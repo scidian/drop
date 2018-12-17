@@ -19,19 +19,10 @@ enum class Color_Scheme
 };
 
 
-
-
-
-
-
-
-
-
-
 //
 //
-// I want to keep this
 //
+//  Line 25 is the greatest line ever
 //
 //
 
