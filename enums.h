@@ -22,8 +22,8 @@ enum class Color_Scheme
 //
 //
 //
-//  Actually...
-//  Some people think line 26 is the greatest
+//  Line 25 is the stupidest line duh
+//
 //
 
 
