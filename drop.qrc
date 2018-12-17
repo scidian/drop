@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icon/icon256.png</file>
+        <file>tree_icons/splitter_h.png</file>
+        <file>tree_icons/tree_scene.png</file>
+        <file>tree_icons/tree_object.png</file>
+        <file>tree_icons/tree_action.png</file>
+        <file>tree_icons/tree_camera.png</file>
+        <file>tree_icons/tree_character.png</file>
+        <file>tree_icons/tree_world.png</file>
+        <file>tree_icons/tree_lock.png</file>
+        <file>tree_icons/tree_bullet.png</file>
+        <file>tree_icons/tree_lock_header.png</file>
+    </qresource>
+</RCC>

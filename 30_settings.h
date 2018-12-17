@@ -1,0 +1,87 @@
+//
+//
+//
+//
+//
+
+#ifndef DRSETTINGS_H
+#define DRSETTINGS_H
+
+#include <map>
+
+#include <QColor>
+#include <QVariant>
+
+#include "enums.h"
+
+
+class DrProperty;
+class DrComponent;
+typedef std::map<long, DrComponent*> ComponentMap;
+
+
+class DrSettings
+{
+private:
+    ComponentMap m_components;                      // map of pointers to DrComponent classes   (holds components for current scene)
+    long         m_key;                             // holds unique key for each object with a base class DrSettings
+
+protected:      // so derived classes can access
+    void         setKey (long new_key) { m_key = new_key; }
+
+public:
+    // Constructor and Destructor
+    DrSettings();
+    virtual ~DrSettings();
+
+
+    // Getters and Setters
+    long            getKey() { return m_key; }
+    virtual DrTypes getType() { return DrTypes::BaseClass; }
+
+    DrSettings*  getSettings() { return this; }
+
+    ComponentMap getComponentList() { return m_components; }
+    long         getComponentCount() { return static_cast<int>(m_components.size()); }
+
+    DrComponent* getComponent(long component) { return m_components[component]; }
+    DrComponent* getComponent(World_Components component) { return m_components[static_cast<long>(component)]; }
+    DrComponent* getComponent(Scene_Components component) { return m_components[static_cast<long>(component)]; }
+    DrComponent* getComponent(Object_Components component) { return m_components[static_cast<long>(component)]; }
+
+    DrProperty*  getComponentProperty(long component, long property);
+    DrProperty*  getComponentProperty(World_Components component, World_Properties property);
+    DrProperty*  getComponentProperty(Scene_Components component, Scene_Properties property);
+    DrProperty*  getComponentProperty(Object_Components component, Object_Properties property);
+
+    QVariant     getComponentPropertyValue(long component, long property);
+    QVariant     getComponentPropertyValue(World_Components component, World_Properties property);
+    QVariant     getComponentPropertyValue(Scene_Components component, Scene_Properties property);
+    QVariant     getComponentPropertyValue(Object_Components component, Object_Properties property);
+
+
+    // External Calls
+    DrComponent* findComponentFromPropertyKey(long property_key_to_find);
+    DrProperty*  findPropertyFromPropertyKey(long property_key_to_find);
+
+    void         addComponent(long component, std::string new_display_name, std::string new_description, QColor new_color, bool new_turned_on);
+    void         addComponent(World_Components component, std::string new_display_name, std::string new_description, QColor new_color, bool new_turned_on);
+    void         addComponent(Scene_Components component, std::string new_display_name, std::string new_description, QColor new_color, bool new_turned_on);
+    void         addComponent(Object_Components component, std::string new_display_name, std::string new_description, QColor new_color, bool new_turned_on);
+
+    void addPropertyToComponent(long component, long property_number, Property_Type new_type, QVariant new_value, std::string new_display_name, std::string new_description);
+    void addPropertyToComponent(World_Components component, World_Properties property_number, Property_Type new_type, QVariant new_value, std::string new_display_name, std::string new_description);
+    void addPropertyToComponent(Scene_Components component, Scene_Properties property_number, Property_Type new_type, QVariant new_value, std::string new_display_name, std::string new_description);
+    void addPropertyToComponent(Object_Components component, Object_Properties property_number, Property_Type new_type, QVariant new_value, std::string new_display_name, std::string new_description);
+
+    std::string  getWorldName();
+    std::string  getSceneName();
+
+
+};
+
+#endif // DRSETTINGS_H
+
+
+
+
