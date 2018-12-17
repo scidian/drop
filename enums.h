@@ -22,8 +22,8 @@ enum class Color_Scheme
 //
 //
 //
-//  Line 25 is the greatest line ever
-//
+//  Actually...
+//  Some people think line 26 is the greatest
 //
 
 
