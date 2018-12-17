@@ -19,14 +19,6 @@ enum class Color_Scheme
 };
 
 
-//
-//
-//
-//  Line 25 is the stupidest line duh
-//
-//
-
-
 //#######################################################################
 //##
 //##    Used to track what the QVariant m_value data type really is
