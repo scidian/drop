@@ -53,8 +53,7 @@ HEADERS += \
     form_coloring.h \
     form_styling.h
 
-FORMS += \
-    mainwindow.ui
+FORMS +=
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

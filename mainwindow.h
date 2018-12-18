@@ -8,18 +8,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QTreeWidgetItem>
-#include <QTableWidgetItem>
+#include <QtWidgets>                    // Header includes all QtWidget items
 
 #include <QDropEvent>
 #include <QDragMoveEvent>
 
 #include "01_project.h"
-
-// Declare UI, handled from external Designer auto generated header file
-namespace Ui {
-class MainWindow;
-}
 
 //#######################################################################
 //##
@@ -32,9 +26,40 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+public:
+    QLabel *label_1;
+    QLabel *label_2;
+    QLabel *label_3;
+    QLabel *label_object;
+    QLabel *label_object_2;
+    QLabel *label_object_3;
+
 private:
-    Ui::MainWindow *ui;                                                 // Holds all the widgets from form design for use in main window
     MyTreeView     *treeScene;
+
+    QWidget *widgetCentral;
+        QVBoxLayout *verticalLayout;
+        QSplitter *splitterVertical;
+        QWidget *widgetInner;
+        QHBoxLayout *horizontalLayout;
+        QSplitter *splitterHorizontal;
+        QScrollArea *areaBottom;
+        QWidget *widgetBottom;
+        QMenuBar *menuBar;
+        QMenu *menuDrop;
+        QDockWidget *assets;
+        QWidget *widgetAssests;
+        QDockWidget *inspector;
+        QWidget *widgetInspector;
+        QTableWidget *tableWidget;
+        QDockWidget *toolbar;
+        QWidget *widgetToolbar;
+        QPushButton *buttonWorlds;
+        QPushButton *buttonPlay;
+        QPushButton *buttonSettings;
+        QPushButton *buttonAtlas;
+        QPushButton *buttonFonts;
+
 
     // Locals that need to be SAVED / LOADED from each project
     DrProject      *project;                                            // Holds whatever the current open game project is
@@ -50,10 +75,11 @@ public:
 
     // Helper calls
     DrProject*      getProject() { return project; }
-    Ui::MainWindow* getUi() { return ui; }
-    MyTreeView*     getSceneListWidget();
-    void            setSceneListWidget(MyTreeView *new_tree_scene);
+
     void            listSelectionChanged(QList<QTreeWidgetItem*> item_list);
+
+    void            applyMainWindowPalette(Color_Scheme new_color);
+    void            buildMainWindow();
     void            buildObjectInspector();
 
 
