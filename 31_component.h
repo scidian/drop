@@ -7,13 +7,8 @@
 #ifndef DRCOMPONENT_H
 #define DRCOMPONENT_H
 
-#include <map>
-#include <string>
-
-#include <QColor>
-#include <QVariant>
-
 #include "enums.h"
+
 
 class DrSettings;
 class DrProperty;

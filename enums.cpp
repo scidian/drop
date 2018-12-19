@@ -6,10 +6,9 @@
 
 #include "enums.h"
 
+
 //#######################################################################
-//##
 //##    Returns a std::string respresentaiton of the passed DrTypes type
-//##
 //#######################################################################
 std::string StringFromType(DrTypes drtype)
 {
@@ -63,8 +62,6 @@ bool IsDrObjectClass(DrTypes type_to_check)
         return false;
     }
 }
-
-
 
 
 

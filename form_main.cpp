@@ -1,13 +1,8 @@
 //
 //
-//      Loads, styles and handles events for MainWindow
+//      Loads, styles and handles events for FormMain
 //
 //
-
-#include "ui_mainwindow.h"
-#include "form_coloring.h"
-#include "form_styling.h"
-#include "mainwindow.h"
 
 #include "01_project.h"
 #include "02_world.h"
@@ -18,32 +13,27 @@
 #include "31_component.h"
 #include "32_property.h"
 
-#include <QCheckBox>
-#include <QMessageBox>
-#include <QDrag>
-
+#include "form_styling.h"
+#include "form_main.h"
 
 // Destructor for Main Window
-MainWindow::~MainWindow()
+FormMain::~FormMain()
 {
     delete project;
 }
 
 
 // Constructor for Main Window
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
+FormMain::FormMain(QWidget *parent, Globals *the_globals) : QMainWindow(parent), globals(the_globals)
 {
-    // Initial data loading
-    loadPalettes();
-
     // Initialize form and customize colors and styles
-    buildMainWindow();
-    applyMainWindowPalette(current_color_scheme);
+    applyPalette(globals->current_color_scheme);
+    buildWindow();
+    applyColoring(globals->current_color_scheme);
 
 
     // Initialize new project, initialize local variables
     project = new DrProject();
-
     current_world = 0;
 
 
@@ -124,9 +114,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 
     // DISPLAY MESSAGEBOX TO KNOW WE MADE IT HERE
-    //QMessageBox *msgBox = new QMessageBox(nullptr);
-    //msgBox->setText("Made It 2");
-    //msgBox->exec();
+    //ShowMessageBox("Made It 99");
 }
 
 
@@ -138,7 +126,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 //##    Setting up and Coloring of main window
 //##
 //#######################################################################
-void MainWindow::buildMainWindow()
+void FormMain::buildWindow()
 {
     QFont font;
     font.setPointSize(11);
@@ -328,7 +316,7 @@ void MainWindow::buildMainWindow()
 
 
     // ***** Load our custom MyTreeView for the Scene List
-    treeScene = new MyTreeView(splitterHorizontal, this);
+    treeScene = new TreeSceneView(splitterHorizontal, this);
     treeScene->setStyle(new SceneTreeHighlightProxy(treeScene->style(), treeScene));
 
     QTreeWidgetItem *header_item = new QTreeWidgetItem();
@@ -378,6 +366,24 @@ void MainWindow::buildMainWindow()
     splitterHorizontal->addWidget(areaScene);
 
 
+    setWindowTitle(QApplication::translate("MainWindow", "Drop", nullptr));
+    label_2->setText(QApplication::translate("MainWindow", "TextLabel", nullptr));
+    label_1->setText(QApplication::translate("MainWindow", "TextLabel", nullptr));
+    label_object->setText(QApplication::translate("MainWindow", "Object ID, Type", nullptr));
+    label_object_2->setText(QApplication::translate("MainWindow", "Object ID, Type", nullptr));
+    label_object_3->setText(QApplication::translate("MainWindow", "Object ID, Type", nullptr));
+    label_3->setText(QApplication::translate("MainWindow", "TextLabel", nullptr));
+    menuDrop->setTitle(QApplication::translate("MainWindow", "File", nullptr));
+    assets->setWindowTitle(QApplication::translate("MainWindow", "Assets", nullptr));
+    inspector->setWindowTitle(QApplication::translate("MainWindow", "Inspector", nullptr));
+    buttonWorlds->setToolTip(QApplication::translate("MainWindow", "Project View", nullptr));
+    buttonWorlds->setText(QApplication::translate("MainWindow", "Worlds / UI", nullptr));
+    buttonPlay->setText(QApplication::translate("MainWindow", "Play", nullptr));
+    buttonSettings->setText(QApplication::translate("MainWindow", "App Settings", nullptr));
+    buttonAtlas->setText(QApplication::translate("MainWindow", "Atlases", nullptr));
+    buttonFonts->setText(QApplication::translate("MainWindow", "Fonts", nullptr));
+
+
     // ********** Small tweaks to some of the widgets
     toolbar->setTitleBarWidget(new QWidget());                    // Removes title bar from QDockWidget Toolbar
 
@@ -388,28 +394,29 @@ void MainWindow::buildMainWindow()
 
 
 
-
-void MainWindow::applyMainWindowPalette(Color_Scheme new_color)
+void FormMain::applyPalette(Color_Scheme new_color)
 {
     // ********** Apply palette to main window
     QPalette palette = this->palette();
-    palette.setColor(QPalette::ColorRole::Window, (color_schemes[new_color])[QPalette::ColorRole::Window]);                      // Background color
-    palette.setColor(QPalette::ColorRole::Background, (color_schemes[new_color])[QPalette::ColorRole::Background]);              // Background color, obsolete?
-    palette.setColor(QPalette::ColorRole::WindowText, (color_schemes[new_color])[QPalette::ColorRole::WindowText]);              // Header and label font color
-    palette.setColor(QPalette::ColorRole::Foreground, (color_schemes[new_color])[QPalette::ColorRole::Foreground]);              // Header and label font color, obsolete?
-    palette.setColor(QPalette::ColorRole::Base, (color_schemes[new_color])[QPalette::ColorRole::Base]);                          // Alternate background color
-    palette.setColor(QPalette::ColorRole::AlternateBase, (color_schemes[new_color])[QPalette::ColorRole::AlternateBase]);        // Alternate background color in QTable
-    palette.setColor(QPalette::ColorRole::Text, (color_schemes[new_color])[QPalette::ColorRole::Text]);                          // Button Text color
-    palette.setColor(QPalette::ColorRole::Button, (color_schemes[new_color])[QPalette::ColorRole::Button]);                      // Header background gradient top color
-    palette.setColor(QPalette::ColorRole::Dark, (color_schemes[new_color])[QPalette::ColorRole::Dark]);                          // Header background gradient bottom color
-    palette.setColor(QPalette::ColorRole::Highlight, (color_schemes[new_color])[QPalette::ColorRole::Highlight]);                // List selection highlight color
-    palette.setColor(QPalette::ColorRole::HighlightedText, (color_schemes[new_color])[QPalette::ColorRole::HighlightedText]);    // List selection highlight text color
-    palette.setColor(QPalette::ColorRole::ButtonText, (color_schemes[new_color])[QPalette::ColorRole::ButtonText]);              // Button text, ** what is QPushButton background color??
-    palette.setColor(QPalette::ColorRole::ToolTipBase, (color_schemes[new_color])[QPalette::ColorRole::ToolTipBase]);            // Tooltips
-    palette.setColor(QPalette::ColorRole::ToolTipText, (color_schemes[new_color])[QPalette::ColorRole::ToolTipText]);            // Tooltips
+    palette.setColor(QPalette::ColorRole::Window, (globals->color_schemes[new_color])[QPalette::ColorRole::Window]);                      // Background color
+    palette.setColor(QPalette::ColorRole::Background, (globals->color_schemes[new_color])[QPalette::ColorRole::Background]);              // Background color, obsolete?
+    palette.setColor(QPalette::ColorRole::WindowText, (globals->color_schemes[new_color])[QPalette::ColorRole::WindowText]);              // Header and label font color
+    palette.setColor(QPalette::ColorRole::Foreground, (globals->color_schemes[new_color])[QPalette::ColorRole::Foreground]);              // Header and label font color, obsolete?
+    palette.setColor(QPalette::ColorRole::Base, (globals->color_schemes[new_color])[QPalette::ColorRole::Base]);                          // Alternate background color
+    palette.setColor(QPalette::ColorRole::AlternateBase, (globals->color_schemes[new_color])[QPalette::ColorRole::AlternateBase]);        // Alternate background color in QTable
+    palette.setColor(QPalette::ColorRole::Text, (globals->color_schemes[new_color])[QPalette::ColorRole::Text]);                          // Button Text color
+    palette.setColor(QPalette::ColorRole::Button, (globals->color_schemes[new_color])[QPalette::ColorRole::Button]);                      // Header background gradient top color
+    palette.setColor(QPalette::ColorRole::Dark, (globals->color_schemes[new_color])[QPalette::ColorRole::Dark]);                          // Header background gradient bottom color
+    palette.setColor(QPalette::ColorRole::Highlight, (globals->color_schemes[new_color])[QPalette::ColorRole::Highlight]);                // List selection highlight color
+    palette.setColor(QPalette::ColorRole::HighlightedText, (globals->color_schemes[new_color])[QPalette::ColorRole::HighlightedText]);    // List selection highlight text color
+    palette.setColor(QPalette::ColorRole::ButtonText, (globals->color_schemes[new_color])[QPalette::ColorRole::ButtonText]);              // Button text, ** what is QPushButton background color??
+    palette.setColor(QPalette::ColorRole::ToolTipBase, (globals->color_schemes[new_color])[QPalette::ColorRole::ToolTipBase]);            // Tooltips
+    palette.setColor(QPalette::ColorRole::ToolTipText, (globals->color_schemes[new_color])[QPalette::ColorRole::ToolTipText]);            // Tooltips
     this->setPalette(palette);
+}
 
-
+void FormMain::applyColoring(Color_Scheme new_color)
+{
     // ********** Custom blue dot image for QSplitter (horizontal)
     QString splitColor = QString(" QSplitter { width: 4px; } QSplitter::handle { image: url(:/tree_icons/splitter_h.png); } ");
     this->splitterHorizontal->setStyleSheet(splitColor);
@@ -417,11 +424,11 @@ void MainWindow::applyMainWindowPalette(Color_Scheme new_color)
     QColor temp1, temp2, temp3, temp4, temp5, temp6;
 
     // ********** Custom coloring for QPushButtons
-    temp1 = color_schemes[current_color_scheme][QPalette::ColorRole::Mid];
-    temp2 = color_schemes[current_color_scheme][QPalette::ColorRole::Midlight];
-    temp3 = color_schemes[current_color_scheme][QPalette::ColorRole::Base];
-    temp4 = color_schemes[current_color_scheme][QPalette::ColorRole::Button];
-    temp5 = color_schemes[current_color_scheme][QPalette::ColorRole::BrightText];
+    temp1 = globals->color_schemes[new_color][QPalette::ColorRole::Mid];
+    temp2 = globals->color_schemes[new_color][QPalette::ColorRole::Midlight];
+    temp3 = globals->color_schemes[new_color][QPalette::ColorRole::Base];
+    temp4 = globals->color_schemes[new_color][QPalette::ColorRole::Button];
+    temp5 = globals->color_schemes[new_color][QPalette::ColorRole::BrightText];
     QString buttonColor = QString(" QPushButton { color: " + temp1.name() + "; "
                                                 " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 " + temp2.name() + ", stop:1 " + temp3.name() + "); "
                                                 " border: none; border-radius: 6px; }"
@@ -440,7 +447,7 @@ void MainWindow::applyMainWindowPalette(Color_Scheme new_color)
         effect[i] = new QGraphicsDropShadowEffect();
         effect[i]->setBlurRadius(6);
         effect[i]->setOffset(0,3);
-        effect[i]->setColor(color_schemes[current_color_scheme][QPalette::ColorRole::Shadow]);
+        effect[i]->setColor(globals->color_schemes[new_color][QPalette::ColorRole::Shadow]);
     }
     this->buttonAtlas->setGraphicsEffect(effect[0]);
     this->buttonFonts->setGraphicsEffect(effect[1]);
@@ -450,12 +457,12 @@ void MainWindow::applyMainWindowPalette(Color_Scheme new_color)
 
 
     // ********** Custom coloring for QTreeWidget
-    temp1 = color_schemes[current_color_scheme][QPalette::ColorRole::Foreground];
-    temp2 = color_schemes[current_color_scheme][QPalette::ColorRole::Base];
-    temp3 = color_schemes[current_color_scheme][QPalette::ColorRole::Highlight];
-    temp4 = color_schemes[current_color_scheme][QPalette::ColorRole::HighlightedText];
-    temp5 = color_schemes[current_color_scheme][QPalette::ColorRole::Dark];
-    temp6 = color_schemes[current_color_scheme][QPalette::ColorRole::BrightText];
+    temp1 = globals->color_schemes[new_color][QPalette::ColorRole::Foreground];
+    temp2 = globals->color_schemes[new_color][QPalette::ColorRole::Base];
+    temp3 = globals->color_schemes[new_color][QPalette::ColorRole::Highlight];
+    temp4 = globals->color_schemes[new_color][QPalette::ColorRole::HighlightedText];
+    temp5 = globals->color_schemes[new_color][QPalette::ColorRole::Dark];
+    temp6 = globals->color_schemes[new_color][QPalette::ColorRole::BrightText];
     QString listColor = QString(" QTreeWidget             { color: " + temp1.name() + ";  background: " + temp2.name() + "; selection-background-color: " + temp3.name() + "; }"
                                 " QTreeWidget::item:selected { color: " + temp4.name() + "; background: " + temp3.name() + "; }"
                                 " QTreeWidget::item:hover:selected { color: " + temp5.name() + ";  background: " + temp3.name() + "; }"
@@ -478,7 +485,7 @@ void MainWindow::applyMainWindowPalette(Color_Scheme new_color)
 //
 
 // This removes the item from under the mouse
-void MyTreeView::startDrag(Qt::DropActions supportedActions)
+void TreeSceneView::startDrag(Qt::DropActions supportedActions)
 {
     // Partly copied from Qt 5.5.5 sources
     QModelIndexList indexes = selectedIndexes();
@@ -501,7 +508,7 @@ void MyTreeView::startDrag(Qt::DropActions supportedActions)
 
 
 // Fires when we start dragging
-void MyTreeView::dragMoveEvent(QDragMoveEvent *event)
+void TreeSceneView::dragMoveEvent(QDragMoveEvent *event)
 {
     m_mouse_x = event->pos().x();
     m_mouse_y = event->pos().y();
@@ -518,8 +525,8 @@ void MyTreeView::dragMoveEvent(QDragMoveEvent *event)
                                                                       ", Checking: " + std::to_string(check_key)) );
         // Check if its the same type as already selected, if so allow possible drop
         if (m_is_dragging && m_selected_key != 0 && check_key != 0) {
-            DrSettings *check_settings = getMainWindow()->getProject()->findSettingsFromKey(check_key);
-            DrSettings *selected_settings = getMainWindow()->getProject()->findSettingsFromKey(m_selected_key);
+            DrSettings *check_settings = getMainWindow()->project->findSettingsFromKey(check_key);
+            DrSettings *selected_settings = getMainWindow()->project->findSettingsFromKey(m_selected_key);
 
             if ( CheckTypesAreSame(check_settings->getType(), selected_settings->getType()) ) { m_can_drop = true; }
         }
@@ -530,7 +537,7 @@ void MyTreeView::dragMoveEvent(QDragMoveEvent *event)
     QTreeWidget::dragMoveEvent(event);
 }
 
-void MyTreeView::dropEvent(QDropEvent* event)
+void TreeSceneView::dropEvent(QDropEvent* event)
 {
     bool dropOK = false;
     DropIndicatorPosition dropIndicator = dropIndicatorPosition();
@@ -563,13 +570,13 @@ void MyTreeView::dropEvent(QDropEvent* event)
 // Updates selection, checks to make sure if more than one item is selected all new items
 //                    not matching original type are not selected
 //
-void MyTreeView::selectionChanged (const QItemSelection &selected, const QItemSelection &deselected)
+void TreeSceneView::selectionChanged (const QItemSelection &selected, const QItemSelection &deselected)
 {
     getMainWindow()->listSelectionChanged(this->selectedItems());
     QTreeWidget::selectionChanged(selected, deselected);
 }
 
-void MainWindow::listSelectionChanged(QList<QTreeWidgetItem*> item_list)
+void FormMain::listSelectionChanged(QList<QTreeWidgetItem*> item_list)
 {
     label_3->setText("Selected Items: " + QString::number(item_list.size()));
 
@@ -617,7 +624,7 @@ void MainWindow::listSelectionChanged(QList<QTreeWidgetItem*> item_list)
 //
 //  Need to finish dynamically building object inspector
 //
-void MainWindow::buildObjectInspector()
+void FormMain::buildObjectInspector()
 {
     // First, retrieve unique key of item clicked in list
     DrTypes     selected_type = project->findTypeFromKey( treeScene->getSelectedKey() );
@@ -666,7 +673,7 @@ void MainWindow::buildObjectInspector()
 //
 //  On object inspector click show info about object and property
 //
-void MainWindow::on_tableWidget_itemClicked(QTableWidgetItem *item)
+void FormMain::on_tableWidget_itemClicked(QTableWidgetItem *item)
 {
     // If no item is selected in tree view, exit function
     if (treeScene->getSelectedKey() == 0) { return; }

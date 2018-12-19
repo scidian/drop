@@ -26,7 +26,6 @@ CONFIG += c++11
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp \
     enums.cpp \
     01_project.cpp \
     02_world.cpp \
@@ -36,11 +35,11 @@ SOURCES += \
     31_component.cpp \
     32_property.cpp \
     30_settings.cpp \
-    form_coloring.cpp \
-    form_styling.cpp
+    form_styling.cpp \
+    globals.cpp \
+    form_main.cpp
 
 HEADERS += \
-    mainwindow.h \
     enums.h \
     01_project.h \
     02_world.h \
@@ -50,8 +49,9 @@ HEADERS += \
     32_property.h \
     10_asset.h \
     30_settings.h \
-    form_coloring.h \
-    form_styling.h
+    form_styling.h \
+    form_main.h \
+    globals.h
 
 FORMS +=
 

@@ -1,19 +1,34 @@
 //
 //
-//      Functions to color and style form widgets
+//
 //
 //
 
-#include <QGraphicsDropShadowEffect>
+#include <QMessageBox>
 
-#include "form_coloring.h"
-#include "form_styling.h"
+#include "globals.h"
+
+Globals::Globals()
+{
+    loadPalettes();
+}
 
 
 //#######################################################################
-//      Set's parent window colors to be inherited by others
+//      Used to show a modal messagebox
 //#######################################################################
-void loadPalettes()
+void Globals::showMessageBox(QString new_message)
+{
+    QMessageBox *msgBox = new QMessageBox(nullptr);
+    msgBox->setText(new_message);
+    msgBox->exec();
+}
+
+
+//#######################################################################
+//      Store window colors to be loaded later
+//#######################################################################
+void Globals::loadPalettes()
 {
     //    palette.setColor(QPalette::ColorRole::Light, QColor(255, 0, 0));                  // ??
     //    palette.setColor(QPalette::ColorRole::Mid, QColor(255, 0, 0));                    // ??
@@ -79,14 +94,4 @@ void loadPalettes()
     color_schemes[Color_Scheme::Blue].insert(std::make_pair(QPalette::ColorRole::Midlight, QColor(20,55,103)));
     color_schemes[Color_Scheme::Blue].insert(std::make_pair(QPalette::ColorRole::Shadow, QColor(5, 16, 28)));
 }
-
-
-
-
-
-
-
-
-
-
 

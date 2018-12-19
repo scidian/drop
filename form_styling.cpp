@@ -9,8 +9,7 @@
 #include "03_scene.h"
 #include "04_object.h"
 
-#include "ui_mainwindow.h"
-#include "mainwindow.h"
+#include "form_main.h"
 #include "form_styling.h"
 
 //#######################################################################
@@ -50,8 +49,8 @@ void SceneTreeHighlightProxy::drawPrimitive(PrimitiveElement element, const QSty
             painter->drawLine(QPoint(0, option->rect.top()), QPoint(option->rect.right() + 50, option->rect.top()));
         }
 
-        m_parent_tree->getMainWindow()->getUi()->label_2->setText(QString::fromStdString("TLX: ") + QString::number(option->rect.topLeft().x()) +
-                                                                  QString::fromStdString(", TLY: ") + QString::number(option->rect.topLeft().y()));
+        m_parent_tree->getMainWindow()->label_2->setText(QString::fromStdString("TLX: ") + QString::number(option->rect.topLeft().x()) +
+                                                         QString::fromStdString(", TLY: ") + QString::number(option->rect.topLeft().y()));
 
     }
     else

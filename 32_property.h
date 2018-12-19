@@ -7,11 +7,6 @@
 #ifndef DRPROPERTY_H
 #define DRPROPERTY_H
 
-#include <map>
-#include <vector>
-
-#include <QVariant>
-
 #include "enums.h"
 
 

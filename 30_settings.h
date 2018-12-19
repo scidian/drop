@@ -7,11 +7,6 @@
 #ifndef DRSETTINGS_H
 #define DRSETTINGS_H
 
-#include <map>
-
-#include <QColor>
-#include <QVariant>
-
 #include "enums.h"
 
 

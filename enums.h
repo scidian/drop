@@ -7,11 +7,18 @@
 #ifndef ENUMS_H
 #define ENUMS_H
 
+#include <map>
 #include <string>
+#include <vector>
 
+#include <QColor>
+#include <QPalette>
+#include <QVariant>
 
 //#######################################################################
-//
+//##
+//##    Palette options for windows
+//##
 //#######################################################################
 enum class Color_Scheme
 {
@@ -50,6 +57,7 @@ enum class DrTypes
 
     NotFound,   BaseClass,
 };
+
 
 
 //#######################################################################

@@ -24,14 +24,28 @@
 
 #include <QApplication>
 
-#include "mainwindow.h"
-
+#include "form_main.h"
+#include "globals.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w(nullptr);
-    w.show();
+    QApplication a(argc, argv);                     // Declare application
 
-    return a.exec();
+    Globals *myGlobals = new Globals();             // Declare / Load Globals helper
+    FormMain w(nullptr, myGlobals);                 // Declare / Load FormMain, pass Globals helper
+    w.show();                                       // Show FormMain
+
+    a.exec();                                       // Run program
+
+    delete myGlobals;
+    //ShowMessageBox("Finished running program");
+    return 0;
 }
+
+
+
+
+
+
+
+
