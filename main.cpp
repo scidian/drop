@@ -29,15 +29,15 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);                     // Declare application
+    QApplication app_drop(argc, argv);              // Declare application
 
-    Globals *myGlobals = new Globals();             // Declare / Load Globals helper
-    FormMain w(nullptr, myGlobals);                 // Declare / Load FormMain, pass Globals helper
-    w.show();                                       // Show FormMain
+    Globals *my_globals = new Globals();            // Declare / Load Globals helper
+    FormMain form_main(nullptr, my_globals);        // Declare / Load FormMain, pass Globals helper
+    form_main.show();                               // Show FormMain
 
-    a.exec();                                       // Run program
+    app_drop.exec();                                // Run program
 
-    delete myGlobals;
+    delete my_globals;
     //ShowMessageBox("Finished running program");
     return 0;
 }

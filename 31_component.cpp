@@ -8,11 +8,9 @@
 #include "31_component.h"
 #include "32_property.h"
 
-//##################################################################################################################
-//##
+//####################################################################################
 //##    Constructor, Destructor
-//##
-//##################################################################################################################
+//####################################################################################
 DrComponent::DrComponent(DrSettings *parent_settings,
                          std::string new_display_name,
                          std::string new_description,
@@ -35,11 +33,9 @@ DrComponent::~DrComponent()
 }
 
 
-//##################################################################################################################
-//##
+//####################################################################################
 //##    addProperty functions, need one for each different Properties enum type
-//##
-//##################################################################################################################
+//####################################################################################
 void DrComponent::addProperty(long setting, Property_Type new_type, QVariant new_value, std::string new_display_name, std::string new_description)
 {
     DrProperty *prop = new DrProperty(m_parent_settings, this, new_display_name, new_description, new_type, new_value, setting);

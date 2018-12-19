@@ -1,6 +1,6 @@
 //
 //
-//
+//      DrSettings - Class to hold settings and a collection of components for all DrClass objects
 //
 //
 

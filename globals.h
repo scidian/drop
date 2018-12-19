@@ -1,6 +1,6 @@
 //
 //
-//
+//      Globals - Holds some global variables for use across the project
 //
 //
 

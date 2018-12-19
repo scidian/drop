@@ -1,6 +1,6 @@
 //
 //
-//
+//      Functions for our Globals class
 //
 //
 
@@ -14,9 +14,9 @@ Globals::Globals()
 }
 
 
-//#######################################################################
-//      Used to show a modal messagebox
-//#######################################################################
+//####################################################################################
+//##        Used to show a modal messagebox
+//####################################################################################
 void Globals::showMessageBox(QString new_message)
 {
     QMessageBox *msgBox = new QMessageBox(nullptr);
@@ -25,18 +25,11 @@ void Globals::showMessageBox(QString new_message)
 }
 
 
-//#######################################################################
-//      Store window colors to be loaded later
-//#######################################################################
+//####################################################################################
+//##        Store custom window palette colors
+//####################################################################################
 void Globals::loadPalettes()
 {
-    //    palette.setColor(QPalette::ColorRole::Light, QColor(255, 0, 0));                  // ??
-    //    palette.setColor(QPalette::ColorRole::Mid, QColor(255, 0, 0));                    // ??
-    //    palette.setColor(QPalette::ColorRole::Midlight, QColor(255, 0, 0));               // ??
-    //    palette.setColor(QPalette::ColorRole::Shadow, QColor(255, 0, 0));                 // ??
-    //    palette.setColor(QPalette::ColorRole::Link, QColor(0, 150, 145));
-    //    palette.setColor(QPalette::ColorRole::LinkVisited, QColor(0, 100, 95));
-
     color_schemes[Color_Scheme::Dark].insert(std::make_pair(QPalette::ColorRole::Window, QColor(32, 32, 32)));
     color_schemes[Color_Scheme::Dark].insert(std::make_pair(QPalette::ColorRole::Background, QColor(32, 32, 32)));
     color_schemes[Color_Scheme::Dark].insert(std::make_pair(QPalette::ColorRole::WindowText, QColor(205, 205, 205)));

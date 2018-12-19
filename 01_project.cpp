@@ -9,11 +9,9 @@
 #include "03_scene.h"
 #include "04_object.h"
 
-//##################################################################################################################
-//##
+//####################################################################################
 //##    Constructor, Destructor - addWorld
-//##
-//##################################################################################################################
+//####################################################################################
 DrProject::DrProject(long key_generator_starting_number)
 {
     m_key_generator = key_generator_starting_number;
@@ -41,11 +39,9 @@ void DrProject::addWorld()
 }
 
 
-//##################################################################################################################
-//##
+//####################################################################################
 //##    Getters - getFirstWorldKey, getWorld (from key), getWorldWithName (from name)
-//##
-//##################################################################################################################
+//####################################################################################
 
 // Returns the map Key of the first World in the map container
 long DrProject::getFirstWorldKey()
@@ -72,7 +68,7 @@ DrWorld* DrProject::getWorldWithName(std::string world_name)
 }
 
 
-//##################################################################################################################
+//####################################################################################
 //##
 //##    Key Finding - These functions search the current project for the specified Key and return the requested info
 //##                    (key's are generated from Project key generator upon object initialization)
@@ -81,7 +77,7 @@ DrWorld* DrProject::getWorldWithName(std::string world_name)
 //##
 //##    findTypeFromKey - Searches all member variables / containers for the specified unique project key
 //##
-//##################################################################################################################
+//####################################################################################
 DrSettings* DrProject::findSettingsFromKey(long check_key)
 {
     for (auto i: m_worlds)

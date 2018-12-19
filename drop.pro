@@ -35,9 +35,10 @@ SOURCES += \
     31_component.cpp \
     32_property.cpp \
     30_settings.cpp \
-    form_styling.cpp \
     globals.cpp \
-    form_main.cpp
+    form_main.cpp \
+    form_main_setup.cpp \
+    form_main_scene_list.cpp
 
 HEADERS += \
     enums.h \
@@ -49,7 +50,6 @@ HEADERS += \
     32_property.h \
     10_asset.h \
     30_settings.h \
-    form_styling.h \
     form_main.h \
     globals.h
 

@@ -7,9 +7,9 @@
 #include "enums.h"
 
 
-//#######################################################################
+//####################################################################################
 //##    Returns a std::string respresentaiton of the passed DrTypes type
-//#######################################################################
+//####################################################################################
 std::string StringFromType(DrTypes drtype)
 {
     switch (drtype)
@@ -39,6 +39,9 @@ std::string StringFromType(DrTypes drtype)
     return "Unknown";
 }
 
+//####################################################################################
+//##        Returns true if same class type (or if both are DrObjects)
+//####################################################################################
 bool CheckTypesAreSame(DrTypes type1, DrTypes type2)
 {
     if (IsDrObjectClass(type1) == true && IsDrObjectClass(type2) == true)
@@ -50,6 +53,9 @@ bool CheckTypesAreSame(DrTypes type1, DrTypes type2)
     }
 }
 
+//####################################################################################
+//##        Returns true if type is an DrObject sub-type
+//####################################################################################
 bool IsDrObjectClass(DrTypes type_to_check)
 {
     switch (type_to_check)
