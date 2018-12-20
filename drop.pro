@@ -38,7 +38,8 @@ SOURCES += \
     globals.cpp \
     form_main.cpp \
     form_main_setup.cpp \
-    form_main_scene_list.cpp
+    form_main_scene_list.cpp \
+    form_main_inspector.cpp
 
 HEADERS += \
     enums.h \

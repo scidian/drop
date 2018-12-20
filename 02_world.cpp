@@ -92,7 +92,7 @@ void DrWorld::initializeWorldSettings(std::string new_name)
     addPropertyToComponent(World_Components::settings, World_Properties::score_multiplier, Property_Type::FLOAT, 1.0,
                            "Score Multiplier", "Value used as multiplier to adjust speed at which distance scoring is calculated");
 
-    addComponent(World_Components::physics, "Physics", "Starting physics settings for current world", Qt::green, true);
+    addComponent(World_Components::physics, "Physics", "Starting physics settings for current world", Qt::yellow, true);
     addPropertyToComponent(World_Components::physics, World_Properties::use_physics, Property_Type::BOOL, true,
                            "Use Physics?", "Whether or not physics is turned on in current world");
     addPropertyToComponent(World_Components::physics, World_Properties::gravity, Property_Type::POINT2D, QList<QVariant>({ 0.0, 10.0 }),

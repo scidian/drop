@@ -71,51 +71,6 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) : QMainWindow(parent),
 
 
 
-//####################################################################################
-//
-//  Need to finish dynamically building object inspector
-//
-void FormMain::buildObjectInspector()
-{
-    // First, retrieve unique key of item clicked in list
-    DrTypes     selected_type = project->findTypeFromKey( treeScene->getSelectedKey() );
-    std::string type_string = StringFromType(selected_type);
-    label_object->setText("KEY: " + QString::number( treeScene->getSelectedKey() ) + ", TYPE: " + QString::fromStdString(type_string));
-    label_object_2->setText("");
-    label_object_3->setText("");
-
-
-    // Reset / clear tableWidget
-    tableWidget->clear();
-
-    ComponentMap components = project->findSettingsFromKey( treeScene->getSelectedKey() )->getComponentList();
-
-
-    //####**** Build Object Inspector!!!!! ****####
-
-
-    // Build tables in Object Inspector
-    int rowCount = 0;
-    for (auto i: components)
-    {
-
-        for (auto j: i.second->getPropertyList())
-        {
-            QTableWidgetItem *new_item = new QTableWidgetItem(QString::fromStdString(j.second->getDisplayName()));
-            new_item->setData(Qt::UserRole, QVariant::fromValue(j.second->getPropertyKey()));
-
-            // If no rows yet, create some, otherwise don't
-            if (tableWidget->rowCount() < (rowCount + 1))
-            {
-                tableWidget->insertRow(rowCount);
-            }
-
-            tableWidget->setItem(rowCount, 0, new_item);
-
-            rowCount++;
-        }
-    }
-}
 
 
 
@@ -124,32 +79,32 @@ void FormMain::buildObjectInspector()
 //
 //  On object inspector click show info about object and property
 //
-void FormMain::on_tableWidget_itemClicked(QTableWidgetItem *item)
-{
-    // If no item is selected in tree view, exit function
-    if (treeScene->getSelectedKey() == 0) { return; }
+//void FormMain::on_tableWidget_itemClicked(QTableWidgetItem *item)
+//{
+//    // If no item is selected in tree view, exit function
+//    if (treeScene->getSelectedKey() == 0) { return; }
 
-    // First, retrieve property key of item clicked in tableWidget list
-    long        property_key = item->data(Qt::UserRole).toLongLong();
+//    // First, retrieve property key of item clicked in tableWidget list
+//    long        property_key = item->data(Qt::UserRole).toLongLong();
 
-    // Grab a pointer to the component list of the first selected item from treeScene (stored in selected_list)
-    DrSettings  *selected_item_settings = project->findSettingsFromKey( treeScene->getSelectedKey() );
-    DrComponent *clicked_component = selected_item_settings->findComponentFromPropertyKey(property_key);
-    DrProperty  *clicked_property = clicked_component->getProperty(property_key);
+//    // Grab a pointer to the component list of the first selected item from treeScene (stored in selected_list)
+//    DrSettings  *selected_item_settings = project->findSettingsFromKey( treeScene->getSelectedKey() );
+//    DrComponent *clicked_component = selected_item_settings->findComponentFromPropertyKey(property_key);
+//    DrProperty  *clicked_property = clicked_component->getProperty(property_key);
 
-    std::string property_name = clicked_property->getDisplayName();
-    std::string component_name = clicked_component->getDisplayName();
-    long        component_key = clicked_component->getComponentKey();
+//    std::string property_name = clicked_property->getDisplayName();
+//    std::string component_name = clicked_component->getDisplayName();
+//    long        component_key = clicked_component->getComponentKey();
 
-    // Grab type of main selected item in selected tree list
-    std::string type_string2 = StringFromType(project->findTypeFromKey( treeScene->getSelectedKey() ));
-    std::string type_string = StringFromType(selected_item_settings->getType());
+//    // Grab type of main selected item in selected tree list
+//    std::string type_string2 = StringFromType(project->findTypeFromKey( treeScene->getSelectedKey() ));
+//    std::string type_string = StringFromType(selected_item_settings->getType());
 
-    label_object->setText("KEY: " + QString::number( treeScene->getSelectedKey() ) + ", TYPE: " + QString::fromStdString(type_string));
-    label_object_2->setText("COMPONENT: " + QString::number(component_key) +   ", NAME: " + QString::fromStdString(component_name));
-    label_object_3->setText("PROPERTY: " + QString::number(property_key) +   ", NAME: " + QString::fromStdString(property_name));
+//    label_object->setText("KEY: " + QString::number( treeScene->getSelectedKey() ) + ", TYPE: " + QString::fromStdString(type_string));
+//    label_object_2->setText("COMPONENT: " + QString::number(component_key) +   ", NAME: " + QString::fromStdString(component_name));
+//    label_object_3->setText("PROPERTY: " + QString::number(property_key) +   ", NAME: " + QString::fromStdString(property_name));
 
-}
+//}
 
 
 

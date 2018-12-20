@@ -2,6 +2,20 @@
 //
 //      FormMain - Class that holds our main form window
 //
+//      FormMain Modes:
+//          Edit Scene
+//          Edit UI
+//          Node Map: World / UI Layout
+//          SNode Map: Scene Layout
+//
+//      Main Components of FormMain while in normal "Edit Scene" mode:
+//          Top Area (Toolbar)
+//          Asset List (Dock)
+//          Object Inspector (Dock)
+//          Scene Area
+//          Scene List
+//          Variable List
+//          Bottom Area (Labels, Scenes?)
 //
 
 #ifndef MAINWINDOW_H
@@ -13,12 +27,13 @@
 #include "01_project.h"
 #include "globals.h"
 
+class TreeSceneView;                        // Necessary forward declaration
+class TreeObjectInspector;                  // Necessary forward declaration
+
 
 //####################################################################################
 //##    FormMain - Main editor window
 //####################################################################################
-class TreeSceneView;                        // Necessary forward declaration
-
 class FormMain : public QMainWindow
 {
     Q_OBJECT
@@ -37,23 +52,24 @@ public:
     QLabel        *label_object,    *label_object_2,    *label_object_3;
 
 private:
-    TreeSceneView *treeScene;
+    // Custom classes for Scene List
+    TreeSceneView       *treeScene;
+
+    // Custom classes for Object Inspector
+    TreeObjectInspector *treeObject;
     QTableWidget  *tableWidget;
 
+    // Normal Qt Classes for simple objects
     QMenu         *menuDrop;
     QMenuBar      *menuBar;
     QWidget       *widgetAssests, *widgetBottom, *widgetCentral, *widgetInner, *widgetInspector, *widgetToolbar;
 
     QHBoxLayout   *horizontalLayout;
-    QVBoxLayout   *verticalLayout;
+    QVBoxLayout   *verticalLayout, *verticalLayoutObject;
     QSplitter     *splitterHorizontal, *splitterVertical;
 
     QDockWidget   *assets, *inspector, *toolbar;
     QPushButton   *buttonAtlas, *buttonFonts, *buttonPlay, *buttonSettings, *buttonWorlds;
-
-
-private slots:
-    void on_tableWidget_itemClicked(QTableWidgetItem *item);            // Handles click on Object Inspector table
 
 public:
     // Constructor and Destructor
@@ -75,8 +91,34 @@ public:
 };
 
 
+
 //####################################################################################
-//##    MyTreeView - A sub classed QTreeWidget so we can override events
+//##    TreeObjectInspector
+//##        A sub classed QTreeWidget so we can override events for Object Inspector List
+//####################################################################################
+class TreeObjectInspector: public QTreeWidget
+{
+    Q_OBJECT
+private:
+    FormMain    *m_parent_window;
+
+public:
+    explicit TreeObjectInspector(QWidget *parent, FormMain *main_window) : QTreeWidget (parent), m_parent_window (main_window) { }
+
+//    virtual void dragMoveEvent(QDragMoveEvent *event) override;
+//    virtual void dropEvent(QDropEvent *event) override;
+//    virtual void selectionChanged (const QItemSelection &selected, const QItemSelection &deselected) override;
+//    virtual void startDrag(Qt::DropActions supportedActions) override;
+
+    FormMain*    getMainWindow() { return m_parent_window; }
+
+};
+
+
+
+//####################################################################################
+//##    TreeSceneView
+//##        A sub classed QTreeWidget so we can override events for Tree Scene List
 //####################################################################################
 class TreeSceneView: public QTreeWidget
 {
@@ -109,12 +151,10 @@ public:
     int          getMouseY() { return m_mouse_y; }
 };
 
-
-
 //####################################################################################
 //##    SceneTreeHighlightStyle
-//##        A sub classed QProxyStyle so we can overwrite event and do
-//##        some cuistom drawing of TreeWidget list divider
+//##        A sub classed QProxyStyle so we can overwrite events and do some custom
+//##        drawing of TreeWidget list divider in Tree Scene List
 //####################################################################################
 class SceneTreeHighlightProxy : public QProxyStyle
 {

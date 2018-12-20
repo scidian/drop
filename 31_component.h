@@ -37,6 +37,7 @@ public:
 
     // Getters and setters
     std::string getDisplayName() { return m_display_name; }
+    QString     getDisplayNameQString() { return QString::fromStdString(m_display_name); }
     std::string getDescription() { return m_description; }
     QColor      getColor() { return m_color; }
     bool        isTurnedOn() { return m_turned_on; }

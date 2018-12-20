@@ -180,7 +180,11 @@ void FormMain::listSelectionChanged(QList<QTreeWidgetItem*> item_list)
 
     if (item_list.size() == 1){
         treeScene->setSelectedKey(item_list.first()->data(0, Qt::UserRole).toLongLong());           // grab stored key from list view user data
+
+        //******************************************************
+        // Call to outside function to rebuild object inspector:
         buildObjectInspector();
+        //******************************************************
     }
     else {
         DrTypes selected_type = project->findTypeFromKey( treeScene->getSelectedKey() );
@@ -206,8 +210,8 @@ void FormMain::listSelectionChanged(QList<QTreeWidgetItem*> item_list)
 
 //####################################################################################
 //##    SceneTreeHighlightStyle
-//##        A sub classed QProxyStyle so we can overwrite event and do
-//##        some cuistom drawing of TreeWidget list divider
+//##        A sub classed QProxyStyle so we can overwrite events and do some custom
+//##        drawing of TreeWidget list divider in Tree Scene List
 //####################################################################################
 SceneTreeHighlightProxy::~SceneTreeHighlightProxy()
 {

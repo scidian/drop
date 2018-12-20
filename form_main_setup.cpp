@@ -86,7 +86,7 @@ void FormMain::applyColoring(Color_Scheme new_color)
     this->buttonWorlds->setGraphicsEffect(effect[4]);
 
 
-    // ********** Custom coloring for QTreeWidget
+    // ********** Custom coloring for TreeSceneView
     temp1 = globals->color_schemes[new_color][QPalette::ColorRole::Foreground];
     temp2 = globals->color_schemes[new_color][QPalette::ColorRole::Base];
     temp3 = globals->color_schemes[new_color][QPalette::ColorRole::Highlight];
@@ -97,9 +97,25 @@ void FormMain::applyColoring(Color_Scheme new_color)
                                 " QTreeWidget::item:selected { color: " + temp4.name() + "; background: " + temp3.name() + "; }"
                                 " QTreeWidget::item:hover:selected { color: " + temp5.name() + ";  background: " + temp3.name() + "; }"
                                 " QTreeWidget::item:hover:!selected { color: " + temp6.name() + ";  background: " + temp2.name() + "; }"
-                                " QHeaderView::section { background-color: " + temp2.name() + "; border: 0px; }");
+                                " QHeaderView::section { background-color: " + temp2.name() + "; border: 0px; }"
+                                " QScrollBar:vertical { border: 2px solid grey; background: #32CC99; width: 14px; margin: 10px 0 10px 0; }");
     treeScene->header()->setStyleSheet(listColor);
     treeScene->setStyleSheet(listColor);
+
+    // ********** Custom coloring for TreeObjectInspector
+    temp1 = globals->color_schemes[new_color][QPalette::ColorRole::Foreground];
+    temp2 = globals->color_schemes[new_color][QPalette::ColorRole::Base];
+    temp3 = globals->color_schemes[new_color][QPalette::ColorRole::Highlight];
+    temp4 = globals->color_schemes[new_color][QPalette::ColorRole::HighlightedText];
+    temp5 = globals->color_schemes[new_color][QPalette::ColorRole::Dark];
+    temp6 = globals->color_schemes[new_color][QPalette::ColorRole::BrightText];
+    QString listObjColor = QString(" QTreeWidget             { color: " + temp1.name() + ";  background: " + temp2.name() + "; selection-background-color: " + temp3.name() + "; }"
+                                   " QTreeWidget::item:selected { color: " + temp4.name() + "; background: " + temp3.name() + "; }"
+                                   " QTreeWidget::item:hover:selected { color: " + temp5.name() + ";  background: " + temp3.name() + "; }"
+                                   " QTreeWidget::item:hover:!selected { color: " + temp6.name() + ";  background: " + temp2.name() + "; }"
+                                   " QHeaderView::section { background-color: " + temp2.name() + "; border: 0px; }");
+    treeObject->header()->setStyleSheet(listObjColor);
+    treeObject->setStyleSheet(listColor);
 
 }
 
@@ -127,8 +143,7 @@ void FormMain::buildWindow()
     sizePolicy2.setVerticalStretch(0);
 
     // ***** Main window settings
-    if (this->objectName().isEmpty())
-        this->setObjectName(QStringLiteral("formMain"));
+    this->setObjectName(QStringLiteral("formMain"));
     this->setWindowModality(Qt::NonModal);
     this->resize(1100, 700);
     this->setMinimumSize(QSize(780, 400));
@@ -142,84 +157,10 @@ void FormMain::buildWindow()
     menuBar = new QMenuBar(this);
     menuBar->setObjectName(QStringLiteral("menuBar"));
     menuBar->setGeometry(QRect(0, 0, 1100, 22));
-    menuDrop = new QMenu(menuBar);
-    menuDrop->setObjectName(QStringLiteral("menuDrop"));
+        menuDrop = new QMenu(menuBar);
+        menuDrop->setObjectName(QStringLiteral("menuDrop"));
+        menuBar->addAction(menuDrop->menuAction());
     this->setMenuBar(menuBar);
-    menuBar->addAction(menuDrop->menuAction());
-
-
-    // ***** Build central widgets
-    widgetCentral = new QWidget(this);
-    widgetCentral->setObjectName(QStringLiteral("widgetCentral"));
-    widgetCentral->setSizePolicy(sizePolicy);
-
-    verticalLayout = new QVBoxLayout(widgetCentral);
-    verticalLayout->setSpacing(2);
-    verticalLayout->setContentsMargins(11, 11, 11, 11);
-    verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-    verticalLayout->setContentsMargins(2, 2, 2, 2);
-
-    splitterVertical = new QSplitter(widgetCentral);
-    splitterVertical->setObjectName(QStringLiteral("splitterVertical"));
-    splitterVertical->setOrientation(Qt::Vertical);
-    splitterVertical->setHandleWidth(4);
-
-    widgetInner = new QWidget(splitterVertical);
-    widgetInner->setObjectName(QStringLiteral("widgetInner"));
-        horizontalLayout = new QHBoxLayout(widgetInner);
-        horizontalLayout->setSpacing(0);
-        horizontalLayout->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        horizontalLayout->setContentsMargins(0, 0, 0, 0);
-
-        splitterHorizontal = new QSplitter(widgetInner);
-        splitterHorizontal->setObjectName(QStringLiteral("splitterHorizontal"));
-        splitterHorizontal->setLineWidth(0);
-        splitterHorizontal->setOrientation(Qt::Horizontal);
-        splitterHorizontal->setHandleWidth(4);
-
-    horizontalLayout->addWidget(splitterHorizontal);
-    splitterVertical->addWidget(widgetInner);
-
-        areaBottom = new QScrollArea(splitterVertical);
-        areaBottom->setObjectName(QStringLiteral("areaBottom"));
-        areaBottom->setSizePolicy(sizePolicy1);
-        areaBottom->setMinimumSize(QSize(0, 100));
-        areaBottom->setFont(font);
-        areaBottom->setWidgetResizable(true);
-        widgetBottom = new QWidget();
-        widgetBottom->setObjectName(QStringLiteral("widgetBottom"));
-        widgetBottom->setGeometry(QRect(0, 0, 652, 622));
-        label_1 = new QLabel(widgetBottom);
-        label_1->setObjectName(QStringLiteral("label_1"));
-        label_1->setGeometry(QRect(10, 10, 141, 21));
-        label_1->setFont(font);
-        label_2 = new QLabel(widgetBottom);
-        label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setGeometry(QRect(10, 30, 141, 21));
-        label_2->setFont(font);
-        label_3 = new QLabel(widgetBottom);
-        label_3->setObjectName(QStringLiteral("label_3"));
-        label_3->setGeometry(QRect(10, 70, 631, 21));
-        label_3->setFont(font);
-        label_object = new QLabel(widgetBottom);
-        label_object->setObjectName(QStringLiteral("label_object"));
-        label_object->setGeometry(QRect(180, 10, 461, 21));
-        label_object->setFont(font);
-        label_object_2 = new QLabel(widgetBottom);
-        label_object_2->setObjectName(QStringLiteral("label_object_2"));
-        label_object_2->setGeometry(QRect(180, 30, 461, 21));
-        label_object_2->setFont(font);
-        label_object_3 = new QLabel(widgetBottom);
-        label_object_3->setObjectName(QStringLiteral("label_object_3"));
-        label_object_3->setGeometry(QRect(180, 50, 461, 21));
-        label_object_3->setFont(font);
-        areaBottom->setWidget(widgetBottom);
-        splitterVertical->addWidget(areaBottom);
-
-    verticalLayout->addWidget(splitterVertical);
-
-    setCentralWidget(widgetCentral);
 
 
     // ***** Build left Assets Dock
@@ -228,25 +169,12 @@ void FormMain::buildWindow()
     assets->setMinimumSize(QSize(180, 35));
     assets->setFont(font);
     assets->setFeatures(QDockWidget::DockWidgetMovable);
-    assets->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
-    widgetAssests = new QWidget();
-    widgetAssests->setObjectName(QStringLiteral("widgetAssests"));
-    assets->setWidget(widgetAssests);
-    addDockWidget(static_cast<Qt::DockWidgetArea>(1), assets);
+    assets->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+        widgetAssests = new QWidget();
+        widgetAssests->setObjectName(QStringLiteral("widgetAssests"));
 
-
-    // ***** Build right Inspector Dock
-    inspector = new QDockWidget(this);
-    inspector->setObjectName(QStringLiteral("inspector"));
-    inspector->setSizePolicy(sizePolicy2);
-    inspector->setMinimumSize(QSize(260, 139));
-    inspector->setFont(font);
-    inspector->setFeatures(QDockWidget::DockWidgetMovable);
-    inspector->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
-        widgetInspector = new QWidget();
-        widgetInspector->setObjectName(QStringLiteral("widgetInspector"));
-        widgetInspector->setSizePolicy(sizePolicy2);
-            tableWidget = new QTableWidget(widgetInspector);
+            // TEMP TABLE
+            tableWidget = new QTableWidget(widgetAssests);
             if (tableWidget->columnCount() < 2)
                 tableWidget->setColumnCount(2);
             tableWidget->setObjectName(QStringLiteral("tableWidget"));
@@ -266,7 +194,57 @@ void FormMain::buildWindow()
             tableWidget->verticalHeader()->setVisible(false);
             tableWidget->verticalHeader()->setDefaultSectionSize(20);
             tableWidget->verticalHeader()->setMinimumSectionSize(10);
-    inspector->setWidget(widgetInspector);
+
+        assets->setWidget(widgetAssests);
+    addDockWidget(static_cast<Qt::DockWidgetArea>(1), assets);
+
+
+    // ***** Build right Inspector Dock
+    inspector = new QDockWidget(this);
+    inspector->setObjectName(QStringLiteral("inspector"));
+    inspector->setSizePolicy(sizePolicy2);
+    inspector->setMinimumSize(QSize(300, 139));
+    inspector->setFont(font);
+    inspector->setFeatures(QDockWidget::DockWidgetMovable);
+    inspector->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+        widgetInspector = new QWidget();
+        widgetInspector->setObjectName(QStringLiteral("widgetInspector"));
+        widgetInspector->setSizePolicy(sizePolicy2);
+        verticalLayoutObject = new QVBoxLayout(widgetInspector);
+        verticalLayoutObject->setSpacing(2);
+        verticalLayoutObject->setContentsMargins(11, 11, 11, 11);
+        verticalLayoutObject->setObjectName(QStringLiteral("verticalLayoutObject"));
+        verticalLayoutObject->setContentsMargins(2, 2, 2, 2);
+
+            // ***** Load our custom TreeObjectInspector for the Scene List
+            treeObject = new TreeObjectInspector(widgetInspector, this);
+                QTreeWidgetItem *header_item_obj = new QTreeWidgetItem();
+                treeObject->setHeaderItem(header_item_obj);
+            treeObject->setObjectName(QStringLiteral("treeObject"));
+            treeObject->setColumnCount(2);
+            treeObject->setColumnWidth(0, 135);
+            treeObject->setMinimumSize(QSize(135, 150));
+            //treeObject->setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents);
+            treeObject->setFont(font);
+            treeObject->setProperty("showDropIndicator", QVariant(false));
+            treeObject->setDragEnabled(false);
+            treeObject->setDragDropOverwriteMode(false);
+            treeObject->setDragDropMode(QAbstractItemView::DragDropMode::NoDragDrop);
+            treeObject->setDefaultDropAction(Qt::DropAction::TargetMoveAction);
+            treeObject->setAlternatingRowColors(false);
+            treeObject->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
+            treeObject->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectItems);
+            treeObject->setIndentation(5);
+            treeObject->setRootIsDecorated(true);
+            treeObject->setItemsExpandable(true);
+            treeObject->setExpandsOnDoubleClick(true);
+            treeObject->header()->setSectionResizeMode(1, QHeaderView::ResizeMode::Stretch);
+            treeObject->header()->setStretchLastSection(true);
+            treeObject->header()->setVisible(false);
+            treeObject->setHeaderHidden(true);
+        verticalLayoutObject->addWidget(treeObject);
+
+        inspector->setWidget(widgetInspector);
     addDockWidget(static_cast<Qt::DockWidgetArea>(2), inspector);
 
 
@@ -280,60 +258,131 @@ void FormMain::buildWindow()
     toolbar->setWindowTitle(QStringLiteral(""));
         widgetToolbar = new QWidget();
         widgetToolbar->setObjectName(QStringLiteral("widgetToolbar"));
-        buttonAtlas = new QPushButton(widgetToolbar);
-        buttonAtlas->setObjectName(QStringLiteral("buttonAtlas"));
-        buttonAtlas->setGeometry(QRect(250, 8, 111, 31));
-        buttonAtlas->setFont(font);
-        buttonFonts = new QPushButton(widgetToolbar);
-        buttonFonts->setObjectName(QStringLiteral("buttonFonts"));
-        buttonFonts->setGeometry(QRect(370, 8, 111, 31));
-        buttonFonts->setFont(font);
-        buttonPlay = new QPushButton(widgetToolbar);
-        buttonPlay->setObjectName(QStringLiteral("buttonPlay"));
-        buttonPlay->setGeometry(QRect(660, 8, 111, 31));
-        buttonPlay->setFont(font);
-        buttonSettings = new QPushButton(widgetToolbar);
-        buttonSettings->setObjectName(QStringLiteral("buttonSettings"));
-        buttonSettings->setGeometry(QRect(780, 8, 111, 31));
-        buttonSettings->setFont(font);
-        buttonWorlds = new QPushButton(widgetToolbar);
-        buttonWorlds->setObjectName(QStringLiteral("buttonWorlds"));
-        buttonWorlds->setGeometry(QRect(20, 8, 121, 31));
-        buttonWorlds->setFont(font);
-        buttonWorlds->setCheckable(false);
-    toolbar->setWidget(widgetToolbar);
+            buttonAtlas = new QPushButton(widgetToolbar);
+            buttonAtlas->setObjectName(QStringLiteral("buttonAtlas"));
+            buttonAtlas->setGeometry(QRect(250, 8, 111, 31));
+            buttonAtlas->setFont(font);
+            buttonFonts = new QPushButton(widgetToolbar);
+            buttonFonts->setObjectName(QStringLiteral("buttonFonts"));
+            buttonFonts->setGeometry(QRect(370, 8, 111, 31));
+            buttonFonts->setFont(font);
+            buttonPlay = new QPushButton(widgetToolbar);
+            buttonPlay->setObjectName(QStringLiteral("buttonPlay"));
+            buttonPlay->setGeometry(QRect(660, 8, 111, 31));
+            buttonPlay->setFont(font);
+            buttonSettings = new QPushButton(widgetToolbar);
+            buttonSettings->setObjectName(QStringLiteral("buttonSettings"));
+            buttonSettings->setGeometry(QRect(780, 8, 111, 31));
+            buttonSettings->setFont(font);
+            buttonWorlds = new QPushButton(widgetToolbar);
+            buttonWorlds->setObjectName(QStringLiteral("buttonWorlds"));
+            buttonWorlds->setGeometry(QRect(20, 8, 121, 31));
+            buttonWorlds->setFont(font);
+            buttonWorlds->setCheckable(false);
+        toolbar->setWidget(widgetToolbar);
     addDockWidget(static_cast<Qt::DockWidgetArea>(4), toolbar);
 
 
-    // ***** Load our custom MyTreeView for the Scene List
-    treeScene = new TreeSceneView(splitterHorizontal, this);
-    treeScene->setStyle(new SceneTreeHighlightProxy(treeScene->style(), treeScene));
+    // ***** Build central widgets
+    widgetCentral = new QWidget(this);
+    widgetCentral->setObjectName(QStringLiteral("widgetCentral"));
+    widgetCentral->setSizePolicy(sizePolicy);
+    verticalLayout = new QVBoxLayout(widgetCentral);
+    verticalLayout->setSpacing(2);
+    verticalLayout->setContentsMargins(11, 11, 11, 11);
+    verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+    verticalLayout->setContentsMargins(2, 2, 2, 2);
+        splitterVertical = new QSplitter(widgetCentral);
+        splitterVertical->setObjectName(QStringLiteral("splitterVertical"));
+        splitterVertical->setOrientation(Qt::Vertical);
+        splitterVertical->setHandleWidth(4);
 
-    QTreeWidgetItem *header_item = new QTreeWidgetItem();
-    header_item->setIcon(1, QIcon(":/tree_icons/tree_lock_header.png"));
-    treeScene->setHeaderItem(header_item);
-    treeScene->setObjectName(QStringLiteral("treeScene"));
-    treeScene->setColumnCount(2);
-    treeScene->setColumnWidth(0, 150);
-    treeScene->setColumnWidth(1, 16);
-    treeScene->setMinimumSize(QSize(190, 0));
-    treeScene->setFont(font);
-    treeScene->setProperty("showDropIndicator", QVariant(false));
-    treeScene->setDragEnabled(true);
-    treeScene->setDragDropOverwriteMode(false);
-    treeScene->setDragDropMode(QAbstractItemView::InternalMove);
-    treeScene->setDefaultDropAction(Qt::TargetMoveAction);
-    treeScene->setAlternatingRowColors(false);
-    treeScene->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    treeScene->setSelectionBehavior(QAbstractItemView::SelectRows);
-    treeScene->setIndentation(15);
-    treeScene->setRootIsDecorated(true);
-    treeScene->setItemsExpandable(true);
-    treeScene->setExpandsOnDoubleClick(false);
-    treeScene->header()->setSectionResizeMode(0, QHeaderView::ResizeMode::Stretch);
-    treeScene->header()->setStretchLastSection(false);
-    treeScene->header()->setVisible(true);
-    splitterHorizontal->addWidget(treeScene);
+            widgetInner = new QWidget(splitterVertical);
+            widgetInner->setObjectName(QStringLiteral("widgetInner"));
+            horizontalLayout = new QHBoxLayout(widgetInner);
+            horizontalLayout->setSpacing(0);
+            horizontalLayout->setContentsMargins(11, 11, 11, 11);
+            horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+            horizontalLayout->setContentsMargins(0, 0, 0, 0);
+                splitterHorizontal = new QSplitter(widgetInner);
+                splitterHorizontal->setObjectName(QStringLiteral("splitterHorizontal"));
+                splitterHorizontal->setLineWidth(0);
+                splitterHorizontal->setOrientation(Qt::Horizontal);
+                splitterHorizontal->setHandleWidth(4);
+
+                    // ***** Load our custom TreeSceneView for the Scene List
+                    treeScene = new TreeSceneView(splitterHorizontal, this);
+                    treeScene->setStyle(new SceneTreeHighlightProxy(treeScene->style(), treeScene));
+                        QTreeWidgetItem *header_item_scene = new QTreeWidgetItem();
+                        header_item_scene->setIcon(1, QIcon(":/tree_icons/tree_lock_header.png"));
+                        treeScene->setHeaderItem(header_item_scene);
+                    treeScene->setObjectName(QStringLiteral("treeScene"));
+                    treeScene->setColumnCount(2);
+                    treeScene->setColumnWidth(0, 150);
+                    treeScene->setColumnWidth(1, 16);
+                    treeScene->setMinimumSize(QSize(190, 0));
+                    treeScene->setFont(font);
+                    treeScene->setProperty("showDropIndicator", QVariant(false));
+                    treeScene->setDragEnabled(true);
+                    treeScene->setDragDropOverwriteMode(false);
+                    treeScene->setDragDropMode(QAbstractItemView::DragDropMode::InternalMove);
+                    treeScene->setDefaultDropAction(Qt::DropAction::TargetMoveAction);
+                    treeScene->setAlternatingRowColors(false);
+                    treeScene->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
+                    treeScene->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
+                    treeScene->setIndentation(15);
+                    treeScene->setRootIsDecorated(true);
+                    treeScene->setItemsExpandable(true);
+                    treeScene->setExpandsOnDoubleClick(false);
+                    treeScene->header()->setSectionResizeMode(0, QHeaderView::ResizeMode::Stretch);
+                    treeScene->header()->setStretchLastSection(false);
+                    treeScene->header()->setVisible(true);
+                splitterHorizontal->addWidget(treeScene);
+
+            horizontalLayout->addWidget(splitterHorizontal);
+        splitterVertical->addWidget(widgetInner);
+
+            areaBottom = new QScrollArea(splitterVertical);
+            areaBottom->setObjectName(QStringLiteral("areaBottom"));
+            areaBottom->setSizePolicy(sizePolicy1);
+            areaBottom->setMinimumSize(QSize(0, 100));
+            areaBottom->setFont(font);
+            areaBottom->setWidgetResizable(true);
+                widgetBottom = new QWidget();
+                widgetBottom->setObjectName(QStringLiteral("widgetBottom"));
+                widgetBottom->setGeometry(QRect(0, 0, 652, 622));
+                label_1 = new QLabel(widgetBottom);
+                label_1->setObjectName(QStringLiteral("label_1"));
+                label_1->setGeometry(QRect(10, 10, 141, 21));
+                label_1->setFont(font);
+                label_2 = new QLabel(widgetBottom);
+                label_2->setObjectName(QStringLiteral("label_2"));
+                label_2->setGeometry(QRect(10, 30, 141, 21));
+                label_2->setFont(font);
+                label_3 = new QLabel(widgetBottom);
+                label_3->setObjectName(QStringLiteral("label_3"));
+                label_3->setGeometry(QRect(10, 70, 631, 21));
+                label_3->setFont(font);
+                label_object = new QLabel(widgetBottom);
+                label_object->setObjectName(QStringLiteral("label_object"));
+                label_object->setGeometry(QRect(180, 10, 461, 21));
+                label_object->setFont(font);
+                label_object_2 = new QLabel(widgetBottom);
+                label_object_2->setObjectName(QStringLiteral("label_object_2"));
+                label_object_2->setGeometry(QRect(180, 30, 461, 21));
+                label_object_2->setFont(font);
+                label_object_3 = new QLabel(widgetBottom);
+                label_object_3->setObjectName(QStringLiteral("label_object_3"));
+                label_object_3->setGeometry(QRect(180, 50, 461, 21));
+                label_object_3->setFont(font);
+            areaBottom->setWidget(widgetBottom);
+        splitterVertical->addWidget(areaBottom);
+
+    verticalLayout->addWidget(splitterVertical);
+    this->setCentralWidget(widgetCentral);
+
+
+
 
 
     // ***** Load ScrollArea for use in showing the Scene
