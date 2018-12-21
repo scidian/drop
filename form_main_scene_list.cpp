@@ -51,6 +51,7 @@ void FormMain::populateTreeSceneList()
                 sub_sub_item->setText(0, object_pair.second->getComponentPropertyValue(
                                          Object_Components::settings, Object_Properties::name).toString());         // Set text for item
                 sub_sub_item->setData(0, Qt::UserRole, QVariant::fromValue(object_pair.second->getKey()));          // Store item key in user data
+                sub_item->addChild(sub_sub_item);
 
                 // Add lock box
                 QString check_images = QString(" QCheckBox::indicator { width: 12px; height: 12px; }"

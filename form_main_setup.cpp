@@ -218,12 +218,15 @@ void FormMain::buildWindow()
 
             // ***** Load our custom TreeObjectInspector for the Scene List
             treeObject = new TreeObjectInspector(widgetInspector, this);
-                QTreeWidgetItem *header_item_obj = new QTreeWidgetItem();
-                treeObject->setHeaderItem(header_item_obj);
+                //QTreeWidgetItem *header_item_obj = new QTreeWidgetItem();
+                //treeObject->setHeaderItem(header_item_obj);
+                //treeObject->header()->setSectionResizeMode(1, QHeaderView::ResizeMode::Stretch);
+                //treeObject->header()->setStretchLastSection(true);
+                //treeObject->header()->setVisible(false);
             treeObject->setObjectName(QStringLiteral("treeObject"));
-            treeObject->setColumnCount(2);
-            treeObject->setColumnWidth(0, 135);
-            treeObject->setMinimumSize(QSize(135, 150));
+            treeObject->setColumnCount(1);
+            //treeObject->setColumnWidth(0, 135);
+            //treeObject->setMinimumSize(QSize(135, 150));
             //treeObject->setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents);
             treeObject->setFont(font);
             treeObject->setProperty("showDropIndicator", QVariant(false));
@@ -234,13 +237,10 @@ void FormMain::buildWindow()
             treeObject->setAlternatingRowColors(false);
             treeObject->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
             treeObject->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectItems);
-            treeObject->setIndentation(5);
-            treeObject->setRootIsDecorated(true);
+            treeObject->setIndentation(1);
+            treeObject->setRootIsDecorated(false);
             treeObject->setItemsExpandable(true);
-            treeObject->setExpandsOnDoubleClick(true);
-            treeObject->header()->setSectionResizeMode(1, QHeaderView::ResizeMode::Stretch);
-            treeObject->header()->setStretchLastSection(true);
-            treeObject->header()->setVisible(false);
+            treeObject->setExpandsOnDoubleClick(false);
             treeObject->setHeaderHidden(true);
         verticalLayoutObject->addWidget(treeObject);
 

@@ -33,7 +33,7 @@ class TreeObjectInspector;                  // Necessary forward declaration
 
 //####################################################################################
 //##    FormMain - Main editor window
-//####################################################################################
+//############################
 class FormMain : public QMainWindow
 {
     Q_OBJECT
@@ -95,7 +95,7 @@ public:
 //####################################################################################
 //##    TreeObjectInspector
 //##        A sub classed QTreeWidget so we can override events for Object Inspector List
-//####################################################################################
+//############################
 class TreeObjectInspector: public QTreeWidget
 {
     Q_OBJECT
@@ -105,13 +105,26 @@ private:
 public:
     explicit TreeObjectInspector(QWidget *parent, FormMain *main_window) : QTreeWidget (parent), m_parent_window (main_window) { }
 
-//    virtual void dragMoveEvent(QDragMoveEvent *event) override;
-//    virtual void dropEvent(QDropEvent *event) override;
-//    virtual void selectionChanged (const QItemSelection &selected, const QItemSelection &deselected) override;
-//    virtual void startDrag(Qt::DropActions supportedActions) override;
-
     FormMain*    getMainWindow() { return m_parent_window; }
+};
 
+//############################
+//##    TreeObjectInspector
+//##        A sub classed QTreeWidget so we can override events for Object Inspector List
+//############################
+class InspectorCategoryButton : public QPushButton
+{
+    Q_OBJECT
+public:
+    InspectorCategoryButton(const QString& a_Text, QTreeWidget* a_pParent, QTreeWidgetItem* a_pItem, QFrame* new_child);
+
+private slots:
+    void ButtonPressed();
+
+private:
+    QTreeWidgetItem *m_pItem;
+    QFrame          *m_child_frame;
+    QRect           m_rect;
 };
 
 
@@ -119,7 +132,7 @@ public:
 //####################################################################################
 //##    TreeSceneView
 //##        A sub classed QTreeWidget so we can override events for Tree Scene List
-//####################################################################################
+//############################
 class TreeSceneView: public QTreeWidget
 {
     Q_OBJECT
@@ -151,11 +164,11 @@ public:
     int          getMouseY() { return m_mouse_y; }
 };
 
-//####################################################################################
+//############################
 //##    SceneTreeHighlightStyle
 //##        A sub classed QProxyStyle so we can overwrite events and do some custom
 //##        drawing of TreeWidget list divider in Tree Scene List
-//####################################################################################
+//############################
 class SceneTreeHighlightProxy : public QProxyStyle
 {
 private:
