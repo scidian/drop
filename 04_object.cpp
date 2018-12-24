@@ -54,7 +54,8 @@ DrObject::~DrObject()
 
 void DrObject::initializeObjectSettings(std::string new_name)
 {
-    addComponent(Object_Components::settings, "Settings", "Basic settings for current object", Qt::green, true);
+    addComponent(Object_Components::settings, "Settings", "Basic settings for current object", Component_Colors::White_Snow, true);
+    getComponent(Object_Components::settings)->setIcon(Component_Icons::Settings);
 
     addPropertyToComponent(Object_Components::settings, Object_Properties::name, Property_Type::STRING, QString::fromStdString(new_name),
                            "Object Name", "Name of the current object");
@@ -67,7 +68,8 @@ void DrObject::initializeObjectSettings(std::string new_name)
 
 void DrObject::initializeCameraSettings()
 {
-    addComponent(Object_Components::camera_settings, "Camera Settings", "Settings for this camera", Qt::yellow, true);
+    addComponent(Object_Components::camera_settings, "Camera Settings", "Settings for this camera", Component_Colors::Beige_Apricot, true);
+    getComponent(Object_Components::camera_settings)->setIcon(Component_Icons::Camera);
 
     addPropertyToComponent(Object_Components::camera_settings, Object_Properties::camera_zoom, Property_Type::FLOAT, 10,
                            "Zoom Level", "Sets distance away from scene (0 to 1000)");
@@ -76,7 +78,8 @@ void DrObject::initializeCameraSettings()
 
 void DrObject::initializeCharacterSettings()
 {
-    addComponent(Object_Components::character_settings, "Character Settings", "Settings for this character", Qt::cyan, true);
+    addComponent(Object_Components::character_settings, "Character Settings", "Settings for this character", Component_Colors::Blue_Yonder, true);
+    getComponent(Object_Components::character_settings)->setIcon(Component_Icons::Character);
 
     addPropertyToComponent(Object_Components::character_settings, Object_Properties::character_jump_x, Property_Type::FLOAT, 0,
                            "Jump Force X", "Force of jump button in x direction");

@@ -55,7 +55,8 @@ void DrScene::addObject(DrTypes new_type)
 
 void DrScene::initializeSceneSettings(std::string new_name)
 {
-    addComponent(Scene_Components::settings, "Settings", "Basic settings for current scene", Qt::green, true);
+    addComponent(Scene_Components::settings, "Settings", "Basic settings for current scene", Component_Colors::White_Snow, true);
+    getComponent(Object_Components::settings)->setIcon(Component_Icons::Settings);
 
     addPropertyToComponent(Scene_Components::settings, Scene_Properties::name, Property_Type::STRING, QString::fromStdString(new_name),
                            "Scene Name", "Name of the current scene");

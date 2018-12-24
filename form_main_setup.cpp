@@ -93,7 +93,8 @@ void FormMain::applyColoring(Color_Scheme new_color)
     temp4 = globals->color_schemes[new_color][QPalette::ColorRole::HighlightedText];
     temp5 = globals->color_schemes[new_color][QPalette::ColorRole::Dark];
     temp6 = globals->color_schemes[new_color][QPalette::ColorRole::BrightText];
-    QString listColor = QString(" QTreeWidget             { color: " + temp1.name() + ";  background: " + temp2.name() + "; selection-background-color: " + temp3.name() + "; }"
+    QString listColor = QString(" QTreeWidget             { icon-size: 14px 14px; color: " + temp1.name() + ";  background: " + temp2.name() + "; "
+                                                          " selection-background-color: " + temp3.name() + "; }"
                                 " QTreeWidget::item:selected { color: " + temp4.name() + "; background: " + temp3.name() + "; }"
                                 " QTreeWidget::item:hover:selected { color: " + temp5.name() + ";  background: " + temp3.name() + "; }"
                                 " QTreeWidget::item:hover:!selected { color: " + temp6.name() + ";  background: " + temp2.name() + "; }"
@@ -130,17 +131,17 @@ void FormMain::buildWindow()
     QFont font;
     font.setPointSize(11);
 
+    QSizePolicy sizePolicyPreferredHorizontal(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    sizePolicyPreferredHorizontal.setHorizontalStretch(1);
+    sizePolicyPreferredHorizontal.setVerticalStretch(0);
+
+    //QSizePolicy sizePolicyExpanding(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
+    //sizePolicyExpanding.setHorizontalStretch(0);
+    //sizePolicyExpanding.setVerticalStretch(0);
+
     QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    sizePolicy.setHorizontalStretch(1);
+    sizePolicy.setHorizontalStretch(0);
     sizePolicy.setVerticalStretch(0);
-
-    QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
-    sizePolicy1.setHorizontalStretch(0);
-    sizePolicy1.setVerticalStretch(0);
-
-    QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    sizePolicy2.setHorizontalStretch(0);
-    sizePolicy2.setVerticalStretch(0);
 
     // ***** Main window settings
     this->setObjectName(QStringLiteral("formMain"));
@@ -172,29 +173,6 @@ void FormMain::buildWindow()
     assets->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
         widgetAssests = new QWidget();
         widgetAssests->setObjectName(QStringLiteral("widgetAssests"));
-
-            // TEMP TABLE
-            tableWidget = new QTableWidget(widgetAssests);
-            if (tableWidget->columnCount() < 2)
-                tableWidget->setColumnCount(2);
-            tableWidget->setObjectName(QStringLiteral("tableWidget"));
-            tableWidget->setGeometry(QRect(0, 0, 251, 601));
-            tableWidget->setFont(font);
-            tableWidget->setLineWidth(1);
-            tableWidget->setMidLineWidth(0);
-            tableWidget->setSizeAdjustPolicy(QAbstractScrollArea::AdjustIgnored);
-            tableWidget->setAutoScrollMargin(6);
-            tableWidget->setAlternatingRowColors(true);
-            tableWidget->setSelectionMode(QAbstractItemView::NoSelection);
-            tableWidget->setShowGrid(false);
-            tableWidget->setRowCount(0);
-            tableWidget->setColumnCount(2);
-            tableWidget->horizontalHeader()->setVisible(false);
-            tableWidget->horizontalHeader()->setMinimumSectionSize(10);
-            tableWidget->verticalHeader()->setVisible(false);
-            tableWidget->verticalHeader()->setDefaultSectionSize(20);
-            tableWidget->verticalHeader()->setMinimumSectionSize(10);
-
         assets->setWidget(widgetAssests);
     addDockWidget(static_cast<Qt::DockWidgetArea>(1), assets);
 
@@ -202,32 +180,23 @@ void FormMain::buildWindow()
     // ***** Build right Inspector Dock
     inspector = new QDockWidget(this);
     inspector->setObjectName(QStringLiteral("inspector"));
-    inspector->setSizePolicy(sizePolicy2);
+    inspector->setSizePolicy(sizePolicy);
     inspector->setMinimumSize(QSize(300, 139));
     inspector->setFont(font);
     inspector->setFeatures(QDockWidget::DockWidgetMovable);
     inspector->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
         widgetInspector = new QWidget();
         widgetInspector->setObjectName(QStringLiteral("widgetInspector"));
-        widgetInspector->setSizePolicy(sizePolicy2);
+        widgetInspector->setSizePolicy(sizePolicy);
         verticalLayoutObject = new QVBoxLayout(widgetInspector);
-        verticalLayoutObject->setSpacing(2);
-        verticalLayoutObject->setContentsMargins(11, 11, 11, 11);
+        verticalLayoutObject->setSpacing(0);
         verticalLayoutObject->setObjectName(QStringLiteral("verticalLayoutObject"));
-        verticalLayoutObject->setContentsMargins(2, 2, 2, 2);
+        verticalLayoutObject->setContentsMargins(0, 0, 0, 0);
 
             // ***** Load our custom TreeObjectInspector for the Scene List
             treeObject = new TreeObjectInspector(widgetInspector, this);
-                //QTreeWidgetItem *header_item_obj = new QTreeWidgetItem();
-                //treeObject->setHeaderItem(header_item_obj);
-                //treeObject->header()->setSectionResizeMode(1, QHeaderView::ResizeMode::Stretch);
-                //treeObject->header()->setStretchLastSection(true);
-                //treeObject->header()->setVisible(false);
             treeObject->setObjectName(QStringLiteral("treeObject"));
             treeObject->setColumnCount(1);
-            //treeObject->setColumnWidth(0, 135);
-            //treeObject->setMinimumSize(QSize(135, 150));
-            //treeObject->setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents);
             treeObject->setFont(font);
             treeObject->setProperty("showDropIndicator", QVariant(false));
             treeObject->setDragEnabled(false);
@@ -237,7 +206,7 @@ void FormMain::buildWindow()
             treeObject->setAlternatingRowColors(false);
             treeObject->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
             treeObject->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectItems);
-            treeObject->setIndentation(1);
+            treeObject->setIndentation(0);
             treeObject->setRootIsDecorated(false);
             treeObject->setItemsExpandable(true);
             treeObject->setExpandsOnDoubleClick(false);
@@ -286,10 +255,9 @@ void FormMain::buildWindow()
     // ***** Build central widgets
     widgetCentral = new QWidget(this);
     widgetCentral->setObjectName(QStringLiteral("widgetCentral"));
-    widgetCentral->setSizePolicy(sizePolicy);
+    widgetCentral->setSizePolicy(sizePolicyPreferredHorizontal);
     verticalLayout = new QVBoxLayout(widgetCentral);
     verticalLayout->setSpacing(2);
-    verticalLayout->setContentsMargins(11, 11, 11, 11);
     verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
     verticalLayout->setContentsMargins(2, 2, 2, 2);
         splitterVertical = new QSplitter(widgetCentral);
@@ -301,7 +269,6 @@ void FormMain::buildWindow()
             widgetInner->setObjectName(QStringLiteral("widgetInner"));
             horizontalLayout = new QHBoxLayout(widgetInner);
             horizontalLayout->setSpacing(0);
-            horizontalLayout->setContentsMargins(11, 11, 11, 11);
             horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
             horizontalLayout->setContentsMargins(0, 0, 0, 0);
                 splitterHorizontal = new QSplitter(widgetInner);
@@ -344,7 +311,7 @@ void FormMain::buildWindow()
 
             areaBottom = new QScrollArea(splitterVertical);
             areaBottom->setObjectName(QStringLiteral("areaBottom"));
-            areaBottom->setSizePolicy(sizePolicy1);
+            areaBottom->setSizePolicy(sizePolicy);
             areaBottom->setMinimumSize(QSize(0, 100));
             areaBottom->setFont(font);
             areaBottom->setWidgetResizable(true);

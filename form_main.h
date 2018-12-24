@@ -57,7 +57,7 @@ private:
 
     // Custom classes for Object Inspector
     TreeObjectInspector *treeObject;
-    QTableWidget  *tableWidget;
+
 
     // Normal Qt Classes for simple objects
     QMenu         *menuDrop;
@@ -124,7 +124,7 @@ private slots:
 private:
     QTreeWidgetItem *m_pItem;
     QFrame          *m_child_frame;
-    QRect           m_rect;
+    QRect            m_rect;
 };
 
 

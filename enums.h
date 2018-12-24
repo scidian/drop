@@ -57,9 +57,48 @@ enum class DrTypes
 //####################################################################################
 //##    Some public forward function declarations
 //####################################################################################
-std::string StringFromType(DrTypes drtype);
 bool        CheckTypesAreSame(DrTypes type1, DrTypes type2);
 bool        IsDrObjectClass(DrTypes type_to_check);
+std::string StringFromType(DrTypes drtype);
+
+
+//####################################################################################
+//##    Possible background colors for Component Categories
+//####################################################################################
+namespace Component_Colors
+{
+    const QColor White_Snow     { QColor(255, 252, 249, 255) };
+    const QColor Silver_Sonic   { QColor(117, 112, 131, 255) };
+
+    const QColor Orange_Medium  { QColor(221, 110,  66, 255) };
+
+    const QColor Pink_Pearl     { QColor(228, 180, 194, 255) };
+    const QColor Red_Faded      { QColor(255, 105, 120, 255) };
+
+    const QColor Red_Tuscan     { QColor(104,  71,  86, 255) };
+    const QColor Purple_Pastel  { QColor(176, 161, 186, 255) };
+    const QColor Blue_Yonder    { QColor(165, 181, 191, 255) };
+
+    const QColor Green_SeaGrass { QColor(154, 225, 157, 255) };
+
+    const QColor Brown_Sugar    { QColor(165, 117,  72, 255) };
+    const QColor Beige_Apricot  { QColor(252, 215, 173, 255) };
+
+
+};
+
+
+//####################################################################################
+//##    Possible icons for Component Categories
+//####################################################################################
+namespace Component_Icons
+{
+    const QString Settings      { QString(":/inspector_icons/comp_settings.png") };
+    const QString Physics       { QString(":/inspector_icons/comp_physics.png") };
+    const QString Camera        { QString(":/inspector_icons/comp_camera.png") };
+    const QString Character     { QString(":/inspector_icons/comp_character.png") };
+    const QString None          { QString("") };
+};
 
 
 //####################################################################################

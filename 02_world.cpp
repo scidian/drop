@@ -84,7 +84,8 @@ DrScene* DrWorld::getSceneWithName(std::string scene_name)
 
 void DrWorld::initializeWorldSettings(std::string new_name)
 {
-    addComponent(World_Components::settings, "Settings", "Basic settings for current world", Qt::green, true);
+    addComponent(World_Components::settings, "Settings", "Basic settings for current world", Component_Colors::White_Snow, true);
+    getComponent(Object_Components::settings)->setIcon(Component_Icons::Settings);
     addPropertyToComponent(World_Components::settings, World_Properties::name, Property_Type::STRING, QString::fromStdString(new_name),
                            "World Name", "Name of the current world");
     addPropertyToComponent(World_Components::settings, World_Properties::game_direction, Property_Type::FLOAT, 0.0,
@@ -92,7 +93,8 @@ void DrWorld::initializeWorldSettings(std::string new_name)
     addPropertyToComponent(World_Components::settings, World_Properties::score_multiplier, Property_Type::FLOAT, 1.0,
                            "Score Multiplier", "Value used as multiplier to adjust speed at which distance scoring is calculated");
 
-    addComponent(World_Components::physics, "Physics", "Starting physics settings for current world", Qt::yellow, true);
+    addComponent(World_Components::physics, "Physics", "Starting physics settings for current world", Component_Colors::Red_Faded, true);
+    getComponent(World_Components::physics)->setIcon(Component_Icons::Physics);
     addPropertyToComponent(World_Components::physics, World_Properties::use_physics, Property_Type::BOOL, true,
                            "Use Physics?", "Whether or not physics is turned on in current world");
     addPropertyToComponent(World_Components::physics, World_Properties::gravity, Property_Type::POINT2D, QList<QVariant>({ 0.0, 10.0 }),

@@ -30,54 +30,86 @@ void FormMain::buildObjectInspector()
     label_object_2->setText("");
     label_object_3->setText("");
 
+    // Retrieve list of components for selected item
     ComponentMap components = project->findSettingsFromKey( selected_key )->getComponentList();
 
-
-    // Inserts properties into Object Inspector Tree
+    // Loop through each component and add it to the Object Inspector list
     int rowCount = 0;
     treeObject->clear();
     for (auto i: components)
     {
+        // Creates a frame to hold all properties of component, with vertical layout
+        QFrame *properties_frame = new QFrame(treeObject);
+        QBoxLayout *vertical_layout = new QVBoxLayout(properties_frame);
+        vertical_layout->setSpacing(0);
+        vertical_layout->setMargin(0);
+        vertical_layout->setContentsMargins(0,0,0,0);
 
-        //####################
-        QTreeWidgetItem *pCategory = new QTreeWidgetItem();
-
-        QFrame *pFrame = new QFrame(treeObject);
-        QBoxLayout *pLayout = new QVBoxLayout(pFrame);
-        pLayout->setSpacing(0);
-        pLayout->setMargin(0);
-        pLayout->setContentsMargins(0,0,0,0);
-        pLayout->addWidget(new QPushButton("Btn1"));
-        pLayout->addWidget(new QPushButton("Btn2"));
-
-        treeObject->addTopLevelItem(pCategory);
-        treeObject->setItemWidget(pCategory, 0, new InspectorCategoryButton(i.second->getDisplayNameQString(), treeObject, pCategory, pFrame) );
-
-        QTreeWidgetItem *sub_item = new QTreeWidgetItem();
-        sub_item->setDisabled(true);
-        pCategory->addChild(sub_item);
-        treeObject->setItemWidget(sub_item, 0, pFrame);
-        //####################
-
-//        QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(treeObject);                             // Create new item (top level item)
-//        //topLevelItem->setTextColor(0, i.second->getColor());
-//        topLevelItem->setBackgroundColor(0, i.second->getColor());
-//        topLevelItem->setFirstColumnSpanned(true);
-//        topLevelItem->setText(0, i.second->getDisplayNameQString());
-//        topLevelItem->setData(0, Qt::UserRole, QVariant::fromValue(i.second->getComponentKey()));    // Stores component key in list iser data
-//        treeObject->addTopLevelItem(topLevelItem);                                                   // Add it on our tree as the top item.
-
-
+        // Loop through each property and add it to the component frame
         for (auto j: i.second->getPropertyList())
         {
-            QTreeWidgetItem *sub_item = new QTreeWidgetItem(pCategory);
+            //QTreeWidgetItem *sub_item = new QTreeWidgetItem(new_category);
             //sub_item->setIcon(0, QIcon(":/tree_icons/tree_object.png"));
-            sub_item->setText(0, j.second->getDisplayNameQString());
+            //sub_item->setText(0, j.second->getDisplayNameQString());
             //sub_item->setData(0, Qt::UserRole, QVariant::fromValue(object_pair.second->getKey()));
 
+            QFrame *single_row = new QFrame(properties_frame);
+            QBoxLayout *horizontal_split = new QHBoxLayout(single_row);
+            horizontal_split->setSpacing(0);
+            horizontal_split->setMargin(0);
+            horizontal_split->setContentsMargins(2,2,2,2);
+
+            QLabel *property_name = new QLabel(j.second->getDisplayNameQString());
+            QString label_color = QString(" QLabel { color: " + globals->color_schemes[globals->current_color_scheme][QPalette::ColorRole::Mid].name() + "; }");
+            property_name->setStyleSheet(label_color);
+            QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
+            sp_left.setHorizontalStretch(1);
+            property_name->setSizePolicy(sp_left);
+            horizontal_split->addWidget(property_name);
+
+
+            QSpinBox *spin_int = new QSpinBox();
+            QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
+            sp_right.setHorizontalStretch(2);
+            spin_int->setSizePolicy(sp_right);
+
+            horizontal_split->addWidget(spin_int);
+
+
+
+
+
+            vertical_layout->addWidget(single_row);
             rowCount++;
         }
 
+        // Create new item in list to hold component
+        QTreeWidgetItem *new_category = new QTreeWidgetItem();
+        new_category->setData(0, Qt::UserRole, QVariant::fromValue(i.second->getComponentKey()));           // Stores component key in list user data
+
+        // Create and style a button to be used as a header item for the category
+        InspectorCategoryButton *category_button = new InspectorCategoryButton(QString(" ") + i.second->getDisplayNameQString(),
+                                                                               treeObject, new_category, properties_frame);
+        QString buttonColor = QString(
+                    " QPushButton { height: 24px; font: 13px; text-align: left; icon-size: 20px 16px; "
+                        " color: " + globals->color_schemes[globals->current_color_scheme][QPalette::ColorRole::Button].name() + "; "
+                        " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 " +
+                                i.second->getColor().name() + ", stop:1 " + i.second->getColor().darker(250).name() + "); "
+                        " border: none; border-radius: 0px; }"
+                    " QPushButton:hover:!pressed { color: " + globals->color_schemes[globals->current_color_scheme][QPalette::ColorRole::BrightText].name() + ";}"
+                    " QPushButton:pressed { color: " + globals->color_schemes[globals->current_color_scheme][QPalette::ColorRole::Button].darker().name() + "; }");
+        category_button->setIcon(QIcon(i.second->getIcon()));
+        category_button->setStyleSheet(buttonColor);
+
+        // Add the TreeWidgetItem to the tree and apply the button as the widget for that tree item
+        treeObject->addTopLevelItem(new_category);
+        treeObject->setItemWidget(new_category, 0, category_button);
+
+        // Create a child TreeWidgetItem attached to the TopLevel category item, and apply the property box as the widget for that tree item
+        QTreeWidgetItem *property_box = new QTreeWidgetItem();
+        property_box->setDisabled(true);
+        new_category->addChild(property_box);
+        treeObject->setItemWidget(property_box, 0, properties_frame);
 
     }
 
@@ -86,12 +118,15 @@ void FormMain::buildObjectInspector()
 
 
 
+
+
 InspectorCategoryButton::InspectorCategoryButton(const QString& a_Text, QTreeWidget* a_pParent, QTreeWidgetItem* a_pItem, QFrame* new_child)
     : QPushButton(a_Text, a_pParent),
       m_pItem(a_pItem),
       m_child_frame(new_child)
 {
-    connect(this, SIGNAL(pressed()), this, SLOT(ButtonPressed()));
+    //connect(this, SIGNAL(pressed()), this, SLOT(ButtonPressed()));
+    connect(this, SIGNAL(clicked()), this, SLOT(ButtonPressed()));
 }
 
 void InspectorCategoryButton::ButtonPressed()
