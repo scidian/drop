@@ -30,9 +30,9 @@ public:
 
 
     // Getters and setters
-    virtual DrTypes getType() override { return DrTypes::World; }
-    DrProject*      getParentProject() { return m_parent_project; }
-    SceneMap        getSceneMap() { return m_scenes; }
+    virtual DrTypes getType() override  { return DrTypes::World; }
+    DrProject*      getParentProject()  { return m_parent_project; }
+    SceneMap        getSceneMap()       { return m_scenes; }
 
 
     // External calls

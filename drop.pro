@@ -39,7 +39,8 @@ SOURCES += \
     form_main.cpp \
     form_main_setup.cpp \
     form_main_scene_list.cpp \
-    form_main_inspector.cpp
+    form_main_inspector.cpp \
+    form_main_assets.cpp
 
 HEADERS += \
     enums.h \

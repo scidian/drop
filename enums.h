@@ -101,6 +101,32 @@ namespace Component_Icons
 };
 
 
+
+//####################################################################################
+//##    Possible Headers and Descriptions for items within editor
+//####################################################################################
+typedef QList<std::string> HeaderBodyList;
+
+namespace Advisor_Info
+{
+    const HeaderBodyList Asset_List            { "Asset List", "These are items that can be dragged into your scene. Changing the properties of these "
+                                                               "items will affect all instances of those items project wide" };
+    const HeaderBodyList Object_Inspector      { "Object Inspector", " Blah Blah" };
+    const HeaderBodyList Scene_List            { "Scene List", "Lists the items contained within the currently displayed scene. Select items to view "
+                                                               "/ adjust properties for each item." };
+
+    const HeaderBodyList World_Object          { "World Object", "This is a world object" };
+    const HeaderBodyList Scene_Object          { "Scene Object", "This is a scene object" };
+    const HeaderBodyList Camera_Object         { "Camera Object", "This is a camera object" };
+    const HeaderBodyList Character_Object      { "Character Object", "This is a character object" };
+    const HeaderBodyList Object_Object         { "Object", "This is an object" };
+
+    const HeaderBodyList Not_Set               { "Not Set", "Fix me!!!!!!" };
+};
+
+
+
+
 //####################################################################################
 //##    World - Possible components and their properties
 //####################################################################################

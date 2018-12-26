@@ -6,16 +6,19 @@
 //          Edit Scene
 //          Edit UI
 //          Node Map: World / UI Layout
-//          SNode Map: Scene Layout
+//          Scene Map: Scene Layout
 //
 //      Main Components of FormMain while in normal "Edit Scene" mode:
 //          Top Area (Toolbar)
-//          Asset List (Dock)
+//          Advisor (Dock)
 //          Object Inspector (Dock)
-//          Scene Area
-//          Scene List
-//          Variable List
-//          Bottom Area (Labels, Scenes?)
+//
+//          Selectable Components:
+//              Asset List (Dock)
+//              Scene Area
+//              Scene List
+//              Variable List
+//              Bottom Area (Labels, Scenes?)
 //
 
 #ifndef MAINWINDOW_H
@@ -29,6 +32,17 @@
 
 class TreeSceneView;                        // Necessary forward declaration
 class TreeObjectInspector;                  // Necessary forward declaration
+class TreeAssetList;                        // Necessary forward declaration
+
+enum class Label_Names
+{
+    Label1,
+    Label2,
+    Label3,
+    LabelObject1,
+    LabelObject2,
+    LabelObject3,
+};
 
 
 //####################################################################################
@@ -46,11 +60,6 @@ public:
     DrProject      *project;                                            // Holds whatever the current open game project is
     long            current_world;                                      // Tracks which world to show in the scene viewer
 
-    // Public labels to make changing text easier
-    QScrollArea   *areaBottom;
-    QLabel        *label_1,         *label_2,           *label_3;
-    QLabel        *label_object,    *label_object_2,    *label_object_3;
-
 private:
     // Custom classes for Scene List
     TreeSceneView       *treeScene;
@@ -58,18 +67,26 @@ private:
     // Custom classes for Object Inspector
     TreeObjectInspector *treeObject;
 
+    // Custom classes for Asset List
+    TreeAssetList       *treeAsset;
 
     // Normal Qt Classes for simple objects
     QMenu         *menuDrop;
     QMenuBar      *menuBar;
-    QWidget       *widgetAssests, *widgetBottom, *widgetCentral, *widgetInner, *widgetInspector, *widgetToolbar;
+    QWidget       *widgetAdvisor, *widgetAssests, *widgetBottom, *widgetCentral, *widgetInner, *widgetInspector, *widgetToolbar;
+    QScrollArea   *areaBottom;
+    QTreeWidget   *treeAdvisor;
 
     QHBoxLayout   *horizontalLayout;
-    QVBoxLayout   *verticalLayout, *verticalLayoutObject;
+    QVBoxLayout   *verticalLayout, *verticalLayoutObject, *verticalLayoutAdvisor, *verticalLayoutAsset;
     QSplitter     *splitterHorizontal, *splitterVertical;
 
-    QDockWidget   *assets, *inspector, *toolbar;
+    QDockWidget   *advisor, *assets, *inspector, *toolbar;
     QPushButton   *buttonAtlas, *buttonFonts, *buttonPlay, *buttonSettings, *buttonWorlds;
+
+    // Labels to display info
+    QLabel        *label_1,         *label_2,           *label_3;
+    QLabel        *label_object_1,  *label_object_2,    *label_object_3;
 
 public:
     // Constructor and Destructor
@@ -81,6 +98,10 @@ public:
     void            applyPalette(Color_Scheme new_scheme);
     void            buildWindow();
 
+    // Member functions
+    void            setAdvisorInfo(HeaderBodyList header_body_list);
+    void            setLabelText(Label_Names label_name, QString new_text);
+
     // Tree Scene List Handling
     void            listSelectionChanged(QList<QTreeWidgetItem*> item_list);
     void            populateTreeSceneList();
@@ -88,6 +109,8 @@ public:
     // Object Inspector Handling
     void            buildObjectInspector();
 
+private:
+    void            setAdvisorInfo(QString header_text, QString body_text);         // Make function private to force calls with Advisor type from enums.h
 };
 
 
@@ -105,12 +128,16 @@ private:
 public:
     explicit TreeObjectInspector(QWidget *parent, FormMain *main_window) : QTreeWidget (parent), m_parent_window (main_window) { }
 
+    // Event Overrides, start at Qt Documentation for QTreeWidget Class to find more events
+    virtual void enterEvent(QEvent *event) override;                                                            // Inherited from QWidget
+
+    // Getters and setters
     FormMain*    getMainWindow() { return m_parent_window; }
 };
 
 //############################
-//##    TreeObjectInspector
-//##        A sub classed QTreeWidget so we can override events for Object Inspector List
+//##    InspectorCategoryButton
+//##        A sub classed QPushButton so we can override events for header buttons in Object Inspector List
 //############################
 class InspectorCategoryButton : public QPushButton
 {
@@ -147,11 +174,14 @@ private:
 public:
     explicit TreeSceneView(QWidget *parent, FormMain *main_window) : QTreeWidget (parent), m_parent_window (main_window) { }
 
-    virtual void dragMoveEvent(QDragMoveEvent *event) override;
-    virtual void dropEvent(QDropEvent *event) override;
-    virtual void selectionChanged (const QItemSelection &selected, const QItemSelection &deselected) override;
-    virtual void startDrag(Qt::DropActions supportedActions) override;
+    // Event Overrides, start at Qt Documentation for QTreeWidget Class to find more events
+    virtual void dragMoveEvent(QDragMoveEvent *event) override;                                                 // Inherited from QAbstractItemView
+    virtual void dropEvent(QDropEvent *event) override;                                                         // Inherited from QTreeWidget
+    virtual void selectionChanged (const QItemSelection &selected, const QItemSelection &deselected) override;  // Inherited from QTreeView
+    virtual void startDrag(Qt::DropActions supportedActions) override;                                          // Inherited from QAbstractItemView
+    virtual void enterEvent(QEvent *event) override;                                                            // Inherited from QWidget
 
+    // Getters and setters
     FormMain*    getMainWindow() { return m_parent_window; }
     long         getSelectedKey() { return m_selected_key; }
     void         setSelectedKey(long new_key) { m_selected_key = new_key; }
@@ -183,6 +213,24 @@ public:
 };
 
 
+//####################################################################################
+//##    TreeAssetList
+//##        A sub classed QTreeWidget so we can override events for Assests List
+//############################
+class TreeAssetList: public QTreeWidget
+{
+    Q_OBJECT
+private:
+    FormMain    *m_parent_window;
+
+public:
+    explicit TreeAssetList(QWidget *parent, FormMain *main_window) : QTreeWidget (parent), m_parent_window (main_window) { }
+
+    // Event Overrides, start at Qt Documentation for QTreeWidget Class to find more events
+    virtual void enterEvent(QEvent *event) override;                                                            // Inherited from QWidget
+
+    FormMain*    getMainWindow() { return m_parent_window; }
+};
 
 
 

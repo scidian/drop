@@ -86,37 +86,27 @@ void FormMain::applyColoring(Color_Scheme new_color)
     this->buttonWorlds->setGraphicsEffect(effect[4]);
 
 
-    // ********** Custom coloring for TreeSceneView
+    // ********** Custom coloring for TreeLists
     temp1 = globals->color_schemes[new_color][QPalette::ColorRole::Foreground];
     temp2 = globals->color_schemes[new_color][QPalette::ColorRole::Base];
     temp3 = globals->color_schemes[new_color][QPalette::ColorRole::Highlight];
     temp4 = globals->color_schemes[new_color][QPalette::ColorRole::HighlightedText];
     temp5 = globals->color_schemes[new_color][QPalette::ColorRole::Dark];
     temp6 = globals->color_schemes[new_color][QPalette::ColorRole::BrightText];
-    QString listColor = QString(" QTreeWidget             { icon-size: 14px 14px; color: " + temp1.name() + ";  background: " + temp2.name() + "; "
+    QString listColor = QString(" QTreeWidget             { color: " + temp1.name() + ";  background: " + temp2.name() + "; "
                                                           " selection-background-color: " + temp3.name() + "; }"
                                 " QTreeWidget::item:selected { color: " + temp4.name() + "; background: " + temp3.name() + "; }"
                                 " QTreeWidget::item:hover:selected { color: " + temp5.name() + ";  background: " + temp3.name() + "; }"
                                 " QTreeWidget::item:hover:!selected { color: " + temp6.name() + ";  background: " + temp2.name() + "; }"
                                 " QHeaderView::section { background-color: " + temp2.name() + "; border: 0px; }"
                                 " QScrollBar:vertical { border: 2px solid grey; background: #32CC99; width: 14px; margin: 10px 0 10px 0; }");
-    treeScene->header()->setStyleSheet(listColor);
-    treeScene->setStyleSheet(listColor);
+    this->treeObject->setStyleSheet(listColor);
+    this->treeAdvisor->setStyleSheet(listColor);
 
-    // ********** Custom coloring for TreeObjectInspector
-    temp1 = globals->color_schemes[new_color][QPalette::ColorRole::Foreground];
-    temp2 = globals->color_schemes[new_color][QPalette::ColorRole::Base];
-    temp3 = globals->color_schemes[new_color][QPalette::ColorRole::Highlight];
-    temp4 = globals->color_schemes[new_color][QPalette::ColorRole::HighlightedText];
-    temp5 = globals->color_schemes[new_color][QPalette::ColorRole::Dark];
-    temp6 = globals->color_schemes[new_color][QPalette::ColorRole::BrightText];
-    QString listObjColor = QString(" QTreeWidget             { color: " + temp1.name() + ";  background: " + temp2.name() + "; selection-background-color: " + temp3.name() + "; }"
-                                   " QTreeWidget::item:selected { color: " + temp4.name() + "; background: " + temp3.name() + "; }"
-                                   " QTreeWidget::item:hover:selected { color: " + temp5.name() + ";  background: " + temp3.name() + "; }"
-                                   " QTreeWidget::item:hover:!selected { color: " + temp6.name() + ";  background: " + temp2.name() + "; }"
-                                   " QHeaderView::section { background-color: " + temp2.name() + "; border: 0px; }");
-    treeObject->header()->setStyleSheet(listObjColor);
-    treeObject->setStyleSheet(listColor);
+    // ********** Cusotm coloring for TreeSceneView
+    QString listColorScene = listColor + " QTreeWidget { icon-size: 14px 14px; }";
+    this->treeScene->header()->setStyleSheet(listColorScene);
+    this->treeScene->setStyleSheet(listColorScene);
 
 }
 
@@ -128,20 +118,27 @@ void FormMain::applyColoring(Color_Scheme new_color)
 //####################################################################################
 void FormMain::buildWindow()
 {
-    QFont font;
+    QFont font, fontLarger;
     font.setPointSize(11);
+    fontLarger.setPointSize(13);
+
+    // Other size policies to play with
+    //QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Minimum);
+    //QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::MinimumExpanding);
+    //QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored);
+    //QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
+
+    QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    sizePolicy.setHorizontalStretch(0);
+    sizePolicy.setVerticalStretch(0);
 
     QSizePolicy sizePolicyPreferredHorizontal(QSizePolicy::Preferred, QSizePolicy::Preferred);
     sizePolicyPreferredHorizontal.setHorizontalStretch(1);
     sizePolicyPreferredHorizontal.setVerticalStretch(0);
 
-    //QSizePolicy sizePolicyExpanding(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
-    //sizePolicyExpanding.setHorizontalStretch(0);
-    //sizePolicyExpanding.setVerticalStretch(0);
-
-    QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    sizePolicy.setHorizontalStretch(0);
-    sizePolicy.setVerticalStretch(0);
+    QSizePolicy sizePolicyPreferredVertical(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    sizePolicyPreferredHorizontal.setHorizontalStretch(0);
+    sizePolicyPreferredHorizontal.setVerticalStretch(1);
 
     // ***** Main window settings
     this->setObjectName(QStringLiteral("formMain"));
@@ -169,28 +166,91 @@ void FormMain::buildWindow()
     assets->setObjectName(QStringLiteral("assets"));
     assets->setMinimumSize(QSize(180, 35));
     assets->setFont(font);
-    assets->setFeatures(QDockWidget::DockWidgetMovable);
+    assets->setFeatures(QDockWidget::DockWidgetMovable);  // | QDockWidget::DockWidgetClosable);
     assets->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
         widgetAssests = new QWidget();
         widgetAssests->setObjectName(QStringLiteral("widgetAssests"));
+        widgetAssests->setSizePolicy(sizePolicyPreferredVertical);
+        verticalLayoutAsset = new QVBoxLayout(widgetAssests);
+        verticalLayoutAsset->setObjectName(QStringLiteral("verticalLayoutAsset"));
+        verticalLayoutAsset->setSpacing(0);
+        verticalLayoutAsset->setContentsMargins(0, 0, 0, 0);
+
+            // ***** Load our custom TreeObjectInspector for the Scene List
+            treeAsset = new TreeAssetList(widgetAssests, this);
+            treeAsset->setObjectName(QStringLiteral("treeAsset"));
+            treeAsset->setColumnCount(1);
+            treeAsset->setFont(font);
+            treeAsset->setProperty("showDropIndicator", QVariant(false));
+            treeAsset->setDragEnabled(false);
+            treeAsset->setDragDropOverwriteMode(false);
+            treeAsset->setDragDropMode(QAbstractItemView::DragDropMode::NoDragDrop);
+            treeAsset->setDefaultDropAction(Qt::DropAction::TargetMoveAction);
+            treeAsset->setAlternatingRowColors(false);
+            treeAsset->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
+            treeAsset->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectItems);
+            treeAsset->setIndentation(0);
+            treeAsset->setRootIsDecorated(false);
+            treeAsset->setItemsExpandable(true);
+            treeAsset->setExpandsOnDoubleClick(false);
+            treeAsset->setHeaderHidden(true);
+        verticalLayoutAsset->addWidget(treeAsset);
+
         assets->setWidget(widgetAssests);
     addDockWidget(static_cast<Qt::DockWidgetArea>(1), assets);
+
+
+    // ***** Build right Advisor Dock
+    advisor = new QDockWidget(this);
+    advisor->setObjectName(QStringLiteral("advisor"));
+    advisor->setMinimumSize(QSize(300, 80));
+    advisor->setSizePolicy(sizePolicy);
+    advisor->setFont(font);
+    advisor->setFeatures(QDockWidget::DockWidgetMovable);  // | QDockWidget::DockWidgetClosable);
+    advisor->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+        widgetAdvisor = new QWidget();
+        widgetAdvisor->setObjectName(QStringLiteral("widgetAdvisor"));
+        widgetAdvisor->setSizePolicy(sizePolicy);
+        widgetAdvisor->setMaximumHeight(140);
+        verticalLayoutAdvisor = new QVBoxLayout(widgetAdvisor);
+        verticalLayoutAdvisor->setObjectName(QStringLiteral("verticalLayoutAdvisor"));
+        verticalLayoutAdvisor->setSpacing(2);
+        verticalLayoutAdvisor->setContentsMargins(1, 1, 1, 1);
+            treeAdvisor = new TreeObjectInspector(widgetInspector, this);
+            treeAdvisor->setObjectName(QStringLiteral("treeObject"));
+            treeAdvisor->setColumnCount(1);
+            treeAdvisor->setFont(fontLarger);
+            treeAdvisor->setProperty("showDropIndicator", QVariant(false));
+            treeAdvisor->setDragEnabled(false);
+            treeAdvisor->setDragDropOverwriteMode(false);
+            treeAdvisor->setDragDropMode(QAbstractItemView::DragDropMode::NoDragDrop);
+            treeAdvisor->setDefaultDropAction(Qt::DropAction::IgnoreAction);
+            treeAdvisor->setAlternatingRowColors(false);
+            treeAdvisor->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
+            treeAdvisor->setIndentation(12);
+            treeAdvisor->setRootIsDecorated(false);
+            treeAdvisor->setItemsExpandable(false);
+            treeAdvisor->setExpandsOnDoubleClick(false);
+            treeAdvisor->setHeaderHidden(true);
+        verticalLayoutAdvisor->addWidget(treeAdvisor);
+        advisor->setWidget(widgetAdvisor);
+    addDockWidget(static_cast<Qt::DockWidgetArea>(2), advisor);
 
 
     // ***** Build right Inspector Dock
     inspector = new QDockWidget(this);
     inspector->setObjectName(QStringLiteral("inspector"));
-    inspector->setSizePolicy(sizePolicy);
-    inspector->setMinimumSize(QSize(300, 139));
+    inspector->setSizePolicy(sizePolicyPreferredVertical);
+    inspector->setMinimumSize(QSize(300, 250));
     inspector->setFont(font);
     inspector->setFeatures(QDockWidget::DockWidgetMovable);
     inspector->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
         widgetInspector = new QWidget();
         widgetInspector->setObjectName(QStringLiteral("widgetInspector"));
-        widgetInspector->setSizePolicy(sizePolicy);
+        widgetInspector->setSizePolicy(sizePolicyPreferredVertical);
         verticalLayoutObject = new QVBoxLayout(widgetInspector);
-        verticalLayoutObject->setSpacing(0);
         verticalLayoutObject->setObjectName(QStringLiteral("verticalLayoutObject"));
+        verticalLayoutObject->setSpacing(0);
         verticalLayoutObject->setContentsMargins(0, 0, 0, 0);
 
             // ***** Load our custom TreeObjectInspector for the Scene List
@@ -215,6 +275,10 @@ void FormMain::buildWindow()
 
         inspector->setWidget(widgetInspector);
     addDockWidget(static_cast<Qt::DockWidgetArea>(2), inspector);
+
+
+    // ***** Can force adjust size of docks with QMainWindow::resizeDocks call
+    //resizeDocks({advisor, inspector}, {100 , 300}, Qt::Vertical);
 
 
     // ***** Build top Toolbar Dock
@@ -268,8 +332,8 @@ void FormMain::buildWindow()
             widgetInner = new QWidget(splitterVertical);
             widgetInner->setObjectName(QStringLiteral("widgetInner"));
             horizontalLayout = new QHBoxLayout(widgetInner);
-            horizontalLayout->setSpacing(0);
             horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+            horizontalLayout->setSpacing(0);
             horizontalLayout->setContentsMargins(0, 0, 0, 0);
                 splitterHorizontal = new QSplitter(widgetInner);
                 splitterHorizontal->setObjectName(QStringLiteral("splitterHorizontal"));
@@ -330,10 +394,10 @@ void FormMain::buildWindow()
                 label_3->setObjectName(QStringLiteral("label_3"));
                 label_3->setGeometry(QRect(10, 70, 631, 21));
                 label_3->setFont(font);
-                label_object = new QLabel(widgetBottom);
-                label_object->setObjectName(QStringLiteral("label_object"));
-                label_object->setGeometry(QRect(180, 10, 461, 21));
-                label_object->setFont(font);
+                label_object_1 = new QLabel(widgetBottom);
+                label_object_1->setObjectName(QStringLiteral("label_object"));
+                label_object_1->setGeometry(QRect(180, 10, 461, 21));
+                label_object_1->setFont(font);
                 label_object_2 = new QLabel(widgetBottom);
                 label_object_2->setObjectName(QStringLiteral("label_object_2"));
                 label_object_2->setGeometry(QRect(180, 30, 461, 21));
@@ -374,13 +438,14 @@ void FormMain::buildWindow()
 
     // ***** Set titles and button texts
     setWindowTitle(QApplication::translate("MainWindow", "Drop", nullptr));
+    advisor->setWindowTitle(QApplication::translate("MainWindow", "Advisor", nullptr));
     assets->setWindowTitle(QApplication::translate("MainWindow", "Assets", nullptr));
     inspector->setWindowTitle(QApplication::translate("MainWindow", "Inspector", nullptr));
     menuDrop->setTitle(QApplication::translate("MainWindow", "File", nullptr));
     label_1->setText(QApplication::translate("MainWindow", "TextLabel", nullptr));
     label_2->setText(QApplication::translate("MainWindow", "TextLabel", nullptr));
     label_3->setText(QApplication::translate("MainWindow", "TextLabel", nullptr));
-    label_object->setText(QApplication::translate("MainWindow", "Object ID, Type", nullptr));
+    label_object_1->setText(QApplication::translate("MainWindow", "Object ID, Type", nullptr));
     label_object_2->setText(QApplication::translate("MainWindow", "Object ID, Type", nullptr));
     label_object_3->setText(QApplication::translate("MainWindow", "Object ID, Type", nullptr));
     buttonAtlas->setText(QApplication::translate("MainWindow", "Atlases", nullptr));

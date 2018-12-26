@@ -67,6 +67,13 @@ void FormMain::populateTreeSceneList()
     treeScene->expandAll();                                             // Expand all items
 }
 
+// Handles changing the Advisor on Mouse Enter
+void TreeSceneView::enterEvent(QEvent *event)
+{
+    getMainWindow()->setAdvisorInfo(Advisor_Info::Scene_List);
+    QTreeWidget::enterEvent(event);
+}
+
 
 
 //####################################################################################
@@ -102,8 +109,8 @@ void TreeSceneView::dragMoveEvent(QDragMoveEvent *event)
 {
     m_mouse_x = event->pos().x();
     m_mouse_y = event->pos().y();
-    getMainWindow()->label_1->setText(QString::fromStdString("MX: ") + QString::number(m_mouse_x) +
-                                      QString::fromStdString(", MY: ") + QString::number(m_mouse_y) );
+    getMainWindow()->setLabelText(Label_Names::Label1, QString::fromStdString("MX: ") + QString::number(m_mouse_x) +
+                                                       QString::fromStdString(", MY: ") + QString::number(m_mouse_y) );
 
     // Get item under mouse, if not null lets process it to see if we will allow dropping there
     QTreeWidgetItem *item_at = this->itemAt(event->pos());
@@ -111,8 +118,8 @@ void TreeSceneView::dragMoveEvent(QDragMoveEvent *event)
     if (item_at != nullptr)
     {
         long        check_key = item_at->data(0, Qt::UserRole).toLongLong();
-        getMainWindow()->label_object_3->setText(QString::fromStdString("Selected: " + std::to_string(m_selected_key) +
-                                                                      ", Checking: " + std::to_string(check_key)) );
+        getMainWindow()->setLabelText(Label_Names::LabelObject3, QString::fromStdString("Selected: " + std::to_string(m_selected_key) +
+                                                                                        ", Checking: " + std::to_string(check_key)) );
         // Check if its the same type as already selected, if so allow possible drop
         if (m_is_dragging && m_selected_key != 0 && check_key != 0) {
             DrSettings *check_settings = getMainWindow()->project->findSettingsFromKey(check_key);
@@ -244,8 +251,8 @@ void SceneTreeHighlightProxy::drawPrimitive(PrimitiveElement element, const QSty
             painter->drawLine(QPoint(0, option->rect.top()), QPoint(option->rect.right() + 50, option->rect.top()));
         }
 
-        m_parent_tree->getMainWindow()->label_2->setText(QString::fromStdString("TLX: ") + QString::number(option->rect.topLeft().x()) +
-                                                         QString::fromStdString(", TLY: ") + QString::number(option->rect.topLeft().y()));
+        m_parent_tree->getMainWindow()->setLabelText(Label_Names::Label2, QString::fromStdString("TLX: ") + QString::number(option->rect.topLeft().x()) +
+                                                                          QString::fromStdString(", TLY: ") + QString::number(option->rect.topLeft().y()));
     }
     else
     {

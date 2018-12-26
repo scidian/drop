@@ -60,14 +60,58 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) : QMainWindow(parent),
     // TEMP:
     //      Test loading data out from a pair, i.e. "POINT2D", stored as QList<QVariant>
     QList<QVariant> myPoint = project->getWorld(current_world)->getComponentProperty(World_Components::physics, World_Properties::gravity)->getValue().toList();
-    label_1->setText("Gravity X:" + myPoint.first().toString());
-    label_2->setText("Gravity Y:" + myPoint.last().toString());
+    setLabelText(Label_Names::Label1, "Gravity X:" + myPoint.first().toString());
+    setLabelText(Label_Names::Label2, "Gravity Y:" + myPoint.last().toString());
 
 
 }
 
+// Sets the Advisor Dock text
+void FormMain::setAdvisorInfo(HeaderBodyList header_body_list)
+{
+    setAdvisorInfo(QString::fromStdString(header_body_list[0]), QString::fromStdString(header_body_list[1]));
+}
+void FormMain::setAdvisorInfo(QString header_text, QString body_text)
+{
+    // Clear advisor tree
+    treeAdvisor->clear();
 
+    // Insert top level item to act as header
+    QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(treeAdvisor);
+    topLevelItem->setText(0, header_text);
+    treeAdvisor->addTopLevelItem(topLevelItem);
 
+    // Create child tree item for body
+    QTreeWidgetItem *sub_item = new QTreeWidgetItem(topLevelItem);
+    topLevelItem->addChild(sub_item);
+
+    // Create a label to display body text and format
+    QLabel *body_label = new QLabel(body_text);
+    QFont font_label;
+    font_label.setPointSize(11);
+    body_label->setFont(font_label);
+    body_label->setWordWrap(true);
+    body_label->setAlignment(Qt::AlignTop);
+    body_label->setStyleSheet("QLabel { color : " + globals->color_schemes[globals->current_color_scheme][QPalette::ColorRole::WindowText].name() + "; } ");
+
+    // Apply label to tree, expand all
+    treeAdvisor->setItemWidget(sub_item, 0, body_label);
+    treeAdvisor->expandAll();
+}
+
+// Sets the text of a label on FormMain
+void FormMain::setLabelText(Label_Names label_name, QString new_text)
+{
+    switch (label_name)
+    {
+    case Label_Names::Label1:       label_1->setText(new_text);         break;
+    case Label_Names::Label2:       label_2->setText(new_text);         break;
+    case Label_Names::Label3:       label_3->setText(new_text);         break;
+    case Label_Names::LabelObject1: label_object_1->setText(new_text);    break;
+    case Label_Names::LabelObject2: label_object_2->setText(new_text);  break;
+    case Label_Names::LabelObject3: label_object_3->setText(new_text);  break;
+    }
+}
 
 
 
@@ -100,9 +144,9 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) : QMainWindow(parent),
 //    std::string type_string2 = StringFromType(project->findTypeFromKey( treeScene->getSelectedKey() ));
 //    std::string type_string = StringFromType(selected_item_settings->getType());
 
-//    label_object->setText("KEY: " + QString::number( treeScene->getSelectedKey() ) + ", TYPE: " + QString::fromStdString(type_string));
-//    label_object_2->setText("COMPONENT: " + QString::number(component_key) +   ", NAME: " + QString::fromStdString(component_name));
-//    label_object_3->setText("PROPERTY: " + QString::number(property_key) +   ", NAME: " + QString::fromStdString(property_name));
+//    setLabelText(Label_Names::LabelObject1, "KEY: " + QString::number( treeScene->getSelectedKey() ) + ", TYPE: " + QString::fromStdString(type_string));
+//    setLabelText(Label_Names::LabelObject2, "COMPONENT: " + QString::number(component_key) +   ", NAME: " + QString::fromStdString(component_name));
+//    setLabelText(Label_Names::LabelObject3, "PROPERTY: " + QString::number(property_key) +   ", NAME: " + QString::fromStdString(property_name));
 
 //}
 

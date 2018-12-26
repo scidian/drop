@@ -26,9 +26,21 @@ void FormMain::buildObjectInspector()
     long        selected_key = treeScene->getSelectedKey();
     DrTypes     selected_type = project->findTypeFromKey( selected_key );
     std::string type_string = StringFromType(selected_type);
-    label_object->setText("KEY: " + QString::number( selected_key ) + ", TYPE: " + QString::fromStdString(type_string));
-    label_object_2->setText("");
-    label_object_3->setText("");
+    setLabelText(Label_Names::LabelObject1, "KEY: " + QString::number( selected_key ) + ", TYPE: " + QString::fromStdString(type_string));
+    setLabelText(Label_Names::LabelObject2, "");
+    setLabelText(Label_Names::LabelObject3, "");
+
+
+    // Change Advisor text after new item selection
+    switch (selected_type) {
+    case DrTypes::World:        setAdvisorInfo(Advisor_Info::World_Object);         break;
+    case DrTypes::Scene:        setAdvisorInfo(Advisor_Info::Scene_Object);         break;
+    case DrTypes::Camera:       setAdvisorInfo(Advisor_Info::Camera_Object);        break;
+    case DrTypes::Character:    setAdvisorInfo(Advisor_Info::Character_Object);     break;
+    case DrTypes::Object:       setAdvisorInfo(Advisor_Info::Object_Object);        break;
+    default:                    setAdvisorInfo(Advisor_Info::Not_Set);
+    }
+
 
     // Retrieve list of components for selected item
     ComponentMap components = project->findSettingsFromKey( selected_key )->getComponentList();
@@ -61,6 +73,9 @@ void FormMain::buildObjectInspector()
 
             QLabel *property_name = new QLabel(j.second->getDisplayNameQString());
             QString label_color = QString(" QLabel { color: " + globals->color_schemes[globals->current_color_scheme][QPalette::ColorRole::Mid].name() + "; }");
+            QFont font_property;
+            font_property.setPointSize(11);
+            property_name->setFont(font_property);
             property_name->setStyleSheet(label_color);
             QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
             sp_left.setHorizontalStretch(1);
@@ -69,6 +84,7 @@ void FormMain::buildObjectInspector()
 
 
             QSpinBox *spin_int = new QSpinBox();
+            spin_int->setFont(font_property);
             QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
             sp_right.setHorizontalStretch(2);
             spin_int->setSizePolicy(sp_right);
@@ -90,14 +106,11 @@ void FormMain::buildObjectInspector()
         // Create and style a button to be used as a header item for the category
         InspectorCategoryButton *category_button = new InspectorCategoryButton(QString(" ") + i.second->getDisplayNameQString(),
                                                                                treeObject, new_category, properties_frame);
-        QString buttonColor = QString(
-                    " QPushButton { height: 24px; font: 13px; text-align: left; icon-size: 20px 16px; "
-                        " color: " + globals->color_schemes[globals->current_color_scheme][QPalette::ColorRole::Button].name() + "; "
-                        " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 " +
-                                i.second->getColor().name() + ", stop:1 " + i.second->getColor().darker(250).name() + "); "
-                        " border: none; border-radius: 0px; }"
-                    " QPushButton:hover:!pressed { color: " + globals->color_schemes[globals->current_color_scheme][QPalette::ColorRole::BrightText].name() + ";}"
-                    " QPushButton:pressed { color: " + globals->color_schemes[globals->current_color_scheme][QPalette::ColorRole::Button].darker().name() + "; }");
+        QString buttonColor = QString(" QPushButton { height: 24px; font: 13px; text-align: left; icon-size: 20px 16px; color: #000000; "
+                                                    " border: none; border-radius: 0px; background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 " +
+                                                    i.second->getColor().name() + ", stop:1 " + i.second->getColor().darker(250).name() + "); } "
+                                      " QPushButton:hover:!pressed { color: #FFFFFF; } "
+                                      " QPushButton:pressed { color: #333333; }");
         category_button->setIcon(QIcon(i.second->getIcon()));
         category_button->setStyleSheet(buttonColor);
 
@@ -117,6 +130,12 @@ void FormMain::buildObjectInspector()
 }
 
 
+// Handles changing the Advisor on Mouse Enter
+void TreeObjectInspector::enterEvent(QEvent *event)
+{
+    getMainWindow()->setAdvisorInfo(Advisor_Info::Object_Inspector);
+    QTreeWidget::enterEvent(event);
+}
 
 
 
