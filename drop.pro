@@ -40,7 +40,9 @@ SOURCES += \
     form_main_setup.cpp \
     form_main_scene_list.cpp \
     form_main_inspector.cpp \
-    form_main_assets.cpp
+    form_main_assets.cpp \
+    form_main_scene.cpp \
+    05_item.cpp
 
 HEADERS += \
     enums.h \
@@ -53,7 +55,8 @@ HEADERS += \
     10_asset.h \
     30_settings.h \
     form_main.h \
-    globals.h
+    globals.h \
+    05_item.h
 
 FORMS +=
 

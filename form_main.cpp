@@ -26,10 +26,15 @@ FormMain::~FormMain()
 //####################################################################################
 FormMain::FormMain(QWidget *parent, Globals *the_globals) : QMainWindow(parent), globals(the_globals)
 {
+
+    populateScene();
+
+
+
+
     // Initialize form and customize colors and styles
-    applyPalette(globals->current_color_scheme);
     buildWindow();
-    applyColoring(globals->current_color_scheme);
+    applyColoring();
 
 
     // Initialize new project, initialize local variables
@@ -54,6 +59,12 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) : QMainWindow(parent),
 
     // Builds out scene list from current project data
     populateTreeSceneList();
+
+
+
+
+
+
 
 
 
@@ -92,7 +103,7 @@ void FormMain::setAdvisorInfo(QString header_text, QString body_text)
     body_label->setFont(font_label);
     body_label->setWordWrap(true);
     body_label->setAlignment(Qt::AlignTop);
-    body_label->setStyleSheet("QLabel { color : " + globals->color_schemes[globals->current_color_scheme][QPalette::ColorRole::WindowText].name() + "; } ");
+    body_label->setStyleSheet("QLabel { color : " + globals->getColor(Window_Colors::Text).name() + "; } ");
 
     // Apply label to tree, expand all
     treeAdvisor->setItemWidget(sub_item, 0, body_label);

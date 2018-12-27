@@ -15,5 +15,6 @@
         <file>inspector_icons/comp_camera.png</file>
         <file>inspector_icons/comp_character.png</file>
         <file>inspector_icons/comp_physics.png</file>
+        <file>qt4logo.png</file>
     </qresource>
 </RCC>

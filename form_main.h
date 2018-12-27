@@ -30,10 +30,13 @@
 #include "01_project.h"
 #include "globals.h"
 
-class TreeSceneView;                        // Necessary forward declaration
-class TreeObjectInspector;                  // Necessary forward declaration
-class TreeAssetList;                        // Necessary forward declaration
+// Necessary forward declarations
+class SceneGraphicsView;
+class TreeSceneView;
+class TreeObjectInspector;
+class TreeAssetList;
 
+// Local enum for referencing debug labels
 enum class Label_Names
 {
     Label1,
@@ -61,6 +64,10 @@ public:
     long            current_world;                                      // Tracks which world to show in the scene viewer
 
 private:
+    // Holds the currently selected scene, ready for rendering in a QGraphicsView
+    QGraphicsScene      *scene;
+    SceneGraphicsView   *viewMain;
+
     // Custom classes for Scene List
     TreeSceneView       *treeScene;
 
@@ -94,13 +101,15 @@ public:
     ~FormMain();
 
     // Form setup
-    void            applyColoring(Color_Scheme new_color);
-    void            applyPalette(Color_Scheme new_scheme);
+    void            applyColoring();
     void            buildWindow();
 
     // Member functions
     void            setAdvisorInfo(HeaderBodyList header_body_list);
     void            setLabelText(Label_Names label_name, QString new_text);
+
+    // Scene Handling
+    void            populateScene();
 
     // Tree Scene List Handling
     void            listSelectionChanged(QList<QTreeWidgetItem*> item_list);
@@ -115,6 +124,41 @@ private:
 
 
 
+
+//####################################################################################
+//##    SceneGraphicsView
+//##        A sub classed QGraphics so we can override events for our View Area
+//############################
+class SceneGraphicsView : public QGraphicsView
+{
+    Q_OBJECT
+
+private:
+    // Local member variables
+    FormMain   *m_parent_window;
+    int         m_zoom = 250;
+    int         m_rotate = 0;
+
+public:
+    // Constructor
+    explicit SceneGraphicsView(QWidget *parent, FormMain *main_window) : QGraphicsView(parent = nullptr), m_parent_window (main_window) { }
+
+    // Event overrides
+#if QT_CONFIG(wheelevent)
+    void wheelEvent(QWheelEvent *) override;
+#endif
+
+    // Getters and setters
+    FormMain*    getMainWindow() { return m_parent_window; }
+
+    // Custom handling functions
+    void applyUpdatedMatrix();
+    void zoomInOut(int level);
+
+};
+
+
+
 //####################################################################################
 //##    TreeObjectInspector
 //##        A sub classed QTreeWidget so we can override events for Object Inspector List
@@ -122,6 +166,7 @@ private:
 class TreeObjectInspector: public QTreeWidget
 {
     Q_OBJECT
+
 private:
     FormMain    *m_parent_window;
 
@@ -142,6 +187,7 @@ public:
 class InspectorCategoryButton : public QPushButton
 {
     Q_OBJECT
+
 public:
     InspectorCategoryButton(const QString& a_Text, QTreeWidget* a_pParent, QTreeWidgetItem* a_pItem, QFrame* new_child);
 
@@ -163,6 +209,7 @@ private:
 class TreeSceneView: public QTreeWidget
 {
     Q_OBJECT
+
 private:
     FormMain    *m_parent_window;
     long         m_selected_key = 0;                                    // Holds first selected item in QTreeWidget (treeScene)
@@ -220,6 +267,7 @@ public:
 class TreeAssetList: public QTreeWidget
 {
     Q_OBJECT
+
 private:
     FormMain    *m_parent_window;
 
