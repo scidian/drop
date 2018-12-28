@@ -109,17 +109,20 @@ typedef QList<std::string> HeaderBodyList;
 
 namespace Advisor_Info
 {
-    const HeaderBodyList Asset_List            { "Asset List", "These are items that can be dragged into your scene. Changing the properties of these "
-                                                               "items will affect all instances of those items project wide" };
-    const HeaderBodyList Object_Inspector      { "Object Inspector", " Blah Blah" };
-    const HeaderBodyList Scene_List            { "Scene List", "Lists the items contained within the currently displayed scene. Select items to view "
-                                                               "/ adjust properties for each item." };
+    const HeaderBodyList Asset_List            { "Asset List", "These are items that can be dragged into your scene. Changing the properties "
+                                                               "of these items will affect all instances of those items project wide." };
+    const HeaderBodyList Object_Inspector      { "Object Inspector", "Displays editable properties of currently selected item." };
+    const HeaderBodyList Scene_Area            { "Scene View", "Shows objects and layout of currently selected Scene. Drop assets into Scene "
+                                                               "View to add to Scene." };
+    const HeaderBodyList Scene_List            { "Scene List", "Lists the items contained within the currently displayed scene. Select items "
+                                                               "to view / adjust properties for each item." };
+    const HeaderBodyList Advisor_Window        { "Advisor Window", "Shows a brief description of editor objects." };
 
-    const HeaderBodyList World_Object          { "World Object", "This is a world object" };
-    const HeaderBodyList Scene_Object          { "Scene Object", "This is a scene object" };
-    const HeaderBodyList Camera_Object         { "Camera Object", "This is a camera object" };
+    const HeaderBodyList World_Object          { "World Object", "A World is a container of Scenes." };
+    const HeaderBodyList Scene_Object          { "Scene Object", "A Scene is a container of Objects." };
+    const HeaderBodyList Camera_Object         { "Camera Object", "This is a camera object. This object will decide what the player sees." };
     const HeaderBodyList Character_Object      { "Character Object", "This is a character object" };
-    const HeaderBodyList Object_Object         { "Object", "This is an object" };
+    const HeaderBodyList Object_Object         { "Object", "This is an object in a Scene." };
 
     const HeaderBodyList Not_Set               { "Not Set", "Fix me!!!!!!" };
 };

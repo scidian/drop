@@ -190,7 +190,7 @@ void FormMain::buildWindow()
     advisor->setMinimumSize(QSize(300, 80));
     advisor->setSizePolicy(sizePolicy);
     advisor->setFont(font);
-    advisor->setFeatures(QDockWidget::DockWidgetMovable);  // | QDockWidget::DockWidgetClosable);
+    advisor->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable);
     advisor->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
         widgetAdvisor = new QWidget();
         widgetAdvisor->setObjectName(QStringLiteral("widgetAdvisor"));
@@ -200,8 +200,8 @@ void FormMain::buildWindow()
         verticalLayoutAdvisor->setObjectName(QStringLiteral("verticalLayoutAdvisor"));
         verticalLayoutAdvisor->setSpacing(2);
         verticalLayoutAdvisor->setContentsMargins(1, 1, 1, 1);
-            treeAdvisor = new TreeObjectInspector(widgetInspector, this);
-            treeAdvisor->setObjectName(QStringLiteral("treeObject"));
+            treeAdvisor = new TreeAdvisorList(widgetInspector, this);
+            treeAdvisor->setObjectName(QStringLiteral("treeAdvisor"));
             treeAdvisor->setColumnCount(1);
             treeAdvisor->setFont(fontLarger);
             treeAdvisor->setProperty("showDropIndicator", QVariant(false));
@@ -360,7 +360,6 @@ void FormMain::buildWindow()
                     viewMain->setObjectName(QStringLiteral("viewMain"));
                     viewMain->setRenderHint(QPainter::Antialiasing, false);
                     viewMain->setDragMode(QGraphicsView::DragMode::RubberBandDrag);
-                    //viewMain->setDragMode(QGraphicsView::ScrollHandDrag);                     // ** <-- want this on space bar hold
                     viewMain->setOptimizationFlags(QGraphicsView::DontSavePainterState);
                     viewMain->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
                     viewMain->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);

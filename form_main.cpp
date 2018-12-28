@@ -90,6 +90,7 @@ void FormMain::setAdvisorInfo(HeaderBodyList header_body_list)
 void FormMain::changeAdvisor(HeaderBodyList header_body_list)
 {
     static bool updating_me = false;
+    if (advisor->isHidden()) return;            // If Advisor dock was closed get out of here
     if (updating_me) return;
     updating_me = true;
 
@@ -132,7 +133,7 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
     case Label_Names::Label1:       label_1->setText(new_text);         break;
     case Label_Names::Label2:       label_2->setText(new_text);         break;
     case Label_Names::Label3:       label_3->setText(new_text);         break;
-    case Label_Names::LabelObject1: label_object_1->setText(new_text);    break;
+    case Label_Names::LabelObject1: label_object_1->setText(new_text);  break;
     case Label_Names::LabelObject2: label_object_2->setText(new_text);  break;
     case Label_Names::LabelObject3: label_object_3->setText(new_text);  break;
     }

@@ -1,6 +1,6 @@
 //
 //
-//      Handles dealing with the Asset List
+//      Handles dealing with the Advisor
 //
 //
 
@@ -17,11 +17,8 @@
 
 
 // Handles changing the Advisor on Mouse Enter
-void TreeAssetList::enterEvent(QEvent *event)
+void TreeAdvisorList::enterEvent(QEvent *event)
 {
-    getMainWindow()->setAdvisorInfo(Advisor_Info::Asset_List);
+    getMainWindow()->setAdvisorInfo(Advisor_Info::Advisor_Window);
     QTreeWidget::enterEvent(event);
 }
-
-
-

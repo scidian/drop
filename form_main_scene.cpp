@@ -45,18 +45,49 @@ void FormMain::populateScene()
 }
 
 
+// Handles changing the Advisor on Mouse Enter
+void SceneGraphicsView::enterEvent(QEvent *event)
+{
+    setFocus(Qt::FocusReason::MouseFocusReason);
+    getMainWindow()->setAdvisorInfo(Advisor_Info::Scene_Area);
+    QGraphicsView::enterEvent(event);
+}
+void SceneGraphicsView::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() & Qt::Key::Key_Space)
+    {
+        setDragMode(QGraphicsView::DragMode::ScrollHandDrag);
+        setInteractive(false);
+    }
+    QGraphicsView::keyPressEvent(event);
+}
+void SceneGraphicsView::keyReleaseEvent(QKeyEvent *event)
+{
+    if (event->key() & Qt::Key::Key_Space)
+    {
+        setDragMode(QGraphicsView::DragMode::RubberBandDrag);
+        setInteractive(true);
+    }
+    QGraphicsView::keyReleaseEvent(event);
+}
+void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
+{
+
+    QGraphicsView::mouseMoveEvent(event);
+}
+
 #if QT_CONFIG(wheelevent)
 void SceneGraphicsView::wheelEvent(QWheelEvent *e)
 {
-    //if (e->modifiers() & Qt::KeyboardModifier::ControlModifier) {
+    if (e->modifiers() & Qt::KeyboardModifier::ControlModifier) {
+        QGraphicsView::wheelEvent(e);
+    } else {
         if (e->delta() > 0)
             zoomInOut(8);
         else
             zoomInOut(-8);
         e->accept();
-    //} else {
-    //    QGraphicsView::wheelEvent(e);
-    //}
+    }
 }
 #endif
 

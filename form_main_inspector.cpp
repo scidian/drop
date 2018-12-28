@@ -16,15 +16,6 @@
 #include "form_main.h"
 
 
-// Handles changing the Advisor on Mouse Enter
-void TreeObjectInspector::enterEvent(QEvent *event)
-{
-    getMainWindow()->setAdvisorInfo(Advisor_Info::Object_Inspector);
-    QTreeWidget::enterEvent(event);
-}
-
-
-
 //####################################################################################
 //
 //  Need to finish dynamically building object inspector
@@ -137,6 +128,16 @@ void FormMain::buildObjectInspector()
 
     treeObject->expandAll();
 }
+
+
+
+// Handles changing the Advisor on Mouse Enter
+void TreeObjectInspector::enterEvent(QEvent *event)
+{
+    getMainWindow()->setAdvisorInfo(Advisor_Info::Object_Inspector);
+    QTreeWidget::enterEvent(event);
+}
+
 
 
 // Constructor for category button, gives button a way to pass click to custom function

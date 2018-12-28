@@ -12,14 +12,6 @@
 #include "form_main.h"
 
 
-// Handles changing the Advisor on Mouse Enter
-void TreeSceneView::enterEvent(QEvent *event)
-{
-    getMainWindow()->setAdvisorInfo(Advisor_Info::Scene_List);
-    QTreeWidget::enterEvent(event);
-}
-
-
 //####################################################################################
 //##        Populates Tree Scene List based on project data
 //####################################################################################
@@ -75,6 +67,15 @@ void FormMain::populateTreeSceneList()
     treeScene->expandAll();                                             // Expand all items
 }
 
+
+
+
+// Handles changing the Advisor on Mouse Enter
+void TreeSceneView::enterEvent(QEvent *event)
+{
+    getMainWindow()->setAdvisorInfo(Advisor_Info::Scene_List);
+    QTreeWidget::enterEvent(event);
+}
 
 
 
