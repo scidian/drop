@@ -11,105 +11,87 @@
 //##        Apply palette / coloring / styling to children widgets
 //####################################################################################
 void FormMain::applyColoring()
-{    
-    // ********** Custom blue dot image for QSplitter (horizontal)
-    QString splitColor = QString(" QSplitter { width: 4px; } QSplitter::handle { image: url(:/tree_icons/splitter_h.png); } ");
-    this->splitterHorizontal->setStyleSheet(splitColor);
+{
+    QString style_sheet = QString(
+        " QMainWindow { background: " + globals->getColor(Window_Colors::Background_Light).name() + "; }" +
+        " QMainWindow::separator { border: 1px solid " + globals->getColor(Window_Colors::Background_Light).name() + "; }"
 
-    QString scrollVColor = QString(" QScrollBar:vertical { width: 12px; margin: 0px; border-radius: 6px; "
-                                   "     background: " + globals->getColor(Window_Colors::Button_Light).name() + " ;} "
-                                   " QScrollBar::handle:vertical {      margin: 2px; border-radius: 4px; "
-                                   "     background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
-                                   "     stop:0 " + globals->getColor(Window_Colors::Icon_Dark).name() +
-                                   "   , stop:1 " + globals->getColor(Window_Colors::Background_Dark).name() + "); } "
-                                   " QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; } "
-                                   " QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { height: 0px; } ");
-    QString scrollHColor = QString(" QScrollBar:horizontal { height: 12px; margin: 0px; border-radius: 6px; "
-                                   "     background: " + globals->getColor(Window_Colors::Button_Light).name() + " ;} "
-                                   " QScrollBar::handle:horizontal {      margin: 2px; border-radius: 4px; "
-                                   "     background: qlineargradient(spread:pad, x1:0 y1:0, x2:1 y2:0, "
-                                   "     stop:0 " + globals->getColor(Window_Colors::Icon_Dark).name() +
-                                   "   , stop:1 " + globals->getColor(Window_Colors::Background_Dark).name() + "); } "
-                                   " QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; } "
-                                   " QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal { width: 0px; } ");
+        " QSplitter { width: 4px; } "
+        " QSplitter::handle:vertical { image: url(:/tree_icons/splitter_v.png); } "
+        " QSplitter::handle:horizontal { image: url(:/tree_icons/splitter_h.png); } "
 
-    QColor temp1, temp2, temp3, temp4, temp5, temp6;  
+        " QScrollBar:vertical { width: 12px; margin: 0px; border-radius: 6px; "
+        "       background: " + globals->getColor(Window_Colors::Button_Light).name() + "; } "
+        " QScrollBar::handle:vertical { margin: 2px; border-radius: 4px; "
+        "       background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
+        "                   stop:0 " + globals->getColor(Window_Colors::Icon_Dark).name() + ", "
+        "                   stop:1 " + globals->getColor(Window_Colors::Background_Dark).name() + "); } "
+        " QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; } "
+        " QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { height: 0px; } "
 
-    // ********** Custom coloring for QPushButtons
-    temp1 = globals->getColor(Window_Colors::Text);
-    temp2 = globals->getColor(Window_Colors::Button_Light);
-    temp3 = globals->getColor(Window_Colors::Button_Dark);
-    temp4 = globals->getColor(Window_Colors::Shadow_Light);
-    temp5 = globals->getColor(Window_Colors::Highlight);
-    QString buttonColor = QString(" QPushButton { color: " + temp1.name() + "; "
-                                                " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 " +
-                                                    temp2.name() + ", stop:1 " + temp3.name() + "); "
-                                                " border: none; border-radius: 6px; }"
-                                  " QPushButton:hover:!pressed { color: " + temp5.name() + "; background: " + temp2.name() + "; }"
-                                  " QPushButton:pressed { color: " + temp5.name() + "; background: " + temp4.name() + "; }");
-    this->buttonAtlas->setStyleSheet(buttonColor);
-    this->buttonFonts->setStyleSheet(buttonColor);
-    this->buttonPlay->setStyleSheet(buttonColor);
-    this->buttonSettings->setStyleSheet(buttonColor);
-    this->buttonWorlds->setStyleSheet(buttonColor);
+        " QScrollBar:horizontal { height: 12px; margin: 0px; border-radius: 6px; "
+        "       background: " + globals->getColor(Window_Colors::Button_Light).name() + " ;} "
+        " QScrollBar::handle:horizontal {      margin: 2px; border-radius: 4px; "
+        "       background: qlineargradient(spread:pad, x1:0 y1:0, x2:1 y2:0, "
+        "                   stop:0 " + globals->getColor(Window_Colors::Icon_Dark).name() + ", "
+        "                   stop:1 " + globals->getColor(Window_Colors::Background_Dark).name() + "); } "
+        " QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; } "
+        " QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal { width: 0px; } "
 
-    // Shadow effect for buttons
-    QGraphicsDropShadowEffect* effect[5];
-    for (int i = 0; i < 5; i++)
-    {
-        effect[i] = new QGraphicsDropShadowEffect();
-        effect[i]->setBlurRadius(6);
-        effect[i]->setOffset(0,3);
-        effect[i]->setColor(globals->getColor(Window_Colors::Shadow_Dark));
-    }
-    this->buttonAtlas->setGraphicsEffect(effect[0]);
-    this->buttonFonts->setGraphicsEffect(effect[1]);
-    this->buttonPlay->setGraphicsEffect(effect[2]);
-    this->buttonSettings->setGraphicsEffect(effect[3]);
-    this->buttonWorlds->setGraphicsEffect(effect[4]);
+        " QPushButton { color: " + globals->getColor(Window_Colors::Text).name() + "; "
+        "       background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
+        "                   stop:0 " + globals->getColor(Window_Colors::Button_Light).name() + ", "
+        "                   stop:1 " + globals->getColor(Window_Colors::Button_Dark).name() + "); "
+        "       border: none; border-radius: 6px; }"
+        " QPushButton:hover:!pressed { color: " + globals->getColor(Window_Colors::Highlight).name() + "; "
+        "       background: " + globals->getColor(Window_Colors::Button_Light).name() + "; }"
+        " QPushButton:pressed { color: " + globals->getColor(Window_Colors::Highlight).name() + "; "
+        "       background: " + globals->getColor(Window_Colors::Shadow_Light).name() + "; }"
 
-    // ********** Custom coloring for TreeLists
-    temp1 = globals->getColor(Window_Colors::Text);
-    temp2 = globals->getColor(Window_Colors::Background_Dark);
-    temp3 = globals->getColor(Window_Colors::Midlight);
-    temp4 = globals->getColor(Window_Colors::Icon_Dark);
-    temp5 = globals->getColor(Window_Colors::Icon_Light);
-    temp6 = globals->getColor(Window_Colors::Highlight);
-    QString listColor = QString(" QTreeWidget             { color: " + temp1.name() + ";  background: " + temp2.name() + "; "
-                                                          " selection-background-color: " + temp3.name() + "; }"
-                                " QTreeWidget::item:selected { color: " + temp4.name() + "; background: " + temp3.name() + "; }"
-                                " QTreeWidget::item:hover:selected { color: " + temp5.name() + ";  background: " + temp3.name() + "; }"
-                                " QTreeWidget::item:hover:!selected { color: " + temp6.name() + ";  background: " + temp2.name() + "; }"
-                                " QHeaderView::section { background-color: " + temp2.name() + "; border: 0px; }" + scrollVColor + scrollHColor);
-    this->treeAdvisor->setStyleSheet(listColor);
-    this->treeObject->setStyleSheet(listColor);
-    this->treeAsset->setStyleSheet(listColor);
+        " QTreeWidget { icon-size: 14px 14px; }"
+        " QTreeWidget { color: " + globals->getColor(Window_Colors::Text).name() + ";  "
+        "       background: " + globals->getColor(Window_Colors::Background_Dark).name() + "; "
+        "       selection-background-color: " + globals->getColor(Window_Colors::Midlight).name() + "; }"
+        " QTreeWidget::item:selected { color: " + globals->getColor(Window_Colors::Icon_Dark).name() + "; "
+        "       background: " + globals->getColor(Window_Colors::Midlight).name() + "; }"
+        " QTreeWidget::item:hover:selected { color: " + globals->getColor(Window_Colors::Icon_Light).name() + "; "
+        "       background: " + globals->getColor(Window_Colors::Midlight).name() + "; }"
+        " QTreeWidget::item:hover:!selected { color: " + globals->getColor(Window_Colors::Highlight).name() + "; "
+        "       background: " + globals->getColor(Window_Colors::Background_Dark).name() + "; }"
 
-    // ********** Cusotm coloring for TreeSceneView
-    QString listColorScene = listColor + " QTreeWidget { icon-size: 14px 14px; }";
-    this->treeScene->header()->setStyleSheet(listColorScene);
-    this->treeScene->setStyleSheet(listColorScene);
+        " QHeaderView::section { "
+        "       background-color: " + globals->getColor(Window_Colors::Background_Dark).name() + "; "
+        "       border: 0px; }"
 
-    // ********** Custom coloring for Graphics View
-    QString viewColor = QString(" QGraphicsView { background: " + globals->getColor(Window_Colors::Background_Light).name() + "; }"
-                                + scrollVColor + scrollHColor);
-    this->viewMain->setStyleSheet(viewColor);
+        " QDockWidget { font-size: 11px; color: " + globals->getColor(Window_Colors::Text).name() + "; } "
+        " QDockWidget::title { text-align: center; "
+        "       background: qlineargradient(x1:0 y1:0, x2:0 y2:1, "
+        "                   stop:0 " + globals->getColor(Window_Colors::Icon_Light).name() + ", "
+        "                   stop:1 " + globals->getColor(Window_Colors::Background_Dark).name() + "); } "
 
-    QString mainColor = QString(" QMainWindow { background: " + globals->getColor(Window_Colors::Background_Light).name() + "; }" +
-                                " QMainWindow::separator { border: 1px solid " + globals->getColor(Window_Colors::Background_Light).name() + "; }");
-    this->setStyleSheet(mainColor);
+        " QGraphicsView { background: " + globals->getColor(Window_Colors::Background_Light).name() + "; }"
+        " QGraphicsView::corner { background: transparent; } "
 
+        " QScrollArea { background: " + globals->getColor(Window_Colors::Background_Dark).name() + "; }"
+    );
 
-    QString dockColor = QString(" QDockWidget { color: " + globals->getColor(Window_Colors::Text).name() + "; "
-                                "     background: qlineargradient(x1:0 y1:0, x2:0 y2:1, "
-                                "     stop:0 " + globals->getColor(Window_Colors::Icon_Light).name() +
-                                "   , stop:1 " + globals->getColor(Window_Colors::Icon_Dark).name() + "); } ");
-    this->assets->setStyleSheet(dockColor);
-    this->advisor->setStyleSheet(dockColor);
-    this->inspector->setStyleSheet(dockColor);
+    this->setStyleSheet(style_sheet);
 
-    QString widgetColor = QString(" QWidget { border: 0px; background: " + globals->getColor(Window_Colors::Background_Light).name() + "; }");
-    this->widgetBottom->setStyleSheet(widgetColor);
+    applyDropShadow(buttonAtlas,    6, 0, 3, globals->getColor(Window_Colors::Shadow_Dark));
+    applyDropShadow(buttonFonts,    6, 0, 3, globals->getColor(Window_Colors::Shadow_Dark));
+    applyDropShadow(buttonPlay,     6, 0, 3, globals->getColor(Window_Colors::Shadow_Dark));
+    applyDropShadow(buttonSettings, 6, 0, 3, globals->getColor(Window_Colors::Shadow_Dark));
+    applyDropShadow(buttonWorlds,   6, 0, 3, globals->getColor(Window_Colors::Shadow_Dark));
+}
+
+void FormMain::applyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color)
+{
+    QGraphicsDropShadowEffect *shadow_effect;
+    shadow_effect = new QGraphicsDropShadowEffect();
+    shadow_effect->setBlurRadius(blur_radius);
+    shadow_effect->setOffset(offset_x, offset_y);
+    shadow_effect->setColor(shadow_color);
+    target_widget->setGraphicsEffect(shadow_effect);
 }
 
 
@@ -145,7 +127,7 @@ void FormMain::buildWindow()
     // ***** Main window settings
     this->setObjectName(QStringLiteral("formMain"));
     this->setWindowModality(Qt::NonModal);
-    this->resize(1100, 700);
+    this->resize(1300, 800);
     this->setMinimumSize(QSize(780, 400));
     this->setFont(font);
     this->setMouseTracking(true);
@@ -236,8 +218,6 @@ void FormMain::buildWindow()
             treeAdvisor->setHeaderHidden(true);
         verticalLayoutAdvisor->addWidget(treeAdvisor);
         advisor->setWidget(widgetAdvisor);
-    addDockWidget(static_cast<Qt::DockWidgetArea>(2), advisor);
-
 
     // ***** Build right Inspector Dock
     inspector = new QDockWidget(this);
@@ -276,7 +256,9 @@ void FormMain::buildWindow()
         verticalLayoutObject->addWidget(treeObject);
 
         inspector->setWidget(widgetInspector);
+
     addDockWidget(static_cast<Qt::DockWidgetArea>(2), inspector);
+    addDockWidget(static_cast<Qt::DockWidgetArea>(2), advisor);
 
 
     // ***** Can force adjust size of docks with QMainWindow::resizeDocks call
@@ -389,7 +371,7 @@ void FormMain::buildWindow()
                     viewMain->setSizePolicy(sizePolicyView);
                     viewMain->setMinimumSize(QSize(100, 0));
                     viewMain->setFont(font);
-                    viewMain->setBackgroundBrush(QBrush(globals->getColor(Window_Colors::Background_Light)));
+                    //viewMain->setBackgroundBrush(QBrush(globals->getColor(Window_Colors::Background_Light)));
                     viewMain->setCacheMode(QGraphicsView::CacheBackground);
                 splitterHorizontal->addWidget(viewMain);
 
@@ -403,34 +385,30 @@ void FormMain::buildWindow()
             areaBottom->setMinimumSize(QSize(0, 100));
             areaBottom->setFont(font);
             areaBottom->setWidgetResizable(true);
-                widgetBottom = new QWidget();
-                widgetBottom->setObjectName(QStringLiteral("widgetBottom"));
-                widgetBottom->setGeometry(QRect(0, 0, 652, 622));
-                label_1 = new QLabel(widgetBottom);
+                label_1 = new QLabel(areaBottom);
                 label_1->setObjectName(QStringLiteral("label_1"));
                 label_1->setGeometry(QRect(10, 10, 141, 21));
                 label_1->setFont(font);
-                label_2 = new QLabel(widgetBottom);
+                label_2 = new QLabel(areaBottom);
                 label_2->setObjectName(QStringLiteral("label_2"));
                 label_2->setGeometry(QRect(10, 30, 141, 21));
                 label_2->setFont(font);
-                label_3 = new QLabel(widgetBottom);
+                label_3 = new QLabel(areaBottom);
                 label_3->setObjectName(QStringLiteral("label_3"));
                 label_3->setGeometry(QRect(10, 70, 631, 21));
                 label_3->setFont(font);
-                label_object_1 = new QLabel(widgetBottom);
+                label_object_1 = new QLabel(areaBottom);
                 label_object_1->setObjectName(QStringLiteral("label_object"));
                 label_object_1->setGeometry(QRect(180, 10, 461, 21));
                 label_object_1->setFont(font);
-                label_object_2 = new QLabel(widgetBottom);
+                label_object_2 = new QLabel(areaBottom);
                 label_object_2->setObjectName(QStringLiteral("label_object_2"));
                 label_object_2->setGeometry(QRect(180, 30, 461, 21));
                 label_object_2->setFont(font);
-                label_object_3 = new QLabel(widgetBottom);
+                label_object_3 = new QLabel(areaBottom);
                 label_object_3->setObjectName(QStringLiteral("label_object_3"));
                 label_object_3->setGeometry(QRect(180, 50, 461, 21));
                 label_object_3->setFont(font);
-            areaBottom->setWidget(widgetBottom);
         splitterVertical->addWidget(areaBottom);
 
     verticalLayout->addWidget(splitterVertical);

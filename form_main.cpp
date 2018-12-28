@@ -24,12 +24,16 @@ FormMain::~FormMain()
 //####################################################################################
 //##        Constructor for Main Window, called upon initialization
 //####################################################################################
-FormMain::FormMain(QWidget *parent, Globals *the_globals) : QMainWindow(parent), globals(the_globals)
+FormMain::FormMain(QWidget *parent, Globals *the_globals) :
+    QMainWindow(parent),
+    globals(the_globals)
 {
+    // Fires signal that is picked up by Advisor to change the help info
+    connect(this, SIGNAL(sendAdvisorInfo(HeaderBodyList)), this, SLOT(changeAdvisor(HeaderBodyList)) , Qt::QueuedConnection);
+
+
 
     populateScene();
-
-
 
 
     // Initialize form and customize colors and styles
@@ -77,15 +81,23 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) : QMainWindow(parent),
 
 }
 
-// Sets the Advisor Dock text
+// Call to put in a signal to change the Advisor to the que
 void FormMain::setAdvisorInfo(HeaderBodyList header_body_list)
 {
-    setAdvisorInfo(QString::fromStdString(header_body_list[0]), QString::fromStdString(header_body_list[1]));
+    emit sendAdvisorInfo(header_body_list);
 }
-void FormMain::setAdvisorInfo(QString header_text, QString body_text)
+// SLOT, Sets the Advisor Dock text
+void FormMain::changeAdvisor(HeaderBodyList header_body_list)
 {
+    static bool updating_me = false;
+    if (updating_me) return;
+    updating_me = true;
+
     // Clear advisor tree
     treeAdvisor->clear();
+
+    QString header_text = QString::fromStdString(header_body_list[0]);
+    QString body_text = QString::fromStdString(header_body_list[1]);
 
     // Insert top level item to act as header
     QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(treeAdvisor);
@@ -108,6 +120,8 @@ void FormMain::setAdvisorInfo(QString header_text, QString body_text)
     // Apply label to tree, expand all
     treeAdvisor->setItemWidget(sub_item, 0, body_label);
     treeAdvisor->expandAll();
+
+    updating_me = false;
 }
 
 // Sets the text of a label on FormMain
@@ -125,7 +139,20 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
 }
 
 
+void FormMain::updateMainView()
+{
+    //viewMain->invalidateScene();
+    //qApp->processEvents();
+    viewMain->zoomInOut(1);
+    //viewMain->applyUpdatedMatrix();
 
+    //scene->update();
+    //viewMain->style()->polish(viewMain);
+    //splitterHorizontal->repaint();
+    //splitterHorizontal->refresh();
+    //viewMain->repaint();
+    //this->repaint();
+}
 
 
 

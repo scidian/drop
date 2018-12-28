@@ -28,7 +28,7 @@
 //                                             Edit UI
 //                                             Node Map: World / UI Layout
 //                                             Node Map: Scene Layout
-//      Collision Shape Editor      Edit Collisiuon Shape
+//      Collision Shape Editor      Edit Collision Shape
 //      Atlas Editor                View / Edit Project Atlases
 //      Font Editor                 Create / View Fonts for Use in Project
 //      Image Editor                Draw shapes, objects for use in Assets
@@ -43,6 +43,10 @@
 
 int main(int argc, char *argv[])
 {
+    // ***** This registers custom typedefs, classes, structs, etc. for use with Qt::QueuedConnection signals
+    qRegisterMetaType<HeaderBodyList>("HeaderBodyList");
+
+    // ***** Initiliaze application
     QApplication app_drop(argc, argv);              // Declare application
 
     Globals *my_globals = new Globals();            // Declare / Load Globals helper

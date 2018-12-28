@@ -16,7 +16,6 @@
 #include "form_main.h"
 
 
-
 // Handles changing the Advisor on Mouse Enter
 void TreeAssetList::enterEvent(QEvent *event)
 {

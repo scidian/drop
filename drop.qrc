@@ -16,5 +16,6 @@
         <file>inspector_icons/comp_character.png</file>
         <file>inspector_icons/comp_physics.png</file>
         <file>qt4logo.png</file>
+        <file>tree_icons/splitter_v.png</file>
     </qresource>
 </RCC>

@@ -50,9 +50,9 @@ void SceneGraphicsView::wheelEvent(QWheelEvent *e)
 {
     //if (e->modifiers() & Qt::KeyboardModifier::ControlModifier) {
         if (e->delta() > 0)
-            zoomInOut(-6);
+            zoomInOut(8);
         else
-            zoomInOut(6);
+            zoomInOut(-8);
         e->accept();
     //} else {
     //    QGraphicsView::wheelEvent(e);

@@ -16,6 +16,15 @@
 #include "form_main.h"
 
 
+// Handles changing the Advisor on Mouse Enter
+void TreeObjectInspector::enterEvent(QEvent *event)
+{
+    getMainWindow()->setAdvisorInfo(Advisor_Info::Object_Inspector);
+    QTreeWidget::enterEvent(event);
+}
+
+
+
 //####################################################################################
 //
 //  Need to finish dynamically building object inspector
@@ -130,24 +139,17 @@ void FormMain::buildObjectInspector()
 }
 
 
-// Handles changing the Advisor on Mouse Enter
-void TreeObjectInspector::enterEvent(QEvent *event)
-{
-    getMainWindow()->setAdvisorInfo(Advisor_Info::Object_Inspector);
-    QTreeWidget::enterEvent(event);
-}
-
-
-
+// Constructor for category button, gives button a way to pass click to custom function
 InspectorCategoryButton::InspectorCategoryButton(const QString& a_Text, QTreeWidget* a_pParent, QTreeWidgetItem* a_pItem, QFrame* new_child)
     : QPushButton(a_Text, a_pParent),
       m_pItem(a_pItem),
       m_child_frame(new_child)
 {
     //connect(this, SIGNAL(pressed()), this, SLOT(ButtonPressed()));
-    connect(this, SIGNAL(clicked()), this, SLOT(ButtonPressed()));
+    connect(this, SIGNAL(clicked()), this, SLOT(ButtonPressed()));          // Forwards user button click to function that expands / contracts
 }
 
+// Called by click signal, expands or contracts category after user click
 void InspectorCategoryButton::ButtonPressed()
 {
     if (m_pItem->isExpanded()) {

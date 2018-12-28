@@ -80,7 +80,7 @@ private:
     // Normal Qt Classes for simple objects
     QMenu         *menuDrop;
     QMenuBar      *menuBar;
-    QWidget       *widgetAdvisor, *widgetAssests, *widgetBottom, *widgetCentral, *widgetInner, *widgetInspector, *widgetToolbar;
+    QWidget       *widgetAdvisor, *widgetAssests, *widgetCentral, *widgetInner, *widgetInspector, *widgetToolbar;
     QScrollArea   *areaBottom;
     QTreeWidget   *treeAdvisor;
 
@@ -102,14 +102,16 @@ public:
 
     // Form setup
     void            applyColoring();
+    void            applyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color);
     void            buildWindow();
 
     // Member functions
-    void            setAdvisorInfo(HeaderBodyList header_body_list);
     void            setLabelText(Label_Names label_name, QString new_text);
+    void            setAdvisorInfo(HeaderBodyList header_body_list);
 
     // Scene Handling
     void            populateScene();
+    void            updateMainView();
 
     // Tree Scene List Handling
     void            listSelectionChanged(QList<QTreeWidgetItem*> item_list);
@@ -118,8 +120,12 @@ public:
     // Object Inspector Handling
     void            buildObjectInspector();
 
-private:
-    void            setAdvisorInfo(QString header_text, QString body_text);         // Make function private to force calls with Advisor type from enums.h
+
+private slots:
+    void            changeAdvisor(HeaderBodyList header_body_list);             // Set as slot so we can emit queued signals
+
+signals:
+    void            sendAdvisorInfo(HeaderBodyList header_body_list);           // Forwards info to MainWindow::changeAdvisor
 };
 
 
@@ -168,16 +174,17 @@ class TreeObjectInspector: public QTreeWidget
     Q_OBJECT
 
 private:
-    FormMain    *m_parent_window;
+    FormMain       *m_parent_window;
 
 public:
-    explicit TreeObjectInspector(QWidget *parent, FormMain *main_window) : QTreeWidget (parent), m_parent_window (main_window) { }
+    explicit        TreeObjectInspector(QWidget *parent, FormMain *main_window) : QTreeWidget (parent), m_parent_window (main_window) { }
 
     // Event Overrides, start at Qt Documentation for QTreeWidget Class to find more events
-    virtual void enterEvent(QEvent *event) override;                                                            // Inherited from QWidget
+    virtual void    enterEvent(QEvent *event) override;                                             // Inherited from QWidget
 
     // Getters and setters
-    FormMain*    getMainWindow() { return m_parent_window; }
+    FormMain*       getMainWindow() { return m_parent_window; }
+
 };
 
 //############################
