@@ -72,6 +72,19 @@ void Globals::loadPalettes()
     color_schemes[Color_Scheme::Blue].insert(std::make_pair(Window_Colors::Icon_Dark, QColor(0, 150, 145)));
     color_schemes[Color_Scheme::Blue].insert(std::make_pair(Window_Colors::Icon_Light, QColor(0, 180, 175)));
 
+    color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Shadow_Dark, QColor(39, 18, 11)));
+    color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Shadow_Light, QColor(64, 30, 19)));
+    color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Background_Dark, QColor(225, 167, 69)));
+    color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Background_Light, QColor(166, 59, 31)));
+    color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Button_Dark, QColor(233,125,49)));
+    color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Button_Light, QColor(213,112,41)));
+    color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Midlight, QColor(197, 79, 32)));
+    color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Text_Dark, QColor(100, 41, 23)));
+    color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Text, QColor(109, 51, 33)));
+    color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Text_Light, QColor(120, 61, 43)));
+    color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Highlight, QColor(218, 190, 98)));
+    color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Icon_Dark,  QColor(131, 142, 41)));
+    color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Icon_Light,  QColor(107, 116, 33)));
 }
 
 
