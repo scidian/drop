@@ -32,16 +32,20 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
     connect(this, SIGNAL(sendAdvisorInfo(HeaderBodyList)), this, SLOT(changeAdvisor(HeaderBodyList)) , Qt::QueuedConnection);
 
 
+    // ########## Load saved preferences
+    globals->current_color_scheme = Color_Scheme::Dark;
 
+
+    // TEMP: temp call to populate Graphics Scene
     populateScene();
 
 
-    // Initialize form and customize colors and styles
+    // ########## Initialize form and customize colors and styles
     buildWindow();
     applyColoring();
 
 
-    // Initialize new project, initialize local variables
+    // ########## Initialize new project, initialize local variables
     project = new DrProject();
     current_world = 0;
 
@@ -81,49 +85,6 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
 
 }
 
-// Call to put in a signal to change the Advisor to the que
-void FormMain::setAdvisorInfo(HeaderBodyList header_body_list)
-{
-    emit sendAdvisorInfo(header_body_list);
-}
-// SLOT, Sets the Advisor Dock text
-void FormMain::changeAdvisor(HeaderBodyList header_body_list)
-{
-    static bool updating_me = false;
-    if (advisor->isHidden()) return;            // If Advisor dock was closed get out of here
-    if (updating_me) return;
-    updating_me = true;
-
-    // Clear advisor tree
-    treeAdvisor->clear();
-
-    QString header_text = QString::fromStdString(header_body_list[0]);
-    QString body_text = QString::fromStdString(header_body_list[1]);
-
-    // Insert top level item to act as header
-    QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(treeAdvisor);
-    topLevelItem->setText(0, header_text);
-    treeAdvisor->addTopLevelItem(topLevelItem);
-
-    // Create child tree item for body
-    QTreeWidgetItem *sub_item = new QTreeWidgetItem(topLevelItem);
-    topLevelItem->addChild(sub_item);
-
-    // Create a label to display body text and format
-    QLabel *body_label = new QLabel(body_text);
-    QFont font_label;
-    font_label.setPointSize(11);
-    body_label->setFont(font_label);
-    body_label->setWordWrap(true);
-    body_label->setAlignment(Qt::AlignTop);
-    body_label->setStyleSheet("QLabel { color : " + globals->getColor(Window_Colors::Text).name() + "; } ");
-
-    // Apply label to tree, expand all
-    treeAdvisor->setItemWidget(sub_item, 0, body_label);
-    treeAdvisor->expandAll();
-
-    updating_me = false;
-}
 
 // Sets the text of a label on FormMain
 void FormMain::setLabelText(Label_Names label_name, QString new_text)
@@ -139,20 +100,31 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
     }
 }
 
-
-void FormMain::updateMainView()
+// Sets the new palette to the style sheets
+void FormMain::changePalette(Color_Scheme new_color_scheme)
 {
-    //viewMain->invalidateScene();
+    globals->current_color_scheme = new_color_scheme;
+    applyColoring();
+    refreshMainView();
+}
+// Slots:
+void FormMain::changePaletteDark()   { changePalette(Color_Scheme::Dark); }
+void FormMain::changePaletteLight()  { changePalette(Color_Scheme::Light); }
+void FormMain::changePaletteBlue()   { changePalette(Color_Scheme::Blue); }
+void FormMain::changePaletteAutumn() { changePalette(Color_Scheme::Autumn); }
+
+// After many tried update calls, force view to redraw by a quick zoom in / out
+void FormMain::refreshMainView()
+{
+    //scene->invalidate(scene->sceneRect(), QGraphicsScene::BackgroundLayer);
+    //scene->update();
+    //this->style()->unpolish(this);
+    //this->style()->polish(this);
+    //viewMain->update();
+    //viewMain->repaint();
     //qApp->processEvents();
     viewMain->zoomInOut(1);
-    //viewMain->applyUpdatedMatrix();
-
-    //scene->update();
-    //viewMain->style()->polish(viewMain);
-    //splitterHorizontal->repaint();
-    //splitterHorizontal->refresh();
-    //viewMain->repaint();
-    //this->repaint();
+    viewMain->zoomInOut(-1);
 }
 
 

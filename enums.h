@@ -15,14 +15,6 @@
 #include <QPalette>
 #include <QVariant>
 
-//####################################################################################
-//##    Palette options for windows
-//####################################################################################
-enum class Color_Scheme
-{
-    Dark,       Light,      Blue,       Autumn
-};
-
 
 //####################################################################################
 //##    Used to track what the QVariant m_value data type really is

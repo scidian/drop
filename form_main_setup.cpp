@@ -73,6 +73,8 @@ void FormMain::applyColoring()
         " QGraphicsView::corner { background: transparent; } "
 
         " QScrollArea { background: " + globals->getColor(Window_Colors::Background_Dark).name() + "; }"
+
+        " QLabel { color : " + globals->getColor(Window_Colors::Text).name() + "; } "
     );
 
     this->setStyleSheet(style_sheet);
@@ -124,6 +126,7 @@ void FormMain::buildWindow()
     sizePolicyPreferredHorizontal.setHorizontalStretch(0);
     sizePolicyPreferredHorizontal.setVerticalStretch(1);
 
+
     // ***** Main window settings
     this->setObjectName(QStringLiteral("formMain"));
     this->setWindowModality(Qt::NonModal);
@@ -133,16 +136,6 @@ void FormMain::buildWindow()
     this->setMouseTracking(true);
     this->setAcceptDrops(true);
     this->setWindowIcon(QIcon(":icon/icon256.png"));                        // Set icon
-
-
-    // ***** Build Menu Bar
-    menuBar = new QMenuBar(this);
-    menuBar->setObjectName(QStringLiteral("menuBar"));
-    menuBar->setGeometry(QRect(0, 0, 1100, 22));
-        menuDrop = new QMenu(menuBar);
-        menuDrop->setObjectName(QStringLiteral("menuDrop"));
-        menuBar->addAction(menuDrop->menuAction());
-    this->setMenuBar(menuBar);
 
 
     // ***** Build left Assets Dock
@@ -414,6 +407,56 @@ void FormMain::buildWindow()
     this->setCentralWidget(widgetCentral);
 
 
+    // ***** Build Menu Bar
+    menuBar = new QMenuBar(this);
+    menuBar->setObjectName(QStringLiteral("menuBar"));
+    menuBar->setGeometry(QRect(0, 0, 1100, 22));
+        // ***** Color Schemes sub menu
+        QMenu *menuColor_Schemes;
+        QAction *actionDark, *actionLight, *actionBlue, *actionAutumn;
+        actionDark =   new QAction(this);   actionDark->setObjectName(QStringLiteral("actionDark"));
+        actionLight =  new QAction(this);   actionLight->setObjectName(QStringLiteral("actionLight"));
+        actionBlue =   new QAction(this);   actionBlue->setObjectName(QStringLiteral("actionBlue"));
+        actionAutumn = new QAction(this);   actionAutumn->setObjectName(QStringLiteral("actionAutumn"));
+            QActionGroup *alignmentGroup;
+            alignmentGroup = new QActionGroup(this);
+            alignmentGroup->addAction(actionDark);
+            alignmentGroup->addAction(actionLight);
+            alignmentGroup->addAction(actionBlue);
+            alignmentGroup->addAction(actionAutumn);
+            alignmentGroup->setExclusive(true);
+            actionDark->setCheckable(true);
+            actionLight->setCheckable(true);
+            actionBlue->setCheckable(true);
+            actionAutumn->setCheckable(true);
+            switch (globals->current_color_scheme)
+            {
+            case Color_Scheme::Dark:    actionDark->setChecked(true);    break;
+            case Color_Scheme::Light:   actionLight->setChecked(true);   break;
+            case Color_Scheme::Blue:    actionBlue->setChecked(true);    break;
+            case Color_Scheme::Autumn:  actionAutumn->setChecked(true);  break;
+            }
+        connect(actionDark,   SIGNAL(triggered()), this, SLOT(changePaletteDark()) );
+        connect(actionLight,  SIGNAL(triggered()), this, SLOT(changePaletteLight()) );
+        connect(actionBlue,   SIGNAL(triggered()), this, SLOT(changePaletteBlue()) );
+        connect(actionAutumn, SIGNAL(triggered()), this, SLOT(changePaletteAutumn()) );
+
+        menuColor_Schemes = new QMenu(menuBar);
+        menuColor_Schemes->setObjectName(QStringLiteral("menuColor_Schemes"));
+        menuBar->addAction(menuColor_Schemes->menuAction());
+        menuColor_Schemes->addAction(actionDark);
+        menuColor_Schemes->addAction(actionLight);
+        menuColor_Schemes->addAction(actionBlue);
+        menuColor_Schemes->addAction(actionAutumn);
+    this->setMenuBar(menuBar);
+
+
+    // ***** Set menu titles and sub menu texts
+    menuColor_Schemes->setTitle(QApplication::translate("MainWindow", "Color Schemes", nullptr));
+    actionDark->setText(QApplication::translate("MainWindow", "Dark", nullptr));
+    actionLight->setText(QApplication::translate("MainWindow", "Light", nullptr));
+    actionBlue->setText(QApplication::translate("MainWindow", "Blue", nullptr));
+    actionAutumn->setText(QApplication::translate("MainWindow", "Autumn", nullptr));
 
 
     // ***** Set titles and button texts
@@ -421,7 +464,6 @@ void FormMain::buildWindow()
     advisor->setWindowTitle(QApplication::translate("MainWindow", "Advisor", nullptr));
     assets->setWindowTitle(QApplication::translate("MainWindow", "Assets", nullptr));
     inspector->setWindowTitle(QApplication::translate("MainWindow", "Inspector", nullptr));
-    menuDrop->setTitle(QApplication::translate("MainWindow", "File", nullptr));
     label_1->setText(QApplication::translate("MainWindow", "TextLabel", nullptr));
     label_2->setText(QApplication::translate("MainWindow", "TextLabel", nullptr));
     label_3->setText(QApplication::translate("MainWindow", "TextLabel", nullptr));

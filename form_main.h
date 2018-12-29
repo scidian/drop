@@ -61,6 +61,9 @@ public:
     long            current_world;                                      // Tracks which world to show in the scene viewer
 
 private:
+    std::string     advisor_header { "No Data" };                       // Keeps current Advisor Header
+    QMutex          advisor_mutex { QMutex::NonRecursive };             // Used to keep building function thread safe
+
     QGraphicsScene      *scene;                 // Holds the currently selected scene, ready for rendering in SceneGraphicsView
     SceneGraphicsView   *viewMain;              // Renders scene for the viewer
 
@@ -70,7 +73,6 @@ private:
     TreeAdvisorList     *treeAdvisor;           // Custom classes for Advisor List
 
     // Normal Qt Classes for simple objects
-    QMenu         *menuDrop;
     QMenuBar      *menuBar;
     QWidget       *widgetAdvisor, *widgetAssests, *widgetCentral, *widgetInner, *widgetInspector, *widgetToolbar;
     QScrollArea   *areaBottom;
@@ -91,32 +93,37 @@ public:
     explicit FormMain(QWidget *parent = nullptr, Globals *the_globals = nullptr);
     ~FormMain();
 
-    // Form setup
-    void            applyColoring();
-    void            applyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color);
-    void            buildWindow();
-
     // Member functions
-    void            setLabelText(Label_Names label_name, QString new_text);
-    void            setAdvisorInfo(HeaderBodyList header_body_list);
+    void        setAdvisorInfo(HeaderBodyList header_body_list);
+    void        setLabelText(Label_Names label_name, QString new_text);
 
     // Scene Handling
-    void            populateScene();
-    void            updateMainView();
+    void        populateScene();
 
     // Tree Scene List Handling
-    void            listSelectionChanged(QList<QTreeWidgetItem*> item_list);
-    void            populateTreeSceneList();
+    void        listSelectionChanged(QList<QTreeWidgetItem*> item_list);
+    void        populateTreeSceneList();
 
     // Object Inspector Handling
-    void            buildObjectInspector();
+    void        buildObjectInspector();
 
+private:
+    // Form setup
+    void        applyColoring();
+    void        applyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color);
+    void        buildWindow();
+    void        changePalette(Color_Scheme new_color_scheme);
+    void        refreshMainView();
 
 private slots:
-    void            changeAdvisor(HeaderBodyList header_body_list);             // Set as slot so we can emit queued signals
+    void        changeAdvisor(HeaderBodyList header_body_list);             // Set as slot so we can emit queued signals
+    void        changePaletteDark();                                        // Slot connected to menu action
+    void        changePaletteLight();                                       // Slot connected to menu action
+    void        changePaletteBlue();                                        // Slot connected to menu action
+    void        changePaletteAutumn();                                      // Slot connected to menu action
 
 signals:
-    void            sendAdvisorInfo(HeaderBodyList header_body_list);           // Forwards info to MainWindow::changeAdvisor
+    void        sendAdvisorInfo(HeaderBodyList header_body_list);           // Forwards info to MainWindow::changeAdvisor
 };
 
 

@@ -7,7 +7,14 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#include "enums.h"
+#include <map>
+#include <QColor>
+
+// ***** Palette options for windows
+enum class Color_Scheme
+{
+    Dark,       Light,      Blue,       Autumn
+};
 
 enum class Window_Colors
 {
@@ -28,7 +35,7 @@ public:
 
     // Variables
     std::map<Color_Scheme, std::map<Window_Colors, QColor>> color_schemes;
-    Color_Scheme current_color_scheme = Color_Scheme::Dark;                             // Color_Scheme defined in enums.h
+    Color_Scheme current_color_scheme;
 
     // Variable Functions
     void    loadPalettes();
@@ -41,6 +48,10 @@ public:
 };
 
 #endif // GLOBALS_H
+
+
+
+
 
 
 

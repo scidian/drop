@@ -72,11 +72,9 @@ void FormMain::buildObjectInspector()
             horizontal_split->setContentsMargins(2,2,2,2);
 
             QLabel *property_name = new QLabel(j.second->getDisplayNameQString());
-            QString label_color = QString(" QLabel { color: " + globals->getColor(Window_Colors::Text_Light).name() + "; }");
             QFont font_property;
             font_property.setPointSize(11);
             property_name->setFont(font_property);
-            property_name->setStyleSheet(label_color);
             QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
             sp_left.setHorizontalStretch(1);
             property_name->setSizePolicy(sp_left);
