@@ -7,11 +7,6 @@
 #ifndef DRPROPERTY_H
 #define DRPROPERTY_H
 
-#include <map>
-#include <vector>
-
-#include <QVariant>
-
 #include "enums.h"
 
 
@@ -39,6 +34,7 @@ public:
 
     // Getters and setters
     std::string   getDisplayName() { return m_display_name; }
+    QString       getDisplayNameQString() { return QString::fromStdString(m_display_name); }
     std::string   getDescription() { return m_description; }
     Property_Type getPropertyType() { return m_preferred_type; }
     QVariant      getValue() { return m_value; }

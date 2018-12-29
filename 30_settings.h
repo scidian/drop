@@ -1,16 +1,11 @@
 //
 //
-//
+//      DrSettings - Class to hold settings and a collection of components for all DrClass objects
 //
 //
 
 #ifndef DRSETTINGS_H
 #define DRSETTINGS_H
-
-#include <map>
-
-#include <QColor>
-#include <QVariant>
 
 #include "enums.h"
 
@@ -36,18 +31,18 @@ public:
 
 
     // Getters and Setters
-    long            getKey() { return m_key; }
-    virtual DrTypes getType() { return DrTypes::BaseClass; }
+    long            getKey()    { return m_key; }
+    virtual DrTypes getType()   { return DrTypes::BaseClass; }
 
-    DrSettings*  getSettings() { return this; }
+    DrSettings*  getSettings()  { return this; }
 
-    ComponentMap getComponentList() { return m_components; }
-    long         getComponentCount() { return static_cast<int>(m_components.size()); }
+    ComponentMap getComponentList()     { return m_components; }
+    long         getComponentCount()    { return static_cast<int>(m_components.size()); }
 
-    DrComponent* getComponent(long component) { return m_components[component]; }
-    DrComponent* getComponent(World_Components component) { return m_components[static_cast<long>(component)]; }
-    DrComponent* getComponent(Scene_Components component) { return m_components[static_cast<long>(component)]; }
-    DrComponent* getComponent(Object_Components component) { return m_components[static_cast<long>(component)]; }
+    DrComponent* getComponent(long component)               { return m_components[component]; }
+    DrComponent* getComponent(World_Components component)   { return m_components[static_cast<long>(component)]; }
+    DrComponent* getComponent(Scene_Components component)   { return m_components[static_cast<long>(component)]; }
+    DrComponent* getComponent(Object_Components component)  { return m_components[static_cast<long>(component)]; }
 
     DrProperty*  getComponentProperty(long component, long property);
     DrProperty*  getComponentProperty(World_Components component, World_Properties property);

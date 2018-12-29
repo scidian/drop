@@ -11,5 +11,11 @@
         <file>tree_icons/tree_lock.png</file>
         <file>tree_icons/tree_bullet.png</file>
         <file>tree_icons/tree_lock_header.png</file>
+        <file>inspector_icons/comp_settings.png</file>
+        <file>inspector_icons/comp_camera.png</file>
+        <file>inspector_icons/comp_character.png</file>
+        <file>inspector_icons/comp_physics.png</file>
+        <file>qt4logo.png</file>
+        <file>tree_icons/splitter_v.png</file>
     </qresource>
 </RCC>

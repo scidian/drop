@@ -1,6 +1,6 @@
 //
 //
-//
+//      DrSettings class functions
 //
 //
 
@@ -8,11 +8,9 @@
 #include "31_component.h"
 #include "32_property.h"
 
-//##################################################################################################################
-//##
+//####################################################################################
 //##    Constructor, Destructor
-//##
-//##################################################################################################################
+//####################################################################################
 DrSettings::DrSettings()
 {
 
@@ -25,11 +23,9 @@ DrSettings::~DrSettings()
 
 
 
-//##################################################################################################################
-//##
+//####################################################################################
 //##    Component / Property fetching
-//##
-//##################################################################################################################
+//####################################################################################
 
 DrProperty* DrSettings::getComponentProperty(long component, long property) { return m_components[component]->getProperty(property); }
 DrProperty* DrSettings::getComponentProperty(World_Components component, World_Properties property) { return m_components[static_cast<long>(component)]->getProperty(property); }
@@ -62,11 +58,9 @@ DrComponent* DrSettings::findComponentFromPropertyKey(long property_key_to_find)
 }
 
 
-//##################################################################################################################
-//##
+//####################################################################################
 //##    Component Loading - addComponent / addComponentProperty
-//##
-//##################################################################################################################
+//####################################################################################
 
 void DrSettings::addComponent(long component, std::string new_display_name, std::string new_description, QColor new_color, bool new_turned_on) {
     DrComponent *comp = new DrComponent(this, new_display_name, new_description, new_color, component, new_turned_on);
@@ -88,7 +82,7 @@ void DrSettings::addComponent(Object_Components component, std::string new_displ
     m_components[static_cast<long>(component)] = comp;
 }
 
-//##############################################################
+//####################################################################################
 
 void DrSettings::addPropertyToComponent(long component, long property_number, Property_Type new_type, QVariant new_value, std::string new_display_name, std::string new_description) {
     m_components[component]->addProperty(property_number, new_type, new_value, new_display_name, new_description);

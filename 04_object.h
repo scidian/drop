@@ -34,10 +34,10 @@ public:
 
 
     // Getters and setters
-    DrProject*      getParentProject() { return m_parent_project; }
-    DrWorld*        getParentWorld() { return m_parent_world; }
-    DrScene*        getParentScene() { return m_parent_scene; }
-    virtual DrTypes getType() override { return m_object_type; }
+    DrProject*      getParentProject()  { return m_parent_project; }
+    DrWorld*        getParentWorld()    { return m_parent_world; }
+    DrScene*        getParentScene()    { return m_parent_scene; }
+    virtual DrTypes getType() override  { return m_object_type; }
 
 
     // External calls

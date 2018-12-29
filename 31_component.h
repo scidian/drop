@@ -7,13 +7,8 @@
 #ifndef DRCOMPONENT_H
 #define DRCOMPONENT_H
 
-#include <map>
-#include <string>
-
-#include <QColor>
-#include <QVariant>
-
 #include "enums.h"
+
 
 class DrSettings;
 class DrProperty;
@@ -29,6 +24,7 @@ private:
 
     std::string m_display_name = "Unknown Component";
     std::string m_description = "No description";
+    QString     m_icon = "";
     QColor      m_color = QColor(Qt::gray);
     bool        m_turned_on = false;
     long        m_component_key;
@@ -42,7 +38,9 @@ public:
 
     // Getters and setters
     std::string getDisplayName() { return m_display_name; }
+    QString     getDisplayNameQString() { return QString::fromStdString(m_display_name); }
     std::string getDescription() { return m_description; }
+    QString     getIcon() { return m_icon; }
     QColor      getColor() { return m_color; }
     bool        isTurnedOn() { return m_turned_on; }
     long        getComponentKey() { return m_component_key; }
@@ -56,6 +54,7 @@ public:
 
     void setDisplayName(std::string new_display_name) { m_display_name = new_display_name; }
     void setDescription(std::string new_description) { m_description = new_description; }
+    void setIcon(QString new_icon) { m_icon = new_icon; }
     void setColor(QColor new_color) { m_color = new_color; }
     void setOnOrOff(bool new_turned_on) { m_turned_on = new_turned_on; }
     void turnOn() { m_turned_on = true; }

@@ -29,10 +29,10 @@ public:
 
 
     // Getters and setters
-    WorldMap    getWorldMap() { return m_worlds; }
+    WorldMap    getWorldMap()       { return m_worlds; }
     long        getNumberOfWorlds() { return static_cast<long>(m_worlds.size()); }
 
-    long        getNextKey() { return m_key_generator++; }
+    long        getNextKey()        { return m_key_generator++; }
     void        setKeyGeneratorStartNumber(long initial_key) { m_key_generator = initial_key; }
 
 
