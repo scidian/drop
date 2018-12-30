@@ -26,7 +26,7 @@ void FormMain::populateTreeSceneList()
         topLevelItem->setIcon(0, QIcon(":/tree_icons/tree_world.png"));                                 // Loads icon for world
         topLevelItem->setText(0, "World: " + world_pair.second->getComponentPropertyValue(
                                  World_Components::settings, World_Properties::name).toString());       // Set text for item
-        topLevelItem->setData(0, Qt::UserRole, QVariant::fromValue(world_pair.second->getKey()));
+        topLevelItem->setData(0, User_Roles::Key, QVariant::fromValue(world_pair.second->getKey()));
         treeScene->addTopLevelItem(topLevelItem);                                                   // Add it on our tree as the top item.
 
         for (auto scene_pair: world_pair.second->getSceneMap())
@@ -35,7 +35,7 @@ void FormMain::populateTreeSceneList()
             sub_item->setIcon(0, QIcon(":/tree_icons/tree_scene.png"));                                 // Loads icon for scene
             sub_item->setText(0, "Scene: " + scene_pair.second->getComponentPropertyValue(
                                  Scene_Components::settings, Scene_Properties::name).toString());       // Set text for item
-            sub_item->setData(0, Qt::UserRole, QVariant::fromValue(scene_pair.second->getKey()));
+            sub_item->setData(0, User_Roles::Key, QVariant::fromValue(scene_pair.second->getKey()));
 
             for (auto object_pair: scene_pair.second->getObjectMap())
             {
@@ -50,7 +50,10 @@ void FormMain::populateTreeSceneList()
 
                 sub_sub_item->setText(0, object_pair.second->getComponentPropertyValue(
                                          Object_Components::settings, Object_Properties::name).toString());         // Set text for item
-                sub_sub_item->setData(0, Qt::UserRole, QVariant::fromValue(object_pair.second->getKey()));          // Store item key in user data
+                sub_sub_item->setData(0, User_Roles::Key, QVariant::fromValue(object_pair.second->getKey()));       // Store item key in user data
+
+
+
                 sub_item->addChild(sub_sub_item);
 
                 // Add lock box
@@ -121,7 +124,7 @@ void TreeSceneView::dragMoveEvent(QDragMoveEvent *event)
     m_can_drop = false;
     if (item_at != nullptr)
     {
-        long        check_key = item_at->data(0, Qt::UserRole).toLongLong();
+        long        check_key = item_at->data(0, User_Roles::Key).toLongLong();
         getMainWindow()->setLabelText(Label_Names::LabelObject3, QString::fromStdString("Selected: " + std::to_string(m_selected_key) +
                                                                                         ", Checking: " + std::to_string(check_key)) );
         // Check if its the same type as already selected, if so allow possible drop
@@ -191,7 +194,7 @@ void FormMain::listSelectionChanged(QList<QTreeWidgetItem*> item_list)
     label_3->setText(label_3->text() + ", First Item: " + item_list.first()->text(0));
 
     if (item_list.size() == 1){
-        treeScene->setSelectedKey(item_list.first()->data(0, Qt::UserRole).toLongLong());           // grab stored key from list view user data
+        treeScene->setSelectedKey(item_list.first()->data(0, User_Roles::Key).toLongLong());           // grab stored key from list view user data
 
         //******************************************************
         // Call to outside function to rebuild object inspector:
@@ -204,7 +207,7 @@ void FormMain::listSelectionChanged(QList<QTreeWidgetItem*> item_list)
         // Check if newly selected items are same type, if not, do not allow select
         for (auto check_item: item_list) {
             // Get key from each item so we can compare it to first selected item
-            long    check_key = check_item->data(0, Qt::UserRole).toLongLong();
+            long    check_key = check_item->data(0, User_Roles::Key).toLongLong();
             DrTypes check_type = project->findTypeFromKey(check_key);
 
             // If we are over item that was first selected, skip to next

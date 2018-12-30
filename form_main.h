@@ -117,10 +117,6 @@ private:
 
 private slots:
     void        changeAdvisor(HeaderBodyList header_body_list);             // Set as slot so we can emit queued signals
-    void        changePaletteDark();                                        // Slot connected to menu action
-    void        changePaletteLight();                                       // Slot connected to menu action
-    void        changePaletteBlue();                                        // Slot connected to menu action
-    void        changePaletteAutumn();                                      // Slot connected to menu action
 
 signals:
     void        sendAdvisorInfo(HeaderBodyList header_body_list);           // Forwards info to MainWindow::changeAdvisor

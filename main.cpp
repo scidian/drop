@@ -55,8 +55,10 @@ int main(int argc, char *argv[])
 
     app_drop.exec();                                // Run program
 
+
+    //my_globals->showMessageBox("Finished running program");
     delete my_globals;
-    //ShowMessageBox("Finished running program");
+
     return 0;
 }
 

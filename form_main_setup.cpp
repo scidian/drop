@@ -436,10 +436,13 @@ void FormMain::buildWindow()
             case Color_Scheme::Blue:    actionBlue->setChecked(true);    break;
             case Color_Scheme::Autumn:  actionAutumn->setChecked(true);  break;
             }
-        connect(actionDark,   SIGNAL(triggered()), this, SLOT(changePaletteDark()) );
-        connect(actionLight,  SIGNAL(triggered()), this, SLOT(changePaletteLight()) );
-        connect(actionBlue,   SIGNAL(triggered()), this, SLOT(changePaletteBlue()) );
-        connect(actionAutumn, SIGNAL(triggered()), this, SLOT(changePaletteAutumn()) );
+        // Instead of traditional SIGNAL to SLOT connect, we can "connect" inline lamda functions directly
+        //      to signals. This allows for passing of variables not included in the SIGNAL that was emitted.
+        // Such as in this instance, passing a new Color_Scheme to FormMain::changePalette)
+        connect(actionDark,   &QAction::triggered, [this]() { changePalette(Color_Scheme::Dark); });
+        connect(actionLight,  &QAction::triggered, [this]() { changePalette(Color_Scheme::Light); });
+        connect(actionBlue,   &QAction::triggered, [this]() { changePalette(Color_Scheme::Blue); });
+        connect(actionAutumn, &QAction::triggered, [this]() { changePalette(Color_Scheme::Autumn); });
 
         menuColor_Schemes = new QMenu(menuBar);
         menuColor_Schemes->setObjectName(QStringLiteral("menuColor_Schemes"));

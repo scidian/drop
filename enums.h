@@ -17,6 +17,16 @@
 
 
 //####################################################################################
+//##    Custom Qt::UserRole 's for storing data in QWidgets using setData
+//####################################################################################
+typedef enum {
+  Key = Qt::UserRole,
+  Another,
+  Unknown,
+} User_Roles;
+
+
+//####################################################################################
 //##    Used to track what the QVariant m_value data type really is
 //####################################################################################
 enum class Property_Type
@@ -91,7 +101,6 @@ namespace Component_Icons
     const QString Character     { QString(":/inspector_icons/comp_character.png") };
     const QString None          { QString("") };
 };
-
 
 
 //####################################################################################

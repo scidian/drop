@@ -54,7 +54,7 @@ void SceneGraphicsView::enterEvent(QEvent *event)
 }
 void SceneGraphicsView::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() & Qt::Key::Key_Space)
+    if (event->key() == Qt::Key::Key_Space)
     {
         setDragMode(QGraphicsView::DragMode::ScrollHandDrag);
         setInteractive(false);
@@ -63,7 +63,7 @@ void SceneGraphicsView::keyPressEvent(QKeyEvent *event)
 }
 void SceneGraphicsView::keyReleaseEvent(QKeyEvent *event)
 {
-    if (event->key() & Qt::Key::Key_Space)
+    if (event->key() == Qt::Key::Key_Space)
     {
         setDragMode(QGraphicsView::DragMode::RubberBandDrag);
         setInteractive(true);
@@ -105,7 +105,6 @@ void SceneGraphicsView::applyUpdatedMatrix()
     QMatrix matrix;
     matrix.scale(scale, scale);
     matrix.rotate(m_rotate);
-
     this->setMatrix(matrix);
 }
 

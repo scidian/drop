@@ -107,11 +107,7 @@ void FormMain::changePalette(Color_Scheme new_color_scheme)
     applyColoring();
     refreshMainView();
 }
-// Slots:
-void FormMain::changePaletteDark()   { changePalette(Color_Scheme::Dark); }
-void FormMain::changePaletteLight()  { changePalette(Color_Scheme::Light); }
-void FormMain::changePaletteBlue()   { changePalette(Color_Scheme::Blue); }
-void FormMain::changePaletteAutumn() { changePalette(Color_Scheme::Autumn); }
+
 
 // After many tried update calls, force view to redraw by a quick zoom in / out
 void FormMain::refreshMainView()
@@ -140,7 +136,7 @@ void FormMain::refreshMainView()
 //    if (treeScene->getSelectedKey() == 0) { return; }
 
 //    // First, retrieve property key of item clicked in tableWidget list
-//    long        property_key = item->data(Qt::UserRole).toLongLong();
+//    long        property_key = item->data(User_Roles::Key).toLongLong();
 
 //    // Grab a pointer to the component list of the first selected item from treeScene (stored in selected_list)
 //    DrSettings  *selected_item_settings = project->findSettingsFromKey( treeScene->getSelectedKey() );

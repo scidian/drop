@@ -12,17 +12,20 @@
 class DrItem : public QGraphicsItem
 {
 private:
-    int x;
-    int y;
-    QColor color;
     QVector<QPointF> stuff;
+
+    int     m_x;
+    int     m_y;
+    QColor  m_color;
+
 
 public:
     DrItem(const QColor &color, int x, int y);
 
-    QRectF boundingRect() const override;
-    QPainterPath shape() const override;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget) override;
+    virtual QRectF       boundingRect() const override;
+    virtual QPainterPath shape() const override;
+
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget) override;
 
 protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event) override;

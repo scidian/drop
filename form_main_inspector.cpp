@@ -63,7 +63,7 @@ void FormMain::buildObjectInspector()
             //QTreeWidgetItem *sub_item = new QTreeWidgetItem(new_category);
             //sub_item->setIcon(0, QIcon(":/tree_icons/tree_object.png"));
             //sub_item->setText(0, j.second->getDisplayNameQString());
-            //sub_item->setData(0, Qt::UserRole, QVariant::fromValue(object_pair.second->getKey()));
+            //sub_item->setData(0, User_Roles::Key, QVariant::fromValue(object_pair.second->getKey()));
 
             QFrame *single_row = new QFrame(properties_frame);
             QBoxLayout *horizontal_split = new QHBoxLayout(single_row);
@@ -99,9 +99,10 @@ void FormMain::buildObjectInspector()
 
         // Create new item in list to hold component
         QTreeWidgetItem *new_category = new QTreeWidgetItem();
-        new_category->setData(0, Qt::UserRole, QVariant::fromValue(i.second->getComponentKey()));           // Stores component key in list user data
+        new_category->setData(0, User_Roles::Key, QVariant::fromValue(i.second->getComponentKey()));           // Stores component key in list user data
 
-        // Create and style a button to be used as a header item for the category
+
+        //->Create and style a button to be used as a header item for the category
         InspectorCategoryButton *category_button = new InspectorCategoryButton(QString(" ") + i.second->getDisplayNameQString(),
                                                                                treeObject, new_category, properties_frame);
         QString buttonColor = QString(" QPushButton { height: 24px; font: 13px; text-align: left; icon-size: 20px 16px; color: #000000; "

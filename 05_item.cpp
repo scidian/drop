@@ -11,12 +11,14 @@
 
 DrItem::DrItem(const QColor &color, int x, int y)
 {
-    this->x = x;
-    this->y = y;
-    this->color = color;
+    m_x = x;
+    m_y = y;
+    m_color = color;
     setZValue((x + y) % 2);
 
-    setFlags(ItemIsSelectable | ItemIsMovable);
+    setFlags(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable |
+             QGraphicsItem::GraphicsItemFlag::ItemIsMovable |
+             QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges);
     setAcceptHoverEvents(true);
 }
 
@@ -36,11 +38,14 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 {
     Q_UNUSED(widget);
 
-    QColor fillColor = (option->state & QStyle::State_Selected) ? color.dark(150) : color;
+    QColor fillColor = (option->state & QStyle::State_Selected) ? m_color.dark(150) : m_color;
+
+    // If mouse is over
     if (option->state & QStyle::State_MouseOver)
         fillColor = fillColor.light(125);
 
     const qreal lod = option->levelOfDetailFromTransform(painter->worldTransform());
+
     if (lod < 0.2) {
         if (lod < 0.125) {
             painter->fillRect(QRectF(0, 0, 110, 70), fillColor);
@@ -81,7 +86,7 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
         painter->setFont(font);
         painter->save();
         painter->scale(0.1, 0.1);
-        painter->drawText(170, 180, QString("Model: VSC-2000 (Very Small Chip) at %1x%2").arg(x).arg(y));
+        painter->drawText(170, 180, QString("Model: VSC-2000 (Very Small Chip) at %1x%2").arg(m_x).arg(m_y));
         painter->drawText(170, 200, QString("Serial number: DLWR-WEER-123L-ZZ33-SDSJ"));
         painter->drawText(170, 220, QString("Manufacturer: Chip Manufacturer"));
         painter->restore();
@@ -134,6 +139,7 @@ void DrItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void DrItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    // If shift key is held down
     if (event->modifiers() & Qt::ShiftModifier) {
         stuff << event->pos();
         update();
