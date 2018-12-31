@@ -27,8 +27,7 @@ DrScene::DrScene(DrProject *parent_project, DrWorld *parent_world, long new_scen
 
     initializeSceneSettings(new_scene_name);        // call to load in all the components / properties for this Scene object
 
-    if (m_is_start_scene)
-    {
+    if (m_is_start_scene) {
         addObject(DrTypes::Camera);
         addObject(DrTypes::Character);
     }
@@ -58,15 +57,15 @@ void DrScene::initializeSceneSettings(std::string new_name)
     addComponent(Scene_Components::settings, "Settings", "Basic settings for current scene", Component_Colors::White_Snow, true);
     getComponent(Object_Components::settings)->setIcon(Component_Icons::Settings);
 
-    addPropertyToComponent(Scene_Components::settings, Scene_Properties::name, Property_Type::STRING, QString::fromStdString(new_name),
+    addPropertyToComponent(Scene_Components::settings, Scene_Properties::name, Property_Type::String, QString::fromStdString(new_name),
                            "Scene Name", "Name of the current scene");
-    addPropertyToComponent(Scene_Components::settings, Scene_Properties::start, Property_Type::INT, 0,
+    addPropertyToComponent(Scene_Components::settings, Scene_Properties::start, Property_Type::Int, 0,
                            "Start", "Start showing scene at this distance");
-    addPropertyToComponent(Scene_Components::settings, Scene_Properties::end, Property_Type::INT, 1200,
+    addPropertyToComponent(Scene_Components::settings, Scene_Properties::end, Property_Type::Int, 1200,
                            "End", "Stop showing scene at this distance, -1 for always show");
-    addPropertyToComponent(Scene_Components::settings, Scene_Properties::size, Property_Type::INT, 1200,
+    addPropertyToComponent(Scene_Components::settings, Scene_Properties::size, Property_Type::Int, 1200,
                            "Size", "Length of scene");
-    addPropertyToComponent(Scene_Components::settings, Scene_Properties::cooldown, Property_Type::INT, 0,
+    addPropertyToComponent(Scene_Components::settings, Scene_Properties::cooldown, Property_Type::Int, 0,
                            "Cooldown", "Distance to wait after scene plays before it is possible to be shown again");
 
 }

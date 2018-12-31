@@ -12,10 +12,11 @@
 //          Top Area (Toolbar)
 //          Advisor (Dock)
 //          Object Inspector (Dock)
+//          Advisor (Dock)
 //
-//          Selectable Components:
+//          Components That Can Hold Focus:
 //              Asset List (Dock)
-//              Scene Area
+//              Scene View
 //              Scene List
 //              Variable List
 //              Bottom Area (Labels, Scenes?)
@@ -31,6 +32,7 @@
 #include "globals.h"
 
 // Necessary forward declarations
+class SceneGraphicsScene;
 class SceneGraphicsView;
 class TreeSceneView;
 class TreeObjectInspector;
@@ -55,6 +57,7 @@ class FormMain : public QMainWindow
 public:
     // Locals
     Globals        *globals;                                            // Holds project globals
+    Form_Main_Mode  current_mode;                                       // Holds current editing mode of FormMain
 
     // Locals that need to be SAVED / LOADED from each project
     DrProject      *project;                                            // Holds whatever the current open game project is
@@ -64,7 +67,7 @@ private:
     std::string     advisor_header { "No Data" };                       // Keeps current Advisor Header
     QMutex          advisor_mutex { QMutex::NonRecursive };             // Used to keep building function thread safe
 
-    QGraphicsScene      *scene;                 // Holds the currently selected scene, ready for rendering in SceneGraphicsView
+    SceneGraphicsScene  *scene;                 // Holds the currently selected scene, ready for rendering in SceneGraphicsView
     SceneGraphicsView   *viewMain;              // Renders scene for the viewer
 
     TreeSceneView       *treeScene;             // Custom classes for Scene List
@@ -74,7 +77,7 @@ private:
 
     // Normal Qt Classes for simple objects
     QMenuBar      *menuBar;
-    QWidget       *widgetAdvisor, *widgetAssests, *widgetCentral, *widgetInner, *widgetInspector, *widgetToolbar;
+    QWidget       *widgetAdvisor, *widgetAssests, *widgetCentral, *widgetScene, *widgetInspector, *widgetToolbar;
     QScrollArea   *areaBottom;
 
     QHBoxLayout   *horizontalLayout;
@@ -111,8 +114,12 @@ private:
     // Form setup
     void        applyColoring();
     void        applyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color);
-    void        buildWindow();
+    void        applyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type);
+    void        buildMenu();
+    void        buildWindow(Form_Main_Mode new_layout);
+    void        buildWindowModeEditScene();
     void        changePalette(Color_Scheme new_color_scheme);
+    void        listChildren();
     void        refreshMainView();
 
 private slots:
@@ -123,11 +130,37 @@ signals:
 };
 
 
+//####################################################################################
+//##    SceneGraphicsScene
+//##        A sub classed QGraphicsScene so we can override events for our Scene
+//############################
+class SceneGraphicsScene : public QGraphicsScene
+{
+    Q_OBJECT
+
+private:
+    // Local member variables
+    FormMain   *m_parent_window;
+
+public:
+    // Constructor
+    explicit SceneGraphicsScene(QWidget *parent, FormMain *main_window) : QGraphicsScene(parent = nullptr), m_parent_window (main_window) { }
+
+    // Event Overrides, start at Qt Docs for QGraphicsScene Class to find more
+    virtual void keyPressEvent(QKeyEvent *event) override;                              // Inherited from QGraphicsScene
+    virtual void keyReleaseEvent(QKeyEvent *event) override;                            // Inherited from QGraphicsScene
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;              // Inherited from QGraphicsScene
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event) override;             // Inherited from QGraphicsScene
+
+    // Getters and setters
+    FormMain*    getMainWindow() { return m_parent_window; }
+
+};
 
 
 //####################################################################################
 //##    SceneGraphicsView
-//##        A sub classed QGraphics so we can override events for our View Area
+//##        A sub classed QGraphicsView so we can override events for our View Area
 //############################
 class SceneGraphicsView : public QGraphicsView
 {
@@ -150,7 +183,7 @@ public:
     virtual void keyReleaseEvent(QKeyEvent *event) override;                        // Inherited from QWidget
     virtual void mouseMoveEvent(QMouseEvent *event) override;                       // Inherited from QWidget
 #if QT_CONFIG(wheelevent)
-    void wheelEvent(QWheelEvent *) override;                                        // Inherited from QWidget
+    virtual void wheelEvent(QWheelEvent *event) override;                           // Inherited from QWidget
 #endif
 
     // Getters and setters

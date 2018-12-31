@@ -43,7 +43,8 @@ SOURCES += \
     form_main_assets.cpp \
     form_main_scene.cpp \
     05_item.cpp \
-    form_main_advisor.cpp
+    form_main_advisor.cpp \
+    form_main_scene_view.cpp
 
 HEADERS += \
     enums.h \

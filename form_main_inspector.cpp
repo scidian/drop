@@ -48,8 +48,7 @@ void FormMain::buildObjectInspector()
     // Loop through each component and add it to the Object Inspector list
     int rowCount = 0;
     treeObject->clear();
-    for (auto i: components)
-    {
+    for (auto i: components) {
         // Creates a frame to hold all properties of component, with vertical layout
         QFrame *properties_frame = new QFrame(treeObject);
         QBoxLayout *vertical_layout = new QVBoxLayout(properties_frame);
@@ -58,8 +57,7 @@ void FormMain::buildObjectInspector()
         vertical_layout->setContentsMargins(0,0,0,0);
 
         // Loop through each property and add it to the component frame
-        for (auto j: i.second->getPropertyList())
-        {
+        for (auto j: i.second->getPropertyList()) {
             //QTreeWidgetItem *sub_item = new QTreeWidgetItem(new_category);
             //sub_item->setIcon(0, QIcon(":/tree_icons/tree_object.png"));
             //sub_item->setText(0, j.second->getDisplayNameQString());
@@ -155,8 +153,7 @@ void InspectorCategoryButton::ButtonPressed()
     if (m_pItem->isExpanded()) {
         m_pItem->setExpanded(false);
         m_rect = m_child_frame->frameRect();
-    }
-    else {
+    } else {
         m_pItem->setExpanded(true);
         // Playing with animating opening
         //QPropertyAnimation *propAnimationFade = new QPropertyAnimation(m_child_frame, "geometry");

@@ -14,6 +14,45 @@
 #include <QColor>
 #include <QPalette>
 #include <QVariant>
+#include <QGraphicsItem>
+
+//####################################################################################
+//##    Types of objects possible in game
+//####################################################################################
+enum class Form_Main_Mode {
+    Edit_Scene,
+    Edit_UI,
+    Node_Map,
+    Scene_Map,
+    Clear,
+};
+
+
+//####################################################################################
+//##    Used to track what the QVariant m_value data type really is
+//####################################################################################
+enum class Property_Type {
+    Bool,       Int,        Long,       Float,      Double,
+    Char,       String,
+    Image,      Icon,       Color,
+    Point2D,    Point3D,
+};
+
+
+//####################################################################################
+//##    Types of objects possible in game
+//####################################################################################
+enum class DrTypes {
+    Project,
+    World,      Folder,
+    Scene,      Background,     Foreground,     StartScene,     Variable,
+    Object,     Character,      Camera,         Action,         Light,          Logic,          Particle,
+
+    UI,
+    Label,      Button,         Joystick,
+
+    NotFound,   BaseClass,
+};
 
 
 //####################################################################################
@@ -27,33 +66,12 @@ typedef enum {
 
 
 //####################################################################################
-//##    Used to track what the QVariant m_value data type really is
+//##    Custom QGraphicsItem::UserType 's for referencing types in QGraphicsScene
 //####################################################################################
-enum class Property_Type
-{
-    BOOL,       INT,        LONG,       FLOAT,      DOUBLE,
-    CHAR,       STRING,
-    IMAGE,      ICON,       COLOR,
-    POINT2D,    POINT3D,
-};
-
-
-//####################################################################################
-//##    Types of objects possible in game
-//####################################################################################
-enum class DrTypes
-{
-    Project,
-    World,      Folder,
-    Scene,      Background,     Foreground,     StartScene,     Variable,
-    Object,     Character,      Camera,         Action,         Light,          Logic,          Particle,
-
-    UI,
-    Label,      Button,         Joystick,
-
-    NotFound,   BaseClass,
-};
-
+typedef enum {
+  Object = QGraphicsItem::UserType,
+  None,
+} User_Types;
 
 
 //####################################################################################
@@ -167,8 +185,7 @@ enum class Scene_Components
     settings,
 };
 
-enum class Scene_Properties
-{
+enum class Scene_Properties {
     // settings
     name,                   //string
     start,                  //int

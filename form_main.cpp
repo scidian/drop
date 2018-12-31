@@ -33,23 +33,18 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
 
 
     // ########## Load saved preferences
+    globals->show_debug = true;
     globals->current_color_scheme = Color_Scheme::Dark;
 
 
-    // TEMP: temp call to populate Graphics Scene
+
+    // TEMP: temp call to populate Graphics Scene (currently does chips)
     populateScene();
-
-
-    // ########## Initialize form and customize colors and styles
-    buildWindow();
-    applyColoring();
 
 
     // ########## Initialize new project, initialize local variables
     project = new DrProject();
     current_world = 0;
-
-
 
     // TEMP NEW PROJECT:
     //      Create a new project and add some stuff to it
@@ -65,9 +60,12 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
     project->addWorld();
 
 
-    // Builds out scene list from current project data
-    populateTreeSceneList();
 
+
+    // ########## Initialize form and customize colors and styles
+    buildMenu();
+    buildWindow(Form_Main_Mode::Edit_Scene);
+    applyColoring();
 
 
 
@@ -78,10 +76,11 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
 
     // TEMP:
     //      Test loading data out from a pair, i.e. "POINT2D", stored as QList<QVariant>
-    QList<QVariant> myPoint = project->getWorld(current_world)->getComponentProperty(World_Components::physics, World_Properties::gravity)->getValue().toList();
-    setLabelText(Label_Names::Label1, "Gravity X:" + myPoint.first().toString());
-    setLabelText(Label_Names::Label2, "Gravity Y:" + myPoint.last().toString());
-
+    if (current_mode == Form_Main_Mode::Edit_Scene) {
+        QList<QVariant> myPoint = project->getWorld(current_world)->getComponentProperty(World_Components::physics, World_Properties::gravity)->getValue().toList();
+        setLabelText(Label_Names::Label1, "Gravity X:" + myPoint.first().toString());
+        setLabelText(Label_Names::Label2, "Gravity Y:" + myPoint.last().toString());
+    }
 
 }
 
@@ -119,8 +118,10 @@ void FormMain::refreshMainView()
     //viewMain->update();
     //viewMain->repaint();
     //qApp->processEvents();
-    viewMain->zoomInOut(1);
-    viewMain->zoomInOut(-1);
+    if (viewMain != nullptr) {
+        viewMain->zoomInOut(1);
+        viewMain->zoomInOut(-1);
+    }
 }
 
 

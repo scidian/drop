@@ -19,6 +19,8 @@
 // Call to put in a signal to change the Advisor to the que
 void FormMain::setAdvisorInfo(HeaderBodyList header_body_list)
 {
+    if (current_mode != Form_Main_Mode::Edit_Scene) return;
+    if (advisor == nullptr) return;
     if (advisor->isHidden()) return;                        // If Advisor dock was closed, cancel
     if (advisor_header == header_body_list[0]) return;      // If Advisor header is already set to proper info, cancel
     emit sendAdvisorInfo(header_body_list);                 // Emits signal connected to changeAdvisor

@@ -27,95 +27,37 @@ QRectF DrItem::boundingRect() const
     return QRectF(0, 0, 110, 70);
 }
 
+// Seems to define mouseOver events
 QPainterPath DrItem::shape() const
 {
     QPainterPath path;
-    path.addRect(14, 14, 82, 42);
+
+    path.addRect(0, 0, 110, 70);
+
+    //path.addRect(14, 14, 82, 42);
     return path;
+}
+
+int DrItem::type() const
+{
+    // Enable the use of qgraphicsitem_cast with this item
+    return User_Types::Object;
 }
 
 void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(widget);
 
-    QColor fillColor = (option->state & QStyle::State_Selected) ? m_color.dark(150) : m_color;
+    QColor fillColor = m_color;
 
-    // If mouse is over
-    if (option->state & QStyle::State_MouseOver)
-        fillColor = fillColor.light(125);
+    if (option->state & QStyle::State_Selected)  { fillColor = m_color.dark(150); }             // If selected
+    if (option->state & QStyle::State_MouseOver) { fillColor = fillColor.light(125); }          // If mouse is over
 
-    const qreal lod = option->levelOfDetailFromTransform(painter->worldTransform());
 
-    if (lod < 0.2) {
-        if (lod < 0.125) {
-            painter->fillRect(QRectF(0, 0, 110, 70), fillColor);
-            return;
-        }
+    //painter->fillRect(QRectF(14, 14, 82, 42), fillColor);
+    painter->fillRect(QRectF(0, 0, 110, 70), fillColor);
 
-        QBrush b = painter->brush();
-        painter->setBrush(fillColor);
-        painter->drawRect(13, 13, 97, 57);
-        painter->setBrush(b);
-        return;
-    }
 
-    QPen oldPen = painter->pen();
-    QPen pen = oldPen;
-    int width = 0;
-    if (option->state & QStyle::State_Selected)
-        width += 2;
-
-    pen.setWidth(width);
-    QBrush b = painter->brush();
-    painter->setBrush(QBrush(fillColor.dark(option->state & QStyle::State_Sunken ? 120 : 100)));
-
-    painter->drawRect(QRect(14, 14, 79, 39));
-    painter->setBrush(b);
-
-    if (lod >= 1) {
-        painter->setPen(QPen(Qt::gray, 1));
-        painter->drawLine(15, 54, 94, 54);
-        painter->drawLine(94, 53, 94, 15);
-        painter->setPen(QPen(Qt::black, 0));
-    }
-
-    // Draw text
-    if (lod >= 2) {
-        QFont font("Times", 10);
-        font.setStyleStrategy(QFont::ForceOutline);
-        painter->setFont(font);
-        painter->save();
-        painter->scale(0.1, 0.1);
-        painter->drawText(170, 180, QString("Model: VSC-2000 (Very Small Chip) at %1x%2").arg(m_x).arg(m_y));
-        painter->drawText(170, 200, QString("Serial number: DLWR-WEER-123L-ZZ33-SDSJ"));
-        painter->drawText(170, 220, QString("Manufacturer: Chip Manufacturer"));
-        painter->restore();
-    }
-
-    // Draw lines
-    QVarLengthArray<QLineF, 36> lines;
-    if (lod >= 0.5) {
-        for (int i = 0; i <= 10; i += (lod > 0.5 ? 1 : 2)) {
-            lines.append(QLineF(18 + 7 * i, 13, 18 + 7 * i, 5));
-            lines.append(QLineF(18 + 7 * i, 54, 18 + 7 * i, 62));
-        }
-        for (int i = 0; i <= 6; i += (lod > 0.5 ? 1 : 2)) {
-            lines.append(QLineF(5, 18 + i * 5, 13, 18 + i * 5));
-            lines.append(QLineF(94, 18 + i * 5, 102, 18 + i * 5));
-        }
-    }
-    if (lod >= 0.4) {
-        const QLineF lineData[] = {
-            QLineF(25, 35, 35, 35),
-            QLineF(35, 30, 35, 40),
-            QLineF(35, 30, 45, 35),
-            QLineF(35, 40, 45, 35),
-            QLineF(45, 30, 45, 40),
-            QLineF(45, 35, 55, 35)
-        };
-        lines.append(lineData, 6);
-    }
-    painter->drawLines(lines.data(), lines.size());
 
     // Draw red ink
     if (stuff.size() > 1) {
@@ -133,24 +75,75 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 
 void DrItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (event->button() & Qt::LeftButton) {
+        // If clicked while holding Alt key, start resizing
+        if (event->modifiers() & Qt::KeyboardModifier::AltModifier) {
+
+            double radius = boundingRect().width() / 2.0;
+
+            m_center = QPointF(boundingRect().topLeft().x() + pos().x() + radius, boundingRect().topLeft().y() + pos().y() + radius);
+
+            //QPointF pos = event->scenePos();
+            //qDebug() << boundingRect() << radius << this->pos() << pos << event->pos();
+            //double dist = sqrt(pow(m_center.x()-pos.x(), 2) + pow(m_center.y()-pos.y(), 2));
+            //if (dist / radius > 0.8) {
+                //qDebug() << dist << radius << dist / radius;
+                m_is_resizing = true;
+            //} else {
+            //    m_is_resizing = false;
+            // }
+
+            return;
+        }
+    }
     QGraphicsItem::mousePressEvent(event);
     update();
 }
 
 void DrItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    // If shift key is held down
-    if (event->modifiers() & Qt::ShiftModifier) {
-        stuff << event->pos();
-        update();
-        return;
+    if (event->button() & Qt::LeftButton) {
+        // If mouse moved while Shift key is held down, draw red line
+        if (event->modifiers() & Qt::KeyboardModifier::ShiftModifier) {
+            stuff << event->pos();
+            update();
+            return;
+
+        // If mouse moved while Alt key is held down, resize
+        } else if (event->modifiers() == Qt::KeyboardModifier::AltModifier && m_is_resizing) {
+            QPointF pos = event->scenePos();
+            double dist = sqrt(pow(m_center.x()-pos.x(), 2) + pow(m_center.y()-pos.y(), 2));
+
+            //setRect(m_center.x() - this->pos().x() - dist, m_center.y() - this->pos().y() - dist, dist * 2, dist * 2);
+
+            //setScale()
+
+            QTransform itTransf = transform();
+            QPointF dp = this->boundingRect().center();
+
+            itTransf.translate( dp.x(), dp.y());
+            itTransf *= QTransform::fromScale( scale() + dist / 100,
+                                               scale() + dist / 100);
+            itTransf.translate( -dp.x(),  -dp.y());
+
+            setTransform(itTransf);
+
+
+            update();
+            return;
+        }
     }
     QGraphicsItem::mouseMoveEvent(event);
+    update();
 }
 
 void DrItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    QGraphicsItem::mouseReleaseEvent(event);
+    if (event->button() & Qt::LeftButton && m_is_resizing) {
+        m_is_resizing = false;
+    } else {
+        QGraphicsItem::mouseReleaseEvent(event);
+    }
     update();
 }
 

@@ -193,15 +193,14 @@ void FormMain::listSelectionChanged(QList<QTreeWidgetItem*> item_list)
     // Otherwise add first item to label, if size is one, reset first selected item
     label_3->setText(label_3->text() + ", First Item: " + item_list.first()->text(0));
 
-    if (item_list.size() == 1){
+    if (item_list.size() == 1) {
         treeScene->setSelectedKey(item_list.first()->data(0, User_Roles::Key).toLongLong());           // grab stored key from list view user data
 
         //******************************************************
         // Call to outside function to rebuild object inspector:
         buildObjectInspector();
         //******************************************************
-    }
-    else {
+    } else {
         DrTypes selected_type = project->findTypeFromKey( treeScene->getSelectedKey() );
 
         // Check if newly selected items are same type, if not, do not allow select
@@ -213,9 +212,8 @@ void FormMain::listSelectionChanged(QList<QTreeWidgetItem*> item_list)
             // If we are over item that was first selected, skip to next
             if (check_key == treeScene->getSelectedKey()) { continue; }
 
-            if (CheckTypesAreSame(check_type, selected_type) == false) {
+            if (CheckTypesAreSame(check_type, selected_type) == false)
                 check_item->setSelected(false);
-            }
         }
     }
 }
@@ -235,8 +233,7 @@ SceneTreeHighlightProxy::~SceneTreeHighlightProxy()
 
 void SceneTreeHighlightProxy::drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 {
-    if (element == QStyle::PE_IndicatorItemViewItemDrop)
-    {
+    if (element == QStyle::PE_IndicatorItemViewItemDrop) {
         if (!m_parent_tree->canWeDrop()) { return; }
 
         painter->setRenderHint(QPainter::Antialiasing, true);
@@ -248,21 +245,17 @@ void SceneTreeHighlightProxy::drawPrimitive(PrimitiveElement element, const QSty
         painter->setPen(pen);
         painter->setBrush(brush);
 
-        if(option->rect.height() == 0)
-        {
+        if(option->rect.height() == 0) {
             //painter->drawEllipse(option->rect.topLeft(), 3, 3);
             painter->drawLine(QPoint(0, option->rect.top()), QPoint(option->rect.right() + 50, option->rect.top()));
-        }
-        else {
+        } else {
             //painter->drawRoundedRect(option->rect, 5, 5);
             painter->drawLine(QPoint(0, option->rect.top()), QPoint(option->rect.right() + 50, option->rect.top()));
         }
 
         m_parent_tree->getMainWindow()->setLabelText(Label_Names::Label2, QString::fromStdString("TLX: ") + QString::number(option->rect.topLeft().x()) +
                                                                           QString::fromStdString(", TLY: ") + QString::number(option->rect.topLeft().y()));
-    }
-    else
-    {
+    } else {
         QProxyStyle::drawPrimitive(element, option, painter, widget);
     }
 }

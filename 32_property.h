@@ -22,7 +22,7 @@ private:
 
     std::string   m_display_name = "Unknown Property";
     std::string   m_description = "No description";
-    Property_Type m_preferred_type = Property_Type::STRING;
+    Property_Type m_preferred_type = Property_Type::String;
     QVariant      m_value = QString::fromStdString("0");
     long          m_property_key;
 
