@@ -15,10 +15,10 @@
 //##                                 Drop Creator                                   ##
 //##                        A Drag and Drop Video Game Maker                        ##
 //##                                                                                ##
-//##                             by Scidian Software                                ##
+//##                          (C) Scidian Software, 2018                            ##
 //##                              Stephens Nunnally                                 ##
 //##                                                                                ##
-//##                            Started December 2018                               ##
+//##                            Started December 7, 18                              ##
 //##                                                                                ##
 //####################################################################################
 //

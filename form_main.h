@@ -1,5 +1,7 @@
 //
+//      Created by Stephens Nunnally on 12/7/18, (c) 2019 Scidian Software, All Rights Reserved
 //
+//  File:
 //      FormMain - Class that holds our main form window
 //
 //      FormMain Modes:

@@ -1,5 +1,7 @@
 //
+//      Created by Stephens Nunnally on 12/26/18, (c) 2019 Scidian Software, All Rights Reserved
 //
+//  File:
 //      Handles dealing with the Scene View
 //
 //
@@ -76,10 +78,13 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
     // If space bar isnt down, start selection box
     if (dragMode() == QGraphicsView::DragMode::NoDrag) {
-        m_is_selecting = true;                                          // Flag that we're in selection mode
-        m_items_start = scene()->selectedItems();                       // Store list of originally selected items
-        m_rubber_band->setGeometry(QRect(m_origin, QSize()));           // Start selection box with no size
-        m_rubber_band->show();                                          // Make selection box visible
+        // If theres an item under mouse, don't start selection box
+        if (itemAt(event->pos()) == nullptr ) {
+            m_is_selecting = true;                                          // Flag that we're in selection mode
+            m_items_start = scene()->selectedItems();                       // Store list of originally selected items
+            m_rubber_band->setGeometry(QRect(m_origin, QSize()));           // Start selection box with no size
+            m_rubber_band->show();                                          // Make selection box visible
+        }
     }
 
     // Pass on event and update view

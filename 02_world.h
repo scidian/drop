@@ -1,5 +1,7 @@
 //
+//      Created by Stephens Nunnally on 12/7/18, (c) 2019 Scidian Software, All Rights Reserved
 //
+//  File:
 //      DrWorld - Class to hold all scenes, variables and objects for one world
 //
 //

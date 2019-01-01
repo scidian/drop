@@ -1,6 +1,8 @@
 //
+//      Created by Stephens Nunnally on 12/7/18, (c) 2019 Scidian Software, All Rights Reserved
 //
-//      DrScene class functions
+//  File:
+//      DrScene Class Definitions
 //
 //
 

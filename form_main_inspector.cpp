@@ -1,5 +1,7 @@
 //
+//      Created by Stephens Nunnally on 12/17/18, (c) 2019 Scidian Software, All Rights Reserved
 //
+//  File:
 //      Handles dealing with the Object Inspector
 //
 //

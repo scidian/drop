@@ -1,5 +1,7 @@
 //
+//      Created by Stephens Nunnally on 12/10/18, (c) 2019 Scidian Software, All Rights Reserved
 //
+//  File:
 //      Calls to set up, initialize, build, style, and color main form
 //
 //

@@ -1,6 +1,8 @@
 //
+//      Created by Stephens Nunnally on 12/26/18, (c) 2019 Scidian Software, All Rights Reserved
 //
-//      Handles dealing with the Scene View Scene container
+//  File:
+//      Handles dealing with the SceneViewScene container
 //
 //
 

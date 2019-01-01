@@ -1,6 +1,8 @@
 //
+//      Created by Stephens Nunnally on 12/26/18, (c) 2019 Scidian Software, All Rights Reserved
 //
-//
+//  File:
+//      DrItem - Class to hold one Graphics Item object within a QGraphicsScene
 //
 //
 
