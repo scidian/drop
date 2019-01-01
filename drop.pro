@@ -38,13 +38,13 @@ SOURCES += \
     globals.cpp \
     form_main.cpp \
     form_main_setup.cpp \
-    form_main_scene_list.cpp \
     form_main_inspector.cpp \
     form_main_assets.cpp \
     form_main_scene.cpp \
     05_item.cpp \
     form_main_advisor.cpp \
-    form_main_scene_view.cpp
+    form_main_scene_view.cpp \
+    form_main_scene_list.cpp
 
 HEADERS += \
     enums.h \

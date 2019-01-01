@@ -223,6 +223,8 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
     case Form_Main_Mode::Edit_Scene:
         buildWindowModeEditScene();
         populateTreeSceneList();
+        viewMain->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
+        current_focus = Form_Main_Focus::Scene_View;
         break;
     case Form_Main_Mode::Clear:
         this->takeCentralWidget()->deleteLater();

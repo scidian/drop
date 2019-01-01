@@ -33,10 +33,7 @@ void SceneGraphicsView::enterEvent(QEvent *event)
 {
     setFocus(Qt::FocusReason::MouseFocusReason);                        // Set focus on mouse enter to allow for space bar pressing hand grab
     getMainWindow()->setAdvisorInfo(Advisor_Info::Scene_Area);          // Set Advisor text on mouse enter
-
-    // Pass on event and update view
     QGraphicsView::enterEvent(event);
-    update();
 }
 
 // Key press event
@@ -48,9 +45,7 @@ void SceneGraphicsView::keyPressEvent(QKeyEvent *event)
         setInteractive(false);
     }
 
-    // Pass on event and update view
     QGraphicsView::keyPressEvent(event);
-    update();
 }
 
 // Key release event
@@ -62,9 +57,7 @@ void SceneGraphicsView::keyReleaseEvent(QKeyEvent *event)
         setInteractive(true);
     }
 
-    // Pass on event and update view
     QGraphicsView::keyReleaseEvent(event);
-    update();
 }
 
 
@@ -87,9 +80,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
         }
     }
 
-    // Pass on event and update view
     QGraphicsView::mousePressEvent(event);
-    update();
 }
 void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
@@ -121,9 +112,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
         }
     }
 
-    // Pass on event and update view
     QGraphicsView::mouseMoveEvent(event);
-    update();
 }
 void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 {
@@ -133,9 +122,7 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
         m_is_selecting = false;
     }
 
-    // Pass on event and update view
     QGraphicsView::mouseReleaseEvent(event);
-    update();
 }
 
 
@@ -167,14 +154,13 @@ void SceneGraphicsView::wheelEvent(QWheelEvent *event)
 {
     if (event->modifiers() & Qt::KeyboardModifier::ControlModifier) {
         QGraphicsView::wheelEvent(event);
-    } else {
-        if (event->delta() > 0)
-            zoomInOut(8);
-        else
-            zoomInOut(-8);
-        event->accept();
+        return;
     }
-    update();
+    if (event->delta() > 0) {
+        zoomInOut(8);  }
+    else {
+        zoomInOut(-8); }
+    event->accept();
 }
 #endif
 
@@ -188,7 +174,6 @@ void SceneGraphicsView::zoomInOut(int level)
 void SceneGraphicsView::applyUpdatedMatrix()
 {
     qreal scale = qPow(qreal(2), (m_zoom - 250) / qreal(50));
-
     QMatrix matrix;
     matrix.scale(scale, scale);
     matrix.rotate(m_rotate);

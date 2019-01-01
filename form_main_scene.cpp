@@ -23,70 +23,81 @@ void FormMain::populateScene()
 {
     scene = new SceneGraphicsScene(this, this);
 
-
-
     // Populate scene
-    QColor color;
-    QGraphicsItem *item;
-
-    color = QColor::fromRgb(QRandomGenerator::global()->generate());
-    item = new DrItem(color, 0, 0);
-    item->setPos(QPointF(0, 0));
-    scene->addItem(item);
-
-    color = QColor::fromRgb(QRandomGenerator::global()->generate());
-    item = new DrItem(color, 200, 0);
-    item->setPos(QPointF(200, 0));
-    scene->addItem(item);
-
-    color = QColor::fromRgb(QRandomGenerator::global()->generate());
-    item = new DrItem(color, 0, 200);
-    item->setPos(QPointF(0, 200));
-    scene->addItem(item);
-
-    color = QColor::fromRgb(QRandomGenerator::global()->generate());
-    item = new DrItem(color, 200, 200);
-    item->setPos(QPointF(200, 200));
-    scene->addItem(item);
+    scene->addSquare(0, 0);
+    scene->addSquare(200, 0);
+    scene->addSquare(0, 200);
+    scene->addSquare(200, 200);
 }
+
+// Create square at location
+void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, QColor color)
+{
+    QGraphicsItem *item;
+    item = new DrItem(color);
+    item->setPos(new_x, new_y);
+    addItem(item);
+}
+
+
 
 void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
 {
+    // Amount to move items when arrow keys are pressed
+    qreal move_by = 5;
+
+    // Find total bounding box of all selected items
+    QRectF sourceRect;
+    for (auto item: this->selectedItems()) {
+        sourceRect = sourceRect.united(item->sceneBoundingRect());
+    }
+
+    // Perform key press event on all selected items
+    for (auto item: this->selectedItems()) {
+        QGraphicsItem *new_item;
+        QColor new_color = QColor::fromRgb(QRandomGenerator::global()->generate()).light(100);
+        qreal new_x = item->pos().x();
+        qreal new_y = item->pos().y();
+
+        switch (event->key())
+        {
+        // Move selected items
+        case Qt::Key::Key_Up:    item->moveBy( 0, -move_by);      break;
+        case Qt::Key::Key_Down:  item->moveBy( 0,  move_by);      break;
+        case Qt::Key::Key_Left:  item->moveBy(-move_by,  0);      break;
+        case Qt::Key::Key_Right: item->moveBy( move_by,  0);      break;
+
+        // Clone selected items
+        case Qt::Key::Key_W:
+        case Qt::Key::Key_A:
+        case Qt::Key::Key_S:
+        case Qt::Key::Key_D:
+            if (event->key() == Qt::Key::Key_W) new_y = new_y - sourceRect.height();
+            if (event->key() == Qt::Key::Key_A) new_x = new_x - sourceRect.width();
+            if (event->key() == Qt::Key::Key_S) new_y = new_y + sourceRect.height();
+            if (event->key() == Qt::Key::Key_D) new_x = new_x + sourceRect.width();
+
+            new_item = new DrItem(new_color);
+            new_item->setPos(new_x, new_y);
+            addItem(new_item);
+            new_item->setSelected(true);
+            item->setSelected(false);
+            break;
+
+        // Delete selected items
+        case Qt::Key::Key_Delete:
+        case Qt::Key::Key_Backspace:
+            if (item->type() == User_Types::Object)
+                removeItem(item);
+            break;
+        }
+    }
     QGraphicsScene::keyPressEvent(event);
 }
 
-void SceneGraphicsScene::keyReleaseEvent(QKeyEvent *event)
-{
-    QGraphicsScene::keyReleaseEvent(event);
-}
-
-void SceneGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-    QGraphicsScene::mouseMoveEvent(event);
-}
-
-
-void SceneGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    // Delete item on under cursaor on right mouse button down (left mouse button with "control" key also works)
-    if (event->button() == Qt::RightButton) {
-        // check whether there is an item under the cursor
-        QGraphicsItem *itemToRemove = nullptr;
-        foreach (auto item, items(event->scenePos())) {
-            if (item->type() == User_Types::Object) {
-                itemToRemove = item;
-                break;
-            }
-        }
-        // remove the item from the graphicsScene
-        if (itemToRemove) { removeItem(itemToRemove); }
-    }
-
-
-
-    QGraphicsScene::mousePressEvent(event);
-    update();
-}
+void SceneGraphicsScene::keyReleaseEvent(QKeyEvent *event) { QGraphicsScene::keyReleaseEvent(event); }
+void SceneGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) { QGraphicsScene::mouseMoveEvent(event); }
+void SceneGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event) { QGraphicsScene::mousePressEvent(event); }
 
 
 

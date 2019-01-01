@@ -158,6 +158,9 @@ public:
     // Getters and setters
     FormMain*    getMainWindow() { return m_parent_window; }
 
+    // Function calls
+    void addSquare(qreal new_x, qreal new_y, QColor color = QColor::fromRgb(QRandomGenerator::global()->generate()).light(100));
+
 };
 
 

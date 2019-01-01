@@ -18,16 +18,13 @@ class DrItem : public QGraphicsItem
 private:
     QVector<QPointF> stuff;
 
-    int     m_x;
-    int     m_y;
     QColor  m_color;
-
     QPointF m_center;
 
     bool    m_is_resizing;
 
 public:
-    DrItem(const QColor &start_color, int start_x, int start_y);
+    DrItem(const QColor &start_color);
 
     virtual QRectF       boundingRect() const override;
     virtual QPainterPath shape() const override;
