@@ -31,6 +31,18 @@ enum class Form_Main_Mode {
 
 
 //####################################################################################
+//##    Sections of FormMain that can have focus
+//####################################################################################
+enum class Form_Main_Focus {
+    Assets,
+    Scene_List,
+    Scene_View,
+    Object_Inspector,
+    Bottom_Area,
+};
+
+
+//####################################################################################
 //##    Used to track what the QVariant m_value data type really is
 //####################################################################################
 enum class Property_Type {

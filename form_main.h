@@ -14,9 +14,8 @@
 //          Top Area (Toolbar)
 //          Advisor (Dock)
 //          Object Inspector (Dock)
-//          Advisor (Dock)
 //
-//          Components That Can Hold Focus:
+//          Components That Can Appear in Object Inspector:
 //              Asset List (Dock)
 //              Scene View
 //              Scene List
@@ -61,6 +60,7 @@ public:
     // Locals
     Globals        *globals;                                            // Holds project globals
     Form_Main_Mode  current_mode;                                       // Holds current editing mode of FormMain
+    Form_Main_Focus current_focus;                                      // Holds Widget that currently has focus
 
     // Locals that need to be SAVED / LOADED from each project
     DrProject      *project;                                            // Holds whatever the current open game project is
@@ -279,6 +279,7 @@ public:
 //##    TreeObjectInspector
 //##        A sub classed QTreeWidget so we can override events for Object Inspector List
 //############################
+class InspectorCategoryButton;
 class TreeObjectInspector: public QTreeWidget
 {
     Q_OBJECT
@@ -294,7 +295,6 @@ public:
 
     // Getters and setters
     FormMain*       getMainWindow() { return m_parent_window; }
-
 };
 
 //############################
@@ -306,16 +306,18 @@ class InspectorCategoryButton : public QPushButton
     Q_OBJECT
 
 private:
-    QTreeWidgetItem *m_pItem;
-    QFrame          *m_child_frame;
-    QRect            m_rect;
+    TreeObjectInspector *m_parent_tree;
+    QTreeWidgetItem     *m_parent_item;
+    QFrame              *m_child_frame;
+    int                  m_height;
+    bool                 m_is_shrunk = false;
 
 public:
-    InspectorCategoryButton(const QString& a_Text, QTreeWidget* a_pParent, QTreeWidgetItem* a_pItem, QFrame* new_child);
+    InspectorCategoryButton(const QString &text, TreeObjectInspector *parent_tree, QTreeWidgetItem *parent_item, QFrame *new_child);
 
 private slots:
-    void ButtonPressed();
-
+    void animationDone();
+    void buttonPressed();
 };
 
 

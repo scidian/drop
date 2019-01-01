@@ -97,10 +97,15 @@ void FormMain::buildObjectInspector()
             rowCount++;
         }
 
-        // Create new item in list to hold component
+        // Create new item in list to hold component and add the TreeWidgetItem to the tree
         QTreeWidgetItem *new_category = new QTreeWidgetItem();
         new_category->setData(0, User_Roles::Key, QVariant::fromValue(i.second->getComponentKey()));           // Stores component key in list user data
+        treeObject->addTopLevelItem(new_category);
 
+        // Create a child TreeWidgetItem attached to the TopLevel category item
+        QTreeWidgetItem *property_box = new QTreeWidgetItem();
+        property_box->setDisabled(true);
+        new_category->addChild(property_box);
 
         //->Create and style a button to be used as a header item for the category
         InspectorCategoryButton *category_button = new InspectorCategoryButton(QString(" ") + i.second->getDisplayNameQString(),
@@ -113,21 +118,13 @@ void FormMain::buildObjectInspector()
         category_button->setIcon(QIcon(i.second->getIcon()));
         category_button->setStyleSheet(buttonColor);
 
-        // Add the TreeWidgetItem to the tree and apply the button as the widget for that tree item
-        treeObject->addTopLevelItem(new_category);
+        // Apply the button and property box widgets to the tree items
         treeObject->setItemWidget(new_category, 0, category_button);
-
-        // Create a child TreeWidgetItem attached to the TopLevel category item, and apply the property box as the widget for that tree item
-        QTreeWidgetItem *property_box = new QTreeWidgetItem();
-        property_box->setDisabled(true);
-        new_category->addChild(property_box);
         treeObject->setItemWidget(property_box, 0, properties_frame);
-
     }
 
     treeObject->expandAll();
 }
-
 
 
 // Handles changing the Advisor on Mouse Enter
@@ -139,31 +136,43 @@ void TreeObjectInspector::enterEvent(QEvent *event)
 
 
 
+
 // Constructor for category button, gives button a way to pass click to custom function
-InspectorCategoryButton::InspectorCategoryButton(const QString& a_Text, QTreeWidget* a_pParent, QTreeWidgetItem* a_pItem, QFrame* new_child)
-    : QPushButton(a_Text, a_pParent),
-      m_pItem(a_pItem),
+InspectorCategoryButton::InspectorCategoryButton(const QString &text, TreeObjectInspector *parent_tree, QTreeWidgetItem *parent_item, QFrame *new_child)
+    : QPushButton(text, parent_tree),
+      m_parent_tree(parent_tree),
+      m_parent_item(parent_item),
       m_child_frame(new_child)
 {
-    //connect(this, SIGNAL(pressed()), this, SLOT(ButtonPressed()));
-    connect(this, SIGNAL(clicked()), this, SLOT(ButtonPressed()));          // Forwards user button click to function that expands / contracts
+    // Forwards user button click to function that expands / contracts
+    connect(this, SIGNAL(clicked()), this, SLOT(buttonPressed()));
 }
 
 // Called by click signal, expands or contracts category after user click
-void InspectorCategoryButton::ButtonPressed()
+void InspectorCategoryButton::animationDone() { m_parent_item->setExpanded(!m_is_shrunk); }
+void InspectorCategoryButton::buttonPressed()
 {
-    if (m_pItem->isExpanded()) {
-        m_pItem->setExpanded(false);
-        m_rect = m_child_frame->frameRect();
+    QPropertyAnimation *propAnimationFade = new QPropertyAnimation(m_child_frame, "geometry");
+    QRect start_rect, end_rect;
+
+    propAnimationFade->setDuration(100);
+    start_rect = m_child_frame->geometry();
+    end_rect = start_rect;
+
+    if (!m_is_shrunk) {
+        connect(propAnimationFade, SIGNAL(finished()), this, SLOT(animationDone()));
+        m_height = start_rect.height();
+        end_rect.setHeight(0);
+        m_is_shrunk = true;
     } else {
-        m_pItem->setExpanded(true);
-        // Playing with animating opening
-        //QPropertyAnimation *propAnimationFade = new QPropertyAnimation(m_child_frame, "geometry");
-        //propAnimationFade->setDuration(100);
-        //propAnimationFade->setStartValue(QRect(0,20,0,0));
-        //propAnimationFade->setEndValue(m_rect);
-        //propAnimationFade->start();
+        m_parent_item->setExpanded(true);
+        end_rect.setHeight(m_height);
+        m_is_shrunk = false;
     }
+
+    propAnimationFade->setStartValue(start_rect);
+    propAnimationFade->setEndValue(end_rect);
+    propAnimationFade->start();
 }
 
 

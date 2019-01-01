@@ -23,13 +23,13 @@ void FormMain::populateTreeSceneList()
 
     for (auto world_pair: project->getWorldMap())
     {
-        QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(treeScene);                             // Create new item (top level item)
+        QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(treeScene);                                 // Create new item (top level item)
 
         topLevelItem->setIcon(0, QIcon(":/tree_icons/tree_world.png"));                                 // Loads icon for world
         topLevelItem->setText(0, "World: " + world_pair.second->getComponentPropertyValue(
                                  World_Components::settings, World_Properties::name).toString());       // Set text for item
         topLevelItem->setData(0, User_Roles::Key, QVariant::fromValue(world_pair.second->getKey()));
-        treeScene->addTopLevelItem(topLevelItem);                                                   // Add it on our tree as the top item.
+        treeScene->addTopLevelItem(topLevelItem);                                                       // Add it on our tree as the top item.
 
         for (auto scene_pair: world_pair.second->getSceneMap())
         {
