@@ -1,6 +1,6 @@
 //
 //
-//      Handles dealing with the Scene View
+//      Handles dealing with the Scene View Scene container
 //
 //
 
@@ -66,8 +66,8 @@ void SceneGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void SceneGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    // Delete item on under cursaor on right mouse button down
-    if (event->button() & Qt::RightButton) {
+    // Delete item on under cursaor on right mouse button down (left mouse button with "control" key also works)
+    if (event->button() == Qt::RightButton) {
         // check whether there is an item under the cursor
         QGraphicsItem *itemToRemove = nullptr;
         foreach (auto item, items(event->scenePos())) {
@@ -79,6 +79,9 @@ void SceneGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         // remove the item from the graphicsScene
         if (itemToRemove) { removeItem(itemToRemove); }
     }
+
+
+
     QGraphicsScene::mousePressEvent(event);
     update();
 }

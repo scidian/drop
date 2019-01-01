@@ -34,6 +34,7 @@
 // Necessary forward declarations
 class SceneGraphicsScene;
 class SceneGraphicsView;
+class SceneViewRubberBand;
 class TreeSceneView;
 class TreeObjectInspector;
 class TreeAssetList;
@@ -168,20 +169,27 @@ class SceneGraphicsView : public QGraphicsView
 
 private:
     // Local member variables
-    FormMain   *m_parent_window;
-    int         m_zoom = 250;
-    int         m_rotate = 0;
-    bool        m_flag_key_down_spacebar = false;
+    FormMain    *m_parent_window;
+    int          m_zoom = 250;
+    int          m_rotate = 0;
+    bool         m_flag_key_down_spacebar = false;
+
+    SceneViewRubberBand    *m_rubber_band;
+    QPoint                  m_origin;
+    bool                    m_is_selecting;
+    QList<QGraphicsItem *>  m_items_start;
 
 public:
     // Constructor
-    explicit SceneGraphicsView(QWidget *parent, FormMain *main_window) : QGraphicsView(parent = nullptr), m_parent_window (main_window) { }
+    explicit SceneGraphicsView(QWidget *parent, FormMain *main_window);
 
     // Event Overrides, start at Qt Docs for QGraphicsView Class to find more
     virtual void enterEvent(QEvent *event) override;                                // Inherited from QWidget
     virtual void keyPressEvent(QKeyEvent *event) override;                          // Inherited from QWidget
     virtual void keyReleaseEvent(QKeyEvent *event) override;                        // Inherited from QWidget
     virtual void mouseMoveEvent(QMouseEvent *event) override;                       // Inherited from QWidget
+    virtual void mousePressEvent(QMouseEvent *event) override;                      // Inherited from QWidget
+    virtual void mouseReleaseEvent(QMouseEvent *event) override;                    // Inherited from QWidget
 #if QT_CONFIG(wheelevent)
     virtual void wheelEvent(QWheelEvent *event) override;                           // Inherited from QWidget
 #endif
@@ -193,6 +201,15 @@ public:
     void applyUpdatedMatrix();
     void zoomInOut(int level);
 
+};
+
+class SceneViewRubberBand : public QRubberBand
+{
+private:
+    Globals        *globals;                                            // Holds project globals, for getting color_scheme
+public:
+    SceneViewRubberBand(Shape shape, Globals *pass_globals, QWidget *parent) : QRubberBand (shape, parent), globals(pass_globals) { }
+    virtual void paintEvent(QPaintEvent *) override;
 };
 
 

@@ -51,7 +51,8 @@ void FormMain::applyColoring()
         " QTreeWidget { icon-size: 14px 14px; }"
         " QTreeWidget { color: " + globals->getColor(Window_Colors::Text).name() + ";  "
         "       background: " + globals->getColor(Window_Colors::Background_Dark).name() + "; "
-        "       selection-background-color: " + globals->getColor(Window_Colors::Midlight).name() + "; }"
+        "       selection-background-color: " + globals->getColor(Window_Colors::Midlight).name() + "; "
+        "       show-decoration-selected: 1; }"
         " QTreeWidget::item:selected { color: " + globals->getColor(Window_Colors::Icon_Dark).name() + "; "
         "       background: " + globals->getColor(Window_Colors::Midlight).name() + "; }"
         " QTreeWidget::item:hover:selected { color: " + globals->getColor(Window_Colors::Icon_Light).name() + "; "
@@ -109,7 +110,6 @@ void FormMain::buildMenu()
     this->setWindowModality(Qt::NonModal);
     this->resize(1300, 800);
     this->setMinimumSize(QSize(780, 400));
-    //this->setFont(font);
     this->setMouseTracking(true);
     this->setAcceptDrops(true);
     this->setWindowIcon(QIcon(":icon/icon256.png"));                        // Set icon
@@ -200,16 +200,17 @@ void FormMain::buildMenu()
 //####################################################################################
 //##        Setting up of form main
 //####################################################################################
+// Lists all child widgets of FormMain
 void FormMain::listChildren()
 {
     QString widget_list;
-    foreach(QWidget *widget, findChildren<QWidget *>())
-    {
+    for (auto widget : findChildren<QWidget *>()) {
         widget_list += widget->objectName() + ", ";
     }
     globals->showMessageBox(widget_list);
 }
 
+// Re-configures FormMain to new mode
 void FormMain::buildWindow(Form_Main_Mode new_layout)
 {
     QString widget_list;
@@ -318,7 +319,8 @@ void FormMain::buildWindowModeEditScene()
                     viewMain = new SceneGraphicsView(splitterHorizontal, this);
                     viewMain->setObjectName(QStringLiteral("viewMain"));
                     viewMain->setRenderHint(QPainter::Antialiasing, false);
-                    viewMain->setDragMode(QGraphicsView::DragMode::RubberBandDrag);
+                    //viewMain->setDragMode(QGraphicsView::DragMode::RubberBandDrag);
+                    viewMain->setDragMode(QGraphicsView::DragMode::NoDrag);
                     viewMain->setOptimizationFlags(QGraphicsView::DontSavePainterState);
                     viewMain->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
                     viewMain->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
@@ -531,6 +533,8 @@ void FormMain::buildWindowModeEditScene()
         toolbar->setTitleBarWidget(new QWidget());                                      // Removes title bar from QDockWidget Toolbar
     addDockWidget(static_cast<Qt::DockWidgetArea>(4), toolbar);
 
+    resizeDocks({assets, inspector}, {180, 300}, Qt::Horizontal);                               // Forces resize of dock
+
     applyDropShadowByType(buttonAtlas, Shadow_Types::Button_Shadow);
     applyDropShadowByType(buttonFonts, Shadow_Types::Button_Shadow);
     applyDropShadowByType(buttonPlay, Shadow_Types::Button_Shadow);
@@ -555,8 +559,6 @@ void FormMain::buildWindowModeEditScene()
     buttonSettings->setText(QApplication::translate("MainWindow", "App Settings", nullptr));
     buttonWorlds->setText(QApplication::translate("MainWindow", "Worlds / UI", nullptr));
 
-
-    resizeDocks({assets, inspector}, {180, 300}, Qt::Horizontal);                               // Forces resize of dock
 
 }
 

@@ -25,7 +25,7 @@ private:
     bool    m_is_resizing;
 
 public:
-    DrItem(const QColor &color, int x, int y);
+    DrItem(const QColor &start_color, int start_x, int start_y);
 
     virtual QRectF       boundingRect() const override;
     virtual QPainterPath shape() const override;
