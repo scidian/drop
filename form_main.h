@@ -189,14 +189,15 @@ public:
     explicit SceneGraphicsView(QWidget *parent, FormMain *main_window);
 
     // Event Overrides, start at Qt Docs for QGraphicsView Class to find more
-    virtual void enterEvent(QEvent *event) override;                                // Inherited from QWidget
-    virtual void keyPressEvent(QKeyEvent *event) override;                          // Inherited from QWidget
-    virtual void keyReleaseEvent(QKeyEvent *event) override;                        // Inherited from QWidget
-    virtual void mouseMoveEvent(QMouseEvent *event) override;                       // Inherited from QWidget
-    virtual void mousePressEvent(QMouseEvent *event) override;                      // Inherited from QWidget
-    virtual void mouseReleaseEvent(QMouseEvent *event) override;                    // Inherited from QWidget
+    virtual void paintEvent(QPaintEvent *event) override;                               // Inherited from QWidget
+    virtual void enterEvent(QEvent *event) override;                                    // Inherited from QWidget
+    virtual void keyPressEvent(QKeyEvent *event) override;                              // Inherited from QWidget
+    virtual void keyReleaseEvent(QKeyEvent *event) override;                            // Inherited from QWidget
+    virtual void mouseMoveEvent(QMouseEvent *event) override;                           // Inherited from QWidget
+    virtual void mousePressEvent(QMouseEvent *event) override;                          // Inherited from QWidget
+    virtual void mouseReleaseEvent(QMouseEvent *event) override;                        // Inherited from QWidget
 #if QT_CONFIG(wheelevent)
-    virtual void wheelEvent(QWheelEvent *event) override;                           // Inherited from QWidget
+    virtual void wheelEvent(QWheelEvent *event) override;                               // Inherited from QWidget
 #endif
 
     // Getters and setters
@@ -310,16 +311,19 @@ class InspectorCategoryButton : public QPushButton
 
 private:
     TreeObjectInspector *m_parent_tree;
-    QTreeWidgetItem     *m_parent_item;
+    QTreeWidgetItem     *m_parent_item,     *m_child_item;
     QFrame              *m_child_frame;
     int                  m_height;
     bool                 m_is_shrunk = false;
+    QRect                start_rect, end_rect;
 
 public:
-    InspectorCategoryButton(const QString &text, TreeObjectInspector *parent_tree, QTreeWidgetItem *parent_item, QFrame *new_child);
+    InspectorCategoryButton(const QString &text, TreeObjectInspector *parent_tree,
+                            QTreeWidgetItem *parent_item, QTreeWidgetItem *child_item, QFrame *new_child);
 
 private slots:
     void animationDone();
+    void animationUpdate(const QVariant &value);
     void buttonPressed();
 };
 

@@ -46,14 +46,12 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 
     QColor fillColor = m_color;
 
-    if (option->state & QStyle::State_Selected)  { fillColor = QColor(Qt::red); } //m_color.dark(150); }             // If selected
+    if (option->state & QStyle::State_Selected)  { fillColor = QColor(Qt::red); } //m_color.dark(150); }                // If selected
     //if (option->state & QStyle::State_MouseOver) { fillColor = QColor(Qt::gray); } //fillColor.light(125); }          // If mouse is over
     //if (option->state & QStyle::State_MouseOver && option->state & QStyle::State_Selected) { fillColor = QColor(Qt::red).darker(200); }
 
 
-    //painter->fillRect(QRectF(14, 14, 82, 42), fillColor);
     painter->fillRect(QRectF(0, 0, 110, 70), fillColor);
-
 
 
     // Draw red ink
@@ -93,6 +91,7 @@ void DrItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
             return;
         }
     }
+
     QGraphicsItem::mousePressEvent(event);
     update();
 }
@@ -130,17 +129,17 @@ void DrItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             return;
         }
     }
+
     QGraphicsItem::mouseMoveEvent(event);
     update();
 }
 
+
 void DrItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (event->button() & Qt::LeftButton && m_is_resizing) {
-        m_is_resizing = false;
-    } else {
-        QGraphicsItem::mouseReleaseEvent(event);
-    }
+    if (event->button() & Qt::LeftButton && m_is_resizing) { m_is_resizing = false; }
+
+    QGraphicsItem::mouseReleaseEvent(event);
     update();
 }
 

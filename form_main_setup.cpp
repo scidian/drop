@@ -495,6 +495,10 @@ void FormMain::buildWindowModeEditScene()
             treeObject->setItemsExpandable(true);
             treeObject->setExpandsOnDoubleClick(false);
             treeObject->setHeaderHidden(true);
+
+            //treeObject->setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents);
+            //treeObject->setAnimated(true);
+
         verticalLayoutObject->addWidget(treeObject);
         inspector->setWidget(widgetInspector);
 

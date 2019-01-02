@@ -81,6 +81,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
     }
 
     QGraphicsView::mousePressEvent(event);
+    update();
 }
 void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
@@ -113,6 +114,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
     }
 
     QGraphicsView::mouseMoveEvent(event);
+    update();
 }
 void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 {
@@ -123,11 +125,31 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
     }
 
     QGraphicsView::mouseReleaseEvent(event);
+    update();
+}
+
+
+void SceneGraphicsView::paintEvent(QPaintEvent *event)
+{
+    // Go ahead and paint scene
+    QGraphicsView::paintEvent(event);
+
+    // Draw selection boxes around all selected items
+    QPainter painter(viewport());
+    painter.setPen(QPen(Qt::white, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    painter.setBrush(Qt::NoBrush);
+
+    for (auto item: scene()->selectedItems()) {
+        QRectF rect = item->boundingRect();                                 // Get item bounding box
+        rect.translate(item->pos().x(), item->pos().y());                   // Translate bounding box to proper scene location
+        QPolygon to_view = mapFromScene(rect);                              // Convert scene location to view location
+        painter.drawPolygon(to_view);                                       // Draw polygon
+    }
 }
 
 
 
-// Custom Paint override so we can draw our selection box with custom colors
+// Custom Paint override so we can draw our Rubber Band selection box with custom colors
 void SceneViewRubberBand::paintEvent(QPaintEvent *)
 {
     QColor bg = globals->getColor(Window_Colors::Icon_Light);
