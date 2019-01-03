@@ -73,10 +73,10 @@ enum class DrTypes {
 //##    Custom Qt::UserRole 's for storing data in QWidgets using setData
 //####################################################################################
 typedef enum {
-  Key = Qt::UserRole,
-  Scale,
-  Uknown,
-  Add_More,
+    Key = Qt::UserRole,
+    Scale,
+    Position,
+    Add_More,
 } User_Roles;
 
 
@@ -84,8 +84,8 @@ typedef enum {
 //##    Custom QGraphicsItem::UserType 's for referencing types in QGraphicsScene
 //####################################################################################
 typedef enum {
-  Object = QGraphicsItem::UserType,
-  None,
+    Object = QGraphicsItem::UserType,
+    None,
 } User_Types;
 
 

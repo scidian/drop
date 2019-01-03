@@ -179,6 +179,8 @@ private:
     bool         m_flag_key_down_control = false;
     bool         m_flag_key_down_alt = false;
 
+    QMutex                  selection_mutex { QMutex::NonRecursive };             // Used to keep mouse move from backing up
+
     QPoint                  m_origin;
     QPointF                 m_origin_in_scene;
     QGraphicsItem          *m_origin_item;

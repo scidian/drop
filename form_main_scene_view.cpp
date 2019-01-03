@@ -108,12 +108,19 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
                 if (scene()->selectedItems().count() > 0) {
                     m_is_resizing = true;
 
-                    // Store total size of selection rectangle
+                    // Store some starting info about the selected items before we start resizing
                     m_selection_rect = scene()->selectedItems().first()->sceneBoundingRect();
                     for (auto item: scene()->selectedItems()) {
+                        // Store total size of selection rectangle
                         m_selection_rect = m_selection_rect.united(item->sceneBoundingRect());
+
+                        // Store starting scale of each selected item
                         QSizeF my_scale(item->transform().m11(), item->transform().m22());
                         item->setData(User_Roles::Scale, my_scale);
+
+                        // Store starting position of each selected item
+                        QSizeF my_pos(item->pos().x(), item->pos().y());
+                        item->setData(User_Roles::Position, my_pos);
                     }
                     return;
                 }
@@ -144,32 +151,33 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
 void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
+    if (selection_mutex.tryLock() == false) return;           // Try and lock function, so we ony run this once at a time
+
     // If we're in selection mode, process mouse movement and resize box as needed
     if (m_is_selecting) {
         m_rubber_band->setGeometry(QRect(m_origin, event->pos()).normalized());                             // Resize selection box
 
         QPainterPath selectionArea;
         selectionArea.addPolygon(mapToScene(m_rubber_band->geometry()));                                    // Convert box to scene coords
-        selectionArea.closeSubpath();
+        selectionArea.closeSubpath();                                                                       // Closes an open polygon
 
         scene()->setSelectionArea(selectionArea, Qt::ItemSelectionOperation::AddToSelection,
-                                  Qt::ItemSelectionMode::IntersectsItemBoundingRect, viewportTransform());         // Pass box to scene for selection
+                                  Qt::ItemSelectionMode::IntersectsItemBoundingRect, viewportTransform());  // Pass box to scene for selection
 
         // Go through selected items, unselect if rubber band box covered them and has since shrunk
         for (auto item : scene()->selectedItems()) {
-            QPainterPath item_location = item->shape();                                                     // Get items shape
-            item_location.translate(item->pos().x(), item->pos().y());                                      // And translate to scene coords
-
+            QRectF item_location = item->sceneBoundingRect();                                       // Get items shape
             if (scene()->selectionArea().intersects( item_location ) == false) {
                 // Check if item was in the original selection list, if so mark to keep selected
                 bool has_it = false;
                 for (auto check_item : m_items_start) {
-                    if (check_item == item) has_it = true;                                                  // Item was in original selection list
+                   if (check_item == item) has_it = true;                                                  // Item was in original selection list
                 }
                 // If it selected during this routine, but the Rubber Band has moved away, deselect it
                 if (!has_it) { item->setSelected(false); }
             }
         }
+
     }
 
 
@@ -179,23 +187,32 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
         QPointF mouse_in_scene =  mapToScene(event->pos());
         QPointF top_left_select = m_selection_rect.topLeft();
 
-        qreal original_x = m_origin_in_scene.x() - top_left_select.x();
-        qreal original_y = m_origin_in_scene.y() - top_left_select.y();
-
+        // Find starting size
+        qreal original_x = m_origin_in_scene.x() - top_left_select.x();             // Original width of selection
+        qreal original_y = m_origin_in_scene.y() - top_left_select.y();             // Original height of selection
         if (abs(original_x) < .0001) original_x = .001;
         if (abs(original_y) < .0001) original_y = .001;
 
-        qreal scale_x = (mouse_in_scene.x() - top_left_select.x()) / original_x;
-        qreal scale_y = (mouse_in_scene.y() - top_left_select.y()) / original_y;
-
+        // Calculate scale of original selection box vs new size
+        qreal scale_x = (mouse_in_scene.x() - top_left_select.x()) / original_x;    // New width of selection / original width
+        qreal scale_y = (mouse_in_scene.y() - top_left_select.y()) / original_y;    // New height of selection / original height
 
         for (auto item : scene()->selectedItems()) {
-            QVariant get_data = item->data(User_Roles::Scale);
-            QSizeF my_scale = get_data.toSizeF();
+            // Get stored data from each item
+            QVariant get_data;
+            QSizeF my_scale, my_pos;
+            get_data = item->data(User_Roles::Scale);       my_scale = get_data.toSizeF();
+            get_data = item->data(User_Roles::Position);    my_pos =   get_data.toSizeF();
 
+            // Apply new scale to each item
             QTransform scale_transform;
             scale_transform = QTransform::fromScale(my_scale.width() * scale_x, my_scale.height() * scale_y);
             item->setTransform(scale_transform);
+
+            // Move each item as neccessary to keep them aligned within selection box
+            qreal new_left = my_pos.width() * scale_x;
+            qreal new_top =  my_pos.height() * scale_y;
+            item->setPos(new_left, new_top);
         }
 
         getMainWindow()->setLabelText(Label_Names::Label2,
@@ -217,6 +234,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
     QGraphicsView::mouseMoveEvent(event);
     update();
+    selection_mutex.unlock();
 }
 
 
