@@ -22,10 +22,10 @@
 //
 //  Need to finish dynamically building object inspector
 //
-void FormMain::buildObjectInspector()
+void FormMain::buildObjectInspector(QList<long> key_list)
 {
     // First, retrieve unique key of item clicked in list
-    long        selected_key = treeScene->getSelectedKey();
+    long        selected_key = key_list[0];
     DrTypes     selected_type = project->findTypeFromKey( selected_key );
     std::string type_string = StringFromType(selected_type);
     setLabelText(Label_Names::LabelObject1, "KEY: " + QString::number( selected_key ) + ", TYPE: " + QString::fromStdString(type_string));
@@ -51,6 +51,12 @@ void FormMain::buildObjectInspector()
     int rowCount = 0;
     treeObject->clear();
     for (auto i: components) {
+
+        // Create new item in list to hold component and add the TreeWidgetItem to the tree
+        QTreeWidgetItem *category_item = new QTreeWidgetItem();
+        category_item->setData(0, User_Roles::Key, QVariant::fromValue(i.second->getComponentKey()));           // Stores component key in list user data
+        treeObject->addTopLevelItem(category_item);
+
         // Creates a frame to hold all properties of component, with vertical layout
         QFrame *properties_frame = new QFrame(treeObject);
         QBoxLayout *vertical_layout = new QVBoxLayout(properties_frame);
@@ -95,10 +101,6 @@ void FormMain::buildObjectInspector()
             rowCount++;
         }
 
-        // Create new item in list to hold component and add the TreeWidgetItem to the tree
-        QTreeWidgetItem *category_item = new QTreeWidgetItem();
-        category_item->setData(0, User_Roles::Key, QVariant::fromValue(i.second->getComponentKey()));           // Stores component key in list user data
-        treeObject->addTopLevelItem(category_item);
 
         // Create a child TreeWidgetItem attached to the TopLevel category item
         QTreeWidgetItem *property_item = new QTreeWidgetItem();
@@ -115,6 +117,7 @@ void FormMain::buildObjectInspector()
                                       " QPushButton:pressed { color: #333333; }");
         category_button->setIcon(QIcon(i.second->getIcon()));
         category_button->setStyleSheet(buttonColor);
+
 
         // Apply the button and property box widgets to the tree items
         treeObject->setItemWidget(category_item, 0, category_button);
@@ -149,7 +152,6 @@ InspectorCategoryButton::InspectorCategoryButton(const QString &text, TreeObject
 // Called by click signal, expands or contracts category after user click
 void InspectorCategoryButton::animationDone() { if (m_is_shrunk) m_parent_item->setExpanded(false); }
 void InspectorCategoryButton::animationUpdate(const QVariant &value) { Q_UNUSED(value); }
-
 void InspectorCategoryButton::buttonPressed()
 {
     QPropertyAnimation *propAnimationFade = new QPropertyAnimation(m_child_frame, "geometry");

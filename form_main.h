@@ -111,7 +111,7 @@ public:
     void        populateTreeSceneList();
 
     // Object Inspector Handling
-    void        buildObjectInspector();
+    void        buildObjectInspector(QList<long> key_list);
 
 private:
     // Form setup
@@ -152,8 +152,6 @@ public:
     // Event Overrides, start at Qt Docs for QGraphicsScene Class to find more
     virtual void keyPressEvent(QKeyEvent *event) override;                              // Inherited from QGraphicsScene
     virtual void keyReleaseEvent(QKeyEvent *event) override;                            // Inherited from QGraphicsScene
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;              // Inherited from QGraphicsScene
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event) override;             // Inherited from QGraphicsScene
 
     // Getters and setters
     FormMain*    getMainWindow() { return m_parent_window; }
@@ -178,11 +176,18 @@ private:
     int          m_zoom = 250;
     int          m_rotate = 0;
     bool         m_flag_key_down_spacebar = false;
+    bool         m_flag_key_down_control = false;
+    bool         m_flag_key_down_alt = false;
 
-    SceneViewRubberBand    *m_rubber_band;
     QPoint                  m_origin;
-    bool                    m_is_selecting;
+    QPointF                 m_origin_in_scene;
+    QGraphicsItem          *m_origin_item;
+    SceneViewRubberBand    *m_rubber_band;
     QList<QGraphicsItem *>  m_items_start;
+    bool                    m_is_selecting = false;
+    bool                    m_is_resizing = false;
+    QRectF                  m_selection_rect;
+
 
 public:
     // Constructor

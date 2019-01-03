@@ -74,8 +74,9 @@ enum class DrTypes {
 //####################################################################################
 typedef enum {
   Key = Qt::UserRole,
-  Another,
-  Unknown,
+  Scale,
+  Uknown,
+  Add_More,
 } User_Roles;
 
 

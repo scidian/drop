@@ -41,23 +41,33 @@ void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, QColor color)
 
 
 
+void SceneGraphicsScene::keyReleaseEvent(QKeyEvent *event) { QGraphicsScene::keyReleaseEvent(event); }
+
 void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
 {
     // Amount to move items when arrow keys are pressed
     qreal move_by = 5;
 
+    if (this->selectedItems().count() < 1) {
+        QGraphicsScene::keyPressEvent(event);
+        return;
+    }
+
     // Find total bounding box of all selected items
-    QRectF sourceRect;
+    QRectF source_rect = this->selectedItems().first()->sceneBoundingRect();
+
+
+
     for (auto item: this->selectedItems()) {
-        sourceRect = sourceRect.united(item->sceneBoundingRect());
+        source_rect = source_rect.united(item->sceneBoundingRect());
     }
 
     // Perform key press event on all selected items
     for (auto item: this->selectedItems()) {
         QGraphicsItem *new_item;
         QColor new_color = QColor::fromRgb(QRandomGenerator::global()->generate()).light(100);
-        qreal new_x = item->pos().x();
-        qreal new_y = item->pos().y();
+        qreal new_x = item->scenePos().x();
+        qreal new_y = item->scenePos().y();
 
         switch (event->key())
         {
@@ -72,13 +82,14 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
         case Qt::Key::Key_A:
         case Qt::Key::Key_S:
         case Qt::Key::Key_D:
-            if (event->key() == Qt::Key::Key_W) new_y = new_y - sourceRect.height();
-            if (event->key() == Qt::Key::Key_A) new_x = new_x - sourceRect.width();
-            if (event->key() == Qt::Key::Key_S) new_y = new_y + sourceRect.height();
-            if (event->key() == Qt::Key::Key_D) new_x = new_x + sourceRect.width();
+            if (event->key() == Qt::Key::Key_W) new_y = new_y - source_rect.height();
+            if (event->key() == Qt::Key::Key_A) new_x = new_x - source_rect.width();
+            if (event->key() == Qt::Key::Key_S) new_y = new_y + source_rect.height();
+            if (event->key() == Qt::Key::Key_D) new_x = new_x + source_rect.width();
 
             new_item = new DrItem(new_color);
             new_item->setPos(new_x, new_y);
+            new_item->setTransform(item->transform());
             addItem(new_item);
             new_item->setSelected(true);
             item->setSelected(false);
@@ -94,12 +105,6 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
     }
     QGraphicsScene::keyPressEvent(event);
 }
-
-void SceneGraphicsScene::keyReleaseEvent(QKeyEvent *event) { QGraphicsScene::keyReleaseEvent(event); }
-void SceneGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) { QGraphicsScene::mouseMoveEvent(event); }
-void SceneGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event) { QGraphicsScene::mousePressEvent(event); }
-
-
 
 
 

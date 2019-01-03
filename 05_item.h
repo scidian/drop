@@ -13,15 +13,12 @@
 
 #include "30_settings.h"
 
+#include "form_main.h"
+
 class DrItem : public QGraphicsItem
 {
 private:
-    QVector<QPointF> stuff;
-
-    QColor  m_color;
-    QPointF m_center;
-
-    bool    m_is_resizing;
+    QColor      m_color;
 
 public:
     DrItem(const QColor &start_color);

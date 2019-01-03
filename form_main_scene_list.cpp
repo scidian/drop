@@ -196,12 +196,14 @@ void FormMain::listSelectionChanged(QList<QTreeWidgetItem*> item_list)
     label_3->setText(label_3->text() + ", First Item: " + item_list.first()->text(0));
 
     if (item_list.size() == 1) {
-        treeScene->setSelectedKey(item_list.first()->data(0, User_Roles::Key).toLongLong());           // grab stored key from list view user data
+        long selected_key = item_list.first()->data(0, User_Roles::Key).toLongLong();       // grab stored key from list view user data
+        treeScene->setSelectedKey(selected_key);
 
         //******************************************************
         // Call to outside function to rebuild object inspector:
-        buildObjectInspector();
+        buildObjectInspector(QList<long> { selected_key });
         //******************************************************
+
     } else {
         DrTypes selected_type = project->findTypeFromKey( treeScene->getSelectedKey() );
 
