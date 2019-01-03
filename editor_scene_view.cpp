@@ -1,8 +1,8 @@
 //
-//      Created by Stephens Nunnally on 12/26/18, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 1/3/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      Handles dealing with the Scene View
+//      Graphics View Definitions
 //
 //
 
@@ -16,21 +16,23 @@
 #include "31_component.h"
 #include "32_property.h"
 
-#include "form_main.h"
+#include "editor_scene_view.h"
+#include "interface_relay.h"
+
 
 // Constructor
-SceneGraphicsView::SceneGraphicsView(QWidget *parent, FormMain *main_window) :
-        QGraphicsView(parent = nullptr), m_parent_window (main_window)
+SceneGraphicsView::SceneGraphicsView(QWidget *parent, DrProject *project, InterfaceRelay *interface) :
+        QGraphicsView(parent = nullptr), m_project(project), m_interface(interface)
 {
     // Initialize rubber band object used as a selection box
-    m_rubber_band = new SceneViewRubberBand(QRubberBand::Rectangle, getMainWindow()->globals, this);
+    m_rubber_band = new SceneViewRubberBand(QRubberBand::Rectangle, this, interface);
 }
 
 // Mouse entered widget area event
 void SceneGraphicsView::enterEvent(QEvent *event)
 {
     setFocus(Qt::FocusReason::MouseFocusReason);                        // Set focus on mouse enter to allow for space bar pressing hand grab
-    getMainWindow()->setAdvisorInfo(Advisor_Info::Scene_Area);          // Set Advisor text on mouse enter
+    m_interface->setAdvisorInfo(Advisor_Info::Scene_Area);              // Set Advisor text on mouse enter
     QGraphicsView::enterEvent(event);
 }
 
@@ -215,18 +217,18 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
             item->setPos(new_left, new_top);
         }
 
-        getMainWindow()->setLabelText(Label_Names::Label2,
-                                      "x: " + QString::number(top_left_select.x() ) +
-                                      ", y:" + QString::number(top_left_select.y() ) );
-        getMainWindow()->setLabelText(Label_Names::LabelObject1,
-                                      "x: " + QString::number(m_origin_in_scene.x() ) +
-                                      ", y:" + QString::number(m_origin_in_scene.y() ) );
-        getMainWindow()->setLabelText(Label_Names::LabelObject2,
-                                      "x: " + QString::number(mouse_in_scene.x() ) +
-                                      ", y:" + QString::number(mouse_in_scene.y() ) );
-        getMainWindow()->setLabelText(Label_Names::LabelObject3,
-                                      "x: " + QString::number(scale_x) +
-                                      ", y:" + QString::number(scale_y) );
+        m_interface->setLabelText(Label_Names::Label2,
+                                  "x: " + QString::number(top_left_select.x() ) +
+                                  ", y:" + QString::number(top_left_select.y() ) );
+        m_interface->setLabelText(Label_Names::LabelObject1,
+                                  "x: " + QString::number(m_origin_in_scene.x() ) +
+                                  ", y:" + QString::number(m_origin_in_scene.y() ) );
+        m_interface->setLabelText(Label_Names::LabelObject2,
+                                  "x: " + QString::number(mouse_in_scene.x() ) +
+                                  ", y:" + QString::number(mouse_in_scene.y() ) );
+        m_interface->setLabelText(Label_Names::LabelObject3,
+                                  "x: " + QString::number(scale_x) +
+                                  ", y:" + QString::number(scale_y) );
         update();
     }
 
@@ -266,7 +268,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 
     // Draw selection boxes around all selected items
     QPainter painter(viewport());
-    QBrush pen_brush(getMainWindow()->globals->getColor(Window_Colors::Text_Light));
+    QBrush pen_brush(m_interface->getColor(Window_Colors::Text_Light));
     painter.setPen(QPen(pen_brush, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.setBrush(Qt::NoBrush);
 
@@ -285,7 +287,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 // Custom Paint override so we can draw our Rubber Band selection box with custom colors
 void SceneViewRubberBand::paintEvent(QPaintEvent *)
 {
-    QColor bg = globals->getColor(Window_Colors::Icon_Light);
+    QColor bg = m_interface->getColor(Window_Colors::Icon_Light);
     QStylePainter painter(this);
 
     QPen pen;

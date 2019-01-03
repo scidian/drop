@@ -1,8 +1,8 @@
 //
-//      Created by Stephens Nunnally on 12/26/18, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 1/3/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      Handles dealing with the SceneViewScene container
+//      Graphics Scene Definitions
 //
 //
 
@@ -16,19 +16,9 @@
 #include "31_component.h"
 #include "32_property.h"
 
-#include "form_main.h"
+#include "editor_scene_scene.h"
+#include "interface_relay.h"
 
-
-void FormMain::populateScene()
-{
-    scene = new SceneGraphicsScene(this, this);
-
-    // Populate scene
-    scene->addSquare(0, 0);
-    scene->addSquare(200, 0);
-    scene->addSquare(0, 200);
-    scene->addSquare(200, 200);
-}
 
 // Create square at location
 void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, QColor color)
@@ -105,16 +95,6 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
     }
     QGraphicsScene::keyPressEvent(event);
 }
-
-
-
-
-
-
-
-
-
-
 
 
 

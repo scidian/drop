@@ -18,6 +18,7 @@
 #include <QVariant>
 #include <QGraphicsItem>
 
+
 //####################################################################################
 //##    Types of objects possible in game
 //####################################################################################
@@ -29,6 +30,11 @@ enum class Form_Main_Mode {
     Clear,
 };
 
+// Form Main enum for referencing debug labels
+enum class Label_Names
+{
+    Label1,          Label2,          Label3,       LabelObject1,    LabelObject2,    LabelObject3,
+};
 
 //####################################################################################
 //##    Sections of FormMain that can have focus

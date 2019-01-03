@@ -1,8 +1,8 @@
 //
-//      Created by Stephens Nunnally on 12/13/18, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 1/3/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      Handles dealing with the Scene List
+//      Tree Scene Definitions
 //
 //
 
@@ -11,25 +11,31 @@
 #include "03_scene.h"
 #include "04_object.h"
 
-#include "form_main.h"
+#include "30_settings.h"
+#include "31_component.h"
+#include "32_property.h"
+
+#include "editor_tree_scene.h"
+#include "interface_relay.h"
 
 
 //####################################################################################
+//##
 //##        Populates Tree Scene List based on project data
-//####################################################################################
-void FormMain::populateTreeSceneList()
+//##
+void TreeScene::populateTreeSceneList()
 {
-    treeScene->clear();
+    this->clear();
 
-    for (auto world_pair: project->getWorldMap())
+    for (auto world_pair: m_project->getWorldMap())
     {
-        QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(treeScene);                                 // Create new item (top level item)
+        QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(this);                                      // Create new item (top level item)
 
         topLevelItem->setIcon(0, QIcon(":/tree_icons/tree_world.png"));                                 // Loads icon for world
         topLevelItem->setText(0, "World: " + world_pair.second->getComponentPropertyValue(
                                  World_Components::settings, World_Properties::name).toString());       // Set text for item
         topLevelItem->setData(0, User_Roles::Key, QVariant::fromValue(world_pair.second->getKey()));
-        treeScene->addTopLevelItem(topLevelItem);                                                       // Add it on our tree as the top item.
+        this->addTopLevelItem(topLevelItem);                                                            // Add it on our tree as the top item.
 
         for (auto scene_pair: world_pair.second->getSceneMap())
         {
@@ -64,21 +70,21 @@ void FormMain::populateTreeSceneList()
                                                " QCheckBox::indicator:unchecked { image: url(:/tree_icons/tree_bullet.png); }");
                 QCheckBox *lock_item = new QCheckBox();
                 lock_item->setStyleSheet(check_images);
-                treeScene->setItemWidget(sub_sub_item, 1, lock_item);
+                this->setItemWidget(sub_sub_item, 1, lock_item);
 
             }
         }
     }
-    treeScene->expandAll();                                             // Expand all items
+    this->expandAll();                                             // Expand all items
 }
 
 
 
 
 // Handles changing the Advisor on Mouse Enter
-void TreeSceneView::enterEvent(QEvent *event)
+void TreeScene::enterEvent(QEvent *event)
 {
-    getMainWindow()->setAdvisorInfo(Advisor_Info::Scene_List);
+    m_interface->setAdvisorInfo(Advisor_Info::Scene_List);
     QTreeWidget::enterEvent(event);
 }
 
@@ -91,7 +97,7 @@ void TreeSceneView::enterEvent(QEvent *event)
 //
 
 // This removes the item from under the mouse, sort of
-void TreeSceneView::startDrag(Qt::DropActions supportedActions)
+void TreeScene::startDrag(Qt::DropActions supportedActions)
 {
     // Partly copied from Qt 5.5.5 sources
     QModelIndexList indexes = selectedIndexes();
@@ -114,12 +120,12 @@ void TreeSceneView::startDrag(Qt::DropActions supportedActions)
 
 
 // Fires when we start dragging
-void TreeSceneView::dragMoveEvent(QDragMoveEvent *event)
+void TreeScene::dragMoveEvent(QDragMoveEvent *event)
 {
     m_mouse_x = event->pos().x();
     m_mouse_y = event->pos().y();
-    getMainWindow()->setLabelText(Label_Names::Label1, QString::fromStdString("MX: ") + QString::number(m_mouse_x) +
-                                                       QString::fromStdString(", MY: ") + QString::number(m_mouse_y) );
+    m_interface->setLabelText(Label_Names::Label1, QString::fromStdString("MX: ") + QString::number(m_mouse_x) +
+                                                   QString::fromStdString(", MY: ") + QString::number(m_mouse_y) );
 
     // Get item under mouse, if not null lets process it to see if we will allow dropping there
     QTreeWidgetItem *item_at = this->itemAt(event->pos());
@@ -127,12 +133,12 @@ void TreeSceneView::dragMoveEvent(QDragMoveEvent *event)
     if (item_at != nullptr)
     {
         long        check_key = item_at->data(0, User_Roles::Key).toLongLong();
-        getMainWindow()->setLabelText(Label_Names::LabelObject3, QString::fromStdString("Selected: " + std::to_string(m_selected_key) +
-                                                                                        ", Checking: " + std::to_string(check_key)) );
+        m_interface->setLabelText(Label_Names::LabelObject3, QString::fromStdString("Selected: " + std::to_string(m_selected_key) +
+                                                                                    ", Checking: " + std::to_string(check_key)) );
         // Check if its the same type as already selected, if so allow possible drop
         if (m_is_dragging && m_selected_key != 0 && check_key != 0) {
-            DrSettings *check_settings = getMainWindow()->project->findSettingsFromKey(check_key);
-            DrSettings *selected_settings = getMainWindow()->project->findSettingsFromKey(m_selected_key);
+            DrSettings *check_settings = m_project->findSettingsFromKey(check_key);
+            DrSettings *selected_settings = m_project->findSettingsFromKey(m_selected_key);
 
             if ( CheckTypesAreSame(check_settings->getType(), selected_settings->getType()) ) { m_can_drop = true; }
         }
@@ -143,7 +149,7 @@ void TreeSceneView::dragMoveEvent(QDragMoveEvent *event)
     QTreeWidget::dragMoveEvent(event);
 }
 
-void TreeSceneView::dropEvent(QDropEvent* event)
+void TreeScene::dropEvent(QDropEvent* event)
 {
     bool dropOK = false;
     DropIndicatorPosition dropIndicator = dropIndicatorPosition();
@@ -176,50 +182,49 @@ void TreeSceneView::dropEvent(QDropEvent* event)
 // Updates selection, checks to make sure if more than one item is selected all new items
 //                    not matching original type are not selected
 //
-void TreeSceneView::selectionChanged (const QItemSelection &selected, const QItemSelection &deselected)
+void TreeScene::selectionChanged (const QItemSelection &selected, const QItemSelection &deselected)
 {
-    getMainWindow()->listSelectionChanged(this->selectedItems());           // pass event to form main
-    QTreeWidget::selectionChanged(selected, deselected);                    // pass event to parent
-}
+    QList<QTreeWidgetItem*> item_list = this->selectedItems();
 
-void FormMain::listSelectionChanged(QList<QTreeWidgetItem*> item_list)
-{
-    label_3->setText("Selected Items: " + QString::number(item_list.size()));
+    m_interface->setLabelText(Label_Names::Label3, QString("Selected Items: ") + QString::number(item_list.size()));
 
     // If size of list is zero, clear selected_key and exit function
     if (item_list.size() == 0) {
-        treeScene->setSelectedKey(0);
+        this->setSelectedKey(0);
         return;
     }
 
     // Otherwise add first item to label, if size is one, reset first selected item
-    label_3->setText(label_3->text() + ", First Item: " + item_list.first()->text(0));
+    m_interface->setLabelText(Label_Names::Label3, QString("Selected Items: ") + QString::number(item_list.size()) +
+                              ", First Item: " + item_list.first()->text(0));
 
     if (item_list.size() == 1) {
         long selected_key = item_list.first()->data(0, User_Roles::Key).toLongLong();       // grab stored key from list view user data
-        treeScene->setSelectedKey(selected_key);
+        this->setSelectedKey(selected_key);
 
         //******************************************************
         // Call to outside function to rebuild object inspector:
-        buildObjectInspector(QList<long> { selected_key });
+        m_interface->buildObjectInspector(QList<long> { selected_key });
         //******************************************************
 
     } else {
-        DrTypes selected_type = project->findTypeFromKey( treeScene->getSelectedKey() );
+        DrTypes selected_type = m_project->findTypeFromKey( this->getSelectedKey() );
 
         // Check if newly selected items are same type, if not, do not allow select
         for (auto check_item: item_list) {
             // Get key from each item so we can compare it to first selected item
             long    check_key = check_item->data(0, User_Roles::Key).toLongLong();
-            DrTypes check_type = project->findTypeFromKey(check_key);
+            DrTypes check_type = m_project->findTypeFromKey(check_key);
 
             // If we are over item that was first selected, skip to next
-            if (check_key == treeScene->getSelectedKey()) { continue; }
+            if (check_key == this->getSelectedKey()) { continue; }
 
             if (CheckTypesAreSame(check_type, selected_type) == false)
                 check_item->setSelected(false);
         }
     }
+
+    QTreeWidget::selectionChanged(selected, deselected);                    // pass event to parent
 }
 
 
@@ -257,8 +262,8 @@ void SceneTreeHighlightProxy::drawPrimitive(PrimitiveElement element, const QSty
             painter->drawLine(QPoint(0, option->rect.top()), QPoint(option->rect.right() + 50, option->rect.top()));
         }
 
-        m_parent_tree->getMainWindow()->setLabelText(Label_Names::Label2, QString::fromStdString("TLX: ") + QString::number(option->rect.topLeft().x()) +
-                                                                          QString::fromStdString(", TLY: ") + QString::number(option->rect.topLeft().y()));
+        m_interface->setLabelText(Label_Names::Label2, QString::fromStdString("TLX: ") + QString::number(option->rect.topLeft().x()) +
+                                                       QString::fromStdString(", TLY: ") + QString::number(option->rect.topLeft().y()));
     } else {
         QProxyStyle::drawPrimitive(element, option, painter, widget);
     }

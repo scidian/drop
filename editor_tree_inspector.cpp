@@ -1,8 +1,8 @@
 //
-//      Created by Stephens Nunnally on 12/17/18, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 1/3/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      Handles dealing with the Object Inspector
+//      Tree Inspector Definitions
 //
 //
 
@@ -15,50 +15,52 @@
 #include "31_component.h"
 #include "32_property.h"
 
-#include "form_main.h"
+#include "editor_tree_inspector.h"
+#include "interface_relay.h"
+
 
 
 //####################################################################################
 //
 //  Need to finish dynamically building object inspector
 //
-void FormMain::buildObjectInspector(QList<long> key_list)
+void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 {
     // First, retrieve unique key of item clicked in list
     long        selected_key = key_list[0];
-    DrTypes     selected_type = project->findTypeFromKey( selected_key );
+    DrTypes     selected_type = m_project->findTypeFromKey( selected_key );
     std::string type_string = StringFromType(selected_type);
-    setLabelText(Label_Names::LabelObject1, "KEY: " + QString::number( selected_key ) + ", TYPE: " + QString::fromStdString(type_string));
-    setLabelText(Label_Names::LabelObject2, "");
-    setLabelText(Label_Names::LabelObject3, "");
+    m_interface->setLabelText(Label_Names::LabelObject1, "KEY: " + QString::number( selected_key ) + ", TYPE: " + QString::fromStdString(type_string));
+    m_interface->setLabelText(Label_Names::LabelObject2, "");
+    m_interface->setLabelText(Label_Names::LabelObject3, "");
 
 
     // Change Advisor text after new item selection
     switch (selected_type) {
-    case DrTypes::World:        setAdvisorInfo(Advisor_Info::World_Object);         break;
-    case DrTypes::Scene:        setAdvisorInfo(Advisor_Info::Scene_Object);         break;
-    case DrTypes::Camera:       setAdvisorInfo(Advisor_Info::Camera_Object);        break;
-    case DrTypes::Character:    setAdvisorInfo(Advisor_Info::Character_Object);     break;
-    case DrTypes::Object:       setAdvisorInfo(Advisor_Info::Object_Object);        break;
-    default:                    setAdvisorInfo(Advisor_Info::Not_Set);
+    case DrTypes::World:        m_interface->setAdvisorInfo(Advisor_Info::World_Object);         break;
+    case DrTypes::Scene:        m_interface->setAdvisorInfo(Advisor_Info::Scene_Object);         break;
+    case DrTypes::Camera:       m_interface->setAdvisorInfo(Advisor_Info::Camera_Object);        break;
+    case DrTypes::Character:    m_interface->setAdvisorInfo(Advisor_Info::Character_Object);     break;
+    case DrTypes::Object:       m_interface->setAdvisorInfo(Advisor_Info::Object_Object);        break;
+    default:                    m_interface->setAdvisorInfo(Advisor_Info::Not_Set);
     }
 
 
     // Retrieve list of components for selected item
-    ComponentMap components = project->findSettingsFromKey( selected_key )->getComponentList();
+    ComponentMap components = m_project->findSettingsFromKey( selected_key )->getComponentList();
 
     // Loop through each component and add it to the Object Inspector list
     int rowCount = 0;
-    treeObject->clear();
+    this->clear();
     for (auto i: components) {
 
         // Create new item in list to hold component and add the TreeWidgetItem to the tree
         QTreeWidgetItem *category_item = new QTreeWidgetItem();
         category_item->setData(0, User_Roles::Key, QVariant::fromValue(i.second->getComponentKey()));           // Stores component key in list user data
-        treeObject->addTopLevelItem(category_item);
+        this->addTopLevelItem(category_item);
 
         // Creates a frame to hold all properties of component, with vertical layout
-        QFrame *properties_frame = new QFrame(treeObject);
+        QFrame *properties_frame = new QFrame(this);
         QBoxLayout *vertical_layout = new QVBoxLayout(properties_frame);
         vertical_layout->setSpacing(0);
         vertical_layout->setMargin(0);
@@ -109,7 +111,7 @@ void FormMain::buildObjectInspector(QList<long> key_list)
 
         //->Create and style a button to be used as a header item for the category
         InspectorCategoryButton *category_button = new InspectorCategoryButton(QString(" ") + i.second->getDisplayNameQString(),
-                                                                               treeObject, category_item, property_item, properties_frame);
+                                                                               this, category_item, property_item, properties_frame);
         QString buttonColor = QString(" QPushButton { height: 24px; font: 13px; text-align: left; icon-size: 20px 16px; color: #000000; "
                                                     " border: none; border-radius: 0px; background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 " +
                                                     i.second->getColor().name() + ", stop:1 " + i.second->getColor().darker(250).name() + "); } "
@@ -120,26 +122,63 @@ void FormMain::buildObjectInspector(QList<long> key_list)
 
 
         // Apply the button and property box widgets to the tree items
-        treeObject->setItemWidget(category_item, 0, category_button);
-        treeObject->setItemWidget(property_item, 0, properties_frame);
+        this->setItemWidget(category_item, 0, category_button);
+        this->setItemWidget(property_item, 0, properties_frame);
     }
 
-    treeObject->expandAll();
+    this->expandAll();
 }
 
 
 // Handles changing the Advisor on Mouse Enter
-void TreeObjectInspector::enterEvent(QEvent *event)
+void TreeInspector::enterEvent(QEvent *event)
 {
-    getMainWindow()->setAdvisorInfo(Advisor_Info::Object_Inspector);
+    m_interface->setAdvisorInfo(Advisor_Info::Object_Inspector);
     QTreeWidget::enterEvent(event);
 }
 
 
 
+//####################################################################################
+//
+//  On object inspector click show info about object and property
+//
+void TreeInspector::itemWasClicked(QTreeWidgetItem *item, int column)
+{
+    Q_UNUSED(item);
+    Q_UNUSED(column);
+
+    m_interface->showMessageBox("Hi There Joe");
+
+    // If no item is selected in tree view, exit function
+    //if (treeScene->getSelectedKey() == 0) { return; }
+
+    // First, retrieve property key of item clicked in tableWidget list
+    //long        property_key = item->data(User_Roles::Key).toLongLong();
+
+    // Grab a pointer to the component list of the first selected item from treeScene (stored in selected_list)
+    //DrSettings  *selected_item_settings = m_project->findSettingsFromKey( treeScene->getSelectedKey() );
+    //DrComponent *clicked_component = selected_item_settings->findComponentFromPropertyKey(property_key);
+    //DrProperty  *clicked_property = clicked_component->getProperty(property_key);
+
+    //std::string property_name = clicked_property->getDisplayName();
+    //std::string component_name = clicked_component->getDisplayName();
+    //long        component_key = clicked_component->getComponentKey();
+
+    // Grab type of main selected item in selected tree list
+    //std::string type_string2 = StringFromType(m_project->findTypeFromKey( treeScene->getSelectedKey() ));
+    //std::string type_string = StringFromType(selected_item_settings->getType());
+
+    //setLabelText(Label_Names::LabelObject1, "KEY: " + QString::number( treeScene->getSelectedKey() ) + ", TYPE: " + QString::fromStdString(type_string));
+    //setLabelText(Label_Names::LabelObject2, "COMPONENT: " + QString::number(component_key) +   ", NAME: " + QString::fromStdString(component_name));
+    //setLabelText(Label_Names::LabelObject3, "PROPERTY: " + QString::number(property_key) +   ", NAME: " + QString::fromStdString(property_name));
+
+}
+
+
 
 // Constructor for category button, gives button a way to pass click to custom function
-InspectorCategoryButton::InspectorCategoryButton(const QString &text, TreeObjectInspector *parent_tree,
+InspectorCategoryButton::InspectorCategoryButton(const QString &text, TreeInspector *parent_tree,
                                                  QTreeWidgetItem *parent_item, QTreeWidgetItem *child_item, QFrame *new_child)
     : QPushButton(text, parent_tree),
       m_parent_tree(parent_tree),           m_parent_item(parent_item),

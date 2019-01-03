@@ -36,15 +36,18 @@ SOURCES += \
     32_property.cpp \
     enums.cpp \
     form_main.cpp \
-    form_main_advisor.cpp \
-    form_main_assets.cpp \
-    form_main_inspector.cpp \
-    form_main_scene.cpp \
-    form_main_scene_list.cpp \
-    form_main_scene_view.cpp \
     form_main_setup.cpp \
     globals.cpp \
     main.cpp \
+    editor_tree_inspector.cpp \
+    interface_relay.cpp \
+    editor_tree_assets.cpp \
+    editor_tree_scene.cpp \
+    editor_tree_advisor.cpp \
+    editor_scene_scene.cpp \
+    editor_scene_view.cpp \
+    form_main_menu.cpp \
+    form_main_color.cpp
 
 HEADERS += \
     01_project.h \
@@ -59,6 +62,13 @@ HEADERS += \
     enums.h \
     form_main.h \
     globals.h \
+    editor_tree_inspector.h \
+    interface_relay.h \
+    editor_tree_assets.h \
+    editor_tree_scene.h \
+    editor_tree_advisor.h \
+    editor_scene_scene.h \
+    editor_scene_view.h
 
 FORMS +=
 

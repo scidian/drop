@@ -2,202 +2,18 @@
 //      Created by Stephens Nunnally on 12/10/18, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      Calls to set up, initialize, build, style, and color main form
+//      Calls to set up, initialize, build Form Main
 //
 //
+
+#include "editor_scene_scene.h"
+#include "editor_tree_advisor.h"
+#include "editor_tree_assets.h"
+#include "editor_tree_inspector.h"
+#include "editor_tree_scene.h"
+#include "editor_scene_view.h"
 
 #include "form_main.h"
-
-
-//####################################################################################
-//##        Apply palette / coloring / styling to children widgets
-//####################################################################################
-void FormMain::applyColoring()
-{
-    QString style_sheet = QString(
-        " QMainWindow { background: " + globals->getColor(Window_Colors::Background_Light).name() + "; }" +
-        " QMainWindow::separator { border: 1px solid " + globals->getColor(Window_Colors::Background_Light).name() + "; }"
-
-        " QSplitter { width: 4px; } "
-        " QSplitter::handle:vertical { image: url(:/tree_icons/splitter_v.png); } "
-        " QSplitter::handle:horizontal { image: url(:/tree_icons/splitter_h.png); } "
-
-        " QScrollBar:vertical { width: 12px; margin: 0px; border-radius: 6px; "
-        "       background: " + globals->getColor(Window_Colors::Button_Light).name() + "; } "
-        " QScrollBar::handle:vertical { margin: 2px; border-radius: 4px; "
-        "       background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
-        "                   stop:0 " + globals->getColor(Window_Colors::Icon_Dark).name() + ", "
-        "                   stop:1 " + globals->getColor(Window_Colors::Background_Dark).name() + "); } "
-        " QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; } "
-        " QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { height: 0px; } "
-
-        " QScrollBar:horizontal { height: 12px; margin: 0px; border-radius: 6px; "
-        "       background: " + globals->getColor(Window_Colors::Button_Light).name() + " ;} "
-        " QScrollBar::handle:horizontal {      margin: 2px; border-radius: 4px; "
-        "       background: qlineargradient(spread:pad, x1:0 y1:0, x2:1 y2:0, "
-        "                   stop:0 " + globals->getColor(Window_Colors::Icon_Dark).name() + ", "
-        "                   stop:1 " + globals->getColor(Window_Colors::Background_Dark).name() + "); } "
-        " QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; } "
-        " QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal { width: 0px; } "
-
-        " QPushButton { color: " + globals->getColor(Window_Colors::Text).name() + "; "
-        "       background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
-        "                   stop:0 " + globals->getColor(Window_Colors::Button_Light).name() + ", "
-        "                   stop:1 " + globals->getColor(Window_Colors::Button_Dark).name() + "); "
-        "       border: none; border-radius: 6px; }"
-        " QPushButton:hover:!pressed { color: " + globals->getColor(Window_Colors::Highlight).name() + "; "
-        "       background: " + globals->getColor(Window_Colors::Button_Light).name() + "; }"
-        " QPushButton:pressed { color: " + globals->getColor(Window_Colors::Highlight).name() + "; "
-        "       background: " + globals->getColor(Window_Colors::Button_Dark).name() + "; }"
-
-        " QTreeWidget { icon-size: 14px 14px; }"
-        " QTreeWidget { color: " + globals->getColor(Window_Colors::Text).name() + ";  "
-        "       background: " + globals->getColor(Window_Colors::Background_Dark).name() + "; "
-        "       selection-background-color: " + globals->getColor(Window_Colors::Midlight).name() + "; "
-        "       show-decoration-selected: 1; }"
-        " QTreeWidget::item:selected { color: " + globals->getColor(Window_Colors::Icon_Dark).name() + "; "
-        "       background: " + globals->getColor(Window_Colors::Midlight).name() + "; }"
-        " QTreeWidget::item:hover:selected { color: " + globals->getColor(Window_Colors::Icon_Light).name() + "; "
-        "       background: " + globals->getColor(Window_Colors::Midlight).name() + "; }"
-        " QTreeWidget::item:hover:!selected { color: " + globals->getColor(Window_Colors::Highlight).name() + "; "
-        "       background: " + globals->getColor(Window_Colors::Background_Dark).name() + "; }"
-
-        " QHeaderView::section { "
-        "       background-color: " + globals->getColor(Window_Colors::Background_Dark).name() + "; "
-        "       border: 0px; }"
-
-        " QDockWidget { font-size: 11px; color: " + globals->getColor(Window_Colors::Text).name() + "; } "
-        " QDockWidget::title { text-align: center; "
-        "       background: qlineargradient(x1:0 y1:0, x2:0 y2:1, "
-        "                   stop:0 " + globals->getColor(Window_Colors::Icon_Light).name() + ", "
-        "                   stop:1 " + globals->getColor(Window_Colors::Background_Dark).name() + "); } "
-
-        " QGraphicsView { background: " + globals->getColor(Window_Colors::Background_Light).name() + "; }"
-        " QGraphicsView::corner { background: transparent; } "
-
-        " QScrollArea { background: " + globals->getColor(Window_Colors::Background_Dark).name() + "; }"
-
-        " QLabel { color : " + globals->getColor(Window_Colors::Text).name() + "; } "
-    );
-
-    this->setStyleSheet(style_sheet);
-}
-
-void FormMain::applyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type)
-{
-    switch (shadow_type) {
-    case Shadow_Types::Button_Shadow:   applyDropShadow(target_widget, 6, 0, 3, QColor(10, 10, 10));
-    }
-}
-void FormMain::applyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color)
-{
-    QGraphicsDropShadowEffect *shadow_effect;
-    shadow_effect = new QGraphicsDropShadowEffect();
-    shadow_effect->setBlurRadius(blur_radius);
-    shadow_effect->setOffset(offset_x, offset_y);
-    shadow_effect->setColor(shadow_color);
-    target_widget->setGraphicsEffect(shadow_effect);
-}
-
-
-
-
-//####################################################################################
-//##        Sets up FormMain menu system
-//####################################################################################
-void FormMain::buildMenu()
-{
-    // ***** Main window settings
-    this->setObjectName(QStringLiteral("formMain"));
-    this->setWindowModality(Qt::NonModal);
-    this->resize(1300, 800);
-    this->setMinimumSize(QSize(780, 400));
-    this->setMouseTracking(true);
-    this->setAcceptDrops(true);
-    this->setWindowIcon(QIcon(":icon/icon256.png"));                        // Set icon
-
-    // ***** Create menu bar
-    menuBar = new QMenuBar(this);
-    menuBar->setObjectName(QStringLiteral("menuBar"));
-    menuBar->setGeometry(QRect(0, 0, 1100, 22));
-
-    // ***** Color Schemes sub menu
-    QMenu *menuColor_Schemes;
-    menuColor_Schemes = new QMenu(menuBar);
-    menuColor_Schemes->setObjectName(QStringLiteral("menuColor_Schemes"));
-    QAction *actionDark, *actionLight, *actionBlue, *actionAutumn;
-    actionDark =   new QAction(this);   actionDark->setObjectName(QStringLiteral("actionDark"));
-    actionLight =  new QAction(this);   actionLight->setObjectName(QStringLiteral("actionLight"));
-    actionBlue =   new QAction(this);   actionBlue->setObjectName(QStringLiteral("actionBlue"));
-    actionAutumn = new QAction(this);   actionAutumn->setObjectName(QStringLiteral("actionAutumn"));
-        QActionGroup *alignmentGroup;
-        alignmentGroup = new QActionGroup(this);
-        alignmentGroup->addAction(actionDark);
-        alignmentGroup->addAction(actionLight);
-        alignmentGroup->addAction(actionBlue);
-        alignmentGroup->addAction(actionAutumn);
-        alignmentGroup->setExclusive(true);
-        actionDark->setCheckable(true);
-        actionLight->setCheckable(true);
-        actionBlue->setCheckable(true);
-        actionAutumn->setCheckable(true);
-        switch (globals->current_color_scheme)
-        {
-        case Color_Scheme::Dark:    actionDark->setChecked(true);    break;
-        case Color_Scheme::Light:   actionLight->setChecked(true);   break;
-        case Color_Scheme::Blue:    actionBlue->setChecked(true);    break;
-        case Color_Scheme::Autumn:  actionAutumn->setChecked(true);  break;
-        }
-    // Instead of traditional SIGNAL to SLOT connect, we can "connect" inline lamda functions directly
-    //      to signals. This allows for passing of variables not included in the SIGNAL that was emitted.
-    // Such as in this instance, passing a new Color_Scheme to FormMain::changePalette)
-    connect(actionDark,   &QAction::triggered, [this]() { changePalette(Color_Scheme::Dark); });
-    connect(actionLight,  &QAction::triggered, [this]() { changePalette(Color_Scheme::Light); });
-    connect(actionBlue,   &QAction::triggered, [this]() { changePalette(Color_Scheme::Blue); });
-    connect(actionAutumn, &QAction::triggered, [this]() { changePalette(Color_Scheme::Autumn); });
-
-    menuBar->addAction(menuColor_Schemes->menuAction());
-    menuColor_Schemes->addAction(actionDark);
-    menuColor_Schemes->addAction(actionLight);
-    menuColor_Schemes->addAction(actionBlue);
-    menuColor_Schemes->addAction(actionAutumn);
-
-    // ***** Debug Menu
-    if (globals->show_debug) {
-        QMenu *menuDebug;
-        menuDebug = new QMenu(menuBar);
-        menuDebug->setObjectName(QStringLiteral("menuDebug"));
-        QAction *actionClearMain, *actionSceneEditMode, *actionListChildren;
-        actionClearMain =   new QAction(this);    actionClearMain->setObjectName(QStringLiteral("actionClearMain"));
-        actionSceneEditMode =  new QAction(this); actionSceneEditMode->setObjectName(QStringLiteral("actionSceneEditMode"));
-        actionListChildren =  new QAction(this);  actionSceneEditMode->setObjectName(QStringLiteral("actionListChildren"));
-
-        menuBar->addAction(menuDebug->menuAction());
-        menuDebug->addAction(actionClearMain);
-        menuDebug->addAction(actionSceneEditMode);
-        menuDebug->addAction(actionListChildren);
-
-        connect(actionClearMain, &QAction::triggered, [this]() { buildWindow(Form_Main_Mode::Clear); });
-        connect(actionSceneEditMode, &QAction::triggered, [this]() { buildWindow(Form_Main_Mode::Edit_Scene); });
-        connect(actionListChildren, &QAction::triggered, [this]() { listChildren(); });
-
-        menuDebug->setTitle(QApplication::translate("MainWindow", "Debug", nullptr));
-        actionClearMain->setText(QApplication::translate("MainWindow", "Clear Form Main Widgets", nullptr));
-        actionSceneEditMode->setText(QApplication::translate("MainWindow", "Set Form Main Mode: Edit Scene", nullptr));
-        actionListChildren->setText(QApplication::translate("MainWindow", "List Children", nullptr));
-    }
-
-    // ***** Set menu titles and sub menu texts
-    menuColor_Schemes->setTitle(QApplication::translate("MainWindow", "Color Schemes", nullptr));
-    actionDark->setText(QApplication::translate("MainWindow", "Dark", nullptr));
-    actionLight->setText(QApplication::translate("MainWindow", "Light", nullptr));
-    actionBlue->setText(QApplication::translate("MainWindow", "Blue", nullptr));
-    actionAutumn->setText(QApplication::translate("MainWindow", "Autumn", nullptr));
-
-    this->setMenuBar(menuBar);
-}
-
-
 
 //####################################################################################
 //##        Setting up of form main
@@ -222,7 +38,7 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
     {
     case Form_Main_Mode::Edit_Scene:
         buildWindowModeEditScene();
-        populateTreeSceneList();
+        buildTreeSceneList();
         viewMain->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
         current_focus = Form_Main_Focus::Scene_View;
         break;
@@ -290,8 +106,8 @@ void FormMain::buildWindowModeEditScene()
                 splitterHorizontal->setHandleWidth(4);
 
                     // ***** Load our custom TreeSceneView for the Scene List
-                    treeScene = new TreeSceneView(splitterHorizontal, this);
-                    treeScene->setStyle(new SceneTreeHighlightProxy(treeScene->style(), treeScene));
+                    treeScene = new TreeScene(splitterHorizontal, project, this);
+                    treeScene->setStyle(new SceneTreeHighlightProxy(treeScene->style(), treeScene, this));
                         QTreeWidgetItem *header_item_scene = new QTreeWidgetItem();
                         header_item_scene->setIcon(1, QIcon(":/tree_icons/tree_lock_header.png"));
                         treeScene->setHeaderItem(header_item_scene);
@@ -300,6 +116,7 @@ void FormMain::buildWindowModeEditScene()
                     treeScene->setColumnWidth(0, 150);
                     treeScene->setColumnWidth(1, 16);
                     treeScene->setMinimumSize(QSize(190, 0));
+                    treeScene->setMaximumWidth(400);
                     treeScene->setFont(font);
                     treeScene->setProperty("showDropIndicator", QVariant(false));
                     treeScene->setDragEnabled(true);
@@ -320,7 +137,7 @@ void FormMain::buildWindowModeEditScene()
 
 
                     // ***** Load our SceneGraphicsView to display our SceneGraphicsScene collection of items
-                    viewMain = new SceneGraphicsView(splitterHorizontal, this);
+                    viewMain = new SceneGraphicsView(splitterHorizontal, project, this);
                     viewMain->setObjectName(QStringLiteral("viewMain"));
                     viewMain->setRenderHint(QPainter::Antialiasing, false);
                     //viewMain->setDragMode(QGraphicsView::DragMode::RubberBandDrag);
@@ -401,7 +218,7 @@ void FormMain::buildWindowModeEditScene()
         verticalLayoutAsset->setContentsMargins(0, 0, 0, 0);
 
             // ***** Load our custom TreeObjectInspector for the Scene List
-            treeAsset = new TreeAssetList(widgetAssests, this);
+            treeAsset = new TreeAssetList(widgetAssests, project, this);
             treeAsset->setObjectName(QStringLiteral("treeAsset"));
             treeAsset->setColumnCount(1);
             treeAsset->setFont(font);
@@ -440,7 +257,7 @@ void FormMain::buildWindowModeEditScene()
         verticalLayoutAdvisor->setObjectName(QStringLiteral("verticalLayoutAdvisor"));
         verticalLayoutAdvisor->setSpacing(2);
         verticalLayoutAdvisor->setContentsMargins(1, 1, 1, 1);
-            treeAdvisor = new TreeAdvisorList(widgetAdvisor, this);
+            treeAdvisor = new TreeAdvisor(widgetAdvisor, project, this);
             treeAdvisor->setObjectName(QStringLiteral("treeAdvisor"));
             treeAdvisor->setColumnCount(1);
             treeAdvisor->setFont(fontLarger);
@@ -457,6 +274,10 @@ void FormMain::buildWindowModeEditScene()
             treeAdvisor->setExpandsOnDoubleClick(false);
             treeAdvisor->setHeaderHidden(true);
         verticalLayoutAdvisor->addWidget(treeAdvisor);
+
+        // Fires signal that is picked up by Advisor to change the help info
+        connect(this, SIGNAL(sendAdvisorInfo(HeaderBodyList)), treeAdvisor, SLOT(changeAdvisor(HeaderBodyList)) , Qt::QueuedConnection);
+
         advisor->setWidget(widgetAdvisor);
 
 
@@ -478,28 +299,28 @@ void FormMain::buildWindowModeEditScene()
         verticalLayoutObject->setContentsMargins(0, 0, 0, 0);
 
             // ***** Load our custom TreeObjectInspector for the Scene List
-            treeObject = new TreeObjectInspector(widgetInspector, this);
-            treeObject->setObjectName(QStringLiteral("treeObject"));
-            treeObject->setColumnCount(1);
-            treeObject->setFont(font);
-            treeObject->setProperty("showDropIndicator", QVariant(false));
-            treeObject->setDragEnabled(false);
-            treeObject->setDragDropOverwriteMode(false);
-            treeObject->setDragDropMode(QAbstractItemView::DragDropMode::NoDragDrop);
-            treeObject->setDefaultDropAction(Qt::DropAction::TargetMoveAction);
-            treeObject->setAlternatingRowColors(false);
-            treeObject->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
-            treeObject->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectItems);
-            treeObject->setIndentation(0);
-            treeObject->setRootIsDecorated(false);
-            treeObject->setItemsExpandable(true);
-            treeObject->setExpandsOnDoubleClick(false);
-            treeObject->setHeaderHidden(true);
+            treeInspector = new TreeInspector(widgetInspector, project, this);
+            treeInspector->setObjectName(QStringLiteral("treeObject"));
+            treeInspector->setColumnCount(1);
+            treeInspector->setFont(font);
+            treeInspector->setProperty("showDropIndicator", QVariant(false));
+            treeInspector->setDragEnabled(false);
+            treeInspector->setDragDropOverwriteMode(false);
+            treeInspector->setDragDropMode(QAbstractItemView::DragDropMode::NoDragDrop);
+            treeInspector->setDefaultDropAction(Qt::DropAction::TargetMoveAction);
+            treeInspector->setAlternatingRowColors(false);
+            treeInspector->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
+            treeInspector->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectItems);
+            treeInspector->setIndentation(0);
+            treeInspector->setRootIsDecorated(false);
+            treeInspector->setItemsExpandable(true);
+            treeInspector->setExpandsOnDoubleClick(false);
+            treeInspector->setHeaderHidden(true);
 
             //treeObject->setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents);
             //treeObject->setAnimated(true);
 
-        verticalLayoutObject->addWidget(treeObject);
+        verticalLayoutObject->addWidget(treeInspector);
         inspector->setWidget(widgetInspector);
 
     addDockWidget(static_cast<Qt::DockWidgetArea>(2), inspector);

@@ -15,6 +15,13 @@
 #include "31_component.h"
 #include "32_property.h"
 
+#include "editor_scene_scene.h"
+#include "editor_tree_advisor.h"
+#include "editor_tree_assets.h"
+#include "editor_tree_inspector.h"
+#include "editor_tree_scene.h"
+#include "editor_scene_view.h"
+
 #include "form_main.h"
 
 // Destructor for Main Window
@@ -30,9 +37,6 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
     QMainWindow(parent),
     globals(the_globals)
 {
-    // Fires signal that is picked up by Advisor to change the help info
-    connect(this, SIGNAL(sendAdvisorInfo(HeaderBodyList)), this, SLOT(changeAdvisor(HeaderBodyList)) , Qt::QueuedConnection);
-
 
     // ########## Load saved preferences
     globals->show_debug = true;
@@ -87,6 +91,35 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
 }
 
 
+
+// Sends new list to Object Inspector
+void FormMain::buildObjectInspector(QList<long> key_list)
+{
+    treeInspector->buildInspectorFromKeys(key_list);
+}
+
+
+void FormMain::buildTreeSceneList()
+{
+    treeScene->populateTreeSceneList();
+}
+
+QColor FormMain::getColor(Window_Colors color_role)
+{
+    return globals->getColor(color_role);
+}
+
+// Call to put in a signal to change the Advisor to the que
+void FormMain::setAdvisorInfo(HeaderBodyList header_body_list)
+{
+    if (current_mode != Form_Main_Mode::Edit_Scene) return;
+    if (advisor == nullptr) return;
+    if (advisor->isHidden()) return;                                        // If Advisor dock was closed, cancel
+    if (treeAdvisor == nullptr) return;
+    if (treeAdvisor->getAdvisorHeader() == header_body_list[0]) return;     // If Advisor header is already set to proper info, cancel
+    emit sendAdvisorInfo(header_body_list);                                 // Emits signal connected to changeAdvisor
+}
+
 // Sets the text of a label on FormMain
 void FormMain::setLabelText(Label_Names label_name, QString new_text)
 {
@@ -101,6 +134,26 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
     }
 }
 
+// Pops up message box from Globals
+void FormMain::showMessageBox(QString message)
+{
+    globals->showMessageBox(message);
+}
+
+
+void FormMain::populateScene()
+{
+    scene = new SceneGraphicsScene(this, project, this);
+
+    // Populate scene
+    scene->addSquare(0, 0);
+    scene->addSquare(200, 0);
+    scene->addSquare(0, 200);
+    scene->addSquare(200, 200);
+}
+
+
+
 // Sets the new palette to the style sheets
 void FormMain::changePalette(Color_Scheme new_color_scheme)
 {
@@ -108,18 +161,9 @@ void FormMain::changePalette(Color_Scheme new_color_scheme)
     applyColoring();
     refreshMainView();
 }
-
-
 // After many tried update calls, force view to redraw by a quick zoom in / out
 void FormMain::refreshMainView()
 {
-    //scene->invalidate(scene->sceneRect(), QGraphicsScene::BackgroundLayer);
-    //scene->update();
-    //this->style()->unpolish(this);
-    //this->style()->polish(this);
-    //viewMain->update();
-    //viewMain->repaint();
-    //qApp->processEvents();
     if (viewMain != nullptr) {
         viewMain->zoomInOut(1);
         viewMain->zoomInOut(-1);
@@ -129,36 +173,9 @@ void FormMain::refreshMainView()
 
 
 
-//####################################################################################
-//
-//  On object inspector click show info about object and property
-//
-//void FormMain::on_tableWidget_itemClicked(QTableWidgetItem *item)
-//{
-//    // If no item is selected in tree view, exit function
-//    if (treeScene->getSelectedKey() == 0) { return; }
 
-//    // First, retrieve property key of item clicked in tableWidget list
-//    long        property_key = item->data(User_Roles::Key).toLongLong();
 
-//    // Grab a pointer to the component list of the first selected item from treeScene (stored in selected_list)
-//    DrSettings  *selected_item_settings = project->findSettingsFromKey( treeScene->getSelectedKey() );
-//    DrComponent *clicked_component = selected_item_settings->findComponentFromPropertyKey(property_key);
-//    DrProperty  *clicked_property = clicked_component->getProperty(property_key);
 
-//    std::string property_name = clicked_property->getDisplayName();
-//    std::string component_name = clicked_component->getDisplayName();
-//    long        component_key = clicked_component->getComponentKey();
-
-//    // Grab type of main selected item in selected tree list
-//    std::string type_string2 = StringFromType(project->findTypeFromKey( treeScene->getSelectedKey() ));
-//    std::string type_string = StringFromType(selected_item_settings->getType());
-
-//    setLabelText(Label_Names::LabelObject1, "KEY: " + QString::number( treeScene->getSelectedKey() ) + ", TYPE: " + QString::fromStdString(type_string));
-//    setLabelText(Label_Names::LabelObject2, "COMPONENT: " + QString::number(component_key) +   ", NAME: " + QString::fromStdString(component_name));
-//    setLabelText(Label_Names::LabelObject3, "PROPERTY: " + QString::number(property_key) +   ", NAME: " + QString::fromStdString(property_name));
-
-//}
 
 
 
