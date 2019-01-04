@@ -20,13 +20,15 @@
 #include "interface_relay.h"
 
 
-// Constructor
+// Constructor & destructor
 SceneGraphicsView::SceneGraphicsView(QWidget *parent, DrProject *project, InterfaceRelay *interface) :
         QGraphicsView(parent = nullptr), m_project(project), m_interface(interface)
 {
     // Initialize rubber band object used as a selection box
     m_rubber_band = new SceneViewRubberBand(QRubberBand::Rectangle, this, interface);
 }
+SceneGraphicsView::~SceneGraphicsView() { }
+
 
 // Mouse entered widget area event
 void SceneGraphicsView::enterEvent(QEvent *event)
@@ -111,10 +113,10 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
                     m_is_resizing = true;
 
                     // Store some starting info about the selected items before we start resizing
-                    m_selection_rect = scene()->selectedItems().first()->sceneBoundingRect();
+                    m_start_resize_rect = scene()->selectedItems().first()->sceneBoundingRect();
                     for (auto item: scene()->selectedItems()) {
                         // Store total size of selection rectangle
-                        m_selection_rect = m_selection_rect.united(item->sceneBoundingRect());
+                        m_start_resize_rect = m_start_resize_rect.united(item->sceneBoundingRect());
 
                         // Store starting scale of each selected item
                         QPointF my_scale(item->transform().m11(), item->transform().m22());
@@ -155,6 +157,9 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
     if (selection_mutex.tryLock() == false) return;           // Try and lock function, so we ony run this once at a time
 
+    // Store total size of selection rectangle
+    updateSelectionRect();
+
     // ******************* If we're in selection mode, process mouse movement and resize box as needed
     if (m_is_selecting) {
         m_rubber_band->setGeometry(QRect(m_origin, event->pos()).normalized());                             // Resize selection box
@@ -186,7 +191,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
     if (m_is_resizing) {
         //qreal dist = sqrt(pow(m_click_pos.x() - pos.x(), 2) + pow(m_click_pos.y() - pos.y(), 2));
         QPointF mouse_in_scene =  mapToScene(event->pos());
-        QPointF top_left_select = m_selection_rect.topLeft();
+        QPointF top_left_select = m_start_resize_rect.topLeft();
 
         // Find starting size
         qreal original_x = m_origin_in_scene.x() - top_left_select.x();             // Original width of selection
@@ -300,6 +305,17 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     // Go ahead and paint scene
     QGraphicsView::paintEvent(event);
 
+    if (scene() != m_scene) {
+        if (scene() != nullptr) {
+            m_scene = scene();
+            connect(scene(), SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
+            ///QString ptrStr = QString("0x%1").arg((quintptr)m_scene, QT_POINTER_SIZE * 2, 16, QChar('0'));
+            ///m_interface->setLabelText(Label_Names::LabelObject3, "Changed: " + ptrStr);
+        }
+    }
+
+    if (scene()->selectedItems().count() < 1) return;                       // If no selected item gets out of here
+
     // Draw selection boxes around all selected items
     QPainter painter(viewport());
     QBrush pen_brush(m_interface->getColor(Window_Colors::Text_Light));
@@ -314,6 +330,10 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         QPolygon to_view = mapFromScene(rect);                              // Convert scene location to view location
         painter.drawPolygon(to_view);                                       // Draw polygon
     }
+
+    QPolygon to_view = mapFromScene(m_selection_rect);
+    painter.setPen(QPen(m_interface->getColor(Window_Colors::Icon_Light), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    painter.drawPolygon(to_view);
 }
 
 
@@ -336,6 +356,35 @@ void SceneViewRubberBand::paintEvent(QPaintEvent *)
     painter.setBrush(brush);
     painter.drawRect(this->rect());
 }
+
+
+
+// SLOT: connected from scene().selectionChanged, keeps total selection area up to date
+void SceneGraphicsView::selectionChanged()
+{
+    updateSelectionRect();
+    update();
+
+    m_interface->setLabelText(Label_Names::LabelObject1, QString::number(m_selection_rect.x()) + ", " + QString::number(m_selection_rect.y()) +
+                                              ", " + QString::number(m_selection_rect.width()) + ", " + QString::number(m_selection_rect.height()) );
+}
+
+// Store total size of selection rectangle
+void SceneGraphicsView::updateSelectionRect()
+{
+    if (scene() == nullptr) return;
+    if (scene()->selectedItems().count() < 1) return;
+
+    m_selection_rect = scene()->selectedItems().first()->sceneBoundingRect();
+    for (auto item: scene()->selectedItems()) {
+        m_selection_rect = m_selection_rect.united(item->sceneBoundingRect());
+    }
+}
+
+
+
+
+
 
 
 
