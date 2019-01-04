@@ -150,12 +150,13 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
         // Process mouse press event for hand drag
         QGraphicsView::mousePressEvent(event);
     }
+    update();
 }
 
 
 void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
-    if (selection_mutex.tryLock() == false) return;           // Try and lock function, so we ony run this once at a time
+    if (selection_mutex.tryLock(10) == false) return;               // Try and lock function, so we ony run this once at a time
 
     // Store total size of selection rectangle
     updateSelectionRect();
@@ -319,7 +320,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     // Draw selection boxes around all selected items
     QPainter painter(viewport());
     QBrush pen_brush(m_interface->getColor(Window_Colors::Text_Light));
-    painter.setPen(QPen(pen_brush, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.setBrush(Qt::NoBrush);
 
     for (auto item: scene()->selectedItems()) {
@@ -331,9 +332,30 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         painter.drawPolygon(to_view);                                       // Draw polygon
     }
 
-    QPolygon to_view = mapFromScene(m_selection_rect);
-    painter.setPen(QPen(m_interface->getColor(Window_Colors::Icon_Light), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    // Draw box around entire seleciton, with Size Grip squares
+    QRectF bigger = m_selection_rect;
+    //bigger.setX(bigger.x() - 1);
+    //bigger.setY(bigger.y() - 1);
+    //bigger.setWidth(bigger.width() + 2);
+    //bigger.setHeight(bigger.height() + 2);
+    QPolygon to_view = mapFromScene(bigger);
+    QPoint top_left = mapFromScene(bigger.topLeft());
+    QPoint bot_right = mapFromScene(bigger.bottomRight());
+
+    painter.setPen(QPen(m_interface->getColor(Window_Colors::Icon_Light), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.drawPolygon(to_view);
+
+    int r_size = 6;
+
+    QVector<QRectF> handles;
+
+    handles.append(QRectF(top_left.x() - r_size,    top_left.y() - r_size,      r_size, r_size));   // Top Left
+    handles.append(QRectF(bot_right.x(),            top_left.y() - r_size,      r_size, r_size));   // Top Right
+    handles.append(QRectF(top_left.x() - r_size,    bot_right.y(),              r_size, r_size));   // Bottom Left
+    handles.append(QRectF(bot_right.x(),            bot_right.y(),              r_size, r_size));   // Bottom Right
+
+    painter.drawRects(handles);
+
 }
 
 
