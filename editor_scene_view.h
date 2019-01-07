@@ -15,15 +15,20 @@ class InterfaceRelay;
 class SceneViewRubberBand;
 
 enum class Position_Flags {
-    Top         = 0x1,
-    Bottom      = 0x2,
-    Left        = 0x4,
-    TopLeft     = Top | Left,
-    BottomLeft  = Bottom | Left,
-    Right       = 0x8,
-    TopRight    = Top | Right,
-    BottomRight = Bottom | Right
+    Top          = 0,
+    Bottom       = 1,
+    Left         = 2,
+    Top_Left     = 3,
+    Bottom_Left  = 4,
+    Right        = 5,
+    Top_Right    = 6,
+    Bottom_Right = 7,
+    Total,
+    None,
 };
+
+enum class X_Axis { Left,   Right,    None  };
+enum class Y_Axis { Top,    Bottom,   None  };
 
 class SceneGraphicsView : public QGraphicsView
 {
@@ -42,15 +47,23 @@ private:
     bool         m_flag_key_down_alt = false;
 
     QMutex                  selection_mutex { QMutex::NonRecursive };               // Used to keep mouse move from backing up
-    QPoint                  m_origin;
-    QPointF                 m_origin_in_scene;
-    QGraphicsItem          *m_origin_item;
-    SceneViewRubberBand    *m_rubber_band;
-    QList<QGraphicsItem *>  m_items_start;
-    bool                    m_is_selecting = false;
-    bool                    m_is_resizing = false;
+    QPoint                  m_origin;                                               // Stores mouse down position in view coordinates
+    QPointF                 m_origin_in_scene;                                      // Stores mouse down position in scene coordinates
+    QGraphicsItem          *m_origin_item;                                          // Stores top item under mouse (if any) on mouse down event
+
+    QVector<QRectF>         m_handles;                                              // Stores QRects of current selection box handles
+    Position_Flags          m_over_handle;                                          // Tracks if mouse is over a handle
+    QPoint                  m_last_mouse_pos;                                       // Tracks last known mouse position in view coordinates
+
+    bool                    m_is_selecting = false;                                 // True when using rubber band selection box
+    SceneViewRubberBand    *m_rubber_band;                                          // Holds our view's RubberBand object
+    QList<QGraphicsItem *>  m_items_start;                                          // Stores items selected at start of new rubber band box
+
+    bool                    m_is_resizing = false;                                  // True when resizing selection
     QRectF                  m_selection_rect;                                       // Stores rect of current selection
     QRectF                  m_start_resize_rect;                                    // Stores starting rect of selection before resize starts
+    Position_Flags          m_start_resize_grip;                                    // Stores which Size Grip Handle we started resize over
+
 
 
 public:
@@ -76,7 +89,9 @@ public:
     void zoomInOut(int level);
 
 public slots:
+    void sceneChanged(QList<QRectF> region);
     void selectionChanged();
+    void resizeSelection(QPointF mouse_in_scene);
 };
 
 

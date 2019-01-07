@@ -21,10 +21,10 @@
 
 
 // Create square at location
-void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, QColor color)
+void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, double new_width, double new_height, QColor color)
 {
     QGraphicsItem *item;
-    item = new DrItem(color);
+    item = new DrItem(color, new_width, new_height);
     item->setPos(new_x, new_y);
     addItem(item);
 }
@@ -77,7 +77,7 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
             if (event->key() == Qt::Key::Key_S) new_y = new_y + source_rect.height();
             if (event->key() == Qt::Key::Key_D) new_x = new_x + source_rect.width();
 
-            new_item = new DrItem(new_color);
+            new_item = new DrItem(new_color, item->boundingRect().width(), item->boundingRect().height());
             new_item->setPos(new_x, new_y);
             new_item->setTransform(item->transform());
             addItem(new_item);

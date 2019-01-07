@@ -33,7 +33,8 @@ public:
 
 
     // Function calls
-    void addSquare(qreal new_x, qreal new_y, QColor color = QColor::fromRgb(QRandomGenerator::global()->generate()).light(100));
+    void addSquare(qreal new_x, qreal new_y, double new_width, double new_height,
+                   QColor color = QColor::fromRgb(QRandomGenerator::global()->generate()).light(100));
 
 };
 
