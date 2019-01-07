@@ -65,6 +65,8 @@ void SceneGraphicsView::keyReleaseEvent(QKeyEvent *event)
     if (event->key() == Qt::Key::Key_Control) { m_flag_key_down_control = false; }
     if (event->key() == Qt::Key::Key_Alt) {     m_flag_key_down_alt = false; }
 
+
+
     QGraphicsView::keyReleaseEvent(event);
 }
 
