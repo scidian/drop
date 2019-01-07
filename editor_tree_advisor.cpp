@@ -1,6 +1,8 @@
 //
+//      Created by Stephens Nunnally on 1/3/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
-//      Handles dealing with the Advisor
+//  File:
+//      Tree Advisor Definitions
 //
 //
 
@@ -13,31 +15,24 @@
 #include "31_component.h"
 #include "32_property.h"
 
-#include "form_main.h"
+#include "editor_tree_advisor.h"
+#include "interface_relay.h"
 
-
-// Call to put in a signal to change the Advisor to the que
-void FormMain::setAdvisorInfo(HeaderBodyList header_body_list)
-{
-    if (advisor->isHidden()) return;                        // If Advisor dock was closed, cancel
-    if (advisor_header == header_body_list[0]) return;      // If Advisor header is already set to proper info, cancel
-    emit sendAdvisorInfo(header_body_list);                 // Emits signal connected to changeAdvisor
-}
 
 // SLOT, Sets the Advisor Dock text
-void FormMain::changeAdvisor(HeaderBodyList header_body_list)
+void TreeAdvisor::changeAdvisor(HeaderBodyList header_body_list)
 {
     if (advisor_mutex.tryLock() == false) return;           // Try and lock function to make this thread safe
 
-    treeAdvisor->clear();                                   // Clear / delete all from advisor tree
+    this->clear();                                          // Clear / delete all from advisor tree
 
     advisor_header = header_body_list[0];
     QString body_text = QString::fromStdString(header_body_list[1]);
 
     // Insert top level item to act as header
-    QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(treeAdvisor);
+    QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(this);
     topLevelItem->setText(0, QString::fromStdString(advisor_header));
-    treeAdvisor->addTopLevelItem(topLevelItem);
+    this->addTopLevelItem(topLevelItem);
 
     // Create child tree item for body
     QTreeWidgetItem *sub_item = new QTreeWidgetItem(topLevelItem);
@@ -52,24 +47,19 @@ void FormMain::changeAdvisor(HeaderBodyList header_body_list)
     body_label->setAlignment(Qt::AlignTop);
 
     // Apply label to tree, expand all
-    treeAdvisor->setItemWidget(sub_item, 0, body_label);    // Apply text label to tree
-    treeAdvisor->expandAll();                               // Expand the tree
+    this->setItemWidget(sub_item, 0, body_label);           // Apply text label to tree
+    this->expandAll();                                      // Expand the tree
 
     advisor_mutex.unlock();                                 // Unlock function for other threads
 }
 
 
 // Handles changing the Advisor on Mouse Enter
-void TreeAdvisorList::enterEvent(QEvent *event)
+void TreeAdvisor::enterEvent(QEvent *event)
 {
-    getMainWindow()->setAdvisorInfo(Advisor_Info::Advisor_Window);
+    m_interface->setAdvisorInfo(Advisor_Info::Advisor_Window);
     QTreeWidget::enterEvent(event);
 }
-
-
-
-
-
 
 
 

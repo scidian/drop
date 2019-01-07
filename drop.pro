@@ -25,39 +25,50 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-    main.cpp \
-    enums.cpp \
     01_project.cpp \
     02_world.cpp \
-    10_asset.cpp \
     03_scene.cpp \
     04_object.cpp \
+    05_item.cpp \
+    10_asset.cpp \
+    30_settings.cpp \
     31_component.cpp \
     32_property.cpp \
-    30_settings.cpp \
-    globals.cpp \
+    enums.cpp \
     form_main.cpp \
     form_main_setup.cpp \
-    form_main_scene_list.cpp \
-    form_main_inspector.cpp \
-    form_main_assets.cpp \
-    form_main_scene.cpp \
-    05_item.cpp \
-    form_main_advisor.cpp
+    globals.cpp \
+    main.cpp \
+    editor_tree_inspector.cpp \
+    interface_relay.cpp \
+    editor_tree_assets.cpp \
+    editor_tree_scene.cpp \
+    editor_tree_advisor.cpp \
+    editor_scene_scene.cpp \
+    editor_scene_view.cpp \
+    form_main_menu.cpp \
+    form_main_color.cpp
 
 HEADERS += \
-    enums.h \
     01_project.h \
     02_world.h \
     03_scene.h \
     04_object.h \
-    31_component.h \
-    32_property.h \
+    05_item.h \
     10_asset.h \
     30_settings.h \
+    31_component.h \
+    32_property.h \
+    enums.h \
     form_main.h \
     globals.h \
-    05_item.h
+    editor_tree_inspector.h \
+    interface_relay.h \
+    editor_tree_assets.h \
+    editor_tree_scene.h \
+    editor_tree_advisor.h \
+    editor_scene_scene.h \
+    editor_scene_view.h
 
 FORMS +=
 

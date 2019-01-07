@@ -1,6 +1,8 @@
 //
+//      Created by Stephens Nunnally on 12/13/18, (c) 2019 Scidian Software, All Rights Reserved
 //
-//      DrProperty class functions
+//  File:
+//      DrProperty Class Definitions
 //
 //
 

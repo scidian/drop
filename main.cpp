@@ -15,10 +15,10 @@
 //##                                 Drop Creator                                   ##
 //##                        A Drag and Drop Video Game Maker                        ##
 //##                                                                                ##
-//##                             by Scidian Software                                ##
+//##                          (C) Scidian Software, 2018                            ##
 //##                              Stephens Nunnally                                 ##
 //##                                                                                ##
-//##                            Started December 2018                               ##
+//##                            Started December 7, 18                              ##
 //##                                                                                ##
 //####################################################################################
 //
@@ -55,8 +55,10 @@ int main(int argc, char *argv[])
 
     app_drop.exec();                                // Run program
 
+
+    //my_globals->showMessageBox("Finished running program");
     delete my_globals;
-    //ShowMessageBox("Finished running program");
+
     return 0;
 }
 

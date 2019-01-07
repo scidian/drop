@@ -1,5 +1,7 @@
 //
+//      Created by Stephens Nunnally on 12/7/18, (c) 2019 Scidian Software, All Rights Reserved
 //
+//  File:
 //      List of enumerations used by this project
 //
 //
@@ -14,25 +16,53 @@
 #include <QColor>
 #include <QPalette>
 #include <QVariant>
+#include <QGraphicsItem>
+
+
+//####################################################################################
+//##    Types of objects possible in game
+//####################################################################################
+enum class Form_Main_Mode {
+    Edit_Scene,
+    Edit_UI,
+    Node_Map,
+    Scene_Map,
+    Clear,
+};
+
+// Form Main enum for referencing debug labels
+enum class Label_Names
+{
+    Label1,          Label2,          Label3,       LabelObject1,    LabelObject2,    LabelObject3,
+};
+
+//####################################################################################
+//##    Sections of FormMain that can have focus
+//####################################################################################
+enum class Form_Main_Focus {
+    Assets,
+    Scene_List,
+    Scene_View,
+    Object_Inspector,
+    Bottom_Area,
+};
 
 
 //####################################################################################
 //##    Used to track what the QVariant m_value data type really is
 //####################################################################################
-enum class Property_Type
-{
-    BOOL,       INT,        LONG,       FLOAT,      DOUBLE,
-    CHAR,       STRING,
-    IMAGE,      ICON,       COLOR,
-    POINT2D,    POINT3D,
+enum class Property_Type {
+    Bool,       Int,        Long,       Float,      Double,
+    Char,       String,
+    Image,      Icon,       Color,
+    Point2D,    Point3D,
 };
 
 
 //####################################################################################
 //##    Types of objects possible in game
 //####################################################################################
-enum class DrTypes
-{
+enum class DrTypes {
     Project,
     World,      Folder,
     Scene,      Background,     Foreground,     StartScene,     Variable,
@@ -44,6 +74,25 @@ enum class DrTypes
     NotFound,   BaseClass,
 };
 
+
+//####################################################################################
+//##    Custom Qt::UserRole 's for storing data in QWidgets using setData
+//####################################################################################
+typedef enum {
+    Key = Qt::UserRole,
+    Scale,
+    Position,
+    Add_More,
+} User_Roles;
+
+
+//####################################################################################
+//##    Custom QGraphicsItem::UserType 's for referencing types in QGraphicsScene
+//####################################################################################
+typedef enum {
+    Object = QGraphicsItem::UserType,
+    None,
+} User_Types;
 
 
 //####################################################################################
@@ -91,7 +140,6 @@ namespace Component_Icons
     const QString Character     { QString(":/inspector_icons/comp_character.png") };
     const QString None          { QString("") };
 };
-
 
 
 //####################################################################################
@@ -158,8 +206,7 @@ enum class Scene_Components
     settings,
 };
 
-enum class Scene_Properties
-{
+enum class Scene_Properties {
     // settings
     name,                   //string
     start,                  //int

@@ -1,6 +1,8 @@
 //
+//      Created by Stephens Nunnally on 12/7/18, (c) 2019 Scidian Software, All Rights Reserved
 //
-//      DrProject class functions
+//  File:
+//      DrProject Class Definitions
 //
 //
 
@@ -28,8 +30,7 @@ void DrProject::addWorld()
 {
     int test_num = 0;
     std::string new_name;
-    do
-    {
+    do {
         ++test_num;
         new_name = "World " + std::to_string(test_num);
     } while (getWorldWithName(new_name) != nullptr);
@@ -59,8 +60,7 @@ DrWorld* DrProject::getWorld(long from_world_key)
 DrWorld* DrProject::getWorldWithName(std::string world_name)
 {
     std::string compare_name;
-    for (auto i: m_worlds)
-    {
+    for (auto i: m_worlds) {
         compare_name = i.second->getWorldName();
         if (compare_name == world_name) { return i.second; }
     }
@@ -80,16 +80,13 @@ DrWorld* DrProject::getWorldWithName(std::string world_name)
 //####################################################################################
 DrSettings* DrProject::findSettingsFromKey(long check_key)
 {
-    for (auto i: m_worlds)
-    {
+    for (auto i: m_worlds) {
         if (i.second->getKey() == check_key) { return i.second->getSettings(); }
 
-        for (auto j: i.second->getSceneMap())
-        {
+        for (auto j: i.second->getSceneMap()) {
             if (j.second->getKey() == check_key) { return j.second->getSettings(); }
 
-            for (auto k: j.second->getObjectMap())
-            {
+            for (auto k: j.second->getObjectMap()) {
                 if (k.second->getKey() == check_key) { return k.second->getSettings(); }
 
                 //************* More types implemented

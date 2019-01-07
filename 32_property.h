@@ -1,5 +1,7 @@
 //
+//      Created by Stephens Nunnally on 12/13/18, (c) 2019 Scidian Software, All Rights Reserved
 //
+//  File:
 //      DrProperty - Class to hold one property of any DrClass object component
 //
 //
@@ -22,7 +24,7 @@ private:
 
     std::string   m_display_name = "Unknown Property";
     std::string   m_description = "No description";
-    Property_Type m_preferred_type = Property_Type::STRING;
+    Property_Type m_preferred_type = Property_Type::String;
     QVariant      m_value = QString::fromStdString("0");
     long          m_property_key;
 
@@ -33,6 +35,12 @@ public:
 
 
     // Getters and setters
+    /**
+    * @brief getDisplayName
+    * @return
+    * @author Stephens
+    * @todo Fix me
+    */
     std::string   getDisplayName() { return m_display_name; }
     QString       getDisplayNameQString() { return QString::fromStdString(m_display_name); }
     std::string   getDescription() { return m_description; }
