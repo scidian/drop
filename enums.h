@@ -91,7 +91,7 @@ typedef enum {
 //####################################################################################
 typedef enum {
     Object = QGraphicsItem::UserType,
-    None,
+    No_Type,
 } User_Types;
 
 

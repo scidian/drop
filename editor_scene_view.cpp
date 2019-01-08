@@ -29,7 +29,7 @@ SceneGraphicsView::SceneGraphicsView(QWidget *parent, DrProject *project, Interf
 
     // Initialize handle array
     m_handles.resize(static_cast<int>(Position_Flags::Total));
-    m_over_handle = Position_Flags::None;
+    m_over_handle = Position_Flags::No_Position;
 }
 SceneGraphicsView::~SceneGraphicsView() { }
 
@@ -100,7 +100,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
 
             // ******************* If clicked while in a Size Grip Handle
-            if (m_over_handle != Position_Flags::None) {
+            if (m_over_handle != Position_Flags::No_Position) {
                 if (scene()->selectedItems().count() > 0) {
                     m_is_resizing = true;
                     m_start_resize_grip = m_over_handle;
@@ -157,6 +157,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
                 m_rubber_band->setGeometry(QRect(m_origin, QSize()));                   // Start selection box with no size
                 m_rubber_band->show();                                                  // Make selection box visible
+                update();
                 return;
             }
 
@@ -172,33 +173,37 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
 void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
-    if (selection_mutex.tryLock(10) == false) return;               // Try and lock function, so we ony run this once at a time
+    // Try and lock function, so we ony run this once at a time
+    if (selection_mutex.tryLock(10) == false) return;
 
-    // Store mouse position
+    // Store event mouse position
     m_last_mouse_pos = event->pos();
     m_last_mouse_pos.setX(m_last_mouse_pos.x() - 2);
     m_last_mouse_pos.setY(m_last_mouse_pos.y() - 2);
 
-    // Check selection handles to see if mouse is over one
-    if (scene()->selectedItems().count() > 0) {
-        m_over_handle = Position_Flags::None;
+    // ******************** Check selection handles to see if mouse is over one
+    if (scene()->selectedItems().count() > 0 && m_is_resizing == false) {
+        m_over_handle = Position_Flags::No_Position;
         for (int i = 0; i < static_cast<int>(Position_Flags::Total); i++) {
-            if (m_handles[i].contains(m_last_mouse_pos)) {
+            if (m_handles[i].contains(m_last_mouse_pos))
                 m_over_handle = static_cast<Position_Flags>(i);
-            }
         }
 
         switch (m_over_handle)
         {
-        case Position_Flags::Top_Left:     viewport()->setCursor(Qt::CursorShape::SizeFDiagCursor);     break;
-        case Position_Flags::Top_Right:    viewport()->setCursor(Qt::CursorShape::SizeBDiagCursor);     break;
-        case Position_Flags::Bottom_Left:  viewport()->setCursor(Qt::CursorShape::SizeBDiagCursor);     break;
-        case Position_Flags::Bottom_Right: viewport()->setCursor(Qt::CursorShape::SizeFDiagCursor);     break;
-        default:                           ;
+        case Position_Flags::Top_Left:      viewport()->setCursor(Qt::CursorShape::SizeFDiagCursor);    break;
+        case Position_Flags::Top_Right:     viewport()->setCursor(Qt::CursorShape::SizeBDiagCursor);    break;
+        case Position_Flags::Bottom_Left:   viewport()->setCursor(Qt::CursorShape::SizeBDiagCursor);    break;
+        case Position_Flags::Bottom_Right:  viewport()->setCursor(Qt::CursorShape::SizeFDiagCursor);    break;
+        case Position_Flags::Top:           viewport()->setCursor(Qt::CursorShape::SizeVerCursor);      break;
+        case Position_Flags::Bottom:        viewport()->setCursor(Qt::CursorShape::SizeVerCursor);      break;
+        case Position_Flags::Left:          viewport()->setCursor(Qt::CursorShape::SizeHorCursor);      break;
+        case Position_Flags::Right:         viewport()->setCursor(Qt::CursorShape::SizeHorCursor);      break;
+        default:    ;
         }
     }
 
-    if (m_over_handle == Position_Flags::None && m_is_resizing == false)
+    if (m_over_handle == Position_Flags::No_Position && m_is_resizing == false)
         viewport()->unsetCursor();
 
     m_interface->setLabelText(Label_Names::Label1, "mouse - x:" + QString::number(m_last_mouse_pos.x()) + ", y:" + QString::number(m_last_mouse_pos.y()) );
@@ -304,7 +309,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     // Go ahead and paint scene
     QGraphicsView::paintEvent(event);
 
-    // Check if scene view is associated has changed, if so re-connect signals from scene
+    // ********** Check if scene view is associated has changed, if so re-connect signals from scene
     if (scene() != m_scene) {
         if (scene() != nullptr) {
             m_scene = scene();
@@ -319,7 +324,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     // If no selected item gets out of here
     if (scene()->selectedItems().count() < 1) return;
 
-    // Draw selection boxes around all selected items
+    // ********** Draw selection boxes around all selected items
     QPainter painter(viewport());
     QBrush pen_brush(m_interface->getColor(Window_Colors::Icon_Light));
     painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
@@ -335,7 +340,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     }
 
 
-    // Draw box around entire seleciton, with Size Grip squares
+    // ********** Draw box around entire seleciton, with Size Grip squares
     QRectF bigger = m_selection_rect;
     QPolygon to_view = mapFromScene(bigger);
     QPoint top_left = mapFromScene(bigger.topLeft());
@@ -353,14 +358,21 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     ///painter.setBrush(QBrush(linear_grad));
     painter.setBrush(m_interface->getColor(Window_Colors::Icon_Light));
 
-    //m_handles.clear();
     m_handles[static_cast<int>(Position_Flags::Top_Left)] =     QRectF(top_left.x() - r_half,  top_left.y() - r_half,  r_size, r_size);
     m_handles[static_cast<int>(Position_Flags::Top_Right)] =    QRectF(bot_right.x() - r_half, top_left.y() - r_half,  r_size, r_size);
     m_handles[static_cast<int>(Position_Flags::Bottom_Left)] =  QRectF(top_left.x() - r_half,  bot_right.y() - r_half, r_size, r_size);
     m_handles[static_cast<int>(Position_Flags::Bottom_Right)] = QRectF(bot_right.x() - r_half, bot_right.y() - r_half, r_size, r_size);
+    m_handles[static_cast<int>(Position_Flags::Top)] =    QRectF(top_left.x() + r_half,  top_left.y() - r_half,  bot_right.x() - r_size, r_size);
+    m_handles[static_cast<int>(Position_Flags::Bottom)] = QRectF(top_left.x() + r_half,  bot_right.y() - r_half, bot_right.x() - r_size, r_size);
+    m_handles[static_cast<int>(Position_Flags::Left)] =   QRectF(top_left.x() - r_half,  top_left.y() + r_half,  r_size, bot_right.y() - r_size);
+    m_handles[static_cast<int>(Position_Flags::Right)] =  QRectF(bot_right.x() - r_half,  top_left.y() + r_half,  r_size, bot_right.y() - r_size);
 
-    painter.drawRects(m_handles);
-
+    QVector<QRectF> handles;
+    handles.append(m_handles[static_cast<int>(Position_Flags::Top_Left)]);
+    handles.append(m_handles[static_cast<int>(Position_Flags::Top_Right)]);
+    handles.append(m_handles[static_cast<int>(Position_Flags::Bottom_Left)]);
+    handles.append(m_handles[static_cast<int>(Position_Flags::Bottom_Right)]);
+    painter.drawRects(handles);
 }
 
 
@@ -410,6 +422,135 @@ void SceneGraphicsView::updateSelectionRect()
 
 // Calculates selection resizing
 void SceneGraphicsView::resizeSelection(QPointF mouse_in_scene)
+{
+    // Figure out what sides to use for x axis and y axis
+    X_Axis do_x;
+    Y_Axis do_y;
+    switch (m_start_resize_grip) {
+    case Position_Flags::Top_Left:      do_x = X_Axis::Left;    do_y = Y_Axis::Top;     break;
+    case Position_Flags::Top:           do_x = X_Axis::None;    do_y = Y_Axis::Top;     break;
+    case Position_Flags::Top_Right:     do_x = X_Axis::Right;   do_y = Y_Axis::Top;     break;
+    case Position_Flags::Right:         do_x = X_Axis::Right;   do_y = Y_Axis::None;    break;
+    case Position_Flags::Bottom_Right:  do_x = X_Axis::Right;   do_y = Y_Axis::Bottom;  break;
+    case Position_Flags::Bottom:        do_x = X_Axis::None;    do_y = Y_Axis::Bottom;  break;
+    case Position_Flags::Bottom_Left:   do_x = X_Axis::Left;    do_y = Y_Axis::Bottom;  break;
+    case Position_Flags::Left:          do_x = X_Axis::Left;    do_y = Y_Axis::None;    break;
+    default:                            do_x = X_Axis::None;    do_y = Y_Axis::None;
+    }
+
+    ///// To be used to calculate size while doing uniform resizing
+    ///qreal dist = sqrt(pow(m_click_pos.x() - pos.x(), 2) + pow(m_click_pos.y() - pos.y(), 2));
+    QPointF top_left_select =  m_start_resize_rect.topLeft();
+    QPointF bot_right_select = m_start_resize_rect.bottomRight();
+    qreal original_x, original_y;
+    qreal new_x,      new_y;
+    qreal scale_x,    scale_y;
+
+    // Find original distance of mouse to opposite selection sides
+    switch (do_x) {
+    case X_Axis::Right:
+        original_x = m_origin_in_scene.x() - top_left_select.x();
+        new_x = mouse_in_scene.x() - top_left_select.x();
+        scale_x = (new_x) / (original_x + .000001);      // New width of selection / original width
+        break;
+    case X_Axis::Left:
+        original_x = bot_right_select.x() - m_origin_in_scene.x();
+        new_x = bot_right_select.x() - mouse_in_scene.x();
+        scale_x = (new_x) / (original_x + .000001);
+        break;
+    case X_Axis::None:
+        original_x = 0;     scale_x = 1;
+    }
+
+    switch (do_y) {
+    case Y_Axis::Bottom:
+        original_y = m_origin_in_scene.y() - top_left_select.y();
+        new_y = mouse_in_scene.y() - top_left_select.y();
+        scale_y = (new_y) / (original_y + .000001);
+        break;
+    case Y_Axis::Top:
+        original_y = bot_right_select.y() - m_origin_in_scene.y();
+        new_y = bot_right_select.y() - mouse_in_scene.y();
+        scale_y = (new_y) / (original_y + .000001);
+        break;
+    case Y_Axis::None:
+        original_y = 0;     scale_y = 1;
+    }
+
+
+    // Apply scaling to each selected item
+    for (auto item : scene()->selectedItems()) {
+        // Get stored data from each item
+        QVariant get_data;
+        QPointF my_scale, my_pos;
+        get_data = item->data(User_Roles::Scale);       my_scale = get_data.toPointF();
+        get_data = item->data(User_Roles::Position);    my_pos =   get_data.toPointF();
+
+        // Apply new scale to each item
+        qreal sx = my_scale.x() * scale_x;
+        qreal sy = my_scale.y() * scale_y;
+        if (sx <  .001 && sx >= 0) sx =  .001;
+        if (sx > -.001 && sx < 0)  sx = -.001;
+        if (sy <  .001 && sy >= 0) sy =  .001;
+        if (sy > -.001 && sy < 0)  sy = -.001;
+        QTransform scale_transform;
+        scale_transform = QTransform::fromScale(sx, sy);
+        item->setTransform(scale_transform);
+
+        // Move each item as neccessary to keep them aligned within selection box
+
+        qreal original_x_dist, original_y_dist;
+        qreal new_left, new_top;
+
+        switch (do_x) {
+        case X_Axis::Right:
+            original_x_dist = (my_pos.x() - top_left_select.x());
+            new_left = top_left_select.x() + (original_x_dist * scale_x);
+            break;
+        case X_Axis::Left:
+            original_x_dist = (bot_right_select.x() - my_pos.x());
+            new_left = bot_right_select.x() - (original_x_dist * scale_x);
+            break;
+        case X_Axis::None:      new_left = my_pos.x();
+        }
+
+        switch (do_y) {
+        case Y_Axis::Bottom:
+            original_y_dist = (my_pos.y() - top_left_select.y());
+            new_top =  top_left_select.y() + (original_y_dist * scale_y);
+            break;
+        case Y_Axis::Top:
+            original_y_dist = (bot_right_select.y() - my_pos.y());
+            new_top =  bot_right_select.y() - (original_y_dist * scale_y);
+            break;
+        case Y_Axis::None:      new_top = my_pos.y();
+        }
+
+        item->setPos(new_left, new_top);
+    }
+
+
+
+
+    m_interface->setLabelText(Label_Names::Label2,        "  x: " + QString::number(top_left_select.x() ) +
+                                                          ", y:" +  QString::number(top_left_select.y() ) );
+    m_interface->setLabelText(Label_Names::LabelObject1,  "  x: " + QString::number(m_origin_in_scene.x() ) +
+                                                          ", y:" +  QString::number(m_origin_in_scene.y() ) );
+    m_interface->setLabelText(Label_Names::LabelObject2,  "  x: " + QString::number(mouse_in_scene.x() ) +
+                                                          ", y:" +  QString::number(mouse_in_scene.y() ) );
+    m_interface->setLabelText(Label_Names::LabelObject3,  "  x: " + QString::number(scale_x) +
+                                                          ", y:" +  QString::number(scale_y) );
+
+}
+
+
+
+
+
+
+
+// Calculates selection resizing
+void SceneGraphicsView::resizeSelection2(QPointF mouse_in_scene)
 {
     ///// To be used to calculate size while doing uniform resizing
     ///qreal dist = sqrt(pow(m_click_pos.x() - pos.x(), 2) + pow(m_click_pos.y() - pos.y(), 2));
@@ -531,9 +672,6 @@ void SceneGraphicsView::resizeSelection(QPointF mouse_in_scene)
                                                           ", y:" +  QString::number(scale_y) );
 
 }
-
-
-
 
 
 

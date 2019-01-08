@@ -14,6 +14,7 @@ class DrProject;
 class InterfaceRelay;
 class SceneViewRubberBand;
 
+// Possible handle rects, order is vector / array index critical
 enum class Position_Flags {
     Top          = 0,
     Bottom       = 1,
@@ -24,7 +25,7 @@ enum class Position_Flags {
     Top_Right    = 6,
     Bottom_Right = 7,
     Total,
-    None,
+    No_Position,
 };
 
 enum class X_Axis { Left,   Right,    None  };
@@ -92,6 +93,8 @@ public slots:
     void sceneChanged(QList<QRectF> region);
     void selectionChanged();
     void resizeSelection(QPointF mouse_in_scene);
+
+    void resizeSelection2(QPointF mouse_in_scene);
 };
 
 
