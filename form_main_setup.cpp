@@ -140,7 +140,6 @@ void FormMain::buildWindowModeEditScene()
                     viewMain = new SceneGraphicsView(splitterHorizontal, project, this);
                     viewMain->setObjectName(QStringLiteral("viewMain"));
                     viewMain->setRenderHint(QPainter::Antialiasing, false);
-                    //viewMain->setDragMode(QGraphicsView::DragMode::RubberBandDrag);
                     viewMain->setDragMode(QGraphicsView::DragMode::NoDrag);
                     viewMain->setOptimizationFlags(QGraphicsView::DontSavePainterState);
                     viewMain->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
@@ -152,7 +151,6 @@ void FormMain::buildWindowModeEditScene()
                     viewMain->setSizePolicy(sizePolicyView);
                     viewMain->setMinimumSize(QSize(100, 0));
                     viewMain->setFont(font);
-                    viewMain->setCacheMode(QGraphicsView::CacheBackground);
                 splitterHorizontal->addWidget(viewMain);
 
                 splitterHorizontal->setSizes(QList<int> { 150, 300 });      // Sets tree_scene (scene assests) startup width to 150
@@ -191,6 +189,10 @@ void FormMain::buildWindowModeEditScene()
                 label_object_3->setObjectName(QStringLiteral("label_object_3"));
                 label_object_3->setGeometry(QRect(180, 50, 461, 21));
                 label_object_3->setFont(font);
+                label_object_4 = new QLabel(areaBottom);
+                label_object_4->setObjectName(QStringLiteral("label_object_4"));
+                label_object_4->setGeometry(QRect(180, 70, 461, 21));
+                label_object_4->setFont(font);
         splitterVertical->addWidget(areaBottom);
 
         splitterVertical->setStretchFactor(0, 1);           // widgetScene (index 0) should stretch (1)

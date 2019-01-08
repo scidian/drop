@@ -86,7 +86,7 @@ private:
 
     // Labels to display info
     QLabel        *label_1,         *label_2,           *label_3;
-    QLabel        *label_object_1,  *label_object_2,    *label_object_3;
+    QLabel        *label_object_1,  *label_object_2,    *label_object_3,    *label_object_4;
 
 public:
     // Constructor and Destructor
@@ -113,7 +113,6 @@ private:
     void        buildWindowModeEditScene();
     void        changePalette(Color_Scheme new_color_scheme);
     void        listChildren();
-    void        refreshMainView();
 
 signals:
     void        sendAdvisorInfo(HeaderBodyList header_body_list);           // Forwards info to MainWindow::changeAdvisor

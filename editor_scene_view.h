@@ -14,6 +14,15 @@ class DrProject;
 class InterfaceRelay;
 class SceneViewRubberBand;
 
+// Interactive mouse modes
+enum class View_Mode {
+    None,
+    Selecting,
+    Resizing,
+    Rotating,
+    Translating,
+};
+
 // Possible handle rects, order is vector / array index critical
 enum class Position_Flags {
     Top          = 0,
@@ -28,8 +37,11 @@ enum class Position_Flags {
     No_Position,
 };
 
-enum class X_Axis { Left,   Right,    None  };
-enum class Y_Axis { Top,    Bottom,   None  };
+enum class X_Axis {  Left,   Right,    None  };
+enum class Y_Axis {  Top,    Bottom,   None  };
+
+enum class Grid_Style {  Lines, Dots,   };
+
 
 class SceneGraphicsView : public QGraphicsView
 {
@@ -37,35 +49,42 @@ class SceneGraphicsView : public QGraphicsView
 
 private:
     // Local member variables
-    DrProject              *m_project;                  // Pointer to currently loaded project
-    InterfaceRelay         *m_interface;                // Pointer to interface class of parent form
-    QGraphicsScene         *m_scene;                    // Pointer to current scene, updated during paintEvent
+    DrProject              *m_project;                              // Pointer to currently loaded project
+    InterfaceRelay         *m_interface;                            // Pointer to interface class of parent form
+    QGraphicsScene         *m_scene;                                // Pointer to current scene, updated during paintEvent
+    View_Mode               m_view_mode = View_Mode::None;          // Tracks current view interaction mode
 
     int          m_zoom = 250;
     int          m_rotate = 0;
+
+    Grid_Style   m_grid_style = Grid_Style::Dots;
+    double       m_grid_x = 10;
+    double       m_grid_y = 10;
+
     bool         m_flag_key_down_spacebar = false;
     bool         m_flag_key_down_control = false;
     bool         m_flag_key_down_alt = false;
 
-    QMutex                  selection_mutex { QMutex::NonRecursive };               // Used to keep mouse move from backing up
+    QMutex                  mouse_move_mutex { QMutex::NonRecursive };              // Used to keep mouse move from backing up
     QPoint                  m_origin;                                               // Stores mouse down position in view coordinates
     QPointF                 m_origin_in_scene;                                      // Stores mouse down position in scene coordinates
     QGraphicsItem          *m_origin_item;                                          // Stores top item under mouse (if any) on mouse down event
 
+    // Selection Bounding Box Variables
     QVector<QRectF>         m_handles;                                              // Stores QRects of current selection box handles
     Position_Flags          m_over_handle;                                          // Tracks if mouse is over a handle
     QPoint                  m_last_mouse_pos;                                       // Tracks last known mouse position in view coordinates
 
-    bool                    m_is_selecting = false;                                 // True when using rubber band selection box
+    // View_Mode::Selecting Variables
     SceneViewRubberBand    *m_rubber_band;                                          // Holds our view's RubberBand object
     QList<QGraphicsItem *>  m_items_start;                                          // Stores items selected at start of new rubber band box
 
-    bool                    m_is_resizing = false;                                  // True when resizing selection
+    // View_Mode::Resizing Variables
     QRectF                  m_selection_rect;                                       // Stores rect of current selection
     QRectF                  m_start_resize_rect;                                    // Stores starting rect of selection before resize starts
     Position_Flags          m_start_resize_grip;                                    // Stores which Size Grip Handle we started resize over
 
-    bool                    m_is_rotating = false;                                  // True when rotating
+    // View_Mode::Rotating Variables
     QPointF                 m_selection_center;                                     // Stores center point of selection
     double                  m_last_angle_diff;                                      // Stores angle difference last time we checked
 
@@ -76,6 +95,8 @@ public:
 
     // Event Overrides, start at Qt Docs for QGraphicsView Class to find more
     virtual void paintEvent(QPaintEvent *event) override;                               // Inherited from QWidget
+    virtual void drawBackground(QPainter *painter, const QRectF &rect) override;        // Inherited from QGraphicsView
+
     virtual void enterEvent(QEvent *event) override;                                    // Inherited from QWidget
     virtual void keyPressEvent(QKeyEvent *event) override;                              // Inherited from QWidget
     virtual void keyReleaseEvent(QKeyEvent *event) override;                            // Inherited from QWidget
@@ -95,6 +116,12 @@ public slots:
     double  calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt);
     void    sceneChanged(QList<QRectF> region);
     void    selectionChanged();
+
+    void    startSelect(QMouseEvent *event);
+    void    startResize();
+    void    startRotate();
+
+    void    processSelection(QPoint mouse_in_view);
     void    resizeSelection(QPointF mouse_in_scene);
     void    rotateSelection(QPointF mouse_in_view);
 };

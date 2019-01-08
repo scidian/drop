@@ -131,6 +131,7 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
     case Label_Names::LabelObject1: label_object_1->setText(new_text);  break;
     case Label_Names::LabelObject2: label_object_2->setText(new_text);  break;
     case Label_Names::LabelObject3: label_object_3->setText(new_text);  break;
+    case Label_Names::LabelObject4: label_object_4->setText(new_text);  break;
     }
 }
 
@@ -146,6 +147,9 @@ void FormMain::populateScene()
     scene = new SceneGraphicsScene(this, project, this);
 
     // Populate scene
+
+    scene->addSquare(-200, -200, 100, 100);
+
     scene->addSquare(0, 0, 100, 50);
     scene->addSquare(200, 0, 100, 50);
 
@@ -153,6 +157,8 @@ void FormMain::populateScene()
 
     scene->addSquare(0, 200, 100, 50);
     scene->addSquare(200, 200, 100, 50);
+
+    scene->setSceneRect(-500, -500, 1000, 1000);
 }
 
 
@@ -162,15 +168,7 @@ void FormMain::changePalette(Color_Scheme new_color_scheme)
 {
     globals->current_color_scheme = new_color_scheme;
     applyColoring();
-    refreshMainView();
-}
-// After many tried update calls, force view to redraw by a quick zoom in / out
-void FormMain::refreshMainView()
-{
-    if (viewMain != nullptr) {
-        viewMain->zoomInOut(1);
-        viewMain->zoomInOut(-1);
-    }
+    update();
 }
 
 
