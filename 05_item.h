@@ -18,10 +18,12 @@
 class DrItem : public QGraphicsItem
 {
 private:
+    double      m_width;
+    double      m_height;
     QColor      m_color;
 
 public:
-    DrItem(const QColor &start_color);
+    DrItem(const QColor &start_color, double width, double height);
 
     virtual QRectF       boundingRect() const override;
     virtual QPainterPath shape() const override;

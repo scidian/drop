@@ -82,6 +82,7 @@ typedef enum {
     Key = Qt::UserRole,
     Scale,
     Position,
+    Rotation,
     Add_More,
 } User_Roles;
 
@@ -91,7 +92,7 @@ typedef enum {
 //####################################################################################
 typedef enum {
     Object = QGraphicsItem::UserType,
-    None,
+    No_Type,
 } User_Types;
 
 

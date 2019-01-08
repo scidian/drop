@@ -146,10 +146,13 @@ void FormMain::populateScene()
     scene = new SceneGraphicsScene(this, project, this);
 
     // Populate scene
-    scene->addSquare(0, 0);
-    scene->addSquare(200, 0);
-    scene->addSquare(0, 200);
-    scene->addSquare(200, 200);
+    scene->addSquare(0, 0, 100, 50);
+    scene->addSquare(200, 0, 100, 50);
+
+    scene->addSquare(100, 100, 1, 1);
+
+    scene->addSquare(0, 200, 100, 50);
+    scene->addSquare(200, 200, 100, 50);
 }
 
 

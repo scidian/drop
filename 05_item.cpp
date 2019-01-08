@@ -10,8 +10,10 @@
 
 #include "05_item.h"
 
-DrItem::DrItem(const QColor &start_color)
+DrItem::DrItem(const QColor &start_color, double width, double height)
 {
+    m_width = width;
+    m_height = height;
     m_color = start_color;
     setZValue(1);
 
@@ -24,12 +26,7 @@ DrItem::DrItem(const QColor &start_color)
 // Outline of entire object
 QRectF DrItem::boundingRect() const
 {
-    QRectF my_rect = QRectF(0, 0, 110, 70);
-
-    //prepareGeometryChange();
-    //my_rect.setWidth( 110 * transform().m11());
-    //my_rect.setHeight( 70 * transform().m22());
-
+    QRectF my_rect = QRectF(0, 0, m_width, m_height);
     return my_rect;
 }
 
@@ -37,7 +34,7 @@ QRectF DrItem::boundingRect() const
 QPainterPath DrItem::shape() const
 {
     QPainterPath path;
-    path.addRect(0, 0, 110, 70);
+    path.addRect(0, 0, m_width, m_height);
     return path;
 }
 
@@ -60,7 +57,7 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     //if (option->state & QStyle::State_MouseOver) { fillColor = QColor(Qt::gray); } //fillColor.light(125); }          // If mouse is over
     //if (option->state & QStyle::State_MouseOver && option->state & QStyle::State_Selected) { fillColor = QColor(Qt::red).darker(200); }
 
-    painter->fillRect(QRectF(0, 0, 110, 70), fillColor);
+    painter->fillRect(QRectF(0, 0, m_width, m_height), fillColor);
 }
 
 
