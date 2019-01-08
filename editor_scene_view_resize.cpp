@@ -40,7 +40,10 @@ void SceneGraphicsView::startResize()
         QPointF my_pos(item->pos().x(), item->pos().y());
         item->setData(User_Roles::Position, my_pos);
     }
+
 }
+
+
 
 
 
@@ -118,21 +121,21 @@ void SceneGraphicsView::resizeSelection(QPointF mouse_in_scene)
         if (sy > -.001 && sy < 0)  sy = -.001;
 
 
-        //QTransform scale_transform;
-        //scale_transform = QTransform::fromScale(sx, sy);
-        //item->setTransform(scale_transform);
+        QTransform scale_transform;
+        scale_transform = QTransform::fromScale(sx, sy);
+        item->setTransform(scale_transform);
 
 
-        QPointF center = m_selection_rect.center();
-        qreal angle = item->rotation();
-        QTransform t;
-        t.translate(center.x(), center.y());
-        t.rotate(-angle);
-        t.scale(sx, sy);
-        t.rotate(angle);
-        t.translate(-center.x(), -center.y());
+//        QPointF center = m_selection_rect.center();
+//        qreal angle = item->rotation();
+//        QTransform t;
+//        t.translate(center.x(), center.y());
+//        t.rotate(-angle);
+//        t.scale(sx, sy);
+//        t.rotate(angle);
+//        t.translate(-center.x(), -center.y());
 
-        item->setTransform(t, false);
+//        item->setTransform(t, false);
 
         //item->setPos(t.map(item->pos()));
         //item->setRotation(angle);

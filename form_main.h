@@ -87,6 +87,7 @@ private:
     // Labels to display info
     QLabel        *label_1,         *label_2,           *label_3;
     QLabel        *label_object_1,  *label_object_2,    *label_object_3,    *label_object_4;
+    QLabel        *label_object_5,  *label_object_6,    *label_object_7,    *label_object_8;
 
 public:
     // Constructor and Destructor

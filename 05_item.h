@@ -15,6 +15,12 @@
 
 #include "form_main.h"
 
+enum class Origin {
+    Top_Left,       Top,        Top_right,
+    Left,           Center,     Right,
+    Bottom_Left,    Bottom,     Bottom_Right,
+};
+
 class DrItem : public QGraphicsItem
 {
 private:
@@ -22,22 +28,34 @@ private:
     double      m_height;
     QColor      m_color;
 
+    Origin      m_origin = Origin::Center;
+
 public:
     DrItem(const QColor &start_color, double width, double height);
 
-    virtual QRectF       boundingRect() const override;
-    virtual QPainterPath shape() const override;
-    virtual int          type() const override;
+    // Base Getter Overrides
+    virtual QRectF          boundingRect() const override;
+    virtual QPainterPath    shape() const override;
+    virtual int             type() const override;
 
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget) override;
+    // Event Overrides
+    virtual void            paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget) override;
+    virtual void            mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    virtual void            mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    virtual void            mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    virtual void            hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 
-protected:
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
-
-    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
+    // Getters and Setters
+    Origin                  getOrigin() { return m_origin; }
 
 };
 
 #endif // DRITEM_H
+
+
+
+
+
+
+
+

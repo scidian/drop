@@ -23,9 +23,14 @@
 // Create square at location
 void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, double new_width, double new_height, QColor color)
 {
-    QGraphicsItem *item;
+    DrItem *item;
     item = new DrItem(color, new_width, new_height);
-    item->setPos(new_x, new_y);
+
+    switch (item->getOrigin()) {
+    case Origin::Center:    item->setPos(new_x - new_width / 2, new_y - (new_height / 2));      break;
+    default:                item->setPos(new_x, new_y);
+    }
+
     addItem(item);
 }
 
@@ -54,7 +59,7 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
 
     // Perform key press event on all selected items
     for (auto item: this->selectedItems()) {
-        QGraphicsItem *new_item;
+        DrItem *new_item;
         QColor new_color = QColor::fromRgb(QRandomGenerator::global()->generate()).light(100);
         qreal new_x = item->scenePos().x();
         qreal new_y = item->scenePos().y();

@@ -21,6 +21,8 @@ DrItem::DrItem(const QColor &start_color, double width, double height)
              QGraphicsItem::GraphicsItemFlag::ItemIsMovable |
              QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges);
     setAcceptHoverEvents(true);
+
+    setData(User_Roles::Rotation, 0);
 }                                     
 
 // Outline of entire object

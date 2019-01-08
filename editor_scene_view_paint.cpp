@@ -27,7 +27,7 @@ void SceneGraphicsView::drawBackground(QPainter *painter, const QRectF &rect)
     QPen p = painter->pen();
     QBrush b = painter->brush();
 
-    painter->setPen(Qt::black);
+    painter->setPen(QPen(Qt::black, 1));
     painter->setBrush(Qt::NoBrush);
 
     if (m_grid_style == Grid_Style::Lines) {
@@ -82,12 +82,46 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     painter.setBrush(Qt::NoBrush);
 
     for (auto item: scene()->selectedItems()) {
-        QRectF rect = item->sceneBoundingRect();                            // Get item bounding box
-        //rect.setWidth(rect.width() * item->transform().m11());            // Transform to item scale
-        //rect.setHeight(rect.height() * item->transform().m22());
-        //rect.translate(item->pos().x(), item->pos().y());                 // Translate bounding box to proper scene location
-        QPolygon to_view = mapFromScene(rect);                              // Convert scene location to view location
+
+        QPointF   center;
+        center.setX(item->pos().x() + item->boundingRect().center().x());
+        center.setY(item->pos().y() + item->boundingRect().center().y());
+
+        QPolygonF polygon;
+        polygon.append(QPointF( item->pos().x(), item->pos().y() ));
+        polygon.append(QPointF( item->pos().x() + item->boundingRect().width(), item->pos().y() ));
+        polygon.append(QPointF( item->pos().x() + item->boundingRect().width(), item->pos().y() + item->boundingRect().height() ));
+        polygon.append(QPointF( item->pos().x(), item->pos().y() + item->boundingRect().height() ));
+
+        QTransform t;
+        //t.translate(-center.y(), -center.x());
+        //t.rotate(item->data(User_Roles::Rotation).toDouble());
+        //t.translate(center.x(), center.y());
+        polygon = t.map(polygon);
+
+        //t.reset();
+        //polygon = t.map(polygon);
+
+        QPolygon to_view = mapFromScene(polygon);                           // Convert scene location to view location
         painter.drawPolygon(to_view);                                       // Draw polygon
+
+
+
+        // TEMP: Showing object data
+        QVariant get_data;
+        QPointF my_scale, my_pos;
+        double  my_angle;
+        get_data = item->data(User_Roles::Position);    my_pos =   get_data.toPointF();
+        get_data = item->data(User_Roles::Scale);       my_scale = get_data.toPointF();
+        get_data = item->data(User_Roles::Rotation);    my_angle = get_data.toDouble();
+        m_interface->setLabelText(Label_Names::LabelObject5, "Pos X: " + QString::number(my_pos.x()) +
+                                                             "Pos Y: " + QString::number(my_pos.y()));
+        m_interface->setLabelText(Label_Names::LabelObject6, "Scale X: " + QString::number(my_scale.x()) +
+                                                             "Scale Y: " + QString::number(my_scale.y()));
+        m_interface->setLabelText(Label_Names::LabelObject7, "Rotation: " + QString::number(my_angle));
+
+        m_interface->setLabelText(Label_Names::LabelObject8, "Cen X: " + QString::number(center.x()) +
+                                                             "Cen Y: " + QString::number(center.y()));
     }
 
     // ********** Draw box around entire seleciton, with Size Grip squares
@@ -130,6 +164,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         painter.drawLine(m_selection_center, m_origin);
         painter.drawLine(m_selection_center, m_last_mouse_pos);
     }
+
 }
 
 

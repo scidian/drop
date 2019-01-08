@@ -253,7 +253,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
         viewport()->unsetCursor();
 
     // Draw mouse coords on screen
-    m_interface->setLabelText(Label_Names::LabelObject4, "mouse - x:" + QString::number(m_last_mouse_pos.x()) + ", y:" + QString::number(m_last_mouse_pos.y()) );
+    m_interface->setLabelText(Label_Names::LabelObject4, "Mouse X: " + QString::number(m_last_mouse_pos.x()) + ", Y: " + QString::number(m_last_mouse_pos.y()) );
 
 
     // ******************* If we're in selection mode, process mouse movement and resize box as needed

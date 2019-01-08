@@ -85,6 +85,7 @@ private:
     Position_Flags          m_start_resize_grip;                                    // Stores which Size Grip Handle we started resize over
 
     // View_Mode::Rotating Variables
+    QMutex                  rotate_mutex { QMutex::NonRecursive };                  // Used to keep rotating from backing up
     QPointF                 m_selection_center;                                     // Stores center point of selection
     double                  m_last_angle_diff;                                      // Stores angle difference last time we checked
 

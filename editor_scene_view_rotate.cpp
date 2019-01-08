@@ -47,43 +47,46 @@ void SceneGraphicsView::startRotate()
 // Calculates rotation
 void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
 {
+    // Try and lock function, so we ony run this once at a time
+    if (rotate_mutex.tryLock() == false) return;
+
     double angle1 = calcRotationAngleInDegrees(m_selection_center, m_origin);
     double angle2 = calcRotationAngleInDegrees(m_selection_center, mouse_in_view);
-    double angle_diff = angle1 - angle2;
+    double angle = angle2 - angle1;
+    double angle_diff = angle - m_last_angle_diff;
+
     if (angle_diff < -180) angle_diff += 360;
     if (angle_diff > 180)  angle_diff -= 360;
 
-    // Apply rotation to each selected item
-    for (auto item : scene()->selectedItems()) {
-        // Get stored data from each item
-        //QVariant get_data = item->data(User_Roles::Rotation);
-        //double my_rotation = get_data.toDouble();
+    // Group selected items and apply rotation to collection
+    QGraphicsItemGroup *group = scene()->createItemGroup(scene()->selectedItems());
+    QPointF offset = group->sceneBoundingRect().center();
+    QTransform transform;
+    transform.translate(offset.x(),offset.y());
+    transform.rotate(angle_diff);
+    transform.translate(-offset.x(),-offset.y());
+    group->setTransform(transform);
 
-        QPointF center = m_selection_rect.center();
-        qreal scale_x = item->transform().m11();
-        qreal scale_y = item->transform().m22();
+    // Save new item rotations for use later
+    for (auto item : group->childItems()) {
+        double my_angle = item->data(User_Roles::Rotation).toDouble();
+        double new_angle =  my_angle + angle_diff;
 
-        //qreal angle = (m_last_angle_diff) - angle_diff;
-        QTransform t;// = item->transform();
-        t.translate(center.x(), center.y());
-        t.scale(1 / scale_x, 1 / scale_y);
-        t.rotate(angle_diff);
-        t.scale(scale_x, scale_y);
-        t.translate(-center.x(), -center.y());
+        if (new_angle >=  360) { do { new_angle -= 360; } while (new_angle >=  360); }
+        if (new_angle <= -360) { do { new_angle += 360; } while (new_angle <= -360); }
 
-        item->setTransform(t, false);
-
-        //item->setPos(t.map(item->pos()));
-        //item->setRotation(item->rotation() + angle);
-
-
-
+        item->setData(User_Roles::Rotation, new_angle);
     }
-    m_last_angle_diff = angle_diff;
+    scene()->destroyItemGroup(group);
 
-    m_interface->setLabelText(Label_Names::LabelObject1, "Angle 1: " + QString::number(angle1));
-    m_interface->setLabelText(Label_Names::LabelObject2, "Angle 2: " + QString::number(angle2));
-    m_interface->setLabelText(Label_Names::LabelObject3, "Angle Dif: " + QString::number(angle_diff));
+    m_last_angle_diff = angle;
+
+    m_interface->setLabelText(Label_Names::Label1, "Angle 1: " + QString::number(angle1));
+    m_interface->setLabelText(Label_Names::Label2, "Angle 2: " + QString::number(angle2));
+    m_interface->setLabelText(Label_Names::LabelObject1, "Angle: " + QString::number(angle));
+    m_interface->setLabelText(Label_Names::LabelObject2, "Difference: " + QString::number(angle_diff) );
+
+    rotate_mutex.unlock();
 }
 
 
