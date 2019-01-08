@@ -65,7 +65,9 @@ private:
     QRectF                  m_start_resize_rect;                                    // Stores starting rect of selection before resize starts
     Position_Flags          m_start_resize_grip;                                    // Stores which Size Grip Handle we started resize over
 
-
+    bool                    m_is_rotating = false;                                  // True when rotating
+    QPointF                 m_selection_center;                                     // Stores center point of selection
+    double                  m_last_angle_diff;                                      // Stores angle difference last time we checked
 
 public:
     // Constructor
@@ -90,11 +92,11 @@ public:
     void zoomInOut(int level);
 
 public slots:
-    void sceneChanged(QList<QRectF> region);
-    void selectionChanged();
-    void resizeSelection(QPointF mouse_in_scene);
-
-    void resizeSelection2(QPointF mouse_in_scene);
+    double  calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt);
+    void    sceneChanged(QList<QRectF> region);
+    void    selectionChanged();
+    void    resizeSelection(QPointF mouse_in_scene);
+    void    rotateSelection(QPointF mouse_in_view);
 };
 
 

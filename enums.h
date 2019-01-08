@@ -82,6 +82,7 @@ typedef enum {
     Key = Qt::UserRole,
     Scale,
     Position,
+    Rotation,
     Add_More,
 } User_Roles;
 
