@@ -34,7 +34,7 @@ void SceneGraphicsView::startResize()
 
         // Store starting scale of each selected item
         QPointF my_scale(item->transform().m11(), item->transform().m22());
-        item->setData(User_Roles::Scale, my_scale);
+        item->setData(User_Roles::Scale_Pre_Resize, my_scale);
 
         // Store starting position of each selected item
         QPointF my_pos(item->pos().x(), item->pos().y());
@@ -109,8 +109,8 @@ void SceneGraphicsView::resizeSelection(QPointF mouse_in_scene)
         // Get stored data from each item
         QVariant get_data;
         QPointF my_scale, my_pos;
-        get_data = item->data(User_Roles::Scale);       my_scale = get_data.toPointF();
-        get_data = item->data(User_Roles::Position);    my_pos =   get_data.toPointF();
+        get_data = item->data(User_Roles::Scale_Pre_Resize);    my_scale = get_data.toPointF();
+        get_data = item->data(User_Roles::Position);            my_pos =   get_data.toPointF();
 
         // Apply new scale to each item
         qreal sx = my_scale.x() * scale_x;

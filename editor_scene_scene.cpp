@@ -25,6 +25,7 @@ void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, double new_width, d
 {
     DrItem *item;
     item = new DrItem(color, new_width, new_height);
+    item->setPos(0, 0);
 
     switch (item->getOrigin()) {
     case Origin::Center:    item->setPos(new_x - new_width / 2, new_y - (new_height / 2));      break;

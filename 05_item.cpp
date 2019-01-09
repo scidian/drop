@@ -19,7 +19,8 @@ DrItem::DrItem(const QColor &start_color, double width, double height)
 
     setFlags(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable |
              QGraphicsItem::GraphicsItemFlag::ItemIsMovable |
-             QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges);
+             QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges |
+             QGraphicsItem::GraphicsItemFlag::ItemSendsGeometryChanges);
     setAcceptHoverEvents(true);
 
     setData(User_Roles::Rotation, 0);
@@ -46,6 +47,20 @@ int DrItem::type() const
     return User_Types::Object;
 }
 
+
+QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
+{
+    // Value is the new position
+    if (change == ItemPositionHasChanged && scene()) {
+        QPointF new_pos = value.toPointF();
+        setData(User_Roles::Position, new_pos);
+    }
+    if (change == ItemTransformHasChanged && scene()) {
+        QPointF my_scale(transform().m11(), transform().m22());
+        setData(User_Roles::Scale, my_scale);
+     }
+    return QGraphicsItem::itemChange(change, value);
+}
 
 
 void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

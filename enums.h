@@ -83,6 +83,7 @@ enum class DrTypes {
 typedef enum {
     Key = Qt::UserRole,
     Scale,
+    Scale_Pre_Resize,
     Position,
     Rotation,
     Add_More,

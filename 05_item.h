@@ -39,6 +39,7 @@ public:
     virtual int             type() const override;
 
     // Event Overrides
+    virtual QVariant        itemChange(GraphicsItemChange change, const QVariant &value) override;
     virtual void            paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget) override;
     virtual void            mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     virtual void            mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;

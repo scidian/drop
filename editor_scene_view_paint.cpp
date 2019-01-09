@@ -152,13 +152,13 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         QVariant get_data;
         QPointF my_scale, my_pos;
         double  my_angle;
-        get_data = item->data(User_Roles::Position);    my_pos =   get_data.toPointF();
+        get_data = item->data(User_Roles::Position);    my_pos =   QPointF(item->pos().x(), item->pos().y()); //get_data.toPointF();
         get_data = item->data(User_Roles::Scale);       my_scale = get_data.toPointF();
         get_data = item->data(User_Roles::Rotation);    my_angle = get_data.toDouble();
         m_interface->setLabelText(Label_Names::LabelObject5, "Pos X: " + QString::number(my_pos.x()) +
-                                                             "Pos Y: " + QString::number(my_pos.y()));
+                                                           ", Pos Y: " + QString::number(my_pos.y()));
         m_interface->setLabelText(Label_Names::LabelObject6, "Scale X: " + QString::number(my_scale.x()) +
-                                                             "Scale Y: " + QString::number(my_scale.y()));
+                                                           ", Scale Y: " + QString::number(my_scale.y()));
         m_interface->setLabelText(Label_Names::LabelObject7, "Rotation: " + QString::number(my_angle));
     }
 
