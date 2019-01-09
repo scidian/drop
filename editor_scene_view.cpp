@@ -85,9 +85,9 @@ void SceneGraphicsView::wheelEvent(QWheelEvent *event)
         return;
     }
     if (event->delta() > 0) {
-        zoomInOut(8);  }
+        zoomInOut(10);  }
     else {
-        zoomInOut(-8); }
+        zoomInOut(-10); }
     event->accept();
 }
 #endif
@@ -96,16 +96,21 @@ void SceneGraphicsView::zoomInOut(int level)
 {
     m_zoom += level;
     if (m_zoom > 500) m_zoom = 500;
+    if (m_zoom < 100) m_zoom = 100;
     applyUpdatedMatrix();
 }
 
 void SceneGraphicsView::applyUpdatedMatrix()
 {
-    qreal scale = qPow(qreal(2), (m_zoom - 250) / qreal(50));
+    m_zoom_scale = qPow(qreal(2), (m_zoom - 250) / qreal(50));
     QMatrix matrix;
-    matrix.scale(scale, scale);
+    matrix.scale(m_zoom_scale, m_zoom_scale);
     matrix.rotate(m_rotate);
     this->setMatrix(matrix);
+
+    // TEMP:
+    m_interface->setLabelText(Label_Names::Label2, "Zoom: " + QString::number(m_zoom) +
+                                                ", Scale: " + QString::number(m_zoom_scale) );
 }
 
 
@@ -129,6 +134,8 @@ void SceneGraphicsView::updateSelectionRect()
     }
 
     update();
+
+    // TEMP:
     m_interface->setLabelText(Label_Names::LabelObject1, QString::number(m_selection_rect.x()) + ", " + QString::number(m_selection_rect.y()) +
                                               ", " + QString::number(m_selection_rect.width()) + ", " + QString::number(m_selection_rect.height()) );
 }
@@ -252,8 +259,11 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
     if (m_over_handle == Position_Flags::No_Position && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false)
         viewport()->unsetCursor();
 
-    // Draw mouse coords on screen
-    m_interface->setLabelText(Label_Names::LabelObject4, "Mouse X: " + QString::number(m_last_mouse_pos.x()) + ", Y: " + QString::number(m_last_mouse_pos.y()) );
+    // TEMP: Draw mouse coords on screen
+    m_interface->setLabelText(Label_Names::LabelObject3, "Mouse Scene X: " + QString::number(mapToScene(m_last_mouse_pos).x()) +
+                                                                   ", Y: " + QString::number(mapToScene(m_last_mouse_pos).y()) );
+    m_interface->setLabelText(Label_Names::LabelObject4, "Mouse View  X: " + QString::number(m_last_mouse_pos.x()) +
+                                                                   ", Y: " + QString::number(m_last_mouse_pos.y()) );
 
 
     // ******************* If we're in selection mode, process mouse movement and resize box as needed

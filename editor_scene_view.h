@@ -55,9 +55,10 @@ private:
     View_Mode               m_view_mode = View_Mode::None;          // Tracks current view interaction mode
 
     int          m_zoom = 250;
+    double       m_zoom_scale = 1;
     int          m_rotate = 0;
 
-    Grid_Style   m_grid_style = Grid_Style::Dots;
+    Grid_Style   m_grid_style = Grid_Style::Lines;
     double       m_grid_x = 10;
     double       m_grid_y = 10;
 
@@ -115,6 +116,7 @@ public:
 
 public slots:
     double  calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt);
+    void    drawGrid();
     void    sceneChanged(QList<QRectF> region);
     void    selectionChanged();
 

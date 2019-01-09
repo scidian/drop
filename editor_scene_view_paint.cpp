@@ -24,33 +24,80 @@
 //##        Draws grid lines
 void SceneGraphicsView::drawBackground(QPainter *painter, const QRectF &rect)
 {
-    QPen p = painter->pen();
-    QBrush b = painter->brush();
+    Q_UNUSED(painter);
+    Q_UNUSED(rect);
+}
 
-    painter->setPen(QPen(Qt::black, 1));
-    painter->setBrush(Qt::NoBrush);
+void SceneGraphicsView::drawGrid()
+{
+    QPainter painter(viewport());
+    painter.setBrush(Qt::NoBrush);
 
+    // Map viewport to scene rect
+    QPointF topLeft = mapToScene(0, 0);
+    QPointF bottomRight = mapToScene(this->width(), this->height());
+    QRectF scene_rect(topLeft, bottomRight);
+
+    // ********** Draw Grid Lines
     if (m_grid_style == Grid_Style::Lines) {
-        QRect int_rect = rect.toRect();
-        for (int i = 0; i <= rect.right(); i += m_grid_x) {      painter->drawLine(i, int_rect.top(), i, int_rect.bottom() + 1);     }
-        for (int i = 0; i >= rect.left(); i -= m_grid_x) {       painter->drawLine(i, int_rect.top(), i, int_rect.bottom() + 1);     }
-        for (int i = 0; i <= rect.bottom(); i += m_grid_y) {     painter->drawLine(int_rect.left(), i, int_rect.right() + 1, i);     }
-        for (int i = 0; i >= rect.top(); i -= m_grid_y) {        painter->drawLine(int_rect.left(), i, int_rect.right() + 1, i);     }
-    } else {
-        qreal left = int(rect.left()) - (int(rect.left()) % static_cast<int>(m_grid_x));
-        qreal top = int(rect.top()) - (int(rect.top()) % static_cast<int>(m_grid_y));
+        painter.setPen(QPen( m_interface->getColor(Window_Colors::Background_Dark), 1 ));
+        QVector<QLine> lines;
+
+        // Vertical lines to the right of scene zero
+        for (qreal x = 0; x <= scene_rect.right(); x += m_grid_x)
+            lines.append(QLine(mapFromScene(x, 0).x(), 0, mapFromScene(x, 0).x(), height()));
+        // Vertical lines to the left of scene zero
+        for (qreal x = 0; x >= scene_rect.left(); x -= m_grid_x)
+            lines.append(QLine(mapFromScene(x, 0).x(), 0, mapFromScene(x, 0).x(), height()));
+
+        // Horizontal lines below scene zero
+        for (qreal y = 0; y <= scene_rect.bottom(); y += m_grid_y)
+            lines.append(QLine(0, mapFromScene(0, y).y(), width(), mapFromScene(0, y).y()) );
+        // Horizontal lines above scene zero
+        for (qreal y = 0; y >= scene_rect.top(); y -= m_grid_y)
+            lines.append(QLine(0, mapFromScene(0, y).y(), width(), mapFromScene(0, y).y()) );
+
+        painter.drawLines(lines);
+
+    // ********** Draw Grid Dots
+    } else if (m_grid_style == Grid_Style::Dots && m_zoom_scale > .5) {
+        qreal dot_size = m_zoom_scale;
+        if (m_zoom_scale < 4) dot_size = 4;
+        if (m_zoom_scale < 2) dot_size = 3;
+        if (m_zoom_scale < 1) dot_size = 2;
+
+        painter.setPen(QPen( m_interface->getColor(Window_Colors::Background_Dark), dot_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ));
         QVector<QPointF> points;
-        for (qreal x = left; x < rect.right(); x += m_grid_x){
-            for (qreal y = top; y < rect.bottom(); y += m_grid_y){
-                points.append(QPointF(x,y));
-            }
+
+        m_interface->setLabelText(Label_Names::Label1, "Test: Fail");
+
+        // Bottom right
+        for (qreal x = 0; x <= scene_rect.right(); x += m_grid_x) {
+            for (qreal y = 0; y <= scene_rect.bottom(); y += m_grid_y)
+                points.append( mapFromScene(x, y) );
         }
-        painter->drawPoints(points.data(), points.size());
+        // Bottom left
+        for (qreal x = 0; x >= scene_rect.left(); x -= m_grid_x) {
+            for (qreal y = 0; y <= scene_rect.bottom(); y += m_grid_y)
+                points.append( mapFromScene(x, y) );
+        }
+        // Top right
+        for (qreal x = 0; x <= scene_rect.right(); x += m_grid_x) {
+            for (qreal y = 0; y >= scene_rect.top(); y -= m_grid_y)
+                points.append( mapFromScene(x, y) );
+        }
+        // Top left
+        for (qreal x = 0; x >= scene_rect.left(); x -= m_grid_x) {
+            for (qreal y = 0; y >= scene_rect.top(); y -= m_grid_y)
+                points.append( mapFromScene(x, y) );
+        }
+
+        painter.drawPoints(points.data(), points.size());
     }
 
-    painter->setPen(p);
-    painter->setBrush(b);
+
 }
+
 
 
 //####################################################################################
@@ -58,6 +105,7 @@ void SceneGraphicsView::drawBackground(QPainter *painter, const QRectF &rect)
 void SceneGraphicsView::paintEvent(QPaintEvent *event)
 {
     // Go ahead and have base class paint scene (draw items)
+    drawGrid();
     QGraphicsView::paintEvent(event);
 
     // ********** Check if scene view is associated has changed, if so re-connect signals from scene
@@ -81,30 +129,23 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.setBrush(Qt::NoBrush);
 
+    // Draw bounding box for each item
     for (auto item: scene()->selectedItems()) {
+        // Load in item bounding box
+        QPolygonF polygon(item->boundingRect());
 
-        QPointF   center;
-        center.setX(item->pos().x() + item->boundingRect().center().x());
-        center.setY(item->pos().y() + item->boundingRect().center().y());
-
-        QPolygonF polygon;
-        polygon.append(QPointF( item->pos().x(), item->pos().y() ));
-        polygon.append(QPointF( item->pos().x() + item->boundingRect().width(), item->pos().y() ));
-        polygon.append(QPointF( item->pos().x() + item->boundingRect().width(), item->pos().y() + item->boundingRect().height() ));
-        polygon.append(QPointF( item->pos().x(), item->pos().y() + item->boundingRect().height() ));
-
-        QTransform t;
-        //t.translate(-center.y(), -center.x());
-        //t.rotate(item->data(User_Roles::Rotation).toDouble());
-        //t.translate(center.x(), center.y());
+        // Apply item scaling / rotation to bounding box
+        QTransform t = item->transform();
         polygon = t.map(polygon);
 
-        //t.reset();
-        //polygon = t.map(polygon);
+        // Move bounding box to item position in the scene
+        t.reset();
+        t.translate(item->pos().x(), item->pos().y());
+        polygon = t.map(polygon);
 
-        QPolygon to_view = mapFromScene(polygon);                           // Convert scene location to view location
-        painter.drawPolygon(to_view);                                       // Draw polygon
-
+        // Convert bounding box to view coordinates and draw on screen
+        QPolygon to_view = mapFromScene(polygon);
+        painter.drawPolygon(to_view);
 
 
         // TEMP: Showing object data
@@ -119,10 +160,8 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         m_interface->setLabelText(Label_Names::LabelObject6, "Scale X: " + QString::number(my_scale.x()) +
                                                              "Scale Y: " + QString::number(my_scale.y()));
         m_interface->setLabelText(Label_Names::LabelObject7, "Rotation: " + QString::number(my_angle));
-
-        m_interface->setLabelText(Label_Names::LabelObject8, "Cen X: " + QString::number(center.x()) +
-                                                             "Cen Y: " + QString::number(center.y()));
     }
+
 
     // ********** Draw box around entire seleciton, with Size Grip squares
     QRectF bigger = m_selection_rect;
