@@ -27,19 +27,12 @@ void SceneGraphicsView::startRotate()
 {
     m_view_mode = View_Mode::Rotating;
 
-    // Store some starting info about the selected items before we start resizing
+    // Add on each items Rect to store total size of selection rectangle
     m_start_resize_rect = scene()->selectedItems().first()->sceneBoundingRect();
     for (auto item: scene()->selectedItems()) {
-        // Add on each items Rect to store total size of selection rectangle
         m_start_resize_rect = m_start_resize_rect.united(item->sceneBoundingRect());
-
-        // Store starting rotation of each selected item
-        item->setData(User_Roles::Rotation, item->rotation());
     }
-    QPointF select_center;
-    select_center.setX(m_start_resize_rect.x() + (m_start_resize_rect.width() / 2));
-    select_center.setY(m_start_resize_rect.y() + (m_start_resize_rect.height() / 2));
-    m_selection_center = mapFromScene(select_center);
+    m_selection_center = mapFromScene(m_start_resize_rect.center());
     m_last_angle_diff = 0;
 }
 
@@ -62,9 +55,15 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     QGraphicsItemGroup *group = scene()->createItemGroup(scene()->selectedItems());
     QPointF offset = group->sceneBoundingRect().center();
     QTransform transform;
-    transform.translate(offset.x(),offset.y());
+
+    // Offset difference of original center bounding box to possible slightly different center of new bounding box
+    offset.setX(offset.x() - (offset.x() - m_start_resize_rect.center().x()) );
+    offset.setY(offset.y() - (offset.y() - m_start_resize_rect.center().y()) );
+
+    // Apply new rotation
+    transform.translate( offset.x(),  offset.y());
     transform.rotate(angle_diff);
-    transform.translate(-offset.x(),-offset.y());
+    transform.translate(-offset.x(), -offset.y());
     group->setTransform(transform);
 
     // Save new item rotations for use later

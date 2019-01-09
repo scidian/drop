@@ -29,6 +29,7 @@ void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, double new_width, d
 
     switch (item->getOrigin()) {
     case Origin::Center:    item->setPos(new_x - new_width / 2, new_y - (new_height / 2));      break;
+    case Origin::Top_Left:  item->setPos(new_x, new_y);                                         break;
     default:                item->setPos(new_x, new_y);
     }
 

@@ -48,6 +48,185 @@ void SceneGraphicsView::startResize()
 
 
 // Calculates selection resizing
+void SceneGraphicsView::resizeSelection2(QPointF mouse_in_scene)
+{
+    // Class Variables used:
+    //      m_start_resize_rect         QRect               Starting size of bounding box in scene coordinates
+    //      m_start_resize_grip         Position_Flags      Represents which directions we're scaling from
+    //      m_origin                    QPoint              Starting mouse position in view coordinates
+    //      m_origin_in_scene           QPointF             Starting mouse position in scene coordinates
+
+    // Figure out what sides to use for x axis and y axis
+    X_Axis do_x;
+    Y_Axis do_y;
+    switch (m_start_resize_grip) {
+    case Position_Flags::Top_Left:      do_x = X_Axis::Left;    do_y = Y_Axis::Top;     break;
+    case Position_Flags::Top:           do_x = X_Axis::None;    do_y = Y_Axis::Top;     break;
+    case Position_Flags::Top_Right:     do_x = X_Axis::Right;   do_y = Y_Axis::Top;     break;
+    case Position_Flags::Right:         do_x = X_Axis::Right;   do_y = Y_Axis::None;    break;
+    case Position_Flags::Bottom_Right:  do_x = X_Axis::Right;   do_y = Y_Axis::Bottom;  break;
+    case Position_Flags::Bottom:        do_x = X_Axis::None;    do_y = Y_Axis::Bottom;  break;
+    case Position_Flags::Bottom_Left:   do_x = X_Axis::Left;    do_y = Y_Axis::Bottom;  break;
+    case Position_Flags::Left:          do_x = X_Axis::Left;    do_y = Y_Axis::None;    break;
+    default:                            do_x = X_Axis::None;    do_y = Y_Axis::None;
+    }
+
+    ///// To be used to calculate size while doing uniform resizing
+    ///qreal dist = sqrt(pow(m_click_pos.x() - pos.x(), 2) + pow(m_click_pos.y() - pos.y(), 2));
+
+    QPointF top_left_select =  m_start_resize_rect.topLeft();
+    QPointF bot_right_select = m_start_resize_rect.bottomRight();
+    ///qreal start_width = m_start_resize_rect.width();
+    ///qreal start_height = m_start_resize_rect.height();
+
+    qreal start_adjust_x, start_adjust_y;
+    qreal new_width, new_height;
+    qreal scale_x,    scale_y;
+
+    // Create groupd from currently selected items
+    QGraphicsItemGroup *group = scene()->createItemGroup(scene()->selectedItems());
+    qreal start_x = group->pos().x(); // is = group->boundingRect().x();
+    qreal start_y = group->pos().y(); // is = group->boundingRect().y();
+
+    m_interface->setLabelText(Label_Names::Label1, "Group Rect  X: " + QString::number(group->boundingRect().x()) +
+                                                             ", Y: " + QString::number(group->boundingRect().y()) );
+
+
+
+
+    qreal group_width;
+
+
+    // Find original distance of mouse to opposite selection sides
+    switch (do_x) {
+    case X_Axis::Right:
+        start_adjust_x = bot_right_select.x() - m_origin_in_scene.x();              // takes into account start mouse pos with actual side pos
+
+        new_width = mouse_in_scene.x() - top_left_select.x() + start_adjust_x;
+
+        group_width = group->sceneBoundingRect().width();
+
+
+        scale_x = new_width / group_width;
+        if (scale_x < .001) scale_x = .001;
+        if (scale_x > 1000000) scale_x = 1000000;
+        break;
+
+
+
+    case X_Axis::Left:
+
+        //new_x = bot_right_select.x() - mouse_in_scene.x();
+        //scale_x = (new_x) / (original_x + .000001);
+        scale_x = 1;
+        break;
+    case X_Axis::None:
+
+        scale_x = 1;
+        ;
+    }
+
+
+    scale_y = 1;
+
+
+    // Group selected items and apply rotation to collection
+    QTransform transform;
+    //transform.translate(-group->sceneBoundingRect().x(), -group->sceneBoundingRect().y());
+    transform.scale(scale_x, scale_y);
+    //transform.translate(group->sceneBoundingRect().x(), group->sceneBoundingRect().y());
+
+    group->setTransform(transform);
+
+    m_interface->setLabelText(Label_Names::Label2, "Group Scale  X: " + QString::number(group->transform().m11()) +
+                                                              ", Y: " + QString::number(group->transform().m22()) );
+
+    group->setPos(start_x, start_y);
+
+
+    scene()->destroyItemGroup(group);
+
+
+//    switch (do_y) {
+//    case Y_Axis::Bottom:
+//        original_y = m_origin_in_scene.y() - top_left_select.y();
+//        new_y = mouse_in_scene.y() - top_left_select.y();
+//        scale_y = (new_y) / (original_y + .000001);
+//        break;
+//    case Y_Axis::Top:
+//        original_y = bot_right_select.y() - m_origin_in_scene.y();
+//        new_y = bot_right_select.y() - mouse_in_scene.y();
+//        scale_y = (new_y) / (original_y + .000001);
+//        break;
+//    case Y_Axis::None:
+//        original_y = 0;     scale_y = 1;
+//    }
+
+    // Apply scaling to each selected item
+//    for (auto item : scene()->selectedItems()) {
+//        // Get stored data from each item
+//        QVariant get_data;
+//        QPointF my_scale, my_pos;
+//        get_data = item->data(User_Roles::Scale_Pre_Resize);    my_scale = get_data.toPointF();
+//        get_data = item->data(User_Roles::Position);            my_pos =   get_data.toPointF();
+
+//        // Apply new scale to each item
+//        qreal sx = my_scale.x() * scale_x;
+//        qreal sy = my_scale.y() * scale_y;
+//        if (sx <  .001 && sx >= 0) sx =  .001;
+//        if (sx > -.001 && sx < 0)  sx = -.001;
+//        if (sy <  .001 && sy >= 0) sy =  .001;
+//        if (sy > -.001 && sy < 0)  sy = -.001;
+
+
+//        QTransform scale_transform;
+//        scale_transform = QTransform::fromScale(sx, sy);
+//        item->setTransform(scale_transform);
+
+
+
+        // Move each item as neccessary to keep them aligned within selection box
+//        qreal original_x_dist, original_y_dist;
+//        qreal new_left, new_top;
+//
+//        switch (do_x) {
+//        case X_Axis::Right:
+//            original_x_dist = (my_pos.x() - top_left_select.x());
+//            new_left = top_left_select.x() + (original_x_dist * scale_x);
+//            break;
+//        case X_Axis::Left:
+//            original_x_dist = (bot_right_select.x() - my_pos.x());
+//            new_left = bot_right_select.x() - (original_x_dist * scale_x);
+//            break;
+//        case X_Axis::None:      new_left = my_pos.x();
+//        }
+
+//        switch (do_y) {
+//        case Y_Axis::Bottom:
+//            original_y_dist = (my_pos.y() - top_left_select.y());
+//            new_top =  top_left_select.y() + (original_y_dist * scale_y);
+//            break;
+//        case Y_Axis::Top:
+//            original_y_dist = (bot_right_select.y() - my_pos.y());
+//            new_top =  bot_right_select.y() - (original_y_dist * scale_y);
+//            break;
+//        case Y_Axis::None:      new_top = my_pos.y();
+//        }
+
+//        item->setPos(new_left, new_top);
+//    }
+
+
+}
+
+
+
+
+
+
+
+
+// Calculates selection resizing
 void SceneGraphicsView::resizeSelection(QPointF mouse_in_scene)
 {
     // Figure out what sides to use for x axis and y axis
@@ -109,8 +288,10 @@ void SceneGraphicsView::resizeSelection(QPointF mouse_in_scene)
         // Get stored data from each item
         QVariant get_data;
         QPointF my_scale, my_pos;
+        double my_angle;
         get_data = item->data(User_Roles::Scale_Pre_Resize);    my_scale = get_data.toPointF();
         get_data = item->data(User_Roles::Position);            my_pos =   get_data.toPointF();
+        get_data = item->data(User_Roles::Rotation);            my_angle = get_data.toDouble();
 
         // Apply new scale to each item
         qreal sx = my_scale.x() * scale_x;
@@ -121,9 +302,18 @@ void SceneGraphicsView::resizeSelection(QPointF mouse_in_scene)
         if (sy > -.001 && sy < 0)  sy = -.001;
 
 
-        QTransform scale_transform;
-        scale_transform = QTransform::fromScale(sx, sy);
-        item->setTransform(scale_transform);
+        QTransform t;
+        t.rotate(my_angle);
+        t.scale(sx, sy);
+        //t.rotate(-my_angle);
+
+        item->setTransform(t);
+        //item->setPos(t.map(item->pos()));
+
+
+//        t.reset();
+//        t.rotate(my_angle);
+//        item->setTransform(t, true);
 
 
 //        QPointF center = m_selection_rect.center();
@@ -136,41 +326,39 @@ void SceneGraphicsView::resizeSelection(QPointF mouse_in_scene)
 //        t.translate(-center.x(), -center.y());
 
 //        item->setTransform(t, false);
-
-        //item->setPos(t.map(item->pos()));
-        //item->setRotation(angle);
+//        item->setPos(t.map(item->pos()));
 
 
 
         // Move each item as neccessary to keep them aligned within selection box
-        qreal original_x_dist, original_y_dist;
-        qreal new_left, new_top;
+//        qreal original_x_dist, original_y_dist;
+//        qreal new_left, new_top;
 
-        switch (do_x) {
-        case X_Axis::Right:
-            original_x_dist = (my_pos.x() - top_left_select.x());
-            new_left = top_left_select.x() + (original_x_dist * scale_x);
-            break;
-        case X_Axis::Left:
-            original_x_dist = (bot_right_select.x() - my_pos.x());
-            new_left = bot_right_select.x() - (original_x_dist * scale_x);
-            break;
-        case X_Axis::None:      new_left = my_pos.x();
-        }
+//        switch (do_x) {
+//        case X_Axis::Right:
+//            original_x_dist = (my_pos.x() - top_left_select.x());
+//            new_left = top_left_select.x() + (original_x_dist * scale_x);
+//            break;
+//        case X_Axis::Left:
+//            original_x_dist = (bot_right_select.x() - my_pos.x());
+//            new_left = bot_right_select.x() - (original_x_dist * scale_x);
+//            break;
+//        case X_Axis::None:      new_left = my_pos.x();
+//        }
 
-        switch (do_y) {
-        case Y_Axis::Bottom:
-            original_y_dist = (my_pos.y() - top_left_select.y());
-            new_top =  top_left_select.y() + (original_y_dist * scale_y);
-            break;
-        case Y_Axis::Top:
-            original_y_dist = (bot_right_select.y() - my_pos.y());
-            new_top =  bot_right_select.y() - (original_y_dist * scale_y);
-            break;
-        case Y_Axis::None:      new_top = my_pos.y();
-        }
+//        switch (do_y) {
+//        case Y_Axis::Bottom:
+//            original_y_dist = (my_pos.y() - top_left_select.y());
+//            new_top =  top_left_select.y() + (original_y_dist * scale_y);
+//            break;
+//        case Y_Axis::Top:
+//            original_y_dist = (bot_right_select.y() - my_pos.y());
+//            new_top =  bot_right_select.y() - (original_y_dist * scale_y);
+//            break;
+//        case Y_Axis::None:      new_top = my_pos.y();
+//        }
 
-        item->setPos(new_left, new_top);
+//        item->setPos(new_left, new_top);
     }
 }
 

@@ -116,11 +116,18 @@ void SceneGraphicsView::applyUpdatedMatrix()
 
 
 //####################################################################################
-//##        Selection Rect Update Handling
+//##        Selection Rect Update Handling - // SLOTs to keep total selection area up to date
 //####################################################################################
-// SLOTs to keep total selection area up to date
-void SceneGraphicsView::sceneChanged(QList<QRectF>) { updateSelectionRect(); }        // Connected from scene().changed
-void SceneGraphicsView::selectionChanged()          { updateSelectionRect(); }        // Connected from scene().selectionChanged
+// Connected from scene().changed
+void SceneGraphicsView::sceneChanged(QList<QRectF>)
+{
+    updateSelectionRect();
+}
+// Connected from scene().selectionChanged
+void SceneGraphicsView::selectionChanged()
+{
+    updateSelectionRect();
+}
 
 // Store total size of selection rectangle
 void SceneGraphicsView::updateSelectionRect()
@@ -297,6 +304,16 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
     {
         m_rubber_band->hide();
         m_view_mode = View_Mode::None;
+
+
+        QGraphicsItemGroup *group = scene()->createItemGroup(scene()->selectedItems());
+        m_interface->setLabelText(Label_Names::Label1, "Group Rect  X: " + QString::number(group->boundingRect().x()) +
+                                                                 ", Y: " + QString::number(group->boundingRect().y()) );
+        m_interface->setLabelText(Label_Names::Label2, "Group Scale  X: " + QString::number(group->transform().m11()) +
+                                                                  ", Y: " + QString::number(group->transform().m22()) );
+        scene()->destroyItemGroup(group);
+
+
     }
 
     QGraphicsView::mouseReleaseEvent(event);

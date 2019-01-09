@@ -16,7 +16,7 @@
 #include "form_main.h"
 
 enum class Origin {
-    Top_Left,       Top,        Top_right,
+    Top_Left,       Top,        Top_Right,
     Left,           Center,     Right,
     Bottom_Left,    Bottom,     Bottom_Right,
 };
@@ -28,7 +28,7 @@ private:
     double      m_height;
     QColor      m_color;
 
-    Origin      m_origin = Origin::Center;
+    Origin      m_origin = Origin::Top_Right;
 
 public:
     DrItem(const QColor &start_color, double width, double height);
