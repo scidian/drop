@@ -102,7 +102,9 @@ public:
     virtual void    setLabelText(Label_Names label_name, QString new_text);
     virtual void    showMessageBox(QString message);
 
-    void            populateScene();                                        // TEMP generic fill of scene
+    // !!!!! TEMP generic fill of scene
+    void            populateScene();
+    // !!!!! END
 
 private:
     // Form setup

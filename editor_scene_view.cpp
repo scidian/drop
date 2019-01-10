@@ -67,8 +67,6 @@ void SceneGraphicsView::keyReleaseEvent(QKeyEvent *event)
     if (event->key() == Qt::Key::Key_Control) { m_flag_key_down_control = false; }
     if (event->key() == Qt::Key::Key_Alt) {     m_flag_key_down_alt = false; }
 
-
-
     QGraphicsView::keyReleaseEvent(event);
 }
 
@@ -108,9 +106,10 @@ void SceneGraphicsView::applyUpdatedMatrix()
     matrix.rotate(m_rotate);
     this->setMatrix(matrix);
 
-    // TEMP:
+    // !!!!! TEMP:
     m_interface->setLabelText(Label_Names::Label2, "Zoom: " + QString::number(m_zoom) +
                                                 ", Scale: " + QString::number(m_zoom_scale) );
+    // !!!!! END
 }
 
 
@@ -132,20 +131,33 @@ void SceneGraphicsView::selectionChanged()
 // Store total size of selection rectangle
 void SceneGraphicsView::updateSelectionRect()
 {
-    if (scene() == nullptr) return;
-    if (scene()->selectedItems().count() < 1) return;
-
-    m_selection_rect = scene()->selectedItems().first()->sceneBoundingRect();
-    for (auto item: scene()->selectedItems()) {
-        m_selection_rect = m_selection_rect.united(item->sceneBoundingRect());
-    }
-
+    m_selection_rect = totalSelectedItemsSceneRect();
     update();
 
-    // TEMP:
+    // !!!!! TEMP:
     m_interface->setLabelText(Label_Names::LabelObject1, QString::number(m_selection_rect.x()) + ", " + QString::number(m_selection_rect.y()) +
                                               ", " + QString::number(m_selection_rect.width()) + ", " + QString::number(m_selection_rect.height()) );
+    // !!!!! END
 }
+
+// Returns a scene rect containing all the selected items
+QRectF SceneGraphicsView::totalSelectedItemsSceneRect()
+{
+    QRectF total_rect;
+
+    if (scene() == nullptr) return total_rect;
+    if (scene()->selectedItems().count() < 1) return total_rect;
+
+    // Start with size of first item
+    total_rect = scene()->selectedItems().first()->sceneBoundingRect();
+
+    // Add on each items Rect to store total size of selection rectangle
+    for (auto item: scene()->selectedItems())
+        total_rect = total_rect.united(item->sceneBoundingRect());
+
+    return total_rect;
+}
+
 
 
 
@@ -266,30 +278,34 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
     if (m_over_handle == Position_Flags::No_Position && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false)
         viewport()->unsetCursor();
 
-    // TEMP: Draw mouse coords on screen
+
+    // !!!!! TEMP: Draw mouse coords on screen
     m_interface->setLabelText(Label_Names::LabelObject3, "Mouse Scene X: " + QString::number(mapToScene(m_last_mouse_pos).x()) +
                                                                    ", Y: " + QString::number(mapToScene(m_last_mouse_pos).y()) );
     m_interface->setLabelText(Label_Names::LabelObject4, "Mouse View  X: " + QString::number(m_last_mouse_pos.x()) +
                                                                    ", Y: " + QString::number(m_last_mouse_pos.y()) );
 
+    // !!!!! TEMP:
+    QGraphicsItemGroup *group = scene()->createItemGroup(scene()->selectedItems());
+    m_interface->setLabelText(Label_Names::Label1, "Group Pos  X: " + QString::number(group->boundingRect().x()) +
+                                                            ", Y: " + QString::number(group->boundingRect().y()) );
+    m_interface->setLabelText(Label_Names::Label2, "Group Size X: " + QString::number(group->boundingRect().width()) +
+                                                            ", Y: " + QString::number(group->boundingRect().height()) );
+    scene()->destroyItemGroup(group);
+    // !!!!! END
+
 
     // ******************* If we're in selection mode, process mouse movement and resize box as needed
-    if (m_view_mode == View_Mode::Selecting) {
+    if (m_view_mode == View_Mode::Selecting)
         processSelection(event->pos());
-        update();
-    }
 
     // ******************* If mouse moved while over Size Grip, resize
-    if (m_view_mode == View_Mode::Resizing) {
+    if (m_view_mode == View_Mode::Resizing)
         resizeSelection(mapToScene(event->pos()));
-        update();
-    }
 
     // ******************* If mouse moved while alt pressed, rotate
-    if (m_view_mode == View_Mode::Rotating) {
+    if (m_view_mode == View_Mode::Rotating)
         rotateSelection(event->pos());
-        update();
-    }
 
     QGraphicsView::mouseMoveEvent(event);
     update();
@@ -304,16 +320,6 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
     {
         m_rubber_band->hide();
         m_view_mode = View_Mode::None;
-
-
-        QGraphicsItemGroup *group = scene()->createItemGroup(scene()->selectedItems());
-        m_interface->setLabelText(Label_Names::Label1, "Group Rect  X: " + QString::number(group->boundingRect().x()) +
-                                                                 ", Y: " + QString::number(group->boundingRect().y()) );
-        m_interface->setLabelText(Label_Names::Label2, "Group Scale  X: " + QString::number(group->transform().m11()) +
-                                                                  ", Y: " + QString::number(group->transform().m22()) );
-        scene()->destroyItemGroup(group);
-
-
     }
 
     QGraphicsView::mouseReleaseEvent(event);

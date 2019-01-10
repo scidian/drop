@@ -27,14 +27,12 @@ void SceneGraphicsView::startRotate()
 {
     m_view_mode = View_Mode::Rotating;
 
-    // Add on each items Rect to store total size of selection rectangle
-    m_start_resize_rect = scene()->selectedItems().first()->sceneBoundingRect();
-    for (auto item: scene()->selectedItems()) {
-        m_start_resize_rect = m_start_resize_rect.united(item->sceneBoundingRect());
-    }
-    m_selection_center = mapFromScene(m_start_resize_rect.center());
-    m_last_angle_diff = 0;
+    m_start_resize_rect = totalSelectedItemsSceneRect();                // Store starting scene rect of initial selection bounding box
+    m_selection_center = mapFromScene(m_start_resize_rect.center());    // Store initial view rect center of initial selection bounding box
+    m_last_angle_diff = 0;                                              // Reset initial rotate event angle at 0
 }
+
+
 
 
 // Calculates rotation

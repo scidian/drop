@@ -24,14 +24,11 @@
 void SceneGraphicsView::startResize()
 {
     m_view_mode = View_Mode::Resizing;
-    m_start_resize_grip = m_over_handle;
+    m_start_resize_grip = m_over_handle;                        // Store grip handle we start resize event with
+    m_start_resize_rect = totalSelectedItemsSceneRect();        // Store starting scene rect of initial selection bounding box
 
     // Store some starting info about the selected items before we start resizing
-    m_start_resize_rect = scene()->selectedItems().first()->sceneBoundingRect();
     for (auto item: scene()->selectedItems()) {
-        // Add on each items Rect to store total size of selection rectangle
-        m_start_resize_rect = m_start_resize_rect.united(item->sceneBoundingRect());
-
         // Store starting scale of each selected item
         QPointF my_scale(item->transform().m11(), item->transform().m22());
         item->setData(User_Roles::Scale_Pre_Resize, my_scale);
@@ -40,7 +37,108 @@ void SceneGraphicsView::startResize()
         QPointF my_pos(item->pos().x(), item->pos().y());
         item->setData(User_Roles::Position, my_pos);
     }
+}
 
+
+// Call appropriate resize function
+void SceneGraphicsView::resizeSelection(QPointF mouse_in_scene)
+{
+    if (scene()->selectedItems().count() == 1){
+         double angle = scene()->selectedItems().first()->data(User_Roles::Rotation).toDouble();
+         if (isRotated(angle) == false)
+             resizeSelectionOneNoRotate(mouse_in_scene);
+
+    }
+
+}
+
+bool SceneGraphicsView::isRotated(double check_angle)
+{
+    check_angle = abs(check_angle);
+    while (check_angle > 90) check_angle -= 90;
+    if ((check_angle < .5) && (check_angle > -.5)) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+
+
+
+// Calculates selection resizing
+void SceneGraphicsView::resizeSelectionOneNoRotate(QPointF mouse_in_scene)
+{
+    // Figure out what sides to use for x axis and y axis
+    X_Axis do_x;
+    Y_Axis do_y;
+    switch (m_start_resize_grip) {
+    case Position_Flags::Top_Left:      do_x = X_Axis::Left;    do_y = Y_Axis::Top;     break;
+    case Position_Flags::Top:           do_x = X_Axis::None;    do_y = Y_Axis::Top;     break;
+    case Position_Flags::Top_Right:     do_x = X_Axis::Right;   do_y = Y_Axis::Top;     break;
+    case Position_Flags::Right:         do_x = X_Axis::Right;   do_y = Y_Axis::None;    break;
+    case Position_Flags::Bottom_Right:  do_x = X_Axis::Right;   do_y = Y_Axis::Bottom;  break;
+    case Position_Flags::Bottom:        do_x = X_Axis::None;    do_y = Y_Axis::Bottom;  break;
+    case Position_Flags::Bottom_Left:   do_x = X_Axis::Left;    do_y = Y_Axis::Bottom;  break;
+    case Position_Flags::Left:          do_x = X_Axis::Left;    do_y = Y_Axis::None;    break;
+    default:                            do_x = X_Axis::None;    do_y = Y_Axis::None;
+    }
+
+    QPointF top_left_select =  m_start_resize_rect.topLeft();
+    QPointF bot_right_select = m_start_resize_rect.bottomRight();
+
+    QGraphicsItem *item = scene()->selectedItems().first();
+    qreal item_width =  item->boundingRect().width();
+    qreal item_height = item->boundingRect().height();
+    qreal start_adjust_x,   start_adjust_y;
+    qreal new_width,        new_height;
+    qreal scale_x = 1,      scale_y = 1;
+
+    // Calculate X scale
+    if (do_x == X_Axis::Right) {
+        start_adjust_x = bot_right_select.x() - m_origin_in_scene.x();              // takes into account start mouse pos with actual side pos
+        new_width = mouse_in_scene.x() - top_left_select.x() + start_adjust_x;
+        scale_x = new_width / item_width;
+    }
+    else if (do_x == X_Axis::Left) {
+        start_adjust_x = top_left_select.x() - m_origin_in_scene.x();               // takes into account start mouse pos with actual side pos
+        new_width = bot_right_select.x() - mouse_in_scene.x() - start_adjust_x;
+        scale_x = new_width / item_width;
+    }
+
+    // Calculate Y scale
+    if (do_y == Y_Axis::Bottom) {
+        start_adjust_y = bot_right_select.y() - m_origin_in_scene.y();              // takes into account start mouse pos with actual side pos
+        new_height = mouse_in_scene.y() - top_left_select.y() + start_adjust_y;
+        scale_y = new_height / item_height;
+    }
+    else if (do_y == Y_Axis::Top) {
+        start_adjust_y = top_left_select.y() - m_origin_in_scene.y();               // takes into account start mouse pos with actual side pos
+        new_height = bot_right_select.y() - mouse_in_scene.y() - start_adjust_y;
+        scale_y = new_height / item_height;
+    }
+
+    // Apply new scale
+    QTransform t;
+    t.scale(scale_x, scale_y);
+    item->setTransform(t);
+
+    // Move each item as neccessary to keep them aligned with opposite starting corner
+    qreal new_left = top_left_select.x();
+    qreal new_top =  top_left_select.y();
+    if (do_x == X_Axis::Left ) {
+        if (scale_x > 0)
+            new_left = bot_right_select.x() - item->sceneBoundingRect().width();
+        else
+            new_left = bot_right_select.x() + item->sceneBoundingRect().width();
+    }
+    if (do_y == Y_Axis::Top  ) {
+        if (scale_y > 0)
+            new_top = bot_right_select.y() - item->sceneBoundingRect().height();
+        else
+            new_top = bot_right_select.y() + item->sceneBoundingRect().height();;
+    }
+    item->setPos(new_left, new_top);
 }
 
 
@@ -224,10 +322,8 @@ void SceneGraphicsView::resizeSelection2(QPointF mouse_in_scene)
 
 
 
-
-
 // Calculates selection resizing
-void SceneGraphicsView::resizeSelection(QPointF mouse_in_scene)
+void SceneGraphicsView::resizeSelection3(QPointF mouse_in_scene)
 {
     // Figure out what sides to use for x axis and y axis
     X_Axis do_x;
@@ -244,8 +340,6 @@ void SceneGraphicsView::resizeSelection(QPointF mouse_in_scene)
     default:                            do_x = X_Axis::None;    do_y = Y_Axis::None;
     }
 
-    ///// To be used to calculate size while doing uniform resizing
-    ///qreal dist = sqrt(pow(m_click_pos.x() - pos.x(), 2) + pow(m_click_pos.y() - pos.y(), 2));
     QPointF top_left_select =  m_start_resize_rect.topLeft();
     QPointF bot_right_select = m_start_resize_rect.bottomRight();
     qreal original_x, original_y;
@@ -361,6 +455,10 @@ void SceneGraphicsView::resizeSelection(QPointF mouse_in_scene)
 //        item->setPos(new_left, new_top);
     }
 }
+
+
+
+
 
 
 

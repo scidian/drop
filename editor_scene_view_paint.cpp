@@ -36,7 +36,7 @@ void SceneGraphicsView::drawGrid()
     // Map viewport to scene rect
     QPointF topLeft = mapToScene(0, 0);
     QPointF bottomRight = mapToScene(this->width(), this->height());
-    QRectF scene_rect(topLeft, bottomRight);
+    QRectF  scene_rect(topLeft, bottomRight);
 
     // ********** Draw Grid Lines
     if (m_grid_style == Grid_Style::Lines) {
@@ -104,11 +104,11 @@ void SceneGraphicsView::drawGrid()
 //##        Paints selection box, etc on top of items
 void SceneGraphicsView::paintEvent(QPaintEvent *event)
 {
-    // Go ahead and have base class paint scene (draw items)
+    // Go ahead and draw grid and then have base class paint scene (draw items)
     drawGrid();
     QGraphicsView::paintEvent(event);
 
-    // ********** Check if scene view is associated has changed, if so re-connect signals from scene
+    // ********** Check if scene that view is associated with has changed, if so re-connect signals from new scene
     if (scene() != m_scene) {
         if (scene() != nullptr) {
             m_scene = scene();
@@ -121,7 +121,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         }
     }
 
-    // If no selected item gets out of here
+    // At this point, if no selected item gets out of here
     if (scene()->selectedItems().count() < 1) return;
 
     // ********** Draw selection boxes around all selected items
@@ -151,7 +151,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 
 
 
-        // TEMP: Showing object data
+        // !!!!! TEMP: Showing object data
         QVariant get_data;
         QPointF my_scale, my_pos;
         double  my_angle;
@@ -163,6 +163,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         m_interface->setLabelText(Label_Names::LabelObject6, "Scale X: " + QString::number(my_scale.x()) +
                                                            ", Scale Y: " + QString::number(my_scale.y()));
         m_interface->setLabelText(Label_Names::LabelObject7, "Rotation: " + QString::number(my_angle));
+        // !!!!! END
     }
 
 
@@ -177,11 +178,20 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     // ********** Draw box around entire seleciton, with Size Grip squares
     painter.setPen(QPen(m_interface->getColor(Window_Colors::Text_Light), 1));
 
-    int r_half = 3;
-    int r_size = r_half * 2;
+    double r_half = 3;
+    double r_size = r_half * 2;
+    double c_size = 4;
+
+    // Check if we should draw bounding box, and if it should be squares or circles
+    bool draw_box = false, do_squares = true;
+    if (scene()->selectedItems().count() > 0) draw_box = true;
+    if (scene()->selectedItems().count() == 1){
+         double angle = scene()->selectedItems().first()->data(User_Roles::Rotation).toDouble();
+         if (isRotated(angle) == true) do_squares = false;
+    }
 
     // Set Size Grip rectangles. If multiple items use one big rectangle - if one item, map item shape
-    if (scene()->selectedItems().count() > 1) {
+    if (draw_box && do_squares) {
         QRectF bigger = m_selection_rect;
         QPolygon to_view = mapFromScene(bigger);
         QPoint top_left = mapFromScene(bigger.topLeft());
@@ -197,7 +207,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         m_handles[static_cast<int>(Position_Flags::Left)] =   QRectF(top_left.x() - r_half,  top_left.y() + r_half,  r_size, bot_right.y() - r_size);
         m_handles[static_cast<int>(Position_Flags::Right)] =  QRectF(bot_right.x() - r_half,  top_left.y() + r_half,  r_size, bot_right.y() - r_size);
     }
-    else if (scene()->selectedItems().count() == 1) {
+    else if (draw_box) {
         // Map item bounding box to screen and draw it
         QGraphicsItem *item = scene()->selectedItems().first();     // Grab only selected item
         QPolygonF polygon(item->boundingRect());                    // Get bounding box of item as polygon
@@ -216,7 +226,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     }
 
     // If we have some objects selected and created some handles, draw them
-    if (scene()->selectedItems().count() > 0) {
+    if (draw_box) {
         painter.setBrush(m_interface->getColor(Window_Colors::Icon_Light));
         QVector<QRectF> handles;
         handles.append(m_handles[static_cast<int>(Position_Flags::Top_Left)]);
@@ -224,8 +234,12 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         handles.append(m_handles[static_cast<int>(Position_Flags::Bottom_Left)]);
         handles.append(m_handles[static_cast<int>(Position_Flags::Bottom_Right)]);
 
-        ///painter.drawRects(handles);                              // Squares
-        for (auto r : handles) painter.drawEllipse(r);              // Circles
+        if (do_squares == false) {
+            for (auto r : handles)
+                painter.drawEllipse(r.center(), c_size, c_size);
+        } else {
+            painter.drawRects(handles);                              // Squares
+        }
     }
 
 
@@ -238,10 +252,13 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 
 }
 
-QRect SceneGraphicsView::rectAtCenterPoint(QPoint center, int rect_size)
+QRectF SceneGraphicsView::rectAtCenterPoint(QPoint center, double rect_size)
 {
-    return QRect(center.x() - rect_size / 2, center.y() - rect_size / 2, rect_size, rect_size);
+    return QRectF(center.x() - rect_size / 2, center.y() - rect_size / 2, rect_size, rect_size);
 }
+
+
+
 
 
 //####################################################################################

@@ -44,16 +44,18 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
 
 
 
-    // TEMP: temp call to populate Graphics Scene (currently does chips)
+    // !!!!! TEMP: call to populate Graphics Scene (currently does chips)
     populateScene();
+    // !!!!! END
 
 
     // ########## Initialize new project, initialize local variables
     project = new DrProject();
     current_world = 0;
 
-    // TEMP NEW PROJECT:
-    //      Create a new project and add some stuff to it
+
+    // !!!!! TEMP: New Project
+    // Create a new project and add some stuff to it
     project->addWorld();
     project->getWorldWithName("World 2")->addScene();
     project->getWorldWithName("World 2")->addScene("asdfasdfasdfasdfasfdasdfasdfasdfasdfasdfasdfasdfasd");
@@ -64,7 +66,7 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
     project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrTypes::Object);
     project->addWorld();
     project->addWorld();
-
+    // !!!!! END
 
 
 
@@ -80,13 +82,14 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
 
 
 
-    // TEMP:
-    //      Test loading data out from a pair, i.e. "POINT2D", stored as QList<QVariant>
+    // !!!!! TEMP:
+    // Test loading data out from a pair, i.e. "POINT2D", stored as QList<QVariant>
     if (current_mode == Form_Main_Mode::Edit_Scene) {
         QList<QVariant> myPoint = project->getWorld(current_world)->getComponentProperty(World_Components::physics, World_Properties::gravity)->getValue().toList();
         setLabelText(Label_Names::Label1, "Gravity X:" + myPoint.first().toString());
         setLabelText(Label_Names::Label2, "Gravity Y:" + myPoint.last().toString());
     }
+    // !!!!! END
 
 }
 

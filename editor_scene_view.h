@@ -117,20 +117,26 @@ public:
 public slots:
     double  calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt);
     void    drawGrid();
-    QRect   rectAtCenterPoint(QPoint center, int rect_size);
+    bool    isRotated(double check_angle);
+    QRectF  rectAtCenterPoint(QPoint center, double rect_size);
     void    sceneChanged(QList<QRectF> region);
     void    selectionChanged();
+    QRectF  totalSelectedItemsSceneRect();
 
     void    startSelect(QMouseEvent *event);
-    void    startResize();
     void    startRotate();
+    void    startResize();
 
     void    processSelection(QPoint mouse_in_view);
+    void    rotateSelection(QPointF mouse_in_view);
+
     void    resizeSelection(QPointF mouse_in_scene);
+    void    resizeSelectionOneNoRotate(QPointF mouse_in_scene);
+
+
 
     void    resizeSelection2(QPointF mouse_in_scene);
-
-    void    rotateSelection(QPointF mouse_in_view);
+    void    resizeSelection3(QPointF mouse_in_scene);
 };
 
 
