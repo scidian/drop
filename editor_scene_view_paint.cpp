@@ -204,46 +204,73 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     // Set Size Grip rectangles. If multiple items use one big rectangle - if one item, map item shape
     if (draw_box && do_squares) {
         QRectF bigger = m_selection_rect;
-        QPolygon to_view = mapFromScene(bigger);
-        painter.drawPolygon(to_view);
 
         QPoint top_left = mapFromScene(bigger.topLeft());
         QPoint bot_right = mapFromScene(bigger.bottomRight());
         double select_width =  abs(bot_right.x() - top_left.x());
         double select_height = abs(bot_right.y() - top_left.y());
 
-        m_handles[static_cast<int>(Position_Flags::Top_Left)] =     QRectF(top_left.x() - r_half,  top_left.y() - r_half,  r_size, r_size);
-        m_handles[static_cast<int>(Position_Flags::Top_Right)] =    QRectF(bot_right.x() - r_half, top_left.y() - r_half,  r_size, r_size);
-        m_handles[static_cast<int>(Position_Flags::Bottom_Left)] =  QRectF(top_left.x() - r_half,  bot_right.y() - r_half, r_size, r_size);
-        m_handles[static_cast<int>(Position_Flags::Bottom_Right)] = QRectF(bot_right.x() - r_half, bot_right.y() - r_half, r_size, r_size);
-        m_handles[static_cast<int>(Position_Flags::Top)] =    QRectF(top_left.x() + r_half,  top_left.y() - r_half,  select_width - r_size, r_size);
-        m_handles[static_cast<int>(Position_Flags::Bottom)] = QRectF(top_left.x() + r_half,  bot_right.y() - r_half, select_width - r_size, r_size);
-        m_handles[static_cast<int>(Position_Flags::Left)] =   QRectF(top_left.x() - r_half,  top_left.y() + r_half,  r_size, select_height - r_size);
-        m_handles[static_cast<int>(Position_Flags::Right)] =  QRectF(bot_right.x() - r_half,  top_left.y() + r_half,  r_size, select_height- r_size);
+        m_handles[static_cast<int>(Handle_Positions::Top_Left)] =     QRectF(top_left.x() - r_half,  top_left.y() - r_half,  r_size, r_size);
+        m_handles[static_cast<int>(Handle_Positions::Top_Right)] =    QRectF(bot_right.x() - r_half, top_left.y() - r_half,  r_size, r_size);
+        m_handles[static_cast<int>(Handle_Positions::Bottom_Left)] =  QRectF(top_left.x() - r_half,  bot_right.y() - r_half, r_size, r_size);
+        m_handles[static_cast<int>(Handle_Positions::Bottom_Right)] = QRectF(bot_right.x() - r_half, bot_right.y() - r_half, r_size, r_size);
+
+        m_sides[static_cast<int>(Side_Positions::Top)] =    QRectF(top_left.x() + r_half,  top_left.y() - r_half,  select_width - r_size, r_size);
+        m_sides[static_cast<int>(Side_Positions::Bottom)] = QRectF(top_left.x() + r_half,  bot_right.y() - r_half, select_width - r_size, r_size);
+        m_sides[static_cast<int>(Side_Positions::Left)] =   QRectF(top_left.x() - r_half,  top_left.y() + r_half,  r_size, select_height - r_size);
+        m_sides[static_cast<int>(Side_Positions::Right)] =  QRectF(bot_right.x() - r_half,  top_left.y() + r_half,  r_size, select_height- r_size);
+
+        QPolygon to_view = mapFromScene(bigger);
+        painter.drawPolygon(to_view);
     }
     else if (draw_box) {
         // Map item bounding box to screen and draw it
         QGraphicsItem *item = scene()->selectedItems().first();     // Grab only selected item
         QPolygonF polygon(item->boundingRect());                    // Get bounding box of item as polygon
+
         QTransform t = item->sceneTransform();                      // Get item bounding box to scene transform
         polygon = t.map(polygon);                                   // Map bounding box to scene location
+
+        QPointF top_left =  item->boundingRect().topLeft();
+        QPointF top_right = item->boundingRect().topRight();
+        QPointF bot_left =  item->boundingRect().bottomLeft();
+        QPointF bot_right = item->boundingRect().bottomRight();
+
+        QPointF top_left_mapped =  t.map(top_left);
+        QPointF top_right_mapped = t.map(top_right);
+        QPointF bot_left_mapped =  t.map(bot_left);
+        QPointF bot_right_mapped = t.map(bot_right);
+
+        m_handles[static_cast<int>(Handle_Positions::Top_Left)] =     rectAtCenterPoint(mapFromScene(top_left_mapped), r_size);
+        m_handles[static_cast<int>(Handle_Positions::Top_Right)] =    rectAtCenterPoint(mapFromScene(top_right_mapped), r_size);
+        m_handles[static_cast<int>(Handle_Positions::Bottom_Left)] =  rectAtCenterPoint(mapFromScene(bot_left_mapped), r_size);
+        m_handles[static_cast<int>(Handle_Positions::Bottom_Right)] = rectAtCenterPoint(mapFromScene(bot_right_mapped), r_size);
+
+        QPolygonF top(QRectF(top_left.x() + r_half,  top_left.y() - r_half,  item->boundingRect().width() - r_size, r_size));
+        QPolygonF bottom(QRectF(top_left.x() + r_half,  bot_right.y() - r_half, item->boundingRect().width() - r_size, r_size));
+        QPolygonF left(QRectF(top_left.x() - r_half,  top_left.y() + r_half,  r_size, item->boundingRect().height() - r_size));
+        QPolygonF right(QRectF(bot_right.x() - r_half,  top_left.y() + r_half,  r_size, item->boundingRect().height() - r_size));
+
+        m_sides[static_cast<int>(Side_Positions::Top)] = mapFromScene(t.map(top));
+        m_sides[static_cast<int>(Side_Positions::Bottom)] = mapFromScene(t.map(bottom));
+        m_sides[static_cast<int>(Side_Positions::Left)] = mapFromScene(t.map(left));
+        m_sides[static_cast<int>(Side_Positions::Right)] = mapFromScene(t.map(right));
+
+        m_interface->setLabelText(Label_Names::Label_Object_3, "Top P1 X: " + QString::number(m_sides[0].at(0).x()) +
+                                                                     " Y: " + QString::number(m_sides[0].at(0).y()) );
+
         QPolygon to_view = mapFromScene(polygon);                   // Convert bounding box to view coordinates
         painter.drawPolygon(to_view);                               // Draw bounding box on screen
-
-        m_handles[static_cast<int>(Position_Flags::Top_Left)] =     rectAtCenterPoint(to_view.point(0), r_size);
-        m_handles[static_cast<int>(Position_Flags::Top_Right)] =    rectAtCenterPoint(to_view.point(1), r_size);
-        m_handles[static_cast<int>(Position_Flags::Bottom_Left)] =  rectAtCenterPoint(to_view.point(3), r_size);
-        m_handles[static_cast<int>(Position_Flags::Bottom_Right)] = rectAtCenterPoint(to_view.point(2), r_size);
     }
 
     // If we have some objects selected and created some handles, draw them
     if (draw_box) {
         painter.setBrush(m_interface->getColor(Window_Colors::Icon_Light));
         QVector<QRectF> handles;
-        handles.append(m_handles[static_cast<int>(Position_Flags::Top_Left)]);
-        handles.append(m_handles[static_cast<int>(Position_Flags::Top_Right)]);
-        handles.append(m_handles[static_cast<int>(Position_Flags::Bottom_Left)]);
-        handles.append(m_handles[static_cast<int>(Position_Flags::Bottom_Right)]);
+        handles.append(m_handles[static_cast<int>(Handle_Positions::Top_Left)]);
+        handles.append(m_handles[static_cast<int>(Handle_Positions::Top_Right)]);
+        handles.append(m_handles[static_cast<int>(Handle_Positions::Bottom_Left)]);
+        handles.append(m_handles[static_cast<int>(Handle_Positions::Bottom_Right)]);
 
         if (do_squares == false) {
             QPixmap p(":/gui_misc/handle_circle.png");

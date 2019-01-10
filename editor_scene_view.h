@@ -27,15 +27,18 @@ enum class View_Mode {
 enum class Position_Flags {
     Top          = 0,
     Bottom       = 1,
-    Left         = 2,
-    Top_Left     = 3,
-    Bottom_Left  = 4,
-    Right        = 5,
+    Right        = 2,
+    Left         = 3,
+    Top_Left     = 4,
+    Bottom_Left  = 5,
     Top_Right    = 6,
     Bottom_Right = 7,
     Total,
     No_Position,
 };
+
+enum class Handle_Positions {   Top_Left = 0,   Bottom_Left = 1,    Top_Right = 2,  Bottom_Right = 3,   Total,  };
+enum class Side_Positions {     Top = 0,        Bottom = 1,         Right = 2,      Left = 3,           Total,  };
 
 enum class X_Axis {  Left,   Right,    None  };
 enum class Y_Axis {  Top,    Bottom,   None  };
@@ -75,6 +78,7 @@ private:
 
     // Selection Bounding Box Variables
     QVector<QRectF>         m_handles;                                              // Stores QRects of current selection box handles
+    QVector<QPolygonF>      m_sides;                                                // Stores QPolygons of sides of selection box
     Position_Flags          m_over_handle;                                          // Tracks if mouse is over a handle
     QPoint                  m_last_mouse_pos;                                       // Tracks last known mouse position in view coordinates
 

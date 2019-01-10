@@ -29,8 +29,10 @@ SceneGraphicsView::SceneGraphicsView(QWidget *parent, DrProject *project, Interf
     // Initialize rubber band object used as a selection box
     m_rubber_band = new SceneViewRubberBand(QRubberBand::Rectangle, this, interface);
 
-    // Initialize handle array
-    m_handles.resize(static_cast<int>(Position_Flags::Total));
+    // Initialize handle / sides arrays
+    m_handles.resize(static_cast<int>(Handle_Positions::Total));
+    m_sides.resize(static_cast<int>(Side_Positions::Total));
+
     m_over_handle = Position_Flags::No_Position;
 }
 SceneGraphicsView::~SceneGraphicsView() { }
@@ -263,10 +265,15 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
     // ******************** Check selection handles to see if mouse is over one
     if (scene()->selectedItems().count() > 0 && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
         m_over_handle = Position_Flags::No_Position;
-        for (int i = 0; i < static_cast<int>(Position_Flags::Total); i++) {
-            if (m_handles[i].contains(adjust_mouse))
-                m_over_handle = static_cast<Position_Flags>(i);
-        }
+        if (m_handles[static_cast<int>(Handle_Positions::Top_Left)].contains(adjust_mouse))     m_over_handle = Position_Flags::Top_Left;
+        if (m_handles[static_cast<int>(Handle_Positions::Top_Right)].contains(adjust_mouse))    m_over_handle = Position_Flags::Top_Right;
+        if (m_handles[static_cast<int>(Handle_Positions::Bottom_Left)].contains(adjust_mouse))  m_over_handle = Position_Flags::Bottom_Left;
+        if (m_handles[static_cast<int>(Handle_Positions::Bottom_Right)].contains(adjust_mouse)) m_over_handle = Position_Flags::Bottom_Right;
+
+        if (m_sides[static_cast<int>(Side_Positions::Top)].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))    m_over_handle = Position_Flags::Top;
+        if (m_sides[static_cast<int>(Side_Positions::Bottom)].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Bottom;
+        if (m_sides[static_cast<int>(Side_Positions::Left)].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))   m_over_handle = Position_Flags::Left;
+        if (m_sides[static_cast<int>(Side_Positions::Right)].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))  m_over_handle = Position_Flags::Right;
 
         switch (m_over_handle)
         {
