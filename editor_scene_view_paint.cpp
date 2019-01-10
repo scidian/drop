@@ -196,27 +196,30 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     // Check if we should draw bounding box, and if it should be squares or circles
     bool draw_box = false, do_squares = true;
     if (scene()->selectedItems().count() > 0) draw_box = true;
-    if (scene()->selectedItems().count() == 1){
+    if (scene()->selectedItems().count() == 1) {
          double angle = scene()->selectedItems().first()->data(User_Roles::Rotation).toDouble();
-         if (isRotated(angle) == true) do_squares = false;
+         if (isSquare(angle, ANGLE_TOLERANCE) == false) do_squares = false;
     }
 
     // Set Size Grip rectangles. If multiple items use one big rectangle - if one item, map item shape
     if (draw_box && do_squares) {
         QRectF bigger = m_selection_rect;
         QPolygon to_view = mapFromScene(bigger);
+        painter.drawPolygon(to_view);
+
         QPoint top_left = mapFromScene(bigger.topLeft());
         QPoint bot_right = mapFromScene(bigger.bottomRight());
-        painter.drawPolygon(to_view);
+        double select_width =  abs(bot_right.x() - top_left.x());
+        double select_height = abs(bot_right.y() - top_left.y());
 
         m_handles[static_cast<int>(Position_Flags::Top_Left)] =     QRectF(top_left.x() - r_half,  top_left.y() - r_half,  r_size, r_size);
         m_handles[static_cast<int>(Position_Flags::Top_Right)] =    QRectF(bot_right.x() - r_half, top_left.y() - r_half,  r_size, r_size);
         m_handles[static_cast<int>(Position_Flags::Bottom_Left)] =  QRectF(top_left.x() - r_half,  bot_right.y() - r_half, r_size, r_size);
         m_handles[static_cast<int>(Position_Flags::Bottom_Right)] = QRectF(bot_right.x() - r_half, bot_right.y() - r_half, r_size, r_size);
-        m_handles[static_cast<int>(Position_Flags::Top)] =    QRectF(top_left.x() + r_half,  top_left.y() - r_half,  bot_right.x() - r_size, r_size);
-        m_handles[static_cast<int>(Position_Flags::Bottom)] = QRectF(top_left.x() + r_half,  bot_right.y() - r_half, bot_right.x() - r_size, r_size);
-        m_handles[static_cast<int>(Position_Flags::Left)] =   QRectF(top_left.x() - r_half,  top_left.y() + r_half,  r_size, bot_right.y() - r_size);
-        m_handles[static_cast<int>(Position_Flags::Right)] =  QRectF(bot_right.x() - r_half,  top_left.y() + r_half,  r_size, bot_right.y() - r_size);
+        m_handles[static_cast<int>(Position_Flags::Top)] =    QRectF(top_left.x() + r_half,  top_left.y() - r_half,  select_width - r_size, r_size);
+        m_handles[static_cast<int>(Position_Flags::Bottom)] = QRectF(top_left.x() + r_half,  bot_right.y() - r_half, select_width - r_size, r_size);
+        m_handles[static_cast<int>(Position_Flags::Left)] =   QRectF(top_left.x() - r_half,  top_left.y() + r_half,  r_size, select_height - r_size);
+        m_handles[static_cast<int>(Position_Flags::Right)] =  QRectF(bot_right.x() - r_half,  top_left.y() + r_half,  r_size, select_height- r_size);
     }
     else if (draw_box) {
         // Map item bounding box to screen and draw it
@@ -242,19 +245,26 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         handles.append(m_handles[static_cast<int>(Position_Flags::Bottom_Left)]);
         handles.append(m_handles[static_cast<int>(Position_Flags::Bottom_Right)]);
 
-        QPixmap p(":/gui_misc/handle_circle.png");
-
         if (do_squares == false) {
+            QPixmap p(":/gui_misc/handle_circle.png");
             for (auto r : handles) {
-                //painter.drawEllipse(r.center(), c_size, c_size);
+                r.setX(r.center().x() - c_size);
+                r.setY(r.center().y() - c_size);
+                r.setWidth(c_size * 2);
+                r.setHeight(c_size * 2);
+                painter.drawPixmap(r, p, p.rect());
+                //painter.drawEllipse(r.center(), c_size, c_size);      // Circles
+            }
+        } else {
+            QPixmap p(":/gui_misc/handle_square.png");
+            for (auto r : handles) {
                 r.setX(r.center().x() - c_size);
                 r.setY(r.center().y() - c_size);
                 r.setWidth(c_size * 2);
                 r.setHeight(c_size * 2);
                 painter.drawPixmap(r, p, p.rect());
             }
-        } else {
-            painter.drawRects(handles);                              // Squares
+            //painter.drawRects(handles);                               // Squares
         }
     }
 

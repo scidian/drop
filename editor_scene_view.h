@@ -58,6 +58,8 @@ private:
     double       m_zoom_scale = 1;
     int          m_rotate = 0;
 
+    const double ANGLE_TOLERANCE = .3;
+
     Grid_Style   m_grid_style = Grid_Style::Lines;
     double       m_grid_x = 10;
     double       m_grid_y = 10;
@@ -84,6 +86,8 @@ private:
     QRectF                  m_selection_rect;                                       // Stores rect of current selection
     QRectF                  m_start_resize_rect;                                    // Stores starting rect of selection before resize starts
     Position_Flags          m_start_resize_grip;                                    // Stores which Size Grip Handle we started resize over
+    X_Axis                  m_do_x;                                                 // Processed after click to know which sides to resize from
+    Y_Axis                  m_do_y;                                                 // Processed after click to know which sides to resize from
 
     // View_Mode::Rotating Variables
     QMutex                  rotate_mutex { QMutex::NonRecursive };                  // Used to keep rotating from backing up
@@ -117,7 +121,8 @@ public:
 public slots:
     double  calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt);
     void    drawGrid();
-    bool    isRotated(double check_angle);
+    bool    isCloseTo(double number_desired, double number_to_check, double tolerance);
+    bool    isSquare(double check_angle, double tolerance);
     QRectF  rectAtCenterPoint(QPoint center, double rect_size);
     void    sceneChanged(QList<QRectF> region);
     void    selectionChanged();
@@ -132,7 +137,7 @@ public slots:
 
     void    resizeSelection(QPointF mouse_in_scene);
     void    resizeSelectionOneNoRotate(QPointF mouse_in_scene);
-
+    void    resizeSelectionOneWithRotate(QPointF mouse_in_scene);
 
 
     void    resizeSelection2(QPointF mouse_in_scene);
