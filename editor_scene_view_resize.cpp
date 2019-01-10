@@ -56,7 +56,7 @@ bool SceneGraphicsView::isRotated(double check_angle)
 {
     check_angle = abs(check_angle);
     while (check_angle > 90) check_angle -= 90;
-    if ((check_angle < .5) && (check_angle > -.5)) {
+    if ((check_angle < .3) && (check_angle > -.3)) {
         return false;
     } else {
         return true;
@@ -69,6 +69,14 @@ bool SceneGraphicsView::isRotated(double check_angle)
 // Calculates selection resizing
 void SceneGraphicsView::resizeSelectionOneNoRotate(QPointF mouse_in_scene)
 {
+    // Now that we decided the item isnt rotated, round angle to nearest 90 and store
+    double angle = scene()->selectedItems().first()->data(User_Roles::Rotation).toDouble();
+    double find_remainer = abs(angle);
+    while (find_remainer > 90)  find_remainer -= 90;
+    if (angle > 0)              angle -= find_remainer;
+    else if (angle < 0)         angle += find_remainer;
+    scene()->selectedItems().first()->setData(User_Roles::Rotation, angle);
+
     // Figure out what sides to use for x axis and y axis
     X_Axis do_x;
     Y_Axis do_y;
@@ -188,10 +196,6 @@ void SceneGraphicsView::resizeSelection2(QPointF mouse_in_scene)
     qreal start_x = group->pos().x(); // is = group->boundingRect().x();
     qreal start_y = group->pos().y(); // is = group->boundingRect().y();
 
-    m_interface->setLabelText(Label_Names::Label1, "Group Rect  X: " + QString::number(group->boundingRect().x()) +
-                                                             ", Y: " + QString::number(group->boundingRect().y()) );
-
-
 
 
     qreal group_width;
@@ -238,8 +242,10 @@ void SceneGraphicsView::resizeSelection2(QPointF mouse_in_scene)
 
     group->setTransform(transform);
 
-    m_interface->setLabelText(Label_Names::Label2, "Group Scale  X: " + QString::number(group->transform().m11()) +
-                                                              ", Y: " + QString::number(group->transform().m22()) );
+    // !!!!! TEMP:
+    m_interface->setLabelText(Label_Names::Label_2, "Group Scale  X: " + QString::number(group->transform().m11()) +
+                                                               ", Y: " + QString::number(group->transform().m22()) );
+    // !!!!! END
 
     group->setPos(start_x, start_y);
 

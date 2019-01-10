@@ -26,8 +26,8 @@ void FormMain::applyColoring()
         " QMainWindow::separator { border: 1px solid " + globals->getColor(Window_Colors::Background_Light).name() + "; }"
 
         " QSplitter { width: 4px; } "
-        " QSplitter::handle:vertical { image: url(:/tree_icons/splitter_v.png); } "
-        " QSplitter::handle:horizontal { image: url(:/tree_icons/splitter_h.png); } "
+        " QSplitter::handle:vertical { image: url(:/gui_misc/splitter_v.png); } "
+        " QSplitter::handle:horizontal { image: url(:/gui_misc/splitter_h.png); } "
 
         " QScrollBar:vertical { width: 12px; margin: 0px; border-radius: 6px; "
         "       background: " + globals->getColor(Window_Colors::Button_Light).name() + "; } "

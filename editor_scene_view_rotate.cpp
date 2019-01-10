@@ -78,10 +78,12 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
 
     m_last_angle_diff = angle;
 
-    m_interface->setLabelText(Label_Names::Label1, "Angle 1: " + QString::number(angle1));
-    m_interface->setLabelText(Label_Names::Label2, "Angle 2: " + QString::number(angle2));
-    m_interface->setLabelText(Label_Names::LabelObject1, "Angle: " + QString::number(angle));
-    m_interface->setLabelText(Label_Names::LabelObject2, "Difference: " + QString::number(angle_diff) );
+    // !!!!! TEMP:
+    m_interface->setLabelText(Label_Names::Label_1, "Angle 1: " + QString::number(angle1));
+    m_interface->setLabelText(Label_Names::Label_2, "Angle 2: " + QString::number(angle2));
+    m_interface->setLabelText(Label_Names::Label_Object_1, "Angle: " + QString::number(angle));
+    m_interface->setLabelText(Label_Names::Label_Object_2, "Difference: " + QString::number(angle_diff) );
+    // !!!!! END
 
     rotate_mutex.unlock();
 }

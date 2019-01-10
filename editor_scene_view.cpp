@@ -107,8 +107,8 @@ void SceneGraphicsView::applyUpdatedMatrix()
     this->setMatrix(matrix);
 
     // !!!!! TEMP:
-    m_interface->setLabelText(Label_Names::Label2, "Zoom: " + QString::number(m_zoom) +
-                                                ", Scale: " + QString::number(m_zoom_scale) );
+    m_interface->setLabelText(Label_Names::Label_2, "Zoom: " + QString::number(m_zoom) +
+                                                 ", Scale: " + QString::number(m_zoom_scale) );
     // !!!!! END
 }
 
@@ -135,8 +135,16 @@ void SceneGraphicsView::updateSelectionRect()
     update();
 
     // !!!!! TEMP:
-    m_interface->setLabelText(Label_Names::LabelObject1, QString::number(m_selection_rect.x()) + ", " + QString::number(m_selection_rect.y()) +
-                                              ", " + QString::number(m_selection_rect.width()) + ", " + QString::number(m_selection_rect.height()) );
+    m_interface->setLabelText(Label_Names::Label_1, "Group Pos  X: " + QString::number(m_selection_rect.x()) +
+                                                             ", Y: " + QString::number(m_selection_rect.y()) );
+    m_interface->setLabelText(Label_Names::Label_2, "Group Size X: " + QString::number(m_selection_rect.width()) +
+                                                             ", Y: " + QString::number(m_selection_rect.height()) );
+    ///QGraphicsItemGroup *group = scene()->createItemGroup(scene()->selectedItems());
+    ///m_interface->setLabelText(Label_Names::Label_1, "Group Pos  X: " + QString::number(group->boundingRect().x()) +
+    ///                                                         ", Y: " + QString::number(group->boundingRect().y()) );
+    ///m_interface->setLabelText(Label_Names::Label_2, "Group Size X: " + QString::number(group->boundingRect().width()) +
+    ///                                                         ", Y: " + QString::number(group->boundingRect().height()) );
+    ///scene()->destroyItemGroup(group);
     // !!!!! END
 }
 
@@ -280,18 +288,10 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
 
     // !!!!! TEMP: Draw mouse coords on screen
-    m_interface->setLabelText(Label_Names::LabelObject3, "Mouse Scene X: " + QString::number(mapToScene(m_last_mouse_pos).x()) +
-                                                                   ", Y: " + QString::number(mapToScene(m_last_mouse_pos).y()) );
-    m_interface->setLabelText(Label_Names::LabelObject4, "Mouse View  X: " + QString::number(m_last_mouse_pos.x()) +
-                                                                   ", Y: " + QString::number(m_last_mouse_pos.y()) );
-
-    // !!!!! TEMP:
-    QGraphicsItemGroup *group = scene()->createItemGroup(scene()->selectedItems());
-    m_interface->setLabelText(Label_Names::Label1, "Group Pos  X: " + QString::number(group->boundingRect().x()) +
-                                                            ", Y: " + QString::number(group->boundingRect().y()) );
-    m_interface->setLabelText(Label_Names::Label2, "Group Size X: " + QString::number(group->boundingRect().width()) +
-                                                            ", Y: " + QString::number(group->boundingRect().height()) );
-    scene()->destroyItemGroup(group);
+    m_interface->setLabelText(Label_Names::Label_Mouse_1, "Mouse Scene X: " + QString::number(mapToScene(m_last_mouse_pos).x()) +
+                                                                    ", Y: " + QString::number(mapToScene(m_last_mouse_pos).y()) );
+    m_interface->setLabelText(Label_Names::Label_Mouse_2, "Mouse View  X: " + QString::number(m_last_mouse_pos.x()) +
+                                                                    ", Y: " + QString::number(m_last_mouse_pos.y()) );
     // !!!!! END
 
 

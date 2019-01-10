@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>icon/icon256.png</file>
-        <file>tree_icons/splitter_h.png</file>
         <file>tree_icons/tree_scene.png</file>
         <file>tree_icons/tree_object.png</file>
         <file>tree_icons/tree_action.png</file>
@@ -15,6 +14,9 @@
         <file>inspector_icons/comp_camera.png</file>
         <file>inspector_icons/comp_character.png</file>
         <file>inspector_icons/comp_physics.png</file>
-        <file>tree_icons/splitter_v.png</file>
+        <file>gui_misc/splitter_h.png</file>
+        <file>gui_misc/splitter_v.png</file>
+        <file>gui_misc/handle_circle.png</file>
+        <file>gui_misc/handle_square.png</file>
     </qresource>
 </RCC>

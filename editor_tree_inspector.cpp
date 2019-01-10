@@ -30,10 +30,12 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     long        selected_key = key_list[0];
     DrTypes     selected_type = m_project->findTypeFromKey( selected_key );
     std::string type_string = StringFromType(selected_type);
-    m_interface->setLabelText(Label_Names::LabelObject1, "KEY: " + QString::number( selected_key ) + ", TYPE: " + QString::fromStdString(type_string));
-    m_interface->setLabelText(Label_Names::LabelObject2, "");
-    m_interface->setLabelText(Label_Names::LabelObject3, "");
 
+    // !!!!! TEMP:
+    m_interface->setLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( selected_key ) + ", TYPE: " + QString::fromStdString(type_string));
+    m_interface->setLabelText(Label_Names::Label_Object_2, "");
+    m_interface->setLabelText(Label_Names::Label_Object_3, "");
+    // !!!!! END
 
     // Change Advisor text after new item selection
     switch (selected_type) {
@@ -169,9 +171,11 @@ void TreeInspector::itemWasClicked(QTreeWidgetItem *item, int column)
     //std::string type_string2 = StringFromType(m_project->findTypeFromKey( treeScene->getSelectedKey() ));
     //std::string type_string = StringFromType(selected_item_settings->getType());
 
+    // !!!!! TEMP:
     //setLabelText(Label_Names::LabelObject1, "KEY: " + QString::number( treeScene->getSelectedKey() ) + ", TYPE: " + QString::fromStdString(type_string));
     //setLabelText(Label_Names::LabelObject2, "COMPONENT: " + QString::number(component_key) +   ", NAME: " + QString::fromStdString(component_name));
     //setLabelText(Label_Names::LabelObject3, "PROPERTY: " + QString::number(property_key) +   ", NAME: " + QString::fromStdString(property_name));
+    // !!!!! END
 
 }
 

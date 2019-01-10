@@ -85,9 +85,10 @@ private:
     QPushButton   *buttonAtlas, *buttonFonts, *buttonPlay, *buttonSettings, *buttonWorlds;
 
     // Labels to display info
-    QLabel        *label_1,         *label_2,           *label_3;
+    QLabel        *label_1,         *label_2,           *label_mouse_1,     *label_mouse_2;
     QLabel        *label_object_1,  *label_object_2,    *label_object_3,    *label_object_4;
-    QLabel        *label_object_5,  *label_object_6,    *label_object_7,    *label_object_8,    *label_object_9;
+    QLabel        *label_position,  *label_center,      *label_scale,       *label_rotate;
+    QLabel        *label_bottom;
 
 public:
     // Constructor and Destructor

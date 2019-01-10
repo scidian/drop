@@ -124,8 +124,11 @@ void TreeScene::dragMoveEvent(QDragMoveEvent *event)
 {
     m_mouse_x = event->pos().x();
     m_mouse_y = event->pos().y();
-    m_interface->setLabelText(Label_Names::Label1, QString::fromStdString("MX: ") + QString::number(m_mouse_x) +
-                                                   QString::fromStdString(", MY: ") + QString::number(m_mouse_y) );
+
+    // !!!!! TEMP:
+    m_interface->setLabelText(Label_Names::Label_1, QString::fromStdString("MX: ") + QString::number(m_mouse_x) +
+                                                    QString::fromStdString(", MY: ") + QString::number(m_mouse_y) );
+    // !!!!! END
 
     // Get item under mouse, if not null lets process it to see if we will allow dropping there
     QTreeWidgetItem *item_at = this->itemAt(event->pos());
@@ -133,8 +136,12 @@ void TreeScene::dragMoveEvent(QDragMoveEvent *event)
     if (item_at != nullptr)
     {
         long        check_key = item_at->data(0, User_Roles::Key).toLongLong();
-        m_interface->setLabelText(Label_Names::LabelObject3, QString::fromStdString("Selected: " + std::to_string(m_selected_key) +
+
+        // !!!!! TEMP:
+        m_interface->setLabelText(Label_Names::Label_Object_3, QString::fromStdString("Selected: " + std::to_string(m_selected_key) +
                                                                                     ", Checking: " + std::to_string(check_key)) );
+        // !!!!! END
+
         // Check if its the same type as already selected, if so allow possible drop
         if (m_is_dragging && m_selected_key != 0 && check_key != 0) {
             DrSettings *check_settings = m_project->findSettingsFromKey(check_key);
@@ -166,6 +173,7 @@ void TreeScene::dropEvent(QDropEvent* event)
     {
         // ########## !!!!!!!!! Here we need manage the case of dropping an item
 
+
         QTreeWidget::dropEvent(event);              // Pass event through to base
     }
     else
@@ -186,7 +194,9 @@ void TreeScene::selectionChanged (const QItemSelection &selected, const QItemSel
 {
     QList<QTreeWidgetItem*> item_list = this->selectedItems();
 
-    m_interface->setLabelText(Label_Names::Label3, QString("Selected Items: ") + QString::number(item_list.size()));
+    // !!!!! TEMP
+    m_interface->setLabelText(Label_Names::Label_Bottom, QString("Selected Items: ") + QString::number(item_list.size()));
+    // !!!!! END
 
     // If size of list is zero, clear selected_key and exit function
     if (item_list.size() == 0) {
@@ -194,10 +204,13 @@ void TreeScene::selectionChanged (const QItemSelection &selected, const QItemSel
         return;
     }
 
-    // Otherwise add first item to label, if size is one, reset first selected item
-    m_interface->setLabelText(Label_Names::Label3, QString("Selected Items: ") + QString::number(item_list.size()) +
+    // !!!!! TEMP
+    // Otherwise add first item to label
+    m_interface->setLabelText(Label_Names::Label_Bottom, QString("Selected Items: ") + QString::number(item_list.size()) +
                               ", First Item: " + item_list.first()->text(0));
+    // !!!!! END
 
+    // If size is one, reset first selected item
     if (item_list.size() == 1) {
         long selected_key = item_list.first()->data(0, User_Roles::Key).toLongLong();       // grab stored key from list view user data
         this->setSelectedKey(selected_key);
@@ -262,8 +275,11 @@ void SceneTreeHighlightProxy::drawPrimitive(PrimitiveElement element, const QSty
             painter->drawLine(QPoint(0, option->rect.top()), QPoint(option->rect.right() + 50, option->rect.top()));
         }
 
-        m_interface->setLabelText(Label_Names::Label2, QString::fromStdString("TLX: ") + QString::number(option->rect.topLeft().x()) +
-                                                       QString::fromStdString(", TLY: ") + QString::number(option->rect.topLeft().y()));
+        // !!!!! TEMP:
+        m_interface->setLabelText(Label_Names::Label_2, QString::fromStdString("TLX: ") + QString::number(option->rect.topLeft().x()) +
+                                                      QString::fromStdString(", TLY: ") + QString::number(option->rect.topLeft().y()));
+        // !!!!! TEMP:
+
     } else {
         QProxyStyle::drawPrimitive(element, option, painter, widget);
     }

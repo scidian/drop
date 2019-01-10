@@ -69,7 +69,9 @@ void SceneGraphicsView::drawGrid()
         painter.setPen(QPen( m_interface->getColor(Window_Colors::Background_Dark), dot_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ));
         QVector<QPointF> points;
 
-        m_interface->setLabelText(Label_Names::Label1, "Test: Fail");
+        // !!!!! TEMP:
+        m_interface->setLabelText(Label_Names::Label_1, "Test: Fail");
+        // !!!!! END
 
         // Bottom right
         for (qreal x = 0; x <= scene_rect.right(); x += m_grid_x) {
@@ -165,13 +167,13 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         t = item->sceneTransform();
         my_center = t.map(my_center);
 
-        m_interface->setLabelText(Label_Names::LabelObject5, "Pos X: " + QString::number(my_pos.x()) +
-                                                           ", Pos Y: " + QString::number(my_pos.y()));
-        m_interface->setLabelText(Label_Names::LabelObject6, "Center X: " + QString::number(my_center.x()) +
+        m_interface->setLabelText(Label_Names::Label_Position, "Pos X: " + QString::number(my_pos.x()) +
+                                                             ", Pos Y: " + QString::number(my_pos.y()));
+        m_interface->setLabelText(Label_Names::Label_Center, "Center X: " + QString::number(my_center.x()) +
                                                                   ", Y: " + QString::number(my_center.y()));
-        m_interface->setLabelText(Label_Names::LabelObject7, "Scale X: " + QString::number(my_scale.x()) +
-                                                           ", Scale Y: " + QString::number(my_scale.y()));
-        m_interface->setLabelText(Label_Names::LabelObject8, "Rotation: " + QString::number(my_angle));
+        m_interface->setLabelText(Label_Names::Label_Scale, "Scale X: " + QString::number(my_scale.x()) +
+                                                          ", Scale Y: " + QString::number(my_scale.y()));
+        m_interface->setLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle));
         // !!!!! END
     }
 
@@ -187,9 +189,9 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     // ********** Draw box around entire seleciton, with Size Grip squares
     painter.setPen(QPen(m_interface->getColor(Window_Colors::Text_Light), 1));
 
-    double r_half = 3;
+    double r_half = 3;                  // Radius of square handle
     double r_size = r_half * 2;
-    double c_size = 4;
+    double c_size = 4;                  // Radius of circle handle
 
     // Check if we should draw bounding box, and if it should be squares or circles
     bool draw_box = false, do_squares = true;
@@ -240,9 +242,17 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         handles.append(m_handles[static_cast<int>(Position_Flags::Bottom_Left)]);
         handles.append(m_handles[static_cast<int>(Position_Flags::Bottom_Right)]);
 
+        QPixmap p(":/gui_misc/handle_circle.png");
+
         if (do_squares == false) {
-            for (auto r : handles)
-                painter.drawEllipse(r.center(), c_size, c_size);
+            for (auto r : handles) {
+                //painter.drawEllipse(r.center(), c_size, c_size);
+                r.setX(r.center().x() - c_size);
+                r.setY(r.center().y() - c_size);
+                r.setWidth(c_size * 2);
+                r.setHeight(c_size * 2);
+                painter.drawPixmap(r, p, p.rect());
+            }
         } else {
             painter.drawRects(handles);                              // Squares
         }
