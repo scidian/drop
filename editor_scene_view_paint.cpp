@@ -136,12 +136,15 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         QPolygonF polygon(item->boundingRect());
 
         // Apply item scaling / rotation to bounding box
-        QTransform t = item->transform();
-        polygon = t.map(polygon);
-
-        // Move bounding box to item position in the scene
-        t.reset();
-        t.translate(item->pos().x(), item->pos().y());
+        /// Old way
+        ///QTransform t = item->transform();
+        ///polygon = t.map(polygon);
+        /// Move bounding box to item position in the scene
+        ///t.reset();
+        ///t.translate(item->pos().x(), item->pos().y());
+        ///polygon = t.map(polygon);
+        // New way
+        QTransform t = item->sceneTransform();
         polygon = t.map(polygon);
 
         // Convert bounding box to view coordinates and draw on screen
@@ -153,16 +156,22 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 
         // !!!!! TEMP: Showing object data
         QVariant get_data;
-        QPointF my_scale, my_pos;
+        QPointF my_scale, my_pos, my_center;
         double  my_angle;
         get_data = item->data(User_Roles::Position);    my_pos =   QPointF(item->pos().x(), item->pos().y()); //get_data.toPointF();
         get_data = item->data(User_Roles::Scale);       my_scale = get_data.toPointF();
         get_data = item->data(User_Roles::Rotation);    my_angle = get_data.toDouble();
+        my_center = item->boundingRect().center();
+        t = item->sceneTransform();
+        my_center = t.map(my_center);
+
         m_interface->setLabelText(Label_Names::LabelObject5, "Pos X: " + QString::number(my_pos.x()) +
                                                            ", Pos Y: " + QString::number(my_pos.y()));
-        m_interface->setLabelText(Label_Names::LabelObject6, "Scale X: " + QString::number(my_scale.x()) +
+        m_interface->setLabelText(Label_Names::LabelObject6, "Center X: " + QString::number(my_center.x()) +
+                                                                  ", Y: " + QString::number(my_center.y()));
+        m_interface->setLabelText(Label_Names::LabelObject7, "Scale X: " + QString::number(my_scale.x()) +
                                                            ", Scale Y: " + QString::number(my_scale.y()));
-        m_interface->setLabelText(Label_Names::LabelObject7, "Rotation: " + QString::number(my_angle));
+        m_interface->setLabelText(Label_Names::LabelObject8, "Rotation: " + QString::number(my_angle));
         // !!!!! END
     }
 
@@ -211,11 +220,8 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         // Map item bounding box to screen and draw it
         QGraphicsItem *item = scene()->selectedItems().first();     // Grab only selected item
         QPolygonF polygon(item->boundingRect());                    // Get bounding box of item as polygon
-        QTransform t = item->transform();                           // Grab items scene transform
-        polygon = t.map(polygon);                                   // Apply item scaling / rotation to bounding box polygon
-        t.reset();                                                  // Reset transform object
-        t.translate(item->pos().x(), item->pos().y());              // Apply item offset
-        polygon = t.map(polygon);                                   // Move bounding box to item position in the scene
+        QTransform t = item->sceneTransform();                      // Get item bounding box to scene transform
+        polygon = t.map(polygon);                                   // Map bounding box to scene location
         QPolygon to_view = mapFromScene(polygon);                   // Convert bounding box to view coordinates
         painter.drawPolygon(to_view);                               // Draw bounding box on screen
 

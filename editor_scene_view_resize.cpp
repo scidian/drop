@@ -92,31 +92,33 @@ void SceneGraphicsView::resizeSelectionOneNoRotate(QPointF mouse_in_scene)
     qreal item_height = item->boundingRect().height();
     qreal start_adjust_x,   start_adjust_y;
     qreal new_width,        new_height;
-    qreal scale_x = 1,      scale_y = 1;
+    qreal scale_x,          scale_y;
 
     // Calculate X scale
     if (do_x == X_Axis::Right) {
         start_adjust_x = bot_right_select.x() - m_origin_in_scene.x();              // takes into account start mouse pos with actual side pos
         new_width = mouse_in_scene.x() - top_left_select.x() + start_adjust_x;
-        scale_x = new_width / item_width;
     }
     else if (do_x == X_Axis::Left) {
         start_adjust_x = top_left_select.x() - m_origin_in_scene.x();               // takes into account start mouse pos with actual side pos
         new_width = bot_right_select.x() - mouse_in_scene.x() - start_adjust_x;
-        scale_x = new_width / item_width;
+    } else {
+        new_width = bot_right_select.x() - top_left_select.x();
     }
+    scale_x = new_width / item_width;
 
     // Calculate Y scale
     if (do_y == Y_Axis::Bottom) {
         start_adjust_y = bot_right_select.y() - m_origin_in_scene.y();              // takes into account start mouse pos with actual side pos
         new_height = mouse_in_scene.y() - top_left_select.y() + start_adjust_y;
-        scale_y = new_height / item_height;
     }
     else if (do_y == Y_Axis::Top) {
         start_adjust_y = top_left_select.y() - m_origin_in_scene.y();               // takes into account start mouse pos with actual side pos
         new_height = bot_right_select.y() - mouse_in_scene.y() - start_adjust_y;
-        scale_y = new_height / item_height;
+    } else {
+        new_height = bot_right_select.y() - top_left_select.y();
     }
+    scale_y = new_height / item_height;
 
     // Apply new scale
     QTransform t;

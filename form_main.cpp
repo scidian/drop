@@ -139,6 +139,7 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
     case Label_Names::LabelObject6: label_object_6->setText(new_text);  break;
     case Label_Names::LabelObject7: label_object_7->setText(new_text);  break;
     case Label_Names::LabelObject8: label_object_8->setText(new_text);  break;
+    case Label_Names::LabelObject9: label_object_9->setText(new_text);  break;
     }
 }
 

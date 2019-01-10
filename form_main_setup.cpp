@@ -210,6 +210,10 @@ void FormMain::buildWindowModeEditScene()
                 label_object_8->setObjectName(QStringLiteral("label_object_8"));
                 label_object_8->setGeometry(QRect(500, 70, 461, 21));
                 label_object_8->setFont(font);
+                label_object_9 = new QLabel(areaBottom);
+                label_object_9->setObjectName(QStringLiteral("label_object_9"));
+                label_object_9->setGeometry(QRect(500, 90, 461, 21));
+                label_object_9->setFont(font);
         splitterVertical->addWidget(areaBottom);
 
         splitterVertical->setStretchFactor(0, 1);           // widgetScene (index 0) should stretch (1)

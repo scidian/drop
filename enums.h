@@ -35,7 +35,7 @@ enum class Label_Names
 {
     Label1,          Label2,          Label3,
     LabelObject1,    LabelObject2,    LabelObject3,    LabelObject4,
-    LabelObject5,    LabelObject6,    LabelObject7,    LabelObject8,
+    LabelObject5,    LabelObject6,    LabelObject7,    LabelObject8,    LabelObject9,
 };
 
 //####################################################################################
