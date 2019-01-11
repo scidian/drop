@@ -163,6 +163,8 @@ public slots:
     void    resizeSelectionOneNoRotate(QPointF mouse_in_scene);
     void    resizeSelectionOneWithRotate(QPointF mouse_in_scene);
 
+    double              getItemHeightInScene(QGraphicsItem *item);
+    double              getItemWidthInScene(QGraphicsItem *item);
     Handle_Positions    findOppositeCorner(Position_Flags start_corner);
     Side_Positions      findOppositeSide(Position_Flags start_side);
 

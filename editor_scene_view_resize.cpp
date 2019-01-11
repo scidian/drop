@@ -191,6 +191,21 @@ Side_Positions SceneGraphicsView::findOppositeSide(Position_Flags start_side)
     default:    return Side_Positions::Top;
     }
 }
+double SceneGraphicsView::getItemWidthInScene(QGraphicsItem *item)
+{
+    QTransform t = item->sceneTransform();
+    QPointF top_left =  t.map(item->boundingRect().topLeft());
+    QPointF top_right = t.map(item->boundingRect().topRight());
+    return QLineF(top_left, top_right).length();
+}
+double SceneGraphicsView::getItemHeightInScene(QGraphicsItem *item)
+{
+    QTransform t = item->sceneTransform();
+    QPointF top_left =  t.map(item->boundingRect().topLeft());
+    QPointF bottom_left = t.map(item->boundingRect().bottomLeft());
+    return QLineF(top_left, bottom_left).length();
+}
+
 
 
 // Calculates selection resizing
@@ -229,16 +244,25 @@ void SceneGraphicsView::resizeSelectionOneWithRotate(QPointF mouse_in_scene)
     QPointF zero_rotated_start    = remove_rotation.map( corner_start );
     QPointF zero_rotated_opposite = remove_rotation.map( corner_opposite );
 
-    // Change over to scene coordinates to find width and height
-    QPointF zero_rotated_start_in_scene = mapToScene(zero_rotated_start.toPoint());
-    QPointF zero_rotated_opposite_in_scene = mapToScene(zero_rotated_opposite.toPoint());
-    qreal   old_width = QLineF(zero_rotated_start_in_scene, zero_rotated_opposite_in_scene).dx();
-    qreal   old_height = QLineF(zero_rotated_start_in_scene, zero_rotated_opposite_in_scene).dy();
-
     // Load item starting width and height
     QGraphicsItem *item = scene()->selectedItems().first();
     qreal item_width =  item->boundingRect().width();
     qreal item_height = item->boundingRect().height();
+
+
+    // Change over to scene coordinates to find width and height
+    QPointF zero_rotated_start_in_scene = mapToScene(zero_rotated_start.toPoint());
+    QPointF zero_rotated_opposite_in_scene = mapToScene(zero_rotated_opposite.toPoint());
+
+
+    //
+    qreal   old_width2 = QLineF(zero_rotated_start_in_scene, zero_rotated_opposite_in_scene).dx();
+    qreal   old_height2 = QLineF(zero_rotated_start_in_scene, zero_rotated_opposite_in_scene).dy();
+    // is same
+    // as
+    qreal old_width = getItemWidthInScene(item);
+    qreal old_height = getItemHeightInScene(item);
+
 
     //qreal start_adjust_x,   start_adjust_y;
     qreal   new_width, new_height;
@@ -262,7 +286,9 @@ void SceneGraphicsView::resizeSelectionOneWithRotate(QPointF mouse_in_scene)
 
 
     // !!!!! TEMP
-    m_interface->setLabelText(Label_Names::Label_Object_4, "New Width: " + QString::number(new_width));
+    //m_interface->setLabelText(Label_Names::Label_Object_4, "New Width: " + QString::number(new_width));
+    m_interface->setLabelText(Label_Names::Label_Object_4, "Old Width: " + QString::number(old_width2) +
+                                                         ", Old Width New: " + QString::number(old_width));
     m_temp_polygon = QPolygonF( { zero_rotated_start, zero_rotated_opposite, mapFromScene(point_in_shape) } );
     // !!!!! END
 
