@@ -95,6 +95,7 @@ private:
     // Selection Bounding Box Variables
     std::map<Handle_Positions,  QRectF> m_handles;                                  // Stores QRects of current selection box handles
     std::map<Side_Positions, QPolygonF> m_sides;                                    // Stores QPolygons of sides of selection box
+    std::map<Side_Positions, QPointF>   m_sides_centers;                            // Stores QPointF center points of sides polygons
     Position_Flags                      m_over_handle;                              // Tracks if mouse is over a handle
     QPoint                              m_last_mouse_pos;                           // Tracks last known mouse position in view coordinates
 
@@ -113,6 +114,9 @@ private:
     QMutex                  rotate_mutex { QMutex::NonRecursive };                  // Used to keep rotating from backing up
     QPointF                 m_selection_center;                                     // Stores center point of selection
     double                  m_last_angle_diff;                                      // Stores angle difference last time we checked
+
+    QPolygonF               m_temp_polygon;                         // TEMP
+    QPolygonF               m_temp_polygon2;                        // TEMP
 
 public:
     // Constructor
@@ -159,8 +163,8 @@ public slots:
     void    resizeSelectionOneNoRotate(QPointF mouse_in_scene);
     void    resizeSelectionOneWithRotate(QPointF mouse_in_scene);
 
-    Handle_Positions findOppositeCorner(Position_Flags start_corner);
-
+    Handle_Positions    findOppositeCorner(Position_Flags start_corner);
+    Side_Positions      findOppositeSide(Position_Flags start_side);
 
 
 

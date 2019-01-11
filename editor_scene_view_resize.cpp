@@ -103,7 +103,7 @@ void SceneGraphicsView::resizeSelectionOneNoRotate(QPointF mouse_in_scene)
     //      m_do_x                      X_Axis              Tells what direction we're resizing from
     //      m_do_y                      Y_Axis              Tells what direction we're resizing from
 
-    // Now that we decided the item isnt rotated, round angle to nearest 90 and store
+    // Now that we decided the item isnt rotated, round angle to nearest 90 and store back in item
     double angle = scene()->selectedItems().first()->data(User_Roles::Rotation).toDouble();
     angle = round(angle / 90) * 90;
     scene()->selectedItems().first()->setData(User_Roles::Rotation, angle);
@@ -177,8 +177,18 @@ Handle_Positions SceneGraphicsView::findOppositeCorner(Position_Flags start_corn
     case Position_Flags::Top_Right:    return Handle_Positions::Bottom_Left;
     case Position_Flags::Bottom_Left:  return Handle_Positions::Top_Right;
     case Position_Flags::Bottom_Right: return Handle_Positions::Top_Left;
-    default:
-        return Handle_Positions::Top_Left;
+    default:    return Handle_Positions::Top_Left;
+    }
+}
+Side_Positions SceneGraphicsView::findOppositeSide(Position_Flags start_side)
+{
+    switch (start_side)
+    {
+    case Position_Flags::Top:       return Side_Positions::Bottom;
+    case Position_Flags::Bottom:    return Side_Positions::Top;
+    case Position_Flags::Left:      return Side_Positions::Right;
+    case Position_Flags::Right:     return Side_Positions::Left;
+    default:    return Side_Positions::Top;
     }
 }
 
@@ -186,71 +196,118 @@ Handle_Positions SceneGraphicsView::findOppositeCorner(Position_Flags start_corn
 // Calculates selection resizing
 void SceneGraphicsView::resizeSelectionOneWithRotate(QPointF mouse_in_scene)
 {
-    //m_handles[static_cast<int>(Handle_Positions::Top_Left)] =     rectAtCenterPoint(to_view.point(0), r_size);
-    //m_handles[static_cast<int>(Handle_Positions::Top_Right)] =    rectAtCenterPoint(to_view.point(1), r_size);
-    //m_handles[static_cast<int>(Handle_Positions::Bottom_Left)] =  rectAtCenterPoint(to_view.point(3), r_size);
-    //m_handles[static_cast<int>(Handle_Positions::Bottom_Right)] = rectAtCenterPoint(to_view.point(2), r_size);
+    // ********** Find corners / sides we're working with, calculate new width / height
+    QPointF corner_start,   corner_opposite,    center_point;
 
-    QPointF corner_start =    m_handles[static_cast<Handle_Positions>(m_over_handle)].center();
-    QPointF corner_opposite = m_handles[findOppositeCorner(m_over_handle)].center();
+    // If processing side
+    if (m_do_x == X_Axis::None || m_do_y == Y_Axis::None) {
+        corner_start =    m_sides_centers[static_cast<Side_Positions>(m_over_handle)];
+        corner_opposite = m_sides_centers[findOppositeSide(m_over_handle)];
+    }
+    // Otherwise processing a corner
+    else {
+        corner_start =    m_handles[static_cast<Handle_Positions>(m_over_handle)].center();
+        corner_opposite = m_handles[findOppositeCorner(m_over_handle)].center();
+    }
+
+    // Find center point and load angle of item
+    center_point = QLineF(corner_start, corner_opposite).pointAt(.5);
+    double angle = scene()->selectedItems().first()->data(User_Roles::Rotation).toDouble();
+
+    // Create transform to rotate center line back to zero
+    QTransform remove_rotation;
+    remove_rotation.translate(center_point.x(), center_point.y());
+    remove_rotation.rotate(-angle);
+    remove_rotation.translate(-center_point.x(), -center_point.y());
+
+    QTransform add_rotation;
+    add_rotation.translate(center_point.x(), center_point.y());
+    add_rotation.rotate(angle);
+    add_rotation.translate(-center_point.x(), -center_point.y());
+
+    // Rotate back to zero degree shape angle, still in view coordinates at this point
+    QPointF zero_rotated_start    = remove_rotation.map( corner_start );
+    QPointF zero_rotated_opposite = remove_rotation.map( corner_opposite );
+
+    // Change over to scene coordinates to find width and height
+    QPointF zero_rotated_start_in_scene = mapToScene(zero_rotated_start.toPoint());
+    QPointF zero_rotated_opposite_in_scene = mapToScene(zero_rotated_opposite.toPoint());
+    qreal   old_width = QLineF(zero_rotated_start_in_scene, zero_rotated_opposite_in_scene).dx();
+    qreal   old_height = QLineF(zero_rotated_start_in_scene, zero_rotated_opposite_in_scene).dy();
+
+    // Load item starting width and height
+    QGraphicsItem *item = scene()->selectedItems().first();
+    qreal item_width =  item->boundingRect().width();
+    qreal item_height = item->boundingRect().height();
+
+    //qreal start_adjust_x,   start_adjust_y;
+    qreal   new_width, new_height;
+    qreal   scale_x,   scale_y;
+    QPointF point_in_shape;
 
 
 
+    // Calculate X scale
+    point_in_shape = mapToScene(remove_rotation.map(mapFromScene(mouse_in_scene)));
+    if (m_do_x == X_Axis::Right)
+        new_width = QLineF(zero_rotated_opposite_in_scene, point_in_shape).dx();
+    else if (m_do_x == X_Axis::Left)
+        new_width = QLineF(point_in_shape, zero_rotated_opposite_in_scene).dx();
+    else
+        new_width = old_width;
+    scale_x = new_width / item_width;
 
-//    QGraphicsItem *item = scene()->selectedItems().first();
-//    qreal item_width =  item->boundingRect().width();
-//    qreal item_height = item->boundingRect().height();
-//    qreal start_adjust_x,   start_adjust_y;
-//    qreal new_width,        new_height;
-//    qreal scale_x,          scale_y;
 
-//    // Calculate X scale
-//    if (m_do_x == X_Axis::Right) {
-//        start_adjust_x = bot_right_select.x() - m_origin_in_scene.x();              // takes into account start mouse pos with actual side pos
-//        new_width = mouse_in_scene.x() - top_left_select.x() + start_adjust_x;
-//    }
-//    else if (m_do_x == X_Axis::Left) {
-//        start_adjust_x = top_left_select.x() - m_origin_in_scene.x();               // takes into account start mouse pos with actual side pos
-//        new_width = bot_right_select.x() - mouse_in_scene.x() - start_adjust_x;
-//    } else {
-//        new_width = bot_right_select.x() - top_left_select.x();
-//    }
-//    scale_x = new_width / item_width;
+    scale_y = 1;
 
-//    // Calculate Y scale
-//    if (m_do_y == Y_Axis::Bottom) {
-//        start_adjust_y = bot_right_select.y() - m_origin_in_scene.y();              // takes into account start mouse pos with actual side pos
-//        new_height = mouse_in_scene.y() - top_left_select.y() + start_adjust_y;
-//    }
-//    else if (m_do_y == Y_Axis::Top) {
-//        start_adjust_y = top_left_select.y() - m_origin_in_scene.y();               // takes into account start mouse pos with actual side pos
-//        new_height = bot_right_select.y() - mouse_in_scene.y() - start_adjust_y;
-//    } else {
-//        new_height = bot_right_select.y() - top_left_select.y();
-//    }
-//    scale_y = new_height / item_height;
 
-//    // Apply new scale
-//    QTransform t;
-//    t.scale(scale_x, scale_y);
-//    item->setTransform(t);
+    // !!!!! TEMP
+    m_interface->setLabelText(Label_Names::Label_Object_4, "New Width: " + QString::number(new_width));
+    m_temp_polygon = QPolygonF( { zero_rotated_start, zero_rotated_opposite, mapFromScene(point_in_shape) } );
+    // !!!!! END
 
-//    // Move each item as neccessary to keep them aligned with opposite starting corner
-//    qreal new_left = top_left_select.x();
-//    qreal new_top =  top_left_select.y();
-//    if (m_do_x == X_Axis::Left ) {
-//        if (scale_x > 0)
-//            new_left = bot_right_select.x() - item->sceneBoundingRect().width();
-//        else
-//            new_left = bot_right_select.x() + item->sceneBoundingRect().width();
-//    }
-//    if (m_do_y == Y_Axis::Top  ) {
-//        if (scale_y > 0)
-//            new_top = bot_right_select.y() - item->sceneBoundingRect().height();
-//        else
-//            new_top = bot_right_select.y() + item->sceneBoundingRect().height();;
-//    }
-//    item->setPos(new_left, new_top);
+
+    // Apply new scale
+    QTransform t = QTransform().rotate(angle).scale(scale_x, scale_y);
+    item->setTransform(t);
+
+
+    // Translate if needed
+    QPointF new_pos = item->pos();
+
+    if (m_do_x == X_Axis::Left ) {
+        qreal x_diff = new_width - old_width;
+
+        QPointF new_top_left = item->boundingRect().topLeft();
+        new_top_left.setX(new_top_left.x() - x_diff);
+
+        QTransform t = item->sceneTransform();                      // Get item bounding box to scene transform
+        new_pos = t.map(new_top_left);
+
+
+        // !!!!!!!!!!!!!!! RIGHT SIDE WORKING, LEFT SIDE NOT MOVING POSITION PROPERLY
+
+
+//        QPointF zero_top_left = remove_rotation.map( m_handles[Handle_Positions::Top_Left].center() );
+
+//        zero_top_left = mapToScene( zero_top_left.toPoint() );
+//        zero_top_left.setX( zero_top_left.x() - x_diff );
+
+//        zero_top_left = mapFromScene(zero_top_left);
+//        zero_top_left = add_rotation.map( zero_top_left );
+
+//        new_pos = mapToScene(zero_top_left.toPoint());
+
+
+
+//        QTransform t = item->sceneTransform();                      // Get item bounding box to scene transform
+//        QPointF top_left_mapped =  t.map(item->boundingRect().topLeft());
+
+    }
+
+
+
+    item->setPos(new_pos);
 }
 
 

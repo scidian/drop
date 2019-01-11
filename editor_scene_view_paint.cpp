@@ -126,33 +126,24 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     // At this point, if no selected item gets out of here
     if (scene()->selectedItems().count() < 1) return;
 
-    // ********** Draw selection boxes around all selected items
+    // Set up painter object
     QPainter painter(viewport());
     QBrush pen_brush(m_interface->getColor(Window_Colors::Icon_Light));
     painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.setBrush(Qt::NoBrush);
 
-    // Draw bounding box for each item
+    // ******************** Draw bounding box for each item
     for (auto item: scene()->selectedItems()) {
         // Load in item bounding box
         QPolygonF polygon(item->boundingRect());
 
         // Apply item scaling / rotation to bounding box
-        /// Old way
-        ///QTransform t = item->transform();
-        ///polygon = t.map(polygon);
-        /// Move bounding box to item position in the scene
-        ///t.reset();
-        ///t.translate(item->pos().x(), item->pos().y());
-        ///polygon = t.map(polygon);
-        // New way
         QTransform t = item->sceneTransform();
         polygon = t.map(polygon);
 
         // Convert bounding box to view coordinates and draw on screen
         QPolygon to_view = mapFromScene(polygon);
         painter.drawPolygon(to_view);
-
 
 
 
@@ -179,15 +170,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     }
 
 
-    ///painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);      // Draws with pixels using NOT operation
-
-    ///QLinearGradient linear_grad( QPointF(top_left.x() - r_size, top_left.y() - r_size), QPointF(top_left.x() + r_size, top_left.y() + r_size) );
-    ///linear_grad.setColorAt(0, m_interface->getColor(Window_Colors::Icon_Light));
-    ///linear_grad.setColorAt(1, m_interface->getColor(Window_Colors::Icon_Dark));
-    ///painter.setBrush(QBrush(linear_grad));
-
-
-    // ********** Draw box around entire seleciton, with Size Grip squares
+    // ******************** Draw box around entire seleciton, with Size Grip squares
     painter.setPen(QPen(m_interface->getColor(Window_Colors::Text_Light), 1));
 
     double r_half = 3;                  // Radius of square handle
@@ -232,33 +215,50 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         QTransform t = item->sceneTransform();                      // Get item bounding box to scene transform
         polygon = t.map(polygon);                                   // Map bounding box to scene location
 
+        // Store item bounding box points
         QPointF top_left =  item->boundingRect().topLeft();
         QPointF top_right = item->boundingRect().topRight();
         QPointF bot_left =  item->boundingRect().bottomLeft();
         QPointF bot_right = item->boundingRect().bottomRight();
 
+        // Map points to scene coordinates
         QPointF top_left_mapped =  t.map(top_left);
         QPointF top_right_mapped = t.map(top_right);
         QPointF bot_left_mapped =  t.map(bot_left);
         QPointF bot_right_mapped = t.map(bot_right);
 
+        // Store view coodinate rectangles of corners for size grip handles
         m_handles[Handle_Positions::Top_Left] =     rectAtCenterPoint(mapFromScene(top_left_mapped), r_size);
         m_handles[Handle_Positions::Top_Right] =    rectAtCenterPoint(mapFromScene(top_right_mapped), r_size);
         m_handles[Handle_Positions::Bottom_Left] =  rectAtCenterPoint(mapFromScene(bot_left_mapped), r_size);
         m_handles[Handle_Positions::Bottom_Right] = rectAtCenterPoint(mapFromScene(bot_right_mapped), r_size);
 
-        QPolygonF top(QRectF(top_left.x() + r_half,  top_left.y() - r_half,  item->boundingRect().width() - r_size, r_size));
-        QPolygonF bottom(QRectF(top_left.x() + r_half,  bot_right.y() - r_half, item->boundingRect().width() - r_size, r_size));
-        QPolygonF left(QRectF(top_left.x() - r_half,  top_left.y() + r_half,  r_size, item->boundingRect().height() - r_size));
-        QPolygonF right(QRectF(bot_right.x() - r_half,  top_left.y() + r_half,  r_size, item->boundingRect().height() - r_size));
+        // Store sides as rects so we can get center points
+        QRectF temp_top    (top_left.x() + r_half,  top_left.y() - r_half,  item->boundingRect().width() - r_size, r_size);
+        QRectF temp_bottom (top_left.x() + r_half,  bot_right.y() - r_half, item->boundingRect().width() - r_size, r_size);
+        QRectF temp_left   (top_left.x() - r_half,  top_left.y() + r_half,  r_size, item->boundingRect().height() - r_size);
+        QRectF temp_right  (bot_right.x() - r_half,  top_left.y() + r_half,  r_size, item->boundingRect().height() - r_size);
 
+        // Map center points to scene, then to view, then store
+        m_sides_centers[Side_Positions::Top] = mapFromScene(t.map(temp_top.center()));
+        m_sides_centers[Side_Positions::Bottom] = mapFromScene(t.map(temp_bottom.center()));
+        m_sides_centers[Side_Positions::Left] = mapFromScene(t.map(temp_left.center()));
+        m_sides_centers[Side_Positions::Right] = mapFromScene(t.map(temp_right.center()));
+
+        // Change rects into polygons, then map to scene, and then map to view and store
+        QPolygonF top(temp_top), bottom(temp_bottom), left(temp_left), right(temp_right);
         m_sides[Side_Positions::Top] = mapFromScene(t.map(top));
         m_sides[Side_Positions::Bottom] = mapFromScene(t.map(bottom));
         m_sides[Side_Positions::Left] = mapFromScene(t.map(left));
         m_sides[Side_Positions::Right] = mapFromScene(t.map(right));
 
-        m_interface->setLabelText(Label_Names::Label_Object_3, "Top P1 X: " + QString::number(m_sides[Side_Positions::Top].at(0).x()) +
-                                                                     " Y: " + QString::number(m_sides[Side_Positions::Top].at(0).y()) );
+        // !!!!! TEMP:
+        m_interface->setLabelText(Label_Names::Label_Object_3, "Top Center X: " + QString::number(m_sides_centers[Side_Positions::Top].x()) +
+                                                                         " Y: " + QString::number(m_sides_centers[Side_Positions::Top].y()) +
+                                                            ", Position Flag: " + QString::number(static_cast<int>(m_over_handle)) );
+        // !!!!! END
+
+
 
         QPolygon to_view = mapFromScene(polygon);                   // Convert bounding box to view coordinates
         painter.drawPolygon(to_view);                               // Draw bounding box on screen
@@ -293,6 +293,9 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
             }
             //painter.drawRects(handles);                               // Squares
         }
+
+        /// Draws with pixels using NOT operation
+        ///painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
     }
 
 
@@ -302,6 +305,15 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         painter.drawLine(m_selection_center, m_origin);
         painter.drawLine(m_selection_center, m_last_mouse_pos);
     }
+
+
+    // !!!!! TEMP:
+    painter.setPen(QPen(Qt::red, 3));
+    painter.drawPolygon(m_temp_polygon);
+
+    painter.setPen(QPen(Qt::blue, 3));
+    painter.drawPolygon(m_temp_polygon2);
+    // !!!!! END
 
 }
 
