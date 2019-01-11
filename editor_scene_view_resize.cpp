@@ -169,6 +169,19 @@ void SceneGraphicsView::resizeSelectionOneNoRotate(QPointF mouse_in_scene)
 
 
 
+Handle_Positions SceneGraphicsView::findOppositeCorner(Position_Flags start_corner)
+{
+    switch (start_corner)
+    {
+    case Position_Flags::Top_Left:     return Handle_Positions::Bottom_Right;
+    case Position_Flags::Top_Right:    return Handle_Positions::Bottom_Left;
+    case Position_Flags::Bottom_Left:  return Handle_Positions::Top_Right;
+    case Position_Flags::Bottom_Right: return Handle_Positions::Top_Left;
+    default:
+        return Handle_Positions::Top_Left;
+    }
+}
+
 
 // Calculates selection resizing
 void SceneGraphicsView::resizeSelectionOneWithRotate(QPointF mouse_in_scene)
@@ -178,8 +191,11 @@ void SceneGraphicsView::resizeSelectionOneWithRotate(QPointF mouse_in_scene)
     //m_handles[static_cast<int>(Handle_Positions::Bottom_Left)] =  rectAtCenterPoint(to_view.point(3), r_size);
     //m_handles[static_cast<int>(Handle_Positions::Bottom_Right)] = rectAtCenterPoint(to_view.point(2), r_size);
 
-//    QPointF corner_start =    m_handles[static_cast<int>(m_over_handle)].center();
-//    QPointF corner_opposite = m_start_resize_rect.bottomRight();
+    QPointF corner_start =    m_handles[static_cast<Handle_Positions>(m_over_handle)].center();
+    QPointF corner_opposite = m_handles[findOppositeCorner(m_over_handle)].center();
+
+
+
 
 //    QGraphicsItem *item = scene()->selectedItems().first();
 //    qreal item_width =  item->boundingRect().width();

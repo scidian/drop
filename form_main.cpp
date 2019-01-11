@@ -142,6 +142,7 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
     case Label_Names::Label_Center:     label_center->setText(new_text);    break;
     case Label_Names::Label_Scale:      label_scale->setText(new_text);     break;
     case Label_Names::Label_Rotate:     label_rotate->setText(new_text);    break;
+    case Label_Names::Label_Z_Order:    label_z_order->setText(new_text);   break;
 
     case Label_Names::Label_Bottom:     label_bottom->setText(new_text);    break;
     }
@@ -160,15 +161,17 @@ void FormMain::populateScene()
 
     // Populate scene
 
-    scene->addSquare(-200, -200, 100, 100);
+    scene->addSquare(-200, -200, 100, 100, 1);
 
-    scene->addSquare(0, 0, 100, 50);
-    scene->addSquare(200, 0, 100, 50);
+    scene->addSquare(0, 0, 100, 50, 2);
+    scene->addSquare(200, 0, 100, 50, 3);
 
-    scene->addSquare(100, 100, 1, 1);
+    scene->addSquare(100, 100, 1, 1, 6);
 
-    scene->addSquare(0, 200, 100, 50);
-    scene->addSquare(200, 200, 100, 50);
+    scene->addSquare(0, 200, 100, 50, 4);
+    scene->addSquare(200, 200, 100, 50, 5);
+
+
 
     scene->setSceneRect(-500, -500, 1000, 1000);
 }

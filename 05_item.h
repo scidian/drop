@@ -31,7 +31,7 @@ private:
     Origin      m_origin = Origin::Top_Right;
 
 public:
-    DrItem(const QColor &start_color, double width, double height);
+    DrItem(const QColor &start_color, double width, double height, double z_order);
 
     // Base Getter Overrides
     virtual QRectF          boundingRect() const override;

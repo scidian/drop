@@ -215,6 +215,10 @@ void FormMain::buildWindowModeEditScene()
                 label_rotate->setObjectName(QStringLiteral("label_rotate"));
                 label_rotate->setGeometry(QRect(560, 50, 400, 21));
                 label_rotate->setFont(font);
+                label_z_order = new QLabel(areaBottom);
+                label_z_order->setObjectName(QStringLiteral("label_z_order"));
+                label_z_order->setGeometry(QRect(560, 65, 400, 21));
+                label_z_order->setFont(font);
 
                 label_bottom = new QLabel(areaBottom);
                 label_bottom->setObjectName(QStringLiteral("label_bottom"));

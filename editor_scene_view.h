@@ -37,8 +37,20 @@ enum class Position_Flags {
     No_Position,
 };
 
-enum class Handle_Positions {   Top_Left = 0,   Bottom_Left = 1,    Top_Right = 2,  Bottom_Right = 3,   Total,  };
-enum class Side_Positions {     Top = 0,        Bottom = 1,         Right = 2,      Left = 3,           Total,  };
+// Possible handle and side positions !!!!! Must be same as Position_Flags equivalent name
+enum class Handle_Positions {
+    Top_Left        = static_cast<int>(Position_Flags::Top_Left),
+    Bottom_Left     = static_cast<int>(Position_Flags::Bottom_Left),
+    Top_Right       = static_cast<int>(Position_Flags::Top_Right),
+    Bottom_Right    = static_cast<int>(Position_Flags::Bottom_Right),
+};
+
+enum class Side_Positions {
+    Top             = static_cast<int>(Position_Flags::Top),
+    Bottom          = static_cast<int>(Position_Flags::Bottom),
+    Right           = static_cast<int>(Position_Flags::Right),
+    Left            = static_cast<int>(Position_Flags::Left),
+};
 
 enum class X_Axis {  Left,   Right,    None  };
 enum class Y_Axis {  Top,    Bottom,   None  };
@@ -61,26 +73,30 @@ private:
     double       m_zoom_scale = 1;
     int          m_rotate = 0;
 
+    // Class constants
     const double ANGLE_TOLERANCE = .3;
 
+    // Grid variables
     Grid_Style   m_grid_style = Grid_Style::Lines;
     double       m_grid_x = 10;
     double       m_grid_y = 10;
 
+    // Keyboard flags
     bool         m_flag_key_down_spacebar = false;
     bool         m_flag_key_down_control = false;
     bool         m_flag_key_down_alt = false;
 
+    // Mouse event variables
     QMutex                  mouse_move_mutex { QMutex::NonRecursive };              // Used to keep mouse move from backing up
     QPoint                  m_origin;                                               // Stores mouse down position in view coordinates
     QPointF                 m_origin_in_scene;                                      // Stores mouse down position in scene coordinates
     QGraphicsItem          *m_origin_item;                                          // Stores top item under mouse (if any) on mouse down event
 
     // Selection Bounding Box Variables
-    QVector<QRectF>         m_handles;                                              // Stores QRects of current selection box handles
-    QVector<QPolygonF>      m_sides;                                                // Stores QPolygons of sides of selection box
-    Position_Flags          m_over_handle;                                          // Tracks if mouse is over a handle
-    QPoint                  m_last_mouse_pos;                                       // Tracks last known mouse position in view coordinates
+    std::map<Handle_Positions,  QRectF> m_handles;                                  // Stores QRects of current selection box handles
+    std::map<Side_Positions, QPolygonF> m_sides;                                    // Stores QPolygons of sides of selection box
+    Position_Flags                      m_over_handle;                              // Tracks if mouse is over a handle
+    QPoint                              m_last_mouse_pos;                           // Tracks last known mouse position in view coordinates
 
     // View_Mode::Selecting Variables
     SceneViewRubberBand    *m_rubber_band;                                          // Holds our view's RubberBand object
@@ -142,6 +158,10 @@ public slots:
     void    resizeSelection(QPointF mouse_in_scene);
     void    resizeSelectionOneNoRotate(QPointF mouse_in_scene);
     void    resizeSelectionOneWithRotate(QPointF mouse_in_scene);
+
+    Handle_Positions findOppositeCorner(Position_Flags start_corner);
+
+
 
 
     void    resizeSelection2(QPointF mouse_in_scene);

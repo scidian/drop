@@ -10,12 +10,12 @@
 
 #include "05_item.h"
 
-DrItem::DrItem(const QColor &start_color, double width, double height)
+DrItem::DrItem(const QColor &start_color, double width, double height, double z_order)
 {
     m_width = width;
     m_height = height;
     m_color = start_color;
-    setZValue(1);
+    setZValue(z_order);
 
     setFlags(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable |
              QGraphicsItem::GraphicsItemFlag::ItemIsMovable |
