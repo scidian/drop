@@ -270,6 +270,38 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         painter.drawPolygon(to_view);                               // Draw bounding box on screen
     }
 
+    // ********** Draw angles if rotating
+    if (m_view_mode == View_Mode::Rotating) {
+        painter.setPen(QPen(m_interface->getColor(Window_Colors::Text_Light), 1));
+        painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
+        //painter.drawLine(m_selection_center, m_origin);
+        //painter.drawLine(m_selection_center, m_last_mouse_pos);
+
+        if (scene()->selectedItems().count() == 1) {
+            QPointF sc = m_selection_center;
+
+            QGraphicsItem *item = scene()->selectedItems().first();
+            double rot_angle = item->data(User_Roles::Rotation).toDouble();
+            QLineF angle(QPointF(sc.x(), sc.y()), QPointF(sc.x(), sc.y() - 50));
+            QTransform rotate_angle = QTransform().translate(sc.x(), sc.y()).rotate(rot_angle).translate(-sc.x(), -sc.y());
+            angle = rotate_angle.map(angle);
+            painter.drawLine(angle);
+
+            QLineF draw_angle(QPointF(sc.x(), sc.y() - 15), QPointF(sc.x(), sc.y() - 25));
+            QTransform rotate_45 = QTransform().translate(sc.x(), sc.y()).rotate(45).translate(-sc.x(), -sc.y());
+            QVector<QLineF> lines;
+
+            for (int i = 0; i < 8; i++) {
+                lines.append(draw_angle);
+                draw_angle = rotate_45.map(draw_angle);
+            }
+            painter.setPen(QPen(m_interface->getColor(Window_Colors::Text_Light), 2));
+            painter.drawLines(lines);
+        }
+        painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOver);
+    }
+
+
     // ********** If we have some objects selected and created some handles, draw them
     if (draw_box) {
         painter.setBrush(m_interface->getColor(Window_Colors::Icon_Light));
@@ -300,18 +332,8 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
             }
             //painter.drawPolygons(handles);                               // Squares
         }
-
-        /// Draws with pixels using NOT operation
-        ///painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
     }
 
-
-    // ********** Draw angles if rotating
-    if (m_view_mode == View_Mode::Rotating) {
-        painter.setPen(QPen(m_interface->getColor(Window_Colors::Text_Light), 1));
-        painter.drawLine(m_selection_center, m_origin);
-        painter.drawLine(m_selection_center, m_last_mouse_pos);
-    }
 
 
     // !!!!! TEMP:
