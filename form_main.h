@@ -85,8 +85,10 @@ private:
     QPushButton   *buttonAtlas, *buttonFonts, *buttonPlay, *buttonSettings, *buttonWorlds;
 
     // Labels to display info
-    QLabel        *label_1,         *label_2,           *label_3;
-    QLabel        *label_object_1,  *label_object_2,    *label_object_3;
+    QLabel        *label_1,         *label_2,           *label_mouse_1,     *label_mouse_2;
+    QLabel        *label_object_1,  *label_object_2,    *label_object_3,    *label_object_4;
+    QLabel        *label_position,  *label_center,      *label_scale,       *label_rotate,       *label_z_order;
+    QLabel        *label_bottom;
 
 public:
     // Constructor and Destructor
@@ -101,7 +103,7 @@ public:
     virtual void    setLabelText(Label_Names label_name, QString new_text);
     virtual void    showMessageBox(QString message);
 
-    void            populateScene();                                        // TEMP generic fill of scene
+    void            populateScene();                                        // !!!!! TEMP generic fill of scene
 
 private:
     // Form setup
@@ -113,7 +115,6 @@ private:
     void        buildWindowModeEditScene();
     void        changePalette(Color_Scheme new_color_scheme);
     void        listChildren();
-    void        refreshMainView();
 
 signals:
     void        sendAdvisorInfo(HeaderBodyList header_body_list);           // Forwards info to MainWindow::changeAdvisor

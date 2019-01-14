@@ -44,16 +44,18 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
 
 
 
-    // TEMP: temp call to populate Graphics Scene (currently does chips)
+    // !!!!! TEMP: call to populate Graphics Scene (currently does chips)
     populateScene();
+    // !!!!! END
 
 
     // ########## Initialize new project, initialize local variables
     project = new DrProject();
     current_world = 0;
 
-    // TEMP NEW PROJECT:
-    //      Create a new project and add some stuff to it
+
+    // !!!!! TEMP: New Project
+    // Create a new project and add some stuff to it
     project->addWorld();
     project->getWorldWithName("World 2")->addScene();
     project->getWorldWithName("World 2")->addScene("asdfasdfasdfasdfasfdasdfasdfasdfasdfasdfasdfasdfasd");
@@ -64,7 +66,7 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
     project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrTypes::Object);
     project->addWorld();
     project->addWorld();
-
+    // !!!!! END
 
 
 
@@ -76,17 +78,14 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
 
 
 
-
-
-
-
-    // TEMP:
-    //      Test loading data out from a pair, i.e. "POINT2D", stored as QList<QVariant>
+    // !!!!! TEMP:
+    // Test loading data out from a pair, i.e. "POINT2D", stored as QList<QVariant>
     if (current_mode == Form_Main_Mode::Edit_Scene) {
         QList<QVariant> myPoint = project->getWorld(current_world)->getComponentProperty(World_Components::physics, World_Properties::gravity)->getValue().toList();
-        setLabelText(Label_Names::Label1, "Gravity X:" + myPoint.first().toString());
-        setLabelText(Label_Names::Label2, "Gravity Y:" + myPoint.last().toString());
+        setLabelText(Label_Names::Label_1, "Gravity X:" + myPoint.first().toString());
+        setLabelText(Label_Names::Label_2, "Gravity Y:" + myPoint.last().toString());
     }
+    // !!!!! END
 
 }
 
@@ -125,12 +124,23 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
 {
     switch (label_name)
     {
-    case Label_Names::Label1:       label_1->setText(new_text);         break;
-    case Label_Names::Label2:       label_2->setText(new_text);         break;
-    case Label_Names::Label3:       label_3->setText(new_text);         break;
-    case Label_Names::LabelObject1: label_object_1->setText(new_text);  break;
-    case Label_Names::LabelObject2: label_object_2->setText(new_text);  break;
-    case Label_Names::LabelObject3: label_object_3->setText(new_text);  break;
+    case Label_Names::Label_1:          label_1->setText(new_text);         break;
+    case Label_Names::Label_2:          label_2->setText(new_text);         break;
+    case Label_Names::Label_Mouse_1:    label_mouse_1->setText(new_text);   break;
+    case Label_Names::Label_Mouse_2:    label_mouse_2->setText(new_text);   break;
+
+    case Label_Names::Label_Object_1:   label_object_1->setText(new_text);  break;
+    case Label_Names::Label_Object_2:   label_object_2->setText(new_text);  break;
+    case Label_Names::Label_Object_3:   label_object_3->setText(new_text);  break;
+    case Label_Names::Label_Object_4:   label_object_4->setText(new_text);  break;
+
+    case Label_Names::Label_Position:   label_position->setText(new_text);  break;
+    case Label_Names::Label_Center:     label_center->setText(new_text);    break;
+    case Label_Names::Label_Scale:      label_scale->setText(new_text);     break;
+    case Label_Names::Label_Rotate:     label_rotate->setText(new_text);    break;
+    case Label_Names::Label_Z_Order:    label_z_order->setText(new_text);   break;
+
+    case Label_Names::Label_Bottom:     label_bottom->setText(new_text);    break;
     }
 }
 
@@ -146,15 +156,18 @@ void FormMain::populateScene()
     scene = new SceneGraphicsScene(this, project, this);
 
     // Populate scene
-    scene->addSquare(0, 0, 100, 50);
-    scene->addSquare(200, 0, 100, 50);
 
-    scene->addSquare(100, 100, 1, 1);
+    scene->addSquare(-200, -200, 100, 100, 1);
 
-    scene->addSquare(0, 200, 100, 50);
-    scene->addSquare(200, 200, 100, 50);
+    scene->addSquare(0, 0, 100, 50, 2);
+    scene->addSquare(200, 0, 100, 50, 3);
+
+    scene->addSquare(100, 100, 1, 1, 6);
+
+    scene->addSquare(0, 200, 100, 50, 4);
+    scene->addSquare(200, 200, 100, 50, 5);
+
 }
-
 
 
 // Sets the new palette to the style sheets
@@ -162,15 +175,7 @@ void FormMain::changePalette(Color_Scheme new_color_scheme)
 {
     globals->current_color_scheme = new_color_scheme;
     applyColoring();
-    refreshMainView();
-}
-// After many tried update calls, force view to redraw by a quick zoom in / out
-void FormMain::refreshMainView()
-{
-    if (viewMain != nullptr) {
-        viewMain->zoomInOut(1);
-        viewMain->zoomInOut(-1);
-    }
+    update();
 }
 
 

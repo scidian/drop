@@ -33,7 +33,10 @@ enum class Form_Main_Mode {
 // Form Main enum for referencing debug labels
 enum class Label_Names
 {
-    Label1,          Label2,          Label3,       LabelObject1,    LabelObject2,    LabelObject3,
+    Label_1,            Label_2,            Label_Mouse_1,      Label_Mouse_2,
+    Label_Object_1,     Label_Object_2,     Label_Object_3,     Label_Object_4,
+    Label_Position,     Label_Center,       Label_Scale,        Label_Rotate,       Label_Z_Order,
+    Label_Bottom,
 };
 
 //####################################################################################
@@ -83,6 +86,13 @@ typedef enum {
     Scale,
     Position,
     Rotation,
+
+    Pre_Resize_Scale,
+    Pre_Resize_Top_Left,
+    Pre_Resize_Top_Right,
+    Pre_Resize_Bottom_Left,
+    Pre_Resize_Bottom_Right,
+
     Add_More,
 } User_Roles;
 
@@ -128,7 +138,6 @@ namespace Component_Colors
 
 
 };
-
 
 //####################################################################################
 //##    Possible icons for Component Categories

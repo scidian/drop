@@ -41,6 +41,8 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
         buildTreeSceneList();
         viewMain->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
         current_focus = Form_Main_Focus::Scene_View;
+        scene->sceneChanged(QList<QRectF> { scene->sceneRect() } );
+        viewMain->centerOn(0,0);
         break;
     case Form_Main_Mode::Clear:
         this->takeCentralWidget()->deleteLater();
@@ -140,7 +142,6 @@ void FormMain::buildWindowModeEditScene()
                     viewMain = new SceneGraphicsView(splitterHorizontal, project, this);
                     viewMain->setObjectName(QStringLiteral("viewMain"));
                     viewMain->setRenderHint(QPainter::Antialiasing, false);
-                    //viewMain->setDragMode(QGraphicsView::DragMode::RubberBandDrag);
                     viewMain->setDragMode(QGraphicsView::DragMode::NoDrag);
                     viewMain->setOptimizationFlags(QGraphicsView::DontSavePainterState);
                     viewMain->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
@@ -152,8 +153,8 @@ void FormMain::buildWindowModeEditScene()
                     viewMain->setSizePolicy(sizePolicyView);
                     viewMain->setMinimumSize(QSize(100, 0));
                     viewMain->setFont(font);
-                    viewMain->setCacheMode(QGraphicsView::CacheBackground);
-                splitterHorizontal->addWidget(viewMain);
+                splitterHorizontal->addWidget(viewMain);             
+
 
                 splitterHorizontal->setSizes(QList<int> { 150, 300 });      // Sets tree_scene (scene assests) startup width to 150
                                                                             // NOTE: You can save and restore the sizes of the widgets from a QByteArray
@@ -169,28 +170,63 @@ void FormMain::buildWindowModeEditScene()
             areaBottom->setWidgetResizable(true);
                 label_1 = new QLabel(areaBottom);
                 label_1->setObjectName(QStringLiteral("label_1"));
-                label_1->setGeometry(QRect(10, 10, 141, 21));
+                label_1->setGeometry(QRect(10, 5, 220, 21));
                 label_1->setFont(font);
                 label_2 = new QLabel(areaBottom);
                 label_2->setObjectName(QStringLiteral("label_2"));
-                label_2->setGeometry(QRect(10, 30, 141, 21));
+                label_2->setGeometry(QRect(10, 20, 220, 21));
                 label_2->setFont(font);
-                label_3 = new QLabel(areaBottom);
-                label_3->setObjectName(QStringLiteral("label_3"));
-                label_3->setGeometry(QRect(10, 70, 631, 21));
-                label_3->setFont(font);
+                label_mouse_1 = new QLabel(areaBottom);
+                label_mouse_1->setObjectName(QStringLiteral("label_mouse_1"));
+                label_mouse_1->setGeometry(QRect(10, 35, 220, 21));
+                label_mouse_1->setFont(font);
+                label_mouse_2 = new QLabel(areaBottom);
+                label_mouse_2->setObjectName(QStringLiteral("label_mouse_2"));
+                label_mouse_2->setGeometry(QRect(10, 50, 220, 21));
+                label_mouse_2->setFont(font);
+
                 label_object_1 = new QLabel(areaBottom);
                 label_object_1->setObjectName(QStringLiteral("label_object"));
-                label_object_1->setGeometry(QRect(180, 10, 461, 21));
+                label_object_1->setGeometry(QRect(240, 5, 400, 21));
                 label_object_1->setFont(font);
                 label_object_2 = new QLabel(areaBottom);
                 label_object_2->setObjectName(QStringLiteral("label_object_2"));
-                label_object_2->setGeometry(QRect(180, 30, 461, 21));
+                label_object_2->setGeometry(QRect(240, 20, 400, 21));
                 label_object_2->setFont(font);
                 label_object_3 = new QLabel(areaBottom);
                 label_object_3->setObjectName(QStringLiteral("label_object_3"));
-                label_object_3->setGeometry(QRect(180, 50, 461, 21));
+                label_object_3->setGeometry(QRect(240, 35, 400, 21));
                 label_object_3->setFont(font);
+                label_object_4 = new QLabel(areaBottom);
+                label_object_4->setObjectName(QStringLiteral("label_object_4"));
+                label_object_4->setGeometry(QRect(240, 50, 400, 21));
+                label_object_4->setFont(font);
+
+                label_position = new QLabel(areaBottom);
+                label_position->setObjectName(QStringLiteral("label_position"));
+                label_position->setGeometry(QRect(560, 5, 400, 21));
+                label_position->setFont(font);
+                label_center = new QLabel(areaBottom);
+                label_center->setObjectName(QStringLiteral("label_center"));
+                label_center->setGeometry(QRect(560, 20, 400, 21));
+                label_center->setFont(font);
+                label_scale = new QLabel(areaBottom);
+                label_scale->setObjectName(QStringLiteral("label_scale"));
+                label_scale->setGeometry(QRect(560, 35, 400, 21));
+                label_scale->setFont(font);
+                label_rotate = new QLabel(areaBottom);
+                label_rotate->setObjectName(QStringLiteral("label_rotate"));
+                label_rotate->setGeometry(QRect(560, 50, 400, 21));
+                label_rotate->setFont(font);
+                label_z_order = new QLabel(areaBottom);
+                label_z_order->setObjectName(QStringLiteral("label_z_order"));
+                label_z_order->setGeometry(QRect(560, 65, 400, 21));
+                label_z_order->setFont(font);
+
+                label_bottom = new QLabel(areaBottom);
+                label_bottom->setObjectName(QStringLiteral("label_bottom"));
+                label_bottom->setGeometry(QRect(10, 70, 700, 21));
+                label_bottom->setFont(font);
         splitterVertical->addWidget(areaBottom);
 
         splitterVertical->setStretchFactor(0, 1);           // widgetScene (index 0) should stretch (1)
@@ -376,9 +412,6 @@ void FormMain::buildWindowModeEditScene()
     advisor->setWindowTitle(QApplication::translate("MainWindow", "Advisor", nullptr));
     assets->setWindowTitle(QApplication::translate("MainWindow", "Assets", nullptr));
     inspector->setWindowTitle(QApplication::translate("MainWindow", "Inspector", nullptr));
-    label_1->setText(QApplication::translate("MainWindow", "TextLabel", nullptr));
-    label_2->setText(QApplication::translate("MainWindow", "TextLabel", nullptr));
-    label_3->setText(QApplication::translate("MainWindow", "TextLabel", nullptr));
     label_object_1->setText(QApplication::translate("MainWindow", "Object ID, Type", nullptr));
     label_object_2->setText(QApplication::translate("MainWindow", "Object ID, Type", nullptr));
     label_object_3->setText(QApplication::translate("MainWindow", "Object ID, Type", nullptr));
@@ -387,7 +420,6 @@ void FormMain::buildWindowModeEditScene()
     buttonPlay->setText(QApplication::translate("MainWindow", "Play", nullptr));
     buttonSettings->setText(QApplication::translate("MainWindow", "App Settings", nullptr));
     buttonWorlds->setText(QApplication::translate("MainWindow", "Worlds / UI", nullptr));
-
 
 }
 
