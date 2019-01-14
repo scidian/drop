@@ -33,7 +33,6 @@ enum class Position_Flags {
     Bottom_Left  = 5,
     Top_Right    = 6,
     Bottom_Right = 7,
-    Total,
     No_Position,
 };
 
@@ -74,7 +73,7 @@ private:
     int          m_rotate = 0;
 
     // Class constants
-    const double ANGLE_TOLERANCE = .3;
+    const double ANGLE_TOLERANCE = .5;
 
     // Grid variables
     Grid_Style   m_grid_style = Grid_Style::Lines;
@@ -137,41 +136,38 @@ public:
     virtual void wheelEvent(QWheelEvent *event) override;                               // Inherited from QWidget
 #endif
 
-    // Custom handling functions
+    // Functions
     void applyUpdatedMatrix();
     void updateSelectionRect();
     void zoomInOut(int level);
 
-public slots:
     double  calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt);
     void    drawGrid();
     bool    isCloseTo(double number_desired, double number_to_check, double tolerance);
     bool    isSquare(double check_angle, double tolerance);
     QRectF  rectAtCenterPoint(QPoint center, double rect_size);
-    void    sceneChanged(QList<QRectF> region);
-    void    selectionChanged();
     QRectF  totalSelectedItemsSceneRect();
 
     void    startSelect(QMouseEvent *event);
-    void    startRotate();
-    void    startResize();
-
     void    processSelection(QPoint mouse_in_view);
+
+    void    startRotate();
     void    rotateSelection(QPointF mouse_in_view);
 
+    void    startResize();
     void    resizeSelection(QPointF mouse_in_scene);
     void    resizeSelectionOneNoRotate(QPointF mouse_in_scene);
     void    resizeSelectionOneWithRotate(QPointF mouse_in_scene);
 
-    double              getItemHeightInScene(QGraphicsItem *item);
-    double              getItemWidthInScene(QGraphicsItem *item);
+
     Handle_Positions    findOppositeCorner(Position_Flags start_corner);
     Side_Positions      findOppositeSide(Position_Flags start_side);
 
 
+public slots:
+    void    sceneChanged(QList<QRectF> region);
+    void    selectionChanged();
 
-    void    resizeSelection2(QPointF mouse_in_scene);
-    void    resizeSelection3(QPointF mouse_in_scene);
 };
 
 

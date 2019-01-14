@@ -25,17 +25,43 @@ void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, double new_width, d
 {
     DrItem *item;
     item = new DrItem(color, new_width, new_height, z_order);
-    item->setPos(0, 0);
 
-    switch (item->getOrigin()) {
-    case Origin::Center:    item->setPos(new_x - new_width / 2, new_y - (new_height / 2));      break;
-    case Origin::Top_Left:  item->setPos(new_x, new_y);                                         break;
-    default:                item->setPos(new_x, new_y);
-    }
+    item->setPositionByOrigin(item->getOrigin(), new_x, new_y);
 
     addItem(item);
 }
 
+
+// Connected from scene().changed, resizes scene when objects are added / subtracted
+void SceneGraphicsScene::sceneChanged(QList<QRectF>)
+{
+    double min_size = 500;
+    double buffer =   200;
+
+    double left =  -min_size;
+    double right =  min_size;
+    double top =   -min_size;
+    double bottom = min_size;
+
+    if (items().count() > 0) {
+        QRectF total_rect = items().first()->sceneBoundingRect();
+        for (auto item: items())
+            total_rect = total_rect.united(item->sceneBoundingRect());
+
+        if (left > total_rect.x()) left = total_rect.x();
+        if (top  > total_rect.y()) top =  total_rect.y();
+        if (right <  total_rect.bottomRight().x()) right =  total_rect.bottomRight().x();
+        if (bottom < total_rect.bottomRight().y()) bottom = total_rect.bottomRight().y();
+
+        if (abs(left) > right) right = abs(left);
+        if (abs(top) > bottom) bottom = abs(top);
+        if (right > abs(left)) left = -right;
+        if (bottom > abs(top)) top = -bottom;
+
+        QRectF new_rect = QRectF(left - buffer, top - buffer, (right - left) + buffer * 2, (bottom - top) + buffer * 2);
+        setSceneRect( new_rect );
+    }
+}
 
 
 void SceneGraphicsScene::keyReleaseEvent(QKeyEvent *event) { QGraphicsScene::keyReleaseEvent(event); }

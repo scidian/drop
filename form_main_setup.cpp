@@ -151,7 +151,8 @@ void FormMain::buildWindowModeEditScene()
                     viewMain->setSizePolicy(sizePolicyView);
                     viewMain->setMinimumSize(QSize(100, 0));
                     viewMain->setFont(font);
-                splitterHorizontal->addWidget(viewMain);
+                splitterHorizontal->addWidget(viewMain);             
+
 
                 splitterHorizontal->setSizes(QList<int> { 150, 300 });      // Sets tree_scene (scene assests) startup width to 150
                                                                             // NOTE: You can save and restore the sizes of the widgets from a QByteArray

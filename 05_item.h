@@ -28,7 +28,7 @@ private:
     double      m_height;
     QColor      m_color;
 
-    Origin      m_origin = Origin::Top_Right;
+    Origin      m_origin = Origin::Center;
 
 public:
     DrItem(const QColor &start_color, double width, double height, double z_order);
@@ -48,6 +48,10 @@ public:
 
     // Getters and Setters
     Origin                  getOrigin() { return m_origin; }
+
+    // Functions
+    void                    setPositionByOrigin(QPointF origin_point, double new_x, double new_y);
+    void                    setPositionByOrigin(Origin by_origin, double new_x, double new_y);
 
 };
 

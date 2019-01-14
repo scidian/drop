@@ -78,10 +78,6 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
 
 
 
-
-
-
-
     // !!!!! TEMP:
     // Test loading data out from a pair, i.e. "POINT2D", stored as QList<QVariant>
     if (current_mode == Form_Main_Mode::Edit_Scene) {
@@ -171,11 +167,14 @@ void FormMain::populateScene()
     scene->addSquare(0, 200, 100, 50, 4);
     scene->addSquare(200, 200, 100, 50, 5);
 
-
-
-    scene->setSceneRect(-500, -500, 1000, 1000);
 }
 
+void FormMain::finishedLoading()
+{
+    // Centers view on 0,0 coordinate of scene after form is done loading
+    scene->sceneChanged(QList<QRectF> {} );
+    viewMain->centerOn(0,0);
+}
 
 
 // Sets the new palette to the style sheets

@@ -10,6 +10,8 @@
 
 #include <QtWidgets>
 
+#include <05_item.h>
+
 class DrProject;
 class InterfaceRelay;
 
@@ -25,16 +27,21 @@ private:
 public:
     // Constructor
     explicit SceneGraphicsScene(QWidget *parent, DrProject *project, InterfaceRelay *interface) :
-                                QGraphicsScene(parent = nullptr), m_project(project), m_interface(interface) { }
+                                QGraphicsScene(parent = nullptr), m_project(project), m_interface(interface) {
+        connect(this, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
+    }
 
     // Event Overrides, start at Qt Docs for QGraphicsScene Class to find more
     virtual void keyPressEvent(QKeyEvent *event) override;                              // Inherited from QGraphicsScene
     virtual void keyReleaseEvent(QKeyEvent *event) override;                            // Inherited from QGraphicsScene
 
-
-    // Function calls
+    // Functions
     void addSquare(qreal new_x, qreal new_y, double new_width, double new_height, double z_order,
                    QColor color = QColor::fromRgb(QRandomGenerator::global()->generate()).light(100));
+
+public slots:
+    void    sceneChanged(QList<QRectF> region);
+
 
 };
 

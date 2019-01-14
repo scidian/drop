@@ -178,15 +178,20 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     double c_size = 4;                  // Radius of circle handle
 
     // Check if we should draw bounding box, and if it should be squares or circles
-    bool draw_box = false, do_squares = true;
+    bool draw_box = false;
+    bool do_squares = true;
+    bool more_than_one = false;
+
     if (scene()->selectedItems().count() > 0) draw_box = true;
     if (scene()->selectedItems().count() == 1) {
          double angle = scene()->selectedItems().first()->data(User_Roles::Rotation).toDouble();
          if (isSquare(angle, ANGLE_TOLERANCE) == false) do_squares = false;
     }
+    if (scene()->selectedItems().count() > 1) more_than_one = true;
 
-    // Set Size Grip rectangles. If multiple items use one big rectangle - if one item, map item shape
-    if (draw_box && do_squares) {
+    // ***** Set Size Grip rectangles
+    // If multiple items use one big rectangle
+    if (draw_box && more_than_one) {
         QRectF bigger = m_selection_rect;
 
         QPoint top_left = mapFromScene(bigger.topLeft());
@@ -207,6 +212,8 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         QPolygon to_view = mapFromScene(bigger);
         painter.drawPolygon(to_view);
     }
+
+    // If one item, map item shape
     else if (draw_box) {
         // Map item bounding box to screen and draw it
         QGraphicsItem *item = scene()->selectedItems().first();     // Grab only selected item

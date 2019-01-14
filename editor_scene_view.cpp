@@ -137,12 +137,11 @@ void SceneGraphicsView::updateSelectionRect()
                                                              ", Y: " + QString::number(m_selection_rect.y()) );
     m_interface->setLabelText(Label_Names::Label_2, "Group Size X: " + QString::number(m_selection_rect.width()) +
                                                              ", Y: " + QString::number(m_selection_rect.height()) );
-    ///QGraphicsItemGroup *group = scene()->createItemGroup(scene()->selectedItems());
-    ///m_interface->setLabelText(Label_Names::Label_1, "Group Pos  X: " + QString::number(group->boundingRect().x()) +
-    ///                                                         ", Y: " + QString::number(group->boundingRect().y()) );
-    ///m_interface->setLabelText(Label_Names::Label_2, "Group Size X: " + QString::number(group->boundingRect().width()) +
-    ///                                                         ", Y: " + QString::number(group->boundingRect().height()) );
-    ///scene()->destroyItemGroup(group);
+
+    m_interface->setLabelText(Label_Names::Label_Object_1, "Scene X: " + QString::number(sceneRect().x()) +
+                                                               ", Y: " + QString::number(sceneRect().y()) );
+    m_interface->setLabelText(Label_Names::Label_Object_2, "Scene W: " + QString::number(sceneRect().width()) +
+                                                               ", H: " + QString::number(sceneRect().height()) );
     // !!!!! END
 }
 

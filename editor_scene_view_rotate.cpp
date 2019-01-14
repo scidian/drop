@@ -33,6 +33,31 @@ void SceneGraphicsView::startRotate()
 }
 
 
+//
+//
+//      !!!!!!!! Need to have angles snap to good angles, ie 0, 15, 30, 45, 60, 75, 90 etc
+//
+//
+// Now that we decided the item isnt rotated, round angle to nearest 90 and store back in item
+//double angle = scene()->selectedItems().first()->data(User_Roles::Rotation).toDouble();
+//angle = round(angle / 90) * 90;
+//scene()->selectedItems().first()->setData(User_Roles::Rotation, angle);
+
+// Returns true is 'check_angle' in within 'tolerance' to 0, 90, 180, or 270, i.e. "square" angle
+bool SceneGraphicsView::isSquare(double check_angle, double tolerance)
+{
+    check_angle = abs(check_angle);
+    while (check_angle >= 360) check_angle -= 360;
+    if (isCloseTo(check_angle, 0, tolerance))   return true;
+    if (isCloseTo(check_angle, 90, tolerance))  return true;
+    if (isCloseTo(check_angle, 180, tolerance)) return true;
+    if (isCloseTo(check_angle, 270, tolerance)) return true;
+    return false;
+}
+// Returns true if 'number_desired' is within +-'tolerance' of 'number_to_check'
+bool SceneGraphicsView::isCloseTo(double number_desired, double number_to_check, double tolerance)
+{   return ( (number_to_check <= (number_desired + tolerance)) && (number_to_check >= (number_desired - tolerance)) );  }
+
 
 
 // Calculates rotation
@@ -58,12 +83,6 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     offset.setX(offset.x() - (offset.x() - m_start_resize_rect.center().x()) );
     offset.setY(offset.y() - (offset.y() - m_start_resize_rect.center().y()) );
 
-    // Apply new rotation
-    transform.translate( offset.x(),  offset.y());
-    transform.rotate(angle_diff);
-    transform.translate(-offset.x(), -offset.y());
-    group->setTransform(transform);
-
     // Save new item rotations for use later
     for (auto item : group->childItems()) {
         double my_angle = item->data(User_Roles::Rotation).toDouble();
@@ -74,6 +93,13 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
 
         item->setData(User_Roles::Rotation, new_angle);
     }
+
+    // Apply new rotations and destroy group
+    transform.translate( offset.x(),  offset.y());
+    transform.rotate(angle_diff);
+    transform.translate(-offset.x(), -offset.y());
+
+    group->setTransform(transform);
     scene()->destroyItemGroup(group);
 
     m_last_angle_diff = angle;
