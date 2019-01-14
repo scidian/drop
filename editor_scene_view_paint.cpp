@@ -199,15 +199,18 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         double select_width =  abs(bot_right.x() - top_left.x());
         double select_height = abs(bot_right.y() - top_left.y());
 
-        m_handles[Handle_Positions::Top_Left] =     QRectF(top_left.x() - r_half,  top_left.y() - r_half,  r_size, r_size);
-        m_handles[Handle_Positions::Top_Right] =    QRectF(bot_right.x() - r_half, top_left.y() - r_half,  r_size, r_size);
-        m_handles[Handle_Positions::Bottom_Left] =  QRectF(top_left.x() - r_half,  bot_right.y() - r_half, r_size, r_size);
-        m_handles[Handle_Positions::Bottom_Right] = QRectF(bot_right.x() - r_half, bot_right.y() - r_half, r_size, r_size);
+        m_handles[Position_Flags::Top_Left] =     QRectF(top_left.x() - r_half,  top_left.y() - r_half,  r_size, r_size);
+        m_handles[Position_Flags::Top_Right] =    QRectF(bot_right.x() - r_half, top_left.y() - r_half,  r_size, r_size);
+        m_handles[Position_Flags::Bottom_Left] =  QRectF(top_left.x() - r_half,  bot_right.y() - r_half, r_size, r_size);
+        m_handles[Position_Flags::Bottom_Right] = QRectF(bot_right.x() - r_half, bot_right.y() - r_half, r_size, r_size);
 
-        m_sides[Side_Positions::Top] =    QRectF(top_left.x() + r_half,  top_left.y() - r_half,  select_width - r_size, r_size);
-        m_sides[Side_Positions::Bottom] = QRectF(top_left.x() + r_half,  bot_right.y() - r_half, select_width - r_size, r_size);
-        m_sides[Side_Positions::Left] =   QRectF(top_left.x() - r_half,  top_left.y() + r_half,  r_size, select_height - r_size);
-        m_sides[Side_Positions::Right] =  QRectF(bot_right.x() - r_half,  top_left.y() + r_half,  r_size, select_height- r_size);
+        m_handles[Position_Flags::Top] =    QRectF(top_left.x() + r_half,  top_left.y() - r_half,  select_width - r_size, r_size);
+        m_handles[Position_Flags::Bottom] = QRectF(top_left.x() + r_half,  bot_right.y() - r_half, select_width - r_size, r_size);
+        m_handles[Position_Flags::Left] =   QRectF(top_left.x() - r_half,  top_left.y() + r_half,  r_size, select_height - r_size);
+        m_handles[Position_Flags::Right] =  QRectF(bot_right.x() - r_half,  top_left.y() + r_half,  r_size, select_height- r_size);
+
+        // Store polygon centers
+        for (auto h : m_handles) m_handles_centers[h.first] = h.second.boundingRect().center();
 
         QPolygon to_view = mapFromScene(bigger);
         painter.drawPolygon(to_view);
@@ -219,8 +222,8 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         QGraphicsItem *item = scene()->selectedItems().first();     // Grab only selected item
         QPolygonF polygon(item->boundingRect());                    // Get bounding box of item as polygon
 
-        QTransform t = item->sceneTransform();                      // Get item bounding box to scene transform
-        polygon = t.map(polygon);                                   // Map bounding box to scene location
+        QTransform transform = item->sceneTransform();              // Get item bounding box to scene transform
+        polygon = transform.map(polygon);                                   // Map bounding box to scene location
 
         // Store item bounding box points
         QPointF top_left =  item->boundingRect().topLeft();
@@ -229,40 +232,36 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         QPointF bot_right = item->boundingRect().bottomRight();
 
         // Map points to scene coordinates
-        QPointF top_left_mapped =  t.map(top_left);
-        QPointF top_right_mapped = t.map(top_right);
-        QPointF bot_left_mapped =  t.map(bot_left);
-        QPointF bot_right_mapped = t.map(bot_right);
+        QPointF top_left_mapped =  transform.map(top_left);
+        QPointF top_right_mapped = transform.map(top_right);
+        QPointF bot_left_mapped =  transform.map(bot_left);
+        QPointF bot_right_mapped = transform.map(bot_right);
 
         // Store view coodinate rectangles of corners for size grip handles
-        m_handles[Handle_Positions::Top_Left] =     rectAtCenterPoint(mapFromScene(top_left_mapped), r_size);
-        m_handles[Handle_Positions::Top_Right] =    rectAtCenterPoint(mapFromScene(top_right_mapped), r_size);
-        m_handles[Handle_Positions::Bottom_Left] =  rectAtCenterPoint(mapFromScene(bot_left_mapped), r_size);
-        m_handles[Handle_Positions::Bottom_Right] = rectAtCenterPoint(mapFromScene(bot_right_mapped), r_size);
+        m_handles[Position_Flags::Top_Left] =     rectAtCenterPoint(mapFromScene(top_left_mapped), r_size);
+        m_handles[Position_Flags::Top_Right] =    rectAtCenterPoint(mapFromScene(top_right_mapped), r_size);
+        m_handles[Position_Flags::Bottom_Left] =  rectAtCenterPoint(mapFromScene(bot_left_mapped), r_size);
+        m_handles[Position_Flags::Bottom_Right] = rectAtCenterPoint(mapFromScene(bot_right_mapped), r_size);
 
-        // Store sides as rects so we can get center points
+        // Store sides as rects
         QRectF temp_top    (top_left.x() + r_half,  top_left.y() - r_half,  item->boundingRect().width() - r_size, r_size);
         QRectF temp_bottom (top_left.x() + r_half,  bot_right.y() - r_half, item->boundingRect().width() - r_size, r_size);
         QRectF temp_left   (top_left.x() - r_half,  top_left.y() + r_half,  r_size, item->boundingRect().height() - r_size);
         QRectF temp_right  (bot_right.x() - r_half,  top_left.y() + r_half,  r_size, item->boundingRect().height() - r_size);
 
-        // Map center points to scene, then to view, then store
-        m_sides_centers[Side_Positions::Top] = mapFromScene(t.map(temp_top.center()));
-        m_sides_centers[Side_Positions::Bottom] = mapFromScene(t.map(temp_bottom.center()));
-        m_sides_centers[Side_Positions::Left] = mapFromScene(t.map(temp_left.center()));
-        m_sides_centers[Side_Positions::Right] = mapFromScene(t.map(temp_right.center()));
-
-        // Change rects into polygons, then map to scene, and then map to view and store
+        // Change rects into polygons, then apply item scene transform, and then map to view and store
         QPolygonF top(temp_top), bottom(temp_bottom), left(temp_left), right(temp_right);
-        m_sides[Side_Positions::Top] = mapFromScene(t.map(top));
-        m_sides[Side_Positions::Bottom] = mapFromScene(t.map(bottom));
-        m_sides[Side_Positions::Left] = mapFromScene(t.map(left));
-        m_sides[Side_Positions::Right] = mapFromScene(t.map(right));
+        m_handles[Position_Flags::Top] = mapFromScene(transform.map(top));
+        m_handles[Position_Flags::Bottom] = mapFromScene(transform.map(bottom));
+        m_handles[Position_Flags::Left] = mapFromScene(transform.map(left));
+        m_handles[Position_Flags::Right] = mapFromScene(transform.map(right));
+
+        // Store polygon centers
+        for (auto h : m_handles) m_handles_centers[h.first] = h.second.boundingRect().center();
+
 
         // !!!!! TEMP:
-        m_interface->setLabelText(Label_Names::Label_Object_3, "Top Center X: " + QString::number(m_sides_centers[Side_Positions::Top].x()) +
-                                                                         " Y: " + QString::number(m_sides_centers[Side_Positions::Top].y()) +
-                                                            ", Position Flag: " + QString::number(static_cast<int>(m_over_handle)) );
+        m_interface->setLabelText(Label_Names::Label_Object_3, "Position Flag: " + QString::number(static_cast<int>(m_over_handle)) );
         // !!!!! END
 
 
@@ -271,34 +270,35 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         painter.drawPolygon(to_view);                               // Draw bounding box on screen
     }
 
-    // If we have some objects selected and created some handles, draw them
+    // ********** If we have some objects selected and created some handles, draw them
     if (draw_box) {
         painter.setBrush(m_interface->getColor(Window_Colors::Icon_Light));
 
-        QVector<QRectF> handles;
-        for (auto h : m_handles)
-            handles.append(h.second);
+        QVector<QPointF> handles;
+        for (int i = 0; i < static_cast<int>(Position_Flags::Total); i++)
+            handles.append(m_handles_centers[static_cast<Position_Flags>(i)]);
 
+        QRectF to_draw;
         if (do_squares == false) {
             QPixmap p(":/gui_misc/handle_circle.png");
             for (auto r : handles) {
-                r.setX(r.center().x() - c_size);
-                r.setY(r.center().y() - c_size);
-                r.setWidth(c_size * 2);
-                r.setHeight(c_size * 2);
-                painter.drawPixmap(r, p, p.rect());
+                to_draw.setX(r.x() - c_size);
+                to_draw.setY(r.y() - c_size);
+                to_draw.setWidth(c_size * 2);
+                to_draw.setHeight(c_size * 2);
+                painter.drawPixmap(to_draw, p, p.rect());
                 //painter.drawEllipse(r.center(), c_size, c_size);      // Circles
             }
         } else {
             QPixmap p(":/gui_misc/handle_square.png");
             for (auto r : handles) {
-                r.setX(r.center().x() - c_size);
-                r.setY(r.center().y() - c_size);
-                r.setWidth(c_size * 2);
-                r.setHeight(c_size * 2);
-                painter.drawPixmap(r, p, p.rect());
+                to_draw.setX(r.x() - c_size);
+                to_draw.setY(r.y() - c_size);
+                to_draw.setWidth(c_size * 2);
+                to_draw.setHeight(c_size * 2);
+                painter.drawPixmap(to_draw, p, p.rect());
             }
-            //painter.drawRects(handles);                               // Squares
+            //painter.drawPolygons(handles);                               // Squares
         }
 
         /// Draws with pixels using NOT operation
@@ -306,7 +306,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     }
 
 
-    // Draw angles if rotating
+    // ********** Draw angles if rotating
     if (m_view_mode == View_Mode::Rotating) {
         painter.setPen(QPen(m_interface->getColor(Window_Colors::Text_Light), 1));
         painter.drawLine(m_selection_center, m_origin);

@@ -113,6 +113,11 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
             new_item = new DrItem(new_color, item->boundingRect().width(), item->boundingRect().height(), this->items().count() + 1);
             new_item->setPos(new_x, new_y);
             new_item->setTransform(item->transform());
+
+            new_item->setData(User_Roles::Position, QPointF(new_item->pos().x(), new_item->pos().y()));
+            new_item->setData(User_Roles::Scale, item->data(User_Roles::Scale).toPointF());
+            new_item->setData(User_Roles::Rotation, item->data(User_Roles::Rotation).toDouble());
+
             addItem(new_item);
             new_item->setSelected(true);
             item->setSelected(false);

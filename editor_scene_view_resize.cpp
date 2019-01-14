@@ -74,6 +74,7 @@ void SceneGraphicsView::resizeSelection(QPointF mouse_in_scene)
 
     // Otherwise, multiple items are selected, start alternate routine
     } else {
+        resizeMultipleSelection(mouse_in_scene);
 
     }
 }
@@ -157,29 +158,20 @@ void SceneGraphicsView::resizeSelectionOneNoRotate(QPointF mouse_in_scene)
     item->setData(User_Roles::Scale, QPointF(scale_x, scale_y) );
 }
 
-
-// Returns the opposite corner name of the corner passed in, no error catch if side is passed in
-Handle_Positions SceneGraphicsView::findOppositeCorner(Position_Flags start_corner)
-{
-    switch (start_corner)
-    {
-    case Position_Flags::Top_Left:     return Handle_Positions::Bottom_Right;
-    case Position_Flags::Top_Right:    return Handle_Positions::Bottom_Left;
-    case Position_Flags::Bottom_Left:  return Handle_Positions::Top_Right;
-    case Position_Flags::Bottom_Right: return Handle_Positions::Top_Left;
-    default:    return Handle_Positions::Top_Left;
-    }
-}
 // Returns the ooposite side name of side passed in, no error catch if corner passed in
-Side_Positions SceneGraphicsView::findOppositeSide(Position_Flags start_side)
+Position_Flags SceneGraphicsView::findOppositeSide(Position_Flags start_side)
 {
     switch (start_side)
     {
-    case Position_Flags::Top:       return Side_Positions::Bottom;
-    case Position_Flags::Bottom:    return Side_Positions::Top;
-    case Position_Flags::Left:      return Side_Positions::Right;
-    case Position_Flags::Right:     return Side_Positions::Left;
-    default:    return Side_Positions::Top;
+    case Position_Flags::Top:       return Position_Flags::Bottom;
+    case Position_Flags::Bottom:    return Position_Flags::Top;
+    case Position_Flags::Left:      return Position_Flags::Right;
+    case Position_Flags::Right:     return Position_Flags::Left;
+    case Position_Flags::Top_Left:     return Position_Flags::Bottom_Right;
+    case Position_Flags::Top_Right:    return Position_Flags::Bottom_Left;
+    case Position_Flags::Bottom_Left:  return Position_Flags::Top_Right;
+    case Position_Flags::Bottom_Right: return Position_Flags::Top_Left;
+    default:    return Position_Flags::Top;
     }
 }
 
@@ -193,22 +185,12 @@ void SceneGraphicsView::resizeSelectionOneWithRotate(QPointF mouse_in_scene)
     qreal item_height = item->boundingRect().height();
 
     // ********** Find corners / sides we're working with, calculate new width / height
-    QPointF corner_start,   corner_opposite,    center_point;
-
-    // If processing side
-    if (m_do_x == X_Axis::None || m_do_y == Y_Axis::None) {
-        corner_start =    m_sides_centers[static_cast<Side_Positions>(m_over_handle)];
-        corner_opposite = m_sides_centers[findOppositeSide(m_over_handle)];
-    }
-    // Otherwise processing a corner
-    else {
-        corner_start =    m_handles[static_cast<Handle_Positions>(m_over_handle)].center();
-        corner_opposite = m_handles[findOppositeCorner(m_over_handle)].center();
-    }
+    QPointF corner_start =    m_handles_centers[static_cast<Position_Flags>(m_over_handle)];
+    QPointF corner_opposite = m_handles_centers[findOppositeSide(m_over_handle)];
 
     // Find center point, load angle of item, load original scale
-    center_point = QLineF(corner_start, corner_opposite).pointAt(.5);
-    double angle = scene()->selectedItems().first()->data(User_Roles::Rotation).toDouble();
+    QPointF center_point = QLineF(corner_start, corner_opposite).pointAt(.5);
+    double  angle = scene()->selectedItems().first()->data(User_Roles::Rotation).toDouble();
     QPointF old_scale = item->data(User_Roles::Pre_Resize_Scale).toPointF();
 
     // Create transform to rotate center line back to zero
@@ -271,7 +253,13 @@ void SceneGraphicsView::resizeSelectionOneWithRotate(QPointF mouse_in_scene)
 
 
 
+// Calculates selection resizing
+void SceneGraphicsView::resizeMultipleSelection(QPointF mouse_in_scene)
+{
 
+
+
+}
 
 
 

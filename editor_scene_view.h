@@ -33,22 +33,8 @@ enum class Position_Flags {
     Bottom_Left  = 5,
     Top_Right    = 6,
     Bottom_Right = 7,
+    Total,
     No_Position,
-};
-
-// Possible handle and side positions !!!!! Must be same as Position_Flags equivalent name
-enum class Handle_Positions {
-    Top_Left        = static_cast<int>(Position_Flags::Top_Left),
-    Bottom_Left     = static_cast<int>(Position_Flags::Bottom_Left),
-    Top_Right       = static_cast<int>(Position_Flags::Top_Right),
-    Bottom_Right    = static_cast<int>(Position_Flags::Bottom_Right),
-};
-
-enum class Side_Positions {
-    Top             = static_cast<int>(Position_Flags::Top),
-    Bottom          = static_cast<int>(Position_Flags::Bottom),
-    Right           = static_cast<int>(Position_Flags::Right),
-    Left            = static_cast<int>(Position_Flags::Left),
 };
 
 enum class X_Axis {  Left,   Right,    None  };
@@ -92,9 +78,8 @@ private:
     QGraphicsItem          *m_origin_item;                                          // Stores top item under mouse (if any) on mouse down event
 
     // Selection Bounding Box Variables
-    std::map<Handle_Positions,  QRectF> m_handles;                                  // Stores QRects of current selection box handles
-    std::map<Side_Positions, QPolygonF> m_sides;                                    // Stores QPolygons of sides of selection box
-    std::map<Side_Positions, QPointF>   m_sides_centers;                            // Stores QPointF center points of sides polygons
+    std::map<Position_Flags, QPolygonF> m_handles;                                  // Stores QRects of current selection box handles
+    std::map<Position_Flags, QPointF>   m_handles_centers;                          // Stores QPointF center points of sides polygons
     Position_Flags                      m_over_handle;                              // Tracks if mouse is over a handle
     QPoint                              m_last_mouse_pos;                           // Tracks last known mouse position in view coordinates
 
@@ -159,9 +144,9 @@ public:
     void    resizeSelectionOneNoRotate(QPointF mouse_in_scene);
     void    resizeSelectionOneWithRotate(QPointF mouse_in_scene);
 
+    void    resizeMultipleSelection(QPointF mouse_in_scene);
 
-    Handle_Positions    findOppositeCorner(Position_Flags start_corner);
-    Side_Positions      findOppositeSide(Position_Flags start_side);
+    Position_Flags    findOppositeSide(Position_Flags start_side);
 
 
 public slots:

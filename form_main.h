@@ -104,7 +104,6 @@ public:
     virtual void    showMessageBox(QString message);
 
     void            populateScene();                                        // !!!!! TEMP generic fill of scene
-    void            finishedLoading();                                      // Called from main after form is shown to center viewport
 
 private:
     // Form setup

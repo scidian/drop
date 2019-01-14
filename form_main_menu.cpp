@@ -83,18 +83,18 @@ void FormMain::buildMenu()
         menuDebug = new QMenu(menuBar);
         menuDebug->setObjectName(QStringLiteral("menuDebug"));
         QAction *actionClearMain, *actionSceneEditMode, *actionListChildren;
-        actionClearMain =   new QAction(this);    actionClearMain->setObjectName(QStringLiteral("actionClearMain"));
-        actionSceneEditMode =  new QAction(this); actionSceneEditMode->setObjectName(QStringLiteral("actionSceneEditMode"));
-        actionListChildren =  new QAction(this);  actionSceneEditMode->setObjectName(QStringLiteral("actionListChildren"));
+        actionClearMain =     new QAction(this); actionClearMain->setObjectName(QStringLiteral("actionClearMain"));
+        actionSceneEditMode = new QAction(this); actionSceneEditMode->setObjectName(QStringLiteral("actionSceneEditMode"));
+        actionListChildren =  new QAction(this); actionSceneEditMode->setObjectName(QStringLiteral("actionListChildren"));
 
         menuBar->addAction(menuDebug->menuAction());
         menuDebug->addAction(actionClearMain);
         menuDebug->addAction(actionSceneEditMode);
         menuDebug->addAction(actionListChildren);
 
-        connect(actionClearMain, &QAction::triggered, [this]() { buildWindow(Form_Main_Mode::Clear); });
-        connect(actionSceneEditMode, &QAction::triggered, [this]() { buildWindow(Form_Main_Mode::Edit_Scene); });
-        connect(actionListChildren, &QAction::triggered, [this]() { listChildren(); });
+        connect(actionClearMain, &QAction::triggered, [this]() { this->buildWindow(Form_Main_Mode::Clear); });
+        connect(actionSceneEditMode, &QAction::triggered, [this]() { this->buildWindow(Form_Main_Mode::Edit_Scene); });
+        connect(actionListChildren, &QAction::triggered, [this]() { this->listChildren(); });
 
         menuDebug->setTitle(QApplication::translate("MainWindow", "Debug", nullptr));
         actionClearMain->setText(QApplication::translate("MainWindow", "Clear Form Main Widgets", nullptr));

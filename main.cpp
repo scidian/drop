@@ -52,7 +52,6 @@ int main(int argc, char *argv[])
     Globals *my_globals = new Globals();            // Declare / Load Globals helper
     FormMain form_main(nullptr, my_globals);        // Declare / Load FormMain, pass Globals helper
     form_main.show();                               // Show FormMain
-    form_main.finishedLoading();
 
     app_drop.exec();                                // Run program
 

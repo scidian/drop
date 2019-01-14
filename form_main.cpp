@@ -169,13 +169,6 @@ void FormMain::populateScene()
 
 }
 
-void FormMain::finishedLoading()
-{
-    // Centers view on 0,0 coordinate of scene after form is done loading
-    scene->sceneChanged(QList<QRectF> {} );
-    viewMain->centerOn(0,0);
-}
-
 
 // Sets the new palette to the style sheets
 void FormMain::changePalette(Color_Scheme new_color_scheme)

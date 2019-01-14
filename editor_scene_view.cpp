@@ -129,7 +129,8 @@ void SceneGraphicsView::selectionChanged()
 // Store total size of selection rectangle
 void SceneGraphicsView::updateSelectionRect()
 {
-    m_selection_rect = totalSelectedItemsSceneRect();
+    m_selection_rect =   totalSelectedItemsSceneRect();
+    m_selection_center = mapFromScene(m_selection_rect.center());
     update();
 
     // !!!!! TEMP:
@@ -260,28 +261,26 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
     // ******************** Check selection handles to see if mouse is over one
     if (scene()->selectedItems().count() > 0 && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
         m_over_handle = Position_Flags::No_Position;
-        if (m_handles[Handle_Positions::Top_Left].contains(adjust_mouse))     m_over_handle = Position_Flags::Top_Left;
-        if (m_handles[Handle_Positions::Top_Right].contains(adjust_mouse))    m_over_handle = Position_Flags::Top_Right;
-        if (m_handles[Handle_Positions::Bottom_Left].contains(adjust_mouse))  m_over_handle = Position_Flags::Bottom_Left;
-        if (m_handles[Handle_Positions::Bottom_Right].contains(adjust_mouse)) m_over_handle = Position_Flags::Bottom_Right;
+        if (m_handles[Position_Flags::Top_Left].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))     m_over_handle = Position_Flags::Top_Left;
+        if (m_handles[Position_Flags::Top_Right].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))    m_over_handle = Position_Flags::Top_Right;
+        if (m_handles[Position_Flags::Bottom_Left].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))  m_over_handle = Position_Flags::Bottom_Left;
+        if (m_handles[Position_Flags::Bottom_Right].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Bottom_Right;
 
-        if (m_sides[Side_Positions::Top].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))    m_over_handle = Position_Flags::Top;
-        if (m_sides[Side_Positions::Bottom].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Bottom;
-        if (m_sides[Side_Positions::Left].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))   m_over_handle = Position_Flags::Left;
-        if (m_sides[Side_Positions::Right].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))  m_over_handle = Position_Flags::Right;
+        if (m_handles[Position_Flags::Top].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))    m_over_handle = Position_Flags::Top;
+        if (m_handles[Position_Flags::Bottom].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Bottom;
+        if (m_handles[Position_Flags::Left].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))   m_over_handle = Position_Flags::Left;
+        if (m_handles[Position_Flags::Right].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))  m_over_handle = Position_Flags::Right;
 
-        switch (m_over_handle)
-        {
-        case Position_Flags::Top_Left:      viewport()->setCursor(Qt::CursorShape::SizeFDiagCursor);    break;
-        case Position_Flags::Top_Right:     viewport()->setCursor(Qt::CursorShape::SizeBDiagCursor);    break;
-        case Position_Flags::Bottom_Left:   viewport()->setCursor(Qt::CursorShape::SizeBDiagCursor);    break;
-        case Position_Flags::Bottom_Right:  viewport()->setCursor(Qt::CursorShape::SizeFDiagCursor);    break;
-        case Position_Flags::Top:           viewport()->setCursor(Qt::CursorShape::SizeVerCursor);      break;
-        case Position_Flags::Bottom:        viewport()->setCursor(Qt::CursorShape::SizeVerCursor);      break;
-        case Position_Flags::Left:          viewport()->setCursor(Qt::CursorShape::SizeHorCursor);      break;
-        case Position_Flags::Right:         viewport()->setCursor(Qt::CursorShape::SizeHorCursor);      break;
-        default:    ;
-        }
+
+        double a = calcRotationAngleInDegrees(m_handles_centers[m_over_handle], m_selection_center);
+        if (a >= 292.5 && a < 337.5) viewport()->setCursor(Qt::CursorShape::SizeFDiagCursor);              // Top Left
+        if (a >= 337.5 || a <  22.5) viewport()->setCursor(Qt::CursorShape::SizeVerCursor);                // Top
+        if (a >=  22.5 && a <  67.5) viewport()->setCursor(Qt::CursorShape::SizeBDiagCursor);              // Top Right
+        if (a >=  67.5 && a < 112.5) viewport()->setCursor(Qt::CursorShape::SizeHorCursor);                // Right
+        if (a >= 112.5 && a < 157.5) viewport()->setCursor(Qt::CursorShape::SizeFDiagCursor);              // Bottom Right
+        if (a >= 157.5 && a < 202.5) viewport()->setCursor(Qt::CursorShape::SizeVerCursor);                // Bottom
+        if (a >= 202.5 && a < 247.5) viewport()->setCursor(Qt::CursorShape::SizeBDiagCursor);              // Bottom Left
+        if (a >= 247.5 && a < 292.5) viewport()->setCursor(Qt::CursorShape::SizeHorCursor);                // Left
     }
 
     // If no longer over handle and mouse is up, reset mouse cursor
