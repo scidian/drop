@@ -222,6 +222,10 @@ void FormMain::buildWindowModeEditScene()
                 label_z_order->setObjectName(QStringLiteral("label_z_order"));
                 label_z_order->setGeometry(QRect(560, 65, 400, 21));
                 label_z_order->setFont(font);
+                label_pos_flag = new QLabel(areaBottom);
+                label_pos_flag->setObjectName(QStringLiteral("label_pos_flag"));
+                label_pos_flag->setGeometry(QRect(560, 80, 400, 21));
+                label_pos_flag->setFont(font);
 
                 label_bottom = new QLabel(areaBottom);
                 label_bottom->setObjectName(QStringLiteral("label_bottom"));

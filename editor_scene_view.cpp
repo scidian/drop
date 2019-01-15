@@ -129,8 +129,7 @@ void SceneGraphicsView::selectionChanged()
 // Store total size of selection rectangle
 void SceneGraphicsView::updateSelectionRect()
 {
-    m_selection_rect =   totalSelectedItemsSceneRect();
-    m_selection_center = mapFromScene(m_selection_rect.center());
+    m_selection_rect = totalSelectedItemsSceneRect();
     update();
 
     // !!!!! TEMP:
@@ -272,7 +271,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
         if (m_handles[Position_Flags::Right].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))  m_over_handle = Position_Flags::Right;
 
 
-        double a = calcRotationAngleInDegrees(m_handles_centers[m_over_handle], m_selection_center);
+        double a = calcRotationAngleInDegrees(m_handles_centers[m_over_handle], mapFromScene(m_selection_rect.center()));
         if (a >= 292.5 && a < 337.5) viewport()->setCursor(Qt::CursorShape::SizeFDiagCursor);              // Top Left
         if (a >= 337.5 || a <  22.5) viewport()->setCursor(Qt::CursorShape::SizeVerCursor);                // Top
         if (a >=  22.5 && a <  67.5) viewport()->setCursor(Qt::CursorShape::SizeBDiagCursor);              // Top Right
@@ -293,6 +292,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
                                                                     ", Y: " + QString::number(mapToScene(m_last_mouse_pos).y()) );
     m_interface->setLabelText(Label_Names::Label_Mouse_2, "Mouse View  X: " + QString::number(m_last_mouse_pos.x()) +
                                                                     ", Y: " + QString::number(m_last_mouse_pos.y()) );
+    m_interface->setLabelText(Label_Names::Label_Pos_Flag, "Position Flag: " + QString::number(static_cast<int>(m_over_handle)) );
     // !!!!! END
 
 

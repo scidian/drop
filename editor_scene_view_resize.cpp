@@ -68,6 +68,9 @@ void SceneGraphicsView::resizeSelection(QPointF mouse_in_scene)
     default:                            m_do_x = X_Axis::None;    m_do_y = Y_Axis::None;
     }
 
+    // Try and lock function, so we ony run this once at a time
+    if (resize_mutex.tryLock() == false) return;
+
     // If only 1 item selected, start appropriate resize routine
     if (scene()->selectedItems().count() == 1){
         resizeSelectionOneWithRotate(mouse_in_scene);
@@ -75,8 +78,9 @@ void SceneGraphicsView::resizeSelection(QPointF mouse_in_scene)
     // Otherwise, multiple items are selected, start alternate routine
     } else {
         resizeMultipleSelection(mouse_in_scene);
-
     }
+
+    resize_mutex.unlock();
 }
 
 
@@ -256,7 +260,94 @@ void SceneGraphicsView::resizeSelectionOneWithRotate(QPointF mouse_in_scene)
 // Calculates selection resizing
 void SceneGraphicsView::resizeMultipleSelection(QPointF mouse_in_scene)
 {
+    QGraphicsItemGroup *group = scene()->createItemGroup(scene()->selectedItems());
+    qreal group_width =  group->boundingRect().width();
+    qreal group_height = group->boundingRect().height();
+    QTransform transform;
 
+
+
+
+
+
+
+    // !!!!! TEMP
+    m_interface->setLabelText(Label_Names::Label_Object_3, "Group Width: " + QString::number(group_width) +
+                                                           ", Height: " + QString::number(group_height));
+
+    scene()->destroyItemGroup(group);
+
+
+    // Load item starting width and height
+    QGraphicsItem *item = scene()->selectedItems().first();
+    qreal item_width =  item->boundingRect().width();
+    qreal item_height = item->boundingRect().height();
+
+    // ********** Find corners / sides we're working with, calculate new width / height
+    QPointF corner_start =    m_handles_centers[static_cast<Position_Flags>(m_over_handle)];
+    QPointF corner_opposite = m_handles_centers[findOppositeSide(m_over_handle)];
+
+    // Find center point, load angle of item, load original scale
+    QPointF center_point = QLineF(corner_start, corner_opposite).pointAt(.5);
+    double  angle = scene()->selectedItems().first()->data(User_Roles::Rotation).toDouble();
+    QPointF old_scale = item->data(User_Roles::Pre_Resize_Scale).toPointF();
+
+    // Create transform to rotate center line back to zero
+    QTransform remove_rotation;
+    remove_rotation.translate(center_point.x(), center_point.y());
+    remove_rotation.rotate(-angle);
+    remove_rotation.translate(-center_point.x(), -center_point.y());
+
+    // Rotate back to zero degree shape angle, starts in view coordinates - ends up in scene coords
+    QPointF zero_rotated_opposite = remove_rotation.map( corner_opposite );
+    QPointF zero_rotated_opposite_in_scene = mapToScene(zero_rotated_opposite.toPoint());
+
+
+    QPointF point_in_shape = mapToScene(remove_rotation.map(mapFromScene(mouse_in_scene)));
+    qreal   scale_x,   scale_y;
+
+    // ***** Calculate X scale
+    if (m_do_x == X_Axis::Right)
+        scale_x = QLineF(zero_rotated_opposite_in_scene, point_in_shape).dx() / item_width;
+    else if (m_do_x == X_Axis::Left)
+        scale_x = QLineF(point_in_shape, zero_rotated_opposite_in_scene).dx() / item_width;
+    else
+        scale_x = old_scale.x();
+
+    // ***** Calculate Y scale
+    if (m_do_y == Y_Axis::Bottom)
+        scale_y = QLineF(zero_rotated_opposite_in_scene, point_in_shape).dy() / item_height;
+    else if (m_do_y == Y_Axis::Top)
+        scale_y = QLineF(point_in_shape, zero_rotated_opposite_in_scene).dy() / item_height;
+    else
+        scale_y = old_scale.y();
+
+
+
+    // ***** Apply new scale
+    QTransform t = QTransform().rotate(angle).scale(scale_x, scale_y);
+    item->setTransform(t);
+
+
+
+    // ***** Translate if needed
+    DrItem *item2 = dynamic_cast<DrItem *>(scene()->selectedItems().first());
+    QPointF new_pos = item->pos();
+
+    if (m_do_x == X_Axis::Left && m_do_y != Y_Axis::Top) {
+        new_pos = item->data(User_Roles::Pre_Resize_Top_Right).toPointF();
+        item2->setPositionByOrigin(Origin::Top_Right, new_pos.x(), new_pos.y());
+    }
+    else if (m_do_x == X_Axis::Left && m_do_y == Y_Axis::Top) {
+        new_pos = item->data(User_Roles::Pre_Resize_Bottom_Right).toPointF();
+        item2->setPositionByOrigin(Origin::Bottom_Right, new_pos.x(), new_pos.y());
+    }
+    else if ((m_do_x == X_Axis::Right && m_do_y == Y_Axis::Top) || (m_do_y == Y_Axis::Top)) {
+        new_pos = item->data(User_Roles::Pre_Resize_Bottom_Left).toPointF();
+        item2->setPositionByOrigin(Origin::Bottom_Left, new_pos.x(), new_pos.y());
+    }
+
+    item->setData(User_Roles::Scale, QPointF(scale_x, scale_y) );
 
 
 }

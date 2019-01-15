@@ -28,7 +28,6 @@ void SceneGraphicsView::startRotate()
     m_view_mode = View_Mode::Rotating;
 
     m_start_resize_rect = totalSelectedItemsSceneRect();                // Store starting scene rect of initial selection bounding box
-    m_selection_center = mapFromScene(m_start_resize_rect.center());    // Store initial view rect center of initial selection bounding box
     m_last_angle_diff = 0;                                              // Reset initial rotate event angle at 0
 }
 
@@ -66,8 +65,8 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     // Try and lock function, so we ony run this once at a time
     if (rotate_mutex.tryLock() == false) return;
 
-    double angle1 = calcRotationAngleInDegrees(m_selection_center, m_origin);
-    double angle2 = calcRotationAngleInDegrees(m_selection_center, mouse_in_view);
+    double angle1 = calcRotationAngleInDegrees( mapFromScene(m_start_resize_rect.center()), m_origin);
+    double angle2 = calcRotationAngleInDegrees( mapFromScene(m_start_resize_rect.center()), mouse_in_view);
     double angle = angle2 - angle1;
     double angle_diff = angle - m_last_angle_diff;
 
@@ -105,10 +104,10 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     m_last_angle_diff = angle;
 
     // !!!!! TEMP:
-    m_interface->setLabelText(Label_Names::Label_1, "Angle 1: " + QString::number(angle1));
-    m_interface->setLabelText(Label_Names::Label_2, "Angle 2: " + QString::number(angle2));
-    m_interface->setLabelText(Label_Names::Label_Object_1, "Angle: " + QString::number(angle));
-    m_interface->setLabelText(Label_Names::Label_Object_2, "Difference: " + QString::number(angle_diff) );
+    m_interface->setLabelText(Label_Names::Label_Object_3, "Angle 1: " + QString::number(angle1) +
+                                                         ", Angle 2: " + QString::number(angle2));
+    m_interface->setLabelText(Label_Names::Label_Object_4, "Angle: " + QString::number(angle) +
+                                                         ", Diff: " + QString::number(angle_diff) );
     // !!!!! END
 
     rotate_mutex.unlock();

@@ -88,6 +88,7 @@ private:
     QList<QGraphicsItem *>  m_items_start;                                          // Stores items selected at start of new rubber band box
 
     // View_Mode::Resizing Variables
+    QMutex                  resize_mutex { QMutex::NonRecursive };                  // Used to keep resizing from backing up
     QRectF                  m_selection_rect;                                       // Stores rect of current selection
     QRectF                  m_start_resize_rect;                                    // Stores starting rect of selection before resize starts
     Position_Flags          m_start_resize_grip;                                    // Stores which Size Grip Handle we started resize over
@@ -96,7 +97,6 @@ private:
 
     // View_Mode::Rotating Variables
     QMutex                  rotate_mutex { QMutex::NonRecursive };                  // Used to keep rotating from backing up
-    QPointF                 m_selection_center;                                     // Stores center point of selection
     double                  m_last_angle_diff;                                      // Stores angle difference last time we checked
 
     QPolygonF               m_temp_polygon;                         // TEMP

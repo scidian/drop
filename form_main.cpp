@@ -139,6 +139,7 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
     case Label_Names::Label_Scale:      label_scale->setText(new_text);     break;
     case Label_Names::Label_Rotate:     label_rotate->setText(new_text);    break;
     case Label_Names::Label_Z_Order:    label_z_order->setText(new_text);   break;
+    case Label_Names::Label_Pos_Flag:   label_pos_flag->setText(new_text);  break;
 
     case Label_Names::Label_Bottom:     label_bottom->setText(new_text);    break;
     }

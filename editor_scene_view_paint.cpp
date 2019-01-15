@@ -190,9 +190,12 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     if (scene()->selectedItems().count() > 1) more_than_one = true;
 
     // ***** Set Size Grip rectangles
+    QPolygon to_view;
+
     // If multiple items use one big rectangle
     if (draw_box && more_than_one) {
         QRectF bigger = m_selection_rect;
+        to_view = mapFromScene(bigger);
 
         QPoint top_left = mapFromScene(bigger.topLeft());
         QPoint bot_right = mapFromScene(bigger.bottomRight());
@@ -208,12 +211,6 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         m_handles[Position_Flags::Bottom] = QRectF(top_left.x() + r_half,  bot_right.y() - r_half, select_width - r_size, r_size);
         m_handles[Position_Flags::Left] =   QRectF(top_left.x() - r_half,  top_left.y() + r_half,  r_size, select_height - r_size);
         m_handles[Position_Flags::Right] =  QRectF(bot_right.x() - r_half,  top_left.y() + r_half,  r_size, select_height- r_size);
-
-        // Store polygon centers
-        for (auto h : m_handles) m_handles_centers[h.first] = h.second.boundingRect().center();
-
-        QPolygon to_view = mapFromScene(bigger);
-        painter.drawPolygon(to_view);
     }
 
     // If one item, map item shape
@@ -223,7 +220,8 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         QPolygonF polygon(item->boundingRect());                    // Get bounding box of item as polygon
 
         QTransform transform = item->sceneTransform();              // Get item bounding box to scene transform
-        polygon = transform.map(polygon);                                   // Map bounding box to scene location
+        polygon = transform.map(polygon);                           // Map bounding box to scene location
+        to_view = mapFromScene(polygon);                            // Convert bounding box to view coordinates
 
         // Store item bounding box points
         QPointF top_left =  item->boundingRect().topLeft();
@@ -231,17 +229,11 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         QPointF bot_left =  item->boundingRect().bottomLeft();
         QPointF bot_right = item->boundingRect().bottomRight();
 
-        // Map points to scene coordinates
-        QPointF top_left_mapped =  transform.map(top_left);
-        QPointF top_right_mapped = transform.map(top_right);
-        QPointF bot_left_mapped =  transform.map(bot_left);
-        QPointF bot_right_mapped = transform.map(bot_right);
-
         // Store view coodinate rectangles of corners for size grip handles
-        m_handles[Position_Flags::Top_Left] =     rectAtCenterPoint(mapFromScene(top_left_mapped), r_size);
-        m_handles[Position_Flags::Top_Right] =    rectAtCenterPoint(mapFromScene(top_right_mapped), r_size);
-        m_handles[Position_Flags::Bottom_Left] =  rectAtCenterPoint(mapFromScene(bot_left_mapped), r_size);
-        m_handles[Position_Flags::Bottom_Right] = rectAtCenterPoint(mapFromScene(bot_right_mapped), r_size);
+        m_handles[Position_Flags::Top_Left] =     rectAtCenterPoint(mapFromScene( transform.map(top_left)  ), r_size);
+        m_handles[Position_Flags::Top_Right] =    rectAtCenterPoint(mapFromScene( transform.map(top_right) ), r_size);
+        m_handles[Position_Flags::Bottom_Left] =  rectAtCenterPoint(mapFromScene( transform.map(bot_left)  ), r_size);
+        m_handles[Position_Flags::Bottom_Right] = rectAtCenterPoint(mapFromScene( transform.map(bot_right) ), r_size);
 
         // Store sides as rects
         QRectF temp_top    (top_left.x() + r_half,  top_left.y() - r_half,  item->boundingRect().width() - r_size, r_size);
@@ -255,49 +247,22 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         m_handles[Position_Flags::Bottom] = mapFromScene(transform.map(bottom));
         m_handles[Position_Flags::Left] = mapFromScene(transform.map(left));
         m_handles[Position_Flags::Right] = mapFromScene(transform.map(right));
+    }
 
+    if (draw_box){
         // Store polygon centers
         for (auto h : m_handles) m_handles_centers[h.first] = h.second.boundingRect().center();
 
-
-        // !!!!! TEMP:
-        m_interface->setLabelText(Label_Names::Label_Object_3, "Position Flag: " + QString::number(static_cast<int>(m_over_handle)) );
-        // !!!!! END
-
-
-
-        QPolygon to_view = mapFromScene(polygon);                   // Convert bounding box to view coordinates
-        painter.drawPolygon(to_view);                               // Draw bounding box on screen
+        // Draw bounding box
+        painter.drawPolygon(to_view);
     }
 
     // ********** Draw angles if rotating
     if (m_view_mode == View_Mode::Rotating) {
         painter.setPen(QPen(m_interface->getColor(Window_Colors::Text_Light), 1));
         painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
-        //painter.drawLine(m_selection_center, m_origin);
-        //painter.drawLine(m_selection_center, m_last_mouse_pos);
-
-        if (scene()->selectedItems().count() == 1) {
-            QPointF sc = m_selection_center;
-
-            QGraphicsItem *item = scene()->selectedItems().first();
-            double rot_angle = item->data(User_Roles::Rotation).toDouble();
-            QLineF angle(QPointF(sc.x(), sc.y()), QPointF(sc.x(), sc.y() - 50));
-            QTransform rotate_angle = QTransform().translate(sc.x(), sc.y()).rotate(rot_angle).translate(-sc.x(), -sc.y());
-            angle = rotate_angle.map(angle);
-            painter.drawLine(angle);
-
-            QLineF draw_angle(QPointF(sc.x(), sc.y() - 15), QPointF(sc.x(), sc.y() - 25));
-            QTransform rotate_45 = QTransform().translate(sc.x(), sc.y()).rotate(45).translate(-sc.x(), -sc.y());
-            QVector<QLineF> lines;
-
-            for (int i = 0; i < 8; i++) {
-                lines.append(draw_angle);
-                draw_angle = rotate_45.map(draw_angle);
-            }
-            painter.setPen(QPen(m_interface->getColor(Window_Colors::Text_Light), 2));
-            painter.drawLines(lines);
-        }
+        painter.drawLine(mapFromScene(m_start_resize_rect.center()), m_origin);
+        painter.drawLine(mapFromScene(m_start_resize_rect.center()), m_last_mouse_pos);
         painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOver);
     }
 
@@ -310,28 +275,29 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         for (int i = 0; i < static_cast<int>(Position_Flags::Total); i++)
             handles.append(m_handles_centers[static_cast<Position_Flags>(i)]);
 
-        QRectF to_draw;
-        if (do_squares == false) {
-            QPixmap p(":/gui_misc/handle_circle.png");
-            for (auto r : handles) {
-                to_draw.setX(r.x() - c_size);
-                to_draw.setY(r.y() - c_size);
-                to_draw.setWidth(c_size * 2);
-                to_draw.setHeight(c_size * 2);
-                painter.drawPixmap(to_draw, p, p.rect());
-                //painter.drawEllipse(r.center(), c_size, c_size);      // Circles
-            }
-        } else {
-            QPixmap p(":/gui_misc/handle_square.png");
-            for (auto r : handles) {
-                to_draw.setX(r.x() - c_size);
-                to_draw.setY(r.y() - c_size);
-                to_draw.setWidth(c_size * 2);
-                to_draw.setHeight(c_size * 2);
-                painter.drawPixmap(to_draw, p, p.rect());
-            }
-            //painter.drawPolygons(handles);                               // Squares
+        QPixmap p;
+        if (do_squares == false)
+            p = QPixmap(":/gui_misc/handle_circle.png");
+        else
+            p = QPixmap(":/gui_misc/handle_square.png");
+
+//        for (auto r : handles) {
+//            QRectF to_draw;
+//           to_draw.setX(r.x() - c_size);
+//            to_draw.setY(r.y() - c_size);
+//            to_draw.setWidth(c_size * 2);
+//            to_draw.setHeight(c_size * 2);
+//            painter.drawPixmap(to_draw, p, p.rect());
+//            //painter.drawEllipse(r.center(), c_size, c_size);              // Circles
+//            //painter.drawPolygons(handles);                                // Squares
+//        }
+
+        for (auto h : m_handles) {
+
+            painter.drawPolygon(h.second);
+
         }
+
     }
 
 
