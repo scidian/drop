@@ -22,15 +22,15 @@ class TreeAdvisor: public QTreeWidget
 
 private:
     DrProject      *m_project;                  // Pointer to currently loaded project
-    InterfaceRelay *m_interface;                // Pointer to interface class of parent form
+    InterfaceRelay *m_relay;                    // Pointer to InterfaceRelay class of parent form
 
     std::string     advisor_header { "No Data" };                       // Keeps current Advisor Header
     QMutex          advisor_mutex { QMutex::NonRecursive };             // Used to keep building function thread safe
 
 public:
     // Constructor
-    explicit        TreeAdvisor(QWidget *parent, DrProject *project, InterfaceRelay *interface) :
-                                QTreeWidget (parent), m_project(project), m_interface(interface) { }
+    explicit        TreeAdvisor(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
+                                QTreeWidget (parent), m_project(project), m_relay(relay) { }
 
     // Event Overrides, start at Qt Docs for QTreeWidget Class to find more
     virtual void enterEvent(QEvent *event) override;

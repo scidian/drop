@@ -34,7 +34,7 @@ void SceneGraphicsView::drawGrid()
 
     // ********** Draw Grid Lines
     if (m_grid_style == Grid_Style::Lines) {
-        painter.setPen(QPen( m_interface->getColor(Window_Colors::Background_Dark), 1 ));
+        painter.setPen(QPen( m_relay->getColor(Window_Colors::Background_Dark), 1 ));
         QVector<QLine> lines;
 
         // Vertical lines to the right of scene zero
@@ -60,11 +60,11 @@ void SceneGraphicsView::drawGrid()
         if (m_zoom_scale < 2) dot_size = 3;
         if (m_zoom_scale < 1) dot_size = 2;
 
-        painter.setPen(QPen( m_interface->getColor(Window_Colors::Background_Dark), dot_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ));
+        painter.setPen(QPen( m_relay->getColor(Window_Colors::Background_Dark), dot_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ));
         QVector<QPointF> points;
 
         // !!!!! TEMP:
-        m_interface->setLabelText(Label_Names::Label_1, "Test: Fail");
+        m_relay->setLabelText(Label_Names::Label_1, "Test: Fail");
         // !!!!! END
 
         // Bottom right
@@ -113,7 +113,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 
             ///// Convert pointer to QString, display in label
             ///QString ptrStr = QString("0x%1").arg((quintptr)m_scene, QT_POINTER_SIZE * 2, 16, QChar('0'));
-            ///m_interface->setLabelText(Label_Names::LabelObject3, "Changed: " + ptrStr);
+            ///m_relay->setLabelText(Label_Names::LabelObject3, "Changed: " + ptrStr);
         }
     }
 
@@ -122,7 +122,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 
     // Set up painter object
     QPainter painter(viewport());
-    QBrush pen_brush(m_interface->getColor(Window_Colors::Icon_Light));
+    QBrush pen_brush(m_relay->getColor(Window_Colors::Icon_Light));
     painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.setBrush(Qt::NoBrush);
 
@@ -152,20 +152,20 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         t = item->sceneTransform();
         my_center = t.map(my_center);
 
-        m_interface->setLabelText(Label_Names::Label_Position, "Pos X: " + QString::number(my_pos.x()) +
-                                                             ", Pos Y: " + QString::number(my_pos.y()));
-        m_interface->setLabelText(Label_Names::Label_Center, "Center X: " + QString::number(my_center.x()) +
-                                                                  ", Y: " + QString::number(my_center.y()));
-        m_interface->setLabelText(Label_Names::Label_Scale, "Scale X: " + QString::number(my_scale.x()) +
-                                                          ", Scale Y: " + QString::number(my_scale.y()));
-        m_interface->setLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle));
-        m_interface->setLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()));
+        m_relay->setLabelText(Label_Names::Label_Position, "Pos X: " +  QString::number(my_pos.x()) +
+                                                         ", Pos Y: " +  QString::number(my_pos.y()));
+        m_relay->setLabelText(Label_Names::Label_Center, "Center X: " + QString::number(my_center.x()) +
+                                                              ", Y: " + QString::number(my_center.y()));
+        m_relay->setLabelText(Label_Names::Label_Scale, "Scale X: " +   QString::number(my_scale.x()) +
+                                                      ", Scale Y: " +   QString::number(my_scale.y()));
+        m_relay->setLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle));
+        m_relay->setLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()));
         // !!!!! END
     }
 
 
     // ******************** Draw box around entire seleciton, with Size Grip squares
-    painter.setPen(QPen(m_interface->getColor(Window_Colors::Text_Light), 1));
+    painter.setPen(QPen(m_relay->getColor(Window_Colors::Text_Light), 1));
 
     // Size of side handle boxes
     double side_size = 6;
@@ -274,7 +274,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 
     // ******************** Draw angles if rotating
     if (m_view_mode == View_Mode::Rotating) {
-        painter.setPen(QPen(m_interface->getColor(Window_Colors::Text_Light), 1));
+        painter.setPen(QPen(m_relay->getColor(Window_Colors::Text_Light), 1));
         painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
         painter.drawLine(mapFromScene(m_start_resize_rect.center()), m_origin);
         painter.drawLine(mapFromScene(m_start_resize_rect.center()), m_last_mouse_pos);
@@ -284,7 +284,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 
     // ******************** If we have some objects selected and created some handles, draw them
     if (draw_box) {
-        painter.setBrush(m_interface->getColor(Window_Colors::Icon_Light));
+        painter.setBrush(m_relay->getColor(Window_Colors::Icon_Light));
 
         QVector<QPointF> handles;
         for (int i = 0; i < static_cast<int>(Position_Flags::Total); i++)
@@ -338,14 +338,14 @@ void SceneViewRubberBand::paintEvent(QPaintEvent *)
 {
     QStylePainter painter(this);
 
-    QColor bg = m_interface->getColor(Window_Colors::Icon_Light);
+    QColor bg = m_relay->getColor(Window_Colors::Icon_Light);
     bg.setAlpha(48);
     QBrush brush;
     brush.setStyle(Qt::BrushStyle::SolidPattern);
     brush.setColor(bg);
 
     painter.setBrush(brush);
-    painter.setPen(QPen(QBrush(m_interface->getColor(Window_Colors::Icon_Light)), 2, Qt::PenStyle::SolidLine));
+    painter.setPen(QPen(QBrush(m_relay->getColor(Window_Colors::Icon_Light)), 2, Qt::PenStyle::SolidLine));
     painter.drawRect(this->rect());
 }
 

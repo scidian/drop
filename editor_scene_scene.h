@@ -22,27 +22,42 @@ class SceneGraphicsScene : public QGraphicsScene
 
 private:
     DrProject      *m_project;                  // Pointer to currently loaded project
-    InterfaceRelay *m_interface;                // Pointer to interface class of parent form
+    InterfaceRelay *m_relay;                    // Pointer to InterfaceRelay class of parent form
+
+    QRectF          m_selection_rect;           // Initial rectangle of selection, changed whenever selection is changed
+    double          m_selection_rotate;         // Any rotation applied to current selection
+    QPointF         m_selection_scale;          // Any scaling  applied to current selection
+
 
 public:
     // Constructor
-    explicit SceneGraphicsScene(QWidget *parent, DrProject *project, InterfaceRelay *interface) :
-                                QGraphicsScene(parent = nullptr), m_project(project), m_interface(interface) {
+    explicit SceneGraphicsScene(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
+                                QGraphicsScene(parent = nullptr), m_project(project), m_relay(relay) {
         connect(this, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
+        connect(this, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
     }
 
     // Event Overrides, start at Qt Docs for QGraphicsScene Class to find more
-    virtual void keyPressEvent(QKeyEvent *event) override;                              // Inherited from QGraphicsScene
-    virtual void keyReleaseEvent(QKeyEvent *event) override;                            // Inherited from QGraphicsScene
+    virtual void    keyPressEvent(QKeyEvent *event) override;                              // Inherited from QGraphicsScene
+    virtual void    keyReleaseEvent(QKeyEvent *event) override;                            // Inherited from QGraphicsScene
 
     // Functions
-    void addSquare(qreal new_x, qreal new_y, double new_width, double new_height, double z_order,
-                   QColor color = QColor::fromRgb(QRandomGenerator::global()->generate()).light(100));
+    void            addSquare(qreal new_x, qreal new_y, double new_width, double new_height, double z_order,
+                              QColor color = QColor::fromRgb(QRandomGenerator::global()->generate()).light(100));
+    QRectF          totalSelectedItemsSceneRect();
 
 public slots:
-    void    sceneChanged(QList<QRectF> region);
-
+    void            sceneChanged(QList<QRectF> region);
+    void            selectionChanged();
 
 };
 
 #endif // EDITOR_SCENE_SCENE_H
+
+
+
+
+
+
+
+

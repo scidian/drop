@@ -51,7 +51,8 @@ SOURCES += \
     settings_component.cpp \
     settings_component_property.cpp \
     editor_scene_item.cpp \
-    editor_scene_view_mouse.cpp
+    editor_scene_view_mouse.cpp \
+    editor_scene_scene_select.cpp
 
 HEADERS += \
     enums.h \

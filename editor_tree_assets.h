@@ -20,12 +20,12 @@ class TreeAssetList: public QTreeWidget
 
 private:
     DrProject      *m_project;                  // Pointer to currently loaded project
-    InterfaceRelay *m_interface;                // Pointer to interface class of parent form
+    InterfaceRelay *m_relay;                    // Pointer to InterfaceRelay class of parent form
 
 public:
     // Constructor
-    explicit        TreeAssetList(QWidget *parent, DrProject *project, InterfaceRelay *interface) :
-                                  QTreeWidget (parent), m_project(project), m_interface(interface) { }
+    explicit        TreeAssetList(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
+                                  QTreeWidget (parent), m_project(project), m_relay(relay) { }
 
     // Event Overrides, start at Qt Docs for QTreeWidget Class to find more
     virtual void    enterEvent(QEvent *event) override;                                // Inherited from QWidget

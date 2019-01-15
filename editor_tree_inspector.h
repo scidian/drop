@@ -22,11 +22,11 @@ class TreeInspector: public QTreeWidget
 
 private:
     DrProject      *m_project;                  // Pointer to currently loaded project
-    InterfaceRelay *m_interface;                // Pointer to interface class of parent form
+    InterfaceRelay *m_relay;                    // Pointer to InterfaceRelay class of parent form
 
 public:
-    explicit        TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay *interface) :
-                                  QTreeWidget (parent), m_project(project), m_interface(interface) {
+    explicit        TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
+                                  QTreeWidget (parent), m_project(project), m_relay(relay) {
         connect(this, SIGNAL(itemClicked(QTreeWidgetItem *, int)), this, SLOT(itemWasClicked(QTreeWidgetItem *, int)));
     }
 

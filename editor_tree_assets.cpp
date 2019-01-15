@@ -23,7 +23,7 @@
 // Handles changing the Advisor on Mouse Enter
 void TreeAssetList::enterEvent(QEvent *event)
 {
-    m_interface->setAdvisorInfo(Advisor_Info::Asset_List);
+    m_relay->setAdvisorInfo(Advisor_Info::Asset_List);
     QTreeWidget::enterEvent(event);
 }
 

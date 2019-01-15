@@ -40,7 +40,7 @@ class SceneGraphicsView : public QGraphicsView
 private:
     // Local, instance specific member variables
     DrProject              *m_project;                              // Pointer to currently loaded project
-    InterfaceRelay         *m_interface;                            // Pointer to interface class of parent form
+    InterfaceRelay         *m_relay;                                // Pointer to InterfaceRelay class of parent form
     QGraphicsScene         *m_scene;                                // Pointer to current scene, updated during paintEvent
     View_Mode               m_view_mode = View_Mode::None;          // Tracks current view interaction mode
 
@@ -102,7 +102,7 @@ private:
 
 public:
     // Constructor
-    explicit SceneGraphicsView(QWidget *parent, DrProject *project, InterfaceRelay *interface);
+    explicit SceneGraphicsView(QWidget *parent, DrProject *project, InterfaceRelay *relay);
     virtual ~SceneGraphicsView() override;
 
     // Event Overrides, start at Qt Docs for QGraphicsView Class to find more
@@ -156,12 +156,12 @@ public slots:
 class SceneViewRubberBand : public QRubberBand
 {
 private:
-    InterfaceRelay  *m_interface;                // Pointer to interface class of parent form, for getting colors
+    InterfaceRelay  *m_relay;                // Pointer to InterfaceRelay class of parent form, for getting colors
 
 public:
     // Constructor
-    SceneViewRubberBand(Shape shape, QWidget *parent, InterfaceRelay *interface) :
-                        QRubberBand (shape, parent), m_interface(interface) { }
+    SceneViewRubberBand(Shape shape, QWidget *parent, InterfaceRelay *relay) :
+                        QRubberBand (shape, parent), m_relay(relay) { }
 
     // Event overrides
     virtual void    paintEvent(QPaintEvent *) override;

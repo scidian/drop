@@ -29,7 +29,7 @@
 void SceneGraphicsView::enterEvent(QEvent *event)
 {
     setFocus(Qt::FocusReason::MouseFocusReason);                        // Set focus on mouse enter to allow for space bar pressing hand grab
-    m_interface->setAdvisorInfo(Advisor_Info::Scene_Area);              // Set Advisor text on mouse enter
+    m_relay->setAdvisorInfo(Advisor_Info::Scene_Area);                  // Set Advisor text on mouse enter
     QGraphicsView::enterEvent(event);
 }
 
@@ -151,11 +151,11 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
 
     // !!!!! TEMP: Draw mouse coords on screen
-    m_interface->setLabelText(Label_Names::Label_Mouse_1, "Mouse Scene X: " + QString::number(mapToScene(m_last_mouse_pos).x()) +
-                                                                    ", Y: " + QString::number(mapToScene(m_last_mouse_pos).y()) );
-    m_interface->setLabelText(Label_Names::Label_Mouse_2, "Mouse View  X: " + QString::number(m_last_mouse_pos.x()) +
-                                                                    ", Y: " + QString::number(m_last_mouse_pos.y()) );
-    m_interface->setLabelText(Label_Names::Label_Pos_Flag, "Position Flag: " + QString::number(static_cast<int>(m_over_handle)) );
+    m_relay->setLabelText(Label_Names::Label_Mouse_1, "Mouse Scene X: " + QString::number(mapToScene(m_last_mouse_pos).x()) +
+                                                                ", Y: " + QString::number(mapToScene(m_last_mouse_pos).y()) );
+    m_relay->setLabelText(Label_Names::Label_Mouse_2, "Mouse View  X: " + QString::number(m_last_mouse_pos.x()) +
+                                                                ", Y: " + QString::number(m_last_mouse_pos.y()) );
+    m_relay->setLabelText(Label_Names::Label_Pos_Flag, "Position Flag: " + QString::number(static_cast<int>(m_over_handle)) );
     // !!!!! END
 
 
@@ -236,8 +236,8 @@ void SceneGraphicsView::applyUpdatedMatrix()
     this->setMatrix(matrix);
 
     // !!!!! TEMP:
-    m_interface->setLabelText(Label_Names::Label_2, "Zoom: " + QString::number(m_zoom) +
-                                                 ", Scale: " + QString::number(m_zoom_scale) );
+    m_relay->setLabelText(Label_Names::Label_2, "Zoom: " + QString::number(m_zoom) +
+                                             ", Scale: " + QString::number(m_zoom_scale) );
     // !!!!! END
 }
 

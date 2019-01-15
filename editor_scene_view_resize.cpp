@@ -272,8 +272,9 @@ void SceneGraphicsView::resizeMultipleSelection(QPointF mouse_in_scene)
 
 
     // !!!!! TEMP
-    m_interface->setLabelText(Label_Names::Label_Object_3, "Group Width: " + QString::number(group_width) +
-                                                           ", Height: " + QString::number(group_height));
+    m_relay->setLabelText(Label_Names::Label_Object_3, "Group Width: " + QString::number(group_width) +
+                                                          ", Height: " + QString::number(group_height));
+    // !!!!! END
 
     scene()->destroyItemGroup(group);
 

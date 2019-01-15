@@ -20,7 +20,7 @@
 #include "interface_relay.h"
 
 
-// Create square at location
+// Adds a square DrItem (QGraphicsItem) to scene
 void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, double new_width, double new_height, double z_order, QColor color)
 {
     DrItem *item;
@@ -35,13 +35,11 @@ void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, double new_width, d
 // Connected from scene().changed, resizes scene when objects are added / subtracted
 void SceneGraphicsScene::sceneChanged(QList<QRectF>)
 {
-    double min_size = 500;
-    double buffer =   200;
+    double min_size = 500;              // Minimum size fo scene rect (-500 to 500 for x and y)
+    double buffer =   200;              // Buffer to add on to items at edge of scene to allow for better scrolling
 
-    double left =  -min_size;
-    double right =  min_size;
-    double top =   -min_size;
-    double bottom = min_size;
+    double left =  -min_size, right =  min_size;
+    double top =   -min_size, bottom = min_size;
 
     if (items().count() > 0) {
         QRectF total_rect = items().first()->sceneBoundingRect();
@@ -77,13 +75,7 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
     }
 
     // Find total bounding box of all selected items
-    QRectF source_rect = this->selectedItems().first()->sceneBoundingRect();
-
-
-
-    for (auto item: this->selectedItems()) {
-        source_rect = source_rect.united(item->sceneBoundingRect());
-    }
+    QRectF source_rect = totalSelectedItemsSceneRect();
 
     // Perform key press event on all selected items
     for (auto item: this->selectedItems()) {
@@ -112,7 +104,7 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
 
             new_item = new DrItem(new_color, item->boundingRect().width(), item->boundingRect().height(), this->items().count() + 1);
             new_item->setPos(new_x, new_y);
-            new_item->setTransform(item->transform());
+            new_item->setTransform(item->transform());          // Includes rotation and scaling
 
             new_item->setData(User_Roles::Position, QPointF(new_item->pos().x(), new_item->pos().y()));
             new_item->setData(User_Roles::Scale, item->data(User_Roles::Scale).toPointF());
