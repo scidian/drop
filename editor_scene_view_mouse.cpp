@@ -37,9 +37,9 @@ void SceneGraphicsView::enterEvent(QEvent *event)
 void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 {
     // On initial mouse down, store mouse origin point
-    m_origin = event->pos();
+    m_origin =          event->pos();
     m_origin_in_scene = mapToScene(m_origin);
-    m_origin_item = nullptr;
+    m_origin_item =     nullptr;
 
     // If space bar isnt down, process mouse down
     if (dragMode() == QGraphicsView::DragMode::NoDrag) {
@@ -71,11 +71,8 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
                 } else {
                     // In not already select, select it and deselect all others
                     if (m_origin_item->isSelected() == false) {
+                        for (auto item: scene()->selectedItems()) item->setSelected(false);
                         m_origin_item->setSelected(true);
-
-                        for (auto item: scene()->selectedItems()) {
-                            if (item != m_origin_item) item->setSelected(false);
-                        }
                     }
                     QGraphicsView::mousePressEvent(event);                  // Process press event for movement
                     m_view_mode = View_Mode::Translating;

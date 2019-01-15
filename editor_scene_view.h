@@ -94,6 +94,7 @@ private:
 
     // View_Mode::Rotating Variables
     double                  m_last_angle_diff;                                      // Stores angle difference last time we checked
+    QRectF                  m_start_rotate_rect;                                    // Stores starting rect of selection before resize starts
 
 
     QPolygonF               m_temp_polygon;                         // TEMP

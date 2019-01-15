@@ -26,7 +26,7 @@ void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, double new_width, d
     DrItem *item;
     item = new DrItem(color, new_width, new_height, z_order);
 
-    item->setPositionByOrigin(item->getOrigin(), new_x, new_y);
+    setPositionByOrigin(item, item->getOrigin(), new_x, new_y);
 
     addItem(item);
 }
@@ -125,6 +125,52 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
     }
     QGraphicsScene::keyPressEvent(event);
 }
+
+
+
+
+// Sets item to new_x, new_y position in scene, offset by_origin
+void SceneGraphicsScene::setPositionByOrigin(QGraphicsItem *item, Origin by_origin, double new_x, double new_y)
+{
+    item->setPos(new_x, new_y);
+
+    QRectF      item_rect = item->boundingRect();
+    QPointF     item_pos;
+
+    switch (by_origin) {
+    case Origin::Top_Left:      item_pos = item_rect.topLeft();                  break;
+    case Origin::Top_Right:     item_pos = item_rect.topRight();                 break;
+    case Origin::Center:        item_pos = item_rect.center();                   break;
+    case Origin::Bottom_Left:   item_pos = item_rect.bottomLeft();               break;
+    case Origin::Bottom_Right:  item_pos = item_rect.bottomRight();              break;
+    case Origin::Top:           item_pos = QPointF(item_rect.topLeft().x() + (item_rect.topRight().x() - item_rect.topLeft().x()),
+                                                   item_rect.topLeft().y() );    break;
+    case Origin::Bottom:        item_pos = QPointF(item_rect.bottomLeft().x() + (item_rect.bottomRight().x() - item_rect.bottomLeft().x()),
+                                                   item_rect.bottomLeft().y() ); break;
+    case Origin::Left:          item_pos = QPointF(item_rect.topLeft().x(),
+                                                   item_rect.topLeft().y() + (item_rect.bottomLeft().y() - item_rect.topLeft().y()) );       break;
+    case Origin::Right:         item_pos = QPointF(item_rect.topRight().x(),
+                                                   item_rect.topRight().y() + (item_rect.bottomRight().y() - item_rect.topRight().y()) );    break;
+    }
+    item_pos = item->sceneTransform().map(item_pos);
+
+    setPositionByOrigin(item, item_pos, new_x, new_y);
+}
+
+void SceneGraphicsScene::setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y)
+{
+    QPointF     new_pos;
+
+    double x_diff = origin_point.x() - new_x;
+    double y_diff = origin_point.y() - new_y;
+
+    new_pos.setX( new_x - x_diff);
+    new_pos.setY( new_y - y_diff);
+
+    item->setPos(new_pos);
+}
+
+
 
 
 

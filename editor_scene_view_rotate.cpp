@@ -27,7 +27,7 @@ void SceneGraphicsView::startRotate()
 {
     m_view_mode = View_Mode::Rotating;
 
-    m_start_resize_rect = totalSelectedItemsSceneRect();                // Store starting scene rect of initial selection bounding box
+    m_start_rotate_rect = totalSelectedItemsSceneRect();                // Store starting scene rect of initial selection bounding box
     m_last_angle_diff = 0;                                              // Reset initial rotate event angle at 0
 }
 
@@ -65,8 +65,8 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     // Try and lock function, so we ony run this once at a time
     if (rotate_mutex.tryLock() == false) return;
 
-    double angle1 = calcRotationAngleInDegrees( mapFromScene(m_start_resize_rect.center()), m_origin);
-    double angle2 = calcRotationAngleInDegrees( mapFromScene(m_start_resize_rect.center()), mouse_in_view);
+    double angle1 = calcRotationAngleInDegrees( mapFromScene(m_start_rotate_rect.center()), m_origin);
+    double angle2 = calcRotationAngleInDegrees( mapFromScene(m_start_rotate_rect.center()), mouse_in_view);
     double angle = angle2 - angle1;
     double angle_diff = angle - m_last_angle_diff;
 
@@ -76,11 +76,14 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     // Group selected items and apply rotation to collection
     QGraphicsItemGroup *group = scene()->createItemGroup(scene()->selectedItems());
     QPointF offset = group->sceneBoundingRect().center();
+
+
+
     QTransform transform;
 
     // Offset difference of original center bounding box to possible slightly different center of new bounding box
-    offset.setX(offset.x() - (offset.x() - m_start_resize_rect.center().x()) );
-    offset.setY(offset.y() - (offset.y() - m_start_resize_rect.center().y()) );
+    offset.setX(offset.x() - (offset.x() - m_start_rotate_rect.center().x()) );
+    offset.setY(offset.y() - (offset.y() - m_start_rotate_rect.center().y()) );
 
     // Save new item rotations for use later
     for (auto item : group->childItems()) {

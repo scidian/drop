@@ -18,6 +18,7 @@
 #include "settings_component.h"
 #include "settings_component_property.h"
 
+#include "editor_scene_scene.h"
 #include "editor_scene_view.h"
 #include "interface_relay.h"
 
@@ -236,20 +237,20 @@ void SceneGraphicsView::resizeSelectionOneWithRotate(QPointF mouse_in_scene)
 
 
     // ***** Translate if needed
-    DrItem *item2 = dynamic_cast<DrItem *>(scene()->selectedItems().first());
+    SceneGraphicsScene *sgs = dynamic_cast<SceneGraphicsScene *>(scene());
     QPointF new_pos = item->pos();
 
     if (m_do_x == X_Axis::Left && m_do_y != Y_Axis::Top) {
         new_pos = item->data(User_Roles::Pre_Resize_Top_Right).toPointF();
-        item2->setPositionByOrigin(Origin::Top_Right, new_pos.x(), new_pos.y());
+        sgs->setPositionByOrigin(scene()->selectedItems().first(), Origin::Top_Right, new_pos.x(), new_pos.y());
     }
     else if (m_do_x == X_Axis::Left && m_do_y == Y_Axis::Top) {
         new_pos = item->data(User_Roles::Pre_Resize_Bottom_Right).toPointF();
-        item2->setPositionByOrigin(Origin::Bottom_Right, new_pos.x(), new_pos.y());
+        sgs->setPositionByOrigin(scene()->selectedItems().first(), Origin::Bottom_Right, new_pos.x(), new_pos.y());
     }
     else if ((m_do_x == X_Axis::Right && m_do_y == Y_Axis::Top) || (m_do_y == Y_Axis::Top)) {
         new_pos = item->data(User_Roles::Pre_Resize_Bottom_Left).toPointF();
-        item2->setPositionByOrigin(Origin::Bottom_Left, new_pos.x(), new_pos.y());
+        sgs->setPositionByOrigin(scene()->selectedItems().first(), Origin::Bottom_Left, new_pos.x(), new_pos.y());
     }
 
     item->setData(User_Roles::Scale, QPointF(scale_x, scale_y) );
@@ -332,21 +333,23 @@ void SceneGraphicsView::resizeMultipleSelection(QPointF mouse_in_scene)
 
 
     // ***** Translate if needed
-    DrItem *item2 = dynamic_cast<DrItem *>(scene()->selectedItems().first());
+    SceneGraphicsScene *sgs = dynamic_cast<SceneGraphicsScene *>(scene());
     QPointF new_pos = item->pos();
 
     if (m_do_x == X_Axis::Left && m_do_y != Y_Axis::Top) {
         new_pos = item->data(User_Roles::Pre_Resize_Top_Right).toPointF();
-        item2->setPositionByOrigin(Origin::Top_Right, new_pos.x(), new_pos.y());
+        sgs->setPositionByOrigin(scene()->selectedItems().first(), Origin::Top_Right, new_pos.x(), new_pos.y());
     }
     else if (m_do_x == X_Axis::Left && m_do_y == Y_Axis::Top) {
         new_pos = item->data(User_Roles::Pre_Resize_Bottom_Right).toPointF();
-        item2->setPositionByOrigin(Origin::Bottom_Right, new_pos.x(), new_pos.y());
+        sgs->setPositionByOrigin(scene()->selectedItems().first(), Origin::Bottom_Right, new_pos.x(), new_pos.y());
     }
     else if ((m_do_x == X_Axis::Right && m_do_y == Y_Axis::Top) || (m_do_y == Y_Axis::Top)) {
         new_pos = item->data(User_Roles::Pre_Resize_Bottom_Left).toPointF();
-        item2->setPositionByOrigin(Origin::Bottom_Left, new_pos.x(), new_pos.y());
+        sgs->setPositionByOrigin(scene()->selectedItems().first(), Origin::Bottom_Left, new_pos.x(), new_pos.y());
     }
+
+
 
     item->setData(User_Roles::Scale, QPointF(scale_x, scale_y) );
 

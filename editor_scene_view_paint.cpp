@@ -276,8 +276,8 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     if (m_view_mode == View_Mode::Rotating) {
         painter.setPen(QPen(m_relay->getColor(Window_Colors::Text_Light), 1));
         painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
-        painter.drawLine(mapFromScene(m_start_resize_rect.center()), m_origin);
-        painter.drawLine(mapFromScene(m_start_resize_rect.center()), m_last_mouse_pos);
+        painter.drawLine(mapFromScene(m_start_rotate_rect.center()), m_origin);
+        painter.drawLine(mapFromScene(m_start_rotate_rect.center()), m_last_mouse_pos);
         painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOver);
     }
 
