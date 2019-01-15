@@ -116,20 +116,20 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
 
 double SceneGraphicsView::calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt)
 {
-    // calculate the angle theta from the deltaY and deltaX values, (atan2 returns radians values from [-PI,PI])
-    // 0 currently points EAST.
-    // NOTE: By preserving Y and X param order to atan2,  we are expecting a CLOCKWISE angle direction.
+    // Calculate the angle theta from the deltaY and deltaX values (atan2 returns radians values from [-PI, PI])
+    // 0 currently points EAST
+    // NOTE: By preserving Y and X param order to atan2,  we are expecting a CLOCKWISE angle direction
     double theta = std::atan2(targetPt.y() - centerPt.y(), targetPt.x() - centerPt.x());
 
-    // rotate the theta angle clockwise by 90 degrees (this makes 0 point NORTH)
+    // Rotate the theta angle clockwise by 90 degrees (this makes 0 point NORTH)
     // NOTE: adding to an angle rotates it clockwise, subtracting would rotate it counter-clockwise
-    theta += 3.141592653589793238463/2.0;
+    theta += 3.141592653589793238463 / 2.0;
 
-    // convert from radians to degrees this will give you an angle from [0->270],[-180,0]
-    double angle = theta * (180.0/3.141592653589793238463);
+    // Convert from radians to degrees this will give you an angle from [0->270], [-180,0]
+    double angle = theta * (180.0 / 3.141592653589793238463);
 
-    // convert to positive range (0-360) since we want to prevent negative angles, adjust them now.
-    // we can assume that atan2 will not return a negative value greater than one partial rotation
+    // Convert to positive range (0-360) since we want to prevent negative angles, adjust them now
+    // We can assume that atan2 will not return a negative value greater than one partial rotation
     if (angle < 0) { angle += 360; }
 
     return angle;

@@ -79,6 +79,23 @@ enum class DrTypes {
 
 
 //####################################################################################
+//##    Possible handle rects, order is vector / array index critical
+//####################################################################################
+enum class Position_Flags {
+    Top          = 0,
+    Bottom       = 1,
+    Right        = 2,
+    Left         = 3,
+    Top_Left     = 4,
+    Bottom_Left  = 5,
+    Top_Right    = 6,
+    Bottom_Right = 7,
+    Total,
+    No_Position,
+};
+
+
+//####################################################################################
 //##    Custom Qt::UserRole 's for storing data in QWidgets using setData
 //####################################################################################
 typedef enum {

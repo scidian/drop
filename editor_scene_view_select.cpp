@@ -50,7 +50,7 @@ void SceneGraphicsView::processSelection(QPoint mouse_in_view)
 
     // Go through selected items, unselect if rubber band box covered them and has since shrunk
     for (auto item : scene()->selectedItems()) {
-        QRectF item_location = item->sceneBoundingRect();                                       // Get items shape
+        QRectF item_location = item->sceneBoundingRect();                                               // Get items shape
         if (scene()->selectionArea().intersects( item_location ) == false) {
             // Check if item was in the original selection list, if so mark to keep selected
             bool has_it = false;

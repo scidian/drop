@@ -22,12 +22,6 @@
 
 //####################################################################################
 //##        Draws grid lines
-void SceneGraphicsView::drawBackground(QPainter *painter, const QRectF &rect)
-{
-    Q_UNUSED(painter);
-    Q_UNUSED(rect);
-}
-
 void SceneGraphicsView::drawGrid()
 {
     QPainter painter(viewport());
