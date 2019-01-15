@@ -10,7 +10,7 @@
 
 #include <QtWidgets>
 
-#include <05_item.h>
+#include <editor_scene_item.h>
 
 class DrProject;
 class InterfaceRelay;

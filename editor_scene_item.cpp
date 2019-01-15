@@ -8,7 +8,7 @@
 
 #include <QtWidgets>
 
-#include "05_item.h"
+#include "editor_scene_item.h"
 
 DrItem::DrItem(const QColor &start_color, double width, double height, double z_order)
 {

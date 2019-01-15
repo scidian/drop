@@ -9,7 +9,7 @@
 #ifndef DROBJECT_H
 #define DROBJECT_H
 
-#include "30_settings.h"
+#include "settings.h"
 
 class DrProject;
 class DrWorld;

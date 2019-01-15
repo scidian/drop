@@ -66,6 +66,18 @@ int main(int argc, char *argv[])
 
 
 
+//####################################################################################
+//##        Interface Destructors - Must include definition of a virtual destructor
+//####################################################################################
+InterfaceRelay::~InterfaceRelay() { }
+
+
+
+
+
+
+
+
 
 
 

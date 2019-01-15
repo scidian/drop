@@ -9,7 +9,7 @@
 #ifndef DRPROJECT_H
 #define DRPROJECT_H
 
-#include "30_settings.h"
+#include "settings.h"
 
 class DrWorld;
 typedef std::map<long, DrWorld*> WorldMap;

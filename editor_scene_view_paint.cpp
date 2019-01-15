@@ -6,15 +6,15 @@
 //
 //
 
-#include "01_project.h"
-#include "02_world.h"
-#include "03_scene.h"
-#include "04_object.h"
-#include "05_item.h"
+#include "project.h"
+#include "project_world.h"
+#include "project_world_scene.h"
+#include "project_world_scene_object.h"
+#include "editor_scene_item.h"
 
-#include "30_settings.h"
-#include "31_component.h"
-#include "32_property.h"
+#include "settings.h"
+#include "settings_component.h"
+#include "settings_component_property.h"
 
 #include "editor_scene_view.h"
 #include "interface_relay.h"
@@ -345,10 +345,10 @@ void SceneViewRubberBand::paintEvent(QPaintEvent *)
     QStylePainter painter(this);
 
     QColor bg = m_interface->getColor(Window_Colors::Icon_Light);
-    bg.setAlpha(64);
+    bg.setAlpha(48);
     QBrush brush;
     brush.setStyle(Qt::BrushStyle::SolidPattern);
-    brush.setColor(m_interface->getColor(Window_Colors::Icon_Light));
+    brush.setColor(bg);
 
     painter.setBrush(brush);
     painter.setPen(QPen(QBrush(m_interface->getColor(Window_Colors::Icon_Light)), 2, Qt::PenStyle::SolidLine));

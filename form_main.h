@@ -29,7 +29,7 @@
 #include <QMainWindow>
 #include <QtWidgets>
 
-#include "01_project.h"
+#include "project.h"
 #include "globals.h"
 #include "interface_relay.h"
 

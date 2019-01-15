@@ -6,9 +6,9 @@
 //
 //
 
-#include "30_settings.h"
-#include "31_component.h"
-#include "32_property.h"
+#include "settings.h"
+#include "settings_component.h"
+#include "settings_component_property.h"
 
 //####################################################################################
 //##    Constructor, Destructor

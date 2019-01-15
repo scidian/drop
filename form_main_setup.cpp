@@ -18,7 +18,7 @@
 //####################################################################################
 //##        Setting up of form main
 //####################################################################################
-// Lists all child widgets of FormMain
+// Pops up a message box listing all child widgets of FormMain
 void FormMain::listChildren()
 {
     QString widget_list;

@@ -11,7 +11,7 @@
 
 #include <QGraphicsItem>
 
-#include "30_settings.h"
+#include "settings.h"
 
 #include "form_main.h"
 

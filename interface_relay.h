@@ -14,7 +14,7 @@
 class InterfaceRelay
 {
 public:
-    InterfaceRelay();
+    InterfaceRelay() { }
     virtual ~InterfaceRelay();
 
     virtual void    buildObjectInspector(QList<long> key_list) = 0;
@@ -27,6 +27,8 @@ public:
 
     virtual void    showMessageBox(QString message) = 0;
 };
+
+
 
 
 #endif // INTERFACE_RELAY_H
