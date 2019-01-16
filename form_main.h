@@ -58,6 +58,7 @@ public:
     Globals        *globals;                                            // Holds project globals
     Form_Main_Mode  current_mode;                                       // Holds current editing mode of FormMain
     Form_Main_Focus current_focus;                                      // Holds Widget that currently has focus
+    bool            done_loading = false;                               // True after initial startup of FormMain
 
     // Locals that need to be SAVED / LOADED from each project
     DrProject      *project;                                            // Holds whatever the current open game project is

@@ -25,7 +25,7 @@
 //##        Constructor & destructor
 //####################################################################################
 SceneGraphicsView::SceneGraphicsView(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
-        QGraphicsView(parent = nullptr), m_project(project), m_relay(relay)
+                                     QGraphicsView(parent = nullptr), m_project(project), m_relay(relay)
 {
     // Initialize rubber band object used as a selection box
     m_rubber_band = new SceneViewRubberBand(QRubberBand::Rectangle, this, relay);
@@ -78,7 +78,14 @@ void SceneGraphicsView::keyReleaseEvent(QKeyEvent *event)
 // Connected from scene().changed
 void SceneGraphicsView::sceneChanged(QList<QRectF>) {   updateSelectionRect();  }
 // Connected from scene().selectionChanged
-void SceneGraphicsView::selectionChanged()  {   updateSelectionRect();  }
+void SceneGraphicsView::selectionChanged()
+{
+    updateSelectionRect();
+
+    // !!!!! TEMP
+    m_relay->setLabelText(Label_Names::Label_Object_4, "Selected Items: " + QString::number(scene()->selectedItems().count()) );
+    // !!!!! END
+}
 
 // Store total size of selection rectangle
 void SceneGraphicsView::updateSelectionRect()
@@ -96,11 +103,6 @@ QRectF SceneGraphicsView::totalSelectedItemsSceneRect()
 
     return my_scene->totalSelectedItemsSceneRect();
 }
-
-
-
-
-
 
 
 

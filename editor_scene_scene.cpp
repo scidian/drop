@@ -20,6 +20,34 @@
 #include "interface_relay.h"
 
 
+//####################################################################################
+//##        Constructor & destructor
+//####################################################################################
+SceneGraphicsScene::SceneGraphicsScene(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
+                                       QGraphicsScene(parent = nullptr),
+                                       m_project(project), m_relay(relay)
+{
+    connect(this, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
+
+    m_selection_group = new SelectionGroup;
+    m_selection_group->setFlags(QGraphicsItem::ItemIsSelectable |              QGraphicsItem::ItemIsMovable |
+                                QGraphicsItem::ItemSendsScenePositionChanges | QGraphicsItem::ItemSendsGeometryChanges);
+    addItem(m_selection_group);
+    emptySelectionGroup();
+    m_selection_group->setData(User_Roles::Is_Selection_Group, true);
+}
+
+SceneGraphicsScene::~SceneGraphicsScene()
+{
+
+}
+
+
+
+//####################################################################################
+//##        Item Handling
+//####################################################################################
+
 // Adds a square DrItem (QGraphicsItem) to scene
 void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, double new_width, double new_height, double z_order, QColor color)
 {
@@ -32,7 +60,9 @@ void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, double new_width, d
 }
 
 
-// Connected from scene().changed, resizes scene when objects are added / subtracted
+//####################################################################################
+//##        SLOT: sceneChanged - Connected from scene().changed, resizes scene when objects are added / subtracted
+//####################################################################################
 void SceneGraphicsScene::sceneChanged(QList<QRectF>)
 {
     double min_size = 500;              // Minimum size fo scene rect (-500 to 500 for x and y)
@@ -62,6 +92,9 @@ void SceneGraphicsScene::sceneChanged(QList<QRectF>)
 }
 
 
+//####################################################################################
+//##        Key Events
+//####################################################################################
 void SceneGraphicsScene::keyReleaseEvent(QKeyEvent *event) { QGraphicsScene::keyReleaseEvent(event); }
 
 void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
@@ -128,8 +161,9 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
 
 
 
-
-// Sets item to new_x, new_y position in scene, offset by_origin
+//####################################################################################
+//##        setPositionByOrigin - Sets item to new_x, new_y position in scene, offset by_origin point
+//####################################################################################
 void SceneGraphicsScene::setPositionByOrigin(QGraphicsItem *item, Origin by_origin, double new_x, double new_y)
 {
     item->setPos(new_x, new_y);

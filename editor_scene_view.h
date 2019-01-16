@@ -138,10 +138,7 @@ public:
 
     void            startResize();
     void            resizeSelection(QPointF mouse_in_scene);
-    void            resizeSelectionOneNoRotate(QPointF mouse_in_scene);
-    void            resizeSelectionOneWithRotate(QPointF mouse_in_scene);
-
-    void            resizeMultipleSelection(QPointF mouse_in_scene);
+    void            resizeSelectionWithRotate(QPointF mouse_in_scene);
 
     Position_Flags  findOppositeSide(Position_Flags start_side);
 
@@ -153,7 +150,10 @@ public slots:
 };
 
 
-
+//############################
+//##    SceneViewRubberBand
+//##        A sub classed QRubberBand so we can override paint event for rubber band
+//############################
 class SceneViewRubberBand : public QRubberBand
 {
 private:
@@ -161,8 +161,7 @@ private:
 
 public:
     // Constructor
-    SceneViewRubberBand(Shape shape, QWidget *parent, InterfaceRelay *relay) :
-                        QRubberBand (shape, parent), m_relay(relay) { }
+    SceneViewRubberBand(Shape shape, QWidget *parent, InterfaceRelay *relay) : QRubberBand (shape, parent), m_relay(relay) { }
 
     // Event overrides
     virtual void    paintEvent(QPaintEvent *) override;

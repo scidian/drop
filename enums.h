@@ -104,6 +104,7 @@ typedef enum {
     Position,
     Rotation,
 
+    Is_Selection_Group,
     Pre_Resize_Scale,
     Pre_Resize_Top_Left,
     Pre_Resize_Top_Right,

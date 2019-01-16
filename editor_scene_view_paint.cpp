@@ -16,6 +16,7 @@
 #include "settings_component.h"
 #include "settings_component_property.h"
 
+#include "editor_scene_scene.h"
 #include "editor_scene_view.h"
 #include "interface_relay.h"
 
@@ -127,13 +128,15 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     painter.setBrush(Qt::NoBrush);
 
     // ******************** Draw bounding box for each item
-    for (auto item: scene()->selectedItems()) {
+    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
+    QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
+
+    for (auto item: my_items) {
         // Load in item bounding box
         QPolygonF polygon(item->boundingRect());
 
         // Apply item scaling / rotation to bounding box
-        QTransform t = item->sceneTransform();
-        polygon = t.map(polygon);
+        polygon = item->sceneTransform().map(polygon);
 
         // Convert bounding box to view coordinates and draw on screen
         QPolygon to_view = mapFromScene(polygon);
@@ -143,23 +146,21 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 
         // !!!!! TEMP: Showing object data
         QVariant get_data;
-        QPointF my_scale, my_pos, my_center;
+        QPointF my_scale, my_center;
         double  my_angle;
-        get_data = item->data(User_Roles::Position);    my_pos =   QPointF(item->pos().x(), item->pos().y()); //get_data.toPointF();
         get_data = item->data(User_Roles::Scale);       my_scale = get_data.toPointF();
         get_data = item->data(User_Roles::Rotation);    my_angle = get_data.toDouble();
         my_center = item->boundingRect().center();
-        t = item->sceneTransform();
-        my_center = t.map(my_center);
+        my_center = item->sceneTransform().map(my_center);
 
-        m_relay->setLabelText(Label_Names::Label_Position, "Pos X: " +  QString::number(my_pos.x()) +
-                                                         ", Pos Y: " +  QString::number(my_pos.y()));
+        m_relay->setLabelText(Label_Names::Label_Position, "Pos X: " +  QString::number(item->pos().x()) +
+                                                         ", Pos Y: " +  QString::number(item->pos().y()) );
         m_relay->setLabelText(Label_Names::Label_Center, "Center X: " + QString::number(my_center.x()) +
-                                                              ", Y: " + QString::number(my_center.y()));
+                                                              ", Y: " + QString::number(my_center.y()) );
         m_relay->setLabelText(Label_Names::Label_Scale, "Scale X: " +   QString::number(my_scale.x()) +
-                                                      ", Scale Y: " +   QString::number(my_scale.y()));
+                                                      ", Scale Y: " +   QString::number(my_scale.y()) );
         m_relay->setLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle));
-        m_relay->setLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()));
+        m_relay->setLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()) );
         // !!!!! END
     }
 
@@ -264,7 +265,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         m_handles[Position_Flags::Right] =  add_rotation.map(temp_right);
     }
 
-    if (draw_box){
+    if (draw_box) {
         // Store polygon centers
         for (auto h : m_handles) m_handles_centers[h.first] = h.second.boundingRect().center();
 
@@ -331,9 +332,9 @@ QRectF SceneGraphicsView::rectAtCenterPoint(QPoint center, double rect_size)
 
 
 
-
 //####################################################################################
 //##        Draw our Rubber Band selection box with custom colors
+//####################################################################################
 void SceneViewRubberBand::paintEvent(QPaintEvent *)
 {
     QStylePainter painter(this);
@@ -348,6 +349,11 @@ void SceneViewRubberBand::paintEvent(QPaintEvent *)
     painter.setPen(QPen(QBrush(m_relay->getColor(Window_Colors::Icon_Light)), 2, Qt::PenStyle::SolidLine));
     painter.drawRect(this->rect());
 }
+
+
+
+
+
 
 
 

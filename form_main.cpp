@@ -87,6 +87,7 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
     }
     // !!!!! END
 
+    done_loading = true;
 }
 
 
@@ -122,6 +123,8 @@ void FormMain::setAdvisorInfo(HeaderBodyList header_body_list)
 // Sets the text of a label on FormMain
 void FormMain::setLabelText(Label_Names label_name, QString new_text)
 {
+    if (!done_loading) return;
+
     switch (label_name)
     {
     case Label_Names::Label_1:          label_1->setText(new_text);         break;

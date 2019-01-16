@@ -16,6 +16,7 @@
 #include "settings_component.h"
 #include "settings_component_property.h"
 
+#include "editor_scene_scene.h"
 #include "editor_scene_view.h"
 #include "interface_relay.h"
 
@@ -36,6 +37,8 @@ void SceneGraphicsView::enterEvent(QEvent *event)
 // Mouse was pressed
 void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 {
+    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
+
     // On initial mouse down, store mouse origin point
     m_origin =          event->pos();
     m_origin_in_scene = mapToScene(m_origin);
@@ -65,20 +68,40 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
             // ******************* If no keys are down, only select item under mouse
             if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
+
                 // If no item under mouse, deselect all
                 if (m_origin_item == nullptr) {
-                    for (auto item: scene()->selectedItems()) { item->setSelected(false); }
+                    my_scene->emptySelectionGroup();
+
                 } else {
-                    // In not already select, select it and deselect all others
-                    if (m_origin_item->isSelected() == false) {
-                        for (auto item: scene()->selectedItems()) item->setSelected(false);
-                        m_origin_item->setSelected(true);
+                    // If we clicked on selection group, check if item is there, if not deselect all
+                    bool is_group = m_origin_item->data(User_Roles::Is_Selection_Group).toBool();
+                    if (is_group) {
+                        QGraphicsItem *item_at = my_scene->getItemAtPosition(m_origin);
+                        if (item_at == nullptr) {
+                           my_scene->emptySelectionGroup();
+                        }
                     }
-                    QGraphicsView::mousePressEvent(event);                  // Process press event for movement
+
+                    // If we did click on an item, make that item selected
+                    else if (m_origin_item->isSelected() == false) {
+                        my_scene->emptySelectionGroup();
+                        my_scene->addToSelectionGroup(m_origin_item, m_origin);
+                        my_scene->selectSelectionGroup();
+                    }
+
+                    // Process press event for item movement (Translation)
+                    QGraphicsView::mousePressEvent(event);
                     m_view_mode = View_Mode::Translating;
                 }
+
             } else if (event->modifiers() & Qt::KeyboardModifier::ControlModifier) {
-                if (m_origin_item != nullptr) m_origin_item->setSelected(!m_origin_item->isSelected());
+
+                // If clicked while control is down, add to selection group
+                // (function will also remove from group if it was already in group)
+                if (m_origin_item != nullptr)
+                    my_scene->addToSelectionGroup(m_origin_item, m_origin);
+
             }
 
 
