@@ -37,25 +37,24 @@ QRectF SceneGraphicsScene::totalSelectedItemsSceneRect()
 //####################################################################################
 //##        Selection Group Handling
 //####################################################################################
-void SceneGraphicsScene::addToSelectionGroup(QGraphicsItem *item, QPoint position)
+void SceneGraphicsScene::addItemToSelectionGroup(QGraphicsItem *item, QPoint position)
 {
     int start_count = m_selection_group->childItems().count();
     double angle = 0;
 
     // Check if we were passed the selection group itself
     if (item->data(User_Roles::Is_Selection_Group).toBool()) {
-        // If so, see if point is over an item already in the group, and if so, remove it
+        // If so, see if point is over an item already in the group, and if so, remove it from selection group
         QGraphicsItem *child_item = getItemAtPosition(position);
-        if (child_item != nullptr)
-            m_selection_group->removeFromGroup(child_item);
+        if (child_item != nullptr) m_selection_group->removeFromGroup(child_item);
 
     } else {
-        // If not passed group, see if item is in group
+        // If item passed is not selection group, see if item is already in group
         bool has_it = false;
         for (auto child : m_selection_group->childItems())
             if (child == item) has_it = true;
 
-        // If item is in group, remove it
+        // If item is in group, remove it (i.e. item was clicked while control key is held down)
         if (has_it) {
             m_selection_group->removeFromGroup(item);
 
@@ -76,6 +75,7 @@ void SceneGraphicsScene::addToSelectionGroup(QGraphicsItem *item, QPoint positio
         }
     }
 
+    // If we removed all the items from the selection group, zero it out
     if (m_selection_group->childItems().count() < 1) emptySelectionGroup();
 
 
@@ -104,7 +104,7 @@ void SceneGraphicsScene::emptySelectionGroup(bool delete_items_during_empty)
     // !!!!! END
 }
 
-void SceneGraphicsScene::removeFromSelectionGroup(QGraphicsItem *item)
+void SceneGraphicsScene::removeItemFromSelectionGroup(QGraphicsItem *item)
 {
     m_selection_group->removeFromGroup(item);
     if (m_selection_group->childItems().count() < 1) resetSelectionGroup();

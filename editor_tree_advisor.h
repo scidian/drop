@@ -33,7 +33,7 @@ public:
                                 QTreeWidget (parent), m_project(project), m_relay(relay) { }
 
     // Event Overrides, start at Qt Docs for QTreeWidget Class to find more
-    virtual void enterEvent(QEvent *event) override;
+    virtual void    enterEvent(QEvent *event) override;
 
     // Getters and setters
     std::string     getAdvisorHeader() { return advisor_header; }

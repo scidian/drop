@@ -105,29 +105,18 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     drawGrid();
     QGraphicsView::paintEvent(event);
 
-    // ******************** Check if scene that view is associated with has changed, if so re-connect signals from new scene
-    if (scene() != m_scene) {
-        if (scene() != nullptr) {
-            m_scene = scene();
-            connect(scene(), SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
-            connect(scene(), SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
-
-            ///// Convert pointer to QString, display in label
-            ///QString ptrStr = QString("0x%1").arg((quintptr)m_scene, QT_POINTER_SIZE * 2, 16, QChar('0'));
-            ///m_relay->setLabelText(Label_Names::LabelObject3, "Changed: " + ptrStr);
-        }
-    }
-
     // At this point, if no selected item gets out of here
     if (scene()->selectedItems().count() < 1) return;
 
-    // Set up painter object
+    // Create a painter object to use during paint event
     QPainter painter(viewport());
+
+
+    // ******************** Draw bounding box for each item
     QBrush pen_brush(m_relay->getColor(Window_Colors::Icon_Light));
     painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.setBrush(Qt::NoBrush);
 
-    // ******************** Draw bounding box for each item
     SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
     QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
 
@@ -143,16 +132,10 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         painter.drawPolygon(to_view);
 
 
-
         // !!!!! TEMP: Showing object data
-        QVariant get_data;
-        QPointF my_scale, my_center;
-        double  my_angle;
-        get_data = item->data(User_Roles::Scale);       my_scale = get_data.toPointF();
-        get_data = item->data(User_Roles::Rotation);    my_angle = get_data.toDouble();
-        my_center = item->boundingRect().center();
-        my_center = item->sceneTransform().map(my_center);
-
+        QPointF my_scale =  item->data(User_Roles::Scale).toPointF();
+        double  my_angle =  item->data(User_Roles::Rotation).toDouble();
+        QPointF my_center = item->sceneTransform().map( item->boundingRect().center() );
         m_relay->setLabelText(Label_Names::Label_Position, "Pos X: " +  QString::number(item->pos().x()) +
                                                          ", Pos Y: " +  QString::number(item->pos().y()) );
         m_relay->setLabelText(Label_Names::Label_Center, "Center X: " + QString::number(my_center.x()) +
@@ -301,6 +284,7 @@ QRectF SceneGraphicsView::rectAtCenterPoint(QPoint center, double rect_size)
 {
     return QRectF(center.x() - rect_size / 2, center.y() - rect_size / 2, rect_size, rect_size);
 }
+
 
 
 

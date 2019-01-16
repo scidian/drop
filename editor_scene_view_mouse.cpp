@@ -86,7 +86,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
                     // If we did click on an item, make that item selected
                     else if (m_origin_item->isSelected() == false) {
                         my_scene->emptySelectionGroup();
-                        my_scene->addToSelectionGroup(m_origin_item, m_origin);
+                        my_scene->addItemToSelectionGroup(m_origin_item, m_origin);
                         my_scene->selectSelectionGroup();
                     }
 
@@ -100,7 +100,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
                 // If clicked while control is down, add to selection group
                 // (function will also remove from group if it was already in group)
                 if (m_origin_item != nullptr)
-                    my_scene->addToSelectionGroup(m_origin_item, m_origin);
+                    my_scene->addItemToSelectionGroup(m_origin_item, m_origin);
 
             }
 
@@ -137,6 +137,8 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
     adjust_mouse.setX(m_last_mouse_pos.x() - 2);
     adjust_mouse.setY(m_last_mouse_pos.y() - 2);
 
+    // Grab the scene as a SceneGraphicsScene
+    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
 
     // ******************** Check selection handles to see if mouse is over one
     if (scene()->selectedItems().count() > 0 && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
@@ -152,7 +154,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
         if (m_handles[Position_Flags::Bottom_Left].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))  m_over_handle = Position_Flags::Bottom_Left;
         if (m_handles[Position_Flags::Bottom_Right].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Bottom_Right;
 
-        double a = calcRotationAngleInDegrees(m_handles_centers[m_over_handle], mapFromScene(m_selection_rect.center()));
+        double a = calcRotationAngleInDegrees(m_handles_centers[m_over_handle], mapFromScene( my_scene->totalSelectedItemsSceneRect().center() ));
         if (a >= 292.5 && a < 337.5) viewport()->setCursor(Qt::CursorShape::SizeFDiagCursor);              // Top Left
         if (a >= 337.5 || a <  22.5) viewport()->setCursor(Qt::CursorShape::SizeVerCursor);                // Top
         if (a >=  22.5 && a <  67.5) viewport()->setCursor(Qt::CursorShape::SizeBDiagCursor);              // Top Right

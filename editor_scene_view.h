@@ -67,38 +67,37 @@ private:
 
 
     // Mouse event variables
-    QPoint                  m_origin;                                               // Stores mouse down position in view coordinates
-    QPointF                 m_origin_in_scene;                                      // Stores mouse down position in scene coordinates
-    QGraphicsItem          *m_origin_item;                                          // Stores top item under mouse (if any) on mouse down event
+    QPoint                  m_origin;                               // Stores mouse down position in view coordinates
+    QPointF                 m_origin_in_scene;                      // Stores mouse down position in scene coordinates
+    QGraphicsItem          *m_origin_item;                          // Stores top item under mouse (if any) on mouse down event
 
 
     // Selection Bounding Box Variables
-    std::map<Position_Flags, QPolygonF> m_handles;                                  // Stores QRects of current selection box handles
-    std::map<Position_Flags, QPointF>   m_handles_centers;                          // Stores QPointF center points of sides polygons
-    Position_Flags                      m_over_handle;                              // Tracks if mouse is over a handle
-    QPoint                              m_last_mouse_pos;                           // Tracks last known mouse position in view coordinates
+    std::map<Position_Flags, QPolygonF> m_handles;                  // Stores QRects of current selection box handles
+    std::map<Position_Flags, QPointF>   m_handles_centers;          // Stores QPointF center points of sides polygons
+    Position_Flags                      m_over_handle;              // Tracks if mouse is over a handle
+    QPoint                              m_last_mouse_pos;           // Tracks last known mouse position in view coordinates
 
 
     // View_Mode::Selecting Variables
-    SceneViewRubberBand    *m_rubber_band;                                          // Holds our view's RubberBand object
-    QList<QGraphicsItem *>  m_items_start;                                          // Stores items selected at start of new rubber band box
+    SceneViewRubberBand    *m_rubber_band;                          // Holds our view's RubberBand object
+    QList<QGraphicsItem *>  m_items_start;                          // Stores items selected at start of new rubber band box
 
 
     // View_Mode::Resizing Variables
-    QRectF                  m_selection_rect;                                       // Stores rect of current selection
-    QRectF                  m_start_resize_rect;                                    // Stores starting rect of selection before resize starts
-    Position_Flags          m_start_resize_grip;                                    // Stores which Size Grip Handle we started resize over
-    X_Axis                  m_do_x;                                                 // Processed after click to know which sides to resize from
-    Y_Axis                  m_do_y;                                                 // Processed after click to know which sides to resize from
+    QRectF                  m_start_resize_rect;                    // Stores starting rect of selection before resize starts
+    Position_Flags          m_start_resize_grip;                    // Stores which Size Grip Handle we started resize over
+    X_Axis                  m_do_x;                                 // Processed after click to know which sides to resize from
+    Y_Axis                  m_do_y;                                 // Processed after click to know which sides to resize from
 
 
     // View_Mode::Rotating Variables
-    double                  m_last_angle_diff;                                      // Stores angle difference last time we checked
-    QRectF                  m_start_rotate_rect;                                    // Stores starting rect of selection before resize starts
+    double                  m_last_angle_diff;                      // Stores angle difference last time we checked
+    QRectF                  m_start_rotate_rect;                    // Stores starting rect of selection before resize starts
 
 
-    QPolygonF               m_temp_polygon;                         // TEMP
-    QPolygonF               m_temp_polygon2;                        // TEMP
+    QPolygonF               m_temp_polygon;                 // TEMP
+    QPolygonF               m_temp_polygon2;                // TEMP
 
 
 public:
@@ -118,33 +117,32 @@ public:
     virtual void    wheelEvent(QWheelEvent *event) override;                               // Inherited from QWidget
 #endif
 
-    // Functions
+    // View Display Functions
     void            applyUpdatedMatrix();
-    double          calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt);
     void            drawGrid();
-    bool            isCloseTo(double number_desired, double number_to_check, double tolerance);
-    bool            isSquare(double check_angle, double tolerance);
-    QRectF          rectAtCenterPoint(QPoint center, double rect_size);
-    QRectF          totalSelectedItemsSceneRect();
-    void            updateSelectionRect();
     void            zoomInOut(int level);
 
+    // Misc Functions
+    QRectF          rectAtCenterPoint(QPoint center, double rect_size);
+    QRectF          totalSelectedItemsSceneRect();
+
+    // Selection Functions
     void            startSelect(QMouseEvent *event);
     void            processSelection(QPoint mouse_in_view);
 
+    // Rotation Functions
     void            startRotate();
     void            rotateSelection(QPointF mouse_in_view);
+    double          calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt);
+    bool            isCloseTo(double number_desired, double number_to_check, double tolerance);
+    bool            isSquare(double check_angle, double tolerance);
     void            updateItemRotation(QGraphicsItem *item, double angle_addition);
 
+    // Resize functions
     void            startResize();
     void            resizeSelection(QPointF mouse_in_scene);
     void            resizeSelectionWithRotate(QPointF mouse_in_scene);
     Position_Flags  findOppositeSide(Position_Flags start_side);
-
-
-public slots:
-    void            sceneChanged(QList<QRectF> region);
-    void            selectionChanged();
 
 };
 

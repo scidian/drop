@@ -38,20 +38,22 @@ public:
     virtual void    keyPressEvent(QKeyEvent *event) override;                              // Inherited from QGraphicsScene
     virtual void    keyReleaseEvent(QKeyEvent *event) override;                            // Inherited from QGraphicsScene
 
-    // Functions
+    // Scene Functions
     void            addSquare(qreal new_x, qreal new_y, double new_width, double new_height, double z_order,
                               QColor color = QColor::fromRgb(QRandomGenerator::global()->generate()).light(100));
     void            setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y);
     void            setPositionByOrigin(QGraphicsItem *item, Origin by_origin, double new_x, double new_y);
     QRectF          totalSelectedItemsSceneRect();
 
-    void            addToSelectionGroup(QGraphicsItem *item, QPoint position);
+    // Selection Functions
+    void            addItemToSelectionGroup(QGraphicsItem *item, QPoint position);
     void            emptySelectionGroup(bool delete_items_during_empty = false);
     QGraphicsItem*  getItemAtPosition(QPoint position);
-    void            removeFromSelectionGroup(QGraphicsItem *item);
+    void            removeItemFromSelectionGroup(QGraphicsItem *item);
     void            resetSelectionGroup();
     void            selectSelectionGroup();
 
+    // Getters and Setters
     QGraphicsItem*        getSelectionGroupAsGraphicsItem();
     QList<QGraphicsItem*> getSelectionGroupItems();
 

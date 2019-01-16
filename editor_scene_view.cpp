@@ -72,29 +72,7 @@ void SceneGraphicsView::keyReleaseEvent(QKeyEvent *event)
 
 
 //####################################################################################
-//##        Selection Rect Update Handling - SLOTs to keep total selection area up to date
-//####################################################################################
-
-// Connected from scene().changed
-void SceneGraphicsView::sceneChanged(QList<QRectF>) {   updateSelectionRect();  }
-// Connected from scene().selectionChanged
-void SceneGraphicsView::selectionChanged()
-{
-    updateSelectionRect();
-
-    // !!!!! TEMP
-    m_relay->setLabelText(Label_Names::Label_Object_4, "Selected Items: " + QString::number(scene()->selectedItems().count()) );
-    // !!!!! END
-}
-
-// Store total size of selection rectangle
-void SceneGraphicsView::updateSelectionRect()
-{
-    m_selection_rect = totalSelectedItemsSceneRect();
-    update();    
-}
-
-// Returns a scene rect containing all the selected items
+//##        Returns a scene rect containing all the selected items
 QRectF SceneGraphicsView::totalSelectedItemsSceneRect()
 {
     if (scene() == nullptr) return QRectF();
