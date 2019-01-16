@@ -56,6 +56,16 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
         QPointF new_pos = value.toPointF();
         setData(User_Roles::Position, new_pos);
     }
+
+    // Value is the new transform
+    if (change == ItemTransformChange)
+    {
+        /// Extract angle from transform and store in item
+        ///auto transform = value.value<QTransform>();
+        ///double angle = qRadiansToDegrees(qAtan2(transform.m12(), transform.m11() ));
+        ///setData(User_Roles::Rotation, angle);
+    }
+
     return QGraphicsItem::itemChange(change, value);
 }
 

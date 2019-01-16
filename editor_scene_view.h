@@ -129,17 +129,16 @@ public:
     void            updateSelectionRect();
     void            zoomInOut(int level);
 
-
     void            startSelect(QMouseEvent *event);
     void            processSelection(QPoint mouse_in_view);
 
     void            startRotate();
     void            rotateSelection(QPointF mouse_in_view);
+    void            updateItemRotation(QGraphicsItem *item, double angle_addition);
 
     void            startResize();
     void            resizeSelection(QPointF mouse_in_scene);
     void            resizeSelectionWithRotate(QPointF mouse_in_scene);
-
     Position_Flags  findOppositeSide(Position_Flags start_side);
 
 

@@ -6,8 +6,6 @@
 //
 //
 
-#include <cmath>            // For std::atan2()
-
 #include "project.h"
 #include "project_world.h"
 #include "project_world_scene.h"
@@ -18,6 +16,7 @@
 #include "settings_component.h"
 #include "settings_component_property.h"
 
+#include "editor_scene_scene.h"
 #include "editor_scene_view.h"
 #include "interface_relay.h"
 
@@ -86,15 +85,11 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     offset.setY(offset.y() - (offset.y() - m_start_rotate_rect.center().y()) );
 
     // Save new item rotations for use later
-    for (auto item : group->childItems()) {
-        double my_angle = item->data(User_Roles::Rotation).toDouble();
-        double new_angle =  my_angle + angle_diff;
-
-        if (new_angle >=  360) { do { new_angle -= 360; } while (new_angle >=  360); }
-        if (new_angle <= -360) { do { new_angle += 360; } while (new_angle <= -360); }
-
-        item->setData(User_Roles::Rotation, new_angle);
+    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+    for (auto child : my_scene->getSelectionGroupItems()) {
+        updateItemRotation(child, angle_diff);
     }
+    updateItemRotation(my_scene->getSelectionGroupAsGraphicsItem(), angle_diff);
 
     // Apply new rotations and destroy group
     transform.translate( offset.x(),  offset.y());
@@ -116,13 +111,23 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     rotate_mutex.unlock();
 }
 
+void SceneGraphicsView::updateItemRotation(QGraphicsItem *item, double angle_addition)
+{
+    double my_angle = item->data(User_Roles::Rotation).toDouble();
+    double new_angle =  my_angle + angle_addition;
+
+    if (new_angle >=  360) { do { new_angle -= 360; } while (new_angle >=  360); }
+    if (new_angle <= -360) { do { new_angle += 360; } while (new_angle <= -360); }
+
+    item->setData(User_Roles::Rotation, new_angle);
+}
 
 double SceneGraphicsView::calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt)
 {
     // Calculate the angle theta from the deltaY and deltaX values (atan2 returns radians values from [-PI, PI])
     // 0 currently points EAST
     // NOTE: By preserving Y and X param order to atan2,  we are expecting a CLOCKWISE angle direction
-    double theta = std::atan2(targetPt.y() - centerPt.y(), targetPt.x() - centerPt.x());
+    double theta = qAtan2(targetPt.y() - centerPt.y(), targetPt.x() - centerPt.x());
 
     // Rotate the theta angle clockwise by 90 degrees (this makes 0 point NORTH)
     // NOTE: adding to an angle rotates it clockwise, subtracting would rotate it counter-clockwise

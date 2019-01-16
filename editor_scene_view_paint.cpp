@@ -174,46 +174,21 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 
     // Size of corner handle boxes
     double corner_size = 10;
-    double c_half = corner_size / 2;
 
     // Check if we should draw bounding box, and if it should be squares or circles
     bool draw_box = false;
     bool do_squares = true;
-    bool more_than_one = false;
 
     if (scene()->selectedItems().count() > 0) draw_box = true;
     if (scene()->selectedItems().count() == 1) {
          double angle = scene()->selectedItems().first()->data(User_Roles::Rotation).toDouble();
          if (isSquare(angle, ANGLE_TOLERANCE) == false) do_squares = false;
     }
-    if (scene()->selectedItems().count() > 1) more_than_one = true;
 
     // ******************** Set Size Grip rectangles
     QPolygon to_view;
 
-    // ********** If multiple items use one big rectangle
-    if (draw_box && more_than_one) {
-        QRectF bigger = m_selection_rect;
-        to_view = mapFromScene(bigger);
-
-        QPoint top_left = mapFromScene(bigger.topLeft());
-        QPoint bot_right = mapFromScene(bigger.bottomRight());
-        double select_width =  abs(bot_right.x() - top_left.x());
-        double select_height = abs(bot_right.y() - top_left.y());
-
-        m_handles[Position_Flags::Top_Left] =     QRectF(top_left.x() -  c_half, top_left.y() -  c_half, corner_size, corner_size);
-        m_handles[Position_Flags::Top_Right] =    QRectF(bot_right.x() - c_half, top_left.y() -  c_half, corner_size, corner_size);
-        m_handles[Position_Flags::Bottom_Left] =  QRectF(top_left.x() -  c_half, bot_right.y() - c_half, corner_size, corner_size);
-        m_handles[Position_Flags::Bottom_Right] = QRectF(bot_right.x() - c_half, bot_right.y() - c_half, corner_size, corner_size);
-
-        m_handles[Position_Flags::Top] =    QRectF(top_left.x() + s_half,  top_left.y() - s_half,  select_width - side_size, side_size);
-        m_handles[Position_Flags::Bottom] = QRectF(top_left.x() + s_half,  bot_right.y() - s_half, select_width - side_size, side_size);
-        m_handles[Position_Flags::Left] =   QRectF(top_left.x() - s_half,  top_left.y() + s_half,  side_size, select_height - side_size);
-        m_handles[Position_Flags::Right] =  QRectF(bot_right.x() - s_half, top_left.y() + s_half,  side_size, select_height- side_size);
-    }
-
-    // ********** If one item, map item shape
-    else if (draw_box) {
+    if (draw_box) {
         // Map item bounding box to screen so we can draw it
         QGraphicsItem *item = scene()->selectedItems().first();     // Grab only selected item
         QPolygonF polygon(item->boundingRect());                    // Get bounding box of item as polygon
@@ -263,9 +238,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         m_handles[Position_Flags::Bottom] = add_rotation.map(temp_bottom);
         m_handles[Position_Flags::Left] =   add_rotation.map(temp_left);
         m_handles[Position_Flags::Right] =  add_rotation.map(temp_right);
-    }
 
-    if (draw_box) {
         // Store polygon centers
         for (auto h : m_handles) m_handles_centers[h.first] = h.second.boundingRect().center();
 

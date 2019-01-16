@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 1/15/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//
+//      Handles item selection in the scene
 //
 //
 
@@ -27,9 +27,9 @@
 QRectF SceneGraphicsScene::totalSelectedItemsSceneRect()
 {
     // If no items selected, return empty rect
-    QRectF total_rect;
-    if (selectedItems().count() < 1) return total_rect;
+    if (selectedItems().count() < 1) return QRectF();
 
+    // Return scene rect of m_selection_group which holds all the scenes selected items
     return m_selection_group->sceneBoundingRect();
 }
 
@@ -39,6 +39,9 @@ QRectF SceneGraphicsScene::totalSelectedItemsSceneRect()
 //####################################################################################
 void SceneGraphicsScene::addToSelectionGroup(QGraphicsItem *item, QPoint position)
 {
+    int start_count = m_selection_group->childItems().count();
+    double angle = 0;
+
     // Check if we were passed the selection group itself
     if (item->data(User_Roles::Is_Selection_Group).toBool()) {
         // If so, see if point is over an item already in the group, and if so, remove it
@@ -58,6 +61,14 @@ void SceneGraphicsScene::addToSelectionGroup(QGraphicsItem *item, QPoint positio
 
         // Otherwise add the item, if there were no items, make sure selection group is selected in scene
         } else {
+            if (start_count == 0) {
+                angle = item->data(User_Roles::Rotation).toDouble();
+                QPointF center = m_selection_group->boundingRect().center();
+                QTransform t = QTransform().translate(center.x(), center.y()).rotate(angle).translate(-center.x(), -center.y());
+                m_selection_group->setTransform(t);
+                m_selection_group->setData(User_Roles::Rotation, angle);
+            }
+
             m_selection_group->addToGroup(item);
             m_selection_group->setEnabled(true);
             if (m_selection_group->isSelected() == false)
@@ -65,10 +76,11 @@ void SceneGraphicsScene::addToSelectionGroup(QGraphicsItem *item, QPoint positio
         }
     }
 
-    if (m_selection_group->childItems().count() < 1)
-        emptySelectionGroup();
+    if (m_selection_group->childItems().count() < 1) emptySelectionGroup();
+
 
     // !!!!! TEMP
+    m_relay->setLabelText(Label_Names::Label_1, "First Item Angle: " + QString::number(angle));
     m_relay->setLabelText(Label_Names::Label_Object_1, "Group Pos  X: " + QString::number(m_selection_group->boundingRect().x()) +
                                                                 ", Y: " + QString::number(m_selection_group->boundingRect().y()) );
     m_relay->setLabelText(Label_Names::Label_Object_2, "Group Size X: " + QString::number(m_selection_group->boundingRect().width()) +
@@ -77,26 +89,42 @@ void SceneGraphicsScene::addToSelectionGroup(QGraphicsItem *item, QPoint positio
     // !!!!! END
 }
 
-void SceneGraphicsScene::emptySelectionGroup()
+void SceneGraphicsScene::emptySelectionGroup(bool delete_items_during_empty)
 {
-    // Deselect all items in scene
-    for (auto item: selectedItems()) item->setSelected(false);
-
     // Remove all items from selection group
-    for (auto child : m_selection_group->childItems())
+    for (auto child : m_selection_group->childItems()) {
         m_selection_group->removeFromGroup(child);
-
-    // Reset transform and reset user data
-    m_selection_group->setTransform(QTransform());
-    m_selection_group->setData(User_Roles::Scale, QPointF(1, 1));
-    m_selection_group->setData(User_Roles::Rotation, 0);
-    m_selection_group->setEnabled(false);
+        if (delete_items_during_empty) removeItem(child);
+    }
+    resetSelectionGroup();
 
     // !!!!! TEMP
     if (m_relay)
         m_relay->setLabelText(Label_Names::Label_Object_3, "Group Items: " + QString::number(m_selection_group->childItems().count()) );
     // !!!!! END
 }
+
+void SceneGraphicsScene::removeFromSelectionGroup(QGraphicsItem *item)
+{
+    m_selection_group->removeFromGroup(item);
+    if (m_selection_group->childItems().count() < 1) resetSelectionGroup();
+
+    // !!!!! TEMP
+    if (m_relay)
+        m_relay->setLabelText(Label_Names::Label_Object_3, "Group Items: " + QString::number(m_selection_group->childItems().count()) );
+    // !!!!! END
+}
+
+// Reset transform and reset user data
+void SceneGraphicsScene::resetSelectionGroup()
+{
+    for (auto item: selectedItems()) item->setSelected(false);
+    m_selection_group->setTransform(QTransform());
+    m_selection_group->setData(User_Roles::Scale, QPointF(1, 1));
+    m_selection_group->setData(User_Roles::Rotation, 0);
+    m_selection_group->setEnabled(false);
+}
+
 
 QGraphicsItem* SceneGraphicsScene::getItemAtPosition(QPoint position)
 {
@@ -117,8 +145,14 @@ QGraphicsItem* SceneGraphicsScene::getItemAtPosition(QPoint position)
     return item;
 }
 
-QList<QGraphicsItem*> SceneGraphicsScene::getSelectionGroupItems()  { return m_selection_group->childItems(); }
-void SceneGraphicsScene::selectSelectionGroup() { m_selection_group->setSelected(true);   }
+QList<QGraphicsItem*> SceneGraphicsScene::getSelectionGroupItems()
+{       return m_selection_group->childItems();     }
+
+QGraphicsItem* SceneGraphicsScene::getSelectionGroupAsGraphicsItem()
+{       return m_selection_group; }
+
+void SceneGraphicsScene::selectSelectionGroup()
+{       m_selection_group->setSelected(true);       }
 
 
 

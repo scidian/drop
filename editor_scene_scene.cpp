@@ -110,26 +110,40 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
     // Find total bounding box of all selected items
     QRectF source_rect = totalSelectedItemsSceneRect();
 
-    // Perform key press event on all selected items
-    for (auto item: this->selectedItems()) {
+    // Process movement key press
+    switch (event->key())
+    {
+    // Move selected items
+    case Qt::Key::Key_Up:    selectedItems().first()->moveBy( 0, -move_by);      break;
+    case Qt::Key::Key_Down:  selectedItems().first()->moveBy( 0,  move_by);      break;
+    case Qt::Key::Key_Left:  selectedItems().first()->moveBy(-move_by,  0);      break;
+    case Qt::Key::Key_Right: selectedItems().first()->moveBy( move_by,  0);      break;
+    }
+
+    // Perform key press event on all items in selection group
+    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(this);
+    QList<QGraphicsItem*>  list_new_items;
+    list_new_items.clear();
+
+    for (auto item : my_scene->getSelectionGroupItems()) {
         DrItem *new_item;
-        QColor new_color = QColor::fromRgb(QRandomGenerator::global()->generate()).light(100);
-        qreal new_x = item->scenePos().x();
-        qreal new_y = item->scenePos().y();
+        QColor new_color;
+        qreal new_x, new_y;
 
         switch (event->key())
         {
-        // Move selected items
-        case Qt::Key::Key_Up:    item->moveBy( 0, -move_by);      break;
-        case Qt::Key::Key_Down:  item->moveBy( 0,  move_by);      break;
-        case Qt::Key::Key_Left:  item->moveBy(-move_by,  0);      break;
-        case Qt::Key::Key_Right: item->moveBy( move_by,  0);      break;
-
         // Clone selected items
         case Qt::Key::Key_W:
         case Qt::Key::Key_A:
         case Qt::Key::Key_S:
         case Qt::Key::Key_D:
+            // Send item back to scene before we copy it
+            removeFromSelectionGroup(item);
+
+            new_color = QColor::fromRgb(QRandomGenerator::global()->generate()).light(100);
+            new_x = item->scenePos().x();
+            new_y = item->scenePos().y();
+
             if (event->key() == Qt::Key::Key_W) new_y = new_y - source_rect.height();
             if (event->key() == Qt::Key::Key_A) new_x = new_x - source_rect.width();
             if (event->key() == Qt::Key::Key_S) new_y = new_y + source_rect.height();
@@ -144,18 +158,23 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
             new_item->setData(User_Roles::Rotation, item->data(User_Roles::Rotation).toDouble());
 
             addItem(new_item);
-            new_item->setSelected(true);
-            item->setSelected(false);
+            list_new_items.append(new_item);
             break;
 
         // Delete selected items
         case Qt::Key::Key_Delete:
         case Qt::Key::Key_Backspace:
-            if (item->type() == User_Types::Object)
-                removeItem(item);
+            emptySelectionGroup(true);
             break;
         }
     }
+
+    // If we added (copied) new items to scene, select those items
+    if (list_new_items.count() > 0) {
+        emptySelectionGroup();
+        for (auto item : list_new_items) addToSelectionGroup(item, QPoint(0, 0));
+    }
+
     QGraphicsScene::keyPressEvent(event);
 }
 

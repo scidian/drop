@@ -46,10 +46,13 @@ public:
     QRectF          totalSelectedItemsSceneRect();
 
     void            addToSelectionGroup(QGraphicsItem *item, QPoint position);
-    void            emptySelectionGroup();
+    void            emptySelectionGroup(bool delete_items_during_empty = false);
     QGraphicsItem*  getItemAtPosition(QPoint position);
+    void            removeFromSelectionGroup(QGraphicsItem *item);
+    void            resetSelectionGroup();
     void            selectSelectionGroup();
 
+    QGraphicsItem*        getSelectionGroupAsGraphicsItem();
     QList<QGraphicsItem*> getSelectionGroupItems();
 
 public slots:

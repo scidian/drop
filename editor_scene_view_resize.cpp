@@ -170,6 +170,10 @@ void SceneGraphicsView::resizeSelectionWithRotate(QPointF mouse_in_scene)
         my_scene->setPositionByOrigin(scene()->selectedItems().first(), Origin::Top_Left, new_pos.x(), new_pos.y());
     }
 
+    // Update scale for each item, and for m_selection_group
+    for (auto child : my_scene->getSelectionGroupItems()) {
+        child->setData(User_Roles::Scale, QPointF(scale_x, scale_y) );
+    }
     item->setData(User_Roles::Scale, QPointF(scale_x, scale_y) );
 }
 

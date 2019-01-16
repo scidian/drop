@@ -45,8 +45,8 @@ void SceneGraphicsView::processSelection(QPoint mouse_in_view)
     selectionArea.addPolygon(mapToScene(m_rubber_band->geometry()));                                    // Convert box to scene coords
     selectionArea.closeSubpath();                                                                       // Closes an open polygon
 
-    scene()->setSelectionArea(selectionArea, Qt::ItemSelectionOperation::AddToSelection,
-                              Qt::ItemSelectionMode::IntersectsItemBoundingRect, viewportTransform());  // Pass box to scene for selection
+  //!!  //scene()->setSelectionArea(selectionArea, Qt::ItemSelectionOperation::AddToSelection,
+  //!!  //                          Qt::ItemSelectionMode::IntersectsItemBoundingRect, viewportTransform());  // Pass box to scene for selection
 
     // Go through selected items, unselect if rubber band box covered them and has since shrunk
     for (auto item : scene()->selectedItems()) {
