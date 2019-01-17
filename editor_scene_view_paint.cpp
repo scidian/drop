@@ -101,24 +101,30 @@ void SceneGraphicsView::drawGrid()
 //##        Paints selection box, etc on top of items
 void SceneGraphicsView::paintEvent(QPaintEvent *event)
 {
-    // Go ahead and draw grid and then have base class paint scene (draw items)
+    // Go ahead and draw grid first
     drawGrid();
+
+    // At this point, if no selected item paint objects and get out of here
+    if (scene()->selectedItems().count() < 1) {
+        QGraphicsView::paintEvent(event);
+        return;
+    }
+
+
+    // ******************** Otherwise, break apart group to draw items in proper z-Order, then put back together
+    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
+    QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
+
+    for (auto item: my_items) my_scene->getSelectionGroup()->removeFromGroup(item);
     QGraphicsView::paintEvent(event);
-
-    // At this point, if no selected item gets out of here
-    if (scene()->selectedItems().count() < 1) return;
-
-    // Create a painter object to use during paint event
-    QPainter painter(viewport());
+    for (auto item: my_items) my_scene->getSelectionGroup()->addToGroup(item);
 
 
     // ******************** Draw bounding box for each item
+    QPainter painter(viewport());
     QBrush pen_brush(m_relay->getColor(Window_Colors::Icon_Light));
     painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.setBrush(Qt::NoBrush);
-
-    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
-    QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
 
     for (auto item: my_items) {
         // Load in item bounding box

@@ -46,14 +46,14 @@ public:
     QRectF          totalSelectedItemsSceneRect();
 
     // Selection Functions
-    void            addItemToSelectionGroup(QGraphicsItem *item, QPoint position);
+    void            addItemToSelectionGroup(QGraphicsItem *item);
     void            emptySelectionGroup(bool delete_items_during_empty = false);
     QGraphicsItem*  getItemAtPosition(QPoint position);
-    void            removeItemFromSelectionGroup(QGraphicsItem *item);
     void            resetSelectionGroup();
     void            selectSelectionGroup();
 
     // Getters and Setters
+    SelectionGroup*       getSelectionGroup();
     QGraphicsItem*        getSelectionGroupAsGraphicsItem();
     QList<QGraphicsItem*> getSelectionGroupItems();
 

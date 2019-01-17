@@ -37,42 +37,30 @@ QRectF SceneGraphicsScene::totalSelectedItemsSceneRect()
 //####################################################################################
 //##        Selection Group Handling
 //####################################################################################
-void SceneGraphicsScene::addItemToSelectionGroup(QGraphicsItem *item, QPoint position)
+void SceneGraphicsScene::addItemToSelectionGroup(QGraphicsItem *item)
 {
     int start_count = m_selection_group->childItems().count();
     double angle = 0;
 
     // Check if we were passed the selection group itself
-    if (item->data(User_Roles::Is_Selection_Group).toBool()) {
-        // If so, see if point is over an item already in the group, and if so, remove it from selection group
-        QGraphicsItem *child_item = getItemAtPosition(position);
-        if (child_item != nullptr) m_selection_group->removeFromGroup(child_item);
+    if (item->data(User_Roles::Is_Selection_Group).toBool()) return;
 
-    } else {
-        // If item passed is not selection group, see if item is already in group
-        bool has_it = false;
-        for (auto child : m_selection_group->childItems())
-            if (child == item) has_it = true;
-
-        // If item is in group, remove it (i.e. item was clicked while control key is held down)
-        if (has_it) {
-            m_selection_group->removeFromGroup(item);
-
-        // Otherwise add the item, if there were no items, make sure selection group is selected in scene
-        } else {
-            if (start_count == 0) {
-                angle = item->data(User_Roles::Rotation).toDouble();
-                QPointF center = m_selection_group->boundingRect().center();
-                QTransform t = QTransform().translate(center.x(), center.y()).rotate(angle).translate(-center.x(), -center.y());
-                m_selection_group->setTransform(t);
-                m_selection_group->setData(User_Roles::Rotation, angle);
-            }
-
-            m_selection_group->addToGroup(item);
-            m_selection_group->setEnabled(true);
-            if (m_selection_group->isSelected() == false)
-                m_selection_group->setSelected(true);
+    // If item is in group, remove it (i.e. item was clicked while control key is held down)
+    if (m_selection_group->childItems().contains(item) == false) {
+        if (start_count == 0) {
+            angle = item->data(User_Roles::Rotation).toDouble();
+            QPointF center = m_selection_group->boundingRect().center();
+            QTransform t = QTransform().translate(center.x(), center.y()).rotate(angle).translate(-center.x(), -center.y());
+            m_selection_group->setTransform(t);
+            m_selection_group->setData(User_Roles::Rotation, angle);
+            m_selection_group->setZValue(item->zValue());
         }
+
+        if (item->zValue() > m_selection_group->zValue()) m_selection_group->setZValue(item->zValue());
+
+        m_selection_group->addToGroup(item);
+        m_selection_group->setEnabled(true);
+        m_selection_group->setSelected(true);
     }
 
     // If we removed all the items from the selection group, zero it out
@@ -86,6 +74,7 @@ void SceneGraphicsScene::addItemToSelectionGroup(QGraphicsItem *item, QPoint pos
     m_relay->setLabelText(Label_Names::Label_Object_2, "Group Size X: " + QString::number(m_selection_group->boundingRect().width()) +
                                                                 ", Y: " + QString::number(m_selection_group->boundingRect().height()) );
     m_relay->setLabelText(Label_Names::Label_Object_3, "Group Items: " + QString::number(m_selection_group->childItems().count()) );
+    m_relay->setLabelText(Label_Names::Label_Object_4, "Group Z: " + QString::number(m_selection_group->zValue() ) );
     // !!!!! END
 }
 
@@ -97,17 +86,6 @@ void SceneGraphicsScene::emptySelectionGroup(bool delete_items_during_empty)
         if (delete_items_during_empty) removeItem(child);
     }
     resetSelectionGroup();
-
-    // !!!!! TEMP
-    if (m_relay)
-        m_relay->setLabelText(Label_Names::Label_Object_3, "Group Items: " + QString::number(m_selection_group->childItems().count()) );
-    // !!!!! END
-}
-
-void SceneGraphicsScene::removeItemFromSelectionGroup(QGraphicsItem *item)
-{
-    m_selection_group->removeFromGroup(item);
-    if (m_selection_group->childItems().count() < 1) resetSelectionGroup();
 
     // !!!!! TEMP
     if (m_relay)
@@ -145,6 +123,9 @@ QGraphicsItem* SceneGraphicsScene::getItemAtPosition(QPoint position)
     return item;
 }
 
+SelectionGroup* SceneGraphicsScene::getSelectionGroup()
+{       return m_selection_group; }
+
 QList<QGraphicsItem*> SceneGraphicsScene::getSelectionGroupItems()
 {       return m_selection_group->childItems();     }
 
@@ -161,12 +142,14 @@ void SceneGraphicsScene::selectSelectionGroup()
 //####################################################################################
 SelectionGroup::~SelectionGroup() {}        // Necessary external definition
 
+// Calling this custom paint allows us to bypass built in custom black bounding box of QGraphicsItemGroup
 void SelectionGroup::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(painter);
     Q_UNUSED(option);
     Q_UNUSED(widget);
-    ///QGraphicsItemGroup::paint(painter, option, widget);       // Paints black selection box
+
+    ///QGraphicsItemGroup::paint(painter, option, widget);       // Allows black selection bounding box to be painted
 }
 
 

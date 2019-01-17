@@ -138,7 +138,7 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
         case Qt::Key::Key_S:
         case Qt::Key::Key_D:
             // Send item back to scene before we copy it
-            removeItemFromSelectionGroup(item);
+            my_scene->getSelectionGroup()->removeFromGroup(item);
 
             new_color = QColor::fromRgb(QRandomGenerator::global()->generate()).light(100);
             new_x = item->scenePos().x();
@@ -172,10 +172,10 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
     // If we added (copied) new items to scene, select those items
     if (list_new_items.count() > 0) {
         emptySelectionGroup();
-        for (auto item : list_new_items) addItemToSelectionGroup(item, QPoint(0, 0));
+        for (auto item : list_new_items) addItemToSelectionGroup(item);
     }
 
-    QGraphicsScene::keyPressEvent(event);           // Pass on key press event to children
+    //QGraphicsScene::keyPressEvent(event);         // Don't pass on, if we pass on arrow key presses, it moves view sliders
     invalidate();                                   // Force view to update
 }
 

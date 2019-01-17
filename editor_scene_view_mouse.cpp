@@ -37,19 +37,17 @@ void SceneGraphicsView::enterEvent(QEvent *event)
 // Mouse was pressed
 void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 {
-    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
-
     // On initial mouse down, store mouse origin point
     m_origin =          event->pos();
     m_origin_in_scene = mapToScene(m_origin);
-    m_origin_item =     nullptr;
+    m_origin_item =     itemAt(event->pos());
 
     // If space bar isnt down, process mouse down
     if (dragMode() == QGraphicsView::DragMode::NoDrag) {
 
         // If left mouse button down
         if (event->button() & Qt::LeftButton) {
-            m_origin_item = itemAt(event->pos());                           // Store item that was under mouse
+
 
             if (scene()->selectedItems().count() > 0) {
                 // ******************* If clicked while holding Alt key
@@ -67,26 +65,28 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
 
             // ******************* If no keys are down, only select item under mouse
+            SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
+            QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
+            QGraphicsItem         *item_under;
+
             if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
+                // Break apart selection group
+                for (auto item: my_items) my_scene->getSelectionGroup()->removeFromGroup(item);
+                item_under = itemAt(event->pos());
 
                 // If no item under mouse, deselect all
-                if (m_origin_item == nullptr) {
+                if (item_under == nullptr) {
                     my_scene->emptySelectionGroup();
 
                 } else {
-                    // If we clicked on selection group, check if item is there, if not deselect all
-                    bool is_group = m_origin_item->data(User_Roles::Is_Selection_Group).toBool();
-                    if (is_group) {
-                        QGraphicsItem *item_at = my_scene->getItemAtPosition(m_origin);
-                        if (item_at == nullptr) {
-                           my_scene->emptySelectionGroup();
-                        }
-                    }
+                    // If we clicked an item in the selection group, put group back together
+                    if (my_items.contains(item_under)) {
+                        for (auto item: my_items) my_scene->getSelectionGroup()->addToGroup(item);
 
-                    // If we did click on an item, make that item selected
-                    else if (m_origin_item->isSelected() == false) {
+                    // Otherwise we clicked a new item, set selection group to that
+                    } else {
                         my_scene->emptySelectionGroup();
-                        my_scene->addItemToSelectionGroup(m_origin_item, m_origin);
+                        my_scene->addItemToSelectionGroup(item_under);
                         my_scene->selectSelectionGroup();
                     }
 
@@ -97,10 +97,20 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
             } else if (event->modifiers() & Qt::KeyboardModifier::ControlModifier) {
 
-                // If clicked while control is down, add to selection group
-                // (function will also remove from group if it was already in group)
-                if (m_origin_item != nullptr)
-                    my_scene->addItemToSelectionGroup(m_origin_item, m_origin);
+                // If clicked while control is down, add to selection group, or take out
+                if (m_origin_item != nullptr) {
+
+                    // Break apart selection group, put back together without item clicked
+                    for (auto item: my_items) my_scene->getSelectionGroup()->removeFromGroup(item);
+                    item_under = itemAt(event->pos());
+                    for (auto item: my_items) if (item != item_under) my_scene->getSelectionGroup()->addToGroup(item);
+
+                    // If clicked new item, add that to group
+                    if (my_items.contains(item_under) == false) my_scene->addItemToSelectionGroup(item_under);
+
+                    // If selection box is empty, clear it
+                    if (my_scene->getSelectionGroup()->childItems().count() < 1) my_scene->emptySelectionGroup();
+                }
 
             }
 
@@ -184,7 +194,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
 
     // ******************* If we're in selection mode, process mouse movement and resize box as needed
-    if (m_view_mode == View_Mode::Selecting)
+   if (m_view_mode == View_Mode::Selecting)
         processSelection(event->pos());
 
     // ******************* If mouse moved while over Size Grip, resize
