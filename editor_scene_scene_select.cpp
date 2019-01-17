@@ -40,15 +40,14 @@ QRectF SceneGraphicsScene::totalSelectedItemsSceneRect()
 void SceneGraphicsScene::addItemToSelectionGroup(QGraphicsItem *item)
 {
     int start_count = m_selection_group->childItems().count();
-    double angle = 0;
 
     // Check if we were passed the selection group itself
-    if (item->data(User_Roles::Is_Selection_Group).toBool()) return;
+    if (item == m_selection_group) return;
 
     // If item is in group, remove it (i.e. item was clicked while control key is held down)
     if (m_selection_group->childItems().contains(item) == false) {
         if (start_count == 0) {
-            angle = item->data(User_Roles::Rotation).toDouble();
+            double angle = item->data(User_Roles::Rotation).toDouble();
             QPointF center = m_selection_group->boundingRect().center();
             QTransform t = QTransform().translate(center.x(), center.y()).rotate(angle).translate(-center.x(), -center.y());
             m_selection_group->setTransform(t);
@@ -56,25 +55,22 @@ void SceneGraphicsScene::addItemToSelectionGroup(QGraphicsItem *item)
             m_selection_group->setZValue(item->zValue());
         }
 
-        if (item->zValue() > m_selection_group->zValue()) m_selection_group->setZValue(item->zValue());
+        if (item->zValue() > m_selection_group->zValue())
+            m_selection_group->setZValue(item->zValue());
 
         m_selection_group->addToGroup(item);
         m_selection_group->setEnabled(true);
         m_selection_group->setSelected(true);
     }
 
-    // If we removed all the items from the selection group, zero it out
-    if (m_selection_group->childItems().count() < 1) emptySelectionGroup();
-
-
     // !!!!! TEMP
     m_relay->setLabelText(Label_Names::Label_Object_1, "Group Pos  X: " + QString::number(m_selection_group->boundingRect().x()) +
                                                                 ", Y: " + QString::number(m_selection_group->boundingRect().y()) );
     m_relay->setLabelText(Label_Names::Label_Object_2, "Group Size X: " + QString::number(m_selection_group->boundingRect().width()) +
                                                                 ", Y: " + QString::number(m_selection_group->boundingRect().height()) );
-    m_relay->setLabelText(Label_Names::Label_Object_3, "Group Items: " + QString::number(m_selection_group->childItems().count()) );
-    m_relay->setLabelText(Label_Names::Label_Object_4, "Group Z: " + QString::number(m_selection_group->zValue()) + QString("\t") +
-                                                       "First Item Angle: " + QString::number(angle) );
+    m_relay->setLabelText(Label_Names::Label_Object_3, "Group Items: " +  QString::number(m_selection_group->childItems().count()) );
+    m_relay->setLabelText(Label_Names::Label_Object_4, "Group Z: " +      QString::number(m_selection_group->zValue()) + QString("\t") +
+                                                       "Group Angle: " +  QString::number(m_selection_group->data(User_Roles::Rotation).toDouble()) );
     // !!!!! END
 }
 

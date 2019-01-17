@@ -101,20 +101,20 @@ void SceneGraphicsView::drawGrid()
 //##        Paints selection box, etc on top of items
 void SceneGraphicsView::paintEvent(QPaintEvent *event)
 {
-    // Go ahead and draw grid first
+    // Convert local scene() object to our own SceneGraphicsScene type
+    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
+
+    // ******************** Go ahead and draw grid first
     drawGrid();
 
-    // At this point, if no selected item paint objects and get out of here
-    if (scene()->selectedItems().count() < 1) {
+    // ******************** At this point, if no selected item paint objects and get out of here
+    if (my_scene->getSelectionGroupCount() < 1) {
         QGraphicsView::paintEvent(event);
         return;
     }
 
-
     // ******************** Otherwise, break apart group to draw items in proper z-Order, then put back together
-    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
     QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
-
     for (auto item: my_items) my_scene->getSelectionGroup()->removeFromGroup(item);
     QGraphicsView::paintEvent(event);
     for (auto item: my_items) my_scene->getSelectionGroup()->addToGroup(item);
@@ -126,7 +126,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.setBrush(Qt::NoBrush);
 
-    for (auto item: my_items) {
+    for (auto item: my_scene->getSelectionGroupItems()) {
         // Load in item bounding box
         QPolygonF polygon(item->boundingRect());
 
@@ -152,36 +152,39 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         m_relay->setLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()) );
 
 
-        double  angle = item->data(User_Roles::Rotation).toDouble();
+//        double  angle = item->data(User_Roles::Rotation).toDouble();
 
+//        QPolygonF poly = item->sceneTransform().map(item->boundingRect());
 
-        QPointF center = QLineF( mapToScene(item->boundingRect().topLeft().toPoint()),
-                                 mapToScene(item->boundingRect().bottomRight().toPoint()) ).pointAt(.5);
+//        QPointF center = my_scene->totalSelectedItemsSceneRect().center();
 
-        QTransform remove_rotation = item->sceneTransform();
-        remove_rotation.translate(center.x(), center.y()).rotate(-angle).translate(-center.x(), -center.y());
+//        QTransform remove_rotation;
+//        remove_rotation.translate(center.x(), center.y()).rotate(-angle).translate(-center.x(), -center.y());
+//        poly = remove_rotation.map(poly);
 
-        QTransform t = remove_rotation;
-        qreal m11 = t.m11();
-        qreal m12 = t.m12();
-        qreal m13 = t.m13();
-        qreal m21 = t.m21();
-        qreal m22 = t.m22();
-        qreal m23 = t.m23();
+//        QTransform t = item->sceneTransform() * remove_rotation;
 
-        if (isCloseTo(0, m11, .00001)) m11 = 0;
-        if (isCloseTo(0, m12, .00001)) m12 = 0;
-        if (isCloseTo(0, m13, .00001)) m13 = 0;
-        if (isCloseTo(0, m21, .00001)) m21 = 0;
-        if (isCloseTo(0, m22, .00001)) m22 = 0;
-        if (isCloseTo(0, m23, .00001)) m23 = 0;
+//        painter.setPen(QPen(QBrush(Qt::red), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+//        painter.drawPolygon( mapFromScene(poly) );
+//        painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
-        m_relay->setLabelText(Label_Names::Label_1, "11: " + QString::number(m11) + ", 12: " + QString::number(m12) + ", 13: " + QString::number(m13) );
-        m_relay->setLabelText(Label_Names::Label_2, "21: " + QString::number(m21) + ", 22: " + QString::number(m22) + ", 23: " + QString::number(m23) );
-//        m_relay->setLabelText(Label_Names::Label_3,
-//                                "31: " + QString::number(item->sceneTransform().m31()) +
-//                              ", 32: " + QString::number(item->sceneTransform().m32()) +
-//                              ", 33: " + QString::number(item->sceneTransform().m33()) );
+//        qreal m11 = t.m11();
+//        qreal m12 = t.m12();
+//        qreal m13 = t.m13();
+//        qreal m21 = t.m21();
+//        qreal m22 = t.m22();
+//        qreal m23 = t.m23();
+
+//        if (isCloseTo(0, m11, .00001)) m11 = 0;
+//        if (isCloseTo(0, m12, .00001)) m12 = 0;
+//        if (isCloseTo(0, m13, .00001)) m13 = 0;
+//        if (isCloseTo(0, m21, .00001)) m21 = 0;
+//        if (isCloseTo(0, m22, .00001)) m22 = 0;
+//        if (isCloseTo(0, m23, .00001)) m23 = 0;
+
+//        m_relay->setLabelText(Label_Names::Label_1, "11: " + QString::number(m11) + ", 12: " + QString::number(m12) + ", 13: " + QString::number(m13) );
+//        m_relay->setLabelText(Label_Names::Label_2, "21: " + QString::number(m21) + ", 22: " + QString::number(m22) + ", 23: " + QString::number(m23) );
+
         // !!!!! END
     }
 
@@ -200,9 +203,9 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     bool draw_box = false;
     bool do_squares = true;
 
-    if (scene()->selectedItems().count() > 0) draw_box = true;
-    if (scene()->selectedItems().count() == 1) {
-         double angle = scene()->selectedItems().first()->data(User_Roles::Rotation).toDouble();
+    if (my_scene->getSelectionGroupCount() > 0) draw_box = true;
+    if (my_scene->getSelectionGroupCount() >= 1) {
+         double angle = my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Rotation).toDouble();
          if (isSquare(angle, ANGLE_TOLERANCE) == false) do_squares = false;
     }
 
@@ -211,12 +214,12 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 
     if (draw_box) {
         // Map item bounding box to screen so we can draw it
-        QGraphicsItem *item = scene()->selectedItems().first();     // Grab only selected item
-        QPolygonF polygon(item->boundingRect());                    // Get bounding box of item as polygon
+        QGraphicsItem *item = my_scene->getSelectionGroupAsGraphicsItem();      // Grab selection box
+        QPolygonF polygon(item->boundingRect());                                // Get bounding box of item as polygon
 
-        QTransform transform = item->sceneTransform();              // Get item bounding box to scene transform
-        polygon = transform.map(polygon);                           // Map bounding box to scene location
-        to_view = mapFromScene(polygon);                            // Convert bounding box to view coordinates
+        QTransform transform = item->sceneTransform();                          // Get item bounding box to scene transform
+        polygon = transform.map(polygon);                                       // Map bounding box to scene location
+        to_view = mapFromScene(polygon);                                        // Convert bounding box to view coordinates
 
         // ***** Store corner handle polygons
         QPointF top_left =  transform.map(item->boundingRect().topLeft());
@@ -315,7 +318,6 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     painter.setPen(QPen(Qt::blue, 3));
     painter.drawPolygon(m_temp_polygon2);
     // !!!!! END
-
 }
 
 QRectF SceneGraphicsView::rectAtCenterPoint(QPoint center, double rect_size)

@@ -64,6 +64,8 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     // Try and lock function, so we ony run this once at a time
     if (rotate_mutex.tryLock() == false) return;
 
+    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+
     double angle1 = calcRotationAngleInDegrees( mapFromScene(m_start_rotate_rect.center()), m_origin);
     double angle2 = calcRotationAngleInDegrees( mapFromScene(m_start_rotate_rect.center()), mouse_in_view);
     double angle = angle2 - angle1;
@@ -73,25 +75,20 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     if (angle_diff > 180)  angle_diff -= 360;
 
     // Group selected items and apply rotation to collection
-    QGraphicsItemGroup *group = scene()->createItemGroup(scene()->selectedItems());
+    QGraphicsItemGroup *group = scene()->createItemGroup( { my_scene->getSelectionGroupAsGraphicsItem() } );
     QPointF offset = group->sceneBoundingRect().center();
-
-
-
-    QTransform transform;
 
     // Offset difference of original center bounding box to possible slightly different center of new bounding box
     offset.setX(offset.x() - (offset.x() - m_start_rotate_rect.center().x()) );
     offset.setY(offset.y() - (offset.y() - m_start_rotate_rect.center().y()) );
 
     // Save new item rotations for use later
-    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
-    for (auto child : my_scene->getSelectionGroupItems()) {
+    for (auto child : my_scene->getSelectionGroupItems())
         updateItemRotation(child, angle_diff);
-    }
     updateItemRotation(my_scene->getSelectionGroupAsGraphicsItem(), angle_diff);
 
     // Apply new rotations and destroy group
+    QTransform transform;
     transform.translate( offset.x(),  offset.y());
     transform.rotate(angle_diff);
     transform.translate(-offset.x(), -offset.y());

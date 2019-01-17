@@ -34,7 +34,6 @@ SceneGraphicsScene::SceneGraphicsScene(QWidget *parent, DrProject *project, Inte
                                 QGraphicsItem::ItemSendsScenePositionChanges | QGraphicsItem::ItemSendsGeometryChanges);
     addItem(m_selection_group);
     emptySelectionGroup();
-    m_selection_group->setData(User_Roles::Is_Selection_Group, true);
 }
 
 SceneGraphicsScene::~SceneGraphicsScene()
@@ -153,7 +152,6 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
             new_item->setPos(new_x, new_y);
             new_item->setTransform(item->transform());          // Includes rotation and scaling
 
-            new_item->setData(User_Roles::Position, QPointF(new_item->pos().x(), new_item->pos().y()));
             new_item->setData(User_Roles::Scale, item->data(User_Roles::Scale).toPointF());
             new_item->setData(User_Roles::Rotation, item->data(User_Roles::Rotation).toDouble());
 

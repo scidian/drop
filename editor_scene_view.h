@@ -65,11 +65,10 @@ private:
     QMutex       resize_mutex     { QMutex::NonRecursive };         // Used to keep resizing from backing up
     QMutex       rotate_mutex     { QMutex::NonRecursive };         // Used to keep rotating from backing up
 
-
     // Mouse event variables
-    QPoint                  m_origin;                               // Stores mouse down position in view coordinates
-    QPointF                 m_origin_in_scene;                      // Stores mouse down position in scene coordinates
-    QGraphicsItem          *m_origin_item;                          // Stores top item under mouse (if any) on mouse down event
+    QPoint                              m_origin;                   // Stores mouse down position in view coordinates
+    QPointF                             m_origin_in_scene;          // Stores mouse down position in scene coordinates
+    QGraphicsItem                      *m_origin_item;              // Stores top item under mouse (if any) on mouse down event
 
 
     // Selection Bounding Box Variables
@@ -80,24 +79,25 @@ private:
 
 
     // View_Mode::Selecting Variables
-    SceneViewRubberBand    *m_rubber_band;                          // Holds our view's RubberBand object
-    QList<QGraphicsItem *>  m_items_start;                          // Stores items selected at start of new rubber band box
+    SceneViewRubberBand            *m_rubber_band;                  // Holds our view's RubberBand object
+    QList<QGraphicsItem *>          m_items_start;                  // Stores items selected at start of new rubber band box
 
 
     // View_Mode::Resizing Variables
-    QRectF                  m_start_resize_rect;                    // Stores starting rect of selection before resize starts
-    Position_Flags          m_start_resize_grip;                    // Stores which Size Grip Handle we started resize over
-    X_Axis                  m_do_x;                                 // Processed after click to know which sides to resize from
-    Y_Axis                  m_do_y;                                 // Processed after click to know which sides to resize from
-
+    QRectF                          m_start_resize_rect;            // Stores starting rect of selection before resize starts
+    Position_Flags                  m_start_resize_grip;            // Stores which Size Grip Handle we started resize over
+    X_Axis                          m_do_x;                         // Processed after click to know which sides to resize from
+    Y_Axis                          m_do_y;                         // Processed after click to know which sides to resize from
+    QPointF                         m_pre_resize_scale;             // Scale of selection group before we start resize
+    QMap<Position_Flags, QPointF>   m_pre_resize_corners;           // Stores corner coordinates before resizing starts
 
     // View_Mode::Rotating Variables
-    double                  m_last_angle_diff;                      // Stores angle difference last time we checked
-    QRectF                  m_start_rotate_rect;                    // Stores starting rect of selection before resize starts
+    double                          m_last_angle_diff;              // Stores angle difference last time we checked
+    QRectF                          m_start_rotate_rect;            // Stores starting rect of selection before resize starts
 
 
-    QPolygonF               m_temp_polygon;                 // TEMP
-    QPolygonF               m_temp_polygon2;                // TEMP
+    QPolygonF                       m_temp_polygon;         // TEMP
+    QPolygonF                       m_temp_polygon2;        // TEMP
 
 
 public:

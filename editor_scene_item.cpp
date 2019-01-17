@@ -53,8 +53,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     // Value is the new position
     if (change == ItemPositionHasChanged && scene()) {
-        QPointF new_pos = value.toPointF();
-        setData(User_Roles::Position, new_pos);
+        ///QPointF new_pos = value.toPointF();
     }
 
     // Value is the new transform
