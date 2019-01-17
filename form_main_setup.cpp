@@ -176,13 +176,17 @@ void FormMain::buildWindowModeEditScene()
                 label_2->setObjectName(QStringLiteral("label_2"));
                 label_2->setGeometry(QRect(10, 20, 220, 21));
                 label_2->setFont(font);
+                label_3 = new QLabel(areaBottom);
+                label_3->setObjectName(QStringLiteral("label_2"));
+                label_3->setGeometry(QRect(10, 35, 220, 21));
+                label_3->setFont(font);
                 label_mouse_1 = new QLabel(areaBottom);
                 label_mouse_1->setObjectName(QStringLiteral("label_mouse_1"));
-                label_mouse_1->setGeometry(QRect(10, 35, 220, 21));
+                label_mouse_1->setGeometry(QRect(10, 50, 220, 21));
                 label_mouse_1->setFont(font);
                 label_mouse_2 = new QLabel(areaBottom);
                 label_mouse_2->setObjectName(QStringLiteral("label_mouse_2"));
-                label_mouse_2->setGeometry(QRect(10, 50, 220, 21));
+                label_mouse_2->setGeometry(QRect(10, 65, 220, 21));
                 label_mouse_2->setFont(font);
 
                 label_object_1 = new QLabel(areaBottom);
@@ -229,7 +233,7 @@ void FormMain::buildWindowModeEditScene()
 
                 label_bottom = new QLabel(areaBottom);
                 label_bottom->setObjectName(QStringLiteral("label_bottom"));
-                label_bottom->setGeometry(QRect(10, 70, 700, 21));
+                label_bottom->setGeometry(QRect(10, 80, 700, 21));
                 label_bottom->setFont(font);
         splitterVertical->addWidget(areaBottom);
 

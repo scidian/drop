@@ -48,7 +48,7 @@ void SceneGraphicsView::processSelection(QPoint mouse_in_view)
     selection_area.addPolygon(mapToScene(m_rubber_band->geometry()));                                   // Convert box to scene coords
     selection_area.closeSubpath();                                                                      // Closes an open polygon
 
-    QList<QGraphicsItem*> selection_area_items = scene()->items(selection_area, Qt::ItemSelectionMode::IntersectsItemBoundingRect,
+    QList<QGraphicsItem*> selection_area_items = scene()->items(selection_area, Qt::ItemSelectionMode::IntersectsItemShape,
                                                                 Qt::SortOrder::DescendingOrder, viewportTransform());
 
     // Add items in selection area to group

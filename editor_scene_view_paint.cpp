@@ -150,6 +150,38 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
                                                       ", Scale Y: " +   QString::number(my_scale.y()) );
         m_relay->setLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle));
         m_relay->setLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()) );
+
+
+        double  angle = item->data(User_Roles::Rotation).toDouble();
+
+
+        QPointF center = QLineF( mapToScene(item->boundingRect().topLeft().toPoint()),
+                                 mapToScene(item->boundingRect().bottomRight().toPoint()) ).pointAt(.5);
+
+        QTransform remove_rotation = item->sceneTransform();
+        remove_rotation.translate(center.x(), center.y()).rotate(-angle).translate(-center.x(), -center.y());
+
+        QTransform t = remove_rotation;
+        qreal m11 = t.m11();
+        qreal m12 = t.m12();
+        qreal m13 = t.m13();
+        qreal m21 = t.m21();
+        qreal m22 = t.m22();
+        qreal m23 = t.m23();
+
+        if (isCloseTo(0, m11, .00001)) m11 = 0;
+        if (isCloseTo(0, m12, .00001)) m12 = 0;
+        if (isCloseTo(0, m13, .00001)) m13 = 0;
+        if (isCloseTo(0, m21, .00001)) m21 = 0;
+        if (isCloseTo(0, m22, .00001)) m22 = 0;
+        if (isCloseTo(0, m23, .00001)) m23 = 0;
+
+        m_relay->setLabelText(Label_Names::Label_1, "11: " + QString::number(m11) + ", 12: " + QString::number(m12) + ", 13: " + QString::number(m13) );
+        m_relay->setLabelText(Label_Names::Label_2, "21: " + QString::number(m21) + ", 22: " + QString::number(m22) + ", 23: " + QString::number(m23) );
+//        m_relay->setLabelText(Label_Names::Label_3,
+//                                "31: " + QString::number(item->sceneTransform().m31()) +
+//                              ", 32: " + QString::number(item->sceneTransform().m32()) +
+//                              ", 33: " + QString::number(item->sceneTransform().m33()) );
         // !!!!! END
     }
 

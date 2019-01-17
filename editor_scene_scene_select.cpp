@@ -68,13 +68,13 @@ void SceneGraphicsScene::addItemToSelectionGroup(QGraphicsItem *item)
 
 
     // !!!!! TEMP
-    m_relay->setLabelText(Label_Names::Label_1, "First Item Angle: " + QString::number(angle));
     m_relay->setLabelText(Label_Names::Label_Object_1, "Group Pos  X: " + QString::number(m_selection_group->boundingRect().x()) +
                                                                 ", Y: " + QString::number(m_selection_group->boundingRect().y()) );
     m_relay->setLabelText(Label_Names::Label_Object_2, "Group Size X: " + QString::number(m_selection_group->boundingRect().width()) +
                                                                 ", Y: " + QString::number(m_selection_group->boundingRect().height()) );
     m_relay->setLabelText(Label_Names::Label_Object_3, "Group Items: " + QString::number(m_selection_group->childItems().count()) );
-    m_relay->setLabelText(Label_Names::Label_Object_4, "Group Z: " + QString::number(m_selection_group->zValue() ) );
+    m_relay->setLabelText(Label_Names::Label_Object_4, "Group Z: " + QString::number(m_selection_group->zValue()) + QString("\t") +
+                                                       "First Item Angle: " + QString::number(angle) );
     // !!!!! END
 }
 

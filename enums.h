@@ -33,7 +33,7 @@ enum class Form_Main_Mode {
 // Form Main enum for referencing debug labels
 enum class Label_Names
 {
-    Label_1,            Label_2,            Label_Mouse_1,      Label_Mouse_2,
+    Label_1,            Label_2,            Label_3,            Label_Mouse_1,      Label_Mouse_2,
     Label_Object_1,     Label_Object_2,     Label_Object_3,     Label_Object_4,
     Label_Position,     Label_Center,       Label_Scale,        Label_Rotate,       Label_Z_Order,      Label_Pos_Flag,
     Label_Bottom,
