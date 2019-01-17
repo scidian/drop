@@ -132,6 +132,9 @@ QList<QGraphicsItem*> SceneGraphicsScene::getSelectionGroupItems()
 QGraphicsItem* SceneGraphicsScene::getSelectionGroupAsGraphicsItem()
 {       return m_selection_group; }
 
+int SceneGraphicsScene::getSelectionGroupCount()
+{       return m_selection_group->childItems().count();     }
+
 void SceneGraphicsScene::selectSelectionGroup()
 {       m_selection_group->setSelected(true);       }
 

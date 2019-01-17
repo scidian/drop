@@ -105,8 +105,15 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
                     item_under = itemAt(event->pos());
                     for (auto item: my_items) if (item != item_under) my_scene->getSelectionGroup()->addToGroup(item);
 
-                    // If clicked new item, add that to group
-                    if (my_items.contains(item_under) == false) my_scene->addItemToSelectionGroup(item_under);
+                    // If we originally clicked on group, but that point is empty, start selection box
+                    if (item_under == nullptr) {
+                        startSelect(event);
+                        return;
+
+                    // Otherwise, if we clicked a new item, add that to group
+                    } else if (my_items.contains(item_under) == false) {
+                        my_scene->addItemToSelectionGroup(item_under);
+                    }
 
                     // If selection box is empty, clear it
                     if (my_scene->getSelectionGroup()->childItems().count() < 1) my_scene->emptySelectionGroup();

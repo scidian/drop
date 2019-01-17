@@ -56,6 +56,7 @@ public:
     SelectionGroup*       getSelectionGroup();
     QGraphicsItem*        getSelectionGroupAsGraphicsItem();
     QList<QGraphicsItem*> getSelectionGroupItems();
+    int                   getSelectionGroupCount();
 
 public slots:
     void            sceneChanged(QList<QRectF> region);
