@@ -29,7 +29,7 @@
 #include <QMainWindow>
 #include <QtWidgets>
 
-#include "01_project.h"
+#include "project.h"
 #include "globals.h"
 #include "interface_relay.h"
 
@@ -58,6 +58,7 @@ public:
     Globals        *globals;                                            // Holds project globals
     Form_Main_Mode  current_mode;                                       // Holds current editing mode of FormMain
     Form_Main_Focus current_focus;                                      // Holds Widget that currently has focus
+    bool            done_loading = false;                               // True after initial startup of FormMain
 
     // Locals that need to be SAVED / LOADED from each project
     DrProject      *project;                                            // Holds whatever the current open game project is
@@ -85,9 +86,9 @@ private:
     QPushButton   *buttonAtlas, *buttonFonts, *buttonPlay, *buttonSettings, *buttonWorlds;
 
     // Labels to display info
-    QLabel        *label_1,         *label_2,           *label_mouse_1,     *label_mouse_2;
+    QLabel        *label_1,         *label_2,           *label_3,           *label_mouse_1,     *label_mouse_2;
     QLabel        *label_object_1,  *label_object_2,    *label_object_3,    *label_object_4;
-    QLabel        *label_position,  *label_center,      *label_scale,       *label_rotate,       *label_z_order;
+    QLabel        *label_position,  *label_center,      *label_scale,       *label_rotate,       *label_z_order,    *label_pos_flag;
     QLabel        *label_bottom;
 
 public:

@@ -18,7 +18,7 @@
 //####################################################################################
 //##        Setting up of form main
 //####################################################################################
-// Lists all child widgets of FormMain
+// Pops up a message box listing all child widgets of FormMain
 void FormMain::listChildren()
 {
     QString widget_list;
@@ -143,9 +143,13 @@ void FormMain::buildWindowModeEditScene()
                     viewMain->setObjectName(QStringLiteral("viewMain"));
                     viewMain->setRenderHint(QPainter::Antialiasing, false);
                     viewMain->setDragMode(QGraphicsView::DragMode::NoDrag);
-                    viewMain->setOptimizationFlags(QGraphicsView::DontSavePainterState);
-                    viewMain->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
-                    viewMain->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+                    viewMain->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);
+                    viewMain->setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
+
+                    // This setting means we will decide when to call update(), controls recurssive paint events
+                    viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
+                    ///viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
+
                     viewMain->setScene(scene);
                         QSizePolicy sizePolicyView(QSizePolicy::MinimumExpanding, QSizePolicy::Expanding);
                         sizePolicyView.setHorizontalStretch(1);
@@ -176,13 +180,17 @@ void FormMain::buildWindowModeEditScene()
                 label_2->setObjectName(QStringLiteral("label_2"));
                 label_2->setGeometry(QRect(10, 20, 220, 21));
                 label_2->setFont(font);
+                label_3 = new QLabel(areaBottom);
+                label_3->setObjectName(QStringLiteral("label_2"));
+                label_3->setGeometry(QRect(10, 35, 220, 21));
+                label_3->setFont(font);
                 label_mouse_1 = new QLabel(areaBottom);
                 label_mouse_1->setObjectName(QStringLiteral("label_mouse_1"));
-                label_mouse_1->setGeometry(QRect(10, 35, 220, 21));
+                label_mouse_1->setGeometry(QRect(10, 50, 220, 21));
                 label_mouse_1->setFont(font);
                 label_mouse_2 = new QLabel(areaBottom);
                 label_mouse_2->setObjectName(QStringLiteral("label_mouse_2"));
-                label_mouse_2->setGeometry(QRect(10, 50, 220, 21));
+                label_mouse_2->setGeometry(QRect(10, 65, 220, 21));
                 label_mouse_2->setFont(font);
 
                 label_object_1 = new QLabel(areaBottom);
@@ -222,10 +230,14 @@ void FormMain::buildWindowModeEditScene()
                 label_z_order->setObjectName(QStringLiteral("label_z_order"));
                 label_z_order->setGeometry(QRect(560, 65, 400, 21));
                 label_z_order->setFont(font);
+                label_pos_flag = new QLabel(areaBottom);
+                label_pos_flag->setObjectName(QStringLiteral("label_pos_flag"));
+                label_pos_flag->setGeometry(QRect(560, 80, 400, 21));
+                label_pos_flag->setFont(font);
 
                 label_bottom = new QLabel(areaBottom);
                 label_bottom->setObjectName(QStringLiteral("label_bottom"));
-                label_bottom->setGeometry(QRect(10, 70, 700, 21));
+                label_bottom->setGeometry(QRect(10, 80, 700, 21));
                 label_bottom->setFont(font);
         splitterVertical->addWidget(areaBottom);
 

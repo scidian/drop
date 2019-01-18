@@ -6,29 +6,29 @@
 //
 //
 
-#include <cmath>            // For std::atan2()
+#include "project.h"
+#include "project_world.h"
+#include "project_world_scene.h"
+#include "project_world_scene_object.h"
+#include "editor_scene_item.h"
 
-#include "01_project.h"
-#include "02_world.h"
-#include "03_scene.h"
-#include "04_object.h"
-#include "05_item.h"
+#include "settings.h"
+#include "settings_component.h"
+#include "settings_component_property.h"
 
-#include "30_settings.h"
-#include "31_component.h"
-#include "32_property.h"
-
+#include "editor_scene_scene.h"
 #include "editor_scene_view.h"
 #include "interface_relay.h"
 
 
-// Starts rotating mode
+//####################################################################################
+//##        Starts rotating mode
+//####################################################################################
 void SceneGraphicsView::startRotate()
 {
     m_view_mode = View_Mode::Rotating;
 
-    m_start_resize_rect = totalSelectedItemsSceneRect();                // Store starting scene rect of initial selection bounding box
-    m_selection_center = mapFromScene(m_start_resize_rect.center());    // Store initial view rect center of initial selection bounding box
+    m_start_rotate_rect = totalSelectedItemsSceneRect();                // Store starting scene rect of initial selection bounding box
     m_last_angle_diff = 0;                                              // Reset initial rotate event angle at 0
 }
 
@@ -60,14 +60,18 @@ bool SceneGraphicsView::isCloseTo(double number_desired, double number_to_check,
 
 
 
-// Calculates rotation
+//####################################################################################
+//##        Main Rotation Function
+//####################################################################################
 void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
 {
     // Try and lock function, so we ony run this once at a time
     if (rotate_mutex.tryLock() == false) return;
 
-    double angle1 = calcRotationAngleInDegrees(m_selection_center, m_origin);
-    double angle2 = calcRotationAngleInDegrees(m_selection_center, mouse_in_view);
+    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+
+    double angle1 = calcRotationAngleInDegrees( mapFromScene(m_start_rotate_rect.center()), m_origin);
+    double angle2 = calcRotationAngleInDegrees( mapFromScene(m_start_rotate_rect.center()), mouse_in_view);
     double angle = angle2 - angle1;
     double angle_diff = angle - m_last_angle_diff;
 
@@ -75,26 +79,20 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     if (angle_diff > 180)  angle_diff -= 360;
 
     // Group selected items and apply rotation to collection
-    QGraphicsItemGroup *group = scene()->createItemGroup(scene()->selectedItems());
+    QGraphicsItemGroup *group = scene()->createItemGroup( { my_scene->getSelectionGroupAsGraphicsItem() } );
     QPointF offset = group->sceneBoundingRect().center();
-    QTransform transform;
 
     // Offset difference of original center bounding box to possible slightly different center of new bounding box
-    offset.setX(offset.x() - (offset.x() - m_start_resize_rect.center().x()) );
-    offset.setY(offset.y() - (offset.y() - m_start_resize_rect.center().y()) );
+    offset.setX(offset.x() - (offset.x() - m_start_rotate_rect.center().x()) );
+    offset.setY(offset.y() - (offset.y() - m_start_rotate_rect.center().y()) );
 
     // Save new item rotations for use later
-    for (auto item : group->childItems()) {
-        double my_angle = item->data(User_Roles::Rotation).toDouble();
-        double new_angle =  my_angle + angle_diff;
-
-        if (new_angle >=  360) { do { new_angle -= 360; } while (new_angle >=  360); }
-        if (new_angle <= -360) { do { new_angle += 360; } while (new_angle <= -360); }
-
-        item->setData(User_Roles::Rotation, new_angle);
-    }
+    for (auto child : my_scene->getSelectionGroupItems())
+        updateItemRotation(child, angle_diff);
+    updateItemRotation(my_scene->getSelectionGroupAsGraphicsItem(), angle_diff);
 
     // Apply new rotations and destroy group
+    QTransform transform;
     transform.translate( offset.x(),  offset.y());
     transform.rotate(angle_diff);
     transform.translate(-offset.x(), -offset.y());
@@ -105,32 +103,46 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     m_last_angle_diff = angle;
 
     // !!!!! TEMP:
-    m_interface->setLabelText(Label_Names::Label_1, "Angle 1: " + QString::number(angle1));
-    m_interface->setLabelText(Label_Names::Label_2, "Angle 2: " + QString::number(angle2));
-    m_interface->setLabelText(Label_Names::Label_Object_1, "Angle: " + QString::number(angle));
-    m_interface->setLabelText(Label_Names::Label_Object_2, "Difference: " + QString::number(angle_diff) );
+    m_relay->setLabelText(Label_Names::Label_Object_3, "Angle 1: " + QString::number(angle1) +
+                                                     ", Angle 2: " + QString::number(angle2));
+    m_relay->setLabelText(Label_Names::Label_Object_4, "Angle: " + QString::number(angle) +
+                                                      ", Diff: " + QString::number(angle_diff) );
     // !!!!! END
 
     rotate_mutex.unlock();
 }
 
+void SceneGraphicsView::updateItemRotation(QGraphicsItem *item, double angle_addition)
+{
+    double my_angle = item->data(User_Roles::Rotation).toDouble();
+    double new_angle =  my_angle + angle_addition;
 
+    if (new_angle >=  360) { do { new_angle -= 360; } while (new_angle >=  360); }
+    if (new_angle <= -360) { do { new_angle += 360; } while (new_angle <= -360); }
+
+    item->setData(User_Roles::Rotation, new_angle);
+}
+
+
+//####################################################################################
+//##        Calculates angle from a center point to any target point, 0 = Up
+//####################################################################################
 double SceneGraphicsView::calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt)
 {
-    // calculate the angle theta from the deltaY and deltaX values, (atan2 returns radians values from [-PI,PI])
-    // 0 currently points EAST.
-    // NOTE: By preserving Y and X param order to atan2,  we are expecting a CLOCKWISE angle direction.
-    double theta = std::atan2(targetPt.y() - centerPt.y(), targetPt.x() - centerPt.x());
+    // Calculate the angle theta from the deltaY and deltaX values (atan2 returns radians values from [-PI, PI])
+    // 0 currently points EAST
+    // NOTE: By preserving Y and X param order to atan2,  we are expecting a CLOCKWISE angle direction
+    double theta = qAtan2(targetPt.y() - centerPt.y(), targetPt.x() - centerPt.x());
 
-    // rotate the theta angle clockwise by 90 degrees (this makes 0 point NORTH)
+    // Rotate the theta angle clockwise by 90 degrees (this makes 0 point NORTH)
     // NOTE: adding to an angle rotates it clockwise, subtracting would rotate it counter-clockwise
-    theta += 3.141592653589793238463/2.0;
+    theta += 3.141592653589793238463 / 2.0;
 
-    // convert from radians to degrees this will give you an angle from [0->270],[-180,0]
-    double angle = theta * (180.0/3.141592653589793238463);
+    // Convert from radians to degrees this will give you an angle from [0->270], [-180,0]
+    double angle = theta * (180.0 / 3.141592653589793238463);
 
-    // convert to positive range (0-360) since we want to prevent negative angles, adjust them now.
-    // we can assume that atan2 will not return a negative value greater than one partial rotation
+    // Convert to positive range (0-360) since we want to prevent negative angles, adjust them now
+    // We can assume that atan2 will not return a negative value greater than one partial rotation
     if (angle < 0) { angle += 360; }
 
     return angle;

@@ -11,7 +11,7 @@
 
 #include <QGraphicsItem>
 
-#include "30_settings.h"
+#include "settings.h"
 
 #include "form_main.h"
 
@@ -49,9 +49,6 @@ public:
     // Getters and Setters
     Origin                  getOrigin() { return m_origin; }
 
-    // Functions
-    void                    setPositionByOrigin(QPointF origin_point, double new_x, double new_y);
-    void                    setPositionByOrigin(Origin by_origin, double new_x, double new_y);
 
 };
 

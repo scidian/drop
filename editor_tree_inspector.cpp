@@ -6,14 +6,14 @@
 //
 //
 
-#include "01_project.h"
-#include "02_world.h"
-#include "03_scene.h"
-#include "04_object.h"
+#include "project.h"
+#include "project_world.h"
+#include "project_world_scene.h"
+#include "project_world_scene_object.h"
 
-#include "30_settings.h"
-#include "31_component.h"
-#include "32_property.h"
+#include "settings.h"
+#include "settings_component.h"
+#include "settings_component_property.h"
 
 #include "editor_tree_inspector.h"
 #include "interface_relay.h"
@@ -32,19 +32,19 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     std::string type_string = StringFromType(selected_type);
 
     // !!!!! TEMP:
-    m_interface->setLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( selected_key ) + ", TYPE: " + QString::fromStdString(type_string));
-    m_interface->setLabelText(Label_Names::Label_Object_2, "");
-    m_interface->setLabelText(Label_Names::Label_Object_3, "");
+    m_relay->setLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( selected_key ) + ", TYPE: " + QString::fromStdString(type_string));
+    m_relay->setLabelText(Label_Names::Label_Object_2, "");
+    m_relay->setLabelText(Label_Names::Label_Object_3, "");
     // !!!!! END
 
     // Change Advisor text after new item selection
     switch (selected_type) {
-    case DrTypes::World:        m_interface->setAdvisorInfo(Advisor_Info::World_Object);         break;
-    case DrTypes::Scene:        m_interface->setAdvisorInfo(Advisor_Info::Scene_Object);         break;
-    case DrTypes::Camera:       m_interface->setAdvisorInfo(Advisor_Info::Camera_Object);        break;
-    case DrTypes::Character:    m_interface->setAdvisorInfo(Advisor_Info::Character_Object);     break;
-    case DrTypes::Object:       m_interface->setAdvisorInfo(Advisor_Info::Object_Object);        break;
-    default:                    m_interface->setAdvisorInfo(Advisor_Info::Not_Set);
+    case DrTypes::World:        m_relay->setAdvisorInfo(Advisor_Info::World_Object);         break;
+    case DrTypes::Scene:        m_relay->setAdvisorInfo(Advisor_Info::Scene_Object);         break;
+    case DrTypes::Camera:       m_relay->setAdvisorInfo(Advisor_Info::Camera_Object);        break;
+    case DrTypes::Character:    m_relay->setAdvisorInfo(Advisor_Info::Character_Object);     break;
+    case DrTypes::Object:       m_relay->setAdvisorInfo(Advisor_Info::Object_Object);        break;
+    default:                    m_relay->setAdvisorInfo(Advisor_Info::Not_Set);
     }
 
 
@@ -135,7 +135,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 // Handles changing the Advisor on Mouse Enter
 void TreeInspector::enterEvent(QEvent *event)
 {
-    m_interface->setAdvisorInfo(Advisor_Info::Object_Inspector);
+    m_relay->setAdvisorInfo(Advisor_Info::Object_Inspector);
     QTreeWidget::enterEvent(event);
 }
 
@@ -150,7 +150,7 @@ void TreeInspector::itemWasClicked(QTreeWidgetItem *item, int column)
     Q_UNUSED(item);
     Q_UNUSED(column);
 
-    m_interface->showMessageBox("Hi There Joe");
+    m_relay->showMessageBox("Hi There Joe");
 
     // If no item is selected in tree view, exit function
     //if (treeScene->getSelectedKey() == 0) { return; }

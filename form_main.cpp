@@ -6,14 +6,14 @@
 //
 //
 
-#include "01_project.h"
-#include "02_world.h"
-#include "03_scene.h"
-#include "04_object.h"
+#include "project.h"
+#include "project_world.h"
+#include "project_world_scene.h"
+#include "project_world_scene_object.h"
 
-#include "30_settings.h"
-#include "31_component.h"
-#include "32_property.h"
+#include "settings.h"
+#include "settings_component.h"
+#include "settings_component_property.h"
 
 #include "editor_scene_scene.h"
 #include "editor_tree_advisor.h"
@@ -87,6 +87,7 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
     }
     // !!!!! END
 
+    done_loading = true;
 }
 
 
@@ -122,10 +123,13 @@ void FormMain::setAdvisorInfo(HeaderBodyList header_body_list)
 // Sets the text of a label on FormMain
 void FormMain::setLabelText(Label_Names label_name, QString new_text)
 {
+    if (!done_loading) return;
+
     switch (label_name)
     {
     case Label_Names::Label_1:          label_1->setText(new_text);         break;
     case Label_Names::Label_2:          label_2->setText(new_text);         break;
+    case Label_Names::Label_3:          label_3->setText(new_text);         break;
     case Label_Names::Label_Mouse_1:    label_mouse_1->setText(new_text);   break;
     case Label_Names::Label_Mouse_2:    label_mouse_2->setText(new_text);   break;
 
@@ -139,6 +143,7 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
     case Label_Names::Label_Scale:      label_scale->setText(new_text);     break;
     case Label_Names::Label_Rotate:     label_rotate->setText(new_text);    break;
     case Label_Names::Label_Z_Order:    label_z_order->setText(new_text);   break;
+    case Label_Names::Label_Pos_Flag:   label_pos_flag->setText(new_text);  break;
 
     case Label_Names::Label_Bottom:     label_bottom->setText(new_text);    break;
     }

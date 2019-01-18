@@ -20,7 +20,7 @@ class TreeScene: public QTreeWidget
 
 private:
     DrProject      *m_project;                  // Pointer to currently loaded project
-    InterfaceRelay *m_interface;                // Pointer to interface class of parent form
+    InterfaceRelay *m_relay;                    // Pointer to InterfaceRelay class of parent form
 
     long            m_selected_key = 0;         // Holds first selected item in QTreeWidget (treeScene)
     bool            m_is_dragging;              // Set to true when we are dragging
@@ -29,8 +29,8 @@ private:
     int             m_mouse_y;
 
 public:
-    explicit        TreeScene(QWidget *parent, DrProject *project, InterfaceRelay *interface) :
-                              QTreeWidget (parent), m_project(project), m_interface(interface) { }
+    explicit        TreeScene(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
+                              QTreeWidget (parent), m_project(project), m_relay(relay) { }
 
     // Function calls
     void            populateTreeSceneList();
@@ -66,11 +66,11 @@ class SceneTreeHighlightProxy : public QProxyStyle
 {
 private:
     TreeScene       *m_parent_tree;              // Pointer to parent TreeScene
-    InterfaceRelay  *m_interface;                // Pointer to interface class of parent form
+    InterfaceRelay  *m_relay;                    // Pointer to InterfaceRelay class of parent form
 
 public:
-    explicit SceneTreeHighlightProxy(QStyle *baseStyle, TreeScene *parent_tree, InterfaceRelay *interface) :
-                                     QProxyStyle(baseStyle), m_parent_tree(parent_tree), m_interface(interface) { }
+    explicit SceneTreeHighlightProxy(QStyle *baseStyle, TreeScene *parent_tree, InterfaceRelay *relay) :
+                                     QProxyStyle(baseStyle), m_parent_tree(parent_tree), m_relay(relay) { }
     virtual ~SceneTreeHighlightProxy() override;
 
     virtual void drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const override;

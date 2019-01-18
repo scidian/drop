@@ -6,14 +6,14 @@
 //
 //
 
-#include "01_project.h"
-#include "02_world.h"
-#include "03_scene.h"
-#include "04_object.h"
+#include "project.h"
+#include "project_world.h"
+#include "project_world_scene.h"
+#include "project_world_scene_object.h"
 
-#include "30_settings.h"
-#include "31_component.h"
-#include "32_property.h"
+#include "settings.h"
+#include "settings_component.h"
+#include "settings_component_property.h"
 
 #include "editor_tree_scene.h"
 #include "interface_relay.h"
@@ -84,7 +84,7 @@ void TreeScene::populateTreeSceneList()
 // Handles changing the Advisor on Mouse Enter
 void TreeScene::enterEvent(QEvent *event)
 {
-    m_interface->setAdvisorInfo(Advisor_Info::Scene_List);
+    m_relay->setAdvisorInfo(Advisor_Info::Scene_List);
     QTreeWidget::enterEvent(event);
 }
 
@@ -126,8 +126,8 @@ void TreeScene::dragMoveEvent(QDragMoveEvent *event)
     m_mouse_y = event->pos().y();
 
     // !!!!! TEMP:
-    m_interface->setLabelText(Label_Names::Label_1, QString::fromStdString("MX: ") + QString::number(m_mouse_x) +
-                                                    QString::fromStdString(", MY: ") + QString::number(m_mouse_y) );
+    m_relay->setLabelText(Label_Names::Label_1, QString::fromStdString("MX: ") + QString::number(m_mouse_x) +
+                                                QString::fromStdString(", MY: ") + QString::number(m_mouse_y) );
     // !!!!! END
 
     // Get item under mouse, if not null lets process it to see if we will allow dropping there
@@ -138,8 +138,8 @@ void TreeScene::dragMoveEvent(QDragMoveEvent *event)
         long        check_key = item_at->data(0, User_Roles::Key).toLongLong();
 
         // !!!!! TEMP:
-        m_interface->setLabelText(Label_Names::Label_Object_3, QString::fromStdString("Selected: " + std::to_string(m_selected_key) +
-                                                                                    ", Checking: " + std::to_string(check_key)) );
+        m_relay->setLabelText(Label_Names::Label_Object_3, QString::fromStdString("Selected: " + std::to_string(m_selected_key) +
+                                                                                ", Checking: " + std::to_string(check_key)) );
         // !!!!! END
 
         // Check if its the same type as already selected, if so allow possible drop
@@ -195,7 +195,7 @@ void TreeScene::selectionChanged (const QItemSelection &selected, const QItemSel
     QList<QTreeWidgetItem*> item_list = this->selectedItems();
 
     // !!!!! TEMP
-    m_interface->setLabelText(Label_Names::Label_Bottom, QString("Selected Items: ") + QString::number(item_list.size()));
+    m_relay->setLabelText(Label_Names::Label_Bottom, QString("Selected Items: ") + QString::number(item_list.size()));
     // !!!!! END
 
     // If size of list is zero, clear selected_key and exit function
@@ -206,8 +206,9 @@ void TreeScene::selectionChanged (const QItemSelection &selected, const QItemSel
 
     // !!!!! TEMP
     // Otherwise add first item to label
-    m_interface->setLabelText(Label_Names::Label_Bottom, QString("Selected Items: ") + QString::number(item_list.size()) +
-                              ", First Item: " + item_list.first()->text(0));
+    m_relay->setLabelText(Label_Names::Label_Bottom, QString("Selected Items: ") +
+                                                     QString::number(item_list.size()) +
+                                                     ", First Item: " + item_list.first()->text(0));
     // !!!!! END
 
     // If size is one, reset first selected item
@@ -217,7 +218,7 @@ void TreeScene::selectionChanged (const QItemSelection &selected, const QItemSel
 
         //******************************************************
         // Call to outside function to rebuild object inspector:
-        m_interface->buildObjectInspector(QList<long> { selected_key });
+        m_relay->buildObjectInspector(QList<long> { selected_key });
         //******************************************************
 
     } else {
@@ -276,8 +277,8 @@ void SceneTreeHighlightProxy::drawPrimitive(PrimitiveElement element, const QSty
         }
 
         // !!!!! TEMP:
-        m_interface->setLabelText(Label_Names::Label_2, QString::fromStdString("TLX: ") + QString::number(option->rect.topLeft().x()) +
-                                                      QString::fromStdString(", TLY: ") + QString::number(option->rect.topLeft().y()));
+        m_relay->setLabelText(Label_Names::Label_2, QString::fromStdString("TLX: ") + QString::number(option->rect.topLeft().x()) +
+                                                    QString::fromStdString(", TLY: ") + QString::number(option->rect.topLeft().y()));
         // !!!!! TEMP:
 
     } else {

@@ -6,28 +6,24 @@
 //
 //
 
-#include "01_project.h"
-#include "02_world.h"
-#include "03_scene.h"
-#include "04_object.h"
-#include "05_item.h"
+#include "project.h"
+#include "project_world.h"
+#include "project_world_scene.h"
+#include "project_world_scene_object.h"
+#include "editor_scene_item.h"
 
-#include "30_settings.h"
-#include "31_component.h"
-#include "32_property.h"
+#include "settings.h"
+#include "settings_component.h"
+#include "settings_component_property.h"
 
+#include "editor_scene_scene.h"
 #include "editor_scene_view.h"
 #include "interface_relay.h"
 
 
 //####################################################################################
 //##        Draws grid lines
-void SceneGraphicsView::drawBackground(QPainter *painter, const QRectF &rect)
-{
-    Q_UNUSED(painter);
-    Q_UNUSED(rect);
-}
-
+//####################################################################################
 void SceneGraphicsView::drawGrid()
 {
     QPainter painter(viewport());
@@ -40,7 +36,7 @@ void SceneGraphicsView::drawGrid()
 
     // ********** Draw Grid Lines
     if (m_grid_style == Grid_Style::Lines) {
-        painter.setPen(QPen( m_interface->getColor(Window_Colors::Background_Dark), 1 ));
+        painter.setPen(QPen( m_relay->getColor(Window_Colors::Background_Dark), 1 ));
         QVector<QLine> lines;
 
         // Vertical lines to the right of scene zero
@@ -66,11 +62,11 @@ void SceneGraphicsView::drawGrid()
         if (m_zoom_scale < 2) dot_size = 3;
         if (m_zoom_scale < 1) dot_size = 2;
 
-        painter.setPen(QPen( m_interface->getColor(Window_Colors::Background_Dark), dot_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ));
+        painter.setPen(QPen( m_relay->getColor(Window_Colors::Background_Dark), dot_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ));
         QVector<QPointF> points;
 
         // !!!!! TEMP:
-        m_interface->setLabelText(Label_Names::Label_1, "Test: Fail");
+        m_relay->setLabelText(Label_Names::Label_1, "Test: Fail");
         // !!!!! END
 
         // Bottom right
@@ -96,222 +92,243 @@ void SceneGraphicsView::drawGrid()
 
         painter.drawPoints(points.data(), points.size());
     }
-
-
 }
+
 
 
 
 //####################################################################################
 //##        Paints selection box, etc on top of items
+//####################################################################################
 void SceneGraphicsView::paintEvent(QPaintEvent *event)
 {
-    // Go ahead and draw grid and then have base class paint scene (draw items)
-    drawGrid();
-    QGraphicsView::paintEvent(event);
-
     // ********** Check if scene that view is associated with has changed, if so re-connect signals from new scene
     if (scene() != m_scene) {
         if (scene() != nullptr) {
             m_scene = scene();
             connect(scene(), SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
             connect(scene(), SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
-
-            ///// Convert pointer to QString, display in label
-            ///QString ptrStr = QString("0x%1").arg((quintptr)m_scene, QT_POINTER_SIZE * 2, 16, QChar('0'));
-            ///m_interface->setLabelText(Label_Names::LabelObject3, "Changed: " + ptrStr);
+            connect(dynamic_cast<SceneGraphicsScene*>(scene()), &SceneGraphicsScene::updateViews, [this]() { update(); });
         }
     }
 
-    // At this point, if no selected item gets out of here
-    if (scene()->selectedItems().count() < 1) return;
 
-    // Set up painter object
+    // ******************** Go ahead and draw grid first
+    drawGrid();
+
+
+    // ******************** At this point, if no selected item paint objects and get out of here
+    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
+    if (my_scene->getSelectionGroupCount() < 1) {
+        QGraphicsView::paintEvent(event);
+        return;
+    }
+
+
+    // ******************** Otherwise, break apart group to draw items in proper z-Order, then put back together
+    QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
+    for (auto item: my_items) my_scene->removeFromGroupNoUpdate(item);
+    QGraphicsView::paintEvent(event);
+    for (auto item: my_items) my_scene->addToGroupNoUpdate(item);
+
+
+
+
+    // ******************** Draw bounding box for each item
     QPainter painter(viewport());
-    QBrush pen_brush(m_interface->getColor(Window_Colors::Icon_Light));
+    QBrush pen_brush(m_relay->getColor(Window_Colors::Icon_Light));
     painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.setBrush(Qt::NoBrush);
 
-    // ******************** Draw bounding box for each item
-    for (auto item: scene()->selectedItems()) {
+    int first_time = 0;
+    for (auto item: my_scene->getSelectionGroupItems()) {
         // Load in item bounding box
         QPolygonF polygon(item->boundingRect());
 
         // Apply item scaling / rotation to bounding box
-        QTransform t = item->sceneTransform();
-        polygon = t.map(polygon);
+        polygon = item->sceneTransform().map(polygon);
 
         // Convert bounding box to view coordinates and draw on screen
         QPolygon to_view = mapFromScene(polygon);
         painter.drawPolygon(to_view);
 
 
-
         // !!!!! TEMP: Showing object data
-        QVariant get_data;
-        QPointF my_scale, my_pos, my_center;
-        double  my_angle;
-        get_data = item->data(User_Roles::Position);    my_pos =   QPointF(item->pos().x(), item->pos().y()); //get_data.toPointF();
-        get_data = item->data(User_Roles::Scale);       my_scale = get_data.toPointF();
-        get_data = item->data(User_Roles::Rotation);    my_angle = get_data.toDouble();
-        my_center = item->boundingRect().center();
-        t = item->sceneTransform();
-        my_center = t.map(my_center);
+        if (first_time == 0) {
+            QPointF my_scale =  item->data(User_Roles::Scale).toPointF();
+            double  my_angle =  item->data(User_Roles::Rotation).toDouble();
+            QPointF my_center = item->sceneTransform().map( item->boundingRect().center() );
+            m_relay->setLabelText(Label_Names::Label_Position, "Pos X: " +  QString::number(item->pos().x()) +
+                                                             ", Pos Y: " +  QString::number(item->pos().y()) );
+            m_relay->setLabelText(Label_Names::Label_Center, "Center X: " + QString::number(my_center.x()) +
+                                                                  ", Y: " + QString::number(my_center.y()) );
+            m_relay->setLabelText(Label_Names::Label_Scale, "Scale X: " +   QString::number(my_scale.x()) +
+                                                          ", Scale Y: " +   QString::number(my_scale.y()) );
+            m_relay->setLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle));
+            m_relay->setLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()) );
+            first_time++;
+        }
 
-        m_interface->setLabelText(Label_Names::Label_Position, "Pos X: " + QString::number(my_pos.x()) +
-                                                             ", Pos Y: " + QString::number(my_pos.y()));
-        m_interface->setLabelText(Label_Names::Label_Center, "Center X: " + QString::number(my_center.x()) +
-                                                                  ", Y: " + QString::number(my_center.y()));
-        m_interface->setLabelText(Label_Names::Label_Scale, "Scale X: " + QString::number(my_scale.x()) +
-                                                          ", Scale Y: " + QString::number(my_scale.y()));
-        m_interface->setLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle));
-        m_interface->setLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()));
+
+//        double   angle = item->data(User_Roles::Rotation).toDouble();
+//        QPolygonF poly = item->boundingRect(); //item->sceneTransform().map(item->boundingRect());
+//        QPointF center = item->boundingRect().center();
+
+//        QTransform remove_rotation = QTransform().translate(center.x(), center.y()).rotate(-angle).translate(-center.x(), -center.y());
+//        poly = remove_rotation.map(poly);
+
+
+//        QTransform item_no_rotate = item->sceneTransform() * remove_rotation;
+//        item_no_rotate.shear(1 - item_no_rotate.m21(), 1 - item_no_rotate.m12() );
+
+//        poly = remove_rotation.map(poly);
+
+
+//        //poly = no_shear.map(poly);
+
+
+
+
+//        painter.setPen(QPen(QBrush(Qt::red), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+//        painter.drawPolygon( mapFromScene(poly) );
+//        painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+
+
+
+//        QTransform t = item_no_rotate;
+//        qreal m11 = t.m11(), m12 = t.m12(), m13 = t.m13();
+//        qreal m21 = t.m21(), m22 = t.m22(), m23 = t.m23();
+//        if (isCloseTo(0, m11, .00001)) m11 = 0;
+//        if (isCloseTo(0, m12, .00001)) m12 = 0;
+//        if (isCloseTo(0, m13, .00001)) m13 = 0;
+//        if (isCloseTo(0, m21, .00001)) m21 = 0;
+//        if (isCloseTo(0, m22, .00001)) m22 = 0;
+//        if (isCloseTo(0, m23, .00001)) m23 = 0;
+//        m_relay->setLabelText(Label_Names::Label_1, "11: " + QString::number(m11) + ", 12: " + QString::number(m12) + ", 13: " + QString::number(m13) );
+//        m_relay->setLabelText(Label_Names::Label_2, "21: " + QString::number(m21) + ", 22: " + QString::number(m22) + ", 23: " + QString::number(m23) );
+
         // !!!!! END
     }
 
 
     // ******************** Draw box around entire seleciton, with Size Grip squares
-    painter.setPen(QPen(m_interface->getColor(Window_Colors::Text_Light), 1));
+    painter.setPen(QPen(m_relay->getColor(Window_Colors::Text_Light), 1));
 
-    double r_half = 3;                  // Radius of square handle
-    double r_size = r_half * 2;
-    double c_size = 4;                  // Radius of circle handle
+    // Size of side handle boxes
+    double side_size = 6;
+    double s_half = side_size / 2;
+
+    // Size of corner handle boxes
+    double corner_size = 10;
 
     // Check if we should draw bounding box, and if it should be squares or circles
     bool draw_box = false;
     bool do_squares = true;
-    bool more_than_one = false;
 
-    if (scene()->selectedItems().count() > 0) draw_box = true;
-    if (scene()->selectedItems().count() == 1) {
-         double angle = scene()->selectedItems().first()->data(User_Roles::Rotation).toDouble();
+    if (my_scene->getSelectionGroupCount() > 0) draw_box = true;
+    if (my_scene->getSelectionGroupCount() >= 1) {
+         double angle = my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Rotation).toDouble();
          if (isSquare(angle, ANGLE_TOLERANCE) == false) do_squares = false;
     }
-    if (scene()->selectedItems().count() > 1) more_than_one = true;
 
-    // ***** Set Size Grip rectangles
-    // If multiple items use one big rectangle
-    if (draw_box && more_than_one) {
-        QRectF bigger = m_selection_rect;
+    // ******************** Set Size Grip rectangles
+    QPolygon to_view;
 
-        QPoint top_left = mapFromScene(bigger.topLeft());
-        QPoint bot_right = mapFromScene(bigger.bottomRight());
-        double select_width =  abs(bot_right.x() - top_left.x());
-        double select_height = abs(bot_right.y() - top_left.y());
+    if (draw_box) {
+        // Map item bounding box to screen so we can draw it
+        QGraphicsItem *item = my_scene->getSelectionGroupAsGraphicsItem();      // Grab selection box
+        QPolygonF polygon(item->boundingRect());                                // Get bounding box of item as polygon
 
-        m_handles[Position_Flags::Top_Left] =     QRectF(top_left.x() - r_half,  top_left.y() - r_half,  r_size, r_size);
-        m_handles[Position_Flags::Top_Right] =    QRectF(bot_right.x() - r_half, top_left.y() - r_half,  r_size, r_size);
-        m_handles[Position_Flags::Bottom_Left] =  QRectF(top_left.x() - r_half,  bot_right.y() - r_half, r_size, r_size);
-        m_handles[Position_Flags::Bottom_Right] = QRectF(bot_right.x() - r_half, bot_right.y() - r_half, r_size, r_size);
+        QTransform transform = item->sceneTransform();                          // Get item bounding box to scene transform
+        polygon = transform.map(polygon);                                       // Map bounding box to scene location
+        to_view = mapFromScene(polygon);                                        // Convert bounding box to view coordinates
 
-        m_handles[Position_Flags::Top] =    QRectF(top_left.x() + r_half,  top_left.y() - r_half,  select_width - r_size, r_size);
-        m_handles[Position_Flags::Bottom] = QRectF(top_left.x() + r_half,  bot_right.y() - r_half, select_width - r_size, r_size);
-        m_handles[Position_Flags::Left] =   QRectF(top_left.x() - r_half,  top_left.y() + r_half,  r_size, select_height - r_size);
-        m_handles[Position_Flags::Right] =  QRectF(bot_right.x() - r_half,  top_left.y() + r_half,  r_size, select_height- r_size);
+        // ***** Store corner handle polygons
+        QPointF top_left =  transform.map(item->boundingRect().topLeft());
+        QPointF top_right = transform.map(item->boundingRect().topRight());
+        QPointF bot_left =  transform.map(item->boundingRect().bottomLeft());
+        QPointF bot_right = transform.map(item->boundingRect().bottomRight());
+
+        // Store view coodinate rectangles of corners for size grip handles
+        m_handles[Position_Flags::Top_Left] =     rectAtCenterPoint( mapFromScene( top_left  ), corner_size);
+        m_handles[Position_Flags::Top_Right] =    rectAtCenterPoint( mapFromScene( top_right ), corner_size);
+        m_handles[Position_Flags::Bottom_Left] =  rectAtCenterPoint( mapFromScene( bot_left  ), corner_size);
+        m_handles[Position_Flags::Bottom_Right] = rectAtCenterPoint( mapFromScene( bot_right ), corner_size);
+
+        // ***** Store side box handle polygons
+        double angle = item->data(User_Roles::Rotation).toDouble();
+        QPointF center = item->boundingRect().center();
+        center = transform.map(center);
+        QTransform remove_rotation = QTransform().translate(center.x(), center.y()).rotate(-angle).translate(-center.x(), -center.y());
+
+        // Remove rotation from bounding box in scene, map bounding box scene coordinates to view coordinates
+        top_left =  mapFromScene( remove_rotation.map(top_left) );
+        top_right=  mapFromScene( remove_rotation.map(top_right) );
+        bot_left =  mapFromScene( remove_rotation.map(bot_left) );
+        bot_right = mapFromScene( remove_rotation.map(bot_right) );
+
+        // Create bounding box rectangles
+        QRectF temp_top    ( QPointF(top_left.x() + s_half,  top_left.y() - s_half),
+                             QPointF(top_right.x() - s_half, top_right.y() + s_half) );
+        QRectF temp_bottom ( QPointF(bot_left.x() + s_half,  bot_left.y() - s_half),
+                             QPointF(bot_right.x() - s_half, bot_right.y() + s_half));
+        QRectF temp_left   ( QPointF(top_left.x() - s_half,  top_left.y() + s_half),
+                             QPointF(bot_left.x() + s_half,  bot_left.y() + s_half));
+        QRectF temp_right  ( QPointF(top_right.x() - s_half, top_right.y() + s_half),
+                             QPointF(bot_right.x() + s_half, bot_right.y() - s_half));
+
+        // Add rotation back onto boxes
+        center = QLineF(top_left, bot_right).pointAt(.5);
+        QTransform add_rotation =    QTransform().translate(center.x(), center.y()).rotate( angle).translate(-center.x(), -center.y());
+        m_handles[Position_Flags::Top] =    add_rotation.map(temp_top);
+        m_handles[Position_Flags::Bottom] = add_rotation.map(temp_bottom);
+        m_handles[Position_Flags::Left] =   add_rotation.map(temp_left);
+        m_handles[Position_Flags::Right] =  add_rotation.map(temp_right);
 
         // Store polygon centers
         for (auto h : m_handles) m_handles_centers[h.first] = h.second.boundingRect().center();
 
-        QPolygon to_view = mapFromScene(bigger);
+        // Draw bounding box
         painter.drawPolygon(to_view);
     }
 
-    // If one item, map item shape
-    else if (draw_box) {
-        // Map item bounding box to screen and draw it
-        QGraphicsItem *item = scene()->selectedItems().first();     // Grab only selected item
-        QPolygonF polygon(item->boundingRect());                    // Get bounding box of item as polygon
-
-        QTransform transform = item->sceneTransform();              // Get item bounding box to scene transform
-        polygon = transform.map(polygon);                                   // Map bounding box to scene location
-
-        // Store item bounding box points
-        QPointF top_left =  item->boundingRect().topLeft();
-        QPointF top_right = item->boundingRect().topRight();
-        QPointF bot_left =  item->boundingRect().bottomLeft();
-        QPointF bot_right = item->boundingRect().bottomRight();
-
-        // Map points to scene coordinates
-        QPointF top_left_mapped =  transform.map(top_left);
-        QPointF top_right_mapped = transform.map(top_right);
-        QPointF bot_left_mapped =  transform.map(bot_left);
-        QPointF bot_right_mapped = transform.map(bot_right);
-
-        // Store view coodinate rectangles of corners for size grip handles
-        m_handles[Position_Flags::Top_Left] =     rectAtCenterPoint(mapFromScene(top_left_mapped), r_size);
-        m_handles[Position_Flags::Top_Right] =    rectAtCenterPoint(mapFromScene(top_right_mapped), r_size);
-        m_handles[Position_Flags::Bottom_Left] =  rectAtCenterPoint(mapFromScene(bot_left_mapped), r_size);
-        m_handles[Position_Flags::Bottom_Right] = rectAtCenterPoint(mapFromScene(bot_right_mapped), r_size);
-
-        // Store sides as rects
-        QRectF temp_top    (top_left.x() + r_half,  top_left.y() - r_half,  item->boundingRect().width() - r_size, r_size);
-        QRectF temp_bottom (top_left.x() + r_half,  bot_right.y() - r_half, item->boundingRect().width() - r_size, r_size);
-        QRectF temp_left   (top_left.x() - r_half,  top_left.y() + r_half,  r_size, item->boundingRect().height() - r_size);
-        QRectF temp_right  (bot_right.x() - r_half,  top_left.y() + r_half,  r_size, item->boundingRect().height() - r_size);
-
-        // Change rects into polygons, then apply item scene transform, and then map to view and store
-        QPolygonF top(temp_top), bottom(temp_bottom), left(temp_left), right(temp_right);
-        m_handles[Position_Flags::Top] = mapFromScene(transform.map(top));
-        m_handles[Position_Flags::Bottom] = mapFromScene(transform.map(bottom));
-        m_handles[Position_Flags::Left] = mapFromScene(transform.map(left));
-        m_handles[Position_Flags::Right] = mapFromScene(transform.map(right));
-
-        // Store polygon centers
-        for (auto h : m_handles) m_handles_centers[h.first] = h.second.boundingRect().center();
-
-
-        // !!!!! TEMP:
-        m_interface->setLabelText(Label_Names::Label_Object_3, "Position Flag: " + QString::number(static_cast<int>(m_over_handle)) );
-        // !!!!! END
-
-
-
-        QPolygon to_view = mapFromScene(polygon);                   // Convert bounding box to view coordinates
-        painter.drawPolygon(to_view);                               // Draw bounding box on screen
+    // ******************** Draw angles if rotating
+    if (m_view_mode == View_Mode::Rotating) {
+        painter.setPen(QPen(m_relay->getColor(Window_Colors::Text_Light), 1));
+        painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
+        painter.drawLine(mapFromScene(m_start_rotate_rect.center()), m_origin);
+        painter.drawLine(mapFromScene(m_start_rotate_rect.center()), m_last_mouse_pos);
+        painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOver);
     }
 
-    // ********** If we have some objects selected and created some handles, draw them
+
+    // ******************** If we have some objects selected and created some handles, draw them
     if (draw_box) {
-        painter.setBrush(m_interface->getColor(Window_Colors::Icon_Light));
+        painter.setBrush(m_relay->getColor(Window_Colors::Icon_Light));
 
         QVector<QPointF> handles;
         for (int i = 0; i < static_cast<int>(Position_Flags::Total); i++)
             handles.append(m_handles_centers[static_cast<Position_Flags>(i)]);
 
-        QRectF to_draw;
-        if (do_squares == false) {
-            QPixmap p(":/gui_misc/handle_circle.png");
-            for (auto r : handles) {
-                to_draw.setX(r.x() - c_size);
-                to_draw.setY(r.y() - c_size);
-                to_draw.setWidth(c_size * 2);
-                to_draw.setHeight(c_size * 2);
-                painter.drawPixmap(to_draw, p, p.rect());
-                //painter.drawEllipse(r.center(), c_size, c_size);      // Circles
-            }
-        } else {
-            QPixmap p(":/gui_misc/handle_square.png");
-            for (auto r : handles) {
-                to_draw.setX(r.x() - c_size);
-                to_draw.setY(r.y() - c_size);
-                to_draw.setWidth(c_size * 2);
-                to_draw.setHeight(c_size * 2);
-                painter.drawPixmap(to_draw, p, p.rect());
-            }
-            //painter.drawPolygons(handles);                               // Squares
+        double handle_size = 8;
+        for (auto r : handles) {
+            QRectF to_draw;
+            to_draw.setX(r.x() - (handle_size / 2));
+            to_draw.setY(r.y() - (handle_size / 2));
+            to_draw.setWidth(handle_size);
+            to_draw.setHeight(handle_size);
+            if (do_squares == false)
+                painter.drawPixmap(to_draw, p_circle, p_circle.rect());
+            else
+                painter.drawPixmap(to_draw, p_square, p_square.rect());
+
+            //painter.drawEllipse(r.center(), handle_size, handle_size);        // Circles
+            //painter.drawPolygons(handles);                                    // Squares
         }
+        ///for (auto h : m_handles) painter.drawPolygon(h.second);              // Draw polygons for all handles
 
-        /// Draws with pixels using NOT operation
-        ///painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
     }
 
-
-    // ********** Draw angles if rotating
-    if (m_view_mode == View_Mode::Rotating) {
-        painter.setPen(QPen(m_interface->getColor(Window_Colors::Text_Light), 1));
-        painter.drawLine(m_selection_center, m_origin);
-        painter.drawLine(m_selection_center, m_last_mouse_pos);
-    }
 
 
     // !!!!! TEMP:
@@ -322,6 +339,14 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     painter.drawPolygon(m_temp_polygon2);
     // !!!!! END
 
+
+    m_relay->setLabelText(Label_Names::Label_3, "Draw Time: " + QString::number(timer.elapsed()) );
+    fps++;
+    if (timer.elapsed() >= 1000) {
+        m_relay->setLabelText(Label_Names::Label_1, "FPS: " + QString::number(fps) );
+        timer.restart();
+        fps = 0;
+    }
 }
 
 QRectF SceneGraphicsView::rectAtCenterPoint(QPoint center, double rect_size)
@@ -332,27 +357,28 @@ QRectF SceneGraphicsView::rectAtCenterPoint(QPoint center, double rect_size)
 
 
 
-
 //####################################################################################
 //##        Draw our Rubber Band selection box with custom colors
+//####################################################################################
 void SceneViewRubberBand::paintEvent(QPaintEvent *)
 {
-    QColor bg = m_interface->getColor(Window_Colors::Icon_Light);
     QStylePainter painter(this);
 
-    QPen pen;
-    pen.setStyle(Qt::PenStyle::SolidLine); //DashLine);
-    pen.setWidth(2);
-    pen.setColor(bg);
+    QColor bg = m_relay->getColor(Window_Colors::Icon_Light);
+    bg.setAlpha(48);
     QBrush brush;
     brush.setStyle(Qt::BrushStyle::SolidPattern);
-    bg.setAlpha(64);
     brush.setColor(bg);
 
-    painter.setPen(pen);
     painter.setBrush(brush);
+    painter.setPen(QPen(QBrush(m_relay->getColor(Window_Colors::Icon_Light)), 2, Qt::PenStyle::SolidLine));
     painter.drawRect(this->rect());
 }
+
+
+
+
+
 
 
 

@@ -6,14 +6,14 @@
 //
 //
 
-#include "01_project.h"
-#include "02_world.h"
-#include "03_scene.h"
-#include "04_object.h"
+#include "project.h"
+#include "project_world.h"
+#include "project_world_scene.h"
+#include "project_world_scene_object.h"
 
-#include "30_settings.h"
-#include "31_component.h"
-#include "32_property.h"
+#include "settings.h"
+#include "settings_component.h"
+#include "settings_component_property.h"
 
 #include "editor_tree_assets.h"
 #include "interface_relay.h"
@@ -23,7 +23,7 @@
 // Handles changing the Advisor on Mouse Enter
 void TreeAssetList::enterEvent(QEvent *event)
 {
-    m_interface->setAdvisorInfo(Advisor_Info::Asset_List);
+    m_relay->setAdvisorInfo(Advisor_Info::Asset_List);
     QTreeWidget::enterEvent(event);
 }
 

@@ -33,9 +33,9 @@ enum class Form_Main_Mode {
 // Form Main enum for referencing debug labels
 enum class Label_Names
 {
-    Label_1,            Label_2,            Label_Mouse_1,      Label_Mouse_2,
+    Label_1,            Label_2,            Label_3,            Label_Mouse_1,      Label_Mouse_2,
     Label_Object_1,     Label_Object_2,     Label_Object_3,     Label_Object_4,
-    Label_Position,     Label_Center,       Label_Scale,        Label_Rotate,       Label_Z_Order,
+    Label_Position,     Label_Center,       Label_Scale,        Label_Rotate,       Label_Z_Order,      Label_Pos_Flag,
     Label_Bottom,
 };
 
@@ -79,19 +79,29 @@ enum class DrTypes {
 
 
 //####################################################################################
+//##    Possible handle rects, order is vector / array index critical
+//####################################################################################
+enum class Position_Flags {
+    Top          = 0,
+    Bottom       = 1,
+    Right        = 2,
+    Left         = 3,
+    Top_Left     = 4,
+    Bottom_Left  = 5,
+    Top_Right    = 6,
+    Bottom_Right = 7,
+    Total,
+    No_Position,
+};
+
+
+//####################################################################################
 //##    Custom Qt::UserRole 's for storing data in QWidgets using setData
 //####################################################################################
 typedef enum {
     Key = Qt::UserRole,
     Scale,
-    Position,
     Rotation,
-
-    Pre_Resize_Scale,
-    Pre_Resize_Top_Left,
-    Pre_Resize_Top_Right,
-    Pre_Resize_Bottom_Left,
-    Pre_Resize_Bottom_Right,
 
     Add_More,
 } User_Roles;

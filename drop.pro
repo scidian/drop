@@ -25,22 +25,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-    01_project.cpp \
-    02_world.cpp \
-    03_scene.cpp \
-    04_object.cpp \
-    05_item.cpp \
-    10_asset.cpp \
-    30_settings.cpp \
-    31_component.cpp \
-    32_property.cpp \
     enums.cpp \
     form_main.cpp \
     form_main_setup.cpp \
     globals.cpp \
     main.cpp \
     editor_tree_inspector.cpp \
-    interface_relay.cpp \
     editor_tree_assets.cpp \
     editor_tree_scene.cpp \
     editor_tree_advisor.cpp \
@@ -51,18 +41,20 @@ SOURCES += \
     editor_scene_view_paint.cpp \
     editor_scene_view_rotate.cpp \
     editor_scene_view_resize.cpp \
-    editor_scene_view_select.cpp
+    editor_scene_view_select.cpp \
+    project.cpp \
+    project_world.cpp \
+    project_world_scene.cpp \
+    project_world_scene_object.cpp \
+    project_asset.cpp \
+    settings.cpp \
+    settings_component.cpp \
+    settings_component_property.cpp \
+    editor_scene_item.cpp \
+    editor_scene_view_mouse.cpp \
+    editor_scene_scene_select.cpp
 
 HEADERS += \
-    01_project.h \
-    02_world.h \
-    03_scene.h \
-    04_object.h \
-    05_item.h \
-    10_asset.h \
-    30_settings.h \
-    31_component.h \
-    32_property.h \
     enums.h \
     form_main.h \
     globals.h \
@@ -72,7 +64,16 @@ HEADERS += \
     editor_tree_scene.h \
     editor_tree_advisor.h \
     editor_scene_scene.h \
-    editor_scene_view.h
+    editor_scene_view.h \
+    project.h \
+    project_world.h \
+    project_world_scene.h \
+    project_world_scene_object.h \
+    project_asset.h \
+    settings.h \
+    settings_component.h \
+    settings_component_property.h \
+    editor_scene_item.h
 
 FORMS +=
 

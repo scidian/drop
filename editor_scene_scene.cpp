@@ -6,42 +6,71 @@
 //
 //
 
-#include "01_project.h"
-#include "02_world.h"
-#include "03_scene.h"
-#include "04_object.h"
-#include "05_item.h"
+#include "project.h"
+#include "project_world.h"
+#include "project_world_scene.h"
+#include "project_world_scene_object.h"
+#include "editor_scene_item.h"
 
-#include "30_settings.h"
-#include "31_component.h"
-#include "32_property.h"
+#include "settings.h"
+#include "settings_component.h"
+#include "settings_component_property.h"
 
 #include "editor_scene_scene.h"
 #include "interface_relay.h"
 
 
-// Create square at location
+//####################################################################################
+//##        Constructor & destructor
+//####################################################################################
+SceneGraphicsScene::SceneGraphicsScene(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
+                                       QGraphicsScene(parent = nullptr),
+                                       m_project(project), m_relay(relay)
+{
+    connect(this, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
+
+    m_selection_group = new SelectionGroup;
+    m_selection_group->setFlags(QGraphicsItem::ItemIsSelectable |
+                                QGraphicsItem::ItemIsMovable |
+                                QGraphicsItem::ItemSendsScenePositionChanges |
+                                QGraphicsItem::ItemSendsGeometryChanges);
+    addItem(m_selection_group);
+    emptySelectionGroup();
+}
+
+SceneGraphicsScene::~SceneGraphicsScene()
+{
+
+}
+
+
+
+//####################################################################################
+//##        Item Handling
+//####################################################################################
+
+// Adds a square DrItem (QGraphicsItem) to scene
 void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, double new_width, double new_height, double z_order, QColor color)
 {
     DrItem *item;
     item = new DrItem(color, new_width, new_height, z_order);
 
-    item->setPositionByOrigin(item->getOrigin(), new_x, new_y);
+    setPositionByOrigin(item, item->getOrigin(), new_x, new_y);
 
     addItem(item);
 }
 
 
-// Connected from scene().changed, resizes scene when objects are added / subtracted
+//####################################################################################
+//##        SLOT: sceneChanged - Connected from scene().changed, resizes scene when objects are added / subtracted
+//####################################################################################
 void SceneGraphicsScene::sceneChanged(QList<QRectF>)
 {
-    double min_size = 500;
-    double buffer =   200;
+    double min_size = 500;              // Minimum size fo scene rect (-500 to 500 for x and y)
+    double buffer =   200;              // Buffer to add on to items at edge of scene to allow for better scrolling
 
-    double left =  -min_size;
-    double right =  min_size;
-    double top =   -min_size;
-    double bottom = min_size;
+    double left =  -min_size, right =  min_size;
+    double top =   -min_size, bottom = min_size;
 
     if (items().count() > 0) {
         QRectF total_rect = items().first()->sceneBoundingRect();
@@ -64,6 +93,9 @@ void SceneGraphicsScene::sceneChanged(QList<QRectF>)
 }
 
 
+//####################################################################################
+//##        Key Events
+//####################################################################################
 void SceneGraphicsScene::keyReleaseEvent(QKeyEvent *event) { QGraphicsScene::keyReleaseEvent(event); }
 
 void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
@@ -77,34 +109,42 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
     }
 
     // Find total bounding box of all selected items
-    QRectF source_rect = this->selectedItems().first()->sceneBoundingRect();
+    QRectF source_rect = totalSelectedItemsSceneRect();
 
-
-
-    for (auto item: this->selectedItems()) {
-        source_rect = source_rect.united(item->sceneBoundingRect());
+    // Process movement key press
+    switch (event->key())
+    {
+    // Move selected items
+    case Qt::Key::Key_Up:    selectedItems().first()->moveBy( 0, -move_by);      break;
+    case Qt::Key::Key_Down:  selectedItems().first()->moveBy( 0,  move_by);      break;
+    case Qt::Key::Key_Left:  selectedItems().first()->moveBy(-move_by,  0);      break;
+    case Qt::Key::Key_Right: selectedItems().first()->moveBy( move_by,  0);      break;
     }
 
-    // Perform key press event on all selected items
-    for (auto item: this->selectedItems()) {
+    // Perform key press event on all items in selection group
+    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(this);
+    QList<QGraphicsItem*>  list_new_items;
+    list_new_items.clear();
+
+    for (auto item : my_scene->getSelectionGroupItems()) {
         DrItem *new_item;
-        QColor new_color = QColor::fromRgb(QRandomGenerator::global()->generate()).light(100);
-        qreal new_x = item->scenePos().x();
-        qreal new_y = item->scenePos().y();
+        QColor new_color;
+        qreal new_x, new_y;
 
         switch (event->key())
         {
-        // Move selected items
-        case Qt::Key::Key_Up:    item->moveBy( 0, -move_by);      break;
-        case Qt::Key::Key_Down:  item->moveBy( 0,  move_by);      break;
-        case Qt::Key::Key_Left:  item->moveBy(-move_by,  0);      break;
-        case Qt::Key::Key_Right: item->moveBy( move_by,  0);      break;
-
         // Clone selected items
         case Qt::Key::Key_W:
         case Qt::Key::Key_A:
         case Qt::Key::Key_S:
         case Qt::Key::Key_D:
+            // Send item back to scene before we copy it
+            my_scene->getSelectionGroup()->removeFromGroup(item);
+
+            new_color = QColor::fromRgb(QRandomGenerator::global()->generate()).light(100);
+            new_x = item->scenePos().x();
+            new_y = item->scenePos().y();
+
             if (event->key() == Qt::Key::Key_W) new_y = new_y - source_rect.height();
             if (event->key() == Qt::Key::Key_A) new_x = new_x - source_rect.width();
             if (event->key() == Qt::Key::Key_S) new_y = new_y + source_rect.height();
@@ -112,27 +152,79 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
 
             new_item = new DrItem(new_color, item->boundingRect().width(), item->boundingRect().height(), this->items().count() + 1);
             new_item->setPos(new_x, new_y);
-            new_item->setTransform(item->transform());
+            new_item->setTransform(item->transform());          // Includes rotation and scaling
 
-            new_item->setData(User_Roles::Position, QPointF(new_item->pos().x(), new_item->pos().y()));
             new_item->setData(User_Roles::Scale, item->data(User_Roles::Scale).toPointF());
             new_item->setData(User_Roles::Rotation, item->data(User_Roles::Rotation).toDouble());
 
             addItem(new_item);
-            new_item->setSelected(true);
-            item->setSelected(false);
+            list_new_items.append(new_item);
             break;
 
         // Delete selected items
         case Qt::Key::Key_Delete:
         case Qt::Key::Key_Backspace:
-            if (item->type() == User_Types::Object)
-                removeItem(item);
+            emptySelectionGroup(true);
             break;
         }
     }
-    QGraphicsScene::keyPressEvent(event);
+
+    // If we added (copied) new items to scene, select those items
+    if (list_new_items.count() > 0) {
+        emptySelectionGroup();
+        for (auto item : list_new_items) addItemToSelectionGroup(item);
+    }
+
+    //QGraphicsScene::keyPressEvent(event);         // Don't pass on, if we pass on arrow key presses, it moves view sliders
+    emit updateViews();
 }
+
+
+
+//####################################################################################
+//##        setPositionByOrigin - Sets item to new_x, new_y position in scene, offset by_origin point
+//####################################################################################
+void SceneGraphicsScene::setPositionByOrigin(QGraphicsItem *item, Origin by_origin, double new_x, double new_y)
+{
+    item->setPos(new_x, new_y);
+
+    QRectF      item_rect = item->boundingRect();
+    QPointF     item_pos;
+
+    switch (by_origin) {
+    case Origin::Top_Left:      item_pos = item_rect.topLeft();                  break;
+    case Origin::Top_Right:     item_pos = item_rect.topRight();                 break;
+    case Origin::Center:        item_pos = item_rect.center();                   break;
+    case Origin::Bottom_Left:   item_pos = item_rect.bottomLeft();               break;
+    case Origin::Bottom_Right:  item_pos = item_rect.bottomRight();              break;
+    case Origin::Top:           item_pos = QPointF(item_rect.topLeft().x() + (item_rect.topRight().x() - item_rect.topLeft().x()),
+                                                   item_rect.topLeft().y() );    break;
+    case Origin::Bottom:        item_pos = QPointF(item_rect.bottomLeft().x() + (item_rect.bottomRight().x() - item_rect.bottomLeft().x()),
+                                                   item_rect.bottomLeft().y() ); break;
+    case Origin::Left:          item_pos = QPointF(item_rect.topLeft().x(),
+                                                   item_rect.topLeft().y() + (item_rect.bottomLeft().y() - item_rect.topLeft().y()) );       break;
+    case Origin::Right:         item_pos = QPointF(item_rect.topRight().x(),
+                                                   item_rect.topRight().y() + (item_rect.bottomRight().y() - item_rect.topRight().y()) );    break;
+    }
+    item_pos = item->sceneTransform().map(item_pos);
+
+    setPositionByOrigin(item, item_pos, new_x, new_y);
+}
+
+void SceneGraphicsScene::setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y)
+{
+    QPointF     new_pos;
+
+    double x_diff = origin_point.x() - new_x;
+    double y_diff = origin_point.y() - new_y;
+
+    new_pos.setX( new_x - x_diff);
+    new_pos.setY( new_y - y_diff);
+
+    item->setPos(new_pos);
+}
+
+
 
 
 
