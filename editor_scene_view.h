@@ -114,7 +114,8 @@ public:
     // Event Overrides, start at Qt Docs for QGraphicsView Class to find more
     virtual void    paintEvent(QPaintEvent *event) override;                                // Inherited from QWidget
 
-    virtual void    scrollContentsBy(int dx, int dy) override;                              // Inherited by QAbstractScrollArea
+    virtual bool    eventFilter(QObject *obj, QEvent *event) override;                      // Inherited from QObject
+    virtual void    scrollContentsBy(int dx, int dy) override;                              // Inherited from QAbstractScrollArea
 
     virtual void    enterEvent(QEvent *event) override;                                     // Inherited from QWidget
     virtual void    keyPressEvent(QKeyEvent *event) override;                               // Inherited from QWidget
