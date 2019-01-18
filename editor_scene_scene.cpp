@@ -62,8 +62,9 @@ void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, double new_width, d
 
 
 //####################################################################################
-//##        SLOT: sceneChanged - Connected from scene().changed, resizes scene when objects are added / subtracted
+//##        SLOT: sceneChanged
 //####################################################################################
+// Connected from scene().changed, resizes scene when objects are added / subtracted
 void SceneGraphicsScene::sceneChanged(QList<QRectF>)
 {
     double min_size = 500;              // Minimum size fo scene rect (-500 to 500 for x and y)

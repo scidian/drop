@@ -58,7 +58,7 @@ enum class Property_Type {
     Bool,       Int,        Long,       Float,      Double,
     Char,       String,
     Image,      Icon,       Color,
-    Point2D,    Point3D,
+    Point,      PointF,     Vector3D,
 };
 
 
@@ -76,7 +76,6 @@ enum class DrTypes {
 
     NotFound,   BaseClass,
 };
-
 
 //####################################################################################
 //##    Possible handle rects, order is vector / array index critical

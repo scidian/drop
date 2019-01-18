@@ -39,12 +39,26 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
 {
 
     // ########## Load saved preferences
-    globals->show_debug = true;
+    globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Secret_Menu));
+    globals->debug_flags.set(static_cast<size_t>(Debug_Flags::FPS));
+    globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Mouse_Coordinates));
+
+    globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Object_Inspector_Build));
+    globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Scene_Tree_Drag));
+    globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Scene_Tree_Selection));
+
+    globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Rotation_Data));
+    globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Selection_Box_Group_Data));
+    globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Selected_Item_Data));
+    globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Shear_Matrix));
+
+
+
     globals->current_color_scheme = Color_Scheme::Dark;
 
 
 
-    // !!!!! TEMP: call to populate Graphics Scene (currently does chips)
+    // !!!!! #TEMP: call to populate Graphics Scene (currently does chips)
     populateScene();
     // !!!!! END
 
@@ -54,7 +68,7 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
     current_world = 0;
 
 
-    // !!!!! TEMP: New Project
+    // !!!!! #TEMP: New Project
     // Create a new project and add some stuff to it
     project->addWorld();
     project->getWorldWithName("World 2")->addScene();
@@ -77,15 +91,6 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
 
 
 
-
-    // !!!!! TEMP:
-    // Test loading data out from a pair, i.e. "POINT2D", stored as QList<QVariant>
-    if (current_mode == Form_Main_Mode::Edit_Scene) {
-        QList<QVariant> myPoint = project->getWorld(current_world)->getComponentProperty(World_Components::physics, World_Properties::gravity)->getValue().toList();
-        setLabelText(Label_Names::Label_1, "Gravity X:" + myPoint.first().toString());
-        setLabelText(Label_Names::Label_2, "Gravity Y:" + myPoint.last().toString());
-    }
-    // !!!!! END
 
     done_loading = true;
 }
@@ -147,6 +152,12 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
 
     case Label_Names::Label_Bottom:     label_bottom->setText(new_text);    break;
     }
+}
+
+// Returns if we should display debug code
+bool FormMain::debugFlag(Debug_Flags option_to_check)
+{
+    return globals->debug_flags.test(static_cast<size_t>(option_to_check));
 }
 
 // Pops up message box from Globals

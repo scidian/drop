@@ -63,14 +63,16 @@ void SceneGraphicsScene::addItemToSelectionGroup(QGraphicsItem *item)
         m_selection_group->setSelected(true);
     }
 
-    // !!!!! TEMP
-    m_relay->setLabelText(Label_Names::Label_Object_1, "Group Pos  X: " + QString::number(m_selection_group->boundingRect().x()) +
-                                                                ", Y: " + QString::number(m_selection_group->boundingRect().y()) );
-    m_relay->setLabelText(Label_Names::Label_Object_2, "Group Size X: " + QString::number(m_selection_group->boundingRect().width()) +
-                                                                ", Y: " + QString::number(m_selection_group->boundingRect().height()) );
-    m_relay->setLabelText(Label_Names::Label_Object_3, "Group Items: " +  QString::number(m_selection_group->childItems().count()) );
-    m_relay->setLabelText(Label_Names::Label_Object_4, "Group Z: " +      QString::number(m_selection_group->zValue()) + QString("\t") +
-                                                       "Group Angle: " +  QString::number(m_selection_group->data(User_Roles::Rotation).toDouble()) );
+    // !!!!! #DEBUG:    Show selection group info
+    if (m_relay->debugFlag(Debug_Flags::Selection_Box_Group_Data)) {
+        m_relay->setLabelText(Label_Names::Label_Object_1, "Group Pos  X: " + QString::number(m_selection_group->boundingRect().x()) +
+                                                                    ", Y: " + QString::number(m_selection_group->boundingRect().y()) );
+        m_relay->setLabelText(Label_Names::Label_Object_2, "Group Size X: " + QString::number(m_selection_group->boundingRect().width()) +
+                                                                    ", Y: " + QString::number(m_selection_group->boundingRect().height()) );
+        m_relay->setLabelText(Label_Names::Label_Object_3, "Group Items: " +  QString::number(m_selection_group->childItems().count()) );
+        m_relay->setLabelText(Label_Names::Label_Object_4, "Group Z: " +      QString::number(m_selection_group->zValue()) + QString("\t") +
+                                                           "Group Angle: " +  QString::number(m_selection_group->data(User_Roles::Rotation).toDouble()) );
+    }
     // !!!!! END
 }
 
@@ -83,8 +85,8 @@ void SceneGraphicsScene::emptySelectionGroup(bool delete_items_during_empty)
     }
     resetSelectionGroup();
 
-    // !!!!! TEMP
-    if (m_relay)
+    // !!!!! #DEBUG:    Update selection group count
+    if (m_relay->debugFlag(Debug_Flags::Selection_Box_Group_Data))
         m_relay->setLabelText(Label_Names::Label_Object_3, "Group Items: " + QString::number(m_selection_group->childItems().count()) );
     // !!!!! END
 }

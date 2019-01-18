@@ -77,8 +77,8 @@ void FormMain::buildMenu()
     menuColor_Schemes->addAction(actionBlue);
     menuColor_Schemes->addAction(actionAutumn);
 
-    // ***** Debug Menu
-    if (globals->show_debug) {
+    // !!!!! #DEBUG:    Load hidden debug menu into menu bar
+    if (debugFlag(Debug_Flags::Secret_Menu)) {
         QMenu *menuDebug;
         menuDebug = new QMenu(menuBar);
         menuDebug->setObjectName(QStringLiteral("menuDebug"));
@@ -101,6 +101,7 @@ void FormMain::buildMenu()
         actionSceneEditMode->setText(QApplication::translate("MainWindow", "Set Form Main Mode: Edit Scene", nullptr));
         actionListChildren->setText(QApplication::translate("MainWindow", "List Children", nullptr));
     }
+    // !!!!!
 
     // ***** Set menu titles and sub menu texts
     menuColor_Schemes->setTitle(QApplication::translate("MainWindow", "Color Schemes", nullptr));

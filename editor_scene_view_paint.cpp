@@ -65,10 +65,6 @@ void SceneGraphicsView::drawGrid()
         painter.setPen(QPen( m_relay->getColor(Window_Colors::Background_Dark), dot_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ));
         QVector<QPointF> points;
 
-        // !!!!! TEMP:
-        m_relay->setLabelText(Label_Names::Label_1, "Test: Fail");
-        // !!!!! END
-
         // Bottom right
         for (qreal x = 0; x <= scene_rect.right(); x += m_grid_x) {
             for (qreal y = 0; y <= scene_rect.bottom(); y += m_grid_y)
@@ -151,15 +147,55 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     ///QApplication::removePostedEvents(nullptr, 0);
 
 
-
     // ******************** Draw bounding box for each item
     QPainter painter(viewport());
+    paintItemOutlines(painter);
+
+    // ******************** Draw box around entire seleciton, with Size Grip handles
+    paintBoundingBox(painter);
+
+    // ******************** Draw angles if rotating
+    if (m_view_mode == View_Mode::Rotating) {
+        painter.setPen(QPen(m_relay->getColor(Window_Colors::Text_Light), 1));
+        painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
+        painter.drawLine(mapFromScene(m_start_rotate_rect.center()), m_origin);
+        painter.drawLine(mapFromScene(m_start_rotate_rect.center()), m_last_mouse_pos);
+        painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOver);
+    }
+
+    // ******************** If we have some objects selected and created some handles, draw them
+    paintHandles(painter, m_handles_shape);
+
+
+    // !!!!! #DEBUG:    Draw frames per second
+    if (m_relay->debugFlag(Debug_Flags::FPS)) {
+        m_relay->setLabelText(Label_Names::Label_3, "Draw Time: " + QString::number(m_debug_timer.elapsed()) );
+        m_debug_fps++;
+        if (m_debug_timer.elapsed() >= 1000) {
+            m_relay->setLabelText(Label_Names::Label_1, "FPS: " + QString::number(m_debug_fps) );
+            m_debug_timer.restart();
+            m_debug_fps = 0;
+        }
+    }
+    // !!!!! END
+}
+
+// Paint helper function, returns a RectF around center point with sides length of rect_size
+QRectF SceneGraphicsView::rectAtCenterPoint(QPoint center, double rect_size)
+{
+    return QRectF(center.x() - rect_size / 2, center.y() - rect_size / 2, rect_size, rect_size);
+}
+
+
+// Paints outline around every selected item
+void SceneGraphicsView::paintItemOutlines(QPainter &painter)
+{
     QBrush pen_brush(m_relay->getColor(Window_Colors::Icon_Light));
     painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.setBrush(Qt::NoBrush);
 
     int first_time = 0;
-    for (auto item: my_scene->getSelectionGroupItems()) {
+    for (auto item: dynamic_cast<SceneGraphicsScene*>(scene())->getSelectionGroupItems()) {
         // Load in item bounding box
         QPolygonF polygon(item->boundingRect());
 
@@ -171,8 +207,8 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         painter.drawPolygon(to_view);
 
 
-        // !!!!! TEMP: Showing object data
-        if (first_time == 0) {
+        // !!!!! #DEBUG:    Showing object data
+        if (m_relay->debugFlag(Debug_Flags::Selected_Item_Data) && first_time == 0) {
             QPointF my_scale =  item->data(User_Roles::Scale).toPointF();
             double  my_angle =  item->data(User_Roles::Rotation).toDouble();
             QPointF my_center = item->sceneTransform().map( item->boundingRect().center() );
@@ -186,8 +222,11 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
             m_relay->setLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()) );
             first_time++;
         }
+        // !!!!! END
 
 
+        // !!!!! #DEBUG:    Shear Data
+        if (m_relay->debugFlag(Debug_Flags::Shear_Matrix)) {
 //        double   angle = item->data(User_Roles::Rotation).toDouble();
 //        QPolygonF poly = item->boundingRect(); //item->sceneTransform().map(item->boundingRect());
 //        QPointF center = item->boundingRect().center();
@@ -205,12 +244,9 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 //        //poly = no_shear.map(poly);
 
 
-
-
 //        painter.setPen(QPen(QBrush(Qt::red), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 //        painter.drawPolygon( mapFromScene(poly) );
 //        painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-
 
 
 //        QTransform t = item_no_rotate;
@@ -224,12 +260,17 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 //        if (isCloseTo(0, m23, .00001)) m23 = 0;
 //        m_relay->setLabelText(Label_Names::Label_1, "11: " + QString::number(m11) + ", 12: " + QString::number(m12) + ", 13: " + QString::number(m13) );
 //        m_relay->setLabelText(Label_Names::Label_2, "21: " + QString::number(m21) + ", 22: " + QString::number(m22) + ", 23: " + QString::number(m23) );
-
+        }
         // !!!!! END
+
     }
+}
 
 
-    // ******************** Draw box around entire seleciton, with Size Grip squares
+// Paints bounding box onto view, calculates handle and side resize boxes
+void SceneGraphicsView::paintBoundingBox(QPainter &painter)
+{
+    QGraphicsItem *item = dynamic_cast<SceneGraphicsScene*>(scene())->getSelectionGroupAsGraphicsItem();
     painter.setPen(QPen(m_relay->getColor(Window_Colors::Text_Light), 1));
 
     // Size of side handle boxes
@@ -239,137 +280,92 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     // Size of corner handle boxes
     double corner_size = 10;
 
-    // Check if we should draw bounding box, and if it should be squares or circles
-    bool draw_box = false;
-    bool do_squares = true;
+    // Check if bounding box handles should be squares or circles
+    double angle = item->data(User_Roles::Rotation).toDouble();
+    if (isSquare(angle, ANGLE_TOLERANCE) == false)  m_handles_shape = Handle_Shapes::Circles;
+    else                                            m_handles_shape = Handle_Shapes::Squares;
 
-    if (my_scene->getSelectionGroupCount() > 0) draw_box = true;
-    if (my_scene->getSelectionGroupCount() >= 1) {
-         double angle = my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Rotation).toDouble();
-         if (isSquare(angle, ANGLE_TOLERANCE) == false) do_squares = false;
-    }
 
     // ******************** Set Size Grip rectangles
-    QPolygon to_view;
+    // Map item bounding box to screen so we can draw it
+    QPolygonF polygon(item->boundingRect());                                // Get bounding box of item as polygon
+    QTransform transform = item->sceneTransform();                          // Get item bounding box to scene transform
+    polygon = transform.map(polygon);                                       // Map bounding box to scene location
+    QPolygon to_view = mapFromScene(polygon);                               // Convert bounding box to view coordinates
 
-    if (draw_box) {
-        // Map item bounding box to screen so we can draw it
-        QGraphicsItem *item = my_scene->getSelectionGroupAsGraphicsItem();      // Grab selection box
-        QPolygonF polygon(item->boundingRect());                                // Get bounding box of item as polygon
+    // ***** Store corner handle polygons
+    QPointF top_left =  transform.map(item->boundingRect().topLeft());
+    QPointF top_right = transform.map(item->boundingRect().topRight());
+    QPointF bot_left =  transform.map(item->boundingRect().bottomLeft());
+    QPointF bot_right = transform.map(item->boundingRect().bottomRight());
 
-        QTransform transform = item->sceneTransform();                          // Get item bounding box to scene transform
-        polygon = transform.map(polygon);                                       // Map bounding box to scene location
-        to_view = mapFromScene(polygon);                                        // Convert bounding box to view coordinates
+    // Store view coodinate rectangles of corners for size grip handles
+    m_handles[Position_Flags::Top_Left] =     rectAtCenterPoint( mapFromScene( top_left  ), corner_size);
+    m_handles[Position_Flags::Top_Right] =    rectAtCenterPoint( mapFromScene( top_right ), corner_size);
+    m_handles[Position_Flags::Bottom_Left] =  rectAtCenterPoint( mapFromScene( bot_left  ), corner_size);
+    m_handles[Position_Flags::Bottom_Right] = rectAtCenterPoint( mapFromScene( bot_right ), corner_size);
 
-        // ***** Store corner handle polygons
-        QPointF top_left =  transform.map(item->boundingRect().topLeft());
-        QPointF top_right = transform.map(item->boundingRect().topRight());
-        QPointF bot_left =  transform.map(item->boundingRect().bottomLeft());
-        QPointF bot_right = transform.map(item->boundingRect().bottomRight());
+    // ***** Store side box handle polygons
+    QPointF center = item->boundingRect().center();
+    center = transform.map(center);
+    QTransform remove_rotation = QTransform().translate(center.x(), center.y()).rotate(-angle).translate(-center.x(), -center.y());
 
-        // Store view coodinate rectangles of corners for size grip handles
-        m_handles[Position_Flags::Top_Left] =     rectAtCenterPoint( mapFromScene( top_left  ), corner_size);
-        m_handles[Position_Flags::Top_Right] =    rectAtCenterPoint( mapFromScene( top_right ), corner_size);
-        m_handles[Position_Flags::Bottom_Left] =  rectAtCenterPoint( mapFromScene( bot_left  ), corner_size);
-        m_handles[Position_Flags::Bottom_Right] = rectAtCenterPoint( mapFromScene( bot_right ), corner_size);
+    // Remove rotation from bounding box in scene, map bounding box scene coordinates to view coordinates
+    top_left =  mapFromScene( remove_rotation.map(top_left) );
+    top_right=  mapFromScene( remove_rotation.map(top_right) );
+    bot_left =  mapFromScene( remove_rotation.map(bot_left) );
+    bot_right = mapFromScene( remove_rotation.map(bot_right) );
 
-        // ***** Store side box handle polygons
-        double angle = item->data(User_Roles::Rotation).toDouble();
-        QPointF center = item->boundingRect().center();
-        center = transform.map(center);
-        QTransform remove_rotation = QTransform().translate(center.x(), center.y()).rotate(-angle).translate(-center.x(), -center.y());
+    // Create bounding box rectangles
+    QRectF temp_top    ( QPointF(top_left.x() + s_half,  top_left.y() - s_half),
+                         QPointF(top_right.x() - s_half, top_right.y() + s_half) );
+    QRectF temp_bottom ( QPointF(bot_left.x() + s_half,  bot_left.y() - s_half),
+                         QPointF(bot_right.x() - s_half, bot_right.y() + s_half));
+    QRectF temp_left   ( QPointF(top_left.x() - s_half,  top_left.y() + s_half),
+                         QPointF(bot_left.x() + s_half,  bot_left.y() + s_half));
+    QRectF temp_right  ( QPointF(top_right.x() - s_half, top_right.y() + s_half),
+                         QPointF(bot_right.x() + s_half, bot_right.y() - s_half));
 
-        // Remove rotation from bounding box in scene, map bounding box scene coordinates to view coordinates
-        top_left =  mapFromScene( remove_rotation.map(top_left) );
-        top_right=  mapFromScene( remove_rotation.map(top_right) );
-        bot_left =  mapFromScene( remove_rotation.map(bot_left) );
-        bot_right = mapFromScene( remove_rotation.map(bot_right) );
+    // Add rotation back onto side boxes
+    center = QLineF(top_left, bot_right).pointAt(.5);
+    QTransform add_rotation =    QTransform().translate(center.x(), center.y()).rotate( angle).translate(-center.x(), -center.y());
+    m_handles[Position_Flags::Top] =    add_rotation.map(temp_top);
+    m_handles[Position_Flags::Bottom] = add_rotation.map(temp_bottom);
+    m_handles[Position_Flags::Left] =   add_rotation.map(temp_left);
+    m_handles[Position_Flags::Right] =  add_rotation.map(temp_right);
 
-        // Create bounding box rectangles
-        QRectF temp_top    ( QPointF(top_left.x() + s_half,  top_left.y() - s_half),
-                             QPointF(top_right.x() - s_half, top_right.y() + s_half) );
-        QRectF temp_bottom ( QPointF(bot_left.x() + s_half,  bot_left.y() - s_half),
-                             QPointF(bot_right.x() - s_half, bot_right.y() + s_half));
-        QRectF temp_left   ( QPointF(top_left.x() - s_half,  top_left.y() + s_half),
-                             QPointF(bot_left.x() + s_half,  bot_left.y() + s_half));
-        QRectF temp_right  ( QPointF(top_right.x() - s_half, top_right.y() + s_half),
-                             QPointF(bot_right.x() + s_half, bot_right.y() - s_half));
+    // Store polygon centers for use later in paintHandles
+    for (auto h : m_handles) m_handles_centers[h.first] = h.second.boundingRect().center();
 
-        // Add rotation back onto boxes
-        center = QLineF(top_left, bot_right).pointAt(.5);
-        QTransform add_rotation =    QTransform().translate(center.x(), center.y()).rotate( angle).translate(-center.x(), -center.y());
-        m_handles[Position_Flags::Top] =    add_rotation.map(temp_top);
-        m_handles[Position_Flags::Bottom] = add_rotation.map(temp_bottom);
-        m_handles[Position_Flags::Left] =   add_rotation.map(temp_left);
-        m_handles[Position_Flags::Right] =  add_rotation.map(temp_right);
-
-        // Store polygon centers
-        for (auto h : m_handles) m_handles_centers[h.first] = h.second.boundingRect().center();
-
-        // Draw bounding box
-        painter.drawPolygon(to_view);
-    }
-
-    // ******************** Draw angles if rotating
-    if (m_view_mode == View_Mode::Rotating) {
-        painter.setPen(QPen(m_relay->getColor(Window_Colors::Text_Light), 1));
-        painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
-        painter.drawLine(mapFromScene(m_start_rotate_rect.center()), m_origin);
-        painter.drawLine(mapFromScene(m_start_rotate_rect.center()), m_last_mouse_pos);
-        painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOver);
-    }
-
-
-    // ******************** If we have some objects selected and created some handles, draw them
-    if (draw_box) {
-        painter.setBrush(m_relay->getColor(Window_Colors::Icon_Light));
-
-        QVector<QPointF> handles;
-        for (int i = 0; i < static_cast<int>(Position_Flags::Total); i++)
-            handles.append(m_handles_centers[static_cast<Position_Flags>(i)]);
-
-        double handle_size = 8;
-        for (auto r : handles) {
-            QRectF to_draw;
-            to_draw.setX(r.x() - (handle_size / 2));
-            to_draw.setY(r.y() - (handle_size / 2));
-            to_draw.setWidth(handle_size);
-            to_draw.setHeight(handle_size);
-            if (do_squares == false)
-                painter.drawPixmap(to_draw, p_circle, p_circle.rect());
-            else
-                painter.drawPixmap(to_draw, p_square, p_square.rect());
-
-            //painter.drawEllipse(r.center(), handle_size, handle_size);        // Circles
-            //painter.drawPolygons(handles);                                    // Squares
-        }
-        ///for (auto h : m_handles) painter.drawPolygon(h.second);              // Draw polygons for all handles
-
-    }
-
-
-
-    // !!!!! TEMP:
-    painter.setPen(QPen(Qt::red, 3));
-    painter.drawPolygon(m_temp_polygon);
-
-    painter.setPen(QPen(Qt::blue, 3));
-    painter.drawPolygon(m_temp_polygon2);
-    // !!!!! END
-
-
-    m_relay->setLabelText(Label_Names::Label_3, "Draw Time: " + QString::number(timer.elapsed()) );
-    fps++;
-    if (timer.elapsed() >= 1000) {
-        m_relay->setLabelText(Label_Names::Label_1, "FPS: " + QString::number(fps) );
-        timer.restart();
-        fps = 0;
-    }
+    // Draw bounding box onto view
+    painter.drawPolygon(to_view);
 }
 
-QRectF SceneGraphicsView::rectAtCenterPoint(QPoint center, double rect_size)
+
+// Paints handles into view
+void SceneGraphicsView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw)
 {
-    return QRectF(center.x() - rect_size / 2, center.y() - rect_size / 2, rect_size, rect_size);
+    painter.setBrush(m_relay->getColor(Window_Colors::Icon_Light));
+
+    QVector<QPointF> handles;
+    for (int i = 0; i < static_cast<int>(Position_Flags::Total); i++)
+        handles.append(m_handles_centers[static_cast<Position_Flags>(i)]);
+
+    double handle_size = 8;
+    for (auto r : handles) {
+        QRectF to_draw;
+        to_draw.setX(r.x() - (handle_size / 2));
+        to_draw.setY(r.y() - (handle_size / 2));
+        to_draw.setWidth(handle_size);
+        to_draw.setHeight(handle_size);
+        switch (shape_to_draw)
+        {
+        case Handle_Shapes::Circles:    painter.drawPixmap(to_draw, p_circle, p_circle.rect());     break;
+        case Handle_Shapes::Squares:    painter.drawPixmap(to_draw, p_square, p_square.rect());     break;
+        }
+    }
+    ///// Draw polygons for all handles
+    ///for (auto h : m_handles) painter.drawPolygon(h.second);
 }
 
 

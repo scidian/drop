@@ -102,6 +102,7 @@ public:
     virtual QColor  getColor(Window_Colors color_role);
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list);
     virtual void    setLabelText(Label_Names label_name, QString new_text);
+    virtual bool    debugFlag(Debug_Flags option_to_check);
     virtual void    showMessageBox(QString message);
 
     void            populateScene();                                        // !!!!! TEMP generic fill of scene

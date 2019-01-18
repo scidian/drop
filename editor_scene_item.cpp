@@ -10,6 +10,10 @@
 
 #include "editor_scene_item.h"
 
+
+//####################################################################################
+//##        Constructor & destructor
+//####################################################################################
 DrItem::DrItem(const QColor &start_color, double width, double height, double z_order)
 {
     m_width = width;
@@ -28,6 +32,10 @@ DrItem::DrItem(const QColor &start_color, double width, double height, double z_
     setData(User_Roles::Scale, QPointF(1, 1));
 }                                     
 
+
+//####################################################################################
+//##        Item Property Overrides
+//####################################################################################
 // Outline of entire object
 QRectF DrItem::boundingRect() const
 {
@@ -35,7 +43,7 @@ QRectF DrItem::boundingRect() const
     return my_rect;
 }
 
-// Seems to define mouseOver events
+// Seems to define mouseOver events, and intersection events for Rubber Band Box
 QPainterPath DrItem::shape() const
 {
     QPainterPath path;
@@ -50,6 +58,10 @@ int DrItem::type() const
 }
 
 
+
+//####################################################################################
+//##        Item Change Event - Allows for auto updating on property changes
+//####################################################################################
 QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     // Value is the new position
@@ -70,6 +82,9 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 }
 
 
+//####################################################################################
+//##        Custom Paint Handling
+//####################################################################################
 void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(widget);
@@ -77,14 +92,17 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 
     QColor fillColor = m_color;
 
-    //if (option->state & QStyle::State_Selected)  { fillColor = QColor(Qt::red); } //m_color.dark(150); }              // If selected
-    //if (option->state & QStyle::State_MouseOver) { fillColor = QColor(Qt::gray); } //fillColor.light(125); }          // If mouse is over
-    //if (option->state & QStyle::State_MouseOver && option->state & QStyle::State_Selected) { fillColor = QColor(Qt::red).darker(200); }
+    ///if (option->state & QStyle::State_Selected)  { fillColor = QColor(Qt::red); } //m_color.dark(150); }              // If selected
+    ///if (option->state & QStyle::State_MouseOver) { fillColor = QColor(Qt::gray); } //fillColor.light(125); }          // If mouse is over
+    ///if (option->state & QStyle::State_MouseOver && option->state & QStyle::State_Selected) { fillColor = QColor(Qt::red).darker(200); }
 
     painter->fillRect(QRectF(0, 0, m_width, m_height), fillColor);
 }
 
 
+//####################################################################################
+//##        Input overrides
+//####################################################################################
 void DrItem::mousePressEvent(QGraphicsSceneMouseEvent *event) { QGraphicsItem::mousePressEvent(event); }
 void DrItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) { QGraphicsItem::mouseMoveEvent(event); }
 void DrItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) { QGraphicsItem::mouseReleaseEvent(event); }

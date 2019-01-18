@@ -203,12 +203,14 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
 
 
-    // !!!!! TEMP: Draw mouse coords on screen
-    m_relay->setLabelText(Label_Names::Label_Mouse_1, "Mouse Scene X: " + QString::number(mapToScene(m_last_mouse_pos).x()) +
-                                                                ", Y: " + QString::number(mapToScene(m_last_mouse_pos).y()) );
-    m_relay->setLabelText(Label_Names::Label_Mouse_2, "Mouse View  X: " + QString::number(m_last_mouse_pos.x()) +
-                                                                ", Y: " + QString::number(m_last_mouse_pos.y()) );
-    m_relay->setLabelText(Label_Names::Label_Pos_Flag, "Position Flag: " + QString::number(static_cast<int>(m_over_handle)) );
+    // !!!!! #DEBUG:    Draw mouse coords on screen
+    if (m_relay->debugFlag(Debug_Flags::Mouse_Coordinates)) {
+        m_relay->setLabelText(Label_Names::Label_Mouse_1, "Mouse Scene X: " + QString::number(mapToScene(m_last_mouse_pos).x()) +
+                                                                    ", Y: " + QString::number(mapToScene(m_last_mouse_pos).y()) );
+        m_relay->setLabelText(Label_Names::Label_Mouse_2, "Mouse View  X: " + QString::number(m_last_mouse_pos.x()) +
+                                                                    ", Y: " + QString::number(m_last_mouse_pos.y()) );
+        m_relay->setLabelText(Label_Names::Label_Pos_Flag, "Position Flag: " + QString::number(static_cast<int>(m_over_handle)) );
+    }
     // !!!!! END
 
 
@@ -291,11 +293,6 @@ void SceneGraphicsView::applyUpdatedMatrix()
     matrix.scale(m_zoom_scale, m_zoom_scale);
     matrix.rotate(m_rotate);
     this->setMatrix(matrix);
-
-    // !!!!! TEMP:
-    m_relay->setLabelText(Label_Names::Label_2, "Zoom: " + QString::number(m_zoom) +
-                                             ", Scale: " + QString::number(m_zoom_scale) );
-    // !!!!! END
 }
 
 

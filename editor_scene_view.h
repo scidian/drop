@@ -25,9 +25,15 @@ enum class View_Mode {
     Translating,
 };
 
+enum class Handle_Shapes {
+    Circles,
+    Squares,
+};
+
 enum class X_Axis {     Left,   Right,    None  };
 enum class Y_Axis {     Top,    Bottom,   None  };
 enum class Grid_Style { Lines,  Dots,           };
+
 
 // Class constants
 const double ANGLE_TOLERANCE = .5;                              // Angle distance to fuzzy compare to desired angle
@@ -77,6 +83,7 @@ private:
     // Selection Bounding Box Variables
     std::map<Position_Flags, QPolygonF> m_handles;                  // Stores QRects of current selection box handles
     std::map<Position_Flags, QPointF>   m_handles_centers;          // Stores QPointF center points of sides polygons
+    Handle_Shapes                       m_handles_shape;            // Stores which style handles should we draw
     Position_Flags                      m_over_handle;              // Tracks if mouse is over a handle
     QPoint                              m_last_mouse_pos;           // Tracks last known mouse position in view coordinates
 
@@ -99,10 +106,11 @@ private:
     QRectF                          m_start_rotate_rect;            // Stores starting rect of selection before resize starts
 
 
-    QPolygonF                       m_temp_polygon;         // TEMP
-    QPolygonF                       m_temp_polygon2;        // TEMP
-    long                            fps = 0;                // TEMP
-    QTime                           timer;                  // TEMP
+    // !!!!! DEBUG: Debugging variables
+    QPolygonF                       m_debug_polygon;                // Holds a polygon used for resize routine
+    QPolygonF                       m_debug_polygon2;        // TEMP
+    long                            m_debug_fps = 0;         // TEMP
+    QTime                           m_debug_timer;           // TEMP
 
 
 
@@ -135,6 +143,11 @@ public:
     // Misc Functions
     QRectF          rectAtCenterPoint(QPoint center, double rect_size);
     QRectF          totalSelectedItemsSceneRect();
+
+    // Paint Functions
+    void            paintBoundingBox(QPainter &painter);
+    void            paintHandles(QPainter &painter, Handle_Shapes shape_to_draw);
+    void            paintItemOutlines(QPainter &painter);
 
     // Selection Functions
     void            startSelect(QMouseEvent *event);

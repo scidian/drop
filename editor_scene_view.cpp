@@ -32,7 +32,8 @@ SceneGraphicsView::SceneGraphicsView(QWidget *parent, DrProject *project, Interf
 
     m_over_handle = Position_Flags::No_Position;
 
-    timer.start();
+    if (m_relay->debugFlag(Debug_Flags::FPS))
+        m_debug_timer.start();
 }
 SceneGraphicsView::~SceneGraphicsView() { }
 
@@ -44,13 +45,13 @@ SceneGraphicsView::~SceneGraphicsView() { }
 // Connected from scene().changed
 void SceneGraphicsView::sceneChanged(QList<QRectF>)
 {
-    //update();             // Calls paint recursively
+    ///update();             // Calls paint recursively
 }
 
 // Connected from scene().selectionChanged
 void SceneGraphicsView::selectionChanged()
 {
-    //update();             // Calls paint recursively
+    ///update();             // Calls paint recursively
 }
 
 void SceneGraphicsView::scrollContentsBy(int dx, int dy)
