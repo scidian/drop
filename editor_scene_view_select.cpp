@@ -21,7 +21,9 @@
 #include "interface_relay.h"
 
 
-// Starts selecting mode
+//####################################################################################
+//##        Starts selecting mode
+//####################################################################################
 void SceneGraphicsView::startSelect(QMouseEvent *event)
 {
     m_view_mode = View_Mode::Selecting;                                     // Flag that we're in selection mode
@@ -36,8 +38,9 @@ void SceneGraphicsView::startSelect(QMouseEvent *event)
     update();
 }
 
-
-// Handles resizing Rubber Band box and updating Selection Area during View_Mode::Selecting
+//####################################################################################
+//##        Handles resizing Rubber Band box and updating Selection Area during View_Mode::Selecting
+//####################################################################################
 void SceneGraphicsView::processSelection(QPoint mouse_in_view)
 {
     SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());

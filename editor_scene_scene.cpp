@@ -30,8 +30,10 @@ SceneGraphicsScene::SceneGraphicsScene(QWidget *parent, DrProject *project, Inte
     connect(this, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
 
     m_selection_group = new SelectionGroup;
-    m_selection_group->setFlags(QGraphicsItem::ItemIsSelectable |              QGraphicsItem::ItemIsMovable |
-                                QGraphicsItem::ItemSendsScenePositionChanges | QGraphicsItem::ItemSendsGeometryChanges);
+    m_selection_group->setFlags(QGraphicsItem::ItemIsSelectable |
+                                QGraphicsItem::ItemIsMovable |
+                                QGraphicsItem::ItemSendsScenePositionChanges |
+                                QGraphicsItem::ItemSendsGeometryChanges);
     addItem(m_selection_group);
     emptySelectionGroup();
 }
@@ -174,7 +176,7 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
     }
 
     //QGraphicsScene::keyPressEvent(event);         // Don't pass on, if we pass on arrow key presses, it moves view sliders
-    invalidate();                                   // Force view to update
+    emit updateViews();
 }
 
 

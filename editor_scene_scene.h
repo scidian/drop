@@ -52,6 +52,10 @@ public:
     void            resetSelectionGroup();
     void            selectSelectionGroup();
 
+    // Custom Add / Remove from Selection Group without calling update()
+    void            addToGroupNoUpdate(QGraphicsItem *item);
+    void            removeFromGroupNoUpdate(QGraphicsItem *item);
+
     // Getters and Setters
     SelectionGroup*       getSelectionGroup();
     QGraphicsItem*        getSelectionGroupAsGraphicsItem();
@@ -60,6 +64,9 @@ public:
 
 public slots:
     void            sceneChanged(QList<QRectF> region);
+
+signals:
+    void            updateViews();
 
 };
 

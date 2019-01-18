@@ -136,6 +136,7 @@ void SceneGraphicsScene::selectSelectionGroup()
 
 
 
+
 //####################################################################################
 //##        SelectionGroup Handling
 //####################################################################################
@@ -151,6 +152,58 @@ void SelectionGroup::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
     ///QGraphicsItemGroup::paint(painter, option, widget);       // Allows black selection bounding box to be painted
 }
 
+
+//####################################################################################
+//##        Custom slimmed from Qt Source Code, "QGraphicsItemGroup->removeFromGroup"
+void SceneGraphicsScene::removeFromGroupNoUpdate(QGraphicsItem *item)
+{
+    if (!item) return;
+
+    QTransform itemTransform = item->sceneTransform();
+    QPointF oldPos = item->mapToScene(0, 0);
+    item->setParentItem(nullptr);
+    item->setPos(oldPos);
+    if (!item->pos().isNull()) itemTransform *= QTransform::fromTranslate(-item->x(), -item->y());
+
+    QPointF origin = item->transformOriginPoint();
+    QMatrix4x4 m;
+    QList<QGraphicsTransform*> transformList = item->transformations();
+    for (int i = 0; i < transformList.size(); ++i)
+        transformList.at(i)->applyTo(&m);
+    itemTransform *= m.toTransform().inverted();
+    itemTransform.translate(origin.x(), origin.y());
+    itemTransform.rotate(-item->rotation());
+    itemTransform.scale(1 / item->scale(), 1 / item->scale());
+    itemTransform.translate(-origin.x(), -origin.y());
+    item->setTransform(itemTransform);
+}
+
+//####################################################################################
+//##        Custom slimmmed from Qt Source Code, "QGraphicsItemGroup->addToGroup"
+void SceneGraphicsScene::addToGroupNoUpdate(QGraphicsItem *item)
+{
+    QGraphicsItemGroup *group = m_selection_group;
+    if (!item || item == group) return;
+
+    bool ok;
+    QTransform itemTransform = item->itemTransform(group, &ok);
+    QTransform newItemTransform(itemTransform);
+    item->setPos(group->mapFromItem(item, 0, 0));
+    item->setParentItem(group);
+    if (!item->pos().isNull()) newItemTransform *= QTransform::fromTranslate(-item->x(), -item->y());
+
+    QPointF origin = item->transformOriginPoint();
+    QMatrix4x4 m;
+    QList<QGraphicsTransform*> transformList = item->transformations();
+    for (int i = 0; i < transformList.size(); ++i)
+        transformList.at(i)->applyTo(&m);
+    newItemTransform *= m.toTransform().inverted();
+    newItemTransform.translate(origin.x(), origin.y());
+    newItemTransform.rotate(-item->rotation());
+    newItemTransform.scale(1/item->scale(), 1/item->scale());
+    newItemTransform.translate(-origin.x(), -origin.y());
+    item->setTransform(newItemTransform);
+}
 
 
 

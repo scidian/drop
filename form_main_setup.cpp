@@ -143,9 +143,13 @@ void FormMain::buildWindowModeEditScene()
                     viewMain->setObjectName(QStringLiteral("viewMain"));
                     viewMain->setRenderHint(QPainter::Antialiasing, false);
                     viewMain->setDragMode(QGraphicsView::DragMode::NoDrag);
-                    viewMain->setOptimizationFlags(QGraphicsView::DontSavePainterState);
-                    viewMain->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
-                    viewMain->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+                    viewMain->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);
+                    viewMain->setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
+
+                    // This setting means we will decide when to call update(), controls recurssive paint events
+                    viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
+                    ///viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
+
                     viewMain->setScene(scene);
                         QSizePolicy sizePolicyView(QSizePolicy::MinimumExpanding, QSizePolicy::Expanding);
                         sizePolicyView.setHorizontalStretch(1);

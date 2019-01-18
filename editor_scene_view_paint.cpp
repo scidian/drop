@@ -23,6 +23,7 @@
 
 //####################################################################################
 //##        Draws grid lines
+//####################################################################################
 void SceneGraphicsView::drawGrid()
 {
     QPainter painter(viewport());
@@ -91,33 +92,46 @@ void SceneGraphicsView::drawGrid()
 
         painter.drawPoints(points.data(), points.size());
     }
-
-
 }
+
 
 
 
 //####################################################################################
 //##        Paints selection box, etc on top of items
+//####################################################################################
 void SceneGraphicsView::paintEvent(QPaintEvent *event)
 {
-    // Convert local scene() object to our own SceneGraphicsScene type
-    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
+    // ********** Check if scene that view is associated with has changed, if so re-connect signals from new scene
+    if (scene() != m_scene) {
+        if (scene() != nullptr) {
+            m_scene = scene();
+            connect(scene(), SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
+            connect(scene(), SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
+            connect(dynamic_cast<SceneGraphicsScene*>(scene()), &SceneGraphicsScene::updateViews, [this]() { update(); });
+        }
+    }
+
 
     // ******************** Go ahead and draw grid first
     drawGrid();
 
+
     // ******************** At this point, if no selected item paint objects and get out of here
+    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
     if (my_scene->getSelectionGroupCount() < 1) {
         QGraphicsView::paintEvent(event);
         return;
     }
 
+
     // ******************** Otherwise, break apart group to draw items in proper z-Order, then put back together
     QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
-    for (auto item: my_items) my_scene->getSelectionGroup()->removeFromGroup(item);
+    for (auto item: my_items) my_scene->removeFromGroupNoUpdate(item);
     QGraphicsView::paintEvent(event);
-    for (auto item: my_items) my_scene->getSelectionGroup()->addToGroup(item);
+    for (auto item: my_items) my_scene->addToGroupNoUpdate(item);
+
+
 
 
     // ******************** Draw bounding box for each item
@@ -126,6 +140,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.setBrush(Qt::NoBrush);
 
+    int first_time = 0;
     for (auto item: my_scene->getSelectionGroupItems()) {
         // Load in item bounding box
         QPolygonF polygon(item->boundingRect());
@@ -139,49 +154,56 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 
 
         // !!!!! TEMP: Showing object data
-        QPointF my_scale =  item->data(User_Roles::Scale).toPointF();
-        double  my_angle =  item->data(User_Roles::Rotation).toDouble();
-        QPointF my_center = item->sceneTransform().map( item->boundingRect().center() );
-        m_relay->setLabelText(Label_Names::Label_Position, "Pos X: " +  QString::number(item->pos().x()) +
-                                                         ", Pos Y: " +  QString::number(item->pos().y()) );
-        m_relay->setLabelText(Label_Names::Label_Center, "Center X: " + QString::number(my_center.x()) +
-                                                              ", Y: " + QString::number(my_center.y()) );
-        m_relay->setLabelText(Label_Names::Label_Scale, "Scale X: " +   QString::number(my_scale.x()) +
-                                                      ", Scale Y: " +   QString::number(my_scale.y()) );
-        m_relay->setLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle));
-        m_relay->setLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()) );
+        if (first_time == 0) {
+            QPointF my_scale =  item->data(User_Roles::Scale).toPointF();
+            double  my_angle =  item->data(User_Roles::Rotation).toDouble();
+            QPointF my_center = item->sceneTransform().map( item->boundingRect().center() );
+            m_relay->setLabelText(Label_Names::Label_Position, "Pos X: " +  QString::number(item->pos().x()) +
+                                                             ", Pos Y: " +  QString::number(item->pos().y()) );
+            m_relay->setLabelText(Label_Names::Label_Center, "Center X: " + QString::number(my_center.x()) +
+                                                                  ", Y: " + QString::number(my_center.y()) );
+            m_relay->setLabelText(Label_Names::Label_Scale, "Scale X: " +   QString::number(my_scale.x()) +
+                                                          ", Scale Y: " +   QString::number(my_scale.y()) );
+            m_relay->setLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle));
+            m_relay->setLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()) );
+            first_time++;
+        }
 
 
-//        double  angle = item->data(User_Roles::Rotation).toDouble();
+//        double   angle = item->data(User_Roles::Rotation).toDouble();
+//        QPolygonF poly = item->boundingRect(); //item->sceneTransform().map(item->boundingRect());
+//        QPointF center = item->boundingRect().center();
 
-//        QPolygonF poly = item->sceneTransform().map(item->boundingRect());
-
-//        QPointF center = my_scene->totalSelectedItemsSceneRect().center();
-
-//        QTransform remove_rotation;
-//        remove_rotation.translate(center.x(), center.y()).rotate(-angle).translate(-center.x(), -center.y());
+//        QTransform remove_rotation = QTransform().translate(center.x(), center.y()).rotate(-angle).translate(-center.x(), -center.y());
 //        poly = remove_rotation.map(poly);
 
-//        QTransform t = item->sceneTransform() * remove_rotation;
+
+//        QTransform item_no_rotate = item->sceneTransform() * remove_rotation;
+//        item_no_rotate.shear(1 - item_no_rotate.m21(), 1 - item_no_rotate.m12() );
+
+//        poly = remove_rotation.map(poly);
+
+
+//        //poly = no_shear.map(poly);
+
+
+
 
 //        painter.setPen(QPen(QBrush(Qt::red), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 //        painter.drawPolygon( mapFromScene(poly) );
 //        painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
-//        qreal m11 = t.m11();
-//        qreal m12 = t.m12();
-//        qreal m13 = t.m13();
-//        qreal m21 = t.m21();
-//        qreal m22 = t.m22();
-//        qreal m23 = t.m23();
 
+
+//        QTransform t = item_no_rotate;
+//        qreal m11 = t.m11(), m12 = t.m12(), m13 = t.m13();
+//        qreal m21 = t.m21(), m22 = t.m22(), m23 = t.m23();
 //        if (isCloseTo(0, m11, .00001)) m11 = 0;
 //        if (isCloseTo(0, m12, .00001)) m12 = 0;
 //        if (isCloseTo(0, m13, .00001)) m13 = 0;
 //        if (isCloseTo(0, m21, .00001)) m21 = 0;
 //        if (isCloseTo(0, m22, .00001)) m22 = 0;
 //        if (isCloseTo(0, m23, .00001)) m23 = 0;
-
 //        m_relay->setLabelText(Label_Names::Label_1, "11: " + QString::number(m11) + ", 12: " + QString::number(m12) + ", 13: " + QString::number(m13) );
 //        m_relay->setLabelText(Label_Names::Label_2, "21: " + QString::number(m21) + ", 22: " + QString::number(m22) + ", 23: " + QString::number(m23) );
 
@@ -288,12 +310,6 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
         for (int i = 0; i < static_cast<int>(Position_Flags::Total); i++)
             handles.append(m_handles_centers[static_cast<Position_Flags>(i)]);
 
-        QPixmap p;
-        if (do_squares == false)
-            p = QPixmap(":/gui_misc/handle_circle.png");
-        else
-            p = QPixmap(":/gui_misc/handle_square.png");
-
         double handle_size = 8;
         for (auto r : handles) {
             QRectF to_draw;
@@ -301,7 +317,11 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
             to_draw.setY(r.y() - (handle_size / 2));
             to_draw.setWidth(handle_size);
             to_draw.setHeight(handle_size);
-            painter.drawPixmap(to_draw, p, p.rect());
+            if (do_squares == false)
+                painter.drawPixmap(to_draw, p_circle, p_circle.rect());
+            else
+                painter.drawPixmap(to_draw, p_square, p_square.rect());
+
             //painter.drawEllipse(r.center(), handle_size, handle_size);        // Circles
             //painter.drawPolygons(handles);                                    // Squares
         }
@@ -318,13 +338,21 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     painter.setPen(QPen(Qt::blue, 3));
     painter.drawPolygon(m_temp_polygon2);
     // !!!!! END
+
+
+    m_relay->setLabelText(Label_Names::Label_3, "Draw Time: " + QString::number(timer.elapsed()) );
+    fps++;
+    if (timer.elapsed() >= 1000) {
+        m_relay->setLabelText(Label_Names::Label_1, "FPS: " + QString::number(fps) );
+        timer.restart();
+        fps = 0;
+    }
 }
 
 QRectF SceneGraphicsView::rectAtCenterPoint(QPoint center, double rect_size)
 {
     return QRectF(center.x() - rect_size / 2, center.y() - rect_size / 2, rect_size, rect_size);
 }
-
 
 
 

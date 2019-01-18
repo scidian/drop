@@ -21,6 +21,7 @@ DrItem::DrItem(const QColor &start_color, double width, double height, double z_
              QGraphicsItem::GraphicsItemFlag::ItemIsMovable |
              QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges |
              QGraphicsItem::GraphicsItemFlag::ItemSendsGeometryChanges);
+
     setAcceptHoverEvents(true);
 
     setData(User_Roles::Rotation, 0);

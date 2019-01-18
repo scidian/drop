@@ -23,10 +23,8 @@
 
 
 //####################################################################################
-//##        Mouse Events
+//##        Mouse Enter
 //####################################################################################
-
-// Mouse entered widget area event
 void SceneGraphicsView::enterEvent(QEvent *event)
 {
     setFocus(Qt::FocusReason::MouseFocusReason);                        // Set focus on mouse enter to allow for space bar pressing hand grab
@@ -34,7 +32,11 @@ void SceneGraphicsView::enterEvent(QEvent *event)
     QGraphicsView::enterEvent(event);
 }
 
-// Mouse was pressed
+
+
+//####################################################################################
+//##        Mouse Pressed
+//####################################################################################
 void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 {
     SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
@@ -149,14 +151,17 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 }
 
 
-// Mouse was moved over View
+
+//####################################################################################
+//##        Mouse Moved
+//####################################################################################
 void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
     // Try and lock function, so we ony run this once at a time
     if (mouse_move_mutex.tryLock(10) == false) return;
 
     m_last_mouse_pos = event->pos();                                    // Store event mouse position
-    update();                                                           // Call Paint Event (which update rects) before we start
+    if (m_view_mode != View_Mode::None) update();                       // Call Paint Event (which update rects) before we start
 
     // Adjust for Qt Arrow not having point right at tip of
     QPointF adjust_mouse = m_last_mouse_pos;
@@ -224,12 +229,16 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
     // Pass on event, update and unlock mutex
     QGraphicsView::mouseMoveEvent(event);
-    update();
+    if (m_view_mode != View_Mode::None) update();
+
     mouse_move_mutex.unlock();
 }
 
 
-// Mouse was released
+
+//####################################################################################
+//##        Mouse Released
+//####################################################################################
 void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 {
     // Process left mouse button released

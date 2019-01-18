@@ -31,8 +31,33 @@ SceneGraphicsView::SceneGraphicsView(QWidget *parent, DrProject *project, Interf
     m_rubber_band = new SceneViewRubberBand(QRubberBand::Rectangle, this, relay);
 
     m_over_handle = Position_Flags::No_Position;
+
+    timer.start();
 }
 SceneGraphicsView::~SceneGraphicsView() { }
+
+
+
+//####################################################################################
+//##        Scene Change SLOTs / Events to paint view when scene changes
+//####################################################################################
+// Connected from scene().changed
+void SceneGraphicsView::sceneChanged(QList<QRectF>)
+{
+    //update();             // Calls paint recursively
+}
+
+// Connected from scene().selectionChanged
+void SceneGraphicsView::selectionChanged()
+{
+    //update();             // Calls paint recursively
+}
+
+void SceneGraphicsView::scrollContentsBy(int dx, int dy)
+{
+    QGraphicsView::scrollContentsBy(dx, dy);
+    update();
+}
 
 
 

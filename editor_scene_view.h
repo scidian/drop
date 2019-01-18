@@ -44,6 +44,9 @@ private:
     QGraphicsScene         *m_scene;                                // Pointer to current scene, updated during paintEvent
     View_Mode               m_view_mode = View_Mode::None;          // Tracks current view interaction mode
 
+    QPixmap p_circle = QPixmap(":/gui_misc/handle_circle.png");
+    QPixmap p_square = QPixmap(":/gui_misc/handle_square.png");
+
     // Display Variables
     int          m_zoom = 250;                                      // Zoom level of current view
     double       m_zoom_scale = 1;                                  // Updated in applyUpdatedMatrix for use during painting grid, DO NOT SET MANUALLY
@@ -98,6 +101,9 @@ private:
 
     QPolygonF                       m_temp_polygon;         // TEMP
     QPolygonF                       m_temp_polygon2;        // TEMP
+    long                            fps = 0;                // TEMP
+    QTime                           timer;                  // TEMP
+
 
 
 public:
@@ -106,15 +112,18 @@ public:
     virtual ~SceneGraphicsView() override;
 
     // Event Overrides, start at Qt Docs for QGraphicsView Class to find more
-    virtual void    paintEvent(QPaintEvent *event) override;                               // Inherited from QWidget
-    virtual void    enterEvent(QEvent *event) override;                                    // Inherited from QWidget
-    virtual void    keyPressEvent(QKeyEvent *event) override;                              // Inherited from QWidget
-    virtual void    keyReleaseEvent(QKeyEvent *event) override;                            // Inherited from QWidget
-    virtual void    mouseMoveEvent(QMouseEvent *event) override;                           // Inherited from QWidget
-    virtual void    mousePressEvent(QMouseEvent *event) override;                          // Inherited from QWidget
-    virtual void    mouseReleaseEvent(QMouseEvent *event) override;                        // Inherited from QWidget
+    virtual void    paintEvent(QPaintEvent *event) override;                                // Inherited from QWidget
+
+    virtual void    scrollContentsBy(int dx, int dy) override;                              // Inherited by QAbstractScrollArea
+
+    virtual void    enterEvent(QEvent *event) override;                                     // Inherited from QWidget
+    virtual void    keyPressEvent(QKeyEvent *event) override;                               // Inherited from QWidget
+    virtual void    keyReleaseEvent(QKeyEvent *event) override;                             // Inherited from QWidget
+    virtual void    mouseMoveEvent(QMouseEvent *event) override;                            // Inherited from QWidget
+    virtual void    mousePressEvent(QMouseEvent *event) override;                           // Inherited from QWidget
+    virtual void    mouseReleaseEvent(QMouseEvent *event) override;                         // Inherited from QWidget
 #if QT_CONFIG(wheelevent)
-    virtual void    wheelEvent(QWheelEvent *event) override;                               // Inherited from QWidget
+    virtual void    wheelEvent(QWheelEvent *event) override;                                // Inherited from QWidget
 #endif
 
     // View Display Functions
@@ -143,7 +152,12 @@ public:
     void            resizeSelection(QPointF mouse_in_scene);
     void            resizeSelectionWithRotate(QPointF mouse_in_scene);
     Position_Flags  findOppositeSide(Position_Flags start_side);
+    void            removeShearing(QGraphicsItem *item);
 
+
+public slots:
+    void    sceneChanged(QList<QRectF> region);
+    void    selectionChanged();
 };
 
 

@@ -23,7 +23,9 @@
 #include "interface_relay.h"
 
 
-// Starts resizing mode
+//####################################################################################
+//##        Starts resizing mode
+//####################################################################################
 void SceneGraphicsView::startResize()
 {
     SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
@@ -42,7 +44,9 @@ void SceneGraphicsView::startResize()
 }
 
 
-// Call appropriate resize function
+//####################################################################################
+//##        Call appropriate resize function
+//####################################################################################
 void SceneGraphicsView::resizeSelection(QPointF mouse_in_scene)
 {
     // Figure out what sides to use for x axis and y axis
@@ -83,7 +87,10 @@ Position_Flags SceneGraphicsView::findOppositeSide(Position_Flags start_side)
 }
 
 
-// Calculates selection resizing
+
+//####################################################################################
+//##        Main resize function
+//####################################################################################
 void SceneGraphicsView::resizeSelectionWithRotate(QPointF mouse_in_scene)
 {
     SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
@@ -144,6 +151,9 @@ void SceneGraphicsView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     item->setTransform(t);
 
 
+  //  for (auto child : my_scene->getSelectionGroupItems())
+  //      removeShearing(child);
+
 
     // ***** Translate if needed
     QPointF new_pos = item->pos();
@@ -170,6 +180,25 @@ void SceneGraphicsView::resizeSelectionWithRotate(QPointF mouse_in_scene)
         child->setData(User_Roles::Scale, QPointF(scale_x, scale_y) );
     item->setData(User_Roles::Scale, QPointF(scale_x, scale_y) );
 }
+
+
+//####################################################################################
+//##        Remove shearing from item
+//####################################################################################
+void SceneGraphicsView::removeShearing(QGraphicsItem *item)
+{
+    double    angle =  item->data(User_Roles::Rotation).toDouble();
+    QPointF   center = item->sceneBoundingRect().center();
+
+    QTransform remove_rotation = QTransform().translate(center.x(), center.y()).rotate(-angle).translate(-center.x(), -center.y());
+    QTransform add_rotation =    QTransform().translate(center.x(), center.y()).rotate( angle).translate(-center.x(), -center.y());
+
+    QTransform t = item->sceneTransform() * remove_rotation;
+    t.setMatrix(t.m11(), 0, t.m13(), 0, t.m22(), t.m23(), t.m31(), t.m32(), t.m33());
+    t = t * add_rotation;
+
+}
+
 
 
 

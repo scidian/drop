@@ -21,7 +21,9 @@
 #include "interface_relay.h"
 
 
-// Starts rotating mode
+//####################################################################################
+//##        Starts rotating mode
+//####################################################################################
 void SceneGraphicsView::startRotate()
 {
     m_view_mode = View_Mode::Rotating;
@@ -58,7 +60,9 @@ bool SceneGraphicsView::isCloseTo(double number_desired, double number_to_check,
 
 
 
-// Calculates rotation
+//####################################################################################
+//##        Main Rotation Function
+//####################################################################################
 void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
 {
     // Try and lock function, so we ony run this once at a time
@@ -119,6 +123,10 @@ void SceneGraphicsView::updateItemRotation(QGraphicsItem *item, double angle_add
     item->setData(User_Roles::Rotation, new_angle);
 }
 
+
+//####################################################################################
+//##        Calculates angle from a center point to any target point, 0 = Up
+//####################################################################################
 double SceneGraphicsView::calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt)
 {
     // Calculate the angle theta from the deltaY and deltaX values (atan2 returns radians values from [-PI, PI])
