@@ -18,5 +18,13 @@
         <file>gui_misc/splitter_v.png</file>
         <file>gui_misc/handle_circle.png</file>
         <file>gui_misc/handle_square.png</file>
+        <file>cursors/size_vertical.png</file>
+        <file>cursors/size_022.png</file>
+        <file>cursors/size_045.png</file>
+        <file>cursors/size_067.png</file>
+        <file>cursors/size_112.png</file>
+        <file>cursors/size_135.png</file>
+        <file>cursors/size_157.png</file>
+        <file>cursors/size_horizontal.png</file>
     </qresource>
 </RCC>

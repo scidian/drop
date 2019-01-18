@@ -274,11 +274,11 @@ void SceneGraphicsView::paintBoundingBox(QPainter &painter)
     painter.setPen(QPen(m_relay->getColor(Window_Colors::Text_Light), 1));
 
     // Size of side handle boxes
-    double side_size = 6;
+    double side_size = 10;
     double s_half = side_size / 2;
 
     // Size of corner handle boxes
-    double corner_size = 10;
+    double corner_size = 14;
 
     // Check if bounding box handles should be squares or circles
     double angle = item->data(User_Roles::Rotation).toDouble();
@@ -317,14 +317,10 @@ void SceneGraphicsView::paintBoundingBox(QPainter &painter)
     bot_right = mapFromScene( remove_rotation.map(bot_right) );
 
     // Create bounding box rectangles
-    QRectF temp_top    ( QPointF(top_left.x() + s_half,  top_left.y() - s_half),
-                         QPointF(top_right.x() - s_half, top_right.y() + s_half) );
-    QRectF temp_bottom ( QPointF(bot_left.x() + s_half,  bot_left.y() - s_half),
-                         QPointF(bot_right.x() - s_half, bot_right.y() + s_half));
-    QRectF temp_left   ( QPointF(top_left.x() - s_half,  top_left.y() + s_half),
-                         QPointF(bot_left.x() + s_half,  bot_left.y() + s_half));
-    QRectF temp_right  ( QPointF(top_right.x() - s_half, top_right.y() + s_half),
-                         QPointF(bot_right.x() + s_half, bot_right.y() - s_half));
+    QRectF temp_top    ( QPointF(top_left.x() + s_half,  top_left.y() - s_half),  QPointF(top_right.x() - s_half, top_right.y() + s_half));
+    QRectF temp_bottom ( QPointF(bot_left.x() + s_half,  bot_left.y() - s_half),  QPointF(bot_right.x() - s_half, bot_right.y() + s_half));
+    QRectF temp_left   ( QPointF(top_left.x() - s_half,  top_left.y() + s_half),  QPointF(bot_left.x() + s_half,  bot_left.y() - s_half));
+    QRectF temp_right  ( QPointF(top_right.x() - s_half, top_right.y() + s_half), QPointF(bot_right.x() + s_half, bot_right.y() - s_half));
 
     // Add rotation back onto side boxes
     center = QLineF(top_left, bot_right).pointAt(.5);
@@ -351,7 +347,7 @@ void SceneGraphicsView::paintHandles(QPainter &painter, Handle_Shapes shape_to_d
     for (int i = 0; i < static_cast<int>(Position_Flags::Total); i++)
         handles.append(m_handles_centers[static_cast<Position_Flags>(i)]);
 
-    double handle_size = 8;
+    double handle_size = 10;
     for (auto r : handles) {
         QRectF to_draw;
         to_draw.setX(r.x() - (handle_size / 2));

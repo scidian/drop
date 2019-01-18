@@ -53,6 +53,15 @@ private:
     QPixmap p_circle = QPixmap(":/gui_misc/handle_circle.png");
     QPixmap p_square = QPixmap(":/gui_misc/handle_square.png");
 
+    QCursor c_size_vertical =   QCursor(QPixmap(":/cursors/size_vertical.png"));
+    QCursor c_size_022 =        QCursor(QPixmap(":/cursors/size_022.png"));
+    QCursor c_size_045 =        QCursor(QPixmap(":/cursors/size_045.png"));
+    QCursor c_size_067 =        QCursor(QPixmap(":/cursors/size_067.png"));
+    QCursor c_size_horizontal = QCursor(QPixmap(":/cursors/size_horizontal.png"));
+    QCursor c_size_112 =        QCursor(QPixmap(":/cursors/size_112.png"));
+    QCursor c_size_135 =        QCursor(QPixmap(":/cursors/size_135.png"));
+    QCursor c_size_157 =        QCursor(QPixmap(":/cursors/size_157.png"));
+
     // Display Variables
     int          m_zoom = 250;                                      // Zoom level of current view
     double       m_zoom_scale = 1;                                  // Updated in applyUpdatedMatrix for use during painting grid, DO NOT SET MANUALLY
