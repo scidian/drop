@@ -62,7 +62,8 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
                 }
 
                 // ******************* If clicked while in a Size Grip Handle
-                if (m_over_handle != Position_Flags::No_Position) {
+                if (m_over_handle != Position_Flags::No_Position &&
+                    m_over_handle != Position_Flags::Move_Item) {
                     startResize();
                     return;
                 }
@@ -70,7 +71,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
 
             // ******************* If no keys are down, only select item under mouse
-            QGraphicsItem         *item_under;
+            QGraphicsItem *item_under;
 
             if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
                 // Break apart selection group
@@ -95,6 +96,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
                     // Process press event for item movement (Translation)
                     QGraphicsView::mousePressEvent(event);
+                    viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
                     m_view_mode = View_Mode::Translating;
                 }
 
@@ -170,6 +172,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
     // Grab the scene as a SceneGraphicsScene
     SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+    QGraphicsItem *check_item = itemAt(adjust_mouse.toPoint());
 
     // ******************** Check selection handles to see if mouse is over one
     if (my_scene->getSelectionGroupCount() > 0 && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
@@ -184,11 +187,14 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
         if (m_handles[Position_Flags::Top_Right].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))    m_over_handle = Position_Flags::Top_Right;
         if (m_handles[Position_Flags::Bottom_Left].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))  m_over_handle = Position_Flags::Bottom_Left;
         if (m_handles[Position_Flags::Bottom_Right].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Bottom_Right;
+
+        if (m_over_handle == Position_Flags::No_Position && my_scene->getSelectionGroupItems().contains(check_item))
+            m_over_handle = Position_Flags::Move_Item;
     }
 
-    // If we are over a handle, set cursor based on precalculated angle
+    // If we are over a handle, and not doing anything, set cursor based on precalculated angle
     double a = 0;
-    if (m_over_handle != Position_Flags::No_Position) {
+    if (m_over_handle != Position_Flags::No_Position && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
         ///// Custom rotated cursor
         ///QPixmap arrow = QPixmap(":/cursors/size_vertical.png");
         ///QPixmap rotated = arrow.transformed(QTransform().rotate(22));
@@ -196,40 +202,34 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
         ///int yoffset = (rotated.height() - arrow.height()) / 2;
         ///rotated = rotated.copy(xoffset, yoffset, arrow.width(), arrow.height());
 
-        a = m_handles_angles[m_over_handle];
-        if      (a <  11.25) viewport()->setCursor(c_size_vertical);                              // 0        Top
-        else if (a <  33.75) viewport()->setCursor(c_size_022);                                   // 22.5
-        else if (a <  56.25) viewport()->setCursor(c_size_045);                                   // 45       Top Right
-        else if (a <  78.75) viewport()->setCursor(c_size_067);                                   // 67.5
-        else if (a < 101.25) viewport()->setCursor(c_size_horizontal);                            // 90       Right
-        else if (a < 123.75) viewport()->setCursor(c_size_112);                                   // 112.5
-        else if (a < 146.25) viewport()->setCursor(c_size_135);                                   // 135      Bottom Right
-        else if (a < 168.75) viewport()->setCursor(c_size_157);                                   // 157
-        else if (a < 191.25) viewport()->setCursor(c_size_vertical);                              // 180      Bottom
-        else if (a < 213.75) viewport()->setCursor(c_size_022);                                   // 202
-        else if (a < 236.25) viewport()->setCursor(c_size_045);                                   // 225      Bottom Left
-        else if (a < 258.75) viewport()->setCursor(c_size_067);                                   // 247
-        else if (a < 281.25) viewport()->setCursor(c_size_horizontal);                            // 270      Left
-        else if (a < 303.75) viewport()->setCursor(c_size_112);                                   // 292
-        else if (a < 326.25) viewport()->setCursor(c_size_135);                                   // 315      Top Left
-        else if (a < 348.75) viewport()->setCursor(c_size_157);                                   // 337
-        else                 viewport()->setCursor(c_size_vertical);                              // 360      Top
-
-        ///// Old built in cursors
-        ///if (a >= 292.5 && a < 337.5) viewport()->setCursor(Qt::CursorShape::SizeFDiagCursor);              // Top Left
-        ///if (a >= 337.5 || a <  22.5) viewport()->setCursor(Qt::CursorShape::SizeVerCursor);                // Top
-        ///if (a >=  22.5 && a <  67.5) viewport()->setCursor(Qt::CursorShape::SizeBDiagCursor);              // Top Right
-        ///if (a >=  67.5 && a < 112.5) viewport()->setCursor(Qt::CursorShape::SizeHorCursor);                // Right
-        ///if (a >= 112.5 && a < 157.5) viewport()->setCursor(Qt::CursorShape::SizeFDiagCursor);              // Bottom Right
-        ///if (a >= 157.5 && a < 202.5) viewport()->setCursor(Qt::CursorShape::SizeVerCursor);                // Bottom
-        ///if (a >= 202.5 && a < 247.5) viewport()->setCursor(Qt::CursorShape::SizeBDiagCursor);              // Bottom Left
-        ///if (a >= 247.5 && a < 292.5) viewport()->setCursor(Qt::CursorShape::SizeHorCursor);                // Left
+        if (m_over_handle == Position_Flags::Move_Item) {
+            viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
+        } else {
+            a = m_handles_angles[m_over_handle];
+            if      (a <  11.25) viewport()->setCursor(c_size_vertical);                              // 0        Top
+            else if (a <  33.75) viewport()->setCursor(c_size_022);                                   // 22.5
+            else if (a <  56.25) viewport()->setCursor(c_size_045);                                   // 45       Top Right
+            else if (a <  78.75) viewport()->setCursor(c_size_067);                                   // 67.5
+            else if (a < 101.25) viewport()->setCursor(c_size_horizontal);                            // 90       Right
+            else if (a < 123.75) viewport()->setCursor(c_size_112);                                   // 112.5
+            else if (a < 146.25) viewport()->setCursor(c_size_135);                                   // 135      Bottom Right
+            else if (a < 168.75) viewport()->setCursor(c_size_157);                                   // 157
+            else if (a < 191.25) viewport()->setCursor(c_size_vertical);                              // 180      Bottom
+            else if (a < 213.75) viewport()->setCursor(c_size_022);                                   // 202
+            else if (a < 236.25) viewport()->setCursor(c_size_045);                                   // 225      Bottom Left
+            else if (a < 258.75) viewport()->setCursor(c_size_067);                                   // 247
+            else if (a < 281.25) viewport()->setCursor(c_size_horizontal);                            // 270      Left
+            else if (a < 303.75) viewport()->setCursor(c_size_112);                                   // 292
+            else if (a < 326.25) viewport()->setCursor(c_size_135);                                   // 315      Top Left
+            else if (a < 348.75) viewport()->setCursor(c_size_157);                                   // 337
+            else                 viewport()->setCursor(c_size_vertical);                              // 360      Top
+        }
     }
+
 
     // If no longer over handle and mouse is up, reset mouse cursor
     if (m_over_handle == Position_Flags::No_Position && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false)
         viewport()->unsetCursor();
-
 
 
 

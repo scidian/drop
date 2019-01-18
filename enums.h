@@ -91,6 +91,7 @@ enum class Position_Flags {
     Bottom_Right = 7,
     Total,
     No_Position,
+    Move_Item,
 };
 
 
