@@ -184,7 +184,11 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
         if (m_handles[Position_Flags::Top_Right].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))    m_over_handle = Position_Flags::Top_Right;
         if (m_handles[Position_Flags::Bottom_Left].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))  m_over_handle = Position_Flags::Bottom_Left;
         if (m_handles[Position_Flags::Bottom_Right].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Bottom_Right;
+    }
 
+    // If we are over a handle, set cursor based on precalculated angle
+    double a = 0;
+    if (m_over_handle != Position_Flags::No_Position) {
         ///// Custom rotated cursor
         ///QPixmap arrow = QPixmap(":/cursors/size_vertical.png");
         ///QPixmap rotated = arrow.transformed(QTransform().rotate(22));
@@ -192,8 +196,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
         ///int yoffset = (rotated.height() - arrow.height()) / 2;
         ///rotated = rotated.copy(xoffset, yoffset, arrow.width(), arrow.height());
 
-        double a = calcRotationAngleInDegrees(mapFromScene( my_scene->totalSelectedItemsSceneRect().center() ), m_handles_centers[m_over_handle]);
-
+        a = m_handles_angles[m_over_handle];
         if      (a <  11.25) viewport()->setCursor(c_size_vertical);                              // 0        Top
         else if (a <  33.75) viewport()->setCursor(c_size_022);                                   // 22.5
         else if (a <  56.25) viewport()->setCursor(c_size_045);                                   // 45       Top Right
@@ -236,7 +239,8 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
                                                                     ", Y: " + QString::number(mapToScene(m_last_mouse_pos).y()) );
         m_relay->setLabelText(Label_Names::Label_Mouse_2, "Mouse View  X: " + QString::number(m_last_mouse_pos.x()) +
                                                                     ", Y: " + QString::number(m_last_mouse_pos.y()) );
-        //m_relay->setLabelText(Label_Names::Label_Pos_Flag, "Position Flag: " + QString::number(static_cast<int>(m_over_handle)) );
+        m_relay->setLabelText(Label_Names::Label_Pos_Flag, "Position Flag: " + QString::number(static_cast<int>(m_over_handle)) +
+                                                                 ", Angle: " + QString::number(a));
     }
     // !!!!! END
 

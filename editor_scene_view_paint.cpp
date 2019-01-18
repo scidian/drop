@@ -285,9 +285,7 @@ void SceneGraphicsView::paintBoundingBox(QPainter &painter)
     if (isSquare(angle, ANGLE_TOLERANCE) == false)  m_handles_shape = Handle_Shapes::Circles;
     else                                            m_handles_shape = Handle_Shapes::Squares;
 
-
-    // ******************** Set Size Grip rectangles
-    // Map item bounding box to screen so we can draw it
+    // ***** Map item bounding box to screen so we can draw it
     QPolygonF polygon(item->boundingRect());                                // Get bounding box of item as polygon
     QTransform transform = item->sceneTransform();                          // Get item bounding box to scene transform
     polygon = transform.map(polygon);                                       // Map bounding box to scene location
@@ -299,7 +297,7 @@ void SceneGraphicsView::paintBoundingBox(QPainter &painter)
     QPointF bot_left =  transform.map(item->boundingRect().bottomLeft());
     QPointF bot_right = transform.map(item->boundingRect().bottomRight());
 
-    // Store view coodinate rectangles of corners for size grip handles
+    // ***** Store view coodinate rectangles of corners for size grip handles
     m_handles[Position_Flags::Top_Left] =     rectAtCenterPoint( mapFromScene( top_left  ), corner_size);
     m_handles[Position_Flags::Top_Right] =    rectAtCenterPoint( mapFromScene( top_right ), corner_size);
     m_handles[Position_Flags::Bottom_Left] =  rectAtCenterPoint( mapFromScene( bot_left  ), corner_size);
@@ -310,19 +308,19 @@ void SceneGraphicsView::paintBoundingBox(QPainter &painter)
     center = transform.map(center);
     QTransform remove_rotation = QTransform().translate(center.x(), center.y()).rotate(-angle).translate(-center.x(), -center.y());
 
-    // Remove rotation from bounding box in scene, map bounding box scene coordinates to view coordinates
+    // ***** Remove rotation from bounding box in scene, map bounding box scene coordinates to view coordinates
     top_left =  mapFromScene( remove_rotation.map(top_left) );
     top_right=  mapFromScene( remove_rotation.map(top_right) );
     bot_left =  mapFromScene( remove_rotation.map(bot_left) );
     bot_right = mapFromScene( remove_rotation.map(bot_right) );
 
-    // Create bounding box rectangles
+    // ***** Create bounding box rectangles
     QRectF temp_top    ( QPointF(top_left.x() + s_half,  top_left.y() - s_half),  QPointF(top_right.x() - s_half, top_right.y() + s_half));
     QRectF temp_bottom ( QPointF(bot_left.x() + s_half,  bot_left.y() - s_half),  QPointF(bot_right.x() - s_half, bot_right.y() + s_half));
     QRectF temp_left   ( QPointF(top_left.x() - s_half,  top_left.y() + s_half),  QPointF(bot_left.x() + s_half,  bot_left.y() - s_half));
     QRectF temp_right  ( QPointF(top_right.x() - s_half, top_right.y() + s_half), QPointF(bot_right.x() + s_half, bot_right.y() - s_half));
 
-    // Add rotation back onto side boxes
+    // ***** Add rotation back onto side boxes
     center = QLineF(top_left, bot_right).pointAt(.5);
     QTransform add_rotation =    QTransform().translate(center.x(), center.y()).rotate( angle).translate(-center.x(), -center.y());
     m_handles[Position_Flags::Top] =    add_rotation.map(temp_top);
@@ -330,11 +328,37 @@ void SceneGraphicsView::paintBoundingBox(QPainter &painter)
     m_handles[Position_Flags::Left] =   add_rotation.map(temp_left);
     m_handles[Position_Flags::Right] =  add_rotation.map(temp_right);
 
-    // Store polygon centers for use later in paintHandles
+    // *****  Store polygon centers for use later in paintHandles
     for (auto h : m_handles) m_handles_centers[h.first] = h.second.boundingRect().center();
 
-    // Draw bounding box onto view
+    // *****  Calculates angles for mouse cursors
+    m_handles_angles[Position_Flags::Top] = QLineF(m_handles_centers[Position_Flags::Top_Left], m_handles_centers[Position_Flags::Top_Right]).angle();
+    m_handles_angles[Position_Flags::Right] = QLineF(m_handles_centers[Position_Flags::Top_Right], m_handles_centers[Position_Flags::Bottom_Right]).angle();
+    m_handles_angles[Position_Flags::Bottom] = QLineF(m_handles_centers[Position_Flags::Bottom_Right], m_handles_centers[Position_Flags::Bottom_Left]).angle();
+    m_handles_angles[Position_Flags::Left] = QLineF(m_handles_centers[Position_Flags::Bottom_Left], m_handles_centers[Position_Flags::Top_Left]).angle();
+
+    // Adjust for angle returned by QLineF to match angles we're used in View_Mode::Rotating function
+    for (auto &pair : m_handles_angles) pair.second = 360 - pair.second;
+
+    m_handles_angles[Position_Flags::Top_Right] =    calculateCornerAngle(m_handles_angles[Position_Flags::Right], m_handles_angles[Position_Flags::Top]);
+    m_handles_angles[Position_Flags::Bottom_Right] = calculateCornerAngle(m_handles_angles[Position_Flags::Bottom], m_handles_angles[Position_Flags::Right]);
+    m_handles_angles[Position_Flags::Bottom_Left] =  calculateCornerAngle(m_handles_angles[Position_Flags::Left], m_handles_angles[Position_Flags::Bottom]);
+    m_handles_angles[Position_Flags::Top_Left] =     calculateCornerAngle(m_handles_angles[Position_Flags::Top], m_handles_angles[Position_Flags::Left]);
+
+    // ***** Draw bounding box onto view
     painter.drawPolygon(to_view);
+}
+
+// Calculates the angle facing away from the corner of two angles, for calculating mouse angle of corners
+double SceneGraphicsView::calculateCornerAngle(double angle1, double angle2)
+{
+    double bigger_angle = angle1;
+    if (angle1 < angle2) bigger_angle += 360;
+
+    double new_angle = angle1 - ((bigger_angle - angle2) / 2);
+    if (new_angle < 0)   new_angle += 360;
+    if (new_angle > 360) new_angle -= 360;
+    return new_angle;
 }
 
 

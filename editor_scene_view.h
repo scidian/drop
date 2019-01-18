@@ -91,7 +91,8 @@ private:
 
     // Selection Bounding Box Variables
     std::map<Position_Flags, QPolygonF> m_handles;                  // Stores QRects of current selection box handles
-    std::map<Position_Flags, QPointF>   m_handles_centers;          // Stores QPointF center points of sides polygons
+    std::map<Position_Flags, QPointF>   m_handles_centers;          // Stores QPointF center points of selection box handles
+    std::map<Position_Flags, double>    m_handles_angles;           // Stores angle used for mouse cursor of selection box handles
     Handle_Shapes                       m_handles_shape;            // Stores which style handles should we draw
     Position_Flags                      m_over_handle;              // Tracks if mouse is over a handle
     QPoint                              m_last_mouse_pos;           // Tracks last known mouse position in view coordinates
@@ -150,6 +151,7 @@ public:
     void            zoomInOut(int level);
 
     // Misc Functions
+    double          calculateCornerAngle(double angle1, double angle2);
     QRectF          rectAtCenterPoint(QPoint center, double rect_size);
     QRectF          totalSelectedItemsSceneRect();
 
