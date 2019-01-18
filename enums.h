@@ -92,6 +92,7 @@ enum class Position_Flags {
     Total,
     No_Position,
     Move_Item,
+    Rotate,
 };
 
 

@@ -345,7 +345,18 @@ void SceneGraphicsView::paintBoundingBox(QPainter &painter)
     m_handles_angles[Position_Flags::Bottom_Left] =  calculateCornerAngle(m_handles_angles[Position_Flags::Left], m_handles_angles[Position_Flags::Bottom]);
     m_handles_angles[Position_Flags::Top_Left] =     calculateCornerAngle(m_handles_angles[Position_Flags::Top], m_handles_angles[Position_Flags::Left]);
 
+    // ***** Add handle for rotating
+    QPoint top = m_handles_centers[Position_Flags::Top].toPoint();
+    QPoint zero = top;
+    zero.setY(zero.y() - 24);
+
+    QTransform rotate = QTransform().translate(top.x(), top.y()).rotate(m_handles_angles[Position_Flags::Top]).translate(-top.x(), -top.y());
+    zero = rotate.map(zero);
+    m_handles[Position_Flags::Rotate] = rectAtCenterPoint( zero, corner_size);
+    m_handles_centers[Position_Flags::Rotate] = m_handles[Position_Flags::Rotate].boundingRect().center();
+
     // ***** Draw bounding box onto view
+    painter.drawLine( QLineF( m_handles_centers[Position_Flags::Rotate], m_handles_centers[Position_Flags::Top]) );
     painter.drawPolygon(to_view);
 }
 
@@ -370,18 +381,26 @@ void SceneGraphicsView::paintHandles(QPainter &painter, Handle_Shapes shape_to_d
     QVector<QPointF> handles;
     for (int i = 0; i < static_cast<int>(Position_Flags::Total); i++)
         handles.append(m_handles_centers[static_cast<Position_Flags>(i)]);
+    handles.append(m_handles_centers[Position_Flags::Rotate] );
 
-    double handle_size = 10;
-    for (auto r : handles) {
-        QRectF to_draw;
-        to_draw.setX(r.x() - (handle_size / 2));
-        to_draw.setY(r.y() - (handle_size / 2));
-        to_draw.setWidth(handle_size);
-        to_draw.setHeight(handle_size);
-        switch (shape_to_draw)
-        {
-        case Handle_Shapes::Circles:    painter.drawPixmap(to_draw, p_circle, p_circle.rect());     break;
-        case Handle_Shapes::Squares:    painter.drawPixmap(to_draw, p_square, p_square.rect());     break;
+    QRectF to_draw;
+    double handle_size = 8;
+    double rotate_size = 10;
+    for (int i = 0; i < handles.count(); i++) {
+        if (i < (handles.count() - 1)) {
+            to_draw.setX(handles[i].x() - (handle_size / 2));    to_draw.setWidth(handle_size);
+            to_draw.setY(handles[i].y() - (handle_size / 2));    to_draw.setHeight(handle_size);
+
+            switch (shape_to_draw)
+            {
+            case Handle_Shapes::Circles:    painter.drawPixmap(to_draw, p_circle, p_circle.rect());     break;
+            case Handle_Shapes::Squares:    painter.drawPixmap(to_draw, p_square, p_square.rect());     break;
+            }
+        } else {
+            to_draw.setX(handles[i].x() - (rotate_size / 2));    to_draw.setWidth(rotate_size);
+            to_draw.setY(handles[i].y() - (rotate_size / 2));    to_draw.setHeight(rotate_size);
+
+            painter.drawPixmap(to_draw, p_rotate, p_rotate.rect());
         }
     }
     ///// Draw polygons for all handles

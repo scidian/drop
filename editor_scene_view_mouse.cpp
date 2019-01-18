@@ -56,7 +56,8 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
             if (my_scene->getSelectionGroupCount() > 0) {
                 // ******************* If clicked while holding Alt key
-                if (event->modifiers() & Qt::KeyboardModifier::AltModifier) {
+                if (event->modifiers() & Qt::KeyboardModifier::AltModifier ||
+                    m_over_handle == Position_Flags::Rotate) {
                     startRotate();
                     return;
                 }
@@ -146,7 +147,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
     } else {
         // Process mouse press event for hand drag
         QGraphicsView::mousePressEvent(event);
-        m_view_mode = View_Mode::Translating;
+        m_view_mode = View_Mode::Dragging;
     }
 
     update();
@@ -188,6 +189,8 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
         if (m_handles[Position_Flags::Bottom_Left].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))  m_over_handle = Position_Flags::Bottom_Left;
         if (m_handles[Position_Flags::Bottom_Right].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Bottom_Right;
 
+        if (m_handles[Position_Flags::Rotate].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Rotate;
+
         if (m_over_handle == Position_Flags::No_Position && my_scene->getSelectionGroupItems().contains(check_item))
             m_over_handle = Position_Flags::Move_Item;
     }
@@ -204,6 +207,8 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
         if (m_over_handle == Position_Flags::Move_Item) {
             viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
+        } else if (m_over_handle == Position_Flags::Rotate) {
+            viewport()->setCursor(c_rotate_all);
         } else {
             a = m_handles_angles[m_over_handle];
             if      (a <  11.25) viewport()->setCursor(c_size_vertical);                              // 0        Top
@@ -256,9 +261,10 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
         resizeSelection(mapToScene(event->pos()));
 
     // ******************* If mouse moved while alt pressed, rotate
-    if (m_view_mode == View_Mode::Rotating)
+    if (m_view_mode == View_Mode::Rotating) {
+        viewport()->setCursor(c_rotate_all);
         rotateSelection(event->pos());
-
+    }
 
     // Pass on event, update and unlock mutex
     QGraphicsView::mouseMoveEvent(event);

@@ -23,6 +23,7 @@ enum class View_Mode {
     Resizing,
     Rotating,
     Translating,
+    Dragging,
 };
 
 enum class Handle_Shapes {
@@ -52,6 +53,7 @@ private:
 
     QPixmap p_circle = QPixmap(":/gui_misc/handle_circle.png");
     QPixmap p_square = QPixmap(":/gui_misc/handle_square.png");
+    QPixmap p_rotate = QPixmap(":/gui_misc/handle_rotate.png");
 
     QCursor c_size_vertical =   QCursor(QPixmap(":/cursors/size_vertical.png"));
     QCursor c_size_022 =        QCursor(QPixmap(":/cursors/size_022.png"));
@@ -61,6 +63,7 @@ private:
     QCursor c_size_112 =        QCursor(QPixmap(":/cursors/size_112.png"));
     QCursor c_size_135 =        QCursor(QPixmap(":/cursors/size_135.png"));
     QCursor c_size_157 =        QCursor(QPixmap(":/cursors/size_157.png"));
+    QCursor c_rotate_all =      QCursor(QPixmap(":/cursors/rotate_all.png"));
 
     // Display Variables
     int          m_zoom = 250;                                      // Zoom level of current view

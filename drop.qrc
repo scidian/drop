@@ -26,5 +26,7 @@
         <file>cursors/size_135.png</file>
         <file>cursors/size_157.png</file>
         <file>cursors/size_horizontal.png</file>
+        <file>gui_misc/handle_rotate.png</file>
+        <file>cursors/rotate_all.png</file>
     </qresource>
 </RCC>
