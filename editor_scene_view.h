@@ -157,6 +157,7 @@ public:
     double          calculateCornerAngle(double angle1, double angle2);
     QRectF          rectAtCenterPoint(QPoint center, double rect_size);
     QRectF          totalSelectedItemsSceneRect();
+    void            updateSelectionBoundingBox();
 
     // Paint Functions
     void            paintBoundingBox(QPainter &painter);
