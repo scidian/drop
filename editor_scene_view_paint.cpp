@@ -190,12 +190,13 @@ QRectF SceneGraphicsView::rectAtCenterPoint(QPoint center, double rect_size)
 // Paints outline around every selected item
 void SceneGraphicsView::paintItemOutlines(QPainter &painter)
 {
+    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
     QBrush pen_brush(m_relay->getColor(Window_Colors::Icon_Light));
     painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.setBrush(Qt::NoBrush);
 
     int first_time = 0;
-    for (auto item: dynamic_cast<SceneGraphicsScene*>(scene())->getSelectionGroupItems()) {
+    for (auto item: my_scene->getSelectionGroupItems()) {
         // Load in item bounding box
         QPolygonF polygon(item->boundingRect());
 
@@ -219,7 +220,10 @@ void SceneGraphicsView::paintItemOutlines(QPainter &painter)
             m_relay->setLabelText(Label_Names::Label_Scale, "Scale X: " +   QString::number(my_scale.x()) +
                                                           ", Scale Y: " +   QString::number(my_scale.y()) );
             m_relay->setLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle));
-            m_relay->setLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()) );
+            m_relay->setLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()) );        
+            m_relay->setLabelText(Label_Names::Label_Object_5,
+                            "Group Scale X: " + QString::number(my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Scale).toPointF().x()) +
+                                      ", Y: " + QString::number(my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Scale).toPointF().y()) );
             first_time++;
         }
         // !!!!! END
@@ -331,7 +335,7 @@ void SceneGraphicsView::paintBoundingBox(QPainter &painter)
     // *****  Store polygon centers for use later in paintHandles
     for (auto h : m_handles) m_handles_centers[h.first] = h.second.boundingRect().center();
 
-    // *****  Calculates angles for mouse cursors
+    // *****  Calculates angles for mouse cursors over sides
     m_handles_angles[Position_Flags::Top] = QLineF(m_handles_centers[Position_Flags::Top_Left], m_handles_centers[Position_Flags::Top_Right]).angle();
     m_handles_angles[Position_Flags::Right] = QLineF(m_handles_centers[Position_Flags::Top_Right], m_handles_centers[Position_Flags::Bottom_Right]).angle();
     m_handles_angles[Position_Flags::Bottom] = QLineF(m_handles_centers[Position_Flags::Bottom_Right], m_handles_centers[Position_Flags::Bottom_Left]).angle();
@@ -340,6 +344,7 @@ void SceneGraphicsView::paintBoundingBox(QPainter &painter)
     // Adjust for angle returned by QLineF to match angles we're used in View_Mode::Rotating function
     for (auto &pair : m_handles_angles) pair.second = 360 - pair.second;
 
+    // Calculate angles for mouse cursors over corners
     m_handles_angles[Position_Flags::Top_Right] =    calculateCornerAngle(m_handles_angles[Position_Flags::Right], m_handles_angles[Position_Flags::Top]);
     m_handles_angles[Position_Flags::Bottom_Right] = calculateCornerAngle(m_handles_angles[Position_Flags::Bottom], m_handles_angles[Position_Flags::Right]);
     m_handles_angles[Position_Flags::Bottom_Left] =  calculateCornerAngle(m_handles_angles[Position_Flags::Left], m_handles_angles[Position_Flags::Bottom]);
@@ -348,7 +353,12 @@ void SceneGraphicsView::paintBoundingBox(QPainter &painter)
     // ***** Add handle for rotating
     QPoint top = m_handles_centers[Position_Flags::Top].toPoint();
     QPoint zero = top;
-    zero.setY(zero.y() - 24);
+    QPointF scale = item->data(User_Roles::Scale).toPointF();
+
+    if ((scale.x() >=0 && scale.y() >= 0) || (scale.x() <= 0 && scale.y() <= 0))
+        zero.setY(zero.y() - 22);
+    else
+        zero.setY(zero.y() + 22);
 
     QTransform rotate = QTransform().translate(top.x(), top.y()).rotate(m_handles_angles[Position_Flags::Top]).translate(-top.x(), -top.y());
     zero = rotate.map(zero);

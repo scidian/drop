@@ -47,11 +47,13 @@ void SceneGraphicsScene::addItemToSelectionGroup(QGraphicsItem *item)
     // If item is in group, remove it (i.e. item was clicked while control key is held down)
     if (m_selection_group->childItems().contains(item) == false) {
         if (start_count == 0) {
-            double angle = item->data(User_Roles::Rotation).toDouble();
+            double  angle = item->data(User_Roles::Rotation).toDouble();
+            QPointF scale = item->data(User_Roles::Scale).toPointF();
             QPointF center = m_selection_group->boundingRect().center();
-            QTransform t = QTransform().translate(center.x(), center.y()).rotate(angle).translate(-center.x(), -center.y());
+            QTransform t = QTransform().translate(center.x(), center.y()).rotate(angle).translate(-center.x(), -center.y()).scale(scale.x(), scale.y());
             m_selection_group->setTransform(t);
             m_selection_group->setData(User_Roles::Rotation, angle);
+            m_selection_group->setData(User_Roles::Scale, scale);
             m_selection_group->setZValue(item->zValue());
         }
 
@@ -72,6 +74,8 @@ void SceneGraphicsScene::addItemToSelectionGroup(QGraphicsItem *item)
         m_relay->setLabelText(Label_Names::Label_Object_3, "Group Items: " +  QString::number(m_selection_group->childItems().count()) );
         m_relay->setLabelText(Label_Names::Label_Object_4, "Group Z: " +      QString::number(m_selection_group->zValue()) + QString("\t") +
                                                            "Group Angle: " +  QString::number(m_selection_group->data(User_Roles::Rotation).toDouble()) );
+        m_relay->setLabelText(Label_Names::Label_Object_5, "Group Scale X: " + QString::number(m_selection_group->data(User_Roles::Scale).toPointF().x()) +
+                                                                     ", Y: " + QString::number(m_selection_group->data(User_Roles::Scale).toPointF().y()) );
     }
     // !!!!! END
 }

@@ -97,6 +97,7 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     ///if (option->state & QStyle::State_MouseOver && option->state & QStyle::State_Selected) { fillColor = QColor(Qt::red).darker(200); }
 
     painter->fillRect(QRectF(0, 0, m_width, m_height), fillColor);
+    painter->fillRect(QRectF(0, 0, m_width / 2, m_height / 2), fillColor.dark(250));
 }
 
 

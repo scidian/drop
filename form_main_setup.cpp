@@ -209,6 +209,10 @@ void FormMain::buildWindowModeEditScene()
                 label_object_4->setObjectName(QStringLiteral("label_object_4"));
                 label_object_4->setGeometry(QRect(240, 50, 400, 21));
                 label_object_4->setFont(font);
+                label_object_5 = new QLabel(areaBottom);
+                label_object_5->setObjectName(QStringLiteral("label_object_4"));
+                label_object_5->setGeometry(QRect(240, 65, 400, 21));
+                label_object_5->setFont(font);
 
                 label_position = new QLabel(areaBottom);
                 label_position->setObjectName(QStringLiteral("label_position"));

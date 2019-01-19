@@ -87,7 +87,7 @@ private:
 
     // Labels to display info
     QLabel        *label_1,         *label_2,           *label_3,           *label_mouse_1,     *label_mouse_2;
-    QLabel        *label_object_1,  *label_object_2,    *label_object_3,    *label_object_4;
+    QLabel        *label_object_1,  *label_object_2,    *label_object_3,    *label_object_4,    *label_object_5;
     QLabel        *label_position,  *label_center,      *label_scale,       *label_rotate,       *label_z_order,    *label_pos_flag;
     QLabel        *label_bottom;
 

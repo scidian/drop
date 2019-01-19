@@ -75,8 +75,6 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
             QGraphicsItem *item_under;
 
             if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
-                // Break apart selection group
-                for (auto item: my_items) my_scene->getSelectionGroup()->removeFromGroup(item);
                 item_under = itemAt(event->pos());
 
                 // If no item under mouse, deselect all
@@ -84,12 +82,8 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
                     my_scene->emptySelectionGroup();
 
                 } else {
-                    // If we clicked an item in the selection group, put group back together
-                    if (my_items.contains(item_under)) {
-                        for (auto item: my_items) my_scene->getSelectionGroup()->addToGroup(item);
-
-                    // Otherwise we clicked a new item, set selection group to that
-                    } else {
+                    // If we clicked clicked a new item, set selection group to that
+                    if (my_items.contains(item_under) == false) {
                         my_scene->emptySelectionGroup();
                         my_scene->addItemToSelectionGroup(item_under);
                         my_scene->selectSelectionGroup();
@@ -191,19 +185,17 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
         if (m_handles[Position_Flags::Rotate].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Rotate;
 
-        if (m_over_handle == Position_Flags::No_Position && my_scene->getSelectionGroupItems().contains(check_item))
-            m_over_handle = Position_Flags::Move_Item;
+        if (m_over_handle == Position_Flags::No_Position && my_scene->getSelectionGroupItems().contains(check_item)) {
+            if (m_flag_key_down_alt == false)
+                m_over_handle = Position_Flags::Move_Item;
+            else
+                m_over_handle = Position_Flags::Rotate;
+        }
     }
 
     // If we are over a handle, and not doing anything, set cursor based on precalculated angle
     double a = 0;
     if (m_over_handle != Position_Flags::No_Position && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
-        ///// Custom rotated cursor
-        ///QPixmap arrow = QPixmap(":/cursors/size_vertical.png");
-        ///QPixmap rotated = arrow.transformed(QTransform().rotate(22));
-        ///int xoffset = (rotated.width() - arrow.width()) / 2;
-        ///int yoffset = (rotated.height() - arrow.height()) / 2;
-        ///rotated = rotated.copy(xoffset, yoffset, arrow.width(), arrow.height());
 
         if (m_over_handle == Position_Flags::Move_Item) {
             viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
@@ -211,6 +203,15 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
             viewport()->setCursor(c_rotate_all);
         } else {
             a = m_handles_angles[m_over_handle];
+
+            ///// Custom rotated cursor
+            ///QPixmap arrow = QPixmap(":/cursors/size_vertical.png", nullptr, Qt::ImageConversionFlag::AutoDither);
+            ///QPixmap rotated = arrow.transformed(QTransform().rotate(a));
+            ///int xoffset = (rotated.width() - arrow.width()) / 2;
+            ///int yoffset = (rotated.height() - arrow.height()) / 2;
+            ///rotated = rotated.copy(xoffset, yoffset, arrow.width(), arrow.height());
+            ///viewport()->setCursor(rotated);
+
             if      (a <  11.25) viewport()->setCursor(c_size_vertical);                              // 0        Top
             else if (a <  33.75) viewport()->setCursor(c_size_022);                                   // 22.5
             else if (a <  56.25) viewport()->setCursor(c_size_045);                                   // 45       Top Right
