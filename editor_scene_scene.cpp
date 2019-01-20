@@ -123,6 +123,48 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
     case Qt::Key::Key_Right: selectedItems().first()->moveBy( move_by,  0);      break;
     }
 
+
+
+    //
+    // !!!!! TEMP
+    //
+    if (event->key() == Qt::Key::Key_M && m_selection_group->childItems().count() == 1) {
+        if (scene_mutex.tryLock(10) == false) return;
+        QList<QGraphicsItem*>  my_items = getSelectionGroupItems();
+        for (auto item: my_items) removeFromGroupNoUpdate(item);
+        QGraphicsItem *item = my_items.first();
+        QString msg = "";
+
+        // Load local transformations
+        QList<QGraphicsTransform*> transformList = item->transformations();
+        msg += "Transformations Count: " + QString::number(transformList.size()) + QString("\n");
+
+        // Show local rotation
+        msg += "Rotation: " + QString::number(item->rotation()) + QString("\n");
+
+        // Show local scale
+        double scale = item->scale();
+        msg += "Scale: " + QString::number(scale) + QString("\n");
+
+        // Load local sceneTransform
+        QTransform t = item->sceneTransform();
+        qreal m11 = t.m11(), m12 = t.m12(), m13 = t.m13();
+        qreal m21 = t.m21(), m22 = t.m22(), m23 = t.m23();
+        msg += "11: " + QString::number(m11) + ", 12: " + QString::number(m12) + ", 13: " + QString::number(m13) + QString("\n");
+        msg += "21: " + QString::number(m21) + ", 22: " + QString::number(m22) + ", 23: " + QString::number(m23) + QString("\n");
+
+        // Show data
+        m_relay->showMessageBox(msg);
+
+        for (auto item: my_items) addToGroupNoUpdate(item);
+        scene_mutex.unlock();
+        return;
+    }
+    //
+    // !!!!! END
+    //
+
+
     // Perform key press event on all items in selection group
     if (scene_mutex.tryLock(10) == false) return;
 

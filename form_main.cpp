@@ -40,14 +40,14 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
 
     // ########## Load saved preferences
     globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Secret_Menu));
-    globals->debug_flags.set(static_cast<size_t>(Debug_Flags::FPS));
-    globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Mouse_Coordinates));
+    //globals->debug_flags.set(static_cast<size_t>(Debug_Flags::FPS));
+    //globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Mouse_Coordinates));
 
     globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Object_Inspector_Build));
     globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Scene_Tree_Drag));
     globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Scene_Tree_Selection));
 
-    globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Rotation_Data));
+    //globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Rotation_Data));
     globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Selection_Box_Group_Data));
     globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Selected_Item_Data));
     globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Shear_Matrix));

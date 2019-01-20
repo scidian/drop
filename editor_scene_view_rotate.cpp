@@ -115,8 +115,8 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     // ********** Break apart selection group so we can grab and store new rotation of all selected items, then put back together
     for (auto item: my_items) my_scene->removeFromGroupNoUpdate(item);
     for (auto child : my_items) {
-        QTransform t = child->transform();
-        child->setData(User_Roles::Rotation, extractAngleFromTransform(t));
+        QTransform t = child->sceneTransform();
+        child->setData(User_Roles::Rotation, extractAngleFromTransform(t) );
     }
     for (auto item: my_items) my_scene->addToGroupNoUpdate(item);
 
@@ -131,10 +131,94 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
 }
 
 
+
+//####################################################################################
+//##        Extract Angle, Scale and Skew from Transforms
+//####################################################################################
 double SceneGraphicsView::extractAngleFromTransform(QTransform &from_transform)
 {
+    // scaleX = √(a^2+c^2)
+    // scaleY = √(b^2+d^2)
+    // rotation = tan^-1(c/d) = tan^-1(-b/a) it will not work sometimes
+    // rotation = a / scaleX  = d / scaleY
+
+//    const double degree = 180 / 3.141592653589793238463;
+//    const double radian = 3.141592653589793238463/ 180;
+
+//    double a = from_transform.m11();
+//    ///double b = from_transform.m12();
+//    double c = from_transform.m21();
+//    ///double d = from_transform.m22();
+
+//    double scale_x = sqrt((a * a) + (c * c));
+//    ///double scale_y = sqrt((b * b) + (d * d));
+
+//    double sign = qAtan(-c / a);
+//    double  rad = qAcos(a / scale_x);
+//    double  deg = rad * degree;
+//    double rotation;
+//    double rotation_in_degree;
+
+//    if (deg > 90 && sign > 0)
+//        rotation = (360 - deg) * radian;
+//    else if (deg < 90 && sign < 0)
+//        rotation = (360 - deg) * radian;
+//    else
+//        rotation = rad;
+//    rotation_in_degree = rotation * degree;
+
+    ///// Alternate
     QTransform t = from_transform;
     return qRadiansToDegrees(qAtan2(t.m12(), t.m11()));
+
+//    return rotation_in_degree;
+}
+
+
+
+Transform_Data SceneGraphicsView::decomposeTransform(QTransform &from_transform, bool qr_type)
+{
+    double a = from_transform.m11();    double c = from_transform.m12();
+    double b = from_transform.m21();    double d = from_transform.m22();
+
+    double delta = a * d - b * c;
+
+    Transform_Data transform;
+    transform.rotation = 0;
+    transform.scale = QPointF(0, 0);
+    transform.skew =  QPointF(0, 0);
+
+    // Apply the QR-like decomposition.
+    if (qr_type) {
+        if (qFuzzyCompare(a, 0) == false || qFuzzyCompare(b, 0) == false) {
+            double r = sqrt(a * a + b * b);
+            transform.rotation = b > 0 ? qAcos(a / r) : -qAcos(a / r);
+            transform.scale = QPointF( r, delta / r );
+            transform.skew =  QPointF( qAtan((a * c + b * d) / (r * r)),  0 );
+
+        } else if (qFuzzyCompare(c, 0) == false || qFuzzyCompare(d, 0) == false) {
+            double s = sqrt(c * c + d * d);
+            transform.rotation = (3.141592653589793238463 / 2.0) - (d > 0 ? qAcos(-c / s) : -qAcos(c / s));
+            transform.scale = QPointF( delta / s, s );
+            transform.skew =  QPointF( 0, qAtan((a * c + b * d) / (s * s)) );
+        }
+    }
+
+    // scaleX = √(a^2+c^2)
+    // scaleY = √(b^2+d^2)
+    // rotation = tan^-1(c/d) = tan^-1(-b/a) it will not work sometimes
+    // rotation = a / scaleX  = d / scaleY
+
+    if (isCloseTo(0, transform.scale.x(), .000001)) transform.scale.setX(0);
+    if (isCloseTo(0, transform.scale.y(), .000001)) transform.scale.setX(0);
+    if (isCloseTo(0, transform.skew.x(),  .000001)) transform.skew.setX(0);
+    if (isCloseTo(0, transform.skew.x(),  .000001)) transform.skew.setX(0);
+
+    transform.rotation *= (180.0 / 3.141592653589793238463);
+    if (transform.rotation < 0) { transform.rotation += 360; }
+    transform.rotation = 360 - transform.rotation;
+
+    return transform;
 }
 
 

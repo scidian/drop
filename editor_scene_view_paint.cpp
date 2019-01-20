@@ -22,71 +22,6 @@
 
 
 //####################################################################################
-//##        Draws grid lines
-//####################################################################################
-void SceneGraphicsView::drawGrid()
-{
-    QPainter painter(viewport());
-    painter.setBrush(Qt::NoBrush);
-
-    // Map viewport to scene rect
-    QPointF topLeft = mapToScene(0, 0);
-    QPointF bottomRight = mapToScene(this->width(), this->height());
-    QRectF  scene_rect(topLeft, bottomRight);
-
-    // ********** Draw Grid Lines
-    if (m_grid_style == Grid_Style::Lines) {
-        painter.setPen(QPen( m_relay->getColor(Window_Colors::Background_Dark), 1 ));
-        QVector<QLine> lines;
-
-        // Vertical lines right of scene zero, followed by Vertical lines left of scene zero
-        for (qreal x = 0; x <= scene_rect.right(); x += m_grid_x)
-            lines.append(QLine(mapFromScene(x, 0).x(), 0, mapFromScene(x, 0).x(), height()));
-        for (qreal x = 0; x >= scene_rect.left(); x -= m_grid_x)
-            lines.append(QLine(mapFromScene(x, 0).x(), 0, mapFromScene(x, 0).x(), height()));
-
-        // Horizontal lines below scene zero, followed by Horizontal lines above scene zero
-        for (qreal y = 0; y <= scene_rect.bottom(); y += m_grid_y)
-            lines.append(QLine(0, mapFromScene(0, y).y(), width(), mapFromScene(0, y).y()) );
-        for (qreal y = 0; y >= scene_rect.top(); y -= m_grid_y)
-            lines.append(QLine(0, mapFromScene(0, y).y(), width(), mapFromScene(0, y).y()) );
-
-        painter.drawLines(lines);
-
-    // ********** Draw Grid Dots
-    } else if (m_grid_style == Grid_Style::Dots && m_zoom_scale > .5) {
-        qreal dot_size = m_zoom_scale;
-        if (m_zoom_scale < 4) dot_size = 4;
-        if (m_zoom_scale < 2) dot_size = 3;
-        if (m_zoom_scale < 1) dot_size = 2;
-
-        painter.setPen(QPen( m_relay->getColor(Window_Colors::Background_Dark), dot_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ));
-        QVector<QPointF> points;
-
-        // Bottom right
-        for (qreal x = 0; x <= scene_rect.right(); x += m_grid_x)
-            for (qreal y = 0; y <= scene_rect.bottom(); y += m_grid_y)
-                points.append( mapFromScene(x, y) );
-        // Bottom left
-        for (qreal x = 0; x >= scene_rect.left(); x -= m_grid_x)
-            for (qreal y = 0; y <= scene_rect.bottom(); y += m_grid_y)
-                points.append( mapFromScene(x, y) );
-        // Top right
-        for (qreal x = 0; x <= scene_rect.right(); x += m_grid_x)
-            for (qreal y = 0; y >= scene_rect.top(); y -= m_grid_y)
-                points.append( mapFromScene(x, y) );
-        // Top left
-        for (qreal x = 0; x >= scene_rect.left(); x -= m_grid_x)
-            for (qreal y = 0; y >= scene_rect.top(); y -= m_grid_y)
-                points.append( mapFromScene(x, y) );
-
-        painter.drawPoints(points.data(), points.size());
-    }
-}
-
-
-
-//####################################################################################
 //##        Event Filter, can monitor events being recieved
 //####################################################################################
 bool SceneGraphicsView::eventFilter(QObject *obj, QEvent *event)
@@ -107,7 +42,7 @@ bool SceneGraphicsView::eventFilter(QObject *obj, QEvent *event)
 
 
 //####################################################################################
-//##        Paints selection box, etc on top of items
+//##        PAINT: Main Paint Event for QGraphicsView (SceneGraphicsView)
 //####################################################################################
 void SceneGraphicsView::paintEvent(QPaintEvent *event)
 {
@@ -123,7 +58,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 
 
     // ******************** Go ahead and draw grid first
-    drawGrid();
+    paintGrid();
 
 
     // ******************** At this point, if no selected item paint objects and get out of here
@@ -194,15 +129,146 @@ QRectF SceneGraphicsView::rectAtCenterPoint(QPoint center, double rect_size)
 }
 
 
-// Paints outline around every selected item
+//####################################################################################
+//##        PAINT: Draws grid lines
+//####################################################################################
+void SceneGraphicsView::paintGrid()
+{
+    QPainter painter(viewport());
+    painter.setBrush(Qt::NoBrush);
+
+    // Map viewport to scene rect
+    QPointF topLeft = mapToScene(0, 0);
+    QPointF bottomRight = mapToScene(this->width(), this->height());
+    QRectF  scene_rect(topLeft, bottomRight);
+
+    // ********** Draw Grid Lines
+    if (m_grid_style == Grid_Style::Lines) {
+        painter.setPen(QPen( m_relay->getColor(Window_Colors::Background_Dark), 1 ));
+        QVector<QLine> lines;
+
+        // Vertical lines right of scene zero, followed by Vertical lines left of scene zero
+        for (qreal x = 0; x <= scene_rect.right(); x += m_grid_x)
+            lines.append(QLine(mapFromScene(x, 0).x(), 0, mapFromScene(x, 0).x(), height()));
+        for (qreal x = 0; x >= scene_rect.left(); x -= m_grid_x)
+            lines.append(QLine(mapFromScene(x, 0).x(), 0, mapFromScene(x, 0).x(), height()));
+
+        // Horizontal lines below scene zero, followed by Horizontal lines above scene zero
+        for (qreal y = 0; y <= scene_rect.bottom(); y += m_grid_y)
+            lines.append(QLine(0, mapFromScene(0, y).y(), width(), mapFromScene(0, y).y()) );
+        for (qreal y = 0; y >= scene_rect.top(); y -= m_grid_y)
+            lines.append(QLine(0, mapFromScene(0, y).y(), width(), mapFromScene(0, y).y()) );
+
+        painter.drawLines(lines);
+
+    // ********** Draw Grid Dots
+    } else if (m_grid_style == Grid_Style::Dots && m_zoom_scale > .5) {
+        qreal dot_size = m_zoom_scale;
+        if (m_zoom_scale < 4) dot_size = 4;
+        if (m_zoom_scale < 2) dot_size = 3;
+        if (m_zoom_scale < 1) dot_size = 2;
+
+        painter.setPen(QPen( m_relay->getColor(Window_Colors::Background_Dark), dot_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ));
+        QVector<QPointF> points;
+
+        // Bottom right
+        for (qreal x = 0; x <= scene_rect.right(); x += m_grid_x)
+            for (qreal y = 0; y <= scene_rect.bottom(); y += m_grid_y)
+                points.append( mapFromScene(x, y) );
+        // Bottom left
+        for (qreal x = 0; x >= scene_rect.left(); x -= m_grid_x)
+            for (qreal y = 0; y <= scene_rect.bottom(); y += m_grid_y)
+                points.append( mapFromScene(x, y) );
+        // Top right
+        for (qreal x = 0; x <= scene_rect.right(); x += m_grid_x)
+            for (qreal y = 0; y >= scene_rect.top(); y -= m_grid_y)
+                points.append( mapFromScene(x, y) );
+        // Top left
+        for (qreal x = 0; x >= scene_rect.left(); x -= m_grid_x)
+            for (qreal y = 0; y >= scene_rect.top(); y -= m_grid_y)
+                points.append( mapFromScene(x, y) );
+
+        painter.drawPoints(points.data(), points.size());
+    }
+}
+
+
+//####################################################################################
+//##        PAINT: Paints outline around every selected item
+//####################################################################################
 void SceneGraphicsView::paintItemOutlines(QPainter &painter)
 {
     SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
+    QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
+    for (auto item: my_items) my_scene->getSelectionGroup()->removeFromGroup(item);
+
     QBrush pen_brush(m_relay->getColor(Window_Colors::Icon_Light));
     painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.setBrush(Qt::NoBrush);
 
+    for (auto item: my_items) {
 
+        // Apply item scaling / rotation to bounding box
+        QPolygonF polygon = item->sceneTransform().map( item->boundingRect() );
+
+        // Convert bounding box to view coordinates and draw on screen
+        QPolygon to_view = mapFromScene(polygon);
+        painter.drawPolygon(to_view);
+
+
+
+
+        // !!!!! #DEBUG:    Shear Data
+        if (m_relay->debugFlag(Debug_Flags::Shear_Matrix)) {
+
+            double  angle = item->data(User_Roles::Rotation).toDouble();
+
+            QPolygonF poly = item->sceneTransform().map( item->boundingRect() );
+            QPointF origin = item->mapToScene( item->boundingRect().center() );
+
+            QTransform remove_rotation;
+            remove_rotation.translate(origin.x(), origin.y());
+            remove_rotation.rotate(-angle);
+            remove_rotation.translate(-origin.x(), -origin.y());
+
+            poly = remove_rotation.map(poly);
+
+            painter.setPen(QPen(QBrush(Qt::red), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+            painter.drawPolygon( mapFromScene(poly) );
+            painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+
+
+
+            QTransform item_no_rotate = item->sceneTransform() * remove_rotation;
+
+            Transform_Data data = decomposeTransform(item_no_rotate);
+
+            m_relay->setLabelText(Label_Names::Label_3,       "Scale X: " + QString::number(data.scale.x()) + QString("\t") +
+                                                              "Scale Y: " + QString::number(data.scale.y()) );
+            m_relay->setLabelText(Label_Names::Label_Mouse_1, "Skew  X: " + QString::number(data.skew.x()) + QString("\t") +
+                                                              "Skew  Y: " + QString::number(data.skew.y()) );
+            m_relay->setLabelText(Label_Names::Label_Mouse_2, "Rotation: " + QString::number(data.rotation));
+
+
+            QTransform t = item_no_rotate;
+            qreal m11 = t.m11(), m12 = t.m12(), m13 = t.m13();
+            qreal m21 = t.m21(), m22 = t.m22(), m23 = t.m23();
+            if (isCloseTo(0, m11, .00001)) m11 = 0;
+            if (isCloseTo(0, m12, .00001)) m12 = 0;
+            if (isCloseTo(0, m13, .00001)) m13 = 0;
+            if (isCloseTo(0, m21, .00001)) m21 = 0;
+            if (isCloseTo(0, m22, .00001)) m22 = 0;
+            if (isCloseTo(0, m23, .00001)) m23 = 0;
+            m_relay->setLabelText(Label_Names::Label_1, "11: " + QString::number(m11, 'g', 3) + QString("\t\t") +
+                                                        "12: " + QString::number(m12, 'g', 3) + QString("\t\t"));
+            m_relay->setLabelText(Label_Names::Label_2, "21: " + QString::number(m21, 'g', 3) + QString("\t\t") +
+                                                        "22: " + QString::number(m22, 'g', 3) + QString("\t\t"));
+        }
+        // !!!!! END
+
+    }
+
+    for (auto item: my_items) my_scene->getSelectionGroup()->addToGroup(item);
 
     // !!!!! #DEBUG:    Show selection group info
     if (m_relay->debugFlag(Debug_Flags::Selection_Box_Group_Data)) {
@@ -211,71 +277,20 @@ void SceneGraphicsView::paintItemOutlines(QPainter &painter)
                                                                     ", Y: " + QString::number(sgroup->sceneBoundingRect().y()) );
         m_relay->setLabelText(Label_Names::Label_Object_2, "Group Size X: " + QString::number(sgroup->sceneBoundingRect().width()) +
                                                                     ", Y: " + QString::number(sgroup->sceneBoundingRect().height()) );
-        m_relay->setLabelText(Label_Names::Label_Object_3, "Group Items: " +  QString::number(sgroup->childItems().count()) );
-        m_relay->setLabelText(Label_Names::Label_Object_4, "Group Z: " +      QString::number(sgroup->zValue()) + QString("\t") +
-                                                           "Group Angle: " +  QString::number(sgroup->data(User_Roles::Rotation).toDouble()) );
-        m_relay->setLabelText(Label_Names::Label_Object_5, "Group Scale X: " + QString::number(sgroup->data(User_Roles::Scale).toPointF().x()) +
+        m_relay->setLabelText(Label_Names::Label_Object_3, "Group Scale X: " + QString::number(sgroup->data(User_Roles::Scale).toPointF().x()) +
                                                                      ", Y: " + QString::number(sgroup->data(User_Roles::Scale).toPointF().y()) );
+        m_relay->setLabelText(Label_Names::Label_Object_4, "Group Rotation: " +  QString::number(sgroup->data(User_Roles::Rotation).toDouble()) );
+        m_relay->setLabelText(Label_Names::Label_Object_5, "Group Z: " +      QString::number(sgroup->zValue()) + QString("\t") +
+                                                           "# Items: " +  QString::number(sgroup->childItems().count()) );
     }
     // !!!!! END
 
-
-
-    for (auto item: my_scene->getSelectionGroupItems()) {
-        // Load in item bounding box
-        QPolygonF polygon(item->boundingRect());
-
-        // Apply item scaling / rotation to bounding box
-        polygon = item->sceneTransform().map(polygon);
-
-        // Convert bounding box to view coordinates and draw on screen
-        QPolygon to_view = mapFromScene(polygon);
-        painter.drawPolygon(to_view);
-
-
-        // !!!!! #DEBUG:    Shear Data
-        if (m_relay->debugFlag(Debug_Flags::Shear_Matrix)) {
-//        double   angle = item->data(User_Roles::Rotation).toDouble();
-//        QPolygonF poly = item->boundingRect(); //item->sceneTransform().map(item->boundingRect());
-//        QPointF center = item->boundingRect().center();
-
-//        QTransform remove_rotation = QTransform().translate(center.x(), center.y()).rotate(-angle).translate(-center.x(), -center.y());
-//        poly = remove_rotation.map(poly);
-
-
-//        QTransform item_no_rotate = item->sceneTransform() * remove_rotation;
-//        item_no_rotate.shear(1 - item_no_rotate.m21(), 1 - item_no_rotate.m12() );
-
-//        poly = remove_rotation.map(poly);
-
-
-//        //poly = no_shear.map(poly);
-
-
-//        painter.setPen(QPen(QBrush(Qt::red), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-//        painter.drawPolygon( mapFromScene(poly) );
-//        painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-
-
-//        QTransform t = item_no_rotate;
-//        qreal m11 = t.m11(), m12 = t.m12(), m13 = t.m13();
-//        qreal m21 = t.m21(), m22 = t.m22(), m23 = t.m23();
-//        if (isCloseTo(0, m11, .00001)) m11 = 0;
-//        if (isCloseTo(0, m12, .00001)) m12 = 0;
-//        if (isCloseTo(0, m13, .00001)) m13 = 0;
-//        if (isCloseTo(0, m21, .00001)) m21 = 0;
-//        if (isCloseTo(0, m22, .00001)) m22 = 0;
-//        if (isCloseTo(0, m23, .00001)) m23 = 0;
-//        m_relay->setLabelText(Label_Names::Label_1, "11: " + QString::number(m11) + ", 12: " + QString::number(m12) + ", 13: " + QString::number(m13) );
-//        m_relay->setLabelText(Label_Names::Label_2, "21: " + QString::number(m21) + ", 22: " + QString::number(m22) + ", 23: " + QString::number(m23) );
-        }
-        // !!!!! END
-
-    }
 }
 
 
-// Paints bounding box onto view, calculates handle and side resize boxes
+//####################################################################################
+//##        PAINT: Paints bounding box onto view
+//####################################################################################
 void SceneGraphicsView::paintBoundingBox(QPainter &painter)
 {
     QGraphicsItem *item = dynamic_cast<SceneGraphicsScene*>(scene())->getSelectionGroupAsGraphicsItem();
@@ -293,7 +308,10 @@ void SceneGraphicsView::paintBoundingBox(QPainter &painter)
 }
 
 
-// Paints handles into view
+
+//####################################################################################
+//##        PAINT: Paints handles onto view
+//####################################################################################
 void SceneGraphicsView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw)
 {
     painter.setBrush(m_relay->getColor(Window_Colors::Icon_Light));
@@ -331,7 +349,7 @@ void SceneGraphicsView::paintHandles(QPainter &painter, Handle_Shapes shape_to_d
 
 
 //####################################################################################
-//##        Draw our Rubber Band selection box with custom colors
+//##        PAINT: Draw our Rubber Band selection box with custom colors
 //####################################################################################
 void SceneViewRubberBand::paintEvent(QPaintEvent *)
 {

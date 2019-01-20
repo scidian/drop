@@ -31,6 +31,12 @@ enum class Handle_Shapes {
     Squares,
 };
 
+struct Transform_Data {
+    double  rotation;
+    QPointF scale;
+    QPointF skew;
+};
+
 enum class X_Axis {     Left,   Right,    None  };
 enum class Y_Axis {     Top,    Bottom,   None  };
 enum class Grid_Style { Lines,  Dots,           };
@@ -147,11 +153,11 @@ public:
 
     // View Display Functions
     void            applyUpdatedMatrix();
-    void            drawGrid();
     void            zoomInOut(int level);
 
     // Misc Functions
     double          calculateCornerAngle(double angle1, double angle2);
+    Transform_Data  decomposeTransform(QTransform &from_transform, bool qr_type = true);
     double          extractAngleFromTransform(QTransform &from_transform);
     QGraphicsItem*  itemOnTopAtPosition(QPoint check_point, bool take_item_on_top_out = false);
     QRectF          rectAtCenterPoint(QPoint center, double rect_size);
@@ -160,6 +166,7 @@ public:
 
     // Paint Functions
     void            paintBoundingBox(QPainter &painter);
+    void            paintGrid();
     void            paintHandles(QPainter &painter, Handle_Shapes shape_to_draw);
     void            paintItemOutlines(QPainter &painter);
 
