@@ -14,7 +14,7 @@
 //####################################################################################
 //##        Constructor & destructor
 //####################################################################################
-DrItem::DrItem(const QColor &start_color, double width, double height, double z_order)
+DrItem::DrItem(const QColor &start_color, double width, double height, double z_order, QString name)
 {
     m_width = width;
     m_height = height;
@@ -30,6 +30,7 @@ DrItem::DrItem(const QColor &start_color, double width, double height, double z_
 
     setData(User_Roles::Rotation, 0);
     setData(User_Roles::Scale, QPointF(1, 1));
+    setData(User_Roles::Name, name);
 }                                     
 
 

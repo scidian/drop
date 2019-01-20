@@ -104,6 +104,7 @@ typedef enum {
     Scale,
     Rotation,
 
+    Name,
     Add_More,
 } User_Roles;
 

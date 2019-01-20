@@ -59,6 +59,7 @@ void SceneGraphicsView::selectionChanged()
 void SceneGraphicsView::scrollContentsBy(int dx, int dy)
 {
     QGraphicsView::scrollContentsBy(dx, dy);
+    updateSelectionBoundingBox();
     update();
 }
 

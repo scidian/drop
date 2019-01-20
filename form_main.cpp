@@ -174,15 +174,15 @@ void FormMain::populateScene()
 
     // Populate scene
 
-    scene->addSquare(-200, -200, 100, 100, 1);
+    scene->addSquare(-200, -200, 100, 100, 1, "Bob");
 
-    scene->addSquare(0, 0, 100, 50, 2);
-    scene->addSquare(200, 0, 100, 50, 3);
+    scene->addSquare(0, 0, 100, 50, 2, "Joe");
+    scene->addSquare(200, 0, 100, 50, 3, "Dan");
 
-    scene->addSquare(100, 100, 1, 1, 6);
+    scene->addSquare(100, 100, 1, 1, 6, "Jeff");
 
-    scene->addSquare(0, 200, 100, 50, 4);
-    scene->addSquare(200, 200, 100, 50, 5);
+    scene->addSquare(0, 200, 100, 50, 4, "Ryan");
+    scene->addSquare(200, 200, 100, 50, 5, "Kirk");
 
 }
 

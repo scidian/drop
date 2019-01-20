@@ -36,6 +36,7 @@ SceneGraphicsScene::SceneGraphicsScene(QWidget *parent, DrProject *project, Inte
                                 QGraphicsItem::ItemSendsGeometryChanges);
     addItem(m_selection_group);
     emptySelectionGroup();
+    m_selection_group->setData(User_Roles::Name, "Captain");
 }
 
 SceneGraphicsScene::~SceneGraphicsScene()
@@ -50,10 +51,10 @@ SceneGraphicsScene::~SceneGraphicsScene()
 //####################################################################################
 
 // Adds a square DrItem (QGraphicsItem) to scene
-void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, double new_width, double new_height, double z_order, QColor color)
+void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, double new_width, double new_height, double z_order, QString name, QColor color)
 {
     DrItem *item;
-    item = new DrItem(color, new_width, new_height, z_order);
+    item = new DrItem(color, new_width, new_height, z_order, name);
 
     setPositionByOrigin(item, item->getOrigin(), new_x, new_y);
 
@@ -151,7 +152,8 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
             if (event->key() == Qt::Key::Key_S) new_y = new_y + source_rect.height();
             if (event->key() == Qt::Key::Key_D) new_x = new_x + source_rect.width();
 
-            new_item = new DrItem(new_color, item->boundingRect().width(), item->boundingRect().height(), this->items().count() + 1);
+            new_item = new DrItem(new_color, item->boundingRect().width(), item->boundingRect().height(),
+                                  this->items().count() + 1, item->data(User_Roles::Name).toString());
             new_item->setPos(new_x, new_y);
             new_item->setTransform(item->transform());          // Includes rotation and scaling
 

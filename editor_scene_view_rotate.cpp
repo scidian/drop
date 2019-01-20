@@ -26,23 +26,30 @@
 //####################################################################################
 void SceneGraphicsView::startRotate()
 {
+
+
     m_view_mode = View_Mode::Rotating;
 
-    m_start_rotate_rect = totalSelectedItemsSceneRect();                // Store starting scene rect of initial selection bounding box
-    m_last_angle_diff = 0;                                              // Reset initial rotate event angle at 0
+    // Grab starting angle of selection group before rotating starts
+    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+    m_rotate_start_angle = my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Rotation).toDouble();
+
+    m_rotate_start_rect = totalSelectedItemsSceneRect();                // Store starting scene rect of initial selection bounding box
 }
 
 
-//
-//
 //      !!!!!!!! Need to have angles snap to good angles, ie 0, 15, 30, 45, 60, 75, 90 etc
-//
 //
 // Now that we decided the item isnt rotated, round angle to nearest 90 and store back in item
 //double angle = scene()->selectedItems().first()->data(User_Roles::Rotation).toDouble();
 //angle = round(angle / 90) * 90;
 //scene()->selectedItems().first()->setData(User_Roles::Rotation, angle);
+//
 
+
+//####################################################################################
+//##        Angle Comparision Functions
+//####################################################################################
 // Returns true is 'check_angle' in within 'tolerance' to 0, 90, 180, or 270, i.e. "square" angle
 bool SceneGraphicsView::isSquare(double check_angle, double tolerance)
 {
@@ -60,6 +67,7 @@ bool SceneGraphicsView::isCloseTo(double number_desired, double number_to_check,
 
 
 
+
 //####################################################################################
 //##        Main Rotation Function
 //####################################################################################
@@ -68,59 +76,59 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     // Try and lock function, so we ony run this once at a time
     if (rotate_mutex.tryLock() == false) return;
 
-    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+    QGraphicsItem         *item =     my_scene->getSelectionGroupAsGraphicsItem();
+    QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
 
-    double angle1 = calcRotationAngleInDegrees( mapFromScene(m_start_rotate_rect.center()), m_origin);
-    double angle2 = calcRotationAngleInDegrees( mapFromScene(m_start_rotate_rect.center()), mouse_in_view);
-    double angle = angle2 - angle1;
-    double angle_diff = angle - m_last_angle_diff;
+    double angle1 = calcRotationAngleInDegrees( mapFromScene(m_rotate_start_rect.center()), m_origin);
+    double angle2 = calcRotationAngleInDegrees( mapFromScene(m_rotate_start_rect.center()), mouse_in_view);
 
-    if (angle_diff < -180) angle_diff += 360;
-    if (angle_diff > 180)  angle_diff -= 360;
+    double angle = m_rotate_start_angle + (angle2 - angle1);
+    while (angle >=  360) { angle -= 360; }
+    while (angle <= -360) { angle += 360; }
 
-    // Group selected items and apply rotation to collection
-    QGraphicsItemGroup *group = scene()->createItemGroup( { my_scene->getSelectionGroupAsGraphicsItem() } );
-    QPointF offset = group->sceneBoundingRect().center();
+    // Group selected items so we can apply new rotation to all selected items
+    QGraphicsItemGroup *group = scene()->createItemGroup( { item } );
 
     // Offset difference of original center bounding box to possible slightly different center of new bounding box
-    offset.setX(offset.x() - (offset.x() - m_start_rotate_rect.center().x()) );
-    offset.setY(offset.y() - (offset.y() - m_start_rotate_rect.center().y()) );
+    QPointF offset = group->sceneBoundingRect().center();
+    offset.setX(offset.x() - (offset.x() - m_rotate_start_rect.center().x()) );
+    offset.setY(offset.y() - (offset.y() - m_rotate_start_rect.center().y()) );
 
-    // Save new item rotations for use later
-    for (auto child : my_scene->getSelectionGroupItems())
-        updateItemRotation(child, angle_diff);
-    updateItemRotation(my_scene->getSelectionGroupAsGraphicsItem(), angle_diff);
+    // Load starting angle pre rotate, and store new angle in item
+    double start_angle = item->data(User_Roles::Rotation).toDouble();
+    item->setData(User_Roles::Rotation, angle);
 
-    // Apply new rotations and destroy group
-    QTransform transform;
-    transform.translate( offset.x(),  offset.y());
-    transform.rotate(angle_diff);
-    transform.translate(-offset.x(), -offset.y());
-
+    // Create transform for new angle, apply it, and destroy temporary item group
+    QTransform transform = QTransform().translate(offset.x(), offset.y()).rotate(angle - start_angle).translate(-offset.x(), -offset.y());
     group->setTransform(transform);
     scene()->destroyItemGroup(group);
 
-    m_last_angle_diff = angle;
+    // Break apart selection group so we can grab and store new rotation of all selected items, then put back together
+    for (auto item: my_items) my_scene->removeFromGroupNoUpdate(item);
+    for (auto child : my_items) {
+        QTransform t = child->transform();
+        child->setData(User_Roles::Rotation, extractAngleFromTransform(t));
+    }
+    for (auto item: my_items) my_scene->addToGroupNoUpdate(item);
+
+
 
     // !!!!! #DEBUG:    Rotation data
     if (m_relay->debugFlag(Debug_Flags::Rotation_Data)) {
-        m_relay->setLabelText(Label_Names::Label_Object_3, "Angle 1: " + QString::number(angle1) + ", Angle 2: " + QString::number(angle2));
-        m_relay->setLabelText(Label_Names::Label_Object_4, "Angle: " + QString::number(angle) +       ", Diff: " + QString::number(angle_diff) );
+        m_relay->setLabelText(Label_Names::Label_1, "Angle 1: " + QString::number(angle1) + ", Angle 2: " + QString::number(angle2));
+        m_relay->setLabelText(Label_Names::Label_2, "Angle: " + QString::number(angle) +       ", Diff: " + QString::number(angle - start_angle) );
     }
     // !!!!! END
 
     rotate_mutex.unlock();
 }
 
-void SceneGraphicsView::updateItemRotation(QGraphicsItem *item, double angle_addition)
+
+double SceneGraphicsView::extractAngleFromTransform(QTransform &from_transform)
 {
-    double my_angle = item->data(User_Roles::Rotation).toDouble();
-    double new_angle =  my_angle + angle_addition;
-
-    if (new_angle >=  360) { do { new_angle -= 360; } while (new_angle >=  360); }
-    if (new_angle <= -360) { do { new_angle += 360; } while (new_angle <= -360); }
-
-    item->setData(User_Roles::Rotation, new_angle);
+    QTransform t = from_transform;
+    return qRadiansToDegrees(qAtan2(t.m12(), t.m11()));
 }
 
 

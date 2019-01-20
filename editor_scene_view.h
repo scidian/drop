@@ -115,14 +115,14 @@ private:
     QMap<Position_Flags, QPointF>   m_pre_resize_corners;           // Stores corner coordinates before resizing starts
 
     // View_Mode::Rotating Variables
-    double                          m_last_angle_diff;              // Stores angle difference last time we checked
-    QRectF                          m_start_rotate_rect;            // Stores starting rect of selection before resize starts
-
+    QRectF                          m_rotate_start_rect;            // Stores starting rect of selection before resize starts
+    double                          m_rotate_start_angle;           // Stores angle of selection group at start of rotate routine
 
     // !!!!! DEBUG: Debugging variables
     QPolygonF                       m_debug_polygon;                // Holds a polygon used for resize routine
     QPolygonF                       m_debug_polygon2;        // TEMP
     long                            m_debug_fps = 0;         // TEMP
+    long                            m_debug_fps_last;        // TEMP
     QTime                           m_debug_timer;           // TEMP
 
 
@@ -155,6 +155,8 @@ public:
 
     // Misc Functions
     double          calculateCornerAngle(double angle1, double angle2);
+    double          extractAngleFromTransform(QTransform &from_transform);
+    QGraphicsItem*  itemOnTopAtPosition(QPoint check_point, bool take_item_on_top_out = false);
     QRectF          rectAtCenterPoint(QPoint center, double rect_size);
     QRectF          totalSelectedItemsSceneRect();
     void            updateSelectionBoundingBox();
@@ -174,7 +176,6 @@ public:
     double          calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt);
     bool            isCloseTo(double number_desired, double number_to_check, double tolerance);
     bool            isSquare(double check_angle, double tolerance);
-    void            updateItemRotation(QGraphicsItem *item, double angle_addition);
 
     // Resize functions
     void            startResize();

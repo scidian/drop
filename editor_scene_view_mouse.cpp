@@ -75,7 +75,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
             QGraphicsItem *item_under;
 
             if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
-                item_under = itemAt(event->pos());
+                item_under = itemOnTopAtPosition(event->pos());
 
                 // If no item under mouse, deselect all
                 if (item_under == nullptr) {
@@ -102,9 +102,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
                     // Break apart selection group, put back together without item clicked
                     int start_count = my_scene->getSelectionGroupCount();
-                    for (auto item: my_items) my_scene->getSelectionGroup()->removeFromGroup(item);
-                    item_under = itemAt(event->pos());
-                    for (auto item: my_items) if (item != item_under) my_scene->getSelectionGroup()->addToGroup(item);
+                    item_under = itemOnTopAtPosition(event->pos(), true);
 
                     // If we originally clicked on group, but that point is empty, start selection box
                     if (item_under == nullptr) {
@@ -148,6 +146,39 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 }
 
 
+//####################################################################################
+//##        Returns item on top of scene at point in View, ignoring selection group
+//####################################################################################
+QGraphicsItem* SceneGraphicsView::itemOnTopAtPosition(QPoint check_point, bool take_item_on_top_out)
+{
+    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
+    QGraphicsItem*         selection = my_scene->getSelectionGroupAsGraphicsItem();
+    QGraphicsItem         *item_on_top;
+    QList<QGraphicsItem*>  possible_items;
+
+    // Make a list of all items at point excluding selection group
+    for (auto item : items(check_point))
+        if (item != selection)
+            possible_items.append(item);
+
+    // If no items at position, return null
+    if (possible_items.count() == 0) return nullptr;
+
+    // Find higest item that is not selection group
+    item_on_top = possible_items.first();
+    for (auto item : possible_items) {
+        if (item->zValue() > item_on_top->zValue())
+            item_on_top = item;
+    }
+
+    // If we should take out item at point if its in selection group, remove it
+    // (This is used for when the user is holding control and clicks an item in the selection group)
+    if (take_item_on_top_out && my_scene->getSelectionGroupItems().contains(item_on_top))
+        my_scene->getSelectionGroup()->removeFromGroup(item_on_top);
+
+    return item_on_top;
+}
+
 
 //####################################################################################
 //##        Mouse Moved
@@ -167,9 +198,14 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
     // Grab the scene as a SceneGraphicsScene
     SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
-    QGraphicsItem *check_item = itemAt(adjust_mouse.toPoint());
+    QGraphicsItem *check_item;
+
+    // ******************** Grab item under mouse
+    check_item = itemOnTopAtPosition(adjust_mouse.toPoint());
 
     // ******************** Check selection handles to see if mouse is over one
+    if (m_over_handle == Position_Flags::Move_Item) m_over_handle = Position_Flags::No_Position;
+
     if (my_scene->getSelectionGroupCount() > 0 && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
         m_over_handle = Position_Flags::No_Position;
         if (m_handles[Position_Flags::Top].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))    m_over_handle = Position_Flags::Top;
@@ -185,12 +221,12 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
         if (m_handles[Position_Flags::Rotate].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Rotate;
 
-        if (m_over_handle == Position_Flags::No_Position && my_scene->getSelectionGroupItems().contains(check_item)) {
+        if (m_over_handle == Position_Flags::No_Position && my_scene->getSelectionGroupItems().contains(check_item))
             if (m_flag_key_down_alt == false)
                 m_over_handle = Position_Flags::Move_Item;
-            else
-                m_over_handle = Position_Flags::Rotate;
-        }
+
+        if (m_flag_key_down_alt == true)
+            m_over_handle = Position_Flags::Rotate;
     }
 
     // If we are over a handle, and not doing anything, set cursor based on precalculated angle
@@ -250,6 +286,33 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
     }
     // !!!!! END
 
+    // !!!!! #DEBUG:    Showing object data
+    if (m_relay->debugFlag(Debug_Flags::Selected_Item_Data) && check_item != nullptr) {
+        QGraphicsItem *item = check_item;
+        QPointF my_scale =  item->data(User_Roles::Scale).toPointF();
+        double  my_angle =  item->data(User_Roles::Rotation).toDouble();
+        QPointF my_center = item->sceneTransform().map( item->boundingRect().center() );
+        m_relay->setLabelText(Label_Names::Label_Position, "Pos X: " +  QString::number(item->pos().x()) +
+                                                         ", Pos Y: " +  QString::number(item->pos().y()) );
+        m_relay->setLabelText(Label_Names::Label_Center, "Center X: " + QString::number(my_center.x()) +
+                                                              ", Y: " + QString::number(my_center.y()) );
+        m_relay->setLabelText(Label_Names::Label_Scale, "Scale X: " +   QString::number(my_scale.x()) +
+                                                      ", Scale Y: " +   QString::number(my_scale.y()) );
+        m_relay->setLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle));
+        m_relay->setLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()) +
+                                                           ", Name:" + item->data(User_Roles::Name).toString() );
+        m_relay->setLabelText(Label_Names::Label_Object_5,
+                        "Group Scale X: " + QString::number(my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Scale).toPointF().x()) +
+                                  ", Y: " + QString::number(my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Scale).toPointF().y()) );
+    } else if (check_item == nullptr) {
+        m_relay->setLabelText(Label_Names::Label_Position, "Null");
+        m_relay->setLabelText(Label_Names::Label_Center, "Null");
+        m_relay->setLabelText(Label_Names::Label_Scale, "Null");
+        m_relay->setLabelText(Label_Names::Label_Rotate, "Null");
+        m_relay->setLabelText(Label_Names::Label_Z_Order, "Null");
+        m_relay->setLabelText(Label_Names::Label_Object_5, "Null");
+    }
+    // !!!!! END
 
 
 
