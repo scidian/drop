@@ -82,10 +82,6 @@ private:
     bool         m_flag_key_down_control =  false;                  // True when View has focus and control (cmd) is down
     bool         m_flag_key_down_alt =      false;                  // True when View has focus and alt (option)  is down
 
-    // Mutexes
-    QMutex       mouse_move_mutex { QMutex::NonRecursive };         // Used to keep mouse move from backing up
-    QMutex       resize_mutex     { QMutex::NonRecursive };         // Used to keep resizing from backing up
-    QMutex       rotate_mutex     { QMutex::NonRecursive };         // Used to keep rotating from backing up
 
     // Mouse event variables
     QPoint                              m_origin;                   // Stores mouse down position in view coordinates

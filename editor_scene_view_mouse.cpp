@@ -39,8 +39,11 @@ void SceneGraphicsView::enterEvent(QEvent *event)
 //####################################################################################
 void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 {
-    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
+    // Test for scene, convert to our custom class and lock the scene
+    if (scene() == nullptr) return;
+    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
     QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
+    if (my_scene->scene_mutex.tryLock(100) == false) return;
 
     // On initial mouse down, store mouse origin point
     m_origin =          event->pos();
@@ -59,6 +62,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
                 if (event->modifiers() & Qt::KeyboardModifier::AltModifier ||
                     m_over_handle == Position_Flags::Rotate) {
                     startRotate();
+                    my_scene->scene_mutex.unlock();
                     return;
                 }
 
@@ -66,6 +70,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
                 if (m_over_handle != Position_Flags::No_Position &&
                     m_over_handle != Position_Flags::Move_Item) {
                     startResize();
+                    my_scene->scene_mutex.unlock();
                     return;
                 }
             }
@@ -107,6 +112,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
                     // If we originally clicked on group, but that point is empty, start selection box
                     if (item_under == nullptr) {
                         startSelect(event);
+                        my_scene->scene_mutex.unlock();
                         return;
 
                     // Otherwise, if we clicked a new item, add that to group
@@ -131,6 +137,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
             // ******************* If theres no item under mouse, start selection box
             if (m_origin_item == nullptr) {
                 startSelect(event);
+                my_scene->scene_mutex.unlock();
                 return;
             }
 
@@ -143,11 +150,13 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
     }
 
     update();
+
+    my_scene->scene_mutex.unlock();
 }
 
 
 //####################################################################################
-//##        Returns item on top of scene at point in View, ignoring selection group
+//##        Finds item on top of scene at point in View, ignoring selection group
 //####################################################################################
 QGraphicsItem* SceneGraphicsView::itemOnTopAtPosition(QPoint check_point, bool take_item_on_top_out)
 {
@@ -161,7 +170,7 @@ QGraphicsItem* SceneGraphicsView::itemOnTopAtPosition(QPoint check_point, bool t
         if (item != selection)
             possible_items.append(item);
 
-    // If no items at position, return null
+    // If no items at position, exit
     if (possible_items.count() == 0) return nullptr;
 
     // Find higest item that is not selection group
@@ -185,23 +194,22 @@ QGraphicsItem* SceneGraphicsView::itemOnTopAtPosition(QPoint check_point, bool t
 //####################################################################################
 void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
-    // Try and lock function, so we ony run this once at a time
-    if (mouse_move_mutex.tryLock(10) == false) return;
+    // Test for scene, convert to our custom class and lock the scene
+    if (scene() == nullptr) return;
+    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+    if (my_scene->scene_mutex.tryLock(10) == false) return;
 
-    m_last_mouse_pos = event->pos();                                    // Store event mouse position
-    if (m_view_mode != View_Mode::None) update();                       // Call Paint Event (which update rects) before we start
+    // Store event mouse position
+    m_last_mouse_pos = event->pos();
 
     // Adjust for Qt Arrow not having point right at tip of
     QPointF adjust_mouse = m_last_mouse_pos;
     adjust_mouse.setX(m_last_mouse_pos.x() - 2);
     adjust_mouse.setY(m_last_mouse_pos.y() - 2);
 
-    // Grab the scene as a SceneGraphicsScene
-    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
-    QGraphicsItem *check_item;
 
     // ******************** Grab item under mouse
-    check_item = itemOnTopAtPosition(adjust_mouse.toPoint());
+    QGraphicsItem *check_item = itemOnTopAtPosition(adjust_mouse.toPoint());
 
     // ******************** Check selection handles to see if mouse is over one
     if (m_over_handle == Position_Flags::Move_Item) m_over_handle = Position_Flags::No_Position;
@@ -336,7 +344,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
     QGraphicsView::mouseMoveEvent(event);
     if (m_view_mode != View_Mode::None) update();
 
-    mouse_move_mutex.unlock();
+    my_scene->scene_mutex.unlock();
 }
 
 

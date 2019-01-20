@@ -25,9 +25,14 @@ private:
     DrProject          *m_project;                  // Pointer to currently loaded project
     InterfaceRelay     *m_relay;                    // Pointer to InterfaceRelay class of parent form
 
-
     // Selection variables
     SelectionGroup     *m_selection_group;          // Holds the group of items currently selected
+
+
+public:
+    // Mutexes
+    QMutex       scene_mutex { QMutex::NonRecursive };         // Used to stop from changing scene more than once at a time
+
 
 public:
     // Constructor

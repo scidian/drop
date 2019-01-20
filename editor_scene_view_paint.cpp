@@ -127,11 +127,17 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 
 
     // ******************** At this point, if no selected item paint objects and get out of here
-    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
+    if (scene() == nullptr) return;
+    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+
     if (my_scene->getSelectionGroupCount() < 1) {
         QGraphicsView::paintEvent(event);
         return;
     }
+
+
+    // #################### Locking here so we can break apart selection group for layered drawing
+    if (my_scene->scene_mutex.tryLock(10) == false) return;
 
 
     // ******************** Otherwise, break apart group to draw items in proper z-Order, then put back together
@@ -145,6 +151,11 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     // ******************** Draw bounding box for each item
     QPainter painter(viewport());
     paintItemOutlines(painter);
+
+
+    // #################### We aren't messing with anymore scene data after here
+    my_scene->scene_mutex.unlock();
+
 
     // ******************** Draw box around entire seleciton, with Size Grip handles
     paintBoundingBox(painter);

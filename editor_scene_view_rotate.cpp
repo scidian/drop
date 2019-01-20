@@ -26,6 +26,8 @@
 //####################################################################################
 void SceneGraphicsView::startRotate()
 {
+    if (scene() == nullptr) return;
+
     m_view_mode = View_Mode::Rotating;
 
     // Grab starting angle of selection group before rotating starts
@@ -66,10 +68,10 @@ bool SceneGraphicsView::isCloseTo(double number_desired, double number_to_check,
 //####################################################################################
 void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
 {
-    // Try and lock function, so we ony run this once at a time
-    if (rotate_mutex.tryLock() == false) return;
-
+    // Test for scene, convert to our custom class
+    if (scene() == nullptr) return;
     SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+
     QGraphicsItem         *item =     my_scene->getSelectionGroupAsGraphicsItem();
     QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
 
@@ -126,8 +128,6 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
         m_relay->setLabelText(Label_Names::Label_2, "Angle: " + QString::number(angle) +       ", Diff: " + QString::number(angle - start_angle) );
     }
     // !!!!! END
-
-    rotate_mutex.unlock();
 }
 
 

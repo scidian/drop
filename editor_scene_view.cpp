@@ -65,10 +65,14 @@ void SceneGraphicsView::scrollContentsBy(int dx, int dy)
 
 void SceneGraphicsView::updateSelectionBoundingBox()
 {
-    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
-    QGraphicsItem      *item = my_scene->getSelectionGroupAsGraphicsItem();
+    // Test for scene, convert to our custom class and lock the scene
+    if (scene() == nullptr) return;
 
+    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+    QGraphicsItem      *item = my_scene->getSelectionGroupAsGraphicsItem();
     if (my_scene->getSelectionGroupCount() < 1) return;
+    if (my_scene->scene_mutex.tryLock(0) == false) return;
+
 
     // Size of side handle boxes
     double side_size = 10;
@@ -150,6 +154,7 @@ void SceneGraphicsView::updateSelectionBoundingBox()
     m_handles[Position_Flags::Rotate] = rectAtCenterPoint( zero, corner_size);
     m_handles_centers[Position_Flags::Rotate] = m_handles[Position_Flags::Rotate].boundingRect().center();
 
+    my_scene->scene_mutex.unlock();
 }
 
 // Calculates the angle facing away from the corner of two angles, for calculating mouse angle of corners

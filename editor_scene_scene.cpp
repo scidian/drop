@@ -124,6 +124,8 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
     }
 
     // Perform key press event on all items in selection group
+    if (scene_mutex.tryLock(10) == false) return;
+
     SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(this);
     QList<QGraphicsItem*>  list_new_items;
     list_new_items.clear();
@@ -177,6 +179,8 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
         emptySelectionGroup();
         for (auto item : list_new_items) addItemToSelectionGroup(item);
     }
+
+    scene_mutex.unlock();
 
     //QGraphicsScene::keyPressEvent(event);         // Don't pass on, if we pass on arrow key presses, it moves view sliders
     emit updateViews();

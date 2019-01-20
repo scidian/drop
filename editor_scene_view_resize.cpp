@@ -62,22 +62,19 @@ void SceneGraphicsView::resizeSelection(QPointF mouse_in_scene)
     default:                            m_do_x = X_Axis::None;    m_do_y = Y_Axis::None;
     }
 
-    // Try and lock function, so we ony run this once at a time
-    if (resize_mutex.tryLock() == false) return;
     resizeSelectionWithRotate(mouse_in_scene);
-    resize_mutex.unlock();
 }
 
 
-// Returns the ooposite side name of side passed in, no error catch if corner passed in
+// Finds the ooposite side name of side passed in, no error catch if corner passed in
 Position_Flags SceneGraphicsView::findOppositeSide(Position_Flags start_side)
 {
     switch (start_side)
     {
-    case Position_Flags::Top:       return Position_Flags::Bottom;
-    case Position_Flags::Bottom:    return Position_Flags::Top;
-    case Position_Flags::Left:      return Position_Flags::Right;
-    case Position_Flags::Right:     return Position_Flags::Left;
+    case Position_Flags::Top:          return Position_Flags::Bottom;
+    case Position_Flags::Bottom:       return Position_Flags::Top;
+    case Position_Flags::Left:         return Position_Flags::Right;
+    case Position_Flags::Right:        return Position_Flags::Left;
     case Position_Flags::Top_Left:     return Position_Flags::Bottom_Right;
     case Position_Flags::Top_Right:    return Position_Flags::Bottom_Left;
     case Position_Flags::Bottom_Left:  return Position_Flags::Top_Right;
@@ -93,7 +90,9 @@ Position_Flags SceneGraphicsView::findOppositeSide(Position_Flags start_side)
 //####################################################################################
 void SceneGraphicsView::resizeSelectionWithRotate(QPointF mouse_in_scene)
 {
-    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+    // Test for scene, convert to our custom class
+    if (scene() == nullptr) return;
+    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
 
     // Load item starting width and height
     QGraphicsItem *item = my_scene->getSelectionGroupAsGraphicsItem();
