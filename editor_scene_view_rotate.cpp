@@ -26,41 +26,34 @@
 //####################################################################################
 void SceneGraphicsView::startRotate()
 {
-
-
     m_view_mode = View_Mode::Rotating;
 
     // Grab starting angle of selection group before rotating starts
     SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+
+    // Store starting rotation of current selection
     m_rotate_start_angle = my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Rotation).toDouble();
 
-    m_rotate_start_rect = totalSelectedItemsSceneRect();                // Store starting scene rect of initial selection bounding box
+    // Store starting scene rect of initial selection bounding box
+    m_rotate_start_rect = totalSelectedItemsSceneRect();
 }
-
-
-//      !!!!!!!! Need to have angles snap to good angles, ie 0, 15, 30, 45, 60, 75, 90 etc
-//
-// Now that we decided the item isnt rotated, round angle to nearest 90 and store back in item
-//double angle = scene()->selectedItems().first()->data(User_Roles::Rotation).toDouble();
-//angle = round(angle / 90) * 90;
-//scene()->selectedItems().first()->setData(User_Roles::Rotation, angle);
-//
 
 
 //####################################################################################
 //##        Angle Comparision Functions
 //####################################################################################
-// Returns true is 'check_angle' in within 'tolerance' to 0, 90, 180, or 270, i.e. "square" angle
-bool SceneGraphicsView::isSquare(double check_angle, double tolerance)
+// Returns true is 'check_angle' in equal to 0, 90, 180, or 270, i.e. "square" angle
+bool SceneGraphicsView::isSquare(double check_angle)
 {
     check_angle = abs(check_angle);
     while (check_angle >= 360) check_angle -= 360;
-    if (isCloseTo(check_angle, 0, tolerance))   return true;
-    if (isCloseTo(check_angle, 90, tolerance))  return true;
-    if (isCloseTo(check_angle, 180, tolerance)) return true;
-    if (isCloseTo(check_angle, 270, tolerance)) return true;
+    if (qFuzzyCompare(check_angle, 0))   return true;
+    if (qFuzzyCompare(check_angle, 90))  return true;
+    if (qFuzzyCompare(check_angle, 180)) return true;
+    if (qFuzzyCompare(check_angle, 270)) return true;
     return false;
 }
+
 // Returns true if 'number_desired' is within +-'tolerance' of 'number_to_check'
 bool SceneGraphicsView::isCloseTo(double number_desired, double number_to_check, double tolerance)
 {   return ( (number_to_check <= (number_desired + tolerance)) && (number_to_check >= (number_desired - tolerance)) );  }
@@ -80,6 +73,7 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     QGraphicsItem         *item =     my_scene->getSelectionGroupAsGraphicsItem();
     QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
 
+    // ********** Calculate angle between starting mouse coordinate and latest mouse coordinate
     double angle1 = calcRotationAngleInDegrees( mapFromScene(m_rotate_start_rect.center()), m_origin);
     double angle2 = calcRotationAngleInDegrees( mapFromScene(m_rotate_start_rect.center()), mouse_in_view);
 
@@ -87,7 +81,19 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     while (angle >=  360) { angle -= 360; }
     while (angle <= -360) { angle += 360; }
 
-    // Group selected items so we can apply new rotation to all selected items
+
+    // ********** Snaps angle to nearest 15 degree increment if angle is with +/-
+    double tolerance =  ANGLE_TOLERANCE;
+    double angle_step = ANGLE_STEP;
+
+    double test_round = abs(angle);
+    while (test_round >= angle_step) { test_round -= angle_step; }
+
+    if (isCloseTo(0, test_round, tolerance) || isCloseTo(angle_step, test_round, tolerance))
+        angle = round(angle / angle_step) * angle_step;
+
+
+    // ********** Group selected items so we can apply new rotation to all selected items
     QGraphicsItemGroup *group = scene()->createItemGroup( { item } );
 
     // Offset difference of original center bounding box to possible slightly different center of new bounding box
@@ -99,12 +105,12 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     double start_angle = item->data(User_Roles::Rotation).toDouble();
     item->setData(User_Roles::Rotation, angle);
 
-    // Create transform for new angle, apply it, and destroy temporary item group
+    // ********** Create transform for new angle, apply it, and destroy temporary item group
     QTransform transform = QTransform().translate(offset.x(), offset.y()).rotate(angle - start_angle).translate(-offset.x(), -offset.y());
     group->setTransform(transform);
     scene()->destroyItemGroup(group);
 
-    // Break apart selection group so we can grab and store new rotation of all selected items, then put back together
+    // ********** Break apart selection group so we can grab and store new rotation of all selected items, then put back together
     for (auto item: my_items) my_scene->removeFromGroupNoUpdate(item);
     for (auto child : my_items) {
         QTransform t = child->transform();

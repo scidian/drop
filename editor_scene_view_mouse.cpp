@@ -282,7 +282,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
         m_relay->setLabelText(Label_Names::Label_Mouse_2, "Mouse View  X: " + QString::number(m_last_mouse_pos.x()) +
                                                                     ", Y: " + QString::number(m_last_mouse_pos.y()) );
         m_relay->setLabelText(Label_Names::Label_Pos_Flag, "Position Flag: " + QString::number(static_cast<int>(m_over_handle)) +
-                                                                 ", Angle: " + QString::number(a));
+                                                             ", Pos Angle: " + QString::number(a));
     }
     // !!!!! END
 
@@ -300,17 +300,19 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
                                                       ", Scale Y: " +   QString::number(my_scale.y()) );
         m_relay->setLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle));
         m_relay->setLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()) +
-                                                           ", Name:" + item->data(User_Roles::Name).toString() );
+                                                           ", Name: " + item->data(User_Roles::Name).toString() );
         m_relay->setLabelText(Label_Names::Label_Object_5,
                         "Group Scale X: " + QString::number(my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Scale).toPointF().x()) +
                                   ", Y: " + QString::number(my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Scale).toPointF().y()) );
-    } else if (check_item == nullptr) {
-        m_relay->setLabelText(Label_Names::Label_Position, "Null");
-        m_relay->setLabelText(Label_Names::Label_Center, "Null");
-        m_relay->setLabelText(Label_Names::Label_Scale, "Null");
-        m_relay->setLabelText(Label_Names::Label_Rotate, "Null");
-        m_relay->setLabelText(Label_Names::Label_Z_Order, "Null");
-        m_relay->setLabelText(Label_Names::Label_Object_5, "Null");
+    } else if (m_relay->debugFlag(Debug_Flags::Selected_Item_Data)) {
+        if (m_view_mode == View_Mode::None && check_item == nullptr) {
+            m_relay->setLabelText(Label_Names::Label_Position, "Null");
+            m_relay->setLabelText(Label_Names::Label_Center, "Null");
+            m_relay->setLabelText(Label_Names::Label_Scale, "Null");
+            m_relay->setLabelText(Label_Names::Label_Rotate, "Null");
+            m_relay->setLabelText(Label_Names::Label_Z_Order, "Null");
+            m_relay->setLabelText(Label_Names::Label_Object_5, "Null");
+        }
     }
     // !!!!! END
 

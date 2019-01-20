@@ -37,7 +37,8 @@ enum class Grid_Style { Lines,  Dots,           };
 
 
 // Class constants
-const double ANGLE_TOLERANCE = .5;                              // Angle distance to fuzzy compare to desired angle
+const double ANGLE_TOLERANCE = 2.5;                                 // Angle distance to fuzzy compare to desired angle
+const int    ANGLE_STEP = 15;                                       // Angle intervals rotate function should snap to
 
 
 class SceneGraphicsView : public QGraphicsView
@@ -175,7 +176,7 @@ public:
     void            rotateSelection(QPointF mouse_in_view);
     double          calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt);
     bool            isCloseTo(double number_desired, double number_to_check, double tolerance);
-    bool            isSquare(double check_angle, double tolerance);
+    bool            isSquare(double check_angle);
 
     // Resize functions
     void            startResize();

@@ -79,8 +79,8 @@ void SceneGraphicsView::updateSelectionBoundingBox()
 
     // Check if bounding box handles should be squares or circles
     double angle = item->data(User_Roles::Rotation).toDouble();
-    if (isSquare(angle, ANGLE_TOLERANCE) == false)  m_handles_shape = Handle_Shapes::Circles;
-    else                                            m_handles_shape = Handle_Shapes::Squares;
+    if (isSquare(angle) == false)  m_handles_shape = Handle_Shapes::Circles;
+    else                           m_handles_shape = Handle_Shapes::Squares;
 
     // ***** Store corner handle polygons
     QTransform transform = item->sceneTransform();                          // Get item bounding box to scene transform

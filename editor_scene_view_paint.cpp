@@ -209,7 +209,7 @@ void SceneGraphicsView::paintItemOutlines(QPainter &painter)
     // !!!!! END
 
 
-    int first_time = 0;
+
     for (auto item: my_scene->getSelectionGroupItems()) {
         // Load in item bounding box
         QPolygonF polygon(item->boundingRect());
@@ -220,18 +220,6 @@ void SceneGraphicsView::paintItemOutlines(QPainter &painter)
         // Convert bounding box to view coordinates and draw on screen
         QPolygon to_view = mapFromScene(polygon);
         painter.drawPolygon(to_view);
-
-
-        if (m_relay->debugFlag(Debug_Flags::Selected_Item_Data) && first_time == 0) {
-            QPointF my_scale =  item->data(User_Roles::Scale).toPointF();
-            double  my_angle =  item->data(User_Roles::Rotation).toDouble();
-            m_relay->setLabelText(Label_Names::Label_Position, "Pos X: " +  QString::number(item->pos().x()) +
-                                                             ", Pos Y: " +  QString::number(item->pos().y()) );
-            m_relay->setLabelText(Label_Names::Label_Scale, "Scale X: " +   QString::number(my_scale.x()) +
-                                                          ", Scale Y: " +   QString::number(my_scale.y()) );
-            m_relay->setLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle));
-            first_time++;
-        }
 
 
         // !!!!! #DEBUG:    Shear Data
