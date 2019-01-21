@@ -28,7 +28,6 @@ SOURCES += \
     enums.cpp \
     form_main.cpp \
     form_main_setup.cpp \
-    globals.cpp \
     main.cpp \
     editor_tree_inspector.cpp \
     editor_tree_assets.cpp \
@@ -52,12 +51,16 @@ SOURCES += \
     settings_component_property.cpp \
     editor_scene_item.cpp \
     editor_scene_view_mouse.cpp \
-    editor_scene_scene_select.cpp
+    editor_scene_scene_select.cpp \
+    editor_scene_view_tooltip.cpp \
+    library.cpp \
+    colors.cpp \
+    debug.cpp \
+    interface_relay.cpp
 
 HEADERS += \
     enums.h \
     form_main.h \
-    globals.h \
     editor_tree_inspector.h \
     interface_relay.h \
     editor_tree_assets.h \
@@ -73,7 +76,10 @@ HEADERS += \
     settings.h \
     settings_component.h \
     settings_component_property.h \
-    editor_scene_item.h
+    editor_scene_item.h \
+    library.h \
+    colors.h \
+    debug.h
 
 FORMS +=
 

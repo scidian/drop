@@ -8,8 +8,9 @@
 #ifndef INTERFACE_RELAY_H
 #define INTERFACE_RELAY_H
 
+#include "colors.h"
+#include "debug.h"
 #include "enums.h"
-#include "globals.h"
 
 class InterfaceRelay
 {
@@ -20,14 +21,19 @@ public:
     virtual void    buildObjectInspector(QList<long> key_list) = 0;
     virtual void    buildTreeSceneList() = 0;
 
-    virtual QColor  getColor(Window_Colors color_role) = 0;
-
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list) = 0;
     virtual void    setLabelText(Label_Names label_name, QString new_text) = 0;
-
-    virtual void    showMessageBox(QString message) = 0;
 };
 
+
+
+// External functions, can be called Globally without a local InterfaceRelay instance
+namespace Dr {
+
+    void SetActiveRelay(InterfaceRelay *new_relay);
+    void SetLabelText(Label_Names label, QString text);
+
+}
 
 
 

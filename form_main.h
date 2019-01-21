@@ -29,8 +29,9 @@
 #include <QMainWindow>
 #include <QtWidgets>
 
+#include "colors.h"
+#include "debug.h"
 #include "project.h"
-#include "globals.h"
 #include "interface_relay.h"
 
 
@@ -55,7 +56,6 @@ class FormMain : public QMainWindow, public InterfaceRelay
 
 public:
     // Locals
-    Globals        *globals;                                            // Holds project globals
     Form_Main_Mode  current_mode;                                       // Holds current editing mode of FormMain
     Form_Main_Focus current_focus;                                      // Holds Widget that currently has focus
     bool            done_loading = false;                               // True after initial startup of FormMain
@@ -87,30 +87,26 @@ private:
 
     // Labels to display info
     QLabel        *label_1,         *label_2,           *label_3,           *label_mouse_1,     *label_mouse_2;
-    QLabel        *label_object_1,  *label_object_2,    *label_object_3,    *label_object_4;
+    QLabel        *label_object_1,  *label_object_2,    *label_object_3,    *label_object_4,    *label_object_5;
     QLabel        *label_position,  *label_center,      *label_scale,       *label_rotate,       *label_z_order,    *label_pos_flag;
     QLabel        *label_bottom;
 
 public:
     // Constructor and Destructor
-    explicit FormMain(QWidget *parent = nullptr, Globals *the_globals = nullptr);
+    explicit FormMain(QWidget *parent = nullptr);
     ~FormMain();
 
     // Member functions
     virtual void    buildObjectInspector(QList<long> key_list);
     virtual void    buildTreeSceneList();
-    virtual QColor  getColor(Window_Colors color_role);
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list);
     virtual void    setLabelText(Label_Names label_name, QString new_text);
-    virtual void    showMessageBox(QString message);
 
     void            populateScene();                                        // !!!!! TEMP generic fill of scene
 
 private:
     // Form setup
     void        applyColoring();
-    void        applyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color);
-    void        applyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type);
     void        buildMenu();
     void        buildWindow(Form_Main_Mode new_layout);
     void        buildWindowModeEditScene();

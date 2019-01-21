@@ -6,6 +6,8 @@
 //
 //
 
+#include "library.h"
+
 #include "project.h"
 #include "project_world.h"
 #include "project_world_scene.h"
@@ -31,10 +33,12 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     DrTypes     selected_type = m_project->findTypeFromKey( selected_key );
     std::string type_string = StringFromType(selected_type);
 
-    // !!!!! TEMP:
-    m_relay->setLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( selected_key ) + ", TYPE: " + QString::fromStdString(type_string));
-    m_relay->setLabelText(Label_Names::Label_Object_2, "");
-    m_relay->setLabelText(Label_Names::Label_Object_3, "");
+    // !!!!! #DEBUG:    Show selected item key and info
+    if (Dr::CheckDebugFlag(Debug_Flags::Object_Inspector_Build)) {
+        m_relay->setLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( selected_key ) + ", TYPE: " + QString::fromStdString(type_string));
+        m_relay->setLabelText(Label_Names::Label_Object_2, "");
+        m_relay->setLabelText(Label_Names::Label_Object_3, "");
+    }
     // !!!!! END
 
     // Change Advisor text after new item selection
@@ -150,7 +154,7 @@ void TreeInspector::itemWasClicked(QTreeWidgetItem *item, int column)
     Q_UNUSED(item);
     Q_UNUSED(column);
 
-    m_relay->showMessageBox("Hi There Joe");
+    Dr::ShowMessageBox("Hi There Joe");
 
     // If no item is selected in tree view, exit function
     //if (treeScene->getSelectedKey() == 0) { return; }
@@ -171,10 +175,12 @@ void TreeInspector::itemWasClicked(QTreeWidgetItem *item, int column)
     //std::string type_string2 = StringFromType(m_project->findTypeFromKey( treeScene->getSelectedKey() ));
     //std::string type_string = StringFromType(selected_item_settings->getType());
 
-    // !!!!! TEMP:
-    //setLabelText(Label_Names::LabelObject1, "KEY: " + QString::number( treeScene->getSelectedKey() ) + ", TYPE: " + QString::fromStdString(type_string));
-    //setLabelText(Label_Names::LabelObject2, "COMPONENT: " + QString::number(component_key) +   ", NAME: " + QString::fromStdString(component_name));
-    //setLabelText(Label_Names::LabelObject3, "PROPERTY: " + QString::number(property_key) +   ", NAME: " + QString::fromStdString(property_name));
+    // !!!!! #DEBUG:    Show selected item key and info
+    //if (Dr::CheckDebugFlag(Debug_Flags::Object_Inspector_Build)) {
+    //    setLabelText(Label_Names::LabelObject1, "KEY: " + QString::number( treeScene->getSelectedKey() ) + ", TYPE: " + QString::fromStdString(type_string));
+    //    setLabelText(Label_Names::LabelObject2, "COMPONENT: " + QString::number(component_key) +   ", NAME: " + QString::fromStdString(component_name));
+    //    setLabelText(Label_Names::LabelObject3, "PROPERTY: " + QString::number(property_key) +   ", NAME: " + QString::fromStdString(property_name));
+    //}
     // !!!!! END
 
 }

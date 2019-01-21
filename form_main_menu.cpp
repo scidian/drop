@@ -13,6 +13,7 @@
 #include "editor_tree_scene.h"
 #include "editor_scene_view.h"
 
+#include "colors.h"
 #include "form_main.h"
 
 
@@ -56,7 +57,7 @@ void FormMain::buildMenu()
         actionLight->setCheckable(true);
         actionBlue->setCheckable(true);
         actionAutumn->setCheckable(true);
-        switch (globals->current_color_scheme)
+        switch (Dr::GetColorScheme())
         {
         case Color_Scheme::Dark:    actionDark->setChecked(true);    break;
         case Color_Scheme::Light:   actionLight->setChecked(true);   break;
@@ -77,8 +78,8 @@ void FormMain::buildMenu()
     menuColor_Schemes->addAction(actionBlue);
     menuColor_Schemes->addAction(actionAutumn);
 
-    // ***** Debug Menu
-    if (globals->show_debug) {
+    // !!!!! #DEBUG:    Load hidden debug menu into menu bar
+    if (Dr::CheckDebugFlag(Debug_Flags::Secret_Menu)) {
         QMenu *menuDebug;
         menuDebug = new QMenu(menuBar);
         menuDebug->setObjectName(QStringLiteral("menuDebug"));
@@ -101,6 +102,7 @@ void FormMain::buildMenu()
         actionSceneEditMode->setText(QApplication::translate("MainWindow", "Set Form Main Mode: Edit Scene", nullptr));
         actionListChildren->setText(QApplication::translate("MainWindow", "List Children", nullptr));
     }
+    // !!!!!
 
     // ***** Set menu titles and sub menu texts
     menuColor_Schemes->setTitle(QApplication::translate("MainWindow", "Color Schemes", nullptr));

@@ -26,6 +26,8 @@
 //####################################################################################
 void SceneGraphicsView::startSelect(QMouseEvent *event)
 {
+    if (scene() == nullptr) return;
+
     m_view_mode = View_Mode::Selecting;                                     // Flag that we're in selection mode
     if (event->modifiers() & Qt::KeyboardModifier::ControlModifier) {
         m_items_start = dynamic_cast<SceneGraphicsScene*>(scene())->getSelectionGroupItems();

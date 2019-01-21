@@ -38,8 +38,10 @@
 
 #include <QApplication>
 
+#include "colors.h"
+#include "debug.h"
 #include "form_main.h"
-#include "globals.h"
+
 
 int main(int argc, char *argv[])
 {
@@ -49,15 +51,18 @@ int main(int argc, char *argv[])
     // ***** Initiliaze application
     QApplication app_drop(argc, argv);              // Declare application
 
-    Globals *my_globals = new Globals();            // Declare / Load Globals helper
-    FormMain form_main(nullptr, my_globals);        // Declare / Load FormMain, pass Globals helper
+    // Load some global data
+    Dr::InitializeFlags();
+    Dr::LoadPalettes();
+
+    FormMain form_main(nullptr);                    // Declare / Load FormMain, pass Globals helper
+    Dr::SetActiveRelay(&form_main);                 // Set main form to active relay
     form_main.show();                               // Show FormMain
 
     app_drop.exec();                                // Run program
 
 
-    //my_globals->showMessageBox("Finished running program");
-    delete my_globals;
+    //Dr::ShowMessageBox("Finished running program");
 
     return 0;
 }
@@ -66,10 +71,7 @@ int main(int argc, char *argv[])
 
 
 
-//####################################################################################
-//##        Interface Destructors - Must include definition of a virtual destructor
-//####################################################################################
-InterfaceRelay::~InterfaceRelay() { }
+
 
 
 

@@ -6,6 +6,8 @@
 //
 //
 
+#include "library.h"
+
 #include "project.h"
 #include "project_world.h"
 #include "project_world_scene.h"
@@ -36,6 +38,7 @@ SceneGraphicsScene::SceneGraphicsScene(QWidget *parent, DrProject *project, Inte
                                 QGraphicsItem::ItemSendsGeometryChanges);
     addItem(m_selection_group);
     emptySelectionGroup();
+    m_selection_group->setData(User_Roles::Name, "Captain");
 }
 
 SceneGraphicsScene::~SceneGraphicsScene()
@@ -50,10 +53,10 @@ SceneGraphicsScene::~SceneGraphicsScene()
 //####################################################################################
 
 // Adds a square DrItem (QGraphicsItem) to scene
-void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, double new_width, double new_height, double z_order, QColor color)
+void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, double new_width, double new_height, double z_order, QString name, QColor color)
 {
     DrItem *item;
-    item = new DrItem(color, new_width, new_height, z_order);
+    item = new DrItem(color, new_width, new_height, z_order, name);
 
     setPositionByOrigin(item, item->getOrigin(), new_x, new_y);
 
@@ -62,8 +65,9 @@ void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, double new_width, d
 
 
 //####################################################################################
-//##        SLOT: sceneChanged - Connected from scene().changed, resizes scene when objects are added / subtracted
+//##        SLOT: sceneChanged
 //####################################################################################
+// Connected from scene().changed, resizes scene when objects are added / subtracted
 void SceneGraphicsScene::sceneChanged(QList<QRectF>)
 {
     double min_size = 500;              // Minimum size fo scene rect (-500 to 500 for x and y)
@@ -121,7 +125,51 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
     case Qt::Key::Key_Right: selectedItems().first()->moveBy( move_by,  0);      break;
     }
 
+
+
+    //
+    // !!!!! TEMP
+    //
+    if (event->key() == Qt::Key::Key_M && m_selection_group->childItems().count() == 1) {
+        if (scene_mutex.tryLock(10) == false) return;
+        QList<QGraphicsItem*>  my_items = getSelectionGroupItems();
+        for (auto item: my_items) removeFromGroupNoUpdate(item);
+        QGraphicsItem *item = my_items.first();
+        QString msg = "";
+
+        // Load local transformations
+        QList<QGraphicsTransform*> transformList = item->transformations();
+        msg += "Transformations Count: " + QString::number(transformList.size()) + QString("\n");
+
+        // Show local rotation
+        msg += "Rotation: " + QString::number(item->rotation()) + QString("\n");
+
+        // Show local scale
+        double scale = item->scale();
+        msg += "Scale: " + QString::number(scale) + QString("\n");
+
+        // Load local sceneTransform
+        QTransform t = item->sceneTransform();
+        qreal m11 = t.m11(), m12 = t.m12(), m13 = t.m13();
+        qreal m21 = t.m21(), m22 = t.m22(), m23 = t.m23();
+        msg += "11: " + QString::number(m11) + ", 12: " + QString::number(m12) + ", 13: " + QString::number(m13) + QString("\n");
+        msg += "21: " + QString::number(m21) + ", 22: " + QString::number(m22) + ", 23: " + QString::number(m23) + QString("\n");
+
+        // Show data
+        Dr::ShowMessageBox(msg);
+
+        for (auto item: my_items) addToGroupNoUpdate(item);
+        scene_mutex.unlock();
+        return;
+    }
+    //
+    // !!!!! END
+    //
+
+
     // Perform key press event on all items in selection group
+    if (scene_mutex.tryLock(10) == false) return;
+
     SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(this);
     QList<QGraphicsItem*>  list_new_items;
     list_new_items.clear();
@@ -150,7 +198,8 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
             if (event->key() == Qt::Key::Key_S) new_y = new_y + source_rect.height();
             if (event->key() == Qt::Key::Key_D) new_x = new_x + source_rect.width();
 
-            new_item = new DrItem(new_color, item->boundingRect().width(), item->boundingRect().height(), this->items().count() + 1);
+            new_item = new DrItem(new_color, item->boundingRect().width(), item->boundingRect().height(),
+                                  this->items().count() + 1, item->data(User_Roles::Name).toString());
             new_item->setPos(new_x, new_y);
             new_item->setTransform(item->transform());          // Includes rotation and scaling
 
@@ -175,6 +224,8 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
         for (auto item : list_new_items) addItemToSelectionGroup(item);
     }
 
+    scene_mutex.unlock();
+
     //QGraphicsScene::keyPressEvent(event);         // Don't pass on, if we pass on arrow key presses, it moves view sliders
     emit updateViews();
 }
@@ -184,7 +235,7 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
 //####################################################################################
 //##        setPositionByOrigin - Sets item to new_x, new_y position in scene, offset by_origin point
 //####################################################################################
-void SceneGraphicsScene::setPositionByOrigin(QGraphicsItem *item, Origin by_origin, double new_x, double new_y)
+void SceneGraphicsScene::setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y)
 {
     item->setPos(new_x, new_y);
 
@@ -192,19 +243,17 @@ void SceneGraphicsScene::setPositionByOrigin(QGraphicsItem *item, Origin by_orig
     QPointF     item_pos;
 
     switch (by_origin) {
-    case Origin::Top_Left:      item_pos = item_rect.topLeft();                  break;
-    case Origin::Top_Right:     item_pos = item_rect.topRight();                 break;
-    case Origin::Center:        item_pos = item_rect.center();                   break;
-    case Origin::Bottom_Left:   item_pos = item_rect.bottomLeft();               break;
-    case Origin::Bottom_Right:  item_pos = item_rect.bottomRight();              break;
-    case Origin::Top:           item_pos = QPointF(item_rect.topLeft().x() + (item_rect.topRight().x() - item_rect.topLeft().x()),
-                                                   item_rect.topLeft().y() );    break;
-    case Origin::Bottom:        item_pos = QPointF(item_rect.bottomLeft().x() + (item_rect.bottomRight().x() - item_rect.bottomLeft().x()),
-                                                   item_rect.bottomLeft().y() ); break;
-    case Origin::Left:          item_pos = QPointF(item_rect.topLeft().x(),
-                                                   item_rect.topLeft().y() + (item_rect.bottomLeft().y() - item_rect.topLeft().y()) );       break;
-    case Origin::Right:         item_pos = QPointF(item_rect.topRight().x(),
-                                                   item_rect.topRight().y() + (item_rect.bottomRight().y() - item_rect.topRight().y()) );    break;
+    case Position_Flags::Top_Left:      item_pos = item_rect.topLeft();                  break;
+    case Position_Flags::Top_Right:     item_pos = item_rect.topRight();                 break;
+    case Position_Flags::Center:        item_pos = item_rect.center();                   break;
+    case Position_Flags::Bottom_Left:   item_pos = item_rect.bottomLeft();               break;
+    case Position_Flags::Bottom_Right:  item_pos = item_rect.bottomRight();              break;
+    case Position_Flags::Top:           item_pos = QPointF( QLineF(item_rect.topLeft(),    item_rect.topRight()).pointAt(.5) );    break;
+    case Position_Flags::Bottom:        item_pos = QPointF( QLineF(item_rect.bottomLeft(), item_rect.bottomRight()).pointAt(.5) ); break;
+    case Position_Flags::Left:          item_pos = QPointF( QLineF(item_rect.topLeft(),    item_rect.bottomLeft()).pointAt(.5) );  break;
+    case Position_Flags::Right:         item_pos = QPointF( QLineF(item_rect.topRight(),   item_rect.bottomRight()).pointAt(.5) ); break;
+    default:
+        item_pos = item_rect.topLeft();
     }
     item_pos = item->sceneTransform().map(item_pos);
 

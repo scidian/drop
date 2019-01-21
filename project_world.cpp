@@ -98,7 +98,7 @@ void DrWorld::initializeWorldSettings(std::string new_name)
     getComponent(World_Components::physics)->setIcon(Component_Icons::Physics);
     addPropertyToComponent(World_Components::physics, World_Properties::use_physics, Property_Type::Bool, true,
                            "Use Physics?", "Whether or not physics is turned on in current world");
-    addPropertyToComponent(World_Components::physics, World_Properties::gravity, Property_Type::Point2D, QList<QVariant>({ 0.0, 10.0 }),
+    addPropertyToComponent(World_Components::physics, World_Properties::gravity, Property_Type::PointF, QPointF(0.0, 10.0),
                            "Gravity", "Amount of gravity in x and y directions, can be negative");
     addPropertyToComponent(World_Components::physics, World_Properties::time_warp, Property_Type::Float, 60.0,
                            "Time Warp", "Update calculations per second");

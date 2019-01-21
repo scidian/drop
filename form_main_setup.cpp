@@ -6,6 +6,8 @@
 //
 //
 
+#include "library.h"
+
 #include "editor_scene_scene.h"
 #include "editor_tree_advisor.h"
 #include "editor_tree_assets.h"
@@ -25,7 +27,7 @@ void FormMain::listChildren()
     for (auto widget : findChildren<QWidget *>()) {
         widget_list += widget->objectName() + ", ";
     }
-    globals->showMessageBox(widget_list);
+    Dr::ShowMessageBox(widget_list);
 }
 
 // Re-configures FormMain to new mode
@@ -49,7 +51,7 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
         for (auto dock : findChildren<QDockWidget *>()) { dock->deleteLater(); }
         break;
     default:
-        globals->showMessageBox("Not set");
+        Dr::ShowMessageBox("Not set");
     }
 }
 
@@ -209,6 +211,10 @@ void FormMain::buildWindowModeEditScene()
                 label_object_4->setObjectName(QStringLiteral("label_object_4"));
                 label_object_4->setGeometry(QRect(240, 50, 400, 21));
                 label_object_4->setFont(font);
+                label_object_5 = new QLabel(areaBottom);
+                label_object_5->setObjectName(QStringLiteral("label_object_4"));
+                label_object_5->setGeometry(QRect(240, 65, 400, 21));
+                label_object_5->setFont(font);
 
                 label_position = new QLabel(areaBottom);
                 label_position->setObjectName(QStringLiteral("label_position"));
@@ -412,11 +418,11 @@ void FormMain::buildWindowModeEditScene()
 
     resizeDocks({assets, inspector}, {180, 300}, Qt::Horizontal);                               // Forces resize of dock
 
-    applyDropShadowByType(buttonAtlas, Shadow_Types::Button_Shadow);
-    applyDropShadowByType(buttonFonts, Shadow_Types::Button_Shadow);
-    applyDropShadowByType(buttonPlay, Shadow_Types::Button_Shadow);
-    applyDropShadowByType(buttonSettings, Shadow_Types::Button_Shadow);
-    applyDropShadowByType(buttonWorlds, Shadow_Types::Button_Shadow);
+    Dr::ApplyDropShadowByType(buttonAtlas,    Shadow_Types::Button_Shadow);
+    Dr::ApplyDropShadowByType(buttonFonts,    Shadow_Types::Button_Shadow);
+    Dr::ApplyDropShadowByType(buttonPlay,     Shadow_Types::Button_Shadow);
+    Dr::ApplyDropShadowByType(buttonSettings, Shadow_Types::Button_Shadow);
+    Dr::ApplyDropShadowByType(buttonWorlds,   Shadow_Types::Button_Shadow);
 
 
     // ***** Set titles and button texts

@@ -39,7 +39,7 @@ public:
     std::string     getAdvisorHeader() { return advisor_header; }
 
 private slots:
-    void        changeAdvisor(HeaderBodyList header_body_list);             // Set as slot so we can emit queued signals
+    void            changeAdvisor(HeaderBodyList header_body_list);             // Set as slot so we can emit queued signals
 };
 
 
