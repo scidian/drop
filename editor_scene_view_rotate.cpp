@@ -26,11 +26,15 @@
 //####################################################################################
 //##        Starts rotating mode
 //####################################################################################
-void SceneGraphicsView::startRotate()
+void SceneGraphicsView::startRotate(QPoint mouse_in_view)
 {
     if (scene() == nullptr) return;
 
     m_view_mode = View_Mode::Rotating;
+
+    // Set up our tooltip
+    QPoint tip_pos = mouse_in_view + QWidget::mapToGlobal(this->rect().topLeft()) + m_tool_tip->getOffset();
+    m_tool_tip->move(tip_pos);
     m_tool_tip->show();
 
     // Grab starting angle of selection group before rotating starts

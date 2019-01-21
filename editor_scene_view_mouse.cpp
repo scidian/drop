@@ -61,7 +61,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
                 // ******************* If clicked while holding Alt key
                 if (event->modifiers() & Qt::KeyboardModifier::AltModifier ||
                     m_over_handle == Position_Flags::Rotate) {
-                    startRotate();
+                    startRotate(m_origin);
                     my_scene->scene_mutex.unlock();
                     return;
                 }
@@ -207,6 +207,11 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
     adjust_mouse.setX(m_last_mouse_pos.x() - 2);
     adjust_mouse.setY(m_last_mouse_pos.y() - 2);
 
+    // Updates our tool tip position
+    if (m_tool_tip->isHidden() == false) {
+        QPoint tip_pos = m_last_mouse_pos + QWidget::mapToGlobal(this->rect().topLeft()) + m_tool_tip->getOffset();
+        m_tool_tip->move(tip_pos);
+    }
 
     // ******************** Grab item under mouse
     QGraphicsItem *check_item = itemOnTopAtPosition(adjust_mouse.toPoint());

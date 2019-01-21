@@ -177,7 +177,7 @@ public:
     void            processSelection(QPoint mouse_in_view);
 
     // Rotation Functions
-    void            startRotate();
+    void            startRotate(QPoint mouse_in_view);
     void            rotateSelection(QPointF mouse_in_view);
     double          calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt);
     bool            isSquare(double check_angle);
@@ -202,12 +202,10 @@ public slots:
 //############################
 class SceneViewRubberBand : public QRubberBand
 {
-private:
-    InterfaceRelay  *m_relay;                // Pointer to InterfaceRelay class of parent form, for getting colors
 
 public:
     // Constructor
-    SceneViewRubberBand(Shape shape, QWidget *parent, InterfaceRelay *relay) : QRubberBand (shape, parent), m_relay(relay) { }
+    SceneViewRubberBand(Shape shape, QWidget *parent) : QRubberBand (shape, parent) { }
 
     // Event overrides
     virtual void    paintEvent(QPaintEvent *) override;
@@ -228,6 +226,10 @@ public:
 
     // Event overrides
     virtual void    paintEvent(QPaintEvent *) override;
+
+    // Functions
+    QPoint          getOffset() { return QPoint(40, -40); }
+
 };
 
 

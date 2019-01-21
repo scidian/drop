@@ -47,7 +47,15 @@ SceneViewToolTip::SceneViewToolTip(QWidget *parent) : QWidget(parent)
 void SceneViewToolTip::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
-    painter.drawText( QPointF(0, 0), QString("Blah"));
+    painter.setPen(Qt::black);
+    painter.setBrush(Qt::black);
+
+
+    QPixmap pic(":/tree_icons/tree_action.png");
+
+    painter.drawPixmap(QPointF(0, 0), pic);
+
+    //painter.drawText( QPointF(0, 0), QString("Blah"));
 
 }
 

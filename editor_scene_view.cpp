@@ -28,7 +28,7 @@ SceneGraphicsView::SceneGraphicsView(QWidget *parent, DrProject *project, Interf
                                      QGraphicsView(parent = nullptr), m_project(project), m_relay(relay)
 {
     // Initialize rubber band object used as a selection box
-    m_rubber_band = new SceneViewRubberBand(QRubberBand::Rectangle, this, relay);
+    m_rubber_band = new SceneViewRubberBand(QRubberBand::Shape::Rectangle, this);
 
     // Initialize tool tip object used for displaying some helpful info
     m_tool_tip = new SceneViewToolTip(this);
