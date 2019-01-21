@@ -8,6 +8,7 @@
 
 #include <QGraphicsDropShadowEffect>
 
+#include "colors.h"
 #include "library.h"
 
 namespace Dr {
@@ -86,6 +87,90 @@ void ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius)
 }
 
 
+
+
+//####################################################################################
+//##        Apply palette / coloring / styling to children widgets
+//####################################################################################
+void ApplyColoring(QWidget *widget)
+{
+    QString style_sheet = QString(
+        " QMainWindow { background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }" +
+        " QMainWindow::separator { border: 1px solid " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }"
+
+        " QSplitter { width: 4px; } "
+        " QSplitter::handle:vertical { image: url(:/gui_misc/splitter_v.png); } "
+        " QSplitter::handle:horizontal { image: url(:/gui_misc/splitter_h.png); } "
+
+        " QScrollBar:vertical { width: 12px; margin: 0px; border-radius: 6px; "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; } "
+        " QScrollBar::handle:vertical { margin: 2px; border-radius: 4px; "
+        "       background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
+        "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Dark).name() + ", "
+        "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
+        " QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; } "
+        " QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { height: 0px; } "
+
+        " QScrollBar:horizontal { height: 12px; margin: 0px; border-radius: 6px; "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + " ;} "
+        " QScrollBar::handle:horizontal {      margin: 2px; border-radius: 4px; "
+        "       background: qlineargradient(spread:pad, x1:0 y1:0, x2:1 y2:0, "
+        "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Dark).name() + ", "
+        "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
+        " QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; } "
+        " QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal { width: 0px; } "
+
+        " QPushButton { color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
+        "       background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
+        "                   stop:0 " + Dr::GetColor(Window_Colors::Button_Light).name() + ", "
+        "                   stop:1 " + Dr::GetColor(Window_Colors::Button_Dark).name() + "); "
+        "       border: none; border-radius: 6px; }"
+        " QPushButton:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; }"
+        " QPushButton:pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }"
+
+        " QTreeWidget { icon-size: 14px 14px; }"
+        " QTreeWidget { color: " + Dr::GetColor(Window_Colors::Text).name() + ";  "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
+        "       selection-background-color: " + Dr::GetColor(Window_Colors::Midlight).name() + "; "
+        "       show-decoration-selected: 1; }"
+        " QTreeWidget::item:selected { color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Midlight).name() + "; }"
+        " QTreeWidget::item:hover:selected { color: " + Dr::GetColor(Window_Colors::Icon_Light).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Midlight).name() + "; }"
+        " QTreeWidget::item:hover:!selected { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
+
+        " QHeaderView::section { "
+        "       background-color: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
+        "       border: 0px; }"
+
+        " QDockWidget { font-size: 11px; color: " + Dr::GetColor(Window_Colors::Text).name() + "; } "
+        " QDockWidget::title { text-align: center; "
+        "       background: qlineargradient(x1:0 y1:0, x2:0 y2:1, "
+        "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Light).name() + ", "
+        "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
+
+        " QGraphicsView { background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }"
+        " QGraphicsView::corner { background: transparent; } "
+
+        " QScrollArea { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
+
+        " QLabel { color : " + Dr::GetColor(Window_Colors::Text).name() + "; } "
+    );
+
+    widget->setStyleSheet(style_sheet);
 }
+
+
+
+}
+
+
+
+
+
+
 
 

@@ -23,9 +23,10 @@ namespace Dr {
 
 
 // Form / Widget Functions
-void    ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius);
+void    ApplyColoring(QWidget *widget);
 void    ApplyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color);
 void    ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type);
+void    ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius);
 
 
 // Comparison Functions

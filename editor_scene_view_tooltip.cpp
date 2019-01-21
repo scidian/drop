@@ -32,13 +32,18 @@ SceneViewToolTip::SceneViewToolTip(QWidget *parent) : QWidget(parent)
 
     this->setWindowModality(Qt::WindowModality::NonModal);
     this->setFocusPolicy(Qt::FocusPolicy::NoFocus);
-    this->setWindowFlags(Qt::WindowType::ToolTip |
-                         Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowStaysOnTopHint);
+    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowStaysOnTopHint);
     this->setAcceptDrops(false);
     this->setMinimumSize(QSize(60, 20));
     this->resize(60, 20);
 
     Dr::ApplyRoundedCornerMask(this, 25, 75);
+
+    Dr::ApplyDropShadowByType(this, Shadow_Types::Button_Shadow);
+
+    this->setStyleSheet(" QWidget { background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
+                        "                   stop:0 " + Dr::GetColor(Window_Colors::Button_Light).name() + ", "
+                        "                   stop:1 " + Dr::GetColor(Window_Colors::Button_Dark).name() + "); } " );
 
 }
 

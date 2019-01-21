@@ -228,7 +228,7 @@ public:
     virtual void    paintEvent(QPaintEvent *) override;
 
     // Functions
-    QPoint          getOffset() { return QPoint(40, -40); }
+    QPoint          getOffset() { return QPoint(40, -50); }
 
 };
 

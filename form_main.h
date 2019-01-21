@@ -106,7 +106,6 @@ public:
 
 private:
     // Form setup
-    void        applyColoring();
     void        buildMenu();
     void        buildWindow(Form_Main_Mode new_layout);
     void        buildWindowModeEditScene();

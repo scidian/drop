@@ -7,6 +7,7 @@
 //
 
 #include "colors.h"
+#include "library.h"
 
 #include "project.h"
 #include "project_world.h"
@@ -72,7 +73,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     // ########## Initialize form and customize colors and styles
     buildMenu();
     buildWindow(Form_Main_Mode::Edit_Scene);
-    applyColoring();
+    Dr::ApplyColoring(this);
 
 
 
@@ -160,7 +161,7 @@ void FormMain::populateScene()
 void FormMain::changePalette(Color_Scheme new_color_scheme)
 {
     Dr::SetColorScheme(new_color_scheme);
-    applyColoring();
+    Dr::ApplyColoring(this);
     update();
 }
 

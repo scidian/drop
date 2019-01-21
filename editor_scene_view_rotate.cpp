@@ -33,7 +33,7 @@ void SceneGraphicsView::startRotate(QPoint mouse_in_view)
     m_view_mode = View_Mode::Rotating;
 
     // Set up our tooltip
-    QPoint tip_pos = mouse_in_view + QWidget::mapToGlobal(this->rect().topLeft()) + m_tool_tip->getOffset();
+    QPoint tip_pos = mouse_in_view + m_tool_tip->getOffset(); // + QWidget::mapToGlobal(this->rect().topLeft());
     m_tool_tip->move(tip_pos);
     m_tool_tip->show();
 

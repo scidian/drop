@@ -32,6 +32,7 @@ SceneGraphicsView::SceneGraphicsView(QWidget *parent, DrProject *project, Interf
 
     // Initialize tool tip object used for displaying some helpful info
     m_tool_tip = new SceneViewToolTip(this);
+    m_tool_tip->hide();
 
     m_over_handle = Position_Flags::No_Position;
 

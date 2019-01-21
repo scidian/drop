@@ -36,7 +36,6 @@ SOURCES += \
     editor_scene_scene.cpp \
     editor_scene_view.cpp \
     form_main_menu.cpp \
-    form_main_color.cpp \
     editor_scene_view_paint.cpp \
     editor_scene_view_rotate.cpp \
     editor_scene_view_resize.cpp \
