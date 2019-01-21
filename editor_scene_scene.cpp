@@ -233,7 +233,7 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
 //####################################################################################
 //##        setPositionByOrigin - Sets item to new_x, new_y position in scene, offset by_origin point
 //####################################################################################
-void SceneGraphicsScene::setPositionByOrigin(QGraphicsItem *item, Origin by_origin, double new_x, double new_y)
+void SceneGraphicsScene::setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y)
 {
     item->setPos(new_x, new_y);
 
@@ -241,19 +241,17 @@ void SceneGraphicsScene::setPositionByOrigin(QGraphicsItem *item, Origin by_orig
     QPointF     item_pos;
 
     switch (by_origin) {
-    case Origin::Top_Left:      item_pos = item_rect.topLeft();                  break;
-    case Origin::Top_Right:     item_pos = item_rect.topRight();                 break;
-    case Origin::Center:        item_pos = item_rect.center();                   break;
-    case Origin::Bottom_Left:   item_pos = item_rect.bottomLeft();               break;
-    case Origin::Bottom_Right:  item_pos = item_rect.bottomRight();              break;
-    case Origin::Top:           item_pos = QPointF(item_rect.topLeft().x() + (item_rect.topRight().x() - item_rect.topLeft().x()),
-                                                   item_rect.topLeft().y() );    break;
-    case Origin::Bottom:        item_pos = QPointF(item_rect.bottomLeft().x() + (item_rect.bottomRight().x() - item_rect.bottomLeft().x()),
-                                                   item_rect.bottomLeft().y() ); break;
-    case Origin::Left:          item_pos = QPointF(item_rect.topLeft().x(),
-                                                   item_rect.topLeft().y() + (item_rect.bottomLeft().y() - item_rect.topLeft().y()) );       break;
-    case Origin::Right:         item_pos = QPointF(item_rect.topRight().x(),
-                                                   item_rect.topRight().y() + (item_rect.bottomRight().y() - item_rect.topRight().y()) );    break;
+    case Position_Flags::Top_Left:      item_pos = item_rect.topLeft();                  break;
+    case Position_Flags::Top_Right:     item_pos = item_rect.topRight();                 break;
+    case Position_Flags::Center:        item_pos = item_rect.center();                   break;
+    case Position_Flags::Bottom_Left:   item_pos = item_rect.bottomLeft();               break;
+    case Position_Flags::Bottom_Right:  item_pos = item_rect.bottomRight();              break;
+    case Position_Flags::Top:           item_pos = QPointF( QLineF(item_rect.topLeft(),    item_rect.topRight()).pointAt(.5) );    break;
+    case Position_Flags::Bottom:        item_pos = QPointF( QLineF(item_rect.bottomLeft(), item_rect.bottomRight()).pointAt(.5) ); break;
+    case Position_Flags::Left:          item_pos = QPointF( QLineF(item_rect.topLeft(),    item_rect.bottomLeft()).pointAt(.5) );  break;
+    case Position_Flags::Right:         item_pos = QPointF( QLineF(item_rect.topRight(),   item_rect.bottomRight()).pointAt(.5) ); break;
+    default:
+        item_pos = item_rect.topLeft();
     }
     item_pos = item->sceneTransform().map(item_pos);
 

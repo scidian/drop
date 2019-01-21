@@ -87,7 +87,7 @@ private:
     bool         m_flag_key_down_spacebar = false;                  // True when View has focus and spacebar      is down
     bool         m_flag_key_down_control =  false;                  // True when View has focus and control (cmd) is down
     bool         m_flag_key_down_alt =      false;                  // True when View has focus and alt (option)  is down
-
+    bool         m_flag_key_down_shift =    false;                  // True when View has focus and shift         is down
 
     // Mouse event variables
     QPoint                              m_origin;                   // Stores mouse down position in view coordinates

@@ -47,7 +47,7 @@ public:
     void            addSquare(qreal new_x, qreal new_y, double new_width, double new_height, double z_order, QString name,
                               QColor color = QColor::fromRgb(QRandomGenerator::global()->generate()).light(100));
     void            setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y);
-    void            setPositionByOrigin(QGraphicsItem *item, Origin by_origin, double new_x, double new_y);
+    void            setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y);
     QRectF          totalSelectedItemsSceneRect();
 
     // Selection Functions

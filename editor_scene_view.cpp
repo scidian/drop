@@ -39,6 +39,57 @@ SceneGraphicsView::~SceneGraphicsView() { }
 
 
 
+
+//####################################################################################
+//##        Key Events
+//####################################################################################
+// Key press event
+void SceneGraphicsView::keyPressEvent(QKeyEvent *event)
+{
+    // When space bar is down, enabled mouse press and move to translate viewable area
+    if (event->key() == Qt::Key::Key_Space) {   m_flag_key_down_spacebar = true;
+        setDragMode(QGraphicsView::DragMode::ScrollHandDrag);
+        setInteractive(false);
+    }
+
+    // Store when control / alt are down
+    if (event->key() == Qt::Key::Key_Control) { m_flag_key_down_control = true; }
+    if (event->key() == Qt::Key::Key_Alt) {     m_flag_key_down_alt = true; }
+    if (event->key() == Qt::Key::Key_Shift) {   m_flag_key_down_shift = true; }
+
+    QGraphicsView::keyPressEvent(event);
+
+    // Fire mouse move event to update mouse cursor on key presses
+    QMouseEvent *fire_mouse_move = new QMouseEvent(QEvent::MouseMove, m_last_mouse_pos, Qt::NoButton,
+                                                   Qt::MouseButtons(), Qt::KeyboardModifiers());
+    mouseMoveEvent(fire_mouse_move);
+}
+
+// Key release event
+void SceneGraphicsView::keyReleaseEvent(QKeyEvent *event)
+{
+    // When space bar is released, change mode back to select / move items
+    if (event->key() == Qt::Key::Key_Space) {   m_flag_key_down_spacebar = false;
+        setDragMode(QGraphicsView::DragMode::NoDrag);
+        setInteractive(true);
+    }
+
+    // Store when control / alt are released
+    if (event->key() == Qt::Key::Key_Control) { m_flag_key_down_control = false; }
+    if (event->key() == Qt::Key::Key_Alt) {     m_flag_key_down_alt = false; }
+    if (event->key() == Qt::Key::Key_Shift) {   m_flag_key_down_shift = false; }
+
+    QGraphicsView::keyReleaseEvent(event);
+
+    // Fire mouse move event to update mouse cursor on key release
+    QMouseEvent *fire_mouse_move = new QMouseEvent(QEvent::MouseMove, m_last_mouse_pos, Qt::NoButton,
+                                                   Qt::MouseButtons(), Qt::KeyboardModifiers());
+    mouseMoveEvent(fire_mouse_move);
+}
+
+
+
+
 //####################################################################################
 //##        Scene Change SLOTs / Events to update selection box when scene / selection changes
 //####################################################################################
@@ -100,6 +151,7 @@ void SceneGraphicsView::updateSelectionBoundingBox()
     m_handles[Position_Flags::Top_Right] =    rectAtCenterPoint( mapFromScene( top_right ), corner_size);
     m_handles[Position_Flags::Bottom_Left] =  rectAtCenterPoint( mapFromScene( bot_left  ), corner_size);
     m_handles[Position_Flags::Bottom_Right] = rectAtCenterPoint( mapFromScene( bot_right ), corner_size);
+    m_handles[Position_Flags::Center] =       rectAtCenterPoint( mapFromScene( center    ), corner_size);
 
     // ***** Remove rotation from bounding box in scene, map bounding box scene coordinates to view coordinates
     top_left =  mapFromScene( remove_rotation.map(top_left) );
@@ -167,52 +219,6 @@ double SceneGraphicsView::calculateCornerAngle(double angle1, double angle2)
     if (new_angle < 0)   new_angle += 360;
     if (new_angle > 360) new_angle -= 360;
     return new_angle;
-}
-
-
-
-
-//####################################################################################
-//##        Key Events
-//####################################################################################
-// Key press event
-void SceneGraphicsView::keyPressEvent(QKeyEvent *event)
-{
-    // When space bar is down, enabled mouse press and move to translate viewable area
-    if (event->key() == Qt::Key::Key_Space) {   m_flag_key_down_spacebar = true;
-        setDragMode(QGraphicsView::DragMode::ScrollHandDrag);
-        setInteractive(false);
-    }
-
-    // Store when control / alt are down
-    if (event->key() == Qt::Key::Key_Control) { m_flag_key_down_control = true; }
-    if (event->key() == Qt::Key::Key_Alt) {     m_flag_key_down_alt = true; }
-
-    QGraphicsView::keyPressEvent(event);
-
-    // Fire mouse move event to update mouse cursor on key presses
-    QMouseEvent *fire_mouse_move = new QMouseEvent(QEvent::MouseMove, m_last_mouse_pos, Qt::NoButton, Qt::MouseButtons(), Qt::KeyboardModifiers());
-    mouseMoveEvent(fire_mouse_move);
-}
-
-// Key release event
-void SceneGraphicsView::keyReleaseEvent(QKeyEvent *event)
-{
-    // When space bar is released, change mode back to select / move items
-    if (event->key() == Qt::Key::Key_Space) {   m_flag_key_down_spacebar = false;
-        setDragMode(QGraphicsView::DragMode::NoDrag);
-        setInteractive(true);
-    }
-
-    // Store when control / alt are released
-    if (event->key() == Qt::Key::Key_Control) { m_flag_key_down_control = false; }
-    if (event->key() == Qt::Key::Key_Alt) {     m_flag_key_down_alt = false; }
-
-    QGraphicsView::keyReleaseEvent(event);
-
-    // Fire mouse move event to update mouse cursor on key release
-    QMouseEvent *fire_mouse_move = new QMouseEvent(QEvent::MouseMove, m_last_mouse_pos, Qt::NoButton, Qt::MouseButtons(), Qt::KeyboardModifiers());
-    mouseMoveEvent(fire_mouse_move);
 }
 
 

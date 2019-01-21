@@ -15,20 +15,14 @@
 
 #include "form_main.h"
 
-enum class Origin {
-    Top_Left,       Top,        Top_Right,
-    Left,           Center,     Right,
-    Bottom_Left,    Bottom,     Bottom_Right,
-};
-
 class DrItem : public QGraphicsItem
 {
 private:
-    double      m_width;
-    double      m_height;
-    QColor      m_color;
+    double          m_width;
+    double          m_height;
+    QColor          m_color;
 
-    Origin      m_origin = Origin::Center;
+    Position_Flags  m_origin = Position_Flags::Center;
 
 public:
     DrItem(const QColor &start_color, double width, double height, double z_order, QString name = "No Name");
@@ -47,7 +41,7 @@ public:
     virtual void            hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 
     // Getters and Setters
-    Origin                  getOrigin() { return m_origin; }
+    Position_Flags          getOrigin() { return m_origin; }
 
 
 };

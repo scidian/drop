@@ -77,6 +77,7 @@ enum class DrTypes {
     NotFound,   BaseClass,
 };
 
+
 //####################################################################################
 //##    Possible handle rects, order is vector / array index critical
 //####################################################################################
@@ -93,6 +94,7 @@ enum class Position_Flags {
     No_Position,
     Move_Item,
     Rotate,
+    Center
 };
 
 

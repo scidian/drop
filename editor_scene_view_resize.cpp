@@ -37,10 +37,17 @@ void SceneGraphicsView::startResize()
     QGraphicsItem *item = my_scene->getSelectionGroupAsGraphicsItem();
     m_pre_resize_scale = item->data(User_Roles::Scale).toPointF();
 
-    m_pre_resize_corners[Position_Flags::Top_Left] =     item->sceneTransform().map( item->boundingRect().topLeft() );
-    m_pre_resize_corners[Position_Flags::Top_Right] =    item->sceneTransform().map( item->boundingRect().topRight() );
-    m_pre_resize_corners[Position_Flags::Bottom_Left] =  item->sceneTransform().map( item->boundingRect().bottomLeft() );
-    m_pre_resize_corners[Position_Flags::Bottom_Right] = item->sceneTransform().map( item->boundingRect().bottomRight() );
+    QTransform t = item->sceneTransform();
+    QRectF     r = item->boundingRect();
+    m_pre_resize_corners[Position_Flags::Top_Left] =     t.map( r.topLeft() );
+    m_pre_resize_corners[Position_Flags::Top_Right] =    t.map( r.topRight() );
+    m_pre_resize_corners[Position_Flags::Bottom_Left] =  t.map( r.bottomLeft() );
+    m_pre_resize_corners[Position_Flags::Bottom_Right] = t.map( r.bottomRight() );
+    m_pre_resize_corners[Position_Flags::Center] =       t.map( r.center() );
+    m_pre_resize_corners[Position_Flags::Top] =          t.map( QLineF(r.topLeft(), r.topRight()).pointAt(.5) );
+    m_pre_resize_corners[Position_Flags::Bottom] =       t.map( QLineF(r.bottomLeft(), r.bottomRight()).pointAt(.5));
+    m_pre_resize_corners[Position_Flags::Left] =         t.map( QLineF(r.topLeft(), r.bottomLeft()).pointAt(.5) );
+    m_pre_resize_corners[Position_Flags::Right] =        t.map( QLineF(r.topRight(), r.bottomRight()).pointAt(.5) );
 }
 
 
@@ -144,6 +151,21 @@ void SceneGraphicsView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     if (scale_y <  .0001 && scale_y >= 0) scale_y =  .0001;
     if (scale_y > -.0001 && scale_y <= 0) scale_y = -.0001;
 
+    // If shift key is down, maintain starting aspect ratio
+    if (m_flag_key_down_shift) {
+        double pre_resize_ratio = m_pre_resize_scale.x() / m_pre_resize_scale.y();
+        if (m_do_y == Y_Axis::None)      scale_y = scale_x * pre_resize_ratio;
+        else if (m_do_x == X_Axis::None) scale_x = scale_y * pre_resize_ratio;
+        else if (scale_x < scale_y)      scale_y = scale_x * pre_resize_ratio;
+        else if (scale_y < scale_x)      scale_x = scale_y * pre_resize_ratio;
+
+    // If control key is down, make scales the same
+    } else if (m_flag_key_down_control) {
+        if (m_do_y == Y_Axis::None)      scale_y = scale_x;
+        else if (m_do_x == X_Axis::None) scale_x = scale_y;
+        else if (scale_x < scale_y)      scale_y = scale_x;
+        else if (scale_y < scale_x)      scale_x = scale_y;
+    }
 
     // ***** Apply new scale
     QTransform t = QTransform().rotate(angle).scale(scale_x, scale_y);
@@ -151,23 +173,34 @@ void SceneGraphicsView::resizeSelectionWithRotate(QPointF mouse_in_scene)
 
     // ***** Translate if needed
     QPointF new_pos = item->pos();
+    Position_Flags resize_flag = Position_Flags::Top_Left;
 
-    if (m_do_x == X_Axis::Left && m_do_y != Y_Axis::Top) {
-        new_pos = m_pre_resize_corners[Position_Flags::Top_Right];
-        my_scene->setPositionByOrigin(item, Origin::Top_Right, new_pos.x(), new_pos.y());
-    }
-    else if (m_do_x == X_Axis::Left && m_do_y == Y_Axis::Top) {
-        new_pos = m_pre_resize_corners[Position_Flags::Bottom_Right];
-        my_scene->setPositionByOrigin(item, Origin::Bottom_Right, new_pos.x(), new_pos.y());
-    }
-    else if ((m_do_x == X_Axis::Right && m_do_y == Y_Axis::Top) || (m_do_y == Y_Axis::Top)) {
-        new_pos = m_pre_resize_corners[Position_Flags::Bottom_Left];
-        my_scene->setPositionByOrigin(item, Origin::Bottom_Left, new_pos.x(), new_pos.y());
-    }
-    else {
-        new_pos = m_pre_resize_corners[Position_Flags::Top_Left] ;
-        my_scene->setPositionByOrigin(item, Origin::Top_Left, new_pos.x(), new_pos.y());
-    }
+    if (m_flag_key_down_control)
+        resize_flag = Position_Flags::Center;
+
+    else if (m_do_x == X_Axis::Left && m_do_y == Y_Axis::None)
+        resize_flag = Position_Flags::Right;
+    else if (m_do_x == X_Axis::Left && m_do_y == Y_Axis::Top)
+        resize_flag = Position_Flags::Bottom_Right;
+    else if (m_do_x == X_Axis::Left && m_do_y == Y_Axis::Bottom)
+        resize_flag = Position_Flags::Top_Right;
+
+    else if (m_do_x == X_Axis::Right && m_do_y == Y_Axis::None)
+        resize_flag = Position_Flags::Left;
+    else if (m_do_x == X_Axis::Right && m_do_y == Y_Axis::Top)
+        resize_flag = Position_Flags::Bottom_Left;
+    else if (m_do_x == X_Axis::Right && m_do_y == Y_Axis::Bottom)
+        resize_flag = Position_Flags::Top_Left;
+
+    else if (m_do_x == X_Axis::None && m_do_y == Y_Axis::Top)
+        resize_flag = Position_Flags::Bottom;
+    else if (m_do_x == X_Axis::None && m_do_y == Y_Axis::Bottom)
+        resize_flag = Position_Flags::Top;
+
+    new_pos = m_pre_resize_corners[resize_flag] ;
+    my_scene->setPositionByOrigin(item, resize_flag, new_pos.x(), new_pos.y());
+
+
 
 
     QList<QGraphicsItem*> my_items = my_scene->getSelectionGroupItems();
