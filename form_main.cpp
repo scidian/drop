@@ -50,7 +50,7 @@ FormMain::FormMain(QWidget *parent, Globals *the_globals) :
     //globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Rotation_Data));
     globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Selection_Box_Group_Data));
     globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Selected_Item_Data));
-    globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Shear_Matrix));
+    //globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Shear_Matrix));
 
 
 

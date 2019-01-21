@@ -403,6 +403,7 @@ void SceneGraphicsView::applyUpdatedMatrix()
     matrix.scale(m_zoom_scale, m_zoom_scale);
     matrix.rotate(m_rotate);
     this->setMatrix(matrix);
+    updateSelectionBoundingBox();
 }
 
 

@@ -33,8 +33,14 @@ void SceneGraphicsView::startRotate()
     // Grab starting angle of selection group before rotating starts
     SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
 
-    // Store starting rotation of current selection
+    // Store starting rotation of current selection group
     m_rotate_start_angle = my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Rotation).toDouble();
+
+    // Store starting rotation of all selected items
+    for (auto child : my_scene->getSelectionGroupItems()) {
+        double child_angle = child->data(User_Roles::Rotation).toDouble();
+        child->setData(User_Roles::Pre_Rotate_Rotation, child_angle);
+    }
 
     // Store starting scene rect of initial selection bounding box
     m_rotate_start_rect = totalSelectedItemsSceneRect();
@@ -91,9 +97,14 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     double test_round = abs(angle);
     while (test_round >= angle_step) { test_round -= angle_step; }
 
-    if (isCloseTo(0, test_round, tolerance) || isCloseTo(angle_step, test_round, tolerance))
+    double angle_diff = angle;
+    if (isCloseTo(0, test_round, tolerance) || isCloseTo(angle_step, test_round, tolerance)) {
         angle = round(angle / angle_step) * angle_step;
-
+        angle_diff = angle - angle_diff;
+    }
+    else {
+        angle_diff = 0;
+    }
 
     // ********** Group selected items so we can apply new rotation to all selected items
     QGraphicsItemGroup *group = scene()->createItemGroup( { item } );
@@ -113,12 +124,22 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     scene()->destroyItemGroup(group);
 
     // ********** Break apart selection group so we can grab and store new rotation of all selected items, then put back together
-    for (auto item: my_items) my_scene->removeFromGroupNoUpdate(item);
+    //for (auto item: my_items) my_scene->removeFromGroupNoUpdate(item);
     for (auto child : my_items) {
-        QTransform t = child->sceneTransform();
-        child->setData(User_Roles::Rotation, extractAngleFromTransform(t) );
+
+        double child_angle = child->data(User_Roles::Pre_Rotate_Rotation).toDouble();
+
+        //m_relay->setLabelText(Label_Names::Label_1, "Child Angle: " + QString::number(child_angle));
+
+        child_angle = child_angle + (angle2 - angle1) + angle_diff;
+        while (child_angle >=  360) { child_angle -= 360; }
+        while (child_angle <= -360) { child_angle += 360; }
+
+        //m_relay->setLabelText(Label_Names::Label_2, "New Angle: " + QString::number(child_angle));
+
+        child->setData(User_Roles::Rotation, child_angle);
     }
-    for (auto item: my_items) my_scene->addToGroupNoUpdate(item);
+    //for (auto item: my_items) my_scene->addToGroupNoUpdate(item);
 
 
 
@@ -137,49 +158,16 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
 //####################################################################################
 double SceneGraphicsView::extractAngleFromTransform(QTransform &from_transform)
 {
-    // scaleX = √(a^2+c^2)
-    // scaleY = √(b^2+d^2)
-    // rotation = tan^-1(c/d) = tan^-1(-b/a) it will not work sometimes
-    // rotation = a / scaleX  = d / scaleY
-
-//    const double degree = 180 / 3.141592653589793238463;
-//    const double radian = 3.141592653589793238463/ 180;
-
-//    double a = from_transform.m11();
-//    ///double b = from_transform.m12();
-//    double c = from_transform.m21();
-//    ///double d = from_transform.m22();
-
-//    double scale_x = sqrt((a * a) + (c * c));
-//    ///double scale_y = sqrt((b * b) + (d * d));
-
-//    double sign = qAtan(-c / a);
-//    double  rad = qAcos(a / scale_x);
-//    double  deg = rad * degree;
-//    double rotation;
-//    double rotation_in_degree;
-
-//    if (deg > 90 && sign > 0)
-//        rotation = (360 - deg) * radian;
-//    else if (deg < 90 && sign < 0)
-//        rotation = (360 - deg) * radian;
-//    else
-//        rotation = rad;
-//    rotation_in_degree = rotation * degree;
-
-    ///// Alternate
     QTransform t = from_transform;
     return qRadiansToDegrees(qAtan2(t.m12(), t.m11()));
-
-//    return rotation_in_degree;
 }
-
-
 
 Transform_Data SceneGraphicsView::decomposeTransform(QTransform &from_transform, bool qr_type)
 {
     double a = from_transform.m11();    double c = from_transform.m12();
     double b = from_transform.m21();    double d = from_transform.m22();
+
+    //double delta = a * d - b * c;
 
     double delta = a * d - b * c;
 
@@ -210,13 +198,14 @@ Transform_Data SceneGraphicsView::decomposeTransform(QTransform &from_transform,
     // rotation = a / scaleX  = d / scaleY
 
     if (isCloseTo(0, transform.scale.x(), .000001)) transform.scale.setX(0);
-    if (isCloseTo(0, transform.scale.y(), .000001)) transform.scale.setX(0);
+    if (isCloseTo(0, transform.scale.y(), .000001)) transform.scale.setY(0);
     if (isCloseTo(0, transform.skew.x(),  .000001)) transform.skew.setX(0);
-    if (isCloseTo(0, transform.skew.x(),  .000001)) transform.skew.setX(0);
+    if (isCloseTo(0, transform.skew.y(),  .000001)) transform.skew.setY(0);
 
     transform.rotation *= (180.0 / 3.141592653589793238463);
-    if (transform.rotation < 0) { transform.rotation += 360; }
-    transform.rotation = 360 - transform.rotation;
+
+    while (transform.rotation >=  360) { transform.rotation -= 360; }
+    while (transform.rotation <= -360) { transform.rotation += 360; }
 
     return transform;
 }

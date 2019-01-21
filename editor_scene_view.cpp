@@ -68,7 +68,7 @@ void SceneGraphicsView::updateSelectionBoundingBox()
     // Test for scene, convert to our custom class and lock the scene
     if (scene() == nullptr) return;
 
-    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
     QGraphicsItem      *item = my_scene->getSelectionGroupAsGraphicsItem();
     if (my_scene->getSelectionGroupCount() < 1) return;
     if (my_scene->scene_mutex.tryLock(0) == false) return;

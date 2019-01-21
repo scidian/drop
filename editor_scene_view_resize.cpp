@@ -149,11 +149,6 @@ void SceneGraphicsView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     QTransform t = QTransform().rotate(angle).scale(scale_x, scale_y);
     item->setTransform(t);
 
-
-  //  for (auto child : my_scene->getSelectionGroupItems())
-  //      removeShearing(child);
-
-
     // ***** Translate if needed
     QPointF new_pos = item->pos();
 
@@ -174,10 +169,16 @@ void SceneGraphicsView::resizeSelectionWithRotate(QPointF mouse_in_scene)
         my_scene->setPositionByOrigin(item, Origin::Top_Left, new_pos.x(), new_pos.y());
     }
 
-    // Update scale for each item, and for m_selection_group
-    for (auto child : my_scene->getSelectionGroupItems())
-        child->setData(User_Roles::Scale, QPointF(scale_x, scale_y) );
-    item->setData(User_Roles::Scale, QPointF(scale_x, scale_y) );
+
+    QList<QGraphicsItem*> my_items = my_scene->getSelectionGroupItems();
+    for (auto child : my_items) my_scene->getSelectionGroup()->removeFromGroup(child);
+    for (auto child : my_items) removeShearing(child);
+    for (auto child : my_items) my_scene->getSelectionGroup()->addToGroup(child);
+
+
+    QPointF group_scale = extractScaleFromItem(item);
+    item->setData(User_Roles::Scale, QPointF(group_scale.x(), group_scale.y()) );
+
 }
 
 
@@ -186,17 +187,31 @@ void SceneGraphicsView::resizeSelectionWithRotate(QPointF mouse_in_scene)
 //####################################################################################
 void SceneGraphicsView::removeShearing(QGraphicsItem *item)
 {
-    double    angle =  item->data(User_Roles::Rotation).toDouble();
-    QPointF   center = item->sceneBoundingRect().center();
+    double  angle = item->data(User_Roles::Rotation).toDouble();
+    QPointF scale = extractScaleFromItem(item);
 
-    QTransform remove_rotation = QTransform().translate(center.x(), center.y()).rotate(-angle).translate(-center.x(), -center.y());
-    QTransform add_rotation =    QTransform().translate(center.x(), center.y()).rotate( angle).translate(-center.x(), -center.y());
+    QTransform no_skew = QTransform().rotate(angle).scale(scale.x(), scale.y());
+    item->setTransform(no_skew);
 
-    QTransform t = item->sceneTransform() * remove_rotation;
-    t.setMatrix(t.m11(), 0, t.m13(), 0, t.m22(), t.m23(), t.m31(), t.m32(), t.m33());
-    t = t * add_rotation;
-
+    item->setData(User_Roles::Scale, QPointF(scale.x(), scale.y()) );
 }
+
+// Pulls out scale from current item screen transform (takes away angle first from stored angle data)
+QPointF SceneGraphicsView::extractScaleFromItem(QGraphicsItem *item)
+{
+    double  angle = item->data(User_Roles::Rotation).toDouble();
+    QPointF origin = item->mapToScene( item->boundingRect().center() );
+
+    QTransform remove_rotation = QTransform().translate(origin.x(), origin.y()).rotate(-angle).translate(-origin.x(), -origin.y());
+    QTransform item_no_rotate = item->sceneTransform() * remove_rotation;
+
+    return QPointF(item_no_rotate.m11(), item_no_rotate.m22());
+}
+
+
+
+
+
 
 
 

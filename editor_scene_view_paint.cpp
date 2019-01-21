@@ -200,7 +200,6 @@ void SceneGraphicsView::paintItemOutlines(QPainter &painter)
 {
     SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
     QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
-    for (auto item: my_items) my_scene->getSelectionGroup()->removeFromGroup(item);
 
     QBrush pen_brush(m_relay->getColor(Window_Colors::Icon_Light));
     painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
@@ -216,49 +215,40 @@ void SceneGraphicsView::paintItemOutlines(QPainter &painter)
         painter.drawPolygon(to_view);
 
 
-
-
         // !!!!! #DEBUG:    Shear Data
         if (m_relay->debugFlag(Debug_Flags::Shear_Matrix)) {
-
             double  angle = item->data(User_Roles::Rotation).toDouble();
-
-            QPolygonF poly = item->sceneTransform().map( item->boundingRect() );
             QPointF origin = item->mapToScene( item->boundingRect().center() );
+            QTransform remove_rotation = QTransform().translate(origin.x(), origin.y()).rotate(-angle).translate(-origin.x(), -origin.y());
 
-            QTransform remove_rotation;
-            remove_rotation.translate(origin.x(), origin.y());
-            remove_rotation.rotate(-angle);
-            remove_rotation.translate(-origin.x(), -origin.y());
-
+            // Draws an unrotated version of item
+            QPolygonF poly = item->sceneTransform().map( item->boundingRect() );
             poly = remove_rotation.map(poly);
-
             painter.setPen(QPen(QBrush(Qt::red), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
             painter.drawPolygon( mapFromScene(poly) );
             painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
-
-
+            // Draws an unrotated, unskewed version of item
             QTransform item_no_rotate = item->sceneTransform() * remove_rotation;
+            poly = item->boundingRect();
+            origin = item->boundingRect().center();
+            QPointF in_scene = item->sceneTransform().map( item->boundingRect().topLeft() );
+            QTransform more = QTransform().rotate(angle).scale(item_no_rotate.m11(), item_no_rotate.m22());
+            poly = more.map(poly);
+            more = QTransform().translate(in_scene.x(), in_scene.y());
+            poly = more.map(poly);
+            painter.setPen(QPen(QBrush(Qt::GlobalColor::cyan), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+            painter.drawPolygon( mapFromScene(poly) );
+            painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
-            Transform_Data data = decomposeTransform(item_no_rotate);
-
-            m_relay->setLabelText(Label_Names::Label_3,       "Scale X: " + QString::number(data.scale.x()) + QString("\t") +
-                                                              "Scale Y: " + QString::number(data.scale.y()) );
-            m_relay->setLabelText(Label_Names::Label_Mouse_1, "Skew  X: " + QString::number(data.skew.x()) + QString("\t") +
-                                                              "Skew  Y: " + QString::number(data.skew.y()) );
-            m_relay->setLabelText(Label_Names::Label_Mouse_2, "Rotation: " + QString::number(data.rotation));
-
-
+            // Prints out unrotated item transform
             QTransform t = item_no_rotate;
-            qreal m11 = t.m11(), m12 = t.m12(), m13 = t.m13();
-            qreal m21 = t.m21(), m22 = t.m22(), m23 = t.m23();
+            qreal m11 = t.m11(), m12 = t.m12();
+            qreal m21 = t.m21(), m22 = t.m22();
             if (isCloseTo(0, m11, .00001)) m11 = 0;
             if (isCloseTo(0, m12, .00001)) m12 = 0;
-            if (isCloseTo(0, m13, .00001)) m13 = 0;
             if (isCloseTo(0, m21, .00001)) m21 = 0;
             if (isCloseTo(0, m22, .00001)) m22 = 0;
-            if (isCloseTo(0, m23, .00001)) m23 = 0;
             m_relay->setLabelText(Label_Names::Label_1, "11: " + QString::number(m11, 'g', 3) + QString("\t\t") +
                                                         "12: " + QString::number(m12, 'g', 3) + QString("\t\t"));
             m_relay->setLabelText(Label_Names::Label_2, "21: " + QString::number(m21, 'g', 3) + QString("\t\t") +
@@ -268,20 +258,19 @@ void SceneGraphicsView::paintItemOutlines(QPainter &painter)
 
     }
 
-    for (auto item: my_items) my_scene->getSelectionGroup()->addToGroup(item);
 
     // !!!!! #DEBUG:    Show selection group info
     if (m_relay->debugFlag(Debug_Flags::Selection_Box_Group_Data)) {
         QGraphicsItem *sgroup = my_scene->getSelectionGroupAsGraphicsItem();
-        m_relay->setLabelText(Label_Names::Label_Object_1, "Group Pos  X: " + QString::number(sgroup->sceneBoundingRect().x()) +
-                                                                    ", Y: " + QString::number(sgroup->sceneBoundingRect().y()) );
-        m_relay->setLabelText(Label_Names::Label_Object_2, "Group Size X: " + QString::number(sgroup->sceneBoundingRect().width()) +
-                                                                    ", Y: " + QString::number(sgroup->sceneBoundingRect().height()) );
-        m_relay->setLabelText(Label_Names::Label_Object_3, "Group Scale X: " + QString::number(sgroup->data(User_Roles::Scale).toPointF().x()) +
-                                                                     ", Y: " + QString::number(sgroup->data(User_Roles::Scale).toPointF().y()) );
-        m_relay->setLabelText(Label_Names::Label_Object_4, "Group Rotation: " +  QString::number(sgroup->data(User_Roles::Rotation).toDouble()) );
-        m_relay->setLabelText(Label_Names::Label_Object_5, "Group Z: " +      QString::number(sgroup->zValue()) + QString("\t") +
-                                                           "# Items: " +  QString::number(sgroup->childItems().count()) );
+        m_relay->setLabelText(Label_Names::Label_Object_1, "Group Pos  X: " +   QString::number(sgroup->sceneBoundingRect().x()) +
+                                                                    ", Y: " +   QString::number(sgroup->sceneBoundingRect().y()) );
+        m_relay->setLabelText(Label_Names::Label_Object_2, "Group Size X: " +   QString::number(sgroup->sceneBoundingRect().width()) +
+                                                                    ", Y: " +   QString::number(sgroup->sceneBoundingRect().height()) );
+        m_relay->setLabelText(Label_Names::Label_Object_3, "Group Scale X: " +  QString::number(sgroup->data(User_Roles::Scale).toPointF().x()) +
+                                                                     ", Y: " +  QString::number(sgroup->data(User_Roles::Scale).toPointF().y()) );
+        m_relay->setLabelText(Label_Names::Label_Object_4, "Group Rotation: " + QString::number(sgroup->data(User_Roles::Rotation).toDouble()) );
+        m_relay->setLabelText(Label_Names::Label_Object_5, "Group Z: " +        QString::number(sgroup->zValue()) + QString("\t") +
+                                                           "# Items: " +        QString::number(sgroup->childItems().count()) );
     }
     // !!!!! END
 
