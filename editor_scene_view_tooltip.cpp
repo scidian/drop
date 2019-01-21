@@ -6,6 +6,7 @@
 //
 //
 
+#include "library.h"
 
 #include "project.h"
 #include "project_world.h"
@@ -25,45 +26,36 @@
 //####################################################################################
 //##        Constructor / Destructor
 //####################################################################################
-SceneViewToolTip::SceneViewToolTip(QWidget *parent) : QWidget (parent)
+SceneViewToolTip::SceneViewToolTip(InterfaceRelay *relay, QWidget *parent) : QWidget(parent), m_relay(relay)
 {
     this->setObjectName(QStringLiteral("formTooltip"));
+
     this->setWindowModality(Qt::WindowModality::NonModal);
     this->setFocusPolicy(Qt::FocusPolicy::NoFocus);
-    this->setWindowFlag(Qt::WindowType::ToolTip);
+    this->setWindowFlags(Qt::WindowType::ToolTip |
+                         Qt::FramelessWindowHint |
+                         Qt::WindowSystemMenuHint |
+                         Qt::WindowStaysOnTopHint);
+    this->setAcceptDrops(false);
+    this->setMinimumSize(QSize(60, 20));
+    this->resize(60, 20);
 
-    //QRegion region()
+    Dr::WidgetMaskRoundedCorners(this, 25, 75);
 
-    QBitmap bitmap(100, 80);
 
-    //QPixmap pix(500,500);
 
-    QPainter *paint = new QPainter(&bitmap);
-    paint->setPen(QColor(255,34,255,255));
-    paint->drawRect(15,15,100,100);
-    delete paint;
 
-    //this->setMask(region);
-
-    this->resize(100, 80);
-
-    //this->setMinimumSize(QSize(100, 80));
-    //this->setMouseTracking(false);
-    //this->setAcceptDrops(false);
 }
 
 
 
 void SceneViewToolTip::paintEvent(QPaintEvent *)
 {
-
-    QPainter painter;
-
+    QPainter painter(this);
     painter.drawText( QPointF(0, 0), QString("Blah"));
 
+
 }
-
-
 
 
 

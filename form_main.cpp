@@ -6,6 +6,8 @@
 //
 //
 
+#include "colors.h"
+
 #include "project.h"
 #include "project_world.h"
 #include "project_world_scene.h"
@@ -33,28 +35,11 @@ FormMain::~FormMain()
 //####################################################################################
 //##        Constructor for Main Window, called upon initialization
 //####################################################################################
-FormMain::FormMain(QWidget *parent, Globals *the_globals) :
-    QMainWindow(parent),
-    globals(the_globals)
+FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 {
 
     // ########## Load saved preferences
-    globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Secret_Menu));
-    //globals->debug_flags.set(static_cast<size_t>(Debug_Flags::FPS));
-    //globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Mouse_Coordinates));
-
-    globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Object_Inspector_Build));
-    globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Scene_Tree_Drag));
-    globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Scene_Tree_Selection));
-
-    //globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Rotation_Data));
-    globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Selection_Box_Group_Data));
-    globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Selected_Item_Data));
-    //globals->debug_flags.set(static_cast<size_t>(Debug_Flags::Shear_Matrix));
-
-
-
-    globals->current_color_scheme = Color_Scheme::Dark;
+    Dr::SetColorScheme(Color_Scheme::Dark);
 
 
 
@@ -111,7 +96,7 @@ void FormMain::buildTreeSceneList()
 
 QColor FormMain::getColor(Window_Colors color_role)
 {
-    return globals->getColor(color_role);
+    return Dr::GetColor(color_role);
 }
 
 // Call to put in a signal to change the Advisor to the que
@@ -158,13 +143,7 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
 // Returns if we should display debug code
 bool FormMain::debugFlag(Debug_Flags option_to_check)
 {
-    return globals->debug_flags.test(static_cast<size_t>(option_to_check));
-}
-
-// Pops up message box from Globals
-void FormMain::showMessageBox(QString message)
-{
-    globals->showMessageBox(message);
+    return Dr::CheckDebugFlag(option_to_check);
 }
 
 
@@ -190,7 +169,7 @@ void FormMain::populateScene()
 // Sets the new palette to the style sheets
 void FormMain::changePalette(Color_Scheme new_color_scheme)
 {
-    globals->current_color_scheme = new_color_scheme;
+    Dr::SetColorScheme(new_color_scheme);
     applyColoring();
     update();
 }

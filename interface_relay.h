@@ -8,8 +8,9 @@
 #ifndef INTERFACE_RELAY_H
 #define INTERFACE_RELAY_H
 
+#include "colors.h"
+#include "debug.h"
 #include "enums.h"
-#include "globals.h"
 
 class InterfaceRelay
 {
@@ -26,8 +27,6 @@ public:
     virtual void    setLabelText(Label_Names label_name, QString new_text) = 0;
 
     virtual bool    debugFlag(Debug_Flags option_to_check) = 0;
-
-    virtual void    showMessageBox(QString message) = 0;
 };
 
 

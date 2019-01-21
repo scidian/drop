@@ -6,6 +6,8 @@
 //
 //
 
+#include "library.h"
+
 #include "project.h"
 #include "project_world.h"
 #include "project_world_scene.h"
@@ -245,10 +247,10 @@ void SceneGraphicsView::paintItemOutlines(QPainter &painter)
             QTransform t = item_no_rotate;
             qreal m11 = t.m11(), m12 = t.m12();
             qreal m21 = t.m21(), m22 = t.m22();
-            if (isCloseTo(0, m11, .00001)) m11 = 0;
-            if (isCloseTo(0, m12, .00001)) m12 = 0;
-            if (isCloseTo(0, m21, .00001)) m21 = 0;
-            if (isCloseTo(0, m22, .00001)) m22 = 0;
+            if (Dr::IsCloseTo(0, m11, .00001)) m11 = 0;
+            if (Dr::IsCloseTo(0, m12, .00001)) m12 = 0;
+            if (Dr::IsCloseTo(0, m21, .00001)) m21 = 0;
+            if (Dr::IsCloseTo(0, m22, .00001)) m22 = 0;
             m_relay->setLabelText(Label_Names::Label_1, "11: " + QString::number(m11, 'g', 3) + QString("\t\t") +
                                                         "12: " + QString::number(m12, 'g', 3) + QString("\t\t"));
             m_relay->setLabelText(Label_Names::Label_2, "21: " + QString::number(m21, 'g', 3) + QString("\t\t") +

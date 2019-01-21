@@ -6,6 +6,8 @@
 //
 //
 
+#include "library.h"
+
 #include "project.h"
 #include "project_world.h"
 #include "project_world_scene.h"
@@ -152,7 +154,7 @@ void TreeInspector::itemWasClicked(QTreeWidgetItem *item, int column)
     Q_UNUSED(item);
     Q_UNUSED(column);
 
-    m_relay->showMessageBox("Hi There Joe");
+    Dr::ShowMessageBox("Hi There Joe");
 
     // If no item is selected in tree view, exit function
     //if (treeScene->getSelectedKey() == 0) { return; }

@@ -31,7 +31,7 @@ SceneGraphicsView::SceneGraphicsView(QWidget *parent, DrProject *project, Interf
     m_rubber_band = new SceneViewRubberBand(QRubberBand::Rectangle, this, relay);
 
     // Initialize tool tip object used for displaying some helpful info
-    m_tool_tip = new SceneViewToolTip();
+    m_tool_tip = new SceneViewToolTip(relay);
 
     m_over_handle = Position_Flags::No_Position;
 

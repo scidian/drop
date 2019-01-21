@@ -1,36 +1,37 @@
 //
-//      Created by Stephens Nunnally on 12/7/18, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 1/21/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      Globals Class Definitions
+//      Holds all of our custom colors
 //
 //
+#include "colors.h"
 
-#include <QMessageBox>
+namespace Dr {
 
-#include "globals.h"
-
-Globals::Globals()
-{
-    loadPalettes();
-}
+//####################################################################################
+//##        Local Static Variables
+//####################################################################################
+static std::map<Color_Scheme, std::map<Window_Colors, QColor>> color_schemes;
+static Color_Scheme current_color_scheme = Color_Scheme::Dark;
 
 
 //####################################################################################
-//##        Used to show a modal messagebox
+//##        Retreive custom colors
 //####################################################################################
-void Globals::showMessageBox(QString new_message)
+QColor  GetColor(Window_Colors color_role)
 {
-    QMessageBox *msgBox = new QMessageBox(nullptr);
-    msgBox->setText(new_message);
-    msgBox->exec();
+    return color_schemes[current_color_scheme][color_role];
 }
+
+Color_Scheme GetColorScheme() { return current_color_scheme; }
+void SetColorScheme(Color_Scheme new_scheme) { current_color_scheme = new_scheme; }
 
 
 //####################################################################################
 //##        Store custom window palette colors
 //####################################################################################
-void Globals::loadPalettes()
+void    LoadPalettes()
 {
     color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Shadow, QColor(0, 0, 0)));
     color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Background_Dark, QColor(24, 24, 24)));
@@ -85,12 +86,7 @@ void Globals::loadPalettes()
     color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Icon_Light,  QColor(107, 116, 33)));
 }
 
-
-
-
-
-
-
+}
 
 
 

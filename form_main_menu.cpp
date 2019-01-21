@@ -13,6 +13,7 @@
 #include "editor_tree_scene.h"
 #include "editor_scene_view.h"
 
+#include "colors.h"
 #include "form_main.h"
 
 
@@ -56,7 +57,7 @@ void FormMain::buildMenu()
         actionLight->setCheckable(true);
         actionBlue->setCheckable(true);
         actionAutumn->setCheckable(true);
-        switch (globals->current_color_scheme)
+        switch (Dr::GetColorScheme())
         {
         case Color_Scheme::Dark:    actionDark->setChecked(true);    break;
         case Color_Scheme::Light:   actionLight->setChecked(true);   break;

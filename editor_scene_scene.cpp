@@ -6,6 +6,8 @@
 //
 //
 
+#include "library.h"
+
 #include "project.h"
 #include "project_world.h"
 #include "project_world_scene.h"
@@ -154,7 +156,7 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
         msg += "21: " + QString::number(m21) + ", 22: " + QString::number(m22) + ", 23: " + QString::number(m23) + QString("\n");
 
         // Show data
-        m_relay->showMessageBox(msg);
+        Dr::ShowMessageBox(msg);
 
         for (auto item: my_items) addToGroupNoUpdate(item);
         scene_mutex.unlock();

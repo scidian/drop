@@ -6,6 +6,8 @@
 //
 //
 
+#include "library.h"
+
 #include "editor_scene_scene.h"
 #include "editor_tree_advisor.h"
 #include "editor_tree_assets.h"
@@ -25,7 +27,7 @@ void FormMain::listChildren()
     for (auto widget : findChildren<QWidget *>()) {
         widget_list += widget->objectName() + ", ";
     }
-    globals->showMessageBox(widget_list);
+    Dr::ShowMessageBox(widget_list);
 }
 
 // Re-configures FormMain to new mode
@@ -49,7 +51,7 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
         for (auto dock : findChildren<QDockWidget *>()) { dock->deleteLater(); }
         break;
     default:
-        globals->showMessageBox("Not set");
+        Dr::ShowMessageBox("Not set");
     }
 }
 

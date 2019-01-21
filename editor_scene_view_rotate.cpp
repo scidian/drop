@@ -6,6 +6,8 @@
 //
 //
 
+#include "library.h"
+
 #include "project.h"
 #include "project_world.h"
 #include "project_world_scene.h"
@@ -63,11 +65,6 @@ bool SceneGraphicsView::isSquare(double check_angle)
     return false;
 }
 
-// Returns true if 'number_desired' is within +-'tolerance' of 'number_to_check'
-bool SceneGraphicsView::isCloseTo(double number_desired, double number_to_check, double tolerance)
-{   return ( (number_to_check <= (number_desired + tolerance)) && (number_to_check >= (number_desired - tolerance)) );  }
-
-
 
 
 //####################################################################################
@@ -99,7 +96,7 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     while (test_round >= angle_step) { test_round -= angle_step; }
 
     double angle_diff = angle;
-    if (isCloseTo(0, test_round, tolerance) || isCloseTo(angle_step, test_round, tolerance)) {
+    if (Dr::IsCloseTo(0, test_round, tolerance) || Dr::IsCloseTo(angle_step, test_round, tolerance)) {
         angle = round(angle / angle_step) * angle_step;
         angle_diff = angle - angle_diff;
     }
@@ -198,10 +195,10 @@ Transform_Data SceneGraphicsView::decomposeTransform(QTransform &from_transform,
     // rotation = tan^-1(c/d) = tan^-1(-b/a) it will not work sometimes
     // rotation = a / scaleX  = d / scaleY
 
-    if (isCloseTo(0, transform.scale.x(), .000001)) transform.scale.setX(0);
-    if (isCloseTo(0, transform.scale.y(), .000001)) transform.scale.setY(0);
-    if (isCloseTo(0, transform.skew.x(),  .000001)) transform.skew.setX(0);
-    if (isCloseTo(0, transform.skew.y(),  .000001)) transform.skew.setY(0);
+    if (Dr::IsCloseTo(0, transform.scale.x(), .000001)) transform.scale.setX(0);
+    if (Dr::IsCloseTo(0, transform.scale.y(), .000001)) transform.scale.setY(0);
+    if (Dr::IsCloseTo(0, transform.skew.x(),  .000001)) transform.skew.setX(0);
+    if (Dr::IsCloseTo(0, transform.skew.y(),  .000001)) transform.skew.setY(0);
 
     transform.rotation *= (180.0 / 3.141592653589793238463);
 

@@ -29,8 +29,9 @@
 #include <QMainWindow>
 #include <QtWidgets>
 
+#include "colors.h"
+#include "debug.h"
 #include "project.h"
-#include "globals.h"
 #include "interface_relay.h"
 
 
@@ -55,7 +56,6 @@ class FormMain : public QMainWindow, public InterfaceRelay
 
 public:
     // Locals
-    Globals        *globals;                                            // Holds project globals
     Form_Main_Mode  current_mode;                                       // Holds current editing mode of FormMain
     Form_Main_Focus current_focus;                                      // Holds Widget that currently has focus
     bool            done_loading = false;                               // True after initial startup of FormMain
@@ -93,7 +93,7 @@ private:
 
 public:
     // Constructor and Destructor
-    explicit FormMain(QWidget *parent = nullptr, Globals *the_globals = nullptr);
+    explicit FormMain(QWidget *parent = nullptr);
     ~FormMain();
 
     // Member functions
@@ -103,7 +103,6 @@ public:
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list);
     virtual void    setLabelText(Label_Names label_name, QString new_text);
     virtual bool    debugFlag(Debug_Flags option_to_check);
-    virtual void    showMessageBox(QString message);
 
     void            populateScene();                                        // !!!!! TEMP generic fill of scene
 

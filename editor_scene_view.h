@@ -180,7 +180,6 @@ public:
     void            startRotate();
     void            rotateSelection(QPointF mouse_in_view);
     double          calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt);
-    bool            isCloseTo(double number_desired, double number_to_check, double tolerance);
     bool            isSquare(double check_angle);
 
     // Resize functions
@@ -223,11 +222,11 @@ public:
 class SceneViewToolTip : public QWidget
 {
 private:
-
+    InterfaceRelay  *m_relay;                // Pointer to InterfaceRelay class of parent form, for getting colors
 
 public:
     // Constructor
-    SceneViewToolTip(QWidget *parent = nullptr);
+    SceneViewToolTip(InterfaceRelay *relay, QWidget *parent = nullptr);
 
     // Event overrides
     virtual void    paintEvent(QPaintEvent *) override;
