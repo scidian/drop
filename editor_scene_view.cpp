@@ -31,11 +31,11 @@ SceneGraphicsView::SceneGraphicsView(QWidget *parent, DrProject *project, Interf
     m_rubber_band = new SceneViewRubberBand(QRubberBand::Rectangle, this, relay);
 
     // Initialize tool tip object used for displaying some helpful info
-    m_tool_tip = new SceneViewToolTip(relay);
+    m_tool_tip = new SceneViewToolTip(this);
 
     m_over_handle = Position_Flags::No_Position;
 
-    if (m_relay->debugFlag(Debug_Flags::FPS))
+    if (Dr::CheckDebugFlag(Debug_Flags::FPS))
         m_debug_timer.start();
 }
 

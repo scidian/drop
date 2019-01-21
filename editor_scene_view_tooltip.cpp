@@ -26,24 +26,19 @@
 //####################################################################################
 //##        Constructor / Destructor
 //####################################################################################
-SceneViewToolTip::SceneViewToolTip(InterfaceRelay *relay, QWidget *parent) : QWidget(parent), m_relay(relay)
+SceneViewToolTip::SceneViewToolTip(QWidget *parent) : QWidget(parent)
 {
     this->setObjectName(QStringLiteral("formTooltip"));
 
     this->setWindowModality(Qt::WindowModality::NonModal);
     this->setFocusPolicy(Qt::FocusPolicy::NoFocus);
     this->setWindowFlags(Qt::WindowType::ToolTip |
-                         Qt::FramelessWindowHint |
-                         Qt::WindowSystemMenuHint |
-                         Qt::WindowStaysOnTopHint);
+                         Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowStaysOnTopHint);
     this->setAcceptDrops(false);
     this->setMinimumSize(QSize(60, 20));
     this->resize(60, 20);
 
-    Dr::WidgetMaskRoundedCorners(this, 25, 75);
-
-
-
+    Dr::ApplyRoundedCornerMask(this, 25, 75);
 
 }
 
@@ -53,7 +48,6 @@ void SceneViewToolTip::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
     painter.drawText( QPointF(0, 0), QString("Blah"));
-
 
 }
 

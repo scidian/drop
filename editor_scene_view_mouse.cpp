@@ -284,7 +284,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
 
     // !!!!! #DEBUG:    Draw mouse coords on screen
-    if (m_relay->debugFlag(Debug_Flags::Mouse_Coordinates)) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Mouse_Coordinates)) {
         m_relay->setLabelText(Label_Names::Label_Mouse_1, "Mouse Scene X: " + QString::number(mapToScene(m_last_mouse_pos).x()) +
                                                                     ", Y: " + QString::number(mapToScene(m_last_mouse_pos).y()) );
         m_relay->setLabelText(Label_Names::Label_Mouse_2, "Mouse View  X: " + QString::number(m_last_mouse_pos.x()) +
@@ -295,7 +295,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
     // !!!!! END
 
     // !!!!! #DEBUG:    Showing object data
-    if (m_relay->debugFlag(Debug_Flags::Selected_Item_Data) && check_item != nullptr) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Selected_Item_Data) && check_item != nullptr) {
         QGraphicsItem *item = check_item;
         QPointF my_scale =  item->data(User_Roles::Scale).toPointF();
         double  my_angle =  item->data(User_Roles::Rotation).toDouble();
@@ -312,7 +312,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
         m_relay->setLabelText(Label_Names::Label_Object_3,
                         "Group Scale X: " + QString::number(my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Scale).toPointF().x()) +
                                   ", Y: " + QString::number(my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Scale).toPointF().y()) );
-    } else if (m_relay->debugFlag(Debug_Flags::Selected_Item_Data)) {
+    } else if (Dr::CheckDebugFlag(Debug_Flags::Selected_Item_Data)) {
         if (m_view_mode == View_Mode::None && check_item == nullptr) {
             m_relay->setLabelText(Label_Names::Label_Position, "Null");
             m_relay->setLabelText(Label_Names::Label_Center, "Null");

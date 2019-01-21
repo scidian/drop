@@ -221,12 +221,10 @@ public:
 //############################
 class SceneViewToolTip : public QWidget
 {
-private:
-    InterfaceRelay  *m_relay;                // Pointer to InterfaceRelay class of parent form, for getting colors
 
 public:
     // Constructor
-    SceneViewToolTip(InterfaceRelay *relay, QWidget *parent = nullptr);
+    SceneViewToolTip(QWidget *parent = nullptr);
 
     // Event overrides
     virtual void    paintEvent(QPaintEvent *) override;

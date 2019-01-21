@@ -33,7 +33,7 @@ void InitializeFlags()
 {
     SetDebugFlag( Debug_Flags::Secret_Menu );
     //SetDebugFlag( Debug_Flags::FPS );
-    //SetDebugFlag( Debug_Flags::Mouse_Coordinates );
+    SetDebugFlag( Debug_Flags::Mouse_Coordinates );
 
     SetDebugFlag( Debug_Flags::Object_Inspector_Build );
     SetDebugFlag( Debug_Flags::Scene_Tree_Drag );

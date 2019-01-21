@@ -142,7 +142,7 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
 
 
     // !!!!! #DEBUG:    Rotation data
-    if (m_relay->debugFlag(Debug_Flags::Rotation_Data)) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Rotation_Data)) {
         m_relay->setLabelText(Label_Names::Label_1, "Angle 1: " + QString::number(angle1) + ", Angle 2: " + QString::number(angle2));
         m_relay->setLabelText(Label_Names::Label_2, "Angle: " + QString::number(angle) +       ", Diff: " + QString::number(angle - start_angle) );
     }

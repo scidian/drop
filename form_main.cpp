@@ -94,10 +94,6 @@ void FormMain::buildTreeSceneList()
     treeScene->populateTreeSceneList();
 }
 
-QColor FormMain::getColor(Window_Colors color_role)
-{
-    return Dr::GetColor(color_role);
-}
 
 // Call to put in a signal to change the Advisor to the que
 void FormMain::setAdvisorInfo(HeaderBodyList header_body_list)
@@ -138,12 +134,6 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
 
     case Label_Names::Label_Bottom:     label_bottom->setText(new_text);    break;
     }
-}
-
-// Returns if we should display debug code
-bool FormMain::debugFlag(Debug_Flags option_to_check)
-{
-    return Dr::CheckDebugFlag(option_to_check);
 }
 
 

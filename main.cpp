@@ -51,16 +51,18 @@ int main(int argc, char *argv[])
     // ***** Initiliaze application
     QApplication app_drop(argc, argv);              // Declare application
 
+    // Load some global data
     Dr::InitializeFlags();
     Dr::LoadPalettes();
 
     FormMain form_main(nullptr);                    // Declare / Load FormMain, pass Globals helper
+    Dr::SetActiveRelay(&form_main);                 // Set main form to active relay
     form_main.show();                               // Show FormMain
 
     app_drop.exec();                                // Run program
 
 
-    //my_globals->showMessageBox("Finished running program");
+    //Dr::ShowMessageBox("Finished running program");
 
     return 0;
 }

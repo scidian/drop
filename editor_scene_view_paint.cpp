@@ -99,7 +99,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 
     // ******************** Draw angles if rotating
     if (m_view_mode == View_Mode::Rotating) {
-        painter.setPen(QPen(m_relay->getColor(Window_Colors::Text_Light), 1));
+        painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 1));
         painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
         painter.drawLine(mapFromScene(m_rotate_start_rect.center()), m_origin);
         painter.drawLine(mapFromScene(m_rotate_start_rect.center()), m_last_mouse_pos);
@@ -111,7 +111,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 
 
     // !!!!! #DEBUG:    Draw frames per second
-    if (m_relay->debugFlag(Debug_Flags::FPS)) {
+    if (Dr::CheckDebugFlag(Debug_Flags::FPS)) {
         m_relay->setLabelText(Label_Names::Label_3, "Draw Time: " + QString::number(m_debug_timer.elapsed()) +
                                                         ", FPS: " + QString::number(m_debug_fps_last) );
         m_debug_fps++;
@@ -146,7 +146,7 @@ void SceneGraphicsView::paintGrid()
 
     // ********** Draw Grid Lines
     if (m_grid_style == Grid_Style::Lines) {
-        painter.setPen(QPen( m_relay->getColor(Window_Colors::Background_Dark), 1 ));
+        painter.setPen(QPen( Dr::GetColor(Window_Colors::Background_Dark), 1 ));
         QVector<QLine> lines;
 
         // Vertical lines right of scene zero, followed by Vertical lines left of scene zero
@@ -170,7 +170,7 @@ void SceneGraphicsView::paintGrid()
         if (m_zoom_scale < 2) dot_size = 3;
         if (m_zoom_scale < 1) dot_size = 2;
 
-        painter.setPen(QPen( m_relay->getColor(Window_Colors::Background_Dark), dot_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ));
+        painter.setPen(QPen( Dr::GetColor(Window_Colors::Background_Dark), dot_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ));
         QVector<QPointF> points;
 
         // Bottom right
@@ -203,7 +203,7 @@ void SceneGraphicsView::paintItemOutlines(QPainter &painter)
     SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
     QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
 
-    QBrush pen_brush(m_relay->getColor(Window_Colors::Icon_Light));
+    QBrush pen_brush(Dr::GetColor(Window_Colors::Icon_Light));
     painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.setBrush(Qt::NoBrush);
 
@@ -218,7 +218,7 @@ void SceneGraphicsView::paintItemOutlines(QPainter &painter)
 
 
         // !!!!! #DEBUG:    Shear Data
-        if (m_relay->debugFlag(Debug_Flags::Shear_Matrix)) {
+        if (Dr::CheckDebugFlag(Debug_Flags::Shear_Matrix)) {
             double  angle = item->data(User_Roles::Rotation).toDouble();
             QPointF origin = item->mapToScene( item->boundingRect().center() );
             QTransform remove_rotation = QTransform().translate(origin.x(), origin.y()).rotate(-angle).translate(-origin.x(), -origin.y());
@@ -262,7 +262,7 @@ void SceneGraphicsView::paintItemOutlines(QPainter &painter)
 
 
     // !!!!! #DEBUG:    Show selection group info
-    if (m_relay->debugFlag(Debug_Flags::Selection_Box_Group_Data)) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Selection_Box_Group_Data)) {
         QGraphicsItem *sgroup = my_scene->getSelectionGroupAsGraphicsItem();
         m_relay->setLabelText(Label_Names::Label_Object_1, "Group Pos  X: " +   QString::number(sgroup->sceneBoundingRect().x()) +
                                                                     ", Y: " +   QString::number(sgroup->sceneBoundingRect().y()) );
@@ -285,7 +285,7 @@ void SceneGraphicsView::paintItemOutlines(QPainter &painter)
 void SceneGraphicsView::paintBoundingBox(QPainter &painter)
 {
     QGraphicsItem *item = dynamic_cast<SceneGraphicsScene*>(scene())->getSelectionGroupAsGraphicsItem();
-    painter.setPen(QPen(m_relay->getColor(Window_Colors::Text_Light), 1));
+    painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 1));
 
     // ***** Map item bounding box to screen so we can draw it
     QPolygonF polygon(item->boundingRect());                                // Get bounding box of item as polygon
@@ -305,7 +305,7 @@ void SceneGraphicsView::paintBoundingBox(QPainter &painter)
 //####################################################################################
 void SceneGraphicsView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw)
 {
-    painter.setBrush(m_relay->getColor(Window_Colors::Icon_Light));
+    painter.setBrush(Dr::GetColor(Window_Colors::Icon_Light));
 
     QVector<QPointF> handles;
     for (int i = 0; i < static_cast<int>(Position_Flags::Total); i++)
@@ -346,14 +346,14 @@ void SceneViewRubberBand::paintEvent(QPaintEvent *)
 {
     QStylePainter painter(this);
 
-    QColor bg = m_relay->getColor(Window_Colors::Icon_Light);
+    QColor bg = Dr::GetColor(Window_Colors::Icon_Light);
     bg.setAlpha(48);
     QBrush brush;
     brush.setStyle(Qt::BrushStyle::SolidPattern);
     brush.setColor(bg);
 
     painter.setBrush(brush);
-    painter.setPen(QPen(QBrush(m_relay->getColor(Window_Colors::Icon_Light)), 2, Qt::PenStyle::SolidLine));
+    painter.setPen(QPen(QBrush(Dr::GetColor(Window_Colors::Icon_Light)), 2, Qt::PenStyle::SolidLine));
     painter.drawRect(this->rect());
 }
 

@@ -151,21 +151,18 @@ void SceneGraphicsView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     if (scale_y <  .0001 && scale_y >= 0) scale_y =  .0001;
     if (scale_y > -.0001 && scale_y <= 0) scale_y = -.0001;
 
-    // If shift key is down, maintain starting aspect ratio
-    if (m_flag_key_down_shift) {
-        double pre_resize_ratio = m_pre_resize_scale.x() / m_pre_resize_scale.y();
-        if (m_do_y == Y_Axis::None)      scale_y = scale_x * pre_resize_ratio;
-        else if (m_do_x == X_Axis::None) scale_x = scale_y * pre_resize_ratio;
-        else if (scale_x < scale_y)      scale_y = scale_x * pre_resize_ratio;
-        else if (scale_y < scale_x)      scale_x = scale_y * pre_resize_ratio;
-
-    // If control key is down, make scales the same
-    } else if (m_flag_key_down_control) {
-        if (m_do_y == Y_Axis::None)      scale_y = scale_x;
-        else if (m_do_x == X_Axis::None) scale_x = scale_y;
-        else if (scale_x < scale_y)      scale_y = scale_x;
-        else if (scale_y < scale_x)      scale_x = scale_y;
+    // If shift or control keys are down, maintain starting aspect ratio
+    if (m_flag_key_down_shift || m_flag_key_down_control) {
+        double pre_resize_ratio;
+        if (m_do_y == Y_Axis::None) {
+            pre_resize_ratio = m_pre_resize_scale.y() / m_pre_resize_scale.x();
+            scale_y = scale_x * pre_resize_ratio;
+        } else {
+            pre_resize_ratio = m_pre_resize_scale.x() / m_pre_resize_scale.y();
+            scale_x = scale_y * pre_resize_ratio;
+        }
     }
+
 
     // ***** Apply new scale
     QTransform t = QTransform().rotate(angle).scale(scale_x, scale_y);

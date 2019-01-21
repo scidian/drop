@@ -418,11 +418,11 @@ void FormMain::buildWindowModeEditScene()
 
     resizeDocks({assets, inspector}, {180, 300}, Qt::Horizontal);                               // Forces resize of dock
 
-    applyDropShadowByType(buttonAtlas, Shadow_Types::Button_Shadow);
-    applyDropShadowByType(buttonFonts, Shadow_Types::Button_Shadow);
-    applyDropShadowByType(buttonPlay, Shadow_Types::Button_Shadow);
-    applyDropShadowByType(buttonSettings, Shadow_Types::Button_Shadow);
-    applyDropShadowByType(buttonWorlds, Shadow_Types::Button_Shadow);
+    Dr::ApplyDropShadowByType(buttonAtlas,    Shadow_Types::Button_Shadow);
+    Dr::ApplyDropShadowByType(buttonFonts,    Shadow_Types::Button_Shadow);
+    Dr::ApplyDropShadowByType(buttonPlay,     Shadow_Types::Button_Shadow);
+    Dr::ApplyDropShadowByType(buttonSettings, Shadow_Types::Button_Shadow);
+    Dr::ApplyDropShadowByType(buttonWorlds,   Shadow_Types::Button_Shadow);
 
 
     // ***** Set titles and button texts

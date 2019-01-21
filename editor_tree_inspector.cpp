@@ -34,7 +34,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     std::string type_string = StringFromType(selected_type);
 
     // !!!!! #DEBUG:    Show selected item key and info
-    if (m_relay->debugFlag(Debug_Flags::Object_Inspector_Build)) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Object_Inspector_Build)) {
         m_relay->setLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( selected_key ) + ", TYPE: " + QString::fromStdString(type_string));
         m_relay->setLabelText(Label_Names::Label_Object_2, "");
         m_relay->setLabelText(Label_Names::Label_Object_3, "");
@@ -176,7 +176,7 @@ void TreeInspector::itemWasClicked(QTreeWidgetItem *item, int column)
     //std::string type_string = StringFromType(selected_item_settings->getType());
 
     // !!!!! #DEBUG:    Show selected item key and info
-    //if (m_relay->debugFlag(Debug_Flags::Object_Inspector_Build)) {
+    //if (Dr::CheckDebugFlag(Debug_Flags::Object_Inspector_Build)) {
     //    setLabelText(Label_Names::LabelObject1, "KEY: " + QString::number( treeScene->getSelectedKey() ) + ", TYPE: " + QString::fromStdString(type_string));
     //    setLabelText(Label_Names::LabelObject2, "COMPONENT: " + QString::number(component_key) +   ", NAME: " + QString::fromStdString(component_name));
     //    setLabelText(Label_Names::LabelObject3, "PROPERTY: " + QString::number(property_key) +   ", NAME: " + QString::fromStdString(property_name));

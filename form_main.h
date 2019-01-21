@@ -99,18 +99,14 @@ public:
     // Member functions
     virtual void    buildObjectInspector(QList<long> key_list);
     virtual void    buildTreeSceneList();
-    virtual QColor  getColor(Window_Colors color_role);
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list);
     virtual void    setLabelText(Label_Names label_name, QString new_text);
-    virtual bool    debugFlag(Debug_Flags option_to_check);
 
     void            populateScene();                                        // !!!!! TEMP generic fill of scene
 
 private:
     // Form setup
     void        applyColoring();
-    void        applyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color);
-    void        applyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type);
     void        buildMenu();
     void        buildWindow(Form_Main_Mode new_layout);
     void        buildWindowModeEditScene();

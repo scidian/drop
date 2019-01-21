@@ -79,7 +79,7 @@ void FormMain::buildMenu()
     menuColor_Schemes->addAction(actionAutumn);
 
     // !!!!! #DEBUG:    Load hidden debug menu into menu bar
-    if (debugFlag(Debug_Flags::Secret_Menu)) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Secret_Menu)) {
         QMenu *menuDebug;
         menuDebug = new QMenu(menuBar);
         menuDebug->setObjectName(QStringLiteral("menuDebug"));

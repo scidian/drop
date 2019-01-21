@@ -92,21 +92,7 @@ void FormMain::applyColoring()
     this->setStyleSheet(style_sheet);
 }
 
-void FormMain::applyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type)
-{
-    switch (shadow_type) {
-    case Shadow_Types::Button_Shadow:   applyDropShadow(target_widget, 6, 0, 3, QColor(10, 10, 10));
-    }
-}
-void FormMain::applyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color)
-{
-    QGraphicsDropShadowEffect *shadow_effect;
-    shadow_effect = new QGraphicsDropShadowEffect();
-    shadow_effect->setBlurRadius(blur_radius);
-    shadow_effect->setOffset(offset_x, offset_y);
-    shadow_effect->setColor(shadow_color);
-    target_widget->setGraphicsEffect(shadow_effect);
-}
+
 
 
 

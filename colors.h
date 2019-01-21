@@ -28,11 +28,6 @@ enum class Window_Colors
     Icon_Dark,          Icon_Light,
 };
 
-enum class Shadow_Types
-{
-    Button_Shadow,
-};
-
 
 namespace Dr {
 
