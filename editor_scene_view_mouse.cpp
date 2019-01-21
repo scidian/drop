@@ -357,6 +357,7 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
     if (event->button() & Qt::LeftButton)
     {
         m_rubber_band->hide();
+        m_tool_tip->hide();
         m_view_mode = View_Mode::None;
     }
 

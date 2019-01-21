@@ -29,6 +29,7 @@ void SceneGraphicsView::startRotate()
     if (scene() == nullptr) return;
 
     m_view_mode = View_Mode::Rotating;
+    m_tool_tip->show();
 
     // Grab starting angle of selection group before rotating starts
     SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());

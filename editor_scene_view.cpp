@@ -30,12 +30,19 @@ SceneGraphicsView::SceneGraphicsView(QWidget *parent, DrProject *project, Interf
     // Initialize rubber band object used as a selection box
     m_rubber_band = new SceneViewRubberBand(QRubberBand::Rectangle, this, relay);
 
+    // Initialize tool tip object used for displaying some helpful info
+    m_tool_tip = new SceneViewToolTip();
+
     m_over_handle = Position_Flags::No_Position;
 
     if (m_relay->debugFlag(Debug_Flags::FPS))
         m_debug_timer.start();
 }
-SceneGraphicsView::~SceneGraphicsView() { }
+
+SceneGraphicsView::~SceneGraphicsView()
+{
+    delete m_tool_tip;
+}
 
 
 

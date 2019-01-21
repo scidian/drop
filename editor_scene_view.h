@@ -15,6 +15,7 @@
 class DrProject;
 class InterfaceRelay;
 class SceneViewRubberBand;
+class SceneViewToolTip;
 
 // Interactive mouse modes
 enum class View_Mode {
@@ -93,7 +94,7 @@ private:
     QPoint                              m_origin;                   // Stores mouse down position in view coordinates
     QPointF                             m_origin_in_scene;          // Stores mouse down position in scene coordinates
     QGraphicsItem                      *m_origin_item;              // Stores top item under mouse (if any) on mouse down event
-
+    SceneViewToolTip                   *m_tool_tip;                 // Holds our view's custom Tool Tip box
 
     // Selection Bounding Box Variables
     std::map<Position_Flags, QPolygonF> m_handles;                  // Stores QRects of current selection box handles
@@ -213,6 +214,24 @@ public:
     virtual void    paintEvent(QPaintEvent *) override;
 };
 
+
+
+//############################
+//##    SceneViewTooltip
+//##        A parentless widget to be used as a custom tooltip
+//############################
+class SceneViewToolTip : public QWidget
+{
+private:
+
+
+public:
+    // Constructor
+    SceneViewToolTip(QWidget *parent = nullptr);
+
+    // Event overrides
+    virtual void    paintEvent(QPaintEvent *) override;
+};
 
 
 #endif // EDITOR_VIEW_SCENE_H
