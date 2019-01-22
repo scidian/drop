@@ -202,35 +202,30 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
     // Store event mouse position
     m_last_mouse_pos = event->pos();
 
-    // Adjust for Qt Arrow not having point right at tip of
-    QPointF adjust_mouse = m_last_mouse_pos;
-    adjust_mouse.setX(m_last_mouse_pos.x() - 2);
-    adjust_mouse.setY(m_last_mouse_pos.y() - 2);
-
     // Updates our tool tip position
     if (m_tool_tip->isHidden() == false)
         m_tool_tip->updateToolTipPosition(m_last_mouse_pos);
 
     // ******************** Grab item under mouse
-    QGraphicsItem *check_item = itemOnTopAtPosition(adjust_mouse.toPoint());
+    QGraphicsItem *check_item = itemOnTopAtPosition(m_last_mouse_pos);
 
     // ******************** Check selection handles to see if mouse is over one
     if (m_over_handle == Position_Flags::Move_Item) m_over_handle = Position_Flags::No_Position;
 
     if (my_scene->getSelectionGroupCount() > 0 && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
         m_over_handle = Position_Flags::No_Position;
-        if (m_handles[Position_Flags::Top].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))    m_over_handle = Position_Flags::Top;
-        if (m_handles[Position_Flags::Bottom].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Bottom;
-        if (m_handles[Position_Flags::Left].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))   m_over_handle = Position_Flags::Left;
-        if (m_handles[Position_Flags::Right].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))  m_over_handle = Position_Flags::Right;
+        if (m_handles[Position_Flags::Top].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill))    m_over_handle = Position_Flags::Top;
+        if (m_handles[Position_Flags::Bottom].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Bottom;
+        if (m_handles[Position_Flags::Left].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill))   m_over_handle = Position_Flags::Left;
+        if (m_handles[Position_Flags::Right].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill))  m_over_handle = Position_Flags::Right;
 
         // Check corners second as they're more important
-        if (m_handles[Position_Flags::Top_Left].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))     m_over_handle = Position_Flags::Top_Left;
-        if (m_handles[Position_Flags::Top_Right].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))    m_over_handle = Position_Flags::Top_Right;
-        if (m_handles[Position_Flags::Bottom_Left].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))  m_over_handle = Position_Flags::Bottom_Left;
-        if (m_handles[Position_Flags::Bottom_Right].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Bottom_Right;
+        if (m_handles[Position_Flags::Top_Left].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill))     m_over_handle = Position_Flags::Top_Left;
+        if (m_handles[Position_Flags::Top_Right].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill))    m_over_handle = Position_Flags::Top_Right;
+        if (m_handles[Position_Flags::Bottom_Left].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill))  m_over_handle = Position_Flags::Bottom_Left;
+        if (m_handles[Position_Flags::Bottom_Right].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Bottom_Right;
 
-        if (m_handles[Position_Flags::Rotate].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Rotate;
+        if (m_handles[Position_Flags::Rotate].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Rotate;
 
         if (m_over_handle == Position_Flags::No_Position && my_scene->getSelectionGroupItems().contains(check_item))
             if (m_flag_key_down_alt == false)
@@ -287,7 +282,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
 
     // !!!!! #DEBUG:    Draw mouse coords on screen
-    if (Dr::CheckDebugFlag(Debug_Flags::Mouse_Coordinates)) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_Mouse_Coordinates)) {
         m_relay->setLabelText(Label_Names::Label_Mouse_1, "Mouse Scene X: " + QString::number(mapToScene(m_last_mouse_pos).x()) +
                                                                     ", Y: " + QString::number(mapToScene(m_last_mouse_pos).y()) );
         m_relay->setLabelText(Label_Names::Label_Mouse_2, "Mouse View  X: " + QString::number(m_last_mouse_pos.x()) +
@@ -298,7 +293,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
     // !!!!! END
 
     // !!!!! #DEBUG:    Showing object data
-    if (Dr::CheckDebugFlag(Debug_Flags::Selected_Item_Data) && check_item != nullptr) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_Selected_Item_Data) && check_item != nullptr) {
         QGraphicsItem *item = check_item;
         QPointF my_scale =  item->data(User_Roles::Scale).toPointF();
         double  my_angle =  item->data(User_Roles::Rotation).toDouble();
@@ -315,7 +310,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
         m_relay->setLabelText(Label_Names::Label_Object_3,
                         "Group Scale X: " + QString::number(my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Scale).toPointF().x()) +
                                   ", Y: " + QString::number(my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Scale).toPointF().y()) );
-    } else if (Dr::CheckDebugFlag(Debug_Flags::Selected_Item_Data)) {
+    } else if (Dr::CheckDebugFlag(Debug_Flags::Label_Selected_Item_Data)) {
         if (m_view_mode == View_Mode::None && check_item == nullptr) {
             m_relay->setLabelText(Label_Names::Label_Position, "Null");
             m_relay->setLabelText(Label_Names::Label_Center, "Null");

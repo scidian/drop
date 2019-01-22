@@ -36,7 +36,7 @@ SceneGraphicsView::SceneGraphicsView(QWidget *parent, DrProject *project, Interf
 
     m_over_handle = Position_Flags::No_Position;
 
-    if (Dr::CheckDebugFlag(Debug_Flags::FPS))
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_FPS))
         m_debug_timer.start();
 }
 

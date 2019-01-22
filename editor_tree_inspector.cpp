@@ -34,7 +34,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     std::string type_string = StringFromType(selected_type);
 
     // !!!!! #DEBUG:    Show selected item key and info
-    if (Dr::CheckDebugFlag(Debug_Flags::Object_Inspector_Build)) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_Object_Inspector_Build)) {
         m_relay->setLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( selected_key ) + ", TYPE: " + QString::fromStdString(type_string));
         m_relay->setLabelText(Label_Names::Label_Object_2, "");
         m_relay->setLabelText(Label_Names::Label_Object_3, "");

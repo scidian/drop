@@ -76,7 +76,7 @@ void SceneViewToolTip::paintEvent(QPaintEvent *)
     painter.setPen(Dr::GetColor(Window_Colors::Text_Light));
 
     QFont font = painter.font();
-    font.setPointSize ( 14 );
+    font.setPointSize ( 13 );
     painter.setFont(font);
 
     int w = this->geometry().width();
