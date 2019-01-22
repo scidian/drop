@@ -55,7 +55,9 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
         // If left mouse button down
         if (event->button() & Qt::LeftButton) {
-
+            // Restart mouse select movement buffer timer
+            m_origin_timer.restart();
+            m_allow_movement = false;
 
             if (my_scene->getSelectionGroupCount() > 0) {
                 // ******************* If clicked while holding Alt key
@@ -97,6 +99,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
                     // Process press event for item movement (Translation)
                     QGraphicsView::mousePressEvent(event);
                     viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
+                    QTimer::singleShot(500, this, SLOT(checkTranslateToolTipStarted()));
                     m_view_mode = View_Mode::Translating;
                 }
 
@@ -155,6 +158,16 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 }
 
 
+// SLOT: Fired from single shot timer when mouse is down, starts tooltip after x milliseconds if user pressed mouse but hasn't started moving it yet
+void SceneGraphicsView::checkTranslateToolTipStarted()
+{
+    if (m_view_mode == View_Mode::Translating) {
+        if (m_tool_tip->getTipType() != View_Mode::Translating)
+            m_tool_tip->startToolTip(View_Mode::Translating, m_origin, mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
+    }
+}
+
+
 //####################################################################################
 //##        Finds item on top of scene at point in View, ignoring selection group
 //####################################################################################
@@ -201,6 +214,15 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
     // Store event mouse position
     m_last_mouse_pos = event->pos();
+
+    // Allow movement if it has been more than x milliseconds or mouse has moved more than 2 pixels
+    if (m_allow_movement == false) {
+        if (m_origin_timer.elapsed() > 200) {
+            m_allow_movement = true;
+        } else if (QLineF(m_origin, m_last_mouse_pos).length() > 2) {
+            m_allow_movement = true;
+        }
+    }
 
     // Updates our tool tip position
     if (m_tool_tip->isHidden() == false)
@@ -339,16 +361,23 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
     // ******************* If mouse moved while in translating mode, update tooltip
     if (m_view_mode == View_Mode::Translating) {
-        if (m_tool_tip->getTipType() != View_Mode::Translating)
-            m_tool_tip->startToolTip(View_Mode::Translating, m_origin, mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
-        else
-            m_tool_tip->updateToolTipData( mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
+        if (m_allow_movement) {
+            // Pass on event to allow movement
+            QGraphicsView::mouseMoveEvent(event);
+            if (m_tool_tip->getTipType() != View_Mode::Translating)
+                m_tool_tip->startToolTip(View_Mode::Translating, m_origin, mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
+            else
+                m_tool_tip->updateToolTipData( mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
+        }
+    } else {
+        // Pass on event to allow movement
+        QGraphicsView::mouseMoveEvent(event);
     }
 
-    // Pass on event, update and unlock mutex
-    QGraphicsView::mouseMoveEvent(event);
+    // Update
     if (m_view_mode != View_Mode::None) update();
 
+    // Unlock scene mutex
     my_scene->scene_mutex.unlock();
 }
 
@@ -407,6 +436,7 @@ void SceneGraphicsView::wheelEvent(QWheelEvent *event)
 }
 #endif
 
+// SLOT: Handles hiding tool tip after done zooming
 void SceneGraphicsView::stoppedZooming()
 {
     // If over 1.2 seconds have passed since last time mouse wheel was activated, stop tool tip

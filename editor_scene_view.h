@@ -96,6 +96,8 @@ private:
     QPoint                              m_origin;                   // Stores mouse down position in view coordinates
     QPointF                             m_origin_in_scene;          // Stores mouse down position in scene coordinates
     QGraphicsItem                      *m_origin_item;              // Stores top item under mouse (if any) on mouse down event
+    QTime                               m_origin_timer;             // Tracks time since mouse down to help buffer movement while selecting
+    bool                                m_allow_movement = false;   // Used along with m_origin_timer to help buffer movement while selecting
     SceneViewToolTip                   *m_tool_tip;                 // Holds our view's custom Tool Tip box
 
 
@@ -197,6 +199,8 @@ public:
 public slots:
     void    sceneChanged(QList<QRectF> region);
     void    selectionChanged();
+
+    void    checkTranslateToolTipStarted();
     void    stoppedZooming();
 };
 
