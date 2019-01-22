@@ -48,7 +48,7 @@ void SceneGraphicsView::startRotate(QPoint mouse_in_view)
     m_rotate_start_rect = totalSelectedItemsSceneRect();
 
     // Set up our tooltip
-    m_tool_tip->setupToolTip(m_view_mode, mouse_in_view, m_rotate_start_angle);
+    m_tool_tip->startToolTip(m_view_mode, mouse_in_view, m_rotate_start_angle);
 }
 
 

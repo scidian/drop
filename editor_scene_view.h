@@ -77,6 +77,7 @@ private:
     // Display Variables
     int          m_zoom = 250;                                      // Zoom level of current view
     double       m_zoom_scale = 1;                                  // Updated in applyUpdatedMatrix for use during painting grid, DO NOT SET MANUALLY
+    QTime        m_zoom_timer;                                      // Used to auto hide zoom tool tip after time has passed
     int          m_rotate = 0;                              // NOT IMPLEMENTED: Rotation of current view
 
     // Grid variables
@@ -186,7 +187,7 @@ public:
     bool            isSquare(double check_angle);
 
     // Resize functions
-    void            startResize();
+    void            startResize(QPoint mouse_in_view);
     void            resizeSelection(QPointF mouse_in_scene);
     void            resizeSelectionWithRotate(QPointF mouse_in_scene);
     Position_Flags  findOppositeSide(Position_Flags start_side);
@@ -196,6 +197,7 @@ public:
 public slots:
     void    sceneChanged(QList<QRectF> region);
     void    selectionChanged();
+    void    stoppedZooming();
 };
 
 
@@ -224,7 +226,11 @@ class SceneViewToolTip : public QWidget
 {
 private:
     View_Mode   m_tip_type = View_Mode::None;           // Which type of tool tip to show
+    QPoint      m_offset;                               // Stores how much to offset the current tooltip from mouse position
     double      m_angle = 0;                            // Stores angle to show in tooltip
+    double      m_x = 0;                                // Stores x value of resizing / moving
+    double      m_y = 0;                                // Stores y value of resizing / moving
+    int         m_int = 0;                              // Stores zoom, # items
 
 public:
     // Constructor
@@ -234,13 +240,14 @@ public:
     virtual void    paintEvent(QPaintEvent *) override;
 
     // Functions
-    void            setupToolTip(View_Mode type, QPoint mouse_position, QVariant data);
+    void            startToolTip(View_Mode type, QPoint mouse_position, QVariant data);
+    void            stopToolTip();
     void            updateToolTipPosition(QPoint mouse_position);
     void            updateToolTipData(QVariant data);
 
     // Getters and Setters
-    void            setToolTipType(View_Mode type) { m_tip_type = type; }
-    QPoint          getOffset() { return QPoint(35, -45); }
+    QPoint          getOffset()  { return m_offset;   }
+    View_Mode       getTipType() { return m_tip_type; }
 
 };
 

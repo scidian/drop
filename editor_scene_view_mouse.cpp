@@ -69,7 +69,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
                 // ******************* If clicked while in a Size Grip Handle
                 if (m_over_handle != Position_Flags::No_Position &&
                     m_over_handle != Position_Flags::Move_Item) {
-                    startResize();
+                    startResize(m_origin);
                     my_scene->scene_mutex.unlock();
                     return;
                 }
@@ -337,6 +337,14 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
         rotateSelection(event->pos());
     }
 
+    // ******************* If mouse moved while in translating mode, update tooltip
+    if (m_view_mode == View_Mode::Translating) {
+        if (m_tool_tip->getTipType() != View_Mode::Translating)
+            m_tool_tip->startToolTip(View_Mode::Translating, m_origin, mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
+        else
+            m_tool_tip->updateToolTipData( mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
+    }
+
     // Pass on event, update and unlock mutex
     QGraphicsView::mouseMoveEvent(event);
     if (m_view_mode != View_Mode::None) update();
@@ -355,7 +363,7 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
     if (event->button() & Qt::LeftButton)
     {
         m_rubber_band->hide();
-        m_tool_tip->hide();
+        m_tool_tip->stopToolTip();
         m_view_mode = View_Mode::None;
     }
 
@@ -375,17 +383,40 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 #if QT_CONFIG(wheelevent)
 void SceneGraphicsView::wheelEvent(QWheelEvent *event)
 {
+    // Allow for scene scrolling if ctrl (cmd) is down
     if (event->modifiers() & Qt::KeyboardModifier::ControlModifier) {
         QGraphicsView::wheelEvent(event);
         return;
     }
+
     if (event->delta() > 0) {
         zoomInOut(10);  }
     else {
         zoomInOut(-10); }
     event->accept();
+
+    // Show tool tip with zoom percentage, if first time start tooltip, otherwise update it
+    if (m_tool_tip->getTipType() != View_Mode::Zooming)
+        m_tool_tip->startToolTip(View_Mode::Zooming, event->pos(), static_cast<int>(m_zoom_scale * 100) );
+    else
+        m_tool_tip->updateToolTipData( static_cast<int>(m_zoom_scale * 100) );
+
+    // Reset tool tip timeout, post a single shot timer to eventually hide tool tip
+    m_zoom_timer.restart();
+    QTimer::singleShot(300, this, SLOT(stoppedZooming()));
 }
 #endif
+
+void SceneGraphicsView::stoppedZooming()
+{
+    // If over 1.2 seconds have passed since last time mouse wheel was activated, stop tool tip
+    if (m_tool_tip->getTipType() == View_Mode::Zooming) {
+        if (m_zoom_timer.elapsed() > 1200)
+            m_tool_tip->stopToolTip();
+        else
+            QTimer::singleShot(300, this, SLOT(stoppedZooming()));
+    }
+}
 
 void SceneGraphicsView::zoomInOut(int level)
 {

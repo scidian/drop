@@ -52,11 +52,11 @@ SOURCES += \
     editor_scene_view_mouse.cpp \
     editor_scene_scene_select.cpp \
     editor_scene_view_tooltip.cpp \
-    library.cpp \
     colors.cpp \
     debug.cpp \
     interface_relay.cpp \
-    library_forms.cpp
+    library_misc.cpp \
+    library_style.cpp
 
 HEADERS += \
     enums.h \
