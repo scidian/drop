@@ -18,7 +18,7 @@ InterfaceRelay::~InterfaceRelay() { }
 
 
 //####################################################################################
-//##        These functions can be used without passing around an interface pointer
+//##        These functions can be used globally without passing around an interface pointer
 //##
 //##        - Just need to #include "interface_relay.h"
 //##        - When program starts, FormMain is set as active 'InterfaceRelay' class

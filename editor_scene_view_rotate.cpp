@@ -32,11 +32,6 @@ void SceneGraphicsView::startRotate(QPoint mouse_in_view)
 
     m_view_mode = View_Mode::Rotating;
 
-    // Set up our tooltip
-    QPoint tip_pos = mouse_in_view + m_tool_tip->getOffset(); // + QWidget::mapToGlobal(this->rect().topLeft());
-    m_tool_tip->move(tip_pos);
-    m_tool_tip->show();
-
     // Grab starting angle of selection group before rotating starts
     SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
 
@@ -51,6 +46,9 @@ void SceneGraphicsView::startRotate(QPoint mouse_in_view)
 
     // Store starting scene rect of initial selection bounding box
     m_rotate_start_rect = totalSelectedItemsSceneRect();
+
+    // Set up our tooltip
+    m_tool_tip->setupToolTip(m_view_mode, mouse_in_view, m_rotate_start_angle);
 }
 
 
@@ -119,6 +117,7 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     // Load starting angle pre rotate, and store new angle in item
     double start_angle = item->data(User_Roles::Rotation).toDouble();
     item->setData(User_Roles::Rotation, angle);
+    m_tool_tip->updateToolTipData(angle);
 
     // ********** Create transform for new angle, apply it, and destroy temporary item group
     QTransform transform = QTransform().translate(offset.x(), offset.y()).rotate(angle - start_angle).translate(-offset.x(), -offset.y());

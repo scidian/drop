@@ -55,7 +55,8 @@ SOURCES += \
     library.cpp \
     colors.cpp \
     debug.cpp \
-    interface_relay.cpp
+    interface_relay.cpp \
+    library_forms.cpp
 
 HEADERS += \
     enums.h \

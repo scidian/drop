@@ -15,12 +15,9 @@
 bool CheckTypesAreSame(DrTypes type1, DrTypes type2)
 {
     if (IsDrObjectClass(type1) == true && IsDrObjectClass(type2) == true)
-    {
         return true;
-    }
-    else {
+    else
         return (type1 == type2);
-    }
 }
 
 //####################################################################################

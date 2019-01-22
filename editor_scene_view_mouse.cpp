@@ -208,10 +208,8 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
     adjust_mouse.setY(m_last_mouse_pos.y() - 2);
 
     // Updates our tool tip position
-    if (m_tool_tip->isHidden() == false) {
-        QPoint tip_pos = m_last_mouse_pos + m_tool_tip->getOffset(); // + QWidget::mapToGlobal(this->rect().topLeft());
-        m_tool_tip->move(tip_pos);
-    }
+    if (m_tool_tip->isHidden() == false)
+        m_tool_tip->updateToolTipPosition(m_last_mouse_pos);
 
     // ******************** Grab item under mouse
     QGraphicsItem *check_item = itemOnTopAtPosition(adjust_mouse.toPoint());
