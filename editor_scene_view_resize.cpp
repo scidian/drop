@@ -155,7 +155,7 @@ void SceneGraphicsView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     if (scale_y > -.0001 && scale_y <= 0) scale_y = -.0001;
 
     // If shift or control keys are down, maintain starting aspect ratio
-    if (m_flag_key_down_shift || m_flag_key_down_control) {
+    if (m_flag_key_down_shift) {
         double pre_resize_ratio;
         if (m_do_y == Y_Axis::None) {
             pre_resize_ratio = m_pre_resize_scale.y() / m_pre_resize_scale.x();

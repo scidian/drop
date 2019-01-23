@@ -50,7 +50,7 @@ void SceneViewToolTip::startToolTip(View_Mode type, QPoint mouse_position, QVari
     {
     case View_Mode::Resizing:
     case View_Mode::Translating:
-        setFixedSize(65, 32);   m_offset = QPoint(30, -63);     Dr::ApplyRoundedCornerMask(this, 23, 50);   break;
+        setFixedSize(66, 32);   m_offset = QPoint(30, -63);     Dr::ApplyRoundedCornerMask(this, 23, 50);   break;
     case View_Mode::Rotating:
     case View_Mode::Zooming:
     default:
