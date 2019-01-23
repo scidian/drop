@@ -234,7 +234,7 @@ private:
     double      m_angle = 0;                            // Stores angle to show in tooltip
     double      m_x = 0;                                // Stores x value of resizing / moving
     double      m_y = 0;                                // Stores y value of resizing / moving
-    int         m_int = 0;                              // Stores zoom, # items
+    int         m_int = 0;                              // Stores zoom scale
 
 public:
     // Constructor

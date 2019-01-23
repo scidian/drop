@@ -36,6 +36,7 @@
 
 
 // Necessary forward declarations
+class ColorSplitter;
 class InterfaceRelay;
 class TreeAssetList;
 class TreeAdvisor;
@@ -75,12 +76,13 @@ private:
 
     // Normal Qt Classes for simple objects
     QMenuBar      *menuBar;
-    QWidget       *widgetAdvisor, *widgetAssests, *widgetCentral, *widgetScene, *widgetInspector, *widgetToolbar;
+    QWidget       *widgetAdvisor, *widgetAssests, *widgetCentral, *widgetScene, *widgetInspector, *widgetToolbar, *widgetSceneView;
     QScrollArea   *areaBottom;
+    QFrame        *statusBar;
 
     QHBoxLayout   *horizontalLayout;
-    QVBoxLayout   *verticalLayout, *verticalLayoutObject, *verticalLayoutAdvisor, *verticalLayoutAsset;
-    QSplitter     *splitterHorizontal, *splitterVertical;
+    QVBoxLayout   *verticalLayout, *verticalLayoutObject, *verticalLayoutAdvisor, *verticalLayoutAsset, *verticalLayoutView;
+    ColorSplitter *splitterHorizontal, *splitterVertical;
 
     QDockWidget   *advisor, *assets, *inspector, *toolbar;
     QPushButton   *buttonAtlas, *buttonFonts, *buttonPlay, *buttonSettings, *buttonWorlds;
@@ -116,6 +118,19 @@ signals:
     void        sendAdvisorInfo(HeaderBodyList header_body_list);           // Forwards info to MainWindow::changeAdvisor
 };
 
+
+
+//####################################################################################
+//##    ColorSplitter - Custom class allows for specific class specific style sheeting
+//############################
+class ColorSplitter : public QSplitter
+{
+    Q_OBJECT
+
+public:
+    ColorSplitter(QWidget *parent = nullptr) : QSplitter(parent) {}
+
+};
 
 
 #endif // MAINWINDOW_H

@@ -52,7 +52,6 @@ void SceneViewToolTip::startToolTip(View_Mode type, QPoint mouse_position, QVari
     case View_Mode::Translating:
         setFixedSize(65, 32);   m_offset = QPoint(30, -63);     Dr::ApplyRoundedCornerMask(this, 23, 50);   break;
     case View_Mode::Rotating:
-    case View_Mode::Selecting:
     case View_Mode::Zooming:
     default:
         setFixedSize(60, 18);   m_offset = QPoint(30, -45);     Dr::ApplyRoundedCornerMask(this, 20, 75);   break;
@@ -80,7 +79,6 @@ void SceneViewToolTip::updateToolTipData(QVariant data)
     case View_Mode::Resizing:
     case View_Mode::Translating:
         m_x = data.toPointF().x(); m_y = data.toPointF().y();   break;
-    case View_Mode::Selecting:
     case View_Mode::Zooming:
         m_int = data.toInt();                                   break;
     default: ;
@@ -125,10 +123,6 @@ void SceneViewToolTip::paintEvent(QPaintEvent *)
         text_2 = "Y: " + QString::number(m_y, 'f', 1);
         painter.drawText( 0,           0, w, h / 2, Qt::AlignmentFlag::AlignCenter, text_1);
         painter.drawText( 0, (h / 2) - 1, w, h / 2, Qt::AlignmentFlag::AlignCenter, text_2);
-        break;
-    case View_Mode::Selecting:
-        text_1 = "#: " + QString::number(m_int);
-        painter.drawText( 0, 0, w, h, Qt::AlignmentFlag::AlignCenter, text_1);
         break;
     case View_Mode::Zooming:
         text_1 = QString::number(m_int) + "%";

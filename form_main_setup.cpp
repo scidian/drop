@@ -82,28 +82,33 @@ void FormMain::buildWindowModeEditScene()
     sizePolicy.setHorizontalStretch(0);
     sizePolicy.setVerticalStretch(0);
 
+    QSizePolicy sizePolicyView(QSizePolicy::MinimumExpanding, QSizePolicy::Expanding);
+    sizePolicyView.setHorizontalStretch(1);
+    sizePolicyView.setVerticalStretch(0);
+
 
     // ***** Build central widgets
     widgetCentral = new QWidget(this);
     widgetCentral->setObjectName(QStringLiteral("widgetCentral"));
     widgetCentral->setSizePolicy(sizePolicyPreferredHorizontal);
-    verticalLayout = new QVBoxLayout(widgetCentral);
-    verticalLayout->setSpacing(2);
-    verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-    verticalLayout->setContentsMargins(2, 2, 2, 2);
-        splitterVertical = new QSplitter(widgetCentral);
+        verticalLayout = new QVBoxLayout(widgetCentral);
+        verticalLayout->setSpacing(0);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        verticalLayout->setContentsMargins(4, 0, 4, 0);
+
+        splitterVertical = new ColorSplitter(widgetCentral);
         splitterVertical->setObjectName(QStringLiteral("splitterVertical"));
         splitterVertical->setOrientation(Qt::Vertical);
         splitterVertical->setHandleWidth(4);
 
             widgetScene = new QWidget(splitterVertical);
-            widgetScene->setObjectName(QStringLiteral("widgetInner"));
+            widgetScene->setObjectName(QStringLiteral("widgetScene"));
+                horizontalLayout = new QHBoxLayout(widgetScene);
+                horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+                horizontalLayout->setSpacing(0);
+                horizontalLayout->setContentsMargins(0, 0, 0, 0);
 
-            horizontalLayout = new QHBoxLayout(widgetScene);
-            horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-            horizontalLayout->setSpacing(0);
-            horizontalLayout->setContentsMargins(0, 0, 0, 0);
-                splitterHorizontal = new QSplitter(widgetScene);
+                splitterHorizontal = new ColorSplitter(widgetScene);
                 splitterHorizontal->setObjectName(QStringLiteral("splitterHorizontal"));
                 splitterHorizontal->setLineWidth(0);
                 splitterHorizontal->setOrientation(Qt::Horizontal);
@@ -137,31 +142,48 @@ void FormMain::buildWindowModeEditScene()
                     treeScene->header()->setSectionResizeMode(0, QHeaderView::ResizeMode::Stretch);
                     treeScene->header()->setStretchLastSection(false);
                     treeScene->header()->setVisible(true);
+                    treeScene->setFrameShape(QFrame::NoFrame);
+
                 splitterHorizontal->addWidget(treeScene);
 
 
-                    // ***** Load our SceneGraphicsView to display our SceneGraphicsScene collection of items
-                    viewMain = new SceneGraphicsView(splitterHorizontal, project, this);
-                    viewMain->setObjectName(QStringLiteral("viewMain"));
-                    viewMain->setRenderHint(QPainter::Antialiasing, false);
-                    viewMain->setDragMode(QGraphicsView::DragMode::NoDrag);
-                    viewMain->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);
-                    viewMain->setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
+                    widgetSceneView = new QWidget(splitterHorizontal);
+                    widgetSceneView->setObjectName(QStringLiteral("widgetSceneView"));
+                    widgetSceneView->setSizePolicy(sizePolicyView);
+                    widgetSceneView->setMinimumSize(QSize(100, 0));
+                    widgetSceneView->setFont(font);
+                        verticalLayoutView = new QVBoxLayout(widgetSceneView);
+                        verticalLayoutView->setObjectName(QStringLiteral("verticalLayoutView"));
+                        verticalLayoutView->setSpacing(0);
+                        verticalLayoutView->setContentsMargins(0, 0, 0, 0);
 
-                    // This setting means we will decide when to call update(), controls recurssive paint events
-                    viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
-                    ///viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
+                        // ***** Load our SceneGraphicsView to display our SceneGraphicsScene collection of items
+                        viewMain = new SceneGraphicsView(widgetSceneView, project, this);
+                        viewMain->setObjectName(QStringLiteral("viewMain"));
+                        viewMain->setRenderHint(QPainter::Antialiasing, false);
+                        viewMain->setDragMode(QGraphicsView::DragMode::NoDrag);
+                        viewMain->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);
+                        viewMain->setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
+                        // This setting means we will decide when to call update(), controls recurssive paint events
+                        viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
+                        ///viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
+                        viewMain->setFrameShape(QFrame::NoFrame);
+                        viewMain->setScene(scene);
 
-                    viewMain->setScene(scene);
-                        QSizePolicy sizePolicyView(QSizePolicy::MinimumExpanding, QSizePolicy::Expanding);
-                        sizePolicyView.setHorizontalStretch(1);
-                        sizePolicyView.setVerticalStretch(0);
-                    viewMain->setSizePolicy(sizePolicyView);
-                    viewMain->setMinimumSize(QSize(100, 0));
-                    viewMain->setFont(font);
-                splitterHorizontal->addWidget(viewMain);             
+
+                        // ***** View area status bar
+                        statusBar = new QFrame(widgetSceneView);
+                        statusBar->setObjectName("statusBar");
+                        statusBar->setFixedHeight(20);
 
 
+
+
+
+                    verticalLayoutView->addWidget(viewMain);
+                    verticalLayoutView->addWidget(statusBar);
+
+                splitterHorizontal->addWidget(widgetSceneView);
                 splitterHorizontal->setSizes(QList<int> { 150, 300 });      // Sets tree_scene (scene assests) startup width to 150
                                                                             // NOTE: You can save and restore the sizes of the widgets from a QByteArray
                                                                             //       using QSplitter.saveState() and QSplitter.restoreState() respectively
@@ -174,6 +196,7 @@ void FormMain::buildWindowModeEditScene()
             areaBottom->setMinimumSize(QSize(0, 100));
             areaBottom->setFont(font);
             areaBottom->setWidgetResizable(true);
+            areaBottom->setFrameShape(QFrame::NoFrame);
                 label_1 = new QLabel(areaBottom);
                 label_1->setObjectName(QStringLiteral("label_1"));
                 label_1->setGeometry(QRect(10, 5, 220, 21));
@@ -266,30 +289,34 @@ void FormMain::buildWindowModeEditScene()
         widgetAssests = new QWidget();
         widgetAssests->setObjectName(QStringLiteral("widgetAssests"));
         widgetAssests->setSizePolicy(sizePolicyPreferredVertical);
-        verticalLayoutAsset = new QVBoxLayout(widgetAssests);
-        verticalLayoutAsset->setObjectName(QStringLiteral("verticalLayoutAsset"));
-        verticalLayoutAsset->setSpacing(0);
-        verticalLayoutAsset->setContentsMargins(0, 0, 0, 0);
+            verticalLayoutAsset = new QVBoxLayout(widgetAssests);
+            verticalLayoutAsset->setObjectName(QStringLiteral("verticalLayoutAsset"));
+            verticalLayoutAsset->setSpacing(0);
+            verticalLayoutAsset->setContentsMargins(0, 0, 0, 0);
 
-            // ***** Load our custom TreeObjectInspector for the Scene List
-            treeAsset = new TreeAssetList(widgetAssests, project, this);
-            treeAsset->setObjectName(QStringLiteral("treeAsset"));
-            treeAsset->setColumnCount(1);
-            treeAsset->setFont(font);
-            treeAsset->setProperty("showDropIndicator", QVariant(false));
-            treeAsset->setDragEnabled(false);
-            treeAsset->setDragDropOverwriteMode(false);
-            treeAsset->setDragDropMode(QAbstractItemView::DragDropMode::NoDragDrop);
-            treeAsset->setDefaultDropAction(Qt::DropAction::TargetMoveAction);
-            treeAsset->setAlternatingRowColors(false);
-            treeAsset->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
-            treeAsset->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectItems);
-            treeAsset->setIndentation(0);
-            treeAsset->setRootIsDecorated(false);
-            treeAsset->setItemsExpandable(true);
-            treeAsset->setExpandsOnDoubleClick(false);
-            treeAsset->setHeaderHidden(true);
-        verticalLayoutAsset->addWidget(treeAsset);
+                // ***** Load our custom TreeObjectInspector for the Scene List
+                treeAsset = new TreeAssetList(widgetAssests, project, this);
+                treeAsset->setObjectName(QStringLiteral("treeAsset"));
+                treeAsset->setColumnCount(1);
+                treeAsset->setFont(font);
+                treeAsset->setProperty("showDropIndicator", QVariant(false));
+                treeAsset->setDragEnabled(false);
+                treeAsset->setDragDropOverwriteMode(false);
+                treeAsset->setDragDropMode(QAbstractItemView::DragDropMode::NoDragDrop);
+                treeAsset->setDefaultDropAction(Qt::DropAction::TargetMoveAction);
+                treeAsset->setAlternatingRowColors(false);
+                treeAsset->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
+                treeAsset->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectItems);
+                treeAsset->setIndentation(0);
+                treeAsset->setRootIsDecorated(false);
+                treeAsset->setItemsExpandable(true);
+                treeAsset->setExpandsOnDoubleClick(false);
+                treeAsset->setHeaderHidden(true);
+                treeAsset->setFrameShape(QFrame::NoFrame);
+
+
+
+            verticalLayoutAsset->addWidget(treeAsset);
 
         assets->setWidget(widgetAssests);
     addDockWidget(static_cast<Qt::DockWidgetArea>(1), assets);
@@ -306,28 +333,31 @@ void FormMain::buildWindowModeEditScene()
         widgetAdvisor = new QWidget();
         widgetAdvisor->setObjectName(QStringLiteral("widgetAdvisor"));
         widgetAdvisor->setSizePolicy(sizePolicy);
-        widgetAdvisor->setMaximumHeight(140);
-        verticalLayoutAdvisor = new QVBoxLayout(widgetAdvisor);
-        verticalLayoutAdvisor->setObjectName(QStringLiteral("verticalLayoutAdvisor"));
-        verticalLayoutAdvisor->setSpacing(2);
-        verticalLayoutAdvisor->setContentsMargins(1, 1, 1, 1);
-            treeAdvisor = new TreeAdvisor(widgetAdvisor, project, this);
-            treeAdvisor->setObjectName(QStringLiteral("treeAdvisor"));
-            treeAdvisor->setColumnCount(1);
-            treeAdvisor->setFont(fontLarger);
-            treeAdvisor->setProperty("showDropIndicator", QVariant(false));
-            treeAdvisor->setDragEnabled(false);
-            treeAdvisor->setDragDropOverwriteMode(false);
-            treeAdvisor->setDragDropMode(QAbstractItemView::DragDropMode::NoDragDrop);
-            treeAdvisor->setDefaultDropAction(Qt::DropAction::IgnoreAction);
-            treeAdvisor->setAlternatingRowColors(false);
-            treeAdvisor->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
-            treeAdvisor->setIndentation(12);
-            treeAdvisor->setRootIsDecorated(false);
-            treeAdvisor->setItemsExpandable(false);
-            treeAdvisor->setExpandsOnDoubleClick(false);
-            treeAdvisor->setHeaderHidden(true);
-        verticalLayoutAdvisor->addWidget(treeAdvisor);
+        widgetAdvisor->setMaximumHeight(120);
+            verticalLayoutAdvisor = new QVBoxLayout(widgetAdvisor);
+            verticalLayoutAdvisor->setObjectName(QStringLiteral("verticalLayoutAdvisor"));
+            verticalLayoutAdvisor->setSpacing(0);
+            verticalLayoutAdvisor->setContentsMargins(0, 0, 0, 0);
+
+                // ***** Load our custom TreeAdvisor for the helpful advisor text
+                treeAdvisor = new TreeAdvisor(widgetAdvisor, project, this);
+                treeAdvisor->setObjectName(QStringLiteral("treeAdvisor"));
+                treeAdvisor->setColumnCount(1);
+                treeAdvisor->setFont(fontLarger);
+                treeAdvisor->setProperty("showDropIndicator", QVariant(false));
+                treeAdvisor->setDragEnabled(false);
+                treeAdvisor->setDragDropOverwriteMode(false);
+                treeAdvisor->setDragDropMode(QAbstractItemView::DragDropMode::NoDragDrop);
+                treeAdvisor->setDefaultDropAction(Qt::DropAction::IgnoreAction);
+                treeAdvisor->setAlternatingRowColors(false);
+                treeAdvisor->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
+                treeAdvisor->setIndentation(12);
+                treeAdvisor->setRootIsDecorated(false);
+                treeAdvisor->setItemsExpandable(false);
+                treeAdvisor->setExpandsOnDoubleClick(false);
+                treeAdvisor->setHeaderHidden(true);
+                treeAdvisor->setFrameShape(QFrame::NoFrame);
+            verticalLayoutAdvisor->addWidget(treeAdvisor);
 
         // Fires signal that is picked up by Advisor to change the help info
         connect(this, SIGNAL(sendAdvisorInfo(HeaderBodyList)), treeAdvisor, SLOT(changeAdvisor(HeaderBodyList)) , Qt::QueuedConnection);
@@ -347,34 +377,32 @@ void FormMain::buildWindowModeEditScene()
         widgetInspector = new QWidget();
         widgetInspector->setObjectName(QStringLiteral("widgetInspector"));
         widgetInspector->setSizePolicy(sizePolicyPreferredVertical);
-        verticalLayoutObject = new QVBoxLayout(widgetInspector);
-        verticalLayoutObject->setObjectName(QStringLiteral("verticalLayoutObject"));
-        verticalLayoutObject->setSpacing(0);
-        verticalLayoutObject->setContentsMargins(0, 0, 0, 0);
+            verticalLayoutObject = new QVBoxLayout(widgetInspector);
+            verticalLayoutObject->setObjectName(QStringLiteral("verticalLayoutObject"));
+            verticalLayoutObject->setSpacing(0);
+            verticalLayoutObject->setContentsMargins(0, 0, 0, 0);
 
-            // ***** Load our custom TreeObjectInspector for the Scene List
-            treeInspector = new TreeInspector(widgetInspector, project, this);
-            treeInspector->setObjectName(QStringLiteral("treeObject"));
-            treeInspector->setColumnCount(1);
-            treeInspector->setFont(font);
-            treeInspector->setProperty("showDropIndicator", QVariant(false));
-            treeInspector->setDragEnabled(false);
-            treeInspector->setDragDropOverwriteMode(false);
-            treeInspector->setDragDropMode(QAbstractItemView::DragDropMode::NoDragDrop);
-            treeInspector->setDefaultDropAction(Qt::DropAction::TargetMoveAction);
-            treeInspector->setAlternatingRowColors(false);
-            treeInspector->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
-            treeInspector->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectItems);
-            treeInspector->setIndentation(0);
-            treeInspector->setRootIsDecorated(false);
-            treeInspector->setItemsExpandable(true);
-            treeInspector->setExpandsOnDoubleClick(false);
-            treeInspector->setHeaderHidden(true);
+                // ***** Load our custom TreeObjectInspector for the Scene List
+                treeInspector = new TreeInspector(widgetInspector, project, this);
+                treeInspector->setObjectName(QStringLiteral("treeObject"));
+                treeInspector->setColumnCount(1);
+                treeInspector->setFont(font);
+                treeInspector->setProperty("showDropIndicator", QVariant(false));
+                treeInspector->setDragEnabled(false);
+                treeInspector->setDragDropOverwriteMode(false);
+                treeInspector->setDragDropMode(QAbstractItemView::DragDropMode::NoDragDrop);
+                treeInspector->setDefaultDropAction(Qt::DropAction::TargetMoveAction);
+                treeInspector->setAlternatingRowColors(false);
+                treeInspector->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
+                treeInspector->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectItems);
+                treeInspector->setIndentation(0);
+                treeInspector->setRootIsDecorated(false);
+                treeInspector->setItemsExpandable(true);
+                treeInspector->setExpandsOnDoubleClick(false);
+                treeInspector->setHeaderHidden(true);
+                treeInspector->setFrameShape(QFrame::NoFrame);
 
-            //treeObject->setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents);
-            //treeObject->setAnimated(true);
-
-        verticalLayoutObject->addWidget(treeInspector);
+            verticalLayoutObject->addWidget(treeInspector);
         inspector->setWidget(widgetInspector);
 
     addDockWidget(static_cast<Qt::DockWidgetArea>(2), inspector);
@@ -416,7 +444,7 @@ void FormMain::buildWindowModeEditScene()
         toolbar->setTitleBarWidget(new QWidget());                                      // Removes title bar from QDockWidget Toolbar
     addDockWidget(static_cast<Qt::DockWidgetArea>(4), toolbar);
 
-    resizeDocks({assets, inspector}, {180, 300}, Qt::Horizontal);                               // Forces resize of dock
+    resizeDocks({assets, inspector}, {180, 300}, Qt::Horizontal);                       // Forces resize of docks
 
     Dr::ApplyDropShadowByType(buttonAtlas,    Shadow_Types::Button_Shadow);
     Dr::ApplyDropShadowByType(buttonFonts,    Shadow_Types::Button_Shadow);

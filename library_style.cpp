@@ -73,10 +73,13 @@ void ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius)
 void ApplyColoring(QWidget *widget)
 {
     QString style_sheet = QString(
+        " .ColorSplitter { background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }"
+        " QFrame#statusBar { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; } "
+
         " QMainWindow { background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }" +
         " QMainWindow::separator { border: 1px solid " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }"
 
-        " QSplitter { width: 4px; } "
+        " QSplitter { width: 5px; height: 5px; } "
         " QSplitter::handle:vertical { image: url(:/gui_misc/splitter_v.png); } "
         " QSplitter::handle:horizontal { image: url(:/gui_misc/splitter_h.png); } "
 
@@ -122,8 +125,9 @@ void ApplyColoring(QWidget *widget)
 
         " QHeaderView::section { "
         "       background-color: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
-        "       border: 0px; }"
+        "       border: 0px; } "
 
+        //" QDockWidget { titlebar-close-icon: url(close.png); } "
         " QDockWidget { font-size: 11px; color: " + Dr::GetColor(Window_Colors::Text).name() + "; } "
         " QDockWidget::title { text-align: center; "
         "       background: qlineargradient(x1:0 y1:0, x2:0 y2:1, "
@@ -136,6 +140,7 @@ void ApplyColoring(QWidget *widget)
         " QScrollArea { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
 
         " QLabel { color : " + Dr::GetColor(Window_Colors::Text).name() + "; } "
+
     );
 
     widget->setStyleSheet(style_sheet);
