@@ -48,7 +48,6 @@ public:
     // Getters and Setters
     Position_Flags          getOrigin() { return m_origin; }
 
-
 };
 
 #endif // DRITEM_H

@@ -78,7 +78,10 @@ public slots:
     void            sceneChanged(QList<QRectF> region);                             // Used to resize scene area to fit contents
 
     // Undo Commands
-    void            itemMoved(SelectionGroup *moved_group, const QPointF &old_position);
+    void            selectionGroupAddItem(SelectionGroup *moved_group, QGraphicsItem* new_item);
+    void            selectionGroupEmpty(SelectionGroup *moved_group, QList<QGraphicsItem*> old_list);
+    void            selectionGroupMoved(SelectionGroup *moved_group, const QPointF &old_position);
+    void            selectionGroupNewGroup(SelectionGroup *moved_group, QList<QGraphicsItem*> old_list, QGraphicsItem *new_item);
 
 
 signals:
@@ -110,31 +113,6 @@ public:
 };
 
 
-
-
-//####################################################################################
-//##    Undo Commands
-//##        Commands used with local m_undo QUndoStack
-//############################
-class MoveCommand : public QUndoCommand
-{
-public:
-    enum { Id = 1234 };
-
-    MoveCommand(SelectionGroup *group, const QPointF &old_pos, QUndoCommand *parent = nullptr);
-
-    void undo() override;
-    void redo() override;
-    int  id() const override { return Id; }
-
-private:
-    SelectionGroup      *m_group;
-    QPointF              m_old_pos;
-    QPointF              m_new_pos;
-};
-
-
-QString createCommandString(SelectionGroup *group, const QPointF &point);
 
 
 

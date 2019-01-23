@@ -9,7 +9,7 @@
 #include <QtWidgets>
 
 #include "editor_scene_item.h"
-
+#include "editor_scene_scene.h"
 
 //####################################################################################
 //##        Constructor & destructor
@@ -65,9 +65,11 @@ int DrItem::type() const
 //####################################################################################
 QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
+
     // Value is the new position
     if (change == ItemPositionHasChanged && scene()) {
         ///QPointF new_pos = value.toPointF();
+        ///return new_pos;
     }
 
     // Value is the new transform

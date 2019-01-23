@@ -86,13 +86,21 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
                 // If no item under mouse, deselect all
                 if (item_under == nullptr) {
-                    my_scene->emptySelectionGroup();
+
+                    ///my_scene->emptySelectionGroup();
+                    emit selectionGroupEmpty(my_scene->getSelectionGroup(), my_scene->getSelectionGroupItems());
 
                 } else {
                     // If we clicked clicked a new item, set selection group to that
                     if (my_items.contains(item_under) == false) {
-                        my_scene->emptySelectionGroup();
-                        my_scene->addItemToSelectionGroup(item_under);
+
+                        ///my_scene->emptySelectionGroup();
+                        ///emit selectionGroupEmpty(my_scene->getSelectionGroup(), my_scene->getSelectionGroupItems());
+                        ///my_scene->addItemToSelectionGroup(item_under);
+                        ///emit selectionGroupAddItem(my_scene->getSelectionGroup(), item_under);
+
+                        emit selectionGroupNewGroup(my_scene->getSelectionGroup(), my_scene->getSelectionGroupItems(), item_under);
+
                         my_scene->selectSelectionGroup();
                     }
 
@@ -395,8 +403,9 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
     {
         if (m_view_mode == View_Mode::Translating && scene() != nullptr) {
             SelectionGroup *group = dynamic_cast<SceneGraphicsScene*>(scene())->getSelectionGroup();
-            if (group->childItems().count() > 0 && m_old_pos != group->pos())
-                    emit itemMoved(group, m_old_pos);
+            if (group->childItems().count() > 0 && m_old_pos != group->pos()) {
+                emit selectionGroupMoved(group, m_old_pos);
+            }
         }
 
         m_rubber_band->hide();

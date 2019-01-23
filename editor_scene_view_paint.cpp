@@ -58,7 +58,18 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
             connect(scene(), SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
 
             connect(my_scene, &SceneGraphicsScene::updateViews, [this]() { update(); });
-            connect(this, SIGNAL(itemMoved(SelectionGroup*, QPointF)), my_scene, SLOT(itemMoved(SelectionGroup*, QPointF)));
+
+            connect(this, SIGNAL(selectionGroupMoved(SelectionGroup*, QPointF)), my_scene,
+                    SLOT(selectionGroupMoved(SelectionGroup*, QPointF)));
+
+            connect(this, SIGNAL(selectionGroupAddItem(SelectionGroup*, QGraphicsItem*)), my_scene,
+                    SLOT(selectionGroupAddItem(SelectionGroup*, QGraphicsItem*)));
+
+            connect(this, SIGNAL(selectionGroupEmpty(SelectionGroup*, QList<QGraphicsItem*>)), my_scene,
+                    SLOT(selectionGroupEmpty(SelectionGroup*, QList<QGraphicsItem*>)));
+
+            connect(this, SIGNAL(selectionGroupNewGroup(SelectionGroup*, QList<QGraphicsItem*>, QGraphicsItem*)), my_scene,
+                    SLOT(selectionGroupNewGroup(SelectionGroup*, QList<QGraphicsItem*>, QGraphicsItem*)));
         }
     }
 

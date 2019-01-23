@@ -81,7 +81,8 @@ HEADERS += \
     editor_scene_item.h \
     library.h \
     colors.h \
-    debug.h
+    debug.h \
+    editor_scene_scene_commands.h
 
 FORMS +=
 
