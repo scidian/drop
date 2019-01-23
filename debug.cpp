@@ -32,7 +32,7 @@ void SetDebugFlag(Debug_Flags flag)
 void InitializeFlags()
 {
     SetDebugFlag( Debug_Flags::Show_Secret_Menu );
-    //SetDebugFlag( Debug_Flags::FPS );
+    SetDebugFlag( Debug_Flags::Label_FPS );
     SetDebugFlag( Debug_Flags::Label_Mouse_Coordinates );
 
     SetDebugFlag( Debug_Flags::Label_Object_Inspector_Build );

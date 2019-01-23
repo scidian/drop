@@ -31,7 +31,7 @@ SceneGraphicsScene::SceneGraphicsScene(QWidget *parent, DrProject *project, Inte
 {
     connect(this, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
 
-    m_selection_group = new SelectionGroup;
+    m_selection_group = new SelectionGroup(this);
     m_selection_group->setFlags(QGraphicsItem::ItemIsSelectable |
                                 QGraphicsItem::ItemIsMovable |
                                 QGraphicsItem::ItemSendsScenePositionChanges |
@@ -41,6 +41,12 @@ SceneGraphicsScene::SceneGraphicsScene(QWidget *parent, DrProject *project, Inte
     m_selection_group->setData(User_Roles::Name, "Captain");
 
     m_undo = new QUndoStack(this);
+
+    QUndoView *undo_view = new QUndoView(m_undo);
+    undo_view->setWindowTitle(tr("Command List"));
+    undo_view->show();
+    undo_view->setAttribute(Qt::WidgetAttribute::WA_QuitOnClose, false);
+    undo_view->move(0, 200);
 }
 
 SceneGraphicsScene::~SceneGraphicsScene()
@@ -229,7 +235,7 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
     scene_mutex.unlock();
 
     //QGraphicsScene::keyPressEvent(event);         // Don't pass on, if we pass on arrow key presses, it moves view sliders
-    emit updateViews();                             // Custom signal to tell views we're attached to update themselves
+    emit updateViews();                             // Custom signal to tell Views we're attached to, to update themselves
 }
 
 

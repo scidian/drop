@@ -11,8 +11,39 @@
 //undoStack->push(new MoveCommand(movedItem, oldPosition));
 
 
-// Signal
-void SceneGraphicsScene::itemMoved(DrItem *moved_item, const QPointF &old_position)
+//####################################################################################
+//##        Move Command on the QUndoStack
+//####################################################################################
+MoveCommand::MoveCommand(SelectionGroup *group, const QPointF &old_pos, QUndoCommand *parent) : QUndoCommand(parent)
 {
-    m_undo->push(new MoveCommand(moved_item, old_position));
+    m_group = group;
+    m_new_pos = group->pos();
+    m_old_pos = old_pos;
+}
+
+void MoveCommand::undo()
+{
+    m_group->setPos(m_old_pos);
+    m_group->getParentScene()->updateView();
+    setText(QObject::tr("Move %1").arg(createCommandString(m_group, m_new_pos)));
+}
+
+void MoveCommand::redo()
+{
+    m_group->setPos(m_new_pos);
+    m_group->getParentScene()->updateView();
+    setText(QObject::tr("Move %1").arg(createCommandString(m_group, m_new_pos)));
+}
+
+
+
+//####################################################################################
+//##        Adds command data onto QUndoView list
+//####################################################################################
+QString createCommandString(SelectionGroup *group, const QPointF &pos)
+{
+    Q_UNUSED(group)
+    return QObject::tr("%1 at (%2, %3)")
+        .arg("Group")
+        .arg(pos.x()).arg(pos.y());
 }

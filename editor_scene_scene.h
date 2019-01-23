@@ -55,6 +55,7 @@ public:
     void            setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y);
     void            setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y);
     QRectF          totalSelectedItemsSceneRect();
+    void            updateView() { emit updateViews(); }
 
     // Selection Functions
     void            addItemToSelectionGroup(QGraphicsItem *item);
@@ -77,7 +78,7 @@ public slots:
     void            sceneChanged(QList<QRectF> region);                             // Used to resize scene area to fit contents
 
     // Undo Commands
-    void            itemMoved(DrItem *moved_item, const QPointF &old_position);     // Item moved in scene
+    void            itemMoved(SelectionGroup *moved_group, const QPointF &old_position);
 
 
 signals:
@@ -94,15 +95,18 @@ signals:
 class SelectionGroup : public QGraphicsItemGroup
 {
 private:
+    SceneGraphicsScene  *m_parent_scene;
 
 public:
     // Constructor / destructor
-    SelectionGroup() {}
+    SelectionGroup(SceneGraphicsScene *parent_scene) : m_parent_scene(parent_scene) {}
     virtual ~SelectionGroup() override;
 
     // Event Overrides
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
+    // Getters and Setters
+    SceneGraphicsScene* getParentScene() { return m_parent_scene; }
 };
 
 
@@ -117,19 +121,20 @@ class MoveCommand : public QUndoCommand
 public:
     enum { Id = 1234 };
 
-    MoveCommand(DrItem *dr_item, const QPointF &old_pos, QUndoCommand *parent = nullptr);
+    MoveCommand(SelectionGroup *group, const QPointF &old_pos, QUndoCommand *parent = nullptr);
 
     void undo() override;
     void redo() override;
-    bool mergeWith(const QUndoCommand *command) override;
-    int id() const override { return Id; }
+    int  id() const override { return Id; }
 
 private:
-    DrItem *m_dr_item;
-    QPointF m_old_pos;
-    QPointF m_new_pos;
+    SelectionGroup      *m_group;
+    QPointF              m_old_pos;
+    QPointF              m_new_pos;
 };
 
+
+QString createCommandString(SelectionGroup *group, const QPointF &point);
 
 
 

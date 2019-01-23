@@ -100,6 +100,8 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
                     QGraphicsView::mousePressEvent(event);
                     viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
                     QTimer::singleShot(500, this, SLOT(checkTranslateToolTipStarted()));
+
+                    m_old_pos = my_scene->getSelectionGroupAsGraphicsItem()->pos();
                     m_view_mode = View_Mode::Translating;
                 }
 
@@ -391,6 +393,12 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
     // Process left mouse button released
     if (event->button() & Qt::LeftButton)
     {
+        if (m_view_mode == View_Mode::Translating && scene() != nullptr) {
+            SelectionGroup *group = dynamic_cast<SceneGraphicsScene*>(scene())->getSelectionGroup();
+            if (group->childItems().count() > 0 && m_old_pos != group->pos())
+                    emit itemMoved(group, m_old_pos);
+        }
+
         m_rubber_band->hide();
         m_tool_tip->stopToolTip();
         m_view_mode = View_Mode::None;

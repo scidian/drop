@@ -52,9 +52,13 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     if (scene() != m_scene) {
         if (scene() != nullptr) {
             m_scene = scene();
+            SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
+
             connect(scene(), SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
             connect(scene(), SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
-            connect(dynamic_cast<SceneGraphicsScene*>(scene()), &SceneGraphicsScene::updateViews, [this]() { update(); });
+
+            connect(my_scene, &SceneGraphicsScene::updateViews, [this]() { update(); });
+            connect(this, SIGNAL(itemMoved(SelectionGroup*, QPointF)), my_scene, SLOT(itemMoved(SelectionGroup*, QPointF)));
         }
     }
 

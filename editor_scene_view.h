@@ -13,6 +13,9 @@
 #include <enums.h>
 
 class DrProject;
+class DrItem;
+class SelectionGroup;
+
 class InterfaceRelay;
 class SceneViewRubberBand;
 class SceneViewToolTip;
@@ -101,13 +104,15 @@ private:
     bool         m_flag_key_down_shift =    false;                  // True when View has focus and shift         is down
 
     // Mouse event variables
+    SceneViewToolTip                   *m_tool_tip;                 // Holds our view's custom Tool Tip box
     QPoint                              m_origin;                   // Stores mouse down position in view coordinates
     QPointF                             m_origin_in_scene;          // Stores mouse down position in scene coordinates
     QGraphicsItem                      *m_origin_item;              // Stores top item under mouse (if any) on mouse down event
+
+    // View_Mode::Translating Variables
     QTime                               m_origin_timer;             // Tracks time since mouse down to help buffer movement while selecting
     bool                                m_allow_movement = false;   // Used along with m_origin_timer to help buffer movement while selecting
-    SceneViewToolTip                   *m_tool_tip;                 // Holds our view's custom Tool Tip box
-
+    QPointF                             m_old_pos;                  // Used to track position movement for QUndoStack
 
     // Selection Bounding Box Variables
     std::map<Position_Flags, QPolygonF> m_handles;                  // Stores QRects of current selection box handles
@@ -117,11 +122,9 @@ private:
     Position_Flags                      m_over_handle;              // Tracks if mouse is over a handle
     QPoint                              m_last_mouse_pos;           // Tracks last known mouse position in view coordinates
 
-
     // View_Mode::Selecting Variables
     SceneViewRubberBand            *m_rubber_band;                  // Holds our view's RubberBand object
     QList<QGraphicsItem *>          m_items_start;                  // Stores items selected at start of new rubber band box
-
 
     // View_Mode::Resizing Variables
     QRectF                          m_start_resize_rect;            // Stores starting rect of selection before resize starts
@@ -210,6 +213,12 @@ public slots:
 
     void    checkTranslateToolTipStarted();
     void    stoppedZooming();
+
+
+signals:
+    // Signals used to emit UndoStack Commands
+    void    itemMoved(SelectionGroup *moved_group, const QPointF &old_position);
+
 };
 
 
