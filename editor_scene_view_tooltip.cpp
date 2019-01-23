@@ -102,32 +102,40 @@ void SceneViewToolTip::paintEvent(QPaintEvent *)
 
     int w = this->geometry().width();
     int h = this->geometry().height();
+    int left;
+    QPixmap  pic(w * 2, h);
+    QPainter paint_pic(&pic);
+    QRect    bounding_1, bounding_2;
 
-    QString text_1 = "---";
-    QString text_2 = "---";
+    QString text_1, text_2;
 
     switch (m_tip_type)
     {
-    case View_Mode::Rotating:
-        text_1 = QString::number(m_angle, 'f', 1) + "°";
-        painter.drawText( 0, 0, w, h, Qt::AlignmentFlag::AlignCenter, text_1);
-        break;
+    case View_Mode::Zooming:     text_1 = QString::number(m_int) + "%";             break;
+    case View_Mode::Rotating:    text_1 = QString::number(m_angle, 'f', 1) + "°";   break;
+    case View_Mode::Resizing:    text_1 = "W: " + QString::number(m_x, 'f', 1);     text_2 = "H: " + QString::number(m_y, 'f', 1);  break;
+    case View_Mode::Translating: text_1 = "X: " + QString::number(m_x, 'f', 1);     text_2 = "Y: " + QString::number(m_y, 'f', 1);  break;
+    default:                     text_1 = "---";                                    text_2 = "---";
+    }
+
+    switch (m_tip_type)
+    {
     case View_Mode::Resizing:
-        text_1 = "W: " + QString::number(m_x, 'f', 1);
-        text_2 = "H: " + QString::number(m_y, 'f', 1);
-        painter.drawText( 0,           0, w, h / 2, Qt::AlignmentFlag::AlignCenter, text_1);
-        painter.drawText( 0, (h / 2) - 1, w, h / 2, Qt::AlignmentFlag::AlignCenter, text_2);
-        break;
     case View_Mode::Translating:
-        text_1 = "X: " + QString::number(m_x, 'f', 1);
-        text_2 = "Y: " + QString::number(m_y, 'f', 1);
-        painter.drawText( 0,           0, w, h / 2, Qt::AlignmentFlag::AlignCenter, text_1);
-        painter.drawText( 0, (h / 2) - 1, w, h / 2, Qt::AlignmentFlag::AlignCenter, text_2);
+        ///// Simple text centering
+        ///painter.drawText( 0,           0, w, h / 2, Qt::AlignmentFlag::AlignCenter, text_1);
+        ///painter.drawText( 0, (h / 2) - 1, w, h / 2, Qt::AlignmentFlag::AlignCenter, text_2);
+
+        // Draw text off screen to calculate proper starting x coord
+        paint_pic.drawText( 0, 0, w, h, Qt::AlignmentFlag::AlignLeft, text_1, &bounding_1);
+        paint_pic.drawText( 0, 0, w, h, Qt::AlignmentFlag::AlignLeft, text_2, &bounding_2);
+        left = (bounding_1.width() > bounding_2.width()) ? (w - bounding_1.width() + 4) / 2 : (w - bounding_2.width() + 4) / 2;
+        painter.drawText( left,               0, w, h / 2, Qt::AlignmentFlag::AlignVCenter, text_1);
+        painter.drawText( left + 1, (h / 2) - 1, w, h / 2, Qt::AlignmentFlag::AlignVCenter, text_2);
+
         break;
+    case View_Mode::Rotating:
     case View_Mode::Zooming:
-        text_1 = QString::number(m_int) + "%";
-        painter.drawText( 0, 0, w, h, Qt::AlignmentFlag::AlignCenter, text_1);
-        break;
     default:
         painter.drawText( 0, 0, w, h, Qt::AlignmentFlag::AlignCenter, text_1);
     }
