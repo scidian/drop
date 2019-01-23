@@ -15,6 +15,11 @@
 class DrSettings;
 class DrComponent;
 
+
+//####################################################################################
+//##    DrProperty
+//##        Class to hold one property of any DrClass object component
+//############################
 class DrProperty
 {
 private:
@@ -64,8 +69,6 @@ public:
 
 
     // External calls
-
-
 
 };
 

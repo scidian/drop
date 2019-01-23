@@ -13,6 +13,10 @@
 #include <QMessageBox>
 #include <QWidget>
 
+
+//####################################################################################
+//##    Local Enumerations
+//############################
 enum class Shadow_Types
 {
     Button_Shadow,
@@ -20,6 +24,10 @@ enum class Shadow_Types
 };
 
 
+//####################################################################################
+//##    Dr Namespace
+//##        A library of helpful functions in a global space
+//############################
 namespace Dr {
 
 

@@ -12,6 +12,11 @@
 #include "debug.h"
 #include "enums.h"
 
+
+//####################################################################################
+//##    InterfaceRelay
+//##        An interface class used to communicate between classes
+//############################
 class InterfaceRelay
 {
 public:

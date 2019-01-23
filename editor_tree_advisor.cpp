@@ -19,7 +19,9 @@
 #include "interface_relay.h"
 
 
-// SLOT, Sets the Advisor Dock text
+//####################################################################################
+//##        SLOT, Sets the Advisor Dock text
+//####################################################################################
 void TreeAdvisor::changeAdvisor(HeaderBodyList header_body_list)
 {
     if (advisor_mutex.tryLock() == false) return;           // Try and lock function to make this thread safe
@@ -54,12 +56,17 @@ void TreeAdvisor::changeAdvisor(HeaderBodyList header_body_list)
 }
 
 
-// Handles changing the Advisor on Mouse Enter
+//####################################################################################
+//##        EVENT, Handles changing the Advisor on Mouse Enter
+//####################################################################################
 void TreeAdvisor::enterEvent(QEvent *event)
 {
     m_relay->setAdvisorInfo(Advisor_Info::Advisor_Window);
     QTreeWidget::enterEvent(event);
 }
+
+
+
 
 
 

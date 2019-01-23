@@ -16,6 +16,11 @@ class DrProject;
 class InterfaceRelay;
 class SelectionGroup;
 
+
+//####################################################################################
+//##    SceneGraphicsScene
+//##        Holds items of one scene
+//############################
 class SceneGraphicsScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -28,6 +33,7 @@ private:
     // Selection variables
     SelectionGroup     *m_selection_group;          // Holds the group of items currently selected
 
+    QUndoStack         *m_undo;
 
 public:
     // Mutexes
@@ -68,15 +74,20 @@ public:
     int                   getSelectionGroupCount();
 
 public slots:
-    void            sceneChanged(QList<QRectF> region);
+    void            sceneChanged(QList<QRectF> region);                             // Used to resize scene area to fit contents
+
+    // Undo Commands
+    void            itemMoved(DrItem *moved_item, const QPointF &old_position);     // Item moved in scene
+
 
 signals:
-    void            updateViews();
+    void            updateViews();                                                  // Connected to update() method of attached Views
 
 };
 
 
-//############################
+
+//####################################################################################
 //##    SelectionGroup
 //##        A sub classed QGraphicsItemGroup that can hold selected items in a scene
 //############################
@@ -94,6 +105,30 @@ public:
 
 };
 
+
+
+
+//####################################################################################
+//##    Undo Commands
+//##        Commands used with local m_undo QUndoStack
+//############################
+class MoveCommand : public QUndoCommand
+{
+public:
+    enum { Id = 1234 };
+
+    MoveCommand(DrItem *dr_item, const QPointF &old_pos, QUndoCommand *parent = nullptr);
+
+    void undo() override;
+    void redo() override;
+    bool mergeWith(const QUndoCommand *command) override;
+    int id() const override { return Id; }
+
+private:
+    DrItem *m_dr_item;
+    QPointF m_old_pos;
+    QPointF m_new_pos;
+};
 
 
 

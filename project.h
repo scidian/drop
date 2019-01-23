@@ -15,6 +15,10 @@ class DrWorld;
 typedef std::map<long, DrWorld*> WorldMap;
 
 
+//####################################################################################
+//##    DrProject
+//##        Class to hold data for one project
+//############################
 class DrProject
 {
 private:

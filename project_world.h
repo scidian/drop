@@ -16,6 +16,10 @@ class DrScene;
 typedef std::map<long, DrScene*> SceneMap;
 
 
+//####################################################################################
+//##    DrWorld
+//##        Class to hold all scenes, variables and objects for one world
+//############################
 class DrWorld : public DrSettings
 {
 private:

@@ -44,7 +44,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 
 
 
-    // !!!!! #TEMP: call to populate Graphics Scene (currently does chips)
+    // !!!!! #TEMP: call to populate Graphics Scene (currently does a couple squares)
     populateScene();
     // !!!!! END
 

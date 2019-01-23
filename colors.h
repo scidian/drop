@@ -12,7 +12,9 @@
 #include <QColor>
 
 
-// ***** Palette options for windows
+//####################################################################################
+//##    Palette options for windows
+//############################
 enum class Color_Scheme
 {
     Dark,       Light,      Blue,       Autumn

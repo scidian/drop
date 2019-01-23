@@ -17,6 +17,10 @@ class InterfaceRelay;
 class SceneViewRubberBand;
 class SceneViewToolTip;
 
+
+//####################################################################################
+//##    Local Enumerations
+//############################
 // Interactive mouse modes
 enum class View_Mode {
     None,
@@ -49,6 +53,10 @@ const double ANGLE_TOLERANCE = 2.5;                                 // Angle dis
 const int    ANGLE_STEP = 15;                                       // Angle intervals rotate function should snap to
 
 
+//####################################################################################
+//##    SceneGraphicsView
+//##        A sub classed QGraphicsView to show our scene
+//############################
 class SceneGraphicsView : public QGraphicsView
 {
     Q_OBJECT
@@ -205,7 +213,7 @@ public slots:
 };
 
 
-//############################
+//####################################################################################
 //##    SceneViewRubberBand
 //##        A sub classed QRubberBand so we can override paint event for rubber band
 //############################
@@ -222,7 +230,7 @@ public:
 
 
 
-//############################
+//####################################################################################
 //##    SceneViewTooltip
 //##        A parentless widget to be used as a custom tooltip
 //############################

@@ -14,6 +14,10 @@ class DrProject;
 class InterfaceRelay;
 
 
+//####################################################################################
+//##    TreeScene
+//##        A Tree List of Current Scene
+//############################
 class TreeScene: public QTreeWidget
 {
     Q_OBJECT
@@ -57,7 +61,7 @@ public:
 
 
 
-//############################
+//####################################################################################
 //##    SceneTreeHighlightStyle
 //##        A sub classed QProxyStyle so we can overwrite events and do some custom
 //##        drawing of TreeWidget list divider in Tree Scene List

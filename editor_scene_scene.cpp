@@ -39,6 +39,8 @@ SceneGraphicsScene::SceneGraphicsScene(QWidget *parent, DrProject *project, Inte
     addItem(m_selection_group);
     emptySelectionGroup();
     m_selection_group->setData(User_Roles::Name, "Captain");
+
+    m_undo = new QUndoStack(this);
 }
 
 SceneGraphicsScene::~SceneGraphicsScene()
@@ -227,7 +229,7 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
     scene_mutex.unlock();
 
     //QGraphicsScene::keyPressEvent(event);         // Don't pass on, if we pass on arrow key presses, it moves view sliders
-    emit updateViews();
+    emit updateViews();                             // Custom signal to tell views we're attached to update themselves
 }
 
 

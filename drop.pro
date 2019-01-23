@@ -56,7 +56,8 @@ SOURCES += \
     debug.cpp \
     interface_relay.cpp \
     library_misc.cpp \
-    library_style.cpp
+    library_style.cpp \
+    editor_scene_scene_commands.cpp
 
 HEADERS += \
     enums.h \
@@ -91,4 +92,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     drop.qrc
 
-DISTFILES +=
+DISTFILES += \
+    README.md

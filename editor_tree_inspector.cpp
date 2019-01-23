@@ -146,9 +146,8 @@ void TreeInspector::enterEvent(QEvent *event)
 
 
 //####################################################################################
-//
-//  On object inspector click show info about object and property
-//
+//##        On object inspector click show info about object and property
+//####################################################################################
 void TreeInspector::itemWasClicked(QTreeWidgetItem *item, int column)
 {
     Q_UNUSED(item);
@@ -187,6 +186,11 @@ void TreeInspector::itemWasClicked(QTreeWidgetItem *item, int column)
 
 
 
+//####################################################################################
+//##
+//##    InspectorCategoryButton Class Functions
+//##
+//####################################################################################
 // Constructor for category button, gives button a way to pass click to custom function
 InspectorCategoryButton::InspectorCategoryButton(const QString &text, TreeInspector *parent_tree,
                                                  QTreeWidgetItem *parent_item, QTreeWidgetItem *child_item, QFrame *new_child)

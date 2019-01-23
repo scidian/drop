@@ -13,9 +13,13 @@
 class DrProject;
 class InterfaceRelay;
 
-
 class InspectorCategoryButton;
 
+
+//####################################################################################
+//##    TreeInspector
+//##        A Tree List to show properties of items / classes / objects
+//############################
 class TreeInspector: public QTreeWidget
 {
     Q_OBJECT
@@ -43,7 +47,7 @@ private slots:
 
 
 
-//############################
+//####################################################################################
 //##    InspectorCategoryButton
 //##        A sub classed QPushButton so we can override events for header buttons in Object Inspector List
 //############################

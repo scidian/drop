@@ -16,6 +16,11 @@ class DrSettings;
 class DrProperty;
 typedef std::map<long, DrProperty*> PropertyMap;
 
+
+//####################################################################################
+//##    DrComponent
+//##        Class to hold a component for all DrClass objects
+//############################
 class DrComponent
 {
 private:

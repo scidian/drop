@@ -15,6 +15,11 @@ class DrProject;
 class DrWorld;
 class DrScene;
 
+
+//####################################################################################
+//##    DrObject
+//##        Class to hold one object within a scene
+//############################
 class DrObject : public DrSettings
 {
 private:

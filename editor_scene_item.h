@@ -15,6 +15,11 @@
 
 #include "form_main.h"
 
+
+//####################################################################################
+//##    DrItem
+//##        A QGraphicsItem for use with our custom QGraphicsScene
+//############################
 class DrItem : public QGraphicsItem
 {
 private:

@@ -16,6 +16,10 @@ class DrProject;
 class InterfaceRelay;
 
 
+//####################################################################################
+//##    TreeAdvisor
+//##        A Tree List to show helpful tips for every item in the editor
+//############################
 class TreeAdvisor: public QTreeWidget
 {
     Q_OBJECT

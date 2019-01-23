@@ -12,7 +12,9 @@
 #include <bitset>
 
 
-// ***** Possible debug options
+//####################################################################################
+//##    Possible debug options
+//############################
 enum class Debug_Flags {
     Show_Secret_Menu,                   // Add special menu to menu bar containing some hidden test functions
     Label_FPS,                          // Show frames per second of SceneGraphicsView

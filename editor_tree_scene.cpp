@@ -20,9 +20,8 @@
 
 
 //####################################################################################
-//##
 //##        Populates Tree Scene List based on project data
-//##
+//####################################################################################
 void TreeScene::populateTreeSceneList()
 {
     this->clear();
@@ -92,10 +91,8 @@ void TreeScene::enterEvent(QEvent *event)
 
 
 //####################################################################################
-//
-//  Testing drag event
-//
-
+//##        Testing drag event
+//####################################################################################
 // This removes the item from under the mouse, sort of
 void TreeScene::startDrag(Qt::DropActions supportedActions)
 {
@@ -190,10 +187,10 @@ void TreeScene::dropEvent(QDropEvent* event)
 
 
 //####################################################################################
-//
-// Updates selection, checks to make sure if more than one item is selected all new items
-//                    not matching original type are not selected
-//
+//##        Updates selection
+//##            Checks to make sure if more than one item is selected all new items
+//##            not matching original type are not selected
+//####################################################################################
 void TreeScene::selectionChanged (const QItemSelection &selected, const QItemSelection &deselected)
 {
     QList<QTreeWidgetItem*> item_list = this->selectedItems();

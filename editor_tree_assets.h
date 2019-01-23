@@ -14,6 +14,10 @@ class DrProject;
 class InterfaceRelay;
 
 
+//####################################################################################
+//##    TreeAssetList
+//##        A Tree List to show assests available to current project
+//############################
 class TreeAssetList: public QTreeWidget
 {
     Q_OBJECT
