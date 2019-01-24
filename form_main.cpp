@@ -84,14 +84,11 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 
 
 // Sends new list to Object Inspector
-void FormMain::buildObjectInspector(QList<long> key_list)
-{
+void FormMain::buildObjectInspector(QList<long> key_list) {
     treeInspector->buildInspectorFromKeys(key_list);
 }
 
-
-void FormMain::buildTreeSceneList()
-{
+void FormMain::buildTreeSceneList() {
     treeScene->populateTreeSceneList();
 }
 

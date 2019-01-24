@@ -57,6 +57,12 @@ public:
     QRectF          totalSelectedItemsSceneRect();
     void            updateView() { emit updateViews(); }
 
+    // Undo / Redo Functions
+    void            undoAction();
+    void            redoAction();
+    QString         getCurrentUndo() { return m_undo->undoText(); }
+    QString         getCurrentRedo() { return m_undo->redoText(); }
+
     // Selection Functions
     void            addItemToSelectionGroup(QGraphicsItem *item);
     void            emptySelectionGroup(bool delete_items_during_empty = false);
@@ -81,7 +87,7 @@ public slots:
     void            selectionGroupAddItem(SelectionGroup *moved_group, QGraphicsItem* new_item);
     void            selectionGroupEmpty(SelectionGroup *moved_group, QList<QGraphicsItem*> old_list);
     void            selectionGroupMoved(SelectionGroup *moved_group, const QPointF &old_position);
-    void            selectionGroupNewGroup(SelectionGroup *moved_group, QList<QGraphicsItem*> old_list, QGraphicsItem *new_item);
+    void            selectionGroupNewGroup(SelectionGroup *moved_group, QList<QGraphicsItem*> old_list, QList<QGraphicsItem*> new_list);
 
 
 signals:

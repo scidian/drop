@@ -32,6 +32,8 @@ void ShowMessageBox(QString new_message)
     QMessageBox *msgBox = new QMessageBox(nullptr);
     msgBox->setText(new_message);
     msgBox->exec();
+
+    ///QMessageBox::about(nullptr, "Sample Box", "Shows a message box");
 }
 
 

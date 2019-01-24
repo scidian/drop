@@ -57,8 +57,7 @@ SOURCES += \
     interface_relay.cpp \
     library_misc.cpp \
     library_style.cpp \
-    editor_scene_scene_commands.cpp \
-    editor_scene_scene_actions.cpp
+    editor_scene_scene_undo.cpp
 
 HEADERS += \
     enums.h \
@@ -82,7 +81,7 @@ HEADERS += \
     library.h \
     colors.h \
     debug.h \
-    editor_scene_scene_commands.h
+    editor_scene_scene_undo.h
 
 FORMS +=
 

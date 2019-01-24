@@ -88,7 +88,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
                 if (item_under == nullptr) {
 
                     ///my_scene->emptySelectionGroup();
-                    emit selectionGroupEmpty(my_scene->getSelectionGroup(), my_scene->getSelectionGroupItems());
+                    emit selectionGroupEmpty(my_scene->getSelectionGroup(), my_items);
 
                 } else {
                     // If we clicked clicked a new item, set selection group to that
@@ -99,7 +99,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
                         ///my_scene->addItemToSelectionGroup(item_under);
                         ///emit selectionGroupAddItem(my_scene->getSelectionGroup(), item_under);
 
-                        emit selectionGroupNewGroup(my_scene->getSelectionGroup(), my_scene->getSelectionGroupItems(), item_under);
+                        emit selectionGroupNewGroup(my_scene->getSelectionGroup(), my_items, QList<QGraphicsItem*>({ item_under }) );
 
                         my_scene->selectSelectionGroup();
                     }

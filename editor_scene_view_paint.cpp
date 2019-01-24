@@ -68,8 +68,8 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
             connect(this, SIGNAL(selectionGroupEmpty(SelectionGroup*, QList<QGraphicsItem*>)), my_scene,
                     SLOT(selectionGroupEmpty(SelectionGroup*, QList<QGraphicsItem*>)));
 
-            connect(this, SIGNAL(selectionGroupNewGroup(SelectionGroup*, QList<QGraphicsItem*>, QGraphicsItem*)), my_scene,
-                    SLOT(selectionGroupNewGroup(SelectionGroup*, QList<QGraphicsItem*>, QGraphicsItem*)));
+            connect(this, SIGNAL(selectionGroupNewGroup(SelectionGroup*, QList<QGraphicsItem*>, QList<QGraphicsItem*>)), my_scene,
+                    SLOT(selectionGroupNewGroup(SelectionGroup*, QList<QGraphicsItem*>, QList<QGraphicsItem*>)));
         }
     }
 

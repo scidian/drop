@@ -76,6 +76,7 @@ private:
 
     // Normal Qt Classes for simple objects
     QMenuBar      *menuBar;
+    QAction       *actionUndo, *actionRedo;
     QWidget       *widgetAdvisor, *widgetAssests, *widgetCentral, *widgetScene, *widgetInspector, *widgetToolbar, *widgetSceneView;
     QScrollArea   *areaBottom;
     QFrame        *statusBar;
@@ -107,12 +108,21 @@ public:
     void            populateScene();                                        // !!!!! TEMP generic fill of scene
 
 private:
-    // Form setup
+    // Form Building / Setup
     void        buildMenu();
     void        buildWindow(Form_Main_Mode new_layout);
     void        buildWindowModeEditScene();
     void        changePalette(Color_Scheme new_color_scheme);
-    void        listChildren();
+
+    // Menu Bar Functions
+    void        menuAbout();
+    void        menuUndo();
+    void        menuRedo();
+    void        menuListChildren();
+
+private slots:
+    void        editMenuAboutToShow();
+    void        editMenuAboutToHide();
 
 signals:
     void        sendAdvisorInfo(HeaderBodyList header_body_list);           // Forwards info to MainWindow::changeAdvisor

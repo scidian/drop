@@ -20,16 +20,6 @@
 //####################################################################################
 //##        Setting up of form main
 //####################################################################################
-// Pops up a message box listing all child widgets of FormMain
-void FormMain::listChildren()
-{
-    QString widget_list;
-    for (auto widget : findChildren<QWidget *>()) {
-        widget_list += widget->objectName() + ", ";
-    }
-    Dr::ShowMessageBox(widget_list);
-}
-
 // Re-configures FormMain to new mode
 void FormMain::buildWindow(Form_Main_Mode new_layout)
 {
