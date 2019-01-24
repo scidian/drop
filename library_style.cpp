@@ -128,6 +128,14 @@ void ApplyColoring(QWidget *widget)
         "       background-color: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
         "       border: 0px; } "
 
+
+        " QTabBar::tab { color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
+        "       border-radius: 6px; padding-top: 2px; padding-bottom: 3px; padding-left: 8px; padding-right: 8px; } "
+        " QTabBar::tab:selected { color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
+        "       border-radius: 6px; padding-top: 2px; padding-bottom: 3px; padding-left: 8px; padding-right: 8px; } "
+
         //" QDockWidget { titlebar-close-icon: url(close.png); } "
         " QDockWidget { font-size: 11px; color: " + Dr::GetColor(Window_Colors::Text).name() + "; } "
         " QDockWidget::title { text-align: center; "
