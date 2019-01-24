@@ -11,11 +11,11 @@
 
 /*
  *  To Implement:
- *      - Selection change
+ *      - Selection change: Rubber band
  *
- *      - Moving item with key press
+ *      - Moving Item: Key press
  *
- *      - Geometry changes (rotation, scaling)
+ *      - Geometry Changes: Rotation, Scaling
  *
  *      - Delete item
  *
@@ -132,7 +132,7 @@ void SelectionNewGroupCommand::undo() {
     for (auto item : m_old_list) m_group->getParentScene()->addItemToSelectionGroup(item);
     m_group->getParentScene()->updateView();
     if (m_new_list.count() > 1)
-        setText("Undo New Items Selected");
+        setText("Redo Change Selection");
     else
         setText("Redo New Item Selected: " + m_new_list.first()->data(User_Roles::Name).toString() );
 }
@@ -143,7 +143,7 @@ void SelectionNewGroupCommand::redo() {
         m_group->getParentScene()->addItemToSelectionGroup(item);
     m_group->getParentScene()->updateView();
     if (m_new_list.count() > 1)
-        setText("Undo New Items Selected");
+        setText("Undo Change Selection");
     else
         setText("Undo New Item Selected: " + m_new_list.first()->data(User_Roles::Name).toString() );
 }

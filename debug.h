@@ -17,6 +17,8 @@
 //############################
 enum class Debug_Flags {
     Show_Secret_Menu,                   // Add special menu to menu bar containing some hidden test functions
+    Show_Undo_View,                     // Shows a window with all undo / redo commands from current scene
+
     Label_FPS,                          // Show frames per second of SceneGraphicsView
     Label_Mouse_Coordinates,            // Show mouse position coordinates while moving over SceneGraphicsView
 

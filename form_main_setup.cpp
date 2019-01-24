@@ -171,7 +171,7 @@ void FormMain::buildWindowModeEditScene()
 
 
                     verticalLayoutView->addWidget(viewMain);
-                    verticalLayoutView->addWidget(statusBar);
+                    ///verticalLayoutView->addWidget(statusBar);
 
                 splitterHorizontal->addWidget(widgetSceneView);
                 splitterHorizontal->setSizes(QList<int> { 150, 300 });      // Sets tree_scene (scene assests) startup width to 150
