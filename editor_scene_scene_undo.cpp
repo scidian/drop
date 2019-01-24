@@ -39,14 +39,9 @@ void SceneGraphicsScene::redoAction() {
 void SceneGraphicsScene::selectionGroupMoved(SelectionGroup *moved_group, const QPointF &old_position)
 {   m_undo->push(new MoveCommand(moved_group, old_position));   }
 
-void SceneGraphicsScene::selectionGroupAddItem(SelectionGroup *moved_group, QGraphicsItem *new_item)
-{   m_undo->push(new SelectionAddItemCommand(moved_group, new_item));   }
-
-void SceneGraphicsScene::selectionGroupEmpty(SelectionGroup *moved_group, QList<QGraphicsItem*> old_list)
-{   m_undo->push(new SelectionEmptyCommand(moved_group, old_list));     }
-
-void SceneGraphicsScene::selectionGroupNewGroup(SelectionGroup *moved_group, QList<QGraphicsItem*> old_list, QList<QGraphicsItem*> new_list)
-{   m_undo->push(new SelectionNewGroupCommand(moved_group, old_list, new_list));    }
+void SceneGraphicsScene::selectionGroupNewGroup(SelectionGroup *moved_group, QList<QGraphicsItem*> old_list, QList<QGraphicsItem*> new_list,
+                                                QGraphicsItem *old_first, QGraphicsItem *new_first)
+{   m_undo->push(new SelectionNewGroupCommand(moved_group, old_list, new_list, old_first, new_first));    }
 
 
 
@@ -72,80 +67,46 @@ void MoveCommand::redo() {
 }
 
 
-//####################################################################################
-//##        Adds item to selection group
-//####################################################################################
-SelectionAddItemCommand::SelectionAddItemCommand(SelectionGroup *group, QGraphicsItem* new_item, QUndoCommand *parent) : QUndoCommand(parent) {
-    m_group = group;
-    m_new_item = new_item;
-}
-
-void SelectionAddItemCommand::undo() {
-    m_group->removeFromGroup(m_new_item);
-
-    if (m_group->childItems().count() < 1) m_group->getParentScene()->emptySelectionGroup();
-
-    m_group->getParentScene()->updateView();
-    setText(QObject::tr("Redo Add Item %1 to Selection").arg(m_new_item->data(User_Roles::Name).toString()));
-}
-
-void SelectionAddItemCommand::redo() {
-    m_group->getParentScene()->addItemToSelectionGroup(m_new_item);
-    m_group->getParentScene()->updateView();
-    setText(QObject::tr("Undo Add Item %1 to Selection").arg(m_new_item->data(User_Roles::Name).toString()));
-}
-
-
-//####################################################################################
-//##        Empties Selection Group
-//####################################################################################
-SelectionEmptyCommand::SelectionEmptyCommand(SelectionGroup *group, QList<QGraphicsItem*> old_list, QUndoCommand *parent) : QUndoCommand(parent) {
-    m_group = group;
-    m_old_list = old_list;
-}
-
-void SelectionEmptyCommand::undo() {
-    for (auto item : m_old_list) m_group->getParentScene()->addItemToSelectionGroup(item);
-    m_group->getParentScene()->updateView();
-    setText("Redo Select None");
-}
-
-void SelectionEmptyCommand::redo() {
-    m_group->getParentScene()->emptySelectionGroup();
-    m_group->getParentScene()->updateView();
-    setText("Undo Select None");
-}
-
 
 //####################################################################################
 //##        Deselects old items, Selects one new item
 //####################################################################################
-SelectionNewGroupCommand::SelectionNewGroupCommand(SelectionGroup *group, QList<QGraphicsItem*> old_list,
-                                                   QList<QGraphicsItem*> new_list, QUndoCommand *parent) : QUndoCommand(parent) {
+SelectionNewGroupCommand::SelectionNewGroupCommand(SelectionGroup *group,
+                                                   QList<QGraphicsItem*> old_list, QList<QGraphicsItem*> new_list,
+                                                   QGraphicsItem *old_first, QGraphicsItem *new_first,
+                                                   QUndoCommand *parent) : QUndoCommand(parent) {
     m_group = group;
     m_old_list = old_list;
     m_new_list = new_list;
+    m_old_first_selected = old_first;
+    m_new_first_selected = new_first;
 }
 
 void SelectionNewGroupCommand::undo() {
     m_group->getParentScene()->emptySelectionGroup();
+    m_group->getParentScene()->setFirstSelectedItem(m_old_first_selected);
     for (auto item : m_old_list) m_group->getParentScene()->addItemToSelectionGroup(item);
     m_group->getParentScene()->updateView();
     if (m_new_list.count() > 1)
         setText("Redo Change Selection");
-    else
+    else if (m_new_list.count() == 1)
         setText("Redo New Item Selected: " + m_new_list.first()->data(User_Roles::Name).toString() );
+    else
+        setText("Redo Select None");
 }
 
 void SelectionNewGroupCommand::redo() {
     m_group->getParentScene()->emptySelectionGroup();
+    m_group->getParentScene()->setFirstSelectedItem(m_new_first_selected);
     for (auto item : m_new_list)
         m_group->getParentScene()->addItemToSelectionGroup(item);
     m_group->getParentScene()->updateView();
     if (m_new_list.count() > 1)
         setText("Undo Change Selection");
-    else
+    else if (m_new_list.count() == 1)
         setText("Undo New Item Selected: " + m_new_list.first()->data(User_Roles::Name).toString() );
+    else
+        setText("Undo Select None");
 }
 
 

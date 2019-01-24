@@ -124,7 +124,8 @@ private:
 
     // View_Mode::Selecting Variables
     SceneViewRubberBand            *m_rubber_band;                  // Holds our view's RubberBand object
-    QList<QGraphicsItem *>          m_items_start;                  // Stores items selected at start of new rubber band box
+    QList<QGraphicsItem*>           m_items_start;                  // Stores items selected at start of new rubber band box
+    QList<QGraphicsItem*>           m_items_keep;                   // Stores list of items to keep on top of rubber band items (with control key)
 
     // View_Mode::Resizing Variables
     QRectF                          m_start_resize_rect;            // Stores starting rect of selection before resize starts
@@ -217,10 +218,9 @@ public slots:
 
 signals:
     // Signals used to emit UndoStack Commands
-    void    selectionGroupAddItem(SelectionGroup *moved_group, QGraphicsItem* new_item);
-    void    selectionGroupEmpty(SelectionGroup *moved_group, QList<QGraphicsItem*> old_list);
     void    selectionGroupMoved(SelectionGroup *moved_group, const QPointF &old_position);
-    void    selectionGroupNewGroup(SelectionGroup *moved_group, QList<QGraphicsItem*> old_list, QList<QGraphicsItem*> new_list);
+    void    selectionGroupNewGroup(SelectionGroup *moved_group, QList<QGraphicsItem*> old_list, QList<QGraphicsItem*> new_list,
+                                   QGraphicsItem *old_first, QGraphicsItem *new_first);
 
 };
 

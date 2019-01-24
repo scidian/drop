@@ -6,6 +6,8 @@
 //
 //
 
+#include "library.h"
+
 #include "project.h"
 #include "project_world.h"
 #include "project_world_scene.h"
@@ -48,7 +50,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
     // On initial mouse down, store mouse origin point
     m_origin =          event->pos();
     m_origin_in_scene = mapToScene(m_origin);
-    m_origin_item =     itemAt(event->pos());
+    m_origin_item =     itemOnTopAtPosition(event->pos());
 
     // If space bar isn't down, process mouse down
     if (dragMode() == QGraphicsView::DragMode::NoDrag) {
@@ -77,19 +79,14 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
 
             // ******************* If no keys are down, only select item under mouse
-            QGraphicsItem *item_under;
-
             if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
-                item_under = itemOnTopAtPosition(event->pos());
 
                 // If no item under mouse, deselect all
-                if (item_under == nullptr) {
-                    emit selectionGroupEmpty(my_scene->getSelectionGroup(), my_items);
-
-                } else {
+                if (m_origin_item != nullptr) {
                     // If we clicked clicked a new item, set selection group to that
-                    if (my_items.contains(item_under) == false) {
-                        emit selectionGroupNewGroup(my_scene->getSelectionGroup(), my_items, QList<QGraphicsItem*>({ item_under }) );
+                    if (my_items.contains(m_origin_item) == false) {
+                        emit selectionGroupNewGroup(my_scene->getSelectionGroup(), my_items, QList<QGraphicsItem*>({ m_origin_item }),
+                                                    my_scene->getFirstSelectedItem(), m_origin_item);
                         my_scene->selectSelectionGroup();
                     }
 
@@ -107,20 +104,28 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
             } else if (event->modifiers() & Qt::KeyboardModifier::ControlModifier && m_origin_item != nullptr) {
 
                 QList<QGraphicsItem*> new_list = my_items;
-                item_under = itemOnTopAtPosition(event->pos());
 
                 // If an item was clicked remove it from selection group, otherwise add it
-                if (my_items.contains(item_under) == true)
-                    new_list.removeOne(item_under);
-                else if (my_items.contains(item_under) == false)
-                    new_list.append(item_under);
+                if (my_items.contains(m_origin_item) == true)
+                    new_list.removeOne(m_origin_item);
+                else if (my_items.contains(m_origin_item) == false)
+                    new_list.append(m_origin_item);
 
-                // If we went from one more than one item to one item, reset selection box to that item
+                // If we lost the first item, cancel having a first item
                 if (new_list.count() > 0) {
-                    emit selectionGroupNewGroup(my_scene->getSelectionGroup(), my_items, new_list);
+                    QGraphicsItem *new_first = my_scene->getFirstSelectedItem();
+
+                    if (new_list.count() == 1)
+                        new_first = new_list.first();
+                    else if (new_list.contains(my_scene->getFirstSelectedItem()) == false)
+                        new_first = nullptr;
+
+                    emit selectionGroupNewGroup(my_scene->getSelectionGroup(), my_items, new_list,
+                                                my_scene->getFirstSelectedItem(), new_first);
                     my_scene->selectSelectionGroup();
                 } else {
-                    emit selectionGroupEmpty(my_scene->getSelectionGroup(), my_items);
+                    emit selectionGroupNewGroup(my_scene->getSelectionGroup(), my_items, QList<QGraphicsItem*>({}),
+                                                my_scene->getFirstSelectedItem(), nullptr);
                 }
             }
 
@@ -128,6 +133,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
             // ******************* If theres no item under mouse, start selection box
             if (m_origin_item == nullptr) {
                 startSelect(event);
+                processSelection(event->pos());
                 my_scene->scene_mutex.unlock();
                 return;
             }
@@ -371,13 +377,42 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 //####################################################################################
 void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 {
+    // Test for scene, convert to our custom class
+    if (scene() == nullptr) return;
+    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+    QList<QGraphicsItem*>  empty{ };
+    QGraphicsItem         *first_item = my_scene->getFirstSelectedItem();
+
     // Process left mouse button released
     if (event->button() & Qt::LeftButton)
     {
+        // We were in item moving mode, emit undo command signal with new item location
         if (m_view_mode == View_Mode::Translating && scene() != nullptr) {
-            SelectionGroup *group = dynamic_cast<SceneGraphicsScene*>(scene())->getSelectionGroup();
+            SelectionGroup *group = my_scene->getSelectionGroup();
             if (group->childItems().count() > 0 && m_old_pos != group->pos()) {
                 emit selectionGroupMoved(group, m_old_pos);
+            }
+        }
+
+        // We were in rubber band selection mode, if selection has changed emit undo command signal
+        if (m_view_mode == View_Mode::Selecting && scene() != nullptr) {
+            SelectionGroup *group = my_scene->getSelectionGroup();
+
+            // If we had items selected and now we don't, emit undo clear selection command
+            if (group->childItems().count() == 0 && m_items_start.count() != 0) {
+                emit selectionGroupNewGroup(group, m_items_start, empty, first_item, nullptr);
+
+            // Otherwise check to see if selected items list has changed, if so emit new group command
+            } else if (group->childItems() != m_items_start) {
+
+                if (group->childItems().count() == 1) {
+                    emit selectionGroupNewGroup(group, m_items_start, group->childItems(), first_item, group->childItems().first());
+                } else if ( group->childItems().count() > 1) {
+                    if (group->childItems().contains(my_scene->getFirstSelectedItem()))
+                        emit selectionGroupNewGroup(group, m_items_start, group->childItems(), first_item, first_item);
+                    else
+                        emit selectionGroupNewGroup(group, m_items_start, group->childItems(), first_item, nullptr);
+                }
             }
         }
 
@@ -390,7 +425,6 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
     QGraphicsView::mouseReleaseEvent(event);
     update();
 }
-
 
 
 

@@ -29,10 +29,11 @@ bool IsCloseTo(double number_desired, double number_to_check, double tolerance)
 //####################################################################################
 void ShowMessageBox(QString new_message)
 {
-    QMessageBox *msgBox = new QMessageBox(nullptr);
-    msgBox->setText(new_message);
-    msgBox->exec();
+    QMessageBox *msg_box = new QMessageBox(nullptr);
+    msg_box->setText(new_message);
+    msg_box->exec();
 
+    delete msg_box;
     ///QMessageBox::about(nullptr, "Sample Box", "Shows a message box");
 }
 

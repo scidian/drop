@@ -44,17 +44,30 @@ void SceneGraphicsScene::addItemToSelectionGroup(QGraphicsItem *item)
     // Check if we were passed the selection group itself
     if (item == m_selection_group) return;
 
-    // If item is in group, remove it (i.e. item was clicked while control key is held down)
+    // If item is not in group, add it in
     if (m_selection_group->childItems().contains(item) == false) {
-        if (start_count == 0) {
-            double  angle = item->data(User_Roles::Rotation).toDouble();
-            QPointF scale = item->data(User_Roles::Scale).toPointF();
+
+        // If this is the first item, set all properties to first item, if second item, reset scale to 1, 1
+        if ((start_count == 0 || start_count == 1) && m_first_selected != nullptr) {
+            QGraphicsItem *first = nullptr;
+            QPointF scale = QPointF(1, 1);
+
+            if (start_count == 0) {
+                scale = m_first_selected->data(User_Roles::Scale).toPointF();
+            } else {
+                first = m_selection_group->childItems().first();
+                m_selection_group->removeFromGroup(first);
+            }
+
+            double  angle = m_first_selected->data(User_Roles::Rotation).toDouble();
             QPointF center = m_selection_group->boundingRect().center();
             QTransform t = QTransform().translate(center.x(), center.y()).rotate(angle).scale(scale.x(), scale.y()).translate(-center.x(), -center.y());
             m_selection_group->setTransform(t);
             m_selection_group->setData(User_Roles::Rotation, angle);
             m_selection_group->setData(User_Roles::Scale, scale);
-            m_selection_group->setZValue(item->zValue());
+            m_selection_group->setZValue(m_first_selected->zValue());
+
+            if (start_count == 1) m_selection_group->addToGroup(first);
         }
 
         if (item->zValue() > m_selection_group->zValue())
@@ -66,8 +79,11 @@ void SceneGraphicsScene::addItemToSelectionGroup(QGraphicsItem *item)
     }
 }
 
+// Empties selection group, delete_items_during_empty used for item copying with SceneGraphicsScene keyPressEvent
 void SceneGraphicsScene::emptySelectionGroup(bool delete_items_during_empty)
 {
+    m_first_selected = nullptr;
+
     // Remove all items from selection group
     for (auto child : m_selection_group->childItems()) {
         m_selection_group->removeFromGroup(child);

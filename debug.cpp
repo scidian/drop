@@ -13,7 +13,7 @@ namespace Dr {
 //####################################################################################
 //##        Local Static Variables
 //####################################################################################
-static std::bitset<static_cast<int>(Debug_Flags::Total)>   debug_flags;
+static std::bitset<static_cast<int>(Debug_Flags::Total)>   g_debug_flags;
 
 
 //####################################################################################
@@ -21,12 +21,12 @@ static std::bitset<static_cast<int>(Debug_Flags::Total)>   debug_flags;
 //####################################################################################
 bool CheckDebugFlag(Debug_Flags flag)
 {
-    return debug_flags.test(static_cast<size_t>(flag));
+    return g_debug_flags.test(static_cast<size_t>(flag));
 }
 
 void SetDebugFlag(Debug_Flags flag)
 {
-    debug_flags.set(static_cast<size_t>(flag));
+    g_debug_flags.set(static_cast<size_t>(flag));
 }
 
 void InitializeFlags()

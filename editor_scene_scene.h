@@ -32,6 +32,7 @@ private:
 
     // Selection variables
     SelectionGroup     *m_selection_group;          // Holds the group of items currently selected
+    QGraphicsItem      *m_first_selected;           // Keeps track of first item selected to use its properties for the group selection
 
     QUndoStack         *m_undo;
 
@@ -80,14 +81,16 @@ public:
     QList<QGraphicsItem*> getSelectionGroupItems();
     int                   getSelectionGroupCount();
 
+    QGraphicsItem*        getFirstSelectedItem() { return m_first_selected; }
+    void                  setFirstSelectedItem(QGraphicsItem *item) { m_first_selected = item; }
+
 public slots:
     void            sceneChanged(QList<QRectF> region);                             // Used to resize scene area to fit contents
 
     // Undo Commands
-    void            selectionGroupAddItem(SelectionGroup *moved_group, QGraphicsItem* new_item);
-    void            selectionGroupEmpty(SelectionGroup *moved_group, QList<QGraphicsItem*> old_list);
     void            selectionGroupMoved(SelectionGroup *moved_group, const QPointF &old_position);
-    void            selectionGroupNewGroup(SelectionGroup *moved_group, QList<QGraphicsItem*> old_list, QList<QGraphicsItem*> new_list);
+    void            selectionGroupNewGroup(SelectionGroup *moved_group, QList<QGraphicsItem*> old_list, QList<QGraphicsItem*> new_list,
+                                           QGraphicsItem *old_first, QGraphicsItem *new_first);
 
 
 signals:

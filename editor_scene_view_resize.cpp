@@ -28,12 +28,11 @@
 //####################################################################################
 void SceneGraphicsView::startResize(QPoint mouse_in_view)
 {
-    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
-
     m_view_mode = View_Mode::Resizing;
     m_start_resize_grip = m_over_handle;                        // Store grip handle we start resize event with
     m_start_resize_rect = totalSelectedItemsSceneRect();        // Store starting scene rect of initial selection bounding box
 
+    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
     QGraphicsItem *item = my_scene->getSelectionGroupAsGraphicsItem();
     m_pre_resize_scale = item->data(User_Roles::Scale).toPointF();
 

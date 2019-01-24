@@ -28,8 +28,6 @@
 //####################################################################################
 void SceneGraphicsView::startRotate(QPoint mouse_in_view)
 {
-    if (scene() == nullptr) return;
-
     m_view_mode = View_Mode::Rotating;
 
     // Grab starting angle of selection group before rotating starts

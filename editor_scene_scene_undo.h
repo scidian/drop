@@ -32,44 +32,13 @@ private:
 
 
 //####################################################################################
-//##    Add to Selection Group Command
-//############################
-class SelectionAddItemCommand : public QUndoCommand
-{
-public:
-    SelectionAddItemCommand(SelectionGroup *group, QGraphicsItem *new_item, QUndoCommand *parent = nullptr);
-    void undo() override;
-    void redo() override;
-
-private:
-    SelectionGroup          *m_group;
-    QGraphicsItem           *m_new_item;
-};
-
-
-//####################################################################################
-//##    Add to Selection Group Command
-//############################
-class SelectionEmptyCommand : public QUndoCommand
-{
-public:
-    SelectionEmptyCommand(SelectionGroup *group, QList<QGraphicsItem*> old_list, QUndoCommand *parent = nullptr);
-    void undo() override;
-    void redo() override;
-
-private:
-    SelectionGroup          *m_group;
-    QList<QGraphicsItem*>    m_old_list;
-};
-
-
-//####################################################################################
 //##    Selected new group command
 //############################
 class SelectionNewGroupCommand : public QUndoCommand
 {
 public:
-    SelectionNewGroupCommand(SelectionGroup *group, QList<QGraphicsItem*> old_list, QList<QGraphicsItem*> new_list, QUndoCommand *parent = nullptr);
+    SelectionNewGroupCommand(SelectionGroup *group, QList<QGraphicsItem*> old_list, QList<QGraphicsItem*> new_list,
+                             QGraphicsItem *old_first, QGraphicsItem *new_first, QUndoCommand *parent = nullptr);
     void undo() override;
     void redo() override;
 
@@ -77,6 +46,8 @@ private:
     SelectionGroup          *m_group;
     QList<QGraphicsItem*>    m_old_list;
     QList<QGraphicsItem*>    m_new_list;
+    QGraphicsItem           *m_old_first_selected;
+    QGraphicsItem           *m_new_first_selected;
 };
 
 
