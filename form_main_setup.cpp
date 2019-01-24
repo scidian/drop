@@ -402,11 +402,12 @@ void FormMain::buildWindowModeEditScene()
     // ***** Build top Toolbar Dock
     toolbar = new QDockWidget(this);
     toolbar->setObjectName(QStringLiteral("toolbar"));
-    toolbar->setMinimumSize(QSize(449, 45));
-    toolbar->setMaximumSize(QSize(524287, 45));
+    toolbar->setMinimumSize(QSize(449, 50));
+    toolbar->setMaximumSize(QSize(524287, 50));
     toolbar->setFeatures(QDockWidget::NoDockWidgetFeatures);
     toolbar->setAllowedAreas(Qt::TopDockWidgetArea);
     toolbar->setWindowTitle(QStringLiteral(""));
+    toolbar->setContentsMargins(0, 0, 0, 4);
         widgetToolbar = new QWidget();
         widgetToolbar->setObjectName(QStringLiteral("widgetToolbar"));
             buttonAtlas = new QPushButton(widgetToolbar);
@@ -429,7 +430,6 @@ void FormMain::buildWindowModeEditScene()
             buttonWorlds->setObjectName(QStringLiteral("buttonWorlds"));
             buttonWorlds->setGeometry(QRect(20, 8, 121, 31));
             buttonWorlds->setFont(font);
-            buttonWorlds->setCheckable(false);
         toolbar->setWidget(widgetToolbar);
         toolbar->setTitleBarWidget(new QWidget());                                      // Removes title bar from QDockWidget Toolbar
     addDockWidget(static_cast<Qt::DockWidgetArea>(4), toolbar);

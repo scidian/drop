@@ -11,11 +11,10 @@
 
 /*
  *  To Implement:
- *      - Selection change: Rubber band
  *
  *      - Moving Item: Key press
  *
- *      - Geometry Changes: Rotation, Scaling
+ *      - Geometry Changes: Rotation, Scaling       !! USE MERGE??
  *
  *      - Delete item
  *

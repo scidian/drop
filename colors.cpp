@@ -33,6 +33,7 @@ void SetColorScheme(Color_Scheme new_scheme) { g_current_color_scheme = new_sche
 //####################################################################################
 void    LoadPalettes()
 {
+    g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Seperator, QColor(16, 16, 16)));
     g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Shadow, QColor(0, 0, 0)));
     g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Background_Dark, QColor(24, 24, 24)));
     g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Background_Light, QColor(32, 32, 32)));
@@ -46,6 +47,7 @@ void    LoadPalettes()
     g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Icon_Dark, QColor(0, 150, 145)));
     g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Icon_Light, QColor(0, 180, 175)));
 
+    g_color_schemes[Color_Scheme::Light].insert(std::make_pair(Window_Colors::Seperator, QColor(225, 225, 225)));
     g_color_schemes[Color_Scheme::Light].insert(std::make_pair(Window_Colors::Shadow, QColor(255, 255, 255)));
     g_color_schemes[Color_Scheme::Light].insert(std::make_pair(Window_Colors::Background_Dark, QColor(200, 200, 200)));
     g_color_schemes[Color_Scheme::Light].insert(std::make_pair(Window_Colors::Background_Light, QColor(225, 225, 225)));
@@ -59,6 +61,7 @@ void    LoadPalettes()
     g_color_schemes[Color_Scheme::Light].insert(std::make_pair(Window_Colors::Icon_Dark, QColor(0, 150, 145)));
     g_color_schemes[Color_Scheme::Light].insert(std::make_pair(Window_Colors::Icon_Light, QColor(0, 180, 175)));
 
+    g_color_schemes[Color_Scheme::Blue].insert(std::make_pair(Window_Colors::Seperator, QColor(29, 77, 144)));
     g_color_schemes[Color_Scheme::Blue].insert(std::make_pair(Window_Colors::Shadow, QColor(5, 16, 28)));
     g_color_schemes[Color_Scheme::Blue].insert(std::make_pair(Window_Colors::Background_Dark, QColor(20,55,103)));
     g_color_schemes[Color_Scheme::Blue].insert(std::make_pair(Window_Colors::Background_Light, QColor(29, 77, 144)));
@@ -72,6 +75,7 @@ void    LoadPalettes()
     g_color_schemes[Color_Scheme::Blue].insert(std::make_pair(Window_Colors::Icon_Dark, QColor(0, 150, 145)));
     g_color_schemes[Color_Scheme::Blue].insert(std::make_pair(Window_Colors::Icon_Light, QColor(0, 180, 175)));
 
+    g_color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Seperator, QColor(166, 59, 31)));
     g_color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Shadow, QColor(39, 18, 11)));
     g_color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Background_Dark, QColor(225, 167, 69)));
     g_color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Background_Light, QColor(166, 59, 31)));

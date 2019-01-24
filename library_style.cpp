@@ -73,11 +73,12 @@ void ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius)
 void ApplyColoring(QWidget *widget)
 {
     QString style_sheet = QString(
-        " .ColorSplitter { background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }"
-        " QFrame#statusBar { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; } "
+        " .ColorSplitter { background: " + Dr::GetColor(Window_Colors::Seperator).name() + "; }"
+        " QFrame#statusBar { background: " + Dr::GetColor(Window_Colors::Seperator).name() + "; } "
+        " QWidget#widgetToolbar { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; } "
 
-        " QMainWindow { background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }" +
-        " QMainWindow::separator { border: 1px solid " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }"
+        " QMainWindow { background: " + Dr::GetColor(Window_Colors::Seperator).name() + "; }" +
+        " QMainWindow::separator { border: 1px solid " + Dr::GetColor(Window_Colors::Seperator).name() + "; }"
 
         " QSplitter { width: 5px; height: 5px; } "
         " QSplitter::handle:vertical { image: url(:/gui_misc/splitter_v.png); } "

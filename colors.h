@@ -28,6 +28,7 @@ enum class Window_Colors
     Midlight,           Highlight,
     Text_Dark,          Text_Light,             Text,
     Icon_Dark,          Icon_Light,
+    Seperator,
 };
 
 
