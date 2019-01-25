@@ -195,7 +195,7 @@ namespace Advisor_Info
 //##    Used to track what the QVariant m_value data type really is
 //####################################################################################
 enum class Property_Type {
-    Bool,       Int,        Double,     Variable,   Percent,
+    Bool,       Int,        Double,     Variable,   Percent,    Angle,
     Char,       String,
     Image,      Icon,       Color,
     Point,      PointF,     Vector3D,
@@ -273,7 +273,7 @@ enum class Object_Properties
 
     // transform
     position,               //pointf
-    rotation,               //double
+    rotation,               //angle
     scale,                  //pointf
     opacity,                //double
 

@@ -43,7 +43,7 @@ void TreeAdvisor::changeAdvisor(QString header, QString body)
     // Create a label to display body text and format
     QLabel *body_label = new QLabel(body_text);
     QFont font_label;
-    font_label.setPointSize(11);
+    font_label.setPointSize(Dr::FontSize());
     body_label->setFont(font_label);
     body_label->setWordWrap(true);
     body_label->setAlignment(Qt::AlignTop);

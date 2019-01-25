@@ -48,8 +48,8 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
 void FormMain::buildWindowModeEditScene()
 {
     QFont font, fontLarger;
-    font.setPointSize(11);
-    fontLarger.setPointSize(13);
+    font.setPointSize(Dr::FontSize());
+    fontLarger.setPointSize(Dr::FontSize() + 2);
 
     // Other size policies to play with
     //QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::MinimumExpanding);
@@ -359,7 +359,7 @@ void FormMain::buildWindowModeEditScene()
     inspector = new QDockWidget(this);
     inspector->setObjectName(QStringLiteral("inspector"));
     inspector->setSizePolicy(sizePolicyPreferredVertical);
-    inspector->setMinimumSize(QSize(280, 250));
+    inspector->setMinimumSize(QSize(250, 250));
     inspector->setMaximumWidth(450);
     inspector->setFont(font);
     inspector->setFeatures(QDockWidget::DockWidgetMovable);

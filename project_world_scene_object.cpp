@@ -78,7 +78,7 @@ void DrObject::initializeObjectSettings(QString new_name)
 
     addPropertyToComponent(Object_Components::transform, Object_Properties::position, Property_Type::PointF, QPointF(0, 0),
                            "Position", "Location of item within the current scene.");
-    addPropertyToComponent(Object_Components::transform, Object_Properties::rotation, Property_Type::Double, 0,
+    addPropertyToComponent(Object_Components::transform, Object_Properties::rotation, Property_Type::Angle, 0,
                            "Rotation", "Angle of item within the scene.");
     addPropertyToComponent(Object_Components::transform, Object_Properties::scale, Property_Type::PointF, QPointF(1, 1),
                            "Scale", "X and Y scale of item within the scene.");

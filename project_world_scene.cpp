@@ -43,7 +43,7 @@ DrScene::~DrScene()
 void DrScene::addObject(DrTypes new_type)
 {
     QString new_name;
-    new_name = QString::number(static_cast<long>(m_objects.size() + 1));
+    new_name = "Object " + QString::number(static_cast<long>(m_objects.size() + 1));
 
     long new_object_key = m_parent_project->getNextKey();
     m_objects[new_object_key] = new DrObject(m_parent_project, m_parent_world, this, new_object_key, new_name, new_type);

@@ -72,11 +72,17 @@ void FormMain::buildMenu()
     // ***** Main window settings
     this->setObjectName(QStringLiteral("formMain"));
     this->setWindowModality(Qt::NonModal);
-    this->resize(1300, 800);
+    this->resize(1400, 940);
     this->setMinimumSize(QSize(780, 400));
     this->setMouseTracking(true);
     this->setAcceptDrops(true);
     this->setWindowIcon(QIcon(":icon/icon256.png"));                        // Set icon
+
+    // Center window on screen
+    QRect screenGeometry = QGuiApplication::screens().first()->geometry();
+    this->setGeometry(QStyle::alignedRect( Qt::LeftToRight, Qt::AlignCenter, this->size(), screenGeometry ));
+
+
 
     // ***** Create menu bar
     menuBar = new QMenuBar(this);

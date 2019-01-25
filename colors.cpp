@@ -16,6 +16,9 @@ static std::map<Color_Scheme, std::map<Window_Colors, QColor>> g_color_schemes;
 static Color_Scheme g_current_color_scheme = Color_Scheme::Dark;
 
 
+int     FontSize() {  return 11;  }                         // Project wide font size
+
+
 //####################################################################################
 //##        Retreive custom colors
 //####################################################################################

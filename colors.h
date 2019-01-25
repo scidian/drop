@@ -36,6 +36,8 @@ namespace Dr {
 
     void            LoadPalettes();
 
+    int             FontSize();                                 // Project wide font size
+
     QColor          GetColor(Window_Colors color_role);
     Color_Scheme    GetColorScheme();
     void            SetColorScheme(Color_Scheme new_scheme);

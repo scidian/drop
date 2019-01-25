@@ -6,6 +6,8 @@
 //
 //
 
+#include <cmath>
+
 #include "library.h"
 
 #include "project.h"
@@ -28,8 +30,8 @@ TreeInspector::TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay
                               QTreeWidget (parent), m_project(project), m_relay(relay)
 {
     connect(this, SIGNAL(itemClicked(QTreeWidgetItem *, int)), this, SLOT(itemWasClicked(QTreeWidgetItem *, int)));
-    m_label_hover = new LabelHoverHandler(this);
-    connect(m_label_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
+    m_widget_hover = new WidgetHoverHandler(this);
+    connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
 }
 
 
@@ -61,6 +63,17 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     default:                    m_relay->setAdvisorInfo(Advisor_Info::Not_Set);
     }
 
+    // Find out if we should hide name for this object
+    bool show_name;
+    switch (selected_type)
+    {
+    case DrTypes::Object:
+    case DrTypes::Character:
+    case DrTypes::Action:
+                show_name = false;  break;
+    default:    show_name = true;
+    }
+
 
     // Retrieve list of components for selected item
     ComponentMap components = m_project->findSettingsFromKey( selected_key )->getComponentList();
@@ -84,6 +97,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
         // Loop through each property and add it to the component frame
         for (auto j: i.second->getPropertyList()) {
+            if (j.second->getPropertyKey() == static_cast<long>(Object_Properties::name) && !show_name) continue;
+
             QFrame *single_row = new QFrame(properties_frame);
             QBoxLayout *horizontal_split = new QHBoxLayout(single_row);
             horizontal_split->setSpacing(0);
@@ -92,23 +107,22 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
             QLabel *property_name = new QLabel(j.second->getDisplayNameQString());
             QFont fp;
-            fp.setPointSize(11);
+            fp.setPointSize(Dr::FontSize());
             property_name->setFont(fp);
                 QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
-                sp_left.setHorizontalStretch(2);
+                sp_left.setHorizontalStretch(SIZE_LEFT);
             property_name->setSizePolicy(sp_left);
-            property_name->setProperty(User_Property::Header, j.second->getDisplayName());
-            property_name->setProperty(User_Property::Body, j.second->getDescription());
-            m_label_hover->attach(property_name);
-
+            applyHeaderBodyProperties(property_name, j.second);
             horizontal_split->addWidget(property_name);
-
 
             switch (j.second->getPropertyType())
             {
-            case Property_Type::Bool:       horizontal_split->addWidget(createCheckBox(j.second, fp));               break;
-            case Property_Type::Double:     horizontal_split->addWidget(createDoubleSpinBox(j.second, fp));          break;
-            case Property_Type::Percent:    horizontal_split->addWidget(createDoubleSpinBox(j.second, fp, true));    break;
+            case Property_Type::Bool:       horizontal_split->addWidget(createCheckBox(j.second, fp));                              break;
+            case Property_Type::Double:     horizontal_split->addWidget(createDoubleSpinBox(j.second, fp, Spin_Type::Double));      break;
+            case Property_Type::Percent:    horizontal_split->addWidget(createDoubleSpinBox(j.second, fp, Spin_Type::Percent));     break;
+            case Property_Type::Angle:      horizontal_split->addWidget(createDoubleSpinBox(j.second, fp, Spin_Type::Angle));       break;
+            case Property_Type::String:     horizontal_split->addWidget(createLineEdit(j.second, fp));               break;
+            case Property_Type::PointF:     horizontal_split->addWidget(createDoubleSpinBoxPair(j.second, fp));      break;
             }
 
 
@@ -157,45 +171,105 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 //##        Property Row Building Functions
 //####################################################################################
 
+void TreeInspector::applyHeaderBodyProperties(QWidget *widget, DrProperty *property)
+{
+    widget->setProperty(User_Property::Header, property->getDisplayName());
+    widget->setProperty(User_Property::Body, property->getDescription());
+    m_widget_hover->attach(widget);
+}
+
 QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font)
 {
     QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    sp_right.setHorizontalStretch(3);
+    sp_right.setHorizontalStretch(SIZE_RIGHT);
 
     QCheckBox *check = new QCheckBox();
     check->setObjectName("checkInspector");
     check->setFont(font);
     check->setSizePolicy(sp_right);
     check->setTristate(false);
+
     check->setChecked(property->getValue().toBool());
+    applyHeaderBodyProperties(check, property);
     return check;
 }
 
-QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &font, bool use_for_percent)
+QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type)
 {
     ///// Could also try to use a QLineEdit with a QValidator
     ///myLineEdit->setValidator( new QDoubleValidator(0, 100, 2, this) );
 
     QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    sp_right.setHorizontalStretch(3);
+    sp_right.setHorizontalStretch(SIZE_RIGHT);
 
-    QDoubleSpinBox *spin = new QDoubleSpinBox();
+    TripleSpinBox *spin = new TripleSpinBox();
     spin->setFont(font);
     spin->setSizePolicy(sp_right);
     spin->setDecimals(3);
-    if (use_for_percent) {
-        spin->setRange(0, 100);
-        spin->setSuffix("%");
-    } else {
-        spin->setRange(-100000000, 100000000);
+    switch (spin_type)
+    {
+    case Spin_Type::Double:     spin->setRange(-100000000, 100000000);                  break;
+    case Spin_Type::Percent:    spin->setRange(0, 100);     spin->setSuffix("%");       break;
+    case Spin_Type::Angle:      spin->setRange(-360, 360);  spin->setSuffix("°");       break;
     }
-    spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
     ///spin->setProperty("alignment", Qt::AlignRight);      // Align right?
+    spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
 
     spin->setValue(property->getValue().toDouble());
+    applyHeaderBodyProperties(spin, property);
     return spin;
 }
 
+QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font)
+{
+    QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    sp_right.setHorizontalStretch(SIZE_RIGHT);
+
+    QFrame *spin_pair = new QFrame();
+    spin_pair->setSizePolicy(sp_right);
+
+    QBoxLayout *horizontal_split = new QHBoxLayout(spin_pair);
+    horizontal_split->setSpacing(6);
+    horizontal_split->setContentsMargins(0,0,0,0);
+
+    QDoubleSpinBox *spin_left  = new QDoubleSpinBox();
+    spin_left->setFont(font);
+    spin_left->setMinimumWidth(50);
+    spin_left->setPrefix("X: ");
+    spin_left->setDecimals(3);
+    spin_left->setRange(-100000000, 100000000);
+    spin_left->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
+    spin_left->setValue(property->getValue().toPointF().x());
+    applyHeaderBodyProperties(spin_left, property);
+
+    QDoubleSpinBox *spin_right  = new QDoubleSpinBox();
+    spin_right->setFont(font);
+    spin_right->setMinimumWidth(50);
+    spin_right->setPrefix("Y: ");
+    spin_right->setDecimals(3);
+    spin_right->setRange(-100000000, 100000000);
+    spin_right->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
+    spin_right->setValue(property->getValue().toPointF().x());
+    applyHeaderBodyProperties(spin_right, property);
+
+    horizontal_split->addWidget(spin_left);
+    horizontal_split->addWidget(spin_right);
+    return spin_pair;
+}
+
+QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font)
+{
+    QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    sp_right.setHorizontalStretch(SIZE_RIGHT);
+
+    QLineEdit *edit = new QLineEdit();
+    edit->setFont(font);
+    edit->setSizePolicy(sp_right);
+
+    edit->setText(property->getValue().toString());
+    applyHeaderBodyProperties(edit, property);
+    return edit;
+}
 
 
 
@@ -313,29 +387,49 @@ void InspectorCategoryButton::buttonPressed()
 
 //####################################################################################
 //##
-//##    LabelHoverHandler Class Functions
+//##    WidgetHoverHandler Class Functions
 //##
 //####################################################################################
-void LabelHoverHandler::attach(QLabel *label)
+void WidgetHoverHandler::attach(QWidget *widget)
 {
-    label->setAttribute(Qt::WidgetAttribute::WA_Hover, true);
-    label->installEventFilter(this);
+    widget->setAttribute(Qt::WidgetAttribute::WA_Hover, true);
+    widget->installEventFilter(this);
 }
 
-bool LabelHoverHandler::eventFilter(QObject *obj, QEvent *event)
+bool WidgetHoverHandler::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::HoverEnter)
     {
-        QLabel *hover_label = dynamic_cast<QLabel*>(obj);
+        QWidget *hover_widget = dynamic_cast<QWidget*>(obj);
 
-        QString header = hover_label->property(User_Property::Header).toString();
-        QString body = hover_label->property(User_Property::Body).toString();
+        QString header = hover_widget->property(User_Property::Header).toString();
+        QString body = hover_widget->property(User_Property::Body).toString();
 
         emit signalMouseHover(header, body);
     }
 
     return false;
 }
+
+
+
+//####################################################################################
+//##
+//##    TripleSpinBox Class Functions
+//##
+//####################################################################################
+QString TripleSpinBox::textFromValue(double value) const
+{
+    QString output;
+    double intpart;
+    if (std::modf(value, &intpart) == 0.0)              output = QWidget::locale().toString(value, QLatin1Char('f').unicode(), 0);
+    else if (std::modf(value * 10, &intpart) == 0.0)    output = QWidget::locale().toString(value, QLatin1Char('f').unicode(), 1);
+    else if (std::modf(value * 100, &intpart) == 0.0)   output = QWidget::locale().toString(value, QLatin1Char('f').unicode(), 2);
+    else                                                output = QWidget::locale().toString(value, QLatin1Char('f').unicode(), decimals());
+    return output;
+}
+
+
 
 
 

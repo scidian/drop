@@ -16,7 +16,19 @@ class DrProperty;
 class InterfaceRelay;
 
 class InspectorCategoryButton;
-class LabelHoverHandler;
+class WidgetHoverHandler;
+
+
+enum class Spin_Type {
+    Double,
+    Percent,
+    Angle
+};
+
+
+// Class constants
+const int   SIZE_LEFT =  3;                             // Size policy width of left column
+const int   SIZE_RIGHT = 5;                             // Size policy width of right column
 
 
 //####################################################################################
@@ -28,10 +40,10 @@ class TreeInspector: public QTreeWidget
     Q_OBJECT
 
 private:
-    DrProject           *m_project;                  // Pointer to currently loaded project
-    InterfaceRelay      *m_relay;                    // Pointer to InterfaceRelay class of parent form
+    DrProject           *m_project;                     // Pointer to currently loaded project
+    InterfaceRelay      *m_relay;                       // Pointer to InterfaceRelay class of parent form
 
-    LabelHoverHandler   *m_label_hover;           // Pointer to a label hover handler
+    WidgetHoverHandler  *m_widget_hover;                // Pointer to a widget hover handler
 
 public:
     explicit        TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay *relay);
@@ -44,8 +56,11 @@ public:
     InterfaceRelay* getRelay() { return m_relay; }
 
     // Property Builders
+    void            applyHeaderBodyProperties(QWidget *widget, DrProperty *property);
     QCheckBox*      createCheckBox(DrProperty *property, QFont &font);
-    QDoubleSpinBox* createDoubleSpinBox(DrProperty *property, QFont &font, bool use_for_percent = false);
+    QDoubleSpinBox* createDoubleSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type);
+    QFrame*         createDoubleSpinBoxPair(DrProperty *property, QFont &font);
+    QLineEdit*      createLineEdit(DrProperty *property, QFont &font);
 
 private slots:
     void            itemWasClicked(QTreeWidgetItem *item, int column);
@@ -91,18 +106,18 @@ private slots:
 
 
 //####################################################################################
-//##    LabelHoverHandler
-//##        Catches hover events for labels on Object Inspector without needing subclassing
+//##    WidgetHoverHandler
+//##        Catches hover events for widgets on Object Inspector without needing subclassing
 //############################
-class LabelHoverHandler : public QObject
+class WidgetHoverHandler : public QObject
 {
     Q_OBJECT
 
 public:
-    LabelHoverHandler(QObject *parent) : QObject(parent) {}
-    virtual ~LabelHoverHandler() {}
+    WidgetHoverHandler(QObject *parent) : QObject(parent) {}
+    virtual ~WidgetHoverHandler() {}
 
-    void attach(QLabel *label);
+    void attach(QWidget *widget);
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
@@ -112,7 +127,29 @@ signals:
 };
 
 
+//####################################################################################
+//##    TripleSpinBox
+//##        Allows us to control number of decimals being shown in spin box
+//############################
+class TripleSpinBox : public QDoubleSpinBox
+{
+    Q_OBJECT
+
+public:
+    TripleSpinBox(QWidget *parent = nullptr) : QDoubleSpinBox(parent) {}
+    virtual ~TripleSpinBox() override {}
+
+protected:
+    virtual QString textFromValue(double value) const override;
+
+};
+
+
+
+
 #endif // EDITOR_TREE_INSPECTOR_H
+
+
 
 
 

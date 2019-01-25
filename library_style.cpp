@@ -145,7 +145,7 @@ void ApplyColoring(QWidget *widget)
 
         // Dock Widgets
         //" QDockWidget { titlebar-close-icon: url(close.png); } "
-        " QDockWidget { font-size: 11px; color: " + Dr::GetColor(Window_Colors::Text).name() + "; } "
+        " QDockWidget { font-size: " + QString::number(Dr::FontSize()) + "px; color: " + Dr::GetColor(Window_Colors::Text).name() + "; } "
         " QDockWidget::title { text-align: center; "
         "       background: qlineargradient(x1:0 y1:0, x2:0 y2:1, "
         "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Light).name() + ", "
@@ -162,8 +162,10 @@ void ApplyColoring(QWidget *widget)
         " QLabel { color: " + Dr::GetColor(Window_Colors::Text).name() + "; } "
 
         // Check boxes, mostly in object inspector
-        " QCheckBox#checkInspector::indicator:checked { background: white; }"
-        " QCheckBox#checkInspector::indicator:unchecked { background: red; }"
+        " QCheckBox#checkInspector::indicator:checked { image: url(:/inspector_icons/check_checked.png); }"
+        " QCheckBox#checkInspector::indicator:unchecked { image: url(:/inspector_icons/check_unchecked.png); }"
+        " QCheckBox#checkInspector::indicator:checked:hover { image: url(:/inspector_icons/check_hover_checked.png); }"
+        " QCheckBox#checkInspector::indicator:unchecked:hover { image: url(:/inspector_icons/check_hover_unchecked.png); }"
 
         // Spin boxes, mostly in object inspector
         " QAbstractSpinBox { "
@@ -174,7 +176,6 @@ void ApplyColoring(QWidget *widget)
         "       border-radius: 4px; height: 20px;"
         "       selection-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
         "       selection-background-color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
-        "       text-align: right; "
         " } "
         " QAbstractSpinBox:hover { "
         "       color: " + Dr::GetColor(Window_Colors::Text_Light).name() + "; "
@@ -188,9 +189,27 @@ void ApplyColoring(QWidget *widget)
         "       border: 2px solid " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
         "       border-radius: 0px; }"
 
-        //" QAbstractSpinBox::up-button  {"
-        //"  background-color: #ABABAB;"
-        //"}"
+        // Line Edit, mostly in object inspector
+        " QLineEdit { "
+        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
+        "       border: 2px solid; "
+        "       border-color: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
+        "       border-radius: 4px; height: 20px;"
+        "       selection-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
+        "       selection-background-color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        " } "
+        " QLineEdit:hover { "
+        "       color: " + Dr::GetColor(Window_Colors::Text_Light).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
+        "       border: 2px solid " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
+        "       border-radius: 4px; }"
+
+        " QLineEdit:focus { "
+        "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
+        "       border: 2px solid " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
+        "       border-radius: 0px; }"
 
 
     );
