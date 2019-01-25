@@ -10,7 +10,6 @@
 #define ENUMS_H
 
 #include <map>
-#include <string>
 #include <vector>
 
 #include <QColor>
@@ -114,7 +113,7 @@ typedef enum {
 //####################################################################################
 bool        CheckTypesAreSame(DrTypes type1, DrTypes type2);
 bool        IsDrObjectClass(DrTypes type_to_check);
-std::string StringFromType(DrTypes drtype);
+QString     StringFromType(DrTypes drtype);
 
 
 //####################################################################################
@@ -160,7 +159,7 @@ namespace Component_Icons
 //####################################################################################
 //##    Possible Headers and Descriptions for items within editor
 //####################################################################################
-typedef QList<std::string> HeaderBodyList;
+typedef QList<QString> HeaderBodyList;
 
 namespace Advisor_Info
 {

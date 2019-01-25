@@ -18,7 +18,7 @@
 //####################################################################################
 //##    Constructor, Destructor - addScene
 //####################################################################################
-DrWorld::DrWorld(DrProject *parent_project, long new_world_key, std::string new_world_name)
+DrWorld::DrWorld(DrProject *parent_project, long new_world_key, QString new_world_name)
 {
     m_parent_project = parent_project;
     setKey(new_world_key);
@@ -34,10 +34,10 @@ DrWorld::~DrWorld()
 }
 
 // Adds a Scene to the map container, assins name based on current scene count
-void DrWorld::addScene(std::string new_scene_name)
+void DrWorld::addScene(QString new_scene_name)
 {
     if (new_scene_name == "") {
-        new_scene_name = std::to_string(static_cast<long>(m_scenes.size() + 1));
+        new_scene_name = QString::number(static_cast<long>(m_scenes.size() + 1));
     }
 
     long new_scene_key = m_parent_project->getNextKey();
@@ -68,9 +68,9 @@ DrScene* DrWorld::getScene(long from_scene_key)
 }
 
 // Returns a pointer to the World with the mathcing name
-DrScene* DrWorld::getSceneWithName(std::string scene_name)
+DrScene* DrWorld::getSceneWithName(QString scene_name)
 {
-    std::string compare_name;
+    QString compare_name;
     for (auto i: m_scenes) {
         compare_name = i.second->getSceneName();
         if (compare_name == scene_name) { return i.second; }
@@ -83,11 +83,11 @@ DrScene* DrWorld::getSceneWithName(std::string scene_name)
 //##    Property loading - initializeWorldSettings
 //####################################################################################
 
-void DrWorld::initializeWorldSettings(std::string new_name)
+void DrWorld::initializeWorldSettings(QString new_name)
 {
     addComponent(World_Components::settings, "Settings", "Basic settings for current world.", Component_Colors::White_Snow, true);
     getComponent(Object_Components::settings)->setIcon(Component_Icons::Settings);
-    addPropertyToComponent(World_Components::settings, World_Properties::name, Property_Type::String, QString::fromStdString(new_name),
+    addPropertyToComponent(World_Components::settings, World_Properties::name, Property_Type::String, new_name,
                            "World Name", "Name of the current world.");
     addPropertyToComponent(World_Components::settings, World_Properties::game_direction, Property_Type::Double, 0.0,
                            "Game Direction", "Default direction, in degrees, to load new scenes, 0 - right, 90 - up, 180 - left, 270 - down, etc.");

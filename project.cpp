@@ -29,10 +29,10 @@ DrProject::~DrProject()
 void DrProject::addWorld()
 {
     int test_num = 0;
-    std::string new_name;
+    QString new_name;
     do {
         ++test_num;
-        new_name = "World " + std::to_string(test_num);
+        new_name = "World " + QString::number(test_num);
     } while (getWorldWithName(new_name) != nullptr);
 
     long new_world_key = getNextKey();
@@ -57,9 +57,9 @@ DrWorld* DrProject::getWorld(long from_world_key)
 }
 
 // Returns a pointer to the World with the mathcing name
-DrWorld* DrProject::getWorldWithName(std::string world_name)
+DrWorld* DrProject::getWorldWithName(QString world_name)
 {
-    std::string compare_name;
+    QString compare_name;
     for (auto i: m_worlds) {
         compare_name = i.second->getWorldName();
         if (compare_name == world_name) { return i.second; }

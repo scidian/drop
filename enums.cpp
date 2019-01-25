@@ -37,9 +37,9 @@ bool IsDrObjectClass(DrTypes type_to_check)
 }
 
 //####################################################################################
-//##    Returns a std::string respresentaiton of the passed DrTypes type
+//##    Returns a QString respresentaiton of the passed DrTypes type
 //####################################################################################
-std::string StringFromType(DrTypes drtype)
+QString StringFromType(DrTypes drtype)
 {
     switch (drtype)
     {

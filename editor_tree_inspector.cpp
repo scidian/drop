@@ -21,6 +21,17 @@
 #include "interface_relay.h"
 
 
+//####################################################################################
+//##        Constructor
+//####################################################################################
+TreeInspector::TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
+                              QTreeWidget (parent), m_project(project), m_relay(relay)
+{
+    connect(this, SIGNAL(itemClicked(QTreeWidgetItem *, int)), this, SLOT(itemWasClicked(QTreeWidgetItem *, int)));
+    m_label_hover = new LabelHoverHandler(this);
+    connect(m_label_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
+}
+
 
 //####################################################################################
 //
@@ -31,11 +42,11 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     // First, retrieve unique key of item clicked in list
     long        selected_key = key_list[0];
     DrTypes     selected_type = m_project->findTypeFromKey( selected_key );
-    std::string type_string = StringFromType(selected_type);
+    QString     type_string = StringFromType(selected_type);
 
     // !!!!! #DEBUG:    Show selected item key and info
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Object_Inspector_Build)) {
-        m_relay->setLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( selected_key ) + ", TYPE: " + QString::fromStdString(type_string));
+        m_relay->setLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( selected_key ) + ", TYPE: " + type_string);
         m_relay->setLabelText(Label_Names::Label_Object_2, "");
         m_relay->setLabelText(Label_Names::Label_Object_3, "");
     }
@@ -87,6 +98,10 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
                 QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
                 sp_left.setHorizontalStretch(1);
             property_name->setSizePolicy(sp_left);
+            property_name->setProperty("Header", j.second->getDisplayName());
+            property_name->setProperty("Body", j.second->getDescription());
+            m_label_hover->attach(property_name);
+
             horizontal_split->addWidget(property_name);
 
 
@@ -119,6 +134,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
         //->Create and style a button to be used as a header item for the category
         InspectorCategoryButton *category_button = new InspectorCategoryButton(QString(" ") + i.second->getDisplayNameQString(),
                                                                                this, category_item, property_item, properties_frame);
+        category_button->setAdvisorHeaderText(i.second->getDisplayName());
+        category_button->setAdvisorBodyText(i.second->getDescription());
         QString buttonColor = QString(" QPushButton { height: 24px; font: 13px; text-align: left; icon-size: 20px 16px; color: #000000; "
                                                     " border: none; border-radius: 0px; background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 " +
                                                     i.second->getColor().name() + ", stop:1 " + i.second->getColor().darker(250).name() + "); } "
@@ -144,6 +161,11 @@ void TreeInspector::enterEvent(QEvent *event)
     QTreeWidget::enterEvent(event);
 }
 
+void TreeInspector::setAdvisorInfo(QString header, QString body)
+{
+    m_relay->setAdvisorInfo(header, body);
+}
+
 
 
 //####################################################################################
@@ -167,13 +189,13 @@ void TreeInspector::itemWasClicked(QTreeWidgetItem *item, int column)
     //DrComponent *clicked_component = selected_item_settings->findComponentFromPropertyKey(property_key);
     //DrProperty  *clicked_property = clicked_component->getProperty(property_key);
 
-    //std::string property_name = clicked_property->getDisplayName();
-    //std::string component_name = clicked_component->getDisplayName();
+    //QString     property_name = clicked_property->getDisplayName();
+    //QString     component_name = clicked_component->getDisplayName();
     //long        component_key = clicked_component->getComponentKey();
 
     // Grab type of main selected item in selected tree list
-    //std::string type_string2 = StringFromType(m_project->findTypeFromKey( treeScene->getSelectedKey() ));
-    //std::string type_string = StringFromType(selected_item_settings->getType());
+    //QString     type_string2 = StringFromType(m_project->findTypeFromKey( treeScene->getSelectedKey() ));
+    //QString     type_string = StringFromType(selected_item_settings->getType());
 
     // !!!!! #DEBUG:    Show selected item key and info
     //if (Dr::CheckDebugFlag(Debug_Flags::Object_Inspector_Build)) {
@@ -201,6 +223,13 @@ InspectorCategoryButton::InspectorCategoryButton(const QString &text, TreeInspec
 {
     // Forwards user button click to function that expands / contracts
     connect(this, SIGNAL(clicked()), this, SLOT(buttonPressed()));
+}
+
+// Handles changing the Advisor on Mouse Enter
+void InspectorCategoryButton::enterEvent(QEvent *event)
+{
+    m_parent_tree->getRelay()->setAdvisorInfo(m_header, m_body);
+    QPushButton::enterEvent(event);
 }
 
 // Called by click signal, expands or contracts category after user click
@@ -234,7 +263,31 @@ void InspectorCategoryButton::buttonPressed()
 
 
 
+//####################################################################################
+//##
+//##    LabelHoverHandler Class Functions
+//##
+//####################################################################################
+void LabelHoverHandler::attach(QLabel *label)
+{
+    label->setAttribute(Qt::WA_Hover, true);
+    label->installEventFilter(this);
+}
 
+bool LabelHoverHandler::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::HoverEnter)
+    {
+        QLabel *hover_label = dynamic_cast<QLabel*>(obj);
+
+        QString header = hover_label->property("Header").toString();
+        QString body = hover_label->property("Body").toString();
+
+        emit signalMouseHover(header, body);
+    }
+
+    return false;
+}
 
 
 

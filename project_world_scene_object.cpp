@@ -19,7 +19,7 @@
 //##    Constructor, Destructor
 //####################################################################################
 DrObject::DrObject(DrProject *parent_project, DrWorld *parent_world, DrScene *parent_scene,
-                   long new_object_key, std::string new_object_name, DrTypes new_object_type)
+                   long new_object_key, QString new_object_name, DrTypes new_object_type)
 {
     m_parent_project = parent_project;              // pointer to parent Project
     m_parent_world = parent_world;                  // pointer to parent World
@@ -59,12 +59,12 @@ DrObject::~DrObject()
 //    angular_velocity,       //variable
 
 
-void DrObject::initializeObjectSettings(std::string new_name)
+void DrObject::initializeObjectSettings(QString new_name)
 {
     addComponent(Object_Components::settings, "Settings", "Basic settings for current object.", Component_Colors::White_Snow, true);
     getComponent(Object_Components::settings)->setIcon(Component_Icons::Settings);
 
-    addPropertyToComponent(Object_Components::settings, Object_Properties::name, Property_Type::String, QString::fromStdString(new_name),
+    addPropertyToComponent(Object_Components::settings, Object_Properties::name, Property_Type::String, new_name,
                            "Object Name", "Name of the current object.");
     addPropertyToComponent(Object_Components::settings, Object_Properties::physics, Property_Type::Bool, false,
                            "Physics?", "Should this item be effected by physics?");

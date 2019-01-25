@@ -28,12 +28,12 @@ void TreeAdvisor::changeAdvisor(QString header, QString body)
 
     this->clear();                                          // Clear / delete all from advisor tree
 
-    advisor_header = header.toStdString();
+    advisor_header = header;
     QString body_text = body;
 
     // Insert top level item to act as header
     QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(this);
-    topLevelItem->setText(0, QString::fromStdString(advisor_header));
+    topLevelItem->setText(0, advisor_header);
     this->addTopLevelItem(topLevelItem);
 
     // Create child tree item for body

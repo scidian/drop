@@ -96,7 +96,7 @@ void FormMain::buildTreeSceneList() {
 // Call to put in a signal to change the Advisor to the que
 void FormMain::setAdvisorInfo(HeaderBodyList header_body_list)
 {
-    setAdvisorInfo(QString::fromStdString(header_body_list[0]), QString::fromStdString(header_body_list[1]));
+    setAdvisorInfo(header_body_list[0], header_body_list[1]);
 }
 
 // Call to put in a signal to change the Advisor to the que
@@ -106,7 +106,7 @@ void FormMain::setAdvisorInfo(QString header, QString body)
     if (advisor == nullptr) return;
     if (advisor->isHidden()) return;                                        // If Advisor dock was closed, cancel
     if (treeAdvisor == nullptr) return;
-    if (treeAdvisor->getAdvisorHeader() == header.toStdString()) return;    // If Advisor header is already set to proper info, cancel
+    if (treeAdvisor->getAdvisorHeader() == header) return;                  // If Advisor header is already set to proper info, cancel
     emit sendAdvisorInfo(header, body);                                     // Emits signal connected to changeAdvisor
 }
 
