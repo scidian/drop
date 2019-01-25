@@ -7,6 +7,7 @@
 //
 
 #include "colors.h"
+#include "library.h"
 
 #include "project.h"
 #include "project_world.h"
@@ -43,7 +44,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 
 
 
-    // !!!!! #TEMP: call to populate Graphics Scene (currently does chips)
+    // !!!!! #TEMP: call to populate Graphics Scene (currently does a couple squares)
     populateScene();
     // !!!!! END
 
@@ -72,7 +73,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     // ########## Initialize form and customize colors and styles
     buildMenu();
     buildWindow(Form_Main_Mode::Edit_Scene);
-    applyColoring();
+    Dr::ApplyColoring(this);
 
 
 
@@ -83,14 +84,11 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 
 
 // Sends new list to Object Inspector
-void FormMain::buildObjectInspector(QList<long> key_list)
-{
+void FormMain::buildObjectInspector(QList<long> key_list) {
     treeInspector->buildInspectorFromKeys(key_list);
 }
 
-
-void FormMain::buildTreeSceneList()
-{
+void FormMain::buildTreeSceneList() {
     treeScene->populateTreeSceneList();
 }
 
@@ -98,13 +96,21 @@ void FormMain::buildTreeSceneList()
 // Call to put in a signal to change the Advisor to the que
 void FormMain::setAdvisorInfo(HeaderBodyList header_body_list)
 {
+    setAdvisorInfo(header_body_list[0], header_body_list[1]);
+}
+
+// Call to put in a signal to change the Advisor to the que
+void FormMain::setAdvisorInfo(QString header, QString body)
+{
     if (current_mode != Form_Main_Mode::Edit_Scene) return;
     if (advisor == nullptr) return;
     if (advisor->isHidden()) return;                                        // If Advisor dock was closed, cancel
     if (treeAdvisor == nullptr) return;
-    if (treeAdvisor->getAdvisorHeader() == header_body_list[0]) return;     // If Advisor header is already set to proper info, cancel
-    emit sendAdvisorInfo(header_body_list);                                 // Emits signal connected to changeAdvisor
+    if (treeAdvisor->getAdvisorHeader() == header) return;                  // If Advisor header is already set to proper info, cancel
+    emit sendAdvisorInfo(header, body);                                     // Emits signal connected to changeAdvisor
 }
+
+
 
 // Sets the text of a label on FormMain
 void FormMain::setLabelText(Label_Names label_name, QString new_text)
@@ -160,7 +166,7 @@ void FormMain::populateScene()
 void FormMain::changePalette(Color_Scheme new_color_scheme)
 {
     Dr::SetColorScheme(new_color_scheme);
-    applyColoring();
+    Dr::ApplyColoring(this);
     update();
 }
 

@@ -10,7 +10,6 @@
 #define ENUMS_H
 
 #include <map>
-#include <string>
 #include <vector>
 
 #include <QColor>
@@ -50,25 +49,13 @@ enum class Form_Main_Focus {
     Bottom_Area,
 };
 
-
-//####################################################################################
-//##    Used to track what the QVariant m_value data type really is
-//####################################################################################
-enum class Property_Type {
-    Bool,       Int,        Long,       Float,      Double,
-    Char,       String,
-    Image,      Icon,       Color,
-    Point,      PointF,     Vector3D,
-};
-
-
 //####################################################################################
 //##    Types of objects possible in game
 //####################################################################################
 enum class DrTypes {
     Project,
-    World,      Folder,
-    Scene,      Background,     Foreground,     StartScene,     Variable,
+    World,      Folder,         Variable,
+    Scene,      Background,     Foreground,     StartScene,
     Object,     Character,      Camera,         Action,         Light,          Logic,          Particle,
 
     UI,
@@ -113,6 +100,14 @@ typedef enum {
 
 
 //####################################################################################
+//##    Custom QStrings for storing data in QWidgets using setProperty
+//####################################################################################
+namespace User_Property {
+    const char Header[10] = "dr_header";
+    const char Body[8] = "dr_body";
+}
+
+//####################################################################################
 //##    Custom QGraphicsItem::UserType 's for referencing types in QGraphicsScene
 //####################################################################################
 typedef enum {
@@ -126,7 +121,7 @@ typedef enum {
 //####################################################################################
 bool        CheckTypesAreSame(DrTypes type1, DrTypes type2);
 bool        IsDrObjectClass(DrTypes type_to_check);
-std::string StringFromType(DrTypes drtype);
+QString     StringFromType(DrTypes drtype);
 
 
 //####################################################################################
@@ -161,6 +156,8 @@ namespace Component_Icons
 {
     const QString Settings      { QString(":/inspector_icons/comp_settings.png") };
     const QString Physics       { QString(":/inspector_icons/comp_physics.png") };
+    const QString Transform     { QString(":/inspector_icons/comp_transform.png") };
+    const QString Movement      { QString(":/inspector_icons/comp_movement.png") };
     const QString Camera        { QString(":/inspector_icons/comp_camera.png") };
     const QString Character     { QString(":/inspector_icons/comp_character.png") };
     const QString None          { QString("") };
@@ -170,7 +167,7 @@ namespace Component_Icons
 //####################################################################################
 //##    Possible Headers and Descriptions for items within editor
 //####################################################################################
-typedef QList<std::string> HeaderBodyList;
+typedef QList<QString> HeaderBodyList;
 
 namespace Advisor_Info
 {
@@ -194,6 +191,17 @@ namespace Advisor_Info
 
 
 
+//####################################################################################
+//##    Used to track what the QVariant m_value data type really is
+//####################################################################################
+enum class Property_Type {
+    Bool,       Int,        Double,     Variable,   Percent,    Angle,
+    Char,       String,
+    Image,      Icon,       Color,
+    Point,      PointF,     Vector3D,
+    List,
+};
+
 
 //####################################################################################
 //##    World - Possible components and their properties
@@ -214,7 +222,7 @@ enum class World_Properties
 
     // physics
     use_physics,            //bool
-    gravity,                //point2d (x, y) - float
+    gravity,                //pointf (x, y)
     time_warp,              //float
     friction,               //float
     drag,                   //float
@@ -248,6 +256,9 @@ enum class Scene_Properties {
 enum class Object_Components
 {
     settings,
+    transform,
+    movement,
+
     camera_settings,
     character_settings,
 };
@@ -256,15 +267,27 @@ enum class Object_Properties
 {
     // settings
     name,                   //string
-    x,                      //float
-    y,                      //float
+    physics,                //bool
+    collide,                //bool
+    damage,                 //list
+
+    // transform
+    position,               //pointf
+    rotation,               //angle
+    scale,                  //pointf
+    opacity,                //double
+
+    // movement
+    velocity_x,             //variable
+    velocity_y,             //variable
+    angular_velocity,       //variable
 
     // camera_settings
-    camera_zoom,            //float
+    camera_zoom,            //double
 
     // character_settings
-    character_jump_x,       //float
-    character_jump_y,       //float
+    character_jump_x,       //double
+    character_jump_y,       //double
 };
 
 

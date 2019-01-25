@@ -15,6 +15,11 @@
 
 #include "form_main.h"
 
+
+//####################################################################################
+//##    DrItem
+//##        A QGraphicsItem for use with our custom QGraphicsScene
+//############################
 class DrItem : public QGraphicsItem
 {
 private:
@@ -42,7 +47,6 @@ public:
 
     // Getters and Setters
     Position_Flags          getOrigin() { return m_origin; }
-
 
 };
 

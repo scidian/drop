@@ -16,6 +16,10 @@ class DrScene;
 typedef std::map<long, DrScene*> SceneMap;
 
 
+//####################################################################################
+//##    DrWorld
+//##        Class to hold all scenes, variables and objects for one world
+//############################
 class DrWorld : public DrSettings
 {
 private:
@@ -27,7 +31,7 @@ private:
 
 public:
     // Constructor & destructor
-    DrWorld(DrProject *parent_project, long new_world_key, std::string new_world_name);
+    DrWorld(DrProject *parent_project, long new_world_key, QString new_world_name);
     virtual ~DrWorld() override;
 
 
@@ -38,12 +42,12 @@ public:
 
 
     // External calls
-    void        addScene(std::string new_scene_name = "");
-    void        initializeWorldSettings(std::string new_name);
+    void        addScene(QString new_scene_name = "");
+    void        initializeWorldSettings(QString new_name);
 
     long        getFirstSceneKey();
     DrScene*    getScene(long from_scene_key);
-    DrScene*    getSceneWithName(std::string scene_name);
+    DrScene*    getSceneWithName(QString scene_name);
 
 
 

@@ -52,9 +52,20 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     if (scene() != m_scene) {
         if (scene() != nullptr) {
             m_scene = scene();
+            SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
+
             connect(scene(), SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
             connect(scene(), SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
-            connect(dynamic_cast<SceneGraphicsScene*>(scene()), &SceneGraphicsScene::updateViews, [this]() { update(); });
+
+            connect(my_scene, &SceneGraphicsScene::updateViews, [this]() { update(); });
+
+            connect(this, SIGNAL(selectionGroupMoved(SelectionGroup*, QPointF)), my_scene,
+                    SLOT(selectionGroupMoved(SelectionGroup*, QPointF)));
+
+            connect(this,     SIGNAL(selectionGroupNewGroup(SelectionGroup*, QList<QGraphicsItem*>, QList<QGraphicsItem*>,
+                                                            QGraphicsItem *, QGraphicsItem *)),
+                    my_scene, SLOT(selectionGroupNewGroup(SelectionGroup*, QList<QGraphicsItem*>, QList<QGraphicsItem*>,
+                                                          QGraphicsItem *, QGraphicsItem *)) );
         }
     }
 
@@ -98,20 +109,15 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     paintBoundingBox(painter);
 
     // ******************** Draw angles if rotating
-    if (m_view_mode == View_Mode::Rotating) {
-        painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 1));
-        painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
-        painter.drawLine(mapFromScene(m_rotate_start_rect.center()), m_origin);
-        painter.drawLine(mapFromScene(m_rotate_start_rect.center()), m_last_mouse_pos);
-        painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOver);
-    }
+    double group_angle = my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Rotation).toDouble();
+    paintGroupAngle(painter, group_angle);
 
     // ******************** If we have some objects selected and created some handles, draw them
     paintHandles(painter, m_handles_shape);
 
 
     // !!!!! #DEBUG:    Draw frames per second
-    if (Dr::CheckDebugFlag(Debug_Flags::FPS)) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_FPS)) {
         m_relay->setLabelText(Label_Names::Label_3, "Draw Time: " + QString::number(m_debug_timer.elapsed()) +
                                                         ", FPS: " + QString::number(m_debug_fps_last) );
         m_debug_fps++;
@@ -218,7 +224,7 @@ void SceneGraphicsView::paintItemOutlines(QPainter &painter)
 
 
         // !!!!! #DEBUG:    Shear Data
-        if (Dr::CheckDebugFlag(Debug_Flags::Shear_Matrix)) {
+        if (Dr::CheckDebugFlag(Debug_Flags::Paint_Shear_Matrix)) {
             double  angle = item->data(User_Roles::Rotation).toDouble();
             QPointF origin = item->mapToScene( item->boundingRect().center() );
             QTransform remove_rotation = QTransform().translate(origin.x(), origin.y()).rotate(-angle).translate(-origin.x(), -origin.y());
@@ -262,7 +268,7 @@ void SceneGraphicsView::paintItemOutlines(QPainter &painter)
 
 
     // !!!!! #DEBUG:    Show selection group info
-    if (Dr::CheckDebugFlag(Debug_Flags::Selection_Box_Group_Data)) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_Selection_Group_Data)) {
         QGraphicsItem *sgroup = my_scene->getSelectionGroupAsGraphicsItem();
         m_relay->setLabelText(Label_Names::Label_Object_1, "Group Pos  X: " +   QString::number(sgroup->sceneBoundingRect().x()) +
                                                                     ", Y: " +   QString::number(sgroup->sceneBoundingRect().y()) );
@@ -299,6 +305,42 @@ void SceneGraphicsView::paintBoundingBox(QPainter &painter)
 }
 
 
+//####################################################################################
+//##        PAINT: Paints lines showing rotation while rotating
+//####################################################################################
+void SceneGraphicsView::paintGroupAngle(QPainter &painter, double angle)
+{
+    if (m_view_mode == View_Mode::Rotating) {
+        ///// Set pen to draw as NOT operation
+        ///painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
+        painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 1));
+
+        // !!!!! #DEBUG:    Draws from center to origin point (mouse down), and center to last position (mouse move)
+        if (Dr::CheckDebugFlag(Debug_Flags::Paint_Rotating_Angles)) {
+            painter.drawLine(mapFromScene(m_rotate_start_rect.center()), m_origin);
+            painter.drawLine(mapFromScene(m_rotate_start_rect.center()), m_last_mouse_pos);
+        }
+        // !!!!! END
+
+        // Map center point to view, create a line going straight up at zero degrees
+        QPointF center_point = mapFromScene(m_rotate_start_rect.center());
+        QLineF     line_zero = QLineF(center_point, QPointF(center_point.x(), center_point.y() - 30) );
+
+        // Make a copy of line rotated at the current Selection Group angle (passed in)
+        QPointF origin = center_point;
+        QTransform rotate = QTransform().translate(origin.x(), origin.y()).rotate(angle).translate(-origin.x(), -origin.y());
+        QLineF  line_rotated = rotate.map(line_zero);
+        line_zero.setP1( QPointF(line_zero.x1(), line_zero.y1() - 1) );
+
+        // Draw lines
+        painter.drawLine( line_zero );
+        painter.drawLine( line_rotated );
+
+        ///// Reset pen to draw normally
+        ///painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOver);
+    }
+}
+
 
 //####################################################################################
 //##        PAINT: Paints handles onto view
@@ -332,8 +374,13 @@ void SceneGraphicsView::paintHandles(QPainter &painter, Handle_Shapes shape_to_d
             painter.drawPixmap(to_draw, p_rotate, p_rotate.rect());
         }
     }
-    ///// Draw polygons for all handles
-    ///for (auto h : m_handles) painter.drawPolygon(h.second);
+
+    // !!!!! #DEBUG:    Paint rects of all mouse resizing grip handles
+    if (Dr::CheckDebugFlag(Debug_Flags::Paint_Size_Grip_Handles)) {
+        for (auto h : m_handles)
+            painter.drawPolygon(h.second);
+    }
+    // !!!!! END
 }
 
 

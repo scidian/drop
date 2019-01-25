@@ -13,18 +13,26 @@
 #include <enums.h>
 
 class DrProject;
+class DrItem;
+class SelectionGroup;
+
 class InterfaceRelay;
 class SceneViewRubberBand;
 class SceneViewToolTip;
 
+
+//####################################################################################
+//##    Local Enumerations
+//############################
 // Interactive mouse modes
 enum class View_Mode {
     None,
-    Selecting,
-    Resizing,
-    Rotating,
-    Translating,
-    Dragging,
+    Selecting,          // Rubber band selection
+    Resizing,           // Changing items size
+    Rotating,           // Rotating items
+    Translating,        // Moving item(s) around
+    Dragging,           // Moving scene with space bar
+    Zooming,            // Zooming in / out of view
 };
 
 enum class Handle_Shapes {
@@ -38,9 +46,9 @@ struct Transform_Data {
     QPointF skew;
 };
 
-enum class X_Axis {     Left,   Right,    None  };
-enum class Y_Axis {     Top,    Bottom,   None  };
-enum class Grid_Style { Lines,  Dots,           };
+enum class X_Axis {         Left,   Right,    None      };
+enum class Y_Axis {         Top,    Bottom,   None      };
+enum class Grid_Style {     Lines,  Dots,               };
 
 
 // Class constants
@@ -48,6 +56,10 @@ const double ANGLE_TOLERANCE = 2.5;                                 // Angle dis
 const int    ANGLE_STEP = 15;                                       // Angle intervals rotate function should snap to
 
 
+//####################################################################################
+//##    SceneGraphicsView
+//##        A sub classed QGraphicsView to show our scene
+//############################
 class SceneGraphicsView : public QGraphicsView
 {
     Q_OBJECT
@@ -76,6 +88,7 @@ private:
     // Display Variables
     int          m_zoom = 250;                                      // Zoom level of current view
     double       m_zoom_scale = 1;                                  // Updated in applyUpdatedMatrix for use during painting grid, DO NOT SET MANUALLY
+    QTime        m_zoom_timer;                                      // Used to auto hide zoom tool tip after time has passed
     int          m_rotate = 0;                              // NOT IMPLEMENTED: Rotation of current view
 
     // Grid variables
@@ -91,10 +104,15 @@ private:
     bool         m_flag_key_down_shift =    false;                  // True when View has focus and shift         is down
 
     // Mouse event variables
+    SceneViewToolTip                   *m_tool_tip;                 // Holds our view's custom Tool Tip box
     QPoint                              m_origin;                   // Stores mouse down position in view coordinates
     QPointF                             m_origin_in_scene;          // Stores mouse down position in scene coordinates
     QGraphicsItem                      *m_origin_item;              // Stores top item under mouse (if any) on mouse down event
-    SceneViewToolTip                   *m_tool_tip;                 // Holds our view's custom Tool Tip box
+
+    // View_Mode::Translating Variables
+    QTime                               m_origin_timer;             // Tracks time since mouse down to help buffer movement while selecting
+    bool                                m_allow_movement = false;   // Used along with m_origin_timer to help buffer movement while selecting
+    QPointF                             m_old_pos;                  // Used to track position movement for QUndoStack
 
     // Selection Bounding Box Variables
     std::map<Position_Flags, QPolygonF> m_handles;                  // Stores QRects of current selection box handles
@@ -104,11 +122,11 @@ private:
     Position_Flags                      m_over_handle;              // Tracks if mouse is over a handle
     QPoint                              m_last_mouse_pos;           // Tracks last known mouse position in view coordinates
 
-
     // View_Mode::Selecting Variables
     SceneViewRubberBand            *m_rubber_band;                  // Holds our view's RubberBand object
-    QList<QGraphicsItem *>          m_items_start;                  // Stores items selected at start of new rubber band box
-
+    QList<QGraphicsItem*>           m_items_start;                  // Stores items selected at start of new rubber band box
+    QList<QGraphicsItem*>           m_items_keep;                   // Stores list of items to keep on top of rubber band items (with control key)
+    QGraphicsItem                  *m_first_start;                  // Stores first selected item before rubber band box stareted
 
     // View_Mode::Resizing Variables
     QRectF                          m_start_resize_rect;            // Stores starting rect of selection before resize starts
@@ -161,7 +179,7 @@ public:
     Transform_Data  decomposeTransform(QTransform &from_transform, bool qr_type = true);
     double          extractAngleFromTransform(QTransform &from_transform);
     QPointF         extractScaleFromItem(QGraphicsItem *item);
-    QGraphicsItem*  itemOnTopAtPosition(QPoint check_point, bool take_item_on_top_out = false);
+    QGraphicsItem*  itemOnTopAtPosition(QPoint check_point);
     QRectF          rectAtCenterPoint(QPoint center, double rect_size);
     QRectF          totalSelectedItemsSceneRect();
     void            updateSelectionBoundingBox();
@@ -169,6 +187,7 @@ public:
     // Paint Functions
     void            paintBoundingBox(QPainter &painter);
     void            paintGrid();
+    void            paintGroupAngle(QPainter &painter, double angle);
     void            paintHandles(QPainter &painter, Handle_Shapes shape_to_draw);
     void            paintItemOutlines(QPainter &painter);
 
@@ -183,7 +202,7 @@ public:
     bool            isSquare(double check_angle);
 
     // Resize functions
-    void            startResize();
+    void            startResize(QPoint mouse_in_view);
     void            resizeSelection(QPointF mouse_in_scene);
     void            resizeSelectionWithRotate(QPointF mouse_in_scene);
     Position_Flags  findOppositeSide(Position_Flags start_side);
@@ -193,10 +212,21 @@ public:
 public slots:
     void    sceneChanged(QList<QRectF> region);
     void    selectionChanged();
+
+    void    checkTranslateToolTipStarted();
+    void    stoppedZooming();
+
+
+signals:
+    // Signals used to emit UndoStack Commands
+    void    selectionGroupMoved(SelectionGroup *moved_group, const QPointF &old_position);
+    void    selectionGroupNewGroup(SelectionGroup *moved_group, QList<QGraphicsItem*> old_list, QList<QGraphicsItem*> new_list,
+                                   QGraphicsItem *old_first, QGraphicsItem *new_first);
+
 };
 
 
-//############################
+//####################################################################################
 //##    SceneViewRubberBand
 //##        A sub classed QRubberBand so we can override paint event for rubber band
 //############################
@@ -213,12 +243,19 @@ public:
 
 
 
-//############################
+//####################################################################################
 //##    SceneViewTooltip
 //##        A parentless widget to be used as a custom tooltip
 //############################
 class SceneViewToolTip : public QWidget
 {
+private:
+    View_Mode   m_tip_type = View_Mode::None;           // Which type of tool tip to show
+    QPoint      m_offset;                               // Stores how much to offset the current tooltip from mouse position
+    double      m_angle = 0;                            // Stores angle to show in tooltip
+    double      m_x = 0;                                // Stores x value of resizing / moving
+    double      m_y = 0;                                // Stores y value of resizing / moving
+    int         m_int = 0;                              // Stores zoom scale
 
 public:
     // Constructor
@@ -228,7 +265,14 @@ public:
     virtual void    paintEvent(QPaintEvent *) override;
 
     // Functions
-    QPoint          getOffset() { return QPoint(40, -40); }
+    void            startToolTip(View_Mode type, QPoint mouse_position, QVariant data);
+    void            stopToolTip();
+    void            updateToolTipPosition(QPoint mouse_position);
+    void            updateToolTipData(QVariant data);
+
+    // Getters and Setters
+    QPoint          getOffset()  { return m_offset;   }
+    View_Mode       getTipType() { return m_tip_type; }
 
 };
 

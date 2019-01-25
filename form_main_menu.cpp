@@ -15,8 +15,54 @@
 
 #include "colors.h"
 #include "form_main.h"
+#include "library.h"
 
 
+//####################################################################################
+//##        Main Menu Bar Functions
+//####################################################################################
+void FormMain::menuAbout() {
+    QMessageBox::about(this, tr("About Drop"), tr("<b>Drop Creator</b> A Drag and Drop Game Maker by Stephens Nunnally"));
+}
+
+void FormMain::menuUndo() {
+        scene->undoAction();
+}
+void FormMain::menuRedo() {
+        scene->redoAction();
+}
+
+// Pops up a message box listing all child widgets of FormMain
+void FormMain::menuListChildren() {
+    QString widget_list;
+    for (auto widget : findChildren<QWidget *>()) {
+        widget_list += widget->objectName() + ", ";
+    }
+    Dr::ShowMessageBox(widget_list);
+}
+
+// SLOT: Updates Undo / Redo text
+void FormMain::editMenuAboutToShow()
+{
+    QString undo_text = scene->getCurrentUndo();
+    QString redo_text = scene->getCurrentRedo();
+    actionUndo->setText(undo_text);
+    actionRedo->setText(redo_text);
+
+    if (undo_text.isEmpty()) {
+        actionUndo->setText("&Undo");
+        actionUndo->setEnabled(false);
+    }
+    if (redo_text.isEmpty()) {
+        actionRedo->setText("&Redo");
+        actionRedo->setEnabled(false);
+    }
+}
+
+void FormMain::editMenuAboutToHide() {
+    actionUndo->setEnabled(true);
+    actionRedo->setEnabled(true);
+}
 
 //####################################################################################
 //##        Sets up FormMain menu system
@@ -26,16 +72,48 @@ void FormMain::buildMenu()
     // ***** Main window settings
     this->setObjectName(QStringLiteral("formMain"));
     this->setWindowModality(Qt::NonModal);
-    this->resize(1300, 800);
+    this->resize(1400, 940);
     this->setMinimumSize(QSize(780, 400));
     this->setMouseTracking(true);
     this->setAcceptDrops(true);
     this->setWindowIcon(QIcon(":icon/icon256.png"));                        // Set icon
 
+    // Center window on screen
+    QRect screenGeometry = QGuiApplication::screens().first()->geometry();
+    this->setGeometry(QStyle::alignedRect( Qt::LeftToRight, Qt::AlignCenter, this->size(), screenGeometry ));
+
+
+
     // ***** Create menu bar
     menuBar = new QMenuBar(this);
     menuBar->setObjectName(QStringLiteral("menuBar"));
     menuBar->setGeometry(QRect(0, 0, 1100, 22));
+
+
+    QMenu *menuFile;
+    QAction *actionExit;
+    menuFile = new QMenu(menuBar);
+    menuFile->setObjectName(QStringLiteral("menuFile"));
+    actionExit = new QAction(this);    actionExit->setObjectName(QStringLiteral("actionExit"));
+    actionExit->setShortcuts(QKeySequence::Quit);
+    connect(actionExit, SIGNAL(triggered()), this, SLOT(close()));
+    menuBar->addAction(menuFile->menuAction());
+    menuFile->addAction(actionExit);
+
+    QMenu *menuEdit;
+    menuEdit = new QMenu(menuBar);
+    menuEdit->setObjectName(QStringLiteral("menuEdit"));
+    connect(menuEdit, SIGNAL(aboutToShow()), this, SLOT(editMenuAboutToShow()));
+    connect(menuEdit, SIGNAL(aboutToHide()), this, SLOT(editMenuAboutToHide()));
+    actionUndo = new QAction(this);     actionUndo->setObjectName(QStringLiteral("actionUndo"));
+    actionRedo = new QAction(this);     actionRedo->setObjectName(QStringLiteral("actionRedo"));
+    actionUndo->setShortcuts(QKeySequence::Undo);
+    actionRedo->setShortcuts(QKeySequence::Redo);
+    connect(actionUndo,   &QAction::triggered, [this]() { this->menuUndo(); });
+    connect(actionRedo,   &QAction::triggered, [this]() { this->menuRedo(); });
+    menuBar->addAction(menuEdit->menuAction());
+    menuEdit->addAction(actionUndo);
+    menuEdit->addAction(actionRedo);
 
     // ***** Color Schemes sub menu
     QMenu *menuColor_Schemes;
@@ -78,8 +156,20 @@ void FormMain::buildMenu()
     menuColor_Schemes->addAction(actionBlue);
     menuColor_Schemes->addAction(actionAutumn);
 
+    QMenu *menuHelp;
+    QAction *actionAbout;
+    menuHelp = new QMenu(menuBar);
+    menuHelp->setObjectName(QStringLiteral("menuHelp"));
+    actionAbout = new QAction(this);    actionAbout->setObjectName(QStringLiteral("actionAbout"));
+    QList<QKeySequence> aboutShortcuts;
+    aboutShortcuts << tr("Ctrl+A") << tr("Ctrl+B");
+    actionAbout->setShortcuts(aboutShortcuts);
+    connect(actionAbout, &QAction::triggered, [this]() { this->menuAbout(); });
+    menuBar->addAction(menuHelp->menuAction());
+    menuHelp->addAction(actionAbout);
+
     // !!!!! #DEBUG:    Load hidden debug menu into menu bar
-    if (Dr::CheckDebugFlag(Debug_Flags::Secret_Menu)) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Show_Secret_Menu)) {
         QMenu *menuDebug;
         menuDebug = new QMenu(menuBar);
         menuDebug->setObjectName(QStringLiteral("menuDebug"));
@@ -95,7 +185,7 @@ void FormMain::buildMenu()
 
         connect(actionClearMain, &QAction::triggered, [this]() { this->buildWindow(Form_Main_Mode::Clear); });
         connect(actionSceneEditMode, &QAction::triggered, [this]() { this->buildWindow(Form_Main_Mode::Edit_Scene); });
-        connect(actionListChildren, &QAction::triggered, [this]() { this->listChildren(); });
+        connect(actionListChildren, &QAction::triggered, [this]() { this->menuListChildren(); });
 
         menuDebug->setTitle(QApplication::translate("MainWindow", "Debug", nullptr));
         actionClearMain->setText(QApplication::translate("MainWindow", "Clear Form Main Widgets", nullptr));
@@ -105,11 +195,21 @@ void FormMain::buildMenu()
     // !!!!!
 
     // ***** Set menu titles and sub menu texts
+    menuFile->setTitle(QApplication::translate("MainWindow", "&File", nullptr));
+    actionExit->setText(QApplication::translate("MainWindow", "E&xit", nullptr));
+
+    menuEdit->setTitle(QApplication::translate("MainWindow", "&Edit", nullptr));
+    actionUndo->setText(QApplication::translate("MainWindow", "&Undo", nullptr));
+    actionRedo->setText(QApplication::translate("MainWindow", "&Redo", nullptr));
+
     menuColor_Schemes->setTitle(QApplication::translate("MainWindow", "Color Schemes", nullptr));
     actionDark->setText(QApplication::translate("MainWindow", "Dark", nullptr));
     actionLight->setText(QApplication::translate("MainWindow", "Light", nullptr));
     actionBlue->setText(QApplication::translate("MainWindow", "Blue", nullptr));
     actionAutumn->setText(QApplication::translate("MainWindow", "Autumn", nullptr));
+
+    menuHelp->setTitle(QApplication::translate("MainWindow", "&Help", nullptr));
+    actionAbout->setText(QApplication::translate("MainWindow", "&About", nullptr));
 
     this->setMenuBar(menuBar);
 }

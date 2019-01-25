@@ -28,14 +28,7 @@
 //####################################################################################
 void SceneGraphicsView::startRotate(QPoint mouse_in_view)
 {
-    if (scene() == nullptr) return;
-
     m_view_mode = View_Mode::Rotating;
-
-    // Set up our tooltip
-    QPoint tip_pos = mouse_in_view + QWidget::mapToGlobal(this->rect().topLeft()) + m_tool_tip->getOffset();
-    m_tool_tip->move(tip_pos);
-    m_tool_tip->show();
 
     // Grab starting angle of selection group before rotating starts
     SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
@@ -51,6 +44,9 @@ void SceneGraphicsView::startRotate(QPoint mouse_in_view)
 
     // Store starting scene rect of initial selection bounding box
     m_rotate_start_rect = totalSelectedItemsSceneRect();
+
+    // Set up our tooltip
+    m_tool_tip->startToolTip(m_view_mode, mouse_in_view, m_rotate_start_angle);
 }
 
 
@@ -88,9 +84,6 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     double angle2 = calcRotationAngleInDegrees( mapFromScene(m_rotate_start_rect.center()), mouse_in_view);
 
     double angle = m_rotate_start_angle + (angle2 - angle1);
-    while (angle >=  360) { angle -= 360; }
-    while (angle <= -360) { angle += 360; }
-
 
     // ********** Snaps angle to nearest 15 degree increment if angle is with +/-
     double tolerance =  ANGLE_TOLERANCE;
@@ -99,14 +92,18 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     double test_round = abs(angle);
     while (test_round >= angle_step) { test_round -= angle_step; }
 
+    double angle_adjust;
     double angle_diff = angle;
+
     if (Dr::IsCloseTo(0, test_round, tolerance) || Dr::IsCloseTo(angle_step, test_round, tolerance)) {
         angle = round(angle / angle_step) * angle_step;
-        angle_diff = angle - angle_diff;
+        angle_adjust = angle - angle_diff;
+    } else {
+        angle_adjust = 0;
     }
-    else {
-        angle_diff = 0;
-    }
+    while (angle >=  360) { angle -= 360; }
+    while (angle <= -360) { angle += 360; }
+
 
     // ********** Group selected items so we can apply new rotation to all selected items
     QGraphicsItemGroup *group = scene()->createItemGroup( { item } );
@@ -119,34 +116,27 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     // Load starting angle pre rotate, and store new angle in item
     double start_angle = item->data(User_Roles::Rotation).toDouble();
     item->setData(User_Roles::Rotation, angle);
+    m_tool_tip->updateToolTipData(angle);
 
     // ********** Create transform for new angle, apply it, and destroy temporary item group
     QTransform transform = QTransform().translate(offset.x(), offset.y()).rotate(angle - start_angle).translate(-offset.x(), -offset.y());
     group->setTransform(transform);
     scene()->destroyItemGroup(group);
 
-    // ********** Break apart selection group so we can grab and store new rotation of all selected items, then put back together
-    //for (auto item: my_items) my_scene->removeFromGroupNoUpdate(item);
+    // ********** Add in new angle to all selected items and store in item data
     for (auto child : my_items) {
-
         double child_angle = child->data(User_Roles::Pre_Rotate_Rotation).toDouble();
 
-        //m_relay->setLabelText(Label_Names::Label_1, "Child Angle: " + QString::number(child_angle));
-
-        child_angle = child_angle + (angle2 - angle1) + angle_diff;
+        child_angle = child_angle + (angle2 - angle1) + angle_adjust;
         while (child_angle >=  360) { child_angle -= 360; }
         while (child_angle <= -360) { child_angle += 360; }
 
-        //m_relay->setLabelText(Label_Names::Label_2, "New Angle: " + QString::number(child_angle));
-
         child->setData(User_Roles::Rotation, child_angle);
     }
-    //for (auto item: my_items) my_scene->addToGroupNoUpdate(item);
-
 
 
     // !!!!! #DEBUG:    Rotation data
-    if (Dr::CheckDebugFlag(Debug_Flags::Rotation_Data)) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_Rotation_Data)) {
         m_relay->setLabelText(Label_Names::Label_1, "Angle 1: " + QString::number(angle1) + ", Angle 2: " + QString::number(angle2));
         m_relay->setLabelText(Label_Names::Label_2, "Angle: " + QString::number(angle) +       ", Diff: " + QString::number(angle - start_angle) );
     }

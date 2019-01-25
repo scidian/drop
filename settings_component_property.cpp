@@ -14,8 +14,8 @@
 //##    Constructor
 //####################################################################################
 DrProperty::DrProperty(DrSettings *parent_settings, DrComponent *parent_component,
-                       std::string new_display_name,
-                       std::string new_description,
+                       QString new_display_name,
+                       QString new_description,
                        Property_Type new_type,
                        QVariant new_value,
                        long new_key)

@@ -11,39 +11,66 @@
 #include <QtWidgets>
 
 class DrProject;
+class DrProperty;
+
 class InterfaceRelay;
 
-
 class InspectorCategoryButton;
+class WidgetHoverHandler;
 
+
+enum class Spin_Type {
+    Double,
+    Percent,
+    Angle
+};
+
+
+// Class constants
+const int   SIZE_LEFT =  3;                             // Size policy width of left column
+const int   SIZE_RIGHT = 5;                             // Size policy width of right column
+
+
+//####################################################################################
+//##    TreeInspector
+//##        A Tree List to show properties of items / classes / objects
+//############################
 class TreeInspector: public QTreeWidget
 {
     Q_OBJECT
 
 private:
-    DrProject      *m_project;                  // Pointer to currently loaded project
-    InterfaceRelay *m_relay;                    // Pointer to InterfaceRelay class of parent form
+    DrProject           *m_project;                     // Pointer to currently loaded project
+    InterfaceRelay      *m_relay;                       // Pointer to InterfaceRelay class of parent form
+
+    WidgetHoverHandler  *m_widget_hover;                // Pointer to a widget hover handler
 
 public:
-    explicit        TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
-                                  QTreeWidget (parent), m_project(project), m_relay(relay) {
-        connect(this, SIGNAL(itemClicked(QTreeWidgetItem *, int)), this, SLOT(itemWasClicked(QTreeWidgetItem *, int)));
-    }
+    explicit        TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay *relay);
 
     // Event Overrides, start at Qt Docs for QTreeWidget Class to find more
     virtual void    enterEvent(QEvent *event) override;                                // Inherited from QWidget
 
     // Function Calls
     void            buildInspectorFromKeys(QList<long> key_list);
+    InterfaceRelay* getRelay() { return m_relay; }
+
+    // Property Builders
+    void            applyHeaderBodyProperties(QWidget *widget, DrProperty *property);
+    QCheckBox*      createCheckBox(DrProperty *property, QFont &font);
+    QDoubleSpinBox* createDoubleSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type);
+    QFrame*         createDoubleSpinBoxPair(DrProperty *property, QFont &font);
+    QLineEdit*      createLineEdit(DrProperty *property, QFont &font);
 
 private slots:
     void            itemWasClicked(QTreeWidgetItem *item, int column);
+    void            setAdvisorInfo(QString header, QString body);
 
 };
 
 
 
-//############################
+//####################################################################################
 //##    InspectorCategoryButton
 //##        A sub classed QPushButton so we can override events for header buttons in Object Inspector List
 //############################
@@ -58,10 +85,18 @@ private:
     int                  m_height;
     bool                 m_is_shrunk = false;
     QRect                start_rect, end_rect;
+    QString              m_header, m_body;
 
 public:
     InspectorCategoryButton(const QString &text, TreeInspector *parent_tree,
                             QTreeWidgetItem *parent_item, QTreeWidgetItem *child_item, QFrame *new_child);
+
+    // Events
+    virtual void    enterEvent(QEvent *event) override;                                // Inherited from QWidget
+
+    // Getters and Setters
+    void            setAdvisorHeaderText(QString header) { m_header = header; }
+    void            setAdvisorBodyText(QString body) { m_body = body; }
 
 private slots:
     void animationDone();
@@ -70,8 +105,51 @@ private slots:
 };
 
 
+//####################################################################################
+//##    WidgetHoverHandler
+//##        Catches hover events for widgets on Object Inspector without needing subclassing
+//############################
+class WidgetHoverHandler : public QObject
+{
+    Q_OBJECT
+
+public:
+    WidgetHoverHandler(QObject *parent) : QObject(parent) {}
+    virtual ~WidgetHoverHandler() {}
+
+    void attach(QWidget *widget);
+
+protected:
+    bool eventFilter(QObject *obj, QEvent *event);
+
+signals:
+    void signalMouseHover(QString header, QString body);
+};
+
+
+//####################################################################################
+//##    TripleSpinBox
+//##        Allows us to control number of decimals being shown in spin box
+//############################
+class TripleSpinBox : public QDoubleSpinBox
+{
+    Q_OBJECT
+
+public:
+    TripleSpinBox(QWidget *parent = nullptr) : QDoubleSpinBox(parent) {}
+    virtual ~TripleSpinBox() override {}
+
+protected:
+    virtual QString textFromValue(double value) const override;
+
+};
+
+
+
 
 #endif // EDITOR_TREE_INSPECTOR_H
+
+
 
 
 

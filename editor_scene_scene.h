@@ -16,6 +16,11 @@ class DrProject;
 class InterfaceRelay;
 class SelectionGroup;
 
+
+//####################################################################################
+//##    SceneGraphicsScene
+//##        Holds items of one scene
+//############################
 class SceneGraphicsScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -27,7 +32,9 @@ private:
 
     // Selection variables
     SelectionGroup     *m_selection_group;          // Holds the group of items currently selected
+    QGraphicsItem      *m_first_selected;           // Keeps track of first item selected to use its properties for the group selection
 
+    QUndoStack         *m_undo;
 
 public:
     // Mutexes
@@ -49,6 +56,13 @@ public:
     void            setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y);
     void            setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y);
     QRectF          totalSelectedItemsSceneRect();
+    void            updateView() { emit updateViews(); }
+
+    // Undo / Redo Functions
+    void            undoAction();
+    void            redoAction();
+    QString         getCurrentUndo() { return m_undo->undoText(); }
+    QString         getCurrentRedo() { return m_undo->redoText(); }
 
     // Selection Functions
     void            addItemToSelectionGroup(QGraphicsItem *item);
@@ -67,31 +81,44 @@ public:
     QList<QGraphicsItem*> getSelectionGroupItems();
     int                   getSelectionGroupCount();
 
+    QGraphicsItem*        getFirstSelectedItem() { return m_first_selected; }
+    void                  setFirstSelectedItem(QGraphicsItem *item) { m_first_selected = item; }
+
 public slots:
-    void            sceneChanged(QList<QRectF> region);
+    void            sceneChanged(QList<QRectF> region);                             // Used to resize scene area to fit contents
+
+    // Undo Commands
+    void            selectionGroupMoved(SelectionGroup *moved_group, const QPointF &old_position);
+    void            selectionGroupNewGroup(SelectionGroup *moved_group, QList<QGraphicsItem*> old_list, QList<QGraphicsItem*> new_list,
+                                           QGraphicsItem *old_first, QGraphicsItem *new_first);
+
 
 signals:
-    void            updateViews();
+    void            updateViews();                                                  // Connected to update() method of attached Views
 
 };
 
 
-//############################
+
+//####################################################################################
 //##    SelectionGroup
 //##        A sub classed QGraphicsItemGroup that can hold selected items in a scene
 //############################
 class SelectionGroup : public QGraphicsItemGroup
 {
 private:
+    SceneGraphicsScene  *m_parent_scene;
 
 public:
     // Constructor / destructor
-    SelectionGroup() {}
+    SelectionGroup(SceneGraphicsScene *parent_scene) : m_parent_scene(parent_scene) {}
     virtual ~SelectionGroup() override;
 
     // Event Overrides
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
+    // Getters and Setters
+    SceneGraphicsScene* getParentScene() { return m_parent_scene; }
 };
 
 

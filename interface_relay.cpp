@@ -18,7 +18,7 @@ InterfaceRelay::~InterfaceRelay() { }
 
 
 //####################################################################################
-//##        These functions can be used without passing around an interface pointer
+//##        These functions can be used globally without passing around an interface pointer
 //##
 //##        - Just need to #include "interface_relay.h"
 //##        - When program starts, FormMain is set as active 'InterfaceRelay' class
@@ -29,10 +29,10 @@ InterfaceRelay::~InterfaceRelay() { }
 namespace Dr {
 
     // Local variable used to store an active InterfaceRelay class instance
-    static InterfaceRelay *active_window;
+    static InterfaceRelay *g_active_window;
 
 
-    void SetActiveRelay(InterfaceRelay *new_relay)      { active_window = new_relay; }
-    void SetLabelText(Label_Names label, QString text)  { active_window->setLabelText(label, text); }
+    void SetActiveRelay(InterfaceRelay *new_relay)      { g_active_window = new_relay; }
+    void SetLabelText(Label_Names label, QString text)  { g_active_window->setLabelText(label, text); }
 
 }

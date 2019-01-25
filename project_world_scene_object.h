@@ -15,6 +15,11 @@ class DrProject;
 class DrWorld;
 class DrScene;
 
+
+//####################################################################################
+//##    DrObject
+//##        Class to hold one object within a scene
+//############################
 class DrObject : public DrSettings
 {
 private:
@@ -31,7 +36,7 @@ private:
 public:
     // Constructor & destructor
     DrObject(DrProject *parent_project, DrWorld *parent_world, DrScene *parent_scene,
-             long new_object_key, std::string new_object_name, DrTypes new_object_type);
+             long new_object_key, QString new_object_name, DrTypes new_object_type);
     virtual ~DrObject() override;
 
 
@@ -43,7 +48,7 @@ public:
 
 
     // External calls
-    void initializeObjectSettings(std::string new_name);
+    void initializeObjectSettings(QString new_name);
     void initializeCameraSettings();
     void initializeCharacterSettings();
 

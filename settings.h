@@ -17,6 +17,10 @@ class DrComponent;
 typedef std::map<long, DrComponent*> ComponentMap;
 
 
+//####################################################################################
+//##    DrComponent
+//##        Class to hold a component for all DrClass objects
+//############################
 class DrSettings
 {
 private:
@@ -61,18 +65,18 @@ public:
     DrComponent* findComponentFromPropertyKey(long property_key_to_find);
     DrProperty*  findPropertyFromPropertyKey(long property_key_to_find);
 
-    void         addComponent(long component, std::string new_display_name, std::string new_description, QColor new_color, bool new_turned_on);
-    void         addComponent(World_Components component, std::string new_display_name, std::string new_description, QColor new_color, bool new_turned_on);
-    void         addComponent(Scene_Components component, std::string new_display_name, std::string new_description, QColor new_color, bool new_turned_on);
-    void         addComponent(Object_Components component, std::string new_display_name, std::string new_description, QColor new_color, bool new_turned_on);
+    void         addComponent(long component, QString new_display_name, QString new_description, QColor new_color, bool new_turned_on);
+    void         addComponent(World_Components component, QString new_display_name, QString new_description, QColor new_color, bool new_turned_on);
+    void         addComponent(Scene_Components component, QString new_display_name, QString new_description, QColor new_color, bool new_turned_on);
+    void         addComponent(Object_Components component, QString new_display_name, QString new_description, QColor new_color, bool new_turned_on);
 
-    void addPropertyToComponent(long component, long property_number, Property_Type new_type, QVariant new_value, std::string new_display_name, std::string new_description);
-    void addPropertyToComponent(World_Components component, World_Properties property_number, Property_Type new_type, QVariant new_value, std::string new_display_name, std::string new_description);
-    void addPropertyToComponent(Scene_Components component, Scene_Properties property_number, Property_Type new_type, QVariant new_value, std::string new_display_name, std::string new_description);
-    void addPropertyToComponent(Object_Components component, Object_Properties property_number, Property_Type new_type, QVariant new_value, std::string new_display_name, std::string new_description);
+    void addPropertyToComponent(long component, long property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
+    void addPropertyToComponent(World_Components component, World_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
+    void addPropertyToComponent(Scene_Components component, Scene_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
+    void addPropertyToComponent(Object_Components component, Object_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
 
-    std::string  getWorldName();
-    std::string  getSceneName();
+    QString      getWorldName();
+    QString      getSceneName();
 
 
 };

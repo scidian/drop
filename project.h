@@ -15,6 +15,10 @@ class DrWorld;
 typedef std::map<long, DrWorld*> WorldMap;
 
 
+//####################################################################################
+//##    DrProject
+//##        Class to hold data for one project
+//############################
 class DrProject
 {
 private:
@@ -45,7 +49,7 @@ public:
     void        addWorld();
     long        getFirstWorldKey();
     DrWorld*    getWorld(long from_world_key);
-    DrWorld*    getWorldWithName(std::string world_name);
+    DrWorld*    getWorldWithName(QString world_name);
 
 
 

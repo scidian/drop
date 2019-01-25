@@ -26,14 +26,17 @@
 //####################################################################################
 void SceneGraphicsView::startSelect(QMouseEvent *event)
 {
-    if (scene() == nullptr) return;
-
     m_view_mode = View_Mode::Selecting;                                     // Flag that we're in selection mode
-    if (event->modifiers() & Qt::KeyboardModifier::ControlModifier) {
-        m_items_start = dynamic_cast<SceneGraphicsScene*>(scene())->getSelectionGroupItems();
-    } else {
-        m_items_start.clear();
-    }
+
+    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+    m_items_start = my_scene->getSelectionGroupItems();
+    m_first_start = my_scene->getFirstSelectedItem();
+
+    // If control key isnt down, we're starting a new selection process, so remove all items
+    if (event->modifiers() & Qt::KeyboardModifier::ControlModifier)
+        m_items_keep = m_items_start;
+    else
+        m_items_keep.clear();
 
     m_rubber_band->setGeometry(QRect(m_origin, QSize()));                   // Start selection box with no size
     m_rubber_band->show();                                                  // Make selection box visible
@@ -56,17 +59,22 @@ void SceneGraphicsView::processSelection(QPoint mouse_in_view)
     QList<QGraphicsItem*> selection_area_items = scene()->items(selection_area, Qt::ItemSelectionMode::IntersectsItemShape,
                                                                 Qt::SortOrder::DescendingOrder, viewportTransform());
 
-    // Add items in selection area to group
-    for (auto item : selection_area_items) my_scene->addItemToSelectionGroup(item);
-
     // Go through selected items, unselect if rubber band box covered them and has since shrunk
     for (auto item : my_scene->getSelectionGroupItems()) {
-        if (selection_area_items.contains(item) == false && m_items_start.contains(item) == false)
+        if (selection_area_items.contains(item) == false && m_items_keep.contains(item) == false)
                 my_scene->getSelectionGroup()->removeFromGroup(item);
     }
 
-    // If we don't have any items left in selection group, reset it
-    if (my_scene->getSelectionGroupCount() < 1) my_scene->emptySelectionGroup();
+    if (my_scene->getSelectionGroupCount() == 0)
+        my_scene->resetSelectionGroup();
+
+    if (m_items_keep.count() == 0 && selection_area_items.count() == 1)
+        my_scene->setFirstSelectedItem(selection_area_items.first());
+
+    // Add items in selection area to group
+    for (auto item : selection_area_items) my_scene->addItemToSelectionGroup(item);
+
+
 }
 
 

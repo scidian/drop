@@ -34,8 +34,8 @@
 #include "project.h"
 #include "interface_relay.h"
 
-
 // Necessary forward declarations
+class ColorSplitter;
 class InterfaceRelay;
 class TreeAssetList;
 class TreeAdvisor;
@@ -58,7 +58,8 @@ public:
     // Locals
     Form_Main_Mode  current_mode;                                       // Holds current editing mode of FormMain
     Form_Main_Focus current_focus;                                      // Holds Widget that currently has focus
-    bool            done_loading = false;                               // True after initial startup of FormMain
+    bool            done_loading = false;                               // True after initial startup of FormMain,
+                                                                        // makes sure done loading before any calls to SetLabelText
 
     // Locals that need to be SAVED / LOADED from each project
     DrProject      *project;                                            // Holds whatever the current open game project is
@@ -75,12 +76,14 @@ private:
 
     // Normal Qt Classes for simple objects
     QMenuBar      *menuBar;
-    QWidget       *widgetAdvisor, *widgetAssests, *widgetCentral, *widgetScene, *widgetInspector, *widgetToolbar;
+    QAction       *actionUndo, *actionRedo;
+    QWidget       *widgetAdvisor, *widgetAssests, *widgetCentral, *widgetScene, *widgetInspector, *widgetToolbar, *widgetSceneView;
     QScrollArea   *areaBottom;
+    QFrame        *statusBar;
 
     QHBoxLayout   *horizontalLayout;
-    QVBoxLayout   *verticalLayout, *verticalLayoutObject, *verticalLayoutAdvisor, *verticalLayoutAsset;
-    QSplitter     *splitterHorizontal, *splitterVertical;
+    QVBoxLayout   *verticalLayout, *verticalLayoutObject, *verticalLayoutAdvisor, *verticalLayoutAsset, *verticalLayoutView;
+    ColorSplitter *splitterHorizontal, *splitterVertical;
 
     QDockWidget   *advisor, *assets, *inspector, *toolbar;
     QPushButton   *buttonAtlas, *buttonFonts, *buttonPlay, *buttonSettings, *buttonWorlds;
@@ -100,23 +103,45 @@ public:
     virtual void    buildObjectInspector(QList<long> key_list);
     virtual void    buildTreeSceneList();
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list);
+    virtual void    setAdvisorInfo(QString header, QString body);
     virtual void    setLabelText(Label_Names label_name, QString new_text);
 
     void            populateScene();                                        // !!!!! TEMP generic fill of scene
 
 private:
-    // Form setup
-    void        applyColoring();
+    // Form Building / Setup
     void        buildMenu();
     void        buildWindow(Form_Main_Mode new_layout);
     void        buildWindowModeEditScene();
     void        changePalette(Color_Scheme new_color_scheme);
-    void        listChildren();
+
+    // Menu Bar Functions
+    void        menuAbout();
+    void        menuUndo();
+    void        menuRedo();
+    void        menuListChildren();
+
+private slots:
+    void        editMenuAboutToShow();
+    void        editMenuAboutToHide();
 
 signals:
-    void        sendAdvisorInfo(HeaderBodyList header_body_list);           // Forwards info to MainWindow::changeAdvisor
+    void        sendAdvisorInfo(QString header, QString body);              // Forwards info to MainWindow::changeAdvisor
 };
 
+
+
+//####################################################################################
+//##    ColorSplitter - Custom class allows for specific class specific style sheeting
+//############################
+class ColorSplitter : public QSplitter
+{
+    Q_OBJECT
+
+public:
+    ColorSplitter(QWidget *parent = nullptr) : QSplitter(parent) {}
+
+};
 
 
 #endif // MAINWINDOW_H

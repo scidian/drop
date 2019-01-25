@@ -36,7 +36,6 @@ SOURCES += \
     editor_scene_scene.cpp \
     editor_scene_view.cpp \
     form_main_menu.cpp \
-    form_main_color.cpp \
     editor_scene_view_paint.cpp \
     editor_scene_view_rotate.cpp \
     editor_scene_view_resize.cpp \
@@ -53,10 +52,12 @@ SOURCES += \
     editor_scene_view_mouse.cpp \
     editor_scene_scene_select.cpp \
     editor_scene_view_tooltip.cpp \
-    library.cpp \
     colors.cpp \
     debug.cpp \
-    interface_relay.cpp
+    interface_relay.cpp \
+    library_misc.cpp \
+    library_style.cpp \
+    editor_scene_scene_undo.cpp
 
 HEADERS += \
     enums.h \
@@ -79,7 +80,8 @@ HEADERS += \
     editor_scene_item.h \
     library.h \
     colors.h \
-    debug.h
+    debug.h \
+    editor_scene_scene_undo.h
 
 FORMS +=
 
@@ -91,4 +93,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     drop.qrc
 
-DISTFILES +=
+DISTFILES += \
+    README.md

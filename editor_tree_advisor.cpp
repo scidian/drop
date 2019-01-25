@@ -19,19 +19,21 @@
 #include "interface_relay.h"
 
 
-// SLOT, Sets the Advisor Dock text
-void TreeAdvisor::changeAdvisor(HeaderBodyList header_body_list)
+//####################################################################################
+//##        SLOT, Sets the Advisor Dock text
+//####################################################################################
+void TreeAdvisor::changeAdvisor(QString header, QString body)
 {
     if (advisor_mutex.tryLock() == false) return;           // Try and lock function to make this thread safe
 
     this->clear();                                          // Clear / delete all from advisor tree
 
-    advisor_header = header_body_list[0];
-    QString body_text = QString::fromStdString(header_body_list[1]);
+    advisor_header = header;
+    QString body_text = body;
 
     // Insert top level item to act as header
     QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(this);
-    topLevelItem->setText(0, QString::fromStdString(advisor_header));
+    topLevelItem->setText(0, advisor_header);
     this->addTopLevelItem(topLevelItem);
 
     // Create child tree item for body
@@ -41,7 +43,7 @@ void TreeAdvisor::changeAdvisor(HeaderBodyList header_body_list)
     // Create a label to display body text and format
     QLabel *body_label = new QLabel(body_text);
     QFont font_label;
-    font_label.setPointSize(11);
+    font_label.setPointSize(Dr::FontSize());
     body_label->setFont(font_label);
     body_label->setWordWrap(true);
     body_label->setAlignment(Qt::AlignTop);
@@ -54,12 +56,17 @@ void TreeAdvisor::changeAdvisor(HeaderBodyList header_body_list)
 }
 
 
-// Handles changing the Advisor on Mouse Enter
+//####################################################################################
+//##        EVENT, Handles changing the Advisor on Mouse Enter
+//####################################################################################
 void TreeAdvisor::enterEvent(QEvent *event)
 {
     m_relay->setAdvisorInfo(Advisor_Info::Advisor_Window);
     QTreeWidget::enterEvent(event);
 }
+
+
+
 
 
 

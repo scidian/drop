@@ -15,12 +15,9 @@
 bool CheckTypesAreSame(DrTypes type1, DrTypes type2)
 {
     if (IsDrObjectClass(type1) == true && IsDrObjectClass(type2) == true)
-    {
         return true;
-    }
-    else {
+    else
         return (type1 == type2);
-    }
 }
 
 //####################################################################################
@@ -40,9 +37,9 @@ bool IsDrObjectClass(DrTypes type_to_check)
 }
 
 //####################################################################################
-//##    Returns a std::string respresentaiton of the passed DrTypes type
+//##    Returns a QString respresentaiton of the passed DrTypes type
 //####################################################################################
-std::string StringFromType(DrTypes drtype)
+QString StringFromType(DrTypes drtype)
 {
     switch (drtype)
     {

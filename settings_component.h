@@ -16,6 +16,11 @@ class DrSettings;
 class DrProperty;
 typedef std::map<long, DrProperty*> PropertyMap;
 
+
+//####################################################################################
+//##    DrComponent
+//##        Class to hold a component for all DrClass objects
+//############################
 class DrComponent
 {
 private:
@@ -24,8 +29,8 @@ private:
 
     DrSettings *m_parent_settings;
 
-    std::string m_display_name = "Unknown Component";
-    std::string m_description = "No description";
+    QString     m_display_name = "Unknown Component";
+    QString     m_description = "No description";
     QString     m_icon = "";
     QColor      m_color = QColor(Qt::gray);
     bool        m_turned_on = false;
@@ -34,14 +39,14 @@ private:
 
 public:
     // Constructor & destructor
-    DrComponent(DrSettings *parent_settings, std::string new_display_name, std::string new_description, QColor new_color, long new_key, bool new_turned_on);
+    DrComponent(DrSettings *parent_settings, QString new_display_name, QString new_description, QColor new_color, long new_key, bool new_turned_on);
     ~DrComponent();
 
 
     // Getters and setters
-    std::string getDisplayName() { return m_display_name; }
-    QString     getDisplayNameQString() { return QString::fromStdString(m_display_name); }
-    std::string getDescription() { return m_description; }
+    QString     getDisplayName() { return m_display_name; }
+    QString     getDisplayNameQString() { return m_display_name; }
+    QString     getDescription() { return m_description; }
     QString     getIcon() { return m_icon; }
     QColor      getColor() { return m_color; }
     bool        isTurnedOn() { return m_turned_on; }
@@ -54,8 +59,8 @@ public:
     DrProperty* getProperty(Scene_Properties setting) { return m_properties[static_cast<int>(setting)]; }
     DrProperty* getProperty(Object_Properties setting) { return m_properties[static_cast<int>(setting)]; }
 
-    void setDisplayName(std::string new_display_name) { m_display_name = new_display_name; }
-    void setDescription(std::string new_description) { m_description = new_description; }
+    void setDisplayName(QString new_display_name) { m_display_name = new_display_name; }
+    void setDescription(QString new_description) { m_description = new_description; }
     void setIcon(QString new_icon) { m_icon = new_icon; }
     void setColor(QColor new_color) { m_color = new_color; }
     void setOnOrOff(bool new_turned_on) { m_turned_on = new_turned_on; }
@@ -65,10 +70,10 @@ public:
 
 
     // External calls
-    void addProperty(long property_number, Property_Type new_type, QVariant new_value, std::string new_display_name, std::string new_description);
-    void addProperty(World_Properties property_number, Property_Type new_type, QVariant new_value, std::string new_display_name, std::string new_description);
-    void addProperty(Scene_Properties property_number, Property_Type new_type, QVariant new_value, std::string new_display_name, std::string new_description);
-    void addProperty(Object_Properties property_number, Property_Type new_type, QVariant new_value, std::string new_display_name, std::string new_description);
+    void addProperty(long property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
+    void addProperty(World_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
+    void addProperty(Scene_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
+    void addProperty(Object_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
 
 
 };

@@ -20,9 +20,8 @@
 
 
 //####################################################################################
-//##
 //##        Populates Tree Scene List based on project data
-//##
+//####################################################################################
 void TreeScene::populateTreeSceneList()
 {
     this->clear();
@@ -69,6 +68,7 @@ void TreeScene::populateTreeSceneList()
                                                " QCheckBox::indicator:checked { image: url(:/tree_icons/tree_lock.png); }"
                                                " QCheckBox::indicator:unchecked { image: url(:/tree_icons/tree_bullet.png); }");
                 QCheckBox *lock_item = new QCheckBox();
+                lock_item->setFocusPolicy(Qt::FocusPolicy::NoFocus);
                 lock_item->setStyleSheet(check_images);
                 this->setItemWidget(sub_sub_item, 1, lock_item);
 
@@ -92,10 +92,8 @@ void TreeScene::enterEvent(QEvent *event)
 
 
 //####################################################################################
-//
-//  Testing drag event
-//
-
+//##        Testing drag event
+//####################################################################################
 // This removes the item from under the mouse, sort of
 void TreeScene::startDrag(Qt::DropActions supportedActions)
 {
@@ -126,7 +124,7 @@ void TreeScene::dragMoveEvent(QDragMoveEvent *event)
     m_mouse_y = event->pos().y();
 
     // !!!!! #DEBUG:    Show scene tree drag event info
-    if (Dr::CheckDebugFlag(Debug_Flags::Scene_Tree_Drag)) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_Scene_Tree_Drag)) {
         m_relay->setLabelText(Label_Names::Label_1, QString::fromStdString("MX: ") + QString::number(m_mouse_x) +
                                                     QString::fromStdString(", MY: ") + QString::number(m_mouse_y) );
     }
@@ -140,9 +138,9 @@ void TreeScene::dragMoveEvent(QDragMoveEvent *event)
         long        check_key = item_at->data(0, User_Roles::Key).toLongLong();
 
         // !!!!! #DEBUG:    Show scene tree drag event info
-        if (Dr::CheckDebugFlag(Debug_Flags::Scene_Tree_Drag)) {
-            m_relay->setLabelText(Label_Names::Label_Object_3, QString::fromStdString("Selected: " + std::to_string(m_selected_key) +
-                                                                                    ", Checking: " + std::to_string(check_key)) );
+        if (Dr::CheckDebugFlag(Debug_Flags::Label_Scene_Tree_Drag)) {
+            m_relay->setLabelText(Label_Names::Label_Object_3, "Selected: " + QString::number(m_selected_key) +
+                                                             ", Checking: " + QString::number(check_key) );
         }
         // !!!!! END
 
@@ -190,16 +188,16 @@ void TreeScene::dropEvent(QDropEvent* event)
 
 
 //####################################################################################
-//
-// Updates selection, checks to make sure if more than one item is selected all new items
-//                    not matching original type are not selected
-//
+//##        Updates selection
+//##            Checks to make sure if more than one item is selected all new items
+//##            not matching original type are not selected
+//####################################################################################
 void TreeScene::selectionChanged (const QItemSelection &selected, const QItemSelection &deselected)
 {
     QList<QTreeWidgetItem*> item_list = this->selectedItems();
 
     // !!!!! #DEBUG:    Show Scene Tree selection data
-    if (Dr::CheckDebugFlag(Debug_Flags::Scene_Tree_Selection))
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_Scene_Tree_Selection))
         m_relay->setLabelText(Label_Names::Label_Bottom, QString("Selected Items: ") + QString::number(item_list.size()));
     // !!!!! END
 
@@ -211,7 +209,7 @@ void TreeScene::selectionChanged (const QItemSelection &selected, const QItemSel
 
     // !!!!! #DEBUG:    Show Scene Tree selection data
     // Otherwise add first item to label
-    if (Dr::CheckDebugFlag(Debug_Flags::Scene_Tree_Selection)) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_Scene_Tree_Selection)) {
         m_relay->setLabelText(Label_Names::Label_Bottom, QString("Selected Items: ") +
                                                          QString::number(item_list.size()) +
                                                          ", First Item: " + item_list.first()->text(0));
@@ -284,7 +282,7 @@ void SceneTreeHighlightProxy::drawPrimitive(PrimitiveElement element, const QSty
         }
 
         // !!!!! #DEUBG:    Show custom highlight event data
-        if (Dr::CheckDebugFlag(Debug_Flags::Scene_Tree_Drag)) {
+        if (Dr::CheckDebugFlag(Debug_Flags::Label_Scene_Tree_Drag)) {
             m_relay->setLabelText(Label_Names::Label_2, QString::fromStdString("TLX: ") + QString::number(option->rect.topLeft().x()) +
                                                         QString::fromStdString(", TLY: ") + QString::number(option->rect.topLeft().y()));
         }

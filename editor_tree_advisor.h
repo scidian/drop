@@ -16,6 +16,10 @@ class DrProject;
 class InterfaceRelay;
 
 
+//####################################################################################
+//##    TreeAdvisor
+//##        A Tree List to show helpful tips for every item in the editor
+//############################
 class TreeAdvisor: public QTreeWidget
 {
     Q_OBJECT
@@ -24,7 +28,7 @@ private:
     DrProject      *m_project;                  // Pointer to currently loaded project
     InterfaceRelay *m_relay;                    // Pointer to InterfaceRelay class of parent form
 
-    std::string     advisor_header { "No Data" };                       // Keeps current Advisor Header
+    QString         advisor_header { "No Data" };                       // Keeps current Advisor Header
     QMutex          advisor_mutex { QMutex::NonRecursive };             // Used to keep building function thread safe
 
 public:
@@ -36,10 +40,10 @@ public:
     virtual void    enterEvent(QEvent *event) override;
 
     // Getters and setters
-    std::string     getAdvisorHeader() { return advisor_header; }
+    QString         getAdvisorHeader() { return advisor_header; }
 
 private slots:
-    void            changeAdvisor(HeaderBodyList header_body_list);             // Set as slot so we can emit queued signals
+    void            changeAdvisor(QString header, QString body);               // Set as slot so we can emit queued signals
 };
 
 

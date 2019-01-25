@@ -6,6 +6,8 @@
 //
 //
 
+#include "library.h"
+
 #include "project.h"
 #include "project_world.h"
 #include "project_world_scene.h"
@@ -27,7 +29,7 @@
 //####################################################################################
 void SceneGraphicsView::enterEvent(QEvent *event)
 {
-    setFocus(Qt::FocusReason::MouseFocusReason);                        // Set focus on mouse enter to allow for space bar pressing hand grab
+    ///setFocus(Qt::FocusReason::MouseFocusReason);                     // Set focus on mouse enter to allow for space bar pressing hand grab
     m_relay->setAdvisorInfo(Advisor_Info::Scene_Area);                  // Set Advisor text on mouse enter
     QGraphicsView::enterEvent(event);
 }
@@ -48,28 +50,28 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
     // On initial mouse down, store mouse origin point
     m_origin =          event->pos();
     m_origin_in_scene = mapToScene(m_origin);
-    m_origin_item =     itemAt(event->pos());
+    m_origin_item =     itemOnTopAtPosition(event->pos());
 
-    // If space bar isnt down, process mouse down
+    // If space bar isn't down, process mouse down
     if (dragMode() == QGraphicsView::DragMode::NoDrag) {
 
         // If left mouse button down
         if (event->button() & Qt::LeftButton) {
-
+            // Restart mouse select movement buffer timer
+            m_origin_timer.restart();
+            m_allow_movement = false;
 
             if (my_scene->getSelectionGroupCount() > 0) {
-                // ******************* If clicked while holding Alt key
-                if (event->modifiers() & Qt::KeyboardModifier::AltModifier ||
-                    m_over_handle == Position_Flags::Rotate) {
+                // ******************* If clicked while holding Alt key start rotating
+                if (event->modifiers() & Qt::KeyboardModifier::AltModifier || m_over_handle == Position_Flags::Rotate) {
                     startRotate(m_origin);
                     my_scene->scene_mutex.unlock();
                     return;
                 }
 
-                // ******************* If clicked while in a Size Grip Handle
-                if (m_over_handle != Position_Flags::No_Position &&
-                    m_over_handle != Position_Flags::Move_Item) {
-                    startResize();
+                // ******************* If clicked while in a Size Grip Handle start resizing
+                if (m_over_handle != Position_Flags::No_Position && m_over_handle != Position_Flags::Move_Item) {
+                    startResize(m_origin);
                     my_scene->scene_mutex.unlock();
                     return;
                 }
@@ -77,88 +79,92 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
 
             // ******************* If no keys are down, only select item under mouse
-            QGraphicsItem *item_under;
-
             if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
-                item_under = itemOnTopAtPosition(event->pos());
 
-                // If no item under mouse, deselect all
-                if (item_under == nullptr) {
-                    my_scene->emptySelectionGroup();
-
-                } else {
+                if (m_origin_item != nullptr) {
                     // If we clicked clicked a new item, set selection group to that
-                    if (my_items.contains(item_under) == false) {
-                        my_scene->emptySelectionGroup();
-                        my_scene->addItemToSelectionGroup(item_under);
+                    if (my_items.contains(m_origin_item) == false) {
+                        emit selectionGroupNewGroup(my_scene->getSelectionGroup(), my_items, QList<QGraphicsItem*>({ m_origin_item }),
+                                                    my_scene->getFirstSelectedItem(), m_origin_item);
                         my_scene->selectSelectionGroup();
                     }
 
                     // Process press event for item movement (Translation)
                     QGraphicsView::mousePressEvent(event);
                     viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
+                    QTimer::singleShot(500, this, SLOT(checkTranslateToolTipStarted()));
+
+                    ///m_old_pos = my_scene->getSelectionGroup()->scenePos();
+                    m_old_pos = my_scene->getSelectionGroup()->sceneTransform().map(my_scene->getSelectionGroup()->boundingRect().center());
                     m_view_mode = View_Mode::Translating;
                 }
 
-            } else if (event->modifiers() & Qt::KeyboardModifier::ControlModifier) {
+            // ******************** If clicked while control is down, add to selection group, or take out
+            } else if (event->modifiers() & Qt::KeyboardModifier::ControlModifier && m_origin_item != nullptr) {
 
-                // If clicked while control is down, add to selection group, or take out
-                if (m_origin_item != nullptr) {
+                QList<QGraphicsItem*> new_list = my_items;
 
-                    // Break apart selection group, put back together without item clicked
-                    int start_count = my_scene->getSelectionGroupCount();
-                    item_under = itemOnTopAtPosition(event->pos(), true);
+                // If an item was clicked remove it from selection group, otherwise add it
+                if (my_items.contains(m_origin_item) == true)
+                    new_list.removeOne(m_origin_item);
+                else if (my_items.contains(m_origin_item) == false)
+                    new_list.append(m_origin_item);
 
-                    // If we originally clicked on group, but that point is empty, start selection box
-                    if (item_under == nullptr) {
-                        startSelect(event);
-                        my_scene->scene_mutex.unlock();
-                        return;
+                // If we lost the first item, cancel having a first item
+                if (new_list.count() > 0) {
+                    QGraphicsItem *new_first = my_scene->getFirstSelectedItem();
 
-                    // Otherwise, if we clicked a new item, add that to group
-                    } else if (my_items.contains(item_under) == false) {
-                        my_scene->addItemToSelectionGroup(item_under);
-                    }
+                    if (new_list.count() == 1)
+                        new_first = new_list.first();
+                    else if (new_list.contains(my_scene->getFirstSelectedItem()) == false)
+                        new_first = nullptr;
 
-                    // If we went one more than one item, to one item. Reset selection box to that item
-                    if (start_count > 1 && my_scene->getSelectionGroupCount() == 1) {
-                        QGraphicsItem *one_item = my_scene->getSelectionGroupItems().first();
-                        my_scene->emptySelectionGroup();
-                        my_scene->addItemToSelectionGroup(one_item);
-                    }
-
-                    // If selection box is empty, clear it
-                    if (my_scene->getSelectionGroup()->childItems().count() < 1) my_scene->emptySelectionGroup();
+                    emit selectionGroupNewGroup(my_scene->getSelectionGroup(), my_items, new_list,
+                                                my_scene->getFirstSelectedItem(), new_first);
+                    my_scene->selectSelectionGroup();
+                } else {
+                    emit selectionGroupNewGroup(my_scene->getSelectionGroup(), my_items, QList<QGraphicsItem*>({}),
+                                                my_scene->getFirstSelectedItem(), nullptr);
                 }
-
             }
 
 
             // ******************* If theres no item under mouse, start selection box
             if (m_origin_item == nullptr) {
                 startSelect(event);
+                processSelection(event->pos());
                 my_scene->scene_mutex.unlock();
                 return;
             }
 
         }
 
+
+    // ******************** Process mouse press event for hand drag
     } else {
-        // Process mouse press event for hand drag
         QGraphicsView::mousePressEvent(event);
         m_view_mode = View_Mode::Dragging;
     }
 
     update();
-
     my_scene->scene_mutex.unlock();
+}
+
+
+// SLOT: Fired from single shot timer when mouse is down, starts tooltip after x milliseconds if user pressed mouse but hasn't started moving it yet
+void SceneGraphicsView::checkTranslateToolTipStarted()
+{
+    if (m_view_mode == View_Mode::Translating) {
+        if (m_tool_tip->getTipType() != View_Mode::Translating)
+            m_tool_tip->startToolTip(View_Mode::Translating, m_origin, mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
+    }
 }
 
 
 //####################################################################################
 //##        Finds item on top of scene at point in View, ignoring selection group
 //####################################################################################
-QGraphicsItem* SceneGraphicsView::itemOnTopAtPosition(QPoint check_point, bool take_item_on_top_out)
+QGraphicsItem* SceneGraphicsView::itemOnTopAtPosition(QPoint check_point)
 {
     SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
     QGraphicsItem*         selection = my_scene->getSelectionGroupAsGraphicsItem();
@@ -180,11 +186,6 @@ QGraphicsItem* SceneGraphicsView::itemOnTopAtPosition(QPoint check_point, bool t
             item_on_top = item;
     }
 
-    // If we should take out item at point if its in selection group, remove it
-    // (This is used for when the user is holding control and clicks an item in the selection group)
-    if (take_item_on_top_out && my_scene->getSelectionGroupItems().contains(item_on_top))
-        my_scene->getSelectionGroup()->removeFromGroup(item_on_top);
-
     return item_on_top;
 }
 
@@ -202,37 +203,39 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
     // Store event mouse position
     m_last_mouse_pos = event->pos();
 
-    // Adjust for Qt Arrow not having point right at tip of
-    QPointF adjust_mouse = m_last_mouse_pos;
-    adjust_mouse.setX(m_last_mouse_pos.x() - 2);
-    adjust_mouse.setY(m_last_mouse_pos.y() - 2);
-
-    // Updates our tool tip position
-    if (m_tool_tip->isHidden() == false) {
-        QPoint tip_pos = m_last_mouse_pos + QWidget::mapToGlobal(this->rect().topLeft()) + m_tool_tip->getOffset();
-        m_tool_tip->move(tip_pos);
+    // Allow movement if it has been more than x milliseconds or mouse has moved more than 2 pixels
+    if (m_allow_movement == false) {
+        if (m_origin_timer.elapsed() > 200) {
+            m_allow_movement = true;
+        } else if (QLineF(m_origin, m_last_mouse_pos).length() > 2) {
+            m_allow_movement = true;
+        }
     }
 
+    // Updates our tool tip position
+    if (m_tool_tip->isHidden() == false)
+        m_tool_tip->updateToolTipPosition(m_last_mouse_pos);
+
     // ******************** Grab item under mouse
-    QGraphicsItem *check_item = itemOnTopAtPosition(adjust_mouse.toPoint());
+    QGraphicsItem *check_item = itemOnTopAtPosition(m_last_mouse_pos);
 
     // ******************** Check selection handles to see if mouse is over one
     if (m_over_handle == Position_Flags::Move_Item) m_over_handle = Position_Flags::No_Position;
 
     if (my_scene->getSelectionGroupCount() > 0 && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
         m_over_handle = Position_Flags::No_Position;
-        if (m_handles[Position_Flags::Top].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))    m_over_handle = Position_Flags::Top;
-        if (m_handles[Position_Flags::Bottom].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Bottom;
-        if (m_handles[Position_Flags::Left].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))   m_over_handle = Position_Flags::Left;
-        if (m_handles[Position_Flags::Right].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))  m_over_handle = Position_Flags::Right;
+        if (m_handles[Position_Flags::Top].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill))    m_over_handle = Position_Flags::Top;
+        if (m_handles[Position_Flags::Bottom].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Bottom;
+        if (m_handles[Position_Flags::Left].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill))   m_over_handle = Position_Flags::Left;
+        if (m_handles[Position_Flags::Right].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill))  m_over_handle = Position_Flags::Right;
 
         // Check corners second as they're more important
-        if (m_handles[Position_Flags::Top_Left].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))     m_over_handle = Position_Flags::Top_Left;
-        if (m_handles[Position_Flags::Top_Right].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))    m_over_handle = Position_Flags::Top_Right;
-        if (m_handles[Position_Flags::Bottom_Left].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill))  m_over_handle = Position_Flags::Bottom_Left;
-        if (m_handles[Position_Flags::Bottom_Right].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Bottom_Right;
+        if (m_handles[Position_Flags::Top_Left].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill))     m_over_handle = Position_Flags::Top_Left;
+        if (m_handles[Position_Flags::Top_Right].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill))    m_over_handle = Position_Flags::Top_Right;
+        if (m_handles[Position_Flags::Bottom_Left].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill))  m_over_handle = Position_Flags::Bottom_Left;
+        if (m_handles[Position_Flags::Bottom_Right].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Bottom_Right;
 
-        if (m_handles[Position_Flags::Rotate].containsPoint(adjust_mouse, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Rotate;
+        if (m_handles[Position_Flags::Rotate].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Rotate;
 
         if (m_over_handle == Position_Flags::No_Position && my_scene->getSelectionGroupItems().contains(check_item))
             if (m_flag_key_down_alt == false)
@@ -289,7 +292,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
 
     // !!!!! #DEBUG:    Draw mouse coords on screen
-    if (Dr::CheckDebugFlag(Debug_Flags::Mouse_Coordinates)) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_Mouse_Coordinates)) {
         m_relay->setLabelText(Label_Names::Label_Mouse_1, "Mouse Scene X: " + QString::number(mapToScene(m_last_mouse_pos).x()) +
                                                                     ", Y: " + QString::number(mapToScene(m_last_mouse_pos).y()) );
         m_relay->setLabelText(Label_Names::Label_Mouse_2, "Mouse View  X: " + QString::number(m_last_mouse_pos.x()) +
@@ -300,7 +303,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
     // !!!!! END
 
     // !!!!! #DEBUG:    Showing object data
-    if (Dr::CheckDebugFlag(Debug_Flags::Selected_Item_Data) && check_item != nullptr) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_Selected_Item_Data) && check_item != nullptr) {
         QGraphicsItem *item = check_item;
         QPointF my_scale =  item->data(User_Roles::Scale).toPointF();
         double  my_angle =  item->data(User_Roles::Rotation).toDouble();
@@ -317,7 +320,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
         m_relay->setLabelText(Label_Names::Label_Object_3,
                         "Group Scale X: " + QString::number(my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Scale).toPointF().x()) +
                                   ", Y: " + QString::number(my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Scale).toPointF().y()) );
-    } else if (Dr::CheckDebugFlag(Debug_Flags::Selected_Item_Data)) {
+    } else if (Dr::CheckDebugFlag(Debug_Flags::Label_Selected_Item_Data)) {
         if (m_view_mode == View_Mode::None && check_item == nullptr) {
             m_relay->setLabelText(Label_Names::Label_Position, "Null");
             m_relay->setLabelText(Label_Names::Label_Center, "Null");
@@ -344,10 +347,25 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
         rotateSelection(event->pos());
     }
 
-    // Pass on event, update and unlock mutex
-    QGraphicsView::mouseMoveEvent(event);
+    // ******************* If mouse moved while in translating mode, update tooltip
+    if (m_view_mode == View_Mode::Translating) {
+        if (m_allow_movement) {
+            // Pass on event to allow movement
+            QGraphicsView::mouseMoveEvent(event);
+            if (m_tool_tip->getTipType() != View_Mode::Translating)
+                m_tool_tip->startToolTip(View_Mode::Translating, m_origin, mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
+            else
+                m_tool_tip->updateToolTipData( mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
+        }
+    } else {
+        // Pass on event to allow movement
+        QGraphicsView::mouseMoveEvent(event);
+    }
+
+    // Update
     if (m_view_mode != View_Mode::None) update();
 
+    // Unlock scene mutex
     my_scene->scene_mutex.unlock();
 }
 
@@ -358,11 +376,42 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 //####################################################################################
 void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 {
+    // Test for scene, convert to our custom class
+    if (scene() == nullptr) return;
+    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+    QList<QGraphicsItem*>  empty{ };
+
     // Process left mouse button released
     if (event->button() & Qt::LeftButton)
     {
+        // We were in item moving mode, emit undo command signal with new item location
+        if (m_view_mode == View_Mode::Translating && scene() != nullptr) {
+            SelectionGroup *group = my_scene->getSelectionGroup();
+            QPointF check_pos = group->sceneTransform().map(group->boundingRect().center());
+            if (group->childItems().count() > 0 && m_old_pos != check_pos) {
+                emit selectionGroupMoved(group, m_old_pos);
+            }
+        }
+
+        // We were in rubber band selection mode, if selection has changed emit undo command signal
+        if (m_view_mode == View_Mode::Selecting && scene() != nullptr) {
+            SelectionGroup *group = my_scene->getSelectionGroup();
+
+            // If we had items selected and now we don't, emit undo clear selection command
+            if (group->childItems().count() == 0 && m_items_start.count() != 0) {
+                emit selectionGroupNewGroup(group, m_items_start, empty, m_first_start, nullptr);
+
+            // Otherwise check to see if selected items list has changed, if so emit new group command
+            } else if (group->childItems() != m_items_start) {
+                if (group->childItems().count() == 1)
+                    emit selectionGroupNewGroup(group, m_items_start, group->childItems(), m_first_start, group->childItems().first());
+                else if ( group->childItems().count() > 1)
+                    emit selectionGroupNewGroup(group, m_items_start, group->childItems(), m_first_start, my_scene->getFirstSelectedItem());
+            }
+        }
+
         m_rubber_band->hide();
-        m_tool_tip->hide();
+        m_tool_tip->stopToolTip();
         m_view_mode = View_Mode::None;
     }
 
@@ -370,7 +419,6 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
     QGraphicsView::mouseReleaseEvent(event);
     update();
 }
-
 
 
 
@@ -382,17 +430,41 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 #if QT_CONFIG(wheelevent)
 void SceneGraphicsView::wheelEvent(QWheelEvent *event)
 {
+    // Allow for scene scrolling if ctrl (cmd) is down
     if (event->modifiers() & Qt::KeyboardModifier::ControlModifier) {
         QGraphicsView::wheelEvent(event);
         return;
     }
+
     if (event->delta() > 0) {
         zoomInOut(10);  }
     else {
         zoomInOut(-10); }
     event->accept();
+
+    // Show tool tip with zoom percentage, if first time start tooltip, otherwise update it
+    if (m_tool_tip->getTipType() != View_Mode::Zooming)
+        m_tool_tip->startToolTip(View_Mode::Zooming, event->pos(), static_cast<int>(m_zoom_scale * 100) );
+    else
+        m_tool_tip->updateToolTipData( static_cast<int>(m_zoom_scale * 100) );
+
+    // Reset tool tip timeout, post a single shot timer to eventually hide tool tip
+    m_zoom_timer.restart();
+    QTimer::singleShot(300, this, SLOT(stoppedZooming()));
 }
 #endif
+
+// SLOT: Handles hiding tool tip after done zooming
+void SceneGraphicsView::stoppedZooming()
+{
+    // If over 1.2 seconds have passed since last time mouse wheel was activated, stop tool tip
+    if (m_tool_tip->getTipType() == View_Mode::Zooming) {
+        if (m_zoom_timer.elapsed() > 1200)
+            m_tool_tip->stopToolTip();
+        else
+            QTimer::singleShot(300, this, SLOT(stoppedZooming()));
+    }
+}
 
 void SceneGraphicsView::zoomInOut(int level)
 {

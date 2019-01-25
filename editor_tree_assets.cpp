@@ -20,7 +20,9 @@
 
 
 
-// Handles changing the Advisor on Mouse Enter
+//####################################################################################
+//##        EVENT, Handles changing the Advisor on Mouse Enter
+//####################################################################################
 void TreeAssetList::enterEvent(QEvent *event)
 {
     m_relay->setAdvisorInfo(Advisor_Info::Asset_List);

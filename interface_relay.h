@@ -12,6 +12,11 @@
 #include "debug.h"
 #include "enums.h"
 
+
+//####################################################################################
+//##    InterfaceRelay
+//##        An interface class used to communicate between classes
+//############################
 class InterfaceRelay
 {
 public:
@@ -22,6 +27,7 @@ public:
     virtual void    buildTreeSceneList() = 0;
 
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list) = 0;
+    virtual void    setAdvisorInfo(QString header, QString body) = 0;
     virtual void    setLabelText(Label_Names label_name, QString new_text) = 0;
 };
 

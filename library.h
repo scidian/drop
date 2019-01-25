@@ -13,19 +13,29 @@
 #include <QMessageBox>
 #include <QWidget>
 
+
+//####################################################################################
+//##    Local Enumerations
+//############################
 enum class Shadow_Types
 {
     Button_Shadow,
+    Tool_Tip_Shadow,
 };
 
 
+//####################################################################################
+//##    Dr Namespace
+//##        A library of helpful functions in a global space
+//############################
 namespace Dr {
 
 
 // Form / Widget Functions
-void    ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius);
+void    ApplyColoring(QWidget *widget);
 void    ApplyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color);
 void    ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type);
+void    ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius);
 
 
 // Comparison Functions

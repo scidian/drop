@@ -12,7 +12,9 @@
 #include <QColor>
 
 
-// ***** Palette options for windows
+//####################################################################################
+//##    Palette options for windows
+//############################
 enum class Color_Scheme
 {
     Dark,       Light,      Blue,       Autumn
@@ -26,12 +28,15 @@ enum class Window_Colors
     Midlight,           Highlight,
     Text_Dark,          Text_Light,             Text,
     Icon_Dark,          Icon_Light,
+    Seperator,
 };
 
 
 namespace Dr {
 
     void            LoadPalettes();
+
+    int             FontSize();                                 // Project wide font size
 
     QColor          GetColor(Window_Colors color_role);
     Color_Scheme    GetColorScheme();

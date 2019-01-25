@@ -26,14 +26,13 @@
 //####################################################################################
 //##        Starts resizing mode
 //####################################################################################
-void SceneGraphicsView::startResize()
+void SceneGraphicsView::startResize(QPoint mouse_in_view)
 {
-    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
-
     m_view_mode = View_Mode::Resizing;
     m_start_resize_grip = m_over_handle;                        // Store grip handle we start resize event with
     m_start_resize_rect = totalSelectedItemsSceneRect();        // Store starting scene rect of initial selection bounding box
 
+    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
     QGraphicsItem *item = my_scene->getSelectionGroupAsGraphicsItem();
     m_pre_resize_scale = item->data(User_Roles::Scale).toPointF();
 
@@ -48,6 +47,9 @@ void SceneGraphicsView::startResize()
     m_pre_resize_corners[Position_Flags::Bottom] =       t.map( QLineF(r.bottomLeft(), r.bottomRight()).pointAt(.5));
     m_pre_resize_corners[Position_Flags::Left] =         t.map( QLineF(r.topLeft(), r.bottomLeft()).pointAt(.5) );
     m_pre_resize_corners[Position_Flags::Right] =        t.map( QLineF(r.topRight(), r.bottomRight()).pointAt(.5) );
+
+    // Set up our custom tool tip
+    m_tool_tip->startToolTip(m_view_mode, mouse_in_view, QPointF( m_start_resize_rect.width(), m_start_resize_rect.height() ));
 }
 
 
@@ -152,7 +154,7 @@ void SceneGraphicsView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     if (scale_y > -.0001 && scale_y <= 0) scale_y = -.0001;
 
     // If shift or control keys are down, maintain starting aspect ratio
-    if (m_flag_key_down_shift || m_flag_key_down_control) {
+    if (m_flag_key_down_shift) {
         double pre_resize_ratio;
         if (m_do_y == Y_Axis::None) {
             pre_resize_ratio = m_pre_resize_scale.y() / m_pre_resize_scale.x();
@@ -208,7 +210,7 @@ void SceneGraphicsView::resizeSelectionWithRotate(QPointF mouse_in_scene)
 
     QPointF group_scale = extractScaleFromItem(item);
     item->setData(User_Roles::Scale, QPointF(group_scale.x(), group_scale.y()) );
-
+    m_tool_tip->updateToolTipData( QPointF( item->sceneBoundingRect().width(), item->sceneBoundingRect().height() ) );
 }
 
 
