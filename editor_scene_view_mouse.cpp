@@ -81,7 +81,6 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
             // ******************* If no keys are down, only select item under mouse
             if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
 
-                // If no item under mouse, deselect all
                 if (m_origin_item != nullptr) {
                     // If we clicked clicked a new item, set selection group to that
                     if (my_items.contains(m_origin_item) == false) {
@@ -95,10 +94,10 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
                     viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
                     QTimer::singleShot(500, this, SLOT(checkTranslateToolTipStarted()));
 
-                    m_old_pos = my_scene->getSelectionGroupAsGraphicsItem()->pos();
+                    ///m_old_pos = my_scene->getSelectionGroup()->scenePos();
+                    m_old_pos = my_scene->getSelectionGroup()->sceneTransform().map(my_scene->getSelectionGroup()->boundingRect().center());
                     m_view_mode = View_Mode::Translating;
                 }
-
 
             // ******************** If clicked while control is down, add to selection group, or take out
             } else if (event->modifiers() & Qt::KeyboardModifier::ControlModifier && m_origin_item != nullptr) {
@@ -381,7 +380,6 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
     if (scene() == nullptr) return;
     SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
     QList<QGraphicsItem*>  empty{ };
-    QGraphicsItem         *first_item = my_scene->getFirstSelectedItem();
 
     // Process left mouse button released
     if (event->button() & Qt::LeftButton)
@@ -389,7 +387,8 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
         // We were in item moving mode, emit undo command signal with new item location
         if (m_view_mode == View_Mode::Translating && scene() != nullptr) {
             SelectionGroup *group = my_scene->getSelectionGroup();
-            if (group->childItems().count() > 0 && m_old_pos != group->pos()) {
+            QPointF check_pos = group->sceneTransform().map(group->boundingRect().center());
+            if (group->childItems().count() > 0 && m_old_pos != check_pos) {
                 emit selectionGroupMoved(group, m_old_pos);
             }
         }
@@ -400,19 +399,14 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 
             // If we had items selected and now we don't, emit undo clear selection command
             if (group->childItems().count() == 0 && m_items_start.count() != 0) {
-                emit selectionGroupNewGroup(group, m_items_start, empty, first_item, nullptr);
+                emit selectionGroupNewGroup(group, m_items_start, empty, m_first_start, nullptr);
 
             // Otherwise check to see if selected items list has changed, if so emit new group command
             } else if (group->childItems() != m_items_start) {
-
-                if (group->childItems().count() == 1) {
-                    emit selectionGroupNewGroup(group, m_items_start, group->childItems(), first_item, group->childItems().first());
-                } else if ( group->childItems().count() > 1) {
-                    if (group->childItems().contains(my_scene->getFirstSelectedItem()))
-                        emit selectionGroupNewGroup(group, m_items_start, group->childItems(), first_item, first_item);
-                    else
-                        emit selectionGroupNewGroup(group, m_items_start, group->childItems(), first_item, nullptr);
-                }
+                if (group->childItems().count() == 1)
+                    emit selectionGroupNewGroup(group, m_items_start, group->childItems(), m_first_start, group->childItems().first());
+                else if ( group->childItems().count() > 1)
+                    emit selectionGroupNewGroup(group, m_items_start, group->childItems(), m_first_start, my_scene->getFirstSelectedItem());
             }
         }
 

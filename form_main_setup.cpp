@@ -350,7 +350,7 @@ void FormMain::buildWindowModeEditScene()
             verticalLayoutAdvisor->addWidget(treeAdvisor);
 
         // Fires signal that is picked up by Advisor to change the help info
-        connect(this, SIGNAL(sendAdvisorInfo(HeaderBodyList)), treeAdvisor, SLOT(changeAdvisor(HeaderBodyList)) , Qt::QueuedConnection);
+        connect(this, SIGNAL(sendAdvisorInfo(QString, QString)), treeAdvisor, SLOT(changeAdvisor(QString, QString)) , Qt::QueuedConnection);
 
         advisor->setWidget(widgetAdvisor);
 

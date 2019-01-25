@@ -66,7 +66,8 @@ void TreeScene::populateTreeSceneList()
                 // Add lock box
                 QString check_images = QString(" QCheckBox::indicator { width: 12px; height: 12px; }"
                                                " QCheckBox::indicator:checked { image: url(:/tree_icons/tree_lock.png); }"
-                                               " QCheckBox::indicator:unchecked { image: url(:/tree_icons/tree_bullet.png); }");
+                                               " QCheckBox::indicator:unchecked { image: url(:/tree_icons/tree_bullet.png); }"
+                                               " QCheckBox::indicator:focus { border: 0px; }");
                 QCheckBox *lock_item = new QCheckBox();
                 lock_item->setStyleSheet(check_images);
                 this->setItemWidget(sub_sub_item, 1, lock_item);

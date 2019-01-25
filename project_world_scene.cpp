@@ -56,19 +56,19 @@ void DrScene::addObject(DrTypes new_type)
 
 void DrScene::initializeSceneSettings(std::string new_name)
 {
-    addComponent(Scene_Components::settings, "Settings", "Basic settings for current scene", Component_Colors::White_Snow, true);
+    addComponent(Scene_Components::settings, "Settings", "Basic settings for current scene.", Component_Colors::White_Snow, true);
     getComponent(Object_Components::settings)->setIcon(Component_Icons::Settings);
 
     addPropertyToComponent(Scene_Components::settings, Scene_Properties::name, Property_Type::String, QString::fromStdString(new_name),
-                           "Scene Name", "Name of the current scene");
+                           "Scene Name", "Name of the current scene.");
     addPropertyToComponent(Scene_Components::settings, Scene_Properties::start, Property_Type::Int, 0,
-                           "Start", "Start showing scene at this distance");
+                           "Start", "Start showing scene at this distance.");
     addPropertyToComponent(Scene_Components::settings, Scene_Properties::end, Property_Type::Int, 1200,
-                           "End", "Stop showing scene at this distance, -1 for always show");
+                           "End", "Stop showing scene at this distance, -1 for always show.");
     addPropertyToComponent(Scene_Components::settings, Scene_Properties::size, Property_Type::Int, 1200,
-                           "Size", "Length of scene");
+                           "Size", "Length of scene.");
     addPropertyToComponent(Scene_Components::settings, Scene_Properties::cooldown, Property_Type::Int, 0,
-                           "Cooldown", "Distance to wait after scene plays before it is possible to be shown again");
+                           "Cooldown", "Distance to wait after scene plays before it is possible to be shown again.");
 
 }
 

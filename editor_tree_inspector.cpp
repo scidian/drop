@@ -68,9 +68,9 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
         // Creates a frame to hold all properties of component, with vertical layout
         QFrame *properties_frame = new QFrame(this);
         QBoxLayout *vertical_layout = new QVBoxLayout(properties_frame);
-        vertical_layout->setSpacing(0);
+        vertical_layout->setSpacing(6);
         vertical_layout->setMargin(0);
-        vertical_layout->setContentsMargins(0,0,0,0);
+        vertical_layout->setContentsMargins(8,4,8,4);
 
         // Loop through each property and add it to the component frame
         for (auto j: i.second->getPropertyList()) {
@@ -78,7 +78,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
             QBoxLayout *horizontal_split = new QHBoxLayout(single_row);
             horizontal_split->setSpacing(0);
             horizontal_split->setMargin(0);
-            horizontal_split->setContentsMargins(2,2,2,2);
+            horizontal_split->setContentsMargins(0,0,0,0);
 
             QLabel *property_name = new QLabel(j.second->getDisplayNameQString());
             QFont font_property;
@@ -91,17 +91,18 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
 
 
-            QSpinBox *spin_int = new QSpinBox();
-            spin_int->setFont(font_property);
+            QDoubleSpinBox *spin = new QDoubleSpinBox();
+            spin->setFont(font_property);
                 QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
                 sp_right.setHorizontalStretch(2);
-            spin_int->setSizePolicy(sp_right);
+            spin->setSizePolicy(sp_right);
+            spin->setDecimals(3);
 
 
             //spin_int->setUserData( setData(0, User_Roles::Key, QVariant::fromValue(object_pair.second->getKey()));
 
 
-            horizontal_split->addWidget(spin_int);
+            horizontal_split->addWidget(spin);
 
 
 
@@ -153,7 +154,7 @@ void TreeInspector::itemWasClicked(QTreeWidgetItem *item, int column)
     Q_UNUSED(item);
     Q_UNUSED(column);
 
-    Dr::ShowMessageBox("Hi There Joe");
+    //Dr::ShowMessageBox("Hi There Joe");
 
     // If no item is selected in tree view, exit function
     //if (treeScene->getSelectedKey() == 0) { return; }

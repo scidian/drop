@@ -28,5 +28,7 @@
         <file>cursors/size_horizontal.png</file>
         <file>gui_misc/handle_rotate.png</file>
         <file>cursors/rotate_all.png</file>
+        <file>inspector_icons/comp_transform.png</file>
+        <file>inspector_icons/comp_movement.png</file>
     </qresource>
 </RCC>

@@ -53,19 +53,47 @@ DrObject::~DrObject()
 //##                       initializeCharacterSettings
 //####################################################################################
 
+//    // movement
+//    velocity_x,             //variable
+//    velocity_y,             //variable
+//    angular_velocity,       //variable
+
 
 void DrObject::initializeObjectSettings(std::string new_name)
 {
-    addComponent(Object_Components::settings, "Settings", "Basic settings for current object", Component_Colors::White_Snow, true);
+    addComponent(Object_Components::settings, "Settings", "Basic settings for current object.", Component_Colors::White_Snow, true);
     getComponent(Object_Components::settings)->setIcon(Component_Icons::Settings);
 
     addPropertyToComponent(Object_Components::settings, Object_Properties::name, Property_Type::String, QString::fromStdString(new_name),
-                           "Object Name", "Name of the current object");
-    addPropertyToComponent(Object_Components::settings, Object_Properties::x, Property_Type::Float, 0,
-                           "X", "X Location");
-    addPropertyToComponent(Object_Components::settings, Object_Properties::y, Property_Type::Float, 0,
-                           "Y", "Y Location");
+                           "Object Name", "Name of the current object.");
+    addPropertyToComponent(Object_Components::settings, Object_Properties::physics, Property_Type::Bool, false,
+                           "Physics?", "Should this item be effected by physics?");
+    addPropertyToComponent(Object_Components::settings, Object_Properties::collide, Property_Type::Bool, true,
+                           "Collide?", "Should this item collide with other items?");
+    addPropertyToComponent(Object_Components::settings, Object_Properties::damage, Property_Type::List, 0,
+                           "Damage", "What should this item damage when it collides with something else.");
 
+    addComponent(Object_Components::transform, "Transform", "Sets the physical size and angle of the item in the scene.", Component_Colors::Green_SeaGrass, true);
+    getComponent(Object_Components::transform)->setIcon(Component_Icons::Transform);
+
+    addPropertyToComponent(Object_Components::transform, Object_Properties::position, Property_Type::PointF, QPointF(0, 0),
+                           "Position", "Location of item within the current scene.");
+    addPropertyToComponent(Object_Components::transform, Object_Properties::rotation, Property_Type::Double, 0,
+                           "Rotation", "Angle of item within the scene.");
+    addPropertyToComponent(Object_Components::transform, Object_Properties::scale, Property_Type::PointF, QPointF(1, 1),
+                           "Scale", "X and Y scale of item within the scene.");
+    addPropertyToComponent(Object_Components::transform, Object_Properties::opacity, Property_Type::Percent, 100,
+                           "Opacity", "How see through is the item, 0 (invisible) - 100 (solid)");
+
+    addComponent(Object_Components::movement, "Movement", "Initial starting velocities of item in scene.", Component_Colors::Red_Faded, true);
+    getComponent(Object_Components::movement)->setIcon(Component_Icons::Movement);
+
+    addPropertyToComponent(Object_Components::movement, Object_Properties::velocity_x, Property_Type::Variable, QPointF(0, 0),
+                           "Velocity X", "Initial horizontal movement speed of item +/- variable amount.");
+    addPropertyToComponent(Object_Components::movement, Object_Properties::velocity_y, Property_Type::Variable, QPointF(0, 0),
+                           "Velocity Y", "Initial vertical movement speed of item +/- variable amount.");
+    addPropertyToComponent(Object_Components::movement, Object_Properties::angular_velocity, Property_Type::Variable, QPointF(0, 0),
+                           "Angular Velocity", "Rotational movement speed of item.");
 }
 
 void DrObject::initializeCameraSettings()
@@ -73,7 +101,7 @@ void DrObject::initializeCameraSettings()
     addComponent(Object_Components::camera_settings, "Camera Settings", "Settings for this camera", Component_Colors::Beige_Apricot, true);
     getComponent(Object_Components::camera_settings)->setIcon(Component_Icons::Camera);
 
-    addPropertyToComponent(Object_Components::camera_settings, Object_Properties::camera_zoom, Property_Type::Float, 10,
+    addPropertyToComponent(Object_Components::camera_settings, Object_Properties::camera_zoom, Property_Type::Double, 10,
                            "Zoom Level", "Sets distance away from scene (0 to 1000)");
 
 }
@@ -83,9 +111,9 @@ void DrObject::initializeCharacterSettings()
     addComponent(Object_Components::character_settings, "Character Settings", "Settings for this character", Component_Colors::Blue_Yonder, true);
     getComponent(Object_Components::character_settings)->setIcon(Component_Icons::Character);
 
-    addPropertyToComponent(Object_Components::character_settings, Object_Properties::character_jump_x, Property_Type::Float, 0,
+    addPropertyToComponent(Object_Components::character_settings, Object_Properties::character_jump_x, Property_Type::Double, 0,
                            "Jump Force X", "Force of jump button in x direction");
-    addPropertyToComponent(Object_Components::character_settings, Object_Properties::character_jump_y, Property_Type::Float, 0,
+    addPropertyToComponent(Object_Components::character_settings, Object_Properties::character_jump_y, Property_Type::Double, 0,
                            "Jump Force Y", "Force of jump button in y direction");
 
 }

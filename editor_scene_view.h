@@ -126,6 +126,7 @@ private:
     SceneViewRubberBand            *m_rubber_band;                  // Holds our view's RubberBand object
     QList<QGraphicsItem*>           m_items_start;                  // Stores items selected at start of new rubber band box
     QList<QGraphicsItem*>           m_items_keep;                   // Stores list of items to keep on top of rubber band items (with control key)
+    QGraphicsItem                  *m_first_start;                  // Stores first selected item before rubber band box stareted
 
     // View_Mode::Resizing Variables
     QRectF                          m_start_resize_rect;            // Stores starting rect of selection before resize starts

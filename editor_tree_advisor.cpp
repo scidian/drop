@@ -22,14 +22,14 @@
 //####################################################################################
 //##        SLOT, Sets the Advisor Dock text
 //####################################################################################
-void TreeAdvisor::changeAdvisor(HeaderBodyList header_body_list)
+void TreeAdvisor::changeAdvisor(QString header, QString body)
 {
     if (advisor_mutex.tryLock() == false) return;           // Try and lock function to make this thread safe
 
     this->clear();                                          // Clear / delete all from advisor tree
 
-    advisor_header = header_body_list[0];
-    QString body_text = QString::fromStdString(header_body_list[1]);
+    advisor_header = header.toStdString();
+    QString body_text = body;
 
     // Insert top level item to act as header
     QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(this);

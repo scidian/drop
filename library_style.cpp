@@ -73,17 +73,21 @@ void ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius)
 void ApplyColoring(QWidget *widget)
 {
     QString style_sheet = QString(
+        // Some custom class coloring
         " .ColorSplitter { background: " + Dr::GetColor(Window_Colors::Seperator).name() + "; }"
         " QFrame#statusBar { background: " + Dr::GetColor(Window_Colors::Seperator).name() + "; } "
         " QWidget#widgetToolbar { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; } "
 
+        // Main window background and seperator
         " QMainWindow { background: " + Dr::GetColor(Window_Colors::Seperator).name() + "; }" +
         " QMainWindow::separator { border: 1px solid " + Dr::GetColor(Window_Colors::Seperator).name() + "; }"
 
+        // Horizontal and vertical splitters
         " QSplitter { width: 5px; height: 5px; } "
         " QSplitter::handle:vertical { image: url(:/gui_misc/splitter_v.png); } "
         " QSplitter::handle:horizontal { image: url(:/gui_misc/splitter_h.png); } "
 
+        // Scroll bars, used mostly in QGraphicsView
         " QScrollBar:vertical { width: 12px; margin: 0px; border-radius: 6px; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; } "
         " QScrollBar::handle:vertical { margin: 2px; border-radius: 4px; "
@@ -102,6 +106,7 @@ void ApplyColoring(QWidget *widget)
         " QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; } "
         " QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal { width: 0px; } "
 
+        // Toolbar buttons up top
         " QPushButton { color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
         "       background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
         "                   stop:0 " + Dr::GetColor(Window_Colors::Button_Light).name() + ", "
@@ -112,6 +117,7 @@ void ApplyColoring(QWidget *widget)
         " QPushButton:pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }"
 
+        // Asset, Scene, Inspector, Etc Trees
         " QTreeWidget { icon-size: 14px 14px; }"
         " QTreeWidget { color: " + Dr::GetColor(Window_Colors::Text).name() + ";  "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
@@ -124,11 +130,12 @@ void ApplyColoring(QWidget *widget)
         " QTreeWidget::item:hover:!selected { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
 
+        // Header of Scene Tree (where little lock is)
         " QHeaderView::section { "
         "       background-color: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
         "       border: 0px; } "
 
-
+        // Tab bar that appears when you stack multiple DockWidgets
         " QTabBar::tab { color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
         "       border-radius: 6px; padding-top: 2px; padding-bottom: 3px; padding-left: 8px; padding-right: 8px; } "
@@ -136,6 +143,7 @@ void ApplyColoring(QWidget *widget)
         "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
         "       border-radius: 6px; padding-top: 2px; padding-bottom: 3px; padding-left: 8px; padding-right: 8px; } "
 
+        // Dock Widgets
         //" QDockWidget { titlebar-close-icon: url(close.png); } "
         " QDockWidget { font-size: 11px; color: " + Dr::GetColor(Window_Colors::Text).name() + "; } "
         " QDockWidget::title { text-align: center; "
@@ -143,12 +151,36 @@ void ApplyColoring(QWidget *widget)
         "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Light).name() + ", "
         "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
 
+        // SceneGraphicsView scene display area, ::corner removes right botttom little box
         " QGraphicsView { background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }"
         " QGraphicsView::corner { background: transparent; } "
 
+        // Bottom toolbar area
         " QScrollArea { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
 
-        " QLabel { color : " + Dr::GetColor(Window_Colors::Text).name() + "; } "
+        // Mostly debug labels
+        " QLabel { color: " + Dr::GetColor(Window_Colors::Text).name() + "; } "
+
+        // Spin boxes in object inspector
+        " QAbstractSpinBox { color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
+        "       border: 1px solid; "
+        "       border-image: url(:/gui_misc/edit_box.png) 4 4 4 4 stretch stretch; "
+        "       border-color: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
+        "       border-radius: 4px; height: 20px;"
+        "       selection-color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        "       selection-background-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
+        " } "
+        " QAbstractSpinBox:focus { "
+        "       color: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Text_Light).name() + "; "
+        "       border: 2px solid " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
+        "       border-radius: 0px; }"
+
+        //" QAbstractSpinBox::up-button  {"
+        //"  background-color: #ABABAB;"
+        //"}"
+
 
     );
 
@@ -158,5 +190,14 @@ void ApplyColoring(QWidget *widget)
 
 
 }
+
+
+
+
+
+
+
+
+
 
 

@@ -30,6 +30,7 @@ void SceneGraphicsView::startSelect(QMouseEvent *event)
 
     SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
     m_items_start = my_scene->getSelectionGroupItems();
+    m_first_start = my_scene->getFirstSelectedItem();
 
     // If control key isnt down, we're starting a new selection process, so remove all items
     if (event->modifiers() & Qt::KeyboardModifier::ControlModifier)
@@ -58,14 +59,22 @@ void SceneGraphicsView::processSelection(QPoint mouse_in_view)
     QList<QGraphicsItem*> selection_area_items = scene()->items(selection_area, Qt::ItemSelectionMode::IntersectsItemShape,
                                                                 Qt::SortOrder::DescendingOrder, viewportTransform());
 
-    // Add items in selection area to group
-    for (auto item : selection_area_items) my_scene->addItemToSelectionGroup(item);
-
     // Go through selected items, unselect if rubber band box covered them and has since shrunk
     for (auto item : my_scene->getSelectionGroupItems()) {
         if (selection_area_items.contains(item) == false && m_items_keep.contains(item) == false)
                 my_scene->getSelectionGroup()->removeFromGroup(item);
     }
+
+    if (my_scene->getSelectionGroupCount() == 0)
+        my_scene->resetSelectionGroup();
+
+    if (m_items_keep.count() == 0 && selection_area_items.count() == 1)
+        my_scene->setFirstSelectedItem(selection_area_items.first());
+
+    // Add items in selection area to group
+    for (auto item : selection_area_items) my_scene->addItemToSelectionGroup(item);
+
+
 }
 
 

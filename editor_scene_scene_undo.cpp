@@ -49,18 +49,20 @@ void SceneGraphicsScene::selectionGroupNewGroup(SelectionGroup *moved_group, QLi
 //####################################################################################
 MoveCommand::MoveCommand(SelectionGroup *group, const QPointF &old_pos, QUndoCommand *parent) : QUndoCommand(parent) {
     m_group = group;
-    m_new_pos = group->pos();
+    m_new_pos = group->sceneTransform().map(group->boundingRect().center());
     m_old_pos = old_pos;
 }
 
 void MoveCommand::undo() {
-    m_group->setPos(m_old_pos);
+    ///m_group->setPos(m_old_pos);
+    m_group->getParentScene()->setPositionByOrigin(m_group, Position_Flags::Center, m_old_pos.x(), m_old_pos.y());
     m_group->getParentScene()->updateView();
     setText(QObject::tr("Redo Move Item %1 to (%2, %3)").arg(m_group->data(User_Roles::Name).toString()).arg(m_new_pos.x()).arg(m_new_pos.y()));
 }
 
 void MoveCommand::redo() {
-    m_group->setPos(m_new_pos);
+    ///m_group->setPos(m_new_pos);
+    m_group->getParentScene()->setPositionByOrigin(m_group, Position_Flags::Center, m_new_pos.x(), m_new_pos.y());
     m_group->getParentScene()->updateView();
     setText(QObject::tr("Undo Move Item %1 to (%2, %3)").arg(m_group->data(User_Roles::Name).toString()).arg(m_new_pos.x()).arg(m_new_pos.y()));
 }
