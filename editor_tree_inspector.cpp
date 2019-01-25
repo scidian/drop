@@ -106,6 +106,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
             switch (j.second->getPropertyType())
             {
+            case Property_Type::Bool:       horizontal_split->addWidget(createCheckBox(j.second, fp));               break;
             case Property_Type::Double:     horizontal_split->addWidget(createDoubleSpinBox(j.second, fp));          break;
             case Property_Type::Percent:    horizontal_split->addWidget(createDoubleSpinBox(j.second, fp, true));    break;
             }
@@ -156,8 +157,25 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 //##        Property Row Building Functions
 //####################################################################################
 
+QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font)
+{
+    QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    sp_right.setHorizontalStretch(3);
+
+    QCheckBox *check = new QCheckBox();
+    check->setObjectName("checkInspector");
+    check->setFont(font);
+    check->setSizePolicy(sp_right);
+    check->setTristate(false);
+    check->setChecked(property->getValue().toBool());
+    return check;
+}
+
 QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &font, bool use_for_percent)
 {
+    ///// Could also try to use a QLineEdit with a QValidator
+    ///myLineEdit->setValidator( new QDoubleValidator(0, 100, 2, this) );
+
     QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
     sp_right.setHorizontalStretch(3);
 
@@ -172,11 +190,13 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
         spin->setRange(-100000000, 100000000);
     }
     spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
-    ///spin->setProperty("alignment", Qt::AlignRight);
+    ///spin->setProperty("alignment", Qt::AlignRight);      // Align right?
 
     spin->setValue(property->getValue().toDouble());
     return spin;
 }
+
+
 
 
 //####################################################################################

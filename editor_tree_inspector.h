@@ -44,6 +44,7 @@ public:
     InterfaceRelay* getRelay() { return m_relay; }
 
     // Property Builders
+    QCheckBox*      createCheckBox(DrProperty *property, QFont &font);
     QDoubleSpinBox* createDoubleSpinBox(DrProperty *property, QFont &font, bool use_for_percent = false);
 
 private slots:

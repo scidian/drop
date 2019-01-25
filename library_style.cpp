@@ -161,7 +161,11 @@ void ApplyColoring(QWidget *widget)
         // Mostly debug labels
         " QLabel { color: " + Dr::GetColor(Window_Colors::Text).name() + "; } "
 
-        // Spin boxes in object inspector
+        // Check boxes, mostly in object inspector
+        " QCheckBox#checkInspector::indicator:checked { background: white; }"
+        " QCheckBox#checkInspector::indicator:unchecked { background: red; }"
+
+        // Spin boxes, mostly in object inspector
         " QAbstractSpinBox { "
         "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
