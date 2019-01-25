@@ -34,9 +34,8 @@ TreeInspector::TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay
 
 
 //####################################################################################
-//
-//  Need to finish dynamically building object inspector
-//
+//##    Dynamically build object inspector
+//####################################################################################
 void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 {
     // First, retrieve unique key of item clicked in list
@@ -92,32 +91,31 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
             horizontal_split->setContentsMargins(0,0,0,0);
 
             QLabel *property_name = new QLabel(j.second->getDisplayNameQString());
-            QFont font_property;
-            font_property.setPointSize(11);
-            property_name->setFont(font_property);
+            QFont fp;
+            fp.setPointSize(11);
+            property_name->setFont(fp);
                 QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
-                sp_left.setHorizontalStretch(1);
+                sp_left.setHorizontalStretch(2);
             property_name->setSizePolicy(sp_left);
-            property_name->setProperty("Header", j.second->getDisplayName());
-            property_name->setProperty("Body", j.second->getDescription());
+            property_name->setProperty(User_Property::Header, j.second->getDisplayName());
+            property_name->setProperty(User_Property::Body, j.second->getDescription());
             m_label_hover->attach(property_name);
 
             horizontal_split->addWidget(property_name);
 
 
+            switch (j.second->getPropertyType())
+            {
+            case Property_Type::Double:     horizontal_split->addWidget(createDoubleSpinBox(j.second, fp));          break;
+            case Property_Type::Percent:    horizontal_split->addWidget(createDoubleSpinBox(j.second, fp, true));    break;
+            }
 
-            QDoubleSpinBox *spin = new QDoubleSpinBox();
-            spin->setFont(font_property);
-                QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
-                sp_right.setHorizontalStretch(2);
-            spin->setSizePolicy(sp_right);
-            spin->setDecimals(3);
 
 
             //spin_int->setUserData( setData(0, User_Roles::Key, QVariant::fromValue(object_pair.second->getKey()));
 
 
-            horizontal_split->addWidget(spin);
+
 
 
 
@@ -154,6 +152,36 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 }
 
 
+//####################################################################################
+//##        Property Row Building Functions
+//####################################################################################
+
+QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &font, bool use_for_percent)
+{
+    QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    sp_right.setHorizontalStretch(3);
+
+    QDoubleSpinBox *spin = new QDoubleSpinBox();
+    spin->setFont(font);
+    spin->setSizePolicy(sp_right);
+    spin->setDecimals(3);
+    if (use_for_percent) {
+        spin->setRange(0, 100);
+        spin->setSuffix("%");
+    } else {
+        spin->setRange(-100000000, 100000000);
+    }
+    spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
+    ///spin->setProperty("alignment", Qt::AlignRight);
+
+    spin->setValue(property->getValue().toDouble());
+    return spin;
+}
+
+
+//####################################################################################
+//##        Advisor Info Functions
+//####################################################################################
 // Handles changing the Advisor on Mouse Enter
 void TreeInspector::enterEvent(QEvent *event)
 {
@@ -270,7 +298,7 @@ void InspectorCategoryButton::buttonPressed()
 //####################################################################################
 void LabelHoverHandler::attach(QLabel *label)
 {
-    label->setAttribute(Qt::WA_Hover, true);
+    label->setAttribute(Qt::WidgetAttribute::WA_Hover, true);
     label->installEventFilter(this);
 }
 
@@ -280,8 +308,8 @@ bool LabelHoverHandler::eventFilter(QObject *obj, QEvent *event)
     {
         QLabel *hover_label = dynamic_cast<QLabel*>(obj);
 
-        QString header = hover_label->property("Header").toString();
-        QString body = hover_label->property("Body").toString();
+        QString header = hover_label->property(User_Property::Header).toString();
+        QString body = hover_label->property(User_Property::Body).toString();
 
         emit signalMouseHover(header, body);
     }

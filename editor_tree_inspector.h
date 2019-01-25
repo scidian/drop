@@ -11,6 +11,8 @@
 #include <QtWidgets>
 
 class DrProject;
+class DrProperty;
+
 class InterfaceRelay;
 
 class InspectorCategoryButton;
@@ -40,6 +42,9 @@ public:
     // Function Calls
     void            buildInspectorFromKeys(QList<long> key_list);
     InterfaceRelay* getRelay() { return m_relay; }
+
+    // Property Builders
+    QDoubleSpinBox* createDoubleSpinBox(DrProperty *property, QFont &font, bool use_for_percent = false);
 
 private slots:
     void            itemWasClicked(QTreeWidgetItem *item, int column);

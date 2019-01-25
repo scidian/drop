@@ -359,7 +359,7 @@ void FormMain::buildWindowModeEditScene()
     inspector = new QDockWidget(this);
     inspector->setObjectName(QStringLiteral("inspector"));
     inspector->setSizePolicy(sizePolicyPreferredVertical);
-    inspector->setMinimumSize(QSize(300, 250));
+    inspector->setMinimumSize(QSize(280, 250));
     inspector->setMaximumWidth(450);
     inspector->setFont(font);
     inspector->setFeatures(QDockWidget::DockWidgetMovable);

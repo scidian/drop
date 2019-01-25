@@ -100,6 +100,14 @@ typedef enum {
 
 
 //####################################################################################
+//##    Custom QStrings for storing data in QWidgets using setProperty
+//####################################################################################
+namespace User_Property {
+    const char Header[10] = "dr_header";
+    const char Body[8] = "dr_body";
+}
+
+//####################################################################################
 //##    Custom QGraphicsItem::UserType 's for referencing types in QGraphicsScene
 //####################################################################################
 typedef enum {

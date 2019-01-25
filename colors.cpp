@@ -33,7 +33,7 @@ void SetColorScheme(Color_Scheme new_scheme) { g_current_color_scheme = new_sche
 //####################################################################################
 void    LoadPalettes()
 {
-    g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Seperator, QColor(16, 16, 16)));
+    g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Seperator, QColor(20, 20, 20)));
     g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Shadow, QColor(0, 0, 0)));
     g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Background_Dark, QColor(24, 24, 24)));
     g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Background_Light, QColor(32, 32, 32)));

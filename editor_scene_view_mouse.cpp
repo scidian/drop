@@ -29,7 +29,7 @@
 //####################################################################################
 void SceneGraphicsView::enterEvent(QEvent *event)
 {
-    setFocus(Qt::FocusReason::MouseFocusReason);                        // Set focus on mouse enter to allow for space bar pressing hand grab
+    ///setFocus(Qt::FocusReason::MouseFocusReason);                     // Set focus on mouse enter to allow for space bar pressing hand grab
     m_relay->setAdvisorInfo(Advisor_Info::Scene_Area);                  // Set Advisor text on mouse enter
     QGraphicsView::enterEvent(event);
 }
