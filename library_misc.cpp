@@ -6,7 +6,10 @@
 //
 //
 
-#include <QGraphicsDropShadowEffect>
+#include <cmath>
+
+#include <QtWidgets>
+//#include <QWidget>
 
 #include "colors.h"
 #include "library.h"
@@ -21,6 +24,22 @@ namespace Dr {
 bool IsCloseTo(double number_desired, double number_to_check, double tolerance)
 {
     return ( (number_to_check <= (number_desired + tolerance)) && (number_to_check >= (number_desired - tolerance)) );
+}
+
+
+QString RemoveTrailingDecimals(double value, int max_decimal_places)
+{
+    QWidget widget;
+    double int_part, decimal_part = 0;
+
+    int count = 0;
+    while (count < max_decimal_places) {
+        decimal_part = std::modf(value * pow(10, count), &int_part);
+        if (decimal_part == 0.0) break;
+        ++count;
+    }
+
+    return widget.locale().toString(value, QLatin1Char('f').unicode(), count);
 }
 
 

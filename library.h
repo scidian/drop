@@ -40,6 +40,7 @@ void    ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius);
 
 // Comparison Functions
 bool    IsCloseTo(double number_desired, double number_to_check, double tolerance);
+QString RemoveTrailingDecimals(double value, int max_decimal_places);
 
 
 // User Interaction

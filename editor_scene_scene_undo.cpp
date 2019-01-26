@@ -6,6 +6,8 @@
 //
 //
 
+#include "library.h"
+
 #include "editor_scene_scene.h"
 #include "editor_scene_scene_undo.h"
 
@@ -57,14 +59,20 @@ void MoveCommand::undo() {
     ///m_group->setPos(m_old_pos);
     m_group->getParentScene()->setPositionByOrigin(m_group, Position_Flags::Center, m_old_pos.x(), m_old_pos.y());
     m_group->getParentScene()->updateView();
-    setText(QObject::tr("Redo Move Item %1 to (%2, %3)").arg(m_group->data(User_Roles::Name).toString()).arg(m_new_pos.x()).arg(m_new_pos.y()));
+    setText(QObject::tr("Redo Move Item %1 to (%2, %3)")
+            .arg(m_group->data(User_Roles::Name).toString())
+            .arg(Dr::RemoveTrailingDecimals(m_new_pos.x(), 1))
+            .arg(Dr::RemoveTrailingDecimals(m_new_pos.y(), 1)));
 }
 
 void MoveCommand::redo() {
     ///m_group->setPos(m_new_pos);
     m_group->getParentScene()->setPositionByOrigin(m_group, Position_Flags::Center, m_new_pos.x(), m_new_pos.y());
     m_group->getParentScene()->updateView();
-    setText(QObject::tr("Undo Move Item %1 to (%2, %3)").arg(m_group->data(User_Roles::Name).toString()).arg(m_new_pos.x()).arg(m_new_pos.y()));
+    setText(QObject::tr("Undo Move Item %1 to (%2, %3)")
+            .arg(m_group->data(User_Roles::Name).toString())
+            .arg(Dr::RemoveTrailingDecimals(m_new_pos.x(), 1))
+            .arg(Dr::RemoveTrailingDecimals(m_new_pos.y(), 1)));
 }
 
 
