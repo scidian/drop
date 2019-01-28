@@ -201,16 +201,22 @@ void SceneGraphicsView::resizeSelectionWithRotate(QPointF mouse_in_scene)
 
 
 
-
+    // Remove any shearing that may have been caused to all items in selection group
     QList<QGraphicsItem*> my_items = my_scene->getSelectionGroupItems();
     for (auto child : my_items) my_scene->getSelectionGroup()->removeFromGroup(child);
     for (auto child : my_items) removeShearing(child);
     for (auto child : my_items) my_scene->getSelectionGroup()->addToGroup(child);
 
-
+    // Update stored scale User_Role property
     QPointF group_scale = extractScaleFromItem(item);
     item->setData(User_Roles::Scale, QPointF(group_scale.x(), group_scale.y()) );
-    m_tool_tip->updateToolTipData( QPointF( item->sceneBoundingRect().width(), item->sceneBoundingRect().height() ) );
+
+    // Update tool tip
+    double group_width =  QLineF( mapToScene(m_handles_centers[Position_Flags::Left].toPoint()),
+                                  mapToScene(m_handles_centers[Position_Flags::Right].toPoint()) ).length();
+    double group_height = QLineF( mapToScene(m_handles_centers[Position_Flags::Top].toPoint()),
+                                  mapToScene(m_handles_centers[Position_Flags::Bottom].toPoint()) ).length();
+    m_tool_tip->updateToolTipData( QPointF( group_width, group_height ));
 }
 
 

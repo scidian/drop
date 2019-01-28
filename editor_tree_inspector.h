@@ -16,13 +16,17 @@ class DrProperty;
 class InterfaceRelay;
 
 class InspectorCategoryButton;
+class TripleSpinBox;
 class WidgetHoverHandler;
 
 
 enum class Spin_Type {
+    Integer,
     Double,
     Percent,
-    Angle
+    Angle,
+    Point,
+    Size,
 };
 
 
@@ -57,10 +61,15 @@ public:
 
     // Property Builders
     void            applyHeaderBodyProperties(QWidget *widget, DrProperty *property);
+    void            applyHeaderBodyProperties(QWidget *widget, QString header, QString body);
     QCheckBox*      createCheckBox(DrProperty *property, QFont &font);
+    QComboBox*      createComboBox(DrProperty *property, QFont &font);
     QDoubleSpinBox* createDoubleSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type);
-    QFrame*         createDoubleSpinBoxPair(DrProperty *property, QFont &font);
+    QFrame*         createDoubleSpinBoxPair(DrProperty *property, QFont &font, Spin_Type spin_type);
+    QSpinBox*       createIntSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type);
     QLineEdit*      createLineEdit(DrProperty *property, QFont &font);
+    QFrame*         createVariableSpinBoxPair(DrProperty *property, QFont &font);
+    TripleSpinBox*  initializeEmptySpinBox(DrProperty *property, QFont &font, double start_value);
 
 private slots:
     void            itemWasClicked(QTreeWidgetItem *item, int column);
@@ -141,6 +150,24 @@ public:
 
 protected:
     virtual QString textFromValue(double value) const override;
+
+};
+
+
+//####################################################################################
+//##    DropDownComboBox
+//##        Allows us to move combo listview underneath control to appear as a drop down list
+//############################
+class DropDownComboBox : public QComboBox
+{
+    Q_OBJECT
+
+public:
+    DropDownComboBox(QWidget *parent = nullptr) : QComboBox(parent) {}
+    virtual ~DropDownComboBox() override {}
+
+protected:
+    virtual void showPopup() override;
 
 };
 

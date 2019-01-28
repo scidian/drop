@@ -27,10 +27,16 @@ bool IsCloseTo(double number_desired, double number_to_check, double tolerance)
 }
 
 
+//####################################################################################
+//##        Trimms double to max_decimal_places, and then removes any trailing zeros
+//####################################################################################
 QString RemoveTrailingDecimals(double value, int max_decimal_places)
 {
     QWidget widget;
     double int_part, decimal_part = 0;
+
+    // Remove any extra starting decimal places
+    value = widget.locale().toString(value, QLatin1Char('f').unicode(), max_decimal_places).toDouble();
 
     int count = 0;
     while (count < max_decimal_places) {

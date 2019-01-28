@@ -211,6 +211,30 @@ void ApplyColoring(QWidget *widget)
         "       border: 2px solid " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
         "       border-radius: 0px; }"
 
+        // Drop down Combo Box, mostly in object inspector
+        " QComboBox { "
+        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
+        "       border: 2px solid; "
+        "       border-color: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
+        "       border-radius: 4px; height: 20px; }"
+        " QComboBox:hover { "
+        "       color: " + Dr::GetColor(Window_Colors::Text_Light).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
+        "       border: 2px solid " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
+        "       border-radius: 4px; }"
+        " QComboBox::drop-down { border: 0px; width: 20px; }"
+        " QComboBox::down-arrow { image: url(:/gui_misc/drop_arrow.png); }"
+        // QComboBox gets the "on" state when the popup is open
+        " QComboBox:on {"
+        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
+        "       border: 2px solid; "
+        "       border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
+        "       border-bottom-right-radius: 0px;  "
+        "       border-bottom-left-radius: 0px; } "
+
+
 
     );
 

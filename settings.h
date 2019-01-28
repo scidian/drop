@@ -27,7 +27,7 @@ private:
     ComponentMap m_components;                      // map of pointers to DrComponent classes   (holds components for current scene)
     long         m_key;                             // holds unique key for each object with a base class DrSettings
 
-protected:      // so derived classes can access
+protected:       // so derived classes can access
     void         setKey (long new_key) { m_key = new_key; }
 
 public:

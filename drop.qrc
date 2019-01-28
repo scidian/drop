@@ -34,5 +34,7 @@
         <file>inspector_icons/check_unchecked.png</file>
         <file>inspector_icons/check_hover_checked.png</file>
         <file>inspector_icons/check_hover_unchecked.png</file>
+        <file>gui_misc/drop_arrow.png</file>
+        <file>gui_misc/check.png</file>
     </qresource>
 </RCC>

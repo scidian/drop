@@ -80,6 +80,8 @@ void DrObject::initializeObjectSettings(QString new_name)
                            "Position", "Location of item within the current scene.");
     addPropertyToComponent(Object_Components::transform, Object_Properties::rotation, Property_Type::Angle, 0,
                            "Rotation", "Angle of item within the scene.");
+    addPropertyToComponent(Object_Components::transform, Object_Properties::size, Property_Type::SizeF, QPointF(100, 100),
+                           "Size", "Width and Height of object in pixels, affected by Scale property.");
     addPropertyToComponent(Object_Components::transform, Object_Properties::scale, Property_Type::PointF, QPointF(1, 1),
                            "Scale", "X and Y scale of item within the scene.");
     addPropertyToComponent(Object_Components::transform, Object_Properties::opacity, Property_Type::Percent, 100,
@@ -93,7 +95,7 @@ void DrObject::initializeObjectSettings(QString new_name)
     addPropertyToComponent(Object_Components::movement, Object_Properties::velocity_y, Property_Type::Variable, QPointF(0, 0),
                            "Velocity Y", "Initial vertical movement speed of item +/- variable amount.");
     addPropertyToComponent(Object_Components::movement, Object_Properties::angular_velocity, Property_Type::Variable, QPointF(0, 0),
-                           "Angular Velocity", "Rotational movement speed of item.");
+                           "Angular Velocity", "Rotational movement speed of item +/- variable amount.");
 }
 
 void DrObject::initializeCameraSettings()

@@ -94,5 +94,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     drop.qrc
 
-DISTFILES += \
-    README.md
+DISTFILES +=

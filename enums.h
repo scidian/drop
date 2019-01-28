@@ -198,7 +198,7 @@ enum class Property_Type {
     Bool,       Int,        Double,     Variable,   Percent,    Angle,
     Char,       String,
     Image,      Icon,       Color,
-    Point,      PointF,     Vector3D,
+    Point,      PointF,     SizeF,      Vector3D,
     List,
 };
 
@@ -274,6 +274,7 @@ enum class Object_Properties
     // transform
     position,               //pointf
     rotation,               //angle
+    size,                   //sizef
     scale,                  //pointf
     opacity,                //double
 

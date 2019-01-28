@@ -36,6 +36,36 @@ TreeInspector::TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay
 
 
 //####################################################################################
+//##        Advisor Info Functions
+//####################################################################################
+// Handles changing the Advisor on Mouse Enter
+void TreeInspector::enterEvent(QEvent *event)
+{
+    m_relay->setAdvisorInfo(Advisor_Info::Object_Inspector);
+    QTreeWidget::enterEvent(event);
+}
+
+void TreeInspector::setAdvisorInfo(QString header, QString body)
+{
+    m_relay->setAdvisorInfo(header, body);
+}
+
+void TreeInspector::applyHeaderBodyProperties(QWidget *widget, DrProperty *property)
+{
+    widget->setProperty(User_Property::Header, property->getDisplayName());
+    widget->setProperty(User_Property::Body, property->getDescription());
+    m_widget_hover->attach(widget);
+}
+
+void TreeInspector::applyHeaderBodyProperties(QWidget *widget, QString header, QString body)
+{
+    widget->setProperty(User_Property::Header, header);
+    widget->setProperty(User_Property::Body, body);
+    m_widget_hover->attach(widget);
+}
+
+
+//####################################################################################
 //##    Dynamically build object inspector
 //####################################################################################
 void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
@@ -76,16 +106,16 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
 
     // Retrieve list of components for selected item
-    ComponentMap components = m_project->findSettingsFromKey( selected_key )->getComponentList();
+    ComponentMap list_components = m_project->findSettingsFromKey( selected_key )->getComponentList();
 
     // Loop through each component and add it to the Object Inspector list
     int rowCount = 0;
     this->clear();
-    for (auto i: components) {
+    for (auto component_map: list_components) {
 
         // Create new item in list to hold component and add the TreeWidgetItem to the tree
         QTreeWidgetItem *category_item = new QTreeWidgetItem();
-        category_item->setData(0, User_Roles::Key, QVariant::fromValue(i.second->getComponentKey()));           // Stores component key in list user data
+        category_item->setData(0, User_Roles::Key, QVariant::fromValue(component_map.second->getComponentKey()));           // Stores component key in list user data
         this->addTopLevelItem(category_item);
 
         // Creates a frame to hold all properties of component, with vertical layout
@@ -96,8 +126,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
         vertical_layout->setContentsMargins(8,4,8,4);
 
         // Loop through each property and add it to the component frame
-        for (auto j: i.second->getPropertyList()) {
-            if (j.second->getPropertyKey() == static_cast<long>(Object_Properties::name) && !show_name) continue;
+        for (auto property_map: component_map.second->getPropertyList()) {
+            if (property_map.second->getPropertyKey() == static_cast<long>(Object_Properties::name) && !show_name) continue;
 
             QFrame *single_row = new QFrame(properties_frame);
             QBoxLayout *horizontal_split = new QHBoxLayout(single_row);
@@ -105,24 +135,28 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
             horizontal_split->setMargin(0);
             horizontal_split->setContentsMargins(0,0,0,0);
 
-            QLabel *property_name = new QLabel(j.second->getDisplayNameQString());
+            QLabel *property_name = new QLabel(property_map.second->getDisplayNameQString());
             QFont fp;
             fp.setPointSize(Dr::FontSize());
             property_name->setFont(fp);
                 QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
                 sp_left.setHorizontalStretch(SIZE_LEFT);
             property_name->setSizePolicy(sp_left);
-            applyHeaderBodyProperties(property_name, j.second);
+            applyHeaderBodyProperties(property_name, property_map.second);
             horizontal_split->addWidget(property_name);
 
-            switch (j.second->getPropertyType())
+            switch (property_map.second->getPropertyType())
             {
-            case Property_Type::Bool:       horizontal_split->addWidget(createCheckBox(j.second, fp));                              break;
-            case Property_Type::Double:     horizontal_split->addWidget(createDoubleSpinBox(j.second, fp, Spin_Type::Double));      break;
-            case Property_Type::Percent:    horizontal_split->addWidget(createDoubleSpinBox(j.second, fp, Spin_Type::Percent));     break;
-            case Property_Type::Angle:      horizontal_split->addWidget(createDoubleSpinBox(j.second, fp, Spin_Type::Angle));       break;
-            case Property_Type::String:     horizontal_split->addWidget(createLineEdit(j.second, fp));               break;
-            case Property_Type::PointF:     horizontal_split->addWidget(createDoubleSpinBoxPair(j.second, fp));      break;
+            case Property_Type::Bool:       horizontal_split->addWidget(createCheckBox(property_map.second, fp));                               break;
+            case Property_Type::String:     horizontal_split->addWidget(createLineEdit(property_map.second, fp));                               break;
+            case Property_Type::Int:        horizontal_split->addWidget(createIntSpinBox(property_map.second, fp, Spin_Type::Integer));         break;
+            case Property_Type::Double:     horizontal_split->addWidget(createDoubleSpinBox(property_map.second, fp, Spin_Type::Double));       break;
+            case Property_Type::Percent:    horizontal_split->addWidget(createDoubleSpinBox(property_map.second, fp, Spin_Type::Percent));      break;
+            case Property_Type::Angle:      horizontal_split->addWidget(createDoubleSpinBox(property_map.second, fp, Spin_Type::Angle));        break;
+            case Property_Type::PointF:     horizontal_split->addWidget(createDoubleSpinBoxPair(property_map.second, fp, Spin_Type::Point));    break;
+            case Property_Type::SizeF:      horizontal_split->addWidget(createDoubleSpinBoxPair(property_map.second, fp, Spin_Type::Size));     break;
+            case Property_Type::Variable:   horizontal_split->addWidget(createVariableSpinBoxPair(property_map.second, fp));                    break;
+            case Property_Type::List:       horizontal_split->addWidget(createComboBox(property_map.second, fp));
             }
 
 
@@ -145,16 +179,17 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
         category_item->addChild(property_item);
 
         //->Create and style a button to be used as a header item for the category
-        InspectorCategoryButton *category_button = new InspectorCategoryButton(QString(" ") + i.second->getDisplayNameQString(),
+        InspectorCategoryButton *category_button = new InspectorCategoryButton(QString(" ") + component_map.second->getDisplayNameQString(),
                                                                                this, category_item, property_item, properties_frame);
-        category_button->setAdvisorHeaderText(i.second->getDisplayName());
-        category_button->setAdvisorBodyText(i.second->getDescription());
+        category_button->setAdvisorHeaderText(component_map.second->getDisplayName());
+        category_button->setAdvisorBodyText(component_map.second->getDescription());
         QString buttonColor = QString(" QPushButton { height: 24px; font: 13px; text-align: left; icon-size: 20px 16px; color: #000000; "
                                                     " border: none; border-radius: 0px; background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 " +
-                                                    i.second->getColor().name() + ", stop:1 " + i.second->getColor().darker(250).name() + "); } "
+                                                    component_map.second->getColor().name() + ", stop:1 " +
+                                                    component_map.second->getColor().darker(250).name() + "); } "
                                       " QPushButton:hover:!pressed { color: #FFFFFF; } "
                                       " QPushButton:pressed { color: #333333; }");
-        category_button->setIcon(QIcon(i.second->getIcon()));
+        category_button->setIcon(QIcon(component_map.second->getIcon()));
         category_button->setStyleSheet(buttonColor);
 
 
@@ -164,23 +199,6 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     }
 
     this->expandAll();
-}
-
-
-
-//####################################################################################
-//##        Advisor Info Functions
-//####################################################################################
-// Handles changing the Advisor on Mouse Enter
-void TreeInspector::enterEvent(QEvent *event)
-{
-    m_relay->setAdvisorInfo(Advisor_Info::Object_Inspector);
-    QTreeWidget::enterEvent(event);
-}
-
-void TreeInspector::setAdvisorInfo(QString header, QString body)
-{
-    m_relay->setAdvisorInfo(header, body);
 }
 
 
@@ -254,28 +272,29 @@ void InspectorCategoryButton::animationDone() { if (m_is_shrunk) m_parent_item->
 void InspectorCategoryButton::animationUpdate(const QVariant &value) { Q_UNUSED(value); }
 void InspectorCategoryButton::buttonPressed()
 {
-    QPropertyAnimation *propAnimationFade = new QPropertyAnimation(m_child_frame, "geometry");
+    ///// Item shrinking / expanding animation, doesnt work that great overall
+    ///QPropertyAnimation *propAnimationFade = new QPropertyAnimation(m_child_frame, "geometry");
+    ///propAnimationFade->setDuration(100);
+    ///start_rect = m_child_frame->geometry();
+    ///end_rect = start_rect;
+    ///    if (m_is_shrunk) {
+    ///        m_parent_item->setExpanded(true);
+    ///        start_rect.setHeight(0);
+    ///        end_rect.setHeight(m_height);
+    ///    } else {
+    ///        m_height = start_rect.height();
+    ///        end_rect.setHeight(0);
+    ///    }
+    ///    m_is_shrunk = !m_is_shrunk;
+    ///connect(propAnimationFade, SIGNAL(finished()), this, SLOT(animationDone()));
+    ///connect(propAnimationFade, SIGNAL(valueChanged(QVariant)), this, SLOT(animationUpdate(QVariant)));
+    ///propAnimationFade->setStartValue(start_rect);
+    ///propAnimationFade->setEndValue(end_rect);
+    ///propAnimationFade->start();
 
-    propAnimationFade->setDuration(100);
-    start_rect = m_child_frame->geometry();
-    end_rect = start_rect;
-
-    if (m_is_shrunk) {
-        m_parent_item->setExpanded(true);
-        start_rect.setHeight(0);
-        end_rect.setHeight(m_height);
-    } else {
-        m_height = start_rect.height();
-        end_rect.setHeight(0);
-    }
     m_is_shrunk = !m_is_shrunk;
+    m_parent_item->setExpanded(!m_is_shrunk);
 
-    connect(propAnimationFade, SIGNAL(finished()), this, SLOT(animationDone()));
-    connect(propAnimationFade, SIGNAL(valueChanged(QVariant)), this, SLOT(animationUpdate(QVariant)));
-
-    propAnimationFade->setStartValue(start_rect);
-    propAnimationFade->setEndValue(end_rect);
-    propAnimationFade->start();
 }
 
 
