@@ -53,12 +53,6 @@ DrObject::~DrObject()
 //##                       initializeCharacterSettings
 //####################################################################################
 
-//    // movement
-//    velocity_x,             //variable
-//    velocity_y,             //variable
-//    angular_velocity,       //variable
-
-
 void DrObject::initializeObjectSettings(QString new_name)
 {
     addComponent(Object_Components::settings, "Settings", "Basic settings for current object.", Component_Colors::White_Snow, true);

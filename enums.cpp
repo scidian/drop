@@ -64,6 +64,7 @@ QString StringFromType(DrTypes drtype)
     case DrTypes::Joystick:     return "Joystick";
     case DrTypes::NotFound:     return "Not Found";
     case DrTypes::BaseClass:    return "Base Class";
+    case DrTypes::Asset:        return "Asset";
     }
     return "Unknown";
 }

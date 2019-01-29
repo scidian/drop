@@ -184,29 +184,28 @@ QComboBox* TreeInspector::createComboBox(DrProperty *property, QFont &font)
 
     DropDownComboBox *combo = new DropDownComboBox();
     combo->setObjectName(QStringLiteral("comboBox"));
-
-    combo->view()->parentWidget()->setStyleSheet("background: none;");
+    combo->view()->parentWidget()->setStyleSheet(" background: none; border-radius: 0px; ");
 
     QString style =
-            " QWidget { border-radius: 0px; }"
-
             " QComboBox QAbstractItemView { "
             "       font-size: " + QString::number(font.pointSize()) + "px; "
             "       border: 2px solid; margin: 0px; "
             "       border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; } "
 
-            " QComboBox QAbstractItemView::item { "
-            "       padding: 4px; padding-left: 4px;"
+            " QComboBox QAbstractItemView::item { padding: 4px; "
+            "       padding-left: 4px;"
             "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
             "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; } "
 
-            " QComboBox QAbstractItemView::item:selected { padding-left: 6px; "
+            " QComboBox QAbstractItemView::item:selected { "
+            "       padding-left: 6px; "
             "       image: url(:/gui_misc/check.png); "
             "       image-position: right center; "
             "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
             "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } ";
 
-    combo->setView(new QListView());
+    QListView *combo_list = new QListView();
+    combo->setView(combo_list);
     combo->setStyleSheet(style);
 
     //// Alternate way to remove white border around QComboBox ListView
@@ -260,7 +259,7 @@ void DropDownComboBox::showPopup()
 
     QComboBox::showPopup();
     QWidget *frame = findChild<QFrame*>();
-    frame->move( frame->x() + 7, mapToGlobal(this->geometry().bottomLeft()).y() - 4);
+    frame->move( frame->x() + 7, mapToGlobal(this->geometry().bottomLeft()).y() - 1);
 
     qApp->setEffectEnabled(Qt::UI_AnimateCombo, oldAnimationEffects);
 }

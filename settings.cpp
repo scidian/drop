@@ -33,11 +33,13 @@ DrProperty* DrSettings::getComponentProperty(long component, long property) { re
 DrProperty* DrSettings::getComponentProperty(World_Components component, World_Properties property) { return m_components[static_cast<long>(component)]->getProperty(property); }
 DrProperty* DrSettings::getComponentProperty(Scene_Components component, Scene_Properties property) { return m_components[static_cast<long>(component)]->getProperty(property); }
 DrProperty* DrSettings::getComponentProperty(Object_Components component, Object_Properties property) { return m_components[static_cast<long>(component)]->getProperty(property); }
+DrProperty* DrSettings::getComponentProperty(Asset_Components component, Asset_Properties property) { return m_components[static_cast<long>(component)]->getProperty(property); }
 
 QVariant DrSettings::getComponentPropertyValue(long component, long property) { return m_components[component]->getProperty(property)->getValue(); }
 QVariant DrSettings::getComponentPropertyValue(World_Components component, World_Properties property) { return m_components[static_cast<long>(component)]->getProperty(property)->getValue(); }
 QVariant DrSettings::getComponentPropertyValue(Scene_Components component, Scene_Properties property) { return m_components[static_cast<long>(component)]->getProperty(property)->getValue(); }
 QVariant DrSettings::getComponentPropertyValue(Object_Components component, Object_Properties property) { return m_components[static_cast<long>(component)]->getProperty(property)->getValue(); }
+QVariant DrSettings::getComponentPropertyValue(Asset_Components component, Asset_Properties property) { return m_components[static_cast<long>(component)]->getProperty(property)->getValue(); }
 
 QString DrSettings::getWorldName() { return m_components[static_cast<long>(World_Components::settings)]->getProperty(World_Properties::name)->getValue().toString(); }
 QString  DrSettings::getSceneName() { return m_components[static_cast<long>(Scene_Components::settings)]->getProperty(Scene_Properties::name)->getValue().toString(); }
@@ -84,6 +86,11 @@ void DrSettings::addComponent(Object_Components component, QString new_display_n
     m_components[static_cast<long>(component)] = comp;
 }
 
+void DrSettings::addComponent(Asset_Components component, QString new_display_name, QString new_description, QColor new_color, bool new_turned_on) {
+    DrComponent *comp = new DrComponent(this, new_display_name, new_description, new_color, static_cast<long>(component), new_turned_on);
+    m_components[static_cast<long>(component)] = comp;
+}
+
 //####################################################################################
 
 void DrSettings::addPropertyToComponent(long component, long property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description) {
@@ -102,7 +109,10 @@ void DrSettings::addPropertyToComponent(Object_Components component, Object_Prop
                                         QVariant new_value, QString new_display_name, QString new_description) {
     m_components[static_cast<long>(component)]->addProperty(property_number, new_type, new_value, new_display_name, new_description);
 }
-
+void DrSettings::addPropertyToComponent(Asset_Components component, Asset_Properties property_number, Property_Type new_type,
+                                        QVariant new_value, QString new_display_name, QString new_description) {
+    m_components[static_cast<long>(component)]->addProperty(property_number, new_type, new_value, new_display_name, new_description);
+}
 
 
 

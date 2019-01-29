@@ -61,9 +61,18 @@ enum class DrTypes {
     UI,
     Label,      Button,         Joystick,
 
+    Asset,
+
     NotFound,   BaseClass,
 };
 
+//####################################################################################
+//##    Types of objects possible in game
+//####################################################################################
+enum class DrAsset_Types {
+    Character,
+    Object,
+};
 
 //####################################################################################
 //##    Possible handle rects, order is vector / array index critical
@@ -197,7 +206,7 @@ namespace Advisor_Info
 enum class Property_Type {
     Bool,       Int,        Double,     Variable,   Percent,    Angle,
     Char,       String,
-    Image,      Icon,       Color,
+    Image,      Icon,       Color,      Polygon,
     Point,      PointF,     SizeF,      Vector3D,
     List,
 };
@@ -292,6 +301,44 @@ enum class Object_Properties
 };
 
 
+//####################################################################################
+//##    Object - Possible components and their properties
+//####################################################################################
+
+enum class Asset_Components
+{
+    settings,
+    animation,
+};
+
+enum class Asset_Properties
+{
+    // settings
+    name,                   //string
+    collision_shape,        //polygon
+
+    //animation
+    animation_default,      //image
+
+};
+
+
 
 
 #endif // ENUMS_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

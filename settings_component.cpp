@@ -62,6 +62,11 @@ void DrComponent::addProperty(Object_Properties setting, Property_Type new_type,
     m_properties[static_cast<int>(setting)] = prop;
 }
 
+void DrComponent::addProperty(Asset_Properties setting, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description)
+{
+    DrProperty *prop = new DrProperty(m_parent_settings, this, new_display_name, new_description, new_type, new_value, static_cast<int>(setting));
+    m_properties[static_cast<int>(setting)] = prop;
+}
 
 
 

@@ -235,7 +235,6 @@ void ApplyColoring(QWidget *widget)
         "       border-bottom-left-radius: 0px; } "
 
 
-
     );
 
     widget->setStyleSheet(style_sheet);

@@ -58,6 +58,7 @@ public:
     DrProperty* getProperty(World_Properties setting) { return m_properties[static_cast<int>(setting)]; }
     DrProperty* getProperty(Scene_Properties setting) { return m_properties[static_cast<int>(setting)]; }
     DrProperty* getProperty(Object_Properties setting) { return m_properties[static_cast<int>(setting)]; }
+    DrProperty* getProperty(Asset_Properties setting) { return m_properties[static_cast<int>(setting)]; }
 
     void setDisplayName(QString new_display_name) { m_display_name = new_display_name; }
     void setDescription(QString new_description) { m_description = new_description; }
@@ -74,7 +75,7 @@ public:
     void addProperty(World_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
     void addProperty(Scene_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
     void addProperty(Object_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
-
+    void addProperty(Asset_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
 
 };
 

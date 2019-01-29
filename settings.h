@@ -49,16 +49,19 @@ public:
     DrComponent* getComponent(World_Components component)   { return m_components[static_cast<long>(component)]; }
     DrComponent* getComponent(Scene_Components component)   { return m_components[static_cast<long>(component)]; }
     DrComponent* getComponent(Object_Components component)  { return m_components[static_cast<long>(component)]; }
+    DrComponent* getComponent(Asset_Components component)   { return m_components[static_cast<long>(component)]; }
 
     DrProperty*  getComponentProperty(long component, long property);
     DrProperty*  getComponentProperty(World_Components component, World_Properties property);
     DrProperty*  getComponentProperty(Scene_Components component, Scene_Properties property);
     DrProperty*  getComponentProperty(Object_Components component, Object_Properties property);
+    DrProperty*  getComponentProperty(Asset_Components component, Asset_Properties property);
 
     QVariant     getComponentPropertyValue(long component, long property);
     QVariant     getComponentPropertyValue(World_Components component, World_Properties property);
     QVariant     getComponentPropertyValue(Scene_Components component, Scene_Properties property);
     QVariant     getComponentPropertyValue(Object_Components component, Object_Properties property);
+    QVariant     getComponentPropertyValue(Asset_Components component, Asset_Properties property);
 
 
     // External Calls
@@ -69,11 +72,13 @@ public:
     void         addComponent(World_Components component, QString new_display_name, QString new_description, QColor new_color, bool new_turned_on);
     void         addComponent(Scene_Components component, QString new_display_name, QString new_description, QColor new_color, bool new_turned_on);
     void         addComponent(Object_Components component, QString new_display_name, QString new_description, QColor new_color, bool new_turned_on);
+    void         addComponent(Asset_Components component, QString new_display_name, QString new_description, QColor new_color, bool new_turned_on);
 
     void addPropertyToComponent(long component, long property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
     void addPropertyToComponent(World_Components component, World_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
     void addPropertyToComponent(Scene_Components component, Scene_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
     void addPropertyToComponent(Object_Components component, Object_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
+    void addPropertyToComponent(Asset_Components component, Asset_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
 
     QString      getWorldName();
     QString      getSceneName();
