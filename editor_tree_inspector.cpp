@@ -135,7 +135,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
             horizontal_split->setMargin(0);
             horizontal_split->setContentsMargins(0,0,0,0);
 
-            QLabel *property_name = new QLabel(property_map.second->getDisplayNameQString());
+            QLabel *property_name = new QLabel(property_map.second->getDisplayName());
             QFont fp;
             fp.setPointSize(Dr::FontSize());
             property_name->setFont(fp);

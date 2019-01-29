@@ -132,6 +132,17 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 }
 
 
+QColor DrItem::getColorAtPoint(QPointF at_point)
+{
+    QImage image = m_pixmap.toImage();
+
+    if (image.rect().contains(at_point.toPoint()))
+        return image.pixelColor(at_point.toPoint());
+    else
+        return QColor(0, 0, 0, 0);
+}
+
+
 //####################################################################################
 //##        Input overrides
 //####################################################################################

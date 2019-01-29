@@ -36,6 +36,7 @@ void InitializeFlags()
 
     SetDebugFlag( Debug_Flags::Label_FPS );
     SetDebugFlag( Debug_Flags::Label_Mouse_Coordinates );
+    //SetDebugFlag( Debug_Flags::Label_Top_Item_RGBA);
 
     SetDebugFlag( Debug_Flags::Label_Object_Inspector_Build );
     SetDebugFlag( Debug_Flags::Label_Scene_Tree_Drag );

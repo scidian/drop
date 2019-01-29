@@ -82,21 +82,38 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
             if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
 
                 if (m_origin_item != nullptr) {
-                    // If we clicked clicked a new item, set selection group to that
+
+                    // ***** If we clicked clicked a new item, set selection group to that
                     if (my_items.contains(m_origin_item) == false) {
                         emit selectionGroupNewGroup(my_scene->getSelectionGroup(), my_items, QList<QGraphicsItem*>({ m_origin_item }),
                                                     my_scene->getFirstSelectedItem(), m_origin_item);
                         my_scene->selectSelectionGroup();
                     }
 
-                    // Process press event for item movement (Translation)
+                    // ***** Disable any objects that were there and transparent
+                    QList<QGraphicsItem*> item_list = items(event->pos());
+                    for (auto item : item_list)
+                        if (my_scene->getSelectionGroupItems().contains(item) == false) {
+                            item->setEnabled(false);
+                            item->setVisible(false);
+                        }
+                    my_scene->getSelectionGroup()->setEnabled(true);
+                    my_scene->getSelectionGroup()->setVisible(true);
+
+                    // ***** Process press event for item movement (Translation)
                     QGraphicsView::mousePressEvent(event);
                     viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
                     QTimer::singleShot(500, this, SLOT(checkTranslateToolTipStarted()));
 
-                    ///m_old_pos = my_scene->getSelectionGroup()->scenePos();
+                    // ***** Store item start position for UNDO
                     m_old_pos = my_scene->getSelectionGroup()->sceneTransform().map(my_scene->getSelectionGroup()->boundingRect().center());
                     m_view_mode = View_Mode::Translating;
+
+                    // ***** Re-enable any objects that were there and transparent
+                    for (auto item : item_list) {
+                        item->setEnabled(true);
+                        item->setVisible(true);
+                    }
                 }
 
             // ******************** If clicked while control is down, add to selection group, or take out
@@ -173,8 +190,32 @@ QGraphicsItem* SceneGraphicsView::itemOnTopAtPosition(QPoint check_point)
 
     // Make a list of all items at point excluding selection group
     for (auto item : items(check_point))
-        if (item != selection)
-            possible_items.append(item);
+        if (item != selection) {
+
+            // If we have an item selected don't worry about transparent space
+            if (my_scene->getSelectionGroupItems().contains(item)) {
+                possible_items.append(item);
+
+            // If no items are selected lets grab the item that the user sees
+            } else {
+                DrItem *dritem = dynamic_cast<DrItem*>(item);
+                QPointF in_scene = mapToScene(check_point);
+                QPointF in_object = dritem->mapFromScene(in_scene);
+                QColor pixel_color = dritem->getColorAtPoint(in_object);
+
+                if (pixel_color.alpha() > 0)
+                    possible_items.append(item);
+
+                // !!!!! DEBUG: Shows red, green, blue and alpha of pixel under mouse
+                if (Dr::CheckDebugFlag(Debug_Flags::Label_Top_Item_RGBA)) {
+                    Dr::SetLabelText(Label_Names::Label_1, "R: " + QString::number(pixel_color.red()) +
+                                                           "G: " + QString::number(pixel_color.green()) +
+                                                           "B: " + QString::number(pixel_color.blue()) );
+                    Dr::SetLabelText(Label_Names::Label_2, "Aplha: " + QString::number(pixel_color.alpha()) );
+                }
+                // !!!!! END
+            }
+        }
 
     // If no items at position, exit
     if (possible_items.count() == 0) return nullptr;

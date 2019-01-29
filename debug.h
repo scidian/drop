@@ -21,6 +21,7 @@ enum class Debug_Flags {
 
     Label_FPS,                          // Show frames per second of SceneGraphicsView
     Label_Mouse_Coordinates,            // Show mouse position coordinates while moving over SceneGraphicsView
+    Label_Top_Item_RGBA,                // Show red, green, blue, alpha of pixel on item at top of mouse position
 
     Label_Object_Inspector_Build,       // Show info about item sent to Object Inspector Tree
     Label_Scene_Tree_Drag,              // Show info about dragging event of Scene Tree

@@ -51,6 +51,7 @@ public:
 
     // Getters and Setters
     Position_Flags          getOrigin() { return m_origin; }
+    QColor                  getColorAtPoint(QPointF at_point);
 
     double                  startX() { return m_start_x; }
     double                  startY() { return m_start_y; }
