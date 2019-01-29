@@ -52,10 +52,11 @@ QString RemoveTrailingDecimals(double value, int max_decimal_places)
 //####################################################################################
 //##        Used to show a modal messagebox
 //####################################################################################
-void ShowMessageBox(QString new_message)
+void ShowMessageBox(QString new_message, QPixmap pixmap)
 {
     QMessageBox *msg_box = new QMessageBox(nullptr);
     msg_box->setText(new_message);
+    msg_box->setIconPixmap(pixmap);
     msg_box->exec();
 
     delete msg_box;

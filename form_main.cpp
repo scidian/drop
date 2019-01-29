@@ -10,6 +10,7 @@
 #include "library.h"
 
 #include "project.h"
+#include "project_asset.h"
 #include "project_world.h"
 #include "project_world_scene.h"
 #include "project_world_scene_object.h"
@@ -43,31 +44,41 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     Dr::SetColorScheme(Color_Scheme::Dark);
 
 
+    // ########## Initialize new project, initialize local variables
+    project = new DrProject(0, 0);
+    current_world = 0;
 
-    // !!!!! #TEMP: call to populate Graphics Scene (currently does a couple squares)
-    populateScene();
+
+    // !!!!! #TEMP: Add assets
+    long asset_1 = project->addAsset("Dr Square",    DrAsset_Type::Object, QPixmap(":/assets/test_square.png"));
+    long asset_2 = project->addAsset("Ground Fill",  DrAsset_Type::Object, QPixmap(":/assets/ground_fill.png"));
+    long asset_3 = project->addAsset("Ground Top",   DrAsset_Type::Object, QPixmap(":/assets/ground_top.png"));
+    long asset_4 = project->addAsset("Moon Plant 6", DrAsset_Type::Object, QPixmap(":/assets/moon_plant_6.png"));
     // !!!!! END
 
-
-    // ########## Initialize new project, initialize local variables
-    project = new DrProject();
-    current_world = 0;
 
 
     // !!!!! #TEMP: New Project
     // Create a new project and add some stuff to it
+    project->addWorld();
     project->addWorld();
     project->getWorldWithName("World 2")->addScene();
     project->getWorldWithName("World 2")->addScene("asdfasdfasdfasdfasfdasdfasdfasdfasdfasdfasdfasdfasd");
     project->getWorldWithName("World 2")->addScene();
     project->getWorldWithName("World 2")->addScene();
     project->getWorldWithName("World 2")->addScene();
-    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrTypes::Object);
-    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrTypes::Object);
-    project->addWorld();
-    project->addWorld();
+
+    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_1, 0, 0);
+    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_1, -200, -200);
+    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_2, 250, -200);
+    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_3, -200, 200);
+    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_4, 100, 100);
     // !!!!! END
 
+
+    // !!!!! #TEMP: call to populate Graphics Scene (currently does a couple squares)
+    populateScene( project->getWorldWithName("World 2")->getSceneWithName("4")->getKey() );
+    // !!!!! END
 
 
     // ########## Initialize form and customize colors and styles
@@ -143,21 +154,20 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
 }
 
 
-void FormMain::populateScene()
+void FormMain::populateScene(long new_key)
 {
     scene = new SceneGraphicsScene(this, project, this);
 
-    // Populate scene
+    DrScene *my_scene = project->findSceneFromKey(new_key);
+    int z_order = 0;
+    for (auto object : my_scene->getObjectMap()) {
 
-    scene->addSquare(-200, -200, 100, 100, 1, "Bob");
+        DrItem *item = new DrItem(project, my_scene, object.first, z_order);
+        scene->setPositionByOrigin(item, item->getOrigin(), item->startX(), item->startY());
+        scene->addItem(item);
 
-    scene->addSquare(0, 0, 100, 50, 2, "Joe");
-    scene->addSquare(200, 0, 100, 50, 3, "Dan");
-
-    scene->addSquare(100, 100, 1, 1, 6, "Jeff");
-
-    scene->addSquare(0, 200, 100, 50, 4, "Ryan");
-    scene->addSquare(200, 200, 100, 50, 5, "Kirk");
+        z_order++;
+    }
 
 }
 

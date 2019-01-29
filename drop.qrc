@@ -36,5 +36,9 @@
         <file>inspector_icons/check_hover_unchecked.png</file>
         <file>gui_misc/drop_arrow.png</file>
         <file>gui_misc/check.png</file>
+        <file>assets/ground_fill.png</file>
+        <file>assets/ground_top.png</file>
+        <file>assets/moon_plant_6.png</file>
+        <file>assets/test_square.png</file>
     </qresource>
 </RCC>

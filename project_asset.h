@@ -22,25 +22,34 @@ class DrAsset : public DrSettings
 private:
     DrProject       *m_parent_project;                  // holds reference to parent Project class that handles key generation for project
 
-    DrAsset_Types    m_asset_type;                      // holds asset type (object, character, etc)
+    DrAsset_Type     m_asset_type;                      // holds asset type (object, character, etc)
+
+    long             m_width;
+    long             m_height;
+
+    long             m_list_order;                      // keeps track of what order to be in on the asset list tree
+    long             m_group_number;                    // keeps track of what group to be in on the asset list tree
 
 public:
     DrAsset();
 
     // Constructor & destructor
-    DrAsset(DrProject *parent_project, long new_asset_key, QString new_asset_name, DrAsset_Types new_asset_type);
+    explicit DrAsset(DrProject *parent_project, long new_asset_key, QString new_asset_name,
+                     DrAsset_Type new_asset_type, QPixmap pixmap);
     virtual ~DrAsset() override;
 
 
     // Getters and setters
-    virtual DrTypes getType() override  { return DrTypes::Asset; }
+    virtual DrType  getType() override  { return DrType::Asset; }
 
-    DrAsset_Types   getAssetType()      { return m_asset_type; }
+    DrAsset_Type    getAssetType()      { return m_asset_type; }
     DrProject*      getParentProject()  { return m_parent_project; }
+    long            width()             { return m_width; }
+    long            height()            { return m_height; }
 
 
     // External calls
-    void        initializeAssetSettings(QString new_name);
+    void        initializeAssetSettings(QString new_name, QPixmap pixmap);
 
 };
 

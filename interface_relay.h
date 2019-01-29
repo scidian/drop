@@ -26,6 +26,8 @@ public:
     virtual void    buildObjectInspector(QList<long> key_list) = 0;
     virtual void    buildTreeSceneList() = 0;
 
+    virtual void    populateScene(long new_key) = 0;
+
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list) = 0;
     virtual void    setAdvisorInfo(QString header, QString body) = 0;
     virtual void    setLabelText(Label_Names label_name, QString new_text) = 0;

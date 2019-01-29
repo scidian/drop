@@ -12,6 +12,7 @@
 #include "settings.h"
 
 class DrProject;
+class DrAsset;
 class DrWorld;
 class DrScene;
 
@@ -24,31 +25,31 @@ class DrObject : public DrSettings
 {
 private:
     // Local variables
-    DrTypes     m_object_type;                              // holds type of current object
+    DrType      m_object_type;                              // holds type of current object
 
     DrProject  *m_parent_project;                           // holds reference to parent Project class that handles key generation for project
     DrWorld    *m_parent_world;                             // holds reference to parent World class
     DrScene    *m_parent_scene;                             // holds reference to parent World class
 
-    //long m_asset_key;                            // TODO: will hold the associated asset key, this way we know what image to grab for GraphicsView
-                                                   //       will need to preload some assets that don't use GraphicsItems (like camera, particle, trail, etc)
+    long        m_asset_key;                                // holds the associated asset key, this way we know what image to grab for GraphicsView
+
 
 public:
     // Constructor & destructor
-    DrObject(DrProject *parent_project, DrWorld *parent_world, DrScene *parent_scene,
-             long new_object_key, QString new_object_name, DrTypes new_object_type);
+    explicit DrObject(DrProject *parent_project, DrWorld *parent_world, DrScene *parent_scene, long new_object_key,
+                      QString new_object_name, DrType new_object_type, long from_asset_key, double x, double y);
     virtual ~DrObject() override;
 
 
     // Getters and setters
+    virtual DrType  getType() override  { return m_object_type; }
     DrProject*      getParentProject()  { return m_parent_project; }
     DrWorld*        getParentWorld()    { return m_parent_world; }
     DrScene*        getParentScene()    { return m_parent_scene; }
-    virtual DrTypes getType() override  { return m_object_type; }
-
+    long            getAssetKey()       { return m_asset_key; }
 
     // External calls
-    void initializeObjectSettings(QString new_name);
+    void initializeObjectSettings(QString new_name, double x, double y);
     void initializeCameraSettings();
     void initializeCharacterSettings();
 

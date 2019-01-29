@@ -12,7 +12,7 @@
 //####################################################################################
 //##        Returns true if same class type (or if both are DrObjects)
 //####################################################################################
-bool CheckTypesAreSame(DrTypes type1, DrTypes type2)
+bool CheckTypesAreSame(DrType type1, DrType type2)
 {
     if (IsDrObjectClass(type1) == true && IsDrObjectClass(type2) == true)
         return true;
@@ -23,13 +23,13 @@ bool CheckTypesAreSame(DrTypes type1, DrTypes type2)
 //####################################################################################
 //##        Returns true if type is an DrObject sub-type
 //####################################################################################
-bool IsDrObjectClass(DrTypes type_to_check)
+bool IsDrObjectClass(DrType type_to_check)
 {
     switch (type_to_check)
     {
-    case DrTypes::Object:
-    case DrTypes::Camera:
-    case DrTypes::Character:
+    case DrType::Object:
+    case DrType::Camera:
+    case DrType::Character:
         return true;
     default:
         return false;
@@ -39,37 +39,45 @@ bool IsDrObjectClass(DrTypes type_to_check)
 //####################################################################################
 //##    Returns a QString respresentaiton of the passed DrTypes type
 //####################################################################################
-QString StringFromType(DrTypes drtype)
+QString StringFromType(DrType type)
 {
-    switch (drtype)
+    switch (type)
     {
-    case DrTypes::Project:      return "Project";
-    case DrTypes::Folder:       return "Folder";
-    case DrTypes::World:        return "World";
-    case DrTypes::Scene:        return "Scene";
-    case DrTypes::Background:   return "Background";
-    case DrTypes::Foreground:   return "Foreground";
-    case DrTypes::StartScene:   return "Foreground";
-    case DrTypes::Variable:     return "Variable";
-    case DrTypes::Object:       return "Object";
-    case DrTypes::Character:    return "Character";
-    case DrTypes::Action:       return "Action";
-    case DrTypes::Camera:       return "Camera";
-    case DrTypes::Light:        return "Light";
-    case DrTypes::Logic:        return "Logic";
-    case DrTypes::Particle:     return "Particle";
-    case DrTypes::UI:           return "UI";
-    case DrTypes::Label:        return "Label";
-    case DrTypes::Button:       return "Button";
-    case DrTypes::Joystick:     return "Joystick";
-    case DrTypes::NotFound:     return "Not Found";
-    case DrTypes::BaseClass:    return "Base Class";
-    case DrTypes::Asset:        return "Asset";
+    case DrType::Project:      return "Project";
+    case DrType::Folder:       return "Folder";
+    case DrType::World:        return "World";
+    case DrType::Scene:        return "Scene";
+    case DrType::Background:   return "Background";
+    case DrType::Foreground:   return "Foreground";
+    case DrType::StartScene:   return "Foreground";
+    case DrType::Variable:     return "Variable";
+    case DrType::Object:       return "Object";
+    case DrType::Character:    return "Character";
+    case DrType::Action:       return "Action";
+    case DrType::Camera:       return "Camera";
+    case DrType::Light:        return "Light";
+    case DrType::Logic:        return "Logic";
+    case DrType::Particle:     return "Particle";
+    case DrType::UI:           return "UI";
+    case DrType::Label:        return "Label";
+    case DrType::Button:       return "Button";
+    case DrType::Joystick:     return "Joystick";
+    case DrType::NotFound:     return "Not Found";
+    case DrType::BaseClass:    return "Base Class";
+    case DrType::Asset:        return "Asset";
     }
     return "Unknown";
 }
 
-
+QString StringFromAssetType(DrAsset_Type type)
+{
+    switch (type)
+    {
+    case DrAsset_Type::Object:      return "Object Asset";
+    case DrAsset_Type::Character:   return "Character Asset";
+    }
+    return "Unknown";
+}
 
 
 

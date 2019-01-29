@@ -7,6 +7,7 @@
 //
 
 #include "project.h"
+#include "project_asset.h"
 #include "project_world.h"
 #include "project_world_scene.h"
 #include "project_world_scene_object.h"
@@ -30,8 +31,8 @@ DrScene::DrScene(DrProject *parent_project, DrWorld *parent_world, long new_scen
     initializeSceneSettings(new_scene_name);        // call to load in all the components / properties for this Scene object
 
     if (m_is_start_scene) {
-        addObject(DrTypes::Camera);
-        addObject(DrTypes::Character);
+        ///addObject(DrType::Camera, new DrAsset(), 0, 0);
+        ///addObject(DrType::Character, new DrAsset(), 0, 0);
     }
 }
 
@@ -40,13 +41,23 @@ DrScene::~DrScene()
     for (auto i: m_objects) { delete i.second; }
 }
 
-void DrScene::addObject(DrTypes new_type)
+void DrScene::addObject(DrType new_type, long from_asset_key, double x, double y)
 {
     QString new_name;
-    new_name = "Object " + QString::number(static_cast<long>(m_objects.size() + 1));
+    switch (new_type) {
+    case DrType::Camera:        "Camera " + QString::number(static_cast<long>(m_objects.size() + 1));       break;
+    case DrType::Action:
+    case DrType::Character:
+    case DrType::Object:
+        new_name = m_parent_project->getAsset(from_asset_key)->getComponentProperty(Asset_Components::settings, Asset_Properties::name)->getValue().toString();
+        break;
+    default:
+        new_name = "Fix me";
+    }
 
-    long new_object_key = m_parent_project->getNextKey();
-    m_objects[new_object_key] = new DrObject(m_parent_project, m_parent_world, this, new_object_key, new_name, new_type);
+    long new_object_key = m_parent_project->getNextChildKey();
+    m_objects[new_object_key] = new DrObject(m_parent_project, m_parent_world, this, new_object_key,
+                                             new_name, new_type, from_asset_key, x, y);
 }
 
 

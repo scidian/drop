@@ -72,7 +72,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 {
     // First, retrieve unique key of item clicked in list
     long        selected_key = key_list[0];
-    DrTypes     selected_type = m_project->findTypeFromKey( selected_key );
+    DrType      selected_type = m_project->findChildTypeFromKey( selected_key );
     QString     type_string = StringFromType(selected_type);
 
     // !!!!! #DEBUG:    Show selected item key and info
@@ -85,28 +85,28 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
     // Change Advisor text after new item selection
     switch (selected_type) {
-    case DrTypes::World:        m_relay->setAdvisorInfo(Advisor_Info::World_Object);         break;
-    case DrTypes::Scene:        m_relay->setAdvisorInfo(Advisor_Info::Scene_Object);         break;
-    case DrTypes::Camera:       m_relay->setAdvisorInfo(Advisor_Info::Camera_Object);        break;
-    case DrTypes::Character:    m_relay->setAdvisorInfo(Advisor_Info::Character_Object);     break;
-    case DrTypes::Object:       m_relay->setAdvisorInfo(Advisor_Info::Object_Object);        break;
-    default:                    m_relay->setAdvisorInfo(Advisor_Info::Not_Set);
+    case DrType::World:        m_relay->setAdvisorInfo(Advisor_Info::World_Object);         break;
+    case DrType::Scene:        m_relay->setAdvisorInfo(Advisor_Info::Scene_Object);         break;
+    case DrType::Camera:       m_relay->setAdvisorInfo(Advisor_Info::Camera_Object);        break;
+    case DrType::Character:    m_relay->setAdvisorInfo(Advisor_Info::Character_Object);     break;
+    case DrType::Object:       m_relay->setAdvisorInfo(Advisor_Info::Object_Object);        break;
+    default:                   m_relay->setAdvisorInfo(Advisor_Info::Not_Set);
     }
 
     // Find out if we should hide name for this object
     bool show_name;
     switch (selected_type)
     {
-    case DrTypes::Object:
-    case DrTypes::Character:
-    case DrTypes::Action:
+    case DrType::Object:
+    case DrType::Character:
+    case DrType::Action:
                 show_name = false;  break;
     default:    show_name = true;
     }
 
 
     // Retrieve list of components for selected item
-    ComponentMap list_components = m_project->findSettingsFromKey( selected_key )->getComponentList();
+    ComponentMap list_components = m_project->findChildSettingsFromKey( selected_key )->getComponentList();
 
     // Loop through each component and add it to the Object Inspector list
     int rowCount = 0;

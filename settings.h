@@ -38,7 +38,7 @@ public:
 
     // Getters and Setters
     long            getKey()    { return m_key; }
-    virtual DrTypes getType()   { return DrTypes::BaseClass; }
+    virtual DrType  getType()   { return DrType::BaseClass; }
 
     DrSettings*  getSettings()  { return this; }
 
@@ -82,7 +82,8 @@ public:
 
     QString      getWorldName();
     QString      getSceneName();
-
+    QString      getObjectName();
+    QString      getAssetName();
 
 };
 

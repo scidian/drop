@@ -15,6 +15,7 @@
 
 #include "form_main.h"
 
+class DrScene;
 
 //####################################################################################
 //##    DrItem
@@ -23,14 +24,17 @@
 class DrItem : public QGraphicsItem
 {
 private:
+    QPixmap         m_pixmap;
+
     double          m_width;
     double          m_height;
-    QColor          m_color;
+
+    double          m_start_x, m_start_y;
 
     Position_Flags  m_origin = Position_Flags::Center;
 
 public:
-    DrItem(const QColor &start_color, double width, double height, double z_order, QString name = "No Name");
+    DrItem(DrProject *project, DrScene *scene, long object_key, double z_order);
 
     // Base Getter Overrides
     virtual QRectF          boundingRect() const override;
@@ -47,6 +51,9 @@ public:
 
     // Getters and Setters
     Position_Flags          getOrigin() { return m_origin; }
+
+    double                  startX() { return m_start_x; }
+    double                  startY() { return m_start_y; }
 
 };
 

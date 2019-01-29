@@ -12,6 +12,7 @@
 #include "settings.h"
 
 class DrProject;
+class DrAsset;
 class DrWorld;
 class DrObject;
 typedef std::map<long, DrObject*> ObjectMap;
@@ -39,14 +40,15 @@ public:
 
 
     // Getters and setters
-    virtual DrTypes getType() override  { return DrTypes::Scene; }
+    virtual DrType  getType() override  { return DrType::Scene; }
     DrProject*      getParentProject()  { return m_parent_project; }
     DrWorld*        getParentWorld()    { return m_parent_world; }
     ObjectMap       getObjectMap()      { return m_objects; }
-
+    DrObject*       getObject(long key) { return m_objects[key]; }
 
     // External calls
-    void addObject(DrTypes new_type);
+    void addObject(DrType new_type, long from_asset_key, double x, double y);
+
     void initializeSceneSettings(QString new_name);
 
 

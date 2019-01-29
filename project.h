@@ -11,9 +11,12 @@
 
 #include "settings.h"
 
+class DrAsset;
 class DrWorld;
+class DrScene;
+class DrObject;
 typedef std::map<long, DrWorld*> WorldMap;
-
+typedef std::map<long, DrAsset*> AssetMap;
 
 //####################################################################################
 //##    DrProject
@@ -23,35 +26,47 @@ class DrProject
 {
 private:
     // Local variables
-    WorldMap    m_worlds;                               // map of pointers to DrWorld classes
+    WorldMap    m_worlds;                               // Holds worlds for the project
+    AssetMap    m_assets;                               // Holds assets for the project
 
-    long        m_key_generator;                        // variable to hand out unique id key's to all children objects
-
+    long        m_child_key_generator;                  // variable to hand out unique id key's to all children objects
+    long        m_asset_key_generator;                  // variable to hand out unique id key's to all project assets
 
 public:
     // Constructor & destructor
-    DrProject(long key_generator_starting_number = 0);
+    DrProject(long key_generator_starting_number = 0, long asset_key_generator_starting_number = 0);
     ~DrProject();
 
+    // Getters and Setters
+    long        getNextChildKey()   { return m_child_key_generator++; }
+    void        setChildKeyGeneratorStartNumber(long initial_key) { m_child_key_generator = initial_key; }
 
-    // Getters and setters
-    WorldMap    getWorldMap()       { return m_worlds; }
+    long        getNextAssetKey()   { return m_asset_key_generator++; }
+    void        setAssetKeyGeneratorStartNumber(long initial_key) { m_asset_key_generator = initial_key; }
+
+    DrAsset*    getAsset(long key)  { return m_assets[key]; }
+    AssetMap    getAssets()         { return m_assets; }
+    long        getNumberOfAssets() { return static_cast<long>(m_assets.size()); }
+
+    long        getFirstWorldKey()  { return m_worlds.begin()->first; }
     long        getNumberOfWorlds() { return static_cast<long>(m_worlds.size()); }
-
-    long        getNextKey()        { return m_key_generator++; }
-    void        setKeyGeneratorStartNumber(long initial_key) { m_key_generator = initial_key; }
-
-
-    // External calls
-    DrSettings* findSettingsFromKey(long check_key);
-    DrTypes     findTypeFromKey(long check_key);
-
-    void        addWorld();
-    long        getFirstWorldKey();
-    DrWorld*    getWorld(long from_world_key);
+    DrWorld*    getWorld(long key)  { return m_worlds[key]; }
+    WorldMap    getWorlds()         { return m_worlds; }
     DrWorld*    getWorldWithName(QString world_name);
 
 
+    // External calls
+    DrScene*        findSceneFromKey(long key);
+
+    DrSettings*     findChildSettingsFromKey(long check_key);
+    DrType          findChildTypeFromKey(long check_key);
+
+    DrSettings*     findAssetSettingsFromKey(long check_key);
+    DrAsset_Type    findAssetTypeFromKey(long check_key);
+
+    // Children creation calls
+    void        addWorld();
+    long        addAsset(QString new_asset_name, DrAsset_Type new_asset_type, QPixmap pixmap);
 
 };
 

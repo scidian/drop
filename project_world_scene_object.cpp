@@ -19,7 +19,8 @@
 //##    Constructor, Destructor
 //####################################################################################
 DrObject::DrObject(DrProject *parent_project, DrWorld *parent_world, DrScene *parent_scene,
-                   long new_object_key, QString new_object_name, DrTypes new_object_type)
+                   long new_object_key, QString new_object_name, DrType new_object_type,
+                   long from_asset_key, double x, double y)
 {
     m_parent_project = parent_project;              // pointer to parent Project
     m_parent_world = parent_world;                  // pointer to parent World
@@ -28,13 +29,15 @@ DrObject::DrObject(DrProject *parent_project, DrWorld *parent_world, DrScene *pa
     setKey(new_object_key);                         // assign key passed in from key generator, this key matches key in parent Scene map container
 
     m_object_type = new_object_type;                // assign object type
+    m_asset_key = from_asset_key;                   // associated asset key
 
-    initializeObjectSettings(new_object_name);      // call to load in all the components / properties for this Scene object
+    // Call to load in all the components / properties for this Scene object
+    initializeObjectSettings(new_object_name, x, y);
 
     switch (new_object_type)
     {
-    case DrTypes::Camera:       initializeCameraSettings();     break;
-    case DrTypes::Character:    initializeCharacterSettings();  break;
+    case DrType::Camera:       initializeCameraSettings();     break;
+    case DrType::Character:    initializeCharacterSettings();  break;
     default: break;
     }
 
@@ -53,7 +56,7 @@ DrObject::~DrObject()
 //##                       initializeCharacterSettings
 //####################################################################################
 
-void DrObject::initializeObjectSettings(QString new_name)
+void DrObject::initializeObjectSettings(QString new_name, double x, double y)
 {
     addComponent(Object_Components::settings, "Settings", "Basic settings for current object.", Component_Colors::White_Snow, true);
     getComponent(Object_Components::settings)->setIcon(Component_Icons::Settings);
@@ -70,7 +73,7 @@ void DrObject::initializeObjectSettings(QString new_name)
     addComponent(Object_Components::transform, "Transform", "Sets the physical size and angle of the item in the scene.", Component_Colors::Green_SeaGrass, true);
     getComponent(Object_Components::transform)->setIcon(Component_Icons::Transform);
 
-    addPropertyToComponent(Object_Components::transform, Object_Properties::position, Property_Type::PointF, QPointF(0, 0),
+    addPropertyToComponent(Object_Components::transform, Object_Properties::position, Property_Type::PointF, QPointF(x, y),
                            "Position", "Location of item within the current scene.");
     addPropertyToComponent(Object_Components::transform, Object_Properties::rotation, Property_Type::Angle, 0,
                            "Rotation", "Angle of item within the scene.");

@@ -8,18 +8,46 @@
 
 #include <QtWidgets>
 
+#include "library.h"
+
+#include "project.h"
+#include "project_asset.h"
+#include "project_world.h"
+#include "project_world_scene.h"
+#include "project_world_scene_object.h"
+
+#include "settings.h"
+#include "settings_component.h"
+#include "settings_component_property.h"
+
 #include "editor_scene_item.h"
 #include "editor_scene_scene.h"
 
 //####################################################################################
 //##        Constructor & destructor
 //####################################################################################
-DrItem::DrItem(const QColor &start_color, double width, double height, double z_order, QString name)
+DrItem::DrItem(DrProject *project, DrScene *scene, long object_key, double z_order)
 {
-    m_width = width;
-    m_height = height;
-    m_color = start_color;
+    DrObject *from_object = scene->getObject(object_key);
+    DrAsset  *from_asset =  project->getAsset( from_object->getAssetKey() );
+
+    QPointF start_pos = from_object->getComponentProperty(Object_Components::transform, Object_Properties::position)->getValue().toPointF();
+    m_start_x = start_pos.x();
+    m_start_y = start_pos.y();
+
+    m_width =  from_asset->width();
+    m_height = from_asset->height();
     setZValue(z_order);
+
+    DrComponent *comp = from_asset->getComponent(Asset_Components::animation);
+    DrProperty  *prop = comp->getProperty(Asset_Properties::animation_default);
+
+    ///// Loads pixmap from byte array
+    ///QByteArray byte_array = prop->getValue().toByteArray();
+    ///QPixmap pix;
+    ///pix.loadFromData(byte_array, "PNG");
+
+    m_pixmap = prop->getValue().value<QPixmap>();
 
     setFlags(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable |
              QGraphicsItem::GraphicsItemFlag::ItemIsMovable |
@@ -30,7 +58,8 @@ DrItem::DrItem(const QColor &start_color, double width, double height, double z_
 
     setData(User_Roles::Rotation, 0);
     setData(User_Roles::Scale, QPointF(1, 1));
-    setData(User_Roles::Name, name);
+    setData(User_Roles::Name, project->getAsset( scene->getObject(object_key)->getAssetKey() )->getAssetName() );
+
 }                                     
 
 
@@ -93,14 +122,13 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     Q_UNUSED(widget);
     Q_UNUSED(option);
 
-    QColor fillColor = m_color;
-
     ///if (option->state & QStyle::State_Selected)  { fillColor = QColor(Qt::red); } //m_color.dark(150); }              // If selected
     ///if (option->state & QStyle::State_MouseOver) { fillColor = QColor(Qt::gray); } //fillColor.light(125); }          // If mouse is over
     ///if (option->state & QStyle::State_MouseOver && option->state & QStyle::State_Selected) { fillColor = QColor(Qt::red).darker(200); }
+    ///painter->fillRect(QRectF(0, 0, m_width, m_height), fillColor);
+    ///painter->fillRect(QRectF(0, 0, m_width / 2, m_height / 2), fillColor.dark(250));
 
-    painter->fillRect(QRectF(0, 0, m_width, m_height), fillColor);
-    painter->fillRect(QRectF(0, 0, m_width / 2, m_height / 2), fillColor.dark(250));
+    painter->drawPixmap(0, 0, m_pixmap);
 }
 
 

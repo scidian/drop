@@ -26,7 +26,7 @@ void TreeScene::populateTreeSceneList()
 {
     this->clear();
 
-    for (auto world_pair: m_project->getWorldMap())
+    for (auto world_pair: m_project->getWorlds())
     {
         QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(this);                                      // Create new item (top level item)
 
@@ -49,9 +49,9 @@ void TreeScene::populateTreeSceneList()
                 QTreeWidgetItem *sub_sub_item = new QTreeWidgetItem(sub_item);                                      // Create new item and add as child item
                 switch (object_pair.second->getType())
                 {
-                    case DrTypes::Object:    sub_sub_item->setIcon(0, QIcon(":/tree_icons/tree_object.png")); break;
-                    case DrTypes::Camera:    sub_sub_item->setIcon(0, QIcon(":/tree_icons/tree_camera.png")); break;
-                    case DrTypes::Character: sub_sub_item->setIcon(0, QIcon(":/tree_icons/tree_character.png")); break;
+                    case DrType::Object:    sub_sub_item->setIcon(0, QIcon(":/tree_icons/tree_object.png")); break;
+                    case DrType::Camera:    sub_sub_item->setIcon(0, QIcon(":/tree_icons/tree_camera.png")); break;
+                    case DrType::Character: sub_sub_item->setIcon(0, QIcon(":/tree_icons/tree_character.png")); break;
                     default: break;
                 }
 
@@ -146,8 +146,8 @@ void TreeScene::dragMoveEvent(QDragMoveEvent *event)
 
         // Check if its the same type as already selected, if so allow possible drop
         if (m_is_dragging && m_selected_key != 0 && check_key != 0) {
-            DrSettings *check_settings = m_project->findSettingsFromKey(check_key);
-            DrSettings *selected_settings = m_project->findSettingsFromKey(m_selected_key);
+            DrSettings *check_settings = m_project->findChildSettingsFromKey(check_key);
+            DrSettings *selected_settings = m_project->findChildSettingsFromKey(m_selected_key);
 
             if ( CheckTypesAreSame(check_settings->getType(), selected_settings->getType()) ) { m_can_drop = true; }
         }
@@ -224,16 +224,23 @@ void TreeScene::selectionChanged (const QItemSelection &selected, const QItemSel
         //******************************************************
         // Call to outside function to rebuild object inspector:
         m_relay->buildObjectInspector(QList<long> { selected_key });
+
+        ////!!!!!!!!!!
+        ////!!!!!!!!!!
+///////!!!!!!!!!!! add new scene click here
+        ////!!!!!!!!!!
+        ////!!!!!!!!!!
+
         //******************************************************
 
     } else {
-        DrTypes selected_type = m_project->findTypeFromKey( this->getSelectedKey() );
+        DrType selected_type = m_project->findChildTypeFromKey( this->getSelectedKey() );
 
         // Check if newly selected items are same type, if not, do not allow select
         for (auto check_item: item_list) {
             // Get key from each item so we can compare it to first selected item
             long    check_key = check_item->data(0, User_Roles::Key).toLongLong();
-            DrTypes check_type = m_project->findTypeFromKey(check_key);
+            DrType  check_type = m_project->findChildTypeFromKey(check_key);
 
             // If we are over item that was first selected, skip to next
             if (check_key == this->getSelectedKey()) { continue; }

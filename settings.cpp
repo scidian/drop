@@ -43,6 +43,8 @@ QVariant DrSettings::getComponentPropertyValue(Asset_Components component, Asset
 
 QString DrSettings::getWorldName() { return m_components[static_cast<long>(World_Components::settings)]->getProperty(World_Properties::name)->getValue().toString(); }
 QString  DrSettings::getSceneName() { return m_components[static_cast<long>(Scene_Components::settings)]->getProperty(Scene_Properties::name)->getValue().toString(); }
+QString  DrSettings::getObjectName() { return m_components[static_cast<long>(Object_Components::settings)]->getProperty(Object_Properties::name)->getValue().toString(); }
+QString  DrSettings::getAssetName() { return m_components[static_cast<long>(Asset_Components::settings)]->getProperty(Asset_Properties::name)->getValue().toString(); }
 
 DrProperty* DrSettings::findPropertyFromPropertyKey(long property_key_to_find)
 {

@@ -52,7 +52,7 @@ enum class Form_Main_Focus {
 //####################################################################################
 //##    Types of objects possible in game
 //####################################################################################
-enum class DrTypes {
+enum class DrType {
     Project,
     World,      Folder,         Variable,
     Scene,      Background,     Foreground,     StartScene,
@@ -69,7 +69,7 @@ enum class DrTypes {
 //####################################################################################
 //##    Types of objects possible in game
 //####################################################################################
-enum class DrAsset_Types {
+enum class DrAsset_Type {
     Character,
     Object,
 };
@@ -128,9 +128,10 @@ typedef enum {
 //####################################################################################
 //##    Some public forward function declarations
 //####################################################################################
-bool        CheckTypesAreSame(DrTypes type1, DrTypes type2);
-bool        IsDrObjectClass(DrTypes type_to_check);
-QString     StringFromType(DrTypes drtype);
+bool        CheckTypesAreSame(DrType type1, DrType type2);
+bool        IsDrObjectClass(DrType type_to_check);
+QString     StringFromType(DrType type);
+QString     StringFromAssetType(DrAsset_Type type);
 
 
 //####################################################################################

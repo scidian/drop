@@ -61,22 +61,6 @@ SceneGraphicsScene::~SceneGraphicsScene()
 
 
 //####################################################################################
-//##        Item Handling
-//####################################################################################
-
-// Adds a square DrItem (QGraphicsItem) to scene
-void SceneGraphicsScene::addSquare(qreal new_x, qreal new_y, double new_width, double new_height, double z_order, QString name, QColor color)
-{
-    DrItem *item;
-    item = new DrItem(color, new_width, new_height, z_order, name);
-
-    setPositionByOrigin(item, item->getOrigin(), new_x, new_y);
-
-    addItem(item);
-}
-
-
-//####################################################################################
 //##        SLOT: sceneChanged
 //####################################################################################
 // Connected from scene().changed, resizes scene when objects are added / subtracted
@@ -145,7 +129,7 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
     list_new_items.clear();
 
     for (auto item : my_scene->getSelectionGroupItems()) {
-        DrItem *new_item;
+    //!!    DrItem *new_item;
         QColor new_color;
         qreal new_x, new_y;
 
@@ -168,16 +152,16 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
             if (event->key() == Qt::Key::Key_S) new_y = new_y + source_rect.height();
             if (event->key() == Qt::Key::Key_D) new_x = new_x + source_rect.width();
 
-            new_item = new DrItem(new_color, item->boundingRect().width(), item->boundingRect().height(),
-                                  this->items().count() + 1, item->data(User_Roles::Name).toString());
-            new_item->setPos(new_x, new_y);
-            new_item->setTransform(item->transform());          // Includes rotation and scaling
+    //!!        new_item = new DrItem(new_color, item->boundingRect().width(), item->boundingRect().height(),
+    //!!                              this->items().count() + 1, item->data(User_Roles::Name).toString());
+    //!!         new_item->setPos(new_x, new_y);
+    //!!        new_item->setTransform(item->transform());          // Includes rotation and scaling
 
-            new_item->setData(User_Roles::Scale, item->data(User_Roles::Scale).toPointF());
-            new_item->setData(User_Roles::Rotation, item->data(User_Roles::Rotation).toDouble());
+    //!!        new_item->setData(User_Roles::Scale, item->data(User_Roles::Scale).toPointF());
+    //!!        new_item->setData(User_Roles::Rotation, item->data(User_Roles::Rotation).toDouble());
 
-            addItem(new_item);
-            list_new_items.append(new_item);
+    //!!        addItem(new_item);
+    //!!        list_new_items.append(new_item);
             break;
 
         // Delete selected items
