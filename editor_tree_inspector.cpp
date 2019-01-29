@@ -183,12 +183,15 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
                                                                                this, category_item, property_item, properties_frame);
         category_button->setAdvisorHeaderText(component_map.second->getDisplayName());
         category_button->setAdvisorBodyText(component_map.second->getDescription());
-        QString buttonColor = QString(" QPushButton { height: 24px; font: 13px; text-align: left; icon-size: 20px 16px; color: #000000; "
-                                                    " border: none; border-radius: 0px; background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 " +
-                                                    component_map.second->getColor().name() + ", stop:1 " +
-                                                    component_map.second->getColor().darker(250).name() + "); } "
-                                      " QPushButton:hover:!pressed { color: #FFFFFF; } "
-                                      " QPushButton:pressed { color: #333333; }");
+        QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: #000000; "
+                                                    " border: 2px solid; "
+                                                    " border-color: " + component_map.second->getColor().darker(250).name() + "; "
+                                                    " border-radius: 1px; "
+                                                    " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 " +
+                                                        component_map.second->getColor().name() + ", stop:1 " +
+                                                        component_map.second->getColor().darker(250).name() + "); } "
+                                      " QPushButton:hover:!pressed { color: " + component_map.second->getColor().lighter(200).name() + "; } "
+                                      " QPushButton:pressed { color: " + component_map.second->getColor().darker(400).name() + "; } ");
         category_button->setIcon(QIcon(component_map.second->getIcon()));
         category_button->setStyleSheet(buttonColor);
 

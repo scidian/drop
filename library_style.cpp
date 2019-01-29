@@ -145,7 +145,8 @@ void ApplyColoring(QWidget *widget)
 
         // Dock Widgets
         //" QDockWidget { titlebar-close-icon: url(close.png); } "
-        " QDockWidget { font-size: " + QString::number(Dr::FontSize()) + "px; color: " + Dr::GetColor(Window_Colors::Text).name() + "; } "
+        " QDockWidget { font-size: " + QString::number(Dr::FontSize()) + "px; font: bold; "
+        "               color: " + Dr::GetColor(Window_Colors::Text).name() + "; } "
         " QDockWidget::title { text-align: center; "
         "       background: qlineargradient(x1:0 y1:0, x2:0 y2:1, "
         "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Light).name() + ", "
