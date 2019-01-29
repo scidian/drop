@@ -64,6 +64,7 @@ public:
 
     // Selection Functions
     void            addItemToSelectionGroup(QGraphicsItem *item);
+    void            createSelectionGroup();
     void            emptySelectionGroup(bool delete_items_during_empty = false);
     QGraphicsItem*  getItemAtPosition(QPointF position);
     void            resetSelectionGroup();

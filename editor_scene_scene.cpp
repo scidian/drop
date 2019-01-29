@@ -31,14 +31,7 @@ SceneGraphicsScene::SceneGraphicsScene(QWidget *parent, DrProject *project, Inte
 {
     connect(this, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
 
-    m_selection_group = new SelectionGroup(this);
-    m_selection_group->setFlags(QGraphicsItem::ItemIsSelectable |
-                                QGraphicsItem::ItemIsMovable |
-                                QGraphicsItem::ItemSendsScenePositionChanges |
-                                QGraphicsItem::ItemSendsGeometryChanges);
-    addItem(m_selection_group);
-    emptySelectionGroup();
-    m_selection_group->setData(User_Roles::Name, "Captain");
+    createSelectionGroup();
 
     m_undo = new QUndoStack(this);
 
@@ -58,6 +51,15 @@ SceneGraphicsScene::~SceneGraphicsScene()
 
 }
 
+void SceneGraphicsScene::createSelectionGroup()
+{
+    m_selection_group = new SelectionGroup(this);
+    m_selection_group->setFlags(QGraphicsItem::ItemIsSelectable |               QGraphicsItem::ItemIsMovable |
+                                QGraphicsItem::ItemSendsScenePositionChanges |  QGraphicsItem::ItemSendsGeometryChanges);
+    addItem(m_selection_group);
+    emptySelectionGroup();
+    m_selection_group->setData(User_Roles::Name, "Captain");
+}
 
 
 //####################################################################################

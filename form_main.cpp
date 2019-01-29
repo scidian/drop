@@ -54,6 +54,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     long asset_2 = project->addAsset("Ground Fill",  DrAsset_Type::Object, QPixmap(":/assets/ground_fill.png"));
     long asset_3 = project->addAsset("Ground Top",   DrAsset_Type::Object, QPixmap(":/assets/ground_top.png"));
     long asset_4 = project->addAsset("Moon Plant 6", DrAsset_Type::Object, QPixmap(":/assets/moon_plant_6.png"));
+    long asset_5 = project->addAsset("Rover Body",   DrAsset_Type::Object, QPixmap(":/assets/rover_body.png"));
     // !!!!! END
 
 
@@ -73,19 +74,23 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_2, 250, -200);
     project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_3, -200, 200);
     project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_4, 100, 100);
+    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_5, -150, 0);
+
+    project->getWorldWithName("World 2")->getSceneWithName("2")->addObject(DrType::Object, asset_5, 100, 100);
     // !!!!! END
 
-
-    // !!!!! #TEMP: call to populate Graphics Scene (currently does a couple squares)
-    populateScene( project->getWorldWithName("World 2")->getSceneWithName("4")->getKey() );
-    // !!!!! END
 
 
     // ########## Initialize form and customize colors and styles
+    scene = new SceneGraphicsScene(this, project, this);
     buildMenu();
     buildWindow(Form_Main_Mode::Edit_Scene);
     Dr::ApplyColoring(this);
 
+
+
+    // ########## Populates SceneGraphicsScene from current DrScene
+    populateScene( project->getWorldWithName("World 2")->getSceneWithName("4")->getKey() );
 
 
 
@@ -154,21 +159,27 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
 }
 
 
-void FormMain::populateScene(long new_key)
+void FormMain::populateScene(long from_scene_key)
 {
-    scene = new SceneGraphicsScene(this, project, this);
+    DrScene *from_scene = project->findSceneFromKey(from_scene_key);
 
-    DrScene *my_scene = project->findSceneFromKey(new_key);
+    if (from_scene == nullptr) return;
+
+    scene->clear();
+    scene->createSelectionGroup();
+
     int z_order = 0;
-    for (auto object : my_scene->getObjectMap()) {
+    for (auto object : from_scene->getObjectMap()) {
 
-        DrItem *item = new DrItem(project, my_scene, object.first, z_order);
+        DrItem *item = new DrItem(project, from_scene, object.first, z_order);
         scene->setPositionByOrigin(item, item->getOrigin(), item->startX(), item->startY());
         scene->addItem(item);
 
         z_order++;
     }
 
+    scene->update();
+    viewMain->update();
 }
 
 

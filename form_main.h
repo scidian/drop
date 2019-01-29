@@ -102,7 +102,7 @@ public:
     // Member functions
     virtual void    buildObjectInspector(QList<long> key_list);
     virtual void    buildTreeSceneList();
-    virtual void    populateScene(long new_key);
+    virtual void    populateScene(long from_scene_key);
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list);
     virtual void    setAdvisorInfo(QString header, QString body);
     virtual void    setLabelText(Label_Names label_name, QString new_text);

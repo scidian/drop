@@ -225,11 +225,7 @@ void TreeScene::selectionChanged (const QItemSelection &selected, const QItemSel
         // Call to outside function to rebuild object inspector:
         m_relay->buildObjectInspector(QList<long> { selected_key });
 
-        ////!!!!!!!!!!
-        ////!!!!!!!!!!
-///////!!!!!!!!!!! add new scene click here
-        ////!!!!!!!!!!
-        ////!!!!!!!!!!
+        m_relay->populateScene(selected_key);
 
         //******************************************************
 

@@ -40,5 +40,6 @@
         <file>assets/ground_top.png</file>
         <file>assets/moon_plant_6.png</file>
         <file>assets/test_square.png</file>
+        <file>assets/rover_body.png</file>
     </qresource>
 </RCC>
