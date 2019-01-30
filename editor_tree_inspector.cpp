@@ -11,6 +11,7 @@
 #include "library.h"
 
 #include "project.h"
+#include "project_asset.h"
 #include "project_world.h"
 #include "project_world_scene.h"
 #include "project_world_scene_object.h"
@@ -78,8 +79,18 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     // !!!!! #DEBUG:    Show selected item key and info
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Object_Inspector_Build)) {
         m_relay->setLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( selected_key ) + ", TYPE: " + type_string);
-        m_relay->setLabelText(Label_Names::Label_Object_2, "");
-        m_relay->setLabelText(Label_Names::Label_Object_3, "");
+
+        if (IsDrObjectClass(selected_type)) {
+            DrObject* object = dynamic_cast<DrObject*>(m_project->findChildSettingsFromKey(selected_key));
+            long asset_key = object->getAssetKey();
+            QString asset_name = m_project->findChildSettingsFromKey(asset_key)->getAssetName();
+
+            m_relay->setLabelText(Label_Names::Label_Object_2, "ASSET KEY:  " + QString::number(asset_key));
+            m_relay->setLabelText(Label_Names::Label_Object_3, "ASSET NAME: " + asset_name);
+        } else {
+            m_relay->setLabelText(Label_Names::Label_Object_2, "");
+            m_relay->setLabelText(Label_Names::Label_Object_3, "");
+        }
     }
     // !!!!! END
 

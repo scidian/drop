@@ -6,6 +6,8 @@
 //
 //
 
+#include "library.h"
+
 #include "project.h"
 #include "project_asset.h"
 #include "project_world.h"
@@ -15,10 +17,9 @@
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrProject::DrProject(long child_key_generator_starting_number, long asset_key_generator_starting_number)
+DrProject::DrProject(long key_generator_starting_number)
 {
-    m_child_key_generator = child_key_generator_starting_number;
-    m_asset_key_generator = asset_key_generator_starting_number;
+    m_key_generator = key_generator_starting_number;
 }
 
 DrProject::~DrProject()
@@ -34,7 +35,7 @@ DrProject::~DrProject()
 
 long DrProject::addAsset(QString new_asset_name, DrAsset_Type new_asset_type, QPixmap pixmap)
 {
-    long new_asset_key = getNextAssetKey();
+    long new_asset_key = getNextKey();
     m_assets[new_asset_key] = new DrAsset(this, new_asset_key, new_asset_name, new_asset_type, pixmap);
     return new_asset_key;
 }
@@ -49,7 +50,7 @@ void DrProject::addWorld()
         new_name = "World " + QString::number(test_num);
     } while (getWorldWithName(new_name) != nullptr);
 
-    long new_world_key = getNextChildKey();
+    long new_world_key = getNextKey();
     m_worlds[new_world_key] = new DrWorld(this, new_world_key, new_name);
 }
 
@@ -74,8 +75,8 @@ DrWorld* DrProject::getWorldWithName(QString world_name)
 
 DrScene* DrProject::findSceneFromKey(long key)
 {
-    for (auto i: m_worlds) {
-        for (auto j: i.second->getSceneMap()) {
+    for (auto i : m_worlds) {
+        for (auto j : i.second->getSceneMap()) {
             if (j.second->getKey() == key) { return j.second; }
         }
     }
@@ -85,13 +86,17 @@ DrScene* DrProject::findSceneFromKey(long key)
 // Returns a pointer to the Base DrSettings class of the object with the specified key
 DrSettings* DrProject::findChildSettingsFromKey(long check_key)
 {
-    for (auto i: m_worlds) {
+    for (auto i : m_assets) {
+        if (i.second->getKey() == check_key) { return i.second->getSettings(); }
+    }
+
+    for (auto i : m_worlds) {
         if (i.second->getKey() == check_key) { return i.second->getSettings(); }
 
-        for (auto j: i.second->getSceneMap()) {
+        for (auto j : i.second->getSceneMap()) {
             if (j.second->getKey() == check_key) { return j.second->getSettings(); }
 
-            for (auto k: j.second->getObjectMap()) {
+            for (auto k : j.second->getObjectMap()) {
                 if (k.second->getKey() == check_key) { return k.second->getSettings(); }
 
                 //************* More types implemented
@@ -99,6 +104,8 @@ DrSettings* DrProject::findChildSettingsFromKey(long check_key)
             }
         }
     }
+
+    Dr::ShowMessageBox("WARNING: Did not find key in project (from 'DrProject::findChildSettingsFromKey')...");
     return nullptr;
 }
 

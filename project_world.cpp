@@ -40,7 +40,7 @@ void DrWorld::addScene(QString new_scene_name)
         new_scene_name = QString::number(static_cast<long>(m_scenes.size() + 1));
     }
 
-    long new_scene_key = m_parent_project->getNextChildKey();
+    long new_scene_key = m_parent_project->getNextKey();
     bool need_start_scene = false;
     if (m_scenes.size() < 1) {
         need_start_scene = true;

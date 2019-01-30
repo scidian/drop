@@ -55,9 +55,27 @@ void DrScene::addObject(DrType new_type, long from_asset_key, double x, double y
         new_name = "Fix me";
     }
 
-    long new_object_key = m_parent_project->getNextChildKey();
+    long new_object_key = m_parent_project->getNextKey();
     m_objects[new_object_key] = new DrObject(m_parent_project, m_parent_world, this, new_object_key,
-                                             new_name, new_type, from_asset_key, x, y);
+                                             new_name, new_type, from_asset_key, x, y, static_cast<long>(m_objects.size()) + 1);
+}
+
+// Returns a list of object keys contained in scene, sorted from high z value to low
+QList<long> DrScene::objectKeysSortedByZOrder()
+{
+    std::vector<std::pair<long, long>> zorder_key_pair;
+
+    for (auto object : m_objects)
+        zorder_key_pair.push_back(std::make_pair(object.second->getZOrder(), object.first));
+
+    std::sort(zorder_key_pair.begin(), zorder_key_pair.end());
+
+    QList<long> z_ordered_keys;
+
+    for (auto one_pair : zorder_key_pair)
+        z_ordered_keys.push_front(one_pair.second);
+
+    return z_ordered_keys;
 }
 
 

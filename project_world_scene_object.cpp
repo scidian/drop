@@ -20,7 +20,7 @@
 //####################################################################################
 DrObject::DrObject(DrProject *parent_project, DrWorld *parent_world, DrScene *parent_scene,
                    long new_object_key, QString new_object_name, DrType new_object_type,
-                   long from_asset_key, double x, double y)
+                   long from_asset_key, double x, double y, long z_order)
 {
     m_parent_project = parent_project;              // pointer to parent Project
     m_parent_world = parent_world;                  // pointer to parent World
@@ -30,6 +30,7 @@ DrObject::DrObject(DrProject *parent_project, DrWorld *parent_world, DrScene *pa
 
     m_object_type = new_object_type;                // assign object type
     m_asset_key = from_asset_key;                   // associated asset key
+    m_z_order = z_order;
 
     // Call to load in all the components / properties for this Scene object
     initializeObjectSettings(new_object_name, x, y);

@@ -29,20 +29,16 @@ private:
     WorldMap    m_worlds;                               // Holds worlds for the project
     AssetMap    m_assets;                               // Holds assets for the project
 
-    long        m_child_key_generator;                  // variable to hand out unique id key's to all children objects
-    long        m_asset_key_generator;                  // variable to hand out unique id key's to all project assets
+    long        m_key_generator;                        // variable to hand out unique id key's to all children objects
 
 public:
     // Constructor & destructor
-    DrProject(long key_generator_starting_number = 0, long asset_key_generator_starting_number = 0);
+    DrProject(long key_generator_starting_number = 0);
     ~DrProject();
 
     // Getters and Setters
-    long        getNextChildKey()   { return m_child_key_generator++; }
-    void        setChildKeyGeneratorStartNumber(long initial_key) { m_child_key_generator = initial_key; }
-
-    long        getNextAssetKey()   { return m_asset_key_generator++; }
-    void        setAssetKeyGeneratorStartNumber(long initial_key) { m_asset_key_generator = initial_key; }
+    long        getNextKey()   { return m_key_generator++; }
+    void        setKeyGeneratorStartNumber(long initial_key) { m_key_generator = initial_key; }
 
     DrAsset*    getAsset(long key)  { return m_assets[key]; }
     AssetMap    getAssets()         { return m_assets; }

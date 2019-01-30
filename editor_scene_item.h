@@ -24,8 +24,6 @@ class DrScene;
 class DrItem : public QGraphicsPixmapItem
 {
 private:
-    QPixmap         m_pixmap;
-
     double          m_width;
     double          m_height;
 
@@ -38,7 +36,7 @@ public:
 
     // Base Getter Overrides
     virtual QRectF          boundingRect() const override;
-//    virtual QPainterPath    shape() const override;
+    virtual QPainterPath    shape() const override;
     virtual int             type() const override;
 
     // Event Overrides
@@ -51,7 +49,8 @@ public:
 
     // Getters and Setters
     Position_Flags          getOrigin() { return m_origin; }
-    QColor                  getColorAtPoint(QPointF at_point);
+    QColor                  getColorAtPoint(QPointF at_local_point);
+    QColor                  getColorAtPoint(QPointF at_view_point, QGraphicsView *mouse_over_view);
 
     double                  startX() { return m_start_x; }
     double                  startY() { return m_start_y; }

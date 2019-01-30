@@ -33,11 +33,12 @@ private:
 
     long        m_asset_key;                                // holds the associated asset key, this way we know what image to grab for GraphicsView
 
+    long        m_z_order;                                  // keeps track of the order of this item in its container
 
 public:
     // Constructor & destructor
     explicit DrObject(DrProject *parent_project, DrWorld *parent_world, DrScene *parent_scene, long new_object_key,
-                      QString new_object_name, DrType new_object_type, long from_asset_key, double x, double y);
+                      QString new_object_name, DrType new_object_type, long from_asset_key, double x, double y, long z_order);
     virtual ~DrObject() override;
 
 
@@ -47,6 +48,7 @@ public:
     DrWorld*        getParentWorld()    { return m_parent_world; }
     DrScene*        getParentScene()    { return m_parent_scene; }
     long            getAssetKey()       { return m_asset_key; }
+    long            getZOrder()         { return m_z_order; }
 
     // External calls
     void initializeObjectSettings(QString new_name, double x, double y);

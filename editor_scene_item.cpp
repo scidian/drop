@@ -47,8 +47,6 @@ DrItem::DrItem(DrProject *project, DrScene *scene, long object_key, double z_ord
     ///QPixmap pix;
     ///pix.loadFromData(byte_array, "PNG");
 
-    m_pixmap = prop->getValue().value<QPixmap>();
-
     setFlags(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable |
              QGraphicsItem::GraphicsItemFlag::ItemIsMovable |
              QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges |
@@ -61,7 +59,7 @@ DrItem::DrItem(DrProject *project, DrScene *scene, long object_key, double z_ord
     setData(User_Roles::Name, project->getAsset( scene->getObject(object_key)->getAssetKey() )->getAssetName() );
 
     setShapeMode(QGraphicsPixmapItem::MaskShape);
-    setPixmap(m_pixmap);
+    setPixmap(prop->getValue().value<QPixmap>());
 
 }                                     
 
@@ -77,12 +75,13 @@ QRectF DrItem::boundingRect() const
 }
 
 // Seems to define mouseOver events, and intersection events for Rubber Band Box
-//QPainterPath DrItem::shape() const
-//{
-//    QPainterPath path;
-//    path.addRect(0, 0, m_width, m_height);
-//    return path;
-//}
+QPainterPath DrItem::shape() const
+{
+    ///QPainterPath path;
+    ///path.addRect(0, 0, m_width, m_height);
+    ///return path;
+    return QGraphicsPixmapItem::shape();
+}
 
 // Enable the use of qgraphicsitem_cast with this item
 int DrItem::type() const
@@ -113,7 +112,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
         ///setData(User_Roles::Rotation, angle);
     }
 
-    return QGraphicsItem::itemChange(change, value);
+    return QGraphicsPixmapItem::itemChange(change, value);
 }
 
 
@@ -122,30 +121,34 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 //####################################################################################
 void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-//    Q_UNUSED(widget);
-//    Q_UNUSED(option);
+    ///if (option->state & QStyle::State_Selected)  { fillColor = QColor(Qt::red); } //m_color.dark(150); }              // If selected
+    ///if (option->state & QStyle::State_MouseOver) { fillColor = QColor(Qt::gray); } //fillColor.light(125); }          // If mouse is over
+    ///if (option->state & QStyle::State_MouseOver && option->state & QStyle::State_Selected) { fillColor = QColor(Qt::red).darker(200); }
 
-//    ///if (option->state & QStyle::State_Selected)  { fillColor = QColor(Qt::red); } //m_color.dark(150); }              // If selected
-//    ///if (option->state & QStyle::State_MouseOver) { fillColor = QColor(Qt::gray); } //fillColor.light(125); }          // If mouse is over
-//    ///if (option->state & QStyle::State_MouseOver && option->state & QStyle::State_Selected) { fillColor = QColor(Qt::red).darker(200); }
-//    ///painter->fillRect(QRectF(0, 0, m_width, m_height), fillColor);
-//    ///painter->fillRect(QRectF(0, 0, m_width / 2, m_height / 2), fillColor.dark(250));
+    ///painter->fillRect(QRectF(0, 0, m_width, m_height), fillColor);
+    ///painter->fillRect(QRectF(0, 0, m_width / 2, m_height / 2), fillColor.dark(250));
 
-//    painter->drawPixmap(0, 0, m_pixmap);
+    ///painter->drawPixmap(0, 0, pixmap());
 
     QGraphicsPixmapItem::paint(painter, option, widget);
-
 }
 
 
-QColor DrItem::getColorAtPoint(QPointF at_point)
+QColor DrItem::getColorAtPoint(QPointF at_local_point)
 {
-    QImage image = m_pixmap.toImage();
+    QImage image = this->pixmap().toImage();
 
-    if (image.rect().contains(at_point.toPoint()))
-        return image.pixelColor(at_point.toPoint());
+    if (image.rect().contains(at_local_point.toPoint()))
+        return image.pixelColor(at_local_point.toPoint());
     else
         return QColor(0, 0, 0, 0);
+}
+
+QColor DrItem::getColorAtPoint(QPointF at_view_point, QGraphicsView *mouse_over_view)
+{
+    QPointF in_scene = mouse_over_view->mapToScene(at_view_point.toPoint());
+    QPointF in_object = this->mapFromScene(in_scene);
+    return this->getColorAtPoint(in_object);
 }
 
 

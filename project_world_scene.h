@@ -47,10 +47,9 @@ public:
     DrObject*       getObject(long key) { return m_objects[key]; }
 
     // External calls
-    void addObject(DrType new_type, long from_asset_key, double x, double y);
-
-    void initializeSceneSettings(QString new_name);
-
+    void            addObject(DrType new_type, long from_asset_key, double x, double y);
+    QList<long>     objectKeysSortedByZOrder();
+    void            initializeSceneSettings(QString new_name);
 
 };
 

@@ -28,40 +28,44 @@ void TreeScene::populateTreeSceneList()
 
     for (auto world_pair: m_project->getWorlds())
     {
-        QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(this);                                      // Create new item (top level item)
+        QTreeWidgetItem *world_item = new QTreeWidgetItem(this);                                            // Create new item (top level item)
 
-        topLevelItem->setIcon(0, QIcon(":/tree_icons/tree_world.png"));                                 // Loads icon for world
-        topLevelItem->setText(0, "World: " + world_pair.second->getComponentPropertyValue(
-                                 World_Components::settings, World_Properties::name).toString());       // Set text for item
-        topLevelItem->setData(0, User_Roles::Key, QVariant::fromValue(world_pair.second->getKey()));
-        this->addTopLevelItem(topLevelItem);                                                            // Add it on our tree as the top item.
+        world_item->setIcon(0, QIcon(":/tree_icons/tree_world.png"));                                       // Loads icon for world
+        world_item->setText(0, "World: " + world_pair.second->getComponentPropertyValue(
+                               World_Components::settings, World_Properties::name).toString());             // Set text for item
+        world_item->setData(0, User_Roles::Key, QVariant::fromValue(world_pair.second->getKey()));
+        this->addTopLevelItem(world_item);                                                                  // Add it on our tree as the top item.
 
         for (auto scene_pair: world_pair.second->getSceneMap())
         {
-            QTreeWidgetItem *sub_item = new QTreeWidgetItem(topLevelItem);                              // Create new item and add as child item
-            sub_item->setIcon(0, QIcon(":/tree_icons/tree_scene.png"));                                 // Loads icon for scene
-            sub_item->setText(0, "Scene: " + scene_pair.second->getComponentPropertyValue(
-                                 Scene_Components::settings, Scene_Properties::name).toString());       // Set text for item
-            sub_item->setData(0, User_Roles::Key, QVariant::fromValue(scene_pair.second->getKey()));
+            QTreeWidgetItem *scene_item = new QTreeWidgetItem(world_item);                                  // Create new item and add as child item
+            scene_item->setIcon(0, QIcon(":/tree_icons/tree_scene.png"));                                   // Loads icon for scene
+            scene_item->setText(0, "Scene: " + scene_pair.second->getComponentPropertyValue(
+                                   Scene_Components::settings, Scene_Properties::name).toString());         // Set text for item
+            scene_item->setData(0, User_Roles::Key, QVariant::fromValue(scene_pair.second->getKey()));
 
-            for (auto object_pair: scene_pair.second->getObjectMap())
+
+            // ***** Iterates through objects based on z-order of each object
+            ObjectMap   objects = scene_pair.second->getObjectMap();
+            QList<long> keys = scene_pair.second->objectKeysSortedByZOrder();
+            for (auto key: keys)
             {
-                QTreeWidgetItem *sub_sub_item = new QTreeWidgetItem(sub_item);                                      // Create new item and add as child item
-                switch (object_pair.second->getType())
+                DrObject *object = objects[key];
+
+                QTreeWidgetItem *object_item = new QTreeWidgetItem(scene_item);                             // Create new item and add as child item
+                switch (object->getType())
                 {
-                    case DrType::Object:    sub_sub_item->setIcon(0, QIcon(":/tree_icons/tree_object.png")); break;
-                    case DrType::Camera:    sub_sub_item->setIcon(0, QIcon(":/tree_icons/tree_camera.png")); break;
-                    case DrType::Character: sub_sub_item->setIcon(0, QIcon(":/tree_icons/tree_character.png")); break;
+                    case DrType::Object:    object_item->setIcon(0, QIcon(":/tree_icons/tree_object.png")); break;
+                    case DrType::Camera:    object_item->setIcon(0, QIcon(":/tree_icons/tree_camera.png")); break;
+                    case DrType::Character: object_item->setIcon(0, QIcon(":/tree_icons/tree_character.png")); break;
                     default: break;
                 }
 
-                sub_sub_item->setText(0, object_pair.second->getComponentPropertyValue(
-                                         Object_Components::settings, Object_Properties::name).toString());         // Set text for item
-                sub_sub_item->setData(0, User_Roles::Key, QVariant::fromValue(object_pair.second->getKey()));       // Store item key in user data
+                object_item->setText(0, object->getComponentPropertyValue(
+                                        Object_Components::settings, Object_Properties::name).toString());          // Set text for item
+                object_item->setData(0, User_Roles::Key, QVariant::fromValue(object->getKey()));        // Store item key in user data
 
-
-
-                sub_item->addChild(sub_sub_item);
+                scene_item->addChild(object_item);
 
                 // Add lock box
                 QString check_images = QString(" QCheckBox::indicator { width: 12px; height: 12px; }"
@@ -70,7 +74,7 @@ void TreeScene::populateTreeSceneList()
                 QCheckBox *lock_item = new QCheckBox();
                 lock_item->setFocusPolicy(Qt::FocusPolicy::NoFocus);
                 lock_item->setStyleSheet(check_images);
-                this->setItemWidget(sub_sub_item, 1, lock_item);
+                this->setItemWidget(object_item, 1, lock_item);
 
             }
         }

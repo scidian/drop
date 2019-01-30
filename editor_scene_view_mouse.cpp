@@ -64,6 +64,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
             if (my_scene->getSelectionGroupCount() > 0) {
                 // ******************* If clicked while holding Alt key start rotating
                 if (event->modifiers() & Qt::KeyboardModifier::AltModifier || m_over_handle == Position_Flags::Rotate) {
+                    m_view_mode = View_Mode::Rotating;
                     startRotate(m_origin);
                     my_scene->scene_mutex.unlock();
                     return;
@@ -71,6 +72,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
                 // ******************* If clicked while in a Size Grip Handle start resizing
                 if (m_over_handle != Position_Flags::No_Position && m_over_handle != Position_Flags::Move_Item) {
+                    m_view_mode = View_Mode::Resizing;
                     startResize(m_origin);
                     my_scene->scene_mutex.unlock();
                     return;
@@ -148,9 +150,9 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
             // ******************* If theres no item under mouse, start selection box
             if (m_origin_item == nullptr) {
-                if ((event->modifiers() & Qt::KeyboardModifier::ControlModifier) == false)
-                    my_scene->emptySelectionGroup();
-                m_view_mode = View_Mode::Selecting;                                     // Flag that we're in selection mode
+                m_view_mode = View_Mode::Selecting;
+                startSelect(event);
+                processSelection(event->pos());
                 my_scene->scene_mutex.unlock();
                 return;
             }
@@ -192,30 +194,17 @@ QGraphicsItem* SceneGraphicsView::itemOnTopAtPosition(QPoint check_point)
     // Make a list of all items at point excluding selection group
     for (auto item : items(check_point))
         if (item != selection) {
+            possible_items.append(item);
 
-            ///// If we have an item selected don't worry about transparent space
-            ///if (my_scene->getSelectionGroupItems().contains(item)) {
-               possible_items.append(item);
-
-            // If no items are selected lets grab the item that the user sees
-            ///} else {
-//                DrItem *dritem = dynamic_cast<DrItem*>(item);
-//                QPointF in_scene = mapToScene(check_point);
-//                QPointF in_object = dritem->mapFromScene(in_scene);
-//                QColor pixel_color = dritem->getColorAtPoint(in_object);
-
-//                if (pixel_color.alpha() > 0)
-//                    possible_items.append(item);
-
-//                // !!!!! DEBUG: Shows red, green, blue and alpha of pixel under mouse
-//                if (Dr::CheckDebugFlag(Debug_Flags::Label_Top_Item_RGBA)) {
-//                    Dr::SetLabelText(Label_Names::Label_1, "R: " + QString::number(pixel_color.red()) +
-//                                                           "G: " + QString::number(pixel_color.green()) +
-//                                                           "B: " + QString::number(pixel_color.blue()) );
-//                    Dr::SetLabelText(Label_Names::Label_2, "Aplha: " + QString::number(pixel_color.alpha()) );
-//                }
-//                // !!!!! END
-            ///}
+            // !!!!! DEBUG: Shows red, green, blue and alpha of pixel under mouse
+            if (Dr::CheckDebugFlag(Debug_Flags::Label_Top_Item_RGBA)) {
+                QColor pixel_color = dynamic_cast<DrItem*>(item)->getColorAtPoint(check_point, this);
+                Dr::SetLabelText(Label_Names::Label_1, "R: " + QString::number(pixel_color.red()) +
+                                                       "G: " + QString::number(pixel_color.green()) +
+                                                       "B: " + QString::number(pixel_color.blue()) );
+                Dr::SetLabelText(Label_Names::Label_2, "Aplha: " + QString::number(pixel_color.alpha()) );
+            }
+            // !!!!! END
         }
 
     // If no items at position, exit
@@ -249,7 +238,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
     if (m_allow_movement == false) {
         if (m_origin_timer.elapsed() > 200) {
             m_allow_movement = true;
-        } else if (QLineF(m_origin, m_last_mouse_pos).length() > 2) {
+        } else if (QPoint(m_origin - m_last_mouse_pos).manhattanLength() > 2) {
             m_allow_movement = true;
         }
     }
@@ -376,13 +365,8 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
 
     // ******************* If we're in selection mode, process mouse movement and resize box as needed
-   if (m_view_mode == View_Mode::Selecting) {
-        if (m_allow_movement) {
-            if (m_rubber_band->isHidden())
-                startSelect(event);
-            processSelection(event->pos());
-        }
-   }
+   if (m_view_mode == View_Mode::Selecting)
+        processSelection(event->pos());
 
     // ******************* If mouse moved while over Size Grip, resize
     if (m_view_mode == View_Mode::Resizing)
