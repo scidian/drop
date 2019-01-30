@@ -94,13 +94,16 @@ void TreeAssetList::buildAssetList()
 
         QPixmap pix = asset_pair.second->getComponentProperty(Asset_Components::animation, Asset_Properties::animation_default)->getValue().value<QPixmap>();
         QLabel *pix_label = new QLabel();
+        pix_label->setObjectName("assetFrame");
         pix_label->setFont(fp);
-        pix_label->setSizePolicy(sp_left);
-        pix_label->setGeometry(0, 0, 100, 50);
+        pix_label->setSizePolicy(sp_right);
+        pix_label->setMinimumHeight(60);
+        pix_label->setMaximumHeight(60);
+        pix_label->setAlignment(Qt::AlignmentFlag::AlignCenter);
         horizontal_split->addWidget( pix_label );
 
         // Draw pixmap onto label
-        pix_label->setPixmap(pix.scaled(60, 60, Qt::KeepAspectRatio));
+        pix_label->setPixmap(pix.scaled(90, 45, Qt::KeepAspectRatio));
 
         // Create a child TreeWidgetItem attached to the TopLevel category item
         QTreeWidgetItem *property_item = new QTreeWidgetItem();

@@ -235,6 +235,9 @@ void ApplyColoring(QWidget *widget)
         "       border-bottom-right-radius: 0px;  "
         "       border-bottom-left-radius: 0px; } "
 
+        " QLabel#assetFrame { border: 2px solid #777777; "
+        "       padding: 2px; margin: 4px; "
+        "       border-radius: 6px; } "
 
     );
 
