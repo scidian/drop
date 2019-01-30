@@ -271,20 +271,19 @@ void SceneTreeHighlightProxy::drawPrimitive(PrimitiveElement element, const QSty
     if (element == QStyle::PE_IndicatorItemViewItemDrop) {
         if (!m_parent_tree->canWeDrop()) { return; }
 
-        painter->setRenderHint(QPainter::Antialiasing, true);
-
         QPalette palette;
         QPen    pen(QColor(0, 180, 175, 200));
         QBrush  brush(QColor(0, 180, 175, 50));
+
         pen.setWidth(2);
         painter->setPen(pen);
         painter->setBrush(brush);
 
         if(option->rect.height() == 0) {
-            //painter->drawEllipse(option->rect.topLeft(), 3, 3);
+
             painter->drawLine(QPoint(0, option->rect.top()), QPoint(option->rect.right() + 50, option->rect.top()));
         } else {
-            //painter->drawRoundedRect(option->rect, 5, 5);
+
             painter->drawLine(QPoint(0, option->rect.top()), QPoint(option->rect.right() + 50, option->rect.top()));
         }
 

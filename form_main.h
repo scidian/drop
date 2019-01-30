@@ -100,6 +100,7 @@ public:
     ~FormMain();
 
     // Member functions
+    virtual void    buildAssetList();
     virtual void    buildObjectInspector(QList<long> key_list);
     virtual void    buildTreeSceneList();
     virtual void    populateScene(long from_scene_key);

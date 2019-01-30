@@ -23,6 +23,7 @@ public:
     InterfaceRelay() { }
     virtual ~InterfaceRelay();
 
+    virtual void    buildAssetList() = 0;
     virtual void    buildObjectInspector(QList<long> key_list) = 0;
     virtual void    buildTreeSceneList() = 0;
 

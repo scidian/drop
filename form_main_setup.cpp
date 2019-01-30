@@ -30,6 +30,7 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
     {
     case Form_Main_Mode::Edit_Scene:
         buildWindowModeEditScene();
+        buildAssetList();
         buildTreeSceneList();
         viewMain->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
         current_focus = Form_Main_Focus::Scene_View;

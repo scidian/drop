@@ -99,6 +99,10 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 
 
 
+void FormMain::buildAssetList() {
+    treeAsset->buildAssetList();
+}
+
 // Sends new list to Object Inspector
 void FormMain::buildObjectInspector(QList<long> key_list) {
     treeInspector->buildInspectorFromKeys(key_list);

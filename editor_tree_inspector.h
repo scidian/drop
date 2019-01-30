@@ -31,8 +31,8 @@ enum class Spin_Type {
 
 
 // Class constants
-const int   SIZE_LEFT =  3;                             // Size policy width of left column
-const int   SIZE_RIGHT = 5;                             // Size policy width of right column
+const int   INSPECTOR_SIZE_LEFT =  3;                             // Size policy width of left column
+const int   INSPECTOR_SIZE_RIGHT = 5;                             // Size policy width of right column
 
 
 //####################################################################################
