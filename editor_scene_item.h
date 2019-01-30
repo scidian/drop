@@ -21,7 +21,7 @@ class DrScene;
 //##    DrItem
 //##        A QGraphicsItem for use with our custom QGraphicsScene
 //############################
-class DrItem : public QGraphicsItem
+class DrItem : public QGraphicsPixmapItem
 {
 private:
     QPixmap         m_pixmap;
@@ -38,7 +38,7 @@ public:
 
     // Base Getter Overrides
     virtual QRectF          boundingRect() const override;
-    virtual QPainterPath    shape() const override;
+//    virtual QPainterPath    shape() const override;
     virtual int             type() const override;
 
     // Event Overrides

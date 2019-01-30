@@ -60,6 +60,9 @@ DrItem::DrItem(DrProject *project, DrScene *scene, long object_key, double z_ord
     setData(User_Roles::Scale, QPointF(1, 1));
     setData(User_Roles::Name, project->getAsset( scene->getObject(object_key)->getAssetKey() )->getAssetName() );
 
+    setShapeMode(QGraphicsPixmapItem::MaskShape);
+    setPixmap(m_pixmap);
+
 }                                     
 
 
@@ -74,12 +77,12 @@ QRectF DrItem::boundingRect() const
 }
 
 // Seems to define mouseOver events, and intersection events for Rubber Band Box
-QPainterPath DrItem::shape() const
-{
-    QPainterPath path;
-    path.addRect(0, 0, m_width, m_height);
-    return path;
-}
+//QPainterPath DrItem::shape() const
+//{
+//    QPainterPath path;
+//    path.addRect(0, 0, m_width, m_height);
+//    return path;
+//}
 
 // Enable the use of qgraphicsitem_cast with this item
 int DrItem::type() const
@@ -119,16 +122,19 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 //####################################################################################
 void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    Q_UNUSED(widget);
-    Q_UNUSED(option);
+//    Q_UNUSED(widget);
+//    Q_UNUSED(option);
 
-    ///if (option->state & QStyle::State_Selected)  { fillColor = QColor(Qt::red); } //m_color.dark(150); }              // If selected
-    ///if (option->state & QStyle::State_MouseOver) { fillColor = QColor(Qt::gray); } //fillColor.light(125); }          // If mouse is over
-    ///if (option->state & QStyle::State_MouseOver && option->state & QStyle::State_Selected) { fillColor = QColor(Qt::red).darker(200); }
-    ///painter->fillRect(QRectF(0, 0, m_width, m_height), fillColor);
-    ///painter->fillRect(QRectF(0, 0, m_width / 2, m_height / 2), fillColor.dark(250));
+//    ///if (option->state & QStyle::State_Selected)  { fillColor = QColor(Qt::red); } //m_color.dark(150); }              // If selected
+//    ///if (option->state & QStyle::State_MouseOver) { fillColor = QColor(Qt::gray); } //fillColor.light(125); }          // If mouse is over
+//    ///if (option->state & QStyle::State_MouseOver && option->state & QStyle::State_Selected) { fillColor = QColor(Qt::red).darker(200); }
+//    ///painter->fillRect(QRectF(0, 0, m_width, m_height), fillColor);
+//    ///painter->fillRect(QRectF(0, 0, m_width / 2, m_height / 2), fillColor.dark(250));
 
-    painter->drawPixmap(0, 0, m_pixmap);
+//    painter->drawPixmap(0, 0, m_pixmap);
+
+    QGraphicsPixmapItem::paint(painter, option, widget);
+
 }
 
 

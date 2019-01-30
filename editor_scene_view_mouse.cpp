@@ -148,8 +148,9 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
             // ******************* If theres no item under mouse, start selection box
             if (m_origin_item == nullptr) {
-                startSelect(event);
-                processSelection(event->pos());
+                if ((event->modifiers() & Qt::KeyboardModifier::ControlModifier) == false)
+                    my_scene->emptySelectionGroup();
+                m_view_mode = View_Mode::Selecting;                                     // Flag that we're in selection mode
                 my_scene->scene_mutex.unlock();
                 return;
             }
@@ -192,29 +193,29 @@ QGraphicsItem* SceneGraphicsView::itemOnTopAtPosition(QPoint check_point)
     for (auto item : items(check_point))
         if (item != selection) {
 
-            // If we have an item selected don't worry about transparent space
-            if (my_scene->getSelectionGroupItems().contains(item)) {
-                possible_items.append(item);
+            ///// If we have an item selected don't worry about transparent space
+            ///if (my_scene->getSelectionGroupItems().contains(item)) {
+               possible_items.append(item);
 
             // If no items are selected lets grab the item that the user sees
-            } else {
-                DrItem *dritem = dynamic_cast<DrItem*>(item);
-                QPointF in_scene = mapToScene(check_point);
-                QPointF in_object = dritem->mapFromScene(in_scene);
-                QColor pixel_color = dritem->getColorAtPoint(in_object);
+            ///} else {
+//                DrItem *dritem = dynamic_cast<DrItem*>(item);
+//                QPointF in_scene = mapToScene(check_point);
+//                QPointF in_object = dritem->mapFromScene(in_scene);
+//                QColor pixel_color = dritem->getColorAtPoint(in_object);
 
-                if (pixel_color.alpha() > 0)
-                    possible_items.append(item);
+//                if (pixel_color.alpha() > 0)
+//                    possible_items.append(item);
 
-                // !!!!! DEBUG: Shows red, green, blue and alpha of pixel under mouse
-                if (Dr::CheckDebugFlag(Debug_Flags::Label_Top_Item_RGBA)) {
-                    Dr::SetLabelText(Label_Names::Label_1, "R: " + QString::number(pixel_color.red()) +
-                                                           "G: " + QString::number(pixel_color.green()) +
-                                                           "B: " + QString::number(pixel_color.blue()) );
-                    Dr::SetLabelText(Label_Names::Label_2, "Aplha: " + QString::number(pixel_color.alpha()) );
-                }
-                // !!!!! END
-            }
+//                // !!!!! DEBUG: Shows red, green, blue and alpha of pixel under mouse
+//                if (Dr::CheckDebugFlag(Debug_Flags::Label_Top_Item_RGBA)) {
+//                    Dr::SetLabelText(Label_Names::Label_1, "R: " + QString::number(pixel_color.red()) +
+//                                                           "G: " + QString::number(pixel_color.green()) +
+//                                                           "B: " + QString::number(pixel_color.blue()) );
+//                    Dr::SetLabelText(Label_Names::Label_2, "Aplha: " + QString::number(pixel_color.alpha()) );
+//                }
+//                // !!!!! END
+            ///}
         }
 
     // If no items at position, exit
@@ -375,8 +376,13 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
 
     // ******************* If we're in selection mode, process mouse movement and resize box as needed
-   if (m_view_mode == View_Mode::Selecting)
-        processSelection(event->pos());
+   if (m_view_mode == View_Mode::Selecting) {
+        if (m_allow_movement) {
+            if (m_rubber_band->isHidden())
+                startSelect(event);
+            processSelection(event->pos());
+        }
+   }
 
     // ******************* If mouse moved while over Size Grip, resize
     if (m_view_mode == View_Mode::Resizing)

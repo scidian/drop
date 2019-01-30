@@ -26,8 +26,6 @@
 //####################################################################################
 void SceneGraphicsView::startSelect(QMouseEvent *event)
 {
-    m_view_mode = View_Mode::Selecting;                                     // Flag that we're in selection mode
-
     SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
     m_items_start = my_scene->getSelectionGroupItems();
     m_first_start = my_scene->getFirstSelectedItem();
@@ -50,11 +48,15 @@ void SceneGraphicsView::processSelection(QPoint mouse_in_view)
 {
     SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
 
-    m_rubber_band->setGeometry(QRect(m_origin, mouse_in_view).normalized());                            // Resize selection box
+    QRect band_box = QRect(m_origin, mouse_in_view).normalized();
+    if (band_box.width() < 1)  band_box.setWidth(1);
+    if (band_box.height() < 1) band_box.setHeight(1);
+
+    m_rubber_band->setGeometry(band_box);                                                       // Resize selection box
 
     QPainterPath selection_area;
-    selection_area.addPolygon(mapToScene(m_rubber_band->geometry()));                                   // Convert box to scene coords
-    selection_area.closeSubpath();                                                                      // Closes an open polygon
+    selection_area.addPolygon(mapToScene(m_rubber_band->geometry()));                           // Convert box to scene coords
+    selection_area.closeSubpath();                                                              // Closes an open polygon
 
     QList<QGraphicsItem*> selection_area_items = scene()->items(selection_area, Qt::ItemSelectionMode::IntersectsItemShape,
                                                                 Qt::SortOrder::DescendingOrder, viewportTransform());
