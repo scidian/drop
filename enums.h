@@ -167,6 +167,7 @@ namespace Component_Icons
     const QString Settings      { QString(":/inspector_icons/comp_settings.png") };
     const QString Physics       { QString(":/inspector_icons/comp_physics.png") };
     const QString Transform     { QString(":/inspector_icons/comp_transform.png") };
+    const QString Layering      { QString(":/inspector_icons/comp_layering.png") };
     const QString Movement      { QString(":/inspector_icons/comp_movement.png") };
     const QString Camera        { QString(":/inspector_icons/comp_camera.png") };
     const QString Character     { QString(":/inspector_icons/comp_character.png") };
@@ -205,10 +206,21 @@ namespace Advisor_Info
 //##    Used to track what the QVariant m_value data type really is
 //####################################################################################
 enum class Property_Type {
-    Bool,       Int,        Double,     Variable,   Percent,    Angle,
-    Char,       String,
-    Image,      Icon,       Color,      Polygon,
-    Point,      PointF,     SizeF,      Vector3D,
+    Bool,       // true or false, represented as CheckBox
+    Int,        //
+    Double,
+    Variable,
+    Percent,
+    Angle,
+    String,
+    Image,
+    Icon,
+    Color,
+    Polygon,
+    Point,
+    PointF,
+    SizeF,
+    Vector3D,
     List,
 };
 
@@ -267,6 +279,7 @@ enum class Object_Components
 {
     settings,
     transform,
+    layering,
     movement,
 
     camera_settings,
@@ -287,6 +300,10 @@ enum class Object_Properties
     size,                   //sizef
     scale,                  //pointf
     opacity,                //double
+
+    // layering
+    z_order,                //int
+    group_order,            //int
 
     // movement
     velocity_x,             //variable

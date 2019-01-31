@@ -30,6 +30,8 @@ private:
     DrProject          *m_project;                  // Pointer to currently loaded project
     InterfaceRelay     *m_relay;                    // Pointer to InterfaceRelay class of parent form
 
+    long                m_current_scene_key = -1;   // Holds the project key of the currently shown scene, starts at -1, i.e. "none"
+
     // Selection variables
     SelectionGroup     *m_selection_group;          // Holds the group of items currently selected
     QGraphicsItem      *m_first_selected;           // Keeps track of first item selected to use its properties for the group selection
@@ -54,6 +56,7 @@ public:
     void            setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y);
     void            setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y);
     QRectF          totalSelectedItemsSceneRect();
+    void            updateTrees() { m_relay->updateSceneTreeSelectionBasedOnSelectionGroup(); }
     void            updateView() { emit updateViews(); }
 
     // Undo / Redo Functions
@@ -75,6 +78,9 @@ public:
     void            removeFromGroupNoUpdate(QGraphicsItem *item);
 
     // Getters and Setters
+    long                  getCurrentSceneShown() { return m_current_scene_key; }
+    void                  setCurrentSceneShown(long scene_key) { m_current_scene_key = scene_key; }
+
     SelectionGroup*       getSelectionGroup();
     QGraphicsItem*        getSelectionGroupAsGraphicsItem();
     QList<QGraphicsItem*> getSelectionGroupItems();
@@ -87,10 +93,10 @@ public slots:
     void            sceneChanged(QList<QRectF> region);                             // Used to resize scene area to fit contents
 
     // Undo Commands
+    void            newSceneSelected(DrProject *project, SceneGraphicsScene *scene, long old_scene, long new_scene);
     void            selectionGroupMoved(SelectionGroup *moved_group, const QPointF &old_position);
     void            selectionGroupNewGroup(SelectionGroup *moved_group, QList<QGraphicsItem*> old_list, QList<QGraphicsItem*> new_list,
                                            QGraphicsItem *old_first, QGraphicsItem *new_first);
-
 
 signals:
     void            updateViews();                                                  // Connected to update() method of attached Views

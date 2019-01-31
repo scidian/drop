@@ -12,7 +12,7 @@
 
 class DrProject;
 class InterfaceRelay;
-
+class SceneGraphicsScene;
 
 //####################################################################################
 //##    TreeScene
@@ -37,7 +37,9 @@ public:
                               QTreeWidget (parent), m_project(project), m_relay(relay) { }
 
     // Function calls
-    void            populateTreeSceneList();
+    void                        populateTreeSceneList();
+    QList <QTreeWidgetItem*>    getListOfAllTreeWidgetItems();
+    QList <QTreeWidgetItem*>    getListOfChildrenFromItem( QTreeWidgetItem *item );
 
     // Event Overrides, start at Qt Docs for QTreeWidget Class to find more
     virtual void enterEvent(QEvent *event) override;                                                            // Inherited from QWidget
@@ -56,6 +58,7 @@ public:
     bool         canWeDrop() { return m_can_drop; }
     int          getMouseX() { return m_mouse_x; }
     int          getMouseY() { return m_mouse_y; }
+
 };
 
 

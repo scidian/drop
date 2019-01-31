@@ -98,7 +98,17 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 }
 
 
+// Sets the new palette to the style sheets
+void FormMain::changePalette(Color_Scheme new_color_scheme) {
+    Dr::SetColorScheme(new_color_scheme);
+    Dr::ApplyColoring(this);
+    update();
+}
 
+
+//####################################################################################
+//##        Interface Relay Handlers
+//####################################################################################
 void FormMain::buildAssetList() {
     treeAsset->buildAssetList();
 }
@@ -130,8 +140,6 @@ void FormMain::setAdvisorInfo(QString header, QString body)
     emit sendAdvisorInfo(header, body);                                     // Emits signal connected to changeAdvisor
 }
 
-
-
 // Sets the text of a label on FormMain
 void FormMain::setLabelText(Label_Names label_name, QString new_text)
 {
@@ -162,38 +170,42 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
     }
 }
 
-
 void FormMain::populateScene(long from_scene_key)
 {
-    DrScene *from_scene = project->findSceneFromKey(from_scene_key);
+    // Emits an Undo stack command to change scenes
+    if (scene->getCurrentSceneShown() != from_scene_key)
+        emit newSceneSelected(project, scene, scene->getCurrentSceneShown(), from_scene_key);
+}
 
-    if (from_scene == nullptr) return;
 
-    scene->clear();
-    scene->createSelectionGroup();
+void FormMain::updateSceneTreeSelectionBasedOnSelectionGroup()
+{
+    QList<QGraphicsItem*>   scene_list = scene->getSelectionGroupItems();
+    QList<QTreeWidgetItem*> tree_list = treeScene->getListOfAllTreeWidgetItems();
+    treeScene->clearSelection();
 
-    int z_order = 0;
-    for (auto object : from_scene->getObjectMap()) {
+    long items_selected = 0;
+    for (auto item : scene_list) {
+        long item_key = dynamic_cast<DrItem*>(item)->getObjectKey();
 
-        DrItem *item = new DrItem(project, from_scene, object.first, z_order);
-        scene->setPositionByOrigin(item, item->getOrigin(), item->startX(), item->startY());
-        scene->addItem(item);
+        for (auto row : tree_list) {
+            long row_key = row->data(0, User_Roles::Key).toLongLong();
 
-        z_order++;
+            if (item_key == row_key) {
+                row->setSelected(true);
+                if (items_selected == 0)
+                    treeScene->setSelectedKey(row_key);
+                ++items_selected;
+            }
+        }
     }
 
-    scene->update();
-    viewMain->update();
+    treeScene->update();
+    Dr::SetLabelText(Label_Names::Label_1, "Scene: " + QString::number(scene_list.count()) + ", Tree: " + QString::number(tree_list.count()));
+    Dr::SetLabelText(Label_Names::Label_2, "Matched: " + QString::number(items_selected));
+
 }
 
-
-// Sets the new palette to the style sheets
-void FormMain::changePalette(Color_Scheme new_color_scheme)
-{
-    Dr::SetColorScheme(new_color_scheme);
-    Dr::ApplyColoring(this);
-    update();
-}
 
 
 

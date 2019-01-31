@@ -85,6 +85,15 @@ void DrObject::initializeObjectSettings(QString new_name, double x, double y)
     addPropertyToComponent(Object_Components::transform, Object_Properties::opacity, Property_Type::Percent, 100,
                            "Opacity", "How see through is the item, 0 (invisible) - 100 (solid)");
 
+    addComponent(Object_Components::layering, "Layering", "Controls the order items are drawn onto the screen. Lower numbers are "
+                                                           "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, true);
+    getComponent(Object_Components::layering)->setIcon(Component_Icons::Layering);
+
+    addPropertyToComponent(Object_Components::layering, Object_Properties::z_order, Property_Type::Int, 0,
+                           "Z Order", "Arrangement of item along the z axis in the scene");
+    addPropertyToComponent(Object_Components::layering, Object_Properties::group_order, Property_Type::Int, 0,
+                           "Group Order", "Secondary layering number for those items with the same Z value.");
+
     addComponent(Object_Components::movement, "Movement", "Initial starting velocities of item in scene.", Component_Colors::Red_Faded, true);
     getComponent(Object_Components::movement)->setIcon(Component_Icons::Movement);
 

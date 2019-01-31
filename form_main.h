@@ -107,7 +107,7 @@ public:
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list);
     virtual void    setAdvisorInfo(QString header, QString body);
     virtual void    setLabelText(Label_Names label_name, QString new_text);
-
+    virtual void    updateSceneTreeSelectionBasedOnSelectionGroup();
 
 private:
     // Form Building / Setup
@@ -128,6 +128,10 @@ private slots:
 
 signals:
     void        sendAdvisorInfo(QString header, QString body);              // Forwards info to MainWindow::changeAdvisor
+
+    // Undo Stack Signals
+    void        newSceneSelected(DrProject *project, SceneGraphicsScene *scene, long old_scene, long new_scene);
+
 };
 
 

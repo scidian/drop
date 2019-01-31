@@ -11,6 +11,31 @@
 #include "editor_scene_scene.h"
 
 
+
+//####################################################################################
+//##    Change Scene in View
+//############################
+class ChangeSceneCommand : public QUndoCommand
+{
+public:
+    ChangeSceneCommand(QUndoStack *undo_stack, DrProject *project, SceneGraphicsScene *scene, long old_scene, long new_scene,
+                       QUndoCommand *parent = nullptr);
+
+    void        undo() override;
+    void        redo() override;
+
+    QString     changeScene(long new_scene, bool is_undo);
+
+private:
+    QUndoStack             *m_undo_stack;
+    DrProject              *m_project;
+    SceneGraphicsScene     *m_scene;
+    long                    m_old_scene;
+    long                    m_new_scene;
+};
+
+
+
 //####################################################################################
 //##    Selection group moved position
 //############################
@@ -22,9 +47,9 @@ public:
     void redo() override;
 
 private:
-    SelectionGroup          *m_group;
-    QPointF                  m_old_pos;
-    QPointF                  m_new_pos;
+    SelectionGroup         *m_group;
+    QPointF                 m_old_pos;
+    QPointF                 m_new_pos;
 };
 
 
@@ -40,11 +65,11 @@ public:
     void redo() override;
 
 private:
-    SelectionGroup          *m_group;
-    QList<QGraphicsItem*>    m_old_list;
-    QList<QGraphicsItem*>    m_new_list;
-    QGraphicsItem           *m_old_first_selected;
-    QGraphicsItem           *m_new_first_selected;
+    SelectionGroup         *m_group;
+    QList<QGraphicsItem*>   m_old_list;
+    QList<QGraphicsItem*>   m_new_list;
+    QGraphicsItem          *m_old_first_selected;
+    QGraphicsItem          *m_new_first_selected;
 };
 
 

@@ -82,9 +82,6 @@ void TreeScene::populateTreeSceneList()
     this->expandAll();                                             // Expand all items
 }
 
-
-
-
 // Handles changing the Advisor on Mouse Enter
 void TreeScene::enterEvent(QEvent *event)
 {
@@ -92,6 +89,26 @@ void TreeScene::enterEvent(QEvent *event)
     QTreeWidget::enterEvent(event);
 }
 
+
+
+//####################################################################################
+//##        Returns a list of the items contained within the tree
+//####################################################################################
+QList <QTreeWidgetItem*> TreeScene::getListOfAllTreeWidgetItems() {
+    return getListOfChildrenFromItem( this->invisibleRootItem() );
+}
+
+QList <QTreeWidgetItem*> TreeScene::getListOfChildrenFromItem( QTreeWidgetItem *item )
+{
+    QList <QTreeWidgetItem*> items;
+
+    for( int i = 0; i < item->childCount(); ++i ) {
+        items.append( item->child(i) );
+        items.append( getListOfChildrenFromItem( item->child(i) ) );
+    }
+
+    return items;
+}
 
 
 
@@ -202,7 +219,7 @@ void TreeScene::selectionChanged (const QItemSelection &selected, const QItemSel
 
     // !!!!! #DEBUG:    Show Scene Tree selection data
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Scene_Tree_Selection))
-        m_relay->setLabelText(Label_Names::Label_Bottom, QString("Selected Items: ") + QString::number(item_list.size()));
+        m_relay->setLabelText(Label_Names::Label_Bottom, QString("Selected Item Count: ") + QString::number(item_list.size()));
     // !!!!! END
 
     // If size of list is zero, clear selected_key and exit function
@@ -214,7 +231,7 @@ void TreeScene::selectionChanged (const QItemSelection &selected, const QItemSel
     // !!!!! #DEBUG:    Show Scene Tree selection data
     // Otherwise add first item to label
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Scene_Tree_Selection)) {
-        m_relay->setLabelText(Label_Names::Label_Bottom, QString("Selected Items: ") +
+        m_relay->setLabelText(Label_Names::Label_Bottom, QString("Selected Item Count: ") +
                                                          QString::number(item_list.size()) +
                                                          ", First Item: " + item_list.first()->text(0));
     }
@@ -229,7 +246,8 @@ void TreeScene::selectionChanged (const QItemSelection &selected, const QItemSel
         // Call to outside function to rebuild object inspector:
         m_relay->buildObjectInspector(QList<long> { selected_key });
 
-        m_relay->populateScene(selected_key);
+        if (m_project->findSceneFromKey(selected_key) != nullptr)
+            m_relay->populateScene(selected_key);
 
         //******************************************************
 

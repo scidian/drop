@@ -31,6 +31,8 @@ DrItem::DrItem(DrProject *project, DrScene *scene, long object_key, double z_ord
     DrObject *from_object = scene->getObject(object_key);
     DrAsset  *from_asset =  project->getAsset( from_object->getAssetKey() );
 
+    m_object_key = object_key;
+
     QPointF start_pos = from_object->getComponentProperty(Object_Components::transform, Object_Properties::position)->getValue().toPointF();
     m_start_x = start_pos.x();
     m_start_y = start_pos.y();

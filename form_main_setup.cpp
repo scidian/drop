@@ -350,9 +350,6 @@ void FormMain::buildWindowModeEditScene()
                 treeAdvisor->setFrameShape(QFrame::NoFrame);
             verticalLayoutAdvisor->addWidget(treeAdvisor);
 
-        // Fires signal that is picked up by Advisor to change the help info
-        connect(this, SIGNAL(sendAdvisorInfo(QString, QString)), treeAdvisor, SLOT(changeAdvisor(QString, QString)) , Qt::QueuedConnection);
-
         advisor->setWidget(widgetAdvisor);
 
 
@@ -437,6 +434,19 @@ void FormMain::buildWindowModeEditScene()
 
     resizeDocks({assets, inspector}, {180, 300}, Qt::Horizontal);                       // Forces resize of docks
 
+
+
+    // ******************** Signals emitted by FormMain
+    // Fires signal that is picked up by Advisor to change the help info
+    connect(this, SIGNAL(sendAdvisorInfo(QString, QString)), treeAdvisor, SLOT(changeAdvisor(QString, QString)) , Qt::QueuedConnection);
+
+    // Connects signal used to populate scene
+    connect(this, SIGNAL(newSceneSelected(DrProject*, SceneGraphicsScene*, long, long)), scene,
+            SLOT(newSceneSelected(DrProject*, SceneGraphicsScene*, long, long)) );
+
+
+
+    // ***** Apply shadow effects to buttons
     Dr::ApplyDropShadowByType(buttonAtlas,    Shadow_Types::Button_Shadow);
     Dr::ApplyDropShadowByType(buttonFonts,    Shadow_Types::Button_Shadow);
     Dr::ApplyDropShadowByType(buttonPlay,     Shadow_Types::Button_Shadow);

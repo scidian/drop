@@ -24,6 +24,8 @@ class DrScene;
 class DrItem : public QGraphicsPixmapItem
 {
 private:
+    long            m_object_key;               // Stores the object key this item represents within the Project
+
     double          m_width;
     double          m_height;
 
@@ -48,6 +50,8 @@ public:
     virtual void            hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 
     // Getters and Setters
+    long                    getObjectKey() { return m_object_key; }
+
     Position_Flags          getOrigin() { return m_origin; }
     QColor                  getColorAtPoint(QPointF at_local_point);
     QColor                  getColorAtPoint(QPointF at_view_point, QGraphicsView *mouse_over_view);
