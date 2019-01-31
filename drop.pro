@@ -59,7 +59,7 @@ SOURCES += \
     library_style.cpp \
     editor_scene_scene_undo.cpp \
     editor_tree_inspector_widgets.cpp \
-    editor_hover_handler.cpp
+    editor_tree_widgets.cpp
 
 HEADERS += \
     enums.h \
@@ -84,7 +84,7 @@ HEADERS += \
     colors.h \
     debug.h \
     editor_scene_scene_undo.h \
-    editor_hover_handler.h
+    editor_tree_widgets.h
 
 FORMS +=
 

@@ -12,8 +12,8 @@
 
 class DrProject;
 class DrProperty;
-class InterfaceRelay;
 
+class InterfaceRelay;
 class WidgetHoverHandler;
 
 // Class constants
@@ -54,37 +54,24 @@ private slots:
 
 
 
-//####################################################################################
-//##    AssetCategoryButton
-//##        A sub classed QPushButton so we can override events for header buttons in Asset Inspector List
-//############################
-class AssetCategoryButton : public QPushButton
-{
-    Q_OBJECT
-
-private:
-    TreeAssetList       *m_parent_tree;
-    QTreeWidgetItem     *m_parent_item;
-    bool                 m_is_shrunk = false;
-    QString              m_header, m_body;
-
-public:
-    AssetCategoryButton(const QString &text, TreeAssetList *parent_tree, QTreeWidgetItem *parent_item);
-
-    // Events
-    virtual void    enterEvent(QEvent *event) override;                                // Inherited from QWidget
-
-    // Getters and Setters
-    void            setAdvisorHeaderText(QString header) { m_header = header; }
-    void            setAdvisorBodyText(QString body) { m_body = body; }
-
-private slots:
-    void buttonPressed();
-};
 
 
 
 #endif // EDITOR_TREE_ASSETS_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

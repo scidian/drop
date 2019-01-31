@@ -316,7 +316,7 @@ void FormMain::buildWindowModeEditScene()
     // ***** Build right Advisor Dock
     advisor = new QDockWidget(this);
     advisor->setObjectName(QStringLiteral("advisor"));
-    advisor->setMinimumSize(QSize(300, 80));
+    advisor->setMinimumSize(QSize(100, 80));
     advisor->setSizePolicy(sizePolicy);
     advisor->setFont(font);
     advisor->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable);

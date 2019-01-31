@@ -14,8 +14,6 @@ class DrProject;
 class DrProperty;
 
 class InterfaceRelay;
-
-class InspectorCategoryButton;
 class TripleSpinBox;
 class WidgetHoverHandler;
 
@@ -72,42 +70,6 @@ private slots:
     void            itemWasClicked(QTreeWidgetItem *item, int column);
     void            setAdvisorInfo(QString header, QString body);
 
-};
-
-
-
-//####################################################################################
-//##    InspectorCategoryButton
-//##        A sub classed QPushButton so we can override events for header buttons in Object Inspector List
-//############################
-class InspectorCategoryButton : public QPushButton
-{
-    Q_OBJECT
-
-private:
-    TreeInspector       *m_parent_tree;
-    QTreeWidgetItem     *m_parent_item,     *m_child_item;
-    QFrame              *m_child_frame;
-    int                  m_height;
-    bool                 m_is_shrunk = false;
-    QRect                start_rect, end_rect;
-    QString              m_header, m_body;
-
-public:
-    InspectorCategoryButton(const QString &text, TreeInspector *parent_tree,
-                            QTreeWidgetItem *parent_item, QTreeWidgetItem *child_item, QFrame *new_child);
-
-    // Events
-    virtual void    enterEvent(QEvent *event) override;                                // Inherited from QWidget
-
-    // Getters and Setters
-    void            setAdvisorHeaderText(QString header) { m_header = header; }
-    void            setAdvisorBodyText(QString body) { m_body = body; }
-
-private slots:
-    void animationDone();
-    void animationUpdate(const QVariant &value);
-    void buttonPressed();
 };
 
 

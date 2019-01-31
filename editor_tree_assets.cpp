@@ -17,7 +17,7 @@
 #include "settings_component_property.h"
 
 #include "editor_tree_assets.h"
-#include "editor_hover_handler.h"
+#include "editor_tree_widgets.h"
 #include "interface_relay.h"
 
 
@@ -31,31 +31,18 @@ TreeAssetList::TreeAssetList(QWidget *parent, DrProject *project, InterfaceRelay
     m_widget_hover = new WidgetHoverHandler(this);
     connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
 
-    applyHeaderBodyProperties(this, Advisor_Info::Asset_List[0], Advisor_Info::Asset_List[1]);
+    m_widget_hover->applyHeaderBodyProperties(this, Advisor_Info::Asset_List);
 }
 
-
-
-//####################################################################################
-//##        Advisor Info Functions
-//####################################################################################
-void TreeAssetList::setAdvisorInfo(QString header, QString body)
-{
+// SLOT: Catches signals from m_widget_hover
+void TreeAssetList::setAdvisorInfo(QString header, QString body) {
     m_relay->setAdvisorInfo(header, body);
 }
-
-void TreeAssetList::applyHeaderBodyProperties(QWidget *widget, DrProperty *property)
-{
-    widget->setProperty(User_Property::Header, property->getDisplayName());
-    widget->setProperty(User_Property::Body, property->getDescription());
-    m_widget_hover->attach(widget);
+void TreeAssetList::applyHeaderBodyProperties(QWidget *widget, DrProperty *property) {
+    m_widget_hover->applyHeaderBodyProperties(widget, property);
 }
-
-void TreeAssetList::applyHeaderBodyProperties(QWidget *widget, QString header, QString body)
-{
-    widget->setProperty(User_Property::Header, header);
-    widget->setProperty(User_Property::Body, body);
-    m_widget_hover->attach(widget);
+void TreeAssetList::applyHeaderBodyProperties(QWidget *widget, QString header, QString body) {
+    m_widget_hover->applyHeaderBodyProperties(widget, header, body);
 }
 
 
@@ -86,9 +73,7 @@ void TreeAssetList::buildAssetList()
     this->addTopLevelItem(category_item);
 
     // Create and style a button to be used as a header item for the category
-    AssetCategoryButton *category_button = new AssetCategoryButton("  Objects", this, category_item);
-    category_button->setAdvisorHeaderText("Object Assets");
-    category_button->setAdvisorBodyText("Objects for use in scene");
+    CategoryButton *category_button = new CategoryButton("  Objects", category_item);
     QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: #CCCCCC; "
                                                 " border: 2px solid; border-radius: 1px; "
                                                 " border-color: #555555; "
@@ -100,10 +85,9 @@ void TreeAssetList::buildAssetList()
     //category_button->setIcon(QIcon(component_map.second->getIcon()));
     category_button->setStyleSheet(buttonColor);
     category_button->setEnabled(false);
+    applyHeaderBodyProperties(category_button, "Object Assets", "Objects for use in scene");
 
     this->setItemWidget(category_item, 0, category_button);                             // Apply the button to the tree item
-
-
 
     // Loop through each property and add it to the component frame
     for (auto asset_pair: list_assets) {
@@ -119,7 +103,7 @@ void TreeAssetList::buildAssetList()
         asset_name->setFont(fp);
         asset_name->setSizePolicy(sp_left);
         asset_name->setAlignment(Qt::AlignmentFlag::AlignCenter);
-        applyHeaderBodyProperties(asset_name, asset_pair.second->getAssetName(), "None.");
+        m_widget_hover->applyHeaderBodyProperties(asset_name, asset_pair.second->getAssetName(), "None.");
         horizontal_split->addWidget(asset_name);
 
         QPixmap pix = asset_pair.second->getComponentProperty(Asset_Components::animation, Asset_Properties::animation_default)->getValue().value<QPixmap>();
@@ -127,8 +111,7 @@ void TreeAssetList::buildAssetList()
         pix_label->setObjectName("assetFrame");
         pix_label->setFont(fp);
         pix_label->setSizePolicy(sp_right);
-        pix_label->setMinimumHeight(60);
-        pix_label->setMaximumHeight(60);
+        pix_label->setFixedHeight(60);
         pix_label->setAlignment(Qt::AlignmentFlag::AlignCenter);
         horizontal_split->addWidget( pix_label );
 
@@ -150,9 +133,6 @@ void TreeAssetList::buildAssetList()
 
 
 
-
-
-
     this->expandAll();
 
 }
@@ -160,32 +140,21 @@ void TreeAssetList::buildAssetList()
 
 
 
-//####################################################################################
-//##
-//##    InspectorCategoryButton Class Functions
-//##
-//####################################################################################
-// Constructor for category button, gives button a way to pass click to custom function
-AssetCategoryButton::AssetCategoryButton(const QString &text, TreeAssetList *parent_tree, QTreeWidgetItem *parent_item)
-    : QPushButton(text, parent_tree), m_parent_tree(parent_tree), m_parent_item(parent_item)
-{
-    // Forwards user button click to function that expands / contracts
-    connect(this, SIGNAL(clicked()), this, SLOT(buttonPressed()));
-}
 
-// Handles changing the Advisor on Mouse Enter
-void AssetCategoryButton::enterEvent(QEvent *event)
-{
-    m_parent_tree->getRelay()->setAdvisorInfo(m_header, m_body);
-    QPushButton::enterEvent(event);
-}
 
-// Called by click signal, expands or contracts category after user click
-void AssetCategoryButton::buttonPressed()
-{
-    m_is_shrunk = !m_is_shrunk;
-    m_parent_item->setExpanded(!m_is_shrunk);
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

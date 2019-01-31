@@ -21,7 +21,7 @@
 #include "settings_component_property.h"
 
 #include "editor_tree_inspector.h"
-#include "editor_hover_handler.h"
+#include "editor_tree_widgets.h"
 #include "interface_relay.h"
 
 
@@ -36,31 +36,22 @@ TreeInspector::TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay
     m_widget_hover = new WidgetHoverHandler(this);
     connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
 
-    applyHeaderBodyProperties(this, Advisor_Info::Object_Inspector[0], Advisor_Info::Object_Inspector[1]);
+    m_widget_hover->applyHeaderBodyProperties(this, Advisor_Info::Object_Inspector);
 }
 
 
-//####################################################################################
-//##        Advisor Info Functions
-//####################################################################################
-void TreeInspector::setAdvisorInfo(QString header, QString body)
-{
+// SLOT: Catches signals from m_widget_hover
+void TreeInspector::setAdvisorInfo(QString header, QString body) {
     m_relay->setAdvisorInfo(header, body);
 }
-
-void TreeInspector::applyHeaderBodyProperties(QWidget *widget, DrProperty *property)
-{
-    widget->setProperty(User_Property::Header, property->getDisplayName());
-    widget->setProperty(User_Property::Body, property->getDescription());
-    m_widget_hover->attach(widget);
+void TreeInspector::applyHeaderBodyProperties(QWidget *widget, DrProperty *property) {
+    m_widget_hover->applyHeaderBodyProperties(widget, property);
+}
+void TreeInspector::applyHeaderBodyProperties(QWidget *widget, QString header, QString body) {
+    m_widget_hover->applyHeaderBodyProperties(widget, header, body);
 }
 
-void TreeInspector::applyHeaderBodyProperties(QWidget *widget, QString header, QString body)
-{
-    widget->setProperty(User_Property::Header, header);
-    widget->setProperty(User_Property::Body, body);
-    m_widget_hover->attach(widget);
-}
+
 
 
 //####################################################################################
@@ -187,10 +178,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
         category_item->addChild(property_item);
 
         //->Create and style a button to be used as a header item for the category
-        InspectorCategoryButton *category_button = new InspectorCategoryButton(QString(" ") + component_pair.second->getDisplayNameQString(),
-                                                                               this, category_item, property_item, properties_frame);
-        category_button->setAdvisorHeaderText(component_pair.second->getDisplayName());
-        category_button->setAdvisorBodyText(component_pair.second->getDescription());
+        CategoryButton *category_button = new CategoryButton(QString(" ") + component_pair.second->getDisplayNameQString(), category_item);
         QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: #000000; "
                                                     " border: 2px solid; "
                                                     " border-color: " + component_pair.second->getColor().darker(250).name() + "; "
@@ -202,7 +190,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
                                       " QPushButton:pressed { color: " + component_pair.second->getColor().darker(400).name() + "; } ");
         category_button->setIcon(QIcon(component_pair.second->getIcon()));
         category_button->setStyleSheet(buttonColor);
-
+        applyHeaderBodyProperties(category_button, component_pair.second->getDisplayName(), component_pair.second->getDescription());
 
         // Apply the button and property box widgets to the tree items
         this->setItemWidget(category_item, 0, category_button);
@@ -253,60 +241,6 @@ void TreeInspector::itemWasClicked(QTreeWidgetItem *item, int column)
 
 }
 
-
-
-//####################################################################################
-//##
-//##    InspectorCategoryButton Class Functions
-//##
-//####################################################################################
-// Constructor for category button, gives button a way to pass click to custom function
-InspectorCategoryButton::InspectorCategoryButton(const QString &text, TreeInspector *parent_tree,
-                                                 QTreeWidgetItem *parent_item, QTreeWidgetItem *child_item, QFrame *new_child)
-    : QPushButton(text, parent_tree),
-      m_parent_tree(parent_tree),           m_parent_item(parent_item),
-      m_child_item(child_item),             m_child_frame(new_child)
-{
-    // Forwards user button click to function that expands / contracts
-    connect(this, SIGNAL(clicked()), this, SLOT(buttonPressed()));
-}
-
-// Handles changing the Advisor on Mouse Enter
-void InspectorCategoryButton::enterEvent(QEvent *event)
-{
-    m_parent_tree->getRelay()->setAdvisorInfo(m_header, m_body);
-    QPushButton::enterEvent(event);
-}
-
-// Called by click signal, expands or contracts category after user click
-void InspectorCategoryButton::animationDone() { if (m_is_shrunk) m_parent_item->setExpanded(false); }
-void InspectorCategoryButton::animationUpdate(const QVariant &value) { Q_UNUSED(value); }
-void InspectorCategoryButton::buttonPressed()
-{
-    ///// Item shrinking / expanding animation, doesnt work that great overall
-    ///QPropertyAnimation *propAnimationFade = new QPropertyAnimation(m_child_frame, "geometry");
-    ///propAnimationFade->setDuration(100);
-    ///start_rect = m_child_frame->geometry();
-    ///end_rect = start_rect;
-    ///    if (m_is_shrunk) {
-    ///        m_parent_item->setExpanded(true);
-    ///        start_rect.setHeight(0);
-    ///        end_rect.setHeight(m_height);
-    ///    } else {
-    ///        m_height = start_rect.height();
-    ///        end_rect.setHeight(0);
-    ///    }
-    ///    m_is_shrunk = !m_is_shrunk;
-    ///connect(propAnimationFade, SIGNAL(finished()), this, SLOT(animationDone()));
-    ///connect(propAnimationFade, SIGNAL(valueChanged(QVariant)), this, SLOT(animationUpdate(QVariant)));
-    ///propAnimationFade->setStartValue(start_rect);
-    ///propAnimationFade->setEndValue(end_rect);
-    ///propAnimationFade->start();
-
-    m_is_shrunk = !m_is_shrunk;
-    m_parent_item->setExpanded(!m_is_shrunk);
-
-}
 
 
 
