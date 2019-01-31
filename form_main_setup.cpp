@@ -151,7 +151,11 @@ void FormMain::buildWindowModeEditScene()
                         // ***** Load our SceneGraphicsView to display our SceneGraphicsScene collection of items
                         viewMain = new SceneGraphicsView(widgetSceneView, project, this);
                         viewMain->setObjectName(QStringLiteral("viewMain"));
-                        viewMain->setRenderHint(QPainter::Antialiasing, false);
+
+                        ///viewMain->setRenderHint(QPainter::Antialiasing, false);
+
+                        viewMain->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
+
                         viewMain->setDragMode(QGraphicsView::DragMode::NoDrag);
                         viewMain->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);
                         viewMain->setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);

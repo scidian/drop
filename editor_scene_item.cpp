@@ -26,44 +26,65 @@
 //####################################################################################
 //##        Constructor & destructor
 //####################################################################################
-DrItem::DrItem(DrProject *project, DrScene *scene, long object_key, double z_order)
+DrItem::DrItem(DrProject *project, DrScene *scene, long object_key)
 {
-    DrObject *from_object = scene->getObject(object_key);
-    DrAsset  *from_asset =  project->getAsset( from_object->getAssetKey() );
-
+    m_project    = project;
     m_object_key = object_key;
+    m_object     = scene->getObject(object_key);
+    m_asset_key  = m_object->getAssetKey();
+    m_asset      = project->getAsset(m_asset_key);
 
-    QPointF start_pos = from_object->getComponentProperty(Object_Components::transform, Object_Properties::position)->getValue().toPointF();
+    QPointF start_pos = m_object->getComponentProperty(Object_Components::transform, Object_Properties::position)->getValue().toPointF();
     m_start_x = start_pos.x();
     m_start_y = start_pos.y();
 
-    m_width =  from_asset->width();
-    m_height = from_asset->height();
-    setZValue(z_order);
+    m_asset_width =  m_asset->getWidth();
+    m_asset_height = m_asset->getHeight();
 
-    DrComponent *comp = from_asset->getComponent(Asset_Components::animation);
-    DrProperty  *prop = comp->getProperty(Asset_Properties::animation_default);
+    // Store some initial uiser data
+    setData(User_Roles::Name, project->getAsset( scene->getObject(object_key)->getAssetKey() )->getAssetName() );
+    updateProperty(User_Roles::Z_Order, m_object->getComponentProperty(Object_Components::layering, Object_Properties::z_order)->getValue());
+    updateProperty(User_Roles::Rotation, 0);
+    updateProperty(User_Roles::Scale, QPointF(1, 1));
 
-    ///// Loads pixmap from byte array
-    ///QByteArray byte_array = prop->getValue().toByteArray();
-    ///QPixmap pix;
-    ///pix.loadFromData(byte_array, "PNG");
+    // Set initial set up item settings
+    setAcceptHoverEvents(true);                                         // Item tracks mouse movement
+    setTransformationMode(Qt::SmoothTransformation);                    // Turn on anti aliasing
+    setShapeMode(QGraphicsPixmapItem::MaskShape);                       // Allows for selecting while ignoring transparent pixels
 
     setFlags(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable |
              QGraphicsItem::GraphicsItemFlag::ItemIsMovable |
              QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges |
              QGraphicsItem::GraphicsItemFlag::ItemSendsGeometryChanges);
 
-    setAcceptHoverEvents(true);
-
-    setData(User_Roles::Rotation, 0);
-    setData(User_Roles::Scale, QPointF(1, 1));
-    setData(User_Roles::Name, project->getAsset( scene->getObject(object_key)->getAssetKey() )->getAssetName() );
-
-    setShapeMode(QGraphicsPixmapItem::MaskShape);
-    setPixmap(prop->getValue().value<QPixmap>());
+    // Load image from asset
+    setPixmap(m_asset->getComponentProperty(Asset_Components::animation, Asset_Properties::animation_default)->getValue().value<QPixmap>());
 
 }                                     
+
+
+//####################################################################################
+//##        Custom Property Storing
+//####################################################################################
+void DrItem::updateProperty(int key, const QVariant &value)
+{
+    switch (key)
+    {
+    case User_Roles::Rotation:
+        setData(User_Roles::Rotation, value);
+        m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::rotation, value);
+        break;
+    case User_Roles::Scale:
+        setData(User_Roles::Scale, value);
+        m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::scale, value);
+        break;
+    case User_Roles::Z_Order:
+        setZValue(value.toInt());
+        m_object->setComponentPropertyValue(Object_Components::layering, Object_Properties::z_order, value);
+        break;
+    }
+}
+
 
 
 //####################################################################################
@@ -72,7 +93,7 @@ DrItem::DrItem(DrProject *project, DrScene *scene, long object_key, double z_ord
 // Outline of entire object
 QRectF DrItem::boundingRect() const
 {
-    QRectF my_rect = QRectF(0, 0, m_width, m_height);
+    QRectF my_rect = QRectF(0, 0, m_asset_width, m_asset_height);
     return my_rect;
 }
 

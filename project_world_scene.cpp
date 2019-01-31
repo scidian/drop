@@ -41,7 +41,7 @@ DrScene::~DrScene()
     for (auto i: m_objects) { delete i.second; }
 }
 
-void DrScene::addObject(DrType new_type, long from_asset_key, double x, double y)
+void DrScene::addObject(DrType new_type, long from_asset_key, double x, double y, long z)
 {
     QString new_name;
     switch (new_type) {
@@ -57,7 +57,7 @@ void DrScene::addObject(DrType new_type, long from_asset_key, double x, double y
 
     long new_object_key = m_parent_project->getNextKey();
     m_objects[new_object_key] = new DrObject(m_parent_project, m_parent_world, this, new_object_key,
-                                             new_name, new_type, from_asset_key, x, y, static_cast<long>(m_objects.size()) + 1);
+                                             new_name, new_type, from_asset_key, x, y, z);
 }
 
 // Returns a list of object keys contained in scene, sorted from high z value to low

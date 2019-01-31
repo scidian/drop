@@ -44,8 +44,8 @@ public:
 
     DrAsset_Type    getAssetType()      { return m_asset_type; }
     DrProject*      getParentProject()  { return m_parent_project; }
-    long            width()             { return m_width; }
-    long            height()            { return m_height; }
+    long            getWidth()             { return m_width; }
+    long            getHeight()            { return m_height; }
 
 
     // External calls

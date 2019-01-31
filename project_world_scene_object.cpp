@@ -7,6 +7,7 @@
 //
 
 #include "project.h"
+#include "project_asset.h"
 #include "project_world.h"
 #include "project_world_scene.h"
 #include "project_world_scene_object.h"
@@ -20,7 +21,7 @@
 //####################################################################################
 DrObject::DrObject(DrProject *parent_project, DrWorld *parent_world, DrScene *parent_scene,
                    long new_object_key, QString new_object_name, DrType new_object_type,
-                   long from_asset_key, double x, double y, long z_order)
+                   long from_asset_key, double x, double y, long z)
 {
     m_parent_project = parent_project;              // pointer to parent Project
     m_parent_world = parent_world;                  // pointer to parent World
@@ -30,10 +31,12 @@ DrObject::DrObject(DrProject *parent_project, DrWorld *parent_world, DrScene *pa
 
     m_object_type = new_object_type;                // assign object type
     m_asset_key = from_asset_key;                   // associated asset key
-    m_z_order = z_order;
+
+    DrSettings *asset_settings = m_parent_project->findAssetSettingsFromKey(from_asset_key);
+    DrAsset *asset = dynamic_cast<DrAsset*>(asset_settings);
 
     // Call to load in all the components / properties for this Scene object
-    initializeObjectSettings(new_object_name, x, y);
+    initializeObjectSettings(new_object_name, asset->getWidth(), asset->getHeight(), x, y, z);
 
     switch (new_object_type)
     {
@@ -57,7 +60,7 @@ DrObject::~DrObject()
 //##                       initializeCharacterSettings
 //####################################################################################
 
-void DrObject::initializeObjectSettings(QString new_name, double x, double y)
+void DrObject::initializeObjectSettings(QString new_name, double width, double height, double x, double y, long z)
 {
     addComponent(Object_Components::settings, "Settings", "Basic settings for current object.", Component_Colors::White_Snow, true);
     getComponent(Object_Components::settings)->setIcon(Component_Icons::Settings);
@@ -78,7 +81,7 @@ void DrObject::initializeObjectSettings(QString new_name, double x, double y)
                            "Position", "Location of item within the current scene.");
     addPropertyToComponent(Object_Components::transform, Object_Properties::rotation, Property_Type::Angle, 0,
                            "Rotation", "Angle of item within the scene.");
-    addPropertyToComponent(Object_Components::transform, Object_Properties::size, Property_Type::SizeF, QPointF(100, 100),
+    addPropertyToComponent(Object_Components::transform, Object_Properties::size, Property_Type::SizeF, QPointF(width, height),
                            "Size", "Width and Height of object in pixels, affected by Scale property.");
     addPropertyToComponent(Object_Components::transform, Object_Properties::scale, Property_Type::PointF, QPointF(1, 1),
                            "Scale", "X and Y scale of item within the scene.");
@@ -89,7 +92,7 @@ void DrObject::initializeObjectSettings(QString new_name, double x, double y)
                                                            "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, true);
     getComponent(Object_Components::layering)->setIcon(Component_Icons::Layering);
 
-    addPropertyToComponent(Object_Components::layering, Object_Properties::z_order, Property_Type::Int, 0,
+    addPropertyToComponent(Object_Components::layering, Object_Properties::z_order, Property_Type::Int, QVariant::fromValue(z),
                            "Z Order", "Arrangement of item along the z axis in the scene");
     addPropertyToComponent(Object_Components::layering, Object_Properties::group_order, Property_Type::Int, 0,
                            "Group Order", "Secondary layering number for those items with the same Z value.");

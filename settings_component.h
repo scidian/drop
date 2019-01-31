@@ -11,7 +11,6 @@
 
 #include "enums.h"
 
-
 class DrSettings;
 class DrProperty;
 typedef std::map<long, DrProperty*> PropertyMap;
@@ -59,6 +58,12 @@ public:
     DrProperty* getProperty(Scene_Properties setting) { return m_properties[static_cast<int>(setting)]; }
     DrProperty* getProperty(Object_Properties setting) { return m_properties[static_cast<int>(setting)]; }
     DrProperty* getProperty(Asset_Properties setting) { return m_properties[static_cast<int>(setting)]; }
+
+    void setProperty(long setting, QVariant value);
+    void setProperty(World_Properties setting, QVariant value);
+    void setProperty(Scene_Properties setting, QVariant value);
+    void setProperty(Object_Properties setting, QVariant value);
+    void setProperty(Asset_Properties setting, QVariant value);
 
     void setDisplayName(QString new_display_name) { m_display_name = new_display_name; }
     void setDescription(QString new_description) { m_description = new_description; }

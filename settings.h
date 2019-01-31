@@ -63,6 +63,12 @@ public:
     QVariant     getComponentPropertyValue(Object_Components component, Object_Properties property);
     QVariant     getComponentPropertyValue(Asset_Components component, Asset_Properties property);
 
+    void         setComponentPropertyValue(long component, long property, QVariant value);
+    void         setComponentPropertyValue(World_Components component, World_Properties property, QVariant value);
+    void         setComponentPropertyValue(Scene_Components component, Scene_Properties property, QVariant value);
+    void         setComponentPropertyValue(Object_Components component, Object_Properties property, QVariant value);
+    void         setComponentPropertyValue(Asset_Components component, Asset_Properties property, QVariant value);
+
 
     // External Calls
     DrComponent* findComponentFromPropertyKey(long property_key_to_find);

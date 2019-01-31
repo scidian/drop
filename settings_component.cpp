@@ -35,6 +35,18 @@ DrComponent::~DrComponent()
 }
 
 
+
+//####################################################################################
+//##    setProperty functions, need one for each different Properties enum type
+//####################################################################################
+void DrComponent::setProperty(long setting, QVariant value) { m_properties[setting]->setValue(value); }
+void DrComponent::setProperty(World_Properties setting, QVariant value) { m_properties[static_cast<int>(setting)]->setValue(value); }
+void DrComponent::setProperty(Scene_Properties setting, QVariant value) { m_properties[static_cast<int>(setting)]->setValue(value); }
+void DrComponent::setProperty(Object_Properties setting, QVariant value) { m_properties[static_cast<int>(setting)]->setValue(value); }
+void DrComponent::setProperty(Asset_Properties setting, QVariant value) { m_properties[static_cast<int>(setting)]->setValue(value); }
+
+
+
 //####################################################################################
 //##    addProperty functions, need one for each different Properties enum type
 //####################################################################################
@@ -67,6 +79,12 @@ void DrComponent::addProperty(Asset_Properties setting, Property_Type new_type, 
     DrProperty *prop = new DrProperty(m_parent_settings, this, new_display_name, new_description, new_type, new_value, static_cast<int>(setting));
     m_properties[static_cast<int>(setting)] = prop;
 }
+
+
+
+
+
+
 
 
 

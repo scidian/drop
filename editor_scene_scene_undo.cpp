@@ -81,10 +81,7 @@ QString ChangeSceneCommand::changeScene(long new_scene, bool is_undo)
 {
     DrScene *from_scene = m_project->findSceneFromKey(new_scene);
     if (from_scene == nullptr) {
-        if (is_undo)
-            m_undo_stack->setIndex(m_undo_stack->index());
-        else
-            m_undo_stack->setIndex(m_undo_stack->index());
+        ///m_undo_stack->setIndex(m_undo_stack->index());
         return "Could not change scenes!";
     }
 
@@ -94,7 +91,7 @@ QString ChangeSceneCommand::changeScene(long new_scene, bool is_undo)
 
     int z_order = 0;
     for (auto object : from_scene->getObjectMap()) {
-        DrItem *item = new DrItem(m_project, from_scene, object.first, z_order);
+        DrItem *item = new DrItem(m_project, from_scene, object.first);
         m_scene->setPositionByOrigin(item, item->getOrigin(), item->startX(), item->startY());
         m_scene->addItem(item);
         z_order++;
@@ -164,7 +161,7 @@ void SelectionNewGroupCommand::undo() {
     m_group->getParentScene()->emptySelectionGroup();
     m_group->getParentScene()->setFirstSelectedItem(m_old_first_selected);
     for (auto item : m_old_list) m_group->getParentScene()->addItemToSelectionGroup(item);
-    m_group->getParentScene()->updateTrees();
+    m_group->getParentScene()->updateSceneTreeSelection();
     m_group->getParentScene()->updateView();
     if (m_new_list.count() > 1)
         setText("Redo Change Selection");
@@ -179,7 +176,7 @@ void SelectionNewGroupCommand::redo() {
     m_group->getParentScene()->setFirstSelectedItem(m_new_first_selected);
     for (auto item : m_new_list)
         m_group->getParentScene()->addItemToSelectionGroup(item);
-    m_group->getParentScene()->updateTrees();
+    m_group->getParentScene()->updateSceneTreeSelection();
     m_group->getParentScene()->updateView();
     if (m_new_list.count() > 1)
         setText("Undo Change Selection");

@@ -35,8 +35,9 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font)
     check->setFont(font);
     check->setSizePolicy(sp_right);
     check->setTristate(false);
-
+    check->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
     check->setChecked(property->getValue().toBool());
+
     applyHeaderBodyProperties(check, property);
     return check;
 }
@@ -49,8 +50,9 @@ QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font)
     QLineEdit *edit = new QLineEdit();
     edit->setFont(font);
     edit->setSizePolicy(sp_right);
-
+    edit->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
     edit->setText(property->getValue().toString());
+
     applyHeaderBodyProperties(edit, property);
     return edit;
 }
@@ -70,8 +72,9 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, Spi
     default:                    spin->setRange(-100000000, 100000000);
     }
     spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
-
+    spin->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
     spin->setValue(property->getValue().toInt());
+
     applyHeaderBodyProperties(spin, property);
     return spin;
 }
@@ -95,10 +98,10 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     case Spin_Type::Angle:      spin->setRange(-360, 360);  spin->setSuffix("°");       break;
     default:                    spin->setRange(-100000000, 100000000);
     }
-    ///spin->setProperty("alignment", Qt::AlignRight);      // Align right?
     spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
-
+    spin->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
     spin->setValue(property->getValue().toDouble());
+
     applyHeaderBodyProperties(spin, property);
     return spin;
 }
@@ -127,6 +130,9 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
 
     horizontal_split->addWidget(spin_left);
     horizontal_split->addWidget(spin_right);
+
+    spin_left->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
+    spin_right->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
     return spin_pair;
 }
 
@@ -161,6 +167,9 @@ QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &fo
     horizontal_split->addWidget(spin_left);
     horizontal_split->addWidget(variable_sign);
     horizontal_split->addWidget(spin_right);
+
+    spin_left->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
+    spin_right->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
     return spin_pair;
 }
 
@@ -224,6 +233,8 @@ QComboBox* TreeInspector::createComboBox(DrProperty *property, QFont &font)
     }
     combo->addItems(options);
     ///connect(combo, SIGNAL(currentIndexChanged(QString)), this, SLOT(sceneScaleChanged(QString)));
+
+    combo->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
 
     combo->setCurrentIndex(property->getValue().toInt());
     applyHeaderBodyProperties(combo, property);

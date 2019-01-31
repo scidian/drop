@@ -444,6 +444,8 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
         m_rubber_band->hide();
         m_tool_tip->stopToolTip();
         m_view_mode = View_Mode::None;
+
+        m_relay->updateObjectInspectorAfterItemChange();
     }
 
     // Pass on event, update

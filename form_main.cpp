@@ -69,14 +69,14 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     project->getWorldWithName("World 2")->addScene();
     project->getWorldWithName("World 2")->addScene();
 
-    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_1, 0, 0);
-    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_1, -200, -200);
-    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_2, 250, -200);
-    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_3, -200, 200);
-    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_4, 100, 100);
-    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_5, -150, 0);
+    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_1, 0, 0, 1);
+    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_1, -200, -200, 2);
+    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_2, 250, -200, 3);
+    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_3, -200, 200, 10);
+    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_4, 100, 100, 11);
+    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_5, -150, 0, 30);
 
-    project->getWorldWithName("World 2")->getSceneWithName("2")->addObject(DrType::Object, asset_5, 100, 100);
+    project->getWorldWithName("World 2")->getSceneWithName("2")->addObject(DrType::Object, asset_5, 100, 100, 104);
     // !!!!! END
 
 
@@ -90,7 +90,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 
 
     // ########## Populates SceneGraphicsScene from current DrScene
-    populateScene( project->getWorldWithName("World 2")->getSceneWithName("4")->getKey() );
+    //populateScene( project->getWorldWithName("World 2")->getSceneWithName("4")->getKey() );
 
 
 
@@ -178,6 +178,11 @@ void FormMain::populateScene(long from_scene_key)
 }
 
 
+void FormMain::updateObjectInspectorAfterItemChange()
+{
+    treeInspector->updateProperties();
+}
+
 void FormMain::updateSceneTreeSelectionBasedOnSelectionGroup()
 {
     QList<QGraphicsItem*>   scene_list = scene->getSelectionGroupItems();
@@ -201,8 +206,13 @@ void FormMain::updateSceneTreeSelectionBasedOnSelectionGroup()
     }
 
     treeScene->update();
-    Dr::SetLabelText(Label_Names::Label_1, "Scene: " + QString::number(scene_list.count()) + ", Tree: " + QString::number(tree_list.count()));
-    Dr::SetLabelText(Label_Names::Label_2, "Matched: " + QString::number(items_selected));
+
+    // !!!!! DEBUG:: Show if some selected items matched the items in the scene tree
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_Selection_Change_Scene_Tree)) {
+        Dr::SetLabelText(Label_Names::Label_1, "Scene: " + QString::number(scene_list.count()) + ", Tree: " + QString::number(tree_list.count()));
+        Dr::SetLabelText(Label_Names::Label_2, "Matched: " + QString::number(items_selected));
+    }
+    // !!!!! END
 
 }
 

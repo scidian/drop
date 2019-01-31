@@ -38,7 +38,7 @@ private:
 public:
     // Constructor & destructor
     explicit DrObject(DrProject *parent_project, DrWorld *parent_world, DrScene *parent_scene, long new_object_key,
-                      QString new_object_name, DrType new_object_type, long from_asset_key, double x, double y, long z_order);
+                      QString new_object_name, DrType new_object_type, long from_asset_key, double x, double y, long z);
     virtual ~DrObject() override;
 
 
@@ -51,7 +51,7 @@ public:
     long            getZOrder()         { return m_z_order; }
 
     // External calls
-    void initializeObjectSettings(QString new_name, double x, double y);
+    void initializeObjectSettings(QString new_name, double width, double height, double x, double y, long z);
     void initializeCameraSettings();
     void initializeCharacterSettings();
 

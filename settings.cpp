@@ -41,6 +41,12 @@ QVariant DrSettings::getComponentPropertyValue(Scene_Components component, Scene
 QVariant DrSettings::getComponentPropertyValue(Object_Components component, Object_Properties property) { return m_components[static_cast<long>(component)]->getProperty(property)->getValue(); }
 QVariant DrSettings::getComponentPropertyValue(Asset_Components component, Asset_Properties property) { return m_components[static_cast<long>(component)]->getProperty(property)->getValue(); }
 
+void DrSettings::setComponentPropertyValue(long component, long property, QVariant value) { m_components[component]->getProperty(property)->setValue(value); }
+void DrSettings::setComponentPropertyValue(World_Components component, World_Properties property, QVariant value) { m_components[static_cast<long>(component)]->getProperty(property)->setValue(value); }
+void DrSettings::setComponentPropertyValue(Scene_Components component, Scene_Properties property, QVariant value) { m_components[static_cast<long>(component)]->getProperty(property)->setValue(value); }
+void DrSettings::setComponentPropertyValue(Object_Components component, Object_Properties property, QVariant value) { m_components[static_cast<long>(component)]->getProperty(property)->setValue(value); }
+void DrSettings::setComponentPropertyValue(Asset_Components component, Asset_Properties property, QVariant value) { m_components[static_cast<long>(component)]->getProperty(property)->setValue(value); }
+
 QString DrSettings::getWorldName() { return m_components[static_cast<long>(World_Components::settings)]->getProperty(World_Properties::name)->getValue().toString(); }
 QString DrSettings::getSceneName() { return m_components[static_cast<long>(Scene_Components::settings)]->getProperty(Scene_Properties::name)->getValue().toString(); }
 QString DrSettings::getObjectName() { return m_components[static_cast<long>(Object_Components::settings)]->getProperty(Object_Properties::name)->getValue().toString(); }

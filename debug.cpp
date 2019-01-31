@@ -41,6 +41,7 @@ void InitializeFlags()
     SetDebugFlag( Debug_Flags::Label_Object_Inspector_Build );
     SetDebugFlag( Debug_Flags::Label_Scene_Tree_Drag );
     SetDebugFlag( Debug_Flags::Label_Scene_Tree_Selection );
+    SetDebugFlag( Debug_Flags::Label_Selection_Change_Scene_Tree );
 
     //SetDebugFlag( Debug_Flags::Paint_Rotating_Angles );
     //SetDebugFlag( Debug_Flags::Label_Rotation_Data );

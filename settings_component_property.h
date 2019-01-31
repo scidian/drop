@@ -27,11 +27,13 @@ private:
     DrSettings   *m_parent_settings;
     DrComponent  *m_parent_component;
 
+    // The 4 Parts pf Data for Every Property
     QString       m_display_name = "Unknown Property";
     QString       m_description = "No description";
     Property_Type m_preferred_type = Property_Type::String;
     QVariant      m_value = QString::fromStdString("0");
 
+    // The unique id of this property within the parent object
     long          m_property_key;
 
 public:

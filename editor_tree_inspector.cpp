@@ -60,16 +60,17 @@ void TreeInspector::applyHeaderBodyProperties(QWidget *widget, QString header, Q
 void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 {
     // First, retrieve unique key of item clicked in list
-    long        selected_key = key_list[0];
-    DrType      selected_type = m_project->findChildTypeFromKey( selected_key );
-    QString     type_string = StringFromType(selected_type);
+    m_selected_key = key_list[0];
+    m_selected_type = m_project->findChildTypeFromKey( m_selected_key );
+
+    QString     type_string = StringFromType(m_selected_type);
 
     // !!!!! #DEBUG:    Show selected item key and info
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Object_Inspector_Build)) {
-        m_relay->setLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( selected_key ) + ", TYPE: " + type_string);
+        m_relay->setLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( m_selected_key ) + ", TYPE: " + type_string);
 
-        if (IsDrObjectClass(selected_type)) {
-            DrObject* object = dynamic_cast<DrObject*>(m_project->findChildSettingsFromKey(selected_key));
+        if (IsDrObjectClass(m_selected_type)) {
+            DrObject* object = dynamic_cast<DrObject*>(m_project->findChildSettingsFromKey(m_selected_key));
             long asset_key = object->getAssetKey();
             QString asset_name = m_project->findChildSettingsFromKey(asset_key)->getAssetName();
 
@@ -83,7 +84,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     // !!!!! END
 
     // Change Advisor text after new item selection
-    switch (selected_type) {
+    switch (m_selected_type) {
     case DrType::World:        m_relay->setAdvisorInfo(Advisor_Info::World_Object);         break;
     case DrType::Scene:        m_relay->setAdvisorInfo(Advisor_Info::Scene_Object);         break;
     case DrType::Camera:       m_relay->setAdvisorInfo(Advisor_Info::Camera_Object);        break;
@@ -94,7 +95,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
     // Find out if we should hide name for this object
     bool show_name;
-    switch (selected_type)
+    switch (m_selected_type)
     {
     case DrType::Object:
     case DrType::Character:
@@ -105,11 +106,13 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
 
     // Retrieve list of components for selected item
-    ComponentMap list_components = m_project->findChildSettingsFromKey( selected_key )->getComponentList();
+    ComponentMap list_components = m_project->findChildSettingsFromKey( m_selected_key )->getComponentList();
 
     // Loop through each component and add it to the Object Inspector list
     int rowCount = 0;
     this->clear();
+    m_widgets.clear();
+
     for (auto component_pair: list_components) {
 
         // Create new item in list to hold component and add the TreeWidgetItem to the tree
@@ -144,29 +147,24 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
             applyHeaderBodyProperties(property_name, property_pair.second);
             horizontal_split->addWidget(property_name);
 
+            QWidget *new_widget = nullptr;
             switch (property_pair.second->getPropertyType())
             {
-            case Property_Type::Bool:       horizontal_split->addWidget(createCheckBox(property_pair.second, fp));                              break;
-            case Property_Type::String:     horizontal_split->addWidget(createLineEdit(property_pair.second, fp));                              break;
-            case Property_Type::Int:        horizontal_split->addWidget(createIntSpinBox(property_pair.second, fp, Spin_Type::Integer));        break;
-            case Property_Type::Positive:   horizontal_split->addWidget(createIntSpinBox(property_pair.second, fp, Spin_Type::Positive));       break;
-            case Property_Type::Float:      horizontal_split->addWidget(createDoubleSpinBox(property_pair.second, fp, Spin_Type::Float));       break;
-            case Property_Type::Percent:    horizontal_split->addWidget(createDoubleSpinBox(property_pair.second, fp, Spin_Type::Percent));     break;
-            case Property_Type::Angle:      horizontal_split->addWidget(createDoubleSpinBox(property_pair.second, fp, Spin_Type::Angle));       break;
-            case Property_Type::PointF:     horizontal_split->addWidget(createDoubleSpinBoxPair(property_pair.second, fp, Spin_Type::Point));   break;
-            case Property_Type::SizeF:      horizontal_split->addWidget(createDoubleSpinBoxPair(property_pair.second, fp, Spin_Type::Size));    break;
-            case Property_Type::Variable:   horizontal_split->addWidget(createVariableSpinBoxPair(property_pair.second, fp));                   break;
-            case Property_Type::List:       horizontal_split->addWidget(createComboBox(property_pair.second, fp));
+            case Property_Type::Bool:       new_widget = createCheckBox(property_pair.second, fp);                              break;
+            case Property_Type::String:     new_widget = createLineEdit(property_pair.second, fp);                              break;
+            case Property_Type::Int:        new_widget = createIntSpinBox(property_pair.second, fp, Spin_Type::Integer);        break;
+            case Property_Type::Positive:   new_widget = createIntSpinBox(property_pair.second, fp, Spin_Type::Positive);       break;
+            case Property_Type::Float:      new_widget = createDoubleSpinBox(property_pair.second, fp, Spin_Type::Float);       break;
+            case Property_Type::Percent:    new_widget = createDoubleSpinBox(property_pair.second, fp, Spin_Type::Percent);     break;
+            case Property_Type::Angle:      new_widget = createDoubleSpinBox(property_pair.second, fp, Spin_Type::Angle);       break;
+            case Property_Type::PointF:     new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Spin_Type::Point);   break;
+            case Property_Type::SizeF:      new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Spin_Type::Size);    break;
+            case Property_Type::Variable:   new_widget = createVariableSpinBoxPair(property_pair.second, fp);                   break;
+            case Property_Type::List:       new_widget = createComboBox(property_pair.second, fp);
             }
 
-
-
-            //spin_int->setUserData( setData(0, User_Roles::Key, QVariant::fromValue(object_pair.second->getKey()));
-
-
-
-
-
+            horizontal_split->addWidget(new_widget);
+            m_widgets.append(new_widget);
 
             vertical_layout->addWidget(single_row);
             rowCount++;
@@ -200,6 +198,40 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
     this->expandAll();
 }
+
+
+
+
+//####################################################################################
+//##        Updates the property boxes already in the object inspector for the current item
+//####################################################################################
+void TreeInspector::updateProperties()
+{
+    if (IsDrObjectClass(m_selected_type) == false) return;
+
+    DrSettings *settings = m_project->findChildSettingsFromKey(m_selected_key);
+
+    Dr::SetLabelText(Label_Names::Label_1, "Child count: " + QString::number(m_widgets.count()) );
+
+    for (auto widget : m_widgets) {
+        long prop_key = widget->property(User_Property::Key).toInt();
+        DrProperty *prop = settings->findPropertyFromPropertyKey(prop_key);
+
+        if (prop != nullptr) {
+            Property_Type prop_type = prop->getPropertyType();
+
+            switch (prop_type)
+            {
+            case Property_Type::Angle:
+                QDoubleSpinBox* converted = dynamic_cast<QDoubleSpinBox*>(widget);
+                converted->setValue(prop->getValue().toDouble());
+                break;
+            }
+        }
+    }
+
+}
+
 
 
 

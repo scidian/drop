@@ -99,12 +99,13 @@ enum class Position_Flags {
 //####################################################################################
 typedef enum {
     Key = Qt::UserRole,
+
+    Z_Order,
     Scale,
     Rotation,
     Pre_Rotate_Rotation,
 
     Name,
-    Add_More,
 } User_Roles;
 
 
@@ -112,6 +113,7 @@ typedef enum {
 //##    Custom QStrings for storing data in QWidgets using setProperty
 //####################################################################################
 namespace User_Property {
+    const char Key[7] = "dr_key";
     const char Header[10] = "dr_header";
     const char Body[8] = "dr_body";
 }

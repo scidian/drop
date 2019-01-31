@@ -24,17 +24,22 @@ class DrScene;
 class DrItem : public QGraphicsPixmapItem
 {
 private:
-    long            m_object_key;               // Stores the object key this item represents within the Project
+    DrProject      *m_project;                              // Stores a pointer to the parent project
+    DrObject       *m_object;                               // Stores the pointer to the object for this item
+    long            m_object_key;                           // Stores the object key this item represents within the Project
+    DrAsset        *m_asset;                                // Stores pointer to the asset for this item
+    long            m_asset_key;                            // Stores the asset key this item is drawn from
 
-    double          m_width;
-    double          m_height;
+    double          m_asset_width;                          // Width of asset this item is drawn from
+    double          m_asset_height;                         // Height of asset this item is drawn from
 
-    double          m_start_x, m_start_y;
+    double          m_start_x;                              // Stores the item position the first time it was loaded
+    double          m_start_y;                              // Stores the item position the first time it was loaded
 
     Position_Flags  m_origin = Position_Flags::Center;
 
 public:
-    DrItem(DrProject *project, DrScene *scene, long object_key, double z_order);
+    DrItem(DrProject *project, DrScene *scene, long object_key);
 
     // Base Getter Overrides
     virtual QRectF          boundingRect() const override;
@@ -50,8 +55,9 @@ public:
     virtual void            hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 
     // Getters and Setters
-    long                    getObjectKey() { return m_object_key; }
+    void                    updateProperty(int key, const QVariant & value);
 
+    long                    getObjectKey() { return m_object_key; }
     Position_Flags          getOrigin() { return m_origin; }
     QColor                  getColorAtPoint(QPointF at_local_point);
     QColor                  getColorAtPoint(QPointF at_view_point, QGraphicsView *mouse_over_view);

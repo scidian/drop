@@ -56,7 +56,10 @@ public:
     void            setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y);
     void            setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y);
     QRectF          totalSelectedItemsSceneRect();
-    void            updateTrees() { m_relay->updateSceneTreeSelectionBasedOnSelectionGroup(); }
+
+    // Other Widget Update Calls
+    void            updateObjectInspectorData() { m_relay->updateObjectInspectorAfterItemChange(); }
+    void            updateSceneTreeSelection() { m_relay->updateSceneTreeSelectionBasedOnSelectionGroup(); }
     void            updateView() { emit updateViews(); }
 
     // Undo / Redo Functions

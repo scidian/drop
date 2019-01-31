@@ -107,6 +107,7 @@ public:
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list);
     virtual void    setAdvisorInfo(QString header, QString body);
     virtual void    setLabelText(Label_Names label_name, QString new_text);
+    virtual void    updateObjectInspectorAfterItemChange();
     virtual void    updateSceneTreeSelectionBasedOnSelectionGroup();
 
 private:

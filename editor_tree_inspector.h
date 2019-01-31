@@ -10,6 +10,8 @@
 
 #include <QtWidgets>
 
+#include "enums.h"
+
 class DrProject;
 class DrProperty;
 
@@ -43,16 +45,22 @@ class TreeInspector: public QTreeWidget
     Q_OBJECT
 
 private:
-    DrProject           *m_project;                     // Pointer to currently loaded project
-    InterfaceRelay      *m_relay;                       // Pointer to InterfaceRelay class of parent form
+    DrProject          *m_project;                      // Pointer to currently loaded project
+    InterfaceRelay     *m_relay;                        // Pointer to InterfaceRelay class of parent form
+    WidgetHoverHandler *m_widget_hover;                 // Pointer to a widget hover handler
 
-    WidgetHoverHandler  *m_widget_hover;                // Pointer to a widget hover handler
+    QList<QWidget*>     m_widgets;                      // List of the widgets we built the last time we selected a new item
+
+    long                m_selected_key;                 // Unique project key of currently selected item
+    DrType              m_selected_type;                // Stores object type of currently selected item
 
 public:
     explicit        TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay *relay);
 
     // Function Calls
     void            buildInspectorFromKeys(QList<long> key_list);
+    void            updateProperties();
+
     InterfaceRelay* getRelay() { return m_relay; }
 
     // Property Builders
