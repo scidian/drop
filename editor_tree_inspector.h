@@ -19,12 +19,13 @@ class WidgetHoverHandler;
 
 
 enum class Spin_Type {
-    Integer,
-    Double,
-    Percent,
-    Angle,
-    Point,
-    Size,
+    Integer,                // Any integer
+    Positive,               // Integer >= 0
+    Float,                  // Any floating point number
+    Percent,                // Floating point between 0.0 and 100.0
+    Angle,                  // Show degrees sign
+    Point,                  // Has X and Y
+    Size,                   // Has W and H
 };
 
 

@@ -90,13 +90,13 @@ void DrScene::initializeSceneSettings(QString new_name)
 
     addPropertyToComponent(Scene_Components::settings, Scene_Properties::name, Property_Type::String, new_name,
                            "Scene Name", "Name of the current scene.");
-    addPropertyToComponent(Scene_Components::settings, Scene_Properties::start, Property_Type::Int, 0,
+    addPropertyToComponent(Scene_Components::settings, Scene_Properties::start, Property_Type::Positive, 0,
                            "Start", "Start showing scene at this distance.");
-    addPropertyToComponent(Scene_Components::settings, Scene_Properties::end, Property_Type::Int, 1200,
+    addPropertyToComponent(Scene_Components::settings, Scene_Properties::end, Property_Type::Positive, 1200,
                            "End", "Stop showing scene at this distance, -1 for always show.");
-    addPropertyToComponent(Scene_Components::settings, Scene_Properties::size, Property_Type::Int, 1200,
+    addPropertyToComponent(Scene_Components::settings, Scene_Properties::size, Property_Type::Positive, 1200,
                            "Size", "Length of scene.");
-    addPropertyToComponent(Scene_Components::settings, Scene_Properties::cooldown, Property_Type::Int, 0,
+    addPropertyToComponent(Scene_Components::settings, Scene_Properties::cooldown, Property_Type::Positive, 0,
                            "Cooldown", "Distance to wait after scene plays before it is possible to be shown again.");
 
 }

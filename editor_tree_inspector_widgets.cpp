@@ -65,7 +65,8 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, Spi
     spin->setSizePolicy(size_policy);
     switch (spin_type)
     {
-    case Spin_Type::Integer:    spin->setRange(0, 100000000);                  break;
+    case Spin_Type::Integer:    spin->setRange(-100000000, 100000000);         break;
+    case Spin_Type::Positive:   spin->setRange(0, 100000000);                  break;
     default:                    spin->setRange(-100000000, 100000000);
     }
     spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
@@ -89,7 +90,7 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     spin->setDecimals(3);
     switch (spin_type)
     {
-    case Spin_Type::Double:     spin->setRange(-100000000, 100000000);                  break;
+    case Spin_Type::Float:      spin->setRange(-100000000, 100000000);                  break;
     case Spin_Type::Percent:    spin->setRange(0, 100);     spin->setSuffix("%");       break;
     case Spin_Type::Angle:      spin->setRange(-360, 360);  spin->setSuffix("°");       break;
     default:                    spin->setRange(-100000000, 100000000);

@@ -206,20 +206,21 @@ namespace Advisor_Info
 //##    Used to track what the QVariant m_value data type really is
 //####################################################################################
 enum class Property_Type {
-    Bool,       // true or false, represented as CheckBox
-    Int,        //
-    Double,
-    Variable,
-    Percent,
-    Angle,
+    Bool,                   // true or false
+    Int,                    // any integer
+    Positive,               // integer >= 0
+    Float,                  // any floating point
+    Variable,               // floating point pair, number followed by a +/- number
+    Percent,                // floating point from 0.0 to 100.0
+    Angle,                  // floating point for showing degrees
     String,
-    Image,
+    Image,                  // QPixmap
     Icon,
-    Color,
-    Polygon,
-    Point,
-    PointF,
-    SizeF,
+    Color,                  // QColor
+    Polygon,                // For Collision Shapes
+    Point,                  // Integer pair x and y
+    PointF,                 // Floating pair x and y
+    SizeF,                  // Floating pair w and h
     Vector3D,
     List,
 };
@@ -264,10 +265,10 @@ enum class Scene_Components
 enum class Scene_Properties {
     // settings
     name,                   //string
-    start,                  //int
-    end,                    //int
-    size,                   //int
-    cooldown,               //int
+    start,                  //positive
+    end,                    //positive
+    size,                   //positive
+    cooldown,               //Positive
 };
 
 

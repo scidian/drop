@@ -110,19 +110,19 @@ void DrObject::initializeCameraSettings()
     addComponent(Object_Components::camera_settings, "Camera Settings", "Settings for this camera", Component_Colors::Beige_Apricot, true);
     getComponent(Object_Components::camera_settings)->setIcon(Component_Icons::Camera);
 
-    addPropertyToComponent(Object_Components::camera_settings, Object_Properties::camera_zoom, Property_Type::Double, 10,
+    addPropertyToComponent(Object_Components::camera_settings, Object_Properties::camera_zoom, Property_Type::Float, 10,
                            "Zoom Level", "Sets distance away from scene (0 to 1000)");
 
 }
 
 void DrObject::initializeCharacterSettings()
 {
-    addComponent(Object_Components::character_settings, "Character Settings", "Settings for this character", Component_Colors::Blue_Yonder, true);
+    addComponent(Object_Components::character_settings, "Character Settings", "Settings for this character", Component_Colors::Silver_Sonic, true);
     getComponent(Object_Components::character_settings)->setIcon(Component_Icons::Character);
 
-    addPropertyToComponent(Object_Components::character_settings, Object_Properties::character_jump_x, Property_Type::Double, 0,
+    addPropertyToComponent(Object_Components::character_settings, Object_Properties::character_jump_x, Property_Type::Float, 0,
                            "Jump Force X", "Force of jump button in x direction");
-    addPropertyToComponent(Object_Components::character_settings, Object_Properties::character_jump_y, Property_Type::Double, 0,
+    addPropertyToComponent(Object_Components::character_settings, Object_Properties::character_jump_y, Property_Type::Float, 0,
                            "Jump Force Y", "Force of jump button in y direction");
 
 }
