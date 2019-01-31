@@ -17,18 +17,53 @@
 #include "settings_component_property.h"
 
 #include "editor_tree_assets.h"
+#include "editor_tree_inspector.h"
 #include "interface_relay.h"
 
 
 
 //####################################################################################
-//##        EVENT, Handles changing the Advisor on Mouse Enter
+//##        Constructor
 //####################################################################################
+TreeAssetList::TreeAssetList(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
+                             QTreeWidget (parent), m_project(project), m_relay(relay)
+{
+    m_widget_hover = new WidgetHoverHandler(this);
+    connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
+}
+
+
+
+//####################################################################################
+//##        Advisor Info Functions
+//####################################################################################
+// Handles changing the Advisor on Mouse Enter
 void TreeAssetList::enterEvent(QEvent *event)
 {
     m_relay->setAdvisorInfo(Advisor_Info::Asset_List);
     QTreeWidget::enterEvent(event);
 }
+
+void TreeAssetList::setAdvisorInfo(QString header, QString body)
+{
+    m_relay->setAdvisorInfo(header, body);
+}
+
+void TreeAssetList::applyHeaderBodyProperties(QWidget *widget, DrProperty *property)
+{
+    widget->setProperty(User_Property::Header, property->getDisplayName());
+    widget->setProperty(User_Property::Body, property->getDescription());
+    m_widget_hover->attach(widget);
+}
+
+void TreeAssetList::applyHeaderBodyProperties(QWidget *widget, QString header, QString body)
+{
+    widget->setProperty(User_Property::Header, header);
+    widget->setProperty(User_Property::Body, body);
+    m_widget_hover->attach(widget);
+}
+
+
 
 
 
@@ -85,12 +120,12 @@ void TreeAssetList::buildAssetList()
         horizontal_split->setMargin(0);
         horizontal_split->setContentsMargins(0,0,0,0);
 
-        QLabel *property_name = new QLabel(asset_pair.second->getAssetName());
-        property_name->setFont(fp);
-        property_name->setSizePolicy(sp_left);
-        property_name->setAlignment(Qt::AlignmentFlag::AlignCenter);
-        //applyHeaderBodyProperties(property_name, property_map.second);
-        horizontal_split->addWidget(property_name);
+        QLabel *asset_name = new QLabel(asset_pair.second->getAssetName());
+        asset_name->setFont(fp);
+        asset_name->setSizePolicy(sp_left);
+        asset_name->setAlignment(Qt::AlignmentFlag::AlignCenter);
+        applyHeaderBodyProperties(asset_name, asset_pair.second->getAssetName(), "None.");
+        horizontal_split->addWidget(asset_name);
 
         QPixmap pix = asset_pair.second->getComponentProperty(Asset_Components::animation, Asset_Properties::animation_default)->getValue().value<QPixmap>();
         QLabel *pix_label = new QLabel();
@@ -156,7 +191,6 @@ void AssetCategoryButton::buttonPressed()
     m_is_shrunk = !m_is_shrunk;
     m_parent_item->setExpanded(!m_is_shrunk);
 }
-
 
 
 

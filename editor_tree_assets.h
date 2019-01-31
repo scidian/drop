@@ -11,8 +11,10 @@
 #include <QtWidgets>
 
 class DrProject;
+class DrProperty;
 class InterfaceRelay;
 
+class WidgetHoverHandler;
 
 // Class constants
 const int   ASSET_SIZE_LEFT =  3;                             // Size policy width of left column
@@ -28,13 +30,14 @@ class TreeAssetList: public QTreeWidget
     Q_OBJECT
 
 private:
-    DrProject      *m_project;                  // Pointer to currently loaded project
-    InterfaceRelay *m_relay;                    // Pointer to InterfaceRelay class of parent form
+    DrProject           *m_project;                  // Pointer to currently loaded project
+    InterfaceRelay      *m_relay;                    // Pointer to InterfaceRelay class of parent form
+
+    WidgetHoverHandler  *m_widget_hover;            // Pointer to a widget hover handler
 
 public:
     // Constructor
-    explicit        TreeAssetList(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
-                                  QTreeWidget (parent), m_project(project), m_relay(relay) { }
+    explicit        TreeAssetList(QWidget *parent, DrProject *project, InterfaceRelay *relay);
 
     // Event Overrides, start at Qt Docs for QTreeWidget Class to find more
     virtual void    enterEvent(QEvent *event) override;                                // Inherited from QWidget
@@ -43,7 +46,12 @@ public:
     void            buildAssetList();
     InterfaceRelay* getRelay() { return m_relay; }
 
+    // Property Builders
+    void            applyHeaderBodyProperties(QWidget *widget, DrProperty *property);
+    void            applyHeaderBodyProperties(QWidget *widget, QString header, QString body);
 
+private slots:
+    void            setAdvisorInfo(QString header, QString body);
 
 };
 

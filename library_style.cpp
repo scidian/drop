@@ -239,6 +239,10 @@ void ApplyColoring(QWidget *widget)
         "       padding: 2px; margin: 4px; "
         "       border-radius: 6px; } "
 
+        " QLabel#assetFrame:hover { border: 2px solid " + Dr::GetColor(Window_Colors::Icon_Dark).name()  + "; "
+        "       padding: 2px; margin: 4px; "
+        "       border-radius: 6px; } "
+
     );
 
     widget->setStyleSheet(style_sheet);
