@@ -17,7 +17,7 @@
 #include "settings_component_property.h"
 
 #include "editor_tree_assets.h"
-#include "editor_tree_inspector.h"
+#include "editor_hover_handler.h"
 #include "interface_relay.h"
 
 
@@ -30,6 +30,8 @@ TreeAssetList::TreeAssetList(QWidget *parent, DrProject *project, InterfaceRelay
 {
     m_widget_hover = new WidgetHoverHandler(this);
     connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
+
+    applyHeaderBodyProperties(this, Advisor_Info::Asset_List[0], Advisor_Info::Asset_List[1]);
 }
 
 
@@ -37,13 +39,6 @@ TreeAssetList::TreeAssetList(QWidget *parent, DrProject *project, InterfaceRelay
 //####################################################################################
 //##        Advisor Info Functions
 //####################################################################################
-// Handles changing the Advisor on Mouse Enter
-void TreeAssetList::enterEvent(QEvent *event)
-{
-    m_relay->setAdvisorInfo(Advisor_Info::Asset_List);
-    QTreeWidget::enterEvent(event);
-}
-
 void TreeAssetList::setAdvisorInfo(QString header, QString body)
 {
     m_relay->setAdvisorInfo(header, body);
@@ -65,8 +60,9 @@ void TreeAssetList::applyHeaderBodyProperties(QWidget *widget, QString header, Q
 
 
 
-
-
+//####################################################################################
+//##        Tree Building Functions
+//####################################################################################
 void TreeAssetList::buildAssetList()
 {
     // Initialize some QWidget helper items
@@ -94,9 +90,8 @@ void TreeAssetList::buildAssetList()
     category_button->setAdvisorHeaderText("Object Assets");
     category_button->setAdvisorBodyText("Objects for use in scene");
     QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: #CCCCCC; "
-                                                " border: 2px solid; "
+                                                " border: 2px solid; border-radius: 1px; "
                                                 " border-color: #555555; "
-                                                " border-radius: 1px; "
                                                 " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 " +
                                                     Dr::GetColor(Window_Colors::Button_Light).name() + ", stop:1 " +
                                                     Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "

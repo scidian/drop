@@ -21,6 +21,7 @@
 #include "settings_component_property.h"
 
 #include "editor_tree_inspector.h"
+#include "editor_hover_handler.h"
 #include "interface_relay.h"
 
 
@@ -31,21 +32,17 @@ TreeInspector::TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay
                               QTreeWidget (parent), m_project(project), m_relay(relay)
 {
     connect(this, SIGNAL(itemClicked(QTreeWidgetItem *, int)), this, SLOT(itemWasClicked(QTreeWidgetItem *, int)));
+
     m_widget_hover = new WidgetHoverHandler(this);
     connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
+
+    applyHeaderBodyProperties(this, Advisor_Info::Object_Inspector[0], Advisor_Info::Object_Inspector[1]);
 }
 
 
 //####################################################################################
 //##        Advisor Info Functions
 //####################################################################################
-// Handles changing the Advisor on Mouse Enter
-void TreeInspector::enterEvent(QEvent *event)
-{
-    m_relay->setAdvisorInfo(Advisor_Info::Object_Inspector);
-    QTreeWidget::enterEvent(event);
-}
-
 void TreeInspector::setAdvisorInfo(QString header, QString body)
 {
     m_relay->setAdvisorInfo(header, body);
@@ -311,33 +308,6 @@ void InspectorCategoryButton::buttonPressed()
 
 }
 
-
-
-//####################################################################################
-//##
-//##    WidgetHoverHandler Class Functions
-//##
-//####################################################################################
-void WidgetHoverHandler::attach(QWidget *widget)
-{
-    widget->setAttribute(Qt::WidgetAttribute::WA_Hover, true);
-    widget->installEventFilter(this);
-}
-
-bool WidgetHoverHandler::eventFilter(QObject *obj, QEvent *event)
-{
-    if (event->type() == QEvent::HoverEnter)
-    {
-        QWidget *hover_widget = dynamic_cast<QWidget*>(obj);
-
-        QString header = hover_widget->property(User_Property::Header).toString();
-        QString body = hover_widget->property(User_Property::Body).toString();
-
-        emit signalMouseHover(header, body);
-    }
-
-    return false;
-}
 
 
 

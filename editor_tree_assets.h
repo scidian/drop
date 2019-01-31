@@ -39,9 +39,6 @@ public:
     // Constructor
     explicit        TreeAssetList(QWidget *parent, DrProject *project, InterfaceRelay *relay);
 
-    // Event Overrides, start at Qt Docs for QTreeWidget Class to find more
-    virtual void    enterEvent(QEvent *event) override;                                // Inherited from QWidget
-
     // Function Calls
     void            buildAssetList();
     InterfaceRelay* getRelay() { return m_relay; }

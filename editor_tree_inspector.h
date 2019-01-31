@@ -52,9 +52,6 @@ private:
 public:
     explicit        TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay *relay);
 
-    // Event Overrides, start at Qt Docs for QTreeWidget Class to find more
-    virtual void    enterEvent(QEvent *event) override;                                // Inherited from QWidget
-
     // Function Calls
     void            buildInspectorFromKeys(QList<long> key_list);
     InterfaceRelay* getRelay() { return m_relay; }
@@ -113,27 +110,6 @@ private slots:
     void buttonPressed();
 };
 
-
-//####################################################################################
-//##    WidgetHoverHandler
-//##        Catches hover events for widgets on Object Inspector without needing subclassing
-//############################
-class WidgetHoverHandler : public QObject
-{
-    Q_OBJECT
-
-public:
-    WidgetHoverHandler(QObject *parent) : QObject(parent) {}
-    virtual ~WidgetHoverHandler() {}
-
-    void attach(QWidget *widget);
-
-protected:
-    bool eventFilter(QObject *obj, QEvent *event);
-
-signals:
-    void signalMouseHover(QString header, QString body);
-};
 
 
 //####################################################################################
