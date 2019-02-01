@@ -33,7 +33,7 @@ public:
     virtual void    setAdvisorInfo(QString header, QString body) = 0;
     virtual void    setLabelText(Label_Names label_name, QString new_text) = 0;
 
-    virtual void    updateObjectInspectorAfterItemChange() = 0;
+    virtual void    updateObjectInspectorAfterItemChange(long item_key) = 0;
     virtual void    updateSceneTreeSelectionBasedOnSelectionGroup() = 0;
 };
 

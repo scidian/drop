@@ -34,6 +34,8 @@ void InitializeFlags()
     SetDebugFlag( Debug_Flags::Show_Secret_Menu );
     SetDebugFlag( Debug_Flags::Show_Undo_View );
 
+    SetDebugFlag( Debug_Flags::Turn_Off_Antialiasing );
+
     SetDebugFlag( Debug_Flags::Label_FPS );
     SetDebugFlag( Debug_Flags::Label_Mouse_Coordinates );
     //SetDebugFlag( Debug_Flags::Label_Top_Item_RGBA);
@@ -41,7 +43,7 @@ void InitializeFlags()
     SetDebugFlag( Debug_Flags::Label_Object_Inspector_Build );
     SetDebugFlag( Debug_Flags::Label_Scene_Tree_Drag );
     SetDebugFlag( Debug_Flags::Label_Scene_Tree_Selection );
-    SetDebugFlag( Debug_Flags::Label_Selection_Change_Scene_Tree );
+    //SetDebugFlag( Debug_Flags::Label_Selection_Change_Scene_Tree );
 
     //SetDebugFlag( Debug_Flags::Paint_Rotating_Angles );
     //SetDebugFlag( Debug_Flags::Label_Rotation_Data );

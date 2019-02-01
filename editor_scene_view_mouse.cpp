@@ -25,18 +25,6 @@
 
 
 //####################################################################################
-//##        Mouse Enter
-//####################################################################################
-void SceneGraphicsView::enterEvent(QEvent *event)
-{
-    ///setFocus(Qt::FocusReason::MouseFocusReason);                     // Set focus on mouse enter to allow for space bar pressing hand grab
-    m_relay->setAdvisorInfo(Advisor_Info::Scene_Area);                  // Set Advisor text on mouse enter
-    QGraphicsView::enterEvent(event);
-}
-
-
-
-//####################################################################################
 //##        Mouse Pressed
 //####################################################################################
 void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
@@ -363,6 +351,15 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
     // !!!!! END
 
 
+    // ***** If we're not doing anything, update the advisor based on item under the mouse
+    if (m_view_mode == View_Mode::None) {
+        if (check_item != nullptr) {
+            m_relay->setAdvisorInfo(check_item->data(User_Roles::Name).toString(), check_item->data(User_Roles::Type).toString());
+        } else {
+            m_relay->setAdvisorInfo(Advisor_Info::Scene_Area);
+        }
+    }
+
 
     // ******************* If we're in selection mode, process mouse movement and resize box as needed
    if (m_view_mode == View_Mode::Selecting)
@@ -385,8 +382,10 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
             QGraphicsView::mouseMoveEvent(event);
             if (m_tool_tip->getTipType() != View_Mode::Translating)
                 m_tool_tip->startToolTip(View_Mode::Translating, m_origin, mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
-            else
+            else {
                 m_tool_tip->updateToolTipData( mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
+                my_scene->getSelectionGroup()->updatePositionData();
+            }
         }
     } else {
         // Pass on event to allow movement
@@ -444,8 +443,6 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
         m_rubber_band->hide();
         m_tool_tip->stopToolTip();
         m_view_mode = View_Mode::None;
-
-        m_relay->updateObjectInspectorAfterItemChange();
     }
 
     // Pass on event, update

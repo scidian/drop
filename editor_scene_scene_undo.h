@@ -43,8 +43,9 @@ class MoveCommand : public QUndoCommand
 {
 public:
     MoveCommand(SelectionGroup *group, const QPointF &old_pos, QUndoCommand *parent = nullptr);
-    void undo() override;
-    void redo() override;
+
+    void        undo() override;
+    void        redo() override;
 
 private:
     SelectionGroup         *m_group;
@@ -61,8 +62,8 @@ class SelectionNewGroupCommand : public QUndoCommand
 public:
     SelectionNewGroupCommand(SelectionGroup *group, QList<QGraphicsItem*> old_list, QList<QGraphicsItem*> new_list,
                              QGraphicsItem *old_first, QGraphicsItem *new_first, QUndoCommand *parent = nullptr);
-    void undo() override;
-    void redo() override;
+    void        undo() override;
+    void        redo() override;
 
 private:
     SelectionGroup         *m_group;

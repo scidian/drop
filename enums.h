@@ -100,12 +100,14 @@ enum class Position_Flags {
 typedef enum {
     Key = Qt::UserRole,
 
-    Z_Order,
+    Position,
     Scale,
     Rotation,
     Pre_Rotate_Rotation,
+    Z_Order,
 
     Name,
+    Type,
 } User_Roles;
 
 
@@ -114,6 +116,7 @@ typedef enum {
 //####################################################################################
 namespace User_Property {
     const char Key[7] = "dr_key";
+    const char First[9] = "dr_first";            // Set as true if data is first of a piar, or false if second
     const char Header[10] = "dr_header";
     const char Body[8] = "dr_body";
 }
@@ -302,11 +305,10 @@ enum class Object_Properties
     rotation,               //angle
     size,                   //sizef
     scale,                  //pointf
-    opacity,                //double
 
     // layering
     z_order,                //int
-    group_order,            //int
+    opacity,                //double
 
     // movement
     velocity_x,             //variable

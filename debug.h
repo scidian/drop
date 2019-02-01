@@ -19,6 +19,8 @@ enum class Debug_Flags {
     Show_Secret_Menu,                   // Add special menu to menu bar containing some hidden test functions
     Show_Undo_View,                     // Shows a window with all undo / redo commands from current scene
 
+    Turn_Off_Antialiasing,              // Turns off antialiasing in the GraphicsView
+
     Label_FPS,                          // Show frames per second of SceneGraphicsView
     Label_Mouse_Coordinates,            // Show mouse position coordinates while moving over SceneGraphicsView
     Label_Top_Item_RGBA,                // Show red, green, blue, alpha of pixel on item at top of mouse position

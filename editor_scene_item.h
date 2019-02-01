@@ -12,7 +12,6 @@
 #include <QGraphicsItem>
 
 #include "settings.h"
-
 #include "form_main.h"
 
 class DrScene;
@@ -57,7 +56,9 @@ public:
     // Getters and Setters
     void                    updateProperty(int key, const QVariant & value);
 
+    long                    getAssetKey()  { return m_asset_key; }
     long                    getObjectKey() { return m_object_key; }
+
     Position_Flags          getOrigin() { return m_origin; }
     QColor                  getColorAtPoint(QPointF at_local_point);
     QColor                  getColorAtPoint(QPointF at_view_point, QGraphicsView *mouse_over_view);

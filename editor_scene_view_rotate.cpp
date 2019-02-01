@@ -129,9 +129,7 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
         while (child_angle >=  360) { child_angle -= 360; }
         while (child_angle <= -360) { child_angle += 360; }
 
-        DrItem *child_as_dr = dynamic_cast<DrItem*>(child);
-        child_as_dr->updateProperty(User_Roles::Rotation, child_angle);
-        ///child->setData(User_Roles::Rotation, child_angle);
+        dynamic_cast<DrItem*>(child)->updateProperty(User_Roles::Rotation, child_angle);
     }
 
 

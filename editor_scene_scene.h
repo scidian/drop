@@ -58,7 +58,8 @@ public:
     QRectF          totalSelectedItemsSceneRect();
 
     // Other Widget Update Calls
-    void            updateObjectInspectorData() { m_relay->updateObjectInspectorAfterItemChange(); }
+    InterfaceRelay* getRelay() { return m_relay; }
+    void            updateObjectInspectorData(long item_key) { m_relay->updateObjectInspectorAfterItemChange(item_key); }
     void            updateSceneTreeSelection() { m_relay->updateSceneTreeSelectionBasedOnSelectionGroup(); }
     void            updateView() { emit updateViews(); }
 
@@ -123,10 +124,13 @@ public:
     virtual ~SelectionGroup() override;
 
     // Event Overrides
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
+    virtual void        paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
-    // Getters and Setters
+    // Getters / Setters
     SceneGraphicsScene* getParentScene() { return m_parent_scene; }
+
+    // Function Calls
+    void                updatePositionData();
 };
 
 

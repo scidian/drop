@@ -41,16 +41,20 @@ DrItem::DrItem(DrProject *project, DrScene *scene, long object_key)
     m_asset_width =  m_asset->getWidth();
     m_asset_height = m_asset->getHeight();
 
-    // Store some initial uiser data
+    // Store some initial user data
     setData(User_Roles::Name, project->getAsset( scene->getObject(object_key)->getAssetKey() )->getAssetName() );
+    setData(User_Roles::Type, StringFromType( m_object->getType() ));
+
     updateProperty(User_Roles::Z_Order, m_object->getComponentProperty(Object_Components::layering, Object_Properties::z_order)->getValue());
     updateProperty(User_Roles::Rotation, 0);
     updateProperty(User_Roles::Scale, QPointF(1, 1));
 
     // Set initial set up item settings
     setAcceptHoverEvents(true);                                         // Item tracks mouse movement
-    setTransformationMode(Qt::SmoothTransformation);                    // Turn on anti aliasing
     setShapeMode(QGraphicsPixmapItem::MaskShape);                       // Allows for selecting while ignoring transparent pixels
+
+    if (!Dr::CheckDebugFlag(Debug_Flags::Turn_Off_Antialiasing))
+        setTransformationMode(Qt::SmoothTransformation);                // Turn on anti aliasing
 
     setFlags(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable |
              QGraphicsItem::GraphicsItemFlag::ItemIsMovable |
@@ -68,8 +72,14 @@ DrItem::DrItem(DrProject *project, DrScene *scene, long object_key)
 //####################################################################################
 void DrItem::updateProperty(int key, const QVariant &value)
 {
+    double x, y;
+
     switch (key)
     {
+    case User_Roles::Position:
+        setData(User_Roles::Position, value);
+        m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::position, value);
+        break;
     case User_Roles::Rotation:
         setData(User_Roles::Rotation, value);
         m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::rotation, value);
@@ -77,12 +87,17 @@ void DrItem::updateProperty(int key, const QVariant &value)
     case User_Roles::Scale:
         setData(User_Roles::Scale, value);
         m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::scale, value);
+        x = m_asset_width *  value.toPointF().x();
+        y = m_asset_height * value.toPointF().y();
+        m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::size, QPointF(x, y));
         break;
     case User_Roles::Z_Order:
         setZValue(value.toInt());
         m_object->setComponentPropertyValue(Object_Components::layering, Object_Properties::z_order, value);
         break;
     }
+
+    if (scene()) dynamic_cast<SceneGraphicsScene*>(scene())->getRelay()->updateObjectInspectorAfterItemChange(m_object_key);
 }
 
 

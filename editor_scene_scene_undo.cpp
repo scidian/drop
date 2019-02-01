@@ -118,6 +118,7 @@ MoveCommand::MoveCommand(SelectionGroup *group, const QPointF &old_pos, QUndoCom
 
 void MoveCommand::undo() {
     m_group->getParentScene()->setPositionByOrigin(m_group, Position_Flags::Center, m_old_pos.x(), m_old_pos.y());
+    m_group->updatePositionData();
     m_group->getParentScene()->updateView();
     QString item_text = "Items";
     if (m_group->childItems().count() == 1)
@@ -130,6 +131,7 @@ void MoveCommand::undo() {
 
 void MoveCommand::redo() {
     m_group->getParentScene()->setPositionByOrigin(m_group, Position_Flags::Center, m_new_pos.x(), m_new_pos.y());
+    m_group->updatePositionData();
     m_group->getParentScene()->updateView();
     QString item_text = "Items";
     if (m_group->childItems().count() == 1)
@@ -140,7 +142,6 @@ void MoveCommand::redo() {
             .arg(Dr::RemoveTrailingDecimals(m_new_pos.y(), 1)));
 
 }
-
 
 
 //####################################################################################

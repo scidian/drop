@@ -59,13 +59,14 @@ public:
 
     // Function Calls
     void            buildInspectorFromKeys(QList<long> key_list);
-    void            updateProperties();
+    void            updateProperties(long item_key);
 
     InterfaceRelay* getRelay() { return m_relay; }
 
     // Property Builders
     void            applyHeaderBodyProperties(QWidget *widget, DrProperty *property);
     void            applyHeaderBodyProperties(QWidget *widget, QString header, QString body);
+    void            addToWidgetList(QWidget *widget) { m_widgets.append(widget); }
     QCheckBox*      createCheckBox(DrProperty *property, QFont &font);
     QComboBox*      createComboBox(DrProperty *property, QFont &font);
     QDoubleSpinBox* createDoubleSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type);

@@ -178,9 +178,9 @@ void FormMain::populateScene(long from_scene_key)
 }
 
 
-void FormMain::updateObjectInspectorAfterItemChange()
+void FormMain::updateObjectInspectorAfterItemChange(long item_key)
 {
-    treeInspector->updateProperties();
+    treeInspector->updateProperties(item_key);
 }
 
 void FormMain::updateSceneTreeSelectionBasedOnSelectionGroup()

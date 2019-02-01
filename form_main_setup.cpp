@@ -152,9 +152,10 @@ void FormMain::buildWindowModeEditScene()
                         viewMain = new SceneGraphicsView(widgetSceneView, project, this);
                         viewMain->setObjectName(QStringLiteral("viewMain"));
 
-                        ///viewMain->setRenderHint(QPainter::Antialiasing, false);
-
-                        viewMain->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
+                        if (!Dr::CheckDebugFlag(Debug_Flags::Turn_Off_Antialiasing))
+                            viewMain->setRenderHint(QPainter::Antialiasing, false);
+                        else
+                            viewMain->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
 
                         viewMain->setDragMode(QGraphicsView::DragMode::NoDrag);
                         viewMain->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);

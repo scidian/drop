@@ -85,8 +85,6 @@ void DrObject::initializeObjectSettings(QString new_name, double width, double h
                            "Size", "Width and Height of object in pixels, affected by Scale property.");
     addPropertyToComponent(Object_Components::transform, Object_Properties::scale, Property_Type::PointF, QPointF(1, 1),
                            "Scale", "X and Y scale of item within the scene.");
-    addPropertyToComponent(Object_Components::transform, Object_Properties::opacity, Property_Type::Percent, 100,
-                           "Opacity", "How see through is the item, 0 (invisible) - 100 (solid)");
 
     addComponent(Object_Components::layering, "Layering", "Controls the order items are drawn onto the screen. Lower numbers are "
                                                            "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, true);
@@ -94,8 +92,8 @@ void DrObject::initializeObjectSettings(QString new_name, double width, double h
 
     addPropertyToComponent(Object_Components::layering, Object_Properties::z_order, Property_Type::Int, QVariant::fromValue(z),
                            "Z Order", "Arrangement of item along the z axis in the scene");
-    addPropertyToComponent(Object_Components::layering, Object_Properties::group_order, Property_Type::Int, 0,
-                           "Group Order", "Secondary layering number for those items with the same Z value.");
+    addPropertyToComponent(Object_Components::layering, Object_Properties::opacity, Property_Type::Percent, 100,
+                           "Opacity", "How see transparent an item is, 0 (invisible) - 100 (solid)");
 
     addComponent(Object_Components::movement, "Movement", "Initial starting velocities of item in scene.", Component_Colors::Red_Faded, true);
     getComponent(Object_Components::movement)->setIcon(Component_Icons::Movement);

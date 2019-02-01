@@ -162,9 +162,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
             case Property_Type::Variable:   new_widget = createVariableSpinBoxPair(property_pair.second, fp);                   break;
             case Property_Type::List:       new_widget = createComboBox(property_pair.second, fp);
             }
-
             horizontal_split->addWidget(new_widget);
-            m_widgets.append(new_widget);
+
 
             vertical_layout->addWidget(single_row);
             rowCount++;
@@ -205,8 +204,9 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 //####################################################################################
 //##        Updates the property boxes already in the object inspector for the current item
 //####################################################################################
-void TreeInspector::updateProperties()
+void TreeInspector::updateProperties(long item_key)
 {
+    if (item_key != m_selected_key) return;
     if (IsDrObjectClass(m_selected_type) == false) return;
 
     DrSettings *settings = m_project->findChildSettingsFromKey(m_selected_key);
@@ -217,19 +217,29 @@ void TreeInspector::updateProperties()
         long prop_key = widget->property(User_Property::Key).toInt();
         DrProperty *prop = settings->findPropertyFromPropertyKey(prop_key);
 
-        if (prop != nullptr) {
-            Property_Type prop_type = prop->getPropertyType();
+        if (prop == nullptr || prop_key == 0) continue;
+        Property_Type prop_type = prop->getPropertyType();
 
-            switch (prop_type)
-            {
-            case Property_Type::Angle:
-                QDoubleSpinBox* converted = dynamic_cast<QDoubleSpinBox*>(widget);
-                converted->setValue(prop->getValue().toDouble());
-                break;
-            }
+        switch (prop_type)
+        {
+        case Property_Type::Bool:       dynamic_cast<QCheckBox*>(widget)->setChecked(prop->getValue().toBool());        break;
+        case Property_Type::Int:
+        case Property_Type::Positive:   dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toInt());            break;
+        case Property_Type::Float:
+        case Property_Type::Percent:
+        case Property_Type::Angle:      dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toDouble());   break;
+
+        case Property_Type::PointF:
+        case Property_Type::SizeF:
+            if (dynamic_cast<QDoubleSpinBox*>(widget)->property(User_Property::First).toBool())
+                dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toPointF().x());
+            else
+                dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toPointF().y());
+            break;
         }
     }
 
+    this->update();
 }
 
 

@@ -155,6 +155,15 @@ void SelectionGroup::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
     ///QGraphicsItemGroup::paint(painter, option, widget);       // Allows black selection bounding box to be painted
 }
 
+void SelectionGroup::updatePositionData()
+{
+    QList<QGraphicsItem*>  my_items = this->getParentScene()->getSelectionGroupItems();
+    for (auto child : my_items) {
+        QPointF center = child->sceneTransform().map( child->boundingRect().center() );
+        dynamic_cast<DrItem*>(child)->updateProperty(User_Roles::Position, center);
+    }
+}
+
 
 //####################################################################################
 //##        Custom slimmed from Qt Source Code, "QGraphicsItemGroup->removeFromGroup"

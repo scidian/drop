@@ -93,8 +93,8 @@ private:
 
     // Grid variables
     Grid_Style   m_grid_style = Grid_Style::Lines;                  // Grid type to display
-    double       m_grid_x = 20;                                     // Grid size left to right
-    double       m_grid_y = 20;                                     // Grid size top to bottom
+    double       m_grid_x = 50;                                     // Grid size left to right
+    double       m_grid_y = 50;                                     // Grid size top to bottom
     double       m_grid_rotate = 0;                         // NOT IMPLEMENTED: Rotation of grid lines
 
     // Keyboard flags
@@ -160,7 +160,6 @@ public:
     virtual bool    eventFilter(QObject *obj, QEvent *event) override;                      // Inherited from QObject
     virtual void    scrollContentsBy(int dx, int dy) override;                              // Inherited from QAbstractScrollArea
 
-    virtual void    enterEvent(QEvent *event) override;                                     // Inherited from QWidget
     virtual void    keyPressEvent(QKeyEvent *event) override;                               // Inherited from QWidget
     virtual void    keyReleaseEvent(QKeyEvent *event) override;                             // Inherited from QWidget
     virtual void    mouseMoveEvent(QMouseEvent *event) override;                            // Inherited from QWidget

@@ -48,7 +48,11 @@ void SceneGraphicsView::startResize(QPoint mouse_in_view)
     m_pre_resize_corners[Position_Flags::Right] =        t.map( QLineF(r.topRight(), r.bottomRight()).pointAt(.5) );
 
     // Set up our custom tool tip
-    m_tool_tip->startToolTip(m_view_mode, mouse_in_view, QPointF( m_start_resize_rect.width(), m_start_resize_rect.height() ));
+    double group_width =  QLineF( mapToScene(m_handles_centers[Position_Flags::Left].toPoint()),
+                                  mapToScene(m_handles_centers[Position_Flags::Right].toPoint()) ).length();
+    double group_height = QLineF( mapToScene(m_handles_centers[Position_Flags::Top].toPoint()),
+                                  mapToScene(m_handles_centers[Position_Flags::Bottom].toPoint()) ).length();
+    m_tool_tip->startToolTip(m_view_mode, mouse_in_view, QPointF( group_width, group_height ) );
 }
 
 
@@ -230,7 +234,7 @@ void SceneGraphicsView::removeShearing(QGraphicsItem *item)
     QTransform no_skew = QTransform().rotate(angle).scale(scale.x(), scale.y());
     item->setTransform(no_skew);
 
-    item->setData(User_Roles::Scale, QPointF(scale.x(), scale.y()) );
+    dynamic_cast<DrItem*>(item)->updateProperty(User_Roles::Scale, QPointF(scale.x(), scale.y()) );
 }
 
 // Pulls out scale from current item screen transform (takes away angle first from stored angle data)
