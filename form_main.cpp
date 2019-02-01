@@ -136,10 +136,14 @@ void FormMain::centerViewTimer(QPointF center_point) {  viewMain->centerOn(cente
 // Emits an Undo stack command to change scenes
 void FormMain::populateScene(long from_scene_key)
 {
+    if (scene->scene_mutex.tryLock(10) == false) return;
+
     if (scene->getCurrentSceneKeyShown() != from_scene_key) {
         viewMain->emptySelectionGroupIfNotEmpty();
         emit newSceneSelected(project, scene, scene->getCurrentSceneKeyShown(), from_scene_key);
     }
+
+    scene->scene_mutex.unlock();
 }
 
 // Call to put in a signal to change the Advisor to the que

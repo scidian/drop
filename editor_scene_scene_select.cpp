@@ -42,7 +42,9 @@ void SceneGraphicsScene::addItemToSelectionGroup(QGraphicsItem *item)
     int start_count = m_selection_group->childItems().count();
 
     // Check if we were passed the selection group itself
-    if (item == m_selection_group) return;
+    if (m_selection_group != nullptr)
+        if (item == dynamic_cast<QGraphicsItem*>(m_selection_group))
+            return;
 
     // If item is not in group, add it in
     if (m_selection_group->childItems().contains(item) == false) {
