@@ -60,8 +60,12 @@ private:
 class SelectionNewGroupCommand : public QUndoCommand
 {
 public:
-    SelectionNewGroupCommand(SelectionGroup *group, QList<QGraphicsItem*> old_list, QList<QGraphicsItem*> new_list,
-                             QGraphicsItem *old_first, QGraphicsItem *new_first, QUndoCommand *parent = nullptr);
+    SelectionNewGroupCommand(SelectionGroup *group,
+                             QList<QGraphicsItem*> old_list,
+                             QList<QGraphicsItem*> new_list,
+                             DrObject *old_first,
+                             DrObject *new_first,
+                             QUndoCommand *parent = nullptr);
     void        undo() override;
     void        redo() override;
 
@@ -69,8 +73,8 @@ private:
     SelectionGroup         *m_group;
     QList<QGraphicsItem*>   m_old_list;
     QList<QGraphicsItem*>   m_new_list;
-    QGraphicsItem          *m_old_first_selected;
-    QGraphicsItem          *m_new_first_selected;
+    DrObject               *m_old_first_selected;
+    DrObject               *m_new_first_selected;
 };
 
 

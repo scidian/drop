@@ -25,10 +25,10 @@ class DrItem : public QGraphicsPixmapItem
 private:
     DrProject      *m_project;                              // Stores a pointer to the parent project
 
-    DrObject       *m_object;                               // Stores the pointer to the object for this item
+    DrObject       *m_object = nullptr;                     // Stores the pointer to the object for this item
     long            m_object_key;                           // Stores the object project key this item represents
 
-    DrAsset        *m_asset;                                // Stores pointer to the asset for this item
+    DrAsset        *m_asset = nullptr;                      // Stores pointer to the asset for this item
     long            m_asset_key;                            // Stores the asset project key this item is drawn from
     double          m_asset_width;                          // Width of asset this item is drawn from
     double          m_asset_height;                         // Height of asset this item is drawn from

@@ -76,7 +76,8 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
                     // ***** If we clicked clicked a new item, set selection group to that
                     if (my_items.contains(m_origin_item) == false) {
                         emit selectionGroupNewGroup(my_scene->getSelectionGroup(), my_items, QList<QGraphicsItem*>({ m_origin_item }),
-                                                    my_scene->getFirstSelectedItem(), m_origin_item);
+                                                    my_scene->getFirstSelectedItem(),
+                                                    dynamic_cast<DrItem*>(m_origin_item)->getObject());
                         my_scene->selectSelectionGroup();
                     }
 
@@ -119,11 +120,14 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
                 // If we lost the first item, cancel having a first item
                 if (new_list.count() > 0) {
-                    QGraphicsItem *new_first = my_scene->getFirstSelectedItem();
+                    DrObject *new_first = my_scene->getFirstSelectedItem();
+
+                    QGraphicsItem *new_first_as_graphics = nullptr;
+                    if (new_first) new_first_as_graphics = my_scene->getFirstSelectedItem()->getDrItem();
 
                     if (new_list.count() == 1)
-                        new_first = new_list.first();
-                    else if (new_list.contains(my_scene->getFirstSelectedItem()) == false)
+                        new_first = dynamic_cast<DrItem*>(new_list.first())->getObject();
+                    else if (new_list.contains(new_first_as_graphics) == false)
                         new_first = nullptr;
 
                     emit selectionGroupNewGroup(my_scene->getSelectionGroup(), my_items, new_list,
@@ -433,8 +437,10 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 
             // Otherwise check to see if selected items list has changed, if so emit new group command
             } else if (group->childItems() != m_items_start) {
-                if (group->childItems().count() == 1)
-                    emit selectionGroupNewGroup(group, m_items_start, group->childItems(), m_first_start, group->childItems().first());
+                if (group->childItems().count() == 1) {
+                    DrObject *new_first = dynamic_cast<DrItem*>(group->childItems().first())->getObject();
+                    emit selectionGroupNewGroup(group, m_items_start, group->childItems(), m_first_start, new_first);
+                }
                 else if ( group->childItems().count() > 1)
                     emit selectionGroupNewGroup(group, m_items_start, group->childItems(), m_first_start, my_scene->getFirstSelectedItem());
             }

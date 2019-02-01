@@ -53,19 +53,19 @@ void SceneGraphicsScene::addItemToSelectionGroup(QGraphicsItem *item)
             QPointF scale = QPointF(1, 1);
 
             if (start_count == 0) {
-                scale = m_first_selected->data(User_Roles::Scale).toPointF();
+                scale = m_first_selected->getDrItem()->data(User_Roles::Scale).toPointF();
             } else {
                 first = m_selection_group->childItems().first();
                 m_selection_group->removeFromGroup(first);
             }
 
-            double  angle = m_first_selected->data(User_Roles::Rotation).toDouble();
+            double  angle = m_first_selected->getDrItem()->data(User_Roles::Rotation).toDouble();
             QPointF center = m_selection_group->boundingRect().center();
             QTransform t = QTransform().translate(center.x(), center.y()).rotate(angle).scale(scale.x(), scale.y()).translate(-center.x(), -center.y());
             m_selection_group->setTransform(t);
             m_selection_group->setData(User_Roles::Rotation, angle);
             m_selection_group->setData(User_Roles::Scale, scale);
-            m_selection_group->setZValue(m_first_selected->zValue());
+            m_selection_group->setZValue(m_first_selected->getDrItem()->zValue());
 
             if (start_count == 1) m_selection_group->addToGroup(first);
         }
@@ -138,6 +138,21 @@ void SceneGraphicsScene::selectSelectionGroup()
 {       m_selection_group->setSelected(true);       }
 
 
+// Returns list of objects represented from selected items
+QList<DrObject*> SceneGraphicsScene::getSelectionGroupObjects() {
+    return convertListItemsToObjects(m_selection_group->childItems());
+}
+
+// Returns list of objects represented from item list
+QList<DrObject*> SceneGraphicsScene::convertListItemsToObjects(QList<QGraphicsItem*> graphics_items)
+{
+    QList<DrObject*> objects;
+    for (auto item : graphics_items) {
+        DrItem *dritem = dynamic_cast<DrItem*>(item);
+        objects.append(dritem->getObject());
+    }
+    return objects;
+}
 
 
 //####################################################################################

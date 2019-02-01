@@ -63,9 +63,9 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
                     SLOT(selectionGroupMoved(SelectionGroup*, QPointF)));
 
             connect(this,     SIGNAL(selectionGroupNewGroup(SelectionGroup*, QList<QGraphicsItem*>, QList<QGraphicsItem*>,
-                                                            QGraphicsItem *, QGraphicsItem *)),
+                                                            DrObject*, DrObject*)),
                     my_scene, SLOT(selectionGroupNewGroup(SelectionGroup*, QList<QGraphicsItem*>, QList<QGraphicsItem*>,
-                                                          QGraphicsItem *, QGraphicsItem *)) );
+                                                          DrObject*, DrObject*)) );
         }
     }
 

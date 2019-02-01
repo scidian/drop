@@ -51,8 +51,11 @@ void SceneGraphicsScene::newSceneSelected(DrProject *project, SceneGraphicsScene
 void SceneGraphicsScene::selectionGroupMoved(SelectionGroup *moved_group, const QPointF &old_position)
 {   m_undo->push(new MoveCommand(moved_group, old_position));   }
 
-void SceneGraphicsScene::selectionGroupNewGroup(SelectionGroup *moved_group, QList<QGraphicsItem*> old_list, QList<QGraphicsItem*> new_list,
-                                                QGraphicsItem *old_first, QGraphicsItem *new_first)
+void SceneGraphicsScene::selectionGroupNewGroup(SelectionGroup *moved_group,
+                                                QList<QGraphicsItem*> old_list,
+                                                QList<QGraphicsItem*> new_list,
+                                                DrObject *old_first,
+                                                DrObject *new_first)
 {   m_undo->push(new SelectionNewGroupCommand(moved_group, old_list, new_list, old_first, new_first));    }
 
 
@@ -161,8 +164,10 @@ void MoveCommand::redo() {
 //##        Deselects old items, Selects one new item
 //####################################################################################
 SelectionNewGroupCommand::SelectionNewGroupCommand(SelectionGroup *group,
-                                                   QList<QGraphicsItem*> old_list, QList<QGraphicsItem*> new_list,
-                                                   QGraphicsItem *old_first, QGraphicsItem *new_first,
+                                                   QList<QGraphicsItem*> old_list,
+                                                   QList<QGraphicsItem*> new_list,
+                                                   DrObject *old_first,
+                                                   DrObject *new_first,
                                                    QUndoCommand *parent) : QUndoCommand(parent) {
     m_group = group;
     m_old_list = old_list;
@@ -174,7 +179,9 @@ SelectionNewGroupCommand::SelectionNewGroupCommand(SelectionGroup *group,
 void SelectionNewGroupCommand::undo() {
     m_group->getParentScene()->emptySelectionGroup();
     m_group->getParentScene()->setFirstSelectedItem(m_old_first_selected);
+
     for (auto item : m_old_list) m_group->getParentScene()->addItemToSelectionGroup(item);
+
     m_group->getParentScene()->updateSceneTreeSelection();
     m_group->getParentScene()->updateView();
     if (m_new_list.count() > 1)
@@ -188,8 +195,10 @@ void SelectionNewGroupCommand::undo() {
 void SelectionNewGroupCommand::redo() {
     m_group->getParentScene()->emptySelectionGroup();
     m_group->getParentScene()->setFirstSelectedItem(m_new_first_selected);
+
     for (auto item : m_new_list)
         m_group->getParentScene()->addItemToSelectionGroup(item);
+
     m_group->getParentScene()->updateSceneTreeSelection();
     m_group->getParentScene()->updateView();
     if (m_new_list.count() > 1)

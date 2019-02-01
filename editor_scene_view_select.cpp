@@ -70,8 +70,10 @@ void SceneGraphicsView::processSelection(QPoint mouse_in_view)
     if (my_scene->getSelectionGroupCount() == 0)
         my_scene->resetSelectionGroup();
 
-    if (m_items_keep.count() == 0 && selection_area_items.count() == 1)
-        my_scene->setFirstSelectedItem(selection_area_items.first());
+    if (m_items_keep.count() == 0 && selection_area_items.count() == 1) {
+        DrObject *new_first = dynamic_cast<DrItem*>(selection_area_items.first())->getObject();
+        my_scene->setFirstSelectedItem(new_first);
+    }
 
     // Add items in selection area to group
     for (auto item : selection_area_items) my_scene->addItemToSelectionGroup(item);

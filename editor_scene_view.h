@@ -10,9 +10,10 @@
 
 #include <QtWidgets>
 
-#include <enums.h>
+#include "enums.h"
 
 class DrProject;
+class DrObject;
 class DrItem;
 class SelectionGroup;
 
@@ -127,7 +128,7 @@ private:
     SceneViewRubberBand            *m_rubber_band;                  // Holds our view's RubberBand object
     QList<QGraphicsItem*>           m_items_start;                  // Stores items selected at start of new rubber band box
     QList<QGraphicsItem*>           m_items_keep;                   // Stores list of items to keep on top of rubber band items (with control key)
-    QGraphicsItem                  *m_first_start;                  // Stores first selected item before rubber band box stareted
+    DrObject                       *m_first_start;                  // Stores first selected item before rubber band box stareted
 
     // View_Mode::Resizing Variables
     QRectF                          m_start_resize_rect;            // Stores starting rect of selection before resize starts
@@ -221,8 +222,11 @@ public slots:
 signals:
     // Signals used to emit UndoStack Commands
     void    selectionGroupMoved(SelectionGroup *moved_group, const QPointF &old_position);
-    void    selectionGroupNewGroup(SelectionGroup *moved_group, QList<QGraphicsItem*> old_list, QList<QGraphicsItem*> new_list,
-                                   QGraphicsItem *old_first, QGraphicsItem *new_first);
+    void    selectionGroupNewGroup(SelectionGroup *moved_group,
+                                   QList<QGraphicsItem*> old_list,
+                                   QList<QGraphicsItem*> new_list,
+                                   DrObject *old_first,
+                                   DrObject *new_first);
 
 };
 
