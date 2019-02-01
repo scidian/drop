@@ -90,7 +90,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 
 
     // ########## Populates SceneGraphicsScene from current DrScene
-    //populateScene( project->getWorldWithName("World 2")->getSceneWithName("4")->getKey() );
+    populateScene( project->getWorldWithName("World 2")->getSceneWithName("4")->getKey() );
 
 
 
@@ -136,8 +136,10 @@ void FormMain::centerViewTimer(QPointF center_point) {  viewMain->centerOn(cente
 // Emits an Undo stack command to change scenes
 void FormMain::populateScene(long from_scene_key)
 {
-    if (scene->getCurrentSceneKeyShown() != from_scene_key)
+    if (scene->getCurrentSceneKeyShown() != from_scene_key) {
+        viewMain->emptySelectionGroupIfNotEmpty();
         emit newSceneSelected(project, scene, scene->getCurrentSceneKeyShown(), from_scene_key);
+    }
 }
 
 // Call to put in a signal to change the Advisor to the que

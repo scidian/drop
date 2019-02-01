@@ -75,7 +75,9 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
                     // ***** If we clicked clicked a new item, set selection group to that
                     if (my_items.contains(m_origin_item) == false) {
-                        emit selectionGroupNewGroup(my_scene->getSelectionGroup(), my_items, QList<QGraphicsItem*>({ m_origin_item }),
+                        emit selectionGroupNewGroup(my_scene,
+                                                    my_scene->convertListItemsToObjects(my_items),
+                                                    QList<DrObject*>({ dynamic_cast<DrItem*>(m_origin_item)->getObject() }),
                                                     my_scene->getFirstSelectedItem(),
                                                     dynamic_cast<DrItem*>(m_origin_item)->getObject());
                         my_scene->selectSelectionGroup();
@@ -130,11 +132,13 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
                     else if (new_list.contains(new_first_as_graphics) == false)
                         new_first = nullptr;
 
-                    emit selectionGroupNewGroup(my_scene->getSelectionGroup(), my_items, new_list,
+                    emit selectionGroupNewGroup(my_scene,
+                                                my_scene->convertListItemsToObjects(my_items),
+                                                my_scene->convertListItemsToObjects(new_list),
                                                 my_scene->getFirstSelectedItem(), new_first);
                     my_scene->selectSelectionGroup();
                 } else {
-                    emit selectionGroupNewGroup(my_scene->getSelectionGroup(), my_items, QList<QGraphicsItem*>({}),
+                    emit selectionGroupNewGroup(my_scene, my_scene->convertListItemsToObjects(my_items), QList<DrObject*>({}),
                                                 my_scene->getFirstSelectedItem(), nullptr);
                 }
             }
@@ -388,7 +392,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
                 m_tool_tip->startToolTip(View_Mode::Translating, m_origin, mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
             else {
                 m_tool_tip->updateToolTipData( mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
-                my_scene->getSelectionGroup()->updateChildrenPositionData();
+                my_scene->updateChildrenPositionData();
             }
         }
     } else {
@@ -413,7 +417,7 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
     // Test for scene, convert to our custom class
     if (scene() == nullptr) return;
     SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
-    QList<QGraphicsItem*>  empty{ };
+    QList<DrObject*>  empty{ };
 
     // Process left mouse button released
     if (event->button() & Qt::LeftButton)
@@ -423,7 +427,7 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
             SelectionGroup *group = my_scene->getSelectionGroup();
             QPointF check_pos = group->sceneTransform().map(group->boundingRect().center());
             if (group->childItems().count() > 0 && m_old_pos != check_pos) {
-                emit selectionGroupMoved(group, m_old_pos);
+                emit selectionGroupMoved(my_scene, m_old_pos);
             }
         }
 
@@ -433,16 +437,18 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 
             // If we had items selected and now we don't, emit undo clear selection command
             if (group->childItems().count() == 0 && m_items_start.count() != 0) {
-                emit selectionGroupNewGroup(group, m_items_start, empty, m_first_start, nullptr);
+                emit selectionGroupNewGroup(my_scene, my_scene->convertListItemsToObjects(m_items_start), empty, m_first_start, nullptr);
 
             // Otherwise check to see if selected items list has changed, if so emit new group command
             } else if (group->childItems() != m_items_start) {
                 if (group->childItems().count() == 1) {
                     DrObject *new_first = dynamic_cast<DrItem*>(group->childItems().first())->getObject();
-                    emit selectionGroupNewGroup(group, m_items_start, group->childItems(), m_first_start, new_first);
+                    emit selectionGroupNewGroup(my_scene, my_scene->convertListItemsToObjects(m_items_start),
+                                                my_scene->convertListItemsToObjects(group->childItems()), m_first_start, new_first);
                 }
                 else if ( group->childItems().count() > 1)
-                    emit selectionGroupNewGroup(group, m_items_start, group->childItems(), m_first_start, my_scene->getFirstSelectedItem());
+                    emit selectionGroupNewGroup(my_scene, my_scene->convertListItemsToObjects(m_items_start),
+                                                my_scene->convertListItemsToObjects(group->childItems()), m_first_start, my_scene->getFirstSelectedItem());
             }
         }
 
@@ -456,6 +462,19 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
     update();
 }
 
+
+// Called right before scene switch to empty selection group
+void SceneGraphicsView::emptySelectionGroupIfNotEmpty()
+{
+    if (!scene()) return;
+    SceneGraphicsScene  *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+    SelectionGroup      *group = my_scene->getSelectionGroup();
+    QList<DrObject*>     empty{ };
+
+    if (group->childItems().count() != 0)
+        emit selectionGroupNewGroup(my_scene, my_scene->convertListItemsToObjects(group->childItems()), empty,
+                                    my_scene->getFirstSelectedItem(), nullptr);
+}
 
 
 //####################################################################################

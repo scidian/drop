@@ -59,13 +59,11 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 
             connect(my_scene, &SceneGraphicsScene::updateViews, [this]() { update(); });
 
-            connect(this, SIGNAL(selectionGroupMoved(SelectionGroup*, QPointF)), my_scene,
-                    SLOT(selectionGroupMoved(SelectionGroup*, QPointF)));
+            connect(this,   SIGNAL(selectionGroupMoved(SceneGraphicsScene*, QPointF)),
+                    my_scene, SLOT(selectionGroupMoved(SceneGraphicsScene*, QPointF)));
 
-            connect(this,     SIGNAL(selectionGroupNewGroup(SelectionGroup*, QList<QGraphicsItem*>, QList<QGraphicsItem*>,
-                                                            DrObject*, DrObject*)),
-                    my_scene, SLOT(selectionGroupNewGroup(SelectionGroup*, QList<QGraphicsItem*>, QList<QGraphicsItem*>,
-                                                          DrObject*, DrObject*)) );
+            connect(this,     SIGNAL(selectionGroupNewGroup(SceneGraphicsScene*, QList<DrObject*>, QList<DrObject*>, DrObject*, DrObject*)),
+                    my_scene,   SLOT(selectionGroupNewGroup(SceneGraphicsScene*, QList<DrObject*>, QList<DrObject*>, DrObject*, DrObject*)) );
         }
     }
 

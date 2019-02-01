@@ -18,8 +18,7 @@
 class ChangeSceneCommand : public QUndoCommand
 {
 public:
-    ChangeSceneCommand(QUndoStack *undo_stack, DrProject *project, SceneGraphicsScene *scene, long old_scene, long new_scene,
-                       QUndoCommand *parent = nullptr);
+    ChangeSceneCommand(DrProject *project, SceneGraphicsScene *scene, long old_scene, long new_scene, QUndoCommand *parent = nullptr);
 
     void        undo() override;
     void        redo() override;
@@ -27,7 +26,6 @@ public:
     QString     changeScene(long old_scene, long new_scene, bool is_undo);
 
 private:
-    QUndoStack             *m_undo_stack;
     DrProject              *m_project;
     SceneGraphicsScene     *m_scene;
     long                    m_old_scene;
@@ -42,13 +40,13 @@ private:
 class MoveCommand : public QUndoCommand
 {
 public:
-    MoveCommand(SelectionGroup *group, const QPointF &old_pos, QUndoCommand *parent = nullptr);
+    MoveCommand(SceneGraphicsScene *scene, const QPointF &old_pos, QUndoCommand *parent = nullptr);
 
     void        undo() override;
     void        redo() override;
 
 private:
-    SelectionGroup         *m_group;
+    SceneGraphicsScene     *m_scene;
     QPointF                 m_old_pos;
     QPointF                 m_new_pos;
 };
@@ -60,9 +58,9 @@ private:
 class SelectionNewGroupCommand : public QUndoCommand
 {
 public:
-    SelectionNewGroupCommand(SelectionGroup *group,
-                             QList<QGraphicsItem*> old_list,
-                             QList<QGraphicsItem*> new_list,
+    SelectionNewGroupCommand(SceneGraphicsScene *scene,
+                             QList<DrObject*> old_list,
+                             QList<DrObject*> new_list,
                              DrObject *old_first,
                              DrObject *new_first,
                              QUndoCommand *parent = nullptr);
@@ -70,9 +68,9 @@ public:
     void        redo() override;
 
 private:
-    SelectionGroup         *m_group;
-    QList<QGraphicsItem*>   m_old_list;
-    QList<QGraphicsItem*>   m_new_list;
+    SceneGraphicsScene     *m_scene;
+    QList<DrObject*>        m_old_list;
+    QList<DrObject*>        m_new_list;
     DrObject               *m_old_first_selected;
     DrObject               *m_new_first_selected;
 };

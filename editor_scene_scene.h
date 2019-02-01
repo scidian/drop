@@ -77,6 +77,7 @@ public:
     QGraphicsItem*  getItemAtPosition(QPointF position);
     void            resetSelectionGroup();
     void            selectSelectionGroup();
+    void            updateChildrenPositionData();
 
     // Custom Add / Remove from Selection Group without calling update()
     void            addToGroupNoUpdate(QGraphicsItem *item);
@@ -97,17 +98,17 @@ public:
     QList<DrObject*>      getSelectionGroupObjects();
 
     DrObject*             getFirstSelectedItem() { return m_first_selected; }
-    void                  setFirstSelectedItem(DrObject *item) { m_first_selected = item; }
+    void                  setFirstSelectedItem(DrObject *object) { m_first_selected = object; }
 
 public slots:
     void            sceneChanged(QList<QRectF> region);                             // Used to resize scene area to fit contents
 
     // Undo Commands
     void            newSceneSelected(DrProject *project, SceneGraphicsScene *scene, long old_scene, long new_scene);
-    void            selectionGroupMoved(SelectionGroup *moved_group, const QPointF &old_position);
-    void            selectionGroupNewGroup(SelectionGroup *moved_group,
-                                           QList<QGraphicsItem*> old_list,
-                                           QList<QGraphicsItem*> new_list,
+    void            selectionGroupMoved(SceneGraphicsScene *scene, const QPointF &old_position);
+    void            selectionGroupNewGroup(SceneGraphicsScene *scene,
+                                           QList<DrObject*> old_list,
+                                           QList<DrObject*> new_list,
                                            DrObject *old_first,
                                            DrObject *new_first);
 
@@ -137,9 +138,6 @@ public:
 
     // Getters / Setters
     SceneGraphicsScene* getParentScene() { return m_parent_scene; }
-
-    // Function Calls
-    void                updateChildrenPositionData();
 };
 
 

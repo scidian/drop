@@ -28,7 +28,6 @@ private:
 
     DrProject  *m_parent_project;                           // holds reference to parent Project class that handles key generation for project
 
-
 public:
     // Constructor & destructor
     DrWorld(DrProject *parent_project, long new_world_key, QString new_world_name);

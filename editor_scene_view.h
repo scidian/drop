@@ -18,6 +18,7 @@ class DrItem;
 class SelectionGroup;
 
 class InterfaceRelay;
+class SceneGraphicsScene;
 class SceneViewRubberBand;
 class SceneViewToolTip;
 
@@ -196,6 +197,7 @@ public:
     // Selection Functions
     void            startSelect(QMouseEvent *event);
     void            processSelection(QPoint mouse_in_view);
+    void            emptySelectionGroupIfNotEmpty();
 
     // Rotation Functions
     void            startRotate(QPoint mouse_in_view);
@@ -221,10 +223,10 @@ public slots:
 
 signals:
     // Signals used to emit UndoStack Commands
-    void    selectionGroupMoved(SelectionGroup *moved_group, const QPointF &old_position);
-    void    selectionGroupNewGroup(SelectionGroup *moved_group,
-                                   QList<QGraphicsItem*> old_list,
-                                   QList<QGraphicsItem*> new_list,
+    void    selectionGroupMoved(SceneGraphicsScene *scene, const QPointF &old_position);
+    void    selectionGroupNewGroup(SceneGraphicsScene *scene,
+                                   QList<DrObject*> old_list,
+                                   QList<DrObject*> new_list,
                                    DrObject *old_first,
                                    DrObject *new_first);
 

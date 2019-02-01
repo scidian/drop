@@ -122,6 +122,15 @@ QGraphicsItem* SceneGraphicsScene::getItemAtPosition(QPointF position)
     return item;
 }
 
+void SceneGraphicsScene::updateChildrenPositionData()
+{
+    QList<QGraphicsItem*>  my_items = this->getSelectionGroupItems();
+    for (auto child : my_items) {
+        QPointF center = child->sceneTransform().map( child->boundingRect().center() );
+        dynamic_cast<DrItem*>(child)->updateProperty(User_Roles::Position, center);
+    }
+}
+
 SelectionGroup* SceneGraphicsScene::getSelectionGroup()
 {       return m_selection_group; }
 
@@ -146,7 +155,7 @@ QList<DrObject*> SceneGraphicsScene::getSelectionGroupObjects() {
 // Returns list of objects represented from item list
 QList<DrObject*> SceneGraphicsScene::convertListItemsToObjects(QList<QGraphicsItem*> graphics_items)
 {
-    QList<DrObject*> objects;
+    QList<DrObject*> objects {};
     for (auto item : graphics_items) {
         DrItem *dritem = dynamic_cast<DrItem*>(item);
         objects.append(dritem->getObject());
@@ -168,15 +177,6 @@ void SelectionGroup::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
     Q_UNUSED(widget);
 
     ///QGraphicsItemGroup::paint(painter, option, widget);       // Allows black selection bounding box to be painted
-}
-
-void SelectionGroup::updateChildrenPositionData()
-{
-    QList<QGraphicsItem*>  my_items = this->getParentScene()->getSelectionGroupItems();
-    for (auto child : my_items) {
-        QPointF center = child->sceneTransform().map( child->boundingRect().center() );
-        dynamic_cast<DrItem*>(child)->updateProperty(User_Roles::Position, center);
-    }
 }
 
 
