@@ -103,6 +103,7 @@ public:
     virtual void    buildAssetList();
     virtual void    buildObjectInspector(QList<long> key_list);
     virtual void    buildTreeSceneList();
+    virtual void    centerViewOn(QPointF center_point);
     virtual void    populateScene(long from_scene_key);
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list);
     virtual void    setAdvisorInfo(QString header, QString body);
@@ -124,6 +125,7 @@ private:
     void        menuListChildren();
 
 private slots:
+    void        centerViewTimer(QPointF center_point);
     void        editMenuAboutToShow();
     void        editMenuAboutToHide();
 

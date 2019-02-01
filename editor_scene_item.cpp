@@ -45,9 +45,11 @@ DrItem::DrItem(DrProject *project, DrScene *scene, long object_key)
     setData(User_Roles::Name, project->getAsset( scene->getObject(object_key)->getAssetKey() )->getAssetName() );
     setData(User_Roles::Type, StringFromType( m_object->getType() ));
 
+    double angle = m_object->getComponentProperty(Object_Components::transform, Object_Properties::rotation)->getValue().toDouble();
+    QPointF scale = m_object->getComponentProperty(Object_Components::transform, Object_Properties::scale)->getValue().toPointF();
     updateProperty(User_Roles::Z_Order, m_object->getComponentProperty(Object_Components::layering, Object_Properties::z_order)->getValue());
-    updateProperty(User_Roles::Rotation, 0);
-    updateProperty(User_Roles::Scale, QPointF(1, 1));
+    updateProperty(User_Roles::Rotation, QVariant::fromValue(angle));
+    updateProperty(User_Roles::Scale, scale);
 
     // Set initial set up item settings
     setAcceptHoverEvents(true);                                         // Item tracks mouse movement
@@ -64,6 +66,10 @@ DrItem::DrItem(DrProject *project, DrScene *scene, long object_key)
     // Load image from asset
     setPixmap(m_asset->getComponentProperty(Asset_Components::animation, Asset_Properties::animation_default)->getValue().value<QPixmap>());
 
+    // Adjust item to proper transform
+    QPointF center = boundingRect().center();
+    QTransform t = QTransform().translate(center.x(), center.y()).rotate(angle).scale(scale.x(), scale.y()).translate(-center.x(), -center.y());
+    setTransform(t);
 }                                     
 
 

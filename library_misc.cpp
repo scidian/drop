@@ -32,11 +32,10 @@ bool IsCloseTo(double number_desired, double number_to_check, double tolerance)
 //####################################################################################
 QString RemoveTrailingDecimals(double value, int max_decimal_places)
 {
-    QWidget widget;
     double int_part, decimal_part = 0;
 
     // Remove any extra starting decimal places
-    value = widget.locale().toString(value, QLatin1Char('f').unicode(), max_decimal_places).toDouble();
+    value = QString::number(value, 'f', max_decimal_places).toDouble();
 
     int count = 0;
     while (count < max_decimal_places) {
@@ -45,7 +44,7 @@ QString RemoveTrailingDecimals(double value, int max_decimal_places)
         ++count;
     }
 
-    return widget.locale().toString(value, QLatin1Char('f').unicode(), count);
+    return QString::number(value, 'f', count);
 }
 
 

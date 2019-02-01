@@ -78,6 +78,11 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
     if (scene() == nullptr) return;
     SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
 
+    // Store current center point of scene, so that if we go to a new scene and come back we stay in the same place
+    if (my_scene->getCurrentSceneShown())
+        my_scene->getCurrentSceneShown()->setViewCenterPoint( mapToScene( this->viewport()->rect().center() ) );
+
+    // If theres no selection we don't need to perform rest of paint routine
     if (my_scene->getSelectionGroupCount() < 1) {
         QGraphicsView::paintEvent(event);
         return;

@@ -27,6 +27,7 @@ public:
     virtual void    buildObjectInspector(QList<long> key_list) = 0;
     virtual void    buildTreeSceneList() = 0;
 
+    virtual void    centerViewOn(QPointF center_point) = 0;
     virtual void    populateScene(long from_scene_key) = 0;
 
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list) = 0;

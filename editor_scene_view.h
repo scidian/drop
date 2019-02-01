@@ -113,6 +113,7 @@ private:
     QTime                               m_origin_timer;             // Tracks time since mouse down to help buffer movement while selecting
     bool                                m_allow_movement = false;   // Used along with m_origin_timer to help buffer movement while selecting
     QPointF                             m_old_pos;                  // Used to track position movement for QUndoStack
+    bool                                m_shown_a_scene = false;    // False until a scene is loaded for the first time
 
     // Selection Bounding Box Variables
     std::map<Position_Flags, QPolygonF> m_handles;                  // Stores QRects of current selection box handles
@@ -171,6 +172,8 @@ public:
 
     // View Display Functions
     void            applyUpdatedMatrix();
+    bool            hasLoadedFirstScene() { return m_shown_a_scene; }
+    void            loadedFirstScene() { m_shown_a_scene = true; }
     void            zoomInOut(int level);
 
     // Misc Functions
@@ -180,7 +183,6 @@ public:
     QPointF         extractScaleFromItem(QGraphicsItem *item);
     QGraphicsItem*  itemOnTopAtPosition(QPoint check_point);
     QRectF          rectAtCenterPoint(QPoint center, double rect_size);
-    QRectF          totalSelectedItemsSceneRect();
     void            updateSelectionBoundingBox();
 
     // Paint Functions

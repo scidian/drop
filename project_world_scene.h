@@ -31,7 +31,8 @@ private:
     DrProject  *m_parent_project;                           // holds reference to parent Project class that handles key generation for project
     DrWorld    *m_parent_world;                             // holds reference to parent World class
 
-    bool m_is_start_scene;
+    bool        m_is_start_scene;
+    QPointF     m_center_view_point { 0, 0 };               // holds the center point the view was on last time this scene was shown
 
 public:
     // Constructor & destructor
@@ -45,6 +46,11 @@ public:
     DrWorld*        getParentWorld()    { return m_parent_world; }
     ObjectMap       getObjectMap()      { return m_objects; }
     DrObject*       getObject(long key) { return m_objects[key]; }
+
+    QPointF         getViewCenterPoint(){ return m_center_view_point; }
+    void            setViewCenterPoint(QPointF new_point) { m_center_view_point = new_point; }
+
+    bool            isStartScene()      { return m_is_start_scene; }
 
     // External calls
     void            addObject(DrType new_type, long from_asset_key, double x, double y, long z);

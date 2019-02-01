@@ -87,7 +87,8 @@ QString ChangeSceneCommand::changeScene(long new_scene, bool is_undo)
 
     m_scene->clear();
     m_scene->createSelectionGroup();
-    m_scene->setCurrentSceneShown(m_new_scene);
+    m_scene->setCurrentSceneShown(from_scene);
+    m_scene->setCurrentSceneKeyShown(m_new_scene);
 
     int z_order = 0;
     for (auto object : from_scene->getObjectMap()) {
@@ -98,6 +99,7 @@ QString ChangeSceneCommand::changeScene(long new_scene, bool is_undo)
     }
 
     m_scene->update();
+    m_scene->getRelay()->centerViewOn(from_scene->getViewCenterPoint());
     m_scene->updateView();
     if (is_undo)
         return "Redo Select Scene " + from_scene->getSceneName();

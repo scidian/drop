@@ -41,7 +41,7 @@ void SceneGraphicsView::startRotate(QPoint mouse_in_view)
     }
 
     // Store starting scene rect of initial selection bounding box
-    m_rotate_start_rect = totalSelectedItemsSceneRect();
+    m_rotate_start_rect = my_scene->totalSelectedItemsSceneRect();
 
     // Set up our tooltip
     m_tool_tip->startToolTip(m_view_mode, mouse_in_view, m_rotate_start_angle);
@@ -99,9 +99,16 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     } else {
         angle_adjust = 0;
     }
+
+    // ********** If we didnt snap to nearest ANGLE_STEP, try to snap to nearest .1 decimal place
+    if (qFuzzyCompare(angle_adjust, 0)) {
+        angle = QString::number(angle, 'f', 1).toDouble();
+        angle_adjust = angle - angle_diff;
+    }
+
+    // ********** Make sure angle is within -360 to 360
     while (angle >=  360) { angle -= 360; }
     while (angle <= -360) { angle += 360; }
-
 
     // ********** Group selected items so we can apply new rotation to all selected items
     QGraphicsItemGroup *group = scene()->createItemGroup( { item } );

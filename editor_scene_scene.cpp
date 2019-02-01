@@ -65,33 +65,11 @@ void SceneGraphicsScene::createSelectionGroup()
 //####################################################################################
 //##        SLOT: sceneChanged
 //####################################################################################
-// Connected from scene().changed, resizes scene when objects are added / subtracted
+// Connected from scene().changed
 void SceneGraphicsScene::sceneChanged(QList<QRectF>)
 {
-    double min_size = 500;              // Minimum size fo scene rect (-500 to 500 for x and y)
-    double buffer =   200;              // Buffer to add on to items at edge of scene to allow for better scrolling
 
-    double left =  -min_size, right =  min_size;
-    double top =   -min_size, bottom = min_size;
 
-    if (items().count() > 0) {
-        QRectF total_rect = items().first()->sceneBoundingRect();
-        for (auto item: items())
-            total_rect = total_rect.united(item->sceneBoundingRect());
-
-        if (left > total_rect.x()) left = total_rect.x();
-        if (top  > total_rect.y()) top =  total_rect.y();
-        if (right <  total_rect.bottomRight().x()) right =  total_rect.bottomRight().x();
-        if (bottom < total_rect.bottomRight().y()) bottom = total_rect.bottomRight().y();
-
-        if (abs(left) > right) right = abs(left);
-        if (abs(top) > bottom) bottom = abs(top);
-        if (right > abs(left)) left = -right;
-        if (bottom > abs(top)) top = -bottom;
-
-        QRectF new_rect = QRectF(left - buffer, top - buffer, (right - left) + buffer * 2, (bottom - top) + buffer * 2);
-        setSceneRect( new_rect );
-    }
 }
 
 

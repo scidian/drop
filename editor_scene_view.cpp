@@ -104,6 +104,12 @@ void SceneGraphicsView::keyReleaseEvent(QKeyEvent *event)
 // Connected from scene().changed
 void SceneGraphicsView::sceneChanged(QList<QRectF>)
 {
+    double left_adjust =  -4000;
+    double right_adjust =  4000;
+    double top_adjust =   -4000;
+    double bottom_adjust = 4000;
+    this->setSceneRect( scene()->sceneRect().adjusted(left_adjust, top_adjust, right_adjust, bottom_adjust) );
+
     updateSelectionBoundingBox();
     ///update();             // Don't use here!!!!! Calls paint recursively
 }
@@ -227,19 +233,6 @@ double SceneGraphicsView::calculateCornerAngle(double angle1, double angle2)
     if (new_angle < 0)   new_angle += 360;
     if (new_angle > 360) new_angle -= 360;
     return new_angle;
-}
-
-
-
-//####################################################################################
-//##        Returns a scene rect containing all the selected items
-QRectF SceneGraphicsView::totalSelectedItemsSceneRect()
-{
-    if (scene() == nullptr) return QRectF();
-
-    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
-
-    return my_scene->totalSelectedItemsSceneRect();
 }
 
 

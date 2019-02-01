@@ -123,9 +123,25 @@ void FormMain::buildTreeSceneList() {
 }
 
 
-// Call to put in a signal to change the Advisor to the que
-void FormMain::setAdvisorInfo(HeaderBodyList header_body_list)
+// Emits a single shot timer to update view coordinates after event calls are done
+void FormMain::centerViewOn(QPointF center_point) {
+    if (viewMain->hasLoadedFirstScene())
+        viewMain->centerOn(center_point);
+    else
+        QTimer::singleShot(0, this, [this, center_point] { this->centerViewTimer(center_point); } );
+}
+void FormMain::centerViewTimer(QPointF center_point) {  viewMain->centerOn(center_point); viewMain->loadedFirstScene(); }
+
+
+// Emits an Undo stack command to change scenes
+void FormMain::populateScene(long from_scene_key)
 {
+    if (scene->getCurrentSceneKeyShown() != from_scene_key)
+        emit newSceneSelected(project, scene, scene->getCurrentSceneKeyShown(), from_scene_key);
+}
+
+// Call to put in a signal to change the Advisor to the que
+void FormMain::setAdvisorInfo(HeaderBodyList header_body_list) {
     setAdvisorInfo(header_body_list[0], header_body_list[1]);
 }
 
@@ -168,13 +184,6 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
 
     case Label_Names::Label_Bottom:     label_bottom->setText(new_text);    break;
     }
-}
-
-void FormMain::populateScene(long from_scene_key)
-{
-    // Emits an Undo stack command to change scenes
-    if (scene->getCurrentSceneShown() != from_scene_key)
-        emit newSceneSelected(project, scene, scene->getCurrentSceneShown(), from_scene_key);
 }
 
 

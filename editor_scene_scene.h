@@ -30,6 +30,7 @@ private:
     DrProject          *m_project;                  // Pointer to currently loaded project
     InterfaceRelay     *m_relay;                    // Pointer to InterfaceRelay class of parent form
 
+    DrScene            *m_current_scene = nullptr;  // Holds a pointer to the current DrScene being shown
     long                m_current_scene_key = -1;   // Holds the project key of the currently shown scene, starts at -1, i.e. "none"
 
     // Selection variables
@@ -82,8 +83,10 @@ public:
     void            removeFromGroupNoUpdate(QGraphicsItem *item);
 
     // Getters and Setters
-    long                  getCurrentSceneShown() { return m_current_scene_key; }
-    void                  setCurrentSceneShown(long scene_key) { m_current_scene_key = scene_key; }
+    DrScene*              getCurrentSceneShown() { return m_current_scene; }
+    void                  setCurrentSceneShown(DrScene *drscene) { m_current_scene = drscene; }
+    long                  getCurrentSceneKeyShown() { return m_current_scene_key; }
+    void                  setCurrentSceneKeyShown(long scene_key) { m_current_scene_key = scene_key; }
 
     SelectionGroup*       getSelectionGroup();
     QGraphicsItem*        getSelectionGroupAsGraphicsItem();

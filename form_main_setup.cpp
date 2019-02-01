@@ -34,8 +34,6 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
         buildTreeSceneList();
         viewMain->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
         current_focus = Form_Main_Focus::Scene_View;
-        scene->sceneChanged(QList<QRectF> { scene->sceneRect() } );
-        viewMain->centerOn(0,0);
         break;
     case Form_Main_Mode::Clear:
         this->takeCentralWidget()->deleteLater();
