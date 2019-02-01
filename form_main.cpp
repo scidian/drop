@@ -45,7 +45,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 
 
     // ########## Initialize new project, initialize local variables
-    project = new DrProject(0);
+    project = new DrProject(1);
     current_world = 0;
 
 

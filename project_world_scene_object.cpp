@@ -32,7 +32,7 @@ DrObject::DrObject(DrProject *parent_project, DrWorld *parent_world, DrScene *pa
     m_object_type = new_object_type;                // assign object type
     m_asset_key = from_asset_key;                   // associated asset key
 
-    DrSettings *asset_settings = m_parent_project->findAssetSettingsFromKey(from_asset_key);
+    DrSettings *asset_settings = m_parent_project->findSettingsFromKey(from_asset_key);
     DrAsset *asset = dynamic_cast<DrAsset*>(asset_settings);
 
     // Call to load in all the components / properties for this Scene object

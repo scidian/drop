@@ -16,6 +16,7 @@ class DrAsset;
 class DrWorld;
 class DrScene;
 
+class DrItem;
 
 //####################################################################################
 //##    DrObject
@@ -33,7 +34,7 @@ private:
 
     long        m_asset_key;                                // holds the associated asset key, this way we know what image to grab for GraphicsView
 
-    long        m_z_order;                                  // keeps track of the order of this item in its container
+    DrItem     *m_item_in_scene = nullptr;                  // holds a pointer to a QGraphicsItem if this object is currently represented in the editor
 
 public:
     // Constructor & destructor
@@ -43,12 +44,14 @@ public:
 
 
     // Getters and setters
-    virtual DrType  getType() override  { return m_object_type; }
-    DrProject*      getParentProject()  { return m_parent_project; }
-    DrWorld*        getParentWorld()    { return m_parent_world; }
-    DrScene*        getParentScene()    { return m_parent_scene; }
-    long            getAssetKey()       { return m_asset_key; }
-    long            getZOrder()         { return m_z_order; }
+    virtual DrType  getType() override      { return m_object_type; }
+    DrProject*      getParentProject()      { return m_parent_project; }
+    DrWorld*        getParentWorld()        { return m_parent_world; }
+    DrScene*        getParentScene()        { return m_parent_scene; }
+    long            getAssetKey()           { return m_asset_key; }
+
+    DrItem*         getDrItem()             { return m_item_in_scene; }
+    void            setDrItem(DrItem *item) { m_item_in_scene = item; }
 
     // External calls
     void initializeObjectSettings(QString new_name, double width, double height, double x, double y, long z);

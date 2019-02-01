@@ -24,7 +24,7 @@ public:
     void        undo() override;
     void        redo() override;
 
-    QString     changeScene(long new_scene, bool is_undo);
+    QString     changeScene(long old_scene, long new_scene, bool is_undo);
 
 private:
     QUndoStack             *m_undo_stack;

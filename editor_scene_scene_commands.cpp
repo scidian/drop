@@ -9,10 +9,11 @@
 #include "library.h"
 
 #include "project_world_scene.h"
+#include "project_world_scene_object.h"
 
 #include "editor_scene_item.h"
 #include "editor_scene_scene.h"
-#include "editor_scene_scene_undo.h"
+#include "editor_scene_scene_commands.h"
 
 /*
  *  To Implement:
@@ -68,20 +69,28 @@ ChangeSceneCommand::ChangeSceneCommand(QUndoStack *undo_stack, DrProject *projec
 }
 
 void ChangeSceneCommand::undo() {
-    QString new_scene_name = changeScene(m_old_scene, true);
+    QString new_scene_name = changeScene(m_new_scene, m_old_scene, true);
     setText( new_scene_name );
 }
 
 void ChangeSceneCommand::redo() {
-    QString new_scene_name = changeScene(m_new_scene, false);
+    QString new_scene_name = changeScene(m_old_scene, m_new_scene, false);
     setText( new_scene_name );
 }
 
-QString ChangeSceneCommand::changeScene(long new_scene, bool is_undo)
+QString ChangeSceneCommand::changeScene(long old_scene, long new_scene, bool is_undo)
 {
+    // Remove any references within the current project scene objects to any GraphicsScene items
+    DrScene *displayed = m_project->findSceneFromKey(old_scene);
+    if (displayed) {
+        for (auto object_pair : displayed->getObjectMap()) {
+            object_pair.second->setDrItem(nullptr);
+        }
+    }
+
+    // Load scene we're changing to
     DrScene *from_scene = m_project->findSceneFromKey(new_scene);
     if (from_scene == nullptr) {
-        ///m_undo_stack->setIndex(m_undo_stack->index());
         return "Could not change scenes!";
     }
 
@@ -91,10 +100,12 @@ QString ChangeSceneCommand::changeScene(long new_scene, bool is_undo)
     m_scene->setCurrentSceneKeyShown(m_new_scene);
 
     int z_order = 0;
-    for (auto object : from_scene->getObjectMap()) {
-        DrItem *item = new DrItem(m_project, from_scene, object.first);
+    for (auto object_pair : from_scene->getObjectMap()) {
+        DrItem *item = new DrItem(m_project, object_pair.second);
         m_scene->setPositionByOrigin(item, item->getOrigin(), item->startX(), item->startY());
         m_scene->addItem(item);
+
+        object_pair.second->setDrItem(item);
         z_order++;
     }
 
@@ -120,7 +131,7 @@ MoveCommand::MoveCommand(SelectionGroup *group, const QPointF &old_pos, QUndoCom
 
 void MoveCommand::undo() {
     m_group->getParentScene()->setPositionByOrigin(m_group, Position_Flags::Center, m_old_pos.x(), m_old_pos.y());
-    m_group->updatePositionData();
+    m_group->updateChildrenPositionData();
     m_group->getParentScene()->updateView();
     QString item_text = "Items";
     if (m_group->childItems().count() == 1)
@@ -133,7 +144,7 @@ void MoveCommand::undo() {
 
 void MoveCommand::redo() {
     m_group->getParentScene()->setPositionByOrigin(m_group, Position_Flags::Center, m_new_pos.x(), m_new_pos.y());
-    m_group->updatePositionData();
+    m_group->updateChildrenPositionData();
     m_group->getParentScene()->updateView();
     QString item_text = "Items";
     if (m_group->childItems().count() == 1)

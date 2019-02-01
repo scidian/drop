@@ -6,6 +6,8 @@
 //
 //
 
+#include <stdexcept>
+
 #include "library.h"
 
 #include "project.h"
@@ -19,6 +21,8 @@
 //####################################################################################
 DrProject::DrProject(long key_generator_starting_number)
 {
+    // Don't alllow key to start at less than 1, having an item with key 0 could conflict with nullptr results
+    if (key_generator_starting_number <= 1) key_generator_starting_number = 1;
     m_key_generator = key_generator_starting_number;
 }
 
@@ -73,22 +77,20 @@ DrWorld* DrProject::getWorldWithName(QString world_name)
 //##
 //####################################################################################
 
-DrScene* DrProject::findSceneFromKey(long key)
+DrScene* DrProject::findSceneFromKey(long check_key)
 {
-    for (auto i : m_worlds) {
-        for (auto j : i.second->getSceneMap()) {
-            if (j.second->getKey() == key) { return j.second; }
-        }
+    for (auto world_pair : m_worlds) {
+        try {  return world_pair.second->getSceneMap().at(check_key);  }
+        catch (const std::out_of_range&) {  }               // Not Found
     }
     return nullptr;
 }
 
 // Returns a pointer to the Base DrSettings class of the object with the specified key
-DrSettings* DrProject::findChildSettingsFromKey(long check_key)
+DrSettings* DrProject::findSettingsFromKey(long check_key)
 {
-    for (auto i : m_assets) {
-        if (i.second->getKey() == check_key) { return i.second->getSettings(); }
-    }
+    try {  return m_assets.at(check_key);  }
+    catch (const std::out_of_range&) {  }                   // Not Found
 
     for (auto i : m_worlds) {
         if (i.second->getKey() == check_key) { return i.second->getSettings(); }
@@ -100,7 +102,6 @@ DrSettings* DrProject::findChildSettingsFromKey(long check_key)
                 if (k.second->getKey() == check_key) { return k.second->getSettings(); }
 
                 //************* More types implemented
-
             }
         }
     }
@@ -112,12 +113,7 @@ DrSettings* DrProject::findChildSettingsFromKey(long check_key)
 // Searches all member variables / containers for the specified unique project key
 DrType DrProject::findChildTypeFromKey(long check_key)
 {
-    return findChildSettingsFromKey(check_key)->getType();
-}
-
-DrSettings* DrProject::findAssetSettingsFromKey(long check_key)
-{
-    return m_assets[check_key]->getSettings();
+    return findSettingsFromKey(check_key)->getType();
 }
 
 DrAsset_Type DrProject::findAssetTypeFromKey(long check_key)

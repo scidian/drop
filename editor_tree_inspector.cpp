@@ -70,9 +70,9 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
         m_relay->setLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( m_selected_key ) + ", TYPE: " + type_string);
 
         if (IsDrObjectClass(m_selected_type)) {
-            DrObject* object = dynamic_cast<DrObject*>(m_project->findChildSettingsFromKey(m_selected_key));
+            DrObject* object = dynamic_cast<DrObject*>(m_project->findSettingsFromKey(m_selected_key));
             long asset_key = object->getAssetKey();
-            QString asset_name = m_project->findChildSettingsFromKey(asset_key)->getAssetName();
+            QString asset_name = m_project->findSettingsFromKey(asset_key)->getAssetName();
 
             m_relay->setLabelText(Label_Names::Label_Object_2, "ASSET KEY:  " + QString::number(asset_key) +
                                                                ", NAME: " + asset_name);
@@ -106,7 +106,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
 
     // Retrieve list of components for selected item
-    ComponentMap list_components = m_project->findChildSettingsFromKey( m_selected_key )->getComponentList();
+    ComponentMap list_components = m_project->findSettingsFromKey( m_selected_key )->getComponentList();
 
     // Loop through each component and add it to the Object Inspector list
     int rowCount = 0;
@@ -209,7 +209,7 @@ void TreeInspector::updateProperties(long item_key)
     if (item_key != m_selected_key) return;
     if (IsDrObjectClass(m_selected_type) == false) return;
 
-    DrSettings *settings = m_project->findChildSettingsFromKey(m_selected_key);
+    DrSettings *settings = m_project->findSettingsFromKey(m_selected_key);
 
     Dr::SetLabelText(Label_Names::Label_1, "Child count: " + QString::number(m_widgets.count()) );
 

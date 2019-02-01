@@ -65,8 +65,10 @@ QList<long> DrScene::objectKeysSortedByZOrder()
 {
     std::vector<std::pair<long, long>> zorder_key_pair;
 
-    for (auto object : m_objects)
-        zorder_key_pair.push_back(std::make_pair(object.second->getZOrder(), object.first));
+    for (auto object : m_objects) {
+        long z_order = object.second->getComponentProperty(Object_Components::layering, Object_Properties::z_order)->getValue().toInt();
+        zorder_key_pair.push_back(std::make_pair(z_order, object.first));
+    }
 
     std::sort(zorder_key_pair.begin(), zorder_key_pair.end());
 

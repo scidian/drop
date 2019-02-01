@@ -133,7 +133,7 @@ public:
     SceneGraphicsScene* getParentScene() { return m_parent_scene; }
 
     // Function Calls
-    void                updatePositionData();
+    void                updateChildrenPositionData();
 };
 
 

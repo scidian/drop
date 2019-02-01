@@ -72,6 +72,8 @@ enum class DrType {
 enum class DrAsset_Type {
     Character,
     Object,
+
+    NotFound,
 };
 
 //####################################################################################

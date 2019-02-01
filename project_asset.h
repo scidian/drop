@@ -22,7 +22,8 @@ class DrAsset : public DrSettings
 private:
     DrProject       *m_parent_project;                  // holds reference to parent Project class that handles key generation for project
 
-    DrAsset_Type     m_asset_type;                      // holds asset type (object, character, etc)
+    DrAsset_Type     m_asset_type =
+                        DrAsset_Type::NotFound;         // holds asset type (object, character, etc)
 
     long             m_width;
     long             m_height;

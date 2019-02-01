@@ -155,7 +155,7 @@ void SelectionGroup::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
     ///QGraphicsItemGroup::paint(painter, option, widget);       // Allows black selection bounding box to be painted
 }
 
-void SelectionGroup::updatePositionData()
+void SelectionGroup::updateChildrenPositionData()
 {
     QList<QGraphicsItem*>  my_items = this->getParentScene()->getSelectionGroupItems();
     for (auto child : my_items) {

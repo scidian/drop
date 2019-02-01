@@ -24,11 +24,12 @@ class DrItem : public QGraphicsPixmapItem
 {
 private:
     DrProject      *m_project;                              // Stores a pointer to the parent project
-    DrObject       *m_object;                               // Stores the pointer to the object for this item
-    long            m_object_key;                           // Stores the object key this item represents within the Project
-    DrAsset        *m_asset;                                // Stores pointer to the asset for this item
-    long            m_asset_key;                            // Stores the asset key this item is drawn from
 
+    DrObject       *m_object;                               // Stores the pointer to the object for this item
+    long            m_object_key;                           // Stores the object project key this item represents
+
+    DrAsset        *m_asset;                                // Stores pointer to the asset for this item
+    long            m_asset_key;                            // Stores the asset project key this item is drawn from
     double          m_asset_width;                          // Width of asset this item is drawn from
     double          m_asset_height;                         // Height of asset this item is drawn from
 
@@ -38,7 +39,7 @@ private:
     Position_Flags  m_origin = Position_Flags::Center;
 
 public:
-    DrItem(DrProject *project, DrScene *scene, long object_key);
+    DrItem(DrProject *project, DrObject *object);
 
     // Base Getter Overrides
     virtual QRectF          boundingRect() const override;
@@ -56,8 +57,10 @@ public:
     // Getters and Setters
     void                    updateProperty(int key, const QVariant & value);
 
-    long                    getAssetKey()  { return m_asset_key; }
+    DrObject*               getObject()    { return m_object; }
     long                    getObjectKey() { return m_object_key; }
+    DrAsset*                getAsset()     { return m_asset; }
+    long                    getAssetKey()  { return m_asset_key; }
 
     Position_Flags          getOrigin() { return m_origin; }
     QColor                  getColorAtPoint(QPointF at_local_point);

@@ -384,7 +384,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
                 m_tool_tip->startToolTip(View_Mode::Translating, m_origin, mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
             else {
                 m_tool_tip->updateToolTipData( mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
-                my_scene->getSelectionGroup()->updatePositionData();
+                my_scene->getSelectionGroup()->updateChildrenPositionData();
             }
         }
     } else {

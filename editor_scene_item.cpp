@@ -26,23 +26,26 @@
 //####################################################################################
 //##        Constructor & destructor
 //####################################################################################
-DrItem::DrItem(DrProject *project, DrScene *scene, long object_key)
+DrItem::DrItem(DrProject *project, DrObject *object)
 {
+    // Store relevant project / object data for use later
     m_project    = project;
-    m_object_key = object_key;
-    m_object     = scene->getObject(object_key);
+    m_object     = object;
+    m_object_key = object->getKey();
     m_asset_key  = m_object->getAssetKey();
     m_asset      = project->getAsset(m_asset_key);
 
+    // Load starting position
     QPointF start_pos = m_object->getComponentProperty(Object_Components::transform, Object_Properties::position)->getValue().toPointF();
     m_start_x = start_pos.x();
     m_start_y = start_pos.y();
 
+    // Dimensions of associated asset, used for boundingRect
     m_asset_width =  m_asset->getWidth();
     m_asset_height = m_asset->getHeight();
 
     // Store some initial user data
-    setData(User_Roles::Name, project->getAsset( scene->getObject(object_key)->getAssetKey() )->getAssetName() );
+    setData(User_Roles::Name, m_asset->getAssetName() );
     setData(User_Roles::Type, StringFromType( m_object->getType() ));
 
     double angle = m_object->getComponentProperty(Object_Components::transform, Object_Properties::rotation)->getValue().toDouble();
@@ -51,7 +54,7 @@ DrItem::DrItem(DrProject *project, DrScene *scene, long object_key)
     updateProperty(User_Roles::Rotation, QVariant::fromValue(angle));
     updateProperty(User_Roles::Scale, scale);
 
-    // Set initial set up item settings
+    // Set up initial item settings
     setAcceptHoverEvents(true);                                         // Item tracks mouse movement
     setShapeMode(QGraphicsPixmapItem::MaskShape);                       // Allows for selecting while ignoring transparent pixels
 

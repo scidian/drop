@@ -33,7 +33,7 @@ private:
 
 public:
     // Constructor & destructor
-    DrProject(long key_generator_starting_number = 0);
+    DrProject(long key_generator_starting_number = 1);
     ~DrProject();
 
     // Getters and Setters
@@ -52,12 +52,11 @@ public:
 
 
     // External calls
-    DrScene*        findSceneFromKey(long key);
+    DrScene*        findSceneFromKey(long check_key);
 
-    DrSettings*     findChildSettingsFromKey(long check_key);
+    DrSettings*     findSettingsFromKey(long check_key);
+
     DrType          findChildTypeFromKey(long check_key);
-
-    DrSettings*     findAssetSettingsFromKey(long check_key);
     DrAsset_Type    findAssetTypeFromKey(long check_key);
 
     // Children creation calls
