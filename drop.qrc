@@ -42,5 +42,8 @@
         <file>assets/rover_body.png</file>
         <file>inspector_icons/comp_layering.png</file>
         <file>tree_icons/tree_stage.png</file>
+        <file>assets/ball_1.png</file>
+        <file>assets/rover_wheel.png</file>
+        <file>assets/water_1.png</file>
     </qresource>
 </RCC>

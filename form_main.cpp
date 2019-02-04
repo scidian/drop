@@ -55,6 +55,9 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     long asset_3 = project->addAsset("Ground Top",   DrAsset_Type::Object, QPixmap(":/assets/ground_top.png"));
     long asset_4 = project->addAsset("Moon Plant 6", DrAsset_Type::Object, QPixmap(":/assets/moon_plant_6.png"));
     long asset_5 = project->addAsset("Rover Body",   DrAsset_Type::Object, QPixmap(":/assets/rover_body.png"));
+    long asset_6 = project->addAsset("Ball 1",       DrAsset_Type::Object, QPixmap(":/assets/ball_1.png"));
+    long asset_7 = project->addAsset("Water 1",      DrAsset_Type::Object, QPixmap(":/assets/water_1.png"));
+    long asset_8 = project->addAsset("Rover Wheel",  DrAsset_Type::Object, QPixmap(":/assets/rover_wheel.png"));
     // !!!!! END
 
 
@@ -76,7 +79,10 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrType::Object, asset_4, 100, 100, 11);
     project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrType::Object, asset_5, -150, 0, 30);
 
-    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrType::Object, asset_5, 100, 100, 104);
+    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrType::Object, asset_5, 100, 100, -2);
+    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrType::Object, asset_6, 200, 100,  4);
+    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrType::Object, asset_7, 300, 100,  1);
+    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrType::Object, asset_8, 400, 100,  2);
     // !!!!! END
 
 

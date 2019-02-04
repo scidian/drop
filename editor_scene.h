@@ -38,6 +38,15 @@ private:
     SelectionGroup     *m_selection_group;          // Holds the group of items currently selected
     DrObject           *m_first_selected = nullptr; // Keeps track of first item selected to use its properties for the group selection
 
+
+
+    // !!!!! ***** !!!!! Re working how selection works, getting rid of selection group, back to selectedItems()
+    QList<DrItem*>      m_selection_items;
+    double              m_selection_angle;
+    QPointF             m_selection_scale;
+    QPointF             m_selection_position;
+
+
     QUndoStack         *m_undo;
 
 public:
