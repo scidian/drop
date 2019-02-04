@@ -10,16 +10,16 @@
 
 #include "project.h"
 #include "project_world.h"
-#include "project_world_scene.h"
-#include "project_world_scene_object.h"
-#include "editor_scene_item.h"
+#include "project_world_stage.h"
+#include "project_world_stage_object.h"
+#include "editor_stage_item.h"
 
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
 
-#include "editor_scene_scene.h"
-#include "editor_scene_view.h"
+#include "editor_stage_scene.h"
+#include "editor_stage_view.h"
 #include "interface_relay.h"
 
 
@@ -27,7 +27,7 @@
 //####################################################################################
 //##        Constructor / Destructor
 //####################################################################################
-SceneViewToolTip::SceneViewToolTip(QWidget *parent) : QWidget(parent)
+StageViewToolTip::StageViewToolTip(QWidget *parent) : QWidget(parent)
 {
     this->setObjectName(QStringLiteral("formTooltip"));
 
@@ -38,7 +38,7 @@ SceneViewToolTip::SceneViewToolTip(QWidget *parent) : QWidget(parent)
 }
 
 
-void SceneViewToolTip::startToolTip(View_Mode type, QPoint mouse_position, QVariant data)
+void StageViewToolTip::startToolTip(View_Mode type, QPoint mouse_position, QVariant data)
 {
     m_tip_type = type;
     this->setStyleSheet(" QWidget { background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
@@ -63,14 +63,14 @@ void SceneViewToolTip::startToolTip(View_Mode type, QPoint mouse_position, QVari
     show();
 }
 
-void SceneViewToolTip::stopToolTip()
+void StageViewToolTip::stopToolTip()
 {
     hide();
     m_tip_type = View_Mode::None;
 }
 
 
-void SceneViewToolTip::updateToolTipData(QVariant data)
+void StageViewToolTip::updateToolTipData(QVariant data)
 {
     switch (m_tip_type)
     {
@@ -85,13 +85,13 @@ void SceneViewToolTip::updateToolTipData(QVariant data)
     }
 }
 
-void SceneViewToolTip::updateToolTipPosition(QPoint mouse_position)
+void StageViewToolTip::updateToolTipPosition(QPoint mouse_position)
 {
     move(mouse_position + getOffset());
 }
 
 
-void SceneViewToolTip::paintEvent(QPaintEvent *)
+void StageViewToolTip::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
     painter.setPen(Dr::GetColor(Window_Colors::Text_Light));

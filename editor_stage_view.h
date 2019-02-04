@@ -5,20 +5,22 @@
 //      A sub classed QGraphicsView so we can override events for our View Area
 //
 //
-#ifndef EDITOR_VIEW_SCENE_H
-#define EDITOR_VIEW_SCENE_H
+#ifndef EDITOR_STAGE_VIEW_H
+#define EDITOR_STAGE_VIEW_H
 
 #include <QtWidgets>
 
-#include <enums.h>
+#include "enums.h"
 
 class DrProject;
+class DrObject;
 class DrItem;
 class SelectionGroup;
 
 class InterfaceRelay;
-class SceneViewRubberBand;
-class SceneViewToolTip;
+class StageGraphicsScene;
+class StageViewRubberBand;
+class StageViewToolTip;
 
 
 //####################################################################################
@@ -57,10 +59,10 @@ const int    ANGLE_STEP = 15;                                       // Angle int
 
 
 //####################################################################################
-//##    SceneGraphicsView
-//##        A sub classed QGraphicsView to show our scene
+//##    StageGraphicsView
+//##        A sub classed QGraphicsView to show our QGraphicsScene
 //############################
-class SceneGraphicsView : public QGraphicsView
+class StageGraphicsView : public QGraphicsView
 {
     Q_OBJECT
 
@@ -93,8 +95,8 @@ private:
 
     // Grid variables
     Grid_Style   m_grid_style = Grid_Style::Lines;                  // Grid type to display
-    double       m_grid_x = 10;                                     // Grid size left to right
-    double       m_grid_y = 10;                                     // Grid size top to bottom
+    double       m_grid_x = 50;                                     // Grid size left to right
+    double       m_grid_y = 50;                                     // Grid size top to bottom
     double       m_grid_rotate = 0;                         // NOT IMPLEMENTED: Rotation of grid lines
 
     // Keyboard flags
@@ -104,7 +106,7 @@ private:
     bool         m_flag_key_down_shift =    false;                  // True when View has focus and shift         is down
 
     // Mouse event variables
-    SceneViewToolTip                   *m_tool_tip;                 // Holds our view's custom Tool Tip box
+    StageViewToolTip                   *m_tool_tip;                 // Holds our view's custom Tool Tip box
     QPoint                              m_origin;                   // Stores mouse down position in view coordinates
     QPointF                             m_origin_in_scene;          // Stores mouse down position in scene coordinates
     QGraphicsItem                      *m_origin_item;              // Stores top item under mouse (if any) on mouse down event
@@ -113,6 +115,7 @@ private:
     QTime                               m_origin_timer;             // Tracks time since mouse down to help buffer movement while selecting
     bool                                m_allow_movement = false;   // Used along with m_origin_timer to help buffer movement while selecting
     QPointF                             m_old_pos;                  // Used to track position movement for QUndoStack
+    bool                                m_shown_a_scene = false;    // False until a scene is loaded for the first time
 
     // Selection Bounding Box Variables
     std::map<Position_Flags, QPolygonF> m_handles;                  // Stores QRects of current selection box handles
@@ -123,10 +126,10 @@ private:
     QPoint                              m_last_mouse_pos;           // Tracks last known mouse position in view coordinates
 
     // View_Mode::Selecting Variables
-    SceneViewRubberBand            *m_rubber_band;                  // Holds our view's RubberBand object
+    StageViewRubberBand            *m_rubber_band;                  // Holds our view's RubberBand object
     QList<QGraphicsItem*>           m_items_start;                  // Stores items selected at start of new rubber band box
     QList<QGraphicsItem*>           m_items_keep;                   // Stores list of items to keep on top of rubber band items (with control key)
-    QGraphicsItem                  *m_first_start;                  // Stores first selected item before rubber band box stareted
+    DrObject                       *m_first_start;                  // Stores first selected item before rubber band box stareted
 
     // View_Mode::Resizing Variables
     QRectF                          m_start_resize_rect;            // Stores starting rect of selection before resize starts
@@ -151,8 +154,8 @@ private:
 
 public:
     // Constructor
-    explicit SceneGraphicsView(QWidget *parent, DrProject *project, InterfaceRelay *relay);
-    virtual ~SceneGraphicsView() override;
+    explicit StageGraphicsView(QWidget *parent, DrProject *project, InterfaceRelay *relay);
+    virtual ~StageGraphicsView() override;
 
     // Event Overrides, start at Qt Docs for QGraphicsView Class to find more
     virtual void    paintEvent(QPaintEvent *event) override;                                // Inherited from QWidget
@@ -160,7 +163,6 @@ public:
     virtual bool    eventFilter(QObject *obj, QEvent *event) override;                      // Inherited from QObject
     virtual void    scrollContentsBy(int dx, int dy) override;                              // Inherited from QAbstractScrollArea
 
-    virtual void    enterEvent(QEvent *event) override;                                     // Inherited from QWidget
     virtual void    keyPressEvent(QKeyEvent *event) override;                               // Inherited from QWidget
     virtual void    keyReleaseEvent(QKeyEvent *event) override;                             // Inherited from QWidget
     virtual void    mouseMoveEvent(QMouseEvent *event) override;                            // Inherited from QWidget
@@ -172,6 +174,8 @@ public:
 
     // View Display Functions
     void            applyUpdatedMatrix();
+    bool            hasLoadedFirstScene() { return m_shown_a_scene; }
+    void            loadedFirstScene() { m_shown_a_scene = true; }
     void            zoomInOut(int level);
 
     // Misc Functions
@@ -181,7 +185,6 @@ public:
     QPointF         extractScaleFromItem(QGraphicsItem *item);
     QGraphicsItem*  itemOnTopAtPosition(QPoint check_point);
     QRectF          rectAtCenterPoint(QPoint center, double rect_size);
-    QRectF          totalSelectedItemsSceneRect();
     void            updateSelectionBoundingBox();
 
     // Paint Functions
@@ -194,6 +197,7 @@ public:
     // Selection Functions
     void            startSelect(QMouseEvent *event);
     void            processSelection(QPoint mouse_in_view);
+    void            emptySelectionGroupIfNotEmpty();
 
     // Rotation Functions
     void            startRotate(QPoint mouse_in_view);
@@ -219,23 +223,26 @@ public slots:
 
 signals:
     // Signals used to emit UndoStack Commands
-    void    selectionGroupMoved(SelectionGroup *moved_group, const QPointF &old_position);
-    void    selectionGroupNewGroup(SelectionGroup *moved_group, QList<QGraphicsItem*> old_list, QList<QGraphicsItem*> new_list,
-                                   QGraphicsItem *old_first, QGraphicsItem *new_first);
+    void    selectionGroupMoved(StageGraphicsScene *scene, const QPointF &old_position);
+    void    selectionGroupNewGroup(StageGraphicsScene *scene,
+                                   QList<DrObject*> old_list,
+                                   QList<DrObject*> new_list,
+                                   DrObject *old_first,
+                                   DrObject *new_first);
 
 };
 
 
 //####################################################################################
-//##    SceneViewRubberBand
+//##    StageViewRubberBand
 //##        A sub classed QRubberBand so we can override paint event for rubber band
 //############################
-class SceneViewRubberBand : public QRubberBand
+class StageViewRubberBand : public QRubberBand
 {
 
 public:
     // Constructor
-    SceneViewRubberBand(Shape shape, QWidget *parent) : QRubberBand (shape, parent) { }
+    StageViewRubberBand(Shape shape, QWidget *parent) : QRubberBand (shape, parent) { }
 
     // Event overrides
     virtual void    paintEvent(QPaintEvent *) override;
@@ -244,10 +251,10 @@ public:
 
 
 //####################################################################################
-//##    SceneViewTooltip
+//##    StageViewToolTip
 //##        A parentless widget to be used as a custom tooltip
 //############################
-class SceneViewToolTip : public QWidget
+class StageViewToolTip : public QWidget
 {
 private:
     View_Mode   m_tip_type = View_Mode::None;           // Which type of tool tip to show
@@ -259,7 +266,7 @@ private:
 
 public:
     // Constructor
-    SceneViewToolTip(QWidget *parent = nullptr);
+    StageViewToolTip(QWidget *parent = nullptr);
 
     // Event overrides
     virtual void    paintEvent(QPaintEvent *) override;
@@ -277,7 +284,7 @@ public:
 };
 
 
-#endif // EDITOR_VIEW_SCENE_H
+#endif // EDITOR_STAGE_VIEW_H
 
 
 

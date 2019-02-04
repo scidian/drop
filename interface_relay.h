@@ -23,12 +23,19 @@ public:
     InterfaceRelay() { }
     virtual ~InterfaceRelay();
 
+    virtual void    buildAssetList() = 0;
     virtual void    buildObjectInspector(QList<long> key_list) = 0;
-    virtual void    buildTreeSceneList() = 0;
+    virtual void    buildTreeStageList() = 0;
+
+    virtual void    centerViewOn(QPointF center_point) = 0;
+    virtual void    populateScene(long from_stage_key) = 0;
 
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list) = 0;
     virtual void    setAdvisorInfo(QString header, QString body) = 0;
     virtual void    setLabelText(Label_Names label_name, QString new_text) = 0;
+
+    virtual void    updateObjectInspectorAfterItemChange(long item_key) = 0;
+    virtual void    updateStageTreeSelectionBasedOnSelectionGroup() = 0;
 };
 
 

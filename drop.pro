@@ -33,31 +33,33 @@ SOURCES += \
     editor_tree_assets.cpp \
     editor_tree_scene.cpp \
     editor_tree_advisor.cpp \
-    editor_scene_scene.cpp \
-    editor_scene_view.cpp \
     form_main_menu.cpp \
-    editor_scene_view_paint.cpp \
-    editor_scene_view_rotate.cpp \
-    editor_scene_view_resize.cpp \
-    editor_scene_view_select.cpp \
     project.cpp \
     project_world.cpp \
-    project_world_scene.cpp \
-    project_world_scene_object.cpp \
     project_asset.cpp \
     settings.cpp \
     settings_component.cpp \
     settings_component_property.cpp \
-    editor_scene_item.cpp \
-    editor_scene_view_mouse.cpp \
-    editor_scene_scene_select.cpp \
-    editor_scene_view_tooltip.cpp \
     colors.cpp \
     debug.cpp \
     interface_relay.cpp \
     library_misc.cpp \
     library_style.cpp \
-    editor_scene_scene_undo.cpp
+    editor_tree_inspector_widgets.cpp \
+    editor_tree_widgets.cpp \
+    project_world_stage.cpp \
+    project_world_stage_object.cpp \
+    editor_stage_scene.cpp \
+    editor_stage_view_tooltip.cpp \
+    editor_stage_view_select.cpp \
+    editor_stage_view_rotate.cpp \
+    editor_stage_view_resize.cpp \
+    editor_stage_view_paint.cpp \
+    editor_stage_view_mouse.cpp \
+    editor_stage_view.cpp \
+    editor_stage_scene_select.cpp \
+    editor_stage_scene_commands.cpp \
+    editor_stage_item.cpp
 
 HEADERS += \
     enums.h \
@@ -65,23 +67,24 @@ HEADERS += \
     editor_tree_inspector.h \
     interface_relay.h \
     editor_tree_assets.h \
-    editor_tree_scene.h \
     editor_tree_advisor.h \
-    editor_scene_scene.h \
-    editor_scene_view.h \
     project.h \
     project_world.h \
-    project_world_scene.h \
-    project_world_scene_object.h \
     project_asset.h \
     settings.h \
     settings_component.h \
     settings_component_property.h \
-    editor_scene_item.h \
     library.h \
     colors.h \
     debug.h \
-    editor_scene_scene_undo.h
+    editor_tree_widgets.h \
+    project_world_stage.h \
+    project_world_stage_object.h \
+    editor_tree_stage.h \
+    editor_stage_scene.h \
+    editor_stage_view.h \
+    editor_stage_scene_commands.h \
+    editor_stage_item.h
 
 FORMS +=
 
@@ -93,5 +96,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     drop.qrc
 
-DISTFILES += \
-    README.md
+DISTFILES +=

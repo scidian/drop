@@ -22,10 +22,10 @@
 //##    Types of objects possible in game
 //####################################################################################
 enum class Form_Main_Mode {
-    Edit_Scene,
+    Edit_Stage,
     Edit_UI,
     Node_Map,
-    Scene_Map,
+    Stage_Map,
     Clear,
 };
 
@@ -43,8 +43,8 @@ enum class Label_Names
 //####################################################################################
 enum class Form_Main_Focus {
     Assets,
-    Scene_List,
-    Scene_View,
+    Stage_List,
+    Stage_View,
     Object_Inspector,
     Bottom_Area,
 };
@@ -52,18 +52,29 @@ enum class Form_Main_Focus {
 //####################################################################################
 //##    Types of objects possible in game
 //####################################################################################
-enum class DrTypes {
+enum class DrType {
     Project,
     World,      Folder,         Variable,
-    Scene,      Background,     Foreground,     StartScene,
+    Stage,      Background,     Foreground,     StartStage,
     Object,     Character,      Camera,         Action,         Light,          Logic,          Particle,
 
     UI,
     Label,      Button,         Joystick,
 
+    Asset,
+
     NotFound,   BaseClass,
 };
 
+//####################################################################################
+//##    Types of objects possible in game
+//####################################################################################
+enum class DrAsset_Type {
+    Character,
+    Object,
+
+    NotFound,
+};
 
 //####################################################################################
 //##    Possible handle rects, order is vector / array index critical
@@ -90,12 +101,15 @@ enum class Position_Flags {
 //####################################################################################
 typedef enum {
     Key = Qt::UserRole,
+
+    Position,
     Scale,
     Rotation,
     Pre_Rotate_Rotation,
+    Z_Order,
 
     Name,
-    Add_More,
+    Type,
 } User_Roles;
 
 
@@ -103,6 +117,8 @@ typedef enum {
 //##    Custom QStrings for storing data in QWidgets using setProperty
 //####################################################################################
 namespace User_Property {
+    const char Key[7] = "dr_key";
+    const char First[9] = "dr_first";            // Set as true if data is first of a piar, or false if second
     const char Header[10] = "dr_header";
     const char Body[8] = "dr_body";
 }
@@ -119,9 +135,10 @@ typedef enum {
 //####################################################################################
 //##    Some public forward function declarations
 //####################################################################################
-bool        CheckTypesAreSame(DrTypes type1, DrTypes type2);
-bool        IsDrObjectClass(DrTypes type_to_check);
-QString     StringFromType(DrTypes drtype);
+bool        CheckTypesAreSame(DrType type1, DrType type2);
+bool        IsDrObjectClass(DrType type_to_check);
+QString     StringFromType(DrType type);
+QString     StringFromAssetType(DrAsset_Type type);
 
 
 //####################################################################################
@@ -157,6 +174,7 @@ namespace Component_Icons
     const QString Settings      { QString(":/inspector_icons/comp_settings.png") };
     const QString Physics       { QString(":/inspector_icons/comp_physics.png") };
     const QString Transform     { QString(":/inspector_icons/comp_transform.png") };
+    const QString Layering      { QString(":/inspector_icons/comp_layering.png") };
     const QString Movement      { QString(":/inspector_icons/comp_movement.png") };
     const QString Camera        { QString(":/inspector_icons/comp_camera.png") };
     const QString Character     { QString(":/inspector_icons/comp_character.png") };
@@ -171,20 +189,20 @@ typedef QList<QString> HeaderBodyList;
 
 namespace Advisor_Info
 {
-    const HeaderBodyList Asset_List            { "Asset List", "These are items that can be dragged into your scene. Changing the properties "
+    const HeaderBodyList Asset_List            { "Asset List", "These are items that can be dragged into your project. Changing the properties "
                                                                "of these items will affect all instances of those items project wide." };
     const HeaderBodyList Object_Inspector      { "Object Inspector", "Displays editable properties of currently selected item." };
-    const HeaderBodyList Scene_Area            { "Scene View", "Shows objects and layout of currently selected Scene. Drop assets into Scene "
-                                                               "View to add to Scene." };
-    const HeaderBodyList Scene_List            { "Scene List", "Lists the items contained within the currently displayed scene. Select items "
+    const HeaderBodyList Stage_Area            { "Stage View", "Shows objects and layout of currently selected Stage. Drop assets into Stage "
+                                                               "View to add to Stage." };
+    const HeaderBodyList Stage_List            { "Stage List", "Lists the items contained within the currently displayed Stage. Select items "
                                                                "to view / adjust properties for each item." };
     const HeaderBodyList Advisor_Window        { "Advisor Window", "Shows a brief description of editor objects." };
 
-    const HeaderBodyList World_Object          { "World Object", "A World is a container of Scenes." };
-    const HeaderBodyList Scene_Object          { "Scene Object", "A Scene is a container of Objects." };
+    const HeaderBodyList World_Object          { "World Object", "A World is a container of Stages." };
+    const HeaderBodyList Stage_Object          { "Stage Object", "A Stage is a container of Objects." };
     const HeaderBodyList Camera_Object         { "Camera Object", "This is a camera object. This object will decide what the player sees." };
     const HeaderBodyList Character_Object      { "Character Object", "This is a character object" };
-    const HeaderBodyList Object_Object         { "Object", "This is an object in a Scene." };
+    const HeaderBodyList Object_Object         { "Object", "This is an object in a Stage." };
 
     const HeaderBodyList Not_Set               { "Not Set", "Fix me!!!!!!" };
 };
@@ -195,10 +213,22 @@ namespace Advisor_Info
 //##    Used to track what the QVariant m_value data type really is
 //####################################################################################
 enum class Property_Type {
-    Bool,       Int,        Double,     Variable,   Percent,    Angle,
-    Char,       String,
-    Image,      Icon,       Color,
-    Point,      PointF,     Vector3D,
+    Bool,                   // true or false
+    Int,                    // any integer
+    Positive,               // integer >= 0
+    Float,                  // any floating point
+    Variable,               // floating point pair, number followed by a +/- number
+    Percent,                // floating point from 0.0 to 100.0
+    Angle,                  // floating point for showing degrees
+    String,
+    Image,                  // QPixmap
+    Icon,
+    Color,                  // QColor
+    Polygon,                // For Collision Shapes
+    Point,                  // Integer pair x and y
+    PointF,                 // Floating pair x and y
+    SizeF,                  // Floating pair w and h
+    Vector3D,
     List,
 };
 
@@ -231,21 +261,21 @@ enum class World_Properties
 
 
 //####################################################################################
-//##    Scene - Possible components and their properties
+//##    Stage - Possible components and their properties
 //####################################################################################
 
-enum class Scene_Components
+enum class Stage_Components
 {
     settings,
 };
 
-enum class Scene_Properties {
+enum class Stage_Properties {
     // settings
     name,                   //string
-    start,                  //int
-    end,                    //int
-    size,                   //int
-    cooldown,               //int
+    start,                  //positive
+    end,                    //positive
+    size,                   //positive
+    cooldown,               //Positive
 };
 
 
@@ -257,6 +287,7 @@ enum class Object_Components
 {
     settings,
     transform,
+    layering,
     movement,
 
     camera_settings,
@@ -274,7 +305,11 @@ enum class Object_Properties
     // transform
     position,               //pointf
     rotation,               //angle
+    size,                   //sizef
     scale,                  //pointf
+
+    // layering
+    z_order,                //int
     opacity,                //double
 
     // movement
@@ -291,6 +326,44 @@ enum class Object_Properties
 };
 
 
+//####################################################################################
+//##    Object - Possible components and their properties
+//####################################################################################
+
+enum class Asset_Components
+{
+    settings,
+    animation,
+};
+
+enum class Asset_Properties
+{
+    // settings
+    name,                   //string
+    collision_shape,        //polygon
+
+    //animation
+    animation_default,      //image
+
+};
+
+
 
 
 #endif // ENUMS_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

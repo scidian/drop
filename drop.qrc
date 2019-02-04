@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>icon/icon256.png</file>
-        <file>tree_icons/tree_scene.png</file>
         <file>tree_icons/tree_object.png</file>
         <file>tree_icons/tree_action.png</file>
         <file>tree_icons/tree_camera.png</file>
@@ -34,5 +33,14 @@
         <file>inspector_icons/check_unchecked.png</file>
         <file>inspector_icons/check_hover_checked.png</file>
         <file>inspector_icons/check_hover_unchecked.png</file>
+        <file>gui_misc/drop_arrow.png</file>
+        <file>gui_misc/check.png</file>
+        <file>assets/ground_fill.png</file>
+        <file>assets/ground_top.png</file>
+        <file>assets/moon_plant_6.png</file>
+        <file>assets/test_square.png</file>
+        <file>assets/rover_body.png</file>
+        <file>inspector_icons/comp_layering.png</file>
+        <file>tree_icons/tree_stage.png</file>
     </qresource>
 </RCC>

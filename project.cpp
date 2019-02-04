@@ -6,23 +6,42 @@
 //
 //
 
+#include <stdexcept>
+
+#include "library.h"
+
 #include "project.h"
+#include "project_asset.h"
 #include "project_world.h"
-#include "project_world_scene.h"
-#include "project_world_scene_object.h"
+#include "project_world_stage.h"
+#include "project_world_stage_object.h"
 
 //####################################################################################
-//##    Constructor, Destructor - addWorld
+//##    Constructor, Destructor
 //####################################################################################
 DrProject::DrProject(long key_generator_starting_number)
 {
+    // Don't alllow key to start at less than 1, having an item with key 0 could conflict with nullptr results
+    if (key_generator_starting_number <= 1) key_generator_starting_number = 1;
     m_key_generator = key_generator_starting_number;
-    addWorld();
 }
 
 DrProject::~DrProject()
 {
     for (auto i: m_worlds) { delete i.second; }
+}
+
+
+
+//####################################################################################
+//##    Project Children Functions
+//####################################################################################
+
+long DrProject::addAsset(QString new_asset_name, DrAsset_Type new_asset_type, QPixmap pixmap)
+{
+    long new_asset_key = getNextKey();
+    m_assets[new_asset_key] = new DrAsset(this, new_asset_key, new_asset_name, new_asset_type, pixmap);
+    return new_asset_key;
 }
 
 // Adds a World to the map container, finds next availbable "World xxx" name to assign to World
@@ -37,23 +56,6 @@ void DrProject::addWorld()
 
     long new_world_key = getNextKey();
     m_worlds[new_world_key] = new DrWorld(this, new_world_key, new_name);
-}
-
-
-//####################################################################################
-//##    Getters - getFirstWorldKey, getWorld (from key), getWorldWithName (from name)
-//####################################################################################
-
-// Returns the map Key of the first World in the map container
-long DrProject::getFirstWorldKey()
-{
-    return m_worlds.begin()->first;
-}
-
-// Returns a pointer to the World with the associated Key from the map container
-DrWorld* DrProject::getWorld(long from_world_key)
-{
-    return m_worlds[from_world_key];
 }
 
 // Returns a pointer to the World with the mathcing name
@@ -73,34 +75,69 @@ DrWorld* DrProject::getWorldWithName(QString world_name)
 //##    Key Finding - These functions search the current project for the specified Key and return the requested info
 //##                    (key's are generated from Project key generator upon object initialization)
 //##
-//##    findSettingsFromKey - Returns a pointer to the Base DrSettings class of the object with the specified key
-//##
-//##    findTypeFromKey - Searches all member variables / containers for the specified unique project key
-//##
 //####################################################################################
-DrSettings* DrProject::findSettingsFromKey(long check_key)
+
+DrStage* DrProject::findStageFromKey(long check_key)
 {
-    for (auto i: m_worlds) {
-        if (i.second->getKey() == check_key) { return i.second->getSettings(); }
-
-        for (auto j: i.second->getSceneMap()) {
-            if (j.second->getKey() == check_key) { return j.second->getSettings(); }
-
-            for (auto k: j.second->getObjectMap()) {
-                if (k.second->getKey() == check_key) { return k.second->getSettings(); }
-
-                //************* More types implemented
-
-            }
-        }
+    for (auto world_pair : m_worlds) {
+        try {  return world_pair.second->getStageMap().at(check_key);  }
+        catch (const std::out_of_range&) {  }               // Not Found
     }
     return nullptr;
 }
 
-DrTypes DrProject::findTypeFromKey(long check_key)
+// Returns a pointer to the Base DrSettings class of the object with the specified key
+DrSettings* DrProject::findSettingsFromKey(long check_key)
+{
+    try {  return m_assets.at(check_key);  }
+    catch (const std::out_of_range&) {  }                   // Not Found
+
+    for (auto i : m_worlds) {
+        if (i.second->getKey() == check_key) { return i.second->getSettings(); }
+
+        for (auto j : i.second->getStageMap()) {
+            if (j.second->getKey() == check_key) { return j.second->getSettings(); }
+
+            for (auto k : j.second->getObjectMap()) {
+                if (k.second->getKey() == check_key) { return k.second->getSettings(); }
+
+                //************* More types implemented
+            }
+        }
+    }
+
+    Dr::ShowMessageBox("WARNING: Did not find key in project (from 'DrProject::findChildSettingsFromKey')...");
+    return nullptr;
+}
+
+// Searches all member variables / containers for the specified unique project key
+DrType DrProject::findChildTypeFromKey(long check_key)
 {
     return findSettingsFromKey(check_key)->getType();
 }
+
+DrAsset_Type DrProject::findAssetTypeFromKey(long check_key)
+{
+    return m_assets[check_key]->getAssetType();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

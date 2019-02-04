@@ -117,7 +117,7 @@ void ApplyColoring(QWidget *widget)
         " QPushButton:pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }"
 
-        // Asset, Scene, Inspector, Etc Trees
+        // Asset, Stage, Inspector, Etc Trees
         " QTreeWidget { icon-size: 14px 14px; }"
         " QTreeWidget { color: " + Dr::GetColor(Window_Colors::Text).name() + ";  "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
@@ -130,7 +130,7 @@ void ApplyColoring(QWidget *widget)
         " QTreeWidget::item:hover:!selected { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
 
-        // Header of Scene Tree (where little lock is)
+        // Header of Stage Tree (where little lock is)
         " QHeaderView::section { "
         "       background-color: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
         "       border: 0px; } "
@@ -145,13 +145,14 @@ void ApplyColoring(QWidget *widget)
 
         // Dock Widgets
         //" QDockWidget { titlebar-close-icon: url(close.png); } "
-        " QDockWidget { font-size: " + QString::number(Dr::FontSize()) + "px; color: " + Dr::GetColor(Window_Colors::Text).name() + "; } "
+        " QDockWidget { font-size: " + QString::number(Dr::FontSize()) + "px; font: bold; "
+        "               color: " + Dr::GetColor(Window_Colors::Text).name() + "; } "
         " QDockWidget::title { text-align: center; "
         "       background: qlineargradient(x1:0 y1:0, x2:0 y2:1, "
         "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Light).name() + ", "
         "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
 
-        // SceneGraphicsView scene display area, ::corner removes right botttom little box
+        // StageGraphicsView display area, ::corner removes right botttom little box
         " QGraphicsView { background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }"
         " QGraphicsView::corner { background: transparent; } "
 
@@ -211,6 +212,36 @@ void ApplyColoring(QWidget *widget)
         "       border: 2px solid " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
         "       border-radius: 0px; }"
 
+        // Drop down Combo Box, mostly in object inspector
+        " QComboBox { "
+        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
+        "       border: 2px solid; "
+        "       border-color: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
+        "       border-radius: 4px; height: 20px; }"
+        " QComboBox:hover { "
+        "       color: " + Dr::GetColor(Window_Colors::Text_Light).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
+        "       border: 2px solid " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
+        "       border-radius: 4px; }"
+        " QComboBox::drop-down { border: 0px; width: 20px; }"
+        " QComboBox::down-arrow { image: url(:/gui_misc/drop_arrow.png); }"
+        // QComboBox gets the "on" state when the popup is open
+        " QComboBox:on {"
+        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
+        "       border: 2px solid; "
+        "       border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
+        "       border-bottom-right-radius: 0px;  "
+        "       border-bottom-left-radius: 0px; } "
+
+        " QLabel#assetFrame { border: 2px solid #777777; "
+        "       padding: 2px; margin: 4px; "
+        "       border-radius: 6px; } "
+
+        " QLabel#assetFrame:hover { border: 2px solid " + Dr::GetColor(Window_Colors::Icon_Dark).name()  + "; "
+        "       padding: 2px; margin: 4px; "
+        "       border-radius: 6px; } "
 
     );
 

@@ -11,7 +11,6 @@
 
 #include "enums.h"
 
-
 class DrSettings;
 class DrProperty;
 typedef std::map<long, DrProperty*> PropertyMap;
@@ -56,8 +55,15 @@ public:
     PropertyMap getPropertyList() { return m_properties; }
     DrProperty* getProperty(long setting) { return m_properties[setting]; }
     DrProperty* getProperty(World_Properties setting) { return m_properties[static_cast<int>(setting)]; }
-    DrProperty* getProperty(Scene_Properties setting) { return m_properties[static_cast<int>(setting)]; }
+    DrProperty* getProperty(Stage_Properties setting) { return m_properties[static_cast<int>(setting)]; }
     DrProperty* getProperty(Object_Properties setting) { return m_properties[static_cast<int>(setting)]; }
+    DrProperty* getProperty(Asset_Properties setting) { return m_properties[static_cast<int>(setting)]; }
+
+    void setProperty(long setting, QVariant value);
+    void setProperty(World_Properties setting, QVariant value);
+    void setProperty(Stage_Properties setting, QVariant value);
+    void setProperty(Object_Properties setting, QVariant value);
+    void setProperty(Asset_Properties setting, QVariant value);
 
     void setDisplayName(QString new_display_name) { m_display_name = new_display_name; }
     void setDescription(QString new_description) { m_description = new_description; }
@@ -72,9 +78,9 @@ public:
     // External calls
     void addProperty(long property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
     void addProperty(World_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
-    void addProperty(Scene_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
+    void addProperty(Stage_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
     void addProperty(Object_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
-
+    void addProperty(Asset_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
 
 };
 

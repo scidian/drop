@@ -24,15 +24,15 @@
 //
 //  FormStartup                     Pick Recent Project, News, Create New Project
 //
-//  FormMain                        (4) Modes: Edit Scene
+//  FormMain                        (4) Modes: Edit Stage
 //                                             Edit UI
 //                                             Node Map: World / UI Layout
-//                                             Node Map: Scene Layout
+//                                             Node Map: Stage Layout
 //      Collision Shape Editor      Edit Collision Shape
 //      Atlas Editor                View / Edit Project Atlases
 //      Font Editor                 Create / View Fonts for Use in Project
 //      Image Editor                Draw shapes, objects for use in Assets
-//      Object Editor               Edit object "scenes"
+//      Object Editor               Edit object's ObjectMaps
 //      Particle Editor             Make custom particles
 //
 

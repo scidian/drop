@@ -8,8 +8,8 @@
 
 #include "project.h"
 #include "project_world.h"
-#include "project_world_scene.h"
-#include "project_world_scene_object.h"
+#include "project_world_stage.h"
+#include "project_world_stage_object.h"
 
 #include "settings.h"
 #include "settings_component.h"
@@ -46,11 +46,15 @@ void TreeAdvisor::changeAdvisor(QString header, QString body)
     font_label.setPointSize(Dr::FontSize());
     body_label->setFont(font_label);
     body_label->setWordWrap(true);
+    body_label->setScaledContents(true);
     body_label->setAlignment(Qt::AlignTop);
 
     // Apply label to tree, expand all
     this->setItemWidget(sub_item, 0, body_label);           // Apply text label to tree
     this->expandAll();                                      // Expand the tree
+
+    // Adjust height to maximize advisor text in advisor window
+    body_label->setFixedHeight(body_label->rect().height() + (this->rect().bottom() - body_label->rect().bottom() - 1) );
 
     advisor_mutex.unlock();                                 // Unlock function for other threads
 }

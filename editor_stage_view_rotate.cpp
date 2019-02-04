@@ -10,28 +10,26 @@
 
 #include "project.h"
 #include "project_world.h"
-#include "project_world_scene.h"
-#include "project_world_scene_object.h"
-#include "editor_scene_item.h"
+#include "project_world_stage.h"
+#include "project_world_stage_object.h"
+#include "editor_stage_item.h"
 
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
 
-#include "editor_scene_scene.h"
-#include "editor_scene_view.h"
+#include "editor_stage_scene.h"
+#include "editor_stage_view.h"
 #include "interface_relay.h"
 
 
 //####################################################################################
 //##        Starts rotating mode
 //####################################################################################
-void SceneGraphicsView::startRotate(QPoint mouse_in_view)
+void StageGraphicsView::startRotate(QPoint mouse_in_view)
 {
-    m_view_mode = View_Mode::Rotating;
-
     // Grab starting angle of selection group before rotating starts
-    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+    StageGraphicsScene *my_scene = dynamic_cast<StageGraphicsScene *>(scene());
 
     // Store starting rotation of current selection group
     m_rotate_start_angle = my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Rotation).toDouble();
@@ -43,7 +41,7 @@ void SceneGraphicsView::startRotate(QPoint mouse_in_view)
     }
 
     // Store starting scene rect of initial selection bounding box
-    m_rotate_start_rect = totalSelectedItemsSceneRect();
+    m_rotate_start_rect = my_scene->totalSelectedItemsSceneRect();
 
     // Set up our tooltip
     m_tool_tip->startToolTip(m_view_mode, mouse_in_view, m_rotate_start_angle);
@@ -54,7 +52,7 @@ void SceneGraphicsView::startRotate(QPoint mouse_in_view)
 //##        Angle Comparision Functions
 //####################################################################################
 // Returns true is 'check_angle' in equal to 0, 90, 180, or 270, i.e. "square" angle
-bool SceneGraphicsView::isSquare(double check_angle)
+bool StageGraphicsView::isSquare(double check_angle)
 {
     check_angle = abs(check_angle);
     while (check_angle >= 360) check_angle -= 360;
@@ -70,11 +68,11 @@ bool SceneGraphicsView::isSquare(double check_angle)
 //####################################################################################
 //##        Main Rotation Function
 //####################################################################################
-void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
+void StageGraphicsView::rotateSelection(QPointF mouse_in_view)
 {
     // Test for scene, convert to our custom class
     if (scene() == nullptr) return;
-    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+    StageGraphicsScene    *my_scene = dynamic_cast<StageGraphicsScene *>(scene());
 
     QGraphicsItem         *item =     my_scene->getSelectionGroupAsGraphicsItem();
     QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
@@ -101,9 +99,16 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
     } else {
         angle_adjust = 0;
     }
+
+    // ********** If we didnt snap to nearest ANGLE_STEP, try to snap to nearest .1 decimal place
+    if (qFuzzyCompare(angle_adjust, 0)) {
+        angle = QString::number(angle, 'f', 1).toDouble();
+        angle_adjust = angle - angle_diff;
+    }
+
+    // ********** Make sure angle is within -360 to 360
     while (angle >=  360) { angle -= 360; }
     while (angle <= -360) { angle += 360; }
-
 
     // ********** Group selected items so we can apply new rotation to all selected items
     QGraphicsItemGroup *group = scene()->createItemGroup( { item } );
@@ -131,7 +136,7 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
         while (child_angle >=  360) { child_angle -= 360; }
         while (child_angle <= -360) { child_angle += 360; }
 
-        child->setData(User_Roles::Rotation, child_angle);
+        dynamic_cast<DrItem*>(child)->updateProperty(User_Roles::Rotation, child_angle);
     }
 
 
@@ -148,13 +153,13 @@ void SceneGraphicsView::rotateSelection(QPointF mouse_in_view)
 //####################################################################################
 //##        Extract Angle, Scale and Skew from Transforms
 //####################################################################################
-double SceneGraphicsView::extractAngleFromTransform(QTransform &from_transform)
+double StageGraphicsView::extractAngleFromTransform(QTransform &from_transform)
 {
     QTransform t = from_transform;
     return qRadiansToDegrees(qAtan2(t.m12(), t.m11()));
 }
 
-Transform_Data SceneGraphicsView::decomposeTransform(QTransform &from_transform, bool qr_type)
+Transform_Data StageGraphicsView::decomposeTransform(QTransform &from_transform, bool qr_type)
 {
     double a = from_transform.m11();    double c = from_transform.m12();
     double b = from_transform.m21();    double d = from_transform.m22();
@@ -206,7 +211,7 @@ Transform_Data SceneGraphicsView::decomposeTransform(QTransform &from_transform,
 //####################################################################################
 //##        Calculates angle from a center point to any target point, 0 = Up
 //####################################################################################
-double SceneGraphicsView::calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt)
+double StageGraphicsView::calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt)
 {
     // Calculate the angle theta from the deltaY and deltaX values (atan2 returns radians values from [-PI, PI])
     // 0 currently points EAST

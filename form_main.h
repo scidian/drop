@@ -5,22 +5,22 @@
 //      FormMain - Class that holds our main form window
 //
 //      FormMain Modes:
-//          Edit Scene
+//          Edit Stage
 //          Edit UI
 //          Node Map: World / UI Layout
-//          Scene Map: Scene Layout
+//          Stage Map: Stage Layout
 //
-//      Main Components of FormMain while in normal "Edit Scene" mode:
+//      Main Components of FormMain while in normal "Edit Stage" mode:
 //          Top Area (Toolbar)
 //          Advisor (Dock)
 //          Object Inspector (Dock)
 //
 //          Components That Can Appear in Object Inspector:
 //              Asset List (Dock)
-//              Scene View
-//              Scene List
+//              Stage View
+//              Stage List
 //              Variable List
-//              Bottom Area (Labels, Scenes?)
+//              Bottom Area (Labels, Stages?)
 //
 
 #ifndef MAINWINDOW_H
@@ -40,10 +40,10 @@ class InterfaceRelay;
 class TreeAssetList;
 class TreeAdvisor;
 class TreeInspector;
-class TreeScene;
-class SceneGraphicsScene;
-class SceneGraphicsView;
-class SceneViewRubberBand;
+class TreeStage;
+class StageGraphicsScene;
+class StageGraphicsView;
+class StageViewRubberBand;
 
 
 
@@ -63,13 +63,13 @@ public:
 
     // Locals that need to be SAVED / LOADED from each project
     DrProject      *project;                                            // Holds whatever the current open game project is
-    long            current_world;                                      // Tracks which world to show in the scene viewer
+    long            current_world;                                      // Tracks which world to show in the Stage viewer
 
 private:
-    SceneGraphicsScene  *scene;                 // Holds the currently selected scene, ready for rendering in SceneGraphicsView
-    SceneGraphicsView   *viewMain;              // Renders scene for the viewer
+    StageGraphicsScene  *scene;                 // Holds the currently selected Stage, ready for rendering in StageGraphicsView
+    StageGraphicsView   *viewMain;              // Renders scene for the viewer
 
-    TreeScene           *treeScene;             // Custom classes for Scene List
+    TreeStage           *treeStage;             // Custom classes for Stage List
     TreeInspector       *treeInspector;         // Custom classes for Object Inspector
     TreeAssetList       *treeAsset;             // Custom classes for Asset List
     TreeAdvisor         *treeAdvisor;           // Custom classes for Advisor List
@@ -77,7 +77,7 @@ private:
     // Normal Qt Classes for simple objects
     QMenuBar      *menuBar;
     QAction       *actionUndo, *actionRedo;
-    QWidget       *widgetAdvisor, *widgetAssests, *widgetCentral, *widgetScene, *widgetInspector, *widgetToolbar, *widgetSceneView;
+    QWidget       *widgetAdvisor, *widgetAssests, *widgetCentral, *widgetStage, *widgetInspector, *widgetToolbar, *widgetStageView;
     QScrollArea   *areaBottom;
     QFrame        *statusBar;
 
@@ -100,19 +100,22 @@ public:
     ~FormMain();
 
     // Member functions
+    virtual void    buildAssetList();
     virtual void    buildObjectInspector(QList<long> key_list);
-    virtual void    buildTreeSceneList();
+    virtual void    buildTreeStageList();
+    virtual void    centerViewOn(QPointF center_point);
+    virtual void    populateScene(long from_stage_key);
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list);
     virtual void    setAdvisorInfo(QString header, QString body);
     virtual void    setLabelText(Label_Names label_name, QString new_text);
-
-    void            populateScene();                                        // !!!!! TEMP generic fill of scene
+    virtual void    updateObjectInspectorAfterItemChange(long item_key);
+    virtual void    updateStageTreeSelectionBasedOnSelectionGroup();
 
 private:
     // Form Building / Setup
     void        buildMenu();
     void        buildWindow(Form_Main_Mode new_layout);
-    void        buildWindowModeEditScene();
+    void        buildWindowModeEditStage();
     void        changePalette(Color_Scheme new_color_scheme);
 
     // Menu Bar Functions
@@ -122,11 +125,16 @@ private:
     void        menuListChildren();
 
 private slots:
+    void        centerViewTimer(QPointF center_point);
     void        editMenuAboutToShow();
     void        editMenuAboutToHide();
 
 signals:
     void        sendAdvisorInfo(QString header, QString body);              // Forwards info to MainWindow::changeAdvisor
+
+    // Undo Stack Signals
+    void        newStageSelected(DrProject *project, StageGraphicsScene *scene, long old_stage, long new_stage);
+
 };
 
 

@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 12/7/18, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      DrWorld - Class to hold all scenes, variables and objects for one world
+//      DrWorld - Class to hold all stages, variables and objects for one world
 //
 //
 
@@ -12,22 +12,21 @@
 #include "settings.h"
 
 class DrProject;
-class DrScene;
-typedef std::map<long, DrScene*> SceneMap;
+class DrStage;
+typedef std::map<long, DrStage*> StageMap;
 
 
 //####################################################################################
 //##    DrWorld
-//##        Class to hold all scenes, variables and objects for one world
+//##        Class to hold all stages, variables and objects for one world
 //############################
 class DrWorld : public DrSettings
 {
 private:
     // Local variables
-    SceneMap    m_scenes;                                   // map of pointers to DrScene classes       (holds the scenes for current world)
+    StageMap    m_stages;                                   // map of pointers to DrStage classes       (holds the stages for current world)
 
     DrProject  *m_parent_project;                           // holds reference to parent Project class that handles key generation for project
-
 
 public:
     // Constructor & destructor
@@ -36,18 +35,18 @@ public:
 
 
     // Getters and setters
-    virtual DrTypes getType() override  { return DrTypes::World; }
+    virtual DrType  getType() override  { return DrType::World; }
     DrProject*      getParentProject()  { return m_parent_project; }
-    SceneMap        getSceneMap()       { return m_scenes; }
+    StageMap        getStageMap()       { return m_stages; }
 
 
     // External calls
-    void        addScene(QString new_scene_name = "");
+    void        addStage(QString new_stage_name = "");
     void        initializeWorldSettings(QString new_name);
 
-    long        getFirstSceneKey();
-    DrScene*    getScene(long from_scene_key);
-    DrScene*    getSceneWithName(QString scene_name);
+    long        getFirstStageKey();
+    DrStage*    getStage(long from_stage_key);
+    DrStage*    getStageWithName(QString stage_name);
 
 
 

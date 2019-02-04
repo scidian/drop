@@ -10,40 +10,28 @@
 
 #include "project.h"
 #include "project_world.h"
-#include "project_world_scene.h"
-#include "project_world_scene_object.h"
-#include "editor_scene_item.h"
+#include "project_world_stage.h"
+#include "project_world_stage_object.h"
+#include "editor_stage_item.h"
 
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
 
-#include "editor_scene_scene.h"
-#include "editor_scene_view.h"
+#include "editor_stage_scene.h"
+#include "editor_stage_view.h"
 #include "interface_relay.h"
-
-
-
-//####################################################################################
-//##        Mouse Enter
-//####################################################################################
-void SceneGraphicsView::enterEvent(QEvent *event)
-{
-    ///setFocus(Qt::FocusReason::MouseFocusReason);                     // Set focus on mouse enter to allow for space bar pressing hand grab
-    m_relay->setAdvisorInfo(Advisor_Info::Scene_Area);                  // Set Advisor text on mouse enter
-    QGraphicsView::enterEvent(event);
-}
 
 
 
 //####################################################################################
 //##        Mouse Pressed
 //####################################################################################
-void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
+void StageGraphicsView::mousePressEvent(QMouseEvent *event)
 {
     // Test for scene, convert to our custom class and lock the scene
     if (scene() == nullptr) return;
-    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+    StageGraphicsScene    *my_scene = dynamic_cast<StageGraphicsScene *>(scene());
     QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
     if (my_scene->scene_mutex.tryLock(100) == false) return;
 
@@ -64,6 +52,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
             if (my_scene->getSelectionGroupCount() > 0) {
                 // ******************* If clicked while holding Alt key start rotating
                 if (event->modifiers() & Qt::KeyboardModifier::AltModifier || m_over_handle == Position_Flags::Rotate) {
+                    m_view_mode = View_Mode::Rotating;
                     startRotate(m_origin);
                     my_scene->scene_mutex.unlock();
                     return;
@@ -71,6 +60,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
                 // ******************* If clicked while in a Size Grip Handle start resizing
                 if (m_over_handle != Position_Flags::No_Position && m_over_handle != Position_Flags::Move_Item) {
+                    m_view_mode = View_Mode::Resizing;
                     startResize(m_origin);
                     my_scene->scene_mutex.unlock();
                     return;
@@ -82,21 +72,41 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
             if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
 
                 if (m_origin_item != nullptr) {
-                    // If we clicked clicked a new item, set selection group to that
+
+                    // ***** If we clicked clicked a new item, set selection group to that
                     if (my_items.contains(m_origin_item) == false) {
-                        emit selectionGroupNewGroup(my_scene->getSelectionGroup(), my_items, QList<QGraphicsItem*>({ m_origin_item }),
-                                                    my_scene->getFirstSelectedItem(), m_origin_item);
+                        emit selectionGroupNewGroup(my_scene,
+                                                    my_scene->convertListItemsToObjects(my_items),
+                                                    QList<DrObject*>({ dynamic_cast<DrItem*>(m_origin_item)->getObject() }),
+                                                    my_scene->getFirstSelectedItem(),
+                                                    dynamic_cast<DrItem*>(m_origin_item)->getObject());
                         my_scene->selectSelectionGroup();
                     }
 
-                    // Process press event for item movement (Translation)
+                    // ***** Disable any objects that were there and transparent
+                    QList<QGraphicsItem*> item_list = items(event->pos());
+                    for (auto item : item_list)
+                        if (my_scene->getSelectionGroupItems().contains(item) == false) {
+                            item->setEnabled(false);
+                            item->setVisible(false);
+                        }
+                    my_scene->getSelectionGroup()->setEnabled(true);
+                    my_scene->getSelectionGroup()->setVisible(true);
+
+                    // ***** Process press event for item movement (Translation)
                     QGraphicsView::mousePressEvent(event);
                     viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
                     QTimer::singleShot(500, this, SLOT(checkTranslateToolTipStarted()));
 
-                    ///m_old_pos = my_scene->getSelectionGroup()->scenePos();
+                    // ***** Store item start position for UNDO
                     m_old_pos = my_scene->getSelectionGroup()->sceneTransform().map(my_scene->getSelectionGroup()->boundingRect().center());
                     m_view_mode = View_Mode::Translating;
+
+                    // ***** Re-enable any objects that were there and transparent
+                    for (auto item : item_list) {
+                        item->setEnabled(true);
+                        item->setVisible(true);
+                    }
                 }
 
             // ******************** If clicked while control is down, add to selection group, or take out
@@ -112,18 +122,23 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
                 // If we lost the first item, cancel having a first item
                 if (new_list.count() > 0) {
-                    QGraphicsItem *new_first = my_scene->getFirstSelectedItem();
+                    DrObject *new_first = my_scene->getFirstSelectedItem();
+
+                    QGraphicsItem *new_first_as_graphics = nullptr;
+                    if (new_first) new_first_as_graphics = my_scene->getFirstSelectedItem()->getDrItem();
 
                     if (new_list.count() == 1)
-                        new_first = new_list.first();
-                    else if (new_list.contains(my_scene->getFirstSelectedItem()) == false)
+                        new_first = dynamic_cast<DrItem*>(new_list.first())->getObject();
+                    else if (new_list.contains(new_first_as_graphics) == false)
                         new_first = nullptr;
 
-                    emit selectionGroupNewGroup(my_scene->getSelectionGroup(), my_items, new_list,
+                    emit selectionGroupNewGroup(my_scene,
+                                                my_scene->convertListItemsToObjects(my_items),
+                                                my_scene->convertListItemsToObjects(new_list),
                                                 my_scene->getFirstSelectedItem(), new_first);
                     my_scene->selectSelectionGroup();
                 } else {
-                    emit selectionGroupNewGroup(my_scene->getSelectionGroup(), my_items, QList<QGraphicsItem*>({}),
+                    emit selectionGroupNewGroup(my_scene, my_scene->convertListItemsToObjects(my_items), QList<DrObject*>({}),
                                                 my_scene->getFirstSelectedItem(), nullptr);
                 }
             }
@@ -131,6 +146,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
             // ******************* If theres no item under mouse, start selection box
             if (m_origin_item == nullptr) {
+                m_view_mode = View_Mode::Selecting;
                 startSelect(event);
                 processSelection(event->pos());
                 my_scene->scene_mutex.unlock();
@@ -152,7 +168,7 @@ void SceneGraphicsView::mousePressEvent(QMouseEvent *event)
 
 
 // SLOT: Fired from single shot timer when mouse is down, starts tooltip after x milliseconds if user pressed mouse but hasn't started moving it yet
-void SceneGraphicsView::checkTranslateToolTipStarted()
+void StageGraphicsView::checkTranslateToolTipStarted()
 {
     if (m_view_mode == View_Mode::Translating) {
         if (m_tool_tip->getTipType() != View_Mode::Translating)
@@ -164,17 +180,28 @@ void SceneGraphicsView::checkTranslateToolTipStarted()
 //####################################################################################
 //##        Finds item on top of scene at point in View, ignoring selection group
 //####################################################################################
-QGraphicsItem* SceneGraphicsView::itemOnTopAtPosition(QPoint check_point)
+QGraphicsItem* StageGraphicsView::itemOnTopAtPosition(QPoint check_point)
 {
-    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
+    StageGraphicsScene    *my_scene = dynamic_cast<StageGraphicsScene*>(scene());
     QGraphicsItem*         selection = my_scene->getSelectionGroupAsGraphicsItem();
     QGraphicsItem         *item_on_top;
     QList<QGraphicsItem*>  possible_items;
 
     // Make a list of all items at point excluding selection group
     for (auto item : items(check_point))
-        if (item != selection)
+        if (item != selection) {
             possible_items.append(item);
+
+            // !!!!! DEBUG: Shows red, green, blue and alpha of pixel under mouse
+            if (Dr::CheckDebugFlag(Debug_Flags::Label_Top_Item_RGBA)) {
+                QColor pixel_color = dynamic_cast<DrItem*>(item)->getColorAtPoint(check_point, this);
+                Dr::SetLabelText(Label_Names::Label_1, "R: " + QString::number(pixel_color.red()) +
+                                                       "G: " + QString::number(pixel_color.green()) +
+                                                       "B: " + QString::number(pixel_color.blue()) );
+                Dr::SetLabelText(Label_Names::Label_2, "Aplha: " + QString::number(pixel_color.alpha()) );
+            }
+            // !!!!! END
+        }
 
     // If no items at position, exit
     if (possible_items.count() == 0) return nullptr;
@@ -193,11 +220,11 @@ QGraphicsItem* SceneGraphicsView::itemOnTopAtPosition(QPoint check_point)
 //####################################################################################
 //##        Mouse Moved
 //####################################################################################
-void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
+void StageGraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
     // Test for scene, convert to our custom class and lock the scene
     if (scene() == nullptr) return;
-    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+    StageGraphicsScene    *my_scene = dynamic_cast<StageGraphicsScene *>(scene());
     if (my_scene->scene_mutex.tryLock(10) == false) return;
 
     // Store event mouse position
@@ -207,7 +234,7 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
     if (m_allow_movement == false) {
         if (m_origin_timer.elapsed() > 200) {
             m_allow_movement = true;
-        } else if (QLineF(m_origin, m_last_mouse_pos).length() > 2) {
+        } else if (QPoint(m_origin - m_last_mouse_pos).manhattanLength() > 2) {
             m_allow_movement = true;
         }
     }
@@ -332,6 +359,15 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
     // !!!!! END
 
 
+    // ***** If we're not doing anything, update the advisor based on item under the mouse
+    if (m_view_mode == View_Mode::None) {
+        if (check_item != nullptr) {
+            m_relay->setAdvisorInfo(check_item->data(User_Roles::Name).toString(), check_item->data(User_Roles::Type).toString());
+        } else {
+            m_relay->setAdvisorInfo(Advisor_Info::Stage_Area);
+        }
+    }
+
 
     // ******************* If we're in selection mode, process mouse movement and resize box as needed
    if (m_view_mode == View_Mode::Selecting)
@@ -354,8 +390,10 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
             QGraphicsView::mouseMoveEvent(event);
             if (m_tool_tip->getTipType() != View_Mode::Translating)
                 m_tool_tip->startToolTip(View_Mode::Translating, m_origin, mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
-            else
+            else {
                 m_tool_tip->updateToolTipData( mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
+                my_scene->updateChildrenPositionData();
+            }
         }
     } else {
         // Pass on event to allow movement
@@ -374,12 +412,12 @@ void SceneGraphicsView::mouseMoveEvent(QMouseEvent *event)
 //####################################################################################
 //##        Mouse Released
 //####################################################################################
-void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
+void StageGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 {
     // Test for scene, convert to our custom class
     if (scene() == nullptr) return;
-    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
-    QList<QGraphicsItem*>  empty{ };
+    StageGraphicsScene    *my_scene = dynamic_cast<StageGraphicsScene *>(scene());
+    QList<DrObject*>  empty{ };
 
     // Process left mouse button released
     if (event->button() & Qt::LeftButton)
@@ -389,7 +427,7 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
             SelectionGroup *group = my_scene->getSelectionGroup();
             QPointF check_pos = group->sceneTransform().map(group->boundingRect().center());
             if (group->childItems().count() > 0 && m_old_pos != check_pos) {
-                emit selectionGroupMoved(group, m_old_pos);
+                emit selectionGroupMoved(my_scene, m_old_pos);
             }
         }
 
@@ -399,14 +437,18 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 
             // If we had items selected and now we don't, emit undo clear selection command
             if (group->childItems().count() == 0 && m_items_start.count() != 0) {
-                emit selectionGroupNewGroup(group, m_items_start, empty, m_first_start, nullptr);
+                emit selectionGroupNewGroup(my_scene, my_scene->convertListItemsToObjects(m_items_start), empty, m_first_start, nullptr);
 
             // Otherwise check to see if selected items list has changed, if so emit new group command
             } else if (group->childItems() != m_items_start) {
-                if (group->childItems().count() == 1)
-                    emit selectionGroupNewGroup(group, m_items_start, group->childItems(), m_first_start, group->childItems().first());
+                if (group->childItems().count() == 1) {
+                    DrObject *new_first = dynamic_cast<DrItem*>(group->childItems().first())->getObject();
+                    emit selectionGroupNewGroup(my_scene, my_scene->convertListItemsToObjects(m_items_start),
+                                                my_scene->convertListItemsToObjects(group->childItems()), m_first_start, new_first);
+                }
                 else if ( group->childItems().count() > 1)
-                    emit selectionGroupNewGroup(group, m_items_start, group->childItems(), m_first_start, my_scene->getFirstSelectedItem());
+                    emit selectionGroupNewGroup(my_scene, my_scene->convertListItemsToObjects(m_items_start),
+                                                my_scene->convertListItemsToObjects(group->childItems()), m_first_start, my_scene->getFirstSelectedItem());
             }
         }
 
@@ -421,6 +463,19 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 }
 
 
+// Called right before scene switch to empty selection group
+void StageGraphicsView::emptySelectionGroupIfNotEmpty()
+{
+    if (!scene()) return;
+    StageGraphicsScene  *my_scene = dynamic_cast<StageGraphicsScene *>(scene());
+    SelectionGroup      *group = my_scene->getSelectionGroup();
+    QList<DrObject*>     empty{ };
+
+    if (group->childItems().count() != 0)
+        emit selectionGroupNewGroup(my_scene, my_scene->convertListItemsToObjects(group->childItems()), empty,
+                                    my_scene->getFirstSelectedItem(), nullptr);
+}
+
 
 //####################################################################################
 //##        Wheel Event / Zoom Functions
@@ -428,7 +483,7 @@ void SceneGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 
 // Handles zooming in / out of view with mouse wheel
 #if QT_CONFIG(wheelevent)
-void SceneGraphicsView::wheelEvent(QWheelEvent *event)
+void StageGraphicsView::wheelEvent(QWheelEvent *event)
 {
     // Allow for scene scrolling if ctrl (cmd) is down
     if (event->modifiers() & Qt::KeyboardModifier::ControlModifier) {
@@ -455,7 +510,7 @@ void SceneGraphicsView::wheelEvent(QWheelEvent *event)
 #endif
 
 // SLOT: Handles hiding tool tip after done zooming
-void SceneGraphicsView::stoppedZooming()
+void StageGraphicsView::stoppedZooming()
 {
     // If over 1.2 seconds have passed since last time mouse wheel was activated, stop tool tip
     if (m_tool_tip->getTipType() == View_Mode::Zooming) {
@@ -466,7 +521,7 @@ void SceneGraphicsView::stoppedZooming()
     }
 }
 
-void SceneGraphicsView::zoomInOut(int level)
+void StageGraphicsView::zoomInOut(int level)
 {
     m_zoom += level;
     if (m_zoom > 500) m_zoom = 500;
@@ -474,7 +529,7 @@ void SceneGraphicsView::zoomInOut(int level)
     applyUpdatedMatrix();
 }
 
-void SceneGraphicsView::applyUpdatedMatrix()
+void StageGraphicsView::applyUpdatedMatrix()
 {
     m_zoom_scale = qPow(qreal(2), (m_zoom - 250) / qreal(50));
     QMatrix matrix;

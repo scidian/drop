@@ -10,23 +10,23 @@
 
 #include "project.h"
 #include "project_world.h"
-#include "project_world_scene.h"
-#include "project_world_scene_object.h"
-#include "editor_scene_item.h"
+#include "project_world_stage.h"
+#include "project_world_stage_object.h"
+#include "editor_stage_item.h"
 
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
 
-#include "editor_scene_scene.h"
-#include "editor_scene_view.h"
+#include "editor_stage_scene.h"
+#include "editor_stage_view.h"
 #include "interface_relay.h"
 
 
 //####################################################################################
 //##        Event Filter, can monitor events being recieved
 //####################################################################################
-bool SceneGraphicsView::eventFilter(QObject *obj, QEvent *event)
+bool StageGraphicsView::eventFilter(QObject *obj, QEvent *event)
 {
     //int t = event->type();
     //   1 = Timer
@@ -44,28 +44,26 @@ bool SceneGraphicsView::eventFilter(QObject *obj, QEvent *event)
 
 
 //####################################################################################
-//##        PAINT: Main Paint Event for QGraphicsView (SceneGraphicsView)
+//##        PAINT: Main Paint Event for QGraphicsView (StageGraphicsView)
 //####################################################################################
-void SceneGraphicsView::paintEvent(QPaintEvent *event)
+void StageGraphicsView::paintEvent(QPaintEvent *event)
 {
     // ********** Check if scene that view is associated with has changed, if so re-connect signals from new scene
     if (scene() != m_scene) {
         if (scene() != nullptr) {
             m_scene = scene();
-            SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
+            StageGraphicsScene *my_scene = dynamic_cast<StageGraphicsScene*>(scene());
 
             connect(scene(), SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
             connect(scene(), SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
 
-            connect(my_scene, &SceneGraphicsScene::updateViews, [this]() { update(); });
+            connect(my_scene, &StageGraphicsScene::updateViews, [this]() { update(); });
 
-            connect(this, SIGNAL(selectionGroupMoved(SelectionGroup*, QPointF)), my_scene,
-                    SLOT(selectionGroupMoved(SelectionGroup*, QPointF)));
+            connect(this,   SIGNAL(selectionGroupMoved(StageGraphicsScene*, QPointF)),
+                    my_scene, SLOT(selectionGroupMoved(StageGraphicsScene*, QPointF)));
 
-            connect(this,     SIGNAL(selectionGroupNewGroup(SelectionGroup*, QList<QGraphicsItem*>, QList<QGraphicsItem*>,
-                                                            QGraphicsItem *, QGraphicsItem *)),
-                    my_scene, SLOT(selectionGroupNewGroup(SelectionGroup*, QList<QGraphicsItem*>, QList<QGraphicsItem*>,
-                                                          QGraphicsItem *, QGraphicsItem *)) );
+            connect(this,     SIGNAL(selectionGroupNewGroup(StageGraphicsScene*, QList<DrObject*>, QList<DrObject*>, DrObject*, DrObject*)),
+                    my_scene,   SLOT(selectionGroupNewGroup(StageGraphicsScene*, QList<DrObject*>, QList<DrObject*>, DrObject*, DrObject*)) );
         }
     }
 
@@ -76,8 +74,13 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 
     // ******************** At this point, if no selected item paint objects and get out of here
     if (scene() == nullptr) return;
-    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(scene());
+    StageGraphicsScene    *my_scene = dynamic_cast<StageGraphicsScene *>(scene());
 
+    // Store current center point of scene, so that if we go to a new scene and come back we stay in the same place
+    if (my_scene->getCurrentStageShown())
+        my_scene->getCurrentStageShown()->setViewCenterPoint( mapToScene( this->viewport()->rect().center() ) );
+
+    // If theres no selection we don't need to perform rest of paint routine
     if (my_scene->getSelectionGroupCount() < 1) {
         QGraphicsView::paintEvent(event);
         return;
@@ -131,7 +134,7 @@ void SceneGraphicsView::paintEvent(QPaintEvent *event)
 }
 
 // Paint helper function, returns a RectF around center point with sides length of rect_size
-QRectF SceneGraphicsView::rectAtCenterPoint(QPoint center, double rect_size)
+QRectF StageGraphicsView::rectAtCenterPoint(QPoint center, double rect_size)
 {
     return QRectF(center.x() - rect_size / 2, center.y() - rect_size / 2, rect_size, rect_size);
 }
@@ -140,7 +143,7 @@ QRectF SceneGraphicsView::rectAtCenterPoint(QPoint center, double rect_size)
 //####################################################################################
 //##        PAINT: Draws grid lines
 //####################################################################################
-void SceneGraphicsView::paintGrid()
+void StageGraphicsView::paintGrid()
 {
     QPainter painter(viewport());
     painter.setBrush(Qt::NoBrush);
@@ -204,9 +207,9 @@ void SceneGraphicsView::paintGrid()
 //####################################################################################
 //##        PAINT: Paints outline around every selected item
 //####################################################################################
-void SceneGraphicsView::paintItemOutlines(QPainter &painter)
+void StageGraphicsView::paintItemOutlines(QPainter &painter)
 {
-    SceneGraphicsScene *my_scene = dynamic_cast<SceneGraphicsScene*>(scene());
+    StageGraphicsScene *my_scene = dynamic_cast<StageGraphicsScene*>(scene());
     QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
 
     QBrush pen_brush(Dr::GetColor(Window_Colors::Icon_Light));
@@ -288,9 +291,9 @@ void SceneGraphicsView::paintItemOutlines(QPainter &painter)
 //####################################################################################
 //##        PAINT: Paints bounding box onto view
 //####################################################################################
-void SceneGraphicsView::paintBoundingBox(QPainter &painter)
+void StageGraphicsView::paintBoundingBox(QPainter &painter)
 {
-    QGraphicsItem *item = dynamic_cast<SceneGraphicsScene*>(scene())->getSelectionGroupAsGraphicsItem();
+    QGraphicsItem *item = dynamic_cast<StageGraphicsScene*>(scene())->getSelectionGroupAsGraphicsItem();
     painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 1));
 
     // ***** Map item bounding box to screen so we can draw it
@@ -308,7 +311,7 @@ void SceneGraphicsView::paintBoundingBox(QPainter &painter)
 //####################################################################################
 //##        PAINT: Paints lines showing rotation while rotating
 //####################################################################################
-void SceneGraphicsView::paintGroupAngle(QPainter &painter, double angle)
+void StageGraphicsView::paintGroupAngle(QPainter &painter, double angle)
 {
     if (m_view_mode == View_Mode::Rotating) {
         ///// Set pen to draw as NOT operation
@@ -345,7 +348,7 @@ void SceneGraphicsView::paintGroupAngle(QPainter &painter, double angle)
 //####################################################################################
 //##        PAINT: Paints handles onto view
 //####################################################################################
-void SceneGraphicsView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw)
+void StageGraphicsView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw)
 {
     painter.setBrush(Dr::GetColor(Window_Colors::Icon_Light));
 
@@ -389,7 +392,7 @@ void SceneGraphicsView::paintHandles(QPainter &painter, Handle_Shapes shape_to_d
 //####################################################################################
 //##        PAINT: Draw our Rubber Band selection box with custom colors
 //####################################################################################
-void SceneViewRubberBand::paintEvent(QPaintEvent *)
+void StageViewRubberBand::paintEvent(QPaintEvent *)
 {
     QStylePainter painter(this);
 
