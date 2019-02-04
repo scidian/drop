@@ -8,14 +8,16 @@
 
 #include "library.h"
 
-#include "editor_scene_scene.h"
+#include "editor_stage_scene.h"
 #include "editor_tree_advisor.h"
 #include "editor_tree_assets.h"
 #include "editor_tree_inspector.h"
-#include "editor_tree_scene.h"
-#include "editor_scene_view.h"
+#include "editor_tree_stage.h"
+#include "editor_stage_view.h"
 
 #include "form_main.h"
+
+#include "project_world_stage.h"
 
 //####################################################################################
 //##        Setting up of form main
@@ -28,27 +30,28 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
     current_mode = new_layout;
     switch (current_mode)
     {
-    case Form_Main_Mode::Edit_Scene:
-        buildWindowModeEditScene();
+    case Form_Main_Mode::Edit_Stage:
+        buildWindowModeEditStage();
         buildAssetList();
-        buildTreeSceneList();
+        buildTreeStageList();
         viewMain->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
-        current_focus = Form_Main_Focus::Scene_View;
+        current_focus = Form_Main_Focus::Stage_View;
         scene->setSceneRect(-2000, -2000, 4000, 4000);
         scene->update();
         viewMain->update();
         centerViewOn(QPointF(0, 0));
         break;
-    case Form_Main_Mode::Clear:
+    case Form_Main_Mode::Clear:  
         this->takeCentralWidget()->deleteLater();
         for (auto dock : findChildren<QDockWidget *>()) { dock->deleteLater(); }
+        delete scene;
         break;
     default:
         Dr::ShowMessageBox("Not set");
     }
 }
 
-void FormMain::buildWindowModeEditScene()
+void FormMain::buildWindowModeEditStage()
 {
     QFont font, fontLarger;
     font.setPointSize(Dr::FontSize());
@@ -80,6 +83,10 @@ void FormMain::buildWindowModeEditScene()
     sizePolicyView.setVerticalStretch(0);
 
 
+    // ***** Initialize GraphicsScene object
+    scene = new StageGraphicsScene(this, project, this);
+
+
     // ***** Build central widgets
     widgetCentral = new QWidget(this);
     widgetCentral->setObjectName(QStringLiteral("widgetCentral"));
@@ -94,64 +101,64 @@ void FormMain::buildWindowModeEditScene()
         splitterVertical->setOrientation(Qt::Vertical);
         splitterVertical->setHandleWidth(4);
 
-            widgetScene = new QWidget(splitterVertical);
-            widgetScene->setObjectName(QStringLiteral("widgetScene"));
-                horizontalLayout = new QHBoxLayout(widgetScene);
+            widgetStage = new QWidget(splitterVertical);
+            widgetStage->setObjectName(QStringLiteral("widgetStage"));
+                horizontalLayout = new QHBoxLayout(widgetStage);
                 horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
                 horizontalLayout->setSpacing(0);
                 horizontalLayout->setContentsMargins(0, 0, 0, 0);
 
-                splitterHorizontal = new ColorSplitter(widgetScene);
+                splitterHorizontal = new ColorSplitter(widgetStage);
                 splitterHorizontal->setObjectName(QStringLiteral("splitterHorizontal"));
                 splitterHorizontal->setLineWidth(0);
                 splitterHorizontal->setOrientation(Qt::Horizontal);
                 splitterHorizontal->setHandleWidth(4);
 
-                    // ***** Load our custom TreeSceneView for the Scene List
-                    treeScene = new TreeScene(splitterHorizontal, project, this);
-                    treeScene->setStyle(new SceneTreeHighlightProxy(treeScene->style(), treeScene, this));
-                        QTreeWidgetItem *header_item_scene = new QTreeWidgetItem();
-                        header_item_scene->setIcon(1, QIcon(":/tree_icons/tree_lock_header.png"));
-                        treeScene->setHeaderItem(header_item_scene);
-                    treeScene->setObjectName(QStringLiteral("treeScene"));
-                    treeScene->setColumnCount(2);
-                    treeScene->setColumnWidth(0, 150);
-                    treeScene->setColumnWidth(1, 16);
-                    treeScene->setMinimumSize(QSize(190, 0));
-                    treeScene->setMaximumWidth(400);
-                    treeScene->setFont(font);
-                    treeScene->setProperty("showDropIndicator", QVariant(false));
-                    treeScene->setDragEnabled(true);
-                    treeScene->setDragDropOverwriteMode(false);
-                    treeScene->setDragDropMode(QAbstractItemView::DragDropMode::InternalMove);
-                    treeScene->setDefaultDropAction(Qt::DropAction::TargetMoveAction);
-                    treeScene->setAlternatingRowColors(false);
-                    treeScene->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
-                    treeScene->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
-                    treeScene->setIndentation(15);
-                    treeScene->setRootIsDecorated(true);
-                    treeScene->setItemsExpandable(true);
-                    treeScene->setExpandsOnDoubleClick(false);
-                    treeScene->header()->setSectionResizeMode(0, QHeaderView::ResizeMode::Stretch);
-                    treeScene->header()->setStretchLastSection(false);
-                    treeScene->header()->setVisible(true);
-                    treeScene->setFrameShape(QFrame::NoFrame);
+                    // ***** Load our custom TreeStageView for the Scene List
+                    treeStage = new TreeStage(splitterHorizontal, project, this);
+                    treeStage->setStyle(new StageTreeHighlightProxy(treeStage->style(), treeStage, this));
+                        QTreeWidgetItem *header_item_stage = new QTreeWidgetItem();
+                        header_item_stage->setIcon(1, QIcon(":/tree_icons/tree_lock_header.png"));
+                        treeStage->setHeaderItem(header_item_stage);
+                    treeStage->setObjectName(QStringLiteral("treeStage"));
+                    treeStage->setColumnCount(2);
+                    treeStage->setColumnWidth(0, 150);
+                    treeStage->setColumnWidth(1, 16);
+                    treeStage->setMinimumSize(QSize(190, 0));
+                    treeStage->setMaximumWidth(400);
+                    treeStage->setFont(font);
+                    treeStage->setProperty("showDropIndicator", QVariant(false));
+                    treeStage->setDragEnabled(true);
+                    treeStage->setDragDropOverwriteMode(false);
+                    treeStage->setDragDropMode(QAbstractItemView::DragDropMode::InternalMove);
+                    treeStage->setDefaultDropAction(Qt::DropAction::TargetMoveAction);
+                    treeStage->setAlternatingRowColors(false);
+                    treeStage->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
+                    treeStage->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
+                    treeStage->setIndentation(15);
+                    treeStage->setRootIsDecorated(true);
+                    treeStage->setItemsExpandable(true);
+                    treeStage->setExpandsOnDoubleClick(false);
+                    treeStage->header()->setSectionResizeMode(0, QHeaderView::ResizeMode::Stretch);
+                    treeStage->header()->setStretchLastSection(false);
+                    treeStage->header()->setVisible(true);
+                    treeStage->setFrameShape(QFrame::NoFrame);
 
-                splitterHorizontal->addWidget(treeScene);
+                splitterHorizontal->addWidget(treeStage);
 
 
-                    widgetSceneView = new QWidget(splitterHorizontal);
-                    widgetSceneView->setObjectName(QStringLiteral("widgetSceneView"));
-                    widgetSceneView->setSizePolicy(sizePolicyView);
-                    widgetSceneView->setMinimumSize(QSize(100, 0));
-                    widgetSceneView->setFont(font);
-                        verticalLayoutView = new QVBoxLayout(widgetSceneView);
+                    widgetStageView = new QWidget(splitterHorizontal);
+                    widgetStageView->setObjectName(QStringLiteral("widgetStageView"));
+                    widgetStageView->setSizePolicy(sizePolicyView);
+                    widgetStageView->setMinimumSize(QSize(100, 0));
+                    widgetStageView->setFont(font);
+                        verticalLayoutView = new QVBoxLayout(widgetStageView);
                         verticalLayoutView->setObjectName(QStringLiteral("verticalLayoutView"));
                         verticalLayoutView->setSpacing(0);
                         verticalLayoutView->setContentsMargins(0, 0, 0, 0);
 
-                        // ***** Load our SceneGraphicsView to display our SceneGraphicsScene collection of items
-                        viewMain = new SceneGraphicsView(widgetSceneView, project, this);
+                        // ***** Load our StageGraphicsView to display our StageGraphicsScene collection of items
+                        viewMain = new StageGraphicsView(widgetStageView, project, this);
                         viewMain->setObjectName(QStringLiteral("viewMain"));
 
                         if (!Dr::CheckDebugFlag(Debug_Flags::Turn_Off_Antialiasing))
@@ -170,7 +177,7 @@ void FormMain::buildWindowModeEditScene()
 
 
                         // ***** View area status bar
-                        statusBar = new QFrame(widgetSceneView);
+                        statusBar = new QFrame(widgetStageView);
                         statusBar->setObjectName("statusBar");
                         statusBar->setFixedHeight(20);
 
@@ -181,12 +188,12 @@ void FormMain::buildWindowModeEditScene()
                     verticalLayoutView->addWidget(viewMain);
                     ///verticalLayoutView->addWidget(statusBar);
 
-                splitterHorizontal->addWidget(widgetSceneView);
-                splitterHorizontal->setSizes(QList<int> { 150, 300 });      // Sets tree_scene (scene assests) startup width to 150
+                splitterHorizontal->addWidget(widgetStageView);
+                splitterHorizontal->setSizes(QList<int> { 150, 300 });      // Sets tree_stage (stage assests) startup width to 150
                                                                             // NOTE: You can save and restore the sizes of the widgets from a QByteArray
                                                                             //       using QSplitter.saveState() and QSplitter.restoreState() respectively
             horizontalLayout->addWidget(splitterHorizontal);
-        splitterVertical->addWidget(widgetScene);
+        splitterVertical->addWidget(widgetStage);
 
             areaBottom = new QScrollArea(splitterVertical);
             areaBottom->setObjectName(QStringLiteral("areaBottom"));
@@ -268,7 +275,7 @@ void FormMain::buildWindowModeEditScene()
                 label_bottom->setFont(font);
         splitterVertical->addWidget(areaBottom);
 
-        splitterVertical->setStretchFactor(0, 1);           // widgetScene (index 0) should stretch (1)
+        splitterVertical->setStretchFactor(0, 1);           // widgetStage (index 0) should stretch (1)
         splitterVertical->setStretchFactor(1, 0);           // areaBottom  (index 1) should not stretch (0)
 
     verticalLayout->addWidget(splitterVertical);
@@ -292,7 +299,7 @@ void FormMain::buildWindowModeEditScene()
             verticalLayoutAsset->setSpacing(0);
             verticalLayoutAsset->setContentsMargins(0, 0, 0, 0);
 
-                // ***** Load our custom TreeObjectInspector for the Scene List
+                // ***** Load our custom TreeObjectInspector for the Stage List
                 treeAsset = new TreeAssetList(widgetAssests, project, this);
                 treeAsset->setObjectName(QStringLiteral("treeAsset"));
                 treeAsset->setColumnCount(1);
@@ -377,7 +384,7 @@ void FormMain::buildWindowModeEditScene()
             verticalLayoutObject->setSpacing(0);
             verticalLayoutObject->setContentsMargins(0, 0, 0, 0);
 
-                // ***** Load our custom TreeObjectInspector for the Scene List
+                // ***** Load our custom TreeObjectInspector for the Stage List
                 treeInspector = new TreeInspector(widgetInspector, project, this);
                 treeInspector->setObjectName(QStringLiteral("treeObject"));
                 treeInspector->setColumnCount(1);
@@ -448,8 +455,8 @@ void FormMain::buildWindowModeEditScene()
     connect(this, SIGNAL(sendAdvisorInfo(QString, QString)), treeAdvisor, SLOT(changeAdvisor(QString, QString)) , Qt::QueuedConnection);
 
     // Connects signal used to populate scene
-    connect(this, SIGNAL(newSceneSelected(DrProject*, SceneGraphicsScene*, long, long)), scene,
-            SLOT(newSceneSelected(DrProject*, SceneGraphicsScene*, long, long)) );
+    connect(this, SIGNAL(newStageSelected(DrProject*, StageGraphicsScene*, long, long)),
+            scene,  SLOT(newStageSelected(DrProject*, StageGraphicsScene*, long, long)) );
 
 
 

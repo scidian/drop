@@ -8,17 +8,17 @@
 
 #include "library.h"
 
-#include "project_world_scene.h"
-#include "project_world_scene_object.h"
+#include "project_world_stage.h"
+#include "project_world_stage_object.h"
 
-#include "editor_scene_item.h"
-#include "editor_scene_scene.h"
-#include "editor_scene_scene_commands.h"
+#include "editor_stage_item.h"
+#include "editor_stage_scene.h"
+#include "editor_stage_scene_commands.h"
 
 /*
  *  To Implement:
  *
- *      - Change scene
+ *      - Change stage
  *
  *      - Moving Item: Key press
  *
@@ -36,22 +36,22 @@
 //##            - Mouse release on View
 //##            - Arrow key press on scene
 //####################################################################################
-void SceneGraphicsScene::undoAction() {
+void StageGraphicsScene::undoAction() {
     m_undo->undo();
 }
-void SceneGraphicsScene::redoAction() {
+void StageGraphicsScene::redoAction() {
     m_undo->redo(); 
 }
 
-void SceneGraphicsScene::newSceneSelected(DrProject *project, SceneGraphicsScene *scene, long old_scene, long new_scene)
+void StageGraphicsScene::newStageSelected(DrProject *project, StageGraphicsScene *scene, long old_stage, long new_stage)
 {
-    m_undo->push(new ChangeSceneCommand(project, scene, old_scene, new_scene));
+    m_undo->push(new ChangeStageCommand(project, scene, old_stage, new_stage));
 }
 
-void SceneGraphicsScene::selectionGroupMoved(SceneGraphicsScene *scene, const QPointF &old_position)
+void StageGraphicsScene::selectionGroupMoved(StageGraphicsScene *scene, const QPointF &old_position)
 {   m_undo->push(new MoveCommand(scene, old_position));   }
 
-void SceneGraphicsScene::selectionGroupNewGroup(SceneGraphicsScene *scene,
+void StageGraphicsScene::selectionGroupNewGroup(StageGraphicsScene *scene,
                                                 QList<DrObject*> old_list,
                                                 QList<DrObject*> new_list,
                                                 DrObject *old_first,
@@ -63,46 +63,42 @@ void SceneGraphicsScene::selectionGroupNewGroup(SceneGraphicsScene *scene,
 //####################################################################################
 //##        Move Command on the QUndoStack
 //####################################################################################
-ChangeSceneCommand::ChangeSceneCommand(DrProject *project, SceneGraphicsScene *scene,
-                                       long old_scene, long new_scene, QUndoCommand *parent) :
+ChangeStageCommand::ChangeStageCommand(DrProject *project, StageGraphicsScene *scene,
+                                       long old_stage, long new_stage, QUndoCommand *parent) :
                                        QUndoCommand(parent), m_project(project), m_scene(scene)
 {
-    m_new_scene = new_scene;
-    m_old_scene = old_scene;
+    m_new_stage = new_stage;
+    m_old_stage = old_stage;
 }
 
-void ChangeSceneCommand::undo() {
-    QString new_scene_name = changeScene(m_new_scene, m_old_scene, true);
-    setText( new_scene_name );
+void ChangeStageCommand::undo() {
+    QString new_stage_name = changeStage(m_new_stage, m_old_stage, true);
+    setText( new_stage_name );
 }
 
-void ChangeSceneCommand::redo() {
-    QString new_scene_name = changeScene(m_old_scene, m_new_scene, false);
-    setText( new_scene_name );
+void ChangeStageCommand::redo() {
+    QString new_stage_name = changeStage(m_old_stage, m_new_stage, false);
+    setText( new_stage_name );
 }
 
-QString ChangeSceneCommand::changeScene(long old_scene, long new_scene, bool is_undo)
+QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_undo)
 {
-    // Remove any references within the current project scene objects to any GraphicsScene items
-    DrScene *displayed = m_project->findSceneFromKey(old_scene);
-    if (displayed) {
-        for (auto object_pair : displayed->getObjectMap()) {
-            object_pair.second->setDrItem(nullptr);
-        }
-    }
+    // Remove any references within the current project stage objects to any GraphicsScene items
+    DrStage *displayed = m_project->findStageFromKey(old_stage);
+    if (displayed) displayed->removeGraphicsItemReferences();
 
-    // Load scene we're changing to
-    DrScene *from_scene = m_project->findSceneFromKey(new_scene);
-    if (from_scene == nullptr) {
-        return "Redo Select Scene " + displayed->getSceneName();
+    // Load stage we're changing to
+    DrStage *from_stage = m_project->findStageFromKey(new_stage);
+    if (from_stage == nullptr) {
+        return "Redo Select Stage " + displayed->getStageName();
     }
 
     m_scene->clear();
     m_scene->createSelectionGroup();
-    m_scene->setCurrentSceneShown(from_scene);
-    m_scene->setCurrentSceneKeyShown(m_new_scene);
+    m_scene->setCurrentStageShown(from_stage);
+    m_scene->setCurrentStageKeyShown(m_new_stage);
 
-    for (auto object_pair : from_scene->getObjectMap()) {
+    for (auto object_pair : from_stage->getObjectMap()) {
         DrItem *item = new DrItem(m_project, object_pair.second);
         m_scene->setPositionByOrigin(item, item->getOrigin(), item->startX(), item->startY());
         m_scene->addItem(item);
@@ -110,13 +106,13 @@ QString ChangeSceneCommand::changeScene(long old_scene, long new_scene, bool is_
         object_pair.second->setDrItem(item);
     }
 
-    m_scene->getRelay()->centerViewOn(from_scene->getViewCenterPoint());
+    m_scene->getRelay()->centerViewOn(from_stage->getViewCenterPoint());
     m_scene->update();
     m_scene->updateView();
     if (is_undo)
-        return "Redo Select Scene " + displayed->getSceneName();
+        return "Redo Select Stage " + displayed->getStageName();
     else
-        return "Undo Select Scene " + from_scene->getSceneName();
+        return "Undo Select Stage " + from_stage->getStageName();
 }
 
 
@@ -124,7 +120,7 @@ QString ChangeSceneCommand::changeScene(long old_scene, long new_scene, bool is_
 //####################################################################################
 //##        Move Command on the QUndoStack
 //####################################################################################
-MoveCommand::MoveCommand(SceneGraphicsScene *scene, const QPointF &old_pos, QUndoCommand *parent) : QUndoCommand(parent) {
+MoveCommand::MoveCommand(StageGraphicsScene *scene, const QPointF &old_pos, QUndoCommand *parent) : QUndoCommand(parent) {
     m_scene = scene;
     m_new_pos = m_scene->getSelectionGroup()->sceneTransform().map(m_scene->getSelectionGroup()->boundingRect().center());
     m_old_pos = old_pos;
@@ -161,7 +157,7 @@ void MoveCommand::redo() {
 //####################################################################################
 //##        Deselects old items, Selects one new item
 //####################################################################################
-SelectionNewGroupCommand::SelectionNewGroupCommand(SceneGraphicsScene *scene,
+SelectionNewGroupCommand::SelectionNewGroupCommand(StageGraphicsScene *scene,
                                                    QList<DrObject*> old_list,
                                                    QList<DrObject*> new_list,
                                                    DrObject *old_first,
@@ -180,7 +176,7 @@ void SelectionNewGroupCommand::undo() {
 
     for (auto object : m_old_list) m_scene->addItemToSelectionGroup(object->getDrItem());
 
-    m_scene->updateSceneTreeSelection();
+    m_scene->updateStageTreeSelection();
     m_scene->updateView();
     if (m_new_list.count() > 1)
         setText("Redo Change Selection");
@@ -196,7 +192,7 @@ void SelectionNewGroupCommand::redo() {
 
     for (auto object : m_new_list) m_scene->addItemToSelectionGroup(object->getDrItem());
 
-    m_scene->updateSceneTreeSelection();
+    m_scene->updateStageTreeSelection();
     m_scene->updateView();
     if (m_new_list.count() > 1)
         setText("Undo Change Selection");

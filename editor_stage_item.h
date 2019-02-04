@@ -14,7 +14,6 @@
 #include "settings.h"
 #include "form_main.h"
 
-class DrScene;
 
 //####################################################################################
 //##    DrItem

@@ -13,8 +13,8 @@
 #include "project.h"
 #include "project_asset.h"
 #include "project_world.h"
-#include "project_world_scene.h"
-#include "project_world_scene_object.h"
+#include "project_world_stage.h"
+#include "project_world_stage_object.h"
 
 #include "settings.h"
 #include "settings_component.h"
@@ -86,7 +86,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     // Change Advisor text after new item selection
     switch (m_selected_type) {
     case DrType::World:        m_relay->setAdvisorInfo(Advisor_Info::World_Object);         break;
-    case DrType::Scene:        m_relay->setAdvisorInfo(Advisor_Info::Scene_Object);         break;
+    case DrType::Stage:        m_relay->setAdvisorInfo(Advisor_Info::Stage_Object);         break;
     case DrType::Camera:       m_relay->setAdvisorInfo(Advisor_Info::Camera_Object);        break;
     case DrType::Character:    m_relay->setAdvisorInfo(Advisor_Info::Character_Object);     break;
     case DrType::Object:       m_relay->setAdvisorInfo(Advisor_Info::Object_Object);        break;
@@ -256,13 +256,13 @@ void TreeInspector::itemWasClicked(QTreeWidgetItem *item, int column)
     //Dr::ShowMessageBox("Item Clicked in Tree Object Inspector");
 
     // If no item is selected in tree view, exit function
-    //if (treeScene->getSelectedKey() == 0) { return; }
+    //if (treeStage->getSelectedKey() == 0) { return; }
 
     // First, retrieve property key of item clicked in tableWidget list
     //long        property_key = item->data(User_Roles::Key).toLongLong();
 
-    // Grab a pointer to the component list of the first selected item from treeScene (stored in selected_list)
-    //DrSettings  *selected_item_settings = m_project->findSettingsFromKey( treeScene->getSelectedKey() );
+    // Grab a pointer to the component list of the first selected item from treeStage (stored in selected_list)
+    //DrSettings  *selected_item_settings = m_project->findSettingsFromKey( treeStage->getSelectedKey() );
     //DrComponent *clicked_component = selected_item_settings->findComponentFromPropertyKey(property_key);
     //DrProperty  *clicked_property = clicked_component->getProperty(property_key);
 
@@ -271,12 +271,12 @@ void TreeInspector::itemWasClicked(QTreeWidgetItem *item, int column)
     //long        component_key = clicked_component->getComponentKey();
 
     // Grab type of main selected item in selected tree list
-    //QString     type_string2 = StringFromType(m_project->findTypeFromKey( treeScene->getSelectedKey() ));
+    //QString     type_string2 = StringFromType(m_project->findTypeFromKey( treeStage->getSelectedKey() ));
     //QString     type_string = StringFromType(selected_item_settings->getType());
 
     // !!!!! #DEBUG:    Show selected item key and info
     //if (Dr::CheckDebugFlag(Debug_Flags::Object_Inspector_Build)) {
-    //    setLabelText(Label_Names::LabelObject1, "KEY: " + QString::number( treeScene->getSelectedKey() ) + ", TYPE: " + QString::fromStdString(type_string));
+    //    setLabelText(Label_Names::LabelObject1, "KEY: " + QString::number( treeStage->getSelectedKey() ) + ", TYPE: " + QString::fromStdString(type_string));
     //    setLabelText(Label_Names::LabelObject2, "COMPONENT: " + QString::number(component_key) +   ", NAME: " + QString::fromStdString(component_name));
     //    setLabelText(Label_Names::LabelObject3, "PROPERTY: " + QString::number(property_key) +   ", NAME: " + QString::fromStdString(property_name));
     //}

@@ -13,15 +13,15 @@
 #include "project.h"
 #include "project_asset.h"
 #include "project_world.h"
-#include "project_world_scene.h"
-#include "project_world_scene_object.h"
+#include "project_world_stage.h"
+#include "project_world_stage_object.h"
 
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
 
-#include "editor_scene_item.h"
-#include "editor_scene_scene.h"
+#include "editor_stage_item.h"
+#include "editor_stage_scene.h"
 
 //####################################################################################
 //##        Constructor & destructor
@@ -106,7 +106,7 @@ void DrItem::updateProperty(int key, const QVariant &value)
         break;
     }
 
-    if (scene()) dynamic_cast<SceneGraphicsScene*>(scene())->getRelay()->updateObjectInspectorAfterItemChange(m_object_key);
+    if (scene()) dynamic_cast<StageGraphicsScene*>(scene())->getRelay()->updateObjectInspectorAfterItemChange(m_object_key);
 }
 
 

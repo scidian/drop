@@ -2,29 +2,29 @@
 //      Created by Stephens Nunnally on 1/15/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      Handles item selection in the scene
+//      Handles item selection in the GraphicsScene
 //
 //
 
 
 #include "project.h"
 #include "project_world.h"
-#include "project_world_scene.h"
-#include "project_world_scene_object.h"
-#include "editor_scene_item.h"
+#include "project_world_stage.h"
+#include "project_world_stage_object.h"
+#include "editor_stage_item.h"
 
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
 
-#include "editor_scene_scene.h"
+#include "editor_stage_scene.h"
 #include "interface_relay.h"
 
 
 //####################################################################################
 //##        Returns a scene rect containing all the selected items
 //####################################################################################
-QRectF SceneGraphicsScene::totalSelectedItemsSceneRect()
+QRectF StageGraphicsScene::totalSelectedItemsSceneRect()
 {
     // If no items selected, return empty rect
     if (selectedItems().count() < 1) return QRectF();
@@ -37,7 +37,7 @@ QRectF SceneGraphicsScene::totalSelectedItemsSceneRect()
 //####################################################################################
 //##        Selection Group Handling
 //####################################################################################
-void SceneGraphicsScene::addItemToSelectionGroup(QGraphicsItem *item)
+void StageGraphicsScene::addItemToSelectionGroup(QGraphicsItem *item)
 {
     int start_count = m_selection_group->childItems().count();
 
@@ -81,8 +81,8 @@ void SceneGraphicsScene::addItemToSelectionGroup(QGraphicsItem *item)
     }
 }
 
-// Empties selection group, delete_items_during_empty used for item copying with SceneGraphicsScene keyPressEvent
-void SceneGraphicsScene::emptySelectionGroup(bool delete_items_during_empty)
+// Empties selection group, delete_items_during_empty used for item copying with StageGraphicsScene keyPressEvent
+void StageGraphicsScene::emptySelectionGroup(bool delete_items_during_empty)
 {
     m_first_selected = nullptr;
 
@@ -95,7 +95,7 @@ void SceneGraphicsScene::emptySelectionGroup(bool delete_items_during_empty)
 }
 
 // Reset transform and reset user data
-void SceneGraphicsScene::resetSelectionGroup()
+void StageGraphicsScene::resetSelectionGroup()
 {
     for (auto item: selectedItems()) item->setSelected(false);
     m_selection_group->setTransform(QTransform());
@@ -105,7 +105,7 @@ void SceneGraphicsScene::resetSelectionGroup()
 }
 
 
-QGraphicsItem* SceneGraphicsScene::getItemAtPosition(QPointF position)
+QGraphicsItem* StageGraphicsScene::getItemAtPosition(QPointF position)
 {
     QGraphicsItem *item = nullptr;
     bool found_one = false;
@@ -124,7 +124,7 @@ QGraphicsItem* SceneGraphicsScene::getItemAtPosition(QPointF position)
     return item;
 }
 
-void SceneGraphicsScene::updateChildrenPositionData()
+void StageGraphicsScene::updateChildrenPositionData()
 {
     QList<QGraphicsItem*>  my_items = this->getSelectionGroupItems();
     for (auto child : my_items) {
@@ -133,29 +133,29 @@ void SceneGraphicsScene::updateChildrenPositionData()
     }
 }
 
-SelectionGroup* SceneGraphicsScene::getSelectionGroup()
+SelectionGroup* StageGraphicsScene::getSelectionGroup()
 {       return m_selection_group; }
 
-QList<QGraphicsItem*> SceneGraphicsScene::getSelectionGroupItems()
+QList<QGraphicsItem*> StageGraphicsScene::getSelectionGroupItems()
 {       return m_selection_group->childItems();     }
 
-QGraphicsItem* SceneGraphicsScene::getSelectionGroupAsGraphicsItem()
+QGraphicsItem* StageGraphicsScene::getSelectionGroupAsGraphicsItem()
 {       return m_selection_group; }
 
-int SceneGraphicsScene::getSelectionGroupCount()
+int StageGraphicsScene::getSelectionGroupCount()
 {       return m_selection_group->childItems().count();     }
 
-void SceneGraphicsScene::selectSelectionGroup()
+void StageGraphicsScene::selectSelectionGroup()
 {       m_selection_group->setSelected(true);       }
 
 
 // Returns list of objects represented from selected items
-QList<DrObject*> SceneGraphicsScene::getSelectionGroupObjects() {
+QList<DrObject*> StageGraphicsScene::getSelectionGroupObjects() {
     return convertListItemsToObjects(m_selection_group->childItems());
 }
 
 // Returns list of objects represented from item list
-QList<DrObject*> SceneGraphicsScene::convertListItemsToObjects(QList<QGraphicsItem*> graphics_items)
+QList<DrObject*> StageGraphicsScene::convertListItemsToObjects(QList<QGraphicsItem*> graphics_items)
 {
     QList<DrObject*> objects {};
     for (auto item : graphics_items) {
@@ -184,7 +184,7 @@ void SelectionGroup::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
 
 //####################################################################################
 //##        Custom slimmed from Qt Source Code, "QGraphicsItemGroup->removeFromGroup"
-void SceneGraphicsScene::removeFromGroupNoUpdate(QGraphicsItem *item)
+void StageGraphicsScene::removeFromGroupNoUpdate(QGraphicsItem *item)
 {
     if (!item) return;
 
@@ -209,7 +209,7 @@ void SceneGraphicsScene::removeFromGroupNoUpdate(QGraphicsItem *item)
 
 //####################################################################################
 //##        Custom slimmmed from Qt Source Code, "QGraphicsItemGroup->addToGroup"
-void SceneGraphicsScene::addToGroupNoUpdate(QGraphicsItem *item)
+void StageGraphicsScene::addToGroupNoUpdate(QGraphicsItem *item)
 {
     QGraphicsItemGroup *group = m_selection_group;
     if (!item || item == group) return;

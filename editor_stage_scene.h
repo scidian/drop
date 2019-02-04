@@ -2,26 +2,27 @@
 //      Created by Stephens Nunnally on 1/3/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      A sub classed QGraphicsScene so we can override events for our Scene
+//      A sub classed QGraphicsScene so we can override events for our Stage
 //
 //
-#ifndef EDITOR_SCENE_SCENE_H
-#define EDITOR_SCENE_SCENE_H
+#ifndef EDITOR_STAGE_SCENE_H
+#define EDITOR_STAGE_SCENE_H
 
 #include <QtWidgets>
 
-#include <editor_scene_item.h>
+#include <editor_stage_item.h>
 
 class DrProject;
+class DrStage;
 class InterfaceRelay;
 class SelectionGroup;
 
 
 //####################################################################################
-//##    SceneGraphicsScene
-//##        Holds items of one scene
+//##    StageGraphicsScene
+//##        Holds items of one stage
 //############################
-class SceneGraphicsScene : public QGraphicsScene
+class StageGraphicsScene : public QGraphicsScene
 {
     Q_OBJECT
 
@@ -30,8 +31,8 @@ private:
     DrProject          *m_project;                  // Pointer to currently loaded project
     InterfaceRelay     *m_relay;                    // Pointer to InterfaceRelay class of parent form
 
-    DrScene            *m_current_scene = nullptr;  // Holds a pointer to the current DrScene being shown
-    long                m_current_scene_key = -1;   // Holds the project key of the currently shown scene, starts at -1, i.e. "none"
+    DrStage            *m_current_stage = nullptr;  // Holds a pointer to the current DrStage being shown
+    long                m_current_stage_key = -1;   // Holds the project key of the currently shown DrStage, starts at -1, i.e. "none"
 
     // Selection variables
     SelectionGroup     *m_selection_group;          // Holds the group of items currently selected
@@ -41,13 +42,13 @@ private:
 
 public:
     // Mutexes
-    QMutex       scene_mutex { QMutex::NonRecursive };         // Used to stop from changing scene more than once at a time
+    QMutex       scene_mutex { QMutex::NonRecursive };         // Used to stop from changing scene items more than once at a time
 
 
 public:
     // Constructor
-    explicit SceneGraphicsScene(QWidget *parent, DrProject *project, InterfaceRelay *relay);
-    virtual ~SceneGraphicsScene() override;
+    explicit StageGraphicsScene(QWidget *parent, DrProject *project, InterfaceRelay *relay);
+    virtual ~StageGraphicsScene() override;
 
     // Event Overrides, start at Qt Docs for QGraphicsScene Class to find more
     virtual void    keyPressEvent(QKeyEvent *event) override;                              // Inherited from QGraphicsScene
@@ -61,7 +62,7 @@ public:
     // Other Widget Update Calls
     InterfaceRelay* getRelay() { return m_relay; }
     void            updateObjectInspectorData(long item_key) { m_relay->updateObjectInspectorAfterItemChange(item_key); }
-    void            updateSceneTreeSelection() { m_relay->updateSceneTreeSelectionBasedOnSelectionGroup(); }
+    void            updateStageTreeSelection() { m_relay->updateStageTreeSelectionBasedOnSelectionGroup(); }
     void            updateView() { emit updateViews(); }
 
     // Undo / Redo Functions
@@ -84,10 +85,10 @@ public:
     void            removeFromGroupNoUpdate(QGraphicsItem *item);
 
     // Getters and Setters
-    DrScene*              getCurrentSceneShown() { return m_current_scene; }
-    void                  setCurrentSceneShown(DrScene *drscene) { m_current_scene = drscene; }
-    long                  getCurrentSceneKeyShown() { return m_current_scene_key; }
-    void                  setCurrentSceneKeyShown(long scene_key) { m_current_scene_key = scene_key; }
+    DrStage*              getCurrentStageShown() { return m_current_stage; }
+    void                  setCurrentStageShown(DrStage *stage) { m_current_stage = stage; }
+    long                  getCurrentStageKeyShown() { return m_current_stage_key; }
+    void                  setCurrentStageKeyShown(long stage_key) { m_current_stage_key = stage_key; }
 
     SelectionGroup*       getSelectionGroup();
     QGraphicsItem*        getSelectionGroupAsGraphicsItem();
@@ -104,9 +105,9 @@ public slots:
     void            sceneChanged(QList<QRectF> region);                             // Used to resize scene area to fit contents
 
     // Undo Commands
-    void            newSceneSelected(DrProject *project, SceneGraphicsScene *scene, long old_scene, long new_scene);
-    void            selectionGroupMoved(SceneGraphicsScene *scene, const QPointF &old_position);
-    void            selectionGroupNewGroup(SceneGraphicsScene *scene,
+    void            newStageSelected(DrProject *project, StageGraphicsScene *scene, long old_stage, long new_stage);
+    void            selectionGroupMoved(StageGraphicsScene *scene, const QPointF &old_position);
+    void            selectionGroupNewGroup(StageGraphicsScene *scene,
                                            QList<DrObject*> old_list,
                                            QList<DrObject*> new_list,
                                            DrObject *old_first,
@@ -126,25 +127,25 @@ signals:
 class SelectionGroup : public QGraphicsItemGroup
 {
 private:
-    SceneGraphicsScene  *m_parent_scene;
+    StageGraphicsScene  *m_parent_scene;
 
 public:
     // Constructor / destructor
-    SelectionGroup(SceneGraphicsScene *parent_scene) : m_parent_scene(parent_scene) {}
+    SelectionGroup(StageGraphicsScene *parent_scene) : m_parent_scene(parent_scene) {}
     virtual ~SelectionGroup() override;
 
     // Event Overrides
     virtual void        paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
     // Getters / Setters
-    SceneGraphicsScene* getParentScene() { return m_parent_scene; }
+    StageGraphicsScene* getParentScene() { return m_parent_scene; }
 };
 
 
 
 
 
-#endif // EDITOR_SCENE_SCENE_H
+#endif // EDITOR_STAGE_SCENE_H
 
 
 

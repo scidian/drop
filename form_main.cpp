@@ -12,19 +12,19 @@
 #include "project.h"
 #include "project_asset.h"
 #include "project_world.h"
-#include "project_world_scene.h"
-#include "project_world_scene_object.h"
+#include "project_world_stage.h"
+#include "project_world_stage_object.h"
 
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
 
-#include "editor_scene_scene.h"
+#include "editor_stage_scene.h"
+#include "editor_stage_view.h"
 #include "editor_tree_advisor.h"
 #include "editor_tree_assets.h"
 #include "editor_tree_inspector.h"
-#include "editor_tree_scene.h"
-#include "editor_scene_view.h"
+#include "editor_tree_stage.h"
 
 #include "form_main.h"
 
@@ -63,34 +63,33 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     // Create a new project and add some stuff to it
     project->addWorld();
     project->addWorld();
-    project->getWorldWithName("World 2")->addScene();
-    project->getWorldWithName("World 2")->addScene("asdfasdfasdfasdfasfdasdfasdfasdfasdfasdfasdfasdfasd");
-    project->getWorldWithName("World 2")->addScene();
-    project->getWorldWithName("World 2")->addScene();
-    project->getWorldWithName("World 2")->addScene();
+    project->getWorldWithName("World 2")->addStage();
+    project->getWorldWithName("World 2")->addStage("asdfasdfasdfasdfasfdasdfasdfasdfasdfasdfasdfasdfasd");
+    project->getWorldWithName("World 2")->addStage();
+    project->getWorldWithName("World 2")->addStage();
+    project->getWorldWithName("World 2")->addStage();
 
-    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_1, 0, 0, 1);
-    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_1, -200, -200, 2);
-    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_2, 250, -200, 3);
-    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_3, -200, 200, 10);
-    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_4, 100, 100, 11);
-    project->getWorldWithName("World 2")->getSceneWithName("4")->addObject(DrType::Object, asset_5, -150, 0, 30);
+    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrType::Object, asset_1, 0, 0, 1);
+    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrType::Object, asset_1, -200, -200, 2);
+    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrType::Object, asset_2, 250, -200, 3);
+    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrType::Object, asset_3, -200, 200, 10);
+    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrType::Object, asset_4, 100, 100, 11);
+    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrType::Object, asset_5, -150, 0, 30);
 
-    project->getWorldWithName("World 2")->getSceneWithName("2")->addObject(DrType::Object, asset_5, 100, 100, 104);
+    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrType::Object, asset_5, 100, 100, 104);
     // !!!!! END
 
 
 
     // ########## Initialize form and customize colors and styles
-    scene = new SceneGraphicsScene(this, project, this);
     buildMenu();
-    buildWindow(Form_Main_Mode::Edit_Scene);
+    buildWindow(Form_Main_Mode::Edit_Stage);
     Dr::ApplyColoring(this);
 
 
 
-    // ########## Populates SceneGraphicsScene from current DrScene
-    populateScene( project->getWorldWithName("World 2")->getSceneWithName("4")->getKey() );
+    // ########## Populates StageGraphicsScene from current DrStage
+    populateScene( project->getWorldWithName("World 2")->getStageWithName("4")->getKey() );
 
 
 
@@ -118,8 +117,8 @@ void FormMain::buildObjectInspector(QList<long> key_list) {
     treeInspector->buildInspectorFromKeys(key_list);
 }
 
-void FormMain::buildTreeSceneList() {
-    treeScene->populateTreeSceneList();
+void FormMain::buildTreeStageList() {
+    treeStage->populateTreeStageList();
 }
 
 
@@ -133,14 +132,14 @@ void FormMain::centerViewOn(QPointF center_point) {
 void FormMain::centerViewTimer(QPointF center_point) {  viewMain->centerOn(center_point); viewMain->loadedFirstScene(); }
 
 
-// Emits an Undo stack command to change scenes
-void FormMain::populateScene(long from_scene_key)
+// Emits an Undo stack command to change Stages within Scene
+void FormMain::populateScene(long from_stage_key)
 {
     if (scene->scene_mutex.tryLock(10) == false) return;
 
-    if (scene->getCurrentSceneKeyShown() != from_scene_key) {
+    if (scene->getCurrentStageKeyShown() != from_stage_key) {
         viewMain->emptySelectionGroupIfNotEmpty();
-        emit newSceneSelected(project, scene, scene->getCurrentSceneKeyShown(), from_scene_key);
+        emit newStageSelected(project, scene, scene->getCurrentStageKeyShown(), from_stage_key);
     }
 
     scene->scene_mutex.unlock();
@@ -154,7 +153,7 @@ void FormMain::setAdvisorInfo(HeaderBodyList header_body_list) {
 // Call to put in a signal to change the Advisor to the que
 void FormMain::setAdvisorInfo(QString header, QString body)
 {
-    if (current_mode != Form_Main_Mode::Edit_Scene) return;
+    if (current_mode != Form_Main_Mode::Edit_Stage) return;
     if (advisor == nullptr) return;
     if (advisor->isHidden()) return;                                        // If Advisor dock was closed, cancel
     if (treeAdvisor == nullptr) return;
@@ -198,14 +197,14 @@ void FormMain::updateObjectInspectorAfterItemChange(long item_key)
     treeInspector->updateProperties(item_key);
 }
 
-void FormMain::updateSceneTreeSelectionBasedOnSelectionGroup()
+void FormMain::updateStageTreeSelectionBasedOnSelectionGroup()
 {
-    QList<QGraphicsItem*>   scene_list = scene->getSelectionGroupItems();
-    QList<QTreeWidgetItem*> tree_list = treeScene->getListOfAllTreeWidgetItems();
-    treeScene->clearSelection();
+    QList<QGraphicsItem*>   item_list = scene->getSelectionGroupItems();
+    QList<QTreeWidgetItem*> tree_list = treeStage->getListOfAllTreeWidgetItems();
+    treeStage->clearSelection();
 
     long items_selected = 0;
-    for (auto item : scene_list) {
+    for (auto item : item_list) {
         long item_key = dynamic_cast<DrItem*>(item)->getObjectKey();
 
         for (auto row : tree_list) {
@@ -214,17 +213,17 @@ void FormMain::updateSceneTreeSelectionBasedOnSelectionGroup()
             if (item_key == row_key) {
                 row->setSelected(true);
                 if (items_selected == 0)
-                    treeScene->setSelectedKey(row_key);
+                    treeStage->setSelectedKey(row_key);
                 ++items_selected;
             }
         }
     }
 
-    treeScene->update();
+    treeStage->update();
 
-    // !!!!! DEBUG:: Show if some selected items matched the items in the scene tree
-    if (Dr::CheckDebugFlag(Debug_Flags::Label_Selection_Change_Scene_Tree)) {
-        Dr::SetLabelText(Label_Names::Label_1, "Scene: " + QString::number(scene_list.count()) + ", Tree: " + QString::number(tree_list.count()));
+    // !!!!! DEBUG:: Show if some selected items matched the items in the stage tree
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_Selection_Change_Stage_Tree)) {
+        Dr::SetLabelText(Label_Names::Label_1, "Scene: " + QString::number(item_list.count()) + ", Stage Tree: " + QString::number(tree_list.count()));
         Dr::SetLabelText(Label_Names::Label_2, "Matched: " + QString::number(items_selected));
     }
     // !!!!! END

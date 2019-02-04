@@ -14,8 +14,8 @@
 
 #include "project.h"
 #include "project_world.h"
-#include "project_world_scene.h"
-#include "project_world_scene_object.h"
+#include "project_world_stage.h"
+#include "project_world_stage_object.h"
 
 #include "settings.h"
 #include "settings_component.h"
@@ -23,7 +23,7 @@
 
 
 //####################################################################################
-//##    Constructor, Destructor - addScene
+//##    Constructor, Destructor
 //####################################################################################
 DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, QString new_asset_name, DrAsset_Type new_asset_type, QPixmap pixmap)
 {

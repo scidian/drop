@@ -13,7 +13,7 @@
 
 class DrAsset;
 class DrWorld;
-class DrScene;
+class DrStage;
 class DrObject;
 typedef std::map<long, DrWorld*> WorldMap;
 typedef std::map<long, DrAsset*> AssetMap;
@@ -52,7 +52,7 @@ public:
 
 
     // External calls
-    DrScene*        findSceneFromKey(long check_key);
+    DrStage*        findStageFromKey(long check_key);
 
     DrSettings*     findSettingsFromKey(long check_key);
 
@@ -62,6 +62,8 @@ public:
     // Children creation calls
     void        addWorld();
     long        addAsset(QString new_asset_name, DrAsset_Type new_asset_type, QPixmap pixmap);
+
+
 
 };
 

@@ -5,31 +5,31 @@
 //      Commands used with local m_undo QUndoStack
 //
 //
-#ifndef EDITOR_SCENE_SCENE_UNDO_H
-#define EDITOR_SCENE_SCENE_UNDO_H
+#ifndef EDITOR_STAGE_SCENE_UNDO_H
+#define EDITOR_STAGE_SCENE_UNDO_H
 
-#include "editor_scene_scene.h"
+#include "editor_stage_scene.h"
 
 
 
 //####################################################################################
-//##    Change Scene in View
+//##    Change Stage in SceneView
 //############################
-class ChangeSceneCommand : public QUndoCommand
+class ChangeStageCommand : public QUndoCommand
 {
 public:
-    ChangeSceneCommand(DrProject *project, SceneGraphicsScene *scene, long old_scene, long new_scene, QUndoCommand *parent = nullptr);
+    ChangeStageCommand(DrProject *project, StageGraphicsScene *scene, long old_stage, long new_stage, QUndoCommand *parent = nullptr);
 
     void        undo() override;
     void        redo() override;
 
-    QString     changeScene(long old_scene, long new_scene, bool is_undo);
+    QString     changeStage(long old_stage, long new_stage, bool is_undo);
 
 private:
     DrProject              *m_project;
-    SceneGraphicsScene     *m_scene;
-    long                    m_old_scene;
-    long                    m_new_scene;
+    StageGraphicsScene     *m_scene;
+    long                    m_old_stage;
+    long                    m_new_stage;
 };
 
 
@@ -40,13 +40,13 @@ private:
 class MoveCommand : public QUndoCommand
 {
 public:
-    MoveCommand(SceneGraphicsScene *scene, const QPointF &old_pos, QUndoCommand *parent = nullptr);
+    MoveCommand(StageGraphicsScene *scene, const QPointF &old_pos, QUndoCommand *parent = nullptr);
 
     void        undo() override;
     void        redo() override;
 
 private:
-    SceneGraphicsScene     *m_scene;
+    StageGraphicsScene     *m_scene;
     QPointF                 m_old_pos;
     QPointF                 m_new_pos;
 };
@@ -58,7 +58,7 @@ private:
 class SelectionNewGroupCommand : public QUndoCommand
 {
 public:
-    SelectionNewGroupCommand(SceneGraphicsScene *scene,
+    SelectionNewGroupCommand(StageGraphicsScene *scene,
                              QList<DrObject*> old_list,
                              QList<DrObject*> new_list,
                              DrObject *old_first,
@@ -68,7 +68,7 @@ public:
     void        redo() override;
 
 private:
-    SceneGraphicsScene     *m_scene;
+    StageGraphicsScene     *m_scene;
     QList<DrObject*>        m_old_list;
     QList<DrObject*>        m_new_list;
     DrObject               *m_old_first_selected;
@@ -77,7 +77,7 @@ private:
 
 
 
-#endif // EDITOR_SCENE_SCENE_UNDO_H
+#endif // EDITOR_STAGE_SCENE_UNDO_H
 
 
 

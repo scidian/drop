@@ -9,8 +9,8 @@
 #include "project.h"
 #include "project_asset.h"
 #include "project_world.h"
-#include "project_world_scene.h"
-#include "project_world_scene_object.h"
+#include "project_world_stage.h"
+#include "project_world_stage_object.h"
 
 #include "settings.h"
 #include "settings_component.h"
@@ -85,7 +85,7 @@ void TreeAssetList::buildAssetList()
     //category_button->setIcon(QIcon(component_map.second->getIcon()));
     category_button->setStyleSheet(buttonColor);
     category_button->setEnabled(false);
-    applyHeaderBodyProperties(category_button, "Object Assets", "Objects for use in scene");
+    applyHeaderBodyProperties(category_button, "Object Assets", "Objects for use in Stage");
 
     this->setItemWidget(category_item, 0, category_button);                             // Apply the button to the tree item
 

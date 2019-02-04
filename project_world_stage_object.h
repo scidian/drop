@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 12/7/18, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      DrObject - Class to hold one object within a scene, can holds more objects?
+//      DrObject - Class to hold one object within a stage, can holds more objects?
 //
 //
 
@@ -14,13 +14,13 @@
 class DrProject;
 class DrAsset;
 class DrWorld;
-class DrScene;
+class DrStage;
 
 class DrItem;
 
 //####################################################################################
 //##    DrObject
-//##        Class to hold one object within a scene
+//##        Class to hold one object within a stage
 //############################
 class DrObject : public DrSettings
 {
@@ -30,7 +30,7 @@ private:
 
     DrProject  *m_parent_project;                           // holds reference to parent Project class that handles key generation for project
     DrWorld    *m_parent_world;                             // holds reference to parent World class
-    DrScene    *m_parent_scene;                             // holds reference to parent World class
+    DrStage    *m_parent_stage;                             // holds reference to parent Stage class
 
     long        m_asset_key;                                // holds the associated asset key, this way we know what image to grab for GraphicsView
 
@@ -38,7 +38,7 @@ private:
 
 public:
     // Constructor & destructor
-    explicit DrObject(DrProject *parent_project, DrWorld *parent_world, DrScene *parent_scene, long new_object_key,
+    explicit DrObject(DrProject *parent_project, DrWorld *parent_world, DrStage *parent_stage, long new_object_key,
                       QString new_object_name, DrType new_object_type, long from_asset_key, double x, double y, long z);
     virtual ~DrObject() override;
 
@@ -47,7 +47,7 @@ public:
     virtual DrType  getType() override      { return m_object_type; }
     DrProject*      getParentProject()      { return m_parent_project; }
     DrWorld*        getParentWorld()        { return m_parent_world; }
-    DrScene*        getParentScene()        { return m_parent_scene; }
+    DrStage*        getParentStage()        { return m_parent_stage; }
     long            getAssetKey()           { return m_asset_key; }
 
     DrItem*         getDrItem()             { return m_item_in_scene; }

@@ -13,8 +13,8 @@
 #include "project.h"
 #include "project_asset.h"
 #include "project_world.h"
-#include "project_world_scene.h"
-#include "project_world_scene_object.h"
+#include "project_world_stage.h"
+#include "project_world_stage_object.h"
 
 //####################################################################################
 //##    Constructor, Destructor
@@ -77,10 +77,10 @@ DrWorld* DrProject::getWorldWithName(QString world_name)
 //##
 //####################################################################################
 
-DrScene* DrProject::findSceneFromKey(long check_key)
+DrStage* DrProject::findStageFromKey(long check_key)
 {
     for (auto world_pair : m_worlds) {
-        try {  return world_pair.second->getSceneMap().at(check_key);  }
+        try {  return world_pair.second->getStageMap().at(check_key);  }
         catch (const std::out_of_range&) {  }               // Not Found
     }
     return nullptr;
@@ -95,7 +95,7 @@ DrSettings* DrProject::findSettingsFromKey(long check_key)
     for (auto i : m_worlds) {
         if (i.second->getKey() == check_key) { return i.second->getSettings(); }
 
-        for (auto j : i.second->getSceneMap()) {
+        for (auto j : i.second->getStageMap()) {
             if (j.second->getKey() == check_key) { return j.second->getSettings(); }
 
             for (auto k : j.second->getObjectMap()) {
@@ -120,6 +120,15 @@ DrAsset_Type DrProject::findAssetTypeFromKey(long check_key)
 {
     return m_assets[check_key]->getAssetType();
 }
+
+
+
+
+
+
+
+
+
 
 
 

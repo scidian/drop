@@ -10,22 +10,22 @@
 
 #include "project.h"
 #include "project_world.h"
-#include "project_world_scene.h"
-#include "project_world_scene_object.h"
-#include "editor_scene_item.h"
+#include "project_world_stage.h"
+#include "project_world_stage_object.h"
+#include "editor_stage_item.h"
 
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
 
-#include "editor_scene_scene.h"
+#include "editor_stage_scene.h"
 #include "interface_relay.h"
 
 
 //####################################################################################
 //##        Constructor & destructor
 //####################################################################################
-SceneGraphicsScene::SceneGraphicsScene(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
+StageGraphicsScene::StageGraphicsScene(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
                                        QGraphicsScene(parent = nullptr),
                                        m_project(project), m_relay(relay)
 {
@@ -46,12 +46,12 @@ SceneGraphicsScene::SceneGraphicsScene(QWidget *parent, DrProject *project, Inte
     // !!!!! END
 }
 
-SceneGraphicsScene::~SceneGraphicsScene()
+StageGraphicsScene::~StageGraphicsScene()
 {
 
 }
 
-void SceneGraphicsScene::createSelectionGroup()
+void StageGraphicsScene::createSelectionGroup()
 {
     m_selection_group = new SelectionGroup(this);
     m_selection_group->setFlags(QGraphicsItem::ItemIsSelectable |               QGraphicsItem::ItemIsMovable |
@@ -66,19 +66,20 @@ void SceneGraphicsScene::createSelectionGroup()
 //##        SLOT: sceneChanged
 //####################################################################################
 // Connected from scene().changed
-void SceneGraphicsScene::sceneChanged(QList<QRectF>)
+void StageGraphicsScene::sceneChanged(QList<QRectF>)
 {
 
 
 }
 
 
+
 //####################################################################################
 //##        Key Events
 //####################################################################################
-void SceneGraphicsScene::keyReleaseEvent(QKeyEvent *event) { QGraphicsScene::keyReleaseEvent(event); }
+void StageGraphicsScene::keyReleaseEvent(QKeyEvent *event) { QGraphicsScene::keyReleaseEvent(event); }
 
-void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
+void StageGraphicsScene::keyPressEvent(QKeyEvent *event)
 {
     // Amount to move items when arrow keys are pressed
     qreal move_by = 5;
@@ -104,7 +105,7 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
     // Perform key press event on all items in selection group
     if (scene_mutex.tryLock(10) == false) return;
 
-    SceneGraphicsScene    *my_scene = dynamic_cast<SceneGraphicsScene *>(this);
+    StageGraphicsScene    *my_scene = dynamic_cast<StageGraphicsScene *>(this);
     QList<QGraphicsItem*>  list_new_items;
     list_new_items.clear();
 
@@ -169,7 +170,7 @@ void SceneGraphicsScene::keyPressEvent(QKeyEvent *event)
 //####################################################################################
 //##        setPositionByOrigin - Sets item to new_x, new_y position in scene, offset by_origin point
 //####################################################################################
-void SceneGraphicsScene::setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y)
+void StageGraphicsScene::setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y)
 {
     item->setPos(new_x, new_y);
 
@@ -194,7 +195,7 @@ void SceneGraphicsScene::setPositionByOrigin(QGraphicsItem *item, Position_Flags
     setPositionByOrigin(item, item_pos, new_x, new_y);
 }
 
-void SceneGraphicsScene::setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y)
+void StageGraphicsScene::setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y)
 {
     QPointF     new_pos;
 

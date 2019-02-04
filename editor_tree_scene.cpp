@@ -2,27 +2,27 @@
 //      Created by Stephens Nunnally on 1/3/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      Tree Scene Definitions
+//      Tree Stage Definitions
 //
 //
 
 #include "project.h"
 #include "project_world.h"
-#include "project_world_scene.h"
-#include "project_world_scene_object.h"
+#include "project_world_stage.h"
+#include "project_world_stage_object.h"
 
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
 
-#include "editor_tree_scene.h"
+#include "editor_tree_stage.h"
 #include "interface_relay.h"
 
 
 //####################################################################################
-//##        Populates Tree Scene List based on project data
+//##        Populates Tree Stage List based on project data
 //####################################################################################
-void TreeScene::populateTreeSceneList()
+void TreeStage::populateTreeStageList()
 {
     this->clear();
 
@@ -36,23 +36,23 @@ void TreeScene::populateTreeSceneList()
         world_item->setData(0, User_Roles::Key, QVariant::fromValue(world_pair.second->getKey()));
         this->addTopLevelItem(world_item);                                                                  // Add it on our tree as the top item.
 
-        for (auto scene_pair: world_pair.second->getSceneMap())
+        for (auto stage_pair: world_pair.second->getStageMap())
         {
-            QTreeWidgetItem *scene_item = new QTreeWidgetItem(world_item);                                  // Create new item and add as child item
-            scene_item->setIcon(0, QIcon(":/tree_icons/tree_scene.png"));                                   // Loads icon for scene
-            scene_item->setText(0, "Scene: " + scene_pair.second->getComponentPropertyValue(
-                                   Scene_Components::settings, Scene_Properties::name).toString());         // Set text for item
-            scene_item->setData(0, User_Roles::Key, QVariant::fromValue(scene_pair.second->getKey()));
+            QTreeWidgetItem *stage_item = new QTreeWidgetItem(world_item);                                  // Create new item and add as child item
+            stage_item->setIcon(0, QIcon(":/tree_icons/tree_stage.png"));                                   // Loads icon for stage
+            stage_item->setText(0, "Stage: " + stage_pair.second->getComponentPropertyValue(
+                                   Stage_Components::settings, Stage_Properties::name).toString());         // Set text for item
+            stage_item->setData(0, User_Roles::Key, QVariant::fromValue(stage_pair.second->getKey()));
 
 
             // ***** Iterates through objects based on z-order of each object
-            ObjectMap   objects = scene_pair.second->getObjectMap();
-            QList<long> keys = scene_pair.second->objectKeysSortedByZOrder();
+            ObjectMap   objects = stage_pair.second->getObjectMap();
+            QList<long> keys = stage_pair.second->objectKeysSortedByZOrder();
             for (auto key: keys)
             {
                 DrObject *object = objects[key];
 
-                QTreeWidgetItem *object_item = new QTreeWidgetItem(scene_item);                             // Create new item and add as child item
+                QTreeWidgetItem *object_item = new QTreeWidgetItem(stage_item);                             // Create new item and add as child item
                 switch (object->getType())
                 {
                     case DrType::Object:    object_item->setIcon(0, QIcon(":/tree_icons/tree_object.png")); break;
@@ -65,7 +65,7 @@ void TreeScene::populateTreeSceneList()
                                         Object_Components::settings, Object_Properties::name).toString());          // Set text for item
                 object_item->setData(0, User_Roles::Key, QVariant::fromValue(object->getKey()));        // Store item key in user data
 
-                scene_item->addChild(object_item);
+                stage_item->addChild(object_item);
 
                 // Add lock box
                 QString check_images = QString(" QCheckBox::indicator { width: 12px; height: 12px; }"
@@ -83,9 +83,9 @@ void TreeScene::populateTreeSceneList()
 }
 
 // Handles changing the Advisor on Mouse Enter
-void TreeScene::enterEvent(QEvent *event)
+void TreeStage::enterEvent(QEvent *event)
 {
-    m_relay->setAdvisorInfo(Advisor_Info::Scene_List);
+    m_relay->setAdvisorInfo(Advisor_Info::Stage_List);
     QTreeWidget::enterEvent(event);
 }
 
@@ -94,11 +94,11 @@ void TreeScene::enterEvent(QEvent *event)
 //####################################################################################
 //##        Returns a list of the items contained within the tree
 //####################################################################################
-QList <QTreeWidgetItem*> TreeScene::getListOfAllTreeWidgetItems() {
+QList <QTreeWidgetItem*> TreeStage::getListOfAllTreeWidgetItems() {
     return getListOfChildrenFromItem( this->invisibleRootItem() );
 }
 
-QList <QTreeWidgetItem*> TreeScene::getListOfChildrenFromItem( QTreeWidgetItem *item )
+QList <QTreeWidgetItem*> TreeStage::getListOfChildrenFromItem( QTreeWidgetItem *item )
 {
     QList <QTreeWidgetItem*> items;
 
@@ -116,7 +116,7 @@ QList <QTreeWidgetItem*> TreeScene::getListOfChildrenFromItem( QTreeWidgetItem *
 //##        Testing drag event
 //####################################################################################
 // This removes the item from under the mouse, sort of
-void TreeScene::startDrag(Qt::DropActions supportedActions)
+void TreeStage::startDrag(Qt::DropActions supportedActions)
 {
     // Partly copied from Qt 5.5.5 sources
     QModelIndexList indexes = selectedIndexes();
@@ -139,13 +139,13 @@ void TreeScene::startDrag(Qt::DropActions supportedActions)
 
 
 // Fires when we start dragging
-void TreeScene::dragMoveEvent(QDragMoveEvent *event)
+void TreeStage::dragMoveEvent(QDragMoveEvent *event)
 {
     m_mouse_x = event->pos().x();
     m_mouse_y = event->pos().y();
 
-    // !!!!! #DEBUG:    Show scene tree drag event info
-    if (Dr::CheckDebugFlag(Debug_Flags::Label_Scene_Tree_Drag)) {
+    // !!!!! #DEBUG:    Show stage tree drag event info
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_Stage_Tree_Drag)) {
         m_relay->setLabelText(Label_Names::Label_1, QString::fromStdString("MX: ") + QString::number(m_mouse_x) +
                                                     QString::fromStdString(", MY: ") + QString::number(m_mouse_y) );
     }
@@ -158,8 +158,8 @@ void TreeScene::dragMoveEvent(QDragMoveEvent *event)
     {
         long        check_key = item_at->data(0, User_Roles::Key).toLongLong();
 
-        // !!!!! #DEBUG:    Show scene tree drag event info
-        if (Dr::CheckDebugFlag(Debug_Flags::Label_Scene_Tree_Drag)) {
+        // !!!!! #DEBUG:    Show stage tree drag event info
+        if (Dr::CheckDebugFlag(Debug_Flags::Label_Stage_Tree_Drag)) {
             m_relay->setLabelText(Label_Names::Label_Object_3, "Selected: " + QString::number(m_selected_key) +
                                                              ", Checking: " + QString::number(check_key) );
         }
@@ -179,7 +179,7 @@ void TreeScene::dragMoveEvent(QDragMoveEvent *event)
     QTreeWidget::dragMoveEvent(event);
 }
 
-void TreeScene::dropEvent(QDropEvent* event)
+void TreeStage::dropEvent(QDropEvent* event)
 {
     bool dropOK = false;
     DropIndicatorPosition dropIndicator = dropIndicatorPosition();
@@ -213,12 +213,12 @@ void TreeScene::dropEvent(QDropEvent* event)
 //##            Checks to make sure if more than one item is selected all new items
 //##            not matching original type are not selected
 //####################################################################################
-void TreeScene::selectionChanged (const QItemSelection &selected, const QItemSelection &deselected)
+void TreeStage::selectionChanged (const QItemSelection &selected, const QItemSelection &deselected)
 {
     QList<QTreeWidgetItem*> item_list = this->selectedItems();
 
-    // !!!!! #DEBUG:    Show Scene Tree selection data
-    if (Dr::CheckDebugFlag(Debug_Flags::Label_Scene_Tree_Selection))
+    // !!!!! #DEBUG:    Show Stage Tree selection data
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_Stage_Tree_Selection))
         m_relay->setLabelText(Label_Names::Label_Bottom, QString("Selected Item Count: ") + QString::number(item_list.size()));
     // !!!!! END
 
@@ -228,9 +228,9 @@ void TreeScene::selectionChanged (const QItemSelection &selected, const QItemSel
         return;
     }
 
-    // !!!!! #DEBUG:    Show Scene Tree selection data
+    // !!!!! #DEBUG:    Show Stage Tree selection data
     // Otherwise add first item to label
-    if (Dr::CheckDebugFlag(Debug_Flags::Label_Scene_Tree_Selection)) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_Stage_Tree_Selection)) {
         m_relay->setLabelText(Label_Names::Label_Bottom, QString("Selected Item Count: ") +
                                                          QString::number(item_list.size()) +
                                                          ", First Item: " + item_list.first()->text(0));
@@ -246,7 +246,7 @@ void TreeScene::selectionChanged (const QItemSelection &selected, const QItemSel
         // Call to outside function to rebuild object inspector:
         m_relay->buildObjectInspector(QList<long> { selected_key });
 
-        if (m_project->findSceneFromKey(selected_key) != nullptr)
+        if (m_project->findStageFromKey(selected_key) != nullptr)
             m_relay->populateScene(selected_key);
 
         //******************************************************
@@ -275,16 +275,16 @@ void TreeScene::selectionChanged (const QItemSelection &selected, const QItemSel
 
 
 //####################################################################################
-//##    SceneTreeHighlightStyle
+//##    StageTreeHighlightStyle
 //##        A sub classed QProxyStyle so we can overwrite events and do some custom
-//##        drawing of TreeWidget list divider in Tree Scene List
+//##        drawing of TreeWidget list divider in Tree Stage List
 //####################################################################################
-SceneTreeHighlightProxy::~SceneTreeHighlightProxy()
+StageTreeHighlightProxy::~StageTreeHighlightProxy()
 {
     // Must include definition of a virtual destructor
 }
 
-void SceneTreeHighlightProxy::drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
+void StageTreeHighlightProxy::drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 {
     if (element == QStyle::PE_IndicatorItemViewItemDrop) {
         if (!m_parent_tree->canWeDrop()) { return; }
@@ -306,7 +306,7 @@ void SceneTreeHighlightProxy::drawPrimitive(PrimitiveElement element, const QSty
         }
 
         // !!!!! #DEUBG:    Show custom highlight event data
-        if (Dr::CheckDebugFlag(Debug_Flags::Label_Scene_Tree_Drag)) {
+        if (Dr::CheckDebugFlag(Debug_Flags::Label_Stage_Tree_Drag)) {
             m_relay->setLabelText(Label_Names::Label_2, QString::fromStdString("TLX: ") + QString::number(option->rect.topLeft().x()) +
                                                         QString::fromStdString(", TLY: ") + QString::number(option->rect.topLeft().y()));
         }

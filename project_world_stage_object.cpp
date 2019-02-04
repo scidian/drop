@@ -9,8 +9,8 @@
 #include "project.h"
 #include "project_asset.h"
 #include "project_world.h"
-#include "project_world_scene.h"
-#include "project_world_scene_object.h"
+#include "project_world_stage.h"
+#include "project_world_stage_object.h"
 
 #include "settings.h"
 #include "settings_component.h"
@@ -19,15 +19,15 @@
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrObject::DrObject(DrProject *parent_project, DrWorld *parent_world, DrScene *parent_scene,
+DrObject::DrObject(DrProject *parent_project, DrWorld *parent_world, DrStage *parent_stage,
                    long new_object_key, QString new_object_name, DrType new_object_type,
                    long from_asset_key, double x, double y, long z)
 {
     m_parent_project = parent_project;              // pointer to parent Project
     m_parent_world = parent_world;                  // pointer to parent World
-    m_parent_scene = parent_scene;                  // pointer to parent Scene
+    m_parent_stage = parent_stage;                  // pointer to parent Stage
 
-    setKey(new_object_key);                         // assign key passed in from key generator, this key matches key in parent Scene map container
+    setKey(new_object_key);                         // assign key passed in from key generator, this key matches key in parent Stage map container
 
     m_object_type = new_object_type;                // assign object type
     m_asset_key = from_asset_key;                   // associated asset key
@@ -35,7 +35,7 @@ DrObject::DrObject(DrProject *parent_project, DrWorld *parent_world, DrScene *pa
     DrSettings *asset_settings = m_parent_project->findSettingsFromKey(from_asset_key);
     DrAsset *asset = dynamic_cast<DrAsset*>(asset_settings);
 
-    // Call to load in all the components / properties for this Scene object
+    // Call to load in all the components / properties for this Stage object
     initializeObjectSettings(new_object_name, asset->getWidth(), asset->getHeight(), x, y, z);
 
     switch (new_object_type)
@@ -74,28 +74,28 @@ void DrObject::initializeObjectSettings(QString new_name, double width, double h
     addPropertyToComponent(Object_Components::settings, Object_Properties::damage, Property_Type::List, 0,
                            "Damage", "What should this item damage when it collides with something else.");
 
-    addComponent(Object_Components::transform, "Transform", "Sets the physical size and angle of the item in the scene.", Component_Colors::Green_SeaGrass, true);
+    addComponent(Object_Components::transform, "Transform", "Sets the physical size and angle of the item in the stage.", Component_Colors::Green_SeaGrass, true);
     getComponent(Object_Components::transform)->setIcon(Component_Icons::Transform);
 
     addPropertyToComponent(Object_Components::transform, Object_Properties::position, Property_Type::PointF, QPointF(x, y),
-                           "Position", "Location of item within the current scene.");
+                           "Position", "Location of item within the current stage.");
     addPropertyToComponent(Object_Components::transform, Object_Properties::rotation, Property_Type::Angle, 0,
-                           "Rotation", "Angle of item within the scene.");
+                           "Rotation", "Angle of item within the stage.");
     addPropertyToComponent(Object_Components::transform, Object_Properties::size, Property_Type::SizeF, QPointF(width, height),
                            "Size", "Width and Height of object in pixels, affected by Scale property.");
     addPropertyToComponent(Object_Components::transform, Object_Properties::scale, Property_Type::PointF, QPointF(1, 1),
-                           "Scale", "X and Y scale of item within the scene.");
+                           "Scale", "X and Y scale of item within the stage.");
 
     addComponent(Object_Components::layering, "Layering", "Controls the order items are drawn onto the screen. Lower numbers are "
                                                            "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, true);
     getComponent(Object_Components::layering)->setIcon(Component_Icons::Layering);
 
     addPropertyToComponent(Object_Components::layering, Object_Properties::z_order, Property_Type::Int, QVariant::fromValue(z),
-                           "Z Order", "Arrangement of item along the z axis in the scene");
+                           "Z Order", "Arrangement of item along the z axis in the stage");
     addPropertyToComponent(Object_Components::layering, Object_Properties::opacity, Property_Type::Percent, 100,
                            "Opacity", "How see transparent an item is, 0 (invisible) - 100 (solid)");
 
-    addComponent(Object_Components::movement, "Movement", "Initial starting velocities of item in scene.", Component_Colors::Red_Faded, true);
+    addComponent(Object_Components::movement, "Movement", "Initial starting velocities of item in stage.", Component_Colors::Red_Faded, true);
     getComponent(Object_Components::movement)->setIcon(Component_Icons::Movement);
 
     addPropertyToComponent(Object_Components::movement, Object_Properties::velocity_x, Property_Type::Variable, QPointF(0, 0),
@@ -112,7 +112,7 @@ void DrObject::initializeCameraSettings()
     getComponent(Object_Components::camera_settings)->setIcon(Component_Icons::Camera);
 
     addPropertyToComponent(Object_Components::camera_settings, Object_Properties::camera_zoom, Property_Type::Float, 10,
-                           "Zoom Level", "Sets distance away from scene (0 to 1000)");
+                           "Zoom Level", "Sets distance away from stage (0 to 1000)");
 
 }
 

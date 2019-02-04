@@ -22,10 +22,10 @@
 //##    Types of objects possible in game
 //####################################################################################
 enum class Form_Main_Mode {
-    Edit_Scene,
+    Edit_Stage,
     Edit_UI,
     Node_Map,
-    Scene_Map,
+    Stage_Map,
     Clear,
 };
 
@@ -43,8 +43,8 @@ enum class Label_Names
 //####################################################################################
 enum class Form_Main_Focus {
     Assets,
-    Scene_List,
-    Scene_View,
+    Stage_List,
+    Stage_View,
     Object_Inspector,
     Bottom_Area,
 };
@@ -55,7 +55,7 @@ enum class Form_Main_Focus {
 enum class DrType {
     Project,
     World,      Folder,         Variable,
-    Scene,      Background,     Foreground,     StartScene,
+    Stage,      Background,     Foreground,     StartStage,
     Object,     Character,      Camera,         Action,         Light,          Logic,          Particle,
 
     UI,
@@ -189,20 +189,20 @@ typedef QList<QString> HeaderBodyList;
 
 namespace Advisor_Info
 {
-    const HeaderBodyList Asset_List            { "Asset List", "These are items that can be dragged into your scene. Changing the properties "
+    const HeaderBodyList Asset_List            { "Asset List", "These are items that can be dragged into your project. Changing the properties "
                                                                "of these items will affect all instances of those items project wide." };
     const HeaderBodyList Object_Inspector      { "Object Inspector", "Displays editable properties of currently selected item." };
-    const HeaderBodyList Scene_Area            { "Scene View", "Shows objects and layout of currently selected Scene. Drop assets into Scene "
-                                                               "View to add to Scene." };
-    const HeaderBodyList Scene_List            { "Scene List", "Lists the items contained within the currently displayed scene. Select items "
+    const HeaderBodyList Stage_Area            { "Stage View", "Shows objects and layout of currently selected Stage. Drop assets into Stage "
+                                                               "View to add to Stage." };
+    const HeaderBodyList Stage_List            { "Stage List", "Lists the items contained within the currently displayed Stage. Select items "
                                                                "to view / adjust properties for each item." };
     const HeaderBodyList Advisor_Window        { "Advisor Window", "Shows a brief description of editor objects." };
 
-    const HeaderBodyList World_Object          { "World Object", "A World is a container of Scenes." };
-    const HeaderBodyList Scene_Object          { "Scene Object", "A Scene is a container of Objects." };
+    const HeaderBodyList World_Object          { "World Object", "A World is a container of Stages." };
+    const HeaderBodyList Stage_Object          { "Stage Object", "A Stage is a container of Objects." };
     const HeaderBodyList Camera_Object         { "Camera Object", "This is a camera object. This object will decide what the player sees." };
     const HeaderBodyList Character_Object      { "Character Object", "This is a character object" };
-    const HeaderBodyList Object_Object         { "Object", "This is an object in a Scene." };
+    const HeaderBodyList Object_Object         { "Object", "This is an object in a Stage." };
 
     const HeaderBodyList Not_Set               { "Not Set", "Fix me!!!!!!" };
 };
@@ -261,15 +261,15 @@ enum class World_Properties
 
 
 //####################################################################################
-//##    Scene - Possible components and their properties
+//##    Stage - Possible components and their properties
 //####################################################################################
 
-enum class Scene_Components
+enum class Stage_Components
 {
     settings,
 };
 
-enum class Scene_Properties {
+enum class Stage_Properties {
     // settings
     name,                   //string
     start,                  //positive

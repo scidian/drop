@@ -117,7 +117,7 @@ void ApplyColoring(QWidget *widget)
         " QPushButton:pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }"
 
-        // Asset, Scene, Inspector, Etc Trees
+        // Asset, Stage, Inspector, Etc Trees
         " QTreeWidget { icon-size: 14px 14px; }"
         " QTreeWidget { color: " + Dr::GetColor(Window_Colors::Text).name() + ";  "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
@@ -130,7 +130,7 @@ void ApplyColoring(QWidget *widget)
         " QTreeWidget::item:hover:!selected { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
 
-        // Header of Scene Tree (where little lock is)
+        // Header of Stage Tree (where little lock is)
         " QHeaderView::section { "
         "       background-color: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
         "       border: 0px; } "
@@ -152,7 +152,7 @@ void ApplyColoring(QWidget *widget)
         "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Light).name() + ", "
         "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
 
-        // SceneGraphicsView scene display area, ::corner removes right botttom little box
+        // StageGraphicsView display area, ::corner removes right botttom little box
         " QGraphicsView { background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }"
         " QGraphicsView::corner { background: transparent; } "
 

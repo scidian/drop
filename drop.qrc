@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>icon/icon256.png</file>
-        <file>tree_icons/tree_scene.png</file>
         <file>tree_icons/tree_object.png</file>
         <file>tree_icons/tree_action.png</file>
         <file>tree_icons/tree_camera.png</file>
@@ -42,5 +41,6 @@
         <file>assets/test_square.png</file>
         <file>assets/rover_body.png</file>
         <file>inspector_icons/comp_layering.png</file>
+        <file>tree_icons/tree_stage.png</file>
     </qresource>
 </RCC>

@@ -46,10 +46,10 @@ QString StringFromType(DrType type)
     case DrType::Project:      return "Project";
     case DrType::Folder:       return "Folder";
     case DrType::World:        return "World";
-    case DrType::Scene:        return "Scene";
+    case DrType::Stage:        return "Stage";
     case DrType::Background:   return "Background";
     case DrType::Foreground:   return "Foreground";
-    case DrType::StartScene:   return "Foreground";
+    case DrType::StartStage:   return "Start Stage";
     case DrType::Variable:     return "Variable";
     case DrType::Object:       return "Object";
     case DrType::Character:    return "Character";
@@ -75,6 +75,7 @@ QString StringFromAssetType(DrAsset_Type type)
     {
     case DrAsset_Type::Object:      return "Object Asset";
     case DrAsset_Type::Character:   return "Character Asset";
+    case DrAsset_Type::NotFound:    return "Not Found";
     }
     return "Unknown";
 }
