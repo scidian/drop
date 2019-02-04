@@ -6,12 +6,12 @@
 //
 //
 
-#include "editor_stage_scene.h"
+#include "editor_scene.h"
 #include "editor_tree_advisor.h"
 #include "editor_tree_assets.h"
 #include "editor_tree_inspector.h"
 #include "editor_tree_stage.h"
-#include "editor_stage_view.h"
+#include "editor_view.h"
 
 #include "colors.h"
 #include "form_main.h"

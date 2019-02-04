@@ -8,12 +8,12 @@
 
 #include "library.h"
 
-#include "editor_stage_scene.h"
+#include "editor_scene.h"
 #include "editor_tree_advisor.h"
 #include "editor_tree_assets.h"
 #include "editor_tree_inspector.h"
 #include "editor_tree_stage.h"
-#include "editor_stage_view.h"
+#include "editor_view.h"
 
 #include "form_main.h"
 
@@ -83,8 +83,8 @@ void FormMain::buildWindowModeEditStage()
     sizePolicyView.setVerticalStretch(0);
 
 
-    // ***** Initialize GraphicsScene object
-    scene = new StageGraphicsScene(this, project, this);
+    // ***** Initialize DrScene QGraphicsScene object
+    scene = new DrScene(this, project, this);
 
 
     // ***** Build central widgets
@@ -157,8 +157,8 @@ void FormMain::buildWindowModeEditStage()
                         verticalLayoutView->setSpacing(0);
                         verticalLayoutView->setContentsMargins(0, 0, 0, 0);
 
-                        // ***** Load our StageGraphicsView to display our StageGraphicsScene collection of items
-                        viewMain = new StageGraphicsView(widgetStageView, project, this);
+                        // ***** Load our DrView to display our DrScene collection of items
+                        viewMain = new DrView(widgetStageView, project, this);
                         viewMain->setObjectName(QStringLiteral("viewMain"));
 
                         if (!Dr::CheckDebugFlag(Debug_Flags::Turn_Off_Antialiasing))
@@ -455,8 +455,8 @@ void FormMain::buildWindowModeEditStage()
     connect(this, SIGNAL(sendAdvisorInfo(QString, QString)), treeAdvisor, SLOT(changeAdvisor(QString, QString)) , Qt::QueuedConnection);
 
     // Connects signal used to populate scene
-    connect(this, SIGNAL(newStageSelected(DrProject*, StageGraphicsScene*, long, long)),
-            scene,  SLOT(newStageSelected(DrProject*, StageGraphicsScene*, long, long)) );
+    connect(this, SIGNAL(newStageSelected(DrProject*, DrScene*, long, long)),
+            scene,  SLOT(newStageSelected(DrProject*, DrScene*, long, long)) );
 
 
 

@@ -41,9 +41,9 @@ class TreeAssetList;
 class TreeAdvisor;
 class TreeInspector;
 class TreeStage;
-class StageGraphicsScene;
-class StageGraphicsView;
-class StageViewRubberBand;
+class DrScene;
+class DrView;
+class DrViewRubberBand;
 
 
 
@@ -66,13 +66,13 @@ public:
     long            current_world;                                      // Tracks which world to show in the Stage viewer
 
 private:
-    StageGraphicsScene  *scene;                 // Holds the currently selected Stage, ready for rendering in StageGraphicsView
-    StageGraphicsView   *viewMain;              // Renders scene for the viewer
+    DrScene       *scene;                 // Holds the currently selected Stage, ready for rendering in DrView
+    DrView        *viewMain;              // Renders scene for the viewer
 
-    TreeStage           *treeStage;             // Custom classes for Stage List
-    TreeInspector       *treeInspector;         // Custom classes for Object Inspector
-    TreeAssetList       *treeAsset;             // Custom classes for Asset List
-    TreeAdvisor         *treeAdvisor;           // Custom classes for Advisor List
+    TreeStage     *treeStage;             // Custom classes for Stage List
+    TreeInspector *treeInspector;         // Custom classes for Object Inspector
+    TreeAssetList *treeAsset;             // Custom classes for Asset List
+    TreeAdvisor   *treeAdvisor;           // Custom classes for Advisor List
 
     // Normal Qt Classes for simple objects
     QMenuBar      *menuBar;
@@ -133,7 +133,7 @@ signals:
     void        sendAdvisorInfo(QString header, QString body);              // Forwards info to MainWindow::changeAdvisor
 
     // Undo Stack Signals
-    void        newStageSelected(DrProject *project, StageGraphicsScene *scene, long old_stage, long new_stage);
+    void        newStageSelected(DrProject *project, DrScene *scene, long old_stage, long new_stage);
 
 };
 

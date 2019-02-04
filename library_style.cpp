@@ -152,7 +152,7 @@ void ApplyColoring(QWidget *widget)
         "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Light).name() + ", "
         "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
 
-        // StageGraphicsView display area, ::corner removes right botttom little box
+        // DrView display area, ::corner removes right botttom little box
         " QGraphicsView { background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }"
         " QGraphicsView::corner { background: transparent; } "
 

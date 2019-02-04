@@ -20,8 +20,8 @@
 #include "settings_component.h"
 #include "settings_component_property.h"
 
-#include "editor_stage_item.h"
-#include "editor_stage_scene.h"
+#include "editor_item.h"
+#include "editor_scene.h"
 
 //####################################################################################
 //##        Constructor & destructor
@@ -106,7 +106,7 @@ void DrItem::updateProperty(int key, const QVariant &value)
         break;
     }
 
-    if (scene()) dynamic_cast<StageGraphicsScene*>(scene())->getRelay()->updateObjectInspectorAfterItemChange(m_object_key);
+    if (scene()) dynamic_cast<DrScene*>(scene())->getRelay()->updateObjectInspectorAfterItemChange(m_object_key);
 }
 
 

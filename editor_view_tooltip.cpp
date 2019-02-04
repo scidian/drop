@@ -12,14 +12,14 @@
 #include "project_world.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
-#include "editor_stage_item.h"
+#include "editor_item.h"
 
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
 
-#include "editor_stage_scene.h"
-#include "editor_stage_view.h"
+#include "editor_scene.h"
+#include "editor_view.h"
 #include "interface_relay.h"
 
 
@@ -27,7 +27,7 @@
 //####################################################################################
 //##        Constructor / Destructor
 //####################################################################################
-StageViewToolTip::StageViewToolTip(QWidget *parent) : QWidget(parent)
+DrViewToolTip::DrViewToolTip(QWidget *parent) : QWidget(parent)
 {
     this->setObjectName(QStringLiteral("formTooltip"));
 
@@ -38,7 +38,7 @@ StageViewToolTip::StageViewToolTip(QWidget *parent) : QWidget(parent)
 }
 
 
-void StageViewToolTip::startToolTip(View_Mode type, QPoint mouse_position, QVariant data)
+void DrViewToolTip::startToolTip(View_Mode type, QPoint mouse_position, QVariant data)
 {
     m_tip_type = type;
     this->setStyleSheet(" QWidget { background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
@@ -63,14 +63,14 @@ void StageViewToolTip::startToolTip(View_Mode type, QPoint mouse_position, QVari
     show();
 }
 
-void StageViewToolTip::stopToolTip()
+void DrViewToolTip::stopToolTip()
 {
     hide();
     m_tip_type = View_Mode::None;
 }
 
 
-void StageViewToolTip::updateToolTipData(QVariant data)
+void DrViewToolTip::updateToolTipData(QVariant data)
 {
     switch (m_tip_type)
     {
@@ -85,13 +85,13 @@ void StageViewToolTip::updateToolTipData(QVariant data)
     }
 }
 
-void StageViewToolTip::updateToolTipPosition(QPoint mouse_position)
+void DrViewToolTip::updateToolTipPosition(QPoint mouse_position)
 {
     move(mouse_position + getOffset());
 }
 
 
-void StageViewToolTip::paintEvent(QPaintEvent *)
+void DrViewToolTip::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
     painter.setPen(Dr::GetColor(Window_Colors::Text_Light));

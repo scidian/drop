@@ -19,8 +19,8 @@
 #include "settings_component.h"
 #include "settings_component_property.h"
 
-#include "editor_stage_scene.h"
-#include "editor_stage_view.h"
+#include "editor_scene.h"
+#include "editor_view.h"
 #include "editor_tree_advisor.h"
 #include "editor_tree_assets.h"
 #include "editor_tree_inspector.h"
@@ -88,7 +88,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 
 
 
-    // ########## Populates StageGraphicsScene from current DrStage
+    // ########## Populates DrScene from current DrStage
     populateScene( project->getWorldWithName("World 2")->getStageWithName("4")->getKey() );
 
 

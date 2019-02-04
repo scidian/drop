@@ -12,7 +12,7 @@
 
 class DrProject;
 class InterfaceRelay;
-class StageGraphicsScene;
+class DrScene;
 
 //####################################################################################
 //##    TreeStage

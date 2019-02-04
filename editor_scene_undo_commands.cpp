@@ -11,9 +11,9 @@
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
 
-#include "editor_stage_item.h"
-#include "editor_stage_scene.h"
-#include "editor_stage_scene_commands.h"
+#include "editor_item.h"
+#include "editor_scene.h"
+#include "editor_scene_undo_commands.h"
 
 /*
  *  To Implement:
@@ -36,22 +36,22 @@
 //##            - Mouse release on View
 //##            - Arrow key press on scene
 //####################################################################################
-void StageGraphicsScene::undoAction() {
+void DrScene::undoAction() {
     m_undo->undo();
 }
-void StageGraphicsScene::redoAction() {
+void DrScene::redoAction() {
     m_undo->redo(); 
 }
 
-void StageGraphicsScene::newStageSelected(DrProject *project, StageGraphicsScene *scene, long old_stage, long new_stage)
+void DrScene::newStageSelected(DrProject *project, DrScene *scene, long old_stage, long new_stage)
 {
     m_undo->push(new ChangeStageCommand(project, scene, old_stage, new_stage));
 }
 
-void StageGraphicsScene::selectionGroupMoved(StageGraphicsScene *scene, const QPointF &old_position)
+void DrScene::selectionGroupMoved(DrScene *scene, const QPointF &old_position)
 {   m_undo->push(new MoveCommand(scene, old_position));   }
 
-void StageGraphicsScene::selectionGroupNewGroup(StageGraphicsScene *scene,
+void DrScene::selectionGroupNewGroup(DrScene *scene,
                                                 QList<DrObject*> old_list,
                                                 QList<DrObject*> new_list,
                                                 DrObject *old_first,
@@ -63,7 +63,7 @@ void StageGraphicsScene::selectionGroupNewGroup(StageGraphicsScene *scene,
 //####################################################################################
 //##        Move Command on the QUndoStack
 //####################################################################################
-ChangeStageCommand::ChangeStageCommand(DrProject *project, StageGraphicsScene *scene,
+ChangeStageCommand::ChangeStageCommand(DrProject *project, DrScene *scene,
                                        long old_stage, long new_stage, QUndoCommand *parent) :
                                        QUndoCommand(parent), m_project(project), m_scene(scene)
 {
@@ -120,7 +120,7 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
 //####################################################################################
 //##        Move Command on the QUndoStack
 //####################################################################################
-MoveCommand::MoveCommand(StageGraphicsScene *scene, const QPointF &old_pos, QUndoCommand *parent) : QUndoCommand(parent) {
+MoveCommand::MoveCommand(DrScene *scene, const QPointF &old_pos, QUndoCommand *parent) : QUndoCommand(parent) {
     m_scene = scene;
     m_new_pos = m_scene->getSelectionGroup()->sceneTransform().map(m_scene->getSelectionGroup()->boundingRect().center());
     m_old_pos = old_pos;
@@ -157,7 +157,7 @@ void MoveCommand::redo() {
 //####################################################################################
 //##        Deselects old items, Selects one new item
 //####################################################################################
-SelectionNewGroupCommand::SelectionNewGroupCommand(StageGraphicsScene *scene,
+SelectionNewGroupCommand::SelectionNewGroupCommand(DrScene *scene,
                                                    QList<DrObject*> old_list,
                                                    QList<DrObject*> new_list,
                                                    DrObject *old_first,

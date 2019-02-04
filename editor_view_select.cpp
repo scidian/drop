@@ -10,23 +10,23 @@
 #include "project_world.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
-#include "editor_stage_item.h"
+#include "editor_item.h"
 
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
 
-#include "editor_stage_scene.h"
-#include "editor_stage_view.h"
+#include "editor_scene.h"
+#include "editor_view.h"
 #include "interface_relay.h"
 
 
 //####################################################################################
 //##        Starts selecting mode
 //####################################################################################
-void StageGraphicsView::startSelect(QMouseEvent *event)
+void DrView::startSelect(QMouseEvent *event)
 {
-    StageGraphicsScene *my_scene = dynamic_cast<StageGraphicsScene *>(scene());
+    DrScene *my_scene = dynamic_cast<DrScene*>(scene());
     m_items_start = my_scene->getSelectionGroupItems();
     m_first_start = my_scene->getFirstSelectedItem();
 
@@ -44,9 +44,9 @@ void StageGraphicsView::startSelect(QMouseEvent *event)
 //####################################################################################
 //##        Handles resizing Rubber Band box and updating Selection Area during View_Mode::Selecting
 //####################################################################################
-void StageGraphicsView::processSelection(QPoint mouse_in_view)
+void DrView::processSelection(QPoint mouse_in_view)
 {
-    StageGraphicsScene    *my_scene = dynamic_cast<StageGraphicsScene*>(scene());
+    DrScene *my_scene = dynamic_cast<DrScene*>(scene());
 
     QRect band_box = QRect(m_origin, mouse_in_view).normalized();
     if (band_box.width() < 1)  band_box.setWidth(1);

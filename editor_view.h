@@ -5,8 +5,8 @@
 //      A sub classed QGraphicsView so we can override events for our View Area
 //
 //
-#ifndef EDITOR_STAGE_VIEW_H
-#define EDITOR_STAGE_VIEW_H
+#ifndef EDITOR_VIEW_H
+#define EDITOR_VIEW_H
 
 #include <QtWidgets>
 
@@ -18,9 +18,9 @@ class DrItem;
 class SelectionGroup;
 
 class InterfaceRelay;
-class StageGraphicsScene;
-class StageViewRubberBand;
-class StageViewToolTip;
+class DrScene;
+class DrViewRubberBand;
+class DrViewToolTip;
 
 
 //####################################################################################
@@ -59,10 +59,10 @@ const int    ANGLE_STEP = 15;                                       // Angle int
 
 
 //####################################################################################
-//##    StageGraphicsView
+//##    DrView
 //##        A sub classed QGraphicsView to show our QGraphicsScene
 //############################
-class StageGraphicsView : public QGraphicsView
+class DrView : public QGraphicsView
 {
     Q_OBJECT
 
@@ -106,7 +106,7 @@ private:
     bool         m_flag_key_down_shift =    false;                  // True when View has focus and shift         is down
 
     // Mouse event variables
-    StageViewToolTip                   *m_tool_tip;                 // Holds our view's custom Tool Tip box
+    DrViewToolTip                          *m_tool_tip;                 // Holds our view's custom Tool Tip box
     QPoint                              m_origin;                   // Stores mouse down position in view coordinates
     QPointF                             m_origin_in_scene;          // Stores mouse down position in scene coordinates
     QGraphicsItem                      *m_origin_item;              // Stores top item under mouse (if any) on mouse down event
@@ -126,7 +126,7 @@ private:
     QPoint                              m_last_mouse_pos;           // Tracks last known mouse position in view coordinates
 
     // View_Mode::Selecting Variables
-    StageViewRubberBand            *m_rubber_band;                  // Holds our view's RubberBand object
+    DrViewRubberBand                   *m_rubber_band;                  // Holds our view's RubberBand object
     QList<QGraphicsItem*>           m_items_start;                  // Stores items selected at start of new rubber band box
     QList<QGraphicsItem*>           m_items_keep;                   // Stores list of items to keep on top of rubber band items (with control key)
     DrObject                       *m_first_start;                  // Stores first selected item before rubber band box stareted
@@ -154,8 +154,8 @@ private:
 
 public:
     // Constructor
-    explicit StageGraphicsView(QWidget *parent, DrProject *project, InterfaceRelay *relay);
-    virtual ~StageGraphicsView() override;
+    explicit DrView(QWidget *parent, DrProject *project, InterfaceRelay *relay);
+    virtual ~DrView() override;
 
     // Event Overrides, start at Qt Docs for QGraphicsView Class to find more
     virtual void    paintEvent(QPaintEvent *event) override;                                // Inherited from QWidget
@@ -223,8 +223,8 @@ public slots:
 
 signals:
     // Signals used to emit UndoStack Commands
-    void    selectionGroupMoved(StageGraphicsScene *scene, const QPointF &old_position);
-    void    selectionGroupNewGroup(StageGraphicsScene *scene,
+    void    selectionGroupMoved(DrScene *scene, const QPointF &old_position);
+    void    selectionGroupNewGroup(DrScene *scene,
                                    QList<DrObject*> old_list,
                                    QList<DrObject*> new_list,
                                    DrObject *old_first,
@@ -234,15 +234,15 @@ signals:
 
 
 //####################################################################################
-//##    StageViewRubberBand
+//##    DrViewRubberBand
 //##        A sub classed QRubberBand so we can override paint event for rubber band
 //############################
-class StageViewRubberBand : public QRubberBand
+class DrViewRubberBand : public QRubberBand
 {
 
 public:
     // Constructor
-    StageViewRubberBand(Shape shape, QWidget *parent) : QRubberBand (shape, parent) { }
+    DrViewRubberBand(Shape shape, QWidget *parent) : QRubberBand (shape, parent) { }
 
     // Event overrides
     virtual void    paintEvent(QPaintEvent *) override;
@@ -251,10 +251,10 @@ public:
 
 
 //####################################################################################
-//##    StageViewToolTip
+//##    DrViewToolTip
 //##        A parentless widget to be used as a custom tooltip
 //############################
-class StageViewToolTip : public QWidget
+class DrViewToolTip : public QWidget
 {
 private:
     View_Mode   m_tip_type = View_Mode::None;           // Which type of tool tip to show
@@ -266,7 +266,7 @@ private:
 
 public:
     // Constructor
-    StageViewToolTip(QWidget *parent = nullptr);
+    DrViewToolTip(QWidget *parent = nullptr);
 
     // Event overrides
     virtual void    paintEvent(QPaintEvent *) override;
@@ -284,7 +284,7 @@ public:
 };
 
 
-#endif // EDITOR_STAGE_VIEW_H
+#endif // EDITOR_VIEW_H
 
 
 

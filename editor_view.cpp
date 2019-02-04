@@ -10,28 +10,28 @@
 #include "project_world.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
-#include "editor_stage_item.h"
+#include "editor_item.h"
 
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
 
-#include "editor_stage_view.h"
-#include "editor_stage_scene.h"
+#include "editor_view.h"
+#include "editor_scene.h"
 #include "interface_relay.h"
 
 
 //####################################################################################
 //##        Constructor & destructor
 //####################################################################################
-StageGraphicsView::StageGraphicsView(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
-                                     QGraphicsView(parent = nullptr), m_project(project), m_relay(relay)
+DrView::DrView(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
+               QGraphicsView(parent = nullptr), m_project(project), m_relay(relay)
 {
     // Initialize rubber band object used as a selection box
-    m_rubber_band = new StageViewRubberBand(QRubberBand::Shape::Rectangle, this);
+    m_rubber_band = new DrViewRubberBand(QRubberBand::Shape::Rectangle, this);
 
     // Initialize tool tip object used for displaying some helpful info
-    m_tool_tip = new StageViewToolTip(this);
+    m_tool_tip = new DrViewToolTip(this);
     m_tool_tip->hide();
 
     m_over_handle = Position_Flags::No_Position;
@@ -40,7 +40,7 @@ StageGraphicsView::StageGraphicsView(QWidget *parent, DrProject *project, Interf
         m_debug_timer.start();
 }
 
-StageGraphicsView::~StageGraphicsView()
+DrView::~DrView()
 {
     delete m_tool_tip;
 }
@@ -52,7 +52,7 @@ StageGraphicsView::~StageGraphicsView()
 //##        Key Events
 //####################################################################################
 // Key press event
-void StageGraphicsView::keyPressEvent(QKeyEvent *event)
+void DrView::keyPressEvent(QKeyEvent *event)
 {
     // When space bar is down, enabled mouse press and move to translate viewable area
     if (event->key() == Qt::Key::Key_Space) {   m_flag_key_down_spacebar = true;
@@ -74,7 +74,7 @@ void StageGraphicsView::keyPressEvent(QKeyEvent *event)
 }
 
 // Key release event
-void StageGraphicsView::keyReleaseEvent(QKeyEvent *event)
+void DrView::keyReleaseEvent(QKeyEvent *event)
 {
     // When space bar is released, change mode back to select / move items
     if (event->key() == Qt::Key::Key_Space) {   m_flag_key_down_spacebar = false;
@@ -102,7 +102,7 @@ void StageGraphicsView::keyReleaseEvent(QKeyEvent *event)
 //##        Scene Change SLOTs / Events to update selection box when scene / selection changes
 //####################################################################################
 // Connected from scene().changed
-void StageGraphicsView::sceneChanged(QList<QRectF>)
+void DrView::sceneChanged(QList<QRectF>)
 {
     double left_adjust =  -4000;
     double right_adjust =  4000;
@@ -115,26 +115,26 @@ void StageGraphicsView::sceneChanged(QList<QRectF>)
 }
 
 // Connected from scene().selectionChanged
-void StageGraphicsView::selectionChanged()
+void DrView::selectionChanged()
 {
     updateSelectionBoundingBox();
     ///update();             // Don't use here!!!!! Calls paint recursively
 }
 
-void StageGraphicsView::scrollContentsBy(int dx, int dy)
+void DrView::scrollContentsBy(int dx, int dy)
 {
     QGraphicsView::scrollContentsBy(dx, dy);
     updateSelectionBoundingBox();
     update();
 }
 
-void StageGraphicsView::updateSelectionBoundingBox()
+void DrView::updateSelectionBoundingBox()
 {
     // Test for scene, convert to our custom class and lock the scene
     if (scene() == nullptr) return;
 
-    StageGraphicsScene *my_scene = dynamic_cast<StageGraphicsScene *>(scene());
-    QGraphicsItem      *item = my_scene->getSelectionGroupAsGraphicsItem();
+    DrScene         *my_scene = dynamic_cast<DrScene *>(scene());
+    QGraphicsItem   *item = my_scene->getSelectionGroupAsGraphicsItem();
     if (my_scene->getSelectionGroupCount() < 1) return;
     if (my_scene->scene_mutex.tryLock(0) == false) return;
 
@@ -224,7 +224,7 @@ void StageGraphicsView::updateSelectionBoundingBox()
 }
 
 // Calculates the angle facing away from the corner of two angles, for calculating mouse angle of corners
-double StageGraphicsView::calculateCornerAngle(double angle1, double angle2)
+double DrView::calculateCornerAngle(double angle1, double angle2)
 {
     double bigger_angle = angle1;
     if (angle1 < angle2) bigger_angle += 360;

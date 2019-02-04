@@ -12,23 +12,23 @@
 #include "project_world.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
-#include "editor_stage_item.h"
+#include "editor_item.h"
 
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
 
-#include "editor_stage_scene.h"
-#include "editor_stage_view.h"
+#include "editor_scene.h"
+#include "editor_view.h"
 #include "interface_relay.h"
 
 
 //####################################################################################
 //##        Starts resizing mode
 //####################################################################################
-void StageGraphicsView::startResize(QPoint mouse_in_view)
+void DrView::startResize(QPoint mouse_in_view)
 {
-    StageGraphicsScene *my_scene = dynamic_cast<StageGraphicsScene *>(scene());
+    DrScene       *my_scene = dynamic_cast<DrScene*>(scene());
     QGraphicsItem *item = my_scene->getSelectionGroupAsGraphicsItem();
     m_pre_resize_scale = item->data(User_Roles::Scale).toPointF();
 
@@ -59,7 +59,7 @@ void StageGraphicsView::startResize(QPoint mouse_in_view)
 //####################################################################################
 //##        Call appropriate resize function
 //####################################################################################
-void StageGraphicsView::resizeSelection(QPointF mouse_in_scene)
+void DrView::resizeSelection(QPointF mouse_in_scene)
 {
     // Figure out what sides to use for x axis and y axis
     switch (m_start_resize_grip) {
@@ -79,7 +79,7 @@ void StageGraphicsView::resizeSelection(QPointF mouse_in_scene)
 
 
 // Finds the ooposite side name of side passed in, no error catch if corner passed in
-Position_Flags StageGraphicsView::findOppositeSide(Position_Flags start_side)
+Position_Flags DrView::findOppositeSide(Position_Flags start_side)
 {
     switch (start_side)
     {
@@ -100,11 +100,11 @@ Position_Flags StageGraphicsView::findOppositeSide(Position_Flags start_side)
 //####################################################################################
 //##        Main resize function
 //####################################################################################
-void StageGraphicsView::resizeSelectionWithRotate(QPointF mouse_in_scene)
+void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
 {
     // Test for scene, convert to our custom class
     if (scene() == nullptr) return;
-    StageGraphicsScene    *my_scene = dynamic_cast<StageGraphicsScene *>(scene());
+    DrScene *my_scene = dynamic_cast<DrScene*>(scene());
 
     // Load item starting width and height
     QGraphicsItem *item = my_scene->getSelectionGroupAsGraphicsItem();
@@ -226,7 +226,7 @@ void StageGraphicsView::resizeSelectionWithRotate(QPointF mouse_in_scene)
 //####################################################################################
 //##        Remove shearing from item
 //####################################################################################
-void StageGraphicsView::removeShearing(QGraphicsItem *item)
+void DrView::removeShearing(QGraphicsItem *item)
 {
     double  angle = item->data(User_Roles::Rotation).toDouble();
     QPointF scale = extractScaleFromItem(item);
@@ -238,7 +238,7 @@ void StageGraphicsView::removeShearing(QGraphicsItem *item)
 }
 
 // Pulls out scale from current item screen transform (takes away angle first from stored angle data)
-QPointF StageGraphicsView::extractScaleFromItem(QGraphicsItem *item)
+QPointF DrView::extractScaleFromItem(QGraphicsItem *item)
 {
     double  angle = item->data(User_Roles::Rotation).toDouble();
     QPointF origin = item->mapToScene( item->boundingRect().center() );

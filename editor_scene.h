@@ -5,12 +5,12 @@
 //      A sub classed QGraphicsScene so we can override events for our Stage
 //
 //
-#ifndef EDITOR_STAGE_SCENE_H
-#define EDITOR_STAGE_SCENE_H
+#ifndef EDITOR_SCENE_H
+#define EDITOR_SCENE_H
 
 #include <QtWidgets>
 
-#include <editor_stage_item.h>
+#include <editor_item.h>
 
 class DrProject;
 class DrStage;
@@ -19,10 +19,10 @@ class SelectionGroup;
 
 
 //####################################################################################
-//##    StageGraphicsScene
+//##    DrScene
 //##        Holds items of one stage
 //############################
-class StageGraphicsScene : public QGraphicsScene
+class DrScene : public QGraphicsScene
 {
     Q_OBJECT
 
@@ -47,8 +47,8 @@ public:
 
 public:
     // Constructor
-    explicit StageGraphicsScene(QWidget *parent, DrProject *project, InterfaceRelay *relay);
-    virtual ~StageGraphicsScene() override;
+    explicit DrScene(QWidget *parent, DrProject *project, InterfaceRelay *relay);
+    virtual ~DrScene() override;
 
     // Event Overrides, start at Qt Docs for QGraphicsScene Class to find more
     virtual void    keyPressEvent(QKeyEvent *event) override;                              // Inherited from QGraphicsScene
@@ -105,9 +105,9 @@ public slots:
     void            sceneChanged(QList<QRectF> region);                             // Used to resize scene area to fit contents
 
     // Undo Commands
-    void            newStageSelected(DrProject *project, StageGraphicsScene *scene, long old_stage, long new_stage);
-    void            selectionGroupMoved(StageGraphicsScene *scene, const QPointF &old_position);
-    void            selectionGroupNewGroup(StageGraphicsScene *scene,
+    void            newStageSelected(DrProject *project, DrScene *scene, long old_stage, long new_stage);
+    void            selectionGroupMoved(DrScene *scene, const QPointF &old_position);
+    void            selectionGroupNewGroup(DrScene *scene,
                                            QList<DrObject*> old_list,
                                            QList<DrObject*> new_list,
                                            DrObject *old_first,
@@ -127,25 +127,25 @@ signals:
 class SelectionGroup : public QGraphicsItemGroup
 {
 private:
-    StageGraphicsScene  *m_parent_scene;
+    DrScene  *m_parent_scene;
 
 public:
     // Constructor / destructor
-    SelectionGroup(StageGraphicsScene *parent_scene) : m_parent_scene(parent_scene) {}
+    SelectionGroup(DrScene *parent_scene) : m_parent_scene(parent_scene) {}
     virtual ~SelectionGroup() override;
 
     // Event Overrides
     virtual void        paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
     // Getters / Setters
-    StageGraphicsScene* getParentScene() { return m_parent_scene; }
+    DrScene*            getParentScene() { return m_parent_scene; }
 };
 
 
 
 
 
-#endif // EDITOR_STAGE_SCENE_H
+#endif // EDITOR_SCENE_H
 
 
 
