@@ -27,8 +27,7 @@
 void DrView::startSelect(QMouseEvent *event)
 {
     DrScene *my_scene = dynamic_cast<DrScene*>(scene());
-    m_items_start = my_scene->getSelectionGroupItems();
-    m_first_start = my_scene->getFirstSelectedItem();
+    m_items_start = my_scene->getSelectionItems();
 
     // If control key isnt down, we're starting a new selection process, so remove all items
     if (event->modifiers() & Qt::KeyboardModifier::ControlModifier)
@@ -46,45 +45,23 @@ void DrView::startSelect(QMouseEvent *event)
 //####################################################################################
 void DrView::processSelection(QPoint mouse_in_view)
 {
-    DrScene *my_scene = dynamic_cast<DrScene*>(scene());
-
     QRect band_box = QRect(m_origin, mouse_in_view).normalized();
     if (band_box.width() < 1)  band_box.setWidth(1);
     if (band_box.height() < 1) band_box.setHeight(1);
 
-    m_rubber_band->setGeometry(band_box);                                                       // Resize selection box
+    m_rubber_band->setGeometry(band_box);                                                           // Resize selection box
 
     QPainterPath selection_area;
-    selection_area.addPolygon(mapToScene(m_rubber_band->geometry()));                           // Convert box to scene coords
-    selection_area.closeSubpath();                                                              // Closes an open polygon
+    selection_area.addPolygon(mapToScene(m_rubber_band->geometry()));                               // Convert box to scene coords
+    selection_area.closeSubpath();                                                                  // Closes an open polygon
 
-    QList<QGraphicsItem*> selection_area_items = scene()->items(selection_area, Qt::ItemSelectionMode::IntersectsItemShape,
-                                                                Qt::SortOrder::DescendingOrder, viewportTransform());
+    scene()->setSelectionArea(selection_area, Qt::ItemSelectionOperation::ReplaceSelection,
+                              Qt::ItemSelectionMode::IntersectsItemShape, viewportTransform());     // Pass box to scene for selection
 
-    // Go through selected items, unselect if rubber band box covered them and has since shrunk
-    for (auto item : my_scene->getSelectionGroupItems()) {
-        if (selection_area_items.contains(item) == false && m_items_keep.contains(item) == false)
-                my_scene->getSelectionGroup()->removeFromGroup(item);
+    for (auto item : m_items_keep) {
+        item->setSelected(true);
     }
-
-    if (my_scene->getSelectionGroupCount() == 0)
-        my_scene->resetSelectionGroup();
-
-    if (m_items_keep.count() == 0 && selection_area_items.count() == 1) {
-        if (selection_area_items.first() != my_scene->getSelectionGroupAsGraphicsItem()) {
-            DrObject *new_first = dynamic_cast<DrItem*>(selection_area_items.first())->getObject();
-            my_scene->setFirstSelectedItem(new_first);
-        }
-    }
-
-    // Add items in selection area to group
-    for (auto item : selection_area_items) my_scene->addItemToSelectionGroup(item);
-
-
 }
-
-
-
 
 
 

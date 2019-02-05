@@ -88,6 +88,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 
 
     // ########## Initialize form and customize colors and styles
+    scene = new DrScene(this, project, this);
     buildMenu();
     buildWindow(Form_Main_Mode::Edit_Stage);
     Dr::ApplyColoring(this);
@@ -144,7 +145,6 @@ void FormMain::populateScene(long from_stage_key)
     if (scene->scene_mutex.tryLock(10) == false) return;
 
     if (scene->getCurrentStageKeyShown() != from_stage_key) {
-        viewMain->emptySelectionGroupIfNotEmpty();
         emit newStageSelected(project, scene, scene->getCurrentStageKeyShown(), from_stage_key);
     }
 
@@ -205,7 +205,7 @@ void FormMain::updateObjectInspectorAfterItemChange(long item_key)
 
 void FormMain::updateStageTreeSelectionBasedOnSelectionGroup()
 {
-    QList<QGraphicsItem*>   item_list = scene->getSelectionGroupItems();
+    QList<QGraphicsItem*>   item_list = scene->getSelectionItems();
     QList<QTreeWidgetItem*> tree_list = treeStage->getListOfAllTreeWidgetItems();
     treeStage->clearSelection();
 

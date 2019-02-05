@@ -31,8 +31,7 @@ void DrView::mousePressEvent(QMouseEvent *event)
 {
     // Test for scene, convert to our custom class and lock the scene
     if (scene() == nullptr) return;
-    DrScene               *my_scene = dynamic_cast<DrScene*>(scene());
-    QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
+    DrScene *my_scene = dynamic_cast<DrScene*>(scene());
     if (my_scene->scene_mutex.tryLock(100) == false) return;
 
     // On initial mouse down, store mouse origin point
@@ -49,7 +48,7 @@ void DrView::mousePressEvent(QMouseEvent *event)
             m_origin_timer.restart();
             m_allow_movement = false;
 
-            if (my_scene->getSelectionGroupCount() > 0) {
+            if (my_scene->getSelectionCount() > 0) {
                 // ******************* If clicked while holding Alt key start rotating
                 if (event->modifiers() & Qt::KeyboardModifier::AltModifier || m_over_handle == Position_Flags::Rotate) {
                     m_view_mode = View_Mode::Rotating;
@@ -74,73 +73,25 @@ void DrView::mousePressEvent(QMouseEvent *event)
                 if (m_origin_item != nullptr) {
 
                     // ***** If we clicked clicked a new item, set selection group to that
-                    if (my_items.contains(m_origin_item) == false) {
-                        emit selectionGroupNewGroup(my_scene,
-                                                    my_scene->convertListItemsToObjects(my_items),
-                                                    QList<DrObject*>({ dynamic_cast<DrItem*>(m_origin_item)->getObject() }),
-                                                    my_scene->getFirstSelectedItem(),
-                                                    dynamic_cast<DrItem*>(m_origin_item)->getObject());
-                        my_scene->selectSelectionGroup();
+                    if (my_scene->getSelectionItems().contains(m_origin_item) == false) {
+                        my_scene->clearSelection();
+                        m_origin_item->setSelected(true);
                     }
-
-                    // ***** Disable any objects that were there and transparent
-                    QList<QGraphicsItem*> item_list = items(event->pos());
-                    for (auto item : item_list)
-                        if (my_scene->getSelectionGroupItems().contains(item) == false) {
-                            item->setEnabled(false);
-                            item->setVisible(false);
-                        }
-                    my_scene->getSelectionGroup()->setEnabled(true);
-                    my_scene->getSelectionGroup()->setVisible(true);
 
                     // ***** Process press event for item movement (Translation)
                     QGraphicsView::mousePressEvent(event);
                     viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
                     QTimer::singleShot(500, this, SLOT(checkTranslateToolTipStarted()));
 
-                    // ***** Store item start position for UNDO
-                    m_old_pos = my_scene->getSelectionGroup()->sceneTransform().map(my_scene->getSelectionGroup()->boundingRect().center());
                     m_view_mode = View_Mode::Translating;
-
-                    // ***** Re-enable any objects that were there and transparent
-                    for (auto item : item_list) {
-                        item->setEnabled(true);
-                        item->setVisible(true);
-                    }
                 }
 
             // ******************** If clicked while control is down, add to selection group, or take out
             } else if (event->modifiers() & Qt::KeyboardModifier::ControlModifier && m_origin_item != nullptr) {
 
-                QList<QGraphicsItem*> new_list = my_items;
+                if (m_origin_item != nullptr)
+                    m_origin_item->setSelected(!m_origin_item->isSelected());
 
-                // If an item was clicked remove it from selection group, otherwise add it
-                if (my_items.contains(m_origin_item) == true)
-                    new_list.removeOne(m_origin_item);
-                else if (my_items.contains(m_origin_item) == false)
-                    new_list.append(m_origin_item);
-
-                // If we lost the first item, cancel having a first item
-                if (new_list.count() > 0) {
-                    DrObject *new_first = my_scene->getFirstSelectedItem();
-
-                    QGraphicsItem *new_first_as_graphics = nullptr;
-                    if (new_first) new_first_as_graphics = my_scene->getFirstSelectedItem()->getDrItem();
-
-                    if (new_list.count() == 1)
-                        new_first = dynamic_cast<DrItem*>(new_list.first())->getObject();
-                    else if (new_list.contains(new_first_as_graphics) == false)
-                        new_first = nullptr;
-
-                    emit selectionGroupNewGroup(my_scene,
-                                                my_scene->convertListItemsToObjects(my_items),
-                                                my_scene->convertListItemsToObjects(new_list),
-                                                my_scene->getFirstSelectedItem(), new_first);
-                    my_scene->selectSelectionGroup();
-                } else {
-                    emit selectionGroupNewGroup(my_scene, my_scene->convertListItemsToObjects(my_items), QList<DrObject*>({}),
-                                                my_scene->getFirstSelectedItem(), nullptr);
-                }
             }
 
 
@@ -182,26 +133,24 @@ void DrView::checkTranslateToolTipStarted()
 //####################################################################################
 QGraphicsItem* DrView::itemOnTopAtPosition(QPoint check_point)
 {
-    DrScene               *my_scene = dynamic_cast<DrScene*>(scene());
-    QGraphicsItem*         selection = my_scene->getSelectionGroupAsGraphicsItem();
     QGraphicsItem         *item_on_top;
     QList<QGraphicsItem*>  possible_items;
 
     // Make a list of all items at point excluding selection group
-    for (auto item : items(check_point))
-        if (item != selection) {
-            possible_items.append(item);
+    for (auto item : items(check_point)) {
 
-            // !!!!! DEBUG: Shows red, green, blue and alpha of pixel under mouse
-            if (Dr::CheckDebugFlag(Debug_Flags::Label_Top_Item_RGBA)) {
-                QColor pixel_color = dynamic_cast<DrItem*>(item)->getColorAtPoint(check_point, this);
-                Dr::SetLabelText(Label_Names::Label_1, "R: " + QString::number(pixel_color.red()) +
-                                                       "G: " + QString::number(pixel_color.green()) +
-                                                       "B: " + QString::number(pixel_color.blue()) );
-                Dr::SetLabelText(Label_Names::Label_2, "Aplha: " + QString::number(pixel_color.alpha()) );
-            }
-            // !!!!! END
+        possible_items.append(item);
+
+        // !!!!! DEBUG: Shows red, green, blue and alpha of pixel under mouse
+        if (Dr::CheckDebugFlag(Debug_Flags::Label_Top_Item_RGBA)) {
+            QColor pixel_color = dynamic_cast<DrItem*>(item)->getColorAtPoint(check_point, this);
+            Dr::SetLabelText(Label_Names::Label_1, "R: " + QString::number(pixel_color.red()) +
+                                                   "G: " + QString::number(pixel_color.green()) +
+                                                   "B: " + QString::number(pixel_color.blue()) );
+            Dr::SetLabelText(Label_Names::Label_2, "Aplha: " + QString::number(pixel_color.alpha()) );
         }
+        // !!!!! END
+    }
 
     // If no items at position, exit
     if (possible_items.count() == 0) return nullptr;
@@ -249,7 +198,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
     // ******************** Check selection handles to see if mouse is over one
     if (m_over_handle == Position_Flags::Move_Item) m_over_handle = Position_Flags::No_Position;
 
-    if (my_scene->getSelectionGroupCount() > 0 && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
+    if (my_scene->getSelectionCount() > 0 && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
         m_over_handle = Position_Flags::No_Position;
         if (m_handles[Position_Flags::Top].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill))    m_over_handle = Position_Flags::Top;
         if (m_handles[Position_Flags::Bottom].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Bottom;
@@ -264,7 +213,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
 
         if (m_handles[Position_Flags::Rotate].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Rotate;
 
-        if (m_over_handle == Position_Flags::No_Position && my_scene->getSelectionGroupItems().contains(check_item))
+        if (m_over_handle == Position_Flags::No_Position && my_scene->getSelectionItems().contains(check_item))
             if (m_flag_key_down_alt == false)
                 m_over_handle = Position_Flags::Move_Item;
 
@@ -344,9 +293,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
         m_relay->setLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle));
         m_relay->setLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()) + QString("\t") +
                                                              "Name: " + item->data(User_Roles::Name).toString() );
-        m_relay->setLabelText(Label_Names::Label_Object_3,
-                        "Group Scale X: " + QString::number(my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Scale).toPointF().x()) +
-                                  ", Y: " + QString::number(my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Scale).toPointF().y()) );
+
     } else if (Dr::CheckDebugFlag(Debug_Flags::Label_Selected_Item_Data)) {
         if (m_view_mode == View_Mode::None && check_item == nullptr) {
             m_relay->setLabelText(Label_Names::Label_Position, "Null");
@@ -388,6 +335,9 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
         if (m_allow_movement) {
             // Pass on event to allow movement
             QGraphicsView::mouseMoveEvent(event);
+
+            my_scene->updateSelectionBox();
+
             if (m_tool_tip->getTipType() != View_Mode::Translating)
                 m_tool_tip->startToolTip(View_Mode::Translating, m_origin, mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
             else {
@@ -416,42 +366,10 @@ void DrView::mouseReleaseEvent(QMouseEvent *event)
 {
     // Test for scene, convert to our custom class
     if (scene() == nullptr) return;
-    DrScene          *my_scene = dynamic_cast<DrScene*>(scene());
-    QList<DrObject*>  empty{ };
 
     // Process left mouse button released
     if (event->button() & Qt::LeftButton)
     {
-        // We were in item moving mode, emit undo command signal with new item location
-        if (m_view_mode == View_Mode::Translating && scene() != nullptr) {
-            SelectionGroup *group = my_scene->getSelectionGroup();
-            QPointF check_pos = group->sceneTransform().map(group->boundingRect().center());
-            if (group->childItems().count() > 0 && m_old_pos != check_pos) {
-                emit selectionGroupMoved(my_scene, m_old_pos);
-            }
-        }
-
-        // We were in rubber band selection mode, if selection has changed emit undo command signal
-        if (m_view_mode == View_Mode::Selecting && scene() != nullptr) {
-            SelectionGroup *group = my_scene->getSelectionGroup();
-
-            // If we had items selected and now we don't, emit undo clear selection command
-            if (group->childItems().count() == 0 && m_items_start.count() != 0) {
-                emit selectionGroupNewGroup(my_scene, my_scene->convertListItemsToObjects(m_items_start), empty, m_first_start, nullptr);
-
-            // Otherwise check to see if selected items list has changed, if so emit new group command
-            } else if (group->childItems() != m_items_start) {
-                if (group->childItems().count() == 1) {
-                    DrObject *new_first = dynamic_cast<DrItem*>(group->childItems().first())->getObject();
-                    emit selectionGroupNewGroup(my_scene, my_scene->convertListItemsToObjects(m_items_start),
-                                                my_scene->convertListItemsToObjects(group->childItems()), m_first_start, new_first);
-                }
-                else if ( group->childItems().count() > 1)
-                    emit selectionGroupNewGroup(my_scene, my_scene->convertListItemsToObjects(m_items_start),
-                                                my_scene->convertListItemsToObjects(group->childItems()), m_first_start, my_scene->getFirstSelectedItem());
-            }
-        }
-
         m_rubber_band->hide();
         m_tool_tip->stopToolTip();
         m_view_mode = View_Mode::None;
@@ -462,19 +380,6 @@ void DrView::mouseReleaseEvent(QMouseEvent *event)
     update();
 }
 
-
-// Called right before scene switch to empty selection group
-void DrView::emptySelectionGroupIfNotEmpty()
-{
-    if (!scene()) return;
-    DrScene          *my_scene = dynamic_cast<DrScene*>(scene());
-    SelectionGroup   *group = my_scene->getSelectionGroup();
-    QList<DrObject*>  empty{ };
-
-    if (group->childItems().count() != 0)
-        emit selectionGroupNewGroup(my_scene, my_scene->convertListItemsToObjects(group->childItems()), empty,
-                                    my_scene->getFirstSelectedItem(), nullptr);
-}
 
 
 //####################################################################################

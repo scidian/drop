@@ -31,8 +31,7 @@ DrScene::DrScene(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
                  m_relay(relay)
 {
     connect(this, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
-
-    createSelectionGroup();
+    connect(this, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
 
     m_undo = new QUndoStack(this);
 
@@ -52,15 +51,6 @@ DrScene::~DrScene()
 
 }
 
-void DrScene::createSelectionGroup()
-{
-    m_selection_group = new SelectionGroup(this);
-    m_selection_group->setFlags(QGraphicsItem::ItemIsSelectable |               QGraphicsItem::ItemIsMovable |
-                                QGraphicsItem::ItemSendsScenePositionChanges |  QGraphicsItem::ItemSendsGeometryChanges);
-    addItem(m_selection_group);
-    emptySelectionGroup();
-    m_selection_group->setData(User_Roles::Name, "Captain");
-}
 
 
 //####################################################################################
@@ -85,13 +75,13 @@ void DrScene::keyPressEvent(QKeyEvent *event)
     // Amount to move items when arrow keys are pressed
     qreal move_by = 5;
 
-    if (this->selectedItems().count() < 1) {
+    if (getSelectionCount() < 1) {
         QGraphicsScene::keyPressEvent(event);
         return;
     }
 
     // Find total bounding box of all selected items
-    QRectF source_rect = totalSelectedItemsSceneRect();
+    QRectF source_rect = totalSelectionSceneRect();
 
     // Process movement key press
     switch (event->key())
@@ -110,7 +100,7 @@ void DrScene::keyPressEvent(QKeyEvent *event)
     QList<QGraphicsItem*>  list_new_items;
     list_new_items.clear();
 
-    for (auto item : my_scene->getSelectionGroupItems()) {
+    for (auto item : my_scene->getSelectionItems()) {
     //!!    DrItem *new_item;
         QColor new_color;
         qreal new_x, new_y;
@@ -123,7 +113,7 @@ void DrScene::keyPressEvent(QKeyEvent *event)
         case Qt::Key::Key_S:
         case Qt::Key::Key_D:
             // Send item back to scene before we copy it
-            my_scene->getSelectionGroup()->removeFromGroup(item);
+            //my_scene->getSelectionGroup()->removeFromGroup(item);
 
             new_color = QColor::fromRgb(QRandomGenerator::global()->generate()).light(100);
             new_x = item->scenePos().x();
@@ -149,16 +139,16 @@ void DrScene::keyPressEvent(QKeyEvent *event)
         // Delete selected items
         case Qt::Key::Key_Delete:
         case Qt::Key::Key_Backspace:
-            emptySelectionGroup(true);
+            //emptySelectionGroup(true);
             break;
         }
     }
 
     // If we added (copied) new items to scene, select those items
-    if (list_new_items.count() > 0) {
-        emptySelectionGroup();
-        for (auto item : list_new_items) addItemToSelectionGroup(item);
-    }
+//    if (list_new_items.count() > 0) {
+//        emptySelectionGroup();
+//        for (auto item : list_new_items) addItemToSelectionGroup(item);
+//    }
 
     scene_mutex.unlock();
 

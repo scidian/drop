@@ -19,12 +19,13 @@
 #include "editor_view.h"
 #include "editor_scene.h"
 #include "interface_relay.h"
+#include "library.h"
 
 
 //####################################################################################
 //##        Constructor & destructor
 //####################################################################################
-DrView::DrView(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
+DrView::DrView(QWidget *parent, DrProject *project, DrScene *my_scene, InterfaceRelay *relay) :
                QGraphicsView(parent = nullptr), m_project(project), m_relay(relay)
 {
     // Initialize rubber band object used as a selection box
@@ -38,10 +39,40 @@ DrView::DrView(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
 
     if (Dr::CheckDebugFlag(Debug_Flags::Label_FPS))
         m_debug_timer.start();
+
+
+
+    // ********** Connect signals to scene
+    connect(my_scene, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
+    connect(my_scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
+
+    connect(my_scene, &DrScene::updateViews, this, [this]() { update(); });
+
+    connect(this,   SIGNAL(selectionGroupMoved(DrScene*, QPointF)),
+            my_scene, SLOT(selectionGroupMoved(DrScene*, QPointF)));
+
+    connect(this,   SIGNAL(selectionGroupNewGroup(DrScene*, QList<DrObject*>, QList<DrObject*>)),
+            my_scene, SLOT(selectionGroupNewGroup(DrScene*, QList<DrObject*>, QList<DrObject*>)) );
+
 }
+
 
 DrView::~DrView()
 {
+    // ********** Disconnect signals from scene
+    DrScene *my_scene = dynamic_cast<DrScene*>(scene());
+
+    disconnect(my_scene, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
+    disconnect(my_scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
+
+    disconnect(my_scene, &DrScene::updateViews, this, nullptr);
+
+    disconnect(this,   SIGNAL(selectionGroupMoved(DrScene*, QPointF)),
+               my_scene, SLOT(selectionGroupMoved(DrScene*, QPointF)));
+
+    disconnect(this,   SIGNAL(selectionGroupNewGroup(DrScene*, QList<DrObject*>, QList<DrObject*>)),
+               my_scene, SLOT(selectionGroupNewGroup(DrScene*, QList<DrObject*>, QList<DrObject*>)) );
+
     delete m_tool_tip;
 }
 
@@ -133,9 +164,10 @@ void DrView::updateSelectionBoundingBox()
     // Test for scene, convert to our custom class and lock the scene
     if (scene() == nullptr) return;
 
-    DrScene         *my_scene = dynamic_cast<DrScene *>(scene());
-    QGraphicsItem   *item = my_scene->getSelectionGroupAsGraphicsItem();
-    if (my_scene->getSelectionGroupCount() < 1) return;
+    DrScene         *my_scene =  dynamic_cast<DrScene*>(scene());
+    QRectF           rect =      my_scene->getSelectionBox();
+    QTransform       transform = my_scene->getSelectionTransform();
+    if (my_scene->selectedItems().count() < 1) return;
     if (my_scene->scene_mutex.tryLock(0) == false) return;
 
 
@@ -147,17 +179,16 @@ void DrView::updateSelectionBoundingBox()
     double corner_size = 14;
 
     // Check if bounding box handles should be squares or circles
-    double angle = item->data(User_Roles::Rotation).toDouble();
+    double angle = my_scene->getSelectionAngle();
     if (isSquare(angle) == false)  m_handles_shape = Handle_Shapes::Circles;
     else                           m_handles_shape = Handle_Shapes::Squares;
 
     // ***** Store corner handle polygons
-    QTransform transform = item->sceneTransform();                          // Get item bounding box to scene transform
-    QPointF top_left =  transform.map(item->boundingRect().topLeft());
-    QPointF top_right = transform.map(item->boundingRect().topRight());
-    QPointF bot_left =  transform.map(item->boundingRect().bottomLeft());
-    QPointF bot_right = transform.map(item->boundingRect().bottomRight());
-    QPointF center =    transform.map(item->boundingRect().center());
+    QPointF top_left =  transform.map(rect.topLeft());
+    QPointF top_right = transform.map(rect.topRight());
+    QPointF bot_left =  transform.map(rect.bottomLeft());
+    QPointF bot_right = transform.map(rect.bottomRight());
+    QPointF center =    transform.map(rect.center());
     QTransform remove_rotation = QTransform().translate(center.x(), center.y()).rotate(-angle).translate(-center.x(), -center.y());
 
     // ***** Store view coodinate rectangles of corners for size grip handles
@@ -206,7 +237,7 @@ void DrView::updateSelectionBoundingBox()
     m_handles_angles[Position_Flags::Top_Left] =     calculateCornerAngle(m_handles_angles[Position_Flags::Top], m_handles_angles[Position_Flags::Left]);
 
     // ***** Add handle for rotating
-    QPointF scale = item->data(User_Roles::Scale).toPointF();
+    QPointF scale = my_scene->getSelectionScale();
     QPoint  top = m_handles_centers[Position_Flags::Top].toPoint();
     QPoint  zero = top;
 

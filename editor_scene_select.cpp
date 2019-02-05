@@ -21,137 +21,100 @@
 #include "interface_relay.h"
 
 
+
+
+//####################################################################################
+//##        SLOT: selectionChanged
+//####################################################################################
+//  QList<QGraphicsItem*>   m_selection_items;          // List of selected items
+//  double                  m_selection_angle;          // Angle current selection has been rotated to
+//  QPointF                 m_selection_scale;          // Scaling applied to current selection
+//  QPointF                 m_selection_translate;      // Translation applied to current selection
+//  QRectF                  m_selection_box;            // Starting outline of selected items
+//
+void DrScene::selectionChanged()
+{
+    m_selection_items = selectedItems();
+
+    m_selection_angle = 0;
+    m_selection_scale = QPointF(1, 1);
+
+    m_selection_box = totalSelectionSceneRect();
+}
+
+
+
 //####################################################################################
 //##        Returns a scene rect containing all the selected items
 //####################################################################################
-QRectF DrScene::totalSelectedItemsSceneRect()
+QRectF DrScene::totalSelectionSceneRect()
 {
     // If no items selected, return empty rect
-    if (selectedItems().count() < 1) return QRectF();
+    QRectF total_rect;
+    if (selectedItems().count() < 1) return total_rect;
 
-    // Return scene rect of m_selection_group which holds all the scenes selected items
-    return m_selection_group->sceneBoundingRect();
+    // Start with rect of first item, add on each additional items rect
+    total_rect = selectedItems().first()->sceneBoundingRect();
+    for (auto item: selectedItems())
+        total_rect = total_rect.united(item->sceneBoundingRect());
+
+    return total_rect;
+}
+
+//####################################################################################
+//##        Returns a transform representing the total changes that have been
+//##        applied since selection group creation
+//####################################################################################
+QTransform DrScene::getSelectionTransform()
+{
+    QPointF center = m_selection_box.center();
+    QTransform t =   QTransform()
+            .translate(center.x(), center.y())
+            .rotate(m_selection_angle)
+            .scale(m_selection_scale.x(), m_selection_scale.y())
+            .translate(-center.x(), -center.y());
+    return t;
+}
+
+void DrScene::updateSelectionBox()
+{
+    // Recreate selection bounding box based on new item locations
+    QGraphicsItemGroup *group = new QGraphicsItemGroup();
+    this->addItem(group);
+
+    double  angle = getSelectionAngle();
+    QPointF scale = getSelectionScale();
+
+    QPointF center = group->boundingRect().center();
+    QTransform t = QTransform().translate(center.x(), center.y()).rotate(angle).translate(-center.x(), -center.y());
+    group->setTransform(t);
+    for (auto item : this->getSelectionItems()) group->addToGroup(item);
+
+    QPointF top_left =   group->sceneTransform().map( group->boundingRect().topLeft() );
+    QPointF bot_right =  group->sceneTransform().map( group->boundingRect().bottomRight() );
+    QPointF map_center = group->sceneTransform().map( group->boundingRect().center() );
+
+    t = QTransform()
+            .translate(map_center.x(), map_center.y())
+            .scale(1 / scale.x(), 1 / scale.y())
+            .rotate(-angle)
+            .translate(-map_center.x(), -map_center.y());
+
+    top_left =  t.map(top_left);
+    bot_right = t.map(bot_right);
+    QRectF new_box = QRectF(top_left, bot_right);
+    this->setSelectionBox( new_box );
+
+    this->destroyItemGroup(group);
 }
 
 
 //####################################################################################
-//##        Selection Group Handling
+//##        Keeps track of which items are selected as DrObjects in the data model
 //####################################################################################
-void DrScene::addItemToSelectionGroup(QGraphicsItem *item)
-{
-    int start_count = m_selection_group->childItems().count();
-
-    // Check if we were passed the selection group itself
-    if (m_selection_group != nullptr)
-        if (item == dynamic_cast<QGraphicsItem*>(m_selection_group))
-            return;
-
-    // If item is not in group, add it in
-    if (m_selection_group->childItems().contains(item) == false) {
-
-        // If this is the first item, set all properties to first item, if second item, reset scale to 1, 1
-        if ((start_count == 0 || start_count == 1) && m_first_selected != nullptr) {
-            QGraphicsItem *first = nullptr;
-            QPointF scale = QPointF(1, 1);
-
-            if (start_count == 0) {
-                scale = m_first_selected->getDrItem()->data(User_Roles::Scale).toPointF();
-            } else {
-                first = m_selection_group->childItems().first();
-                m_selection_group->removeFromGroup(first);
-            }
-
-            double  angle = m_first_selected->getDrItem()->data(User_Roles::Rotation).toDouble();
-            QPointF center = m_selection_group->boundingRect().center();
-            QTransform t = QTransform().translate(center.x(), center.y()).rotate(angle).scale(scale.x(), scale.y()).translate(-center.x(), -center.y());
-            m_selection_group->setTransform(t);
-            m_selection_group->setData(User_Roles::Rotation, angle);
-            m_selection_group->setData(User_Roles::Scale, scale);
-            m_selection_group->setZValue(m_first_selected->getDrItem()->zValue());
-
-            if (start_count == 1) m_selection_group->addToGroup(first);
-        }
-
-        if (item->zValue() > m_selection_group->zValue())
-            m_selection_group->setZValue(item->zValue());
-
-        m_selection_group->addToGroup(item);
-        m_selection_group->setEnabled(true);
-        m_selection_group->setSelected(true);
-    }
-}
-
-// Empties selection group, delete_items_during_empty used for item copying with DrScene keyPressEvent
-void DrScene::emptySelectionGroup(bool delete_items_during_empty)
-{
-    m_first_selected = nullptr;
-
-    // Remove all items from selection group
-    for (auto child : m_selection_group->childItems()) {
-        m_selection_group->removeFromGroup(child);
-        if (delete_items_during_empty) removeItem(child);
-    }
-    resetSelectionGroup();
-}
-
-// Reset transform and reset user data
-void DrScene::resetSelectionGroup()
-{
-    for (auto item: selectedItems()) item->setSelected(false);
-    m_selection_group->setTransform(QTransform());
-    m_selection_group->setData(User_Roles::Scale, QPointF(1, 1));
-    m_selection_group->setData(User_Roles::Rotation, 0);
-    m_selection_group->setEnabled(false);
-}
-
-
-QGraphicsItem* DrScene::getItemAtPosition(QPointF position)
-{
-    QGraphicsItem *item = nullptr;
-    bool found_one = false;
-    double zorder = 0;
-
-    // Go through items in selection group and get top most item contaning 'position'
-    for (auto child : m_selection_group->childItems()) {
-        if (child->contains(position)) {
-            if ((found_one == false) || (child->zValue() > zorder)) {
-                item = child;
-                zorder = item->zValue();
-                found_one = true;
-            }
-        }
-    }
-    return item;
-}
-
-void DrScene::updateChildrenPositionData()
-{
-    QList<QGraphicsItem*>  my_items = this->getSelectionGroupItems();
-    for (auto child : my_items) {
-        QPointF center = child->sceneTransform().map( child->boundingRect().center() );
-        dynamic_cast<DrItem*>(child)->updateProperty(User_Roles::Position, center);
-    }
-}
-
-SelectionGroup* DrScene::getSelectionGroup()
-{       return m_selection_group; }
-
-QList<QGraphicsItem*> DrScene::getSelectionGroupItems()
-{       return m_selection_group->childItems();     }
-
-QGraphicsItem* DrScene::getSelectionGroupAsGraphicsItem()
-{       return m_selection_group; }
-
-int DrScene::getSelectionGroupCount()
-{       return m_selection_group->childItems().count();     }
-
-void DrScene::selectSelectionGroup()
-{       m_selection_group->setSelected(true);       }
-
-
 // Returns list of objects represented from selected items
 QList<DrObject*> DrScene::getSelectionGroupObjects() {
-    return convertListItemsToObjects(m_selection_group->childItems());
+    return convertListItemsToObjects(m_selection_items);
 }
 
 // Returns list of objects represented from item list
@@ -167,72 +130,18 @@ QList<DrObject*> DrScene::convertListItemsToObjects(QList<QGraphicsItem*> graphi
 
 
 //####################################################################################
-//##        SelectionGroup Handling
+//##        Calls updateProperty which forces an update of the object inspector
 //####################################################################################
-SelectionGroup::~SelectionGroup() {}        // Necessary external definition
-
-// Calling this custom paint allows us to bypass built in custom black bounding box of QGraphicsItemGroup
-void SelectionGroup::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void DrScene::updateChildrenPositionData()
 {
-    Q_UNUSED(painter);
-    Q_UNUSED(option);
-    Q_UNUSED(widget);
-
-    ///QGraphicsItemGroup::paint(painter, option, widget);       // Allows black selection bounding box to be painted
+    for (auto item : selectedItems()) {
+        QPointF center = item->sceneTransform().map( item->boundingRect().center() );
+        dynamic_cast<DrItem*>(item)->updateProperty(User_Roles::Position, center);
+    }
 }
 
 
-//####################################################################################
-//##        Custom slimmed from Qt Source Code, "QGraphicsItemGroup->removeFromGroup"
-void DrScene::removeFromGroupNoUpdate(QGraphicsItem *item)
-{
-    if (!item) return;
 
-    QTransform itemTransform = item->sceneTransform();
-    QPointF oldPos = item->mapToScene(0, 0);
-    item->setParentItem(nullptr);
-    item->setPos(oldPos);
-    if (!item->pos().isNull()) itemTransform *= QTransform::fromTranslate(-item->x(), -item->y());
-
-    QPointF origin = item->transformOriginPoint();
-    QMatrix4x4 m;
-    QList<QGraphicsTransform*> transformList = item->transformations();
-    for (int i = 0; i < transformList.size(); ++i)
-        transformList.at(i)->applyTo(&m);
-    itemTransform *= m.toTransform().inverted();
-    itemTransform.translate(origin.x(), origin.y());
-    itemTransform.rotate(-item->rotation());
-    itemTransform.scale(1 / item->scale(), 1 / item->scale());
-    itemTransform.translate(-origin.x(), -origin.y());
-    item->setTransform(itemTransform);
-}
-
-//####################################################################################
-//##        Custom slimmmed from Qt Source Code, "QGraphicsItemGroup->addToGroup"
-void DrScene::addToGroupNoUpdate(QGraphicsItem *item)
-{
-    QGraphicsItemGroup *group = m_selection_group;
-    if (!item || item == group) return;
-
-    bool ok;
-    QTransform itemTransform = item->itemTransform(group, &ok);
-    QTransform newItemTransform(itemTransform);
-    item->setPos(group->mapFromItem(item, 0, 0));
-    item->setParentItem(group);
-    if (!item->pos().isNull()) newItemTransform *= QTransform::fromTranslate(-item->x(), -item->y());
-
-    QPointF origin = item->transformOriginPoint();
-    QMatrix4x4 m;
-    QList<QGraphicsTransform*> transformList = item->transformations();
-    for (int i = 0; i < transformList.size(); ++i)
-        transformList.at(i)->applyTo(&m);
-    newItemTransform *= m.toTransform().inverted();
-    newItemTransform.translate(origin.x(), origin.y());
-    newItemTransform.rotate(-item->rotation());
-    newItemTransform.scale(1/item->scale(), 1/item->scale());
-    newItemTransform.translate(-origin.x(), -origin.y());
-    item->setTransform(newItemTransform);
-}
 
 
 

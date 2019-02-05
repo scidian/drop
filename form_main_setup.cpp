@@ -42,9 +42,14 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
         centerViewOn(QPointF(0, 0));
         break;
     case Form_Main_Mode::Clear:  
+
+        disconnectSignals();
+        for (auto item : scene->selectedItems())
+            item->setSelected(false);
+
         this->takeCentralWidget()->deleteLater();
         for (auto dock : findChildren<QDockWidget *>()) { dock->deleteLater(); }
-        delete scene;
+
         break;
     default:
         Dr::ShowMessageBox("Not set");
@@ -81,10 +86,6 @@ void FormMain::buildWindowModeEditStage()
     QSizePolicy sizePolicyView(QSizePolicy::MinimumExpanding, QSizePolicy::Expanding);
     sizePolicyView.setHorizontalStretch(1);
     sizePolicyView.setVerticalStretch(0);
-
-
-    // ***** Initialize DrScene QGraphicsScene object
-    scene = new DrScene(this, project, this);
 
 
     // ***** Build central widgets
@@ -158,7 +159,7 @@ void FormMain::buildWindowModeEditStage()
                         verticalLayoutView->setContentsMargins(0, 0, 0, 0);
 
                         // ***** Load our DrView to display our DrScene collection of items
-                        viewMain = new DrView(widgetStageView, project, this);
+                        viewMain = new DrView(widgetStageView, project, scene, this);
                         viewMain->setObjectName(QStringLiteral("viewMain"));
 
                         if (!Dr::CheckDebugFlag(Debug_Flags::Turn_Off_Antialiasing))
@@ -169,9 +170,10 @@ void FormMain::buildWindowModeEditStage()
                         viewMain->setDragMode(QGraphicsView::DragMode::NoDrag);
                         viewMain->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);
                         viewMain->setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
-                        // This setting means we will decide when to call update(), controls recurssive paint events
-                        viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
-                        ///viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
+
+                        /// This setting means we will decide when to call update(), controls recurssive paint events
+                        ///viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
+                        viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
                         viewMain->setFrameShape(QFrame::NoFrame);
                         viewMain->setScene(scene);
 
@@ -449,15 +451,8 @@ void FormMain::buildWindowModeEditStage()
     resizeDocks({assets, inspector}, {180, 300}, Qt::Horizontal);                       // Forces resize of docks
 
 
-
-    // ******************** Signals emitted by FormMain
-    // Fires signal that is picked up by Advisor to change the help info
-    connect(this, SIGNAL(sendAdvisorInfo(QString, QString)), treeAdvisor, SLOT(changeAdvisor(QString, QString)) , Qt::QueuedConnection);
-
-    // Connects signal used to populate scene
-    connect(this, SIGNAL(newStageSelected(DrProject*, DrScene*, long, long)),
-            scene,  SLOT(newStageSelected(DrProject*, DrScene*, long, long)) );
-
+    // ***** Signals emitted by FormMain
+    connectSignals();
 
 
     // ***** Apply shadow effects to buttons
@@ -483,6 +478,37 @@ void FormMain::buildWindowModeEditStage()
     buttonWorlds->setText(QApplication::translate("MainWindow", "Worlds / UI", nullptr));
 
 }
+
+
+
+//####################################################################################
+//##        Connect / disconnect signals emitted by FormMain
+//####################################################################################
+void FormMain::connectSignals()
+{
+    connect(this, SIGNAL(sendAdvisorInfo(QString, QString)), treeAdvisor, SLOT(changeAdvisor(QString, QString)) , Qt::QueuedConnection);
+
+    // Connects signal used to populate scene
+    connect(this, SIGNAL(newStageSelected(DrProject*, DrScene*, long, long)),
+            scene,  SLOT(newStageSelected(DrProject*, DrScene*, long, long)) );
+}
+
+// Disconnect signals emitted by FormMain
+void FormMain::disconnectSignals()
+{
+    disconnect(this, SIGNAL(sendAdvisorInfo(QString, QString)), treeAdvisor, SLOT(changeAdvisor(QString, QString)) );
+
+    // Connects signal used to populate scene
+    disconnect(this, SIGNAL(newStageSelected(DrProject*, DrScene*, long, long)),
+               scene,  SLOT(newStageSelected(DrProject*, DrScene*, long, long)) );
+}
+
+
+
+
+
+
+
 
 
 

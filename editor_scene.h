@@ -15,7 +15,6 @@
 class DrProject;
 class DrStage;
 class InterfaceRelay;
-class SelectionGroup;
 
 
 //####################################################################################
@@ -28,24 +27,18 @@ class DrScene : public QGraphicsScene
 
 private:
     // Local member variables
-    DrProject          *m_project;                  // Pointer to currently loaded project
-    InterfaceRelay     *m_relay;                    // Pointer to InterfaceRelay class of parent form
+    DrProject          *m_project;                      // Pointer to currently loaded project
+    InterfaceRelay     *m_relay;                        // Pointer to InterfaceRelay class of parent form
 
-    DrStage            *m_current_stage = nullptr;  // Holds a pointer to the current DrStage being shown
-    long                m_current_stage_key = -1;   // Holds the project key of the currently shown DrStage, starts at -1, i.e. "none"
+    DrStage            *m_current_stage = nullptr;      // Holds a pointer to the current DrStage being shown
+    long                m_current_stage_key = -1;       // Holds the project key of the currently shown DrStage, starts at -1, i.e. "none"
 
     // Selection variables
-    SelectionGroup     *m_selection_group;          // Holds the group of items currently selected
-    DrObject           *m_first_selected = nullptr; // Keeps track of first item selected to use its properties for the group selection
-
-
-
     // !!!!! ***** !!!!! Re working how selection works, getting rid of selection group, back to selectedItems()
-    QList<DrItem*>      m_selection_items;
-    double              m_selection_angle;
-    QPointF             m_selection_scale;
-    QPointF             m_selection_position;
-
+    QList<QGraphicsItem*>   m_selection_items;          // List of selected items
+    double                  m_selection_angle;          // Angle current selection has been rotated to
+    QPointF                 m_selection_scale;          // Scaling applied to current selection
+    QRectF                  m_selection_box;            // Starting outline of selected items
 
     QUndoStack         *m_undo;
 
@@ -66,7 +59,6 @@ public:
     // Scene Functions
     void            setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y);
     void            setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y);
-    QRectF          totalSelectedItemsSceneRect();
 
     // Other Widget Update Calls
     InterfaceRelay* getRelay() { return m_relay; }
@@ -80,47 +72,43 @@ public:
     QString         getCurrentUndo() { return m_undo->undoText(); }
     QString         getCurrentRedo() { return m_undo->redoText(); }
 
-    // Selection Functions
-    void            addItemToSelectionGroup(QGraphicsItem *item);
-    void            createSelectionGroup();
-    void            emptySelectionGroup(bool delete_items_during_empty = false);
-    QGraphicsItem*  getItemAtPosition(QPointF position);
-    void            resetSelectionGroup();
-    void            selectSelectionGroup();
-    void            updateChildrenPositionData();
-
-    // Custom Add / Remove from Selection Group without calling update()
-    void            addToGroupNoUpdate(QGraphicsItem *item);
-    void            removeFromGroupNoUpdate(QGraphicsItem *item);
-
     // Getters and Setters
-    DrStage*              getCurrentStageShown() { return m_current_stage; }
-    void                  setCurrentStageShown(DrStage *stage) { m_current_stage = stage; }
-    long                  getCurrentStageKeyShown() { return m_current_stage_key; }
-    void                  setCurrentStageKeyShown(long stage_key) { m_current_stage_key = stage_key; }
+    DrStage*        getCurrentStageShown() { return m_current_stage; }
+    void            setCurrentStageShown(DrStage *stage) { m_current_stage = stage; }
+    long            getCurrentStageKeyShown() { return m_current_stage_key; }
+    void            setCurrentStageKeyShown(long stage_key) { m_current_stage_key = stage_key; }
 
-    SelectionGroup*       getSelectionGroup();
-    QGraphicsItem*        getSelectionGroupAsGraphicsItem();
-    QList<QGraphicsItem*> getSelectionGroupItems();
-    int                   getSelectionGroupCount();
 
-    QList<DrObject*>      convertListItemsToObjects(QList<QGraphicsItem*> graphics_items);
-    QList<DrObject*>      getSelectionGroupObjects();
+    // Selection Functions
+    long                    getSelectionCount()         { return m_selection_items.count(); }
+    QTransform              getSelectionTransform();
 
-    DrObject*             getFirstSelectedItem() { return m_first_selected; }
-    void                  setFirstSelectedItem(DrObject *object) { m_first_selected = object; }
+    QList<QGraphicsItem*>   getSelectionItems()         { return m_selection_items; }
+    double                  getSelectionAngle()         { return m_selection_angle; }
+    QPointF                 getSelectionScale()         { return m_selection_scale; }
+    QRectF                  getSelectionBox()           { return m_selection_box; }
+
+    void                    setSelectionItems(QList<QGraphicsItem*> list)    { m_selection_items = list; }
+    void                    setSelectionAngle(double angle)                  { m_selection_angle = angle; }
+    void                    setSelectionScale(QPointF scale)                 { m_selection_scale = scale; }
+    void                    setSelectionBox(QRectF box)                      { m_selection_box = box; }
+
+    QRectF                  totalSelectionSceneRect();
+    void                    updateSelectionBox();
+
+    void                    updateChildrenPositionData();
+    QList<DrObject*>        convertListItemsToObjects(QList<QGraphicsItem*> graphics_items);
+    QList<DrObject*>        getSelectionGroupObjects();
+
 
 public slots:
     void            sceneChanged(QList<QRectF> region);                             // Used to resize scene area to fit contents
+    void            selectionChanged();
 
     // Undo Commands
     void            newStageSelected(DrProject *project, DrScene *scene, long old_stage, long new_stage);
     void            selectionGroupMoved(DrScene *scene, const QPointF &old_position);
-    void            selectionGroupNewGroup(DrScene *scene,
-                                           QList<DrObject*> old_list,
-                                           QList<DrObject*> new_list,
-                                           DrObject *old_first,
-                                           DrObject *new_first);
+    void            selectionGroupNewGroup(DrScene *scene, QList<DrObject*> old_list, QList<DrObject*> new_list);
 
 signals:
     void            updateViews();                                                  // Connected to update() method of attached Views
@@ -128,27 +116,6 @@ signals:
 };
 
 
-
-//####################################################################################
-//##    SelectionGroup
-//##        A sub classed QGraphicsItemGroup that can hold selected items in a scene
-//############################
-class SelectionGroup : public QGraphicsItemGroup
-{
-private:
-    DrScene  *m_parent_scene;
-
-public:
-    // Constructor / destructor
-    SelectionGroup(DrScene *parent_scene) : m_parent_scene(parent_scene) {}
-    virtual ~SelectionGroup() override;
-
-    // Event Overrides
-    virtual void        paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
-
-    // Getters / Setters
-    DrScene*            getParentScene() { return m_parent_scene; }
-};
 
 
 

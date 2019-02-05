@@ -117,6 +117,8 @@ private:
     void        buildWindow(Form_Main_Mode new_layout);
     void        buildWindowModeEditStage();
     void        changePalette(Color_Scheme new_color_scheme);
+    void        connectSignals();
+    void        disconnectSignals();
 
     // Menu Bar Functions
     void        menuAbout();

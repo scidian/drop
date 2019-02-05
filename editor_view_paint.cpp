@@ -48,31 +48,13 @@ bool DrView::eventFilter(QObject *obj, QEvent *event)
 //####################################################################################
 void DrView::paintEvent(QPaintEvent *event)
 {
-    // ********** Check if scene that view is associated with has changed, if so re-connect signals from new scene
-    if (scene() != m_scene) {
-        if (scene() != nullptr) {
-            m_scene = scene();
-            DrScene *my_scene = dynamic_cast<DrScene*>(scene());
 
-            connect(scene(), SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
-            connect(scene(), SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
-
-            connect(my_scene, &DrScene::updateViews, [this]() { update(); });
-
-            connect(this,   SIGNAL(selectionGroupMoved(DrScene*, QPointF)),
-                    my_scene, SLOT(selectionGroupMoved(DrScene*, QPointF)));
-
-            connect(this,     SIGNAL(selectionGroupNewGroup(DrScene*, QList<DrObject*>, QList<DrObject*>, DrObject*, DrObject*)),
-                    my_scene,   SLOT(selectionGroupNewGroup(DrScene*, QList<DrObject*>, QList<DrObject*>, DrObject*, DrObject*)) );
-        }
-    }
-
-
-    // ******************** Go ahead and draw grid first
+    // ******************** Go ahead and draw grid first then pass on event to paint items
     paintGrid();
+    QGraphicsView::paintEvent(event);
 
 
-    // ******************** At this point, if no selected item paint objects and get out of here
+    // ******************** At this point, if no selected items get out of here
     if (scene() == nullptr) return;
     DrScene *my_scene = dynamic_cast<DrScene*>(scene());
 
@@ -81,22 +63,9 @@ void DrView::paintEvent(QPaintEvent *event)
         my_scene->getCurrentStageShown()->setViewCenterPoint( mapToScene( this->viewport()->rect().center() ) );
 
     // If theres no selection we don't need to perform rest of paint routine
-    if (my_scene->getSelectionGroupCount() < 1) {
-        QGraphicsView::paintEvent(event);
-        return;
-    }
+    if (my_scene->getSelectionCount() < 1) return;
 
 
-    // #################### Locking here so we can break apart selection group for layered drawing
-    if (my_scene->scene_mutex.tryLock(10) == false) return;
-
-
-    // ******************** Otherwise, break apart group to draw items in proper z-Order, then put back together
-    QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
-    for (auto item: my_items) my_scene->removeFromGroupNoUpdate(item);
-    QGraphicsView::paintEvent(event);
-    for (auto item: my_items) my_scene->addToGroupNoUpdate(item);
-    ///QApplication::removePostedEvents(nullptr, 0);
 
 
     // ******************** Draw bounding box for each item
@@ -104,15 +73,14 @@ void DrView::paintEvent(QPaintEvent *event)
     paintItemOutlines(painter);
 
 
-    // #################### We aren't messing with anymore scene data after here
-    my_scene->scene_mutex.unlock();
-
 
     // ******************** Draw box around entire seleciton, with Size Grip handles
     paintBoundingBox(painter);
 
+
+
     // ******************** Draw angles if rotating
-    double group_angle = my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Rotation).toDouble();
+    double group_angle = my_scene->getSelectionAngle();
     paintGroupAngle(painter, group_angle);
 
     // ******************** If we have some objects selected and created some handles, draw them
@@ -210,7 +178,7 @@ void DrView::paintGrid()
 void DrView::paintItemOutlines(QPainter &painter)
 {
     DrScene *my_scene = dynamic_cast<DrScene*>(scene());
-    QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
+    QList<QGraphicsItem*>  my_items = my_scene->getSelectionItems();
 
     QBrush pen_brush(Dr::GetColor(Window_Colors::Icon_Light));
     painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
@@ -272,16 +240,13 @@ void DrView::paintItemOutlines(QPainter &painter)
 
     // !!!!! #DEBUG:    Show selection group info
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Selection_Group_Data)) {
-        QGraphicsItem *sgroup = my_scene->getSelectionGroupAsGraphicsItem();
-        m_relay->setLabelText(Label_Names::Label_Object_1, "Group Pos  X: " +   QString::number(sgroup->sceneBoundingRect().x()) +
-                                                                    ", Y: " +   QString::number(sgroup->sceneBoundingRect().y()) );
-        m_relay->setLabelText(Label_Names::Label_Object_2, "Group Size X: " +   QString::number(sgroup->sceneBoundingRect().width()) +
-                                                                    ", Y: " +   QString::number(sgroup->sceneBoundingRect().height()) );
-        m_relay->setLabelText(Label_Names::Label_Object_3, "Group Scale X: " +  QString::number(sgroup->data(User_Roles::Scale).toPointF().x()) +
-                                                                     ", Y: " +  QString::number(sgroup->data(User_Roles::Scale).toPointF().y()) );
-        m_relay->setLabelText(Label_Names::Label_Object_4, "Group Rotation: " + QString::number(sgroup->data(User_Roles::Rotation).toDouble()) );
-        m_relay->setLabelText(Label_Names::Label_Object_5, "Group Z: " +        QString::number(sgroup->zValue()) + QString("\t") +
-                                                           "# Items: " +        QString::number(sgroup->childItems().count()) );
+        m_relay->setLabelText(Label_Names::Label_Object_1, "Group Size X: " +   QString::number(my_scene->getSelectionBox().width()) +
+                                                                    ", Y: " +   QString::number(my_scene->getSelectionBox().height()) );
+        m_relay->setLabelText(Label_Names::Label_Object_2, "Group Scale X: " +  QString::number(my_scene->getSelectionScale().x()) +
+                                                                     ", Y: " +  QString::number(my_scene->getSelectionScale().y()) );
+
+        m_relay->setLabelText(Label_Names::Label_Object_4, "Group Rotation: " + QString::number(my_scene->getSelectionAngle()));
+        m_relay->setLabelText(Label_Names::Label_Object_5, "# Items: " +        QString::number(my_scene->getSelectionCount()));
     }
     // !!!!! END
 
@@ -293,12 +258,13 @@ void DrView::paintItemOutlines(QPainter &painter)
 //####################################################################################
 void DrView::paintBoundingBox(QPainter &painter)
 {
-    QGraphicsItem *item = dynamic_cast<DrScene*>(scene())->getSelectionGroupAsGraphicsItem();
+    DrScene *my_scene = dynamic_cast<DrScene*>(scene());
+
     painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 1));
 
     // ***** Map item bounding box to screen so we can draw it
-    QPolygonF polygon(item->boundingRect());                                // Get bounding box of item as polygon
-    QTransform transform = item->sceneTransform();                          // Get item bounding box to scene transform
+    QPolygonF polygon = my_scene->getSelectionBox();
+    QTransform transform = my_scene->getSelectionTransform();
     polygon = transform.map(polygon);                                       // Map bounding box to scene location
     QPolygon to_view = mapFromScene(polygon);                               // Convert bounding box to view coordinates
 

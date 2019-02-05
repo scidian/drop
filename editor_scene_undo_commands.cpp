@@ -53,10 +53,8 @@ void DrScene::selectionGroupMoved(DrScene *scene, const QPointF &old_position)
 
 void DrScene::selectionGroupNewGroup(DrScene *scene,
                                                 QList<DrObject*> old_list,
-                                                QList<DrObject*> new_list,
-                                                DrObject *old_first,
-                                                DrObject *new_first)
-{   m_undo->push(new SelectionNewGroupCommand(scene, old_list, new_list, old_first, new_first));    }
+                                                QList<DrObject*> new_list)
+{   m_undo->push(new SelectionNewGroupCommand(scene, old_list, new_list));    }
 
 
 
@@ -94,7 +92,6 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
     }
 
     m_scene->clear();
-    m_scene->createSelectionGroup();
     m_scene->setCurrentStageShown(from_stage);
     m_scene->setCurrentStageKeyShown(m_new_stage);
 
@@ -122,34 +119,34 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
 //####################################################################################
 MoveCommand::MoveCommand(DrScene *scene, const QPointF &old_pos, QUndoCommand *parent) : QUndoCommand(parent) {
     m_scene = scene;
-    m_new_pos = m_scene->getSelectionGroup()->sceneTransform().map(m_scene->getSelectionGroup()->boundingRect().center());
+//    m_new_pos = m_scene->getSelectionGroup()->sceneTransform().map(m_scene->getSelectionGroup()->boundingRect().center());
     m_old_pos = old_pos;
 }
 
 void MoveCommand::undo() {
-    m_scene->setPositionByOrigin(m_scene->getSelectionGroup(), Position_Flags::Center, m_old_pos.x(), m_old_pos.y());
-    m_scene->updateChildrenPositionData();
-    m_scene->updateView();
-    QString item_text = "Items";
-    if (m_scene->getSelectionGroup()->childItems().count() == 1)
-        item_text = "Item " + m_scene->getSelectionGroup()->childItems().first()->data(User_Roles::Name).toString();
-    setText(QObject::tr("Undo Move %1 to (%2, %3)")
-            .arg(item_text)
-            .arg(Dr::RemoveTrailingDecimals(m_new_pos.x(), 1))
-            .arg(Dr::RemoveTrailingDecimals(m_new_pos.y(), 1)));
+//    m_scene->setPositionByOrigin(m_scene->getSelectionGroup(), Position_Flags::Center, m_old_pos.x(), m_old_pos.y());
+//    m_scene->updateChildrenPositionData();
+//    m_scene->updateView();
+//    QString item_text = "Items";
+//    if (m_scene->getSelectionGroup()->childItems().count() == 1)
+//        item_text = "Item " + m_scene->getSelectionGroup()->childItems().first()->data(User_Roles::Name).toString();
+//    setText(QObject::tr("Undo Move %1 to (%2, %3)")
+//            .arg(item_text)
+//            .arg(Dr::RemoveTrailingDecimals(m_new_pos.x(), 1))
+//            .arg(Dr::RemoveTrailingDecimals(m_new_pos.y(), 1)));
 }
 
 void MoveCommand::redo() {
-    m_scene->setPositionByOrigin(m_scene->getSelectionGroup(), Position_Flags::Center, m_new_pos.x(), m_new_pos.y());
-    m_scene->updateChildrenPositionData();
-    m_scene->updateView();
-    QString item_text = "Items";
-    if (m_scene->getSelectionGroup()->childItems().count() == 1)
-        item_text = "Item " + m_scene->getSelectionGroup()->childItems().first()->data(User_Roles::Name).toString();
-    setText(QObject::tr("Undo Move %1 to (%2, %3)")
-            .arg(item_text)
-            .arg(Dr::RemoveTrailingDecimals(m_new_pos.x(), 1))
-            .arg(Dr::RemoveTrailingDecimals(m_new_pos.y(), 1)));
+//    m_scene->setPositionByOrigin(m_scene->getSelectionGroup(), Position_Flags::Center, m_new_pos.x(), m_new_pos.y());
+//    m_scene->updateChildrenPositionData();
+//    m_scene->updateView();
+//    QString item_text = "Items";
+//    if (m_scene->getSelectionGroup()->childItems().count() == 1)
+//        item_text = "Item " + m_scene->getSelectionGroup()->childItems().first()->data(User_Roles::Name).toString();
+//    setText(QObject::tr("Undo Move %1 to (%2, %3)")
+//            .arg(item_text)
+//            .arg(Dr::RemoveTrailingDecimals(m_new_pos.x(), 1))
+//            .arg(Dr::RemoveTrailingDecimals(m_new_pos.y(), 1)));
 
 }
 
@@ -160,46 +157,40 @@ void MoveCommand::redo() {
 SelectionNewGroupCommand::SelectionNewGroupCommand(DrScene *scene,
                                                    QList<DrObject*> old_list,
                                                    QList<DrObject*> new_list,
-                                                   DrObject *old_first,
-                                                   DrObject *new_first,
                                                    QUndoCommand *parent) : QUndoCommand(parent) {
     m_scene = scene;
     m_old_list = old_list;
     m_new_list = new_list;
-    m_old_first_selected = old_first;
-    m_new_first_selected = new_first;
 }
 
 void SelectionNewGroupCommand::undo() {
-    m_scene->emptySelectionGroup();
-    m_scene->setFirstSelectedItem(m_old_first_selected);
+//    m_scene->emptySelectionGroup();
 
-    for (auto object : m_old_list) m_scene->addItemToSelectionGroup(object->getDrItem());
+//    for (auto object : m_old_list) m_scene->addItemToSelectionGroup(object->getDrItem());
 
-    m_scene->updateStageTreeSelection();
-    m_scene->updateView();
-    if (m_new_list.count() > 1)
-        setText("Redo Change Selection");
-    else if (m_new_list.count() == 1)
-        setText("Redo New Item Selected: " + m_new_list.first()->getDrItem()->data(User_Roles::Name).toString() );
-    else
-        setText("Redo Select None");
+//    m_scene->updateStageTreeSelection();
+//    m_scene->updateView();
+//    if (m_new_list.count() > 1)
+//        setText("Redo Change Selection");
+//    else if (m_new_list.count() == 1)
+//        setText("Redo New Item Selected: " + m_new_list.first()->getDrItem()->data(User_Roles::Name).toString() );
+//    else
+//        setText("Redo Select None");
 }
 
 void SelectionNewGroupCommand::redo() {
-    m_scene->emptySelectionGroup();
-    m_scene->setFirstSelectedItem(m_new_first_selected);
+//    m_scene->emptySelectionGroup();
 
-    for (auto object : m_new_list) m_scene->addItemToSelectionGroup(object->getDrItem());
+//    for (auto object : m_new_list) m_scene->addItemToSelectionGroup(object->getDrItem());
 
-    m_scene->updateStageTreeSelection();
-    m_scene->updateView();
-    if (m_new_list.count() > 1)
-        setText("Undo Change Selection");
-    else if (m_new_list.count() == 1)
-        setText("Undo New Item Selected: " + m_new_list.first()->getDrItem()->data(User_Roles::Name).toString() );
-    else
-        setText("Undo Select None");
+//    m_scene->updateStageTreeSelection();
+//    m_scene->updateView();
+//    if (m_new_list.count() > 1)
+//        setText("Undo Change Selection");
+//    else if (m_new_list.count() == 1)
+//        setText("Undo New Item Selected: " + m_new_list.first()->getDrItem()->data(User_Roles::Name).toString() );
+//    else
+//        setText("Undo Select None");
 }
 
 

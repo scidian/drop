@@ -29,14 +29,13 @@
 void DrView::startResize(QPoint mouse_in_view)
 {
     DrScene       *my_scene = dynamic_cast<DrScene*>(scene());
-    QGraphicsItem *item = my_scene->getSelectionGroupAsGraphicsItem();
-    m_pre_resize_scale = item->data(User_Roles::Scale).toPointF();
+    m_pre_resize_scale = my_scene->getSelectionScale();
 
     m_start_resize_grip = m_over_handle;                                // Store grip handle we start resize event with
-    m_start_resize_rect = my_scene->totalSelectedItemsSceneRect();      // Store starting scene rect of initial selection bounding box
+    m_start_resize_rect = my_scene->totalSelectionSceneRect();          // Store starting scene rect of initial selection bounding box
 
-    QTransform t = item->sceneTransform();
-    QRectF     r = item->boundingRect();
+    QTransform t = my_scene->getSelectionTransform();
+    QRectF     r = my_scene->getSelectionBox();
     m_pre_resize_corners[Position_Flags::Top_Left] =     t.map( r.topLeft() );
     m_pre_resize_corners[Position_Flags::Top_Right] =    t.map( r.topRight() );
     m_pre_resize_corners[Position_Flags::Bottom_Left] =  t.map( r.bottomLeft() );
@@ -107,9 +106,8 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     DrScene *my_scene = dynamic_cast<DrScene*>(scene());
 
     // Load item starting width and height
-    QGraphicsItem *item = my_scene->getSelectionGroupAsGraphicsItem();
-    qreal item_width =  item->boundingRect().width();
-    qreal item_height = item->boundingRect().height();
+    double item_width =  my_scene->getSelectionBox().width();
+    double item_height = my_scene->getSelectionBox().height();
 
     // ********** Find corners / sides we're working with, calculate new width / height
     QPointF corner_start =    m_handles_centers[static_cast<Position_Flags>(m_over_handle)];
@@ -117,7 +115,7 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
 
     // Find center point, load angle of item, load original scale
     QPointF center_point = QLineF(corner_start, corner_opposite).pointAt(.5);
-    double  angle = item->data(User_Roles::Rotation).toDouble();
+    double  angle = my_scene->getSelectionAngle();
 
     // Create transform to rotate center line back to zero
     QTransform remove_rotation;
@@ -169,12 +167,30 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     }
 
 
-    // ***** Apply new scale
-    QTransform t = QTransform().rotate(angle).scale(scale_x, scale_y);
-    item->setTransform(t);
+    // ********** Create transform for new group, apply it, and destroy temporary item group
+    QPointF old_scale = my_scene->getSelectionScale();
+
+    // Create item group and apply rotation before adding items
+    QGraphicsItemGroup *group = new QGraphicsItemGroup();
+    scene()->addItem(group);
+    QPointF center = group->boundingRect().center();
+    QTransform t = QTransform().translate(center.x(), center.y()).rotate(angle).translate(-center.x(), -center.y());
+    group->setTransform(t);
+    for (auto item : my_scene->getSelectionItems())
+        group->addToGroup(item);
+
+    // Remove old scaling and then apply new scale factor
+    center = group->boundingRect().center();
+    QTransform transform = group->transform()
+            .translate(center.x(), center.y())
+            .scale(1 / old_scale.x(), 1 / old_scale.y())
+            .scale(scale_x, scale_y)
+            .translate(-center.x(), -center.y());
+    group->setTransform(transform);
+
 
     // ***** Translate if needed
-    QPointF new_pos = item->pos();
+    QPointF new_pos = group->pos();
     Position_Flags resize_flag = Position_Flags::Top_Left;
 
     if (m_flag_key_down_control)
@@ -199,22 +215,27 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     else if (m_do_x == X_Axis::None && m_do_y == Y_Axis::Bottom)
         resize_flag = Position_Flags::Top;
 
-    new_pos = m_pre_resize_corners[resize_flag] ;
-    my_scene->setPositionByOrigin(item, resize_flag, new_pos.x(), new_pos.y());
+    new_pos = m_pre_resize_corners[resize_flag];
+    my_scene->setPositionByOrigin(group, resize_flag, new_pos.x(), new_pos.y());
 
 
 
-    // Remove any shearing that may have been caused to all items in selection group
-    QList<QGraphicsItem*> my_items = my_scene->getSelectionGroupItems();
-    for (auto child : my_items) my_scene->getSelectionGroup()->removeFromGroup(child);
+    // ***** Store new scale and destroy item
+    my_scene->setSelectionScale( QPointF(scale_x, scale_y) );
+    scene()->destroyItemGroup(group);
+
+
+    // ***** Remove any shearing that may have been caused to all items in selection group
+    QList<QGraphicsItem*> my_items = my_scene->getSelectionItems();
     for (auto child : my_items) removeShearing(child);
-    for (auto child : my_items) my_scene->getSelectionGroup()->addToGroup(child);
 
-    // Update stored scale User_Role property
-    QPointF group_scale = extractScaleFromItem(item);
-    item->setData(User_Roles::Scale, QPointF(group_scale.x(), group_scale.y()) );
 
-    // Update tool tip
+    // ***** Updates selection box from new item locations / sizes,
+    //       especially important because item locations may have changed during shear remove
+    my_scene->updateSelectionBox();
+
+
+    // ***** Update tool tip
     double group_width =  QLineF( mapToScene(m_handles_centers[Position_Flags::Left].toPoint()),
                                   mapToScene(m_handles_centers[Position_Flags::Right].toPoint()) ).length();
     double group_height = QLineF( mapToScene(m_handles_centers[Position_Flags::Top].toPoint()),
@@ -231,8 +252,13 @@ void DrView::removeShearing(QGraphicsItem *item)
     double  angle = item->data(User_Roles::Rotation).toDouble();
     QPointF scale = extractScaleFromItem(item);
 
+    QPointF center_in_scene = item->sceneTransform().map( item->boundingRect().center() );
+
     QTransform no_skew = QTransform().rotate(angle).scale(scale.x(), scale.y());
     item->setTransform(no_skew);
+
+    DrScene *my_scene = dynamic_cast<DrScene*>(scene());
+    my_scene->setPositionByOrigin(item, Position_Flags::Center, center_in_scene.x(), center_in_scene.y());
 
     dynamic_cast<DrItem*>(item)->updateProperty(User_Roles::Scale, QPointF(scale.x(), scale.y()) );
 }
@@ -248,6 +274,9 @@ QPointF DrView::extractScaleFromItem(QGraphicsItem *item)
 
     return QPointF(item_no_rotate.m11(), item_no_rotate.m22());
 }
+
+
+
 
 
 

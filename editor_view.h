@@ -70,7 +70,6 @@ private:
     // Local, instance specific member variables
     DrProject              *m_project;                              // Pointer to currently loaded project
     InterfaceRelay         *m_relay;                                // Pointer to InterfaceRelay class of parent form
-    QGraphicsScene         *m_scene;                                // Pointer to current scene, updated during paintEvent
     View_Mode               m_view_mode = View_Mode::None;          // Tracks current view interaction mode
 
     QPixmap p_circle = QPixmap(":/gui_misc/handle_circle.png");
@@ -106,7 +105,7 @@ private:
     bool         m_flag_key_down_shift =    false;                  // True when View has focus and shift         is down
 
     // Mouse event variables
-    DrViewToolTip                          *m_tool_tip;                 // Holds our view's custom Tool Tip box
+    DrViewToolTip                      *m_tool_tip;                 // Holds our view's custom Tool Tip box
     QPoint                              m_origin;                   // Stores mouse down position in view coordinates
     QPointF                             m_origin_in_scene;          // Stores mouse down position in scene coordinates
     QGraphicsItem                      *m_origin_item;              // Stores top item under mouse (if any) on mouse down event
@@ -114,7 +113,6 @@ private:
     // View_Mode::Translating Variables
     QTime                               m_origin_timer;             // Tracks time since mouse down to help buffer movement while selecting
     bool                                m_allow_movement = false;   // Used along with m_origin_timer to help buffer movement while selecting
-    QPointF                             m_old_pos;                  // Used to track position movement for QUndoStack
     bool                                m_shown_a_scene = false;    // False until a scene is loaded for the first time
 
     // Selection Bounding Box Variables
@@ -126,10 +124,9 @@ private:
     QPoint                              m_last_mouse_pos;           // Tracks last known mouse position in view coordinates
 
     // View_Mode::Selecting Variables
-    DrViewRubberBand                   *m_rubber_band;                  // Holds our view's RubberBand object
+    DrViewRubberBand               *m_rubber_band;                  // Holds our view's RubberBand object
     QList<QGraphicsItem*>           m_items_start;                  // Stores items selected at start of new rubber band box
     QList<QGraphicsItem*>           m_items_keep;                   // Stores list of items to keep on top of rubber band items (with control key)
-    DrObject                       *m_first_start;                  // Stores first selected item before rubber band box stareted
 
     // View_Mode::Resizing Variables
     QRectF                          m_start_resize_rect;            // Stores starting rect of selection before resize starts
@@ -154,7 +151,7 @@ private:
 
 public:
     // Constructor
-    explicit DrView(QWidget *parent, DrProject *project, InterfaceRelay *relay);
+    explicit DrView(QWidget *parent, DrProject *project, DrScene *my_scene, InterfaceRelay *relay);
     virtual ~DrView() override;
 
     // Event Overrides, start at Qt Docs for QGraphicsView Class to find more
@@ -197,7 +194,6 @@ public:
     // Selection Functions
     void            startSelect(QMouseEvent *event);
     void            processSelection(QPoint mouse_in_view);
-    void            emptySelectionGroupIfNotEmpty();
 
     // Rotation Functions
     void            startRotate(QPoint mouse_in_view);
@@ -213,6 +209,9 @@ public:
     void            removeShearing(QGraphicsItem *item);
 
 
+                    void            resizeSelectionWithRotate2(QPointF mouse_in_scene);
+
+
 public slots:
     void    sceneChanged(QList<QRectF> region);
     void    selectionChanged();
@@ -224,11 +223,7 @@ public slots:
 signals:
     // Signals used to emit UndoStack Commands
     void    selectionGroupMoved(DrScene *scene, const QPointF &old_position);
-    void    selectionGroupNewGroup(DrScene *scene,
-                                   QList<DrObject*> old_list,
-                                   QList<DrObject*> new_list,
-                                   DrObject *old_first,
-                                   DrObject *new_first);
+    void    selectionGroupNewGroup(DrScene *scene, QList<DrObject*> old_list, QList<DrObject*> new_list);
 
 };
 

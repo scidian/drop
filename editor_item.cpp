@@ -177,7 +177,10 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 
     ///painter->drawPixmap(0, 0, pixmap());
 
-    QGraphicsPixmapItem::paint(painter, option, widget);
+    QStyleOptionGraphicsItem myOption(*option);
+    myOption.state &= ~QStyle::State_Selected;
+
+    QGraphicsPixmapItem::paint(painter, &myOption, widget);
 }
 
 

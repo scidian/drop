@@ -32,16 +32,16 @@ void DrView::startRotate(QPoint mouse_in_view)
     DrScene *my_scene = dynamic_cast<DrScene*>(scene());
 
     // Store starting rotation of current selection group
-    m_rotate_start_angle = my_scene->getSelectionGroupAsGraphicsItem()->data(User_Roles::Rotation).toDouble();
+    m_rotate_start_angle = my_scene->getSelectionAngle();
 
     // Store starting rotation of all selected items
-    for (auto child : my_scene->getSelectionGroupItems()) {
+    for (auto child : my_scene->getSelectionItems()) {
         double child_angle = child->data(User_Roles::Rotation).toDouble();
         child->setData(User_Roles::Pre_Rotate_Rotation, child_angle);
     }
 
     // Store starting scene rect of initial selection bounding box
-    m_rotate_start_rect = my_scene->totalSelectedItemsSceneRect();
+    m_rotate_start_rect = my_scene->totalSelectionSceneRect();
 
     // Set up our tooltip
     m_tool_tip->startToolTip(m_view_mode, mouse_in_view, m_rotate_start_angle);
@@ -73,9 +73,7 @@ void DrView::rotateSelection(QPointF mouse_in_view)
     // Test for scene, convert to our custom class
     if (scene() == nullptr) return;
     DrScene               *my_scene = dynamic_cast<DrScene*>(scene());
-
-    QGraphicsItem         *item =     my_scene->getSelectionGroupAsGraphicsItem();
-    QList<QGraphicsItem*>  my_items = my_scene->getSelectionGroupItems();
+    QList<QGraphicsItem*>  my_items = my_scene->getSelectionItems();
 
     // ********** Calculate angle between starting mouse coordinate and latest mouse coordinate
     double angle1 = calcRotationAngleInDegrees( mapFromScene(m_rotate_start_rect.center()), m_origin);
@@ -111,7 +109,7 @@ void DrView::rotateSelection(QPointF mouse_in_view)
     while (angle <= -360) { angle += 360; }
 
     // ********** Group selected items so we can apply new rotation to all selected items
-    QGraphicsItemGroup *group = scene()->createItemGroup( { item } );
+    QGraphicsItemGroup *group = scene()->createItemGroup( my_items );
 
     // Offset difference of original center bounding box to possible slightly different center of new bounding box
     QPointF offset = group->sceneBoundingRect().center();
@@ -119,8 +117,8 @@ void DrView::rotateSelection(QPointF mouse_in_view)
     offset.setY(offset.y() - (offset.y() - m_rotate_start_rect.center().y()) );
 
     // Load starting angle pre rotate, and store new angle in item
-    double start_angle = item->data(User_Roles::Rotation).toDouble();
-    item->setData(User_Roles::Rotation, angle);
+    double start_angle = my_scene->getSelectionAngle();
+    my_scene->setSelectionAngle(angle);
     m_tool_tip->updateToolTipData(angle);
 
     // ********** Create transform for new angle, apply it, and destroy temporary item group
@@ -139,6 +137,7 @@ void DrView::rotateSelection(QPointF mouse_in_view)
         dynamic_cast<DrItem*>(child)->updateProperty(User_Roles::Rotation, child_angle);
     }
 
+    my_scene->updateSelectionBox();
 
     // !!!!! #DEBUG:    Rotation data
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Rotation_Data)) {

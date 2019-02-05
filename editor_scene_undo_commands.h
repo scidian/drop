@@ -61,8 +61,6 @@ public:
     SelectionNewGroupCommand(DrScene *scene,
                              QList<DrObject*> old_list,
                              QList<DrObject*> new_list,
-                             DrObject *old_first,
-                             DrObject *new_first,
                              QUndoCommand *parent = nullptr);
     void        undo() override;
     void        redo() override;
@@ -71,8 +69,6 @@ private:
     DrScene             *m_scene;
     QList<DrObject*>     m_old_list;
     QList<DrObject*>     m_new_list;
-    DrObject            *m_old_first_selected;
-    DrObject            *m_new_first_selected;
 };
 
 
