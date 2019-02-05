@@ -12,6 +12,7 @@
 #include "debug.h"
 #include "enums.h"
 
+class DrObject;
 
 //####################################################################################
 //##    InterfaceRelay
@@ -34,7 +35,7 @@ public:
     virtual void    setAdvisorInfo(QString header, QString body) = 0;
     virtual void    setLabelText(Label_Names label_name, QString new_text) = 0;
 
-    virtual void    updateObjectInspectorAfterItemChange(long item_key) = 0;
+    virtual void    updateObjectInspectorAfterItemChange(DrObject* object, Object_Properties property) = 0;
     virtual void    updateStageTreeSelectionBasedOnSelectionGroup() = 0;
 };
 

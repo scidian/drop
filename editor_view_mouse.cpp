@@ -83,6 +83,8 @@ void DrView::mousePressEvent(QMouseEvent *event)
                     viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
                     QTimer::singleShot(500, this, SLOT(checkTranslateToolTipStarted()));
 
+                    m_old_pos = my_scene->getSelectionBox().center();
+                    m_start_pos = my_scene->selectedItems().first()->pos();
                     m_view_mode = View_Mode::Translating;
                 }
 
@@ -336,7 +338,14 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
             // Pass on event to allow movement
             QGraphicsView::mouseMoveEvent(event);
 
-            my_scene->updateSelectionBox();
+            // Update selection box location
+            ///my_scene->updateSelectionBox();
+            double diff_x = my_scene->selectedItems().first()->pos().x() - m_start_pos.x();
+            double diff_y = my_scene->selectedItems().first()->pos().y() - m_start_pos.y();
+            double new_x = m_old_pos.x() + diff_x;
+            double new_y = m_old_pos.y() + diff_y;
+            my_scene->translateSelectionBox(new_x, new_y);
+
 
             if (m_tool_tip->getTipType() != View_Mode::Translating)
                 m_tool_tip->startToolTip(View_Mode::Translating, m_origin, mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );

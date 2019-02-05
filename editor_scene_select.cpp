@@ -113,6 +113,11 @@ void DrScene::updateSelectionBox()
     this->destroyItemGroup(group);
 }
 
+void DrScene::translateSelectionBox(double x, double y)
+{
+    m_selection_box.moveCenter( QPointF(x, y) );
+}
+
 
 //####################################################################################
 //##        Keeps track of which items are selected as DrObjects in the data model

@@ -13,6 +13,7 @@
 #include "enums.h"
 
 class DrProject;
+class DrObject;
 class DrProperty;
 
 class InterfaceRelay;
@@ -59,7 +60,7 @@ public:
 
     // Function Calls
     void            buildInspectorFromKeys(QList<long> key_list);
-    void            updateProperties(long item_key);
+    void            updateObjectProperty(DrObject* object, Object_Properties property);
 
     InterfaceRelay* getRelay() { return m_relay; }
 

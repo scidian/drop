@@ -106,7 +106,18 @@ void DrItem::updateProperty(int key, const QVariant &value)
         break;
     }
 
-    if (scene()) dynamic_cast<DrScene*>(scene())->getRelay()->updateObjectInspectorAfterItemChange(m_object_key);
+    if (scene()) {
+        InterfaceRelay *relay = dynamic_cast<DrScene*>(scene())->getRelay();
+
+        switch (key)
+        {
+        case User_Roles::Position: relay->updateObjectInspectorAfterItemChange(m_object, Object_Properties::position);      break;
+        case User_Roles::Rotation: relay->updateObjectInspectorAfterItemChange(m_object, Object_Properties::rotation);      break;
+        case User_Roles::Scale:    relay->updateObjectInspectorAfterItemChange(m_object, Object_Properties::scale);         break;
+        case User_Roles::Z_Order:  relay->updateObjectInspectorAfterItemChange(m_object, Object_Properties::z_order);       break;
+        }
+
+    }
 }
 
 

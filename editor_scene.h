@@ -62,7 +62,6 @@ public:
 
     // Other Widget Update Calls
     InterfaceRelay* getRelay() { return m_relay; }
-    void            updateObjectInspectorData(long item_key) { m_relay->updateObjectInspectorAfterItemChange(item_key); }
     void            updateStageTreeSelection() { m_relay->updateStageTreeSelectionBasedOnSelectionGroup(); }
     void            updateView() { emit updateViews(); }
 
@@ -94,6 +93,7 @@ public:
     void                    setSelectionBox(QRectF box)                      { m_selection_box = box; }
 
     QRectF                  totalSelectionSceneRect();
+    void                    translateSelectionBox(double x, double y);
     void                    updateSelectionBox();
 
     void                    updateChildrenPositionData();

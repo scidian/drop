@@ -112,6 +112,8 @@ private:
 
     // View_Mode::Translating Variables
     QTime                               m_origin_timer;             // Tracks time since mouse down to help buffer movement while selecting
+    QPointF                             m_old_pos;                  // Used to track position movement for translating selection box
+    QPointF                             m_start_pos;                // Used to track position movement for translating selection box
     bool                                m_allow_movement = false;   // Used along with m_origin_timer to help buffer movement while selecting
     bool                                m_shown_a_scene = false;    // False until a scene is loaded for the first time
 

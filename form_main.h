@@ -108,7 +108,7 @@ public:
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list);
     virtual void    setAdvisorInfo(QString header, QString body);
     virtual void    setLabelText(Label_Names label_name, QString new_text);
-    virtual void    updateObjectInspectorAfterItemChange(long item_key);
+    virtual void    updateObjectInspectorAfterItemChange(DrObject* object, Object_Properties property);
     virtual void    updateStageTreeSelectionBasedOnSelectionGroup();
 
 private:

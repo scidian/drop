@@ -198,9 +198,9 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
 }
 
 
-void FormMain::updateObjectInspectorAfterItemChange(long item_key)
+void FormMain::updateObjectInspectorAfterItemChange(DrObject* object, Object_Properties property)
 {
-    treeInspector->updateProperties(item_key);
+    treeInspector->updateObjectProperty(object, property);
 }
 
 void FormMain::updateStageTreeSelectionBasedOnSelectionGroup()

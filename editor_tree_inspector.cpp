@@ -202,20 +202,18 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 //####################################################################################
 //##        Updates the property boxes already in the object inspector for the current item
 //####################################################################################
-void TreeInspector::updateProperties(long item_key)
+void TreeInspector::updateObjectProperty(DrObject* object, Object_Properties property)
 {
-    if (item_key != m_selected_key) return;
+    if (object->getKey() != m_selected_key) return;
     if (IsDrObjectClass(m_selected_type) == false) return;
-
-    DrSettings *settings = m_project->findSettingsFromKey(m_selected_key);
 
     Dr::SetLabelText(Label_Names::Label_1, "Insp Widget Count: " + QString::number(m_widgets.count()) );
 
     for (auto widget : m_widgets) {
         long prop_key = widget->property(User_Property::Key).toInt();
-        if (prop_key == 0) continue;
+        if (prop_key != static_cast<long>(property)) continue;
 
-        DrProperty *prop = settings->findPropertyFromPropertyKey(prop_key);
+        DrProperty *prop = object->findPropertyFromPropertyKey(prop_key);
         if (prop == nullptr) continue;
 
         switch (prop->getPropertyType())
