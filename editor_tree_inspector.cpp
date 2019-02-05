@@ -57,6 +57,8 @@ void TreeInspector::applyHeaderBodyProperties(QWidget *widget, QString header, Q
 //####################################################################################
 void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 {
+    if (key_list[0] == m_selected_key) return;
+
     // First, retrieve unique key of item clicked in list
     m_selected_key = key_list[0];
     m_selected_type = m_project->findChildTypeFromKey( m_selected_key );
@@ -235,9 +237,11 @@ void TreeInspector::updateObjectProperty(DrObject* object, Object_Properties pro
                 dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toPointF().y());
             break;
         }
+
+        this->update();
+        return;
     }
 
-    this->update();
 }
 
 

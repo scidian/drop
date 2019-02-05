@@ -81,8 +81,8 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 
     project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrType::Object, asset_5, 100, 100, -2);
     project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrType::Object, asset_6, 200, 100,  4);
-    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrType::Object, asset_7, 300, 100,  1);
-    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrType::Object, asset_8, 400, 100,  2);
+    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrType::Object, asset_7, -200, -200,  1);
+    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrType::Object, asset_8, 0, 0,  2);
     // !!!!! END
 
 

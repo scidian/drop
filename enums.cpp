@@ -81,6 +81,36 @@ QString StringFromAssetType(DrAsset_Type type)
 }
 
 
+QString StringFromPositionFlag(Position_Flags flag)
+{
+    switch (flag)
+    {
+    case Position_Flags::Top:           return "Top";
+    case Position_Flags::Top_Right:     return "Top Right";
+    case Position_Flags::Top_Left:      return "Top Left";
+    case Position_Flags::Bottom:        return "Bottom";
+    case Position_Flags::Bottom_Left:   return "Bottom Left";
+    case Position_Flags::Bottom_Right:  return "Bottom Right";
+    case Position_Flags::Left:          return "Left";
+    case Position_Flags::Right:         return "Right";
+    case Position_Flags::Center:        return "Center";
+    case Position_Flags::Rotate:        return "Rotate";
+    case Position_Flags::Move_Item:     return "Move Item";
+    case Position_Flags::Total:         return "Total";
+    case Position_Flags::No_Position:   return "No Position";
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -106,14 +106,18 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     DrScene *my_scene = dynamic_cast<DrScene*>(scene());
 
     // Load item starting width and height
-    double item_width =  my_scene->getSelectionBox().width();
-    double item_height = my_scene->getSelectionBox().height();
+    double item_width =  my_scene->getSelectionBox().normalized().width();
+    double item_height = my_scene->getSelectionBox().normalized().height();
+
+    Position_Flags use_handle = m_over_handle;
+
+Dr::SetLabelText(Label_Names::Label_Object_5, "W: " + QString::number(item_width) + ", H: " + QString::number(item_height));
 
     // ********** Find corners / sides we're working with, calculate new width / height
-    QPointF corner_start =    m_handles_centers[static_cast<Position_Flags>(m_over_handle)];
-    QPointF corner_opposite = m_handles_centers[findOppositeSide(m_over_handle)];
+    QPointF corner_start =    m_handles_centers[use_handle];
+    QPointF corner_opposite = m_handles_centers[findOppositeSide(use_handle)];
 
-    // Find center point, load angle of item, load original scale
+    // Find center point, load angle of item
     QPointF center_point = QLineF(corner_start, corner_opposite).pointAt(.5);
     double  angle = my_scene->getSelectionAngle();
 
@@ -127,9 +131,17 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     QPointF zero_rotated_opposite = remove_rotation.map( corner_opposite );
     QPointF zero_rotated_opposite_in_scene = mapToScene(zero_rotated_opposite.toPoint());
 
+QPointF zero_rotated_corner = remove_rotation.map( corner_start );
+QPointF zero_rotated_corner_in_scene = mapToScene(zero_rotated_corner.toPoint());
 
     QPointF point_in_shape = mapToScene(remove_rotation.map(mapFromScene(mouse_in_scene)));
     qreal   scale_x,   scale_y;
+
+
+m_debug_points.clear();
+m_debug_points.append( mapFromScene(point_in_shape) );
+m_debug_points.append( mapFromScene(zero_rotated_opposite_in_scene)) ;
+m_debug_points.append( mapFromScene(zero_rotated_corner_in_scene) );
 
     // ***** Calculate X scale
     if (m_do_x == X_Axis::Right)
@@ -189,7 +201,7 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     group->setTransform(transform);
 
 
-    // ***** Translate if needed
+    // ***** Figure out which position from original rect to translate from
     QPointF new_pos = group->pos();
     Position_Flags resize_flag = Position_Flags::Top_Left;
 
@@ -216,7 +228,50 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
         resize_flag = Position_Flags::Top;
 
     new_pos = m_pre_resize_corners[resize_flag];
-    my_scene->setPositionByOrigin(group, resize_flag, new_pos.x(), new_pos.y());
+
+
+    // ***** Adjust destination position if scale is negative in x or y
+    Position_Flags origin_flag = resize_flag;
+
+    if (scale_y < 0 && scale_x > 0) {
+        switch (origin_flag)
+        {
+        case Position_Flags::Bottom:        origin_flag = Position_Flags::Top;              break;
+        case Position_Flags::Bottom_Right:  origin_flag = Position_Flags::Top_Right;        break;
+        case Position_Flags::Bottom_Left:   origin_flag = Position_Flags::Top_Left;         break;
+        case Position_Flags::Top:           origin_flag = Position_Flags::Bottom;           break;
+        case Position_Flags::Top_Right:     origin_flag = Position_Flags::Bottom_Right;     break;
+        case Position_Flags::Top_Left:      origin_flag = Position_Flags::Bottom_Left;      break;
+        default: ;
+        }
+    } else if (scale_y > 0 && scale_x < 0) {
+        switch (origin_flag)
+        {
+        case Position_Flags::Right:         origin_flag = Position_Flags::Left;             break;
+        case Position_Flags::Top_Right:     origin_flag = Position_Flags::Top_Left;         break;
+        case Position_Flags::Bottom_Right:  origin_flag = Position_Flags::Bottom_Left;      break;
+        case Position_Flags::Left:          origin_flag = Position_Flags::Right;            break;
+        case Position_Flags::Top_Left:      origin_flag = Position_Flags::Top_Right;        break;
+        case Position_Flags::Bottom_Left:   origin_flag = Position_Flags::Bottom_Right;     break;
+        default: ;
+        }
+    } else if (scale_y < 0 && scale_x < 0) {
+        switch (origin_flag)
+        {
+        case Position_Flags::Right:         origin_flag = Position_Flags::Left;             break;
+        case Position_Flags::Left:          origin_flag = Position_Flags::Right;            break;
+        case Position_Flags::Top:           origin_flag = Position_Flags::Bottom;           break;
+        case Position_Flags::Bottom:        origin_flag = Position_Flags::Top;              break;
+        case Position_Flags::Top_Right:     origin_flag = Position_Flags::Bottom_Left;      break;
+        case Position_Flags::Bottom_Right:  origin_flag = Position_Flags::Top_Left;         break;
+        case Position_Flags::Top_Left:      origin_flag = Position_Flags::Bottom_Right;     break;
+        case Position_Flags::Bottom_Left:   origin_flag = Position_Flags::Top_Right;        break;
+        default: ;
+        }
+    }
+
+
+    my_scene->setPositionByOrigin(group, origin_flag, new_pos.x(), new_pos.y());
 
 
 

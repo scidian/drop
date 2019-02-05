@@ -129,6 +129,7 @@ bool        CheckTypesAreSame(DrType type1, DrType type2);
 bool        IsDrObjectClass(DrType type_to_check);
 QString     StringFromType(DrType type);
 QString     StringFromAssetType(DrAsset_Type type);
+QString     StringFromPositionFlag(Position_Flags flag);
 
 
 //####################################################################################

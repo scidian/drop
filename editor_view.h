@@ -138,13 +138,13 @@ private:
     QPointF                         m_pre_resize_scale;             // Scale of selection group before we start resize
     QMap<Position_Flags, QPointF>   m_pre_resize_corners;           // Stores corner coordinates before resizing starts
 
+    QPolygonF  m_debug_points;
+
     // View_Mode::Rotating Variables
     QRectF                          m_rotate_start_rect;            // Stores starting rect of selection before resize starts
     double                          m_rotate_start_angle;           // Stores angle of selection group at start of rotate routine
 
     // !!!!! DEBUG: Debugging variables
-    QPolygonF                       m_debug_polygon;                // Holds a polygon used for resize routine
-    QPolygonF                       m_debug_polygon2;        // TEMP
     long                            m_debug_fps = 0;         // TEMP
     long                            m_debug_fps_last;        // TEMP
     QTime                           m_debug_timer;           // TEMP

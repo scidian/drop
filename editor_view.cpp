@@ -165,8 +165,9 @@ void DrView::updateSelectionBoundingBox()
     if (scene() == nullptr) return;
 
     DrScene         *my_scene =  dynamic_cast<DrScene*>(scene());
-    QRectF           rect =      my_scene->getSelectionBox();
+    QRectF           rect =      my_scene->getSelectionBox().normalized();
     QTransform       transform = my_scene->getSelectionTransform();
+
     if (my_scene->selectedItems().count() < 1) return;
     if (my_scene->scene_mutex.tryLock(0) == false) return;
 

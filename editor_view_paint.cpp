@@ -237,7 +237,6 @@ void DrView::paintItemOutlines(QPainter &painter)
 
     }
 
-
     // !!!!! #DEBUG:    Show selection group info
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Selection_Group_Data)) {
         m_relay->setLabelText(Label_Names::Label_Object_3, "Group Size X: " + QString::number(my_scene->getSelectionBox().width()) +
@@ -245,7 +244,6 @@ void DrView::paintItemOutlines(QPainter &painter)
         m_relay->setLabelText(Label_Names::Label_Object_4, "Scale X: " +      QString::number(my_scene->getSelectionScale().x()) +
                                                                ", Y: " +      QString::number(my_scene->getSelectionScale().y()) +
                                                            ", Angle: " +      QString::number(my_scene->getSelectionAngle()));
-        m_relay->setLabelText(Label_Names::Label_Object_5, "# Items: " +      QString::number(my_scene->getSelectionCount()));
     }
     // !!!!! END
 
@@ -270,6 +268,18 @@ void DrView::paintBoundingBox(QPainter &painter)
     // ***** Draw bounding box onto view
     painter.drawLine( QLineF( m_handles_centers[Position_Flags::Rotate], m_handles_centers[Position_Flags::Top]) );
     painter.drawPolygon(to_view);
+
+
+
+
+
+    painter.setPen(QPen(QBrush(Qt::red), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    painter.drawPolygon(m_debug_points);
+
+
+
+
+
 }
 
 
