@@ -34,12 +34,16 @@
 //
 void DrScene::selectionChanged()
 {
+    if (selectedItems() == m_selection_items) return;
+
     m_selection_items = selectedItems();
 
     m_selection_angle = 0;
     m_selection_scale = QPointF(1, 1);
 
     m_selection_box = totalSelectionSceneRect();
+
+    updateStageTreeSelection();
 }
 
 
@@ -76,6 +80,7 @@ QTransform DrScene::getSelectionTransform()
     return t;
 }
 
+// Creates a temporary item group to extract a new bounding box with new location and new shearing removed
 void DrScene::updateSelectionBox()
 {
     // Recreate selection bounding box based on new item locations
@@ -134,7 +139,7 @@ QList<DrObject*> DrScene::convertListItemsToObjects(QList<QGraphicsItem*> graphi
 //####################################################################################
 void DrScene::updateChildrenPositionData()
 {
-    for (auto item : selectedItems()) {
+    for (auto item : getSelectionItems()) {
         QPointF center = item->sceneTransform().map( item->boundingRect().center() );
         dynamic_cast<DrItem*>(item)->updateProperty(User_Roles::Position, center);
     }

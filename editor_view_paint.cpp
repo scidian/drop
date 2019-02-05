@@ -240,13 +240,12 @@ void DrView::paintItemOutlines(QPainter &painter)
 
     // !!!!! #DEBUG:    Show selection group info
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Selection_Group_Data)) {
-        m_relay->setLabelText(Label_Names::Label_Object_1, "Group Size X: " +   QString::number(my_scene->getSelectionBox().width()) +
-                                                                    ", Y: " +   QString::number(my_scene->getSelectionBox().height()) );
-        m_relay->setLabelText(Label_Names::Label_Object_2, "Group Scale X: " +  QString::number(my_scene->getSelectionScale().x()) +
-                                                                     ", Y: " +  QString::number(my_scene->getSelectionScale().y()) );
-
-        m_relay->setLabelText(Label_Names::Label_Object_4, "Group Rotation: " + QString::number(my_scene->getSelectionAngle()));
-        m_relay->setLabelText(Label_Names::Label_Object_5, "# Items: " +        QString::number(my_scene->getSelectionCount()));
+        m_relay->setLabelText(Label_Names::Label_Object_3, "Group Size X: " + QString::number(my_scene->getSelectionBox().width()) +
+                                                                    ", Y: " + QString::number(my_scene->getSelectionBox().height()) );
+        m_relay->setLabelText(Label_Names::Label_Object_4, "Scale X: " +      QString::number(my_scene->getSelectionScale().x()) +
+                                                               ", Y: " +      QString::number(my_scene->getSelectionScale().y()) +
+                                                           ", Angle: " +      QString::number(my_scene->getSelectionAngle()));
+        m_relay->setLabelText(Label_Names::Label_Object_5, "# Items: " +      QString::number(my_scene->getSelectionCount()));
     }
     // !!!!! END
 

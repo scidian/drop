@@ -31,8 +31,6 @@
 TreeInspector::TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
                               QTreeWidget (parent), m_project(project), m_relay(relay)
 {
-    connect(this, SIGNAL(itemClicked(QTreeWidgetItem *, int)), this, SLOT(itemWasClicked(QTreeWidgetItem *, int)));
-
     m_widget_hover = new WidgetHoverHandler(this);
     connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
 
@@ -211,20 +209,22 @@ void TreeInspector::updateProperties(long item_key)
 
     DrSettings *settings = m_project->findSettingsFromKey(m_selected_key);
 
-    Dr::SetLabelText(Label_Names::Label_1, "Child count: " + QString::number(m_widgets.count()) );
+    Dr::SetLabelText(Label_Names::Label_1, "Insp Widget Count: " + QString::number(m_widgets.count()) );
 
     for (auto widget : m_widgets) {
         long prop_key = widget->property(User_Property::Key).toInt();
+        if (prop_key == 0) continue;
+
         DrProperty *prop = settings->findPropertyFromPropertyKey(prop_key);
+        if (prop == nullptr) continue;
 
-        if (prop == nullptr || prop_key == 0) continue;
-        Property_Type prop_type = prop->getPropertyType();
-
-        switch (prop_type)
+        switch (prop->getPropertyType())
         {
         case Property_Type::Bool:       dynamic_cast<QCheckBox*>(widget)->setChecked(prop->getValue().toBool());        break;
+
         case Property_Type::Int:
         case Property_Type::Positive:   dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toInt());            break;
+
         case Property_Type::Float:
         case Property_Type::Percent:
         case Property_Type::Angle:      dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toDouble());   break;
@@ -245,44 +245,6 @@ void TreeInspector::updateProperties(long item_key)
 
 
 
-//####################################################################################
-//##        On object inspector click show info about object and property
-//####################################################################################
-void TreeInspector::itemWasClicked(QTreeWidgetItem *item, int column)
-{
-    Q_UNUSED(item);
-    Q_UNUSED(column);
-
-    //Dr::ShowMessageBox("Item Clicked in Tree Object Inspector");
-
-    // If no item is selected in tree view, exit function
-    //if (treeStage->getSelectedKey() == 0) { return; }
-
-    // First, retrieve property key of item clicked in tableWidget list
-    //long        property_key = item->data(User_Roles::Key).toLongLong();
-
-    // Grab a pointer to the component list of the first selected item from treeStage (stored in selected_list)
-    //DrSettings  *selected_item_settings = m_project->findSettingsFromKey( treeStage->getSelectedKey() );
-    //DrComponent *clicked_component = selected_item_settings->findComponentFromPropertyKey(property_key);
-    //DrProperty  *clicked_property = clicked_component->getProperty(property_key);
-
-    //QString     property_name = clicked_property->getDisplayName();
-    //QString     component_name = clicked_component->getDisplayName();
-    //long        component_key = clicked_component->getComponentKey();
-
-    // Grab type of main selected item in selected tree list
-    //QString     type_string2 = StringFromType(m_project->findTypeFromKey( treeStage->getSelectedKey() ));
-    //QString     type_string = StringFromType(selected_item_settings->getType());
-
-    // !!!!! #DEBUG:    Show selected item key and info
-    //if (Dr::CheckDebugFlag(Debug_Flags::Object_Inspector_Build)) {
-    //    setLabelText(Label_Names::LabelObject1, "KEY: " + QString::number( treeStage->getSelectedKey() ) + ", TYPE: " + QString::fromStdString(type_string));
-    //    setLabelText(Label_Names::LabelObject2, "COMPONENT: " + QString::number(component_key) +   ", NAME: " + QString::fromStdString(component_name));
-    //    setLabelText(Label_Names::LabelObject3, "PROPERTY: " + QString::number(property_key) +   ", NAME: " + QString::fromStdString(property_name));
-    //}
-    // !!!!! END
-
-}
 
 
 

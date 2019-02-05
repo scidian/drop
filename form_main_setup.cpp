@@ -35,7 +35,6 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
         buildAssetList();
         buildTreeStageList();
         viewMain->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
-        current_focus = Form_Main_Focus::Stage_View;
         scene->setSceneRect(-2000, -2000, 4000, 4000);
         scene->update();
         viewMain->update();

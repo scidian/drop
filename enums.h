@@ -38,16 +38,6 @@ enum class Label_Names
     Label_Bottom,
 };
 
-//####################################################################################
-//##    Sections of FormMain that can have focus
-//####################################################################################
-enum class Form_Main_Focus {
-    Assets,
-    Stage_List,
-    Stage_View,
-    Object_Inspector,
-    Bottom_Area,
-};
 
 //####################################################################################
 //##    Types of objects possible in game

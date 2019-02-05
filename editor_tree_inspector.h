@@ -77,7 +77,6 @@ public:
     TripleSpinBox*  initializeEmptySpinBox(DrProperty *property, QFont &font, double start_value);
 
 private slots:
-    void            itemWasClicked(QTreeWidgetItem *item, int column);
     void            setAdvisorInfo(QString header, QString body);
 
 };

@@ -45,6 +45,8 @@ void DrView::startSelect(QMouseEvent *event)
 //####################################################################################
 void DrView::processSelection(QPoint mouse_in_view)
 {
+    DrScene *my_scene = dynamic_cast<DrScene*>(scene());
+
     QRect band_box = QRect(m_origin, mouse_in_view).normalized();
     if (band_box.width() < 1)  band_box.setWidth(1);
     if (band_box.height() < 1) band_box.setHeight(1);
@@ -55,13 +57,44 @@ void DrView::processSelection(QPoint mouse_in_view)
     selection_area.addPolygon(mapToScene(m_rubber_band->geometry()));                               // Convert box to scene coords
     selection_area.closeSubpath();                                                                  // Closes an open polygon
 
-    scene()->setSelectionArea(selection_area, Qt::ItemSelectionOperation::ReplaceSelection,
-                              Qt::ItemSelectionMode::IntersectsItemShape, viewportTransform());     // Pass box to scene for selection
+    QList<QGraphicsItem*> before_band = my_scene->getSelectionItems();
 
-    for (auto item : m_items_keep) {
+    // Disconnect signal before we try to figure out which items should be selected
+    disconnect(my_scene, SIGNAL(selectionChanged()), my_scene, SLOT(selectionChanged()));
+
+    my_scene->setSelectionArea(selection_area, Qt::ItemSelectionOperation::ReplaceSelection,
+                               Qt::ItemSelectionMode::IntersectsItemShape, viewportTransform());     // Pass box to scene for selection
+
+    for (auto item : m_items_keep)
         item->setSelected(true);
-    }
+
+    // Re-connect signal and call selectionChanged if necessary
+    connect(my_scene, SIGNAL(selectionChanged()), my_scene, SLOT(selectionChanged()));
+    if (before_band != scene()->selectedItems()) my_scene->selectionChanged();
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
