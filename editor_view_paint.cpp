@@ -67,10 +67,16 @@ void DrView::paintEvent(QPaintEvent *event)
 
 
     QPainter painter(viewport());                                   // Initiate QPainter object
+
     paintItemOutlines(painter);                                     // Draw bounding box for each selected item
-    paintBoundingBox(painter);                                      // Draw box around entire seleciton, with Size Grip handles
+
+    if (m_hide_bounding == false)
+        paintBoundingBox(painter);                                  // Draw box around entire seleciton, with Size Grip handles
+
     paintGroupAngle(painter, my_scene->getSelectionAngle());        // Draw angles if rotating
-    paintHandles(painter, m_handles_shape);                         // Draw handles around selected item / bounding box
+
+    if (m_hide_bounding == false)
+        paintHandles(painter, m_handles_shape);                     // Draw handles around selected item / bounding box
 
 
     // !!!!! #DEBUG:    Draw frames per second

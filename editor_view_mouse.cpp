@@ -85,6 +85,7 @@ void DrView::mousePressEvent(QMouseEvent *event)
 
                     m_old_pos = my_scene->getSelectionBox().center();
                     m_start_pos = my_scene->selectedItems().first()->pos();
+                    m_hide_bounding = true;
                     m_view_mode = View_Mode::Translating;
                 }
 
@@ -320,11 +321,10 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
             double new_y = m_old_pos.y() + diff_y;
             my_scene->translateSelectionBox(new_x, new_y);
 
-
             if (m_tool_tip->getTipType() != View_Mode::Translating)
-                m_tool_tip->startToolTip(View_Mode::Translating, m_origin, mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
+                m_tool_tip->startToolTip(View_Mode::Translating, m_origin, my_scene->getSelectionTransform().map(my_scene->getSelectionBox().center()) );
             else {
-                m_tool_tip->updateToolTipData( mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
+                m_tool_tip->updateToolTipData( my_scene->getSelectionTransform().map(my_scene->getSelectionBox().center()) );
                 my_scene->updateSelectedItemsPositionData();
             }
         }
@@ -336,8 +336,13 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
     // Update
     if (m_view_mode != View_Mode::None) update();
 
-    // Unlock scene mutex
+
+    // ***** Unlock scene mutex
     my_scene->scene_mutex.unlock();
+
+
+    // If we're hand dragging make sure selection box is updating, must be called AFTER mutex is unlocked
+    if (m_view_mode == View_Mode::Dragging) updateSelectionBoundingBox(4);
 }
 
 
@@ -353,8 +358,12 @@ void DrView::mouseReleaseEvent(QMouseEvent *event)
     // Process left mouse button released
     if (event->button() & Qt::LeftButton)
     {
+        m_hide_bounding = false;
+        updateSelectionBoundingBox(6);
+
         m_rubber_band->hide();
         m_tool_tip->stopToolTip();
+
         m_view_mode = View_Mode::None;
     }
 
@@ -424,7 +433,7 @@ void DrView::applyUpdatedMatrix()
     matrix.scale(m_zoom_scale, m_zoom_scale);
     matrix.rotate(m_rotate);
     this->setMatrix(matrix);
-    updateSelectionBoundingBox();
+    updateSelectionBoundingBox(5);
 }
 
 

@@ -116,6 +116,7 @@ private:
     QPointF                             m_start_pos;                // Used to track position movement for translating selection box
     bool                                m_allow_movement = false;   // Used along with m_origin_timer to help buffer movement while selecting
     bool                                m_shown_a_scene = false;    // False until a scene is loaded for the first time
+    bool                                m_hide_bounding = false;    // True when moving items to stop bounding box from updating and painting
 
     // Selection Bounding Box Variables
     std::map<Position_Flags, QPolygonF> m_handles;                  // Stores QRects of current selection box handles
@@ -183,7 +184,7 @@ public:
     double          extractAngleFromTransform(QTransform &from_transform);
     QPointF         extractScaleFromItem(QGraphicsItem *item);
     QRectF          rectAtCenterPoint(QPoint center, double rect_size);
-    void            updateSelectionBoundingBox();
+    void            updateSelectionBoundingBox(int called_from = 0);
 
     // Paint Functions
     void            paintBoundingBox(QPainter &painter);

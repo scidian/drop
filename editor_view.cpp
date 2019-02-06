@@ -135,42 +135,50 @@ void DrView::keyReleaseEvent(QKeyEvent *event)
 // Connected from scene().changed
 void DrView::sceneChanged(QList<QRectF>)
 {
-    double left_adjust =  -4000;
-    double right_adjust =  4000;
-    double top_adjust =   -4000;
-    double bottom_adjust = 4000;
-    this->setSceneRect( scene()->sceneRect().adjusted(left_adjust, top_adjust, right_adjust, bottom_adjust) );
+    if (m_view_mode == View_Mode::None) {
+        double left_adjust =  -4000;
+        double right_adjust =  4000;
+        double top_adjust =   -4000;
+        double bottom_adjust = 4000;
+        this->setSceneRect( scene()->sceneRect().adjusted(left_adjust, top_adjust, right_adjust, bottom_adjust) );
+    }
 
-    updateSelectionBoundingBox();
+    updateSelectionBoundingBox(1);
     ///update();             // Don't use here!!!!! Calls paint recursively
 }
 
 // Connected from scene().selectionChanged
 void DrView::selectionChanged()
 {
-    updateSelectionBoundingBox();
+    updateSelectionBoundingBox(2);
     ///update();             // Don't use here!!!!! Calls paint recursively
 }
 
 void DrView::scrollContentsBy(int dx, int dy)
 {
     QGraphicsView::scrollContentsBy(dx, dy);
-    updateSelectionBoundingBox();
+    updateSelectionBoundingBox(3);
     update();
 }
 
-void DrView::updateSelectionBoundingBox()
+void DrView::updateSelectionBoundingBox(int called_from)
 {
     // Test for scene, convert to our custom class and lock the scene
     if (scene() == nullptr) return;
+    if (m_hide_bounding == true) return;
 
     DrScene         *my_scene =  dynamic_cast<DrScene*>(scene());
     QRectF           rect =      my_scene->getSelectionBox().normalized();
     QTransform       transform = my_scene->getSelectionTransform();
 
-    if (my_scene->selectedItems().count() < 1) return;
+    if (my_scene->getSelectionCount() < 1) return;
     if (my_scene->scene_mutex.tryLock(0) == false) return;
 
+    // !!!!! DEBUG: Shows where the call to the UpdateSelectionBoxData function originated from
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_Where_Update_Box_From)) {
+        Dr::SetLabelText(Label_Names::Label_2, QTime().currentTime().toString() + ", From: " + QString::number(called_from)  );
+    }
+    // !!!!! END
 
     // Size of side handle boxes
     double side_size = 10;
@@ -223,19 +231,19 @@ void DrView::updateSelectionBoundingBox()
     for (auto h : m_handles) m_handles_centers[h.first] = h.second.boundingRect().center();
 
     // *****  Calculates angles for mouse cursors over sides
-    m_handles_angles[Position_Flags::Top] = QLineF(m_handles_centers[Position_Flags::Top_Left], m_handles_centers[Position_Flags::Top_Right]).angle();
-    m_handles_angles[Position_Flags::Right] = QLineF(m_handles_centers[Position_Flags::Top_Right], m_handles_centers[Position_Flags::Bottom_Right]).angle();
+    m_handles_angles[Position_Flags::Top] =    QLineF(m_handles_centers[Position_Flags::Top_Left],     m_handles_centers[Position_Flags::Top_Right]).angle();
+    m_handles_angles[Position_Flags::Right] =  QLineF(m_handles_centers[Position_Flags::Top_Right],    m_handles_centers[Position_Flags::Bottom_Right]).angle();
     m_handles_angles[Position_Flags::Bottom] = QLineF(m_handles_centers[Position_Flags::Bottom_Right], m_handles_centers[Position_Flags::Bottom_Left]).angle();
-    m_handles_angles[Position_Flags::Left] = QLineF(m_handles_centers[Position_Flags::Bottom_Left], m_handles_centers[Position_Flags::Top_Left]).angle();
+    m_handles_angles[Position_Flags::Left] =   QLineF(m_handles_centers[Position_Flags::Bottom_Left],  m_handles_centers[Position_Flags::Top_Left]).angle();
 
     // Adjust for angle returned by QLineF to match angles we're used in View_Mode::Rotating function
     for (auto &pair : m_handles_angles) pair.second = 360 - pair.second;
 
     // Calculate angles for mouse cursors over corners
-    m_handles_angles[Position_Flags::Top_Right] =    calculateCornerAngle(m_handles_angles[Position_Flags::Right], m_handles_angles[Position_Flags::Top]);
+    m_handles_angles[Position_Flags::Top_Right] =    calculateCornerAngle(m_handles_angles[Position_Flags::Right],  m_handles_angles[Position_Flags::Top]);
     m_handles_angles[Position_Flags::Bottom_Right] = calculateCornerAngle(m_handles_angles[Position_Flags::Bottom], m_handles_angles[Position_Flags::Right]);
-    m_handles_angles[Position_Flags::Bottom_Left] =  calculateCornerAngle(m_handles_angles[Position_Flags::Left], m_handles_angles[Position_Flags::Bottom]);
-    m_handles_angles[Position_Flags::Top_Left] =     calculateCornerAngle(m_handles_angles[Position_Flags::Top], m_handles_angles[Position_Flags::Left]);
+    m_handles_angles[Position_Flags::Bottom_Left] =  calculateCornerAngle(m_handles_angles[Position_Flags::Left],   m_handles_angles[Position_Flags::Bottom]);
+    m_handles_angles[Position_Flags::Top_Left] =     calculateCornerAngle(m_handles_angles[Position_Flags::Top],    m_handles_angles[Position_Flags::Left]);
 
     // ***** Add handle for rotating
     QPointF scale = my_scene->getSelectionScale();

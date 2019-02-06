@@ -141,7 +141,6 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
         m_debug_points.append( mapFromScene(zero_rotated_opposite_in_scene)) ;
         m_debug_points.append( mapFromScene(zero_rotated_corner_in_scene) );
     }
-    // !!!!! END
 
 
     // ***** Calculate X scale
@@ -159,6 +158,7 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
         scale_y = QLineF(point_in_shape, zero_rotated_opposite_in_scene).dy() / item_height;
     else
         scale_y = m_pre_resize_scale.y();
+
 
     // Make sure it doesnt disappear off the screen, Qt doesnt like when items scale go to zero
     if (scale_x <  .0001 && scale_x >= 0) scale_x =  .0001;
