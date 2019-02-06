@@ -14,6 +14,7 @@
 
 class DrProject;
 class DrObject;
+class DrSettings;
 class DrProperty;
 
 class InterfaceRelay;
@@ -60,7 +61,7 @@ public:
 
     // Function Calls
     void            buildInspectorFromKeys(QList<long> key_list);
-    void            updateObjectProperty(DrObject* object, Object_Properties property);
+    void            updateObjectProperty(DrSettings* object, Object_Properties property);
 
     InterfaceRelay* getRelay() { return m_relay; }
 

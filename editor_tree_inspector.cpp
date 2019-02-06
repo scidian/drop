@@ -57,20 +57,20 @@ void TreeInspector::applyHeaderBodyProperties(QWidget *widget, QString header, Q
 //####################################################################################
 void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 {
-    if (key_list[0] == m_selected_key) return;
-
     // First, retrieve unique key of item clicked in list
-    m_selected_key = key_list[0];
-    m_selected_type = m_project->findChildTypeFromKey( m_selected_key );
+    long   new_key =  key_list[0];
+    DrType new_type = m_project->findChildTypeFromKey( new_key );
 
-    QString     type_string = StringFromType(m_selected_type);
+    // If object inspector already contaitns this item exit now
+    if (new_key == m_selected_key) return;
 
     // !!!!! #DEBUG:    Show selected item key and info
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Object_Inspector_Build)) {
-        m_relay->setLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( m_selected_key ) + ", TYPE: " + type_string);
+        QString type_string = StringFromType(new_type);
+        m_relay->setLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( new_key ) + ", TYPE: " + type_string);
 
-        if (IsDrObjectClass(m_selected_type)) {
-            DrObject* object = dynamic_cast<DrObject*>(m_project->findSettingsFromKey(m_selected_key));
+        if (IsDrObjectClass(new_type)) {
+            DrObject* object = dynamic_cast<DrObject*>(m_project->findSettingsFromKey(new_key));
             long asset_key = object->getAssetKey();
             QString asset_name = m_project->findSettingsFromKey(asset_key)->getAssetName();
 
@@ -78,10 +78,19 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
                                                                ", NAME: " + asset_name);
         } else {
             m_relay->setLabelText(Label_Names::Label_Object_2, "");
-            m_relay->setLabelText(Label_Names::Label_Object_3, "");
         }
     }
     // !!!!! END
+
+    // If old selection and new selection are both objects, we don't need to completely rebuild inspector, just change values
+    if (m_selected_type == DrType::Object && new_type == DrType::Object) {
+        m_selected_key =  new_key;
+        updateObjectProperty(m_project->findSettingsFromKey(m_selected_key), Object_Properties::all_properties);
+        return;
+    } else {
+        m_selected_key =  new_key;
+        m_selected_type = new_type;
+    }
 
     // Change Advisor text after new item selection
     switch (m_selected_type) {
@@ -204,16 +213,19 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 //####################################################################################
 //##        Updates the property boxes already in the object inspector for the current item
 //####################################################################################
-void TreeInspector::updateObjectProperty(DrObject* object, Object_Properties property)
+void TreeInspector::updateObjectProperty(DrSettings* object, Object_Properties property)
 {
     if (object->getKey() != m_selected_key) return;
     if (IsDrObjectClass(m_selected_type) == false) return;
 
     Dr::SetLabelText(Label_Names::Label_1, "Insp Widget Count: " + QString::number(m_widgets.count()) );
 
+    long property_to_change = static_cast<long>(property);
+
     for (auto widget : m_widgets) {
         long prop_key = widget->property(User_Property::Key).toInt();
-        if (prop_key != static_cast<long>(property)) continue;
+        if (prop_key != property_to_change &&
+            property != Object_Properties::all_properties) continue;
 
         DrProperty *prop = object->findPropertyFromPropertyKey(prop_key);
         if (prop == nullptr) continue;
@@ -237,11 +249,9 @@ void TreeInspector::updateObjectProperty(DrObject* object, Object_Properties pro
                 dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toPointF().y());
             break;
         }
-
-        this->update();
-        return;
     }
 
+    this->update();
 }
 
 

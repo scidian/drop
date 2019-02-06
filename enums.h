@@ -314,6 +314,9 @@ enum class Object_Properties
     // character_settings
     character_jump_x,       //double
     character_jump_y,       //double
+
+    // Special case that tells some functions (such as updating object inspector) to use all properties
+    all_properties,
 };
 
 
