@@ -182,7 +182,6 @@ public:
     Transform_Data  decomposeTransform(QTransform &from_transform, bool qr_type = true);
     double          extractAngleFromTransform(QTransform &from_transform);
     QPointF         extractScaleFromItem(QGraphicsItem *item);
-    QGraphicsItem*  itemOnTopAtPosition(QPoint check_point);
     QRectF          rectAtCenterPoint(QPoint center, double rect_size);
     void            updateSelectionBoundingBox();
 

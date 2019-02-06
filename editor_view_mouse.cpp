@@ -37,7 +37,7 @@ void DrView::mousePressEvent(QMouseEvent *event)
     // On initial mouse down, store mouse origin point
     m_origin =          event->pos();
     m_origin_in_scene = mapToScene(m_origin);
-    m_origin_item =     itemOnTopAtPosition(event->pos());
+    m_origin_item =     itemAt(event->pos());
 
     // If space bar isn't down, process mouse down
     if (dragMode() == QGraphicsView::DragMode::NoDrag) {
@@ -131,44 +131,6 @@ void DrView::checkTranslateToolTipStarted()
 
 
 //####################################################################################
-//##        Finds item on top of scene at point in View, ignoring selection group
-//####################################################################################
-QGraphicsItem* DrView::itemOnTopAtPosition(QPoint check_point)
-{
-    QGraphicsItem         *item_on_top;
-    QList<QGraphicsItem*>  possible_items;
-
-    // Make a list of all items at point excluding selection group
-    for (auto item : items(check_point)) {
-
-        possible_items.append(item);
-
-        // !!!!! DEBUG: Shows red, green, blue and alpha of pixel under mouse
-        if (Dr::CheckDebugFlag(Debug_Flags::Label_Top_Item_RGBA)) {
-            QColor pixel_color = dynamic_cast<DrItem*>(item)->getColorAtPoint(check_point, this);
-            Dr::SetLabelText(Label_Names::Label_1, "R: " + QString::number(pixel_color.red()) +
-                                                   "G: " + QString::number(pixel_color.green()) +
-                                                   "B: " + QString::number(pixel_color.blue()) );
-            Dr::SetLabelText(Label_Names::Label_2, "Aplha: " + QString::number(pixel_color.alpha()) );
-        }
-        // !!!!! END
-    }
-
-    // If no items at position, exit
-    if (possible_items.count() == 0) return nullptr;
-
-    // Find higest item that is not selection group
-    item_on_top = possible_items.first();
-    for (auto item : possible_items) {
-        if (item->zValue() > item_on_top->zValue())
-            item_on_top = item;
-    }
-
-    return item_on_top;
-}
-
-
-//####################################################################################
 //##        Mouse Moved
 //####################################################################################
 void DrView::mouseMoveEvent(QMouseEvent *event)
@@ -195,7 +157,19 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
         m_tool_tip->updateToolTipPosition(m_last_mouse_pos);
 
     // ******************** Grab item under mouse
-    QGraphicsItem *check_item = itemOnTopAtPosition(m_last_mouse_pos);
+    QGraphicsItem *check_item = itemAt(m_last_mouse_pos);
+
+
+    // !!!!! DEBUG: Shows red, green, blue and alpha of pixel under mouse
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_Top_Item_RGBA)) {
+        QColor pixel_color = dynamic_cast<DrItem*>(check_item)->getColorAtPoint(m_last_mouse_pos, this);
+        Dr::SetLabelText(Label_Names::Label_1, "R: " + QString::number(pixel_color.red()) +
+                                               "G: " + QString::number(pixel_color.green()) +
+                                               "B: " + QString::number(pixel_color.blue()) );
+        Dr::SetLabelText(Label_Names::Label_2, "Aplha: " + QString::number(pixel_color.alpha()) );
+    }
+    // !!!!! END
+
 
     // ******************** Check selection handles to see if mouse is over one
     if (m_over_handle == Position_Flags::Move_Item) m_over_handle = Position_Flags::No_Position;
@@ -351,7 +325,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
                 m_tool_tip->startToolTip(View_Mode::Translating, m_origin, mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
             else {
                 m_tool_tip->updateToolTipData( mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
-                my_scene->updateChildrenPositionData();
+                my_scene->updateSelectedItemsPositionData();
             }
         }
     } else {

@@ -27,20 +27,21 @@ class DrScene : public QGraphicsScene
 
 private:
     // Local member variables
-    DrProject          *m_project;                      // Pointer to currently loaded project
-    InterfaceRelay     *m_relay;                        // Pointer to InterfaceRelay class of parent form
+    DrProject              *m_project;                      // Pointer to currently loaded project
+    InterfaceRelay         *m_relay;                        // Pointer to InterfaceRelay class of parent form
 
-    DrStage            *m_current_stage = nullptr;      // Holds a pointer to the current DrStage being shown
-    long                m_current_stage_key = -1;       // Holds the project key of the currently shown DrStage, starts at -1, i.e. "none"
+    DrStage                *m_current_stage = nullptr;      // Holds a pointer to the current DrStage being shown
+    long                    m_current_stage_key = -1;       // Holds the project key of the currently shown DrStage, starts at -1, i.e. "none"
+
+    QUndoStack             *m_undo;
+
 
     // Selection variables
-    // !!!!! ***** !!!!! Re working how selection works, getting rid of selection group, back to selectedItems()
-    QList<QGraphicsItem*>   m_selection_items;          // List of selected items
-    double                  m_selection_angle;          // Angle current selection has been rotated to
-    QPointF                 m_selection_scale;          // Scaling applied to current selection
-    QRectF                  m_selection_box;            // Starting outline of selected items
+    QList<QGraphicsItem*>   m_selection_items;              // List of selected items
+    double                  m_selection_angle;              // Angle current selection has been rotated to
+    QPointF                 m_selection_scale;              // Scaling applied to current selection
+    QRectF                  m_selection_box;                // Starting outline of selected items
 
-    QUndoStack         *m_undo;
 
 public:
     // Mutexes
@@ -78,7 +79,7 @@ public:
     void            setCurrentStageKeyShown(long stage_key) { m_current_stage_key = stage_key; }
 
 
-    // Selection Functions
+    // ********** Selection Functions
     long                    getSelectionCount()         { return m_selection_items.count(); }
     QTransform              getSelectionTransform();
 
@@ -96,7 +97,7 @@ public:
     void                    translateSelectionBox(double x, double y);
     void                    updateSelectionBox();
 
-    void                    updateChildrenPositionData();
+    void                    updateSelectedItemsPositionData();
     QList<DrObject*>        convertListItemsToObjects(QList<QGraphicsItem*> graphics_items);
     QList<DrObject*>        getSelectionGroupObjects();
 

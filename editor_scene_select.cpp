@@ -142,7 +142,7 @@ QList<DrObject*> DrScene::convertListItemsToObjects(QList<QGraphicsItem*> graphi
 //####################################################################################
 //##        Calls updateProperty which forces an update of the object inspector
 //####################################################################################
-void DrScene::updateChildrenPositionData()
+void DrScene::updateSelectedItemsPositionData()
 {
     for (auto item : getSelectionItems()) {
         QPointF center = item->sceneTransform().map( item->boundingRect().center() );

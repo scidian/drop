@@ -125,7 +125,7 @@ MoveCommand::MoveCommand(DrScene *scene, const QPointF &old_pos, QUndoCommand *p
 
 void MoveCommand::undo() {
 //    m_scene->setPositionByOrigin(m_scene->getSelectionGroup(), Position_Flags::Center, m_old_pos.x(), m_old_pos.y());
-//    m_scene->updateChildrenPositionData();
+//    m_scene->updateSelectedItemsPositionData();
 //    m_scene->updateView();
 //    QString item_text = "Items";
 //    if (m_scene->getSelectionGroup()->childItems().count() == 1)
@@ -138,7 +138,7 @@ void MoveCommand::undo() {
 
 void MoveCommand::redo() {
 //    m_scene->setPositionByOrigin(m_scene->getSelectionGroup(), Position_Flags::Center, m_new_pos.x(), m_new_pos.y());
-//    m_scene->updateChildrenPositionData();
+//    m_scene->updateSelectedItemsPositionData();
 //    m_scene->updateView();
 //    QString item_text = "Items";
 //    if (m_scene->getSelectionGroup()->childItems().count() == 1)
