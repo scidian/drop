@@ -66,25 +66,11 @@ void DrView::paintEvent(QPaintEvent *event)
     if (my_scene->getSelectionCount() < 1) return;
 
 
-
-
-    // ******************** Draw bounding box for each item
-    QPainter painter(viewport());
-    paintItemOutlines(painter);
-
-
-
-    // ******************** Draw box around entire seleciton, with Size Grip handles
-    paintBoundingBox(painter);
-
-
-
-    // ******************** Draw angles if rotating
-    double group_angle = my_scene->getSelectionAngle();
-    paintGroupAngle(painter, group_angle);
-
-    // ******************** If we have some objects selected and created some handles, draw them
-    paintHandles(painter, m_handles_shape);
+    QPainter painter(viewport());                                   // Initiate QPainter object
+    paintItemOutlines(painter);                                     // Draw bounding box for each selected item
+    paintBoundingBox(painter);                                      // Draw box around entire seleciton, with Size Grip handles
+    paintGroupAngle(painter, my_scene->getSelectionAngle());        // Draw angles if rotating
+    paintHandles(painter, m_handles_shape);                         // Draw handles around selected item / bounding box
 
 
     // !!!!! #DEBUG:    Draw frames per second
@@ -270,16 +256,12 @@ void DrView::paintBoundingBox(QPainter &painter)
     painter.drawPolygon(to_view);
 
 
-
-
-
-    painter.setPen(QPen(QBrush(Qt::red), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    painter.drawPolygon(m_debug_points);
-
-
-
-
-
+    // !!!!! #DEBUG:    Paints unrotated selection box with distance point used for calculating scale
+    if (Dr::CheckDebugFlag(Debug_Flags::Paint_Resize_Calculations)) {
+        painter.setPen(QPen(QBrush(Qt::red), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        painter.drawPolygon(m_debug_points);
+    }
+    // !!!!! END
 }
 
 

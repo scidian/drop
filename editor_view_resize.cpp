@@ -35,7 +35,7 @@ void DrView::startResize(QPoint mouse_in_view)
     m_start_resize_rect = my_scene->totalSelectionSceneRect();          // Store starting scene rect of initial selection bounding box
 
     QTransform t = my_scene->getSelectionTransform();
-    QRectF     r = my_scene->getSelectionBox();
+    QRectF     r = my_scene->getSelectionBox().normalized();
     m_pre_resize_corners[Position_Flags::Top_Left] =     t.map( r.topLeft() );
     m_pre_resize_corners[Position_Flags::Top_Right] =    t.map( r.topRight() );
     m_pre_resize_corners[Position_Flags::Bottom_Left] =  t.map( r.bottomLeft() );
@@ -111,8 +111,6 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
 
     Position_Flags use_handle = m_over_handle;
 
-Dr::SetLabelText(Label_Names::Label_Object_5, "W: " + QString::number(item_width) + ", H: " + QString::number(item_height));
-
     // ********** Find corners / sides we're working with, calculate new width / height
     QPointF corner_start =    m_handles_centers[use_handle];
     QPointF corner_opposite = m_handles_centers[findOppositeSide(use_handle)];
@@ -130,18 +128,21 @@ Dr::SetLabelText(Label_Names::Label_Object_5, "W: " + QString::number(item_width
     // Rotate back to zero degree shape angle, starts in view coordinates - ends up in scene coords
     QPointF zero_rotated_opposite = remove_rotation.map( corner_opposite );
     QPointF zero_rotated_opposite_in_scene = mapToScene(zero_rotated_opposite.toPoint());
-
-QPointF zero_rotated_corner = remove_rotation.map( corner_start );
-QPointF zero_rotated_corner_in_scene = mapToScene(zero_rotated_corner.toPoint());
-
     QPointF point_in_shape = mapToScene(remove_rotation.map(mapFromScene(mouse_in_scene)));
     qreal   scale_x,   scale_y;
 
 
-m_debug_points.clear();
-m_debug_points.append( mapFromScene(point_in_shape) );
-m_debug_points.append( mapFromScene(zero_rotated_opposite_in_scene)) ;
-m_debug_points.append( mapFromScene(zero_rotated_corner_in_scene) );
+    // !!!!! #DEBUG:    Paints unrotated selection box with distance point used for calculating scale
+    if (Dr::CheckDebugFlag(Debug_Flags::Paint_Resize_Calculations)) {
+        QPointF zero_rotated_corner = remove_rotation.map( corner_start );
+        QPointF zero_rotated_corner_in_scene = mapToScene(zero_rotated_corner.toPoint());
+        m_debug_points.clear();
+        m_debug_points.append( mapFromScene(point_in_shape) );
+        m_debug_points.append( mapFromScene(zero_rotated_opposite_in_scene)) ;
+        m_debug_points.append( mapFromScene(zero_rotated_corner_in_scene) );
+    }
+    // !!!!! END
+
 
     // ***** Calculate X scale
     if (m_do_x == X_Axis::Right)
@@ -158,7 +159,6 @@ m_debug_points.append( mapFromScene(zero_rotated_corner_in_scene) );
         scale_y = QLineF(point_in_shape, zero_rotated_opposite_in_scene).dy() / item_height;
     else
         scale_y = m_pre_resize_scale.y();
-
 
     // Make sure it doesnt disappear off the screen, Qt doesnt like when items scale go to zero
     if (scale_x <  .0001 && scale_x >= 0) scale_x =  .0001;
@@ -270,9 +270,7 @@ m_debug_points.append( mapFromScene(zero_rotated_corner_in_scene) );
         }
     }
 
-
     my_scene->setPositionByOrigin(group, origin_flag, new_pos.x(), new_pos.y());
-
 
 
     // ***** Store new scale and destroy item

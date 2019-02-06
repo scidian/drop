@@ -45,10 +45,11 @@ void InitializeFlags()
     SetDebugFlag( Debug_Flags::Label_Stage_Tree_Selection );
     //SetDebugFlag( Debug_Flags::Label_Selection_Change_Stage_Tree );
 
-    //SetDebugFlag( Debug_Flags::Paint_Rotating_Angles );
     //SetDebugFlag( Debug_Flags::Label_Rotation_Data );
     SetDebugFlag( Debug_Flags::Label_Selection_Group_Data );
     SetDebugFlag( Debug_Flags::Label_Selected_Item_Data );
+    SetDebugFlag( Debug_Flags::Paint_Resize_Calculations );
+    //SetDebugFlag( Debug_Flags::Paint_Rotating_Angles );
     //SetDebugFlag( Debug_Flags::Paint_Shear_Matrix );
     //SetDebugFlag( Debug_Flags::Paint_Size_Grip_Handles );
 }

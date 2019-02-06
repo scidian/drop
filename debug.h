@@ -33,6 +33,8 @@ enum class Debug_Flags {
     Label_Rotation_Data,                // Show rotation data while in View_Mode::Rotating in DrView
     Label_Selection_Group_Data,         // Show info about DrScene current QGraphicsItemGroup of selected items
     Label_Selected_Item_Data,           // Show info about first item in Selection Group
+
+    Paint_Resize_Calculations,          // Paints unrotated selection box with distance point used for calculating scale
     Paint_Shear_Matrix,                 // Paints un sheared / unrotated boxes and shows matrix data for selected item's transform()
     Paint_Rotating_Angles,              // Paints mouse origin and mouse position lines during Rotating
     Paint_Size_Grip_Handles,            // Paints rects of resize grip handles
