@@ -141,8 +141,6 @@ private:
     QPointF                         m_pre_resize_scale;             // Scale of selection group before we start resize
     QMap<Position_Flags, QPointF>   m_pre_resize_corners;           // Stores corner coordinates before resizing starts
 
-    QPolygonF  m_debug_points;
-
     // View_Mode::Rotating Variables
     QRectF                          m_rotate_start_rect;            // Stores starting rect of selection before resize starts
     double                          m_rotate_start_angle;           // Stores angle of selection group at start of rotate routine
@@ -151,6 +149,10 @@ private:
     long                            m_debug_fps = 0;         // TEMP
     long                            m_debug_fps_last;        // TEMP
     QTime                           m_debug_timer;           // TEMP
+
+    QPolygonF                       m_debug_points;
+    QPolygonF                       m_debug_shear;
+    QPolygonF                       m_debug_shear2, m_debug_shear3;
 
 
 
@@ -212,8 +214,8 @@ public:
     Position_Flags  findOppositeSide(Position_Flags start_side);
     void            removeShearing(QGraphicsItem *item);
 
-
-                    void            resizeSelectionWithRotate2(QPointF mouse_in_scene);
+            void            removeShearing2(QGraphicsItem *item);
+            void            resizeSelectionWithRotate2(QPointF mouse_in_scene);
 
 
 public slots:

@@ -188,6 +188,12 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 
     ///painter->drawPixmap(0, 0, pixmap());
 
+    // Check item is not super duper tiny, this seems to crash paint function
+    QPolygonF poly = ( sceneTransform().map( boundingRect() ));
+    QRectF bounds = poly.boundingRect();
+    if (bounds.width() < .5 || bounds.height() < .5) return;
+
+    // Set paint option to "not selected" or paint routine will draw dotted lines around item
     QStyleOptionGraphicsItem myOption(*option);
     myOption.state &= ~QStyle::State_Selected;
 
