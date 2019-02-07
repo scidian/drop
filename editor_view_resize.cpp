@@ -44,12 +44,6 @@ void DrView::startResize(QPoint mouse_in_view)
     m_pre_resize_corners[Position_Flags::Left] =         t.map( QLineF(r.topLeft(), r.bottomLeft()).pointAt(.5) );
     m_pre_resize_corners[Position_Flags::Right] =        t.map( QLineF(r.topRight(), r.bottomRight()).pointAt(.5) );
 
-    // Store pre resize scales
-    for (auto child : my_scene->getSelectionItems()) {
-        QPointF child_scale = child->data(User_Roles::Scale).toPointF();
-        child->setData(User_Roles::Pre_Resize_Scale, child_scale);
-    }
-
     // Set up our custom tool tip
     double group_width =  QLineF( mapToScene(m_handles_centers[Position_Flags::Left].toPoint()),
                                   mapToScene(m_handles_centers[Position_Flags::Right].toPoint()) ).length();
@@ -284,10 +278,6 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     QList<QGraphicsItem*> my_items = my_scene->getSelectionItems();
     for (auto child : my_items) removeShearing(child);
 
-
-//    for (auto child : my_items) removeShearing2(child);
-
-
     // ***** Updates selection box from new item locations / sizes,
     //       especially important because item locations may have changed during shear remove
     my_scene->updateSelectionBox();
@@ -304,7 +294,6 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     my_scene->setPositionByOrigin(group, origin_flag, new_pos.x(), new_pos.y());
     scene()->destroyItemGroup(group);
     my_scene->updateSelectionBox();
-
 
 
     // ***** Update tool tip
@@ -324,11 +313,10 @@ void DrView::removeShearing(QGraphicsItem *item)
     double  angle = item->data(User_Roles::Rotation).toDouble();
     QPointF scale = extractScaleFromItem(item);
 
-    QPointF center_in_scene = item->sceneTransform().map( item->boundingRect().center() );
-
     QTransform no_skew = QTransform().rotate(angle).scale(scale.x(), scale.y());
     item->setTransform(no_skew);
 
+    QPointF center_in_scene = item->sceneTransform().map( item->boundingRect().center() );
     my_scene->setPositionByOrigin(item, Position_Flags::Center, center_in_scene.x(), center_in_scene.y());
 
     dynamic_cast<DrItem*>(item)->updateProperty(User_Roles::Scale, QPointF(scale.x(), scale.y()) );
@@ -349,40 +337,6 @@ QPointF DrView::extractScaleFromItem(QGraphicsItem *item)
 
 
 
-void DrView::removeShearing2(QGraphicsItem *item)
-{
-    double start_box_width =  QLineF(m_pre_resize_corners[Position_Flags::Top_Left], m_pre_resize_corners[Position_Flags::Top_Right]).length();
-    double start_box_height = QLineF(m_pre_resize_corners[Position_Flags::Top_Left], m_pre_resize_corners[Position_Flags::Bottom_Left]).length();
-
-    double  angle = item->data(User_Roles::Rotation).toDouble();
-    QPointF start_scale = item->data(User_Roles::Pre_Resize_Scale).toPointF();
-
-    double start_width =  item->boundingRect().width() * start_scale.x();
-    double start_height = item->boundingRect().height() * start_scale.y();
-
-    double start_ratio_x = start_width /  start_box_width;
-    double start_ratio_y = start_height / start_box_height;
-
-    QTransform t = my_scene->getSelectionTransform();
-    QRectF     r = my_scene->getSelectionBox();
-    double new_box_width =  QLineF( t.map( r.topLeft()), t.map(r.topRight()) ).length();
-    double new_box_height = QLineF( t.map( r.topLeft()), t.map(r.bottomLeft()) ).length();
-
-    double new_width =  new_box_width *  start_ratio_x;
-    double new_height = new_box_height * start_ratio_y;
-
-    double new_scale_x = new_width /  item->boundingRect().width();
-    double new_scale_y = new_height / item->boundingRect().height();
-
-    QPointF center_in_scene = item->sceneTransform().map( item->boundingRect().center() );
-
-    QTransform no_skew = QTransform().rotate(angle).scale(new_scale_x, new_scale_y);
-    item->setTransform(no_skew);
-
-    my_scene->setPositionByOrigin(item, Position_Flags::Center, center_in_scene.x(), center_in_scene.y());
-
-    dynamic_cast<DrItem*>(item)->updateProperty(User_Roles::Scale, QPointF(new_scale_x, new_scale_y) );
-}
 
 
 
@@ -392,201 +346,6 @@ void DrView::removeShearing2(QGraphicsItem *item)
 
 
 
-void DrView::resizeSelectionWithRotate2(QPointF mouse_in_scene)
-{
-    // Test for scene, convert to our custom class
-    if (scene() == nullptr) return;
-
-    // Load item starting width and height
-    double item_width =  my_scene->getSelectionBox().normalized().width();
-    double item_height = my_scene->getSelectionBox().normalized().height();
-
-    Position_Flags use_handle = m_over_handle;
-
-    // ********** Find corners / sides we're working with, calculate new width / height
-    QPointF corner_start =    m_handles_centers[use_handle];
-    QPointF corner_opposite = m_handles_centers[findOppositeSide(use_handle)];
-
-    // Find center point, load angle of item
-    QPointF center_point = QLineF(corner_start, corner_opposite).pointAt(.5);
-    double  angle = my_scene->getSelectionAngle();
-
-    // Create transform to rotate center line back to zero
-    QTransform remove_rotation;
-    remove_rotation.translate(center_point.x(), center_point.y());
-    remove_rotation.rotate(-angle);
-    remove_rotation.translate(-center_point.x(), -center_point.y());
-
-    // Rotate back to zero degree shape angle, starts in view coordinates - ends up in scene coords
-    QPointF zero_rotated_opposite = remove_rotation.map( corner_opposite );
-    QPointF zero_rotated_opposite_in_scene = mapToScene(zero_rotated_opposite.toPoint());
-    QPointF point_in_shape = mapToScene(remove_rotation.map(mapFromScene(mouse_in_scene)));
-    qreal   scale_x,   scale_y;
-
-
-    // !!!!! #DEBUG:    Paints unrotated selection box with distance point used for calculating scale
-    if (Dr::CheckDebugFlag(Debug_Flags::Paint_Resize_Calculations)) {
-        QPointF zero_rotated_corner = remove_rotation.map( corner_start );
-        QPointF zero_rotated_corner_in_scene = mapToScene(zero_rotated_corner.toPoint());
-        m_debug_points.clear();
-        m_debug_points.append( mapFromScene(point_in_shape) );
-        m_debug_points.append( mapFromScene(zero_rotated_opposite_in_scene)) ;
-        m_debug_points.append( mapFromScene(zero_rotated_corner_in_scene) );
-    }
-
-
-    // ***** Calculate X scale
-    if (m_do_x == X_Axis::Right)
-        scale_x = QLineF(zero_rotated_opposite_in_scene, point_in_shape).dx() / item_width;
-    else if (m_do_x == X_Axis::Left)
-        scale_x = QLineF(point_in_shape, zero_rotated_opposite_in_scene).dx() / item_width;
-    else
-        scale_x = m_pre_resize_scale.x();
-
-    // ***** Calculate Y scale
-    if (m_do_y == Y_Axis::Bottom)
-        scale_y = QLineF(zero_rotated_opposite_in_scene, point_in_shape).dy() / item_height;
-    else if (m_do_y == Y_Axis::Top)
-        scale_y = QLineF(point_in_shape, zero_rotated_opposite_in_scene).dy() / item_height;
-    else
-        scale_y = m_pre_resize_scale.y();
-
-
-    // Make sure it doesnt disappear off the screen, Qt doesnt like when items scale go to zero
-    if (scale_x <  .0001 && scale_x >= 0) scale_x =  .0001;
-    if (scale_x > -.0001 && scale_x <= 0) scale_x = -.0001;
-    if (scale_y <  .0001 && scale_y >= 0) scale_y =  .0001;
-    if (scale_y > -.0001 && scale_y <= 0) scale_y = -.0001;
-
-    // If shift or control keys are down, maintain starting aspect ratio
-    if (m_flag_key_down_shift) {
-        double pre_resize_ratio;
-        if (m_do_y == Y_Axis::None) {
-            pre_resize_ratio = m_pre_resize_scale.y() / m_pre_resize_scale.x();
-            scale_y = scale_x * pre_resize_ratio;
-        } else {
-            pre_resize_ratio = m_pre_resize_scale.x() / m_pre_resize_scale.y();
-            scale_x = scale_y * pre_resize_ratio;
-        }
-    }
-
-
-    // ********** Create transform for new group, apply it, and destroy temporary item group
-    QPointF old_scale = my_scene->getSelectionScale();
-
-    // Create item group and apply rotation before adding items
-    QGraphicsItemGroup *group = new QGraphicsItemGroup();
-    scene()->addItem(group);
-    QPointF center = group->boundingRect().center();
-    QTransform t = QTransform().translate(center.x(), center.y()).rotate(angle).translate(-center.x(), -center.y());
-    group->setTransform(t);
-    for (auto item : my_scene->getSelectionItems())
-        group->addToGroup(item);
-
-    // Remove old scaling and then apply new scale factor
-    center = group->boundingRect().center();
-    QTransform transform = group->transform()
-            .translate(center.x(), center.y())
-            .scale(1 / old_scale.x(), 1 / old_scale.y())
-            .scale(scale_x, scale_y)
-            .translate(-center.x(), -center.y());
-    group->setTransform(transform);
-
-
-    // ***** Figure out which position from original rect to translate from
-    QPointF new_pos = group->pos();
-    Position_Flags resize_flag = Position_Flags::Top_Left;
-
-    if (m_flag_key_down_control)
-        resize_flag = Position_Flags::Center;
-
-    else if (m_do_x == X_Axis::Left && m_do_y == Y_Axis::None)
-        resize_flag = Position_Flags::Right;
-    else if (m_do_x == X_Axis::Left && m_do_y == Y_Axis::Top)
-        resize_flag = Position_Flags::Bottom_Right;
-    else if (m_do_x == X_Axis::Left && m_do_y == Y_Axis::Bottom)
-        resize_flag = Position_Flags::Top_Right;
-
-    else if (m_do_x == X_Axis::Right && m_do_y == Y_Axis::None)
-        resize_flag = Position_Flags::Left;
-    else if (m_do_x == X_Axis::Right && m_do_y == Y_Axis::Top)
-        resize_flag = Position_Flags::Bottom_Left;
-    else if (m_do_x == X_Axis::Right && m_do_y == Y_Axis::Bottom)
-        resize_flag = Position_Flags::Top_Left;
-
-    else if (m_do_x == X_Axis::None && m_do_y == Y_Axis::Top)
-        resize_flag = Position_Flags::Bottom;
-    else if (m_do_x == X_Axis::None && m_do_y == Y_Axis::Bottom)
-        resize_flag = Position_Flags::Top;
-
-    new_pos = m_pre_resize_corners[resize_flag];
-
-
-    // ***** Adjust destination position if scale is negative in x or y
-    Position_Flags origin_flag = resize_flag;
-
-    if (scale_y < 0 && scale_x > 0) {
-        switch (origin_flag)
-        {
-        case Position_Flags::Bottom:        origin_flag = Position_Flags::Top;              break;
-        case Position_Flags::Bottom_Right:  origin_flag = Position_Flags::Top_Right;        break;
-        case Position_Flags::Bottom_Left:   origin_flag = Position_Flags::Top_Left;         break;
-        case Position_Flags::Top:           origin_flag = Position_Flags::Bottom;           break;
-        case Position_Flags::Top_Right:     origin_flag = Position_Flags::Bottom_Right;     break;
-        case Position_Flags::Top_Left:      origin_flag = Position_Flags::Bottom_Left;      break;
-        default: ;
-        }
-    } else if (scale_y > 0 && scale_x < 0) {
-        switch (origin_flag)
-        {
-        case Position_Flags::Right:         origin_flag = Position_Flags::Left;             break;
-        case Position_Flags::Top_Right:     origin_flag = Position_Flags::Top_Left;         break;
-        case Position_Flags::Bottom_Right:  origin_flag = Position_Flags::Bottom_Left;      break;
-        case Position_Flags::Left:          origin_flag = Position_Flags::Right;            break;
-        case Position_Flags::Top_Left:      origin_flag = Position_Flags::Top_Right;        break;
-        case Position_Flags::Bottom_Left:   origin_flag = Position_Flags::Bottom_Right;     break;
-        default: ;
-        }
-    } else if (scale_y < 0 && scale_x < 0) {
-        switch (origin_flag)
-        {
-        case Position_Flags::Right:         origin_flag = Position_Flags::Left;             break;
-        case Position_Flags::Left:          origin_flag = Position_Flags::Right;            break;
-        case Position_Flags::Top:           origin_flag = Position_Flags::Bottom;           break;
-        case Position_Flags::Bottom:        origin_flag = Position_Flags::Top;              break;
-        case Position_Flags::Top_Right:     origin_flag = Position_Flags::Bottom_Left;      break;
-        case Position_Flags::Bottom_Right:  origin_flag = Position_Flags::Top_Left;         break;
-        case Position_Flags::Top_Left:      origin_flag = Position_Flags::Bottom_Right;     break;
-        case Position_Flags::Bottom_Left:   origin_flag = Position_Flags::Top_Right;        break;
-        default: ;
-        }
-    }
-
-    my_scene->setPositionByOrigin(group, origin_flag, new_pos.x(), new_pos.y());
-
-
-    // ***** Store new scale and destroy item
-    my_scene->setSelectionScale( QPointF(scale_x, scale_y) );
-    scene()->destroyItemGroup(group);
-
-
-    // ***** Remove any shearing that may have been caused to all items in selection group
-    QList<QGraphicsItem*> my_items = my_scene->getSelectionItems();
-    for (auto child : my_items) removeShearing(child);
-
-
-    // ***** Updates selection box from new item locations / sizes,
-    //       especially important because item locations may have changed during shear remove
-    my_scene->updateSelectionBox();
-
-
-    // ***** Update tool tip
-    double group_width =  QLineF( mapToScene(m_handles_centers[Position_Flags::Left].toPoint()),
-                                  mapToScene(m_handles_centers[Position_Flags::Right].toPoint()) ).length();
-    double group_height = QLineF( mapToScene(m_handles_centers[Position_Flags::Top].toPoint()),
-                                  mapToScene(m_handles_centers[Position_Flags::Bottom].toPoint()) ).length();
-    m_tool_tip->updateToolTipData( QPointF( group_width, group_height ));
-}
 
 
 

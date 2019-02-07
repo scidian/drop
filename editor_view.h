@@ -214,9 +214,6 @@ public:
     Position_Flags  findOppositeSide(Position_Flags start_side);
     void            removeShearing(QGraphicsItem *item);
 
-            void            removeShearing2(QGraphicsItem *item);
-            void            resizeSelectionWithRotate2(QPointF mouse_in_scene);
-
 
 public slots:
     void    sceneChanged(QList<QRectF> region);
