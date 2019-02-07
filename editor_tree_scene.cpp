@@ -225,6 +225,7 @@ void TreeStage::selectionChanged (const QItemSelection &selected, const QItemSel
     // If size of list is zero, clear selected_key and exit function
     if (item_list.size() == 0) {
         this->setSelectedKey(0);
+        m_relay->buildObjectInspector(QList<long> { });
         return;
     }
 

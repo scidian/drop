@@ -57,12 +57,21 @@ void TreeInspector::applyHeaderBodyProperties(QWidget *widget, QString header, Q
 //####################################################################################
 void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 {
-    // First, retrieve unique key of item clicked in list
-    long   new_key =  key_list[0];
-    DrType new_type = m_project->findChildTypeFromKey( new_key );
+    // If no keys were passed in, clear inspector and exit
+    if (key_list.count() == 0) {
+        m_selected_key = 0;
+        m_selected_type = DrType::NotFound;
+        this->clear();
+        m_widgets.clear();
+        return;
+    }
+
+    // Retrieve unique key of item clicked in list
+    long new_key = key_list[0];
 
     // If object inspector already contaitns this item exit now
     if (new_key == m_selected_key) return;
+    DrType new_type = m_project->findChildTypeFromKey( new_key );
 
     // !!!!! #DEBUG:    Show selected item key and info
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Object_Inspector_Build)) {
@@ -118,7 +127,6 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     ComponentMap list_components = m_project->findSettingsFromKey( m_selected_key )->getComponentList();
 
     // Loop through each component and add it to the Object Inspector list
-    int rowCount = 0;
     this->clear();
     m_widgets.clear();
 
@@ -175,7 +183,6 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
 
             vertical_layout->addWidget(single_row);
-            rowCount++;
         }
 
 
