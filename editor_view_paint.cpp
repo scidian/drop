@@ -56,7 +56,6 @@ void DrView::paintEvent(QPaintEvent *event)
 
     // ******************** At this point, if no selected items get out of here
     if (scene() == nullptr) return;
-    DrScene *my_scene = dynamic_cast<DrScene*>(scene());
 
     // Store current center point of scene, so that if we go to a new scene and come back we stay in the same place
     if (my_scene->getCurrentStageShown())
@@ -169,7 +168,6 @@ void DrView::paintGrid()
 //####################################################################################
 void DrView::paintItemOutlines(QPainter &painter)
 {
-    DrScene *my_scene = dynamic_cast<DrScene*>(scene());
     QList<QGraphicsItem*>  my_items = my_scene->getSelectionItems();
 
     QBrush pen_brush(Dr::GetColor(Window_Colors::Icon_Light));
@@ -247,8 +245,6 @@ void DrView::paintItemOutlines(QPainter &painter)
 //####################################################################################
 void DrView::paintBoundingBox(QPainter &painter)
 {
-    DrScene *my_scene = dynamic_cast<DrScene*>(scene());
-
     painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 1));
 
     // ***** Map item bounding box to screen so we can draw it

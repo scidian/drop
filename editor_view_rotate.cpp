@@ -28,9 +28,6 @@
 //####################################################################################
 void DrView::startRotate(QPoint mouse_in_view)
 {
-    // Grab starting angle of selection group before rotating starts
-    DrScene *my_scene = dynamic_cast<DrScene*>(scene());
-
     // Store starting rotation of current selection group
     m_rotate_start_angle = my_scene->getSelectionAngle();
 
@@ -72,7 +69,6 @@ void DrView::rotateSelection(QPointF mouse_in_view)
 {
     // Test for scene, convert to our custom class
     if (scene() == nullptr) return;
-    DrScene               *my_scene = dynamic_cast<DrScene*>(scene());
     QList<QGraphicsItem*>  my_items = my_scene->getSelectionItems();
 
     // ********** Calculate angle between starting mouse coordinate and latest mouse coordinate

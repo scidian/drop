@@ -72,6 +72,8 @@ private:
     InterfaceRelay         *m_relay;                                // Pointer to InterfaceRelay class of parent form
     View_Mode               m_view_mode = View_Mode::None;          // Tracks current view interaction mode
 
+    DrScene                *my_scene;                               // Holds the scene() this view is set to as a DrScene class
+
     QPixmap p_circle = QPixmap(":/gui_misc/handle_circle.png");
     QPixmap p_square = QPixmap(":/gui_misc/handle_square.png");
     QPixmap p_rotate = QPixmap(":/gui_misc/handle_rotate.png");
@@ -154,7 +156,7 @@ private:
 
 public:
     // Constructor
-    explicit DrView(QWidget *parent, DrProject *project, DrScene *my_scene, InterfaceRelay *relay);
+    explicit DrView(QWidget *parent, DrProject *project, DrScene *from_scene, InterfaceRelay *relay);
     virtual ~DrView() override;
 
     // Event Overrides, start at Qt Docs for QGraphicsView Class to find more

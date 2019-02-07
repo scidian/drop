@@ -25,7 +25,7 @@
 //####################################################################################
 //##        Constructor & destructor
 //####################################################################################
-DrView::DrView(QWidget *parent, DrProject *project, DrScene *my_scene, InterfaceRelay *relay) :
+DrView::DrView(QWidget *parent, DrProject *project, DrScene *from_scene, InterfaceRelay *relay) :
                QGraphicsView(parent = nullptr), m_project(project), m_relay(relay)
 {
     // Initialize rubber band object used as a selection box
@@ -40,6 +40,9 @@ DrView::DrView(QWidget *parent, DrProject *project, DrScene *my_scene, Interface
     if (Dr::CheckDebugFlag(Debug_Flags::Label_FPS))
         m_debug_timer.start();
 
+    my_scene = from_scene;
+
+    setScene(my_scene);
 
 
     // ********** Connect signals to scene
@@ -60,8 +63,6 @@ DrView::DrView(QWidget *parent, DrProject *project, DrScene *my_scene, Interface
 DrView::~DrView()
 {
     // ********** Disconnect signals from scene
-    DrScene *my_scene = dynamic_cast<DrScene*>(scene());
-
     disconnect(my_scene, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
     disconnect(my_scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
 
@@ -167,7 +168,6 @@ void DrView::updateSelectionBoundingBox(int called_from)
     if (scene() == nullptr) return;
     if (m_hide_bounding == true) return;
 
-    DrScene         *my_scene =  dynamic_cast<DrScene*>(scene());
     QRectF           rect =      my_scene->getSelectionBox().normalized();
     QTransform       transform = my_scene->getSelectionTransform();
 

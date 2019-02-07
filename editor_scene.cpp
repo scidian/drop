@@ -96,11 +96,10 @@ void DrScene::keyPressEvent(QKeyEvent *event)
     // Perform key press event on all items in selection group
     if (scene_mutex.tryLock(10) == false) return;
 
-    DrScene               *my_scene = dynamic_cast<DrScene *>(this);
     QList<QGraphicsItem*>  list_new_items;
     list_new_items.clear();
 
-    for (auto item : my_scene->getSelectionItems()) {
+    for (auto item : getSelectionItems()) {
     //!!    DrItem *new_item;
         QColor new_color;
         qreal new_x, new_y;

@@ -28,7 +28,6 @@
 //####################################################################################
 void DrView::startResize(QPoint mouse_in_view)
 {
-    DrScene       *my_scene = dynamic_cast<DrScene*>(scene());
     m_pre_resize_scale = my_scene->getSelectionScale();
 
     m_start_resize_grip = m_over_handle;                                // Store grip handle we start resize event with
@@ -103,7 +102,6 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
 {
     // Test for scene, convert to our custom class
     if (scene() == nullptr) return;
-    DrScene *my_scene = dynamic_cast<DrScene*>(scene());
 
     // Load item starting width and height
     double item_width =  my_scene->getSelectionBox().normalized().width();
@@ -310,7 +308,6 @@ void DrView::removeShearing(QGraphicsItem *item)
     QTransform no_skew = QTransform().rotate(angle).scale(scale.x(), scale.y());
     item->setTransform(no_skew);
 
-    DrScene *my_scene = dynamic_cast<DrScene*>(scene());
     my_scene->setPositionByOrigin(item, Position_Flags::Center, center_in_scene.x(), center_in_scene.y());
 
     dynamic_cast<DrItem*>(item)->updateProperty(User_Roles::Scale, QPointF(scale.x(), scale.y()) );

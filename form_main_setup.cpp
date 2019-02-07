@@ -174,7 +174,6 @@ void FormMain::buildWindowModeEditStage()
                         ///viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
                         viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
                         viewMain->setFrameShape(QFrame::NoFrame);
-                        viewMain->setScene(scene);
 
 
                         // ***** View area status bar

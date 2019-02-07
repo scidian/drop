@@ -26,7 +26,6 @@
 //####################################################################################
 void DrView::startSelect(QMouseEvent *event)
 {
-    DrScene *my_scene = dynamic_cast<DrScene*>(scene());
     m_items_start = my_scene->getSelectionItems();
 
     // If control key isnt down, we're starting a new selection process, so remove all items
@@ -45,8 +44,6 @@ void DrView::startSelect(QMouseEvent *event)
 //####################################################################################
 void DrView::processSelection(QPoint mouse_in_view)
 {
-    DrScene *my_scene = dynamic_cast<DrScene*>(scene());
-
     QRect band_box = QRect(m_origin, mouse_in_view).normalized();
     if (band_box.width() < 1)  band_box.setWidth(1);
     if (band_box.height() < 1) band_box.setHeight(1);

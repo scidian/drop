@@ -31,7 +31,6 @@ void DrView::mousePressEvent(QMouseEvent *event)
 {
     // Test for scene, convert to our custom class and lock the scene
     if (scene() == nullptr) return;
-    DrScene *my_scene = dynamic_cast<DrScene*>(scene());
     if (my_scene->scene_mutex.tryLock(100) == false) return;
 
     // On initial mouse down, store mouse origin point
@@ -138,7 +137,6 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
 {
     // Test for scene, convert to our custom class and lock the scene
     if (scene() == nullptr) return;
-    DrScene *my_scene = dynamic_cast<DrScene*>(scene());
     if (my_scene->scene_mutex.tryLock(10) == false) return;
 
     // Store event mouse position
