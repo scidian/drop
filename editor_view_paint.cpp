@@ -182,49 +182,6 @@ void DrView::paintItemOutlines(QPainter &painter)
         // Convert bounding box to view coordinates and draw on screen
         QPolygon to_view = mapFromScene(polygon);
         painter.drawPolygon(to_view);
-
-
-        // !!!!! #DEBUG:    Shear Data
-        if (Dr::CheckDebugFlag(Debug_Flags::Paint_Shear_Matrix)) {
-            double  angle = item->data(User_Roles::Rotation).toDouble();
-            QPointF origin = item->mapToScene( item->boundingRect().center() );
-            QTransform remove_rotation = QTransform().translate(origin.x(), origin.y()).rotate(-angle).translate(-origin.x(), -origin.y());
-
-            // Draws an unrotated version of item
-            QPolygonF poly = item->sceneTransform().map( item->boundingRect() );
-            poly = remove_rotation.map(poly);
-            painter.setPen(QPen(QBrush(Qt::red), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-            painter.drawPolygon( mapFromScene(poly) );
-            painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-
-            // Draws an unrotated, unskewed version of item
-            QTransform item_no_rotate = item->sceneTransform() * remove_rotation;
-            poly = item->boundingRect();
-            origin = item->boundingRect().center();
-            QPointF in_scene = item->sceneTransform().map( item->boundingRect().topLeft() );
-            QTransform more = QTransform().rotate(angle).scale(item_no_rotate.m11(), item_no_rotate.m22());
-            poly = more.map(poly);
-            more = QTransform().translate(in_scene.x(), in_scene.y());
-            poly = more.map(poly);
-            painter.setPen(QPen(QBrush(Qt::GlobalColor::cyan), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-            painter.drawPolygon( mapFromScene(poly) );
-            painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-
-            // Prints out unrotated item transform
-            QTransform t = item_no_rotate;
-            qreal m11 = t.m11(), m12 = t.m12();
-            qreal m21 = t.m21(), m22 = t.m22();
-            if (Dr::IsCloseTo(0, m11, .00001)) m11 = 0;
-            if (Dr::IsCloseTo(0, m12, .00001)) m12 = 0;
-            if (Dr::IsCloseTo(0, m21, .00001)) m21 = 0;
-            if (Dr::IsCloseTo(0, m22, .00001)) m22 = 0;
-            m_relay->setLabelText(Label_Names::Label_1, "11: " + QString::number(m11, 'g', 3) + QString("\t\t") +
-                                                        "12: " + QString::number(m12, 'g', 3) + QString("\t\t"));
-            m_relay->setLabelText(Label_Names::Label_2, "21: " + QString::number(m21, 'g', 3) + QString("\t\t") +
-                                                        "22: " + QString::number(m22, 'g', 3) + QString("\t\t"));
-        }
-        // !!!!! END
-
     }
 
     // !!!!! #DEBUG:    Show selection group info

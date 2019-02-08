@@ -84,22 +84,17 @@ QTransform DrScene::getSelectionTransform()
 void DrScene::updateSelectionBox()
 {
     // Recreate selection bounding box based on new item locations
-    QGraphicsItemGroup *group = new QGraphicsItemGroup();
-    this->addItem(group);
-
     double  angle = getSelectionAngle();
     QPointF scale = getSelectionScale();
 
-    QPointF center = group->boundingRect().center();
-    QTransform t = QTransform().translate(center.x(), center.y()).rotate(angle).translate(-center.x(), -center.y());
-    group->setTransform(t);
+    QGraphicsItemGroup *group = createEmptyItemGroup(angle);
     for (auto item : this->getSelectionItems()) group->addToGroup(item);
 
     QPointF top_left =   group->sceneTransform().map( group->boundingRect().topLeft() );
     QPointF bot_right =  group->sceneTransform().map( group->boundingRect().bottomRight() );
     QPointF map_center = group->sceneTransform().map( group->boundingRect().center() );
 
-    t = QTransform()
+    QTransform t = QTransform()
             .translate(map_center.x(), map_center.y())
             .scale(1 / scale.x(), 1 / scale.y())
             .rotate(-angle)
@@ -116,6 +111,22 @@ void DrScene::updateSelectionBox()
 void DrScene::translateSelectionBox(double x, double y)
 {
     m_selection_box.moveCenter( QPointF(x, y) );
+}
+
+
+// Creates an empty QGraphicsItemGroup at angle starting angle
+QGraphicsItemGroup* DrScene::createEmptyItemGroup(double angle, QPointF scale)
+{
+    QGraphicsItemGroup *group = new QGraphicsItemGroup();
+    addItem(group);
+    QPointF    center = group->boundingRect().center();
+    QTransform transform = QTransform()
+            .translate(center.x(), center.y())
+            .rotate(angle)
+            .scale(scale.x(), scale.y())
+            .translate(-center.x(), -center.y());
+    group->setTransform(transform);
+    return group;
 }
 
 

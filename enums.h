@@ -94,6 +94,7 @@ typedef enum {
 
     Position,
     Scale,
+    Pre_Resize_Scale,
     Rotation,
     Pre_Rotate_Rotation,
     Z_Order,

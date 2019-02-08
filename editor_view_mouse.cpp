@@ -362,6 +362,15 @@ void DrView::mouseReleaseEvent(QMouseEvent *event)
         m_rubber_band->hide();
         m_tool_tip->stopToolTip();
 
+        // Clean up temporary item group used for resize routine
+        if (m_view_mode == View_Mode::Resizing) {
+            for (auto item : m_group->childItems()) {
+                m_group->removeFromGroup(item);
+                delete item;
+            }
+            my_scene->destroyItemGroup(m_group);
+        }
+
         m_view_mode = View_Mode::None;
     }
 

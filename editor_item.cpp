@@ -48,7 +48,7 @@ DrItem::DrItem(DrProject *project, DrObject *object)
     setData(User_Roles::Name, m_asset->getAssetName() );
     setData(User_Roles::Type, StringFromType( m_object->getType() ));
 
-    double angle = m_object->getComponentProperty(Object_Components::transform, Object_Properties::rotation)->getValue().toDouble();
+    double  angle = m_object->getComponentProperty(Object_Components::transform, Object_Properties::rotation)->getValue().toDouble();
     QPointF scale = m_object->getComponentProperty(Object_Components::transform, Object_Properties::scale)->getValue().toPointF();
     updateProperty(User_Roles::Z_Order, m_object->getComponentProperty(Object_Components::layering, Object_Properties::z_order)->getValue());
     updateProperty(User_Roles::Rotation, QVariant::fromValue(angle));

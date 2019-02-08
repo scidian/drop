@@ -140,6 +140,8 @@ private:
     Y_Axis                          m_do_y;                         // Processed after click to know which sides to resize from
     QPointF                         m_pre_resize_scale;             // Scale of selection group before we start resize
     QMap<Position_Flags, QPointF>   m_pre_resize_corners;           // Stores corner coordinates before resizing starts
+    QGraphicsItemGroup             *m_group;                        // Loads a copy of selected items in a new group before resize starts to better calculate resizing
+
 
     // View_Mode::Rotating Variables
     QRectF                          m_rotate_start_rect;            // Stores starting rect of selection before resize starts
@@ -185,7 +187,6 @@ public:
     double          calculateCornerAngle(double angle1, double angle2);
     Transform_Data  decomposeTransform(QTransform &from_transform, bool qr_type = true);
     double          extractAngleFromTransform(QTransform &from_transform);
-    QPointF         extractScaleFromItem(QGraphicsItem *item);
     QRectF          rectAtCenterPoint(QPoint center, double rect_size);
     void            updateSelectionBoundingBox(int called_from = 0);
 
@@ -211,9 +212,7 @@ public:
     void            resizeSelection(QPointF mouse_in_scene);
     void            resizeSelectionWithRotate(QPointF mouse_in_scene);
     Position_Flags  findOppositeSide(Position_Flags start_side);
-    void            removeShearing(QGraphicsItem *item);
-
-    void            removeShearing2(QGraphicsItem *item);
+    void            removeShearing(QGraphicsItem *item, QPointF scale);
 
 
 public slots:
