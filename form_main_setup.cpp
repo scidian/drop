@@ -61,10 +61,10 @@ void FormMain::buildWindowModeEditStage()
     font.setPointSize(Dr::FontSize());
     fontLarger.setPointSize(Dr::FontSize() + 2);
 
-    // Other size policies to play with
-    //QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::MinimumExpanding);
-    //QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored);
-    //QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
+    /// Other size policies to play with
+    ///QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::MinimumExpanding);
+    ///QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored);
+    ///QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
 
     QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     sizePolicy.setHorizontalStretch(0);
@@ -180,7 +180,6 @@ void FormMain::buildWindowModeEditStage()
                         statusBar = new QFrame(widgetStageView);
                         statusBar->setObjectName("statusBar");
                         statusBar->setFixedHeight(20);
-
 
 
 
@@ -319,26 +318,23 @@ void FormMain::buildWindowModeEditStage()
                 treeAsset->setHeaderHidden(true);
                 treeAsset->setFrameShape(QFrame::NoFrame);
 
-
-
             verticalLayoutAsset->addWidget(treeAsset);
 
         assets->setWidget(widgetAssests);
-    addDockWidget(static_cast<Qt::DockWidgetArea>(1), assets);
 
 
     // ***** Build right Advisor Dock
     advisor = new QDockWidget(this);
     advisor->setObjectName(QStringLiteral("advisor"));
     advisor->setMinimumSize(QSize(100, 80));
-    advisor->setSizePolicy(sizePolicy);
+    advisor->setSizePolicy(sizePolicyMinimum);
     advisor->setFont(font);
     advisor->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable);
     advisor->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
         widgetAdvisor = new QWidget();
         widgetAdvisor->setObjectName(QStringLiteral("widgetAdvisor"));
         widgetAdvisor->setSizePolicy(sizePolicy);
-        widgetAdvisor->setMaximumHeight(120);
+        widgetAdvisor->setMaximumHeight(180);
             verticalLayoutAdvisor = new QVBoxLayout(widgetAdvisor);
             verticalLayoutAdvisor->setObjectName(QStringLiteral("verticalLayoutAdvisor"));
             verticalLayoutAdvisor->setSpacing(0);
@@ -407,9 +403,6 @@ void FormMain::buildWindowModeEditStage()
             verticalLayoutObject->addWidget(treeInspector);
         inspector->setWidget(widgetInspector);
 
-    addDockWidget(static_cast<Qt::DockWidgetArea>(2), inspector);
-    addDockWidget(static_cast<Qt::DockWidgetArea>(2), advisor);
-
 
     // ***** Build top Toolbar Dock
     toolbar = new QDockWidget(this);
@@ -444,13 +437,24 @@ void FormMain::buildWindowModeEditStage()
             buttonWorlds->setFont(font);
         toolbar->setWidget(widgetToolbar);
         toolbar->setTitleBarWidget(new QWidget());                                      // Removes title bar from QDockWidget Toolbar
+
+
+    // ***** Add QMainWindow Docks
+    addDockWidget(static_cast<Qt::DockWidgetArea>(1), assets);
+    addDockWidget(static_cast<Qt::DockWidgetArea>(2), advisor);
+    addDockWidget(static_cast<Qt::DockWidgetArea>(2), inspector);
     addDockWidget(static_cast<Qt::DockWidgetArea>(4), toolbar);
 
-    resizeDocks({assets, inspector}, {180, 300}, Qt::Horizontal);                       // Forces resize of docks
+    // Forces resize of docks
+    resizeDocks( { assets },    { 180 }, Qt::Horizontal);
+    resizeDocks( { inspector }, { 300 }, Qt::Horizontal);
+    resizeDocks( { advisor },   { 130 }, Qt::Vertical);
+
 
 
     // ***** Signals emitted by FormMain
     connectSignals();
+
 
 
     // ***** Apply shadow effects to buttons

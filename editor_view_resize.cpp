@@ -281,6 +281,7 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale)
     my_scene->setPositionByOrigin(original, Position_Flags::Center, center_point.x(), center_point.y());
 
     // Update object data and also item property
+    original->updateProperty(User_Roles::Position, original->sceneTransform().map(original->boundingRect().center()) );
     original->updateProperty(User_Roles::Scale, QPointF(new_scale_x, new_scale_y) );
 }
 

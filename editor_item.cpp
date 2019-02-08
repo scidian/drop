@@ -113,7 +113,8 @@ void DrItem::updateProperty(int key, const QVariant &value)
         {
         case User_Roles::Position: relay->updateObjectInspectorAfterItemChange(m_object, Object_Properties::position);      break;
         case User_Roles::Rotation: relay->updateObjectInspectorAfterItemChange(m_object, Object_Properties::rotation);      break;
-        case User_Roles::Scale:    relay->updateObjectInspectorAfterItemChange(m_object, Object_Properties::scale);         break;
+        case User_Roles::Scale:    relay->updateObjectInspectorAfterItemChange(m_object, Object_Properties::size);
+                                   relay->updateObjectInspectorAfterItemChange(m_object, Object_Properties::scale);         break;
         case User_Roles::Z_Order:  relay->updateObjectInspectorAfterItemChange(m_object, Object_Properties::z_order);       break;
         }
 
