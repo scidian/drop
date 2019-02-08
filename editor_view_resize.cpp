@@ -224,6 +224,54 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     for (auto child : my_scene->getSelectionItems()) removeShearing(child, new_scale);
 
 
+
+    // ***** Aligns new selected items origin location with proper resize starting point
+    Position_Flags origin_flag = resize_flag;
+    if (scale_y < 0 && scale_x > 0) {
+         switch (origin_flag)
+         {
+         case Position_Flags::Bottom:        origin_flag = Position_Flags::Top;              break;
+         case Position_Flags::Bottom_Right:  origin_flag = Position_Flags::Top_Right;        break;
+         case Position_Flags::Bottom_Left:   origin_flag = Position_Flags::Top_Left;         break;
+         case Position_Flags::Top:           origin_flag = Position_Flags::Bottom;           break;
+         case Position_Flags::Top_Right:     origin_flag = Position_Flags::Bottom_Right;     break;
+         case Position_Flags::Top_Left:      origin_flag = Position_Flags::Bottom_Left;      break;
+         default: ;
+
+        }
+    } else if (scale_y > 0 && scale_x < 0) {
+        switch (origin_flag)
+        {
+        case Position_Flags::Right:         origin_flag = Position_Flags::Left;             break;
+        case Position_Flags::Top_Right:     origin_flag = Position_Flags::Top_Left;         break;
+        case Position_Flags::Bottom_Right:  origin_flag = Position_Flags::Bottom_Left;      break;
+        case Position_Flags::Left:          origin_flag = Position_Flags::Right;            break;
+        case Position_Flags::Top_Left:      origin_flag = Position_Flags::Top_Right;        break;
+        case Position_Flags::Bottom_Left:   origin_flag = Position_Flags::Bottom_Right;     break;
+        default: ;
+        }
+    } else if (scale_y < 0 && scale_x < 0) {
+        switch (origin_flag)
+        {
+        case Position_Flags::Right:         origin_flag = Position_Flags::Left;             break;
+        case Position_Flags::Left:          origin_flag = Position_Flags::Right;            break;
+        case Position_Flags::Top:           origin_flag = Position_Flags::Bottom;           break;
+        case Position_Flags::Bottom:        origin_flag = Position_Flags::Top;              break;
+        case Position_Flags::Top_Right:     origin_flag = Position_Flags::Bottom_Left;      break;
+        case Position_Flags::Bottom_Right:  origin_flag = Position_Flags::Top_Left;         break;
+        case Position_Flags::Top_Left:      origin_flag = Position_Flags::Bottom_Right;     break;
+        case Position_Flags::Bottom_Left:   origin_flag = Position_Flags::Top_Right;        break;
+        default: ;
+        }
+    }
+    QGraphicsItemGroup *temp = my_scene->createEmptyItemGroup(angle);
+    for (auto child : my_scene->getSelectionItems())
+        temp->addToGroup(child);
+    my_scene->setPositionByOrigin(temp, origin_flag, new_pos.x(), new_pos.y());
+    my_scene->destroyItemGroup(temp);
+    my_scene->updateSelectedItemsPositionData();
+
+
     // ***** Update stored scale and selection box
     my_scene->setSelectionScale( new_scale );
     my_scene->updateSelectionBox();
@@ -281,7 +329,6 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale)
     my_scene->setPositionByOrigin(original, Position_Flags::Center, center_point.x(), center_point.y());
 
     // Update object data and also item property
-    original->updateProperty(User_Roles::Position, original->sceneTransform().map(original->boundingRect().center()) );
     original->updateProperty(User_Roles::Scale, QPointF(new_scale_x, new_scale_y) );
 }
 
