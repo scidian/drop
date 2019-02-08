@@ -151,8 +151,7 @@ private:
     QTime                           m_debug_timer;           // TEMP
 
     QPolygonF                       m_debug_points;
-    QPolygonF                       m_debug_shear;
-    QPolygonF                       m_debug_shear2, m_debug_shear3;
+    QPolygonF                       m_debug_shear, m_debug_shear2, m_debug_shear3;
 
 
 
@@ -213,6 +212,8 @@ public:
     void            resizeSelectionWithRotate(QPointF mouse_in_scene);
     Position_Flags  findOppositeSide(Position_Flags start_side);
     void            removeShearing(QGraphicsItem *item);
+
+    void            removeShearing2(QGraphicsItem *item);
 
 
 public slots:

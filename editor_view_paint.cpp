@@ -264,6 +264,22 @@ void DrView::paintBoundingBox(QPainter &painter)
         painter.drawPolygon(m_debug_points);
     }
     // !!!!! END
+
+    // !!!!! #DEBUG:    Paints un rotated, sheared boxes
+    if (Dr::CheckDebugFlag(Debug_Flags::Paint_Shear_Remove)) {
+        painter.setPen(QPen(QBrush(Qt::red), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        QPolygonF shear_to_view = mapFromScene(m_debug_shear);
+        painter.drawPolygon(shear_to_view);
+
+        painter.setPen(QPen(QBrush(Qt::green), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        QPolygonF shear_to_view2 = mapFromScene(m_debug_shear2);
+        painter.drawPolygon(shear_to_view2);
+
+        painter.setPen(QPen(QBrush(Qt::blue), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        QPolygonF shear_to_view3 = mapFromScene(m_debug_shear3);
+        painter.drawPolygon(shear_to_view3);
+    }
+    // !!!!! END
 }
 
 

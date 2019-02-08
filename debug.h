@@ -37,6 +37,7 @@ enum class Debug_Flags {
 
     Paint_Resize_Calculations,          // Paints unrotated selection box with distance point used for calculating scale
     Paint_Shear_Matrix,                 // Paints un sheared / unrotated boxes and shows matrix data for selected item's transform()
+    Paint_Shear_Remove,                 // Paints un rotated, sheared boxes
     Paint_Rotating_Angles,              // Paints mouse origin and mouse position lines during Rotating
     Paint_Size_Grip_Handles,            // Paints rects of resize grip handles
     Total,

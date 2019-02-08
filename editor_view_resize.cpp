@@ -26,6 +26,7 @@
 //####################################################################################
 //##        Starts resizing mode
 //####################################################################################
+
 void DrView::startResize(QPoint mouse_in_view)
 {
     m_pre_resize_scale =  my_scene->getSelectionScale();
@@ -274,13 +275,13 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     my_scene->setSelectionScale( QPointF(scale_x, scale_y) );
     scene()->destroyItemGroup(group);
 
+
     // ***** Remove any shearing that may have been caused to all items in selection group
-    QList<QGraphicsItem*> my_items = my_scene->getSelectionItems();
-    for (auto child : my_items) removeShearing(child);
+    for (auto child : my_scene->getSelectionItems()) removeShearing(child);
 
     // ***** Updates selection box from new item locations / sizes,
     //       especially important because item locations may have changed during shear remove
-    my_scene->updateSelectionBox();
+  //  my_scene->updateSelectionBox();
 
 
     // ***** Now that shearing has been removed, move items one more time to proper origin point and recalculate box again
@@ -313,6 +314,8 @@ void DrView::removeShearing(QGraphicsItem *item)
     double  angle = item->data(User_Roles::Rotation).toDouble();
     QPointF scale = extractScaleFromItem(item);
 
+    return;
+
     QTransform no_skew = QTransform().rotate(angle).scale(scale.x(), scale.y());
     item->setTransform(no_skew);
 
@@ -321,6 +324,7 @@ void DrView::removeShearing(QGraphicsItem *item)
 
     dynamic_cast<DrItem*>(item)->updateProperty(User_Roles::Scale, QPointF(scale.x(), scale.y()) );
 }
+
 
 // Pulls out scale from current item screen transform (takes away angle first from stored angle data)
 QPointF DrView::extractScaleFromItem(QGraphicsItem *item)
@@ -331,15 +335,45 @@ QPointF DrView::extractScaleFromItem(QGraphicsItem *item)
     QTransform remove_rotation = QTransform().translate(origin.x(), origin.y()).rotate(-angle).translate(-origin.x(), -origin.y());
     QTransform item_no_rotate = item->sceneTransform() * remove_rotation;
 
+//!!!!!!!!!!!!!!!!!!!!!!
+
+    m_debug_shear =  item_no_rotate.map ( item->boundingRect() );
+
+
+
+    QTransform remove_shear = item->sceneTransform();
+    remove_shear.setMatrix( remove_shear.m11(),       0,                     remove_shear.m13(),
+                            0,                        remove_shear.m22(),    remove_shear.m23(),
+                            remove_shear.m31(),       remove_shear.m32(),    remove_shear.m33());
+    m_debug_shear2 = remove_shear.map ( item->boundingRect() );
+
+
+    double x = (origin.x() - m_debug_shear2.boundingRect().center().x());
+    double y = (origin.y() - m_debug_shear2.boundingRect().center().y());
+    QTransform move = QTransform().translate(x, y);
+    m_debug_shear2 = move.map (m_debug_shear2);
+
+
+
+    origin = m_debug_shear2.boundingRect().center();
+    QTransform add_rotation = QTransform().translate(origin.x(), origin.y()).rotate(angle).translate(-origin.x(), -origin.y());
+    m_debug_shear3 = add_rotation.map (m_debug_shear2);
+
+
+//!!!!!!!!!!!!!!!!!!!!!!
     return QPointF(item_no_rotate.m11(), item_no_rotate.m22());
 }
 
+//QPointF DrView::extractScaleFromItem(QGraphicsItem *item)
+//{
+//    double  angle = item->data(User_Roles::Rotation).toDouble();
+//    QPointF origin = item->mapToScene( item->boundingRect().center() );
 
+//    QTransform remove_rotation = QTransform().translate(origin.x(), origin.y()).rotate(-angle).translate(-origin.x(), -origin.y());
+//    QTransform item_no_rotate = item->sceneTransform() * remove_rotation;
 
-
-
-
-
+//    return QPointF(item_no_rotate.m11(), item_no_rotate.m22());
+//}
 
 
 
