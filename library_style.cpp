@@ -160,7 +160,7 @@ void ApplyColoring(QWidget *widget)
         " QScrollArea { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
 
         // Mostly debug labels
-        " QLabel { color: " + Dr::GetColor(Window_Colors::Text).name() + "; } "
+        " QLabel { color: " + Dr::GetColor(Window_Colors::Text).name() + "; padding: 0px; margin: 0px; border: 0px; } "
 
         // Check boxes, mostly in object inspector
         " QCheckBox#checkInspector::indicator:checked { image: url(:/inspector_icons/check_checked.png); }"
@@ -235,12 +235,12 @@ void ApplyColoring(QWidget *widget)
         "       border-bottom-right-radius: 0px;  "
         "       border-bottom-left-radius: 0px; } "
 
-        " QLabel#assetFrame { border: 2px solid #777777; "
-        "       padding: 2px; margin: 4px; "
+        " QFrame#assetFrame { border: 2px solid #777777; "
+        "       padding: 1px; margin-top: 2px; margin-bottom: 2px; margin-left: 4px; margin-right: 4px; "
         "       border-radius: 6px; } "
 
-        " QLabel#assetFrame:hover { border: 2px solid " + Dr::GetColor(Window_Colors::Icon_Dark).name()  + "; "
-        "       padding: 2px; margin: 4px; "
+        " QFrame#assetFrame:hover { border: 2px solid " + Dr::GetColor(Window_Colors::Icon_Dark).name()  + "; "
+        "       padding: 1px; margin-top: 2px; margin-bottom: 2px; margin-left: 4px; margin-right: 4px; "
         "       border-radius: 6px; } "
 
     );

@@ -76,11 +76,11 @@ public:
 
 
     // External calls
-    void addProperty(long property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
-    void addProperty(World_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
-    void addProperty(Stage_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
-    void addProperty(Object_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
-    void addProperty(Asset_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
+    void addProperty(long property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description, bool is_hidden = false);
+    void addProperty(World_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description, bool is_hidden = false);
+    void addProperty(Stage_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description, bool is_hidden = false);
+    void addProperty(Object_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description, bool is_hidden = false);
+    void addProperty(Asset_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description, bool is_hidden = false);
 
 };
 

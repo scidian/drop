@@ -111,17 +111,6 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     default:                   m_relay->setAdvisorInfo(Advisor_Info::Not_Set);
     }
 
-    // Find out if we should hide name for this object
-    bool show_name;
-    switch (m_selected_type)
-    {
-    case DrType::Object:
-    case DrType::Character:
-    case DrType::Action:
-                show_name = false;  break;
-    default:    show_name = true;
-    }
-
 
     // Retrieve list of components for selected item
     ComponentMap list_components = m_project->findSettingsFromKey( m_selected_key )->getComponentList();
@@ -146,7 +135,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
         // Loop through each property and add it to the component frame
         for (auto property_pair: component_pair.second->getPropertyList()) {
-            if (property_pair.second->getPropertyKey() == static_cast<long>(Object_Properties::name) && !show_name) continue;
+            if (property_pair.second->isHidden()) continue;
 
             QFrame *single_row = new QFrame(properties_frame);
             QBoxLayout *horizontal_split = new QHBoxLayout(single_row);

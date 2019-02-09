@@ -94,29 +94,34 @@ void TreeAssetList::buildAssetList()
         if (asset_pair.second->getAssetType() != DrAsset_Type::Object) continue;
 
         QFrame *single_row = new QFrame();
-        QBoxLayout *horizontal_split = new QHBoxLayout(single_row);
-        horizontal_split->setSpacing(0);
-        horizontal_split->setMargin(0);
-        horizontal_split->setContentsMargins(0,0,0,0);
+        single_row->setObjectName("assetFrame");
+
+        QBoxLayout *vertical_split = new QVBoxLayout(single_row);
+        vertical_split->setSpacing(0);
+        vertical_split->setMargin(0);
+        vertical_split->setContentsMargins(0,0,0,0);
 
         QLabel *asset_name = new QLabel(asset_pair.second->getAssetName());
         asset_name->setFont(fp);
         asset_name->setSizePolicy(sp_left);
         asset_name->setAlignment(Qt::AlignmentFlag::AlignCenter);
         m_widget_hover->applyHeaderBodyProperties(asset_name, asset_pair.second->getAssetName(), "None.");
-        horizontal_split->addWidget(asset_name);
+        vertical_split->addWidget(asset_name);
 
         QPixmap pix = asset_pair.second->getComponentProperty(Asset_Components::animation, Asset_Properties::animation_default)->getValue().value<QPixmap>();
         QLabel *pix_label = new QLabel();
-        pix_label->setObjectName("assetFrame");
         pix_label->setFont(fp);
         pix_label->setSizePolicy(sp_right);
-        pix_label->setFixedHeight(60);
+        pix_label->setFixedHeight(50);
         pix_label->setAlignment(Qt::AlignmentFlag::AlignCenter);
-        horizontal_split->addWidget( pix_label );
+        m_widget_hover->applyHeaderBodyProperties(pix_label, asset_pair.second->getAssetName(), "None.");
+        vertical_split->addWidget( pix_label );
 
         // Draw pixmap onto label
-        pix_label->setPixmap(pix.scaled(90, 45, Qt::KeepAspectRatio));
+        pix_label->setPixmap(pix.scaled(160, 38, Qt::KeepAspectRatio));
+
+
+
 
         // Create a child TreeWidgetItem attached to the TopLevel category item
         QTreeWidgetItem *property_item = new QTreeWidgetItem();

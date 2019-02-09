@@ -74,52 +74,53 @@ DrComponent* DrSettings::findComponentFromPropertyKey(long property_key_to_find)
 //##    Component Loading - addComponent / addComponentProperty
 //####################################################################################
 
-void DrSettings::addComponent(long component, QString new_display_name, QString new_description, QColor new_color, bool new_turned_on) {
-    DrComponent *comp = new DrComponent(this, new_display_name, new_description, new_color, component, new_turned_on);
+void DrSettings::addComponent(long component, QString new_display_name, QString new_description, QColor new_color, bool is_turned_on) {
+    DrComponent *comp = new DrComponent(this, new_display_name, new_description, new_color, component, is_turned_on);
     m_components[component] = comp;
 }
 
-void DrSettings::addComponent(World_Components component, QString new_display_name, QString new_description, QColor new_color, bool new_turned_on) {
-    DrComponent *comp = new DrComponent(this, new_display_name, new_description, new_color, static_cast<long>(component), new_turned_on);
+void DrSettings::addComponent(World_Components component, QString new_display_name, QString new_description, QColor new_color, bool is_turned_on) {
+    DrComponent *comp = new DrComponent(this, new_display_name, new_description, new_color, static_cast<long>(component), is_turned_on);
     m_components[static_cast<long>(component)] = comp;
 }
 
-void DrSettings::addComponent(Stage_Components component, QString new_display_name, QString new_description, QColor new_color, bool new_turned_on) {
-    DrComponent *comp = new DrComponent(this, new_display_name, new_description, new_color, static_cast<long>(component), new_turned_on);
+void DrSettings::addComponent(Stage_Components component, QString new_display_name, QString new_description, QColor new_color, bool is_turned_on) {
+    DrComponent *comp = new DrComponent(this, new_display_name, new_description, new_color, static_cast<long>(component), is_turned_on);
     m_components[static_cast<long>(component)] = comp;
 }
 
-void DrSettings::addComponent(Object_Components component, QString new_display_name, QString new_description, QColor new_color, bool new_turned_on) {
-    DrComponent *comp = new DrComponent(this, new_display_name, new_description, new_color, static_cast<long>(component), new_turned_on);
+void DrSettings::addComponent(Object_Components component, QString new_display_name, QString new_description, QColor new_color, bool is_turned_on) {
+    DrComponent *comp = new DrComponent(this, new_display_name, new_description, new_color, static_cast<long>(component), is_turned_on);
     m_components[static_cast<long>(component)] = comp;
 }
 
-void DrSettings::addComponent(Asset_Components component, QString new_display_name, QString new_description, QColor new_color, bool new_turned_on) {
-    DrComponent *comp = new DrComponent(this, new_display_name, new_description, new_color, static_cast<long>(component), new_turned_on);
+void DrSettings::addComponent(Asset_Components component, QString new_display_name, QString new_description, QColor new_color, bool is_turned_on) {
+    DrComponent *comp = new DrComponent(this, new_display_name, new_description, new_color, static_cast<long>(component), is_turned_on);
     m_components[static_cast<long>(component)] = comp;
 }
 
 //####################################################################################
 
-void DrSettings::addPropertyToComponent(long component, long property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description) {
-    m_components[component]->addProperty(property_number, new_type, new_value, new_display_name, new_description);
+void DrSettings::addPropertyToComponent(long component, long property_number, Property_Type new_type,
+                                        QVariant new_value, QString new_display_name, QString new_description, bool is_hidden) {
+    m_components[component]->addProperty(property_number, new_type, new_value, new_display_name, new_description, is_hidden);
 }
 
 void DrSettings::addPropertyToComponent(World_Components component, World_Properties property_number, Property_Type new_type,
-                                        QVariant new_value, QString new_display_name, QString new_description) {
-    m_components[static_cast<long>(component)]->addProperty(property_number, new_type, new_value, new_display_name, new_description);
+                                        QVariant new_value, QString new_display_name, QString new_description, bool is_hidden) {
+    m_components[static_cast<long>(component)]->addProperty(property_number, new_type, new_value, new_display_name, new_description, is_hidden);
 }
 void DrSettings::addPropertyToComponent(Stage_Components component, Stage_Properties property_number, Property_Type new_type,
-                                        QVariant new_value, QString new_display_name, QString new_description) {
-    m_components[static_cast<long>(component)]->addProperty(property_number, new_type, new_value, new_display_name, new_description);
+                                        QVariant new_value, QString new_display_name, QString new_description, bool is_hidden) {
+    m_components[static_cast<long>(component)]->addProperty(property_number, new_type, new_value, new_display_name, new_description, is_hidden);
 }
 void DrSettings::addPropertyToComponent(Object_Components component, Object_Properties property_number, Property_Type new_type,
-                                        QVariant new_value, QString new_display_name, QString new_description) {
-    m_components[static_cast<long>(component)]->addProperty(property_number, new_type, new_value, new_display_name, new_description);
+                                        QVariant new_value, QString new_display_name, QString new_description, bool is_hidden) {
+    m_components[static_cast<long>(component)]->addProperty(property_number, new_type, new_value, new_display_name, new_description, is_hidden);
 }
 void DrSettings::addPropertyToComponent(Asset_Components component, Asset_Properties property_number, Property_Type new_type,
-                                        QVariant new_value, QString new_display_name, QString new_description) {
-    m_components[static_cast<long>(component)]->addProperty(property_number, new_type, new_value, new_display_name, new_description);
+                                        QVariant new_value, QString new_display_name, QString new_description, bool is_hidden) {
+    m_components[static_cast<long>(component)]->addProperty(property_number, new_type, new_value, new_display_name, new_description, is_hidden);
 }
 
 

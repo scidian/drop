@@ -70,6 +70,10 @@ void FormMain::buildWindowModeEditStage()
     sizePolicy.setHorizontalStretch(0);
     sizePolicy.setVerticalStretch(0);
 
+    QSizePolicy sizePolicyLess(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    sizePolicy.setHorizontalStretch(1);
+    sizePolicy.setVerticalStretch(1);
+
     QSizePolicy sizePolicyPreferredHorizontal(QSizePolicy::Preferred, QSizePolicy::Preferred);
     sizePolicyPreferredHorizontal.setHorizontalStretch(1);
     sizePolicyPreferredHorizontal.setVerticalStretch(0);
@@ -78,7 +82,7 @@ void FormMain::buildWindowModeEditStage()
     sizePolicyPreferredHorizontal.setHorizontalStretch(0);
     sizePolicyPreferredHorizontal.setVerticalStretch(1);
 
-    QSizePolicy sizePolicyMinimum(QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Minimum);
+    QSizePolicy sizePolicyMinimum(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::MinimumExpanding);
     sizePolicy.setHorizontalStretch(0);
     sizePolicy.setVerticalStretch(0);
 
@@ -327,13 +331,13 @@ void FormMain::buildWindowModeEditStage()
     advisor = new QDockWidget(this);
     advisor->setObjectName(QStringLiteral("advisor"));
     advisor->setMinimumSize(QSize(100, 80));
-    advisor->setSizePolicy(sizePolicyMinimum);
+    advisor->setSizePolicy(sizePolicyLess);
     advisor->setFont(font);
     advisor->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable);
     advisor->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
         widgetAdvisor = new QWidget();
         widgetAdvisor->setObjectName(QStringLiteral("widgetAdvisor"));
-        widgetAdvisor->setSizePolicy(sizePolicy);
+        widgetAdvisor->setSizePolicy(sizePolicyLess);
         widgetAdvisor->setMaximumHeight(180);
             verticalLayoutAdvisor = new QVBoxLayout(widgetAdvisor);
             verticalLayoutAdvisor->setObjectName(QStringLiteral("verticalLayoutAdvisor"));
@@ -446,9 +450,8 @@ void FormMain::buildWindowModeEditStage()
     addDockWidget(static_cast<Qt::DockWidgetArea>(4), toolbar);
 
     // Forces resize of docks
-    resizeDocks( { assets },    { 180 }, Qt::Horizontal);
-    resizeDocks( { inspector }, { 300 }, Qt::Horizontal);
-    resizeDocks( { advisor },   { 130 }, Qt::Vertical);
+    resizeDocks( { assets, inspector  }, { 180, 300 }, Qt::Horizontal);
+    resizeDocks( { advisor, inspector }, { 140, 900 }, Qt::Vertical);
 
 
 

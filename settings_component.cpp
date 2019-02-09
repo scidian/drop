@@ -50,33 +50,33 @@ void DrComponent::setProperty(Asset_Properties setting, QVariant value) { m_prop
 //####################################################################################
 //##    addProperty functions, need one for each different Properties enum type
 //####################################################################################
-void DrComponent::addProperty(long setting, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description)
+void DrComponent::addProperty(long setting, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description, bool is_hidden)
 {
-    DrProperty *prop = new DrProperty(m_parent_settings, this, new_display_name, new_description, new_type, new_value, setting);
+    DrProperty *prop = new DrProperty(m_parent_settings, this, new_display_name, new_description, new_type, new_value, setting, is_hidden);
     m_properties[setting] = prop;
 }
 
-void DrComponent::addProperty(World_Properties setting, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description)
+void DrComponent::addProperty(World_Properties setting, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description, bool is_hidden)
 {
-    DrProperty *prop = new DrProperty(m_parent_settings, this, new_display_name, new_description, new_type, new_value, static_cast<int>(setting));
+    DrProperty *prop = new DrProperty(m_parent_settings, this, new_display_name, new_description, new_type, new_value, static_cast<int>(setting), is_hidden);
     m_properties[static_cast<int>(setting)] = prop;
 }
 
-void DrComponent::addProperty(Stage_Properties setting, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description)
+void DrComponent::addProperty(Stage_Properties setting, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description, bool is_hidden)
 {
-    DrProperty *prop = new DrProperty(m_parent_settings, this, new_display_name, new_description, new_type, new_value, static_cast<int>(setting));
+    DrProperty *prop = new DrProperty(m_parent_settings, this, new_display_name, new_description, new_type, new_value, static_cast<int>(setting), is_hidden);
     m_properties[static_cast<int>(setting)] = prop;
 }
 
-void DrComponent::addProperty(Object_Properties setting, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description)
+void DrComponent::addProperty(Object_Properties setting, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description, bool is_hidden)
 {
-    DrProperty *prop = new DrProperty(m_parent_settings, this, new_display_name, new_description, new_type, new_value, static_cast<int>(setting));
+    DrProperty *prop = new DrProperty(m_parent_settings, this, new_display_name, new_description, new_type, new_value, static_cast<int>(setting), is_hidden);
     m_properties[static_cast<int>(setting)] = prop;
 }
 
-void DrComponent::addProperty(Asset_Properties setting, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description)
+void DrComponent::addProperty(Asset_Properties setting, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description, bool is_hidden)
 {
-    DrProperty *prop = new DrProperty(m_parent_settings, this, new_display_name, new_description, new_type, new_value, static_cast<int>(setting));
+    DrProperty *prop = new DrProperty(m_parent_settings, this, new_display_name, new_description, new_type, new_value, static_cast<int>(setting), is_hidden);
     m_properties[static_cast<int>(setting)] = prop;
 }
 

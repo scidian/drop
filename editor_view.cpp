@@ -228,7 +228,8 @@ void DrView::updateSelectionBoundingBox(int called_from)
     m_handles[Position_Flags::Right] =  add_rotation.map(temp_right);
 
     // *****  Store polygon centers for use later in paintHandles
-    for (auto h : m_handles) m_handles_centers[h.first] = h.second.boundingRect().center();
+    for (auto h : m_handles)
+        m_handles_centers[h.first] = h.second.boundingRect().center();
 
     // *****  Calculates angles for mouse cursors over sides
     m_handles_angles[Position_Flags::Top] =    QLineF(m_handles_centers[Position_Flags::Top_Left],     m_handles_centers[Position_Flags::Top_Right]).angle();

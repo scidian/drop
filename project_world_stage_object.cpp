@@ -66,7 +66,7 @@ void DrObject::initializeObjectSettings(QString new_name, double width, double h
     getComponent(Object_Components::settings)->setIcon(Component_Icons::Settings);
 
     addPropertyToComponent(Object_Components::settings, Object_Properties::name, Property_Type::String, new_name,
-                           "Object Name", "Name of the current object.");
+                           "Object Name", "Name of the current object.", true);
     addPropertyToComponent(Object_Components::settings, Object_Properties::physics, Property_Type::Bool, false,
                            "Physics?", "Should this item be effected by physics?");
     addPropertyToComponent(Object_Components::settings, Object_Properties::collide, Property_Type::Bool, true,
@@ -114,6 +114,7 @@ void DrObject::initializeCameraSettings()
     addPropertyToComponent(Object_Components::camera_settings, Object_Properties::camera_zoom, Property_Type::Float, 10,
                            "Zoom Level", "Sets distance away from stage (0 to 1000)");
 
+    getComponentProperty(Object_Components::settings, Object_Properties::name)->setHidden(false);
 }
 
 void DrObject::initializeCharacterSettings()
@@ -125,7 +126,6 @@ void DrObject::initializeCharacterSettings()
                            "Jump Force X", "Force of jump button in x direction");
     addPropertyToComponent(Object_Components::character_settings, Object_Properties::character_jump_y, Property_Type::Float, 0,
                            "Jump Force Y", "Force of jump button in y direction");
-
 }
 
 

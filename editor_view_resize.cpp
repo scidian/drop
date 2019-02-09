@@ -321,7 +321,9 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale)
         if (scale.y() > 0) new_scale_y *= -1;
     }
 
-    QTransform no_shear = QTransform().rotate(angle).scale(new_scale_x, new_scale_y);
+    QTransform no_shear = QTransform()
+            .rotate(angle)
+            .scale(new_scale_x, new_scale_y);
     original->setTransform(no_shear);
 
     // Set item to center point of clone

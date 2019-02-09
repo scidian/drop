@@ -74,17 +74,17 @@ public:
     DrComponent* findComponentFromPropertyKey(long property_key_to_find);
     DrProperty*  findPropertyFromPropertyKey(long property_key_to_find);
 
-    void         addComponent(long component, QString new_display_name, QString new_description, QColor new_color, bool new_turned_on);
-    void         addComponent(World_Components component, QString new_display_name, QString new_description, QColor new_color, bool new_turned_on);
-    void         addComponent(Stage_Components component, QString new_display_name, QString new_description, QColor new_color, bool new_turned_on);
-    void         addComponent(Object_Components component, QString new_display_name, QString new_description, QColor new_color, bool new_turned_on);
-    void         addComponent(Asset_Components component, QString new_display_name, QString new_description, QColor new_color, bool new_turned_on);
+    void         addComponent(long component, QString new_display_name, QString new_description, QColor new_color, bool is_turned_on);
+    void         addComponent(World_Components component, QString new_display_name, QString new_description, QColor new_color, bool is_turned_on);
+    void         addComponent(Stage_Components component, QString new_display_name, QString new_description, QColor new_color, bool is_turned_on);
+    void         addComponent(Object_Components component, QString new_display_name, QString new_description, QColor new_color, bool is_turned_on);
+    void         addComponent(Asset_Components component, QString new_display_name, QString new_description, QColor new_color, bool is_turned_on);
 
-    void addPropertyToComponent(long component, long property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
-    void addPropertyToComponent(World_Components component, World_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
-    void addPropertyToComponent(Stage_Components component, Stage_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
-    void addPropertyToComponent(Object_Components component, Object_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
-    void addPropertyToComponent(Asset_Components component, Asset_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description);
+    void addPropertyToComponent(long component, long property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description, bool is_hidden = false);
+    void addPropertyToComponent(World_Components component, World_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description, bool is_hidden = false);
+    void addPropertyToComponent(Stage_Components component, Stage_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description, bool is_hidden = false);
+    void addPropertyToComponent(Object_Components component, Object_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description, bool is_hidden = false);
+    void addPropertyToComponent(Asset_Components component, Asset_Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description, bool is_hidden = false);
 
     QString      getWorldName();
     QString      getStageName();
