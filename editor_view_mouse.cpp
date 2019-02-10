@@ -362,6 +362,17 @@ void DrView::mouseReleaseEvent(QMouseEvent *event)
         m_rubber_band->hide();
         m_tool_tip->stopToolTip();
 
+        // Object inspector doesnt change during rubber band box mode,
+        // Make sure we update it when we're done with rubber band box and we have a new selection
+        if (m_view_mode == View_Mode::Selecting) {
+            if (my_scene->getSelectionCount() > 0) {
+                DrItem *selected = dynamic_cast<DrItem*>(my_scene->getSelectionItems().first());
+                long selected_key = selected->getObjectKey();
+                m_view_mode = View_Mode::None;
+                m_relay->buildObjectInspector( { selected_key } );
+            }
+        }
+
         // Clean up temporary item group used for resize routine
         if (m_view_mode == View_Mode::Resizing) {
             for (auto item : m_group->childItems()) {

@@ -27,6 +27,7 @@ private:
     InterfaceRelay *m_relay;                    // Pointer to InterfaceRelay class of parent form
 
     long            m_selected_key = 0;         // Holds first selected item in QTreeWidget (treeStage)
+
     bool            m_is_dragging;              // Set to true when we are dragging
     bool            m_can_drop;
     int             m_mouse_x;

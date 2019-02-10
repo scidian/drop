@@ -214,6 +214,8 @@ public:
     Position_Flags  findOppositeSide(Position_Flags start_side);
     void            removeShearing(QGraphicsItem *item, QPointF scale);
 
+    // Getters / Setters
+    View_Mode       currentViewMode() { return m_view_mode; }
 
 public slots:
     void    sceneChanged(QList<QRectF> region);

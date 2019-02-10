@@ -180,10 +180,14 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
         property_item->setDisabled(true);
         category_item->addChild(property_item);
 
+        QFrame *holder = new QFrame();
+        QGridLayout *grid = new QGridLayout(holder);
+        grid->setContentsMargins(0, 0, 0, 0);
+
         //->Create and style a button to be used as a header item for the category
-        CategoryButton *category_button = new CategoryButton(QString(" ") + component_pair.second->getDisplayNameQString(), category_item);
+        CategoryButton *category_button = new CategoryButton(QString(" ") + component_pair.second->getDisplayNameQString(), nullptr, category_item);
         QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: #000000; "
-                                                    " border: 2px solid; "
+                                                    " border: " + Dr::BorderWidth() + " solid; "
                                                     " border-color: " + component_pair.second->getColor().darker(250).name() + "; "
                                                     " border-radius: 1px; "
                                                     " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 " +
@@ -195,8 +199,23 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
         category_button->setStyleSheet(buttonColor);
         applyHeaderBodyProperties(category_button, component_pair.second->getDisplayName(), component_pair.second->getDescription());
 
+
+
         // Apply the button and property box widgets to the tree items
-        this->setItemWidget(category_item, 0, category_button);
+
+
+
+        //this->setItemWidget(category_item, 0, category_button);
+
+        QLabel *label = new QLabel("Mopm");
+        label->setAttribute( Qt::WA_TransparentForMouseEvents );
+
+        grid->addWidget(category_button);
+        grid->addWidget(label, 0, 0, Qt::AlignmentFlag::AlignRight);
+
+        this->setItemWidget(category_item, 0, holder);
+
+
         this->setItemWidget(property_item, 0, properties_frame);
     }
 

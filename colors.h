@@ -36,6 +36,7 @@ namespace Dr {
 
     void            LoadPalettes();
 
+    QString         BorderWidth();                              // Project wide border width for Style Sheets
     int             FontSize();                                 // Project wide font size
 
     QColor          GetColor(Window_Colors color_role);

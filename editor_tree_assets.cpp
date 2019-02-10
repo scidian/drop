@@ -73,9 +73,9 @@ void TreeAssetList::buildAssetList()
     this->addTopLevelItem(category_item);
 
     // Create and style a button to be used as a header item for the category
-    CategoryButton *category_button = new CategoryButton("  Objects", category_item);
+    CategoryButton *category_button = new CategoryButton("  Objects", nullptr, category_item);
     QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: #CCCCCC; "
-                                                " border: 2px solid; border-radius: 1px; "
+                                                " border: " + Dr::BorderWidth() + " solid; border-radius: 1px; "
                                                 " border-color: #555555; "
                                                 " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 " +
                                                     Dr::GetColor(Window_Colors::Button_Light).name() + ", stop:1 " +
@@ -118,7 +118,7 @@ void TreeAssetList::buildAssetList()
         vertical_split->addWidget( pix_label );
 
         // Draw pixmap onto label
-        pix_label->setPixmap(pix.scaled(160, 38, Qt::KeepAspectRatio));
+        pix_label->setPixmap(pix.scaled(140, 38, Qt::KeepAspectRatio));
 
 
 

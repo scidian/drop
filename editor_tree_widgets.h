@@ -58,7 +58,7 @@ private:
     bool                 m_is_shrunk = false;
 
 public:
-    CategoryButton(const QString &text, QTreeWidgetItem *parent_item);
+    CategoryButton(const QString &text, QWidget *parent, QTreeWidgetItem *parent_tree_item);
 
 private slots:
     void            buttonPressed();

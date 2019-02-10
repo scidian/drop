@@ -68,7 +68,9 @@ void WidgetHoverHandler::applyHeaderBodyProperties(QWidget *widget, HeaderBodyLi
 //##    InspectorCategoryButton Class Functions
 //####################################################################################
 // Constructor for category button, gives button a way to pass click to custom function
-CategoryButton::CategoryButton(const QString &text, QTreeWidgetItem *parent_item) : QPushButton(text), m_parent_item(parent_item)
+CategoryButton::CategoryButton(const QString &text, QWidget *parent, QTreeWidgetItem *parent_tree_item) :
+    QPushButton(text, parent),
+    m_parent_item(parent_tree_item)
 {
     // Forwards user button click to function that expands / contracts
     connect(this, SIGNAL(clicked()), this, SLOT(buttonPressed()));

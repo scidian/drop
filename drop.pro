@@ -31,7 +31,6 @@ SOURCES += \
     main.cpp \
     editor_tree_inspector.cpp \
     editor_tree_assets.cpp \
-    editor_tree_scene.cpp \
     editor_tree_advisor.cpp \
     form_main_menu.cpp \
     project.cpp \
@@ -59,7 +58,8 @@ SOURCES += \
     editor_view_resize.cpp \
     editor_view_tooltip.cpp \
     editor_view_rotate.cpp \
-    editor_view_select.cpp
+    editor_view_select.cpp \
+    editor_tree_stage.cpp
 
 HEADERS += \
     enums.h \
