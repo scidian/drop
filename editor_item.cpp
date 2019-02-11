@@ -26,7 +26,7 @@
 //####################################################################################
 //##        Constructor & destructor
 //####################################################################################
-DrItem::DrItem(DrProject *project, DrObject *object)
+DrItem::DrItem(DrProject *project, DrObject *object, bool is_temp_only)
 {
     // Store relevant project / object data for use later
     m_project    = project;
@@ -34,6 +34,8 @@ DrItem::DrItem(DrProject *project, DrObject *object)
     m_object_key = object->getKey();
     m_asset_key  = m_object->getAssetKey();
     m_asset      = project->getAsset(m_asset_key);
+
+    m_temp_only  = is_temp_only;
 
     // Load starting position
     QPointF start_pos = m_object->getComponentProperty(Object_Components::transform, Object_Properties::position)->getValue().toPointF();
@@ -155,11 +157,27 @@ int DrItem::type() const
 //####################################################################################
 QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
+    // If this is a temporary object, do not process change
+    if (m_temp_only) QGraphicsPixmapItem::itemChange(change, value);
+
 
     // Value is the new position
     if (change == ItemPositionHasChanged && scene()) {
-        ///QPointF new_pos = value.toPointF();
-        ///return new_pos;
+
+        QPointF object_pos = m_object->getComponentPropertyValue(Object_Components::transform, Object_Properties::position).toPointF();
+        QPointF new_pos = value.toPointF();
+
+        QPointF new_center = sceneTransform().map( boundingRect().center() );
+
+        if (object_pos != new_center) {
+
+            updateProperty(User_Roles::Position, new_center);
+
+
+        }
+
+
+        return new_pos;
     }
 
     // Value is the new transform

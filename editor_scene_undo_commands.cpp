@@ -95,6 +95,7 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
     m_scene->setCurrentStageShown(from_stage);
     m_scene->setCurrentStageKeyShown(m_new_stage);
 
+    // Load all our objects from data model into QGraphicsItems
     for (auto object_pair : from_stage->getObjectMap()) {
         DrItem *item = new DrItem(m_project, object_pair.second);
         m_scene->setPositionByOrigin(item, item->getOrigin(), item->startX(), item->startY());
@@ -125,7 +126,7 @@ MoveCommand::MoveCommand(DrScene *scene, const QPointF &old_pos, QUndoCommand *p
 
 void MoveCommand::undo() {
 //    m_scene->setPositionByOrigin(m_scene->getSelectionGroup(), Position_Flags::Center, m_old_pos.x(), m_old_pos.y());
-//    m_scene->updateSelectedItemsPositionData();
+//    //DELETED: changes now happen through DrItem::itemChange() --- m_scene->updateSelectedItemsPositionData();
 //    m_scene->updateView();
 //    QString item_text = "Items";
 //    if (m_scene->getSelectionGroup()->childItems().count() == 1)
@@ -138,7 +139,7 @@ void MoveCommand::undo() {
 
 void MoveCommand::redo() {
 //    m_scene->setPositionByOrigin(m_scene->getSelectionGroup(), Position_Flags::Center, m_new_pos.x(), m_new_pos.y());
-//    m_scene->updateSelectedItemsPositionData();
+//    //DELETED: changes now happen through DrItem::itemChange() --- m_scene->updateSelectedItemsPositionData();
 //    m_scene->updateView();
 //    QString item_text = "Items";
 //    if (m_scene->getSelectionGroup()->childItems().count() == 1)

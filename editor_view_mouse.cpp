@@ -321,10 +321,8 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
 
             if (m_tool_tip->getTipType() != View_Mode::Translating)
                 m_tool_tip->startToolTip(View_Mode::Translating, m_origin, my_scene->getSelectionTransform().map(my_scene->getSelectionBox().center()) );
-            else {
+            else
                 m_tool_tip->updateToolTipData( my_scene->getSelectionTransform().map(my_scene->getSelectionBox().center()) );
-                my_scene->updateSelectedItemsPositionData();
-            }
         }
     } else {
         // Pass on event to allow movement

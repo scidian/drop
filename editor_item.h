@@ -35,10 +35,14 @@ private:
     double          m_start_x;                              // Stores the item position the first time it was loaded
     double          m_start_y;                              // Stores the item position the first time it was loaded
 
+    bool            m_temp_only = false;                    // If this is set to true when object is created, changes to this item are ignored
+                                                            // and not processed into the undo stack, nor do changes have an effect on the associated
+                                                            // object in the project data model
+
     Position_Flags  m_origin = Position_Flags::Center;
 
 public:
-    DrItem(DrProject *project, DrObject *object);
+    DrItem(DrProject *project, DrObject *object, bool is_temp_only = false);
 
     // Base Getter Overrides
     virtual QRectF          boundingRect() const override;

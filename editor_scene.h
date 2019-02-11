@@ -98,7 +98,6 @@ public:
     void                    translateSelectionBox(double x, double y);
     void                    updateSelectionBox();
 
-    void                    updateSelectedItemsPositionData();
     QList<DrObject*>        convertListItemsToObjects(QList<QGraphicsItem*> graphics_items);
     QList<DrObject*>        getSelectionGroupObjects();
 

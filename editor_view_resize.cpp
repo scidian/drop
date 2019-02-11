@@ -269,7 +269,6 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
         temp->addToGroup(child);
     my_scene->setPositionByOrigin(temp, origin_flag, new_pos.x(), new_pos.y());
     my_scene->destroyItemGroup(temp);
-    my_scene->updateSelectedItemsPositionData();
 
 
     // ***** Update stored scale and selection box

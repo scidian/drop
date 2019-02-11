@@ -150,18 +150,6 @@ QList<DrObject*> DrScene::convertListItemsToObjects(QList<QGraphicsItem*> graphi
 }
 
 
-//####################################################################################
-//##        Calls updateProperty which forces an update of the object inspector
-//####################################################################################
-void DrScene::updateSelectedItemsPositionData()
-{
-    for (auto item : getSelectionItems()) {
-        QPointF center = item->sceneTransform().map( item->boundingRect().center() );
-        dynamic_cast<DrItem*>(item)->updateProperty(User_Roles::Position, center);
-    }
-}
-
-
 
 
 
