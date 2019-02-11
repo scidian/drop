@@ -49,15 +49,24 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     current_world = 0;
 
 
-    // !!!!! #TEMP: Add assets
-    long asset_1 = project->addAsset("Dr Square",    DrAsset_Type::Object, QPixmap(":/assets/test_square.png"));
-    long asset_2 = project->addAsset("Ground Fill",  DrAsset_Type::Object, QPixmap(":/assets/ground_fill.png"));
-    long asset_3 = project->addAsset("Ground Top",   DrAsset_Type::Object, QPixmap(":/assets/ground_top.png"));
-    long asset_4 = project->addAsset("Moon Plant 6", DrAsset_Type::Object, QPixmap(":/assets/moon_plant_6.png"));
-    long asset_5 = project->addAsset("Rover Body",   DrAsset_Type::Object, QPixmap(":/assets/rover_body.png"));
-    long asset_6 = project->addAsset("Ball 1",       DrAsset_Type::Object, QPixmap(":/assets/ball_1.png"));
-    long asset_7 = project->addAsset("Water 1",      DrAsset_Type::Object, QPixmap(":/assets/water_1.png"));
-    long asset_8 = project->addAsset("Rover Wheel",  DrAsset_Type::Object, QPixmap(":/assets/rover_wheel.png"));
+    // !!!!! #TEMP: Add images / assets
+    long image_1 = project->addImage(":/assets/test_square.png");
+    long image_2 = project->addImage(":/assets/ground_fill.png");
+    long image_3 = project->addImage(":/assets/ground_top.png");
+    long image_4 = project->addImage(":/assets/moon_plant_6.png");
+    long image_5 = project->addImage(":/assets/rover_body.png");
+    long image_6 = project->addImage(":/assets/ball_1.png");
+    long image_7 = project->addImage(":/assets/water_1.png");
+    long image_8 = project->addImage(":/assets/rover_wheel.png");
+
+    long asset_1 = project->addAsset(DrAsset_Type::Object, image_1 );           // "Dr Square"
+    long asset_2 = project->addAsset(DrAsset_Type::Object, image_2 );           // "Ground Fill"
+    long asset_3 = project->addAsset(DrAsset_Type::Object, image_3 );           // "Ground Top"
+    long asset_4 = project->addAsset(DrAsset_Type::Object, image_4 );           // "Moon Plant 6"
+    long asset_5 = project->addAsset(DrAsset_Type::Object, image_5 );           // "Rover Body"
+    long asset_6 = project->addAsset(DrAsset_Type::Object, image_6 );           // "Ball 1"
+    long asset_7 = project->addAsset(DrAsset_Type::Object, image_7 );           // "Water 1"
+    long asset_8 = project->addAsset(DrAsset_Type::Object, image_8 );           // "Rover Wheel"
     // !!!!! END
 
 

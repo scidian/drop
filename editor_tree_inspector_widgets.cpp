@@ -261,6 +261,7 @@ QComboBox* TreeInspector::createComboBox(DrProperty *property, QFont &font)
 }
 
 
+// Uses a pushbutton with a popup menu instead of a QComboBox
 QPushButton* TreeInspector::createComboBox2(DrProperty *property, QFont &font)
 {
     QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);

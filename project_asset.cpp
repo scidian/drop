@@ -13,6 +13,7 @@
 #include "project_asset.h"
 
 #include "project.h"
+#include "project_image.h"
 #include "project_world.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
@@ -25,7 +26,7 @@
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, QString new_asset_name, DrAsset_Type new_asset_type, QPixmap pixmap)
+DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAsset_Type new_asset_type, long image_key)
 {
     m_parent_project = parent_project;
     setKey(new_asset_key);
@@ -35,10 +36,12 @@ DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, QString new_asse
     m_list_order = new_asset_key;
     m_group_number = 0;
 
-    initializeAssetSettings(new_asset_name, pixmap);
+    QPixmap my_starting_pixmap = m_parent_project->getImage(image_key)->getPixmap();
 
-    m_width =  pixmap.width();
-    m_height = pixmap.height();
+    initializeAssetSettings(m_parent_project->getImage(image_key)->getSimplifiedName(), my_starting_pixmap );
+
+    m_width =  my_starting_pixmap.width();
+    m_height = my_starting_pixmap.height();
 }
 
 DrAsset::~DrAsset() {}

@@ -12,6 +12,7 @@
 
 #include "project.h"
 #include "project_asset.h"
+#include "project_image.h"
 #include "project_world.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
@@ -37,12 +38,20 @@ DrProject::~DrProject()
 //##    Project Children Functions
 //####################################################################################
 
-long DrProject::addAsset(QString new_asset_name, DrAsset_Type new_asset_type, QPixmap pixmap)
+long DrProject::addAsset(DrAsset_Type new_asset_type, long image_key)
 {
     long new_asset_key = getNextKey();
-    m_assets[new_asset_key] = new DrAsset(this, new_asset_key, new_asset_name, new_asset_type, pixmap);
+    m_assets[new_asset_key] = new DrAsset(this, new_asset_key, new_asset_type, image_key);
     return new_asset_key;
 }
+
+long DrProject::addImage(QString image_path)
+{
+    long new_image_key = getNextKey();
+    m_images[new_image_key] = new DrImage(this, new_image_key, image_path);
+    return new_image_key;
+}
+
 
 // Adds a World to the map container, finds next availbable "World xxx" name to assign to World
 void DrProject::addWorld()

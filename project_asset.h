@@ -31,11 +31,8 @@ private:
     long             m_group_number;                    // keeps track of what group to be in on the asset list tree
 
 public:
-    DrAsset();
-
     // Constructor & destructor
-    explicit DrAsset(DrProject *parent_project, long new_asset_key, QString new_asset_name,
-                     DrAsset_Type new_asset_type, QPixmap pixmap);
+    explicit DrAsset(DrProject *parent_project, long new_asset_key, DrAsset_Type new_asset_type, long image_key);
     virtual ~DrAsset() override;
 
 
