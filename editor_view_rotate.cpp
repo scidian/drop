@@ -104,6 +104,17 @@ void DrView::rotateSelection(QPointF mouse_in_view)
     while (angle >=  360) { angle -= 360; }
     while (angle <= -360) { angle += 360; }
 
+    // ********** Add in new angle to all selected items and store in item data
+    for (auto child : my_items) {
+        double child_angle = child->data(User_Roles::Pre_Rotate_Rotation).toDouble();
+
+        child_angle = child_angle + (angle2 - angle1) + angle_adjust;
+        while (child_angle >=  360) { child_angle -= 360; }
+        while (child_angle <= -360) { child_angle += 360; }
+
+        child->setData(User_Roles::Rotation, child_angle);
+    }
+
     // ********** Group selected items so we can apply new rotation to all selected items
     QGraphicsItemGroup *group = scene()->createItemGroup( my_items );
 
@@ -122,23 +133,12 @@ void DrView::rotateSelection(QPointF mouse_in_view)
     group->setTransform(transform);
     scene()->destroyItemGroup(group);
 
-    // ********** Add in new angle to all selected items and store in item data
-    for (auto child : my_items) {
-        double child_angle = child->data(User_Roles::Pre_Rotate_Rotation).toDouble();
-
-        child_angle = child_angle + (angle2 - angle1) + angle_adjust;
-        while (child_angle >=  360) { child_angle -= 360; }
-        while (child_angle <= -360) { child_angle += 360; }
-
-        dynamic_cast<DrItem*>(child)->updateProperty(User_Roles::Rotation, child_angle);
-    }
-
     my_scene->updateSelectionBox();
 
     // !!!!! #DEBUG:    Rotation data
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Rotation_Data)) {
         m_relay->setLabelText(Label_Names::Label_1, "Angle 1: " + QString::number(angle1) + ", Angle 2: " + QString::number(angle2));
-        m_relay->setLabelText(Label_Names::Label_2, "Angle: " + QString::number(angle) +       ", Diff: " + QString::number(angle - start_angle) );
+        m_relay->setLabelText(Label_Names::Label_2, "Angle: " +   QString::number(angle) +     ", Diff: " + QString::number(angle - start_angle) );
     }
     // !!!!! END
 }

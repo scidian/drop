@@ -92,11 +92,12 @@ enum class Position_Flags {
 typedef enum {
     Key = Qt::UserRole,
 
-    Position,
     Scale,
     Pre_Resize_Scale,
+
     Rotation,
     Pre_Rotate_Rotation,
+
     Z_Order,
 
     Name,

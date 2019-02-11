@@ -50,11 +50,13 @@ DrItem::DrItem(DrProject *project, DrObject *object, bool is_temp_only)
     setData(User_Roles::Name, m_asset->getAssetName() );
     setData(User_Roles::Type, StringFromType( m_object->getType() ));
 
-    double  angle = m_object->getComponentProperty(Object_Components::transform, Object_Properties::rotation)->getValue().toDouble();
-    QPointF scale = m_object->getComponentProperty(Object_Components::transform, Object_Properties::scale)->getValue().toPointF();
-    updateProperty(User_Roles::Z_Order, m_object->getComponentProperty(Object_Components::layering, Object_Properties::z_order)->getValue());
-    updateProperty(User_Roles::Rotation, QVariant::fromValue(angle));
-    updateProperty(User_Roles::Scale, scale);
+    double  angle =   m_object->getComponentProperty(Object_Components::transform, Object_Properties::rotation)->getValue().toDouble();
+    QPointF scale =   m_object->getComponentProperty(Object_Components::transform, Object_Properties::scale)->getValue().toPointF();
+    double  z_order = m_object->getComponentProperty(Object_Components::layering,  Object_Properties::z_order)->getValue().toDouble();
+    setData(User_Roles::Rotation, QVariant::fromValue(angle));
+    setData(User_Roles::Scale, scale);
+    setData(User_Roles::Z_Order, z_order);
+    setZValue(z_order);
 
     // Set up initial item settings
     setAcceptHoverEvents(true);                                         // Item tracks mouse movement
@@ -63,10 +65,10 @@ DrItem::DrItem(DrProject *project, DrObject *object, bool is_temp_only)
     if (!Dr::CheckDebugFlag(Debug_Flags::Turn_Off_Antialiasing))
         setTransformationMode(Qt::SmoothTransformation);                // Turn on anti aliasing
 
-    setFlags(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable |
-             QGraphicsItem::GraphicsItemFlag::ItemIsMovable |
-             QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges |
-             QGraphicsItem::GraphicsItemFlag::ItemSendsGeometryChanges);
+    setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable);
+    setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsMovable);
+    setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsGeometryChanges);
+    setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges);
 
     // Load image from asset
     setPixmap(m_asset->getComponentProperty(Asset_Components::animation, Asset_Properties::animation_default)->getValue().value<QPixmap>());
@@ -76,52 +78,6 @@ DrItem::DrItem(DrProject *project, DrObject *object, bool is_temp_only)
     QTransform t = QTransform().translate(center.x(), center.y()).rotate(angle).scale(scale.x(), scale.y()).translate(-center.x(), -center.y());
     setTransform(t);
 }                                     
-
-
-//####################################################################################
-//##        Custom Property Storing
-//####################################################################################
-void DrItem::updateProperty(int key, const QVariant &value)
-{
-    double x, y;
-
-    switch (key)
-    {
-    case User_Roles::Position:
-        setData(User_Roles::Position, value);
-        m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::position, value);
-        break;
-    case User_Roles::Rotation:
-        setData(User_Roles::Rotation, value);
-        m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::rotation, value);
-        break;
-    case User_Roles::Scale:
-        setData(User_Roles::Scale, value);
-        m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::scale, value);
-        x = m_asset_width *  value.toPointF().x();
-        y = m_asset_height * value.toPointF().y();
-        m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::size, QPointF(x, y));
-        break;
-    case User_Roles::Z_Order:
-        setZValue(value.toInt());
-        m_object->setComponentPropertyValue(Object_Components::layering, Object_Properties::z_order, value);
-        break;
-    }
-
-    if (scene()) {
-        InterfaceRelay *relay = dynamic_cast<DrScene*>(scene())->getRelay();
-
-        switch (key)
-        {
-        case User_Roles::Position: relay->updateObjectInspectorAfterItemChange(m_object, Object_Properties::position);      break;
-        case User_Roles::Rotation: relay->updateObjectInspectorAfterItemChange(m_object, Object_Properties::rotation);      break;
-        case User_Roles::Scale:    relay->updateObjectInspectorAfterItemChange(m_object, Object_Properties::size);
-                                   relay->updateObjectInspectorAfterItemChange(m_object, Object_Properties::scale);         break;
-        case User_Roles::Z_Order:  relay->updateObjectInspectorAfterItemChange(m_object, Object_Properties::z_order);       break;
-        }
-
-    }
-}
 
 
 
@@ -160,34 +116,103 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
     // If this is a temporary object, do not process change
     if (m_temp_only) QGraphicsPixmapItem::itemChange(change, value);
 
+    if (change == ItemScenePositionHasChanged) {
+        QPointF new_pos =    value.toPointF();
 
-    // Value is the new position
-    if (change == ItemPositionHasChanged && scene()) {
+        double old_x = m_object->getComponentPropertyValue(Object_Components::transform, Object_Properties::position).toPointF().x();
+        double old_y = m_object->getComponentPropertyValue(Object_Components::transform, Object_Properties::position).toPointF().y();
+        double new_x = sceneTransform().map( boundingRect().center() ).x();
+        double new_y = sceneTransform().map( boundingRect().center() ).y();
 
-        QPointF object_pos = m_object->getComponentPropertyValue(Object_Components::transform, Object_Properties::position).toPointF();
-        QPointF new_pos = value.toPointF();
-
-        QPointF new_center = sceneTransform().map( boundingRect().center() );
-
-        if (object_pos != new_center) {
-
-            updateProperty(User_Roles::Position, new_center);
-
-
+        if (qFuzzyCompare(old_x, new_x) == false || qFuzzyCompare(old_y, new_y) == false) {
+            m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::position, QPointF(new_x, new_y));
+            if (scene()) dynamic_cast<DrScene*>(scene())->getRelay()->updateObjectInspectorAfterItemChange(m_object, Object_Properties::position);
         }
-
 
         return new_pos;
     }
 
-    // Value is the new transform
-    if (change == ItemTransformChange)
-    {
-        /// Extract angle from transform and store in item
-        ///auto transform = value.value<QTransform>();
-        ///double angle = qRadiansToDegrees(qAtan2(transform.m12(), transform.m11() ));
-        ///setData(User_Roles::Rotation, angle);
+    if (change == ItemTransformHasChanged) {
+        QTransform new_transform = value.value<QTransform>();
+
+        double start_angle = m_object->getComponentPropertyValue(Object_Components::transform, Object_Properties::rotation).toDouble();
+        double new_angle   = data(User_Roles::Rotation).toDouble();
+
+        if (qFuzzyCompare(start_angle, new_angle) == false) {
+            m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::rotation, new_angle);
+            if (scene()) dynamic_cast<DrScene*>(scene())->getRelay()->updateObjectInspectorAfterItemChange(m_object, Object_Properties::rotation);
+        }
+
+        double old_x = m_object->getComponentPropertyValue(Object_Components::transform, Object_Properties::scale).toPointF().x();
+        double old_y = m_object->getComponentPropertyValue(Object_Components::transform, Object_Properties::scale).toPointF().y();
+        double new_x = data(User_Roles::Scale).toPointF().x();
+        double new_y = data(User_Roles::Scale).toPointF().y();
+
+        if (qFuzzyCompare(old_x, new_x) == false || qFuzzyCompare(old_y, new_y) == false) {
+            m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::scale, QPointF(new_x, new_y));
+            double size_x = m_asset_width *  new_x;
+            double size_y = m_asset_height * new_y;
+            m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::size, QPointF(size_x, size_y));
+
+            if (scene()) dynamic_cast<DrScene*>(scene())->getRelay()->updateObjectInspectorAfterItemChange(m_object, Object_Properties::size);
+            if (scene()) dynamic_cast<DrScene*>(scene())->getRelay()->updateObjectInspectorAfterItemChange(m_object, Object_Properties::scale);
+        }
+
+        return new_transform;
     }
+
+    if (change == ItemZValueHasChanged) {
+        double new_z = value.toDouble();
+        double old_z = m_object->getComponentPropertyValue(Object_Components::layering, Object_Properties::z_order).toDouble();
+
+        if (qFuzzyCompare(old_z, new_z) == false) {
+            m_object->setComponentPropertyValue(Object_Components::layering, Object_Properties::z_order, new_z);
+            if (scene()) dynamic_cast<DrScene*>(scene())->getRelay()->updateObjectInspectorAfterItemChange(m_object, Object_Properties::z_order);
+        }
+
+        return new_z;
+    }
+
+
+
+    // ---------- Following changes are emitted when GraphicsItemFlag::ItemSendsGeometryChanges is set to true
+
+    // ItemPositionChange           // Position is about to change              Value is the new position, PointF           Return a different PointF to change it
+    // ItemPositionHasChanged       // Position has changed                                                                 Return does nothing
+
+    // ItemTransformChange          // Transform is about to change             Value is the new transform, QTransform      Return a different QTransform to change it
+    // ItemTransformHasChanged      // Transform has changed                                                                Return does nothing
+
+    // ----------
+
+    // ItemEnabledChange            // Enabled state is about to change         Value is the new state, bool                Return a different bool to stop it
+    // ItemEnabledHasChanged        // Enabled state has changed                                                            Return does nothing
+
+    // ItemSelectedChange           // Selected state is about to change        Value is if selected or not, bool           Return a different bool to stop it
+    // ItemSelectedHasChanged       // Selected state has changed                                                           Return does nothing
+
+    // ItemVisibleChange            // Visible state about to change            Value is Visible or not, bool               Return a different bool to stop it
+    // ItemVisibleHasChanged        // Visible state has changed                                                            Return does nothing
+
+    // ItemParentChange             // Parent is about to change                Value is new parent, QGraphicsItem*         Return a different pointer to change it
+    // ItemParentHasChanged         // Parent has changed                                                                   Return does nothing
+
+    // ItemChildAddedChange         // Child is added to this item              Value is new child, QGraphicsItem*              Return value is unused
+    // ItemChildRemovedChange       // Child is removed from this item          Value is child to be removed, QGraphicsItem*    Return value is unused
+
+    // ItemSceneChange              // Parent scene is about to change          Value is the new scene, QGraphicsScene*
+    // ItemSceneHasChanged
+
+    // ItemFlagsChange              // quint_32
+    // ItemFlagsHaveChanged
+
+    // ItemZValueChange             // double
+    // ItemZValueHasChanged
+
+    // ItemOpacityChange            // double
+    // ItemOpacityHasChanged
+
+    // ItemScenePositionHasChanged
 
     return QGraphicsPixmapItem::itemChange(change, value);
 }

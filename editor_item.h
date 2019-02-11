@@ -58,8 +58,6 @@ public:
     virtual void            hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 
     // Getters and Setters
-    void                    updateProperty(int key, const QVariant & value);
-
     DrObject*               getObject()    { return m_object; }
     long                    getObjectKey() { return m_object_key; }
     DrAsset*                getAsset()     { return m_asset; }

@@ -87,10 +87,12 @@ void DrScene::keyPressEvent(QKeyEvent *event)
     switch (event->key())
     {
     // Move selected items
-    case Qt::Key::Key_Up:    selectedItems().first()->moveBy( 0, -move_by);      break;
-    case Qt::Key::Key_Down:  selectedItems().first()->moveBy( 0,  move_by);      break;
-    case Qt::Key::Key_Left:  selectedItems().first()->moveBy(-move_by,  0);      break;
-    case Qt::Key::Key_Right: selectedItems().first()->moveBy( move_by,  0);      break;
+    case Qt::Key::Key_Up:     selectedItems().first()->moveBy( 0, -move_by);      break;
+    case Qt::Key::Key_Down:   selectedItems().first()->moveBy( 0,  move_by);      break;
+    case Qt::Key::Key_Left:   selectedItems().first()->moveBy(-move_by,  0);      break;
+    case Qt::Key::Key_Right:  selectedItems().first()->moveBy( move_by,  0);      break;
+    case Qt::Key::Key_Comma:  selectedItems().first()->setZValue(selectedItems().first()->zValue() - 1);    break;
+    case Qt::Key::Key_Period: selectedItems().first()->setZValue(selectedItems().first()->zValue() + 1);    break;
     }
 
     // Perform key press event on all items in selection group

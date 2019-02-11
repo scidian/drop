@@ -40,7 +40,7 @@ void DrView::startResize(QPoint mouse_in_view)
     for (auto child : my_scene->getSelectionItems()) {
         child->setData(User_Roles::Pre_Resize_Scale, (child->data(User_Roles::Scale).toPointF()) );
         DrItem *child_as_item = dynamic_cast<DrItem*>(child);
-        DrItem *dritem = new DrItem(m_project, child_as_item->getObject());
+        DrItem *dritem = new DrItem(m_project, child_as_item->getObject(), true);
         dritem->setVisible(false);
         dritem->setEnabled(false);
         dritem->setPos(child_as_item->pos());
@@ -320,6 +320,9 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale)
         if (scale.y() > 0) new_scale_y *= -1;
     }
 
+    // Update item property
+    original->setData(User_Roles::Scale, QPointF(new_scale_x, new_scale_y) );
+
     QTransform no_shear = QTransform()
             .rotate(angle)
             .scale(new_scale_x, new_scale_y);
@@ -329,8 +332,6 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale)
     QPointF center_point = clone->mapToScene( clone->boundingRect().center() );
     my_scene->setPositionByOrigin(original, Position_Flags::Center, center_point.x(), center_point.y());
 
-    // Update object data and also item property
-    original->updateProperty(User_Roles::Scale, QPointF(new_scale_x, new_scale_y) );
 }
 
 
