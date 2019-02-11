@@ -65,10 +65,12 @@ DrItem::DrItem(DrProject *project, DrObject *object, bool is_temp_only)
     if (!Dr::CheckDebugFlag(Debug_Flags::Turn_Off_Antialiasing))
         setTransformationMode(Qt::SmoothTransformation);                // Turn on anti aliasing
 
-    setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable);
-    setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsMovable);
-    setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsGeometryChanges);
-    setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges);
+    if (!m_temp_only) {
+        setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable);
+        setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsMovable);
+        setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsGeometryChanges);
+        setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges);
+    }
 
     // Load image from asset
     setPixmap(m_asset->getComponentProperty(Asset_Components::animation, Asset_Properties::animation_default)->getValue().value<QPixmap>());
@@ -114,15 +116,15 @@ int DrItem::type() const
 QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     // If this is a temporary object, do not process change
-    if (m_temp_only) QGraphicsPixmapItem::itemChange(change, value);
+    if (m_temp_only == true) QGraphicsPixmapItem::itemChange(change, value);
 
     if (change == ItemScenePositionHasChanged) {
         QPointF new_pos =    value.toPointF();
 
         double old_x = m_object->getComponentPropertyValue(Object_Components::transform, Object_Properties::position).toPointF().x();
         double old_y = m_object->getComponentPropertyValue(Object_Components::transform, Object_Properties::position).toPointF().y();
-        double new_x = sceneTransform().map( boundingRect().center() ).x();
-        double new_y = sceneTransform().map( boundingRect().center() ).y();
+        double new_x = mapToScene( boundingRect().center() ).x();
+        double new_y = mapToScene( boundingRect().center() ).y();
 
         if (qFuzzyCompare(old_x, new_x) == false || qFuzzyCompare(old_y, new_y) == false) {
             m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::position, QPointF(new_x, new_y));

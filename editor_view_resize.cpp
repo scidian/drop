@@ -221,8 +221,8 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
 
     // ***** Remove any shearing
     QPointF new_scale(scale_x, scale_y);
-    for (auto child : my_scene->getSelectionItems()) removeShearing(child, new_scale);
-
+    for (auto child : my_scene->getSelectionItems())
+        removeShearing(child, new_scale);
 
 
     // ***** Aligns new selected items origin location with proper resize starting point
@@ -270,11 +270,9 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     my_scene->setPositionByOrigin(temp, origin_flag, new_pos.x(), new_pos.y());
     my_scene->destroyItemGroup(temp);
 
-
     // ***** Update stored scale and selection box
     my_scene->setSelectionScale( new_scale );
     my_scene->updateSelectionBox();
-
 
     // ***** Update tool tip
     double group_width =  QLineF( mapToScene(m_handles_centers[Position_Flags::Left].toPoint()),

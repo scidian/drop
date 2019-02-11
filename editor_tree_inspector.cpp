@@ -20,6 +20,7 @@
 #include "settings_component.h"
 #include "settings_component_property.h"
 
+#include "editor_scene.h"
 #include "editor_tree_inspector.h"
 #include "editor_tree_widgets.h"
 #include "interface_relay.h"
@@ -94,7 +95,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     // If old selection and new selection are both objects, we don't need to completely rebuild inspector, just change values
     if (m_selected_type == DrType::Object && new_type == DrType::Object) {
         m_selected_key =  new_key;
-        updateObjectProperty(m_project->findSettingsFromKey(m_selected_key), Object_Properties::all_properties);
+        updatePropertyBoxes(m_project->findSettingsFromKey(m_selected_key), Object_Properties::all_properties);
         return;
     } else {
         m_selected_key =  new_key;
@@ -221,7 +222,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 //####################################################################################
 //##        Updates the property boxes already in the object inspector for the current item
 //####################################################################################
-void TreeInspector::updateObjectProperty(DrSettings* object, Object_Properties property)
+void TreeInspector::updatePropertyBoxes(DrSettings* object, Object_Properties property)
 {
     if (object->getKey() != m_selected_key) return;
     if (IsDrObjectClass(m_selected_type) == false) return;
@@ -238,6 +239,9 @@ void TreeInspector::updateObjectProperty(DrSettings* object, Object_Properties p
         DrProperty *prop = object->findPropertyFromPropertyKey(prop_key);
         if (prop == nullptr) continue;
 
+        // Must turn off signals while updating or we will cause recursive function calling as changes to the widgets are connected to updateObjectFromNewValue()
+        widget->blockSignals(true);
+
         switch (prop->getPropertyType())
         {
         case Property_Type::Bool:       dynamic_cast<QCheckBox*>(widget)->setChecked(prop->getValue().toBool());        break;
@@ -251,16 +255,67 @@ void TreeInspector::updateObjectProperty(DrSettings* object, Object_Properties p
 
         case Property_Type::PointF:
         case Property_Type::SizeF:
-            if (dynamic_cast<QDoubleSpinBox*>(widget)->property(User_Property::First).toBool())
+            if (dynamic_cast<QDoubleSpinBox*>(widget)->property(User_Property::Order).toInt() == 0)
                 dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toPointF().x());
             else
                 dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toPointF().y());
             break;
         }
+
+        // Turn signals back on
+        widget->blockSignals(false);
     }
 
     this->update();
 }
+
+
+
+//####################################################################################
+//##        Updates the object we're displaying the properties of with the new value
+//####################################################################################
+void TreeInspector::updateObjectFromNewValue(long property_key, QVariant new_value, long sub_order)
+{
+    // Exit if the selected project object is not something in the scene that needs to be updated
+    if (IsDrObjectClass(m_selected_type) == false) return;
+
+    DrObject *object =   dynamic_cast<DrObject*>(m_project->findSettingsFromKey(m_selected_key));
+    DrItem   *item =     object->getDrItem();
+    DrScene  *my_scene = dynamic_cast<DrScene*>( item->scene() );
+
+    Object_Properties property = static_cast<Object_Properties>(property_key);
+
+    // Turn off itemChange() signals to stop recursive calling
+    item->setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges, false);
+    item->setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsGeometryChanges, false);
+
+    double x, y;
+    switch (property)
+    {
+
+    // Processes changes to spin boxes that represent item position
+    case Object_Properties::position:
+        x = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::position).toPointF().x();
+        y = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::position).toPointF().y();
+        if (sub_order == 0)
+            x = new_value.toDouble();
+        else
+            y = new_value.toDouble();
+        object->setComponentPropertyValue(Object_Components::transform, Object_Properties::position, QPointF(x, y));
+        my_scene->setPositionByOrigin(item, Position_Flags::Center, x, y);
+        break;
+
+
+    default: ;
+    }
+
+    my_scene->updateSelectionBox();
+
+    // Turn back on itemChange() signals
+    item->setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsGeometryChanges, true);
+    item->setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges, true);
+}
+
 
 
 

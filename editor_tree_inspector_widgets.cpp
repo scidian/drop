@@ -25,6 +25,7 @@
 //##        Property Row Building Functions
 //####################################################################################
 
+// SIGNAL: void QCheckBox::stateChanged(int state)
 QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font)
 {
     QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -44,6 +45,7 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font)
     return check;
 }
 
+// SIGNAL: void QLineEdit::editingFinished()
 QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font)
 {
     QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -61,6 +63,7 @@ QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font)
     return edit;
 }
 
+// SIGNAL: void QSpinBox::valueChanged(int i)
 QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type)
 {
     QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -85,6 +88,7 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, Spi
     return spin;
 }
 
+// SIGNAL: void QDoubleSpinBox::valueChanged(double d)
 QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type)
 {
     ///// Could also try to use a QLineEdit with a QValidator
@@ -139,13 +143,24 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
     horizontal_split->addWidget(spin_left);
     horizontal_split->addWidget(spin_right);
 
-    spin_left->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
-    spin_left->setProperty(User_Property::First, true);
+    long property_key = property->getPropertyKey();
+
+    spin_left->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
+    spin_left->setProperty(User_Property::Order, 0);
     addToWidgetList(spin_left);
 
-    spin_right->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
-    spin_right->setProperty(User_Property::First, false);
+    spin_right->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
+    spin_right->setProperty(User_Property::Order, 1);
     addToWidgetList(spin_right);
+
+
+    connect (spin_left,  QOverload<double>::of(&TripleSpinBox::valueChanged),
+             this, [this, property_key] (double d) { updateObjectFromNewValue(property_key, d, 0); });
+
+    connect (spin_right, QOverload<double>::of(&TripleSpinBox::valueChanged),
+             this, [this, property_key] (double d) { updateObjectFromNewValue(property_key, d, 1); });
+
+
     return spin_pair;
 }
 
@@ -182,11 +197,11 @@ QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &fo
     horizontal_split->addWidget(spin_right);
 
     spin_left->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
-    spin_left->setProperty(User_Property::First, true);
+    spin_left->setProperty(User_Property::Order, 0);
     addToWidgetList(spin_left);
 
     spin_right->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
-    spin_right->setProperty(User_Property::First, false);
+    spin_right->setProperty(User_Property::Order, 1);
     addToWidgetList(spin_right);
     return spin_pair;
 }
@@ -204,7 +219,7 @@ TripleSpinBox* TreeInspector::initializeEmptySpinBox(DrProperty *property, QFont
     return new_spin;
 }
 
-
+// SIGNAL: void QComboBox::currentIndexChanged(int index)
 QComboBox* TreeInspector::createComboBox(DrProperty *property, QFont &font)
 {
     QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -279,7 +294,6 @@ QPushButton* TreeInspector::createComboBox2(DrProperty *property, QFont &font)
         options << tr("Unknown List");
     }
 
-
     QString menu_style = " QMenu { "
                          "      min-width: 100px; padding-left: 6px; padding-top: 4px; padding-bottom: 4px; "
                          "      color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
@@ -287,15 +301,11 @@ QPushButton* TreeInspector::createComboBox2(DrProperty *property, QFont &font)
                          "      border: " + Dr::BorderWidth() + " solid; margin: 0px; "
                          "      border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
                          "      background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } "
-
-                         " QMenu::item { "
-                         "       padding-top: 2px; padding-bottom: 2px; } "
-
+                         " QMenu::item { padding-top: 2px; padding-bottom: 2px; } "
                          " QMenu::item:selected { "
                          "       padding-left: 2px; "
                          "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
                          "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } ";
-
                          " QMenu::item:checked { "
                          "       padding-left: 0px; "
                          "       font-weight: bold; "
@@ -308,32 +318,18 @@ QPushButton* TreeInspector::createComboBox2(DrProperty *property, QFont &font)
 
     QActionGroup *group;
     group = new QActionGroup(menu);
-
-    QAction *action1 = new QAction("First");
-    QAction *action2 = new QAction("Second");
-    QAction *action3 = new QAction("Third");
-    QAction *action4 = new QAction("Fourth");
-    group->addAction(action1);
-    group->addAction(action2);
-    group->addAction(action3);
-    group->addAction(action4);
     group->setExclusive(true);
-    action1->setCheckable(true);
-    action2->setCheckable(true);
-    action3->setCheckable(true);
-    action4->setCheckable(true);
 
-    action2->setChecked(true);
-
-    menu->addAction(action1);
-    menu->addAction(action2);
-    menu->addAction(action3);
-    menu->addAction(action4);
+    QAction *action1 = new QAction("First");    QAction *action2 = new QAction("Second");       QAction *action3 = new QAction("Third");
+    group->addAction(action1);                  group->addAction(action2);                      group->addAction(action3);
+    action1->setCheckable(true);                action2->setCheckable(true);                    action3->setCheckable(true);
+    menu->addAction(action1);                   menu->addAction(action2);                       menu->addAction(action3);
 
     connect(action1,   &QAction::triggered, [button, action1]() { button->setText(action1->text()); });
     connect(action2,   &QAction::triggered, [button, action2]() { button->setText(action2->text()); });
     connect(action3,   &QAction::triggered, [button, action3]() { button->setText(action3->text()); });
-    connect(action4,   &QAction::triggered, [button, action4]() { button->setText(action4->text()); });
+
+    action2->setChecked(true);
 
     button->setMenu(menu);
     button->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));

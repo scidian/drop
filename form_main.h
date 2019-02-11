@@ -57,8 +57,6 @@ class FormMain : public QMainWindow, public InterfaceRelay
 public:
     // Locals
     Form_Main_Mode  current_mode;                                       // Holds current editing mode of FormMain
-    bool            done_loading = false;                               // True after initial startup of FormMain,
-                                                                        // makes sure done loading before any calls to SetLabelText
 
     // Locals that need to be SAVED / LOADED from each project
     DrProject      *project;                                            // Holds whatever the current open game project is

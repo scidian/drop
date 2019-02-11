@@ -109,7 +109,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 
 
 
-    done_loading = true;
+    Dr::SetDoneLoading(true);
 }
 
 
@@ -180,7 +180,7 @@ void FormMain::setAdvisorInfo(QString header, QString body)
 // Sets the text of a label on FormMain
 void FormMain::setLabelText(Label_Names label_name, QString new_text)
 {
-    if (!done_loading) return;
+    if (Dr::CheckDoneLoading() == false) return;
 
     switch (label_name)
     {
@@ -210,7 +210,7 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
 
 void FormMain::updateObjectInspectorAfterItemChange(DrObject* object, Object_Properties property)
 {
-    treeInspector->updateObjectProperty(object, property);
+    treeInspector->updatePropertyBoxes(object, property);
 }
 
 void FormMain::updateStageTreeSelectionBasedOnSelectionGroup()

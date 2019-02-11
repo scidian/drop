@@ -110,7 +110,7 @@ typedef enum {
 //####################################################################################
 namespace User_Property {
     const char Key[7] = "dr_key";
-    const char First[9] = "dr_first";            // Set as true if data is first of a piar, or false if second
+    const char Order[9] = "dr_order";       // For properties with mulitple values (i.e Size, Position, etc), the item # of the single property we want (0, 1, 2, etc)
     const char Header[10] = "dr_header";
     const char Body[8] = "dr_body";
 }

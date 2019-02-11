@@ -88,7 +88,9 @@ void DrScene::updateSelectionBox()
     QPointF scale = getSelectionScale();
 
     QGraphicsItemGroup *group = createEmptyItemGroup(angle);
-    for (auto item : this->getSelectionItems()) group->addToGroup(item);
+    for (auto item : this->getSelectionItems()) {
+        group->addToGroup(item);
+    }
 
     QPointF top_left =   group->sceneTransform().map( group->boundingRect().topLeft() );
     QPointF bot_right =  group->sceneTransform().map( group->boundingRect().bottomRight() );

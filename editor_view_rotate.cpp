@@ -141,6 +141,7 @@ void DrView::rotateSelection(QPointF mouse_in_view)
         m_relay->setLabelText(Label_Names::Label_2, "Angle: " +   QString::number(angle) +     ", Diff: " + QString::number(angle - start_angle) );
     }
     // !!!!! END
+
 }
 
 

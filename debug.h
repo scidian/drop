@@ -48,6 +48,9 @@ namespace Dr {
     bool CheckDebugFlag(Debug_Flags flag);
     void SetDebugFlag(Debug_Flags flag);
 
+    bool CheckDoneLoading();
+    void SetDoneLoading(bool done);
+
     void InitializeFlags();
 
 }
