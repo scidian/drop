@@ -56,9 +56,12 @@ private:
     QTreeWidget          m_parent_tree;
     QTreeWidgetItem     *m_parent_item;
     bool                 m_is_shrunk = false;
+    QColor               m_color;
 
 public:
-    CategoryButton(const QString &text, QWidget *parent, QTreeWidgetItem *parent_tree_item);
+    CategoryButton(const QString &text, QColor color, QWidget *parent, QTreeWidgetItem *parent_tree_item);
+
+    void            paintEvent(QPaintEvent *event);
 
 private slots:
     void            buttonPressed();

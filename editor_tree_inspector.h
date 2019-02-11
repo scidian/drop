@@ -71,6 +71,7 @@ public:
     void            addToWidgetList(QWidget *widget) { m_widgets.append(widget); }
     QCheckBox*      createCheckBox(DrProperty *property, QFont &font);
     QComboBox*      createComboBox(DrProperty *property, QFont &font);
+    QPushButton*    createComboBox2(DrProperty *property, QFont &font);
     QDoubleSpinBox* createDoubleSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type);
     QFrame*         createDoubleSpinBoxPair(DrProperty *property, QFont &font, Spin_Type spin_type);
     QSpinBox*       createIntSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type);

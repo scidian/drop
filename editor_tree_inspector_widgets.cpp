@@ -217,7 +217,7 @@ QComboBox* TreeInspector::createComboBox(DrProperty *property, QFont &font)
     QString style =
             " QComboBox QAbstractItemView { "
             "       font-size: " + QString::number(font.pointSize()) + "px; "
-            "       border: 2px solid; margin: 0px; "
+            "       border: " + Dr::BorderWidth() + " solid; margin: 0px; "
             "       border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; } "
 
             " QComboBox QAbstractItemView::item { padding: 4px; "
@@ -258,6 +258,90 @@ QComboBox* TreeInspector::createComboBox(DrProperty *property, QFont &font)
     applyHeaderBodyProperties(combo, property);
     addToWidgetList(combo);
     return combo;
+}
+
+
+QPushButton* TreeInspector::createComboBox2(DrProperty *property, QFont &font)
+{
+    QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    size_policy.setHorizontalStretch(INSPECTOR_SIZE_RIGHT);
+
+    QPushButton *button = new QPushButton();
+    button->setObjectName(QStringLiteral("buttonDropDown"));
+    button->setFont(font);
+    button->setSizePolicy(size_policy);
+
+    QStringList options;
+    if (property->getPropertyKey() == static_cast<int>(Object_Properties::damage)) {
+        options << tr("No Damage") << tr("Damage Player") << tr("Damage Enemy") << tr("Damage All");
+    } else {
+        options << tr("Unknown List");
+    }
+
+
+    QString menu_style = " QMenu { "
+                         "      min-width: 100px; padding-left: 6px; padding-top: 4px; padding-bottom: 4px; "
+                         "      color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
+                         "      font-size: " + QString::number(font.pointSize()) + "px; "
+                         "      border: " + Dr::BorderWidth() + " solid; margin: 0px; "
+                         "      border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
+                         "      background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } "
+
+                         " QMenu::item { "
+                         "       padding-top: 2px; padding-bottom: 2px; } "
+
+                         " QMenu::item:selected { "
+                         "       padding-left: 2px; "
+                         "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+                         "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } ";
+
+                         " QMenu::item:checked { "
+                         "       padding-left: 0px; "
+                         "       font-weight: bold; "
+                         "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+                         "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } ";
+
+    QMenu *menu = new QMenu();
+    menu->setStyleSheet(menu_style);
+
+
+    QActionGroup *group;
+    group = new QActionGroup(menu);
+
+    QAction *action1 = new QAction("First");
+    QAction *action2 = new QAction("Second");
+    QAction *action3 = new QAction("Third");
+    QAction *action4 = new QAction("Fourth");
+    group->addAction(action1);
+    group->addAction(action2);
+    group->addAction(action3);
+    group->addAction(action4);
+    group->setExclusive(true);
+    action1->setCheckable(true);
+    action2->setCheckable(true);
+    action3->setCheckable(true);
+    action4->setCheckable(true);
+
+    action2->setChecked(true);
+
+    menu->addAction(action1);
+    menu->addAction(action2);
+    menu->addAction(action3);
+    menu->addAction(action4);
+
+    connect(action1,   &QAction::triggered, [button, action1]() { button->setText(action1->text()); });
+    connect(action2,   &QAction::triggered, [button, action2]() { button->setText(action2->text()); });
+    connect(action3,   &QAction::triggered, [button, action3]() { button->setText(action3->text()); });
+    connect(action4,   &QAction::triggered, [button, action4]() { button->setText(action4->text()); });
+
+    button->setMenu(menu);
+    button->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
+    button->setText(" First");
+
+    //button->setCurrentIndex(property->getValue().toInt());
+    applyHeaderBodyProperties(button, property);
+    addToWidgetList(button);
+    return button;
 }
 
 

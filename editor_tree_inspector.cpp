@@ -166,7 +166,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
             case Property_Type::PointF:     new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Spin_Type::Point);   break;
             case Property_Type::SizeF:      new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Spin_Type::Size);    break;
             case Property_Type::Variable:   new_widget = createVariableSpinBoxPair(property_pair.second, fp);                   break;
-            case Property_Type::List:       new_widget = createComboBox(property_pair.second, fp);
+            case Property_Type::List:       new_widget = createComboBox(property_pair.second, fp);                              break;
+            case Property_Type::List2:      new_widget = createComboBox2(property_pair.second, fp);
             }
             horizontal_split->addWidget(new_widget);
 
@@ -175,18 +176,13 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
         }
 
 
-        // Create a child TreeWidgetItem attached to the TopLevel category item
-        QTreeWidgetItem *property_item = new QTreeWidgetItem();
-        property_item->setDisabled(true);
-        category_item->addChild(property_item);
-
-        QFrame *holder = new QFrame();
-        QGridLayout *grid = new QGridLayout(holder);
+        // ***** Create and style a button to be used as a header item for the category
+        QFrame *button_frame = new QFrame();
+        QGridLayout *grid = new QGridLayout(button_frame);
         grid->setContentsMargins(0, 0, 0, 0);
 
-        //->Create and style a button to be used as a header item for the category
-        CategoryButton *category_button = new CategoryButton(QString(" ") + component_pair.second->getDisplayNameQString(), nullptr, category_item);
-        QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: #000000; "
+        CategoryButton *category_button = new CategoryButton(QString(" ") + component_pair.second->getDisplayNameQString(), Qt::black, nullptr, category_item);
+        QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: black; "
                                                     " border: " + Dr::BorderWidth() + " solid; "
                                                     " border-color: " + component_pair.second->getColor().darker(250).name() + "; "
                                                     " border-radius: 1px; "
@@ -199,23 +195,20 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
         category_button->setStyleSheet(buttonColor);
         applyHeaderBodyProperties(category_button, component_pair.second->getDisplayName(), component_pair.second->getDescription());
 
-
-
-        // Apply the button and property box widgets to the tree items
-
-
-
-        //this->setItemWidget(category_item, 0, category_button);
-
-        QLabel *label = new QLabel("Mopm");
-        label->setAttribute( Qt::WA_TransparentForMouseEvents );
-
+        // Apply the button widget to the tree item
         grid->addWidget(category_button);
-        grid->addWidget(label, 0, 0, Qt::AlignmentFlag::AlignRight);
+        ///QLabel *label = new QLabel("Mom");
+        ///label->setAttribute( Qt::WA_TransparentForMouseEvents );
+        ///grid->addWidget(label, 0, 0, Qt::AlignmentFlag::AlignRight);
+        this->setItemWidget(category_item, 0, button_frame);
 
-        this->setItemWidget(category_item, 0, holder);
 
+        // ***** Create a child TreeWidgetItem attached to the TopLevel category item
+        QTreeWidgetItem *property_item = new QTreeWidgetItem();
+        property_item->setDisabled(true);
+        category_item->addChild(property_item);
 
+        // Apply the property frame widget to the tree item
         this->setItemWidget(property_item, 0, properties_frame);
     }
 

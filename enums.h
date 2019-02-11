@@ -222,6 +222,7 @@ enum class Property_Type {
     SizeF,                  // Floating pair w and h
     Vector3D,
     List,
+    List2,
 };
 
 
@@ -293,6 +294,7 @@ enum class Object_Properties
     physics,                //bool
     collide,                //bool
     damage,                 //list
+    test,                   //list2
 
     // transform
     position,               //pointf

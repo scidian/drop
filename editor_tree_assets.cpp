@@ -73,7 +73,7 @@ void TreeAssetList::buildAssetList()
     this->addTopLevelItem(category_item);
 
     // Create and style a button to be used as a header item for the category
-    CategoryButton *category_button = new CategoryButton("  Objects", nullptr, category_item);
+    CategoryButton *category_button = new CategoryButton("  Objects", QColor(204, 204, 204), nullptr, category_item);
     QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: #CCCCCC; "
                                                 " border: " + Dr::BorderWidth() + " solid; border-radius: 1px; "
                                                 " border-color: #555555; "
