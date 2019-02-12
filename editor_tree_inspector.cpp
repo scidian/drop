@@ -295,11 +295,10 @@ void TreeInspector::updateObjectFromNewValue(long property_key, QVariant new_val
 
     // Some local variables
     QTransform transform;
-    double angle;
-
     QPointF position = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::position).toPointF();
     QPointF scale    = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::scale).toPointF();
     QPointF size     = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::size).toPointF();
+    double  angle =    object->getComponentPropertyValue(Object_Components::transform, Object_Properties::rotation).toDouble();
 
     switch (property)
     {
@@ -332,12 +331,12 @@ void TreeInspector::updateObjectFromNewValue(long property_key, QVariant new_val
                 size.setY(  scale.y() * item->getAssetHeight() );
             }
         }
+        // Update properties
         object->setComponentPropertyValue(Object_Components::transform, Object_Properties::scale, scale );
         object->setComponentPropertyValue(Object_Components::transform, Object_Properties::size, size );
-
-        // Now that we have a new scale, calculate a new transform and apply to item
         item->setData(User_Roles::Scale, scale );
-        angle = item->data(User_Roles::Rotation).toDouble();
+
+        // Now that we have a new size / scale, calculate a new transform and apply to item
         transform = QTransform().rotate(angle).scale(scale.x(), scale.y());
         item->setTransform(transform);
 
@@ -345,6 +344,17 @@ void TreeInspector::updateObjectFromNewValue(long property_key, QVariant new_val
         my_scene->setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
         my_scene->getRelay()->updateObjectInspectorAfterItemChange(object, Object_Properties::scale);
         my_scene->getRelay()->updateObjectInspectorAfterItemChange(object, Object_Properties::size);
+        break;
+
+    // Process changes to spin box that represents item rotation
+    case Object_Properties::rotation:
+        angle = new_value.toDouble();
+        object->setComponentPropertyValue(Object_Components::transform, Object_Properties::rotation, angle );
+        item->setData(User_Roles::Rotation, angle );
+
+        transform = QTransform().rotate(angle).scale(scale.x(), scale.y());
+        item->setTransform(transform);
+        my_scene->setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
         break;
 
     // Processes changes to spin box that represents item z order

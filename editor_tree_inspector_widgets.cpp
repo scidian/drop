@@ -18,6 +18,7 @@
 #include "settings_component_property.h"
 
 #include "editor_tree_inspector.h"
+#include "editor_tree_widgets.h"
 #include "interface_relay.h"
 
 
@@ -88,6 +89,10 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, Spi
     applyHeaderBodyProperties(spin, property);
     addToWidgetList(spin);
 
+    // This stops mouse wheel from stealing focus unless user has selected the widget
+    spin->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+    spin->installEventFilter(new MouseWheelWidgetAdjustmentGuard(spin));
+
     connect (spin,  QOverload<int>::of(&QSpinBox::valueChanged),
              this, [this, property_key] (int i) { updateObjectFromNewValue(property_key, i); });
 
@@ -109,9 +114,9 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     spin->setDecimals(3);
     switch (spin_type)
     {
-    case Spin_Type::Float:      spin->setRange(-100000000, 100000000);                  break;
-    case Spin_Type::Percent:    spin->setRange(0, 100);     spin->setSuffix("%");       break;
-    case Spin_Type::Angle:      spin->setRange(-360, 360);  spin->setSuffix("°");       break;
+    case Spin_Type::Float:      spin->setRange(-100000000, 100000000);              spin->setSingleStep(5);     break;
+    case Spin_Type::Percent:    spin->setRange(0, 100);     spin->setSuffix("%");   spin->setSingleStep(2);     break;
+    case Spin_Type::Angle:      spin->setRange(-360, 360);  spin->setSuffix("°");   spin->setSingleStep(5);     break;
     default:                    spin->setRange(-100000000, 100000000);
     }
     spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);     // Hides little up / down buttons
@@ -124,6 +129,10 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     // Connect HoverHandler with proper text, add this widget to list of widgets in object inspector
     applyHeaderBodyProperties(spin, property);
     addToWidgetList(spin);
+
+    // This stops mouse wheel from stealing focus unless user has selected the widget
+    spin->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+    spin->installEventFilter(new MouseWheelWidgetAdjustmentGuard(spin));
 
     // Connect value changed to our handler function
     connect (spin,  QOverload<double>::of(&TripleSpinBox::valueChanged),
@@ -174,10 +183,14 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
     spin_right->setProperty(User_Property::Order, 1);
     addToWidgetList(spin_right);
 
+    // This stops mouse wheel from stealing focus unless user has selected the widget
+    spin_left->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+    spin_left->installEventFilter(new MouseWheelWidgetAdjustmentGuard(spin_left));
+    spin_right->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+    spin_right->installEventFilter(new MouseWheelWidgetAdjustmentGuard(spin_right));
 
     connect (spin_left,  QOverload<double>::of(&TripleSpinBox::valueChanged),
              this, [this, property_key] (double d) { updateObjectFromNewValue(property_key, d, 0); });
-
     connect (spin_right, QOverload<double>::of(&TripleSpinBox::valueChanged),
              this, [this, property_key] (double d) { updateObjectFromNewValue(property_key, d, 1); });
 
@@ -224,6 +237,13 @@ QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &fo
     spin_right->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
     spin_right->setProperty(User_Property::Order, 1);
     addToWidgetList(spin_right);
+
+    // This stops mouse wheel from stealing focus unless user has selected the widget
+    spin_left->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+    spin_left->installEventFilter(new MouseWheelWidgetAdjustmentGuard(spin_left));
+    spin_right->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+    spin_right->installEventFilter(new MouseWheelWidgetAdjustmentGuard(spin_right));
+
     return spin_pair;
 }
 

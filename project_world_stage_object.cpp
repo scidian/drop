@@ -73,10 +73,8 @@ void DrObject::initializeObjectSettings(QString new_name, double width, double h
                            "Collide?", "Should this item collide with other items?");
     addPropertyToComponent(Object_Components::settings, Object_Properties::damage, Property_Type::List, 0,
                            "Damage", "What should this item damage when it collides with something else.");
-
-
-    addPropertyToComponent(Object_Components::settings, Object_Properties::test, Property_Type::List2, 0,
-                           "Test List", "A test of a new widget");
+    ///addPropertyToComponent(Object_Components::settings, Object_Properties::test, Property_Type::List2, 0,
+    ///                       "Test List", "A test of a new widget");
 
 
     addComponent(Object_Components::transform, "Transform", "Sets the physical size and angle of the item in the stage.", Component_Colors::Green_SeaGrass, true);

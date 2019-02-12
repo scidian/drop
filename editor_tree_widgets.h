@@ -45,6 +45,21 @@ signals:
 
 
 //####################################################################################
+//##    MouseWheelWidgetAdjustmentGuard
+//##        Stops widget from stealing focus on mouse wheel
+//####################################################################################
+class MouseWheelWidgetAdjustmentGuard : public QObject
+{
+public:
+    explicit        MouseWheelWidgetAdjustmentGuard(QObject *parent);
+
+protected:
+    bool            eventFilter(QObject* obj, QEvent* event) override;
+};
+
+
+
+//####################################################################################
 //##    CategoryButton
 //##        A sub classed QPushButton so we can override events for header buttons in Tree Lists
 //############################

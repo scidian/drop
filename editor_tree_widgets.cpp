@@ -68,6 +68,25 @@ void WidgetHoverHandler::applyHeaderBodyProperties(QWidget *widget, HeaderBodyLi
 
 
 //####################################################################################
+//##    MouseWheelWidgetAdjustmentGuard Class Functions
+//####################################################################################
+MouseWheelWidgetAdjustmentGuard::MouseWheelWidgetAdjustmentGuard(QObject *parent) : QObject(parent) {}
+
+bool MouseWheelWidgetAdjustmentGuard::eventFilter(QObject *obj, QEvent *event)
+{
+    const QWidget* widget = static_cast<QWidget*>(obj);
+    if (event->type() == QEvent::Wheel && widget && !widget->hasFocus())
+    {
+        event->ignore();
+        return true;
+    }
+
+    return QObject::eventFilter(obj, event);
+}
+
+
+
+//####################################################################################
 //##    InspectorCategoryButton Class Functions
 //####################################################################################
 // Constructor for category button, gives button a way to pass click to custom function
