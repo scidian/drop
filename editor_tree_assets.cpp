@@ -116,13 +116,13 @@ void TreeAssetList::buildAssetList()
         QLabel *pix_label = new QLabel();
         pix_label->setFont(fp);
         pix_label->setSizePolicy(sp_right);
-        pix_label->setFixedHeight(50);
+        pix_label->setFixedHeight(45);
         pix_label->setAlignment(Qt::AlignmentFlag::AlignCenter);
         m_widget_hover->applyHeaderBodyProperties(pix_label, asset_pair.second->getAssetName(), Advisor_Info::Asset_Object[1] );
         vertical_split->addWidget( pix_label );
 
         // Draw pixmap onto label
-        pix_label->setPixmap(pix.scaled(120, 38, Qt::KeepAspectRatio));
+        pix_label->setPixmap(pix.scaled(120, 35, Qt::KeepAspectRatio));
 
 
         // ***** Create a child TreeWidgetItem attached to the TopLevel category item

@@ -268,6 +268,7 @@ enum class World_Properties
 enum class Stage_Components
 {
     settings,
+    grid,
 };
 
 enum class Stage_Properties {
@@ -277,6 +278,11 @@ enum class Stage_Properties {
     end,                    //positive
     size,                   //positive
     cooldown,               //Positive
+
+    // grid
+    grid_origin_point,      //pointf
+    grid_size,              //sizef
+    grid_rotation,          //angle
 };
 
 

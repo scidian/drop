@@ -88,7 +88,7 @@ QList<long> DrStage::objectKeysSortedByZOrder()
 void DrStage::initializeStageSettings(QString new_name)
 {
     addComponent(Stage_Components::settings, "Settings", "Basic settings for current stage.", Component_Colors::White_Snow, true);
-    getComponent(Object_Components::settings)->setIcon(Component_Icons::Settings);
+    getComponent(Stage_Components::settings)->setIcon(Component_Icons::Settings);
 
     addPropertyToComponent(Stage_Components::settings, Stage_Properties::name, Property_Type::String, new_name,
                            "Stage Name", "Name of the current stage.");
@@ -101,9 +101,20 @@ void DrStage::initializeStageSettings(QString new_name)
     addPropertyToComponent(Stage_Components::settings, Stage_Properties::cooldown, Property_Type::Positive, 0,
                            "Cooldown", "Distance to wait after stage plays before it is possible to be shown again.");
 
+
+    addComponent(Stage_Components::grid, "Grid", "Settings for the alignment grid within the editor. For an isometric grid, set 'Grid Rotation' "
+                                                 "to 30 degrees, and set a grid size width twice the value of the grid size height (i.e. w: 50, h: 25).",
+                                                 Component_Colors::Pink_Pearl, true);
+    getComponent(Stage_Components::grid)->setIcon(Component_Icons::Transform);
+
+    addPropertyToComponent(Stage_Components::grid, Stage_Properties::grid_origin_point, Property_Type::PointF, QPointF(0, 0),
+                           "Grid Origin Point", "Origin point in stage the grid begins at.");
+    addPropertyToComponent(Stage_Components::grid, Stage_Properties::grid_size, Property_Type::SizeF, QPointF(50, 50),
+                           "Grid Cell Size", "Width and height of the cells in the grid.");
+    addPropertyToComponent(Stage_Components::grid, Stage_Properties::grid_rotation, Property_Type::Angle, 0,
+                           "Grid Rotation", "Rotation of the grid lines.");
+
 }
-
-
 
 
 //####################################################################################

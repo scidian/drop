@@ -259,13 +259,13 @@ void ApplyColoring(QWidget *widget)
         "       border-bottom-left-radius: 0px;  }"
 
         // Asset Item Frames
-        " QFrame#assetFrame { border: " + Dr::BorderWidth() + " solid #777777; "
-        "       padding: 1px; margin-top: 2px; margin-bottom: 2px; margin-left: 4px; margin-right: 4px; "
+        " QFrame#assetFrame { "
+        "       border: " + Dr::BorderWidth() + " solid #777777; "
+        "       padding: 1px; margin-top: 3px; margin-bottom: 3px; margin-left: 6px; margin-right: 6px; "
         "       border-radius: 6px; } "
 
-        " QFrame#assetFrame:hover { border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name()  + "; "
-        "       padding: 1px; margin-top: 2px; margin-bottom: 2px; margin-left: 4px; margin-right: 4px; "
-        "       border-radius: 6px; } "
+        " QFrame#assetFrame:hover { "
+        "       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name()  + "; }"
 
     );
 

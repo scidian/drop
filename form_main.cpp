@@ -130,8 +130,10 @@ void FormMain::buildAssetList() {
 
 // Sends new list to Object Inspector
 void FormMain::buildObjectInspector(QList<long> key_list) {
-    if (viewMain->currentViewMode() != View_Mode::Selecting)
-        treeInspector->buildInspectorFromKeys(key_list);
+    if ((viewMain->currentViewMode() == View_Mode::Selecting) ||
+        (viewMain->currentViewMode() != View_Mode::None && key_list.count() == 0)) return;
+
+    treeInspector->buildInspectorFromKeys(key_list);
 }
 
 void FormMain::buildTreeStageList() {

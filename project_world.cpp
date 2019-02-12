@@ -86,7 +86,7 @@ DrStage* DrWorld::getStageWithName(QString stage_name)
 void DrWorld::initializeWorldSettings(QString new_name)
 {
     addComponent(World_Components::settings, "Settings", "Basic settings for current world.", Component_Colors::White_Snow, true);
-    getComponent(Object_Components::settings)->setIcon(Component_Icons::Settings);
+    getComponent(World_Components::settings)->setIcon(Component_Icons::Settings);
     addPropertyToComponent(World_Components::settings, World_Properties::name, Property_Type::String, new_name,
                            "World Name", "Name of the current world.");
     addPropertyToComponent(World_Components::settings, World_Properties::game_direction, Property_Type::Float, 0.0,
