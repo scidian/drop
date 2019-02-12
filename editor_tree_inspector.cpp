@@ -366,7 +366,6 @@ void TreeInspector::updateObjectFromNewValue(long property_key, QVariant new_val
     // Processes changes to spin box that represents item opacity
     case Object_Properties::opacity:
         object->setComponentPropertyValue(Object_Components::layering, Object_Properties::opacity, new_value.toDouble());
-        item->setOpacity(new_value.toDouble() / 100);
         break;
 
     default: ;

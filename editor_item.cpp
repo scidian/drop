@@ -57,7 +57,6 @@ DrItem::DrItem(DrProject *project, DrObject *object, bool is_temp_only)
     setData(User_Roles::Z_Order,  z_order);
     setData(User_Roles::Opacity,  opacity);
     setZValue(  z_order );
-    setOpacity( opacity / 100);
 
     // Adjust item to proper transform
     QPointF center = boundingRect().center();
@@ -69,7 +68,7 @@ DrItem::DrItem(DrProject *project, DrObject *object, bool is_temp_only)
     m_start_x = start_pos.x();
     m_start_y = start_pos.y();
 
-    if (!Dr::CheckDebugFlag(Debug_Flags::Turn_Off_Antialiasing))
+    if (Dr::CheckDebugFlag(Debug_Flags::Turn_Off_Antialiasing) == false)
         setTransformationMode(Qt::SmoothTransformation);                    // Turn on anti aliasing
 
     // Set up initial item settings
@@ -248,12 +247,12 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 {
     ///if (option->state & QStyle::State_Selected)  { fillColor = QColor(Qt::red); } //m_color.dark(150); }              // If selected
     ///if (option->state & QStyle::State_MouseOver) { fillColor = QColor(Qt::gray); } //fillColor.light(125); }          // If mouse is over
-    ///if (option->state & QStyle::State_MouseOver && option->state & QStyle::State_Selected) { fillColor = QColor(Qt::red).darker(200); }
 
-    ///painter->fillRect(QRectF(0, 0, m_width, m_height), fillColor);
-    ///painter->fillRect(QRectF(0, 0, m_width / 2, m_height / 2), fillColor.dark(250));
-
-    ///painter->drawPixmap(0, 0, pixmap());
+    // Turn off anti aliasing if necessary
+    if (Dr::CheckDebugFlag(Debug_Flags::Turn_Off_Antialiasing)) {
+        painter->setRenderHint(QPainter::Antialiasing, false);
+        painter->setRenderHint(QPainter::SmoothPixmapTransform, false);
+    }
 
     // Check item is not super duper tiny, this seems to crash paint function
     QPolygonF poly = ( sceneTransform().map( boundingRect() ));
@@ -264,7 +263,20 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     QStyleOptionGraphicsItem myOption(*option);
     myOption.state &= ~QStyle::State_Selected;
 
-    QGraphicsPixmapItem::paint(painter, &myOption, widget);
+    // Check opacity of current item
+    double transparency = 100;
+    if (m_object) transparency = m_object->getComponentPropertyValue(Object_Components::layering, Object_Properties::opacity).toDouble();
+
+    // Apply the proper opacity to this item and either paint the pixmap, or paint a pattern representation of the item
+    if ( transparency >= 1) {
+        setOpacity(transparency / 100);
+        QGraphicsPixmapItem::paint(painter, &myOption, widget);
+    } else {
+        setOpacity(1);
+        painter->setPen( QPen(Dr::GetColor(Window_Colors::Icon_Dark), 1, Qt::PenStyle::SolidLine, Qt::PenCapStyle::FlatCap, Qt::PenJoinStyle::MiterJoin ) );
+        painter->setBrush( QBrush(Dr::GetColor(Window_Colors::Icon_Dark), Qt::BrushStyle::FDiagPattern ) );
+        painter->drawPath( this->shape() );
+    }
 }
 
 
