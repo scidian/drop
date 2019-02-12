@@ -56,11 +56,17 @@ QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font)
     edit->setFont(font);
     edit->setSizePolicy(sp_right);
 
-    edit->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
+    long property_key = property->getPropertyKey();
+
+    edit->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     edit->setText(property->getValue().toString());
 
     applyHeaderBodyProperties(edit, property);
     addToWidgetList(edit);
+
+    connect (edit,  &QLineEdit::editingFinished,
+             this, [this, property_key, edit] () { updateSettingsFromNewValue(property_key, edit->text() ); });
+
     return edit;
 }
 
@@ -94,7 +100,7 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, Spi
     spin->installEventFilter(new MouseWheelWidgetAdjustmentGuard(spin));
 
     connect (spin,  QOverload<int>::of(&QSpinBox::valueChanged),
-             this, [this, property_key] (int i) { updateObjectFromNewValue(property_key, i); });
+             this, [this, property_key] (int i) { updateSettingsFromNewValue(property_key, i); });
 
     return spin;
 }
@@ -114,8 +120,8 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     spin->setDecimals(3);
     switch (spin_type)
     {
-    case Spin_Type::Float:      spin->setRange(-100000000, 100000000);              spin->setSingleStep(5);     break;
-    case Spin_Type::Percent:    spin->setRange(0, 100);     spin->setSuffix("%");   spin->setSingleStep(2);     break;
+    case Spin_Type::Float:      spin->setRange(-100000000, 100000000);              spin->setSingleStep(1);     break;
+    case Spin_Type::Percent:    spin->setRange(0, 100);     spin->setSuffix("%");   spin->setSingleStep(5);     break;
     case Spin_Type::Angle:      spin->setRange(-360, 360);  spin->setSuffix("°");   spin->setSingleStep(5);     break;
     default:                    spin->setRange(-100000000, 100000000);
     }
@@ -136,7 +142,7 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
 
     // Connect value changed to our handler function
     connect (spin,  QOverload<double>::of(&TripleSpinBox::valueChanged),
-             this, [this, property_key] (double d) { updateObjectFromNewValue(property_key, d); });
+             this, [this, property_key] (double d) { updateSettingsFromNewValue(property_key, d); });
 
     return spin;
 }
@@ -163,11 +169,11 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
     default: ;
     }
     if (spin_type == Spin_Type::Scale) {
-        spin_left->setSingleStep(.25);
-        spin_right->setSingleStep(.25);
+        spin_left->setSingleStep(.1);
+        spin_right->setSingleStep(.1);
     } else {
-        spin_left->setSingleStep(5);
-        spin_right->setSingleStep(5);
+        spin_left->setSingleStep(1);
+        spin_right->setSingleStep(1);
     }
 
     horizontal_split->addWidget(spin_left);
@@ -190,9 +196,9 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
     spin_right->installEventFilter(new MouseWheelWidgetAdjustmentGuard(spin_right));
 
     connect (spin_left,  QOverload<double>::of(&TripleSpinBox::valueChanged),
-             this, [this, property_key] (double d) { updateObjectFromNewValue(property_key, d, 0); });
+             this, [this, property_key] (double d) { updateSettingsFromNewValue(property_key, d, 0); });
     connect (spin_right, QOverload<double>::of(&TripleSpinBox::valueChanged),
-             this, [this, property_key] (double d) { updateObjectFromNewValue(property_key, d, 1); });
+             this, [this, property_key] (double d) { updateSettingsFromNewValue(property_key, d, 1); });
 
 
     return spin_pair;
@@ -230,11 +236,13 @@ QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &fo
     horizontal_split->addWidget(variable_sign);
     horizontal_split->addWidget(spin_right);
 
-    spin_left->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
+    long property_key = property->getPropertyKey();
+
+    spin_left->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     spin_left->setProperty(User_Property::Order, 0);
     addToWidgetList(spin_left);
 
-    spin_right->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
+    spin_right->setProperty(User_Property::Key, QVariant::fromValue( property_key));
     spin_right->setProperty(User_Property::Order, 1);
     addToWidgetList(spin_right);
 
@@ -243,6 +251,11 @@ QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &fo
     spin_left->installEventFilter(new MouseWheelWidgetAdjustmentGuard(spin_left));
     spin_right->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
     spin_right->installEventFilter(new MouseWheelWidgetAdjustmentGuard(spin_right));
+
+    connect (spin_left,  QOverload<double>::of(&TripleSpinBox::valueChanged),
+             this, [this, property_key] (double d) { updateSettingsFromNewValue(property_key, d, 0); });
+    connect (spin_right, QOverload<double>::of(&TripleSpinBox::valueChanged),
+             this, [this, property_key] (double d) { updateSettingsFromNewValue(property_key, d, 1); });
 
     return spin_pair;
 }

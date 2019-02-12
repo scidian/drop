@@ -109,6 +109,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     case DrType::Camera:       m_relay->setAdvisorInfo(Advisor_Info::Camera_Object);        break;
     case DrType::Character:    m_relay->setAdvisorInfo(Advisor_Info::Character_Object);     break;
     case DrType::Object:       m_relay->setAdvisorInfo(Advisor_Info::Object_Object);        break;
+    case DrType::Asset:        m_relay->setAdvisorInfo(Advisor_Info::Asset_Object);         break;
     default:                   m_relay->setAdvisorInfo(Advisor_Info::Not_Set);
     }
 
@@ -171,8 +172,9 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
             case Property_Type::List:       new_widget = createComboBox(property_pair.second, fp);                              break;
             case Property_Type::List2:      new_widget = createComboBox2(property_pair.second, fp);
             }
-            horizontal_split->addWidget(new_widget);
 
+            if (new_widget != nullptr)
+                horizontal_split->addWidget(new_widget);
 
             vertical_layout->addWidget(single_row);
         }
@@ -255,13 +257,39 @@ void TreeInspector::updateObjectPropertyBoxes(DrSettings* object, Object_Propert
         case Property_Type::Percent:
         case Property_Type::Angle:      dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toDouble());   break;
 
+        case Property_Type::String:     dynamic_cast<QLineEdit*>(widget)->setText(prop->getValue().toString());         break;
+
         case Property_Type::PointF:
         case Property_Type::SizeF:
         case Property_Type::Scale:
+        case Property_Type::Variable:
             if (dynamic_cast<QDoubleSpinBox*>(widget)->property(User_Property::Order).toInt() == 0)
                 dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toPointF().x());
             else
                 dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toPointF().y());
+            break;
+
+        case Property_Type::Point:
+            if (dynamic_cast<QSpinBox*>(widget)->property(User_Property::Order).toInt() == 0)
+                dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toPoint().x());
+            else
+                dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toPoint().y());
+            break;
+
+        case Property_Type::Image:                                  // QPixmap
+        case Property_Type::Icon:
+        case Property_Type::Color:                                  // QColor
+        case Property_Type::Polygon:                                // For Collision Shapes
+        case Property_Type::Vector3D:
+        case Property_Type::List:
+        case Property_Type::List2:
+
+            //################ !!!!!!!!!!!!!!!!!!!!!!!
+            //
+            //      CASES NOT ACCOUNTED FOR
+            //
+            //################ !!!!!!!!!!!!!!!!!!!!!!!
+
             break;
         }
 
@@ -275,13 +303,81 @@ void TreeInspector::updateObjectPropertyBoxes(DrSettings* object, Object_Propert
 
 
 //####################################################################################
+//##        When the user changes the values of the input boxes, updates the
+//##        appropriate settings of the item shown in the object inspector
+//####################################################################################
+void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order)
+{
+    // If is DrObject type, call seperate update function that handles the DrItem QGraphicsItems as well
+    if (IsDrObjectClass(m_selected_type) == true) {
+        // Make a call to update the DrObject type item, if it returns false, stay around and update the other property
+        if (updateDrObjectFromNewValue(property_key, new_value, sub_order)) return;
+    }
+
+    // Update the appropiate property in the settings of the object shown in the inspector
+    DrSettings *settings = m_project->findSettingsFromKey( m_selected_key );
+    QPoint  temp_point;
+    QPointF temp_pointf;
+
+    if (settings != nullptr) {
+        DrProperty *property = settings->findPropertyFromPropertyKey(property_key);
+
+        switch (property->getPropertyType())
+        {
+        case Property_Type::Bool:                                   // true or false
+        case Property_Type::Int:                                    // any integer
+        case Property_Type::Positive:                               // integer >= 0
+        case Property_Type::Float:                                  // any floating point
+        case Property_Type::Percent:                                // floating point from 0.0 to 100.0
+        case Property_Type::Angle:                                  // floating point for showing degrees
+        case Property_Type::String:
+            property->setValue(new_value);
+            break;
+        case Property_Type::Point:                                  // Integer pair x and y
+            temp_point = property->getValue().toPoint();
+            if (sub_order == 0) temp_point.setX( new_value.toInt() );
+            else                temp_point.setY( new_value.toInt() );
+            property->setValue(temp_point);
+            break;
+        case Property_Type::PointF:                                 // Floating pair x and y
+        case Property_Type::SizeF:                                  // Floating pair w and h
+        case Property_Type::Scale:                                  // Floating pair, has smaller step in spin box
+        case Property_Type::Variable:                               // floating point pair, number followed by a +/- number
+            temp_pointf = property->getValue().toPointF();
+            if (sub_order == 0) temp_pointf.setX( new_value.toDouble() );
+            else                temp_pointf.setY( new_value.toDouble() );
+            property->setValue(temp_pointf);
+            break;
+
+        case Property_Type::Image:                                  // QPixmap
+        case Property_Type::Icon:
+        case Property_Type::Color:                                  // QColor
+        case Property_Type::Polygon:                                // For Collision Shapes
+        case Property_Type::Vector3D:
+        case Property_Type::List:
+        case Property_Type::List2:
+
+            //################ !!!!!!!!!!!!!!!!!!!!!!!
+            //
+            //      CASES NOT ACCOUNTED FOR
+            //
+            //################ !!!!!!!!!!!!!!!!!!!!!!!
+
+            break;
+        }
+    }
+}
+
+
+//####################################################################################
 //##        When the user changes the values of the input boxes, updates the object
 //##        shown in the object inspector in both the scene and in the data model
+//##
+//##        RETURNS TRUE if it found a property to update, otherwise FALSE
 //####################################################################################
-void TreeInspector::updateObjectFromNewValue(long property_key, QVariant new_value, long sub_order)
+bool TreeInspector::updateDrObjectFromNewValue(long property_key, QVariant new_value, long sub_order)
 {
-    // Exit if the selected project object is not something in the scene that needs to be updated
-    if (IsDrObjectClass(m_selected_type) == false) return;
+    bool updated_something = false;
 
     // Load the object we're trying to update, the item in the scene that represents it, and our scene
     DrObject *object =   dynamic_cast<DrObject*>(m_project->findSettingsFromKey(m_selected_key));
@@ -309,6 +405,7 @@ void TreeInspector::updateObjectFromNewValue(long property_key, QVariant new_val
         else                    position.setY( new_value.toDouble() );
         object->setComponentPropertyValue(Object_Components::transform, Object_Properties::position, position );
         my_scene->setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
+        updated_something = true;
         break;
 
     // Processes change to spin boxes that represent item size and item scale
@@ -344,6 +441,7 @@ void TreeInspector::updateObjectFromNewValue(long property_key, QVariant new_val
         my_scene->setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
         my_scene->getRelay()->updateObjectInspectorAfterItemChange(object, Object_Properties::scale);
         my_scene->getRelay()->updateObjectInspectorAfterItemChange(object, Object_Properties::size);
+        updated_something = true;
         break;
 
     // Process changes to spin box that represents item rotation
@@ -355,17 +453,20 @@ void TreeInspector::updateObjectFromNewValue(long property_key, QVariant new_val
         transform = QTransform().rotate(angle).scale(scale.x(), scale.y());
         item->setTransform(transform);
         my_scene->setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
+        updated_something = true;
         break;
 
     // Processes changes to spin box that represents item z order
     case Object_Properties::z_order:
         object->setComponentPropertyValue(Object_Components::layering, Object_Properties::z_order, new_value.toDouble());
         item->setZValue(new_value.toDouble());
+        updated_something = true;
         break;
 
     // Processes changes to spin box that represents item opacity
     case Object_Properties::opacity:
         object->setComponentPropertyValue(Object_Components::layering, Object_Properties::opacity, new_value.toDouble());
+        updated_something = true;
         break;
 
     default: ;
@@ -376,6 +477,8 @@ void TreeInspector::updateObjectFromNewValue(long property_key, QVariant new_val
 
     // Turn back on itemChange() signals
     item->enableItemChangeFlags();
+
+    return updated_something;
 }
 
 

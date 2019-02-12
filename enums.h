@@ -198,6 +198,9 @@ namespace Advisor_Info
     const HeaderBodyList Character_Object      { "Character Object", "This is a character object" };
     const HeaderBodyList Object_Object         { "Object", "This is an object in a Stage." };
 
+    const HeaderBodyList Asset_Object          { "Asset", "This is an object that can have many copies of itself placed into your game. Any change to this "
+                                                          "asset will change all occurences of the asset within the game." };
+
     const HeaderBodyList Not_Set               { "Not Set", "Fix me!!!!!!" };
 };
 
@@ -207,22 +210,24 @@ namespace Advisor_Info
 //##    Used to track what the QVariant m_value data type really is
 //####################################################################################
 enum class Property_Type {
-    Bool,                   // true or false
-    Int,                    // any integer
-    Positive,               // integer >= 0
-    Float,                  // any floating point
-    Variable,               // floating point pair, number followed by a +/- number
-    Percent,                // floating point from 0.0 to 100.0
-    Angle,                  // floating point for showing degrees
-    String,
+    Bool,                   // bool         true or false
+    Int,                    // long         any integer
+    Positive,               // long         integer >= 0
+    Float,                  // double       any floating point
+    Percent,                // double       floating point from 0.0 to 100.0
+    Angle,                  // double       floating point for showing degrees
+    String,                 // QString
+
+    Point,                  // QPoint       Integer pair x and y
+    PointF,                 // QPointF      Floating pair x and y
+    SizeF,                  // QPointF      Floating pair w and h
+    Scale,                  // QPointF      Floating pair, has smaller step in spin box
+    Variable,               // QPointF      floating point pair, number followed by a +/- number
+
     Image,                  // QPixmap
     Icon,
     Color,                  // QColor
-    Polygon,                // For Collision Shapes
-    Point,                  // Integer pair x and y
-    PointF,                 // Floating pair x and y
-    SizeF,                  // Floating pair w and h
-    Scale,                  // Floating pair, has smaller step in spin box
+    Polygon,                // QPolygon     For Collision Shapes
     Vector3D,
     List,
     List2,

@@ -29,17 +29,18 @@ void WidgetHoverHandler::attach(QWidget *widget)
 
 bool WidgetHoverHandler::eventFilter(QObject *obj, QEvent *event)
 {
+    QWidget *hover_widget = dynamic_cast<QWidget*>(obj);
+    if (!hover_widget) return QObject::eventFilter(obj, event);
+
     if (event->type() == QEvent::HoverEnter)
     {
-        QWidget *hover_widget = dynamic_cast<QWidget*>(obj);
-
         QString header = hover_widget->property(User_Property::Header).toString();
         QString body = hover_widget->property(User_Property::Body).toString();
 
         emit signalMouseHover(header, body);
     }
 
-    return false;
+    return QObject::eventFilter(obj, event);
 }
 
 //      Sets AdvisorInfo widget user properties
@@ -75,7 +76,9 @@ MouseWheelWidgetAdjustmentGuard::MouseWheelWidgetAdjustmentGuard(QObject *parent
 bool MouseWheelWidgetAdjustmentGuard::eventFilter(QObject *obj, QEvent *event)
 {
     const QWidget* widget = static_cast<QWidget*>(obj);
-    if (event->type() == QEvent::Wheel && widget && !widget->hasFocus())
+    if (!widget) return QObject::eventFilter(obj, event);
+
+    if (event->type() == QEvent::Wheel && !widget->hasFocus())
     {
         event->ignore();
         return true;

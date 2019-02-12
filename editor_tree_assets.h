@@ -53,7 +53,21 @@ private slots:
 };
 
 
+//####################################################################################
+//##    AssetMouseHandler
+//##        Event filter handler for asset items
+//####################################################################################
+class AssetMouseHandler : public QObject
+{
+private:
+    InterfaceRelay      *m_relay;                    // Pointer to InterfaceRelay class of parent form
 
+public:
+    explicit        AssetMouseHandler(QObject *parent, InterfaceRelay *relay);
+
+protected:
+    bool            eventFilter(QObject* obj, QEvent* event) override;
+};
 
 
 
