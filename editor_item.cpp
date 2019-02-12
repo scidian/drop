@@ -37,10 +37,8 @@ DrItem::DrItem(DrProject *project, DrObject *object, bool is_temp_only)
 
     m_temp_only  = is_temp_only;
 
-    // Load starting position
-    QPointF start_pos = m_object->getComponentProperty(Object_Components::transform, Object_Properties::position)->getValue().toPointF();
-    m_start_x = start_pos.x();
-    m_start_y = start_pos.y();
+    // Load image from asset
+    setPixmap(m_asset->getComponentProperty(Asset_Components::animation, Asset_Properties::animation_default)->getValue().value<QPixmap>());
 
     // Dimensions of associated asset, used for boundingRect
     m_asset_width =  m_asset->getWidth();
@@ -53,35 +51,45 @@ DrItem::DrItem(DrProject *project, DrObject *object, bool is_temp_only)
     double  angle =   m_object->getComponentProperty(Object_Components::transform, Object_Properties::rotation)->getValue().toDouble();
     QPointF scale =   m_object->getComponentProperty(Object_Components::transform, Object_Properties::scale)->getValue().toPointF();
     double  z_order = m_object->getComponentProperty(Object_Components::layering,  Object_Properties::z_order)->getValue().toDouble();
-    setData(User_Roles::Rotation, QVariant::fromValue(angle));
-    setData(User_Roles::Scale, scale);
-    setData(User_Roles::Z_Order, z_order);
-    setZValue(z_order);
-
-    // Set up initial item settings
-    setAcceptHoverEvents(true);                                         // Item tracks mouse movement
-    setShapeMode(QGraphicsPixmapItem::MaskShape);                       // Allows for selecting while ignoring transparent pixels
-
-    if (!Dr::CheckDebugFlag(Debug_Flags::Turn_Off_Antialiasing))
-        setTransformationMode(Qt::SmoothTransformation);                // Turn on anti aliasing
-
-    if (!m_temp_only) {
-        setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable);
-        setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsMovable);
-        setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsGeometryChanges);
-        setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges);
-    }
-
-    // Load image from asset
-    setPixmap(m_asset->getComponentProperty(Asset_Components::animation, Asset_Properties::animation_default)->getValue().value<QPixmap>());
+    double  opacity = m_object->getComponentProperty(Object_Components::layering,  Object_Properties::opacity)->getValue().toDouble();
+    setData(User_Roles::Rotation, angle);
+    setData(User_Roles::Scale,    scale);
+    setData(User_Roles::Z_Order,  z_order);
+    setData(User_Roles::Opacity,  opacity);
+    setZValue(  z_order );
+    setOpacity( opacity / 100);
 
     // Adjust item to proper transform
     QPointF center = boundingRect().center();
     QTransform t = QTransform().translate(center.x(), center.y()).rotate(angle).scale(scale.x(), scale.y()).translate(-center.x(), -center.y());
     setTransform(t);
+
+    // Load starting position
+    QPointF start_pos = m_object->getComponentProperty(Object_Components::transform, Object_Properties::position)->getValue().toPointF();
+    m_start_x = start_pos.x();
+    m_start_y = start_pos.y();
+
+    if (!Dr::CheckDebugFlag(Debug_Flags::Turn_Off_Antialiasing))
+        setTransformationMode(Qt::SmoothTransformation);                    // Turn on anti aliasing
+
+    // Set up initial item settings
+    if (!m_temp_only) {
+        setAcceptHoverEvents(true);                                         // Item tracks mouse movement
+        setShapeMode(QGraphicsPixmapItem::MaskShape);                       // Allows for selecting while ignoring transparent pixels
+        setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsSelectable);
+        setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsMovable);
+        enableItemChangeFlags();
+    }
 }                                     
 
-
+void DrItem::disableItemChangeFlags() {
+    setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsGeometryChanges, false);
+    setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges, false);
+}
+void DrItem::enableItemChangeFlags() {
+    setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsGeometryChanges, true);
+    setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges, true);
+}
 
 //####################################################################################
 //##        Item Property Overrides
@@ -118,14 +126,22 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
     // If this is a temporary object, do not process change
     if (m_temp_only == true) QGraphicsPixmapItem::itemChange(change, value);
 
-    if (change == ItemScenePositionHasChanged) {
-        QPointF new_pos =    value.toPointF();
+    // If item position has changed, update it
+    if (change == ItemPositionHasChanged) {
+        QPointF new_pos =    value.toPointF();                      // Value is new scene position (of upper left corner)
 
+        // Create a transform so we can find new position in as origin in center point of item
+        double  angle   = data(User_Roles::Rotation).toDouble();
+        QPointF scale   = data(User_Roles::Scale).toPointF();
+        QTransform t = QTransform().rotate(angle).scale(scale.x(), scale.y());
+
+        // Load the center we have on file, and figure out the potential new center
         double old_x = m_object->getComponentPropertyValue(Object_Components::transform, Object_Properties::position).toPointF().x();
         double old_y = m_object->getComponentPropertyValue(Object_Components::transform, Object_Properties::position).toPointF().y();
-        double new_x = mapToScene( boundingRect().center() ).x();
-        double new_y = mapToScene( boundingRect().center() ).y();
+        double new_x = new_pos.x() + t.map( boundingRect().center() ).x();
+        double new_y = new_pos.y() + t.map( boundingRect().center() ).y();
 
+        // Compare new center point to center point we have on record, if different, update
         if (qFuzzyCompare(old_x, new_x) == false || qFuzzyCompare(old_y, new_y) == false) {
             m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::position, QPointF(new_x, new_y));
             if (scene()) dynamic_cast<DrScene*>(scene())->getRelay()->updateObjectInspectorAfterItemChange(m_object, Object_Properties::position);
@@ -135,21 +151,25 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
     }
 
     if (change == ItemTransformHasChanged) {
-        QTransform new_transform = value.value<QTransform>();
+        QTransform new_transform = value.value<QTransform>();       // Value is new item QTransform
 
+        // Load rotation we have on file and current rotation of the item
         double start_angle = m_object->getComponentPropertyValue(Object_Components::transform, Object_Properties::rotation).toDouble();
         double new_angle   = data(User_Roles::Rotation).toDouble();
 
+        // If the rotation has changed, update
         if (qFuzzyCompare(start_angle, new_angle) == false) {
             m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::rotation, new_angle);
             if (scene()) dynamic_cast<DrScene*>(scene())->getRelay()->updateObjectInspectorAfterItemChange(m_object, Object_Properties::rotation);
         }
 
+        // Load scale we have on file and current scale of the item
         double old_x = m_object->getComponentPropertyValue(Object_Components::transform, Object_Properties::scale).toPointF().x();
         double old_y = m_object->getComponentPropertyValue(Object_Components::transform, Object_Properties::scale).toPointF().y();
         double new_x = data(User_Roles::Scale).toPointF().x();
         double new_y = data(User_Roles::Scale).toPointF().y();
 
+        // If the scale has changed, update scale and size
         if (qFuzzyCompare(old_x, new_x) == false || qFuzzyCompare(old_y, new_y) == false) {
             m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::scale, QPointF(new_x, new_y));
             double size_x = m_asset_width *  new_x;
@@ -164,9 +184,10 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
     }
 
     if (change == ItemZValueHasChanged) {
-        double new_z = value.toDouble();
+        double new_z = value.toDouble();                            // Value is new double z value
         double old_z = m_object->getComponentPropertyValue(Object_Components::layering, Object_Properties::z_order).toDouble();
 
+        // If z value has changed, update
         if (qFuzzyCompare(old_z, new_z) == false) {
             m_object->setComponentPropertyValue(Object_Components::layering, Object_Properties::z_order, new_z);
             if (scene()) dynamic_cast<DrScene*>(scene())->getRelay()->updateObjectInspectorAfterItemChange(m_object, Object_Properties::z_order);

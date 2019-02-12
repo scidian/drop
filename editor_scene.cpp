@@ -84,22 +84,23 @@ void DrScene::keyPressEvent(QKeyEvent *event)
     QRectF source_rect = totalSelectionSceneRect();
 
     // Process movement key press
-    switch (event->key())
-    {
-    // Move selected items
-    case Qt::Key::Key_Up:     selectedItems().first()->moveBy( 0, -move_by);      break;
-    case Qt::Key::Key_Down:   selectedItems().first()->moveBy( 0,  move_by);      break;
-    case Qt::Key::Key_Left:   selectedItems().first()->moveBy(-move_by,  0);      break;
-    case Qt::Key::Key_Right:  selectedItems().first()->moveBy( move_by,  0);      break;
-    case Qt::Key::Key_Comma:  selectedItems().first()->setZValue(selectedItems().first()->zValue() - 1);    break;
-    case Qt::Key::Key_Period: selectedItems().first()->setZValue(selectedItems().first()->zValue() + 1);    break;
+    for (auto item : getSelectionItems()) {
+        switch (event->key())
+        {
+        case Qt::Key::Key_Up:     item->moveBy( 0, -move_by);      break;
+        case Qt::Key::Key_Down:   item->moveBy( 0,  move_by);      break;
+        case Qt::Key::Key_Left:   item->moveBy(-move_by,  0);      break;
+        case Qt::Key::Key_Right:  item->moveBy( move_by,  0);      break;
+        case Qt::Key::Key_Comma:  item->setZValue(selectedItems().first()->zValue() - 1);    break;
+        case Qt::Key::Key_Period: item->setZValue(selectedItems().first()->zValue() + 1);    break;
+        }
     }
+    updateSelectionBox();
 
     // Perform key press event on all items in selection group
     if (scene_mutex.tryLock(10) == false) return;
 
-    QList<QGraphicsItem*>  list_new_items;
-    list_new_items.clear();
+    QList<QGraphicsItem*>  list_new_items {};
 
     for (auto item : getSelectionItems()) {
     //!!    DrItem *new_item;

@@ -39,8 +39,6 @@ private:
                                                             // and not processed into the undo stack, nor do changes have an effect on the associated
                                                             // object in the project data model
 
-    Position_Flags  m_origin = Position_Flags::Center;
-
 public:
     DrItem(DrProject *project, DrObject *object, bool is_temp_only = false);
 
@@ -57,13 +55,16 @@ public:
     virtual void            mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
     virtual void            hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 
+    // Function Calls
+    void                    disableItemChangeFlags();
+    void                    enableItemChangeFlags();
+
     // Getters and Setters
     DrObject*               getObject()    { return m_object; }
     long                    getObjectKey() { return m_object_key; }
     DrAsset*                getAsset()     { return m_asset; }
     long                    getAssetKey()  { return m_asset_key; }
 
-    Position_Flags          getOrigin() { return m_origin; }
     QColor                  getColorAtPoint(QPointF at_local_point);
     QColor                  getColorAtPoint(QPointF at_view_point, QGraphicsView *mouse_over_view);
 

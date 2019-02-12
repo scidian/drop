@@ -99,6 +99,7 @@ typedef enum {
     Pre_Rotate_Rotation,
 
     Z_Order,
+    Opacity,
 
     Name,
     Type,

@@ -82,10 +82,11 @@ void DrView::mousePressEvent(QMouseEvent *event)
                     viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
                     QTimer::singleShot(500, this, SLOT(checkTranslateToolTipStarted()));
 
-                    m_old_pos = my_scene->getSelectionBox().center();
-                    m_start_pos = my_scene->selectedItems().first()->pos();
                     m_hide_bounding = true;
                     m_view_mode = View_Mode::Translating;
+
+                    for (auto items : my_scene->getSelectionItems())
+                        items->moveBy(0, 0);
                 }
 
             // ******************** If clicked while control is down, add to selection group, or take out
@@ -265,7 +266,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
                                                               ", Y: " + QString::number(my_center.y()) );
         m_relay->setLabelText(Label_Names::Label_Scale, "Scale X: " +   QString::number(my_scale.x()) +
                                                       ", Scale Y: " +   QString::number(my_scale.y()) );
-        m_relay->setLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle));
+        m_relay->setLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle) + ", Opacity: " + QString::number(item->opacity()));
         m_relay->setLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()) + QString("\t") +
                                                              "Name: " + item->data(User_Roles::Name).toString() );
 
@@ -312,12 +313,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
             QGraphicsView::mouseMoveEvent(event);
 
             // Update selection box location
-            ///my_scene->updateSelectionBox();
-            double diff_x = my_scene->selectedItems().first()->pos().x() - m_start_pos.x();
-            double diff_y = my_scene->selectedItems().first()->pos().y() - m_start_pos.y();
-            double new_x = m_old_pos.x() + diff_x;
-            double new_y = m_old_pos.y() + diff_y;
-            my_scene->translateSelectionBox(new_x, new_y);
+            my_scene->updateSelectionBox();
 
             if (m_tool_tip->getTipType() != View_Mode::Translating)
                 m_tool_tip->startToolTip(View_Mode::Translating, m_origin, my_scene->getSelectionTransform().map(my_scene->getSelectionBox().center()) );
@@ -363,11 +359,13 @@ void DrView::mouseReleaseEvent(QMouseEvent *event)
         // Object inspector doesnt change during rubber band box mode,
         // Make sure we update it when we're done with rubber band box and we have a new selection
         if (m_view_mode == View_Mode::Selecting) {
+            m_view_mode = View_Mode::None;
             if (my_scene->getSelectionCount() > 0) {
                 DrItem *selected = dynamic_cast<DrItem*>(my_scene->getSelectionItems().first());
                 long selected_key = selected->getObjectKey();
-                m_view_mode = View_Mode::None;
                 m_relay->buildObjectInspector( { selected_key } );
+            } else {
+                m_relay->buildObjectInspector( { } );
             }
         }
 

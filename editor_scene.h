@@ -95,7 +95,6 @@ public:
 
     QGraphicsItemGroup*     createEmptyItemGroup(double angle = 0, QPointF scale = QPointF(1, 1));
     QRectF                  totalSelectionSceneRect();
-    void                    translateSelectionBox(double x, double y);
     void                    updateSelectionBox();
 
     QList<DrObject*>        convertListItemsToObjects(QList<QGraphicsItem*> graphics_items);

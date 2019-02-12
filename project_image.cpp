@@ -23,6 +23,6 @@ DrImage::DrImage(DrProject *parent_project, long key, QString image_path) :
 
     m_simple_name.replace("_", " ");
 
-    m_image =    QImage(image_path);
+    m_image = QImage(image_path).convertToFormat(QImage::Format::Format_ARGB32);
 
 }

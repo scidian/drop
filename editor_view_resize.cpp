@@ -47,6 +47,8 @@ void DrView::startResize(QPoint mouse_in_view)
         dritem->setTransform(child_as_item->transform());
         m_group->addToGroup(dritem);
     }
+    m_group->setEnabled(false);
+    m_group->setVisible(false);
 
     // Store which grip handle we started over and the initial slection bounding box
     m_start_resize_grip = m_over_handle;

@@ -220,7 +220,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
 
 //####################################################################################
-//##        Updates the property boxes already in the object inspector for the current item
+//##        Updates the property boxes already in the object inspector when a new
+//##        item is selected
 //####################################################################################
 void TreeInspector::updatePropertyBoxes(DrSettings* object, Object_Properties property)
 {
@@ -272,13 +273,15 @@ void TreeInspector::updatePropertyBoxes(DrSettings* object, Object_Properties pr
 
 
 //####################################################################################
-//##        Updates the object we're displaying the properties of with the new value
+//##        When the user changes the values of the input boxes, updates the object
+//##        shown in the object inspector in both the scene and in the data model
 //####################################################################################
 void TreeInspector::updateObjectFromNewValue(long property_key, QVariant new_value, long sub_order)
 {
     // Exit if the selected project object is not something in the scene that needs to be updated
     if (IsDrObjectClass(m_selected_type) == false) return;
 
+    // Load the object we're trying to update, the item in the scene that represents it, and our scene
     DrObject *object =   dynamic_cast<DrObject*>(m_project->findSettingsFromKey(m_selected_key));
     DrItem   *item =     object->getDrItem();
     DrScene  *my_scene = dynamic_cast<DrScene*>( item->scene() );
@@ -286,8 +289,7 @@ void TreeInspector::updateObjectFromNewValue(long property_key, QVariant new_val
     Object_Properties property = static_cast<Object_Properties>(property_key);
 
     // Turn off itemChange() signals to stop recursive calling
-    item->setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges, false);
-    item->setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsGeometryChanges, false);
+    item->disableItemChangeFlags();
 
     double x, y;
     switch (property)
@@ -305,15 +307,26 @@ void TreeInspector::updateObjectFromNewValue(long property_key, QVariant new_val
         my_scene->setPositionByOrigin(item, Position_Flags::Center, x, y);
         break;
 
+    // Processes changes to spin box that represents item z order
+    case Object_Properties::z_order:
+        object->setComponentPropertyValue(Object_Components::layering, Object_Properties::z_order, new_value.toDouble());
+        item->setZValue(new_value.toDouble());
+        break;
+
+    // Processes changes to spin box that represents item opacity
+    case Object_Properties::opacity:
+        object->setComponentPropertyValue(Object_Components::layering, Object_Properties::opacity, new_value.toDouble());
+        item->setOpacity(new_value.toDouble() / 100);
+        break;
 
     default: ;
     }
 
+    // Update selection box in case item position changed
     my_scene->updateSelectionBox();
 
     // Turn back on itemChange() signals
-    item->setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsGeometryChanges, true);
-    item->setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges, true);
+    item->enableItemChangeFlags();
 }
 
 

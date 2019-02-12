@@ -110,11 +110,6 @@ void DrScene::updateSelectionBox()
     this->destroyItemGroup(group);
 }
 
-void DrScene::translateSelectionBox(double x, double y)
-{
-    m_selection_box.moveCenter( QPointF(x, y) );
-}
-
 
 // Creates an empty QGraphicsItemGroup at angle starting angle
 QGraphicsItemGroup* DrScene::createEmptyItemGroup(double angle, QPointF scale)

@@ -80,11 +80,17 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, Spi
     }
     spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
 
-    spin->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
+    long property_key = property->getPropertyKey();
+
+    spin->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     spin->setValue(property->getValue().toInt());
 
     applyHeaderBodyProperties(spin, property);
     addToWidgetList(spin);
+
+    connect (spin,  QOverload<int>::of(&QSpinBox::valueChanged),
+             this, [this, property_key] (int i) { updateObjectFromNewValue(property_key, i); });
+
     return spin;
 }
 
@@ -108,13 +114,21 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     case Spin_Type::Angle:      spin->setRange(-360, 360);  spin->setSuffix("°");       break;
     default:                    spin->setRange(-100000000, 100000000);
     }
-    spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
+    spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);     // Hides little up / down buttons
 
-    spin->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
+    // Store property key within item, set initial starting value of spin box
+    long property_key = property->getPropertyKey();
+    spin->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     spin->setValue(property->getValue().toDouble());
 
+    // Connect HoverHandler with proper text, add this widget to list of widgets in object inspector
     applyHeaderBodyProperties(spin, property);
     addToWidgetList(spin);
+
+    // Connect value changed to our handler function
+    connect (spin,  QOverload<double>::of(&TripleSpinBox::valueChanged),
+             this, [this, property_key] (double d) { updateObjectFromNewValue(property_key, d); });
+
     return spin;
 }
 
