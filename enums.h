@@ -222,6 +222,7 @@ enum class Property_Type {
     Point,                  // Integer pair x and y
     PointF,                 // Floating pair x and y
     SizeF,                  // Floating pair w and h
+    Scale,                  // Floating pair, has smaller step in spin box
     Vector3D,
     List,
     List2,

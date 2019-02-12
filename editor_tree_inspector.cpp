@@ -95,7 +95,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     // If old selection and new selection are both objects, we don't need to completely rebuild inspector, just change values
     if (m_selected_type == DrType::Object && new_type == DrType::Object) {
         m_selected_key =  new_key;
-        updatePropertyBoxes(m_project->findSettingsFromKey(m_selected_key), Object_Properties::all_properties);
+        updateObjectPropertyBoxes(m_project->findSettingsFromKey(m_selected_key), Object_Properties::all_properties);
         return;
     } else {
         m_selected_key =  new_key;
@@ -166,6 +166,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
             case Property_Type::Angle:      new_widget = createDoubleSpinBox(property_pair.second, fp, Spin_Type::Angle);       break;
             case Property_Type::PointF:     new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Spin_Type::Point);   break;
             case Property_Type::SizeF:      new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Spin_Type::Size);    break;
+            case Property_Type::Scale:      new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Spin_Type::Scale);   break;
             case Property_Type::Variable:   new_widget = createVariableSpinBoxPair(property_pair.second, fp);                   break;
             case Property_Type::List:       new_widget = createComboBox(property_pair.second, fp);                              break;
             case Property_Type::List2:      new_widget = createComboBox2(property_pair.second, fp);
@@ -223,7 +224,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 //##        Updates the property boxes already in the object inspector when a new
 //##        item is selected
 //####################################################################################
-void TreeInspector::updatePropertyBoxes(DrSettings* object, Object_Properties property)
+void TreeInspector::updateObjectPropertyBoxes(DrSettings* object, Object_Properties property)
 {
     if (object->getKey() != m_selected_key) return;
     if (IsDrObjectClass(m_selected_type) == false) return;
@@ -256,6 +257,7 @@ void TreeInspector::updatePropertyBoxes(DrSettings* object, Object_Properties pr
 
         case Property_Type::PointF:
         case Property_Type::SizeF:
+        case Property_Type::Scale:
             if (dynamic_cast<QDoubleSpinBox*>(widget)->property(User_Property::Order).toInt() == 0)
                 dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toPointF().x());
             else
@@ -291,20 +293,58 @@ void TreeInspector::updateObjectFromNewValue(long property_key, QVariant new_val
     // Turn off itemChange() signals to stop recursive calling
     item->disableItemChangeFlags();
 
-    double x, y;
+    // Some local variables
+    QTransform transform;
+    double angle;
+
+    QPointF position = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::position).toPointF();
+    QPointF scale    = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::scale).toPointF();
+    QPointF size     = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::size).toPointF();
+
     switch (property)
     {
 
     // Processes changes to spin boxes that represent item position
     case Object_Properties::position:
-        x = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::position).toPointF().x();
-        y = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::position).toPointF().y();
-        if (sub_order == 0)
-            x = new_value.toDouble();
-        else
-            y = new_value.toDouble();
-        object->setComponentPropertyValue(Object_Components::transform, Object_Properties::position, QPointF(x, y));
-        my_scene->setPositionByOrigin(item, Position_Flags::Center, x, y);
+        if (sub_order == 0)     position.setX( new_value.toDouble() );
+        else                    position.setY( new_value.toDouble() );
+        object->setComponentPropertyValue(Object_Components::transform, Object_Properties::position, position );
+        my_scene->setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
+        break;
+
+    // Processes change to spin boxes that represent item size and item scale
+    case Object_Properties::size:
+    case Object_Properties::scale:
+        if (property == Object_Properties::size) {
+            if (sub_order == 0) {
+                size.setX(  new_value.toDouble() );
+                scale.setX( size.x() / item->getAssetWidth()  );
+            } else {
+                size.setY(  new_value.toDouble() );
+                scale.setY( size.y() / item->getAssetHeight() );
+            }
+        } else {
+            if (sub_order == 0) {
+                scale.setX( new_value.toDouble() );
+                size.setX(  scale.x() * item->getAssetWidth() );
+            } else {
+                scale.setY( new_value.toDouble());
+                size.setY(  scale.y() * item->getAssetHeight() );
+            }
+        }
+        object->setComponentPropertyValue(Object_Components::transform, Object_Properties::scale, scale );
+        object->setComponentPropertyValue(Object_Components::transform, Object_Properties::size, size );
+
+        // Now that we have a new scale, calculate a new transform and apply to item
+        item->setData(User_Roles::Scale, scale );
+        angle = item->data(User_Roles::Rotation).toDouble();
+        transform = QTransform().rotate(angle).scale(scale.x(), scale.y());
+        item->setTransform(transform);
+
+        // Reset the center point of the item to the objects position and update the opposing data in the object inspector
+        my_scene->setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
+        my_scene->getRelay()->updateObjectInspectorAfterItemChange(object, Object_Properties::scale);
+        my_scene->getRelay()->updateObjectInspectorAfterItemChange(object, Object_Properties::size);
         break;
 
     // Processes changes to spin box that represents item z order

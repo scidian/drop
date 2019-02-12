@@ -30,6 +30,7 @@ enum class Spin_Type {
     Angle,                  // Show degrees sign
     Point,                  // Has X and Y
     Size,                   // Has W and H
+    Scale,                  // Used to have smaller increment / decrement
 };
 
 
@@ -61,7 +62,7 @@ public:
 
     // Function Calls
     void            buildInspectorFromKeys(QList<long> key_list);
-    void            updatePropertyBoxes(DrSettings* object, Object_Properties property);
+    void            updateObjectPropertyBoxes(DrSettings* object, Object_Properties property);
     void            updateObjectFromNewValue(long property_key, QVariant new_value, long sub_order = 0);
 
     InterfaceRelay* getRelay() { return m_relay; }

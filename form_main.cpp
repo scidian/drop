@@ -210,7 +210,7 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
 
 void FormMain::updateObjectInspectorAfterItemChange(DrObject* object, Object_Properties property)
 {
-    treeInspector->updatePropertyBoxes(object, property);
+    treeInspector->updateObjectPropertyBoxes(object, property);
 }
 
 void FormMain::updateStageTreeSelectionBasedOnSelectionGroup()

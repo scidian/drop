@@ -153,6 +153,13 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
     case Spin_Type::Size:   spin_left->setPrefix("W: ");    spin_right->setPrefix("H: ");   break;
     default: ;
     }
+    if (spin_type == Spin_Type::Scale) {
+        spin_left->setSingleStep(.25);
+        spin_right->setSingleStep(.25);
+    } else {
+        spin_left->setSingleStep(5);
+        spin_right->setSingleStep(5);
+    }
 
     horizontal_split->addWidget(spin_left);
     horizontal_split->addWidget(spin_right);

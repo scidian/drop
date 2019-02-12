@@ -118,7 +118,7 @@ void TreeAssetList::buildAssetList()
         vertical_split->addWidget( pix_label );
 
         // Draw pixmap onto label
-        pix_label->setPixmap(pix.scaled(140, 38, Qt::KeepAspectRatio));
+        pix_label->setPixmap(pix.scaled(120, 38, Qt::KeepAspectRatio));
 
 
 

@@ -60,10 +60,12 @@ public:
     void                    enableItemChangeFlags();
 
     // Getters and Setters
-    DrObject*               getObject()    { return m_object; }
-    long                    getObjectKey() { return m_object_key; }
-    DrAsset*                getAsset()     { return m_asset; }
-    long                    getAssetKey()  { return m_asset_key; }
+    DrObject*               getObject()      { return m_object; }
+    long                    getObjectKey()   { return m_object_key; }
+    DrAsset*                getAsset()       { return m_asset; }
+    long                    getAssetKey()    { return m_asset_key; }
+    double                  getAssetWidth()  { return m_asset_width; }
+    double                  getAssetHeight() { return m_asset_height; }
 
     QColor                  getColorAtPoint(QPointF at_local_point);
     QColor                  getColorAtPoint(QPointF at_view_point, QGraphicsView *mouse_over_view);

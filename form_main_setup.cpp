@@ -289,7 +289,7 @@ void FormMain::buildWindowModeEditStage()
     // ***** Build left Assets Dock
     assets = new QDockWidget(this);
     assets->setObjectName(QStringLiteral("assets"));
-    assets->setMinimumSize(QSize(160, 35));
+    assets->setMinimumSize(QSize(140, 35));
     assets->setMaximumWidth(300);
     assets->setFont(font);
     assets->setFeatures(QDockWidget::DockWidgetMovable);  // | QDockWidget::DockWidgetClosable);
@@ -450,7 +450,7 @@ void FormMain::buildWindowModeEditStage()
     addDockWidget(static_cast<Qt::DockWidgetArea>(4), toolbar);
 
     // Forces resize of docks
-    resizeDocks( { assets, inspector  }, { 160, 300 }, Qt::Horizontal);
+    resizeDocks( { assets, inspector  }, { 140, 270 }, Qt::Horizontal);
     resizeDocks( { advisor, inspector }, { 140, 900 }, Qt::Vertical);
 
 

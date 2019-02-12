@@ -88,7 +88,7 @@ void DrObject::initializeObjectSettings(QString new_name, double width, double h
                            "Rotation", "Angle of item within the stage.");
     addPropertyToComponent(Object_Components::transform, Object_Properties::size, Property_Type::SizeF, QPointF(width, height),
                            "Size", "Width and Height of object in pixels, affected by Scale property.");
-    addPropertyToComponent(Object_Components::transform, Object_Properties::scale, Property_Type::PointF, QPointF(1, 1),
+    addPropertyToComponent(Object_Components::transform, Object_Properties::scale, Property_Type::Scale, QPointF(1, 1),
                            "Scale", "X and Y scale of item within the stage.");
 
     addComponent(Object_Components::layering, "Layering", "Controls the order items are drawn onto the screen. Lower numbers are "

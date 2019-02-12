@@ -247,8 +247,18 @@ void TreeStage::selectionChanged (const QItemSelection &selected, const QItemSel
         // Call to outside function to rebuild object inspector:
         m_relay->buildObjectInspector(QList<long> { selected_key });
 
-        if (m_project->findStageFromKey(selected_key) != nullptr)
-            m_relay->populateScene(selected_key);
+        // Call to undo command to change scene to newly selected Stage or newly selected item's parent Stage
+        DrSettings *selected_item = m_project->findSettingsFromKey(selected_key);
+        if (selected_item != nullptr) {
+            DrType selected_type = selected_item->getType();
+            if (selected_type == DrType::Stage) {
+                m_relay->populateScene(selected_key);
+            } else if (IsDrObjectClass(selected_type) == true) {
+                DrObject *as_object = dynamic_cast<DrObject*>(selected_item);
+                m_relay->populateScene( as_object->getParentStage()->getKey() );
+            }
+        }
+
 
         //******************************************************
 

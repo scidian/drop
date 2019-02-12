@@ -320,6 +320,15 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale)
         if (scale.y() > 0) new_scale_y *= -1;
     }
 
+
+//    QTransform start = QTransform().rotate(angle).scale(start_scale.x(), start_scale.y());
+//    QPointF bot_left =  start.map( original->boundingRect().bottomLeft() );
+//    QPointF top_right = start.map( original->boundingRect().topRight() );
+
+//    double initial_w = QLineF(bot_left, top_right).dx() * scale.x();
+//    double initial_h = QLineF(bot_left, top_right).dy() * scale.y();
+
+
     // Update item property
     original->setData(User_Roles::Scale, QPointF(new_scale_x, new_scale_y) );
 
