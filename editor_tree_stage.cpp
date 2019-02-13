@@ -5,19 +5,27 @@
 //      Tree Stage Definitions
 //
 //
+#include <QCheckBox>
+#include <QDrag>
+#include <QDragEnterEvent>
+#include <QDragLeaveEvent>
+#include <QDragMoveEvent>
+#include <QPainter>
+
+#include "colors.h"
+#include "debug.h"
+
+#include "editor_tree_stage.h"
+
+#include "interface_relay.h"
 
 #include "project.h"
 #include "project_world.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
-
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
-
-#include "editor_tree_stage.h"
-#include "interface_relay.h"
-
 
 //####################################################################################
 //##        Populates Tree Stage List based on project data

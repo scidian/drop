@@ -10,12 +10,11 @@
 #include <QEvent>
 #include <QPainter>
 
+#include "colors.h"
+
 #include "editor_tree_widgets.h"
 
 #include "settings_component_property.h"
-
-#include "colors.h"
-
 
 
 //####################################################################################

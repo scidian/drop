@@ -5,21 +5,26 @@
 //      Tree Asset Definitions
 //
 //
+#include <QEvent>
+#include <QLabel>
+#include <QVBoxLayout>
+
+#include "colors.h"
+#include "debug.h"
+
+#include "editor_tree_assets.h"
+#include "editor_tree_widgets.h"
+
+#include "interface_relay.h"
 
 #include "project.h"
 #include "project_asset.h"
 #include "project_world.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
-
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
-
-#include "editor_tree_assets.h"
-#include "editor_tree_widgets.h"
-#include "interface_relay.h"
-
 
 
 //####################################################################################

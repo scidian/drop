@@ -8,7 +8,8 @@
 #ifndef EDITOR_TREE_STAGE_H
 #define EDITOR_TREE_STAGE_H
 
-#include <QtWidgets>
+#include <QProxyStyle>
+#include <QTreeWidget>
 
 class DrProject;
 class InterfaceRelay;

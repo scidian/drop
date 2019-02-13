@@ -8,9 +8,6 @@
 
 #include <cmath>
 
-#include <QtWidgets>
-//#include <QWidget>
-
 #include "colors.h"
 #include "library.h"
 
@@ -45,6 +42,15 @@ QString RemoveTrailingDecimals(double value, int max_decimal_places)
     }
 
     return QString::number(value, 'f', count);
+}
+
+
+//####################################################################################
+//##        Used to show a modal error message
+//####################################################################################
+void ShowErrorMessage(QString function_name, QString error_message)
+{
+    QMessageBox::warning(nullptr, "Error", "Error from " + function_name + "(): " + error_message);
 }
 
 

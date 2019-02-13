@@ -5,20 +5,25 @@
 //      Graphics View Handling - View_Mode::Selecting
 //
 //
+#include <QMouseEvent>
+
+#include "colors.h"
+#include "debug.h"
+
+#include "editor_item.h"
+#include "editor_scene.h"
+#include "editor_view.h"
+
+#include "interface_relay.h"
+#include "library.h"
 
 #include "project.h"
 #include "project_world.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
-#include "editor_item.h"
-
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
-
-#include "editor_scene.h"
-#include "editor_view.h"
-#include "interface_relay.h"
 
 
 //####################################################################################

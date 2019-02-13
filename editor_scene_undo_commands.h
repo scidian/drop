@@ -8,9 +8,12 @@
 #ifndef EDITOR_SCENE_UNDO_H
 #define EDITOR_SCENE_UNDO_H
 
-#include "editor_scene.h"
+#include <QPointF>
+#include <QUndoCommand>
 
-
+class DrProject;
+class DrScene;
+class DrObject;
 
 //####################################################################################
 //##    Change Stage in SceneView

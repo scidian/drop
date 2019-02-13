@@ -5,22 +5,32 @@
 //
 //
 //
+#include <QApplication>
+#include <QAction>
+#include <QActionGroup>
+#include <QLabel>
+#include <QLineEdit>
+#include <QListView>
+#include <QMenu>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 
+#include "colors.h"
+#include "debug.h"
+
+#include "editor_tree_inspector.h"
+#include "editor_tree_widgets.h"
+
+#include "interface_relay.h"
 #include "library.h"
 
 #include "project.h"
 #include "project_world.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
-
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
-
-#include "editor_tree_inspector.h"
-#include "editor_tree_widgets.h"
-#include "interface_relay.h"
-
 
 //####################################################################################
 //##        Property Row Building Functions
@@ -172,8 +182,8 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
         spin_left->setSingleStep(.1);
         spin_right->setSingleStep(.1);
     } else {
-        spin_left->setSingleStep(1);
-        spin_right->setSingleStep(1);
+        spin_left->setSingleStep(5);
+        spin_right->setSingleStep(5);
     }
 
     horizontal_split->addWidget(spin_left);

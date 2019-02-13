@@ -8,7 +8,6 @@
 #ifndef COLORS_H
 #define COLORS_H
 
-#include <map>
 #include <QColor>
 
 

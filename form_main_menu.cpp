@@ -5,7 +5,15 @@
 //      Calls to set up, initialize, build Form Main menu system
 //
 //
+#include <QApplication>
+#include <QActionGroup>
+#include <QMenuBar>
+#include <QScreen>
 
+#include "colors.h"
+#include "debug.h"
+
+#include "editor_item.h"
 #include "editor_scene.h"
 #include "editor_tree_advisor.h"
 #include "editor_tree_assets.h"
@@ -13,8 +21,8 @@
 #include "editor_tree_stage.h"
 #include "editor_view.h"
 
-#include "colors.h"
 #include "form_main.h"
+
 #include "library.h"
 
 

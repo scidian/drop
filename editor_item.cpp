@@ -5,9 +5,15 @@
 //      DrObject Class Definitions
 //
 //
-
 #include <QtWidgets>
 
+#include "colors.h"
+#include "debug.h"
+
+#include "editor_item.h"
+#include "editor_scene.h"
+
+#include "interface_relay.h"
 #include "library.h"
 
 #include "project.h"
@@ -15,13 +21,9 @@
 #include "project_world.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
-
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
-
-#include "editor_item.h"
-#include "editor_scene.h"
 
 //####################################################################################
 //##        Constructor & destructor
@@ -122,76 +124,56 @@ int DrItem::type() const
 //####################################################################################
 QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
-    // If this is a temporary object, do not process change
-    if (m_temp_only == true) QGraphicsPixmapItem::itemChange(change, value);
+    // If this is a temporary object, or not attached to a scene, do not process change
+    if (m_temp_only || !scene()) return QGraphicsPixmapItem::itemChange(change, value);
 
-    // If item position has changed, update it
+    // Load relay (FormMain, etc) to send calls to outside this item
+    InterfaceRelay *relay = dynamic_cast<DrScene*>(scene())->getRelay();
+
+    // Load any new data stored in item
+    double  angle = data(User_Roles::Rotation).toDouble();
+    QPointF scale = data(User_Roles::Scale).toPointF();
+
+
+    // ***** If item position has changed, update it
     if (change == ItemPositionHasChanged) {
-        QPointF new_pos =    value.toPointF();                      // Value is new scene position (of upper left corner)
+        // Value is new scene position (of upper left corner)
+        QPointF new_pos =    value.toPointF();
 
-        // Create a transform so we can find new position in as origin in center point of item
-        double  angle   = data(User_Roles::Rotation).toDouble();
-        QPointF scale   = data(User_Roles::Scale).toPointF();
+        // Create a transform so we can find new center position of item
         QTransform t = QTransform().rotate(angle).scale(scale.x(), scale.y());
-
-        // Load the center we have on file, and figure out the potential new center
-        double old_x = m_object->getComponentPropertyValue(Object_Components::transform, Object_Properties::position).toPointF().x();
-        double old_y = m_object->getComponentPropertyValue(Object_Components::transform, Object_Properties::position).toPointF().y();
         double new_x = new_pos.x() + t.map( boundingRect().center() ).x();
         double new_y = new_pos.y() + t.map( boundingRect().center() ).y();
 
-        // Compare new center point to center point we have on record, if different, update
-        if (qFuzzyCompare(old_x, new_x) == false || qFuzzyCompare(old_y, new_y) == false) {
-            m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::position, QPointF(new_x, new_y));
-            if (scene()) dynamic_cast<DrScene*>(scene())->getRelay()->updateObjectInspectorAfterItemChange(m_object, Object_Properties::position);
-        }
+        m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::position, QPointF(new_x, new_y));
 
+        relay->updateObjectInspectorAfterItemChange(m_object, { Object_Properties::position });
         return new_pos;
     }
 
+    // ***** If item transform has changed, update it
     if (change == ItemTransformHasChanged) {
-        QTransform new_transform = value.value<QTransform>();       // Value is new item QTransform
+        // Value is new item QTransform
+        QTransform new_transform = value.value<QTransform>();
 
-        // Load rotation we have on file and current rotation of the item
-        double start_angle = m_object->getComponentPropertyValue(Object_Components::transform, Object_Properties::rotation).toDouble();
-        double new_angle   = data(User_Roles::Rotation).toDouble();
+        double size_x = m_asset_width *  scale.x();
+        double size_y = m_asset_height * scale.y();
 
-        // If the rotation has changed, update
-        if (qFuzzyCompare(start_angle, new_angle) == false) {
-            m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::rotation, new_angle);
-            if (scene()) dynamic_cast<DrScene*>(scene())->getRelay()->updateObjectInspectorAfterItemChange(m_object, Object_Properties::rotation);
-        }
+        m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::rotation, angle);
+        m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::scale, scale );
+        m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::size, QPointF(size_x, size_y));
 
-        // Load scale we have on file and current scale of the item
-        double old_x = m_object->getComponentPropertyValue(Object_Components::transform, Object_Properties::scale).toPointF().x();
-        double old_y = m_object->getComponentPropertyValue(Object_Components::transform, Object_Properties::scale).toPointF().y();
-        double new_x = data(User_Roles::Scale).toPointF().x();
-        double new_y = data(User_Roles::Scale).toPointF().y();
-
-        // If the scale has changed, update scale and size
-        if (qFuzzyCompare(old_x, new_x) == false || qFuzzyCompare(old_y, new_y) == false) {
-            m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::scale, QPointF(new_x, new_y));
-            double size_x = m_asset_width *  new_x;
-            double size_y = m_asset_height * new_y;
-            m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::size, QPointF(size_x, size_y));
-
-            if (scene()) dynamic_cast<DrScene*>(scene())->getRelay()->updateObjectInspectorAfterItemChange(m_object, Object_Properties::size);
-            if (scene()) dynamic_cast<DrScene*>(scene())->getRelay()->updateObjectInspectorAfterItemChange(m_object, Object_Properties::scale);
-        }
-
+        relay->updateObjectInspectorAfterItemChange(m_object, { Object_Properties::size, Object_Properties::scale, Object_Properties::rotation });
         return new_transform;
     }
 
+    // ***** If item z value has changed, update it
     if (change == ItemZValueHasChanged) {
-        double new_z = value.toDouble();                            // Value is new double z value
-        double old_z = m_object->getComponentPropertyValue(Object_Components::layering, Object_Properties::z_order).toDouble();
+        // Value is new double z value
+        double new_z = value.toDouble();
+        m_object->setComponentPropertyValue(Object_Components::layering, Object_Properties::z_order, new_z);
 
-        // If z value has changed, update
-        if (qFuzzyCompare(old_z, new_z) == false) {
-            m_object->setComponentPropertyValue(Object_Components::layering, Object_Properties::z_order, new_z);
-            if (scene()) dynamic_cast<DrScene*>(scene())->getRelay()->updateObjectInspectorAfterItemChange(m_object, Object_Properties::z_order);
-        }
-
+        relay->updateObjectInspectorAfterItemChange(m_object, { Object_Properties::z_order });
         return new_z;
     }
 

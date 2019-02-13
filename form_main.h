@@ -27,11 +27,14 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QtWidgets>
+
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QPushButton>
+#include <QScrollArea>
+#include <QSplitter>
 
 #include "colors.h"
-#include "debug.h"
-#include "project.h"
 #include "interface_relay.h"
 
 // Necessary forward declarations
@@ -41,6 +44,7 @@ class TreeAssetList;
 class TreeAdvisor;
 class TreeInspector;
 class TreeStage;
+class DrProject;
 class DrScene;
 class DrView;
 class DrViewRubberBand;
@@ -106,7 +110,7 @@ public:
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list);
     virtual void    setAdvisorInfo(QString header, QString body);
     virtual void    setLabelText(Label_Names label_name, QString new_text);
-    virtual void    updateObjectInspectorAfterItemChange(DrObject* object, Object_Properties property);
+    virtual void    updateObjectInspectorAfterItemChange(DrObject* object, QList<Object_Properties> properties);
     virtual void    updateStageTreeSelectionBasedOnSelectionGroup();
 
 private:

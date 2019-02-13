@@ -6,6 +6,7 @@
 //
 //
 #include "colors.h"
+#include "enums.h"
 
 namespace Dr {
 

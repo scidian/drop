@@ -8,7 +8,11 @@
 #ifndef EDITOR_TREE_INSPECTOR_H
 #define EDITOR_TREE_INSPECTOR_H
 
-#include <QtWidgets>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QDoubleSpinBox>
+#include <QPushButton>
+#include <QTreeWidget>
 
 #include "enums.h"
 
@@ -62,7 +66,7 @@ public:
 
     // Function Calls
     void            buildInspectorFromKeys(QList<long> key_list);
-    void            updateObjectPropertyBoxes(DrSettings* object, Object_Properties property);
+    void            updateObjectPropertyBoxes(DrSettings* object, QList<Object_Properties> properties_to_update);
 
     bool            updateDrObjectFromNewValue(long property_key, QVariant new_value, long sub_order = 0);
     void            updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order = 0);

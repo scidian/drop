@@ -5,15 +5,16 @@
 //
 //
 //
-
-#include "library.h"
-
-#include "project_world_stage.h"
-#include "project_world_stage_object.h"
-
 #include "editor_item.h"
 #include "editor_scene.h"
 #include "editor_scene_undo_commands.h"
+
+#include "library.h"
+
+#include "project.h"
+#include "project_world_stage.h"
+#include "project_world_stage_object.h"
+
 
 /*
  *  To Implement:

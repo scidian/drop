@@ -10,7 +10,6 @@
 
 #include <QPushButton>
 #include <QTreeWidgetItem>
-#include <QWidget>
 
 #include "enums.h"
 

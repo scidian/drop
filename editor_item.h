@@ -10,9 +10,11 @@
 #define DRITEM_H
 
 #include <QGraphicsItem>
+#include <QGraphicsView>
 
-#include "settings.h"
-#include "form_main.h"
+class DrProject;
+class DrAsset;
+class DrObject;
 
 
 //####################################################################################

@@ -8,7 +8,9 @@
 #ifndef EDITOR_VIEW_H
 #define EDITOR_VIEW_H
 
-#include <QtWidgets>
+#include <QGraphicsView>
+#include <QRubberBand>
+#include <QTime>
 
 #include "enums.h"
 

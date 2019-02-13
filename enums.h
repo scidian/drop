@@ -9,12 +9,6 @@
 #ifndef ENUMS_H
 #define ENUMS_H
 
-#include <map>
-#include <vector>
-
-#include <QColor>
-#include <QPalette>
-#include <QVariant>
 #include <QGraphicsItem>
 
 

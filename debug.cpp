@@ -5,6 +5,7 @@
 //      Handles debug flags for use in debugging / troubleshooting
 //
 //
+#include <bitset>
 
 #include "debug.h"
 

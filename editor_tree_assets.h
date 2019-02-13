@@ -8,7 +8,7 @@
 #ifndef EDITOR_TREE_ASSETS_H
 #define EDITOR_TREE_ASSETS_H
 
-#include <QtWidgets>
+#include <QTreeWidget>
 
 class DrProject;
 class DrProperty;

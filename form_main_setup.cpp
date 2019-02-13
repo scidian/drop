@@ -5,8 +5,12 @@
 //      Calls to set up, initialize, build Form Main
 //
 //
+#include <QApplication>
+#include <QDockWidget>
+#include <QHeaderView>
 
-#include "library.h"
+#include "colors.h"
+#include "debug.h"
 
 #include "editor_scene.h"
 #include "editor_tree_advisor.h"
@@ -17,7 +21,10 @@
 
 #include "form_main.h"
 
+#include "library.h"
+
 #include "project_world_stage.h"
+
 
 //####################################################################################
 //##        Setting up of form main

@@ -5,20 +5,13 @@
 //      Loads, styles and handles events for FormMain
 //
 //
+#include <QDockWidget>
+#include <QTimer>
 
 #include "colors.h"
-#include "library.h"
+#include "debug.h"
 
-#include "project.h"
-#include "project_asset.h"
-#include "project_world.h"
-#include "project_world_stage.h"
-#include "project_world_stage_object.h"
-
-#include "settings.h"
-#include "settings_component.h"
-#include "settings_component_property.h"
-
+#include "editor_item.h"
 #include "editor_scene.h"
 #include "editor_view.h"
 #include "editor_tree_advisor.h"
@@ -27,6 +20,18 @@
 #include "editor_tree_stage.h"
 
 #include "form_main.h"
+
+#include "library.h"
+
+#include "project.h"
+#include "project_asset.h"
+#include "project_world.h"
+#include "project_world_stage.h"
+#include "project_world_stage_object.h"
+#include "settings.h"
+#include "settings_component.h"
+#include "settings_component_property.h"
+
 
 // Destructor for Main Window
 FormMain::~FormMain()
@@ -210,9 +215,9 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
 }
 
 
-void FormMain::updateObjectInspectorAfterItemChange(DrObject* object, Object_Properties property)
+void FormMain::updateObjectInspectorAfterItemChange(DrObject* object, QList<Object_Properties> properties_to_update)
 {
-    treeInspector->updateObjectPropertyBoxes(object, property);
+    treeInspector->updateObjectPropertyBoxes(object, properties_to_update);
 }
 
 void FormMain::updateStageTreeSelectionBasedOnSelectionGroup()

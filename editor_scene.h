@@ -8,9 +8,10 @@
 #ifndef EDITOR_SCENE_H
 #define EDITOR_SCENE_H
 
-#include <QtWidgets>
+#include <QGraphicsScene>
+#include <QUndoStack>
 
-#include <editor_item.h>
+#include "interface_relay.h"
 
 class DrProject;
 class DrStage;
