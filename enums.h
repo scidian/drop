@@ -128,11 +128,16 @@ typedef enum {
 //####################################################################################
 //##    Some public forward function declarations
 //####################################################################################
-bool        CheckTypesAreSame(DrType type1, DrType type2);
-bool        IsDrObjectClass(DrType type_to_check);
-QString     StringFromType(DrType type);
-QString     StringFromAssetType(DrAsset_Type type);
-QString     StringFromPositionFlag(Position_Flags flag);
+namespace Dr
+{
+
+    bool        CheckTypesAreSame(DrType type1, DrType type2);
+    bool        IsDrObjectClass(DrType type_to_check);
+    QString     StringFromType(DrType type);
+    QString     StringFromAssetType(DrAsset_Type type);
+    QString     StringFromPositionFlag(Position_Flags flag);
+
+}
 
 
 //####################################################################################
@@ -280,6 +285,7 @@ enum class Stage_Properties {
     cooldown,               //Positive
 
     // grid
+    grid_style,             //list
     grid_origin_point,      //pointf
     grid_size,              //sizef
     grid_rotation,          //angle

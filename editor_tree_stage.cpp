@@ -170,7 +170,7 @@ void TreeStage::dragMoveEvent(QDragMoveEvent *event)
             DrSettings *check_settings = m_project->findSettingsFromKey(check_key);
             DrSettings *selected_settings = m_project->findSettingsFromKey(m_selected_key);
 
-            if ( CheckTypesAreSame(check_settings->getType(), selected_settings->getType()) ) { m_can_drop = true; }
+            if ( Dr::CheckTypesAreSame(check_settings->getType(), selected_settings->getType()) ) { m_can_drop = true; }
         }
     }
 
@@ -256,7 +256,7 @@ void TreeStage::selectionChanged (const QItemSelection &selected, const QItemSel
             DrType selected_type = selected_item->getType();
             if (selected_type == DrType::Stage) {
                 m_relay->populateScene(selected_key);
-            } else if (IsDrObjectClass(selected_type) == true) {
+            } else if (Dr::IsDrObjectClass(selected_type) == true) {
                 DrObject *as_object = dynamic_cast<DrObject*>(selected_item);
                 m_relay->populateScene( as_object->getParentStage()->getKey() );
             }
@@ -277,7 +277,7 @@ void TreeStage::selectionChanged (const QItemSelection &selected, const QItemSel
             // If we are over item that was first selected, skip to next
             if (check_key == this->getSelectedKey()) { continue; }
 
-            if (CheckTypesAreSame(check_type, selected_type) == false)
+            if (Dr::CheckTypesAreSame(check_type, selected_type) == false)
                 check_item->setSelected(false);
         }
     }

@@ -63,6 +63,7 @@ public:
 
     // Other Widget Update Calls
     InterfaceRelay* getRelay() { return m_relay; }
+    void            updateAlignmentGrid() { emit updateGrid(); }
     void            updateStageTreeSelection() { m_relay->updateStageTreeSelectionBasedOnSelectionGroup(); }
     void            updateView() { emit updateViews(); }
 
@@ -111,7 +112,8 @@ public slots:
     void            selectionGroupNewGroup(DrScene *scene, QList<DrObject*> old_list, QList<DrObject*> new_list);
 
 signals:
-    void            updateViews();                                                  // Connected to update() method of attached Views
+    void            updateGrid();                                                   // Connected to updateGrid() function of attached Views
+    void            updateViews();                                                  // Connected to update() function of attached Views
 
 };
 

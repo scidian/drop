@@ -112,21 +112,24 @@ void DrView::paintGrid()
     QPointF bottomRight = mapToScene(this->width(), this->height());
     QRectF  scene_rect(topLeft, bottomRight);
 
+    double grid_x = m_grid_size.x();
+    double grid_y = m_grid_size.y();
+
     // ********** Draw Grid Lines
     if (m_grid_style == Grid_Style::Lines) {
         painter.setPen(QPen( Dr::GetColor(Window_Colors::Background_Dark), 1 ));
         QVector<QLine> lines;
 
         // Vertical lines right of scene zero, followed by Vertical lines left of scene zero
-        for (qreal x = 0; x <= scene_rect.right(); x += m_grid_x)
+        for (qreal x = 0; x <= scene_rect.right(); x += grid_x)
             lines.append(QLine(mapFromScene(x, 0).x(), 0, mapFromScene(x, 0).x(), height()));
-        for (qreal x = 0; x >= scene_rect.left(); x -= m_grid_x)
+        for (qreal x = 0; x >= scene_rect.left(); x -= grid_x)
             lines.append(QLine(mapFromScene(x, 0).x(), 0, mapFromScene(x, 0).x(), height()));
 
         // Horizontal lines below scene zero, followed by Horizontal lines above scene zero
-        for (qreal y = 0; y <= scene_rect.bottom(); y += m_grid_y)
+        for (qreal y = 0; y <= scene_rect.bottom(); y += grid_y)
             lines.append(QLine(0, mapFromScene(0, y).y(), width(), mapFromScene(0, y).y()) );
-        for (qreal y = 0; y >= scene_rect.top(); y -= m_grid_y)
+        for (qreal y = 0; y >= scene_rect.top(); y -= grid_y)
             lines.append(QLine(0, mapFromScene(0, y).y(), width(), mapFromScene(0, y).y()) );
 
         painter.drawLines(lines);
@@ -142,20 +145,20 @@ void DrView::paintGrid()
         QVector<QPointF> points;
 
         // Bottom right
-        for (qreal x = 0; x <= scene_rect.right(); x += m_grid_x)
-            for (qreal y = 0; y <= scene_rect.bottom(); y += m_grid_y)
+        for (qreal x = 0; x <= scene_rect.right(); x += grid_x)
+            for (qreal y = 0; y <= scene_rect.bottom(); y += grid_y)
                 points.append( mapFromScene(x, y) );
         // Bottom left
-        for (qreal x = 0; x >= scene_rect.left(); x -= m_grid_x)
-            for (qreal y = 0; y <= scene_rect.bottom(); y += m_grid_y)
+        for (qreal x = 0; x >= scene_rect.left(); x -= grid_x)
+            for (qreal y = 0; y <= scene_rect.bottom(); y += grid_y)
                 points.append( mapFromScene(x, y) );
         // Top right
-        for (qreal x = 0; x <= scene_rect.right(); x += m_grid_x)
-            for (qreal y = 0; y >= scene_rect.top(); y -= m_grid_y)
+        for (qreal x = 0; x <= scene_rect.right(); x += grid_x)
+            for (qreal y = 0; y >= scene_rect.top(); y -= grid_y)
                 points.append( mapFromScene(x, y) );
         // Top left
-        for (qreal x = 0; x >= scene_rect.left(); x -= m_grid_x)
-            for (qreal y = 0; y >= scene_rect.top(); y -= m_grid_y)
+        for (qreal x = 0; x >= scene_rect.left(); x -= grid_x)
+            for (qreal y = 0; y >= scene_rect.top(); y -= grid_y)
                 points.append( mapFromScene(x, y) );
 
         painter.drawPoints(points.data(), points.size());

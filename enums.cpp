@@ -9,6 +9,8 @@
 #include "enums.h"
 
 
+namespace Dr {
+
 //####################################################################################
 //##        Returns true if same class type (or if both are DrObjects)
 //####################################################################################
@@ -103,7 +105,7 @@ QString StringFromPositionFlag(Position_Flags flag)
 
 
 
-
+}
 
 
 

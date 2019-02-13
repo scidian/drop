@@ -46,7 +46,7 @@ DrItem::DrItem(DrProject *project, DrObject *object, bool is_temp_only)
 
     // Store some initial user data
     setData(User_Roles::Name, m_asset->getAssetName() );
-    setData(User_Roles::Type, StringFromType( m_object->getType() ));
+    setData(User_Roles::Type, Dr::StringFromType( m_object->getType() ));
 
     double  angle =   m_object->getComponentProperty(Object_Components::transform, Object_Properties::rotation)->getValue().toDouble();
     QPointF scale =   m_object->getComponentProperty(Object_Components::transform, Object_Properties::scale)->getValue().toPointF();
@@ -274,7 +274,7 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     } else {
         setOpacity(1);
         painter->setPen( QPen(Dr::GetColor(Window_Colors::Icon_Dark), 1, Qt::PenStyle::SolidLine, Qt::PenCapStyle::FlatCap, Qt::PenJoinStyle::MiterJoin ) );
-        painter->setBrush( QBrush(Dr::GetColor(Window_Colors::Icon_Dark), Qt::BrushStyle::FDiagPattern ) );
+        painter->setBrush( QBrush(Dr::GetColor(Window_Colors::Icon_Dark), Qt::BrushStyle::DiagCrossPattern ) );
         painter->drawPath( this->shape() );
     }
 }

@@ -120,7 +120,7 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     spin->setDecimals(3);
     switch (spin_type)
     {
-    case Spin_Type::Float:      spin->setRange(-100000000, 100000000);              spin->setSingleStep(1);     break;
+    case Spin_Type::Float:      spin->setRange(-100000000, 100000000);              spin->setSingleStep(5);     break;
     case Spin_Type::Percent:    spin->setRange(0, 100);     spin->setSuffix("%");   spin->setSingleStep(5);     break;
     case Spin_Type::Angle:      spin->setRange(-360, 360);  spin->setSuffix("°");   spin->setSingleStep(5);     break;
     default:                    spin->setRange(-100000000, 100000000);
@@ -304,24 +304,29 @@ QComboBox* TreeInspector::createComboBox(DrProperty *property, QFont &font)
     QListView *combo_list = new QListView();
     combo->setView(combo_list);
     combo->setStyleSheet(style);
+    combo->setFont(font);
+    combo->setSizePolicy(size_policy);
 
     //// Alternate way to remove white border around QComboBox ListView
     ///combo->setEditable(true);
     ///combo->lineEdit()->setReadOnly(true);
     ///combo->lineEdit()->setDisabled(true);
 
-    combo->setFont(font);
-    combo->setSizePolicy(size_policy);
-    QStringList options;
-    if (property->getPropertyKey() == static_cast<int>(Object_Properties::damage)) {
+    long   property_key =  property->getPropertyKey();
+    DrType object_type  =  property->getParentComponent()->getParentSettings()->getType();
+
+    QStringList options;    
+    if (Dr::IsDrObjectClass(object_type) && property_key == static_cast<int>(Object_Properties::damage))
         options << tr("No Damage") << tr("Damage Player") << tr("Damage Enemy") << tr("Damage All");
-    } else {
+    else if ((object_type == DrType::Stage || object_type == DrType::StartStage) && (property_key == static_cast<int>(Stage_Properties::grid_style)))
+        options << tr("Lines") << tr("Dots");
+    else
         options << tr("Unknown List");
-    }
     combo->addItems(options);
+
     ///connect(combo, SIGNAL(currentIndexChanged(QString)), this, SLOT(sceneScaleChanged(QString)));
 
-    combo->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
+    combo->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     combo->setCurrentIndex(property->getValue().toInt());
 
     applyHeaderBodyProperties(combo, property);

@@ -249,7 +249,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
                                                                     ", Y: " + QString::number(mapToScene(m_last_mouse_pos).y()) );
         m_relay->setLabelText(Label_Names::Label_Mouse_2, "Mouse View  X: " + QString::number(m_last_mouse_pos.x()) +
                                                                     ", Y: " + QString::number(m_last_mouse_pos.y()) );
-        m_relay->setLabelText(Label_Names::Label_Pos_Flag, "Position Flag: " + StringFromPositionFlag(m_over_handle) + QString("\t") +
+        m_relay->setLabelText(Label_Names::Label_Pos_Flag, "Position Flag: " + Dr::StringFromPositionFlag(m_over_handle) + QString("\t") +
                                                                "Pos Angle: " + QString::number(a));
     }
     // !!!!! END
@@ -356,8 +356,8 @@ void DrView::mouseReleaseEvent(QMouseEvent *event)
         m_rubber_band->hide();
         m_tool_tip->stopToolTip();
 
-        // Object inspector doesnt change during rubber band box mode,
-        // Make sure we update it when we're done with rubber band box and we have a new selection
+        // We have it so that object inspector doesnt change during rubber band box mode,
+        // So, now we make sure to update it when we're done with rubber band box and we have a new selection
         if (m_view_mode == View_Mode::Selecting) {
             m_view_mode = View_Mode::None;
             if (my_scene->getSelectionCount() > 0) {

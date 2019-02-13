@@ -96,9 +96,10 @@ private:
 
     // Grid variables
     Grid_Style   m_grid_style = Grid_Style::Lines;                  // Grid type to display
-    double       m_grid_x = 50;                                     // Grid size left to right
-    double       m_grid_y = 50;                                     // Grid size top to bottom
-    double       m_grid_rotate = 0;                         // NOT IMPLEMENTED: Rotation of grid lines
+    QPointF      m_grid_origin { 0, 0 };                            // Origin point of grid in scene
+    QPointF      m_grid_size { 50, 50 };                            // Grid size
+    double       m_grid_rotate = 0;                                 // Rotation of grid lines
+
 
     // Keyboard flags
     bool         m_flag_key_down_spacebar = false;                  // True when View has focus and spacebar      is down
@@ -179,6 +180,7 @@ public:
     void            applyUpdatedMatrix();
     bool            hasLoadedFirstScene() { return m_shown_a_scene; }
     void            loadedFirstScene() { m_shown_a_scene = true; }
+    void            updateGrid();
     void            zoomInOut(int level);
 
     // Misc Functions

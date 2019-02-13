@@ -49,6 +49,7 @@ DrView::DrView(QWidget *parent, DrProject *project, DrScene *from_scene, Interfa
     connect(my_scene, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
     connect(my_scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
 
+    connect(my_scene, &DrScene::updateGrid,  this, [this]() { updateGrid(); });
     connect(my_scene, &DrScene::updateViews, this, [this]() { update(); });
 
     connect(this,   SIGNAL(selectionGroupMoved(DrScene*, QPointF)),
@@ -160,6 +161,18 @@ void DrView::scrollContentsBy(int dx, int dy)
     QGraphicsView::scrollContentsBy(dx, dy);
     updateSelectionBoundingBox(3);
     update();
+}
+
+void DrView::updateGrid()
+{
+    if (!scene()) return;
+    if (!my_scene->getCurrentStageShown()) return;
+
+    m_grid_origin =  my_scene->getCurrentStageShown()->getComponentPropertyValue(Stage_Components::grid, Stage_Properties::grid_origin_point).toPointF();
+    m_grid_size =    my_scene->getCurrentStageShown()->getComponentPropertyValue(Stage_Components::grid, Stage_Properties::grid_size).toPointF();
+    m_grid_rotate =  my_scene->getCurrentStageShown()->getComponentPropertyValue(Stage_Components::grid, Stage_Properties::grid_rotation).toDouble();
+    int style =      my_scene->getCurrentStageShown()->getComponentPropertyValue(Stage_Components::grid, Stage_Properties::grid_style).toInt();
+    m_grid_style =   static_cast<Grid_Style>(style);
 }
 
 void DrView::updateSelectionBoundingBox(int called_from)

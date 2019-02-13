@@ -76,10 +76,10 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
     // !!!!! #DEBUG:    Show selected item key and info
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Object_Inspector_Build)) {
-        QString type_string = StringFromType(new_type);
+        QString type_string = Dr::StringFromType(new_type);
         m_relay->setLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( new_key ) + ", TYPE: " + type_string);
 
-        if (IsDrObjectClass(new_type)) {
+        if (Dr::IsDrObjectClass(new_type)) {
             DrObject* object = dynamic_cast<DrObject*>(m_project->findSettingsFromKey(new_key));
             long asset_key = object->getAssetKey();
             QString asset_name = m_project->findSettingsFromKey(asset_key)->getAssetName();
@@ -229,7 +229,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 void TreeInspector::updateObjectPropertyBoxes(DrSettings* object, Object_Properties property)
 {
     if (object->getKey() != m_selected_key) return;
-    if (IsDrObjectClass(m_selected_type) == false) return;
+    if (Dr::IsDrObjectClass(m_selected_type) == false) return;
 
     Dr::SetLabelText(Label_Names::Label_1, "Insp Widget Count: " + QString::number(m_widgets.count()) );
 
@@ -309,7 +309,7 @@ void TreeInspector::updateObjectPropertyBoxes(DrSettings* object, Object_Propert
 void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order)
 {
     // If is DrObject type, call seperate update function that handles the DrItem QGraphicsItems as well
-    if (IsDrObjectClass(m_selected_type) == true) {
+    if (Dr::IsDrObjectClass(m_selected_type) == true) {
         // Make a call to update the DrObject type item, if it returns false, stay around and update the other property
         if (updateDrObjectFromNewValue(property_key, new_value, sub_order)) return;
     }

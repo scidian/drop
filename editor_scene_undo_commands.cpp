@@ -122,6 +122,7 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
 
     m_scene->getRelay()->centerViewOn(from_stage->getViewCenterPoint());
     m_scene->update();
+    m_scene->updateAlignmentGrid();
     m_scene->updateView();
     if (is_undo)
         return "Redo Select Stage " + displayed->getStageName();

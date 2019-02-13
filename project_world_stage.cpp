@@ -107,6 +107,8 @@ void DrStage::initializeStageSettings(QString new_name)
                                                  Component_Colors::Pink_Pearl, true);
     getComponent(Stage_Components::grid)->setIcon(Component_Icons::Transform);
 
+    addPropertyToComponent(Stage_Components::grid, Stage_Properties::grid_style, Property_Type::List, 0,
+                           "Grid Style", "Visual style of alignment grid.");
     addPropertyToComponent(Stage_Components::grid, Stage_Properties::grid_origin_point, Property_Type::PointF, QPointF(0, 0),
                            "Grid Origin Point", "Origin point in stage the grid begins at.");
     addPropertyToComponent(Stage_Components::grid, Stage_Properties::grid_size, Property_Type::SizeF, QPointF(50, 50),

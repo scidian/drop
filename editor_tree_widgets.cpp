@@ -121,7 +121,7 @@ void CategoryButton::paintEvent(QPaintEvent *event)
     painter.setBrush( QBrush(m_color, Qt::BrushStyle::SolidPattern) );
 
     double x = this->geometry().width() - 18;
-    double y = this->geometry().height() / 2 - 2;
+    double y = this->geometry().height() / 2 - 1;
 
     QPolygonF triangle;
     if (m_is_shrunk) {
