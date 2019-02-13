@@ -18,7 +18,7 @@
 #include "editor_tree_advisor.h"
 #include "editor_tree_assets.h"
 #include "editor_tree_inspector.h"
-#include "editor_tree_stage.h"
+#include "editor_tree_project.h"
 #include "editor_view.h"
 
 #include "form_main.h"

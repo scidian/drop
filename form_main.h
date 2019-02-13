@@ -43,7 +43,7 @@ class InterfaceRelay;
 class TreeAssetList;
 class TreeAdvisor;
 class TreeInspector;
-class TreeStage;
+class TreeProject;
 class DrProject;
 class DrScene;
 class DrView;
@@ -71,7 +71,7 @@ private:
     DrScene       *scene;                 // Holds the currently selected Stage, ready for rendering in DrView
     DrView        *viewMain;              // Renders scene for the viewer
 
-    TreeStage     *treeStage;             // Custom classes for Stage List
+    TreeProject   *treeProject;           // Custom classes for Project List
     TreeInspector *treeInspector;         // Custom classes for Object Inspector
     TreeAssetList *treeAsset;             // Custom classes for Asset List
     TreeAdvisor   *treeAdvisor;           // Custom classes for Advisor List
@@ -104,7 +104,7 @@ public:
     // Member functions
     virtual void    buildAssetList();
     virtual void    buildObjectInspector(QList<long> key_list);
-    virtual void    buildTreeStageList();
+    virtual void    buildTreeProjectList();
     virtual void    centerViewOn(QPointF center_point);
     virtual void    populateScene(long from_stage_key);
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list);

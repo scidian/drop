@@ -2,11 +2,11 @@
 //      Created by Stephens Nunnally on 1/3/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      A sub classed QTreeWidget so we can override events for Tree Stage List
+//      A sub classed QTreeWidget so we can override events for Tree Project List
 //
 //
-#ifndef EDITOR_TREE_STAGE_H
-#define EDITOR_TREE_STAGE_H
+#ifndef EDITOR_TREE_PROJECT_H
+#define EDITOR_TREE_PROJECT_H
 
 #include <QProxyStyle>
 #include <QTreeWidget>
@@ -16,10 +16,10 @@ class InterfaceRelay;
 class DrScene;
 
 //####################################################################################
-//##    TreeStage
-//##        A Tree List of Current Stage
+//##    TreeProject
+//##        A Tree List of Current Project
 //############################
-class TreeStage: public QTreeWidget
+class TreeProject: public QTreeWidget
 {
     Q_OBJECT
 
@@ -27,7 +27,7 @@ private:
     DrProject      *m_project;                  // Pointer to currently loaded project
     InterfaceRelay *m_relay;                    // Pointer to InterfaceRelay class of parent form
 
-    long            m_selected_key = 0;         // Holds first selected item in QTreeWidget (treeStage)
+    long            m_selected_key = 0;         // Holds first selected item in QTreeWidget (treeProject)
 
     bool            m_is_dragging;              // Set to true when we are dragging
     bool            m_can_drop;
@@ -35,11 +35,11 @@ private:
     int             m_mouse_y;
 
 public:
-    explicit        TreeStage(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
-                              QTreeWidget (parent), m_project(project), m_relay(relay) { }
+    explicit        TreeProject(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
+                                QTreeWidget (parent), m_project(project), m_relay(relay) { }
 
     // Function calls
-    void                        populateTreeStageList();
+    void                        populateTreeProjectList();
     QList <QTreeWidgetItem*>    getListOfAllTreeWidgetItems();
     QList <QTreeWidgetItem*>    getListOfChildrenFromItem( QTreeWidgetItem *item );
 
@@ -74,11 +74,11 @@ public:
 class StageTreeHighlightProxy : public QProxyStyle
 {
 private:
-    TreeStage      *m_parent_tree;              // Pointer to parent TreeStage
+    TreeProject     *m_parent_tree;              // Pointer to parent TreeProject
     InterfaceRelay  *m_relay;                    // Pointer to InterfaceRelay class of parent form
 
 public:
-    explicit StageTreeHighlightProxy(QStyle *baseStyle, TreeStage *parent_tree, InterfaceRelay *relay) :
+    explicit StageTreeHighlightProxy(QStyle *baseStyle, TreeProject *parent_tree, InterfaceRelay *relay) :
                                      QProxyStyle(baseStyle), m_parent_tree(parent_tree), m_relay(relay) { }
     virtual ~StageTreeHighlightProxy() override;
 
@@ -88,7 +88,7 @@ public:
 
 
 
-#endif // EDITOR_TREE_STAGE_H
+#endif // EDITOR_TREE_PROJECT_H
 
 
 

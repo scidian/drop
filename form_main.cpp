@@ -17,7 +17,7 @@
 #include "editor_tree_advisor.h"
 #include "editor_tree_assets.h"
 #include "editor_tree_inspector.h"
-#include "editor_tree_stage.h"
+#include "editor_tree_project.h"
 
 #include "form_main.h"
 
@@ -126,8 +126,9 @@ void FormMain::changePalette(Color_Scheme new_color_scheme) {
 }
 
 
+
 //####################################################################################
-//##        Interface Relay Handlers
+//##        Editor Interface Relay Handlers
 //####################################################################################
 void FormMain::buildAssetList() {
     treeAsset->buildAssetList();
@@ -141,8 +142,8 @@ void FormMain::buildObjectInspector(QList<long> key_list) {
     treeInspector->buildInspectorFromKeys(key_list);
 }
 
-void FormMain::buildTreeStageList() {
-    treeStage->populateTreeStageList();
+void FormMain::buildTreeProjectList() {
+    treeProject->populateTreeProjectList();
 }
 
 
@@ -168,6 +169,50 @@ void FormMain::populateScene(long from_stage_key)
     scene->scene_mutex.unlock();
 }
 
+void FormMain::updateObjectInspectorAfterItemChange(DrObject* object, QList<Object_Properties> properties_to_update)
+{
+    treeInspector->updateObjectPropertyBoxes(object, properties_to_update);
+}
+
+void FormMain::updateStageTreeSelectionBasedOnSelectionGroup()
+{
+    QList<QGraphicsItem*>   item_list = scene->getSelectionItems();
+    QList<QTreeWidgetItem*> tree_list = treeProject->getListOfAllTreeWidgetItems();
+    treeProject->clearSelection();
+
+    long items_selected = 0;
+    for (auto item : item_list) {
+        long item_key = dynamic_cast<DrItem*>(item)->getObjectKey();
+
+        for (auto row : tree_list) {
+            long row_key = row->data(0, User_Roles::Key).toLongLong();
+
+            if (item_key == row_key) {
+                row->setSelected(true);
+                if (items_selected == 0)
+                    treeProject->setSelectedKey(row_key);
+                ++items_selected;
+            }
+        }
+    }
+
+    treeProject->update();
+
+    // !!!!! DEBUG:: Show if some selected items matched the items in the stage tree
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_Selection_Change_Stage_Tree)) {
+        Dr::SetLabelText(Label_Names::Label_1, "Scene: " + QString::number(item_list.count()) + ", Stage Tree: " + QString::number(tree_list.count()));
+        Dr::SetLabelText(Label_Names::Label_2, "Matched: " + QString::number(items_selected));
+    }
+    // !!!!! END
+
+}
+
+
+
+
+//####################################################################################
+//##        Misc Interface Relay Handlers
+//####################################################################################
 // Call to put in a signal to change the Advisor to the que
 void FormMain::setAdvisorInfo(HeaderBodyList header_body_list) {
     setAdvisorInfo(header_body_list[0], header_body_list[1]);
@@ -213,46 +258,6 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
     case Label_Names::Label_Bottom:     label_bottom->setText(new_text);    break;
     }
 }
-
-
-void FormMain::updateObjectInspectorAfterItemChange(DrObject* object, QList<Object_Properties> properties_to_update)
-{
-    treeInspector->updateObjectPropertyBoxes(object, properties_to_update);
-}
-
-void FormMain::updateStageTreeSelectionBasedOnSelectionGroup()
-{
-    QList<QGraphicsItem*>   item_list = scene->getSelectionItems();
-    QList<QTreeWidgetItem*> tree_list = treeStage->getListOfAllTreeWidgetItems();
-    treeStage->clearSelection();
-
-    long items_selected = 0;
-    for (auto item : item_list) {
-        long item_key = dynamic_cast<DrItem*>(item)->getObjectKey();
-
-        for (auto row : tree_list) {
-            long row_key = row->data(0, User_Roles::Key).toLongLong();
-
-            if (item_key == row_key) {
-                row->setSelected(true);
-                if (items_selected == 0)
-                    treeStage->setSelectedKey(row_key);
-                ++items_selected;
-            }
-        }
-    }
-
-    treeStage->update();
-
-    // !!!!! DEBUG:: Show if some selected items matched the items in the stage tree
-    if (Dr::CheckDebugFlag(Debug_Flags::Label_Selection_Change_Stage_Tree)) {
-        Dr::SetLabelText(Label_Names::Label_1, "Scene: " + QString::number(item_list.count()) + ", Stage Tree: " + QString::number(tree_list.count()));
-        Dr::SetLabelText(Label_Names::Label_2, "Matched: " + QString::number(items_selected));
-    }
-    // !!!!! END
-
-}
-
 
 
 

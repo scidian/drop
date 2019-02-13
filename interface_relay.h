@@ -24,7 +24,7 @@ public:
 
     virtual void    buildAssetList() = 0;
     virtual void    buildObjectInspector(QList<long> key_list) = 0;
-    virtual void    buildTreeStageList() = 0;
+    virtual void    buildTreeProjectList() = 0;
 
     virtual void    centerViewOn(QPointF center_point) = 0;
     virtual void    populateScene(long from_stage_key) = 0;

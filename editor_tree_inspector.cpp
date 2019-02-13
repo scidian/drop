@@ -451,8 +451,8 @@ bool TreeInspector::updateDrObjectFromNewValue(long property_key, QVariant new_v
 
         // Reset the center point of the item to the objects position and update the opposing data in the object inspector
         my_scene->setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
-        my_scene->getRelay()->updateObjectInspectorAfterItemChange(object, { Object_Properties::scale });
-        my_scene->getRelay()->updateObjectInspectorAfterItemChange(object, { Object_Properties::size });
+        if (property == Object_Properties::size)  my_scene->getRelay()->updateObjectInspectorAfterItemChange(object, { Object_Properties::scale  });
+        if (property == Object_Properties::scale) my_scene->getRelay()->updateObjectInspectorAfterItemChange(object, { Object_Properties::size });
         updated_something = true;
         break;
 

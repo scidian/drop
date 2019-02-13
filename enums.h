@@ -12,6 +12,13 @@
 #include <QGraphicsItem>
 
 
+enum class Editor_Widgets {
+    Asset_Tree,
+    Object_Inspector,
+    Project_Tree,
+    Scene_View,
+};
+
 //####################################################################################
 //##    Types of objects possible in game
 //####################################################################################
@@ -34,7 +41,7 @@ enum class Label_Names
 
 
 //####################################################################################
-//##    Types of objects possible in game
+//##    Types of entities possible in project
 //####################################################################################
 enum class DrType {
     Project,
@@ -51,7 +58,7 @@ enum class DrType {
 };
 
 //####################################################################################
-//##    Types of objects possible in game
+//##    Types of Assets possible in project
 //####################################################################################
 enum class DrAsset_Type {
     Character,
@@ -338,7 +345,7 @@ enum class Object_Properties
 
 
 //####################################################################################
-//##    Object - Possible components and their properties
+//##    Asset - Possible components and their properties
 //####################################################################################
 
 enum class Asset_Components

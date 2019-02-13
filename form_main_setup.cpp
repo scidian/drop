@@ -16,7 +16,7 @@
 #include "editor_tree_advisor.h"
 #include "editor_tree_assets.h"
 #include "editor_tree_inspector.h"
-#include "editor_tree_stage.h"
+#include "editor_tree_project.h"
 #include "editor_view.h"
 
 #include "form_main.h"
@@ -40,7 +40,7 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
     case Form_Main_Mode::Edit_Stage:
         buildWindowModeEditStage();
         buildAssetList();
-        buildTreeStageList();
+        buildTreeProjectList();
         viewMain->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
         scene->setSceneRect(-2000, -2000, 4000, 4000);
         scene->update();
@@ -125,37 +125,37 @@ void FormMain::buildWindowModeEditStage()
                 splitterHorizontal->setOrientation(Qt::Horizontal);
                 splitterHorizontal->setHandleWidth(4);
 
-                    // ***** Load our custom TreeStageView for the Scene List
-                    treeStage = new TreeStage(splitterHorizontal, project, this);
-                    treeStage->setStyle(new StageTreeHighlightProxy(treeStage->style(), treeStage, this));
+                    // ***** Load our custom TreeProject for the Scene List
+                    treeProject = new TreeProject(splitterHorizontal, project, this);
+                    treeProject->setStyle(new StageTreeHighlightProxy(treeProject->style(), treeProject, this));
                         QTreeWidgetItem *header_item_stage = new QTreeWidgetItem();
                         header_item_stage->setIcon(1, QIcon(":/tree_icons/tree_lock_header.png"));
-                        treeStage->setHeaderItem(header_item_stage);
-                    treeStage->setObjectName(QStringLiteral("treeStage"));
-                    treeStage->setColumnCount(2);
-                    treeStage->setColumnWidth(0, 150);
-                    treeStage->setColumnWidth(1, 16);
-                    treeStage->setMinimumSize(QSize(190, 0));
-                    treeStage->setMaximumWidth(400);
-                    treeStage->setFont(font);
-                    treeStage->setProperty("showDropIndicator", QVariant(false));
-                    treeStage->setDragEnabled(true);
-                    treeStage->setDragDropOverwriteMode(false);
-                    treeStage->setDragDropMode(QAbstractItemView::DragDropMode::InternalMove);
-                    treeStage->setDefaultDropAction(Qt::DropAction::TargetMoveAction);
-                    treeStage->setAlternatingRowColors(false);
-                    treeStage->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
-                    treeStage->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
-                    treeStage->setIndentation(15);
-                    treeStage->setRootIsDecorated(true);
-                    treeStage->setItemsExpandable(true);
-                    treeStage->setExpandsOnDoubleClick(false);
-                    treeStage->header()->setSectionResizeMode(0, QHeaderView::ResizeMode::Stretch);
-                    treeStage->header()->setStretchLastSection(false);
-                    treeStage->header()->setVisible(true);
-                    treeStage->setFrameShape(QFrame::NoFrame);
+                        treeProject->setHeaderItem(header_item_stage);
+                    treeProject->setObjectName(QStringLiteral("treeProject"));
+                    treeProject->setColumnCount(2);
+                    treeProject->setColumnWidth(0, 150);
+                    treeProject->setColumnWidth(1, 16);
+                    treeProject->setMinimumSize(QSize(190, 0));
+                    treeProject->setMaximumWidth(400);
+                    treeProject->setFont(font);
+                    treeProject->setProperty("showDropIndicator", QVariant(false));
+                    treeProject->setDragEnabled(true);
+                    treeProject->setDragDropOverwriteMode(false);
+                    treeProject->setDragDropMode(QAbstractItemView::DragDropMode::InternalMove);
+                    treeProject->setDefaultDropAction(Qt::DropAction::TargetMoveAction);
+                    treeProject->setAlternatingRowColors(false);
+                    treeProject->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
+                    treeProject->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
+                    treeProject->setIndentation(15);
+                    treeProject->setRootIsDecorated(true);
+                    treeProject->setItemsExpandable(true);
+                    treeProject->setExpandsOnDoubleClick(false);
+                    treeProject->header()->setSectionResizeMode(0, QHeaderView::ResizeMode::Stretch);
+                    treeProject->header()->setStretchLastSection(false);
+                    treeProject->header()->setVisible(true);
+                    treeProject->setFrameShape(QFrame::NoFrame);
 
-                splitterHorizontal->addWidget(treeStage);
+                splitterHorizontal->addWidget(treeProject);
 
 
                     widgetStageView = new QWidget(splitterHorizontal);

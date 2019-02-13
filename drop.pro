@@ -59,8 +59,8 @@ SOURCES += \
     editor_view_tooltip.cpp \
     editor_view_rotate.cpp \
     editor_view_select.cpp \
-    editor_tree_stage.cpp \
-    project_image.cpp
+    project_image.cpp \
+    editor_tree_project.cpp
 
 HEADERS += \
     enums.h \
@@ -81,12 +81,12 @@ HEADERS += \
     editor_tree_widgets.h \
     project_world_stage.h \
     project_world_stage_object.h \
-    editor_tree_stage.h \
     editor_item.h \
     editor_scene.h \
     editor_view.h \
     editor_scene_undo_commands.h \
-    project_image.h
+    project_image.h \
+    editor_tree_project.h
 
 FORMS +=
 

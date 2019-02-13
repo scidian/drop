@@ -44,7 +44,7 @@ void DrView::startResize(QPoint mouse_in_view)
     for (auto child : my_scene->getSelectionItems()) {
         child->setData(User_Roles::Pre_Resize_Scale, (child->data(User_Roles::Scale).toPointF()) );
         DrItem *child_as_item = dynamic_cast<DrItem*>(child);
-        DrItem *dritem = new DrItem(m_project, child_as_item->getObject(), true);
+        DrItem *dritem = new DrItem(m_project, child_as_item->getRelay(), child_as_item->getObject(), true);
         dritem->setVisible(false);
         dritem->setEnabled(false);
         dritem->setPos(child_as_item->pos());

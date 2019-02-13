@@ -100,7 +100,7 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
     for (auto object_pair : from_stage->getObjectMap()) {
 
         // Create new item representing this object
-        DrItem *item = new DrItem(m_project, object_pair.second);
+        DrItem *item = new DrItem(m_project, m_scene->getRelay(), object_pair.second);
 
         // Temporarily disable geometry signal itemChange updates
         item->disableItemChangeFlags();

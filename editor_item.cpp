@@ -5,7 +5,8 @@
 //      DrObject Class Definitions
 //
 //
-#include <QtWidgets>
+#include <QTime>
+#include <QStyleOptionGraphicsItem>
 
 #include "colors.h"
 #include "debug.h"
@@ -28,9 +29,11 @@
 //####################################################################################
 //##        Constructor & destructor
 //####################################################################################
-DrItem::DrItem(DrProject *project, DrObject *object, bool is_temp_only)
+DrItem::DrItem(DrProject *project, InterfaceRelay *relay, DrObject *object, bool is_temp_only)
 {
     // Store relevant project / object data for use later
+    m_relay      = relay;
+
     m_project    = project;
     m_object     = object;
     m_object_key = object->getKey();
@@ -125,10 +128,7 @@ int DrItem::type() const
 QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     // If this is a temporary object, or not attached to a scene, do not process change
-    if (m_temp_only || !scene()) return QGraphicsPixmapItem::itemChange(change, value);
-
-    // Load relay (FormMain, etc) to send calls to outside this item
-    InterfaceRelay *relay = dynamic_cast<DrScene*>(scene())->getRelay();
+    if (m_temp_only || !m_relay) return QGraphicsPixmapItem::itemChange(change, value);
 
     // Load any new data stored in item
     double  angle = data(User_Roles::Rotation).toDouble();
@@ -147,7 +147,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 
         m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::position, QPointF(new_x, new_y));
 
-        relay->updateObjectInspectorAfterItemChange(m_object, { Object_Properties::position });
+        m_relay->updateObjectInspectorAfterItemChange(m_object, { Object_Properties::position });
         return new_pos;
     }
 
@@ -163,7 +163,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
         m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::scale, scale );
         m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::size, QPointF(size_x, size_y));
 
-        relay->updateObjectInspectorAfterItemChange(m_object, { Object_Properties::size, Object_Properties::scale, Object_Properties::rotation });
+        m_relay->updateObjectInspectorAfterItemChange(m_object, { Object_Properties::size, Object_Properties::scale, Object_Properties::rotation });
         return new_transform;
     }
 
@@ -173,10 +173,9 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
         double new_z = value.toDouble();
         m_object->setComponentPropertyValue(Object_Components::layering, Object_Properties::z_order, new_z);
 
-        relay->updateObjectInspectorAfterItemChange(m_object, { Object_Properties::z_order });
+        m_relay->updateObjectInspectorAfterItemChange(m_object, { Object_Properties::z_order });
         return new_z;
     }
-
 
 
     // ---------- Following changes are emitted when GraphicsItemFlag::ItemSendsGeometryChanges is set to true

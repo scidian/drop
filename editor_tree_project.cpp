@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 1/3/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      Tree Stage Definitions
+//      Tree Project List Definitions
 //
 //
 #include <QCheckBox>
@@ -15,7 +15,7 @@
 #include "colors.h"
 #include "debug.h"
 
-#include "editor_tree_stage.h"
+#include "editor_tree_project.h"
 
 #include "interface_relay.h"
 
@@ -28,9 +28,9 @@
 #include "settings_component_property.h"
 
 //####################################################################################
-//##        Populates Tree Stage List based on project data
+//##        Populates Tree Project List based on project data
 //####################################################################################
-void TreeStage::populateTreeStageList()
+void TreeProject::populateTreeProjectList()
 {
     this->clear();
 
@@ -91,7 +91,7 @@ void TreeStage::populateTreeStageList()
 }
 
 // Handles changing the Advisor on Mouse Enter
-void TreeStage::enterEvent(QEvent *event)
+void TreeProject::enterEvent(QEvent *event)
 {
     m_relay->setAdvisorInfo(Advisor_Info::Stage_List);
     QTreeWidget::enterEvent(event);
@@ -102,11 +102,11 @@ void TreeStage::enterEvent(QEvent *event)
 //####################################################################################
 //##        Returns a list of the items contained within the tree
 //####################################################################################
-QList <QTreeWidgetItem*> TreeStage::getListOfAllTreeWidgetItems() {
+QList <QTreeWidgetItem*> TreeProject::getListOfAllTreeWidgetItems() {
     return getListOfChildrenFromItem( this->invisibleRootItem() );
 }
 
-QList <QTreeWidgetItem*> TreeStage::getListOfChildrenFromItem( QTreeWidgetItem *item )
+QList <QTreeWidgetItem*> TreeProject::getListOfChildrenFromItem( QTreeWidgetItem *item )
 {
     QList <QTreeWidgetItem*> items;
 
@@ -124,7 +124,7 @@ QList <QTreeWidgetItem*> TreeStage::getListOfChildrenFromItem( QTreeWidgetItem *
 //##        Testing drag event
 //####################################################################################
 // This removes the item from under the mouse, sort of
-void TreeStage::startDrag(Qt::DropActions supportedActions)
+void TreeProject::startDrag(Qt::DropActions supportedActions)
 {
     // Partly copied from Qt 5.5.5 sources
     QModelIndexList indexes = selectedIndexes();
@@ -147,7 +147,7 @@ void TreeStage::startDrag(Qt::DropActions supportedActions)
 
 
 // Fires when we start dragging
-void TreeStage::dragMoveEvent(QDragMoveEvent *event)
+void TreeProject::dragMoveEvent(QDragMoveEvent *event)
 {
     m_mouse_x = event->pos().x();
     m_mouse_y = event->pos().y();
@@ -187,7 +187,7 @@ void TreeStage::dragMoveEvent(QDragMoveEvent *event)
     QTreeWidget::dragMoveEvent(event);
 }
 
-void TreeStage::dropEvent(QDropEvent* event)
+void TreeProject::dropEvent(QDropEvent* event)
 {
     bool dropOK = false;
     DropIndicatorPosition dropIndicator = dropIndicatorPosition();
@@ -221,7 +221,7 @@ void TreeStage::dropEvent(QDropEvent* event)
 //##            Checks to make sure if more than one item is selected all new items
 //##            not matching original type are not selected
 //####################################################################################
-void TreeStage::selectionChanged (const QItemSelection &selected, const QItemSelection &deselected)
+void TreeProject::selectionChanged (const QItemSelection &selected, const QItemSelection &deselected)
 {
     QList<QTreeWidgetItem*> item_list = this->selectedItems();
 
