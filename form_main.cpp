@@ -185,15 +185,31 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
 void FormMain::updateItemSelection(Editor_Widgets selected_from)
 {
 
+    // Selects items in scene based on new selection in tree view
     if (selected_from != Editor_Widgets::Scene_View) {
+        scene->blockSignals(true);
 
+        for (auto item : scene->selectedItems())
+            item->setSelected(false);
 
+        for (auto item : treeProject->selectedItems()) {
+            long row_key = item->data(0, User_Roles::Key).toLongLong();
 
+            DrSettings* settings = project->findSettingsFromKey(row_key);
+
+            if (Dr::IsDrObjectClass(settings->getType())) {
+                DrObject* object = dynamic_cast<DrObject*>(settings);
+                object->getDrItem()->setSelected(true);
+            }
+        }
+
+        scene->blockSignals(false);
+        scene->updateSelectionBox();
     }
 
 
     if (selected_from != Editor_Widgets::Project_Tree) {
-        treeProject->blockSignals(true);
+        treeProject->setAllowSelectionEvent(false);
 
         QList<QGraphicsItem*>   item_list = scene->getSelectionItems();
         QList<QTreeWidgetItem*> tree_list = treeProject->getListOfAllTreeWidgetItems();
@@ -216,7 +232,7 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from)
         }
 
         treeProject->update();
-        treeProject->blockSignals(false);
+        treeProject->setAllowSelectionEvent(true);
 
         // !!!!! DEBUG:: Show if some selected items matched the items in the stage tree
         if (Dr::CheckDebugFlag(Debug_Flags::Label_Selection_Change_Stage_Tree)) {

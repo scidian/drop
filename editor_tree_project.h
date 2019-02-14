@@ -24,12 +24,13 @@ class TreeProject: public QTreeWidget
     Q_OBJECT
 
 private:
-    DrProject      *m_project;                  // Pointer to currently loaded project
-    InterfaceRelay *m_relay;                    // Pointer to InterfaceRelay class of parent form
+    DrProject      *m_project;                          // Pointer to currently loaded project
+    InterfaceRelay *m_relay;                            // Pointer to InterfaceRelay class of parent form
 
-    long            m_selected_key = 0;         // Holds first selected item in QTreeWidget (treeProject)
+    long            m_selected_key = 0;                 // Holds first selected item in QTreeWidget (treeProject)
+    bool            m_allow_selection_event = true;     // When false, stops selectionChanged event from propagating changes to editor
 
-    bool            m_is_dragging;              // Set to true when we are dragging
+    bool            m_is_dragging;                      // Set to true when we are dragging
     bool            m_can_drop;
     int             m_mouse_x;
     int             m_mouse_y;
@@ -44,6 +45,7 @@ public:
     QList <QTreeWidgetItem*>    getListOfChildrenFromItem( QTreeWidgetItem *item );
 
     // Event Overrides, start at Qt Docs for QTreeWidget Class to find more
+    virtual bool    eventFilter(QObject *obj, QEvent *event) override;                                             // Inherited from QObject
     virtual void    enterEvent(QEvent *event) override;                                                            // Inherited from QWidget
     virtual void    dragMoveEvent(QDragMoveEvent *event) override;                                                 // Inherited from QAbstractItemView
     virtual void    dropEvent(QDropEvent *event) override;                                                         // Inherited from QTreeWidget
@@ -56,6 +58,8 @@ public:
 
     bool            getIsDragging() { return m_is_dragging; }
     void            setIsDragging(bool new_state) { m_is_dragging = new_state; }
+
+    void            setAllowSelectionEvent(bool allow) { m_allow_selection_event = allow; }
 
     bool            canWeDrop() { return m_can_drop; }
     int             getMouseX() { return m_mouse_x; }

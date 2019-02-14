@@ -217,12 +217,29 @@ void TreeProject::dropEvent(QDropEvent* event)
 
 
 //####################################################################################
+//##        Event Filter Override
+//####################################################################################
+bool TreeProject::eventFilter(QObject *obj, QEvent *event)
+{
+    //
+
+
+    return QTreeWidget::eventFilter(obj, event);
+}
+
+
+//####################################################################################
 //##        Updates selection
 //##            Checks to make sure if more than one item is selected all new items
 //##            not matching original type are not selected
 //####################################################################################
 void TreeProject::selectionChanged (const QItemSelection &selected, const QItemSelection &deselected)
 {
+    if (!m_allow_selection_event) {
+        QTreeWidget::selectionChanged(selected, deselected);
+        return;
+    }
+
     QList<QTreeWidgetItem*> item_list = this->selectedItems();
 
     // !!!!! #DEBUG:    Show Stage Tree selection data
