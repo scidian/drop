@@ -30,6 +30,9 @@
 //####################################################################################
 //##        Mouse Pressed
 //####################################################################################
+// Forwards a double click as just another mouse down
+void DrView::mouseDoubleClickEvent(QMouseEvent *event) { mousePressEvent(event); }
+
 void DrView::mousePressEvent(QMouseEvent *event)
 {
     // Test for scene, convert to our custom class and lock the scene
@@ -354,22 +357,18 @@ void DrView::mouseReleaseEvent(QMouseEvent *event)
     if (event->button() & Qt::LeftButton)
     {
         m_hide_bounding = false;
-        updateSelectionBoundingBox(6);
 
         m_rubber_band->hide();
         m_tool_tip->stopToolTip();
 
-        // We have it so that object inspector doesnt change during rubber band box mode,
-        // So, now we make sure to update it when we're done with rubber band box and we have a new selection
+        // We have it so that object inspector only updates from scene view on mouse up
+        // (i.e. after rubber band box mode is over)
         if (m_view_mode == View_Mode::Selecting) {
             m_view_mode = View_Mode::None;
-            if (my_scene->getSelectionCount() > 0) {
-                DrItem *selected = dynamic_cast<DrItem*>(my_scene->getSelectionItems().first());
-                long selected_key = selected->getObjectKey();
-                m_relay->buildObjectInspector( { selected_key } );
-            } else {
+            if (my_scene->getSelectionCount() > 0)
+                m_relay->buildObjectInspector( { my_scene->getSelectionItems().first()->data(User_Roles::Key).toLongLong() } );
+            else
                 m_relay->buildObjectInspector( { } );
-            }
         }
 
         // Clean up temporary item group used for resize routine
@@ -381,8 +380,11 @@ void DrView::mouseReleaseEvent(QMouseEvent *event)
             my_scene->destroyItemGroup(m_group);
         }
 
+        updateSelectionBoundingBox(6);
+
         m_view_mode = View_Mode::None;
     }
+
 
     // Pass on event, update
     QGraphicsView::mouseReleaseEvent(event);

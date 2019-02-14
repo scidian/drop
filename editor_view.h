@@ -171,6 +171,7 @@ public:
 
     virtual void    keyPressEvent(QKeyEvent *event) override;                               // Inherited from QWidget
     virtual void    keyReleaseEvent(QKeyEvent *event) override;                             // Inherited from QWidget
+    virtual void    mouseDoubleClickEvent(QMouseEvent *event) override;                     // Inherited from QWidget
     virtual void    mouseMoveEvent(QMouseEvent *event) override;                            // Inherited from QWidget
     virtual void    mousePressEvent(QMouseEvent *event) override;                           // Inherited from QWidget
     virtual void    mouseReleaseEvent(QMouseEvent *event) override;                         // Inherited from QWidget

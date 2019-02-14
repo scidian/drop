@@ -61,17 +61,17 @@ void DrView::processSelection(QPoint mouse_in_view)
 
     QList<QGraphicsItem*> before_band = my_scene->getSelectionItems();
 
-    // Disconnect signal before we try to figure out which items should be selected
-    disconnect(my_scene, SIGNAL(selectionChanged()), my_scene, SLOT(selectionChanged()));
+    // Blocks signals while we try to figure out which items should be selected
+    my_scene->blockSignals(true);
 
+    // Figure out new selection items
     my_scene->setSelectionArea(selection_area, Qt::ItemSelectionOperation::ReplaceSelection,
                                Qt::ItemSelectionMode::IntersectsItemShape, viewportTransform());     // Pass box to scene for selection
-
     for (auto item : m_items_keep)
         item->setSelected(true);
 
     // Re-connect signal and call selectionChanged if necessary
-    connect(my_scene, SIGNAL(selectionChanged()), my_scene, SLOT(selectionChanged()));
+    my_scene->blockSignals(false);
     if (before_band != scene()->selectedItems()) my_scene->selectionChanged();
 
 }

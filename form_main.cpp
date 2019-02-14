@@ -182,22 +182,11 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
 }
 
 
-
-
-
 void FormMain::updateItemSelection(Editor_Widgets selected_from)
 {
-
     // Selects items in scene based on new selection in tree view
-    if (selected_from != Editor_Widgets::Scene_View) {
-        scene->updateSelectionFromProjectTree( treeProject->selectedItems() );
-
-
-    }
-
-
-    if (selected_from != Editor_Widgets::Project_Tree) treeProject->updateSelectionFromView( scene->getSelectionItems() );
-
+    if (selected_from != Editor_Widgets::Scene_View)    scene->updateSelectionFromProjectTree( treeProject->selectedItems() );
+    if (selected_from != Editor_Widgets::Project_Tree)  treeProject->updateSelectionFromView( scene->getSelectionItems() );
 
     // !!!!! TEMP: Testing to make sure not running non stop
     setLabelText(Label_Names::Label_Bottom, "Update Selection: " + QTime::currentTime().toString());
