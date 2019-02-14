@@ -176,47 +176,59 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
 {
     if (changed_from != Editor_Widgets::Object_Inspector)   treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys);
     if (changed_from != Editor_Widgets::Scene_View)         scene->updateItemsInScene(changed_items, property_keys);
-
-
-    // !!!!! TEMP: Testing to make sure not running non stop
-    setLabelText(Label_Names::Label_2, QTime::currentTime().toString());
 }
 
 
 
 
 
-void FormMain::updateStageTreeSelectionBasedOnSelectionGroup()
+void FormMain::updateItemSelection(Editor_Widgets selected_from)
 {
-    QList<QGraphicsItem*>   item_list = scene->getSelectionItems();
-    QList<QTreeWidgetItem*> tree_list = treeProject->getListOfAllTreeWidgetItems();
-    treeProject->clearSelection();
 
-    long items_selected = 0;
-    for (auto item : item_list) {
-        long item_key = dynamic_cast<DrItem*>(item)->getObjectKey();
+    if (selected_from != Editor_Widgets::Scene_View) {
 
-        for (auto row : tree_list) {
-            long row_key = row->data(0, User_Roles::Key).toLongLong();
 
-            if (item_key == row_key) {
-                row->setSelected(true);
-                if (items_selected == 0)
-                    treeProject->setSelectedKey(row_key);
-                ++items_selected;
+
+    }
+
+
+    if (selected_from != Editor_Widgets::Project_Tree) {
+        treeProject->blockSignals(true);
+
+        QList<QGraphicsItem*>   item_list = scene->getSelectionItems();
+        QList<QTreeWidgetItem*> tree_list = treeProject->getListOfAllTreeWidgetItems();
+        treeProject->clearSelection();
+
+        long items_selected = 0;
+        for (auto item : item_list) {
+            long item_key = dynamic_cast<DrItem*>(item)->getObjectKey();
+
+            for (auto row : tree_list) {
+                long row_key = row->data(0, User_Roles::Key).toLongLong();
+
+                if (item_key == row_key) {
+                    row->setSelected(true);
+                    if (items_selected == 0)
+                        treeProject->setSelectedKey(row_key);
+                    ++items_selected;
+                }
             }
         }
+
+        treeProject->update();
+        treeProject->blockSignals(false);
+
+        // !!!!! DEBUG:: Show if some selected items matched the items in the stage tree
+        if (Dr::CheckDebugFlag(Debug_Flags::Label_Selection_Change_Stage_Tree)) {
+            Dr::SetLabelText(Label_Names::Label_1, "Scene: " + QString::number(item_list.count()) + ", Stage Tree: " + QString::number(tree_list.count()));
+            Dr::SetLabelText(Label_Names::Label_2, "Matched: " + QString::number(items_selected));
+        }
+        // !!!!! END
     }
 
-    treeProject->update();
 
-    // !!!!! DEBUG:: Show if some selected items matched the items in the stage tree
-    if (Dr::CheckDebugFlag(Debug_Flags::Label_Selection_Change_Stage_Tree)) {
-        Dr::SetLabelText(Label_Names::Label_1, "Scene: " + QString::number(item_list.count()) + ", Stage Tree: " + QString::number(tree_list.count()));
-        Dr::SetLabelText(Label_Names::Label_2, "Matched: " + QString::number(items_selected));
-    }
-    // !!!!! END
-
+    // !!!!! TEMP: Testing to make sure not running non stop
+    setLabelText(Label_Names::Label_2, QTime::currentTime().toString());
 }
 
 

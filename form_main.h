@@ -113,7 +113,7 @@ public:
     virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Stage_Properties> property_keys);
     virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Object_Properties> property_keys);
 
-    virtual void    updateStageTreeSelectionBasedOnSelectionGroup();
+    virtual void    updateItemSelection(Editor_Widgets selected_from);
 
     virtual void    centerViewOnPoint(QPointF center_point);
 

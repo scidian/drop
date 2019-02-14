@@ -17,7 +17,8 @@
 #include "settings_component_property.h"
 
 //####################################################################################
-//##        SLOT: selectionChanged
+//##        SLOT: selectionChanged,
+//##              connected from built in Qt SIGNAL DrScene::selectionChanged()
 //####################################################################################
 //  QList<QGraphicsItem*>   m_selection_items;          // List of selected items
 //  double                  m_selection_angle;          // Angle current selection has been rotated to
@@ -36,7 +37,7 @@ void DrScene::selectionChanged()
 
     m_selection_box = totalSelectionSceneRect();
 
-    updateStageTreeSelection();
+    if (m_relay) m_relay->updateItemSelection(Editor_Widgets::Scene_View);
 }
 
 

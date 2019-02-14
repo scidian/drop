@@ -34,7 +34,7 @@ public:
     virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Stage_Properties> property_keys) = 0;
     virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Object_Properties> property_keys) = 0;
 
-    virtual void    updateStageTreeSelectionBasedOnSelectionGroup() = 0;
+    virtual void    updateItemSelection(Editor_Widgets selected_from) = 0;
 
 
 

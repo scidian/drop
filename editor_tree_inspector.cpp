@@ -317,7 +317,7 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 
 
 //####################################################################################
-//##        CONNECT-ed from SIGNAL that is emmited when the user changes the values
+//##        SLOT: connceted from SIGNAL that is emmited when the user changes the values
 //##            of the input boxes in the object inspector.
 //##
 //##        Updates the appropriate DrSettings DrProperty Values of the item changed
@@ -325,23 +325,6 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 //####################################################################################
 void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order)
 {
-
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    // Trying to see if we can push through updates ourselves by updating the item we changed the value to directly from DrScene
-
-    ///// If is DrObject type, call seperate update function that handles the DrItem QGraphicsItems as well
-    ///if (Dr::IsDrObjectClass(m_selected_type) == true) {
-    ///    // Make a call to update the DrObject type item, if it returns false, stay around and update the other property
-    ///    if (updateDrObjectFromNewValue(property_key, new_value, sub_order)) return;
-    ///}
-
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
     // Update the appropiate property in the settings of the object shown in the inspector
     DrSettings *settings = m_project->findSettingsFromKey( m_selected_key );
     QPoint  temp_point;

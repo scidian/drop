@@ -66,7 +66,6 @@ public:
     InterfaceRelay* getRelay() { return m_relay; }
     void            updateAlignmentGrid() { emit updateGrid(); }
     void            updateItemsInScene(QList<DrSettings*> changed_items, QList<long> property_keys);
-    void            updateStageTreeSelection() { m_relay->updateStageTreeSelectionBasedOnSelectionGroup(); }
     void            updateView() { emit updateViews(); }
 
 

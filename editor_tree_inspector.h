@@ -66,9 +66,9 @@ public:
 
     // Function Calls
     void            buildInspectorFromKeys(QList<long> key_list);
+
     void            updateInspectorPropertyBoxes(QList<DrSettings*> changed_items, QList<long> property_keys_to_update);
 
-    bool            updateDrObjectFromNewValue(long property_key, QVariant new_value, long sub_order = 0);
     void            updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order = 0);
 
 
