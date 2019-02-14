@@ -235,47 +235,29 @@ bool TreeProject::eventFilter(QObject *obj, QEvent *event)
 //####################################################################################
 void TreeProject::selectionChanged (const QItemSelection &selected, const QItemSelection &deselected)
 {
+    // If we're updating selection from outside source this function has been turned off from that source (i.e. updateSelection in InterfaceRelay)
     if (!m_allow_selection_event) {
         QTreeWidget::selectionChanged(selected, deselected);
         return;
     }
 
+    // ***** If size of list is zero, clear selected_key and exit function
     QList<QTreeWidgetItem*> item_list = this->selectedItems();
-
-    // !!!!! #DEBUG:    Show Stage Tree selection data
-    if (Dr::CheckDebugFlag(Debug_Flags::Label_Stage_Tree_Selection))
-        m_relay->setLabelText(Label_Names::Label_Bottom, QString("Selected Item Count: ") + QString::number(item_list.size()));
-    // !!!!! END
-
-    // If size of list is zero, clear selected_key and exit function
     if (item_list.size() == 0) {
         this->setSelectedKey(0);
-
-        // If Stage Tree has focus, and selection is now empty, clear object inspector
-        if (this->hasFocus())
-            m_relay->buildObjectInspector(QList<long> { });
+        m_relay->buildObjectInspector(QList<long> { });
+        m_relay->updateItemSelection(Editor_Widgets::Project_Tree);
         return;
     }
 
-    // !!!!! #DEBUG:    Show Stage Tree selection data
-    // Otherwise add first item to label
-    if (Dr::CheckDebugFlag(Debug_Flags::Label_Stage_Tree_Selection)) {
-        m_relay->setLabelText(Label_Names::Label_Bottom, QString("Selected Item Count: ") +
-                                                         QString::number(item_list.size()) +
-                                                         ", First Item: " + item_list.first()->text(0));
-    }
-    // !!!!! END
-
-    // If size is one, reset first selected item
+    // ***** If size is one, reset first selected item
     if (item_list.size() == 1) {
         long selected_key = item_list.first()->data(0, User_Roles::Key).toLongLong();       // grab stored key from list view user data
         this->setSelectedKey(selected_key);
 
         //******************************************************
-        // Call to outside function to rebuild object inspector:
-        m_relay->buildObjectInspector(QList<long> { selected_key });
 
-        // Call to undo command to change scene to newly selected Stage or newly selected item's parent Stage
+        // Call to undo command to change scene to newly selected Stage or newly selected object's parent Stage
         DrSettings *selected_item = m_project->findSettingsFromKey(selected_key);
         if (selected_item != nullptr) {
             DrType selected_type = selected_item->getType();
@@ -287,9 +269,12 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
             }
         }
 
+        // Callsto outside update functions to rebuild object inspector
+        m_relay->buildObjectInspector(QList<long> { selected_key });
 
         //******************************************************
 
+    // ***** Size is more than 1, prevent items of different types being selected at same time
     } else {
         DrType selected_type = m_project->findChildTypeFromKey( this->getSelectedKey() );
 
@@ -306,6 +291,9 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
                 check_item->setSelected(false);
         }
     }
+
+    // Call to outside update functions to update selection in scene view
+    m_relay->updateItemSelection(Editor_Widgets::Project_Tree);
 
     QTreeWidget::selectionChanged(selected, deselected);                    // pass event to parent
 }

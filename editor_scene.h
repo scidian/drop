@@ -98,6 +98,7 @@ public:
     void                    setSelectionBox(QRectF box)                      { m_selection_box = box; }
 
     QGraphicsItemGroup*     createEmptyItemGroup(double angle = 0, QPointF scale = QPointF(1, 1));
+    void                    resetSelectionGroup();
     QRectF                  totalSelectionSceneRect();
     void                    updateSelectionBox();
 

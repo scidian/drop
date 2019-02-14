@@ -52,6 +52,7 @@ DrItem::DrItem(DrProject *project, InterfaceRelay *relay, DrObject *object, bool
     // Store some initial user data
     setData(User_Roles::Name, m_asset->getAssetName() );
     setData(User_Roles::Type, Dr::StringFromType( m_object->getType() ));
+    setData(User_Roles::Key, QVariant::fromValue(m_object_key));
 
     double  angle =   m_object->getComponentProperty(Object_Components::transform, Object_Properties::rotation)->getValue().toDouble();
     QPointF scale =   m_object->getComponentProperty(Object_Components::transform, Object_Properties::scale)->getValue().toPointF();
@@ -249,6 +250,7 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     // Check opacity of current item
     double transparency = 100;
     if (m_object) transparency = m_object->getComponentPropertyValue(Object_Components::layering, Object_Properties::opacity).toDouble();
+    transparency = Dr::FitToRange(transparency, 0, 100);
 
     // Apply the proper opacity to this item and either paint the pixmap, or paint a pattern representation of the item
     if (transparency >= 1) {
@@ -256,8 +258,11 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
         QGraphicsPixmapItem::paint(painter, &myOption, widget);
     } else {
         setOpacity(1);
+        QColor brush_color = Dr::GetColor(Window_Colors::Icon_Dark);
+        brush_color.setAlpha(64);
+
         painter->setPen( QPen(Dr::GetColor(Window_Colors::Icon_Dark), 1, Qt::PenStyle::SolidLine, Qt::PenCapStyle::FlatCap, Qt::PenJoinStyle::MiterJoin ) );
-        painter->setBrush( QBrush(Dr::GetColor(Window_Colors::Icon_Dark), Qt::BrushStyle::DiagCrossPattern ) );
+        painter->setBrush( QBrush(brush_color, Qt::BrushStyle::SolidPattern)); //Qt::BrushStyle::DiagCrossPattern ) );
         painter->drawPath( this->shape() );
     }
 }

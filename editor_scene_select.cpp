@@ -30,16 +30,24 @@ void DrScene::selectionChanged()
 {
     if (selectedItems() == m_selection_items) return;
 
-    m_selection_items = selectedItems();
+    resetSelectionGroup();
 
-    m_selection_angle = 0;
-    m_selection_scale = QPointF(1, 1);
+    if (m_relay) {
+        QList<long> item_keys;
+        for (auto item : selectedItems()) item_keys.append(item->data(User_Roles::Key).toLongLong());
 
-    m_selection_box = totalSelectionSceneRect();
-
-    if (m_relay) m_relay->updateItemSelection(Editor_Widgets::Scene_View);
+        m_relay->buildObjectInspector(item_keys);
+        m_relay->updateItemSelection(Editor_Widgets::Scene_View);
+    }
 }
 
+void DrScene::resetSelectionGroup()
+{
+    m_selection_items = selectedItems();
+    m_selection_angle = 0;
+    m_selection_scale = QPointF(1, 1);
+    m_selection_box = totalSelectionSceneRect();
+}
 
 
 //####################################################################################

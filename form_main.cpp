@@ -176,6 +176,9 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
 {
     if (changed_from != Editor_Widgets::Object_Inspector)   treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys);
     if (changed_from != Editor_Widgets::Scene_View)         scene->updateChangesInScene(changed_items, property_keys);
+
+    // !!!!! TEMP: Testing to make sure not running non stop
+    setLabelText(Label_Names::Label_Bottom, "Update Editor Widgets: " + QTime::currentTime().toString());
 }
 
 
@@ -189,22 +192,24 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from)
     if (selected_from != Editor_Widgets::Scene_View) {
         scene->blockSignals(true);
 
-        for (auto item : scene->selectedItems())
-            item->setSelected(false);
+        QList<QGraphicsItem*>   item_list = scene->items();
+        QList<QTreeWidgetItem*> tree_list = treeProject->selectedItems();
+        for (auto item : scene->selectedItems()) item->setSelected(false);
 
-        for (auto item : treeProject->selectedItems()) {
-            long row_key = item->data(0, User_Roles::Key).toLongLong();
+        for (auto row : tree_list) {
+            long row_key = row->data(0, User_Roles::Key).toLongLong();
 
-            DrSettings* settings = project->findSettingsFromKey(row_key);
+            for (auto item : item_list) {
+                long item_key = item->data(User_Roles::Key).toLongLong();
 
-            if (Dr::IsDrObjectClass(settings->getType())) {
-                DrObject* object = dynamic_cast<DrObject*>(settings);
-                object->getDrItem()->setSelected(true);
+                if (item_key == row_key)
+                    item->setSelected(true);
             }
         }
+        scene->resetSelectionGroup();
+        scene->updateSelectionBox();
 
         scene->blockSignals(false);
-        scene->updateSelectionBox();
     }
 
 
@@ -217,7 +222,7 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from)
 
         long items_selected = 0;
         for (auto item : item_list) {
-            long item_key = dynamic_cast<DrItem*>(item)->getObjectKey();
+            long item_key = item->data(User_Roles::Key).toLongLong();
 
             for (auto row : tree_list) {
                 long row_key = row->data(0, User_Roles::Key).toLongLong();
@@ -244,7 +249,7 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from)
 
 
     // !!!!! TEMP: Testing to make sure not running non stop
-    setLabelText(Label_Names::Label_2, QTime::currentTime().toString());
+    setLabelText(Label_Names::Label_Bottom, "Update Selection: " + QTime::currentTime().toString());
 }
 
 
