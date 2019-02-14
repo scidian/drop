@@ -324,34 +324,35 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale)
     if ((diff_angle > 45 && diff_angle < 135) || (diff_angle > 225 && diff_angle < 315)) {
         new_scale_x = abs(start_scale.x()) * abs(scale.y());
         new_scale_y = abs(start_scale.y()) * abs(scale.x());
+
+        // Check to make sure we respect flipping
+        if ((m_pre_resize_scale.y() < 0 && start_scale.x() < 0) || (m_pre_resize_scale.y() > 0 && start_scale.x() > 0)) {
+            if (scale.y() < 0) new_scale_x *= -1;
+        } else {
+            if (scale.y() > 0) new_scale_x *= -1;
+        }
+        if ((m_pre_resize_scale.x() < 0 && start_scale.y() < 0) || (m_pre_resize_scale.x() > 0 && start_scale.y() > 0)) {
+            if (scale.x() < 0) new_scale_y *= -1;
+        } else {
+            if (scale.x() > 0) new_scale_y *= -1;
+        }
+
     } else {
         new_scale_x = abs(start_scale.x()) * abs(scale.x());
         new_scale_y = abs(start_scale.y()) * abs(scale.y());
-    }
 
-    // Check to make sure we respect flipping
-    if ((m_pre_resize_scale.x() < 0 && start_scale.x() < 0) || (m_pre_resize_scale.x() > 0 && start_scale.x() > 0)) {
-        if (scale.x() < 0) new_scale_x *= -1;
-    } else {
-        if (scale.x() > 0) new_scale_x *= -1;
+        // Check to make sure we respect flipping
+        if ((m_pre_resize_scale.x() < 0 && start_scale.x() < 0) || (m_pre_resize_scale.x() > 0 && start_scale.x() > 0)) {
+            if (scale.x() < 0) new_scale_x *= -1;
+        } else {
+            if (scale.x() > 0) new_scale_x *= -1;
+        }
+        if ((m_pre_resize_scale.y() < 0 && start_scale.y() < 0) || (m_pre_resize_scale.y() > 0 && start_scale.y() > 0)) {
+            if (scale.y() < 0) new_scale_y *= -1;
+        } else {
+            if (scale.y() > 0) new_scale_y *= -1;
+        }
     }
-    if ((m_pre_resize_scale.y() < 0 && start_scale.y() < 0) || (m_pre_resize_scale.y() > 0 && start_scale.y() > 0)) {
-        if (scale.y() < 0) new_scale_y *= -1;
-    } else {
-        if (scale.y() > 0) new_scale_y *= -1;
-    }
-
-    /// 360 = 0
-    /// 270 = 1
-    /// 180 = 0
-    ///  90 = 1
-    ///   0 = 0
-    /// This returns a sliding number that is 1 if 270 or 90, 0 if 360 or 180
-    ///    double percent = static_cast<double>((static_cast<int>(angle) % 180)) / 90;
-    ///    double x_diff = new_scale_x - new_scale_y;
-    ///    double y_diff = new_scale_y - new_scale_x;
-    ///    new_scale_x -= x_diff * percent;
-    ///    new_scale_y -= y_diff * percent;
 
     // Update item property
     original->setData(User_Roles::Scale, QPointF(new_scale_x, new_scale_y) );
