@@ -231,13 +231,17 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
 //####################################################################################
 //##        Updates the property boxes already in the object inspector when a new
-//##        item is selected
+//##            item is selected or when something in the project has changed
+//##
+//##        Inspector Widget SIGNALS are blocked to prevent recursive updating
 //####################################################################################
 void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_items, QList<long> property_keys_to_update)
 {
     if (changed_items.count() == 0) return;
 
+    // !!!!! TEMP: Need to be more than just one item represented in object inspector
     DrSettings* object = changed_items.first();
+    // !!!!!
 
     if (object->getKey() != m_selected_key) return;
     if (Dr::IsDrObjectClass(m_selected_type) == false) return;
@@ -321,11 +325,22 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 //####################################################################################
 void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order)
 {
-    // If is DrObject type, call seperate update function that handles the DrItem QGraphicsItems as well
-    if (Dr::IsDrObjectClass(m_selected_type) == true) {
-        // Make a call to update the DrObject type item, if it returns false, stay around and update the other property
-        if (updateDrObjectFromNewValue(property_key, new_value, sub_order)) return;
-    }
+
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    // Trying to see if we can push through updates ourselves by updating the item we changed the value to directly from DrScene
+
+    ///// If is DrObject type, call seperate update function that handles the DrItem QGraphicsItems as well
+    ///if (Dr::IsDrObjectClass(m_selected_type) == true) {
+    ///    // Make a call to update the DrObject type item, if it returns false, stay around and update the other property
+    ///    if (updateDrObjectFromNewValue(property_key, new_value, sub_order)) return;
+    ///}
+
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     // Update the appropiate property in the settings of the object shown in the inspector
     DrSettings *settings = m_project->findSettingsFromKey( m_selected_key );
@@ -378,122 +393,13 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
 
             break;
         }
+
+        m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Object_Inspector, { settings }, { property_key } );
     }
 }
 
 
-//####################################################################################
-//##        When the user changes the values of the input boxes, updates the object
-//##            shown in the object inspector in both the scene and in the data model
-//##
-//##        RETURNS TRUE if it found a property to update, otherwise FALSE so we can
-//##            fall back to the calling updateSettingsFromNewValue() function
-//####################################################################################
-bool TreeInspector::updateDrObjectFromNewValue(long property_key, QVariant new_value, long sub_order)
-{
-    bool updated_something = false;
 
-    // Load the object we're trying to update, the item in the scene that represents it, and our scene
-    DrObject *object =   dynamic_cast<DrObject*>(m_project->findSettingsFromKey(m_selected_key));
-    DrItem   *item =     object->getDrItem();
-    DrScene  *my_scene = dynamic_cast<DrScene*>( item->scene() );
-
-    Object_Properties property = static_cast<Object_Properties>(property_key);
-
-    // Turn off itemChange() signals to stop recursive calling
-    item->disableItemChangeFlags();
-
-    // Some local variables
-    QTransform transform;
-    QPointF position = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::position).toPointF();
-    QPointF scale    = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::scale).toPointF();
-    QPointF size     = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::size).toPointF();
-    double  angle =    object->getComponentPropertyValue(Object_Components::transform, Object_Properties::rotation).toDouble();
-
-    switch (property)
-    {
-
-    // Processes changes to spin boxes that represent item position
-    case Object_Properties::position:
-        if (sub_order == 0)     position.setX( new_value.toDouble() );
-        else                    position.setY( new_value.toDouble() );
-        object->setComponentPropertyValue(Object_Components::transform, Object_Properties::position, position );
-        my_scene->setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
-        updated_something = true;
-        break;
-
-    // Processes change to spin boxes that represent item size and item scale
-    case Object_Properties::size:
-    case Object_Properties::scale:
-        if (property == Object_Properties::size) {
-            if (sub_order == 0) {
-                size.setX(  new_value.toDouble() );
-                scale.setX( size.x() / item->getAssetWidth()  );
-            } else {
-                size.setY(  new_value.toDouble() );
-                scale.setY( size.y() / item->getAssetHeight() );
-            }
-        } else {
-            if (sub_order == 0) {
-                scale.setX( new_value.toDouble() );
-                size.setX(  scale.x() * item->getAssetWidth() );
-            } else {
-                scale.setY( new_value.toDouble());
-                size.setY(  scale.y() * item->getAssetHeight() );
-            }
-        }
-        // Update properties
-        object->setComponentPropertyValue(Object_Components::transform, Object_Properties::scale, scale );
-        object->setComponentPropertyValue(Object_Components::transform, Object_Properties::size, size );
-        item->setData(User_Roles::Scale, scale );
-
-        // Now that we have a new size / scale, calculate a new transform and apply to item
-        transform = QTransform().rotate(angle).scale(scale.x(), scale.y());
-        item->setTransform(transform);
-
-        // Reset the center point of the item to the objects position and update the opposing data in the object inspector
-        my_scene->setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
-        if (property == Object_Properties::size)  updateInspectorPropertyBoxes( { object} , { static_cast<long>(Object_Properties::scale) });
-        if (property == Object_Properties::scale) updateInspectorPropertyBoxes( { object} , { static_cast<long>(Object_Properties::size) });
-        updated_something = true;
-        break;
-
-    // Process changes to spin box that represents item rotation
-    case Object_Properties::rotation:
-        angle = new_value.toDouble();
-        object->setComponentPropertyValue(Object_Components::transform, Object_Properties::rotation, angle );
-        item->setData(User_Roles::Rotation, angle );
-
-        transform = QTransform().rotate(angle).scale(scale.x(), scale.y());
-        item->setTransform(transform);
-        my_scene->setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
-        updated_something = true;
-        break;
-
-    // Processes changes to spin box that represents item z order
-    case Object_Properties::z_order:
-        object->setComponentPropertyValue(Object_Components::layering, Object_Properties::z_order, new_value.toDouble());
-        item->setZValue(new_value.toDouble());
-        updated_something = true;
-        break;
-
-    // Processes changes to spin box that represents item opacity
-    case Object_Properties::opacity:
-        object->setComponentPropertyValue(Object_Components::layering, Object_Properties::opacity, new_value.toDouble());
-        updated_something = true;
-        break;
-
-    default: ;
-    }
-
-    // Update selection box in case item position changed
-    my_scene->updateSelectionBox();
-
-    // Turn back on itemChange() signals
-    item->enableItemChangeFlags();
-
-    return updated_something;
-}
 
 
 
