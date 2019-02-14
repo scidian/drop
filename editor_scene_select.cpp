@@ -23,9 +23,7 @@
 //  QList<QGraphicsItem*>   m_selection_items;          // List of selected items
 //  double                  m_selection_angle;          // Angle current selection has been rotated to
 //  QPointF                 m_selection_scale;          // Scaling applied to current selection
-//  QPointF                 m_selection_translate;      // Translation applied to current selection
 //  QRectF                  m_selection_box;            // Starting outline of selected items
-//
 void DrScene::selectionChanged()
 {
     if (selectedItems() == m_selection_items) return;
@@ -148,6 +146,32 @@ QList<DrObject*> DrScene::convertListItemsToObjects(QList<QGraphicsItem*> graphi
     return objects;
 }
 
+
+//####################################################################################
+//##        Selects items based on rows selected in Editor_Project_Tree
+//####################################################################################
+void DrScene::updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list)
+{
+    // Turn off signals to stop recurssive calling of interface_relay->updateItemSelection()
+    blockSignals(true);
+
+    // Clear current selection
+    for (auto item : selectedItems()) item->setSelected(false);
+
+    for (auto row : tree_list) {
+        long row_key = row->data(0, User_Roles::Key).toLongLong();
+
+        for (auto item : items()) {
+            long item_key = item->data(User_Roles::Key).toLongLong();
+
+            if (item_key == row_key) item->setSelected(true);
+        }
+    }
+    resetSelectionGroup();
+    updateSelectionBox();
+
+    blockSignals(false);
+}
 
 
 

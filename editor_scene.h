@@ -9,6 +9,7 @@
 #define EDITOR_SCENE_H
 
 #include <QGraphicsScene>
+#include <QTreeWidgetItem>
 #include <QUndoStack>
 
 #include "interface_relay.h"
@@ -101,6 +102,7 @@ public:
     void                    resetSelectionGroup();
     QRectF                  totalSelectionSceneRect();
     void                    updateSelectionBox();
+    void                    updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list);
 
     QList<DrObject*>        convertListItemsToObjects(QList<QGraphicsItem*> graphics_items);
     QList<DrObject*>        getSelectionGroupObjects();

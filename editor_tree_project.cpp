@@ -27,6 +27,7 @@
 #include "settings_component.h"
 #include "settings_component_property.h"
 
+
 //####################################################################################
 //##        Populates Tree Project List based on project data
 //####################################################################################
@@ -98,6 +99,117 @@ void TreeProject::enterEvent(QEvent *event)
 }
 
 
+
+//####################################################################################
+//##        Event Filter Override
+//####################################################################################
+bool TreeProject::eventFilter(QObject *obj, QEvent *event)
+{
+
+    return QTreeWidget::eventFilter(obj, event);
+}
+
+
+//####################################################################################
+//##        Updates selection
+//##            Checks to make sure if more than one item is selected all new items
+//##            not matching original type are not selected
+//####################################################################################
+void TreeProject::selectionChanged (const QItemSelection &selected, const QItemSelection &deselected)
+{
+    // If we're updating selection from outside source this function has been turned off from that source (i.e. updateSelection in InterfaceRelay)
+    if (!m_allow_selection_event) {
+        QTreeWidget::selectionChanged(selected, deselected);
+        return;
+    }
+
+    // ***** If size of list is zero, clear selected_key and exit function
+    QList<QTreeWidgetItem*> item_list = this->selectedItems();
+    if (item_list.size() == 0) {
+        this->setSelectedKey(0);
+        m_relay->buildObjectInspector(QList<long> { });
+        m_relay->updateItemSelection(Editor_Widgets::Project_Tree);
+        return;
+    }
+
+    // ***** If size is one, reset first selected item
+    if (item_list.size() == 1) {
+        long selected_key = item_list.first()->data(0, User_Roles::Key).toLongLong();       // grab stored key from list view user data
+        this->setSelectedKey(selected_key);
+
+        //******************************************************
+
+        // Call to undo command to change scene to newly selected Stage or newly selected object's parent Stage
+        DrSettings *selected_item = m_project->findSettingsFromKey(selected_key);
+        if (selected_item != nullptr) {
+            DrType selected_type = selected_item->getType();
+            if (selected_type == DrType::Stage) {
+                m_relay->buildScene(selected_key);
+            } else if (Dr::IsDrObjectClass(selected_type) == true) {
+                DrObject *as_object = dynamic_cast<DrObject*>(selected_item);
+                m_relay->buildScene( as_object->getParentStage()->getKey() );
+            }
+        }
+
+        // Callsto outside update functions to rebuild object inspector
+        m_relay->buildObjectInspector(QList<long> { selected_key });
+
+        //******************************************************
+
+    // ***** Size is more than 1, prevent items of different types being selected at same time
+    } else {
+        DrType selected_type = m_project->findChildTypeFromKey( this->getSelectedKey() );
+
+        // Check if newly selected items are same type, if not, do not allow select
+        for (auto check_item: item_list) {
+            // Get key from each item so we can compare it to first selected item
+            long    check_key = check_item->data(0, User_Roles::Key).toLongLong();
+            DrType  check_type = m_project->findChildTypeFromKey(check_key);
+
+            // If we are over item that was first selected, skip to next
+            if (check_key == this->getSelectedKey()) { continue; }
+
+            if (Dr::CheckTypesAreSame(check_type, selected_type) == false)
+                check_item->setSelected(false);
+        }
+    }
+
+    // Call to outside update functions to update selection in scene view
+    m_relay->updateItemSelection(Editor_Widgets::Project_Tree);
+
+    QTreeWidget::selectionChanged(selected, deselected);                    // pass event to parent
+}
+
+
+//####################################################################################
+//##        Selects rows based on items selected in view
+//####################################################################################
+void TreeProject::updateSelectionFromView(QList<QGraphicsItem*> item_list)
+{
+    setAllowSelectionEvent(false);
+    clearSelection();
+
+    long items_selected = 0;
+    for (auto item : item_list) {
+        long item_key = item->data(User_Roles::Key).toLongLong();
+
+        for (auto row : getListOfAllTreeWidgetItems()) {
+            long row_key = row->data(0, User_Roles::Key).toLongLong();
+
+            if (item_key == row_key) {
+                row->setSelected(true);
+
+                if (items_selected == 0) {
+                    setSelectedKey(row_key);
+                    ++items_selected;
+                }
+            }
+        }
+    }
+
+    update();
+    setAllowSelectionEvent(true);
+}
 
 //####################################################################################
 //##        Returns a list of the items contained within the tree
@@ -203,8 +315,6 @@ void TreeProject::dropEvent(QDropEvent* event)
     if (dropOK && m_can_drop)
     {
         // ########## !!!!!!!!! Here we need manage the case of dropping an item
-
-
         QTreeWidget::dropEvent(event);              // Pass event through to base
     }
     else
@@ -213,89 +323,6 @@ void TreeProject::dropEvent(QDropEvent* event)
     }
     setDropIndicatorShown(false);                   // hide the drop indicator once the drop is done
     m_is_dragging = false;
-}
-
-
-//####################################################################################
-//##        Event Filter Override
-//####################################################################################
-bool TreeProject::eventFilter(QObject *obj, QEvent *event)
-{
-    //
-
-
-    return QTreeWidget::eventFilter(obj, event);
-}
-
-
-//####################################################################################
-//##        Updates selection
-//##            Checks to make sure if more than one item is selected all new items
-//##            not matching original type are not selected
-//####################################################################################
-void TreeProject::selectionChanged (const QItemSelection &selected, const QItemSelection &deselected)
-{
-    // If we're updating selection from outside source this function has been turned off from that source (i.e. updateSelection in InterfaceRelay)
-    if (!m_allow_selection_event) {
-        QTreeWidget::selectionChanged(selected, deselected);
-        return;
-    }
-
-    // ***** If size of list is zero, clear selected_key and exit function
-    QList<QTreeWidgetItem*> item_list = this->selectedItems();
-    if (item_list.size() == 0) {
-        this->setSelectedKey(0);
-        m_relay->buildObjectInspector(QList<long> { });
-        m_relay->updateItemSelection(Editor_Widgets::Project_Tree);
-        return;
-    }
-
-    // ***** If size is one, reset first selected item
-    if (item_list.size() == 1) {
-        long selected_key = item_list.first()->data(0, User_Roles::Key).toLongLong();       // grab stored key from list view user data
-        this->setSelectedKey(selected_key);
-
-        //******************************************************
-
-        // Call to undo command to change scene to newly selected Stage or newly selected object's parent Stage
-        DrSettings *selected_item = m_project->findSettingsFromKey(selected_key);
-        if (selected_item != nullptr) {
-            DrType selected_type = selected_item->getType();
-            if (selected_type == DrType::Stage) {
-                m_relay->buildScene(selected_key);
-            } else if (Dr::IsDrObjectClass(selected_type) == true) {
-                DrObject *as_object = dynamic_cast<DrObject*>(selected_item);
-                m_relay->buildScene( as_object->getParentStage()->getKey() );
-            }
-        }
-
-        // Callsto outside update functions to rebuild object inspector
-        m_relay->buildObjectInspector(QList<long> { selected_key });
-
-        //******************************************************
-
-    // ***** Size is more than 1, prevent items of different types being selected at same time
-    } else {
-        DrType selected_type = m_project->findChildTypeFromKey( this->getSelectedKey() );
-
-        // Check if newly selected items are same type, if not, do not allow select
-        for (auto check_item: item_list) {
-            // Get key from each item so we can compare it to first selected item
-            long    check_key = check_item->data(0, User_Roles::Key).toLongLong();
-            DrType  check_type = m_project->findChildTypeFromKey(check_key);
-
-            // If we are over item that was first selected, skip to next
-            if (check_key == this->getSelectedKey()) { continue; }
-
-            if (Dr::CheckTypesAreSame(check_type, selected_type) == false)
-                check_item->setSelected(false);
-        }
-    }
-
-    // Call to outside update functions to update selection in scene view
-    m_relay->updateItemSelection(Editor_Widgets::Project_Tree);
-
-    QTreeWidget::selectionChanged(selected, deselected);                    // pass event to parent
 }
 
 

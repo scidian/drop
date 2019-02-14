@@ -47,7 +47,6 @@ void InitializeFlags()
 
     SetDebugFlag( Debug_Flags::Label_Object_Inspector_Build );
     SetDebugFlag( Debug_Flags::Label_Stage_Tree_Drag );
-    //SetDebugFlag( Debug_Flags::Label_Selection_Change_Stage_Tree );
 
     //SetDebugFlag( Debug_Flags::Label_Rotation_Data );
     SetDebugFlag( Debug_Flags::Label_Selection_Group_Data );

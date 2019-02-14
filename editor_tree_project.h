@@ -8,6 +8,7 @@
 #ifndef EDITOR_TREE_PROJECT_H
 #define EDITOR_TREE_PROJECT_H
 
+#include <QGraphicsItem>
 #include <QProxyStyle>
 #include <QTreeWidget>
 
@@ -43,6 +44,7 @@ public:
     void                        buildProjectTree();
     QList <QTreeWidgetItem*>    getListOfAllTreeWidgetItems();
     QList <QTreeWidgetItem*>    getListOfChildrenFromItem( QTreeWidgetItem *item );
+    void                        updateSelectionFromView(QList<QGraphicsItem*> item_list);
 
     // Event Overrides, start at Qt Docs for QTreeWidget Class to find more
     virtual bool    eventFilter(QObject *obj, QEvent *event) override;                                             // Inherited from QObject

@@ -128,44 +128,52 @@ void DrView::paintGrid()
         QVector<QLine> lines;
 
         // Vertical lines right of scene zero, followed by Vertical lines left of scene zero
-        for (qreal x = 0; x <= scene_rect.right(); x += grid_x)
+        for (double x = 0; x <= scene_rect.right(); x += grid_x)
             lines.append(QLine(mapFromScene(x, 0).x(), 0, mapFromScene(x, 0).x(), height()));
-        for (qreal x = 0; x >= scene_rect.left(); x -= grid_x)
+        for (double x = 0; x >= scene_rect.left(); x -= grid_x)
             lines.append(QLine(mapFromScene(x, 0).x(), 0, mapFromScene(x, 0).x(), height()));
 
         // Horizontal lines below scene zero, followed by Horizontal lines above scene zero
-        for (qreal y = 0; y <= scene_rect.bottom(); y += grid_y)
+        for (double y = 0; y <= scene_rect.bottom(); y += grid_y)
             lines.append(QLine(0, mapFromScene(0, y).y(), width(), mapFromScene(0, y).y()) );
-        for (qreal y = 0; y >= scene_rect.top(); y -= grid_y)
+        for (double y = 0; y >= scene_rect.top(); y -= grid_y)
             lines.append(QLine(0, mapFromScene(0, y).y(), width(), mapFromScene(0, y).y()) );
 
         painter.drawLines(lines);
 
     // ********** Draw Grid Dots
-    } else if (m_grid_style == Grid_Style::Dots && m_zoom_scale > .5) {
-        qreal dot_size = m_zoom_scale;
-        if (m_zoom_scale < 4) dot_size = 4;
-        if (m_zoom_scale < 2) dot_size = 3;
-        if (m_zoom_scale < 1) dot_size = 2;
+    } else if (m_grid_style == Grid_Style::Dots && m_zoom_scale > .1) {
+        double dot_size = m_zoom_scale;
+        if (m_zoom_scale < 8)   dot_size = 9;
+        if (m_zoom_scale < 4)   dot_size = 7;
+        if (m_zoom_scale < 2)   dot_size = 5.4;
+        if (m_zoom_scale < 1.5) dot_size = 4.7;
+        if (m_zoom_scale < 1)   dot_size = 4.1;
+        if (m_zoom_scale < .80) dot_size = 3.5;
+        if (m_zoom_scale < .60) dot_size = 3.3;
+        if (m_zoom_scale < .45) dot_size = 3.25;
+        if (m_zoom_scale < .35) dot_size = 3.2;
+        if (m_zoom_scale < .25) dot_size = 3.15;
+        if (m_zoom_scale < .2)  dot_size = 3.1;
 
         painter.setPen(QPen( Dr::GetColor(Window_Colors::Background_Dark), dot_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ));
         QVector<QPointF> points;
 
         // Bottom right
-        for (qreal x = 0; x <= scene_rect.right(); x += grid_x)
-            for (qreal y = 0; y <= scene_rect.bottom(); y += grid_y)
+        for (double x = 0; x <= scene_rect.right(); x += grid_x)
+            for (double y = 0; y <= scene_rect.bottom(); y += grid_y)
                 points.append( mapFromScene(x, y) );
         // Bottom left
-        for (qreal x = 0; x >= scene_rect.left(); x -= grid_x)
-            for (qreal y = 0; y <= scene_rect.bottom(); y += grid_y)
+        for (double x = 0; x >= scene_rect.left(); x -= grid_x)
+            for (double y = 0; y <= scene_rect.bottom(); y += grid_y)
                 points.append( mapFromScene(x, y) );
         // Top right
-        for (qreal x = 0; x <= scene_rect.right(); x += grid_x)
-            for (qreal y = 0; y >= scene_rect.top(); y -= grid_y)
+        for (double x = 0; x <= scene_rect.right(); x += grid_x)
+            for (double y = 0; y >= scene_rect.top(); y -= grid_y)
                 points.append( mapFromScene(x, y) );
         // Top left
-        for (qreal x = 0; x >= scene_rect.left(); x -= grid_x)
-            for (qreal y = 0; y >= scene_rect.top(); y -= grid_y)
+        for (double x = 0; x >= scene_rect.left(); x -= grid_x)
+            for (double y = 0; y >= scene_rect.top(); y -= grid_y)
                 points.append( mapFromScene(x, y) );
 
         painter.drawPoints(points.data(), points.size());

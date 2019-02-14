@@ -24,7 +24,6 @@ enum class Debug_Flags {
 
     Label_Object_Inspector_Build,       // Show info about item sent to Object Inspector Tree
     Label_Stage_Tree_Drag,              // Show info about dragging event of Stage Tree
-    Label_Selection_Change_Stage_Tree,  // Show info about how many items in the Stage Tree matched the items selected in the GraphicsScene
 
     Label_Rotation_Data,                // Show rotation data while in View_Mode::Rotating in DrView
     Label_Selection_Group_Data,         // Show info about DrScene current QGraphicsItemGroup of selected items
