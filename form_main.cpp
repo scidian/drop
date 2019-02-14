@@ -175,7 +175,7 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
 void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<long> property_keys)
 {
     if (changed_from != Editor_Widgets::Object_Inspector)   treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys);
-    if (changed_from != Editor_Widgets::Scene_View)         scene->updateItemsInScene(changed_items, property_keys);
+    if (changed_from != Editor_Widgets::Scene_View)         scene->updateChangesInScene(changed_items, property_keys);
 }
 
 

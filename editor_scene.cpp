@@ -212,79 +212,107 @@ void DrScene::setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, dou
 //##        Called after some change has been made to items on another widget besides
 //##        the QGraphicsView, updates the items in the scene
 //####################################################################################
-void DrScene::updateItemsInScene(QList<DrSettings*> changed_items, QList<long> property_keys)
+void DrScene::updateChangesInScene(QList<DrSettings*> changed_items, QList<long> property_keys)
 {
-    for (auto settings : changed_items) {
+    for (auto settings_item : changed_items) {
+        DrType my_type = settings_item->getType();
 
-        if (Dr::IsDrObjectClass(settings->getType()) == false) continue;
+        if (Dr::IsDrObjectClass(my_type)) {
+            updateItemInScene(settings_item, property_keys);
 
-        DrObject *object = dynamic_cast<DrObject*>(settings);
-        DrItem   *item =   object->getDrItem();
-
-        // Some local item variables, prepping for update
-        QTransform transform;
-        QPointF position = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::position).toPointF();
-        QPointF scale    = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::scale).toPointF();
-        QPointF size     = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::size).toPointF();
-        double  angle =    object->getComponentPropertyValue(Object_Components::transform, Object_Properties::rotation).toDouble();
-
-        // Turn off itemChange() signals to stop recursive calling
-        item->disableItemChangeFlags();
-
-        // Go through each property that we have been notified has changed and update as appropriately
-        for (auto one_property : property_keys) {
-            Object_Properties property = static_cast<Object_Properties>(one_property);
-
-            QVariant new_value = object->findPropertyFromPropertyKey(one_property)->getValue();
-
-            switch (property)
-            {
-
-            case Object_Properties::position:
-                setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
-                break;
-
-            case Object_Properties::size:
-            case Object_Properties::scale:
-            case Object_Properties::rotation:
-                if (property == Object_Properties::size) {
-                        scale.setX( size.x() / item->getAssetWidth()  );
-                        scale.setY( size.y() / item->getAssetHeight() );
-                } else {
-                        size.setX(  scale.x() * item->getAssetWidth() );
-                        size.setY(  scale.y() * item->getAssetHeight() );
-                }
-                item->setData(User_Roles::Scale, scale );
-                item->setData(User_Roles::Rotation, angle );
-                transform = QTransform().rotate(angle).scale(scale.x(), scale.y());
-                item->setTransform(transform);
-                setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
-
-                if (property == Object_Properties::size) {
-                    object->setComponentPropertyValue(Object_Components::transform, Object_Properties::scale, scale);
-                    m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { object } , { static_cast<long>(Object_Properties::scale) });
-                }
-                if (property == Object_Properties::scale) {
-                    object->setComponentPropertyValue(Object_Components::transform, Object_Properties::size, size);
-                    m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { object } , { static_cast<long>(Object_Properties::size) });
-                }
-
-                break;
-
-            case Object_Properties::z_order:
-                item->setZValue(new_value.toDouble());
-                break;
-            default: ;
-            }
+        } else if (my_type == DrType::Stage || my_type == DrType::StartStage) {
+            emit updateAlignmentGrid();
         }
 
-        // Turn back on itemChange() signals
-        item->enableItemChangeFlags();
+        //################ !!!!!!!!!!!!!!!!!!!!!!!
+        //
+        //      ROOM FOR MORE TYPES
+        //
+        //################ !!!!!!!!!!!!!!!!!!!!!!!
     }
 
     // Update selection box in case item position changed
     updateSelectionBox();
 }
+
+
+// Updates the item in the scene based on the new property_keys
+void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_keys)
+{
+    DrObject *object = dynamic_cast<DrObject*>(changed_item);
+    DrItem   *item =   object->getDrItem();
+
+    // Some local item variables, prepping for update
+    QTransform transform;
+    QPointF position = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::position).toPointF();
+    QPointF scale    = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::scale).toPointF();
+    QPointF size     = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::size).toPointF();
+    double  angle =    object->getComponentPropertyValue(Object_Components::transform, Object_Properties::rotation).toDouble();
+
+    // Turn off itemChange() signals to stop recursive calling
+    item->disableItemChangeFlags();
+
+    // Go through each property that we have been notified has changed and update as appropriately
+    for (auto one_property : property_keys) {
+        Object_Properties property = static_cast<Object_Properties>(one_property);
+
+        QVariant new_value = object->findPropertyFromPropertyKey(one_property)->getValue();
+
+        switch (property)
+        {
+
+        case Object_Properties::position:
+            setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
+            break;
+
+        case Object_Properties::size:
+        case Object_Properties::scale:
+        case Object_Properties::rotation:
+            if (property == Object_Properties::size) {
+                    scale.setX( size.x() / item->getAssetWidth()  );
+                    scale.setY( size.y() / item->getAssetHeight() );
+            } else {
+                    size.setX(  scale.x() * item->getAssetWidth() );
+                    size.setY(  scale.y() * item->getAssetHeight() );
+            }
+            item->setData(User_Roles::Scale, scale );
+            item->setData(User_Roles::Rotation, angle );
+            transform = QTransform().rotate(angle).scale(scale.x(), scale.y());
+            item->setTransform(transform);
+            setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
+
+            if (property == Object_Properties::size) {
+                object->setComponentPropertyValue(Object_Components::transform, Object_Properties::scale, scale);
+                m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { object } , { static_cast<long>(Object_Properties::scale) });
+            }
+            if (property == Object_Properties::scale) {
+                object->setComponentPropertyValue(Object_Components::transform, Object_Properties::size, size);
+                m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { object } , { static_cast<long>(Object_Properties::size) });
+            }
+
+            break;
+
+        case Object_Properties::z_order:
+            item->setZValue(new_value.toDouble());
+            break;
+        default: ;
+        }
+    }
+
+    // Turn back on itemChange() signals
+    item->enableItemChangeFlags();
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -166,6 +166,7 @@ void DrView::scrollContentsBy(int dx, int dy)
     update();
 }
 
+
 void DrView::updateGrid()
 {
     if (!scene()) return;

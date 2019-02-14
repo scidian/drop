@@ -65,7 +65,8 @@ public:
     // Other Widget Update Calls
     InterfaceRelay* getRelay() { return m_relay; }
     void            updateAlignmentGrid() { emit updateGrid(); }
-    void            updateItemsInScene(QList<DrSettings*> changed_items, QList<long> property_keys);
+    void            updateChangesInScene(QList<DrSettings*> changed_items, QList<long> property_keys);
+    void            updateItemInScene(DrSettings* changed_item, QList<long> property_keys);
     void            updateView() { emit updateViews(); }
 
 

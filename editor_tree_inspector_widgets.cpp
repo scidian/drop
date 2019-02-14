@@ -334,7 +334,8 @@ QComboBox* TreeInspector::createComboBox(DrProperty *property, QFont &font)
         options << tr("Unknown List");
     combo->addItems(options);
 
-    ///connect(combo, SIGNAL(currentIndexChanged(QString)), this, SLOT(sceneScaleChanged(QString)));
+    connect (combo, QOverload<int>::of(&QComboBox::currentIndexChanged),
+             this, [this, property_key] (int index) { updateSettingsFromNewValue(property_key, index); });
 
     combo->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     combo->setCurrentIndex(property->getValue().toInt());

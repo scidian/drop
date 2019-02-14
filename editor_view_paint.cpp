@@ -118,6 +118,10 @@ void DrView::paintGrid()
     double grid_x = m_grid_size.x();
     double grid_y = m_grid_size.y();
 
+    // Bounds check
+    if (grid_x < 1) grid_x = 1;
+    if (grid_y < 1) grid_y = 1;
+
     // ********** Draw Grid Lines
     if (m_grid_style == Grid_Style::Lines) {
         painter.setPen(QPen( Dr::GetColor(Window_Colors::Background_Dark), 1 ));

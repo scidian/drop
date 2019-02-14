@@ -18,9 +18,9 @@ class DrProject;
 class DrObject;
 class DrItem;
 class SelectionGroup;
-
 class InterfaceRelay;
 class DrScene;
+class DrSettings;
 class DrViewRubberBand;
 class DrViewToolTip;
 
