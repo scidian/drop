@@ -37,15 +37,15 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
     current_mode = new_layout;
     switch (current_mode)
     {
-    case Form_Main_Mode::Edit_Stage:
+    case Form_Main_Mode::World_Editor:
         buildWindowModeEditStage();
-        buildAssetList();
-        buildTreeProjectList();
+        buildAssetTree();
+        buildProjectTree();
         viewMain->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
         scene->setSceneRect(-2000, -2000, 4000, 4000);
         scene->update();
         viewMain->update();
-        centerViewOn(QPointF(0, 0));
+        centerViewOnPoint(QPointF(0, 0));
         break;
     case Form_Main_Mode::Clear:  
 
@@ -310,7 +310,7 @@ void FormMain::buildWindowModeEditStage()
             verticalLayoutAsset->setContentsMargins(0, 0, 0, 0);
 
                 // ***** Load our custom TreeObjectInspector for the Stage List
-                treeAsset = new TreeAssetList(widgetAssests, project, this);
+                treeAsset = new TreeAssets(widgetAssests, project, this);
                 treeAsset->setObjectName(QStringLiteral("treeAsset"));
                 treeAsset->setColumnCount(1);
                 treeAsset->setFont(font);

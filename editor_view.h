@@ -56,8 +56,8 @@ enum class Grid_Style {     Lines,  Dots,               };
 
 
 // Class constants
-const double ANGLE_TOLERANCE = 2.5;                                 // Angle distance to fuzzy compare to desired angle
-const int    ANGLE_STEP = 15;                                       // Angle intervals rotate function should snap to
+const double c_angle_tolerance = 2.5;                               // Angle distance to fuzzy compare to desired angle
+const int    c_angle_step = 15;                                     // Angle intervals rotate function should snap to
 
 
 //####################################################################################

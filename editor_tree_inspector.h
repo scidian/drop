@@ -39,8 +39,8 @@ enum class Spin_Type {
 
 
 // Class constants
-const int   INSPECTOR_SIZE_LEFT =  3;                             // Size policy width of left column
-const int   INSPECTOR_SIZE_RIGHT = 5;                             // Size policy width of right column
+const int   c_inspector_size_left =  3;                 // Size policy width of left column
+const int   c_inspector_size_right = 5;                 // Size policy width of right column
 
 
 //####################################################################################
@@ -66,7 +66,7 @@ public:
 
     // Function Calls
     void            buildInspectorFromKeys(QList<long> key_list);
-    void            updateObjectPropertyBoxes(DrSettings* object, QList<Object_Properties> properties_to_update);
+    void            updateInspectorPropertyBoxes(QList<DrSettings*> changed_items, QList<long> property_keys_to_update);
 
     bool            updateDrObjectFromNewValue(long property_key, QVariant new_value, long sub_order = 0);
     void            updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order = 0);

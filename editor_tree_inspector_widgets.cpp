@@ -40,7 +40,7 @@
 QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font)
 {
     QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    sp_right.setHorizontalStretch(INSPECTOR_SIZE_RIGHT);
+    sp_right.setHorizontalStretch(c_inspector_size_right);
 
     QCheckBox *check = new QCheckBox();
     check->setObjectName("checkInspector");
@@ -60,7 +60,7 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font)
 QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font)
 {
     QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    sp_right.setHorizontalStretch(INSPECTOR_SIZE_RIGHT);
+    sp_right.setHorizontalStretch(c_inspector_size_right);
 
     QLineEdit *edit = new QLineEdit();
     edit->setFont(font);
@@ -84,7 +84,7 @@ QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font)
 QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type)
 {
     QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    size_policy.setHorizontalStretch(INSPECTOR_SIZE_RIGHT);
+    size_policy.setHorizontalStretch(c_inspector_size_right);
 
     QSpinBox *spin = new QSpinBox();
     spin->setFont(font);
@@ -122,7 +122,7 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     ///myLineEdit->setValidator( new QDoubleValidator(0, 100, 2, this) );
 
     QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    size_policy.setHorizontalStretch(INSPECTOR_SIZE_RIGHT);
+    size_policy.setHorizontalStretch(c_inspector_size_right);
 
     TripleSpinBox *spin = new TripleSpinBox();
     spin->setFont(font);
@@ -160,7 +160,7 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
 QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font, Spin_Type spin_type)
 {
     QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    size_policy.setHorizontalStretch(INSPECTOR_SIZE_RIGHT);
+    size_policy.setHorizontalStretch(c_inspector_size_right);
 
     QFrame *spin_pair = new QFrame();
     spin_pair->setSizePolicy(size_policy);
@@ -217,7 +217,7 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
 QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &font)
 {
     QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    size_policy.setHorizontalStretch(INSPECTOR_SIZE_RIGHT);
+    size_policy.setHorizontalStretch(c_inspector_size_right);
 
     QFrame *spin_pair = new QFrame();
     spin_pair->setSizePolicy(size_policy);
@@ -287,7 +287,7 @@ TripleSpinBox* TreeInspector::initializeEmptySpinBox(DrProperty *property, QFont
 QComboBox* TreeInspector::createComboBox(DrProperty *property, QFont &font)
 {
     QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    size_policy.setHorizontalStretch(INSPECTOR_SIZE_RIGHT);
+    size_policy.setHorizontalStretch(c_inspector_size_right);
 
     DropDownComboBox *combo = new DropDownComboBox();
     combo->setObjectName(QStringLiteral("comboBox"));
@@ -349,7 +349,7 @@ QComboBox* TreeInspector::createComboBox(DrProperty *property, QFont &font)
 QPushButton* TreeInspector::createComboBox2(DrProperty *property, QFont &font)
 {
     QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    size_policy.setHorizontalStretch(INSPECTOR_SIZE_RIGHT);
+    size_policy.setHorizontalStretch(c_inspector_size_right);
 
     QPushButton *button = new QPushButton();
     button->setObjectName(QStringLiteral("buttonDropDown"));

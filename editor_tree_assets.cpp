@@ -30,8 +30,8 @@
 //####################################################################################
 //##        Constructor
 //####################################################################################
-TreeAssetList::TreeAssetList(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
-                             QTreeWidget (parent), m_project(project), m_relay(relay)
+TreeAssets::TreeAssets(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
+                       QTreeWidget (parent), m_project(project), m_relay(relay)
 {
     m_widget_hover = new WidgetHoverHandler(this);
     connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
@@ -40,13 +40,13 @@ TreeAssetList::TreeAssetList(QWidget *parent, DrProject *project, InterfaceRelay
 }
 
 // SLOT: Catches signals from m_widget_hover
-void TreeAssetList::setAdvisorInfo(QString header, QString body) {
+void TreeAssets::setAdvisorInfo(QString header, QString body) {
     m_relay->setAdvisorInfo(header, body);
 }
-void TreeAssetList::applyHeaderBodyProperties(QWidget *widget, DrProperty *property) {
+void TreeAssets::applyHeaderBodyProperties(QWidget *widget, DrProperty *property) {
     m_widget_hover->applyHeaderBodyProperties(widget, property);
 }
-void TreeAssetList::applyHeaderBodyProperties(QWidget *widget, QString header, QString body) {
+void TreeAssets::applyHeaderBodyProperties(QWidget *widget, QString header, QString body) {
     m_widget_hover->applyHeaderBodyProperties(widget, header, body);
 }
 
@@ -55,13 +55,13 @@ void TreeAssetList::applyHeaderBodyProperties(QWidget *widget, QString header, Q
 //####################################################################################
 //##        Tree Building Functions
 //####################################################################################
-void TreeAssetList::buildAssetList()
+void TreeAssets::buildAssetTree()
 {
     // ***** Initialize some QWidget helper items
     QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
     QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    sp_left.setHorizontalStretch(ASSET_SIZE_LEFT);
-    sp_right.setHorizontalStretch(ASSET_SIZE_RIGHT);
+    sp_left.setHorizontalStretch(c_asset_size_left);
+    sp_right.setHorizontalStretch(c_asset_size_right);
 
     QFont fp;
     fp.setPointSize(Dr::FontSize());

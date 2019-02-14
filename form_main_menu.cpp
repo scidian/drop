@@ -196,7 +196,7 @@ void FormMain::buildMenu()
         menuDebug->addAction(actionListChildren);
 
         connect(actionClearMain, &QAction::triggered, [this]() { this->buildWindow(Form_Main_Mode::Clear); });
-        connect(actionStageEditMode, &QAction::triggered, [this]() { this->buildWindow(Form_Main_Mode::Edit_Stage); });
+        connect(actionStageEditMode, &QAction::triggered, [this]() { this->buildWindow(Form_Main_Mode::World_Editor); });
         connect(actionListChildren, &QAction::triggered, [this]() { this->menuListChildren(); });
 
         menuDebug->setTitle(QApplication::translate("MainWindow", "Debug", nullptr));

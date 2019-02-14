@@ -17,30 +17,30 @@ class InterfaceRelay;
 class WidgetHoverHandler;
 
 // Class constants
-const int   ASSET_SIZE_LEFT =  3;                             // Size policy width of left column
-const int   ASSET_SIZE_RIGHT = 5;                             // Size policy width of right column
+const int   c_asset_size_left =  3;                 // Size policy width of left column
+const int   c_asset_size_right = 5;                 // Size policy width of right column
 
 
 //####################################################################################
 //##    TreeAssetList
 //##        A Tree List to show assests available to current project
 //############################
-class TreeAssetList: public QTreeWidget
+class TreeAssets: public QTreeWidget
 {
     Q_OBJECT
 
 private:
-    DrProject           *m_project;                  // Pointer to currently loaded project
-    InterfaceRelay      *m_relay;                    // Pointer to InterfaceRelay class of parent form
+    DrProject           *m_project;                 // Pointer to currently loaded project
+    InterfaceRelay      *m_relay;                   // Pointer to InterfaceRelay class of parent form
 
     WidgetHoverHandler  *m_widget_hover;            // Pointer to a widget hover handler
 
 public:
     // Constructor
-    explicit        TreeAssetList(QWidget *parent, DrProject *project, InterfaceRelay *relay);
+    explicit        TreeAssets(QWidget *parent, DrProject *project, InterfaceRelay *relay);
 
     // Function Calls
-    void            buildAssetList();
+    void            buildAssetTree();
     InterfaceRelay* getRelay() { return m_relay; }
 
     // Property Builders

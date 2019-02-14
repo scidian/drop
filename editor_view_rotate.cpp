@@ -81,8 +81,8 @@ void DrView::rotateSelection(QPointF mouse_in_view)
     double angle = m_rotate_start_angle + (angle2 - angle1);
 
     // ********** Snaps angle to nearest 15 degree increment if angle is with +/-
-    double tolerance =  ANGLE_TOLERANCE;
-    double angle_step = ANGLE_STEP;
+    double tolerance =  c_angle_tolerance;
+    double angle_step = c_angle_step;
 
     double test_round = abs(angle);
     while (test_round >= angle_step) { test_round -= angle_step; }

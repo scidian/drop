@@ -5,9 +5,9 @@
 //      FormMain - Class that holds our main form window
 //
 //      FormMain Modes:
-//          Edit Stage
-//          Edit UI
-//          Node Map: World / UI Layout
+//          World Editor
+//          UI Editor
+//          World Map: World / UI Layout
 //          Stage Map: Stage Layout
 //
 //      Main Components of FormMain while in normal "Edit Stage" mode:
@@ -15,10 +15,10 @@
 //          Advisor (Dock)
 //          Object Inspector (Dock)
 //
-//          Components That Can Appear in Object Inspector:
-//              Asset List (Dock)
-//              Stage View
-//              Stage List
+//          Components That Have Items that Can Appear in Object Inspector:
+//              Asset List
+//              Scene View
+//              Project Tree
 //              Variable List
 //              Bottom Area (Labels, Stages?)
 //
@@ -40,7 +40,7 @@
 // Necessary forward declarations
 class ColorSplitter;
 class InterfaceRelay;
-class TreeAssetList;
+class TreeAssets;
 class TreeAdvisor;
 class TreeInspector;
 class TreeProject;
@@ -68,13 +68,13 @@ public:
 
 
 private:
-    DrScene       *scene;                 // Holds the currently selected Stage, ready for rendering in DrView
-    DrView        *viewMain;              // Renders scene for the viewer
-
-    TreeProject   *treeProject;           // Custom classes for Project List
+    TreeAdvisor   *treeAdvisor;           // Custom classes for Advisor Window
+    TreeAssets    *treeAsset;             // Custom classes for Asset Tree
     TreeInspector *treeInspector;         // Custom classes for Object Inspector
-    TreeAssetList *treeAsset;             // Custom classes for Asset List
-    TreeAdvisor   *treeAdvisor;           // Custom classes for Advisor List
+    TreeProject   *treeProject;           // Custom classes for Project Tree
+
+    DrScene       *scene;                 // Behind the scene data model that holds the currently selected Stage
+    DrView        *viewMain;              // Renders the scene, allows for interaction
 
     // Normal Qt Classes for simple objects
     QMenuBar      *menuBar;
@@ -101,17 +101,25 @@ public:
     explicit FormMain(QWidget *parent = nullptr);
     ~FormMain();
 
-    // Member functions
-    virtual void    buildAssetList();
+    // Interface Relay Implementations
+    virtual void    buildAssetTree();
     virtual void    buildObjectInspector(QList<long> key_list);
-    virtual void    buildTreeProjectList();
-    virtual void    centerViewOn(QPointF center_point);
-    virtual void    populateScene(long from_stage_key);
+    virtual void    buildProjectTree();
+    virtual void    buildScene(long from_stage_key);
+
+    virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<long> property_keys);
+    virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Asset_Properties> property_keys);
+    virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<World_Properties> property_keys);
+    virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Stage_Properties> property_keys);
+    virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Object_Properties> property_keys);
+
+    virtual void    updateStageTreeSelectionBasedOnSelectionGroup();
+
+    virtual void    centerViewOnPoint(QPointF center_point);
+
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list);
     virtual void    setAdvisorInfo(QString header, QString body);
     virtual void    setLabelText(Label_Names label_name, QString new_text);
-    virtual void    updateObjectInspectorAfterItemChange(DrObject* object, QList<Object_Properties> properties);
-    virtual void    updateStageTreeSelectionBasedOnSelectionGroup();
 
 private:
     // Form Building / Setup

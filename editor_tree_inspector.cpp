@@ -84,17 +84,17 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     // !!!!! #DEBUG:    Show selected item key and info
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Object_Inspector_Build)) {
         QString type_string = Dr::StringFromType(new_type);
-        m_relay->setLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( new_key ) + ", TYPE: " + type_string);
+        Dr::SetLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( new_key ) + ", TYPE: " + type_string);
 
         if (Dr::IsDrObjectClass(new_type)) {
             DrObject* object = dynamic_cast<DrObject*>(m_project->findSettingsFromKey(new_key));
             long asset_key = object->getAssetKey();
             QString asset_name = m_project->findSettingsFromKey(asset_key)->getAssetName();
 
-            m_relay->setLabelText(Label_Names::Label_Object_2, "ASSET KEY:  " + QString::number(asset_key) +
-                                                               ", NAME: " + asset_name);
+            Dr::SetLabelText(Label_Names::Label_Object_2, "ASSET KEY:  " + QString::number(asset_key) +
+                                                              ", NAME: " + asset_name);
         } else {
-            m_relay->setLabelText(Label_Names::Label_Object_2, "");
+            Dr::SetLabelText(Label_Names::Label_Object_2, "");
         }
     }
     // !!!!! END
@@ -102,7 +102,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     // If old selection and new selection are both objects, we don't need to completely rebuild inspector, just change values
     if (m_selected_type == DrType::Object && new_type == DrType::Object) {
         m_selected_key =  new_key;
-        updateObjectPropertyBoxes(m_project->findSettingsFromKey(m_selected_key), { Object_Properties::all_properties });
+        updateInspectorPropertyBoxes( { m_project->findSettingsFromKey(m_selected_key) }, { });
         return;
     } else {
         m_selected_key =  new_key;
@@ -157,7 +157,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
             fp.setPointSize(Dr::FontSize());
             property_name->setFont(fp);
                 QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
-                sp_left.setHorizontalStretch(INSPECTOR_SIZE_LEFT);
+                sp_left.setHorizontalStretch(c_inspector_size_left);
             property_name->setSizePolicy(sp_left);
             applyHeaderBodyProperties(property_name, property_pair.second);
             horizontal_split->addWidget(property_name);
@@ -233,24 +233,22 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 //##        Updates the property boxes already in the object inspector when a new
 //##        item is selected
 //####################################################################################
-void TreeInspector::updateObjectPropertyBoxes(DrSettings* object, QList<Object_Properties> properties_to_update)
+void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_items, QList<long> property_keys_to_update)
 {
-    if (properties_to_update.count() == 0)  return;
+    if (changed_items.count() == 0) return;
+
+    DrSettings* object = changed_items.first();
+
     if (object->getKey() != m_selected_key) return;
     if (Dr::IsDrObjectClass(m_selected_type) == false) return;
 
     Dr::SetLabelText(Label_Names::Label_1, "Insp Widget Count: " + QString::number(m_widgets.count()) );
 
-    // Convert from Object_Properties enum to long for easy comparing of keys
-    QList<long> property_keys_to_update;
-    for (auto property : properties_to_update)
-        property_keys_to_update.append(static_cast<long>(property));
-
     for (auto widget : m_widgets) {
         long prop_key = widget->property(User_Property::Key).toInt();
 
         if (property_keys_to_update.contains(prop_key) == false &&
-            properties_to_update.contains(Object_Properties::all_properties) == false) continue;
+            property_keys_to_update.count() != 0) continue;
 
         DrProperty *prop = object->findPropertyFromPropertyKey(prop_key);
         if (prop == nullptr) continue;
@@ -315,8 +313,11 @@ void TreeInspector::updateObjectPropertyBoxes(DrSettings* object, QList<Object_P
 
 
 //####################################################################################
-//##        When the user changes the values of the input boxes, updates the
-//##        appropriate settings of the item shown in the object inspector
+//##        CONNECT-ed from SIGNAL that is emmited when the user changes the values
+//##            of the input boxes in the object inspector.
+//##
+//##        Updates the appropriate DrSettings DrProperty Values of the item changed
+//##            in the object inspector
 //####################################################################################
 void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order)
 {
@@ -383,9 +384,10 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
 
 //####################################################################################
 //##        When the user changes the values of the input boxes, updates the object
-//##        shown in the object inspector in both the scene and in the data model
+//##            shown in the object inspector in both the scene and in the data model
 //##
-//##        RETURNS TRUE if it found a property to update, otherwise FALSE
+//##        RETURNS TRUE if it found a property to update, otherwise FALSE so we can
+//##            fall back to the calling updateSettingsFromNewValue() function
 //####################################################################################
 bool TreeInspector::updateDrObjectFromNewValue(long property_key, QVariant new_value, long sub_order)
 {
@@ -451,8 +453,8 @@ bool TreeInspector::updateDrObjectFromNewValue(long property_key, QVariant new_v
 
         // Reset the center point of the item to the objects position and update the opposing data in the object inspector
         my_scene->setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
-        if (property == Object_Properties::size)  my_scene->getRelay()->updateObjectInspectorAfterItemChange(object, { Object_Properties::scale  });
-        if (property == Object_Properties::scale) my_scene->getRelay()->updateObjectInspectorAfterItemChange(object, { Object_Properties::size });
+        if (property == Object_Properties::size)  updateInspectorPropertyBoxes( { object} , { static_cast<long>(Object_Properties::scale) });
+        if (property == Object_Properties::scale) updateInspectorPropertyBoxes( { object} , { static_cast<long>(Object_Properties::size) });
         updated_something = true;
         break;
 

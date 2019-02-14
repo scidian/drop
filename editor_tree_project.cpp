@@ -30,7 +30,7 @@
 //####################################################################################
 //##        Populates Tree Project List based on project data
 //####################################################################################
-void TreeProject::populateTreeProjectList()
+void TreeProject::buildProjectTree()
 {
     this->clear();
 
@@ -263,10 +263,10 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
         if (selected_item != nullptr) {
             DrType selected_type = selected_item->getType();
             if (selected_type == DrType::Stage) {
-                m_relay->populateScene(selected_key);
+                m_relay->buildScene(selected_key);
             } else if (Dr::IsDrObjectClass(selected_type) == true) {
                 DrObject *as_object = dynamic_cast<DrObject*>(selected_item);
-                m_relay->populateScene( as_object->getParentStage()->getKey() );
+                m_relay->buildScene( as_object->getParentStage()->getKey() );
             }
         }
 

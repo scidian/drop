@@ -121,7 +121,7 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
         object_pair.second->setDrItem(item);
     }
 
-    m_scene->getRelay()->centerViewOn(from_stage->getViewCenterPoint());
+    m_scene->getRelay()->centerViewOnPoint(from_stage->getViewCenterPoint());
     m_scene->update();
     m_scene->updateAlignmentGrid();
     m_scene->updateView();

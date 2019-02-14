@@ -24,16 +24,18 @@
 //
 //  FormStartup                     Pick Recent Project, News, Create New Project
 //
-//  FormMain                        (4) Modes: Edit Stage
-//                                             Edit UI
-//                                             Node Map: World / UI Layout
-//                                             Node Map: Stage Layout
+//  FormMain                        (4) Modes: World Editor
+//                                             UI Editor
+//                                             World Map: World / UI Layout
+//                                             Stage Map: Stage Layout
 //      Collision Shape Editor      Edit Collision Shape
 //      Atlas Editor                View / Edit Project Atlases
 //      Font Editor                 Create / View Fonts for Use in Project
-//      Image Editor                Draw shapes, objects for use in Assets
+//      Image Editor                Draw shapes, objects for use in Assets, vectors, custom format, export
 //      Object Editor               Edit object's ObjectMaps
 //      Particle Editor             Make custom particles
+//      Sound Editor
+//      Animation Editor
 //
 
 #include <QApplication>

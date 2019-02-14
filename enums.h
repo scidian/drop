@@ -11,6 +11,11 @@
 
 #include <QGraphicsItem>
 
+enum class Asset_Properties;
+enum class World_Properties;
+enum class Stage_Properties;
+enum class Object_Properties;
+
 
 //####################################################################################
 //##    Different widgets in an editor window, used for cross updating widgets
@@ -27,9 +32,9 @@ enum class Editor_Widgets {
 //##    Types of modes for Form Main
 //####################################################################################
 enum class Form_Main_Mode {
-    Edit_Stage,
-    Edit_UI,
-    Node_Map,
+    World_Editor,
+    UI_Editor,
+    World_Map,
     Stage_Map,
     Clear,
 };
@@ -142,6 +147,10 @@ namespace Dr
     QString     StringFromAssetType(DrAsset_Type type);
     QString     StringFromPositionFlag(Position_Flags flag);
 
+    QList<long> ConvertAssetPropertyListToLongs(QList<Asset_Properties> list);
+    QList<long> ConvertWorldPropertyListToLongs(QList<World_Properties> list);
+    QList<long> ConvertStagePropertyListToLongs(QList<Stage_Properties> list);
+    QList<long> ConvertObjectPropertyListToLongs(QList<Object_Properties> list);
 }
 
 
@@ -245,9 +254,29 @@ enum class Property_Type {
 
 
 //####################################################################################
+//##    Asset - Possible components and their properties
+//####################################################################################
+enum class Asset_Components
+{
+    settings,
+    animation,
+};
+
+enum class Asset_Properties
+{
+    // settings
+    name,                   //string
+    collision_shape,        //polygon
+
+    //animation
+    animation_default,      //image
+
+};
+
+
+//####################################################################################
 //##    World - Possible components and their properties
 //####################################################################################
-
 enum class World_Components
 {
     settings,
@@ -274,7 +303,6 @@ enum class World_Properties
 //####################################################################################
 //##    Stage - Possible components and their properties
 //####################################################################################
-
 enum class Stage_Components
 {
     settings,
@@ -300,7 +328,6 @@ enum class Stage_Properties {
 //####################################################################################
 //##    Object - Possible components and their properties
 //####################################################################################
-
 enum class Object_Components
 {
     settings,
@@ -342,32 +369,8 @@ enum class Object_Properties
     // character_settings
     character_jump_x,       //double
     character_jump_y,       //double
-
-    // Special case that tells some functions (such as updating object inspector) to use all properties
-    all_properties,
 };
 
-
-//####################################################################################
-//##    Asset - Possible components and their properties
-//####################################################################################
-
-enum class Asset_Components
-{
-    settings,
-    animation,
-};
-
-enum class Asset_Properties
-{
-    // settings
-    name,                   //string
-    collision_shape,        //polygon
-
-    //animation
-    animation_default,      //image
-
-};
 
 
 

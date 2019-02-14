@@ -39,7 +39,7 @@ public:
                                 QTreeWidget (parent), m_project(project), m_relay(relay) { }
 
     // Function calls
-    void                        populateTreeProjectList();
+    void                        buildProjectTree();
     QList <QTreeWidgetItem*>    getListOfAllTreeWidgetItems();
     QList <QTreeWidgetItem*>    getListOfChildrenFromItem( QTreeWidgetItem *item );
 

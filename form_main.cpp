@@ -10,6 +10,7 @@
 
 #include "colors.h"
 #include "debug.h"
+#include "enums.h"
 
 #include "editor_item.h"
 #include "editor_scene.h"
@@ -104,13 +105,13 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     // ########## Initialize form and customize colors and styles
     scene = new DrScene(this, project, this);
     buildMenu();
-    buildWindow(Form_Main_Mode::Edit_Stage);
+    buildWindow(Form_Main_Mode::World_Editor);
     Dr::ApplyColoring(this);
 
 
 
     // ########## Populates DrScene from current DrStage
-    populateScene( project->getWorldWithName("World 2")->getStageWithName("4")->getKey() );
+    buildScene( project->getWorldWithName("World 2")->getStageWithName("4")->getKey() );
 
 
 
@@ -130,8 +131,14 @@ void FormMain::changePalette(Color_Scheme new_color_scheme) {
 //####################################################################################
 //##        Editor Interface Relay Handlers
 //####################################################################################
-void FormMain::buildAssetList() {
-    treeAsset->buildAssetList();
+///enum class Editor_Widgets {
+///    Asset_Tree,
+///    Object_Inspector,
+///    Project_Tree,
+///    Scene_View,
+
+void FormMain::buildAssetTree() {
+    treeAsset->buildAssetTree();
 }
 
 // Sends new list to Object Inspector
@@ -142,37 +149,38 @@ void FormMain::buildObjectInspector(QList<long> key_list) {
     treeInspector->buildInspectorFromKeys(key_list);
 }
 
-void FormMain::buildTreeProjectList() {
-    treeProject->populateTreeProjectList();
+void FormMain::buildProjectTree() {
+    treeProject->buildProjectTree();
 }
-
-
-// Emits a single shot timer to update view coordinates after event calls are done
-void FormMain::centerViewOn(QPointF center_point) {
-    if (viewMain->hasLoadedFirstScene())
-        viewMain->centerOn(center_point);
-    else
-        QTimer::singleShot(0, this, [this, center_point] { this->centerViewTimer(center_point); } );
-}
-void FormMain::centerViewTimer(QPointF center_point) {  viewMain->centerOn(center_point); viewMain->loadedFirstScene(); }
-
 
 // Emits an Undo stack command to change Stages within Scene
-void FormMain::populateScene(long from_stage_key)
+void FormMain::buildScene(long from_stage_key)
 {
     if (scene->scene_mutex.tryLock(10) == false) return;
 
-    if (scene->getCurrentStageKeyShown() != from_stage_key) {
+    if (scene->getCurrentStageKeyShown() != from_stage_key)
         emit newStageSelected(project, scene, scene->getCurrentStageKeyShown(), from_stage_key);
-    }
 
     scene->scene_mutex.unlock();
 }
 
-void FormMain::updateObjectInspectorAfterItemChange(DrObject* object, QList<Object_Properties> properties_to_update)
+void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Asset_Properties> property_keys) {
+    updateEditorWidgetsAfterItemChange(changed_from, changed_items, Dr::ConvertAssetPropertyListToLongs(property_keys));    }
+void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<World_Properties> property_keys) {
+    updateEditorWidgetsAfterItemChange(changed_from, changed_items, Dr::ConvertWorldPropertyListToLongs(property_keys));    }
+void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Stage_Properties> property_keys) {
+    updateEditorWidgetsAfterItemChange(changed_from, changed_items, Dr::ConvertStagePropertyListToLongs(property_keys));    }
+void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Object_Properties> property_keys) {
+    updateEditorWidgetsAfterItemChange(changed_from, changed_items, Dr::ConvertObjectPropertyListToLongs(property_keys));    }
+void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<long> property_keys)
 {
-    treeInspector->updateObjectPropertyBoxes(object, properties_to_update);
+    if (changed_from != Editor_Widgets::Object_Inspector) treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys);
+
 }
+
+
+
+
 
 void FormMain::updateStageTreeSelectionBasedOnSelectionGroup()
 {
@@ -209,6 +217,16 @@ void FormMain::updateStageTreeSelectionBasedOnSelectionGroup()
 
 
 
+// Emits a single shot timer to update view coordinates after event calls are done
+void FormMain::centerViewOnPoint(QPointF center_point) {
+    if (viewMain->hasLoadedFirstScene())
+        viewMain->centerOn(center_point);
+    else
+        QTimer::singleShot(0, this, [this, center_point] { this->centerViewTimer(center_point); } );
+}
+void FormMain::centerViewTimer(QPointF center_point) {  viewMain->centerOn(center_point); viewMain->loadedFirstScene(); }
+
+
 
 //####################################################################################
 //##        Misc Interface Relay Handlers
@@ -221,7 +239,7 @@ void FormMain::setAdvisorInfo(HeaderBodyList header_body_list) {
 // Call to put in a signal to change the Advisor to the que
 void FormMain::setAdvisorInfo(QString header, QString body)
 {
-    if (current_mode != Form_Main_Mode::Edit_Stage) return;
+    if (current_mode != Form_Main_Mode::World_Editor) return;
     if (advisor == nullptr) return;
     if (advisor->isHidden()) return;                                        // If Advisor dock was closed, cancel
     if (treeAdvisor == nullptr) return;

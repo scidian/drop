@@ -104,6 +104,29 @@ QString StringFromPositionFlag(Position_Flags flag)
 }
 
 
+QList<long> ConvertAssetPropertyListToLongs(QList<Asset_Properties> list) {
+    QList<long> new_list;
+    for (auto item : list) new_list.append(static_cast<long>(item));
+    return new_list;    }
+
+QList<long> ConvertWorldPropertyListToLongs(QList<World_Properties> list) {
+    QList<long> new_list;
+    for (auto item : list) new_list.append(static_cast<long>(item));
+    return new_list;    }
+
+QList<long> ConvertStagePropertyListToLongs(QList<Stage_Properties> list) {
+    QList<long> new_list;
+    for (auto item : list) new_list.append(static_cast<long>(item));
+    return new_list;    }
+
+QList<long> ConvertObjectPropertyListToLongs(QList<Object_Properties> list) {
+    QList<long> new_list;
+    for (auto item : list) new_list.append(static_cast<long>(item));
+    return new_list;    }
+
+
+
+
 
 }
 

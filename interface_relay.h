@@ -11,6 +11,7 @@
 #include "enums.h"
 
 class DrObject;
+class DrSettings;
 
 //####################################################################################
 //##    InterfaceRelay
@@ -22,19 +23,28 @@ public:
     InterfaceRelay() { }
     virtual ~InterfaceRelay();
 
-    virtual void    buildAssetList() = 0;
+    virtual void    buildAssetTree() = 0;
     virtual void    buildObjectInspector(QList<long> key_list) = 0;
-    virtual void    buildTreeProjectList() = 0;
+    virtual void    buildProjectTree() = 0;
+    virtual void    buildScene(long from_stage_key) = 0;
 
-    virtual void    centerViewOn(QPointF center_point) = 0;
-    virtual void    populateScene(long from_stage_key) = 0;
+    virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<long> property_keys) = 0;
+    virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Asset_Properties> property_keys) = 0;
+    virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<World_Properties> property_keys) = 0;
+    virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Stage_Properties> property_keys) = 0;
+    virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Object_Properties> property_keys) = 0;
+
+    virtual void    updateStageTreeSelectionBasedOnSelectionGroup() = 0;
+
+
+
+
+
+    virtual void    centerViewOnPoint(QPointF center_point) = 0;
 
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list) = 0;
     virtual void    setAdvisorInfo(QString header, QString body) = 0;
     virtual void    setLabelText(Label_Names label_name, QString new_text) = 0;
-
-    virtual void    updateObjectInspectorAfterItemChange(DrObject* object, QList<Object_Properties> properties_to_update) = 0;
-    virtual void    updateStageTreeSelectionBasedOnSelectionGroup() = 0;
 };
 
 

@@ -147,7 +147,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 
         m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::position, QPointF(new_x, new_y));
 
-        m_relay->updateObjectInspectorAfterItemChange(m_object, { Object_Properties::position });
+        m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Object_Properties::position });
         return new_pos;
     }
 
@@ -163,7 +163,9 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
         m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::scale, scale );
         m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::size, QPointF(size_x, size_y));
 
-        m_relay->updateObjectInspectorAfterItemChange(m_object, { Object_Properties::size, Object_Properties::scale, Object_Properties::rotation });
+        m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Object_Properties::size,
+                                                                                                Object_Properties::scale,
+                                                                                                Object_Properties::rotation });
         return new_transform;
     }
 
@@ -173,7 +175,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
         double new_z = value.toDouble();
         m_object->setComponentPropertyValue(Object_Components::layering, Object_Properties::z_order, new_z);
 
-        m_relay->updateObjectInspectorAfterItemChange(m_object, { Object_Properties::z_order });
+        m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Object_Properties::z_order });
         return new_z;
     }
 
@@ -249,7 +251,7 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     if (m_object) transparency = m_object->getComponentPropertyValue(Object_Components::layering, Object_Properties::opacity).toDouble();
 
     // Apply the proper opacity to this item and either paint the pixmap, or paint a pattern representation of the item
-    if ( transparency >= 1) {
+    if (transparency >= 1) {
         setOpacity(transparency / 100);
         QGraphicsPixmapItem::paint(painter, &myOption, widget);
     } else {
