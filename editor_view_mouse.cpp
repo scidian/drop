@@ -293,7 +293,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
         if (check_item != nullptr) {
             m_relay->setAdvisorInfo(check_item->data(User_Roles::Name).toString(), check_item->data(User_Roles::Type).toString());
         } else {
-            m_relay->setAdvisorInfo(Advisor_Info::Stage_Area);
+            m_relay->setAdvisorInfo(Advisor_Info::Stage_View);
         }
     }
 

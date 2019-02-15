@@ -41,7 +41,7 @@ void TreeProject::buildProjectTree()
 
         world_item->setIcon(0, QIcon(":/tree_icons/tree_world.png"));                                       // Loads icon for world
         world_item->setText(0, "World: " + world_pair.second->getComponentPropertyValue(
-                               World_Components::settings, World_Properties::name).toString());             // Set text for item
+                               Components::World_Settings, Properties::World_Name).toString());             // Set text for item
         world_item->setData(0, User_Roles::Key, QVariant::fromValue(world_pair.second->getKey()));
         this->addTopLevelItem(world_item);                                                                  // Add it on our tree as the top item.
 
@@ -50,7 +50,7 @@ void TreeProject::buildProjectTree()
             QTreeWidgetItem *stage_item = new QTreeWidgetItem(world_item);                                  // Create new item and add as child item
             stage_item->setIcon(0, QIcon(":/tree_icons/tree_stage.png"));                                   // Loads icon for stage
             stage_item->setText(0, "Stage: " + stage_pair.second->getComponentPropertyValue(
-                                   Stage_Components::settings, Stage_Properties::name).toString());         // Set text for item
+                                   Components::Stage_Settings, Properties::Stage_Name).toString());         // Set text for item
             stage_item->setData(0, User_Roles::Key, QVariant::fromValue(stage_pair.second->getKey()));
 
 
@@ -71,7 +71,7 @@ void TreeProject::buildProjectTree()
                 }
 
                 object_item->setText(0, object->getComponentPropertyValue(
-                                        Object_Components::settings, Object_Properties::name).toString());          // Set text for item
+                                        Components::Object_Settings, Properties::Object_Name).toString());          // Set text for item
                 object_item->setData(0, User_Roles::Key, QVariant::fromValue(object->getKey()));            // Store item key in user data
 
                 stage_item->addChild(object_item);
@@ -94,7 +94,7 @@ void TreeProject::buildProjectTree()
 // Handles changing the Advisor on Mouse Enter
 void TreeProject::enterEvent(QEvent *event)
 {
-    m_relay->setAdvisorInfo(Advisor_Info::Stage_List);
+    m_relay->setAdvisorInfo(Advisor_Info::Project_Tree);
     QTreeWidget::enterEvent(event);
 }
 

@@ -326,9 +326,9 @@ QComboBox* TreeInspector::createComboBox(DrProperty *property, QFont &font)
     DrType object_type  =  property->getParentComponent()->getParentSettings()->getType();
 
     QStringList options;    
-    if (Dr::IsDrObjectClass(object_type) && property_key == static_cast<int>(Object_Properties::damage))
+    if (Dr::IsDrObjectClass(object_type) && property_key == static_cast<int>(Properties::Object_Damage))
         options << tr("No Damage") << tr("Damage Player") << tr("Damage Enemy") << tr("Damage All");
-    else if ((object_type == DrType::Stage || object_type == DrType::StartStage) && (property_key == static_cast<int>(Stage_Properties::grid_style)))
+    else if ((object_type == DrType::Stage || object_type == DrType::StartStage) && (property_key == static_cast<int>(Properties::Stage_Grid_Style)))
         options << tr("Lines") << tr("Dots");
     else
         options << tr("Unknown List");
@@ -358,7 +358,7 @@ QPushButton* TreeInspector::createComboBox2(DrProperty *property, QFont &font)
     button->setSizePolicy(size_policy);
 
     QStringList options;
-    if (property->getPropertyKey() == static_cast<int>(Object_Properties::damage)) {
+    if (property->getPropertyKey() == static_cast<int>(Properties::Object_Damage)) {
         options << tr("No Damage") << tr("Damage Player") << tr("Damage Enemy") << tr("Damage All");
     } else {
         options << tr("Unknown List");

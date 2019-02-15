@@ -11,10 +11,7 @@
 
 #include <QGraphicsItem>
 
-enum class Asset_Properties;
-enum class World_Properties;
-enum class Stage_Properties;
-enum class Object_Properties;
+enum class Properties;
 
 
 //####################################################################################
@@ -126,31 +123,20 @@ namespace User_Property {
     const char Body[8] = "dr_body";
 }
 
-//####################################################################################
-//##    Custom QGraphicsItem::UserType 's for referencing types in QGraphicsScene
-//####################################################################################
-typedef enum {
-    Object = QGraphicsItem::UserType,
-    No_Type,
-} User_Types;
-
 
 //####################################################################################
 //##    Some public forward function declarations
 //####################################################################################
 namespace Dr
 {
-
     bool        CheckTypesAreSame(DrType type1, DrType type2);
     bool        IsDrObjectClass(DrType type_to_check);
+
     QString     StringFromType(DrType type);
     QString     StringFromAssetType(DrAsset_Type type);
     QString     StringFromPositionFlag(Position_Flags flag);
 
-    QList<long> ConvertAssetPropertyListToLongs(QList<Asset_Properties> list);
-    QList<long> ConvertWorldPropertyListToLongs(QList<World_Properties> list);
-    QList<long> ConvertStagePropertyListToLongs(QList<Stage_Properties> list);
-    QList<long> ConvertObjectPropertyListToLongs(QList<Object_Properties> list);
+    QList<long> ConvertPropertyListToLongs(QList<Properties> list);
 }
 
 
@@ -205,10 +191,10 @@ namespace Advisor_Info
     const HeaderBodyList Asset_List            { "Asset List", "These are items that can be dragged into your project. Changing the properties "
                                                                "of these items will affect all instances of those items project wide." };
     const HeaderBodyList Object_Inspector      { "Object Inspector", "Displays editable properties of currently selected item." };
-    const HeaderBodyList Stage_Area            { "Stage View", "Shows objects and layout of currently selected Stage. Drop assets into Stage "
+    const HeaderBodyList Stage_View            { "Stage View", "Shows objects and layout of currently selected Stage. Drop assets into Stage "
                                                                "View to add to Stage." };
-    const HeaderBodyList Stage_List            { "Stage List", "Lists the items contained within the currently displayed Stage. Select items "
-                                                               "to view / adjust properties for each item." };
+    const HeaderBodyList Project_Tree          { "Project Tree", "Lists the items contained within the currently displayed Stage. Select items "
+                                                                 "to view / adjust properties for each item." };
     const HeaderBodyList Advisor_Window        { "Advisor Window", "Shows a brief description of editor objects." };
 
     const HeaderBodyList World_Object          { "World Object", "A World is a container of Stages." };
@@ -254,121 +240,97 @@ enum class Property_Type {
 
 
 //####################################################################################
-//##    Asset - Possible components and their properties
+//##    Possible components and their properties
 //####################################################################################
-enum class Asset_Components
+enum class Components
 {
-    settings,
-    animation,
+    Asset_Settings,
+    Asset_Animation,
+
+    World_Settings,
+    World_Physics,
+
+    Stage_Settings,
+    Stage_Grid,
+
+    Object_Settings,
+    Object_Transform,
+    Object_Layering,
+    Object_Movement,
+
+    Object_Camera_Settings,
+    Object_Character_Settings,
 };
 
-enum class Asset_Properties
+enum class Properties
 {
-    // settings
-    name,                   //string
-    collision_shape,        //polygon
+    // Settings
+    Asset_Name,                     //string
+    Asset_Collision_Shape,          //polygon
 
-    //animation
-    animation_default,      //image
+    // Animation
+    Asset_Animation_Default,        //image
 
-};
+    // ********************
 
+    // Settings
+    World_Name,                     //string
+    World_Game_Direction,           //float
+    World_Score_Multiplier,         //float
 
-//####################################################################################
-//##    World - Possible components and their properties
-//####################################################################################
-enum class World_Components
-{
-    settings,
-    physics,
-};
+    // Physics
+    World_Use_Physics,              //bool
+    World_Gravity,                  //pointf (x, y)
+    World_Time_Warp,                //float
+    World_Friction,                 //float
+    World_Drag,                     //float
+    World_Bounce ,                  //float
 
-enum class World_Properties
-{
-    // settings
-    name,                   //string
-    game_direction,         //float
-    score_multiplier,       //float
+    // ********************
 
-    // physics
-    use_physics,            //bool
-    gravity,                //pointf (x, y)
-    time_warp,              //float
-    friction,               //float
-    drag,                   //float
-    bounce                  //float
-};
+    // Settings
+    Stage_Name,                     //string
+    Stage_Start,                    //positive
+    Stage_End,                      //positive
+    Stage_Size,                     //positive
+    Stage_Cooldown,                 //Positive
 
+    // Grid
+    Stage_Grid_Style,               //list
+    Stage_Grid_Origin_Point,        //pointf
+    Stage_Grid_Size,                //sizef
+    Stage_Grid_Rotation,            //angle
 
-//####################################################################################
-//##    Stage - Possible components and their properties
-//####################################################################################
-enum class Stage_Components
-{
-    settings,
-    grid,
-};
+    // ********************
 
-enum class Stage_Properties {
-    // settings
-    name,                   //string
-    start,                  //positive
-    end,                    //positive
-    size,                   //positive
-    cooldown,               //Positive
+    // Settings
+    Object_Name,                    //string
+    Object_Physics,                 //bool
+    Object_Collide,                 //bool
+    Object_Damage,                  //list
+    Object_Test,                    //list2
 
-    // grid
-    grid_style,             //list
-    grid_origin_point,      //pointf
-    grid_size,              //sizef
-    grid_rotation,          //angle
-};
+    // Transform
+    Object_Position,                //pointf
+    Object_Rotation,                //angle
+    Object_Size,                    //sizef
+    Object_Scale,                   //pointf
 
+    // Layering
+    Object_Z_Order,                 //int
+    Object_Opacity,                 //double
 
-//####################################################################################
-//##    Object - Possible components and their properties
-//####################################################################################
-enum class Object_Components
-{
-    settings,
-    transform,
-    layering,
-    movement,
+    // Movement
+    Object_Velocity_X,             //variable
+    Object_Velocity_Y,             //variable
+    Object_Angular_Velocity,       //variable
 
-    camera_settings,
-    character_settings,
-};
+    // Camera Settings
+    Object_Camera_Zoom,            //double
 
-enum class Object_Properties
-{
-    // settings
-    name,                   //string
-    physics,                //bool
-    collide,                //bool
-    damage,                 //list
-    test,                   //list2
-
-    // transform
-    position,               //pointf
-    rotation,               //angle
-    size,                   //sizef
-    scale,                  //pointf
-
-    // layering
-    z_order,                //int
-    opacity,                //double
-
-    // movement
-    velocity_x,             //variable
-    velocity_y,             //variable
-    angular_velocity,       //variable
-
-    // camera_settings
-    camera_zoom,            //double
-
-    // character_settings
-    character_jump_x,       //double
-    character_jump_y,       //double
+    // Character Settings
+    Object_Character_Jump_X,       //double
+    Object_Character_Jump_Y,       //double
 };
 
 

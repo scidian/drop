@@ -143,8 +143,12 @@ void FormMain::buildAssetTree() {
 
 // Sends new list to Object Inspector
 void FormMain::buildObjectInspector(QList<long> key_list) {
-    if ((viewMain->currentViewMode() == View_Mode::Selecting) ||
-        (viewMain->currentViewMode() != View_Mode::None && key_list.count() == 0)) return;
+    // If we're currently in the middle of selecting with rubber band box, don't update yet
+    if (viewMain->currentViewMode() == View_Mode::Selecting) return;
+
+    // If key_list.count() = 0, then an empty list was passed in. This will clear the object inspector.
+    // If we're doing anything at all in viewMain (i.e. View_Mode != None), let's wait to clear the inspector.
+    if (viewMain->currentViewMode() != View_Mode::None && key_list.count() == 0) return;
 
     treeInspector->buildInspectorFromKeys(key_list);
 }
@@ -164,14 +168,11 @@ void FormMain::buildScene(long from_stage_key)
     scene->scene_mutex.unlock();
 }
 
-void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Asset_Properties> property_keys) {
-    updateEditorWidgetsAfterItemChange(changed_from, changed_items, Dr::ConvertAssetPropertyListToLongs(property_keys));    }
-void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<World_Properties> property_keys) {
-    updateEditorWidgetsAfterItemChange(changed_from, changed_items, Dr::ConvertWorldPropertyListToLongs(property_keys));    }
-void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Stage_Properties> property_keys) {
-    updateEditorWidgetsAfterItemChange(changed_from, changed_items, Dr::ConvertStagePropertyListToLongs(property_keys));    }
-void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Object_Properties> property_keys) {
-    updateEditorWidgetsAfterItemChange(changed_from, changed_items, Dr::ConvertObjectPropertyListToLongs(property_keys));    }
+
+
+
+void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Properties> property_keys) {
+    updateEditorWidgetsAfterItemChange(changed_from, changed_items, Dr::ConvertPropertyListToLongs(property_keys));    }
 void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<long> property_keys)
 {
     if (changed_from != Editor_Widgets::Object_Inspector)   treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys);
@@ -180,7 +181,6 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
     // !!!!! TEMP: Testing to make sure not running non stop
     setLabelText(Label_Names::Label_Bottom, "Update Editor Widgets: " + QTime::currentTime().toString());
 }
-
 
 void FormMain::updateItemSelection(Editor_Widgets selected_from)
 {
@@ -191,6 +191,8 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from)
     // !!!!! TEMP: Testing to make sure not running non stop
     setLabelText(Label_Names::Label_Bottom, "Update Selection: " + QTime::currentTime().toString());
 }
+
+
 
 
 

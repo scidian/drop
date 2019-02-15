@@ -117,7 +117,7 @@ void TreeAssets::buildAssetTree()
         vertical_split->addWidget(asset_name);
 
         // ***** Create the label that will display the asset
-        QPixmap pix = asset_pair.second->getComponentProperty(Asset_Components::animation, Asset_Properties::animation_default)->getValue().value<QPixmap>();
+        QPixmap pix = asset_pair.second->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
         QLabel *pix_label = new QLabel();
         pix_label->setFont(fp);
         pix_label->setSizePolicy(sp_right);

@@ -43,7 +43,7 @@ DrItem::DrItem(DrProject *project, InterfaceRelay *relay, DrObject *object, bool
     m_temp_only  = is_temp_only;
 
     // Load image from asset
-    setPixmap(m_asset->getComponentProperty(Asset_Components::animation, Asset_Properties::animation_default)->getValue().value<QPixmap>());
+    setPixmap(m_asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>());
 
     // Dimensions of associated asset, used for boundingRect
     m_asset_width =  m_asset->getWidth();
@@ -54,10 +54,10 @@ DrItem::DrItem(DrProject *project, InterfaceRelay *relay, DrObject *object, bool
     setData(User_Roles::Type, Dr::StringFromType( m_object->getType() ));
     setData(User_Roles::Key, QVariant::fromValue(m_object_key));
 
-    double  angle =   m_object->getComponentProperty(Object_Components::transform, Object_Properties::rotation)->getValue().toDouble();
-    QPointF scale =   m_object->getComponentProperty(Object_Components::transform, Object_Properties::scale)->getValue().toPointF();
-    double  z_order = m_object->getComponentProperty(Object_Components::layering,  Object_Properties::z_order)->getValue().toDouble();
-    double  opacity = m_object->getComponentProperty(Object_Components::layering,  Object_Properties::opacity)->getValue().toDouble();
+    double  angle =   m_object->getComponentProperty(Components::Object_Transform, Properties::Object_Rotation)->getValue().toDouble();
+    QPointF scale =   m_object->getComponentProperty(Components::Object_Transform, Properties::Object_Scale)->getValue().toPointF();
+    double  z_order = m_object->getComponentProperty(Components::Object_Layering,  Properties::Object_Z_Order)->getValue().toDouble();
+    double  opacity = m_object->getComponentProperty(Components::Object_Layering,  Properties::Object_Opacity)->getValue().toDouble();
     setData(User_Roles::Rotation, angle);
     setData(User_Roles::Scale,    scale);
     setData(User_Roles::Z_Order,  z_order);
@@ -70,7 +70,7 @@ DrItem::DrItem(DrProject *project, InterfaceRelay *relay, DrObject *object, bool
     setTransform(t);
 
     // Load starting position
-    QPointF start_pos = m_object->getComponentProperty(Object_Components::transform, Object_Properties::position)->getValue().toPointF();
+    QPointF start_pos = m_object->getComponentProperty(Components::Object_Transform, Properties::Object_Position)->getValue().toPointF();
     m_start_x = start_pos.x();
     m_start_y = start_pos.y();
 
@@ -115,12 +115,6 @@ QPainterPath DrItem::shape() const
     return QGraphicsPixmapItem::shape();
 }
 
-// Enable the use of qgraphicsitem_cast with this item
-int DrItem::type() const
-{
-    return User_Types::Object;
-}
-
 
 
 //####################################################################################
@@ -146,9 +140,9 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
         double new_x = new_pos.x() + t.map( boundingRect().center() ).x();
         double new_y = new_pos.y() + t.map( boundingRect().center() ).y();
 
-        m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::position, QPointF(new_x, new_y));
+        m_object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Position, QPointF(new_x, new_y));
 
-        m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Object_Properties::position });
+        m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Properties::Object_Position });
         return new_pos;
     }
 
@@ -160,13 +154,13 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
         double size_x = m_asset_width *  scale.x();
         double size_y = m_asset_height * scale.y();
 
-        m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::rotation, angle);
-        m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::scale, scale );
-        m_object->setComponentPropertyValue(Object_Components::transform, Object_Properties::size, QPointF(size_x, size_y));
+        m_object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Rotation, angle);
+        m_object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale, scale );
+        m_object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Size, QPointF(size_x, size_y));
 
-        m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Object_Properties::size,
-                                                                                                Object_Properties::scale,
-                                                                                                Object_Properties::rotation });
+        m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Properties::Object_Size,
+                                                                                                Properties::Object_Scale,
+                                                                                                Properties::Object_Rotation });
         return new_transform;
     }
 
@@ -174,9 +168,9 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
     if (change == ItemZValueHasChanged) {
         // Value is new double z value
         double new_z = value.toDouble();
-        m_object->setComponentPropertyValue(Object_Components::layering, Object_Properties::z_order, new_z);
+        m_object->setComponentPropertyValue(Components::Object_Layering, Properties::Object_Z_Order, new_z);
 
-        m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Object_Properties::z_order });
+        m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Properties::Object_Z_Order });
         return new_z;
     }
 
@@ -249,7 +243,7 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 
     // Check opacity of current item
     double transparency = 100;
-    if (m_object) transparency = m_object->getComponentPropertyValue(Object_Components::layering, Object_Properties::opacity).toDouble();
+    if (m_object) transparency = m_object->getComponentPropertyValue(Components::Object_Layering, Properties::Object_Opacity).toDouble();
     transparency = Dr::FitToRange(transparency, 0, 100);
 
     // Apply the proper opacity to this item and either paint the pixmap, or paint a pattern representation of the item

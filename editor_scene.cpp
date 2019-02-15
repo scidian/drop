@@ -244,31 +244,31 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
 
     // Some local item variables, prepping for update
     QTransform transform;
-    QPointF position = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::position).toPointF();
-    QPointF scale    = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::scale).toPointF();
-    QPointF size     = object->getComponentPropertyValue(Object_Components::transform, Object_Properties::size).toPointF();
-    double  angle =    object->getComponentPropertyValue(Object_Components::transform, Object_Properties::rotation).toDouble();
+    QPointF position = object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF();
+    QPointF scale    = object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale).toPointF();
+    QPointF size     = object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Size).toPointF();
+    double  angle =    object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Rotation).toDouble();
 
     // Turn off itemChange() signals to stop recursive calling
     item->disableItemChangeFlags();
 
     // Go through each property that we have been notified has changed and update as appropriately
     for (auto one_property : property_keys) {
-        Object_Properties property = static_cast<Object_Properties>(one_property);
+        Properties property = static_cast<Properties>(one_property);
 
         QVariant new_value = object->findPropertyFromPropertyKey(one_property)->getValue();
 
         switch (property)
         {
 
-        case Object_Properties::position:
+        case Properties::Object_Position:
             setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
             break;
 
-        case Object_Properties::size:
-        case Object_Properties::scale:
-        case Object_Properties::rotation:
-            if (property == Object_Properties::size) {
+        case Properties::Object_Size:
+        case Properties::Object_Scale:
+        case Properties::Object_Rotation:
+            if (property == Properties::Object_Size) {
                     scale.setX( size.x() / item->getAssetWidth()  );
                     scale.setY( size.y() / item->getAssetHeight() );
             } else {
@@ -281,18 +281,18 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
             item->setTransform(transform);
             setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
 
-            if (property == Object_Properties::size) {
-                object->setComponentPropertyValue(Object_Components::transform, Object_Properties::scale, scale);
-                m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { object } , { static_cast<long>(Object_Properties::scale) });
+            if (property == Properties::Object_Size) {
+                object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale, scale);
+                m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { object } , { static_cast<long>(Properties::Object_Scale) });
             }
-            if (property == Object_Properties::scale) {
-                object->setComponentPropertyValue(Object_Components::transform, Object_Properties::size, size);
-                m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { object } , { static_cast<long>(Object_Properties::size) });
+            if (property == Properties::Object_Scale) {
+                object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Size, size);
+                m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { object } , { static_cast<long>(Properties::Object_Size) });
             }
 
             break;
 
-        case Object_Properties::z_order:
+        case Properties::Object_Z_Order:
             item->setZValue(new_value.toDouble());
             break;
         default: ;

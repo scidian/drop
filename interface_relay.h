@@ -29,10 +29,7 @@ public:
     virtual void    buildScene(long from_stage_key) = 0;
 
     virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<long> property_keys) = 0;
-    virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Asset_Properties> property_keys) = 0;
-    virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<World_Properties> property_keys) = 0;
-    virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Stage_Properties> property_keys) = 0;
-    virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Object_Properties> property_keys) = 0;
+    virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Properties> property_keys) = 0;
 
     virtual void    updateItemSelection(Editor_Widgets selected_from) = 0;
 

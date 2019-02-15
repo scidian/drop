@@ -49,7 +49,7 @@ void DrStage::addObject(DrType new_type, long from_asset_key, double x, double y
     case DrType::Action:
     case DrType::Character:
     case DrType::Object:
-        new_name = m_parent_project->getAsset(from_asset_key)->getComponentProperty(Asset_Components::settings, Asset_Properties::name)->getValue().toString();
+        new_name = m_parent_project->getAsset(from_asset_key)->getComponentProperty(Components::Asset_Settings, Properties::Asset_Name)->getValue().toString();
         break;
     default:
         new_name = "Fix me";
@@ -66,7 +66,7 @@ QList<long> DrStage::objectKeysSortedByZOrder()
     std::vector<std::pair<long, long>> zorder_key_pair;
 
     for (auto object : m_objects) {
-        long z_order = object.second->getComponentProperty(Object_Components::layering, Object_Properties::z_order)->getValue().toInt();
+        long z_order = object.second->getComponentProperty(Components::Object_Layering, Properties::Object_Z_Order)->getValue().toInt();
         zorder_key_pair.push_back(std::make_pair(z_order, object.first));
     }
 
@@ -87,33 +87,33 @@ QList<long> DrStage::objectKeysSortedByZOrder()
 
 void DrStage::initializeStageSettings(QString new_name)
 {
-    addComponent(Stage_Components::settings, "Settings", "Basic settings for current stage.", Component_Colors::White_Snow, true);
-    getComponent(Stage_Components::settings)->setIcon(Component_Icons::Settings);
+    addComponent(Components::Stage_Settings, "Settings", "Basic settings for current stage.", Component_Colors::White_Snow, true);
+    getComponent(Components::Stage_Settings)->setIcon(Component_Icons::Settings);
 
-    addPropertyToComponent(Stage_Components::settings, Stage_Properties::name, Property_Type::String, new_name,
+    addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Name, Property_Type::String, new_name,
                            "Stage Name", "Name of the current stage.");
-    addPropertyToComponent(Stage_Components::settings, Stage_Properties::start, Property_Type::Positive, 0,
+    addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Start, Property_Type::Positive, 0,
                            "Start", "Start showing stage at this distance.");
-    addPropertyToComponent(Stage_Components::settings, Stage_Properties::end, Property_Type::Positive, 1200,
+    addPropertyToComponent(Components::Stage_Settings, Properties::Stage_End, Property_Type::Positive, 1200,
                            "End", "Stop showing stage at this distance, -1 for always show.");
-    addPropertyToComponent(Stage_Components::settings, Stage_Properties::size, Property_Type::Positive, 1200,
+    addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Size, Property_Type::Positive, 1200,
                            "Size", "Length of stage.");
-    addPropertyToComponent(Stage_Components::settings, Stage_Properties::cooldown, Property_Type::Positive, 0,
+    addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Cooldown, Property_Type::Positive, 0,
                            "Cooldown", "Distance to wait after stage plays before it is possible to be shown again.");
 
 
-    addComponent(Stage_Components::grid, "Grid", "Settings for the alignment grid within the editor. For an isometric grid, set 'Grid Rotation' "
+    addComponent(Components::Stage_Grid, "Grid", "Settings for the alignment grid within the editor. For an isometric grid, set 'Grid Rotation' "
                                                  "to 30 degrees, and set a grid size width twice the value of the grid size height (i.e. w: 50, h: 25).",
                                                  Component_Colors::Pink_Pearl, true);
-    getComponent(Stage_Components::grid)->setIcon(Component_Icons::Transform);
+    getComponent(Components::Stage_Grid)->setIcon(Component_Icons::Transform);
 
-    addPropertyToComponent(Stage_Components::grid, Stage_Properties::grid_style, Property_Type::List, 0,
+    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Style, Property_Type::List, 0,
                            "Grid Style", "Visual style of alignment grid.");
-    addPropertyToComponent(Stage_Components::grid, Stage_Properties::grid_origin_point, Property_Type::PointF, QPointF(0, 0),
+    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point, Property_Type::PointF, QPointF(0, 0),
                            "Grid Origin Point", "Origin point in stage the grid begins at.");
-    addPropertyToComponent(Stage_Components::grid, Stage_Properties::grid_size, Property_Type::SizeF, QPointF(50, 50),
+    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Size, Property_Type::SizeF, QPointF(50, 50),
                            "Grid Cell Size", "Width and height of the cells in the grid.");
-    addPropertyToComponent(Stage_Components::grid, Stage_Properties::grid_rotation, Property_Type::Angle, 0,
+    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Rotation, Property_Type::Angle, 0,
                            "Grid Rotation", "Rotation of the grid lines.");
 
 }

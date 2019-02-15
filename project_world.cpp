@@ -85,28 +85,28 @@ DrStage* DrWorld::getStageWithName(QString stage_name)
 
 void DrWorld::initializeWorldSettings(QString new_name)
 {
-    addComponent(World_Components::settings, "Settings", "Basic settings for current world.", Component_Colors::White_Snow, true);
-    getComponent(World_Components::settings)->setIcon(Component_Icons::Settings);
-    addPropertyToComponent(World_Components::settings, World_Properties::name, Property_Type::String, new_name,
+    addComponent(Components::World_Settings, "Settings", "Basic settings for current world.", Component_Colors::White_Snow, true);
+    getComponent(Components::World_Settings)->setIcon(Component_Icons::Settings);
+    addPropertyToComponent(Components::World_Settings, Properties::World_Name, Property_Type::String, new_name,
                            "World Name", "Name of the current world.");
-    addPropertyToComponent(World_Components::settings, World_Properties::game_direction, Property_Type::Float, 0.0,
+    addPropertyToComponent(Components::World_Settings, Properties::World_Game_Direction, Property_Type::Float, 0.0,
                            "Game Direction", "Default direction, in degrees, to load new stages, 0 - right, 90 - up, 180 - left, 270 - down, etc.");
-    addPropertyToComponent(World_Components::settings, World_Properties::score_multiplier, Property_Type::Float, 1.0,
+    addPropertyToComponent(Components::World_Settings, Properties::World_Score_Multiplier, Property_Type::Float, 1.0,
                            "Score Multiplier", "Value used as multiplier to adjust speed at which distance scoring is calculated.");
 
-    addComponent(World_Components::physics, "Physics", "Starting physics settings for current world.", Component_Colors::Orange_Medium, true);
-    getComponent(World_Components::physics)->setIcon(Component_Icons::Physics);
-    addPropertyToComponent(World_Components::physics, World_Properties::use_physics, Property_Type::Bool, true,
+    addComponent(Components::World_Physics, "Physics", "Starting physics settings for current world.", Component_Colors::Orange_Medium, true);
+    getComponent(Components::World_Physics)->setIcon(Component_Icons::Physics);
+    addPropertyToComponent(Components::World_Physics, Properties::World_Use_Physics, Property_Type::Bool, true,
                            "Use Physics?", "Whether or not physics is turned on in current world.");
-    addPropertyToComponent(World_Components::physics, World_Properties::gravity, Property_Type::PointF, QPointF(0.0, 10.0),
+    addPropertyToComponent(Components::World_Physics, Properties::World_Gravity, Property_Type::PointF, QPointF(0.0, 10.0),
                            "Gravity", "Amount of gravity in x and y directions, can be negative.");
-    addPropertyToComponent(World_Components::physics, World_Properties::time_warp, Property_Type::Float, 60.0,
+    addPropertyToComponent(Components::World_Physics, Properties::World_Time_Warp, Property_Type::Float, 60.0,
                            "Time Warp", "Update calculations per second.");
-    addPropertyToComponent(World_Components::physics, World_Properties::friction, Property_Type::Float, 10.0,
+    addPropertyToComponent(Components::World_Physics, Properties::World_Friction, Property_Type::Float, 10.0,
                            "Friction", "Global friction setting.");
-    addPropertyToComponent(World_Components::physics, World_Properties::drag, Property_Type::Float, 5.0,
+    addPropertyToComponent(Components::World_Physics, Properties::World_Drag, Property_Type::Float, 5.0,
                            "Velocity Drag", "Velocity drag.");
-    addPropertyToComponent(World_Components::physics, World_Properties::bounce, Property_Type::Float, 5.0,
+    addPropertyToComponent(Components::World_Physics, Properties::World_Bounce, Property_Type::Float, 5.0,
                            "Bounce", "Global bounce setting.");
 
 }

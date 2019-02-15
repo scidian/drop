@@ -172,10 +172,10 @@ void DrView::updateGrid()
     if (!scene()) return;
     if (!my_scene->getCurrentStageShown()) return;
 
-    m_grid_origin =  my_scene->getCurrentStageShown()->getComponentPropertyValue(Stage_Components::grid, Stage_Properties::grid_origin_point).toPointF();
-    m_grid_size =    my_scene->getCurrentStageShown()->getComponentPropertyValue(Stage_Components::grid, Stage_Properties::grid_size).toPointF();
-    m_grid_rotate =  my_scene->getCurrentStageShown()->getComponentPropertyValue(Stage_Components::grid, Stage_Properties::grid_rotation).toDouble();
-    int style =      my_scene->getCurrentStageShown()->getComponentPropertyValue(Stage_Components::grid, Stage_Properties::grid_style).toInt();
+    m_grid_origin =  my_scene->getCurrentStageShown()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point).toPointF();
+    m_grid_size =    my_scene->getCurrentStageShown()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
+    m_grid_rotate =  my_scene->getCurrentStageShown()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Rotation).toDouble();
+    int style =      my_scene->getCurrentStageShown()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Style).toInt();
     m_grid_style =   static_cast<Grid_Style>(style);
 }
 

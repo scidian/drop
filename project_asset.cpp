@@ -53,19 +53,19 @@ DrAsset::~DrAsset() {}
 
 void DrAsset::initializeAssetSettings(QString new_name, QPixmap pixmap)
 {
-    addComponent(Asset_Components::settings, "Settings", "Basic settings for current asset.", Component_Colors::White_Snow, true);
-    getComponent(Asset_Components::settings)->setIcon(Component_Icons::Settings);
+    addComponent(Components::Asset_Settings, "Settings", "Basic settings for current asset.", Component_Colors::White_Snow, true);
+    getComponent(Components::Asset_Settings)->setIcon(Component_Icons::Settings);
 
-    addPropertyToComponent(Asset_Components::settings, Asset_Properties::name, Property_Type::String, new_name,
+    addPropertyToComponent(Components::Asset_Settings, Properties::Asset_Name, Property_Type::String, new_name,
                            "Asset Name", "Name of the current asset.");
-    addPropertyToComponent(Asset_Components::settings, Asset_Properties::collision_shape, Property_Type::Polygon, QPolygonF(),
+    addPropertyToComponent(Components::Asset_Settings, Properties::Asset_Collision_Shape, Property_Type::Polygon, QPolygonF(),
                            "Collision Shape", "Shape of the object as it interacts with other objects in the world.");
 
 
-    addComponent(Asset_Components::animation, "Animation", "Images to show for this asset", Component_Colors::Green_SeaGrass, true);
-    getComponent(Asset_Components::animation)->setIcon(Component_Icons::Transform);
+    addComponent(Components::Asset_Animation, "Animation", "Images to show for this asset", Component_Colors::Green_SeaGrass, true);
+    getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Transform);
 
-    addPropertyToComponent(Asset_Components::animation, Asset_Properties::animation_default, Property_Type::Image, QVariant(pixmap),
+    addPropertyToComponent(Components::Asset_Animation, Properties::Asset_Animation_Default, Property_Type::Image, QVariant(pixmap),
                            "Default Animation", "Image shown for this object.");
 
 }

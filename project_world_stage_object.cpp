@@ -62,72 +62,72 @@ DrObject::~DrObject()
 
 void DrObject::initializeObjectSettings(QString new_name, double width, double height, double x, double y, long z)
 {
-    addComponent(Object_Components::settings, "Settings", "Basic settings for current object.", Component_Colors::White_Snow, true);
-    getComponent(Object_Components::settings)->setIcon(Component_Icons::Settings);
+    addComponent(Components::Object_Settings, "Settings", "Basic settings for current object.", Component_Colors::White_Snow, true);
+    getComponent(Components::Object_Settings)->setIcon(Component_Icons::Settings);
 
-    addPropertyToComponent(Object_Components::settings, Object_Properties::name, Property_Type::String, new_name,
+    addPropertyToComponent(Components::Object_Settings, Properties::Object_Name, Property_Type::String, new_name,
                            "Object Name", "Name of the current object.", true);
-    addPropertyToComponent(Object_Components::settings, Object_Properties::physics, Property_Type::Bool, false,
+    addPropertyToComponent(Components::Object_Settings, Properties::Object_Physics, Property_Type::Bool, false,
                            "Physics?", "Should this item be effected by physics?");
-    addPropertyToComponent(Object_Components::settings, Object_Properties::collide, Property_Type::Bool, true,
+    addPropertyToComponent(Components::Object_Settings, Properties::Object_Collide, Property_Type::Bool, true,
                            "Collide?", "Should this item collide with other items?");
-    addPropertyToComponent(Object_Components::settings, Object_Properties::damage, Property_Type::List, 0,
+    addPropertyToComponent(Components::Object_Settings, Properties::Object_Damage, Property_Type::List, 0,
                            "Damage", "What should this item damage when it collides with something else.");
     ///addPropertyToComponent(Object_Components::settings, Object_Properties::test, Property_Type::List2, 0,
     ///                       "Test List", "A test of a new widget");
 
 
-    addComponent(Object_Components::transform, "Transform", "Sets the physical size and angle of the item in the stage.", Component_Colors::Green_SeaGrass, true);
-    getComponent(Object_Components::transform)->setIcon(Component_Icons::Transform);
+    addComponent(Components::Object_Transform, "Transform", "Sets the physical size and angle of the item in the stage.", Component_Colors::Green_SeaGrass, true);
+    getComponent(Components::Object_Transform)->setIcon(Component_Icons::Transform);
 
-    addPropertyToComponent(Object_Components::transform, Object_Properties::position, Property_Type::PointF, QPointF(x, y),
+    addPropertyToComponent(Components::Object_Transform, Properties::Object_Position, Property_Type::PointF, QPointF(x, y),
                            "Position", "Location of item within the current stage.");
-    addPropertyToComponent(Object_Components::transform, Object_Properties::rotation, Property_Type::Angle, 0,
+    addPropertyToComponent(Components::Object_Transform, Properties::Object_Rotation, Property_Type::Angle, 0,
                            "Rotation", "Angle of item within the stage.");
-    addPropertyToComponent(Object_Components::transform, Object_Properties::size, Property_Type::SizeF, QPointF(width, height),
+    addPropertyToComponent(Components::Object_Transform, Properties::Object_Size, Property_Type::SizeF, QPointF(width, height),
                            "Size", "Width and Height of object in pixels, affected by Scale property.");
-    addPropertyToComponent(Object_Components::transform, Object_Properties::scale, Property_Type::Scale, QPointF(1, 1),
+    addPropertyToComponent(Components::Object_Transform, Properties::Object_Scale, Property_Type::Scale, QPointF(1, 1),
                            "Scale", "X and Y scale of item within the stage.");
 
-    addComponent(Object_Components::layering, "Layering", "Controls the order items are drawn onto the screen. Lower numbers are "
+    addComponent(Components::Object_Layering, "Layering", "Controls the order items are drawn onto the screen. Lower numbers are "
                                                            "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, true);
-    getComponent(Object_Components::layering)->setIcon(Component_Icons::Layering);
+    getComponent(Components::Object_Layering)->setIcon(Component_Icons::Layering);
 
-    addPropertyToComponent(Object_Components::layering, Object_Properties::z_order, Property_Type::Int, QVariant::fromValue(z),
+    addPropertyToComponent(Components::Object_Layering, Properties::Object_Z_Order, Property_Type::Int, QVariant::fromValue(z),
                            "Z Order", "Arrangement of item along the z axis in the stage");
-    addPropertyToComponent(Object_Components::layering, Object_Properties::opacity, Property_Type::Percent, 100,
+    addPropertyToComponent(Components::Object_Layering, Properties::Object_Opacity, Property_Type::Percent, 100,
                            "Opacity", "How see transparent an item is, 0 (invisible) - 100 (solid)");
 
-    addComponent(Object_Components::movement, "Movement", "Initial starting velocities of item in stage.", Component_Colors::Red_Faded, true);
-    getComponent(Object_Components::movement)->setIcon(Component_Icons::Movement);
+    addComponent(Components::Object_Movement, "Movement", "Initial starting velocities of item in stage.", Component_Colors::Red_Faded, true);
+    getComponent(Components::Object_Movement)->setIcon(Component_Icons::Movement);
 
-    addPropertyToComponent(Object_Components::movement, Object_Properties::velocity_x, Property_Type::Variable, QPointF(0, 0),
+    addPropertyToComponent(Components::Object_Movement, Properties::Object_Velocity_X, Property_Type::Variable, QPointF(0, 0),
                            "Velocity X", "Initial horizontal movement speed of item +/- variable amount.");
-    addPropertyToComponent(Object_Components::movement, Object_Properties::velocity_y, Property_Type::Variable, QPointF(0, 0),
+    addPropertyToComponent(Components::Object_Movement, Properties::Object_Velocity_Y, Property_Type::Variable, QPointF(0, 0),
                            "Velocity Y", "Initial vertical movement speed of item +/- variable amount.");
-    addPropertyToComponent(Object_Components::movement, Object_Properties::angular_velocity, Property_Type::Variable, QPointF(0, 0),
+    addPropertyToComponent(Components::Object_Movement, Properties::Object_Angular_Velocity, Property_Type::Variable, QPointF(0, 0),
                            "Angular Velocity", "Rotational movement speed of item +/- variable amount.");
 }
 
 void DrObject::initializeCameraSettings()
 {
-    addComponent(Object_Components::camera_settings, "Camera Settings", "Settings for this camera", Component_Colors::Beige_Apricot, true);
-    getComponent(Object_Components::camera_settings)->setIcon(Component_Icons::Camera);
+    addComponent(Components::Object_Camera_Settings, "Camera Settings", "Settings for this camera", Component_Colors::Beige_Apricot, true);
+    getComponent(Components::Object_Camera_Settings)->setIcon(Component_Icons::Camera);
 
-    addPropertyToComponent(Object_Components::camera_settings, Object_Properties::camera_zoom, Property_Type::Float, 10,
+    addPropertyToComponent(Components::Object_Camera_Settings, Properties::Object_Camera_Zoom, Property_Type::Float, 10,
                            "Zoom Level", "Sets distance away from stage (0 to 1000)");
 
-    getComponentProperty(Object_Components::settings, Object_Properties::name)->setHidden(false);
+    getComponentProperty(Components::Object_Settings, Properties::Object_Name)->setHidden(false);
 }
 
 void DrObject::initializeCharacterSettings()
 {
-    addComponent(Object_Components::character_settings, "Character Settings", "Settings for this character", Component_Colors::Silver_Sonic, true);
-    getComponent(Object_Components::character_settings)->setIcon(Component_Icons::Character);
+    addComponent(Components::Object_Character_Settings, "Character Settings", "Settings for this character", Component_Colors::Silver_Sonic, true);
+    getComponent(Components::Object_Character_Settings)->setIcon(Component_Icons::Character);
 
-    addPropertyToComponent(Object_Components::character_settings, Object_Properties::character_jump_x, Property_Type::Float, 0,
+    addPropertyToComponent(Components::Object_Character_Settings, Properties::Object_Character_Jump_X, Property_Type::Float, 0,
                            "Jump Force X", "Force of jump button in x direction");
-    addPropertyToComponent(Object_Components::character_settings, Object_Properties::character_jump_y, Property_Type::Float, 0,
+    addPropertyToComponent(Components::Object_Character_Settings, Properties::Object_Character_Jump_Y, Property_Type::Float, 0,
                            "Jump Force Y", "Force of jump button in y direction");
 }
 

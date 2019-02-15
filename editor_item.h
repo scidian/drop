@@ -48,7 +48,6 @@ public:
     // Base Getter Overrides
     virtual QRectF          boundingRect() const override;
     virtual QPainterPath    shape() const override;
-    virtual int             type() const override;
 
     // Event Overrides
     virtual QVariant        itemChange(GraphicsItemChange change, const QVariant &value) override;
