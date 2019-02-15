@@ -41,14 +41,14 @@ DrStage::~DrStage()
     for (auto i: m_objects) { delete i.second; }
 }
 
-void DrStage::addObject(DrType new_type, long from_asset_key, double x, double y, long z)
+void DrStage::addObject(DrObjectType new_type, long from_asset_key, double x, double y, long z)
 {
     QString new_name;
     switch (new_type) {
-    case DrType::Camera:        "Camera " + QString::number(static_cast<long>(m_objects.size() + 1));       break;
-    case DrType::Action:
-    case DrType::Character:
-    case DrType::Object:
+    case DrObjectType::Camera:        "Camera " + QString::number(static_cast<long>(m_objects.size() + 1));       break;
+    case DrObjectType::Action:
+    case DrObjectType::Character:
+    case DrObjectType::Object:
         new_name = m_parent_project->getAsset(from_asset_key)->getComponentProperty(Components::Asset_Settings, Properties::Asset_Name)->getValue().toString();
         break;
     default:

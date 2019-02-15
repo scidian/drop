@@ -11,6 +11,7 @@
 #include <QPushButton>
 #include <QTreeWidgetItem>
 
+#include "constants.h"
 #include "enums.h"
 
 class DrProperty;

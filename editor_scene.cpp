@@ -217,7 +217,7 @@ void DrScene::updateChangesInScene(QList<DrSettings*> changed_items, QList<long>
     for (auto settings_item : changed_items) {
         DrType my_type = settings_item->getType();
 
-        if (Dr::IsDrObjectClass(my_type)) {
+        if (my_type == DrType::Object) {
             updateItemInScene(settings_item, property_keys);
 
         } else if (my_type == DrType::Stage || my_type == DrType::StartStage) {

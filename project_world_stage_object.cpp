@@ -20,7 +20,7 @@
 //##    Constructor, Destructor
 //####################################################################################
 DrObject::DrObject(DrProject *parent_project, DrWorld *parent_world, DrStage *parent_stage,
-                   long new_object_key, QString new_object_name, DrType new_object_type,
+                   long new_object_key, QString new_object_name, DrObjectType new_object_type,
                    long from_asset_key, double x, double y, long z)
 {
     m_parent_project = parent_project;              // pointer to parent Project
@@ -40,8 +40,8 @@ DrObject::DrObject(DrProject *parent_project, DrWorld *parent_world, DrStage *pa
 
     switch (new_object_type)
     {
-    case DrType::Camera:       initializeCameraSettings();     break;
-    case DrType::Character:    initializeCharacterSettings();  break;
+    case DrObjectType::Camera:       initializeCameraSettings();     break;
+    case DrObjectType::Character:    initializeCharacterSettings();  break;
     default: break;
     }
 

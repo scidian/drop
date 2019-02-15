@@ -65,14 +65,14 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     long image_7 = project->addImage(":/assets/water_1.png");
     long image_8 = project->addImage(":/assets/rover_wheel.png");
 
-    long asset_1 = project->addAsset(DrAsset_Type::Object, image_1 );           // "Dr Square"
-    long asset_2 = project->addAsset(DrAsset_Type::Object, image_2 );           // "Ground Fill"
-    long asset_3 = project->addAsset(DrAsset_Type::Object, image_3 );           // "Ground Top"
-    long asset_4 = project->addAsset(DrAsset_Type::Object, image_4 );           // "Moon Plant 6"
-    long asset_5 = project->addAsset(DrAsset_Type::Object, image_5 );           // "Rover Body"
-    long asset_6 = project->addAsset(DrAsset_Type::Object, image_6 );           // "Ball 1"
-    long asset_7 = project->addAsset(DrAsset_Type::Object, image_7 );           // "Water 1"
-    long asset_8 = project->addAsset(DrAsset_Type::Object, image_8 );           // "Rover Wheel"
+    long asset_1 = project->addAsset(DrAssetType::Object, image_1 );           // "Dr Square"
+    long asset_2 = project->addAsset(DrAssetType::Object, image_2 );           // "Ground Fill"
+    long asset_3 = project->addAsset(DrAssetType::Object, image_3 );           // "Ground Top"
+    long asset_4 = project->addAsset(DrAssetType::Object, image_4 );           // "Moon Plant 6"
+    long asset_5 = project->addAsset(DrAssetType::Object, image_5 );           // "Rover Body"
+    long asset_6 = project->addAsset(DrAssetType::Object, image_6 );           // "Ball 1"
+    long asset_7 = project->addAsset(DrAssetType::Object, image_7 );           // "Water 1"
+    long asset_8 = project->addAsset(DrAssetType::Object, image_8 );           // "Rover Wheel"
     // !!!!! END
 
 
@@ -87,17 +87,17 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     project->getWorldWithName("World 2")->addStage();
     project->getWorldWithName("World 2")->addStage();
 
-    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrType::Object, asset_1, 0, 0, 1);
-    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrType::Object, asset_1, -200, -200, 2);
-    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrType::Object, asset_2, 250, -200, 3);
-    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrType::Object, asset_3, -200, 200, 10);
-    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrType::Object, asset_4, 100, 100, 11);
-    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrType::Object, asset_5, -150, 0, 30);
+    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_1, 0, 0, 1);
+    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_1, -200, -200, 2);
+    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_2, 250, -200, 3);
+    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_3, -200, 200, 10);
+    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_4, 100, 100, 11);
+    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_5, -150, 0, 30);
 
-    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrType::Object, asset_5, 100, 100, -2);
-    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrType::Object, asset_6, 200, 100,  4);
-    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrType::Object, asset_7, -200, -200,  1);
-    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrType::Object, asset_8, 0, 0,  2);
+    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_5, 100, 100, -2);
+    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_6, 200, 100,  4);
+    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_7, -200, -200,  1);
+    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_8, 0, 0,  2);
     // !!!!! END
 
 

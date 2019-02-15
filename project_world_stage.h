@@ -53,7 +53,7 @@ public:
     bool            isStartStage()      { return m_is_start_stage; }
 
     // External calls
-    void            addObject(DrType new_type, long from_asset_key, double x, double y, long z);
+    void            addObject(DrObjectType new_type, long from_asset_key, double x, double y, long z);
     QList<long>     objectKeysSortedByZOrder();
     void            initializeStageSettings(QString new_name);
     void            removeGraphicsItemReferences();

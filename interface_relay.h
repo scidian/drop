@@ -8,6 +8,7 @@
 #ifndef INTERFACE_RELAY_H
 #define INTERFACE_RELAY_H
 
+#include "constants.h"
 #include "enums.h"
 
 class DrObject;

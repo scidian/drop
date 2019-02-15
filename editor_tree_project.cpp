@@ -62,11 +62,11 @@ void TreeProject::buildProjectTree()
                 DrObject *object = objects[key];
 
                 QTreeWidgetItem *object_item = new QTreeWidgetItem(stage_item);                             // Create new item and add as child item
-                switch (object->getType())
+                switch (object->getObjectType())
                 {
-                    case DrType::Object:    object_item->setIcon(0, QIcon(":/tree_icons/tree_object.png")); break;
-                    case DrType::Camera:    object_item->setIcon(0, QIcon(":/tree_icons/tree_camera.png")); break;
-                    case DrType::Character: object_item->setIcon(0, QIcon(":/tree_icons/tree_character.png")); break;
+                    case DrObjectType::Object:    object_item->setIcon(0, QIcon(":/tree_icons/tree_object.png")); break;
+                    case DrObjectType::Camera:    object_item->setIcon(0, QIcon(":/tree_icons/tree_camera.png")); break;
+                    case DrObjectType::Character: object_item->setIcon(0, QIcon(":/tree_icons/tree_character.png")); break;
                     default: break;
                 }
 
@@ -143,9 +143,9 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
         DrSettings *selected_item = m_project->findSettingsFromKey(selected_key);
         if (selected_item != nullptr) {
             DrType selected_type = selected_item->getType();
-            if (selected_type == DrType::Stage) {
+            if (selected_type == DrType::Stage || selected_type == DrType::StartStage) {
                 m_relay->buildScene(selected_key);
-            } else if (Dr::IsDrObjectClass(selected_type) == true) {
+            } else if (selected_type == DrType::Object) {
                 DrObject *as_object = dynamic_cast<DrObject*>(selected_item);
                 m_relay->buildScene( as_object->getParentStage()->getKey() );
             }
@@ -169,7 +169,7 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
             // If we are over item that was first selected, skip to next
             if (check_key == this->getSelectedKey()) { continue; }
 
-            if (Dr::CheckTypesAreSame(check_type, selected_type) == false)
+            if (check_type != selected_type)
                 check_item->setSelected(false);
         }
     }
@@ -290,7 +290,7 @@ void TreeProject::dragMoveEvent(QDragMoveEvent *event)
             DrSettings *check_settings = m_project->findSettingsFromKey(check_key);
             DrSettings *selected_settings = m_project->findSettingsFromKey(m_selected_key);
 
-            if ( Dr::CheckTypesAreSame(check_settings->getType(), selected_settings->getType()) ) { m_can_drop = true; }
+            if ( check_settings->getType() == selected_settings->getType() ) { m_can_drop = true; }
         }
     }
 

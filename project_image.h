@@ -12,13 +12,14 @@
 #include <QPixmap>
 #include <QString>
 
+#include "settings.h"
+
 class DrProject;
 
-class DrImage
+class DrImage : public DrSettings
 {
 private:
     DrProject       *m_parent_project;                  // holds reference to parent Project class that handles key generation for project
-    long             m_key;                             // holds unique key for each object within DrProject
 
     QString          m_full_path;                       // full path,  i.e.  ":/images/more/pretty_tree_1.png"
     QString          m_filename;                        // image name, i.e.  "pretty_tree_1.png"
@@ -30,8 +31,9 @@ public:
     DrImage(DrProject *parent_project, long key, QString image_path);
 
     // Getters and setters
+    virtual DrType  getType() override  { return DrType::Image; }
+
     DrProject*      getParentProject()  { return m_parent_project; }
-    long            getKey()            { return m_key; }
 
     QString         getFullPath()       { return m_full_path; }
     QString         getFilename()       { return m_filename; }

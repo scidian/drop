@@ -38,7 +38,7 @@ DrProject::~DrProject()
 //##    Project Children Functions
 //####################################################################################
 
-long DrProject::addAsset(DrAsset_Type new_asset_type, long image_key)
+long DrProject::addAsset(DrAssetType new_asset_type, long image_key)
 {
     long new_asset_key = getNextKey();
     m_assets[new_asset_key] = new DrAsset(this, new_asset_key, new_asset_type, image_key);
@@ -125,10 +125,7 @@ DrType DrProject::findChildTypeFromKey(long check_key)
     return findSettingsFromKey(check_key)->getType();
 }
 
-DrAsset_Type DrProject::findAssetTypeFromKey(long check_key)
-{
-    return m_assets[check_key]->getAssetType();
-}
+
 
 
 

@@ -26,32 +26,34 @@ class DrObject : public DrSettings
 {
 private:
     // Local variables
-    DrType      m_object_type;                              // holds type of current object
+    DrObjectType    m_object_type;                          // holds type of current object
 
-    DrProject  *m_parent_project;                           // holds reference to parent Project class that handles key generation for project
-    DrWorld    *m_parent_world;                             // holds reference to parent World class
-    DrStage    *m_parent_stage;                             // holds reference to parent Stage class
+    DrProject      *m_parent_project;                       // holds reference to parent Project class that handles key generation for project
+    DrWorld        *m_parent_world;                         // holds reference to parent World class
+    DrStage        *m_parent_stage;                         // holds reference to parent Stage class
 
-    long        m_asset_key;                                // holds the associated asset key, this way we know what image to grab for GraphicsView
+    long            m_asset_key;                            // holds the associated asset key, this way we know what image to grab for GraphicsView
 
-    DrItem     *m_item_in_scene = nullptr;                  // holds a pointer to a QGraphicsItem if this object is currently represented in the editor
+    DrItem         *m_item_in_scene = nullptr;              // holds a pointer to a QGraphicsItem if this object is currently represented in the editor
 
 public:
     // Constructor & destructor
     explicit DrObject(DrProject *parent_project, DrWorld *parent_world, DrStage *parent_stage, long new_object_key,
-                      QString new_object_name, DrType new_object_type, long from_asset_key, double x, double y, long z);
+                      QString new_object_name, DrObjectType new_object_type, long from_asset_key, double x, double y, long z);
     virtual ~DrObject() override;
 
+    // Virtual overrides
+    virtual DrType  getType() override          { return DrType::Object; }
+    DrObjectType    getObjectType()             { return m_object_type; }
 
     // Getters and setters
-    virtual DrType  getType() override      { return m_object_type; }
-    DrProject*      getParentProject()      { return m_parent_project; }
-    DrWorld*        getParentWorld()        { return m_parent_world; }
-    DrStage*        getParentStage()        { return m_parent_stage; }
-    long            getAssetKey()           { return m_asset_key; }
+    DrProject*      getParentProject()          { return m_parent_project; }
+    DrWorld*        getParentWorld()            { return m_parent_world; }
+    DrStage*        getParentStage()            { return m_parent_stage; }
+    long            getAssetKey()               { return m_asset_key; }
 
-    DrItem*         getDrItem()             { return m_item_in_scene; }
-    void            setDrItem(DrItem *item) { m_item_in_scene = item; }
+    DrItem*         getDrItem()                 { return m_item_in_scene; }
+    void            setDrItem(DrItem *item)     { m_item_in_scene = item; }
 
     // External calls
     void initializeObjectSettings(QString new_name, double width, double height, double x, double y, long z);

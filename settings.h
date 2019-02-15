@@ -9,6 +9,7 @@
 #ifndef DRSETTINGS_H
 #define DRSETTINGS_H
 
+#include "constants.h"
 #include "enums.h"
 
 
@@ -37,10 +38,10 @@ public:
 
 
     // Getters and Setters
-    long            getKey()    { return m_key; }
-    virtual DrType  getType()   { return DrType::BaseClass; }
+    long            getKey()            { return m_key; }
+    virtual DrType  getType()           { return DrType::BaseClass; }       // Returns different types depending on reimplementation in child class
 
-    DrSettings*  getSettings()  { return this; }
+    DrSettings*  getSettings()          { return this; }
 
     ComponentMap getComponentList()     { return m_components; }
     long         getComponentCount()    { return static_cast<int>(m_components.size()); }

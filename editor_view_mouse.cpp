@@ -210,7 +210,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
         if (m_over_handle == Position_Flags::Move_Item) {
             viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
         } else if (m_over_handle == Position_Flags::Rotate) {
-            viewport()->setCursor(c_rotate_all);
+            viewport()->setCursor(Mouse_Cursors::rotateAll());
         } else {
             a = m_handles_angles[m_over_handle];
 
@@ -222,23 +222,23 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
             ///rotated = rotated.copy(xoffset, yoffset, arrow.width(), arrow.height());
             ///viewport()->setCursor(rotated);
 
-            if      (a <  11.25) viewport()->setCursor(c_size_vertical);                              // 0        Top
-            else if (a <  33.75) viewport()->setCursor(c_size_022);                                   // 22.5
-            else if (a <  56.25) viewport()->setCursor(c_size_045);                                   // 45       Top Right
-            else if (a <  78.75) viewport()->setCursor(c_size_067);                                   // 67.5
-            else if (a < 101.25) viewport()->setCursor(c_size_horizontal);                            // 90       Right
-            else if (a < 123.75) viewport()->setCursor(c_size_112);                                   // 112.5
-            else if (a < 146.25) viewport()->setCursor(c_size_135);                                   // 135      Bottom Right
-            else if (a < 168.75) viewport()->setCursor(c_size_157);                                   // 157
-            else if (a < 191.25) viewport()->setCursor(c_size_vertical);                              // 180      Bottom
-            else if (a < 213.75) viewport()->setCursor(c_size_022);                                   // 202
-            else if (a < 236.25) viewport()->setCursor(c_size_045);                                   // 225      Bottom Left
-            else if (a < 258.75) viewport()->setCursor(c_size_067);                                   // 247
-            else if (a < 281.25) viewport()->setCursor(c_size_horizontal);                            // 270      Left
-            else if (a < 303.75) viewport()->setCursor(c_size_112);                                   // 292
-            else if (a < 326.25) viewport()->setCursor(c_size_135);                                   // 315      Top Left
-            else if (a < 348.75) viewport()->setCursor(c_size_157);                                   // 337
-            else                 viewport()->setCursor(c_size_vertical);                              // 360      Top
+            if      (a <  11.25) viewport()->setCursor(Mouse_Cursors::sizeVertical());                              // 0        Top
+            else if (a <  33.75) viewport()->setCursor(Mouse_Cursors::size022());                                   // 22.5
+            else if (a <  56.25) viewport()->setCursor(Mouse_Cursors::size045());                                   // 45       Top Right
+            else if (a <  78.75) viewport()->setCursor(Mouse_Cursors::size067());                                   // 67.5
+            else if (a < 101.25) viewport()->setCursor(Mouse_Cursors::sizeHorizontal());                            // 90       Right
+            else if (a < 123.75) viewport()->setCursor(Mouse_Cursors::size112());                                   // 112.5
+            else if (a < 146.25) viewport()->setCursor(Mouse_Cursors::size135());                                   // 135      Bottom Right
+            else if (a < 168.75) viewport()->setCursor(Mouse_Cursors::size157());                                   // 157
+            else if (a < 191.25) viewport()->setCursor(Mouse_Cursors::sizeVertical());                              // 180      Bottom
+            else if (a < 213.75) viewport()->setCursor(Mouse_Cursors::size022());                                   // 202
+            else if (a < 236.25) viewport()->setCursor(Mouse_Cursors::size045());                                   // 225      Bottom Left
+            else if (a < 258.75) viewport()->setCursor(Mouse_Cursors::size067());                                   // 247
+            else if (a < 281.25) viewport()->setCursor(Mouse_Cursors::sizeHorizontal());                            // 270      Left
+            else if (a < 303.75) viewport()->setCursor(Mouse_Cursors::size112());                                   // 292
+            else if (a < 326.25) viewport()->setCursor(Mouse_Cursors::size135());                                   // 315      Top Left
+            else if (a < 348.75) viewport()->setCursor(Mouse_Cursors::size157());                                   // 337
+            else                 viewport()->setCursor(Mouse_Cursors::sizeVertical());                              // 360      Top
         }
     }
 
@@ -308,7 +308,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
 
     // ******************* If mouse moved while alt pressed, rotate
     if (m_view_mode == View_Mode::Rotating) {
-        viewport()->setCursor(c_rotate_all);
+        viewport()->setCursor(Mouse_Cursors::rotateAll());
         rotateSelection(event->pos());
     }
 

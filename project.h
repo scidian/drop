@@ -57,15 +57,13 @@ public:
 
     // External calls
     DrStage*        findStageFromKey(long check_key);
-
     DrSettings*     findSettingsFromKey(long check_key);
-
     DrType          findChildTypeFromKey(long check_key);
-    DrAsset_Type    findAssetTypeFromKey(long check_key);
+
 
     // Children creation calls
     void        addWorld();
-    long        addAsset(DrAsset_Type new_asset_type, long image_key);
+    long        addAsset(DrAssetType new_asset_type, long image_key);
     long        addImage(QString image_path);
 
 

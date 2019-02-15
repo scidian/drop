@@ -12,6 +12,7 @@
 #include <QGraphicsItem>
 
 enum class Properties;
+enum class Position_Flags;
 
 
 //####################################################################################
@@ -47,50 +48,46 @@ enum class Label_Names
 
 
 //####################################################################################
-//##    Types of entities possible in project
+//##
+//##    Main Types of entities possible in project
+//##
 //####################################################################################
 enum class DrType {
-    Project,
-    World,      Folder,         Variable,
-    Stage,      Background,     Foreground,     StartStage,
-    Object,     Character,      Camera,         Action,         Light,          Logic,          Particle,
+    Asset,
+    Image,
+    World,
+        Stage,
+        StartStage,
+            Background,
+            Foreground,
+            Object,
+    Variable,
 
     UI,
-    Label,      Button,         Joystick,
-
-    Asset,
-
-    NotFound,   BaseClass,
-};
-
-//####################################################################################
-//##    Types of Assets possible in project
-//####################################################################################
-enum class DrAsset_Type {
-    Character,
-    Object,
+        Label,
+        Button,
+        Joystick,
 
     NotFound,
+    BaseClass,
 };
 
-//####################################################################################
-//##    Possible handle rects, order is vector / array index critical
-//####################################################################################
-enum class Position_Flags {
-    Top          = 0,
-    Bottom       = 1,
-    Right        = 2,
-    Left         = 3,
-    Top_Left     = 4,
-    Bottom_Left  = 5,
-    Top_Right    = 6,
-    Bottom_Right = 7,
-    Total,
-    No_Position,
-    Move_Item,
-    Rotate,
-    Center
+// ################## Sub Types ####################
+enum class DrAssetType {
+    Character,
+    Object,
 };
+
+enum class DrObjectType {
+    Object,
+    Character,
+    Camera,
+    Action,
+    Light,
+    Logic,
+    Particle,
+};
+
 
 
 //####################################################################################
@@ -99,17 +96,14 @@ enum class Position_Flags {
 typedef enum {
     Key = Qt::UserRole,
 
-    Scale,
-    Pre_Resize_Scale,
-
-    Rotation,
-    Pre_Rotate_Rotation,
-
+    Scale,      Pre_Resize_Scale,
+    Rotation,   Pre_Rotate_Rotation,
     Z_Order,
     Opacity,
 
     Name,
     Type,
+
 } User_Roles;
 
 
@@ -118,97 +112,24 @@ typedef enum {
 //####################################################################################
 namespace User_Property {
     const char Key[7] = "dr_key";
-    const char Order[9] = "dr_order";       // For properties with mulitple values (i.e Size, Position, etc), the item # of the single property we want (0, 1, 2, etc)
+    const char Order[9] = "dr_order";       // Used for properties with mulitple values (like Size has X and Y), the index of the single property we want (0, 1, 2, etc)
     const char Header[10] = "dr_header";
     const char Body[8] = "dr_body";
 }
 
 
 //####################################################################################
-//##    Some public forward function declarations
+//##    Some public forward function declarations for some enum functions
 //####################################################################################
 namespace Dr
 {
-    bool        CheckTypesAreSame(DrType type1, DrType type2);
-    bool        IsDrObjectClass(DrType type_to_check);
-
     QString     StringFromType(DrType type);
-    QString     StringFromAssetType(DrAsset_Type type);
+    QString     StringFromAssetType(DrAssetType type);
+    QString     StringFromObjectType(DrObjectType type);
     QString     StringFromPositionFlag(Position_Flags flag);
 
     QList<long> ConvertPropertyListToLongs(QList<Properties> list);
 }
-
-
-//####################################################################################
-//##    Possible background colors for Component Categories
-//####################################################################################
-namespace Component_Colors
-{
-    const QColor White_Snow     { QColor(255, 252, 249, 255) };
-    const QColor Silver_Sonic   { QColor(117, 112, 131, 255) };
-
-    const QColor Orange_Medium  { QColor(221, 110,  66, 255) };
-
-    const QColor Pink_Pearl     { QColor(228, 180, 194, 255) };
-    const QColor Red_Faded      { QColor(255, 105, 120, 255) };
-
-    const QColor Red_Tuscan     { QColor(104,  71,  86, 255) };
-    const QColor Purple_Pastel  { QColor(176, 161, 186, 255) };
-    const QColor Blue_Yonder    { QColor(165, 181, 191, 255) };
-
-    const QColor Green_SeaGrass { QColor(154, 225, 157, 255) };
-
-    const QColor Brown_Sugar    { QColor(165, 117,  72, 255) };
-    const QColor Beige_Apricot  { QColor(252, 215, 173, 255) };
-
-
-};
-
-//####################################################################################
-//##    Possible icons for Component Categories
-//####################################################################################
-namespace Component_Icons
-{
-    const QString Settings      { QString(":/inspector_icons/comp_settings.png") };
-    const QString Physics       { QString(":/inspector_icons/comp_physics.png") };
-    const QString Transform     { QString(":/inspector_icons/comp_transform.png") };
-    const QString Layering      { QString(":/inspector_icons/comp_layering.png") };
-    const QString Movement      { QString(":/inspector_icons/comp_movement.png") };
-    const QString Camera        { QString(":/inspector_icons/comp_camera.png") };
-    const QString Character     { QString(":/inspector_icons/comp_character.png") };
-    const QString None          { QString("") };
-};
-
-
-//####################################################################################
-//##    Possible Headers and Descriptions for items within editor
-//####################################################################################
-typedef QList<QString> HeaderBodyList;
-
-namespace Advisor_Info
-{
-    const HeaderBodyList Asset_List            { "Asset List", "These are items that can be dragged into your project. Changing the properties "
-                                                               "of these items will affect all instances of those items project wide." };
-    const HeaderBodyList Object_Inspector      { "Object Inspector", "Displays editable properties of currently selected item." };
-    const HeaderBodyList Stage_View            { "Stage View", "Shows objects and layout of currently selected Stage. Drop assets into Stage "
-                                                               "View to add to Stage." };
-    const HeaderBodyList Project_Tree          { "Project Tree", "Lists the items contained within the currently displayed Stage. Select items "
-                                                                 "to view / adjust properties for each item." };
-    const HeaderBodyList Advisor_Window        { "Advisor Window", "Shows a brief description of editor objects." };
-
-    const HeaderBodyList World_Object          { "World Object", "A World is a container of Stages." };
-    const HeaderBodyList Stage_Object          { "Stage Object", "A Stage is a container of Objects." };
-    const HeaderBodyList Camera_Object         { "Camera Object", "This is a camera object. This object will decide what the player sees." };
-    const HeaderBodyList Character_Object      { "Character Object", "This is a character object" };
-    const HeaderBodyList Object_Object         { "Object", "This is an object in a Stage." };
-
-    const HeaderBodyList Asset_Object          { "Asset", "This is an object that can have many copies of itself placed into your game. Any change to this "
-                                                          "asset will change all occurences of the asset within the game." };
-
-    const HeaderBodyList Not_Set               { "Not Set", "Fix me!!!!!!" };
-};
-
 
 
 //####################################################################################

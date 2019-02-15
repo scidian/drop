@@ -60,7 +60,8 @@ SOURCES += \
     editor_view_rotate.cpp \
     editor_view_select.cpp \
     project_image.cpp \
-    editor_tree_project.cpp
+    editor_tree_project.cpp \
+    constants.cpp
 
 HEADERS += \
     enums.h \
@@ -86,7 +87,8 @@ HEADERS += \
     editor_view.h \
     editor_scene_undo_commands.h \
     project_image.h \
-    editor_tree_project.h
+    editor_tree_project.h \
+    constants.h
 
 FORMS +=
 

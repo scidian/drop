@@ -25,7 +25,7 @@
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAsset_Type new_asset_type, long image_key)
+DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_asset_type, long image_key)
 {
     m_parent_project = parent_project;
     setKey(new_asset_key);

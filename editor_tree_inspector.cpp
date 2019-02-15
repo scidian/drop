@@ -86,7 +86,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
         QString type_string = Dr::StringFromType(new_type);
         Dr::SetLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( new_key ) + ", TYPE: " + type_string);
 
-        if (Dr::IsDrObjectClass(new_type)) {
+        if (new_type == DrType::Object) {
             DrObject* object = dynamic_cast<DrObject*>(m_project->findSettingsFromKey(new_key));
             long asset_key = object->getAssetKey();
             QString asset_name = m_project->findSettingsFromKey(asset_key)->getAssetName();
@@ -113,8 +113,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     switch (m_selected_type) {
     case DrType::World:        m_relay->setAdvisorInfo(Advisor_Info::World_Object);         break;
     case DrType::Stage:        m_relay->setAdvisorInfo(Advisor_Info::Stage_Object);         break;
-    case DrType::Camera:       m_relay->setAdvisorInfo(Advisor_Info::Camera_Object);        break;
-    case DrType::Character:    m_relay->setAdvisorInfo(Advisor_Info::Character_Object);     break;
+    ///case DrType::Camera:       m_relay->setAdvisorInfo(Advisor_Info::Camera_Object);        break;
+    ///case DrType::Character:    m_relay->setAdvisorInfo(Advisor_Info::Character_Object);     break;
     case DrType::Object:       m_relay->setAdvisorInfo(Advisor_Info::Object_Object);        break;
     case DrType::Asset:        m_relay->setAdvisorInfo(Advisor_Info::Asset_Object);         break;
     default:                   m_relay->setAdvisorInfo(Advisor_Info::Not_Set);
@@ -244,7 +244,7 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
     // !!!!!
 
     if (object->getKey() != m_selected_key) return;
-    if (Dr::IsDrObjectClass(m_selected_type) == false) return;
+    if (m_selected_type != DrType::Object) return;
 
     Dr::SetLabelText(Label_Names::Label_1, "Insp Widget Count: " + QString::number(m_widgets.count()) );
 

@@ -96,7 +96,7 @@ void TreeAssets::buildAssetTree()
 
     // ********** Loop through each property and add it to the component frame
     for (auto asset_pair: list_assets) {
-        if (asset_pair.second->getAssetType() != DrAsset_Type::Object) continue;
+        if (asset_pair.second->getAssetType() != DrAssetType::Object) continue;
 
         // ***** Store current asset key in widget and install a mouse handler event filter on the item, AssetMouseHandler
         QFrame *single_row = new QFrame();
