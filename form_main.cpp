@@ -175,7 +175,9 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
     updateEditorWidgetsAfterItemChange(changed_from, changed_items, Dr::ConvertPropertyListToLongs(property_keys));    }
 void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<long> property_keys)
 {
-    if (changed_from != Editor_Widgets::Object_Inspector)   treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys);
+    if (changed_from != Editor_Widgets::Object_Inspector)
+        if (viewMain->currentViewMode() != View_Mode::Translating)
+            treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys);
     if (changed_from != Editor_Widgets::Scene_View)         scene->updateChangesInScene(changed_items, property_keys);
 
     // !!!!! TEMP: Testing to make sure not running non stop

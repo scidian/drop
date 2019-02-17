@@ -7,7 +7,10 @@
 //
 
 #include "enums.h"
+#include "editor_item.h"
 #include "editor_scene.h"
+#include "project_world_stage_object.h"
+#include "settings.h"
 
 enum class Position_Flags;
 
@@ -92,6 +95,15 @@ QList<long> ConvertPropertyListToLongs(QList<Properties> list) {
     return new_list;
 }
 
+QList<DrSettings*> ConvertItemListToSettings(QList<QGraphicsItem*> list) {
+    QList<DrSettings*> new_list;
+    for (auto item : list) {
+        DrItem* as_item = dynamic_cast<DrItem*>(item);
+        DrObject* as_object = as_item->getObject();
+        new_list.append(dynamic_cast<DrSettings*>(as_object));
+    }
+    return new_list;
+}
 
 
 

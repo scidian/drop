@@ -242,16 +242,16 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     myOption.state &= ~QStyle::State_Selected;
 
     // Check opacity of current item
-    double transparency = 100;
-    if (m_object) transparency = m_object->getComponentPropertyValue(Components::Object_Layering, Properties::Object_Opacity).toDouble();
-    transparency = Dr::FitToRange(transparency, 0, 100);
+    double transparency = 1;
+    if (m_object) transparency = m_object->getComponentPropertyValue(Components::Object_Layering, Properties::Object_Opacity).toDouble() / 100;
+    transparency = Dr::FitToRange(transparency, 0, 1);
 
     // Apply the proper opacity to this item and either paint the pixmap, or paint a pattern representation of the item
-    if (transparency >= 1) {
-        setOpacity(transparency / 100);
+    if (transparency >= .01) {
+        if (qFuzzyCompare(opacity(), transparency) == false) setOpacity(transparency);
         QGraphicsPixmapItem::paint(painter, &myOption, widget);
     } else {
-        setOpacity(1);
+        if (qFuzzyCompare(opacity(), 1) == false) setOpacity(1);
         QColor brush_color = Dr::GetColor(Window_Colors::Icon_Dark);
         brush_color.setAlpha(64);
 

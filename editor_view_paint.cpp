@@ -75,7 +75,8 @@ void DrView::paintEvent(QPaintEvent *event)
     if (m_hide_bounding == false)
         paintBoundingBox(painter);                                  // Draw box around entire seleciton, with Size Grip handles
 
-    paintGroupAngle(painter, my_scene->getSelectionAngle());        // Draw angles if rotating
+    if (m_view_mode == View_Mode::Rotating)
+        paintGroupAngle(painter, my_scene->getSelectionAngle());      // Draw angles if rotating
 
     if (m_hide_bounding == false)
         paintHandles(painter, m_handles_shape);                     // Draw handles around selected item / bounding box
@@ -263,35 +264,33 @@ void DrView::paintBoundingBox(QPainter &painter)
 //####################################################################################
 void DrView::paintGroupAngle(QPainter &painter, double angle)
 {
-    if (m_view_mode == View_Mode::Rotating) {
-        ///// Set pen to draw as NOT operation
-        ///painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
-        painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 1));
+    ///// Set pen to draw as NOT operation
+    ///painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
+    painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 1));
 
-        // !!!!! #DEBUG:    Draws from center to origin point (mouse down), and center to last position (mouse move)
-        if (Dr::CheckDebugFlag(Debug_Flags::Paint_Rotating_Angles)) {
-            painter.drawLine(mapFromScene(m_rotate_start_rect.center()), m_origin);
-            painter.drawLine(mapFromScene(m_rotate_start_rect.center()), m_last_mouse_pos);
-        }
-        // !!!!! END
-
-        // Map center point to view, create a line going straight up at zero degrees
-        QPointF center_point = mapFromScene(m_rotate_start_rect.center());
-        QLineF     line_zero = QLineF(center_point, QPointF(center_point.x(), center_point.y() - 30) );
-
-        // Make a copy of line rotated at the current Selection Group angle (passed in)
-        QPointF origin = center_point;
-        QTransform rotate = QTransform().translate(origin.x(), origin.y()).rotate(angle).translate(-origin.x(), -origin.y());
-        QLineF  line_rotated = rotate.map(line_zero);
-        line_zero.setP1( QPointF(line_zero.x1(), line_zero.y1() - 1) );
-
-        // Draw lines
-        painter.drawLine( line_zero );
-        painter.drawLine( line_rotated );
-
-        ///// Reset pen to draw normally
-        ///painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOver);
+    // !!!!! #DEBUG:    Draws from center to origin point (mouse down), and center to last position (mouse move)
+    if (Dr::CheckDebugFlag(Debug_Flags::Paint_Rotating_Angles)) {
+        painter.drawLine(mapFromScene(m_rotate_start_rect.center()), m_origin);
+        painter.drawLine(mapFromScene(m_rotate_start_rect.center()), m_last_mouse_pos);
     }
+    // !!!!! END
+
+    // Map center point to view, create a line going straight up at zero degrees
+    QPointF center_point = mapFromScene(m_rotate_start_rect.center());
+    QLineF     line_zero = QLineF(center_point, QPointF(center_point.x(), center_point.y() - 30) );
+
+    // Make a copy of line rotated at the current Selection Group angle (passed in)
+    QPointF origin = center_point;
+    QTransform rotate = QTransform().translate(origin.x(), origin.y()).rotate(angle).translate(-origin.x(), -origin.y());
+    QLineF  line_rotated = rotate.map(line_zero);
+    line_zero.setP1( QPointF(line_zero.x1(), line_zero.y1() - 1) );
+
+    // Draw lines
+    painter.drawLine( line_zero );
+    painter.drawLine( line_rotated );
+
+    ///// Reset pen to draw normally
+    ///painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOver);
 }
 
 

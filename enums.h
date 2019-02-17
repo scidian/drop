@@ -11,6 +11,8 @@
 
 #include <QGraphicsItem>
 
+class DrSettings;
+
 enum class Properties;
 enum class Position_Flags;
 
@@ -128,7 +130,8 @@ namespace Dr
     QString     StringFromObjectType(DrObjectType type);
     QString     StringFromPositionFlag(Position_Flags flag);
 
-    QList<long> ConvertPropertyListToLongs(QList<Properties> list);
+    QList<long>         ConvertPropertyListToLongs(QList<Properties> list);
+    QList<DrSettings*>  ConvertItemListToSettings(QList<QGraphicsItem*> list);
 }
 
 

@@ -357,12 +357,11 @@ void DrView::mouseReleaseEvent(QMouseEvent *event)
     if (event->button() & Qt::LeftButton)
     {
         m_hide_bounding = false;
-
         m_rubber_band->hide();
         m_tool_tip->stopToolTip();
 
-        // We have it so that object inspector only updates from scene view on mouse up
-        // (i.e. after rubber band box mode is over)
+        // We have it so that object inspector only completely changes itself based on selection from scene view on mouse up
+        // (i.e. after rubber band box mode is over so it's not trying to change a ton and slow thigs down)
         if (m_view_mode == View_Mode::Selecting) {
             m_view_mode = View_Mode::None;
             if (my_scene->getSelectionCount() > 0)
@@ -378,6 +377,15 @@ void DrView::mouseReleaseEvent(QMouseEvent *event)
                 delete item;
             }
             my_scene->destroyItemGroup(m_group);
+        }
+
+        // We have it so object inspector only tries to update it's position property boxes during item translation
+        // once the mouse is released, it's much, muich faster this way
+        if (m_view_mode == View_Mode::Translating) {
+            m_view_mode = View_Mode::None;
+            m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View,
+                                                        Dr::ConvertItemListToSettings(my_scene->getSelectionItems()),
+                                                        { Properties::Object_Position });
         }
 
         updateSelectionBoundingBox(6);
