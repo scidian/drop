@@ -128,26 +128,6 @@ QGraphicsItemGroup* DrScene::createEmptyItemGroup(double angle, QPointF scale)
 
 
 //####################################################################################
-//##        Keeps track of which items are selected as DrObjects in the data model
-//####################################################################################
-// Returns list of objects represented from selected items
-QList<DrObject*> DrScene::getSelectionGroupObjects() {
-    return convertListItemsToObjects(m_selection_items);
-}
-
-// Returns list of objects represented from item list
-QList<DrObject*> DrScene::convertListItemsToObjects(QList<QGraphicsItem*> graphics_items)
-{
-    QList<DrObject*> objects {};
-    for (auto item : graphics_items) {
-        DrItem *dritem = dynamic_cast<DrItem*>(item);
-        objects.append(dritem->getObject());
-    }
-    return objects;
-}
-
-
-//####################################################################################
 //##        Selects items based on rows selected in Editor_Project_Tree
 //####################################################################################
 void DrScene::updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list)

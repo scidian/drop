@@ -88,6 +88,7 @@ public:
     void            updateAlignmentGrid() { emit updateGrid(); }
     void            updateChangesInScene(QList<DrSettings*> changed_items, QList<long> property_keys);
     void            updateItemInScene(DrSettings* changed_item, QList<long> property_keys);
+    void            updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list);
     void            updateView() { emit updateViews(); }
 
 
@@ -122,10 +123,6 @@ public:
     void                    resetSelectionGroup();
     QRectF                  totalSelectionSceneRect();
     void                    updateSelectionBox();
-    void                    updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list);
-
-    QList<DrObject*>        convertListItemsToObjects(QList<QGraphicsItem*> graphics_items);
-    QList<DrObject*>        getSelectionGroupObjects();
 
 
 public slots:
