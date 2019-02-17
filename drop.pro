@@ -61,7 +61,8 @@ SOURCES += \
     editor_view_select.cpp \
     project_image.cpp \
     editor_tree_project.cpp \
-    constants.cpp
+    constants.cpp \
+    editor_view_mouse_move.cpp
 
 HEADERS += \
     enums.h \
