@@ -47,12 +47,6 @@ public:
                bool is_hidden = false);
 
     // Getters and setters
-    /**
-    * @brief getDisplayName
-    * @return
-    * @author Stephens
-    * @todo Fix me
-    */
     DrSettings*   getParentSettings() { return m_parent_settings; }
     DrComponent*  getParentComponent() { return m_parent_component; }
 

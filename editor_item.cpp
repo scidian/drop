@@ -254,7 +254,6 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
         if (qFuzzyCompare(opacity(), 1) == false) setOpacity(1);
         QColor brush_color = Dr::GetColor(Window_Colors::Icon_Dark);
         brush_color.setAlpha(64);
-
         painter->setPen( QPen(Dr::GetColor(Window_Colors::Icon_Dark), 1, Qt::PenStyle::SolidLine, Qt::PenCapStyle::FlatCap, Qt::PenJoinStyle::MiterJoin ) );
         painter->setBrush( QBrush(brush_color, Qt::BrushStyle::SolidPattern)); //Qt::BrushStyle::DiagCrossPattern ) );
         painter->drawPath( this->shape() );

@@ -40,6 +40,14 @@ namespace Dr {
 
     QColor          GetColor(Window_Colors color_role);
     Color_Scheme    GetColorScheme();
+
+
+    /**
+     * Doxygen comments, type slash star star enter, brief shows a mouse mover popup for the described function in the editor
+     *
+     * @brief SetColorScheme is a setter to a global veriable that keeps track of which color scheme to use for the open editor
+     * @param new_scheme
+     */
     void            SetColorScheme(Color_Scheme new_scheme);
 
 }

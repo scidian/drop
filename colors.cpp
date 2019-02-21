@@ -32,7 +32,6 @@ QColor  GetColor(Window_Colors color_role)
 Color_Scheme GetColorScheme() { return g_current_color_scheme; }
 void SetColorScheme(Color_Scheme new_scheme) { g_current_color_scheme = new_scheme; }
 
-
 //####################################################################################
 //##        Store custom window palette colors
 //####################################################################################
