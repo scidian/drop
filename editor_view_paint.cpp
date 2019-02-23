@@ -97,10 +97,14 @@ void DrView::paintEvent(QPaintEvent *event)
         paintBoundingBox(painter);                                  // Draw box around entire seleciton, with Size Grip handles
 
     if (m_view_mode == View_Mode::Rotating)
-        paintGroupAngle(painter, my_scene->getSelectionAngle());      // Draw angles if rotating
+        paintGroupAngle(painter, my_scene->getSelectionAngle());    // Draw angles if rotating
 
     if (m_hide_bounding == false)
         paintHandles(painter, m_handles_shape);                     // Draw handles around selected item / bounding box
+
+    if (m_tool_tip->isHidden() == false &&
+            Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL))
+        paintToolTip(painter);
 
 
     // !!!!! #DEBUG:    Draw frames per second
@@ -357,6 +361,70 @@ void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw)
 }
 
 
+//####################################################################################
+//##        PAINT: Paints tool tip when using OpenGL
+//####################################################################################
+void DrView::paintToolTip(QPainter &painter)
+{
+    int w = m_tool_tip->geometry().width();
+    int h = m_tool_tip->geometry().height();
+    int left_offset = m_tool_tip->pos().x();
+    int top_offset =  m_tool_tip->pos().y();
+
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(Dr::GetColor(Window_Colors::Shadow));
+    painter.drawRoundedRect(left_offset, top_offset + 2, w, h, m_tool_tip->m_x_radius, m_tool_tip->m_y_radius, Qt::SizeMode::RelativeSize);
+
+    QLinearGradient gradient( left_offset, top_offset, left_offset, top_offset + h);
+    gradient.setColorAt(0.0, Dr::GetColor(Window_Colors::Button_Light));
+    gradient.setColorAt(1.0, Dr::GetColor(Window_Colors::Button_Dark));
+    painter.setBrush(gradient);
+    painter.drawRoundedRect(left_offset, top_offset, w, h, m_tool_tip->m_x_radius, m_tool_tip->m_y_radius, Qt::SizeMode::RelativeSize);
+
+    int left;
+    QPixmap  pic(w * 2, h);
+    QPainter paint_pic(&pic);
+    QRect    bounding_1, bounding_2;
+
+    QString text_1, text_2;
+
+    QFont font = painter.font();
+    font.setPointSize ( 12 );
+    painter.setFont(font);
+    painter.setPen(Dr::GetColor(Window_Colors::Text_Light));
+
+    switch (m_tool_tip->m_tip_type)
+    {
+    case View_Mode::Zooming:     text_1 = QString::number(m_tool_tip->m_int) + "%";             break;
+    case View_Mode::Rotating:    text_1 = QString::number(m_tool_tip->m_angle, 'f', 1) + "°";   break;
+    case View_Mode::Resizing:    text_1 = "W: " + QString::number(m_tool_tip->m_x, 'f', 1);     text_2 = "H: " + QString::number(m_tool_tip->m_y, 'f', 1);  break;
+    case View_Mode::Translating: text_1 = "X: " + QString::number(m_tool_tip->m_x, 'f', 1);     text_2 = "Y: " + QString::number(m_tool_tip->m_y, 'f', 1);  break;
+    default:                     text_1 = "---";                                    text_2 = "---";
+    }
+
+    switch (m_tool_tip->m_tip_type)
+    {
+    case View_Mode::Resizing:
+    case View_Mode::Translating:
+        ///// Simple text centering
+        ///painter.drawText( 0,           0, w, h / 2, Qt::AlignmentFlag::AlignCenter, text_1);
+        ///painter.drawText( 0, (h / 2) - 1, w, h / 2, Qt::AlignmentFlag::AlignCenter, text_2);
+
+        // Draw text off screen to calculate proper starting x coord
+        paint_pic.drawText( 0, 0, w, h, Qt::AlignmentFlag::AlignLeft, text_1, &bounding_1);
+        paint_pic.drawText( 0, 0, w, h, Qt::AlignmentFlag::AlignLeft, text_2, &bounding_2);
+        left = (bounding_1.width() > bounding_2.width()) ? (w - bounding_1.width() + 4) / 2 : (w - bounding_2.width() + 4) / 2;
+        painter.drawText( left_offset + left,     top_offset,               w, h / 2, Qt::AlignmentFlag::AlignVCenter, text_1);
+        painter.drawText( left_offset + left + 1, top_offset + (h / 2) - 1, w, h / 2, Qt::AlignmentFlag::AlignVCenter, text_2);
+
+        break;
+    case View_Mode::Rotating:
+    case View_Mode::Zooming:
+    default:
+        painter.drawText( left_offset, top_offset, w, h, Qt::AlignmentFlag::AlignCenter, text_1);
+    }
+
+}
 
 
 //####################################################################################

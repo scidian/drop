@@ -44,11 +44,8 @@ DrView::DrView(QWidget *parent, DrProject *project, DrScene *from_scene, Interfa
         m_debug_timer.start();
 
     my_scene = from_scene;
-
     setScene(my_scene);
 
-
-    my_scene->addWidget(m_tool_tip);
 
     // ********** Connect signals to scene
     connect(my_scene, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));

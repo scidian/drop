@@ -51,13 +51,23 @@ void DrViewToolTip::startToolTip(View_Mode type, QPoint mouse_position, QVariant
     {
     case View_Mode::Resizing:
     case View_Mode::Translating:
-        setFixedSize(66, 32);   m_offset = QPoint(30, -63);     Dr::ApplyRoundedCornerMask(this, 23, 50);   break;
+        setFixedSize(66, 32);   m_offset = QPoint(30, -63);
+        m_x_radius = 23;
+        m_y_radius = 50;
+        break;
     case View_Mode::Rotating:
     case View_Mode::Zooming:
     default:
-        setFixedSize(60, 18);   m_offset = QPoint(30, -45);     Dr::ApplyRoundedCornerMask(this, 20, 75);   break;
+        setFixedSize(60, 18);   m_offset = QPoint(30, -45);
+        m_x_radius = 20;
+        m_y_radius = 75;
+        break;
     }
-    Dr::ApplyDropShadowByType(this, Shadow_Types::Tool_Tip_Shadow);
+
+    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL) == false) {
+        Dr::ApplyRoundedCornerMask(this, m_x_radius, m_y_radius);
+        Dr::ApplyDropShadowByType(this, Shadow_Types::Tool_Tip_Shadow);
+    }
 
     updateToolTipData(data);
     updateToolTipPosition(mouse_position);

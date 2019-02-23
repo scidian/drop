@@ -1,4 +1,4 @@
-//
+﻿//
 //      Created by Stephens Nunnally on 1/3/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
@@ -101,10 +101,14 @@ private:
     bool         m_flag_key_down_shift =    false;                  // True when View has focus and shift         is down
 
     // Mouse event variables
-    DrViewToolTip                      *m_tool_tip;                 // Holds our view's custom Tool Tip box
     QPoint                              m_origin;                   // Stores mouse down position in view coordinates
     QPointF                             m_origin_in_scene;          // Stores mouse down position in scene coordinates
     QGraphicsItem                      *m_origin_item;              // Stores top item under mouse (if any) on mouse down event
+
+
+    // Tool Tip Variables
+    DrViewToolTip                  *m_tool_tip;                     // Holds our view's custom Tool Tip box
+
 
     // View_Mode::Translating Variables
     QTime                               m_origin_timer;             // Tracks time since mouse down to help buffer movement while selecting
@@ -191,6 +195,7 @@ public:
     void            paintGroupAngle(QPainter &painter, double angle);
     void            paintHandles(QPainter &painter, Handle_Shapes shape_to_draw);
     void            paintItemOutlines(QPainter &painter);
+    void            paintToolTip(QPainter &painter);
 
     // Selection Functions
     void            startSelect(QMouseEvent *event);
@@ -251,13 +256,15 @@ public:
 //############################
 class DrViewToolTip : public QWidget
 {
-private:
+public:
     View_Mode   m_tip_type = View_Mode::None;           // Which type of tool tip to show
     QPoint      m_offset;                               // Stores how much to offset the current tooltip from mouse position
     double      m_angle = 0;                            // Stores angle to show in tooltip
     double      m_x = 0;                                // Stores x value of resizing / moving
     double      m_y = 0;                                // Stores y value of resizing / moving
     int         m_int = 0;                              // Stores zoom scale
+    int         m_x_radius = 100;
+    int         m_y_radius = 100;
 
 public:
     // Constructor
