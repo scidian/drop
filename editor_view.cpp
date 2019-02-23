@@ -48,6 +48,8 @@ DrView::DrView(QWidget *parent, DrProject *project, DrScene *from_scene, Interfa
     setScene(my_scene);
 
 
+    my_scene->addWidget(m_tool_tip);
+
     // ********** Connect signals to scene
     connect(my_scene, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
     connect(my_scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));

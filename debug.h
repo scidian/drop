@@ -16,7 +16,8 @@ enum class Debug_Flags {
     Show_Secret_Menu,                   // Add special menu to menu bar containing some hidden test functions
     Show_Undo_View,                     // Shows a window with all undo / redo commands from current DrScene
 
-    Turn_Off_Antialiasing,              // Turns off antialiasing in the GraphicsView
+    Turn_On_Antialiasing,               // Turns on antialiasing in the GraphicsView
+    Turn_On_OpenGL,                     // Turns on opengl optimizations
 
     Label_FPS,                          // Show frames per second of DrView
     Label_Mouse_Coordinates,            // Show mouse position coordinates while moving over DrView

@@ -74,7 +74,7 @@ DrItem::DrItem(DrProject *project, InterfaceRelay *relay, DrObject *object, bool
     m_start_x = start_pos.x();
     m_start_y = start_pos.y();
 
-    if (Dr::CheckDebugFlag(Debug_Flags::Turn_Off_Antialiasing) == false)
+    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing))
         setTransformationMode(Qt::SmoothTransformation);                    // Turn on anti aliasing
 
     // Set up initial item settings
@@ -227,7 +227,7 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     ///if (option->state & QStyle::State_MouseOver) { fillColor = QColor(Qt::gray); } //fillColor.light(125); }          // If mouse is over
 
     // Turn off anti aliasing if necessary
-    if (Dr::CheckDebugFlag(Debug_Flags::Turn_Off_Antialiasing)) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing) == false) {
         painter->setRenderHint(QPainter::Antialiasing, false);
         painter->setRenderHint(QPainter::SmoothPixmapTransform, false);
     }

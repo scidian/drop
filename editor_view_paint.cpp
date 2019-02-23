@@ -5,7 +5,9 @@
 //      Graphics View Paint Overrides
 //
 //
+#include <QPaintEngine>
 #include <QStylePainter>
+#include <QOpenGLFunctions>
 
 #include "colors.h"
 #include "debug.h"
@@ -45,12 +47,31 @@ bool DrView::eventFilter(QObject *obj, QEvent *event)
 }
 
 
+void DrView::drawBackground(QPainter *painter, const QRectF &rect)
+{
+    Q_UNUSED(painter);
+    Q_UNUSED(rect);
+
+    ///QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
+    ///f->glClearColor(static_cast<float>(Dr::GetColor(Window_Colors::Background_Light).redF()),
+    ///                static_cast<float>(Dr::GetColor(Window_Colors::Background_Light).greenF()),
+    ///                static_cast<float>(Dr::GetColor(Window_Colors::Background_Light).blueF()),
+    ///                1.0f);
+    ///f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
+}
+
 
 //####################################################################################
 //##        PAINT: Main Paint Event for QGraphicsView (DrView)
 //####################################################################################
 void DrView::paintEvent(QPaintEvent *event)
 {
+    // ******************** Clears the sceen
+    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL)) {
+        QPainter clear_painter(this->viewport());
+        clear_painter.eraseRect(this->viewport()->rect());
+        clear_painter.end();
+    }
 
     // ******************** Go ahead and draw grid first then pass on event to paint items
     paintGrid();
@@ -67,8 +88,8 @@ void DrView::paintEvent(QPaintEvent *event)
     // If theres no selection we don't need to perform rest of paint routine
     if (my_scene->getSelectionCount() < 1) return;
 
-
-    QPainter painter(viewport());                                   // Initiate QPainter object
+    // Initiate QPainter object
+    QPainter painter(viewport());
 
     paintItemOutlines(painter);                                     // Draw bounding box for each selected item
 

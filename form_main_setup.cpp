@@ -8,6 +8,7 @@
 #include <QApplication>
 #include <QDockWidget>
 #include <QHeaderView>
+#include <QOpenGLWidget>
 
 #include "colors.h"
 #include "debug.h"
@@ -172,10 +173,20 @@ void FormMain::buildWindowModeEditStage()
                         viewMain = new DrView(widgetStageView, project, scene, this);
                         viewMain->setObjectName(QStringLiteral("viewMain"));
 
-                        if (!Dr::CheckDebugFlag(Debug_Flags::Turn_Off_Antialiasing))
+                        if (!Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing))
                             viewMain->setRenderHint(QPainter::Antialiasing, false);
-                        else
+                        else {
                             viewMain->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
+                            QSurfaceFormat format;
+                            format.setSamples(4);
+                            QSurfaceFormat::setDefaultFormat(format);                   // Set antialiasing samples to 4
+                        }
+
+                        if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL)) {
+                            QOpenGLWidget *gl_widget = new QOpenGLWidget();
+                            gl_widget->setUpdateBehavior(QOpenGLWidget::NoPartialUpdate);
+                            viewMain->setViewport(gl_widget);
+                        }
 
                         viewMain->setDragMode(QGraphicsView::DragMode::NoDrag);
                         viewMain->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);
@@ -187,12 +198,12 @@ void FormMain::buildWindowModeEditStage()
                         viewMain->setFrameShape(QFrame::NoFrame);
 
 
+
+
                         // ***** View area status bar
                         statusBar = new QFrame(widgetStageView);
                         statusBar->setObjectName("statusBar");
                         statusBar->setFixedHeight(20);
-
-
 
 
                     verticalLayoutView->addWidget(viewMain);

@@ -155,6 +155,7 @@ public:
     virtual ~DrView() override;
 
     // Event Overrides, start at Qt Docs for QGraphicsView Class to find more
+    virtual void    drawBackground(QPainter *painter, const QRectF &rect) override;
     virtual void    paintEvent(QPaintEvent *event) override;                                // Inherited from QWidget
 
     virtual bool    eventFilter(QObject *obj, QEvent *event) override;                      // Inherited from QObject

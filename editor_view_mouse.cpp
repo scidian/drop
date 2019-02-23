@@ -191,6 +191,7 @@ void DrView::mouseReleaseEvent(QMouseEvent *event)
 
     // Pass on event, update
     QGraphicsView::mouseReleaseEvent(event);
+    this->viewport()->repaint(this->viewport()->rect());
     update();
 }
 
