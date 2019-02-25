@@ -163,10 +163,7 @@ void ApplyColoring(QWidget *widget)
         " QLabel { color: " + Dr::GetColor(Window_Colors::Text).name() + "; padding: 0px; margin: 0px; border: 0px; } "
 
         // Check boxes, mostly in object inspector
-        " QCheckBox#checkInspector::indicator:checked {         image: url(:/inspector_icons/check_checked.png); }"
-        " QCheckBox#checkInspector::indicator:unchecked {       image: url(:/inspector_icons/check_unchecked.png); }"
-        " QCheckBox#checkInspector::indicator:checked:hover {   image: url(:/inspector_icons/check_hover_checked.png); }"
-        " QCheckBox#checkInspector::indicator:unchecked:hover { image: url(:/inspector_icons/check_hover_unchecked.png); }"
+        " QCheckBox#checkInspector::indicator { height: 22px; width: 32px; }"
 
         // Spin boxes, mostly in object inspector
         " QAbstractSpinBox { "

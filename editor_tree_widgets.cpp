@@ -9,6 +9,7 @@
 #include <QObject>
 #include <QEvent>
 #include <QPainter>
+#include <QMouseEvent>
 
 #include "colors.h"
 
@@ -33,11 +34,24 @@ bool WidgetHoverHandler::eventFilter(QObject *obj, QEvent *event)
 
     if (event->type() == QEvent::HoverEnter)
     {
+        hover_widget->setProperty(User_Property::Mouse_Over, true);
+        hover_widget->update();
+
         QString header = hover_widget->property(User_Property::Header).toString();
         QString body = hover_widget->property(User_Property::Body).toString();
 
         emit signalMouseHover(header, body);
+
+    } else if (event->type() == QEvent::HoverLeave) {
+        hover_widget->setProperty(User_Property::Mouse_Over, false);
+        hover_widget->update();
+
+    } else if (event->type() == QEvent::MouseMove) {
+        QMouseEvent *mouse_event = dynamic_cast<QMouseEvent*>(event);
+        hover_widget->setProperty(User_Property::Mouse_Pos, mouse_event->pos());
+        hover_widget->update();
     }
+
 
     return QObject::eventFilter(obj, event);
 }

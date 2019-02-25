@@ -8,10 +8,12 @@
 #ifndef EDITOR_TREE_ASSETS_H
 #define EDITOR_TREE_ASSETS_H
 
+#include <QLabel>
 #include <QTreeWidget>
 
 class DrProject;
 class DrProperty;
+class DrSettings;
 
 class InterfaceRelay;
 class WidgetHoverHandler;
@@ -33,6 +35,9 @@ private:
     DrProject           *m_project;                 // Pointer to currently loaded project
     InterfaceRelay      *m_relay;                   // Pointer to InterfaceRelay class of parent form
 
+    QList<QLabel*>       m_labels_name;             // List of the name   label widgets contained in asset tree
+    QList<QLabel*>       m_labels_pix;              // List of the pixmap label widgets contained in asset tree
+
     WidgetHoverHandler  *m_widget_hover;            // Pointer to a widget hover handler
 
 public:
@@ -42,6 +47,7 @@ public:
     // Function Calls
     void            buildAssetTree();
     InterfaceRelay* getRelay() { return m_relay; }
+    void            updateAssetList(QList<DrSettings*> changed_items, QList<long> property_keys);
 
     // Property Builders
     void            applyHeaderBodyProperties(QWidget *widget, DrProperty *property);

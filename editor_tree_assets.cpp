@@ -71,7 +71,8 @@ void TreeAssets::buildAssetTree()
     AssetMap list_assets = m_project->getAssets();
     int rowCount = 0;
     this->clear();
-
+    m_labels_name.clear();
+    m_labels_pix.clear();
 
     // Create new item in list to hold component and add the TreeWidgetItem to the tree
     QTreeWidgetItem *category_item = new QTreeWidgetItem();
@@ -94,7 +95,7 @@ void TreeAssets::buildAssetTree()
 
     this->setItemWidget(category_item, 0, category_button);                             // Apply the button to the tree item
 
-    // ********** Loop through each property and add it to the component frame
+    // ********** Loop through each object asset and add it to the component frame
     for (auto asset_pair: list_assets) {
         if (asset_pair.second->getAssetType() != DrAssetType::Object) continue;
 
@@ -118,16 +119,23 @@ void TreeAssets::buildAssetTree()
 
         // ***** Create the label that will display the asset
         QPixmap pix = asset_pair.second->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
-        QLabel *pix_label = new QLabel();
-        pix_label->setFont(fp);
-        pix_label->setSizePolicy(sp_right);
-        pix_label->setFixedHeight(45);
-        pix_label->setAlignment(Qt::AlignmentFlag::AlignCenter);
-        m_widget_hover->applyHeaderBodyProperties(pix_label, asset_pair.second->getAssetName(), Advisor_Info::Asset_Object[1] );
-        vertical_split->addWidget( pix_label );
+        QLabel *asset_pix = new QLabel();
+        asset_pix->setFont(fp);
+        asset_pix->setSizePolicy(sp_right);
+        asset_pix->setFixedHeight(45);
+        asset_pix->setAlignment(Qt::AlignmentFlag::AlignCenter);
+        m_widget_hover->applyHeaderBodyProperties(asset_pix, asset_pair.second->getAssetName(), Advisor_Info::Asset_Object[1] );
+        vertical_split->addWidget( asset_pix );
 
         // Draw pixmap onto label
-        pix_label->setPixmap(pix.scaled(120, 35, Qt::KeepAspectRatio));
+        asset_pix->setPixmap(pix.scaled(120, 35, Qt::KeepAspectRatio));
+
+
+        // ***** Store reference to name and pixmap labels for use later
+        asset_name->setProperty(User_Property::Key, QVariant::fromValue( asset_pair.second->getKey() ));
+        asset_pix->setProperty( User_Property::Key, QVariant::fromValue( asset_pair.second->getKey() ));
+        m_labels_name.append(asset_name);
+        m_labels_pix.append(asset_pix);
 
 
         // ***** Create a child TreeWidgetItem attached to the TopLevel category item
@@ -147,6 +155,34 @@ void TreeAssets::buildAssetTree()
 
 
 
+//####################################################################################
+//##        Updates Asset List (like asset names) if items have been changed
+//####################################################################################
+void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> property_keys)
+{
+    for (auto item : changed_items) {
+        long item_key = item->getKey();
+
+        for (auto label : m_labels_name) {
+            long label_key = label->property(User_Property::Key).toLongLong();
+
+            if (item_key == label_key) {
+                for (auto property : property_keys) {
+                    Properties check_property = static_cast<Properties>(property);
+
+                    switch (check_property)
+                    {
+                    case Properties::Asset_Name:
+                        label->setText(item->getComponentPropertyValue(Components::Asset_Settings, Properties::Asset_Name).toString() );
+                        break;
+                    default: ;
+                    }
+                }
+            }
+        }
+    }
+    update();
+}
 
 
 

@@ -114,9 +114,13 @@ typedef enum {
 //####################################################################################
 namespace User_Property {
     const char Key[7] = "dr_key";
-    const char Order[9] = "dr_order";       // Used for properties with mulitple values (like Size has X and Y), the index of the single property we want (0, 1, 2, etc)
+
+    const char Order[9] = "dr_order";               // Used for properties with mulitple values (like Size has X and Y),
+                                                    // the index of the single property we want (0, 1, 2, etc)
     const char Header[10] = "dr_header";
     const char Body[8] = "dr_body";
+    const char Mouse_Over[14] = "dr_mouse_over";    // Set to true by WidgetHoverHandler when mouse is over widget
+    const char Mouse_Pos[13] = "dr_mouse_pos";      // Set to mouse position (QPoint) by WidgetHoverHandler when mouse is moving over widget
 }
 
 

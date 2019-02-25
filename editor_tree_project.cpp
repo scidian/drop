@@ -213,7 +213,7 @@ void TreeProject::updateSelectionFromView(QList<QGraphicsItem*> item_list)
 
 
 //####################################################################################
-//##        Selects rows based on items selected in view
+//##        Updates item names if they have been changed
 //####################################################################################
 void TreeProject::updateItemNames(QList<DrSettings*> changed_items, QList<long> property_keys)
 {
