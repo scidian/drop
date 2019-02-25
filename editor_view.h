@@ -256,7 +256,7 @@ public:
 //############################
 class DrViewToolTip : public QWidget
 {
-public:
+private:
     View_Mode   m_tip_type = View_Mode::None;           // Which type of tool tip to show
     QPoint      m_offset;                               // Stores how much to offset the current tooltip from mouse position
     double      m_angle = 0;                            // Stores angle to show in tooltip
@@ -274,6 +274,7 @@ public:
     virtual void    paintEvent(QPaintEvent *) override;
 
     // Functions
+    void            drawText(QPainter &painter, int left_offset = 0, int top_offset = 0);
     void            startToolTip(View_Mode type, QPoint mouse_position, QVariant data);
     void            stopToolTip();
     void            updateToolTipPosition(QPoint mouse_position);
@@ -282,6 +283,8 @@ public:
     // Getters and Setters
     QPoint          getOffset()  { return m_offset;   }
     View_Mode       getTipType() { return m_tip_type; }
+    int             getXRadius() { return m_x_radius; }
+    int             getYRadius() { return m_y_radius; }
 
 };
 
