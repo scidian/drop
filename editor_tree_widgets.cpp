@@ -8,11 +8,13 @@
 
 #include <QObject>
 #include <QEvent>
+#include <QPainter>
 
-#include "settings_component_property.h"
+#include "colors.h"
+
 #include "editor_tree_widgets.h"
 
-
+#include "settings_component_property.h"
 
 
 //####################################################################################
@@ -26,17 +28,18 @@ void WidgetHoverHandler::attach(QWidget *widget)
 
 bool WidgetHoverHandler::eventFilter(QObject *obj, QEvent *event)
 {
+    QWidget *hover_widget = dynamic_cast<QWidget*>(obj);
+    if (!hover_widget) return QObject::eventFilter(obj, event);
+
     if (event->type() == QEvent::HoverEnter)
     {
-        QWidget *hover_widget = dynamic_cast<QWidget*>(obj);
-
         QString header = hover_widget->property(User_Property::Header).toString();
         QString body = hover_widget->property(User_Property::Body).toString();
 
         emit signalMouseHover(header, body);
     }
 
-    return false;
+    return QObject::eventFilter(obj, event);
 }
 
 //      Sets AdvisorInfo widget user properties
@@ -65,13 +68,38 @@ void WidgetHoverHandler::applyHeaderBodyProperties(QWidget *widget, HeaderBodyLi
 
 
 //####################################################################################
+//##    MouseWheelWidgetAdjustmentGuard Class Functions
+//####################################################################################
+MouseWheelWidgetAdjustmentGuard::MouseWheelWidgetAdjustmentGuard(QObject *parent) : QObject(parent) {}
+
+bool MouseWheelWidgetAdjustmentGuard::eventFilter(QObject *obj, QEvent *event)
+{
+    const QWidget* widget = static_cast<QWidget*>(obj);
+    if (!widget) return QObject::eventFilter(obj, event);
+
+    if (event->type() == QEvent::Wheel && !widget->hasFocus())
+    {
+        event->ignore();
+        return true;
+    }
+
+    return QObject::eventFilter(obj, event);
+}
+
+
+
+//####################################################################################
 //##    InspectorCategoryButton Class Functions
 //####################################################################################
 // Constructor for category button, gives button a way to pass click to custom function
-CategoryButton::CategoryButton(const QString &text, QTreeWidgetItem *parent_item) : QPushButton(text), m_parent_item(parent_item)
+CategoryButton::CategoryButton(const QString &text, QColor color, QWidget *parent, QTreeWidgetItem *parent_tree_item) :
+    QPushButton(text, parent)
 {
     // Forwards user button click to function that expands / contracts
     connect(this, SIGNAL(clicked()), this, SLOT(buttonPressed()));
+
+    m_parent_item = parent_tree_item;
+    m_color =       color;
 }
 
 // Called by click signal, expands or contracts category after user click
@@ -82,6 +110,32 @@ void CategoryButton::buttonPressed()
 
 }
 
+// Override paint event to draw tree exanpsion decoration
+void CategoryButton::paintEvent(QPaintEvent *event)
+{
+    QPushButton::paintEvent(event);
+
+    QPainter painter(this);
+    painter.setPen( m_color );
+    painter.setBrush( QBrush(m_color, Qt::BrushStyle::SolidPattern) );
+
+    double x = this->geometry().width() - 18;
+    double y = this->geometry().height() / 2 - 1;
+
+    QPolygonF triangle;
+    if (m_is_shrunk) {
+        triangle.append( QPointF(x - 2, y - 4) );       // To the right
+        triangle.append( QPointF(x + 2, y + 0) );
+        triangle.append( QPointF(x - 2, y + 4) );
+    } else {
+        triangle.append( QPointF(x - 4, y - 2) );       // To the bottom
+        triangle.append( QPointF(x + 4, y - 2) );
+        triangle.append( QPointF(x - 0, y + 2) );
+    }
+    painter.drawPolygon(triangle, Qt::FillRule::OddEvenFill);
+
+
+}
 
 
 

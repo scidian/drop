@@ -8,11 +8,17 @@
 #ifndef EDITOR_TREE_INSPECTOR_H
 #define EDITOR_TREE_INSPECTOR_H
 
-#include <QtWidgets>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QDoubleSpinBox>
+#include <QPushButton>
+#include <QTreeWidget>
 
 #include "enums.h"
 
 class DrProject;
+class DrObject;
+class DrSettings;
 class DrProperty;
 
 class InterfaceRelay;
@@ -28,12 +34,13 @@ enum class Spin_Type {
     Angle,                  // Show degrees sign
     Point,                  // Has X and Y
     Size,                   // Has W and H
+    Scale,                  // Used to have smaller increment / decrement
 };
 
 
 // Class constants
-const int   INSPECTOR_SIZE_LEFT =  3;                             // Size policy width of left column
-const int   INSPECTOR_SIZE_RIGHT = 5;                             // Size policy width of right column
+const int   c_inspector_size_left =  3;                 // Size policy width of left column
+const int   c_inspector_size_right = 5;                 // Size policy width of right column
 
 
 //####################################################################################
@@ -59,7 +66,11 @@ public:
 
     // Function Calls
     void            buildInspectorFromKeys(QList<long> key_list);
-    void            updateProperties(long item_key);
+
+    void            updateInspectorPropertyBoxes(QList<DrSettings*> changed_items, QList<long> property_keys_to_update);
+
+    void            updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order = 0);
+
 
     InterfaceRelay* getRelay() { return m_relay; }
 
@@ -69,6 +80,7 @@ public:
     void            addToWidgetList(QWidget *widget) { m_widgets.append(widget); }
     QCheckBox*      createCheckBox(DrProperty *property, QFont &font);
     QComboBox*      createComboBox(DrProperty *property, QFont &font);
+    QPushButton*    createComboBox2(DrProperty *property, QFont &font);
     QDoubleSpinBox* createDoubleSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type);
     QFrame*         createDoubleSpinBoxPair(DrProperty *property, QFont &font, Spin_Type spin_type);
     QSpinBox*       createIntSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type);
@@ -77,7 +89,6 @@ public:
     TripleSpinBox*  initializeEmptySpinBox(DrProperty *property, QFont &font, double start_value);
 
 private slots:
-    void            itemWasClicked(QTreeWidgetItem *item, int column);
     void            setAdvisorInfo(QString header, QString body);
 
 };

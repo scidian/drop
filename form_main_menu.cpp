@@ -5,16 +5,24 @@
 //      Calls to set up, initialize, build Form Main menu system
 //
 //
+#include <QApplication>
+#include <QActionGroup>
+#include <QMenuBar>
+#include <QScreen>
 
-#include "editor_stage_scene.h"
+#include "colors.h"
+#include "debug.h"
+
+#include "editor_item.h"
+#include "editor_scene.h"
 #include "editor_tree_advisor.h"
 #include "editor_tree_assets.h"
 #include "editor_tree_inspector.h"
-#include "editor_tree_stage.h"
-#include "editor_stage_view.h"
+#include "editor_tree_project.h"
+#include "editor_view.h"
 
-#include "colors.h"
 #include "form_main.h"
+
 #include "library.h"
 
 
@@ -188,7 +196,7 @@ void FormMain::buildMenu()
         menuDebug->addAction(actionListChildren);
 
         connect(actionClearMain, &QAction::triggered, [this]() { this->buildWindow(Form_Main_Mode::Clear); });
-        connect(actionStageEditMode, &QAction::triggered, [this]() { this->buildWindow(Form_Main_Mode::Edit_Stage); });
+        connect(actionStageEditMode, &QAction::triggered, [this]() { this->buildWindow(Form_Main_Mode::World_Editor); });
         connect(actionListChildren, &QAction::triggered, [this]() { this->menuListChildren(); });
 
         menuDebug->setTitle(QApplication::translate("MainWindow", "Debug", nullptr));

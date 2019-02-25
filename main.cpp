@@ -24,29 +24,42 @@
 //
 //  FormStartup                     Pick Recent Project, News, Create New Project
 //
-//  FormMain                        (4) Modes: Edit Stage
-//                                             Edit UI
-//                                             Node Map: World / UI Layout
-//                                             Node Map: Stage Layout
+//  FormMain                        (4) Modes: World Editor
+//                                             UI Editor
+//                                             World Map: World / UI Layout
+//                                             Stage Map: Stage Layout
 //      Collision Shape Editor      Edit Collision Shape
 //      Atlas Editor                View / Edit Project Atlases
 //      Font Editor                 Create / View Fonts for Use in Project
-//      Image Editor                Draw shapes, objects for use in Assets
+//      Image Editor                Draw shapes, objects for use in Assets, vectors, custom format, export
 //      Object Editor               Edit object's ObjectMaps
 //      Particle Editor             Make custom particles
+//      Sound Editor
+//      Animation Editor
 //
 
 #include <QApplication>
+#include <QMetaType>
 
 #include "colors.h"
 #include "debug.h"
 #include "form_main.h"
 
+// To declare a custom QVariant Type:
+typedef std::map<long, QString> OptionList;
+
+Q_DECLARE_METATYPE(OptionList)
+
+///Q_DECLARE_METATYPE(QList<int>)
+///qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
+///settings.setValue("foo", QVariant::fromValue(myList));
+///QList<int> myList2 = settings.value("foo").value<QList<int> >();
 
 int main(int argc, char *argv[])
 {
-    // ***** This registers custom typedefs, classes, structs, etc. for use with Qt::QueuedConnection signals
+    // ***** This registers custom typedefs, classes, structs, etc. for use with Qt::QueuedConnection signals and QVariants
     qRegisterMetaType<HeaderBodyList>("HeaderBodyList");
+    qRegisterMetaType<OptionList>("OptionList");
 
     // ***** Initiliaze application
     QApplication app_drop(argc, argv);              // Declare application
@@ -66,9 +79,6 @@ int main(int argc, char *argv[])
 
     return 0;
 }
-
-
-
 
 
 

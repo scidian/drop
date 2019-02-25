@@ -5,28 +5,33 @@
 //      Tree Asset Definitions
 //
 //
+#include <QEvent>
+#include <QLabel>
+#include <QVBoxLayout>
+
+#include "colors.h"
+#include "debug.h"
+
+#include "editor_tree_assets.h"
+#include "editor_tree_widgets.h"
+
+#include "interface_relay.h"
 
 #include "project.h"
 #include "project_asset.h"
 #include "project_world.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
-
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
-
-#include "editor_tree_assets.h"
-#include "editor_tree_widgets.h"
-#include "interface_relay.h"
-
 
 
 //####################################################################################
 //##        Constructor
 //####################################################################################
-TreeAssetList::TreeAssetList(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
-                             QTreeWidget (parent), m_project(project), m_relay(relay)
+TreeAssets::TreeAssets(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
+                       QTreeWidget (parent), m_project(project), m_relay(relay)
 {
     m_widget_hover = new WidgetHoverHandler(this);
     connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
@@ -35,13 +40,13 @@ TreeAssetList::TreeAssetList(QWidget *parent, DrProject *project, InterfaceRelay
 }
 
 // SLOT: Catches signals from m_widget_hover
-void TreeAssetList::setAdvisorInfo(QString header, QString body) {
+void TreeAssets::setAdvisorInfo(QString header, QString body) {
     m_relay->setAdvisorInfo(header, body);
 }
-void TreeAssetList::applyHeaderBodyProperties(QWidget *widget, DrProperty *property) {
+void TreeAssets::applyHeaderBodyProperties(QWidget *widget, DrProperty *property) {
     m_widget_hover->applyHeaderBodyProperties(widget, property);
 }
-void TreeAssetList::applyHeaderBodyProperties(QWidget *widget, QString header, QString body) {
+void TreeAssets::applyHeaderBodyProperties(QWidget *widget, QString header, QString body) {
     m_widget_hover->applyHeaderBodyProperties(widget, header, body);
 }
 
@@ -50,13 +55,13 @@ void TreeAssetList::applyHeaderBodyProperties(QWidget *widget, QString header, Q
 //####################################################################################
 //##        Tree Building Functions
 //####################################################################################
-void TreeAssetList::buildAssetList()
+void TreeAssets::buildAssetTree()
 {
-    // Initialize some QWidget helper items
+    // ***** Initialize some QWidget helper items
     QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
     QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    sp_left.setHorizontalStretch(ASSET_SIZE_LEFT);
-    sp_right.setHorizontalStretch(ASSET_SIZE_RIGHT);
+    sp_left.setHorizontalStretch(c_asset_size_left);
+    sp_right.setHorizontalStretch(c_asset_size_right);
 
     QFont fp;
     fp.setPointSize(Dr::FontSize());
@@ -73,9 +78,9 @@ void TreeAssetList::buildAssetList()
     this->addTopLevelItem(category_item);
 
     // Create and style a button to be used as a header item for the category
-    CategoryButton *category_button = new CategoryButton("  Objects", category_item);
+    CategoryButton *category_button = new CategoryButton("  Objects", QColor(204, 204, 204), nullptr, category_item);
     QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: #CCCCCC; "
-                                                " border: 2px solid; border-radius: 1px; "
+                                                " border: " + Dr::BorderWidth() + " solid; border-radius: 1px; "
                                                 " border-color: #555555; "
                                                 " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 " +
                                                     Dr::GetColor(Window_Colors::Button_Light).name() + ", stop:1 " +
@@ -89,41 +94,47 @@ void TreeAssetList::buildAssetList()
 
     this->setItemWidget(category_item, 0, category_button);                             // Apply the button to the tree item
 
-    // Loop through each property and add it to the component frame
+    // ********** Loop through each property and add it to the component frame
     for (auto asset_pair: list_assets) {
-        if (asset_pair.second->getAssetType() != DrAsset_Type::Object) continue;
+        if (asset_pair.second->getAssetType() != DrAssetType::Object) continue;
 
+        // ***** Store current asset key in widget and install a mouse handler event filter on the item, AssetMouseHandler
         QFrame *single_row = new QFrame();
-        QBoxLayout *horizontal_split = new QHBoxLayout(single_row);
-        horizontal_split->setSpacing(0);
-        horizontal_split->setMargin(0);
-        horizontal_split->setContentsMargins(0,0,0,0);
+        single_row->setObjectName("assetFrame");
+        single_row->setProperty(User_Property::Key, QVariant::fromValue( asset_pair.second->getKey() ));
+        single_row->installEventFilter(new AssetMouseHandler(single_row, m_relay));
+
+        QBoxLayout *vertical_split = new QVBoxLayout(single_row);
+        vertical_split->setSpacing(0);
+        vertical_split->setMargin(0);
+        vertical_split->setContentsMargins(0,0,0,0);
 
         QLabel *asset_name = new QLabel(asset_pair.second->getAssetName());
         asset_name->setFont(fp);
         asset_name->setSizePolicy(sp_left);
         asset_name->setAlignment(Qt::AlignmentFlag::AlignCenter);
-        m_widget_hover->applyHeaderBodyProperties(asset_name, asset_pair.second->getAssetName(), "None.");
-        horizontal_split->addWidget(asset_name);
+        m_widget_hover->applyHeaderBodyProperties(asset_name, asset_pair.second->getAssetName(), Advisor_Info::Asset_Object[1] );
+        vertical_split->addWidget(asset_name);
 
-        QPixmap pix = asset_pair.second->getComponentProperty(Asset_Components::animation, Asset_Properties::animation_default)->getValue().value<QPixmap>();
+        // ***** Create the label that will display the asset
+        QPixmap pix = asset_pair.second->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
         QLabel *pix_label = new QLabel();
-        pix_label->setObjectName("assetFrame");
         pix_label->setFont(fp);
         pix_label->setSizePolicy(sp_right);
-        pix_label->setFixedHeight(60);
+        pix_label->setFixedHeight(45);
         pix_label->setAlignment(Qt::AlignmentFlag::AlignCenter);
-        horizontal_split->addWidget( pix_label );
+        m_widget_hover->applyHeaderBodyProperties(pix_label, asset_pair.second->getAssetName(), Advisor_Info::Asset_Object[1] );
+        vertical_split->addWidget( pix_label );
 
         // Draw pixmap onto label
-        pix_label->setPixmap(pix.scaled(90, 45, Qt::KeepAspectRatio));
+        pix_label->setPixmap(pix.scaled(120, 35, Qt::KeepAspectRatio));
 
-        // Create a child TreeWidgetItem attached to the TopLevel category item
+
+        // ***** Create a child TreeWidgetItem attached to the TopLevel category item
         QTreeWidgetItem *property_item = new QTreeWidgetItem();
         property_item->setDisabled(true);
         category_item->addChild(property_item);
         this->setItemWidget(property_item, 0, single_row);
-
 
 
         category_button->setEnabled(true);
@@ -131,10 +142,7 @@ void TreeAssetList::buildAssetList()
     }
 
 
-
-
     this->expandAll();
-
 }
 
 
@@ -142,7 +150,25 @@ void TreeAssetList::buildAssetList()
 
 
 
+//####################################################################################
+//##    AssetMouseHandler Class Functions
+//####################################################################################
+AssetMouseHandler::AssetMouseHandler(QObject *parent, InterfaceRelay *relay) : QObject(parent), m_relay(relay) {}
 
+bool AssetMouseHandler::eventFilter(QObject *obj, QEvent *event)
+{
+    if (!obj) return false;
+    QWidget *asset = dynamic_cast<QWidget*>(obj);
+
+    if (event->type() == QEvent::MouseButtonPress)
+    {
+        long asset_key = asset->property(User_Property::Key).toLongLong();
+
+        m_relay->buildObjectInspector( { asset_key } );
+    }
+
+    return QObject::eventFilter(obj, event);
+}
 
 
 

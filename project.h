@@ -12,11 +12,13 @@
 #include "settings.h"
 
 class DrAsset;
+class DrImage;
 class DrWorld;
 class DrStage;
 class DrObject;
 typedef std::map<long, DrWorld*> WorldMap;
 typedef std::map<long, DrAsset*> AssetMap;
+typedef std::map<long, DrImage*> ImageMap;
 
 //####################################################################################
 //##    DrProject
@@ -28,6 +30,7 @@ private:
     // Local variables
     WorldMap    m_worlds;                               // Holds worlds for the project
     AssetMap    m_assets;                               // Holds assets for the project
+    ImageMap    m_images;                               // Holds images for the project
 
     long        m_key_generator;                        // variable to hand out unique id key's to all children objects
 
@@ -40,28 +43,28 @@ public:
     long        getNextKey()   { return m_key_generator++; }
     void        setKeyGeneratorStartNumber(long initial_key) { m_key_generator = initial_key; }
 
-    DrAsset*    getAsset(long key)  { return m_assets[key]; }
-    AssetMap    getAssets()         { return m_assets; }
-    long        getNumberOfAssets() { return static_cast<long>(m_assets.size()); }
-
     long        getFirstWorldKey()  { return m_worlds.begin()->first; }
     long        getNumberOfWorlds() { return static_cast<long>(m_worlds.size()); }
     DrWorld*    getWorld(long key)  { return m_worlds[key]; }
     WorldMap    getWorlds()         { return m_worlds; }
     DrWorld*    getWorldWithName(QString world_name);
 
+    DrAsset*    getAsset(long key)  { return m_assets[key]; }
+    AssetMap    getAssets()         { return m_assets; }
+    long        getNumberOfAssets() { return static_cast<long>(m_assets.size()); }
+
+    DrImage*    getImage(long key)  { return m_images[key]; }
 
     // External calls
     DrStage*        findStageFromKey(long check_key);
-
     DrSettings*     findSettingsFromKey(long check_key);
-
     DrType          findChildTypeFromKey(long check_key);
-    DrAsset_Type    findAssetTypeFromKey(long check_key);
+
 
     // Children creation calls
     void        addWorld();
-    long        addAsset(QString new_asset_name, DrAsset_Type new_asset_type, QPixmap pixmap);
+    long        addAsset(DrAssetType new_asset_type, long image_key);
+    long        addImage(QString image_path);
 
 
 

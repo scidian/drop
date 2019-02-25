@@ -8,9 +8,7 @@
 #ifndef EDITOR_TREE_ADVISOR_H
 #define EDITOR_TREE_ADVISOR_H
 
-#include <QtWidgets>
-
-#include "enums.h"
+#include <QTreeWidget>
 
 class DrProject;
 class InterfaceRelay;

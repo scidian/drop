@@ -31,7 +31,6 @@ SOURCES += \
     main.cpp \
     editor_tree_inspector.cpp \
     editor_tree_assets.cpp \
-    editor_tree_scene.cpp \
     editor_tree_advisor.cpp \
     form_main_menu.cpp \
     project.cpp \
@@ -49,17 +48,22 @@ SOURCES += \
     editor_tree_widgets.cpp \
     project_world_stage.cpp \
     project_world_stage_object.cpp \
-    editor_stage_scene.cpp \
-    editor_stage_view_tooltip.cpp \
-    editor_stage_view_select.cpp \
-    editor_stage_view_rotate.cpp \
-    editor_stage_view_resize.cpp \
-    editor_stage_view_paint.cpp \
-    editor_stage_view_mouse.cpp \
-    editor_stage_view.cpp \
-    editor_stage_scene_select.cpp \
-    editor_stage_scene_commands.cpp \
-    editor_stage_item.cpp
+    editor_item.cpp \
+    editor_scene.cpp \
+    editor_scene_undo_commands.cpp \
+    editor_scene_select.cpp \
+    editor_view.cpp \
+    editor_view_mouse.cpp \
+    editor_view_paint.cpp \
+    editor_view_resize.cpp \
+    editor_view_tooltip.cpp \
+    editor_view_rotate.cpp \
+    editor_view_select.cpp \
+    project_image.cpp \
+    editor_tree_project.cpp \
+    constants.cpp \
+    editor_view_mouse_move.cpp \
+    editor_tree_inspector_update.cpp
 
 HEADERS += \
     enums.h \
@@ -80,11 +84,13 @@ HEADERS += \
     editor_tree_widgets.h \
     project_world_stage.h \
     project_world_stage_object.h \
-    editor_tree_stage.h \
-    editor_stage_scene.h \
-    editor_stage_view.h \
-    editor_stage_scene_commands.h \
-    editor_stage_item.h
+    editor_item.h \
+    editor_scene.h \
+    editor_view.h \
+    editor_scene_undo_commands.h \
+    project_image.h \
+    editor_tree_project.h \
+    constants.h
 
 FORMS +=
 

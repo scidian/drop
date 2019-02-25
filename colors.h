@@ -8,7 +8,6 @@
 #ifndef COLORS_H
 #define COLORS_H
 
-#include <map>
 #include <QColor>
 
 
@@ -36,10 +35,19 @@ namespace Dr {
 
     void            LoadPalettes();
 
+    QString         BorderWidth();                              // Project wide border width for Style Sheets
     int             FontSize();                                 // Project wide font size
 
     QColor          GetColor(Window_Colors color_role);
     Color_Scheme    GetColorScheme();
+
+
+    /**
+     * Doxygen comments, type slash star star enter, brief shows a mouse mover popup for the described function in the editor
+     *
+     * @brief SetColorScheme is a setter to a global veriable that keeps track of which color scheme to use for the open editor
+     * @param new_scheme
+     */
     void            SetColorScheme(Color_Scheme new_scheme);
 
 }

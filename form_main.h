@@ -5,9 +5,9 @@
 //      FormMain - Class that holds our main form window
 //
 //      FormMain Modes:
-//          Edit Stage
-//          Edit UI
-//          Node Map: World / UI Layout
+//          World Editor
+//          UI Editor
+//          World Map: World / UI Layout
 //          Stage Map: Stage Layout
 //
 //      Main Components of FormMain while in normal "Edit Stage" mode:
@@ -15,10 +15,10 @@
 //          Advisor (Dock)
 //          Object Inspector (Dock)
 //
-//          Components That Can Appear in Object Inspector:
-//              Asset List (Dock)
-//              Stage View
-//              Stage List
+//          Components That Have Items that Can Appear in Object Inspector:
+//              Asset List
+//              Scene View
+//              Project Tree
 //              Variable List
 //              Bottom Area (Labels, Stages?)
 //
@@ -27,23 +27,27 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QtWidgets>
+
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QPushButton>
+#include <QScrollArea>
+#include <QSplitter>
 
 #include "colors.h"
-#include "debug.h"
-#include "project.h"
 #include "interface_relay.h"
 
 // Necessary forward declarations
 class ColorSplitter;
 class InterfaceRelay;
-class TreeAssetList;
+class TreeAssets;
 class TreeAdvisor;
 class TreeInspector;
-class TreeStage;
-class StageGraphicsScene;
-class StageGraphicsView;
-class StageViewRubberBand;
+class TreeProject;
+class DrProject;
+class DrScene;
+class DrView;
+class DrViewRubberBand;
 
 
 
@@ -57,22 +61,20 @@ class FormMain : public QMainWindow, public InterfaceRelay
 public:
     // Locals
     Form_Main_Mode  current_mode;                                       // Holds current editing mode of FormMain
-    Form_Main_Focus current_focus;                                      // Holds Widget that currently has focus
-    bool            done_loading = false;                               // True after initial startup of FormMain,
-                                                                        // makes sure done loading before any calls to SetLabelText
 
     // Locals that need to be SAVED / LOADED from each project
     DrProject      *project;                                            // Holds whatever the current open game project is
     long            current_world;                                      // Tracks which world to show in the Stage viewer
 
-private:
-    StageGraphicsScene  *scene;                 // Holds the currently selected Stage, ready for rendering in StageGraphicsView
-    StageGraphicsView   *viewMain;              // Renders scene for the viewer
 
-    TreeStage           *treeStage;             // Custom classes for Stage List
-    TreeInspector       *treeInspector;         // Custom classes for Object Inspector
-    TreeAssetList       *treeAsset;             // Custom classes for Asset List
-    TreeAdvisor         *treeAdvisor;           // Custom classes for Advisor List
+private:
+    TreeAdvisor   *treeAdvisor;           // Custom classes for Advisor Window
+    TreeAssets    *treeAsset;             // Custom classes for Asset Tree
+    TreeInspector *treeInspector;         // Custom classes for Object Inspector
+    TreeProject   *treeProject;           // Custom classes for Project Tree
+
+    DrScene       *scene;                 // Behind the scene data model that holds the currently selected Stage
+    DrView        *viewMain;              // Renders the scene, allows for interaction
 
     // Normal Qt Classes for simple objects
     QMenuBar      *menuBar;
@@ -99,17 +101,22 @@ public:
     explicit FormMain(QWidget *parent = nullptr);
     ~FormMain();
 
-    // Member functions
-    virtual void    buildAssetList();
+    // Interface Relay Implementations
+    virtual void    buildAssetTree();
     virtual void    buildObjectInspector(QList<long> key_list);
-    virtual void    buildTreeStageList();
-    virtual void    centerViewOn(QPointF center_point);
-    virtual void    populateScene(long from_stage_key);
+    virtual void    buildProjectTree();
+    virtual void    buildScene(long from_stage_key);
+
+    virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<long> property_keys);
+    virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Properties> property_keys);
+
+    virtual void    updateItemSelection(Editor_Widgets selected_from);
+
+    virtual void    centerViewOnPoint(QPointF center_point);
+
     virtual void    setAdvisorInfo(HeaderBodyList header_body_list);
     virtual void    setAdvisorInfo(QString header, QString body);
     virtual void    setLabelText(Label_Names label_name, QString new_text);
-    virtual void    updateObjectInspectorAfterItemChange(long item_key);
-    virtual void    updateStageTreeSelectionBasedOnSelectionGroup();
 
 private:
     // Form Building / Setup
@@ -117,6 +124,8 @@ private:
     void        buildWindow(Form_Main_Mode new_layout);
     void        buildWindowModeEditStage();
     void        changePalette(Color_Scheme new_color_scheme);
+    void        connectSignals();
+    void        disconnectSignals();
 
     // Menu Bar Functions
     void        menuAbout();
@@ -133,7 +142,7 @@ signals:
     void        sendAdvisorInfo(QString header, QString body);              // Forwards info to MainWindow::changeAdvisor
 
     // Undo Stack Signals
-    void        newStageSelected(DrProject *project, StageGraphicsScene *scene, long old_stage, long new_stage);
+    void        newStageSelected(DrProject *project, DrScene *scene, long old_stage, long new_stage);
 
 };
 

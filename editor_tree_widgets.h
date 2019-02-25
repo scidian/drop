@@ -10,8 +10,8 @@
 
 #include <QPushButton>
 #include <QTreeWidgetItem>
-#include <QWidget>
 
+#include "constants.h"
 #include "enums.h"
 
 class DrProperty;
@@ -45,6 +45,21 @@ signals:
 
 
 //####################################################################################
+//##    MouseWheelWidgetAdjustmentGuard
+//##        Stops widget from stealing focus on mouse wheel
+//####################################################################################
+class MouseWheelWidgetAdjustmentGuard : public QObject
+{
+public:
+    explicit        MouseWheelWidgetAdjustmentGuard(QObject *parent);
+
+protected:
+    bool            eventFilter(QObject* obj, QEvent* event) override;
+};
+
+
+
+//####################################################################################
 //##    CategoryButton
 //##        A sub classed QPushButton so we can override events for header buttons in Tree Lists
 //############################
@@ -56,9 +71,12 @@ private:
     QTreeWidget          m_parent_tree;
     QTreeWidgetItem     *m_parent_item;
     bool                 m_is_shrunk = false;
+    QColor               m_color;
 
 public:
-    CategoryButton(const QString &text, QTreeWidgetItem *parent_item);
+    CategoryButton(const QString &text, QColor color, QWidget *parent, QTreeWidgetItem *parent_tree_item);
+
+    void            paintEvent(QPaintEvent *event);
 
 private slots:
     void            buttonPressed();

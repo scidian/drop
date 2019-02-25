@@ -5,19 +5,27 @@
 //      Calls to set up, initialize, build Form Main
 //
 //
+#include <QApplication>
+#include <QDockWidget>
+#include <QHeaderView>
+#include <QOpenGLWidget>
 
-#include "library.h"
+#include "colors.h"
+#include "debug.h"
 
-#include "editor_stage_scene.h"
+#include "editor_scene.h"
 #include "editor_tree_advisor.h"
 #include "editor_tree_assets.h"
 #include "editor_tree_inspector.h"
-#include "editor_tree_stage.h"
-#include "editor_stage_view.h"
+#include "editor_tree_project.h"
+#include "editor_view.h"
 
 #include "form_main.h"
 
+#include "library.h"
+
 #include "project_world_stage.h"
+
 
 //####################################################################################
 //##        Setting up of form main
@@ -30,21 +38,25 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
     current_mode = new_layout;
     switch (current_mode)
     {
-    case Form_Main_Mode::Edit_Stage:
+    case Form_Main_Mode::World_Editor:
         buildWindowModeEditStage();
-        buildAssetList();
-        buildTreeStageList();
+        buildAssetTree();
+        buildProjectTree();
         viewMain->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
-        current_focus = Form_Main_Focus::Stage_View;
         scene->setSceneRect(-2000, -2000, 4000, 4000);
         scene->update();
         viewMain->update();
-        centerViewOn(QPointF(0, 0));
+        centerViewOnPoint(QPointF(0, 0));
         break;
     case Form_Main_Mode::Clear:  
+
+        disconnectSignals();
+        for (auto item : scene->selectedItems())
+            item->setSelected(false);
+
         this->takeCentralWidget()->deleteLater();
         for (auto dock : findChildren<QDockWidget *>()) { dock->deleteLater(); }
-        delete scene;
+
         break;
     default:
         Dr::ShowMessageBox("Not set");
@@ -57,14 +69,18 @@ void FormMain::buildWindowModeEditStage()
     font.setPointSize(Dr::FontSize());
     fontLarger.setPointSize(Dr::FontSize() + 2);
 
-    // Other size policies to play with
-    //QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::MinimumExpanding);
-    //QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored);
-    //QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
+    /// Other size policies to play with
+    ///QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::MinimumExpanding);
+    ///QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored);
+    ///QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
 
     QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     sizePolicy.setHorizontalStretch(0);
     sizePolicy.setVerticalStretch(0);
+
+    QSizePolicy sizePolicyLess(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    sizePolicy.setHorizontalStretch(1);
+    sizePolicy.setVerticalStretch(1);
 
     QSizePolicy sizePolicyPreferredHorizontal(QSizePolicy::Preferred, QSizePolicy::Preferred);
     sizePolicyPreferredHorizontal.setHorizontalStretch(1);
@@ -74,17 +90,13 @@ void FormMain::buildWindowModeEditStage()
     sizePolicyPreferredHorizontal.setHorizontalStretch(0);
     sizePolicyPreferredHorizontal.setVerticalStretch(1);
 
-    QSizePolicy sizePolicyMinimum(QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Minimum);
+    QSizePolicy sizePolicyMinimum(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::MinimumExpanding);
     sizePolicy.setHorizontalStretch(0);
     sizePolicy.setVerticalStretch(0);
 
     QSizePolicy sizePolicyView(QSizePolicy::MinimumExpanding, QSizePolicy::Expanding);
     sizePolicyView.setHorizontalStretch(1);
     sizePolicyView.setVerticalStretch(0);
-
-
-    // ***** Initialize GraphicsScene object
-    scene = new StageGraphicsScene(this, project, this);
 
 
     // ***** Build central widgets
@@ -114,37 +126,37 @@ void FormMain::buildWindowModeEditStage()
                 splitterHorizontal->setOrientation(Qt::Horizontal);
                 splitterHorizontal->setHandleWidth(4);
 
-                    // ***** Load our custom TreeStageView for the Scene List
-                    treeStage = new TreeStage(splitterHorizontal, project, this);
-                    treeStage->setStyle(new StageTreeHighlightProxy(treeStage->style(), treeStage, this));
+                    // ***** Load our custom TreeProject for the Scene List
+                    treeProject = new TreeProject(splitterHorizontal, project, this);
+                    treeProject->setStyle(new StageTreeHighlightProxy(treeProject->style(), treeProject, this));
                         QTreeWidgetItem *header_item_stage = new QTreeWidgetItem();
                         header_item_stage->setIcon(1, QIcon(":/tree_icons/tree_lock_header.png"));
-                        treeStage->setHeaderItem(header_item_stage);
-                    treeStage->setObjectName(QStringLiteral("treeStage"));
-                    treeStage->setColumnCount(2);
-                    treeStage->setColumnWidth(0, 150);
-                    treeStage->setColumnWidth(1, 16);
-                    treeStage->setMinimumSize(QSize(190, 0));
-                    treeStage->setMaximumWidth(400);
-                    treeStage->setFont(font);
-                    treeStage->setProperty("showDropIndicator", QVariant(false));
-                    treeStage->setDragEnabled(true);
-                    treeStage->setDragDropOverwriteMode(false);
-                    treeStage->setDragDropMode(QAbstractItemView::DragDropMode::InternalMove);
-                    treeStage->setDefaultDropAction(Qt::DropAction::TargetMoveAction);
-                    treeStage->setAlternatingRowColors(false);
-                    treeStage->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
-                    treeStage->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
-                    treeStage->setIndentation(15);
-                    treeStage->setRootIsDecorated(true);
-                    treeStage->setItemsExpandable(true);
-                    treeStage->setExpandsOnDoubleClick(false);
-                    treeStage->header()->setSectionResizeMode(0, QHeaderView::ResizeMode::Stretch);
-                    treeStage->header()->setStretchLastSection(false);
-                    treeStage->header()->setVisible(true);
-                    treeStage->setFrameShape(QFrame::NoFrame);
+                        treeProject->setHeaderItem(header_item_stage);
+                    treeProject->setObjectName(QStringLiteral("treeProject"));
+                    treeProject->setColumnCount(2);
+                    treeProject->setColumnWidth(0, 150);
+                    treeProject->setColumnWidth(1, 16);
+                    treeProject->setMinimumSize(QSize(190, 0));
+                    treeProject->setMaximumWidth(400);
+                    treeProject->setFont(font);
+                    treeProject->setProperty("showDropIndicator", QVariant(false));
+                    treeProject->setDragEnabled(true);
+                    treeProject->setDragDropOverwriteMode(false);
+                    treeProject->setDragDropMode(QAbstractItemView::DragDropMode::InternalMove);
+                    treeProject->setDefaultDropAction(Qt::DropAction::TargetMoveAction);
+                    treeProject->setAlternatingRowColors(false);
+                    treeProject->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
+                    treeProject->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
+                    treeProject->setIndentation(15);
+                    treeProject->setRootIsDecorated(true);
+                    treeProject->setItemsExpandable(true);
+                    treeProject->setExpandsOnDoubleClick(false);
+                    treeProject->header()->setSectionResizeMode(0, QHeaderView::ResizeMode::Stretch);
+                    treeProject->header()->setStretchLastSection(false);
+                    treeProject->header()->setVisible(true);
+                    treeProject->setFrameShape(QFrame::NoFrame);
 
-                splitterHorizontal->addWidget(treeStage);
+                splitterHorizontal->addWidget(treeProject);
 
 
                     widgetStageView = new QWidget(splitterHorizontal);
@@ -157,32 +169,41 @@ void FormMain::buildWindowModeEditStage()
                         verticalLayoutView->setSpacing(0);
                         verticalLayoutView->setContentsMargins(0, 0, 0, 0);
 
-                        // ***** Load our StageGraphicsView to display our StageGraphicsScene collection of items
-                        viewMain = new StageGraphicsView(widgetStageView, project, this);
+                        // ***** Load our DrView to display our DrScene collection of items
+                        viewMain = new DrView(widgetStageView, project, scene, this);
                         viewMain->setObjectName(QStringLiteral("viewMain"));
 
-                        if (!Dr::CheckDebugFlag(Debug_Flags::Turn_Off_Antialiasing))
+                        if (!Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing))
                             viewMain->setRenderHint(QPainter::Antialiasing, false);
-                        else
+                        else {
                             viewMain->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
+                            QSurfaceFormat format;
+                            format.setSamples(4);
+                            QSurfaceFormat::setDefaultFormat(format);                   // Set antialiasing samples to 4
+                        }
+
+                        if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL)) {
+                            QOpenGLWidget *gl_widget = new QOpenGLWidget();
+                            gl_widget->setUpdateBehavior(QOpenGLWidget::NoPartialUpdate);
+                            viewMain->setViewport(gl_widget);
+                        }
 
                         viewMain->setDragMode(QGraphicsView::DragMode::NoDrag);
                         viewMain->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);
                         viewMain->setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
-                        // This setting means we will decide when to call update(), controls recurssive paint events
-                        viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
-                        ///viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
+
+                        /// This setting means we will decide when to call update(), controls recurssive paint events
+                        ///viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
+                        viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
                         viewMain->setFrameShape(QFrame::NoFrame);
-                        viewMain->setScene(scene);
+
+
 
 
                         // ***** View area status bar
                         statusBar = new QFrame(widgetStageView);
                         statusBar->setObjectName("statusBar");
                         statusBar->setFixedHeight(20);
-
-
-
 
 
                     verticalLayoutView->addWidget(viewMain);
@@ -286,7 +307,7 @@ void FormMain::buildWindowModeEditStage()
     // ***** Build left Assets Dock
     assets = new QDockWidget(this);
     assets->setObjectName(QStringLiteral("assets"));
-    assets->setMinimumSize(QSize(180, 35));
+    assets->setMinimumSize(QSize(140, 35));
     assets->setMaximumWidth(300);
     assets->setFont(font);
     assets->setFeatures(QDockWidget::DockWidgetMovable);  // | QDockWidget::DockWidgetClosable);
@@ -300,7 +321,7 @@ void FormMain::buildWindowModeEditStage()
             verticalLayoutAsset->setContentsMargins(0, 0, 0, 0);
 
                 // ***** Load our custom TreeObjectInspector for the Stage List
-                treeAsset = new TreeAssetList(widgetAssests, project, this);
+                treeAsset = new TreeAssets(widgetAssests, project, this);
                 treeAsset->setObjectName(QStringLiteral("treeAsset"));
                 treeAsset->setColumnCount(1);
                 treeAsset->setFont(font);
@@ -319,26 +340,23 @@ void FormMain::buildWindowModeEditStage()
                 treeAsset->setHeaderHidden(true);
                 treeAsset->setFrameShape(QFrame::NoFrame);
 
-
-
             verticalLayoutAsset->addWidget(treeAsset);
 
         assets->setWidget(widgetAssests);
-    addDockWidget(static_cast<Qt::DockWidgetArea>(1), assets);
 
 
     // ***** Build right Advisor Dock
     advisor = new QDockWidget(this);
     advisor->setObjectName(QStringLiteral("advisor"));
     advisor->setMinimumSize(QSize(100, 80));
-    advisor->setSizePolicy(sizePolicy);
+    advisor->setSizePolicy(sizePolicyLess);
     advisor->setFont(font);
     advisor->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable);
     advisor->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
         widgetAdvisor = new QWidget();
         widgetAdvisor->setObjectName(QStringLiteral("widgetAdvisor"));
-        widgetAdvisor->setSizePolicy(sizePolicy);
-        widgetAdvisor->setMaximumHeight(120);
+        widgetAdvisor->setSizePolicy(sizePolicyLess);
+        widgetAdvisor->setMaximumHeight(180);
             verticalLayoutAdvisor = new QVBoxLayout(widgetAdvisor);
             verticalLayoutAdvisor->setObjectName(QStringLiteral("verticalLayoutAdvisor"));
             verticalLayoutAdvisor->setSpacing(0);
@@ -407,9 +425,6 @@ void FormMain::buildWindowModeEditStage()
             verticalLayoutObject->addWidget(treeInspector);
         inspector->setWidget(widgetInspector);
 
-    addDockWidget(static_cast<Qt::DockWidgetArea>(2), inspector);
-    addDockWidget(static_cast<Qt::DockWidgetArea>(2), advisor);
-
 
     // ***** Build top Toolbar Dock
     toolbar = new QDockWidget(this);
@@ -423,40 +438,43 @@ void FormMain::buildWindowModeEditStage()
         widgetToolbar = new QWidget();
         widgetToolbar->setObjectName(QStringLiteral("widgetToolbar"));
             buttonAtlas = new QPushButton(widgetToolbar);
-            buttonAtlas->setObjectName(QStringLiteral("buttonAtlas"));
+            buttonAtlas->setObjectName(QStringLiteral("toolbarButton"));
             buttonAtlas->setGeometry(QRect(250, 8, 111, 31));
             buttonAtlas->setFont(font);
             buttonFonts = new QPushButton(widgetToolbar);
-            buttonFonts->setObjectName(QStringLiteral("buttonFonts"));
+            buttonFonts->setObjectName(QStringLiteral("toolbarButton"));
             buttonFonts->setGeometry(QRect(370, 8, 111, 31));
             buttonFonts->setFont(font);
             buttonPlay = new QPushButton(widgetToolbar);
-            buttonPlay->setObjectName(QStringLiteral("buttonPlay"));
+            buttonPlay->setObjectName(QStringLiteral("toolbarButton"));
             buttonPlay->setGeometry(QRect(660, 8, 111, 31));
             buttonPlay->setFont(font);
             buttonSettings = new QPushButton(widgetToolbar);
-            buttonSettings->setObjectName(QStringLiteral("buttonSettings"));
+            buttonSettings->setObjectName(QStringLiteral("toolbarButton"));
             buttonSettings->setGeometry(QRect(780, 8, 111, 31));
             buttonSettings->setFont(font);
             buttonWorlds = new QPushButton(widgetToolbar);
-            buttonWorlds->setObjectName(QStringLiteral("buttonWorlds"));
+            buttonWorlds->setObjectName(QStringLiteral("toolbarButton"));
             buttonWorlds->setGeometry(QRect(20, 8, 121, 31));
             buttonWorlds->setFont(font);
         toolbar->setWidget(widgetToolbar);
         toolbar->setTitleBarWidget(new QWidget());                                      // Removes title bar from QDockWidget Toolbar
+
+
+    // ***** Add QMainWindow Docks
+    addDockWidget(static_cast<Qt::DockWidgetArea>(1), assets);
+    addDockWidget(static_cast<Qt::DockWidgetArea>(2), inspector);
+    addDockWidget(static_cast<Qt::DockWidgetArea>(2), advisor);
     addDockWidget(static_cast<Qt::DockWidgetArea>(4), toolbar);
 
-    resizeDocks({assets, inspector}, {180, 300}, Qt::Horizontal);                       // Forces resize of docks
+    // Forces resize of docks
+    resizeDocks( { assets, inspector  }, { 140, 270 }, Qt::Horizontal);
+    resizeDocks( { advisor, inspector }, { 140, 900 }, Qt::Vertical);
 
 
 
-    // ******************** Signals emitted by FormMain
-    // Fires signal that is picked up by Advisor to change the help info
-    connect(this, SIGNAL(sendAdvisorInfo(QString, QString)), treeAdvisor, SLOT(changeAdvisor(QString, QString)) , Qt::QueuedConnection);
-
-    // Connects signal used to populate scene
-    connect(this, SIGNAL(newStageSelected(DrProject*, StageGraphicsScene*, long, long)),
-            scene,  SLOT(newStageSelected(DrProject*, StageGraphicsScene*, long, long)) );
+    // ***** Signals emitted by FormMain
+    connectSignals();
 
 
 
@@ -483,6 +501,37 @@ void FormMain::buildWindowModeEditStage()
     buttonWorlds->setText(QApplication::translate("MainWindow", "Worlds / UI", nullptr));
 
 }
+
+
+
+//####################################################################################
+//##        Connect / disconnect signals emitted by FormMain
+//####################################################################################
+void FormMain::connectSignals()
+{
+    connect(this, SIGNAL(sendAdvisorInfo(QString, QString)), treeAdvisor, SLOT(changeAdvisor(QString, QString)) , Qt::QueuedConnection);
+
+    // Connects signal used to populate scene
+    connect(this, SIGNAL(newStageSelected(DrProject*, DrScene*, long, long)),
+            scene,  SLOT(newStageSelected(DrProject*, DrScene*, long, long)) );
+}
+
+// Disconnect signals emitted by FormMain
+void FormMain::disconnectSignals()
+{
+    disconnect(this, SIGNAL(sendAdvisorInfo(QString, QString)), treeAdvisor, SLOT(changeAdvisor(QString, QString)) );
+
+    // Connects signal used to populate scene
+    disconnect(this, SIGNAL(newStageSelected(DrProject*, DrScene*, long, long)),
+               scene,  SLOT(newStageSelected(DrProject*, DrScene*, long, long)) );
+}
+
+
+
+
+
+
+
 
 
 

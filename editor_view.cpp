@@ -5,43 +5,78 @@
 //      Graphics View Definitions
 //
 //
+#include "QKeyEvent"
+
+#include "colors.h"
+#include "debug.h"
+
+#include "editor_item.h"
+#include "editor_view.h"
+#include "editor_scene.h"
+#include "interface_relay.h"
+#include "library.h"
 
 #include "project.h"
 #include "project_world.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
-#include "editor_stage_item.h"
-
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
-
-#include "editor_stage_view.h"
-#include "editor_stage_scene.h"
-#include "interface_relay.h"
 
 
 //####################################################################################
 //##        Constructor & destructor
 //####################################################################################
-StageGraphicsView::StageGraphicsView(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
-                                     QGraphicsView(parent = nullptr), m_project(project), m_relay(relay)
+DrView::DrView(QWidget *parent, DrProject *project, DrScene *from_scene, InterfaceRelay *relay) :
+               QGraphicsView(parent = nullptr), m_project(project), m_relay(relay)
 {
     // Initialize rubber band object used as a selection box
-    m_rubber_band = new StageViewRubberBand(QRubberBand::Shape::Rectangle, this);
+    m_rubber_band = new DrViewRubberBand(QRubberBand::Shape::Rectangle, this);
 
     // Initialize tool tip object used for displaying some helpful info
-    m_tool_tip = new StageViewToolTip(this);
+    m_tool_tip = new DrViewToolTip(this);
     m_tool_tip->hide();
 
     m_over_handle = Position_Flags::No_Position;
 
     if (Dr::CheckDebugFlag(Debug_Flags::Label_FPS))
         m_debug_timer.start();
+
+    my_scene = from_scene;
+    setScene(my_scene);
+
+
+    // ********** Connect signals to scene
+    connect(my_scene, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
+    connect(my_scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
+
+    connect(my_scene, &DrScene::updateGrid,  this, [this]() { updateGrid(); });
+    connect(my_scene, &DrScene::updateViews, this, [this]() { update(); });
+
+    connect(this,   SIGNAL(selectionGroupMoved(DrScene*, QPointF)),
+            my_scene, SLOT(selectionGroupMoved(DrScene*, QPointF)));
+
+    connect(this,   SIGNAL(selectionGroupNewGroup(DrScene*, QList<DrObject*>, QList<DrObject*>)),
+            my_scene, SLOT(selectionGroupNewGroup(DrScene*, QList<DrObject*>, QList<DrObject*>)) );
+
 }
 
-StageGraphicsView::~StageGraphicsView()
+
+DrView::~DrView()
 {
+    // ********** Disconnect signals from scene
+    disconnect(my_scene, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
+    disconnect(my_scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
+
+    disconnect(my_scene, &DrScene::updateViews, this, nullptr);
+
+    disconnect(this,   SIGNAL(selectionGroupMoved(DrScene*, QPointF)),
+               my_scene, SLOT(selectionGroupMoved(DrScene*, QPointF)));
+
+    disconnect(this,   SIGNAL(selectionGroupNewGroup(DrScene*, QList<DrObject*>, QList<DrObject*>)),
+               my_scene, SLOT(selectionGroupNewGroup(DrScene*, QList<DrObject*>, QList<DrObject*>)) );
+
     delete m_tool_tip;
 }
 
@@ -52,7 +87,7 @@ StageGraphicsView::~StageGraphicsView()
 //##        Key Events
 //####################################################################################
 // Key press event
-void StageGraphicsView::keyPressEvent(QKeyEvent *event)
+void DrView::keyPressEvent(QKeyEvent *event)
 {
     // When space bar is down, enabled mouse press and move to translate viewable area
     if (event->key() == Qt::Key::Key_Space) {   m_flag_key_down_spacebar = true;
@@ -74,7 +109,7 @@ void StageGraphicsView::keyPressEvent(QKeyEvent *event)
 }
 
 // Key release event
-void StageGraphicsView::keyReleaseEvent(QKeyEvent *event)
+void DrView::keyReleaseEvent(QKeyEvent *event)
 {
     // When space bar is released, change mode back to select / move items
     if (event->key() == Qt::Key::Key_Space) {   m_flag_key_down_spacebar = false;
@@ -102,42 +137,64 @@ void StageGraphicsView::keyReleaseEvent(QKeyEvent *event)
 //##        Scene Change SLOTs / Events to update selection box when scene / selection changes
 //####################################################################################
 // Connected from scene().changed
-void StageGraphicsView::sceneChanged(QList<QRectF>)
+void DrView::sceneChanged(QList<QRectF>)
 {
-    double left_adjust =  -4000;
-    double right_adjust =  4000;
-    double top_adjust =   -4000;
-    double bottom_adjust = 4000;
-    this->setSceneRect( scene()->sceneRect().adjusted(left_adjust, top_adjust, right_adjust, bottom_adjust) );
+    if (m_view_mode == View_Mode::None) {
+        double left_adjust =  -4000;
+        double right_adjust =  4000;
+        double top_adjust =   -4000;
+        double bottom_adjust = 4000;
+        this->setSceneRect( scene()->sceneRect().adjusted(left_adjust, top_adjust, right_adjust, bottom_adjust) );
+    }
 
-    updateSelectionBoundingBox();
+    updateSelectionBoundingBox(1);
     ///update();             // Don't use here!!!!! Calls paint recursively
 }
 
 // Connected from scene().selectionChanged
-void StageGraphicsView::selectionChanged()
+void DrView::selectionChanged()
 {
-    updateSelectionBoundingBox();
+    updateSelectionBoundingBox(2);
     ///update();             // Don't use here!!!!! Calls paint recursively
 }
 
-void StageGraphicsView::scrollContentsBy(int dx, int dy)
+void DrView::scrollContentsBy(int dx, int dy)
 {
     QGraphicsView::scrollContentsBy(dx, dy);
-    updateSelectionBoundingBox();
+    updateSelectionBoundingBox(3);
     update();
 }
 
-void StageGraphicsView::updateSelectionBoundingBox()
+
+void DrView::updateGrid()
+{
+    if (!scene()) return;
+    if (!my_scene->getCurrentStageShown()) return;
+
+    m_grid_origin =  my_scene->getCurrentStageShown()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point).toPointF();
+    m_grid_size =    my_scene->getCurrentStageShown()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
+    m_grid_rotate =  my_scene->getCurrentStageShown()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Rotation).toDouble();
+    int style =      my_scene->getCurrentStageShown()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Style).toInt();
+    m_grid_style =   static_cast<Grid_Style>(style);
+}
+
+void DrView::updateSelectionBoundingBox(int called_from)
 {
     // Test for scene, convert to our custom class and lock the scene
     if (scene() == nullptr) return;
+    if (m_hide_bounding == true) return;
 
-    StageGraphicsScene *my_scene = dynamic_cast<StageGraphicsScene *>(scene());
-    QGraphicsItem      *item = my_scene->getSelectionGroupAsGraphicsItem();
-    if (my_scene->getSelectionGroupCount() < 1) return;
+    QRectF           rect =      my_scene->getSelectionBox().normalized();
+    QTransform       transform = my_scene->getSelectionTransform();
+
+    if (my_scene->getSelectionCount() < 1) return;
     if (my_scene->scene_mutex.tryLock(0) == false) return;
 
+    // !!!!! DEBUG: Shows where the call to the UpdateSelectionBoxData function originated from
+    if (Dr::CheckDebugFlag(Debug_Flags::Label_Where_Update_Box_From)) {
+        Dr::SetLabelText(Label_Names::Label_2, QTime().currentTime().toString() + ", From: " + QString::number(called_from)  );
+    }
+    // !!!!! END
 
     // Size of side handle boxes
     double side_size = 10;
@@ -147,17 +204,16 @@ void StageGraphicsView::updateSelectionBoundingBox()
     double corner_size = 14;
 
     // Check if bounding box handles should be squares or circles
-    double angle = item->data(User_Roles::Rotation).toDouble();
+    double angle = my_scene->getSelectionAngle();
     if (isSquare(angle) == false)  m_handles_shape = Handle_Shapes::Circles;
     else                           m_handles_shape = Handle_Shapes::Squares;
 
     // ***** Store corner handle polygons
-    QTransform transform = item->sceneTransform();                          // Get item bounding box to scene transform
-    QPointF top_left =  transform.map(item->boundingRect().topLeft());
-    QPointF top_right = transform.map(item->boundingRect().topRight());
-    QPointF bot_left =  transform.map(item->boundingRect().bottomLeft());
-    QPointF bot_right = transform.map(item->boundingRect().bottomRight());
-    QPointF center =    transform.map(item->boundingRect().center());
+    QPointF top_left =  transform.map(rect.topLeft());
+    QPointF top_right = transform.map(rect.topRight());
+    QPointF bot_left =  transform.map(rect.bottomLeft());
+    QPointF bot_right = transform.map(rect.bottomRight());
+    QPointF center =    transform.map(rect.center());
     QTransform remove_rotation = QTransform().translate(center.x(), center.y()).rotate(-angle).translate(-center.x(), -center.y());
 
     // ***** Store view coodinate rectangles of corners for size grip handles
@@ -188,25 +244,26 @@ void StageGraphicsView::updateSelectionBoundingBox()
     m_handles[Position_Flags::Right] =  add_rotation.map(temp_right);
 
     // *****  Store polygon centers for use later in paintHandles
-    for (auto h : m_handles) m_handles_centers[h.first] = h.second.boundingRect().center();
+    for (auto h : m_handles)
+        m_handles_centers[h.first] = h.second.boundingRect().center();
 
     // *****  Calculates angles for mouse cursors over sides
-    m_handles_angles[Position_Flags::Top] = QLineF(m_handles_centers[Position_Flags::Top_Left], m_handles_centers[Position_Flags::Top_Right]).angle();
-    m_handles_angles[Position_Flags::Right] = QLineF(m_handles_centers[Position_Flags::Top_Right], m_handles_centers[Position_Flags::Bottom_Right]).angle();
+    m_handles_angles[Position_Flags::Top] =    QLineF(m_handles_centers[Position_Flags::Top_Left],     m_handles_centers[Position_Flags::Top_Right]).angle();
+    m_handles_angles[Position_Flags::Right] =  QLineF(m_handles_centers[Position_Flags::Top_Right],    m_handles_centers[Position_Flags::Bottom_Right]).angle();
     m_handles_angles[Position_Flags::Bottom] = QLineF(m_handles_centers[Position_Flags::Bottom_Right], m_handles_centers[Position_Flags::Bottom_Left]).angle();
-    m_handles_angles[Position_Flags::Left] = QLineF(m_handles_centers[Position_Flags::Bottom_Left], m_handles_centers[Position_Flags::Top_Left]).angle();
+    m_handles_angles[Position_Flags::Left] =   QLineF(m_handles_centers[Position_Flags::Bottom_Left],  m_handles_centers[Position_Flags::Top_Left]).angle();
 
     // Adjust for angle returned by QLineF to match angles we're used in View_Mode::Rotating function
     for (auto &pair : m_handles_angles) pair.second = 360 - pair.second;
 
     // Calculate angles for mouse cursors over corners
-    m_handles_angles[Position_Flags::Top_Right] =    calculateCornerAngle(m_handles_angles[Position_Flags::Right], m_handles_angles[Position_Flags::Top]);
+    m_handles_angles[Position_Flags::Top_Right] =    calculateCornerAngle(m_handles_angles[Position_Flags::Right],  m_handles_angles[Position_Flags::Top]);
     m_handles_angles[Position_Flags::Bottom_Right] = calculateCornerAngle(m_handles_angles[Position_Flags::Bottom], m_handles_angles[Position_Flags::Right]);
-    m_handles_angles[Position_Flags::Bottom_Left] =  calculateCornerAngle(m_handles_angles[Position_Flags::Left], m_handles_angles[Position_Flags::Bottom]);
-    m_handles_angles[Position_Flags::Top_Left] =     calculateCornerAngle(m_handles_angles[Position_Flags::Top], m_handles_angles[Position_Flags::Left]);
+    m_handles_angles[Position_Flags::Bottom_Left] =  calculateCornerAngle(m_handles_angles[Position_Flags::Left],   m_handles_angles[Position_Flags::Bottom]);
+    m_handles_angles[Position_Flags::Top_Left] =     calculateCornerAngle(m_handles_angles[Position_Flags::Top],    m_handles_angles[Position_Flags::Left]);
 
     // ***** Add handle for rotating
-    QPointF scale = item->data(User_Roles::Scale).toPointF();
+    QPointF scale = my_scene->getSelectionScale();
     QPoint  top = m_handles_centers[Position_Flags::Top].toPoint();
     QPoint  zero = top;
 
@@ -224,7 +281,7 @@ void StageGraphicsView::updateSelectionBoundingBox()
 }
 
 // Calculates the angle facing away from the corner of two angles, for calculating mouse angle of corners
-double StageGraphicsView::calculateCornerAngle(double angle1, double angle2)
+double DrView::calculateCornerAngle(double angle1, double angle2)
 {
     double bigger_angle = angle1;
     if (angle1 < angle2) bigger_angle += 360;

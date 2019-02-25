@@ -10,10 +10,12 @@
 #define DRITEM_H
 
 #include <QGraphicsItem>
+#include <QGraphicsView>
 
-#include "settings.h"
-#include "form_main.h"
-
+class DrProject;
+class DrAsset;
+class DrObject;
+class InterfaceRelay;
 
 //####################################################################################
 //##    DrItem
@@ -23,6 +25,7 @@ class DrItem : public QGraphicsPixmapItem
 {
 private:
     DrProject      *m_project;                              // Stores a pointer to the parent project
+    InterfaceRelay *m_relay;                                // Pointer to InterfaceRelay class of parent form
 
     DrObject       *m_object = nullptr;                     // Stores the pointer to the object for this item
     long            m_object_key;                           // Stores the object project key this item represents
@@ -35,15 +38,16 @@ private:
     double          m_start_x;                              // Stores the item position the first time it was loaded
     double          m_start_y;                              // Stores the item position the first time it was loaded
 
-    Position_Flags  m_origin = Position_Flags::Center;
+    bool            m_temp_only = false;                    // If this is set to true when object is created, changes to this item are ignored
+                                                            // and not processed into the undo stack, nor do changes have an effect on the associated
+                                                            // object in the project data model
 
 public:
-    DrItem(DrProject *project, DrObject *object);
+    DrItem(DrProject *project, InterfaceRelay *relay, DrObject *object, bool is_temp_only = false);
 
     // Base Getter Overrides
     virtual QRectF          boundingRect() const override;
     virtual QPainterPath    shape() const override;
-    virtual int             type() const override;
 
     // Event Overrides
     virtual QVariant        itemChange(GraphicsItemChange change, const QVariant &value) override;
@@ -53,15 +57,20 @@ public:
     virtual void            mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
     virtual void            hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 
+    // Function Calls
+    void                    disableItemChangeFlags();
+    void                    enableItemChangeFlags();
+
     // Getters and Setters
-    void                    updateProperty(int key, const QVariant & value);
+    InterfaceRelay*         getRelay()       { return m_relay; }
 
-    DrObject*               getObject()    { return m_object; }
-    long                    getObjectKey() { return m_object_key; }
-    DrAsset*                getAsset()     { return m_asset; }
-    long                    getAssetKey()  { return m_asset_key; }
+    DrObject*               getObject()      { return m_object; }
+    long                    getObjectKey()   { return m_object_key; }
+    DrAsset*                getAsset()       { return m_asset; }
+    long                    getAssetKey()    { return m_asset_key; }
+    double                  getAssetWidth()  { return m_asset_width; }
+    double                  getAssetHeight() { return m_asset_height; }
 
-    Position_Flags          getOrigin() { return m_origin; }
     QColor                  getColorAtPoint(QPointF at_local_point);
     QColor                  getColorAtPoint(QPointF at_view_point, QGraphicsView *mouse_over_view);
 

@@ -39,11 +39,14 @@ void    ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius);
 
 
 // Comparison Functions
+long    FitToRange(long number_to_check, long min, long max);
+double  FitToRange(double number_to_check, double min, double max);
 bool    IsCloseTo(double number_desired, double number_to_check, double tolerance);
 QString RemoveTrailingDecimals(double value, int max_decimal_places);
 
 
 // User Interaction
+void    ShowErrorMessage(QString function_name, QString error_message);
 void    ShowMessageBox(QString new_message, QPixmap pixmap = QPixmap());
 
 

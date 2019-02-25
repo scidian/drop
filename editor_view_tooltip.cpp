@@ -5,29 +5,30 @@
 //
 //
 //
+#include "colors.h"
+#include "debug.h"
 
+#include "editor_item.h"
+#include "editor_scene.h"
+#include "editor_view.h"
+
+#include "interface_relay.h"
 #include "library.h"
 
 #include "project.h"
 #include "project_world.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
-#include "editor_stage_item.h"
-
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
-
-#include "editor_stage_scene.h"
-#include "editor_stage_view.h"
-#include "interface_relay.h"
 
 
 
 //####################################################################################
 //##        Constructor / Destructor
 //####################################################################################
-StageViewToolTip::StageViewToolTip(QWidget *parent) : QWidget(parent)
+DrViewToolTip::DrViewToolTip(QWidget *parent) : QWidget(parent)
 {
     this->setObjectName(QStringLiteral("formTooltip"));
 
@@ -38,7 +39,7 @@ StageViewToolTip::StageViewToolTip(QWidget *parent) : QWidget(parent)
 }
 
 
-void StageViewToolTip::startToolTip(View_Mode type, QPoint mouse_position, QVariant data)
+void DrViewToolTip::startToolTip(View_Mode type, QPoint mouse_position, QVariant data)
 {
     m_tip_type = type;
     this->setStyleSheet(" QWidget { background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
@@ -50,27 +51,37 @@ void StageViewToolTip::startToolTip(View_Mode type, QPoint mouse_position, QVari
     {
     case View_Mode::Resizing:
     case View_Mode::Translating:
-        setFixedSize(66, 32);   m_offset = QPoint(30, -63);     Dr::ApplyRoundedCornerMask(this, 23, 50);   break;
+        setFixedSize(66, 32);   m_offset = QPoint(30, -63);
+        m_x_radius = 23;
+        m_y_radius = 50;
+        break;
     case View_Mode::Rotating:
     case View_Mode::Zooming:
     default:
-        setFixedSize(60, 18);   m_offset = QPoint(30, -45);     Dr::ApplyRoundedCornerMask(this, 20, 75);   break;
+        setFixedSize(60, 18);   m_offset = QPoint(30, -45);
+        m_x_radius = 20;
+        m_y_radius = 75;
+        break;
     }
-    Dr::ApplyDropShadowByType(this, Shadow_Types::Tool_Tip_Shadow);
+
+    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL) == false) {
+        Dr::ApplyRoundedCornerMask(this, m_x_radius, m_y_radius);
+        Dr::ApplyDropShadowByType(this, Shadow_Types::Tool_Tip_Shadow);
+    }
 
     updateToolTipData(data);
     updateToolTipPosition(mouse_position);
     show();
 }
 
-void StageViewToolTip::stopToolTip()
+void DrViewToolTip::stopToolTip()
 {
     hide();
     m_tip_type = View_Mode::None;
 }
 
 
-void StageViewToolTip::updateToolTipData(QVariant data)
+void DrViewToolTip::updateToolTipData(QVariant data)
 {
     switch (m_tip_type)
     {
@@ -85,20 +96,26 @@ void StageViewToolTip::updateToolTipData(QVariant data)
     }
 }
 
-void StageViewToolTip::updateToolTipPosition(QPoint mouse_position)
+void DrViewToolTip::updateToolTipPosition(QPoint mouse_position)
 {
     move(mouse_position + getOffset());
 }
 
 
-void StageViewToolTip::paintEvent(QPaintEvent *)
+void DrViewToolTip::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
-    painter.setPen(Dr::GetColor(Window_Colors::Text_Light));
 
+    drawText(painter);
+}
+
+
+void DrViewToolTip::drawText(QPainter &painter, int left_offset, int top_offset)
+{
     QFont font = painter.font();
-    font.setPointSize ( 12 );
+    font.setPointSize ( Dr::FontSize() + 1 );
     painter.setFont(font);
+    painter.setPen(Dr::GetColor(Window_Colors::Text_Light));
 
     int w = this->geometry().width();
     int h = this->geometry().height();
@@ -106,8 +123,7 @@ void StageViewToolTip::paintEvent(QPaintEvent *)
     QPixmap  pic(w * 2, h);
     QPainter paint_pic(&pic);
     QRect    bounding_1, bounding_2;
-
-    QString text_1, text_2;
+    QString  text_1, text_2;
 
     switch (m_tip_type)
     {
@@ -130,21 +146,16 @@ void StageViewToolTip::paintEvent(QPaintEvent *)
         paint_pic.drawText( 0, 0, w, h, Qt::AlignmentFlag::AlignLeft, text_1, &bounding_1);
         paint_pic.drawText( 0, 0, w, h, Qt::AlignmentFlag::AlignLeft, text_2, &bounding_2);
         left = (bounding_1.width() > bounding_2.width()) ? (w - bounding_1.width() + 4) / 2 : (w - bounding_2.width() + 4) / 2;
-        painter.drawText( left,               0, w, h / 2, Qt::AlignmentFlag::AlignVCenter, text_1);
-        painter.drawText( left + 1, (h / 2) - 1, w, h / 2, Qt::AlignmentFlag::AlignVCenter, text_2);
+        painter.drawText( left_offset + left,     top_offset,               w, h / 2, Qt::AlignmentFlag::AlignVCenter, text_1);
+        painter.drawText( left_offset + left + 1, top_offset + (h / 2) - 1, w, h / 2, Qt::AlignmentFlag::AlignVCenter, text_2);
 
         break;
     case View_Mode::Rotating:
     case View_Mode::Zooming:
     default:
-        painter.drawText( 0, 0, w, h, Qt::AlignmentFlag::AlignCenter, text_1);
+        painter.drawText( left_offset, top_offset, w, h, Qt::AlignmentFlag::AlignCenter, text_1);
     }
-
-
 }
-
-
-
 
 
 

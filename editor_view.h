@@ -1,26 +1,29 @@
-//
+﻿//
 //      Created by Stephens Nunnally on 1/3/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
 //      A sub classed QGraphicsView so we can override events for our View Area
 //
 //
-#ifndef EDITOR_STAGE_VIEW_H
-#define EDITOR_STAGE_VIEW_H
+#ifndef EDITOR_VIEW_H
+#define EDITOR_VIEW_H
 
-#include <QtWidgets>
+#include <QGraphicsView>
+#include <QRubberBand>
+#include <QTime>
 
+#include "constants.h"
 #include "enums.h"
 
 class DrProject;
 class DrObject;
 class DrItem;
 class SelectionGroup;
-
 class InterfaceRelay;
-class StageGraphicsScene;
-class StageViewRubberBand;
-class StageViewToolTip;
+class DrScene;
+class DrSettings;
+class DrViewRubberBand;
+class DrViewToolTip;
 
 
 //####################################################################################
@@ -54,15 +57,15 @@ enum class Grid_Style {     Lines,  Dots,               };
 
 
 // Class constants
-const double ANGLE_TOLERANCE = 2.5;                                 // Angle distance to fuzzy compare to desired angle
-const int    ANGLE_STEP = 15;                                       // Angle intervals rotate function should snap to
+const double c_angle_tolerance = 2.5;                               // Angle distance to fuzzy compare to desired angle
+const int    c_angle_step = 15;                                     // Angle intervals rotate function should snap to
 
 
 //####################################################################################
-//##    StageGraphicsView
+//##    DrView
 //##        A sub classed QGraphicsView to show our QGraphicsScene
 //############################
-class StageGraphicsView : public QGraphicsView
+class DrView : public QGraphicsView
 {
     Q_OBJECT
 
@@ -70,22 +73,13 @@ private:
     // Local, instance specific member variables
     DrProject              *m_project;                              // Pointer to currently loaded project
     InterfaceRelay         *m_relay;                                // Pointer to InterfaceRelay class of parent form
-    QGraphicsScene         *m_scene;                                // Pointer to current scene, updated during paintEvent
     View_Mode               m_view_mode = View_Mode::None;          // Tracks current view interaction mode
 
-    QPixmap p_circle = QPixmap(":/gui_misc/handle_circle.png");
-    QPixmap p_square = QPixmap(":/gui_misc/handle_square.png");
-    QPixmap p_rotate = QPixmap(":/gui_misc/handle_rotate.png");
+    DrScene                *my_scene;                               // Holds the scene() this view is set to as a DrScene class
 
-    QCursor c_size_vertical =   QCursor(QPixmap(":/cursors/size_vertical.png"));
-    QCursor c_size_022 =        QCursor(QPixmap(":/cursors/size_022.png"));
-    QCursor c_size_045 =        QCursor(QPixmap(":/cursors/size_045.png"));
-    QCursor c_size_067 =        QCursor(QPixmap(":/cursors/size_067.png"));
-    QCursor c_size_horizontal = QCursor(QPixmap(":/cursors/size_horizontal.png"));
-    QCursor c_size_112 =        QCursor(QPixmap(":/cursors/size_112.png"));
-    QCursor c_size_135 =        QCursor(QPixmap(":/cursors/size_135.png"));
-    QCursor c_size_157 =        QCursor(QPixmap(":/cursors/size_157.png"));
-    QCursor c_rotate_all =      QCursor(QPixmap(":/cursors/rotate_all.png"));
+    const QPixmap p_circle = QPixmap(":/gui_misc/handle_circle.png");
+    const QPixmap p_square = QPixmap(":/gui_misc/handle_square.png");
+    const QPixmap p_rotate = QPixmap(":/gui_misc/handle_rotate.png");
 
     // Display Variables
     int          m_zoom = 250;                                      // Zoom level of current view
@@ -95,9 +89,10 @@ private:
 
     // Grid variables
     Grid_Style   m_grid_style = Grid_Style::Lines;                  // Grid type to display
-    double       m_grid_x = 50;                                     // Grid size left to right
-    double       m_grid_y = 50;                                     // Grid size top to bottom
-    double       m_grid_rotate = 0;                         // NOT IMPLEMENTED: Rotation of grid lines
+    QPointF      m_grid_origin { 0, 0 };                            // Origin point of grid in scene
+    QPointF      m_grid_size { 50, 50 };                            // Grid size
+    double       m_grid_rotate = 0;                                 // Rotation of grid lines
+
 
     // Keyboard flags
     bool         m_flag_key_down_spacebar = false;                  // True when View has focus and spacebar      is down
@@ -106,16 +101,20 @@ private:
     bool         m_flag_key_down_shift =    false;                  // True when View has focus and shift         is down
 
     // Mouse event variables
-    StageViewToolTip                   *m_tool_tip;                 // Holds our view's custom Tool Tip box
     QPoint                              m_origin;                   // Stores mouse down position in view coordinates
     QPointF                             m_origin_in_scene;          // Stores mouse down position in scene coordinates
     QGraphicsItem                      *m_origin_item;              // Stores top item under mouse (if any) on mouse down event
 
+
+    // Tool Tip Variables
+    DrViewToolTip                  *m_tool_tip;                     // Holds our view's custom Tool Tip box
+
+
     // View_Mode::Translating Variables
     QTime                               m_origin_timer;             // Tracks time since mouse down to help buffer movement while selecting
     bool                                m_allow_movement = false;   // Used along with m_origin_timer to help buffer movement while selecting
-    QPointF                             m_old_pos;                  // Used to track position movement for QUndoStack
     bool                                m_shown_a_scene = false;    // False until a scene is loaded for the first time
+    bool                                m_hide_bounding = false;    // True when moving items to stop bounding box from updating and painting
 
     // Selection Bounding Box Variables
     std::map<Position_Flags, QPolygonF> m_handles;                  // Stores QRects of current selection box handles
@@ -126,10 +125,9 @@ private:
     QPoint                              m_last_mouse_pos;           // Tracks last known mouse position in view coordinates
 
     // View_Mode::Selecting Variables
-    StageViewRubberBand            *m_rubber_band;                  // Holds our view's RubberBand object
+    DrViewRubberBand               *m_rubber_band;                  // Holds our view's RubberBand object
     QList<QGraphicsItem*>           m_items_start;                  // Stores items selected at start of new rubber band box
     QList<QGraphicsItem*>           m_items_keep;                   // Stores list of items to keep on top of rubber band items (with control key)
-    DrObject                       *m_first_start;                  // Stores first selected item before rubber band box stareted
 
     // View_Mode::Resizing Variables
     QRectF                          m_start_resize_rect;            // Stores starting rect of selection before resize starts
@@ -138,26 +136,30 @@ private:
     Y_Axis                          m_do_y;                         // Processed after click to know which sides to resize from
     QPointF                         m_pre_resize_scale;             // Scale of selection group before we start resize
     QMap<Position_Flags, QPointF>   m_pre_resize_corners;           // Stores corner coordinates before resizing starts
+    QGraphicsItemGroup             *m_group;                        // Loads a copy of selected items in a new group before resize starts to better calculate resizing
+
 
     // View_Mode::Rotating Variables
     QRectF                          m_rotate_start_rect;            // Stores starting rect of selection before resize starts
     double                          m_rotate_start_angle;           // Stores angle of selection group at start of rotate routine
 
     // !!!!! DEBUG: Debugging variables
-    QPolygonF                       m_debug_polygon;                // Holds a polygon used for resize routine
-    QPolygonF                       m_debug_polygon2;        // TEMP
     long                            m_debug_fps = 0;         // TEMP
     long                            m_debug_fps_last;        // TEMP
     QTime                           m_debug_timer;           // TEMP
+
+    QPolygonF                       m_debug_points;
+    QPolygonF                       m_debug_shear, m_debug_shear2, m_debug_shear3;
 
 
 
 public:
     // Constructor
-    explicit StageGraphicsView(QWidget *parent, DrProject *project, InterfaceRelay *relay);
-    virtual ~StageGraphicsView() override;
+    explicit DrView(QWidget *parent, DrProject *project, DrScene *from_scene, InterfaceRelay *relay);
+    virtual ~DrView() override;
 
     // Event Overrides, start at Qt Docs for QGraphicsView Class to find more
+    virtual void    drawBackground(QPainter *painter, const QRectF &rect) override;
     virtual void    paintEvent(QPaintEvent *event) override;                                // Inherited from QWidget
 
     virtual bool    eventFilter(QObject *obj, QEvent *event) override;                      // Inherited from QObject
@@ -165,6 +167,7 @@ public:
 
     virtual void    keyPressEvent(QKeyEvent *event) override;                               // Inherited from QWidget
     virtual void    keyReleaseEvent(QKeyEvent *event) override;                             // Inherited from QWidget
+    virtual void    mouseDoubleClickEvent(QMouseEvent *event) override;                     // Inherited from QWidget
     virtual void    mouseMoveEvent(QMouseEvent *event) override;                            // Inherited from QWidget
     virtual void    mousePressEvent(QMouseEvent *event) override;                           // Inherited from QWidget
     virtual void    mouseReleaseEvent(QMouseEvent *event) override;                         // Inherited from QWidget
@@ -176,28 +179,27 @@ public:
     void            applyUpdatedMatrix();
     bool            hasLoadedFirstScene() { return m_shown_a_scene; }
     void            loadedFirstScene() { m_shown_a_scene = true; }
+    void            updateGrid();
     void            zoomInOut(int level);
 
     // Misc Functions
     double          calculateCornerAngle(double angle1, double angle2);
     Transform_Data  decomposeTransform(QTransform &from_transform, bool qr_type = true);
     double          extractAngleFromTransform(QTransform &from_transform);
-    QPointF         extractScaleFromItem(QGraphicsItem *item);
-    QGraphicsItem*  itemOnTopAtPosition(QPoint check_point);
     QRectF          rectAtCenterPoint(QPoint center, double rect_size);
-    void            updateSelectionBoundingBox();
+    void            updateSelectionBoundingBox(int called_from = 0);
 
     // Paint Functions
     void            paintBoundingBox(QPainter &painter);
-    void            paintGrid();
+    void            paintGrid(QPainter &painter);
     void            paintGroupAngle(QPainter &painter, double angle);
     void            paintHandles(QPainter &painter, Handle_Shapes shape_to_draw);
     void            paintItemOutlines(QPainter &painter);
+    void            paintToolTip(QPainter &painter);
 
     // Selection Functions
     void            startSelect(QMouseEvent *event);
     void            processSelection(QPoint mouse_in_view);
-    void            emptySelectionGroupIfNotEmpty();
 
     // Rotation Functions
     void            startRotate(QPoint mouse_in_view);
@@ -210,8 +212,10 @@ public:
     void            resizeSelection(QPointF mouse_in_scene);
     void            resizeSelectionWithRotate(QPointF mouse_in_scene);
     Position_Flags  findOppositeSide(Position_Flags start_side);
-    void            removeShearing(QGraphicsItem *item);
+    void            removeShearing(QGraphicsItem *item, QPointF scale);
 
+    // Getters / Setters
+    View_Mode       currentViewMode() { return m_view_mode; }
 
 public slots:
     void    sceneChanged(QList<QRectF> region);
@@ -223,26 +227,22 @@ public slots:
 
 signals:
     // Signals used to emit UndoStack Commands
-    void    selectionGroupMoved(StageGraphicsScene *scene, const QPointF &old_position);
-    void    selectionGroupNewGroup(StageGraphicsScene *scene,
-                                   QList<DrObject*> old_list,
-                                   QList<DrObject*> new_list,
-                                   DrObject *old_first,
-                                   DrObject *new_first);
+    void    selectionGroupMoved(DrScene *scene, const QPointF &old_position);
+    void    selectionGroupNewGroup(DrScene *scene, QList<DrObject*> old_list, QList<DrObject*> new_list);
 
 };
 
 
 //####################################################################################
-//##    StageViewRubberBand
+//##    DrViewRubberBand
 //##        A sub classed QRubberBand so we can override paint event for rubber band
 //############################
-class StageViewRubberBand : public QRubberBand
+class DrViewRubberBand : public QRubberBand
 {
 
 public:
     // Constructor
-    StageViewRubberBand(Shape shape, QWidget *parent) : QRubberBand (shape, parent) { }
+    DrViewRubberBand(Shape shape, QWidget *parent) : QRubberBand (shape, parent) { }
 
     // Event overrides
     virtual void    paintEvent(QPaintEvent *) override;
@@ -251,10 +251,10 @@ public:
 
 
 //####################################################################################
-//##    StageViewToolTip
+//##    DrViewToolTip
 //##        A parentless widget to be used as a custom tooltip
 //############################
-class StageViewToolTip : public QWidget
+class DrViewToolTip : public QWidget
 {
 private:
     View_Mode   m_tip_type = View_Mode::None;           // Which type of tool tip to show
@@ -263,15 +263,18 @@ private:
     double      m_x = 0;                                // Stores x value of resizing / moving
     double      m_y = 0;                                // Stores y value of resizing / moving
     int         m_int = 0;                              // Stores zoom scale
+    int         m_x_radius = 100;
+    int         m_y_radius = 100;
 
 public:
     // Constructor
-    StageViewToolTip(QWidget *parent = nullptr);
+    DrViewToolTip(QWidget *parent = nullptr);
 
     // Event overrides
     virtual void    paintEvent(QPaintEvent *) override;
 
     // Functions
+    void            drawText(QPainter &painter, int left_offset = 0, int top_offset = 0);
     void            startToolTip(View_Mode type, QPoint mouse_position, QVariant data);
     void            stopToolTip();
     void            updateToolTipPosition(QPoint mouse_position);
@@ -280,11 +283,13 @@ public:
     // Getters and Setters
     QPoint          getOffset()  { return m_offset;   }
     View_Mode       getTipType() { return m_tip_type; }
+    int             getXRadius() { return m_x_radius; }
+    int             getYRadius() { return m_y_radius; }
 
 };
 
 
-#endif // EDITOR_STAGE_VIEW_H
+#endif // EDITOR_VIEW_H
 
 
 

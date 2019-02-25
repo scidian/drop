@@ -28,27 +28,25 @@ private:
     DrComponent  *m_parent_component;
 
     // The 4 Parts pf Data for Every Property
-    QString       m_display_name = "Unknown Property";
-    QString       m_description = "No description";
-    Property_Type m_preferred_type = Property_Type::String;
-    QVariant      m_value = QString::fromStdString("0");
+    QString       m_display_name =      "Unknown Property";
+    QString       m_description =       "No description";
+    Property_Type m_preferred_type =    Property_Type::String;
+    QVariant      m_value =             QString::fromStdString("0");
 
     // The unique id of this property within the parent object
     long          m_property_key;
 
+    // Should this apepar in the object inspector
+    bool          m_is_hidden =         false;
+
 public:
     // Constructor & destructor
     DrProperty(DrSettings *parent_settings, DrComponent *parent_component,
-               QString new_display_name, QString new_description, Property_Type new_type, QVariant new_value, long new_key);
-
+               QString new_display_name, QString new_description, Property_Type new_type, QVariant new_value,
+               long new_key,
+               bool is_hidden = false);
 
     // Getters and setters
-    /**
-    * @brief getDisplayName
-    * @return
-    * @author Stephens
-    * @todo Fix me
-    */
     DrSettings*   getParentSettings() { return m_parent_settings; }
     DrComponent*  getParentComponent() { return m_parent_component; }
 
@@ -59,6 +57,8 @@ public:
 
     long          getPropertyKey() { return m_property_key; }
 
+    bool          isHidden() { return m_is_hidden; }
+    void          setHidden(bool is_hidden) { m_is_hidden = is_hidden; }
 
     void setDisplayName(QString new_display_name) { m_display_name = new_display_name; }
     void setDescription(QString new_description) { m_description = new_description; }

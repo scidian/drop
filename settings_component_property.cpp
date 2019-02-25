@@ -18,7 +18,8 @@ DrProperty::DrProperty(DrSettings *parent_settings, DrComponent *parent_componen
                        QString new_description,
                        Property_Type new_type,
                        QVariant new_value,
-                       long new_key)
+                       long new_key,
+                       bool is_hidden)
 {
     m_parent_settings = parent_settings;
     m_parent_component = parent_component;
@@ -27,7 +28,10 @@ DrProperty::DrProperty(DrSettings *parent_settings, DrComponent *parent_componen
     m_description = new_description;
     m_preferred_type = new_type;
     m_value = new_value;
+
     m_property_key = new_key;
+
+    m_is_hidden = is_hidden;
 }
 
 
