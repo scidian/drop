@@ -287,71 +287,9 @@ DrTripleSpinBox* TreeInspector::initializeEmptySpinBox(DrProperty *property, QFo
     return new_spin;
 }
 
-// SIGNAL: void QComboBox::currentIndexChanged(int index)
-QComboBox* TreeInspector::createComboBox(DrProperty *property, QFont &font)
-{
-    QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    size_policy.setHorizontalStretch(c_inspector_size_right);
-
-    DrDropDownComboBox *combo = new DrDropDownComboBox();
-    combo->setObjectName(QStringLiteral("comboBox"));
-    combo->view()->parentWidget()->setStyleSheet(" background: none; border-radius: 0px; ");
-
-    QString style =
-            " QComboBox QAbstractItemView { "
-            "       font-size: " + QString::number(font.pointSize()) + "px; "
-            "       border: " + Dr::BorderWidth() + " solid; margin: 0px; "
-            "       border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; } "
-
-            " QComboBox QAbstractItemView::item { padding: 4px; "
-            "       padding-left: 4px;"
-            "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
-            "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; } "
-
-            " QComboBox QAbstractItemView::item:selected { "
-            "       padding-left: 6px; "
-            "       image: url(:/gui_misc/check.png); "
-            "       image-position: right center; "
-            "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
-            "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } ";
-
-    QListView *combo_list = new QListView();
-    combo->setView(combo_list);
-    combo->setStyleSheet(style);
-    combo->setFont(font);
-    combo->setSizePolicy(size_policy);
-
-    //// Alternate way to remove white border around QComboBox ListView
-    ///combo->setEditable(true);
-    ///combo->lineEdit()->setReadOnly(true);
-    ///combo->lineEdit()->setDisabled(true);
-
-    long   property_key =  property->getPropertyKey();
-    DrType object_type  =  property->getParentComponent()->getParentSettings()->getType();
-
-    QStringList options;    
-    if (object_type == DrType::Object && property_key == static_cast<int>(Properties::Object_Damage))
-        options << tr("No Damage") << tr("Damage Player") << tr("Damage Enemy") << tr("Damage All");
-    else if ((object_type == DrType::Stage || object_type == DrType::StartStage) && (property_key == static_cast<int>(Properties::Stage_Grid_Style)))
-        options << tr("Lines") << tr("Dots");
-    else
-        options << tr("Unknown List");
-    combo->addItems(options);
-
-    connect (combo, QOverload<int>::of(&QComboBox::currentIndexChanged),
-             this, [this, property_key] (int index) { updateSettingsFromNewValue(property_key, index); });
-
-    combo->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
-    combo->setCurrentIndex(property->getValue().toInt());
-
-    applyHeaderBodyProperties(combo, property);
-    addToWidgetList(combo);
-    return combo;
-}
-
 
 // Uses a pushbutton with a popup menu instead of a QComboBox
-QPushButton* TreeInspector::createComboBox2(DrProperty *property, QFont &font)
+QPushButton* TreeInspector::createComboBox(DrProperty *property, QFont &font)
 {
     QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     size_policy.setHorizontalStretch(c_inspector_size_right);
@@ -361,55 +299,49 @@ QPushButton* TreeInspector::createComboBox2(DrProperty *property, QFont &font)
     button->setFont(font);
     button->setSizePolicy(size_policy);
 
+    long   property_key =  property->getPropertyKey();
     QStringList options;
-    if (property->getPropertyKey() == static_cast<int>(Properties::Object_Damage)) {
+    if (property_key == static_cast<int>(Properties::Object_Damage)) {
         options << tr("No Damage") << tr("Damage Player") << tr("Damage Enemy") << tr("Damage All");
     } else {
         options << tr("Unknown List");
     }
 
-    QString menu_style = " QMenu { "
-                         "      min-width: 100px; padding-left: 6px; padding-top: 4px; padding-bottom: 4px; "
-                         "      color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
-                         "      font-size: " + QString::number(font.pointSize()) + "px; "
-                         "      border: " + Dr::BorderWidth() + " solid; margin: 0px; "
-                         "      border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
-                         "      background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } "
-                         " QMenu::item { padding-top: 2px; padding-bottom: 2px; } "
-                         " QMenu::item:selected { "
-                         "       padding-left: 2px; "
-                         "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
-                         "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } ";
-                         " QMenu::item:checked { "
-                         "       padding-left: 0px; "
-                         "       font-weight: bold; "
-                         "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
-                         "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } ";
-
-    QMenu *menu = new QMenu();
-    menu->setStyleSheet(menu_style);
-
+    QMenu *menu = new QMenu(this);
+    menu->setObjectName(QStringLiteral("menuComboBox"));
+    menu->setMinimumWidth(130);
 
     QActionGroup *group;
     group = new QActionGroup(menu);
     group->setExclusive(true);
 
-    QAction *action1 = new QAction("First");    QAction *action2 = new QAction("Second");       QAction *action3 = new QAction("Third");
-    group->addAction(action1);                  group->addAction(action2);                      group->addAction(action3);
-    action1->setCheckable(true);                action2->setCheckable(true);                    action3->setCheckable(true);
-    menu->addAction(action1);                   menu->addAction(action2);                       menu->addAction(action3);
+    // Loop through possible strings, add them to sub menu along with a connect to a lambda function that can update object settings
+    int string_count = 0;
+    for (auto string : options) {
+        QAction *action = new QAction(string);
+        group->addAction(action);
+        action->setCheckable(true);
+        menu->addAction(action);
 
-    connect(action1,   &QAction::triggered, [button, action1]() { button->setText(action1->text()); });
-    connect(action2,   &QAction::triggered, [button, action2]() { button->setText(action2->text()); });
-    connect(action3,   &QAction::triggered, [button, action3]() { button->setText(action3->text()); });
+        if (property->getValue().toInt() == string_count) {
+            action->setChecked(true);
+            button->setText(string);
+        }
 
-    action2->setChecked(true);
+        action->setProperty(User_Property::Order, QVariant::fromValue(string_count));
+
+        // Create a callback function to update DrSettings when a new value is selected
+        connect(action,   &QAction::triggered, [this, button, action, property_key]() {
+            button->setText(action->text());
+            this->updateSettingsFromNewValue(property_key, action->property(User_Property::Order).toInt());
+        });
+
+        string_count++;
+    }
 
     button->setMenu(menu);
     button->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
-    button->setText(" First");
 
-    //button->setCurrentIndex(property->getValue().toInt());
     applyHeaderBodyProperties(button, property);
     addToWidgetList(button);
     return button;
@@ -458,7 +390,7 @@ void DrDropDownComboBox::showPopup()
 //####################################################################################
 void DrCheckBox::paintEvent(QPaintEvent *)
 {
-    QRect checkbox_indicator(4, 0, 30, 22);
+    QRect checkbox_indicator(4, 0, 28, 22);
     QPoint mouse_position = property(User_Property::Mouse_Pos).toPoint();
 
     QPainter painter(this);
@@ -477,8 +409,8 @@ void DrCheckBox::paintEvent(QPaintEvent *)
 
     if (checkState()) {
         QVector<QLineF> check;
-        check.append( QLineF( 9,  12, 13, 16) );
-        check.append( QLineF( 13, 16, 22,  7) );
+        check.append( QLineF( 10, 13, 13, 16) );
+        check.append( QLineF( 13, 16, 21,  8) );
         painter.drawLines(check);
     }
 

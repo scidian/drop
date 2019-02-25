@@ -178,7 +178,6 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
             case Property_Type::Scale:      new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Spin_Type::Scale);   break;
             case Property_Type::Variable:   new_widget = createVariableSpinBoxPair(property_pair.second, fp);                   break;
             case Property_Type::List:       new_widget = createComboBox(property_pair.second, fp);                              break;
-            case Property_Type::List2:      new_widget = createComboBox2(property_pair.second, fp);
             }
 
             if (new_widget != nullptr)

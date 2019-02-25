@@ -96,7 +96,7 @@ enum class DrObjectType {
 //##    Custom Qt::UserRole 's for storing data in QWidgets using setData
 //####################################################################################
 typedef enum {
-    Key = Qt::UserRole,
+    Key = Qt::UserRole,                             // Stores Object Key in User Data of widget / graphicsitem
 
     Scale,      Pre_Resize_Scale,
     Rotation,   Pre_Rotate_Rotation,
@@ -105,7 +105,6 @@ typedef enum {
 
     Name,
     Type,
-
 } User_Roles;
 
 
@@ -113,12 +112,11 @@ typedef enum {
 //##    Custom QStrings for storing data in QWidgets using setProperty
 //####################################################################################
 namespace User_Property {
-    const char Key[7] = "dr_key";
-
+    const char Key[7] = "dr_key";                   // Stores Object Key in User Property of widget
     const char Order[9] = "dr_order";               // Used for properties with mulitple values (like Size has X and Y),
-                                                    // the index of the single property we want (0, 1, 2, etc)
-    const char Header[10] = "dr_header";
-    const char Body[8] = "dr_body";
+                                                    //      the index of the single property we want (0, 1, 2, etc)
+    const char Header[10] = "dr_header";            // Used for Advisor Text
+    const char Body[8] = "dr_body";                 // Used for Advisor Text
     const char Mouse_Over[14] = "dr_mouse_over";    // Set to true by WidgetHoverHandler when mouse is over widget
     const char Mouse_Pos[13] = "dr_mouse_pos";      // Set to mouse position (QPoint) by WidgetHoverHandler when mouse is moving over widget
 }
@@ -163,7 +161,6 @@ enum class Property_Type {
     Polygon,                // QPolygon     For Collision Shapes
     Vector3D,
     List,
-    List2,
 };
 
 
@@ -236,7 +233,6 @@ enum class Properties
     Object_Physics,                 //bool
     Object_Collide,                 //bool
     Object_Damage,                  //list
-    Object_Test,                    //list2
 
     // Transform
     Object_Position,                //pointf

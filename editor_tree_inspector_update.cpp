@@ -88,7 +88,6 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
         case Property_Type::Polygon:                                // For Collision Shapes
         case Property_Type::Vector3D:
         case Property_Type::List:
-        case Property_Type::List2:
 
             //################ !!!!!!!!!!!!!!!!!!!!!!!
             //
@@ -158,7 +157,6 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
         case Property_Type::Color:                                  // QColor
         case Property_Type::Polygon:                                // For Collision Shapes
         case Property_Type::Vector3D:
-        case Property_Type::List2:
 
             //################ !!!!!!!!!!!!!!!!!!!!!!!
             //
