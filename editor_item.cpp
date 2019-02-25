@@ -243,8 +243,10 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 
     // Check opacity of current item
     double transparency = 1;
-    if (m_object) transparency = m_object->getComponentPropertyValue(Components::Object_Layering, Properties::Object_Opacity).toDouble() / 100;
-    transparency = Dr::FitToRange(transparency, 0, 1);
+    if (m_object) {
+        transparency = m_object->getComponentPropertyValue(Components::Object_Layering, Properties::Object_Opacity).toDouble() / 100;
+        transparency = Dr::FitToRange(transparency, 0, 1);
+    }
 
     // Apply the proper opacity to this item and either paint the pixmap, or paint a pattern representation of the item
     if (transparency >= .01) {
@@ -252,10 +254,17 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
         QGraphicsPixmapItem::paint(painter, &myOption, widget);
     } else {
         if (qFuzzyCompare(opacity(), 1) == false) setOpacity(1);
+
+        QPen comestic_pen = QPen(Dr::GetColor(Window_Colors::Icon_Dark), 0, Qt::PenStyle::SolidLine, Qt::PenCapStyle::FlatCap, Qt::PenJoinStyle::MiterJoin );
+        comestic_pen.setCosmetic(true);
+        painter->setPen( comestic_pen );
+
         QColor brush_color = Dr::GetColor(Window_Colors::Icon_Dark);
-        brush_color.setAlpha(64);
-        painter->setPen( QPen(Dr::GetColor(Window_Colors::Icon_Dark), 1, Qt::PenStyle::SolidLine, Qt::PenCapStyle::FlatCap, Qt::PenJoinStyle::MiterJoin ) );
-        painter->setBrush( QBrush(brush_color, Qt::BrushStyle::SolidPattern)); //Qt::BrushStyle::DiagCrossPattern ) );
+        brush_color.setAlpha(128);
+        QBrush scaled_brush = QBrush(brush_color, Qt::BrushStyle::DiagCrossPattern );   //Qt::BrushStyle::SolidPattern);
+        scaled_brush.setTransform(QTransform(painter->worldTransform().inverted()));
+        painter->setBrush(scaled_brush);
+
         painter->drawPath( this->shape() );
     }
 }

@@ -175,7 +175,7 @@ void DrView::mouseReleaseEvent(QMouseEvent *event)
         }
 
         // We have it so object inspector only tries to update it's position property boxes during item translation
-        // once the mouse is released, it's much, muich faster this way
+        // once the mouse is released, it's much, much faster this way
         if (m_view_mode == View_Mode::Translating) {
             m_view_mode = View_Mode::None;
             m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View,
