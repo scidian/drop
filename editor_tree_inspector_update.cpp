@@ -7,6 +7,7 @@
 //
 #include <QDoubleSpinBox>
 #include <QLineEdit>
+#include <QAction>
 #include <QMenu>
 
 #include "editor_tree_inspector.h"
@@ -88,6 +89,7 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
         case Property_Type::List:
             pushbutton = dynamic_cast<QPushButton*>(widget);
             pushbutton->setText( pushbutton->menu()->actions().at(prop->getValue().toInt())->text() );
+            pushbutton->menu()->actions().at(prop->getValue().toInt())->setChecked(true);
             break;
 
         case Property_Type::Image:                                  // QPixmap

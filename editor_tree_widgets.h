@@ -58,6 +58,19 @@ protected:
 };
 
 
+//####################################################################################
+//##    PopUpMenuRelocater
+//##        Changes starting position of popup menu
+//####################################################################################
+class PopUpMenuRelocater : public QObject
+{
+public:
+    explicit        PopUpMenuRelocater(QObject *parent);
+
+protected:
+    bool            eventFilter(QObject *obj, QEvent *event) override;
+};
+
 
 //####################################################################################
 //##    CategoryButton

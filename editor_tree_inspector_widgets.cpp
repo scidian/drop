@@ -345,6 +345,7 @@ QPushButton* TreeInspector::createComboBox(DrProperty *property, QFont &font)
 
     button->setMenu(menu);
     button->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
+    menu->installEventFilter(new PopUpMenuRelocater(menu));
 
     applyHeaderBodyProperties(button, property);
     addToWidgetList(button);

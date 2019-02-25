@@ -10,11 +10,12 @@
 #include <QEvent>
 #include <QPainter>
 #include <QMouseEvent>
+#include <QMenu>
+#include <QTime>
 
 #include "colors.h"
-
 #include "editor_tree_widgets.h"
-
+#include "interface_relay.h"
 #include "settings_component_property.h"
 
 
@@ -100,6 +101,26 @@ bool MouseWheelWidgetAdjustmentGuard::eventFilter(QObject *obj, QEvent *event)
     return QObject::eventFilter(obj, event);
 }
 
+
+//####################################################################################
+//##    PopUpMenuRelocater Class Functions
+//####################################################################################
+PopUpMenuRelocater::PopUpMenuRelocater(QObject *parent) : QObject(parent) {}
+
+bool PopUpMenuRelocater::eventFilter(QObject *obj, QEvent *event)
+{
+    QMenu* menu = dynamic_cast<QMenu*>(obj);
+    if (!menu) return QObject::eventFilter(obj, event);
+
+    if (event->type() == QEvent::Show)
+    {
+        QPoint pos = menu->pos();
+        pos.setY(pos.y() + 2);
+        menu->move(pos);
+        return true;
+    }
+    return QObject::eventFilter(obj, event);
+}
 
 
 //####################################################################################
