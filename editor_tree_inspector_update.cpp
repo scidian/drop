@@ -7,6 +7,7 @@
 //
 #include <QDoubleSpinBox>
 #include <QLineEdit>
+#include <QMenu>
 
 #include "editor_tree_inspector.h"
 
@@ -39,6 +40,8 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
     if (m_selected_type != DrType::Object) return;
 
     Dr::SetLabelText(Label_Names::Label_1, "Insp Widget Count: " + QString::number(m_widgets.count()) );
+
+    QPushButton *pushbutton;
 
     for (auto widget : m_widgets) {
         long prop_key = widget->property(User_Property::Key).toInt();
@@ -82,12 +85,16 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
                 dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toPoint().y());
             break;
 
+        case Property_Type::List:
+            pushbutton = dynamic_cast<QPushButton*>(widget);
+            pushbutton->setText( pushbutton->menu()->actions().at(prop->getValue().toInt())->text() );
+            break;
+
         case Property_Type::Image:                                  // QPixmap
         case Property_Type::Icon:
         case Property_Type::Color:                                  // QColor
         case Property_Type::Polygon:                                // For Collision Shapes
         case Property_Type::Vector3D:
-        case Property_Type::List:
 
             //################ !!!!!!!!!!!!!!!!!!!!!!!
             //

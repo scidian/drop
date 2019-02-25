@@ -300,9 +300,13 @@ QPushButton* TreeInspector::createComboBox(DrProperty *property, QFont &font)
     button->setSizePolicy(size_policy);
 
     long   property_key =  property->getPropertyKey();
+    DrType object_type  =  property->getParentComponent()->getParentSettings()->getType();
+
     QStringList options;
     if (property_key == static_cast<int>(Properties::Object_Damage)) {
         options << tr("No Damage") << tr("Damage Player") << tr("Damage Enemy") << tr("Damage All");
+    } else if ((object_type == DrType::Stage || object_type == DrType::StartStage) && (property_key == static_cast<int>(Properties::Stage_Grid_Style))) {
+        options << tr("Lines") << tr("Dots");
     } else {
         options << tr("Unknown List");
     }
