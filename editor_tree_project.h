@@ -12,9 +12,11 @@
 #include <QProxyStyle>
 #include <QTreeWidget>
 
-class DrProject;
 class InterfaceRelay;
 class DrScene;
+class DrProject;
+class DrSettings;
+
 
 //####################################################################################
 //##    TreeProject
@@ -44,6 +46,7 @@ public:
     void                        buildProjectTree();
     QList <QTreeWidgetItem*>    getListOfAllTreeWidgetItems();
     QList <QTreeWidgetItem*>    getListOfChildrenFromItem( QTreeWidgetItem *item );
+    void                        updateItemNames(QList<DrSettings*> changed_items, QList<long> property_keys);
     void                        updateSelectionFromView(QList<QGraphicsItem*> item_list);
 
     // Event Overrides, start at Qt Docs for QTreeWidget Class to find more

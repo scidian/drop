@@ -260,7 +260,7 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
         painter->setPen( comestic_pen );
 
         QColor brush_color = Dr::GetColor(Window_Colors::Icon_Dark);
-        brush_color.setAlpha(128);
+        brush_color.setAlpha(96);
         QBrush scaled_brush = QBrush(brush_color, Qt::BrushStyle::DiagCrossPattern );   //Qt::BrushStyle::SolidPattern);
         scaled_brush.setTransform(QTransform(painter->worldTransform().inverted()));
         painter->setBrush(scaled_brush);

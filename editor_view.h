@@ -191,7 +191,7 @@ public:
 
     // Paint Functions
     void            paintBoundingBox(QPainter &painter);
-    void            paintGrid();
+    void            paintGrid(QPainter &painter);
     void            paintGroupAngle(QPainter &painter, double angle);
     void            paintHandles(QPainter &painter, Handle_Shapes shape_to_draw);
     void            paintItemOutlines(QPainter &painter);

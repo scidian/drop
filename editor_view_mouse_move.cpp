@@ -223,15 +223,17 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
         QGraphicsView::mouseMoveEvent(event);
     }
 
-    // Update
-    if (m_view_mode != View_Mode::None) update();
+
+    // ***** Update
+    if (m_view_mode != View_Mode::None || m_tool_tip->isHidden() == false)
+        update();
 
 
     // ***** Unlock scene mutex
     my_scene->scene_mutex.unlock();
 
 
-    // If we're hand dragging make sure selection box is updating, must be called AFTER mutex is unlocked
+    // ***** If we're hand dragging make sure selection box is updating, must be called AFTER mutex is unlocked
     if (m_view_mode == View_Mode::Dragging) updateSelectionBoundingBox(4);
 }
 

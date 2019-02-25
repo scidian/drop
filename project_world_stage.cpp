@@ -31,6 +31,10 @@ DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world, long new_stag
     initializeStageSettings(new_stage_name);        // call to load in all the components / properties for this Stage object
 
     if (m_is_start_stage) {
+        // If start stage, make name hidden to stop user from changing it
+        DrProperty *my_name = getComponentProperty(Components::Stage_Settings, Properties::Stage_Name);
+        my_name->setHidden(true);
+
         ///addObject(DrType::Camera, new DrAsset(), 0, 0);
         ///addObject(DrType::Character, new DrAsset(), 0, 0);
     }

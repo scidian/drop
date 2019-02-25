@@ -234,10 +234,12 @@ void DrView::stoppedZooming()
 {
     // If over 1.2 seconds have passed since last time mouse wheel was activated, stop tool tip
     if (m_tool_tip->getTipType() == View_Mode::Zooming) {
-        if (m_zoom_timer.elapsed() > 1200)
+        if (m_zoom_timer.elapsed() > 1200) {
             m_tool_tip->stopToolTip();
-        else
+            this->viewport()->repaint(this->viewport()->rect());
+        } else {
             QTimer::singleShot(300, this, SLOT(stoppedZooming()));
+        }
     }
 }
 

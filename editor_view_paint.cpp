@@ -6,6 +6,7 @@
 //
 //
 #include <QPaintEngine>
+#include <QPaintEvent>
 #include <QStylePainter>
 #include <QOpenGLFunctions>
 
@@ -52,12 +53,16 @@ void DrView::drawBackground(QPainter *painter, const QRectF &rect)
     Q_UNUSED(painter);
     Q_UNUSED(rect);
 
-    ///QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
-    ///f->glClearColor(static_cast<float>(Dr::GetColor(Window_Colors::Background_Light).redF()),
-    ///                static_cast<float>(Dr::GetColor(Window_Colors::Background_Light).greenF()),
-    ///                static_cast<float>(Dr::GetColor(Window_Colors::Background_Light).blueF()),
-    ///                1.0f);
-    ///f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
+    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL)) {
+        QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
+        f->glClearColor(static_cast<float>(Dr::GetColor(Window_Colors::Background_Light).redF()),
+                        static_cast<float>(Dr::GetColor(Window_Colors::Background_Light).greenF()),
+                        static_cast<float>(Dr::GetColor(Window_Colors::Background_Light).blueF()),
+                        1.0f);
+        f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
+    }
+
+    paintGrid(*painter);
 }
 
 
@@ -68,13 +73,12 @@ void DrView::paintEvent(QPaintEvent *event)
 {
     // ******************** Clears the sceen
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL)) {
-        QPainter clear_painter(this->viewport());
-        clear_painter.eraseRect(this->viewport()->rect());
-        clear_painter.end();
+        //QPainter clear_painter(this->viewport());
+        //clear_painter.eraseRect(this->viewport()->rect());
+        //clear_painter.end();
     }
 
-    // ******************** Go ahead and draw grid first then pass on event to paint items
-    paintGrid();
+    // ******************** Pass on event to parent class paint items into scene
     QGraphicsView::paintEvent(event);
 
 
@@ -85,27 +89,25 @@ void DrView::paintEvent(QPaintEvent *event)
     if (my_scene->getCurrentStageShown())
         my_scene->getCurrentStageShown()->setViewCenterPoint( mapToScene( this->viewport()->rect().center() ) );
 
-    // If theres no selection we don't need to perform rest of paint routine
-    if (my_scene->getSelectionCount() < 1) return;
-
     // Initiate QPainter object
     QPainter painter(viewport());
 
-    paintItemOutlines(painter);                                     // Draw bounding box for each selected item
+    // If theres no selection we don't need to perform these paint routines
+    if (my_scene->getSelectionCount() > 0) {
 
-    if (m_hide_bounding == false)
-        paintBoundingBox(painter);                                  // Draw box around entire seleciton, with Size Grip handles
+        paintItemOutlines(painter);                                     // Draw bounding box for each selected item
 
-    if (m_view_mode == View_Mode::Rotating)
-        paintGroupAngle(painter, my_scene->getSelectionAngle());    // Draw angles if rotating
+        if (m_hide_bounding == false) {
+            paintBoundingBox(painter);                                  // Draw box around entire seleciton, with Size Grip handles
+            paintHandles(painter, m_handles_shape);                     // Draw handles around selected item / bounding box
+        }
 
-    if (m_hide_bounding == false)
-        paintHandles(painter, m_handles_shape);                     // Draw handles around selected item / bounding box
+        if (m_view_mode == View_Mode::Rotating)
+            paintGroupAngle(painter, my_scene->getSelectionAngle());    // Draw angles if rotating
+    }
 
-    if (m_tool_tip->isHidden() == false &&
-            Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL))
+    if (m_tool_tip->isHidden() == false && Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL))
         paintToolTip(painter);
-
 
     // !!!!! #DEBUG:    Draw frames per second
     if (Dr::CheckDebugFlag(Debug_Flags::Label_FPS)) {
@@ -119,6 +121,7 @@ void DrView::paintEvent(QPaintEvent *event)
         }
     }
     // !!!!! END
+
 }
 
 // Paint helper function, returns a RectF around center point with sides length of rect_size
@@ -131,9 +134,8 @@ QRectF DrView::rectAtCenterPoint(QPoint center, double rect_size)
 //####################################################################################
 //##        PAINT: Draws grid lines
 //####################################################################################
-void DrView::paintGrid()
+void DrView::paintGrid(QPainter &painter)
 {
-    QPainter painter(viewport());
     painter.setBrush(Qt::NoBrush);
 
     // Map viewport to scene rect
@@ -144,67 +146,66 @@ void DrView::paintGrid()
     double grid_x = m_grid_size.x();
     double grid_y = m_grid_size.y();
 
+    double origin_x = m_grid_origin.x();
+    double origin_y = m_grid_origin.y();
+
     // Bounds check
     if (grid_x < 1) grid_x = 1;
     if (grid_y < 1) grid_y = 1;
 
     // ********** Draw Grid Lines
     if (m_grid_style == Grid_Style::Lines) {
-        painter.setPen(QPen( Dr::GetColor(Window_Colors::Background_Dark), 1 ));
-        QVector<QLine> lines;
+        QPen cosmetic_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 0 );
+        cosmetic_pen.setCosmetic(true);
+        painter.setPen(cosmetic_pen);
+        QVector<QLineF> lines;
 
         // Vertical lines right of scene zero, followed by Vertical lines left of scene zero
-        for (double x = 0; x <= scene_rect.right(); x += grid_x)
-            lines.append(QLine(mapFromScene(x, 0).x(), 0, mapFromScene(x, 0).x(), height()));
-        for (double x = 0; x >= scene_rect.left(); x -= grid_x)
-            lines.append(QLine(mapFromScene(x, 0).x(), 0, mapFromScene(x, 0).x(), height()));
+        for (double x = origin_x; x <= scene_rect.right(); x += grid_x)
+            lines.append(QLineF(x, topLeft.y(), x, bottomRight.y()) );
+
+        for (double x = origin_x; x >= scene_rect.left(); x -= grid_x)
+            lines.append(QLineF(x, topLeft.y(), x, bottomRight.y()) );
 
         // Horizontal lines below scene zero, followed by Horizontal lines above scene zero
-        for (double y = 0; y <= scene_rect.bottom(); y += grid_y)
-            lines.append(QLine(0, mapFromScene(0, y).y(), width(), mapFromScene(0, y).y()) );
-        for (double y = 0; y >= scene_rect.top(); y -= grid_y)
-            lines.append(QLine(0, mapFromScene(0, y).y(), width(), mapFromScene(0, y).y()) );
+        for (double y = origin_y; y <= scene_rect.bottom(); y += grid_y)
+            lines.append(QLineF(topLeft.x(), y, bottomRight.x(), y) );
+
+        for (double y = origin_y; y >= scene_rect.top(); y -= grid_y)
+            lines.append(QLineF(topLeft.x(), y, bottomRight.x(), y) );
 
         painter.drawLines(lines);
 
-    // ********** Draw Grid Dots
-    } else if (m_grid_style == Grid_Style::Dots && m_zoom_scale > .1) {
-        double dot_size = m_zoom_scale;
-        if (m_zoom_scale < 8)   dot_size = 9;
-        if (m_zoom_scale < 4)   dot_size = 7;
-        if (m_zoom_scale < 2)   dot_size = 5.4;
-        if (m_zoom_scale < 1.5) dot_size = 4.7;
-        if (m_zoom_scale < 1)   dot_size = 4.1;
-        if (m_zoom_scale < .80) dot_size = 3.5;
-        if (m_zoom_scale < .60) dot_size = 3.3;
-        if (m_zoom_scale < .45) dot_size = 3.25;
-        if (m_zoom_scale < .35) dot_size = 3.2;
-        if (m_zoom_scale < .25) dot_size = 3.15;
-        if (m_zoom_scale < .2)  dot_size = 3.1;
 
-        painter.setPen(QPen( Dr::GetColor(Window_Colors::Background_Dark), dot_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ));
+
+    // ********** Draw Grid Dots
+    } else if (m_grid_style == Grid_Style::Dots && m_zoom_scale > .25) {
+        QPen dot_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 4, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
+        //dot_pen.setCosmetic(true);
+        painter.setPen(dot_pen);
         QVector<QPointF> points;
 
         // Bottom right
-        for (double x = 0; x <= scene_rect.right(); x += grid_x)
-            for (double y = 0; y <= scene_rect.bottom(); y += grid_y)
-                points.append( mapFromScene(x, y) );
+        for (double x = origin_x; x <= scene_rect.right(); x += grid_x)
+            for (double y = origin_y; y <= scene_rect.bottom(); y += grid_y)
+                points.append( QPointF(x, y) );
         // Bottom left
-        for (double x = 0; x >= scene_rect.left(); x -= grid_x)
-            for (double y = 0; y <= scene_rect.bottom(); y += grid_y)
-                points.append( mapFromScene(x, y) );
+        for (double x = origin_x; x >= scene_rect.left(); x -= grid_x)
+            for (double y = origin_y; y <= scene_rect.bottom(); y += grid_y)
+                points.append( QPointF(x, y) );
         // Top right
-        for (double x = 0; x <= scene_rect.right(); x += grid_x)
-            for (double y = 0; y >= scene_rect.top(); y -= grid_y)
-                points.append( mapFromScene(x, y) );
+        for (double x = origin_x; x <= scene_rect.right(); x += grid_x)
+            for (double y = origin_y; y >= scene_rect.top(); y -= grid_y)
+                points.append( QPointF(x, y) );
         // Top left
-        for (double x = 0; x >= scene_rect.left(); x -= grid_x)
-            for (double y = 0; y >= scene_rect.top(); y -= grid_y)
-                points.append( mapFromScene(x, y) );
+        for (double x = origin_x; x >= scene_rect.left(); x -= grid_x)
+            for (double y = origin_y; y >= scene_rect.top(); y -= grid_y)
+                points.append( QPointF(x, y) );
 
         painter.drawPoints(points.data(), points.size());
     }
 }
+
 
 
 //####################################################################################
