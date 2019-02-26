@@ -35,8 +35,7 @@ private:
     DrProject           *m_project;                 // Pointer to currently loaded project
     InterfaceRelay      *m_relay;                   // Pointer to InterfaceRelay class of parent form
 
-    QList<QLabel*>       m_labels_name;             // List of the name   label widgets contained in asset tree
-    QList<QLabel*>       m_labels_pix;              // List of the pixmap label widgets contained in asset tree
+    QList<QFrame*>       m_asset_frames;            // List of the single row frames that contain name and pixmap labels
 
     WidgetHoverHandler  *m_widget_hover;            // Pointer to a widget hover handler
 
