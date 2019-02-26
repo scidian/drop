@@ -143,12 +143,12 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
 
     // !!!!! #DEBUG:    Draw mouse coords on screen
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Mouse_Coordinates)) {
-        m_relay->setLabelText(Label_Names::Label_Mouse_1, "Mouse Scene X: " + QString::number(mapToScene(m_last_mouse_pos).x()) +
-                                                                    ", Y: " + QString::number(mapToScene(m_last_mouse_pos).y()) );
-        m_relay->setLabelText(Label_Names::Label_Mouse_2, "Mouse View  X: " + QString::number(m_last_mouse_pos.x()) +
-                                                                    ", Y: " + QString::number(m_last_mouse_pos.y()) );
-        m_relay->setLabelText(Label_Names::Label_Pos_Flag, "Position Flag: " + Dr::StringFromPositionFlag(m_over_handle) + QString("\t") +
-                                                               "Pos Angle: " + QString::number(a));
+        Dr::SetLabelText(Label_Names::Label_Mouse_1, "Mouse Scene X: " + QString::number(mapToScene(m_last_mouse_pos).x()) +
+                                                               ", Y: " + QString::number(mapToScene(m_last_mouse_pos).y()) );
+        Dr::SetLabelText(Label_Names::Label_Mouse_2, "Mouse View  X: " + QString::number(m_last_mouse_pos.x()) +
+                                                               ", Y: " + QString::number(m_last_mouse_pos.y()) );
+        Dr::SetLabelText(Label_Names::Label_Pos_Flag, "Position Flag: " + Dr::StringFromPositionFlag(m_over_handle) + QString("\t") +
+                                                          "Pos Angle: " + QString::number(a));
     }
     // !!!!! END
 
@@ -158,23 +158,23 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
         QPointF my_scale =  item->data(User_Roles::Scale).toPointF();
         double  my_angle =  item->data(User_Roles::Rotation).toDouble();
         QPointF my_center = item->sceneTransform().map( item->boundingRect().center() );
-        m_relay->setLabelText(Label_Names::Label_Position, "Pos X: " +  QString::number(item->pos().x()) +
-                                                         ", Pos Y: " +  QString::number(item->pos().y()) );
-        m_relay->setLabelText(Label_Names::Label_Center, "Center X: " + QString::number(my_center.x()) +
-                                                              ", Y: " + QString::number(my_center.y()) );
-        m_relay->setLabelText(Label_Names::Label_Scale, "Scale X: " +   QString::number(my_scale.x()) +
-                                                      ", Scale Y: " +   QString::number(my_scale.y()) );
-        m_relay->setLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle) + ", Opacity: " + QString::number(item->opacity()));
-        m_relay->setLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()) + QString("\t") +
+        Dr::SetLabelText(Label_Names::Label_Position, "Pos X: " +  QString::number(item->pos().x()) +
+                                                    ", Pos Y: " +  QString::number(item->pos().y()) );
+        Dr::SetLabelText(Label_Names::Label_Center, "Center X: " + QString::number(my_center.x()) +
+                                                         ", Y: " + QString::number(my_center.y()) );
+        Dr::SetLabelText(Label_Names::Label_Scale, "Scale X: " +   QString::number(my_scale.x()) +
+                                                 ", Scale Y: " +   QString::number(my_scale.y()) );
+        Dr::SetLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle) + ", Opacity: " + QString::number(item->opacity()));
+        Dr::SetLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()) + QString("\t") +
                                                              "Name: " + item->data(User_Roles::Name).toString() );
 
     } else if (Dr::CheckDebugFlag(Debug_Flags::Label_Selected_Item_Data)) {
         if (m_view_mode == View_Mode::None && check_item == nullptr) {
-            m_relay->setLabelText(Label_Names::Label_Position, "Null");
-            m_relay->setLabelText(Label_Names::Label_Center, "Null");
-            m_relay->setLabelText(Label_Names::Label_Scale, "Null");
-            m_relay->setLabelText(Label_Names::Label_Rotate, "Null");
-            m_relay->setLabelText(Label_Names::Label_Z_Order, "Null");
+            Dr::SetLabelText(Label_Names::Label_Position, "Null");
+            Dr::SetLabelText(Label_Names::Label_Center, "Null");
+            Dr::SetLabelText(Label_Names::Label_Scale, "Null");
+            Dr::SetLabelText(Label_Names::Label_Rotate, "Null");
+            Dr::SetLabelText(Label_Names::Label_Z_Order, "Null");
         }
     }
     // !!!!! END

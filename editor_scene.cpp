@@ -283,11 +283,11 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
 
             if (property == Properties::Object_Size) {
                 object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale, scale);
-                m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { object } , { static_cast<long>(Properties::Object_Scale) });
+                m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { object } , { Properties::Object_Scale });
             }
             if (property == Properties::Object_Scale) {
                 object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Size, size);
-                m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { object } , { static_cast<long>(Properties::Object_Size) });
+                m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { object } , { Properties::Object_Size });
             }
 
             break;

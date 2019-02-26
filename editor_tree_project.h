@@ -84,11 +84,9 @@ class StageTreeHighlightProxy : public QProxyStyle
 {
 private:
     TreeProject     *m_parent_tree;              // Pointer to parent TreeProject
-    InterfaceRelay  *m_relay;                    // Pointer to InterfaceRelay class of parent form
 
 public:
-    explicit StageTreeHighlightProxy(QStyle *baseStyle, TreeProject *parent_tree, InterfaceRelay *relay) :
-                                     QProxyStyle(baseStyle), m_parent_tree(parent_tree), m_relay(relay) { }
+    explicit StageTreeHighlightProxy(QStyle *baseStyle, TreeProject *parent_tree) : QProxyStyle(baseStyle), m_parent_tree(parent_tree) { }
     virtual ~StageTreeHighlightProxy() override;
 
     virtual void drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const override;

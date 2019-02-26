@@ -176,7 +176,7 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
             break;
         }
 
-        m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Object_Inspector, { settings }, { property_key } );
+        m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Object_Inspector, { settings }, { static_cast<Properties>(property_key) } );
     }
 }
 

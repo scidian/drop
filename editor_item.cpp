@@ -5,6 +5,8 @@
 //      DrObject Class Definitions
 //
 //
+#include <QtMath>
+
 #include <QTime>
 #include <QStyleOptionGraphicsItem>
 
@@ -129,6 +131,19 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
     double  angle = data(User_Roles::Rotation).toDouble();
     QPointF scale = data(User_Roles::Scale).toPointF();
 
+    // Intercepts item position change and limits new location if Snap to Grid is on
+    if (change == ItemPositionChange) {
+        QPointF new_pos = value.toPointF();
+
+        QPointF grid_size =   m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
+        QPointF grid_origin = m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point).toPointF();
+        double  grid_angle =  m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Rotation).toDouble();
+
+        new_pos.setX( round(new_pos.x() / grid_size.x()) * grid_size.x() );
+        new_pos.setY( round(new_pos.y() / grid_size.y()) * grid_size.y() );
+
+        return new_pos;
+    }
 
     // ***** If item position has changed, update it
     if (change == ItemPositionHasChanged) {

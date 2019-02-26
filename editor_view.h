@@ -93,7 +93,6 @@ private:
     QPointF      m_grid_size { 50, 50 };                            // Grid size
     double       m_grid_rotate = 0;                                 // Rotation of grid lines
 
-
     // Keyboard flags
     bool         m_flag_key_down_spacebar = false;                  // True when View has focus and spacebar      is down
     bool         m_flag_key_down_control =  false;                  // True when View has focus and control (cmd) is down

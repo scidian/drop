@@ -49,10 +49,19 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     // ########## Load saved preferences
     Dr::SetColorScheme(Color_Scheme::Dark);
 
+    current_mode = Form_Main_Mode::World_Editor;
+
+    setOption(Options::World_Editor_Current_World, 0);
+    setOption(Options::World_Editor_Lock_Backgrounds, false);
+    setOption(Options::World_Editor_Show_Collision_Shapes, false);
+    setOption(Options::World_Editor_Show_Connections, false);
+    setOption(Options::World_Editor_Show_Game_Frame, false);
+    setOption(Options::World_Editor_Show_Grid_On_Top, false);
+    setOption(Options::World_Editor_Snap_To_Grid, true);
+
 
     // ########## Initialize new project, initialize local variables
     project = new DrProject(1);
-    current_world = 0;
 
 
     // !!!!! #TEMP: Add images / assets
@@ -105,7 +114,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     // ########## Initialize form and customize colors and styles
     scene = new DrScene(this, project, this);
     buildMenu();
-    buildWindow(Form_Main_Mode::World_Editor);
+    buildWindow(current_mode);
     Dr::ApplyColoring(this);
 
 
@@ -171,19 +180,19 @@ void FormMain::buildScene(long from_stage_key)
 
 
 
-void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Properties> property_keys) {
-    updateEditorWidgetsAfterItemChange(changed_from, changed_items, Dr::ConvertPropertyListToLongs(property_keys));    }
-void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<long> property_keys)
+void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Properties> property_keys)
 {
+    QList<long> property_keys_as_long = Dr::ConvertPropertyListToLongs(property_keys);
+
     if (viewMain->currentViewMode() == View_Mode::Translating) return;
 
-    if (changed_from != Editor_Widgets::Object_Inspector)   treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys);
-    if (changed_from != Editor_Widgets::Scene_View)         scene->updateChangesInScene(changed_items, property_keys);
-    if (changed_from != Editor_Widgets::Project_Tree)       treeProject->updateItemNames(changed_items, property_keys);
-    if (changed_from != Editor_Widgets::Asset_Tree)         treeAsset->updateAssetList(changed_items, property_keys);
+    if (changed_from != Editor_Widgets::Object_Inspector)   treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys_as_long);
+    if (changed_from != Editor_Widgets::Scene_View)         scene->updateChangesInScene(changed_items, property_keys_as_long);
+    if (changed_from != Editor_Widgets::Project_Tree)       treeProject->updateItemNames(changed_items, property_keys_as_long);
+    if (changed_from != Editor_Widgets::Asset_Tree)         treeAsset->updateAssetList(changed_items, property_keys_as_long);
 
     // !!!!! TEMP: Testing to make sure not running non stop
-    setLabelText(Label_Names::Label_Bottom, "Update Editor Widgets: " + QTime::currentTime().toString());
+    Dr::SetLabelText(Label_Names::Label_Bottom, "Update Editor Widgets: " + QTime::currentTime().toString());
 }
 
 void FormMain::updateItemSelection(Editor_Widgets selected_from)
@@ -193,11 +202,17 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from)
     if (selected_from != Editor_Widgets::Project_Tree)  treeProject->updateSelectionFromView( scene->getSelectionItems() );
 
     // !!!!! TEMP: Testing to make sure not running non stop
-    setLabelText(Label_Names::Label_Bottom, "Update Selection: " + QTime::currentTime().toString());
+    Dr::SetLabelText(Label_Names::Label_Bottom, "Update Selection: " + QTime::currentTime().toString());
 }
 
 
 
+QVariant FormMain::getOption(Options option_to_get) {
+    return options[option_to_get];
+}
+void FormMain::setOption(Options option_to_set, QVariant new_value) {
+    options[option_to_set] = new_value;
+}
 
 
 // Emits a single shot timer to update view coordinates after event calls are done

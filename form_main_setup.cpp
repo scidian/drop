@@ -128,7 +128,7 @@ void FormMain::buildWindowModeEditStage()
 
                     // ***** Load our custom TreeProject for the Scene List
                     treeProject = new TreeProject(splitterHorizontal, project, this);
-                    treeProject->setStyle(new StageTreeHighlightProxy(treeProject->style(), treeProject, this));
+                    treeProject->setStyle(new StageTreeHighlightProxy(treeProject->style(), treeProject));
                         QTreeWidgetItem *header_item_stage = new QTreeWidgetItem();
                         header_item_stage->setIcon(1, QIcon(":/tree_icons/tree_lock_header.png"));
                         treeProject->setHeaderItem(header_item_stage);

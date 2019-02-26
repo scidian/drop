@@ -305,8 +305,8 @@ void TreeProject::dragMoveEvent(QDragMoveEvent *event)
 
     // !!!!! #DEBUG:    Show stage tree drag event info
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Stage_Tree_Drag)) {
-        m_relay->setLabelText(Label_Names::Label_1, QString::fromStdString("MX: ") + QString::number(m_mouse_x) +
-                                                    QString::fromStdString(", MY: ") + QString::number(m_mouse_y) );
+        Dr::SetLabelText(Label_Names::Label_1, QString::fromStdString("MX: ") + QString::number(m_mouse_x) +
+                                               QString::fromStdString(", MY: ") + QString::number(m_mouse_y) );
     }
     // !!!!! END
 
@@ -319,8 +319,8 @@ void TreeProject::dragMoveEvent(QDragMoveEvent *event)
 
         // !!!!! #DEBUG:    Show stage tree drag event info
         if (Dr::CheckDebugFlag(Debug_Flags::Label_Stage_Tree_Drag)) {
-            m_relay->setLabelText(Label_Names::Label_Object_3, "Selected: " + QString::number(m_selected_key) +
-                                                             ", Checking: " + QString::number(check_key) );
+            Dr::SetLabelText(Label_Names::Label_Object_3, "Selected: " + QString::number(m_selected_key) +
+                                                        ", Checking: " + QString::number(check_key) );
         }
         // !!!!! END
 
@@ -400,8 +400,8 @@ void StageTreeHighlightProxy::drawPrimitive(PrimitiveElement element, const QSty
 
         // !!!!! #DEUBG:    Show custom highlight event data
         if (Dr::CheckDebugFlag(Debug_Flags::Label_Stage_Tree_Drag)) {
-            m_relay->setLabelText(Label_Names::Label_2, QString::fromStdString("TLX: ") + QString::number(option->rect.topLeft().x()) +
-                                                        QString::fromStdString(", TLY: ") + QString::number(option->rect.topLeft().y()));
+            Dr::SetLabelText(Label_Names::Label_2, QString::fromStdString("TLX: ") + QString::number(option->rect.topLeft().x()) +
+                                                 QString::fromStdString(", TLY: ") + QString::number(option->rect.topLeft().y()));
         }
         // !!!!! END
 

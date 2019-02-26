@@ -49,7 +49,7 @@ class DrScene;
 class DrView;
 class DrViewRubberBand;
 
-
+typedef std::map<Options, QVariant> OptionMap;
 
 //####################################################################################
 //##    FormMain - Main editor window
@@ -64,37 +64,37 @@ public:
 
     // Locals that need to be SAVED / LOADED from each project
     DrProject      *project;                                            // Holds whatever the current open game project is
-    long            current_world;                                      // Tracks which world to show in the Stage viewer
+    OptionMap       options;                                            // Map holding project wide options (linked to InterfaceRelay)
 
 
-private:
-    TreeAdvisor   *treeAdvisor;           // Custom classes for Advisor Window
-    TreeAssets    *treeAsset;             // Custom classes for Asset Tree
-    TreeInspector *treeInspector;         // Custom classes for Object Inspector
-    TreeProject   *treeProject;           // Custom classes for Project Tree
+private:   
+    TreeAdvisor    *treeAdvisor;           // Custom classes for Advisor Window
+    TreeAssets     *treeAsset;             // Custom classes for Asset Tree
+    TreeInspector  *treeInspector;         // Custom classes for Object Inspector
+    TreeProject    *treeProject;           // Custom classes for Project Tree
 
-    DrScene       *scene;                 // Behind the scene data model that holds the currently selected Stage
-    DrView        *viewMain;              // Renders the scene, allows for interaction
+    DrScene        *scene;                 // Behind the scene data model that holds the currently selected Stage
+    DrView         *viewMain;              // Renders the scene, allows for interaction
 
     // Normal Qt Classes for simple objects
-    QMenuBar      *menuBar;
-    QAction       *actionUndo, *actionRedo;
-    QWidget       *widgetAdvisor, *widgetAssests, *widgetCentral, *widgetStage, *widgetInspector, *widgetToolbar, *widgetStageView;
-    QScrollArea   *areaBottom;
-    QFrame        *statusBar;
+    QMenuBar       *menuBar;
+    QAction        *actionUndo, *actionRedo;
+    QWidget        *widgetAdvisor, *widgetAssests, *widgetCentral, *widgetStage, *widgetInspector, *widgetToolbar, *widgetStageView;
+    QScrollArea    *areaBottom;
+    QFrame         *statusBar;
 
-    QHBoxLayout   *horizontalLayout;
-    QVBoxLayout   *verticalLayout, *verticalLayoutObject, *verticalLayoutAdvisor, *verticalLayoutAsset, *verticalLayoutView;
-    ColorSplitter *splitterHorizontal, *splitterVertical;
+    QHBoxLayout    *horizontalLayout;
+    QVBoxLayout    *verticalLayout, *verticalLayoutObject, *verticalLayoutAdvisor, *verticalLayoutAsset, *verticalLayoutView;
+    ColorSplitter  *splitterHorizontal, *splitterVertical;
 
-    QDockWidget   *advisor, *assets, *inspector, *toolbar;
-    QPushButton   *buttonAtlas, *buttonFonts, *buttonPlay, *buttonSettings, *buttonWorlds;
+    QDockWidget    *advisor, *assets, *inspector, *toolbar;
+    QPushButton    *buttonAtlas, *buttonFonts, *buttonPlay, *buttonSettings, *buttonWorlds;
 
     // Labels to display info
-    QLabel        *label_1,         *label_2,           *label_3,           *label_mouse_1,     *label_mouse_2;
-    QLabel        *label_object_1,  *label_object_2,    *label_object_3,    *label_object_4,    *label_object_5;
-    QLabel        *label_position,  *label_center,      *label_scale,       *label_rotate,       *label_z_order,    *label_pos_flag;
-    QLabel        *label_bottom;
+    QLabel         *label_1,         *label_2,           *label_3,           *label_mouse_1,     *label_mouse_2;
+    QLabel         *label_object_1,  *label_object_2,    *label_object_3,    *label_object_4,    *label_object_5;
+    QLabel         *label_position,  *label_center,      *label_scale,       *label_rotate,       *label_z_order,    *label_pos_flag;
+    QLabel         *label_bottom;
 
 public:
     // Constructor and Destructor
@@ -102,21 +102,22 @@ public:
     ~FormMain();
 
     // Interface Relay Implementations
-    virtual void    buildAssetTree();
-    virtual void    buildObjectInspector(QList<long> key_list);
-    virtual void    buildProjectTree();
-    virtual void    buildScene(long from_stage_key);
+    virtual void        buildAssetTree();
+    virtual void        buildObjectInspector(QList<long> key_list);
+    virtual void        buildProjectTree();
+    virtual void        buildScene(long from_stage_key);
 
-    virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<long> property_keys);
-    virtual void    updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Properties> property_keys);
+    virtual void        updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Properties> property_keys);
+    virtual void        updateItemSelection(Editor_Widgets selected_from);
 
-    virtual void    updateItemSelection(Editor_Widgets selected_from);
+    virtual QVariant    getOption(Options option_to_get);
+    virtual void        setOption(Options option_to_set, QVariant new_value);
 
-    virtual void    centerViewOnPoint(QPointF center_point);
+    virtual void        centerViewOnPoint(QPointF center_point);
 
-    virtual void    setAdvisorInfo(HeaderBodyList header_body_list);
-    virtual void    setAdvisorInfo(QString header, QString body);
-    virtual void    setLabelText(Label_Names label_name, QString new_text);
+    virtual void        setAdvisorInfo(HeaderBodyList header_body_list);
+    virtual void        setAdvisorInfo(QString header, QString body);
+    virtual void        setLabelText(Label_Names label_name, QString new_text);
 
 private:
     // Form Building / Setup

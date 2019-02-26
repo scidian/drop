@@ -43,7 +43,7 @@ bool DrView::eventFilter(QObject *obj, QEvent *event)
     // 128 = Hover Leave     129 = Hover Move
     //
     //if (t != 1 && t != 11 && t != 12 && t != 13 && t != 14 && t != 17 && t != 24 && t != 74 && t != 78 && t != 128 && t != 129)
-    //    m_relay->setLabelText(Label_Names::Label_2, QString::number(event->type()));
+    //    Dr::SetLabelText(Label_Names::Label_2, QString::number(event->type()));
     return QGraphicsView::eventFilter(obj, event);
 }
 
@@ -61,6 +61,7 @@ void DrView::drawBackground(QPainter *painter, const QRectF &rect)
                         1.0f);
         f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
     }
+
 
     paintGrid(*painter);
 }
@@ -111,8 +112,8 @@ void DrView::paintEvent(QPaintEvent *event)
 
     // !!!!! #DEBUG:    Draw frames per second
     if (Dr::CheckDebugFlag(Debug_Flags::Label_FPS)) {
-        m_relay->setLabelText(Label_Names::Label_3, "Draw Time: " + QString::number(m_debug_timer.elapsed()) +
-                                                        ", FPS: " + QString::number(m_debug_fps_last) );
+        Dr::SetLabelText(Label_Names::Label_3, "Draw Time: " + QString::number(m_debug_timer.elapsed()) +
+                                                   ", FPS: " + QString::number(m_debug_fps_last) );
         m_debug_fps++;
         if (m_debug_timer.elapsed() >= 1000) {
             m_debug_timer.restart();
@@ -231,11 +232,11 @@ void DrView::paintItemOutlines(QPainter &painter)
 
     // !!!!! #DEBUG:    Show selection group info
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Selection_Group_Data)) {
-        m_relay->setLabelText(Label_Names::Label_Object_3, "Group Size X: " + QString::number(my_scene->getSelectionBox().width()) +
-                                                                    ", Y: " + QString::number(my_scene->getSelectionBox().height()) );
-        m_relay->setLabelText(Label_Names::Label_Object_4, "Scale X: " +      QString::number(my_scene->getSelectionScale().x()) +
-                                                               ", Y: " +      QString::number(my_scene->getSelectionScale().y()) +
-                                                           ", Angle: " +      QString::number(my_scene->getSelectionAngle()));
+        Dr::SetLabelText(Label_Names::Label_Object_3, "Group Size X: " + QString::number(my_scene->getSelectionBox().width()) +
+                                                               ", Y: " + QString::number(my_scene->getSelectionBox().height()) );
+        Dr::SetLabelText(Label_Names::Label_Object_4, "Scale X: " +      QString::number(my_scene->getSelectionScale().x()) +
+                                                          ", Y: " +      QString::number(my_scene->getSelectionScale().y()) +
+                                                      ", Angle: " +      QString::number(my_scene->getSelectionAngle()));
     }
     // !!!!! END
 

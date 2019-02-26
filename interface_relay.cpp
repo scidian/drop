@@ -33,6 +33,6 @@ namespace Dr {
 
 
     void SetActiveRelay(InterfaceRelay *new_relay)      { g_active_window = new_relay; }
-    void SetLabelText(Label_Names label, QString text)  { g_active_window->setLabelText(label, text); }
+    void SetLabelText(Label_Names label, QString text)  { if (g_active_window) g_active_window->setLabelText(label, text); }
 
 }
