@@ -133,11 +133,30 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 
     // Intercepts item position change and limits new location if Snap to Grid is on
     if (change == ItemPositionChange) {
+        QPointF grid_size =   m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
+        //QPointF grid_origin = m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point).toPointF();
+        //double  grid_angle =  m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Rotation).toDouble();
+
         QPointF new_pos = value.toPointF();
 
-        QPointF grid_size =   m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
-        QPointF grid_origin = m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point).toPointF();
-        double  grid_angle =  m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Rotation).toDouble();
+        return new_pos;
+
+        Dr::SetLabelText(Label_Names::Label_1, "Top Left X, Y: " + QString::number(new_pos.x()) + ", " + QString::number(new_pos.y()));
+
+        // Create a transform so we can find new center position of item
+        QTransform t = QTransform().rotate(angle).scale(scale.x(), scale.y());
+        double new_center_x = new_pos.x() + t.map( boundingRect().center() ).x();
+        double new_center_y = new_pos.y() + t.map( boundingRect().center() ).y();
+
+        Dr::SetLabelText(Label_Names::Label_2, "Center X, Y: " + QString::number(new_center_x) + ", " + QString::number(new_center_y));
+
+        double rounded_center_x = round(new_center_x / grid_size.x()) * grid_size.x();
+        double rounded_center_y = round(new_center_y / grid_size.y()) * grid_size.y();
+        double x_diff = new_center_x - rounded_center_x;
+        double y_diff = new_center_y - rounded_center_y;
+
+        //new_pos.setX( new_pos.x() - x_diff );
+        //new_pos.setY( new_pos.y() - y_diff );
 
         new_pos.setX( round(new_pos.x() / grid_size.x()) * grid_size.x() );
         new_pos.setY( round(new_pos.y() / grid_size.y()) * grid_size.y() );
@@ -152,10 +171,11 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 
         // Create a transform so we can find new center position of item
         QTransform t = QTransform().rotate(angle).scale(scale.x(), scale.y());
-        double new_x = new_pos.x() + t.map( boundingRect().center() ).x();
-        double new_y = new_pos.y() + t.map( boundingRect().center() ).y();
+        QPointF center = t.map( boundingRect().center() ) + pos(); //+ new_pos();
 
-        m_object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Position, QPointF(new_x, new_y));
+        Dr::SetLabelText(Label_Names::Label_3, "Pos() X, Y: " + QString::number(pos().x()) + ", " + QString::number(pos().y()));
+
+        m_object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Position, center);
 
         m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Properties::Object_Position });
         return new_pos;

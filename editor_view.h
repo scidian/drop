@@ -104,10 +104,8 @@ private:
     QPointF                             m_origin_in_scene;          // Stores mouse down position in scene coordinates
     QGraphicsItem                      *m_origin_item;              // Stores top item under mouse (if any) on mouse down event
 
-
     // Tool Tip Variables
-    DrViewToolTip                  *m_tool_tip;                     // Holds our view's custom Tool Tip box
-
+    DrViewToolTip                      *m_tool_tip;                 // Holds our view's custom Tool Tip box
 
     // View_Mode::Translating Variables
     QTime                               m_origin_timer;             // Tracks time since mouse down to help buffer movement while selecting
@@ -159,6 +157,7 @@ public:
 
     // Event Overrides, start at Qt Docs for QGraphicsView Class to find more
     virtual void    drawBackground(QPainter *painter, const QRectF &rect) override;
+    virtual void    drawForeground(QPainter *painter, const QRectF &rect) override;
     virtual void    paintEvent(QPaintEvent *event) override;                                // Inherited from QWidget
 
     virtual bool    eventFilter(QObject *obj, QEvent *event) override;                      // Inherited from QObject
@@ -194,6 +193,7 @@ public:
     void            paintGroupAngle(QPainter &painter, double angle);
     void            paintHandles(QPainter &painter, Handle_Shapes shape_to_draw);
     void            paintItemOutlines(QPainter &painter);
+    void            paintItemCenters(QPainter &painter);
     void            paintToolTip(QPainter &painter);
 
     // Selection Functions

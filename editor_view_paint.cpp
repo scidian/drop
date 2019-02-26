@@ -48,9 +48,11 @@ bool DrView::eventFilter(QObject *obj, QEvent *event)
 }
 
 
+//####################################################################################
+//##        DrawBackground / DrawForground, called before and after paintEvent
+//####################################################################################
 void DrView::drawBackground(QPainter *painter, const QRectF &rect)
 {
-    Q_UNUSED(painter);
     Q_UNUSED(rect);
 
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL)) {
@@ -62,8 +64,18 @@ void DrView::drawBackground(QPainter *painter, const QRectF &rect)
         f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
     }
 
+    if (m_relay->getOption(Options::World_Editor_Show_Grid_On_Top).toBool() == false) {
+        paintGrid(*painter);
+    }
+}
 
-    paintGrid(*painter);
+void DrView::drawForeground(QPainter *painter, const QRectF &rect)
+{
+    Q_UNUSED(rect);
+
+    if (m_relay->getOption(Options::World_Editor_Show_Grid_On_Top).toBool() == true) {
+        paintGrid(*painter);
+    }
 }
 
 
@@ -105,6 +117,9 @@ void DrView::paintEvent(QPaintEvent *event)
 
         if (m_view_mode == View_Mode::Rotating)
             paintGroupAngle(painter, my_scene->getSelectionAngle());    // Draw angles if rotating
+
+        if (m_view_mode == View_Mode::Translating)
+            paintItemCenters(painter);
     }
 
     if (m_tool_tip->isHidden() == false && Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL))
@@ -287,41 +302,6 @@ void DrView::paintBoundingBox(QPainter &painter)
 
 
 //####################################################################################
-//##        PAINT: Paints lines showing rotation while rotating
-//####################################################################################
-void DrView::paintGroupAngle(QPainter &painter, double angle)
-{
-    ///// Set pen to draw as NOT operation
-    ///painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
-    painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 1));
-
-    // !!!!! #DEBUG:    Draws from center to origin point (mouse down), and center to last position (mouse move)
-    if (Dr::CheckDebugFlag(Debug_Flags::Paint_Rotating_Angles)) {
-        painter.drawLine(mapFromScene(m_rotate_start_rect.center()), m_origin);
-        painter.drawLine(mapFromScene(m_rotate_start_rect.center()), m_last_mouse_pos);
-    }
-    // !!!!! END
-
-    // Map center point to view, create a line going straight up at zero degrees
-    QPointF center_point = mapFromScene(m_rotate_start_rect.center());
-    QLineF     line_zero = QLineF(center_point, QPointF(center_point.x(), center_point.y() - 30) );
-
-    // Make a copy of line rotated at the current Selection Group angle (passed in)
-    QPointF origin = center_point;
-    QTransform rotate = QTransform().translate(origin.x(), origin.y()).rotate(angle).translate(-origin.x(), -origin.y());
-    QLineF  line_rotated = rotate.map(line_zero);
-    line_zero.setP1( QPointF(line_zero.x1(), line_zero.y1() - 1) );
-
-    // Draw lines
-    painter.drawLine( line_zero );
-    painter.drawLine( line_rotated );
-
-    ///// Reset pen to draw normally
-    ///painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOver);
-}
-
-
-//####################################################################################
 //##        PAINT: Paints handles onto view
 //####################################################################################
 void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw)
@@ -360,6 +340,69 @@ void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw)
             painter.drawPolygon(h.second);
     }
     // !!!!! END
+}
+
+
+//####################################################################################
+//##        PAINT: Paints lines showing rotation while rotating
+//####################################################################################
+void DrView::paintGroupAngle(QPainter &painter, double angle)
+{
+    painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 1));
+
+    // !!!!! #DEBUG:    Draws from center to origin point (mouse down), and center to last position (mouse move)
+    if (Dr::CheckDebugFlag(Debug_Flags::Paint_Rotating_Angles)) {
+        painter.drawLine(mapFromScene(m_rotate_start_rect.center()), m_origin);
+        painter.drawLine(mapFromScene(m_rotate_start_rect.center()), m_last_mouse_pos);
+    }
+    // !!!!! END
+
+    // Map center point to view, create a line going straight up at zero degrees
+    QPointF center_point = mapFromScene(m_rotate_start_rect.center());
+    QLineF     line_zero = QLineF(center_point, QPointF(center_point.x(), center_point.y() - 30) );
+
+    // Make a copy of line rotated at the current Selection Group angle (passed in)
+    QPointF origin = center_point;
+    QTransform rotate = QTransform().translate(origin.x(), origin.y()).rotate(angle).translate(-origin.x(), -origin.y());
+    QLineF  line_rotated = rotate.map(line_zero);
+    line_zero.setP1( QPointF(line_zero.x1(), line_zero.y1() - 1) );
+
+    // Draw lines
+    painter.drawLine( line_zero );
+    painter.drawLine( line_rotated );
+}
+
+
+//####################################################################################
+//##        PAINT: Paints cross in the center of item while translating
+//####################################################################################
+void DrView::paintItemCenters(QPainter &painter)
+{
+    // Don't draw if snap to grid is off
+    if (m_relay->getOption(Options::World_Editor_Snap_To_Grid).toBool() == false) return;
+
+    QList<QGraphicsItem*>  my_items = my_scene->getSelectionItems();
+
+    QPen pen_brush(Dr::GetColor(Window_Colors::Text_Light));
+    pen_brush.setCosmetic(true);
+    painter.setPen(pen_brush);
+    painter.setBrush(Qt::NoBrush);
+
+    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL) == false)
+        painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
+
+    for (auto item: my_items) {
+        QPoint center = mapFromScene( item->sceneTransform().map( item->boundingRect().center() ) );
+
+        QVector<QLine> lines;
+        lines.append( QLine(center.x(), center.y() + 10, center.x(), center.y() - 10) );
+        lines.append( QLine(center.x() + 10, center.y(), center.x() - 10, center.y()) );
+
+        painter.drawLines(lines);
+    }
+
+    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL) == false)
+        painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOver);
 }
 
 
