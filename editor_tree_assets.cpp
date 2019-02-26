@@ -37,18 +37,18 @@ TreeAssets::TreeAssets(QWidget *parent, DrProject *project, InterfaceRelay *rela
     m_widget_hover = new WidgetHoverHandler(this);
     connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
 
-    m_widget_hover->applyHeaderBodyProperties(this, Advisor_Info::Asset_List);
+    m_widget_hover->attachToHoverHandler(this, Advisor_Info::Asset_List);
 }
 
 // SLOT: Catches signals from m_widget_hover
 void TreeAssets::setAdvisorInfo(QString header, QString body) {
     m_relay->setAdvisorInfo(header, body);
 }
-void TreeAssets::applyHeaderBodyProperties(QWidget *widget, DrProperty *property) {
-    m_widget_hover->applyHeaderBodyProperties(widget, property);
+void TreeAssets::attachToHoverHandler(QWidget *widget, DrProperty *property) {
+    m_widget_hover->attachToHoverHandler(widget, property);
 }
-void TreeAssets::applyHeaderBodyProperties(QWidget *widget, QString header, QString body) {
-    m_widget_hover->applyHeaderBodyProperties(widget, header, body);
+void TreeAssets::attachToHoverHandler(QWidget *widget, QString header, QString body) {
+    m_widget_hover->attachToHoverHandler(widget, header, body);
 }
 
 
@@ -91,7 +91,7 @@ void TreeAssets::buildAssetTree()
     //category_button->setIcon(QIcon(component_map.second->getIcon()));
     category_button->setStyleSheet(buttonColor);
     category_button->setEnabled(false);
-    applyHeaderBodyProperties(category_button, "Object Assets", "Objects for use in Stage");
+    attachToHoverHandler(category_button, "Object Assets", "Objects for use in Stage");
 
     this->setItemWidget(category_item, 0, category_button);                             // Apply the button to the tree item
 
@@ -118,7 +118,7 @@ void TreeAssets::buildAssetTree()
         asset_name->setFont(fp);
         asset_name->setSizePolicy(sp_left);
         asset_name->setAlignment(Qt::AlignmentFlag::AlignCenter);
-        m_widget_hover->applyHeaderBodyProperties(asset_name, asset_pair.second->getAssetName(), Advisor_Info::Asset_Object[1] );
+        m_widget_hover->attachToHoverHandler(asset_name, asset_pair.second->getAssetName(), Advisor_Info::Asset_Object[1] );
         vertical_split->addWidget(asset_name);
 
         // ***** Create the label that will display the asset
@@ -129,7 +129,7 @@ void TreeAssets::buildAssetTree()
         asset_pix->setSizePolicy(sp_right);
         asset_pix->setFixedHeight(45);
         asset_pix->setAlignment(Qt::AlignmentFlag::AlignCenter);
-        m_widget_hover->applyHeaderBodyProperties(asset_pix, asset_pair.second->getAssetName(), Advisor_Info::Asset_Object[1] );
+        m_widget_hover->attachToHoverHandler(asset_pix, asset_pair.second->getAssetName(), Advisor_Info::Asset_Object[1] );
         vertical_split->addWidget( asset_pix );
 
         // Draw pixmap onto label

@@ -43,7 +43,7 @@ TreeInspector::TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay
     m_widget_hover = new WidgetHoverHandler(this);
     connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
 
-    m_widget_hover->applyHeaderBodyProperties(this, Advisor_Info::Object_Inspector);
+    m_widget_hover->attachToHoverHandler(this, Advisor_Info::Object_Inspector);
 }
 
 
@@ -51,11 +51,11 @@ TreeInspector::TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay
 void TreeInspector::setAdvisorInfo(QString header, QString body) {
     m_relay->setAdvisorInfo(header, body);
 }
-void TreeInspector::applyHeaderBodyProperties(QWidget *widget, DrProperty *property) {
-    m_widget_hover->applyHeaderBodyProperties(widget, property);
+void TreeInspector::attachToHoverHandler(QWidget *widget, DrProperty *property) {
+    m_widget_hover->attachToHoverHandler(widget, property);
 }
-void TreeInspector::applyHeaderBodyProperties(QWidget *widget, QString header, QString body) {
-    m_widget_hover->applyHeaderBodyProperties(widget, header, body);
+void TreeInspector::attachToHoverHandler(QWidget *widget, QString header, QString body) {
+    m_widget_hover->attachToHoverHandler(widget, header, body);
 }
 
 
@@ -160,7 +160,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
                 QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
                 sp_left.setHorizontalStretch(c_inspector_size_left);
             property_name->setSizePolicy(sp_left);
-            applyHeaderBodyProperties(property_name, property_pair.second);
+            attachToHoverHandler(property_name, property_pair.second);
             horizontal_split->addWidget(property_name);
 
             QWidget *new_widget = nullptr;
@@ -177,7 +177,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
             case Property_Type::SizeF:      new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Spin_Type::Size);    break;
             case Property_Type::Scale:      new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Spin_Type::Scale);   break;
             case Property_Type::Variable:   new_widget = createVariableSpinBoxPair(property_pair.second, fp);                   break;
-            case Property_Type::List:       new_widget = createComboBox(property_pair.second, fp);                              break;
+            case Property_Type::List:       new_widget = createListBox(property_pair.second, fp);                               break;
             }
 
             if (new_widget != nullptr)
@@ -204,7 +204,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
                                       " QPushButton:pressed { color: " + component_pair.second->getColor().darker(400).name() + "; } ");
         category_button->setIcon(QIcon(component_pair.second->getIcon()));
         category_button->setStyleSheet(buttonColor);
-        applyHeaderBodyProperties(category_button, component_pair.second->getDisplayName(), component_pair.second->getDescription());
+        attachToHoverHandler(category_button, component_pair.second->getDisplayName(), component_pair.second->getDescription());
 
         // Apply the button widget to the tree item
         grid->addWidget(category_button);

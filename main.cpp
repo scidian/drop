@@ -45,21 +45,19 @@
 #include "debug.h"
 #include "form_main.h"
 
-// To declare a custom QVariant Type:
-typedef std::map<long, QString> OptionList;
-
-Q_DECLARE_METATYPE(OptionList)
-
-///Q_DECLARE_METATYPE(QList<int>)
-///qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
-///settings.setValue("foo", QVariant::fromValue(myList));
-///QList<int> myList2 = settings.value("foo").value<QList<int> >();
+///// ***** How to have a custom QVariant Type *****
+///// In this file:
+///typedef std::map<long, QString> OptionList;
+///Q_DECLARE_METATYPE(OptionList)
+///qRegisterMetaTypeStreamOperators<OptionList>("OptionList");
+///// Usage example:
+///widget.setValue("test", QVariant::fromValue(myList));
+///OptionList myList2 = widget.value("test").value<OptionList>();
 
 int main(int argc, char *argv[])
 {
     // ***** This registers custom typedefs, classes, structs, etc. for use with Qt::QueuedConnection signals and QVariants
     qRegisterMetaType<HeaderBodyList>("HeaderBodyList");
-    qRegisterMetaType<OptionList>("OptionList");
 
     // ***** Initiliaze application
     QApplication app_drop(argc, argv);              // Declare application

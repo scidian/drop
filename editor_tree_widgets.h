@@ -29,11 +29,9 @@ public:
     WidgetHoverHandler(QObject *parent) : QObject(parent) {}
     virtual ~WidgetHoverHandler() {}
 
-    void            attach(QWidget *widget);
-
-    void            applyHeaderBodyProperties(QWidget *widget, DrProperty *property);
-    void            applyHeaderBodyProperties(QWidget *widget, QString header, QString body);
-    void            applyHeaderBodyProperties(QWidget *widget, HeaderBodyList header_body_list);
+    void            attachToHoverHandler(QWidget *widget, DrProperty *property);
+    void            attachToHoverHandler(QWidget *widget, QString header, QString body);
+    void            attachToHoverHandler(QWidget *widget, HeaderBodyList header_body_list);
 
 protected:
     bool            eventFilter(QObject *obj, QEvent *event);
@@ -54,7 +52,7 @@ public:
     explicit        MouseWheelWidgetAdjustmentGuard(QObject *parent);
 
 protected:
-    bool            eventFilter(QObject* obj, QEvent* event) override;
+    bool            eventFilter(QObject *obj, QEvent *event) override;
 };
 
 

@@ -49,8 +49,8 @@ public:
     void            updateAssetList(QList<DrSettings*> changed_items, QList<long> property_keys);
 
     // Property Builders
-    void            applyHeaderBodyProperties(QWidget *widget, DrProperty *property);
-    void            applyHeaderBodyProperties(QWidget *widget, QString header, QString body);
+    void            attachToHoverHandler(QWidget *widget, DrProperty *property);
+    void            attachToHoverHandler(QWidget *widget, QString header, QString body);
 
 private slots:
     void            setAdvisorInfo(QString header, QString body);
