@@ -56,8 +56,6 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     setOption(Options::World_Editor_Show_Collision_Shapes, false);
     setOption(Options::World_Editor_Show_Connections, false);
     setOption(Options::World_Editor_Show_Game_Frame, false);
-    setOption(Options::World_Editor_Show_Grid_On_Top, false);
-    setOption(Options::World_Editor_Snap_To_Grid, true);
 
 
     // ########## Initialize new project, initialize local variables

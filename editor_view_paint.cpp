@@ -64,7 +64,7 @@ void DrView::drawBackground(QPainter *painter, const QRectF &rect)
         f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
     }
 
-    if (m_relay->getOption(Options::World_Editor_Show_Grid_On_Top).toBool() == false) {
+    if (m_grid_show_on_top == false) {
         paintGrid(*painter);
     }
 }
@@ -73,7 +73,7 @@ void DrView::drawForeground(QPainter *painter, const QRectF &rect)
 {
     Q_UNUSED(rect);
 
-    if (m_relay->getOption(Options::World_Editor_Show_Grid_On_Top).toBool() == true) {
+    if (m_grid_show_on_top == true) {
         paintGrid(*painter);
     }
 }
@@ -379,7 +379,7 @@ void DrView::paintGroupAngle(QPainter &painter, double angle)
 void DrView::paintItemCenters(QPainter &painter)
 {
     // Don't draw if snap to grid is off
-    if (m_relay->getOption(Options::World_Editor_Snap_To_Grid).toBool() == false) return;
+    if (m_grid_should_snap == false) return;
 
     QList<QGraphicsItem*>  my_items = my_scene->getSelectionItems();
 

@@ -49,14 +49,19 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font)
     check->setSizePolicy(sp_right);
     check->setTristate(false);
 
+    long property_key = property->getPropertyKey();
+
     check->setProperty(User_Property::Mouse_Over, false);               // Initialize some mouse user data, WidgetHoverHandler updates this info,
     check->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));         // Used to track when the mouse is within the indicator area for custom paint event
-    check->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
+    check->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
 
     check->setChecked(property->getValue().toBool());
 
     attachToHoverHandler(check, property);
     addToWidgetList(check);
+
+    connect (check, &QCheckBox::toggled, [this, property_key](bool checked) { updateSettingsFromNewValue( property_key, checked );  });
+
     return check;
 }
 
@@ -79,7 +84,7 @@ QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font)
     addToWidgetList(edit);
 
     connect (edit,  &QLineEdit::editingFinished,
-             this, [this, property_key, edit] () { updateSettingsFromNewValue(property_key, edit->text() ); });
+             this, [this, property_key, edit] () { updateSettingsFromNewValue( property_key, edit->text() ); });
 
     return edit;
 }

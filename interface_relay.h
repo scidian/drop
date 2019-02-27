@@ -21,8 +21,6 @@ enum class Options
     World_Editor_Show_Collision_Shapes,
     World_Editor_Show_Connections,
     World_Editor_Show_Game_Frame,
-    World_Editor_Show_Grid_On_Top,
-    World_Editor_Snap_To_Grid,
 };
 
 //####################################################################################

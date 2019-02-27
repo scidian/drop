@@ -41,8 +41,8 @@ void InitializeFlags()
 
     //SetDebugFlag( Debug_Flags::Turn_On_Antialiasing );
     SetDebugFlag( Debug_Flags::Turn_On_OpenGL );
-    //SetDebugFlag( Debug_Flags::Label_FPS );
 
+    //SetDebugFlag( Debug_Flags::Label_FPS );
     SetDebugFlag( Debug_Flags::Label_Mouse_Coordinates );
     //SetDebugFlag( Debug_Flags::Label_Top_Item_RGBA);
 
@@ -53,6 +53,7 @@ void InitializeFlags()
     SetDebugFlag( Debug_Flags::Label_Selection_Group_Data );
     SetDebugFlag( Debug_Flags::Label_Selected_Item_Data );
     //SetDebugFlag( Debug_Flags::Label_Where_Update_Box_From );
+    SetDebugFlag( Debug_Flags::Label_Snap_To_Grid_Data );
 
     //SetDebugFlag( Debug_Flags::Paint_Resize_Calculations );
     //SetDebugFlag( Debug_Flags::Paint_Rotating_Angles );

@@ -240,6 +240,8 @@ enum class Properties
     Stage_Grid_Origin_Point,        //pointf
     Stage_Grid_Size,                //sizef
     Stage_Grid_Rotation,            //angle
+    Stage_Grid_Should_Snap,         //bool
+    Stage_Grid_Show_On_Top,         //bool
 
     // ********************
 

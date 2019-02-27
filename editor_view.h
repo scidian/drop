@@ -81,6 +81,8 @@ private:
     QPointF      m_grid_origin { 0, 0 };                            // Origin point of grid in scene
     QPointF      m_grid_size { 50, 50 };                            // Grid size
     double       m_grid_rotate = 0;                                 // Rotation of grid lines
+    bool         m_grid_should_snap = true;                         // Should snap to grid?
+    bool         m_grid_show_on_top = false;                        // Paint grid on top?
 
     // Keyboard flags
     bool         m_flag_key_down_spacebar = false;                  // True when View has focus and spacebar      is down

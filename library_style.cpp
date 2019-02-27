@@ -255,7 +255,7 @@ void ApplyColoring(QWidget *widget)
         " QMenu#menuComboBox::item:selected { "
         "       padding-left: 3px; "
         "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
-        "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; } "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; } "
         " QMenu#menuComboBox::indicator:checked { left: 5px; top: -3px; } "
         " QMenu#menuComboBox::item:checked { "
         "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; }"
