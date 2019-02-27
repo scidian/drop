@@ -153,11 +153,11 @@ void FormMain::buildAssetTree() {
 // Sends new list to Object Inspector
 void FormMain::buildObjectInspector(QList<long> key_list) {
     // If we're currently in the middle of selecting with rubber band box, don't update yet
-    if (viewMain->currentViewMode() == View_Mode::Selecting) return;
+    if (currentViewMode() == View_Mode::Selecting) return;
 
     // If key_list.count() = 0, then an empty list was passed in. This will clear the object inspector.
     // If we're doing anything at all in viewMain (i.e. View_Mode != None), let's wait to clear the inspector.
-    if (viewMain->currentViewMode() != View_Mode::None && key_list.count() == 0) return;
+    if (currentViewMode() != View_Mode::None && key_list.count() == 0) return;
 
     treeInspector->buildInspectorFromKeys(key_list);
 }
@@ -184,7 +184,7 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
 {
     QList<long> property_keys_as_long = Dr::ConvertPropertyListToLongs(property_keys);
 
- ///   if (viewMain->currentViewMode() == View_Mode::Translating) return;
+    if (currentViewMode() == View_Mode::Translating) return;
 
     if (changed_from != Editor_Widgets::Object_Inspector)   treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys_as_long);
     if (changed_from != Editor_Widgets::Scene_View)         scene->updateChangesInScene(changed_items, property_keys_as_long);
@@ -192,7 +192,7 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
     if (changed_from != Editor_Widgets::Asset_Tree)         treeAsset->updateAssetList(changed_items, property_keys_as_long);
 
     // !!!!! TEMP: Testing to make sure not running non stop
- ///   Dr::SetLabelText(Label_Names::Label_Bottom, "Update Editor Widgets: " + QTime::currentTime().toString());
+    Dr::SetLabelText(Label_Names::Label_Bottom, "Update Editor Widgets: " + QTime::currentTime().toString());
 }
 
 void FormMain::updateItemSelection(Editor_Widgets selected_from)
@@ -202,7 +202,7 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from)
     if (selected_from != Editor_Widgets::Project_Tree)  treeProject->updateSelectionFromView( scene->getSelectionItems() );
 
     // !!!!! TEMP: Testing to make sure not running non stop
- ///   Dr::SetLabelText(Label_Names::Label_Bottom, "Update Selection: " + QTime::currentTime().toString());
+    Dr::SetLabelText(Label_Names::Label_Bottom, "Update Selection: " + QTime::currentTime().toString());
 }
 
 

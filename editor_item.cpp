@@ -134,41 +134,30 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
     // Intercepts item position change and limits new location if Snap to Grid is on
     if (change == ItemPositionChange) {
         QPointF new_pos = value.toPointF();
-
         if (m_relay->currentViewMode() != View_Mode::Translating) return new_pos;
 
         QPointF grid_size =   m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
         //QPointF grid_origin = m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point).toPointF();
         //double  grid_angle =  m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Rotation).toDouble();
 
-
-        Dr::SetLabelText(Label_Names::Label_1, "Top Left X: " + QString::number(new_pos.x()) + ", Y: " + QString::number(new_pos.y()));
+      ///  Dr::SetLabelText(Label_Names::Label_1, "Top Left X: " + QString::number(new_pos.x()) + ", Y: " + QString::number(new_pos.y()));
 
         // Create a transform so we can find new center position of item
+        QPointF new_center, rounded_center;
         QTransform t = QTransform().rotate(angle).scale(scale.x(), scale.y());
-        double new_center_x = new_pos.x() + t.map( boundingRect().center() ).x();
-        double new_center_y = new_pos.y() + t.map( boundingRect().center() ).y();
-        Dr::SetLabelText(Label_Names::Label_2, "Center X: " + QString::number(new_center_x) + ", Y: " + QString::number(new_center_y));
+        new_center.setX( new_pos.x() + t.map( boundingRect().center() ).x() );
+        new_center.setY( new_pos.y() + t.map( boundingRect().center() ).y() );
 
-        QPointF rounded_center;
-        rounded_center.setX( round(new_center_x / grid_size.x()) * grid_size.x() );
-        rounded_center.setY( round(new_center_y / grid_size.y()) * grid_size.y() );
-
-
-        Dr::SetLabelText(Label_Names::Label_Bottom, "Update ItemPositionChange: " + QTime::currentTime().toString());
-
-
-        double x_diff = rounded_center.x() - new_center_x;
-        double y_diff = rounded_center.y() - new_center_y;
-
+        rounded_center.setX( round(new_center.x() / grid_size.x()) * grid_size.x() );
+        rounded_center.setY( round(new_center.y() / grid_size.y()) * grid_size.y() );
+        double x_diff = rounded_center.x() - new_center.x();
+        double y_diff = rounded_center.y() - new_center.y();
 
         new_pos.setX( new_pos.x() + x_diff );
         new_pos.setY( new_pos.y() + y_diff );
 
-        //new_pos.setX( round(new_pos.x() / grid_size.x()) * grid_size.x() );
-        //new_pos.setY( round(new_pos.y() / grid_size.y()) * grid_size.y() );
-
-        Dr::SetLabelText(Label_Names::Label_3, "Adj Left X: " + QString::number(new_pos.x()) + ", Y: " + QString::number(new_pos.y()));
+     ///   Dr::SetLabelText(Label_Names::Label_2, "Center X: " + QString::number(new_center.x()) + ", Y: " + QString::number(new_center.y()));
+     ///   Dr::SetLabelText(Label_Names::Label_3, "Adj Left X: " + QString::number(new_pos.x()) + ", Y: " + QString::number(new_pos.y()));
 
         return new_pos;
     }
