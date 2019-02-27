@@ -140,24 +140,22 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
         //QPointF grid_origin = m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point).toPointF();
         //double  grid_angle =  m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Rotation).toDouble();
 
-      ///  Dr::SetLabelText(Label_Names::Label_1, "Top Left X: " + QString::number(new_pos.x()) + ", Y: " + QString::number(new_pos.y()));
+        Dr::SetLabelText(Label_Names::Label_1, "Top Left X: " + QString::number(new_pos.x()) + ", Y: " + QString::number(new_pos.y()));
 
-        // Create a transform so we can find new center position of item
+        // Calculate new desired center location based on starting center and difference between starting pos() and new passed in new_pos
         QPointF new_center, rounded_center;
-        QTransform t = QTransform().rotate(angle).scale(scale.x(), scale.y());
-        new_center.setX( new_pos.x() + t.map( boundingRect().center() ).x() );
-        new_center.setY( new_pos.y() + t.map( boundingRect().center() ).y() );
+        QPointF old_center = m_object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF();
+        new_center = old_center - (pos() - new_pos);
 
+        // Align new desired center to grid
         rounded_center.setX( round(new_center.x() / grid_size.x()) * grid_size.x() );
         rounded_center.setY( round(new_center.y() / grid_size.y()) * grid_size.y() );
-        double x_diff = rounded_center.x() - new_center.x();
-        double y_diff = rounded_center.y() - new_center.y();
 
-        new_pos.setX( new_pos.x() + x_diff );
-        new_pos.setY( new_pos.y() + y_diff );
+        // Adjust new position based on adjustment to grid we just performed
+        new_pos += (rounded_center - new_center);
 
-     ///   Dr::SetLabelText(Label_Names::Label_2, "Center X: " + QString::number(new_center.x()) + ", Y: " + QString::number(new_center.y()));
-     ///   Dr::SetLabelText(Label_Names::Label_3, "Adj Left X: " + QString::number(new_pos.x()) + ", Y: " + QString::number(new_pos.y()));
+        Dr::SetLabelText(Label_Names::Label_2, "Center X: " + QString::number(rounded_center.x()) + ", Y: " + QString::number(rounded_center.y()));
+        Dr::SetLabelText(Label_Names::Label_3, "Adj Left X: " + QString::number(new_pos.x()) + ", Y: " + QString::number(new_pos.y()));
 
         return new_pos;
     }
