@@ -100,7 +100,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_1, -200, -200, 2);
     project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_2, 250, -200, 3);
     project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_3, -200, 200, 10);
-    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_4, 100, 100, 11);
+    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_4, 107, 112, 11);
     project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_5, -150, 0, 30);
 
     project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_5, 100, 100, -2);
@@ -184,7 +184,7 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
 {
     QList<long> property_keys_as_long = Dr::ConvertPropertyListToLongs(property_keys);
 
-    if (viewMain->currentViewMode() == View_Mode::Translating) return;
+ ///   if (viewMain->currentViewMode() == View_Mode::Translating) return;
 
     if (changed_from != Editor_Widgets::Object_Inspector)   treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys_as_long);
     if (changed_from != Editor_Widgets::Scene_View)         scene->updateChangesInScene(changed_items, property_keys_as_long);
@@ -192,7 +192,7 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
     if (changed_from != Editor_Widgets::Asset_Tree)         treeAsset->updateAssetList(changed_items, property_keys_as_long);
 
     // !!!!! TEMP: Testing to make sure not running non stop
-    Dr::SetLabelText(Label_Names::Label_Bottom, "Update Editor Widgets: " + QTime::currentTime().toString());
+ ///   Dr::SetLabelText(Label_Names::Label_Bottom, "Update Editor Widgets: " + QTime::currentTime().toString());
 }
 
 void FormMain::updateItemSelection(Editor_Widgets selected_from)
@@ -202,7 +202,7 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from)
     if (selected_from != Editor_Widgets::Project_Tree)  treeProject->updateSelectionFromView( scene->getSelectionItems() );
 
     // !!!!! TEMP: Testing to make sure not running non stop
-    Dr::SetLabelText(Label_Names::Label_Bottom, "Update Selection: " + QTime::currentTime().toString());
+ ///   Dr::SetLabelText(Label_Names::Label_Bottom, "Update Selection: " + QTime::currentTime().toString());
 }
 
 
@@ -223,7 +223,7 @@ void FormMain::centerViewOnPoint(QPointF center_point) {
         QTimer::singleShot(0, this, [this, center_point] { this->centerViewTimer(center_point); } );
 }
 void FormMain::centerViewTimer(QPointF center_point) {  viewMain->centerOn(center_point); viewMain->loadedFirstScene(); }
-
+View_Mode FormMain::currentViewMode() { return viewMain->currentViewMode(); }
 
 
 //####################################################################################

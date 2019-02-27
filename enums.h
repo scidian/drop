@@ -39,6 +39,21 @@ enum class Form_Main_Mode {
     Clear,
 };
 
+
+//####################################################################################
+//##    Interactive mouse modes
+//####################################################################################
+enum class View_Mode {
+    None,
+    Selecting,          // Rubber band selection
+    Resizing,           // Changing items size
+    Rotating,           // Rotating items
+    Translating,        // Moving item(s) around
+    Dragging,           // Moving scene with space bar
+    Zooming,            // Zooming in / out of view
+};
+
+
 // Form Main enum for referencing debug labels
 enum class Label_Names
 {

@@ -40,9 +40,10 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
     if (object->getKey() != m_selected_key) return;
     if (m_selected_type != DrType::Object) return;
 
-    Dr::SetLabelText(Label_Names::Label_1, "Insp Widget Count: " + QString::number(m_widgets.count()) );
-
-    QPushButton *pushbutton;
+    // Forward definitions for widgets used in switch statement
+    QPushButton     *pushbutton;
+    QSpinBox        *spinbox;
+    QDoubleSpinBox  *doublespin;
 
     for (auto widget : m_widgets) {
         long prop_key = widget->property(User_Property::Key).toInt();
@@ -73,17 +74,19 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
         case Property_Type::SizeF:
         case Property_Type::Scale:
         case Property_Type::Variable:
-            if (dynamic_cast<QDoubleSpinBox*>(widget)->property(User_Property::Order).toInt() == 0)
-                dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toPointF().x());
+            doublespin = dynamic_cast<QDoubleSpinBox*>(widget);
+            if (doublespin->property(User_Property::Order).toInt() == 0)
+                doublespin->setValue(prop->getValue().toPointF().x());
             else
-                dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toPointF().y());
+                doublespin->setValue(prop->getValue().toPointF().y());
             break;
 
         case Property_Type::Point:
-            if (dynamic_cast<QSpinBox*>(widget)->property(User_Property::Order).toInt() == 0)
-                dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toPoint().x());
+            spinbox = dynamic_cast<QSpinBox*>(widget);
+            if (spinbox->property(User_Property::Order).toInt() == 0)
+                spinbox->setValue(prop->getValue().toPoint().x());
             else
-                dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toPoint().y());
+                spinbox->setValue(prop->getValue().toPoint().y());
             break;
 
         case Property_Type::List:
