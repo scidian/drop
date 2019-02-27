@@ -77,6 +77,8 @@ private:
     int          m_rotate = 0;                              // NOT IMPLEMENTED: Rotation of current view
 
     // Grid variables
+    QVector<QPointF> m_grid_points;                                 // Holds latest calculated grid points
+    QVector<QLineF>  m_grid_lines;                                  // Holds latest calculated grid lines
     Grid_Style   m_grid_style = Grid_Style::Lines;                  // Grid type to display
     QPointF      m_grid_origin { 0, 0 };                            // Origin point of grid in scene
     QPointF      m_grid_size { 50, 50 };                            // Grid size
@@ -168,7 +170,6 @@ public:
     void            applyUpdatedMatrix();
     bool            hasLoadedFirstScene() { return m_shown_a_scene; }
     void            loadedFirstScene() { m_shown_a_scene = true; }
-    void            updateGrid();
     void            zoomInOut(int level);
 
     // Misc Functions
@@ -177,6 +178,11 @@ public:
     double          extractAngleFromTransform(QTransform &from_transform);
     QRectF          rectAtCenterPoint(QPoint center, double rect_size);
     void            updateSelectionBoundingBox(int called_from = 0);
+
+    // Grid Functions
+    QPointF         closestGridPoint(QPointF check_point);
+    void            recalculateGrid();
+    void            updateGrid();
 
     // Paint Functions
     void            paintBoundingBox(QPainter &painter);

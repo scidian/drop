@@ -63,7 +63,8 @@ SOURCES += \
     editor_tree_project.cpp \
     constants.cpp \
     editor_view_mouse_move.cpp \
-    editor_tree_inspector_update.cpp
+    editor_tree_inspector_update.cpp \
+    editor_view_grid.cpp
 
 HEADERS += \
     enums.h \

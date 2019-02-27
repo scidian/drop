@@ -43,7 +43,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
 
     // Allow movement if it has been more than x milliseconds or mouse has moved more than 2 pixels
     if (m_allow_movement == false) {
-        if (m_origin_timer.elapsed() > 200) {
+        if (m_origin_timer.elapsed() > 250) {
             m_allow_movement = true;
         } else if (QPoint(m_origin - m_last_mouse_pos).manhattanLength() > 2) {
             m_allow_movement = true;

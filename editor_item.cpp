@@ -137,21 +137,21 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
         if (m_relay->currentViewMode() != View_Mode::Translating) return new_pos;
         if (m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Should_Snap).toBool() == false) return new_pos;
 
-        QPointF grid_size =   m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
-        QPointF grid_origin = m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point).toPointF();
-        //double  grid_angle =  m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Rotation).toDouble();
-
         // Calculate new desired center location based on starting center and difference between starting pos() and new passed in new_pos
-        QPointF new_center, rounded_center;
+        QPointF new_center, rounded_center, adjust_by;
         QPointF old_center = m_object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF();
         new_center = old_center - (pos() - new_pos);
 
+        ///// Align new desired center to grid
+        ///rounded_center.setX( round((new_center.x() - grid_origin.x()) / grid_size.x()) * grid_size.x() + grid_origin.x());
+        ///rounded_center.setY( round((new_center.y() - grid_origin.y()) / grid_size.y()) * grid_size.y() + grid_origin.y());
+
         // Align new desired center to grid
-        rounded_center.setX( round((new_center.x() - (grid_origin.x() )) / grid_size.x()) * grid_size.x() + grid_origin.x());
-        rounded_center.setY( round((new_center.y() - (grid_origin.y() )) / grid_size.y()) * grid_size.y() + grid_origin.y());
+        rounded_center = m_relay->closestGridPoint( new_center );
+        adjust_by = new_center - rounded_center;
 
         // Adjust new position based on adjustment to grid we just performed
-        QPointF adjusted_pos = new_pos - (new_center - rounded_center);
+        QPointF adjusted_pos = new_pos - (adjust_by);
 
         // !!!!! DEBUG: Show snapped coordinates
         if (Dr::CheckDebugFlag(Debug_Flags::Label_Snap_To_Grid_Data)) {

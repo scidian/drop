@@ -190,7 +190,7 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
     if (changed_from != Editor_Widgets::Asset_Tree)         treeAsset->updateAssetList(changed_items, property_keys_as_long);
 
     // !!!!! TEMP: Testing to make sure not running non stop
-    Dr::SetLabelText(Label_Names::Label_Bottom, "Update Editor Widgets: " + QTime::currentTime().toString());
+    Dr::SetLabelText(Label_Names::Label_Bottom, "Update Editor Widgets: " + Dr::CurrentTimeAsString());
 }
 
 void FormMain::updateItemSelection(Editor_Widgets selected_from)
@@ -200,7 +200,7 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from)
     if (selected_from != Editor_Widgets::Project_Tree)  treeProject->updateSelectionFromView( scene->getSelectionItems() );
 
     // !!!!! TEMP: Testing to make sure not running non stop
-    Dr::SetLabelText(Label_Names::Label_Bottom, "Update Selection: " + QTime::currentTime().toString());
+    Dr::SetLabelText(Label_Names::Label_Bottom, "Update Selection: " + Dr::CurrentTimeAsString());
 }
 
 
@@ -221,6 +221,9 @@ void FormMain::centerViewOnPoint(QPointF center_point) {
         QTimer::singleShot(0, this, [this, center_point] { this->centerViewTimer(center_point); } );
 }
 void FormMain::centerViewTimer(QPointF center_point) {  viewMain->centerOn(center_point); viewMain->loadedFirstScene(); }
+
+// Returns the cloest point in the grid QVector array
+QPointF FormMain::closestGridPoint(QPointF check_point) { return viewMain->closestGridPoint(check_point); }
 View_Mode FormMain::currentViewMode() { return viewMain->currentViewMode(); }
 
 

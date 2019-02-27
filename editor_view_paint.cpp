@@ -154,74 +154,20 @@ void DrView::paintGrid(QPainter &painter)
 {
     painter.setBrush(Qt::NoBrush);
 
-    // Map viewport to scene rect
-    QPointF topLeft = mapToScene(0, 0);
-    QPointF bottomRight = mapToScene(this->width(), this->height());
-    QRectF  scene_rect(topLeft, bottomRight);
-
-    double grid_x = m_grid_size.x();
-    double grid_y = m_grid_size.y();
-
-    double origin_x = m_grid_origin.x();
-    double origin_y = m_grid_origin.y();
-
-    // Bounds check
-    if (grid_x < 1) grid_x = 1;
-    if (grid_y < 1) grid_y = 1;
-
-    // ********** Draw Grid Lines
+    // ***** Grid Lines
     if (m_grid_style == Grid_Style::Lines) {
-        QPen cosmetic_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 0 );
-        cosmetic_pen.setCosmetic(true);
-        painter.setPen(cosmetic_pen);
-        QVector<QLineF> lines;
-
-        // Vertical lines right of scene zero, followed by Vertical lines left of scene zero
-        for (double x = origin_x; x <= scene_rect.right(); x += grid_x)
-            lines.append(QLineF(x, topLeft.y(), x, bottomRight.y()) );
-
-        for (double x = origin_x; x >= scene_rect.left(); x -= grid_x)
-            lines.append(QLineF(x, topLeft.y(), x, bottomRight.y()) );
-
-        // Horizontal lines below scene zero, followed by Horizontal lines above scene zero
-        for (double y = origin_y; y <= scene_rect.bottom(); y += grid_y)
-            lines.append(QLineF(topLeft.x(), y, bottomRight.x(), y) );
-
-        for (double y = origin_y; y >= scene_rect.top(); y -= grid_y)
-            lines.append(QLineF(topLeft.x(), y, bottomRight.x(), y) );
-
-        painter.drawLines(lines);
-
-
-
-    // ********** Draw Grid Dots
-    } else if (m_grid_style == Grid_Style::Dots && m_zoom_scale > .25) {
-        QPen dot_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 4, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
-        //dot_pen.setCosmetic(true);
+        QPen dot_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 1, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
+        dot_pen.setCosmetic(true);
         painter.setPen(dot_pen);
-        QVector<QPointF> points;
+        painter.drawLines( m_grid_lines );
 
-        // Bottom right
-        for (double x = origin_x; x <= scene_rect.right(); x += grid_x)
-            for (double y = origin_y; y <= scene_rect.bottom(); y += grid_y)
-                points.append( QPointF(x, y) );
-        // Bottom left
-        for (double x = origin_x; x >= scene_rect.left(); x -= grid_x)
-            for (double y = origin_y; y <= scene_rect.bottom(); y += grid_y)
-                points.append( QPointF(x, y) );
-        // Top right
-        for (double x = origin_x; x <= scene_rect.right(); x += grid_x)
-            for (double y = origin_y; y >= scene_rect.top(); y -= grid_y)
-                points.append( QPointF(x, y) );
-        // Top left
-        for (double x = origin_x; x >= scene_rect.left(); x -= grid_x)
-            for (double y = origin_y; y >= scene_rect.top(); y -= grid_y)
-                points.append( QPointF(x, y) );
-
-        painter.drawPoints(points.data(), points.size());
+    // ***** Grid Dots
+    } else {
+        QPen dot_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 4, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
+        painter.setPen(dot_pen);
+        painter.drawPoints(m_grid_points.data(), m_grid_points.size());
     }
 }
-
 
 
 //####################################################################################
@@ -382,27 +328,34 @@ void DrView::paintItemCenters(QPainter &painter)
     if (m_grid_should_snap == false) return;
 
     QList<QGraphicsItem*>  my_items = my_scene->getSelectionItems();
+    int line_size = 15;
 
-    QPen pen_brush(Dr::GetColor(Window_Colors::Text_Light));
-    pen_brush.setCosmetic(true);
+    QPen pen_brush(Dr::GetColor(Window_Colors::Text_Light), 3);
     painter.setPen(pen_brush);
     painter.setBrush(Qt::NoBrush);
 
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL) == false)
         painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
+    else
+        painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_Source);
 
     for (auto item: my_items) {
         QPoint center = mapFromScene( item->sceneTransform().map( item->boundingRect().center() ) );
 
+        QTransform t = QTransform().translate(center.x(), center.y()).rotate(m_grid_rotate).translate(-center.x(), -center.y());
         QVector<QLine> lines;
-        lines.append( QLine(center.x(), center.y() + 10, center.x(), center.y() - 10) );
-        lines.append( QLine(center.x() + 10, center.y(), center.x() - 10, center.y()) );
+        QLine line;
+
+        line = QLine(center.x(), center.y() + line_size, center.x(), center.y() - line_size);
+        lines.append( t.map (line) );
+
+        line = QLine(center.x() + line_size, center.y(), center.x() - line_size, center.y());
+        lines.append( t.map (line) );
 
         painter.drawLines(lines);
     }
 
-    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL) == false)
-        painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOver);
+    painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOver);
 }
 
 
