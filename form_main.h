@@ -114,7 +114,6 @@ public:
     virtual void        setOption(Options option_to_set, QVariant new_value);
 
     virtual void        centerViewOnPoint(QPointF center_point);
-    virtual QPointF     closestGridPoint(QPointF check_point);
     virtual View_Mode   currentViewMode();
 
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list);

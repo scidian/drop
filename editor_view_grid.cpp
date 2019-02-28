@@ -53,6 +53,10 @@ void DrView::recalculateGrid()
     if (grid_x < 1) grid_x = 1;
     if (grid_y < 1) grid_y = 1;
 
+    bool allow_dots = true;
+    if ((m_zoom_scale <= .50) && (grid_x < 10 || grid_y < 10)) allow_dots = false;
+    if ((m_zoom_scale <= .25) && (grid_x < 25 || grid_y < 25)) allow_dots = false;
+
     double origin_x = m_grid_origin.x();
     double origin_y = m_grid_origin.y();
 
@@ -63,70 +67,45 @@ void DrView::recalculateGrid()
     // Bottom right
     for (double x = origin_x; x <= scene_rect.right(); x += grid_x) {
         m_grid_lines.append( QLineF(x, scene_rect.top(), x, scene_rect.bottom()) );
-        for (double y = origin_y; y <= scene_rect.bottom(); y += grid_y)
-            m_grid_points.append( QPointF(x, y) );
+        if (allow_dots)
+            for (double y = origin_y; y <= scene_rect.bottom(); y += grid_y)
+                m_grid_points.append( QPointF(x, y) );
     }
 
     // Bottom left
     for (double y = origin_y; y <= scene_rect.bottom(); y += grid_y) {
         m_grid_lines.append( QLineF(scene_rect.left(), y, scene_rect.right(), y) );
-        for (double x = origin_x; x >= scene_rect.left(); x -= grid_x)
-            m_grid_points.append( QPointF(x, y) );
+        if (allow_dots)
+            for (double x = origin_x; x >= scene_rect.left(); x -= grid_x)
+                m_grid_points.append( QPointF(x, y) );
     }
 
     // Top right
     for (double y = origin_y; y >= scene_rect.top(); y -= grid_y) {
         m_grid_lines.append( QLineF(scene_rect.left(), y, scene_rect.right(), y) );
-        for (double x = origin_x; x <= scene_rect.right(); x += grid_x)
-            m_grid_points.append( QPointF(x, y) );
+        if (allow_dots)
+            for (double x = origin_x; x <= scene_rect.right(); x += grid_x)
+                m_grid_points.append( QPointF(x, y) );
     }
 
     // Top left
     for (double x = origin_x; x >= scene_rect.left(); x -= grid_x) {
         m_grid_lines.append( QLineF(x, scene_rect.top(), x, scene_rect.bottom()) );
-        for (double y = origin_y; y >= scene_rect.top(); y -= grid_y)
-            m_grid_points.append( QPointF(x, y) );
+        if (allow_dots)
+            for (double y = origin_y; y >= scene_rect.top(); y -= grid_y)
+                m_grid_points.append( QPointF(x, y) );
     }
 
-//    for (auto point: m_grid_points) {
-//        QLineF line;
-//        line = QLineF( point, QPointF(point.x() + grid_x, point.y()) );
-//        line = t.map(line);
-//        m_grid_lines.append(line);
-//        line = QLineF( point, QPointF(point.x(), point.y() + grid_y) );
-//        line = t.map(line);
-//        m_grid_lines.append(line);
-//    }
-
+    // Rotate grid lines
     for (auto &line: m_grid_lines) {
         line = t.map(line);
     }
 
     // Rotate grid points
-    m_grid_points = t.map( m_grid_points );
+    if (allow_dots)
+        m_grid_points = t.map( m_grid_points );
 }
 
-
-//####################################################################################
-//##        Finds closest Scene point in grid array to the Scene point passed in
-//####################################################################################
-QPointF DrView::closestGridPoint(QPointF check_point)
-{
-    QPointF closest = check_point;
-    double length = 0;
-
-    bool have_one = false;
-    for (auto point : m_grid_points) {
-        double check_length = QLineF(check_point, point).length();
-
-        if (check_length < length || !have_one) {
-            closest = point;
-            length = check_length;
-            have_one = true;
-        }
-    }
-    return closest;
-}
 
 
 

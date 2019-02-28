@@ -180,7 +180,6 @@ public:
     void            updateSelectionBoundingBox(int called_from = 0);
 
     // Grid Functions
-    QPointF         closestGridPoint(QPointF check_point);
     void            recalculateGrid();
     void            updateGrid();
 

@@ -165,7 +165,7 @@ void DrView::paintGrid(QPainter &painter)
     } else {
         QPen dot_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 4, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
         painter.setPen(dot_pen);
-        painter.drawPoints(m_grid_points.data(), m_grid_points.size());
+        painter.drawPoints(m_grid_points);
     }
 }
 

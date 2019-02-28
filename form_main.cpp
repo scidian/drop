@@ -221,9 +221,6 @@ void FormMain::centerViewOnPoint(QPointF center_point) {
         QTimer::singleShot(0, this, [this, center_point] { this->centerViewTimer(center_point); } );
 }
 void FormMain::centerViewTimer(QPointF center_point) {  viewMain->centerOn(center_point); viewMain->loadedFirstScene(); }
-
-// Returns the cloest point in the grid QVector array
-QPointF FormMain::closestGridPoint(QPointF check_point) { return viewMain->closestGridPoint(check_point); }
 View_Mode FormMain::currentViewMode() { return viewMain->currentViewMode(); }
 
 
