@@ -64,7 +64,8 @@ SOURCES += \
     constants.cpp \
     editor_view_mouse_move.cpp \
     editor_tree_inspector_update.cpp \
-    editor_view_grid.cpp
+    editor_view_grid.cpp \
+    editor_view_key_press.cpp
 
 HEADERS += \
     enums.h \

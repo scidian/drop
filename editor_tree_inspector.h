@@ -35,13 +35,14 @@ enum class Spin_Type {
     Point,                  // Has X and Y
     Size,                   // Has W and H
     Scale,                  // Used to have smaller increment / decrement
+    Grid,                   // Used for Grid, minimum value of 1 for x and y
 };
 
 
 // Class constants
 const int   c_inspector_size_left =  3;                 // Size policy width of left column
 const int   c_inspector_size_right = 5;                 // Size policy width of right column
-
+const int   c_minimum_grid_size =    5;                 // Minimum grid size
 
 //####################################################################################
 //##    TreeInspector
@@ -69,8 +70,9 @@ public:
     void            updateInspectorPropertyBoxes(QList<DrSettings*> changed_items, QList<long> property_keys_to_update);
     void            updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order = 0);
 
-
-    InterfaceRelay* getRelay() { return m_relay; }
+    // Getters and Setters
+    InterfaceRelay* getRelay()          { return m_relay; }
+    long            getSelectedKey()    { return m_selected_key; }
 
     // Property Builders
     void                attachToHoverHandler(QWidget *widget, DrProperty *property);

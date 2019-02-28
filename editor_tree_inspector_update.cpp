@@ -71,6 +71,7 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
         case Property_Type::String:     dynamic_cast<QLineEdit*>(widget)->setText(prop->getValue().toString());         break;
 
         case Property_Type::PointF:
+        case Property_Type::GridF:
         case Property_Type::SizeF:
         case Property_Type::Scale:
         case Property_Type::Variable:
@@ -155,6 +156,7 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
             property->setValue(temp_point);
             break;
         case Property_Type::PointF:                                 // Floating pair x and y
+        case Property_Type::GridF:                                  // Floating pair x and y, minimum value c_minimum_grid_size
         case Property_Type::SizeF:                                  // Floating pair w and h
         case Property_Type::Scale:                                  // Floating pair, has smaller step in spin box
         case Property_Type::Variable:                               // floating point pair, number followed by a +/- number

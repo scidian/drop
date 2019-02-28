@@ -167,6 +167,7 @@ enum class Property_Type {
     Point,                  // QPoint       Integer pair x and y
     PointF,                 // QPointF      Floating pair x and y
     SizeF,                  // QPointF      Floating pair w and h
+    GridF,                  // QPointF      Floating pair x and y, minimum value of c_minimum_grid_size for both
     Scale,                  // QPointF      Floating pair, has smaller step in spin box
     Variable,               // QPointF      floating point pair, number followed by a +/- number
 

@@ -15,6 +15,9 @@
 #include "project_world_stage.h"
 
 
+//####################################################################################
+//##        Updates grid based on current stage shown, recalculates points and lines
+//####################################################################################
 void DrView::updateGrid()
 {
     if (!scene()) return;
@@ -30,6 +33,8 @@ void DrView::updateGrid()
 
     recalculateGrid();
 
+    update();
+
     Dr::SetLabelText(Label_Names::Label_1, "Updated Grid at: " + Dr::CurrentTimeAsString());
 }
 
@@ -43,8 +48,8 @@ void DrView::recalculateGrid()
     QPointF bottomRight = mapToScene(this->width(), this->height());
     QRectF  scene_rect(topLeft, bottomRight);
 
-    double grid_x =   m_grid_size.x();
-    double grid_y =   m_grid_size.y();
+    double grid_x = m_grid_size.x();
+    double grid_y = m_grid_size.y();
     if (grid_x < 1) grid_x = 1;
     if (grid_y < 1) grid_y = 1;
 
@@ -56,33 +61,45 @@ void DrView::recalculateGrid()
     m_grid_lines.clear();
 
     // Bottom right
-    for (double x = origin_x; x <= scene_rect.right() * 2; x += grid_x)
+    for (double x = origin_x; x <= scene_rect.right(); x += grid_x) {
+        m_grid_lines.append( QLineF(x, scene_rect.top(), x, scene_rect.bottom()) );
         for (double y = origin_y; y <= scene_rect.bottom(); y += grid_y)
             m_grid_points.append( QPointF(x, y) );
+    }
 
     // Bottom left
-    for (double x = origin_x; x >= scene_rect.left() * 2; x -= grid_x)
-        for (double y = origin_y; y <= scene_rect.bottom(); y += grid_y)
+    for (double y = origin_y; y <= scene_rect.bottom(); y += grid_y) {
+        m_grid_lines.append( QLineF(scene_rect.left(), y, scene_rect.right(), y) );
+        for (double x = origin_x; x >= scene_rect.left(); x -= grid_x)
             m_grid_points.append( QPointF(x, y) );
+    }
 
     // Top right
-    for (double x = origin_x; x <= scene_rect.right() * 2; x += grid_x)
-        for (double y = origin_y; y >= scene_rect.top(); y -= grid_y)
+    for (double y = origin_y; y >= scene_rect.top(); y -= grid_y) {
+        m_grid_lines.append( QLineF(scene_rect.left(), y, scene_rect.right(), y) );
+        for (double x = origin_x; x <= scene_rect.right(); x += grid_x)
             m_grid_points.append( QPointF(x, y) );
+    }
 
     // Top left
-    for (double x = origin_x; x >= scene_rect.left() * 2; x -= grid_x)
+    for (double x = origin_x; x >= scene_rect.left(); x -= grid_x) {
+        m_grid_lines.append( QLineF(x, scene_rect.top(), x, scene_rect.bottom()) );
         for (double y = origin_y; y >= scene_rect.top(); y -= grid_y)
             m_grid_points.append( QPointF(x, y) );
+    }
 
-    for (auto point: m_grid_points) {
-        QLineF line;
-        line = QLineF( point, QPointF(point.x() + grid_x, point.y()) );
+//    for (auto point: m_grid_points) {
+//        QLineF line;
+//        line = QLineF( point, QPointF(point.x() + grid_x, point.y()) );
+//        line = t.map(line);
+//        m_grid_lines.append(line);
+//        line = QLineF( point, QPointF(point.x(), point.y() + grid_y) );
+//        line = t.map(line);
+//        m_grid_lines.append(line);
+//    }
+
+    for (auto &line: m_grid_lines) {
         line = t.map(line);
-        m_grid_lines.append(line);
-        line = QLineF( point, QPointF(point.x(), point.y() + grid_y) );
-        line = t.map(line);
-        m_grid_lines.append(line);
     }
 
     // Rotate grid points

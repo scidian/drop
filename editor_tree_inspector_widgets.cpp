@@ -183,8 +183,15 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
 
     switch (spin_type)
     {
-    case Spin_Type::Point:  spin_left->setPrefix("X: ");    spin_right->setPrefix("Y: ");   break;
-    case Spin_Type::Size:   spin_left->setPrefix("W: ");    spin_right->setPrefix("H: ");   break;
+    case Spin_Type::Point:
+        spin_left->setPrefix("X: ");        spin_right->setPrefix("Y: ");   break;
+    case Spin_Type::Grid:
+        spin_left->setPrefix("W: ");        spin_right->setPrefix("H: ");
+        spin_left->setRange( c_minimum_grid_size, 100000000);
+        spin_right->setRange(c_minimum_grid_size, 100000000);
+        break;
+    case Spin_Type::Size:
+        spin_left->setPrefix("W: ");        spin_right->setPrefix("H: ");   break;
     default: ;
     }
     if (spin_type == Spin_Type::Scale) {

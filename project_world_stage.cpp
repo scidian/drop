@@ -115,7 +115,7 @@ void DrStage::initializeStageSettings(QString new_name)
                            "Grid Style", "Visual style of alignment grid.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point, Property_Type::PointF, QPointF(0, 0),
                            "Grid Origin Point", "Origin point in stage the grid begins at.");
-    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Size, Property_Type::SizeF, QPointF(50, 50),
+    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Size, Property_Type::GridF, QPointF(50, 50),
                            "Grid Cell Size", "Width and height of the cells in the grid.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Rotation, Property_Type::Angle, 0,
                            "Grid Rotation", "Rotation of the grid lines.");

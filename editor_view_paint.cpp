@@ -156,7 +156,7 @@ void DrView::paintGrid(QPainter &painter)
 
     // ***** Grid Lines
     if (m_grid_style == Grid_Style::Lines) {
-        QPen dot_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 1, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
+        QPen dot_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 1);
         dot_pen.setCosmetic(true);
         painter.setPen(dot_pen);
         painter.drawLines( m_grid_lines );
@@ -326,20 +326,17 @@ void DrView::paintItemCenters(QPainter &painter)
 {
     // Don't draw if snap to grid is off
     if (m_grid_should_snap == false) return;
+    if (m_allow_movement == false) return;
 
-    QList<QGraphicsItem*>  my_items = my_scene->getSelectionItems();
     int line_size = 15;
-
-    QPen pen_brush(Dr::GetColor(Window_Colors::Text_Light), 3);
-    painter.setPen(pen_brush);
-    painter.setBrush(Qt::NoBrush);
 
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL) == false)
         painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
     else
         painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_Source);
 
-    for (auto item: my_items) {
+    // Loop through selected items and draw crosshairs on each one
+    for (auto item: my_scene->getSelectionItems()) {
         QPoint center = mapFromScene( item->sceneTransform().map( item->boundingRect().center() ) );
 
         QTransform t = QTransform().translate(center.x(), center.y()).rotate(m_grid_rotate).translate(-center.x(), -center.y());
@@ -352,6 +349,10 @@ void DrView::paintItemCenters(QPainter &painter)
         line = QLine(center.x() + line_size, center.y(), center.x() - line_size, center.y());
         lines.append( t.map (line) );
 
+        painter.setBrush(Qt::NoBrush);
+        painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 3));
+        painter.drawLines(lines);
+        painter.setPen(QPen(Dr::GetColor(Window_Colors::Shadow), 1));
         painter.drawLines(lines);
     }
 

@@ -31,7 +31,7 @@ void DrScene::selectionChanged()
     resetSelectionGroup();
 
     if (m_relay) {
-        QList<long> item_keys;
+        QList<long> item_keys { };
         for (auto item : selectedItems()) item_keys.append(item->data(User_Roles::Key).toLongLong());
 
         m_relay->buildObjectInspector(item_keys);

@@ -132,8 +132,11 @@ void DrView::mousePressEvent(QMouseEvent *event)
 void DrView::checkTranslateToolTipStarted()
 {
     if (m_view_mode == View_Mode::Translating) {
-        if (m_tool_tip->getTipType() != View_Mode::Translating)
+        if (m_tool_tip->getTipType() != View_Mode::Translating) {
             m_tool_tip->startToolTip(View_Mode::Translating, m_origin, mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
+            m_allow_movement = true;
+            update();
+        }
     }
 }
 
@@ -163,6 +166,7 @@ void DrView::mouseReleaseEvent(QMouseEvent *event)
                 m_relay->buildObjectInspector( { my_scene->getSelectionItems().first()->data(User_Roles::Key).toLongLong() } );
             else
                 m_relay->buildObjectInspector( { } );
+            m_relay->updateItemSelection(Editor_Widgets::Scene_View);
         }
 
         // Clean up temporary item group used for resize routine
