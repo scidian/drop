@@ -34,6 +34,8 @@ void DrView::updateGrid()
 
     recalculateGrid();
 
+    m_grid_needs_redraw = true;         // Flag grid for redraw during next paintEvent
+
     update();
 
     ///Dr::SetLabelText(Label_Names::Label_1, "Updated Grid at: " + Dr::CurrentTimeAsString());

@@ -213,8 +213,10 @@ void FormMain::setOption(Options option_to_set, QVariant new_value) {
 }
 
 
-// Emits a single shot timer to update view coordinates after event calls are done
+// Emits a single shot timer to update view coordinates after event calls are done,
+// sometimes centerOn function doesnt work until after an update() has been processed in the event loop
 void FormMain::centerViewOnPoint(QPointF center_point) {
+    viewMain->centerOn(center_point);
     QTimer::singleShot(0, this, [this, center_point] { this->centerViewTimer(center_point); } );
 }
 void FormMain::centerViewTimer(QPointF center_point) {  viewMain->centerOn(center_point);  }

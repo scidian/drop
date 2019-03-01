@@ -82,7 +82,9 @@ DrView::~DrView()
     disconnect(this,   SIGNAL(selectionGroupNewGroup(DrScene*, QList<DrObject*>, QList<DrObject*>)),
                my_scene, SLOT(selectionGroupNewGroup(DrScene*, QList<DrObject*>, QList<DrObject*>)) );
 
+    delete m_rubber_band;
     delete m_tool_tip;
+    delete m_grid_buffer;
 }
 
 

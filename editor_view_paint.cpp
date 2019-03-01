@@ -154,21 +154,48 @@ QRectF DrView::rectAtCenterPoint(QPoint center, double rect_size)
 //####################################################################################
 void DrView::paintGrid(QPainter &painter)
 {
-    painter.setBrush(Qt::NoBrush);
+    if (m_grid_needs_redraw) {
+        if (m_grid_buffer) delete m_grid_buffer;
+        m_grid_buffer = new QPixmap(this->width(), this->height());
+        m_grid_buffer->fill(QColor(0, 0, 0, 0));
 
-    // ***** Grid Lines
-    if (m_grid_style == Grid_Style::Lines) {
-        QPen dot_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 1);
-        dot_pen.setCosmetic(true);
-        painter.setPen(dot_pen);
-        painter.drawLines( m_grid_lines );
+        QPainter *grid_painter = new QPainter(m_grid_buffer);
+        grid_painter->setBrush(Qt::NoBrush);
 
-    // ***** Grid Dots
-    } else {
-        QPen dot_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 4, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
-        painter.setPen(dot_pen);
-        painter.drawPoints(m_grid_points);
+        // ***** Grid Lines
+        if (m_grid_style == Grid_Style::Lines) {
+            QPen dot_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 1);
+            dot_pen.setCosmetic(true);
+            grid_painter->setPen(dot_pen);
+
+            QVector<QLineF> view_lines;
+
+            for (auto &line : m_grid_lines) {
+                view_lines.append( QLineF( mapFromScene( line.p1() ) , mapFromScene( line.p2() ) ) );
+            }
+            grid_painter->drawLines( view_lines );
+
+        // ***** Grid Dots
+        } else {
+            QPen dot_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 4, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
+            grid_painter->setPen(dot_pen);
+
+            QVector<QPointF> view_points;
+
+            for (auto &point : m_grid_points) {
+                view_points.append( mapFromScene( point) );
+            }
+            grid_painter->drawPoints( view_points );
+        }
+
+        grid_painter->end();
+        delete grid_painter;
+
+        m_grid_needs_redraw = false;
     }
+
+    QRectF target_rect = QRectF( mapToScene(0, 0), mapToScene(this->width(), this->height()) );
+    painter.drawPixmap(target_rect, *m_grid_buffer, QRectF(m_grid_buffer->rect()) );
 }
 
 
