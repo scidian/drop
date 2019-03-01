@@ -6,6 +6,7 @@
 //
 //
 #include <QtMath>
+#include <QScrollBar>
 
 #include "colors.h"
 #include "debug.h"
@@ -47,31 +48,50 @@ void DrView::updateGrid()
 void DrView::recalculateGrid()
 {
     // Map viewport to scene rect
-    QPointF topLeft = mapToScene(0, 0);
-    QPointF bottomRight = mapToScene(this->width(), this->height());
-    QRectF  viewport_rect(topLeft, bottomRight);
-
     QRectF  scene_rect = this->scene()->sceneRect();
+    QPointF top_left = mapToScene(0, 0);
+    QPointF bottom_right = mapToScene(this->width(), this->height());
 
+    // Variables used to create bounding box in view of where we need to draw grid lines
+    double min_x = top_left.x();
+    double min_y = top_left.y();
+    double max_x = bottom_right.x();
+    double max_y = bottom_right.y();
+
+    // If zoom is out all the way on x or y, set bounds to scene().sceneRect() bounds
+    if (this->horizontalScrollBar()->value() == 0) {
+        min_x = scene_rect.left();
+        max_x = scene_rect.right();
+    }
+    if (this->verticalScrollBar()->value() == 0) {
+        min_y = scene_rect.top();
+        max_y = scene_rect.bottom();
+    }
+    // If view bounding box is less than scene_rect bounding box, fit bounding box to scene_rect
+    if (min_x < scene_rect.left()) min_x = scene_rect.left();
+    if (min_y < scene_rect.top())  min_y = scene_rect.top();
+    if (max_x > scene_rect.right())  max_x = scene_rect.right();
+    if (max_y > scene_rect.bottom()) max_y = scene_rect.bottom();
+
+    ///Dr::SetLabelText(Label_Names::Label_1, "Top Left  X: " + QString::number(min_x) + ", Y: " + QString::number(min_y) );
+    ///Dr::SetLabelText(Label_Names::Label_2, "Bot Right X: " + QString::number(max_x) + ", Y: " + QString::number(max_y) );
+
+    // ***** Create viewport bounding rect, calculate grid drawing origin point
+    QRectF  viewport_rect = QRectF( QPointF(min_x, min_y), QPointF(max_x, max_y) );
     double grid_x = m_grid_size.x();
     double grid_y = m_grid_size.y();
-
-    double min_x = (scene_rect.left()   > viewport_rect.left())   ? scene_rect.left()   : viewport_rect.left();
-    double max_x = (scene_rect.right()  < viewport_rect.right())  ? scene_rect.right()  : viewport_rect.right();
-    double min_y = (scene_rect.top()    > viewport_rect.top())    ? scene_rect.top()    : viewport_rect.top();
-    double max_y = (scene_rect.bottom() < viewport_rect.bottom()) ? scene_rect.bottom() : viewport_rect.bottom();
-
-    // !!!!!!!!!! Figure out how to start drawing when scene barely is in view in one corner
-
     double origin_x = round((viewport_rect.center().x() - m_grid_origin.x()) / grid_x) * grid_x + m_grid_origin.x();
     double origin_y = round((viewport_rect.center().y() - m_grid_origin.y()) / grid_y) * grid_y + m_grid_origin.y();
 
+
+    // Hide dots if too zoomed out
     bool allow_dots = true;
     if ((m_zoom_scale <= .50) && (grid_x < 10 || grid_y < 10)) allow_dots = false;
     if ((m_zoom_scale <= .25) && (grid_x < 25 || grid_y < 25)) allow_dots = false;
     if (m_grid_style != Grid_Style::Dots) allow_dots = false;
 
-    QTransform t = QTransform().rotate(m_grid_rotate);
+
+    // ********** Calculate lines and dots
     QVector<QPointF> new_points;
     QVector<QLineF>  new_lines;
 
@@ -115,6 +135,7 @@ void DrView::recalculateGrid()
             new_points.append( QPointF(x, y) );
     }
 
+    QTransform t = QTransform().rotate(m_grid_rotate);
 
     // ***** Rotate grid lines
     QLineF diag1 { viewport_rect.topLeft(),    viewport_rect.bottomRight() };

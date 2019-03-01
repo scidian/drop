@@ -84,7 +84,6 @@ DrView::~DrView()
 
     delete m_rubber_band;
     delete m_tool_tip;
-    delete m_grid_buffer;
 }
 
 

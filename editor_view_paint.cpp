@@ -155,18 +155,17 @@ QRectF DrView::rectAtCenterPoint(QPoint center, double rect_size)
 void DrView::paintGrid(QPainter &painter)
 {
     if (m_grid_needs_redraw) {
-        if (m_grid_buffer) delete m_grid_buffer;
-        m_grid_buffer = new QPixmap(this->width(), this->height());
-        m_grid_buffer->fill(QColor(0, 0, 0, 0));
+        m_grid_buffer = QPixmap(this->width(), this->height());
+        m_grid_buffer.fill(QColor(0, 0, 0, 0));
 
-        QPainter *grid_painter = new QPainter(m_grid_buffer);
+        QPainter *grid_painter = new QPainter(&m_grid_buffer);
         grid_painter->setBrush(Qt::NoBrush);
 
         // ***** Grid Lines
         if (m_grid_style == Grid_Style::Lines) {
-            QPen dot_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 1);
-            dot_pen.setCosmetic(true);
-            grid_painter->setPen(dot_pen);
+            QPen line_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 1);
+            line_pen.setCosmetic(true);
+            grid_painter->setPen(line_pen);
 
             QVector<QLineF> view_lines;
 
@@ -177,7 +176,8 @@ void DrView::paintGrid(QPainter &painter)
 
         // ***** Grid Dots
         } else {
-            QPen dot_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 4, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
+            double point_size = 4;
+            QPen dot_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), point_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
             grid_painter->setPen(dot_pen);
 
             QVector<QPointF> view_points;
@@ -195,7 +195,7 @@ void DrView::paintGrid(QPainter &painter)
     }
 
     QRectF target_rect = QRectF( mapToScene(0, 0), mapToScene(this->width(), this->height()) );
-    painter.drawPixmap(target_rect, *m_grid_buffer, QRectF(m_grid_buffer->rect()) );
+    painter.drawPixmap(target_rect, m_grid_buffer, QRectF(m_grid_buffer.rect()) );
 }
 
 
