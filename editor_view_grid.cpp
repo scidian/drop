@@ -5,6 +5,7 @@
 //      DrView Grid Functions
 //
 //
+#include <QtMath>
 
 #include "colors.h"
 #include "debug.h"
@@ -47,15 +48,21 @@ void DrView::recalculateGrid()
     QPointF topLeft = mapToScene(0, 0);
     QPointF bottomRight = mapToScene(this->width(), this->height());
     QRectF  viewport_rect(topLeft, bottomRight);
+
     QRectF  scene_rect = this->scene()->sceneRect();
 
     double grid_x = m_grid_size.x();
     double grid_y = m_grid_size.y();
-    if (grid_x < 1) grid_x = 1;
-    if (grid_y < 1) grid_y = 1;
-    double origin_x = m_grid_origin.x();
-    double origin_y = m_grid_origin.y();
-    double add_more = 1;
+
+    double min_x = (scene_rect.left()   > viewport_rect.left())   ? scene_rect.left()   : viewport_rect.left();
+    double max_x = (scene_rect.right()  < viewport_rect.right())  ? scene_rect.right()  : viewport_rect.right();
+    double min_y = (scene_rect.top()    > viewport_rect.top())    ? scene_rect.top()    : viewport_rect.top();
+    double max_y = (scene_rect.bottom() < viewport_rect.bottom()) ? scene_rect.bottom() : viewport_rect.bottom();
+
+    // !!!!!!!!!! Figure out how to start drawing when scene barely is in view in one corner
+
+    double origin_x = round((viewport_rect.center().x() - m_grid_origin.x()) / grid_x) * grid_x + m_grid_origin.x();
+    double origin_y = round((viewport_rect.center().y() - m_grid_origin.y()) / grid_y) * grid_y + m_grid_origin.y();
 
     bool allow_dots = true;
     if ((m_zoom_scale <= .50) && (grid_x < 10 || grid_y < 10)) allow_dots = false;
@@ -67,42 +74,42 @@ void DrView::recalculateGrid()
     QVector<QLineF>  new_lines;
 
     // Bottom right
-    for (double x = origin_x; x <= scene_rect.right() * add_more; x += grid_x) {
+    for (double x = origin_x; x <= max_x; x += grid_x) {
         // Right side vertical lines
-        new_lines.append( QLineF(x, scene_rect.top() * add_more, x, scene_rect.bottom() * add_more) );
-        if (!allow_dots) continue;
+        new_lines.append( QLineF(x, min_y, x, max_y) );
 
-        for (double y = origin_y; y <= scene_rect.bottom() * add_more; y += grid_y)
+        if (!allow_dots) continue;
+        for (double y = origin_y; y <= max_y; y += grid_y)
             new_points.append( QPointF(x, y) );
     }
 
     // Bottom left
-    for (double y = origin_y; y <= scene_rect.bottom() * add_more; y += grid_y) {
+    for (double y = origin_y; y <= max_y; y += grid_y) {
         // Bottom horizontal lines
-        new_lines.append( QLineF(scene_rect.left() * add_more, y, scene_rect.right() * add_more, y) );
-        if (!allow_dots) continue;
+        new_lines.append( QLineF(min_x, y, max_x, y) );
 
-        for (double x = origin_x; x >= scene_rect.left() * add_more; x -= grid_x)
+        if (!allow_dots) continue;
+        for (double x = origin_x; x >= min_x; x -= grid_x)
             new_points.append( QPointF(x, y) );
     }
 
     // Top right
-    for (double y = origin_y; y >= scene_rect.top() * add_more; y -= grid_y) {
+    for (double y = origin_y; y >= min_y; y -= grid_y) {
         // Top horizontal lines
-        new_lines.append( QLineF(scene_rect.left() * add_more, y, scene_rect.right() * add_more, y) );
+        new_lines.append( QLineF(min_x, y, max_x, y) );
         if (!allow_dots) continue;
 
-        for (double x = origin_x; x <= scene_rect.right() * add_more; x += grid_x)
+        for (double x = origin_x; x <= max_x; x += grid_x)
             new_points.append( QPointF(x, y) );
     }
 
     // Top left
-    for (double x = origin_x; x >= scene_rect.left() * add_more; x -= grid_x) {
+    for (double x = origin_x; x >= min_x; x -= grid_x) {
         // Left side vertical lines
-        new_lines.append( QLineF(x, scene_rect.top() * add_more, x, scene_rect.bottom() * add_more) );
+        new_lines.append( QLineF(x, min_y, x, max_y) );
         if (!allow_dots) continue;
 
-        for (double y = origin_y; y >= scene_rect.top() * add_more; y -= grid_y)
+        for (double y = origin_y; y >= min_y; y -= grid_y)
             new_points.append( QPointF(x, y) );
     }
 
