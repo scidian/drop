@@ -251,7 +251,7 @@ void DrView::zoomInOut(int level)
 {
     m_zoom += level;
     if (m_zoom > 500) m_zoom = 500;
-    if (m_zoom < 100) m_zoom = 100;
+    if (m_zoom < 40) m_zoom = 40;
     applyUpdatedMatrix();
 }
 

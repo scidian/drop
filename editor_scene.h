@@ -85,6 +85,7 @@ public:
 
     // Other Widget Update Calls
     InterfaceRelay* getRelay() { return m_relay; }
+    void            clearViewSceneRect(QRectF new_rect) { emit clearViewRect(new_rect); }
     void            updateAlignmentGrid() { emit updateGrid(); }
     void            updateChangesInScene(QList<DrSettings*> changed_items, QList<long> property_keys);
     void            updateItemInScene(DrSettings* changed_item, QList<long> property_keys);
@@ -126,7 +127,8 @@ public:
 
 
 public slots:
-    void            sceneChanged(QList<QRectF> region);                             // Used to resize scene area to fit contents
+    void            sceneChanged(QList<QRectF>);                            // Used to resize scene area to fit contents
+    void            sceneRectChanged(QRectF new_rect);
     void            selectionChanged();
 
     // Undo Commands
@@ -135,8 +137,9 @@ public slots:
     void            selectionGroupNewGroup(DrScene *scene, QList<DrObject*> old_list, QList<DrObject*> new_list);
 
 signals:
-    void            updateGrid();                                                   // Connected to updateGrid() function of attached Views
-    void            updateViews();                                                  // Connected to update() function of attached Views
+    void            clearViewRect(QRectF new_rect);                         // Connected to clearViewSceneRect() function of attached Views
+    void            updateGrid();                                           // Connected to updateGrid() function of attached Views
+    void            updateViews();                                          // Connected to update() function of attached Views
 
 };
 

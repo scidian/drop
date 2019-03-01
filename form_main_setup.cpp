@@ -43,7 +43,7 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
         buildAssetTree();
         buildProjectTree();
         viewMain->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
-        scene->setSceneRect(-2000, -2000, 4000, 4000);
+        ///scene->setSceneRect(-2000, -2000, 4000, 4000);
         scene->update();
         viewMain->update();
         centerViewOnPoint(QPointF(0, 0));
@@ -184,7 +184,7 @@ void FormMain::buildWindowModeEditStage()
 
                         if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL)) {
                             QOpenGLWidget *gl_widget = new QOpenGLWidget();
-                            gl_widget->setUpdateBehavior(QOpenGLWidget::NoPartialUpdate);
+                            gl_widget->setUpdateBehavior(QOpenGLWidget::UpdateBehavior::NoPartialUpdate);
                             viewMain->setViewport(gl_widget);
                         }
 

@@ -103,7 +103,6 @@ private:
     // View_Mode::Translating Variables
     QTime                               m_origin_timer;             // Tracks time since mouse down to help buffer movement while selecting
     bool                                m_allow_movement = false;   // Used along with m_origin_timer to help buffer movement while selecting
-    bool                                m_shown_a_scene = false;    // False until a scene is loaded for the first time
     bool                                m_hide_bounding = false;    // True when moving items to stop bounding box from updating and painting
 
     // Selection Bounding Box Variables
@@ -168,8 +167,7 @@ public:
 
     // View Display Functions
     void            applyUpdatedMatrix();
-    bool            hasLoadedFirstScene() { return m_shown_a_scene; }
-    void            loadedFirstScene() { m_shown_a_scene = true; }
+    void            clearViewSceneRect(QRectF new_rect);
     void            zoomInOut(int level);
 
     // Misc Functions
@@ -213,7 +211,8 @@ public:
     View_Mode       currentViewMode() { return m_view_mode; }
 
 public slots:
-    void    sceneChanged(QList<QRectF> region);
+    void    sceneChanged(QList<QRectF>);
+    void    sceneRectChanged(QRectF new_rect);
     void    selectionChanged();
 
     void    checkTranslateToolTipStarted();

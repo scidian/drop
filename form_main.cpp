@@ -215,12 +215,9 @@ void FormMain::setOption(Options option_to_set, QVariant new_value) {
 
 // Emits a single shot timer to update view coordinates after event calls are done
 void FormMain::centerViewOnPoint(QPointF center_point) {
-    if (viewMain->hasLoadedFirstScene())
-        viewMain->centerOn(center_point);
-    else
-        QTimer::singleShot(0, this, [this, center_point] { this->centerViewTimer(center_point); } );
+    QTimer::singleShot(0, this, [this, center_point] { this->centerViewTimer(center_point); } );
 }
-void FormMain::centerViewTimer(QPointF center_point) {  viewMain->centerOn(center_point); viewMain->loadedFirstScene(); }
+void FormMain::centerViewTimer(QPointF center_point) {  viewMain->centerOn(center_point);  }
 View_Mode FormMain::currentViewMode() { return viewMain->currentViewMode(); }
 
 
