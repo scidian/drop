@@ -30,25 +30,6 @@
 
 
 //####################################################################################
-//##        Event Filter, can monitor events being recieved
-//####################################################################################
-bool DrView::eventFilter(QObject *obj, QEvent *event)
-{
-    //int t = event->type();
-    //   1 = Timer
-    //  11 = Leave            12 = Paint
-    //  13 = Move             14 = Resize
-    //  17 = Show             24 = Window Activate
-    //  74 = Polish Request   78 = Update Later
-    // 128 = Hover Leave     129 = Hover Move
-    //
-    //if (t != 1 && t != 11 && t != 12 && t != 13 && t != 14 && t != 17 && t != 24 && t != 74 && t != 78 && t != 128 && t != 129)
-    //    Dr::SetLabelText(Label_Names::Label_2, QString::number(event->type()));
-    return QGraphicsView::eventFilter(obj, event);
-}
-
-
-//####################################################################################
 //##        DrawBackground / DrawForground, called before and after paintEvent
 //####################################################################################
 void DrView::drawBackground(QPainter *painter, const QRectF &rect)

@@ -155,9 +155,7 @@ public:
     virtual void    drawForeground(QPainter *painter, const QRectF &rect) override;
     virtual void    paintEvent(QPaintEvent *event) override;                                // Inherited from QWidget
 
-    virtual bool    eventFilter(QObject *obj, QEvent *event) override;                      // Inherited from QObject
     virtual void    scrollContentsBy(int dx, int dy) override;                              // Inherited from QAbstractScrollArea
-
     virtual void    keyPressEvent(QKeyEvent *event) override;                               // Inherited from QWidget
     virtual void    keyReleaseEvent(QKeyEvent *event) override;                             // Inherited from QWidget
     virtual void    mouseDoubleClickEvent(QMouseEvent *event) override;                     // Inherited from QWidget
