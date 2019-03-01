@@ -84,16 +84,8 @@ void DrView::drawForeground(QPainter *painter, const QRectF &rect)
 //####################################################################################
 void DrView::paintEvent(QPaintEvent *event)
 {
-    // ******************** Clears the sceen
-    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL)) {
-        //QPainter clear_painter(this->viewport());
-        //clear_painter.eraseRect(this->viewport()->rect());
-        //clear_painter.end();
-    }
-
     // ******************** Pass on event to parent class paint items into scene
     QGraphicsView::paintEvent(event);
-
 
     // ******************** At this point, if no selected items get out of here
     if (scene() == nullptr) return;

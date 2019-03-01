@@ -5,7 +5,9 @@
 //      Loads, styles and handles events for FormMain
 //
 //
+#include <QApplication>
 #include <QDockWidget>
+#include <QKeyEvent>
 #include <QTimer>
 
 #include "colors.h"
@@ -49,7 +51,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     // ########## Load saved preferences
     Dr::SetColorScheme(Color_Scheme::Dark);
 
-    current_mode = Form_Main_Mode::World_Editor;
+    current_form_main_mode = Form_Main_Mode::World_Editor;
 
     setOption(Options::World_Editor_Current_World, 0);
     setOption(Options::World_Editor_Lock_Backgrounds, false);
@@ -112,7 +114,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     // ########## Initialize form and customize colors and styles
     scene = new DrScene(this, project, this);
     buildMenu();
-    buildWindow(current_mode);
+    buildWindow(current_form_main_mode);
     Dr::ApplyColoring(this);
 
 
@@ -122,6 +124,8 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 
 
 
+
+    // ########## Marks FormMain as finished loading
     Dr::SetDoneLoading(true);
 }
 
@@ -234,7 +238,7 @@ void FormMain::setAdvisorInfo(HeaderBodyList header_body_list) {
 // Call to put in a signal to change the Advisor to the que
 void FormMain::setAdvisorInfo(QString header, QString body)
 {
-    if (current_mode != Form_Main_Mode::World_Editor) return;
+    if (current_form_main_mode != Form_Main_Mode::World_Editor) return;
     if (advisor == nullptr) return;
     if (advisor->isHidden()) return;                                        // If Advisor dock was closed, cancel
     if (treeAdvisor == nullptr) return;

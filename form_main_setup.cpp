@@ -35,15 +35,14 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
 {
     QString widget_list;
 
-    current_mode = new_layout;
-    switch (current_mode)
+    current_form_main_mode = new_layout;
+    switch (current_form_main_mode)
     {
     case Form_Main_Mode::World_Editor:
         buildWindowModeEditStage();
         buildAssetTree();
         buildProjectTree();
         viewMain->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
-        ///scene->setSceneRect(-2000, -2000, 4000, 4000);
         scene->update();
         viewMain->update();
         centerViewOnPoint(QPointF(0, 0));

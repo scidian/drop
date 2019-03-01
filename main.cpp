@@ -68,6 +68,7 @@ int main(int argc, char *argv[])
 
     FormMain form_main(nullptr);                    // Declare / Load FormMain, pass Globals helper
     Dr::SetActiveRelay(&form_main);                 // Set main form to active relay
+    qApp->installEventFilter(&form_main);           // Installs an application wide event filter attached to FormMain (acts as key grabber)
     form_main.show();                               // Show FormMain
 
     app_drop.exec();                                // Run program

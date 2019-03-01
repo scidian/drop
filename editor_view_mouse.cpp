@@ -5,8 +5,10 @@
 //      Graphics View Handling - Mouse Events
 //
 //
+#include <QApplication>
 #include <QtMath>
 #include <QMouseEvent>
+#include <QScrollBar>
 #include <QTimer>
 
 #include "colors.h"
@@ -252,17 +254,16 @@ void DrView::zoomInOut(int level)
     m_zoom += level;
     if (m_zoom > 500) m_zoom = 500;
     if (m_zoom < 40) m_zoom = 40;
-    applyUpdatedMatrix();
-}
-
-void DrView::applyUpdatedMatrix()
-{
     m_zoom_scale = qPow(qreal(2), (m_zoom - 250) / qreal(50));
+
     QMatrix matrix;
     matrix.scale(m_zoom_scale, m_zoom_scale);
     matrix.rotate(m_rotate);
     this->setMatrix(matrix);
+
     updateSelectionBoundingBox(5);
+    if (horizontalScrollBar()->value() == 0 && verticalScrollBar()->value() == 0)
+        updateGrid();
 }
 
 

@@ -60,7 +60,7 @@ class FormMain : public QMainWindow, public InterfaceRelay
 
 public:
     // Locals
-    Form_Main_Mode  current_mode;                                       // Holds current editing mode of FormMain
+    Form_Main_Mode  current_form_main_mode;                             // Holds current editing mode of FormMain
 
     // Locals that need to be SAVED / LOADED from each project
     DrProject      *project;                                            // Holds whatever the current open game project is
@@ -99,26 +99,30 @@ private:
 public:
     // Constructor and Destructor
     explicit FormMain(QWidget *parent = nullptr);
-    ~FormMain();
+    virtual ~FormMain() override;
+
+    // Event Handlers
+    virtual bool        eventFilter(QObject *obj, QEvent *event) override;                                          // Inherited from QObject
 
     // Interface Relay Implementations
-    virtual void        buildAssetTree();
-    virtual void        buildObjectInspector(QList<long> key_list);
-    virtual void        buildProjectTree();
-    virtual void        buildScene(long from_stage_key);
+    virtual void        buildAssetTree() override;
+    virtual void        buildObjectInspector(QList<long> key_list) override;
+    virtual void        buildProjectTree() override;
+    virtual void        buildScene(long from_stage_key) override;
 
-    virtual void        updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Properties> property_keys);
-    virtual void        updateItemSelection(Editor_Widgets selected_from);
+    virtual void        updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items,
+                                                           QList<Properties> property_keys) override;
+    virtual void        updateItemSelection(Editor_Widgets selected_from) override;
 
-    virtual QVariant    getOption(Options option_to_get);
-    virtual void        setOption(Options option_to_set, QVariant new_value);
+    virtual QVariant    getOption(Options option_to_get) override;
+    virtual void        setOption(Options option_to_set, QVariant new_value)override;
 
-    virtual void        centerViewOnPoint(QPointF center_point);
-    virtual View_Mode   currentViewMode();
+    virtual void        centerViewOnPoint(QPointF center_point) override;
+    virtual View_Mode   currentViewMode() override;
 
-    virtual void        setAdvisorInfo(HeaderBodyList header_body_list);
-    virtual void        setAdvisorInfo(QString header, QString body);
-    virtual void        setLabelText(Label_Names label_name, QString new_text);
+    virtual void        setAdvisorInfo(HeaderBodyList header_body_list) override;
+    virtual void        setAdvisorInfo(QString header, QString body) override;
+    virtual void        setLabelText(Label_Names label_name, QString new_text) override;
 
 private:
     // Form Building / Setup

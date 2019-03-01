@@ -72,7 +72,7 @@ private:
 
     // Display Variables
     int          m_zoom = 250;                                      // Zoom level of current view
-    double       m_zoom_scale = 1;                                  // Updated in applyUpdatedMatrix for use during painting grid, DO NOT SET MANUALLY
+    double       m_zoom_scale = 1;                                  // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
     QTime        m_zoom_timer;                                      // Used to auto hide zoom tool tip after time has passed
     int          m_rotate = 0;                              // NOT IMPLEMENTED: Rotation of current view
 
@@ -169,7 +169,6 @@ public:
 #endif
 
     // View Display Functions
-    void            applyUpdatedMatrix();
     void            clearViewSceneRect(QRectF new_rect);
     void            zoomInOut(int level);
 

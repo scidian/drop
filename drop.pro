@@ -66,7 +66,8 @@ SOURCES += \
     editor_tree_inspector_update.cpp \
     editor_view_grid.cpp \
     editor_view_key_press.cpp \
-    editor_scene_key_press.cpp
+    editor_scene_key_press.cpp \
+    form_main_event_filter.cpp
 
 HEADERS += \
     enums.h \

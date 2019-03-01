@@ -127,7 +127,8 @@ void DrView::scrollContentsBy(int dx, int dy)
 {
     QGraphicsView::scrollContentsBy(dx, dy);
     updateSelectionBoundingBox(3);
-    updateGrid();
+    updateGrid();                       // Updates grid when view is dragged or zoomed, also called from zoom
+                                        // function (zoomInOut()) in case there are no scrollbars due to zoomed too far out
     update();
 }
 

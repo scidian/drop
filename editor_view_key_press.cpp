@@ -8,6 +8,7 @@
 #include <QKeyEvent>
 
 #include "editor_view.h"
+#include "interface_relay.h"
 
 //####################################################################################
 //##        Key Events
@@ -16,7 +17,8 @@
 void DrView::keyPressEvent(QKeyEvent *event)
 {
     // When space bar is down, enabled mouse press and move to translate viewable area
-    if (event->key() == Qt::Key::Key_Space) {   m_flag_key_down_spacebar = true;
+    if (event->key() == Qt::Key::Key_Space) {
+        m_flag_key_down_spacebar = true;
         setDragMode(QGraphicsView::DragMode::ScrollHandDrag);
         setInteractive(false);
     }
@@ -38,7 +40,8 @@ void DrView::keyPressEvent(QKeyEvent *event)
 void DrView::keyReleaseEvent(QKeyEvent *event)
 {
     // When space bar is released, change mode back to select / move items
-    if (event->key() == Qt::Key::Key_Space) {   m_flag_key_down_spacebar = false;
+    if (event->key() == Qt::Key::Key_Space) {
+        m_flag_key_down_spacebar = false;
         setDragMode(QGraphicsView::DragMode::NoDrag);
         setInteractive(true);
     }
