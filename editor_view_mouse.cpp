@@ -5,7 +5,6 @@
 //      Graphics View Handling - Mouse Events
 //
 //
-#include <QApplication>
 #include <QtMath>
 #include <QMouseEvent>
 #include <QScrollBar>

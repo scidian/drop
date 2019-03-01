@@ -211,6 +211,9 @@ public:
 
     // Getters / Setters
     View_Mode       currentViewMode() { return m_view_mode; }
+    void            spaceBarDown();
+    void            spaceBarUp();
+
 
 public slots:
     void    sceneChanged(QList<QRectF>);

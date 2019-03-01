@@ -23,15 +23,16 @@ bool FormMain::eventFilter(QObject *obj, QEvent *event)
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         if (keyEvent->key() == Qt::Key::Key_Space && current_form_main_mode == Form_Main_Mode::World_Editor)
             if (viewMain->hasFocus() == false)
-                viewMain->keyPressEvent(keyEvent);
+                viewMain->spaceBarDown();
     }
     if (event->type() == QEvent::KeyRelease)
     {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         if (keyEvent->key() == Qt::Key::Key_Space && current_form_main_mode == Form_Main_Mode::World_Editor)
             if (viewMain->hasFocus() == false)
-                viewMain->keyReleaseEvent(keyEvent);
+                viewMain->spaceBarUp();
     }
+
 
     return QObject::eventFilter(obj, event);
 }
