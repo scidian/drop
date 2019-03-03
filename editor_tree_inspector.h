@@ -21,7 +21,7 @@ class DrObject;
 class DrSettings;
 class DrProperty;
 
-class InterfaceRelay;
+class IEditorRelay;
 class DrTripleSpinBox;
 class WidgetHoverHandler;
 
@@ -54,7 +54,7 @@ class TreeInspector: public QTreeWidget
 
 private:
     DrProject          *m_project;                      // Pointer to currently loaded project
-    InterfaceRelay     *m_relay;                        // Pointer to InterfaceRelay class of parent form
+    IEditorRelay       *m_editor_relay;                 // Pointer to IEditorRelay class of parent form
     WidgetHoverHandler *m_widget_hover;                 // Pointer to a widget hover handler
 
     QList<QWidget*>     m_widgets;                      // List of the widgets we built the last time we selected a new item
@@ -63,7 +63,7 @@ private:
     DrType              m_selected_type;                // Stores object type of currently selected item
 
 public:
-    explicit        TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay *relay);
+    explicit        TreeInspector(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
 
     // Function Calls
     void            buildInspectorFromKeys(QList<long> key_list);
@@ -71,7 +71,7 @@ public:
     void            updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order = 0);
 
     // Getters and Setters
-    InterfaceRelay* getRelay()          { return m_relay; }
+    IEditorRelay*   getRelay()          { return m_editor_relay; }
     long            getSelectedKey()    { return m_selected_key; }
 
     // Property Builders

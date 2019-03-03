@@ -13,7 +13,7 @@
 #include "editor_tree_inspector.h"
 
 #include "enums.h"
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 #include "library.h"
 
 #include "project.h"
@@ -181,7 +181,7 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
             break;
         }
 
-        m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Object_Inspector, { settings }, { static_cast<Properties>(property_key) } );
+        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Object_Inspector, { settings }, { static_cast<Properties>(property_key) } );
     }
 }
 

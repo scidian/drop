@@ -12,11 +12,11 @@
 #include <QTreeWidgetItem>
 #include <QUndoStack>
 
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 
 class DrProject;
 class DrStage;
-class InterfaceRelay;
+class IEditorRelay;
 
 
 //####################################################################################
@@ -50,7 +50,7 @@ class DrScene : public QGraphicsScene
 private:
     // Local member variables
     DrProject              *m_project;                      // Pointer to currently loaded project
-    InterfaceRelay         *m_relay;                        // Pointer to InterfaceRelay class of parent form
+    IEditorRelay           *m_editor_relay;                 // Pointer to IEditorRelay class of parent form
 
     DrStage                *m_current_stage = nullptr;      // Holds a pointer to the current DrStage being shown
     long                    m_current_stage_key = -1;       // Holds the project key of the currently shown DrStage, starts at -1, i.e. "none"
@@ -72,7 +72,7 @@ public:
 
 public:
     // Constructor
-    explicit DrScene(QWidget *parent, DrProject *project, InterfaceRelay *relay);
+    explicit DrScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
     virtual ~DrScene() override;
 
     // Event Overrides, start at Qt Docs for QGraphicsScene Class to find more
@@ -84,7 +84,7 @@ public:
     void            setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y);
 
     // Other Widget Update Calls
-    InterfaceRelay* getRelay() { return m_relay; }
+    IEditorRelay*   getRelay() { return m_editor_relay; }
     void            clearViewSceneRect(QRectF new_rect) { emit clearViewRect(new_rect); }
     void            updateAlignmentGrid() { emit updateGrid(); }
     void            updateChangesInScene(QList<DrSettings*> changed_items, QList<long> property_keys);

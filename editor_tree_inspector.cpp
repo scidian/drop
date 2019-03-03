@@ -21,7 +21,7 @@
 #include "editor_tree_inspector.h"
 #include "editor_tree_widgets.h"
 
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 #include "library.h"
 
 #include "project.h"
@@ -37,8 +37,8 @@
 //####################################################################################
 //##        Constructor
 //####################################################################################
-TreeInspector::TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
-                              QTreeWidget (parent), m_project(project), m_relay(relay)
+TreeInspector::TreeInspector(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
+                              QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay)
 {
     m_widget_hover = new WidgetHoverHandler(this);
     connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
@@ -49,7 +49,7 @@ TreeInspector::TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay
 
 // SLOT: Catches signals from m_widget_hover
 void TreeInspector::setAdvisorInfo(QString header, QString body) {
-    m_relay->setAdvisorInfo(header, body);
+    m_editor_relay->setAdvisorInfo(header, body);
 }
 void TreeInspector::attachToHoverHandler(QWidget *widget, DrProperty *property) {
     m_widget_hover->attachToHoverHandler(widget, property);
@@ -112,13 +112,13 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
     // Change Advisor text after new item selection
     switch (m_selected_type) {
-    case DrType::World:        m_relay->setAdvisorInfo(Advisor_Info::World_Object);         break;
-    case DrType::Stage:        m_relay->setAdvisorInfo(Advisor_Info::Stage_Object);         break;
-    ///case DrType::Camera:       m_relay->setAdvisorInfo(Advisor_Info::Camera_Object);        break;
-    ///case DrType::Character:    m_relay->setAdvisorInfo(Advisor_Info::Character_Object);     break;
-    case DrType::Object:       m_relay->setAdvisorInfo(Advisor_Info::Object_Object);        break;
-    case DrType::Asset:        m_relay->setAdvisorInfo(Advisor_Info::Asset_Object);         break;
-    default:                   m_relay->setAdvisorInfo(Advisor_Info::Not_Set);
+    case DrType::World:        m_editor_relay->setAdvisorInfo(Advisor_Info::World_Object);         break;
+    case DrType::Stage:        m_editor_relay->setAdvisorInfo(Advisor_Info::Stage_Object);         break;
+    ///case DrType::Camera:       m_editor_relay->setAdvisorInfo(Advisor_Info::Camera_Object);        break;
+    ///case DrType::Character:    m_editor_relay->setAdvisorInfo(Advisor_Info::Character_Object);     break;
+    case DrType::Object:       m_editor_relay->setAdvisorInfo(Advisor_Info::Object_Object);        break;
+    case DrType::Asset:        m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Object);         break;
+    default:                   m_editor_relay->setAdvisorInfo(Advisor_Info::Not_Set);
     }
 
 

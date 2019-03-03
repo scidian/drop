@@ -14,7 +14,7 @@
 #include "editor_item.h"
 #include "editor_scene.h"
 
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 #include "library.h"
 
 #include "project.h"
@@ -29,10 +29,10 @@
 //####################################################################################
 //##        Constructor & destructor
 //####################################################################################
-DrScene::DrScene(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
+DrScene::DrScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
                  QGraphicsScene(parent = nullptr),
                  m_project(project),
-                 m_relay(relay)
+                 m_editor_relay(editor_relay)
 {
     connect(this, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
     connect(this, SIGNAL(sceneRectChanged(QRectF)), this, SLOT(sceneRectChanged(QRectF)));
@@ -208,11 +208,11 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
 
             if (property == Properties::Object_Size) {
                 object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale, scale);
-                m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { object } , { Properties::Object_Scale });
+                m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { object } , { Properties::Object_Scale });
             }
             if (property == Properties::Object_Scale) {
                 object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Size, size);
-                m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { object } , { Properties::Object_Size });
+                m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { object } , { Properties::Object_Size });
             }
 
             break;

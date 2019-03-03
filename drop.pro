@@ -41,7 +41,6 @@ SOURCES += \
     settings_component_property.cpp \
     colors.cpp \
     debug.cpp \
-    interface_relay.cpp \
     library_misc.cpp \
     library_style.cpp \
     editor_tree_inspector_widgets.cpp \
@@ -67,13 +66,13 @@ SOURCES += \
     editor_view_grid.cpp \
     editor_view_key_press.cpp \
     editor_scene_key_press.cpp \
-    form_main_event_filter.cpp
+    form_main_interface_editor.cpp \
+    interface_editor_relay.cpp
 
 HEADERS += \
     enums.h \
     form_main.h \
     editor_tree_inspector.h \
-    interface_relay.h \
     editor_tree_assets.h \
     editor_tree_advisor.h \
     project.h \
@@ -94,7 +93,8 @@ HEADERS += \
     editor_scene_undo_commands.h \
     project_image.h \
     editor_tree_project.h \
-    constants.h
+    constants.h \
+    interface_editor_relay.h
 
 FORMS +=
 

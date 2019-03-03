@@ -8,7 +8,7 @@
 #include <QKeyEvent>
 
 #include "editor_view.h"
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 
 //####################################################################################
 //##        Key Events

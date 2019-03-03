@@ -13,7 +13,7 @@
 #include "editor_item.h"
 #include "editor_view.h"
 #include "editor_scene.h"
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 #include "library.h"
 
 #include "project.h"
@@ -28,8 +28,8 @@
 //####################################################################################
 //##        Constructor & destructor
 //####################################################################################
-DrView::DrView(QWidget *parent, DrProject *project, DrScene *from_scene, InterfaceRelay *relay) :
-               QGraphicsView(parent = nullptr), m_project(project), m_relay(relay)
+DrView::DrView(QWidget *parent, DrProject *project, DrScene *from_scene, IEditorRelay *editor_relay) :
+               QGraphicsView(parent = nullptr), m_project(project), m_editor_relay(editor_relay)
 {
     // Initialize rubber band object used as a selection box
     m_rubber_band = new DrViewRubberBand(QRubberBand::Shape::Rectangle, this);

@@ -16,7 +16,7 @@
 #include "editor_scene.h"
 #include "editor_view.h"
 
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 #include "library.h"
 
 #include "project.h"
@@ -183,9 +183,9 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
     // ***** If we're not doing anything, update the advisor based on item under the mouse
     if (m_view_mode == View_Mode::None) {
         if (check_item != nullptr) {
-            m_relay->setAdvisorInfo(check_item->data(User_Roles::Name).toString(), check_item->data(User_Roles::Type).toString());
+            m_editor_relay->setAdvisorInfo(check_item->data(User_Roles::Name).toString(), check_item->data(User_Roles::Type).toString());
         } else {
-            m_relay->setAdvisorInfo(Advisor_Info::Stage_View);
+            m_editor_relay->setAdvisorInfo(Advisor_Info::Stage_View);
         }
     }
 

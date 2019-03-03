@@ -15,7 +15,7 @@ class DrProject;
 class DrProperty;
 class DrSettings;
 
-class InterfaceRelay;
+class IEditorRelay;
 class WidgetHoverHandler;
 
 // Class constants
@@ -32,20 +32,20 @@ class TreeAssets: public QTreeWidget
     Q_OBJECT
 
 private:
-    DrProject           *m_project;                 // Pointer to currently loaded project
-    InterfaceRelay      *m_relay;                   // Pointer to InterfaceRelay class of parent form
+    DrProject            *m_project;                // Pointer to currently loaded project
+    IEditorRelay         *m_editor_relay;           // Pointer to IEditorRelay class of parent form
 
-    QList<QFrame*>       m_asset_frames;            // List of the single row frames that contain name and pixmap labels
+    QList<QFrame*>        m_asset_frames;           // List of the single row frames that contain name and pixmap labels
 
-    WidgetHoverHandler  *m_widget_hover;            // Pointer to a widget hover handler
+    WidgetHoverHandler   *m_widget_hover;           // Pointer to a widget hover handler
 
 public:
     // Constructor
-    explicit        TreeAssets(QWidget *parent, DrProject *project, InterfaceRelay *relay);
+    explicit        TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
 
     // Function Calls
     void            buildAssetTree();
-    InterfaceRelay* getRelay() { return m_relay; }
+    IEditorRelay*   getRelay() { return m_editor_relay; }
     void            updateAssetList(QList<DrSettings*> changed_items, QList<long> property_keys);
 
     // Property Builders
@@ -65,10 +65,10 @@ private slots:
 class AssetMouseHandler : public QObject
 {
 private:
-    InterfaceRelay      *m_relay;                    // Pointer to InterfaceRelay class of parent form
+    IEditorRelay      *m_editor_relay;                    // Pointer to IEditorRelay class of parent form
 
 public:
-    explicit        AssetMouseHandler(QObject *parent, InterfaceRelay *relay);
+    explicit        AssetMouseHandler(QObject *parent, IEditorRelay *editor_relay);
 
 protected:
     bool            eventFilter(QObject* obj, QEvent* event) override;

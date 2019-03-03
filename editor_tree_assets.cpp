@@ -16,7 +16,7 @@
 #include "editor_tree_assets.h"
 #include "editor_tree_widgets.h"
 
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 
 #include "project.h"
 #include "project_asset.h"
@@ -31,8 +31,8 @@
 //####################################################################################
 //##        Constructor
 //####################################################################################
-TreeAssets::TreeAssets(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
-                       QTreeWidget (parent), m_project(project), m_relay(relay)
+TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
+                       QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay)
 {
     m_widget_hover = new WidgetHoverHandler(this);
     connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
@@ -42,7 +42,7 @@ TreeAssets::TreeAssets(QWidget *parent, DrProject *project, InterfaceRelay *rela
 
 // SLOT: Catches signals from m_widget_hover
 void TreeAssets::setAdvisorInfo(QString header, QString body) {
-    m_relay->setAdvisorInfo(header, body);
+    m_editor_relay->setAdvisorInfo(header, body);
 }
 void TreeAssets::attachToHoverHandler(QWidget *widget, DrProperty *property) {
     m_widget_hover->attachToHoverHandler(widget, property);
@@ -103,7 +103,7 @@ void TreeAssets::buildAssetTree()
         QFrame *single_row = new QFrame();
         single_row->setObjectName("assetFrame");
         single_row->setProperty(User_Property::Key, QVariant::fromValue( asset_pair.second->getKey() ));
-        single_row->installEventFilter(new AssetMouseHandler(single_row, m_relay));
+        single_row->installEventFilter(new AssetMouseHandler(single_row, m_editor_relay));
 
         // Store pointer to frame in a list for future reference
         m_asset_frames.append(single_row);
@@ -188,8 +188,9 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
 
 //####################################################################################
 //##    AssetMouseHandler Class Functions
+//##        eventFilter - handles mouse click on asset, loads object inspector for clicked asset
 //####################################################################################
-AssetMouseHandler::AssetMouseHandler(QObject *parent, InterfaceRelay *relay) : QObject(parent), m_relay(relay) {}
+AssetMouseHandler::AssetMouseHandler(QObject *parent, IEditorRelay *editor_relay) : QObject(parent), m_editor_relay(editor_relay) {}
 
 bool AssetMouseHandler::eventFilter(QObject *obj, QEvent *event)
 {
@@ -199,8 +200,7 @@ bool AssetMouseHandler::eventFilter(QObject *obj, QEvent *event)
     if (event->type() == QEvent::MouseButtonPress)
     {
         long asset_key = asset->property(User_Property::Key).toLongLong();
-
-        m_relay->buildObjectInspector( { asset_key } );
+        m_editor_relay->buildObjectInspector( { asset_key } );
     }
 
     return QObject::eventFilter(obj, event);

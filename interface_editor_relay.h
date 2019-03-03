@@ -2,11 +2,11 @@
 //      Created by Stephens Nunnally on 1/3/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      Base class to receive signals from editor objects and relay them to derived form
+//      Base class to receive signals from Editor objects and relay them to derived form
 //
 //
-#ifndef INTERFACE_RELAY_H
-#define INTERFACE_RELAY_H
+#ifndef I_EDITOR_RELAY_H
+#define I_EDITOR_RELAY_H
 
 #include "constants.h"
 #include "enums.h"
@@ -24,14 +24,14 @@ enum class Options
 };
 
 //####################################################################################
-//##    InterfaceRelay
-//##        An interface class used to communicate between classes
+//##    IEditorRelay
+//##        An interface class used to communicate between Editor Mode classes
 //############################
-class InterfaceRelay
+class IEditorRelay
 {
 public:
-    InterfaceRelay() { }
-    virtual ~InterfaceRelay();
+    IEditorRelay() { }
+    virtual ~IEditorRelay();
 
     virtual void        buildAssetTree() = 0;
     virtual void        buildObjectInspector(QList<long> key_list) = 0;
@@ -54,17 +54,17 @@ public:
 
 
 
-// External functions, can be called Globally without a local InterfaceRelay instance
+// External functions, can be called Globally without a local IEditorRelay reference in calling class
 namespace Dr {
 
-    void SetActiveRelay(InterfaceRelay *new_relay);
+    void SetActiveRelay(IEditorRelay *new_relay);
     void SetLabelText(Label_Names label, QString text);
 
 }
 
 
 
-#endif // INTERFACE_RELAY_H
+#endif // I_EDITOR_RELAY_H
 
 
 

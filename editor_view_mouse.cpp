@@ -17,7 +17,7 @@
 #include "editor_scene.h"
 #include "editor_view.h"
 
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 #include "library.h"
 
 #include "project.h"
@@ -164,10 +164,10 @@ void DrView::mouseReleaseEvent(QMouseEvent *event)
         if (m_view_mode == View_Mode::Selecting) {
             m_view_mode = View_Mode::None;
             if (my_scene->getSelectionCount() > 0)
-                m_relay->buildObjectInspector( { my_scene->getSelectionItems().first()->data(User_Roles::Key).toLongLong() } );
+                m_editor_relay->buildObjectInspector( { my_scene->getSelectionItems().first()->data(User_Roles::Key).toLongLong() } );
             else
-                m_relay->buildObjectInspector( { } );
-            m_relay->updateItemSelection(Editor_Widgets::Scene_View);
+                m_editor_relay->buildObjectInspector( { } );
+            m_editor_relay->updateItemSelection(Editor_Widgets::Scene_View);
         }
 
         // Clean up temporary item group used for resize routine
@@ -183,9 +183,9 @@ void DrView::mouseReleaseEvent(QMouseEvent *event)
         // once the mouse is released, it's much, much faster this way
         if (m_view_mode == View_Mode::Translating) {
             m_view_mode = View_Mode::None;
-            m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View,
-                                                        Dr::ConvertItemListToSettings(my_scene->getSelectionItems()),
-                                                        { Properties::Object_Position });
+            m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View,
+                                                               Dr::ConvertItemListToSettings(my_scene->getSelectionItems()),
+                                                               { Properties::Object_Position });
         }
 
         updateSelectionBoundingBox(6);

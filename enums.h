@@ -17,16 +17,6 @@ enum class Properties;
 enum class Position_Flags;
 
 
-//####################################################################################
-//##    Different widgets in an editor window, used for cross updating widgets
-//####################################################################################
-enum class Editor_Widgets {
-    Asset_Tree,
-    Object_Inspector,
-    Project_Tree,
-    Scene_View,
-};
-
 
 //####################################################################################
 //##    Types of modes for Form Main
@@ -37,6 +27,17 @@ enum class Form_Main_Mode {
     World_Map,
     Stage_Map,
     Clear,
+};
+
+
+//####################################################################################
+//##    Different widgets in an editor window, used for cross updating widgets
+//####################################################################################
+enum class Editor_Widgets {
+    Asset_Tree,
+    Object_Inspector,
+    Project_Tree,
+    Scene_View,
 };
 
 

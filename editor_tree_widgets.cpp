@@ -15,7 +15,7 @@
 
 #include "colors.h"
 #include "editor_tree_widgets.h"
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 #include "settings_component_property.h"
 
 
@@ -80,11 +80,11 @@ void WidgetHoverHandler::attachToHoverHandler(QWidget *widget, HeaderBodyList he
 
 
 //####################################################################################
-//##    MouseWheelWidgetAdjustmentGuard Class Functions
+//##    MouseWheelAdjustmentGuard Class Functions
 //####################################################################################
-MouseWheelWidgetAdjustmentGuard::MouseWheelWidgetAdjustmentGuard(QObject *parent) : QObject(parent) {}
+MouseWheelAdjustmentGuard::MouseWheelAdjustmentGuard(QObject *parent) : QObject(parent) {}
 
-bool MouseWheelWidgetAdjustmentGuard::eventFilter(QObject *obj, QEvent *event)
+bool MouseWheelAdjustmentGuard::eventFilter(QObject *obj, QEvent *event)
 {
     const QWidget* widget = static_cast<QWidget*>(obj);
     if (!widget) return QObject::eventFilter(obj, event);

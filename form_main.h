@@ -35,11 +35,10 @@
 #include <QSplitter>
 
 #include "colors.h"
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 
 // Necessary forward declarations
 class ColorSplitter;
-class InterfaceRelay;
 class TreeAssets;
 class TreeAdvisor;
 class TreeInspector;
@@ -54,7 +53,7 @@ typedef std::map<Options, QVariant> OptionMap;
 //####################################################################################
 //##    FormMain - Main editor window
 //############################
-class FormMain : public QMainWindow, public InterfaceRelay
+class FormMain : public QMainWindow, public IEditorRelay
 {
     Q_OBJECT
 
@@ -64,7 +63,7 @@ public:
 
     // Locals that need to be SAVED / LOADED from each project
     DrProject      *project;                                            // Holds whatever the current open game project is
-    OptionMap       options;                                            // Map holding project wide options (linked to InterfaceRelay)
+    OptionMap       options;                                            // Map holding project wide options (deinfed in IEditorRelay)
 
 
 private:   

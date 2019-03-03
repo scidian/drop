@@ -43,13 +43,13 @@ signals:
 
 
 //####################################################################################
-//##    MouseWheelWidgetAdjustmentGuard
+//##    MouseWheelAdjustmentGuard
 //##        Stops widget from stealing focus on mouse wheel
 //####################################################################################
-class MouseWheelWidgetAdjustmentGuard : public QObject
+class MouseWheelAdjustmentGuard : public QObject
 {
 public:
-    explicit        MouseWheelWidgetAdjustmentGuard(QObject *parent);
+    explicit        MouseWheelAdjustmentGuard(QObject *parent);
 
 protected:
     bool            eventFilter(QObject *obj, QEvent *event) override;

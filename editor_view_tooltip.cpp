@@ -12,7 +12,7 @@
 #include "editor_scene.h"
 #include "editor_view.h"
 
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 #include "library.h"
 
 #include "project.h"

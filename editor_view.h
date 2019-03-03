@@ -19,7 +19,7 @@ class DrProject;
 class DrObject;
 class DrItem;
 class SelectionGroup;
-class InterfaceRelay;
+class IEditorRelay;
 class DrScene;
 class DrSettings;
 class DrViewRubberBand;
@@ -61,7 +61,7 @@ class DrView : public QGraphicsView
 private:
     // Local, instance specific member variables
     DrProject              *m_project;                              // Pointer to currently loaded project
-    InterfaceRelay         *m_relay;                                // Pointer to InterfaceRelay class of parent form
+    IEditorRelay           *m_editor_relay;                         // Pointer to IEditorRelay class of parent form
     View_Mode               m_view_mode = View_Mode::None;          // Tracks current view interaction mode
 
     DrScene                *my_scene;                               // Holds the scene() this view is set to as a DrScene class
@@ -147,7 +147,7 @@ private:
 
 public:
     // Constructor
-    explicit DrView(QWidget *parent, DrProject *project, DrScene *from_scene, InterfaceRelay *relay);
+    explicit DrView(QWidget *parent, DrProject *project, DrScene *from_scene, IEditorRelay *editor_relay);
     virtual ~DrView() override;
 
     // Event Overrides, start at Qt Docs for QGraphicsView Class to find more

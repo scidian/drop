@@ -16,7 +16,7 @@
 #include "editor_item.h"
 #include "editor_scene.h"
 
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 #include "library.h"
 
 #include "project.h"
@@ -31,11 +31,9 @@
 //####################################################################################
 //##        Constructor & destructor
 //####################################################################################
-DrItem::DrItem(DrProject *project, InterfaceRelay *relay, DrObject *object, bool is_temp_only)
+DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrObject *object, bool is_temp_only) : m_editor_relay(editor_relay)
 {
     // Store relevant project / object data for use later
-    m_relay      = relay;
-
     m_project    = project;
     m_object     = object;
     m_object_key = object->getKey();
@@ -125,7 +123,7 @@ QPainterPath DrItem::shape() const
 QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     // If this is a temporary object, or not attached to a scene, do not process change
-    if (m_temp_only || !m_relay) return QGraphicsPixmapItem::itemChange(change, value);
+    if (m_temp_only || !m_editor_relay) return QGraphicsPixmapItem::itemChange(change, value);
 
     // Load any new data stored in item
     double  angle = data(User_Roles::Rotation).toDouble();
@@ -134,7 +132,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
     // Intercepts item position change and limits new location if Snap to Grid is on
     if (change == ItemPositionChange) {
         QPointF new_pos = value.toPointF();
-        if (m_relay->currentViewMode() != View_Mode::Translating) return new_pos;
+        if (m_editor_relay->currentViewMode() != View_Mode::Translating) return new_pos;
         if (m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Should_Snap).toBool() == false) return new_pos;
 
         QPointF grid_size =   m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
@@ -181,7 +179,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
         QPointF new_center = mapToScene( boundingRect().center() );
         m_object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Position, new_center);
 
-        m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Properties::Object_Position });
+        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Properties::Object_Position });
         return new_pos;
     }
 
@@ -197,9 +195,9 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
         m_object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale, scale );
         m_object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Size, QPointF(size_x, size_y));
 
-        m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Properties::Object_Size,
-                                                                                                Properties::Object_Scale,
-                                                                                                Properties::Object_Rotation });
+        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Properties::Object_Size,
+                                                                                                       Properties::Object_Scale,
+                                                                                                       Properties::Object_Rotation });
         return new_transform;
     }
 
@@ -209,7 +207,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
         double new_z = value.toDouble();
         m_object->setComponentPropertyValue(Components::Object_Layering, Properties::Object_Z_Order, new_z);
 
-        m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Properties::Object_Z_Order });
+        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Properties::Object_Z_Order });
         return new_z;
     }
 

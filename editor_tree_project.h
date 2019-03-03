@@ -12,7 +12,7 @@
 #include <QProxyStyle>
 #include <QTreeWidget>
 
-class InterfaceRelay;
+class IEditorRelay;
 class DrScene;
 class DrProject;
 class DrSettings;
@@ -28,7 +28,7 @@ class TreeProject: public QTreeWidget
 
 private:
     DrProject      *m_project;                          // Pointer to currently loaded project
-    InterfaceRelay *m_relay;                            // Pointer to InterfaceRelay class of parent form
+    IEditorRelay   *m_editor_relay;                     // Pointer to IEditorRelay class of parent form
 
     long            m_selected_key = 0;                 // Holds first selected item in QTreeWidget (treeProject)
     bool            m_allow_selection_event = true;     // When false, stops selectionChanged event from propagating changes to editor
@@ -39,8 +39,8 @@ private:
     int             m_mouse_y;
 
 public:
-    explicit        TreeProject(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
-                                QTreeWidget (parent), m_project(project), m_relay(relay) { }
+    explicit        TreeProject(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
+                                QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay) { }
 
     // Function calls
     void                        buildProjectTree();
