@@ -138,7 +138,7 @@ void DrView::paintGrid(QPainter &painter)
         QPointF bot_right = mapFromScene( m_grid_view_rect.bottomRight() );
         QTransform offset = QTransform().translate(-top_left.x(), -top_left.y());
 
-        QRect grid_view = QRectF(top_left, bot_right).toRect();
+        QRect grid_view = QRectF(top_left, bot_right).normalized().toRect();
         m_grid_buffer = QPixmap(grid_view.width(), grid_view.height());
         m_grid_buffer.fill(QColor(0, 0, 0, 0));
 

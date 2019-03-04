@@ -91,7 +91,8 @@ void DrView::recalculateGrid()
     bool allow_dots = true;
     if ((m_zoom_scale <= .50) && (grid_x < 10 || grid_y < 10)) allow_dots = false;
     if ((m_zoom_scale <= .25) && (grid_x < 25 || grid_y < 25)) allow_dots = false;
-    if (m_grid_style != Grid_Style::Dots) allow_dots = false;
+    if  (m_zoom_scale <= .10) allow_dots = false;
+    if  (m_grid_style != Grid_Style::Dots) allow_dots = false;
 
 
     // ********** Calculate lines and dots

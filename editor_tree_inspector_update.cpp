@@ -42,7 +42,6 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 
     // Forward definitions for widgets used in switch statement
     QPushButton     *pushbutton;
-    QSpinBox        *spinbox;
     QDoubleSpinBox  *doublespin;
 
     for (auto widget : m_widgets) {
@@ -79,15 +78,10 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
             if (doublespin->property(User_Property::Order).toInt() == 0)
                 doublespin->setValue(prop->getValue().toPointF().x());
             else
-                doublespin->setValue(prop->getValue().toPointF().y());
-            break;
-
-        case Property_Type::Point:
-            spinbox = dynamic_cast<QSpinBox*>(widget);
-            if (spinbox->property(User_Property::Order).toInt() == 0)
-                spinbox->setValue(prop->getValue().toPoint().x());
-            else
-                spinbox->setValue(prop->getValue().toPoint().y());
+                if (prop->getPropertyType() == Property_Type::PointF)
+                    doublespin->setValue(prop->getValue().toPointF().y() * -1);
+                else
+                    doublespin->setValue(prop->getValue().toPointF().y());
             break;
 
         case Property_Type::List:
@@ -131,7 +125,6 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
 {
     // Update the appropiate property in the settings of the object shown in the inspector
     DrSettings *settings = m_project->findSettingsFromKey( m_selected_key );
-    QPoint  temp_point;
     QPointF temp_pointf;
 
     if (settings != nullptr) {
@@ -148,12 +141,6 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
         case Property_Type::List:                                   // index value
         case Property_Type::String:
             property->setValue(new_value);
-            break;
-        case Property_Type::Point:                                  // Integer pair x and y
-            temp_point = property->getValue().toPoint();
-            if (sub_order == 0) temp_point.setX( new_value.toInt() );
-            else                temp_point.setY( new_value.toInt() );
-            property->setValue(temp_point);
             break;
         case Property_Type::PointF:                                 // Floating pair x and y
         case Property_Type::GridF:                                  // Floating pair x and y, minimum value c_minimum_grid_size

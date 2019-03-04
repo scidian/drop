@@ -179,7 +179,12 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
     horizontal_split->setContentsMargins(0,0,0,0);
 
     DrTripleSpinBox *spin_left  =  initializeEmptySpinBox(property, font, property->getValue().toPointF().x());
-    DrTripleSpinBox *spin_right  = initializeEmptySpinBox(property, font, property->getValue().toPointF().y());
+    DrTripleSpinBox *spin_right;
+
+    if (spin_type == Spin_Type::Point)
+        spin_right  = initializeEmptySpinBox(property, font, -1 * property->getValue().toPointF().y());
+    else
+        spin_right  = initializeEmptySpinBox(property, font, property->getValue().toPointF().y());
 
     switch (spin_type)
     {

@@ -134,7 +134,8 @@ void DrView::checkTranslateToolTipStarted()
 {
     if (m_view_mode == View_Mode::Translating) {
         if (m_tool_tip->getTipType() != View_Mode::Translating) {
-            m_tool_tip->startToolTip(View_Mode::Translating, m_origin, mapToScene( m_handles_centers[Position_Flags::Center].toPoint()) );
+            my_scene->updateSelectionBox();
+            m_tool_tip->startToolTip(View_Mode::Translating, m_origin, my_scene->getSelectionTransform().map(my_scene->getSelectionBox().center()) );
             m_allow_movement = true;
             update();
         }
