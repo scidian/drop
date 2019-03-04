@@ -171,8 +171,9 @@ enum class Property_Type {
                             //                                updateInspectorPropertyBoxes(), updateToolTipData()
     PointF,                 // QPointF      Floating pair x and y
     SizeF,                  // QPointF      Floating pair w and h
+    ScaleF,                 // QPointF      Floating pair, has smaller increment step in spin box
     GridF,                  // QPointF      Floating pair x and y, minimum value of c_minimum_grid_size for both x and y
-    Scale,                  // QPointF      Floating pair, has smaller increment step in spin box
+    GridScaleF,             // QPointF      Floating pair x and y, minimum value of c_minimum_grid_scale for both x and y
     Variable,               // QPointF      floating point pair, number followed by a +/- number
 
     Image,                  // QPixmap

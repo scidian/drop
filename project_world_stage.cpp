@@ -136,7 +136,7 @@ void DrStage::initializeStageSettings(QString new_name)
                            "Grid Origin Point", "Origin point in stage the grid begins at. Allows for small adjustments of enitre grid.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Size, Property_Type::GridF, QPointF(50, 50),
                            "Grid Cell Size", "Width and height of the cells in the grid.");
-    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Scale, Property_Type::Scale, QPointF(1, 1),
+    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Scale, Property_Type::GridScaleF, QPointF(1, 1),
                            "Grid Scale", "X and Y stretch factor after grid has been rotated. For Isometric Grids, set X value twice that of Y value.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Rotation, Property_Type::Angle, 0,
                            "Grid Rotation", "Rotation of the grid lines. For Isometric Grids, set \"Grid Rotation\" to 45 degrees.");

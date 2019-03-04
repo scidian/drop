@@ -7,6 +7,7 @@
 //
 #include "editor_item.h"
 #include "editor_scene.h"
+#include "library.h"
 
 #include "project.h"
 #include "project_world.h"
@@ -117,10 +118,12 @@ QGraphicsItemGroup* DrScene::createEmptyItemGroup(double angle, QPointF scale)
     QGraphicsItemGroup *group = new QGraphicsItemGroup();
     addItem(group);
     QPointF    center = group->boundingRect().center();
+    double transform_scale_x = Dr::CheckScaleNotZero(scale.x());
+    double transform_scale_y = Dr::CheckScaleNotZero(scale.y());
     QTransform transform = QTransform()
             .translate(center.x(), center.y())
             .rotate(angle)
-            .scale(scale.x(), scale.y())
+            .scale(transform_scale_x, transform_scale_y)
             .translate(-center.x(), -center.y());
     group->setTransform(transform);
     return group;

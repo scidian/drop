@@ -193,7 +193,9 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
 
 
     // ***** Apply new scale
-    QTransform t = QTransform().rotate(angle).scale(scale_x, scale_y);
+    double transform_scale_x = Dr::CheckScaleNotZero(scale_x);
+    double transform_scale_y = Dr::CheckScaleNotZero(scale_y);
+    QTransform t = QTransform().rotate(angle).scale(transform_scale_x, transform_scale_y);
     m_group->setTransform(t);
 
     // ***** Translate if needed
@@ -356,10 +358,12 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale)
 
     // Update item property
     original->setData(User_Roles::Scale, QPointF(new_scale_x, new_scale_y) );
+    double transform_scale_x = Dr::CheckScaleNotZero(new_scale_x);
+    double transform_scale_y = Dr::CheckScaleNotZero(new_scale_y);
 
     QTransform no_shear = QTransform()
             .rotate(angle)
-            .scale(new_scale_x, new_scale_y);
+            .scale(transform_scale_x, transform_scale_y);
     original->setTransform(no_shear);
 
     // Set item to center point of clone

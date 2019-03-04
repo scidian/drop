@@ -17,6 +17,17 @@ namespace Dr {
 
 
 //####################################################################################
+//##        Makes sure scale is not zero so we don't mess up QGraphicsItem transform
+//####################################################################################
+double CheckScaleNotZero(double scale_to_check)
+{
+    if (scale_to_check <  .001 && scale_to_check >= 0) scale_to_check =  .001;
+    if (scale_to_check > -.001 && scale_to_check <= 0) scale_to_check = -.001;
+    return scale_to_check;
+}
+
+
+//####################################################################################
 //##        Returns number_to_check fit to within the bounds of min / max
 //####################################################################################
 //

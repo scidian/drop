@@ -82,12 +82,6 @@ void DrView::recalculateGrid()
     double origin_y = round((viewport_rect.center().y() - m_grid_origin.y()) / grid_y) * grid_y + m_grid_origin.y();
     m_grid_view_rect = viewport_rect;
 
-    // Square max and min values so that if grid is rotated it will still fill in the viewport rect
-    if (max_x < max_y) max_x = max_y;
-    if (max_y < max_x) max_y = max_x;
-    if (min_x > min_y) min_x = min_y;
-    if (min_y > min_x) min_y = min_x;
-
     // Hide dots if too zoomed out
     bool allow_dots = true;
     if ((m_zoom_scale <= .50) && (grid_x < 10 || grid_y < 10)) allow_dots = false;
@@ -101,10 +95,18 @@ void DrView::recalculateGrid()
     QVector<QLineF>  new_lines;
     double adjust = 1.44;
 
-    max_x *= adjust;
-    max_y *= adjust;
-    min_x *= adjust;
-    min_y *= adjust;
+    // Add in some buffering for rotation, and negate the effects of the scaling
+    double smaller_scale = (m_grid_scale.x() < m_grid_scale.y()) ? m_grid_scale.x() : m_grid_scale.y();
+    max_x *= adjust / smaller_scale;
+    max_y *= adjust / smaller_scale;
+    min_x *= adjust / smaller_scale;
+    min_y *= adjust / smaller_scale;
+
+    // Square max and min values so that if grid is rotated it will still fill in the viewport rect
+    if (max_x < max_y) max_x = max_y;
+    if (max_y < max_x) max_y = max_x;
+    if (min_x > min_y) min_x = min_y;
+    if (min_y > min_x) min_y = min_x;
 
     // Bottom right -- Right side vertical lines
     for (double x = origin_x; x <= max_x; x += grid_x) {

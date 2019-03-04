@@ -71,9 +71,10 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 
         case Property_Type::PositionF:
         case Property_Type::PointF:
-        case Property_Type::GridF:
         case Property_Type::SizeF:
-        case Property_Type::Scale:
+        case Property_Type::ScaleF:
+        case Property_Type::GridF:
+        case Property_Type::GridScaleF:
         case Property_Type::Variable:
             doublespin = dynamic_cast<QDoubleSpinBox*>(widget);
             if (doublespin->property(User_Property::Order).toInt() == 0)
@@ -145,9 +146,10 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
             break;
         case Property_Type::PositionF:                              // Floating pair x and y, y is flipped
         case Property_Type::PointF:                                 // Floating pair x and y
-        case Property_Type::GridF:                                  // Floating pair x and y, minimum value c_minimum_grid_size
         case Property_Type::SizeF:                                  // Floating pair w and h
-        case Property_Type::Scale:                                  // Floating pair, has smaller step in spin box
+        case Property_Type::ScaleF:                                 // Floating pair, has smaller step in spin box
+        case Property_Type::GridF:                                  // Floating pair x and y, minimum value c_minimum_grid_size
+        case Property_Type::GridScaleF:                             // Floating pair x and y, minimum value c_minimum_grid_scale
         case Property_Type::Variable:                               // floating point pair, number followed by a +/- number
             temp_pointf = property->getValue().toPointF();
             if (sub_order == 0)

@@ -382,9 +382,9 @@ void DrView::paintItemCenters(QPainter &painter)
         lines.append( t.map (line) );
 
         painter.setBrush(Qt::NoBrush);
-        painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 3));
+        painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 4));
         painter.drawLines(lines);
-        painter.setPen(QPen(Dr::GetColor(Window_Colors::Shadow), 1));
+        painter.setPen(QPen(Dr::GetColor(Window_Colors::Shadow), 2));
         painter.drawLines(lines);
     }
 

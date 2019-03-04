@@ -67,7 +67,13 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrObject *object,
 
     // Adjust item to proper transform
     QPointF center = boundingRect().center();
-    QTransform t = QTransform().translate(center.x(), center.y()).rotate(angle).scale(scale.x(), scale.y()).translate(-center.x(), -center.y());
+    double transform_scale_x = Dr::CheckScaleNotZero(scale.x());
+    double transform_scale_y = Dr::CheckScaleNotZero(scale.y());
+    QTransform t = QTransform()
+            .translate(center.x(), center.y())
+            .rotate(angle)
+            .scale(transform_scale_x, transform_scale_y)
+            .translate(-center.x(), -center.y());
     setTransform(t);
 
     // Load starting position

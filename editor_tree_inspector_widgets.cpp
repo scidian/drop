@@ -190,18 +190,23 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
     {
     case Property_Type::PositionF:
     case Property_Type::PointF:
-    case Property_Type::Scale:
+    case Property_Type::ScaleF:
         spin_left->setPrefix("X: ");        spin_right->setPrefix("Y: ");   break;
     case Property_Type::GridF:
         spin_left->setPrefix("W: ");        spin_right->setPrefix("H: ");
         spin_left->setRange( c_minimum_grid_size, 100000000);
         spin_right->setRange(c_minimum_grid_size, 100000000);
         break;
+    case Property_Type::GridScaleF:
+        spin_left->setPrefix("X: ");        spin_right->setPrefix("Y: ");
+        spin_left->setRange( c_minimum_grid_scale, 100000000);
+        spin_right->setRange(c_minimum_grid_scale, 100000000);
+        break;
     case Property_Type::SizeF:
         spin_left->setPrefix("W: ");        spin_right->setPrefix("H: ");   break;
     default: ;
     }
-    if (spin_type == Property_Type::Scale) {
+    if (spin_type == Property_Type::ScaleF || spin_type == Property_Type::GridScaleF) {
         spin_left->setSingleStep(.1);
         spin_right->setSingleStep(.1);
     } else {
@@ -228,10 +233,9 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
     spin_right->installEventFilter(new MouseWheelAdjustmentGuard(spin_right));
 
     connect (spin_left,  QOverload<double>::of(&DrTripleSpinBox::valueChanged),
-             this, [this, property_key] (double d) { updateSettingsFromNewValue(property_key, d, 0); });
+         this, [this, property_key] (double d) { updateSettingsFromNewValue(property_key, d, 0); });
     connect (spin_right, QOverload<double>::of(&DrTripleSpinBox::valueChanged),
-             this, [this, property_key] (double d) { updateSettingsFromNewValue(property_key, d, 1); });
-
+         this, [this, property_key] (double d) { updateSettingsFromNewValue(property_key, d, 1); });
 
     return spin_pair;
 }

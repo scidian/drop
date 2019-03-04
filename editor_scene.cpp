@@ -173,6 +173,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
     QPointF scale    = object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale).toPointF();
     QPointF size     = object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Size).toPointF();
     double  angle =    object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Rotation).toDouble();
+    double  transform_scale_x, transform_scale_y;
 
     // Turn off itemChange() signals to stop recursive calling
     item->disableItemChangeFlags();
@@ -202,7 +203,9 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
             }
             item->setData(User_Roles::Scale, scale );
             item->setData(User_Roles::Rotation, angle );
-            transform = QTransform().rotate(angle).scale(scale.x(), scale.y());
+            transform_scale_x = Dr::CheckScaleNotZero(scale.x());
+            transform_scale_y = Dr::CheckScaleNotZero(scale.y());
+            transform = QTransform().rotate(angle).scale(transform_scale_x, transform_scale_y);
             item->setTransform(transform);
             setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
 
