@@ -7,7 +7,6 @@
 //
 
 #include <QKeyEvent>
-#include <QRandomGenerator>
 #include <QUndoView>
 
 #include "debug.h"
@@ -15,6 +14,7 @@
 #include "editor_item.h"
 #include "editor_scene.h"
 
+#include "globals.h"
 #include "interface_editor_relay.h"
 #include "library.h"
 
@@ -34,9 +34,12 @@ void DrScene::keyReleaseEvent(QKeyEvent *event) { QGraphicsScene::keyReleaseEven
 
 void DrScene::keyPressEvent(QKeyEvent *event)
 {
-    // Amount to move items when arrow keys are pressed
-    qreal move_by = 5;
+    bool update_widgets_when_done = false;
 
+    // Amount to move items when arrow keys are pressed
+    double move_by = 5;
+
+    // If no selected items, pass on key press event and exit
     if (getSelectionCount() < 1) {
         QGraphicsScene::keyPressEvent(event);
         return;
@@ -62,12 +65,19 @@ void DrScene::keyPressEvent(QKeyEvent *event)
     // Perform key press event on all items in selection group
     if (scene_mutex.tryLock(10) == false) return;
 
-    QList<QGraphicsItem*>  list_new_items {};
 
-    for (auto item : getSelectionItems()) {
-    //!!    DrItem *new_item;
-        QColor new_color;
-        qreal new_x, new_y;
+    // Go through any items selected and make copies of them if the copy keys (wasd) were pressed
+    QList<QGraphicsItem*>  list_old_items = getSelectionItems();
+    QList<QGraphicsItem*>  list_new_items { };
+
+    for (auto item : list_old_items) {
+        DrItem   *dritem   = dynamic_cast<DrItem*>(item);
+        DrObject *drobject = dritem->getObject();
+        DrStage  *drstage  = drobject->getParentStage();
+        DrObject *new_object;
+
+        double  new_x, new_y;
+        int     new_z;
 
         switch (event->key())
         {
@@ -76,45 +86,49 @@ void DrScene::keyPressEvent(QKeyEvent *event)
         case Qt::Key::Key_A:
         case Qt::Key::Key_S:
         case Qt::Key::Key_D:
-            // Send item back to scene before we copy it
-            //my_scene->getSelectionGroup()->removeFromGroup(item);
-
-            new_color = QColor::fromRgb(QRandomGenerator::global()->generate()).light(100);
-            new_x = item->scenePos().x();
-            new_y = item->scenePos().y();
+            new_x = drobject->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF().x();
+            new_y = drobject->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF().y();
+            new_z = drobject->getComponentPropertyValue(Components::Object_Layering,  Properties::Object_Z_Order).toInt();
 
             if (event->key() == Qt::Key::Key_W) new_y = new_y - source_rect.height();
             if (event->key() == Qt::Key::Key_A) new_x = new_x - source_rect.width();
             if (event->key() == Qt::Key::Key_S) new_y = new_y + source_rect.height();
             if (event->key() == Qt::Key::Key_D) new_x = new_x + source_rect.width();
 
-    //!!        new_item = new DrItem(new_color, item->boundingRect().width(), item->boundingRect().height(),
-    //!!                              this->items().count() + 1, item->data(User_Roles::Name).toString());
-    //!!         new_item->setPos(new_x, new_y);
-    //!!        new_item->setTransform(item->transform());          // Includes rotation and scaling
+            new_object = drstage->addObject(drobject->getObjectType(), drobject->getAssetKey(), new_x, new_y, new_z);
+            drstage->copyObjectSettings(drobject, new_object);
+            new_object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Position, QPointF(new_x, new_y));
+            new_object->setComponentPropertyValue(Components::Object_Layering,  Properties::Object_Z_Order, new_z);
 
-    //!!        new_item->setData(User_Roles::Scale, item->data(User_Roles::Scale).toPointF());
-    //!!        new_item->setData(User_Roles::Rotation, item->data(User_Roles::Rotation).toDouble());
-
-    //!!        addItem(new_item);
-    //!!        list_new_items.append(new_item);
+            list_new_items.append(this->addItemToSceneFromObject(new_object));
             break;
+
 
         // Delete selected items
         case Qt::Key::Key_Delete:
         case Qt::Key::Key_Backspace:
-            //emptySelectionGroup(true);
+            drstage->deleteObject(drobject);
+            delete item;
+            update_widgets_when_done = true;
             break;
         }
     }
 
     // If we added (copied) new items to scene, select those items
-//    if (list_new_items.count() > 0) {
-//        emptySelectionGroup();
-//        for (auto item : list_new_items) addItemToSelectionGroup(item);
-//    }
+    if (list_new_items.count() > 0) {
+        this->clearSelection();
+        for (auto item : list_new_items)
+            item->setSelected(true);
+        update_widgets_when_done = true;
+    }
 
     scene_mutex.unlock();
+
+    // Update Editor Widgets
+    if (update_widgets_when_done) {
+        m_editor_relay->buildProjectTree();
+        m_editor_relay->updateItemSelection(Editor_Widgets::Scene_View);
+    }
 
     //QGraphicsScene::keyPressEvent(event);         // Don't pass on, if we pass on arrow key presses, it moves view sliders
     emit updateViews();                             // Custom signal to tell Views we're attached to, to update themselves

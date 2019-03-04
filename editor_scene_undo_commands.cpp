@@ -100,27 +100,7 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
 
     // Load all our objects from data model into QGraphicsItems
     for (auto object_pair : from_stage->getObjectMap()) {
-
-        // Create new item representing this object
-        DrItem *item = new DrItem(m_project, m_scene->getRelay(), object_pair.second);
-
-        // Temporarily disable geometry signal itemChange updates
-        item->disableItemChangeFlags();
-
-        // Add item to scene, set starting position
-        m_scene->addItem(item);
-        m_scene->setPositionByOrigin(item, Position_Flags::Center, item->startX(), item->startY());
-
-        // Create a temporary group and destroy it, this causes some unknown but importatnt changes to the items
-        // sceneTransform that we really seem to need before we try to move a scaled item with View_Mode::Translating
-        QGraphicsItemGroup *group = m_scene->createItemGroup({ item });
-        m_scene->destroyItemGroup(group);
-
-        // Re enable geometry signal itemChange() updates
-        item->enableItemChangeFlags();
-
-        // Assign this QGraphicsItem we just made to the object in the project so it can reference it later
-        object_pair.second->setDrItem(item);
+        m_scene->addItemToSceneFromObject(object_pair.second);
     }
 
     m_scene->update();
@@ -131,6 +111,32 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
         return "Redo Select Stage " + displayed->getStageName();
     else
         return "Undo Select Stage " + from_stage->getStageName();
+}
+
+DrItem* DrScene::addItemToSceneFromObject(DrObject *object)
+{
+    // Create new item representing this object
+    DrItem *item = new DrItem(m_project, this->getRelay(), object);
+
+    // Temporarily disable geometry signal itemChange updates
+    item->disableItemChangeFlags();
+
+    // Add item to scene, set starting position
+    this->addItem(item);
+    this->setPositionByOrigin(item, Position_Flags::Center, item->startX(), item->startY());
+
+    // Create a temporary group and destroy it, this causes some unknown but importatnt changes to the items
+    // sceneTransform that we really seem to need before we try to move a scaled item with View_Mode::Translating
+    QGraphicsItemGroup *group = this->createItemGroup({ item });
+    this->destroyItemGroup(group);
+
+    // Re enable geometry signal itemChange() updates
+    item->enableItemChangeFlags();
+
+    // Assign this QGraphicsItem we just made to the object in the project so it can reference it later
+    object->setDrItem(item);
+
+    return item;
 }
 
 

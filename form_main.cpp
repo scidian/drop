@@ -101,9 +101,9 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_7, -200, -200,  1);
     project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_8, 0, 0,  2);
 
-    project->getWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_9,   100, 100, -2);
-    project->getWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_10,  200, 100,  4);
-    project->getWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_11, -200, -200, 1);
+    project->getWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_9,   100, 100,   2);
+    project->getWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_10,  200, 100,   4);
+    project->getWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_11, -200, -200, -2);
     // !!!!! END
 
 

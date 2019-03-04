@@ -42,6 +42,7 @@ namespace Dr {
     QColor          GetColor(Window_Colors color_role);
     Color_Scheme    GetColorScheme();
 
+    QColor          GenerateRandomColor();
 
     /**
      * Doxygen comments, type slash star star enter, brief shows a mouse mover popup for the described function in the editor

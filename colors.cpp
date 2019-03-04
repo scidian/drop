@@ -5,6 +5,8 @@
 //      Holds all of our custom colors
 //
 //
+#include <QRandomGenerator>
+
 #include "colors.h"
 #include "enums.h"
 
@@ -25,13 +27,13 @@ int     FontSize()          { return 11;  }                         // Project w
 //####################################################################################
 //##        Retreive custom colors
 //####################################################################################
-QColor  GetColor(Window_Colors color_role)
-{
-    return g_color_schemes[g_current_color_scheme][color_role];
-}
+QColor          GetColor(Window_Colors color_role)      { return g_color_schemes[g_current_color_scheme][color_role]; }
 
-Color_Scheme GetColorScheme() { return g_current_color_scheme; }
-void SetColorScheme(Color_Scheme new_scheme) { g_current_color_scheme = new_scheme; }
+Color_Scheme    GetColorScheme()                        { return g_current_color_scheme; }
+void            SetColorScheme(Color_Scheme new_scheme) { g_current_color_scheme = new_scheme; }
+
+QColor          GenerateRandomColor()                   { return QColor::fromRgb(QRandomGenerator::global()->generate()); }
+
 
 //####################################################################################
 //##        Store custom window palette colors

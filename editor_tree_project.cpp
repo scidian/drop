@@ -34,6 +34,7 @@
 //####################################################################################
 void TreeProject::buildProjectTree()
 {
+    setAllowSelectionEvent(false);
     this->clear();
 
     for (auto world_pair: m_project->getWorlds())
@@ -90,6 +91,8 @@ void TreeProject::buildProjectTree()
         }
     }
     this->expandAll();                                             // Expand all items
+    this->update();
+    setAllowSelectionEvent(true);
 }
 
 // Handles changing the Advisor on Mouse Enter

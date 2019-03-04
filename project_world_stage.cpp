@@ -45,7 +45,8 @@ DrStage::~DrStage()
     for (auto i: m_objects) { delete i.second; }
 }
 
-void DrStage::addObject(DrObjectType new_type, long from_asset_key, double x, double y, long z)
+// Adds a new object to the stage
+DrObject* DrStage::addObject(DrObjectType new_type, long from_asset_key, double x, double y, long z)
 {
     QString new_name;
     switch (new_type) {
@@ -62,7 +63,25 @@ void DrStage::addObject(DrObjectType new_type, long from_asset_key, double x, do
     long new_object_key = m_parent_project->getNextKey();
     m_objects[new_object_key] = new DrObject(m_parent_project, m_parent_world, this, new_object_key,
                                              new_name, new_type, from_asset_key, x, y, z);
+    return m_objects[new_object_key];
 }
+
+// Copies all component / property settings from one object to another object of the same type
+void DrStage::copyObjectSettings(DrObject *from_object, DrObject *to_object)
+{
+    if (from_object->getObjectType() != to_object->getObjectType()) return;
+
+    for (auto component : from_object->getComponentList())
+        for (auto property : component.second->getPropertyList())
+            to_object->setComponentPropertyValue(component.first, property.first, property.second->getValue());
+}
+
+// Removes an object from the project
+void DrStage::deleteObject(DrObject *object)
+{
+    m_objects.erase(object->getKey());
+}
+
 
 // Returns a list of object keys contained in stage, sorted from high z value to low
 QList<long> DrStage::objectKeysSortedByZOrder()
@@ -106,21 +125,21 @@ void DrStage::initializeStageSettings(QString new_name)
                            "Cooldown", "Distance to wait after stage plays before it is possible to be shown again.");
 
 
-    addComponent(Components::Stage_Grid, "Grid", "Settings for the alignment grid within the editor. For an isometric grid, set 'Grid Rotation' "
-                                                 "to 30 degrees, and set a grid size width twice the value of the grid size height (i.e. w: 50, h: 25).",
+    addComponent(Components::Stage_Grid, "Grid", "Settings for the alignment grid within the editor. For an Isometric Grid: set \"Grid Rotation\" "
+                                                 "to 45 degrees, and set \"Grid Scale\" X value twice the size \"Grid Scale\" Y value (i.e. X: 2, Y: 1).",
                                                  Component_Colors::Pink_Pearl, true);
     getComponent(Components::Stage_Grid)->setIcon(Component_Icons::Transform);
 
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Style, Property_Type::List, 0,
                            "Grid Style", "Visual style of alignment grid.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point, Property_Type::PointF, QPointF(0, 0),
-                           "Grid Origin Point", "Origin point in stage the grid begins at.");
+                           "Grid Origin Point", "Origin point in stage the grid begins at. Allows for small adjustments of enitre grid.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Size, Property_Type::GridF, QPointF(50, 50),
                            "Grid Cell Size", "Width and height of the cells in the grid.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Scale, Property_Type::Scale, QPointF(1, 1),
-                           "Grid Cell Scale", "X and Y stretch factor after grid has been rotated.");
+                           "Grid Scale", "X and Y stretch factor after grid has been rotated. For Isometric Grids, set X value twice that of Y value.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Rotation, Property_Type::Angle, 0,
-                           "Grid Rotation", "Rotation of the grid lines.");
+                           "Grid Rotation", "Rotation of the grid lines. For Isometric Grids, set \"Grid Rotation\" to 45 degrees.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Should_Snap, Property_Type::Bool, true,
                            "Snap to Grid?", "Snaps objects to grid lines when moving objects around with the mouse.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Show_On_Top, Property_Type::Bool, false,

@@ -34,7 +34,6 @@ DrProperty* DrSettings::getComponentProperty(Components component, Properties pr
 
 QVariant DrSettings::getComponentPropertyValue(long component, long property) { return m_components[component]->getProperty(property)->getValue(); }
 QVariant DrSettings::getComponentPropertyValue(Components component, Properties property) { return m_components[static_cast<long>(component)]->getProperty(property)->getValue(); }
-
 void DrSettings::setComponentPropertyValue(long component, long property, QVariant value) { m_components[component]->getProperty(property)->setValue(value); }
 void DrSettings::setComponentPropertyValue(Components component, Properties property, QVariant value) { m_components[static_cast<long>(component)]->getProperty(property)->setValue(value); }
 

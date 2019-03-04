@@ -26,15 +26,15 @@ class DrObject : public DrSettings
 {
 private:
     // Local variables
-    DrObjectType    m_object_type;                          // holds type of current object
+    DrObjectType    m_object_type;                      // Holds type of current object
 
-    DrProject      *m_parent_project;                       // holds reference to parent Project class that handles key generation for project
-    DrWorld        *m_parent_world;                         // holds reference to parent World class
-    DrStage        *m_parent_stage;                         // holds reference to parent Stage class
+    DrProject      *m_parent_project;                   // Holds reference to parent Project class that handles key generation for project
+    DrWorld        *m_parent_world;                     // Holds reference to parent World class
+    DrStage        *m_parent_stage;                     // Holds reference to parent Stage class
 
-    long            m_asset_key;                            // holds the associated asset key, this way we know what image to grab for GraphicsView
+    long            m_asset_key;                        // Holds the associated asset key, this way we know what image to grab for GraphicsView
 
-    DrItem         *m_item_in_scene = nullptr;              // holds a pointer to a QGraphicsItem if this object is currently represented in the editor
+    DrItem         *m_item_in_scene = nullptr;          // Holds a pointer to a QGraphicsItem if this object is currently represented in the editor
 
 public:
     // Constructor & destructor
@@ -42,11 +42,11 @@ public:
                       QString new_object_name, DrObjectType new_object_type, long from_asset_key, double x, double y, long z);
     virtual ~DrObject() override;
 
-    // Virtual overrides
+    // DrSettings Base Class Overrides
     virtual DrType  getType() override          { return DrType::Object; }
-    DrObjectType    getObjectType()             { return m_object_type; }
 
     // Getters and setters
+    DrObjectType    getObjectType()             { return m_object_type; }
     DrProject*      getParentProject()          { return m_parent_project; }
     DrWorld*        getParentWorld()            { return m_parent_world; }
     DrStage*        getParentStage()            { return m_parent_stage; }

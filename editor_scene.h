@@ -14,6 +14,7 @@
 
 #include "interface_editor_relay.h"
 
+class DrItem;
 class DrProject;
 class DrStage;
 class IEditorRelay;
@@ -80,6 +81,7 @@ public:
     virtual void    keyReleaseEvent(QKeyEvent *event) override;                            // Inherited from QGraphicsScene
 
     // Scene Functions
+    DrItem*         addItemToSceneFromObject(DrObject *object);
     void            setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y);
     void            setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y);
 

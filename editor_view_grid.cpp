@@ -169,16 +169,13 @@ void DrView::recalculateGrid()
     rounded_center.setY( round((rounded_center.y()) / grid_y) * grid_y );
     rounded_center = add_angle.map ( rounded_center );
     QTransform slide = QTransform().translate( -rounded_center.x(), -rounded_center.y() );
-
     QTransform scale = QTransform().scale(m_grid_scale.x(), m_grid_scale.y());
 
     // Apply the rotation and translation transforms to the new lines
     for (auto &line: new_lines) {
         line = add_angle.map( line );
         line = slide.map( line );
-
         line = scale.map( line );
-
         m_grid_lines.append( line );
     }
 
@@ -188,7 +185,6 @@ void DrView::recalculateGrid()
     if (allow_dots) {
         new_points = add_angle.map( new_points );
         new_points = slide.map( new_points );
-
         new_points = scale.map( new_points );
 
         for (auto point : new_points) {
