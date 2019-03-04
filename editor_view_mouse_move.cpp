@@ -16,6 +16,7 @@
 #include "editor_scene.h"
 #include "editor_view.h"
 
+#include "globals.h"
 #include "interface_editor_relay.h"
 #include "library.h"
 

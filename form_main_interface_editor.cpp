@@ -24,6 +24,7 @@
 
 #include "form_main.h"
 
+#include "globals.h"
 #include "library.h"
 
 #include "project.h"
@@ -106,14 +107,6 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from)
 
 
 
-QVariant FormMain::getOption(Options option_to_get) {
-    return options[option_to_get];
-}
-void FormMain::setOption(Options option_to_set, QVariant new_value) {
-    options[option_to_set] = new_value;
-}
-
-
 // Emits a single shot timer to update view coordinates after event calls are done,
 // sometimes centerOn function doesnt work until after an update() has been processed in the event loop
 void FormMain::centerViewOnPoint(QPointF center_point) {
@@ -141,35 +134,8 @@ void FormMain::setAdvisorInfo(QString header, QString body)
     emit sendAdvisorInfo(header, body);                                     // Emits signal connected to changeAdvisor
 }
 
-// Sets the text of a label on FormMain
-void FormMain::setLabelText(Label_Names label_name, QString new_text)
-{
-    if (Dr::CheckDoneLoading() == false) return;
 
-    switch (label_name)
-    {
-    case Label_Names::Label_1:          label_1->setText(new_text);         break;
-    case Label_Names::Label_2:          label_2->setText(new_text);         break;
-    case Label_Names::Label_3:          label_3->setText(new_text);         break;
-    case Label_Names::Label_Mouse_1:    label_mouse_1->setText(new_text);   break;
-    case Label_Names::Label_Mouse_2:    label_mouse_2->setText(new_text);   break;
 
-    case Label_Names::Label_Object_1:   label_object_1->setText(new_text);  break;
-    case Label_Names::Label_Object_2:   label_object_2->setText(new_text);  break;
-    case Label_Names::Label_Object_3:   label_object_3->setText(new_text);  break;
-    case Label_Names::Label_Object_4:   label_object_4->setText(new_text);  break;
-    case Label_Names::Label_Object_5:   label_object_5->setText(new_text);  break;
-
-    case Label_Names::Label_Position:   label_position->setText(new_text);  break;
-    case Label_Names::Label_Center:     label_center->setText(new_text);    break;
-    case Label_Names::Label_Scale:      label_scale->setText(new_text);     break;
-    case Label_Names::Label_Rotate:     label_rotate->setText(new_text);    break;
-    case Label_Names::Label_Z_Order:    label_z_order->setText(new_text);   break;
-    case Label_Names::Label_Pos_Flag:   label_pos_flag->setText(new_text);  break;
-
-    case Label_Names::Label_Bottom:     label_bottom->setText(new_text);    break;
-    }
-}
 
 
 

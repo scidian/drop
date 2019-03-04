@@ -48,7 +48,6 @@ class DrScene;
 class DrView;
 class DrViewRubberBand;
 
-typedef std::map<Options, QVariant> OptionMap;
 
 //####################################################################################
 //##    FormMain - Main editor window
@@ -58,12 +57,10 @@ class FormMain : public QMainWindow, public IEditorRelay
     Q_OBJECT
 
 public:
-    // Locals
+    // Public Locals
     Form_Main_Mode  current_form_main_mode;                             // Holds current editing mode of FormMain
 
-    // Locals that need to be SAVED / LOADED from each project
     DrProject      *project;                                            // Holds whatever the current open game project is
-    OptionMap       options;                                            // Map holding project wide options (deinfed in IEditorRelay)
 
 
 private:   
@@ -100,6 +97,9 @@ public:
     explicit FormMain(QWidget *parent = nullptr);
     virtual ~FormMain() override;
 
+    // Misc functions
+    void                setLabelText(Label_Names label_name, QString new_text);
+
     // Event Handlers
     virtual bool        eventFilter(QObject *obj, QEvent *event) override;                                          // Inherited from QObject
 
@@ -113,15 +113,11 @@ public:
                                                            QList<Properties> property_keys) override;
     virtual void        updateItemSelection(Editor_Widgets selected_from) override;
 
-    virtual QVariant    getOption(Options option_to_get) override;
-    virtual void        setOption(Options option_to_set, QVariant new_value)override;
-
     virtual void        centerViewOnPoint(QPointF center_point) override;
     virtual View_Mode   currentViewMode() override;
 
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) override;
     virtual void        setAdvisorInfo(QString header, QString body) override;
-    virtual void        setLabelText(Label_Names label_name, QString new_text) override;
 
 private:
     // Form Building / Setup

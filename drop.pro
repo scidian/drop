@@ -67,7 +67,8 @@ SOURCES += \
     editor_view_key_press.cpp \
     editor_scene_key_press.cpp \
     form_main_interface_editor.cpp \
-    interface_editor_relay.cpp
+    interface_editor_relay.cpp \
+    globals.cpp
 
 HEADERS += \
     enums.h \
@@ -94,7 +95,8 @@ HEADERS += \
     project_image.h \
     editor_tree_project.h \
     constants.h \
-    interface_editor_relay.h
+    interface_editor_relay.h \
+    globals.h
 
 FORMS +=
 

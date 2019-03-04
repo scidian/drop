@@ -21,6 +21,7 @@
 #include "editor_tree_inspector.h"
 #include "editor_tree_widgets.h"
 
+#include "globals.h"
 #include "interface_editor_relay.h"
 #include "library.h"
 

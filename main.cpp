@@ -44,6 +44,7 @@
 #include "colors.h"
 #include "debug.h"
 #include "form_main.h"
+#include "globals.h"
 
 ///// ***** How to have a custom QVariant Type *****
 ///// In this file:
@@ -67,7 +68,8 @@ int main(int argc, char *argv[])
     Dr::LoadPalettes();
 
     FormMain form_main(nullptr);                    // Declare / Load FormMain, pass Globals helper
-    Dr::SetActiveRelay(&form_main);                 // Set main form to active relay
+    Dr::SetActiveFormMain(&form_main);              // Set main form to active FormMain
+    Dr::SetActiveEditorRelay(&form_main);           // Set main form to active EditorRelay
     qApp->installEventFilter(&form_main);           // Installs an application wide event filter attached to FormMain (acts as key grabber)
     form_main.show();                               // Show FormMain
 

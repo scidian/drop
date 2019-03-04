@@ -17,6 +17,7 @@
 
 #include "editor_tree_project.h"
 
+#include "globals.h"
 #include "interface_editor_relay.h"
 
 #include "project.h"

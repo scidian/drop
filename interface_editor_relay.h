@@ -14,14 +14,6 @@
 class DrObject;
 class DrSettings;
 
-enum class Options
-{
-    World_Editor_Current_World,
-    World_Editor_Lock_Backgrounds,
-    World_Editor_Show_Collision_Shapes,
-    World_Editor_Show_Connections,
-    World_Editor_Show_Game_Frame,
-};
 
 //####################################################################################
 //##    IEditorRelay
@@ -41,27 +33,15 @@ public:
     virtual void        updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Properties> property_keys) = 0;
     virtual void        updateItemSelection(Editor_Widgets selected_from) = 0;
 
-    virtual QVariant    getOption(Options option_to_get) = 0;
-    virtual void        setOption(Options option_to_set, QVariant new_value) = 0;
-
     virtual void        centerViewOnPoint(QPointF center_point) = 0;
     virtual View_Mode   currentViewMode() = 0;
 
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) = 0;
     virtual void        setAdvisorInfo(QString header, QString body) = 0;
-    virtual void        setLabelText(Label_Names label, QString text) = 0;
 
 };
 
 
-
-// External functions, can be called Globally without a local IEditorRelay reference in calling class
-namespace Dr {
-
-    void SetActiveRelay(IEditorRelay *new_relay);
-    void SetLabelText(Label_Names label, QString text);
-
-}
 
 
 

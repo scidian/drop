@@ -22,6 +22,7 @@
 
 #include "form_main.h"
 
+#include "globals.h"
 #include "library.h"
 
 #include "project.h"
@@ -51,11 +52,11 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 
     current_form_main_mode = Form_Main_Mode::World_Editor;
 
-    setOption(Options::World_Editor_Current_World, 0);
-    setOption(Options::World_Editor_Lock_Backgrounds, false);
-    setOption(Options::World_Editor_Show_Collision_Shapes, false);
-    setOption(Options::World_Editor_Show_Connections, false);
-    setOption(Options::World_Editor_Show_Game_Frame, false);
+    Dr::SetOption(Options::World_Editor_Current_World, 0);
+    Dr::SetOption(Options::World_Editor_Lock_Backgrounds, false);
+    Dr::SetOption(Options::World_Editor_Show_Collision_Shapes, false);
+    Dr::SetOption(Options::World_Editor_Show_Connections, false);
+    Dr::SetOption(Options::World_Editor_Show_Game_Frame, false);
 
 
     // ########## Initialize new project, initialize local variables
@@ -177,6 +178,39 @@ bool FormMain::eventFilter(QObject *obj, QEvent *event)
     return QObject::eventFilter(obj, event);
 }
 
+
+
+//####################################################################################
+//##        Sets the text of a label on FormMain, can be called globally from Dr::SetLabelText
+//####################################################################################
+void FormMain::setLabelText(Label_Names label_name, QString new_text)
+{
+    if (Dr::CheckDoneLoading() == false) return;
+
+    switch (label_name)
+    {
+    case Label_Names::Label_1:          label_1->setText(new_text);         break;
+    case Label_Names::Label_2:          label_2->setText(new_text);         break;
+    case Label_Names::Label_3:          label_3->setText(new_text);         break;
+    case Label_Names::Label_Mouse_1:    label_mouse_1->setText(new_text);   break;
+    case Label_Names::Label_Mouse_2:    label_mouse_2->setText(new_text);   break;
+
+    case Label_Names::Label_Object_1:   label_object_1->setText(new_text);  break;
+    case Label_Names::Label_Object_2:   label_object_2->setText(new_text);  break;
+    case Label_Names::Label_Object_3:   label_object_3->setText(new_text);  break;
+    case Label_Names::Label_Object_4:   label_object_4->setText(new_text);  break;
+    case Label_Names::Label_Object_5:   label_object_5->setText(new_text);  break;
+
+    case Label_Names::Label_Position:   label_position->setText(new_text);  break;
+    case Label_Names::Label_Center:     label_center->setText(new_text);    break;
+    case Label_Names::Label_Scale:      label_scale->setText(new_text);     break;
+    case Label_Names::Label_Rotate:     label_rotate->setText(new_text);    break;
+    case Label_Names::Label_Z_Order:    label_z_order->setText(new_text);   break;
+    case Label_Names::Label_Pos_Flag:   label_pos_flag->setText(new_text);  break;
+
+    case Label_Names::Label_Bottom:     label_bottom->setText(new_text);    break;
+    }
+}
 
 
 

@@ -17,28 +17,6 @@ IEditorRelay::~IEditorRelay() { }
 
 
 
-//####################################################################################
-//##        These functions can be used globally without passing around an interface pointer
-//##
-//##        - Just need to #include "interface_relay.h"
-//##        - When program starts, FormMain is set as active 'IEditorRelay' class
-//##        - Make calls like: "Dr::SetLabelText"
-//##
-//####################################################################################
-
-namespace Dr {
-
-    // Local variable used to store an active IEditorRelay class instance
-    static IEditorRelay *g_active_window;
-
-
-    void SetActiveRelay(IEditorRelay *new_relay)        { g_active_window = new_relay; }
-    void SetLabelText(Label_Names label, QString text)  { if (g_active_window) g_active_window->setLabelText(label, text); }
-
-}
-
-
-
 
 
 
