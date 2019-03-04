@@ -128,6 +128,10 @@ QRectF DrView::rectAtCenterPoint(QPoint center, double rect_size)
 void DrView::paintGrid(QPainter &painter)
 {
     double point_size = 4;
+    if (m_zoom_scale <= .50) point_size = 3;
+    if (m_zoom_scale >= 2.0) point_size = 6;
+    if (m_zoom_scale >= 4.0) point_size = 8;
+    if (m_zoom_scale >= 8.0) point_size = 12;
     QPen dot_pen =  QPen( Dr::GetColor(Window_Colors::Background_Dark), point_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
     QPen line_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 1);
     line_pen.setCosmetic(true);
@@ -157,6 +161,9 @@ void DrView::paintGrid(QPainter &painter)
             }
             grid_painter->drawLines( view_lines );
 
+            ///painter.setPen(line_pen);
+            ///painter.drawLines( m_grid_lines );
+
         // ***** Grid Dots
         } else {
             grid_painter->setPen(dot_pen);
@@ -181,6 +188,7 @@ void DrView::paintGrid(QPainter &painter)
     painter.drawPixmap(target_rect, m_grid_buffer, QRectF(m_grid_buffer.rect()) );
 
     // Draws an outline around grid
+    painter.setBrush(Qt::NoBrush);
     painter.setPen(line_pen);
     painter.drawRect(m_grid_view_rect);
 

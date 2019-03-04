@@ -164,12 +164,12 @@ void DrView::recalculateGrid()
 
     // Align new desired center to grid
     QPointF rounded_center = remove_angle.map ( QPointF(diff.x(), diff.y()) );
-    rounded_center.setX( round((rounded_center.x() - m_grid_origin.x()) / grid_x) * grid_x + m_grid_origin.x());
-    rounded_center.setY( round((rounded_center.y() - m_grid_origin.y()) / grid_y) * grid_y + m_grid_origin.y());
+    rounded_center.setX( round((rounded_center.x()) / grid_x) * grid_x );
+    rounded_center.setY( round((rounded_center.y()) / grid_y) * grid_y );
     rounded_center = add_angle.map ( rounded_center );
-
-    // Create transform to move center lines within the bounding box, move the lines
     QTransform slide = QTransform().translate( -rounded_center.x(), -rounded_center.y() );
+
+    // Apply the rotation and translation transforms to the new lines
     for (auto &line: new_lines) {
         line = add_angle.map( line );
         line = slide.map( line );
