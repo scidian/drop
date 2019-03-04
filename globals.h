@@ -29,6 +29,8 @@ enum class Options
 // External functions, can be called Globally without a local IEditorRelay reference in calling class
 namespace Dr {
 
+    void        LoadPreferences();
+
     QVariant    GetOption(Options option_to_get);
     void        SetOption(Options option_to_set, QVariant new_value);
 

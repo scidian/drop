@@ -63,10 +63,12 @@ int main(int argc, char *argv[])
     // ***** Initiliaze application
     QApplication app_drop(argc, argv);              // Declare application
 
-    // Load some global data
-    Dr::InitializeFlags();
-    Dr::LoadPalettes();
+    // ***** Load some global data
+    Dr::InitializeFlags();                          // Sets debug flags
+    Dr::LoadPalettes();                             // Loads color data into global vector
+    Dr::LoadPreferences();                          // Loads user preferences
 
+    // ***** Create main form
     FormMain form_main(nullptr);                    // Declare / Load FormMain, pass Globals helper
     Dr::SetActiveFormMain(&form_main);              // Set main form to active FormMain
     Dr::SetActiveEditorRelay(&form_main);           // Set main form to active EditorRelay

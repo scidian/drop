@@ -33,10 +33,24 @@ namespace Dr {
     QVariant    GetOption(Options option_to_get)   { return options[option_to_get]; }
     void        SetOption(Options option_to_set, QVariant new_value) { options[option_to_set] = new_value; }
 
-
     void        SetActiveEditorRelay(IEditorRelay *new_editor_relay)   { g_active_editor = new_editor_relay; }
     void        SetActiveFormMain(FormMain *new_form_main)             { g_active_form_main = new_form_main; }
     void        SetLabelText(Label_Names label, QString text)          { if (g_active_form_main) g_active_form_main->setLabelText(label, text); }
+
+
+    // ########## Load saved preferences
+    void LoadPreferences() {
+        Dr::SetColorScheme(Color_Scheme::Dark);
+
+        Dr::SetOption(Options::Form_Main_Mode, static_cast<int>(Form_Main_Mode::World_Editor));
+
+        Dr::SetOption(Options::World_Editor_Current_World, 0);
+        Dr::SetOption(Options::World_Editor_Lock_Backgrounds, false);
+        Dr::SetOption(Options::World_Editor_Show_Collision_Shapes, false);
+        Dr::SetOption(Options::World_Editor_Show_Connections, false);
+        Dr::SetOption(Options::World_Editor_Show_Game_Frame, false);
+    }
+
 
 }
 

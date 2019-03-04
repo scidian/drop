@@ -47,18 +47,6 @@ FormMain::~FormMain()
 FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 {
 
-    // ########## Load saved preferences
-    Dr::SetColorScheme(Color_Scheme::Dark);
-
-    Dr::SetOption(Options::Form_Main_Mode, static_cast<int>(Form_Main_Mode::World_Editor));
-
-    Dr::SetOption(Options::World_Editor_Current_World, 0);
-    Dr::SetOption(Options::World_Editor_Lock_Backgrounds, false);
-    Dr::SetOption(Options::World_Editor_Show_Collision_Shapes, false);
-    Dr::SetOption(Options::World_Editor_Show_Connections, false);
-    Dr::SetOption(Options::World_Editor_Show_Game_Frame, false);
-
-
     // ########## Initialize new project, initialize local variables
     project = new DrProject(1);
 
