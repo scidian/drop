@@ -126,7 +126,8 @@ void FormMain::setAdvisorInfo(HeaderBodyList header_body_list) {
 // Call to put in a signal to change the Advisor to the que
 void FormMain::setAdvisorInfo(QString header, QString body)
 {
-    if (current_form_main_mode != Form_Main_Mode::World_Editor) return;
+    Form_Main_Mode mode = static_cast<Form_Main_Mode>(Dr::GetOption(Options::Form_Main_Mode).toInt());
+    if (mode != Form_Main_Mode::World_Editor) return;
     if (advisor == nullptr) return;
     if (advisor->isHidden()) return;                                        // If Advisor dock was closed, cancel
     if (treeAdvisor == nullptr) return;

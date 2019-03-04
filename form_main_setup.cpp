@@ -22,6 +22,7 @@
 
 #include "form_main.h"
 
+#include "globals.h"
 #include "library.h"
 
 #include "project_world_stage.h"
@@ -35,8 +36,9 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
 {
     QString widget_list;
 
-    current_form_main_mode = new_layout;
-    switch (current_form_main_mode)
+
+    Dr::SetOption(Options::Form_Main_Mode, static_cast<int>(new_layout));
+    switch (new_layout)
     {
     case Form_Main_Mode::World_Editor:
         buildWindowModeEditStage();

@@ -16,6 +16,8 @@ class IEditorRelay;
 
 enum class Options
 {
+    Form_Main_Mode,
+
     World_Editor_Current_World,
     World_Editor_Lock_Backgrounds,
     World_Editor_Show_Collision_Shapes,

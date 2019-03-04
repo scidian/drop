@@ -50,7 +50,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     // ########## Load saved preferences
     Dr::SetColorScheme(Color_Scheme::Dark);
 
-    current_form_main_mode = Form_Main_Mode::World_Editor;
+    Dr::SetOption(Options::Form_Main_Mode, static_cast<int>(Form_Main_Mode::World_Editor));
 
     Dr::SetOption(Options::World_Editor_Current_World, 0);
     Dr::SetOption(Options::World_Editor_Lock_Backgrounds, false);
@@ -113,7 +113,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     // ########## Initialize form and customize colors and styles
     scene = new DrScene(this, project, this);
     buildMenu();
-    buildWindow(current_form_main_mode);
+    buildWindow( static_cast<Form_Main_Mode>(Dr::GetOption(Options::Form_Main_Mode).toInt()) );
     Dr::ApplyColoring(this);
 
 
@@ -159,17 +159,19 @@ bool FormMain::eventFilter(QObject *obj, QEvent *event)
 
 
     // ********** Catch space bar for view to make sure we can drag even if view didnt have focus
+    Form_Main_Mode mode = static_cast<Form_Main_Mode>(Dr::GetOption(Options::Form_Main_Mode).toInt());
+
     if (event->type() == QEvent::KeyPress)
     {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        if (keyEvent->key() == Qt::Key::Key_Space && current_form_main_mode == Form_Main_Mode::World_Editor)
+        if (keyEvent->key() == Qt::Key::Key_Space && mode == Form_Main_Mode::World_Editor)
             if (viewMain->hasFocus() == false)
                 viewMain->spaceBarDown();
     }
     if (event->type() == QEvent::KeyRelease)
     {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        if (keyEvent->key() == Qt::Key::Key_Space && current_form_main_mode == Form_Main_Mode::World_Editor)
+        if (keyEvent->key() == Qt::Key::Key_Space && mode == Form_Main_Mode::World_Editor)
             if (viewMain->hasFocus() == false)
                 viewMain->spaceBarUp();
     }

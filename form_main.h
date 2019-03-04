@@ -57,9 +57,6 @@ class FormMain : public QMainWindow, public IEditorRelay
     Q_OBJECT
 
 public:
-    // Public Locals
-    Form_Main_Mode  current_form_main_mode;                             // Holds current editing mode of FormMain
-
     DrProject      *project;                                            // Holds whatever the current open game project is
 
 
