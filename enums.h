@@ -17,6 +17,19 @@ enum class Properties;
 enum class Position_Flags;
 
 
+
+//####################################################################################
+//##    Types of modes for Form Main
+//####################################################################################
+enum class Form_Main_Mode {
+    World_Editor,
+    UI_Editor,
+    World_Map,
+    Stage_Map,
+    Clear,
+};
+
+
 //####################################################################################
 //##    Different widgets in an editor window, used for cross updating widgets
 //####################################################################################
@@ -29,15 +42,18 @@ enum class Editor_Widgets {
 
 
 //####################################################################################
-//##    Types of modes for Form Main
+//##    Interactive mouse modes
 //####################################################################################
-enum class Form_Main_Mode {
-    World_Editor,
-    UI_Editor,
-    World_Map,
-    Stage_Map,
-    Clear,
+enum class View_Mode {
+    None,
+    Selecting,          // Rubber band selection
+    Resizing,           // Changing items size
+    Rotating,           // Rotating items
+    Translating,        // Moving item(s) around
+    Dragging,           // Moving scene with space bar
+    Zooming,            // Zooming in / out of view
 };
+
 
 // Form Main enum for referencing debug labels
 enum class Label_Names
@@ -96,7 +112,7 @@ enum class DrObjectType {
 //##    Custom Qt::UserRole 's for storing data in QWidgets using setData
 //####################################################################################
 typedef enum {
-    Key = Qt::UserRole,
+    Key = Qt::UserRole,                             // Stores Object Key in User Data of widget / graphicsitem
 
     Scale,      Pre_Resize_Scale,
     Rotation,   Pre_Rotate_Rotation,
@@ -105,7 +121,6 @@ typedef enum {
 
     Name,
     Type,
-
 } User_Roles;
 
 
@@ -113,10 +128,13 @@ typedef enum {
 //##    Custom QStrings for storing data in QWidgets using setProperty
 //####################################################################################
 namespace User_Property {
-    const char Key[7] = "dr_key";
-    const char Order[9] = "dr_order";       // Used for properties with mulitple values (like Size has X and Y), the index of the single property we want (0, 1, 2, etc)
-    const char Header[10] = "dr_header";
-    const char Body[8] = "dr_body";
+    const char Key[7] = "dr_key";                   // Stores Object Key in User Property of widget
+    const char Order[9] = "dr_order";               // Used for properties with mulitple values (like Size has X and Y),
+                                                    //      the index of the single property we want (0, 1, 2, etc)
+    const char Header[10] = "dr_header";            // Used for Advisor Text
+    const char Body[8] = "dr_body";                 // Used for Advisor Text
+    const char Mouse_Over[14] = "dr_mouse_over";    // Set to true by WidgetHoverHandler when mouse is over widget
+    const char Mouse_Pos[13] = "dr_mouse_pos";      // Set to mouse position (QPoint) by WidgetHoverHandler when mouse is moving over widget
 }
 
 
@@ -147,9 +165,13 @@ enum class Property_Type {
     Angle,                  // double       floating point for showing degrees
     String,                 // QString
 
-    Point,                  // QPoint       Integer pair x and y
+    PositionF,              // QPointF      Floating pair x and y, used for object positions in scene
+                            //                  Y is shown flipped (i.e. * -1), Box2D and Monogame use different coordinate system than Qt
+                            //                  Y flipped in: createDoubleSpinBoxPair(), updateSettingsFromNewValue(),
+                            //                                updateInspectorPropertyBoxes(), updateToolTipData()
     PointF,                 // QPointF      Floating pair x and y
     SizeF,                  // QPointF      Floating pair w and h
+    GridF,                  // QPointF      Floating pair x and y, minimum value of c_minimum_grid_size for both
     Scale,                  // QPointF      Floating pair, has smaller step in spin box
     Variable,               // QPointF      floating point pair, number followed by a +/- number
 
@@ -159,7 +181,6 @@ enum class Property_Type {
     Polygon,                // QPolygon     For Collision Shapes
     Vector3D,
     List,
-    List2,
 };
 
 
@@ -224,6 +245,8 @@ enum class Properties
     Stage_Grid_Origin_Point,        //pointf
     Stage_Grid_Size,                //sizef
     Stage_Grid_Rotation,            //angle
+    Stage_Grid_Should_Snap,         //bool
+    Stage_Grid_Show_On_Top,         //bool
 
     // ********************
 
@@ -232,7 +255,6 @@ enum class Properties
     Object_Physics,                 //bool
     Object_Collide,                 //bool
     Object_Damage,                  //list
-    Object_Test,                    //list2
 
     // Transform
     Object_Position,                //pointf

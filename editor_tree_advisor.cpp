@@ -11,7 +11,7 @@
 
 #include "editor_tree_advisor.h"
 
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 
 #include "project.h"
 #include "project_world.h"
@@ -67,7 +67,7 @@ void TreeAdvisor::changeAdvisor(QString header, QString body)
 //####################################################################################
 void TreeAdvisor::enterEvent(QEvent *event)
 {
-    m_relay->setAdvisorInfo(Advisor_Info::Advisor_Window);
+    m_editor_relay->setAdvisorInfo(Advisor_Info::Advisor_Window);
     QTreeWidget::enterEvent(event);
 }
 

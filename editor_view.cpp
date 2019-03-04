@@ -5,7 +5,7 @@
 //      Graphics View Definitions
 //
 //
-#include "QKeyEvent"
+#include <QtMath>
 
 #include "colors.h"
 #include "debug.h"
@@ -13,7 +13,7 @@
 #include "editor_item.h"
 #include "editor_view.h"
 #include "editor_scene.h"
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 #include "library.h"
 
 #include "project.h"
@@ -28,8 +28,8 @@
 //####################################################################################
 //##        Constructor & destructor
 //####################################################################################
-DrView::DrView(QWidget *parent, DrProject *project, DrScene *from_scene, InterfaceRelay *relay) :
-               QGraphicsView(parent = nullptr), m_project(project), m_relay(relay)
+DrView::DrView(QWidget *parent, DrProject *project, DrScene *from_scene, IEditorRelay *editor_relay) :
+               QGraphicsView(parent = nullptr), m_project(project), m_editor_relay(editor_relay)
 {
     // Initialize rubber band object used as a selection box
     m_rubber_band = new DrViewRubberBand(QRubberBand::Shape::Rectangle, this);
@@ -49,10 +49,12 @@ DrView::DrView(QWidget *parent, DrProject *project, DrScene *from_scene, Interfa
 
     // ********** Connect signals to scene
     connect(my_scene, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
+    connect(my_scene, SIGNAL(sceneRectChanged(QRectF)), this, SLOT(sceneRectChanged(QRectF)));
     connect(my_scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
 
-    connect(my_scene, &DrScene::updateGrid,  this, [this]() { updateGrid(); });
-    connect(my_scene, &DrScene::updateViews, this, [this]() { update(); });
+    connect(my_scene, &DrScene::updateGrid,    this, [this]() { updateGrid(); });
+    connect(my_scene, &DrScene::updateViews,   this, [this]() { update(); });
+    connect(my_scene, &DrScene::clearViewRect, this, [this](QRectF new_rect) { clearViewSceneRect(new_rect); });
 
     connect(this,   SIGNAL(selectionGroupMoved(DrScene*, QPointF)),
             my_scene, SLOT(selectionGroupMoved(DrScene*, QPointF)));
@@ -67,9 +69,12 @@ DrView::~DrView()
 {
     // ********** Disconnect signals from scene
     disconnect(my_scene, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
+    disconnect(my_scene, SIGNAL(sceneRectChanged(QRectF)), this, SLOT(sceneRectChanged(QRectF)));
     disconnect(my_scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
 
-    disconnect(my_scene, &DrScene::updateViews, this, nullptr);
+    disconnect(my_scene, &DrScene::updateGrid,    this, nullptr);
+    disconnect(my_scene, &DrScene::updateViews,   this, nullptr);
+    disconnect(my_scene, &DrScene::clearViewRect, this, nullptr);
 
     disconnect(this,   SIGNAL(selectionGroupMoved(DrScene*, QPointF)),
                my_scene, SLOT(selectionGroupMoved(DrScene*, QPointF)));
@@ -77,58 +82,10 @@ DrView::~DrView()
     disconnect(this,   SIGNAL(selectionGroupNewGroup(DrScene*, QList<DrObject*>, QList<DrObject*>)),
                my_scene, SLOT(selectionGroupNewGroup(DrScene*, QList<DrObject*>, QList<DrObject*>)) );
 
+    delete m_rubber_band;
     delete m_tool_tip;
 }
 
-
-
-
-//####################################################################################
-//##        Key Events
-//####################################################################################
-// Key press event
-void DrView::keyPressEvent(QKeyEvent *event)
-{
-    // When space bar is down, enabled mouse press and move to translate viewable area
-    if (event->key() == Qt::Key::Key_Space) {   m_flag_key_down_spacebar = true;
-        setDragMode(QGraphicsView::DragMode::ScrollHandDrag);
-        setInteractive(false);
-    }
-
-    // Store when control / alt are down
-    if (event->key() == Qt::Key::Key_Control) { m_flag_key_down_control = true; }
-    if (event->key() == Qt::Key::Key_Alt) {     m_flag_key_down_alt = true; }
-    if (event->key() == Qt::Key::Key_Shift) {   m_flag_key_down_shift = true; }
-
-    QGraphicsView::keyPressEvent(event);
-
-    // Fire mouse move event to update mouse cursor on key presses
-    QMouseEvent *fire_mouse_move = new QMouseEvent(QEvent::MouseMove, m_last_mouse_pos, Qt::NoButton,
-                                                   Qt::MouseButtons(), Qt::KeyboardModifiers());
-    mouseMoveEvent(fire_mouse_move);
-}
-
-// Key release event
-void DrView::keyReleaseEvent(QKeyEvent *event)
-{
-    // When space bar is released, change mode back to select / move items
-    if (event->key() == Qt::Key::Key_Space) {   m_flag_key_down_spacebar = false;
-        setDragMode(QGraphicsView::DragMode::NoDrag);
-        setInteractive(true);
-    }
-
-    // Store when control / alt are released
-    if (event->key() == Qt::Key::Key_Control) { m_flag_key_down_control = false; }
-    if (event->key() == Qt::Key::Key_Alt) {     m_flag_key_down_alt = false; }
-    if (event->key() == Qt::Key::Key_Shift) {   m_flag_key_down_shift = false; }
-
-    QGraphicsView::keyReleaseEvent(event);
-
-    // Fire mouse move event to update mouse cursor on key release
-    QMouseEvent *fire_mouse_move = new QMouseEvent(QEvent::MouseMove, m_last_mouse_pos, Qt::NoButton,
-                                                   Qt::MouseButtons(), Qt::KeyboardModifiers());
-    mouseMoveEvent(fire_mouse_move);
-}
 
 
 
@@ -136,48 +93,51 @@ void DrView::keyReleaseEvent(QKeyEvent *event)
 //####################################################################################
 //##        Scene Change SLOTs / Events to update selection box when scene / selection changes
 //####################################################################################
-// Connected from scene().changed
-void DrView::sceneChanged(QList<QRectF>)
+// SLOT: Connected from scene().sceneRectChanged
+void DrView::sceneRectChanged(QRectF new_rect)
 {
-    if (m_view_mode == View_Mode::None) {
-        double left_adjust =  -4000;
-        double right_adjust =  4000;
-        double top_adjust =   -4000;
-        double bottom_adjust = 4000;
-        this->setSceneRect( scene()->sceneRect().adjusted(left_adjust, top_adjust, right_adjust, bottom_adjust) );
-    }
+    double adjust = 4000;
+    QRectF adjusted_rect = new_rect.adjusted(-adjust, -adjust, adjust, adjust);
+    this->setSceneRect( adjusted_rect );
+
+    //Dr::SetLabelText(Label_Names::Label_2,
+    //                 "VRect X: " + QString::number(round(adjusted_rect.x())) +     ", Y: " + QString::number(round(adjusted_rect.y())) +
+    //                     ", W: " + QString::number(round(adjusted_rect.width())) + ", H: " + QString::number(round(adjusted_rect.height())));
 
     updateSelectionBoundingBox(1);
-    ///update();             // Don't use here!!!!! Calls paint recursively
+    updateGrid();
+    /// Don't use update() here!!!!! Calls paint recursively?
 }
+void DrView::clearViewSceneRect(QRectF new_rect) { this->setSceneRect(new_rect); }
 
-// Connected from scene().selectionChanged
+// SLOT: Connected from scene().changed
+void DrView::sceneChanged(QList<QRectF>)
+{
+    updateSelectionBoundingBox(7);
+    /// Don't use update() here!!!!! Calls paint recursively?
+}
+// SLOT: Connected from scene().selectionChanged
 void DrView::selectionChanged()
 {
     updateSelectionBoundingBox(2);
-    ///update();             // Don't use here!!!!! Calls paint recursively
+    /// Don't use update() here!!!!! Calls paint recursively
 }
-
+// EVENT: Called when viewport is dragged or scrollbars are used
 void DrView::scrollContentsBy(int dx, int dy)
 {
     QGraphicsView::scrollContentsBy(dx, dy);
     updateSelectionBoundingBox(3);
+    updateGrid();                       // Updates grid when view is dragged or zoomed, also called from zoom
+                                        // function (zoomInOut()) in case there are no scrollbars due to zoomed too far out
     update();
 }
 
 
-void DrView::updateGrid()
-{
-    if (!scene()) return;
-    if (!my_scene->getCurrentStageShown()) return;
 
-    m_grid_origin =  my_scene->getCurrentStageShown()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point).toPointF();
-    m_grid_size =    my_scene->getCurrentStageShown()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
-    m_grid_rotate =  my_scene->getCurrentStageShown()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Rotation).toDouble();
-    int style =      my_scene->getCurrentStageShown()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Style).toInt();
-    m_grid_style =   static_cast<Grid_Style>(style);
-}
-
+//####################################################################################
+//##        Recalculates corner and sides handles,
+//##        Usually called after View or Item changes
+//####################################################################################
 void DrView::updateSelectionBoundingBox(int called_from)
 {
     // Test for scene, convert to our custom class and lock the scene

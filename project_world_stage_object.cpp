@@ -73,14 +73,12 @@ void DrObject::initializeObjectSettings(QString new_name, double width, double h
                            "Collide?", "Should this item collide with other items?");
     addPropertyToComponent(Components::Object_Settings, Properties::Object_Damage, Property_Type::List, 0,
                            "Damage", "What should this item damage when it collides with something else.");
-    ///addPropertyToComponent(Object_Components::settings, Object_Properties::test, Property_Type::List2, 0,
-    ///                       "Test List", "A test of a new widget");
 
 
     addComponent(Components::Object_Transform, "Transform", "Sets the physical size and angle of the item in the stage.", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Object_Transform)->setIcon(Component_Icons::Transform);
 
-    addPropertyToComponent(Components::Object_Transform, Properties::Object_Position, Property_Type::PointF, QPointF(x, y),
+    addPropertyToComponent(Components::Object_Transform, Properties::Object_Position, Property_Type::PositionF, QPointF(x, y),
                            "Position", "Location of item within the current stage.");
     addPropertyToComponent(Components::Object_Transform, Properties::Object_Rotation, Property_Type::Angle, 0,
                            "Rotation", "Angle of item within the stage.");

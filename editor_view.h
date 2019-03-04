@@ -19,7 +19,7 @@ class DrProject;
 class DrObject;
 class DrItem;
 class SelectionGroup;
-class InterfaceRelay;
+class IEditorRelay;
 class DrScene;
 class DrSettings;
 class DrViewRubberBand;
@@ -29,17 +29,6 @@ class DrViewToolTip;
 //####################################################################################
 //##    Local Enumerations
 //############################
-// Interactive mouse modes
-enum class View_Mode {
-    None,
-    Selecting,          // Rubber band selection
-    Resizing,           // Changing items size
-    Rotating,           // Rotating items
-    Translating,        // Moving item(s) around
-    Dragging,           // Moving scene with space bar
-    Zooming,            // Zooming in / out of view
-};
-
 enum class Handle_Shapes {
     Circles,
     Squares,
@@ -72,7 +61,7 @@ class DrView : public QGraphicsView
 private:
     // Local, instance specific member variables
     DrProject              *m_project;                              // Pointer to currently loaded project
-    InterfaceRelay         *m_relay;                                // Pointer to InterfaceRelay class of parent form
+    IEditorRelay           *m_editor_relay;                         // Pointer to IEditorRelay class of parent form
     View_Mode               m_view_mode = View_Mode::None;          // Tracks current view interaction mode
 
     DrScene                *my_scene;                               // Holds the scene() this view is set to as a DrScene class
@@ -83,16 +72,23 @@ private:
 
     // Display Variables
     int          m_zoom = 250;                                      // Zoom level of current view
-    double       m_zoom_scale = 1;                                  // Updated in applyUpdatedMatrix for use during painting grid, DO NOT SET MANUALLY
+    double       m_zoom_scale = 1;                                  // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
     QTime        m_zoom_timer;                                      // Used to auto hide zoom tool tip after time has passed
     int          m_rotate = 0;                              // NOT IMPLEMENTED: Rotation of current view
 
     // Grid variables
-    Grid_Style   m_grid_style = Grid_Style::Lines;                  // Grid type to display
+    QVector<QPointF> m_grid_points;                                 // Holds latest calculated grid points
+    QVector<QLineF>  m_grid_lines;                                  // Holds latest calculated grid lines
+    QPixmap          m_grid_buffer;                                 // Back buffer for painting, grid lines are drawn onto this when view changes and then
+                                                                    //      this gets painted instead of drawLine calls every time paintEvent is called
+    QRectF           m_grid_view_rect;                              // Holds the desired area we wish to draw lines or dots
+    bool             m_grid_needs_redraw = true;                    // Flag used to mark grid for redrawing during next paintEvent
+    Grid_Style   m_grid_style { Grid_Style::Lines };                // Grid type to display
     QPointF      m_grid_origin { 0, 0 };                            // Origin point of grid in scene
     QPointF      m_grid_size { 50, 50 };                            // Grid size
     double       m_grid_rotate = 0;                                 // Rotation of grid lines
-
+    bool         m_grid_should_snap = true;                         // Should snap to grid?
+    bool         m_grid_show_on_top = false;                        // Paint grid on top?
 
     // Keyboard flags
     bool         m_flag_key_down_spacebar = false;                  // True when View has focus and spacebar      is down
@@ -105,15 +101,12 @@ private:
     QPointF                             m_origin_in_scene;          // Stores mouse down position in scene coordinates
     QGraphicsItem                      *m_origin_item;              // Stores top item under mouse (if any) on mouse down event
 
-
     // Tool Tip Variables
-    DrViewToolTip                  *m_tool_tip;                     // Holds our view's custom Tool Tip box
-
+    DrViewToolTip                      *m_tool_tip;                 // Holds our view's custom Tool Tip box
 
     // View_Mode::Translating Variables
     QTime                               m_origin_timer;             // Tracks time since mouse down to help buffer movement while selecting
     bool                                m_allow_movement = false;   // Used along with m_origin_timer to help buffer movement while selecting
-    bool                                m_shown_a_scene = false;    // False until a scene is loaded for the first time
     bool                                m_hide_bounding = false;    // True when moving items to stop bounding box from updating and painting
 
     // Selection Bounding Box Variables
@@ -155,16 +148,15 @@ private:
 
 public:
     // Constructor
-    explicit DrView(QWidget *parent, DrProject *project, DrScene *from_scene, InterfaceRelay *relay);
+    explicit DrView(QWidget *parent, DrProject *project, DrScene *from_scene, IEditorRelay *editor_relay);
     virtual ~DrView() override;
 
     // Event Overrides, start at Qt Docs for QGraphicsView Class to find more
     virtual void    drawBackground(QPainter *painter, const QRectF &rect) override;
+    virtual void    drawForeground(QPainter *painter, const QRectF &rect) override;
     virtual void    paintEvent(QPaintEvent *event) override;                                // Inherited from QWidget
 
-    virtual bool    eventFilter(QObject *obj, QEvent *event) override;                      // Inherited from QObject
     virtual void    scrollContentsBy(int dx, int dy) override;                              // Inherited from QAbstractScrollArea
-
     virtual void    keyPressEvent(QKeyEvent *event) override;                               // Inherited from QWidget
     virtual void    keyReleaseEvent(QKeyEvent *event) override;                             // Inherited from QWidget
     virtual void    mouseDoubleClickEvent(QMouseEvent *event) override;                     // Inherited from QWidget
@@ -176,10 +168,7 @@ public:
 #endif
 
     // View Display Functions
-    void            applyUpdatedMatrix();
-    bool            hasLoadedFirstScene() { return m_shown_a_scene; }
-    void            loadedFirstScene() { m_shown_a_scene = true; }
-    void            updateGrid();
+    void            clearViewSceneRect(QRectF new_rect);
     void            zoomInOut(int level);
 
     // Misc Functions
@@ -189,12 +178,17 @@ public:
     QRectF          rectAtCenterPoint(QPoint center, double rect_size);
     void            updateSelectionBoundingBox(int called_from = 0);
 
+    // Grid Functions
+    void            recalculateGrid();
+    void            updateGrid();
+
     // Paint Functions
     void            paintBoundingBox(QPainter &painter);
     void            paintGrid(QPainter &painter);
     void            paintGroupAngle(QPainter &painter, double angle);
     void            paintHandles(QPainter &painter, Handle_Shapes shape_to_draw);
     void            paintItemOutlines(QPainter &painter);
+    void            paintItemCenters(QPainter &painter);
     void            paintToolTip(QPainter &painter);
 
     // Selection Functions
@@ -216,9 +210,13 @@ public:
 
     // Getters / Setters
     View_Mode       currentViewMode() { return m_view_mode; }
+    void            spaceBarDown();
+    void            spaceBarUp();
+
 
 public slots:
-    void    sceneChanged(QList<QRectF> region);
+    void    sceneChanged(QList<QRectF>);
+    void    sceneRectChanged(QRectF new_rect);
     void    selectionChanged();
 
     void    checkTranslateToolTipStarted();

@@ -46,6 +46,7 @@ QString RemoveTrailingDecimals(double value, int max_decimal_places);
 
 
 // User Interaction
+QString CurrentTimeAsString();
 void    ShowErrorMessage(QString function_name, QString error_message);
 void    ShowMessageBox(QString new_message, QPixmap pixmap = QPixmap());
 

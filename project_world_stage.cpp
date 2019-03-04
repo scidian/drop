@@ -115,11 +115,14 @@ void DrStage::initializeStageSettings(QString new_name)
                            "Grid Style", "Visual style of alignment grid.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point, Property_Type::PointF, QPointF(0, 0),
                            "Grid Origin Point", "Origin point in stage the grid begins at.");
-    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Size, Property_Type::SizeF, QPointF(50, 50),
+    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Size, Property_Type::GridF, QPointF(50, 50),
                            "Grid Cell Size", "Width and height of the cells in the grid.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Rotation, Property_Type::Angle, 0,
                            "Grid Rotation", "Rotation of the grid lines.");
-
+    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Should_Snap, Property_Type::Bool, true,
+                           "Snap to Grid?", "Snaps objects to grid lines when moving objects around with the mouse.");
+    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Show_On_Top, Property_Type::Bool, false,
+                           "Grid on Top?", "Draws grid lines on top of objects in editor.");
 }
 
 

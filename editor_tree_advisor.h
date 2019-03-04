@@ -11,7 +11,7 @@
 #include <QTreeWidget>
 
 class DrProject;
-class InterfaceRelay;
+class IEditorRelay;
 
 
 //####################################################################################
@@ -23,16 +23,16 @@ class TreeAdvisor: public QTreeWidget
     Q_OBJECT
 
 private:
-    DrProject      *m_project;                  // Pointer to currently loaded project
-    InterfaceRelay *m_relay;                    // Pointer to InterfaceRelay class of parent form
+    DrProject      *m_project;                                      // Pointer to currently loaded project
+    IEditorRelay   *m_editor_relay;                                 // Pointer to IEditorRelay class of parent form
 
-    QString         advisor_header { "No Data" };                       // Keeps current Advisor Header
-    QMutex          advisor_mutex { QMutex::NonRecursive };             // Used to keep building function thread safe
+    QString         advisor_header { "No Data" };                   // Keeps current Advisor Header
+    QMutex          advisor_mutex { QMutex::NonRecursive };         // Used to keep building function thread safe
 
 public:
     // Constructor
-    explicit        TreeAdvisor(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
-                                QTreeWidget (parent), m_project(project), m_relay(relay) { }
+    explicit        TreeAdvisor(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
+                                QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay) { }
 
     // Event Overrides, start at Qt Docs for QTreeWidget Class to find more
     virtual void    enterEvent(QEvent *event) override;
@@ -47,3 +47,13 @@ private slots:
 
 
 #endif // EDITOR_TREE_ADVISOR_H
+
+
+
+
+
+
+
+
+
+

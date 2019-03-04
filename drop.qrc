@@ -29,10 +29,6 @@
         <file>cursors/rotate_all.png</file>
         <file>inspector_icons/comp_transform.png</file>
         <file>inspector_icons/comp_movement.png</file>
-        <file>inspector_icons/check_checked.png</file>
-        <file>inspector_icons/check_unchecked.png</file>
-        <file>inspector_icons/check_hover_checked.png</file>
-        <file>inspector_icons/check_hover_unchecked.png</file>
         <file>gui_misc/drop_arrow.png</file>
         <file>gui_misc/check.png</file>
         <file>assets/ground_fill.png</file>

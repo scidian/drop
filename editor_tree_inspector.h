@@ -21,8 +21,8 @@ class DrObject;
 class DrSettings;
 class DrProperty;
 
-class InterfaceRelay;
-class TripleSpinBox;
+class IEditorRelay;
+class DrTripleSpinBox;
 class WidgetHoverHandler;
 
 
@@ -33,15 +33,17 @@ enum class Spin_Type {
     Percent,                // Floating point between 0.0 and 100.0
     Angle,                  // Show degrees sign
     Point,                  // Has X and Y
+    Position,               // Has X and Y, Y is Flipped (i.e. -250 becomes 250)
     Size,                   // Has W and H
     Scale,                  // Used to have smaller increment / decrement
+    Grid,                   // Used for Grid, minimum value of 1 for x and y
 };
 
 
 // Class constants
 const int   c_inspector_size_left =  3;                 // Size policy width of left column
 const int   c_inspector_size_right = 5;                 // Size policy width of right column
-
+const int   c_minimum_grid_size =    5;                 // Minimum grid size
 
 //####################################################################################
 //##    TreeInspector
@@ -53,7 +55,7 @@ class TreeInspector: public QTreeWidget
 
 private:
     DrProject          *m_project;                      // Pointer to currently loaded project
-    InterfaceRelay     *m_relay;                        // Pointer to InterfaceRelay class of parent form
+    IEditorRelay       *m_editor_relay;                 // Pointer to IEditorRelay class of parent form
     WidgetHoverHandler *m_widget_hover;                 // Pointer to a widget hover handler
 
     QList<QWidget*>     m_widgets;                      // List of the widgets we built the last time we selected a new item
@@ -62,34 +64,32 @@ private:
     DrType              m_selected_type;                // Stores object type of currently selected item
 
 public:
-    explicit        TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay *relay);
+    explicit        TreeInspector(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
 
     // Function Calls
     void            buildInspectorFromKeys(QList<long> key_list);
-
     void            updateInspectorPropertyBoxes(QList<DrSettings*> changed_items, QList<long> property_keys_to_update);
-
     void            updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order = 0);
 
-
-    InterfaceRelay* getRelay() { return m_relay; }
+    // Getters and Setters
+    IEditorRelay*   getRelay()          { return m_editor_relay; }
+    long            getSelectedKey()    { return m_selected_key; }
 
     // Property Builders
-    void            applyHeaderBodyProperties(QWidget *widget, DrProperty *property);
-    void            applyHeaderBodyProperties(QWidget *widget, QString header, QString body);
-    void            addToWidgetList(QWidget *widget) { m_widgets.append(widget); }
-    QCheckBox*      createCheckBox(DrProperty *property, QFont &font);
-    QComboBox*      createComboBox(DrProperty *property, QFont &font);
-    QPushButton*    createComboBox2(DrProperty *property, QFont &font);
-    QDoubleSpinBox* createDoubleSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type);
-    QFrame*         createDoubleSpinBoxPair(DrProperty *property, QFont &font, Spin_Type spin_type);
-    QSpinBox*       createIntSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type);
-    QLineEdit*      createLineEdit(DrProperty *property, QFont &font);
-    QFrame*         createVariableSpinBoxPair(DrProperty *property, QFont &font);
-    TripleSpinBox*  initializeEmptySpinBox(DrProperty *property, QFont &font, double start_value);
+    void                attachToHoverHandler(QWidget *widget, DrProperty *property);
+    void                attachToHoverHandler(QWidget *widget, QString header, QString body);
+    void                addToWidgetList(QWidget *widget) { m_widgets.append(widget); }
+    QCheckBox*          createCheckBox(DrProperty *property, QFont &font);
+    QPushButton*        createListBox(DrProperty *property, QFont &font);
+    QDoubleSpinBox*     createDoubleSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type);
+    QFrame*             createDoubleSpinBoxPair(DrProperty *property, QFont &font, Spin_Type spin_type);
+    QSpinBox*           createIntSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type);
+    QLineEdit*          createLineEdit(DrProperty *property, QFont &font);
+    QFrame*             createVariableSpinBoxPair(DrProperty *property, QFont &font);
+    DrTripleSpinBox*    initializeEmptySpinBox(DrProperty *property, QFont &font, double start_value);
 
 private slots:
-    void            setAdvisorInfo(QString header, QString body);
+    void                setAdvisorInfo(QString header, QString body);
 
 };
 
@@ -99,13 +99,13 @@ private slots:
 //##    TripleSpinBox
 //##        Allows us to control number of decimals being shown in spin box
 //############################
-class TripleSpinBox : public QDoubleSpinBox
+class DrTripleSpinBox : public QDoubleSpinBox
 {
     Q_OBJECT
 
 public:
-    TripleSpinBox(QWidget *parent = nullptr) : QDoubleSpinBox(parent) {}
-    virtual ~TripleSpinBox() override {}
+    DrTripleSpinBox(QWidget *parent = nullptr) : QDoubleSpinBox(parent) {}
+    virtual ~DrTripleSpinBox() override {}
 
 protected:
     virtual QString textFromValue(double value) const override;
@@ -117,19 +117,36 @@ protected:
 //##    DropDownComboBox
 //##        Allows us to move combo listview underneath control to appear as a drop down list
 //############################
-class DropDownComboBox : public QComboBox
+class DrDropDownComboBox : public QComboBox
 {
     Q_OBJECT
 
 public:
-    DropDownComboBox(QWidget *parent = nullptr) : QComboBox(parent) {}
-    virtual ~DropDownComboBox() override {}
+    DrDropDownComboBox(QWidget *parent = nullptr) : QComboBox(parent) {}
+    virtual ~DrDropDownComboBox() override {}
 
 protected:
     virtual void showPopup() override;
 
 };
 
+
+//####################################################################################
+//##    CheckBox
+//##        Allows us to move combo listview underneath control to appear as a drop down list
+//############################
+class DrCheckBox : public QCheckBox
+{
+    Q_OBJECT
+
+public:
+    DrCheckBox(QWidget *parent = nullptr) : QCheckBox (parent) {}
+    virtual ~DrCheckBox() override {}
+
+protected:
+    virtual void paintEvent(QPaintEvent *) override;
+
+};
 
 
 

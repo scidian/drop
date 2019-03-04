@@ -8,6 +8,8 @@
 
 #include <cmath>
 
+#include <QTime>
+
 #include "colors.h"
 #include "library.h"
 
@@ -63,6 +65,14 @@ QString RemoveTrailingDecimals(double value, int max_decimal_places)
 
 
 //####################################################################################
+//##        Returns System time as string
+//####################################################################################
+QString CurrentTimeAsString()
+{
+    return QTime().currentTime().toString() + "." + QString::number(QTime().currentTime().msec());
+}
+
+//####################################################################################
 //##        Used to show a modal error message
 //####################################################################################
 void ShowErrorMessage(QString function_name, QString error_message)
@@ -87,6 +97,11 @@ void ShowMessageBox(QString new_message, QPixmap pixmap)
 
 
 }
+
+
+
+
+
 
 
 

@@ -17,7 +17,7 @@
 #include "editor_scene.h"
 #include "editor_view.h"
 
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 #include "library.h"
 
 #include "project.h"
@@ -30,27 +30,10 @@
 
 
 //####################################################################################
-//##        Event Filter, can monitor events being recieved
+//##        DrawBackground / DrawForground, called before and after paintEvent
 //####################################################################################
-bool DrView::eventFilter(QObject *obj, QEvent *event)
-{
-    //int t = event->type();
-    //   1 = Timer
-    //  11 = Leave            12 = Paint
-    //  13 = Move             14 = Resize
-    //  17 = Show             24 = Window Activate
-    //  74 = Polish Request   78 = Update Later
-    // 128 = Hover Leave     129 = Hover Move
-    //
-    //if (t != 1 && t != 11 && t != 12 && t != 13 && t != 14 && t != 17 && t != 24 && t != 74 && t != 78 && t != 128 && t != 129)
-    //    m_relay->setLabelText(Label_Names::Label_2, QString::number(event->type()));
-    return QGraphicsView::eventFilter(obj, event);
-}
-
-
 void DrView::drawBackground(QPainter *painter, const QRectF &rect)
 {
-    Q_UNUSED(painter);
     Q_UNUSED(rect);
 
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL)) {
@@ -62,7 +45,18 @@ void DrView::drawBackground(QPainter *painter, const QRectF &rect)
         f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
     }
 
-    paintGrid(*painter);
+    if (m_grid_show_on_top == false) {
+        paintGrid(*painter);
+    }
+}
+
+void DrView::drawForeground(QPainter *painter, const QRectF &rect)
+{
+    Q_UNUSED(rect);
+
+    if (m_grid_show_on_top == true) {
+        paintGrid(*painter);
+    }
 }
 
 
@@ -71,23 +65,17 @@ void DrView::drawBackground(QPainter *painter, const QRectF &rect)
 //####################################################################################
 void DrView::paintEvent(QPaintEvent *event)
 {
-    // ******************** Clears the sceen
-    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL)) {
-        //QPainter clear_painter(this->viewport());
-        //clear_painter.eraseRect(this->viewport()->rect());
-        //clear_painter.end();
-    }
-
     // ******************** Pass on event to parent class paint items into scene
     QGraphicsView::paintEvent(event);
-
 
     // ******************** At this point, if no selected items get out of here
     if (scene() == nullptr) return;
 
     // Store current center point of scene, so that if we go to a new scene and come back we stay in the same place
-    if (my_scene->getCurrentStageShown())
-        my_scene->getCurrentStageShown()->setViewCenterPoint( mapToScene( this->viewport()->rect().center() ) );
+    if (my_scene->getCurrentStageShown()) {
+        QRect view_rect = QRect(0, 0, this->width(), this->height());
+        my_scene->getCurrentStageShown()->setViewCenterPoint( mapToScene( view_rect.center() ) );
+    }
 
     // Initiate QPainter object
     QPainter painter(viewport());
@@ -104,6 +92,9 @@ void DrView::paintEvent(QPaintEvent *event)
 
         if (m_view_mode == View_Mode::Rotating)
             paintGroupAngle(painter, my_scene->getSelectionAngle());    // Draw angles if rotating
+
+        if (m_view_mode == View_Mode::Translating)
+            paintItemCenters(painter);
     }
 
     if (m_tool_tip->isHidden() == false && Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL))
@@ -111,8 +102,8 @@ void DrView::paintEvent(QPaintEvent *event)
 
     // !!!!! #DEBUG:    Draw frames per second
     if (Dr::CheckDebugFlag(Debug_Flags::Label_FPS)) {
-        m_relay->setLabelText(Label_Names::Label_3, "Draw Time: " + QString::number(m_debug_timer.elapsed()) +
-                                                        ", FPS: " + QString::number(m_debug_fps_last) );
+        Dr::SetLabelText(Label_Names::Label_3, "Draw Time: " + QString::number(m_debug_timer.elapsed()) +
+                                                   ", FPS: " + QString::number(m_debug_fps_last) );
         m_debug_fps++;
         if (m_debug_timer.elapsed() >= 1000) {
             m_debug_timer.restart();
@@ -136,74 +127,71 @@ QRectF DrView::rectAtCenterPoint(QPoint center, double rect_size)
 //####################################################################################
 void DrView::paintGrid(QPainter &painter)
 {
-    painter.setBrush(Qt::NoBrush);
+    double point_size = 4;
+    if (m_zoom_scale <= .50) point_size = 3;
+    if (m_zoom_scale >= 2.0) point_size = 6;
+    if (m_zoom_scale >= 4.0) point_size = 8;
+    if (m_zoom_scale >= 8.0) point_size = 12;
+    QPen dot_pen =  QPen( Dr::GetColor(Window_Colors::Background_Dark), point_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
+    QPen line_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 1);
+    line_pen.setCosmetic(true);
 
-    // Map viewport to scene rect
-    QPointF topLeft = mapToScene(0, 0);
-    QPointF bottomRight = mapToScene(this->width(), this->height());
-    QRectF  scene_rect(topLeft, bottomRight);
+    if (m_grid_needs_redraw) {
 
-    double grid_x = m_grid_size.x();
-    double grid_y = m_grid_size.y();
+        QPointF top_left =  mapFromScene( m_grid_view_rect.topLeft() );
+        QPointF bot_right = mapFromScene( m_grid_view_rect.bottomRight() );
+        QTransform offset = QTransform().translate(-top_left.x(), -top_left.y());
 
-    double origin_x = m_grid_origin.x();
-    double origin_y = m_grid_origin.y();
+        QRect grid_view = QRectF(top_left, bot_right).normalized().toRect();
+        m_grid_buffer = QPixmap(grid_view.width(), grid_view.height());
+        m_grid_buffer.fill(QColor(0, 0, 0, 0));
 
-    // Bounds check
-    if (grid_x < 1) grid_x = 1;
-    if (grid_y < 1) grid_y = 1;
+        QPainter *grid_painter = new QPainter(&m_grid_buffer);
+        grid_painter->setBrush(Qt::NoBrush);
 
-    // ********** Draw Grid Lines
-    if (m_grid_style == Grid_Style::Lines) {
-        QPen cosmetic_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 0 );
-        cosmetic_pen.setCosmetic(true);
-        painter.setPen(cosmetic_pen);
-        QVector<QLineF> lines;
+        // ***** Grid Lines
+        if (m_grid_style == Grid_Style::Lines) {
+            grid_painter->setPen(line_pen);
 
-        // Vertical lines right of scene zero, followed by Vertical lines left of scene zero
-        for (double x = origin_x; x <= scene_rect.right(); x += grid_x)
-            lines.append(QLineF(x, topLeft.y(), x, bottomRight.y()) );
+            QVector<QLineF> view_lines;
+            for (auto &line : m_grid_lines) {
+                QLineF new_line = QLineF( mapFromScene( line.p1() ) , mapFromScene( line.p2() ) );
+                new_line = offset.map (new_line );
+                view_lines.append( new_line );
+            }
+            grid_painter->drawLines( view_lines );
 
-        for (double x = origin_x; x >= scene_rect.left(); x -= grid_x)
-            lines.append(QLineF(x, topLeft.y(), x, bottomRight.y()) );
+            ///painter.setPen(line_pen);
+            ///painter.drawLines( m_grid_lines );
 
-        // Horizontal lines below scene zero, followed by Horizontal lines above scene zero
-        for (double y = origin_y; y <= scene_rect.bottom(); y += grid_y)
-            lines.append(QLineF(topLeft.x(), y, bottomRight.x(), y) );
+        // ***** Grid Dots
+        } else {
+            grid_painter->setPen(dot_pen);
 
-        for (double y = origin_y; y >= scene_rect.top(); y -= grid_y)
-            lines.append(QLineF(topLeft.x(), y, bottomRight.x(), y) );
+            QVector<QPointF> view_points;
+            for (auto &point : m_grid_points) {
+                QPointF new_point = mapFromScene( point );
+                new_point = offset.map( new_point );
+                view_points.append( new_point );
+            }
+            grid_painter->drawPoints( view_points );
+        }
 
-        painter.drawLines(lines);
+        grid_painter->end();
+        delete grid_painter;
 
-
-
-    // ********** Draw Grid Dots
-    } else if (m_grid_style == Grid_Style::Dots && m_zoom_scale > .25) {
-        QPen dot_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 4, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
-        //dot_pen.setCosmetic(true);
-        painter.setPen(dot_pen);
-        QVector<QPointF> points;
-
-        // Bottom right
-        for (double x = origin_x; x <= scene_rect.right(); x += grid_x)
-            for (double y = origin_y; y <= scene_rect.bottom(); y += grid_y)
-                points.append( QPointF(x, y) );
-        // Bottom left
-        for (double x = origin_x; x >= scene_rect.left(); x -= grid_x)
-            for (double y = origin_y; y <= scene_rect.bottom(); y += grid_y)
-                points.append( QPointF(x, y) );
-        // Top right
-        for (double x = origin_x; x <= scene_rect.right(); x += grid_x)
-            for (double y = origin_y; y >= scene_rect.top(); y -= grid_y)
-                points.append( QPointF(x, y) );
-        // Top left
-        for (double x = origin_x; x >= scene_rect.left(); x -= grid_x)
-            for (double y = origin_y; y >= scene_rect.top(); y -= grid_y)
-                points.append( QPointF(x, y) );
-
-        painter.drawPoints(points.data(), points.size());
+        m_grid_needs_redraw = false;
     }
+
+    // Draw buffer holding grid onto screen
+    QRectF target_rect = m_grid_view_rect;
+    painter.drawPixmap(target_rect, m_grid_buffer, QRectF(m_grid_buffer.rect()) );
+
+    // Draws an outline around grid
+    painter.setBrush(Qt::NoBrush);
+    painter.setPen(line_pen);
+    painter.drawRect(m_grid_view_rect);
+
 }
 
 
@@ -231,11 +219,11 @@ void DrView::paintItemOutlines(QPainter &painter)
 
     // !!!!! #DEBUG:    Show selection group info
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Selection_Group_Data)) {
-        m_relay->setLabelText(Label_Names::Label_Object_3, "Group Size X: " + QString::number(my_scene->getSelectionBox().width()) +
-                                                                    ", Y: " + QString::number(my_scene->getSelectionBox().height()) );
-        m_relay->setLabelText(Label_Names::Label_Object_4, "Scale X: " +      QString::number(my_scene->getSelectionScale().x()) +
-                                                               ", Y: " +      QString::number(my_scene->getSelectionScale().y()) +
-                                                           ", Angle: " +      QString::number(my_scene->getSelectionAngle()));
+        Dr::SetLabelText(Label_Names::Label_Object_3, "Group Size X: " + QString::number(my_scene->getSelectionBox().width()) +
+                                                               ", Y: " + QString::number(my_scene->getSelectionBox().height()) );
+        Dr::SetLabelText(Label_Names::Label_Object_4, "Scale X: " +      QString::number(my_scene->getSelectionScale().x()) +
+                                                          ", Y: " +      QString::number(my_scene->getSelectionScale().y()) +
+                                                      ", Angle: " +      QString::number(my_scene->getSelectionAngle()));
     }
     // !!!!! END
 
@@ -286,41 +274,6 @@ void DrView::paintBoundingBox(QPainter &painter)
 
 
 //####################################################################################
-//##        PAINT: Paints lines showing rotation while rotating
-//####################################################################################
-void DrView::paintGroupAngle(QPainter &painter, double angle)
-{
-    ///// Set pen to draw as NOT operation
-    ///painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
-    painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 1));
-
-    // !!!!! #DEBUG:    Draws from center to origin point (mouse down), and center to last position (mouse move)
-    if (Dr::CheckDebugFlag(Debug_Flags::Paint_Rotating_Angles)) {
-        painter.drawLine(mapFromScene(m_rotate_start_rect.center()), m_origin);
-        painter.drawLine(mapFromScene(m_rotate_start_rect.center()), m_last_mouse_pos);
-    }
-    // !!!!! END
-
-    // Map center point to view, create a line going straight up at zero degrees
-    QPointF center_point = mapFromScene(m_rotate_start_rect.center());
-    QLineF     line_zero = QLineF(center_point, QPointF(center_point.x(), center_point.y() - 30) );
-
-    // Make a copy of line rotated at the current Selection Group angle (passed in)
-    QPointF origin = center_point;
-    QTransform rotate = QTransform().translate(origin.x(), origin.y()).rotate(angle).translate(-origin.x(), -origin.y());
-    QLineF  line_rotated = rotate.map(line_zero);
-    line_zero.setP1( QPointF(line_zero.x1(), line_zero.y1() - 1) );
-
-    // Draw lines
-    painter.drawLine( line_zero );
-    painter.drawLine( line_rotated );
-
-    ///// Reset pen to draw normally
-    ///painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOver);
-}
-
-
-//####################################################################################
 //##        PAINT: Paints handles onto view
 //####################################################################################
 void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw)
@@ -359,6 +312,77 @@ void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw)
             painter.drawPolygon(h.second);
     }
     // !!!!! END
+}
+
+
+//####################################################################################
+//##        PAINT: Paints lines showing rotation while rotating
+//####################################################################################
+void DrView::paintGroupAngle(QPainter &painter, double angle)
+{
+    painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 1));
+
+    // !!!!! #DEBUG:    Draws from center to origin point (mouse down), and center to last position (mouse move)
+    if (Dr::CheckDebugFlag(Debug_Flags::Paint_Rotating_Angles)) {
+        painter.drawLine(mapFromScene(m_rotate_start_rect.center()), m_origin);
+        painter.drawLine(mapFromScene(m_rotate_start_rect.center()), m_last_mouse_pos);
+    }
+    // !!!!! END
+
+    // Map center point to view, create a line going straight up at zero degrees
+    QPointF center_point = mapFromScene(m_rotate_start_rect.center());
+    QLineF     line_zero = QLineF(center_point, QPointF(center_point.x(), center_point.y() - 30) );
+
+    // Make a copy of line rotated at the current Selection Group angle (passed in)
+    QPointF origin = center_point;
+    QTransform rotate = QTransform().translate(origin.x(), origin.y()).rotate(angle).translate(-origin.x(), -origin.y());
+    QLineF  line_rotated = rotate.map(line_zero);
+    line_zero.setP1( QPointF(line_zero.x1(), line_zero.y1() - 1) );
+
+    // Draw lines
+    painter.drawLine( line_zero );
+    painter.drawLine( line_rotated );
+}
+
+
+//####################################################################################
+//##        PAINT: Paints cross in the center of item while translating
+//####################################################################################
+void DrView::paintItemCenters(QPainter &painter)
+{
+    // Don't draw if snap to grid is off
+    if (m_grid_should_snap == false) return;
+    if (m_allow_movement == false) return;
+
+    int line_size = 15;
+
+    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL) == false)
+        painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
+    else
+        painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_Source);
+
+    // Loop through selected items and draw crosshairs on each one
+    for (auto item: my_scene->getSelectionItems()) {
+        QPoint center = mapFromScene( item->sceneTransform().map( item->boundingRect().center() ) );
+
+        QTransform t = QTransform().translate(center.x(), center.y()).rotate(m_grid_rotate).translate(-center.x(), -center.y());
+        QVector<QLine> lines;
+        QLine line;
+
+        line = QLine(center.x(), center.y() + line_size, center.x(), center.y() - line_size);
+        lines.append( t.map (line) );
+
+        line = QLine(center.x() + line_size, center.y(), center.x() - line_size, center.y());
+        lines.append( t.map (line) );
+
+        painter.setBrush(Qt::NoBrush);
+        painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 3));
+        painter.drawLines(lines);
+        painter.setPen(QPen(Dr::GetColor(Window_Colors::Shadow), 1));
+        painter.drawLines(lines);
+    }
+
+    painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOver);
 }
 
 

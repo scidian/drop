@@ -8,12 +8,14 @@
 #ifndef EDITOR_TREE_ASSETS_H
 #define EDITOR_TREE_ASSETS_H
 
+#include <QLabel>
 #include <QTreeWidget>
 
 class DrProject;
 class DrProperty;
+class DrSettings;
 
-class InterfaceRelay;
+class IEditorRelay;
 class WidgetHoverHandler;
 
 // Class constants
@@ -30,22 +32,25 @@ class TreeAssets: public QTreeWidget
     Q_OBJECT
 
 private:
-    DrProject           *m_project;                 // Pointer to currently loaded project
-    InterfaceRelay      *m_relay;                   // Pointer to InterfaceRelay class of parent form
+    DrProject            *m_project;                // Pointer to currently loaded project
+    IEditorRelay         *m_editor_relay;           // Pointer to IEditorRelay class of parent form
 
-    WidgetHoverHandler  *m_widget_hover;            // Pointer to a widget hover handler
+    QList<QFrame*>        m_asset_frames;           // List of the single row frames that contain name and pixmap labels
+
+    WidgetHoverHandler   *m_widget_hover;           // Pointer to a widget hover handler
 
 public:
     // Constructor
-    explicit        TreeAssets(QWidget *parent, DrProject *project, InterfaceRelay *relay);
+    explicit        TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
 
     // Function Calls
     void            buildAssetTree();
-    InterfaceRelay* getRelay() { return m_relay; }
+    IEditorRelay*   getRelay() { return m_editor_relay; }
+    void            updateAssetList(QList<DrSettings*> changed_items, QList<long> property_keys);
 
     // Property Builders
-    void            applyHeaderBodyProperties(QWidget *widget, DrProperty *property);
-    void            applyHeaderBodyProperties(QWidget *widget, QString header, QString body);
+    void            attachToHoverHandler(QWidget *widget, DrProperty *property);
+    void            attachToHoverHandler(QWidget *widget, QString header, QString body);
 
 private slots:
     void            setAdvisorInfo(QString header, QString body);
@@ -60,10 +65,10 @@ private slots:
 class AssetMouseHandler : public QObject
 {
 private:
-    InterfaceRelay      *m_relay;                    // Pointer to InterfaceRelay class of parent form
+    IEditorRelay      *m_editor_relay;                    // Pointer to IEditorRelay class of parent form
 
 public:
-    explicit        AssetMouseHandler(QObject *parent, InterfaceRelay *relay);
+    explicit        AssetMouseHandler(QObject *parent, IEditorRelay *editor_relay);
 
 protected:
     bool            eventFilter(QObject* obj, QEvent* event) override;

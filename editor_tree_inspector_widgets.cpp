@@ -14,6 +14,7 @@
 #include <QMenu>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QPaintEvent>
 
 #include "colors.h"
 #include "debug.h"
@@ -21,7 +22,7 @@
 #include "editor_tree_inspector.h"
 #include "editor_tree_widgets.h"
 
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 #include "library.h"
 
 #include "project.h"
@@ -42,17 +43,25 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font)
     QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
     sp_right.setHorizontalStretch(c_inspector_size_right);
 
-    QCheckBox *check = new QCheckBox();
+    DrCheckBox *check = new DrCheckBox();
     check->setObjectName("checkInspector");
     check->setFont(font);
     check->setSizePolicy(sp_right);
     check->setTristate(false);
 
-    check->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
+    long property_key = property->getPropertyKey();
+
+    check->setProperty(User_Property::Mouse_Over, false);               // Initialize some mouse user data, WidgetHoverHandler updates this info,
+    check->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));         // Used to track when the mouse is within the indicator area for custom paint event
+    check->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
+
     check->setChecked(property->getValue().toBool());
 
-    applyHeaderBodyProperties(check, property);
+    attachToHoverHandler(check, property);
     addToWidgetList(check);
+
+    connect (check, &QCheckBox::toggled, [this, property_key](bool checked) { updateSettingsFromNewValue( property_key, checked );  });
+
     return check;
 }
 
@@ -71,11 +80,11 @@ QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font)
     edit->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     edit->setText(property->getValue().toString());
 
-    applyHeaderBodyProperties(edit, property);
+    attachToHoverHandler(edit, property);
     addToWidgetList(edit);
 
     connect (edit,  &QLineEdit::editingFinished,
-             this, [this, property_key, edit] () { updateSettingsFromNewValue(property_key, edit->text() ); });
+             this, [this, property_key, edit] () { updateSettingsFromNewValue( property_key, edit->text() ); });
 
     return edit;
 }
@@ -102,12 +111,12 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, Spi
     spin->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     spin->setValue(property->getValue().toInt());
 
-    applyHeaderBodyProperties(spin, property);
+    attachToHoverHandler(spin, property);
     addToWidgetList(spin);
 
     // This stops mouse wheel from stealing focus unless user has selected the widget
     spin->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-    spin->installEventFilter(new MouseWheelWidgetAdjustmentGuard(spin));
+    spin->installEventFilter(new MouseWheelAdjustmentGuard(spin));
 
     connect (spin,  QOverload<int>::of(&QSpinBox::valueChanged),
              this, [this, property_key] (int i) { updateSettingsFromNewValue(property_key, i); });
@@ -124,7 +133,7 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     size_policy.setHorizontalStretch(c_inspector_size_right);
 
-    TripleSpinBox *spin = new TripleSpinBox();
+    DrTripleSpinBox *spin = new DrTripleSpinBox();
     spin->setFont(font);
     spin->setSizePolicy(size_policy);
     spin->setDecimals(3);
@@ -143,15 +152,15 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     spin->setValue(property->getValue().toDouble());
 
     // Connect HoverHandler with proper text, add this widget to list of widgets in object inspector
-    applyHeaderBodyProperties(spin, property);
+    attachToHoverHandler(spin, property);
     addToWidgetList(spin);
 
     // This stops mouse wheel from stealing focus unless user has selected the widget
     spin->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-    spin->installEventFilter(new MouseWheelWidgetAdjustmentGuard(spin));
+    spin->installEventFilter(new MouseWheelAdjustmentGuard(spin));
 
     // Connect value changed to our handler function
-    connect (spin,  QOverload<double>::of(&TripleSpinBox::valueChanged),
+    connect (spin,  QOverload<double>::of(&DrTripleSpinBox::valueChanged),
              this, [this, property_key] (double d) { updateSettingsFromNewValue(property_key, d); });
 
     return spin;
@@ -169,13 +178,26 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
     horizontal_split->setSpacing(6);
     horizontal_split->setContentsMargins(0,0,0,0);
 
-    TripleSpinBox *spin_left  =  initializeEmptySpinBox(property, font, property->getValue().toPointF().x());
-    TripleSpinBox *spin_right  = initializeEmptySpinBox(property, font, property->getValue().toPointF().y());
+    DrTripleSpinBox *spin_left  =  initializeEmptySpinBox(property, font, property->getValue().toPointF().x());
+    DrTripleSpinBox *spin_right;
+
+    if (spin_type == Spin_Type::Position)
+        spin_right  = initializeEmptySpinBox(property, font, -1 * property->getValue().toPointF().y());
+    else
+        spin_right  = initializeEmptySpinBox(property, font, property->getValue().toPointF().y());
 
     switch (spin_type)
     {
-    case Spin_Type::Point:  spin_left->setPrefix("X: ");    spin_right->setPrefix("Y: ");   break;
-    case Spin_Type::Size:   spin_left->setPrefix("W: ");    spin_right->setPrefix("H: ");   break;
+    case Spin_Type::Position:
+    case Spin_Type::Point:
+        spin_left->setPrefix("X: ");        spin_right->setPrefix("Y: ");   break;
+    case Spin_Type::Grid:
+        spin_left->setPrefix("W: ");        spin_right->setPrefix("H: ");
+        spin_left->setRange( c_minimum_grid_size, 100000000);
+        spin_right->setRange(c_minimum_grid_size, 100000000);
+        break;
+    case Spin_Type::Size:
+        spin_left->setPrefix("W: ");        spin_right->setPrefix("H: ");   break;
     default: ;
     }
     if (spin_type == Spin_Type::Scale) {
@@ -192,22 +214,21 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
     long property_key = property->getPropertyKey();
 
     spin_left->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
-    spin_left->setProperty(User_Property::Order, 0);
-    addToWidgetList(spin_left);
-
     spin_right->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
+    spin_left->setProperty(User_Property::Order, 0);
     spin_right->setProperty(User_Property::Order, 1);
+    addToWidgetList(spin_left);
     addToWidgetList(spin_right);
 
     // This stops mouse wheel from stealing focus unless user has selected the widget
     spin_left->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-    spin_left->installEventFilter(new MouseWheelWidgetAdjustmentGuard(spin_left));
     spin_right->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-    spin_right->installEventFilter(new MouseWheelWidgetAdjustmentGuard(spin_right));
+    spin_left->installEventFilter(new MouseWheelAdjustmentGuard(spin_left));
+    spin_right->installEventFilter(new MouseWheelAdjustmentGuard(spin_right));
 
-    connect (spin_left,  QOverload<double>::of(&TripleSpinBox::valueChanged),
+    connect (spin_left,  QOverload<double>::of(&DrTripleSpinBox::valueChanged),
              this, [this, property_key] (double d) { updateSettingsFromNewValue(property_key, d, 0); });
-    connect (spin_right, QOverload<double>::of(&TripleSpinBox::valueChanged),
+    connect (spin_right, QOverload<double>::of(&DrTripleSpinBox::valueChanged),
              this, [this, property_key] (double d) { updateSettingsFromNewValue(property_key, d, 1); });
 
 
@@ -226,7 +247,7 @@ QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &fo
     horizontal_split->setSpacing(6);
     horizontal_split->setContentsMargins(0,0,0,0);
 
-    TripleSpinBox *spin_left  = initializeEmptySpinBox(property, font, property->getValue().toPointF().x());
+    DrTripleSpinBox *spin_left  = initializeEmptySpinBox(property, font, property->getValue().toPointF().x());
     size_policy.setHorizontalStretch(4);
     spin_left->setSizePolicy(size_policy);
 
@@ -234,10 +255,10 @@ QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &fo
     variable_sign->setFont(font);
     size_policy.setHorizontalStretch(1);
     variable_sign->setSizePolicy(size_policy);
-    applyHeaderBodyProperties(variable_sign, "Variable Amount", "Plus or minus modifier to initial value, the following value allows for some "
+    attachToHoverHandler(variable_sign, "Variable Amount", "Plus or minus modifier to initial value, the following value allows for some "
                                                                 "variable amount to the initial value. For example, an initial value of 100 with "
                                                                 "a variable amount of 5, allows for values ranging from 95 to 105.");
-    TripleSpinBox *spin_right  = initializeEmptySpinBox(property, font, property->getValue().toPointF().y());
+    DrTripleSpinBox *spin_right  = initializeEmptySpinBox(property, font, property->getValue().toPointF().y());
     spin_right->setMinimum(0);
     size_policy.setHorizontalStretch(3);
     spin_right->setSizePolicy(size_policy);
@@ -249,105 +270,42 @@ QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &fo
     long property_key = property->getPropertyKey();
 
     spin_left->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
-    spin_left->setProperty(User_Property::Order, 0);
-    addToWidgetList(spin_left);
-
     spin_right->setProperty(User_Property::Key, QVariant::fromValue( property_key));
+    spin_left->setProperty(User_Property::Order, 0);
     spin_right->setProperty(User_Property::Order, 1);
+    addToWidgetList(spin_left);
     addToWidgetList(spin_right);
 
     // This stops mouse wheel from stealing focus unless user has selected the widget
     spin_left->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-    spin_left->installEventFilter(new MouseWheelWidgetAdjustmentGuard(spin_left));
     spin_right->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-    spin_right->installEventFilter(new MouseWheelWidgetAdjustmentGuard(spin_right));
+    spin_left->installEventFilter(new MouseWheelAdjustmentGuard(spin_left));
+    spin_right->installEventFilter(new MouseWheelAdjustmentGuard(spin_right));
 
-    connect (spin_left,  QOverload<double>::of(&TripleSpinBox::valueChanged),
+    connect (spin_left,  QOverload<double>::of(&DrTripleSpinBox::valueChanged),
              this, [this, property_key] (double d) { updateSettingsFromNewValue(property_key, d, 0); });
-    connect (spin_right, QOverload<double>::of(&TripleSpinBox::valueChanged),
+    connect (spin_right, QOverload<double>::of(&DrTripleSpinBox::valueChanged),
              this, [this, property_key] (double d) { updateSettingsFromNewValue(property_key, d, 1); });
 
     return spin_pair;
 }
 
-TripleSpinBox* TreeInspector::initializeEmptySpinBox(DrProperty *property, QFont &font, double start_value)
+DrTripleSpinBox* TreeInspector::initializeEmptySpinBox(DrProperty *property, QFont &font, double start_value)
 {
-    TripleSpinBox *new_spin  = new TripleSpinBox();
+    DrTripleSpinBox *new_spin  = new DrTripleSpinBox();
     new_spin->setFont(font);
     new_spin->setMinimumWidth(50);
     new_spin->setDecimals(3);
     new_spin->setRange(-100000000, 100000000);
     new_spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
     new_spin->setValue(start_value);
-    applyHeaderBodyProperties(new_spin, property);
+    attachToHoverHandler(new_spin, property);
     return new_spin;
-}
-
-// SIGNAL: void QComboBox::currentIndexChanged(int index)
-QComboBox* TreeInspector::createComboBox(DrProperty *property, QFont &font)
-{
-    QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    size_policy.setHorizontalStretch(c_inspector_size_right);
-
-    DropDownComboBox *combo = new DropDownComboBox();
-    combo->setObjectName(QStringLiteral("comboBox"));
-    combo->view()->parentWidget()->setStyleSheet(" background: none; border-radius: 0px; ");
-
-    QString style =
-            " QComboBox QAbstractItemView { "
-            "       font-size: " + QString::number(font.pointSize()) + "px; "
-            "       border: " + Dr::BorderWidth() + " solid; margin: 0px; "
-            "       border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; } "
-
-            " QComboBox QAbstractItemView::item { padding: 4px; "
-            "       padding-left: 4px;"
-            "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
-            "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; } "
-
-            " QComboBox QAbstractItemView::item:selected { "
-            "       padding-left: 6px; "
-            "       image: url(:/gui_misc/check.png); "
-            "       image-position: right center; "
-            "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
-            "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } ";
-
-    QListView *combo_list = new QListView();
-    combo->setView(combo_list);
-    combo->setStyleSheet(style);
-    combo->setFont(font);
-    combo->setSizePolicy(size_policy);
-
-    //// Alternate way to remove white border around QComboBox ListView
-    ///combo->setEditable(true);
-    ///combo->lineEdit()->setReadOnly(true);
-    ///combo->lineEdit()->setDisabled(true);
-
-    long   property_key =  property->getPropertyKey();
-    DrType object_type  =  property->getParentComponent()->getParentSettings()->getType();
-
-    QStringList options;    
-    if (object_type == DrType::Object && property_key == static_cast<int>(Properties::Object_Damage))
-        options << tr("No Damage") << tr("Damage Player") << tr("Damage Enemy") << tr("Damage All");
-    else if ((object_type == DrType::Stage || object_type == DrType::StartStage) && (property_key == static_cast<int>(Properties::Stage_Grid_Style)))
-        options << tr("Lines") << tr("Dots");
-    else
-        options << tr("Unknown List");
-    combo->addItems(options);
-
-    connect (combo, QOverload<int>::of(&QComboBox::currentIndexChanged),
-             this, [this, property_key] (int index) { updateSettingsFromNewValue(property_key, index); });
-
-    combo->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
-    combo->setCurrentIndex(property->getValue().toInt());
-
-    applyHeaderBodyProperties(combo, property);
-    addToWidgetList(combo);
-    return combo;
 }
 
 
 // Uses a pushbutton with a popup menu instead of a QComboBox
-QPushButton* TreeInspector::createComboBox2(DrProperty *property, QFont &font)
+QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font)
 {
     QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     size_policy.setHorizontalStretch(c_inspector_size_right);
@@ -357,57 +315,59 @@ QPushButton* TreeInspector::createComboBox2(DrProperty *property, QFont &font)
     button->setFont(font);
     button->setSizePolicy(size_policy);
 
+    long   property_key =  property->getPropertyKey();
+
     QStringList options;
-    if (property->getPropertyKey() == static_cast<int>(Properties::Object_Damage)) {
-        options << tr("No Damage") << tr("Damage Player") << tr("Damage Enemy") << tr("Damage All");
+    if          (property_key == static_cast<int>(Properties::Object_Damage)) {
+        options << tr("No Damage")
+                << tr("Damage Player")
+                << tr("Damage Enemy")
+                << tr("Damage All");
+    } else if   (property_key == static_cast<int>(Properties::Stage_Grid_Style)) {
+        options << tr("Lines")
+                << tr("Dots");
     } else {
         options << tr("Unknown List");
     }
 
-    QString menu_style = " QMenu { "
-                         "      min-width: 100px; padding-left: 6px; padding-top: 4px; padding-bottom: 4px; "
-                         "      color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
-                         "      font-size: " + QString::number(font.pointSize()) + "px; "
-                         "      border: " + Dr::BorderWidth() + " solid; margin: 0px; "
-                         "      border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
-                         "      background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } "
-                         " QMenu::item { padding-top: 2px; padding-bottom: 2px; } "
-                         " QMenu::item:selected { "
-                         "       padding-left: 2px; "
-                         "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
-                         "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } ";
-                         " QMenu::item:checked { "
-                         "       padding-left: 0px; "
-                         "       font-weight: bold; "
-                         "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
-                         "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } ";
-
-    QMenu *menu = new QMenu();
-    menu->setStyleSheet(menu_style);
-
+    QMenu *menu = new QMenu(this);
+    menu->setObjectName(QStringLiteral("menuComboBox"));
+    menu->setMinimumWidth(130);
 
     QActionGroup *group;
     group = new QActionGroup(menu);
     group->setExclusive(true);
 
-    QAction *action1 = new QAction("First");    QAction *action2 = new QAction("Second");       QAction *action3 = new QAction("Third");
-    group->addAction(action1);                  group->addAction(action2);                      group->addAction(action3);
-    action1->setCheckable(true);                action2->setCheckable(true);                    action3->setCheckable(true);
-    menu->addAction(action1);                   menu->addAction(action2);                       menu->addAction(action3);
+    // Loop through possible strings, add them to sub menu along with a connect to a lambda function that can update object settings
+    int string_count = 0;
+    for (auto string : options) {
+        QAction *action = new QAction(string);
+        group->addAction(action);
+        action->setCheckable(true);
+        menu->addAction(action);
 
-    connect(action1,   &QAction::triggered, [button, action1]() { button->setText(action1->text()); });
-    connect(action2,   &QAction::triggered, [button, action2]() { button->setText(action2->text()); });
-    connect(action3,   &QAction::triggered, [button, action3]() { button->setText(action3->text()); });
+        if (property->getValue().toInt() == string_count) {
+            action->setChecked(true);
+            button->setText(string);
+        }
 
-    action2->setChecked(true);
+        action->setProperty(User_Property::Order, QVariant::fromValue(string_count));
+
+        // Create a callback function to update DrSettings when a new value is selected
+        connect(action,   &QAction::triggered, [this, button, action, property_key]() {
+            button->setText(action->text());
+            this->updateSettingsFromNewValue(property_key, action->property(User_Property::Order).toInt());
+        });
+
+        string_count++;
+    }
 
     button->setMenu(menu);
     button->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
-    button->setText(" First");
-
-    //button->setCurrentIndex(property->getValue().toInt());
-    applyHeaderBodyProperties(button, property);
+    menu->installEventFilter(new PopUpMenuRelocater(menu));
+    attachToHoverHandler(button, property);
     addToWidgetList(button);
+
     return button;
 }
 
@@ -417,7 +377,7 @@ QPushButton* TreeInspector::createComboBox2(DrProperty *property, QFont &font)
 //##    TripleSpinBox Class Functions
 //##
 //####################################################################################
-QString TripleSpinBox::textFromValue(double value) const
+QString DrTripleSpinBox::textFromValue(double value) const
 {
     ///double intpart;
     ///if (std::modf(value, &intpart) == 0.0)              return QWidget::locale().toString(value, QLatin1Char('f').unicode(), 0);
@@ -434,7 +394,7 @@ QString TripleSpinBox::textFromValue(double value) const
 //##    DropDownComboBox Class Functions
 //##
 //####################################################################################
-void DropDownComboBox::showPopup()
+void DrDropDownComboBox::showPopup()
 {
     bool oldAnimationEffects = qApp->isEffectEnabled(Qt::UI_AnimateCombo);
     qApp->setEffectEnabled(Qt::UI_AnimateCombo, false);
@@ -445,6 +405,52 @@ void DropDownComboBox::showPopup()
 
     qApp->setEffectEnabled(Qt::UI_AnimateCombo, oldAnimationEffects);
 }
+
+
+//####################################################################################
+//##
+//##    DropDownComboBox Class Functions, paints the checkbox & check mark
+//##
+//####################################################################################
+void DrCheckBox::paintEvent(QPaintEvent *)
+{
+    QRect checkbox_indicator(4, 0, 28, 22);
+    QPoint mouse_position = property(User_Property::Mouse_Pos).toPoint();
+
+    QPainter painter(this);
+    if (property(User_Property::Mouse_Over).toBool() && checkbox_indicator.contains(mouse_position)) {
+        painter.setPen( QPen( Dr::GetColor(Window_Colors::Background_Light), Dr::BorderWidthAsInt() ) );
+        painter.setBrush( QBrush(Dr::GetColor(Window_Colors::Button_Light)) );
+        painter.drawRoundRect(5, 1, 20, 20, 20, 20);
+        painter.setPen( QPen( Dr::GetColor(Window_Colors::Text_Light), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ) );
+
+    } else {
+        painter.setPen( QPen( Dr::GetColor(Window_Colors::Button_Light), Dr::BorderWidthAsInt() ) );
+        painter.setBrush( QBrush(Dr::GetColor(Window_Colors::Background_Light)) );
+        painter.drawRoundRect(5, 1, 20, 20, 20, 20);
+        painter.setPen( QPen( Dr::GetColor(Window_Colors::Text), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ) );
+    }
+
+    if (checkState()) {
+        QVector<QLineF> check;
+        check.append( QLineF( 10, 13, 13, 16) );
+        check.append( QLineF( 13, 16, 21,  8) );
+        painter.drawLines(check);
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

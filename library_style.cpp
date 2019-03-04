@@ -162,11 +162,21 @@ void ApplyColoring(QWidget *widget)
         // Mostly debug labels
         " QLabel { color: " + Dr::GetColor(Window_Colors::Text).name() + "; padding: 0px; margin: 0px; border: 0px; } "
 
+        // Asset Item Frames
+        " QFrame#assetFrame { "
+        "       border: " + Dr::BorderWidth() + " solid #777777; "
+        "       padding: 1px; margin-top: 3px; margin-bottom: 3px; margin-left: 6px; margin-right: 6px; "
+        "       border-radius: 6px; } "
+
+        " QFrame#assetFrame:hover { "
+        "       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name()  + "; }"
+
+
+        //###############################################################################
+        //##    Inspector Widgets
+        //################################################################################
         // Check boxes, mostly in object inspector
-        " QCheckBox#checkInspector::indicator:checked {         image: url(:/inspector_icons/check_checked.png); }"
-        " QCheckBox#checkInspector::indicator:unchecked {       image: url(:/inspector_icons/check_unchecked.png); }"
-        " QCheckBox#checkInspector::indicator:checked:hover {   image: url(:/inspector_icons/check_hover_checked.png); }"
-        " QCheckBox#checkInspector::indicator:unchecked:hover { image: url(:/inspector_icons/check_hover_unchecked.png); }"
+        " QCheckBox#checkInspector::indicator { height: 22px; width: 32px; }"
 
         // Spin boxes, mostly in object inspector
         " QAbstractSpinBox { "
@@ -212,29 +222,6 @@ void ApplyColoring(QWidget *widget)
         "       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
         "       border-radius: 0px; }"
 
-        // Drop down Combo Box, mostly in object inspector
-        " QComboBox { "
-        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
-        "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
-        "       border: " + Dr::BorderWidth() + " solid; "
-        "       border-color: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
-        "       border-radius: 4px; height: 20px; }"
-        " QComboBox:hover { "
-        "       color: " + Dr::GetColor(Window_Colors::Text_Light).name() + "; "
-        "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
-        "       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
-        "       border-radius: 4px; }"
-        " QComboBox::drop-down { border: 0px; width: 20px; }"
-        " QComboBox::down-arrow { image: url(:/gui_misc/drop_arrow.png); }"
-        // QComboBox gets the "on" state when the popup is open
-        " QComboBox:on {"
-        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
-        "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
-        "       border: " + Dr::BorderWidth() + " solid; "
-        "       border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
-        "       border-bottom-right-radius: 0px;  "
-        "       border-bottom-left-radius: 0px; } "
-
         // Drop down PushButtons
         " QPushButton { "
         "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
@@ -244,8 +231,8 @@ void ApplyColoring(QWidget *widget)
         "       border-radius: 4px; height: 20px;"
         "       padding-left: 10px; "
         "       text-align: left; "
-        " } "
-        " QPushButton::menu-indicator { image: none; }"
+        " } "                
+        " QPushButton::menu-indicator { left: -8px; top: -7px; }"
         " QPushButton:hover { "
         "       color: " + Dr::GetColor(Window_Colors::Text_Light).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
@@ -255,17 +242,25 @@ void ApplyColoring(QWidget *widget)
         "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
         "       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
-        "       border-bottom-right-radius: 0px; "
-        "       border-bottom-left-radius: 0px;  }"
+        "       border-radius: 0px; }"
+        // Popup Menu for PushButton
+        " QMenu#menuComboBox { "
+        "      padding-top: 4px; padding-bottom: 4px; "
+        "      color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
+        "      font-size: " + QString::number(Dr::FontSize()) + "px; "
+        "      border: " + Dr::BorderWidth() + " solid; margin: 0px; "
+        "      border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
+        "      background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; }"
+        " QMenu#menuComboBox::item { padding-top: 2px; padding-bottom: 3px; } "
+        " QMenu#menuComboBox::item:selected { "
+        "       padding-left: 3px; "
+        "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; } "
+        " QMenu#menuComboBox::indicator:checked { left: 5px; top: -3px; } "
+        " QMenu#menuComboBox::item:checked { "
+        "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; }"
 
-        // Asset Item Frames
-        " QFrame#assetFrame { "
-        "       border: " + Dr::BorderWidth() + " solid #777777; "
-        "       padding: 1px; margin-top: 3px; margin-bottom: 3px; margin-left: 6px; margin-right: 6px; "
-        "       border-radius: 6px; } "
 
-        " QFrame#assetFrame:hover { "
-        "       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name()  + "; }"
 
     );
 

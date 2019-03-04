@@ -5,6 +5,8 @@
 //      DrObject Class Definitions
 //
 //
+#include <QtMath>
+
 #include <QTime>
 #include <QStyleOptionGraphicsItem>
 
@@ -14,7 +16,7 @@
 #include "editor_item.h"
 #include "editor_scene.h"
 
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 #include "library.h"
 
 #include "project.h"
@@ -29,11 +31,9 @@
 //####################################################################################
 //##        Constructor & destructor
 //####################################################################################
-DrItem::DrItem(DrProject *project, InterfaceRelay *relay, DrObject *object, bool is_temp_only)
+DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrObject *object, bool is_temp_only) : m_editor_relay(editor_relay)
 {
     // Store relevant project / object data for use later
-    m_relay      = relay;
-
     m_project    = project;
     m_object     = object;
     m_object_key = object->getKey();
@@ -123,26 +123,63 @@ QPainterPath DrItem::shape() const
 QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     // If this is a temporary object, or not attached to a scene, do not process change
-    if (m_temp_only || !m_relay) return QGraphicsPixmapItem::itemChange(change, value);
+    if (m_temp_only || !m_editor_relay) return QGraphicsPixmapItem::itemChange(change, value);
 
     // Load any new data stored in item
     double  angle = data(User_Roles::Rotation).toDouble();
     QPointF scale = data(User_Roles::Scale).toPointF();
 
+    // Intercepts item position change and limits new location if Snap to Grid is on
+    if (change == ItemPositionChange) {
+        QPointF new_pos = value.toPointF();
+        if (m_editor_relay->currentViewMode() != View_Mode::Translating) return new_pos;
+        if (m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Should_Snap).toBool() == false) return new_pos;
+
+        QPointF grid_size =   m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
+        QPointF grid_origin = m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point).toPointF();
+        double  grid_angle =  m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Rotation).toDouble();
+
+        // Calculate new desired center location based on starting center and difference between starting pos() and new passed in new_pos
+        QPointF old_center = m_object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF();
+        QPointF new_center = old_center - (pos() - new_pos);
+
+        // Align new desired center to grid
+        QTransform remove_angle = QTransform().rotate(-grid_angle);
+        QTransform add_angle =    QTransform().rotate( grid_angle);
+        QPointF rounded_center = remove_angle.map ( new_center );
+        rounded_center.setX( round((rounded_center.x() - grid_origin.x()) / grid_size.x()) * grid_size.x() + grid_origin.x());
+        rounded_center.setY( round((rounded_center.y() - grid_origin.y()) / grid_size.y()) * grid_size.y() + grid_origin.y());
+        rounded_center = add_angle.map ( rounded_center );
+
+        // Adjust new position based on adjustment to grid we just performed
+        QPointF adjust_by = new_center - rounded_center;
+        QPointF adjusted_pos = new_pos - adjust_by;
+
+        // !!!!! DEBUG: Show snapped coordinates
+        if (Dr::CheckDebugFlag(Debug_Flags::Label_Snap_To_Grid_Data)) {
+            Dr::SetLabelText(Label_Names::Label_1, "New Top Left X: " + QString::number(new_pos.x()) + ", Y: " + QString::number(new_pos.y()));
+            Dr::SetLabelText(Label_Names::Label_2, "New Center X: " + QString::number(rounded_center.x()) + ", Y: " + QString::number(rounded_center.y()));
+            Dr::SetLabelText(Label_Names::Label_3, "Adj Top Left X: " + QString::number(adjusted_pos.x()) + ", Y: " + QString::number(adjusted_pos.y()));
+        }
+        // !!!!! END
+
+        return adjusted_pos;
+    }
 
     // ***** If item position has changed, update it
-    if (change == ItemPositionHasChanged) {
+    if (change == ItemScenePositionHasChanged) {
         // Value is new scene position (of upper left corner)
         QPointF new_pos =    value.toPointF();
 
-        // Create a transform so we can find new center position of item
-        QTransform t = QTransform().rotate(angle).scale(scale.x(), scale.y());
-        double new_x = new_pos.x() + t.map( boundingRect().center() ).x();
-        double new_y = new_pos.y() + t.map( boundingRect().center() ).y();
+        // Following works with ItemPositionHasChanged
+        ///// Create a transform so we can find new center position of item
+        ///QTransform t = QTransform().rotate(angle).scale(scale.x(), scale.y());
+        ///QPointF new_center = t.map( boundingRect().center() ) + new_pos;
 
-        m_object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Position, QPointF(new_x, new_y));
+        QPointF new_center = mapToScene( boundingRect().center() );
+        m_object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Position, new_center);
 
-        m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Properties::Object_Position });
+        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Properties::Object_Position });
         return new_pos;
     }
 
@@ -158,9 +195,9 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
         m_object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale, scale );
         m_object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Size, QPointF(size_x, size_y));
 
-        m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Properties::Object_Size,
-                                                                                                Properties::Object_Scale,
-                                                                                                Properties::Object_Rotation });
+        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Properties::Object_Size,
+                                                                                                       Properties::Object_Scale,
+                                                                                                       Properties::Object_Rotation });
         return new_transform;
     }
 
@@ -170,7 +207,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
         double new_z = value.toDouble();
         m_object->setComponentPropertyValue(Components::Object_Layering, Properties::Object_Z_Order, new_z);
 
-        m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Properties::Object_Z_Order });
+        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Properties::Object_Z_Order });
         return new_z;
     }
 

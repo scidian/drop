@@ -7,11 +7,13 @@
 //
 #include <QDoubleSpinBox>
 #include <QLineEdit>
+#include <QAction>
+#include <QMenu>
 
 #include "editor_tree_inspector.h"
 
 #include "enums.h"
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 #include "library.h"
 
 #include "project.h"
@@ -38,7 +40,9 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
     if (object->getKey() != m_selected_key) return;
     if (m_selected_type != DrType::Object) return;
 
-    Dr::SetLabelText(Label_Names::Label_1, "Insp Widget Count: " + QString::number(m_widgets.count()) );
+    // Forward definitions for widgets used in switch statement
+    QPushButton     *pushbutton;
+    QDoubleSpinBox  *doublespin;
 
     for (auto widget : m_widgets) {
         long prop_key = widget->property(User_Property::Key).toInt();
@@ -65,21 +69,26 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 
         case Property_Type::String:     dynamic_cast<QLineEdit*>(widget)->setText(prop->getValue().toString());         break;
 
+        case Property_Type::PositionF:
         case Property_Type::PointF:
+        case Property_Type::GridF:
         case Property_Type::SizeF:
         case Property_Type::Scale:
         case Property_Type::Variable:
-            if (dynamic_cast<QDoubleSpinBox*>(widget)->property(User_Property::Order).toInt() == 0)
-                dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toPointF().x());
+            doublespin = dynamic_cast<QDoubleSpinBox*>(widget);
+            if (doublespin->property(User_Property::Order).toInt() == 0)
+                doublespin->setValue(prop->getValue().toPointF().x());
             else
-                dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toPointF().y());
+                if (prop->getPropertyType() == Property_Type::PositionF)
+                    doublespin->setValue(prop->getValue().toPointF().y() * -1);
+                else
+                    doublespin->setValue(prop->getValue().toPointF().y());
             break;
 
-        case Property_Type::Point:
-            if (dynamic_cast<QSpinBox*>(widget)->property(User_Property::Order).toInt() == 0)
-                dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toPoint().x());
-            else
-                dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toPoint().y());
+        case Property_Type::List:
+            pushbutton = dynamic_cast<QPushButton*>(widget);
+            pushbutton->setText( pushbutton->menu()->actions().at(prop->getValue().toInt())->text() );
+            pushbutton->menu()->actions().at(prop->getValue().toInt())->setChecked(true);
             break;
 
         case Property_Type::Image:                                  // QPixmap
@@ -87,8 +96,6 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
         case Property_Type::Color:                                  // QColor
         case Property_Type::Polygon:                                // For Collision Shapes
         case Property_Type::Vector3D:
-        case Property_Type::List:
-        case Property_Type::List2:
 
             //################ !!!!!!!!!!!!!!!!!!!!!!!
             //
@@ -119,7 +126,6 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
 {
     // Update the appropiate property in the settings of the object shown in the inspector
     DrSettings *settings = m_project->findSettingsFromKey( m_selected_key );
-    QPoint  temp_point;
     QPointF temp_pointf;
 
     if (settings != nullptr) {
@@ -137,19 +143,21 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
         case Property_Type::String:
             property->setValue(new_value);
             break;
-        case Property_Type::Point:                                  // Integer pair x and y
-            temp_point = property->getValue().toPoint();
-            if (sub_order == 0) temp_point.setX( new_value.toInt() );
-            else                temp_point.setY( new_value.toInt() );
-            property->setValue(temp_point);
-            break;
+        case Property_Type::PositionF:                              // Floating pair x and y, y is flipped
         case Property_Type::PointF:                                 // Floating pair x and y
+        case Property_Type::GridF:                                  // Floating pair x and y, minimum value c_minimum_grid_size
         case Property_Type::SizeF:                                  // Floating pair w and h
         case Property_Type::Scale:                                  // Floating pair, has smaller step in spin box
         case Property_Type::Variable:                               // floating point pair, number followed by a +/- number
             temp_pointf = property->getValue().toPointF();
-            if (sub_order == 0) temp_pointf.setX( new_value.toDouble() );
-            else                temp_pointf.setY( new_value.toDouble() );
+            if (sub_order == 0)
+                temp_pointf.setX( new_value.toDouble() );
+            else {
+                if (property->getPropertyType() == Property_Type::PositionF)
+                    temp_pointf.setY( new_value.toDouble() * -1);
+                else
+                    temp_pointf.setY( new_value.toDouble() );
+            }
             property->setValue(temp_pointf);
             break;
 
@@ -158,7 +166,6 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
         case Property_Type::Color:                                  // QColor
         case Property_Type::Polygon:                                // For Collision Shapes
         case Property_Type::Vector3D:
-        case Property_Type::List2:
 
             //################ !!!!!!!!!!!!!!!!!!!!!!!
             //
@@ -169,7 +176,7 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
             break;
         }
 
-        m_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Object_Inspector, { settings }, { property_key } );
+        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Object_Inspector, { settings }, { static_cast<Properties>(property_key) } );
     }
 }
 

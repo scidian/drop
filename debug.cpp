@@ -53,6 +53,7 @@ void InitializeFlags()
     SetDebugFlag( Debug_Flags::Label_Selection_Group_Data );
     SetDebugFlag( Debug_Flags::Label_Selected_Item_Data );
     //SetDebugFlag( Debug_Flags::Label_Where_Update_Box_From );
+    //SetDebugFlag( Debug_Flags::Label_Snap_To_Grid_Data );
 
     //SetDebugFlag( Debug_Flags::Paint_Resize_Calculations );
     //SetDebugFlag( Debug_Flags::Paint_Rotating_Angles );

@@ -15,7 +15,7 @@
 class DrProject;
 class DrAsset;
 class DrObject;
-class InterfaceRelay;
+class IEditorRelay;
 
 //####################################################################################
 //##    DrItem
@@ -25,7 +25,7 @@ class DrItem : public QGraphicsPixmapItem
 {
 private:
     DrProject      *m_project;                              // Stores a pointer to the parent project
-    InterfaceRelay *m_relay;                                // Pointer to InterfaceRelay class of parent form
+    IEditorRelay   *m_editor_relay;                         // Pointer to IEditorRelay class of parent form
 
     DrObject       *m_object = nullptr;                     // Stores the pointer to the object for this item
     long            m_object_key;                           // Stores the object project key this item represents
@@ -43,7 +43,7 @@ private:
                                                             // object in the project data model
 
 public:
-    DrItem(DrProject *project, InterfaceRelay *relay, DrObject *object, bool is_temp_only = false);
+    DrItem(DrProject *project, IEditorRelay *editor_relay, DrObject *object, bool is_temp_only = false);
 
     // Base Getter Overrides
     virtual QRectF          boundingRect() const override;
@@ -62,7 +62,7 @@ public:
     void                    enableItemChangeFlags();
 
     // Getters and Setters
-    InterfaceRelay*         getRelay()       { return m_relay; }
+    IEditorRelay*           getRelay()       { return m_editor_relay; }
 
     DrObject*               getObject()      { return m_object; }
     long                    getObjectKey()   { return m_object_key; }

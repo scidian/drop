@@ -12,7 +12,7 @@
 #include <QProxyStyle>
 #include <QTreeWidget>
 
-class InterfaceRelay;
+class IEditorRelay;
 class DrScene;
 class DrProject;
 class DrSettings;
@@ -28,7 +28,7 @@ class TreeProject: public QTreeWidget
 
 private:
     DrProject      *m_project;                          // Pointer to currently loaded project
-    InterfaceRelay *m_relay;                            // Pointer to InterfaceRelay class of parent form
+    IEditorRelay   *m_editor_relay;                     // Pointer to IEditorRelay class of parent form
 
     long            m_selected_key = 0;                 // Holds first selected item in QTreeWidget (treeProject)
     bool            m_allow_selection_event = true;     // When false, stops selectionChanged event from propagating changes to editor
@@ -39,8 +39,8 @@ private:
     int             m_mouse_y;
 
 public:
-    explicit        TreeProject(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
-                                QTreeWidget (parent), m_project(project), m_relay(relay) { }
+    explicit        TreeProject(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
+                                QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay) { }
 
     // Function calls
     void                        buildProjectTree();
@@ -84,11 +84,9 @@ class StageTreeHighlightProxy : public QProxyStyle
 {
 private:
     TreeProject     *m_parent_tree;              // Pointer to parent TreeProject
-    InterfaceRelay  *m_relay;                    // Pointer to InterfaceRelay class of parent form
 
 public:
-    explicit StageTreeHighlightProxy(QStyle *baseStyle, TreeProject *parent_tree, InterfaceRelay *relay) :
-                                     QProxyStyle(baseStyle), m_parent_tree(parent_tree), m_relay(relay) { }
+    explicit StageTreeHighlightProxy(QStyle *baseStyle, TreeProject *parent_tree) : QProxyStyle(baseStyle), m_parent_tree(parent_tree) { }
     virtual ~StageTreeHighlightProxy() override;
 
     virtual void drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const override;

@@ -35,15 +35,14 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
 {
     QString widget_list;
 
-    current_mode = new_layout;
-    switch (current_mode)
+    current_form_main_mode = new_layout;
+    switch (current_form_main_mode)
     {
     case Form_Main_Mode::World_Editor:
         buildWindowModeEditStage();
         buildAssetTree();
         buildProjectTree();
         viewMain->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
-        scene->setSceneRect(-2000, -2000, 4000, 4000);
         scene->update();
         viewMain->update();
         centerViewOnPoint(QPointF(0, 0));
@@ -128,7 +127,7 @@ void FormMain::buildWindowModeEditStage()
 
                     // ***** Load our custom TreeProject for the Scene List
                     treeProject = new TreeProject(splitterHorizontal, project, this);
-                    treeProject->setStyle(new StageTreeHighlightProxy(treeProject->style(), treeProject, this));
+                    treeProject->setStyle(new StageTreeHighlightProxy(treeProject->style(), treeProject));
                         QTreeWidgetItem *header_item_stage = new QTreeWidgetItem();
                         header_item_stage->setIcon(1, QIcon(":/tree_icons/tree_lock_header.png"));
                         treeProject->setHeaderItem(header_item_stage);
@@ -184,7 +183,7 @@ void FormMain::buildWindowModeEditStage()
 
                         if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL)) {
                             QOpenGLWidget *gl_widget = new QOpenGLWidget();
-                            gl_widget->setUpdateBehavior(QOpenGLWidget::NoPartialUpdate);
+                            gl_widget->setUpdateBehavior(QOpenGLWidget::UpdateBehavior::NoPartialUpdate);
                             viewMain->setViewport(gl_widget);
                         }
 

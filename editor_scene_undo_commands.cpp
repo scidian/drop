@@ -93,6 +93,8 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
     }
 
     m_scene->clear();
+    m_scene->setSceneRect(-1000, -1000, 2000, 2000);
+    m_scene->clearViewSceneRect(QRectF(-4000, -4000, 8000, 8000));
     m_scene->setCurrentStageShown(from_stage);
     m_scene->setCurrentStageKeyShown(m_new_stage);
 
@@ -121,10 +123,10 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
         object_pair.second->setDrItem(item);
     }
 
-    m_scene->getRelay()->centerViewOnPoint(from_stage->getViewCenterPoint());
     m_scene->update();
     m_scene->updateAlignmentGrid();
     m_scene->updateView();
+    m_scene->getRelay()->centerViewOnPoint(from_stage->getViewCenterPoint());
     if (is_undo)
         return "Redo Select Stage " + displayed->getStageName();
     else

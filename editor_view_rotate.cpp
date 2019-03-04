@@ -14,7 +14,7 @@
 #include "editor_scene.h"
 #include "editor_view.h"
 
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 #include "library.h"
 
 #include "project.h"
@@ -140,8 +140,8 @@ void DrView::rotateSelection(QPointF mouse_in_view)
 
     // !!!!! #DEBUG:    Rotation data
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Rotation_Data)) {
-        m_relay->setLabelText(Label_Names::Label_1, "Angle 1: " + QString::number(angle1) + ", Angle 2: " + QString::number(angle2));
-        m_relay->setLabelText(Label_Names::Label_2, "Angle: " +   QString::number(angle) +     ", Diff: " + QString::number(angle - start_angle) );
+        Dr::SetLabelText(Label_Names::Label_1, "Angle 1: " + QString::number(angle1) + ", Angle 2: " + QString::number(angle2));
+        Dr::SetLabelText(Label_Names::Label_2, "Angle: " +   QString::number(angle) +     ", Diff: " + QString::number(angle - start_angle) );
     }
     // !!!!! END
 

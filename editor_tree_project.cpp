@@ -17,7 +17,7 @@
 
 #include "editor_tree_project.h"
 
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 
 #include "project.h"
 #include "project_world.h"
@@ -94,7 +94,7 @@ void TreeProject::buildProjectTree()
 // Handles changing the Advisor on Mouse Enter
 void TreeProject::enterEvent(QEvent *event)
 {
-    m_relay->setAdvisorInfo(Advisor_Info::Project_Tree);
+    m_editor_relay->setAdvisorInfo(Advisor_Info::Project_Tree);
     QTreeWidget::enterEvent(event);
 }
 
@@ -117,7 +117,7 @@ bool TreeProject::eventFilter(QObject *obj, QEvent *event)
 //####################################################################################
 void TreeProject::selectionChanged (const QItemSelection &selected, const QItemSelection &deselected)
 {
-    // If we're updating selection from outside source this function has been turned off from that source (i.e. updateSelection in InterfaceRelay)
+    // If we're updating selection from outside source this function has been turned off from that source (i.e. updateSelection in IEditorRelay)
     if (!m_allow_selection_event) {
         QTreeWidget::selectionChanged(selected, deselected);
         return;
@@ -127,8 +127,8 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
     QList<QTreeWidgetItem*> item_list = this->selectedItems();
     if (item_list.size() == 0) {
         this->setSelectedKey(0);
-        m_relay->buildObjectInspector(QList<long> { });
-        m_relay->updateItemSelection(Editor_Widgets::Project_Tree);
+        m_editor_relay->buildObjectInspector(QList<long> { });
+        m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree);
         return;
     }
 
@@ -144,15 +144,15 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
         if (selected_item != nullptr) {
             DrType selected_type = selected_item->getType();
             if (selected_type == DrType::Stage || selected_type == DrType::StartStage) {
-                m_relay->buildScene(selected_key);
+                m_editor_relay->buildScene(selected_key);
             } else if (selected_type == DrType::Object) {
                 DrObject *as_object = dynamic_cast<DrObject*>(selected_item);
-                m_relay->buildScene( as_object->getParentStage()->getKey() );
+                m_editor_relay->buildScene( as_object->getParentStage()->getKey() );
             }
         }
 
         // Callsto outside update functions to rebuild object inspector
-        m_relay->buildObjectInspector(QList<long> { selected_key });
+        m_editor_relay->buildObjectInspector(QList<long> { selected_key });
 
         //******************************************************
 
@@ -175,7 +175,7 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
     }
 
     // Call to outside update functions to update selection in scene view
-    m_relay->updateItemSelection(Editor_Widgets::Project_Tree);
+    m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree);
 
     QTreeWidget::selectionChanged(selected, deselected);                    // pass event to parent
 }
@@ -213,7 +213,7 @@ void TreeProject::updateSelectionFromView(QList<QGraphicsItem*> item_list)
 
 
 //####################################################################################
-//##        Selects rows based on items selected in view
+//##        Updates item names if they have been changed
 //####################################################################################
 void TreeProject::updateItemNames(QList<DrSettings*> changed_items, QList<long> property_keys)
 {
@@ -305,8 +305,8 @@ void TreeProject::dragMoveEvent(QDragMoveEvent *event)
 
     // !!!!! #DEBUG:    Show stage tree drag event info
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Stage_Tree_Drag)) {
-        m_relay->setLabelText(Label_Names::Label_1, QString::fromStdString("MX: ") + QString::number(m_mouse_x) +
-                                                    QString::fromStdString(", MY: ") + QString::number(m_mouse_y) );
+        Dr::SetLabelText(Label_Names::Label_1, QString::fromStdString("MX: ") + QString::number(m_mouse_x) +
+                                               QString::fromStdString(", MY: ") + QString::number(m_mouse_y) );
     }
     // !!!!! END
 
@@ -319,8 +319,8 @@ void TreeProject::dragMoveEvent(QDragMoveEvent *event)
 
         // !!!!! #DEBUG:    Show stage tree drag event info
         if (Dr::CheckDebugFlag(Debug_Flags::Label_Stage_Tree_Drag)) {
-            m_relay->setLabelText(Label_Names::Label_Object_3, "Selected: " + QString::number(m_selected_key) +
-                                                             ", Checking: " + QString::number(check_key) );
+            Dr::SetLabelText(Label_Names::Label_Object_3, "Selected: " + QString::number(m_selected_key) +
+                                                        ", Checking: " + QString::number(check_key) );
         }
         // !!!!! END
 
@@ -400,8 +400,8 @@ void StageTreeHighlightProxy::drawPrimitive(PrimitiveElement element, const QSty
 
         // !!!!! #DEUBG:    Show custom highlight event data
         if (Dr::CheckDebugFlag(Debug_Flags::Label_Stage_Tree_Drag)) {
-            m_relay->setLabelText(Label_Names::Label_2, QString::fromStdString("TLX: ") + QString::number(option->rect.topLeft().x()) +
-                                                        QString::fromStdString(", TLY: ") + QString::number(option->rect.topLeft().y()));
+            Dr::SetLabelText(Label_Names::Label_2, QString::fromStdString("TLX: ") + QString::number(option->rect.topLeft().x()) +
+                                                 QString::fromStdString(", TLY: ") + QString::number(option->rect.topLeft().y()));
         }
         // !!!!! END
 

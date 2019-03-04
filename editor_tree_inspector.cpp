@@ -21,7 +21,7 @@
 #include "editor_tree_inspector.h"
 #include "editor_tree_widgets.h"
 
-#include "interface_relay.h"
+#include "interface_editor_relay.h"
 #include "library.h"
 
 #include "project.h"
@@ -37,25 +37,25 @@
 //####################################################################################
 //##        Constructor
 //####################################################################################
-TreeInspector::TreeInspector(QWidget *parent, DrProject *project, InterfaceRelay *relay) :
-                              QTreeWidget (parent), m_project(project), m_relay(relay)
+TreeInspector::TreeInspector(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
+                              QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay)
 {
     m_widget_hover = new WidgetHoverHandler(this);
     connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
 
-    m_widget_hover->applyHeaderBodyProperties(this, Advisor_Info::Object_Inspector);
+    m_widget_hover->attachToHoverHandler(this, Advisor_Info::Object_Inspector);
 }
 
 
 // SLOT: Catches signals from m_widget_hover
 void TreeInspector::setAdvisorInfo(QString header, QString body) {
-    m_relay->setAdvisorInfo(header, body);
+    m_editor_relay->setAdvisorInfo(header, body);
 }
-void TreeInspector::applyHeaderBodyProperties(QWidget *widget, DrProperty *property) {
-    m_widget_hover->applyHeaderBodyProperties(widget, property);
+void TreeInspector::attachToHoverHandler(QWidget *widget, DrProperty *property) {
+    m_widget_hover->attachToHoverHandler(widget, property);
 }
-void TreeInspector::applyHeaderBodyProperties(QWidget *widget, QString header, QString body) {
-    m_widget_hover->applyHeaderBodyProperties(widget, header, body);
+void TreeInspector::attachToHoverHandler(QWidget *widget, QString header, QString body) {
+    m_widget_hover->attachToHoverHandler(widget, header, body);
 }
 
 
@@ -112,13 +112,13 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
     // Change Advisor text after new item selection
     switch (m_selected_type) {
-    case DrType::World:        m_relay->setAdvisorInfo(Advisor_Info::World_Object);         break;
-    case DrType::Stage:        m_relay->setAdvisorInfo(Advisor_Info::Stage_Object);         break;
-    ///case DrType::Camera:       m_relay->setAdvisorInfo(Advisor_Info::Camera_Object);        break;
-    ///case DrType::Character:    m_relay->setAdvisorInfo(Advisor_Info::Character_Object);     break;
-    case DrType::Object:       m_relay->setAdvisorInfo(Advisor_Info::Object_Object);        break;
-    case DrType::Asset:        m_relay->setAdvisorInfo(Advisor_Info::Asset_Object);         break;
-    default:                   m_relay->setAdvisorInfo(Advisor_Info::Not_Set);
+    case DrType::World:        m_editor_relay->setAdvisorInfo(Advisor_Info::World_Object);         break;
+    case DrType::Stage:        m_editor_relay->setAdvisorInfo(Advisor_Info::Stage_Object);         break;
+    ///case DrType::Camera:       m_editor_relay->setAdvisorInfo(Advisor_Info::Camera_Object);        break;
+    ///case DrType::Character:    m_editor_relay->setAdvisorInfo(Advisor_Info::Character_Object);     break;
+    case DrType::Object:       m_editor_relay->setAdvisorInfo(Advisor_Info::Object_Object);        break;
+    case DrType::Asset:        m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Object);         break;
+    default:                   m_editor_relay->setAdvisorInfo(Advisor_Info::Not_Set);
     }
 
 
@@ -160,25 +160,40 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
                 QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
                 sp_left.setHorizontalStretch(c_inspector_size_left);
             property_name->setSizePolicy(sp_left);
-            applyHeaderBodyProperties(property_name, property_pair.second);
+            attachToHoverHandler(property_name, property_pair.second);
             horizontal_split->addWidget(property_name);
 
             QWidget *new_widget = nullptr;
             switch (property_pair.second->getPropertyType())
             {
-            case Property_Type::Bool:       new_widget = createCheckBox(property_pair.second, fp);                              break;
-            case Property_Type::String:     new_widget = createLineEdit(property_pair.second, fp);                              break;
-            case Property_Type::Int:        new_widget = createIntSpinBox(property_pair.second, fp, Spin_Type::Integer);        break;
-            case Property_Type::Positive:   new_widget = createIntSpinBox(property_pair.second, fp, Spin_Type::Positive);       break;
-            case Property_Type::Float:      new_widget = createDoubleSpinBox(property_pair.second, fp, Spin_Type::Float);       break;
-            case Property_Type::Percent:    new_widget = createDoubleSpinBox(property_pair.second, fp, Spin_Type::Percent);     break;
-            case Property_Type::Angle:      new_widget = createDoubleSpinBox(property_pair.second, fp, Spin_Type::Angle);       break;
-            case Property_Type::PointF:     new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Spin_Type::Point);   break;
-            case Property_Type::SizeF:      new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Spin_Type::Size);    break;
-            case Property_Type::Scale:      new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Spin_Type::Scale);   break;
-            case Property_Type::Variable:   new_widget = createVariableSpinBoxPair(property_pair.second, fp);                   break;
-            case Property_Type::List:       new_widget = createComboBox(property_pair.second, fp);                              break;
-            case Property_Type::List2:      new_widget = createComboBox2(property_pair.second, fp);
+            case Property_Type::Bool:       new_widget = createCheckBox(property_pair.second, fp);                                  break;
+            case Property_Type::String:     new_widget = createLineEdit(property_pair.second, fp);                                  break;
+            case Property_Type::Int:        new_widget = createIntSpinBox(property_pair.second, fp, Spin_Type::Integer);            break;
+            case Property_Type::Positive:   new_widget = createIntSpinBox(property_pair.second, fp, Spin_Type::Positive);           break;
+            case Property_Type::Float:      new_widget = createDoubleSpinBox(property_pair.second, fp, Spin_Type::Float);           break;
+            case Property_Type::Percent:    new_widget = createDoubleSpinBox(property_pair.second, fp, Spin_Type::Percent);         break;
+            case Property_Type::Angle:      new_widget = createDoubleSpinBox(property_pair.second, fp, Spin_Type::Angle);           break;
+            case Property_Type::PositionF:  new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Spin_Type::Position);    break;
+            case Property_Type::PointF:     new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Spin_Type::Point);       break;
+            case Property_Type::SizeF:      new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Spin_Type::Size);        break;
+            case Property_Type::GridF:      new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Spin_Type::Grid);        break;
+            case Property_Type::Scale:      new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Spin_Type::Scale);       break;
+            case Property_Type::Variable:   new_widget = createVariableSpinBoxPair(property_pair.second, fp);                       break;
+            case Property_Type::List:       new_widget = createListBox(property_pair.second, fp);                                   break;
+
+            case Property_Type::Image:                                  // QPixmap
+            case Property_Type::Icon:
+            case Property_Type::Color:                                  // QColor
+            case Property_Type::Polygon:                                // For Collision Shapes
+            case Property_Type::Vector3D:
+
+                //################ !!!!!!!!!!!!!!!!!!!!!!!
+                //
+                //      CASES NOT ACCOUNTED FOR
+                //
+                //################ !!!!!!!!!!!!!!!!!!!!!!!
+
+                break;
             }
 
             if (new_widget != nullptr)
@@ -205,7 +220,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
                                       " QPushButton:pressed { color: " + component_pair.second->getColor().darker(400).name() + "; } ");
         category_button->setIcon(QIcon(component_pair.second->getIcon()));
         category_button->setStyleSheet(buttonColor);
-        applyHeaderBodyProperties(category_button, component_pair.second->getDisplayName(), component_pair.second->getDescription());
+        attachToHoverHandler(category_button, component_pair.second->getDisplayName(), component_pair.second->getDescription());
 
         // Apply the button widget to the tree item
         grid->addWidget(category_button);
