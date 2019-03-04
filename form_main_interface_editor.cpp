@@ -35,6 +35,7 @@
 #include "settings_component.h"
 #include "settings_component_property.h"
 
+
 //####################################################################################
 //##        Editor Interface Relay Handlers
 //####################################################################################
@@ -169,4 +170,12 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
     case Label_Names::Label_Bottom:     label_bottom->setText(new_text);    break;
     }
 }
+
+
+
+
+
+
+
+
 

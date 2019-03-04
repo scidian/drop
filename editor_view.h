@@ -81,6 +81,7 @@ private:
     QVector<QLineF>  m_grid_lines;                                  // Holds latest calculated grid lines
     QPixmap          m_grid_buffer;                                 // Back buffer for painting, grid lines are drawn onto this when view changes and then
                                                                     //      this gets painted instead of drawLine calls every time paintEvent is called
+    QRectF           m_grid_view_rect;                              // Holds the desired area we wish to draw lines or dots
     bool             m_grid_needs_redraw = true;                    // Flag used to mark grid for redrawing during next paintEvent
     Grid_Style   m_grid_style { Grid_Style::Lines };                // Grid type to display
     QPointF      m_grid_origin { 0, 0 };                            // Origin point of grid in scene

@@ -127,8 +127,19 @@ QRectF DrView::rectAtCenterPoint(QPoint center, double rect_size)
 //####################################################################################
 void DrView::paintGrid(QPainter &painter)
 {
+    double point_size = 4;
+    QPen dot_pen =  QPen( Dr::GetColor(Window_Colors::Background_Dark), point_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
+    QPen line_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 1);
+    line_pen.setCosmetic(true);
+
     if (m_grid_needs_redraw) {
-        m_grid_buffer = QPixmap(this->width(), this->height());
+
+        QPointF top_left =  mapFromScene( m_grid_view_rect.topLeft() );
+        QPointF bot_right = mapFromScene( m_grid_view_rect.bottomRight() );
+        QTransform offset = QTransform().translate(-top_left.x(), -top_left.y());
+
+        QRect grid_view = QRectF(top_left, bot_right).toRect();
+        m_grid_buffer = QPixmap(grid_view.width(), grid_view.height());
         m_grid_buffer.fill(QColor(0, 0, 0, 0));
 
         QPainter *grid_painter = new QPainter(&m_grid_buffer);
@@ -136,27 +147,25 @@ void DrView::paintGrid(QPainter &painter)
 
         // ***** Grid Lines
         if (m_grid_style == Grid_Style::Lines) {
-            QPen line_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 1);
-            line_pen.setCosmetic(true);
             grid_painter->setPen(line_pen);
 
             QVector<QLineF> view_lines;
-
             for (auto &line : m_grid_lines) {
-                view_lines.append( QLineF( mapFromScene( line.p1() ) , mapFromScene( line.p2() ) ) );
+                QLineF new_line = QLineF( mapFromScene( line.p1() ) , mapFromScene( line.p2() ) );
+                new_line = offset.map (new_line );
+                view_lines.append( new_line );
             }
             grid_painter->drawLines( view_lines );
 
         // ***** Grid Dots
         } else {
-            double point_size = 4;
-            QPen dot_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), point_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
             grid_painter->setPen(dot_pen);
 
             QVector<QPointF> view_points;
-
             for (auto &point : m_grid_points) {
-                view_points.append( mapFromScene( point) );
+                QPointF new_point = mapFromScene( point );
+                new_point = offset.map( new_point );
+                view_points.append( new_point );
             }
             grid_painter->drawPoints( view_points );
         }
@@ -167,9 +176,16 @@ void DrView::paintGrid(QPainter &painter)
         m_grid_needs_redraw = false;
     }
 
-    QRectF target_rect = QRectF( mapToScene(0, 0), mapToScene(this->width(), this->height()) );
+    // Draw buffer holding grid onto screen
+    QRectF target_rect = m_grid_view_rect;
     painter.drawPixmap(target_rect, m_grid_buffer, QRectF(m_grid_buffer.rect()) );
+
+    // Draws an outline around grid
+    painter.setPen(line_pen);
+    painter.drawRect(m_grid_view_rect);
+
 }
+
 
 
 //####################################################################################

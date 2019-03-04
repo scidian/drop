@@ -252,7 +252,7 @@ void DrView::zoomInOut(int level)
 {
     m_zoom += level;
     if (m_zoom > 500) m_zoom = 500;
-    if (m_zoom < 40) m_zoom = 40;
+    if (m_zoom < -40) m_zoom = -40;
     m_zoom_scale = qPow(qreal(2), (m_zoom - 250) / qreal(50));
 
     QMatrix matrix;

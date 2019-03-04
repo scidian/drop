@@ -50,6 +50,7 @@ public:
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) = 0;
     virtual void        setAdvisorInfo(QString header, QString body) = 0;
     virtual void        setLabelText(Label_Names label, QString text) = 0;
+
 };
 
 

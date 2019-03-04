@@ -71,16 +71,21 @@ void DrView::recalculateGrid()
     if (max_x > scene_rect.right())  max_x = scene_rect.right();
     if (max_y > scene_rect.bottom()) max_y = scene_rect.bottom();
 
-    ///Dr::SetLabelText(Label_Names::Label_1, "Top Left  X: " + QString::number(min_x) + ", Y: " + QString::number(min_y) );
-    ///Dr::SetLabelText(Label_Names::Label_2, "Bot Right X: " + QString::number(max_x) + ", Y: " + QString::number(max_y) );
 
     // ***** Create viewport bounding rect, calculate grid drawing origin point
-    QRectF  viewport_rect = QRectF( QPointF(min_x, min_y), QPointF(max_x, max_y) );
     double grid_x = m_grid_size.x();
     double grid_y = m_grid_size.y();
+
+    QRectF  viewport_rect = QRectF( QPointF(min_x, min_y), QPointF(max_x, max_y) );
     double origin_x = round((viewport_rect.center().x() - m_grid_origin.x()) / grid_x) * grid_x + m_grid_origin.x();
     double origin_y = round((viewport_rect.center().y() - m_grid_origin.y()) / grid_y) * grid_y + m_grid_origin.y();
+    m_grid_view_rect = viewport_rect;
 
+    // Square max and min values so that if grid is rotated it will still fill in the viewport rect
+    if (max_x < max_y) max_x = max_y;
+    if (max_y < max_x) max_y = max_x;
+    if (min_x > min_y) min_x = min_y;
+    if (min_y > min_x) min_y = min_x;
 
     // Hide dots if too zoomed out
     bool allow_dots = true;
@@ -92,68 +97,90 @@ void DrView::recalculateGrid()
     // ********** Calculate lines and dots
     QVector<QPointF> new_points;
     QVector<QLineF>  new_lines;
+    double adjust = 1.44;
 
-    // Bottom right
+    max_x *= adjust;
+    max_y *= adjust;
+    min_x *= adjust;
+    min_y *= adjust;
+
+    // Bottom right -- Right side vertical lines
     for (double x = origin_x; x <= max_x; x += grid_x) {
-        // Right side vertical lines
         new_lines.append( QLineF(x, min_y, x, max_y) );
 
-        if (!allow_dots) continue;
-        for (double y = origin_y; y <= max_y; y += grid_y)
-            new_points.append( QPointF(x, y) );
+        if (allow_dots)     for (double y = origin_y; y <= max_y; y += grid_y)  new_points.append( QPointF(x, y) );
     }
 
-    // Bottom left
+    // Bottom left -- Bottom horizontal lines
     for (double y = origin_y; y <= max_y; y += grid_y) {
-        // Bottom horizontal lines
         new_lines.append( QLineF(min_x, y, max_x, y) );
 
-        if (!allow_dots) continue;
-        for (double x = origin_x; x >= min_x; x -= grid_x)
-            new_points.append( QPointF(x, y) );
+        if (allow_dots)     for (double x = origin_x; x >= min_x; x -= grid_x)  new_points.append( QPointF(x, y) );
     }
 
-    // Top right
+    // Top right -- Top horizontal lines
     for (double y = origin_y; y >= min_y; y -= grid_y) {
-        // Top horizontal lines
         new_lines.append( QLineF(min_x, y, max_x, y) );
-        if (!allow_dots) continue;
 
-        for (double x = origin_x; x <= max_x; x += grid_x)
-            new_points.append( QPointF(x, y) );
+        if (allow_dots)     for (double x = origin_x; x <= max_x; x += grid_x)  new_points.append( QPointF(x, y) );
     }
 
-    // Top left
+    // Top left -- Left side vertical lines
     for (double x = origin_x; x >= min_x; x -= grid_x) {
-        // Left side vertical lines
         new_lines.append( QLineF(x, min_y, x, max_y) );
-        if (!allow_dots) continue;
 
-        for (double y = origin_y; y >= min_y; y -= grid_y)
-            new_points.append( QPointF(x, y) );
+        if (allow_dots)     for (double y = origin_y; y >= min_y; y -= grid_y)  new_points.append( QPointF(x, y) );
     }
 
-    QTransform t = QTransform().rotate(m_grid_rotate);
 
-    // ***** Rotate grid lines
-    QLineF diag1 { viewport_rect.topLeft(),    viewport_rect.bottomRight() };
-    QLineF diag2 { viewport_rect.bottomLeft(), viewport_rect.topRight() };
-    QPointF *ipoint = new QPointF();
+
+    // ********** Rotate grid lines and calculate transform that centers items to be drawn within the viewport rect
     m_grid_lines.clear();
-    for (auto &line: new_lines) {
-        QLineF  rotated_line = t.map( line );
 
-        //if ( rotated_line.intersect(diag1, ipoint) == QLineF::BoundedIntersection ||
-        //     rotated_line.intersect(diag2, ipoint) == QLineF::BoundedIntersection) {
-            m_grid_lines.append( rotated_line );
-        //}
+    // Create some rotation transforms
+    QTransform remove_angle = QTransform().rotate(-m_grid_rotate);
+    QTransform add_angle =    QTransform().rotate( m_grid_rotate);
+
+    // Calculates total bounding box of all potential grid lines
+    QRectF bounding_box = QRectF(0, 0, 0, 0);
+    for (auto &line : new_lines) {
+        bounding_box = bounding_box.united( QRectF(line.p1(), line.p2()).normalized() );
     }
-    delete ipoint;
 
-    // ***** Rotate grid points and add points inside view to QVector used to paint grid dots
+    // Fit center of viewport to grid
+    QPointF center1 = viewport_rect.center();
+    center1.setX(round((center1.x() - m_grid_origin.x()) / grid_x) * grid_x + m_grid_origin.x());
+    center1.setY(round((center1.y() - m_grid_origin.y()) / grid_y) * grid_y + m_grid_origin.y());
+
+    // Fit center of bounding box to grid, then rotate bounding box
+    QPointF center3 = bounding_box.center();
+    center3.setX(round((center3.x() - m_grid_origin.x()) / grid_x) * grid_x + m_grid_origin.x());
+    center3.setY(round((center3.y() - m_grid_origin.y()) / grid_y) * grid_y + m_grid_origin.y());
+    QPointF center2 = add_angle.map ( center3 );
+
+    // Calculate difference between start center and new center
+    QPointF diff = center2 - center1;
+
+    // Align new desired center to grid
+    QPointF rounded_center = remove_angle.map ( QPointF(diff.x(), diff.y()) );
+    rounded_center.setX( round((rounded_center.x() - m_grid_origin.x()) / grid_x) * grid_x + m_grid_origin.x());
+    rounded_center.setY( round((rounded_center.y() - m_grid_origin.y()) / grid_y) * grid_y + m_grid_origin.y());
+    rounded_center = add_angle.map ( rounded_center );
+
+    // Create transform to move center lines within the bounding box, move the lines
+    QTransform slide = QTransform().translate( -rounded_center.x(), -rounded_center.y() );
+    for (auto &line: new_lines) {
+        line = add_angle.map( line );
+        line = slide.map( line );
+        m_grid_lines.append( line );
+    }
+
+
+    // ********** Rotate grid points and add points inside view to QVector used to paint grid dots
     m_grid_points.clear();
     if (allow_dots) {
-        new_points = t.map( new_points );
+        new_points = add_angle.map( new_points );
+        new_points = slide.map( new_points );
         for (auto point : new_points) {
             if (viewport_rect.contains( point ))
                 m_grid_points.append( point );
