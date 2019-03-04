@@ -78,7 +78,7 @@ void DrObject::initializeObjectSettings(QString new_name, double width, double h
     addComponent(Components::Object_Transform, "Transform", "Sets the physical size and angle of the item in the stage.", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Object_Transform)->setIcon(Component_Icons::Transform);
 
-    addPropertyToComponent(Components::Object_Transform, Properties::Object_Position, Property_Type::PointF, QPointF(x, y),
+    addPropertyToComponent(Components::Object_Transform, Properties::Object_Position, Property_Type::PositionF, QPointF(x, y),
                            "Position", "Location of item within the current stage.");
     addPropertyToComponent(Components::Object_Transform, Properties::Object_Rotation, Property_Type::Angle, 0,
                            "Rotation", "Angle of item within the stage.");

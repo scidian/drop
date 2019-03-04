@@ -165,9 +165,11 @@ enum class Property_Type {
     Angle,                  // double       floating point for showing degrees
     String,                 // QString
 
-    PointF,                 // QPointF      Floating pair x and y
+    PositionF,              // QPointF      Floating pair x and y, used for object positions in scene
                             //                  Y is shown flipped (i.e. * -1), Box2D and Monogame use different coordinate system than Qt
-                            //                  Y flipped in: createDoubleSpinBoxPair(), updateInspectorPropertyBoxes(), updateToolTipData()
+                            //                  Y flipped in: createDoubleSpinBoxPair(), updateSettingsFromNewValue(),
+                            //                                updateInspectorPropertyBoxes(), updateToolTipData()
+    PointF,                 // QPointF      Floating pair x and y
     SizeF,                  // QPointF      Floating pair w and h
     GridF,                  // QPointF      Floating pair x and y, minimum value of c_minimum_grid_size for both
     Scale,                  // QPointF      Floating pair, has smaller step in spin box

@@ -85,17 +85,10 @@ void DrViewToolTip::updateToolTipData(QVariant data)
 {
     switch (m_tip_type)
     {
-    case View_Mode::Rotating:
-        m_angle = data.toDouble();
-        break;
-    case View_Mode::Resizing:
-    case View_Mode::Translating:
-        m_x = data.toPointF().x();
-        m_y = data.toPointF().y() * -1;
-        break;
-    case View_Mode::Zooming:
-        m_int = data.toInt();
-        break;
+    case View_Mode::Rotating:       m_angle = data.toDouble();                                          break;
+    case View_Mode::Resizing:       m_x = data.toPointF().x();      m_y = data.toPointF().y();          break;
+    case View_Mode::Translating:    m_x = data.toPointF().x();      m_y = data.toPointF().y() * -1;     break;
+    case View_Mode::Zooming:        m_int = data.toInt();                                               break;
     default: ;
     }
 }

@@ -33,6 +33,7 @@ enum class Spin_Type {
     Percent,                // Floating point between 0.0 and 100.0
     Angle,                  // Show degrees sign
     Point,                  // Has X and Y
+    Position,               // Has X and Y, Y is Flipped (i.e. -250 becomes 250)
     Size,                   // Has W and H
     Scale,                  // Used to have smaller increment / decrement
     Grid,                   // Used for Grid, minimum value of 1 for x and y

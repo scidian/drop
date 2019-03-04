@@ -69,6 +69,7 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 
         case Property_Type::String:     dynamic_cast<QLineEdit*>(widget)->setText(prop->getValue().toString());         break;
 
+        case Property_Type::PositionF:
         case Property_Type::PointF:
         case Property_Type::GridF:
         case Property_Type::SizeF:
@@ -78,7 +79,7 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
             if (doublespin->property(User_Property::Order).toInt() == 0)
                 doublespin->setValue(prop->getValue().toPointF().x());
             else
-                if (prop->getPropertyType() == Property_Type::PointF)
+                if (prop->getPropertyType() == Property_Type::PositionF)
                     doublespin->setValue(prop->getValue().toPointF().y() * -1);
                 else
                     doublespin->setValue(prop->getValue().toPointF().y());
@@ -142,14 +143,21 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
         case Property_Type::String:
             property->setValue(new_value);
             break;
+        case Property_Type::PositionF:                              // Floating pair x and y, y is flipped
         case Property_Type::PointF:                                 // Floating pair x and y
         case Property_Type::GridF:                                  // Floating pair x and y, minimum value c_minimum_grid_size
         case Property_Type::SizeF:                                  // Floating pair w and h
         case Property_Type::Scale:                                  // Floating pair, has smaller step in spin box
         case Property_Type::Variable:                               // floating point pair, number followed by a +/- number
             temp_pointf = property->getValue().toPointF();
-            if (sub_order == 0) temp_pointf.setX( new_value.toDouble() );
-            else                temp_pointf.setY( new_value.toDouble() );
+            if (sub_order == 0)
+                temp_pointf.setX( new_value.toDouble() );
+            else {
+                if (property->getPropertyType() == Property_Type::PositionF)
+                    temp_pointf.setY( new_value.toDouble() * -1);
+                else
+                    temp_pointf.setY( new_value.toDouble() );
+            }
             property->setValue(temp_pointf);
             break;
 
