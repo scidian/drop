@@ -130,7 +130,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
     double  angle = data(User_Roles::Rotation).toDouble();
     QPointF scale = data(User_Roles::Scale).toPointF();
 
-    // Intercepts item position change and limits new location if Snap to Grid is on
+    // ********** Intercepts item position change and limits new location if Snap to Grid is on
     if (change == ItemPositionChange) {
         QPointF new_pos = value.toPointF();
         if (m_editor_relay->currentViewMode() != View_Mode::Translating) return new_pos;
@@ -138,21 +138,33 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 
         QPointF grid_size =   m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
         QPointF grid_origin = m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point).toPointF();
+        QPointF grid_scale =  m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Scale).toPointF();
         double  grid_angle =  m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Rotation).toDouble();
 
-        // Calculate new desired center location based on starting center and difference between starting pos() and new passed in new_pos
+        // ***** Calculate new desired center location based on starting center and difference between starting pos() and new passed in new_pos
         QPointF old_center = m_object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF();
         QPointF new_center = old_center - (pos() - new_pos);
 
-        // Align new desired center to grid
+        // ***** Align new desired center to grid
         QTransform remove_angle = QTransform().rotate(-grid_angle);
         QTransform add_angle =    QTransform().rotate( grid_angle);
-        QPointF rounded_center = remove_angle.map ( new_center );
+        QPointF rounded_center = new_center;
+
+        // Divide by scale to equalize mouse position to scaling being applied after rounding
+        rounded_center.setX( rounded_center.x() / grid_scale.x() );
+        rounded_center.setY( rounded_center.y() / grid_scale.y() );
+
+        // Remove rotation, round new position to nearest grid step, and add rotation back
+        rounded_center = remove_angle.map ( rounded_center );
         rounded_center.setX( round((rounded_center.x() - grid_origin.x()) / grid_size.x()) * grid_size.x() + grid_origin.x());
         rounded_center.setY( round((rounded_center.y() - grid_origin.y()) / grid_size.y()) * grid_size.y() + grid_origin.y());
         rounded_center = add_angle.map ( rounded_center );
 
-        // Adjust new position based on adjustment to grid we just performed
+        // Apply grid scale to new position
+        rounded_center.setX( rounded_center.x() * grid_scale.x() );
+        rounded_center.setY( rounded_center.y() * grid_scale.y() );
+
+        // ***** Adjust new position based on adjustment to grid we just performed
         QPointF adjust_by = new_center - rounded_center;
         QPointF adjusted_pos = new_pos - adjust_by;
 
@@ -167,7 +179,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
         return adjusted_pos;
     }
 
-    // ***** If item position has changed, update it
+    // ********** If item position has changed, update it
     if (change == ItemScenePositionHasChanged) {
         // Value is new scene position (of upper left corner)
         QPointF new_pos =    value.toPointF();
@@ -184,7 +196,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
         return new_pos;
     }
 
-    // ***** If item transform has changed, update it
+    // ********** If item transform has changed, update it
     if (change == ItemTransformHasChanged) {
         // Value is new item QTransform
         QTransform new_transform = value.value<QTransform>();
@@ -202,7 +214,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
         return new_transform;
     }
 
-    // ***** If item z value has changed, update it
+    // ********** If item z value has changed, update it
     if (change == ItemZValueHasChanged) {
         // Value is new double z value
         double new_z = value.toDouble();

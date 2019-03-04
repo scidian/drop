@@ -86,6 +86,7 @@ private:
     Grid_Style   m_grid_style { Grid_Style::Lines };                // Grid type to display
     QPointF      m_grid_origin { 0, 0 };                            // Origin point of grid in scene
     QPointF      m_grid_size { 50, 50 };                            // Grid size
+    QPointF      m_grid_scale { 1, 1 };                             // X and Y scaling for after grid has been rotated
     double       m_grid_rotate = 0;                                 // Rotation of grid lines
     bool         m_grid_should_snap = true;                         // Should snap to grid?
     bool         m_grid_show_on_top = false;                        // Paint grid on top?

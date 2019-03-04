@@ -26,19 +26,6 @@ class DrTripleSpinBox;
 class WidgetHoverHandler;
 
 
-enum class Spin_Type {
-    Integer,                // Any integer
-    Positive,               // Integer >= 0
-    Float,                  // Any floating point number
-    Percent,                // Floating point between 0.0 and 100.0
-    Angle,                  // Show degrees sign
-    Point,                  // Has X and Y
-    Position,               // Has X and Y, Y is Flipped (i.e. -250 becomes 250)
-    Size,                   // Has W and H
-    Scale,                  // Used to have smaller increment / decrement
-    Grid,                   // Used for Grid, minimum value of 1 for x and y
-};
-
 
 // Class constants
 const int   c_inspector_size_left =  3;                 // Size policy width of left column
@@ -81,9 +68,9 @@ public:
     void                addToWidgetList(QWidget *widget) { m_widgets.append(widget); }
     QCheckBox*          createCheckBox(DrProperty *property, QFont &font);
     QPushButton*        createListBox(DrProperty *property, QFont &font);
-    QDoubleSpinBox*     createDoubleSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type);
-    QFrame*             createDoubleSpinBoxPair(DrProperty *property, QFont &font, Spin_Type spin_type);
-    QSpinBox*           createIntSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type);
+    QDoubleSpinBox*     createDoubleSpinBox(DrProperty *property, QFont &font, Property_Type spin_type);
+    QFrame*             createDoubleSpinBoxPair(DrProperty *property, QFont &font, Property_Type spin_type);
+    QSpinBox*           createIntSpinBox(DrProperty *property, QFont &font, Property_Type spin_type);
     QLineEdit*          createLineEdit(DrProperty *property, QFont &font);
     QFrame*             createVariableSpinBoxPair(DrProperty *property, QFont &font);
     DrTripleSpinBox*    initializeEmptySpinBox(DrProperty *property, QFont &font, double start_value);

@@ -52,23 +52,29 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 
 
     // !!!!! #TEMP: Add images / assets
-    long image_1 = project->addImage(":/assets/test_square.png");
-    long image_2 = project->addImage(":/assets/ground_fill.png");
-    long image_3 = project->addImage(":/assets/ground_top.png");
-    long image_4 = project->addImage(":/assets/moon_plant_6.png");
-    long image_5 = project->addImage(":/assets/rover_body.png");
-    long image_6 = project->addImage(":/assets/ball_1.png");
-    long image_7 = project->addImage(":/assets/water_1.png");
-    long image_8 = project->addImage(":/assets/rover_wheel.png");
+    long image_1  = project->addImage(":/assets/test_square.png");
+    long image_2  = project->addImage(":/assets/ground_fill.png");
+    long image_3  = project->addImage(":/assets/ground_top.png");
+    long image_4  = project->addImage(":/assets/moon_plant_6.png");
+    long image_5  = project->addImage(":/assets/rover_body.png");
+    long image_6  = project->addImage(":/assets/ball_1.png");
+    long image_7  = project->addImage(":/assets/water_1.png");
+    long image_8  = project->addImage(":/assets/rover_wheel.png");
+    long image_9  = project->addImage(":/assets/cake_block.png");
+    long image_10 = project->addImage(":/assets/cake_chocolate.png");
+    long image_11 = project->addImage(":/assets/cake_ice_cube.png");
 
-    long asset_1 = project->addAsset(DrAssetType::Object, image_1 );           // "Dr Square"
-    long asset_2 = project->addAsset(DrAssetType::Object, image_2 );           // "Ground Fill"
-    long asset_3 = project->addAsset(DrAssetType::Object, image_3 );           // "Ground Top"
-    long asset_4 = project->addAsset(DrAssetType::Object, image_4 );           // "Moon Plant 6"
-    long asset_5 = project->addAsset(DrAssetType::Object, image_5 );           // "Rover Body"
-    long asset_6 = project->addAsset(DrAssetType::Object, image_6 );           // "Ball 1"
-    long asset_7 = project->addAsset(DrAssetType::Object, image_7 );           // "Water 1"
-    long asset_8 = project->addAsset(DrAssetType::Object, image_8 );           // "Rover Wheel"
+    long asset_1  = project->addAsset(DrAssetType::Object, image_1 );           // "Dr Square"
+    long asset_2  = project->addAsset(DrAssetType::Object, image_2 );           // "Ground Fill"
+    long asset_3  = project->addAsset(DrAssetType::Object, image_3 );           // "Ground Top"
+    long asset_4  = project->addAsset(DrAssetType::Object, image_4 );           // "Moon Plant 6"
+    long asset_5  = project->addAsset(DrAssetType::Object, image_5 );           // "Rover Body"
+    long asset_6  = project->addAsset(DrAssetType::Object, image_6 );           // "Ball 1"
+    long asset_7  = project->addAsset(DrAssetType::Object, image_7 );           // "Water 1"
+    long asset_8  = project->addAsset(DrAssetType::Object, image_8 );           // "Rover Wheel"
+    long asset_9  = project->addAsset(DrAssetType::Object, image_9 );           // "Cake Block"
+    long asset_10 = project->addAsset(DrAssetType::Object, image_10 );          // "Cake Chocolate"
+    long asset_11 = project->addAsset(DrAssetType::Object, image_11 );          // "Cake Ice Cube"
     // !!!!! END
 
 
@@ -94,6 +100,10 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_6, 200, 100,  4);
     project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_7, -200, -200,  1);
     project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_8, 0, 0,  2);
+
+    project->getWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_9,   100, 100, -2);
+    project->getWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_10,  200, 100,  4);
+    project->getWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_11, -200, -200, 1);
     // !!!!! END
 
 

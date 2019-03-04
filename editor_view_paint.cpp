@@ -366,7 +366,12 @@ void DrView::paintItemCenters(QPainter &painter)
     for (auto item: my_scene->getSelectionItems()) {
         QPoint center = mapFromScene( item->sceneTransform().map( item->boundingRect().center() ) );
 
-        QTransform t = QTransform().translate(center.x(), center.y()).rotate(m_grid_rotate).translate(-center.x(), -center.y());
+        QTransform t = QTransform()
+                .translate(center.x(), center.y())
+                .scale(m_grid_scale.x(), m_grid_scale.y())
+                .rotate(m_grid_rotate)
+                .translate(-center.x(), -center.y());
+
         QVector<QLine> lines;
         QLine line;
 

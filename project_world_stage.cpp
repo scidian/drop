@@ -117,6 +117,8 @@ void DrStage::initializeStageSettings(QString new_name)
                            "Grid Origin Point", "Origin point in stage the grid begins at.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Size, Property_Type::GridF, QPointF(50, 50),
                            "Grid Cell Size", "Width and height of the cells in the grid.");
+    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Scale, Property_Type::Scale, QPointF(1, 1),
+                           "Grid Cell Scale", "X and Y stretch factor after grid has been rotated.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Rotation, Property_Type::Angle, 0,
                            "Grid Rotation", "Rotation of the grid lines.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Should_Snap, Property_Type::Bool, true,

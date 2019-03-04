@@ -90,7 +90,7 @@ QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font)
 }
 
 // SIGNAL: void QSpinBox::valueChanged(int i)
-QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type)
+QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, Property_Type spin_type)
 {
     QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     size_policy.setHorizontalStretch(c_inspector_size_right);
@@ -100,9 +100,9 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, Spi
     spin->setSizePolicy(size_policy);
     switch (spin_type)
     {
-    case Spin_Type::Integer:    spin->setRange(-100000000, 100000000);         break;
-    case Spin_Type::Positive:   spin->setRange(0, 100000000);                  break;
-    default:                    spin->setRange(-100000000, 100000000);
+    case Property_Type::Int:        spin->setRange(-100000000, 100000000);         break;
+    case Property_Type::Positive:   spin->setRange(0, 100000000);                  break;
+    default:                        spin->setRange(-100000000, 100000000);
     }
     spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
 
@@ -125,7 +125,7 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, Spi
 }
 
 // SIGNAL: void QDoubleSpinBox::valueChanged(double d)
-QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &font, Spin_Type spin_type)
+QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &font, Property_Type spin_type)
 {
     ///// Could also try to use a QLineEdit with a QValidator
     ///myLineEdit->setValidator( new QDoubleValidator(0, 100, 2, this) );
@@ -139,10 +139,10 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     spin->setDecimals(3);
     switch (spin_type)
     {
-    case Spin_Type::Float:      spin->setRange(-100000000, 100000000);              spin->setSingleStep(5);     break;
-    case Spin_Type::Percent:    spin->setRange(0, 100);     spin->setSuffix("%");   spin->setSingleStep(5);     break;
-    case Spin_Type::Angle:      spin->setRange(-360, 360);  spin->setSuffix("°");   spin->setSingleStep(5);     break;
-    default:                    spin->setRange(-100000000, 100000000);
+    case Property_Type::Double:     spin->setRange(-100000000, 100000000);              spin->setSingleStep(5);     break;
+    case Property_Type::Percent:    spin->setRange(0, 100);     spin->setSuffix("%");   spin->setSingleStep(5);     break;
+    case Property_Type::Angle:      spin->setRange(-360, 360);  spin->setSuffix("°");   spin->setSingleStep(5);     break;
+    default:                        spin->setRange(-100000000, 100000000);
     }
     spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);     // Hides little up / down buttons
 
@@ -166,7 +166,7 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     return spin;
 }
 
-QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font, Spin_Type spin_type)
+QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font, Property_Type spin_type)
 {
     QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     size_policy.setHorizontalStretch(c_inspector_size_right);
@@ -181,26 +181,27 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
     DrTripleSpinBox *spin_left  =  initializeEmptySpinBox(property, font, property->getValue().toPointF().x());
     DrTripleSpinBox *spin_right;
 
-    if (spin_type == Spin_Type::Position)
+    if (spin_type == Property_Type::PositionF)
         spin_right  = initializeEmptySpinBox(property, font, -1 * property->getValue().toPointF().y());
     else
         spin_right  = initializeEmptySpinBox(property, font, property->getValue().toPointF().y());
 
     switch (spin_type)
     {
-    case Spin_Type::Position:
-    case Spin_Type::Point:
+    case Property_Type::PositionF:
+    case Property_Type::PointF:
+    case Property_Type::Scale:
         spin_left->setPrefix("X: ");        spin_right->setPrefix("Y: ");   break;
-    case Spin_Type::Grid:
+    case Property_Type::GridF:
         spin_left->setPrefix("W: ");        spin_right->setPrefix("H: ");
         spin_left->setRange( c_minimum_grid_size, 100000000);
         spin_right->setRange(c_minimum_grid_size, 100000000);
         break;
-    case Spin_Type::Size:
+    case Property_Type::SizeF:
         spin_left->setPrefix("W: ");        spin_right->setPrefix("H: ");   break;
     default: ;
     }
-    if (spin_type == Spin_Type::Scale) {
+    if (spin_type == Property_Type::Scale) {
         spin_left->setSingleStep(.1);
         spin_right->setSingleStep(.1);
     } else {

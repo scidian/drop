@@ -160,9 +160,9 @@ enum class Property_Type {
     Bool,                   // bool         true or false
     Int,                    // long         any integer
     Positive,               // long         integer >= 0
-    Float,                  // double       any floating point
+    Double,                 // double       any floating point number
     Percent,                // double       floating point from 0.0 to 100.0
-    Angle,                  // double       floating point for showing degrees
+    Angle,                  // double       floating point for showing degrees, shows degree symbol in spinbox
     String,                 // QString
 
     PositionF,              // QPointF      Floating pair x and y, used for object positions in scene
@@ -171,8 +171,8 @@ enum class Property_Type {
                             //                                updateInspectorPropertyBoxes(), updateToolTipData()
     PointF,                 // QPointF      Floating pair x and y
     SizeF,                  // QPointF      Floating pair w and h
-    GridF,                  // QPointF      Floating pair x and y, minimum value of c_minimum_grid_size for both
-    Scale,                  // QPointF      Floating pair, has smaller step in spin box
+    GridF,                  // QPointF      Floating pair x and y, minimum value of c_minimum_grid_size for both x and y
+    Scale,                  // QPointF      Floating pair, has smaller increment step in spin box
     Variable,               // QPointF      floating point pair, number followed by a +/- number
 
     Image,                  // QPixmap
@@ -244,6 +244,7 @@ enum class Properties
     Stage_Grid_Style,               //list
     Stage_Grid_Origin_Point,        //pointf
     Stage_Grid_Size,                //sizef
+    Stage_Grid_Scale,               //scale
     Stage_Grid_Rotation,            //angle
     Stage_Grid_Should_Snap,         //bool
     Stage_Grid_Show_On_Top,         //bool
@@ -257,10 +258,10 @@ enum class Properties
     Object_Damage,                  //list
 
     // Transform
-    Object_Position,                //pointf
+    Object_Position,                //positionf
     Object_Rotation,                //angle
     Object_Size,                    //sizef
-    Object_Scale,                   //pointf
+    Object_Scale,                   //scale
 
     // Layering
     Object_Z_Order,                 //int

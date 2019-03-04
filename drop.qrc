@@ -41,5 +41,8 @@
         <file>assets/ball_1.png</file>
         <file>assets/rover_wheel.png</file>
         <file>assets/water_1.png</file>
+        <file>assets/cake_block.png</file>
+        <file>assets/cake_chocolate.png</file>
+        <file>assets/cake_ice_cube.png</file>
     </qresource>
 </RCC>
