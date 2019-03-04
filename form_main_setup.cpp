@@ -88,8 +88,8 @@ void FormMain::buildWindowModeEditStage()
     sizePolicyPreferredHorizontal.setVerticalStretch(0);
 
     QSizePolicy sizePolicyPreferredVertical(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    sizePolicyPreferredHorizontal.setHorizontalStretch(0);
-    sizePolicyPreferredHorizontal.setVerticalStretch(1);
+    sizePolicyPreferredVertical.setHorizontalStretch(0);
+    sizePolicyPreferredVertical.setVerticalStretch(1);
 
     QSizePolicy sizePolicyMinimum(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::MinimumExpanding);
     sizePolicy.setHorizontalStretch(0);
@@ -224,77 +224,26 @@ void FormMain::buildWindowModeEditStage()
             areaBottom->setFont(font);
             areaBottom->setWidgetResizable(true);
             areaBottom->setFrameShape(QFrame::NoFrame);
-                label_1 = new QLabel(areaBottom);
-                label_1->setObjectName(QStringLiteral("label_1"));
-                label_1->setGeometry(QRect(10, 5, 220, 21));
-                label_1->setFont(font);
-                label_2 = new QLabel(areaBottom);
-                label_2->setObjectName(QStringLiteral("label_2"));
-                label_2->setGeometry(QRect(10, 20, 220, 21));
-                label_2->setFont(font);
-                label_3 = new QLabel(areaBottom);
-                label_3->setObjectName(QStringLiteral("label_2"));
-                label_3->setGeometry(QRect(10, 35, 220, 21));
-                label_3->setFont(font);
-                label_mouse_1 = new QLabel(areaBottom);
-                label_mouse_1->setObjectName(QStringLiteral("label_mouse_1"));
-                label_mouse_1->setGeometry(QRect(10, 50, 220, 21));
-                label_mouse_1->setFont(font);
-                label_mouse_2 = new QLabel(areaBottom);
-                label_mouse_2->setObjectName(QStringLiteral("label_mouse_2"));
-                label_mouse_2->setGeometry(QRect(10, 65, 220, 21));
-                label_mouse_2->setFont(font);
+                label_1 =       createLabel(areaBottom,   "label_1",            QRect( 10,  5, 220, 21),    font);
+                label_2 =       createLabel(areaBottom,   "label_2",            QRect( 10, 20, 220, 21),    font);
+                label_3 =       createLabel(areaBottom,   "label_3",            QRect( 10, 35, 220, 21),    font);
+                label_mouse_1 = createLabel(areaBottom,   "label_mouse_1",      QRect( 10, 50, 220, 21),    font);
+                label_mouse_2 = createLabel(areaBottom,   "label_mouse_2",      QRect( 10, 65, 220, 21),    font);
 
-                label_object_1 = new QLabel(areaBottom);
-                label_object_1->setObjectName(QStringLiteral("label_object"));
-                label_object_1->setGeometry(QRect(240, 5, 400, 21));
-                label_object_1->setFont(font);
-                label_object_2 = new QLabel(areaBottom);
-                label_object_2->setObjectName(QStringLiteral("label_object_2"));
-                label_object_2->setGeometry(QRect(240, 20, 400, 21));
-                label_object_2->setFont(font);
-                label_object_3 = new QLabel(areaBottom);
-                label_object_3->setObjectName(QStringLiteral("label_object_3"));
-                label_object_3->setGeometry(QRect(240, 35, 400, 21));
-                label_object_3->setFont(font);
-                label_object_4 = new QLabel(areaBottom);
-                label_object_4->setObjectName(QStringLiteral("label_object_4"));
-                label_object_4->setGeometry(QRect(240, 50, 400, 21));
-                label_object_4->setFont(font);
-                label_object_5 = new QLabel(areaBottom);
-                label_object_5->setObjectName(QStringLiteral("label_object_4"));
-                label_object_5->setGeometry(QRect(240, 65, 400, 21));
-                label_object_5->setFont(font);
+                label_object_1 = createLabel(areaBottom,  "label_object_1",     QRect(240,  5, 400, 21),    font);
+                label_object_2 = createLabel(areaBottom,  "label_object_2",     QRect(240, 20, 400, 21),    font);
+                label_object_3 = createLabel(areaBottom,  "label_object_3",     QRect(240, 35, 400, 21),    font);
+                label_object_4 = createLabel(areaBottom,  "label_object_4",     QRect(240, 50, 400, 21),    font);
+                label_object_5 = createLabel(areaBottom,  "label_object_5",     QRect(240, 65, 400, 21),    font);
 
-                label_position = new QLabel(areaBottom);
-                label_position->setObjectName(QStringLiteral("label_position"));
-                label_position->setGeometry(QRect(560, 5, 400, 21));
-                label_position->setFont(font);
-                label_center = new QLabel(areaBottom);
-                label_center->setObjectName(QStringLiteral("label_center"));
-                label_center->setGeometry(QRect(560, 20, 400, 21));
-                label_center->setFont(font);
-                label_scale = new QLabel(areaBottom);
-                label_scale->setObjectName(QStringLiteral("label_scale"));
-                label_scale->setGeometry(QRect(560, 35, 400, 21));
-                label_scale->setFont(font);
-                label_rotate = new QLabel(areaBottom);
-                label_rotate->setObjectName(QStringLiteral("label_rotate"));
-                label_rotate->setGeometry(QRect(560, 50, 400, 21));
-                label_rotate->setFont(font);
-                label_z_order = new QLabel(areaBottom);
-                label_z_order->setObjectName(QStringLiteral("label_z_order"));
-                label_z_order->setGeometry(QRect(560, 65, 400, 21));
-                label_z_order->setFont(font);
-                label_pos_flag = new QLabel(areaBottom);
-                label_pos_flag->setObjectName(QStringLiteral("label_pos_flag"));
-                label_pos_flag->setGeometry(QRect(560, 80, 400, 21));
-                label_pos_flag->setFont(font);
+                label_position = createLabel(areaBottom,  "label_position",     QRect(560,  5, 400, 21),    font);
+                label_center =   createLabel(areaBottom,  "label_center",       QRect(560, 20, 400, 21),    font);
+                label_scale =    createLabel(areaBottom,  "label_scale",        QRect(560, 35, 400, 21),    font);
+                label_rotate =   createLabel(areaBottom,  "label_rotate",       QRect(560, 50, 400, 21),    font);
+                label_z_order =  createLabel(areaBottom,  "label_z_order",      QRect(560, 65, 400, 21),    font);
+                label_pos_flag = createLabel(areaBottom,  "label_pos_flag",     QRect(560, 80, 400, 21),    font);
 
-                label_bottom = new QLabel(areaBottom);
-                label_bottom->setObjectName(QStringLiteral("label_bottom"));
-                label_bottom->setGeometry(QRect(10, 80, 700, 21));
-                label_bottom->setFont(font);
+                label_bottom =   createLabel(areaBottom,  "label_bottom",       QRect( 10, 80, 700, 21),    font);
         splitterVertical->addWidget(areaBottom);
 
         splitterVertical->setStretchFactor(0, 1);           // widgetStage (index 0) should stretch (1)
@@ -504,6 +453,16 @@ void FormMain::buildWindowModeEditStage()
 }
 
 
+QLabel* FormMain::createLabel(QWidget *parent, QString object_name, QRect label_rect, QFont &label_font)
+{
+    QLabel *new_label;
+    new_label = new QLabel(parent);
+    new_label->setObjectName(object_name);
+    new_label->setGeometry(label_rect);
+    new_label->setFont(label_font);
+    return new_label;
+}
+
 
 //####################################################################################
 //##        Connect / disconnect signals emitted by FormMain
@@ -526,12 +485,6 @@ void FormMain::disconnectSignals()
     disconnect(this, SIGNAL(newStageSelected(DrProject*, DrScene*, long, long)),
                scene,  SLOT(newStageSelected(DrProject*, DrScene*, long, long)) );
 }
-
-
-
-
-
-
 
 
 

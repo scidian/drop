@@ -125,6 +125,8 @@ private:
     void        connectSignals();
     void        disconnectSignals();
 
+    QLabel*     createLabel(QWidget *parent, QString object_name, QRect label_rect, QFont &label_font);
+
     // Menu Bar Functions
     void        menuAbout();
     void        menuUndo();
