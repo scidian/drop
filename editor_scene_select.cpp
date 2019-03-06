@@ -7,6 +7,8 @@
 //
 #include "editor_item.h"
 #include "editor_scene.h"
+
+#include "globals.h"
 #include "library.h"
 
 #include "project.h"
@@ -33,7 +35,8 @@ void DrScene::selectionChanged()
 
     if (m_editor_relay) {
         QList<long> item_keys { };
-        for (auto item : selectedItems()) item_keys.append(item->data(User_Roles::Key).toLongLong());
+        for (auto item : selectedItems())
+            item_keys.append(item->data(User_Roles::Key).toLongLong());
 
         m_editor_relay->buildObjectInspector(item_keys);
         m_editor_relay->updateItemSelection(Editor_Widgets::Scene_View);
@@ -43,9 +46,33 @@ void DrScene::selectionChanged()
 void DrScene::resetSelectionGroup()
 {
     m_selection_items = selectedItems();
-    m_selection_angle = 0;
     m_selection_scale = QPointF(1, 1);
-    m_selection_box = totalSelectionSceneRect();
+    m_selection_angle = m_editor_relay->currentViewGridAngle();
+    if (shouldEnableResizeToGrid() == false) m_selection_angle = 0;
+
+    updateSelectionBox();
+    ///m_selection_box = totalSelectionSceneRect();
+}
+
+// Checks if all selected items are at the current grid angle (to enable snapping)
+bool DrScene::shouldEnableResizeToGrid()
+{
+    bool   match_angle = true;
+    double current_view_grid_angle = m_editor_relay->currentViewGridAngle();
+
+    // Check that all selected items match grid angle
+    for (auto item : m_selection_items) {
+        if (Dr::IsSimilarAngle(item->data(User_Roles::Rotation).toDouble(), current_view_grid_angle) == false) match_angle = false;
+    }
+
+    // Check that selectiopn angle matches grid angle
+    if (Dr::IsSimilarAngle(m_selection_angle, current_view_grid_angle) == false) match_angle = false;
+
+    // Check that grid is squared
+    QPointF current_view_grid_scale = m_editor_relay->currentViewGridScale();
+    if (qFuzzyCompare(current_view_grid_scale.x(), current_view_grid_scale.y()) == false) match_angle = false;
+
+    return match_angle;
 }
 
 

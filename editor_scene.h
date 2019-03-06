@@ -124,6 +124,7 @@ public:
 
     QGraphicsItemGroup*     createEmptyItemGroup(double angle = 0, QPointF scale = QPointF(1, 1));
     void                    resetSelectionGroup();
+    bool                    shouldEnableResizeToGrid();
     QRectF                  totalSelectionSceneRect();
     void                    updateSelectionBox();
 

@@ -167,8 +167,10 @@ void DrView::updateSelectionBoundingBox(int called_from)
 
     // Check if bounding box handles should be squares or circles
     double angle = my_scene->getSelectionAngle();
-    if (isSquare(angle) == false)  m_handles_shape = Handle_Shapes::Circles;
-    else                           m_handles_shape = Handle_Shapes::Squares;
+    if (my_scene->shouldEnableResizeToGrid())   m_handles_shape = Handle_Shapes::Squares;
+    else                                        m_handles_shape = Handle_Shapes::Circles;
+
+
 
     // ***** Store corner handle polygons
     QPointF top_left =  transform.map(rect.topLeft());

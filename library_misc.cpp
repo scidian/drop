@@ -55,6 +55,32 @@ bool IsCloseTo(double number_desired, double number_to_check, double tolerance)
 
 
 //####################################################################################
+//##        Angle Comparision Functions
+//####################################################################################
+// Returns true of the two angles are parrallel or perpendicular
+bool IsSimilarAngle(double angle1, double angle2)
+{
+    while (angle1 >= 90) { angle1 -= 90; }
+    while (angle1 <   0) { angle1 += 90; }
+    while (angle2 >= 90) { angle2 -= 90; }
+    while (angle2 <   0) { angle2 += 90; }
+    return IsCloseTo(angle1, angle2, .001);
+}
+
+// Returns true is 'check_angle' in equal to 0, 90, 180, or 270, i.e. "square" angle
+bool IsSquare(double check_angle)
+{
+    check_angle = abs(check_angle);
+    while (check_angle >= 360) check_angle -= 360;
+    if (qFuzzyCompare(check_angle, 0))   return true;
+    if (qFuzzyCompare(check_angle, 90))  return true;
+    if (qFuzzyCompare(check_angle, 180)) return true;
+    if (qFuzzyCompare(check_angle, 270)) return true;
+    return false;
+}
+
+
+//####################################################################################
 //##        Trimms double to max_decimal_places, and then removes any trailing zeros
 //####################################################################################
 QString RemoveTrailingDecimals(double value, int max_decimal_places)

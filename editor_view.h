@@ -180,6 +180,8 @@ public:
     void            updateSelectionBoundingBox(int called_from = 0);
 
     // Grid Functions
+    double          currentGridAngle() { return m_grid_rotate; }
+    QPointF         currentGridScale() { return m_grid_scale; }
     void            recalculateGrid();
     QPointF         roundToGrid(QPointF point_in_scene);
     void            updateGrid();
@@ -201,7 +203,6 @@ public:
     void            startRotate(QPoint mouse_in_view);
     void            rotateSelection(QPointF mouse_in_view);
     double          calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt);
-    bool            isSquare(double check_angle);
 
     // Resize functions
     void            startResize(QPoint mouse_in_view);

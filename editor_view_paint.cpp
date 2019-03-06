@@ -279,6 +279,7 @@ void DrView::paintBoundingBox(QPainter &painter)
 void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw)
 {
     painter.setBrush(Dr::GetColor(Window_Colors::Icon_Light));
+    painter.resetTransform();
 
     QVector<QPointF> handles;
     for (int i = 0; i < static_cast<int>(Position_Flags::Total); i++)
@@ -293,11 +294,16 @@ void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw)
             to_draw.setX(handles[i].x() - (handle_size / 2));    to_draw.setWidth(handle_size);
             to_draw.setY(handles[i].y() - (handle_size / 2));    to_draw.setHeight(handle_size);
 
-            switch (shape_to_draw)
-            {
-            case Handle_Shapes::Circles:    painter.drawPixmap(to_draw, p_circle, p_circle.rect());     break;
-            case Handle_Shapes::Squares:    painter.drawPixmap(to_draw, p_square, p_square.rect());     break;
+            if (shape_to_draw == Handle_Shapes::Circles) {
+                painter.drawPixmap(to_draw, p_circle, p_circle.rect());
+            } else if (shape_to_draw == Handle_Shapes::Squares) {
+                painter.translate(to_draw.center());
+                painter.rotate( m_grid_rotate );
+                painter.scale(.25, .25);
+                painter.drawPixmap(-p_square.rect().center(), p_square);
+                painter.resetTransform();
             }
+
         } else {
             to_draw.setX(handles[i].x() - (rotate_size / 2));    to_draw.setWidth(rotate_size);
             to_draw.setY(handles[i].y() - (rotate_size / 2));    to_draw.setHeight(rotate_size);

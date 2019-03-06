@@ -152,7 +152,7 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     QPointF zero_rotated_opposite_in_scene = mapToScene(zero_rotated_opposite.toPoint());
 
     // Snap if snapping is turned on
-    if (m_grid_should_snap)
+    if (m_grid_should_snap && m_handles_shape == Handle_Shapes::Squares)
         mouse_in_scene = roundToGrid( mouse_in_scene );
 
     QPointF point_in_shape = mapToScene(remove_rotation.map(mapFromScene(mouse_in_scene)));

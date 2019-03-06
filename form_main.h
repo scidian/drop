@@ -111,6 +111,8 @@ public:
     virtual void        updateItemSelection(Editor_Widgets selected_from) override;
 
     virtual void        centerViewOnPoint(QPointF center_point) override;
+    virtual double      currentViewGridAngle() override;
+    virtual QPointF     currentViewGridScale() override;
     virtual View_Mode   currentViewMode() override;
     virtual QPointF     roundPointToGrid(QPointF point_in_scene) override;
 

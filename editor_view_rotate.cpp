@@ -50,23 +50,6 @@ void DrView::startRotate(QPoint mouse_in_view)
 
 
 //####################################################################################
-//##        Angle Comparision Functions
-//####################################################################################
-// Returns true is 'check_angle' in equal to 0, 90, 180, or 270, i.e. "square" angle
-bool DrView::isSquare(double check_angle)
-{
-    check_angle = abs(check_angle);
-    while (check_angle >= 360) check_angle -= 360;
-    if (qFuzzyCompare(check_angle, 0))   return true;
-    if (qFuzzyCompare(check_angle, 90))  return true;
-    if (qFuzzyCompare(check_angle, 180)) return true;
-    if (qFuzzyCompare(check_angle, 270)) return true;
-    return false;
-}
-
-
-
-//####################################################################################
 //##        Main Rotation Function
 //####################################################################################
 void DrView::rotateSelection(QPointF mouse_in_view)

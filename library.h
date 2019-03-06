@@ -46,6 +46,11 @@ bool    IsCloseTo(double number_desired, double number_to_check, double toleranc
 QString RemoveTrailingDecimals(double value, int max_decimal_places);
 
 
+// Angle Functions
+bool    IsSimilarAngle(double angle1, double angle2);
+bool    IsSquare(double check_angle);
+
+
 // User Interaction
 QString CurrentTimeAsString();
 void    ShowErrorMessage(QString function_name, QString error_message);

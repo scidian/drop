@@ -34,6 +34,8 @@ public:
     virtual void        updateItemSelection(Editor_Widgets selected_from) = 0;
 
     virtual void        centerViewOnPoint(QPointF center_point) = 0;
+    virtual double      currentViewGridAngle() = 0;
+    virtual QPointF     currentViewGridScale() = 0;
     virtual View_Mode   currentViewMode() = 0;
     virtual QPointF     roundPointToGrid(QPointF point_in_scene) = 0;
 
