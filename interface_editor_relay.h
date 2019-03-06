@@ -35,6 +35,7 @@ public:
 
     virtual void        centerViewOnPoint(QPointF center_point) = 0;
     virtual View_Mode   currentViewMode() = 0;
+    virtual QPointF     roundPointToGrid(QPointF point_in_scene) = 0;
 
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) = 0;
     virtual void        setAdvisorInfo(QString header, QString body) = 0;

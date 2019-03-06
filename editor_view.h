@@ -181,6 +181,7 @@ public:
 
     // Grid Functions
     void            recalculateGrid();
+    QPointF         roundToGrid(QPointF point_in_scene);
     void            updateGrid();
 
     // Paint Functions

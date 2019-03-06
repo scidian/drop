@@ -112,6 +112,7 @@ public:
 
     virtual void        centerViewOnPoint(QPointF center_point) override;
     virtual View_Mode   currentViewMode() override;
+    virtual QPointF     roundPointToGrid(QPointF point_in_scene) override;
 
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) override;
     virtual void        setAdvisorInfo(QString header, QString body) override;
