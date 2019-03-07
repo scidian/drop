@@ -87,7 +87,7 @@ void DrObject::initializeObjectSettings(QString new_name, double width, double h
     addPropertyToComponent(Components::Object_Transform, Properties::Object_Scale, Property_Type::ScaleF, QPointF(1, 1),
                            "Scale", "X and Y scale of item within the stage.");
 
-    addComponent(Components::Object_Layering, "Layering", "Controls the order items are drawn onto the screen. Lower numbers are "
+    addComponent(Components::Object_Layering, "Layering", "Controls the order items are drawn onto the screen. For \"Z Order\", lower numbers are "
                                                            "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, true);
     getComponent(Components::Object_Layering)->setIcon(Component_Icons::Layering);
 
@@ -105,6 +105,14 @@ void DrObject::initializeObjectSettings(QString new_name, double width, double h
                            "Velocity Y", "Initial vertical movement speed of item +/- variable amount.");
     addPropertyToComponent(Components::Object_Movement, Properties::Object_Angular_Velocity, Property_Type::Variable, QPointF(0, 0),
                            "Angular Velocity", "Rotational movement speed of item +/- variable amount.");
+
+
+    addComponent(Components::Object_Appearance, "Appearance", "Filters for objects as they appear in the Stage. ", Component_Colors::Golden_Yellow, true);
+    getComponent(Components::Object_Appearance)->setIcon(Component_Icons::Appearance);
+
+    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Brightness, Property_Type::Int, 0,
+                           "Brightness", "How light / dark this object should appear.");
+
 }
 
 void DrObject::initializeCameraSettings()

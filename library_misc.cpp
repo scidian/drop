@@ -28,23 +28,6 @@ double CheckScaleNotZero(double scale_to_check)
 
 
 //####################################################################################
-//##        Returns number_to_check fit to within the bounds of min / max
-//####################################################################################
-//
-long FitToRange(long number_to_check, long min, long max)
-{
-    if (number_to_check < min) number_to_check = min;
-    if (number_to_check > max) number_to_check = max;
-    return number_to_check;
-}
-double FitToRange(double number_to_check, double min, double max)
-{
-    if (number_to_check < min) number_to_check = min;
-    if (number_to_check > max) number_to_check = max;
-    return number_to_check;
-}
-
-//####################################################################################
 //##        Returns true if 'number_desired' is within +-'tolerance' of 'number_to_check'
 //####################################################################################
 //

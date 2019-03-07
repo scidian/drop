@@ -17,6 +17,8 @@
 #include "editor_scene.h"
 #include "globals.h"
 
+#include "image_filter_color.h"
+
 #include "interface_editor_relay.h"
 #include "library.h"
 
@@ -44,7 +46,8 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrObject *object,
     m_temp_only  = is_temp_only;
 
     // Load image from asset
-    setPixmap(m_asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>());
+    m_pixmap = m_asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
+    setPixmap( m_pixmap );
 
     // Dimensions of associated asset, used for boundingRect
     m_asset_width =  m_asset->getWidth();
@@ -280,7 +283,7 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     double transparency = 1;
     if (m_object) {
         transparency = m_object->getComponentPropertyValue(Components::Object_Layering, Properties::Object_Opacity).toDouble() / 100;
-        transparency = Dr::FitToRange(transparency, 0, 1);
+        transparency = Dr::FitToRange(transparency, 0.0, 1.0);
     }
 
     // Apply the proper opacity to this item and either paint the pixmap, or paint a pattern representation of the item
@@ -320,6 +323,16 @@ QColor DrItem::getColorAtPoint(QPointF at_view_point, QGraphicsView *mouse_over_
     QPointF in_scene = mouse_over_view->mapToScene(at_view_point.toPoint());
     QPointF in_object = this->mapFromScene(in_scene);
     return this->getColorAtPoint(in_object);
+}
+
+
+//####################################################################################
+//##        Pixmap Filters
+//####################################################################################
+void DrItem::filterBrightness(int brightness)
+{
+    QPixmap np = DrFilter::changeBrightness(m_pixmap, brightness);
+    setPixmap(np);
 }
 
 

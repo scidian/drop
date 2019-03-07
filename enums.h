@@ -203,6 +203,7 @@ enum class Components
     Object_Transform,
     Object_Layering,
     Object_Movement,
+    Object_Appearance,
 
     Object_Camera_Settings,
     Object_Character_Settings,
@@ -269,16 +270,22 @@ enum class Properties
     Object_Opacity,                 //double
 
     // Movement
-    Object_Velocity_X,             //variable
-    Object_Velocity_Y,             //variable
-    Object_Angular_Velocity,       //variable
+    Object_Velocity_X,              //variable
+    Object_Velocity_Y,              //variable
+    Object_Angular_Velocity,        //variable
+
+    // Appearance
+    Object_Brightness,              //int
+
+
+    // *****
 
     // Camera Settings
-    Object_Camera_Zoom,            //double
+    Object_Camera_Zoom,             //double
 
     // Character Settings
-    Object_Character_Jump_X,       //double
-    Object_Character_Jump_Y,       //double
+    Object_Character_Jump_X,        //double
+    Object_Character_Jump_Y,        //double
 };
 
 

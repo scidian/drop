@@ -63,7 +63,7 @@ void DrAsset::initializeAssetSettings(QString new_name, QPixmap pixmap)
 
 
     addComponent(Components::Asset_Animation, "Animation", "Images to show for this asset", Component_Colors::Green_SeaGrass, true);
-    getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Transform);
+    getComponent(Components::Asset_Animation)->setIcon( nullptr ); // !!!!! TODO
 
     addPropertyToComponent(Components::Asset_Animation, Properties::Asset_Animation_Default, Property_Type::Image, QVariant(pixmap),
                            "Default Animation", "Image shown for this object.");

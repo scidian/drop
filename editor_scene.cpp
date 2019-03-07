@@ -233,6 +233,12 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
         case Properties::Object_Z_Order:
             item->setZValue(new_value.toDouble());
             break;
+
+
+        case Properties::Object_Brightness:
+            item->filterBrightness( new_value.toInt() );
+            break;
+
         default: ;
         }
     }

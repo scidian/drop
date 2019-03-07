@@ -35,6 +35,8 @@ private:
     double          m_asset_width;                          // Width of asset this item is drawn from
     double          m_asset_height;                         // Height of asset this item is drawn from
 
+    QPixmap         m_pixmap;                               // Pixmap used to represent this object, filters are applied to this
+
     double          m_start_x;                              // Stores the item position the first time it was loaded
     double          m_start_y;                              // Stores the item position the first time it was loaded
 
@@ -60,6 +62,9 @@ public:
     // Function Calls
     void                    disableItemChangeFlags();
     void                    enableItemChangeFlags();
+
+    // Pixmap Filters
+    void                    filterBrightness(int brightness);
 
     // Getters and Setters
     IEditorRelay*           getRelay()       { return m_editor_relay; }

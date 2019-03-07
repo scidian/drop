@@ -88,7 +88,10 @@ void TreeAssets::buildAssetTree()
                                                     Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
                                   " QPushButton:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } "
                                   " QPushButton:pressed { color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } ");
-    //category_button->setIcon(QIcon(component_map.second->getIcon()));
+
+    /// !!!!! TODO: Set Icon call, need to implement
+    ///category_button->setIcon(QIcon(component_map.second->getIcon()));
+
     category_button->setStyleSheet(buttonColor);
     category_button->setEnabled(false);
     attachToHoverHandler(category_button, "Object Assets", "Objects for use in Stage");

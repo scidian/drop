@@ -44,5 +44,6 @@
         <file>assets/cake_block.png</file>
         <file>assets/cake_chocolate.png</file>
         <file>assets/cake_ice_cube.png</file>
+        <file>inspector_icons/comp_appearance.png</file>
     </qresource>
 </RCC>

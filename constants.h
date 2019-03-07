@@ -33,6 +33,8 @@ namespace Component_Colors
 
     const QColor Green_SeaGrass { QColor(154, 225, 157, 255) };
 
+    const QColor Golden_Yellow  { QColor(233, 218,   4, 255) };
+
     const QColor Brown_Sugar    { QColor(165, 117,  72, 255) };
     const QColor Beige_Apricot  { QColor(252, 215, 173, 255) };
 
@@ -49,6 +51,7 @@ namespace Component_Icons
     const QString Transform     { QString(":/inspector_icons/comp_transform.png") };
     const QString Layering      { QString(":/inspector_icons/comp_layering.png") };
     const QString Movement      { QString(":/inspector_icons/comp_movement.png") };
+    const QString Appearance    { QString(":/inspector_icons/comp_appearance.png") };
     const QString Camera        { QString(":/inspector_icons/comp_camera.png") };
     const QString Character     { QString(":/inspector_icons/comp_character.png") };
     const QString None          { QString("") };

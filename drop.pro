@@ -68,7 +68,8 @@ SOURCES += \
     editor_scene_key_press.cpp \
     form_main_interface_editor.cpp \
     interface_editor_relay.cpp \
-    globals.cpp
+    globals.cpp \
+    image_filter_color.cpp
 
 HEADERS += \
     enums.h \
@@ -96,7 +97,8 @@ HEADERS += \
     editor_tree_project.h \
     constants.h \
     interface_editor_relay.h \
-    globals.h
+    globals.h \
+    image_filter_color.h
 
 FORMS +=
 
