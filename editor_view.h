@@ -46,8 +46,8 @@ enum class Grid_Style {     Lines,  Dots,               };
 
 
 // Class constants
-const double c_angle_tolerance = 2.5;                               // Angle distance to fuzzy compare to desired angle
-const int    c_angle_step = 15;                                     // Angle intervals rotate function should snap to
+constexpr double c_angle_tolerance = 2.5;                           // Angle distance to fuzzy compare to desired angle
+constexpr int    c_angle_step = 15;                                 // Angle intervals rotate function should snap to
 
 
 //####################################################################################
@@ -128,6 +128,8 @@ private:
     Position_Flags                  m_start_resize_grip;            // Stores which Size Grip Handle we started resize over
     X_Axis                          m_do_x;                         // Processed after click to know which sides to resize from
     Y_Axis                          m_do_y;                         // Processed after click to know which sides to resize from
+    bool                            m_resize_started = false;       // Turns to true after the first time resize function has been run, resets to false when done
+    QPointF                         m_last_mouse_snap { 0, 0 };     // Keeps track of the last point the item was snapped to while resizing
     QPointF                         m_pre_resize_scale;             // Scale of selection group before we start resize
     QMap<Position_Flags, QPointF>   m_pre_resize_corners;           // Stores corner coordinates before resizing starts
     QGraphicsItemGroup             *m_group;                        // Loads a copy of selected items in a new group before resize starts to better calculate resizing

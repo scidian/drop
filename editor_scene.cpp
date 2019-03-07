@@ -14,6 +14,7 @@
 #include "editor_item.h"
 #include "editor_scene.h"
 
+#include "globals.h"
 #include "interface_editor_relay.h"
 #include "library.h"
 
@@ -167,22 +168,24 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
     DrObject *object = dynamic_cast<DrObject*>(changed_item);
     DrItem   *item =   object->getDrItem();
 
-    // Some local item variables, prepping for update
+    // ***** Some local item variables, prepping for update
     QTransform transform;
-    QPointF position = object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF();
-    QPointF scale    = object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale).toPointF();
-    QPointF size     = object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Size).toPointF();
-    double  angle =    object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Rotation).toDouble();
+    QPointF position  = object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF();
+    QPointF scale     = object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale).toPointF();
+    QPointF size      = object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Size).toPointF();
+    double  angle     = object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Rotation).toDouble();
+    double  pre_angle = item->data(User_Roles::Rotation).toDouble();
     double  transform_scale_x, transform_scale_y;
 
-    // Turn off itemChange() signals to stop recursive calling
+
+    // ***** Turn off itemChange() signals to stop recursive calling
     item->disableItemChangeFlags();
 
-    // Go through each property that we have been notified has changed and update as appropriately
+    // ***** Go through each property that we have been notified has changed and update as appropriately
     for (auto one_property : property_keys) {
         Properties property = static_cast<Properties>(one_property);
 
-        QVariant new_value = object->findPropertyFromPropertyKey(one_property)->getValue();
+        QVariant new_value  = object->findPropertyFromPropertyKey(one_property)->getValue();
 
         switch (property)
         {
@@ -194,13 +197,19 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
         case Properties::Object_Size:
         case Properties::Object_Scale:
         case Properties::Object_Rotation:
+
+            // If property that changed was size, calculate the proper scale based on size
             if (property == Properties::Object_Size) {
                     scale.setX( size.x() / item->getAssetWidth()  );
                     scale.setY( size.y() / item->getAssetHeight() );
+            // Otherwise calculate the size based on the scale
             } else {
                     size.setX(  scale.x() * item->getAssetWidth() );
                     size.setY(  scale.y() * item->getAssetHeight() );
             }
+
+            // Store the item transform data, one of which will have been new. Then recalculate the transform and move the object
+
             item->setData(User_Roles::Scale, scale );
             item->setData(User_Roles::Rotation, angle );
             transform_scale_x = Dr::CheckScaleNotZero(scale.x());
@@ -209,6 +218,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
             item->setTransform(transform);
             setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
 
+            // If size or scale was changed, update the other and update the widgets in the object inspector
             if (property == Properties::Object_Size) {
                 object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale, scale);
                 m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { object } , { Properties::Object_Scale });
@@ -227,7 +237,16 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
         }
     }
 
-    // Turn back on itemChange() signals
+
+    // ***** If angle has changed, check if we should update selection box angle as well
+    if (Dr::IsCloseTo(pre_angle, angle, .001) == false) {
+        if (checkAllSelectedItemsHaveSameAngle()) {
+            setSelectionAngle( angle );
+        }
+    }
+
+
+    // ***** Turn back on itemChange() signals
     item->enableItemChangeFlags();
 }
 

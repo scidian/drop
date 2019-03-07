@@ -178,6 +178,7 @@ void DrView::mouseReleaseEvent(QMouseEvent *event)
                 delete item;
             }
             my_scene->destroyItemGroup(m_group);
+            m_resize_started = false;
         }
 
         // We have it so object inspector only tries to update it's position property boxes during item translation

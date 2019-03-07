@@ -15,6 +15,7 @@
 #include "editor_scene.h"
 #include "editor_view.h"
 
+#include "globals.h"
 #include "interface_editor_relay.h"
 #include "library.h"
 
@@ -129,6 +130,13 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     // Test for scene, convert to our custom class
     if (scene() == nullptr) return;
 
+    // Initialize point variable used to keep track of last snapping resize, this is so we can limit a snap to one time. At some angles
+    // when we try to keep resizing to a snapped point the item will vibrate as it tries to continously remove shearing
+    if (m_resize_started == false) {
+        m_last_mouse_snap = QPointF( -10000100001, -10000100001 );
+        m_resize_started  = true;
+    }
+
     // Load item starting width and height
     qreal item_width =  m_group->boundingRect().width();
     qreal item_height = m_group->boundingRect().height();
@@ -152,9 +160,15 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     QPointF zero_rotated_opposite_in_scene = mapToScene(zero_rotated_opposite.toPoint());
 
     // Snap if snapping is turned on
-    if (m_grid_should_snap && m_handles_shape == Handle_Shapes::Squares)
+    if (m_grid_should_snap && m_handles_shape == Handle_Shapes::Squares) {
         mouse_in_scene = roundToGrid( mouse_in_scene );
+        // If we already resized to this point, cancel the resize to the current position
+        if (mouse_in_scene == m_last_mouse_snap)    return;
+        // Otherwise continue, but store this resize position as the last snapped to
+        else                                        m_last_mouse_snap = mouse_in_scene;
+    }
 
+    // Map resize point to scene coordinates
     QPointF point_in_shape = mapToScene(remove_rotation.map(mapFromScene(mouse_in_scene)));
     double  scale_x;
     double  scale_y;
@@ -299,7 +313,7 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
 //####################################################################################
 void DrView::removeShearing(QGraphicsItem *item, QPointF scale)
 {
-    // Figure out which item in resize group to base transform off of
+    // Figure out which item in invisible cloned resize group to base transform off of
     DrItem *original = dynamic_cast<DrItem*>(item);
     DrItem *clone = nullptr;
     for (auto child : m_group->childItems()) {

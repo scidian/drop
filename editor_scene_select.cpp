@@ -43,6 +43,7 @@ void DrScene::selectionChanged()
     }
 }
 
+// Called from selectionChanged(), resets properties of current selection. Checks if items are at resize to grid angle
 void DrScene::resetSelectionGroup()
 {
     m_selection_items = selectedItems();
@@ -73,6 +74,19 @@ bool DrScene::shouldEnableResizeToGrid()
     if (qFuzzyCompare(current_view_grid_scale.x(), current_view_grid_scale.y()) == false) match_angle = false;
 
     return match_angle;
+}
+
+// Check that all selected items have similar (parrallel or perpendicular) angles
+bool DrScene::checkAllSelectedItemsHaveSameAngle()
+{
+    if (m_selection_items.count() < 1) return false;
+    bool have_the_same = true;
+    double first_angle = m_selection_items.first()->data(User_Roles::Rotation).toDouble();
+
+    for (auto item : m_selection_items) {
+        if (Dr::IsSimilarAngle(item->data(User_Roles::Rotation).toDouble(), first_angle) == false) have_the_same = false;
+    }
+    return have_the_same;
 }
 
 

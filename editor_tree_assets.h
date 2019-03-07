@@ -19,8 +19,8 @@ class IEditorRelay;
 class WidgetHoverHandler;
 
 // Class constants
-const int   c_asset_size_left =  3;                 // Size policy width of left column
-const int   c_asset_size_right = 5;                 // Size policy width of right column
+constexpr int   c_asset_size_left =  3;                 // Size policy width of left column
+constexpr int   c_asset_size_right = 5;                 // Size policy width of right column
 
 
 //####################################################################################

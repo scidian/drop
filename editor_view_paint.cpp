@@ -290,8 +290,9 @@ void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw)
     handles.append(m_handles_centers[Position_Flags::Rotate] );
 
     QRectF to_draw;
-    double handle_size = 8;
-    double rotate_size = 10;
+    double handle_size  =    8;
+    double rotate_size  =   10;
+    double square_scale = .225;
     for (int i = 0; i < handles.count(); i++) {
         if (i < (handles.count() - 1)) {
             to_draw.setX(handles[i].x() - (handle_size / 2));    to_draw.setWidth(handle_size);
@@ -302,7 +303,7 @@ void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw)
             } else if (shape_to_draw == Handle_Shapes::Squares) {
                 painter.translate(to_draw.center());
                 painter.rotate( m_grid_rotate );
-                painter.scale(.25, .25);
+                painter.scale( square_scale, square_scale );
                 painter.drawPixmap(-p_square.rect().center(), p_square);
                 painter.resetTransform();
             }

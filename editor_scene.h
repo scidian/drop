@@ -123,6 +123,7 @@ public:
     void                    setSelectionBox(QRectF box)                      { m_selection_box = box; }
 
     QGraphicsItemGroup*     createEmptyItemGroup(double angle = 0, QPointF scale = QPointF(1, 1));
+    bool                    checkAllSelectedItemsHaveSameAngle();
     void                    resetSelectionGroup();
     bool                    shouldEnableResizeToGrid();
     QRectF                  totalSelectionSceneRect();
