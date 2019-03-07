@@ -110,8 +110,12 @@ void DrObject::initializeObjectSettings(QString new_name, double width, double h
     addComponent(Components::Object_Appearance, "Appearance", "Filters for objects as they appear in the Stage. ", Component_Colors::Golden_Yellow, true);
     getComponent(Components::Object_Appearance)->setIcon(Component_Icons::Appearance);
 
-    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Brightness, Property_Type::Int, 0,
+    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Brightness, Property_Type::Filter, 0,
                            "Brightness", "How light / dark this object should appear.");
+    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Contrast, Property_Type::Filter, 100,
+                           "Contrast", "Empty");
+    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Gamma, Property_Type::Filter, 100,
+                           "Gamma", "Empty");
 
 }
 

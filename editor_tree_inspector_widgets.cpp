@@ -100,8 +100,9 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, Pro
     spin->setSizePolicy(size_policy);
     switch (spin_type)
     {
-    case Property_Type::Int:        spin->setRange(-100000000, 100000000);         break;
-    case Property_Type::Positive:   spin->setRange(0, 100000000);                  break;
+    case Property_Type::Int:        spin->setRange(-100000000, 100000000);         spin->setSingleStep(5);      break;
+    case Property_Type::Positive:   spin->setRange(0, 100000000);                  spin->setSingleStep(5);      break;
+    case Property_Type::Filter:     spin->setRange(-255, 255);                     spin->setSingleStep(5);      break;
     default:                        spin->setRange(-100000000, 100000000);
     }
     spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);

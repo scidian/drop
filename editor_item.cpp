@@ -335,6 +335,19 @@ void DrItem::filterBrightness(int brightness)
     setPixmap(np);
 }
 
+void DrItem::filterContrast(int contrast)
+{
+    QPixmap np = DrFilter::changeContrast(m_pixmap, contrast);
+    setPixmap(np);
+}
+
+void DrItem::filterGamma(int gamma)
+{
+    QPixmap np = DrFilter::changeGamma(m_pixmap, gamma);
+    setPixmap(np);
+}
+
+
 
 //####################################################################################
 //##        Input overrides
@@ -343,6 +356,10 @@ void DrItem::mousePressEvent(QGraphicsSceneMouseEvent *event) { QGraphicsItem::m
 void DrItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) { QGraphicsItem::mouseMoveEvent(event); }
 void DrItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) { QGraphicsItem::mouseReleaseEvent(event); }
 void DrItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) { QGraphicsItem::hoverLeaveEvent(event);}
+
+
+
+
 
 
 

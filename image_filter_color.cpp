@@ -45,25 +45,26 @@ QImage changeImage( const QImage& image, int value )
     if (im.colorCount() == 0 ) /* truecolor */
     {
         // Just in case
-        if ( im.format() != QImage::Format_RGB32 ) {
-            im = im.convertToFormat( QImage::Format_RGB32 );
-            Dr::SetLabelText(Label_Names::Label_2, "Made it RGB32: " + Dr::CurrentTimeAsString());
+        if ( im.format() != QImage::Format::Format_ARGB32 ) {
+            im = im.convertToFormat( QImage::Format_ARGB32 );
         }
 
         int table[ 256 ];
-        for ( int i = 0; i < 256; ++i )
+        for ( int i = 0; i < 256; ++i ) {
             table[ i ] = operation( i, value );
+        }
 
         if ( im.hasAlphaChannel() ) {
+            Dr::SetLabelText(Label_Names::Label_2, "Is RgbA: " + Dr::CurrentTimeAsString());
+
             for( int y = 0; y < im.height(); ++y ) {
                 QRgb* line = reinterpret_cast<QRgb*>( im.scanLine( y ));
-                for( int x = 0; x < im.width(); ++x )
+                for( int x = 0; x < im.width(); ++x ) {
                     line[ x ] = qRgba( changeUsingTable( qRed(   line[ x ] ), table ),
                                        changeUsingTable( qGreen( line[ x ] ), table ),
                                        changeUsingTable( qBlue(  line[ x ] ), table ),
-                                       qAlpha( line[ x ] ));
-
-                                       //changeUsingTable( qAlpha( line[ x ] ), table ));
+                                       qAlpha( line [x] ) );
+                }
             }
 
         } else {

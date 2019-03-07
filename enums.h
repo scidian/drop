@@ -160,6 +160,8 @@ enum class Property_Type {
     Bool,                   // bool         true or false
     Int,                    // long         any integer
     Positive,               // long         integer >= 0
+    Filter,                 // long         integer from -255 to 255, used for image filters
+
     Double,                 // double       any floating point number
     Percent,                // double       floating point from 0.0 to 100.0
     Angle,                  // double       floating point for showing degrees, shows degree symbol in spinbox
@@ -275,7 +277,9 @@ enum class Properties
     Object_Angular_Velocity,        //variable
 
     // Appearance
-    Object_Brightness,              //int
+    Object_Filter_Brightness,       //filter
+    Object_Filter_Contrast,         //filter
+    Object_Filter_Gamma,            //filter
 
 
     // *****

@@ -65,6 +65,9 @@ public:
 
     // Pixmap Filters
     void                    filterBrightness(int brightness);
+    void                    filterContrast(int contrast);
+    void                    filterGamma(int gamma);
+
 
     // Getters and Setters
     IEditorRelay*           getRelay()       { return m_editor_relay; }
