@@ -47,7 +47,8 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrObject *object,
 
     // Load image from asset
     m_pixmap = m_asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
-    setPixmap( m_pixmap );
+    // Apply any filters and sets the items pixmap
+    applyFilters();
 
     // Dimensions of associated asset, used for boundingRect
     m_asset_width =  m_asset->getWidth();
@@ -283,7 +284,7 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     double transparency = 1;
     if (m_object) {
         transparency = m_object->getComponentPropertyValue(Components::Object_Layering, Properties::Object_Opacity).toDouble() / 100;
-        transparency = Dr::FitToRange(transparency, 0.0, 1.0);
+        transparency = Dr::Clamp(transparency, 0.0, 1.0);
     }
 
     // Apply the proper opacity to this item and either paint the pixmap, or paint a pattern representation of the item
@@ -329,23 +330,26 @@ QColor DrItem::getColorAtPoint(QPointF at_view_point, QGraphicsView *mouse_over_
 //####################################################################################
 //##        Pixmap Filters
 //####################################################################################
-void DrItem::filterBrightness(int brightness)
+void DrItem::applyFilters()
 {
-    QPixmap np = DrFilter::changeBrightness(m_pixmap, brightness);
-    setPixmap(np);
+    QPixmap new_pixmap = m_pixmap.copy();
+
+    int brightness = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Brightness).toInt();
+    int contrast   = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Contrast).toInt();
+    int hue        = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Hue).toInt();
+    int saturation = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Saturation).toInt();
+
+    if ( saturation !=   0 ) new_pixmap = DrFilter::changeSaturation(new_pixmap, saturation);
+    if ( hue        !=   0 ) new_pixmap = DrFilter::changeHue(new_pixmap, hue);
+    if ( contrast   != 100 ) new_pixmap = DrFilter::changeContrast(new_pixmap, contrast);
+    if ( brightness !=   0 ) new_pixmap = DrFilter::changeBrightness(new_pixmap, brightness);
+
+    setPixmap(new_pixmap);
 }
 
-void DrItem::filterContrast(int contrast)
-{
-    QPixmap np = DrFilter::changeContrast(m_pixmap, contrast);
-    setPixmap(np);
-}
 
-void DrItem::filterGamma(int gamma)
-{
-    QPixmap np = DrFilter::changeGamma(m_pixmap, gamma);
-    setPixmap(np);
-}
+
+
 
 
 

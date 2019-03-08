@@ -35,9 +35,9 @@ DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_
     m_list_order = new_asset_key;
     m_group_number = 0;
 
-    QPixmap my_starting_pixmap = m_parent_project->getImage(image_key)->getPixmap();
+    QPixmap my_starting_pixmap = m_parent_project->getDrImage(image_key)->getPixmapFromImage();
 
-    initializeAssetSettings(m_parent_project->getImage(image_key)->getSimplifiedName(), my_starting_pixmap );
+    initializeAssetSettings(m_parent_project->getDrImage(image_key)->getSimplifiedName(), my_starting_pixmap );
 
     m_width =  my_starting_pixmap.width();
     m_height = my_starting_pixmap.height();

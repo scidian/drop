@@ -236,14 +236,12 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
 
 
         case Properties::Object_Filter_Brightness:
-            item->filterBrightness( new_value.toInt() );
-            break;
         case Properties::Object_Filter_Contrast:
-            item->filterContrast( new_value.toInt() );
+        case Properties::Object_Filter_Hue:
+        case Properties::Object_Filter_Saturation:
+            item->applyFilters();
             break;
-        case Properties::Object_Filter_Gamma:
-            item->filterGamma( new_value.toInt() );
-            break;
+
 
         default: ;
         }

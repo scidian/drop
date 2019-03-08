@@ -11,12 +11,23 @@
 #include <QPixmap>
 
 
+enum class Filter_Type
+{
+    Brightness,
+    Contrast,
+    Hue,
+    Saturation,
+};
+
+
 namespace DrFilter
 {
 
-    QPixmap changeBrightness(const QPixmap& image, int brightness);
-    QPixmap changeContrast(const QPixmap& image, int contrast);
-    QPixmap changeGamma(const QPixmap& image, int gamma);
+
+    QPixmap changeBrightness(const QPixmap& pixmap, int brightness);
+    QPixmap changeContrast(const QPixmap& pixmap, int contrast);
+    QPixmap changeHue(const QPixmap& pixmap, int hue);
+    QPixmap changeSaturation(const QPixmap& pixmap, int saturation);
 
 }
 

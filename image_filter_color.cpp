@@ -6,130 +6,153 @@
 //
 //
 #include <QtMath>
+#include <QImage>
+#include <QPixmap>
+#include <QRgb>
+#include <QTime>
 
 #include "globals.h"
 #include "image_filter_color.h"
 #include "library.h"
 
-#include <QImage>
-#include <QPixmap>
-#include <QRgb>
-
 
 namespace DrFilter
 {
 
+// Foward declarations
+QImage  applySinglePixelFilter( Filter_Type filter, const QImage& from_image, int value );
 
-template<class T>
-inline const T& kClamp( const T& x, const T& low, const T& high ) {
-    if ( x < low )       return low;
-    else if ( high < x ) return high;
-    else                 return x;
+
+
+//####################################################################################
+//##        External filter calls
+//####################################################################################
+// Range is -255 to 255
+QPixmap changeBrightness(const QPixmap& pixmap, int brightness)
+{
+    QImage image = applySinglePixelFilter( Filter_Type::Brightness, pixmap.toImage(), brightness );
+    return QPixmap::fromImage( image );
 }
 
-inline int changeBrightness( int value, int brightness )    { return kClamp( value + brightness * 255 / 100, 0, 255 ); }
-inline int changeContrast( int value, int contrast )        { return kClamp((( value - 127 ) * contrast / 100 ) + 127, 0, 255 ); }
-inline int changeGamma( int value, int gamma )              { return kClamp( int( pow( value / 255.0, 100.0 / gamma ) * 255 ), 0, 255 ); }
-inline int changeUsingTable( int value, const int table[] ) { return table[ value ]; }
-
-template< int operation( int, int ) >
-static
-QImage changeImage( const QImage& image, int value )
+// Contrast is multiplied by 100 in order to avoid floating point numbers
+QPixmap changeContrast(const QPixmap& pixmap, int contrast)
 {
-    QImage im = image;
-    im.detach();
+    QImage image = applySinglePixelFilter( Filter_Type::Contrast, pixmap.toImage(), contrast );
+    return QPixmap::fromImage( image );
+}
 
-    Dr::SetLabelText(Label_Names::Label_1, "Color Count: " + QString::number(im.colorCount()));
+QPixmap changeHue(const QPixmap& pixmap, int hue)
+{
+    QImage image = applySinglePixelFilter( Filter_Type::Hue, pixmap.toImage(), hue );
+    return QPixmap::fromImage( image );
+}
+
+QPixmap changeSaturation(const QPixmap& pixmap, int saturation)
+{
+    QImage image = applySinglePixelFilter( Filter_Type::Saturation, pixmap.toImage(), saturation );
+    return QPixmap::fromImage( image );
+}
 
 
-    if (im.colorCount() == 0 ) /* truecolor */
+
+//####################################################################################
+//##        Loops through image and changes one pixel at a time based on a
+//##        premultiplied table
+//####################################################################################
+QImage applySinglePixelFilter( Filter_Type filter, const QImage& from_image, int value )
+{
+    QImage image = from_image;
+    image.detach();
+
+    if ( image.format() != QImage::Format::Format_ARGB32 )
+        image = image.convertToFormat( QImage::Format_ARGB32 );
+
+    QTime time_it;
+    time_it.restart();
+
+
+    if (image.colorCount() == 0 )      // i.e. Truecolor Rgba
     {
         // Just in case
-        if ( im.format() != QImage::Format::Format_ARGB32 ) {
-            im = im.convertToFormat( QImage::Format_ARGB32 );
-        }
+
 
         int table[ 256 ];
         for ( int i = 0; i < 256; ++i ) {
-            table[ i ] = operation( i, value );
+            switch (filter)
+            {
+
+            //f ( x ) = α ( x − 128 ) + 128 + b
+
+            case Filter_Type::Brightness:   table[i] = Dr::Clamp( i + value, 0, 255 );                              break;
+            case Filter_Type::Contrast:     table[i] = Dr::Clamp( (( i - 127 ) * value / 100 ) + 127, 0, 255 );     break;
+            case Filter_Type::Hue:
+            case Filter_Type::Saturation: ;
+            }
         }
 
-        if ( im.hasAlphaChannel() ) {
-            Dr::SetLabelText(Label_Names::Label_2, "Is RgbA: " + Dr::CurrentTimeAsString());
+        if ( image.hasAlphaChannel() ) {
 
-            for( int y = 0; y < im.height(); ++y ) {
-                QRgb* line = reinterpret_cast<QRgb*>( im.scanLine( y ));
-                for( int x = 0; x < im.width(); ++x ) {
-                    line[ x ] = qRgba( changeUsingTable( qRed(   line[ x ] ), table ),
-                                       changeUsingTable( qGreen( line[ x ] ), table ),
-                                       changeUsingTable( qBlue(  line[ x ] ), table ),
-                                       qAlpha( line [x] ) );
+            // Loop through every pixel
+            for( int y = 0; y < image.height(); ++y ) {
+                QRgb* line = reinterpret_cast<QRgb*>( image.scanLine( y ));
+                for( int x = 0; x < image.width(); ++x ) {
+
+                    // Grab the current pixel color
+                    QColor color = QColor::fromRgba( line[x] );
+
+                    switch (filter)
+                    {
+                    case Filter_Type::Brightness:
+                    case Filter_Type::Contrast:
+                        color.setRed(   table[color.red()]   );
+                        color.setGreen( table[color.green()] );
+                        color.setBlue(  table[color.blue()]  );
+                        break;
+                    case Filter_Type::Hue:
+                        color.setHsv(Dr::Clamp(color.hue() + value, 0, 720), color.saturation(), color.value(), color.alpha());
+                        break;
+                    case Filter_Type::Saturation:
+                        color.setHsv(color.hue(), Dr::Clamp(color.saturation() + value, 0, 255), color.value(), color.alpha());
+                        break;
+                    }
+
+                    // Sets the new pixel color
+                    line[x] = color.rgba();
+
                 }
+
             }
+
 
         } else {
-            for( int y = 0; y < im.height(); ++y ) {
-                QRgb* line = reinterpret_cast<QRgb*>( im.scanLine( y ));
-                for( int x = 0; x < im.width(); ++x )
-                    line[ x ] = qRgb( changeUsingTable( qRed(   line[ x ] ), table ),
-                                      changeUsingTable( qGreen( line[ x ] ), table ),
-                                      changeUsingTable( qBlue(  line[ x ] ), table ));
-            }
+            // Error, no alpha channel
+            Dr::ShowMessageBox("Image missing alpha channel!");
         }
     } else {
-        QVector<QRgb> colors = im.colorTable();
-
-        for( int i = 0; i < im.colorCount(); ++i )
-            colors[ i ] = qRgb( operation( qRed(   colors[ i ] ), value ),
-                                operation( qGreen( colors[ i ] ), value ),
-                                operation( qBlue(  colors[ i ] ), value ) );
+        // Error, only 256 color format
+        Dr::ShowMessageBox("Image only has 256 colors!");
     }
-    return im;
+
+
+
+//    if (filter == Filter_Type::Hue)
+//        Dr::SetLabelText(Label_Names::Label_2, "   Hue  Time: " + QString::number(time_it.elapsed()) );
+//    else
+//        Dr::SetLabelText(Label_Names::Label_1, " Filter Time: " + QString::number(time_it.elapsed()) );
+
+
+    return image;
 }
 
 
-// brightness is multiplied by 100 in order to avoid floating point numbers
-QImage changeBrightness( const QImage& image, int brightness )
-{
-    // Range is -255 to 255
-    if ( brightness == 0 ) return image;
-    return changeImage< changeBrightness >( image, brightness );
-}
 
 
-// contrast is multiplied by 100 in order to avoid floating point numbers
-QImage changeContrast( const QImage& image, int contrast )
-{
-    if ( contrast == 100 ) return image;
-    return changeImage< changeContrast >( image, contrast );
-}
 
-// gamma is multiplied by 100 in order to avoid floating point numbers
-QImage changeGamma( const QImage& image, int gamma )
-{
-    if( gamma == 100 ) return image;
-    return changeImage< changeGamma >( image, gamma );
-}
 
-QPixmap changeBrightness(const QPixmap& pixmap, int brightness)
-{
-    QImage image = pixmap.toImage();
-    return QPixmap::fromImage(changeBrightness(image, brightness));
-}
 
-QPixmap changeContrast(const QPixmap& pixmap, int contrast)
-{
-    QImage image = pixmap.toImage();
-    return QPixmap::fromImage(changeContrast(image, contrast));
-}
-
-QPixmap changeGamma(const QPixmap& pixmap, int gamma)
-{
-    QImage image = pixmap.toImage();
-    return QPixmap::fromImage(changeBrightness(image, gamma));
-}
 
 }
+
 
 
 

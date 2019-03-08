@@ -64,9 +64,8 @@ public:
     void                    enableItemChangeFlags();
 
     // Pixmap Filters
-    void                    filterBrightness(int brightness);
-    void                    filterContrast(int contrast);
-    void                    filterGamma(int gamma);
+    void                    applyFilters();
+
 
 
     // Getters and Setters

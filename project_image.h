@@ -31,16 +31,16 @@ public:
     DrImage(DrProject *parent_project, long key, QString image_path);
 
     // Getters and setters
-    virtual DrType  getType() override  { return DrType::Image; }
+    virtual DrType  getType() override      { return DrType::Image; }
 
-    DrProject*      getParentProject()  { return m_parent_project; }
+    DrProject*      getParentProject()      { return m_parent_project; }
 
-    QString         getFullPath()       { return m_full_path; }
-    QString         getFilename()       { return m_filename; }
-    QString         getSimplifiedName() { return m_simple_name; }
+    QString         getFullPath()           { return m_full_path; }
+    QString         getFilename()           { return m_filename; }
+    QString         getSimplifiedName()     { return m_simple_name; }
 
-    QImage          getImage()          { return m_image; }
-    QPixmap         getPixmap()         { return QPixmap::fromImage(m_image); }
+    const QImage&   getImage()              { return m_image; }
+    QPixmap         getPixmapFromImage()    { return QPixmap::fromImage(m_image); }
 
 
 };

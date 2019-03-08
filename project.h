@@ -40,20 +40,20 @@ public:
     ~DrProject();
 
     // Getters and Setters
-    long        getNextKey()   { return m_key_generator++; }
+    long        getNextKey()            { return m_key_generator++; }
     void        setKeyGeneratorStartNumber(long initial_key) { m_key_generator = initial_key; }
 
-    long        getFirstWorldKey()  { return m_worlds.begin()->first; }
-    long        getNumberOfWorlds() { return static_cast<long>(m_worlds.size()); }
-    DrWorld*    getWorld(long key)  { return m_worlds[key]; }
-    WorldMap    getWorlds()         { return m_worlds; }
+    long        getFirstWorldKey()      { return m_worlds.begin()->first; }
+    long        getNumberOfWorlds()     { return static_cast<long>(m_worlds.size()); }
+    DrWorld*    getWorld(long key)      { return m_worlds[key]; }
+    WorldMap    getWorlds()             { return m_worlds; }
     DrWorld*    getWorldWithName(QString world_name);
 
-    DrAsset*    getAsset(long key)  { return m_assets[key]; }
-    AssetMap    getAssets()         { return m_assets; }
-    long        getNumberOfAssets() { return static_cast<long>(m_assets.size()); }
+    DrAsset*    getAsset(long key)      { return m_assets[key]; }
+    AssetMap    getAssets()             { return m_assets; }
+    long        getNumberOfAssets()     { return static_cast<long>(m_assets.size()); }
 
-    DrImage*    getImage(long key)  { return m_images[key]; }
+    DrImage*    getDrImage(long key)    { return m_images[key]; }
 
     // External calls
     DrStage*        findStageFromKey(long check_key);

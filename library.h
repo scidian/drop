@@ -44,18 +44,8 @@ bool    IsCloseTo(double number_desired, double number_to_check, double toleranc
 QString RemoveTrailingDecimals(double value, int max_decimal_places);
 
 // Comparison Template Function, Returns number_to_check fit to within the bounds of min / max
-//template<class T>
-//inline const T& FitToRange(const T& number_to_check, const T& min, const T& max) {
-//    if      (number_to_check < min) return min;
-//    else if (number_to_check > max) return max;
-//    else                            return number_to_check;
-//}
-
 template<class T>
-const T& FitToRange(const T& number_to_check, const T& min, const T& max);
-
-template<class T>
-const T& FitToRange(const T& number_to_check, const T& min, const T& max) {
+const T& Clamp(const T& number_to_check, const T& min, const T& max) {
     if      (number_to_check < min) return min;
     else if (number_to_check > max) return max;
     else                            return number_to_check;

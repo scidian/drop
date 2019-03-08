@@ -111,11 +111,15 @@ void DrObject::initializeObjectSettings(QString new_name, double width, double h
     getComponent(Components::Object_Appearance)->setIcon(Component_Icons::Appearance);
 
     addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Brightness, Property_Type::Filter, 0,
-                           "Brightness", "How light / dark this object should appear.");
-    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Contrast, Property_Type::Filter, 100,
-                           "Contrast", "Empty");
-    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Gamma, Property_Type::Filter, 100,
-                           "Gamma", "Empty");
+                           "Brightness", "How light / dark this object should appear. \nDefault: \t0 \nRange: \t-255 to 255");
+    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Contrast, Property_Type::FilterPositive, 100,
+                           "Contrast", "Amount of distinguishable difference of colors. \nDefault: \t100 \nRange: \t0 to 255");
+    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Hue, Property_Type::FilterAngle, 0,
+                           "Hue", "Rotate color values. \nDefault: \t0 \nRange: \t0 to 360");
+    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Saturation, Property_Type::Filter, 0,
+                           "Saturation", "How colorful the colors appear. \nDefault: \t0 \nRange: \t-255 to 255");
+
+
 
 }
 

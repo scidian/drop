@@ -34,7 +34,13 @@ DrViewToolTip::DrViewToolTip(QWidget *parent) : QWidget(parent)
 
     this->setWindowModality(Qt::WindowModality::NonModal);
     this->setFocusPolicy(Qt::FocusPolicy::NoFocus);
-    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowStaysOnTopHint);
+
+    this->setWindowFlag(Qt::WindowType::FramelessWindowHint);
+    this->setWindowFlag(Qt::WindowType::WindowSystemMenuHint);
+    this->setWindowFlag(Qt::WindowType::WindowStaysOnTopHint);
+
+    //this->setWindowFlag(Qt::WindowType::
+
     this->setAcceptDrops(false);
 }
 

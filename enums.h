@@ -161,6 +161,8 @@ enum class Property_Type {
     Int,                    // long         any integer
     Positive,               // long         integer >= 0
     Filter,                 // long         integer from -255 to 255, used for image filters
+    FilterPositive,         // long         integer from    0 to 255, used for image filters
+    FilterAngle,            // long         integer from    0 to 360, used for image filters
 
     Double,                 // double       any floating point number
     Percent,                // double       floating point from 0.0 to 100.0
@@ -278,8 +280,9 @@ enum class Properties
 
     // Appearance
     Object_Filter_Brightness,       //filter
-    Object_Filter_Contrast,         //filter
-    Object_Filter_Gamma,            //filter
+    Object_Filter_Contrast,         //filter positive
+    Object_Filter_Hue,              //filter angle
+    Object_Filter_Saturation,       //filter
 
 
     // *****
