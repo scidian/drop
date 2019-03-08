@@ -334,15 +334,19 @@ void DrItem::applyFilters()
 {
     QPixmap new_pixmap = m_pixmap.copy();
 
-    int brightness = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Brightness).toInt();
-    int contrast   = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Contrast).toInt();
-    int hue        = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Hue).toInt();
-    int saturation = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Saturation).toInt();
+    int  brightness = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Brightness).toInt();
+    int  contrast   = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Contrast).toInt();
+    int  saturation = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Saturation).toInt();
+    int  hue        = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Hue).toInt();
+    bool grayscale  = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Grayscale).toBool();
+    bool negative   = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Negative).toBool();
 
-    if ( saturation !=   0 ) new_pixmap = DrFilter::changeSaturation(new_pixmap, saturation);
-    if ( hue        !=   0 ) new_pixmap = DrFilter::changeHue(new_pixmap, hue);
-    if ( contrast   != 100 ) new_pixmap = DrFilter::changeContrast(new_pixmap, contrast);
-    if ( brightness !=   0 ) new_pixmap = DrFilter::changeBrightness(new_pixmap, brightness);
+    if ( negative )        new_pixmap = DrFilter::changeToNegative(new_pixmap);
+    if ( grayscale )       new_pixmap = DrFilter::changeToGrayscale(new_pixmap);
+    if ( hue        != 0 ) new_pixmap = DrFilter::changeHue(new_pixmap, hue);
+    if ( saturation != 0 ) new_pixmap = DrFilter::changeSaturation(new_pixmap, saturation);
+    if ( contrast   != 0 ) new_pixmap = DrFilter::changeContrast(new_pixmap, contrast);
+    if ( brightness != 0 ) new_pixmap = DrFilter::changeBrightness(new_pixmap, brightness);
 
     setPixmap(new_pixmap);
 }

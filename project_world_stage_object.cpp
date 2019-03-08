@@ -40,8 +40,9 @@ DrObject::DrObject(DrProject *parent_project, DrWorld *parent_world, DrStage *pa
 
     switch (new_object_type)
     {
-    case DrObjectType::Camera:       initializeCameraSettings();     break;
-    case DrObjectType::Character:    initializeCharacterSettings();  break;
+    case DrObjectType::Object:       initializeAppearanceSettings();    break;
+    case DrObjectType::Camera:       initializeCameraSettings();        break;
+    case DrObjectType::Character:    initializeCharacterSettings();     break;
     default: break;
     }
 
@@ -107,20 +108,25 @@ void DrObject::initializeObjectSettings(QString new_name, double width, double h
                            "Angular Velocity", "Rotational movement speed of item +/- variable amount.");
 
 
+}
+
+void DrObject::initializeAppearanceSettings()
+{
     addComponent(Components::Object_Appearance, "Appearance", "Filters for objects as they appear in the Stage. ", Component_Colors::Golden_Yellow, true);
     getComponent(Components::Object_Appearance)->setIcon(Component_Icons::Appearance);
 
     addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Brightness, Property_Type::Filter, 0,
                            "Brightness", "How light / dark this object should appear. \nDefault: \t0 \nRange: \t-255 to 255");
-    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Contrast, Property_Type::FilterPositive, 100,
-                           "Contrast", "Amount of distinguishable difference of colors. \nDefault: \t100 \nRange: \t0 to 255");
-    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Hue, Property_Type::FilterAngle, 0,
-                           "Hue", "Rotate color values. \nDefault: \t0 \nRange: \t0 to 360");
+    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Contrast, Property_Type::Filter, 0,
+                           "Contrast", "Amount of distinguishable difference of colors. \nDefault: \t0 \nRange: \t-255 to 255");
     addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Saturation, Property_Type::Filter, 0,
                            "Saturation", "How colorful the colors appear. \nDefault: \t0 \nRange: \t-255 to 255");
-
-
-
+    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Hue, Property_Type::FilterAngle, 0,
+                           "Hue", "Rotate color values. \nDefault: \t0 \nRange: \t0 to 360");
+    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Grayscale, Property_Type::Bool, false,
+                           "Grayscale", "Should this object be shown grayscale?");
+    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Negative, Property_Type::Bool, false,
+                           "Negative", "Should this objects colors be inverted?");
 }
 
 void DrObject::initializeCameraSettings()
@@ -144,6 +150,21 @@ void DrObject::initializeCharacterSettings()
     addPropertyToComponent(Components::Object_Character_Settings, Properties::Object_Character_Jump_Y, Property_Type::Double, 0,
                            "Jump Force Y", "Force of jump button in y direction");
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

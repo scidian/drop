@@ -172,7 +172,6 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
             case Property_Type::Int:            new_widget = createIntSpinBox(property_pair.second, fp, Property_Type::Int);                break;
             case Property_Type::Positive:       new_widget = createIntSpinBox(property_pair.second, fp, Property_Type::Positive);           break;
             case Property_Type::Filter:         new_widget = createIntSpinBox(property_pair.second, fp, Property_Type::Filter);             break;
-            case Property_Type::FilterPositive: new_widget = createIntSpinBox(property_pair.second, fp, Property_Type::FilterPositive);     break;
             case Property_Type::FilterAngle:    new_widget = createIntSpinBox(property_pair.second, fp, Property_Type::FilterAngle);        break;
             case Property_Type::Double:         new_widget = createDoubleSpinBox(property_pair.second, fp, Property_Type::Double);          break;
             case Property_Type::Percent:        new_widget = createDoubleSpinBox(property_pair.second, fp, Property_Type::Percent);         break;

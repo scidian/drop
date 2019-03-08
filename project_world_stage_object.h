@@ -57,6 +57,7 @@ public:
 
     // External calls
     void initializeObjectSettings(QString new_name, double width, double height, double x, double y, long z);
+    void initializeAppearanceSettings();
     void initializeCameraSettings();
     void initializeCharacterSettings();
 
