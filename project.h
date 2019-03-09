@@ -5,11 +5,19 @@
 //      DrProject - Class to hold data for one project
 //
 //
-
 #ifndef DRPROJECT_H
 #define DRPROJECT_H
 
 #include "settings.h"
+
+enum class Project_Options {
+    Orientation,                // int (Orientation)
+};
+
+enum class Orientation {
+    Portrait,
+    Landscape
+};
 
 class DrAsset;
 class DrImage;
@@ -19,6 +27,8 @@ class DrObject;
 typedef std::map<long, DrWorld*> WorldMap;
 typedef std::map<long, DrAsset*> AssetMap;
 typedef std::map<long, DrImage*> ImageMap;
+typedef std::map<Project_Options, QVariant>  OptionMap;
+
 
 //####################################################################################
 //##    DrProject
@@ -27,12 +37,14 @@ typedef std::map<long, DrImage*> ImageMap;
 class DrProject
 {
 private:
-    // Local variables
+    // Project Variables
+    long        m_key_generator;                        // variable to hand out unique id key's to all children objects
+
     WorldMap    m_worlds;                               // Holds worlds for the project
     AssetMap    m_assets;                               // Holds assets for the project
     ImageMap    m_images;                               // Holds images for the project
 
-    long        m_key_generator;                        // variable to hand out unique id key's to all children objects
+    OptionMap   m_options;                              // Map holding DrProject Wide options
 
 public:
     // Constructor & destructor
@@ -55,23 +67,23 @@ public:
 
     DrImage*    getDrImage(long key)    { return m_images[key]; }
 
+    // Options calls
+    QVariant    getOption(Project_Options option_to_get)   { return m_options[option_to_get]; }
+    void        setOption(Project_Options option_to_set, QVariant new_value) { m_options[option_to_set] = new_value; }
+
     // External calls
     DrStage*        findStageFromKey(long check_key);
     DrSettings*     findSettingsFromKey(long check_key);
     DrType          findChildTypeFromKey(long check_key);
 
-
     // Children creation calls
-    void        addWorld();
-    long        addAsset(DrAssetType new_asset_type, long image_key);
-    long        addImage(QString image_path);
-
-
+    void            addWorld();
+    long            addAsset(DrAssetType new_asset_type, long image_key);
+    long            addImage(QString image_path);
 
 };
 
 #endif // DRPROJECT_H
-
 
 
 

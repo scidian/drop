@@ -405,8 +405,3 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale)
 
 
 
-
-
-
-
-

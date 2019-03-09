@@ -47,8 +47,11 @@ FormMain::~FormMain()
 FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 {
 
-    // ########## Initialize new project, initialize local variables
+    // ########## Initialize new project, load DrProject options
     project = new DrProject(1);
+
+    project->setOption(Project_Options::Orientation, static_cast<int>(Orientation::Portrait));
+
 
 
     // !!!!! #TEMP: Add images / assets
@@ -111,7 +114,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     // ########## Initialize form and customize colors and styles
     scene = new DrScene(this, project, this);
     buildMenu();
-    buildWindow( static_cast<Form_Main_Mode>(Dr::GetOption(Options::Form_Main_Mode).toInt()) );
+    buildWindow( static_cast<Form_Main_Mode>(Dr::GetPreference(Preferences::Form_Main_Mode).toInt()) );
     Dr::ApplyColoring(this);
 
 
@@ -157,7 +160,7 @@ bool FormMain::eventFilter(QObject *obj, QEvent *event)
 
 
     // ********** Catch space bar for view to make sure we can drag even if view didnt have focus
-    Form_Main_Mode mode = static_cast<Form_Main_Mode>(Dr::GetOption(Options::Form_Main_Mode).toInt());
+    Form_Main_Mode mode = static_cast<Form_Main_Mode>(Dr::GetPreference(Preferences::Form_Main_Mode).toInt());
 
     if (event->type() == QEvent::KeyPress)
     {

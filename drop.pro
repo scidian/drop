@@ -71,7 +71,8 @@ SOURCES += \
     globals.cpp \
     image_filter_color.cpp \
     editor_item_item_change.cpp \
-    editor_item_paint.cpp
+    editor_item_paint.cpp \
+    editor_view_paint_items.cpp
 
 HEADERS += \
     enums.h \

@@ -245,6 +245,12 @@ void DrView::updateSelectionBoundingBox(int called_from)
     my_scene->scene_mutex.unlock();
 }
 
+// Helper function, returns a RectF around center point with sides length of rect_size
+QRectF DrView::rectAtCenterPoint(QPoint center, double rect_size)
+{
+    return QRectF(center.x() - rect_size / 2, center.y() - rect_size / 2, rect_size, rect_size);
+}
+
 // Calculates the angle facing away from the corner of two angles, for calculating mouse angle of corners
 double DrView::calculateCornerAngle(double angle1, double angle2)
 {

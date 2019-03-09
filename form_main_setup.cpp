@@ -37,7 +37,7 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
     QString widget_list;
 
 
-    Dr::SetOption(Options::Form_Main_Mode, static_cast<int>(new_layout));
+    Dr::SetPreference(Preferences::Form_Main_Mode, static_cast<int>(new_layout));
     switch (new_layout)
     {
     case Form_Main_Mode::World_Editor:

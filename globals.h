@@ -13,16 +13,15 @@
 class FormMain;
 class IEditorRelay;
 
-
-enum class Options
+enum class Preferences
 {
-    Form_Main_Mode,
+    Form_Main_Mode,                         // int (Form_Main_Mode)
 
-    World_Editor_Current_World,
-    World_Editor_Lock_Backgrounds,
-    World_Editor_Show_Collision_Shapes,
-    World_Editor_Show_Connections,
-    World_Editor_Show_Game_Frame,
+    World_Editor_Current_World,             // int
+    World_Editor_Lock_Backgrounds,          // bool
+    World_Editor_Show_Collision_Shapes,     // bool
+    World_Editor_Show_Connections,          // bool
+    World_Editor_Show_Game_Frame,           // bool
 };
 
 
@@ -31,8 +30,8 @@ namespace Dr {
 
     void        LoadPreferences();
 
-    QVariant    GetOption(Options option_to_get);
-    void        SetOption(Options option_to_set, QVariant new_value);
+    QVariant    GetPreference(Preferences preference_to_get);
+    void        SetPreference(Preferences preference_to_set, QVariant new_value);
 
     void        SetActiveEditorRelay(IEditorRelay *new_editor_relay);
     void        SetActiveFormMain(FormMain *new_form_main);
@@ -41,5 +40,5 @@ namespace Dr {
 }
 
 
-
 #endif // GLOBALS_H
+
