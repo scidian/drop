@@ -64,8 +64,7 @@ void TreeProject::buildProjectTree()
                 DrObject *object = objects[key];
 
                 QTreeWidgetItem *object_item = new QTreeWidgetItem(stage_item);                             // Create new item and add as child item
-                switch (object->getObjectType())
-                {
+                switch (object->getObjectType()) {
                     case DrObjectType::Object:    object_item->setIcon(0, QIcon(":/tree_icons/tree_object.png")); break;
                     case DrObjectType::Camera:    object_item->setIcon(0, QIcon(":/tree_icons/tree_camera.png")); break;
                     case DrObjectType::Character: object_item->setIcon(0, QIcon(":/tree_icons/tree_character.png")); break;
@@ -232,8 +231,7 @@ void TreeProject::updateItemNames(QList<DrSettings*> changed_items, QList<long> 
                 for (auto property : property_keys) {
                     Properties check_property = static_cast<Properties>(property);
 
-                    switch (check_property)
-                    {
+                    switch (check_property) {
                     case Properties::World_Name:
                         row->setText(0, "World: " + item->getComponentPropertyValue(Components::World_Settings, Properties::World_Name).toString() );
                         break;
@@ -347,8 +345,7 @@ void TreeProject::dropEvent(QDropEvent* event)
     bool dropOK = false;
     DropIndicatorPosition dropIndicator = dropIndicatorPosition();
 
-    switch (dropIndicator)
-    {
+    switch (dropIndicator) {
         case QAbstractItemView::AboveItem:  dropOK = true;  break;
         case QAbstractItemView::BelowItem:  dropOK = true;  break;
         case QAbstractItemView::OnItem:     dropOK = false; break;

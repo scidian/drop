@@ -89,8 +89,7 @@ QImage applySinglePixelFilter( Filter_Type filter, const QImage& from_image, int
 
         int table[ 256 ];
         for ( int i = 0; i < 256; ++i ) {
-            switch (filter)
-            {
+            switch (filter) {
             case Filter_Type::Brightness:   table[i] = Dr::Clamp( i + value, 0, 255 );                                      break;
             case Filter_Type::Contrast:     table[i] = Dr::Clamp( (( i - 127 ) * (value + 100) / 100 ) + 127, 0, 255 );     break;
             default: ;
@@ -108,8 +107,7 @@ QImage applySinglePixelFilter( Filter_Type filter, const QImage& from_image, int
                     QColor color = QColor::fromRgba( line[x] );
                     double temp;
 
-                    switch (filter)
-                    {
+                    switch (filter) {
                     case Filter_Type::Brightness:
                     case Filter_Type::Contrast:
                         color.setRed(   table[color.red()]   );

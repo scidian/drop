@@ -7,6 +7,7 @@
 //
 #include <QApplication>
 #include <QKeyEvent>
+#include <QTimer>
 
 #include "colors.h"
 #include "debug.h"
@@ -92,21 +93,21 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     project->getWorldWithName("World 2")->addStage();
     project->getWorldWithName("World 2")->addStage();
 
-    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_1, 0, 0, 1);
-    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_1, -200, -200, 2);
-    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_2, 250, -200, 3);
-    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_3, -200, 200, 10);
-    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_4, 107, 112, 11);
-    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_5, -150, 0, 30);
+    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_1, 100, -800, 1);
+    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_1, 600, -700, 2);
+    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_2, 250, -300, 3);
+    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_3, 300, -500, 10);
+    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_4, 407, -600, 11);
+    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_5, 600, -600, 30);
 
-    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_5, 100, 100, -2);
-    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_6, 200, 100,  4);
-    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_7, -200, -200,  1);
-    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_8, 0, 0,  2);
+    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_5, 300, -700, -2);
+    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_6, 200, -600,  4);
+    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_7, 200, -300,  1);
+    project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_8, 400, -500,  2);
 
-    project->getWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_9,   100, 100,   2);
-    project->getWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_10,  200, 100,   4);
-    project->getWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_11, -200, -200, -2);
+    project->getWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_9,  200,  -500,  2);
+    project->getWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_10, 400,  -800,  4);
+    project->getWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_11, 600, -1100, -2);
     // !!!!! END
 
 
@@ -118,17 +119,22 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     Dr::ApplyColoring(this);
 
 
-
     // ########## Populates DrScene from current DrStage
-    buildScene( project->getWorldWithName("World 2")->getStageWithName("4")->getKey() );
+    buildSceneAfterLoading( project->getWorldWithName("World 2")->getStageWithName("4")->getKey() );
 
-
-
-
-    // ########## Marks FormMain as finished loading
-    Dr::SetDoneLoading(true);
 }
 
+
+
+//####################################################################################
+//##        Populates DrScene with passed in DrStage when Program is done loading
+//####################################################################################
+void FormMain::buildSceneAfterLoading(long stage_key) {
+    if (Dr::CheckDoneLoading() && this->isActiveWindow())
+        buildScene( stage_key );
+    else
+        QTimer::singleShot( 200, this, [this, stage_key] { this->buildSceneAfterLoading(stage_key); } );
+}
 
 
 //####################################################################################
@@ -190,8 +196,7 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
 {
     if (Dr::CheckDoneLoading() == false) return;
 
-    switch (label_name)
-    {
+    switch (label_name) {
     case Label_Names::Label_1:          label_1->setText(new_text);         break;
     case Label_Names::Label_2:          label_2->setText(new_text);         break;
     case Label_Names::Label_3:          label_3->setText(new_text);         break;

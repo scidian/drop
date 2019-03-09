@@ -106,8 +106,7 @@ void DrView::resizeSelection(QPointF mouse_in_scene)
 // Finds the ooposite side name of side passed in, no error catch if corner passed in
 Position_Flags DrView::findOppositeSide(Position_Flags start_side)
 {
-    switch (start_side)
-    {
+    switch (start_side) {
     case Position_Flags::Top:          return Position_Flags::Bottom;
     case Position_Flags::Bottom:       return Position_Flags::Top;
     case Position_Flags::Left:         return Position_Flags::Right;
@@ -253,8 +252,7 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     // ***** Aligns new selected items origin location with proper resize starting point
     Position_Flags origin_flag = resize_flag;
     if (scale_y < 0 && scale_x > 0) {
-         switch (origin_flag)
-         {
+         switch (origin_flag) {
          case Position_Flags::Bottom:        origin_flag = Position_Flags::Top;              break;
          case Position_Flags::Bottom_Right:  origin_flag = Position_Flags::Top_Right;        break;
          case Position_Flags::Bottom_Left:   origin_flag = Position_Flags::Top_Left;         break;
@@ -265,8 +263,7 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
 
         }
     } else if (scale_y > 0 && scale_x < 0) {
-        switch (origin_flag)
-        {
+        switch (origin_flag) {
         case Position_Flags::Right:         origin_flag = Position_Flags::Left;             break;
         case Position_Flags::Top_Right:     origin_flag = Position_Flags::Top_Left;         break;
         case Position_Flags::Bottom_Right:  origin_flag = Position_Flags::Bottom_Left;      break;
@@ -276,8 +273,7 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
         default: ;
         }
     } else if (scale_y < 0 && scale_x < 0) {
-        switch (origin_flag)
-        {
+        switch (origin_flag) {
         case Position_Flags::Right:         origin_flag = Position_Flags::Left;             break;
         case Position_Flags::Left:          origin_flag = Position_Flags::Right;            break;
         case Position_Flags::Top:           origin_flag = Position_Flags::Bottom;           break;

@@ -122,6 +122,7 @@ public:
 private:
     // Form Building / Setup
     void        buildMenu();
+    void        buildSceneAfterLoading(long stage_key);
     void        buildWindow(Form_Main_Mode new_layout);
     void        buildWindowModeEditStage();
     void        changePalette(Color_Scheme new_color_scheme);

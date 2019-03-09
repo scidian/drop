@@ -8,6 +8,7 @@
 #include <QPaintEngine>
 #include <QPaintEvent>
 #include <QStylePainter>
+#include <QScrollBar>
 #include <QOpenGLFunctions>
 
 #include "colors.h"
@@ -75,9 +76,10 @@ void DrView::paintEvent(QPaintEvent *event)
     if (scene() == nullptr) return;
 
     // Store current center point of scene, so that if we go to a new scene and come back we stay in the same place
-    if (my_scene->getCurrentStageShown()) {
-        QRect view_rect = QRect(0, 0, this->width(), this->height());
-        my_scene->getCurrentStageShown()->setViewCenterPoint( mapToScene( view_rect.center() ) );
+    if (my_scene->getCurrentStageShown() && Dr::CheckDoneLoading()) {
+        QPointF center_point = this->viewport()->geometry().center();
+        QPointF mapped_scene = mapToScene( center_point.toPoint() );
+        my_scene->getCurrentStageShown()->setViewCenterPoint( mapped_scene );
     }
 
     // Initiate QPainter object
@@ -199,11 +201,8 @@ void DrView::paintGrid(QPainter &painter)
 //####################################################################################
 void DrView::paintGameFrame(QPainter &painter)
 {
-    Orientation direction = static_cast<Orientation>((m_project->getOption(Project_Options::Orientation).toInt()));
     QRectF game_frame;
-
-    switch (direction)
-    {
+    switch (m_project->getOptionOrientation()) {
     case Orientation::Portrait:     game_frame = QRectF(0, -1600, 800, 1600);       break;
     case Orientation::Landscape:    game_frame = QRectF(0, -800, 1600,  800);       break;
     }

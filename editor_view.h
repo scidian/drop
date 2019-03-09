@@ -71,7 +71,7 @@ private:
     const QPixmap p_rotate = QPixmap(":/gui_misc/handle_rotate.png");
 
     // Display Variables
-    int          m_zoom = 250;                                      // Zoom level of current view
+    int          m_zoom = 200;                                      // Zoom level of current view, 200 is 50% - 250 is 100%
     double       m_zoom_scale = 1;                                  // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
     QTime        m_zoom_timer;                                      // Used to auto hide zoom tool tip after time has passed
     int          m_rotate = 0;                              // NOT IMPLEMENTED: Rotation of current view
@@ -216,6 +216,7 @@ public:
 
     // Getters / Setters
     View_Mode       currentViewMode() { return m_view_mode; }
+    int             currentZoomLevel() { return m_zoom; }
     void            spaceBarDown();
     void            spaceBarUp();
 

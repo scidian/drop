@@ -71,6 +71,9 @@ public:
     QVariant    getOption(Project_Options option_to_get)   { return m_options[option_to_get]; }
     void        setOption(Project_Options option_to_set, QVariant new_value) { m_options[option_to_set] = new_value; }
 
+    Orientation getOptionOrientation() { return static_cast<Orientation>( m_options[Project_Options::Orientation].toInt()); }
+
+
     // External calls
     DrStage*        findStageFromKey(long check_key);
     DrSettings*     findSettingsFromKey(long check_key);
@@ -84,7 +87,6 @@ public:
 };
 
 #endif // DRPROJECT_H
-
 
 
 

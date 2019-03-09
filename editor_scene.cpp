@@ -187,8 +187,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
 
         QVariant new_value  = object->findPropertyFromPropertyKey(one_property)->getValue();
 
-        switch (property)
-        {
+        switch (property) {
 
         case Properties::Object_Position:
             setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());

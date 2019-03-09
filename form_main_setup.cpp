@@ -38,8 +38,7 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
 
 
     Dr::SetPreference(Preferences::Form_Main_Mode, static_cast<int>(new_layout));
-    switch (new_layout)
-    {
+    switch (new_layout) {
     case Form_Main_Mode::World_Editor:
         buildWindowModeEditStage();
         buildAssetTree();
@@ -47,7 +46,6 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
         viewMain->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
         scene->update();
         viewMain->update();
-        centerViewOnPoint(QPointF(0, 0));
         break;
     case Form_Main_Mode::Clear:  
 
@@ -197,7 +195,7 @@ void FormMain::buildWindowModeEditStage()
                         ///viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
                         viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
                         viewMain->setFrameShape(QFrame::NoFrame);
-
+                        viewMain->zoomInOut( 0 );
 
 
 

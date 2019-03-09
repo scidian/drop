@@ -23,8 +23,7 @@ namespace Dr {
 //####################################################################################
 QString StringFromType(DrType type)
 {
-    switch (type)
-    {
+    switch (type) {
     case DrType::Asset:        return "Asset";
     case DrType::Image:        return "Image";
     case DrType::World:        return "World";
@@ -46,8 +45,7 @@ QString StringFromType(DrType type)
 
 QString StringFromAssetType(DrAssetType type)
 {
-    switch (type)
-    {
+    switch (type) {
     case DrAssetType::Object:      return "Object Asset";
     case DrAssetType::Character:   return "Character Asset";
     }
@@ -56,8 +54,7 @@ QString StringFromAssetType(DrAssetType type)
 
 QString StringFromObjectType(DrObjectType type)
 {
-    switch (type)
-    {
+    switch (type) {
     case DrObjectType::Object:       return "Object";
     case DrObjectType::Character:    return "Character";
     case DrObjectType::Action:       return "Action";
@@ -70,8 +67,7 @@ QString StringFromObjectType(DrObjectType type)
 
 QString StringFromPositionFlag(Position_Flags flag)
 {
-    switch (flag)
-    {
+    switch (flag) {
     case Position_Flags::Top:           return "Top";
     case Position_Flags::Top_Right:     return "Top Right";
     case Position_Flags::Top_Left:      return "Top Left";

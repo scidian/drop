@@ -53,8 +53,7 @@ void DrViewToolTip::startToolTip(View_Mode type, QPoint mouse_position, QVariant
                         "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Light).name() + "); } " );
     clearMask();
 
-    switch (m_tip_type)
-    {
+    switch (m_tip_type) {
     case View_Mode::Resizing:
     case View_Mode::Translating:
         setFixedSize(66, 32);   m_offset = QPoint(30, -63);
@@ -89,8 +88,7 @@ void DrViewToolTip::stopToolTip()
 
 void DrViewToolTip::updateToolTipData(QVariant data)
 {
-    switch (m_tip_type)
-    {
+    switch (m_tip_type) {
     case View_Mode::Rotating:       m_angle = data.toDouble();                                          break;
     case View_Mode::Resizing:       m_x = data.toPointF().x();      m_y = data.toPointF().y();          break;
     case View_Mode::Translating:    m_x = data.toPointF().x();      m_y = data.toPointF().y() * -1;     break;
@@ -128,8 +126,7 @@ void DrViewToolTip::drawText(QPainter &painter, int left_offset, int top_offset)
     QRect    bounding_1, bounding_2;
     QString  text_1, text_2;
 
-    switch (m_tip_type)
-    {
+    switch (m_tip_type) {
     case View_Mode::Zooming:     text_1 = QString::number(m_int) + "%";             break;
     case View_Mode::Rotating:    text_1 = QString::number(m_angle, 'f', 1) + "°";   break;
     case View_Mode::Resizing:    text_1 = "W: " + QString::number(m_x, 'f', 1);     text_2 = "H: " + QString::number(m_y, 'f', 1);  break;
@@ -137,8 +134,7 @@ void DrViewToolTip::drawText(QPainter &painter, int left_offset, int top_offset)
     default:                     text_1 = "---";                                    text_2 = "---";
     }
 
-    switch (m_tip_type)
-    {
+    switch (m_tip_type) {
     case View_Mode::Resizing:
     case View_Mode::Translating:
         ///// Simple text centering

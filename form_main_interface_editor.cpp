@@ -71,8 +71,9 @@ void FormMain::buildScene(long from_stage_key)
 {
     if (scene->scene_mutex.tryLock(10) == false) return;
 
-    if (scene->getCurrentStageKeyShown() != from_stage_key)
+    if (scene->getCurrentStageKeyShown() != from_stage_key) {
         emit newStageSelected(project, scene, scene->getCurrentStageKeyShown(), from_stage_key);
+    }
 
     scene->scene_mutex.unlock();
 }
@@ -113,7 +114,7 @@ void FormMain::centerViewOnPoint(QPointF center_point) {
     viewMain->centerOn(center_point);
     QTimer::singleShot(0, this, [this, center_point] { this->centerViewTimer(center_point); } );
 }
-void FormMain::centerViewTimer(QPointF center_point)        { viewMain->centerOn(center_point);  }
+void FormMain::centerViewTimer(QPointF center_point)        { viewMain->centerOn(center_point); }
 double FormMain::currentViewGridAngle()                     { return viewMain->currentGridAngle(); }
 QPointF FormMain::currentViewGridScale()                    { return viewMain->currentGridScale(); }
 View_Mode FormMain::currentViewMode()                       { return viewMain->currentViewMode(); }

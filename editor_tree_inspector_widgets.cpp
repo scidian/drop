@@ -98,8 +98,7 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, Pro
     QSpinBox *spin = new QSpinBox();
     spin->setFont(font);
     spin->setSizePolicy(size_policy);
-    switch (spin_type)
-    {
+    switch (spin_type) {
     case Property_Type::Int:            spin->setRange(-100000000, 100000000);      spin->setSingleStep(  5 );      break;
     case Property_Type::Positive:       spin->setRange(0, 100000000);               spin->setSingleStep(  5 );      break;
     case Property_Type::Filter:         spin->setRange(-255, 255);                  spin->setSingleStep( 10 );      break;
@@ -139,8 +138,7 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     spin->setFont(font);
     spin->setSizePolicy(size_policy);
     spin->setDecimals(3);
-    switch (spin_type)
-    {
+    switch (spin_type) {
     case Property_Type::Double:     spin->setRange(-100000000, 100000000);              spin->setSingleStep(5);     break;
     case Property_Type::Percent:    spin->setRange(0, 100);     spin->setSuffix("%");   spin->setSingleStep(5);     break;
     case Property_Type::Angle:      spin->setRange(-360, 360);  spin->setSuffix("°");   spin->setSingleStep(5);     break;
@@ -188,8 +186,7 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
     else
         spin_right  = initializeEmptySpinBox(property, font, property->getValue().toPointF().y());
 
-    switch (spin_type)
-    {
+    switch (spin_type) {
     case Property_Type::PositionF:
     case Property_Type::PointF:
     case Property_Type::ScaleF:

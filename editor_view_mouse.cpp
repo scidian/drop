@@ -16,7 +16,7 @@
 #include "editor_item.h"
 #include "editor_scene.h"
 #include "editor_view.h"
-
+#include "globals.h"
 #include "interface_editor_relay.h"
 #include "library.h"
 
@@ -256,6 +256,8 @@ void DrView::zoomInOut(int level)
     if (m_zoom > 500) m_zoom = 500;
     if (m_zoom < -40) m_zoom = -40;
     m_zoom_scale = qPow(qreal(2), (m_zoom - 250) / qreal(50));
+
+    ///Dr::SetLabelText(Label_Names::Label_1, "Zoom: " + QString::number(m_zoom));
 
     QMatrix matrix;
     matrix.scale(m_zoom_scale, m_zoom_scale);

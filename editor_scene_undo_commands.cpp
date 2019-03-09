@@ -9,6 +9,7 @@
 #include "editor_scene.h"
 #include "editor_scene_undo_commands.h"
 
+#include "globals.h"
 #include "library.h"
 
 #include "project.h"
@@ -92,9 +93,21 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
         return "Redo Select Stage " + displayed->getStageName();
     }
 
+    // Calculate new scene and view rects, clear scene and set sizes
+    QRectF new_scene_rect(-1000, -1000, 2000, 2000);
+    QRectF new_view_rect( -4000, -4000, 8000, 8000);
+    QPointF adjust;
+
+    switch (m_project->getOptionOrientation()) {
+    case Orientation::Portrait:     adjust = QPointF(400, -800);    break;
+    case Orientation::Landscape:    adjust = QPointF(800, -400);    break;
+    }
+    new_scene_rect.adjust(adjust.x(), adjust.y(), adjust.x(), adjust.y());
+    new_view_rect.adjust( adjust.x(), adjust.y(), adjust.x(), adjust.y());
+
     m_scene->clear();
-    m_scene->setSceneRect(-1000, -1000, 2000, 2000);
-    m_scene->clearViewSceneRect(QRectF(-4000, -4000, 8000, 8000));
+    m_scene->setSceneRect(new_scene_rect);
+    m_scene->clearViewSceneRect(new_view_rect);
     m_scene->setCurrentStageShown(from_stage);
     m_scene->setCurrentStageKeyShown(m_new_stage);
 
@@ -106,11 +119,15 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
     m_scene->update();
     m_scene->updateAlignmentGrid();
     m_scene->updateView();
-    m_scene->getRelay()->centerViewOnPoint(from_stage->getViewCenterPoint());
-    if (is_undo)
-        return "Redo Select Stage " + displayed->getStageName();
-    else
-        return "Undo Select Stage " + from_stage->getStageName();
+
+    // Center the view on the new stage
+    QPointF new_center = from_stage->getViewCenterPoint();
+    if (new_center == QPointF(0, 0)) new_center = new_view_rect.center();
+    m_scene->getRelay()->centerViewOnPoint( new_center );
+
+    // Set Undo / Redo text
+    if (is_undo)    return "Redo Select Stage " + displayed->getStageName();
+    else            return "Undo Select Stage " + from_stage->getStageName();
 }
 
 DrItem* DrScene::addItemToSceneFromObject(DrObject *object)

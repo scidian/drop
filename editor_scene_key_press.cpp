@@ -50,8 +50,7 @@ void DrScene::keyPressEvent(QKeyEvent *event)
 
     // Process movement key press
     for (auto item : getSelectionItems()) {
-        switch (event->key())
-        {
+        switch (event->key()) {
         case Qt::Key::Key_Up:     item->moveBy( 0, -move_by);      break;
         case Qt::Key::Key_Down:   item->moveBy( 0,  move_by);      break;
         case Qt::Key::Key_Left:   item->moveBy(-move_by,  0);      break;
@@ -79,8 +78,8 @@ void DrScene::keyPressEvent(QKeyEvent *event)
         double  new_x, new_y;
         int     new_z;
 
-        switch (event->key())
-        {
+        switch (event->key()) {
+
         // Clone selected items
         case Qt::Key::Key_W:
         case Qt::Key::Key_A:

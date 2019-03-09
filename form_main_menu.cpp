@@ -147,8 +147,7 @@ void FormMain::buildMenu()
         actionLight->setCheckable(true);
         actionBlue->setCheckable(true);
         actionAutumn->setCheckable(true);
-        switch (Dr::GetColorScheme())
-        {
+        switch (Dr::GetColorScheme()) {
         case Color_Scheme::Dark:    actionDark->setChecked(true);    break;
         case Color_Scheme::Light:   actionLight->setChecked(true);   break;
         case Color_Scheme::Blue:    actionBlue->setChecked(true);    break;

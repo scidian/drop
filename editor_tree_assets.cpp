@@ -172,8 +172,7 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
                 for (auto property : property_keys) {
                     Properties check_property = static_cast<Properties>(property);
 
-                    switch (check_property)
-                    {
+                    switch (check_property) {
                     case Properties::Asset_Name:
                         label = frame->findChild<QLabel*>("assetName");
                         if (label) label->setText(item->getComponentPropertyValue(Components::Asset_Settings, Properties::Asset_Name).toString() );

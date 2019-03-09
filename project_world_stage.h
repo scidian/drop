@@ -32,7 +32,7 @@ private:
     DrWorld    *m_parent_world;                             // holds reference to parent World class
 
     bool        m_is_start_stage;
-    QPointF     m_center_view_point { 0, 0 };               // holds the center point the view was on last time this stage was shown
+    QPointF     m_center_view_point {0, 0};                        // holds the center point the view was on last time this stage was shown
 
 public:
     // Constructor & destructor

@@ -165,8 +165,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
             horizontal_split->addWidget(property_name);
 
             QWidget *new_widget = nullptr;
-            switch (property_pair.second->getPropertyType())
-            {
+            switch (property_pair.second->getPropertyType()) {
             case Property_Type::Bool:           new_widget = createCheckBox(property_pair.second, fp);                                      break;
             case Property_Type::String:         new_widget = createLineEdit(property_pair.second, fp);                                      break;
             case Property_Type::Int:            new_widget = createIntSpinBox(property_pair.second, fp, Property_Type::Int);                break;

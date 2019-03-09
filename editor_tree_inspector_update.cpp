@@ -56,8 +56,7 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
         // Must turn off signals while updating or we will cause recursive function calling as changes to the widgets are connected to updateObjectFromNewValue()
         widget->blockSignals(true);
 
-        switch (prop->getPropertyType())
-        {
+        switch (prop->getPropertyType()) {
         case Property_Type::Bool:       dynamic_cast<QCheckBox*>(widget)->setChecked(prop->getValue().toBool());        break;
 
         case Property_Type::Int:
@@ -135,8 +134,7 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
     if (settings != nullptr) {
         DrProperty *property = settings->findPropertyFromPropertyKey(property_key);
 
-        switch (property->getPropertyType())
-        {
+        switch (property->getPropertyType()) {
         case Property_Type::Bool:                                   // true or false
         case Property_Type::Int:                                    // any integer
         case Property_Type::Positive:                               // integer >= 0

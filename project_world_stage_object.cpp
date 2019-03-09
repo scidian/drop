@@ -38,8 +38,7 @@ DrObject::DrObject(DrProject *parent_project, DrWorld *parent_world, DrStage *pa
     // Call to load in all the components / properties for this Stage object
     initializeObjectSettings(new_object_name, asset->getWidth(), asset->getHeight(), x, y, z);
 
-    switch (new_object_type)
-    {
+    switch (new_object_type) {
     case DrObjectType::Object:       initializeAppearanceSettings();    break;
     case DrObjectType::Camera:       initializeCameraSettings();        break;
     case DrObjectType::Character:    initializeCharacterSettings();     break;
