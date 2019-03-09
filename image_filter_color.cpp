@@ -93,11 +93,7 @@ QImage applySinglePixelFilter( Filter_Type filter, const QImage& from_image, int
             {
             case Filter_Type::Brightness:   table[i] = Dr::Clamp( i + value, 0, 255 );                                      break;
             case Filter_Type::Contrast:     table[i] = Dr::Clamp( (( i - 127 ) * (value + 100) / 100 ) + 127, 0, 255 );     break;
-            case Filter_Type::Saturation:
-            case Filter_Type::Hue:
-            case Filter_Type::Grayscale:
-            case Filter_Type::Negative:
-                ;
+            default: ;
             }
         }
 

@@ -69,7 +69,9 @@ SOURCES += \
     form_main_interface_editor.cpp \
     interface_editor_relay.cpp \
     globals.cpp \
-    image_filter_color.cpp
+    image_filter_color.cpp \
+    editor_item_item_change.cpp \
+    editor_item_paint.cpp
 
 HEADERS += \
     enums.h \

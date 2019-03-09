@@ -285,6 +285,7 @@ enum class Properties
     Object_Filter_Grayscale,        //bool
     Object_Filter_Negative,         //bool
 
+
     // *****
 
     // Camera Settings
