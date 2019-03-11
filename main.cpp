@@ -24,9 +24,9 @@
 //
 //  FormStartup                     Pick Recent Project, News, Create New Project
 //
-//  FormMain                        (4) Modes: World Editor
+//  FormMain                        (4) Modes: World Map: World / UI Layout
+//                                             World Editor
 //                                             UI Editor
-//                                             World Map: World / UI Layout
 //                                             Stage Map: Stage Layout
 //      Collision Shape Editor      Edit Collision Shape
 //      Atlas Editor                View / Edit Project Atlases

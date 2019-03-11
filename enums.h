@@ -22,9 +22,9 @@ enum class Position_Flags;
 //##    Types of modes for Form Main
 //####################################################################################
 enum class Form_Main_Mode {
+    World_Map,
     World_Editor,
     UI_Editor,
-    World_Map,
     Stage_Map,
     Clear,
 };

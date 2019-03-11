@@ -139,10 +139,11 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
         // Creates a frame to hold all properties of component, with vertical layout
         QFrame *properties_frame = new QFrame(this);
+        properties_frame->setObjectName("propertiesFrame");
         QBoxLayout *vertical_layout = new QVBoxLayout(properties_frame);
         vertical_layout->setSpacing(6);
         vertical_layout->setMargin(0);
-        vertical_layout->setContentsMargins(8,4,8,4);
+        vertical_layout->setContentsMargins(6,4,8,4);
 
         // Loop through each property and add it to the component frame
         for (auto property_pair: component_pair.second->getPropertyList()) {

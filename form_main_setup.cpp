@@ -64,6 +64,8 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
     default:
         Dr::ShowMessageBox("Not set");
     }
+
+    buttonGroupEditorSetChecked(int(new_layout));
 }
 
 void FormMain::buildWindowModeWorldEditor()
@@ -108,7 +110,7 @@ void FormMain::buildWindowModeWorldEditor()
 
             widgetStage = new QWidget(splitterVertical);
             widgetStage->setObjectName(QStringLiteral("widgetStage"));
-                horizontalLayout = new QHBoxLayout(widgetStage);
+                QHBoxLayout *horizontalLayout = new QHBoxLayout(widgetStage);
                 horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
                 horizontalLayout->setSpacing(0);
                 horizontalLayout->setContentsMargins(0, 0, 0, 0);
@@ -371,17 +373,10 @@ void FormMain::buildWindowModeWorldEditor()
         inspector->setWidget(widgetInspector);
 
 
-
-    // ***** Build top Toolbar Dock
-    DrToolBar *toolbar = buildWindowModeWorldEditorToolbar();
-
-
     // ***** Add QMainWindow Docks
     addDockWidget(static_cast<Qt::DockWidgetArea>(1), assets);
     addDockWidget(static_cast<Qt::DockWidgetArea>(2), inspector);
     addDockWidget(static_cast<Qt::DockWidgetArea>(2), advisor);
-    ///addDockWidget(static_cast<Qt::DockWidgetArea>(4), toolbar);
-    this->addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbar);
 
     // Forces resize of docks
     resizeDocks( { assets, inspector  }, { 140, 270 }, Qt::Horizontal);

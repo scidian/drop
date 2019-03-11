@@ -122,6 +122,9 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     Dr::ApplyColoring(this);
     buildMenu();
 
+    DrToolBar *toolbar = buildWindowModeWorldEditorToolbar();
+    this->addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbar);
+
     buildWindow( static_cast<Form_Main_Mode>(Dr::GetPreference(Preferences::Form_Main_Mode).toInt()) );
 
 
@@ -190,6 +193,11 @@ bool FormMain::eventFilter(QObject *obj, QEvent *event)
     return QObject::eventFilter(obj, event);
 }
 
+void FormMain::resizeEvent(QResizeEvent *event)
+{
+    QMainWindow::resizeEvent(event);
+    widgetToolbar->setFixedWidth( this->width() );
+}
 
 
 //####################################################################################

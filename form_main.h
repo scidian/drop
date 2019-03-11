@@ -5,9 +5,9 @@
 //      FormMain - Class that holds our main form window
 //
 //      FormMain Modes:
+//          World Map: World / UI Layout
 //          World Editor
 //          UI Editor
-//          World Map: World / UI Layout
 //          Stage Map: Stage Layout
 //
 //      Main Components of FormMain while in normal "Edit Stage" mode:
@@ -34,6 +34,7 @@
 #include <QScrollArea>
 #include <QSplitter>
 #include <QToolBar>
+#include <QToolButton>
 #include <QWidgetAction>
 
 #include "colors.h"
@@ -64,6 +65,11 @@ public:
 
 
 private:   
+    // Menu Widgets
+    QMenuBar       *menuBar;
+    QAction        *actionUndo, *actionRedo;
+
+    // World Editor Widgets
     TreeAdvisor    *treeAdvisor;           // Custom classes for Advisor Window
     TreeAssets     *treeAsset;             // Custom classes for Asset Tree
     TreeInspector  *treeInspector;         // Custom classes for Object Inspector
@@ -72,18 +78,18 @@ private:
     DrScene        *scene;                 // Behind the scene data model that holds the currently selected Stage
     DrView         *viewMain;              // Renders the scene, allows for interaction
 
-    // Normal Qt Classes for simple objects
-    QMenuBar       *menuBar;
-    QAction        *actionUndo, *actionRedo;
-    QWidget        *widgetAdvisor, *widgetAssests, *widgetCentral, *widgetStage, *widgetInspector, *widgetToolbar, *widgetStageView;
+    QWidget        *widgetAdvisor, *widgetAssests, *widgetCentral, *widgetStage, *widgetInspector, *widgetStageView;
     QScrollArea    *areaBottom;
     QFrame         *statusBar;
 
-    QHBoxLayout    *horizontalLayout;
     QVBoxLayout    *verticalLayout, *verticalLayoutObject, *verticalLayoutAdvisor, *verticalLayoutAsset, *verticalLayoutView;
     ColorSplitter  *splitterHorizontal, *splitterVertical;
 
     QDockWidget    *advisor, *assets, *inspector;
+
+    // Toolbar widgets
+    QWidget        *widgetToolbar;
+    QButtonGroup   *buttonGroupEditor;
 
     // Labels to display info
     QLabel         *label_1,         *label_2,           *label_3,           *label_mouse_1,     *label_mouse_2;
@@ -100,7 +106,8 @@ public:
     void                setLabelText(Label_Names label_name, QString new_text);
 
     // Event Handlers
-    virtual bool        eventFilter(QObject *obj, QEvent *event) override;                                          // Inherited from QObject
+    virtual bool        eventFilter(QObject *obj, QEvent *event) override;                                  // Inherited from QObject
+    virtual void        resizeEvent(QResizeEvent *event) override;                                          // Inherited from QWidget
 
     // Interface Relay Implementations
     virtual void        buildAssetTree() override;
@@ -140,7 +147,15 @@ private:
     void        menuRedo();
     void        menuListChildren();
 
+    // Toolbar Functions
+    void            buttonGroupEditorSetChecked(int id);
+    QToolButton*    createToolbarButtonCheckable(const QString &name);
+    QLabel*         createToolbarSpacer();
+
+
 private slots:
+    void        buttonGroupEditorClicked(int id);
+
     void        centerViewTimer(QPointF center_point);
     void        editMenuAboutToShow();
     void        editMenuAboutToHide();
@@ -188,19 +203,6 @@ protected:
 };
 
 
-//####################################################################################
-//##    PushButtonAction - Allows for PushButtons to be inserted into a toolbar as an action
-//############################
-class PushButtonAction : public QWidgetAction
-{
-public:
-    explicit PushButtonAction(const QIcon &icon, const QString &text, QObject *parent = nullptr);
-    virtual ~PushButtonAction();
-
-protected:
-    virtual QWidget* createWidget(QWidget *parent) { return new QPushButton(icon(), objectName(), parent); }
-    virtual void     deleteWidget(QWidget *widget) { delete widget; }
-};
 
 
 

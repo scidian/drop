@@ -73,7 +73,7 @@ SOURCES += \
     editor_item_item_change.cpp \
     editor_item_paint.cpp \
     editor_view_paint_items.cpp \
-    form_main_setup_toolbar.cpp
+    form_main_toolbar.cpp
 
 HEADERS += \
     enums.h \

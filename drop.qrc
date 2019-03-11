@@ -45,5 +45,9 @@
         <file>assets/cake_chocolate.png</file>
         <file>assets/cake_ice_cube.png</file>
         <file>inspector_icons/comp_appearance.png</file>
+        <file>toolbar_icons/toolbar_world_map_faded.png</file>
+        <file>toolbar_icons/toolbar_world_map.png</file>
+        <file>toolbar_icons/toolbar_world_editor.png</file>
+        <file>toolbar_icons/toolbar_world_editor_faded.png</file>
     </qresource>
 </RCC>
