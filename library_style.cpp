@@ -29,8 +29,9 @@ void ApplyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, 
 void ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type)
 {
     switch (shadow_type) {
-    case Shadow_Types::Button_Shadow:   ApplyDropShadow(target_widget, 6,  0,  3, Dr::GetColor(Window_Colors::Shadow) );    break;
-    case Shadow_Types::Tool_Tip_Shadow: ApplyDropShadow(target_widget, 4,  0,  3, Dr::GetColor(Window_Colors::Shadow) );    break;
+    case Shadow_Types::Button_Shadow:   ApplyDropShadow(target_widget, 6,  0,  3, Dr::GetColor(Window_Colors::Shadow) );        break;
+    case Shadow_Types::Tool_Tip_Shadow: ApplyDropShadow(target_widget, 4,  0,  3, Dr::GetColor(Window_Colors::Shadow) );        break;
+    case Shadow_Types::Input_Box:       ApplyDropShadow(target_widget, 1,  0,  1, Dr::GetColor(Window_Colors::Button_Light) );  break;
     }
 }
 
@@ -81,6 +82,11 @@ void ApplyColoring(QWidget *widget)
         // Main window background and seperator
         " QMainWindow { background: " + Dr::GetColor(Window_Colors::Seperator).name() + "; }" +
         " QMainWindow::separator { border: 1px solid " + Dr::GetColor(Window_Colors::Seperator).name() + "; }"
+
+        // Toolbar
+        " QToolBar { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; border: none; }"
+
+        //" QToolBar > QToolBarExtension#qt_toolbar_ext_button { background-color: red; min-width: 28px; }");
 
         // Horizontal and vertical splitters
         " QSplitter { width: 5px; height: 5px; } "
@@ -178,10 +184,25 @@ void ApplyColoring(QWidget *widget)
         // Check boxes, mostly in object inspector
         " QCheckBox#checkInspector::indicator { height: 22px; width: 32px; }"
 
+
         // Spin boxes, mostly in object inspector
         " QAbstractSpinBox { "
         "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
+        /** // Cool sunken border look
+        " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
+        "       stop:0 " +    Dr::GetColor(Window_Colors::Background_Light).darker(200).name() + ", "
+        "       stop:0.15 " + Dr::GetColor(Window_Colors::Background_Light).darker(200).name() + ", "
+        "       stop:0.16 " + Dr::GetColor(Window_Colors::Background_Light).name() + ", "
+        "       stop:0.94 " + Dr::GetColor(Window_Colors::Background_Light).name() +
+        "       stop:0.95 " + Dr::GetColor(Window_Colors::Button_Light).name() +
+        "       stop:1 " +    Dr::GetColor(Window_Colors::Button_Light).name() +
+        "       border: " + Dr::BorderWidth() + " solid; "
+        "       border-color: " +   Dr::GetColor(Window_Colors::Button_Light).name() + " " +
+                                    Dr::GetColor(Window_Colors::Button_Light).name() + " " +
+                                    Dr::GetColor(Window_Colors::Button_Light).lighter(200).name() + " " +
+                                    Dr::GetColor(Window_Colors::Button_Light).name() + "; "
+        */
         "       border: " + Dr::BorderWidth() + " solid; "
         "       border-color: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
         "       border-radius: 4px; height: 20px;"
@@ -191,6 +212,13 @@ void ApplyColoring(QWidget *widget)
         " QAbstractSpinBox:hover { "
         "       color: " + Dr::GetColor(Window_Colors::Text_Light).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
+        /** // Cool sunken border look
+        " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
+        "       stop:0 " +    Dr::GetColor(Window_Colors::Button_Light).darker(125).name() + ", "
+        "       stop:0.15 " + Dr::GetColor(Window_Colors::Button_Light).darker(125).name() + ", "
+        "       stop:0.16 " + Dr::GetColor(Window_Colors::Button_Light).name() + ", "
+        "       stop:1 " +    Dr::GetColor(Window_Colors::Button_Light).name() + "); "
+        */
         "       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
         "       border-radius: 4px; }"
 

@@ -51,6 +51,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     // ########## Initialize new project, load DrProject options
     project = new DrProject(1);
 
+    project->setOption(Project_Options::Name, "Rocky Rover");
     project->setOption(Project_Options::Orientation, static_cast<int>(Orientation::Portrait));
 
 
@@ -108,19 +109,21 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     project->getWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_9,  200,  -500,  2);
     project->getWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_10, 400,  -800,  4);
     project->getWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_11, 600, -1100, -2);
+
+
+    project->setOption(Project_Options::Current_World, 0);
+    project->setOption(Project_Options::Current_Stage, QVariant::fromValue(project->getWorldWithName("World 2")->getStageWithName("4")->getKey()) );
     // !!!!! END
 
 
 
     // ########## Initialize form and customize colors and styles
     scene = new DrScene(this, project, this);
-    buildMenu();
-    buildWindow( static_cast<Form_Main_Mode>(Dr::GetPreference(Preferences::Form_Main_Mode).toInt()) );
     Dr::ApplyColoring(this);
+    buildMenu();
 
+    buildWindow( static_cast<Form_Main_Mode>(Dr::GetPreference(Preferences::Form_Main_Mode).toInt()) );
 
-    // ########## Populates DrScene from current DrStage
-    buildSceneAfterLoading( project->getWorldWithName("World 2")->getStageWithName("4")->getKey() );
 
 }
 
@@ -130,10 +133,10 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 //##        Populates DrScene with passed in DrStage when Program is done loading
 //####################################################################################
 void FormMain::buildSceneAfterLoading(long stage_key) {
-    if (Dr::CheckDoneLoading() && this->isActiveWindow())
+    if (Dr::CheckDoneLoading())
         buildScene( stage_key );
     else
-        QTimer::singleShot( 200, this, [this, stage_key] { this->buildSceneAfterLoading(stage_key); } );
+        QTimer::singleShot( 50, this, [this, stage_key] { this->buildSceneAfterLoading(stage_key); } );
 }
 
 

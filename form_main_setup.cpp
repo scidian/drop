@@ -25,6 +25,7 @@
 #include "globals.h"
 #include "library.h"
 
+#include "project.h"
 #include "project_world_stage.h"
 
 
@@ -34,22 +35,25 @@
 // Re-configures FormMain to new mode
 void FormMain::buildWindow(Form_Main_Mode new_layout)
 {
-    QString widget_list;
-
-
+    Form_Main_Mode old_mode = static_cast<Form_Main_Mode>(Dr::GetPreference(Preferences::Form_Main_Mode).toInt());
     Dr::SetPreference(Preferences::Form_Main_Mode, static_cast<int>(new_layout));
+
     switch (new_layout) {
     case Form_Main_Mode::World_Editor:
+        setWindowTitle( tr("Drop") + " - " + project->getOption(Project_Options::Name).toString() );
         buildWindowModeEditStage();
         buildAssetTree();
         buildProjectTree();
         viewMain->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
         scene->update();
         viewMain->update();
+        buildSceneAfterLoading( project->getOption(Project_Options::Current_Stage).toInt() );
         break;
     case Form_Main_Mode::Clear:  
 
-        disconnectSignals();
+        if (old_mode == Form_Main_Mode::World_Editor)
+            disconnectSignalsEditor();
+
         for (auto item : scene->selectedItems())
             item->setSelected(false);
 
@@ -73,29 +77,19 @@ void FormMain::buildWindowModeEditStage()
     ///QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored);
     ///QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
 
-    QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    sizePolicy.setHorizontalStretch(0);
-    sizePolicy.setVerticalStretch(0);
+    QSizePolicy sizePolicy(                     QSizePolicy::Preferred,         QSizePolicy::Preferred);
+    QSizePolicy sizePolicyLess(                 QSizePolicy::Preferred,         QSizePolicy::Preferred);
+    QSizePolicy sizePolicyPreferredHorizontal(  QSizePolicy::Preferred,         QSizePolicy::Preferred);
+    QSizePolicy sizePolicyPreferredVertical(    QSizePolicy::Preferred,         QSizePolicy::Preferred);
+    QSizePolicy sizePolicyMinimum(              QSizePolicy::MinimumExpanding,  QSizePolicy::MinimumExpanding);
+    QSizePolicy sizePolicyView(                 QSizePolicy::MinimumExpanding,  QSizePolicy::Expanding);
 
-    QSizePolicy sizePolicyLess(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    sizePolicy.setHorizontalStretch(1);
-    sizePolicy.setVerticalStretch(1);
-
-    QSizePolicy sizePolicyPreferredHorizontal(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    sizePolicyPreferredHorizontal.setHorizontalStretch(1);
-    sizePolicyPreferredHorizontal.setVerticalStretch(0);
-
-    QSizePolicy sizePolicyPreferredVertical(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    sizePolicyPreferredVertical.setHorizontalStretch(0);
-    sizePolicyPreferredVertical.setVerticalStretch(1);
-
-    QSizePolicy sizePolicyMinimum(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::MinimumExpanding);
-    sizePolicy.setHorizontalStretch(0);
-    sizePolicy.setVerticalStretch(0);
-
-    QSizePolicy sizePolicyView(QSizePolicy::MinimumExpanding, QSizePolicy::Expanding);
-    sizePolicyView.setHorizontalStretch(1);
-    sizePolicyView.setVerticalStretch(0);
+    sizePolicy.setHorizontalStretch(0);                         sizePolicy.setVerticalStretch(0);
+    sizePolicyLess.setHorizontalStretch(1);                     sizePolicyLess.setVerticalStretch(1);
+    sizePolicyPreferredHorizontal.setHorizontalStretch(1);      sizePolicyPreferredHorizontal.setVerticalStretch(0);
+    sizePolicyPreferredVertical.setHorizontalStretch(0);        sizePolicyPreferredVertical.setVerticalStretch(1);
+    sizePolicyMinimum.setHorizontalStretch(0);                  sizePolicyMinimum.setVerticalStretch(0);
+    sizePolicyView.setHorizontalStretch(1);                     sizePolicyView.setVerticalStretch(0);
 
 
     // ***** Build central widgets
@@ -254,6 +248,7 @@ void FormMain::buildWindowModeEditStage()
 
     // ***** Build left Assets Dock
     assets = new QDockWidget(this);
+    assets->setWindowTitle( tr("Assets") );
     assets->setObjectName(QStringLiteral("assets"));
     assets->setMinimumSize(QSize(140, 35));
     assets->setMaximumWidth(300);
@@ -295,6 +290,7 @@ void FormMain::buildWindowModeEditStage()
 
     // ***** Build right Advisor Dock
     advisor = new QDockWidget(this);
+    advisor->setWindowTitle( tr("Advisor") );
     advisor->setObjectName(QStringLiteral("advisor"));
     advisor->setMinimumSize(QSize(100, 80));
     advisor->setSizePolicy(sizePolicyLess);
@@ -335,6 +331,7 @@ void FormMain::buildWindowModeEditStage()
 
     // ***** Build right Inspector Dock
     inspector = new QDockWidget(this);
+    inspector->setWindowTitle( tr("Inspector") );
     inspector->setObjectName(QStringLiteral("inspector"));
     inspector->setSizePolicy(sizePolicyPreferredVertical);
     inspector->setMinimumSize(QSize(250, 250));
@@ -374,79 +371,27 @@ void FormMain::buildWindowModeEditStage()
         inspector->setWidget(widgetInspector);
 
 
+
     // ***** Build top Toolbar Dock
-    toolbar = new QDockWidget(this);
-    toolbar->setObjectName(QStringLiteral("toolbar"));
-    toolbar->setMinimumSize(QSize(449, 50));
-    toolbar->setMaximumSize(QSize(524287, 50));
-    toolbar->setFeatures(QDockWidget::NoDockWidgetFeatures);
-    toolbar->setAllowedAreas(Qt::TopDockWidgetArea);
-    toolbar->setWindowTitle(QStringLiteral(""));
-    toolbar->setContentsMargins(0, 0, 0, 4);
-        widgetToolbar = new QWidget();
-        widgetToolbar->setObjectName(QStringLiteral("widgetToolbar"));
-            buttonAtlas = new QPushButton(widgetToolbar);
-            buttonAtlas->setObjectName(QStringLiteral("toolbarButton"));
-            buttonAtlas->setGeometry(QRect(250, 8, 111, 31));
-            buttonAtlas->setFont(font);
-            buttonFonts = new QPushButton(widgetToolbar);
-            buttonFonts->setObjectName(QStringLiteral("toolbarButton"));
-            buttonFonts->setGeometry(QRect(370, 8, 111, 31));
-            buttonFonts->setFont(font);
-            buttonPlay = new QPushButton(widgetToolbar);
-            buttonPlay->setObjectName(QStringLiteral("toolbarButton"));
-            buttonPlay->setGeometry(QRect(660, 8, 111, 31));
-            buttonPlay->setFont(font);
-            buttonSettings = new QPushButton(widgetToolbar);
-            buttonSettings->setObjectName(QStringLiteral("toolbarButton"));
-            buttonSettings->setGeometry(QRect(780, 8, 111, 31));
-            buttonSettings->setFont(font);
-            buttonWorlds = new QPushButton(widgetToolbar);
-            buttonWorlds->setObjectName(QStringLiteral("toolbarButton"));
-            buttonWorlds->setGeometry(QRect(20, 8, 121, 31));
-            buttonWorlds->setFont(font);
-        toolbar->setWidget(widgetToolbar);
-        toolbar->setTitleBarWidget(new QWidget());                                      // Removes title bar from QDockWidget Toolbar
+    QToolBar *toolbar = buildWindowModeEditStageToolbar();
 
 
     // ***** Add QMainWindow Docks
     addDockWidget(static_cast<Qt::DockWidgetArea>(1), assets);
     addDockWidget(static_cast<Qt::DockWidgetArea>(2), inspector);
     addDockWidget(static_cast<Qt::DockWidgetArea>(2), advisor);
-    addDockWidget(static_cast<Qt::DockWidgetArea>(4), toolbar);
+
+    //addDockWidget(static_cast<Qt::DockWidgetArea>(4), toolbar);
+    this->addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbar);
 
     // Forces resize of docks
     resizeDocks( { assets, inspector  }, { 140, 270 }, Qt::Horizontal);
     resizeDocks( { advisor, inspector }, { 140, 900 }, Qt::Vertical);
 
 
-
     // ***** Signals emitted by FormMain
-    connectSignals();
+    connectSignalsEditor();
 
-
-
-    // ***** Apply shadow effects to buttons
-    Dr::ApplyDropShadowByType(buttonAtlas,    Shadow_Types::Button_Shadow);
-    Dr::ApplyDropShadowByType(buttonFonts,    Shadow_Types::Button_Shadow);
-    Dr::ApplyDropShadowByType(buttonPlay,     Shadow_Types::Button_Shadow);
-    Dr::ApplyDropShadowByType(buttonSettings, Shadow_Types::Button_Shadow);
-    Dr::ApplyDropShadowByType(buttonWorlds,   Shadow_Types::Button_Shadow);
-
-
-    // ***** Set titles and button texts
-    setWindowTitle(QApplication::translate("MainWindow", "Drop", nullptr));
-    advisor->setWindowTitle(QApplication::translate("MainWindow", "Advisor", nullptr));
-    assets->setWindowTitle(QApplication::translate("MainWindow", "Assets", nullptr));
-    inspector->setWindowTitle(QApplication::translate("MainWindow", "Inspector", nullptr));
-    label_object_1->setText(QApplication::translate("MainWindow", "Object ID, Type", nullptr));
-    label_object_2->setText(QApplication::translate("MainWindow", "Object ID, Type", nullptr));
-    label_object_3->setText(QApplication::translate("MainWindow", "Object ID, Type", nullptr));
-    buttonAtlas->setText(QApplication::translate("MainWindow", "Atlases", nullptr));
-    buttonFonts->setText(QApplication::translate("MainWindow", "Fonts", nullptr));
-    buttonPlay->setText(QApplication::translate("MainWindow", "Play", nullptr));
-    buttonSettings->setText(QApplication::translate("MainWindow", "App Settings", nullptr));
-    buttonWorlds->setText(QApplication::translate("MainWindow", "Worlds / UI", nullptr));
 
 }
 
@@ -465,7 +410,7 @@ QLabel* FormMain::createLabel(QWidget *parent, QString object_name, QRect label_
 //####################################################################################
 //##        Connect / disconnect signals emitted by FormMain
 //####################################################################################
-void FormMain::connectSignals()
+void FormMain::connectSignalsEditor()
 {
     connect(this, SIGNAL(sendAdvisorInfo(QString, QString)), treeAdvisor, SLOT(changeAdvisor(QString, QString)) , Qt::QueuedConnection);
 
@@ -475,7 +420,7 @@ void FormMain::connectSignals()
 }
 
 // Disconnect signals emitted by FormMain
-void FormMain::disconnectSignals()
+void FormMain::disconnectSignalsEditor()
 {
     disconnect(this, SIGNAL(sendAdvisorInfo(QString, QString)), treeAdvisor, SLOT(changeAdvisor(QString, QString)) );
 

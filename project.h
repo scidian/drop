@@ -11,6 +11,11 @@
 #include "settings.h"
 
 enum class Project_Options {
+    Name,                       // string
+
+    Current_World,              // int
+    Current_Stage,              // int
+
     Orientation,                // int (Orientation)
 };
 

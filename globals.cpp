@@ -44,7 +44,6 @@ namespace Dr {
 
         Dr::SetPreference(Preferences::Form_Main_Mode, static_cast<int>(Form_Main_Mode::World_Editor));
 
-        Dr::SetPreference(Preferences::World_Editor_Current_World, 0);
         Dr::SetPreference(Preferences::World_Editor_Lock_Backgrounds, false);
         Dr::SetPreference(Preferences::World_Editor_Show_Collision_Shapes, false);
         Dr::SetPreference(Preferences::World_Editor_Show_Connections, false);

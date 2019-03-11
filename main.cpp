@@ -74,18 +74,15 @@ int main(int argc, char *argv[])
     Dr::SetActiveEditorRelay(&form_main);           // Set main form to active EditorRelay
     qApp->installEventFilter(&form_main);           // Installs an application wide event filter attached to FormMain (acts as key grabber)
     form_main.show();                               // Show FormMain
+    QApplication::processEvents();                  // Ensure FormMain finishes showing
     Dr::SetDoneLoading(true);                       // Marks FormMain as finished loading
 
     app_drop.exec();                                // Run program
-
 
     //Dr::ShowMessageBox("Finished running program");
 
     return 0;
 }
-
-
-
 
 
 

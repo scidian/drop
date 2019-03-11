@@ -111,7 +111,7 @@ void DrObject::initializeObjectSettings(QString new_name, double width, double h
 
 void DrObject::initializeAppearanceSettings()
 {
-    addComponent(Components::Object_Appearance, "Appearance", "Filters for objects as they appear in the Stage. ", Component_Colors::Golden_Yellow, true);
+    addComponent(Components::Object_Appearance, "Appearance", "Filters for objects as they appear in the Stage. ", Component_Colors::Mellow_Yellow, true);
     getComponent(Components::Object_Appearance)->setIcon(Component_Icons::Appearance);
 
     addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Brightness, Property_Type::Filter, 0,

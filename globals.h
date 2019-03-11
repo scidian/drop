@@ -17,7 +17,7 @@ enum class Preferences
 {
     Form_Main_Mode,                         // int (Form_Main_Mode)
 
-    World_Editor_Current_World,             // int
+
     World_Editor_Lock_Backgrounds,          // bool
     World_Editor_Show_Collision_Shapes,     // bool
     World_Editor_Show_Connections,          // bool

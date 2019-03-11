@@ -15,6 +15,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QPaintEvent>
+#include <QStyleFactory>
 
 #include "colors.h"
 #include "debug.h"

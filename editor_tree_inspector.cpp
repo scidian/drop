@@ -199,8 +199,9 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
                 break;
             }
 
-            if (new_widget != nullptr)
+            if (new_widget != nullptr) {
                 horizontal_split->addWidget(new_widget);
+            }
 
             vertical_layout->addWidget(single_row);
         }

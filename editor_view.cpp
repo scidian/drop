@@ -6,6 +6,7 @@
 //
 //
 #include <QtMath>
+#include <QScrollBar>
 
 #include "colors.h"
 #include "debug.h"

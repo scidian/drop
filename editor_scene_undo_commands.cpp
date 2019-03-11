@@ -110,6 +110,7 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
     m_scene->clearViewSceneRect(new_view_rect);
     m_scene->setCurrentStageShown(from_stage);
     m_scene->setCurrentStageKeyShown(m_new_stage);
+    m_project->setOption(Project_Options::Current_Stage, QVariant::fromValue(from_stage->getKey()) );
 
     // Load all our objects from data model into QGraphicsItems
     for (auto object_pair : from_stage->getObjectMap()) {

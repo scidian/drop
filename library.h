@@ -21,6 +21,7 @@ enum class Shadow_Types
 {
     Button_Shadow,
     Tool_Tip_Shadow,
+    Input_Box,
 };
 
 

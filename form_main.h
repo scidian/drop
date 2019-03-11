@@ -33,6 +33,7 @@
 #include <QPushButton>
 #include <QScrollArea>
 #include <QSplitter>
+#include <QWidgetAction>
 
 #include "colors.h"
 #include "interface_editor_relay.h"
@@ -80,8 +81,7 @@ private:
     QVBoxLayout    *verticalLayout, *verticalLayoutObject, *verticalLayoutAdvisor, *verticalLayoutAsset, *verticalLayoutView;
     ColorSplitter  *splitterHorizontal, *splitterVertical;
 
-    QDockWidget    *advisor, *assets, *inspector, *toolbar;
-    QPushButton    *buttonAtlas, *buttonFonts, *buttonPlay, *buttonSettings, *buttonWorlds;
+    QDockWidget    *advisor, *assets, *inspector;
 
     // Labels to display info
     QLabel         *label_1,         *label_2,           *label_3,           *label_mouse_1,     *label_mouse_2;
@@ -125,9 +125,10 @@ private:
     void        buildSceneAfterLoading(long stage_key);
     void        buildWindow(Form_Main_Mode new_layout);
     void        buildWindowModeEditStage();
+    QToolBar*   buildWindowModeEditStageToolbar();
     void        changePalette(Color_Scheme new_color_scheme);
-    void        connectSignals();
-    void        disconnectSignals();
+    void        connectSignalsEditor();
+    void        disconnectSignalsEditor();
 
     QLabel*     createLabel(QWidget *parent, QString object_name, QRect label_rect, QFont &label_font);
 
@@ -163,6 +164,21 @@ public:
     ColorSplitter(QWidget *parent = nullptr) : QSplitter(parent) {}
 
 };
+
+
+
+
+class PushButtonAction : public QWidgetAction
+{
+public:
+    explicit PushButtonAction(const QIcon &icon, const QString &text, QObject *parent = nullptr);
+    virtual ~PushButtonAction();
+
+protected:
+    virtual QWidget* createWidget(QWidget *parent) { return new QPushButton(icon(), objectName(), parent); }
+    virtual void     deleteWidget(QWidget *widget) { delete widget; }
+};
+
 
 
 #endif // MAINWINDOW_H

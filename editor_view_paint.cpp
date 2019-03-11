@@ -60,7 +60,10 @@ void DrView::drawForeground(QPainter *painter, const QRectF &rect)
         paintGrid(*painter);
     }
 
-    paintGameFrame(*painter);
+    if (my_scene->getCurrentStageShown()) {
+        if (my_scene->getCurrentStageShown()->isStartStage())
+            paintGameFrame(*painter);
+    }
 }
 
 
@@ -187,12 +190,14 @@ void DrView::paintGrid(QPainter &painter)
 
     // Draw buffer holding grid onto screen
     QRectF target_rect = m_grid_view_rect;
-    painter.drawPixmap(target_rect, m_grid_buffer, QRectF(m_grid_buffer.rect()) );
+    if (target_rect.width() > 0 && target_rect.height() > 0) {
+        painter.drawPixmap(target_rect, m_grid_buffer, QRectF(m_grid_buffer.rect()) );
 
-    // Draws an outline around grid
-    painter.setBrush(Qt::NoBrush);
-    painter.setPen(line_pen);
-    painter.drawRect(m_grid_view_rect);
+        // Draws an outline around grid
+        painter.setBrush(Qt::NoBrush);
+        painter.setPen(line_pen);
+        painter.drawRect(m_grid_view_rect);
+    }
 }
 
 

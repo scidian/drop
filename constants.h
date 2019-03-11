@@ -33,7 +33,8 @@ namespace Component_Colors
 
     const QColor Green_SeaGrass { QColor(154, 225, 157, 255) };
 
-    const QColor Golden_Yellow  { QColor(233, 218,   4, 255) };
+    const QColor Mustard_Yellow { QColor(255, 200,  87, 255) };
+    const QColor Mellow_Yellow  { QColor(250, 223, 127, 255) };
 
     const QColor Brown_Sugar    { QColor(165, 117,  72, 255) };
     const QColor Beige_Apricot  { QColor(252, 215, 173, 255) };

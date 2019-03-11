@@ -8,6 +8,7 @@
 
 #include <QDockWidget>
 #include <QKeyEvent>
+#include <QScrollBar>
 #include <QTimer>
 
 #include "colors.h"

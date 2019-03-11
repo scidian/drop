@@ -82,7 +82,7 @@ void DrView::recalculateGrid()
     // Map viewport to scene rect
     QRectF  scene_rect = this->scene()->sceneRect();
     QPointF top_left = mapToScene(0, 0);
-    QPointF bottom_right = mapToScene(this->width(), this->height());
+    QPointF bottom_right = mapToScene(this->viewport()->width(), this->viewport()->height());
 
     // Variables used to create bounding box in view of where we need to draw grid lines
     double min_x = top_left.x();
