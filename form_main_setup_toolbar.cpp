@@ -12,6 +12,31 @@
 #include "library.h"
 
 
+//####################################################################################
+//##    DrToolBar Function Calls
+//####################################################################################
+DrToolBar::~DrToolBar() { }
+
+// Save the press position (this is relative to the current widget)
+void DrToolBar::mousePressEvent(QMouseEvent* event) {
+    pressPos= event->pos();
+    isMoving= true;
+}
+
+// Calculate difference between the press position and the new Mouse position, relative to the current widget
+void DrToolBar::mouseMoveEvent(QMouseEvent* event) {
+    if (isMoving) {
+        QPoint diff = event->pos() - pressPos;
+        window()->move( window()->pos() + diff );
+    }
+}
+void DrToolBar::mouseReleaseEvent(QMouseEvent*) { isMoving = false; }
+
+
+
+//####################################################################################
+//##    PushButtonAction - Constructor / Destructor
+//####################################################################################
 PushButtonAction::PushButtonAction(const QIcon &icon, const QString &text, QObject *parent)
     : QWidgetAction(parent)
 {
@@ -27,13 +52,16 @@ PushButtonAction::PushButtonAction(const QIcon &icon, const QString &text, QObje
 PushButtonAction::~PushButtonAction() { }
 
 
-QToolBar* FormMain::buildWindowModeEditStageToolbar()
+//####################################################################################
+//##    Builds FormMain toolbar for WorldEditor mode
+//####################################################################################
+DrToolBar* FormMain::buildWindowModeWorldEditorToolbar()
 {
     QFont font, fontLarger;
     font.setPointSize(Dr::FontSize());
     fontLarger.setPointSize(Dr::FontSize() + 2);
 
-    QToolBar *toolbar = new QToolBar(this);
+    DrToolBar *toolbar = new DrToolBar(this);
     toolbar->setObjectName(QStringLiteral("toolbar"));
     toolbar->setMovable(false);
     toolbar->setFloatable(false);
@@ -57,7 +85,10 @@ QToolBar* FormMain::buildWindowModeEditStageToolbar()
     toolbar->insertWidget(pb, button);
 
 
-    /*QDockWidget *toolbar = new QToolBar(this);
+
+
+    /*  Old toolbar as QDockWidget
+    QDockWidget *toolbar = new QToolBar(this);
     toolbar->setObjectName(QStringLiteral("toolbar"));
     toolbar->setMinimumSize(QSize(449, 50));
     toolbar->setMaximumSize(QSize(524287, 50));
@@ -78,32 +109,9 @@ QToolBar* FormMain::buildWindowModeEditStageToolbar()
             Dr::ApplyDropShadowByType(button,    Shadow_Types::Button_Shadow);
             button->setText( tr("Atlases") );
             toolbarLayout->addWidget(button);
-            button = new QPushButton();
-            button->setObjectName(QStringLiteral("toolbarButton"));
-            button->setFont(font);
-            Dr::ApplyDropShadowByType(button,    Shadow_Types::Button_Shadow);
-            button->setText( tr("Fonts") );
-            toolbarLayout->addWidget(button);
-            button = new QPushButton();
-            button->setObjectName(QStringLiteral("toolbarButton"));
-            button->setFont(font);
-            Dr::ApplyDropShadowByType(button,    Shadow_Types::Button_Shadow);
-            button->setText( tr("Play") );
-            toolbarLayout->addWidget(button);
-            button = new QPushButton();
-            button->setObjectName(QStringLiteral("toolbarButton"));
-            button->setFont(font);
-            Dr::ApplyDropShadowByType(button,    Shadow_Types::Button_Shadow);
-            button->setText( tr("App Settings") );
-            toolbarLayout->addWidget(button);
-            button = new QPushButton();
-            button->setObjectName(QStringLiteral("toolbarButton"));
-            button->setFont(font);
-            Dr::ApplyDropShadowByType(button,    Shadow_Types::Button_Shadow);
-            button->setText( tr("Worlds / UI") );
-            toolbarLayout->addWidget(button);
         toolbar->setWidget(widgetToolbar);
-        toolbar->setTitleBarWidget(new QWidget());                               */       // Removes title bar from QDockWidget Toolbar
+        toolbar->setTitleBarWidget(new QWidget());              // Removes title bar from QDockWidget Toolbar
+    */
 
 
     return toolbar;

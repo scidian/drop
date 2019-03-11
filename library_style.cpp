@@ -84,7 +84,8 @@ void ApplyColoring(QWidget *widget)
         " QMainWindow::separator { border: 1px solid " + Dr::GetColor(Window_Colors::Seperator).name() + "; }"
 
         // Toolbar
-        " QToolBar { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; border: none; }"
+        " QToolBar { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
+        "       border-bottom: 1 solid; }"
 
         //" QToolBar > QToolBarExtension#qt_toolbar_ext_button { background-color: red; min-width: 28px; }");
 

@@ -22,7 +22,6 @@
 //              Variable List
 //              Bottom Area (Labels, Stages?)
 //
-
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -30,9 +29,11 @@
 
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QMouseEvent>
 #include <QPushButton>
 #include <QScrollArea>
 #include <QSplitter>
+#include <QToolBar>
 #include <QWidgetAction>
 
 #include "colors.h"
@@ -46,6 +47,7 @@ class TreeInspector;
 class TreeProject;
 class DrProject;
 class DrScene;
+class DrToolBar;
 class DrView;
 class DrViewRubberBand;
 
@@ -124,8 +126,8 @@ private:
     void        buildMenu();
     void        buildSceneAfterLoading(long stage_key);
     void        buildWindow(Form_Main_Mode new_layout);
-    void        buildWindowModeEditStage();
-    QToolBar*   buildWindowModeEditStageToolbar();
+    void        buildWindowModeWorldEditor();
+    DrToolBar*  buildWindowModeWorldEditorToolbar();
     void        changePalette(Color_Scheme new_color_scheme);
     void        connectSignalsEditor();
     void        disconnectSignalsEditor();
@@ -166,8 +168,29 @@ public:
 };
 
 
+//####################################################################################
+//##    DrToolBar - Custom class allows for movement by mouseDown
+//############################
+class DrToolBar : public QToolBar
+{
+private:
+    QPoint  pressPos;
+    bool    isMoving = false;       // Flag makes sure that the drag and drop event originated from within the titlebar
+
+public:
+    DrToolBar(QWidget *parent = nullptr) : QToolBar(parent) { }
+    virtual ~DrToolBar() override;
+
+protected:
+    virtual void mousePressEvent(QMouseEvent *event) override;
+    virtual void mouseMoveEvent(QMouseEvent *event) override;
+    virtual void mouseReleaseEvent(QMouseEvent *event) override;
+};
 
 
+//####################################################################################
+//##    PushButtonAction - Allows for PushButtons to be inserted into a toolbar as an action
+//############################
 class PushButtonAction : public QWidgetAction
 {
 public:

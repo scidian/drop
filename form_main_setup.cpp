@@ -41,7 +41,7 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
     switch (new_layout) {
     case Form_Main_Mode::World_Editor:
         setWindowTitle( tr("Drop") + " - " + project->getOption(Project_Options::Name).toString() );
-        buildWindowModeEditStage();
+        buildWindowModeWorldEditor();
         buildAssetTree();
         buildProjectTree();
         viewMain->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
@@ -66,7 +66,7 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
     }
 }
 
-void FormMain::buildWindowModeEditStage()
+void FormMain::buildWindowModeWorldEditor()
 {
     QFont font, fontLarger;
     font.setPointSize(Dr::FontSize());
@@ -373,15 +373,14 @@ void FormMain::buildWindowModeEditStage()
 
 
     // ***** Build top Toolbar Dock
-    QToolBar *toolbar = buildWindowModeEditStageToolbar();
+    DrToolBar *toolbar = buildWindowModeWorldEditorToolbar();
 
 
     // ***** Add QMainWindow Docks
     addDockWidget(static_cast<Qt::DockWidgetArea>(1), assets);
     addDockWidget(static_cast<Qt::DockWidgetArea>(2), inspector);
     addDockWidget(static_cast<Qt::DockWidgetArea>(2), advisor);
-
-    //addDockWidget(static_cast<Qt::DockWidgetArea>(4), toolbar);
+    ///addDockWidget(static_cast<Qt::DockWidgetArea>(4), toolbar);
     this->addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbar);
 
     // Forces resize of docks
