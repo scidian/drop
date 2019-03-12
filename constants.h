@@ -55,6 +55,7 @@ namespace Component_Icons
     const QString Appearance    { QString(":/inspector_icons/comp_appearance.png") };
     const QString Camera        { QString(":/inspector_icons/comp_camera.png") };
     const QString Character     { QString(":/inspector_icons/comp_character.png") };
+    const QString Animation     { QString(":/inspector_icons/comp_animation.png") };
     const QString None          { QString("") };
 };
 

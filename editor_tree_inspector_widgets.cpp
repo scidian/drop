@@ -24,6 +24,7 @@
 #include "editor_tree_widgets.h"
 
 #include "interface_editor_relay.h"
+#include "globals.h"
 #include "library.h"
 
 #include "project.h"
@@ -414,27 +415,38 @@ void DrDropDownComboBox::showPopup()
 
 //####################################################################################
 //##
-//##    DropDownComboBox Class Functions, paints the checkbox & check mark
+//##    DrCheckBox Class Functions, paints the checkbox & check mark
 //##
 //####################################################################################
 void DrCheckBox::paintEvent(QPaintEvent *)
 {
-    QRect checkbox_indicator(4, 0, 28, 22);
+    QRect  checkbox_indicator(4, 0, 28, 22);
     QPoint mouse_position = property(User_Property::Mouse_Pos).toPoint();
 
     QPainter painter(this);
-    if (property(User_Property::Mouse_Over).toBool() && checkbox_indicator.contains(mouse_position)) {
-        painter.setPen( QPen( Dr::GetColor(Window_Colors::Background_Light), Dr::BorderWidthAsInt() ) );
-        painter.setBrush( QBrush(Dr::GetColor(Window_Colors::Button_Light)) );
-        painter.drawRoundRect(5, 1, 20, 20, 20, 20);
-        painter.setPen( QPen( Dr::GetColor(Window_Colors::Text_Light), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ) );
+    painter.setRenderHint(QPainter::Antialiasing, true);
 
-    } else {
-        painter.setPen( QPen( Dr::GetColor(Window_Colors::Button_Light), Dr::BorderWidthAsInt() ) );
-        painter.setBrush( QBrush(Dr::GetColor(Window_Colors::Background_Light)) );
-        painter.drawRoundRect(5, 1, 20, 20, 20, 20);
-        painter.setPen( QPen( Dr::GetColor(Window_Colors::Text), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ) );
-    }
+    QColor middle;
+    //Hover
+    if (property(User_Property::Mouse_Over).toBool() && checkbox_indicator.contains(mouse_position))
+        middle = Dr::GetColor(Window_Colors::Background_Dark).darker(150);
+    else
+        middle = Dr::GetColor(Window_Colors::Background_Dark);
+
+    // Draw bottom highlight
+    painter.setPen( QPen( Dr::GetColor(Window_Colors::Background_Dark).lighter(200), Dr::BorderWidthAsInt() ) );
+    painter.setBrush( Qt::NoBrush );
+    painter.drawRoundedRect(5, 1, 20, 20, 4, 4);
+
+    QLinearGradient gradient( 5, 1, 5, 20);
+    gradient.setColorAt(0.00, Dr::GetColor(Window_Colors::Background_Dark).darker(150));
+    gradient.setColorAt(0.14, Dr::GetColor(Window_Colors::Background_Dark).darker(150));
+    gradient.setColorAt(0.18, middle);
+    gradient.setColorAt(1.00, middle);
+    painter.setBrush(gradient);
+    painter.setPen( QPen( Dr::GetColor(Window_Colors::Background_Dark).darker(150), Dr::BorderWidthAsInt() ) );
+    painter.drawRoundedRect(5, 1, 20, 19, 4, 4);
+    painter.setPen( QPen( Dr::GetColor(Window_Colors::Text), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ) );
 
     if (checkState()) {
         QVector<QLineF> check;

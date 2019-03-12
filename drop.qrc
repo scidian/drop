@@ -51,5 +51,6 @@
         <file>toolbar_icons/toolbar_world_editor_faded.png</file>
         <file>toolbar_icons/toolbar_ui_editor.png</file>
         <file>toolbar_icons/toolbar_ui_editor_faded.png</file>
+        <file>inspector_icons/comp_animation.png</file>
     </qresource>
 </RCC>
