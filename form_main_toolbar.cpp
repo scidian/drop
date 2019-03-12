@@ -51,6 +51,8 @@ void FormMain::buttonGroupEditorClicked(int id)
         this->buildWindow(Form_Main_Mode::Clear);
     } else if (new_id == Form_Main_Mode::World_Editor) {
         this->buildWindow(Form_Main_Mode::World_Editor);
+    } else if (new_id == Form_Main_Mode::UI_Editor) {
+        this->buildWindow(Form_Main_Mode::Clear);
     }
 }
 

@@ -36,7 +36,8 @@ void    ApplyColoring(QWidget *widget);
 void    ApplyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color);
 void    ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type);
 void    ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius);
-
+QString StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_percent, bool highlight = false);
+QString StyleSheetPoppedOutBackgroundBorder(int top_percent, int bottom_percent, bool highlight = false);
 
 // Comparison Functions
 double  CheckScaleNotZero(double scale_to_check);

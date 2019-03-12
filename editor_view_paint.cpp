@@ -40,9 +40,9 @@ void DrView::drawBackground(QPainter *painter, const QRectF &rect)
 
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL)) {
         QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
-        f->glClearColor(static_cast<float>(Dr::GetColor(Window_Colors::Background_Light).redF()),
-                        static_cast<float>(Dr::GetColor(Window_Colors::Background_Light).greenF()),
-                        static_cast<float>(Dr::GetColor(Window_Colors::Background_Light).blueF()),
+        f->glClearColor(static_cast<float>(Dr::GetColor(Window_Colors::Background_Dark).redF()),
+                        static_cast<float>(Dr::GetColor(Window_Colors::Background_Dark).greenF()),
+                        static_cast<float>(Dr::GetColor(Window_Colors::Background_Dark).blueF()),
                         1.0f);
         f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
     }
@@ -134,8 +134,8 @@ void DrView::paintGrid(QPainter &painter)
     if (m_zoom_scale >= 2.0) point_size = 6;
     if (m_zoom_scale >= 4.0) point_size = 8;
     if (m_zoom_scale >= 8.0) point_size = 12;
-    QPen dot_pen =  QPen( Dr::GetColor(Window_Colors::Background_Dark), point_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
-    QPen line_pen = QPen( Dr::GetColor(Window_Colors::Background_Dark), 1);
+    QPen dot_pen =  QPen( Dr::GetColor(Window_Colors::Background_Light), point_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
+    QPen line_pen = QPen( Dr::GetColor(Window_Colors::Background_Light), 1);
     line_pen.setCosmetic(true);
 
     if (m_grid_needs_redraw) {

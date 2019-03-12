@@ -99,7 +99,10 @@ void FormMain::buildWindowModeWorldEditor()
         verticalLayout = new QVBoxLayout(widgetCentral);
         verticalLayout->setSpacing(0);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        verticalLayout->setContentsMargins(4, 0, 4, 0);
+
+        // This sets the border with for the main vontrol area between middle and docks
+        //verticalLayout->setContentsMargins(2, 0, 2, 0);
+        verticalLayout->setContentsMargins(0, 0, 0, 0);
 
         splitterVertical = new ColorSplitter(widgetCentral);
         splitterVertical->setObjectName(QStringLiteral("splitterVertical"));
