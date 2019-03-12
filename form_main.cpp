@@ -139,7 +139,7 @@ void FormMain::buildSceneAfterLoading(long stage_key) {
     if (Dr::CheckDoneLoading())
         buildScene( stage_key );
     else
-        QTimer::singleShot( 50, this, [this, stage_key] { this->buildSceneAfterLoading(stage_key); } );
+        QTimer::singleShot( 100, this, [this, stage_key] { this->buildSceneAfterLoading(stage_key); } );
 }
 
 
@@ -193,8 +193,8 @@ bool FormMain::eventFilter(QObject *obj, QEvent *event)
     return QObject::eventFilter(obj, event);
 }
 
-void FormMain::resizeEvent(QResizeEvent *event)
-{
+// Overrides resize event to keep toolbar proper width
+void FormMain::resizeEvent(QResizeEvent *event) {
     QMainWindow::resizeEvent(event);
     widgetToolbar->setFixedWidth( this->width() );
 }

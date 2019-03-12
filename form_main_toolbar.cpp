@@ -43,14 +43,15 @@ void FormMain::buttonGroupEditorClicked(int id)
 {
     buttonGroupEditorSetChecked(id);
 
-    Dr::SetLabelText(Label_Names::Label_1, "Button ID: " + QString::number(id) );
+    Form_Main_Mode new_id =     static_cast<Form_Main_Mode>(id);
+    Form_Main_Mode current_id = static_cast<Form_Main_Mode>(Dr::GetPreference(Preferences::Form_Main_Mode).toInt());
+    if (current_id == new_id) return;
 
-//    if (id == InsertTextButton) {
-//        scene->setMode(DiagramScene::InsertText);
-//    } else {
-//        scene->setItemType(DiagramItem::DiagramType(id));
-//        scene->setMode(DiagramScene::InsertItem);
-//    }
+    if (new_id == Form_Main_Mode::World_Map) {
+        this->buildWindow(Form_Main_Mode::Clear);
+    } else if (new_id == Form_Main_Mode::World_Editor) {
+        this->buildWindow(Form_Main_Mode::World_Editor);
+    }
 }
 
 void FormMain::buttonGroupEditorSetChecked(int id)
@@ -72,7 +73,6 @@ DrToolBar* FormMain::buildWindowModeWorldEditorToolbar()
     // Widgets to use during building
     QPushButton *button;
     QToolButton *tool;
-    QLabel      *spacer;
 
     // Some fonts to use
     QFont font, fontLarger;
@@ -91,7 +91,7 @@ DrToolBar* FormMain::buildWindowModeWorldEditorToolbar()
     widgetToolbar->setObjectName(QStringLiteral("widgetToolbar"));
     widgetToolbar->setFixedHeight(48);
     QHBoxLayout *toolbarLayout = new QHBoxLayout(widgetToolbar);
-    toolbarLayout->setSpacing(4);
+    toolbarLayout->setSpacing(3);
     toolbarLayout->setContentsMargins(12, 0, 12, 2);
 
         // ***** Holds which mode we are in: World Editor, World Map, UI Editor
@@ -109,7 +109,7 @@ DrToolBar* FormMain::buildWindowModeWorldEditorToolbar()
         toolbarLayout->addWidget(tool);
         toolbarLayout->addWidget(createToolbarSpacer());
 
-        tool = createToolbarButtonCheckable(QStringLiteral("buttonModeWorldEdit"));
+        tool = createToolbarButtonCheckable(QStringLiteral("buttonModeUIEdit"));
         buttonGroupEditor->addButton(tool, int(Form_Main_Mode::UI_Editor));
         toolbarLayout->addWidget(tool);
 
@@ -140,7 +140,7 @@ QToolButton* FormMain::createToolbarButtonCheckable(const QString &name)
     tool->setObjectName( name );
     tool->setCheckable(true);
     tool->setChecked(false);
-    tool->setFixedSize(38, 38);
+    tool->setFixedSize(38, 36);
     return tool;
 }
 
@@ -148,7 +148,7 @@ QLabel* FormMain::createToolbarSpacer()
 {
     QLabel *spacer = new QLabel();
     spacer->setObjectName(QStringLiteral("labelSpacer"));
-    spacer->setFixedSize( 2, 26 );
+    spacer->setFixedSize( 1, 24 );
     return spacer;
 }
 

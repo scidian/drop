@@ -45,12 +45,10 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
         buildAssetTree();
         buildProjectTree();
         viewMain->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
-        scene->update();
-        viewMain->update();
         buildSceneAfterLoading( project->getOption(Project_Options::Current_Stage).toInt() );
+        centerViewOnPoint( project->findStageFromKey(project->getOption(Project_Options::Current_Stage).toInt())->getViewCenterPoint() );
         break;
     case Form_Main_Mode::Clear:  
-
         if (old_mode == Form_Main_Mode::World_Editor)
             disconnectSignalsEditor();
 

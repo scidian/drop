@@ -172,7 +172,7 @@ void ApplyColoring(QWidget *widget)
         //##    Toolbar
         //################################################################################
         // Toolbar
-        " QToolBar { background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
+        " QToolBar { background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
         "       border-bottom: 4 solid; }"
 
         // Toolbar Buttons
@@ -187,28 +187,37 @@ void ApplyColoring(QWidget *widget)
         "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }"
 
         // QLabel Spacer
-        " QLabel#labelSpacer { border-left: 2px solid; border-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } "
+        " QLabel#labelSpacer { border-left: 1px solid; border-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } "
 
         // Toobar Selectable Buttons
-        " QToolButton {         background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
-        "       border-radius: 4px; border: 1px solid; border-color: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; } "
-        " QToolButton:checked { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
+        " QToolButton {                     background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
+        "       border-radius: 4px; border: 1px solid; border-color: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; } "
+        " QToolButton:hover:!checked {      background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
+        "       border-radius: 4px; border: 1px solid; border-color: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; } "
+
+        " QToolButton:checked {             background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
         "       border-radius: 4px; border: 1px solid; border-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } "
-        " QToolButton:hover:checked {    background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
+        " QToolButton:hover:checked {       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
         "       border-radius: 4px; border: 1px solid; border-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } "
 
-        " QToolButton:hover:!checked {   background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
-        "       border-radius: 4px; border: 1px solid; border-color: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; } "
 
         " QToolButton#buttonModeWorldMap  {                image: url(:/toolbar_icons/toolbar_world_map.png); padding: 6px; } "
         " QToolButton#buttonModeWorldMap:pressed {         image: url(:/toolbar_icons/toolbar_world_map_faded.png); padding: 6px; } "
+        " QToolButton#buttonModeWorldMap:checked {         image: url(:/toolbar_icons/toolbar_world_map.png); padding: 6px; } "
         " QToolButton#buttonModeWorldMap:hover:checked {   image: url(:/toolbar_icons/toolbar_world_map.png); padding: 6px; } "
         " QToolButton#buttonModeWorldMap:hover:!checked {  image: url(:/toolbar_icons/toolbar_world_map.png); padding: 6px; } "
 
         " QToolButton#buttonModeWorldEdit {                image: url(:/toolbar_icons/toolbar_world_editor.png); padding: 4px; } "
         " QToolButton#buttonModeWorldEdit:pressed {        image: url(:/toolbar_icons/toolbar_world_editor_faded.png); padding: 4px; } "
+        " QToolButton#buttonModeWorldEdit:checked {        image: url(:/toolbar_icons/toolbar_world_editor.png); padding: 4px; } "
         " QToolButton#buttonModeWorldEdit:hover:checked {  image: url(:/toolbar_icons/toolbar_world_editor.png); padding: 4px; } "
         " QToolButton#buttonModeWorldEdit:hover:!checked { image: url(:/toolbar_icons/toolbar_world_editor.png); padding: 4px; } "
+
+        " QToolButton#buttonModeUIEdit {                  image: url(:/toolbar_icons/toolbar_ui_editor.png); padding: 6px; } "
+        " QToolButton#buttonModeUIEdit:pressed {          image: url(:/toolbar_icons/toolbar_ui_editor_faded.png); padding: 6px; } "
+        " QToolButton#buttonModeUIEdit:checked {          image: url(:/toolbar_icons/toolbar_ui_editor.png); padding: 6px; } "
+        " QToolButton#buttonModeUIEdit:hover:checked {    image: url(:/toolbar_icons/toolbar_ui_editor.png); padding: 6px; } "
+        " QToolButton#buttonModeUIEdit:hover:!checked {   image: url(:/toolbar_icons/toolbar_ui_editor.png); padding: 6px; } "
 
 
 
