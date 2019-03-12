@@ -174,7 +174,7 @@ void ApplyColoring(QWidget *widget)
         //################################################################################
         // Toolbar
         " QToolBar { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
-        "       border-bottom: 0 solid; } "//border-color: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }"
+        "       border-bottom: 0 solid; } "
 
         // Toolbar Push Buttons
         " QPushButton#toolbarButton { "
@@ -257,7 +257,7 @@ void ApplyColoring(QWidget *widget)
         // Drop down PushButtons
         " QPushButton#buttonDropDown { border: " + Dr::BorderWidth() + " solid; height: 20px; "
         "       border-top-left-radius: 4px; border-bottom-left-radius: 6px; border-top-right-radius: 4px; border-bottom-right-radius: 6px;"
-        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; " + StyleSheetPoppedOutBackgroundBorder(8, 92) +
+        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; " + StyleSheetPoppedOutBackgroundBorder(9, 92) +
         "       padding-left: 10px; "
         "       text-align: left; } "
         " QPushButton#buttonDropDown::menu-indicator { left: -8px; top: -7px; }"
@@ -299,12 +299,17 @@ QString StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_percent, 
     QString top2 = QString::number(double(top_percent + 1)    / 100.0);
     QString bot1 = QString::number(double(bottom_percent)     / 100.0);
     QString bot2 = QString::number(double(bottom_percent + 1) / 100.0);
-    QColor middle;
-    if (!highlight) middle = Dr::GetColor(Window_Colors::Background_Dark);
-    else            middle = Dr::GetColor(Window_Colors::Background_Dark).darker(150);
+    QColor middle, top;
+    if (!highlight) {
+        middle = Dr::GetColor(Window_Colors::Background_Dark);
+        top =    Dr::GetColor(Window_Colors::Background_Dark).darker(150);
+    } else {
+        middle = Dr::GetColor(Window_Colors::Background_Dark).lighter(150);
+        top =    Dr::GetColor(Window_Colors::Background_Dark);
+    }
     return " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
-           "            stop:0 " +      Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + ", "
-           "            stop:" + top1 + Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + ", "
+           "            stop:0 " +      top.name() + ", "
+           "            stop:" + top1 + top.name() + ", "
            "            stop:" + top2 + middle.name() + ", "
            "            stop:" + bot1 + middle.name() + ", "
            "            stop:" + bot2 + Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + ", "
@@ -322,19 +327,19 @@ QString StyleSheetPoppedOutBackgroundBorder(int top_percent, int bottom_percent,
     QString bot1 = QString::number(double(bottom_percent)     / 100.0);
     QString bot2 = QString::number(double(bottom_percent + 1) / 100.0);
     QColor middle;
-    if (!highlight) middle = Dr::GetColor(Window_Colors::Button_Light);
-    else            middle = Dr::GetColor(Window_Colors::Button_Light).lighter(150);
+    if (!highlight) middle = Dr::GetColor(Window_Colors::Background_Dark);
+    else            middle = Dr::GetColor(Window_Colors::Background_Dark).lighter(150);
     return " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
-           "            stop:0 " +      Dr::GetColor(Window_Colors::Button_Light).lighter(150).name() + ", "
-           "            stop:" + top1 + Dr::GetColor(Window_Colors::Button_Light).lighter(150).name() + ", "
+           "            stop:0 " +      Dr::GetColor(Window_Colors::Background_Dark).lighter(200).name() + ", "
+           "            stop:" + top1 + Dr::GetColor(Window_Colors::Background_Dark).lighter(200).name() + ", "
            "            stop:" + top2 + middle.name() + ", "
            "            stop:" + bot1 + middle.name() + ", "
-           "            stop:" + bot2 + Dr::GetColor(Window_Colors::Button_Light).darker(250).name() + ", "
-           "            stop:1 " +      Dr::GetColor(Window_Colors::Button_Light).darker(250).name() + "); "
-           "          border-color: " + Dr::GetColor(Window_Colors::Button_Light).darker(250).name() + " " +
-                                        Dr::GetColor(Window_Colors::Button_Light).darker(250).name()+ " " +
-                                        Dr::GetColor(Window_Colors::Background_Dark).lighter(200).name() + " " +
-                                        Dr::GetColor(Window_Colors::Button_Light).darker(250).name() + "; ";
+           "            stop:" + bot2 + Dr::GetColor(Window_Colors::Background_Dark).darker(250).name() + ", "
+           "            stop:1 " +      Dr::GetColor(Window_Colors::Background_Dark).darker(250).name() + "); "
+           "          border-color: " + Dr::GetColor(Window_Colors::Background_Dark).darker(250).name() + " " +
+                                        Dr::GetColor(Window_Colors::Background_Dark).darker(250).name()+ " " +
+                                        Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + " " +
+                                        Dr::GetColor(Window_Colors::Background_Dark).darker(250).name() + "; ";
 }
 
 

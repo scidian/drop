@@ -5,7 +5,6 @@
 //
 //
 //
-
 #include <QDockWidget>
 #include <QKeyEvent>
 #include <QScrollBar>
@@ -115,7 +114,7 @@ void FormMain::centerViewOnPoint(QPointF center_point) {
     viewMain->centerOn(center_point);
     QTimer::singleShot(0, this, [this, center_point] { this->centerViewTimer(center_point); } );
 }
-void FormMain::centerViewTimer(QPointF center_point)        { viewMain->centerOn(center_point); }
+void FormMain::centerViewTimer(QPointF center_point) { viewMain->centerOn(center_point); }
 double FormMain::currentViewGridAngle()                     { return viewMain->currentGridAngle(); }
 QPointF FormMain::currentViewGridScale()                    { return viewMain->currentGridScale(); }
 View_Mode FormMain::currentViewMode()                       { return viewMain->currentViewMode(); }

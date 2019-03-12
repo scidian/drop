@@ -40,13 +40,16 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
 
     switch (new_layout) {
     case Form_Main_Mode::World_Editor:
-        setWindowTitle( tr("Drop") + " - " + project->getOption(Project_Options::Name).toString() );
-        buildWindowModeWorldEditor();
-        buildAssetTree();
-        buildProjectTree();
-        viewMain->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
-        buildSceneAfterLoading( project->getOption(Project_Options::Current_Stage).toInt() );
-        centerViewOnPoint( project->findStageFromKey(project->getOption(Project_Options::Current_Stage).toInt())->getViewCenterPoint() );
+        Dr::SetDoneLoading(false);
+            setWindowTitle( tr("Drop") + " - " + project->getOption(Project_Options::Name).toString() );
+            buildWindowModeWorldEditor();
+            buildAssetTree();
+            buildProjectTree();
+            viewMain->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
+            scene->setCurrentStageKeyShown(-1);
+            buildSceneAfterLoading( project->getOption(Project_Options::Current_Stage).toInt() );
+        QApplication::processEvents();
+        Dr::SetDoneLoading(true);
         break;
     case Form_Main_Mode::Clear:  
         if (old_mode == Form_Main_Mode::World_Editor)

@@ -84,17 +84,17 @@ DrToolBar* FormMain::buildWindowModeWorldEditorToolbar()
     // Initialize toolbar widget
     DrToolBar *toolbar = new DrToolBar(this);
     toolbar->setObjectName(QStringLiteral("toolbar"));
-    toolbar->setFixedHeight(48);
+    toolbar->setFixedHeight(44);
     toolbar->setMovable(false);
     toolbar->setFloatable(false);
 
     // This is a container object that holds all toolbar buttons, allowing us to put them in a layout
     widgetToolbar = new QWidget();
     widgetToolbar->setObjectName(QStringLiteral("widgetToolbar"));
-    widgetToolbar->setFixedHeight(48);
+    widgetToolbar->setFixedHeight(46);
     QHBoxLayout *toolbarLayout = new QHBoxLayout(widgetToolbar);
     toolbarLayout->setSpacing(3);
-    toolbarLayout->setContentsMargins(12, 0, 12, 2);
+    toolbarLayout->setContentsMargins(12, 0, 12, 0);
 
         // ***** Holds which mode we are in: World Editor, World Map, UI Editor
         buttonGroupEditor = new QButtonGroup(this);
