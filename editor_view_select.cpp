@@ -68,7 +68,7 @@ void DrView::processSelection(QPoint mouse_in_view)
     my_scene->setSelectionArea(selection_area, Qt::ItemSelectionOperation::ReplaceSelection,
                                Qt::ItemSelectionMode::IntersectsItemShape, viewportTransform());     // Pass box to scene for selection
     for (auto item : m_items_keep)
-        item->setSelected(true);
+        if (item->isSelected() == false) item->setSelected(true);
 
     // Re-connect signal and call selectionChanged if necessary
     my_scene->blockSignals(false);

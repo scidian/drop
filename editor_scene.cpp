@@ -39,6 +39,9 @@ DrScene::DrScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay
     connect(this, SIGNAL(sceneRectChanged(QRectF)), this, SLOT(sceneRectChanged(QRectF)));
     connect(this, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
 
+    ///// May speed up large scenes?
+    ///setItemIndexMethod(QGraphicsScene::ItemIndexMethod::NoIndex);
+
     m_undo = new QUndoStack(this);
 
     // !!!!! #DEBUG:    Opens a window showing all undo commands
@@ -86,7 +89,7 @@ void DrScene::sceneChanged(QList<QRectF>) {
     if (bottom_diff < 0) bottom_diff = 0;
 
     my_rect.adjust(left_diff, top_diff, right_diff, bottom_diff);
-    setSceneRect(my_rect);
+    if (my_rect != sceneRect()) setSceneRect(my_rect);
 }
 
 

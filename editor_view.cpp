@@ -155,7 +155,7 @@ void DrView::updateSelectionBoundingBox(int called_from)
 
     // !!!!! DEBUG: Shows where the call to the UpdateSelectionBoxData function originated from
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Where_Update_Box_From)) {
-        Dr::SetLabelText(Label_Names::Label_2, QTime().currentTime().toString() + ", From: " + QString::number(called_from)  );
+        Dr::SetLabelText(Label_Names::Label_2, "SB From: " + QString::number(called_from) + ", " + Dr::CurrentTimeAsString() );
     }
     // !!!!! END
 

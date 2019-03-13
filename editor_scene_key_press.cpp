@@ -115,17 +115,36 @@ void DrScene::keyPressEvent(QKeyEvent *event)
 
     // If we added (copied) new items to scene, select those items
     if (list_new_items.count() > 0) {
+        blockSignals(true);
         this->clearSelection();
-        for (auto item : list_new_items)
-            item->setSelected(true);
+        for (auto item : list_new_items) {
+            DrItem *dritem = dynamic_cast<DrItem*>(item);
+            dritem->disableItemChangeFlags();
+            dritem->setSelected(true);
+            dritem->enableItemChangeFlags();
+        }
         update_widgets_when_done = true;
+        blockSignals(false);
+        selectionChanged();
     }
 
     scene_mutex.unlock();
 
     // Update Editor Widgets
     if (update_widgets_when_done) {
-        m_editor_relay->buildProjectTree();
+
+        //######################
+        //######################
+        //######################
+
+        // !! Don't want to rebuild it, only update it
+
+        //m_editor_relay->buildProjectTree();
+
+        //######################
+        //######################
+        //######################
+
         m_editor_relay->updateItemSelection(Editor_Widgets::Scene_View);
     }
 

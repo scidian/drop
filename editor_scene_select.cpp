@@ -29,6 +29,9 @@
 //  QRectF                  m_selection_box;            // Starting outline of selected items
 void DrScene::selectionChanged()
 {
+
+    Dr::SetLabelText(Label_Names::Label_1, "Select Changed: " + Dr::CurrentTimeAsString() );
+
     if (selectedItems() == m_selection_items) return;
 
     resetSelectionGroup();
