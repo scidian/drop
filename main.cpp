@@ -18,7 +18,7 @@
 //##                          (C) Scidian Software, 2018                            ##
 //##                              Stephens Nunnally                                 ##
 //##                                                                                ##
-//##                            Started December 7, 18                              ##
+//##                           Started December 7, 2018                             ##
 //##                                                                                ##
 //####################################################################################
 //
@@ -27,7 +27,7 @@
 //  FormMain                        (4) Modes: World Map: World / UI Layout
 //                                             World Editor
 //                                             UI Editor
-//                                             Stage Map: Stage Layout
+//                                             Stage Map: Stage Layout??
 //      Collision Shape Editor      Edit Collision Shape
 //      Atlas Editor                View / Edit Project Atlases
 //      Font Editor                 Create / View Fonts for Use in Project
@@ -57,9 +57,6 @@
 
 int main(int argc, char *argv[])
 {
-    // ***** This registers custom typedefs, classes, structs, etc. for use with Qt::QueuedConnection signals and QVariants
-    qRegisterMetaType<HeaderBodyList>("HeaderBodyList");
-
     // ***** Initiliaze application
     QApplication app_drop(argc, argv);              // Declare application
 
@@ -74,17 +71,18 @@ int main(int argc, char *argv[])
     Dr::SetActiveEditorRelay(&form_main);           // Set main form to active EditorRelay
     qApp->installEventFilter(&form_main);           // Installs an application wide event filter attached to FormMain (acts as key grabber)
     form_main.show();                               // Show FormMain
+
+    // ***** Process events and mark as loaded
     QApplication::processEvents();                  // Ensure FormMain finishes showing
     Dr::SetDoneLoading(true);                       // Marks FormMain as finished loading
 
-    app_drop.exec();                                // Run program
+    // ***** Run Program
+    app_drop.exec();
 
     //Dr::ShowMessageBox("Finished running program");
 
     return 0;
 }
-
-
 
 
 

@@ -159,10 +159,7 @@ QImage applySinglePixelFilter( Filter_Type filter, const QImage& from_image, int
 
 
 
-
-
-
-}
+}   // namespace Dr
 
 
 

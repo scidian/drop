@@ -62,8 +62,7 @@ void InitializeFlags()
 }
 
 
-}
-
+}   // namespace Dr
 
 
 

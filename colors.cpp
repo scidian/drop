@@ -97,7 +97,7 @@ void    LoadPalettes()
     g_color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Icon_Light,  QColor(107, 116, 33)));
 }
 
-}
+}   // namespace Dr
 
 
 

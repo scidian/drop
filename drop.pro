@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Drop
 TEMPLATE = app
 
-# The following define makes your compiler emit warnings if you use
+# The following define makes your compiler show warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
@@ -42,7 +42,6 @@ SOURCES += \
     colors.cpp \
     debug.cpp \
     library_misc.cpp \
-    library_style.cpp \
     editor_tree_inspector_widgets.cpp \
     editor_tree_widgets.cpp \
     project_world_stage.cpp \
@@ -73,7 +72,9 @@ SOURCES += \
     editor_item_item_change.cpp \
     editor_item_paint.cpp \
     editor_view_paint_items.cpp \
-    form_main_toolbar.cpp
+    form_main_toolbar.cpp \
+    library_style_widget.cpp \
+    library_style_sheet.cpp
 
 HEADERS += \
     enums.h \

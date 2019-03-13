@@ -171,7 +171,7 @@ public:
 #endif
 
     // View Display Functions
-    void            clearViewSceneRect(QRectF new_rect);
+    void            setViewRect(QRectF new_rect);
     void            zoomInOut(int level);
 
     // Misc Functions
@@ -231,7 +231,7 @@ public slots:
 
 
 signals:
-    // Signals used to emit UndoStack Commands
+    // Signals used to fire UndoStack Commands
     void    selectionGroupMoved(DrScene *scene, const QPointF &old_position);
     void    selectionGroupNewGroup(DrScene *scene, QList<DrObject*> old_list, QList<DrObject*> new_list);
 

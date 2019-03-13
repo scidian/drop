@@ -19,6 +19,7 @@
 
 #include "globals.h"
 #include "interface_editor_relay.h"
+#include "library.h"
 
 #include "project.h"
 #include "project_world.h"
@@ -108,7 +109,6 @@ void TreeProject::enterEvent(QEvent *event)
 //####################################################################################
 bool TreeProject::eventFilter(QObject *obj, QEvent *event)
 {
-
     return QTreeWidget::eventFilter(obj, event);
 }
 
@@ -146,11 +146,16 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
         DrSettings *selected_item = m_project->findSettingsFromKey(selected_key);
         if (selected_item != nullptr) {
             DrType selected_type = selected_item->getType();
+            long change_to_key = -1;
             if (selected_type == DrType::Stage || selected_type == DrType::StartStage) {
-                m_editor_relay->buildScene(selected_key);
+                change_to_key = selected_key;
             } else if (selected_type == DrType::Object) {
                 DrObject *as_object = dynamic_cast<DrObject*>(selected_item);
-                m_editor_relay->buildScene( as_object->getParentStage()->getKey() );
+                change_to_key = as_object->getParentStage()->getKey();
+            }
+            if (change_to_key != -1) {
+                m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree);          // selects none in scene before rebuilding scene
+                m_editor_relay->buildScene( change_to_key );
             }
         }
 

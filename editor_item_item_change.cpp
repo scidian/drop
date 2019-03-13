@@ -6,7 +6,7 @@
 //
 //
 
-/* ---------- Following changes are emitted when GraphicsItemFlag::ItemSendsGeometryChanges is set to true
+/* ---------- Following changes Post Event when GraphicsItemFlag::ItemSendsGeometryChanges is set to true
 
     ItemPositionChange          Position is about to change         Value is the new position, PointF               Return a different PointF to change it
     ItemPositionHasChanged      Position has changed                                                                Return does nothing

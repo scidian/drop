@@ -6,7 +6,6 @@
 //
 //
 #include <QButtonGroup>
-#include <QDockWidget>
 #include <QToolBar>
 #include <QToolButton>
 

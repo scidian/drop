@@ -37,7 +37,7 @@ namespace Dr {
     void        SetActiveFormMain(FormMain *new_form_main);
     void        SetLabelText(Label_Names label, QString text);
 
-}
+}   // namespace Dr
 
 
 #endif // GLOBALS_H

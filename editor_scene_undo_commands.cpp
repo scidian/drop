@@ -107,7 +107,7 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
 
     m_scene->clear();
     m_scene->setSceneRect(new_scene_rect);
-    m_scene->clearViewSceneRect(new_view_rect);
+    emit m_scene->setViewRect(new_view_rect);
     m_scene->setCurrentStageShown(from_stage);
     m_scene->setCurrentStageKeyShown(m_new_stage);
     m_project->setOption(Project_Options::Current_Stage, QVariant::fromValue(from_stage->getKey()) );
@@ -116,10 +116,6 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
     for (auto object_pair : from_stage->getObjectMap()) {
         m_scene->addItemToSceneFromObject(object_pair.second);
     }
-
-    m_scene->update();
-    m_scene->updateAlignmentGrid();
-    m_scene->updateView();
 
     // Center the view on the new stage
     QPointF new_center = from_stage->getViewCenterPoint();
@@ -171,7 +167,7 @@ MoveCommand::MoveCommand(DrScene *scene, const QPointF &old_pos, QUndoCommand *p
 void MoveCommand::undo() {
 //    m_scene->setPositionByOrigin(m_scene->getSelectionGroup(), Position_Flags::Center, m_old_pos.x(), m_old_pos.y());
 //    //DELETED: changes now happen through DrItem::itemChange() --- m_scene->updateSelectedItemsPositionData();
-//    m_scene->updateView();
+//    emit m_scene->updateViews();
 //    QString item_text = "Items";
 //    if (m_scene->getSelectionGroup()->childItems().count() == 1)
 //        item_text = "Item " + m_scene->getSelectionGroup()->childItems().first()->data(User_Roles::Name).toString();
@@ -184,7 +180,7 @@ void MoveCommand::undo() {
 void MoveCommand::redo() {
 //    m_scene->setPositionByOrigin(m_scene->getSelectionGroup(), Position_Flags::Center, m_new_pos.x(), m_new_pos.y());
 //    //DELETED: changes now happen through DrItem::itemChange() --- m_scene->updateSelectedItemsPositionData();
-//    m_scene->updateView();
+//    emit m_scene->updateViews();
 //    QString item_text = "Items";
 //    if (m_scene->getSelectionGroup()->childItems().count() == 1)
 //        item_text = "Item " + m_scene->getSelectionGroup()->childItems().first()->data(User_Roles::Name).toString();
@@ -214,7 +210,7 @@ void SelectionNewGroupCommand::undo() {
 //    for (auto object : m_old_list) m_scene->addItemToSelectionGroup(object->getDrItem());
 
 //    m_scene->updateStageTreeSelection();
-//    m_scene->updateView();
+//    emit m_scene->updateViews();
 //    if (m_new_list.count() > 1)
 //        setText("Redo Change Selection");
 //    else if (m_new_list.count() == 1)
@@ -229,7 +225,7 @@ void SelectionNewGroupCommand::redo() {
 //    for (auto object : m_new_list) m_scene->addItemToSelectionGroup(object->getDrItem());
 
 //    m_scene->updateStageTreeSelection();
-//    m_scene->updateView();
+//    emit m_scene->updateViews();
 //    if (m_new_list.count() > 1)
 //        setText("Undo Change Selection");
 //    else if (m_new_list.count() == 1)

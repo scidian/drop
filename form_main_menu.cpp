@@ -154,7 +154,7 @@ void FormMain::buildMenu()
         case Color_Scheme::Autumn:  actionAutumn->setChecked(true);  break;
         }
     // Instead of traditional SIGNAL to SLOT connect, we can "connect" inline lamda functions directly
-    //      to signals. This allows for passing of variables not included in the SIGNAL that was emitted.
+    //      to signals. This allows for passing of variables not included in the SIGNAL that was fired.
     // Such as in this instance, passing a new Color_Scheme to FormMain::changePalette)
     connect(actionDark,   &QAction::triggered, [this]() { changePalette(Color_Scheme::Dark); });
     connect(actionLight,  &QAction::triggered, [this]() { changePalette(Color_Scheme::Light); });

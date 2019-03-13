@@ -38,10 +38,9 @@ public:
     virtual void    enterEvent(QEvent *event) override;
 
     // Getters and setters
+    void            changeAdvisor(QString header, QString body);
     QString         getAdvisorHeader() { return advisor_header; }
 
-private slots:
-    void            changeAdvisor(QString header, QString body);               // Set as slot so we can emit queued signals
 };
 
 

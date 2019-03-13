@@ -50,6 +50,6 @@ namespace Dr {
 
     void InitializeFlags();
 
-}
+}   // namespace Dr
 
 #endif // DEBUG_H

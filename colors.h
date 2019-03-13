@@ -52,7 +52,7 @@ namespace Dr {
      */
     void            SetColorScheme(Color_Scheme new_scheme);
 
-}
+}   // namespace Dr
 
 
 

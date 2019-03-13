@@ -55,9 +55,9 @@ DrView::DrView(QWidget *parent, DrProject *project, DrScene *from_scene, IEditor
     connect(my_scene, SIGNAL(sceneRectChanged(QRectF)), this, SLOT(sceneRectChanged(QRectF)));
     connect(my_scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
 
-    connect(my_scene, &DrScene::updateGrid,    this, [this]() { updateGrid(); });
-    connect(my_scene, &DrScene::updateViews,   this, [this]() { update(); });
-    connect(my_scene, &DrScene::clearViewRect, this, [this](QRectF new_rect) { clearViewSceneRect(new_rect); });
+    connect(my_scene, &DrScene::updateGrid,  this, [this]() { updateGrid(); });
+    connect(my_scene, &DrScene::updateViews, this, [this]() { update(); });
+    connect(my_scene, &DrScene::setViewRect, this, [this](QRectF new_rect) { setViewRect(new_rect); });
 
     connect(this,   SIGNAL(selectionGroupMoved(DrScene*, QPointF)),
             my_scene, SLOT(selectionGroupMoved(DrScene*, QPointF)));
@@ -75,9 +75,9 @@ DrView::~DrView()
     disconnect(my_scene, SIGNAL(sceneRectChanged(QRectF)), this, SLOT(sceneRectChanged(QRectF)));
     disconnect(my_scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
 
-    disconnect(my_scene, &DrScene::updateGrid,    this, nullptr);
-    disconnect(my_scene, &DrScene::updateViews,   this, nullptr);
-    disconnect(my_scene, &DrScene::clearViewRect, this, nullptr);
+    disconnect(my_scene, &DrScene::updateGrid,  this, nullptr);
+    disconnect(my_scene, &DrScene::updateViews, this, nullptr);
+    disconnect(my_scene, &DrScene::setViewRect, this, nullptr);
 
     disconnect(this,   SIGNAL(selectionGroupMoved(DrScene*, QPointF)),
                my_scene, SLOT(selectionGroupMoved(DrScene*, QPointF)));
@@ -111,7 +111,7 @@ void DrView::sceneRectChanged(QRectF new_rect)
     updateGrid();
     /// Don't use update() here!!!!! Calls paint recursively?
 }
-void DrView::clearViewSceneRect(QRectF new_rect) { this->setSceneRect(new_rect); }
+void DrView::setViewRect(QRectF new_rect) { this->setSceneRect(new_rect); }
 
 // SLOT: Connected from scene().changed
 void DrView::sceneChanged(QList<QRectF>)

@@ -147,7 +147,7 @@ void DrScene::updateChangesInScene(QList<DrSettings*> changed_items, QList<long>
             updateItemInScene(settings_item, property_keys);
 
         } else if (my_type == DrType::Stage || my_type == DrType::StartStage) {
-            emit updateAlignmentGrid();
+            emit updateGrid();
         }
 
         //################ !!!!!!!!!!!!!!!!!!!!!!!

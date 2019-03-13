@@ -52,14 +52,19 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
         Dr::SetDoneLoading(true);
         break;
     case Form_Main_Mode::Clear:  
-        if (old_mode == Form_Main_Mode::World_Editor)
-            disconnectSignalsEditor();
+        while (Dr::CheckDoneLoading() == false) {
+            QApplication::processEvents();
+        }
+//            if (old_mode == Form_Main_Mode::World_Editor)
+//                disconnectSignalsEditor();
 
-        for (auto item : scene->selectedItems())
-            item->setSelected(false);
+//            for (auto item : scene->selectedItems())
+//                item->setSelected(false);
 
-        this->takeCentralWidget()->deleteLater();
-        for (auto dock : findChildren<QDockWidget *>()) { dock->deleteLater(); }
+//            this->takeCentralWidget()->deleteLater();
+//            for (auto dock : findChildren<QDockWidget *>()) { dock->deleteLater(); }
+
+        this->setCentralWidget(nullptr);
 
         break;
     default:
@@ -387,7 +392,7 @@ void FormMain::buildWindowModeWorldEditor()
     resizeDocks( { advisor, inspector }, { 140, 900 }, Qt::Vertical);
 
 
-    // ***** Signals emitted by FormMain
+    // ***** Connected signals fired by FormMain
     connectSignalsEditor();
 
 
@@ -406,22 +411,17 @@ QLabel* FormMain::createLabel(QWidget *parent, QString object_name, QRect label_
 
 
 //####################################################################################
-//##        Connect / disconnect signals emitted by FormMain
+//##        Connect / disconnect signals fired by FormMain
 //####################################################################################
 void FormMain::connectSignalsEditor()
 {
-    connect(this, SIGNAL(sendAdvisorInfo(QString, QString)), treeAdvisor, SLOT(changeAdvisor(QString, QString)) , Qt::QueuedConnection);
-
     // Connects signal used to populate scene
     connect(this, SIGNAL(newStageSelected(DrProject*, DrScene*, long, long)),
             scene,  SLOT(newStageSelected(DrProject*, DrScene*, long, long)) );
 }
 
-// Disconnect signals emitted by FormMain
 void FormMain::disconnectSignalsEditor()
 {
-    disconnect(this, SIGNAL(sendAdvisorInfo(QString, QString)), treeAdvisor, SLOT(changeAdvisor(QString, QString)) );
-
     // Connects signal used to populate scene
     disconnect(this, SIGNAL(newStageSelected(DrProject*, DrScene*, long, long)),
                scene,  SLOT(newStageSelected(DrProject*, DrScene*, long, long)) );

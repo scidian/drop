@@ -99,7 +99,7 @@ void DrScene::keyPressEvent(QKeyEvent *event)
             new_object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Position, QPointF(new_x, new_y));
             new_object->setComponentPropertyValue(Components::Object_Layering,  Properties::Object_Z_Order, new_z);
 
-            list_new_items.append(this->addItemToSceneFromObject(new_object));
+            list_new_items.append( this->addItemToSceneFromObject(new_object) );
             break;
 
 
@@ -130,7 +130,6 @@ void DrScene::keyPressEvent(QKeyEvent *event)
     }
 
     //QGraphicsScene::keyPressEvent(event);         // Don't pass on, if we pass on arrow key presses, it moves view sliders
-    emit updateViews();                             // Custom signal to tell Views we're attached to, to update themselves
 }
 
 

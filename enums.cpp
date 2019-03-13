@@ -105,7 +105,7 @@ QList<DrSettings*> ConvertItemListToSettings(QList<QGraphicsItem*> list) {
 
 
 
-}   // END NAMESPACE DR
+}   // namespace Dr
 
 
 

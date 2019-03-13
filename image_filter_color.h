@@ -25,14 +25,12 @@ enum class Filter_Type
 namespace DrFilter
 {
 
-
     QPixmap changeBrightness(const QPixmap& pixmap, int brightness);
     QPixmap changeContrast(const QPixmap& pixmap, int contrast);
     QPixmap changeSaturation(const QPixmap& pixmap, int saturation);
     QPixmap changeHue(const QPixmap& pixmap, int hue);
     QPixmap changeToGrayscale(const QPixmap& pixmap);
     QPixmap changeToNegative(const QPixmap& pixmap);
-
 
 }
 

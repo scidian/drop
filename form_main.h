@@ -161,8 +161,6 @@ private slots:
     void        editMenuAboutToHide();
 
 signals:
-    void        sendAdvisorInfo(QString header, QString body);              // Forwards info to MainWindow::changeAdvisor
-
     // Undo Stack Signals
     void        newStageSelected(DrProject *project, DrScene *scene, long old_stage, long new_stage);
 

@@ -40,11 +40,12 @@
 //####################################################################################
 //##        Editor Interface Relay Handlers
 //####################################################################################
-///enum class Editor_Widgets {
-///    Asset_Tree,
-///    Object_Inspector,
-///    Project_Tree,
-///    Scene_View,
+//enum class Editor_Widgets {
+//    Asset_Tree,
+//    Object_Inspector,
+//    Project_Tree,
+//    Scene_View,
+//  Toolbar?
 
 void FormMain::buildAssetTree() {
     treeAsset->buildAssetTree();
@@ -66,9 +67,8 @@ void FormMain::buildProjectTree() {
     treeProject->buildProjectTree();
 }
 
-// Emits an Undo stack command to change Stages within Scene
-void FormMain::buildScene(long from_stage_key)
-{
+// Fires an Undo stack command to change Stages within Scene
+void FormMain::buildScene(long from_stage_key) {
     if (scene->scene_mutex.tryLock(10) == false) return;
 
     if (scene->getCurrentStageKeyShown() != from_stage_key) {
@@ -108,7 +108,7 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from)
 
 
 
-// Emits a single shot timer to update view coordinates after event calls are done,
+// Fires a single shot timer to update view coordinates after event calls are done,
 // sometimes centerOn function doesnt work until after an update() has been processed in the event loop
 void FormMain::centerViewOnPoint(QPointF center_point) {
     viewMain->centerOn(center_point);
@@ -121,21 +121,18 @@ View_Mode FormMain::currentViewMode()                       { return viewMain->c
 QPointF FormMain::roundPointToGrid(QPointF point_in_scene)  { return viewMain->roundToGrid(point_in_scene); }
 
 
-// Call to put in a signal to change the Advisor to the que
-void FormMain::setAdvisorInfo(HeaderBodyList header_body_list) {
-    setAdvisorInfo(header_body_list[0], header_body_list[1]);
-}
 
-// Call to put in a signal to change the Advisor to the que
-void FormMain::setAdvisorInfo(QString header, QString body)
-{
+//s Call to change the Advisor
+void FormMain::setAdvisorInfo(HeaderBodyList header_body_list) {
+    setAdvisorInfo(header_body_list[0], header_body_list[1]);  }
+void FormMain::setAdvisorInfo(QString header, QString body) {
     Form_Main_Mode mode = static_cast<Form_Main_Mode>(Dr::GetPreference(Preferences::Form_Main_Mode).toInt());
     if (mode != Form_Main_Mode::World_Editor) return;
     if (advisor == nullptr) return;
     if (advisor->isHidden()) return;                                        // If Advisor dock was closed, cancel
     if (treeAdvisor == nullptr) return;
     if (treeAdvisor->getAdvisorHeader() == header) return;                  // If Advisor header is already set to proper info, cancel
-    emit sendAdvisorInfo(header, body);                                     // Emits signal connected to changeAdvisor
+    treeAdvisor->changeAdvisor(header, body);
 }
 
 

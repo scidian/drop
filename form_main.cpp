@@ -36,18 +36,15 @@
 #include "settings_component_property.h"
 
 
-// Destructor for Main Window
-FormMain::~FormMain()
-{
+//####################################################################################
+//##        Constructor / Destructor for Main Window
+//####################################################################################
+FormMain::~FormMain() {
     delete project;
 }
 
-//####################################################################################
-//##        Constructor for Main Window, called upon initialization
-//####################################################################################
 FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 {
-
     // ########## Initialize new project, load DrProject options
     project = new DrProject(1);
 
@@ -119,7 +116,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 
     // ########## Initialize form and customize colors and styles
     scene = new DrScene(this, project, this);
-    Dr::ApplyColoring(this);
+    Dr::ApplyCustomStyleSheetFormatting(this);
     buildMenu();
 
     DrToolBar *toolbar = buildWindowModeWorldEditorToolbar();
@@ -136,10 +133,11 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 //##        Populates DrScene with passed in DrStage when Program is done loading
 //####################################################################################
 void FormMain::buildSceneAfterLoading(long stage_key) {
-    if (Dr::CheckDoneLoading())
-        buildScene( stage_key );
-    else
+    if (Dr::CheckDoneLoading() == false) {
         QTimer::singleShot( 100, this, [this, stage_key] { this->buildSceneAfterLoading(stage_key); } );
+        return;
+    }
+    buildScene( stage_key );
 }
 
 
@@ -148,8 +146,7 @@ void FormMain::buildSceneAfterLoading(long stage_key) {
 //####################################################################################
 void FormMain::changePalette(Color_Scheme new_color_scheme) {
     Dr::SetColorScheme(new_color_scheme);
-    Dr::ApplyColoring(this);
-    update();
+    Dr::ApplyCustomStyleSheetFormatting(this);
 }
 
 
@@ -159,6 +156,7 @@ void FormMain::changePalette(Color_Scheme new_color_scheme) {
 //####################################################################################
 bool FormMain::eventFilter(QObject *obj, QEvent *event)
 {
+    // ***** Some event numbers we know, we can use this to find more
     //int t = event->type();
     //   1 = Timer
     //  11 = Leave            12 = Paint

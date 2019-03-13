@@ -87,12 +87,9 @@ public:
 
     // Other Widget Update Calls
     IEditorRelay*   getRelay() { return m_editor_relay; }
-    void            clearViewSceneRect(QRectF new_rect) { emit clearViewRect(new_rect); }
-    void            updateAlignmentGrid() { emit updateGrid(); }
     void            updateChangesInScene(QList<DrSettings*> changed_items, QList<long> property_keys);
     void            updateItemInScene(DrSettings* changed_item, QList<long> property_keys);
     void            updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list);
-    void            updateView() { emit updateViews(); }
 
 
     // Undo / Redo Functions
@@ -141,7 +138,7 @@ public slots:
     void            selectionGroupNewGroup(DrScene *scene, QList<DrObject*> old_list, QList<DrObject*> new_list);
 
 signals:
-    void            clearViewRect(QRectF new_rect);                         // Connected to clearViewSceneRect() function of attached Views
+    void            setViewRect(QRectF new_rect);                           // Connected to setViewRect() function of attached Views
     void            updateGrid();                                           // Connected to updateGrid() function of attached Views
     void            updateViews();                                          // Connected to update() function of attached Views
 
