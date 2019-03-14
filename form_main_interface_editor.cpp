@@ -130,8 +130,8 @@ void FormMain::setAdvisorInfo(HeaderBodyList header_body_list) {
 void FormMain::setAdvisorInfo(QString header, QString body) {
     Form_Main_Mode mode = static_cast<Form_Main_Mode>(Dr::GetPreference(Preferences::Form_Main_Mode).toInt());
     if (mode != Form_Main_Mode::World_Editor) return;
-    if (advisor == nullptr) return;
-    if (advisor->isHidden()) return;                                        // If Advisor dock was closed, cancel
+    if (dockAdvisor == nullptr) return;
+    if (dockAdvisor->isHidden()) return;                                    // If Advisor dock was closed, cancel
     if (treeAdvisor == nullptr) return;
     if (treeAdvisor->getAdvisorHeader() == header) return;                  // If Advisor header is already set to proper info, cancel
     treeAdvisor->changeAdvisor(header, body);

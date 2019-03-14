@@ -81,7 +81,7 @@ void DrView::paintEvent(QPaintEvent *event)
     if (my_scene->getCurrentStageShown() && Dr::CheckDoneLoading()) {
         QPointF center_point = this->viewport()->geometry().center();
         QPointF mapped_scene = mapToScene( center_point.toPoint() );
-        my_scene->getCurrentStageShown()->setViewCenterPoint( mapped_scene + QPoint(0, 1) );
+        my_scene->getCurrentStageShown()->setViewCenterPoint( mapped_scene + QPoint(1, 1) );
     }
 
     // Initiate QPainter object

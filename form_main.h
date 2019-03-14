@@ -41,7 +41,6 @@
 #include "interface_editor_relay.h"
 
 // Necessary forward declarations
-class ColorSplitter;
 class TreeAssets;
 class TreeAdvisor;
 class TreeInspector;
@@ -70,17 +69,15 @@ private:
     QAction        *actionUndo, *actionRedo;
 
     // ***** Toolbar Widgets
+    DrToolBar      *toolBar;
     QWidget        *widgetToolbar;
     QButtonGroup   *buttonGroupEditor;
 
     // ***** Shared FormMain Widgets
     TreeAdvisor    *treeAdvisor;           // Custom classes for Advisor Window
     TreeInspector  *treeInspector;         // Custom classes for Object Inspector
-
-    QWidget        *widgetCentral;
-    QWidget        *widgetAdvisor, *widgetInspector;
-
-    QDockWidget    *advisor, *assets, *inspector;
+    QDockWidget    *dockAdvisor, *dockInspector;
+    QWidget        *widgetCentral, *widgetAdvisor, *widgetInspector;
 
 
     // ***** "Editor" (World Editor) Widget
@@ -88,13 +85,10 @@ private:
     TreeProject    *treeProjectEditor;     // Custom classes for Project Tree
     DrScene        *sceneEditor;           // Behind the scene data model that holds the currently selected Stage
     DrView         *viewEditor;            // Renders the scene, allows for interaction
-
-    QWidget        *widgetAssests, *widgetStage, *widgetStageView;
+    QDockWidget    *dockAssetsEditor;
+    QWidget        *widgetCentralEditor, *widgetAssestsEditor, *widgetStage, *widgetStageView;
     QScrollArea    *areaBottom;
     QFrame         *statusBar;
-
-    ColorSplitter  *splitterHorizontal, *splitterVertical;
-
 
 
     // ***** Labels to display info
@@ -138,14 +132,15 @@ private:
     // Form Building / Setup
     void        buildMenu();
     void        buildSceneAfterLoading(long stage_key);
-    void        buildWindow(Form_Main_Mode new_layout);
-    void        buildWindowModeWorldEditor();
-    DrToolBar*  buildWindowModeWorldEditorToolbar();
+    void        buildToolBar();
+    void        buildWidgetsEditor();
+    void        buildWidgetsShared();
     void        changePalette(Color_Scheme new_color_scheme);
-    void        connectSignalsEditor();
-    void        disconnectSignalsEditor();
-
     QLabel*     createLabel(QWidget *parent, QString object_name, QRect label_rect, QFont &label_font);
+    void        setFormMainMode(Form_Main_Mode new_layout);
+
+    void        lockDockWidth(QDockWidget *dock, int width);
+    void        unlockDockWidth(QDockWidget *dock);
 
     // Menu Bar Functions
     void        menuAbout();

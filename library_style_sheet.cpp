@@ -26,6 +26,9 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         " QMainWindow { background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }" +
         " QMainWindow::separator { border: 1px solid " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }"
 
+        // Shared Empty Widget
+        " QWidget#widgetCentral { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
+
         // Horizontal and vertical splitters
         " QSplitter { width: 5px; height: 5px; } "
         " QSplitter::handle:vertical { image: url(:/gui_misc/splitter_v.png); } "
@@ -56,18 +59,18 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         "               background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }"
 
         // Project Tree
-        " QTreeWidget#treeProject { icon-size: 14px 14px; }"
-        " QTreeWidget#treeProject { color: " + Dr::GetColor(Window_Colors::Text).name() + ";  "
+        " QTreeWidget#treeProjectEditor { icon-size: 14px 14px; }"
+        " QTreeWidget#treeProjectEditor { color: " + Dr::GetColor(Window_Colors::Text).name() + ";  "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
         "       selection-background-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
         "       show-decoration-selected: 1; }"
-        " QTreeWidget#treeProject::item:selected { "
+        " QTreeWidget#treeProjectEditor::item:selected { "
         "       color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }"
-        " QTreeWidget#treeProject::item:hover:selected { "
+        " QTreeWidget#treeProjectEditor::item:hover:selected { "
         "       color: " + Dr::GetColor(Window_Colors::Icon_Light).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }"
-        " QTreeWidget#treeProject::item:hover:!selected { "
+        " QTreeWidget#treeProjectEditor::item:hover:!selected { "
         "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
         // Header of Project Tree (where little lock is)

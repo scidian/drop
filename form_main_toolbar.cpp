@@ -47,11 +47,11 @@ void FormMain::buttonGroupEditorClicked(int id)
     if (current_id == new_id) return;
 
     if (new_id == Form_Main_Mode::World_Map) {
-        this->buildWindow(Form_Main_Mode::Clear);
+        this->setFormMainMode(Form_Main_Mode::Clear);
     } else if (new_id == Form_Main_Mode::World_Editor) {
-        this->buildWindow(Form_Main_Mode::World_Editor);
+        this->setFormMainMode(Form_Main_Mode::World_Editor);
     } else if (new_id == Form_Main_Mode::UI_Editor) {
-        this->buildWindow(Form_Main_Mode::Clear);
+        this->setFormMainMode(Form_Main_Mode::Clear);
     }
 }
 
@@ -69,7 +69,7 @@ void FormMain::buttonGroupEditorSetChecked(int id)
 //####################################################################################
 //##    Builds FormMain toolbar for WorldEditor mode
 //####################################################################################
-DrToolBar* FormMain::buildWindowModeWorldEditorToolbar()
+void FormMain::buildToolBar()
 {
     // Widgets to use during building
     QPushButton *button;
@@ -81,11 +81,11 @@ DrToolBar* FormMain::buildWindowModeWorldEditorToolbar()
     fontLarger.setPointSize(Dr::FontSize() + 2);
 
     // Initialize toolbar widget
-    DrToolBar *toolbar = new DrToolBar(this);
-    toolbar->setObjectName(QStringLiteral("toolbar"));
-    toolbar->setFixedHeight(44);
-    toolbar->setMovable(false);
-    toolbar->setFloatable(false);
+    toolBar = new DrToolBar(this);
+    toolBar->setObjectName(QStringLiteral("toolbar"));
+    toolBar->setFixedHeight(44);
+    toolBar->setMovable(false);
+    toolBar->setFloatable(false);
 
     // This is a container object that holds all toolbar buttons, allowing us to put them in a layout
     widgetToolbar = new QWidget();
@@ -127,11 +127,11 @@ DrToolBar* FormMain::buildWindowModeWorldEditorToolbar()
         button->setText( tr("Atlases") );
         toolbarLayout->addWidget(button);
 
-    toolbar->addWidget(widgetToolbar);
+    toolBar->addWidget(widgetToolbar);
     widgetToolbar->setFixedWidth( this->width() );
 
 
-    return toolbar;
+    this->addToolBar(Qt::ToolBarArea::TopToolBarArea, toolBar);
 }
 
 

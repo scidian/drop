@@ -115,15 +115,14 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 
 
     // ########## Initialize form and customize colors and styles
-    sceneEditor = new DrScene(this, project, this);
     Dr::ApplyCustomStyleSheetFormatting(this);
+
     buildMenu();
+    buildToolBar();
+    buildWidgetsShared();
+    buildWidgetsEditor();
 
-    DrToolBar *toolbar = buildWindowModeWorldEditorToolbar();
-    this->addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbar);
-
-    buildWindow( static_cast<Form_Main_Mode>(Dr::GetPreference(Preferences::Form_Main_Mode).toInt()) );
-
+    setFormMainMode( static_cast<Form_Main_Mode>(Dr::GetPreference(Preferences::Form_Main_Mode).toInt()) );
 
 }
 

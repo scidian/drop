@@ -27,7 +27,6 @@ CONFIG += c++11
 SOURCES += \
     enums.cpp \
     form_main.cpp \
-    form_main_setup.cpp \
     main.cpp \
     editor_tree_inspector.cpp \
     editor_tree_assets.cpp \
@@ -74,7 +73,9 @@ SOURCES += \
     editor_view_paint_items.cpp \
     form_main_toolbar.cpp \
     library_style_widget.cpp \
-    library_style_sheet.cpp
+    library_style_sheet.cpp \
+    form_main_build.cpp \
+    form_main_build_editor.cpp
 
 HEADERS += \
     enums.h \
