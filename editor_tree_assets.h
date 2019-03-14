@@ -34,10 +34,10 @@ class TreeAssets: public QTreeWidget
 private:
     DrProject            *m_project;                // Pointer to currently loaded project
     IEditorRelay         *m_editor_relay;           // Pointer to IEditorRelay class of parent form
+    WidgetHoverHandler   *m_widget_hover;           // Pointer to a widget hover handler
 
     QList<QFrame*>        m_asset_frames;           // List of the single row frames that contain name and pixmap labels
 
-    WidgetHoverHandler   *m_widget_hover;           // Pointer to a widget hover handler
 
 public:
     // Constructor
@@ -47,10 +47,6 @@ public:
     void            buildAssetTree();
     IEditorRelay*   getRelay() { return m_editor_relay; }
     void            updateAssetList(QList<DrSettings*> changed_items, QList<long> property_keys);
-
-    // Property Builders
-    void            attachToHoverHandler(QWidget *widget, DrProperty *property);
-    void            attachToHoverHandler(QWidget *widget, QString header, QString body);
 
 private slots:
     void            setAdvisorInfo(QString header, QString body);

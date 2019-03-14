@@ -146,14 +146,14 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
         DrSettings *selected_item = m_project->findSettingsFromKey(selected_key);
         if (selected_item != nullptr) {
             DrType selected_type = selected_item->getType();
-            long change_to_key = -1;
+            long change_to_key = c_no_key;
             if (selected_type == DrType::Stage || selected_type == DrType::StartStage) {
                 change_to_key = selected_key;
             } else if (selected_type == DrType::Object) {
                 DrObject *as_object = dynamic_cast<DrObject*>(selected_item);
                 change_to_key = as_object->getParentStage()->getKey();
             }
-            if (change_to_key != -1) {
+            if (change_to_key != c_no_key) {
                 m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree);          // selects none in scene before rebuilding scene
                 m_editor_relay->buildScene( change_to_key );
             }

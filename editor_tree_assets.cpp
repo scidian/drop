@@ -34,22 +34,17 @@
 TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
                        QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay)
 {
+    // Initialize hover handler
     m_widget_hover = new WidgetHoverHandler(this);
     connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
 
+    // Connect this widget to the hover handler
     m_widget_hover->attachToHoverHandler(this, Advisor_Info::Asset_List);
 }
 
-// SLOT: Catches signals from m_widget_hover
-void TreeAssets::setAdvisorInfo(QString header, QString body) {
-    m_editor_relay->setAdvisorInfo(header, body);
-}
-void TreeAssets::attachToHoverHandler(QWidget *widget, DrProperty *property) {
-    m_widget_hover->attachToHoverHandler(widget, property);
-}
-void TreeAssets::attachToHoverHandler(QWidget *widget, QString header, QString body) {
-    m_widget_hover->attachToHoverHandler(widget, header, body);
-}
+// SLOT: Catches signals from m_widget_hover and passes to InterfaceEditorRelay
+void TreeAssets::setAdvisorInfo(QString header, QString body) { m_editor_relay->setAdvisorInfo(header, body); }
+
 
 
 
@@ -94,7 +89,7 @@ void TreeAssets::buildAssetTree()
 
     category_button->setStyleSheet(buttonColor);
     category_button->setEnabled(false);
-    attachToHoverHandler(category_button, "Object Assets", "Objects for use in Stage");
+    m_widget_hover->attachToHoverHandler(category_button, "Object Assets", "Objects for use in Stage");
 
     this->setItemWidget(category_item, 0, category_button);                             // Apply the button to the tree item
 

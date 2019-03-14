@@ -40,6 +40,9 @@
 //##        Constructor / Destructor for Main Window
 //####################################################################################
 FormMain::~FormMain() {
+    Form_Main_Mode current_mode = static_cast<Form_Main_Mode>(Dr::GetPreference(Preferences::Form_Main_Mode).toInt());
+    if (current_mode != Form_Main_Mode::World_Editor)   delete widgetCentralEditor;
+    if (current_mode != Form_Main_Mode::Clear)          delete widgetCentral;
     delete project;
 }
 

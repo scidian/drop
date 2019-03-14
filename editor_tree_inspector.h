@@ -48,7 +48,7 @@ private:
 
     QList<QWidget*>     m_widgets;                      // List of the widgets we built the last time we selected a new item
 
-    long                m_selected_key;                 // Unique project key of currently selected item
+    long                m_selected_key = c_no_key;      // Unique project key of currently selected item
     DrType              m_selected_type;                // Stores object type of currently selected item
 
 public:
@@ -64,8 +64,6 @@ public:
     long            getSelectedKey()    { return m_selected_key; }
 
     // Property Builders
-    void                attachToHoverHandler(QWidget *widget, DrProperty *property);
-    void                attachToHoverHandler(QWidget *widget, QString header, QString body);
     void                addToWidgetList(QWidget *widget) { m_widgets.append(widget); }
     QCheckBox*          createCheckBox(DrProperty *property, QFont &font);
     QPushButton*        createListBox(DrProperty *property, QFont &font);

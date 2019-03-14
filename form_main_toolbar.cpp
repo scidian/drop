@@ -9,16 +9,22 @@
 #include <QToolBar>
 #include <QToolButton>
 
+#include "editor_tree_widgets.h"
 #include "form_main.h"
 #include "globals.h"
 #include "library.h"
 
 
 //####################################################################################
-//##    DrToolBar Function Calls
+//##        Constructor / Destructor
 //####################################################################################
+DrToolBar::DrToolBar(QWidget *parent) : QToolBar(parent) { }
 DrToolBar::~DrToolBar() { }
 
+
+//####################################################################################
+//##    DrToolBar Function Calls
+//####################################################################################
 // Save the press position (this is relative to the current widget)
 void DrToolBar::mousePressEvent(QMouseEvent* event) {
     pressPos= event->pos();
@@ -102,16 +108,19 @@ void FormMain::buildToolBar()
 
         tool = createToolbarButtonCheckable(QStringLiteral("buttonModeWorldMap"));
         buttonGroupEditor->addButton(tool, int(Form_Main_Mode::World_Map));
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Mode_Map);
         toolbarLayout->addWidget(tool);
         toolbarLayout->addWidget(createToolbarSpacer());
 
         tool = createToolbarButtonCheckable(QStringLiteral("buttonModeWorldEdit"));
         buttonGroupEditor->addButton(tool, int(Form_Main_Mode::World_Editor));
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Mode_Editor);
         toolbarLayout->addWidget(tool);
         toolbarLayout->addWidget(createToolbarSpacer());
 
         tool = createToolbarButtonCheckable(QStringLiteral("buttonModeUIEdit"));
         buttonGroupEditor->addButton(tool, int(Form_Main_Mode::UI_Editor));
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Mode_UI);
         toolbarLayout->addWidget(tool);
 
 

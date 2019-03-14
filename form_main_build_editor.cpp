@@ -250,8 +250,8 @@ void FormMain::buildWidgetsEditor()
 
         dockAssetsEditor->setWidget(widgetAssestsEditor);
 
+    dockAssetsEditor->setFixedWidth( 140 );
     addDockWidget(static_cast<Qt::DockWidgetArea>(1), dockAssetsEditor);
-    resizeDocks( { dockAssetsEditor }, { 140 }, Qt::Horizontal);
     dockAssetsEditor->hide();
 
 }

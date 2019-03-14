@@ -59,7 +59,7 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font)
 
     check->setChecked(property->getValue().toBool());
 
-    attachToHoverHandler(check, property);
+    m_widget_hover->attachToHoverHandler(check, property);
     addToWidgetList(check);
 
     connect (check, &QCheckBox::toggled, [this, property_key](bool checked) { updateSettingsFromNewValue( property_key, checked );  });
@@ -82,7 +82,7 @@ QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font)
     edit->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     edit->setText(property->getValue().toString());
 
-    attachToHoverHandler(edit, property);
+    m_widget_hover->attachToHoverHandler(edit, property);
     addToWidgetList(edit);
 
     connect (edit,  &QLineEdit::editingFinished,
@@ -114,7 +114,7 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, Pro
     spin->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     spin->setValue(property->getValue().toInt());
 
-    attachToHoverHandler(spin, property);
+    m_widget_hover->attachToHoverHandler(spin, property);
     addToWidgetList(spin);
 
     // This stops mouse wheel from stealing focus unless user has selected the widget
@@ -154,7 +154,7 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     spin->setValue(property->getValue().toDouble());
 
     // Connect HoverHandler with proper text, add this widget to list of widgets in object inspector
-    attachToHoverHandler(spin, property);
+    m_widget_hover->attachToHoverHandler(spin, property);
     addToWidgetList(spin);
 
     // This stops mouse wheel from stealing focus unless user has selected the widget
@@ -261,7 +261,7 @@ QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &fo
     variable_sign->setFont(font);
     size_policy.setHorizontalStretch(1);
     variable_sign->setSizePolicy(size_policy);
-    attachToHoverHandler(variable_sign, "Variable Amount", "Plus or minus modifier to initial value, the following value allows for some "
+    m_widget_hover->attachToHoverHandler(variable_sign, "Variable Amount", "Plus or minus modifier to initial value, the following value allows for some "
                                                                 "variable amount to the initial value. For example, an initial value of 100 with "
                                                                 "a variable amount of 5, allows for values ranging from 95 to 105.");
     DrTripleSpinBox *spin_right  = initializeEmptySpinBox(property, font, property->getValue().toPointF().y());
@@ -305,7 +305,7 @@ DrTripleSpinBox* TreeInspector::initializeEmptySpinBox(DrProperty *property, QFo
     new_spin->setRange(-100000000, 100000000);
     new_spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
     new_spin->setValue(start_value);
-    attachToHoverHandler(new_spin, property);
+    m_widget_hover->attachToHoverHandler(new_spin, property);
     return new_spin;
 }
 
@@ -371,7 +371,7 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font)
     button->setMenu(menu);
     button->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
     menu->installEventFilter(new PopUpMenuRelocater(menu));
-    attachToHoverHandler(button, property);
+    m_widget_hover->attachToHoverHandler(button, property);
     addToWidgetList(button);
 
     return button;

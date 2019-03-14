@@ -127,8 +127,9 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 //####################################################################################
 void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order)
 {
-    // Update the appropiate property in the settings of the object shown in the inspector
+    if (m_selected_key == c_no_key) return;
     DrSettings *settings = m_project->findSettingsFromKey( m_selected_key );
+
     QPointF temp_pointf;
 
     if (settings != nullptr) {

@@ -12,10 +12,12 @@
 #include <QGraphicsItem>
 
 class DrSettings;
-
 enum class Properties;
 enum class Position_Flags;
 
+
+// ##### Global Enum Constants
+constexpr int    c_no_key = -1;             // Value that represents no item selected
 
 
 //####################################################################################

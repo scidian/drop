@@ -12,6 +12,8 @@
 #include <QProxyStyle>
 #include <QTreeWidget>
 
+#include "enums.h"
+
 class IEditorRelay;
 class DrScene;
 class DrProject;
@@ -30,7 +32,7 @@ private:
     DrProject      *m_project;                          // Pointer to currently loaded project
     IEditorRelay   *m_editor_relay;                     // Pointer to IEditorRelay class of parent form
 
-    long            m_selected_key = 0;                 // Holds first selected item in QTreeWidget (treeProject)
+    long            m_selected_key = c_no_key;          // Holds first selected item in QTreeWidget (treeProject)
     bool            m_allow_selection_event = true;     // When false, stops selectionChanged event from propagating changes to editor
 
     bool            m_is_dragging;                      // Set to true when we are dragging

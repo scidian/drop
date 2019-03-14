@@ -41,23 +41,17 @@
 TreeInspector::TreeInspector(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
                               QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay)
 {
+    // Initialize hover handler
     m_widget_hover = new WidgetHoverHandler(this);
     connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
 
+    // Connect this widget to the hover handler
     m_widget_hover->attachToHoverHandler(this, Advisor_Info::Object_Inspector);
 }
 
+// SLOT: Catches signals from m_widget_hover and passes to InterfaceEditorRelay
+void TreeInspector::setAdvisorInfo(QString header, QString body) { m_editor_relay->setAdvisorInfo(header, body); }
 
-// SLOT: Catches signals from m_widget_hover
-void TreeInspector::setAdvisorInfo(QString header, QString body) {
-    m_editor_relay->setAdvisorInfo(header, body);
-}
-void TreeInspector::attachToHoverHandler(QWidget *widget, DrProperty *property) {
-    m_widget_hover->attachToHoverHandler(widget, property);
-}
-void TreeInspector::attachToHoverHandler(QWidget *widget, QString header, QString body) {
-    m_widget_hover->attachToHoverHandler(widget, header, body);
-}
 
 
 
@@ -69,7 +63,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 {
     // If no keys were passed in, clear inspector and exit
     if (key_list.count() == 0) {
-        m_selected_key = 0;
+        m_selected_key = c_no_key;
         m_selected_type = DrType::NotFound;
         this->clear();
         m_widgets.clear();
@@ -80,6 +74,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     long new_key = key_list[0];
 
     // If object inspector already contaitns this item exit now
+    if (new_key == c_no_key) return;
     if (new_key == m_selected_key) return;
     DrType new_type = m_project->findChildTypeFromKey( new_key );
 
@@ -162,7 +157,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
                 QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
                 sp_left.setHorizontalStretch(c_inspector_size_left);
             property_name->setSizePolicy(sp_left);
-            attachToHoverHandler(property_name, property_pair.second);
+            m_widget_hover->attachToHoverHandler(property_name, property_pair.second);
             horizontal_split->addWidget(property_name);
 
             QWidget *new_widget = nullptr;
@@ -228,7 +223,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
                                       " QPushButton:pressed { color: " + component_pair.second->getColor().darker(400).name() + "; } ");
         category_button->setIcon(QIcon(component_pair.second->getIcon()));
         category_button->setStyleSheet(buttonColor);
-        attachToHoverHandler(category_button, component_pair.second->getDisplayName(), component_pair.second->getDescription());
+        m_widget_hover->attachToHoverHandler(category_button, component_pair.second->getDisplayName(), component_pair.second->getDescription());
 
         // Apply the button widget to the tree item
         grid->addWidget(category_button);

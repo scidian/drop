@@ -115,7 +115,7 @@ DrSettings* DrProject::findSettingsFromKey(long check_key)
         }
     }
 
-    Dr::ShowMessageBox("WARNING: Did not find key in project (from 'DrProject::findChildSettingsFromKey')...");
+    Dr::ShowMessageBox("WARNING: Did not find key in project, this warning called from \"DrProject::findChildSettingsFromKey\"");
     return nullptr;
 }
 

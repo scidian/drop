@@ -12,6 +12,7 @@
 #include <QTreeWidgetItem>
 #include <QUndoStack>
 
+#include "enums.h"
 #include "interface_editor_relay.h"
 
 class DrItem;
@@ -54,7 +55,7 @@ private:
     IEditorRelay           *m_editor_relay;                 // Pointer to IEditorRelay class of parent form
 
     DrStage                *m_current_stage = nullptr;      // Holds a pointer to the current DrStage being shown
-    long                    m_current_stage_key = -1;       // Holds the project key of the currently shown DrStage, starts at -1, i.e. "none"
+    long                    m_current_stage_key = c_no_key; // Holds the project key of the currently shown DrStage, starts at c_no_key, i.e. "none"
 
     QUndoStack             *m_undo;
 

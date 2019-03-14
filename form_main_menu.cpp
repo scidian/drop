@@ -19,6 +19,7 @@
 #include "editor_tree_assets.h"
 #include "editor_tree_inspector.h"
 #include "editor_tree_project.h"
+#include "editor_tree_widgets.h"
 #include "editor_view.h"
 
 #include "form_main.h"
@@ -85,15 +86,18 @@ void FormMain::buildMenu()
     this->setAcceptDrops(true);
     this->setWindowIcon(QIcon(":icon/icon256.png"));                        // Set icon
 
-    // Sets initial main window size
+    // ***** Sets initial main window size
     int new_width = 1400;
     int new_height = QGuiApplication::screens().first()->geometry().height();
     this->resize(new_width, new_height);
 
-    // Center window on screen
+    // ***** Center window on screen
     QRect screenGeometry = QGuiApplication::screens().first()->geometry();
     this->setGeometry(QStyle::alignedRect( Qt::LeftToRight, Qt::AlignCenter, this->size(), screenGeometry ));
 
+    // ***** Initialize hover handler
+    m_widget_hover = new WidgetHoverHandler(this);
+    connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
 
 
     // ***** Create menu bar
@@ -184,23 +188,15 @@ void FormMain::buildMenu()
         QMenu *menuDebug;
         menuDebug = new QMenu(menuBar);
         menuDebug->setObjectName(QStringLiteral("menuDebug"));
-        QAction *actionClearMain, *actionStageEditMode, *actionListChildren;
-        actionClearMain =     new QAction(this); actionClearMain->setObjectName(QStringLiteral("actionClearMain"));
-        actionStageEditMode = new QAction(this); actionStageEditMode->setObjectName(QStringLiteral("actionStageEditMode"));
-        actionListChildren =  new QAction(this); actionStageEditMode->setObjectName(QStringLiteral("actionListChildren"));
+
+        QAction *actionListChildren =  new QAction(this); actionListChildren->setObjectName(QStringLiteral("actionListChildren"));
 
         menuBar->addAction(menuDebug->menuAction());
-        menuDebug->addAction(actionClearMain);
-        menuDebug->addAction(actionStageEditMode);
         menuDebug->addAction(actionListChildren);
 
-        connect(actionClearMain, &QAction::triggered, [this]() { this->setFormMainMode(Form_Main_Mode::Clear); });
-        connect(actionStageEditMode, &QAction::triggered, [this]() { this->setFormMainMode(Form_Main_Mode::World_Editor); });
         connect(actionListChildren, &QAction::triggered, [this]() { this->menuListChildren(); });
 
         menuDebug->setTitle(QApplication::translate("MainWindow", "Debug", nullptr));
-        actionClearMain->setText(QApplication::translate("MainWindow", "Clear Form Main Widgets", nullptr));
-        actionStageEditMode->setText(QApplication::translate("MainWindow", "Set Form Main Mode: Edit Stage", nullptr));
         actionListChildren->setText(QApplication::translate("MainWindow", "List Children", nullptr));
     }
     // !!!!!

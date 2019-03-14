@@ -69,21 +69,6 @@ DrView::DrView(QWidget *parent, DrProject *project, DrScene *from_scene, IEditor
 
 DrView::~DrView()
 {
-    // ********** Disconnect signals from scene
-    disconnect(my_scene, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
-    disconnect(my_scene, SIGNAL(sceneRectChanged(QRectF)), this, SLOT(sceneRectChanged(QRectF)));
-    disconnect(my_scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
-
-    disconnect(my_scene, &DrScene::updateGrid,  this, nullptr);
-    disconnect(my_scene, &DrScene::updateViews, this, nullptr);
-    disconnect(my_scene, &DrScene::setViewRect, this, nullptr);
-
-    disconnect(this,   SIGNAL(selectionGroupMoved(DrScene*, QPointF)),
-               my_scene, SLOT(selectionGroupMoved(DrScene*, QPointF)));
-
-    disconnect(this,   SIGNAL(selectionGroupNewGroup(DrScene*, QList<DrObject*>, QList<DrObject*>)),
-               my_scene, SLOT(selectionGroupNewGroup(DrScene*, QList<DrObject*>, QList<DrObject*>)) );
-
     delete m_rubber_band;
     delete m_tool_tip;
 }
@@ -108,22 +93,13 @@ void DrView::sceneRectChanged(QRectF new_rect)
 
     updateSelectionBoundingBox(1);
     updateGrid();
-    /// Don't use update() here!!!!! Calls paint recursively?
 }
 void DrView::setViewRect(QRectF new_rect) { this->setSceneRect(new_rect); }
 
-// SLOT: Connected from scene().changed
-void DrView::sceneChanged(QList<QRectF>)
-{
-    updateSelectionBoundingBox(7);
-    /// Don't use update() here!!!!! Calls paint recursively?
-}
-// SLOT: Connected from scene().selectionChanged
-void DrView::selectionChanged()
-{
-    updateSelectionBoundingBox(2);
-    /// Don't use update() here!!!!! Calls paint recursively
-}
+// SLOTs: Connected from scene().changed and scene().selectionChanged
+void DrView::sceneChanged(QList<QRectF>) { updateSelectionBoundingBox(7); }
+void DrView::selectionChanged()          { updateSelectionBoundingBox(2);}
+
 // EVENT: Called when viewport is dragged or scrollbars are used
 void DrView::scrollContentsBy(int dx, int dy)
 {
@@ -131,7 +107,6 @@ void DrView::scrollContentsBy(int dx, int dy)
     updateSelectionBoundingBox(3);
     updateGrid();                       // Updates grid when view is dragged or zoomed, also called from zoom
                                         // function (zoomInOut()) in case there are no scrollbars due to zoomed too far out
-    update();
 }
 
 

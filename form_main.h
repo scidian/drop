@@ -50,6 +50,7 @@ class DrScene;
 class DrToolBar;
 class DrView;
 class DrViewRubberBand;
+class WidgetHoverHandler;
 
 
 //####################################################################################
@@ -64,6 +65,8 @@ public:
 
 
 private:   
+    WidgetHoverHandler   *m_widget_hover;                               // Pointer to a widget hover handler
+
     // ***** Menu Widgets
     QMenuBar       *menuBar;
     QAction        *actionUndo, *actionRedo;
@@ -125,8 +128,10 @@ public:
     virtual View_Mode   currentViewMode() override;
     virtual QPointF     roundPointToGrid(QPointF point_in_scene) override;
 
+public slots:
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) override;
     virtual void        setAdvisorInfo(QString header, QString body) override;
+
 
 private:
     // Form Building / Setup
@@ -155,11 +160,11 @@ private:
 
 
 private slots:
-    void        buttonGroupEditorClicked(int id);
+    void            buttonGroupEditorClicked(int id);
 
-    void        centerViewTimer(QPointF center_point);
-    void        editMenuAboutToShow();
-    void        editMenuAboutToHide();
+    void            centerViewTimer(QPointF center_point);
+    void            editMenuAboutToShow();
+    void            editMenuAboutToHide();
 
 signals:
     // Undo Stack Signals
@@ -189,16 +194,17 @@ class DrToolBar : public QToolBar
 {
 private:
     QPoint  pressPos;
-    bool    isMoving = false;       // Flag makes sure that the drag and drop event originated from within the titlebar
+    bool    isMoving = false;                       // Flag makes sure that the drag and drop event originated from within the titlebar
 
 public:
-    DrToolBar(QWidget *parent = nullptr) : QToolBar(parent) { }
+    DrToolBar(QWidget *parent);
     virtual ~DrToolBar() override;
 
 protected:
     virtual void mousePressEvent(QMouseEvent *event) override;
     virtual void mouseMoveEvent(QMouseEvent *event) override;
     virtual void mouseReleaseEvent(QMouseEvent *event) override;
+
 };
 
 

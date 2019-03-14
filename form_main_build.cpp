@@ -60,7 +60,7 @@ void FormMain::setFormMainMode(Form_Main_Mode new_layout)
             buildAssetTree();
             dockAssetsEditor->show();
             buildProjectTree();
-            sceneEditor->setCurrentStageKeyShown(-1);
+            sceneEditor->setCurrentStageKeyShown(c_no_key);
             buildSceneAfterLoading( project->getOption(Project_Options::Current_Stage).toInt() );    
         break;
 
@@ -93,19 +93,12 @@ void FormMain::buildWidgetsShared()
     font.setPointSize(Dr::FontSize());
     fontLarger.setPointSize(Dr::FontSize() + 2);
 
-    /// Other size policies to play with
-    ///QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::MinimumExpanding);
-    ///QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored);
-    ///QSizePolicy sizePolicyNoChange(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
-
     QSizePolicy sizePolicy(                     QSizePolicy::Preferred,         QSizePolicy::Preferred);
     QSizePolicy sizePolicyLess(                 QSizePolicy::Preferred,         QSizePolicy::Preferred);
     QSizePolicy sizePolicyPreferredVertical(    QSizePolicy::Preferred,         QSizePolicy::Preferred);
-
     sizePolicy.setHorizontalStretch(0);                         sizePolicy.setVerticalStretch(0);
     sizePolicyLess.setHorizontalStretch(1);                     sizePolicyLess.setVerticalStretch(1);
     sizePolicyPreferredVertical.setHorizontalStretch(0);        sizePolicyPreferredVertical.setVerticalStretch(1);
-
 
 
     // ***** Empty central widget
@@ -195,10 +188,14 @@ void FormMain::buildWidgetsShared()
 
 
     // ***** Add QMainWindow Docks
+    dockInspector->setFixedWidth( 270 );
+    dockAdvisor->setFixedWidth(   270 );
+
     addDockWidget(static_cast<Qt::DockWidgetArea>(2), dockInspector);
     addDockWidget(static_cast<Qt::DockWidgetArea>(2), dockAdvisor);
-    resizeDocks( { dockInspector  }, { 270 }, Qt::Horizontal);
+
     resizeDocks( { dockAdvisor, dockInspector }, { 140, 900 }, Qt::Vertical);
+
 
 }
 
@@ -208,8 +205,11 @@ void FormMain::buildWidgetsShared()
 //####################################################################################
 void FormMain::lockDockWidth(QDockWidget *dock, int width) { dock->setFixedWidth( width ); }
 void FormMain::unlockDockWidth(QDockWidget *dock) {
+    int pre_width = dock->width();
     dock->setMaximumSize(500, QWIDGETSIZE_MAX);
     dock->setMinimumSize(140, 80);
+    QApplication::processEvents();
+    resizeDocks( { dock }, { pre_width }, Qt::Horizontal);
 }
 
 
