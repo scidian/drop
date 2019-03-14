@@ -37,6 +37,7 @@ void FormMain::setFormMainMode(Form_Main_Mode new_layout)
 
     // ***** If we aren't loading for the first time, clear previous layout and save central widgets for future use
     if (old_layout != new_layout) {
+        clearToolbar();
         switch (old_layout) {
         case Form_Main_Mode::World_Editor:
             widgetCentralEditor = takeCentralWidget();
@@ -50,6 +51,7 @@ void FormMain::setFormMainMode(Form_Main_Mode new_layout)
         default:    Dr::ShowMessageBox("Not set");
         }
     }
+    setToolbar(new_layout);
 
     // ***** Set up new layout
     switch (new_layout) {
@@ -80,7 +82,7 @@ void FormMain::setFormMainMode(Form_Main_Mode new_layout)
     unlockDockWidth( dockAdvisor );
     unlockDockWidth( dockInspector );
     unlockDockWidth( dockAssetsEditor );
-    buttonGroupEditorSetChecked(int(new_layout));
+    buttonGroupModeSetChecked(int(new_layout));
 }
 
 

@@ -36,13 +36,17 @@ void    ApplyCustomStyleSheetFormatting(QWidget *widget);
 void    ApplyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color);
 void    ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type);
 void    ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius);
+
+QString StyleSheetToolBarModeButton(QString button_name, QString icon_name, QString icon_faded_name);
 QString StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_percent, bool highlight = false);
 QString StyleSheetPoppedOutBackgroundBorder(int top_percent, int bottom_percent, bool highlight = false);
+
 
 // Comparison Functions
 double  CheckScaleNotZero(double scale_to_check);
 bool    IsCloseTo(double number_desired, double number_to_check, double tolerance);
 QString RemoveTrailingDecimals(double value, int max_decimal_places);
+
 
 // Comparison Template Function, Returns number_to_check fit to within the bounds of min / max
 template<class T>

@@ -72,9 +72,15 @@ private:
     QAction        *actionUndo, *actionRedo;
 
     // ***** Toolbar Widgets
-    DrToolBar      *toolBar;
-    QWidget        *widgetToolbar;
-    QButtonGroup   *buttonGroupEditor;
+    QList<QWidget*>      toolbarWidgets;
+    QList<QLayoutItem*>  toolbarSpacers;
+
+    DrToolBar      *toolbar;
+    QWidget        *widgetToolbar;          QHBoxLayout    *widgetToolbarLayout;
+
+    QWidget        *widgetGroupMode;        QButtonGroup   *buttonsGroupMode;
+    QWidget        *widgetGroupLayering;    QButtonGroup   *buttonsGroupLayering;
+
 
     // ***** Shared FormMain Widgets
     TreeAdvisor    *treeAdvisor;           // Custom classes for Advisor Window
@@ -154,13 +160,17 @@ private:
     void        menuListChildren();
 
     // Toolbar Functions
-    void            buttonGroupEditorSetChecked(int id);
-    QToolButton*    createToolbarButtonCheckable(const QString &name);
+    void            addToolbarGroup(QWidget *group, bool add_spacer = true);
+    void            buttonGroupModeSetChecked(int id);
+    void            clearToolbar();
+    QPushButton*    createPushButton(QString name = "toolbarButton", QString text = "Button");
+    QToolButton*    createToolbarButton(const QString &style_sheet_name, int w, int h, bool checkable = false);
     QLabel*         createToolbarSpacer();
-
+    void            setToolbar(Form_Main_Mode new_mode);
 
 private slots:
-    void            buttonGroupEditorClicked(int id);
+    void            buttonGroupModeClicked(int id);
+    void            buttonGroupLayeringClicked(int id);
 
     void            centerViewTimer(QPointF center_point);
     void            editMenuAboutToShow();

@@ -139,33 +139,40 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         " QLabel#labelSpacer { border-left: 1px solid; border-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } "
 
         // Toobar Selectable Buttons
-        " QToolButton {                  border-radius: 4px; border: 1px solid;  "
-        "       background: " +   Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
-        "       border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
-        " QToolButton:hover:!checked {   border-radius: 4px; border: 1px solid; "
-        "       background: " +   Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
-        "       border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
+        +
+        StyleSheetToolBarModeButton("buttonModeWorldMap",  "toolbar_world_map.png",     "toolbar_world_map_faded.png") +
+        StyleSheetToolBarModeButton("buttonModeWorldEdit", "toolbar_world_editor.png",  "toolbar_world_editor_faded.png") +
+        StyleSheetToolBarModeButton("buttonModeUIEdit",    "toolbar_ui_editor.png",     "toolbar_ui_editor_faded.png") +
 
-        " QToolButton:checked {          border-radius: 4px; border: 1px solid; " + StyleSheetRecessedBackgroundBorder(12, 93) +  "; } "
-        " QToolButton:hover:checked {    border-radius: 4px; border: 1px solid; " + StyleSheetRecessedBackgroundBorder(12, 93) +  "; } "
+        " QToolButton {            border: 1px solid; "
+        "       background: " +    Dr::GetColor(Window_Colors::Button_Light).name() + "; "
+        "       border-color: " +  Dr::GetColor(Window_Colors::Button_Light).lighter(150).name() +
+                                   Dr::GetColor(Window_Colors::Button_Light).name() +
+                                   Dr::GetColor(Window_Colors::Button_Light).name() +
+                                   Dr::GetColor(Window_Colors::Button_Light).name() +"; } "
+        " QToolButton:hover {      border: 1px solid; "
+        "       background: " +    Dr::GetColor(Window_Colors::Midlight).name() + "; "
+        "       border-color: " +  Dr::GetColor(Window_Colors::Midlight).lighter(150).name() +
+                                   Dr::GetColor(Window_Colors::Midlight).name() +
+                                   Dr::GetColor(Window_Colors::Midlight).name() +
+                                   Dr::GetColor(Window_Colors::Midlight).name() +"; } "
+        " QToolButton:pressed {    border: 1px solid; "
+        "       background: " +    Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
+        "       border-color: " +  Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() +
+                                   Dr::GetColor(Window_Colors::Background_Dark).name() +
+                                   Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() +
+                                   Dr::GetColor(Window_Colors::Background_Dark).name() +"; } "
 
-        " QToolButton#buttonModeWorldMap  {                image: url(:/toolbar_icons/toolbar_world_map.png); padding: 7px; } "
-        " QToolButton#buttonModeWorldMap:pressed {         image: url(:/toolbar_icons/toolbar_world_map_faded.png); padding: 7px; } "
-        " QToolButton#buttonModeWorldMap:checked {         image: url(:/toolbar_icons/toolbar_world_map.png); padding: 7px; } "
-        " QToolButton#buttonModeWorldMap:hover:checked {   image: url(:/toolbar_icons/toolbar_world_map.png); padding: 7px; } "
-        " QToolButton#buttonModeWorldMap:hover:!checked {  image: url(:/toolbar_icons/toolbar_world_map.png); padding: 7px; } "
+        " QToolButton#buttonSendToBack  {           border-top-left-radius: 4px; border-bottom-left-radius: 4px; } "
+        " QToolButton#buttonSendToBack  {           image: url(:/toolbar_icons/toolbar_sendtoback.png);        padding: 4px; } "
+        " QToolButton#buttonSendToBack:disabled {   image: url(:/toolbar_icons/toolbar_sendtoback_gray.png);   padding: 4px; } "
 
-        " QToolButton#buttonModeWorldEdit {                image: url(:/toolbar_icons/toolbar_world_editor.png); padding: 4px; } "
-        " QToolButton#buttonModeWorldEdit:pressed {        image: url(:/toolbar_icons/toolbar_world_editor_faded.png); padding: 4px; } "
-        " QToolButton#buttonModeWorldEdit:checked {        image: url(:/toolbar_icons/toolbar_world_editor.png); padding: 4px; } "
-        " QToolButton#buttonModeWorldEdit:hover:checked {  image: url(:/toolbar_icons/toolbar_world_editor.png); padding: 4px; } "
-        " QToolButton#buttonModeWorldEdit:hover:!checked { image: url(:/toolbar_icons/toolbar_world_editor.png); padding: 4px; } "
+        " QToolButton#buttonSendBackward  {         image: url(:/toolbar_icons/toolbar_sendbackward.png);      padding: 4px; } "
+        " QToolButton#buttonSendBackward:disabled { image: url(:/toolbar_icons/toolbar_sendbackward_gray.png); padding: 4px; } "
 
-        " QToolButton#buttonModeUIEdit {                  image: url(:/toolbar_icons/toolbar_ui_editor.png); padding: 6px; } "
-        " QToolButton#buttonModeUIEdit:pressed {          image: url(:/toolbar_icons/toolbar_ui_editor_faded.png); padding: 6px; } "
-        " QToolButton#buttonModeUIEdit:checked {          image: url(:/toolbar_icons/toolbar_ui_editor.png); padding: 6px; } "
-        " QToolButton#buttonModeUIEdit:hover:checked {    image: url(:/toolbar_icons/toolbar_ui_editor.png); padding: 6px; } "
-        " QToolButton#buttonModeUIEdit:hover:!checked {   image: url(:/toolbar_icons/toolbar_ui_editor.png); padding: 6px; } "
+        " QToolButton#buttonSendToFront  {          border-top-right-radius: 4px; border-bottom-right-radius: 4px; } "
+        " QToolButton#buttonSendToFront  {          image: url(:/toolbar_icons/toolbar_sendtofront.png);       padding: 4px; } "
+        " QToolButton#buttonSendToFront:disabled {  image: url(:/toolbar_icons/toolbar_sendtofront_gray.png);  padding: 4px; } "
 
 
 
@@ -291,7 +298,23 @@ QString StyleSheetPoppedOutBackgroundBorder(int top_percent, int bottom_percent,
                                         Dr::GetColor(Window_Colors::Background_Dark).darker(250).name() + "; ";
 }
 
-
+// Formatting for toolbar buttons
+QString StyleSheetToolBarModeButton(QString button_name, QString icon_name, QString icon_faded_name) {
+    return
+    " QToolButton#" + button_name + " {                  border-radius: 4px; border: 1px solid;  "
+    "       background: " +   Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
+    "       border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
+    " QToolButton#" + button_name + ":hover:!checked {   border-radius: 4px; border: 1px solid; "
+    "       background: " +   Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
+    "       border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
+    " QToolButton#" + button_name + ":checked {          border-radius: 4px; border: 1px solid; " + StyleSheetRecessedBackgroundBorder(12, 93) +  "; } "
+    " QToolButton#" + button_name + ":hover:checked {    border-radius: 4px; border: 1px solid; " + StyleSheetRecessedBackgroundBorder(12, 93) +  "; } "
+    " QToolButton#" + button_name + "  {                image: url(:/toolbar_icons/" + icon_name + "); padding: 7px; } "
+    " QToolButton#" + button_name + ":pressed {         image: url(:/toolbar_icons/" + icon_faded_name + "); padding: 7px; } "
+    " QToolButton#" + button_name + ":checked {         image: url(:/toolbar_icons/" + icon_name + "); padding: 7px; } "
+    " QToolButton#" + button_name + ":hover:checked {   image: url(:/toolbar_icons/" + icon_name + "); padding: 7px; } "
+    " QToolButton#" + button_name + ":hover:!checked {  image: url(:/toolbar_icons/" + icon_name + "); padding: 7px; } ";
+}
 
 
 

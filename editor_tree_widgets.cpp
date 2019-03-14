@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 1/31/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//
+//      Some helper widgets, mostly event filters
 //
 //
 
@@ -21,6 +21,9 @@
 
 //####################################################################################
 //##    WidgetHoverHandler Class Functions
+//##        This exists as a member object inside some parent classes (instead of being created on the fly like other event filters).
+//##        This is so the SIGNAL, signalMouseHover, only has to be CONNECTed once upon the parent class initialization.
+//##        Otherwise we'd have to pass an IEditorRelay into every class that wanted to initialize a WidgetHoverHandler.
 //####################################################################################
 bool WidgetHoverHandler::eventFilter(QObject *obj, QEvent *event)
 {

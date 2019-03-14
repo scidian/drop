@@ -14,6 +14,12 @@
 #include "globals.h"
 #include "library.h"
 
+enum class Buttons_Layering {
+    Send_To_Back,
+    Send_Backward,
+    Send_To_Front,
+    Send_Forward,
+};
 
 //####################################################################################
 //##        Constructor / Destructor
@@ -42,11 +48,11 @@ void DrToolBar::mouseReleaseEvent(QMouseEvent*) { isMoving = false; }
 
 
 //####################################################################################
-//##    buttonGroupEditor SLOT and functions
+//##    buttonGroupMode SLOT and functions
 //####################################################################################
-void FormMain::buttonGroupEditorClicked(int id)
+void FormMain::buttonGroupModeClicked(int id)
 {
-    buttonGroupEditorSetChecked(id);
+    buttonGroupModeSetChecked(id);
 
     Form_Main_Mode new_id =     static_cast<Form_Main_Mode>(id);
     Form_Main_Mode current_id = static_cast<Form_Main_Mode>(Dr::GetPreference(Preferences::Form_Main_Mode).toInt());
@@ -61,11 +67,11 @@ void FormMain::buttonGroupEditorClicked(int id)
     }
 }
 
-void FormMain::buttonGroupEditorSetChecked(int id)
+void FormMain::buttonGroupModeSetChecked(int id)
 {
-    QList<QAbstractButton*> buttons = buttonGroupEditor->buttons();
+    QList<QAbstractButton*> buttons = buttonsGroupMode->buttons();
     for (auto button : buttons) {
-        bool is_button = (buttonGroupEditor->button(id) == button);
+        bool is_button = (buttonsGroupMode->button(id) == button);
         button->setChecked(is_button);
         button->setDown(!is_button);
     }
@@ -73,84 +79,179 @@ void FormMain::buttonGroupEditorSetChecked(int id)
 
 
 //####################################################################################
-//##    Builds FormMain toolbar for WorldEditor mode
+//##    buttonGroupLayering SLOT and functions
+//####################################################################################
+void FormMain::buttonGroupLayeringClicked(int id)
+{
+    Buttons_Layering clicked = static_cast<Buttons_Layering>(id);
+
+    if (clicked == Buttons_Layering::Send_To_Back) {
+
+    }
+}
+
+
+//####################################################################################
+//##    Builds FormMain toolbar
 //####################################################################################
 void FormMain::buildToolBar()
 {
     // Widgets to use during building
-    QPushButton *button;
     QToolButton *tool;
 
-    // Some fonts to use
-    QFont font, fontLarger;
-    font.setPointSize(Dr::FontSize());
-    fontLarger.setPointSize(Dr::FontSize() + 2);
+    // ***** Initialize toolbar widget
+    toolbar = new DrToolBar(this);
+    toolbar->setObjectName(QStringLiteral("toolbar"));
+    toolbar->setFixedHeight(44);
+    toolbar->setMovable(false);
+    toolbar->setFloatable(false);
 
-    // Initialize toolbar widget
-    toolBar = new DrToolBar(this);
-    toolBar->setObjectName(QStringLiteral("toolbar"));
-    toolBar->setFixedHeight(44);
-    toolBar->setMovable(false);
-    toolBar->setFloatable(false);
-
-    // This is a container object that holds all toolbar buttons, allowing us to put them in a layout
+    // ***** This is a container object that holds all toolbar buttons, allowing us to put them in a layout
     widgetToolbar = new QWidget();
     widgetToolbar->setObjectName(QStringLiteral("widgetToolbar"));
     widgetToolbar->setFixedHeight(46);
-    QHBoxLayout *toolbarLayout = new QHBoxLayout(widgetToolbar);
-    toolbarLayout->setSpacing(3);
-    toolbarLayout->setContentsMargins(12, 0, 12, 0);
+    widgetToolbarLayout = new QHBoxLayout(widgetToolbar);
+    widgetToolbarLayout->setSpacing(3);
+    widgetToolbarLayout->setContentsMargins(12, 0, 12, 0);
 
-        // ***** Holds which mode we are in: World Editor, World Map, UI Editor
-        buttonGroupEditor = new QButtonGroup(this);
-        buttonGroupEditor->setExclusive(true);
-        connect(buttonGroupEditor, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupEditorClicked(int)));
+    // ***** Holds which mode we are in: World Editor, World Map, UI Editor
+    widgetGroupMode = new QWidget();
+    widgetGroupMode->setObjectName(QStringLiteral("widgetGroupMode"));
+    widgetGroupMode->setFixedHeight(46);
+        QHBoxLayout *toolbarLayoutMode = new QHBoxLayout(widgetGroupMode);
+        toolbarLayoutMode->setSpacing(3);
+        toolbarLayoutMode->setContentsMargins(0, 0, 0, 0);
 
-        tool = createToolbarButtonCheckable(QStringLiteral("buttonModeWorldMap"));
-        buttonGroupEditor->addButton(tool, int(Form_Main_Mode::World_Map));
+        buttonsGroupMode = new QButtonGroup();
+        buttonsGroupMode->setExclusive(true);
+        connect(buttonsGroupMode, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupModeClicked(int)));
+
+        tool = createToolbarButton(QStringLiteral("buttonModeWorldMap"), 38, 36, true);
+        buttonsGroupMode->addButton(tool, int(Form_Main_Mode::World_Map));
         m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Mode_Map);
-        toolbarLayout->addWidget(tool);
-        toolbarLayout->addWidget(createToolbarSpacer());
+        toolbarLayoutMode->addWidget(tool);
+        toolbarLayoutMode->addWidget(createToolbarSpacer());
 
-        tool = createToolbarButtonCheckable(QStringLiteral("buttonModeWorldEdit"));
-        buttonGroupEditor->addButton(tool, int(Form_Main_Mode::World_Editor));
+        tool = createToolbarButton(QStringLiteral("buttonModeWorldEdit"), 38, 36, true);
+        buttonsGroupMode->addButton(tool, int(Form_Main_Mode::World_Editor));
         m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Mode_Editor);
-        toolbarLayout->addWidget(tool);
-        toolbarLayout->addWidget(createToolbarSpacer());
+        toolbarLayoutMode->addWidget(tool);
+        toolbarLayoutMode->addWidget(createToolbarSpacer());
 
-        tool = createToolbarButtonCheckable(QStringLiteral("buttonModeUIEdit"));
-        buttonGroupEditor->addButton(tool, int(Form_Main_Mode::UI_Editor));
+        tool = createToolbarButton(QStringLiteral("buttonModeUIEdit"), 38, 36, true);
+        buttonsGroupMode->addButton(tool, int(Form_Main_Mode::UI_Editor));
         m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Mode_UI);
-        toolbarLayout->addWidget(tool);
+        toolbarLayoutMode->addWidget(tool);
 
 
+    // ***** Mode "Editor" Add-On, Layering: Holds buttons that send objects to front / back
+    widgetGroupLayering = new QWidget(widgetToolbar);
+    widgetGroupLayering->hide();
+    widgetGroupLayering->setObjectName(QStringLiteral("widgetGroupLayering"));
+    widgetGroupLayering->setFixedHeight(46);
+        QHBoxLayout *toolbarLayoutLayering = new QHBoxLayout(widgetGroupLayering);
+        toolbarLayoutLayering->setSpacing(1);
+        toolbarLayoutLayering->setContentsMargins(0, 0, 0, 0);
+
+        buttonsGroupLayering = new QButtonGroup();
+        buttonsGroupLayering->setExclusive(true);
+        connect(buttonsGroupLayering, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupLayeringClicked(int)));
+
+        tool = createToolbarButton(QStringLiteral("buttonSendToBack"), 36, 26, false);
+        buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_To_Back));
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Mode_Map);
+        toolbarLayoutLayering->addWidget(tool);
+
+        tool = createToolbarButton(QStringLiteral("buttonSendBackward"), 36, 26, false);
+        buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_Backward));
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Mode_Editor);
+        toolbarLayoutLayering->addWidget(tool);
+
+        tool = createToolbarButton(QStringLiteral("buttonSendForward"), 36, 26, false);
+        buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_Forward));
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Mode_UI);
+        toolbarLayoutLayering->addWidget(tool);
+
+        tool = createToolbarButton(QStringLiteral("buttonSendToFront"), 36, 26, false);
+        buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_To_Front));
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Mode_UI);
+        toolbarLayoutLayering->addWidget(tool);
 
 
-        toolbarLayout->addStretch();
+    // Clears the containers that keeps track of whats added to the toolbar layout
+    toolbarWidgets.clear();
+    toolbarSpacers.clear();
 
-        button = new QPushButton();
-        button->setObjectName(QStringLiteral("toolbarButton"));
-        button->setFont(font);
-        button->setFixedSize(80, 24);
-        //Dr::ApplyDropShadowByType(button,    Shadow_Types::Button_Shadow);
-        button->setText( tr("Atlases") );
-        toolbarLayout->addWidget(button);
+    // Set the initial toolbar as the mode buttons only
+    widgetToolbarLayout->addWidget(widgetGroupMode);
+    widgetToolbarLayout->addStretch();
 
-    toolBar->addWidget(widgetToolbar);
+    // Add the toolbar onto FormMain
+    toolbar->addWidget(widgetToolbar);
     widgetToolbar->setFixedWidth( this->width() );
-
-
-    this->addToolBar(Qt::ToolBarArea::TopToolBarArea, toolBar);
+    this->addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbar);
 }
 
 
-QToolButton* FormMain::createToolbarButtonCheckable(const QString &name)
+//####################################################################################
+//##    Clears and recreates the toolbar based on the new mode
+//####################################################################################
+void FormMain::clearToolbar()
+{
+    for (auto widget : toolbarWidgets) {
+        widgetToolbarLayout->removeWidget( widget );
+        widget->hide();
+    }
+    // Use iterator to delete items in list
+    for(auto it = toolbarSpacers.begin(); it != toolbarSpacers.end(); ) {
+        widgetToolbarLayout->removeItem( *it );
+        it = toolbarSpacers.erase(it);
+    }
+}
+
+void FormMain::setToolbar(Form_Main_Mode new_mode)
+{
+    switch (new_mode) {
+    case Form_Main_Mode::World_Editor:
+        addToolbarGroup( widgetGroupLayering, true );
+
+//        for (auto button : buttonsGroupLayering->buttons() ) {
+//            button->setEnabled(false);
+//        }
+
+        break;
+
+    case Form_Main_Mode::Clear:
+        break;
+
+    default:    ;
+    }
+}
+
+void FormMain::addToolbarGroup(QWidget *group, bool add_spacer)
+{
+    toolbarWidgets.append(group);
+    widgetToolbarLayout->addWidget(group);
+    group->show();
+
+    if (add_spacer) {
+        QSpacerItem *spacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        toolbarSpacers.append(spacer);
+        widgetToolbarLayout->addSpacerItem(spacer);
+    }
+}
+
+
+//####################################################################################
+//##    Button creation calls
+//####################################################################################
+QToolButton* FormMain::createToolbarButton(const QString &style_sheet_name, int w, int h, bool checkable)
 {
     QToolButton *tool = new QToolButton();
-    tool->setObjectName( name );
-    tool->setCheckable(true);
+    tool->setObjectName( style_sheet_name );
+    tool->setCheckable(checkable);
     tool->setChecked(false);
-    tool->setFixedSize(38, 36);
+    tool->setFixedSize(w, h);
     return tool;
 }
 
@@ -160,6 +261,20 @@ QLabel* FormMain::createToolbarSpacer()
     spacer->setObjectName(QStringLiteral("labelSpacer"));
     spacer->setFixedSize( 1, 24 );
     return spacer;
+}
+
+QPushButton* FormMain::createPushButton(QString name, QString text)
+{
+    QFont font;
+    font.setPointSize(Dr::FontSize());
+
+    QPushButton *button = new QPushButton();
+    button->setObjectName( name );
+    button->setFont(font);
+    button->setFixedSize(80, 24);
+    Dr::ApplyDropShadowByType(button,    Shadow_Types::Button_Shadow);
+    button->setText( text );
+    return button;
 }
 
 

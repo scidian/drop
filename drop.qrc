@@ -52,5 +52,9 @@
         <file>toolbar_icons/toolbar_ui_editor.png</file>
         <file>toolbar_icons/toolbar_ui_editor_faded.png</file>
         <file>inspector_icons/comp_animation.png</file>
+        <file>toolbar_icons/toolbar_sendtoback.png</file>
+        <file>toolbar_icons/toolbar_sendtoback_gray.png</file>
+        <file>toolbar_icons/toolbar_sendtofront_gray.png</file>
+        <file>toolbar_icons/toolbar_sendtofront.png</file>
     </qresource>
 </RCC>
