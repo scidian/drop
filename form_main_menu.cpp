@@ -34,10 +34,10 @@ void FormMain::menuAbout() {
 }
 
 void FormMain::menuUndo() {
-        scene->undoAction();
+        sceneEditor->undoAction();
 }
 void FormMain::menuRedo() {
-        scene->redoAction();
+        sceneEditor->redoAction();
 }
 
 // Pops up a message box listing all child widgets of FormMain
@@ -52,8 +52,8 @@ void FormMain::menuListChildren() {
 // SLOT: Updates Undo / Redo text
 void FormMain::editMenuAboutToShow()
 {
-    QString undo_text = scene->getCurrentUndo();
-    QString redo_text = scene->getCurrentRedo();
+    QString undo_text = sceneEditor->getCurrentUndo();
+    QString redo_text = sceneEditor->getCurrentRedo();
     actionUndo->setText(undo_text);
     actionRedo->setText(redo_text);
 

@@ -91,6 +91,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrObject *object,
         setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsMovable);
         enableItemChangeFlags();
     }
+
 }                                     
 
 void DrItem::disableItemChangeFlags() {

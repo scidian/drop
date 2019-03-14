@@ -8,7 +8,6 @@
 #include <QPaintEngine>
 #include <QPaintEvent>
 #include <QStylePainter>
-#include <QScrollBar>
 #include <QOpenGLFunctions>
 
 #include "colors.h"

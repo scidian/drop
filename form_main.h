@@ -4,10 +4,10 @@
 //  File:
 //      FormMain - Class that holds our main form window
 //
-//      FormMain Modes:
-//          World Map: World / UI Layout
-//          World Editor
-//          UI Editor
+//      FormMain Modes:                         Handle / Nickname
+//          World Map: World / UI Layout            Map
+//          World Editor                            Editor
+//          UI Editor                               UI
 //          Stage Map: Stage Layout
 //
 //      Main Components of FormMain while in normal "Edit Stage" mode:
@@ -65,37 +65,43 @@ public:
 
 
 private:   
-    // Menu Widgets
+    // ***** Menu Widgets
     QMenuBar       *menuBar;
     QAction        *actionUndo, *actionRedo;
 
-    // World Editor Widgets
-    TreeAdvisor    *treeAdvisor;           // Custom classes for Advisor Window
-    TreeAssets     *treeAsset;             // Custom classes for Asset Tree
-    TreeInspector  *treeInspector;         // Custom classes for Object Inspector
-    TreeProject    *treeProject;           // Custom classes for Project Tree
-
-    DrScene        *scene;                 // Behind the scene data model that holds the currently selected Stage
-    DrView         *viewMain;              // Renders the scene, allows for interaction
-
-    QWidget        *widgetAdvisor, *widgetAssests, *widgetCentral, *widgetStage, *widgetInspector, *widgetStageView;
-    QScrollArea    *areaBottom;
-    QFrame         *statusBar;
-
-    QVBoxLayout    *verticalLayout, *verticalLayoutObject, *verticalLayoutAdvisor, *verticalLayoutAsset, *verticalLayoutView;
-    ColorSplitter  *splitterHorizontal, *splitterVertical;
-
-    QDockWidget    *advisor, *assets, *inspector;
-
-    // Toolbar widgets
+    // ***** Toolbar Widgets
     QWidget        *widgetToolbar;
     QButtonGroup   *buttonGroupEditor;
 
-    // Labels to display info
-    QLabel         *label_1,         *label_2,           *label_3,           *label_mouse_1,     *label_mouse_2;
-    QLabel         *label_object_1,  *label_object_2,    *label_object_3,    *label_object_4,    *label_object_5;
-    QLabel         *label_position,  *label_center,      *label_scale,       *label_rotate,       *label_z_order,    *label_pos_flag;
-    QLabel         *label_bottom;
+    // ***** Shared FormMain Widgets
+    TreeAdvisor    *treeAdvisor;           // Custom classes for Advisor Window
+    TreeInspector  *treeInspector;         // Custom classes for Object Inspector
+
+    QWidget        *widgetCentral;
+    QWidget        *widgetAdvisor, *widgetInspector;
+
+    QDockWidget    *advisor, *assets, *inspector;
+
+
+    // ***** "Editor" (World Editor) Widget
+    TreeAssets     *treeAssetEditor;       // Custom classes for Asset Tree
+    TreeProject    *treeProjectEditor;     // Custom classes for Project Tree
+    DrScene        *sceneEditor;           // Behind the scene data model that holds the currently selected Stage
+    DrView         *viewEditor;            // Renders the scene, allows for interaction
+
+    QWidget        *widgetAssests, *widgetStage, *widgetStageView;
+    QScrollArea    *areaBottom;
+    QFrame         *statusBar;
+
+    ColorSplitter  *splitterHorizontal, *splitterVertical;
+
+
+
+    // ***** Labels to display info
+    QLabel         *label1,         *label2,        *label3,        *labelMouse1,   *labelMouse2;
+    QLabel         *labelObject1,   *labelObject2,  *labelObject3,  *labelObject4,  *labelObject5;
+    QLabel         *labelPosition,  *labelCenter,   *labelScale,    *labelRotate,   *labelZOrder,   *labelPosFlag;
+    QLabel         *labelBottom;
 
 public:
     // Constructor and Destructor

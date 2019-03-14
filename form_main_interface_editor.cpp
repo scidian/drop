@@ -7,7 +7,6 @@
 //
 #include <QDockWidget>
 #include <QKeyEvent>
-#include <QScrollBar>
 #include <QTimer>
 
 #include "colors.h"
@@ -48,7 +47,7 @@
 //  Toolbar?
 
 void FormMain::buildAssetTree() {
-    treeAsset->buildAssetTree();
+    treeAssetEditor->buildAssetTree();
 }
 
 // Sends new list to Object Inspector
@@ -57,25 +56,25 @@ void FormMain::buildObjectInspector(QList<long> key_list) {
     if (currentViewMode() == View_Mode::Selecting) return;
 
     // If key_list.count() = 0, then an empty list was passed in. This will clear the object inspector.
-    // If we're doing anything at all in viewMain (i.e. View_Mode != None), let's wait to clear the inspector.
+    // If we're doing anything at all in viewEditor (i.e. View_Mode != None), let's wait to clear the inspector.
     if (currentViewMode() != View_Mode::None && key_list.count() == 0) return;
 
     treeInspector->buildInspectorFromKeys(key_list);
 }
 
 void FormMain::buildProjectTree() {
-    treeProject->buildProjectTree();
+    treeProjectEditor->buildProjectTree();
 }
 
 // Fires an Undo stack command to change Stages within Scene
 void FormMain::buildScene(long from_stage_key) {
-    if (scene->scene_mutex.tryLock(10) == false) return;
+    if (sceneEditor->scene_mutex.tryLock(10) == false) return;
 
-    if (scene->getCurrentStageKeyShown() != from_stage_key) {
-        emit newStageSelected(project, scene, scene->getCurrentStageKeyShown(), from_stage_key);
+    if (sceneEditor->getCurrentStageKeyShown() != from_stage_key) {
+        emit newStageSelected(project, sceneEditor, sceneEditor->getCurrentStageKeyShown(), from_stage_key);
     }
 
-    scene->scene_mutex.unlock();
+    sceneEditor->scene_mutex.unlock();
 }
 
 
@@ -88,9 +87,9 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
     if (currentViewMode() == View_Mode::Translating) return;
 
     if (changed_from != Editor_Widgets::Object_Inspector)   treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys_as_long);
-    if (changed_from != Editor_Widgets::Scene_View)         scene->updateChangesInScene(changed_items, property_keys_as_long);
-    if (changed_from != Editor_Widgets::Project_Tree)       treeProject->updateItemNames(changed_items, property_keys_as_long);
-    if (changed_from != Editor_Widgets::Asset_Tree)         treeAsset->updateAssetList(changed_items, property_keys_as_long);
+    if (changed_from != Editor_Widgets::Scene_View)         sceneEditor->updateChangesInScene(changed_items, property_keys_as_long);
+    if (changed_from != Editor_Widgets::Project_Tree)       treeProjectEditor->updateItemNames(changed_items, property_keys_as_long);
+    if (changed_from != Editor_Widgets::Asset_Tree)         treeAssetEditor->updateAssetList(changed_items, property_keys_as_long);
 
     // !!!!! TEMP: Testing to make sure not running non stop
     Dr::SetLabelText(Label_Names::Label_Bottom, "Update Editor Widgets: " + Dr::CurrentTimeAsString());
@@ -99,10 +98,10 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
 void FormMain::updateItemSelection(Editor_Widgets selected_from)
 {
     // Selects items in scene based on new selection in tree view
-    if (selected_from != Editor_Widgets::Scene_View)    scene->updateSelectionFromProjectTree( treeProject->selectedItems() );
+    if (selected_from != Editor_Widgets::Scene_View)    sceneEditor->updateSelectionFromProjectTree( treeProjectEditor->selectedItems() );
     if (selected_from != Editor_Widgets::Project_Tree)  {
-        if (viewMain->currentViewMode() != View_Mode::Selecting)
-        treeProject->updateSelectionFromView( scene->getSelectionItems() );
+        if (viewEditor->currentViewMode() != View_Mode::Selecting)
+            treeProjectEditor->updateSelectionFromView( sceneEditor->getSelectionItems() );
     }
 
     // !!!!! TEMP: Testing to make sure not running non stop
@@ -114,14 +113,14 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from)
 // Fires a single shot timer to update view coordinates after event calls are done,
 // sometimes centerOn function doesnt work until after an update() has been processed in the event loop
 void FormMain::centerViewOnPoint(QPointF center_point) {
-    viewMain->centerOn(center_point);
+    viewEditor->centerOn(center_point);
     QTimer::singleShot(0, this, [this, center_point] { this->centerViewTimer(center_point); } );
 }
-void FormMain::centerViewTimer(QPointF center_point) { viewMain->centerOn(center_point); }
-double FormMain::currentViewGridAngle()                     { return viewMain->currentGridAngle(); }
-QPointF FormMain::currentViewGridScale()                    { return viewMain->currentGridScale(); }
-View_Mode FormMain::currentViewMode()                       { return viewMain->currentViewMode(); }
-QPointF FormMain::roundPointToGrid(QPointF point_in_scene)  { return viewMain->roundToGrid(point_in_scene); }
+void FormMain::centerViewTimer(QPointF center_point) { viewEditor->centerOn(center_point); }
+double FormMain::currentViewGridAngle()                     { return viewEditor->currentGridAngle(); }
+QPointF FormMain::currentViewGridScale()                    { return viewEditor->currentGridScale(); }
+View_Mode FormMain::currentViewMode()                       { return viewEditor->currentViewMode(); }
+QPointF FormMain::roundPointToGrid(QPointF point_in_scene)  { return viewEditor->roundToGrid(point_in_scene); }
 
 
 

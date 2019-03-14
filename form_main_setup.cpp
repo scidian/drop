@@ -45,8 +45,8 @@ void FormMain::buildWindow(Form_Main_Mode new_layout)
             buildWindowModeWorldEditor();
             buildAssetTree();
             buildProjectTree();
-            viewMain->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
-            scene->setCurrentStageKeyShown(-1);
+            viewEditor->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
+            sceneEditor->setCurrentStageKeyShown(-1);
             buildSceneAfterLoading( project->getOption(Project_Options::Current_Stage).toInt() );
         QApplication::processEvents();
         Dr::SetDoneLoading(true);
@@ -104,13 +104,13 @@ void FormMain::buildWindowModeWorldEditor()
     widgetCentral = new QWidget(this);
     widgetCentral->setObjectName(QStringLiteral("widgetCentral"));
     widgetCentral->setSizePolicy(sizePolicyPreferredHorizontal);
-        verticalLayout = new QVBoxLayout(widgetCentral);
-        verticalLayout->setSpacing(0);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        QVBoxLayout *verticalLayoutCentral = new QVBoxLayout(widgetCentral);
+        verticalLayoutCentral->setSpacing(0);
+        verticalLayoutCentral->setObjectName(QStringLiteral("verticalLayout"));
 
         // This sets the border with for the main vontrol area between middle and docks
         //verticalLayout->setContentsMargins(2, 0, 2, 0);
-        verticalLayout->setContentsMargins(0, 0, 0, 0);
+        verticalLayoutCentral->setContentsMargins(0, 0, 0, 0);
 
         splitterVertical = new ColorSplitter(widgetCentral);
         splitterVertical->setObjectName(QStringLiteral("splitterVertical"));
@@ -131,36 +131,36 @@ void FormMain::buildWindowModeWorldEditor()
                 splitterHorizontal->setHandleWidth(4);
 
                     // ***** Load our custom TreeProject for the Scene List
-                    treeProject = new TreeProject(splitterHorizontal, project, this);
-                    treeProject->setStyle(new StageTreeHighlightProxy(treeProject->style(), treeProject));
+                    treeProjectEditor = new TreeProject(splitterHorizontal, project, this);
+                    treeProjectEditor->setStyle(new StageTreeHighlightProxy(treeProjectEditor->style(), treeProjectEditor));
                         QTreeWidgetItem *header_item_stage = new QTreeWidgetItem();
                         header_item_stage->setIcon(1, QIcon(":/tree_icons/tree_lock_header.png"));
-                        treeProject->setHeaderItem(header_item_stage);
-                    treeProject->setObjectName(QStringLiteral("treeProject"));
-                    treeProject->setColumnCount(2);
-                    treeProject->setColumnWidth(0, 150);
-                    treeProject->setColumnWidth(1, 16);
-                    treeProject->setMinimumSize(QSize(190, 0));
-                    treeProject->setMaximumWidth(400);
-                    treeProject->setFont(font);
-                    treeProject->setProperty("showDropIndicator", QVariant(false));
-                    treeProject->setDragEnabled(true);
-                    treeProject->setDragDropOverwriteMode(false);
-                    treeProject->setDragDropMode(QAbstractItemView::DragDropMode::InternalMove);
-                    treeProject->setDefaultDropAction(Qt::DropAction::TargetMoveAction);
-                    treeProject->setAlternatingRowColors(false);
-                    treeProject->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
-                    treeProject->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
-                    treeProject->setIndentation(15);
-                    treeProject->setRootIsDecorated(true);
-                    treeProject->setItemsExpandable(true);
-                    treeProject->setExpandsOnDoubleClick(false);
-                    treeProject->header()->setSectionResizeMode(0, QHeaderView::ResizeMode::Stretch);
-                    treeProject->header()->setStretchLastSection(false);
-                    treeProject->header()->setVisible(true);
-                    treeProject->setFrameShape(QFrame::NoFrame);
+                        treeProjectEditor->setHeaderItem(header_item_stage);
+                    treeProjectEditor->setObjectName(QStringLiteral("treeProject"));
+                    treeProjectEditor->setColumnCount(2);
+                    treeProjectEditor->setColumnWidth(0, 150);
+                    treeProjectEditor->setColumnWidth(1, 16);
+                    treeProjectEditor->setMinimumSize(QSize(190, 0));
+                    treeProjectEditor->setMaximumWidth(400);
+                    treeProjectEditor->setFont(font);
+                    treeProjectEditor->setProperty("showDropIndicator", QVariant(false));
+                    treeProjectEditor->setDragEnabled(true);
+                    treeProjectEditor->setDragDropOverwriteMode(false);
+                    treeProjectEditor->setDragDropMode(QAbstractItemView::DragDropMode::InternalMove);
+                    treeProjectEditor->setDefaultDropAction(Qt::DropAction::TargetMoveAction);
+                    treeProjectEditor->setAlternatingRowColors(false);
+                    treeProjectEditor->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
+                    treeProjectEditor->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
+                    treeProjectEditor->setIndentation(15);
+                    treeProjectEditor->setRootIsDecorated(true);
+                    treeProjectEditor->setItemsExpandable(true);
+                    treeProjectEditor->setExpandsOnDoubleClick(false);
+                    treeProjectEditor->header()->setSectionResizeMode(0, QHeaderView::ResizeMode::Stretch);
+                    treeProjectEditor->header()->setStretchLastSection(false);
+                    treeProjectEditor->header()->setVisible(true);
+                    treeProjectEditor->setFrameShape(QFrame::NoFrame);
 
-                splitterHorizontal->addWidget(treeProject);
+                splitterHorizontal->addWidget(treeProjectEditor);
 
 
                     widgetStageView = new QWidget(splitterHorizontal);
@@ -168,31 +168,33 @@ void FormMain::buildWindowModeWorldEditor()
                     widgetStageView->setSizePolicy(sizePolicyView);
                     widgetStageView->setMinimumSize(QSize(100, 0));
                     widgetStageView->setFont(font);
-                        verticalLayoutView = new QVBoxLayout(widgetStageView);
+                        QVBoxLayout *verticalLayoutView = new QVBoxLayout(widgetStageView);
                         verticalLayoutView->setObjectName(QStringLiteral("verticalLayoutView"));
                         verticalLayoutView->setSpacing(0);
                         verticalLayoutView->setContentsMargins(0, 0, 0, 0);
 
                         // ***** Load our DrView to display our DrScene collection of items
-                        viewMain = new DrView(widgetStageView, project, scene, this);
-                        viewMain->setObjectName(QStringLiteral("viewMain"));
-                        viewMain->setFrameShape(QFrame::NoFrame);
-                        viewMain->setDragMode(QGraphicsView::DragMode::NoDrag);
-                        viewMain->setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
-                        viewMain->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);
-                        viewMain->zoomInOut( 0 );
+                        viewEditor = new DrView(widgetStageView, project, sceneEditor, this);
+                        viewEditor->setObjectName(QStringLiteral("viewEditor"));
+                        viewEditor->setFrameShape(QFrame::NoFrame);
+                        viewEditor->setDragMode(QGraphicsView::DragMode::NoDrag);
+                        viewEditor->setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
+                        viewEditor->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);
+                        viewEditor->zoomInOut( 0 );
 
-
-                        ///viewMain->setCacheMode(QGraphicsView::CacheBackground);
+                        ///// Possible Optimizations
+                        ///viewEditor->setHorizontalScrollBarPolicy ( Qt::ScrollBarAlwaysOff );
+                        ///viewEditor->setVerticalScrollBarPolicy ( Qt::ScrollBarAlwaysOff );
+                        ///viewEditor->setCacheMode(QGraphicsView::CacheModeFlag::CacheBackground);
 
                         ///// This setting means we will decide when to call update(), controls recurssive paint events
-                        ///viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
-                        viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
+                        ///viewEditor->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
+                        viewEditor->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
 
                         if (!Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing))
-                            viewMain->setRenderHint(QPainter::Antialiasing, false);
+                            viewEditor->setRenderHint(QPainter::Antialiasing, false);
                         else {
-                            viewMain->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
+                            viewEditor->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
                             QSurfaceFormat format;
                             format.setSamples(4);
                             QSurfaceFormat::setDefaultFormat(format);                   // Set antialiasing samples to 4
@@ -201,7 +203,7 @@ void FormMain::buildWindowModeWorldEditor()
                         if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL)) {
                             QOpenGLWidget *gl_widget = new QOpenGLWidget();
                             gl_widget->setUpdateBehavior(QOpenGLWidget::UpdateBehavior::NoPartialUpdate);
-                            viewMain->setViewport(gl_widget);
+                            viewEditor->setViewport(gl_widget);
                         }
 
 
@@ -218,7 +220,7 @@ void FormMain::buildWindowModeWorldEditor()
                         statusBar->setFixedHeight(20);
 
 
-                    verticalLayoutView->addWidget(viewMain);
+                    verticalLayoutView->addWidget(viewEditor);
                     ///verticalLayoutView->addWidget(statusBar);
 
                 splitterHorizontal->addWidget(widgetStageView);
@@ -235,32 +237,32 @@ void FormMain::buildWindowModeWorldEditor()
             areaBottom->setFont(font);
             areaBottom->setWidgetResizable(true);
             areaBottom->setFrameShape(QFrame::NoFrame);
-                label_1 =       createLabel(areaBottom,   "label_1",            QRect( 10,  5, 220, 21),    font);
-                label_2 =       createLabel(areaBottom,   "label_2",            QRect( 10, 20, 220, 21),    font);
-                label_3 =       createLabel(areaBottom,   "label_3",            QRect( 10, 35, 220, 21),    font);
-                label_mouse_1 = createLabel(areaBottom,   "label_mouse_1",      QRect( 10, 50, 220, 21),    font);
-                label_mouse_2 = createLabel(areaBottom,   "label_mouse_2",      QRect( 10, 65, 220, 21),    font);
+                label1 =        createLabel(areaBottom,   "label_1",            QRect( 10,  5, 220, 21),    font);
+                label2 =        createLabel(areaBottom,   "label_2",            QRect( 10, 20, 220, 21),    font);
+                label3 =        createLabel(areaBottom,   "label_3",            QRect( 10, 35, 220, 21),    font);
+                labelMouse1 =   createLabel(areaBottom,   "label_mouse_1",      QRect( 10, 50, 220, 21),    font);
+                labelMouse2 =   createLabel(areaBottom,   "label_mouse_2",      QRect( 10, 65, 220, 21),    font);
 
-                label_object_1 = createLabel(areaBottom,  "label_object_1",     QRect(240,  5, 400, 21),    font);
-                label_object_2 = createLabel(areaBottom,  "label_object_2",     QRect(240, 20, 400, 21),    font);
-                label_object_3 = createLabel(areaBottom,  "label_object_3",     QRect(240, 35, 400, 21),    font);
-                label_object_4 = createLabel(areaBottom,  "label_object_4",     QRect(240, 50, 400, 21),    font);
-                label_object_5 = createLabel(areaBottom,  "label_object_5",     QRect(240, 65, 400, 21),    font);
+                labelObject1 =   createLabel(areaBottom,  "label_object_1",     QRect(240,  5, 400, 21),    font);
+                labelObject2 =   createLabel(areaBottom,  "label_object_2",     QRect(240, 20, 400, 21),    font);
+                labelObject3 =   createLabel(areaBottom,  "label_object_3",     QRect(240, 35, 400, 21),    font);
+                labelObject4 =   createLabel(areaBottom,  "label_object_4",     QRect(240, 50, 400, 21),    font);
+                labelObject5 =   createLabel(areaBottom,  "label_object_5",     QRect(240, 65, 400, 21),    font);
 
-                label_position = createLabel(areaBottom,  "label_position",     QRect(560,  5, 400, 21),    font);
-                label_center =   createLabel(areaBottom,  "label_center",       QRect(560, 20, 400, 21),    font);
-                label_scale =    createLabel(areaBottom,  "label_scale",        QRect(560, 35, 400, 21),    font);
-                label_rotate =   createLabel(areaBottom,  "label_rotate",       QRect(560, 50, 400, 21),    font);
-                label_z_order =  createLabel(areaBottom,  "label_z_order",      QRect(560, 65, 400, 21),    font);
-                label_pos_flag = createLabel(areaBottom,  "label_pos_flag",     QRect(560, 80, 400, 21),    font);
+                labelPosition =  createLabel(areaBottom,  "label_position",     QRect(560,  5, 400, 21),    font);
+                labelCenter =    createLabel(areaBottom,  "label_center",       QRect(560, 20, 400, 21),    font);
+                labelScale =     createLabel(areaBottom,  "label_scale",        QRect(560, 35, 400, 21),    font);
+                labelRotate =    createLabel(areaBottom,  "label_rotate",       QRect(560, 50, 400, 21),    font);
+                labelZOrder =    createLabel(areaBottom,  "label_z_order",      QRect(560, 65, 400, 21),    font);
+                labelPosFlag =   createLabel(areaBottom,  "label_pos_flag",     QRect(560, 80, 400, 21),    font);
 
-                label_bottom =   createLabel(areaBottom,  "label_bottom",       QRect( 10, 80, 700, 21),    font);
+                labelBottom =    createLabel(areaBottom,  "label_bottom",       QRect( 10, 80, 700, 21),    font);
         splitterVertical->addWidget(areaBottom);
 
         splitterVertical->setStretchFactor(0, 1);           // widgetStage (index 0) should stretch (1)
         splitterVertical->setStretchFactor(1, 0);           // areaBottom  (index 1) should not stretch (0)
 
-    verticalLayout->addWidget(splitterVertical);
+    verticalLayoutCentral->addWidget(splitterVertical);
     this->setCentralWidget(widgetCentral);
 
 
@@ -277,32 +279,32 @@ void FormMain::buildWindowModeWorldEditor()
         widgetAssests = new QWidget();
         widgetAssests->setObjectName(QStringLiteral("widgetAssests"));
         widgetAssests->setSizePolicy(sizePolicyPreferredVertical);
-            verticalLayoutAsset = new QVBoxLayout(widgetAssests);
+            QVBoxLayout *verticalLayoutAsset = new QVBoxLayout(widgetAssests);
             verticalLayoutAsset->setObjectName(QStringLiteral("verticalLayoutAsset"));
             verticalLayoutAsset->setSpacing(0);
             verticalLayoutAsset->setContentsMargins(0, 0, 0, 0);
 
                 // ***** Load our custom TreeObjectInspector for the Stage List
-                treeAsset = new TreeAssets(widgetAssests, project, this);
-                treeAsset->setObjectName(QStringLiteral("treeAsset"));
-                treeAsset->setColumnCount(1);
-                treeAsset->setFont(font);
-                treeAsset->setProperty("showDropIndicator", QVariant(false));
-                treeAsset->setDragEnabled(false);
-                treeAsset->setDragDropOverwriteMode(false);
-                treeAsset->setDragDropMode(QAbstractItemView::DragDropMode::NoDragDrop);
-                treeAsset->setDefaultDropAction(Qt::DropAction::TargetMoveAction);
-                treeAsset->setAlternatingRowColors(false);
-                treeAsset->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
-                treeAsset->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectItems);
-                treeAsset->setIndentation(0);
-                treeAsset->setRootIsDecorated(false);
-                treeAsset->setItemsExpandable(true);
-                treeAsset->setExpandsOnDoubleClick(false);
-                treeAsset->setHeaderHidden(true);
-                treeAsset->setFrameShape(QFrame::NoFrame);
+                treeAssetEditor = new TreeAssets(widgetAssests, project, this);
+                treeAssetEditor->setObjectName(QStringLiteral("treeAsset"));
+                treeAssetEditor->setColumnCount(1);
+                treeAssetEditor->setFont(font);
+                treeAssetEditor->setProperty("showDropIndicator", QVariant(false));
+                treeAssetEditor->setDragEnabled(false);
+                treeAssetEditor->setDragDropOverwriteMode(false);
+                treeAssetEditor->setDragDropMode(QAbstractItemView::DragDropMode::NoDragDrop);
+                treeAssetEditor->setDefaultDropAction(Qt::DropAction::TargetMoveAction);
+                treeAssetEditor->setAlternatingRowColors(false);
+                treeAssetEditor->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
+                treeAssetEditor->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectItems);
+                treeAssetEditor->setIndentation(0);
+                treeAssetEditor->setRootIsDecorated(false);
+                treeAssetEditor->setItemsExpandable(true);
+                treeAssetEditor->setExpandsOnDoubleClick(false);
+                treeAssetEditor->setHeaderHidden(true);
+                treeAssetEditor->setFrameShape(QFrame::NoFrame);
 
-            verticalLayoutAsset->addWidget(treeAsset);
+            verticalLayoutAsset->addWidget(treeAssetEditor);
 
         assets->setWidget(widgetAssests);
 
@@ -320,7 +322,7 @@ void FormMain::buildWindowModeWorldEditor()
         widgetAdvisor->setObjectName(QStringLiteral("widgetAdvisor"));
         widgetAdvisor->setSizePolicy(sizePolicyLess);
         widgetAdvisor->setMaximumHeight(180);
-            verticalLayoutAdvisor = new QVBoxLayout(widgetAdvisor);
+            QVBoxLayout *verticalLayoutAdvisor = new QVBoxLayout(widgetAdvisor);
             verticalLayoutAdvisor->setObjectName(QStringLiteral("verticalLayoutAdvisor"));
             verticalLayoutAdvisor->setSpacing(0);
             verticalLayoutAdvisor->setContentsMargins(0, 0, 0, 0);
@@ -361,7 +363,7 @@ void FormMain::buildWindowModeWorldEditor()
         widgetInspector = new QWidget();
         widgetInspector->setObjectName(QStringLiteral("widgetInspector"));
         widgetInspector->setSizePolicy(sizePolicyPreferredVertical);
-            verticalLayoutObject = new QVBoxLayout(widgetInspector);
+            QVBoxLayout *verticalLayoutObject = new QVBoxLayout(widgetInspector);
             verticalLayoutObject->setObjectName(QStringLiteral("verticalLayoutObject"));
             verticalLayoutObject->setSpacing(0);
             verticalLayoutObject->setContentsMargins(0, 0, 0, 0);
@@ -424,15 +426,15 @@ QLabel* FormMain::createLabel(QWidget *parent, QString object_name, QRect label_
 void FormMain::connectSignalsEditor()
 {
     // Connects signal used to populate scene
-    connect(this, SIGNAL(newStageSelected(DrProject*, DrScene*, long, long)),
-            scene,  SLOT(newStageSelected(DrProject*, DrScene*, long, long)) );
+    connect(this,       SIGNAL(newStageSelected(DrProject*, DrScene*, long, long)),
+            sceneEditor,  SLOT(newStageSelected(DrProject*, DrScene*, long, long)) );
 }
 
 void FormMain::disconnectSignalsEditor()
 {
     // Connects signal used to populate scene
-    disconnect(this, SIGNAL(newStageSelected(DrProject*, DrScene*, long, long)),
-               scene,  SLOT(newStageSelected(DrProject*, DrScene*, long, long)) );
+    disconnect(this,       SIGNAL(newStageSelected(DrProject*, DrScene*, long, long)),
+               sceneEditor,  SLOT(newStageSelected(DrProject*, DrScene*, long, long)) );
 }
 
 

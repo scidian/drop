@@ -105,12 +105,14 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
     new_scene_rect.adjust(adjust.x(), adjust.y(), adjust.x(), adjust.y());
     new_view_rect.adjust( adjust.x(), adjust.y(), adjust.x(), adjust.y());
 
-    m_scene->clear();
-    m_scene->setSceneRect(new_scene_rect);
-    emit m_scene->setViewRect(new_view_rect);
     m_scene->setCurrentStageShown(from_stage);
     m_scene->setCurrentStageKeyShown(m_new_stage);
     m_project->setOption(Project_Options::Current_Stage, QVariant::fromValue(from_stage->getKey()) );
+
+    m_scene->clear();
+    m_scene->setSceneRect(new_scene_rect);
+    emit m_scene->setViewRect(new_view_rect);
+    emit m_scene->updateGrid();
 
     // Load all our objects from data model into QGraphicsItems
     for (auto object_pair : from_stage->getObjectMap()) {

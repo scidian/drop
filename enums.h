@@ -23,9 +23,9 @@ enum class Position_Flags;
 //####################################################################################
 enum class Form_Main_Mode {
     None,
-    World_Map,
-    World_Editor,
-    UI_Editor,
+    World_Map,          // "Map"
+    World_Editor,       // "Editor"
+    UI_Editor,          // "UI"
     Stage_Map,
     Clear,
 };

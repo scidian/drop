@@ -115,7 +115,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 
 
     // ########## Initialize form and customize colors and styles
-    scene = new DrScene(this, project, this);
+    sceneEditor = new DrScene(this, project, this);
     Dr::ApplyCustomStyleSheetFormatting(this);
     buildMenu();
 
@@ -176,15 +176,15 @@ bool FormMain::eventFilter(QObject *obj, QEvent *event)
     {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         if (keyEvent->key() == Qt::Key::Key_Space && mode == Form_Main_Mode::World_Editor)
-            if (viewMain->hasFocus() == false)
-                viewMain->spaceBarDown();
+            if (viewEditor->hasFocus() == false)
+                viewEditor->spaceBarDown();
     }
     if (event->type() == QEvent::KeyRelease)
     {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         if (keyEvent->key() == Qt::Key::Key_Space && mode == Form_Main_Mode::World_Editor)
-            if (viewMain->hasFocus() == false)
-                viewMain->spaceBarUp();
+            if (viewEditor->hasFocus() == false)
+                viewEditor->spaceBarUp();
     }
 
 
@@ -206,26 +206,26 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text)
     if (Dr::CheckDoneLoading() == false) return;
 
     switch (label_name) {
-    case Label_Names::Label_1:          label_1->setText(new_text);         break;
-    case Label_Names::Label_2:          label_2->setText(new_text);         break;
-    case Label_Names::Label_3:          label_3->setText(new_text);         break;
-    case Label_Names::Label_Mouse_1:    label_mouse_1->setText(new_text);   break;
-    case Label_Names::Label_Mouse_2:    label_mouse_2->setText(new_text);   break;
+    case Label_Names::Label_1:          label1->setText(new_text);         break;
+    case Label_Names::Label_2:          label2->setText(new_text);         break;
+    case Label_Names::Label_3:          label3->setText(new_text);         break;
+    case Label_Names::Label_Mouse_1:    labelMouse1->setText(new_text);   break;
+    case Label_Names::Label_Mouse_2:    labelMouse2->setText(new_text);   break;
 
-    case Label_Names::Label_Object_1:   label_object_1->setText(new_text);  break;
-    case Label_Names::Label_Object_2:   label_object_2->setText(new_text);  break;
-    case Label_Names::Label_Object_3:   label_object_3->setText(new_text);  break;
-    case Label_Names::Label_Object_4:   label_object_4->setText(new_text);  break;
-    case Label_Names::Label_Object_5:   label_object_5->setText(new_text);  break;
+    case Label_Names::Label_Object_1:   labelObject1->setText(new_text);  break;
+    case Label_Names::Label_Object_2:   labelObject2->setText(new_text);  break;
+    case Label_Names::Label_Object_3:   labelObject3->setText(new_text);  break;
+    case Label_Names::Label_Object_4:   labelObject4->setText(new_text);  break;
+    case Label_Names::Label_Object_5:   labelObject5->setText(new_text);  break;
 
-    case Label_Names::Label_Position:   label_position->setText(new_text);  break;
-    case Label_Names::Label_Center:     label_center->setText(new_text);    break;
-    case Label_Names::Label_Scale:      label_scale->setText(new_text);     break;
-    case Label_Names::Label_Rotate:     label_rotate->setText(new_text);    break;
-    case Label_Names::Label_Z_Order:    label_z_order->setText(new_text);   break;
-    case Label_Names::Label_Pos_Flag:   label_pos_flag->setText(new_text);  break;
+    case Label_Names::Label_Position:   labelPosition->setText(new_text);  break;
+    case Label_Names::Label_Center:     labelCenter->setText(new_text);    break;
+    case Label_Names::Label_Scale:      labelScale->setText(new_text);     break;
+    case Label_Names::Label_Rotate:     labelRotate->setText(new_text);    break;
+    case Label_Names::Label_Z_Order:    labelZOrder->setText(new_text);   break;
+    case Label_Names::Label_Pos_Flag:   labelPosFlag->setText(new_text);  break;
 
-    case Label_Names::Label_Bottom:     label_bottom->setText(new_text);    break;
+    case Label_Names::Label_Bottom:     labelBottom->setText(new_text);    break;
     }
 }
 

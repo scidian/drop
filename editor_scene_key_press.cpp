@@ -132,11 +132,8 @@ void DrScene::keyPressEvent(QKeyEvent *event)
         //######################
         //######################
         //######################
-
         // !! Don't want to rebuild it, only update it
-
-        //m_editor_relay->buildProjectTree();
-
+        m_editor_relay->buildProjectTree();
         //######################
         //######################
         //######################
