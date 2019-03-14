@@ -39,11 +39,12 @@ void DrView::paintItemOutlines(QPainter &painter)
 
     // !!!!! #DEBUG:    Show selection group info
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Selection_Group_Data)) {
-        Dr::SetLabelText(Label_Names::Label_Object_3, "Group Size X: " + QString::number(my_scene->getSelectionBox().width()) +
-                                                               ", Y: " + QString::number(my_scene->getSelectionBox().height()) );
-        Dr::SetLabelText(Label_Names::Label_Object_4, "Scale X: " +      QString::number(my_scene->getSelectionScale().x()) +
-                                                          ", Y: " +      QString::number(my_scene->getSelectionScale().y()) +
-                                                      ", Angle: " +      QString::number(my_scene->getSelectionAngle()));
+        Dr::SetLabelText(Label_Names::Label_Object_3, "Group W: " + QString::number(my_scene->getSelectionBox().width()) +
+                                                          ", H: " + QString::number(my_scene->getSelectionBox().height()) );
+        Dr::SetLabelText(Label_Names::Label_Object_4, "Scale X: " + QString::number(my_scene->getSelectionScale().x()) +
+                                                          ", Y: " + QString::number(my_scene->getSelectionScale().y()) +
+                                                      ", Angle: " + QString::number(my_scene->getSelectionAngle()) +
+                                                      ", Count: " + QString::number(my_scene->getSelectionCount()) );;
     }
     // !!!!! END
 

@@ -40,6 +40,7 @@ DrScene::DrScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay
     connect(this, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
 
     ///// May speed up large scenes?
+    ///setBspTreeDepth(0);
     ///setItemIndexMethod(QGraphicsScene::ItemIndexMethod::NoIndex);
 
     m_undo = new QUndoStack(this);

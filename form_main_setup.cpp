@@ -176,6 +176,18 @@ void FormMain::buildWindowModeWorldEditor()
                         // ***** Load our DrView to display our DrScene collection of items
                         viewMain = new DrView(widgetStageView, project, scene, this);
                         viewMain->setObjectName(QStringLiteral("viewMain"));
+                        viewMain->setFrameShape(QFrame::NoFrame);
+                        viewMain->setDragMode(QGraphicsView::DragMode::NoDrag);
+                        viewMain->setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
+                        viewMain->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);
+                        viewMain->zoomInOut( 0 );
+
+
+                        ///viewMain->setCacheMode(QGraphicsView::CacheBackground);
+
+                        ///// This setting means we will decide when to call update(), controls recurssive paint events
+                        ///viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
+                        viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
 
                         if (!Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing))
                             viewMain->setRenderHint(QPainter::Antialiasing, false);
@@ -192,15 +204,11 @@ void FormMain::buildWindowModeWorldEditor()
                             viewMain->setViewport(gl_widget);
                         }
 
-                        viewMain->setDragMode(QGraphicsView::DragMode::NoDrag);
-                        viewMain->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);
-                        viewMain->setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
 
-                        /// This setting means we will decide when to call update(), controls recurssive paint events
-                        ///viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
-                        viewMain->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
-                        viewMain->setFrameShape(QFrame::NoFrame);
-                        viewMain->zoomInOut( 0 );
+
+
+
+
 
 
 
