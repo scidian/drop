@@ -157,22 +157,22 @@ void FormMain::buildToolBar()
         buttonsGroupLayering->setExclusive(true);
         connect(buttonsGroupLayering, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupLayeringClicked(int)));
 
-        tool = createToolbarButton(QStringLiteral("buttonSendToBack"), 36, 26, false);
+        tool = createToolbarButton(QStringLiteral("buttonSendToBack"), 34, 26, false);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_To_Back));
         m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Mode_Map);
         toolbarLayoutLayering->addWidget(tool);
 
-        tool = createToolbarButton(QStringLiteral("buttonSendBackward"), 36, 26, false);
+        tool = createToolbarButton(QStringLiteral("buttonSendBackward"), 34, 26, false);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_Backward));
         m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Mode_Editor);
         toolbarLayoutLayering->addWidget(tool);
 
-        tool = createToolbarButton(QStringLiteral("buttonSendForward"), 36, 26, false);
+        tool = createToolbarButton(QStringLiteral("buttonSendForward"), 34, 26, false);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_Forward));
         m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Mode_UI);
         toolbarLayoutLayering->addWidget(tool);
 
-        tool = createToolbarButton(QStringLiteral("buttonSendToFront"), 36, 26, false);
+        tool = createToolbarButton(QStringLiteral("buttonSendToFront"), 34, 26, false);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_To_Front));
         m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Mode_UI);
         toolbarLayoutLayering->addWidget(tool);

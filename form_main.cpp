@@ -120,6 +120,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     // ########## Initialize form and customize colors and styles
     Dr::ApplyCustomStyleSheetFormatting(this);
 
+    initializeFormMainSettings();
     buildMenu();
     buildToolBar();
     buildWidgetsShared();

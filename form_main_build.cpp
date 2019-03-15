@@ -7,6 +7,7 @@
 //
 #include <QApplication>
 #include <QDockWidget>
+#include <QScreen>
 
 #include "colors.h"
 #include "debug.h"
@@ -15,6 +16,7 @@
 #include "editor_tree_assets.h"
 #include "editor_tree_inspector.h"
 #include "editor_tree_project.h"
+#include "editor_tree_widgets.h"
 #include "editor_view.h"
 #include "form_main.h"
 #include "globals.h"
@@ -87,6 +89,38 @@ void FormMain::setFormMainMode(Form_Main_Mode new_layout)
 
 
 //####################################################################################
+//##        Sets initial settings of FormMain
+//####################################################################################
+void FormMain::initializeFormMainSettings()
+{
+    // ***** Main window settings
+    this->setObjectName(QStringLiteral("formMain"));
+    this->setWindowModality(Qt::NonModal);
+    this->setMinimumSize(QSize(800, 400));
+    this->setMouseTracking(true);
+    this->setAcceptDrops(true);
+    this->setWindowIcon(QIcon(":icon/icon256.png"));
+
+    this->setTabPosition(Qt::AllDockWidgetAreas, QTabWidget::North);
+    this->setDockOptions(AnimatedDocks | AllowTabbedDocks | GroupedDragging);
+    ///this->setDocumentMode(true);         // Allows for left alignemnt of dock tabs, but not responsive to style sheets
+
+    // ***** Sets initial main window size
+    int new_width = 1400;
+    int new_height = QGuiApplication::screens().first()->geometry().height();
+    this->resize(new_width, new_height);
+
+    // ***** Center window on screen
+    QRect screenGeometry = QGuiApplication::screens().first()->geometry();
+    this->setGeometry(QStyle::alignedRect( Qt::LeftToRight, Qt::AlignCenter, this->size(), screenGeometry ));
+
+    // ***** Initialize hover handler
+    m_widget_hover = new WidgetHoverHandler(this);
+    connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
+}
+
+
+//####################################################################################
 //##        Builds shared widgets used for all modes of FormMain
 //####################################################################################
 void FormMain::buildWidgetsShared()
@@ -107,10 +141,14 @@ void FormMain::buildWidgetsShared()
     widgetCentral = new QWidget();
     widgetCentral->setObjectName(QStringLiteral("widgetCentral"));
     widgetCentral->setSizePolicy(sizePolicy);
+    QGridLayout *layout = new QGridLayout(widgetCentral);
+        QLabel *label = new QLabel("Coming Soon...");
+        label->setFont(fontLarger);
+        layout->addWidget(label, 0, 0, Qt::AlignmentFlag::AlignCenter);
 
 
     // ***** Build right Advisor Dock
-    dockAdvisor = new QDockWidget();
+    dockAdvisor = new QDockWidget(nullptr, Qt::WindowType::Window | Qt::WindowType::FramelessWindowHint);
     dockAdvisor->setWindowTitle( tr("Advisor") );
     dockAdvisor->setObjectName(QStringLiteral("dockAdvisor"));
     dockAdvisor->setSizePolicy(sizePolicyLess);
@@ -192,13 +230,19 @@ void FormMain::buildWidgetsShared()
     // ***** Add QMainWindow Docks
     dockInspector->setFixedWidth( 270 );
     dockAdvisor->setFixedWidth(   270 );
-
-    addDockWidget(static_cast<Qt::DockWidgetArea>(2), dockInspector);
-    addDockWidget(static_cast<Qt::DockWidgetArea>(2), dockAdvisor);
-
+    addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dockInspector);
+    addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dockAdvisor);
     resizeDocks( { dockAdvisor, dockInspector }, { 140, 900 }, Qt::Vertical);
 
 
+    ///// Helpful QDockWidget commands
+    ///void                  addDockWidget(Qt::DockWidgetArea area, QDockWidget *dockwidget);
+    ///void                  addDockWidget(Qt::DockWidgetArea area, QDockWidget *dockwidget, Qt::Orientation orientation);
+    ///void                  splitDockWidget(QDockWidget *after, QDockWidget *dockwidget, Qt::Orientation orientation);
+    ///void                  tabifyDockWidget(QDockWidget *first, QDockWidget *second);
+    ///QList<QDockWidget*>   tabifiedDockWidgets(QDockWidget *dockwidget) const;
+    ///void                  removeDockWidget(QDockWidget *dockwidget);
+    ///bool                  restoreDockWidget(QDockWidget *dockwidget);
 }
 
 

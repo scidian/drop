@@ -8,7 +8,6 @@
 #include <QApplication>
 #include <QActionGroup>
 #include <QMenuBar>
-#include <QScreen>
 
 #include "colors.h"
 #include "debug.h"
@@ -19,7 +18,6 @@
 #include "editor_tree_assets.h"
 #include "editor_tree_inspector.h"
 #include "editor_tree_project.h"
-#include "editor_tree_widgets.h"
 #include "editor_view.h"
 
 #include "form_main.h"
@@ -78,28 +76,6 @@ void FormMain::editMenuAboutToHide() {
 //####################################################################################
 void FormMain::buildMenu()
 {
-    // ***** Main window settings
-    this->setObjectName(QStringLiteral("formMain"));
-    this->setWindowModality(Qt::NonModal);
-    this->setMinimumSize(QSize(780, 400));
-    this->setMouseTracking(true);
-    this->setAcceptDrops(true);
-    this->setWindowIcon(QIcon(":icon/icon256.png"));                        // Set icon
-
-    // ***** Sets initial main window size
-    int new_width = 1400;
-    int new_height = QGuiApplication::screens().first()->geometry().height();
-    this->resize(new_width, new_height);
-
-    // ***** Center window on screen
-    QRect screenGeometry = QGuiApplication::screens().first()->geometry();
-    this->setGeometry(QStyle::alignedRect( Qt::LeftToRight, Qt::AlignCenter, this->size(), screenGeometry ));
-
-    // ***** Initialize hover handler
-    m_widget_hover = new WidgetHoverHandler(this);
-    connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
-
-
     // ***** Create menu bar
     menuBar = new QMenuBar(this);
     menuBar->setObjectName(QStringLiteral("menuBar"));

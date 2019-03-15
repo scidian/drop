@@ -148,6 +148,7 @@ private:
     void        buildWidgetsShared();
     void        changePalette(Color_Scheme new_color_scheme);
     QLabel*     createLabel(QWidget *parent, QString object_name, QRect label_rect, QFont &label_font);
+    void        initializeFormMainSettings();
     void        setFormMainMode(Form_Main_Mode new_layout);
 
     void        lockDockWidth(QDockWidget *dock, int width);

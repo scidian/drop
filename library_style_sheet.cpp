@@ -79,18 +79,24 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         "       border: 0px; } "
 
         // Tab bar that appears when you stack multiple DockWidgets
-        " QTabBar::tab { color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
+        " QTabBar { "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; } "
+        " QTabBar::tab { "
+        "       color: " +      Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
-        "       border-radius: 6px; padding-top: 2px; padding-bottom: 3px; padding-left: 8px; padding-right: 8px; } "
-        " QTabBar::tab:selected { color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
-        "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
-        "       border-radius: 6px; padding-top: 2px; padding-bottom: 3px; padding-left: 8px; padding-right: 8px; } "
+        "       padding-top: 2px; padding-bottom: 3px; padding-left: 4px; padding-right: 4px; "
+        "       font-size: " + QString::number(Dr::FontSize()) + "px; } "
+        " QTabBar::tab:selected { "
+        "       color: " +      Dr::GetColor(Window_Colors::Text_Light).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
+        "       padding-top: 2px; padding-bottom: 3px; padding-left: 4px; padding-right: 4px; "
+        "       font-size: " + QString::number(Dr::FontSize()) + "px; } "
 
         // Dock Widgets
-        //" QDockWidget { titlebar-close-icon: url(close.png); } "
         " QDockWidget { font-size: " + QString::number(Dr::FontSize()) + "px; font: bold; "
         "               color: " + Dr::GetColor(Window_Colors::Text).name() + "; } "
-        " QDockWidget::title { text-align: center; "
+        " QDockWidget::title { "
+        "       text-align: center; "
         "       background: qlineargradient(x1:0 y1:0, x2:0 y2:1, "
         "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Light).name() + ", "
         "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
@@ -169,6 +175,9 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
 
         " QToolButton#buttonSendBackward  {         image: url(:/toolbar_icons/toolbar_sendbackward.png);      padding: 4px; } "
         " QToolButton#buttonSendBackward:disabled { image: url(:/toolbar_icons/toolbar_sendbackward_gray.png); padding: 4px; } "
+
+        " QToolButton#buttonSendForward  {          image: url(:/toolbar_icons/toolbar_sendforward.png);       padding: 4px; } "
+        " QToolButton#buttonSendForward:disabled {  image: url(:/toolbar_icons/toolbar_sendforward_gray.png);  padding: 4px; } "
 
         " QToolButton#buttonSendToFront  {          border-top-right-radius: 4px; border-bottom-right-radius: 4px; } "
         " QToolButton#buttonSendToFront  {          image: url(:/toolbar_icons/toolbar_sendtofront.png);       padding: 4px; } "
