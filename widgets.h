@@ -8,11 +8,41 @@
 #ifndef WIDGETS_H
 #define WIDGETS_H
 
+#include <QPushButton>
+#include <QTreeWidget>
 
-class widgets
+
+//####################################################################################
+//##    CategoryButton
+//##        A sub classed QPushButton so we can override events for header buttons in Tree Lists
+//############################
+class CategoryButton : public QPushButton
 {
+    Q_OBJECT
+
+private:
+    QTreeWidget          m_parent_tree;
+    QTreeWidgetItem     *m_parent_item;
+    bool                 m_is_shrunk = false;
+    QColor               m_color;
+
 public:
-    widgets();
+    CategoryButton(const QString &text, QColor color, QWidget *parent, QTreeWidgetItem *parent_tree_item);
+
+    void            paintEvent(QPaintEvent *event);
+
+private slots:
+    void            buttonPressed();
 };
 
+
+
 #endif // WIDGETS_H
+
+
+
+
+
+
+
+

@@ -12,12 +12,8 @@
 
 #include "colors.h"
 #include "debug.h"
-
 #include "editor_tree_assets.h"
-#include "editor_tree_widgets.h"
-
 #include "interface_editor_relay.h"
-
 #include "project.h"
 #include "project_asset.h"
 #include "project_world.h"
@@ -26,6 +22,9 @@
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
+#include "widgets.h"
+#include "widgets_event_filters.h"
+#include "widgets_layout.h"
 
 
 //####################################################################################
@@ -59,9 +58,8 @@ void TreeAssets::buildAssetTree()
     sp_left.setHorizontalStretch(c_asset_size_left);
     sp_right.setHorizontalStretch(c_asset_size_right);
 
-    QFont fp;
-    fp.setPointSize(Dr::FontSize());
-
+    QFont font;
+    font.setPointSize(Dr::FontSize());
 
     // ***** Retrieve list of assets for project
     AssetMap list_assets = m_project->getAssets();
@@ -69,7 +67,8 @@ void TreeAssets::buildAssetTree()
     this->clear();
     m_asset_frames.clear();
 
-    // Create new item in list to hold component and add the TreeWidgetItem to the tree
+
+    // ***** Create new item in list to hold component and add the TreeWidgetItem to the tree
     QTreeWidgetItem *category_item = new QTreeWidgetItem();
     this->addTopLevelItem(category_item);
 
@@ -86,64 +85,74 @@ void TreeAssets::buildAssetTree()
 
     /// !!!!! TODO: Set Icon call, need to implement
     ///category_button->setIcon(QIcon(component_map.second->getIcon()));
-
     category_button->setStyleSheet(buttonColor);
     category_button->setEnabled(false);
     m_widget_hover->attachToHoverHandler(category_button, "Object Assets", "Objects for use in Stage");
-
     this->setItemWidget(category_item, 0, category_button);                             // Apply the button to the tree item
+
+
+    // ***** Creates a frame to hold all properties of component, with vertical layout
+    QFrame *assets_frame = new QFrame();
+    assets_frame->setObjectName("assetsContainer");
+    FlowLayout *grid_layout = new FlowLayout(assets_frame, 0, 0, 0);
+
 
     // ********** Loop through each object asset and add it to the component frame
     for (auto asset_pair: list_assets) {
         if (asset_pair.second->getAssetType() != DrAssetType::Object) continue;
 
         // ***** Store current asset key in widget and install a mouse handler event filter on the item, AssetMouseHandler
-        QFrame *single_row = new QFrame();
-        single_row->setObjectName("assetFrame");
-        single_row->setProperty(User_Property::Key, QVariant::fromValue( asset_pair.second->getKey() ));
-        single_row->installEventFilter(new AssetMouseHandler(single_row, m_editor_relay));
+        QFrame *single_asset = new QFrame();
+        single_asset->setObjectName("assetFrame");
+        single_asset->setProperty(User_Property::Key, QVariant::fromValue( asset_pair.second->getKey() ));
+        single_asset->installEventFilter(new AssetMouseHandler(single_asset, m_editor_relay));
+        single_asset->setFixedSize(100, 66);
 
         // Store pointer to frame in a list for future reference
-        m_asset_frames.append(single_row);
+        m_asset_frames.append(single_asset);
 
-        QBoxLayout *vertical_split = new QVBoxLayout(single_row);
-        vertical_split->setSpacing(0);
-        vertical_split->setMargin(0);
-        vertical_split->setContentsMargins(0,0,0,0);
 
-        QLabel *asset_name = new QLabel(asset_pair.second->getAssetName());
+        // ***** Create the label that will display the asset name
+        QLabel *asset_name = new QLabel(asset_pair.second->getAssetName(), single_asset);
         asset_name->setObjectName(QStringLiteral("assetName"));
-        asset_name->setFont(fp);
+        asset_name->setFont(font);
         asset_name->setSizePolicy(sp_left);
+        asset_name->setGeometry(10, 0, 80, 25);
         asset_name->setAlignment(Qt::AlignmentFlag::AlignCenter);
         m_widget_hover->attachToHoverHandler(asset_name, asset_pair.second->getAssetName(), Advisor_Info::Asset_Object[1] );
-        vertical_split->addWidget(asset_name);
+
 
         // ***** Create the label that will display the asset
-        QPixmap pix = asset_pair.second->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
-        QLabel *asset_pix = new QLabel();
-        asset_pix->setObjectName(QStringLiteral("assetPixmap"));
-        asset_pix->setFont(fp);
-        asset_pix->setSizePolicy(sp_right);
-        asset_pix->setFixedHeight(45);
-        asset_pix->setAlignment(Qt::AlignmentFlag::AlignCenter);
-        m_widget_hover->attachToHoverHandler(asset_pix, asset_pair.second->getAssetName(), Advisor_Info::Asset_Object[1] );
-        vertical_split->addWidget( asset_pix );
+        QBoxLayout *vertical_split = new QVBoxLayout(single_asset);
+        vertical_split->setSpacing(0);
+        vertical_split->setMargin(0);
+        vertical_split->setContentsMargins(0, 14, 0, 0);
+            QPixmap pix = asset_pair.second->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
+            QLabel *asset_pix = new QLabel(single_asset);
+            asset_pix->setObjectName(QStringLiteral("assetPixmap"));
+            asset_pix->setFont(font);
+            asset_pix->setSizePolicy(sp_right);
+            asset_pix->setAlignment(Qt::AlignmentFlag::AlignCenter);
+            m_widget_hover->attachToHoverHandler(asset_pix, asset_pair.second->getAssetName(), Advisor_Info::Asset_Object[1] );
+            vertical_split->addWidget( asset_pix );
 
         // Draw pixmap onto label
-        asset_pix->setPixmap(pix.scaled(120, 35, Qt::KeepAspectRatio));
+        asset_pix->setPixmap(pix.scaled(70, 36, Qt::KeepAspectRatio));
 
 
-        // ***** Create a child TreeWidgetItem attached to the TopLevel category item
-        QTreeWidgetItem *property_item = new QTreeWidgetItem();
-        property_item->setDisabled(true);
-        category_item->addChild(property_item);
-        this->setItemWidget(property_item, 0, single_row);
 
+
+        grid_layout->addWidget(single_asset);
 
         category_button->setEnabled(true);
         rowCount++;
     }
+
+    // ***** Create a child TreeWidgetItem attached to the TopLevel category item
+    QTreeWidgetItem *property_item = new QTreeWidgetItem();
+    property_item->setDisabled(true);
+    category_item->addChild(property_item);
+    this->setItemWidget(property_item, 0, assets_frame);
 
 
     this->expandAll();

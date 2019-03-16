@@ -161,11 +161,12 @@ void FormMain::buildWidgetsEditor()
                         // ***** View area status bar
                         statusBar = new QFrame(widgetStageView);
                         statusBar->setObjectName("statusBar");
-                        statusBar->setFixedHeight(20);
+                        statusBar->setFixedHeight(26);
 
 
+
+                    verticalLayoutView->addWidget(statusBar);
                     verticalLayoutView->addWidget(viewEditor);
-                    ///verticalLayoutView->addWidget(statusBar);
 
                 splitterHorizontal->addWidget(widgetStageView);
                 splitterHorizontal->setSizes(QList<int> { 150, 300 });      // Sets tree_stage (stage assests) startup width to 150
@@ -250,7 +251,7 @@ void FormMain::buildWidgetsEditor()
 
         dockAssetsEditor->setWidget(widgetAssestsEditor);
 
-    dockAssetsEditor->setFixedWidth( 140 );
+    dockAssetsEditor->setFixedWidth( 202 );
     addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea, dockAssetsEditor);
     dockAssetsEditor->hide();
 

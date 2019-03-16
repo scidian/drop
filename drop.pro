@@ -42,7 +42,6 @@ SOURCES += \
     debug.cpp \
     library_misc.cpp \
     editor_tree_inspector_widgets.cpp \
-    editor_tree_widgets.cpp \
     project_world_stage.cpp \
     project_world_stage_object.cpp \
     editor_item.cpp \
@@ -75,7 +74,11 @@ SOURCES += \
     library_style_widget.cpp \
     library_style_sheet.cpp \
     form_main_build.cpp \
-    form_main_build_editor.cpp
+    form_main_build_editor.cpp \
+    form_main_toolbar_build.cpp \
+    widgets.cpp \
+    widgets_event_filters.cpp \
+    widgets_layout.cpp
 
 HEADERS += \
     enums.h \
@@ -92,7 +95,6 @@ HEADERS += \
     library.h \
     colors.h \
     debug.h \
-    editor_tree_widgets.h \
     project_world_stage.h \
     project_world_stage_object.h \
     editor_item.h \
@@ -104,7 +106,11 @@ HEADERS += \
     constants.h \
     interface_editor_relay.h \
     globals.h \
-    image_filter_color.h
+    image_filter_color.h \
+    enums_form_main.h \
+    widgets.h \
+    widgets_event_filters.h \
+    widgets_layout.h
 
 FORMS +=
 

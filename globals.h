@@ -9,6 +9,7 @@
 #define GLOBALS_H
 
 #include "enums.h"
+#include "enums_form_main.h"
 
 class FormMain;
 class IEditorRelay;

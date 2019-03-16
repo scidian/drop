@@ -10,6 +10,7 @@
 
 #include "constants.h"
 #include "enums.h"
+#include "enums_form_main.h"
 
 class DrObject;
 class DrSettings;

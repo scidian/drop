@@ -68,31 +68,41 @@ typedef QList<QString> HeaderBodyList;
 
 namespace Advisor_Info
 {
-    const HeaderBodyList Mode_Map              { "World Map", "This mode will allow you to see the layout of your project and how the worlds and "
+    // Toolbar Buttons
+    const HeaderBodyList Mode_Map               { "World Map", "This mode will allow you to see the layout of your project and how the worlds and "
                                                               "user interfaces in you project connect to each other. " };
-    const HeaderBodyList Mode_Editor           { "World Editor Mode", "This mode will allow you to edit the contents of each world. It is where "
+    const HeaderBodyList Mode_Editor            { "World Editor Mode", "This mode will allow you to edit the contents of each world. It is where "
                                                                       "you can design each Stage and lay out your levels." };
-    const HeaderBodyList Mode_UI               { "UI Editor Mode", "This mode will allow you to edit the user interfaces of your project. " };
+    const HeaderBodyList Mode_UI                { "UI Editor Mode", "This mode will allow you to edit the user interfaces of your project. " };
 
-    const HeaderBodyList Asset_List            { "Asset List", "These are items that can be dragged into your project. Changing the properties "
-                                                               "of these items will affect all instances of those items project wide." };
-    const HeaderBodyList Object_Inspector      { "Object Inspector", "Displays editable properties of currently selected item." };
-    const HeaderBodyList Stage_View            { "Stage View", "Shows objects and layout of currently selected Stage. Drop assets into Stage "
-                                                               "View to add to Stage." };
-    const HeaderBodyList Project_Tree          { "Project Tree", "Lists the items contained within the currently displayed Stage. Select items "
-                                                                 "to view / adjust properties for each item." };
-    const HeaderBodyList Advisor_Window        { "Advisor Window", "Shows a brief description of editor objects." };
+    // Form Main Widgets
+    const HeaderBodyList Advisor_Window         { "Advisor Window", "Shows a brief description of editor objects." };
+    const HeaderBodyList Object_Inspector       { "Object Inspector", "Displays editable properties of currently selected item." };
 
-    const HeaderBodyList World_Object          { "World Object", "A World is a container of Stages." };
-    const HeaderBodyList Stage_Object          { "Stage Object", "A Stage is a container of Objects." };
-    const HeaderBodyList Camera_Object         { "Camera Object", "This is a camera object. This object will decide what the player sees." };
-    const HeaderBodyList Character_Object      { "Character Object", "This is a character object" };
-    const HeaderBodyList Object_Object         { "Object", "This is an object in a Stage." };
+    // Editor Widgets
+    const HeaderBodyList Asset_List             { "Asset List", "These are items that can be dragged into your project. Changing the properties "
+                                                                "of these items will affect all instances of those items project wide." };
+    const HeaderBodyList Stage_View             { "Stage View", "Shows objects and layout of currently selected Stage. Drop assets into Stage "
+                                                                "View to add to Stage." };
+    const HeaderBodyList Project_Tree           { "Project Tree", "Lists the items contained within the currently displayed Stage. Select items "
+                                                                  "to view / adjust properties for each item." };
 
-    const HeaderBodyList Asset_Object          { "Asset", "This is an object that can have many copies of itself placed into your game. Any change to this "
+    // Project Types
+    const HeaderBodyList World_Object           { "World Object", "A World is a container of Stages." };
+    const HeaderBodyList Stage_Object           { "Stage Object", "A Stage is a container of Objects." };
+    const HeaderBodyList Camera_Object          { "Camera Object", "This is a camera object. This object will decide what the player sees." };
+    const HeaderBodyList Character_Object       { "Character Object", "This is a character object" };
+    const HeaderBodyList Object_Object          { "Object", "This is an object in a Stage." };
+    const HeaderBodyList Asset_Object           { "Asset", "This is an object that can have many copies of itself placed into your game. Any change to this "
                                                           "asset will change all occurences of the asset within the game." };
 
-    const HeaderBodyList Not_Set               { "Not Set", "Fix me!!!!!!" };
+    // Inspector Widgets
+    const HeaderBodyList Variable_Widget        { "Variable Amount", "Plus or minus modifier to initial value, the following value allows for some "
+                                                                     "variable amount to the initial value. For example, an initial value of 100 with "
+                                                                     "a variable amount of 5, allows for values ranging from 95 to 105." };
+
+    // Other
+    const HeaderBodyList Not_Set                { "Not Set", "Fix me!!!!!!" };
 };
 
 

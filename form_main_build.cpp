@@ -16,13 +16,13 @@
 #include "editor_tree_assets.h"
 #include "editor_tree_inspector.h"
 #include "editor_tree_project.h"
-#include "editor_tree_widgets.h"
 #include "editor_view.h"
 #include "form_main.h"
 #include "globals.h"
 #include "library.h"
 #include "project.h"
 #include "project_world_stage.h"
+#include "widgets_event_filters.h"
 
 
 //####################################################################################
@@ -102,7 +102,7 @@ void FormMain::initializeFormMainSettings()
     this->setWindowIcon(QIcon(":icon/icon256.png"));
 
     this->setTabPosition(Qt::AllDockWidgetAreas, QTabWidget::North);
-    this->setDockOptions(AnimatedDocks | AllowTabbedDocks | GroupedDragging);
+    this->setDockOptions(AnimatedDocks | AllowNestedDocks);    /// | AllowTabbedDocks | GroupedDragging);
     ///this->setDocumentMode(true);         // Allows for left alignemnt of dock tabs, but not responsive to style sheets
 
     // ***** Sets initial main window size
@@ -158,7 +158,7 @@ void FormMain::buildWidgetsShared()
         widgetAdvisor = new QWidget();
         widgetAdvisor->setObjectName(QStringLiteral("widgetAdvisor"));
         widgetAdvisor->setSizePolicy(sizePolicyLess);
-        widgetAdvisor->setMaximumHeight(180);
+        //widgetAdvisor->setMaximumHeight(180);
             QVBoxLayout *verticalLayoutAdvisor = new QVBoxLayout(widgetAdvisor);
             verticalLayoutAdvisor->setObjectName(QStringLiteral("verticalLayoutAdvisor"));
             verticalLayoutAdvisor->setSpacing(0);
@@ -252,8 +252,14 @@ void FormMain::buildWidgetsShared()
 void FormMain::lockDockWidth(QDockWidget *dock, int width) { dock->setFixedWidth( width ); }
 void FormMain::unlockDockWidth(QDockWidget *dock) {
     int pre_width = dock->width();
-    dock->setMaximumSize(500, QWIDGETSIZE_MAX);
-    dock->setMinimumSize(140, 80);
+    dock->setMaximumSize(615, QWIDGETSIZE_MAX);
+
+    QString dock_name = dock->objectName();
+    if (dock_name == "dockInspector")
+        dock->setMinimumSize(235, 80);
+    else
+        dock->setMinimumSize(102, 80);
+
     QApplication::processEvents();
     resizeDocks( { dock }, { pre_width }, Qt::Horizontal);
 }

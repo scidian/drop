@@ -24,7 +24,7 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
 
         // Main window background and seperator
         " QMainWindow { background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }" +
-        " QMainWindow::separator { border: 1px solid " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }"
+        " QMainWindow::separator { border: 1px solid " + Dr::GetColor(Window_Colors::Seperator).name() + "; }"
 
         // Shared Empty Widget
         " QWidget#widgetCentral { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
@@ -101,11 +101,13 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Light).name() + ", "
         "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
 
-        // DrView display area, ::corner removes right botttom little box
+        // DrView display area
         " QGraphicsView { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
-        " QGraphicsView::corner { background: transparent; } "
 
-        // Bottom toolbar area
+        // For all scrollable QWidgets, ::corner removes right botttom little box that appears when there are two scrollbars
+        " QWidget::corner { background: transparent; } "
+
+        // Bottom label area
         " QScrollArea { " //border-left: 2px solid; border-right: 1px solid; "
         "   border-color: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
         "   background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
@@ -113,14 +115,24 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         // Mostly debug labels
         " QLabel { color: " + Dr::GetColor(Window_Colors::Text).name() + "; padding: 0px; margin: 0px; border: 0px; } "
 
+
+
         // Asset Item Frames
         " QFrame#assetFrame { border: " + Dr::BorderWidth() + " solid; " + StyleSheetRecessedBackgroundBorder(5, 95) +
-        "       padding: 1px; margin-top: 3px; margin-bottom: 3px; margin-left: 6px; margin-right: 6px; "
+        "       margin-top: 2px; margin-bottom: 2px; margin-left: 5px; margin-right: 0px; "
         "       border-radius: 6px; } "
 
         " QFrame#assetFrame:hover { "
         "       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name()  + "; }"
 
+
+
+        //###############################################################################
+        //##    StatusBar
+        //################################################################################
+        " QFrame#statusBar { "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
+        "       border-top: 1 solid " + Dr::GetColor(Window_Colors::Seperator).name() + "; } "
 
 
         //###############################################################################
@@ -183,6 +195,9 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         " QToolButton#buttonSendToFront  {          image: url(:/toolbar_icons/toolbar_sendtofront.png);       padding: 4px; } "
         " QToolButton#buttonSendToFront:disabled {  image: url(:/toolbar_icons/toolbar_sendtofront_gray.png);  padding: 4px; } "
 
+        " QToolButton#buttonResetObject  {          border-radius: 4px; } "
+        " QToolButton#buttonResetObject  {          image: url(:/toolbar_icons/toolbar_reset.png);  padding: 4px; } "
+        " QToolButton#buttonResetObject:disabled {  image: url(:/toolbar_icons/toolbar_reset.png);  padding: 4px; } "
 
 
         //###############################################################################

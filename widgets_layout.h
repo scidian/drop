@@ -8,11 +8,45 @@
 #ifndef WIDGETS_LAYOUT_H
 #define WIDGETS_LAYOUT_H
 
+#include <QLayout>
+#include <QRect>
+#include <QStyle>
 
-class widgets_layout
+
+class FlowLayout : public QLayout
 {
+private:
+    int doLayout(const QRect &rect, bool testOnly) const;
+    int smartSpacing(QStyle::PixelMetric pm) const;
+
+    QList<QLayoutItem *> itemList;                          // Holds a list of items inserted into the layout, so we can delete them in the destuctor
+    int m_hSpace;
+    int m_vSpace;
+
+
 public:
-    widgets_layout();
+    explicit FlowLayout(QWidget *parent, int margin = -1, int hSpacing = -1, int vSpacing = -1);
+    explicit FlowLayout(int margin = -1, int hSpacing = -1, int vSpacing = -1);
+    ~FlowLayout() override;
+
+    // QLayout Overrides
+    void                addItem(QLayoutItem *item) override;
+    Qt::Orientations    expandingDirections() const override;
+    QLayoutItem*        itemAt(int index) const override;
+    void                setGeometry(const QRect &rect) override;
+    QLayoutItem*        takeAt(int index) override;
+
+    int     count() const override;
+    bool    hasHeightForWidth() const override;
+    int     heightForWidth(int) const override;
+    QSize   minimumSize() const override;
+    QSize   sizeHint() const override;
+
+    // Function Calls
+    int     horizontalSpacing() const;
+    int     verticalSpacing() const;
 };
+
+
 
 #endif // WIDGETS_LAYOUT_H

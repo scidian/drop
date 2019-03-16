@@ -15,16 +15,12 @@
 
 #include "colors.h"
 #include "debug.h"
-
 #include "editor_item.h"
 #include "editor_scene.h"
 #include "editor_tree_inspector.h"
-#include "editor_tree_widgets.h"
-
 #include "globals.h"
 #include "interface_editor_relay.h"
 #include "library.h"
-
 #include "project.h"
 #include "project_asset.h"
 #include "project_world.h"
@@ -33,6 +29,8 @@
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
+#include "widgets.h"
+#include "widgets_event_filters.h"
 
 
 //####################################################################################
@@ -127,13 +125,43 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
     for (auto component_pair: list_components) {
 
-        // Create new item in list to hold component and add the TreeWidgetItem to the tree
+
+
+        // *****Create new item in list to hold component and add the TreeWidgetItem to the tree
         QTreeWidgetItem *category_item = new QTreeWidgetItem();
-        category_item->setData(0, User_Roles::Key, QVariant::fromValue(component_pair.second->getComponentKey()));           // Stores component key in list user data
+        category_item->setData(0, User_Roles::Key, QVariant::fromValue(component_pair.second->getComponentKey()));      // Stores component key
         this->addTopLevelItem(category_item);
 
-        // Creates a frame to hold all properties of component, with vertical layout
-        QFrame *properties_frame = new QFrame(this);
+        // Create and style a button to be used as a header item for the category
+        QFrame *button_frame = new QFrame();
+        QGridLayout *grid = new QGridLayout(button_frame);
+        grid->setContentsMargins(0, 0, 0, 0);
+
+        CategoryButton *category_button = new CategoryButton(QString(" ") + component_pair.second->getDisplayNameQString(), Qt::black, nullptr, category_item);
+        QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: black; "
+                                                    " border: " + Dr::BorderWidth() + " solid; "
+                                                    " border-color: " + component_pair.second->getColor().darker(250).name() + "; "
+                                                    " border-radius: 1px; "
+                                                    " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
+                                                    "   stop:0.00 " + component_pair.second->getColor().lighter(120).name() +
+                                                    "   stop:0.10 " + component_pair.second->getColor().lighter(120).name() +
+                                                    "   stop:0.15 " + component_pair.second->getColor().name() +
+                                                    " , stop:0.92 " + component_pair.second->getColor().darker(250).name() +
+                                                    " , stop:1.00 " + component_pair.second->getColor().darker(250).name() + "); } "
+                                      " QPushButton:hover:!pressed { color: " + component_pair.second->getColor().lighter(200).name() + "; } "
+                                      " QPushButton:pressed { color: " + component_pair.second->getColor().darker(400).name() + "; } ");
+        category_button->setIcon(QIcon(component_pair.second->getIcon()));
+        category_button->setStyleSheet(buttonColor);
+        m_widget_hover->attachToHoverHandler(category_button, component_pair.second->getDisplayName(), component_pair.second->getDescription());
+
+        // Apply the button widget to the tree item
+        grid->addWidget(category_button);
+        this->setItemWidget(category_item, 0, button_frame);
+
+
+
+        // ***** Creates a frame to hold all properties of component, with vertical layout
+        QFrame *properties_frame = new QFrame();
         properties_frame->setObjectName("propertiesFrame");
         QBoxLayout *vertical_layout = new QVBoxLayout(properties_frame);
         vertical_layout->setSpacing(6);
@@ -201,37 +229,6 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
             vertical_layout->addWidget(single_row);
         }
-
-
-        // ***** Create and style a button to be used as a header item for the category
-        QFrame *button_frame = new QFrame();
-        QGridLayout *grid = new QGridLayout(button_frame);
-        grid->setContentsMargins(0, 0, 0, 0);
-
-        CategoryButton *category_button = new CategoryButton(QString(" ") + component_pair.second->getDisplayNameQString(), Qt::black, nullptr, category_item);
-        QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: black; "
-                                                    " border: " + Dr::BorderWidth() + " solid; "
-                                                    " border-color: " + component_pair.second->getColor().darker(250).name() + "; "
-                                                    " border-radius: 1px; "
-                                                    " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
-                                                    "   stop:0.00 " + component_pair.second->getColor().lighter(120).name() +
-                                                    "   stop:0.10 " + component_pair.second->getColor().lighter(120).name() +
-                                                    "   stop:0.15 " + component_pair.second->getColor().name() +
-                                                    " , stop:0.92 " + component_pair.second->getColor().darker(250).name() +
-                                                    " , stop:1.00 " + component_pair.second->getColor().darker(250).name() + "); } "
-                                      " QPushButton:hover:!pressed { color: " + component_pair.second->getColor().lighter(200).name() + "; } "
-                                      " QPushButton:pressed { color: " + component_pair.second->getColor().darker(400).name() + "; } ");
-        category_button->setIcon(QIcon(component_pair.second->getIcon()));
-        category_button->setStyleSheet(buttonColor);
-        m_widget_hover->attachToHoverHandler(category_button, component_pair.second->getDisplayName(), component_pair.second->getDescription());
-
-        // Apply the button widget to the tree item
-        grid->addWidget(category_button);
-        ///QLabel *label = new QLabel("Mom");
-        ///label->setAttribute( Qt::WA_TransparentForMouseEvents );
-        ///grid->addWidget(label, 0, 0, Qt::AlignmentFlag::AlignRight);
-        this->setItemWidget(category_item, 0, button_frame);
-
 
         // ***** Create a child TreeWidgetItem attached to the TopLevel category item
         QTreeWidgetItem *property_item = new QTreeWidgetItem();

@@ -80,20 +80,21 @@ private:
 
     QWidget        *widgetGroupMode;        QButtonGroup   *buttonsGroupMode;
     QWidget        *widgetGroupLayering;    QButtonGroup   *buttonsGroupLayering;
+    QWidget        *widgetGroupReset;       QButtonGroup   *buttonsGroupReset;
 
 
     // ***** Shared FormMain Widgets
-    TreeAdvisor    *treeAdvisor;           // Custom classes for Advisor Window
-    TreeInspector  *treeInspector;         // Custom classes for Object Inspector
+    TreeAdvisor    *treeAdvisor;                            // Custom classes for Advisor Window
+    TreeInspector  *treeInspector;                          // Custom classes for Object Inspector
     QDockWidget    *dockAdvisor, *dockInspector;
     QWidget        *widgetCentral, *widgetAdvisor, *widgetInspector;
 
 
     // ***** "Editor" (World Editor) Widget
-    TreeAssets     *treeAssetEditor;       // Custom classes for Asset Tree
-    TreeProject    *treeProjectEditor;     // Custom classes for Project Tree
-    DrScene        *sceneEditor;           // Behind the scene data model that holds the currently selected Stage
-    DrView         *viewEditor;            // Renders the scene, allows for interaction
+    TreeAssets     *treeAssetEditor;                        // Custom classes for Asset Tree
+    TreeProject    *treeProjectEditor;                      // Custom classes for Project Tree
+    DrScene        *sceneEditor;                            // Behind the scene data model that holds the currently selected Stage
+    DrView         *viewEditor;                             // Renders the scene, allows for interaction
     QDockWidget    *dockAssetsEditor;
     QWidget        *widgetCentralEditor, *widgetAssestsEditor, *widgetStage, *widgetStageView;
     QScrollArea    *areaBottom;
@@ -172,6 +173,7 @@ private:
 private slots:
     void            buttonGroupModeClicked(int id);
     void            buttonGroupLayeringClicked(int id);
+    void            buttonGroupResetClicked(int id);
 
     void            centerViewTimer(QPointF center_point);
     void            editMenuAboutToShow();

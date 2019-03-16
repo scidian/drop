@@ -19,14 +19,10 @@
 
 #include "colors.h"
 #include "debug.h"
-
 #include "editor_tree_inspector.h"
-#include "editor_tree_widgets.h"
-
 #include "interface_editor_relay.h"
 #include "globals.h"
 #include "library.h"
-
 #include "project.h"
 #include "project_world.h"
 #include "project_world_stage.h"
@@ -34,6 +30,8 @@
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
+#include "widgets_event_filters.h"
+
 
 //####################################################################################
 //##        Property Row Building Functions
@@ -261,9 +259,7 @@ QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &fo
     variable_sign->setFont(font);
     size_policy.setHorizontalStretch(1);
     variable_sign->setSizePolicy(size_policy);
-    m_widget_hover->attachToHoverHandler(variable_sign, "Variable Amount", "Plus or minus modifier to initial value, the following value allows for some "
-                                                                "variable amount to the initial value. For example, an initial value of 100 with "
-                                                                "a variable amount of 5, allows for values ranging from 95 to 105.");
+    m_widget_hover->attachToHoverHandler(variable_sign, Advisor_Info::Variable_Widget);
     DrTripleSpinBox *spin_right  = initializeEmptySpinBox(property, font, property->getValue().toPointF().y());
     spin_right->setMinimum(0);
     size_policy.setHorizontalStretch(3);
