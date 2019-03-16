@@ -94,7 +94,7 @@ void TreeAssets::buildAssetTree()
     // ***** Creates a frame to hold all properties of component, with vertical layout
     QFrame *assets_frame = new QFrame();
     assets_frame->setObjectName("assetsContainer");
-    FlowLayout *grid_layout = new FlowLayout(assets_frame, 0, 0, 0);
+    FlowLayout *grid_layout = new FlowLayout(assets_frame, 8, 0, 0, 0, 0, 0);
 
 
     // ********** Loop through each object asset and add it to the component frame

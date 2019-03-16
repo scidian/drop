@@ -252,13 +252,13 @@ void FormMain::buildWidgetsShared()
 void FormMain::lockDockWidth(QDockWidget *dock, int width) { dock->setFixedWidth( width ); }
 void FormMain::unlockDockWidth(QDockWidget *dock) {
     int pre_width = dock->width();
-    dock->setMaximumSize(615, QWIDGETSIZE_MAX);
+    dock->setMaximumSize(622, QWIDGETSIZE_MAX);
 
     QString dock_name = dock->objectName();
     if (dock_name == "dockInspector")
-        dock->setMinimumSize(235, 80);
+        dock->setMinimumSize(244, 80);
     else
-        dock->setMinimumSize(102, 80);
+        dock->setMinimumSize(122, 80);
 
     QApplication::processEvents();
     resizeDocks( { dock }, { pre_width }, Qt::Horizontal);

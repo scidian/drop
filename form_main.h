@@ -100,6 +100,9 @@ private:
     QScrollArea    *areaBottom;
     QFrame         *statusBar;
 
+    // "Editor" Status Bar Widgets
+    QLabel         *labelSelected;
+
 
     // ***** Labels to display info
     QLabel         *label1,         *label2,        *label3,        *labelMouse1,   *labelMouse2;
@@ -167,7 +170,7 @@ private:
     void            clearToolbar();
     QPushButton*    createPushButton(QString name = "toolbarButton", QString text = "Button");
     QToolButton*    createToolbarButton(const QString &style_sheet_name, int w, int h, bool checkable = false);
-    QLabel*         createToolbarSpacer();
+    QLabel*         createToolbarSpacer(int height = 24, int space_on_the_right = 1);
     void            setToolbar(Form_Main_Mode new_mode);
 
 private slots:

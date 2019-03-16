@@ -35,18 +35,18 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         " QSplitter::handle:horizontal { image: url(:/gui_misc/splitter_h.png); } "
 
         // Scroll bars, used mostly in QGraphicsView
-        " QScrollBar:vertical { width: 12px; margin: 0px; border-radius: 6px; "
-        "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; } "
-        " QScrollBar::handle:vertical { margin: 2px; border-radius: 4px; "
+        " QScrollBar:vertical { width: 10px; margin: 0px; border-radius: 0px; "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
+        " QScrollBar::handle:vertical { margin: 1px; border-radius: 4px; "
         "       background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
         "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Dark).name() + ", "
         "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
         " QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; } "
         " QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { height: 0px; } "
 
-        " QScrollBar:horizontal { height: 12px; margin: 0px; border-radius: 6px; "
-        "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + " ;} "
-        " QScrollBar::handle:horizontal {      margin: 2px; border-radius: 4px; "
+        " QScrollBar:horizontal { height: 10px; margin: 0px; border-radius: 0px; "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + " ; } "
+        " QScrollBar::handle:horizontal {      margin: 1px; border-radius: 4px; "
         "       background: qlineargradient(spread:pad, x1:0 y1:0, x2:1 y2:0, "
         "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Dark).name() + ", "
         "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
@@ -132,7 +132,8 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         //################################################################################
         " QFrame#statusBar { "
         "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
-        "       border-top: 1 solid " + Dr::GetColor(Window_Colors::Seperator).name() + "; } "
+        "       border-top:    1 solid " + Dr::GetColor(Window_Colors::Seperator).name() + "; "
+        "       border-bottom: 1 solid " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
 
 
         //###############################################################################

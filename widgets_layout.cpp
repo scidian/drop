@@ -13,11 +13,15 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-FlowLayout::FlowLayout(QWidget *parent, int margin, int hSpacing, int vSpacing) : QLayout(parent), m_hSpace(hSpacing), m_vSpace(vSpacing) {
-    setContentsMargins(margin, margin, margin, margin);
+FlowLayout::FlowLayout(QWidget *parent, int margin_left, int margin_right, int margin_top, int margin_bottom, int hSpacing, int vSpacing)
+    : QLayout(parent), m_hSpace(hSpacing), m_vSpace(vSpacing)
+{
+    setContentsMargins(margin_left, margin_top, margin_right, margin_bottom);
 }
-FlowLayout::FlowLayout(int margin, int hSpacing, int vSpacing) : m_hSpace(hSpacing), m_vSpace(vSpacing) {
-    setContentsMargins(margin, margin, margin, margin);
+FlowLayout::FlowLayout(int margin_left, int margin_right, int margin_top, int margin_bottom, int hSpacing, int vSpacing)
+    : m_hSpace(hSpacing), m_vSpace(vSpacing)
+{
+    setContentsMargins(margin_left, margin_top, margin_right, margin_bottom);
 }
 FlowLayout::~FlowLayout() {
     QLayoutItem *item;

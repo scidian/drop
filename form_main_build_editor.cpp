@@ -56,9 +56,7 @@ void FormMain::buildWidgetsEditor()
         QVBoxLayout *verticalLayoutCentral = new QVBoxLayout(widgetCentralEditor);
         verticalLayoutCentral->setSpacing(0);
         verticalLayoutCentral->setObjectName(QStringLiteral("verticalLayout"));
-
-        // This sets the border with for the main vontrol area between middle and docks
-        //verticalLayout->setContentsMargins(2, 0, 2, 0);
+        // This sets the border with for the main view area between middle and docks
         verticalLayoutCentral->setContentsMargins(0, 0, 0, 0);
 
         ColorSplitter *splitterVertical = new ColorSplitter(widgetCentralEditor);
@@ -162,6 +160,19 @@ void FormMain::buildWidgetsEditor()
                         statusBar = new QFrame(widgetStageView);
                         statusBar->setObjectName("statusBar");
                         statusBar->setFixedHeight(26);
+                            QHBoxLayout *status_layout = new QHBoxLayout(statusBar);
+                            status_layout->setObjectName(QStringLiteral("statusLayout"));
+                            status_layout->setSpacing(6);
+                            status_layout->setContentsMargins(6, 0, 6, 0);
+
+                            labelSelected = new QLabel("No Selection");
+                            labelSelected->setObjectName(QStringLiteral("labelSelected"));
+                            labelSelected->setAlignment(Qt::AlignmentFlag::AlignCenter);
+                            labelSelected->setFont(font);
+                            status_layout->addWidget(labelSelected);
+                            status_layout->addWidget(createToolbarSpacer(18));
+                            status_layout->addStretch();
+
 
 
 
@@ -251,7 +262,7 @@ void FormMain::buildWidgetsEditor()
 
         dockAssetsEditor->setWidget(widgetAssestsEditor);
 
-    dockAssetsEditor->setFixedWidth( 202 );
+    dockAssetsEditor->setFixedWidth( 222 );
     addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea, dockAssetsEditor);
     dockAssetsEditor->hide();
 

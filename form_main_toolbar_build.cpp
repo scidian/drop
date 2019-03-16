@@ -152,11 +152,11 @@ QToolButton* FormMain::createToolbarButton(const QString &style_sheet_name, int 
     return tool;
 }
 
-QLabel* FormMain::createToolbarSpacer()
+QLabel* FormMain::createToolbarSpacer(int height, int space_on_the_right)   // DEFAULTS: height = 24, space_on_the_right = 1
 {
     QLabel *spacer = new QLabel();
     spacer->setObjectName(QStringLiteral("labelSpacer"));
-    spacer->setFixedSize( 1, 24 );
+    spacer->setFixedSize( space_on_the_right, height );
     return spacer;
 }
 
