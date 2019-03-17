@@ -5,8 +5,6 @@
 //      DrObject Class Definitions
 //
 //
-
-
 #include "colors.h"
 #include "debug.h"
 #include "editor_item.h"
@@ -15,12 +13,10 @@
 #include "image_filter_color.h"
 #include "interface_editor_relay.h"
 #include "library.h"
-
 #include "project.h"
 #include "project_asset.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
-
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"

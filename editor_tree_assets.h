@@ -48,11 +48,12 @@ public:
     explicit        TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
 
     // Function Calls
-    void            buildAssetTree();
+    void            buildAssetTree(QString search_text = "");
     IEditorRelay*   getRelay() { return m_editor_relay; }
     void            updateAssetList(QList<DrSettings*> changed_items, QList<long> property_keys);
 
 private slots:
+    void            searchTextChanged(QString new_text);
     void            setAdvisorInfo(QString header, QString body);
 
 };

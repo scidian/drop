@@ -11,13 +11,10 @@
 #include <QMenu>
 
 #include "editor_tree_inspector.h"
-
 #include "enums.h"
 #include "interface_editor_relay.h"
 #include "library.h"
-
 #include "project.h"
-
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"

@@ -5,7 +5,6 @@
 //      DrComponent Class Definitions
 //
 //
-
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"

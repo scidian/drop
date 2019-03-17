@@ -11,7 +11,6 @@
 
 #include "colors.h"
 #include "debug.h"
-
 #include "editor_item.h"
 #include "editor_scene.h"
 #include "editor_tree_advisor.h"
@@ -19,9 +18,7 @@
 #include "editor_tree_inspector.h"
 #include "editor_tree_project.h"
 #include "editor_view.h"
-
 #include "form_main.h"
-
 #include "library.h"
 
 

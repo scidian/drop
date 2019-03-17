@@ -5,7 +5,6 @@
 //      Helpful QWidget / QObject formating functions
 //
 //
-
 #include "colors.h"
 #include "library.h"
 
@@ -127,12 +126,11 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
 
         " QWidget#assetSearchWidget {"
         "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; } "
-
         " QLineEdit#assetSearchBar { "
         "       background-image: url(:/gui_misc/search.png); "
         "       background-repeat: no-repeat; "
         "       background-position: left; "
-        "       padding: 2 2 2 22; } "
+        "       padding: 2 2 3 22; } "
 
 
         //###############################################################################

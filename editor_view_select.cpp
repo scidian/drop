@@ -9,14 +9,11 @@
 
 #include "colors.h"
 #include "debug.h"
-
 #include "editor_item.h"
 #include "editor_scene.h"
 #include "editor_view.h"
-
 #include "interface_editor_relay.h"
 #include "library.h"
-
 #include "project.h"
 #include "project_world.h"
 #include "project_world_stage.h"

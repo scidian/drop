@@ -8,11 +8,8 @@
 #include <QLabel>
 
 #include "colors.h"
-
 #include "editor_tree_advisor.h"
-
 #include "interface_editor_relay.h"
-
 #include "project.h"
 #include "project_world.h"
 #include "project_world_stage.h"

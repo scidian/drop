@@ -50,7 +50,10 @@ TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor
             m_search_bar = new QLineEdit();
             m_search_bar->setObjectName("assetSearchBar");
             m_search_bar->setPlaceholderText("Search");
-
+                QFont font;
+                font.setPointSize(Dr::FontSize());
+            m_search_bar->setFont(font);
+            connect (m_search_bar, SIGNAL(textChanged(QString)), this, SLOT(searchTextChanged(QString)) );
         m_search_layout->addWidget(m_search_bar);
 
     parent->layout()->addWidget(m_search_widget);
@@ -59,14 +62,18 @@ TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor
 // SLOT: Catches signals from m_widget_hover and passes to InterfaceEditorRelay
 void TreeAssets::setAdvisorInfo(QString header, QString body) { m_editor_relay->setAdvisorInfo(header, body); }
 
-
+// SLOT: Catches signal textChanged() from m_search_bar QLineEdit search bar
+void TreeAssets::searchTextChanged(QString new_text)
+{
+    buildAssetTree(new_text);
+}
 
 
 
 //####################################################################################
 //##        Tree Building Functions
 //####################################################################################
-void TreeAssets::buildAssetTree()
+void TreeAssets::buildAssetTree(QString search_text)
 {
     // ***** Initialize some QWidget helper items
     QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -117,6 +124,9 @@ void TreeAssets::buildAssetTree()
     for (auto asset_pair: list_assets) {
         if (asset_pair.second->getAssetType() != DrAssetType::Object) continue;
 
+        QString asset_name = asset_pair.second->getAssetName();
+        if (!asset_name.contains(search_text)) continue;
+
         // ***** Store current asset key in widget and install a mouse handler event filter on the item, AssetMouseHandler
         QFrame *single_asset = new QFrame();
         single_asset->setObjectName("assetFrame");
@@ -129,13 +139,13 @@ void TreeAssets::buildAssetTree()
 
 
         // ***** Create the label that will display the asset name
-        QLabel *asset_name = new QLabel(asset_pair.second->getAssetName(), single_asset);
-        asset_name->setObjectName(QStringLiteral("assetName"));
-        asset_name->setFont(font);
-        asset_name->setSizePolicy(sp_left);
-        asset_name->setGeometry(10, 0, 80, 25);
-        asset_name->setAlignment(Qt::AlignmentFlag::AlignCenter);
-        m_widget_hover->attachToHoverHandler(asset_name, asset_pair.second->getAssetName(), Advisor_Info::Asset_Object[1] );
+        QLabel *asset_text = new QLabel(asset_name, single_asset);
+        asset_text->setObjectName(QStringLiteral("assetName"));
+        asset_text->setFont(font);
+        asset_text->setSizePolicy(sp_left);
+        asset_text->setGeometry(10, 0, 80, 25);
+        asset_text->setAlignment(Qt::AlignmentFlag::AlignCenter);
+        m_widget_hover->attachToHoverHandler(asset_text, asset_name, Advisor_Info::Asset_Object[1] );
 
 
         // ***** Create the label that will display the asset
@@ -149,7 +159,7 @@ void TreeAssets::buildAssetTree()
             asset_pix->setFont(font);
             asset_pix->setSizePolicy(sp_right);
             asset_pix->setAlignment(Qt::AlignmentFlag::AlignCenter);
-            m_widget_hover->attachToHoverHandler(asset_pix, asset_pair.second->getAssetName(), Advisor_Info::Asset_Object[1] );
+            m_widget_hover->attachToHoverHandler(asset_pix, asset_name, Advisor_Info::Asset_Object[1] );
             vertical_split->addWidget( asset_pix );
 
         // Draw pixmap onto label

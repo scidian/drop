@@ -5,7 +5,6 @@
 //      DrView Paint Functions that paint on / around QGraphicsItems
 //
 //
-
 #include "colors.h"
 #include "debug.h"
 #include "editor_scene.h"
@@ -13,7 +12,6 @@
 #include "enums.h"
 #include "globals.h"
 #include "library.h"
-
 
 
 //####################################################################################

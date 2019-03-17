@@ -5,7 +5,6 @@
 //      An interface class, used to transfer messages, etc around program between widgets / classes
 //
 //
-
 #include "interface_editor_relay.h"
 
 //####################################################################################

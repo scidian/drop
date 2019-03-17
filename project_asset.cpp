@@ -5,18 +5,13 @@
 //      DrAsset Class Definitions
 //
 //
-
-#include <QBuffer>
-
 #include "library.h"
-
 #include "project.h"
 #include "project_asset.h"
 #include "project_image.h"
 #include "project_world.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
-
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"

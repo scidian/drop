@@ -11,8 +11,6 @@
 
 #include "colors.h"
 #include "debug.h"
-#include "enums.h"
-
 #include "editor_item.h"
 #include "editor_scene.h"
 #include "editor_view.h"
@@ -20,12 +18,10 @@
 #include "editor_tree_assets.h"
 #include "editor_tree_inspector.h"
 #include "editor_tree_project.h"
-
+#include "enums.h"
 #include "form_main.h"
-
 #include "globals.h"
 #include "library.h"
-
 #include "project.h"
 #include "project_asset.h"
 #include "project_world.h"

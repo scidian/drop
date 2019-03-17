@@ -5,7 +5,6 @@
 //      Functions associated with enums
 //
 //
-
 #include "enums.h"
 #include "editor_item.h"
 #include "editor_scene.h"

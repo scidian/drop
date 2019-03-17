@@ -37,7 +37,7 @@
 //      Sound Editor
 //      Animation Editor
 //
-
+//
 #include <QApplication>
 #include <QMetaType>
 
@@ -83,7 +83,6 @@ int main(int argc, char *argv[])
 
     return 0;
 }
-
 
 
 

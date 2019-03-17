@@ -5,12 +5,10 @@
 //      DrWorld Class Definitions
 //
 //
-
 #include "project.h"
 #include "project_world.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
-
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
