@@ -49,6 +49,7 @@ public:
 
     // Function Calls
     void            buildAssetTree(QString search_text = "");
+    void            checkLabelWidth(QLabel *label);
     IEditorRelay*   getRelay() { return m_editor_relay; }
     void            updateAssetList(QList<DrSettings*> changed_items, QList<long> property_keys);
 

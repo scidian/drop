@@ -70,9 +70,9 @@ void    LoadPalettes()
 
     g_color_schemes[Color_Scheme::Blue].insert(std::make_pair(Window_Colors::Seperator, QColor(29, 77, 144)));
     g_color_schemes[Color_Scheme::Blue].insert(std::make_pair(Window_Colors::Shadow, QColor(5, 16, 28)));
-    g_color_schemes[Color_Scheme::Blue].insert(std::make_pair(Window_Colors::Background_Dark, QColor(20,55,103)));
+    g_color_schemes[Color_Scheme::Blue].insert(std::make_pair(Window_Colors::Background_Dark, QColor(20,55, 103)));
     g_color_schemes[Color_Scheme::Blue].insert(std::make_pair(Window_Colors::Background_Light, QColor(29, 77, 144)));
-    g_color_schemes[Color_Scheme::Blue].insert(std::make_pair(Window_Colors::Button_Dark, QColor(5, 16, 28)));
+    g_color_schemes[Color_Scheme::Blue].insert(std::make_pair(Window_Colors::Button_Dark, QColor(8, 24, 41)));
     g_color_schemes[Color_Scheme::Blue].insert(std::make_pair(Window_Colors::Button_Light, QColor(11, 32, 55)));
     g_color_schemes[Color_Scheme::Blue].insert(std::make_pair(Window_Colors::Midlight, QColor(29, 77, 144)));
     g_color_schemes[Color_Scheme::Blue].insert(std::make_pair(Window_Colors::Text_Dark, QColor(106, 160, 216)));

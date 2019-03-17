@@ -41,7 +41,7 @@ namespace Dr {
     void LoadPreferences() {
         Dr::SetColorScheme(Color_Scheme::Dark);
 
-        Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, true);
+        Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, false);
 
         Dr::SetPreference(Preferences::World_Editor_Lock_Backgrounds,       false);
         Dr::SetPreference(Preferences::World_Editor_Show_Collision_Shapes,  false);

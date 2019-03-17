@@ -15,6 +15,7 @@
 #include "debug.h"
 #include "editor_tree_assets.h"
 #include "interface_editor_relay.h"
+#include "globals.h"
 #include "project.h"
 #include "project_asset.h"
 #include "project_world.h"
@@ -145,6 +146,7 @@ void TreeAssets::buildAssetTree(QString search_text)
         asset_text->setSizePolicy(sp_left);
         asset_text->setGeometry(10, 0, 80, 25);
         asset_text->setAlignment(Qt::AlignmentFlag::AlignCenter);
+        checkLabelWidth( asset_text );
         m_widget_hover->attachToHoverHandler(asset_text, asset_name, Advisor_Info::Asset_Object[1] );
 
 
@@ -205,7 +207,10 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
                     switch (check_property) {
                     case Properties::Asset_Name:
                         label = frame->findChild<QLabel*>("assetName");
-                        if (label) label->setText(item->getComponentPropertyValue(Components::Asset_Settings, Properties::Asset_Name).toString() );
+                        if (label) {
+                            label->setText(item->getComponentPropertyValue(Components::Asset_Settings, Properties::Asset_Name).toString() );
+                            checkLabelWidth( label );
+                        }
                         break;
                     default: ;
                     }
@@ -216,6 +221,23 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
     update();
 }
 
+
+// Shortens label text to fit within asset frame
+void TreeAssets::checkLabelWidth(QLabel *label)
+{
+    QString text = label->text();
+    QFont my_font = label->font();
+    QFontMetrics fm(my_font);
+    int width = fm.width( text );
+
+    int length = text.length();
+    while (width > 80 && length >= 1) {
+        --length;
+        text = label->text().left(length) + "...";
+        width = fm.width( text );
+    }
+    label->setText( text );
+}
 
 
 //####################################################################################
