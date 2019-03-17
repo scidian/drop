@@ -28,19 +28,19 @@
 //####################################################################################
 //##        Re-configures FormMain to new mode
 //####################################################################################
-void FormMain::setFormMainMode(Form_Main_Mode new_layout)
+void FormMain::setFormMainMode(Form_Main_Mode new_mode)
 {
-    Form_Main_Mode old_layout = static_cast<Form_Main_Mode>(Dr::GetPreference(Preferences::Form_Main_Mode).toInt());
-    Dr::SetPreference(Preferences::Form_Main_Mode, static_cast<int>(new_layout));
+    Form_Main_Mode old_mode = current_mode;
+    current_mode = new_mode;
 
     lockDockWidth( dockAdvisor, dockAdvisor->width() );
     lockDockWidth( dockInspector, dockInspector->width() );
     lockDockWidth( dockAssetsEditor, dockAssetsEditor->width() );
 
     // ***** If we aren't loading for the first time, clear previous layout and save central widgets for future use
-    if (old_layout != new_layout) {
+    if ((old_mode != new_mode) && (old_mode != Form_Main_Mode::Program_Loading)) {
         clearToolbar();
-        switch (old_layout) {
+        switch (old_mode) {
         case Form_Main_Mode::World_Editor:
             widgetCentralEditor = takeCentralWidget();
             buildObjectInspector( {} );
@@ -50,13 +50,13 @@ void FormMain::setFormMainMode(Form_Main_Mode new_layout)
             widgetCentral = takeCentralWidget();
             break;
 
-        default:    Dr::ShowMessageBox("Not set");
+        default:    Dr::ShowMessageBox("setFormMainMode, clearing - Mode not known");
         }
     }
-    setToolbar(new_layout);
+    setToolbar(new_mode);           // Sets toolbar widgets for the new mode selected
 
     // ***** Set up new layout
-    switch (new_layout) {
+    switch (new_mode) {
     case Form_Main_Mode::World_Editor:
         Dr::SetDoneLoading(false);
             setWindowTitle( tr("Drop") + " - " + project->getOption(Project_Options::Name).toString() );
@@ -75,7 +75,7 @@ void FormMain::setFormMainMode(Form_Main_Mode new_layout)
             this->setCentralWidget( widgetCentral );
         break;
 
-    default:    Dr::ShowMessageBox("Not set");
+    default:    Dr::ShowMessageBox("setFormMainMode, setting - Mode not known");
     }
 
     QApplication::processEvents();
@@ -84,7 +84,7 @@ void FormMain::setFormMainMode(Form_Main_Mode new_layout)
     unlockDockWidth( dockAdvisor );
     unlockDockWidth( dockInspector );
     unlockDockWidth( dockAssetsEditor );
-    buttonGroupModeSetChecked(int(new_layout));
+    buttonGroupModeSetChecked(int(new_mode));
 }
 
 

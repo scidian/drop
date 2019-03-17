@@ -50,8 +50,7 @@ void FormMain::buttonGroupModeClicked(int id)
     buttonGroupModeSetChecked(id);
 
     Form_Main_Mode new_id =     static_cast<Form_Main_Mode>(id);
-    Form_Main_Mode current_id = static_cast<Form_Main_Mode>(Dr::GetPreference(Preferences::Form_Main_Mode).toInt());
-    if (current_id == new_id) return;
+    if (current_mode == new_id) return;
 
     if (new_id == Form_Main_Mode::World_Map) {
         this->setFormMainMode(Form_Main_Mode::Clear);

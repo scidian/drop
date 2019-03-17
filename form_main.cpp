@@ -36,7 +36,6 @@
 //##        Constructor / Destructor for Main Window
 //####################################################################################
 FormMain::~FormMain() {
-    Form_Main_Mode current_mode = static_cast<Form_Main_Mode>(Dr::GetPreference(Preferences::Form_Main_Mode).toInt());
     if (current_mode != Form_Main_Mode::World_Editor)   delete widgetCentralEditor;
     if (current_mode != Form_Main_Mode::Clear)          delete widgetCentral;
     delete project;
@@ -125,7 +124,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     buildWidgetsShared();
     buildWidgetsEditor();
 
-    setFormMainMode( static_cast<Form_Main_Mode>(Dr::GetPreference(Preferences::Form_Main_Mode).toInt()) );
+    setFormMainMode( Form_Main_Mode::World_Editor );
 
 }
 
@@ -149,6 +148,9 @@ void FormMain::buildSceneAfterLoading(long stage_key) {
 void FormMain::changePalette(Color_Scheme new_color_scheme) {
     Dr::SetColorScheme(new_color_scheme);
     Dr::ApplyCustomStyleSheetFormatting(this);
+
+    if (current_mode == Form_Main_Mode::World_Editor)
+        viewEditor->updateGrid();
 }
 
 
@@ -172,19 +174,17 @@ bool FormMain::eventFilter(QObject *obj, QEvent *event)
 
 
     // ********** Catch space bar for view to make sure we can drag even if view didnt have focus
-    Form_Main_Mode mode = static_cast<Form_Main_Mode>(Dr::GetPreference(Preferences::Form_Main_Mode).toInt());
-
     if (event->type() == QEvent::KeyPress)
     {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        if (keyEvent->key() == Qt::Key::Key_Space && mode == Form_Main_Mode::World_Editor)
+        if (keyEvent->key() == Qt::Key::Key_Space && current_mode == Form_Main_Mode::World_Editor)
             if (viewEditor->hasFocus() == false)
                 viewEditor->spaceBarDown();
     }
     if (event->type() == QEvent::KeyRelease)
     {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        if (keyEvent->key() == Qt::Key::Key_Space && mode == Form_Main_Mode::World_Editor)
+        if (keyEvent->key() == Qt::Key::Key_Space && current_mode == Form_Main_Mode::World_Editor)
             if (viewEditor->hasFocus() == false)
                 viewEditor->spaceBarUp();
     }

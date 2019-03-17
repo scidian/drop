@@ -16,13 +16,12 @@ class IEditorRelay;
 
 enum class Preferences
 {
-    Form_Main_Mode,                         // int (Form_Main_Mode)
-
 
     World_Editor_Lock_Backgrounds,          // bool
     World_Editor_Show_Collision_Shapes,     // bool
     World_Editor_Show_Connections,          // bool
     World_Editor_Show_Game_Frame,           // bool
+
 };
 
 

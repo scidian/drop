@@ -64,6 +64,8 @@ class FormMain : public QMainWindow, public IEditorRelay
 public:
     DrProject      *project;                                            // Holds whatever the current open game project is
 
+    Form_Main_Mode  current_mode = Form_Main_Mode::Program_Loading;     // Holds what Form_Main_Mode the program is in
+
 
 private:   
     WidgetHoverHandler   *m_widget_hover;                               // Pointer to a widget hover handler
@@ -73,8 +75,8 @@ private:
     QAction        *actionUndo, *actionRedo;
 
     // ***** Toolbar Widgets
-    QList<QWidget*>      toolbarWidgets;
-    QList<QLayoutItem*>  toolbarSpacers;
+    QList<QWidget*>      toolbarWidgets { };
+    QList<QLayoutItem*>  toolbarSpacers { };
 
     DrToolBar      *toolbar;
     QWidget        *widgetToolbar;          QHBoxLayout    *widgetToolbarLayout;
@@ -155,7 +157,7 @@ private:
     void        changePalette(Color_Scheme new_color_scheme);
     QLabel*     createLabel(QWidget *parent, QString object_name, QRect label_rect, QFont &label_font);
     void        initializeFormMainSettings();
-    void        setFormMainMode(Form_Main_Mode new_layout);
+    void        setFormMainMode(Form_Main_Mode new_mode);
 
     void        lockDockWidth(QDockWidget *dock, int width);
     void        unlockDockWidth(QDockWidget *dock);

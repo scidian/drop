@@ -13,7 +13,7 @@
 //##    Types of modes for Form Main
 //####################################################################################
 enum class Form_Main_Mode {
-    None,
+    Program_Loading,
     World_Map,          // "Map"
     World_Editor,       // "Editor"
     UI_Editor,          // "UI"
