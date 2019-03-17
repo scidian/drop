@@ -43,8 +43,7 @@ void DrView::paintItemOutlines(QPainter &painter)
                                                           ", H: " + QString::number(my_scene->getSelectionBox().height()) );
         Dr::SetLabelText(Label_Names::Label_Object_4, "Scale X: " + QString::number(my_scene->getSelectionScale().x()) +
                                                           ", Y: " + QString::number(my_scene->getSelectionScale().y()) +
-                                                      ", Angle: " + QString::number(my_scene->getSelectionAngle()) +
-                                                      ", Count: " + QString::number(my_scene->getSelectionCount()) );;
+                                                      ", Angle: " + QString::number(my_scene->getSelectionAngle()) );
     }
     // !!!!! END
 

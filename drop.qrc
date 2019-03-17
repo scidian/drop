@@ -62,5 +62,6 @@
         <file>toolbar_icons/toolbar_sendforward.png</file>
         <file>toolbar_icons/toolbar_reset.png</file>
         <file>assets/planetwithareallylongname.png</file>
+        <file>gui_misc/search.png</file>
     </qresource>
 </RCC>

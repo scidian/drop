@@ -104,18 +104,15 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from)
             treeProjectEditor->updateSelectionFromView( sceneEditor->getSelectionItems() );
     }
 
-    if (sceneEditor->getSelectionCount() == 0)
-        labelSelected->setText("No Selection");
-    else if (sceneEditor->getSelectionCount() == 1) {
-        QGraphicsItem *item = sceneEditor->getSelectionItems().first();
-        DrItem *dritem = dynamic_cast<DrItem*>(item);
-        DrObject* object = dritem->getObject();
-        if (object) {
-            QString asset_name = project->findSettingsFromKey(object->getAssetKey())->getAssetName();
-            labelSelected->setText( asset_name );
-        }
-    } else
-        labelSelected->setText( QString::number( sceneEditor->getSelectionCount() ) + " Objects" );
+    QString selected = "No Selection";
+    if (sceneEditor->getSelectionCount() == 1) {
+        DrObject *object = dynamic_cast<DrItem*>( sceneEditor->getSelectionItems().first() )->getObject();
+        if (dynamic_cast<DrItem*>( sceneEditor->getSelectionItems().first() )->getObject())
+            selected = project->findSettingsFromKey(object->getAssetKey())->getAssetName();
+    } else if (sceneEditor->getSelectionCount() > 1)
+        selected = QString::number( sceneEditor->getSelectionCount() ) + " Objects";
+    labelSelected->setText(selected);
+
 
     // !!!!! TEMP: Testing to make sure not running non stop
     Dr::SetLabelText(Label_Names::Label_Bottom, "Update Selection: " + Dr::CurrentTimeAsString());

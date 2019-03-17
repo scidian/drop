@@ -9,6 +9,7 @@
 #define EDITOR_TREE_ASSETS_H
 
 #include <QLabel>
+#include <QVBoxLayout>
 #include <QTreeWidget>
 
 class DrProject;
@@ -38,6 +39,9 @@ private:
 
     QList<QFrame*>        m_asset_frames;           // List of the single row frames that contain name and pixmap labels
 
+    QWidget              *m_search_widget;
+    QVBoxLayout          *m_search_layout;
+    QLineEdit            *m_search_bar;             // Search bar at bottom of asset dock
 
 public:
     // Constructor

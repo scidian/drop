@@ -230,16 +230,16 @@ void FormMain::buildWidgetsEditor()
     dockAssetsEditor->setFont(font);
     dockAssetsEditor->setFeatures(QDockWidget::DockWidgetMovable);  // | QDockWidget::DockWidgetClosable);
     dockAssetsEditor->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-        widgetAssestsEditor = new QWidget();
-        widgetAssestsEditor->setObjectName(QStringLiteral("widgetAssestsEditor"));
-        widgetAssestsEditor->setSizePolicy(sizePolicyPreferredVertical);
-            QVBoxLayout *verticalLayoutAsset = new QVBoxLayout(widgetAssestsEditor);
+        widgetAssestEditor = new QWidget();
+        widgetAssestEditor->setObjectName(QStringLiteral("widgetAssestsEditor"));
+        widgetAssestEditor->setSizePolicy(sizePolicyPreferredVertical);
+            QVBoxLayout *verticalLayoutAsset = new QVBoxLayout(widgetAssestEditor);
             verticalLayoutAsset->setObjectName(QStringLiteral("verticalLayoutAsset"));
             verticalLayoutAsset->setSpacing(0);
             verticalLayoutAsset->setContentsMargins(0, 0, 0, 0);
 
                 // ***** Load our custom TreeObjectInspector for the Stage List
-                treeAssetEditor = new TreeAssets(widgetAssestsEditor, project, this);
+                treeAssetEditor = new TreeAssets(widgetAssestEditor, project, this);
                 treeAssetEditor->setObjectName(QStringLiteral("treeAssetEditor"));
                 treeAssetEditor->setColumnCount(1);
                 treeAssetEditor->setFont(font);
@@ -258,9 +258,9 @@ void FormMain::buildWidgetsEditor()
                 treeAssetEditor->setHeaderHidden(true);
                 treeAssetEditor->setFrameShape(QFrame::NoFrame);
 
-            verticalLayoutAsset->addWidget(treeAssetEditor);
+            verticalLayoutAsset->insertWidget(0, treeAssetEditor);
 
-        dockAssetsEditor->setWidget(widgetAssestsEditor);
+        dockAssetsEditor->setWidget(widgetAssestEditor);
 
     dockAssetsEditor->setFixedWidth( 222 );
     addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea, dockAssetsEditor);

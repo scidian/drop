@@ -8,6 +8,7 @@
 #include <QEvent>
 #include <QFrame>
 #include <QLabel>
+#include <QLineEdit>
 #include <QVBoxLayout>
 
 #include "colors.h"
@@ -39,10 +40,25 @@ TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor
 
     // Connect this widget to the hover handler
     m_widget_hover->attachToHoverHandler(this, Advisor_Info::Asset_List);
+
+    // Build search bar
+    m_search_widget = new QWidget(parent);
+    m_search_widget->setFixedHeight(30);
+    m_search_widget->setObjectName(QStringLiteral("assetSearchWidget"));
+        m_search_layout = new QVBoxLayout(m_search_widget);
+        m_search_layout->setMargin(4);
+            m_search_bar = new QLineEdit();
+            m_search_bar->setObjectName("assetSearchBar");
+            m_search_bar->setPlaceholderText("Search");
+
+        m_search_layout->addWidget(m_search_bar);
+
+    parent->layout()->addWidget(m_search_widget);
 }
 
 // SLOT: Catches signals from m_widget_hover and passes to InterfaceEditorRelay
 void TreeAssets::setAdvisorInfo(QString header, QString body) { m_editor_relay->setAdvisorInfo(header, body); }
+
 
 
 

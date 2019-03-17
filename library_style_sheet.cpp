@@ -125,6 +125,14 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         " QFrame#assetFrame:hover { "
         "       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name()  + "; }"
 
+        " QWidget#assetSearchWidget {"
+        "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; } "
+
+        " QLineEdit#assetSearchBar { "
+        "       background-image: url(:/gui_misc/search.png); "
+        "       background-repeat: no-repeat; "
+        "       background-position: left; "
+        "       padding: 2 2 2 22; } "
 
 
         //###############################################################################

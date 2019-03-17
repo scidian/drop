@@ -29,6 +29,7 @@
 
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QLineEdit>
 #include <QMouseEvent>
 #include <QPushButton>
 #include <QScrollArea>
@@ -96,7 +97,7 @@ private:
     DrScene        *sceneEditor;                            // Behind the scene data model that holds the currently selected Stage
     DrView         *viewEditor;                             // Renders the scene, allows for interaction
     QDockWidget    *dockAssetsEditor;
-    QWidget        *widgetCentralEditor, *widgetAssestsEditor, *widgetStage, *widgetStageView;
+    QWidget        *widgetCentralEditor, *widgetAssestEditor, *widgetStage, *widgetStageView;
     QScrollArea    *areaBottom;
     QFrame         *statusBar;
 
@@ -121,6 +122,7 @@ public:
     // Event Handlers
     virtual bool        eventFilter(QObject *obj, QEvent *event) override;                                  // Inherited from QObject
     virtual void        resizeEvent(QResizeEvent *event) override;                                          // Inherited from QWidget
+
 
     // Interface Relay Implementations
     virtual void        buildAssetTree() override;
