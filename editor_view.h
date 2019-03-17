@@ -191,6 +191,7 @@ public:
 
     // Paint Functions
     void            paintBoundingBox(QPainter &painter);
+    void            paintCrossHairs(QPainter &painter, QPoint center);
     void            paintGameFrame(QPainter &painter);
     void            paintGrid(QPainter &painter);
     void            paintGroupAngle(QPainter &painter, double angle);

@@ -172,7 +172,7 @@ void DrView::paintGroupAngle(QPainter &painter, double angle)
 
 
 //####################################################################################
-//##        PAINT: Paints cross in the center of item while translating
+//##        PAINT: Paints cross in the center of item / selection box while translating
 //####################################################################################
 void DrView::paintItemCenters(QPainter &painter)
 {
@@ -180,42 +180,56 @@ void DrView::paintItemCenters(QPainter &painter)
     if (m_grid_should_snap == false) return;
     if (m_allow_movement == false) return;
 
-    int line_size = 15;
-
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL) == false)
         painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
     else
         painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_Source);
 
+    // Draw crosshairs on SelectionBox center
+    if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool()) {
+        QPoint center = mapFromScene(my_scene->getSelectionTransform().map( my_scene->getSelectionBox().center()) );
+        paintCrossHairs(painter, center);
+
     // Loop through selected items and draw crosshairs on each one
-    for (auto item: my_scene->getSelectionItems()) {
-        QPoint center = mapFromScene( item->sceneTransform().map( item->boundingRect().center() ) );
-
-        QTransform t = QTransform()
-                .translate(center.x(), center.y())
-                .scale(m_grid_scale.x(), m_grid_scale.y())
-                .rotate(m_grid_rotate)
-                .translate(-center.x(), -center.y());
-
-        QVector<QLine> lines;
-        QLine line;
-
-        line = QLine(center.x(), center.y() + line_size, center.x(), center.y() - line_size);
-        lines.append( t.map (line) );
-
-        line = QLine(center.x() + line_size, center.y(), center.x() - line_size, center.y());
-        lines.append( t.map (line) );
-
-        painter.setBrush(Qt::NoBrush);
-        painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 4));
-        painter.drawLines(lines);
-        painter.setPen(QPen(Dr::GetColor(Window_Colors::Shadow), 2));
-        painter.drawLines(lines);
+    } else {
+        for (auto item: my_scene->getSelectionItems()) {
+            QPoint center = mapFromScene( item->sceneTransform().map( item->boundingRect().center() ) );
+            paintCrossHairs(painter, center);
+        }
     }
 
     painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOver);
 }
 
+
+//####################################################################################
+//##        PAINT: Paints the actual crosshairs for function paintItemCenters
+//####################################################################################
+void DrView::paintCrossHairs(QPainter &painter, QPoint center)
+{
+    QTransform t = QTransform()
+            .translate(center.x(), center.y())
+            .scale(m_grid_scale.x(), m_grid_scale.y())
+            .rotate(m_grid_rotate)
+            .translate(-center.x(), -center.y());
+
+    QVector<QLine> lines;
+    QLine line;
+
+    int line_size = 15;
+    line = QLine(center.x(), center.y() + line_size, center.x(), center.y() - line_size);
+    lines.append( t.map (line) );
+
+    line = QLine(center.x() + line_size, center.y(), center.x() - line_size, center.y());
+    lines.append( t.map (line) );
+
+    painter.setBrush(Qt::NoBrush);
+    painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 4));
+    painter.drawLines(lines);
+    painter.setPen(QPen(Dr::GetColor(Window_Colors::Shadow), 2));
+    painter.drawLines(lines);
+
+}
 
 
 

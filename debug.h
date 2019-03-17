@@ -30,7 +30,6 @@ enum class Debug_Flags {
     Label_Selection_Group_Data,         // Show info about DrScene current QGraphicsItemGroup of selected items
     Label_Selected_Item_Data,           // Show info about first item in Selection Group
     Label_Where_Update_Box_From,        // Shows where the call to the UpdateSelectionBoxData function originated from
-    Label_Snap_To_Grid_Data,            // Shows item change coordinates and the snapped PointF's calculated during movement when snapping
 
     Paint_Resize_Calculations,          // Paints unrotated selection box with distance point used for calculating scale
     Paint_Shear_Remove,                 // Paints un rotated, sheared boxes

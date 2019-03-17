@@ -50,6 +50,7 @@
 #include "colors.h"
 #include "debug.h"
 #include "editor_item.h"
+#include "editor_scene.h"
 #include "enums.h"
 #include "globals.h"
 #include "interface_editor_relay.h"
@@ -72,30 +73,40 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 
     // ********** Intercepts item position change and limits new location if Snap to Grid is on
     if (change == ItemPositionChange) {
+
         QPointF new_pos = value.toPointF();
         if (m_editor_relay->currentViewMode() != View_Mode::Translating) return new_pos;
         if (m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Should_Snap).toBool() == false) return new_pos;
 
-        // ***** Calculate new desired center location based on starting center and difference between starting pos() and new passed in new_pos
-        QPointF old_center = m_object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF();
-        QPointF new_center = old_center - (pos() - new_pos);
+        // ***** Calculate new center based on SelectionBox starting center and difference between starting pos() and new passed in new_pos
+        if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool()) {
+            DrScene *drscene = dynamic_cast<DrScene*>(this->scene());
+            QPointF old_select_center, new_select_center, rounded_select_center;
+            QPointF adjust_by;
 
-        // ***** Align new desired center to grid
-        QPointF rounded_center = m_editor_relay->roundPointToGrid( new_center );
+            if (!drscene->getHasCalculatedAdjustment()) {
+                old_select_center = drscene->getPreMoveSelectionCenter();
+                new_select_center = old_select_center - (pos() - new_pos);
+                rounded_select_center = m_editor_relay->roundPointToGrid( new_select_center );
+                adjust_by = new_select_center - rounded_select_center;
+                drscene->setMoveAdjustment( adjust_by );
+                drscene->setHasCalculatedAdjustment(true);
+            } else {
+                adjust_by = drscene->getMoveAdjustment();
+            }
+            QPointF adjusted_pos = new_pos - adjust_by;
+            return  adjusted_pos;
 
-        // ***** Adjust new position based on adjustment to grid we just performed
-        QPointF adjust_by = new_center - rounded_center;
-        QPointF adjusted_pos = new_pos - adjust_by;
+        // ***** Calculate new center location based on starting center of item and difference between starting pos() and new passed in new_pos
+        } else {
+            QPointF old_center = m_object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF();
+            QPointF new_center = old_center - (pos() - new_pos);
+            QPointF rounded_center = m_editor_relay->roundPointToGrid( new_center );                // Align new desired center to grid
 
-        // !!!!! DEBUG: Show snapped coordinates
-        if (Dr::CheckDebugFlag(Debug_Flags::Label_Snap_To_Grid_Data)) {
-            Dr::SetLabelText(Label_Names::Label_1, "New Top Left X: " + QString::number(new_pos.x()) + ", Y: " + QString::number(new_pos.y()));
-            Dr::SetLabelText(Label_Names::Label_2, "New Center X: " + QString::number(rounded_center.x()) + ", Y: " + QString::number(rounded_center.y()));
-            Dr::SetLabelText(Label_Names::Label_3, "Adj Top Left X: " + QString::number(adjusted_pos.x()) + ", Y: " + QString::number(adjusted_pos.y()));
+            QPointF adjust_by = new_center - rounded_center;                                        // Adjust new position based on adjustment
+            QPointF adjusted_pos = new_pos - adjust_by;                                             // to grid we just performed
+            return adjusted_pos;
         }
-        // !!!!! END
-
-        return adjusted_pos;
     }
 
     // ********** If item position has changed, update it
@@ -103,7 +114,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
         // Value is new scene position (of upper left corner)
         QPointF new_pos =    value.toPointF();
 
-        // Following works with ItemPositionHasChanged
+        // Following works with ItemPositionHasChanged, but we like using ItemScenePositionHasChanged better, works better for some reason
         ///// Create a transform so we can find new center position of item
         ///QTransform t = QTransform().rotate(angle).scale(scale.x(), scale.y());
         ///QPointF new_center = t.map( boundingRect().center() ) + new_pos;

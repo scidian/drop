@@ -215,11 +215,16 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
     // ******************* If mouse moved while in translating mode, update tooltip
     if (m_view_mode == View_Mode::Translating) {
         if (m_allow_movement) {
-            // Pass on event to allow movement
+            // Pass on event to allow movement, store starting selection center for snapping calculations
+            QPointF pre_center = my_scene->getSelectionTransform().map( my_scene->getSelectionBox().center() );
+            my_scene->setPreMoveSelectionCenter( pre_center );
+            my_scene->setHasCalculatedAdjustment(false);
             QGraphicsView::mouseMoveEvent(event);
 
-            // Update selection box location
+            // Update selection box location, disable DrItem->itemChange before we update selection box by setting View_Mode to None
+            m_view_mode = View_Mode::None;
             my_scene->updateSelectionBox();
+            m_view_mode = View_Mode::Translating;
 
             if (m_tool_tip->getTipType() != View_Mode::Translating)
                 m_tool_tip->startToolTip(View_Mode::Translating, m_origin, my_scene->getSelectionTransform().map(my_scene->getSelectionBox().center()) );
@@ -227,7 +232,6 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
                 m_tool_tip->updateToolTipData( my_scene->getSelectionTransform().map(my_scene->getSelectionBox().center()) );
         }
     } else {
-        // Pass on event to allow movement
         QGraphicsView::mouseMoveEvent(event);
     }
 

@@ -66,6 +66,11 @@ private:
     QPointF                 m_selection_scale;              // Scaling applied to current selection
     QRectF                  m_selection_box;                // Starting outline of selected items
 
+    // Selection movement variables
+    bool                    m_calculated_adjust;            // If an item has already recalculated new center, use that
+    QPointF                 m_pre_move_center;              // Stores a premove center for group grid snapping
+    QPointF                 m_move_adjustment;              // Amount to move items by during translation
+
 
 public:
     // Mutexes
@@ -115,10 +120,10 @@ public:
     QPointF                 getSelectionScale()         { return m_selection_scale; }
     QRectF                  getSelectionBox()           { return m_selection_box; }
 
-    void                    setSelectionItems(QList<QGraphicsItem*> list)    { m_selection_items = list; }
-    void                    setSelectionAngle(double angle)                  { m_selection_angle = angle; }
-    void                    setSelectionScale(QPointF scale)                 { m_selection_scale = scale; }
-    void                    setSelectionBox(QRectF box)                      { m_selection_box = box; }
+    void                    setSelectionItems(QList<QGraphicsItem*> list)   { m_selection_items = list; }
+    void                    setSelectionAngle(double angle)                 { m_selection_angle = angle; }
+    void                    setSelectionScale(QPointF scale)                { m_selection_scale = scale; }
+    void                    setSelectionBox(QRectF box)                     { m_selection_box = box; }
 
     QGraphicsItemGroup*     createEmptyItemGroup(double angle = 0, QPointF scale = QPointF(1, 1));
     bool                    checkAllSelectedItemsHaveSameAngle();
@@ -126,6 +131,16 @@ public:
     bool                    shouldEnableResizeToGrid();
     QRectF                  totalSelectionSceneRect();
     void                    updateSelectionBox();
+
+
+    // ********** Seelction Movement Functions
+    QPointF                 getPreMoveSelectionCenter()                     { return m_pre_move_center; }
+    QPointF                 getMoveAdjustment()                             { return m_move_adjustment; }
+    bool                    getHasCalculatedAdjustment()                    { return m_calculated_adjust; }
+
+    void                    setPreMoveSelectionCenter(QPointF center)       { m_pre_move_center = center; }
+    void                    setMoveAdjustment(QPointF adjust)               { m_move_adjustment = adjust; }
+    void                    setHasCalculatedAdjustment(bool has)            { m_calculated_adjust = has; }
 
 
 public slots:
