@@ -58,7 +58,8 @@ const T& Clamp(const T& number_to_check, const T& min, const T& max) {
 
 
 // Angle Functions
-bool    IsSimilarAngle(double angle1, double angle2);
+double  Closest90DegreeAngle(double angle, double angle_to_find);
+bool    IsSimilarAngle(double angle1, double angle2, double tolerance = .001);
 bool    IsSquare(double check_angle);
 
 

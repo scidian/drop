@@ -61,8 +61,12 @@ void DrView::rotateSelection(QPointF mouse_in_view)
 
     double angle = m_rotate_start_angle + (angle2 - angle1);
 
-    // ********** Snaps angle to nearest 15 degree increment if angle is with +/-
-    double tolerance =  c_angle_tolerance;
+    // ********** Snaps angle to nearest c_angle_step (15) degree increment if angle is with +/-, or to grid angle
+    //            Tolerance is decreased the further the mouse cursor is away from the center of the selection rectangle
+    double mouse_distance_to_center = QLineF(mouse_in_view, mapFromScene(m_rotate_start_rect.center())).length();
+    double tolerance_multiplier = 1;
+    if (mouse_distance_to_center > 200) tolerance_multiplier = (200 / mouse_distance_to_center);
+    double tolerance =  c_angle_tolerance * tolerance_multiplier;
     double angle_step = c_angle_step;
 
     double test_round = abs(angle);
@@ -73,6 +77,9 @@ void DrView::rotateSelection(QPointF mouse_in_view)
 
     if (Dr::IsCloseTo(0, test_round, tolerance) || Dr::IsCloseTo(angle_step, test_round, tolerance)) {
         angle = round(angle / angle_step) * angle_step;
+        angle_adjust = angle - angle_diff;
+    } else if (Dr::IsSimilarAngle(m_editor_relay->currentViewGridAngle(), angle, tolerance)) {
+        angle = Dr::Closest90DegreeAngle(angle, m_editor_relay->currentViewGridAngle());
         angle_adjust = angle - angle_diff;
     } else {
         angle_adjust = 0;
