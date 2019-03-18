@@ -76,7 +76,7 @@ void DrView::mousePressEvent(QMouseEvent *event)
             //                           if the item clicked was already selected (but the object inspector was showing something
             //                           else like an asset or something)
             //                     NOTE: If object was not already selected the object inspector will be updated when the
-            //                           DrScene->selectionChanged slot fires
+            //                           DrScene::selectionChanged slot fires
             if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
 
                 if (m_origin_item != nullptr) {

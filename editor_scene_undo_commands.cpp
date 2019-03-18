@@ -119,7 +119,10 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
 
     // Center the view on the new stage
     QPointF new_center = from_stage->getViewCenterPoint();
-    if (new_center == QPointF(0, 0)) new_center = new_view_rect.center();
+    if (new_center == QPointF(0, 0)) {
+        new_center = new_view_rect.center();
+        from_stage->setViewCenterPoint( new_center );
+    }
     m_scene->getRelay()->centerViewOnPoint( new_center );
 
     // Set Undo / Redo text

@@ -80,6 +80,7 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
 {
     QList<long> property_keys_as_long = Dr::ConvertPropertyListToLongs(property_keys);
 
+    // Don't update inspector constantly while objects are being moved around, very slow
     if (currentViewMode() == View_Mode::Translating) return;
 
     if (changed_from != Editor_Widgets::Object_Inspector)   treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys_as_long);
@@ -96,10 +97,12 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from)
     // Selects items in scene based on new selection in tree view
     if (selected_from != Editor_Widgets::Scene_View)    sceneEditor->updateSelectionFromProjectTree( treeProjectEditor->selectedItems() );
     if (selected_from != Editor_Widgets::Project_Tree)  {
+        // Don't update project tree while rubber band box is being moved around, very slow
         if (viewEditor->currentViewMode() != View_Mode::Selecting)
             treeProjectEditor->updateSelectionFromView( sceneEditor->getSelectionItems() );
     }
 
+    // This block updates the status bar in the viewEditor to show what objects are currently selected
     QString selected = "No Selection";
     if (sceneEditor->getSelectionCount() == 1) {
         DrObject *object = dynamic_cast<DrItem*>( sceneEditor->getSelectionItems().first() )->getObject();
@@ -120,7 +123,10 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from)
 // sometimes centerOn function doesnt work until after an update() has been processed in the event loop
 void FormMain::centerViewOnPoint(QPointF center_point) {
     viewEditor->centerOn(center_point);
-    QTimer::singleShot(0, this, [this, center_point] { this->centerViewTimer(center_point); } );
+    QTimer::singleShot(0, this, [this, center_point] {
+        this->centerViewTimer(center_point);
+        viewEditor->setHasShownAScene(true);
+    } );
 }
 void FormMain::centerViewTimer(QPointF center_point) { viewEditor->centerOn(center_point); }
 double FormMain::currentViewGridAngle()                     { return viewEditor->currentGridAngle(); }
@@ -130,7 +136,7 @@ QPointF FormMain::roundPointToGrid(QPointF point_in_scene)  { return viewEditor-
 
 
 
-//s Call to change the Advisor
+// Call to change the Advisor
 void FormMain::setAdvisorInfo(HeaderBodyList header_body_list) {
     setAdvisorInfo(header_body_list[0], header_body_list[1]);  }
 void FormMain::setAdvisorInfo(QString header, QString body) {

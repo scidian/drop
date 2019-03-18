@@ -107,6 +107,22 @@ void DrView::scrollContentsBy(int dx, int dy)
 }
 
 
+//####################################################################################
+//##        Recenters view when window is resized (after FormMain has loaded and view
+//##            has shown a scene at least once)
+//####################################################################################
+void DrView::resizeEvent(QResizeEvent *event)
+{
+    QGraphicsView::resizeEvent(event);
+
+    if (!Dr::CheckDoneLoading()) return;
+    if (!my_scene) return;
+    if (!my_scene->getCurrentStageShown()) return;
+    if (!hasShownAScene()) return;
+
+    m_editor_relay->centerViewOnPoint( my_scene->getCurrentStageShown()->getViewCenterPoint() );
+}
+
 
 //####################################################################################
 //##        Recalculates corner and sides handles,

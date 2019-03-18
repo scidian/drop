@@ -76,9 +76,10 @@ void DrView::paintEvent(QPaintEvent *event)
 
     // Store current center point of scene, so that if we go to a new scene and come back we stay in the same place
     if (my_scene->getCurrentStageShown() && Dr::CheckDoneLoading()) {
-        QPointF center_point = this->viewport()->geometry().center();
-        QPointF mapped_scene = mapToScene( center_point.toPoint() );
-        my_scene->getCurrentStageShown()->setViewCenterPoint( mapped_scene + QPoint(1, 1) );
+        QRect  viewport_rect(0, 0, this->viewport()->width(), this->viewport()->height());
+        QRectF visible_scene_rect = this->mapToScene(viewport_rect).boundingRect();
+        QPointF center_point = visible_scene_rect.center();
+        my_scene->getCurrentStageShown()->setViewCenterPoint( center_point );
     }
 
     // Initiate QPainter object

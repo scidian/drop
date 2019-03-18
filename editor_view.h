@@ -60,7 +60,7 @@ class DrView : public QGraphicsView
     Q_OBJECT
 
 private:
-    // Local, instance specific member variables
+    // Local, Instance Specific Member Variables
     DrProject              *m_project;                              // Pointer to currently loaded project
     IEditorRelay           *m_editor_relay;                         // Pointer to IEditorRelay class of parent form
     View_Mode               m_view_mode = View_Mode::None;          // Tracks current view interaction mode
@@ -77,13 +77,15 @@ private:
     QTime        m_zoom_timer;                                      // Used to auto hide zoom tool tip after time has passed
     int          m_rotate = 0;                              // NOT IMPLEMENTED: Rotation of current view
 
-    // Grid variables
+    // Grid Drawing Variables
     QVector<QPointF> m_grid_points;                                 // Holds latest calculated grid points
     QVector<QLineF>  m_grid_lines;                                  // Holds latest calculated grid lines
     QPixmap          m_grid_buffer;                                 // Back buffer for painting, grid lines are drawn onto this when view changes and then
                                                                     //      this gets painted instead of drawLine calls every time paintEvent is called
     QRectF           m_grid_view_rect;                              // Holds the desired area we wish to draw lines or dots
     bool             m_grid_needs_redraw = true;                    // Flag used to mark grid for redrawing during next paintEvent
+
+    // Grid Style Variables (currently re-populated from DrView::updateGrid by way of updateEditorWidgetsAfterItemChange -> DrScene::updateChangesInScene)
     Grid_Style   m_grid_style { Grid_Style::Lines };                // Grid type to display
     QPointF      m_grid_origin { 0, 0 };                            // Origin point of grid in scene
     QPointF      m_grid_size { 50, 50 };                            // Grid size
@@ -92,7 +94,10 @@ private:
     bool         m_grid_should_snap = true;                         // Should snap to grid?
     bool         m_grid_show_on_top = false;                        // Paint grid on top?
 
-    // Keyboard flags
+    // Misc Flags
+    bool         m_flag_has_shown_a_scene_yet = false;              // False until a scene has been loaded into the view
+
+    // Keyboard Flags
     bool         m_flag_key_down_spacebar = false;                  // True when View has focus and spacebar      is down
     bool         m_flag_key_down_control =  false;                  // True when View has focus and control (cmd) is down
     bool         m_flag_key_down_alt =      false;                  // True when View has focus and alt (option)  is down
@@ -140,7 +145,7 @@ private:
     QRectF                          m_rotate_start_rect;            // Stores starting rect of selection before resize starts
     double                          m_rotate_start_angle;           // Stores angle of selection group at start of rotate routine
 
-    // !!!!! DEBUG: Debugging variables
+    // !!!!! DEBUG: Debugging Variables
     long                            m_debug_fps = 0;         // TEMP
     long                            m_debug_fps_last;        // TEMP
     QTime                           m_debug_timer;           // TEMP
@@ -170,6 +175,8 @@ public:
 #if QT_CONFIG(wheelevent)
     virtual void    wheelEvent(QWheelEvent *event) override;                                // Inherited from QWidget
 #endif
+    virtual void    resizeEvent(QResizeEvent *event) override;                              // Inherited from QWidget
+
 
     // View Display Functions
     void            setViewRect(QRectF new_rect);
@@ -219,6 +226,8 @@ public:
     // Getters / Setters
     View_Mode       currentViewMode() { return m_view_mode; }
     int             currentZoomLevel() { return m_zoom; }
+    bool            hasShownAScene() const { return m_flag_has_shown_a_scene_yet; }
+    void            setHasShownAScene(bool has) { m_flag_has_shown_a_scene_yet = has; }
     void            spaceBarDown();
     void            spaceBarUp();
 
