@@ -65,7 +65,8 @@
 QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     // If this is a temporary object, or not attached to a scene, do not process change
-    if (m_temp_only || !m_editor_relay) return QGraphicsPixmapItem::itemChange(change, value);
+    if (m_temp_only || !m_editor_relay)
+        return QGraphicsPixmapItem::itemChange(change, value);
 
     // Load any new data stored in item
     double  angle = data(User_Roles::Rotation).toDouble();
@@ -123,6 +124,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
         m_object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Position, new_center);
 
         m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_object }, { Properties::Object_Position });
+
         return new_pos;
     }
 

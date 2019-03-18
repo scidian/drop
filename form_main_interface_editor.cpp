@@ -51,7 +51,7 @@ void FormMain::buildObjectInspector(QList<long> key_list) {
     // If we're currently in the middle of selecting with rubber band box, don't update yet
     if (currentViewMode() == View_Mode::Selecting) return;
 
-    // If key_list.count() = 0, then an empty list was passed in. This will clear the object inspector.
+    // If key_list.count() == 0, then an empty list was passed in. This will clear the object inspector.
     // If we're doing anything at all in viewEditor (i.e. View_Mode != None), let's wait to clear the inspector.
     if (currentViewMode() != View_Mode::None && key_list.count() == 0) return;
 

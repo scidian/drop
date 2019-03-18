@@ -72,7 +72,11 @@ void DrView::mousePressEvent(QMouseEvent *event)
             }
 
 
-            // ******************* If no keys are down, only select item under mouse
+            // ******************* If no modifier keys are down, only select item under mouse. Also updates the object inspector
+            //                           if the item clicked was already selected (but the object inspector was showing something
+            //                           else like an asset or something)
+            //                     NOTE: If object was not already selected the object inspector will be updated when the
+            //                           DrScene->selectionChanged slot fires
             if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
 
                 if (m_origin_item != nullptr) {
@@ -81,6 +85,8 @@ void DrView::mousePressEvent(QMouseEvent *event)
                     if (my_scene->getSelectionItems().contains(m_origin_item) == false) {
                         my_scene->clearSelection();
                         m_origin_item->setSelected(true);
+                    } else {
+                        m_editor_relay->buildObjectInspector( { m_origin_item->data(User_Roles::Key).toLongLong() } );
                     }
 
                     // ***** Process press event for item movement (Translation)
@@ -91,8 +97,8 @@ void DrView::mousePressEvent(QMouseEvent *event)
                     m_hide_bounding = true;
                     m_view_mode = View_Mode::Translating;
 
-                    for (auto items : my_scene->getSelectionItems())
-                        items->moveBy(0, 0);
+                    for (auto item : my_scene->getSelectionItems())
+                        item->moveBy(0, 0);
                 }
 
             // ******************** If clicked while control is down, add to selection group, or take out
