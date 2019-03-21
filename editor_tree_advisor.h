@@ -9,6 +9,7 @@
 #define EDITOR_TREE_ADVISOR_H
 
 #include <QTreeWidget>
+#include <QMutex>
 
 class DrProject;
 class IEditorRelay;

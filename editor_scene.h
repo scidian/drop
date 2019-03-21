@@ -11,6 +11,7 @@
 #include <QGraphicsScene>
 #include <QTreeWidgetItem>
 #include <QUndoStack>
+#include <QMutex>
 
 #include "interface_editor_relay.h"
 
