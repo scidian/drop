@@ -15,8 +15,8 @@ DrFont::DrFont(DrProject *parent_project, long key, QString font_name, QPixmap f
 {
     setKey(key);
 
-    m_font_name =  font_name;
-    m_font_pixmap = font_pixmap;
+    m_name =  font_name;
+    m_pixmap = font_pixmap;
 
     if (font_name.contains("Test Font"))
         setTestFontRects();
@@ -41,7 +41,7 @@ QPixmap DrFont::createText(QString text)
         char letter = text.at(i).toLatin1();
         int  letter_width = m_positions[letter].width();
 
-        painter.drawPixmap( QRect(x, 0, letter_width, height), m_font_pixmap, m_positions[letter] );
+        painter.drawPixmap( QRect(x, 0, letter_width, height), m_pixmap, m_positions[letter] );
         x += letter_width;
     }
 
