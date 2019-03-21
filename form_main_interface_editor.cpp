@@ -73,9 +73,6 @@ void FormMain::buildScene(long from_stage_key) {
     sceneEditor->scene_mutex.unlock();
 }
 
-
-
-
 void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Properties> property_keys)
 {
     QList<long> property_keys_as_long = Dr::ConvertPropertyListToLongs(property_keys);
@@ -119,6 +116,9 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from)
 
 
 
+
+
+DrProject* FormMain::currentProject() { return project; }
 // Fires a single shot timer to update view coordinates after event calls are done,
 // sometimes centerOn function doesnt work until after an update() has been processed in the event loop
 void FormMain::centerViewOnPoint(QPointF center_point) {

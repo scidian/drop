@@ -25,11 +25,13 @@ enum class Orientation {
 };
 
 class DrAsset;
+class DrFont;
 class DrImage;
 class DrWorld;
 class DrStage;
 class DrObject;
 typedef std::map<long, DrWorld*> WorldMap;
+typedef std::map<char, DrFont*>  FontMap;
 typedef std::map<long, DrAsset*> AssetMap;
 typedef std::map<long, DrImage*> ImageMap;
 typedef std::map<Project_Options, QVariant>  OptionMap;
@@ -46,6 +48,7 @@ private:
     long        m_key_generator;                        // variable to hand out unique id key's to all children objects
 
     WorldMap    m_worlds;                               // Holds worlds for the project
+    FontMap     m_fonts;
     AssetMap    m_assets;                               // Holds assets for the project
     ImageMap    m_images;                               // Holds images for the project
 

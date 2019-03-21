@@ -7,6 +7,7 @@
 //
 #include <QGraphicsDropShadowEffect>
 
+
 #include "colors.h"
 #include "library.h"
 
@@ -64,6 +65,22 @@ void ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius)
     widget->setMask(pixmap.createMaskFromColor(Qt::green));
 }
 
+
+// Shortens label text to fit within a widget (i.e. asset frame)
+QString CheckFontWidth(QFont font, QString text_to_check, int max_width)
+{
+    QString text = text_to_check;
+    QFontMetrics fm { font };
+    int width = fm.width( text );
+
+    int length = text.length();
+    while (width > max_width && length >= 1) {
+        --length;
+        text = text_to_check.left(length) + "...";
+        width = fm.width( text );
+    }
+    return text;
+}
 
 
 }   // namespace Dr

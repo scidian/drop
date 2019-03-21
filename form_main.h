@@ -136,6 +136,7 @@ public:
                                                            QList<Properties> property_keys) override;
     virtual void        updateItemSelection(Editor_Widgets selected_from) override;
 
+    virtual DrProject*  currentProject() override;
     virtual void        centerViewOnPoint(QPointF center_point) override;
     virtual double      currentViewGridAngle() override;
     virtual QPointF     currentViewGridScale() override;

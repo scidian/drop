@@ -9,13 +9,15 @@
 #include <QFrame>
 #include <QLabel>
 #include <QLineEdit>
+#include <QTimer>
 #include <QVBoxLayout>
 
 #include "colors.h"
 #include "debug.h"
 #include "editor_tree_assets.h"
-#include "interface_editor_relay.h"
 #include "globals.h"
+#include "interface_editor_relay.h"
+#include "library.h"
 #include "project.h"
 #include "project_asset.h"
 #include "project_world.h"
@@ -118,7 +120,7 @@ void TreeAssets::buildAssetTree(QString search_text)
     // ***** Creates a frame to hold all properties of component, with vertical layout
     QFrame *assets_frame = new QFrame();
     assets_frame->setObjectName("assetsContainer");
-    FlowLayout *grid_layout = new FlowLayout(assets_frame, 8, 0, 0, 0, 0, 0);
+    FlowLayout *grid_layout = new FlowLayout(assets_frame, 8, 0, 4, 0, 0, 0);
 
 
     // ********** Loop through each object asset and add it to the component frame
@@ -146,7 +148,7 @@ void TreeAssets::buildAssetTree(QString search_text)
         asset_text->setSizePolicy(sp_left);
         asset_text->setGeometry(10, 0, 80, 25);
         asset_text->setAlignment(Qt::AlignmentFlag::AlignCenter);
-        checkLabelWidth( asset_text );
+        asset_text->setText( Dr::CheckFontWidth( asset_text->font(), asset_text->text(), 80 ) );
         m_widget_hover->attachToHoverHandler(asset_text, asset_name, Advisor_Info::Asset_Object[1] );
 
 
@@ -209,7 +211,7 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
                         label = frame->findChild<QLabel*>("assetName");
                         if (label) {
                             label->setText(item->getComponentPropertyValue(Components::Asset_Settings, Properties::Asset_Name).toString() );
-                            checkLabelWidth( label );
+                            label->setText( Dr::CheckFontWidth( label->font(), label->text(), 80 ) );
                         }
                         break;
                     default: ;
@@ -222,23 +224,6 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
 }
 
 
-// Shortens label text to fit within asset frame
-void TreeAssets::checkLabelWidth(QLabel *label)
-{
-    QString text = label->text();
-    QFont my_font = label->font();
-    QFontMetrics fm(my_font);
-    int width = fm.width( text );
-
-    int length = text.length();
-    while (width > 80 && length >= 1) {
-        --length;
-        text = label->text().left(length) + "...";
-        width = fm.width( text );
-    }
-    label->setText( text );
-}
-
 
 //####################################################################################
 //##    AssetMouseHandler Class Functions
@@ -249,18 +234,65 @@ AssetMouseHandler::AssetMouseHandler(QObject *parent, IEditorRelay *editor_relay
 bool AssetMouseHandler::eventFilter(QObject *obj, QEvent *event)
 {
     if (!obj) return false;
-    QWidget *asset = dynamic_cast<QWidget*>(obj);
+    QWidget *asset_frame =  dynamic_cast<QWidget*>(obj);
+    QLabel  *label =        asset_frame->findChild<QLabel*>("assetName");
+    long     asset_key =    asset_frame->property(User_Property::Key).toLongLong();
 
     if (event->type() == QEvent::MouseButtonPress)
     {
-        long asset_key = asset->property(User_Property::Key).toLongLong();
         m_editor_relay->buildObjectInspector( { asset_key } );
+
+
+    // Start scrolling name if name is too wide to be shown
+    } else if (event->type() == QEvent::HoverEnter) {
+        DrSettings  *asset = m_editor_relay->currentProject()->findSettingsFromKey(asset_key);
+        QString asset_name = asset->getComponentPropertyValue(Components::Asset_Settings, Properties::Asset_Name).toString();
+
+        if (asset_name != label->text()) {
+            m_flag_scrolling = true;
+            m_position = 1;
+            m_scroll_timer.restart();
+            m_pause_time = 1200;
+            QTimer::singleShot( 500, this, [this, label, asset_name] { this->handleScroll(label, asset_name); } );
+        }
+
+
+    // Reset asset name if it was scrolling
+    } else if (event->type() == QEvent::HoverLeave) {
+        m_flag_scrolling = false;
+        DrSettings  *asset = m_editor_relay->currentProject()->findSettingsFromKey(asset_key);
+        QString asset_name = asset->getComponentPropertyValue(Components::Asset_Settings, Properties::Asset_Name).toString();
+        label->setText( asset_name );
+        label->setText( Dr::CheckFontWidth( label->font(), label->text(), 80 ) );
     }
+
 
     return QObject::eventFilter(obj, event);
 }
 
+void AssetMouseHandler::handleScroll(QLabel *label, QString asset_name)
+{
+    if (!m_flag_scrolling) return;
 
+    if (m_scroll_timer.elapsed() > m_pause_time ) {
+
+        QString new_text = asset_name.right( asset_name.length() - m_position );
+        QString shorten = Dr::CheckFontWidth( label->font(), new_text, 80 );
+
+        label->setText( shorten );
+
+        if (new_text != shorten) {
+            m_position++;
+            if (m_position == 1) m_pause_time = 1500; else m_pause_time = 150;
+        } else {
+            m_position = 0;
+            m_pause_time = 2200;
+        }
+        m_scroll_timer.restart();
+    }
+
+    QTimer::singleShot( 50, this, [this, label, asset_name] { this->handleScroll(label, asset_name); } );
+}
 
 
 

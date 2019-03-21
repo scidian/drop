@@ -10,6 +10,7 @@
 
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QTime>
 #include <QTreeWidget>
 
 class DrProject;
@@ -49,7 +50,6 @@ public:
 
     // Function Calls
     void            buildAssetTree(QString search_text = "");
-    void            checkLabelWidth(QLabel *label);
     IEditorRelay*   getRelay() { return m_editor_relay; }
     void            updateAssetList(QList<DrSettings*> changed_items, QList<long> property_keys);
 
@@ -68,23 +68,24 @@ class AssetMouseHandler : public QObject
 {
 private:
     IEditorRelay      *m_editor_relay;                    // Pointer to IEditorRelay class of parent form
+    QTime              m_scroll_timer;
+    bool               m_flag_scrolling;
+    int                m_position;
+    int                m_pause_time;
 
 public:
     explicit        AssetMouseHandler(QObject *parent, IEditorRelay *editor_relay);
 
-protected:
+    // Event Overrides
     bool            eventFilter(QObject* obj, QEvent* event) override;
+
+    // Functions
+    void            handleScroll(QLabel *label, QString asset_name);
 };
 
 
 
 #endif // EDITOR_TREE_ASSETS_H
-
-
-
-
-
-
 
 
 

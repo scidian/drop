@@ -8,10 +8,14 @@
 
 #include <cmath>
 
+#include <QGridLayout>
+#include <QMessageBox>
+#include <QSpacerItem>
 #include <QTime>
 
 #include "colors.h"
 #include "library.h"
+#include "widgets.h"
 
 namespace Dr {
 
@@ -121,6 +125,7 @@ void ShowErrorMessage(QString function_name, QString error_message)
 void ShowMessageBox(QString new_message, QPixmap pixmap)
 {
     QMessageBox *msg_box = new QMessageBox(nullptr);
+
     msg_box->setText(new_message);
     msg_box->setIconPixmap(pixmap);
     msg_box->exec();

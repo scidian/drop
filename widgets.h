@@ -8,6 +8,7 @@
 #ifndef WIDGETS_H
 #define WIDGETS_H
 
+#include <QMessageBox>
 #include <QPushButton>
 #include <QTreeWidget>
 

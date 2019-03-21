@@ -11,6 +11,7 @@
 #include "enums.h"
 #include "enums_form_main.h"
 
+class DrProject;
 class FormMain;
 class IEditorRelay;
 
@@ -36,6 +37,7 @@ namespace Dr {
 
     void        SetActiveEditorRelay(IEditorRelay *new_editor_relay);
     void        SetActiveFormMain(FormMain *new_form_main);
+
     void        SetLabelText(Label_Names label, QString text);
 
 }   // namespace Dr

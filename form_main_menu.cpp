@@ -8,6 +8,7 @@
 #include <QApplication>
 #include <QActionGroup>
 #include <QMenuBar>
+#include <QMessageBox>
 
 #include "colors.h"
 #include "debug.h"

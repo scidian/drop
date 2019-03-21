@@ -13,6 +13,7 @@
 #include "enums_form_main.h"
 
 class DrObject;
+class DrProject;
 class DrSettings;
 
 
@@ -34,6 +35,7 @@ public:
     virtual void        updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Properties> property_keys) = 0;
     virtual void        updateItemSelection(Editor_Widgets selected_from) = 0;
 
+    virtual DrProject*  currentProject() = 0;
     virtual void        centerViewOnPoint(QPointF center_point) = 0;
     virtual double      currentViewGridAngle() = 0;
     virtual QPointF     currentViewGridScale() = 0;
