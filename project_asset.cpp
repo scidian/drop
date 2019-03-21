@@ -8,6 +8,7 @@
 #include "library.h"
 #include "project.h"
 #include "project_asset.h"
+#include "project_font.h"
 #include "project_image.h"
 #include "project_world.h"
 #include "project_world_stage.h"
@@ -20,19 +21,29 @@
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_asset_type, long image_key)
+DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_asset_type, long source_key)
 {
     m_parent_project = parent_project;
     setKey(new_asset_key);
 
     m_asset_type = new_asset_type;
+    m_source_key = source_key;
 
     m_list_order = new_asset_key;
     m_group_number = 0;
 
-    QPixmap my_starting_pixmap = m_parent_project->getDrImage(image_key)->getPixmapFromImage();
-
-    initializeAssetSettings(m_parent_project->getDrImage(image_key)->getSimplifiedName(), my_starting_pixmap );
+    QPixmap my_starting_pixmap;
+    switch (new_asset_type) {
+    case DrAssetType::Object:
+    case DrAssetType::Character:
+        my_starting_pixmap = m_parent_project->getDrImage(source_key)->getPixmapFromImage();
+        initializeAssetSettingsObject(m_parent_project->getDrImage(source_key)->getSimplifiedName(), my_starting_pixmap );
+        break;
+    case DrAssetType::Text:
+        my_starting_pixmap = m_parent_project->getDrFont(source_key)->getFontPixmap();
+        initializeAssetSettingsFont(m_parent_project->getDrFont(source_key)->getName());
+        break;
+    }
 
     m_width =  my_starting_pixmap.width();
     m_height = my_starting_pixmap.height();
@@ -46,7 +57,7 @@ DrAsset::~DrAsset() {}
 //##    Property loading - initializeAssetSettings
 //####################################################################################
 
-void DrAsset::initializeAssetSettings(QString new_name, QPixmap pixmap)
+void DrAsset::initializeAssetSettingsObject(QString new_name, QPixmap pixmap)
 {
     addComponent(Components::Asset_Settings, "Settings", "Basic settings for current asset.", Component_Colors::White_Snow, true);
     getComponent(Components::Asset_Settings)->setIcon(Component_Icons::Settings);
@@ -65,6 +76,16 @@ void DrAsset::initializeAssetSettings(QString new_name, QPixmap pixmap)
 
 }
 
+
+void DrAsset::initializeAssetSettingsFont(QString new_name)
+{
+    addComponent(Components::Asset_Settings, "Settings", "Basic settings for current asset.", Component_Colors::White_Snow, true);
+    getComponent(Components::Asset_Settings)->setIcon(Component_Icons::Settings);
+
+    addPropertyToComponent(Components::Asset_Settings, Properties::Asset_Name, Property_Type::String, new_name,
+                           "Asset Name", "Name of the current asset.");
+
+}
 
 
 

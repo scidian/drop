@@ -17,6 +17,7 @@ class DrProject;
 class DrProperty;
 class DrSettings;
 
+class CategoryButton;
 class IEditorRelay;
 class WidgetHoverHandler;
 
@@ -48,9 +49,14 @@ public:
     // Constructor
     explicit        TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
 
-    // Function Calls
+    // Tree Building Functions
+    void            addAssetsToCategory(QTreeWidgetItem *tree_item, QFrame *asset_frame);
     void            buildAssetTree(QString search_text = "");
+    CategoryButton* initializeCatergoryButton(QTreeWidgetItem *tree_item, QString name);
+
+    // Function Calls
     IEditorRelay*   getRelay() { return m_editor_relay; }
+    void            forceUpdateOfItemSizes() { this->scheduleDelayedItemsLayout(); }
     void            updateAssetList(QList<DrSettings*> changed_items, QList<long> property_keys);
 
 private slots:
@@ -82,6 +88,8 @@ public:
     // Functions
     void            handleScroll(QLabel *label, QString asset_name);
 };
+
+
 
 
 

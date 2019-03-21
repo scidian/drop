@@ -23,6 +23,7 @@ private:
     DrProject       *m_parent_project;                  // holds reference to parent Project class that handles key generation for project
 
     DrAssetType      m_asset_type;                      // holds asset type (object, character, etc)
+    long             m_source_key;                      // holds key to source image / font
 
     long             m_width;
     long             m_height;
@@ -32,7 +33,7 @@ private:
 
 public:
     // Constructor & destructor
-    explicit DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_asset_type, long image_key);
+    explicit DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_asset_type, long source_key);
     virtual ~DrAsset() override;
 
 
@@ -41,12 +42,13 @@ public:
     DrAssetType     getAssetType()      { return m_asset_type; }
 
     DrProject*      getParentProject()  { return m_parent_project; }
-    long            getWidth()             { return m_width; }
-    long            getHeight()            { return m_height; }
-
+    long            getWidth()          { return m_width; }
+    long            getHeight()         { return m_height; }
+    long            getSourceKey()      { return m_source_key; }
 
     // External calls
-    void        initializeAssetSettings(QString new_name, QPixmap pixmap);
+    void        initializeAssetSettingsObject(QString new_name, QPixmap pixmap);
+    void        initializeAssetSettingsFont(QString new_name);
 
 };
 

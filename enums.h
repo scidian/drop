@@ -27,6 +27,7 @@ constexpr int    c_no_key = -1;             // Value that represents no item sel
 //####################################################################################
 enum class DrType {
     Asset,
+    Font,
     Image,
     World,
         Stage,
@@ -49,6 +50,7 @@ enum class DrType {
 enum class DrAssetType {
     Character,
     Object,
+    Text,
 };
 
 enum class DrObjectType {
@@ -59,6 +61,7 @@ enum class DrObjectType {
     Light,
     Logic,
     Particle,
+    Text,
 };
 
 

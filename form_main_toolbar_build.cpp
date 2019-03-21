@@ -10,7 +10,9 @@
 #include <QToolButton>
 
 #include "enums_form_main.h"
+#include "form_font_editor.h"
 #include "form_main.h"
+#include "form_settings.h"
 #include "globals.h"
 #include "library.h"
 #include "widgets_event_filters.h"
@@ -39,7 +41,7 @@ void FormMain::buildToolBar()
     widgetToolbarLayout->setSpacing(3);
     widgetToolbarLayout->setContentsMargins(12, 0, 12, 0);
 
-    // ***** Holds which mode we are in: World Editor, World Map, UI Editor
+    // ***** Selectable Button group that keeps track of which mode we are in: World Editor, World Map, UI Editor
     widgetGroupMode = new QWidget();
     widgetGroupMode->setObjectName(QStringLiteral("widgetGroupMode"));
     widgetGroupMode->setFixedHeight(46);
@@ -84,22 +86,22 @@ void FormMain::buildToolBar()
 
         tool = createToolbarButton(QStringLiteral("buttonSendToBack"), 34, 26, false);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_To_Back));
-        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Mode_Map);
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Not_Set);
         toolbarLayoutLayering->addWidget(tool);
 
         tool = createToolbarButton(QStringLiteral("buttonSendBackward"), 34, 26, false);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_Backward));
-        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Mode_Editor);
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Not_Set);
         toolbarLayoutLayering->addWidget(tool);
 
         tool = createToolbarButton(QStringLiteral("buttonSendForward"), 34, 26, false);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_Forward));
-        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Mode_UI);
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Not_Set);
         toolbarLayoutLayering->addWidget(tool);
 
         tool = createToolbarButton(QStringLiteral("buttonSendToFront"), 34, 26, false);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_To_Front));
-        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Mode_UI);
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Not_Set);
         toolbarLayoutLayering->addWidget(tool);
 
     // ***** Mode "Editor" Add-On, Layering: Holds buttons that send objects to front / back
@@ -108,17 +110,44 @@ void FormMain::buildToolBar()
     widgetGroupReset->setObjectName(QStringLiteral("widgetGroupReset"));
     widgetGroupReset->setFixedHeight(46);
         QHBoxLayout *toolbarLayoutReset = new QHBoxLayout(widgetGroupReset);
-        toolbarLayoutReset->setSpacing(1);
+        toolbarLayoutReset->setSpacing(5);
         toolbarLayoutReset->setContentsMargins(0, 0, 0, 0);
 
         buttonsGroupReset = new QButtonGroup();
-        buttonsGroupReset->setExclusive(true);
+        buttonsGroupReset->setExclusive(false);
         connect(buttonsGroupReset, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupResetClicked(int)));
 
         tool = createToolbarButton(QStringLiteral("buttonResetObject"), 34, 26, false);
         buttonsGroupReset->addButton(tool, int(Buttons_Reset::Reset_Object));
-        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Mode_Map);
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Not_Set);
         toolbarLayoutReset->addWidget(tool);
+
+
+    // ***** Settings Buttons
+    widgetGroupSettings = new QWidget(widgetToolbar);
+    widgetGroupSettings->hide();
+    widgetGroupSettings->setObjectName(QStringLiteral("widgetGroupSettings"));
+    widgetGroupSettings->setFixedHeight(46);
+        QHBoxLayout *toolbarLayoutSettings = new QHBoxLayout(widgetGroupSettings);
+        toolbarLayoutSettings->setSpacing(5);
+        toolbarLayoutSettings->setContentsMargins(0, 0, 0, 0);
+
+        tool = createToolbarButton(QStringLiteral("buttonFontEditor"), 34, 26, false);
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Settings_Font_Editor);
+        toolbarLayoutSettings->addWidget(tool);
+        connect(tool, &QPushButton::clicked, [this] () {
+            FormFontEditor *font_editor = new FormFontEditor(project);
+            font_editor->show();
+        });
+
+        tool = createToolbarButton(QStringLiteral("buttonSettingsEditor"), 34, 26, false);
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Settings_Editor);
+        toolbarLayoutSettings->addWidget(tool);
+        connect(tool, &QPushButton::clicked, [this] () {
+            FormSettings *settings_editor = new FormSettings(project);
+            settings_editor->show();
+        });
+
 
 
     // ********** Set up initial toolbar

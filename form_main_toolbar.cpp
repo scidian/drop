@@ -28,18 +28,18 @@ DrToolBar::~DrToolBar() { }
 //####################################################################################
 // Save the press position (this is relative to the current widget)
 void DrToolBar::mousePressEvent(QMouseEvent* event) {
-    pressPos= event->pos();
-    isMoving= true;
+    press_pos = event->pos();
+    is_moving = true;
 }
 
 // Calculate difference between the press position and the new Mouse position, relative to the current widget
 void DrToolBar::mouseMoveEvent(QMouseEvent* event) {
-    if (isMoving) {
-        QPoint diff = event->pos() - pressPos;
+    if (is_moving) {
+        QPoint diff = event->pos() - press_pos;
         window()->move( window()->pos() + diff );
     }
 }
-void DrToolBar::mouseReleaseEvent(QMouseEvent*) { isMoving = false; }
+void DrToolBar::mouseReleaseEvent(QMouseEvent*) { is_moving = false; }
 
 
 //####################################################################################
@@ -123,6 +123,7 @@ void FormMain::setToolbar(Form_Main_Mode new_mode)
     case Form_Main_Mode::World_Editor:
         addToolbarGroup( widgetGroupLayering, false);
         addToolbarGroup( widgetGroupReset, true );
+        addToolbarGroup( widgetGroupSettings, false );
 
 //        for (auto button : buttonsGroupLayering->buttons() ) {
 //            button->setEnabled(false);
@@ -131,6 +132,7 @@ void FormMain::setToolbar(Form_Main_Mode new_mode)
         break;
 
     case Form_Main_Mode::Clear:
+        addToolbarGroup( widgetGroupSettings, false );
         break;
 
     default:    ;

@@ -51,7 +51,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
 
 
 
-    // !!!!! #TEMP: Add images / assets
+    // !!!!! #TEMP: Add stored project files
     long image_1  = project->addImage(":/assets/test_square.png");
     long image_2  = project->addImage(":/assets/ground_fill.png");
     long image_3  = project->addImage(":/assets/ground_top.png");
@@ -65,6 +65,14 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     long image_11 = project->addImage(":/assets/cake_ice_cube.png");
     long image_12 = project->addImage(":/assets/planetwithareallylongname.png");
 
+    long font_1 =   project->addFont("Test Font",   QPixmap(":/assets/test_font.png"));
+    long font_2 =   project->addFont("Test Font 2", QPixmap(":/assets/test_font_2.png"));
+    long font_3 =   project->addFont("Test Font 3", QPixmap(":/assets/test_font_3.png"));
+    // !!!!! END
+
+
+
+    // !!!!! #TEMP: Add assets
     long asset_1  = project->addAsset(DrAssetType::Object, image_1 );           // "Dr Square"
     long asset_2  = project->addAsset(DrAssetType::Object, image_2 );           // "Ground Fill"
     long asset_3  = project->addAsset(DrAssetType::Object, image_3 );           // "Ground Top"
@@ -77,6 +85,10 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     long asset_10 = project->addAsset(DrAssetType::Object, image_10 );          // "Cake Chocolate"
     long asset_11 = project->addAsset(DrAssetType::Object, image_11 );          // "Cake Ice Cube"
     long asset_12 = project->addAsset(DrAssetType::Object, image_12 );          // "PlanetWithAReallyLongName"
+
+    project->addAsset(DrAssetType::Text, font_1);       // "Test Font"
+    project->addAsset(DrAssetType::Text, font_2);       // "Test Font 2"
+    project->addAsset(DrAssetType::Text, font_3);       // "Test Font 3"
     // !!!!! END
 
 
@@ -98,6 +110,10 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_4,  407, -600, 11);
     project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_5,  600, -600, 30);
     project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_12, 200, -1000, 5);
+
+
+    //project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Text,   asset_13, 500, -900, 6);
+
 
     project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_5, 300, -700, -2);
     project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_6, 200, -600,  4);

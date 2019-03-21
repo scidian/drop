@@ -20,6 +20,7 @@
 #include "library.h"
 #include "project.h"
 #include "project_asset.h"
+#include "project_font.h"
 #include "project_world.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
@@ -94,41 +95,27 @@ void TreeAssets::buildAssetTree(QString search_text)
     m_asset_frames.clear();
 
 
-    // ***** Create new item in list to hold component and add the TreeWidgetItem to the tree
-    QTreeWidgetItem *category_item = new QTreeWidgetItem();
-    this->addTopLevelItem(category_item);
+    // ***** Create new items in list to hold asset categories
+    QTreeWidgetItem *objects_item = new QTreeWidgetItem();
+    QTreeWidgetItem *text_item =    new QTreeWidgetItem();
+    this->addTopLevelItem(objects_item);
+    this->addTopLevelItem(text_item);
+    CategoryButton *objects_button = initializeCatergoryButton(objects_item, "  Objects");
+    CategoryButton *text_button =    initializeCatergoryButton(text_item, "  Text");
 
-    // Create and style a button to be used as a header item for the category
-    CategoryButton *category_button = new CategoryButton("  Objects", QColor(204, 204, 204), nullptr, category_item);
-    QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: #CCCCCC; "
-                                                " border: " + Dr::BorderWidth() + " solid; border-radius: 1px; "
-                                                " border-color: #555555; "
-                                                " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 " +
-                                                    Dr::GetColor(Window_Colors::Button_Light).name() + ", stop:1 " +
-                                                    Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
-                                  " QPushButton:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } "
-                                  " QPushButton:pressed { color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } ");
-
-    /// !!!!! TODO: Set Icon call, need to implement
-    ///category_button->setIcon(QIcon(component_map.second->getIcon()));
-    category_button->setStyleSheet(buttonColor);
-    category_button->setEnabled(false);
-    m_widget_hover->attachToHoverHandler(category_button, "Object Assets", "Objects for use in Stage");
-    this->setItemWidget(category_item, 0, category_button);                             // Apply the button to the tree item
-
-
-    // ***** Creates a frame to hold all properties of component, with vertical layout
-    QFrame *assets_frame = new QFrame();
-    assets_frame->setObjectName("assetsContainer");
-    FlowLayout *grid_layout = new FlowLayout(assets_frame, 8, 0, 4, 0, 0, 0);
+    // ***** Creates a frame sto hold all assets of each type
+    QFrame      *assets_frame_objects = new QFrame();
+    QFrame      *assets_frame_text =    new QFrame();
+    FlowLayout  *grid_layout_objects =  new FlowLayout(assets_frame_objects, 8, 0, 4, 0, 0, 0);
+    FlowLayout  *grid_layout_text =     new FlowLayout(assets_frame_text, 8, 0, 4, 0, 0, 0);
+    assets_frame_objects->setObjectName("assetsContainer");
+    assets_frame_text->setObjectName(   "assetsContainer");
 
 
     // ********** Loop through each object asset and add it to the component frame
     for (auto asset_pair: list_assets) {
-        if (asset_pair.second->getAssetType() != DrAssetType::Object) continue;
-
         QString asset_name = asset_pair.second->getAssetName();
-        if (!asset_name.contains(search_text)) continue;
+        if (!asset_name.toLower().contains(search_text.toLower())) continue;
 
         // ***** Store current asset key in widget and install a mouse handler event filter on the item, AssetMouseHandler
         QFrame *single_asset = new QFrame();
@@ -157,7 +144,19 @@ void TreeAssets::buildAssetTree(QString search_text)
         vertical_split->setSpacing(0);
         vertical_split->setMargin(0);
         vertical_split->setContentsMargins(0, 14, 0, 0);
-            QPixmap pix = asset_pair.second->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
+            QPixmap pix;
+            switch (asset_pair.second->getAssetType()) {
+            case DrAssetType::Character:
+
+            case DrAssetType::Object:
+                pix = asset_pair.second->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
+                break;
+            case DrAssetType::Text:
+                ///pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->getFontPixmap();
+                pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->createText( "Julie" ); //asset_name );
+                break;
+            }
+
             QLabel *asset_pix = new QLabel(single_asset);
             asset_pix->setObjectName(QStringLiteral("assetPixmap"));
             asset_pix->setFont(font);
@@ -171,22 +170,64 @@ void TreeAssets::buildAssetTree(QString search_text)
 
 
 
+        switch (asset_pair.second->getAssetType()) {
+        case DrAssetType::Character:
 
-        grid_layout->addWidget(single_asset);
+        case DrAssetType::Object:
+            grid_layout_objects->addWidget(single_asset);
+            objects_button->setEnabled(true);
+            break;
+        case DrAssetType::Text:
+            grid_layout_text->addWidget(single_asset);
+            text_button->setEnabled(true);
+            break;
+        }
 
-        category_button->setEnabled(true);
         rowCount++;
     }
 
-    // ***** Create a child TreeWidgetItem attached to the TopLevel category item
-    QTreeWidgetItem *property_item = new QTreeWidgetItem();
-    property_item->setDisabled(true);
-    category_item->addChild(property_item);
-    this->setItemWidget(property_item, 0, assets_frame);
 
+    // ***** Create a child TreeWidgetItem attached to the TopLevel category item
+    addAssetsToCategory(objects_item, assets_frame_objects);
+    addAssetsToCategory(text_item,    assets_frame_text);
 
     this->expandAll();
 }
+
+
+// Create a child TreeWidgetItem attached to the TopLevel category item
+void TreeAssets::addAssetsToCategory(QTreeWidgetItem *tree_item, QFrame *asset_frame)
+{
+    QTreeWidgetItem *asset_collection = new QTreeWidgetItem();
+    asset_collection->setDisabled(true);
+    tree_item->addChild(asset_collection);
+    this->setItemWidget(asset_collection, 0, asset_frame);
+}
+
+// Create and style a buttons to be used as a header items for the categories
+CategoryButton* TreeAssets::initializeCatergoryButton(QTreeWidgetItem *tree_item, QString name)
+{
+    // ***** Styling used for Asset Category Headers
+    QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: #CCCCCC; "
+                                                " border: " + Dr::BorderWidth() + " solid; border-radius: 1px; "
+                                                " border-color: #555555; "
+                                                " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 " +
+                                                    Dr::GetColor(Window_Colors::Button_Light).name() + ", stop:1 " +
+                                                    Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
+                                  " QPushButton:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } "
+                                  " QPushButton:pressed { color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } ");
+
+    CategoryButton *button = new CategoryButton(name, QColor(204, 204, 204), nullptr, tree_item);
+
+    ///// !!!!! TODO: Set Icon call, need to implement
+    ///button->setIcon(QIcon(component_map.second->getIcon()));
+    button->setStyleSheet(buttonColor);
+    button->setEnabled(false);
+    m_widget_hover->attachToHoverHandler(button, "Object Assets", "Objects for use in Stage");
+    this->setItemWidget(tree_item, 0, button);                             // Apply the button to the tree item
+    return button;
+}
+
 
 
 

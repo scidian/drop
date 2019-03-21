@@ -78,7 +78,10 @@ SOURCES += \
     form_main_toolbar_build.cpp \
     widgets.cpp \
     widgets_event_filters.cpp \
-    widgets_layout.cpp
+    widgets_layout.cpp \
+    project_font.cpp \
+    form_font_editor.cpp \
+    form_settings.cpp
 
 HEADERS += \
     enums.h \
@@ -110,7 +113,10 @@ HEADERS += \
     enums_form_main.h \
     widgets.h \
     widgets_event_filters.h \
-    widgets_layout.h
+    widgets_layout.h \
+    project_font.h \
+    form_font_editor.h \
+    form_settings.h
 
 FORMS +=
 

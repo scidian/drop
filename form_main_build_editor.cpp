@@ -257,6 +257,8 @@ void FormMain::buildWidgetsEditor()
                 treeAssetEditor->setExpandsOnDoubleClick(false);
                 treeAssetEditor->setHeaderHidden(true);
                 treeAssetEditor->setFrameShape(QFrame::NoFrame);
+                treeAssetEditor->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+                treeAssetEditor->setUniformRowHeights(false);
 
             verticalLayoutAsset->insertWidget(0, treeAssetEditor);
 

@@ -27,6 +27,7 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
 
         // Shared Empty Widget
         " QWidget#widgetCentral { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
+        " QWidget#childForm     { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }"
 
         // Horizontal and vertical splitters
         " QSplitter { width: 5px; height: 5px; } "
@@ -114,7 +115,16 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         // Mostly debug labels
         " QLabel { color: " + Dr::GetColor(Window_Colors::Text).name() + "; padding: 0px; margin: 0px; border: 0px; } "
 
-
+        // Generic Push Buttons
+        " QPushButton#button { "
+        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
+        "       border-top: 1 solid; border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
+        "       border-radius: 4px; padding: 6px; }"
+        " QPushButton#button:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Midlight).name() + "; }"
+        " QPushButton#button:pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
 
         // Asset Item Frames
         " QFrame#assetFrame { border: " + Dr::BorderWidth() + " solid; " + StyleSheetRecessedBackgroundBorder(5, 95) +
@@ -205,6 +215,14 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         " QToolButton#buttonResetObject  {          border-radius: 4px; } "
         " QToolButton#buttonResetObject  {          image: url(:/toolbar_icons/toolbar_reset.png);  padding: 4px; } "
         " QToolButton#buttonResetObject:disabled {  image: url(:/toolbar_icons/toolbar_reset.png);  padding: 4px; } "
+
+        " QToolButton#buttonFontEditor  {           border-radius: 4px; } "
+        " QToolButton#buttonFontEditor  {           image: url(:/toolbar_icons/toolbar_fonts.png);  padding: 4px; } "
+        " QToolButton#buttonFontEditor:disabled {   image: url(:/toolbar_icons/toolbar_fonts.png);  padding: 4px; } "
+
+        " QToolButton#buttonSettingsEditor  {         border-radius: 4px; } "
+        " QToolButton#buttonSettingsEditor  {         image: url(:/toolbar_icons/toolbar_settings.png);  padding: 4px; } "
+        " QToolButton#buttonSettingsEditor:disabled { image: url(:/toolbar_icons/toolbar_settings.png);  padding: 4px; } "
 
 
         //###############################################################################

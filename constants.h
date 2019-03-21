@@ -75,6 +75,10 @@ namespace Advisor_Info
                                                                       "you can design each Stage and lay out your levels." };
     const HeaderBodyList Mode_UI                { "UI Editor Mode", "This mode will allow you to edit the user interfaces of your project. " };
 
+    const HeaderBodyList Settings_Font_Editor   { "Font Editor", "Create and edit fonts usued for Text objects." };
+    const HeaderBodyList Settings_Editor        { "Settings Editor", "View and edit project settings." };
+
+
     // Form Main Widgets
     const HeaderBodyList Advisor_Window         { "Advisor Window", "Shows a brief description of editor objects." };
     const HeaderBodyList Object_Inspector       { "Object Inspector", "Displays editable properties of currently selected item." };

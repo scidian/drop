@@ -84,6 +84,7 @@ private:
     QWidget        *widgetGroupMode;        QButtonGroup   *buttonsGroupMode;
     QWidget        *widgetGroupLayering;    QButtonGroup   *buttonsGroupLayering;
     QWidget        *widgetGroupReset;       QButtonGroup   *buttonsGroupReset;
+    QWidget        *widgetGroupSettings;
 
 
     // ***** Shared FormMain Widgets
@@ -214,8 +215,8 @@ public:
 class DrToolBar : public QToolBar
 {
 private:
-    QPoint  pressPos;
-    bool    isMoving = false;                       // Flag makes sure that the drag and drop event originated from within the titlebar
+    QPoint  press_pos;
+    bool    is_moving = false;                       // Flag makes sure that the drag and drop event originated from within the titlebar
 
 public:
     DrToolBar(QWidget *parent);

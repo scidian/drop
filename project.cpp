@@ -11,6 +11,7 @@
 
 #include "project.h"
 #include "project_asset.h"
+#include "project_font.h"
 #include "project_image.h"
 #include "project_world.h"
 #include "project_world_stage.h"
@@ -42,6 +43,13 @@ long DrProject::addAsset(DrAssetType new_asset_type, long image_key)
     long new_asset_key = getNextKey();
     m_assets[new_asset_key] = new DrAsset(this, new_asset_key, new_asset_type, image_key);
     return new_asset_key;
+}
+
+long DrProject::addFont(QString font_name, QPixmap font_pixmap)
+{
+    long new_font_key = getNextKey();
+    m_fonts[new_font_key] = new DrFont(this, new_font_key, font_name, font_pixmap);
+    return new_font_key;
 }
 
 long DrProject::addImage(QString image_path)

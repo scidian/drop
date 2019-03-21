@@ -55,13 +55,14 @@ void ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius)
     QPixmap pixmap(width, height);
     pixmap.fill();
     QPainter paint(&pixmap);
+    paint.setRenderHint(QPainter::Antialiasing, true);
     paint.setPen( QPen(Qt::NoPen) );
     paint.setBrush( QBrush( Qt::green ));
     paint.fillRect(QRectF( 0, 0, rect.width(), rect.height()), Qt::green);
     paint.setBrush( QBrush( QColor(255, 0, 0), Qt::BrushStyle::SolidPattern ));
 
     // Draw the rounded rect, this will be the part we keep
-    paint.drawRoundRect(0, 0, width, height, x_radius, y_radius);
+    paint.drawRoundedRect(0, 0, width, height, x_radius, y_radius);
     widget->setMask(pixmap.createMaskFromColor(Qt::green));
 }
 

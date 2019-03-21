@@ -31,7 +31,7 @@ class DrWorld;
 class DrStage;
 class DrObject;
 typedef std::map<long, DrWorld*> WorldMap;
-typedef std::map<char, DrFont*>  FontMap;
+typedef std::map<long, DrFont*>  FontMap;
 typedef std::map<long, DrAsset*> AssetMap;
 typedef std::map<long, DrImage*> ImageMap;
 typedef std::map<Project_Options, QVariant>  OptionMap;
@@ -48,10 +48,10 @@ private:
     long        m_key_generator;                        // variable to hand out unique id key's to all children objects
 
     WorldMap    m_worlds;                               // Holds worlds for the project
-    FontMap     m_fonts;
     AssetMap    m_assets;                               // Holds assets for the project
-    ImageMap    m_images;                               // Holds images for the project
 
+    FontMap     m_fonts;
+    ImageMap    m_images;                               // Holds images for the project
     OptionMap   m_options;                              // Map holding DrProject Wide options
 
 public:
@@ -73,6 +73,7 @@ public:
     AssetMap    getAssets()             { return m_assets; }
     long        getNumberOfAssets()     { return static_cast<long>(m_assets.size()); }
 
+    DrFont*     getDrFont(long key)     { return m_fonts[key]; }
     DrImage*    getDrImage(long key)    { return m_images[key]; }
 
     // Options calls
@@ -90,6 +91,7 @@ public:
     // Children creation calls
     void            addWorld();
     long            addAsset(DrAssetType new_asset_type, long image_key);
+    long            addFont( QString font_name, QPixmap font_pixmap);
     long            addImage(QString image_path);
 
 };

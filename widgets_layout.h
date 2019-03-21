@@ -16,12 +16,13 @@
 class FlowLayout : public QLayout
 {
 private:
-    int doLayout(const QRect &rect, bool testOnly) const;
-    int smartSpacing(QStyle::PixelMetric pm) const;
+    int     doLayout(const QRect &rect, bool testOnly) const;
+    int     smartSpacing(QStyle::PixelMetric pm) const;
 
-    QList<QLayoutItem *> itemList;                          // Holds a list of items inserted into the layout, so we can delete them in the destuctor
-    int m_hSpace;
-    int m_vSpace;
+    QList<QLayoutItem*>  item_list;                          // Holds a list of items inserted into the layout, so we can delete them in the destuctor
+    int                  m_hSpace;
+    int                  m_vSpace;
+    QSize                m_last_size;
 
 
 public:
@@ -47,6 +48,8 @@ public:
     // Function Calls
     int     horizontalSpacing() const;
     int     verticalSpacing() const;
+    QSize   lastSize() { return m_last_size; }
+
 };
 
 

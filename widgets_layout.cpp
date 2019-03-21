@@ -7,6 +7,9 @@
 //
 #include <QWidget>
 
+#include "editor_tree_assets.h"
+#include "globals.h"
+#include "library.h"
 #include "widgets_layout.h"
 
 
@@ -16,6 +19,7 @@
 FlowLayout::FlowLayout(QWidget *parent, int margin_left, int margin_right, int margin_top, int margin_bottom, int hSpacing, int vSpacing)
     : QLayout(parent), m_hSpace(hSpacing), m_vSpace(vSpacing)
 {
+    this->setObjectName("flowLayout");
     setContentsMargins(margin_left, margin_top, margin_right, margin_bottom);
 }
 FlowLayout::FlowLayout(int margin_left, int margin_right, int margin_top, int margin_bottom, int hSpacing, int vSpacing)
@@ -34,7 +38,7 @@ FlowLayout::~FlowLayout() {
 //##    Overrides for some basic QLayout values
 //####################################################################################
 void FlowLayout::addItem(QLayoutItem *item) {
-    itemList.append(item);
+    item_list.append(item);
 }
 
 int FlowLayout::horizontalSpacing() const {
@@ -48,17 +52,17 @@ int FlowLayout::verticalSpacing() const {
 }
 
 
-QLayoutItem *FlowLayout::itemAt(int index) const            { return itemList.value(index); }
+QLayoutItem *FlowLayout::itemAt(int index) const            { return item_list.value(index); }
 
 QLayoutItem *FlowLayout::takeAt(int index) {
-    if (index >= 0 && index < itemList.size())
-        return itemList.takeAt(index);
+    if (index >= 0 && index < item_list.size())
+        return item_list.takeAt(index);
     else
         return nullptr;
 }
 
 Qt::Orientations FlowLayout::expandingDirections() const    { return nullptr; }
-int FlowLayout::count() const                               { return itemList.size(); }
+int FlowLayout::count() const                               { return item_list.size(); }
 QSize FlowLayout::sizeHint() const                          { return minimumSize(); }
 bool FlowLayout::hasHeightForWidth() const                  { return true; }
 int FlowLayout::heightForWidth(int width) const
@@ -69,7 +73,7 @@ int FlowLayout::heightForWidth(int width) const
 
 QSize FlowLayout::minimumSize() const {
     QSize size;
-    for (auto item : itemList)
+    for (auto item : item_list)
         size = size.expandedTo(item->minimumSize());
     size += QSize(2 * margin(), 2 * margin());
     return size;
@@ -81,42 +85,48 @@ QSize FlowLayout::minimumSize() const {
 //####################################################################################
 void FlowLayout::setGeometry(const QRect &rect) {
     QLayout::setGeometry(rect);
-    doLayout(rect, false);
+    m_last_size.setWidth(  rect.width() );
+    m_last_size.setHeight( doLayout(rect, false) );
+
+    // Forces an update of parent tree after resize of layout
+    if (parentWidget()->objectName() == "assetsContainer") {
+        parentWidget()->setFixedHeight( m_last_size.height() );
+        TreeAssets *tree = dynamic_cast<TreeAssets*>(parentWidget()->parentWidget()->parentWidget());
+        if (tree) tree->forceUpdateOfItemSizes();
+    }
 }
 
-int FlowLayout::doLayout(const QRect &rect, bool testOnly) const
+int FlowLayout::doLayout(const QRect &rect, bool test_only) const
 {
     int left, top, right, bottom;
     getContentsMargins(&left, &top, &right, &bottom);
-    QRect effectiveRect = rect.adjusted(+left, +top, -right, -bottom);
-    int x = effectiveRect.x();
-    int y = effectiveRect.y();
-    int lineHeight = 0;
+    QRect effective_rect = rect.adjusted(+left, +top, -right, -bottom);
+    int x = effective_rect.x();
+    int y = effective_rect.y();
+    int line_height = 0;
 
-    for (auto item : itemList) {
-        QWidget *widget = item->widget();
-        int spaceX = horizontalSpacing();
-        if (spaceX == -1)
-            spaceX = widget->style()->layoutSpacing(QSizePolicy::Frame, QSizePolicy::Frame, Qt::Horizontal);
-        int spaceY = verticalSpacing();
-        if (spaceY == -1)
-            spaceY = widget->style()->layoutSpacing(QSizePolicy::Frame, QSizePolicy::Frame, Qt::Vertical);
+    for (auto item : item_list) {
+        int space_x = horizontalSpacing();
+        int space_y = verticalSpacing();
+        if (space_x == -1)  space_x = item->widget()->style()->layoutSpacing(QSizePolicy::Frame, QSizePolicy::Frame, Qt::Horizontal);
+        if (space_y == -1)  space_y = item->widget()->style()->layoutSpacing(QSizePolicy::Frame, QSizePolicy::Frame, Qt::Vertical);
 
-        int nextX = x + item->sizeHint().width() + spaceX;
-        if (nextX - spaceX > effectiveRect.right() && lineHeight > 0) {
-            x = effectiveRect.x();
-            y = y + lineHeight + spaceY;
-            nextX = x + item->sizeHint().width() + spaceX;
-            lineHeight = 0;
+        int next_x = x + item->sizeHint().width() + space_x;
+        if (next_x - space_x > effective_rect.right() && line_height > 0) {
+            x = effective_rect.x();
+            y = y + line_height + space_y;
+            next_x = x + item->sizeHint().width() + space_x;
+            line_height = 0;
         }
 
-        if (!testOnly)
-            item->setGeometry(QRect(QPoint(x, y), item->sizeHint()));
+        if (!test_only)     item->setGeometry(QRect(QPoint(x, y), item->sizeHint()));
 
-        x = nextX;
-        lineHeight = qMax(lineHeight, item->sizeHint().height());
+        x = next_x;
+        line_height = qMax(line_height, item->sizeHint().height());
     }
-    return y + lineHeight - rect.y() + bottom;
+
+    int new_height = y + line_height - rect.y() + bottom;
+    return new_height;
 }
 
 int FlowLayout::smartSpacing(QStyle::PixelMetric pm) const

@@ -55,15 +55,15 @@ void DrViewToolTip::startToolTip(View_Mode type, QPoint mouse_position, QVariant
     case View_Mode::Resizing:
     case View_Mode::Translating:
         setFixedSize(66, 32);   m_offset = QPoint(30, -63);
-        m_x_radius = 23;
-        m_y_radius = 50;
+        m_x_radius = 8;
+        m_y_radius = 8;
         break;
     case View_Mode::Rotating:
     case View_Mode::Zooming:
     default:
         setFixedSize(60, 18);   m_offset = QPoint(30, -45);
-        m_x_radius = 20;
-        m_y_radius = 75;
+        m_x_radius = 8;
+        m_y_radius = 8;
         break;
     }
 
