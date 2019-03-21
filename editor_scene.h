@@ -74,7 +74,7 @@ private:
 
 public:
     // Mutexes
-    QMutex       scene_mutex { QMutex::NonRecursive };         // Used to stop from changing scene items more than once at a time
+    QMutex       scene_mutex { QMutex::NonRecursive };      // Used to stop from changing scene items more than once at a time
 
 
 public:

@@ -7,7 +7,6 @@
 //
 #ifndef EDITOR_TREE_ADVISOR_H
 #define EDITOR_TREE_ADVISOR_H
-
 #include <QTreeWidget>
 
 class DrProject;
