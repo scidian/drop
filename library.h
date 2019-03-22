@@ -36,7 +36,7 @@ void    ApplyCustomStyleSheetFormatting(QWidget *widget);
 void    ApplyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color);
 void    ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type);
 void    ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius);
-QString CheckFontWidth(QFont font, QString text_to_check, int max_width = 80);
+QString CheckFontWidth(QFont font, QString text_to_check, int max_width = 80, bool use_dots = true);
 
 QString StyleSheetToolBarModeButton(QString button_name, QString icon_name, QString icon_faded_name);
 QString StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_percent, bool highlight = false);

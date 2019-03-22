@@ -119,7 +119,8 @@ int FlowLayout::doLayout(const QRect &rect, bool test_only) const
             line_height = 0;
         }
 
-        if (!test_only)     item->setGeometry(QRect(QPoint(x, y), item->sizeHint()));
+        if (!test_only)
+            item->setGeometry(QRect(QPoint(x, y), item->sizeHint()));
 
         x = next_x;
         line_height = qMax(line_height, item->sizeHint().height());

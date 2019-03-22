@@ -10,7 +10,7 @@
 #include "project_font.h"
 
 
-DrFont::DrFont(DrProject *parent_project, long key, QString font_name, QPixmap font_pixmap) :
+DrFont::DrFont(DrProject *parent_project, long key, QString font_name, QPixmap font_pixmap, bool use_test_rects) :
     m_parent_project(parent_project)
 {
     setKey(key);
@@ -18,7 +18,7 @@ DrFont::DrFont(DrProject *parent_project, long key, QString font_name, QPixmap f
     m_name =  font_name;
     m_pixmap = font_pixmap;
 
-    if (font_name.contains("Test Font"))
+    if (use_test_rects)
         setTestFontRects();
 }
 

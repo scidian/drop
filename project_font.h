@@ -46,7 +46,7 @@ private:
 
 
 public:
-    DrFont(DrProject *parent_project, long key, QString font_name, QPixmap font_pixmap);
+    DrFont(DrProject *parent_project, long key, QString font_name, QPixmap font_pixmap, bool use_test_rects = false);
 
     // Function Calls
     QPixmap         createText(QString text);

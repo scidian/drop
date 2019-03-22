@@ -79,6 +79,8 @@ private:
     int                m_position;
     int                m_pause_time;
     int                m_width;
+    QString            m_scroll_text;
+    int                m_scroll_length;
 
 public:
     explicit        AssetMouseHandler(QObject *parent, IEditorRelay *editor_relay);

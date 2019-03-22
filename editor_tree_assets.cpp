@@ -122,13 +122,13 @@ void TreeAssets::buildAssetTree(QString search_text)
         switch (asset_pair.second->getAssetType()) {
         case DrAssetType::Character:
         case DrAssetType::Object:
-            name_rect =  QRect(10, 0, 80, 25);
             frame_size = QSize(100, 66);
+            name_rect =  QRect(10, 0, 80, 25);
             pix_size =   QSize(70, 36);
             break;
         case DrAssetType::Text:
+            frame_size = QSize(200, 50);
             name_rect =  QRect(10, 0, 180, 25);
-            frame_size = QSize(200, 46);
             pix_size =   QSize(180, 20);
             break;
         }
@@ -140,6 +140,9 @@ void TreeAssets::buildAssetTree(QString search_text)
         single_asset->setProperty(User_Property::Width, QVariant::fromValue( name_rect.width() ));
         single_asset->installEventFilter(new AssetMouseHandler(single_asset, m_editor_relay));
         single_asset->setFixedSize(frame_size);
+
+
+
 
         // Store pointer to frame in a list for future reference
         m_asset_frames.append(single_asset);
@@ -170,7 +173,6 @@ void TreeAssets::buildAssetTree(QString search_text)
                 break;
             case DrAssetType::Text:
                 ///pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->getFontPixmap();
-                ///pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->createText( "Julie" );
                 pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->createText( asset_name );
                 break;
             }
@@ -330,6 +332,9 @@ bool AssetMouseHandler::eventFilter(QObject *obj, QEvent *event)
             m_scroll_timer.restart();
             m_pause_time = 1000;
             m_width = asset_frame->property(User_Property::Width).toInt();
+            m_scroll_text = asset_name + "    ";
+            m_scroll_length = m_scroll_text.length();
+            m_scroll_text += m_scroll_text;
             QTimer::singleShot( 500, this, [this, label, asset_name] { this->handleScroll(label, asset_name); } );
         }
 
@@ -353,17 +358,16 @@ void AssetMouseHandler::handleScroll(QLabel *label, QString asset_name)
 
     if (m_scroll_timer.elapsed() > m_pause_time ) {
 
-        QString new_text = asset_name.right( asset_name.length() - m_position );
-        QString shorten = Dr::CheckFontWidth( label->font(), new_text, m_width );
+        QString new_text = m_scroll_text.right( m_scroll_text.length() - m_position );
+        QString shorten = Dr::CheckFontWidth( label->font(), new_text, m_width, false );
 
         label->setText( shorten );
 
-        if (new_text != shorten) {
+        if (m_position <= m_scroll_length) {
             m_position++;
-            if (m_position == 1) m_pause_time = 1500; else m_pause_time = 150;
+            m_pause_time = 150;
         } else {
             m_position = 0;
-            m_pause_time = 2200;
         }
         m_scroll_timer.restart();
     }

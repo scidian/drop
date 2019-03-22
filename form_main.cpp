@@ -65,10 +65,9 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     long image_11 = project->addImage(":/assets/cake_ice_cube.png");
     long image_12 = project->addImage(":/assets/planetwithareallylongname.png");
 
-    long font_1 =   project->addFont("Test Font",   QPixmap(":/assets/test_font.png"));
-    long font_2 =   project->addFont("Test Font 2", QPixmap(":/assets/test_font_2.png"));
-    long font_3 =   project->addFont("Test Font 3", QPixmap(":/assets/test_font_3.png"));
-    // !!!!! END
+    long font_1 =   project->addFont("Distance Font", QPixmap(":/assets/test_font.png"),   true);
+    long font_2 =   project->addFont("Coin Count",    QPixmap(":/assets/test_font_2.png"), true);
+    long font_3 =   project->addFont("I Love Julie",  QPixmap(":/assets/test_font_3.png"), true);
 
 
 

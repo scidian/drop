@@ -30,6 +30,9 @@ DrProject::DrProject(long key_generator_starting_number)
 DrProject::~DrProject()
 {
     for (auto i: m_worlds) { delete i.second; }
+    for (auto i: m_assets) { delete i.second; }
+    for (auto i: m_fonts)  { delete i.second; }
+    for (auto i: m_images) { delete i.second; }
 }
 
 
@@ -45,10 +48,10 @@ long DrProject::addAsset(DrAssetType new_asset_type, long image_key)
     return new_asset_key;
 }
 
-long DrProject::addFont(QString font_name, QPixmap font_pixmap)
+long DrProject::addFont(QString font_name, QPixmap font_pixmap, bool use_test_rects)
 {
     long new_font_key = getNextKey();
-    m_fonts[new_font_key] = new DrFont(this, new_font_key, font_name, font_pixmap);
+    m_fonts[new_font_key] = new DrFont(this, new_font_key, font_name, font_pixmap, use_test_rects);
     return new_font_key;
 }
 

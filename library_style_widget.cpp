@@ -68,7 +68,7 @@ void ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius)
 
 
 // Shortens label text to fit within a widget (i.e. asset frame)
-QString CheckFontWidth(QFont font, QString text_to_check, int max_width)
+QString CheckFontWidth(QFont font, QString text_to_check, int max_width, bool use_dots)
 {
     QString text = text_to_check;
     QFontMetrics fm { font };
@@ -77,7 +77,8 @@ QString CheckFontWidth(QFont font, QString text_to_check, int max_width)
     int length = text.length();
     while (width > max_width && length >= 1) {
         --length;
-        text = text_to_check.left(length) + "...";
+        text = text_to_check.left(length);
+        if (use_dots) text += "...";
         width = fm.width( text );
     }
     return text;
