@@ -285,7 +285,7 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
                             asset_image = frame->findChild<QLabel*>("assetPixmap");
                             if (asset_image) {
                                 pix = m_project->getDrFont( asset->getSourceKey() )->createText( asset_text );
-                                asset_image->setPixmap(pix.scaled(180, 20, Qt::KeepAspectRatio));
+                                asset_image->setPixmap(pix.scaled( 180, 20, Qt::KeepAspectRatio));
                             }
                         }
                         break;

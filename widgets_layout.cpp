@@ -12,6 +12,7 @@
 #include "library.h"
 #include "project.h"
 #include "project_asset.h"
+#include "project_font.h"
 #include "widgets_layout.h"
 
 
@@ -148,6 +149,15 @@ int FlowLayout::doLayout(const QRect &rect, bool test_only) const
                 QString  asset_text =  asset->getComponentPropertyValue(Components::Asset_Settings, Properties::Asset_Name).toString();
                          asset_text =  Dr::FitStringToWidth( asset_name->font(), asset_text, text_holder->width() );
                 asset_name->setText( asset_text );
+
+                QLabel *asset_image = item->widget()->findChild<QLabel*>("assetPixmap");
+                if (asset_image) {
+                    DrFont *drfont = m_project->getDrFont( asset->getSourceKey() );
+                    if (drfont) {
+                        QPixmap pix = drfont->createText( asset_text );
+                        asset_image->setPixmap(pix.scaled( 180, 20, Qt::KeepAspectRatio));
+                    }
+                }
             }
 
         }
