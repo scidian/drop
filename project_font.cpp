@@ -34,6 +34,7 @@ QPixmap DrFont::createText(QString text)
     text_image.fill(Qt::transparent);
 
     QPainter painter(&text_image);
+    painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setPen(Qt::NoPen);
 
     int x = 0;

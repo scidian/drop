@@ -117,12 +117,29 @@ void TreeAssets::buildAssetTree(QString search_text)
         QString asset_name = asset_pair.second->getAssetName();
         if (!asset_name.toLower().contains(search_text.toLower())) continue;
 
+        QRect name_rect;
+        QSize frame_size, pix_size;
+        switch (asset_pair.second->getAssetType()) {
+        case DrAssetType::Character:
+        case DrAssetType::Object:
+            name_rect =  QRect(10, 0, 80, 25);
+            frame_size = QSize(100, 66);
+            pix_size =   QSize(70, 36);
+            break;
+        case DrAssetType::Text:
+            name_rect =  QRect(10, 0, 180, 25);
+            frame_size = QSize(200, 46);
+            pix_size =   QSize(180, 20);
+            break;
+        }
+
         // ***** Store current asset key in widget and install a mouse handler event filter on the item, AssetMouseHandler
         QFrame *single_asset = new QFrame();
         single_asset->setObjectName("assetFrame");
-        single_asset->setProperty(User_Property::Key, QVariant::fromValue( asset_pair.second->getKey() ));
+        single_asset->setProperty(User_Property::Key,   QVariant::fromValue( asset_pair.second->getKey() ));
+        single_asset->setProperty(User_Property::Width, QVariant::fromValue( name_rect.width() ));
         single_asset->installEventFilter(new AssetMouseHandler(single_asset, m_editor_relay));
-        single_asset->setFixedSize(100, 66);
+        single_asset->setFixedSize(frame_size);
 
         // Store pointer to frame in a list for future reference
         m_asset_frames.append(single_asset);
@@ -133,9 +150,9 @@ void TreeAssets::buildAssetTree(QString search_text)
         asset_text->setObjectName(QStringLiteral("assetName"));
         asset_text->setFont(font);
         asset_text->setSizePolicy(sp_left);
-        asset_text->setGeometry(10, 0, 80, 25);
+        asset_text->setGeometry(name_rect);
         asset_text->setAlignment(Qt::AlignmentFlag::AlignCenter);
-        asset_text->setText( Dr::CheckFontWidth( asset_text->font(), asset_text->text(), 80 ) );
+        asset_text->setText( Dr::CheckFontWidth( asset_text->font(), asset_text->text(), name_rect.width() ) );
         m_widget_hover->attachToHoverHandler(asset_text, asset_name, Advisor_Info::Asset_Object[1] );
 
 
@@ -143,7 +160,7 @@ void TreeAssets::buildAssetTree(QString search_text)
         QBoxLayout *vertical_split = new QVBoxLayout(single_asset);
         vertical_split->setSpacing(0);
         vertical_split->setMargin(0);
-        vertical_split->setContentsMargins(0, 14, 0, 0);
+        vertical_split->setContentsMargins(0, 14, 0, 0);                    // Put some space at the top
             QPixmap pix;
             switch (asset_pair.second->getAssetType()) {
             case DrAssetType::Character:
@@ -153,7 +170,8 @@ void TreeAssets::buildAssetTree(QString search_text)
                 break;
             case DrAssetType::Text:
                 ///pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->getFontPixmap();
-                pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->createText( "Julie" ); //asset_name );
+                ///pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->createText( "Julie" );
+                pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->createText( asset_name );
                 break;
             }
 
@@ -166,7 +184,7 @@ void TreeAssets::buildAssetTree(QString search_text)
             vertical_split->addWidget( asset_pix );
 
         // Draw pixmap onto label
-        asset_pix->setPixmap(pix.scaled(70, 36, Qt::KeepAspectRatio));
+        asset_pix->setPixmap(pix.scaled(pix_size, Qt::KeepAspectRatio));
 
 
 
@@ -236,7 +254,11 @@ CategoryButton* TreeAssets::initializeCatergoryButton(QTreeWidgetItem *tree_item
 //####################################################################################
 void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> property_keys)
 {
-    QLabel *label;
+    DrAsset *asset;
+    QLabel  *asset_name, *asset_image;
+    QString  asset_text;
+    QPixmap  pix;
+
     for (auto item : changed_items) {
         long item_key = item->getKey();
 
@@ -249,10 +271,23 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
 
                     switch (check_property) {
                     case Properties::Asset_Name:
-                        label = frame->findChild<QLabel*>("assetName");
-                        if (label) {
-                            label->setText(item->getComponentPropertyValue(Components::Asset_Settings, Properties::Asset_Name).toString() );
-                            label->setText( Dr::CheckFontWidth( label->font(), label->text(), 80 ) );
+                        asset = m_project->getAsset(item_key);
+                        asset_text = item->getComponentPropertyValue(Components::Asset_Settings, Properties::Asset_Name).toString();
+
+                        // Update asset name label
+                        asset_name = frame->findChild<QLabel*>("assetName");
+                        if (asset_name) {
+                            asset_text = Dr::CheckFontWidth( asset_name->font(), asset_text, frame->property(User_Property::Width).toInt() );
+                            asset_name->setText( asset_text );
+                        }
+
+                        // Update Font Picture with New Name
+                        if (asset->getAssetType() == DrAssetType::Text) {
+                            asset_image = frame->findChild<QLabel*>("assetPixmap");
+                            if (asset_image) {
+                                pix = m_project->getDrFont( asset->getSourceKey() )->createText( asset_text );
+                                asset_image->setPixmap(pix.scaled(180, 20, Qt::KeepAspectRatio));
+                            }
                         }
                         break;
                     default: ;
@@ -293,7 +328,8 @@ bool AssetMouseHandler::eventFilter(QObject *obj, QEvent *event)
             m_flag_scrolling = true;
             m_position = 1;
             m_scroll_timer.restart();
-            m_pause_time = 1200;
+            m_pause_time = 1000;
+            m_width = asset_frame->property(User_Property::Width).toInt();
             QTimer::singleShot( 500, this, [this, label, asset_name] { this->handleScroll(label, asset_name); } );
         }
 
@@ -304,7 +340,7 @@ bool AssetMouseHandler::eventFilter(QObject *obj, QEvent *event)
         DrSettings  *asset = m_editor_relay->currentProject()->findSettingsFromKey(asset_key);
         QString asset_name = asset->getComponentPropertyValue(Components::Asset_Settings, Properties::Asset_Name).toString();
         label->setText( asset_name );
-        label->setText( Dr::CheckFontWidth( label->font(), label->text(), 80 ) );
+        label->setText( Dr::CheckFontWidth( label->font(), label->text(), asset_frame->property(User_Property::Width).toInt() ) );
     }
 
 
@@ -318,7 +354,7 @@ void AssetMouseHandler::handleScroll(QLabel *label, QString asset_name)
     if (m_scroll_timer.elapsed() > m_pause_time ) {
 
         QString new_text = asset_name.right( asset_name.length() - m_position );
-        QString shorten = Dr::CheckFontWidth( label->font(), new_text, 80 );
+        QString shorten = Dr::CheckFontWidth( label->font(), new_text, m_width );
 
         label->setText( shorten );
 
@@ -332,7 +368,7 @@ void AssetMouseHandler::handleScroll(QLabel *label, QString asset_name)
         m_scroll_timer.restart();
     }
 
-    QTimer::singleShot( 50, this, [this, label, asset_name] { this->handleScroll(label, asset_name); } );
+    QTimer::singleShot( 20, this, [this, label, asset_name] { this->handleScroll(label, asset_name); } );
 }
 
 
