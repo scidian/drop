@@ -84,6 +84,12 @@ QSize FlowLayout::minimumSize() const {
 //##    Rebuilds the layout on size change
 //####################################################################################
 void FlowLayout::setGeometry(const QRect &rect) {
+    // Updates asset sizes if necessary
+    if (parentWidget()->objectName() == "assetsContainer") {
+
+
+    }
+
     QLayout::setGeometry(rect);
     m_last_size.setWidth(  rect.width() );
     m_last_size.setHeight( doLayout(rect, false) );

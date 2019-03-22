@@ -9,7 +9,6 @@
 #include <QFrame>
 #include <QLabel>
 #include <QLineEdit>
-#include <QTimer>
 #include <QVBoxLayout>
 
 #include "colors.h"
@@ -88,6 +87,7 @@ void TreeAssets::buildAssetTree(QString search_text)
     QFont font;
     font.setPointSize(Dr::FontSize());
 
+
     // ***** Retrieve list of assets for project
     AssetMap list_assets = m_project->getAssets();
     int rowCount = 0;
@@ -102,6 +102,9 @@ void TreeAssets::buildAssetTree(QString search_text)
     this->addTopLevelItem(text_item);
     CategoryButton *objects_button = initializeCatergoryButton(objects_item, "  Objects");
     CategoryButton *text_button =    initializeCatergoryButton(text_item, "  Text");
+    m_widget_hover->attachToHoverHandler(objects_button, Advisor_Info::Asset_Object);
+    m_widget_hover->attachToHoverHandler(text_button, Advisor_Info::Asset_Text);
+
 
     // ***** Creates a frame sto hold all assets of each type
     QFrame      *assets_frame_objects = new QFrame();
@@ -117,21 +120,15 @@ void TreeAssets::buildAssetTree(QString search_text)
         QString asset_name = asset_pair.second->getAssetName();
         if (!asset_name.toLower().contains(search_text.toLower())) continue;
 
-        QRect name_rect;
-        QSize frame_size, pix_size;
+        QSize frame_size;
         switch (asset_pair.second->getAssetType()) {
         case DrAssetType::Character:
-        case DrAssetType::Object:
-            frame_size = QSize(100, 66);
-            name_rect =  QRect(10, 0, 80, 25);
-            pix_size =   QSize(70, 36);
-            break;
-        case DrAssetType::Text:
-            frame_size = QSize(200, 50);
-            name_rect =  QRect(10, 0, 180, 25);
-            pix_size =   QSize(180, 20);
-            break;
+        case DrAssetType::Object:       frame_size = QSize(100, 66);        break;
+        case DrAssetType::Text:         frame_size = QSize(200, 50);        break;
         }
+        QRect name_rect = QRect(10, 0, frame_size.width() - 20, 25);
+        QSize pix_size =  QSize(frame_size.width() - 25, frame_size.height() - 30);
+
 
         // ***** Store current asset key in widget and install a mouse handler event filter on the item, AssetMouseHandler
         QFrame *single_asset = new QFrame();
@@ -141,22 +138,20 @@ void TreeAssets::buildAssetTree(QString search_text)
         single_asset->installEventFilter(new AssetMouseHandler(single_asset, m_editor_relay));
         single_asset->setFixedSize(frame_size);
 
-
-
-
         // Store pointer to frame in a list for future reference
         m_asset_frames.append(single_asset);
 
 
         // ***** Create the label that will display the asset name
-        QLabel *asset_text = new QLabel(asset_name, single_asset);
-        asset_text->setObjectName(QStringLiteral("assetName"));
-        asset_text->setFont(font);
-        asset_text->setSizePolicy(sp_left);
-        asset_text->setGeometry(name_rect);
-        asset_text->setAlignment(Qt::AlignmentFlag::AlignCenter);
-        asset_text->setText( Dr::CheckFontWidth( asset_text->font(), asset_text->text(), name_rect.width() ) );
-        m_widget_hover->attachToHoverHandler(asset_text, asset_name, Advisor_Info::Asset_Object[1] );
+        QFrame *text_holder = new QFrame(single_asset);
+        text_holder->setGeometry(name_rect);
+            QLabel *asset_text = new QLabel(asset_name, text_holder);
+            asset_text->setObjectName(QStringLiteral("assetName"));
+            asset_text->setFont(font);
+            asset_text->setSizePolicy(sp_left);
+            asset_text->setGeometry(0, 0, text_holder->width(), text_holder->height());
+            asset_text->setAlignment(Qt::AlignmentFlag::AlignCenter);
+            asset_text->setText( Dr::FitStringToWidth( asset_text->font(), asset_text->text(), name_rect.width() ) );
 
 
         // ***** Create the label that will display the asset
@@ -170,10 +165,12 @@ void TreeAssets::buildAssetTree(QString search_text)
 
             case DrAssetType::Object:
                 pix = asset_pair.second->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
+                m_widget_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Object[1] );
                 break;
             case DrAssetType::Text:
                 ///pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->getFontPixmap();
                 pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->createText( asset_name );
+                m_widget_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Text[1] );
                 break;
             }
 
@@ -182,14 +179,13 @@ void TreeAssets::buildAssetTree(QString search_text)
             asset_pix->setFont(font);
             asset_pix->setSizePolicy(sp_right);
             asset_pix->setAlignment(Qt::AlignmentFlag::AlignCenter);
-            m_widget_hover->attachToHoverHandler(asset_pix, asset_name, Advisor_Info::Asset_Object[1] );
             vertical_split->addWidget( asset_pix );
 
         // Draw pixmap onto label
         asset_pix->setPixmap(pix.scaled(pix_size, Qt::KeepAspectRatio));
 
 
-
+        // ***** Add widget to proper category
         switch (asset_pair.second->getAssetType()) {
         case DrAssetType::Character:
 
@@ -227,7 +223,6 @@ void TreeAssets::addAssetsToCategory(QTreeWidgetItem *tree_item, QFrame *asset_f
 // Create and style a buttons to be used as a header items for the categories
 CategoryButton* TreeAssets::initializeCatergoryButton(QTreeWidgetItem *tree_item, QString name)
 {
-    // ***** Styling used for Asset Category Headers
     QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: #CCCCCC; "
                                                 " border: " + Dr::BorderWidth() + " solid; border-radius: 1px; "
                                                 " border-color: #555555; "
@@ -243,7 +238,6 @@ CategoryButton* TreeAssets::initializeCatergoryButton(QTreeWidgetItem *tree_item
     ///button->setIcon(QIcon(component_map.second->getIcon()));
     button->setStyleSheet(buttonColor);
     button->setEnabled(false);
-    m_widget_hover->attachToHoverHandler(button, "Object Assets", "Objects for use in Stage");
     this->setItemWidget(tree_item, 0, button);                             // Apply the button to the tree item
     return button;
 }
@@ -279,7 +273,7 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
                         // Update asset name label
                         asset_name = frame->findChild<QLabel*>("assetName");
                         if (asset_name) {
-                            asset_text = Dr::CheckFontWidth( asset_name->font(), asset_text, frame->property(User_Property::Width).toInt() );
+                            asset_text = Dr::FitStringToWidth( asset_name->font(), asset_text, frame->property(User_Property::Width).toInt() );
                             asset_name->setText( asset_text );
                         }
 
@@ -300,83 +294,6 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
     }
     update();
 }
-
-
-
-//####################################################################################
-//##    AssetMouseHandler Class Functions
-//##        eventFilter - handles mouse click on asset, loads object inspector for clicked asset
-//####################################################################################
-AssetMouseHandler::AssetMouseHandler(QObject *parent, IEditorRelay *editor_relay) : QObject(parent), m_editor_relay(editor_relay) {}
-
-bool AssetMouseHandler::eventFilter(QObject *obj, QEvent *event)
-{
-    if (!obj) return false;
-    QWidget *asset_frame =  dynamic_cast<QWidget*>(obj);
-    QLabel  *label =        asset_frame->findChild<QLabel*>("assetName");
-    long     asset_key =    asset_frame->property(User_Property::Key).toLongLong();
-
-    if (event->type() == QEvent::MouseButtonPress)
-    {
-        m_editor_relay->buildObjectInspector( { asset_key } );
-
-
-    // Start scrolling name if name is too wide to be shown
-    } else if (event->type() == QEvent::HoverEnter) {
-        DrSettings  *asset = m_editor_relay->currentProject()->findSettingsFromKey(asset_key);
-        QString asset_name = asset->getComponentPropertyValue(Components::Asset_Settings, Properties::Asset_Name).toString();
-
-        if (asset_name != label->text()) {
-            m_flag_scrolling = true;
-            m_position = 1;
-            m_scroll_timer.restart();
-            m_pause_time = 1000;
-            m_width = asset_frame->property(User_Property::Width).toInt();
-            m_scroll_text = asset_name + "    ";
-            m_scroll_length = m_scroll_text.length();
-            m_scroll_text += m_scroll_text;
-            QTimer::singleShot( 500, this, [this, label, asset_name] { this->handleScroll(label, asset_name); } );
-        }
-
-
-    // Reset asset name if it was scrolling
-    } else if (event->type() == QEvent::HoverLeave) {
-        m_flag_scrolling = false;
-        DrSettings  *asset = m_editor_relay->currentProject()->findSettingsFromKey(asset_key);
-        QString asset_name = asset->getComponentPropertyValue(Components::Asset_Settings, Properties::Asset_Name).toString();
-        label->setText( asset_name );
-        label->setText( Dr::CheckFontWidth( label->font(), label->text(), asset_frame->property(User_Property::Width).toInt() ) );
-    }
-
-
-    return QObject::eventFilter(obj, event);
-}
-
-void AssetMouseHandler::handleScroll(QLabel *label, QString asset_name)
-{
-    if (!m_flag_scrolling) return;
-
-    if (m_scroll_timer.elapsed() > m_pause_time ) {
-
-        QString new_text = m_scroll_text.right( m_scroll_text.length() - m_position );
-        QString shorten = Dr::CheckFontWidth( label->font(), new_text, m_width, false );
-
-        label->setText( shorten );
-
-        if (m_position <= m_scroll_length) {
-            m_position++;
-            m_pause_time = 150;
-        } else {
-            m_position = 0;
-        }
-        m_scroll_timer.restart();
-    }
-
-    QTimer::singleShot( 20, this, [this, label, asset_name] { this->handleScroll(label, asset_name); } );
-}
-
-
-
 
 
 

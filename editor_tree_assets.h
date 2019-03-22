@@ -9,8 +9,9 @@
 #define EDITOR_TREE_ASSETS_H
 
 #include <QLabel>
+#include <QMutex>
 #include <QVBoxLayout>
-#include <QTime>
+#include <QTimer>
 #include <QTreeWidget>
 
 class DrProject;
@@ -72,15 +73,22 @@ private slots:
 //####################################################################################
 class AssetMouseHandler : public QObject
 {
+    Q_OBJECT
+
 private:
-    IEditorRelay      *m_editor_relay;                    // Pointer to IEditorRelay class of parent form
-    QTime              m_scroll_timer;
-    bool               m_flag_scrolling;
-    int                m_position;
-    int                m_pause_time;
-    int                m_width;
-    QString            m_scroll_text;
-    int                m_scroll_length;
+    IEditorRelay      *m_editor_relay;                  // Pointer to IEditorRelay class of parent form
+
+    // Following variables are used for Asset Name scrolling
+    QMutex             scrolling_mutex { QMutex::NonRecursive };
+    QTimer            *m_timer;                         // Timer used to start scrolling
+    bool               m_flag_scrolling = false;        // Flag to track when scrolling is active
+
+    QLabel            *m_label_to_scroll;
+    int                m_position;                      // Position of label
+    QString            m_scroll_text;                   // Text we use for scrolling
+    int                m_scroll_width;                  // Width of total string as drawn
+    QRect              m_starting_rect;                 // Label starting geometry
+    QString            m_starting_text;                 // Label starting text
 
 public:
     explicit        AssetMouseHandler(QObject *parent, IEditorRelay *editor_relay);
@@ -89,7 +97,10 @@ public:
     bool            eventFilter(QObject* obj, QEvent* event) override;
 
     // Functions
-    void            handleScroll(QLabel *label, QString asset_name);
+    void            handleScroll(QLabel *label, bool first_time);
+
+public slots:
+    void            startScroll();
 };
 
 

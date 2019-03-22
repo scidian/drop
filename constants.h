@@ -97,8 +97,12 @@ namespace Advisor_Info
     const HeaderBodyList Camera_Object          { "Camera Object", "This is a camera object. This object will decide what the player sees." };
     const HeaderBodyList Character_Object       { "Character Object", "This is a character object" };
     const HeaderBodyList Object_Object          { "Object", "This is an object in a Stage." };
-    const HeaderBodyList Asset_Object           { "Asset", "This is an object that can have many copies of itself placed into your game. Any change to this "
+
+    // Asset Types
+    const HeaderBodyList Asset_Object           { "Object Asset", "This is an object that can have many copies of itself placed into your game. Any change to this "
                                                           "asset will change all occurences of the asset within the game." };
+    const HeaderBodyList Asset_Text             { "Text Asset", "Use text assets to show labels in your game. You can use the as titles or for showing "
+                                                                "values like hit points, coins or distance. " };
 
     // Inspector Widgets
     const HeaderBodyList Variable_Widget        { "Variable Amount", "Plus or minus modifier to initial value, the following value allows for some "

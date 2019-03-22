@@ -230,6 +230,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
             vertical_layout->addWidget(single_row);
         }
 
+
         // ***** Create a child TreeWidgetItem attached to the TopLevel category item
         QTreeWidgetItem *property_item = new QTreeWidgetItem();
         property_item->setDisabled(true);
