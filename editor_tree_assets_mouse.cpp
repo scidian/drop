@@ -30,10 +30,10 @@ AssetMouseHandler::AssetMouseHandler(QObject *parent, IEditorRelay *editor_relay
     connect(m_timer, SIGNAL(timeout()), SLOT(startScroll()));
 }
 
-bool AssetMouseHandler::eventFilter(QObject *obj, QEvent *event)
+bool AssetMouseHandler::eventFilter(QObject *object, QEvent *event)
 {
-    if (!obj) return false;
-    QWidget *asset_frame =  dynamic_cast<QWidget*>(obj);
+    if (!object) return false;
+    QWidget *asset_frame =  dynamic_cast<QWidget*>(object);
     QLabel  *label =        asset_frame->findChild<QLabel*>("assetName");
     long     asset_key =    asset_frame->property(User_Property::Key).toLongLong();
 
@@ -74,7 +74,7 @@ bool AssetMouseHandler::eventFilter(QObject *obj, QEvent *event)
     }
 
 
-    return QObject::eventFilter(obj, event);
+    return QObject::eventFilter(object, event);
 }
 
 void AssetMouseHandler::startScroll() { this->handleScroll(m_label_to_scroll, true); }

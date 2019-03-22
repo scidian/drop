@@ -94,7 +94,7 @@ public:
     explicit        AssetMouseHandler(QObject *parent, IEditorRelay *editor_relay);
 
     // Event Overrides
-    bool            eventFilter(QObject* obj, QEvent* event) override;
+    bool            eventFilter(QObject* object, QEvent* event) override;
 
     // Functions
     void            handleScroll(QLabel *label, bool first_time);

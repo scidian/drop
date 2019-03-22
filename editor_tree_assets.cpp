@@ -136,7 +136,16 @@ void TreeAssets::buildAssetTree(QString search_text)
         single_asset->setProperty(User_Property::Key,   QVariant::fromValue( asset_pair.second->getKey() ));
         single_asset->setProperty(User_Property::Width, QVariant::fromValue( name_rect.width() ));
         single_asset->installEventFilter(new AssetMouseHandler(single_asset, m_editor_relay));
-        single_asset->setFixedSize(frame_size);
+
+        //single_asset->setFixedSize(frame_size);
+
+        QSize min_size = QSize(100, 66);
+        QSize max_size = QSize(200, 50);
+        single_asset->setMinimumSize(min_size);
+        single_asset->setMaximumSize(max_size);
+
+
+
 
         // Store pointer to frame in a list for future reference
         m_asset_frames.append(single_asset);
