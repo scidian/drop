@@ -87,7 +87,6 @@ typedef enum {
 //####################################################################################
 namespace User_Property {
     const char Key[7] = "dr_key";                   // Stores Object Key in User Property of widget
-    const char Width[9] = "dr_width";               // Stores desired width of item (used in Asset_Frame)
     const char Order[9] = "dr_order";               // Used for properties with mulitple values (like Size has X and Y),
                                                     //      the index of the single property we want (0, 1, 2, etc)
     const char Header[10] = "dr_header";            // Used for Advisor Text

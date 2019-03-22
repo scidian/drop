@@ -109,8 +109,8 @@ void TreeAssets::buildAssetTree(QString search_text)
     // ***** Creates a frame sto hold all assets of each type
     QFrame      *assets_frame_objects = new QFrame();
     QFrame      *assets_frame_text =    new QFrame();
-    FlowLayout  *grid_layout_objects =  new FlowLayout(m_project, assets_frame_objects, 8, 0, 4, 0, 0, 0);
-    FlowLayout  *grid_layout_text =     new FlowLayout(m_project, assets_frame_text, 8, 0, 4, 0, 0, 0);
+    FlowLayout  *grid_layout_objects =  new FlowLayout(assets_frame_objects, 8, 0, 4, 0, 0, 0);
+    FlowLayout  *grid_layout_text =     new FlowLayout(assets_frame_text, 8, 0, 4, 0, 0, 0);
     assets_frame_objects->setObjectName("assetsContainer");
     assets_frame_text->setObjectName(   "assetsContainer");
 
@@ -120,21 +120,14 @@ void TreeAssets::buildAssetTree(QString search_text)
         QString asset_name = asset_pair.second->getAssetName();
         if (!asset_name.toLower().contains(search_text.toLower())) continue;
 
-        QSize frame_size;
-        switch (asset_pair.second->getAssetType()) {
-        case DrAssetType::Character:
-        case DrAssetType::Object:       frame_size = QSize(100, 66);        break;
-        case DrAssetType::Text:         frame_size = QSize(200, 50);        break;
-        }
-        QRect name_rect = QRect(10, 0, frame_size.width() - 20, 25);
-        QSize pix_size =  QSize(frame_size.width() - 25, frame_size.height() - 30);
-
+        QSize frame_size = QSize(100, 66);
+        QRect name_rect =  QRect(10, 0, frame_size.width() - 20, 25);
+        QSize pix_size =   QSize(frame_size.width() - 25, frame_size.height() - 30);
 
         // ***** Store current asset key in widget and install a mouse handler event filter on the item, AssetMouseHandler
         QFrame *single_asset = new QFrame();
         single_asset->setObjectName("assetFrame");
         single_asset->setProperty(User_Property::Key,   QVariant::fromValue( asset_pair.second->getKey() ));
-        single_asset->setProperty(User_Property::Width, QVariant::fromValue( frame_size.width() ));
         single_asset->installEventFilter(new AssetMouseHandler(single_asset, m_editor_relay));
         single_asset->setFixedSize(frame_size);
 
@@ -170,7 +163,7 @@ void TreeAssets::buildAssetTree(QString search_text)
                 break;
             case DrAssetType::Text:
                 ///pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->getFontPixmap();
-                pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->createText( asset_name );
+                pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->createText( "Aa" );
                 m_widget_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Text[1] );
                 break;
             }
@@ -182,8 +175,8 @@ void TreeAssets::buildAssetTree(QString search_text)
             asset_pix->setAlignment(Qt::AlignmentFlag::AlignCenter);
             vertical_split->addWidget( asset_pix );
 
-        // Draw pixmap onto label
-        asset_pix->setPixmap(pix.scaled(pix_size, Qt::KeepAspectRatio));
+            // Draw pixmap onto label
+            asset_pix->setPixmap(pix.scaled(pix_size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
 
         // ***** Add widget to proper category
@@ -208,6 +201,15 @@ void TreeAssets::buildAssetTree(QString search_text)
     addAssetsToCategory(objects_item, assets_frame_objects);
     addAssetsToCategory(text_item,    assets_frame_text);
 
+
+    // ***** Adds a spacer item at the bottom to allow for comfortable scrolling to the bottom of the tree
+    QTreeWidgetItem *spacer_item  = new QTreeWidgetItem();
+    QLabel *spacer_label = new QLabel();
+    spacer_label->setFixedHeight(100);
+    this->addTopLevelItem(spacer_item);
+    this->setItemWidget(spacer_item, 0, spacer_label);
+
+
     this->expandAll();
 }
 
@@ -225,18 +227,14 @@ void TreeAssets::addAssetsToCategory(QTreeWidgetItem *tree_item, QFrame *asset_f
 CategoryButton* TreeAssets::initializeCatergoryButton(QTreeWidgetItem *tree_item, QString name)
 {
     QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: #CCCCCC; "
-                                                " border: " + Dr::BorderWidth() + " solid; border-radius: 1px; "
-                                                " border-color: #555555; "
+                                                " border: " + Dr::BorderWidth() + " solid; border-radius: 1px; border-color: #555555; "
                                                 " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 " +
                                                     Dr::GetColor(Window_Colors::Button_Light).name() + ", stop:1 " +
                                                     Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
                                   " QPushButton:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } "
                                   " QPushButton:pressed { color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } ");
-
     CategoryButton *button = new CategoryButton(name, QColor(204, 204, 204), nullptr, tree_item);
-
-    ///// !!!!! TODO: Set Icon call, need to implement
-    ///button->setIcon(QIcon(component_map.second->getIcon()));
+    ///button->setIcon(QIcon(component_map.second->getIcon()));              // TODO: Set Icon call, need to implement
     button->setStyleSheet(buttonColor);
     button->setEnabled(false);
     this->setItemWidget(tree_item, 0, button);                             // Apply the button to the tree item
@@ -253,9 +251,8 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
 {
     DrAsset *asset;
     QFrame  *text_holder;
-    QLabel  *asset_name, *asset_image;
+    QLabel  *asset_name;
     QString  asset_text;
-    QPixmap  pix;
 
     for (auto item : changed_items) {
         long item_key = item->getKey();
@@ -278,15 +275,6 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
                             text_holder = frame->findChild<QFrame*>("textHolder");
                             asset_text = Dr::FitStringToWidth( asset_name->font(), asset_text, text_holder->width() );
                             asset_name->setText( asset_text );
-                        }
-
-                        // Update Font Picture with New Name
-                        if (asset->getAssetType() == DrAssetType::Text) {
-                            asset_image = frame->findChild<QLabel*>("assetPixmap");
-                            if (asset_image) {
-                                pix = m_project->getDrFont( asset->getSourceKey() )->createText( asset_text );
-                                asset_image->setPixmap(pix.scaled( 180, 20, Qt::KeepAspectRatio));
-                            }
                         }
                         break;
                     default: ;
