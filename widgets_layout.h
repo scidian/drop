@@ -12,6 +12,7 @@
 #include <QRect>
 #include <QStyle>
 
+class DrProject;
 
 class FlowLayout : public QLayout
 {
@@ -19,16 +20,18 @@ private:
     int     doLayout(const QRect &rect, bool testOnly) const;
     int     smartSpacing(QStyle::PixelMetric pm) const;
 
-    QList<QLayoutItem*>  item_list;                          // Holds a list of items inserted into the layout, so we can delete them in the destuctor
+    DrProject           *m_project;                         // Pointer to the active project
+
+    QList<QLayoutItem*>  item_list;                         // Holds a list of items inserted into the layout, so we can delete them in the destuctor
     int                  m_hSpace;
     int                  m_vSpace;
     QSize                m_last_size;
 
 
 public:
-    explicit FlowLayout(QWidget *parent, int margin_left = -1, int margin_right = -1, int margin_top = -1, int margin_bottom = -1,
+    explicit FlowLayout(DrProject *project, QWidget *parent, int margin_left = -1, int margin_right = -1, int margin_top = -1, int margin_bottom = -1,
                         int hSpacing = -1, int vSpacing = -1);
-    explicit FlowLayout(int margin_left = -1, int margin_right = -1, int margin_top = -1, int margin_bottom = -1,
+    explicit FlowLayout(DrProject *project, int margin_left = -1, int margin_right = -1, int margin_top = -1, int margin_bottom = -1,
                         int hSpacing = -1, int vSpacing = -1);
     ~FlowLayout() override;
 
@@ -55,3 +58,11 @@ public:
 
 
 #endif // WIDGETS_LAYOUT_H
+
+
+
+
+
+
+
+

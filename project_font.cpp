@@ -30,6 +30,8 @@ QPixmap DrFont::createText(QString text)
     for (int i = 0; i < text.length(); i++) {
         width += m_positions[ text.at(i).toLatin1() ].width();
     }
+    if (width ==  0) width =  1;
+    if (height == 0) height = 1;
     QPixmap text_image(width, height);
     text_image.fill(Qt::transparent);
 

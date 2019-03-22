@@ -258,7 +258,7 @@ void FormMain::unlockDockWidth(QDockWidget *dock) {
     if (dock_name == "dockInspector")
         dock->setMinimumSize(244, 80);
     else
-        dock->setMinimumSize(122, 80);
+        dock->setMinimumSize(124, 80);
 
     QApplication::processEvents();
     resizeDocks( { dock }, { pre_width }, Qt::Horizontal);

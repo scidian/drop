@@ -109,8 +109,8 @@ void TreeAssets::buildAssetTree(QString search_text)
     // ***** Creates a frame sto hold all assets of each type
     QFrame      *assets_frame_objects = new QFrame();
     QFrame      *assets_frame_text =    new QFrame();
-    FlowLayout  *grid_layout_objects =  new FlowLayout(assets_frame_objects, 8, 0, 4, 0, 0, 0);
-    FlowLayout  *grid_layout_text =     new FlowLayout(assets_frame_text, 8, 0, 4, 0, 0, 0);
+    FlowLayout  *grid_layout_objects =  new FlowLayout(m_project, assets_frame_objects, 8, 0, 4, 0, 0, 0);
+    FlowLayout  *grid_layout_text =     new FlowLayout(m_project, assets_frame_text, 8, 0, 4, 0, 0, 0);
     assets_frame_objects->setObjectName("assetsContainer");
     assets_frame_text->setObjectName(   "assetsContainer");
 
@@ -134,18 +134,9 @@ void TreeAssets::buildAssetTree(QString search_text)
         QFrame *single_asset = new QFrame();
         single_asset->setObjectName("assetFrame");
         single_asset->setProperty(User_Property::Key,   QVariant::fromValue( asset_pair.second->getKey() ));
-        single_asset->setProperty(User_Property::Width, QVariant::fromValue( name_rect.width() ));
+        single_asset->setProperty(User_Property::Width, QVariant::fromValue( frame_size.width() ));
         single_asset->installEventFilter(new AssetMouseHandler(single_asset, m_editor_relay));
-
-        //single_asset->setFixedSize(frame_size);
-
-        QSize min_size = QSize(100, 66);
-        QSize max_size = QSize(200, 50);
-        single_asset->setMinimumSize(min_size);
-        single_asset->setMaximumSize(max_size);
-
-
-
+        single_asset->setFixedSize(frame_size);
 
         // Store pointer to frame in a list for future reference
         m_asset_frames.append(single_asset);
@@ -154,6 +145,7 @@ void TreeAssets::buildAssetTree(QString search_text)
         // ***** Create the label that will display the asset name
         QFrame *text_holder = new QFrame(single_asset);
         text_holder->setGeometry(name_rect);
+        text_holder->setObjectName(QStringLiteral("textHolder"));
             QLabel *asset_text = new QLabel(asset_name, text_holder);
             asset_text->setObjectName(QStringLiteral("assetName"));
             asset_text->setFont(font);
@@ -260,6 +252,7 @@ CategoryButton* TreeAssets::initializeCatergoryButton(QTreeWidgetItem *tree_item
 void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> property_keys)
 {
     DrAsset *asset;
+    QFrame  *text_holder;
     QLabel  *asset_name, *asset_image;
     QString  asset_text;
     QPixmap  pix;
@@ -282,7 +275,8 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
                         // Update asset name label
                         asset_name = frame->findChild<QLabel*>("assetName");
                         if (asset_name) {
-                            asset_text = Dr::FitStringToWidth( asset_name->font(), asset_text, frame->property(User_Property::Width).toInt() );
+                            text_holder = frame->findChild<QFrame*>("textHolder");
+                            asset_text = Dr::FitStringToWidth( asset_name->font(), asset_text, text_holder->width() );
                             asset_name->setText( asset_text );
                         }
 

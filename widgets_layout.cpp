@@ -10,21 +10,25 @@
 #include "editor_tree_assets.h"
 #include "globals.h"
 #include "library.h"
+#include "project.h"
+#include "project_asset.h"
 #include "widgets_layout.h"
 
 
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-FlowLayout::FlowLayout(QWidget *parent, int margin_left, int margin_right, int margin_top, int margin_bottom, int hSpacing, int vSpacing)
+FlowLayout::FlowLayout(DrProject *project, QWidget *parent, int margin_left, int margin_right, int margin_top, int margin_bottom, int hSpacing, int vSpacing)
     : QLayout(parent), m_hSpace(hSpacing), m_vSpace(vSpacing)
 {
+    m_project = project;
     this->setObjectName("flowLayout");
     setContentsMargins(margin_left, margin_top, margin_right, margin_bottom);
 }
-FlowLayout::FlowLayout(int margin_left, int margin_right, int margin_top, int margin_bottom, int hSpacing, int vSpacing)
+FlowLayout::FlowLayout(DrProject *project, int margin_left, int margin_right, int margin_top, int margin_bottom, int hSpacing, int vSpacing)
     : m_hSpace(hSpacing), m_vSpace(vSpacing)
 {
+    m_project = project;
     setContentsMargins(margin_left, margin_top, margin_right, margin_bottom);
 }
 FlowLayout::~FlowLayout() {
@@ -117,6 +121,38 @@ int FlowLayout::doLayout(const QRect &rect, bool test_only) const
         if (space_x == -1)  space_x = item->widget()->style()->layoutSpacing(QSizePolicy::Frame, QSizePolicy::Frame, Qt::Horizontal);
         if (space_y == -1)  space_y = item->widget()->style()->layoutSpacing(QSizePolicy::Frame, QSizePolicy::Frame, Qt::Vertical);
 
+        // ***** If item was an asset frame and this isnt a test, shrink / grow frame if necessary and able
+        if ((item->widget()->objectName() == "assetFrame") && (effective_rect.width() > 10) && (!test_only)) {
+            int width =       item->widget()->width();
+            int max_width =   item->widget()->property(User_Property::Width).toInt();
+            int frame_width = effective_rect.width() - 6;
+
+            if ((width < frame_width) && (width < max_width)) {
+                int smaller = (frame_width < max_width) ? frame_width : max_width;
+                item->widget()->setFixedWidth(smaller);
+
+            } else if ((width > frame_width)) {
+                item->widget()->setFixedWidth(frame_width);
+            }
+
+            // Width was changed, fix name label (recenter / adjust text)
+            if (width != item->widget()->width()) {
+                long    item_key =    item->widget()->property(User_Property::Key).toLongLong();
+                QFrame *text_holder = item->widget()->findChild<QFrame*>("textHolder");
+                QLabel *asset_name =  item->widget()->findChild<QLabel*>("assetName");
+
+                text_holder->setGeometry(10, 0, item->widget()->width() - 20, 25);
+                asset_name->setGeometry(0, 0, text_holder->width(), text_holder->height());
+
+                DrAsset *asset = m_project->getAsset(item_key);
+                QString  asset_text =  asset->getComponentPropertyValue(Components::Asset_Settings, Properties::Asset_Name).toString();
+                         asset_text =  Dr::FitStringToWidth( asset_name->font(), asset_text, text_holder->width() );
+                asset_name->setText( asset_text );
+            }
+
+        }
+
+        // ***** Calculate next item position
         int next_x = x + item->sizeHint().width() + space_x;
         if (next_x - space_x > effective_rect.right() && line_height > 0) {
             x = effective_rect.x();
