@@ -67,7 +67,3 @@ void CategoryButton::paintEvent(QPaintEvent *event)
 
 
 
-
-
-
-

@@ -136,7 +136,7 @@ void FormMain::buildToolBar()
         m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Settings_Font_Editor);
         toolbarLayoutSettings->addWidget(tool);
         connect(tool, &QPushButton::clicked, [this] () {
-            FormFontEditor *font_editor = new FormFontEditor(project);
+            FormFontEditor *font_editor = new FormFontEditor(project, this);
             font_editor->show();
         });
 
@@ -144,7 +144,7 @@ void FormMain::buildToolBar()
         m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Settings_Editor);
         toolbarLayoutSettings->addWidget(tool);
         connect(tool, &QPushButton::clicked, [this] () {
-            FormSettings *settings_editor = new FormSettings(project);
+            FormSettings *settings_editor = new FormSettings(project, this);
             settings_editor->show();
         });
 

@@ -23,6 +23,7 @@ FormFontEditor::FormFontEditor(DrProject *project, QWidget *parent) : QWidget(pa
     // ***** Set up initial window
     setWindowFlag(Qt::WindowType::FramelessWindowHint);
     setWindowFlag(Qt::WindowType::Tool);
+    setMinimumSize(QSize(200, 200));
     setObjectName(QStringLiteral("childForm"));
     Dr::ApplyCustomStyleSheetFormatting(this);
 
