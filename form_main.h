@@ -84,6 +84,7 @@ private:
     QWidget        *widgetGroupMode;        QButtonGroup   *buttonsGroupMode;
     QWidget        *widgetGroupLayering;    QButtonGroup   *buttonsGroupLayering;
     QWidget        *widgetGroupReset;       QButtonGroup   *buttonsGroupReset;
+    QWidget        *widgetGroupGrid;        QButtonGroup   *buttonsGroupGrid;
     QWidget        *widgetGroupSettings;
 
 
@@ -183,6 +184,7 @@ private slots:
     void            buttonGroupModeClicked(int id);
     void            buttonGroupLayeringClicked(int id);
     void            buttonGroupResetClicked(int id);
+    void            buttonGroupGridClicked(int id);
 
     void            centerViewTimer(QPointF center_point);
     void            editMenuAboutToShow();

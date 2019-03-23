@@ -71,15 +71,17 @@ public:
 
 
     // External calls
-    void addProperty(long property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description, bool is_hidden = false);
-    void addProperty(Properties property_number, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description, bool is_hidden = false);
+    void addProperty(Properties     property_number,
+                     Property_Type  type,
+                     QVariant       value,
+                     QString        display_name,
+                     QString        description,
+                     bool           is_hidden = false,
+                     bool           is_editable = true);
 
 };
 
 #endif // DRCOMPONENT_H
-
-
-
 
 
 

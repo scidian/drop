@@ -198,31 +198,21 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
                                    Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() +
                                    Dr::GetColor(Window_Colors::Background_Dark).name() +"; } "
 
-        " QToolButton#buttonSendToBack  {           border-top-left-radius: 4px; border-bottom-left-radius: 4px; } "
-        " QToolButton#buttonSendToBack  {           image: url(:/toolbar_icons/toolbar_sendtoback.png);        padding: 4px; } "
-        " QToolButton#buttonSendToBack:disabled {   image: url(:/toolbar_icons/toolbar_sendtoback_gray.png);   padding: 4px; } "
+        +
+        StyleSheetToolBarButtons("buttonSendToBack",   "sendtoback.png",        "sendtoback.png",       "sendtoback_gray.png",   4, 0, 4, 0, false) +
+        StyleSheetToolBarButtons("buttonSendBackward", "sendbackward.png",      "sendbackward.png",     "sendbackward_gray.png", 0, 0, 0, 0, false) +
+        StyleSheetToolBarButtons("buttonSendForward",  "sendforward.png",       "sendforward.png",      "sendforward_gray.png",  0, 0, 0, 0, false) +
+        StyleSheetToolBarButtons("buttonSendToFront",  "sendtofront.png",       "sendtofront.png",      "sendtofront_gray.png",  0, 4, 0, 4, false) +
 
-        " QToolButton#buttonSendBackward  {         image: url(:/toolbar_icons/toolbar_sendbackward.png);      padding: 4px; } "
-        " QToolButton#buttonSendBackward:disabled { image: url(:/toolbar_icons/toolbar_sendbackward_gray.png); padding: 4px; } "
+        StyleSheetToolBarButtons("buttonResetObject",  "reset.png",             "reset.png",            "reset.png",             4, 4, 4, 4, false) +
 
-        " QToolButton#buttonSendForward  {          image: url(:/toolbar_icons/toolbar_sendforward.png);       padding: 4px; } "
-        " QToolButton#buttonSendForward:disabled {  image: url(:/toolbar_icons/toolbar_sendforward_gray.png);  padding: 4px; } "
+        StyleSheetToolBarButtons("buttonSnapToGrid",   "grid_snap_uncheck.png", "grid_snap.png",        "toolbar_grid_snap_gray.png", 4, 0, 4, 0, true)  +
+                                 " QToolButton#buttonSnapToGrid:checked { padding-bottom: 3px; } " +
+        StyleSheetToolBarButtons("buttonResizeToGrid", "_.png",                 "_.png",                "_gray.png",    0, 0, 0, 0, true)  +
+        StyleSheetToolBarButtons("buttonGridOnTop",    "grid_ontop_uncheck.png", "grid_ontop.png",      "grid_ontop_gray.png",   0, 4, 0, 4, true)  +
 
-        " QToolButton#buttonSendToFront  {          border-top-right-radius: 4px; border-bottom-right-radius: 4px; } "
-        " QToolButton#buttonSendToFront  {          image: url(:/toolbar_icons/toolbar_sendtofront.png);       padding: 4px; } "
-        " QToolButton#buttonSendToFront:disabled {  image: url(:/toolbar_icons/toolbar_sendtofront_gray.png);  padding: 4px; } "
-
-        " QToolButton#buttonResetObject  {          border-radius: 4px; } "
-        " QToolButton#buttonResetObject  {          image: url(:/toolbar_icons/toolbar_reset.png);  padding: 4px; } "
-        " QToolButton#buttonResetObject:disabled {  image: url(:/toolbar_icons/toolbar_reset.png);  padding: 4px; } "
-
-        " QToolButton#buttonFontEditor  {           border-radius: 4px; } "
-        " QToolButton#buttonFontEditor  {           image: url(:/toolbar_icons/toolbar_fonts.png);  padding: 4px; } "
-        " QToolButton#buttonFontEditor:disabled {   image: url(:/toolbar_icons/toolbar_fonts.png);  padding: 4px; } "
-
-        " QToolButton#buttonSettingsEditor  {         border-radius: 4px; } "
-        " QToolButton#buttonSettingsEditor  {         image: url(:/toolbar_icons/toolbar_settings.png);  padding: 4px; } "
-        " QToolButton#buttonSettingsEditor:disabled { image: url(:/toolbar_icons/toolbar_settings.png);  padding: 4px; } "
+        StyleSheetToolBarButtons("buttonFontEditor",     "fonts.png",           "fonts.png",            "fonts.png",             4, 4, 4, 4, false) +
+        StyleSheetToolBarButtons("buttonSettingsEditor", "settings.png",        "settings.png",         "settings.png",          4, 4, 4, 4, false) +
 
 
         //###############################################################################
@@ -243,6 +233,8 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         "       color: " +        Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " +   Dr::GetColor(Window_Colors::Shadow).name() + "; "
         "       border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; }"
+        " QAbstractSpinBox::!enabled { background: transparent; border: none; "
+        "       color: " + Dr::GetColor(Window_Colors::Text).darker(150).name() + "; } "
 
         // Line Edit, mostly in object inspector
         " QLineEdit {               border: " + Dr::BorderWidth() + " solid; height: 20px; "
@@ -257,6 +249,9 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
         "       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
         "       border-radius: 0px; }"
+        " QLineEdit::!enabled { background: transparent; border: none; "
+        "       color: " + Dr::GetColor(Window_Colors::Text).darker(150).name() + "; } "
+
 
         // Drop down PushButtons
         " QPushButton#buttonDropDown { border: " + Dr::BorderWidth() + " solid; height: 20px; "
@@ -347,7 +342,7 @@ QString StyleSheetPoppedOutBackgroundBorder(int top_percent, int bottom_percent,
                                         Dr::GetColor(Window_Colors::Background_Dark).darker(250).name() + "; ";
 }
 
-// Formatting for toolbar buttons
+// Formatting for "Mode" toolbar buttons
 QString StyleSheetToolBarModeButton(QString button_name, QString icon_name, QString icon_faded_name) {
     return
     " QToolButton#" + button_name + " {                  border-radius: 4px; border: 1px solid;  "
@@ -363,6 +358,29 @@ QString StyleSheetToolBarModeButton(QString button_name, QString icon_name, QStr
     " QToolButton#" + button_name + ":checked {         image: url(:/toolbar_icons/" + icon_name + "); padding: 7px; } "
     " QToolButton#" + button_name + ":hover:checked {   image: url(:/toolbar_icons/" + icon_name + "); padding: 7px; } "
     " QToolButton#" + button_name + ":hover:!checked {  image: url(:/toolbar_icons/" + icon_name + "); padding: 7px; } ";
+}
+
+// Formatting for normal toolbar buttons
+QString StyleSheetToolBarButtons(QString button_name, QString icon_unchecked, QString icon_checked, QString icon_disabled,
+                                 int tl, int tr, int bl, int br, bool checkable) {
+    QString text =
+        " QToolButton#" + button_name + "          { image: url(:/toolbar_icons/toolbar_" + icon_unchecked + ");  padding: 4px; } "
+        " QToolButton#" + button_name + ":checked  { image: url(:/toolbar_icons/toolbar_" + icon_checked + ");    } "
+        " QToolButton#" + button_name + ":disabled { image: url(:/toolbar_icons/toolbar_" + icon_disabled + ");   } "
+        " QToolButton#" + button_name + " { border-top-left-radius: " +     QString::number(tl) + "px;  "
+                                        "   border-top-right-radius: " +    QString::number(tr) + "px;  "
+                                        "   border-bottom-left-radius: " +  QString::number(bl) + "px;  "
+                                        "   border-bottom-right-radius: " + QString::number(br) + "px; } ";
+
+    if (checkable) { text +=
+        " QToolButton#" + button_name + ":checked { border: 1px solid; "
+        "       background: " +    Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
+        "       border-color: " +  Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + " " +
+                                   Dr::GetColor(Window_Colors::Background_Dark).name() + " " +
+                                   Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + " " +
+                                   Dr::GetColor(Window_Colors::Background_Dark).name() +"; } ";
+    }
+    return text;
 }
 
 

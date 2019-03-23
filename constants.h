@@ -56,6 +56,7 @@ namespace Component_Icons
     const QString Camera        { QString(":/inspector_icons/comp_camera.png") };
     const QString Character     { QString(":/inspector_icons/comp_character.png") };
     const QString Animation     { QString(":/inspector_icons/comp_animation.png") };
+    const QString Font          { QString(":/inspector_icons/comp_font.png") };
     const QString None          { QString("") };
 };
 
@@ -74,9 +75,11 @@ namespace Advisor_Info
     const HeaderBodyList Mode_Editor            { "World Editor Mode", "This mode will allow you to edit the contents of each world. It is where "
                                                                       "you can design each Stage and lay out your levels." };
     const HeaderBodyList Mode_UI                { "UI Editor Mode", "This mode will allow you to edit the user interfaces of your project. " };
-
     const HeaderBodyList Settings_Font_Editor   { "Font Editor", "Create and edit fonts usued for Text objects." };
     const HeaderBodyList Settings_Editor        { "Settings Editor", "View and edit project settings." };
+
+    const HeaderBodyList Grid_Snap_To_Grid      { "Snap to Grid?", "Snaps objects to grid lines when moving objects around with the mouse." };
+    const HeaderBodyList Grid_Show_On_Top       { "Grid on Top?", "Draws grid lines on top of objects in editor." };
 
 
     // Form Main Widgets

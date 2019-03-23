@@ -11,10 +11,8 @@
 
 #include "enums.h"
 
-
 class DrSettings;
 class DrComponent;
-
 
 //####################################################################################
 //##    DrProperty
@@ -36,15 +34,23 @@ private:
     // The unique id of this property within the parent object
     long          m_property_key;
 
-    // Should this apepar in the object inspector
+    // Should this appear in the object inspector
     bool          m_is_hidden =         false;
+
+    // Shoudl this be editable in the object inspector
+    bool          m_is_editable =       true;
 
 public:
     // Constructor & destructor
-    DrProperty(DrSettings *parent_settings, DrComponent *parent_component,
-               QString new_display_name, QString new_description, Property_Type new_type, QVariant new_value,
-               long new_key,
-               bool is_hidden = false);
+    DrProperty(DrSettings      *parent_settings,
+               DrComponent     *parent_component,
+               QString          display_name,
+               QString          description,
+               Property_Type    type,
+               QVariant         value,
+               long             new_key,
+               bool             is_hidden = false,
+               bool             is_editable = true);
 
     // Getters and setters
     DrSettings*   getParentSettings() { return m_parent_settings; }
@@ -60,6 +66,9 @@ public:
     bool          isHidden() { return m_is_hidden; }
     void          setHidden(bool is_hidden) { m_is_hidden = is_hidden; }
 
+    bool          isEditable() { return m_is_editable; }
+    void          setEditable(bool is_editable) { m_is_editable = is_editable; }
+
     void setDisplayName(QString new_display_name) { m_display_name = new_display_name; }
     void setDescription(QString new_description) { m_description = new_description; }
     void setPropertyType(Property_Type new_type) { m_preferred_type = new_type; }
@@ -73,8 +82,6 @@ public:
 
 
 #endif // DRPROPERTY_H
-
-
 
 
 

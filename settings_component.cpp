@@ -46,15 +46,15 @@ void DrComponent::setProperty(Properties setting, QVariant value) { m_properties
 //####################################################################################
 //##    addProperty functions
 //####################################################################################
-void DrComponent::addProperty(long setting, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description, bool is_hidden)
+void DrComponent::addProperty(Properties setting,
+                              Property_Type type,
+                              QVariant value,
+                              QString display_name,
+                              QString description,
+                              bool is_hidden,
+                              bool is_editable)
 {
-    DrProperty *prop = new DrProperty(m_parent_settings, this, new_display_name, new_description, new_type, new_value, setting, is_hidden);
-    m_properties[setting] = prop;
-}
-
-void DrComponent::addProperty(Properties setting, Property_Type new_type, QVariant new_value, QString new_display_name, QString new_description, bool is_hidden)
-{
-    DrProperty *prop = new DrProperty(m_parent_settings, this, new_display_name, new_description, new_type, new_value, static_cast<int>(setting), is_hidden);
+    DrProperty *prop = new DrProperty(m_parent_settings, this, display_name, description, type, value, static_cast<int>(setting), is_hidden, is_editable);
     m_properties[static_cast<int>(setting)] = prop;
 }
 

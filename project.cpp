@@ -48,10 +48,10 @@ long DrProject::addAsset(DrAssetType new_asset_type, long image_key)
     return new_asset_key;
 }
 
-long DrProject::addFont(QString font_name, QPixmap font_pixmap, bool use_test_rects)
+long DrProject::addFont(QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects)
 {
     long new_font_key = getNextKey();
-    m_fonts[new_font_key] = new DrFont(this, new_font_key, font_name, font_pixmap, use_test_rects);
+    m_fonts[new_font_key] = new DrFont(this, new_font_key, font_name, font_pixmap, font_family, font_size, use_test_rects);
     return new_font_key;
 }
 

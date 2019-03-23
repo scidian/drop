@@ -39,6 +39,8 @@ void    ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius);
 int     CheckFontWidth(QFont font, QString text_to_check);
 QString FitStringToWidth(QFont font, QString text_to_check, int max_width = 80, bool use_dots = true);
 
+QString StyleSheetToolBarButtons(QString button_name, QString icon_unchecked, QString icon_checked, QString icon_disabled,
+                                 int tl, int tr, int bl, int br, bool checkable);
 QString StyleSheetToolBarModeButton(QString button_name, QString icon_name, QString icon_faded_name);
 QString StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_percent, bool highlight = false);
 QString StyleSheetPoppedOutBackgroundBorder(int top_percent, int bottom_percent, bool highlight = false);

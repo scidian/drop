@@ -41,7 +41,7 @@ DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_
         break;
     case DrAssetType::Text:
         my_starting_pixmap = m_parent_project->getDrFont(source_key)->getPixmap();
-        initializeAssetSettingsFont(m_parent_project->getDrFont(source_key)->getName());
+        initializeAssetSettingsFont(m_parent_project->getDrFont(source_key));
         break;
     }
 
@@ -77,13 +77,21 @@ void DrAsset::initializeAssetSettingsObject(QString new_name, QPixmap pixmap)
 }
 
 
-void DrAsset::initializeAssetSettingsFont(QString new_name)
+void DrAsset::initializeAssetSettingsFont(DrFont *font)
 {
     addComponent(Components::Asset_Settings, "Settings", "Basic settings for current asset.", Component_Colors::White_Snow, true);
     getComponent(Components::Asset_Settings)->setIcon(Component_Icons::Settings);
 
-    addPropertyToComponent(Components::Asset_Settings, Properties::Asset_Name, Property_Type::String, new_name,
+    addPropertyToComponent(Components::Asset_Settings, Properties::Asset_Name, Property_Type::String, font->getName(),
                            "Asset Name", "Name of the current asset.");
+
+    addComponent(Components::Asset_Font, "Font", "Font properties for this text asset.", Component_Colors::Orange_Medium, true);
+    getComponent(Components::Asset_Font)->setIcon(Component_Icons::Font);
+
+    addPropertyToComponent(Components::Asset_Font, Properties::Asset_Font_Family, Property_Type::String, font->getPropertyFontFamily(),
+                           "Font Family", "Font used for this text asset.", false, false);
+    addPropertyToComponent(Components::Asset_Font, Properties::Asset_Font_Size, Property_Type::Int, font->getPropertyFontSize(),
+                           "Font Size", "Font size of this text asset.", false, false);
 
 }
 

@@ -23,6 +23,10 @@ enum class Preferences
     World_Editor_Show_Connections,                  // bool
     World_Editor_Show_Game_Frame,                   // bool
 
+    World_Editor_Snap_To_Grid,                      // bool
+    World_Editor_Resize_To_Grid,                    // bool
+    World_Editor_Grid_On_Top,                       // bool
+
     World_Editor_Snap_To_Center_Of_Selection_Box,   // bool
 };
 

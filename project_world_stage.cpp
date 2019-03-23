@@ -138,10 +138,6 @@ void DrStage::initializeStageSettings(QString new_name)
                            "Grid Scale", "X and Y stretch factor after grid has been rotated. For Isometric Grids, set X value twice that of Y value.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Rotation, Property_Type::Angle, 0,
                            "Grid Rotation", "Rotation of the grid lines. For Isometric Grids, set \"Grid Rotation\" to 45 degrees.");
-    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Should_Snap, Property_Type::Bool, true,
-                           "Snap to Grid?", "Snaps objects to grid lines when moving objects around with the mouse.");
-    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Show_On_Top, Property_Type::Bool, false,
-                           "Grid on Top?", "Draws grid lines on top of objects in editor.");
 }
 
 

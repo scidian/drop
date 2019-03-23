@@ -65,9 +65,9 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     long image_11 = project->addImage(":/assets/cake_ice_cube.png");
     long image_12 = project->addImage(":/assets/planetwithareallylongname.png");
 
-    long font_1 =   project->addFont("Distance Font", QPixmap(":/assets/test_font.png"),   true);
-    long font_2 =   project->addFont("Coin Count",    QPixmap(":/assets/test_font_2.png"), true);
-    long font_3 =   project->addFont("I Love Julie",  QPixmap(":/assets/test_font_3.png"), true);
+    long font_1 =   project->addFont("Distance Font", QPixmap(":/assets/test_font.png"),   "Arial",          20, true);
+    long font_2 =   project->addFont("Coin Count",    QPixmap(":/assets/test_font_2.png"), "Britannic Bold", 15, true);
+    long font_3 =   project->addFont("I Love Julie",  QPixmap(":/assets/test_font_3.png"), "Bauhaus 93",     36, true);
 
 
 

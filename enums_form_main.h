@@ -72,7 +72,11 @@ enum class Buttons_Reset {
     Reset_Object,
 };
 
-
+enum class Buttons_Grid {
+    Snap_To_Grid,
+    Resize_To_Grid,
+    Grid_On_Top,
+};
 
 
 

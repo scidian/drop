@@ -91,7 +91,7 @@ public:
     // Children creation calls
     void            addWorld();
     long            addAsset(DrAssetType new_asset_type, long image_key);
-    long            addFont( QString font_name, QPixmap font_pixmap, bool use_test_rects = false);
+    long            addFont( QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects = false);
     long            addImage(QString image_path);
 
 };

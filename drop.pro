@@ -82,7 +82,8 @@ SOURCES += \
     project_font.cpp \
     form_font_editor.cpp \
     form_settings.cpp \
-    editor_tree_assets_mouse.cpp
+    editor_tree_assets_mouse.cpp \
+    form_main_toolbar_button_click.cpp
 
 HEADERS += \
     enums.h \

@@ -36,10 +36,10 @@ QVariant DrSettings::getComponentPropertyValue(Components component, Properties 
 void DrSettings::setComponentPropertyValue(long component, long property, QVariant value) { m_components[component]->getProperty(property)->setValue(value); }
 void DrSettings::setComponentPropertyValue(Components component, Properties property, QVariant value) { m_components[static_cast<long>(component)]->getProperty(property)->setValue(value); }
 
-QString DrSettings::getWorldName() { return m_components[static_cast<long>(Components::World_Settings)]->getProperty(Properties::World_Name)->getValue().toString(); }
-QString DrSettings::getStageName() { return m_components[static_cast<long>(Components::Stage_Settings)]->getProperty(Properties::Stage_Name)->getValue().toString(); }
-QString DrSettings::getObjectName() { return m_components[static_cast<long>(Components::Object_Settings)]->getProperty(Properties::Object_Name)->getValue().toString(); }
-QString DrSettings::getAssetName() { return m_components[static_cast<long>(Components::Asset_Settings)]->getProperty(Properties::Asset_Name)->getValue().toString(); }
+QString DrSettings::getWorldName() { return m_components[static_cast<long>(Components::World_Settings) ]->getProperty(Properties::World_Name )->getValue().toString(); }
+QString DrSettings::getStageName() { return m_components[static_cast<long>(Components::Stage_Settings) ]->getProperty(Properties::Stage_Name )->getValue().toString(); }
+QString DrSettings::getObjectName(){ return m_components[static_cast<long>(Components::Object_Settings)]->getProperty(Properties::Object_Name)->getValue().toString(); }
+QString DrSettings::getAssetName() { return m_components[static_cast<long>(Components::Asset_Settings) ]->getProperty(Properties::Asset_Name )->getValue().toString(); }
 
 DrProperty* DrSettings::findPropertyFromPropertyKey(long property_key_to_find)
 {
@@ -63,27 +63,17 @@ DrComponent* DrSettings::findComponentFromPropertyKey(long property_key_to_find)
 //##    Component Loading - addComponent / addComponentProperty
 //####################################################################################
 
-void DrSettings::addComponent(long component, QString new_display_name, QString new_description, QColor new_color, bool is_turned_on) {
-    DrComponent *comp = new DrComponent(this, new_display_name, new_description, new_color, component, is_turned_on);
-    m_components[component] = comp;
-}
-
-void DrSettings::addComponent(Components component, QString new_display_name, QString new_description, QColor new_color, bool is_turned_on) {
-    DrComponent *comp = new DrComponent(this, new_display_name, new_description, new_color, static_cast<long>(component), is_turned_on);
+void DrSettings::addComponent(Components component, QString display_name, QString description, QColor color, bool is_turned_on) {
+    DrComponent *comp = new DrComponent(this, display_name, description, color, static_cast<long>(component), is_turned_on);
     m_components[static_cast<long>(component)] = comp;
 }
 
 
 //####################################################################################
 
-void DrSettings::addPropertyToComponent(long component, long property_number, Property_Type new_type,
-                                        QVariant new_value, QString new_display_name, QString new_description, bool is_hidden) {
-    m_components[component]->addProperty(property_number, new_type, new_value, new_display_name, new_description, is_hidden);
-}
-
-void DrSettings::addPropertyToComponent(Components component, Properties property_number, Property_Type new_type,
-                                        QVariant new_value, QString new_display_name, QString new_description, bool is_hidden) {
-    m_components[static_cast<long>(component)]->addProperty(property_number, new_type, new_value, new_display_name, new_description, is_hidden);
+void DrSettings::addPropertyToComponent(Components component, Properties property_number, Property_Type type,
+                                        QVariant value, QString display_name, QString description, bool is_hidden, bool is_editable) {
+    m_components[static_cast<long>(component)]->addProperty(property_number, type, value, display_name, description, is_hidden, is_editable);
 }
 
 

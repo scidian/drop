@@ -32,8 +32,8 @@ void DrView::updateGrid()
     m_grid_rotate =  my_scene->getCurrentStageShown()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Rotation).toDouble();
     int style =      my_scene->getCurrentStageShown()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Style).toInt();
     m_grid_style =   static_cast<Grid_Style>(style);
-    m_grid_should_snap =  my_scene->getCurrentStageShown()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Should_Snap).toBool();
-    m_grid_show_on_top =  my_scene->getCurrentStageShown()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Show_On_Top).toBool();
+    m_grid_should_snap =  Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool();
+    m_grid_show_on_top =  Dr::GetPreference(Preferences::World_Editor_Grid_On_Top).toBool();
 
     recalculateGrid();
     m_grid_needs_redraw = true;         // Flag grid for redraw during next paintEvent

@@ -224,6 +224,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
             }
 
             if (new_widget != nullptr) {
+                new_widget->setEnabled(property_pair.second->isEditable());
                 horizontal_split->addWidget(new_widget);
             }
 

@@ -153,6 +153,7 @@ enum class Components
 {
     Asset_Settings,
     Asset_Animation,
+    Asset_Font,
 
     World_Settings,
     World_Physics,
@@ -178,6 +179,10 @@ enum class Properties
 
     // Animation
     Asset_Animation_Default,        //image
+
+    // Font
+    Asset_Font_Family,
+    Asset_Font_Size,
 
     // ********************
 
@@ -209,8 +214,6 @@ enum class Properties
     Stage_Grid_Size,                //sizef
     Stage_Grid_Scale,               //scale
     Stage_Grid_Rotation,            //angle
-    Stage_Grid_Should_Snap,         //bool
-    Stage_Grid_Show_On_Top,         //bool
 
     // ********************
 

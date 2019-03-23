@@ -77,7 +77,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 
         QPointF new_pos = value.toPointF();
         if (m_editor_relay->currentViewMode() != View_Mode::Translating) return new_pos;
-        if (m_object->getParentStage()->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Should_Snap).toBool() == false) return new_pos;
+        if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool() == false) return new_pos;
 
         // ***** Calculate new center based on SelectionBox starting center and difference between starting pos() and new passed in new_pos
         if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool()) {

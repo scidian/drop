@@ -42,64 +42,6 @@ void DrToolBar::mouseMoveEvent(QMouseEvent* event) {
 void DrToolBar::mouseReleaseEvent(QMouseEvent*) { is_moving = false; }
 
 
-//####################################################################################
-//##    buttonGroupMode SLOT and functions
-//####################################################################################
-void FormMain::buttonGroupModeClicked(int id)
-{
-    buttonGroupModeSetChecked(id);
-
-    Form_Main_Mode new_id =     static_cast<Form_Main_Mode>(id);
-    if (current_mode == new_id) return;
-
-    if (new_id == Form_Main_Mode::World_Map) {
-        this->setFormMainMode(Form_Main_Mode::Clear);
-    } else if (new_id == Form_Main_Mode::World_Editor) {
-        this->setFormMainMode(Form_Main_Mode::World_Editor);
-    } else if (new_id == Form_Main_Mode::UI_Editor) {
-        this->setFormMainMode(Form_Main_Mode::Clear);
-    }
-}
-
-void FormMain::buttonGroupModeSetChecked(int id)
-{
-    QList<QAbstractButton*> buttons = buttonsGroupMode->buttons();
-    for (auto button : buttons) {
-        bool is_button = (buttonsGroupMode->button(id) == button);
-        button->setChecked(is_button);
-        button->setDown(!is_button);
-    }
-}
-
-
-
-//####################################################################################
-//##    buttonGroupLayering SLOT and functions
-//####################################################################################
-void FormMain::buttonGroupLayeringClicked(int id)
-{
-    Buttons_Layering clicked = static_cast<Buttons_Layering>(id);
-
-    if (clicked == Buttons_Layering::Send_To_Back) {
-
-    }
-}
-
-
-//####################################################################################
-//##    buttonGroupReset SLOT and functions
-//####################################################################################
-void FormMain::buttonGroupResetClicked(int id)
-{
-    Buttons_Reset clicked = static_cast<Buttons_Reset>(id);
-
-    if (clicked == Buttons_Reset::Reset_Object) {
-
-    }
-}
-
-
-
 
 //####################################################################################
 //##    Clears and recreates the toolbar based on the new mode
@@ -123,6 +65,7 @@ void FormMain::setToolbar(Form_Main_Mode new_mode)
     case Form_Main_Mode::World_Editor:
         addToolbarGroup( widgetGroupLayering, false);
         addToolbarGroup( widgetGroupReset, true );
+        addToolbarGroup( widgetGroupGrid, true );
         addToolbarGroup( widgetGroupSettings, false );
 
 //        for (auto button : buttonsGroupLayering->buttons() ) {

@@ -104,7 +104,7 @@ void FormMain::buildToolBar()
         m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Not_Set);
         toolbarLayoutLayering->addWidget(tool);
 
-    // ***** Mode "Editor" Add-On, Layering: Holds buttons that send objects to front / back
+    // ***** Mode "Editor" Add-On, Reset: Holds button that resets object
     widgetGroupReset = new QWidget(widgetToolbar);
     widgetGroupReset->hide();
     widgetGroupReset->setObjectName(QStringLiteral("widgetGroupReset"));
@@ -121,6 +121,41 @@ void FormMain::buildToolBar()
         buttonsGroupReset->addButton(tool, int(Buttons_Reset::Reset_Object));
         m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Not_Set);
         toolbarLayoutReset->addWidget(tool);
+
+    // ***** Mode "Editor" Add-On, Grid: Holds buttons that control snapo to grid, resize to grid, show grid on top
+    widgetGroupGrid = new QWidget(widgetToolbar);
+    widgetGroupGrid->hide();
+    widgetGroupGrid->setObjectName(QStringLiteral("widgetGroupGrid"));
+    widgetGroupGrid->setFixedHeight(46);
+        QHBoxLayout *toolbarLayoutGrid = new QHBoxLayout(widgetGroupGrid);
+        toolbarLayoutGrid->setSpacing(1);
+        toolbarLayoutGrid->setContentsMargins(0, 0, 0, 0);
+
+        buttonsGroupGrid = new QButtonGroup();
+        buttonsGroupGrid->setExclusive(false);
+        connect(buttonsGroupGrid, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupGridClicked(int)));
+
+        tool = createToolbarButton(QStringLiteral("buttonSnapToGrid"), 34, 26, true);
+        buttonsGroupGrid->addButton(tool, int(Buttons_Grid::Snap_To_Grid));
+        tool->setChecked(!Dr::GetPreference(Preferences::World_Editor_Grid_On_Top).toBool());
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Grid_Snap_To_Grid);
+        toolbarLayoutGrid->addWidget(tool);
+
+        tool = createToolbarButton(QStringLiteral("buttonResizeToGrid"), 34, 26, true);
+        buttonsGroupGrid->addButton(tool, int(Buttons_Grid::Resize_To_Grid));
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Not_Set);
+        toolbarLayoutGrid->addWidget(tool);
+
+        tool = createToolbarButton(QStringLiteral("buttonGridOnTop"), 34, 26, true);
+        buttonsGroupGrid->addButton(tool, int(Buttons_Grid::Grid_On_Top));
+        tool->setChecked(!Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool());
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Grid_Show_On_Top);
+        toolbarLayoutGrid->addWidget(tool);
+
+
+
+
+
 
 
     // ***** Settings Buttons
@@ -147,8 +182,6 @@ void FormMain::buildToolBar()
             FormSettings *settings_editor = new FormSettings(project, this);
             settings_editor->show();
         });
-
-
 
     // ********** Set up initial toolbar
     // Clears the containers that keeps track of whats added to the toolbar layout

@@ -48,7 +48,7 @@ public:
 
     // External calls
     void        initializeAssetSettingsObject(QString new_name, QPixmap pixmap);
-    void        initializeAssetSettingsFont(QString new_name);
+    void        initializeAssetSettingsFont(DrFont *font);
 
 };
 

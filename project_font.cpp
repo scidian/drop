@@ -10,7 +10,7 @@
 #include "project_font.h"
 
 
-DrFont::DrFont(DrProject *parent_project, long key, QString font_name, QPixmap font_pixmap, bool use_test_rects) :
+DrFont::DrFont(DrProject *parent_project, long key, QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects) :
     m_parent_project(parent_project)
 {
     setKey(key);
@@ -20,6 +20,22 @@ DrFont::DrFont(DrProject *parent_project, long key, QString font_name, QPixmap f
 
     if (use_test_rects)
         setTestFontRects();
+
+    p_font_family =     font_family;
+    p_font_size =       font_size;
+    p_font_padding =    2;
+    p_main_color =      Qt::white;
+
+    p_outline =         false;
+    p_outline_color =   Qt::black;
+    p_outline_width =   1;
+
+    p_shadow = false;
+    p_shadow_color =    QColor(205, 205, 205, 128);
+    p_shadow_offset =   QPoint(4, -4);
+
+    p_gradient =        false;
+    p_gradient_color =  Qt::red;
 }
 
 // !!! Need to incorporate letter spacing
