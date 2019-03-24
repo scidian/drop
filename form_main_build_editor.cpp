@@ -142,9 +142,10 @@ void FormMain::buildWidgetsEditor()
                             viewEditor->setRenderHint(QPainter::Antialiasing, false);
                         else {
                             viewEditor->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
-                            QSurfaceFormat format;
-                            format.setSamples(4);
-                            QSurfaceFormat::setDefaultFormat(format);                   // Set antialiasing samples to 4
+                            ///// Enables multisampling
+                            ///QSurfaceFormat format;
+                            ///format.setSamples(2);
+                            ///QSurfaceFormat::setDefaultFormat(format);                   // Set antialiasing samples to 2
                         }
 
                         if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL)) {

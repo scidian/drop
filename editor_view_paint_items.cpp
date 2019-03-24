@@ -25,6 +25,9 @@ void DrView::paintItemOutlines(QPainter &painter)
     painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.setBrush(Qt::NoBrush);
 
+    bool antialiasing_before = painter.testRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::Antialiasing, false);
+
     for (auto item: my_items) {
 
         // Apply item scaling / rotation to bounding box
@@ -34,6 +37,8 @@ void DrView::paintItemOutlines(QPainter &painter)
         QPolygon to_view = mapFromScene(polygon);
         painter.drawPolygon(to_view);
     }
+
+    painter.setRenderHint(QPainter::Antialiasing, antialiasing_before);
 
     // !!!!! #DEBUG:    Show selection group info
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Selection_Group_Data)) {
@@ -53,6 +58,8 @@ void DrView::paintItemOutlines(QPainter &painter)
 //####################################################################################
 void DrView::paintBoundingBox(QPainter &painter)
 {
+    bool antialiasing_before = painter.testRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::Antialiasing, false);
     painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 1));
 
     // ***** Map item bounding box to screen so we can draw it
@@ -64,7 +71,7 @@ void DrView::paintBoundingBox(QPainter &painter)
     // ***** Draw bounding box onto view
     painter.drawLine( QLineF( m_handles_centers[Position_Flags::Rotate], m_handles_centers[Position_Flags::Top]) );
     painter.drawPolygon(to_view);
-
+    painter.setRenderHint(QPainter::Antialiasing, antialiasing_before);
 
     // !!!!! #DEBUG:    Paints unrotated selection box with distance point used for calculating scale
     if (Dr::CheckDebugFlag(Debug_Flags::Paint_Resize_Calculations)) {
@@ -110,6 +117,8 @@ void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw)
     double rotate_size  =   10;
     double square_scale = .225;
     for (int i = 0; i < handles.count(); i++) {
+
+        // Draw Cornder and Side Handles
         if (i < (handles.count() - 1)) {
             to_draw.setX(handles[i].x() - (handle_size / 2));    to_draw.setWidth(handle_size);
             to_draw.setY(handles[i].y() - (handle_size / 2));    to_draw.setHeight(handle_size);
@@ -124,10 +133,10 @@ void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw)
                 painter.resetTransform();
             }
 
+        // Draw rotate handle
         } else {
             to_draw.setX(handles[i].x() - (rotate_size / 2));    to_draw.setWidth(rotate_size);
             to_draw.setY(handles[i].y() - (rotate_size / 2));    to_draw.setHeight(rotate_size);
-
             painter.drawPixmap(to_draw, p_rotate, p_rotate.rect());
         }
     }
@@ -180,8 +189,9 @@ void DrView::paintItemCenters(QPainter &painter)
     if (m_grid_should_snap == false) return;
     if (m_allow_movement == false) return;
 
-    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL) == false)
-        painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
+    if (!Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL))
+        ///painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);      // Paints in NOT mode
+        painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_Source);
     else
         painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_Source);
 

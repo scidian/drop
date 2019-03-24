@@ -205,7 +205,7 @@ void TreeAssets::buildAssetTree(QString search_text)
     // ***** Adds a spacer item at the bottom to allow for comfortable scrolling to the bottom of the tree
     QTreeWidgetItem *spacer_item  = new QTreeWidgetItem();
     QLabel *spacer_label = new QLabel();
-    spacer_label->setFixedHeight(100);
+    spacer_label->setFixedHeight(120);
     this->addTopLevelItem(spacer_item);
     this->setItemWidget(spacer_item, 0, spacer_label);
 

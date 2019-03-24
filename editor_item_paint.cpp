@@ -26,9 +26,9 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     ///if (option->state & QStyle::State_MouseOver) { fillColor = QColor(Qt::gray); } //fillColor.light(125); }          // If mouse is over
 
     // Turn off anti aliasing if necessary
-    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing) == false) {
-        painter->setRenderHint(QPainter::Antialiasing, false);
-        painter->setRenderHint(QPainter::SmoothPixmapTransform, false);
+    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing)) {
+        painter->setRenderHint(QPainter::Antialiasing, true);
+        painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
     }
 
     // Check item is not super duper tiny, this seems to crash paint function

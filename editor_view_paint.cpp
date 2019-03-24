@@ -85,6 +85,11 @@ void DrView::paintEvent(QPaintEvent *event)
     // Initiate QPainter object
     QPainter painter(viewport());
 
+    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing)) {
+        painter.setRenderHint(QPainter::Antialiasing, true);
+        painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+    }
+
     // If theres no selection we don't need to perform these paint routines
     if (my_scene->getSelectionCount() > 0) {
 

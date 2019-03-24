@@ -39,7 +39,7 @@ void InitializeFlags()
     SetDebugFlag( Debug_Flags::Show_Secret_Menu );
     SetDebugFlag( Debug_Flags::Show_Undo_View );
 
-    //SetDebugFlag( Debug_Flags::Turn_On_Antialiasing );
+    SetDebugFlag( Debug_Flags::Turn_On_Antialiasing );
     //SetDebugFlag( Debug_Flags::Turn_On_OpenGL );
 
     SetDebugFlag( Debug_Flags::Label_FPS );
