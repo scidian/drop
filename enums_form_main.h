@@ -39,6 +39,7 @@ enum class Editor_Widgets {
 //####################################################################################
 enum class View_Mode {
     None,
+    Disable_Update,     // Special mode to disallow updates
     Selecting,          // Rubber band selection
     Resizing,           // Changing items size
     Rotating,           // Rotating items

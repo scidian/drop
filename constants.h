@@ -79,6 +79,9 @@ namespace Advisor_Info
     const HeaderBodyList Settings_Editor        { "Settings Editor", "View and edit project settings." };
 
     const HeaderBodyList Grid_Snap_To_Grid      { "Snap to Grid?", "Snaps objects to grid lines when moving objects around with the mouse." };
+    const HeaderBodyList Resize_To_Grid         { "Resize to Grid?", "Snaps objects to grid lines while resizing. This only works if the angle of the object "
+                                                                     "matches the angle of the grid. Resize handles will turn from round to square "
+                                                                     "to signify snapping is possible. "};
     const HeaderBodyList Grid_Show_On_Top       { "Grid on Top?", "Draws grid lines on top of objects in editor." };
 
 

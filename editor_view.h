@@ -94,6 +94,7 @@ private:
     QColor       m_grid_color;                                      // Grid color
 
     bool         m_grid_should_snap = true;                         // Should snap to grid?
+    bool         m_grid_resize_snap = true;                         // Should snap while resizing?
     bool         m_grid_show_on_top = false;                        // Paint grid on top?
 
     // Misc Flags
@@ -227,6 +228,7 @@ public:
 
     // Getters / Setters
     View_Mode       currentViewMode() { return m_view_mode; }
+    QString         currentViewModeAsString();
     int             currentZoomLevel() { return m_zoom; }
     bool            hasShownAScene() const { return m_flag_has_shown_a_scene_yet; }
     void            setHasShownAScene(bool has) { m_flag_has_shown_a_scene_yet = has; }

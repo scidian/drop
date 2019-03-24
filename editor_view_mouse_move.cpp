@@ -174,7 +174,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
                                                  ", Scale Y: " +   QString::number(my_scale.y()) );
         Dr::SetLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle) + ", Opacity: " + QString::number(item->opacity()));
         Dr::SetLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()) + QString("\t") +
-                                                             "Name: " + item->data(User_Roles::Name).toString() );
+                                                             "View Mode: " + currentViewModeAsString() );
 
     } else if (Dr::CheckDebugFlag(Debug_Flags::Label_Selected_Item_Data)) {
         if (m_view_mode == View_Mode::None && check_item == nullptr) {
@@ -221,8 +221,8 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
             my_scene->setHasCalculatedAdjustment(false);
             QGraphicsView::mouseMoveEvent(event);
 
-            // Update selection box location, disable DrItem->itemChange before we update selection box by setting View_Mode to None
-            m_view_mode = View_Mode::None;
+            // Update selection box location, disable DrItem->itemChange before we update selection box by setting View_Mode to Disable_Update
+            m_view_mode = View_Mode::Disable_Update;
             my_scene->updateSelectionBox();
             m_view_mode = View_Mode::Translating;
 

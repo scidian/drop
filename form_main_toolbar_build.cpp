@@ -144,7 +144,8 @@ void FormMain::buildToolBar()
 
         tool = createToolbarButton(QStringLiteral("buttonResizeToGrid"), 34, 26, true);
         buttonsGroupGrid->addButton(tool, int(Buttons_Grid::Resize_To_Grid));
-        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Not_Set);
+        tool->setChecked(!Dr::GetPreference(Preferences::World_Editor_Grid_On_Top).toBool());
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Resize_To_Grid);
         toolbarLayoutGrid->addWidget(tool);
 
         tool = createToolbarButton(QStringLiteral("buttonGridOnTop"), 34, 26, true);
