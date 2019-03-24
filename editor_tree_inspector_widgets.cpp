@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 1/26/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//
+//      Property Row Building Functions
 //
 //
 #include <QApplication>
@@ -35,10 +35,8 @@
 
 
 //####################################################################################
-//##        Property Row Building Functions
+//##    Checkbox / PaintEvent that draws box and check mark
 //####################################################################################
-
-// SIGNAL: void QCheckBox::stateChanged(int state)
 QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font)
 {
     QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -66,7 +64,48 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font)
     return check;
 }
 
-// SIGNAL: void QLineEdit::editingFinished()
+void DrCheckBox::paintEvent(QPaintEvent *)
+{
+    QRect  checkbox_indicator(4, 0, 28, 22);
+    QPoint mouse_position = property(User_Property::Mouse_Pos).toPoint();
+
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+
+    QColor middle;
+    //Hover
+    if (property(User_Property::Mouse_Over).toBool() && checkbox_indicator.contains(mouse_position))
+        middle = Dr::GetColor(Window_Colors::Background_Dark).darker(150);
+    else
+        middle = Dr::GetColor(Window_Colors::Background_Dark);
+
+    // Draw bottom highlight
+    painter.setPen( QPen( Dr::GetColor(Window_Colors::Background_Dark).lighter(200), Dr::BorderWidthAsInt() ) );
+    painter.setBrush( Qt::NoBrush );
+    painter.drawRoundedRect(5, 1, 20, 20, 4, 4);
+
+    QLinearGradient gradient( 5, 1, 5, 20);
+    gradient.setColorAt(0.00, Dr::GetColor(Window_Colors::Background_Dark).darker(150));
+    gradient.setColorAt(0.14, Dr::GetColor(Window_Colors::Background_Dark).darker(150));
+    gradient.setColorAt(0.18, middle);
+    gradient.setColorAt(1.00, middle);
+    painter.setBrush(gradient);
+    painter.setPen( QPen( Dr::GetColor(Window_Colors::Background_Dark).darker(150), Dr::BorderWidthAsInt() ) );
+    painter.drawRoundedRect(5, 1, 20, 19, 4, 4);
+    painter.setPen( QPen( Dr::GetColor(Window_Colors::Text), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ) );
+
+    if (checkState()) {
+        QVector<QLineF> check;
+        check.append( QLineF( 10, 13, 13, 16) );
+        check.append( QLineF( 13, 16, 21,  8) );
+        painter.drawLines(check);
+    }
+}
+
+
+//####################################################################################
+//##    Line Edit
+//####################################################################################
 QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font)
 {
     QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -90,7 +129,10 @@ QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font)
     return edit;
 }
 
-// SIGNAL: void QSpinBox::valueChanged(int i)
+
+//####################################################################################
+//##    Spin Boxes
+//####################################################################################
 QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, Property_Type spin_type)
 {
     QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -306,8 +348,16 @@ DrTripleSpinBox* TreeInspector::initializeEmptySpinBox(DrProperty *property, QFo
     return new_spin;
 }
 
+// Catches event that Qt fires when value has changed to trim any excess zeros from the right side
+QString DrTripleSpinBox::textFromValue(double value) const {
+    return Dr::RemoveTrailingDecimals(value, decimals());
+}
 
-// Uses a pushbutton with a popup menu instead of a QComboBox
+
+
+//####################################################################################
+//##    Pushbutton with a popup menu instead of a QComboBox
+//####################################################################################
 QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font)
 {
     QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -353,7 +403,6 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font)
             action->setChecked(true);
             button->setText(string);
         }
-
         action->setProperty(User_Property::Order, QVariant::fromValue(string_count));
 
         // Create a callback function to update DrSettings when a new value is selected
@@ -374,88 +423,7 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font)
     return button;
 }
 
-
-// A Colorful button used to represent a color
-QPushButton* TreeInspector::createColorButton(DrProperty *property, QFont &font)
-{
-    QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    size_policy.setHorizontalStretch(c_inspector_size_right);
-
-    QPushButton *button = new QPushButton();
-    button->setObjectName(QStringLiteral("buttonColorBox"));
-    button->setFont(font);
-    button->setSizePolicy(size_policy);
-
-    QColor color =     QColor::fromRgba(property->getValue().toUInt());
-    QColor text_color = QColor(24, 24, 24);
-    QColor highlight =  QColor(0, 0, 0);
-    if (color.red() < 92 && color.green() < 92 && color.blue() < 92) {
-        text_color = QColor(205, 205, 205);
-        highlight =  QColor(255, 255, 255);
-    }
-
-    QString color_button = Dr::StyleSheetColorButton(color, text_color, highlight);
-    button->setStyleSheet(color_button);
-    button->setText( color.name().toUpper() );
-    int alpha = static_cast<int>(color.alphaF() * 100.0);
-    if (alpha != 100) button->setText( button->text() + " - " + QString::number(alpha) + "%" );
-    connect(button, &QPushButton::clicked, [this, button] () { this->setColor(button); });
-
-    long   property_key =  property->getPropertyKey();
-    button->setProperty(User_Property::Key,   QVariant::fromValue( property_key ));
-    button->setProperty(User_Property::Color, color.rgba());
-    m_widget_hover->attachToHoverHandler(button, property);
-    addToWidgetList(button);
-
-    return button;
-}
-
-void TreeInspector::setColor(QPushButton *button)
-{
-    QColor color, old_color;
-    old_color = QColor::fromRgba(button->property(User_Property::Color).toUInt());
-
-    color = QColorDialog::getColor(old_color, this, "Select Color", QColorDialog::ColorDialogOption::ShowAlphaChannel);
-    ///color = QColorDialog::getColor(old_color, this, "Select Color", QColorDialog::DontUseNativeDialog);      // Qt Implementation
-
-    if (color.isValid()) {
-        QColor text_color = QColor(24, 24, 24);
-        QColor highlight =  QColor(0, 0, 0);
-        if (color.red() < 92 && color.green() < 92 && color.blue() < 92) {
-            text_color = QColor(205, 205, 205);
-            highlight =  QColor(255, 255, 255);
-        }
-        QString color_button = Dr::StyleSheetColorButton(color, text_color, highlight);
-        button->setStyleSheet(color_button);
-        button->setText( color.name().toUpper() );
-        int alpha = static_cast<int>(color.alphaF() * 100.0);
-        if (alpha != 100) button->setText( button->text() + " - " + QString::number(alpha) + "%" );
-        button->setProperty(User_Property::Color, color.rgba());
-        this->updateSettingsFromNewValue(button->property(User_Property::Key).toInt(), color.rgba());
-    }
-}
-
-//####################################################################################
-//##
-//##    TripleSpinBox Class Functions
-//##
-//####################################################################################
-QString DrTripleSpinBox::textFromValue(double value) const
-{
-    ///double intpart;
-    ///if (std::modf(value, &intpart) == 0.0)              return QWidget::locale().toString(value, QLatin1Char('f').unicode(), 0);
-    ///else if (std::modf(value * 10, &intpart) == 0.0)    return QWidget::locale().toString(value, QLatin1Char('f').unicode(), 1);
-    ///else if (std::modf(value * 100, &intpart) == 0.0)   return QWidget::locale().toString(value, QLatin1Char('f').unicode(), 2);
-    ///else                                                return QWidget::locale().toString(value, QLatin1Char('f').unicode(), decimals());
-    return Dr::RemoveTrailingDecimals(value, decimals());
-}
-
-
-//####################################################################################
-//##
-//##    DropDownComboBox Class Functions
-//##
-//####################################################################################
+// Shows the QPushButton popupMenu, disables animation while we move it to the position we desire
 void DrDropDownComboBox::showPopup()
 {
     bool oldAnimationEffects = qApp->isEffectEnabled(Qt::UI_AnimateCombo);
@@ -470,50 +438,58 @@ void DrDropDownComboBox::showPopup()
 
 
 //####################################################################################
-//##
-//##    DrCheckBox Class Functions, paints the checkbox & check mark
-//##
+//##    Colorful button used to represent a Color property
 //####################################################################################
-void DrCheckBox::paintEvent(QPaintEvent *)
+QPushButton* TreeInspector::createColorButton(DrProperty *property, QFont &font)
 {
-    QRect  checkbox_indicator(4, 0, 28, 22);
-    QPoint mouse_position = property(User_Property::Mouse_Pos).toPoint();
+    QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    size_policy.setHorizontalStretch(c_inspector_size_right);
 
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing, true);
+    QPushButton *button = new QPushButton();
+    button->setObjectName(QStringLiteral("buttonColorBox"));
+    button->setFont(font);
+    button->setSizePolicy(size_policy);
 
-    QColor middle;
-    //Hover
-    if (property(User_Property::Mouse_Over).toBool() && checkbox_indicator.contains(mouse_position))
-        middle = Dr::GetColor(Window_Colors::Background_Dark).darker(150);
-    else
-        middle = Dr::GetColor(Window_Colors::Background_Dark);
+    QColor color =     QColor::fromRgba(property->getValue().toUInt());
+    this->updateColorButton(button, color);
 
-    // Draw bottom highlight
-    painter.setPen( QPen( Dr::GetColor(Window_Colors::Background_Dark).lighter(200), Dr::BorderWidthAsInt() ) );
-    painter.setBrush( Qt::NoBrush );
-    painter.drawRoundedRect(5, 1, 20, 20, 4, 4);
+    connect(button, &QPushButton::clicked, [this, button] () { this->setButtonColor(button); });
 
-    QLinearGradient gradient( 5, 1, 5, 20);
-    gradient.setColorAt(0.00, Dr::GetColor(Window_Colors::Background_Dark).darker(150));
-    gradient.setColorAt(0.14, Dr::GetColor(Window_Colors::Background_Dark).darker(150));
-    gradient.setColorAt(0.18, middle);
-    gradient.setColorAt(1.00, middle);
-    painter.setBrush(gradient);
-    painter.setPen( QPen( Dr::GetColor(Window_Colors::Background_Dark).darker(150), Dr::BorderWidthAsInt() ) );
-    painter.drawRoundedRect(5, 1, 20, 19, 4, 4);
-    painter.setPen( QPen( Dr::GetColor(Window_Colors::Text), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ) );
+    long   property_key =  property->getPropertyKey();
+    button->setProperty(User_Property::Key,   QVariant::fromValue( property_key ));
+    m_widget_hover->attachToHoverHandler(button, property);
+    addToWidgetList(button);
 
-    if (checkState()) {
-        QVector<QLineF> check;
-        check.append( QLineF( 10, 13, 13, 16) );
-        check.append( QLineF( 13, 16, 21,  8) );
-        painter.drawLines(check);
-    }
-
+    return button;
 }
 
+void TreeInspector::setButtonColor(QPushButton *button)
+{
+    QColor old_color= QColor::fromRgba(button->property(User_Property::Color).toUInt());
+    QColor color =    QColorDialog::getColor(old_color, this, "Select Color", QColorDialog::ColorDialogOption::ShowAlphaChannel);
+    ///QColor color = QColorDialog::getColor(old_color, this, "Select Color", QColorDialog::DontUseNativeDialog);                   // Qt Implementation
 
+    if (color.isValid()) {
+        this->updateColorButton(button, color);
+        this->updateSettingsFromNewValue(button->property(User_Property::Key).toInt(), color.rgba());
+    }
+}
+
+void TreeInspector::updateColorButton(QPushButton *button, QColor color)
+{
+    QColor text_color = QColor(24, 24, 24);
+    QColor highlight =  QColor(0, 0, 0);
+    if (color.red() < 128 && color.green() < 128 && color.blue() < 128) {
+        text_color = QColor(205, 205, 205);
+        highlight =  QColor(255, 255, 255);
+    }
+    QString color_button = Dr::StyleSheetColorButton(color, text_color, highlight);
+    button->setStyleSheet(color_button);
+    button->setText( color.name().toUpper() );
+    int alpha = static_cast<int>(color.alphaF() * 100.0);
+    if (alpha != 100) button->setText( button->text() + " - " + QString::number(alpha) + "%" );
+    button->setProperty(User_Property::Color, color.rgba());
+}
 
 
 

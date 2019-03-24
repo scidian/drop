@@ -74,10 +74,11 @@ public:
     QLineEdit*          createLineEdit(DrProperty *property, QFont &font);
     QFrame*             createVariableSpinBoxPair(DrProperty *property, QFont &font);
     DrTripleSpinBox*    initializeEmptySpinBox(DrProperty *property, QFont &font, double start_value);
+    void                updateColorButton(QPushButton *button, QColor color);
 
 private slots:
     void                setAdvisorInfo(QString header, QString body);
-    void                setColor(QPushButton *button);
+    void                setButtonColor(QPushButton *button);
 
 };
 
@@ -97,7 +98,6 @@ public:
 
 protected:
     virtual QString textFromValue(double value) const override;
-
 };
 
 
@@ -115,7 +115,6 @@ public:
 
 protected:
     virtual void showPopup() override;
-
 };
 
 
@@ -133,7 +132,6 @@ public:
 
 protected:
     virtual void paintEvent(QPaintEvent *) override;
-
 };
 
 

@@ -41,9 +41,6 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
     // Forward definitions for widgets used in switch statement
     QPushButton     *pushbutton;
     QDoubleSpinBox  *doublespin;
-    QColor           main_color, text_color, highlight;
-    QString          style;
-    int              alpha;
 
     for (auto widget : m_widgets) {
         long prop_key = widget->property(User_Property::Key).toInt();
@@ -97,18 +94,7 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 
         case Property_Type::Color:
             pushbutton = dynamic_cast<QPushButton*>(widget);
-            main_color = QColor::fromRgba(prop->getValue().toUInt());
-            text_color = QColor(24, 24, 24);
-            highlight =  QColor(0, 0, 0);
-            if (main_color.red() < 92 && main_color.green() < 92 && main_color.blue() < 92) {
-                text_color = QColor(205, 205, 205);
-                highlight =  QColor(255, 255, 255);
-            }
-            style = Dr::StyleSheetColorButton(main_color, text_color, highlight);
-            pushbutton->setStyleSheet(style);
-            pushbutton->setText( main_color.name().toUpper() );
-            alpha = static_cast<int>(main_color.alphaF() * 100.0);
-            if (alpha != 100) pushbutton->setText( pushbutton->text() + " - " + QString::number(alpha) + "%" );
+            this->updateColorButton( pushbutton, QColor::fromRgba(prop->getValue().toUInt()) );
             break;
 
         case Property_Type::Image:                                  // QPixmap
