@@ -210,10 +210,10 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
             case Property_Type::GridScaleF:     new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Property_Type::GridScaleF);  break;
             case Property_Type::Variable:       new_widget = createVariableSpinBoxPair(property_pair.second, fp);                           break;
             case Property_Type::List:           new_widget = createListBox(property_pair.second, fp);                                       break;
+            case Property_Type::Color:          new_widget = createColorButton(property_pair.second, fp);                                   break;
 
             case Property_Type::Image:                                  // QPixmap
             case Property_Type::Icon:
-            case Property_Type::Color:                                  // QColor
             case Property_Type::Polygon:                                // For Collision Shapes
             case Property_Type::Vector3D:
 

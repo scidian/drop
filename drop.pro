@@ -83,7 +83,8 @@ SOURCES += \
     form_font_editor.cpp \
     form_settings.cpp \
     editor_tree_assets_mouse.cpp \
-    form_main_toolbar_button_click.cpp
+    form_main_toolbar_button_click.cpp \
+    library_style_sheet_toolbar.cpp
 
 HEADERS += \
     enums.h \

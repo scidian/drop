@@ -66,6 +66,7 @@ public:
     // Property Builders
     void                addToWidgetList(QWidget *widget) { m_widgets.append(widget); }
     QCheckBox*          createCheckBox(DrProperty *property, QFont &font);
+    QPushButton*        createColorButton(DrProperty *property, QFont &font);
     QPushButton*        createListBox(DrProperty *property, QFont &font);
     QDoubleSpinBox*     createDoubleSpinBox(DrProperty *property, QFont &font, Property_Type spin_type);
     QFrame*             createDoubleSpinBoxPair(DrProperty *property, QFont &font, Property_Type spin_type);
@@ -76,6 +77,7 @@ public:
 
 private slots:
     void                setAdvisorInfo(QString header, QString body);
+    void                setColor(QPushButton *button);
 
 };
 

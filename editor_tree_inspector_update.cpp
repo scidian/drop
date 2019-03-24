@@ -10,6 +10,7 @@
 #include <QAction>
 #include <QMenu>
 
+#include "colors.h"
 #include "editor_tree_inspector.h"
 #include "enums.h"
 #include "interface_editor_relay.h"
@@ -40,6 +41,9 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
     // Forward definitions for widgets used in switch statement
     QPushButton     *pushbutton;
     QDoubleSpinBox  *doublespin;
+    QColor           main_color, text_color, highlight;
+    QString          style;
+    int              alpha;
 
     for (auto widget : m_widgets) {
         long prop_key = widget->property(User_Property::Key).toInt();
@@ -91,9 +95,24 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
             pushbutton->menu()->actions().at(prop->getValue().toInt())->setChecked(true);
             break;
 
+        case Property_Type::Color:
+            pushbutton = dynamic_cast<QPushButton*>(widget);
+            main_color = QColor::fromRgba(prop->getValue().toUInt());
+            text_color = QColor(24, 24, 24);
+            highlight =  QColor(0, 0, 0);
+            if (main_color.red() < 92 && main_color.green() < 92 && main_color.blue() < 92) {
+                text_color = QColor(205, 205, 205);
+                highlight =  QColor(255, 255, 255);
+            }
+            style = Dr::StyleSheetColorButton(main_color, text_color, highlight);
+            pushbutton->setStyleSheet(style);
+            pushbutton->setText( main_color.name().toUpper() );
+            alpha = static_cast<int>(main_color.alphaF() * 100.0);
+            if (alpha != 100) pushbutton->setText( pushbutton->text() + " - " + QString::number(alpha) + "%" );
+            break;
+
         case Property_Type::Image:                                  // QPixmap
         case Property_Type::Icon:
-        case Property_Type::Color:                                  // QColor
         case Property_Type::Polygon:                                // For Collision Shapes
         case Property_Type::Vector3D:
 
@@ -120,7 +139,7 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 //##            of the input boxes in the object inspector.
 //##
 //##        Updates the appropriate DrSettings DrProperty Values of the item changed
-//##            in the object inspector
+//##            in the object inspector after a new value has been accepted
 //####################################################################################
 void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order)
 {
@@ -164,9 +183,12 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
             property->setValue(temp_pointf);
             break;
 
+        case Property_Type::Color:                                  // QColor.rgba()
+            property->setValue(new_value);
+            break;
+
         case Property_Type::Image:                                  // QPixmap
         case Property_Type::Icon:
-        case Property_Type::Color:                                  // QColor
         case Property_Type::Polygon:                                // For Collision Shapes
         case Property_Type::Vector3D:
 

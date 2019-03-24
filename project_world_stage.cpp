@@ -5,6 +5,7 @@
 //      DrStage Class Definitions
 //
 //
+#include "colors.h"
 #include "project.h"
 #include "project_asset.h"
 #include "project_world.h"
@@ -138,6 +139,8 @@ void DrStage::initializeStageSettings(QString new_name)
                            "Grid Scale", "X and Y stretch factor after grid has been rotated. For Isometric Grids, set X value twice that of Y value.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Rotation, Property_Type::Angle, 0,
                            "Grid Rotation", "Rotation of the grid lines. For Isometric Grids, set \"Grid Rotation\" to 45 degrees.");
+    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Color, Property_Type::Color, Dr::GetColor(Window_Colors::Background_Light).rgba(),
+                           "Grid Color", "Color of grid lines.");
 }
 
 

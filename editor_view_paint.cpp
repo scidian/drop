@@ -136,8 +136,8 @@ void DrView::paintGrid(QPainter &painter)
     if (m_zoom_scale >= 2.0) point_size = 6;
     if (m_zoom_scale >= 4.0) point_size = 8;
     if (m_zoom_scale >= 8.0) point_size = 12;
-    QPen dot_pen =  QPen( Dr::GetColor(Window_Colors::Background_Light), point_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
-    QPen line_pen = QPen( Dr::GetColor(Window_Colors::Background_Light), 1);
+    QPen dot_pen =  QPen( m_grid_color, point_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
+    QPen line_pen = QPen( m_grid_color, 1);
     line_pen.setCosmetic(true);
 
     if (m_grid_needs_redraw) {

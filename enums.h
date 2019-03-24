@@ -87,6 +87,7 @@ typedef enum {
 //####################################################################################
 namespace User_Property {
     const char Key[7] = "dr_key";                   // Stores Object Key in User Property of widget
+    const char Color[9] = "dr_color";               // Stores a color value (QColor.rgba())
     const char Order[9] = "dr_order";               // Used for properties with mulitple values (like Size has X and Y),
                                                     //      the index of the single property we want (0, 1, 2, etc)
     const char Header[10] = "dr_header";            // Used for Advisor Text
@@ -139,8 +140,8 @@ enum class Property_Type {
 
     Image,                  // QPixmap
     Icon,
-    Color,                  // QColor
-    Polygon,                // QPolygon     For Collision Shapes
+    Color,                  // QColor.rgba()    For Colors
+    Polygon,                // QPolygon         For Collision Shapes
     Vector3D,
     List,
 };
@@ -214,6 +215,7 @@ enum class Properties
     Stage_Grid_Size,                //sizef
     Stage_Grid_Scale,               //scale
     Stage_Grid_Rotation,            //angle
+    Stage_Grid_Color,               //color
 
     // ********************
 

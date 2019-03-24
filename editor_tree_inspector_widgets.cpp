@@ -8,6 +8,7 @@
 #include <QApplication>
 #include <QAction>
 #include <QActionGroup>
+#include <QColorDialog>
 #include <QLabel>
 #include <QLineEdit>
 #include <QListView>
@@ -365,7 +366,7 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font)
     }
 
     button->setMenu(menu);
-    button->setProperty(User_Property::Key, QVariant::fromValue( property->getPropertyKey() ));
+    button->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     menu->installEventFilter(new PopUpMenuRelocater(menu));
     m_widget_hover->attachToHoverHandler(button, property);
     addToWidgetList(button);
@@ -373,6 +374,66 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font)
     return button;
 }
 
+
+// A Colorful button used to represent a color
+QPushButton* TreeInspector::createColorButton(DrProperty *property, QFont &font)
+{
+    QSizePolicy size_policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    size_policy.setHorizontalStretch(c_inspector_size_right);
+
+    QPushButton *button = new QPushButton();
+    button->setObjectName(QStringLiteral("buttonColorBox"));
+    button->setFont(font);
+    button->setSizePolicy(size_policy);
+
+    QColor color =     QColor::fromRgba(property->getValue().toUInt());
+    QColor text_color = QColor(24, 24, 24);
+    QColor highlight =  QColor(0, 0, 0);
+    if (color.red() < 92 && color.green() < 92 && color.blue() < 92) {
+        text_color = QColor(205, 205, 205);
+        highlight =  QColor(255, 255, 255);
+    }
+
+    QString color_button = Dr::StyleSheetColorButton(color, text_color, highlight);
+    button->setStyleSheet(color_button);
+    button->setText( color.name().toUpper() );
+    int alpha = static_cast<int>(color.alphaF() * 100.0);
+    if (alpha != 100) button->setText( button->text() + " - " + QString::number(alpha) + "%" );
+    connect(button, &QPushButton::clicked, [this, button] () { this->setColor(button); });
+
+    long   property_key =  property->getPropertyKey();
+    button->setProperty(User_Property::Key,   QVariant::fromValue( property_key ));
+    button->setProperty(User_Property::Color, color.rgba());
+    m_widget_hover->attachToHoverHandler(button, property);
+    addToWidgetList(button);
+
+    return button;
+}
+
+void TreeInspector::setColor(QPushButton *button)
+{
+    QColor color, old_color;
+    old_color = QColor::fromRgba(button->property(User_Property::Color).toUInt());
+
+    color = QColorDialog::getColor(old_color, this, "Select Color", QColorDialog::ColorDialogOption::ShowAlphaChannel);
+    ///color = QColorDialog::getColor(old_color, this, "Select Color", QColorDialog::DontUseNativeDialog);      // Qt Implementation
+
+    if (color.isValid()) {
+        QColor text_color = QColor(24, 24, 24);
+        QColor highlight =  QColor(0, 0, 0);
+        if (color.red() < 92 && color.green() < 92 && color.blue() < 92) {
+            text_color = QColor(205, 205, 205);
+            highlight =  QColor(255, 255, 255);
+        }
+        QString color_button = Dr::StyleSheetColorButton(color, text_color, highlight);
+        button->setStyleSheet(color_button);
+        button->setText( color.name().toUpper() );
+        int alpha = static_cast<int>(color.alphaF() * 100.0);
+        if (alpha != 100) button->setText( button->text() + " - " + QString::number(alpha) + "%" );
+        button->setProperty(User_Property::Color, color.rgba());
+        this->updateSettingsFromNewValue(button->property(User_Property::Key).toInt(), color.rgba());
+    }
+}
 
 //####################################################################################
 //##
@@ -388,7 +449,6 @@ QString DrTripleSpinBox::textFromValue(double value) const
     ///else                                                return QWidget::locale().toString(value, QLatin1Char('f').unicode(), decimals());
     return Dr::RemoveTrailingDecimals(value, decimals());
 }
-
 
 
 //####################################################################################
@@ -452,19 +512,6 @@ void DrCheckBox::paintEvent(QPaintEvent *)
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

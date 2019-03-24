@@ -53,6 +53,9 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         " QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; } "
         " QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal { width: 0px; } "
 
+        // For all scrollable QWidgets, ::corner removes right botttom little box that appears when there are two scrollbars
+        " QWidget::corner { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } " ///transparent; } "
+
         // Asset, Stage, Inspector Trees
         " QTreeWidget { icon-size: 14px 14px; }"
         " QTreeWidget { color: " + Dr::GetColor(Window_Colors::Text).name() + ";  "
@@ -104,9 +107,6 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         // DrView display area
         " QGraphicsView { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
 
-        // For all scrollable QWidgets, ::corner removes right botttom little box that appears when there are two scrollbars
-        " QWidget::corner { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } " ///transparent; } "
-
         // Bottom label area
         " QScrollArea { " //border-left: 2px solid; border-right: 1px solid; "
         "   border-color: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
@@ -153,69 +153,6 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
 
 
         //###############################################################################
-        //##    Toolbar
-        //################################################################################
-        // Toolbar
-        " QToolBar { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
-        "       border-bottom: 0 solid; } "
-
-        // Toolbar Push Buttons
-        " QPushButton#toolbarButton { "
-        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
-        "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
-        "       border-top: 1 solid; border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
-        "       border-radius: 4px; }"
-        " QPushButton#toolbarButton:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
-        "       background: " + Dr::GetColor(Window_Colors::Midlight).name() + "; }"
-        " QPushButton#toolbarButton:pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
-        "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
-
-        // QLabel Spacer
-        " QLabel#labelSpacer { border-left: 1px solid; border-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } "
-
-        // Toobar Selectable Buttons
-        +
-        StyleSheetToolBarModeButton("buttonModeWorldMap",  "toolbar_world_map.png",     "toolbar_world_map_faded.png") +
-        StyleSheetToolBarModeButton("buttonModeWorldEdit", "toolbar_world_editor.png",  "toolbar_world_editor_faded.png") +
-        StyleSheetToolBarModeButton("buttonModeUIEdit",    "toolbar_ui_editor.png",     "toolbar_ui_editor_faded.png") +
-
-        " QToolButton {            border: 1px solid; "
-        "       background: " +    Dr::GetColor(Window_Colors::Button_Light).name() + "; "
-        "       border-color: " +  Dr::GetColor(Window_Colors::Button_Light).lighter(150).name() +
-                                   Dr::GetColor(Window_Colors::Button_Light).name() +
-                                   Dr::GetColor(Window_Colors::Button_Light).name() +
-                                   Dr::GetColor(Window_Colors::Button_Light).name() +"; } "
-        " QToolButton:hover {      border: 1px solid; "
-        "       background: " +    Dr::GetColor(Window_Colors::Midlight).name() + "; "
-        "       border-color: " +  Dr::GetColor(Window_Colors::Midlight).lighter(150).name() +
-                                   Dr::GetColor(Window_Colors::Midlight).name() +
-                                   Dr::GetColor(Window_Colors::Midlight).name() +
-                                   Dr::GetColor(Window_Colors::Midlight).name() +"; } "
-        " QToolButton:pressed {    border: 1px solid; "
-        "       background: " +    Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
-        "       border-color: " +  Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() +
-                                   Dr::GetColor(Window_Colors::Background_Dark).name() +
-                                   Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() +
-                                   Dr::GetColor(Window_Colors::Background_Dark).name() +"; } "
-
-        +
-        StyleSheetToolBarButtons("buttonSendToBack",   "sendtoback.png",        "sendtoback.png",       "sendtoback_gray.png",   4, 0, 4, 0, false) +
-        StyleSheetToolBarButtons("buttonSendBackward", "sendbackward.png",      "sendbackward.png",     "sendbackward_gray.png", 0, 0, 0, 0, false) +
-        StyleSheetToolBarButtons("buttonSendForward",  "sendforward.png",       "sendforward.png",      "sendforward_gray.png",  0, 0, 0, 0, false) +
-        StyleSheetToolBarButtons("buttonSendToFront",  "sendtofront.png",       "sendtofront.png",      "sendtofront_gray.png",  0, 4, 0, 4, false) +
-
-        StyleSheetToolBarButtons("buttonResetObject",  "reset.png",             "reset.png",            "reset.png",             4, 4, 4, 4, false) +
-
-        StyleSheetToolBarButtons("buttonSnapToGrid",   "grid_snap_uncheck.png", "grid_snap.png",        "toolbar_grid_snap_gray.png", 4, 0, 4, 0, true)  +
-                                 " QToolButton#buttonSnapToGrid:checked { padding-bottom: 3px; } " +
-        StyleSheetToolBarButtons("buttonResizeToGrid", "_.png",                 "_.png",                "_gray.png",    0, 0, 0, 0, true)  +
-        StyleSheetToolBarButtons("buttonGridOnTop",    "grid_ontop_uncheck.png", "grid_ontop.png",      "grid_ontop_gray.png",   0, 4, 0, 4, true)  +
-
-        StyleSheetToolBarButtons("buttonFontEditor",     "fonts.png",           "fonts.png",            "fonts.png",             4, 4, 4, 4, false) +
-        StyleSheetToolBarButtons("buttonSettingsEditor", "settings.png",        "settings.png",         "settings.png",          4, 4, 4, 4, false) +
-
-
-        //###############################################################################
         //##    Inspector Widgets
         //################################################################################
         // Check boxes, mostly in object inspector
@@ -256,12 +193,14 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         // Drop down PushButtons
         " QPushButton#buttonDropDown { border: " + Dr::BorderWidth() + " solid; height: 20px; "
         "       border-top-left-radius: 4px; border-bottom-left-radius: 6px; border-top-right-radius: 4px; border-bottom-right-radius: 6px;"
-        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; " + StyleSheetPoppedOutBackgroundBorder(9, 92) +
+        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; " +
+                StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Dark), Dr::GetColor(Window_Colors::Background_Dark), 9, 92) +
         "       padding-left: 10px; "
         "       text-align: left; } "
         " QPushButton#buttonDropDown::menu-indicator { left: -8px; top: -7px; }"
         " QPushButton#buttonDropDown:hover { border: " + Dr::BorderWidth() + " solid; "
-        "       color: " + Dr::GetColor(Window_Colors::Text_Light).name() + "; " + StyleSheetPoppedOutBackgroundBorder(10, 92, true) + "}"
+        "       color: " + Dr::GetColor(Window_Colors::Text_Light).name() + "; " +
+                StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Dark), Dr::GetColor(Window_Colors::Background_Dark), 10, 92, true) + " }"
         " QPushButton#buttonDropDown:pressed { "
         "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
@@ -287,6 +226,8 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
 
 
     );
+
+    style_sheet += Dr::StyleSheetToolBar();
 
     widget->setStyleSheet(style_sheet);
     widget->update();
@@ -320,67 +261,58 @@ QString StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_percent, 
                                         Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + "; ";
 }
 
+
 // Cool popped out box kinda look
-QString StyleSheetPoppedOutBackgroundBorder(int top_percent, int bottom_percent, bool highlight) {
+QString StyleSheetPoppedOutBackgroundBorder(QColor background_color, QColor border_color, int top_percent, int bottom_percent, bool highlight) {
     QString top1 = QString::number(double(top_percent)        / 100.0);
     QString top2 = QString::number(double(top_percent + 1)    / 100.0);
     QString bot1 = QString::number(double(bottom_percent)     / 100.0);
     QString bot2 = QString::number(double(bottom_percent + 1) / 100.0);
     QColor middle;
-    if (!highlight) middle = Dr::GetColor(Window_Colors::Background_Dark);
-    else            middle = Dr::GetColor(Window_Colors::Background_Dark).lighter(150);
+    if (!highlight) middle = background_color;
+    else            middle = background_color;
     return " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
-           "            stop:0 " +      Dr::GetColor(Window_Colors::Background_Dark).lighter(200).name() + ", "
-           "            stop:" + top1 + Dr::GetColor(Window_Colors::Background_Dark).lighter(200).name() + ", "
+           "            stop:0 " +      background_color.lighter(200).name() + ", "
+           "            stop:" + top1 + background_color.lighter(200).name() + ", "
            "            stop:" + top2 + middle.name() + ", "
            "            stop:" + bot1 + middle.name() + ", "
-           "            stop:" + bot2 + Dr::GetColor(Window_Colors::Background_Dark).darker(250).name() + ", "
-           "            stop:1 " +      Dr::GetColor(Window_Colors::Background_Dark).darker(250).name() + "); "
-           "          border-color: " + Dr::GetColor(Window_Colors::Background_Dark).darker(250).name() + " " +
-                                        Dr::GetColor(Window_Colors::Background_Dark).darker(250).name()+ " " +
-                                        Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + " " +
-                                        Dr::GetColor(Window_Colors::Background_Dark).darker(250).name() + "; ";
+           "            stop:" + bot2 + background_color.darker(250).name() + ", "
+           "            stop:1 " +      background_color.darker(250).name() + "); "
+           "          border-color: " + border_color.darker(250).name() + " " +
+                                        border_color.darker(250).name()+ " " +
+                                        border_color.darker(150).name() + " " +
+                                        border_color.darker(250).name() + "; ";
 }
 
-// Formatting for "Mode" toolbar buttons
-QString StyleSheetToolBarModeButton(QString button_name, QString icon_name, QString icon_faded_name) {
+
+// Generates the style sheet for use with a Inspector Color Button
+QString StyleSheetColorButton(QColor color, QColor text_color, QColor highlight)
+{
     return
-    " QToolButton#" + button_name + " {                  border-radius: 4px; border: 1px solid;  "
-    "       background: " +   Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
-    "       border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
-    " QToolButton#" + button_name + ":hover:!checked {   border-radius: 4px; border: 1px solid; "
-    "       background: " +   Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
-    "       border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
-    " QToolButton#" + button_name + ":checked {          border-radius: 4px; border: 1px solid; " + StyleSheetRecessedBackgroundBorder(12, 93) +  "; } "
-    " QToolButton#" + button_name + ":hover:checked {    border-radius: 4px; border: 1px solid; " + StyleSheetRecessedBackgroundBorder(12, 93) +  "; } "
-    " QToolButton#" + button_name + "  {                image: url(:/toolbar_icons/" + icon_name + "); padding: 7px; } "
-    " QToolButton#" + button_name + ":pressed {         image: url(:/toolbar_icons/" + icon_faded_name + "); padding: 7px; } "
-    " QToolButton#" + button_name + ":checked {         image: url(:/toolbar_icons/" + icon_name + "); padding: 7px; } "
-    " QToolButton#" + button_name + ":hover:checked {   image: url(:/toolbar_icons/" + icon_name + "); padding: 7px; } "
-    " QToolButton#" + button_name + ":hover:!checked {  image: url(:/toolbar_icons/" + icon_name + "); padding: 7px; } ";
-}
-
-// Formatting for normal toolbar buttons
-QString StyleSheetToolBarButtons(QString button_name, QString icon_unchecked, QString icon_checked, QString icon_disabled,
-                                 int tl, int tr, int bl, int br, bool checkable) {
-    QString text =
-        " QToolButton#" + button_name + "          { image: url(:/toolbar_icons/toolbar_" + icon_unchecked + ");  padding: 4px; } "
-        " QToolButton#" + button_name + ":checked  { image: url(:/toolbar_icons/toolbar_" + icon_checked + ");    } "
-        " QToolButton#" + button_name + ":disabled { image: url(:/toolbar_icons/toolbar_" + icon_disabled + ");   } "
-        " QToolButton#" + button_name + " { border-top-left-radius: " +     QString::number(tl) + "px;  "
-                                        "   border-top-right-radius: " +    QString::number(tr) + "px;  "
-                                        "   border-bottom-left-radius: " +  QString::number(bl) + "px;  "
-                                        "   border-bottom-right-radius: " + QString::number(br) + "px; } ";
-
-    if (checkable) { text +=
-        " QToolButton#" + button_name + ":checked { border: 1px solid; "
-        "       background: " +    Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
-        "       border-color: " +  Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + " " +
-                                   Dr::GetColor(Window_Colors::Background_Dark).name() + " " +
-                                   Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + " " +
-                                   Dr::GetColor(Window_Colors::Background_Dark).name() +"; } ";
-    }
-    return text;
+    " QPushButton { height: 20px; padding-top: 0px;"
+    "   color: " + text_color.name() + "; "
+    "   border: " + Dr::BorderWidth() + " solid; "
+    "   border-radius: 4px; "
+    "   background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
+    "       stop:0.00 " + color.lighter(150).name() + ", "
+    "       stop:0.08 " + color.lighter(150).name() + ", "
+    "       stop:0.20 " + color.name() + ", "
+    "       stop:0.88 " + color.name() + ", "
+    "       stop:0.92 " + color.darker(300).name() + ", "
+    "       stop:1.00 " + color.darker(300).name() + "); "
+    "   border-color: " + color.darker(300).name() + "; "
+    "   border-bottom-color: " + color.darker(400).name() + "; } "
+    " QPushButton:hover {   color: " + highlight.name() + "; } "
+    " QPushButton:pressed { padding-top: 1px; "
+    "   background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
+    "       stop:0.00 " + color.darker(300).name() + ", "
+    "       stop:0.08 " + color.darker(300).name() + ", "
+    "       stop:0.16 " + color.name() + ", "
+    "       stop:0.92 " + color.name() + ", "
+    "       stop:0.93 " + color.darker(300).name() + ", "
+    "       stop:1.00 " + color.darker(300).name() + "); "
+    "   border-color: " + color.darker(300).name() + "; "
+    "   border-bottom-color: " + Dr::GetColor(Window_Colors::Background_Dark).lighter(200).name() + "; } ";
 }
 
 
