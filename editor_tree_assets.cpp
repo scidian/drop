@@ -228,14 +228,18 @@ CategoryButton* TreeAssets::initializeCatergoryButton(QTreeWidgetItem *tree_item
 {
     QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; "
                                                 " color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
-                                                " border: " + Dr::BorderWidth() + " solid; border-radius: 1px; "
+                                                " border: none; "
+                                                " border-style: solid; "
+                                                " border-top-width: " + Dr::BorderWidth() + "; "
+                                                " border-bottom-width: " + Dr::BorderWidth() + "; "
                                                 " border-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
                                                 " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
                                                 "   stop:0.00 " + Dr::GetColor(Window_Colors::Button_Light).lighter(150).name() +
-                                                "   stop:0.08 " + Dr::GetColor(Window_Colors::Button_Light).lighter(150).name() +
-                                                "   stop:0.12 " + Dr::GetColor(Window_Colors::Button_Light).name() +
-                                                " , stop:0.92 " + Dr::GetColor(Window_Colors::Button_Light).darker(200).name() +
-                                                " , stop:1.00 " + Dr::GetColor(Window_Colors::Button_Light).darker(200).name() + "); } "
+                                                "   stop:0.05 " + Dr::GetColor(Window_Colors::Button_Light).lighter(150).name() +
+                                                "   stop:0.10 " + Dr::GetColor(Window_Colors::Button_Light).name() +
+                                                " , stop:0.90 " + Dr::GetColor(Window_Colors::Button_Light).darker(200).name() +
+                                                " , stop:0.95 " + Dr::GetColor(Window_Colors::Button_Light).darker(400).name() +
+                                                " , stop:1.00 " + Dr::GetColor(Window_Colors::Button_Light).darker(400).name() + "); } "
                                   " QPushButton:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } "
                                   " QPushButton:pressed { color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } ");
     CategoryButton *button = new CategoryButton(name, QColor(204, 204, 204), nullptr, tree_item);

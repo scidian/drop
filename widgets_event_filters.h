@@ -48,7 +48,6 @@ class MouseWheelAdjustmentGuard : public QObject
 {
 public:
     explicit        MouseWheelAdjustmentGuard(QObject *parent);
-
 protected:
     bool            eventFilter(QObject *obj, QEvent *event) override;
 };
@@ -62,16 +61,28 @@ class PopUpMenuRelocater : public QObject
 {
 public:
     explicit        PopUpMenuRelocater(QObject *parent);
-
 protected:
     bool            eventFilter(QObject *obj, QEvent *event) override;
 };
 
 
+//####################################################################################
+//##    ClickAndDragWindow
+//##        Clicking and dragging will move parent window
+//####################################################################################
+class ClickAndDragWindow : public QObject
+{
+private:
+    bool            m_is_moving = false;
+    QPoint          m_press_pos;
+public:
+    explicit        ClickAndDragWindow(QObject *parent);
+protected:
+    bool            eventFilter(QObject *obj, QEvent *event) override;
+};
 
 
 #endif // WIDGETS_EVENT_FILTERS_H
-
 
 
 

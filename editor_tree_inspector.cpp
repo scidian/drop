@@ -139,17 +139,20 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
         CategoryButton *category_button = new CategoryButton(QString(" ") + component_pair.second->getDisplayNameQString(), Qt::black, nullptr, category_item);
         QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: black; "
-                                                    " border: " + Dr::BorderWidth() + " solid; "
-                                                    " border-color: " + component_pair.second->getColor().darker(250).name() + "; "
-                                                    " border-radius: 1px; "
+                                                    " border: none; "
+                                                    " border-style: solid; "
+                                                    " border-top-width: " + Dr::BorderWidth() + "; "
+                                                    " border-bottom-width: " + Dr::BorderWidth() + "; "
+                                                    " border-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
                                                     " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
                                                     "   stop:0.00 " + component_pair.second->getColor().lighter(120).name() +
-                                                    "   stop:0.08 " + component_pair.second->getColor().lighter(120).name() +
-                                                    "   stop:0.12 " + component_pair.second->getColor().name() +
-                                                    " , stop:0.92 " + component_pair.second->getColor().darker(250).name() +
-                                                    " , stop:1.00 " + component_pair.second->getColor().darker(250).name() + "); } "
+                                                    "   stop:0.05 " + component_pair.second->getColor().lighter(120).name() +
+                                                    "   stop:0.10 " + component_pair.second->getColor().name() +
+                                                    " , stop:0.90 " + component_pair.second->getColor().darker(200).name() +
+                                                    " , stop:0.95 " + component_pair.second->getColor().darker(300).name() +
+                                                    " , stop:1.00 " + component_pair.second->getColor().darker(300).name() + "); } "
                                       " QPushButton:hover:!pressed { color: " + component_pair.second->getColor().lighter(200).name() + "; } "
-                                      " QPushButton:pressed { color: " + component_pair.second->getColor().darker(400).name() + "; } ");
+                                      " QPushButton:pressed { color: " + component_pair.second->getColor().darker(250).name() + "; } ");
         category_button->setIcon(QIcon(component_pair.second->getIcon()));
         category_button->setStyleSheet(buttonColor);
         m_widget_hover->attachToHoverHandler(category_button, component_pair.second->getDisplayName(), component_pair.second->getDescription());

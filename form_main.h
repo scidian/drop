@@ -48,7 +48,6 @@ class TreeInspector;
 class TreeProject;
 class DrProject;
 class DrScene;
-class DrToolBar;
 class DrView;
 class DrViewRubberBand;
 class WidgetHoverHandler;
@@ -78,7 +77,7 @@ private:
     QList<QWidget*>      toolbarWidgets { };
     QList<QLayoutItem*>  toolbarSpacers { };
 
-    DrToolBar      *toolbar;
+    QToolBar       *toolbar;
     QWidget        *widgetToolbar;          QHBoxLayout    *widgetToolbarLayout;
 
     QWidget        *widgetGroupMode;        QButtonGroup   *buttonsGroupMode;
@@ -207,27 +206,6 @@ class ColorSplitter : public QSplitter
 
 public:
     ColorSplitter(QWidget *parent = nullptr) : QSplitter(parent) {}
-
-};
-
-
-//####################################################################################
-//##    DrToolBar - Custom class allows for movement by mouseDown
-//############################
-class DrToolBar : public QToolBar
-{
-private:
-    QPoint  press_pos;
-    bool    is_moving = false;                       // Flag makes sure that the drag and drop event originated from within the titlebar
-
-public:
-    DrToolBar(QWidget *parent);
-    virtual ~DrToolBar() override;
-
-protected:
-    virtual void mousePressEvent(QMouseEvent *event) override;
-    virtual void mouseMoveEvent(QMouseEvent *event) override;
-    virtual void mouseReleaseEvent(QMouseEvent *event) override;
 
 };
 

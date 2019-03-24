@@ -27,11 +27,12 @@ void FormMain::buildToolBar()
     QToolButton *tool;
 
     // ***** Initialize toolbar widget
-    toolbar = new DrToolBar(this);
+    toolbar = new QToolBar(this);
     toolbar->setObjectName(QStringLiteral("toolbar"));
     toolbar->setFixedHeight(44);
     toolbar->setMovable(false);
     toolbar->setFloatable(false);
+    toolbar->installEventFilter(new ClickAndDragWindow(toolbar));
 
     // ***** This is a container object that holds all toolbar buttons, allowing us to put them in a layout
     widgetToolbar = new QWidget();

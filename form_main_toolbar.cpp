@@ -17,33 +17,6 @@
 
 
 //####################################################################################
-//##        Constructor / Destructor
-//####################################################################################
-DrToolBar::DrToolBar(QWidget *parent) : QToolBar(parent) { }
-DrToolBar::~DrToolBar() { }
-
-
-//####################################################################################
-//##    DrToolBar Function Calls
-//####################################################################################
-// Save the press position (this is relative to the current widget)
-void DrToolBar::mousePressEvent(QMouseEvent* event) {
-    press_pos = event->pos();
-    is_moving = true;
-}
-
-// Calculate difference between the press position and the new Mouse position, relative to the current widget
-void DrToolBar::mouseMoveEvent(QMouseEvent* event) {
-    if (is_moving) {
-        QPoint diff = event->pos() - press_pos;
-        window()->move( window()->pos() + diff );
-    }
-}
-void DrToolBar::mouseReleaseEvent(QMouseEvent*) { is_moving = false; }
-
-
-
-//####################################################################################
 //##    Clears and recreates the toolbar based on the new mode
 //####################################################################################
 void FormMain::clearToolbar()

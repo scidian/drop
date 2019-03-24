@@ -15,6 +15,7 @@
 #include "form_settings.h"
 #include "library.h"
 #include "project.h"
+#include "widgets_event_filters.h"
 
 FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent)
 {
@@ -30,6 +31,7 @@ FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent
     // ***** Center window on screen
     QRect screenGeometry = QGuiApplication::screens().first()->geometry();
     this->setGeometry(QStyle::alignedRect( Qt::LeftToRight, Qt::AlignCenter, this->size(), screenGeometry ));
+    this->installEventFilter(new ClickAndDragWindow(this));
 
     // Create a layout for the form and add a button
     QGridLayout *grid_layout = new QGridLayout(this);
@@ -45,32 +47,6 @@ FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent
 
 
 }
-
-
-//####################################################################################
-//##        Mouse Overrides allow for moving form by clicking anywhere in the background
-//####################################################################################
-// Save the press position (this is relative to the current widget)
-void FormSettings::mousePressEvent(QMouseEvent* event) {
-    press_pos = event->pos();
-    is_moving = true;
-
-    QWidget::mousePressEvent(event);
-}
-
-// Calculate difference between the press position and the new Mouse position, relative to the current widget
-void FormSettings::mouseMoveEvent(QMouseEvent* event) {
-    if (is_moving) {
-        QPoint diff = event->pos() - press_pos;
-        window()->move( window()->pos() + diff );
-    }
-    QWidget::mouseMoveEvent(event);
-}
-void FormSettings::mouseReleaseEvent(QMouseEvent* event) {
-    is_moving = false;
-    QWidget::mouseReleaseEvent(event);
-}
-
 
 
 //####################################################################################
