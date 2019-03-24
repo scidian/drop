@@ -37,7 +37,7 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         // Scroll bars, used mostly in QGraphicsView
         " QScrollBar:vertical { width: 10px; margin: 0px; border-radius: 0px; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
-        " QScrollBar::handle:vertical { margin: 1px; border-radius: 4px; "
+        " QScrollBar::handle:vertical { margin: 2px; border-radius: 3px; "
         "       background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
         "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Dark).name() + ", "
         "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
@@ -46,7 +46,7 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
 
         " QScrollBar:horizontal { height: 10px; margin: 0px; border-radius: 0px; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + " ; } "
-        " QScrollBar::handle:horizontal {      margin: 1px; border-radius: 4px; "
+        " QScrollBar::handle:horizontal {      margin: 2px; border-radius: 3px; "
         "       background: qlineargradient(spread:pad, x1:0 y1:0, x2:1 y2:0, "
         "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Dark).name() + ", "
         "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
@@ -105,7 +105,7 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         " QGraphicsView { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
 
         // For all scrollable QWidgets, ::corner removes right botttom little box that appears when there are two scrollbars
-        " QWidget::corner { background: transparent; } "
+        " QWidget::corner { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } " ///transparent; } "
 
         // Bottom label area
         " QScrollArea { " //border-left: 2px solid; border-right: 1px solid; "
@@ -234,7 +234,7 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         "       background: " +   Dr::GetColor(Window_Colors::Shadow).name() + "; "
         "       border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; }"
         " QAbstractSpinBox::!enabled { background: transparent; border: none; "
-        "       color: " + Dr::GetColor(Window_Colors::Text).darker(150).name() + "; } "
+        "       color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
 
         // Line Edit, mostly in object inspector
         " QLineEdit {               border: " + Dr::BorderWidth() + " solid; height: 20px; "
@@ -250,7 +250,7 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         "       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
         "       border-radius: 0px; }"
         " QLineEdit::!enabled { background: transparent; border: none; "
-        "       color: " + Dr::GetColor(Window_Colors::Text).darker(150).name() + "; } "
+        "       color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
 
 
         // Drop down PushButtons

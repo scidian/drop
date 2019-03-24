@@ -36,8 +36,8 @@ void DrView::updateGrid()
     m_grid_show_on_top =  Dr::GetPreference(Preferences::World_Editor_Grid_On_Top).toBool();
 
     recalculateGrid();
-    m_grid_needs_redraw = true;         // Flag grid for redraw during next paintEvent
-    update();
+    m_grid_needs_redraw = true;                 // Flag grid for redraw during next paintEvent
+    scene()->update(this->sceneRect());         // Forces repaint of view
 
     ///Dr::SetLabelText(Label_Names::Label_1, "Updated Grid at: " + Dr::CurrentTimeAsString());
 }

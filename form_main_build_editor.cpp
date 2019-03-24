@@ -237,7 +237,7 @@ void FormMain::buildWidgetsEditor()
             QVBoxLayout *verticalLayoutAsset = new QVBoxLayout(widgetAssestEditor);
             verticalLayoutAsset->setObjectName(QStringLiteral("verticalLayoutAsset"));
             verticalLayoutAsset->setSpacing(0);
-            verticalLayoutAsset->setContentsMargins(0, 0, 0, 0);
+            verticalLayoutAsset->setContentsMargins(1, 0, 0, 0);
 
                 // ***** Load our custom TreeObjectInspector for the Stage List
                 treeAssetEditor = new TreeAssets(widgetAssestEditor, project, this);

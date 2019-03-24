@@ -244,13 +244,13 @@ void DrView::paintToolTip(QPainter &painter)
 
     painter.setPen(Qt::NoPen);
     painter.setBrush(Dr::GetColor(Window_Colors::Shadow));
-    painter.drawRoundedRect(left_offset, top_offset + 2, w, h, m_tool_tip->getXRadius(), m_tool_tip->getYRadius(), Qt::SizeMode::RelativeSize);
+    painter.drawRoundedRect(left_offset, top_offset + 2, w, h, m_tool_tip->getXRadius(), m_tool_tip->getYRadius(), Qt::SizeMode::AbsoluteSize);
 
     QLinearGradient gradient( left_offset, top_offset, left_offset, top_offset + h);
     gradient.setColorAt(0.0, Dr::GetColor(Window_Colors::Button_Light));
     gradient.setColorAt(1.0, Dr::GetColor(Window_Colors::Button_Dark));
     painter.setBrush(gradient);
-    painter.drawRoundedRect(left_offset, top_offset, w, h, m_tool_tip->getXRadius(), m_tool_tip->getYRadius(), Qt::SizeMode::RelativeSize);
+    painter.drawRoundedRect(left_offset, top_offset, w, h, m_tool_tip->getXRadius(), m_tool_tip->getYRadius(), Qt::SizeMode::AbsoluteSize);
 
     // External call to paint routine of tool tip, but since we pass a painter we can pass the QGraphicsView to be painted on when OpenGL is turned on,
     // this way the tool tip text is drawn directly onto the OpenGL surface and not a seperate QWidget tool tip window

@@ -144,8 +144,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
                                                     " border-radius: 1px; "
                                                     " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
                                                     "   stop:0.00 " + component_pair.second->getColor().lighter(120).name() +
-                                                    "   stop:0.10 " + component_pair.second->getColor().lighter(120).name() +
-                                                    "   stop:0.15 " + component_pair.second->getColor().name() +
+                                                    "   stop:0.08 " + component_pair.second->getColor().lighter(120).name() +
+                                                    "   stop:0.12 " + component_pair.second->getColor().name() +
                                                     " , stop:0.92 " + component_pair.second->getColor().darker(250).name() +
                                                     " , stop:1.00 " + component_pair.second->getColor().darker(250).name() + "); } "
                                       " QPushButton:hover:!pressed { color: " + component_pair.second->getColor().lighter(200).name() + "; } "
