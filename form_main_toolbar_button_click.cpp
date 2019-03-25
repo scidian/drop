@@ -77,6 +77,7 @@ void FormMain::buttonGroupTransformClicked(int id)
             object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale, QPointF(1, 1));
             object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Rotation, 0);
         }
+        sceneEditor->resetSelectionGroup();
         updateEditorWidgetsAfterItemChange(Editor_Widgets::ToolBar, settings, properties );
 
     } else if (clicked == Buttons_Transform::Flip_H || clicked == Buttons_Transform::Flip_V) {
