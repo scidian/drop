@@ -22,21 +22,24 @@
 //##                                                                                ##
 //####################################################################################
 //
-//  FormStartup                     Pick Recent Project, News, Create New Project
-//
 //  FormMain                        (4) Modes: World Map: World / UI Layout
 //                                             World Editor
 //                                             UI Editor
 //                                             Stage Map: Stage Layout??
+//      Atlas Viewer                View / Edit Project Atlases
+//      Font Builder                Create / View Fonts for Use in Project
+//      Settings Manager            View / edit project settings
+//
 //      Collision Shape Editor      Edit Collision Shape
-//      Atlas Editor                View / Edit Project Atlases
-//      Font Editor                 Create / View Fonts for Use in Project
-//      Image Editor                Draw shapes, objects for use in Assets, vectors, custom format, export
 //      Object Editor               Edit object's ObjectMaps
+//  FormStartup                     Pick Recent Project, News, Create New Project / Select Template
+//  FormColorPicker                 Implement our own color picker, Color Grabber, Palette Tab
+//
+//  Future:
+//      Image Editor                Draw shapes, objects for use in Assets, vectors, custom format, export
 //      Particle Editor             Make custom particles
 //      Sound Editor
 //      Animation Editor
-//
 //
 #include <QApplication>
 #include <QMetaType>
@@ -45,15 +48,6 @@
 #include "debug.h"
 #include "form_main.h"
 #include "globals.h"
-
-///// ***** How to have a custom QVariant Type *****
-///// In this file:
-///typedef std::map<long, QString> OptionList;
-///Q_DECLARE_METATYPE(OptionList)
-///qRegisterMetaTypeStreamOperators<OptionList>("OptionList");
-///// Usage example:
-///widget.setValue("test", QVariant::fromValue(myList));
-///OptionList myList2 = widget.value("test").value<OptionList>();
 
 int main(int argc, char *argv[])
 {

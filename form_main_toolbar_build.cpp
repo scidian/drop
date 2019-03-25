@@ -10,7 +10,8 @@
 #include <QToolButton>
 
 #include "enums_form_main.h"
-#include "form_font_editor.h"
+#include "form_atlas.h"
+#include "form_fonts.h"
 #include "form_main.h"
 #include "form_settings.h"
 #include "globals.h"
@@ -169,21 +170,30 @@ void FormMain::buildToolBar()
         toolbarLayoutSettings->setSpacing(5);
         toolbarLayoutSettings->setContentsMargins(0, 0, 0, 0);
 
-        tool = createToolbarButton(QStringLiteral("buttonFontEditor"), 34, 26, false);
-        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Settings_Font_Editor);
+        tool = createToolbarButton(QStringLiteral("buttonFontBuilder"), 34, 26, false);
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Settings_Font_Builder);
         toolbarLayoutSettings->addWidget(tool);
         connect(tool, &QPushButton::clicked, [this] () {
-            FormFontEditor *font_editor = new FormFontEditor(project, this);
+            FormFonts *font_editor = new FormFonts(project, this);
             font_editor->show();
         });
 
+        tool = createToolbarButton(QStringLiteral("buttonAtlasViewer"), 34, 26, false);
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Settings_Atlas_Viewer);
+        toolbarLayoutSettings->addWidget(tool);
+        connect(tool, &QPushButton::clicked, [this] () {
+            FormAtlas *atlas_editor = new FormAtlas(project, this);
+            atlas_editor->show();
+        });
+
         tool = createToolbarButton(QStringLiteral("buttonSettingsEditor"), 34, 26, false);
-        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Settings_Editor);
+        m_widget_hover->attachToHoverHandler(tool, Advisor_Info::Settings_Manager);
         toolbarLayoutSettings->addWidget(tool);
         connect(tool, &QPushButton::clicked, [this] () {
             FormSettings *settings_editor = new FormSettings(project, this);
             settings_editor->show();
         });
+
 
     // ********** Set up initial toolbar
     // Clears the containers that keeps track of whats added to the toolbar layout

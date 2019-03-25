@@ -73,7 +73,8 @@ QString StyleSheetToolBar()
     StyleSheetToolBarButtons("buttonResizeToGrid", "grid_resize_uncheck.png", "grid_resize.png",    "grid_resize.png",       0, 0, 0, 0, true)  +
     StyleSheetToolBarButtons("buttonGridOnTop",    "grid_ontop_uncheck.png", "grid_ontop.png",      "grid_ontop_gray.png",   0, 4, 0, 4, true)  +
 
-    StyleSheetToolBarButtons("buttonFontEditor",     "fonts.png",           "fonts.png",            "fonts.png",             4, 4, 4, 4, false) +
+    StyleSheetToolBarButtons("buttonAtlasViewer",    "atlas.png",           "atlas.png",            "atlas.png",             4, 4, 4, 4, false) +
+    StyleSheetToolBarButtons("buttonFontBuilder",    "fonts.png",           "fonts.png",            "fonts.png",             4, 4, 4, 4, false) +
     StyleSheetToolBarButtons("buttonSettingsEditor", "settings.png",        "settings.png",         "settings.png",          4, 4, 4, 4, false);
 
 

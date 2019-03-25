@@ -80,11 +80,12 @@ SOURCES += \
     widgets_event_filters.cpp \
     widgets_layout.cpp \
     project_font.cpp \
-    form_font_editor.cpp \
     form_settings.cpp \
     editor_tree_assets_mouse.cpp \
     form_main_toolbar_button_click.cpp \
-    library_style_sheet_toolbar.cpp
+    library_style_sheet_toolbar.cpp \
+    form_atlas.cpp \
+    form_fonts.cpp
 
 HEADERS += \
     enums.h \
@@ -118,8 +119,9 @@ HEADERS += \
     widgets_event_filters.h \
     widgets_layout.h \
     project_font.h \
-    form_font_editor.h \
-    form_settings.h
+    form_settings.h \
+    form_atlas.h \
+    form_fonts.h
 
 FORMS +=
 

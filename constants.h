@@ -75,8 +75,9 @@ namespace Advisor_Info
     const HeaderBodyList Mode_Editor            { "World Editor Mode", "This mode will allow you to edit the contents of each world. It is where "
                                                                       "you can design each Stage and lay out your levels." };
     const HeaderBodyList Mode_UI                { "UI Editor Mode", "This mode will allow you to edit the user interfaces of your project. " };
-    const HeaderBodyList Settings_Font_Editor   { "Font Editor", "Create and edit fonts usued for Text objects." };
-    const HeaderBodyList Settings_Editor        { "Settings Editor", "View and edit project settings." };
+    const HeaderBodyList Settings_Atlas_Viewer  { "Atlas Viewer", "View and manage sprite sheets used by your game." };
+    const HeaderBodyList Settings_Font_Builder  { "Font Builder", "Create and edit fonts usued for Text objects." };
+    const HeaderBodyList Settings_Manager       { "Settings Manager", "View and edit project settings." };
 
     const HeaderBodyList Grid_Snap_To_Grid      { "Snap to Grid?", "Snaps objects to grid lines when moving objects around with the mouse." };
     const HeaderBodyList Resize_To_Grid         { "Resize to Grid?", "Snaps objects to grid lines while resizing. This only works if the angle of the object "

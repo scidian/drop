@@ -76,5 +76,6 @@
         <file>toolbar_icons/toolbar_grid_snap_uncheck.png</file>
         <file>toolbar_icons/toolbar_grid_resize.png</file>
         <file>toolbar_icons/toolbar_grid_resize_uncheck.png</file>
+        <file>toolbar_icons/toolbar_atlas.png</file>
     </qresource>
 </RCC>

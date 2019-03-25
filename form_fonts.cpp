@@ -2,22 +2,21 @@
 //      Created by Stephens Nunnally on 3/21/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//
+//      Font Builder
 //
 //
 #include <QApplication>
 #include <QPushButton>
 #include <QGridLayout>
-#include <QMouseEvent>
 #include <QScreen>
 #include <QStyle>
 
-#include "form_font_editor.h"
+#include "form_fonts.h"
 #include "library.h"
 #include "project.h"
 #include "widgets_event_filters.h"
 
-FormFontEditor::FormFontEditor(DrProject *project, QWidget *parent) : QWidget(parent)
+FormFonts::FormFonts(DrProject *project, QWidget *parent) : QWidget(parent)
 {
     m_project = project;
 
@@ -53,7 +52,7 @@ FormFontEditor::FormFontEditor(DrProject *project, QWidget *parent) : QWidget(pa
 //####################################################################################
 //##        Upon first showing creates some rounded corners
 //####################################################################################
-void FormFontEditor::showEvent(QShowEvent *event)
+void FormFonts::showEvent(QShowEvent *event)
 {
     Q_UNUSED(event)
 
