@@ -77,5 +77,15 @@
         <file>toolbar_icons/toolbar_grid_resize.png</file>
         <file>toolbar_icons/toolbar_grid_resize_uncheck.png</file>
         <file>toolbar_icons/toolbar_atlas.png</file>
+        <file>toolbar_icons/toolbar_reset_gray.png</file>
+        <file>toolbar_icons/toolbar_arrow.png</file>
+        <file>toolbar_icons/toolbar_flip_h_gray.png</file>
+        <file>toolbar_icons/toolbar_flip_h.png</file>
+        <file>toolbar_icons/toolbar_flip_v_gray.png</file>
+        <file>toolbar_icons/toolbar_flip_v.png</file>
+        <file>toolbar_icons/toolbar_rotate_l.png</file>
+        <file>toolbar_icons/toolbar_rotate_r.png</file>
+        <file>toolbar_icons/toolbar_rotate_l_gray.png</file>
+        <file>toolbar_icons/toolbar_rotate_r_gray.png</file>
     </qresource>
 </RCC>

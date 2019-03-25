@@ -96,7 +96,7 @@ void FormMain::initializeFormMainSettings()
     // ***** Main window settings
     this->setObjectName(QStringLiteral("formMain"));
     this->setWindowModality(Qt::NonModal);
-    this->setMinimumSize(QSize(800, 400));
+    this->setMinimumSize(QSize(1000, 500));
     this->setMouseTracking(true);
     this->setAcceptDrops(true);
     this->setWindowIcon(QIcon(":icon/icon256.png"));

@@ -416,7 +416,7 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font)
 
     button->setMenu(menu);
     button->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
-    menu->installEventFilter(new PopUpMenuRelocater(menu));
+    menu->installEventFilter(new PopUpMenuRelocater(menu, 2, 0));
     m_widget_hover->attachToHoverHandler(button, property);
     addToWidgetList(button);
 

@@ -216,7 +216,7 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         "      background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; }"
         " QMenu#menuComboBox::item { padding-top: 2px; padding-bottom: 3px; } "
         " QMenu#menuComboBox::item:selected { "
-        "       padding-left: 3px; "
+        "       padding-left: 2px; "
         "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; } "
         " QMenu#menuComboBox::indicator:checked { left: 5px; top: -3px; } "

@@ -79,11 +79,21 @@ namespace Advisor_Info
     const HeaderBodyList Settings_Font_Builder  { "Font Builder", "Create and edit fonts usued for Text objects." };
     const HeaderBodyList Settings_Manager       { "Settings Manager", "View and edit project settings." };
 
-    const HeaderBodyList Grid_Snap_To_Grid      { "Snap to Grid?", "Snaps objects to grid lines when moving objects around with the mouse." };
-    const HeaderBodyList Resize_To_Grid         { "Resize to Grid?", "Snaps objects to grid lines while resizing. This only works if the angle of the object "
-                                                                     "matches the angle of the grid. Resize handles will turn from round to square "
-                                                                     "to signify snapping is possible. "};
+    const HeaderBodyList Object_Reset           { "Reset Object Transform", "Resets selected objects transforms to a Scale of X:1, Y:1 and Rotation of "
+                                                                            "0 Degrees." };
+    const HeaderBodyList Object_Flip_H          { "Flip Horizontal", "Flips the selection horizontally." };
+    const HeaderBodyList Object_Flip_V          { "Flip Vertical",   "Flips the selection vertically." };
+    const HeaderBodyList Object_Rotate_L        { "Rotate Left",  "Rotates selection counter-clockwise by 90 degrees." };
+    const HeaderBodyList Object_Rotate_R        { "Rotate Right", "Rotates selection clockwise by 90 degrees." };
+
     const HeaderBodyList Grid_Show_On_Top       { "Grid on Top?", "Draws grid lines on top of objects in editor." };
+    const HeaderBodyList Resize_To_Grid         { "Resize to Grid?", "Snaps corners and edges of objects to grid lines while resizing. This only works "
+                                                                     "if the angle of the object matches the angle of the grid. Resize handles will turn "
+                                                                     "from round to square to signify snapping is possible. "};
+    const HeaderBodyList Grid_Snap_To_Grid      { "Snap to Grid?", "Snaps objects to grid lines when moving objects around with the mouse." };
+    const HeaderBodyList Grid_Snap_Options      { "Snap Options", "Choose how objects snap to grid while multiple objects are selected, and objects are moved "
+                                                                  "with mouse. Either have the center of the selection group snap to the grid, or have each "
+                                                                  "object within the group snap to grid individually." };
 
 
     // Form Main Widgets
@@ -106,8 +116,8 @@ namespace Advisor_Info
     const HeaderBodyList Object_Object          { "Object", "This is an object in a Stage." };
 
     // Asset Types
-    const HeaderBodyList Asset_Object           { "Object Asset", "This is an object that can have many copies of itself placed into your game. Any change to this "
-                                                          "asset will change all occurences of the asset within the game." };
+    const HeaderBodyList Asset_Object           { "Object Asset", "This is an object that can have many copies of itself placed into your game. Any change to "
+                                                                  "this asset will change all occurences of the asset within the game." };
     const HeaderBodyList Asset_Text             { "Text Asset", "Use text assets to show labels in your game. You can use the as titles or for showing "
                                                                 "values like hit points, coins or distance. " };
 

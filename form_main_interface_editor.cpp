@@ -99,15 +99,8 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from)
             treeProjectEditor->updateSelectionFromView( sceneEditor->getSelectionItems() );
     }
 
-    // This block updates the status bar in the viewEditor to show what objects are currently selected
-    QString selected = "No Selection";
-    if (sceneEditor->getSelectionCount() == 1) {
-        DrObject *object = dynamic_cast<DrItem*>( sceneEditor->getSelectionItems().first() )->getObject();
-        if (dynamic_cast<DrItem*>( sceneEditor->getSelectionItems().first() )->getObject())
-            selected = project->findSettingsFromKey(object->getAssetKey())->getAssetName();
-    } else if (sceneEditor->getSelectionCount() > 1)
-        selected = QString::number( sceneEditor->getSelectionCount() ) + " Objects";
-    labelSelected->setText(selected);
+    // Updates status bar, enables / disables toolbar buttons
+    this->updateToolbar();
 
 
     // !!!!! TEMP: Testing to make sure not running non stop

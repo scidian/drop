@@ -27,7 +27,7 @@
 //####################################################################################
 //##        Starts rotating mode
 //####################################################################################
-void DrView::startRotate(QPoint mouse_in_view)
+void DrView::startRotate(QPoint mouse_in_view, bool use_tool_tip)
 {
     // Store starting rotation of current selection group
     m_rotate_start_angle = my_scene->getSelectionAngle();
@@ -42,24 +42,30 @@ void DrView::startRotate(QPoint mouse_in_view)
     m_rotate_start_rect = my_scene->totalSelectionSceneRect();
 
     // Set up our tooltip
-    m_tool_tip->startToolTip(m_view_mode, mouse_in_view, m_rotate_start_angle);
+    if (use_tool_tip)
+        m_tool_tip->startToolTip(m_view_mode, mouse_in_view, m_rotate_start_angle);
 }
 
 
 //####################################################################################
 //##        Main Rotation Function
 //####################################################################################
-void DrView::rotateSelection(QPointF mouse_in_view)
+void DrView::rotateSelection(QPointF mouse_in_view, bool use_exact_angle, double angle_to_use)
 {
     // Test for scene, convert to our custom class
     if (scene() == nullptr) return;
     QList<QGraphicsItem*>  my_items = my_scene->getSelectionItems();
 
     // ********** Calculate angle between starting mouse coordinate and latest mouse coordinate
-    double angle1 = calcRotationAngleInDegrees( mapFromScene(m_rotate_start_rect.center()), m_origin);
-    double angle2 = calcRotationAngleInDegrees( mapFromScene(m_rotate_start_rect.center()), mouse_in_view);
-
-    double angle = m_rotate_start_angle + (angle2 - angle1);
+    double angle, angle1, angle2;
+    if (!use_exact_angle) {
+        angle1 = calcRotationAngleInDegrees( mapFromScene(m_rotate_start_rect.center()), m_origin);
+        angle2 = calcRotationAngleInDegrees( mapFromScene(m_rotate_start_rect.center()), mouse_in_view);
+    } else {
+        angle1 = 0;
+        angle2 = angle_to_use;
+    }
+    angle = m_rotate_start_angle + (angle2 - angle1);
 
     // ********** Snaps angle to nearest c_angle_step (15) degree increment if angle is with +/-, or to grid angle
     //            Tolerance is decreased the further the mouse cursor is away from the center of the selection rectangle

@@ -7,9 +7,12 @@
 //
 #include <QButtonGroup>
 
+#include "editor_item.h"
+#include "editor_scene.h"
 #include "editor_view.h"
 #include "form_main.h"
 #include "globals.h"
+#include "project_world_stage_object.h"
 
 //####################################################################################
 //##    buttonGroupMode SLOT and functions
@@ -56,17 +59,45 @@ void FormMain::buttonGroupLayeringClicked(int id)
 
 
 //####################################################################################
-//##    buttonGroupReset SLOT and functions
+//##    buttonGroupTransform SLOT and functions
 //####################################################################################
-void FormMain::buttonGroupResetClicked(int id)
+void FormMain::buttonGroupTransformClicked(int id)
 {
-    Buttons_Reset clicked = static_cast<Buttons_Reset>(id);
+    Buttons_Transform clicked = static_cast<Buttons_Transform>(id);
 
-    if (clicked == Buttons_Reset::Reset_Object) {
+    if (clicked == Buttons_Transform::Reset_Object) {
+        QList<DrSettings*> settings;
+        QList<Properties>  properties { Properties::Object_Scale, Properties::Object_Rotation};
 
+        for (auto item : sceneEditor->getSelectionItems()) {
+            DrItem   *dritem = dynamic_cast<DrItem*>(item);
+            DrObject *object = dritem->getObject();
+
+            settings.append(object);
+            object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale, QPointF(1, 1));
+            object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Rotation, 0);
+        }
+        updateEditorWidgetsAfterItemChange(Editor_Widgets::ToolBar, settings, properties );
+
+    } else if (clicked == Buttons_Transform::Flip_H || clicked == Buttons_Transform::Flip_V) {
+        QPointF scale = (clicked == Buttons_Transform::Flip_H) ? QPointF(-1, 1) : QPointF(1, -1);
+
+        if (sceneEditor->scene_mutex.tryLock() == true) {
+            viewEditor->startResize(QPoint(0, 0), false);
+            viewEditor->resizeSelection(QPointF(0, 0), true, scale);
+            sceneEditor->scene_mutex.unlock();
+        }
+
+    } else if (clicked == Buttons_Transform::Rotate_L || clicked == Buttons_Transform::Rotate_R) {
+        double angle = (clicked == Buttons_Transform::Rotate_L) ? -90 : 90;
+
+        if (sceneEditor->scene_mutex.tryLock() == true) {
+            viewEditor->startRotate(QPoint(0, 0), false);
+            viewEditor->rotateSelection(QPoint(0, 0), true, angle);
+            sceneEditor->scene_mutex.unlock();
+        }
     }
 }
-
 
 //####################################################################################
 //##    buttonGroupReset SLOT and functions
@@ -74,16 +105,21 @@ void FormMain::buttonGroupResetClicked(int id)
 void FormMain::buttonGroupGridClicked(int id)
 {
     Buttons_Grid clicked = static_cast<Buttons_Grid>(id);
-    Preferences preference;
 
-    switch (clicked) {
-    case Buttons_Grid::Snap_To_Grid:    preference = Preferences::World_Editor_Snap_To_Grid;        break;
-    case Buttons_Grid::Resize_To_Grid:  preference = Preferences::World_Editor_Resize_To_Grid;      break;
-    case Buttons_Grid::Grid_On_Top:     preference = Preferences::World_Editor_Grid_On_Top;         break;
+    if (clicked == Buttons_Grid::Snap_Options) {
+        QToolButton *tool = dynamic_cast<QToolButton*>(buttonsGroupGrid->button(id));
+        tool->showMenu();
+
+    } else {
+        switch (clicked) {
+        case Buttons_Grid::Snap_To_Grid:    Dr::SetPreference(Preferences::World_Editor_Snap_To_Grid,   buttonsGroupGrid->button(id)->isChecked());  break;
+        case Buttons_Grid::Resize_To_Grid:  Dr::SetPreference(Preferences::World_Editor_Resize_To_Grid, buttonsGroupGrid->button(id)->isChecked());  break;
+        case Buttons_Grid::Grid_On_Top:     Dr::SetPreference(Preferences::World_Editor_Grid_On_Top,    buttonsGroupGrid->button(id)->isChecked());  break;
+        case Buttons_Grid::Snap_Options:    ;
+        }
+        viewEditor->updateGrid();
+        viewEditor->updateSelectionBoundingBox(8);
     }
-    Dr::SetPreference(preference, buttonsGroupGrid->button(id)->isChecked());
-    viewEditor->updateGrid();
-    viewEditor->updateSelectionBoundingBox(8);
 }
 
 

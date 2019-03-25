@@ -59,8 +59,11 @@ protected:
 //####################################################################################
 class PopUpMenuRelocater : public QObject
 {
+private:
+    int         m_top_offset;
+    int         m_left_offset;
 public:
-    explicit        PopUpMenuRelocater(QObject *parent);
+    explicit        PopUpMenuRelocater(QObject *parent, int top_offset, int left_offset);
 protected:
     bool            eventFilter(QObject *obj, QEvent *event) override;
 };

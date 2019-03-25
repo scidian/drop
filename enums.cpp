@@ -11,8 +11,6 @@
 #include "project_world_stage_object.h"
 #include "settings.h"
 
-enum class Position_Flags;
-
 
 namespace Dr {
 

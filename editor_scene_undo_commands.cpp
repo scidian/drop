@@ -124,6 +124,7 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
         from_stage->setViewCenterPoint( new_center );
     }
     m_scene->getRelay()->centerViewOnPoint( new_center );
+    m_scene->getRelay()->updateItemSelection(Editor_Widgets::Project_Tree);
 
     // Set Undo / Redo text
     if (is_undo)    return "Redo Select Stage " + displayed->getStageName();

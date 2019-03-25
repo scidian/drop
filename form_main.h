@@ -10,8 +10,8 @@
 //          UI Editor                               UI
 //          Stage Map: Stage Layout
 //
-//      Main Components of FormMain while in normal "Edit Stage" mode:
-//          Top Area (Toolbar)
+//      Main Components of FormMain while in normal "World Editor" mode:
+//          Tool Bar / Status Bar
 //          Advisor (Dock)
 //          Object Inspector (Dock)
 //
@@ -82,7 +82,7 @@ private:
 
     QWidget        *widgetGroupMode;        QButtonGroup   *buttonsGroupMode;
     QWidget        *widgetGroupLayering;    QButtonGroup   *buttonsGroupLayering;
-    QWidget        *widgetGroupReset;       QButtonGroup   *buttonsGroupReset;
+    QWidget        *widgetGroupTransform;   QButtonGroup   *buttonsGroupTransform;
     QWidget        *widgetGroupGrid;        QButtonGroup   *buttonsGroupGrid;
     QWidget        *widgetGroupSettings;
 
@@ -172,17 +172,20 @@ private:
 
     // Toolbar Functions
     void            addToolbarGroup(QWidget *group, bool add_spacer = true);
+    QMenu*          buildSnapMenu();
     void            buttonGroupModeSetChecked(int id);
     void            clearToolbar();
     QPushButton*    createPushButton(QString name = "toolbarButton", QString text = "Button");
-    QToolButton*    createToolbarButton(const QString &style_sheet_name, int w, int h, bool checkable = false);
+    QToolButton*    createToolbarButton(const QString &style_sheet_name, HeaderBodyList advisor_text, int w, int h,
+                                        bool checkable = false, bool enabled = true);
     QLabel*         createToolbarSpacer(int height = 24, int space_on_the_right = 1);
     void            setToolbar(Form_Main_Mode new_mode);
+    void            updateToolbar();
 
 private slots:
     void            buttonGroupModeClicked(int id);
     void            buttonGroupLayeringClicked(int id);
-    void            buttonGroupResetClicked(int id);
+    void            buttonGroupTransformClicked(int id);
     void            buttonGroupGridClicked(int id);
 
     void            centerViewTimer(QPointF center_point);

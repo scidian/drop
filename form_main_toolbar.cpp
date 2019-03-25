@@ -9,11 +9,50 @@
 #include <QToolBar>
 #include <QToolButton>
 
+#include "editor_item.h"
+#include "editor_scene.h"
+#include "editor_view.h"
 #include "enums_form_main.h"
 #include "form_main.h"
 #include "globals.h"
 #include "library.h"
+#include "project.h"
+#include "project_world_stage_object.h"
 #include "widgets_event_filters.h"
+
+
+//####################################################################################
+//##    Updates status bar, enables / disables buttons as necessary
+//####################################################################################
+void FormMain::updateToolbar()
+{
+    QString selected;
+    if (sceneEditor->getSelectionCount() == 0) {
+        selected = "No Selection";
+        for (auto button : buttonsGroupLayering->buttons())
+            if (button->isEnabled()) button->setEnabled(false);
+        for (auto button : buttonsGroupTransform->buttons())
+            if (button->isEnabled()) button->setEnabled(false);
+
+    } else {
+        for (auto button : buttonsGroupLayering->buttons())
+            if (!button->isEnabled()) button->setEnabled(true);
+        for (auto button : buttonsGroupTransform->buttons())
+            if (!button->isEnabled()) button->setEnabled(true);
+
+        if (sceneEditor->getSelectionCount() == 1) {
+            DrObject *object = dynamic_cast<DrItem*>( sceneEditor->getSelectionItems().first() )->getObject();
+            if (dynamic_cast<DrItem*>( sceneEditor->getSelectionItems().first() )->getObject())
+                selected = project->findSettingsFromKey(object->getAssetKey())->getAssetName();
+
+        } else if (sceneEditor->getSelectionCount() > 1) {
+            selected = QString::number( sceneEditor->getSelectionCount() ) + " Objects";
+        }
+    }
+
+    labelSelected->setText(selected);
+
+}
 
 
 //####################################################################################
@@ -36,10 +75,10 @@ void FormMain::setToolbar(Form_Main_Mode new_mode)
 {
     switch (new_mode) {
     case Form_Main_Mode::World_Editor:
-        addToolbarGroup( widgetGroupLayering, false);
-        addToolbarGroup( widgetGroupReset, true );
-        addToolbarGroup( widgetGroupGrid, true );
-        addToolbarGroup( widgetGroupSettings, false );
+        addToolbarGroup( widgetGroupLayering,   true );
+        addToolbarGroup( widgetGroupTransform,  true );
+        addToolbarGroup( widgetGroupGrid,       true );
+        addToolbarGroup( widgetGroupSettings,   false );
 
 //        for (auto button : buttonsGroupLayering->buttons() ) {
 //            button->setEnabled(false);

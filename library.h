@@ -42,7 +42,7 @@ QString FitStringToWidth(QFont font, QString text_to_check, int max_width = 80, 
 QString StyleSheetColorButton(QColor color, QColor text_color, QColor highlight);
 QString StyleSheetToolBar();
 QString StyleSheetToolBarButtons(QString button_name, QString icon_unchecked, QString icon_checked, QString icon_disabled,
-                                 int tl, int tr, int bl, int br, bool checkable);
+                                 int padding, int tl, int tr, int bl, int br, bool checkable);
 QString StyleSheetToolBarModeButton(QString button_name, QString icon_name, QString icon_faded_name);
 QString StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_percent, bool highlight = false);
 QString StyleSheetPoppedOutBackgroundBorder(QColor background_color, QColor border_color, int top_percent, int bottom_percent, bool highlight = false);

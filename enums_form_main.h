@@ -31,6 +31,7 @@ enum class Editor_Widgets {
     Object_Inspector,
     Project_Tree,
     Scene_View,
+    ToolBar,
 };
 
 
@@ -69,12 +70,17 @@ enum class Buttons_Layering {
     Send_Forward,
 };
 
-enum class Buttons_Reset {
+enum class Buttons_Transform {
     Reset_Object,
+    Flip_H,
+    Flip_V,
+    Rotate_L,
+    Rotate_R,
 };
 
 enum class Buttons_Grid {
     Snap_To_Grid,
+    Snap_Options,
     Resize_To_Grid,
     Grid_On_Top,
 };

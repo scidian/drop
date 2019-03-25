@@ -28,7 +28,7 @@
 //##        Starts resizing mode
 //####################################################################################
 
-void DrView::startResize(QPoint mouse_in_view)
+void DrView::startResize(QPoint mouse_in_view, bool use_tool_tip)
 {
     // Figure out starting orientation
     m_pre_resize_scale =  QPointF(1, 1);
@@ -73,14 +73,15 @@ void DrView::startResize(QPoint mouse_in_view)
                                   mapToScene(m_handles_centers[Position_Flags::Right].toPoint()) ).length();
     double group_height = QLineF( mapToScene(m_handles_centers[Position_Flags::Top].toPoint()),
                                   mapToScene(m_handles_centers[Position_Flags::Bottom].toPoint()) ).length();
-    m_tool_tip->startToolTip(m_view_mode, mouse_in_view, QPointF( group_width, group_height ) );
+    if (use_tool_tip)
+        m_tool_tip->startToolTip(m_view_mode, mouse_in_view, QPointF( group_width, group_height ) );
 }
 
 
 //####################################################################################
 //##        Call appropriate resize function
 //####################################################################################
-void DrView::resizeSelection(QPointF mouse_in_scene)
+void DrView::resizeSelection(QPointF mouse_in_scene, bool use_exact_scale, QPointF scale_to_use)
 {
     // Figure out what sides to use for x axis and y axis
     switch (m_start_resize_grip) {
@@ -95,7 +96,7 @@ void DrView::resizeSelection(QPointF mouse_in_scene)
     default:                            m_do_x = X_Axis::None;    m_do_y = Y_Axis::None;
     }
 
-    resizeSelectionWithRotate(mouse_in_scene);
+    resizeSelectionWithRotate(mouse_in_scene, use_exact_scale, scale_to_use);
 }
 
 
@@ -120,7 +121,7 @@ Position_Flags DrView::findOppositeSide(Position_Flags start_side)
 //####################################################################################
 //##        Main resize function
 //####################################################################################
-void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
+void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_scale, QPointF scale_to_use)
 {
     // Test for scene, convert to our custom class
     if (scene() == nullptr) return;
@@ -137,10 +138,10 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     qreal item_height = m_group->boundingRect().height();
 
     // ********** Find corners / sides we're working with, calculate new width / height
-    QPointF corner_start =    m_handles_centers[static_cast<Position_Flags>(m_over_handle)];
-    QPointF corner_opposite = m_handles_centers[findOppositeSide(m_over_handle)];
+    QPointF corner_start =    m_handles_centers[static_cast<Position_Flags>(m_start_resize_grip)];
+    QPointF corner_opposite = m_handles_centers[findOppositeSide(m_start_resize_grip)];
 
-    // Find center point, load angle of item, load original scale
+    // Find center point, load angle of selection group, load original scale
     QPointF center_point = QLineF(corner_start, corner_opposite).pointAt(.5);
     double  angle = my_scene->getSelectionAngle();
 
@@ -155,7 +156,7 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     QPointF zero_rotated_opposite_in_scene = mapToScene(zero_rotated_opposite.toPoint());
 
     // Snap if snapping is turned on
-    if (m_grid_resize_snap && m_handles_shape == Handle_Shapes::Squares) {
+    if ((m_grid_resize_snap && m_handles_shape == Handle_Shapes::Squares) && !use_exact_scale) {
         mouse_in_scene = roundToGrid( mouse_in_scene );
         // If we already resized to this point, cancel the resize to the current position
         if (mouse_in_scene == m_last_mouse_snap)    return;
@@ -168,22 +169,27 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     double  scale_x;
     double  scale_y;
 
-    // ***** Calculate X scale
-    if (m_do_x == X_Axis::Right)
-        scale_x = QLineF(zero_rotated_opposite_in_scene, point_in_shape).dx() / item_width;
-    else if (m_do_x == X_Axis::Left)
-        scale_x = QLineF(point_in_shape, zero_rotated_opposite_in_scene).dx() / item_width;
-    else
-        scale_x = m_pre_resize_scale.x();
+    if (!use_exact_scale) {
+        // ***** Calculate X scale
+        if (m_do_x == X_Axis::Right)
+            scale_x = QLineF(zero_rotated_opposite_in_scene, point_in_shape).dx() / item_width;
+        else if (m_do_x == X_Axis::Left)
+            scale_x = QLineF(point_in_shape, zero_rotated_opposite_in_scene).dx() / item_width;
+        else
+            scale_x = m_pre_resize_scale.x();
 
-    // ***** Calculate Y scale
-    if (m_do_y == Y_Axis::Bottom)
-        scale_y = QLineF(zero_rotated_opposite_in_scene, point_in_shape).dy() / item_height;
-    else if (m_do_y == Y_Axis::Top)
-        scale_y = QLineF(point_in_shape, zero_rotated_opposite_in_scene).dy() / item_height;
-    else
-        scale_y = m_pre_resize_scale.y();
+        // ***** Calculate Y scale
+        if (m_do_y == Y_Axis::Bottom)
+            scale_y = QLineF(zero_rotated_opposite_in_scene, point_in_shape).dy() / item_height;
+        else if (m_do_y == Y_Axis::Top)
+            scale_y = QLineF(point_in_shape, zero_rotated_opposite_in_scene).dy() / item_height;
+        else
+            scale_y = m_pre_resize_scale.y();
 
+    } else {
+        scale_x = scale_to_use.x() * m_pre_resize_scale.x();
+        scale_y = scale_to_use.y() * m_pre_resize_scale.y();
+    }
 
     // Make sure it doesnt disappear off the screen, Qt doesnt like when items scale go to zero
     if (scale_x <  .0001 && scale_x >= 0) scale_x =  .0001;
@@ -213,7 +219,7 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene)
     // ***** Translate if needed
     Position_Flags resize_flag = Position_Flags::Top_Left;
 
-    if (m_flag_key_down_control)
+    if (m_flag_key_down_control || use_exact_scale)
         resize_flag = Position_Flags::Center;
 
     else if (m_do_x == X_Axis::Left && m_do_y == Y_Axis::None)

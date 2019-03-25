@@ -104,7 +104,10 @@ bool MouseWheelAdjustmentGuard::eventFilter(QObject *obj, QEvent *event)
 //####################################################################################
 //##    PopUpMenuRelocater Class Functions
 //####################################################################################
-PopUpMenuRelocater::PopUpMenuRelocater(QObject *parent) : QObject(parent) {}
+PopUpMenuRelocater::PopUpMenuRelocater(QObject *parent, int top_offset, int left_offset) : QObject(parent) {
+    m_top_offset =  top_offset;
+    m_left_offset = left_offset;
+}
 
 bool PopUpMenuRelocater::eventFilter(QObject *obj, QEvent *event)
 {
@@ -114,7 +117,14 @@ bool PopUpMenuRelocater::eventFilter(QObject *obj, QEvent *event)
     if (event->type() == QEvent::Show)
     {
         QPoint pos = menu->pos();
-        pos.setY(pos.y() + 2);
+        int new_x = pos.x() + m_left_offset;
+        int new_y = pos.y() + m_top_offset;
+
+        if (new_x < 5) new_x = 5;
+        if (new_y < 5) new_y = 5;
+
+        pos.setX(new_x);
+        pos.setY(new_y);
         menu->move(pos);
         return true;
     }
