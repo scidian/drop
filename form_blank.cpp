@@ -5,15 +5,10 @@
 //
 //
 //
-#include "form_blank.h"
-
-#include <QApplication>
 #include <QPushButton>
 #include <QGridLayout>
-#include <QScreen>
-#include <QStyle>
 
-#include "form_atlas.h"
+#include "form_blank.h"
 #include "library.h"
 #include "project.h"
 #include "widgets_event_filters.h"
@@ -27,8 +22,7 @@ FormBlank::FormBlank(DrProject *project, QWidget *parent) : QWidget(parent), m_p
     Dr::ApplyCustomStyleSheetFormatting(this);
 
     // ***** Center window on screen and install dragging event filter
-    QRect screenGeometry = QGuiApplication::screens().first()->geometry();
-    this->setGeometry(QStyle::alignedRect( Qt::LeftToRight, Qt::AlignCenter, this->size(), screenGeometry ));
+    Dr::CenterFormOnScreen(parent, this);
     this->installEventFilter(new ClickAndDragWindow(this));
 
     // Create a contianer widget, this will allow Create a layout for the form and add a button

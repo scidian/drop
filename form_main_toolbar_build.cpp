@@ -282,8 +282,11 @@ void FormMain::buildSnapMenu(FormPopup *popup)
     QVBoxLayout *layout = new QVBoxLayout(widget);
     layout->setContentsMargins(10, 5, 5, 10);
 
-    QRadioButton *button1 = new QRadioButton(option1);  button1->setObjectName(QStringLiteral("popupRadio"));   button1->setFont(font);
-    QRadioButton *button2 = new QRadioButton(option2);  button2->setObjectName(QStringLiteral("popupRadio"));   button2->setFont(font);
+    QRadioButton *button1 = new QRadioButton(option1);  button1->setObjectName(QStringLiteral("popupRadio"));
+    QRadioButton *button2 = new QRadioButton(option2);  button2->setObjectName(QStringLiteral("popupRadio"));
+
+    button1->setFont(font);
+    button2->setFont(font);
 
     button1->setChecked( Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool());
     button2->setChecked(!Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool());

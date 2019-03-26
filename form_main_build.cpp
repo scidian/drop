@@ -111,8 +111,7 @@ void FormMain::initializeFormMainSettings()
     this->resize(new_width, new_height);
 
     // ***** Center window on screen
-    QRect screenGeometry = QGuiApplication::screens().first()->geometry();
-    this->setGeometry(QStyle::alignedRect( Qt::LeftToRight, Qt::AlignCenter, this->size(), screenGeometry ));
+    Dr::CenterFormOnScreen(nullptr, this);
 
     // ***** Initialize hover handler
     m_widget_hover = new WidgetHoverHandler(this);
@@ -125,9 +124,9 @@ void FormMain::initializeFormMainSettings()
 //####################################################################################
 void FormMain::buildWidgetsShared()
 {
-    QFont font, fontLarger;
+    QFont font, font_larger;
     font.setPointSize(Dr::FontSize());
-    fontLarger.setPointSize(Dr::FontSize() + 2);
+    font_larger.setPointSize(Dr::FontSize() + 2);
 
     QSizePolicy sizePolicy(                     QSizePolicy::Preferred,         QSizePolicy::Preferred);
     QSizePolicy sizePolicyLess(                 QSizePolicy::Preferred,         QSizePolicy::Preferred);
@@ -143,7 +142,7 @@ void FormMain::buildWidgetsShared()
     widgetCentral->setSizePolicy(sizePolicy);
     QGridLayout *layout = new QGridLayout(widgetCentral);
         QLabel *label = new QLabel("Coming Soon...");
-        label->setFont(fontLarger);
+        label->setFont(font_larger);
         layout->addWidget(label, 0, 0, Qt::AlignmentFlag::AlignCenter);
 
 
@@ -168,7 +167,7 @@ void FormMain::buildWidgetsShared()
                 treeAdvisor = new TreeAdvisor(widgetAdvisor, project, this);
                 treeAdvisor->setObjectName(QStringLiteral("treeAdvisor"));
                 treeAdvisor->setColumnCount(1);
-                treeAdvisor->setFont(fontLarger);
+                treeAdvisor->setFont(font_larger);
                 treeAdvisor->setProperty("showDropIndicator", QVariant(false));
                 treeAdvisor->setDragEnabled(false);
                 treeAdvisor->setDragDropOverwriteMode(false);

@@ -9,8 +9,6 @@
 #include <QPushButton>
 #include <QGridLayout>
 #include <QMouseEvent>
-#include <QScreen>
-#include <QStyle>
 
 #include "colors.h"
 #include "form_popup.h"
@@ -82,20 +80,16 @@ void FormPopup::resizeEvent(QResizeEvent *event)
 void FormPopup::showEvent(QShowEvent *event)
 {
     // Find new desired popup location relative to parent button
-    QRect parent_rect = parentWidget()->geometry();
-    QPoint center =     m_mapper->mapToGlobal(parent_rect.center());
-    QPoint bot_left =   m_mapper->mapToGlobal(parent_rect.bottomLeft());
+    QRect  parent_rect = parentWidget()->geometry();
+    QPoint center =      m_mapper->mapToGlobal(parent_rect.center());
+    QPoint bot_left =    m_mapper->mapToGlobal(parent_rect.bottomLeft());
 
-    int x = center.x()   - this->geometry().width() / 2;
-    int y = bot_left.y();
-
-    x += m_offset.x();
-    y += m_offset.y();
+    int x = center.x() - this->geometry().width() / 2 + m_offset.x();
+    int y = bot_left.y() + m_offset.y();
 
     // Make sure it is within the screen
-    QRect screenGeometry = QGuiApplication::screens().first()->geometry();
-    if (x < 5) x = 5;
-    if (x + this->geometry().width() + 5 > screenGeometry.width()) x = screenGeometry.width() - this->geometry().width() - 5;
+    if (!QGuiApplication::screenAt(QPoint(x, y)) && x < 2)
+        x = 2;
     this->move(x, y);
 
     QWidget::showEvent(event);

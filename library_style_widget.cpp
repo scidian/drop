@@ -6,12 +6,55 @@
 //
 //
 #include <QGraphicsDropShadowEffect>
-
+#include <QGuiApplication>
+#include <QScreen>
+#include <QStyle>
+#include <QWindow>
 
 #include "colors.h"
 #include "library.h"
 
 namespace Dr {
+
+
+//####################################################################################
+//##        Centers form_to_center on screen,
+//##            Tries to use whatever screen parent_to_find_screen_from is on
+//####################################################################################
+void CenterFormOnScreen(QWidget *parent_to_find_screen_from, QWidget *form_to_center)
+{
+    QWidget *parent = parent_to_find_screen_from;
+    QScreen *screen = nullptr;
+    if (parent) {
+        if (parent->window()) {
+            if (parent->window()->windowHandle()) {
+                screen = parent->window()->windowHandle()->screen();
+            }
+        }
+    }
+    QRect screen_geometry;
+    if (screen) screen_geometry = screen->availableGeometry();
+    else        screen_geometry = QGuiApplication::screens().first()->geometry();
+    form_to_center->setGeometry(QStyle::alignedRect( Qt::LeftToRight, Qt::AlignCenter, form_to_center->size(), screen_geometry ));
+
+
+    /// !! To find screen at mouse position:
+    ///QGuiApplication::screenAt(QPoint(0, 0));
+
+    /// !! To get the pixel somewhere on the screen:
+    /**
+    QPixmap *a = new QPixmap;
+    *a = QPixmap::grabWindow(QApplication::desktop()->winId());
+    QImage *img = new QImage;
+    *img = a->toImage();
+    QRgb b = img->pixel(10,33);
+    QColor *c = new QColor;
+    c->setRgb(b);
+    QString color_name = c->name();
+    */
+
+}
+
 
 
 //####################################################################################
