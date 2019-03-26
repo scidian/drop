@@ -25,6 +25,7 @@ public:
     FormPopup(DrProject *project, QWidget *parent = nullptr);
 
     // Event Overrides
+    virtual void paintEvent(QPaintEvent *event) override;
     virtual void resizeEvent(QResizeEvent *event) override;
     virtual void showEvent(QShowEvent *event) override;
 

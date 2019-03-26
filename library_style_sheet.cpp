@@ -34,6 +34,14 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         "       border: 1px solid; border-radius: 7px; "
         "       border-color: " + Dr::GetColor(Window_Colors::Midlight).name() + "; } "
 
+        " QWidget#innerWidgetPopup     { "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
+        "       border: 1px solid; border-bottom-left-radius: 7px; border-bottom-right-radius: 7px;"
+        "       border-top-color: " +    Dr::GetColor(Window_Colors::Button_Dark).name() + ";  "
+        "       border-left-color: " +   Dr::GetColor(Window_Colors::Midlight).name() + ";  "
+        "       border-right-color: " +  Dr::GetColor(Window_Colors::Midlight).name() + ";  "
+        "       border-bottom-color: " + Dr::GetColor(Window_Colors::Midlight).name() + "; } "
+
         // Horizontal and vertical splitters
         " QSplitter { width: 5px; height: 5px; } "
         " QSplitter::handle:vertical { image: url(:/gui_misc/splitter_v.png); } "

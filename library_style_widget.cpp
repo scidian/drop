@@ -42,11 +42,7 @@ void ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type)
 // Radius is absolute size
 void ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius, int method)
 {
-    QRectF rect = widget->rect();
-    int   width = static_cast<int>(rect.width());
-    int  height = static_cast<int>(rect.height());
-
-    QPixmap pixmap(width, height);
+    QPixmap pixmap(widget->rect().width(), widget->rect().height());
     pixmap.fill(Qt::green);
     QPainter paint(&pixmap);
     paint.setRenderHint(QPainter::Antialiasing, true);
@@ -58,9 +54,34 @@ void ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius, int met
         path.addRoundedRect(pixmap.rect(), x_radius, y_radius, Qt::SizeMode::AbsoluteSize);
         paint.fillPath(path, Qt::red);
     } else {
-        paint.setBrush( QBrush( QColor(255, 0, 0), Qt::BrushStyle::SolidPattern ));
-        paint.drawRoundedRect(0, 0, width, height, x_radius, y_radius);
+        paint.setBrush( Qt::red );
+        paint.drawRoundedRect(0, 0, widget->rect().width(), widget->rect().height(), x_radius, y_radius);
     }
+
+    widget->setMask(pixmap.createMaskFromColor(Qt::green));
+}
+
+
+//####################################################################################
+//##        Gives widget rounded corners, and a pointed top
+//####################################################################################
+// Radius is absolute size
+void ApplyPopupMask(QWidget *widget, int x_radius, int y_radius)
+{
+    QPixmap pixmap(widget->rect().width(), widget->rect().height());
+    pixmap.fill(Qt::green);
+    QPainter paint(&pixmap);
+    paint.setRenderHint(QPainter::Antialiasing, true);
+    paint.setPen( QPen(Qt::NoPen) );
+
+    paint.setBrush( Qt::red );
+    paint.drawRoundedRect(0, 10, widget->rect().width(), widget->rect().height() - 10, x_radius, y_radius);
+
+    QPoint points[3];
+    points[0] = QPoint(widget->rect().width() / 2, 0);
+    points[1] = QPoint((widget->rect().width() / 2) - 30, 30);
+    points[2] = QPoint((widget->rect().width() / 2) + 30, 30);
+    paint.drawPolygon(points, 3);
 
     widget->setMask(pixmap.createMaskFromColor(Qt::green));
 }

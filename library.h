@@ -36,6 +36,7 @@ void    ApplyCustomStyleSheetFormatting(QWidget *widget);
 void    ApplyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color);
 void    ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type);
 void    ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius, int method = 0);
+void    ApplyPopupMask(QWidget *widget, int x_radius, int y_radius);
 int     CheckFontWidth(QFont font, QString text_to_check);
 QString FitStringToWidth(QFont font, QString text_to_check, int max_width = 80, bool use_dots = true);
 
