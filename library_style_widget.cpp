@@ -37,32 +37,31 @@ void ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type)
 
 
 //####################################################################################
-//##        Gives widget rounded corners
+//##        Gives widget rounded corners,
 //####################################################################################
-// Radius is percent of total rect size (0 - 100)
-void ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius)
+// Radius is absolute size
+void ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius, int method)
 {
-    ///// ALTERNATE: Creates a rounded path aand applies as mask, produces jagged corners on small rects
-    ///QPainterPath path;
-    ///path.addRoundedRect(widget->rect(), x_radius, y_radius, Qt::SizeMode::RelativeSize);
-    ///QRegion mask = QRegion(path.toFillPolygon().toPolygon());
-    ///widget->setMask(mask);
-
     QRectF rect = widget->rect();
     int   width = static_cast<int>(rect.width());
     int  height = static_cast<int>(rect.height());
 
     QPixmap pixmap(width, height);
-    pixmap.fill();
+    pixmap.fill(Qt::green);
     QPainter paint(&pixmap);
     paint.setRenderHint(QPainter::Antialiasing, true);
     paint.setPen( QPen(Qt::NoPen) );
-    paint.setBrush( QBrush( Qt::green ));
-    paint.fillRect(QRectF( 0, 0, rect.width(), rect.height()), Qt::green);
-    paint.setBrush( QBrush( QColor(255, 0, 0), Qt::BrushStyle::SolidPattern ));
 
-    // Draw the rounded rect, this will be the part we keep
-    paint.drawRoundedRect(0, 0, width, height, x_radius, y_radius);
+    // Draw the rounded rect, this will be the part we keep. Played around with two ways to do the same thing
+    if (method == 0) {
+        QPainterPath path;
+        path.addRoundedRect(pixmap.rect(), x_radius, y_radius, Qt::SizeMode::AbsoluteSize);
+        paint.fillPath(path, Qt::red);
+    } else {
+        paint.setBrush( QBrush( QColor(255, 0, 0), Qt::BrushStyle::SolidPattern ));
+        paint.drawRoundedRect(0, 0, width, height, x_radius, y_radius);
+    }
+
     widget->setMask(pixmap.createMaskFromColor(Qt::green));
 }
 

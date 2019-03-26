@@ -42,6 +42,7 @@
 #include "interface_editor_relay.h"
 
 // Necessary forward declarations
+class FormPopup;
 class TreeAssets;
 class TreeAdvisor;
 class TreeInspector;
@@ -86,6 +87,7 @@ private:
     QWidget        *widgetGroupGrid;        QButtonGroup   *buttonsGroupGrid;
     QWidget        *widgetGroupSettings;
 
+    FormPopup      *popTest;
 
     // ***** Shared FormMain Widgets
     TreeAdvisor    *treeAdvisor;                            // Custom classes for Advisor Window

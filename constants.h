@@ -79,6 +79,10 @@ namespace Advisor_Info
     const HeaderBodyList Settings_Font_Builder  { "Font Builder", "Create and edit fonts usued for Text objects." };
     const HeaderBodyList Settings_Manager       { "Settings Manager", "View and edit project settings." };
 
+    const HeaderBodyList Object_Send_to_Back    { "Send to Back",  "Send selected item(s) to the back." };
+    const HeaderBodyList Object_Send_to_Front   { "Send to Font",  "Send selected item(s) to the front." };
+    const HeaderBodyList Object_Send_Backward   { "Send Backward", "Send selected item(s) back by one." };
+    const HeaderBodyList Object_Send_Forward    { "Send Forward",  "Send selected item(s) forward by one." };
     const HeaderBodyList Object_Reset           { "Reset Object Transform", "Resets selected objects transforms to a Scale of X:1, Y:1 and Rotation of "
                                                                             "0 Degrees." };
     const HeaderBodyList Object_Flip_H          { "Flip Horizontal", "Flips the selection horizontally." };

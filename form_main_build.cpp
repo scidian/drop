@@ -227,9 +227,9 @@ void FormMain::buildWidgetsShared()
         dockInspector->setWidget(widgetInspector);
 
 
-    // ***** Add QMainWindow Docks
-    dockInspector->setFixedWidth( 270 );
-    dockAdvisor->setFixedWidth(   270 );
+    // ***** Add QMainWindow Docks, set starting widths
+    dockInspector->setFixedWidth( 250 );
+    dockAdvisor->setFixedWidth(   250 );
     addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dockInspector);
     addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dockAdvisor);
     resizeDocks( { dockAdvisor, dockInspector }, { 140, 900 }, Qt::Vertical);
@@ -256,7 +256,7 @@ void FormMain::unlockDockWidth(QDockWidget *dock) {
 
     QString dock_name = dock->objectName();
     if (dock_name == "dockInspector")
-        dock->setMinimumSize(244, 80);
+        dock->setMinimumSize(250, 80);
     else
         dock->setMinimumSize(124, 80);
 

@@ -32,12 +32,15 @@ FormAtlas::FormAtlas(DrProject *project, QWidget *parent) : QWidget(parent)
     this->setGeometry(QStyle::alignedRect( Qt::LeftToRight, Qt::AlignCenter, this->size(), screenGeometry ));
     this->installEventFilter(new ClickAndDragWindow(this));
 
-    // Create a layout for the form and add a button
-    QGridLayout *grid_layout = new QGridLayout(this);
-    QPushButton *exit = new QPushButton("  Exit  ");
-    Dr::ApplyDropShadowByType(exit, Shadow_Types::Button_Shadow);
-    exit->setObjectName(QStringLiteral("button"));
-    grid_layout->addWidget(exit);
+    // Create a contianer widget, this will allow Create a layout for the form and add a button
+    inner_widget = new QWidget(this);
+    inner_widget->setGeometry( 1, 1, this->geometry().width() - 2, this->geometry().height() - 2);
+    inner_widget->setObjectName(QStringLiteral("innerWidget"));
+    QGridLayout *grid_layout = new QGridLayout(inner_widget);
+        QPushButton *exit = new QPushButton("  Exit  ");
+        Dr::ApplyDropShadowByType(exit, Shadow_Types::Button_Shadow);
+        exit->setObjectName(QStringLiteral("button"));
+        grid_layout->addWidget(exit);
 
     // Connect a lambda function to the "exit" button to close the form
     connect(exit, &QPushButton::clicked, [this] () {
@@ -48,6 +51,14 @@ FormAtlas::FormAtlas(DrProject *project, QWidget *parent) : QWidget(parent)
 }
 
 
+//####################################################################################
+//##        Keeps container widget same size as form
+//####################################################################################
+void FormAtlas::resizeEvent(QResizeEvent *event)
+{
+    inner_widget->setGeometry( 1, 1, this->geometry().width() - 2, this->geometry().height() - 2);
+    QWidget::resizeEvent(event);
+}
 
 //####################################################################################
 //##        Upon first showing creates some rounded corners
@@ -62,6 +73,11 @@ void FormAtlas::showEvent(QShowEvent *event)
     }
     QWidget::showEvent(event);
 }
+
+
+
+
+
 
 
 

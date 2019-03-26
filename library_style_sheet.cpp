@@ -25,9 +25,14 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         " QMainWindow { background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }" +
         " QMainWindow::separator { border: 1px solid " + Dr::GetColor(Window_Colors::Seperator).name() + "; }"
 
-        // Shared Empty Widget
+        // Shared Empty Widgets
         " QWidget#widgetCentral { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
-        " QWidget#childForm     { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }"
+
+        " QWidget#childForm     { background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; }"
+        " QWidget#innerWidget     { "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
+        "       border: 1px solid; border-radius: 7px; "
+        "       border-color: " + Dr::GetColor(Window_Colors::Midlight).name() + "; } "
 
         // Horizontal and vertical splitters
         " QSplitter { width: 5px; height: 5px; } "

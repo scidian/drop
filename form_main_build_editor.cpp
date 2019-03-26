@@ -265,7 +265,8 @@ void FormMain::buildWidgetsEditor()
 
         dockAssetsEditor->setWidget(widgetAssestEditor);
 
-    dockAssetsEditor->setFixedWidth( 222 );
+    // Starting width
+    dockAssetsEditor->setFixedWidth( 221 );
     addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea, dockAssetsEditor);
     dockAssetsEditor->hide();
 

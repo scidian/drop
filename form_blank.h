@@ -1,18 +1,18 @@
 //
-//      Created by Stephens Nunnally on 3/24/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 3/25/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
 //
 //
 //
-#ifndef FORM_ATLAS_H
-#define FORM_ATLAS_H
+#ifndef FORM_BLANK_H
+#define FORM_BLANK_H
 
 #include <QWidget>
 
 class DrProject;
 
-class FormAtlas : public QWidget
+class FormBlank : public QWidget
 {
 private:
     DrProject   *m_project;                         // Pointer to the open project
@@ -21,7 +21,7 @@ private:
     bool         m_shown_yet = false;               // True after shown for the first time
 
 public:
-    FormAtlas(DrProject *project, QWidget *parent = nullptr);
+    FormBlank(DrProject *project, QWidget *parent = nullptr);
 
     // Event Overrides
     virtual void resizeEvent(QResizeEvent *event) override;
@@ -31,8 +31,4 @@ public:
 };
 
 
-#endif // FORM_ATLAS_H
-
-
-
-
+#endif // FORM_BLANK_H

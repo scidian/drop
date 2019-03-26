@@ -85,7 +85,9 @@ SOURCES += \
     form_main_toolbar_button_click.cpp \
     library_style_sheet_toolbar.cpp \
     form_atlas.cpp \
-    form_fonts.cpp
+    form_fonts.cpp \
+    form_popup.cpp \
+    form_blank.cpp
 
 HEADERS += \
     enums.h \
@@ -121,7 +123,9 @@ HEADERS += \
     project_font.h \
     form_settings.h \
     form_atlas.h \
-    form_fonts.h
+    form_fonts.h \
+    form_popup.h \
+    form_blank.h
 
 FORMS +=
 

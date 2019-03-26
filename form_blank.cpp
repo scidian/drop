@@ -1,23 +1,24 @@
 //
-//      Created by Stephens Nunnally on 3/21/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 3/25/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
 //
 //
 //
+#include "form_blank.h"
+
 #include <QApplication>
 #include <QPushButton>
 #include <QGridLayout>
-#include <QMouseEvent>
 #include <QScreen>
 #include <QStyle>
 
-#include "form_settings.h"
+#include "form_atlas.h"
 #include "library.h"
 #include "project.h"
 #include "widgets_event_filters.h"
 
-FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent)
+FormBlank::FormBlank(DrProject *project, QWidget *parent) : QWidget(parent)
 {
     m_project = project;
 
@@ -33,7 +34,7 @@ FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent
     this->setGeometry(QStyle::alignedRect( Qt::LeftToRight, Qt::AlignCenter, this->size(), screenGeometry ));
     this->installEventFilter(new ClickAndDragWindow(this));
 
-    // Create a layout for the form and add a button
+    // Create a contianer widget, this will allow Create a layout for the form and add a button
     inner_widget = new QWidget(this);
     inner_widget->setGeometry( 1, 1, this->geometry().width() - 2, this->geometry().height() - 2);
     inner_widget->setObjectName(QStringLiteral("innerWidget"));
@@ -52,21 +53,19 @@ FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent
 }
 
 
-
 //####################################################################################
 //##        Keeps container widget same size as form
 //####################################################################################
-void FormSettings::resizeEvent(QResizeEvent *event)
+void FormBlank::resizeEvent(QResizeEvent *event)
 {
     inner_widget->setGeometry( 1, 1, this->geometry().width() - 2, this->geometry().height() - 2);
     QWidget::resizeEvent(event);
 }
 
-
 //####################################################################################
 //##        Upon first showing creates some rounded corners
 //####################################################################################
-void FormSettings::showEvent(QShowEvent *event)
+void FormBlank::showEvent(QShowEvent *event)
 {
     Q_UNUSED(event)
 
@@ -76,14 +75,6 @@ void FormSettings::showEvent(QShowEvent *event)
     }
     QWidget::showEvent(event);
 }
-
-
-
-
-
-
-
-
 
 
 

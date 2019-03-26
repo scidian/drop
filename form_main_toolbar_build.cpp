@@ -14,6 +14,7 @@
 #include "form_atlas.h"
 #include "form_fonts.h"
 #include "form_main.h"
+#include "form_popup.h"
 #include "form_settings.h"
 #include "globals.h"
 #include "library.h"
@@ -84,19 +85,21 @@ void FormMain::buildToolBar()
         buttonsGroupLayering->setExclusive(false);
         connect(buttonsGroupLayering, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupLayeringClicked(int)));
 
-        tool = createToolbarButton(QStringLiteral("buttonSendToBack"), Advisor_Info::Not_Set, 34, 26, false, false);
+        tool = createToolbarButton(QStringLiteral("buttonSendToBack"), Advisor_Info::Object_Send_to_Back, 34, 26, false, false);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_To_Back));
         toolbarLayoutLayering->addWidget(tool);
 
-        tool = createToolbarButton(QStringLiteral("buttonSendBackward"), Advisor_Info::Not_Set, 34, 26, false, false);
+        popTest = new FormPopup(project, tool);
+
+        tool = createToolbarButton(QStringLiteral("buttonSendBackward"), Advisor_Info::Object_Send_Backward, 34, 26, false, false);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_Backward));
         toolbarLayoutLayering->addWidget(tool);
 
-        tool = createToolbarButton(QStringLiteral("buttonSendForward"), Advisor_Info::Not_Set, 34, 26, false, false);
+        tool = createToolbarButton(QStringLiteral("buttonSendForward"), Advisor_Info::Object_Send_Forward, 34, 26, false, false);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_Forward));
         toolbarLayoutLayering->addWidget(tool);
 
-        tool = createToolbarButton(QStringLiteral("buttonSendToFront"), Advisor_Info::Not_Set, 34, 26, false, false);
+        tool = createToolbarButton(QStringLiteral("buttonSendToFront"), Advisor_Info::Object_Send_to_Front, 34, 26, false, false);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_To_Front));
         toolbarLayoutLayering->addWidget(tool);
 

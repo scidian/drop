@@ -11,6 +11,7 @@
 #include "editor_scene.h"
 #include "editor_view.h"
 #include "form_main.h"
+#include "form_popup.h"
 #include "globals.h"
 #include "project_world_stage_object.h"
 
@@ -53,6 +54,9 @@ void FormMain::buttonGroupLayeringClicked(int id)
     Buttons_Layering clicked = static_cast<Buttons_Layering>(id);
 
     if (clicked == Buttons_Layering::Send_To_Back) {
+
+        popTest->show();
+
 
     }
 }

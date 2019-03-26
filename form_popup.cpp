@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 3/21/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 3/25/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
 //
@@ -12,26 +12,21 @@
 #include <QScreen>
 #include <QStyle>
 
-#include "form_settings.h"
+#include "form_popup.h"
 #include "library.h"
 #include "project.h"
 #include "widgets_event_filters.h"
 
-FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent)
+FormPopup::FormPopup(DrProject *project, QWidget *parent) : QWidget(parent)
 {
     m_project = project;
 
     // ***** Set up initial window
     setWindowFlag(Qt::WindowType::FramelessWindowHint);
-    setWindowFlag(Qt::WindowType::Tool);
+    setWindowFlag(Qt::WindowType::Popup);
     setMinimumSize(QSize(200, 200));
     setObjectName(QStringLiteral("childForm"));
     Dr::ApplyCustomStyleSheetFormatting(this);
-
-    // ***** Center window on screen
-    QRect screenGeometry = QGuiApplication::screens().first()->geometry();
-    this->setGeometry(QStyle::alignedRect( Qt::LeftToRight, Qt::AlignCenter, this->size(), screenGeometry ));
-    this->installEventFilter(new ClickAndDragWindow(this));
 
     // Create a layout for the form and add a button
     inner_widget = new QWidget(this);
@@ -56,17 +51,18 @@ FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent
 //####################################################################################
 //##        Keeps container widget same size as form
 //####################################################################################
-void FormSettings::resizeEvent(QResizeEvent *event)
+void FormPopup::resizeEvent(QResizeEvent *event)
 {
     inner_widget->setGeometry( 1, 1, this->geometry().width() - 2, this->geometry().height() - 2);
     QWidget::resizeEvent(event);
 }
 
 
+
 //####################################################################################
-//##        Upon first showing creates some rounded corners
+//##        Upon first showing, shape window
 //####################################################################################
-void FormSettings::showEvent(QShowEvent *event)
+void FormPopup::showEvent(QShowEvent *event)
 {
     Q_UNUSED(event)
 
@@ -74,8 +70,32 @@ void FormSettings::showEvent(QShowEvent *event)
         Dr::ApplyRoundedCornerMask(this, 8, 8);
         m_shown_yet = true;
     }
+
+    // Find new desired popup location relative to parent button
+    QRect parent_rect = parentWidget()->geometry();
+    int x = parentWidget()->mapToGlobal(parent_rect.center()).x() - this->geometry().width() / 2;
+    int y = parentWidget()->mapToGlobal(parent_rect.bottomLeft()).y() + 2;
+
+    // Make sure it is within the screen
+    QRect screenGeometry = QGuiApplication::screens().first()->geometry();
+    if (x < 5) x = 5;
+    if (x + this->geometry().width() + 5 > screenGeometry.width()) x = screenGeometry.width() - this->geometry().width() - 5;
+    this->setGeometry(x, y, this->width(), this->height());
+
     QWidget::showEvent(event);
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
