@@ -32,9 +32,9 @@ FormBlank::FormBlank(DrProject *project, QWidget *parent) : QWidget(parent), m_p
     this->installEventFilter(new ClickAndDragWindow(this));
 
     // Create a contianer widget, this will allow Create a layout for the form and add a button
-    inner_widget = new QWidget(this);
-    inner_widget->setObjectName(QStringLiteral("innerWidget"));
-    QGridLayout *grid_layout = new QGridLayout(inner_widget);
+    m_inner_widget = new QWidget(this);
+    m_inner_widget->setObjectName(QStringLiteral("innerWidget"));
+    QGridLayout *grid_layout = new QGridLayout(m_inner_widget);
 
         QPushButton *exit = new QPushButton("  Exit  ");
         Dr::ApplyDropShadowByType(exit, Shadow_Types::Button_Shadow);
@@ -56,7 +56,7 @@ FormBlank::FormBlank(DrProject *project, QWidget *parent) : QWidget(parent), m_p
 void FormBlank::resizeEvent(QResizeEvent *event)
 {
     Dr::ApplyRoundedCornerMask(this, 8, 8);
-    inner_widget->setGeometry( 1, 1, this->geometry().width() - 2, this->geometry().height() - 2);
+    m_inner_widget->setGeometry( 1, 1, this->geometry().width() - 2, this->geometry().height() - 2);
 
     QWidget::resizeEvent(event);
 }

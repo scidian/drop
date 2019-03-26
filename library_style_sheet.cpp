@@ -236,7 +236,14 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         " QMenu#menuComboBox::item:checked { "
         "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; }"
 
-
+        // Popup menu RadioButton list
+        " QRadioButton#popupRadio         { color: " + Dr::GetColor(Window_Colors::Text).name() + "; } "
+        " QRadioButton#popupRadio:checked { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } "
+        " QRadioButton#popupRadio:hover   { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        "       padding-left: 2px; } "
+        " QRadioButton::indicator::checked       { image: url(:/gui_misc/check.png); padding-left: 5px;  padding-right: 4px;  } "
+        " QRadioButton::indicator::checked:hover { image: url(:/gui_misc/check.png); padding-left: 3px;  padding-right: 6px; } "
+        " QRadioButton::indicator::unchecked     { image: none; } "
 
     );
 

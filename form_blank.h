@@ -16,7 +16,7 @@ class FormBlank : public QWidget
 {
 private:
     DrProject   *m_project;                         // Pointer to the open project
-    QWidget     *inner_widget;                      // Container widget, allows for a double form border
+    QWidget     *m_inner_widget;                    // Container widget, allows for a double form border
 
 public:
     FormBlank(DrProject *project, QWidget *parent = nullptr);

@@ -55,8 +55,6 @@ void FormMain::buttonGroupLayeringClicked(int id)
 
     if (clicked == Buttons_Layering::Send_To_Back) {
 
-        popTest->show();
-
 
     }
 }
@@ -112,8 +110,7 @@ void FormMain::buttonGroupGridClicked(int id)
     Buttons_Grid clicked = static_cast<Buttons_Grid>(id);
 
     if (clicked == Buttons_Grid::Snap_Options) {
-        QToolButton *tool = dynamic_cast<QToolButton*>(buttonsGroupGrid->button(id));
-        tool->showMenu();
+         popupGrid->show();
 
     } else {
         switch (clicked) {

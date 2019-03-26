@@ -19,26 +19,21 @@
 #include "project.h"
 #include "widgets_event_filters.h"
 
-FormPopup::FormPopup(DrProject *project, QWidget *parent) : QWidget(parent), m_project(project)
+//####################################################################################
+//##        Constructor
+//####################################################################################
+FormPopup::FormPopup(DrProject *project, QWidget *mapper, QWidget *parent) : QWidget(parent), m_project(project), m_mapper(mapper)
 {
     // ***** Set up initial window
     setWindowFlag(Qt::WindowType::FramelessWindowHint);
     setWindowFlag(Qt::WindowType::Popup);
-    setMinimumSize(QSize(300, 120));
+    setFixedSize(QSize(50, 50));
     setObjectName(QStringLiteral("childForm"));
     Dr::ApplyCustomStyleSheetFormatting(this);
 
     // Create a layout for the form and add a button
-    inner_widget = new QWidget(this);
-    inner_widget->setObjectName(QStringLiteral("innerWidgetPopup"));
-    QHBoxLayout *layout = new QHBoxLayout(inner_widget);
-    layout->setContentsMargins(0, 0, 0, 0);
-
-        QFrame *widget_frame = new QFrame();
-        widget_frame->setObjectName(QStringLiteral("popupFrame"));
-        layout->addWidget(widget_frame);
-
-
+    m_inner_widget = new QWidget(this);
+    m_inner_widget->setObjectName(QStringLiteral("innerWidgetPopup"));
 
 }
 
@@ -74,7 +69,8 @@ void FormPopup::paintEvent(QPaintEvent *event)
 void FormPopup::resizeEvent(QResizeEvent *event)
 {
     Dr::ApplyPopupMask(this, 8, 8);
-    inner_widget->setGeometry( 1, 15, this->geometry().width() - 2, this->geometry().height() - 16);
+    m_inner_widget->setGeometry( 1, 15, this->geometry().width() - 2, this->geometry().height() - 16);
+
     QWidget::resizeEvent(event);
 }
 
@@ -87,14 +83,20 @@ void FormPopup::showEvent(QShowEvent *event)
 {
     // Find new desired popup location relative to parent button
     QRect parent_rect = parentWidget()->geometry();
-    int x = parentWidget()->mapToGlobal(parent_rect.center()).x() - this->geometry().width() / 2;
-    int y = parentWidget()->mapToGlobal(parent_rect.bottomLeft()).y() - 5;
+    QPoint center =     m_mapper->mapToGlobal(parent_rect.center());
+    QPoint bot_left =   m_mapper->mapToGlobal(parent_rect.bottomLeft());
+
+    int x = center.x()   - this->geometry().width() / 2;
+    int y = bot_left.y();
+
+    x += m_offset.x();
+    y += m_offset.y();
 
     // Make sure it is within the screen
     QRect screenGeometry = QGuiApplication::screens().first()->geometry();
     if (x < 5) x = 5;
     if (x + this->geometry().width() + 5 > screenGeometry.width()) x = screenGeometry.width() - this->geometry().width() - 5;
-    this->setGeometry(x, y, this->width(), this->height());
+    this->move(x, y);
 
     QWidget::showEvent(event);
 }
