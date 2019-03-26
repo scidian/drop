@@ -17,40 +17,36 @@
 #include "project.h"
 #include "widgets_event_filters.h"
 
-FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent)
+FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent), m_project(project)
 {
-    m_project = project;
-
     // ***** Set up initial window
-    setWindowFlag(Qt::WindowType::FramelessWindowHint);
-    setWindowFlag(Qt::WindowType::Tool);
+    setWindowFlags(Qt::WindowType::FramelessWindowHint | Qt::WindowType::Tool);
     setMinimumSize(QSize(200, 200));
     setObjectName(QStringLiteral("childForm"));
     Dr::ApplyCustomStyleSheetFormatting(this);
 
-    // ***** Center window on screen
+    // ***** Center window on screen and install dragging event filter
     QRect screenGeometry = QGuiApplication::screens().first()->geometry();
     this->setGeometry(QStyle::alignedRect( Qt::LeftToRight, Qt::AlignCenter, this->size(), screenGeometry ));
     this->installEventFilter(new ClickAndDragWindow(this));
 
-    // Create a layout for the form and add a button
+    // Create a contianer widget, this will allow Create a layout for the form and add a button
     inner_widget = new QWidget(this);
-    inner_widget->setGeometry( 1, 1, this->geometry().width() - 2, this->geometry().height() - 2);
     inner_widget->setObjectName(QStringLiteral("innerWidget"));
     QGridLayout *grid_layout = new QGridLayout(inner_widget);
+
         QPushButton *exit = new QPushButton("  Exit  ");
         Dr::ApplyDropShadowByType(exit, Shadow_Types::Button_Shadow);
         exit->setObjectName(QStringLiteral("button"));
         grid_layout->addWidget(exit);
 
-    // Connect a lambda function to the "exit" button to close the form
-    connect(exit, &QPushButton::clicked, [this] () {
-        this->close();
-    });
+        // Connect a lambda function to the "exit" button to close the form
+        connect(exit, &QPushButton::clicked, [this] () {
+            this->close();
+        });
 
 
 }
-
 
 
 //####################################################################################
@@ -58,32 +54,10 @@ FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent
 //####################################################################################
 void FormSettings::resizeEvent(QResizeEvent *event)
 {
+    Dr::ApplyRoundedCornerMask(this, 8, 8);
     inner_widget->setGeometry( 1, 1, this->geometry().width() - 2, this->geometry().height() - 2);
+
     QWidget::resizeEvent(event);
 }
-
-
-//####################################################################################
-//##        Upon first showing creates some rounded corners
-//####################################################################################
-void FormSettings::showEvent(QShowEvent *event)
-{
-    Q_UNUSED(event)
-
-    if (!m_shown_yet) {
-        Dr::ApplyRoundedCornerMask(this, 8, 8);
-        m_shown_yet = true;
-    }
-    QWidget::showEvent(event);
-}
-
-
-
-
-
-
-
-
-
 
 

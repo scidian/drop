@@ -16,16 +16,14 @@ class FormAtlas : public QWidget
 {
 private:
     DrProject   *m_project;                         // Pointer to the open project
-
     QWidget     *inner_widget;                      // Container widget, allows for a double form border
-    bool         m_shown_yet = false;               // True after shown for the first time
+
 
 public:
     FormAtlas(DrProject *project, QWidget *parent = nullptr);
 
     // Event Overrides
     virtual void resizeEvent(QResizeEvent *event) override;
-    virtual void showEvent(QShowEvent *event) override;
 
 
 };

@@ -28,7 +28,7 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         // Shared Empty Widgets
         " QWidget#widgetCentral { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
 
-        " QWidget#childForm     { background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; }"
+        " QWidget#childForm     { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
         " QWidget#innerWidget     { "
         "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
         "       border: 1px solid; border-radius: 7px; "

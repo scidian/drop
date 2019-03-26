@@ -8,7 +8,7 @@
 #ifndef FORM_POPUP_H
 #define FORM_POPUP_H
 
-
+#include <QMenu>
 #include <QWidget>
 
 class DrProject;
@@ -17,9 +17,8 @@ class FormPopup : public QWidget
 {
 private:
     DrProject   *m_project;                         // Pointer to the open project
-
     QWidget     *inner_widget;                      // Container widget, allows for a double form border
-    bool         m_shown_yet = false;               // True after shown for the first time
+
 
 public:
     FormPopup(DrProject *project, QWidget *parent = nullptr);

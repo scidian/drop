@@ -14,35 +14,31 @@
 
 #include "colors.h"
 #include "form_popup.h"
+#include "globals.h"
 #include "library.h"
 #include "project.h"
 #include "widgets_event_filters.h"
 
-FormPopup::FormPopup(DrProject *project, QWidget *parent) : QWidget(parent)
+FormPopup::FormPopup(DrProject *project, QWidget *parent) : QWidget(parent), m_project(project)
 {
-    m_project = project;
-
     // ***** Set up initial window
     setWindowFlag(Qt::WindowType::FramelessWindowHint);
     setWindowFlag(Qt::WindowType::Popup);
-    setMinimumSize(QSize(200, 200));
+    setMinimumSize(QSize(300, 120));
     setObjectName(QStringLiteral("childForm"));
     Dr::ApplyCustomStyleSheetFormatting(this);
 
     // Create a layout for the form and add a button
     inner_widget = new QWidget(this);
-    inner_widget->setGeometry( 1, 15, this->geometry().width() - 2, this->geometry().height() - 16);
     inner_widget->setObjectName(QStringLiteral("innerWidgetPopup"));
-    QGridLayout *grid_layout = new QGridLayout(inner_widget);
-        QPushButton *exit = new QPushButton("  Exit  ");
-        Dr::ApplyDropShadowByType(exit, Shadow_Types::Button_Shadow);
-        exit->setObjectName(QStringLiteral("button"));
-        grid_layout->addWidget(exit);
+    QHBoxLayout *layout = new QHBoxLayout(inner_widget);
+    layout->setContentsMargins(0, 0, 0, 0);
 
-    // Connect a lambda function to the "exit" button to close the form
-    connect(exit, &QPushButton::clicked, [this] () {
-        this->close();
-    });
+        QFrame *widget_frame = new QFrame();
+        widget_frame->setObjectName(QStringLiteral("popupFrame"));
+        layout->addWidget(widget_frame);
+
+
 
 }
 
@@ -77,6 +73,7 @@ void FormPopup::paintEvent(QPaintEvent *event)
 //####################################################################################
 void FormPopup::resizeEvent(QResizeEvent *event)
 {
+    Dr::ApplyPopupMask(this, 8, 8);
     inner_widget->setGeometry( 1, 15, this->geometry().width() - 2, this->geometry().height() - 16);
     QWidget::resizeEvent(event);
 }
@@ -88,13 +85,6 @@ void FormPopup::resizeEvent(QResizeEvent *event)
 //####################################################################################
 void FormPopup::showEvent(QShowEvent *event)
 {
-    Q_UNUSED(event)
-
-    if (!m_shown_yet) {
-        Dr::ApplyPopupMask(this, 8, 8);
-        m_shown_yet = true;
-    }
-
     // Find new desired popup location relative to parent button
     QRect parent_rect = parentWidget()->geometry();
     int x = parentWidget()->mapToGlobal(parent_rect.center()).x() - this->geometry().width() / 2;
@@ -108,11 +98,6 @@ void FormPopup::showEvent(QShowEvent *event)
 
     QWidget::showEvent(event);
 }
-
-
-
-
-
 
 
 
