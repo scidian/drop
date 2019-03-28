@@ -22,6 +22,7 @@ public:
     FormSettings(DrProject *project, QWidget *parent = nullptr);
 
     // Event Overrides
+    virtual void mouseMoveEvent(QMouseEvent *event) override;
     virtual void resizeEvent(QResizeEvent *event) override;
 
 };
