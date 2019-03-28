@@ -109,6 +109,7 @@ private:
     // "Editor" Status Bar Widgets
     QLabel         *labelSelected;
 
+public:
 
     // ***** Labels to display info
     QLabel         *label1,         *label2,        *label3,        *labelMouse1,   *labelMouse2;

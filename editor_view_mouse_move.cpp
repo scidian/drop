@@ -14,6 +14,7 @@
 #include "editor_item.h"
 #include "editor_scene.h"
 #include "editor_view.h"
+#include "form_main.h"
 #include "globals.h"
 #include "interface_editor_relay.h"
 #include "library.h"
@@ -51,21 +52,56 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
 
 
 
-    //QPoint   mouse_pos = this->mapToGlobal( event->pos() );    // Same as below
-    QPoint   mouse_pos = event->globalPos();
+
+
+    // TEMP !!
+
+    static long count = 1;
+
+    QPoint   mouse_pos = this->mapToGlobal( event->pos() );    // Same as below
+    //QPoint   mouse_pos = event->globalPos();
     QScreen *screen = QGuiApplication::screenAt(mouse_pos);
+    //QPoint screen_pos = QCursor::pos(screen);
 
     /// Creates and returns a pixmap constructed by grabbing the contents of the given window restricted by QRect(x, y, width, height)
-    //QImage   screen_capture = screen->grabWindow(QApplication::desktop()->winId()).toImage();
+    QPixmap  capture;
+    if (count % 5 == 0) {
+        FormMain* fm = dynamic_cast<FormMain*>(m_editor_relay);
 
-    //QPoint   in_screen = screen-> ;
-    //QRgb     rgb = screen_capture.pixel(10,33);
-    //QColor   color;
-    //color =  QColor::fromRgba(rgb);
-    //QString  color_name = color.name();
 
-    Dr::SetLabelText(Label_Names::Label_1, "Mouse Screen X: " + QString::number(mouse_pos.x()) + ", Y: " + QString::number(mouse_pos.y()));
-    Dr::SetLabelText(Label_Names::Label_2, "Screen: " + screen->name() );
+        //QRect sg = screen->geometry();
+        QRect sg = QRect(mouse_pos.x() - 50, mouse_pos.y() - 50, 100, 100);
+
+        //capture = screen->grabWindow( QApplication::desktop()->winId(), sg.x(), sg.y(), sg.width(), sg.height());
+
+        capture = screen->grabWindow( this->winId() , this->x(), this->y(), this->height(), this->width() );
+
+
+        QPoint screen_pos;
+        screen_pos.setX( static_cast<int>( (mouse_pos.x() - sg.x()) * screen->devicePixelRatio()) );
+        screen_pos.setY( static_cast<int>( (mouse_pos.y() - sg.y()) * screen->devicePixelRatio()) );
+
+        QImage si = capture.toImage();
+        QColor pixel = si.pixelColor(screen_pos.x(), screen_pos.y());
+        //Dr::SetLabelText(Label_Names::Label_2, "Color: " + pixel.name() );
+
+        //Dr::SetLabelText(Label_Names::Label_1, "Mouse Screen X: " + QString::number(mouse_pos.x()) +   ", Y: " + QString::number(mouse_pos.y()) );
+        Dr::SetLabelText(Label_Names::Label_1, "Capture Size: X: " + QString::number(capture.width()) + ", Y: " + QString::number(capture.height()) );
+        Dr::SetLabelText(Label_Names::Label_2, "Sg X: " + QString::number(sg.x()) +     ", Y: " + QString::number(sg.y()) +
+                                                ", W: " + QString::number(sg.width()) + ", H: " + QString::number(sg.height()) );
+
+        if (count % 50 == 0) {
+            capture = capture.scaledToWidth( capture.width() / 3 );
+            Dr::ShowMessageBox("Test Image", capture);
+        }
+
+
+        fm->label2->setStyleSheet("background: " + pixel.name() + "; " );
+    }
+    count++;
+
+
+
 
 
 

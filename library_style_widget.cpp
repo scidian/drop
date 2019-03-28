@@ -29,18 +29,8 @@ void CenterFormOnScreen(QWidget *parent_to_find_screen_from, QWidget *form_to_ce
     QRect    screen_geometry;
     screen = FindScreenFromWidget(parent_to_find_screen_from);
 
-    // If couldnt find screen from parent, try to create a new temporary widget to see where Qt would load it
-    if (!screen) {
-        QWidget *screen_test = new QWidget();
-        screen_test->setFixedSize(100, 100);
-        screen_test->setEnabled(false);
-        screen_test->setVisible(false);
-        screen_test->setWindowTitle("Loading");
-        screen_test->show();
-        screen = FindScreenFromWidget(screen_test);
-        screen_test->hide();
-        delete screen_test;
-    }
+    // If couldnt find screen from parent, try to grab screen from cursor position, else default to primary or first screen
+    if (!screen) screen = QGuiApplication::screenAt( QCursor::pos() );
     if (!screen) screen = QGuiApplication::primaryScreen();
     if (!screen) screen = QGuiApplication::screens().first();
     screen_geometry = screen->availableGeometry();
