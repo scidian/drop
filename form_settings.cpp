@@ -39,7 +39,7 @@ FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent
 
     // ***** Center window on screen and install dragging event filter
     Dr::CenterFormOnScreen(parent, this);
-    this->installEventFilter(new ClickAndDragWindow(this));
+  ///  this->installEventFilter(new ClickAndDragWindow(this));
 
     // Create a contianer widget, this will allow Create a layout for the form and add a button
     m_inner_widget = new QWidget(this);
@@ -102,12 +102,24 @@ void FormSettings::mousePressEvent(QMouseEvent *event)
     m_screen = QGuiApplication::screenAt(mouse_pos);
     ///QPoint screen_pos = QCursor::pos(screen);            // Also works, but also still grabs in virtualGeometry coordinates
 
+    // Store starting size, then hide before the screenshot
+    m_start_size = this->size();
+    this->setVisible(false);
+    this->setFixedSize(200, 200);
+
     // Take a screenshot of the current screen
     QRect sg  = m_screen->geometry();
     m_capture = m_screen->grabWindow( QApplication::desktop()->winId(), sg.x(), sg.y(), sg.width(), sg.height());
     m_image   = m_capture.toImage();
 
+    // Apply transparency to form, hide widgets
+    m_style = this->styleSheet();
+    this->setAttribute(Qt::WidgetAttribute::WA_TranslucentBackground, true);
+    this->setStyleSheet("color: rgba(0, 0, 0, 0); background-color: rgba(0, 0, 0, 0); border: none;");
+    this->setVisible(true);
+    m_label->setVisible(false);
 
+    this->window()->move(mouse_pos.x() - 100, mouse_pos.y() - 100);
 
     QWidget::mousePressEvent(event);
 }
@@ -117,8 +129,9 @@ void FormSettings::mousePressEvent(QMouseEvent *event)
 // Update the screen grab every now and then
 void FormSettings::mouseMoveEvent(QMouseEvent *event)
 {
-    // Get global mouse position, figure out screen position
+    // Get global mouse position, have form follow us, figure out screen position
     QPoint mouse_pos = event->globalPos();
+    this->window()->move(mouse_pos.x() - 100, mouse_pos.y() - 100);
     QPoint screen_pos;
     QRect  sg =  m_screen->geometry();
     screen_pos.setX( static_cast<int>( (mouse_pos.x() - sg.x()) * m_screen->devicePixelRatio()) );
@@ -134,16 +147,16 @@ void FormSettings::mouseMoveEvent(QMouseEvent *event)
     QColor pixel = m_image.pixelColor(screen_pos.x(), screen_pos.y());
     setColor(pixel);
 
-    QPoint   size(110, 110);
-    double   zoom = 9;
+    QPoint   size(115, 115);
+    double   zoom = 10;
 
     // Set round clipping path for pixmap
-    QPixmap  small(size.x(), size.y());
+    QPixmap  small(size.x(), size.y() + 32);
     small.fill( Qt::transparent );
     QPainter paint(&small);
     QPainterPath circle_path, square_path;
     square_path.addRect(   0, 0, small.width(), small.height());
-    circle_path.addEllipse(2, 2, small.width() - 4, small.height() - 4);
+    circle_path.addEllipse(2, 2, size.x() - 4, size.y() - 4);
     paint.setClipPath(circle_path);
 
     // Draw zoomed in portion and square around selected pixel
@@ -160,18 +173,33 @@ void FormSettings::mouseMoveEvent(QMouseEvent *event)
     // Draw rings around zoom
     paint.setRenderHint(QPainter::Antialiasing, true);
     paint.setPen( QPen( Dr::GetColor(Window_Colors::Background_Dark), 4 ) );
-    paint.drawEllipse(2, 2, small.width() - 4, small.height() - 4);
-
+    paint.drawEllipse(2, 2, size.x() - 4, size.y() - 4);
     paint.setPen( QPen( Dr::GetColor(Window_Colors::Midlight), 2 ) );
-    paint.drawEllipse(2, 2, small.width() - 4, small.height() - 4);
-
+    paint.drawEllipse(2, 2, size.x() - 4, size.y() - 4);
     paint.setPen( QPen( m_color, 4 ) );
-    paint.drawEllipse(5, 5, small.width() - 10, small.height() - 10);
+    paint.drawEllipse(5, 5, size.x() - 10, size.y() - 10);
+
+    // Draw bottom text box area
+    paint.setPen( QPen( Dr::GetColor(Window_Colors::Background_Dark), 4 ) );
+    QColor back_color = Dr::GetColor(Window_Colors::Background_Dark);
+           back_color.setAlpha(128);
+    paint.setBrush( back_color );
+    QRectF text_rect = QRectF(5, size.y() + 5, size.x() - 10, 22);
+    paint.drawRoundedRect( text_rect, 10, 10);
+    paint.setPen( QPen( Dr::GetColor(Window_Colors::Midlight), 2 ) );
+    paint.drawRoundedRect( text_rect.adjusted(0, 0, 0, 0), 10, 10);
+    paint.setPen( QPen( m_color, 3 ) );
+    paint.drawRoundedRect( text_rect.adjusted(2, 2, -2, -2), 8, 8);
+
+    // Draw color name text
+    paint.setPen( Dr::GetColor(Window_Colors::Text_Light) );
+    ///QString color_string = "R: " + QString::number(m_color.red()) +
+    ///                      " G: " + QString::number(m_color.green()) +
+    ///                      " B: " + QString::number(m_color.blue());
+    QFont font;    font.setPointSize( Dr::FontSize() );
+    paint.setFont( font );
+    paint.drawText( text_rect, Qt::AlignCenter, m_color.name() );
     paint.end();
-
-
-
-
 
 
 
@@ -191,6 +219,13 @@ void FormSettings::mouseMoveEvent(QMouseEvent *event)
 void FormSettings::mouseReleaseEvent(QMouseEvent *event)
 {
     while (QApplication::overrideCursor()) QApplication::restoreOverrideCursor();
+
+    this->setStyleSheet(m_style);
+    this->setAttribute(Qt::WidgetAttribute::WA_TranslucentBackground, false);
+    this->m_label->setVisible(true);
+    m_label->setVisible(true);
+    this->setFixedSize(m_start_size);
+
     QWidget::mouseReleaseEvent(event);
 }
 

@@ -29,6 +29,8 @@ private:
     QPixmap     m_capture;
     QImage      m_image;
     QScreen    *m_screen;
+    QSize       m_start_size;
+    QString     m_style;
 
 public:
     void        setColor(QColor color);
