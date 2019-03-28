@@ -265,8 +265,11 @@ void FormMain::buildWidgetsEditor()
 
         dockAssetsEditor->setWidget(widgetAssestEditor);
 
-    // Starting width
-    dockAssetsEditor->setFixedWidth( 221 );
+    // Starting width, if screen size is small, decrease starting width of assets to make more room
+    if (this->geometry().width() < 1500)
+        dockAssetsEditor->setFixedWidth( 124 );
+    else
+        dockAssetsEditor->setFixedWidth( 221 );
     addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea, dockAssetsEditor);
     dockAssetsEditor->hide();
 

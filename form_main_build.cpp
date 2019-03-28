@@ -105,13 +105,8 @@ void FormMain::initializeFormMainSettings()
     this->setDockOptions(AnimatedDocks | AllowNestedDocks);    /// | AllowTabbedDocks | GroupedDragging);
     ///this->setDocumentMode(true);         // Allows for left alignemnt of dock tabs, but not responsive to style sheets
 
-    // ***** Sets initial main window size
-    int new_width = 1400;
-    int new_height = QGuiApplication::screens().first()->geometry().height();
-    this->resize(new_width, new_height);
-
-    // ***** Center window on screen
-    Dr::CenterFormOnScreen(nullptr, this);
+    // ***** Center window on screen, sets initial size as a percentage of screen size
+    Dr::CenterFormOnScreen(this, this, 80, 100);
 
     // ***** Initialize hover handler
     m_widget_hover = new WidgetHoverHandler(this);

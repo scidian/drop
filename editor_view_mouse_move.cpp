@@ -26,6 +26,10 @@
 #include "settings_component_property.h"
 
 
+#include <QApplication>
+#include <QDesktopWidget>
+#include <QGuiApplication>
+#include <QScreen>
 
 //####################################################################################
 //##        Mouse Moved
@@ -43,6 +47,30 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
 
     // Store event mouse position
     m_last_mouse_pos = event->pos();
+
+
+
+
+    //QPoint   mouse_pos = this->mapToGlobal( event->pos() );    // Same as below
+    QPoint   mouse_pos = event->globalPos();
+    QScreen *screen = QGuiApplication::screenAt(mouse_pos);
+
+    /// Creates and returns a pixmap constructed by grabbing the contents of the given window restricted by QRect(x, y, width, height)
+    //QImage   screen_capture = screen->grabWindow(QApplication::desktop()->winId()).toImage();
+
+    //QPoint   in_screen = screen-> ;
+    //QRgb     rgb = screen_capture.pixel(10,33);
+    //QColor   color;
+    //color =  QColor::fromRgba(rgb);
+    //QString  color_name = color.name();
+
+    Dr::SetLabelText(Label_Names::Label_1, "Mouse Screen X: " + QString::number(mouse_pos.x()) + ", Y: " + QString::number(mouse_pos.y()));
+    Dr::SetLabelText(Label_Names::Label_2, "Screen: " + screen->name() );
+
+
+
+
+
 
     // Allow movement if it has been more than x milliseconds or mouse has moved more than 2 pixels
     if (m_allow_movement == false) {

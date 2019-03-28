@@ -11,6 +11,7 @@
 #include <QBitmap>
 #include <QLabel>
 #include <QPainter>
+#include <QScreen>
 #include <QWidget>
 
 
@@ -32,28 +33,32 @@ namespace Dr {
 
 
 // Form / Widget Functions
-void    ApplyCustomStyleSheetFormatting(QWidget *widget);
-void    ApplyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color);
-void    ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type);
-void    ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius, int method = 0);
-void    ApplyPopupMask(QWidget *widget, int x_radius, int y_radius);
-void    CenterFormOnScreen(QWidget *parent_to_find_screen_from, QWidget *form_to_center);
-int     CheckFontWidth(QFont font, QString text_to_check);
-QString FitStringToWidth(QFont font, QString text_to_check, int max_width = 80, bool use_dots = true);
+void        ApplyCustomStyleSheetFormatting(QWidget *widget);
+void        ApplyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color);
+void        ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type);
+void        ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius, int method = 0);
+void        ApplyPopupMask(QWidget *widget, int x_radius, int y_radius);
+void        CenterFormOnScreen(QWidget *parent_to_find_screen_from, QWidget *form_to_center,
+                               double width_percentage = -1, double height_percentage = -1);
+int         CheckFontWidth(QFont font, QString text_to_check);
+QScreen*    FindScreenFromWidget(QWidget *widget);
 
-QString StyleSheetColorButton(QColor color, QColor text_color, QColor highlight);
-QString StyleSheetToolBar();
-QString StyleSheetToolBarButtons(QString button_name, QString icon_unchecked, QString icon_checked, QString icon_disabled,
-                                 int padding, int tl, int tr, int bl, int br, bool checkable);
-QString StyleSheetToolBarModeButton(QString button_name, QString icon_name, QString icon_faded_name);
-QString StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_percent, bool highlight = false);
-QString StyleSheetPoppedOutBackgroundBorder(QColor background_color, QColor border_color, int top_percent, int bottom_percent, bool highlight = false);
+QString     FitStringToWidth(QFont font, QString text_to_check, int max_width = 80, bool use_dots = true);
+
+QString     StyleSheetColorButton(QColor color, QColor text_color, QColor highlight);
+QString     StyleSheetToolBar();
+QString     StyleSheetToolBarButtons(QString button_name, QString icon_unchecked, QString icon_checked, QString icon_disabled,
+                                     int padding, int tl, int tr, int bl, int br, bool checkable);
+QString     StyleSheetToolBarModeButton(QString button_name, QString icon_name, QString icon_faded_name);
+QString     StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_percent, bool highlight = false);
+QString     StyleSheetPoppedOutBackgroundBorder(QColor background_color, QColor border_color, int top_percent,
+                                                int bottom_percent, bool highlight = false);
 
 
 // Comparison Functions
-double  CheckScaleNotZero(double scale_to_check);
-bool    IsCloseTo(double number_desired, double number_to_check, double tolerance);
-QString RemoveTrailingDecimals(double value, int max_decimal_places);
+double      CheckScaleNotZero(double scale_to_check);
+bool        IsCloseTo(double number_desired, double number_to_check, double tolerance);
+QString     RemoveTrailingDecimals(double value, int max_decimal_places);
 
 
 // Comparison Template Function, Returns number_to_check fit to within the bounds of min / max

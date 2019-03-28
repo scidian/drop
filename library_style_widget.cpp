@@ -19,42 +19,47 @@ namespace Dr {
 
 //####################################################################################
 //##        Centers form_to_center on screen,
-//##            Tries to use whatever screen parent_to_find_screen_from is on
+//##            Tries to use whatever screen parent_to_find_screen_from is on, if it can't
+//##            find a valid screen, it defaults to centering the window on the primary screen
 //####################################################################################
-void CenterFormOnScreen(QWidget *parent_to_find_screen_from, QWidget *form_to_center)
+void CenterFormOnScreen(QWidget *parent_to_find_screen_from, QWidget *form_to_center,
+                        double width_percentage, double height_percentage)
 {
-    QWidget *parent = parent_to_find_screen_from;
     QScreen *screen = nullptr;
-    if (parent) {
-        if (parent->window()) {
-            if (parent->window()->windowHandle()) {
-                screen = parent->window()->windowHandle()->screen();
-            }
-        }
+    QRect    screen_geometry;
+    screen = FindScreenFromWidget(parent_to_find_screen_from);
+
+    // If couldnt find screen from parent, try to create a new temporary widget to see where Qt would load it
+    if (!screen) {
+        QWidget *screen_test = new QWidget();
+        screen_test->setFixedSize(100, 100);
+        screen_test->setEnabled(false);
+        screen_test->setVisible(false);
+        screen_test->setWindowTitle("Loading");
+        screen_test->show();
+        screen = FindScreenFromWidget(screen_test);
+        screen_test->hide();
+        delete screen_test;
     }
-    QRect screen_geometry;
-    if (screen) screen_geometry = screen->availableGeometry();
-    else        screen_geometry = QGuiApplication::screens().first()->geometry();
-    form_to_center->setGeometry(QStyle::alignedRect( Qt::LeftToRight, Qt::AlignCenter, form_to_center->size(), screen_geometry ));
+    if (!screen) screen = QGuiApplication::primaryScreen();
+    if (!screen) screen = QGuiApplication::screens().first();
+    screen_geometry = screen->availableGeometry();
 
-
-    /// !! To find screen at mouse position:
-    ///QGuiApplication::screenAt(QPoint(0, 0));
-
-    /// !! To get the pixel somewhere on the screen:
-    /**
-    QPixmap *a = new QPixmap;
-    *a = QPixmap::grabWindow(QApplication::desktop()->winId());
-    QImage *img = new QImage;
-    *img = a->toImage();
-    QRgb b = img->pixel(10,33);
-    QColor *c = new QColor;
-    c->setRgb(b);
-    QString color_name = c->name();
-    */
-
+    QSize new_size = form_to_center->size();
+    if (width_percentage  > 0 && width_percentage  <= 100)
+        new_size.setWidth( static_cast<int>( screen_geometry.width()  * (width_percentage  / 100.0) ) );
+    if (height_percentage > 0 && height_percentage <= 100)
+        new_size.setHeight(static_cast<int>( screen_geometry.height() * (height_percentage / 100.0) ) );
+    form_to_center->setGeometry(QStyle::alignedRect( Qt::LeftToRight, Qt::AlignCenter, new_size, screen_geometry ));
 }
 
+QScreen* FindScreenFromWidget(QWidget *widget)
+{
+    if (!widget)                            return nullptr;
+    if (!widget->window())                  return nullptr;
+    if (!widget->window()->windowHandle())  return nullptr;
+    return widget->window()->windowHandle()->screen();
+}
 
 
 //####################################################################################
