@@ -6,7 +6,7 @@
 //
 //
 #include <QPushButton>
-#include <QGridLayout>
+#include <QVBoxLayout>
 
 #include "form_fonts.h"
 #include "library.h"
@@ -28,12 +28,12 @@ FormFonts::FormFonts(DrProject *project, QWidget *parent) : QWidget(parent), m_p
     // Create a contianer widget, this will allow Create a layout for the form and add a button
     m_inner_widget = new QWidget(this);
     m_inner_widget->setObjectName(QStringLiteral("innerWidget"));
-    QGridLayout *grid_layout = new QGridLayout(m_inner_widget);
+    QVBoxLayout *layout = new QVBoxLayout(m_inner_widget);
 
         QPushButton *exit = new QPushButton("  Exit  ");
         Dr::ApplyDropShadowByType(exit, Shadow_Types::Button_Shadow);
         exit->setObjectName(QStringLiteral("button"));
-        grid_layout->addWidget(exit);
+        layout->addWidget(exit);
 
         // Connect a lambda function to the "exit" button to close the form
         connect(exit, &QPushButton::clicked, [this] () {

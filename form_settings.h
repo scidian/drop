@@ -8,6 +8,10 @@
 #ifndef FORM_SETTINGS_H
 #define FORM_SETTINGS_H
 
+#include <QImage>
+#include <QLabel>
+#include <QPixmap>
+#include <QScreen>
 #include <QWidget>
 
 class DrProject;
@@ -18,11 +22,28 @@ private:
     DrProject   *m_project;                         // Pointer to the open project
     QWidget     *m_inner_widget;                    // Container widget, allows for a double form border
 
+
+    // TEMP for finding color
+    QLabel     *m_label;
+    QColor      m_color = Qt::black;
+    QPixmap     m_capture;
+    QImage      m_image;
+    QScreen    *m_screen;
+
+public:
+    void        setColor(QColor color);
+
+
+
+
 public:
     FormSettings(DrProject *project, QWidget *parent = nullptr);
 
     // Event Overrides
     virtual void mouseMoveEvent(QMouseEvent *event) override;
+    virtual void mousePressEvent(QMouseEvent *event) override;
+    virtual void mouseReleaseEvent(QMouseEvent *event) override;
+
     virtual void resizeEvent(QResizeEvent *event) override;
 
 };

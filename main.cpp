@@ -52,7 +52,7 @@
 int main(int argc, char *argv[])
 {
     // ***** Initiliaze application
-    QApplication app_drop(argc, argv);              // Declare application
+    QApplication drop(argc, argv);                  // Declare application
 
     // ***** Load some global data
     Dr::InitializeFlags();                          // Sets debug flags
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
     Dr::SetDoneLoading(true);                       // Marks FormMain as finished loading
 
     // ***** Run Program
-    app_drop.exec();
+    drop.exec();
 
     //Dr::ShowMessageBox("Finished running program");
 

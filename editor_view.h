@@ -149,10 +149,9 @@ private:
     double                          m_rotate_start_angle;           // Stores angle of selection group at start of rotate routine
 
     // !!!!! DEBUG: Debugging Variables
-    long                            m_debug_fps = 0;         // TEMP
-    long                            m_debug_fps_last;        // TEMP
-    QTime                           m_debug_timer;           // TEMP
-
+    long                            m_debug_fps = 0;         // DEBUG
+    long                            m_debug_fps_last;        // DEBUG
+    QTime                           m_debug_timer;           // DEBUG
     QPolygonF                       m_debug_points;
     QPolygonF                       m_debug_shear, m_debug_shear2, m_debug_shear3;
 
