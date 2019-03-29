@@ -8,13 +8,11 @@
 #ifndef FORM_SETTINGS_H
 #define FORM_SETTINGS_H
 
-#include <QImage>
 #include <QLabel>
-#include <QPixmap>
-#include <QScreen>
 #include <QWidget>
 
 class DrProject;
+class MouseLabel;
 
 class FormSettings : public QWidget
 {
@@ -22,33 +20,65 @@ private:
     DrProject   *m_project;                         // Pointer to the open project
     QWidget     *m_inner_widget;                    // Container widget, allows for a double form border
 
-
-    // TEMP for finding color
-    QLabel     *m_label;
-    QColor      m_color = Qt::black;
-    QPixmap     m_capture;
-    QImage      m_image;
-    QScreen    *m_screen;
-    QSize       m_start_size;
-    QString     m_style;
-
-public:
-    void        setColor(QColor color);
-
-
+    MouseLabel  *m_label;
 
 
 public:
-    FormSettings(DrProject *project, QWidget *parent = nullptr);
+    explicit FormSettings(DrProject *project, QWidget *parent = nullptr);
+    virtual ~FormSettings() override;
 
     // Event Overrides
-    virtual void mouseMoveEvent(QMouseEvent *event) override;
-    virtual void mousePressEvent(QMouseEvent *event) override;
-    virtual void mouseReleaseEvent(QMouseEvent *event) override;
-
     virtual void resizeEvent(QResizeEvent *event) override;
 
 };
 
 
+
+
+class MouseLabel : public QLabel
+{
+    Q_OBJECT
+
+private:
+    QColor      m_color = Qt::black;
+    QSize       m_size;
+
+public:
+    explicit MouseLabel(QWidget *parent = nullptr);
+    virtual ~MouseLabel() override;
+
+    // Event Overrides
+    virtual void mousePressEvent(QMouseEvent *event) override;
+    virtual void mouseReleaseEvent(QMouseEvent *event) override;
+
+public slots:
+    void         setColor(QColor color);
+};
+
+
+
+
+
 #endif // FORM_SETTINGS_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

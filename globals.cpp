@@ -5,6 +5,8 @@
 //      Globals
 //
 //
+#include <QApplication>
+
 #include "form_main.h"
 #include "globals.h"
 #include "interface_editor_relay.h"
@@ -36,6 +38,10 @@ namespace Dr {
     void        SetActiveFormMain(FormMain *form_main)             { g_active_form_main = form_main; }
 
     void        SetLabelText(Label_Names label, QString text)      { if (g_active_form_main) g_active_form_main->setLabelText(label, text); }
+
+    void        ClearCursor() { while (QApplication::overrideCursor()) qApp->restoreOverrideCursor(); }
+    void        HideCursor()               { qApp->setOverrideCursor( Qt::BlankCursor ); }
+    void        SetCursor(QCursor &cursor) { qApp->setOverrideCursor(cursor); }
 
 
     // ########## Load saved preferences

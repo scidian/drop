@@ -44,8 +44,27 @@ namespace Dr {
 
     void        SetLabelText(Label_Names label, QString text);
 
+    void        ClearCursor();
+    void        HideCursor();
+    void        SetCursor(QCursor &cursor);
+
 }   // namespace Dr
 
 
 #endif // GLOBALS_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

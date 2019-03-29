@@ -87,7 +87,8 @@ SOURCES += \
     form_atlas.cpp \
     form_fonts.cpp \
     form_popup.cpp \
-    form_blank.cpp
+    form_blank.cpp \
+    form_color_magnifier.cpp
 
 HEADERS += \
     enums.h \
@@ -125,7 +126,8 @@ HEADERS += \
     form_atlas.h \
     form_fonts.h \
     form_popup.h \
-    form_blank.h
+    form_blank.h \
+    form_color_magnifier.h
 
 FORMS +=
 
