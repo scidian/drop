@@ -45,7 +45,9 @@ QScreen*    FindScreenFromWidget(QWidget *widget);
 
 QString     FitStringToWidth(QFont font, QString text_to_check, int max_width = 80, bool use_dots = true);
 
-QString     StyleSheetColorButton(QColor color, QColor text_color, QColor highlight);
+QString     StyleSheetColorButton(QColor color, QColor text_color, QColor highlight,
+                                  int tl_radius, int tr_radius, int bl_radius, int br_radius,
+                                  bool left_border, bool right_border, QString name);
 QString     StyleSheetToolBar();
 QString     StyleSheetToolBarButtons(QString button_name, QString icon_unchecked, QString icon_checked, QString icon_disabled,
                                      int padding, int tl, int tr, int bl, int br, bool checkable);

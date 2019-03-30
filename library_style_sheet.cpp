@@ -19,7 +19,6 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
     QString style_sheet = QString(
         // Some custom class coloring
         " .ColorSplitter {   background: " + Dr::GetColor(Window_Colors::Seperator).name() + "; }"
-        " QFrame#statusBar { background: " + Dr::GetColor(Window_Colors::Seperator).name() + "; } "
 
         // Main window background and seperator
         " QMainWindow { background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }" +
@@ -245,6 +244,14 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         " QRadioButton::indicator::checked:hover { image: url(:/gui_misc/check.png); padding-left: 3px;  padding-right: 6px; } "
         " QRadioButton::indicator::unchecked     { image: none; } "
 
+        // Color picker and dialog buttons
+        + Dr::StyleSheetColorButton(Dr::GetColor(Window_Colors::Background_Dark),
+                                    Dr::GetColor(Window_Colors::Background_Dark),
+                                    Dr::GetColor(Window_Colors::Background_Dark), 0, 0, 0, 0, false, true, "#buttonColorPicker")
+        + Dr::StyleSheetColorButton(Dr::GetColor(Window_Colors::Background_Dark),
+                                    Dr::GetColor(Window_Colors::Background_Dark),
+                                    Dr::GetColor(Window_Colors::Background_Dark), 0, 4, 0, 4, false, true, "#buttonColorDialog")
+
     );
 
     style_sheet += Dr::StyleSheetToolBar();
@@ -306,33 +313,48 @@ QString StyleSheetPoppedOutBackgroundBorder(QColor background_color, QColor bord
 
 
 // Generates the style sheet for use with a Inspector Color Button
-QString StyleSheetColorButton(QColor color, QColor text_color, QColor highlight)
+QString StyleSheetColorButton(QColor color, QColor text_color, QColor highlight,
+                              int tl_radius, int tr_radius, int bl_radius, int br_radius,
+                              bool left_border, bool right_border, QString name)
 {
-    return
-    " QPushButton { height: 20px; padding-top: 0px;"
+    QString style =
+    " QPushButton" + name + " { height: 20px; padding-top: 0px;"
     "   color: " + text_color.name() + "; "
-    "   border: " + Dr::BorderWidth() + " solid; "
-    "   border-radius: 4px; "
+    "   border-top: " +    Dr::BorderWidth() + " solid; "
+    "   border-bottom: " + Dr::BorderWidth() + " solid; ";
+
+    if (left_border)  style += "   border-left: " +   Dr::BorderWidth() + " solid; ";
+    else              style += "   border-left: 0px; ";
+    if (right_border) style += "   border-right: " +   Dr::BorderWidth() + " solid; ";
+    else              style += "   border-right: 0px; ";
+
+    style +=
+    "   border-top-left-radius:     " + QString::number(tl_radius) + "px; "
+    "   border-bottom-left-radius:  " + QString::number(bl_radius) + "px; "
+    "   border-top-right-radius:    " + QString::number(tr_radius) + "px; "
+    "   border-bottom-right-radius: " + QString::number(br_radius) + "px; "
     "   background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
-    "       stop:0.00 " + color.lighter(150).name() + ", "
-    "       stop:0.08 " + color.lighter(150).name() + ", "
-    "       stop:0.20 " + color.name() + ", "
-    "       stop:0.88 " + color.name() + ", "
-    "       stop:0.92 " + color.darker(300).name() + ", "
+    "       stop:0.00 " + color.lighter(200).name() + ", "
+    "       stop:0.09 " + color.lighter(200).name() + ", "
+    "       stop:0.10 " + color.name() + ", "
+    "       stop:0.92 " + color.name() + ", "
+    "       stop:0.93 " + color.darker(300).name() + ", "
     "       stop:1.00 " + color.darker(300).name() + "); "
     "   border-color: " + color.darker(300).name() + "; "
     "   border-bottom-color: " + color.darker(400).name() + "; } "
-    " QPushButton:hover {   color: " + highlight.name() + "; } "
-    " QPushButton:pressed { padding-top: 1px; "
+    " QPushButton" + name + ":hover {   color: " + highlight.name() + "; } "
+    " QPushButton" + name + ":pressed { padding-top: 1px; "
     "   background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
     "       stop:0.00 " + color.darker(300).name() + ", "
-    "       stop:0.08 " + color.darker(300).name() + ", "
-    "       stop:0.16 " + color.name() + ", "
+    "       stop:0.09 " + color.darker(300).name() + ", "
+    "       stop:0.10 " + color.name() + ", "
     "       stop:0.92 " + color.name() + ", "
     "       stop:0.93 " + color.darker(300).name() + ", "
     "       stop:1.00 " + color.darker(300).name() + "); "
     "   border-color: " + color.darker(300).name() + "; "
     "   border-bottom-color: " + Dr::GetColor(Window_Colors::Background_Dark).lighter(200).name() + "; } ";
+
+    return style;
 }
 
 

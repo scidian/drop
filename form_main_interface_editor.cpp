@@ -5,6 +5,7 @@
 //
 //
 //
+#include <QApplication>
 #include <QDockWidget>
 #include <QKeyEvent>
 #include <QTimer>
@@ -122,12 +123,11 @@ void FormMain::centerViewOnPoint(QPointF center_point) {
         viewEditor->setHasShownAScene(true);
     } );
 }
-void FormMain::centerViewTimer(QPointF center_point) { viewEditor->centerOn(center_point); }
-double FormMain::currentViewGridAngle()                     { return viewEditor->currentGridAngle(); }
-QPointF FormMain::currentViewGridScale()                    { return viewEditor->currentGridScale(); }
+void      FormMain::centerViewTimer(QPointF center_point) { viewEditor->centerOn(center_point); }
+double    FormMain::currentViewGridAngle()                     { return viewEditor->currentGridAngle(); }
+QPointF   FormMain::currentViewGridScale()                    { return viewEditor->currentGridScale(); }
 View_Mode FormMain::currentViewMode()                       { return viewEditor->currentViewMode(); }
-QPointF FormMain::roundPointToGrid(QPointF point_in_scene)  { return viewEditor->roundToGrid(point_in_scene); }
-
+QPointF   FormMain::roundPointToGrid(QPointF point_in_scene)  { return viewEditor->roundToGrid(point_in_scene); }
 
 
 // Call to change the Advisor

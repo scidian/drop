@@ -14,12 +14,12 @@
 #include <QScreen>
 #include <QWidget>
 
-
 class FormColorMagnifier : public QWidget
 {
     Q_OBJECT
 
 private:
+    QWidget    *m_parent;                       // Parent widget that wants the color
     QLabel     *m_label;                        // Draws the magnifier on the form
     QColor      m_color = Qt::black;            // Holds current color
     QPixmap     m_capture;                      // Holds a QPixmap screen shot of the current screen
@@ -47,7 +47,7 @@ public slots:
     void        grabScreen(QScreen *screen);
 
 signals:
-    void        colorGrabbed(QColor m_color);
+    void        colorGrabbed(QWidget *parent, QColor m_color);
 
 };
 

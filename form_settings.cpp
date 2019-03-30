@@ -7,11 +7,13 @@
 //
 #include <QMouseEvent>
 #include <QPushButton>
+#include <QTimer>
 #include <QVBoxLayout>
 
 #include "form_color_magnifier.h"
 #include "form_settings.h"
 #include "globals.h"
+#include "interface_editor_relay.h"
 #include "library.h"
 #include "project.h"
 #include "widgets_event_filters.h"
@@ -36,11 +38,11 @@ FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent
     QVBoxLayout *layout = new QVBoxLayout(m_inner_widget);
     layout->setAlignment(Qt::AlignCenter);
 
-        m_label = new MouseLabel();
+        m_label = new MouseLabel(this);
         m_label->setFixedSize(100, 50);
         m_label->setAlignment(Qt::AlignCenter);
         layout->addWidget(m_label);
-        m_label->setColor(Qt::red);
+        m_label->setColor(this, Qt::red);
 
         QPushButton *exit = new QPushButton("  Exit  ");
         Dr::ApplyDropShadowByType(exit, Shadow_Types::Button_Shadow);
@@ -84,12 +86,13 @@ void MouseLabel::mousePressEvent(QMouseEvent *event)
     QLabel::mousePressEvent(event);
 
     FormColorMagnifier *picker = new FormColorMagnifier(this, event->globalPos(), 115, 115, 8);
-    connect(picker, SIGNAL(colorGrabbed(QColor)), this, SLOT(setColor(QColor)) );
+    connect(picker, SIGNAL(colorGrabbed(QWidget*, QColor)), this, SLOT(setColor(QWidget*, QColor)) );
     picker->show();
 }
 
-void MouseLabel::setColor(QColor color)
+void MouseLabel::setColor(QWidget *widget, QColor color)
 {
+    Q_UNUSED (widget)
     m_color = color;
     this->setText( m_color.name() );
 

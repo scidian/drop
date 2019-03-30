@@ -28,7 +28,7 @@
 //##        Constructor & destructor
 //####################################################################################
 DrScene::DrScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
-                 QGraphicsScene(parent = nullptr),
+                 QGraphicsScene(parent),
                  m_project(project),
                  m_editor_relay(editor_relay)
 {

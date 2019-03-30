@@ -28,7 +28,7 @@
 //##        Constructor & destructor
 //####################################################################################
 DrView::DrView(QWidget *parent, DrProject *project, DrScene *from_scene, IEditorRelay *editor_relay) :
-               QGraphicsView(parent = nullptr), m_project(project), m_editor_relay(editor_relay)
+               QGraphicsView(parent), m_project(project), m_editor_relay(editor_relay)
 {
     // Initialize rubber band object used as a selection box
     m_rubber_band = new DrViewRubberBand(QRubberBand::Shape::Rectangle, this);

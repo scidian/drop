@@ -28,8 +28,9 @@ constexpr int c_mouse_y_offset =   3;
 //##    Constructor / Destructor
 //####################################################################################
 FormColorMagnifier::FormColorMagnifier(QWidget *parent, QPoint mouse_pos, int width, int height, double zoom)
-    : QWidget (parent), m_width(width), m_height(height), m_zoom(zoom)
-{
+    : QWidget (parent), m_parent(parent), m_width(width), m_height(height), m_zoom(zoom)
+{    
+    this->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
     this->setAttribute(Qt::WidgetAttribute::WA_TranslucentBackground, true);
     this->setStyleSheet("color: rgba(0, 0, 0, 0); background-color: rgba(0, 0, 0, 0); border: none;");
 
@@ -73,8 +74,8 @@ void FormColorMagnifier::grabScreen(QScreen *screen)
 void FormColorMagnifier::mousePressEvent(QMouseEvent *event) { QWidget::mousePressEvent(event); }
 void FormColorMagnifier::mouseReleaseEvent(QMouseEvent *)
 {
-    Dr::ClearCursor();
-    emit colorGrabbed(m_color);
+    //Dr::ClearCursor();
+    emit colorGrabbed(m_parent, m_color);
     this->close();
 }
 
@@ -108,10 +109,14 @@ void FormColorMagnifier::updateColor(QPoint mouse_pos)
     QPixmap small = drawCursor(screen_pos, m_width, m_height, m_zoom);
     m_label->setPixmap( small );
 
-    ///// Used to try to change the cursor, couldnt get the cursor to stay application / desktop wide
+    ///// Originally tried to change the cursor, couldnt get the cursor to stay application / desktop wide
     ///QCursor cursor( small, small.width() / 2, small.height() / 2);
     ///Dr::ClearCursor();
     ///Dr::SetCursor( cursor );
+
+    ///// Also tried to hide cursor, but only seems to hide over active widget
+    ///Dr::ClearCursor();
+    ///Dr::HideCursor();
 }
 
 
