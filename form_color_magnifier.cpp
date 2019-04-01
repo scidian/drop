@@ -74,7 +74,7 @@ void FormColorMagnifier::grabScreen(QScreen *screen)
 void FormColorMagnifier::mousePressEvent(QMouseEvent *event) { QWidget::mousePressEvent(event); }
 void FormColorMagnifier::mouseReleaseEvent(QMouseEvent *)
 {
-    //Dr::ClearCursor();
+    Dr::ClearCursor();
     emit colorGrabbed(m_parent, m_color);
     this->close();
 }
@@ -115,8 +115,8 @@ void FormColorMagnifier::updateColor(QPoint mouse_pos)
     ///Dr::SetCursor( cursor );
 
     ///// Also tried to hide cursor, but only seems to hide over active widget
-    ///Dr::ClearCursor();
-    ///Dr::HideCursor();
+    Dr::ClearCursor();
+    Dr::HideCursor();
 }
 
 

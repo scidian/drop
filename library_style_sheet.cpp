@@ -247,7 +247,10 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         // Color picker and dialog buttons
         + Dr::StyleSheetColorButton(Dr::GetColor(Window_Colors::Background_Dark),
                                     Dr::GetColor(Window_Colors::Background_Dark),
-                                    Dr::GetColor(Window_Colors::Background_Dark), 0, 0, 0, 0, false, true, "#buttonColorPicker")
+                                    Dr::GetColor(Window_Colors::Background_Dark), 0, 0, 0, 0, false, true, "#buttonColorPicker") +
+        " QPushButton#buttonColorPicker       { image: url(:/gui_misc/dropper.png);       padding: 3px; } "
+        " QPushButton#buttonColorPicker:hover { image: url(:/gui_misc/dropper_hover.png); padding: 3px; } "
+
         + Dr::StyleSheetColorButton(Dr::GetColor(Window_Colors::Background_Dark),
                                     Dr::GetColor(Window_Colors::Background_Dark),
                                     Dr::GetColor(Window_Colors::Background_Dark), 0, 4, 0, 4, false, true, "#buttonColorDialog")
@@ -311,8 +314,7 @@ QString StyleSheetPoppedOutBackgroundBorder(QColor background_color, QColor bord
                                         border_color.darker(250).name() + "; ";
 }
 
-
-// Generates the style sheet for use with a Inspector Color Button
+// Generates the style sheet for use with Color, Color Dropper and Color Dialog buttons
 QString StyleSheetColorButton(QColor color, QColor text_color, QColor highlight,
                               int tl_radius, int tr_radius, int bl_radius, int br_radius,
                               bool left_border, bool right_border, QString name)

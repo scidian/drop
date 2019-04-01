@@ -470,7 +470,7 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font)
 
         QPushButton *picker_button = new QPushButton();
         picker_button->setObjectName(QStringLiteral("buttonColorPicker"));
-        picker_button->setFixedWidth(25);
+        picker_button->setFixedSize(25, 20 + Dr::BorderWidthAsInt() * 2);           // Height has to include border thickness
         connect(picker_button, &QPushButton::pressed, this, [this, picker_button, color_button]() {
             FormColorMagnifier *picker = new FormColorMagnifier(color_button, QCursor::pos(), 115, 115, 8);
             connect(picker, SIGNAL(colorGrabbed(QWidget*, QColor)), this, SLOT(setButtonColor(QWidget*, QColor)) );
@@ -481,7 +481,7 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font)
 
         QPushButton *dialog_button = new QPushButton();
         dialog_button->setObjectName(QStringLiteral("buttonColorDialog"));
-        dialog_button->setFixedWidth(25);
+        dialog_button->setFixedSize(25, 20 + Dr::BorderWidthAsInt() * 2);           // Height has to include border thickness
         connect(dialog_button, &QPushButton::clicked, [this, color_button] () {
             this->setButtonColorFromSystemDialog(color_button);
         });
@@ -492,11 +492,9 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font)
 
 void TreeInspector::setButtonColorFromSystemDialog(QPushButton *button)
 {
-    ///// Qt Implementation
-    ///QColor color = QColorDialog::getColor(old_color, this, "Select Color", QColorDialog::DontUseNativeDialog);
-
     QColor old_color= QColor::fromRgba(button->property(User_Property::Color).toUInt());
     QColor color =    QColorDialog::getColor(old_color, this, "Select Color", QColorDialog::ColorDialogOption::ShowAlphaChannel);
+    ///QColor color = QColorDialog::getColor(old_color, this, "Select Color", QColorDialog::DontUseNativeDialog);   // Qt Implementation
     setButtonColor(button, color);
 }
 

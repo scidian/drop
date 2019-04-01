@@ -60,7 +60,7 @@ DrScene::~DrScene() {}
 //####################################################################################
 //##        SLOT's: sceneRectChanged, sceneChanged
 //####################################################################################
-// Connected from scene().sceneRectChanged
+// Connected from SIGNAL: QGraphicsScene::sceneRectChanged
 void DrScene::sceneRectChanged(QRectF new_rect)
 {
     Q_UNUSED (new_rect)
@@ -69,7 +69,7 @@ void DrScene::sceneRectChanged(QRectF new_rect)
     //                     ", W: " + QString::number(round(new_rect.width())) + ", H: " + QString::number(round(new_rect.height())));
 }
 
-// Connected from scene().changed
+// Connected from SIGNAL: QGraphicsScene::changed
 void DrScene::sceneChanged(QList<QRectF>) {
 
     QRectF my_rect = sceneRect();
