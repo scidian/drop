@@ -88,6 +88,6 @@
         <file>toolbar_icons/toolbar_rotate_l_gray.png</file>
         <file>toolbar_icons/toolbar_rotate_r_gray.png</file>
         <file>gui_misc/dropper.png</file>
-        <file>gui_misc/dropper_hover.png</file>
+        <file>gui_misc/color_wheel.png</file>
     </qresource>
 </RCC>

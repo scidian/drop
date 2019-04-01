@@ -212,7 +212,7 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         " QPushButton#buttonDropDown::menu-indicator { left: -8px; top: -7px; }"
         " QPushButton#buttonDropDown:hover { border: " + Dr::BorderWidth() + " solid; "
         "       color: " + Dr::GetColor(Window_Colors::Text_Light).name() + "; " +
-                StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Dark), Dr::GetColor(Window_Colors::Background_Dark), 10, 92, true) + " }"
+                StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Light), Dr::GetColor(Window_Colors::Background_Light), 10, 92, true) + " }"
         " QPushButton#buttonDropDown:pressed { "
         "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
@@ -249,11 +249,18 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
                                     Dr::GetColor(Window_Colors::Background_Dark),
                                     Dr::GetColor(Window_Colors::Background_Dark), 0, 0, 0, 0, false, true, "#buttonColorPicker") +
         " QPushButton#buttonColorPicker       { image: url(:/gui_misc/dropper.png);       padding: 3px; } "
-        " QPushButton#buttonColorPicker:hover { image: url(:/gui_misc/dropper_hover.png); padding: 3px; } "
+        " QPushButton#buttonColorPicker:hover { " +
+        StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Light), Dr::GetColor(Window_Colors::Background_Light), 10, 92, true) + " }"
 
         + Dr::StyleSheetColorButton(Dr::GetColor(Window_Colors::Background_Dark),
                                     Dr::GetColor(Window_Colors::Background_Dark),
-                                    Dr::GetColor(Window_Colors::Background_Dark), 0, 4, 0, 4, false, true, "#buttonColorDialog")
+                                    Dr::GetColor(Window_Colors::Background_Dark), 0, 4, 0, 4, false, true, "#buttonColorDialog") +
+        " QPushButton#buttonColorDialog       { image: url(:/gui_misc/color_wheel.png);   padding: 3px; } "
+        " QPushButton#buttonColorDialog:hover { " +
+        StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Light), Dr::GetColor(Window_Colors::Background_Light), 10, 92, true) + " }"
+        " QPushButton#buttonColorDialog:pressed { padding-left: 3px; padding-right: 3px; padding-top: 4px; padding-bottom: 2px; " +
+        StyleSheetRecessedBackgroundBorder(10, 92, false) + " }"
+
 
     );
 
@@ -308,10 +315,8 @@ QString StyleSheetPoppedOutBackgroundBorder(QColor background_color, QColor bord
            "            stop:" + bot1 + middle.name() + ", "
            "            stop:" + bot2 + background_color.darker(250).name() + ", "
            "            stop:1 " +      background_color.darker(250).name() + "); "
-           "          border-color: " + border_color.darker(250).name() + " " +
-                                        border_color.darker(250).name()+ " " +
-                                        border_color.darker(150).name() + " " +
-                                        border_color.darker(250).name() + "; ";
+           "          border-color: " + border_color.darker(250).name() + "; "
+           "          border-bottom-color: " +  border_color.darker(150).name() + "; ";
 }
 
 // Generates the style sheet for use with Color, Color Dropper and Color Dialog buttons
