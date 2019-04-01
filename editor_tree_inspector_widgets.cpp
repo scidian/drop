@@ -19,6 +19,7 @@
 #include <QStyleFactory>
 
 #include "colors.h"
+#include "constants.h"
 #include "debug.h"
 #include "editor_tree_inspector.h"
 #include "form_color_magnifier.h"
@@ -457,6 +458,7 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font)
         color_layout->setContentsMargins(0, 0, 0, 0);
         color_layout->setSpacing(0);
 
+        // This is the button that shows the color and color name, clicking it opens a color popup menu
         QPushButton *color_button = new QPushButton();
         color_button->setObjectName(QStringLiteral("buttonColorBox"));
         color_button->setFont(font);
@@ -464,16 +466,16 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font)
         color_button->setProperty(User_Property::Key,   QVariant::fromValue( property_key ));
         this->updateColorButton(color_button, color);
         connect(color_button, &QPushButton::clicked, [this, color_box, color_button, color] () {
-
             FormPopup *popupColors = new FormPopup(m_project, color_box, color_button);
             Dr::BuildPopupColors(this->topLevelWidget(), popupColors, color_button, QColor::fromRgba(color_button->property(User_Property::Color).toUInt()) );
             connect(popupColors, SIGNAL(colorGrabbed(QWidget*, QColor)), this, SLOT(setButtonColor(QWidget*, QColor)) );
             popupColors->show();
-
         });
+        m_widget_hover->attachToHoverHandler(color_button, Advisor_Info::ColorButton);
         addToWidgetList(color_button);
         color_layout->addWidget(color_button);
 
+        // This is the color that shows the color picker dropper, clicking it starts the color magnifier
         QPushButton *picker_button = new QPushButton();
         picker_button->setObjectName(QStringLiteral("buttonColorPicker"));
         picker_button->setFixedSize(25, 20 + Dr::BorderWidthAsInt() * 2);           // Height has to include border thickness
@@ -483,14 +485,17 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font)
             picker->show();
             picker_button->setDown(false);
         });
+        m_widget_hover->attachToHoverHandler(picker_button, Advisor_Info::ColorPicker);
         color_layout->addWidget(picker_button);
 
+        // This is the button that shows the color wheel, clicking it opens the system color dialog
         QPushButton *dialog_button = new QPushButton();
         dialog_button->setObjectName(QStringLiteral("buttonColorDialog"));
         dialog_button->setFixedSize(25, 20 + Dr::BorderWidthAsInt() * 2);           // Height has to include border thickness
         connect(dialog_button, &QPushButton::clicked, [this, color_button] () {
             this->setButtonColorFromSystemDialog(color_button);
         });
+        m_widget_hover->attachToHoverHandler(dialog_button, Advisor_Info::ColorDialog);
         color_layout->addWidget(dialog_button);
 
     return color_box;
@@ -504,6 +509,7 @@ void TreeInspector::setButtonColorFromSystemDialog(QPushButton *button)
     setButtonColor(button, color);
 }
 
+// SLOT: Receives a new color and updates color button and appropriate Project Settings
 void TreeInspector::setButtonColor(QWidget *button, QColor color)
 {
     QPushButton *push = dynamic_cast<QPushButton*>(button);

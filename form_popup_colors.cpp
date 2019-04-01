@@ -42,7 +42,7 @@ void BuildPopupColors(QWidget *parent_form, FormPopup *popup, QWidget *wants_col
         SetInfoLabelColor(info_label, start_color);
 
         // ***** Main Block of Colors  2-11, 12-21, 22-31
-        QWidget *grays = CreateColorBlock(popup, wants_color, info_label, 2, 10, 3, 0, 11, 11, 0, 1, true);
+        QWidget *grays = CreateColorBlock(popup, wants_color, info_label, 2, 12, 3, 0, 11, 11, 0, 1, true);
         layout->addWidget(grays);
 
         // ***** Main Block of Colors
@@ -97,11 +97,11 @@ QWidget* CreateColorBlock(FormPopup *popup, QWidget *wants_color, QLabel *info_l
     if (grays) {
         ColorSelecterButton *white_button = new ColorSelecterButton(color_block, popup, wants_color, info_label, Qt::white);
         white_button->setStyleSheet( CreateButtonStyleSheet(Qt::white, border) );
-        white_button->setGeometry(y * (block_width + spacing), 0, block_width * 3 + spacing * 2, block_height * 3 + spacing * 2);
+        white_button->setGeometry((y + 0) * (block_width + spacing), 0, block_width * 2 + spacing * 1, block_height * 3 + spacing * 2);
 
         ColorSelecterButton *black_button = new ColorSelecterButton(color_block, popup, wants_color, info_label, Qt::black);
         black_button->setStyleSheet( CreateButtonStyleSheet(Qt::black, border) );
-        black_button->setGeometry((y + 3) * (block_width + spacing), 0, block_width * 3 + spacing * 2, block_height * 3 + spacing * 2);
+        black_button->setGeometry((y + 2) * (block_width + spacing), 0, block_width * 2 + spacing * 1, block_height * 3 + spacing * 2);
     }
 
     return color_block;

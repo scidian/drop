@@ -104,6 +104,10 @@ namespace Advisor_Info
     const HeaderBodyList Advisor_Window         { "Advisor Window", "Shows a brief description of editor objects." };
     const HeaderBodyList Object_Inspector       { "Object Inspector", "Displays editable properties of currently selected item." };
 
+    const HeaderBodyList ColorButton            { "Color Button", "Click this to open a color popup that has a convenient color selection." };
+    const HeaderBodyList ColorPicker            { "Color Picker", "Press and hold this button to use a magnifying lens to pick a color off of the screen." };
+    const HeaderBodyList ColorDialog            { "Color Dialog", "Opens the system color dialog toolbox." };
+
     // Editor Widgets
     const HeaderBodyList Asset_List             { "Asset List", "These are items that can be dragged into your project. Changing the properties "
                                                                 "of these items will affect all instances of those items project wide." };
