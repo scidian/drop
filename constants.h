@@ -91,9 +91,9 @@ namespace Advisor_Info
     const HeaderBodyList Object_Rotate_R        { "Rotate Right", "Rotates selection clockwise by 90 degrees." };
 
     const HeaderBodyList Grid_Show_On_Top       { "Grid on Top?", "Draws grid lines on top of objects in editor." };
-    const HeaderBodyList Resize_To_Grid         { "Resize to Grid?", "Snaps corners and edges of objects to grid lines while resizing. This only works "
-                                                                     "if the angle of the object matches the angle of the grid. Resize handles will turn "
-                                                                     "from round to square to signify snapping is possible. "};
+    const HeaderBodyList Resize_To_Grid         { "Resize to Grid?", "Snaps corners and edges of objects to grid while resizing. Only works if the angle "
+                                                                     "of the object matches the angle of the grid, and the Grid Scale X and Y are the same. "
+                                                                     "Selection handles will change to square shape to signify snapping is possible."};
     const HeaderBodyList Grid_Snap_To_Grid      { "Snap to Grid?", "Snaps objects to grid lines when moving objects around with the mouse." };
     const HeaderBodyList Grid_Snap_Options      { "Snap Options", "Choose how objects snap to grid while multiple objects are selected, and objects are moved "
                                                                   "with mouse. Either have the center of the selection group snap to the grid, or have each "

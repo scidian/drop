@@ -36,6 +36,17 @@
 //##        Constructor / Destructor for Main Window
 //####################################################################################
 FormMain::~FormMain() {
+    // Wait until scene is not being changed, then delete view and scene
+    qApp->blockSignals(true);
+    while (sceneEditor->scene_mutex.tryLock() == false)
+        qApp->processEvents();
+    sceneEditor->clear();
+    sceneEditor->scene_mutex.unlock();
+    delete sceneEditor;
+    delete viewEditor;
+
+
+    // Delete widgets not currently attached to main form
     if (current_mode != Form_Main_Mode::World_Editor)   delete widgetCentralEditor;
     if (current_mode != Form_Main_Mode::Clear)          delete widgetCentral;
     delete project;
