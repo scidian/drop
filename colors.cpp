@@ -19,7 +19,7 @@ static std::map<Color_Scheme, std::map<Window_Colors, QColor>> g_color_schemes;
 static Color_Scheme     g_current_color_scheme = Color_Scheme::Dark;
 
 static QVector<QColor>  g_palette_material;                                     // Google material.io palette
-
+static QVector<QColor>  g_palette_ega;                                          // 4 Bit EGA palette
 
 QString BorderWidth()       { return "1px"; }                                   // Project wide border width for Style Sheets, as QString
 int     BorderWidthAsInt()  { return 1; }                                       // Project wide border width for Style Sheets, as Int
@@ -30,6 +30,7 @@ int     FontSize()          { return 11;  }                                     
 //##        Retreive custom colors
 //####################################################################################
 QColor          GetColor(Window_Colors color_role)      { return g_color_schemes[g_current_color_scheme][color_role]; }
+QColor          GetColorEGA(int color)                  { return g_palette_ega[color]; }
 QColor          GetColorMaterial(int color)             { return g_palette_material[color]; }
 
 Color_Scheme    GetColorScheme()                        { return g_current_color_scheme; }
@@ -43,6 +44,7 @@ QColor          GenerateRandomColor()                   { return QColor::fromRgb
 //####################################################################################
 void    LoadPalettes()
 {
+    LoadPaletteEGA();
     LoadPaletteMaterial();
 
     g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Seperator, QColor(16, 16, 16)));
@@ -102,6 +104,28 @@ void    LoadPalettes()
     g_color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Icon_Light,  QColor(107, 116, 33)));
 }
 
+void LoadPaletteEGA()
+{
+    for(int i = 0; i < 16; i++)
+        g_palette_ega.append(QColor(0, 0, 0));
+
+    g_palette_ega[ 0] = QColor(QRgb(0x000000));   //Black
+    g_palette_ega[ 1] = QColor(QRgb(0x0000AA));   //Blue
+    g_palette_ega[ 2] = QColor(QRgb(0x00AA00));   //Green
+    g_palette_ega[ 3] = QColor(QRgb(0x00AAAA));   //Cyan
+    g_palette_ega[ 4] = QColor(QRgb(0xAA0000));   //Red
+    g_palette_ega[ 5] = QColor(QRgb(0xAA00AA));   //Magenta
+    g_palette_ega[ 6] = QColor(QRgb(0xAA5500));   //Brown
+    g_palette_ega[ 7] = QColor(QRgb(0xAAAAAA));   //Light Gray
+    g_palette_ega[ 8] = QColor(QRgb(0x555555));   //Dark  Gray
+    g_palette_ega[ 9] = QColor(QRgb(0x5555FF));   //Bright Blue
+    g_palette_ega[10] = QColor(QRgb(0x55FF55));   //Bright Green
+    g_palette_ega[11] = QColor(QRgb(0x55FFFF));   //Bright Cyan
+    g_palette_ega[12] = QColor(QRgb(0xFF5555));   //Bright Red
+    g_palette_ega[13] = QColor(QRgb(0xFF55FF));   //Bright Magenta
+    g_palette_ega[14] = QColor(QRgb(0xFFFF55));   //Bright Yellow
+    g_palette_ega[15] = QColor(QRgb(0xFFFFFF));   //White
+}
 
 void LoadPaletteMaterial()
 {

@@ -12,8 +12,15 @@
 
 namespace Dr {
 
+enum class Colors {
+    Grays,
+    Main,
+    Accent,
+    Bit,
+};
+
 QWidget* CreateColorBlock(FormPopup *popup, QWidget *wants_color, QLabel *info_label, int start_index, int columns, int rows,
-                          int mid_step, int block_width, int block_height, int border, int spacing, bool grays);
+                          int mid_step, int block_width, int block_height, int border, int spacing, Colors type);
 QString  CreateButtonStyleSheet(QColor color, int border);
 void     SetInfoLabelColor(QLabel *label, QColor color);
 
@@ -27,7 +34,7 @@ void BuildPopupColors(QWidget *parent_form, FormPopup *popup, QWidget *wants_col
 
     QFont font;  font.setPointSize(Dr::FontSize());
 
-    popup->setFixedSize(210, 340);
+    popup->setFixedSize(210, 344);
 
     // ***** Widget for the whole popup form
     QWidget *widget = popup->getWidget();
@@ -42,16 +49,20 @@ void BuildPopupColors(QWidget *parent_form, FormPopup *popup, QWidget *wants_col
         SetInfoLabelColor(info_label, start_color);
 
         // ***** Main Block of Colors  2-11, 12-21, 22-31
-        QWidget *grays = CreateColorBlock(popup, wants_color, info_label, 2, 12, 3, 0, 11, 11, 0, 1, true);
+        QWidget *grays = CreateColorBlock(popup, wants_color, info_label, 2, 12, 3, 0, 11, 11, 0, 1, Colors::Grays);
         layout->addWidget(grays);
 
         // ***** Main Block of Colors
-        QWidget *main_colors = CreateColorBlock(popup, wants_color, info_label, 32, 16, 14, 4, 11, 11, 0, 1, false);
+        QWidget *main_colors = CreateColorBlock(popup, wants_color, info_label, 32, 16, 15, 4, 11, 11, 0, 1, Colors::Main);
         layout->addWidget(main_colors);
 
         // ********** Accent Colors
-        QWidget *accent_colors = CreateColorBlock(popup, wants_color, info_label, 42, 16, 4, 10, 11, 11, 0, 1, false);
+        QWidget *accent_colors = CreateColorBlock(popup, wants_color, info_label, 42, 16, 4, 10, 11, 11, 0, 1, Colors::Accent);
         layout->addWidget(accent_colors);
+
+        // ********** 4 bit colors
+        ///QWidget *bit_colors = CreateColorBlock(popup, wants_color, info_label, 0, 16, 1, 0, 11, 11, 0, 1, Colors::Bit);
+        ///layout->addWidget(bit_colors);
 
         layout->addWidget(info_label);
 }
@@ -59,49 +70,69 @@ void BuildPopupColors(QWidget *parent_form, FormPopup *popup, QWidget *wants_col
 
 // Creates a group of color labels from Material Palette colors
 QWidget* CreateColorBlock(FormPopup *popup, QWidget *wants_color, QLabel *info_label, int start_index, int columns, int rows,
-                          int mid_step, int block_width, int block_height, int border, int spacing, bool grays)
+                          int mid_step, int block_width, int block_height, int border, int spacing, Colors type)
 {
     QWidget *color_block = new QWidget();
 
     int width =  (columns * block_width)  + (spacing * (columns - 1));
     int height = (rows    * block_height) + (spacing * (rows    - 1));
-    if (grays) width = ((columns + 6) * block_width)  + (spacing * ((columns + 6) - 1));
+    if (type == Colors::Grays || type == Colors::Bit) width = ((columns + 6) * block_width)  + (spacing * ((columns + 6) - 1));
 
     color_block->setFixedSize(width, height);
     color_block->setContentsMargins(0, 0, 0, 0);
 
     // Figure out if we're drawing these top to bottom, or left to right
     int color_index = start_index;
-    int x = grays? rows : columns;
-    int y = grays? columns : rows;
+    int x, y;
+    if (type == Colors::Grays || type == Colors::Bit) {
+        x = rows;       y = columns;
+    } else {
+        x = columns;    y = rows;
+    }
 
     // Loop through array and make a grid of color labels
+    QColor color;
     for (int i = 0; i < x; i++)  {
         for (int j = 0; j < y; j++) {
-            QColor color;
-            if (j < 10) color = Dr::GetColorMaterial(color_index);
-            else        color = Dr::GetColorMaterial(color_index - 1).darker( 100 + (50 * (j - 9)) );
+            if (type == Colors::Bit) {
+                color = Dr::GetColorEGA(color_index);
+            } else {
+                if (j < 10) color = Dr::GetColorMaterial(color_index);
+                else        color = color.darker( 150 );
+            }
 
             ColorSelecterButton *button = new ColorSelecterButton(color_block, popup, wants_color, info_label, color);
             button->setStyleSheet( CreateButtonStyleSheet(color, border) );
 
-            if (!grays) button->setGeometry(i * (block_width + spacing), j * (block_height + spacing), block_width, block_height);
-            else        button->setGeometry(j * (block_width + spacing), i * (block_height + spacing), block_width, block_height);
+            if (type == Colors::Main || type == Colors::Accent)
+                button->setGeometry(i * (block_width + spacing), j * (block_height + spacing), block_width, block_height);
+            else
+                button->setGeometry(j * (block_width + spacing), i * (block_height + spacing), block_width, block_height);
 
-            if (j < 10) ++color_index;
+            if (type == Colors::Bit || j < 10) ++color_index;
         }
         color_index += mid_step;
     }
 
-    // Add black and white
-    if (grays) {
+    // Add black and white and 2 bit gray scale
+    if (type == Colors::Grays) {
         ColorSelecterButton *white_button = new ColorSelecterButton(color_block, popup, wants_color, info_label, Qt::white);
         white_button->setStyleSheet( CreateButtonStyleSheet(Qt::white, border) );
-        white_button->setGeometry((y + 0) * (block_width + spacing), 0, block_width * 2 + spacing * 1, block_height * 3 + spacing * 2);
+        white_button->setGeometry((y + 0) * (block_width + spacing), 0, block_width * 2 + spacing * 1, int(block_height * 1.5) + spacing * 1);
 
         ColorSelecterButton *black_button = new ColorSelecterButton(color_block, popup, wants_color, info_label, Qt::black);
         black_button->setStyleSheet( CreateButtonStyleSheet(Qt::black, border) );
-        black_button->setGeometry((y + 2) * (block_width + spacing), 0, block_width * 2 + spacing * 1, block_height * 3 + spacing * 2);
+        black_button->setGeometry((y + 2) * (block_width + spacing), 0, block_width * 2 + spacing * 1, int(block_height * 1.5) + spacing * 1);
+
+        ColorSelecterButton *gray1_button = new ColorSelecterButton(color_block, popup, wants_color, info_label, QColor(170, 170, 170));
+        gray1_button->setStyleSheet( CreateButtonStyleSheet(QColor(170, 170, 170), border) );
+        gray1_button->setGeometry((y + 0) * (block_width + spacing), int(block_height * 1.5) + spacing,
+                                  block_width * 2 + spacing * 1,     int(block_height * 1.5) + spacing * 1);
+
+        ColorSelecterButton *gray2_button = new ColorSelecterButton(color_block, popup, wants_color, info_label, QColor(85, 85, 85));
+        gray2_button->setStyleSheet( CreateButtonStyleSheet(QColor(85, 85, 85), border) );
+        gray2_button->setGeometry((y + 2) * (block_width + spacing), int(block_height * 1.5) + spacing,
+                                  block_width * 2 + spacing * 1,     int(block_height * 1.5) + spacing * 1);
     }
 
     return color_block;
