@@ -20,13 +20,17 @@
 //####################################################################################
 //##        Constructor
 //####################################################################################
-FormPopup::FormPopup(DrProject *project, QWidget *mapper, QWidget *parent) : QWidget(parent), m_project(project), m_mapper(mapper)
+FormPopup::FormPopup(DrProject *project, QWidget *widget_to_use_for_mapToGlobal, QWidget *parent)
+    : QWidget(parent), m_project(project), m_mapper(widget_to_use_for_mapToGlobal)
 {
     // ***** Set up initial window
-    setWindowFlag(Qt::WindowType::FramelessWindowHint);
-    setWindowFlag(Qt::WindowType::Popup);
-    setFixedSize(QSize(50, 50));
-    setObjectName(QStringLiteral("childForm"));
+    this->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
+
+    this->setWindowFlag(Qt::WindowType::FramelessWindowHint);
+    this->setWindowFlag(Qt::WindowType::Popup);
+    this->setFixedSize(QSize(50, 50));
+    this->setObjectName(QStringLiteral("childForm"));
+
     Dr::ApplyCustomStyleSheetFormatting(this);
 
     // Create a layout for the form and add a button
@@ -34,6 +38,9 @@ FormPopup::FormPopup(DrProject *project, QWidget *mapper, QWidget *parent) : QWi
     m_inner_widget->setObjectName(QStringLiteral("innerWidgetPopup"));
 
 }
+
+// Makes sure this form is closed and deleted when it loses focus
+void FormPopup::focusOutEvent(QFocusEvent *) { this->close(); }
 
 
 //####################################################################################
@@ -88,8 +95,15 @@ void FormPopup::showEvent(QShowEvent *event)
     int y = bot_left.y() + m_offset.y();
 
     // Make sure it is within the screen
-    if (!QGuiApplication::screenAt(QPoint(x, y)) && x < 2)
-        x = 2;
+    if (!QGuiApplication::screenAt(QPoint(x, y)) && x < 2) x = 2;
+
+    QScreen *screen = QGuiApplication::screenAt( QCursor::pos() );
+    if (screen) {
+        if (x + this->geometry().width() +  2 > screen->availableGeometry().right())
+            x = screen->availableGeometry().right() -  this->geometry().width() - 2;
+        if (y + this->geometry().height() + 2 > screen->availableGeometry().bottom())
+            y = screen->availableGeometry().bottom() - this->geometry().height() - 2;
+    }
     this->move(x, y);
 
     QWidget::showEvent(event);

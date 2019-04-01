@@ -84,7 +84,7 @@ private:
     QWidget        *widgetGroupMode;        QButtonGroup   *buttonsGroupMode;
     QWidget        *widgetGroupLayering;    QButtonGroup   *buttonsGroupLayering;
     QWidget        *widgetGroupTransform;   QButtonGroup   *buttonsGroupTransform;
-    QWidget        *widgetGroupGrid;        QButtonGroup   *buttonsGroupGrid;           FormPopup      *popupGrid;
+    QWidget        *widgetGroupGrid;        QButtonGroup   *buttonsGroupGrid;
     QWidget        *widgetGroupSettings;
 
 
@@ -175,7 +175,6 @@ private:
 
     // Toolbar Functions
     void            addToolbarGroup(QWidget *group, bool add_spacer = true);
-    void            buildSnapMenu(FormPopup *popup);
     void            buttonGroupModeSetChecked(int id);
     void            clearToolbar();
     QPushButton*    createPushButton(QString name = "toolbarButton", QString text = "Button");

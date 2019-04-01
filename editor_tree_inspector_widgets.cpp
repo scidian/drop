@@ -22,6 +22,7 @@
 #include "debug.h"
 #include "editor_tree_inspector.h"
 #include "form_color_magnifier.h"
+#include "form_popup.h"
 #include "interface_editor_relay.h"
 #include "globals.h"
 #include "library.h"
@@ -461,10 +462,15 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font)
         color_button->setFont(font);
         color_button->setSizePolicy(size_policy);
         color_button->setProperty(User_Property::Key,   QVariant::fromValue( property_key ));
-        connect(color_button, &QPushButton::clicked, [] () {
+        this->updateColorButton(color_button, color);
+        connect(color_button, &QPushButton::clicked, [this, color_box, color_button, color] () {
+
+            FormPopup *popupColors = new FormPopup(m_project, color_box, color_button);
+            Dr::BuildPopupColors(this->topLevelWidget(), popupColors, color_button, QColor::fromRgba(color_button->property(User_Property::Color).toUInt()) );
+            connect(popupColors, SIGNAL(colorGrabbed(QWidget*, QColor)), this, SLOT(setButtonColor(QWidget*, QColor)) );
+            popupColors->show();
 
         });
-        this->updateColorButton(color_button, color);
         addToWidgetList(color_button);
         color_layout->addWidget(color_button);
 

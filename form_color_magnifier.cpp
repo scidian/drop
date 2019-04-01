@@ -30,6 +30,7 @@ constexpr int c_mouse_y_offset =   3;
 FormColorMagnifier::FormColorMagnifier(QWidget *parent, QPoint mouse_pos, int width, int height, double zoom)
     : QWidget (parent), m_parent(parent), m_width(width), m_height(height), m_zoom(zoom)
 {    
+    // Set up window
     this->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
     this->setAttribute(Qt::WidgetAttribute::WA_TranslucentBackground, true);
     this->setStyleSheet("color: rgba(0, 0, 0, 0); background-color: rgba(0, 0, 0, 0); border: none;");
@@ -41,6 +42,7 @@ FormColorMagnifier::FormColorMagnifier(QWidget *parent, QPoint mouse_pos, int wi
     this->setFixedSize(width, height + c_text_box_height);
     this->move(mouse_pos.x() - width / 2 - c_form_x_offset, mouse_pos.y() - height / 2 - c_form_y_offset);
 
+    // Take initial screenshot of desktop
     grabScreen( QGuiApplication::screenAt(mouse_pos) );
 
     // Create a label to show the zoomies
@@ -179,7 +181,7 @@ QPixmap FormColorMagnifier::drawCursor(QPoint screen_pos, int width, int height,
     ///                      " B: " + QString::number(m_color.blue());
     QFont font;    font.setPointSize( Dr::FontSize() );
     paint.setFont( font );
-    paint.drawText( text_rect, Qt::AlignCenter, m_color.name() );
+    paint.drawText( text_rect, Qt::AlignCenter, m_color.name().toUpper() );
     paint.end();
 
     return small;

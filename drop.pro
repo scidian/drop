@@ -88,7 +88,9 @@ SOURCES += \
     form_fonts.cpp \
     form_popup.cpp \
     form_blank.cpp \
-    form_color_magnifier.cpp
+    form_color_magnifier.cpp \
+    form_popup_colors.cpp \
+    form_popup_grid_snap.cpp
 
 HEADERS += \
     enums.h \

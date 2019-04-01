@@ -86,7 +86,7 @@ void DrView::mousePressEvent(QMouseEvent *event)
                         my_scene->clearSelection();
                         m_origin_item->setSelected(true);
                     } else {
-                        m_editor_relay->buildObjectInspector( { m_origin_item->data(User_Roles::Key).toLongLong() } );
+                        m_editor_relay->buildObjectInspector( { static_cast<long>(m_origin_item->data(User_Roles::Key).toLongLong()) } );
                     }
 
                     // ***** Process press event for item movement (Translation)
@@ -169,7 +169,7 @@ void DrView::mouseReleaseEvent(QMouseEvent *event)
         if (m_view_mode == View_Mode::Selecting) {
             m_view_mode = View_Mode::None;
             if (my_scene->getSelectionCount() > 0)
-                m_editor_relay->buildObjectInspector( { my_scene->getSelectionItems().first()->data(User_Roles::Key).toLongLong() } );
+                m_editor_relay->buildObjectInspector( { static_cast<long>(my_scene->getSelectionItems().first()->data(User_Roles::Key).toLongLong()) } );
             else
                 m_editor_relay->buildObjectInspector( { } );
             m_editor_relay->updateItemSelection(Editor_Widgets::Scene_View);
