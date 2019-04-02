@@ -36,7 +36,7 @@ FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setContentsMargins(1, 1, 1, 1);
 
-    m_inner_widget = new QWidget(this);
+    m_inner_widget = new QWidget();
     m_inner_widget->setObjectName(QStringLiteral("innerWidget"));
     QVBoxLayout *inner_layout = new QVBoxLayout(m_inner_widget);
 

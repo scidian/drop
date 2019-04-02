@@ -25,33 +25,34 @@ void FormPopup::buildPopupGridSnap()
     this->setFixedWidth(width);
     this->setMinimumHeight(rect1.height() + rect2.height() + 42);
 
-    QWidget *widget = this->getWidget();
-    QVBoxLayout *layout = new QVBoxLayout(widget);
+    QWidget *first_page_widget = new QWidget();
+    QVBoxLayout *layout = new QVBoxLayout(first_page_widget);
     layout->setContentsMargins(8, 0, 5, 0);
     layout->setAlignment(Qt::AlignVCenter);
     layout->setSpacing(10);
 
-    QRadioButton *button1 = new QRadioButton(option1);  button1->setObjectName(QStringLiteral("popupRadio"));
-    QRadioButton *button2 = new QRadioButton(option2);  button2->setObjectName(QStringLiteral("popupRadio"));
+        QRadioButton *button1 = new QRadioButton(option1);  button1->setObjectName(QStringLiteral("popupRadio"));
+        QRadioButton *button2 = new QRadioButton(option2);  button2->setObjectName(QStringLiteral("popupRadio"));
 
-    button1->setFont(font);
-    button2->setFont(font);
+        button1->setFont(font);
+        button2->setFont(font);
 
-    button1->setChecked( Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool());
-    button2->setChecked(!Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool());
+        button1->setChecked( Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool());
+        button2->setChecked(!Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool());
 
-    connect(button1, &QRadioButton::released, [this]() {
-        Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, true);
-        this->close();
-    });
-    connect(button2, &QRadioButton::released, [this]() {
-        Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, false);
-        this->close();
-    });
+        connect(button1, &QRadioButton::released, [this]() {
+            Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, true);
+            this->close();
+        });
+        connect(button2, &QRadioButton::released, [this]() {
+            Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, false);
+            this->close();
+        });
 
-    layout->addWidget(button1);
-    layout->addWidget(button2);
+        layout->addWidget(button1);
+        layout->addWidget(button2);
 
+    m_inner_stacked_widget->addWidget(first_page_widget);
 }
 
 

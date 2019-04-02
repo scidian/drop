@@ -21,8 +21,8 @@ void FormPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
     this->setFixedSize(210, 310);
 
     // ***** Widget for the whole popup form
-    QWidget *widget = this->getWidget();
-    QVBoxLayout *layout = new QVBoxLayout(widget);
+    QWidget *first_page_widget = new QWidget();
+    QVBoxLayout *layout = new QVBoxLayout(first_page_widget);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setAlignment(Qt::AlignCenter);
     layout->setSpacing(4);
@@ -50,6 +50,8 @@ void FormPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
         ///layout->addWidget(accent_colors);
 
         layout->addWidget(info_label);
+
+    m_inner_stacked_widget->addWidget(first_page_widget);
 }
 
 
