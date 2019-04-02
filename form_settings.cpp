@@ -33,27 +33,24 @@ FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent
     this->installEventFilter(new ClickAndDragWindow(this));
 
     // Create a contianer widget, this will allow Create a layout for the form and add a button
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->setContentsMargins(1, 1, 1, 1);
+
     m_inner_widget = new QWidget(this);
     m_inner_widget->setObjectName(QStringLiteral("innerWidget"));
-    QVBoxLayout *layout = new QVBoxLayout(m_inner_widget);
-    layout->setAlignment(Qt::AlignCenter);
-
-        m_label = new MouseLabel(this);
-        m_label->setFixedSize(100, 50);
-        m_label->setAlignment(Qt::AlignCenter);
-        layout->addWidget(m_label);
-        m_label->setColor(this, Qt::red);
+    QVBoxLayout *inner_layout = new QVBoxLayout(m_inner_widget);
 
         QPushButton *exit = new QPushButton("  Exit  ");
         Dr::ApplyDropShadowByType(exit, Shadow_Types::Button_Shadow);
         exit->setObjectName(QStringLiteral("button"));
-        layout->addWidget(exit);
+        inner_layout->addWidget(exit);
 
         // Connect a lambda function to the "exit" button to close the form
         connect(exit, &QPushButton::clicked, [this] () {
             this->close();
         });
 
+    layout->addWidget(m_inner_widget);
 }
 
 FormSettings::~FormSettings() { }
@@ -64,48 +61,10 @@ FormSettings::~FormSettings() { }
 //####################################################################################
 void FormSettings::resizeEvent(QResizeEvent *event)
 {
-    Dr::ApplyRoundedCornerMask(this, 8, 8);
-    m_inner_widget->setGeometry( 1, 1, this->geometry().width() - 2, this->geometry().height() - 2);
-
     QWidget::resizeEvent(event);
+
+    Dr::ApplyRoundedCornerMask(this, 8, 8);
 }
-
-
-
-
-
-//####################################################################################
-//##        Initializes a Color Magnifier instance
-//####################################################################################
-MouseLabel::MouseLabel(QWidget *parent) : QLabel(parent) { }
-MouseLabel::~MouseLabel() { }
-
-void MouseLabel::mouseReleaseEvent(QMouseEvent *event) { QLabel::mouseReleaseEvent(event); }
-void MouseLabel::mousePressEvent(QMouseEvent *event)
-{
-    QLabel::mousePressEvent(event);
-
-    FormColorMagnifier *picker = new FormColorMagnifier(this, event->globalPos(), 115, 115, 8);
-    connect(picker, SIGNAL(colorGrabbed(QWidget*, QColor)), this, SLOT(setColor(QWidget*, QColor)) );
-    picker->show();
-}
-
-void MouseLabel::setColor(QWidget *widget, QColor color)
-{
-    Q_UNUSED (widget)
-    m_color = color;
-    this->setText( m_color.name() );
-
-    QColor text_color = Qt::black;
-    if (text_color.red() < 128 && text_color.green() < 128 && text_color.blue() < 128)
-        text_color = Qt::white;
-    this->setStyleSheet("color: " + text_color.name() + "; background: " + m_color.name() + ";" );
-}
-
-
-
-
-
 
 
 

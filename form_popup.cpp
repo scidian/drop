@@ -35,10 +35,14 @@ FormPopup::FormPopup(DrProject *project, QWidget *widget_to_use_for_mapToGlobal,
 
     Dr::ApplyCustomStyleSheetFormatting(this);
 
-    // Create a layout for the form and add a button
-    m_inner_widget = new QWidget(this);
-    m_inner_widget->setObjectName(QStringLiteral("innerWidgetPopupBelow"));
+    // Create a layout for the form
+    m_layout = new QVBoxLayout(this);
+    m_layout->setContentsMargins(1, 15, 1, 1);
 
+        m_inner_widget = new QWidget(this);
+        m_inner_widget->setObjectName(QStringLiteral("innerWidgetPopupBelow"));
+
+    m_layout->addWidget(m_inner_widget);
 }
 
 // Makes sure this form is closed and deleted when it loses focus
@@ -92,16 +96,9 @@ void FormPopup::paintEvent(QPaintEvent *event)
 //####################################################################################
 void FormPopup::resizeEvent(QResizeEvent *event)
 {
-    updateMask();
-    QWidget::resizeEvent(event);
-}
-
-void FormPopup::updateMask()
-{
     Dr::ApplyPopupMask(this, 8, 8, m_below);
 
-    if (m_below) m_inner_widget->setGeometry( 1, 15, this->geometry().width() - 2, this->geometry().height() - 16);
-    else         m_inner_widget->setGeometry( 1,  1, this->geometry().width() - 2, this->geometry().height() - 16);
+    QWidget::resizeEvent(event);
 }
 
 
@@ -124,18 +121,21 @@ void FormPopup::showEvent(QShowEvent *event)
 
     QScreen *screen = QGuiApplication::screenAt( QCursor::pos() );
     if (screen) {
-        if (x + this->geometry().width() +  2 > screen->availableGeometry().right())
+        if (x + this->geometry().width() +  2 > screen->availableGeometry().right()) {
             x = screen->availableGeometry().right() -  this->geometry().width() - 2;
+        }
         if (y + this->geometry().height() + 2 > screen->availableGeometry().bottom()) {
             y = top_left.y() - m_offset.y() - this->geometry().height();
             m_below = false;
+            m_layout->setContentsMargins(1, 1, 1, 15);
             m_inner_widget->setObjectName(QStringLiteral("innerWidgetPopupAbove"));     // Change style sheet for new location
             Dr::ApplyCustomStyleSheetFormatting(m_inner_widget);                        // Force style sheet to update
-            updateMask();
+            Dr::ApplyPopupMask(this, 8, 8, m_below);
         }
     }
     this->move(x, y);
 
+    qApp->processEvents();          // Make sure we finish moving around widgets if margins changed before we make form visible
     QWidget::showEvent(event);
 }
 

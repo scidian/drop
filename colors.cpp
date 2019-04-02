@@ -109,20 +109,20 @@ void LoadPaletteBasic()
     for(int i = 0; i < 12; i++)
         g_palette_basic.append(QColor(0, 0, 0));
 
-    g_palette_basic[ 0] = QColor(QRgb(0xFFFFFF));     //White
-    g_palette_basic[ 1] = QColor(QRgb(0xAAAAAA));     //Light Gray
-    g_palette_basic[ 2] = QColor(QRgb(0x555555));     //Dark Gray
-    g_palette_basic[ 3] = QColor(QRgb(0x000000));     //Black
+    g_palette_basic[ 0] = QColor(QRgb(0xFF0000));     //Red
+    g_palette_basic[ 1] = QColor(QRgb(0xFF8000));     //Orange
+    g_palette_basic[ 2] = QColor(QRgb(0xFFFF00));     //Yellow
+    g_palette_basic[ 3] = QColor(QRgb(0x00FF00));     //Green
 
-    g_palette_basic[ 4] = QColor(QRgb(0xFF0000));     //Red
-    g_palette_basic[ 5] = QColor(QRgb(0xFF8000));     //Orange
-    g_palette_basic[ 6] = QColor(QRgb(0xFFFF00));     //Yellow
-    g_palette_basic[ 7] = QColor(QRgb(0x00FF00));     //Green
+    g_palette_basic[ 4] = QColor(QRgb(0x00FFFF));     //Cyan
+    g_palette_basic[ 5] = QColor(QRgb(0x0000FF));     //Blue
+    g_palette_basic[ 6] = QColor(QRgb(0x800080));     //Purple
+    g_palette_basic[ 7] = QColor(QRgb(0xFF00FF));     //Pink
 
-    g_palette_basic[ 8] = QColor(QRgb(0x00FFFF));     //Cyan
-    g_palette_basic[ 9] = QColor(QRgb(0x0000FF));     //Blue
-    g_palette_basic[10] = QColor(QRgb(0x800080));     //Purple
-    g_palette_basic[11] = QColor(QRgb(0xFF00FF));     //Pink
+    g_palette_basic[ 8] = QColor(QRgb(0xFFFFFF));     //White
+    g_palette_basic[ 9] = QColor(QRgb(0xAAAAAA));     //Light Gray
+    g_palette_basic[10] = QColor(QRgb(0x555555));     //Dark Gray
+    g_palette_basic[11] = QColor(QRgb(0x000000));     //Black
 }
 
 void LoadPaletteMaterial()

@@ -22,11 +22,12 @@ void FormPopup::buildPopupGridSnap()
     QRect rect1 = font_metrics.boundingRect( option1 );
     QRect rect2 = font_metrics.boundingRect( option2 );
     int width = (rect1.width() > rect2.width()) ? rect1.width() + 50 : rect2.width() + 50;
-    this->setFixedSize(width, rect1.height() + rect2.height() + 42);
+    this->setFixedWidth(width);
+    this->setMinimumHeight(rect1.height() + rect2.height() + 42);
 
     QWidget *widget = this->getWidget();
     QVBoxLayout *layout = new QVBoxLayout(widget);
-    layout->setContentsMargins(10, 5, 5, 10);
+    layout->setContentsMargins(8, 0, 5, 0);
     layout->setAlignment(Qt::AlignVCenter);
     layout->setSpacing(10);
 

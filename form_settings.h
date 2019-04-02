@@ -12,15 +12,12 @@
 #include <QWidget>
 
 class DrProject;
-class MouseLabel;
 
 class FormSettings : public QWidget
 {
 private:
     DrProject       *m_project;                         // Pointer to the open project
     QWidget         *m_inner_widget;                    // Container widget, allows for a double form border
-
-    MouseLabel      *m_label;
 
 
 public:
@@ -32,28 +29,6 @@ public:
 
 };
 
-
-
-
-class MouseLabel : public QLabel
-{
-    Q_OBJECT
-
-private:
-    QColor          m_color = Qt::black;
-    QSize           m_size;
-
-public:
-    explicit MouseLabel(QWidget *parent);
-    virtual ~MouseLabel() override;
-
-    // Event Overrides
-    virtual void mousePressEvent(QMouseEvent *event) override;
-    virtual void mouseReleaseEvent(QMouseEvent *event) override;
-
-public slots:
-    void         setColor(QWidget *widget, QColor color);
-};
 
 
 

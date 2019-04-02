@@ -18,12 +18,12 @@ void FormPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
     QFont font;  font.setPointSize(Dr::FontSize());
     m_wants_return_variable = wants_color;
 
-    this->setFixedSize(210, 296);
+    this->setFixedSize(210, 310);
 
     // ***** Widget for the whole popup form
     QWidget *widget = this->getWidget();
     QVBoxLayout *layout = new QVBoxLayout(widget);
-    layout->setContentsMargins(5, 5, 5, 5);
+    layout->setContentsMargins(0, 0, 0, 0);
     layout->setAlignment(Qt::AlignCenter);
     layout->setSpacing(4);
 
@@ -42,7 +42,7 @@ void FormPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
         layout->addWidget(grays);
 
         // ***** Main Block of Colors
-        QWidget *main_colors = createColorBlock(info_label, 32, 16, 15, 4, 11, 11, 0, 1, 1, Colors::Main);
+        QWidget *main_colors = createColorBlock(info_label, 32, 16, 16, 4, 11, 11, 0, 1, 1, Colors::Main);
         layout->addWidget(main_colors);
 
         // ********** Accent Colors

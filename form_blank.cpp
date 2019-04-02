@@ -26,20 +26,24 @@ FormBlank::FormBlank(DrProject *project, QWidget *parent) : QWidget(parent), m_p
     this->installEventFilter(new ClickAndDragWindow(this));
 
     // Create a contianer widget, this will allow Create a layout for the form and add a button
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->setContentsMargins(1, 1, 1, 1);
+
     m_inner_widget = new QWidget(this);
     m_inner_widget->setObjectName(QStringLiteral("innerWidget"));
-    QVBoxLayout *layout = new QVBoxLayout(m_inner_widget);
+    QVBoxLayout *inner_layout = new QVBoxLayout(m_inner_widget);
 
         QPushButton *exit = new QPushButton("  Exit  ");
         Dr::ApplyDropShadowByType(exit, Shadow_Types::Button_Shadow);
         exit->setObjectName(QStringLiteral("button"));
-        layout->addWidget(exit);
+        inner_layout->addWidget(exit);
 
         // Connect a lambda function to the "exit" button to close the form
         connect(exit, &QPushButton::clicked, [this] () {
             this->close();
         });
 
+    layout->addWidget(m_inner_widget);
 
 }
 
@@ -48,11 +52,10 @@ FormBlank::FormBlank(DrProject *project, QWidget *parent) : QWidget(parent), m_p
 //##        Keeps container widget same size as form
 //####################################################################################
 void FormBlank::resizeEvent(QResizeEvent *event)
-{
-    Dr::ApplyRoundedCornerMask(this, 8, 8);
-    m_inner_widget->setGeometry( 1, 1, this->geometry().width() - 2, this->geometry().height() - 2);
-
+{  
     QWidget::resizeEvent(event);
+
+    Dr::ApplyRoundedCornerMask(this, 8, 8);
 }
 
 

@@ -40,6 +40,7 @@ private:
     QWidget     *m_inner_widget;                    // Container widget, allows for a double form border
     QWidget     *m_wants_return_variable;           // A widget that wants something from this popup when its done
 
+    QVBoxLayout *m_layout;                          // Layout for *this form
     bool         m_below = true;                    // Tracks if this popup is shown below or above origin point
     QPoint       m_offset;                          // Adjustment to popup location from parent
 
@@ -57,9 +58,6 @@ public:
 
     QPoint       getOffset() { return m_offset; }
     void         setOffset(QPoint offset) { m_offset = offset; }
-
-    // Functions
-    void         updateMask();
 
 
     // ***** Snap to Grid Option Popup
