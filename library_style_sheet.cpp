@@ -269,6 +269,16 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         StyleSheetRecessedBackgroundBorder(10, 92, false) + " }"
 
 
+        + Dr::StyleSheetColorButton(Dr::GetColor(Window_Colors::Background_Dark),
+                                    Dr::GetColor(Window_Colors::Background_Dark),
+                                    Dr::GetColor(Window_Colors::Background_Dark), 3, 3, 3, 3, true, true, "#buttonColorMaterial") +
+        " QPushButton#buttonColorMaterial       { image: url(:/gui_misc/color_wheel.png);   padding: 3px; } "
+        " QPushButton#buttonColorMaterial:hover { " +
+        StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Light), Dr::GetColor(Window_Colors::Background_Light), 10, 92, true) + " }"
+        " QPushButton#buttonColorMaterial:pressed { padding-left: 3px; padding-right: 3px; padding-top: 4px; padding-bottom: 2px; " +
+        StyleSheetRecessedBackgroundBorder(10, 92, false) + " }"
+
+
     );
 
     style_sheet += Dr::StyleSheetToolBar();

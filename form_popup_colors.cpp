@@ -20,7 +20,7 @@ void FormPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
 
     this->setFixedSize(210, 310);
 
-    // ***** Widget for the whole popup form
+    // ********** Widget for the first page, Material Palette
     QWidget *first_page_widget = new QWidget();
     QVBoxLayout *layout = new QVBoxLayout(first_page_widget);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -51,7 +51,43 @@ void FormPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
 
         layout->addWidget(info_label);
 
+
+    // ********** Widget for the second page, Material Palette
+    QWidget *second_page_widget = new QWidget();
+    layout = new QVBoxLayout(second_page_widget);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setAlignment(Qt::AlignCenter);
+    layout->setSpacing(4);
+
+        QLabel *test = new QLabel("test");
+        layout->addWidget(test);
+
+
     m_inner_stacked_widget->addWidget(first_page_widget);
+    m_inner_stacked_widget->addWidget(second_page_widget);
+
+
+
+    // ********* Buttons for changing pages in the QStackWidget
+    QPushButton *change0 =  new QPushButton(m_inner_stacked_widget);
+    QPushButton *change1 = new QPushButton(m_inner_stacked_widget);
+
+    change0->setGeometry( 159, 7, 41, 25);
+    change0->setObjectName("buttonColorMaterial");
+    connect(change0, &QPushButton::clicked,  this, [this, change0, change1]() {
+        this->m_inner_stacked_widget->setCurrentIndex(0);
+        change0->raise();
+        change1->raise();
+    });
+
+    change1->setGeometry(159, 38, 41, 25);
+    change1->setObjectName("buttonColorMaterial");
+    connect(change1, &QPushButton::clicked, this, [this, change0, change1]() {
+        this->m_inner_stacked_widget->setCurrentIndex(1);
+        change0->raise();
+        change1->raise();
+    });
+
 }
 
 
