@@ -18,11 +18,12 @@ class FormPopup;
 class TreeInspector;
 
 
-// Popups
-namespace Dr {
-    void        BuildPopupColors(QWidget *parent_form, FormPopup *popup, QWidget *wants_color, QColor start_color);
-    void        BuildPopupGridSnap(QWidget *parent_form, FormPopup *popup);
-}
+enum class Colors {
+    Basic,
+    Grays,
+    Main,
+    Accent,
+};
 
 
 //####################################################################################
@@ -38,11 +39,12 @@ private:
 
     QWidget     *m_mapper;                          // Widget to use for mapping to global coordinates (usually same as parent)
     QWidget     *m_inner_widget;                    // Container widget, allows for a double form border
+    QWidget     *m_wants_return_variable;           // A widget that wants something from this popup when its done
 
-    QPoint       m_offset { 0, 5};                  // Adjustment to popup location from parent
+    QPoint       m_offset;                          // Adjustment to popup location from parent
 
 public:
-    FormPopup(DrProject *project, QWidget *widget_to_use_for_mapToGlobal, QWidget *parent);
+    FormPopup(DrProject *project, QWidget *widget_to_use_for_mapToGlobal, QWidget *parent, int x_offset = 0, int y_offset = 5);
 
     // Event Overrides
     virtual void focusOutEvent(QFocusEvent *event) override;
@@ -56,8 +58,20 @@ public:
     QPoint       getOffset() { return m_offset; }
     void         setOffset(QPoint offset) { m_offset = offset; }
 
+    // ***** Snap to Grid Option Popup
+    void         buildPopupGridSnap();
+
+    // ***** Color Popup
+    void         buildPopupColors(QWidget *wants_color, QColor start_color);
+
+    QWidget*     createColorBlock(QLabel *info_label, int start_index, int columns, int rows, int mid_step,
+                                  int block_width, int block_height, int border, int x_spacing, int y_spacing, Colors type);
+    QString      createButtonStyleSheet(QColor color, int border);
+    void         setInfoLabelColor(QLabel *label, QColor color);
+
+
 signals:
-    void        colorGrabbed(QWidget *parent, QColor m_color);
+    void         colorGrabbed(QWidget *parent, QColor m_color);
 
 };
 

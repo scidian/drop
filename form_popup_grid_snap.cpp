@@ -11,22 +11,20 @@
 #include "form_popup.h"
 #include "globals.h"
 
-namespace Dr {
-
-void BuildPopupGridSnap(QWidget *parent_form, FormPopup *popup)
+void FormPopup::buildPopupGridSnap()
 {
     QFont font;  font.setPointSize(Dr::FontSize());
     QFontMetrics font_metrics { font };
 
     // Figure out best size of popup
-    QString option1 = parent_form->tr("Snap center of selection group to grid");
-    QString option2 = parent_form->tr("Snap center of individual objects to grid");
+    QString option1 = tr("Snap center of selection group to grid");
+    QString option2 = tr("Snap center of individual objects to grid");
     QRect rect1 = font_metrics.boundingRect( option1 );
     QRect rect2 = font_metrics.boundingRect( option2 );
     int width = (rect1.width() > rect2.width()) ? rect1.width() + 50 : rect2.width() + 50;
-    popup->setFixedSize(width, rect1.height() + rect2.height() + 42);
+    this->setFixedSize(width, rect1.height() + rect2.height() + 42);
 
-    QWidget *widget = popup->getWidget();
+    QWidget *widget = this->getWidget();
     QVBoxLayout *layout = new QVBoxLayout(widget);
     layout->setContentsMargins(10, 5, 5, 10);
 
@@ -39,13 +37,13 @@ void BuildPopupGridSnap(QWidget *parent_form, FormPopup *popup)
     button1->setChecked( Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool());
     button2->setChecked(!Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool());
 
-    parent_form->connect(button1, &QRadioButton::released, [popup]() {
+    connect(button1, &QRadioButton::released, [this]() {
         Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, true);
-        popup->close();
+        this->close();
     });
-    parent_form->connect(button2, &QRadioButton::released, [popup]() {
+    connect(button2, &QRadioButton::released, [this]() {
         Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, false);
-        popup->close();
+        this->close();
     });
 
     layout->addWidget(button1);
@@ -53,7 +51,6 @@ void BuildPopupGridSnap(QWidget *parent_form, FormPopup *popup)
 
 }
 
-}   // namespace Dr
 
 
 

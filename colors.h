@@ -34,7 +34,7 @@ enum class Window_Colors
 namespace Dr {
 
     void            LoadPalettes();
-    void            LoadPaletteEGA();
+    void            LoadPaletteBasic();
     void            LoadPaletteMaterial();
 
     QString         BorderWidth();                              // Project wide border width for Style Sheets, as QString
@@ -42,7 +42,7 @@ namespace Dr {
     int             FontSize();                                 // Project wide font size
 
     QColor          GetColor(Window_Colors color_role);
-    QColor          GetColorEGA(int color);
+    QColor          GetColorBasic(int color);
     QColor          GetColorMaterial(int color);
     Color_Scheme    GetColorScheme();
 

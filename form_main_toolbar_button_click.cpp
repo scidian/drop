@@ -111,7 +111,7 @@ void FormMain::buttonGroupGridClicked(int id)
 
     if (clicked == Buttons_Grid::Snap_Options) {
         FormPopup *popupGrid = new FormPopup(project, widgetGroupGrid, buttonsGroupGrid->button(id));
-        Dr::BuildPopupGridSnap(this, popupGrid);
+        popupGrid->buildPopupGridSnap();
         popupGrid->show();
 
     } else {

@@ -42,11 +42,11 @@ FormMain::~FormMain() {
         qApp->processEvents();
     sceneEditor->clear();
     sceneEditor->scene_mutex.unlock();
-    delete sceneEditor;
+    sceneEditor->deleteLater();
 
     // Delete widgets not currently attached to main form
-    if (current_mode != Form_Main_Mode::World_Editor)   delete widgetCentralEditor;
-    if (current_mode != Form_Main_Mode::Clear)          delete widgetCentral;
+    if (current_mode != Form_Main_Mode::World_Editor)   widgetCentralEditor->deleteLater();
+    if (current_mode != Form_Main_Mode::Clear)          widgetCentral->deleteLater();
     delete project;
 }
 
