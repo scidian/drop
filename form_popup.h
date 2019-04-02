@@ -36,11 +36,11 @@ class FormPopup : public QWidget
 
 private:
     DrProject   *m_project;                         // Pointer to the open project
-
     QWidget     *m_mapper;                          // Widget to use for mapping to global coordinates (usually same as parent)
     QWidget     *m_inner_widget;                    // Container widget, allows for a double form border
     QWidget     *m_wants_return_variable;           // A widget that wants something from this popup when its done
 
+    bool         m_below = true;                    // Tracks if this popup is shown below or above origin point
     QPoint       m_offset;                          // Adjustment to popup location from parent
 
 public:
@@ -58,8 +58,13 @@ public:
     QPoint       getOffset() { return m_offset; }
     void         setOffset(QPoint offset) { m_offset = offset; }
 
+    // Functions
+    void         updateMask();
+
+
     // ***** Snap to Grid Option Popup
     void         buildPopupGridSnap();
+
 
     // ***** Color Popup
     void         buildPopupColors(QWidget *wants_color, QColor start_color);

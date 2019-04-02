@@ -23,7 +23,7 @@ void FormPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
     // ***** Widget for the whole popup form
     QWidget *widget = this->getWidget();
     QVBoxLayout *layout = new QVBoxLayout(widget);
-    layout->setContentsMargins(8, 5, 10, 10);
+    layout->setContentsMargins(8, 5, 10, 5);
     layout->setAlignment(Qt::AlignCenter);
     layout->setSpacing(5);
 

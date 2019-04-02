@@ -27,6 +27,8 @@ void FormPopup::buildPopupGridSnap()
     QWidget *widget = this->getWidget();
     QVBoxLayout *layout = new QVBoxLayout(widget);
     layout->setContentsMargins(10, 5, 5, 10);
+    layout->setAlignment(Qt::AlignVCenter);
+    layout->setSpacing(10);
 
     QRadioButton *button1 = new QRadioButton(option1);  button1->setObjectName(QStringLiteral("popupRadio"));
     QRadioButton *button2 = new QRadioButton(option2);  button2->setObjectName(QStringLiteral("popupRadio"));

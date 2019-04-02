@@ -33,13 +33,20 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         "       border: 1px solid; border-radius: 7px; "
         "       border-color: " + Dr::GetColor(Window_Colors::Midlight).name() + "; } "
 
-        " QWidget#innerWidgetPopup     { "
+        " QWidget#innerWidgetPopupBelow    { "
         "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
         "       border: 1px solid; border-bottom-left-radius: 7px; border-bottom-right-radius: 7px;"
         "       border-top-color: " +    Dr::GetColor(Window_Colors::Button_Dark).name() + ";  "
         "       border-left-color: " +   Dr::GetColor(Window_Colors::Midlight).name() + ";  "
         "       border-right-color: " +  Dr::GetColor(Window_Colors::Midlight).name() + ";  "
         "       border-bottom-color: " + Dr::GetColor(Window_Colors::Midlight).name() + "; } "
+        " QWidget#innerWidgetPopupAbove    { "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
+        "       border: 1px solid; border-top-left-radius: 7px; border-top-right-radius: 7px;"
+        "       border-top-color: " +    Dr::GetColor(Window_Colors::Midlight).name() + ";  "
+        "       border-left-color: " +   Dr::GetColor(Window_Colors::Midlight).name() + ";  "
+        "       border-right-color: " +  Dr::GetColor(Window_Colors::Midlight).name() + ";  "
+        "       border-bottom-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
 
         // Horizontal and vertical splitters
         " QSplitter { width: 5px; height: 5px; } "
@@ -255,10 +262,10 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         + Dr::StyleSheetColorButton(Dr::GetColor(Window_Colors::Background_Dark),
                                     Dr::GetColor(Window_Colors::Background_Dark),
                                     Dr::GetColor(Window_Colors::Background_Dark), 0, 4, 0, 4, false, true, "#buttonColorDialog") +
-        " QPushButton#buttonColorDialog       { image: url(:/gui_misc/color_wheel.png);   padding: 3px; } "
+        " QPushButton#buttonColorDialog       { image: url(:/gui_misc/color_wheel.png);   padding: 2px; } "
         " QPushButton#buttonColorDialog:hover { " +
         StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Light), Dr::GetColor(Window_Colors::Background_Light), 10, 92, true) + " }"
-        " QPushButton#buttonColorDialog:pressed { padding-left: 3px; padding-right: 3px; padding-top: 4px; padding-bottom: 2px; " +
+        " QPushButton#buttonColorDialog:pressed { padding-left: 2px; padding-right: 2px; padding-top: 3px; padding-bottom: 1px; " +
         StyleSheetRecessedBackgroundBorder(10, 92, false) + " }"
 
 

@@ -104,7 +104,7 @@ void ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius, int met
 //##        Gives widget rounded corners, and a pointed top
 //####################################################################################
 // Radius is absolute size
-void ApplyPopupMask(QWidget *widget, int x_radius, int y_radius)
+void ApplyPopupMask(QWidget *widget, int x_radius, int y_radius, bool below)
 {
     QPixmap pixmap(widget->rect().width(), widget->rect().height());
     pixmap.fill(Qt::green);
@@ -120,7 +120,10 @@ void ApplyPopupMask(QWidget *widget, int x_radius, int y_radius)
     points[1] = QPoint((widget->rect().width() / 2) - 30, 30);
     points[2] = QPoint((widget->rect().width() / 2) + 30, 30);
     paint.drawPolygon(points, 3);
+    paint.end();
 
+    if (!below) pixmap = pixmap.transformed(QTransform().rotate(180));
+    widget->clearMask();
     widget->setMask(pixmap.createMaskFromColor(Qt::green));
 }
 

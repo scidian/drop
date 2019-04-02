@@ -37,7 +37,7 @@ FormPopup::FormPopup(DrProject *project, QWidget *widget_to_use_for_mapToGlobal,
 
     // Create a layout for the form and add a button
     m_inner_widget = new QWidget(this);
-    m_inner_widget->setObjectName(QStringLiteral("innerWidgetPopup"));
+    m_inner_widget->setObjectName(QStringLiteral("innerWidgetPopupBelow"));
 
 }
 
@@ -56,18 +56,35 @@ void FormPopup::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, false);
     painter.setPen( QPen(Dr::GetColor(Window_Colors::Midlight)) );
     painter.setBrush( QBrush(Dr::GetColor(Window_Colors::Button_Dark) ) );
-    painter.drawRoundedRect(1, 11, this->rect().width() - 3, 24, 9, 6);
 
-    painter.setPen( Qt::NoPen );
-    QPoint points[3];
-    points[0] = QPoint( this->rect().width() / 2,        1);
-    points[1] = QPoint((this->rect().width() / 2) - 20, 21);
-    points[2] = QPoint((this->rect().width() / 2) + 20, 21);
-    painter.drawPolygon(points, 3);
+    if (m_below) {
+        painter.drawRoundedRect(1, 11, this->rect().width() - 3, 24, 9, 6);
+        painter.setPen( Qt::NoPen );
+        QPoint points[3];
+        points[0] = QPoint( this->rect().width() / 2,        1);
+        points[1] = QPoint((this->rect().width() / 2) - 20, 21);
+        points[2] = QPoint((this->rect().width() / 2) + 20, 21);
+        painter.drawPolygon(points, 3);
 
-    painter.setPen( QPen(Dr::GetColor(Window_Colors::Midlight)) );
-    painter.drawLine( points[0], QPoint((this->rect().width() / 2) - 10, 11) );
-    painter.drawLine( points[0], QPoint((this->rect().width() / 2) + 10, 11) );
+        painter.setPen( QPen(Dr::GetColor(Window_Colors::Midlight)) );
+        painter.drawLine( points[0], QPoint((this->rect().width() / 2) - 10, 11) );
+        painter.drawLine( points[0], QPoint((this->rect().width() / 2) + 10, 11) );
+    } else {
+
+        painter.drawRoundedRect(1, this->rect().height() - 24, this->rect().width() - 3, 12, 6, 4);
+        painter.setPen( Qt::NoPen );
+        QPoint points[3];
+        points[0] = QPoint( this->rect().width() / 2,       this->rect().height() - 2);
+        points[1] = QPoint((this->rect().width() / 2) - 20, this->rect().height() - 22);
+        points[2] = QPoint((this->rect().width() / 2) + 20, this->rect().height() - 22);
+        painter.drawPolygon(points, 3);
+
+        painter.setPen( QPen(Dr::GetColor(Window_Colors::Midlight)) );
+        painter.drawLine( points[0], QPoint((this->rect().width() / 2) - 10, this->rect().height() - 12) );
+        painter.drawLine( points[0], QPoint((this->rect().width() / 2) + 10, this->rect().height() - 12) );
+
+    }
+    painter.end();
 }
 
 //####################################################################################
@@ -75,12 +92,17 @@ void FormPopup::paintEvent(QPaintEvent *event)
 //####################################################################################
 void FormPopup::resizeEvent(QResizeEvent *event)
 {
-    Dr::ApplyPopupMask(this, 8, 8);
-    m_inner_widget->setGeometry( 1, 15, this->geometry().width() - 2, this->geometry().height() - 16);
-
+    updateMask();
     QWidget::resizeEvent(event);
 }
 
+void FormPopup::updateMask()
+{
+    Dr::ApplyPopupMask(this, 8, 8, m_below);
+
+    if (m_below) m_inner_widget->setGeometry( 1, 15, this->geometry().width() - 2, this->geometry().height() - 16);
+    else         m_inner_widget->setGeometry( 1,  1, this->geometry().width() - 2, this->geometry().height() - 16);
+}
 
 
 //####################################################################################
@@ -92,6 +114,7 @@ void FormPopup::showEvent(QShowEvent *event)
     QRect  parent_rect = parentWidget()->geometry();
     QPoint center =      m_mapper->mapToGlobal(parent_rect.center());
     QPoint bot_left =    m_mapper->mapToGlobal(parent_rect.bottomLeft());
+    QPoint top_left =    m_mapper->mapToGlobal(parent_rect.topLeft());
 
     int x = center.x() - this->geometry().width() / 2 + m_offset.x();
     int y = bot_left.y() + m_offset.y();
@@ -103,8 +126,13 @@ void FormPopup::showEvent(QShowEvent *event)
     if (screen) {
         if (x + this->geometry().width() +  2 > screen->availableGeometry().right())
             x = screen->availableGeometry().right() -  this->geometry().width() - 2;
-        if (y + this->geometry().height() + 2 > screen->availableGeometry().bottom())
-            y = screen->availableGeometry().bottom() - this->geometry().height() - 2;
+        if (y + this->geometry().height() + 2 > screen->availableGeometry().bottom()) {
+            y = top_left.y() - m_offset.y() - this->geometry().height();
+            m_below = false;
+            m_inner_widget->setObjectName(QStringLiteral("innerWidgetPopupAbove"));
+            Dr::ApplyCustomStyleSheetFormatting(m_inner_widget);
+            updateMask();
+        }
     }
     this->move(x, y);
 
