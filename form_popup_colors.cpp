@@ -18,14 +18,14 @@ void FormPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
     QFont font;  font.setPointSize(Dr::FontSize());
     m_wants_return_variable = wants_color;
 
-    this->setFixedSize(210, 290);
+    this->setFixedSize(210, 296);
 
     // ***** Widget for the whole popup form
     QWidget *widget = this->getWidget();
     QVBoxLayout *layout = new QVBoxLayout(widget);
-    layout->setContentsMargins(8, 5, 10, 5);
+    layout->setContentsMargins(5, 5, 5, 5);
     layout->setAlignment(Qt::AlignCenter);
-    layout->setSpacing(5);
+    layout->setSpacing(4);
 
         QLabel *info_label = new QLabel();
         info_label->setAlignment(Qt::AlignCenter);
@@ -59,8 +59,8 @@ QWidget* FormPopup::createColorBlock(QLabel *info_label, int start_index, int co
 {
     QWidget *color_block = new QWidget();
 
-    int width =  (columns * block_width)  + (x_spacing * (columns - 1));
-    int height = (rows    * block_height) + (y_spacing * (rows    - 1));
+    int width =  (columns * block_width)  + (x_spacing * (columns - 1)) + 4;
+    int height = (rows    * block_height) + (y_spacing * (rows    - 1)) + 4;
     color_block->setFixedSize(width, height);
     color_block->setContentsMargins(0, 0, 0, 0);
 
@@ -85,8 +85,8 @@ QWidget* FormPopup::createColorBlock(QLabel *info_label, int start_index, int co
             ColorSelecterButton *button = new ColorSelecterButton(color_block, this, m_wants_return_variable, info_label, color);
             button->setStyleSheet( createButtonStyleSheet(color, border) );
 
-            if (!horizontal) button->setGeometry(i * (block_width + x_spacing), j * (block_height + y_spacing), block_width, block_height);
-            else             button->setGeometry(j * (block_width + x_spacing), i * (block_height + y_spacing), block_width, block_height);
+            if (!horizontal) button->setGeometry(i * (block_width + x_spacing) + 2, j * (block_height + y_spacing) + 2, block_width, block_height);
+            else             button->setGeometry(j * (block_width + x_spacing) + 2, i * (block_height + y_spacing) + 2, block_width, block_height);
 
             if (j < 10 || type == Colors::Basic) ++color_index;
         }
@@ -105,8 +105,8 @@ QString FormPopup::createButtonStyleSheet(QColor color, int border)
     "   border-color: " + color.darker(150).name() + "; "
     "   background-color: " + color.name() + "; }"
     "QPushButton::hover { "
-    "   border: " + QString::number(border + 1) + "px solid;"
-    "   border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; } ";
+    "   border: " + QString::number(border + 2) + "px solid; border-radius: 3px; "
+    "   border-color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } ";
 }
 
 // Updates the info label color and text
@@ -138,8 +138,23 @@ ColorSelecterButton::ColorSelecterButton(QWidget *parent, FormPopup *popup, QWid
 }
 ColorSelecterButton::~ColorSelecterButton() { }
 
-void ColorSelecterButton::enterEvent(QEvent *)              { m_popup->setInfoLabelColor(m_info_label, m_color); }
-void ColorSelecterButton::mouseReleaseEvent(QMouseEvent *)  {
+void ColorSelecterButton::enterEvent(QEvent *)
+{
+    this->raise();
+    this->move( this->pos() - QPoint(2, 2) );
+    this->setFixedSize(15, 15);
+
+    m_popup->setInfoLabelColor(m_info_label, m_color);
+}
+
+void ColorSelecterButton::leaveEvent(QEvent *)
+{
+    this->setFixedSize(11, 11);
+    this->move( this->pos() + QPoint(2, 2) );
+}
+
+void ColorSelecterButton::mouseReleaseEvent(QMouseEvent *)
+{
     emit m_popup->colorGrabbed(m_widget, m_color);
     m_popup->close();
 }

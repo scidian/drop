@@ -46,7 +46,7 @@ void FormPopup::focusOutEvent(QFocusEvent *) { this->close(); }
 
 
 //####################################################################################
-//##        Paints arrow at top of form
+//##        Paints arrow at top / bottom of form
 //####################################################################################
 void FormPopup::paintEvent(QPaintEvent *event)
 {
@@ -129,8 +129,8 @@ void FormPopup::showEvent(QShowEvent *event)
         if (y + this->geometry().height() + 2 > screen->availableGeometry().bottom()) {
             y = top_left.y() - m_offset.y() - this->geometry().height();
             m_below = false;
-            m_inner_widget->setObjectName(QStringLiteral("innerWidgetPopupAbove"));
-            Dr::ApplyCustomStyleSheetFormatting(m_inner_widget);
+            m_inner_widget->setObjectName(QStringLiteral("innerWidgetPopupAbove"));     // Change style sheet for new location
+            Dr::ApplyCustomStyleSheetFormatting(m_inner_widget);                        // Force style sheet to update
             updateMask();
         }
     }

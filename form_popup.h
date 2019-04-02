@@ -99,6 +99,7 @@ public:
 
     // Event Overrides
     virtual void enterEvent(QEvent *event) override;
+    virtual void leaveEvent(QEvent *event) override;
     virtual void mouseReleaseEvent(QMouseEvent *event) override;
 };
 
