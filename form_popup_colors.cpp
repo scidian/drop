@@ -10,14 +10,13 @@
 #include "form_popup.h"
 #include "globals.h"
 
+
 //####################################################################################
 //##        Constructor
 //####################################################################################
 ColorPopup::ColorPopup(DrProject *project, QWidget *widget_to_use_for_mapToGlobal, QWidget *parent, int x_offset, int y_offset)
-    : FormPopup(project, widget_to_use_for_mapToGlobal, parent, x_offset, y_offset)
-{
+    : FormPopup(project, widget_to_use_for_mapToGlobal, parent, x_offset, y_offset) { }
 
-}
 
 //####################################################################################
 //##        Builds a popup with a lot of colors to choose from
@@ -100,7 +99,9 @@ void ColorPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
 }
 
 
-// Creates a group of color labels from Material Palette colors
+//####################################################################################
+//##        Creates a block group of color buttons from palette colors
+//####################################################################################
 QWidget* ColorPopup::createColorBlock(QLabel *info_label, int start_index, int columns, int rows, int mid_step,
                                      int block_width, int block_height, int border, int x_spacing, int y_spacing, Colors type)
 {
@@ -156,7 +157,10 @@ QString ColorPopup::createButtonStyleSheet(QColor color, int border)
     "   border-color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } ";
 }
 
-// Updates the info label color and text
+
+//####################################################################################
+//##        Updates the info label color and text
+//####################################################################################
 void ColorPopup::setInfoLabelColor(QLabel *label, QColor color)
 {
     bool white = (color.red() < 160 && color.green() < 160 && color.blue() < 160);

@@ -90,7 +90,8 @@ SOURCES += \
     form_blank.cpp \
     form_color_magnifier.cpp \
     form_popup_colors.cpp \
-    form_popup_grid_snap.cpp
+    form_popup_grid_snap.cpp \
+    editor_tree_inspector_widgets2.cpp
 
 HEADERS += \
     enums.h \

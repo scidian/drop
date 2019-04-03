@@ -252,7 +252,7 @@ enum class Properties
 
     // Layering
     Object_Z_Order,                 //int
-    Object_Opacity,                 //double
+    Object_Opacity,                 //percent
 
     // Movement
     Object_Velocity_X,              //variable

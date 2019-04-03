@@ -137,7 +137,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
         QGridLayout *grid = new QGridLayout(button_frame);
         grid->setContentsMargins(0, 0, 0, 0);
 
-        CategoryButton *category_button = new CategoryButton(QString(" ") + component_pair.second->getDisplayNameQString(), Qt::black, nullptr, category_item);
+        CategoryButton *category_button = new CategoryButton(QString(" ") + component_pair.second->getDisplayNameQString(),
+                                                             Qt::black, nullptr, category_item);
         QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: black; "
                                                     " border: none; "
                                                     " border-style: solid; "
@@ -155,7 +156,9 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
                                       " QPushButton:pressed { color: " + component_pair.second->getColor().darker(250).name() + "; } ");
         category_button->setIcon(QIcon(component_pair.second->getIcon()));
         category_button->setStyleSheet(buttonColor);
-        m_widget_hover->attachToHoverHandler(category_button, component_pair.second->getDisplayName(), component_pair.second->getDescription());
+        m_widget_hover->attachToHoverHandler(category_button,
+                                             component_pair.second->getDisplayName(),
+                                             component_pair.second->getDescription());
 
         // Apply the button widget to the tree item
         grid->addWidget(category_button);
@@ -187,30 +190,41 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
             property_name->setFont(fp);
                 QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
                 sp_left.setHorizontalStretch(c_inspector_size_left);
+
+                QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
+                sp_right.setHorizontalStretch(c_inspector_size_right);
+
             property_name->setSizePolicy(sp_left);
             m_widget_hover->attachToHoverHandler(property_name, property_pair.second);
             horizontal_split->addWidget(property_name);
 
-            QWidget *new_widget = nullptr;
+            QWidget    *new_widget = nullptr;
+            DrProperty *prop = property_pair.second;
+
             switch (property_pair.second->getPropertyType()) {
-            case Property_Type::Bool:           new_widget = createCheckBox(property_pair.second, fp);                                      break;
-            case Property_Type::String:         new_widget = createLineEdit(property_pair.second, fp);                                      break;
-            case Property_Type::Int:            new_widget = createIntSpinBox(property_pair.second, fp, Property_Type::Int);                break;
-            case Property_Type::Positive:       new_widget = createIntSpinBox(property_pair.second, fp, Property_Type::Positive);           break;
-            case Property_Type::Filter:         new_widget = createIntSpinBox(property_pair.second, fp, Property_Type::Filter);             break;
-            case Property_Type::FilterAngle:    new_widget = createIntSpinBox(property_pair.second, fp, Property_Type::FilterAngle);        break;
-            case Property_Type::Double:         new_widget = createDoubleSpinBox(property_pair.second, fp, Property_Type::Double);          break;
-            case Property_Type::Percent:        new_widget = createDoubleSpinBox(property_pair.second, fp, Property_Type::Percent);         break;
-            case Property_Type::Angle:          new_widget = createDoubleSpinBox(property_pair.second, fp, Property_Type::Angle);           break;
-            case Property_Type::PositionF:      new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Property_Type::PositionF);   break;
-            case Property_Type::PointF:         new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Property_Type::PointF);      break;
-            case Property_Type::SizeF:          new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Property_Type::SizeF);       break;
-            case Property_Type::ScaleF:         new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Property_Type::ScaleF);      break;
-            case Property_Type::GridF:          new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Property_Type::GridF);       break;
-            case Property_Type::GridScaleF:     new_widget = createDoubleSpinBoxPair(property_pair.second, fp, Property_Type::GridScaleF);  break;
-            case Property_Type::Variable:       new_widget = createVariableSpinBoxPair(property_pair.second, fp);                           break;
-            case Property_Type::List:           new_widget = createListBox(property_pair.second, fp);                                       break;
-            case Property_Type::Color:          new_widget = createColorBox(property_pair.second, fp);                                      break;
+            case Property_Type::Bool:           new_widget = createCheckBox(        prop, fp, sp_right);                                break;
+            case Property_Type::String:         new_widget = createLineEdit(        prop, fp, sp_right);                                break;
+            case Property_Type::Int:            new_widget = createIntSpinBox(      prop, fp, sp_right, Property_Type::Int);            break;
+            case Property_Type::Positive:       new_widget = createIntSpinBox(      prop, fp, sp_right, Property_Type::Positive);       break;
+            case Property_Type::Filter:         new_widget = createIntSpinBox(      prop, fp, sp_right, Property_Type::Filter);         break;
+            case Property_Type::FilterAngle:    new_widget = createIntSpinBox(      prop, fp, sp_right, Property_Type::FilterAngle);    break;
+            case Property_Type::Double:         new_widget = createDoubleSpinBox(   prop, fp, sp_right, Property_Type::Double);         break;
+
+         ///case Property_Type::Percent:        new_widget = createDoubleSpinBox(   prop, fp, sp_right, Property_Type::Percent);        break;
+            case Property_Type::Percent:
+                new_widget = createSlider(prop, fp, sp_right, Property_Type::Percent);
+                break;
+
+            case Property_Type::Angle:          new_widget = createDoubleSpinBox(   prop, fp, sp_right, Property_Type::Angle);          break;
+            case Property_Type::PositionF:      new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::PositionF);  break;
+            case Property_Type::PointF:         new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::PointF);     break;
+            case Property_Type::SizeF:          new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::SizeF);      break;
+            case Property_Type::ScaleF:         new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::ScaleF);     break;
+            case Property_Type::GridF:          new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::GridF);      break;
+            case Property_Type::GridScaleF:     new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::GridScaleF); break;
+            case Property_Type::Variable:       new_widget = createVariableSpinBoxPair( prop, fp, sp_right);                            break;
+            case Property_Type::List:           new_widget = createListBox(             prop, fp, sp_right);                            break;
+            case Property_Type::Color:          new_widget = createColorBox(            prop, fp, sp_right);                            break;
 
             case Property_Type::Image:                                  // QPixmap
             case Property_Type::Icon:

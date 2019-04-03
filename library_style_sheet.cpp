@@ -242,6 +242,28 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         " QMenu#menuComboBox::item:checked { "
         "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; }"
 
+        // Slider for Opacity, etc.
+        " QSlider::groove:horizontal { height: 4px; background: black; "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; } "
+        " QSlider::handle:horizontal {"
+        "       border: 1px solid; "
+        "       border-color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
+        "       background: " +   Dr::GetColor(Window_Colors::Text).name() + "; "
+        "       width: 14px;"
+        "       margin: -6px 0; "                  // Expand outside the groove
+        "       border-radius: 8px;"               // Turn into circle
+        " } "
+        " QSlider::handle:horizontal:hover {"
+        "       background: " +   Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        " } "
+        " QSlider::add-page:horizontal { border-radius: 2px; margin: 0 2; border-top: 1px solid; "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; } "
+        " QSlider::sub-page:horizontal { border-radius: 2px; "
+        "       background: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; } "
+
+        //###############################################################################
+        //##    FormPopup Styling
+        //################################################################################
         // Popup menu RadioButton list
         " QRadioButton#popupRadio         { color: " + Dr::GetColor(Window_Colors::Text).name() + "; } "
         " QRadioButton#popupRadio:checked { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } "

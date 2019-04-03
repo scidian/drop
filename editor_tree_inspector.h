@@ -64,14 +64,15 @@ public:
 
     // Property Builders
     void                addToWidgetList(QWidget *widget) { m_widgets.append(widget); }
-    QCheckBox*          createCheckBox(DrProperty *property, QFont &font);
-    QWidget*            createColorBox(DrProperty *property, QFont &font);
-    QPushButton*        createListBox(DrProperty *property, QFont &font);
-    QDoubleSpinBox*     createDoubleSpinBox(DrProperty *property, QFont &font, Property_Type spin_type);
-    QFrame*             createDoubleSpinBoxPair(DrProperty *property, QFont &font, Property_Type spin_type);
-    QSpinBox*           createIntSpinBox(DrProperty *property, QFont &font, Property_Type spin_type);
-    QLineEdit*          createLineEdit(DrProperty *property, QFont &font);
-    QFrame*             createVariableSpinBoxPair(DrProperty *property, QFont &font);
+    QCheckBox*          createCheckBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
+    QWidget*            createColorBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
+    QPushButton*        createListBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
+    QDoubleSpinBox*     createDoubleSpinBox(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
+    QFrame*             createDoubleSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
+    QSpinBox*           createIntSpinBox(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
+    QLineEdit*          createLineEdit(DrProperty *property, QFont &font, QSizePolicy size_policy);
+    QWidget*            createSlider(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
+    QFrame*             createVariableSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy);
     DrTripleSpinBox*    initializeEmptySpinBox(DrProperty *property, QFont &font, double start_value);
     void                setButtonColorFromSystemDialog(QPushButton *button);
     void                updateColorButton(QPushButton *button, QColor color);
