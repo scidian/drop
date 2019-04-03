@@ -466,10 +466,10 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font)
         color_button->setProperty(User_Property::Key,   QVariant::fromValue( property_key ));
         this->updateColorButton(color_button, color);
         connect(color_button, &QPushButton::clicked, [this, color_box, color_button, color] () {
-            FormPopup *popupColors = new FormPopup(m_project, color_box, color_button, -18, 5);
-            popupColors->buildPopupColors(color_button, QColor::fromRgba(color_button->property(User_Property::Color).toUInt()) );
-            connect(popupColors, SIGNAL(colorGrabbed(QWidget*, QColor)), this, SLOT(setButtonColor(QWidget*, QColor)) );
-            popupColors->show();
+            ColorPopup *color_popup = new ColorPopup(m_project, color_box, color_button, -18, 5);
+            color_popup->buildPopupColors(color_button, QColor::fromRgba(color_button->property(User_Property::Color).toUInt()) );
+            connect(color_popup, SIGNAL(colorGrabbed(QWidget*, QColor)), this, SLOT(setButtonColor(QWidget*, QColor)) );
+            color_popup->show();
         });
         m_widget_hover->attachToHoverHandler(color_button, Advisor_Info::ColorButton);
         addToWidgetList(color_button);

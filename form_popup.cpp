@@ -91,6 +91,17 @@ void FormPopup::paintEvent(QPaintEvent *event)
     painter.end();
 }
 
+
+//####################################################################################
+//##        Closes form if clicked in transparent area
+//####################################################################################
+void FormPopup::mousePressEvent(QMouseEvent *event)
+{
+    if (this->mask().contains(event->pos()) == false)
+        this->close();
+}
+
+
 //####################################################################################
 //##        Keeps container widget same size as form
 //####################################################################################

@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 4/1/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//
+//      Subclassed FormPopup used to allow color picking with sweet options
 //
 //
 #include "editor_tree_inspector.h"
@@ -11,9 +11,18 @@
 #include "globals.h"
 
 //####################################################################################
+//##        Constructor
+//####################################################################################
+ColorPopup::ColorPopup(DrProject *project, QWidget *widget_to_use_for_mapToGlobal, QWidget *parent, int x_offset, int y_offset)
+    : FormPopup(project, widget_to_use_for_mapToGlobal, parent, x_offset, y_offset)
+{
+
+}
+
+//####################################################################################
 //##        Builds a popup with a lot of colors to choose from
 //####################################################################################
-void FormPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
+void ColorPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
 {
     QFont font;  font.setPointSize(Dr::FontSize());
     m_wants_return_variable = wants_color;
@@ -63,19 +72,19 @@ void FormPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
         layout->addWidget(test);
 
 
-    m_inner_stacked_widget->addWidget(first_page_widget);
-    m_inner_stacked_widget->addWidget(second_page_widget);
+    getInnerStackedWidget()->addWidget(first_page_widget);
+    getInnerStackedWidget()->addWidget(second_page_widget);
 
 
 
     // ********* Buttons for changing pages in the QStackWidget
-    QPushButton *change0 =  new QPushButton(m_inner_stacked_widget);
-    QPushButton *change1 = new QPushButton(m_inner_stacked_widget);
+    QPushButton *change0 =  new QPushButton(getInnerStackedWidget());
+    QPushButton *change1 = new QPushButton(getInnerStackedWidget());
 
     change0->setGeometry( 159, 7, 41, 25);
     change0->setObjectName("buttonColorMaterial");
     connect(change0, &QPushButton::clicked,  this, [this, change0, change1]() {
-        this->m_inner_stacked_widget->setCurrentIndex(0);
+        this->getInnerStackedWidget()->setCurrentIndex(0);
         change0->raise();
         change1->raise();
     });
@@ -83,7 +92,7 @@ void FormPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
     change1->setGeometry(159, 38, 41, 25);
     change1->setObjectName("buttonColorMaterial");
     connect(change1, &QPushButton::clicked, this, [this, change0, change1]() {
-        this->m_inner_stacked_widget->setCurrentIndex(1);
+        this->getInnerStackedWidget()->setCurrentIndex(1);
         change0->raise();
         change1->raise();
     });
@@ -92,7 +101,7 @@ void FormPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
 
 
 // Creates a group of color labels from Material Palette colors
-QWidget* FormPopup::createColorBlock(QLabel *info_label, int start_index, int columns, int rows, int mid_step,
+QWidget* ColorPopup::createColorBlock(QLabel *info_label, int start_index, int columns, int rows, int mid_step,
                                      int block_width, int block_height, int border, int x_spacing, int y_spacing, Colors type)
 {
     QWidget *color_block = new QWidget();
@@ -135,7 +144,7 @@ QWidget* FormPopup::createColorBlock(QLabel *info_label, int start_index, int co
 }
 
 // Creates initial style sheet text for little color boxes
-QString FormPopup::createButtonStyleSheet(QColor color, int border)
+QString ColorPopup::createButtonStyleSheet(QColor color, int border)
 {
     return
     "QPushButton {  "
@@ -148,7 +157,7 @@ QString FormPopup::createButtonStyleSheet(QColor color, int border)
 }
 
 // Updates the info label color and text
-void FormPopup::setInfoLabelColor(QLabel *label, QColor color)
+void ColorPopup::setInfoLabelColor(QLabel *label, QColor color)
 {
     bool white = (color.red() < 160 && color.green() < 160 && color.blue() < 160);
     QString style =
@@ -169,7 +178,7 @@ void FormPopup::setInfoLabelColor(QLabel *label, QColor color)
 //####################################################################################
 //##        ColorLabel Class Functions
 //####################################################################################
-ColorSelecterButton::ColorSelecterButton(QWidget *parent, FormPopup *popup, QWidget *wants_color, QLabel *info_label, QColor my_color) :
+ColorSelecterButton::ColorSelecterButton(QWidget *parent, ColorPopup *popup, QWidget *wants_color, QLabel *info_label, QColor my_color) :
     QPushButton(parent), m_popup(popup), m_widget(wants_color), m_info_label(info_label), m_color(my_color)
 {
     setAttribute(Qt::WA_Hover);

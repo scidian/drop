@@ -38,7 +38,6 @@ private:
     DrProject       *m_project;                         // Pointer to the open project
     QWidget         *m_mapper;                          // Widget to use for mapping to global coordinates (usually same as parent)
     QStackedWidget  *m_inner_stacked_widget;            // Container widget, allows for a double form border and multiple pages
-    QWidget         *m_wants_return_variable;           // A widget that wants something from this popup when its done
 
     QVBoxLayout     *m_layout;                          // Layout for *this form
     bool             m_below = true;                    // Tracks if this popup is shown below or above origin point
@@ -50,13 +49,34 @@ public:
     // Event Overrides
     virtual void focusOutEvent(QFocusEvent *event) override;
     virtual void paintEvent(QPaintEvent *event) override;
+    virtual void mousePressEvent(QMouseEvent *event) override;
     virtual void resizeEvent(QResizeEvent *event) override;
     virtual void showEvent(QShowEvent *event) override;
 
+    // Getters
+    DrProject*      getProject()            { return m_project; }
+    QWidget*        getMapper()             { return m_mapper; }
+    QStackedWidget* getInnerStackedWidget() { return m_inner_stacked_widget; }
+
 
     // ***** Snap to Grid Option Popup
-    void         buildPopupGridSnap();
+    void            buildPopupGridSnap();
+};
 
+
+//####################################################################################
+//##    ColorPopup
+//##        A subclassed FormPopup to be used for Color Picker Popup window
+//############################
+class ColorPopup : public FormPopup
+{
+    Q_OBJECT
+
+private:
+    QWidget         *m_wants_return_variable;           // A widget that wants something from this popup when its done
+
+public:
+    ColorPopup(DrProject *project, QWidget *widget_to_use_for_mapToGlobal, QWidget *parent, int x_offset = 0, int y_offset = 5);
 
     // ***** Color Popup
     void         buildPopupColors(QWidget *wants_color, QColor start_color);
@@ -65,13 +85,10 @@ public:
     QString      createButtonStyleSheet(QColor color, int border);
     void         setInfoLabelColor(QLabel *label, QColor color);
 
-
 signals:
     void         colorGrabbed(QWidget *parent, QColor m_color);
 
 };
-
-
 
 //####################################################################################
 //##    ColorSelecterButton
@@ -79,13 +96,13 @@ signals:
 //############################
 class ColorSelecterButton : public QPushButton
 {
-    FormPopup   *m_popup;               // Popup form this button is installed on
+    ColorPopup  *m_popup;               // ColorPopup form this button is installed on
     QWidget     *m_widget;              // Widget that wants the color
     QLabel      *m_info_label;          // Label that will temporarily show this color
     QColor       m_color;               // This label's color
 
 public:
-    explicit ColorSelecterButton(QWidget *parent, FormPopup *popup, QWidget *wants_color, QLabel *info_label, QColor my_color);
+    explicit ColorSelecterButton(QWidget *parent, ColorPopup *popup, QWidget *wants_color, QLabel *info_label, QColor my_color);
     virtual ~ColorSelecterButton() override;
 
     // Event Overrides

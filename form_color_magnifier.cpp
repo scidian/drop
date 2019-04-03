@@ -30,11 +30,15 @@ constexpr int c_mouse_y_offset =   3;
 FormColorMagnifier::FormColorMagnifier(QWidget *parent, QPoint mouse_pos, int width, int height, double zoom)
     : QWidget (parent), m_parent(parent), m_width(width), m_height(height), m_zoom(zoom)
 {    
-    // Set up window
+    // Make sure this form is deleted when it closes
     this->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
+
+    // Set up transparent background
     this->setAttribute(Qt::WidgetAttribute::WA_TranslucentBackground, true);
+    this->setAttribute(Qt::WidgetAttribute::WA_NoSystemBackground, true);
     this->setStyleSheet("color: rgba(0, 0, 0, 0); background-color: rgba(0, 0, 0, 0); border: none;");
 
+    // Window properties
     this->setWindowFlag(Qt::WindowType::FramelessWindowHint);
     this->setWindowFlag(Qt::WindowType::NoDropShadowWindowHint);
     this->setWindowFlag(Qt::WindowType::Popup);
