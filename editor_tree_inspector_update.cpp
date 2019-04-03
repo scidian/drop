@@ -65,7 +65,12 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 
         case Property_Type::Double:
         case Property_Type::Percent:
-        case Property_Type::Angle:      dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toDouble());   break;
+        case Property_Type::Angle:
+            if (widget->property(User_Property::Order).toInt() == 2)
+                dynamic_cast<QSlider*>(widget)->setValue(prop->getValue().toInt());
+            else
+                dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toDouble());
+            break;
 
         case Property_Type::String:     dynamic_cast<QLineEdit*>(widget)->setText(prop->getValue().toString());         break;
 

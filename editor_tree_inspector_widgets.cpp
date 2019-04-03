@@ -252,7 +252,7 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
 
     QWidget *slider_pair = new QWidget();
     slider_pair->setSizePolicy(size_policy);
-    m_widget_hover->attachToHoverHandler(slider_pair, property);                        // Connecto to hover handler for advisor
+    m_widget_hover->attachToHoverHandler(slider_pair, property);                            // Connecto to hover handler for advisor
 
     QHBoxLayout *horizontal_split = new QHBoxLayout(slider_pair);
     horizontal_split->setSpacing(6);
@@ -269,8 +269,9 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
         case Property_Type::Angle:      spin->setRange(-360, 360); spin->setSuffix("°");    spin->setSingleStep(5);     break;
         default:                        spin->setRange(-100000000, 100000000);
         }
-        spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);             // Hides little up / down buttons
-        spin->setProperty(User_Property::Key, QVariant::fromValue( property_key ));     // Store property key within item
+        spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);                 // Hides little up / down buttons
+        spin->setProperty(User_Property::Key, QVariant::fromValue( property_key ));         // Store property key within item
+        spin->setValue(property->getValue().toDouble());                                    // Set initial starting value of spin box
         this->addToWidgetList(spin);
 
         // This stops mouse wheel from stealing focus unless user has selected the widget
@@ -278,23 +279,26 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
         spin->installEventFilter(new MouseWheelAdjustmentGuard(spin));
 
         QSlider *slider = new QSlider(Qt::Orientation::Horizontal);
-        size_policy.setHorizontalStretch(4);
+        size_policy.setHorizontalStretch(3);
         slider->setSizePolicy(size_policy);
         slider->setTickPosition(QSlider::TickPosition::NoTicks);
         slider->setRange(0, 100);
+        slider->setValue(property->getValue().toInt());
+        slider->setProperty(User_Property::Key, QVariant::fromValue( property_key ));       // Store property key within item
+        slider->setProperty(User_Property::Order, 2);
+        this->addToWidgetList(slider);
 
     // Connect value changed to our handler function
-    connect (spin,  QOverload<double>::of(&DrTripleSpinBox::valueChanged),
-             this, [this, property_key, slider] (double d) {
-        slider->setValue( static_cast<int>(d)) ;
+    connect (spin,  QOverload<double>::of(&DrTripleSpinBox::valueChanged), this, [this, property_key, slider] (double d) {
+        slider->blockSignals(true);
+        slider->setValue( static_cast<int>(d) );
         updateSettingsFromNewValue(property_key, d);
+        slider->blockSignals(false);
     });
 
-    connect(slider, &QSlider::sliderReleased, this, [spin, slider]() {
-       spin->setValue( slider->value() );
+    connect(slider, &QSlider::valueChanged, this, [spin, slider] () {
+        spin->setValue( slider->value() );
     });
-
-    spin->setValue(property->getValue().toDouble());                                // Set initial starting value of spin box
 
     horizontal_split->addWidget(spin);
     horizontal_split->addWidget(slider);
