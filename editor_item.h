@@ -12,6 +12,7 @@
 #include <QGraphicsItem>
 #include <QGraphicsView>
 
+// Forward declarations
 class DrProject;
 class DrAsset;
 class DrObject;

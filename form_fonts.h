@@ -10,8 +10,13 @@
 
 #include <QWidget>
 
+// Forward declarations
 class DrProject;
 
+//####################################################################################
+//##    FormFonts
+//##        Font builder form
+//############################
 class FormFonts : public QWidget
 {
 private:
@@ -26,7 +31,6 @@ public:
 
 
 };
-
 
 
 #endif // FORM_FONTS_H

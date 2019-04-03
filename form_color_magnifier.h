@@ -14,6 +14,10 @@
 #include <QScreen>
 #include <QWidget>
 
+//####################################################################################
+//##    FormColorMagnifier
+//##        Magnifying glass that pops up to pick a color off the screen
+//############################
 class FormColorMagnifier : public QWidget
 {
     Q_OBJECT

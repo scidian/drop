@@ -11,10 +11,12 @@
 
 #include "enums.h"
 
+// Forward Declarations
 class DrSettings;
 class DrProperty;
-typedef std::map<long, DrProperty*> PropertyMap;
 
+// Type definitions
+typedef std::map<long, DrProperty*> PropertyMap;
 
 //####################################################################################
 //##    DrComponent
@@ -24,9 +26,9 @@ class DrComponent
 {
 private:
     // Local variables
-    PropertyMap m_properties;                                   // map of pointers to DrProperty classes
+    PropertyMap m_properties;                                       // Map of pointers to DrProperty classes
 
-    DrSettings *m_parent_settings;
+    DrSettings *m_parent_settings;                                  // Point to the DrSettings class that holds this component
 
     QString     m_display_name = "Unknown Component";
     QString     m_description = "No description";

@@ -12,8 +12,13 @@
 #include <QRect>
 #include <QStyle>
 
+// Forward declarations
 class DrProject;
 
+//####################################################################################
+//##    FlowLayout
+//##        A changing GridLayout that adjusts to the size of the parent widget
+//############################
 class FlowLayout : public QLayout
 {
 private:

@@ -16,6 +16,7 @@
 #include "enums.h"
 #include "enums_form_main.h"
 
+// Forward declarations
 class DrProject;
 class DrObject;
 class DrItem;

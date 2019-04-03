@@ -11,10 +11,14 @@
 #include "enums.h"
 #include "enums_form_main.h"
 
+// Forward declarations
 class DrProject;
 class FormMain;
 class IEditorRelay;
 
+//####################################################################################
+//##    Program wide options
+//############################
 enum class Preferences
 {
 
@@ -31,7 +35,9 @@ enum class Preferences
 };
 
 
-// External functions, can be called Globally without a local IEditorRelay reference in calling class
+//####################################################################################
+//##    Global function declarations
+//############################
 namespace Dr {
 
     void        LoadPreferences();

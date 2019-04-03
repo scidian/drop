@@ -11,6 +11,7 @@
 #include <QPointF>
 #include <QUndoCommand>
 
+// Forward declarations
 class DrProject;
 class DrScene;
 class DrObject;

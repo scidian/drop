@@ -11,6 +11,8 @@
 
 #include "settings.h"
 
+// Forward Declarations
+class DrFont;
 class DrProject;
 
 //####################################################################################
@@ -20,16 +22,16 @@ class DrProject;
 class DrAsset : public DrSettings
 {
 private:
-    DrProject       *m_parent_project;                  // holds reference to parent Project class that handles key generation for project
+    DrProject       *m_parent_project;                  // Holds reference to parent Project class that handles key generation for project
 
-    DrAssetType      m_asset_type;                      // holds asset type (object, character, etc)
-    long             m_source_key;                      // holds key to source image / font
+    DrAssetType      m_asset_type;                      // Holds asset type (object, character, etc)
+    long             m_source_key;                      // Holds key to source image / font
 
     long             m_width;
     long             m_height;
 
-    long             m_list_order;                      // keeps track of what order to be in on the asset list tree
-    long             m_group_number;                    // keeps track of what group to be in on the asset list tree
+    long             m_list_order;                      // Keeps track of what order to be in on the asset list tree
+    long             m_group_number;                    // Keeps track of what group to be in on the asset list tree
 
 public:
     // Constructor & destructor

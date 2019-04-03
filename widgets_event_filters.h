@@ -12,6 +12,7 @@
 
 #include <constants.h>
 
+// Forward declarations
 class DrProperty;
 
 
@@ -43,7 +44,7 @@ signals:
 //####################################################################################
 //##    MouseWheelAdjustmentGuard
 //##        Stops widget from stealing focus on mouse wheel
-//####################################################################################
+//############################
 class MouseWheelAdjustmentGuard : public QObject
 {
 public:
@@ -56,7 +57,7 @@ protected:
 //####################################################################################
 //##    PopUpMenuRelocater
 //##        Changes starting position of popup menu
-//####################################################################################
+//############################
 class PopUpMenuRelocater : public QObject
 {
 private:
@@ -72,7 +73,7 @@ protected:
 //####################################################################################
 //##    ClickAndDragWindow
 //##        Clicking and dragging will move parent window
-//####################################################################################
+//############################
 class ClickAndDragWindow : public QObject
 {
 private:

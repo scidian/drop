@@ -12,9 +12,11 @@
 #include "constants.h"
 #include "enums.h"
 
-
+// Forward declarations
 class DrProperty;
 class DrComponent;
+
+// Type definitions
 typedef std::map<long, DrComponent*> ComponentMap;
 
 
@@ -25,8 +27,8 @@ typedef std::map<long, DrComponent*> ComponentMap;
 class DrSettings
 {
 private:
-    ComponentMap m_components;                      // map of pointers to DrComponent classes
-    long         m_key;                             // holds unique key for each object with a base class DrSettings
+    ComponentMap m_components;                      // Map of pointers to DrComponent classes
+    long         m_key;                             // Holds unique key for each object with a base class DrSettings
 
 protected:       // so derived classes can access
     void         setKey (long new_key) { m_key = new_key; }

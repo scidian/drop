@@ -16,11 +16,11 @@
 #include "enums.h"
 #include "interface_editor_relay.h"
 
+// Forward declarations
 class DrItem;
 class DrProject;
 class DrStage;
 class IEditorRelay;
-
 
 //####################################################################################
 //##    DrScene

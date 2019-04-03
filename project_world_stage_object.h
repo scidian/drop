@@ -11,12 +11,13 @@
 
 #include "settings.h"
 
+// Forward declarations
+class DrItem;
 class DrProject;
 class DrAsset;
 class DrWorld;
 class DrStage;
 
-class DrItem;
 
 //####################################################################################
 //##    DrObject

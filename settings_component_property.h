@@ -11,6 +11,7 @@
 
 #include "enums.h"
 
+// Forward declarations
 class DrSettings;
 class DrComponent;
 

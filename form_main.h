@@ -11,13 +11,14 @@
 //          Stage Map: Stage Layout
 //
 //      Main Components of FormMain while in normal "World Editor" mode:
-//          Tool Bar / Status Bar
+//          Tool Bar
 //          Advisor (Dock)
 //          Object Inspector (Dock)
 //
 //          Components That Have Items that Can Appear in Object Inspector:
 //              Asset List
 //              Scene View
+//                  Status Bar
 //              Project Tree
 //              Variable List
 //              Bottom Area (Labels, Stages?)
@@ -55,7 +56,8 @@ class WidgetHoverHandler;
 
 
 //####################################################################################
-//##    FormMain - Main editor window
+//##    FormMain
+//##        Main editor window
 //############################
 class FormMain : public QMainWindow, public IEditorRelay
 {
@@ -203,7 +205,8 @@ signals:
 
 
 //####################################################################################
-//##    ColorSplitter - Custom class allows for specific class specific style sheeting
+//##    ColorSplitter
+//##        A demo custom class to show how style sheeting works on a specific class
 //############################
 class ColorSplitter : public QSplitter
 {

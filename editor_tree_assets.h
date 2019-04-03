@@ -14,6 +14,7 @@
 #include <QTimer>
 #include <QTreeWidget>
 
+// Forward declarations
 class DrProject;
 class DrProperty;
 class DrSettings;

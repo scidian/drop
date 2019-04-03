@@ -11,8 +11,11 @@
 
 #include "settings.h"
 
+// Forward declarations
 class DrProject;
 class DrStage;
+
+// Type definitions
 typedef std::map<long, DrStage*> StageMap;
 
 
@@ -24,9 +27,9 @@ class DrWorld : public DrSettings
 {
 private:
     // Local variables
-    StageMap    m_stages;                                   // map of pointers to DrStage classes       (holds the stages for current world)
+    StageMap    m_stages;                                   // Map of pointers to DrStage classes       (holds the stages for current world)
 
-    DrProject  *m_parent_project;                           // holds reference to parent Project class that handles key generation for project
+    DrProject  *m_parent_project;                           // Holds reference to parent Project class that handles key generation for project
 
 public:
     // Constructor & destructor

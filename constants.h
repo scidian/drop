@@ -16,7 +16,7 @@
 
 //####################################################################################
 //##    Possible background colors for Component Categories
-//####################################################################################
+//############################
 namespace Component_Colors
 {
     const QColor White_Snow     { QColor(255, 252, 249, 255) };
@@ -44,7 +44,7 @@ namespace Component_Colors
 
 //####################################################################################
 //##    Possible icons for Component Categories
-//####################################################################################
+//############################
 namespace Component_Icons
 {
     const QString Settings      { QString(":/inspector_icons/comp_settings.png") };
@@ -64,7 +64,7 @@ namespace Component_Icons
 
 //####################################################################################
 //##    Possible Headers and Descriptions for items within editor
-//####################################################################################
+//############################
 typedef QList<QString> HeaderBodyList;
 
 namespace Advisor_Info
@@ -141,7 +141,7 @@ namespace Advisor_Info
 
 //####################################################################################
 //##    Mouse cursors to use throughout project, defined in constants.cpp
-//####################################################################################
+//############################
 namespace Mouse_Cursors {
     QCursor sizeVertical();
     QCursor size022();

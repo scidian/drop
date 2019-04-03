@@ -10,9 +10,9 @@
 #include <QTreeWidget>
 #include <QMutex>
 
+// Forward declarations
 class DrProject;
 class IEditorRelay;
-
 
 //####################################################################################
 //##    TreeAdvisor

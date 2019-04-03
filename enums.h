@@ -11,10 +11,11 @@
 
 #include <QGraphicsItem>
 
+// Forward declarations
 class DrSettings;
 enum class Properties;
 
-// ##### Global Enum Constants
+// Global Enum Constants
 constexpr int    c_no_key = -1;             // Value that represents no item selected
 
 
@@ -22,7 +23,7 @@ constexpr int    c_no_key = -1;             // Value that represents no item sel
 //##
 //##    Main Types of entities possible in project
 //##
-//####################################################################################
+//############################
 enum class DrType {
     Asset,
     Font,
@@ -66,7 +67,7 @@ enum class DrObjectType {
 
 //####################################################################################
 //##    Custom Qt::UserRole 's for storing data in QWidgets using setData
-//####################################################################################
+//############################
 typedef enum {
     Key = Qt::UserRole,                             // Stores Object Key in User Data of widget / graphicsitem
 
@@ -82,7 +83,7 @@ typedef enum {
 
 //####################################################################################
 //##    Possible handle rects, order is vector / array index critical
-//####################################################################################
+//############################
 enum class Position_Flags {
     Top          = 0,
     Bottom       = 1,
@@ -102,7 +103,7 @@ enum class Position_Flags {
 
 //####################################################################################
 //##    Custom QStrings for storing data in QWidgets using setProperty
-//####################################################################################
+//############################
 namespace User_Property {
     const char Key[7] = "dr_key";                   // Stores Object Key in User Property of widget
     const char Color[9] = "dr_color";               // Stores a color value (QColor.rgba())
@@ -117,7 +118,7 @@ namespace User_Property {
 
 //####################################################################################
 //##    Some public forward function declarations for some enum functions
-//####################################################################################
+//############################
 namespace Dr
 {
     QString     StringFromType(DrType type);
@@ -132,7 +133,7 @@ namespace Dr
 
 //####################################################################################
 //##    Used to track what the QVariant m_value data type really is
-//####################################################################################
+//############################
 enum class Property_Type {
     Bool,                   // bool         true or false
     Int,                    // long         any integer
@@ -167,7 +168,7 @@ enum class Property_Type {
 
 //####################################################################################
 //##    Possible components and their properties
-//####################################################################################
+//############################
 enum class Components
 {
     Asset_Settings,

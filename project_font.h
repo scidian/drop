@@ -13,18 +13,23 @@
 
 #include "settings.h"
 
+// Forward declarations
 class DrProject;
 
+//####################################################################################
+//##    DrFont
+//##        Class to hold a font for use in a project
+//############################
 class DrFont : public DrSettings
 {
 private:
-    DrProject              *m_parent_project;               // holds reference to parent Project class that handles key generation for project
+    DrProject              *m_parent_project;               // Holds reference to parent Project class that handles key generation for project
 
-    QPixmap                 m_pixmap;                       // stored font pixmap
-    std::map<char, QRect>   m_positions;                    // holds rects for each character in the pixmap
-    std::map<char, QSize>   m_spacing;                      // horizontal and vertical spacing for each character
+    QPixmap                 m_pixmap;                       // Stored font pixmap
+    std::map<char, QRect>   m_positions;                    // Holds rects for each character in the pixmap
+    std::map<char, QSize>   m_spacing;                      // Horizontal and vertical spacing for each character
 
-    QString                 m_name;                         // name of this font within the Project
+    QString                 m_name;                         // Name of this font within the Project
 
 
     // Font properties - NEED TO INCORPORATE FOR EDITOR

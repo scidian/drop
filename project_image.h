@@ -14,18 +14,23 @@
 
 #include "settings.h"
 
+// Forward declarations
 class DrProject;
 
+//####################################################################################
+//##    DrImage
+//##        Class to hold an immage for use in a project, can be pulled for asset or objects
+//############################
 class DrImage : public DrSettings
 {
 private:
-    DrProject       *m_parent_project;                  // holds reference to parent Project class that handles key generation for project
+    DrProject       *m_parent_project;                  // Holds reference to parent Project class that handles key generation for project
 
-    QString          m_full_path;                       // full path,  i.e.  ":/images/more/pretty_tree_1.png"
-    QString          m_filename;                        // image name, i.e.  "pretty_tree_1.png"
-    QString          m_simple_name;                     // simple name, i.e. "pretty tree 1
+    QString          m_full_path;                       // Full path,  i.e.  ":/images/more/pretty_tree_1.png"
+    QString          m_filename;                        // Image name, i.e.  "pretty_tree_1.png"
+    QString          m_simple_name;                     // Simple name, i.e. "pretty tree 1
 
-    QImage           m_image;                           // stored image
+    QImage           m_image;                           // Stored image
 
 public:
     DrImage(DrProject *parent_project, long key, QString image_path);

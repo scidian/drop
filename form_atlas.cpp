@@ -13,6 +13,9 @@
 #include "project.h"
 #include "widgets_event_filters.h"
 
+//####################################################################################
+//##        Constructor
+//####################################################################################
 FormAtlas::FormAtlas(DrProject *project, QWidget *parent) : QWidget(parent), m_project(project)
 {
     // ***** Set up initial window

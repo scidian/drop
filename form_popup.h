@@ -14,10 +14,10 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
+// Forward declarations
 class DrProject;
 class FormPopup;
 class TreeInspector;
-
 
 enum class Colors {
     Basic,
@@ -25,7 +25,6 @@ enum class Colors {
     Main,
     Accent,
 };
-
 
 //####################################################################################
 //##    FormPopup

@@ -11,8 +11,13 @@
 #include <QLabel>
 #include <QWidget>
 
+// Forward declarations
 class DrProject;
 
+//####################################################################################
+//##    FormSettings
+//##        Form to display Project settings
+//############################
 class FormSettings : public QWidget
 {
 private:

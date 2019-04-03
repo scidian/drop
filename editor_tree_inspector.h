@@ -16,6 +16,7 @@
 
 #include "enums.h"
 
+// Forward declarations
 class DrProject;
 class DrObject;
 class DrSettings;
@@ -24,8 +25,6 @@ class DrProperty;
 class IEditorRelay;
 class DrTripleSpinBox;
 class WidgetHoverHandler;
-
-
 
 // Class constants
 constexpr int    c_inspector_size_left =   3;           // Size policy width of left column

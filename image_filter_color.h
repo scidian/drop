@@ -10,7 +10,9 @@
 
 #include <QPixmap>
 
-
+//####################################################################################
+//##    Different types of filters that can be applied to a QPixmap
+//############################
 enum class Filter_Type
 {
     Brightness,
@@ -22,6 +24,9 @@ enum class Filter_Type
 };
 
 
+//####################################################################################
+//##    Image editing declarations
+//############################
 namespace DrFilter
 {
 

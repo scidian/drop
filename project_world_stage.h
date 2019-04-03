@@ -11,10 +11,13 @@
 
 #include "settings.h"
 
+// Forward declarations
 class DrProject;
 class DrAsset;
 class DrWorld;
 class DrObject;
+
+// Type definitions
 typedef std::map<long, DrObject*> ObjectMap;
 
 
@@ -26,13 +29,13 @@ class DrStage : public DrSettings
 {
 private:
     // Local variables
-    ObjectMap   m_objects;                                  // map of pointers to DrObject classes       (holds the objects for current stage)
+    ObjectMap   m_objects;                                  // Map of pointers to DrObject classes       (holds the objects for current stage)
 
-    DrProject  *m_parent_project;                           // holds reference to parent Project class that handles key generation for project
-    DrWorld    *m_parent_world;                             // holds reference to parent World class
+    DrProject  *m_parent_project;                           // Holds reference to parent Project class that handles key generation for project
+    DrWorld    *m_parent_world;                             // Holds reference to parent World class
 
-    bool        m_is_start_stage;
-    QPointF     m_center_view_point {0, 0};                        // holds the center point the view was on last time this stage was shown
+    bool        m_is_start_stage;                           // True if this is the first stage in a world
+    QPointF     m_center_view_point {0, 0};                 // Holds the center point the view was on last time this stage was shown
 
 public:
     // Constructor & destructor

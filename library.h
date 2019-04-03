@@ -26,8 +26,7 @@ enum class Shadow_Types
 
 
 //####################################################################################
-//##    Dr Namespace
-//##        A library of helpful functions in a global space
+//##    A library of helpful functions within the global Dr namespace
 //############################
 namespace Dr {
 

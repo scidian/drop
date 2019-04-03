@@ -24,12 +24,15 @@ enum class Orientation {
     Landscape
 };
 
+// Forward declarations
 class DrAsset;
 class DrFont;
 class DrImage;
 class DrWorld;
 class DrStage;
 class DrObject;
+
+// Type definitions
 typedef std::map<long, DrWorld*> WorldMap;
 typedef std::map<long, DrFont*>  FontMap;
 typedef std::map<long, DrAsset*> AssetMap;
@@ -45,7 +48,7 @@ class DrProject
 {
 private:
     // Project Variables
-    long        m_key_generator;                        // variable to hand out unique id key's to all children objects
+    long        m_key_generator;                        // Variable to hand out unique id key's to all children objects
 
     WorldMap    m_worlds;                               // Holds worlds for the project
     AssetMap    m_assets;                               // Holds assets for the project

@@ -10,8 +10,13 @@
 
 #include <QWidget>
 
+// Forward declarations
 class DrProject;
 
+//####################################################################################
+//##    FormAtlas
+//##        Toolbox Type form for showing projects Atlases
+//############################
 class FormAtlas : public QWidget
 {
 private:

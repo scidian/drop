@@ -14,6 +14,7 @@
 
 #include "enums.h"
 
+// Forward declarations
 class IEditorRelay;
 class DrScene;
 class DrProject;
