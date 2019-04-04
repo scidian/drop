@@ -37,22 +37,22 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     if (bounds.width() < .5 || bounds.height() < .5) return;
 
     // Set paint option to "not selected" or paint routine will draw dotted lines around item
-    QStyleOptionGraphicsItem myOption(*option);
-    myOption.state &= ~QStyle::State_Selected;
+    QStyleOptionGraphicsItem my_option(*option);
+    my_option.state &= ~QStyle::State_Selected;
 
     // Check opacity of current item
-    double transparency = 1;
+    double transparency = 0.01;
     if (m_object) {
         transparency = m_object->getComponentPropertyValue(Components::Object_Layering, Properties::Object_Opacity).toDouble() / 100;
         transparency = Dr::Clamp(transparency, 0.0, 1.0);
     }
 
     // Apply the proper opacity to this item and either paint the pixmap, or paint a pattern representation of the item
-    if (transparency >= .01) {
-        if (qFuzzyCompare(opacity(), transparency) == false) setOpacity(transparency);
-        QGraphicsPixmapItem::paint(painter, &myOption, widget);
+    if (transparency > 0) {
+        if (qFuzzyCompare(painter->opacity(), transparency) == false) painter->setOpacity(transparency);
+        QGraphicsPixmapItem::paint(painter, &my_option, widget);
     } else {
-        if (qFuzzyCompare(opacity(), 1) == false) setOpacity(1);
+        if (qFuzzyCompare(painter->opacity(), 1) == false) painter->setOpacity(1);
 
         QPen comestic_pen = QPen(Dr::GetColor(Window_Colors::Icon_Dark), 0, Qt::PenStyle::SolidLine, Qt::PenCapStyle::FlatCap, Qt::PenJoinStyle::MiterJoin );
         comestic_pen.setCosmetic(true);
