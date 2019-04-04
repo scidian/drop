@@ -44,7 +44,9 @@ QColor          GetColorFromPalette(Color_Palettes palette, int color_index) {
         return QColor(QRgb(0x00000000));
 }
 
-
+int             GetPaletteColorCount(Color_Palettes palette)                { return g_color_palettes[palette].number_of_colors; }
+QString         GetPaletteName(Color_Palettes palette)                      { return g_color_palettes[palette].name; }
+bool            GetPaletteShowInList(Color_Palettes palette)                { return g_color_palettes[palette].show_in_list; }
 
 
 //####################################################################################
@@ -53,7 +55,9 @@ QColor          GetColorFromPalette(Color_Palettes palette, int color_index) {
 void    LoadPalettes()
 {
     LoadPaletteBasic(        g_color_palettes[Color_Palettes::Basic] );
+    LoadPaletteBlank(        g_color_palettes[Color_Palettes::Blank] );
     LoadPaletteMaterial(     g_color_palettes[Color_Palettes::Material] );
+    LoadPaletteRockyRover(   g_color_palettes[Color_Palettes::Rocky_Rover] );
     LoadPaletteWindowThemes( g_color_palettes[Color_Palettes::Window_Themes] );
 
     g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Seperator,         QColor(16, 16, 16)));

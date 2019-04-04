@@ -28,7 +28,8 @@ void ColorPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
 
     this->setFixedSize(210, 310);
 
-    Color_Palettes palette = Color_Palettes::Window_Themes;
+    // TEMP !!!!!
+    Color_Palettes palette = Color_Palettes::Rocky_Rover;
 
     // ********** Widget for the first page, Material Palette
     QWidget *first_page_widget = new QWidget();
@@ -157,6 +158,8 @@ QWidget* ColorPopup::createColorBlock(Color_Palettes palette, QLabel *info_label
             else             button->setGeometry(j * (block_width + x_spacing) + 2, i * (block_height + y_spacing) + 2, block_width, block_height);
         }
         color_index += mid_step;
+
+        if (color_index >= Dr::GetPaletteColorCount(palette)) break;
     }
 
     return color_block;

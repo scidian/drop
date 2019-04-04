@@ -93,7 +93,9 @@ SOURCES += \
     form_popup_grid_snap.cpp \
     editor_tree_inspector_widgets2.cpp \
     colors_palette_material.cpp \
-    colors_palette_window_themes.cpp
+    colors_palette_window_themes.cpp \
+    colors_palette_rocky_rover.cpp \
+    colors_palette_blank.cpp
 
 HEADERS += \
     enums.h \

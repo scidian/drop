@@ -33,7 +33,9 @@ enum class Window_Colors
 enum class Color_Palettes
 {
     Basic,
+    Blank,
     Material,
+    Rocky_Rover,
     Window_Themes,
 };
 
@@ -49,7 +51,9 @@ namespace Dr {
     void            LoadPalettes();
 
     void            LoadPaletteBasic(Palette_Info &palette);
+    void            LoadPaletteBlank(Palette_Info &palette);
     void            LoadPaletteMaterial(Palette_Info &palette);
+    void            LoadPaletteRockyRover(Palette_Info &palette);
     void            LoadPaletteWindowThemes(Palette_Info &palette);
 
     QString         BorderWidth();                              // Project wide border width for Style Sheets, as QString
@@ -59,6 +63,10 @@ namespace Dr {
     Color_Scheme    GetColorScheme();
     QColor          GetColor(Window_Colors color_role);    
     QColor          GetColorFromPalette(Color_Palettes palette, int color_index);
+
+    int             GetPaletteColorCount(Color_Palettes palette);
+    QString         GetPaletteName(Color_Palettes palette);
+    bool            GetPaletteShowInList(Color_Palettes palette);
 
     QColor          GetRandomColor();
 
