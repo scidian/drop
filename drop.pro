@@ -91,7 +91,9 @@ SOURCES += \
     form_color_magnifier.cpp \
     form_popup_colors.cpp \
     form_popup_grid_snap.cpp \
-    editor_tree_inspector_widgets2.cpp
+    editor_tree_inspector_widgets2.cpp \
+    colors_palette_material.cpp \
+    colors_palette_window_themes.cpp
 
 HEADERS += \
     enums.h \

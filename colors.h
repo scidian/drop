@@ -9,7 +9,7 @@
 #define COLORS_H
 
 #include <QColor>
-
+#include <QVector>
 
 //####################################################################################
 //##    Palette options for windows
@@ -30,23 +30,37 @@ enum class Window_Colors
     Seperator,
 };
 
+enum class Color_Palettes
+{
+    Basic,
+    Material,
+    Window_Themes,
+};
+
+struct Palette_Info {
+    QString         name =              "Name Me";          // Name of color palette
+    bool            show_in_list =      false;              // Show to user?
+    int             number_of_colors =  0;                  // Number of colors in palette
+    QVector<QColor> colors;
+};
 
 namespace Dr {
 
     void            LoadPalettes();
-    void            LoadPaletteBasic();
-    void            LoadPaletteMaterial();
+
+    void            LoadPaletteBasic(Palette_Info &palette);
+    void            LoadPaletteMaterial(Palette_Info &palette);
+    void            LoadPaletteWindowThemes(Palette_Info &palette);
 
     QString         BorderWidth();                              // Project wide border width for Style Sheets, as QString
     int             BorderWidthAsInt();                         // Project wide border width for Style Sheets, as Int
     int             FontSize();                                 // Project wide font size
 
-    QColor          GetColor(Window_Colors color_role);
-    QColor          GetColorBasic(int color);
-    QColor          GetColorMaterial(int color);
     Color_Scheme    GetColorScheme();
+    QColor          GetColor(Window_Colors color_role);    
+    QColor          GetColorFromPalette(Color_Palettes palette, int color_index);
 
-    QColor          GenerateRandomColor();
+    QColor          GetRandomColor();
 
     /**
      * Doxygen comments, type slash star star enter, brief shows a mouse mover popup for the described function in the editor

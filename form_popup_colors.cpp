@@ -28,6 +28,8 @@ void ColorPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
 
     this->setFixedSize(210, 310);
 
+    Color_Palettes palette = Color_Palettes::Window_Themes;
+
     // ********** Widget for the first page, Material Palette
     QWidget *first_page_widget = new QWidget();
     QVBoxLayout *layout = new QVBoxLayout(first_page_widget);
@@ -42,15 +44,15 @@ void ColorPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
         setInfoLabelColor(info_label, start_color);
 
         // ***** Basic
-        QWidget *basic =       createColorBlock(info_label,  0, 12,  1, 0, 11, 11, 0, 1, 1, Colors::Basic);
+        QWidget *basic =       createColorBlock(palette, info_label,  0, 12,  1, 0, 11, 11, 0, 1, 1, Colors::Basic);
         layout->addWidget(basic);
 
         // ***** Grays
-        QWidget *grays =       createColorBlock(info_label,  2, 12,  3, 0, 11, 11, 0, 1, 1, Colors::Grays);
+        QWidget *grays =       createColorBlock(palette, info_label,  2, 12,  3, 0, 11, 11, 0, 1, 1, Colors::Grays);
         layout->addWidget(grays);
 
         // ***** Main Block of Colors
-        QWidget *main_colors = createColorBlock(info_label, 32, 16, 16, 4, 11, 11, 0, 1, 1, Colors::Main);
+        QWidget *main_colors = createColorBlock(palette, info_label, 32, 16, 16, 4, 11, 11, 0, 1, 1, Colors::Main);
         layout->addWidget(main_colors);
 
         // ********** Accent Colors
@@ -102,7 +104,7 @@ void ColorPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
 //####################################################################################
 //##        Creates a block group of color buttons from palette colors
 //####################################################################################
-QWidget* ColorPopup::createColorBlock(QLabel *info_label, int start_index, int columns, int rows, int mid_step,
+QWidget* ColorPopup::createColorBlock(Color_Palettes palette, QLabel *info_label, int start_index, int columns, int rows, int mid_step,
                                      int block_width, int block_height, int border, int x_spacing, int y_spacing, Colors type)
 {
     QWidget *color_block = new QWidget();
@@ -112,8 +114,15 @@ QWidget* ColorPopup::createColorBlock(QLabel *info_label, int start_index, int c
     color_block->setFixedSize(width, height);
     color_block->setContentsMargins(0, 0, 0, 0);
 
-    // Figure out if we're drawing these top to bottom, or left to right
+    // Figure out where in the array to start at, and how many to skip each column
+    if (type != Colors::Main) palette = Color_Palettes::Material;
+    if (palette != Color_Palettes::Material) {
+        start_index = 0;
+        mid_step = 0;
+    }
     int color_index = start_index;
+
+    // Figure out if we're drawing these top to bottom, or left to right
     bool horizontal = (type == Colors::Basic || type == Colors::Grays);
     int x = (horizontal) ? rows : columns;
     int y = (horizontal) ? columns : rows;
@@ -124,19 +133,28 @@ QWidget* ColorPopup::createColorBlock(QLabel *info_label, int start_index, int c
         for (int j = 0; j < y; j++) {
 
             if (type == Colors::Basic) {
-                color = Dr::GetColorBasic(color_index);
+                color = Dr::GetColorFromPalette(Color_Palettes::Basic, color_index);
             } else {
-                if (j < 10) color = Dr::GetColorMaterial(color_index);
-                else        color = color.darker( 150 );
+                if (palette == Color_Palettes::Material) {
+                    if (j < 10) color = Dr::GetColorFromPalette(palette, color_index);
+                    else        color = color.darker( 150 );
+                } else {
+                    color = Dr::GetColorFromPalette(palette, color_index);
+                }
             }
 
+            // Increment counter
+            if (j < 10 || type == Colors::Basic || palette != Color_Palettes::Material) ++color_index;
+
+            // Skip this color if transparent
+            if (color == Qt::transparent) continue;
+
+            // Otherwise create a new color button
             ColorSelecterButton *button = new ColorSelecterButton(color_block, this, m_wants_return_variable, info_label, color);
             button->setStyleSheet( createButtonStyleSheet(color, border) );
 
             if (!horizontal) button->setGeometry(i * (block_width + x_spacing) + 2, j * (block_height + y_spacing) + 2, block_width, block_height);
             else             button->setGeometry(j * (block_width + x_spacing) + 2, i * (block_height + y_spacing) + 2, block_width, block_height);
-
-            if (j < 10 || type == Colors::Basic) ++color_index;
         }
         color_index += mid_step;
     }

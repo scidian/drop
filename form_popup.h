@@ -18,6 +18,7 @@
 class DrProject;
 class FormPopup;
 class TreeInspector;
+enum class Color_Palettes;      // Defined in "colors.h"
 
 enum class Colors {
     Basic,
@@ -80,7 +81,7 @@ public:
 
     // ***** Color Popup
     void         buildPopupColors(QWidget *wants_color, QColor start_color);
-    QWidget*     createColorBlock(QLabel *info_label, int start_index, int columns, int rows, int mid_step,
+    QWidget*     createColorBlock(Color_Palettes palette, QLabel *info_label, int start_index, int columns, int rows, int mid_step,
                                   int block_width, int block_height, int border, int x_spacing, int y_spacing, Colors type);
     QString      createButtonStyleSheet(QColor color, int border);
     void         setInfoLabelColor(QLabel *label, QColor color);
