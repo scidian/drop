@@ -17,13 +17,13 @@ void LoadPaletteWindowThemes(Palette_Info &palette)
     palette.name = "Window Themes";
     palette.show_in_list = true;
 
-    palette.colors.append( QColor::fromRgba( 0xFFFFFF   ) );    //   0 White
+    palette.colors.append( QColor::fromRgba( 0xFFFFFF   ) );    //   0 Whites   (255, 255, 255)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //   1 Blank
-    palette.colors.append( QColor::fromRgba( 0xFAFAFA   ) );    //   2
-    palette.colors.append( QColor::fromRgba( 0xF5F5F5   ) );    //   3
-    palette.colors.append( QColor::fromRgba( 0xEEEEEE   ) );    //   4
-    palette.colors.append( QColor::fromRgba( 0xE0E0E0   ) );    //   5
-    palette.colors.append( QColor::fromRgba( 0xBDBDBD   ) );    //   6
+    palette.colors.append( QColor::fromRgba( 0xF2F2F2   ) );    //   2          (242, 242, 242)
+    palette.colors.append( QColor::fromRgba( 0xD9D9D9   ) );    //   3          (217, 217, 217)
+    palette.colors.append( QColor::fromRgba( 0xBFBFBF   ) );    //   4          (191, 191, 191)
+    palette.colors.append( QColor::fromRgba( 0xA6A6A6   ) );    //   5          (166, 166, 166)
+    palette.colors.append( QColor::fromRgba( 0x7F7F7F   ) );    //   6          (127, 127, 127)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //   7
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //   8
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //   9
@@ -34,13 +34,13 @@ void LoadPaletteWindowThemes(Palette_Info &palette)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  14
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  15
 
-    palette.colors.append( QColor::fromRgba( 0x607D8B   ) );    //  16
+    palette.colors.append( QColor::fromRgba( 0xFF000000 ) );    //  16 Blacks
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  17
-    palette.colors.append( QColor::fromRgba( 0x455A64   ) );    //  18
-    palette.colors.append( QColor::fromRgba( 0x37474F   ) );    //  19
-    palette.colors.append( QColor::fromRgba( 0x263238   ) );    //  20
-    palette.colors.append( QColor::fromRgba( 0xEFEBE9   ) );    //  21
-    palette.colors.append( QColor::fromRgba( 0xD7CCC8   ) );    //  22
+    palette.colors.append( QColor::fromRgba( 0x7F7F7F   ) );    //  18          (127, 127, 127)
+    palette.colors.append( QColor::fromRgba( 0x595959   ) );    //  19          ( 89,  89,  89)
+    palette.colors.append( QColor::fromRgba( 0x404040   ) );    //  20          ( 64,  64,  64)
+    palette.colors.append( QColor::fromRgba( 0x262626   ) );    //  21          ( 38,  38,  38)
+    palette.colors.append( QColor::fromRgba( 0x0D0D0D   ) );    //  22          ( 13,  13,  13)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  23
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  24
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  25
@@ -51,13 +51,13 @@ void LoadPaletteWindowThemes(Palette_Info &palette)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  30
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  31
 
-    palette.colors.append( QColor::fromRgba( 0xFFCDD2   ) );    //  32
+    palette.colors.append( QColor::fromRgba( 0xEEECE1   ) );    //  32 Browns   (238, 236, 225)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  33
-    palette.colors.append( QColor::fromRgba( 0xE57373   ) );    //  34
-    palette.colors.append( QColor::fromRgba( 0xEF5350   ) );    //  35
-    palette.colors.append( QColor::fromRgba( 0xF44336   ) );    //  36
-    palette.colors.append( QColor::fromRgba( 0xE53935   ) );    //  37
-    palette.colors.append( QColor::fromRgba( 0xD32F2F   ) );    //  38
+    palette.colors.append( QColor::fromRgba( 0xDDD9C3   ) );    //  34          (221, 217, 195)
+    palette.colors.append( QColor::fromRgba( 0xC4BD97   ) );    //  35          (196, 189, 151)
+    palette.colors.append( QColor::fromRgba( 0x948A54   ) );    //  36          (148, 138,  84)
+    palette.colors.append( QColor::fromRgba( 0x4A452A   ) );    //  37          ( 74,  69,  42)
+    palette.colors.append( QColor::fromRgba( 0x1E1C11   ) );    //  38          ( 30,  28,  17)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  39
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  40
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  41
@@ -68,13 +68,13 @@ void LoadPaletteWindowThemes(Palette_Info &palette)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  46
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  47
 
-    palette.colors.append( QColor::fromRgba( 0xF06292   ) );    //  48
+    palette.colors.append( QColor::fromRgba( 0x1F497D   ) );    //  48 Blues    ( 31,  73, 125)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  49
-    palette.colors.append( QColor::fromRgba( 0xE91E63   ) );    //  50
-    palette.colors.append( QColor::fromRgba( 0xD81B60   ) );    //  51
-    palette.colors.append( QColor::fromRgba( 0xC2185B   ) );    //  52
-    palette.colors.append( QColor::fromRgba( 0xAD1457   ) );    //  53
-    palette.colors.append( QColor::fromRgba( 0x880E4F   ) );    //  54
+    palette.colors.append( QColor::fromRgba( 0xC6D9F1   ) );    //  50          (198, 217, 241)
+    palette.colors.append( QColor::fromRgba( 0x8EB4E3   ) );    //  51          (142, 180, 227)
+    palette.colors.append( QColor::fromRgba( 0x558ED5   ) );    //  52          ( 85, 142, 213)
+    palette.colors.append( QColor::fromRgba( 0x17375D   ) );    //  53          ( 23,  55,  93)
+    palette.colors.append( QColor::fromRgba( 0x0F243F   ) );    //  54          ( 15,  36,  63)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  55
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  56
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  57
@@ -85,13 +85,13 @@ void LoadPaletteWindowThemes(Palette_Info &palette)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  62
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  63
 
-    palette.colors.append( QColor::fromRgba( 0x9C27B0   ) );    //  64
+    palette.colors.append( QColor::fromRgba( 0x4F81BD   ) );    //  64 Gray Blues ( 79, 129, 189)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  65
-    palette.colors.append( QColor::fromRgba( 0x7B1FA2   ) );    //  66
-    palette.colors.append( QColor::fromRgba( 0x6A1B9A   ) );    //  67
-    palette.colors.append( QColor::fromRgba( 0x4A148C   ) );    //  68
-    palette.colors.append( QColor::fromRgba( 0xEA80FC   ) );    //  69
-    palette.colors.append( QColor::fromRgba( 0xE040FB   ) );    //  70
+    palette.colors.append( QColor::fromRgba( 0xDCE6F2   ) );    //  66          (220, 230, 242)
+    palette.colors.append( QColor::fromRgba( 0xB9CDE5   ) );    //  67          (185, 205, 229)
+    palette.colors.append( QColor::fromRgba( 0x95B3D7   ) );    //  68          (149, 179, 215)
+    palette.colors.append( QColor::fromRgba( 0x376192   ) );    //  69          ( 55,  97, 146)
+    palette.colors.append( QColor::fromRgba( 0x244061   ) );    //  70          ( 36,  64,  97)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  71
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  72
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  73
@@ -102,13 +102,13 @@ void LoadPaletteWindowThemes(Palette_Info &palette)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  78
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  79
 
-    palette.colors.append( QColor::fromRgba( 0x512DA8   ) );    //  80
+    palette.colors.append( QColor::fromRgba( 0xC0504D   ) );    //  80 Burnt Oranges (192,  80,  77)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  81
-    palette.colors.append( QColor::fromRgba( 0x311B92   ) );    //  82
-    palette.colors.append( QColor::fromRgba( 0xB388FF   ) );    //  83
-    palette.colors.append( QColor::fromRgba( 0x7C4DFF   ) );    //  84
-    palette.colors.append( QColor::fromRgba( 0x651FFF   ) );    //  85
-    palette.colors.append( QColor::fromRgba( 0x6200EA   ) );    //  86
+    palette.colors.append( QColor::fromRgba( 0xF2DCDB   ) );    //  82          (242, 220, 219)
+    palette.colors.append( QColor::fromRgba( 0xE6B9B8   ) );    //  83          (230, 185, 184)
+    palette.colors.append( QColor::fromRgba( 0xD99694   ) );    //  84          (217, 150, 148)
+    palette.colors.append( QColor::fromRgba( 0x953736   ) );    //  85          (149,  55,  54)
+    palette.colors.append( QColor::fromRgba( 0x632523   ) );    //  86          ( 99,  37,  35)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  87
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  88
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  89
@@ -119,13 +119,13 @@ void LoadPaletteWindowThemes(Palette_Info &palette)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  94
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  95
 
-    palette.colors.append( QColor::fromRgba( 0x1A237E   ) );    //  96
+    palette.colors.append( QColor::fromRgba( 0x9BBB59   ) );    //  96 Olive Drabs (155, 187,  89)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    //  97
-    palette.colors.append( QColor::fromRgba( 0x536DFE   ) );    //  98
-    palette.colors.append( QColor::fromRgba( 0x3D5AFE   ) );    //  99
-    palette.colors.append( QColor::fromRgba( 0x304FFE   ) );    // 100
-    palette.colors.append( QColor::fromRgba( 0xE3F2FD   ) );    // 101
-    palette.colors.append( QColor::fromRgba( 0xBBDEFB   ) );    // 102
+    palette.colors.append( QColor::fromRgba( 0xEBF1DE   ) );    //  98          (235, 241, 222)
+    palette.colors.append( QColor::fromRgba( 0xD7E4BD   ) );    //  99          (215, 228, 189)
+    palette.colors.append( QColor::fromRgba( 0xC3D69B   ) );    // 100          (195, 214, 155)
+    palette.colors.append( QColor::fromRgba( 0x77933C   ) );    // 101          (119, 147,  60)
+    palette.colors.append( QColor::fromRgba( 0x4F6228   ) );    // 102          ( 79,  98,  40)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 103
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 104
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 105
@@ -136,13 +136,13 @@ void LoadPaletteWindowThemes(Palette_Info &palette)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 110
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 111
 
-    palette.colors.append( QColor::fromRgba( 0x448AFF   ) );    // 112
+    palette.colors.append( QColor::fromRgba( 0x4F6228   ) );    // 112 Grayish Purples ( 79,  98,  40)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 113
-    palette.colors.append( QColor::fromRgba( 0x2979FF   ) );    // 114
-    palette.colors.append( QColor::fromRgba( 0x2962FF   ) );    // 115
-    palette.colors.append( QColor::fromRgba( 0xE1F5FE   ) );    // 116
-    palette.colors.append( QColor::fromRgba( 0xB3E5FC   ) );    // 117
-    palette.colors.append( QColor::fromRgba( 0x81D4FA   ) );    // 118
+    palette.colors.append( QColor::fromRgba( 0xE6E0EC   ) );    // 114          (230, 224, 236)
+    palette.colors.append( QColor::fromRgba( 0xCCC1DA   ) );    // 115          (204, 193, 218)
+    palette.colors.append( QColor::fromRgba( 0xB3A2C7   ) );    // 116          (179, 162, 199)
+    palette.colors.append( QColor::fromRgba( 0x604A7B   ) );    // 117          ( 96,  74, 123)
+    palette.colors.append( QColor::fromRgba( 0x403152   ) );    // 118          ( 64,  49,  82)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 119
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 120
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 121
@@ -153,13 +153,13 @@ void LoadPaletteWindowThemes(Palette_Info &palette)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 126
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 127
 
-    palette.colors.append( QColor::fromRgba( 0x00B0FF   ) );    // 128
+    palette.colors.append( QColor::fromRgba( 0x4BACC6   ) );    // 128 Light Blues ( 75, 172, 198)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 129
-    palette.colors.append( QColor::fromRgba( 0xE0F7FA   ) );    // 130
-    palette.colors.append( QColor::fromRgba( 0xB2EBF2   ) );    // 131
-    palette.colors.append( QColor::fromRgba( 0x80DEEA   ) );    // 132
-    palette.colors.append( QColor::fromRgba( 0x4DD0E1   ) );    // 133
-    palette.colors.append( QColor::fromRgba( 0x26C6DA   ) );    // 134
+    palette.colors.append( QColor::fromRgba( 0xDBEEF4   ) );    // 130          (219, 238, 244)
+    palette.colors.append( QColor::fromRgba( 0xB7DEE8   ) );    // 131          (183, 222, 232)
+    palette.colors.append( QColor::fromRgba( 0x93CDDD   ) );    // 132          (147, 205, 221)
+    palette.colors.append( QColor::fromRgba( 0x31859C   ) );    // 133          ( 49, 133, 156)
+    palette.colors.append( QColor::fromRgba( 0x215968   ) );    // 134          ( 33,  89, 104)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 135
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 136
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 137
@@ -169,15 +169,15 @@ void LoadPaletteWindowThemes(Palette_Info &palette)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 141
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 142
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 143
-    palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 144
 
-    palette.colors.append( QColor::fromRgba( 0xB2DFDB   ) );    // 145
-    palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 146
-    palette.colors.append( QColor::fromRgba( 0x4DB6AC   ) );    // 147
-    palette.colors.append( QColor::fromRgba( 0x26A69A   ) );    // 148
-    palette.colors.append( QColor::fromRgba( 0x009688   ) );    // 149
-    palette.colors.append( QColor::fromRgba( 0x00897B   ) );    // 150
-    palette.colors.append( QColor::fromRgba( 0x00796B   ) );    // 151
+    palette.colors.append( QColor::fromRgba( 0xF79646   ) );    // 144 Oranges  (247, 150,  70)
+    palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 145
+    palette.colors.append( QColor::fromRgba( 0xFDEADA   ) );    // 146          (253, 234, 218)
+    palette.colors.append( QColor::fromRgba( 0xFCD5B5   ) );    // 147          (252, 213, 181)
+    palette.colors.append( QColor::fromRgba( 0xFAC090   ) );    // 148          (250, 192, 144)
+    palette.colors.append( QColor::fromRgba( 0xE46B0A   ) );    // 149          (228, 107,  10)
+    palette.colors.append( QColor::fromRgba( 0x984807   ) );    // 150          (152,  72,   7)
+    palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 151
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 152
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 153
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 154
@@ -187,13 +187,13 @@ void LoadPaletteWindowThemes(Palette_Info &palette)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 158
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 159
 
-    palette.colors.append( QColor::fromRgba( 0xA5D6A7   ) );    // 160
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 160
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 161
-    palette.colors.append( QColor::fromRgba( 0x66BB6A   ) );    // 162
-    palette.colors.append( QColor::fromRgba( 0x4CAF50   ) );    // 163
-    palette.colors.append( QColor::fromRgba( 0x43A047   ) );    // 164
-    palette.colors.append( QColor::fromRgba( 0x388E3C   ) );    // 165
-    palette.colors.append( QColor::fromRgba( 0x2E7D32   ) );    // 166
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 162
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 163
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 164
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 165
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 166
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 167
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 168
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 169
@@ -204,13 +204,13 @@ void LoadPaletteWindowThemes(Palette_Info &palette)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 174
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 175
 
-    palette.colors.append( QColor::fromRgba( 0x9CCC65   ) );    // 176
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 176
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 177
-    palette.colors.append( QColor::fromRgba( 0x7CB342   ) );    // 178
-    palette.colors.append( QColor::fromRgba( 0x689F38   ) );    // 179
-    palette.colors.append( QColor::fromRgba( 0x558B2F   ) );    // 180
-    palette.colors.append( QColor::fromRgba( 0x33691E   ) );    // 181
-    palette.colors.append( QColor::fromRgba( 0xCCFF90   ) );    // 182
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 178
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 179
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 180
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 181
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 182
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 183
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 184
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 185
@@ -221,13 +221,13 @@ void LoadPaletteWindowThemes(Palette_Info &palette)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 190
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 191
 
-    palette.colors.append( QColor::fromRgba( 0xC0CA33   ) );    // 192
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 192
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 193
-    palette.colors.append( QColor::fromRgba( 0x9E9D24   ) );    // 194
-    palette.colors.append( QColor::fromRgba( 0x827717   ) );    // 195
-    palette.colors.append( QColor::fromRgba( 0xF4FF81   ) );    // 196
-    palette.colors.append( QColor::fromRgba( 0xEEFF41   ) );    // 197
-    palette.colors.append( QColor::fromRgba( 0xC6FF00   ) );    // 198
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 194
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 195
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 196
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 197
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 198
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 199
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 200
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 201
@@ -238,13 +238,13 @@ void LoadPaletteWindowThemes(Palette_Info &palette)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 206
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 207
 
-    palette.colors.append( QColor::fromRgba( 0xF9A825   ) );    // 208
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 208
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 209
-    palette.colors.append( QColor::fromRgba( 0xFFFF8D   ) );    // 210
-    palette.colors.append( QColor::fromRgba( 0xFFFF00   ) );    // 211
-    palette.colors.append( QColor::fromRgba( 0xFFEA00   ) );    // 212
-    palette.colors.append( QColor::fromRgba( 0xFFD600   ) );    // 213
-    palette.colors.append( QColor::fromRgba( 0xFFF8E1   ) );    // 214
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 210
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 211
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 212
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 213
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 214
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 215
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 216
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 217
@@ -254,15 +254,15 @@ void LoadPaletteWindowThemes(Palette_Info &palette)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 221
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 222
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 223
-    palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 224
 
-    palette.colors.append( QColor::fromRgba( 0xFFD740   ) );    // 225
-    palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 226
-    palette.colors.append( QColor::fromRgba( 0xFFAB00   ) );    // 227
-    palette.colors.append( QColor::fromRgba( 0xFFF3E0   ) );    // 228
-    palette.colors.append( QColor::fromRgba( 0xFFE0B2   ) );    // 229
-    palette.colors.append( QColor::fromRgba( 0xFFCC80   ) );    // 230
-    palette.colors.append( QColor::fromRgba( 0xFFB74D   ) );    // 231
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 224
+    palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 225
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 226
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 227
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 228
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 229
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 230
+    palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 231
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 232
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 233
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 234
@@ -272,13 +272,13 @@ void LoadPaletteWindowThemes(Palette_Info &palette)
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 238
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 239
 
-    palette.colors.append( QColor::fromRgba( 0xFF9100   ) );    // 240
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 240
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 241
-    palette.colors.append( QColor::fromRgba( 0xFBE9E7   ) );    // 242
-    palette.colors.append( QColor::fromRgba( 0xFFCCBC   ) );    // 243
-    palette.colors.append( QColor::fromRgba( 0xFFAB91   ) );    // 244
-    palette.colors.append( QColor::fromRgba( 0xFF8A65   ) );    // 245
-    palette.colors.append( QColor::fromRgba( 0xFF7043   ) );    // 246
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 242
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 243
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 244
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 245
+    palette.colors.append( QColor::fromRgba( 0x000000   ) );    // 246
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 247
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 248
     palette.colors.append( QColor::fromRgba( 0x00000000 ) );    // 249
