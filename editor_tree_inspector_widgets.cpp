@@ -282,7 +282,7 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
         size_policy.setHorizontalStretch(3);
         slider->setSizePolicy(size_policy);
         slider->setTickPosition(QSlider::TickPosition::NoTicks);
-        slider->setRange(0, 100);
+        slider->setRange( static_cast<int>(spin->minimum()), static_cast<int>(spin->maximum()) );
         slider->setValue(property->getValue().toInt());
         slider->setProperty(User_Property::Key, QVariant::fromValue( property_key ));       // Store property key within item
         slider->setProperty(User_Property::Order, 2);

@@ -246,20 +246,22 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         " QSlider::groove:horizontal { height: 4px; background: black; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; } "
         " QSlider::handle:horizontal {"
-        "       border: 1px solid; "
-        "       border-color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
+        "       border: 2px solid; "
+        "       border-color: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
         "       background: " +   Dr::GetColor(Window_Colors::Text).name() + "; "
-        "       width: 14px;"
-        "       margin: -6px 0; "                  // Expand outside the groove
+        "       width: 12px;"
+        "       margin: -6px 0; "                  // Expand outside the groove (ie "height")
         "       border-radius: 8px;"               // Turn into circle
         " } "
         " QSlider::handle:horizontal:hover {"
         "       background: " +   Dr::GetColor(Window_Colors::Highlight).name() + "; "
         " } "
-        " QSlider::add-page:horizontal { border-radius: 2px; margin: 0 2; border-top: 1px solid; "
-        "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; } "
-        " QSlider::sub-page:horizontal { border-radius: 2px; "
-        "       background: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; } "
+        " QSlider::add-page:horizontal { border-radius: 2px; border-top: 1px solid; margin: 0 2; "
+        "       background: " +   Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
+        "       border-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } "
+        " QSlider::sub-page:horizontal { border-radius: 2px; border-top: 1px solid; "
+        "       background: " +   Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
+        "       border-color: " + Dr::GetColor(Window_Colors::Icon_Light).name() + "; } "
 
         //###############################################################################
         //##    FormPopup Styling
