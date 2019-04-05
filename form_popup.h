@@ -46,7 +46,7 @@ private:
     QPoint           m_offset;                          // Adjustment to popup location from parent
 
 public:
-    FormPopup(DrProject *project, QWidget *widget_to_use_for_mapToGlobal, QWidget *parent, int x_offset = 0, int y_offset = 5);
+    FormPopup(QWidget *parent, DrProject *project, QWidget *widget_to_use_for_mapToGlobal, int x_offset = 0, int y_offset = 5);
 
     // Event Overrides
     virtual void focusOutEvent(QFocusEvent *event) override;
@@ -105,6 +105,27 @@ signals:
     void         colorGrabbed(QWidget *parent, QColor m_color);
 
 };
+
+
+//####################################################################################
+//##    ColorPopupPageButton
+//##        A little color box label that shows a color to pick
+//############################
+class ColorPopupPageButton : public QPushButton
+{
+    ColorPopup  *m_popup;               // ColorPopup form this button is installed on
+    QString      m_description;         // What to show I am in the info label
+    QString      m_text_before;         // Text info color box had before we changed it
+
+public:
+    explicit ColorPopupPageButton(QWidget *parent, ColorPopup *popup, QString description);
+    virtual ~ColorPopupPageButton() override;
+
+    // Event Overrides
+    virtual void enterEvent(QEvent *event) override;
+    virtual void leaveEvent(QEvent *event) override;
+};
+
 
 //####################################################################################
 //##    ColorSelecterButton

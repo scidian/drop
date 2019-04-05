@@ -110,7 +110,7 @@ void FormMain::buttonGroupGridClicked(int id)
     Buttons_Grid clicked = static_cast<Buttons_Grid>(id);
 
     if (clicked == Buttons_Grid::Snap_Options) {
-        FormPopup *popupGrid = new FormPopup(project, widgetGroupGrid, buttonsGroupGrid->button(id));
+        FormPopup *popupGrid = new FormPopup(buttonsGroupGrid->button(id), project, widgetGroupGrid);
         popupGrid->buildPopupGridSnap();
         popupGrid->show();
 

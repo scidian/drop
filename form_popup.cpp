@@ -20,7 +20,7 @@
 //####################################################################################
 //##        Constructor
 //####################################################################################
-FormPopup::FormPopup(DrProject *project, QWidget *widget_to_use_for_mapToGlobal, QWidget *parent, int x_offset, int y_offset)
+FormPopup::FormPopup(QWidget *parent, DrProject *project, QWidget *widget_to_use_for_mapToGlobal, int x_offset, int y_offset)
     : QWidget(parent), m_project(project), m_mapper(widget_to_use_for_mapToGlobal)
 {
     m_offset = QPoint(x_offset, y_offset);

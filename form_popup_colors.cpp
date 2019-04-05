@@ -17,7 +17,7 @@
 //##        Constructor
 //####################################################################################
 ColorPopup::ColorPopup(DrProject *project, QWidget *widget_to_use_for_mapToGlobal, QWidget *parent, int x_offset, int y_offset)
-    : FormPopup(project, widget_to_use_for_mapToGlobal, parent, x_offset, y_offset) { }
+    : FormPopup(parent, project, widget_to_use_for_mapToGlobal, x_offset, y_offset) { }
 
 
 //####################################################################################
@@ -33,34 +33,29 @@ void ColorPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
     this->setFixedSize(210, 310);    
 
     // ********* Buttons for changing pages in the QStackWidget
-    QPushButton *change0 = new QPushButton(getInnerWidget());
-    QPushButton *change1 = new QPushButton(getInnerWidget());
+    ColorPopupPageButton *change0 = new ColorPopupPageButton(getInnerWidget(), this, tr("Color Palette") );
+    change0->setObjectName("buttonColorPalette");
+    change0->setGeometry( 159, 7, 41, 28);
+    change0->setCheckable(true);
+
+    ColorPopupPageButton *change1 = new ColorPopupPageButton(getInnerWidget(), this, tr("Color History") );
+    change1->setObjectName("buttonColorHistory");
+    change1->setGeometry(159, 35, 41, 28);
+    change1->setCheckable(true);
 
     QButtonGroup *color_pages = new QButtonGroup();
     color_pages->setExclusive(true);
     color_pages->addButton(change0, 0);
     color_pages->addButton(change1, 1);
+    color_pages->button( Dr::GetPreference(Preferences::Color_Popup_Tab).toInt() )->setChecked(true);
 
-    change0->setCheckable(true);
-    change1->setCheckable(true);
-    if (Dr::GetPreference(Preferences::Color_Popup_Tab).toInt() == 0) change0->setChecked(true); else change0->setChecked(false);
-    if (Dr::GetPreference(Preferences::Color_Popup_Tab).toInt() == 1) change1->setChecked(true); else change1->setChecked(false);
-
-    change0->setGeometry( 159, 7, 41, 27);
-    change0->setObjectName("buttonColorPalette");
-    connect(change0, &QPushButton::clicked,  this, [this, change0, change1]() {
+    connect(change0, &QPushButton::clicked, this, [this, color_pages]() {
         m_palette_block->setCurrentIndex(0);
-        change0->raise();
-        change1->raise();
-    });
+        for (auto button : color_pages->buttons()) button->raise();     });
 
-    change1->setGeometry(159, 36, 41, 27);
-    change1->setObjectName("buttonColorHistory");
-    connect(change1, &QPushButton::clicked, this, [this, change0, change1]() {
+    connect(change1, &QPushButton::clicked, this, [this, color_pages]() {
         m_palette_block->setCurrentIndex(1);
-        change0->raise();
-        change1->raise();
-    });
+        for (auto button : color_pages->buttons()) button->raise();     });
 
 
     // ********** Widget for the first page, Material Palette
@@ -246,6 +241,26 @@ void ColorPopup::closeEvent(QCloseEvent *event)
 {
     Dr::SetPreference(Preferences::Color_Popup_Tab, m_palette_block->currentIndex());
     FormPopup::closeEvent(event);
+}
+
+
+
+//####################################################################################
+//##        ColorLabel Class Functions
+//####################################################################################
+ColorPopupPageButton::ColorPopupPageButton(QWidget *parent, ColorPopup *popup, QString description) :
+    QPushButton(parent), m_popup(popup), m_description(description)
+{
+    setAttribute(Qt::WA_Hover);
+}
+ColorPopupPageButton::~ColorPopupPageButton() { }
+
+void ColorPopupPageButton::enterEvent(QEvent *) {
+    m_text_before = m_popup->getColorLabel()->text();
+    m_popup->getColorLabel()->setText( m_description );
+}
+void ColorPopupPageButton::leaveEvent(QEvent *) {
+    m_popup->getColorLabel()->setText( m_text_before );
 }
 
 

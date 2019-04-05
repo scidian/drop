@@ -307,7 +307,7 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         + Dr::StyleSheetColorButton(Dr::GetColor(Window_Colors::Background_Dark),
                                     Dr::GetColor(Window_Colors::Background_Dark),
                                     Dr::GetColor(Window_Colors::Background_Dark), 3, 3, 3, 3, true, true, "#buttonColorPalette") +
-        " QPushButton#buttonColorPalette       { image: url(:/gui_misc/color_palette.png);   padding: 5px; } "
+        " QPushButton#buttonColorPalette       { image: url(:/gui_misc/color_palette.png);   padding: 5px; margin-bottom: 1px; } "
         " QPushButton#buttonColorPalette:hover { " +
         StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Light), Dr::GetColor(Window_Colors::Background_Light), 10, 92, true) + " }"
         " QPushButton#buttonColorPalette:pressed { padding-left: 5px; padding-right: 5px; padding-top: 6px; padding-bottom: 4px; " +
