@@ -23,13 +23,13 @@ ColorPopup::ColorPopup(DrProject *project, QWidget *widget_to_use_for_mapToGloba
 //####################################################################################
 void ColorPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
 {
-    QFont font;  font.setPointSize(Dr::FontSize());
+    // ***** Initialize form variables and settings
     m_wants_return_variable = wants_color;
+    m_start_color = start_color;
+    m_current_palette = Color_Palettes::Rocky_Rover;            // TEMP !!!!!
 
-    this->setFixedSize(210, 310);
+    this->setFixedSize(210, 310);    
 
-    // TEMP !!!!!
-    Color_Palettes palette = Color_Palettes::Rocky_Rover;
 
     // ********** Widget for the first page, Material Palette
     QWidget *first_page_widget = new QWidget();
@@ -38,29 +38,31 @@ void ColorPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
     layout->setAlignment(Qt::AlignCenter);
     layout->setSpacing(4);
 
-        QLabel *info_label = new QLabel();
-        info_label->setAlignment(Qt::AlignCenter);
-        info_label->setFixedSize(192, 20);
-        info_label->setFont( font );
-        setInfoLabelColor(info_label, start_color);
+        m_color_label = new QLabel();
+        m_color_label->setAlignment(Qt::AlignCenter);
+        m_color_label->setFixedSize(192, 20);
+            QFont font;
+            font.setPointSize(Dr::FontSize());
+            m_color_label->setFont( font );
+        setInfoLabelColor(start_color);
 
         // ***** Basic
-        QWidget *basic =       createColorBlock(palette, info_label,  0, 12,  1, 0, 11, 11, 0, 1, 1, Colors::Basic);
+        QWidget *basic =       createColorBlock( 0, 12,  1, 0, 11, 11, 0, 1, 1, Colors::Basic);
         layout->addWidget(basic);
 
         // ***** Grays
-        QWidget *grays =       createColorBlock(palette, info_label,  2, 12,  3, 0, 11, 11, 0, 1, 1, Colors::Grays);
+        QWidget *grays =       createColorBlock( 2, 12,  3, 0, 11, 11, 0, 1, 1, Colors::Grays);
         layout->addWidget(grays);
 
         // ***** Main Block of Colors
-        QWidget *main_colors = createColorBlock(palette, info_label, 32, 16, 16, 4, 11, 11, 0, 1, 1, Colors::Main);
+        QWidget *main_colors = createColorBlock(32, 16, 16, 4, 11, 11, 0, 1, 1, Colors::Main);
         layout->addWidget(main_colors);
 
         // ********** Accent Colors
         ///QWidget *accent_colors = CreateColorBlock(popup, wants_color, info_label, 42, 16, 4, 10, 11, 11, 0, 1, Colors::Accent);
         ///layout->addWidget(accent_colors);
 
-        layout->addWidget(info_label);
+        layout->addWidget(m_color_label);
 
 
     // ********** Widget for the second page, Material Palette
@@ -105,8 +107,8 @@ void ColorPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
 //####################################################################################
 //##        Creates a block group of color buttons from palette colors
 //####################################################################################
-QWidget* ColorPopup::createColorBlock(Color_Palettes palette, QLabel *info_label, int start_index, int columns, int rows, int mid_step,
-                                     int block_width, int block_height, int border, int x_spacing, int y_spacing, Colors type)
+QWidget* ColorPopup::createColorBlock(int start_index, int columns, int rows, int mid_step,
+                                      int block_width, int block_height, int border, int x_spacing, int y_spacing, Colors type)
 {
     QWidget *color_block = new QWidget();
 
@@ -116,10 +118,10 @@ QWidget* ColorPopup::createColorBlock(Color_Palettes palette, QLabel *info_label
     color_block->setContentsMargins(0, 0, 0, 0);
 
     // Figure out where in the array to start at, and how many to skip each column
-    if (type != Colors::Main) palette = Color_Palettes::Material;
-    if (palette != Color_Palettes::Material) {
+    if (type != Colors::Main) m_current_palette = Color_Palettes::Material;
+    if (m_current_palette != Color_Palettes::Material) {
         start_index = 0;
-        mid_step = 0;
+        mid_step =    0;
     }
     int color_index = start_index;
 
@@ -136,30 +138,38 @@ QWidget* ColorPopup::createColorBlock(Color_Palettes palette, QLabel *info_label
             if (type == Colors::Basic) {
                 color = Dr::GetColorFromPalette(Color_Palettes::Basic, color_index);
             } else {
-                if (palette == Color_Palettes::Material) {
-                    if (j < 10) color = Dr::GetColorFromPalette(palette, color_index);
-                    else        color = color.darker( 150 );
+                if (m_current_palette == Color_Palettes::Material) {
+                    if (j < 10) color = Dr::GetColorFromPalette(m_current_palette, color_index);
+                    else        {
+                        color = color.darker( 150 );
+                        color.setAlpha(255);
+                    }
                 } else {
-                    color = Dr::GetColorFromPalette(palette, color_index);
+                    color = Dr::GetColorFromPalette(m_current_palette, color_index);
                 }
             }
 
             // Increment counter
-            if (j < 10 || type == Colors::Basic || palette != Color_Palettes::Material) ++color_index;
+            if (j < 10 || type == Colors::Basic || m_current_palette != Color_Palettes::Material) ++color_index;
 
             // Skip this color if transparent
             if (color == Qt::transparent) continue;
 
             // Otherwise create a new color button
-            ColorSelecterButton *button = new ColorSelecterButton(color_block, this, m_wants_return_variable, info_label, color);
+            ColorSelecterButton *button = new ColorSelecterButton(color_block, this, color);
             button->setStyleSheet( createButtonStyleSheet(color, border) );
 
             if (!horizontal) button->setGeometry(i * (block_width + x_spacing) + 2, j * (block_height + y_spacing) + 2, block_width, block_height);
             else             button->setGeometry(j * (block_width + x_spacing) + 2, i * (block_height + y_spacing) + 2, block_width, block_height);
+
+            if (color == m_start_color) {
+                button->move( button->pos() - QPoint(1, 1) );
+                button->setFixedSize(13, 13);
+            }
         }
         color_index += mid_step;
 
-        if (color_index >= Dr::GetPaletteColorCount(palette)) break;
+        if (color_index >= Dr::GetPaletteColorCount(m_current_palette)) break;
     }
 
     return color_block;
@@ -168,21 +178,30 @@ QWidget* ColorPopup::createColorBlock(Color_Palettes palette, QLabel *info_label
 // Creates initial style sheet text for little color boxes
 QString ColorPopup::createButtonStyleSheet(QColor color, int border)
 {
-    return
-    "QPushButton {  "
-    "   border: " + QString::number(border) + "px solid; border-radius: 0px; "
-    "   border-color: " + color.darker(150).name() + "; "
-    "   background-color: " + color.name() + "; }"
-    "QPushButton::hover { "
-    "   border: " + QString::number(border + 2) + "px solid; border-radius: 3px; "
-    "   border-color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } ";
+    QString style;
+    if (color == m_start_color) {
+        style = "QPushButton {  "
+                "   border: " + QString::number(border + 2) + "px solid; border-radius: 2px; "
+                "   border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
+                "   background-color: " + color.name() + "; }";
+    } else {
+        style = "QPushButton {  "
+                "   border: " + QString::number(border) + "px solid; border-radius: 0px; "
+                "   border-color: " + color.darker(150).name() + "; "
+                "   background-color: " + color.name() + "; }";
+    }
+    style +=
+        "QPushButton::hover { "
+        "   border: " + QString::number(border + 2) + "px solid; border-radius: 3px; "
+        "   border-color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } ";
+    return style;
 }
 
 
 //####################################################################################
 //##        Updates the info label color and text
 //####################################################################################
-void ColorPopup::setInfoLabelColor(QLabel *label, QColor color)
+void ColorPopup::setInfoLabelColor(QColor color)
 {
     bool white = (color.red() < 160 && color.green() < 160 && color.blue() < 160);
     QString style =
@@ -191,11 +210,11 @@ void ColorPopup::setInfoLabelColor(QLabel *label, QColor color)
     style +=
         "   border: 1px solid; border-radius: 4px;"
         "   border-color: " + color.darker(200).name() + "; ";
-    label->setStyleSheet(style);
-    label->setText( color.name().toUpper() );
-    ///label->setText( "Red: " + QString::number(color.red()) +
-    ///             ", Blue: " + QString::number(color.blue()) +
-    ///            ", Green: " + QString::number(color.green()) );
+    m_color_label->setStyleSheet(style);
+    m_color_label->setText( color.name().toUpper() );
+    ///m_color_label->setText( "Red: " + QString::number(color.red()) +
+    ///                     ", Blue: " + QString::number(color.blue()) +
+    ///                     ", Green: " + QString::number(color.green()) );
 }
 
 
@@ -203,8 +222,8 @@ void ColorPopup::setInfoLabelColor(QLabel *label, QColor color)
 //####################################################################################
 //##        ColorLabel Class Functions
 //####################################################################################
-ColorSelecterButton::ColorSelecterButton(QWidget *parent, ColorPopup *popup, QWidget *wants_color, QLabel *info_label, QColor my_color) :
-    QPushButton(parent), m_popup(popup), m_widget(wants_color), m_info_label(info_label), m_color(my_color)
+ColorSelecterButton::ColorSelecterButton(QWidget *parent, ColorPopup *popup, QColor my_color) :
+    QPushButton(parent), m_popup(popup), m_color(my_color)
 {
     setAttribute(Qt::WA_Hover);
 }
@@ -212,22 +231,32 @@ ColorSelecterButton::~ColorSelecterButton() { }
 
 void ColorSelecterButton::enterEvent(QEvent *)
 {
+    if (m_color == m_popup->getStartColor()) {
+        this->move( this->pos() - QPoint(1, 1) );
+    } else {
+        this->move( this->pos() - QPoint(2, 2) );
+    }
+
     this->raise();
-    this->move( this->pos() - QPoint(2, 2) );
     this->setFixedSize(15, 15);
 
-    m_popup->setInfoLabelColor(m_info_label, m_color);
+    m_popup->setInfoLabelColor(m_color);
 }
 
 void ColorSelecterButton::leaveEvent(QEvent *)
 {
-    this->setFixedSize(11, 11);
-    this->move( this->pos() + QPoint(2, 2) );
+    if (m_color == m_popup->getStartColor()) {
+        this->setFixedSize(13, 13);
+        this->move( this->pos() + QPoint(1, 1) );
+    } else {
+        this->setFixedSize(11, 11);
+        this->move( this->pos() + QPoint(2, 2) );
+    }
 }
 
 void ColorSelecterButton::mouseReleaseEvent(QMouseEvent *)
 {
-    emit m_popup->colorGrabbed(m_widget, m_color);
+    emit m_popup->colorGrabbed( m_popup->getReturnWidget(), m_color );
     m_popup->close();
 }
 

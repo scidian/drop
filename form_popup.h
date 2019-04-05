@@ -75,16 +75,26 @@ class ColorPopup : public FormPopup
 
 private:
     QWidget         *m_wants_return_variable;           // A widget that wants something from this popup when its done
+    QColor           m_start_color;                     // Selected color when the color popup starts
+
+    Color_Palettes   m_current_palette;
+
+    QLabel          *m_color_label;
 
 public:
     ColorPopup(DrProject *project, QWidget *widget_to_use_for_mapToGlobal, QWidget *parent, int x_offset = 0, int y_offset = 5);
 
-    // ***** Color Popup
+    // Building Functions
     void         buildPopupColors(QWidget *wants_color, QColor start_color);
-    QWidget*     createColorBlock(Color_Palettes palette, QLabel *info_label, int start_index, int columns, int rows, int mid_step,
+    QWidget*     createColorBlock(int start_index, int columns, int rows, int mid_step,
                                   int block_width, int block_height, int border, int x_spacing, int y_spacing, Colors type);
     QString      createButtonStyleSheet(QColor color, int border);
-    void         setInfoLabelColor(QLabel *label, QColor color);
+    void         setInfoLabelColor(QColor color);
+
+    // Getters
+    QLabel*      getColorLabel()    { return m_color_label; }
+    QWidget*     getReturnWidget()  { return m_wants_return_variable; }
+    QColor       getStartColor()    { return m_start_color; }
 
 signals:
     void         colorGrabbed(QWidget *parent, QColor m_color);
@@ -98,12 +108,10 @@ signals:
 class ColorSelecterButton : public QPushButton
 {
     ColorPopup  *m_popup;               // ColorPopup form this button is installed on
-    QWidget     *m_widget;              // Widget that wants the color
-    QLabel      *m_info_label;          // Label that will temporarily show this color
     QColor       m_color;               // This label's color
 
 public:
-    explicit ColorSelecterButton(QWidget *parent, ColorPopup *popup, QWidget *wants_color, QLabel *info_label, QColor my_color);
+    explicit ColorSelecterButton(QWidget *parent, ColorPopup *popup, QColor my_color);
     virtual ~ColorSelecterButton() override;
 
     // Event Overrides
