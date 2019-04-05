@@ -9,6 +9,7 @@
 
 #include "colors.h"
 #include "enums.h"
+#include "globals.h"
 
 typedef std::map<Color_Scheme,   std::map<Window_Colors, QColor>> Color_Scheme_Map;
 typedef std::map<Color_Palettes, Palette_Info> Color_Palette_Map;
@@ -47,6 +48,36 @@ QColor          GetColorFromPalette(Color_Palettes palette, int color_index) {
 int             GetPaletteColorCount(Color_Palettes palette)                { return g_color_palettes[palette].number_of_colors; }
 QString         GetPaletteName(Color_Palettes palette)                      { return g_color_palettes[palette].name; }
 bool            GetPaletteShowInList(Color_Palettes palette)                { return g_color_palettes[palette].show_in_list; }
+
+
+//####################################################################################
+//##        Color History
+//####################################################################################
+void    AddToColorHistory(QColor color)
+{
+    // Load old color history list (up to 36 colors)
+    QList<QVariant> variant_list = Dr::GetPreference(Preferences::Color_Popup_History).toList();
+
+    // Creat new list and add color as first item
+    QList<QVariant> color_list;
+    color_list.append( color.rgba() );
+
+    // Add all the old colors skipping the lastest color
+    for (auto item : variant_list) {
+        QRgb rgba = QRgb(item.toUInt());
+        if (color.rgb() != rgba)
+            color_list.append( rgba );
+    }
+
+    // Make sure list is <= 36 items
+    while (color_list.count() > 36)
+        color_list.removeLast();
+
+    // Store new color list in preferences
+    QVariant colors;
+    colors.setValue( color_list );
+    Dr::SetPreference(Preferences::Color_Popup_History, colors);
+}
 
 
 //####################################################################################

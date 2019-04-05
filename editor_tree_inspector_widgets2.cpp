@@ -259,7 +259,7 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
 void TreeInspector::setButtonColorFromSystemDialog(QPushButton *button)
 {
     QColor old_color= QColor::fromRgba(button->property(User_Property::Color).toUInt());
-    QColor color =    QColorDialog::getColor(old_color, this, "Select Color", QColorDialog::ColorDialogOption::ShowAlphaChannel);
+    QColor color =    QColorDialog::getColor(old_color, this, "Select Color");    //, QColorDialog::ColorDialogOption::ShowAlphaChannel);
     ///QColor color = QColorDialog::getColor(old_color, this, "Select Color", QColorDialog::DontUseNativeDialog);   // Qt Implementation
     setButtonColor(button, color);
 }
@@ -270,6 +270,9 @@ void TreeInspector::setButtonColor(QWidget *button, QColor color)
     QPushButton *push = dynamic_cast<QPushButton*>(button);
     if (push && color.isValid()) {
         this->updateColorButton(push, color);
+
+        Dr::AddToColorHistory(color);
+
         this->updateSettingsFromNewValue(push->property(User_Property::Key).toInt(), color.rgba());
     }
 }

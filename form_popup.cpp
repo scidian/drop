@@ -39,10 +39,10 @@ FormPopup::FormPopup(DrProject *project, QWidget *widget_to_use_for_mapToGlobal,
     m_layout = new QVBoxLayout(this);
     m_layout->setContentsMargins(1, 15, 1, 1);
 
-        m_inner_stacked_widget = new QStackedWidget();
-        m_inner_stacked_widget->setObjectName(QStringLiteral("innerWidgetPopupBelow"));
+        m_inner_widget = new QWidget();
+        m_inner_widget->setObjectName(QStringLiteral("innerWidgetPopupBelow"));
 
-    m_layout->addWidget(m_inner_stacked_widget);
+    m_layout->addWidget(m_inner_widget);
 }
 
 // Makes sure this form is closed and deleted when it loses focus
@@ -139,8 +139,8 @@ void FormPopup::showEvent(QShowEvent *event)
             y = top_left.y() - m_offset.y() - this->geometry().height();
             m_below = false;
             m_layout->setContentsMargins(1, 1, 1, 15);
-            m_inner_stacked_widget->setObjectName(QStringLiteral("innerWidgetPopupAbove"));     // Change style sheet for new location
-            Dr::ApplyCustomStyleSheetFormatting(m_inner_stacked_widget);                        // Force style sheet to update
+            m_inner_widget->setObjectName(QStringLiteral("innerWidgetPopupAbove"));     // Change style sheet for new location
+            Dr::ApplyCustomStyleSheetFormatting(m_inner_widget);                        // Force style sheet to update
             Dr::ApplyPopupMask(this, 8, 8, m_below);
         }
     }

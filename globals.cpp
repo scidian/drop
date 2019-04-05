@@ -46,8 +46,12 @@ namespace Dr {
 
     // ########## Load saved preferences
     void LoadPreferences() {
+
+        // Program Color Scheme
         Dr::SetColorScheme(Color_Scheme::Dark);
 
+
+        // World Editor Options
         Dr::SetPreference(Preferences::World_Editor_Lock_Backgrounds,       false);
         Dr::SetPreference(Preferences::World_Editor_Show_Collision_Shapes,  false);
         Dr::SetPreference(Preferences::World_Editor_Show_Connections,       false);
@@ -58,6 +62,18 @@ namespace Dr {
         Dr::SetPreference(Preferences::World_Editor_Grid_On_Top,    false);
 
         Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, true);
+
+
+        // Stored Color History
+        ///QVariant colors;
+        ///colors.setValue( QList<QVariant> { qRgba(255, 0, 0, 255), qRgba(0, 0, 255, 255) } );
+        ///Dr::SetPreference(Preferences::Color_Popup_History, colors);
+        Dr::AddToColorHistory( Qt::red   );
+        Dr::AddToColorHistory( Qt::green );
+        Dr::AddToColorHistory( Qt::blue  );
+
+        Dr::SetPreference(Preferences::Color_Popup_Tab, 0);                 // int - 0 = Palette, 1 = History
+
     }
 
 

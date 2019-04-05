@@ -5,11 +5,13 @@
 //      Subclassed FormPopup used to allow color picking with sweet options
 //
 //
+#include <QButtonGroup>
+
 #include "editor_tree_inspector.h"
 #include "form_main.h"
 #include "form_popup.h"
 #include "globals.h"
-
+#include "library.h"
 
 //####################################################################################
 //##        Constructor
@@ -26,14 +28,43 @@ void ColorPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
     // ***** Initialize form variables and settings
     m_wants_return_variable = wants_color;
     m_start_color = start_color;
-    m_current_palette = Color_Palettes::Rocky_Rover;            // TEMP !!!!!
+    m_current_palette = Color_Palettes::Material;            // TEMP !!!!!
 
     this->setFixedSize(210, 310);    
 
+    // ********* Buttons for changing pages in the QStackWidget
+    QPushButton *change0 = new QPushButton(getInnerWidget());
+    QPushButton *change1 = new QPushButton(getInnerWidget());
+
+    QButtonGroup *color_pages = new QButtonGroup();
+    color_pages->setExclusive(true);
+    color_pages->addButton(change0, 0);
+    color_pages->addButton(change1, 1);
+
+    change0->setCheckable(true);
+    change1->setCheckable(true);
+    if (Dr::GetPreference(Preferences::Color_Popup_Tab).toInt() == 0) change0->setChecked(true); else change0->setChecked(false);
+    if (Dr::GetPreference(Preferences::Color_Popup_Tab).toInt() == 1) change1->setChecked(true); else change1->setChecked(false);
+
+    change0->setGeometry( 159, 7, 41, 27);
+    change0->setObjectName("buttonColorPalette");
+    connect(change0, &QPushButton::clicked,  this, [this, change0, change1]() {
+        m_palette_block->setCurrentIndex(0);
+        change0->raise();
+        change1->raise();
+    });
+
+    change1->setGeometry(159, 36, 41, 27);
+    change1->setObjectName("buttonColorHistory");
+    connect(change1, &QPushButton::clicked, this, [this, change0, change1]() {
+        m_palette_block->setCurrentIndex(1);
+        change0->raise();
+        change1->raise();
+    });
+
 
     // ********** Widget for the first page, Material Palette
-    QWidget *first_page_widget = new QWidget();
-    QVBoxLayout *layout = new QVBoxLayout(first_page_widget);
+    QVBoxLayout *layout = new QVBoxLayout( this->getInnerWidget()) ;
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setAlignment(Qt::AlignCenter);
     layout->setSpacing(4);
@@ -47,68 +78,39 @@ void ColorPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
         setInfoLabelColor(start_color);
 
         // ***** Basic
-        QWidget *basic =       createColorBlock( 0, 12,  1, 0, 11, 11, 0, 1, 1, Colors::Basic);
+        QWidget *basic =    createColorBlock(Colors::Basic, 0, 12,  1, 0, 11, 11, 0, 1, 1);
         layout->addWidget(basic);
 
         // ***** Grays
-        QWidget *grays =       createColorBlock( 2, 12,  3, 0, 11, 11, 0, 1, 1, Colors::Grays);
+        QWidget *grays =    createColorBlock(Colors::Grays, 2, 12,  3, 0, 11, 11, 0, 1, 1);
         layout->addWidget(grays);
 
         // ***** Main Block of Colors
-        QWidget *main_colors = createColorBlock(32, 16, 16, 4, 11, 11, 0, 1, 1, Colors::Main);
-        layout->addWidget(main_colors);
+        m_palette_block = new QStackedWidget();
+        m_palette_block->setFixedSize(195, 195);
+
+        QWidget *first_page =  createColorBlock(Colors::Main, 32, 16, 16, 4, 11, 11, 0, 1, 1);
+        QWidget *second_page = createColorBlock(Colors::History, 0, 6, 6, 0, 27, 27, 0, 5, 5);
+
+        m_palette_block->addWidget(first_page);
+        m_palette_block->addWidget(second_page);
+        m_palette_block->setCurrentIndex( Dr::GetPreference(Preferences::Color_Popup_Tab).toInt() );
+
+        layout->addWidget(m_palette_block);
 
         // ********** Accent Colors
         ///QWidget *accent_colors = CreateColorBlock(popup, wants_color, info_label, 42, 16, 4, 10, 11, 11, 0, 1, Colors::Accent);
         ///layout->addWidget(accent_colors);
 
         layout->addWidget(m_color_label);
-
-
-    // ********** Widget for the second page, Material Palette
-    QWidget *second_page_widget = new QWidget();
-    layout = new QVBoxLayout(second_page_widget);
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setAlignment(Qt::AlignCenter);
-    layout->setSpacing(4);
-
-        QLabel *test = new QLabel("test");
-        layout->addWidget(test);
-
-
-    getInnerStackedWidget()->addWidget(first_page_widget);
-    getInnerStackedWidget()->addWidget(second_page_widget);
-
-
-
-    // ********* Buttons for changing pages in the QStackWidget
-    QPushButton *change0 =  new QPushButton(getInnerStackedWidget());
-    QPushButton *change1 = new QPushButton(getInnerStackedWidget());
-
-    change0->setGeometry( 159, 7, 41, 25);
-    change0->setObjectName("buttonColorMaterial");
-    connect(change0, &QPushButton::clicked,  this, [this, change0, change1]() {
-        this->getInnerStackedWidget()->setCurrentIndex(0);
-        change0->raise();
-        change1->raise();
-    });
-
-    change1->setGeometry(159, 38, 41, 25);
-    change1->setObjectName("buttonColorMaterial");
-    connect(change1, &QPushButton::clicked, this, [this, change0, change1]() {
-        this->getInnerStackedWidget()->setCurrentIndex(1);
-        change0->raise();
-        change1->raise();
-    });
-
 }
 
 
 //####################################################################################
 //##        Creates a block group of color buttons from palette colors
 //####################################################################################
-QWidget* ColorPopup::createColorBlock(int start_index, int columns, int rows, int mid_step,
-                                      int block_width, int block_height, int border, int x_spacing, int y_spacing, Colors type)
+QWidget* ColorPopup::createColorBlock(Colors type, int start_index, int columns, int rows, int mid_step,
+                                      int block_width, int block_height, int border, int x_spacing, int y_spacing)
 {
     QWidget *color_block = new QWidget();
 
@@ -117,59 +119,79 @@ QWidget* ColorPopup::createColorBlock(int start_index, int columns, int rows, in
     color_block->setFixedSize(width, height);
     color_block->setContentsMargins(0, 0, 0, 0);
 
-    // Figure out where in the array to start at, and how many to skip each column
-    if (type != Colors::Main) m_current_palette = Color_Palettes::Material;
-    if (m_current_palette != Color_Palettes::Material) {
+    // If normal palette load, start index at 0, 0 extra color skipping on each loop
+    if (m_current_palette != Color_Palettes::Material && type == Colors::Main) {
         start_index = 0;
         mid_step =    0;
     }
     int color_index = start_index;
 
     // Figure out if we're drawing these top to bottom, or left to right
-    bool horizontal = (type == Colors::Basic || type == Colors::Grays);
+    bool horizontal = (type == Colors::Basic || type == Colors::Grays || type == Colors::History);
     int x = (horizontal) ? rows : columns;
     int y = (horizontal) ? columns : rows;
+
+    // Find color history if necessary
+    QList<QVariant> history;
+    if (type == Colors::History) {
+        history = Dr::GetPreference(Preferences::Color_Popup_History).toList();
+        if (history.count() < 1) return color_block;
+    }
 
     // Loop through array and make a grid of color labels
     QColor color;
     for (int i = 0; i < x; i++)  {
         for (int j = 0; j < y; j++) {
 
-            if (type == Colors::Basic) {
-                color = Dr::GetColorFromPalette(Color_Palettes::Basic, color_index);
+            if (m_current_palette != Color_Palettes::Material && type == Colors::Main) {
+                color = Dr::GetColorFromPalette(m_current_palette, color_index);
+                ++color_index;
             } else {
-                if (m_current_palette == Color_Palettes::Material) {
-                    if (j < 10) color = Dr::GetColorFromPalette(m_current_palette, color_index);
-                    else        {
+                switch (type) {
+                case Colors::Basic:
+                        color = Dr::GetColorFromPalette(Color_Palettes::Basic, color_index);
+                        ++color_index;
+                    break;
+                case Colors::Accent:
+                case Colors::Grays:
+                case Colors::Main:
+                    if (j < 10) {
+                        color = Dr::GetColorFromPalette(Color_Palettes::Material, color_index);
+                        ++color_index;
+                    } else {
                         color = color.darker( 150 );
-                        color.setAlpha(255);
+                        color.setAlphaF(1);
                     }
-                } else {
-                    color = Dr::GetColorFromPalette(m_current_palette, color_index);
+                    break;
+                case Colors::History:
+                    color = QColor::fromRgba( history.at(color_index).toUInt() );
+                    ++color_index;
+                    break;
                 }
             }
-
-            // Increment counter
-            if (j < 10 || type == Colors::Basic || m_current_palette != Color_Palettes::Material) ++color_index;
 
             // Skip this color if transparent
             if (color == Qt::transparent) continue;
 
             // Otherwise create a new color button
-            ColorSelecterButton *button = new ColorSelecterButton(color_block, this, color);
-            button->setStyleSheet( createButtonStyleSheet(color, border) );
-
+            ColorSelecterButton *button = new ColorSelecterButton(color_block, this, color, block_width, block_height);
             if (!horizontal) button->setGeometry(i * (block_width + x_spacing) + 2, j * (block_height + y_spacing) + 2, block_width, block_height);
             else             button->setGeometry(j * (block_width + x_spacing) + 2, i * (block_height + y_spacing) + 2, block_width, block_height);
 
-            if (color == m_start_color) {
+            if (color.rgb() == m_start_color.rgb()) {
                 button->move( button->pos() - QPoint(1, 1) );
-                button->setFixedSize(13, 13);
+                button->setFixedSize(block_width + 2, block_height + 2);
             }
+
+            button->setStyleSheet( createButtonStyleSheet(color, border) );
+
+            if (type == Colors::History) {  if (color_index >= history.count()) break;
+            } else {                        if (color_index >= Dr::GetPaletteColorCount(m_current_palette)) break;  }
         }
         color_index += mid_step;
 
-        if (color_index >= Dr::GetPaletteColorCount(m_current_palette)) break;
+        if (type == Colors::History) {      if (color_index >= history.count()) break;
+        } else {                            if (color_index >= Dr::GetPaletteColorCount(m_current_palette)) break;  }
     }
 
     return color_block;
@@ -179,7 +201,7 @@ QWidget* ColorPopup::createColorBlock(int start_index, int columns, int rows, in
 QString ColorPopup::createButtonStyleSheet(QColor color, int border)
 {
     QString style;
-    if (color == m_start_color) {
+    if (color.rgb() == m_start_color.rgb()) {
         style = "QPushButton {  "
                 "   border: " + QString::number(border + 2) + "px solid; border-radius: 2px; "
                 "   border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
@@ -187,7 +209,7 @@ QString ColorPopup::createButtonStyleSheet(QColor color, int border)
     } else {
         style = "QPushButton {  "
                 "   border: " + QString::number(border) + "px solid; border-radius: 0px; "
-                "   border-color: " + color.darker(150).name() + "; "
+                "   border-color: " + color.darker(175).name() + "; "
                 "   background-color: " + color.name() + "; }";
     }
     style +=
@@ -211,19 +233,27 @@ void ColorPopup::setInfoLabelColor(QColor color)
         "   border: 1px solid; border-radius: 4px;"
         "   border-color: " + color.darker(200).name() + "; ";
     m_color_label->setStyleSheet(style);
-    m_color_label->setText( color.name().toUpper() );
-    ///m_color_label->setText( "Red: " + QString::number(color.red()) +
-    ///                     ", Blue: " + QString::number(color.blue()) +
-    ///                     ", Green: " + QString::number(color.green()) );
+    QString text = color.name().toUpper();
+    ///text = "Red: " + QString::number(color.red()) + ", Blue: " + QString::number(color.blue()) + ", Green: " + QString::number(color.green());
+    m_color_label->setText( text );
 }
 
+
+//####################################################################################
+//##        On close, save current tab for later
+//####################################################################################
+void ColorPopup::closeEvent(QCloseEvent *event)
+{
+    Dr::SetPreference(Preferences::Color_Popup_Tab, m_palette_block->currentIndex());
+    FormPopup::closeEvent(event);
+}
 
 
 //####################################################################################
 //##        ColorLabel Class Functions
 //####################################################################################
-ColorSelecterButton::ColorSelecterButton(QWidget *parent, ColorPopup *popup, QColor my_color) :
-    QPushButton(parent), m_popup(popup), m_color(my_color)
+ColorSelecterButton::ColorSelecterButton(QWidget *parent, ColorPopup *popup, QColor my_color, int width, int height) :
+    QPushButton(parent), m_popup(popup), m_color(my_color), m_width(width), m_height(height)
 {
     setAttribute(Qt::WA_Hover);
 }
@@ -238,7 +268,7 @@ void ColorSelecterButton::enterEvent(QEvent *)
     }
 
     this->raise();
-    this->setFixedSize(15, 15);
+    this->setFixedSize(m_width + 4, m_height + 4);
 
     m_popup->setInfoLabelColor(m_color);
 }
@@ -246,16 +276,21 @@ void ColorSelecterButton::enterEvent(QEvent *)
 void ColorSelecterButton::leaveEvent(QEvent *)
 {
     if (m_color == m_popup->getStartColor()) {
-        this->setFixedSize(13, 13);
+        this->setFixedSize(m_width + 2, m_height + 2);
         this->move( this->pos() + QPoint(1, 1) );
     } else {
-        this->setFixedSize(11, 11);
+        this->setFixedSize(m_width, m_height);
         this->move( this->pos() + QPoint(2, 2) );
     }
 }
 
 void ColorSelecterButton::mouseReleaseEvent(QMouseEvent *)
 {
+//    Dr::SetLabelText(Label_Names::Label_1, "Red: " + QString::number(m_color.red()) +
+//                                        ", Blue: " + QString::number(m_color.blue()) +
+//                                       ", Green: " + QString::number(m_color.green()) +
+//                                       ", Alpha: " + QString::number(m_color.alpha()) );
+
     emit m_popup->colorGrabbed( m_popup->getReturnWidget(), m_color );
     m_popup->close();
 }

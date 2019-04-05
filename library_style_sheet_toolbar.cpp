@@ -11,7 +11,7 @@
 namespace Dr {
 
 
-//###############################################################################
+//################################################################################
 //##    Toolbar Style Sheet
 //################################################################################
 QString StyleSheetToolBar()
@@ -108,7 +108,9 @@ QString StyleSheetToolBar()
 }
 
 
-// Formatting for "Mode" toolbar buttons
+//################################################################################
+//##    Formatting for "Mode" toolbar buttons
+//################################################################################
 QString StyleSheetToolBarModeButton(QString button_name, QString icon_name, QString icon_faded_name) {
     return
     " QToolButton#" + button_name + " {                  border-radius: 4px; border: 1px solid;  "
@@ -126,7 +128,10 @@ QString StyleSheetToolBarModeButton(QString button_name, QString icon_name, QStr
     " QToolButton#" + button_name + ":hover:!checked {  image: url(:/toolbar_icons/" + icon_name + "); padding: 7px; } ";
 }
 
-// Formatting for normal toolbar buttons
+
+//################################################################################
+//##    Formatting for normal toolbar buttons
+//################################################################################
 QString StyleSheetToolBarButtons(QString button_name, QString icon_unchecked, QString icon_checked, QString icon_disabled,
                                  int padding, int tl, int tr, int bl, int br, bool checkable) {
     QString text =

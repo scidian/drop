@@ -28,8 +28,7 @@ void FormPopup::buildPopupGridSnap()
     this->setFixedWidth(width);
     this->setMinimumHeight(rect1.height() + rect2.height() + 42);
 
-    QWidget *first_page_widget = new QWidget();
-    QVBoxLayout *layout = new QVBoxLayout(first_page_widget);
+    QVBoxLayout *layout = new QVBoxLayout(m_inner_widget);
     layout->setContentsMargins(8, 0, 5, 0);
     layout->setAlignment(Qt::AlignVCenter);
     layout->setSpacing(10);
@@ -54,8 +53,6 @@ void FormPopup::buildPopupGridSnap()
 
         layout->addWidget(button1);
         layout->addWidget(button2);
-
-    m_inner_stacked_widget->addWidget(first_page_widget);
 }
 
 

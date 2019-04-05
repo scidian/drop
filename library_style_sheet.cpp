@@ -10,19 +10,25 @@
 
 namespace Dr {
 
-
 //####################################################################################
 //##        Apply palette / coloring / styling to children widgets
 //####################################################################################
 void ApplyCustomStyleSheetFormatting(QWidget *widget)
 {
     QString style_sheet = QString(
-        // Some custom class coloring
+
+        //################################################################################
+        //##    Misc Styling
+        //################################################################################
+        // Example of some custom class coloring
         " .ColorSplitter {   background: " + Dr::GetColor(Window_Colors::Seperator).name() + "; }"
 
         // Main window background and seperator
         " QMainWindow { background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }" +
         " QMainWindow::separator { border: 1px solid " + Dr::GetColor(Window_Colors::Seperator).name() + "; }"
+
+        // For all scrollable QWidgets, ::corner removes right botttom little box that appears when there are two scrollbars
+        " QWidget::corner { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } " ///transparent; } "
 
         // Shared Empty Widgets
         " QWidget#widgetCentral { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
@@ -53,7 +59,31 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         " QSplitter::handle:vertical { image: url(:/gui_misc/splitter_v.png); } "
         " QSplitter::handle:horizontal { image: url(:/gui_misc/splitter_h.png); } "
 
-        // Scroll bars, used mostly in QGraphicsView
+        // DrView display area
+        " QGraphicsView { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
+
+        // Bottom label area
+        " QScrollArea { " //border-left: 2px solid; border-right: 1px solid; "
+        "   border-color: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
+        "   background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
+
+        // Mostly debug labels
+        " QLabel { color: " + Dr::GetColor(Window_Colors::Text).name() + "; padding: 0px; margin: 0px; border: 0px; } "
+
+        // Generic Push Buttons
+        " QPushButton#button { "
+        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
+        "       border-top: 1 solid; border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
+        "       border-radius: 4px; padding: 6px; }"
+        " QPushButton#button:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Midlight).name() + "; }"
+        " QPushButton#button:pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
+
+        //################################################################################
+        //##    Scroll bars, used mostly in QGraphicsView
+        //################################################################################
         " QScrollBar:vertical { width: 10px; margin: 0px; border-radius: 0px; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
         " QScrollBar::handle:vertical { margin: 2px; border-radius: 3px; "
@@ -72,10 +102,9 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         " QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; } "
         " QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal { width: 0px; } "
 
-        // For all scrollable QWidgets, ::corner removes right botttom little box that appears when there are two scrollbars
-        " QWidget::corner { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } " ///transparent; } "
-
-        // Asset, Stage, Inspector Trees
+        //################################################################################
+        //##    Asset, Stage, Inspector Trees
+        //################################################################################
         " QTreeWidget { icon-size: 14px 14px; }"
         " QTreeWidget { color: " + Dr::GetColor(Window_Colors::Text).name() + ";  "
         "               background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }"
@@ -100,6 +129,17 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         "       background-color: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
         "       border: 0px; } "
 
+        //################################################################################
+        //##    Dock Widgets - Stacked Dock TabBars
+        //################################################################################
+        " QDockWidget { font-size: " + QString::number(Dr::FontSize()) + "px; font: bold; "
+        "               color: " + Dr::GetColor(Window_Colors::Text).name() + "; } "
+        " QDockWidget::title { "
+        "       text-align: center; "
+        "       background: qlineargradient(x1:0 y1:0, x2:0 y2:1, "
+        "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Light).name() + ", "
+        "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
+
         // Tab bar that appears when you stack multiple DockWidgets
         " QTabBar { "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; } "
@@ -114,38 +154,9 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         "       padding-top: 2px; padding-bottom: 3px; padding-left: 4px; padding-right: 4px; "
         "       font-size: " + QString::number(Dr::FontSize()) + "px; } "
 
-        // Dock Widgets
-        " QDockWidget { font-size: " + QString::number(Dr::FontSize()) + "px; font: bold; "
-        "               color: " + Dr::GetColor(Window_Colors::Text).name() + "; } "
-        " QDockWidget::title { "
-        "       text-align: center; "
-        "       background: qlineargradient(x1:0 y1:0, x2:0 y2:1, "
-        "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Light).name() + ", "
-        "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
-
-        // DrView display area
-        " QGraphicsView { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
-
-        // Bottom label area
-        " QScrollArea { " //border-left: 2px solid; border-right: 1px solid; "
-        "   border-color: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
-        "   background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
-
-        // Mostly debug labels
-        " QLabel { color: " + Dr::GetColor(Window_Colors::Text).name() + "; padding: 0px; margin: 0px; border: 0px; } "
-
-        // Generic Push Buttons
-        " QPushButton#button { "
-        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
-        "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
-        "       border-top: 1 solid; border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
-        "       border-radius: 4px; padding: 6px; }"
-        " QPushButton#button:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
-        "       background: " + Dr::GetColor(Window_Colors::Midlight).name() + "; }"
-        " QPushButton#button:pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
-        "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
-
-        // Asset Item Frames
+        //################################################################################
+        //##    Asset Tree - Item Frames, Search Bar
+        //################################################################################
         " QFrame#assetFrame { border: " + Dr::BorderWidth() + " solid; " + StyleSheetRecessedBackgroundBorder(5, 95) +
         "       margin-top: 2px; margin-bottom: 2px; margin-left: 5px; margin-right: 0px; "
         "       border-radius: 6px; } "
@@ -162,7 +173,7 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         "       padding: 2 2 3 22; } "
 
 
-        //###############################################################################
+        //################################################################################
         //##    StatusBar
         //################################################################################
         " QFrame#statusBar { "
@@ -171,8 +182,8 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         "       border-bottom: 1 solid " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
 
 
-        //###############################################################################
-        //##    Inspector Widgets
+        //################################################################################
+        //##    Inspector Widgets - Spinboxes, LineEdits, Pushbutton Menus, Sliders
         //################################################################################
         // Check boxes, mostly in object inspector
         " QCheckBox#checkInspector::indicator { height: 22px; width: 32px; }"
@@ -263,7 +274,7 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         "       background: " +   Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
         "       border-color: " + Dr::GetColor(Window_Colors::Icon_Light).name() + "; } "
 
-        //###############################################################################
+        //################################################################################
         //##    FormPopup Styling
         //################################################################################
         // Popup menu RadioButton list
@@ -286,20 +297,34 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         + Dr::StyleSheetColorButton(Dr::GetColor(Window_Colors::Background_Dark),
                                     Dr::GetColor(Window_Colors::Background_Dark),
                                     Dr::GetColor(Window_Colors::Background_Dark), 0, 4, 0, 4, false, true, "#buttonColorDialog") +
-        " QPushButton#buttonColorDialog       { image: url(:/gui_misc/color_wheel.png);   padding: 2px; } "
+        " QPushButton#buttonColorDialog       { image: url(:/gui_misc/color_wheel.png);   padding: 3px; } "
         " QPushButton#buttonColorDialog:hover { " +
         StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Light), Dr::GetColor(Window_Colors::Background_Light), 10, 92, true) + " }"
-        " QPushButton#buttonColorDialog:pressed { padding-left: 2px; padding-right: 2px; padding-top: 3px; padding-bottom: 1px; " +
+        " QPushButton#buttonColorDialog:pressed { padding-left: 3px; padding-right: 3px; padding-top: 4px; padding-bottom: 2px; " +
         StyleSheetRecessedBackgroundBorder(10, 92, false) + " }"
 
-
+        // Color popup Palette button
         + Dr::StyleSheetColorButton(Dr::GetColor(Window_Colors::Background_Dark),
                                     Dr::GetColor(Window_Colors::Background_Dark),
-                                    Dr::GetColor(Window_Colors::Background_Dark), 3, 3, 3, 3, true, true, "#buttonColorMaterial") +
-        " QPushButton#buttonColorMaterial       { image: url(:/gui_misc/color_wheel.png);   padding: 3px; } "
-        " QPushButton#buttonColorMaterial:hover { " +
+                                    Dr::GetColor(Window_Colors::Background_Dark), 3, 3, 3, 3, true, true, "#buttonColorPalette") +
+        " QPushButton#buttonColorPalette       { image: url(:/gui_misc/color_palette.png);   padding: 5px; } "
+        " QPushButton#buttonColorPalette:hover { " +
         StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Light), Dr::GetColor(Window_Colors::Background_Light), 10, 92, true) + " }"
-        " QPushButton#buttonColorMaterial:pressed { padding-left: 3px; padding-right: 3px; padding-top: 4px; padding-bottom: 2px; " +
+        " QPushButton#buttonColorPalette:pressed { padding-left: 5px; padding-right: 5px; padding-top: 6px; padding-bottom: 4px; " +
+        StyleSheetRecessedBackgroundBorder(10, 92, false) + " }"
+        " QPushButton#buttonColorPalette:checked { padding-left: 5px; padding-right: 5px; padding-top: 6px; padding-bottom: 4px; " +
+        StyleSheetRecessedBackgroundBorder(10, 92, false) + " }"
+
+        // Color popup History button
+        + Dr::StyleSheetColorButton(Dr::GetColor(Window_Colors::Background_Dark),
+                                    Dr::GetColor(Window_Colors::Background_Dark),
+                                    Dr::GetColor(Window_Colors::Background_Dark), 3, 3, 3, 3, true, true, "#buttonColorHistory") +
+        " QPushButton#buttonColorHistory       { image: url(:/gui_misc/color_history.png);   padding: 5px; } "
+        " QPushButton#buttonColorHistory:hover { " +
+        StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Light), Dr::GetColor(Window_Colors::Background_Light), 10, 92, true) + " }"
+        " QPushButton#buttonColorHistory:pressed { padding-left: 5px; padding-right: 5px; padding-top: 6px; padding-bottom: 4px; " +
+        StyleSheetRecessedBackgroundBorder(10, 92, false) + " }"
+        " QPushButton#buttonColorHistory:checked { padding-left: 5px; padding-right: 5px; padding-top: 6px; padding-bottom: 4px; " +
         StyleSheetRecessedBackgroundBorder(10, 92, false) + " }"
 
 
@@ -312,7 +337,9 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
 }
 
 
-// Cool sunken box kinda look
+//################################################################################
+//##    Cool sunken box kinda look
+//################################################################################
 QString StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_percent, bool highlight) {
     QString top1 = QString::number(double(top_percent)        / 100.0);
     QString top2 = QString::number(double(top_percent + 1)    / 100.0);
@@ -339,8 +366,9 @@ QString StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_percent, 
                                         Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + "; ";
 }
 
-
-// Cool popped out box kinda look
+//################################################################################
+//##    Cool popped out box kinda look
+//################################################################################
 QString StyleSheetPoppedOutBackgroundBorder(QColor background_color, QColor border_color, int top_percent, int bottom_percent, bool highlight) {
     QString top1 = QString::number(double(top_percent)        / 100.0);
     QString top2 = QString::number(double(top_percent + 1)    / 100.0);
@@ -360,7 +388,9 @@ QString StyleSheetPoppedOutBackgroundBorder(QColor background_color, QColor bord
            "          border-bottom-color: " +  border_color.darker(150).name() + "; ";
 }
 
-// Generates the style sheet for use with Color, Color Dropper and Color Dialog buttons
+//################################################################################
+//##    Generates the style sheet for use with Color, Color Dropper and Color Dialog buttons
+//################################################################################
 QString StyleSheetColorButton(QColor color, QColor text_color, QColor highlight,
                               int tl_radius, int tr_radius, int bl_radius, int br_radius,
                               bool left_border, bool right_border, QString name)
@@ -409,9 +439,6 @@ QString StyleSheetColorButton(QColor color, QColor text_color, QColor highlight,
 
 
 }   // namespace Dr
-
-
-
 
 
 

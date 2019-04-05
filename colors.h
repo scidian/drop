@@ -70,6 +70,8 @@ namespace Dr {
 
     QColor          GetRandomColor();
 
+    void            AddToColorHistory(QColor color);
+
     /**
      * Doxygen comments, type slash star star enter, brief shows a mouse mover popup for the described function in the editor
      *

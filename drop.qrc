@@ -89,5 +89,7 @@
         <file>toolbar_icons/toolbar_rotate_r_gray.png</file>
         <file>gui_misc/dropper.png</file>
         <file>gui_misc/color_wheel.png</file>
+        <file>gui_misc/color_palette.png</file>
+        <file>gui_misc/color_history.png</file>
     </qresource>
 </RCC>

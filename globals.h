@@ -21,7 +21,6 @@ class IEditorRelay;
 //############################
 enum class Preferences
 {
-
     World_Editor_Lock_Backgrounds,                  // bool
     World_Editor_Show_Collision_Shapes,             // bool
     World_Editor_Show_Connections,                  // bool
@@ -32,6 +31,9 @@ enum class Preferences
     World_Editor_Grid_On_Top,                       // bool
 
     World_Editor_Snap_To_Center_Of_Selection_Box,   // bool
+
+    Color_Popup_History,                            // QList<QVariant> (QVariant = qRgba = unsigned int)
+    Color_Popup_Tab,                                // int - 0 = Palette, 1 = History
 };
 
 
