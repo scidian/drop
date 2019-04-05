@@ -35,11 +35,13 @@ void ColorPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
     // ********* Buttons for changing pages in the QStackWidget
     ColorPopupPageButton *change0 = new ColorPopupPageButton(getInnerWidget(), this, tr("Color Palette") );
     change0->setObjectName("buttonColorPalette");
+    change0->setToolTip(tr("Color Palette"));
     change0->setGeometry( 159, 7, 41, 28);
     change0->setCheckable(true);
 
     ColorPopupPageButton *change1 = new ColorPopupPageButton(getInnerWidget(), this, tr("Color History") );
     change1->setObjectName("buttonColorHistory");
+    change1->setToolTip(tr("Color History"));
     change1->setGeometry(159, 35, 41, 28);
     change1->setCheckable(true);
 
@@ -229,7 +231,6 @@ void ColorPopup::setInfoLabelColor(QColor color)
         "   border-color: " + color.darker(200).name() + "; ";
     m_color_label->setStyleSheet(style);
     QString text = color.name().toUpper();
-    ///text = "Red: " + QString::number(color.red()) + ", Blue: " + QString::number(color.blue()) + ", Green: " + QString::number(color.green());
     m_color_label->setText( text );
 }
 
@@ -271,6 +272,7 @@ ColorSelecterButton::ColorSelecterButton(QWidget *parent, ColorPopup *popup, QCo
     QPushButton(parent), m_popup(popup), m_color(my_color), m_width(width), m_height(height)
 {
     setAttribute(Qt::WA_Hover);
+    ///setToolTip("R: " + QString::number(m_color.red()) + ", B: " + QString::number(m_color.blue()) + ", G: " + QString::number(m_color.green()));
 }
 ColorSelecterButton::~ColorSelecterButton() { }
 
@@ -301,11 +303,6 @@ void ColorSelecterButton::leaveEvent(QEvent *)
 
 void ColorSelecterButton::mouseReleaseEvent(QMouseEvent *)
 {
-//    Dr::SetLabelText(Label_Names::Label_1, "Red: " + QString::number(m_color.red()) +
-//                                        ", Blue: " + QString::number(m_color.blue()) +
-//                                       ", Green: " + QString::number(m_color.green()) +
-//                                       ", Alpha: " + QString::number(m_color.alpha()) );
-
     emit m_popup->colorGrabbed( m_popup->getReturnWidget(), m_color );
     m_popup->close();
 }

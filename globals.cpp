@@ -50,7 +50,6 @@ namespace Dr {
         // Program Color Scheme
         Dr::SetColorScheme(Color_Scheme::Dark);
 
-
         // World Editor Options
         Dr::SetPreference(Preferences::World_Editor_Lock_Backgrounds,       false);
         Dr::SetPreference(Preferences::World_Editor_Show_Collision_Shapes,  false);

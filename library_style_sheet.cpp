@@ -20,6 +20,12 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         //################################################################################
         //##    Misc Styling
         //################################################################################
+        // Tool tip
+        " QToolTip { border: 1px solid; "
+        "       border-color: " +     Dr::GetColor(Window_Colors::Shadow).name() + "; "
+        "       color: " +            Dr::GetColor(Window_Colors::Text).name() + "; "
+        "       background-color: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
+
         // Example of some custom class coloring
         " .ColorSplitter {   background: " + Dr::GetColor(Window_Colors::Seperator).name() + "; }"
 
