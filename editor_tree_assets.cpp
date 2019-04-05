@@ -48,6 +48,8 @@ TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor
     m_search_widget = new QWidget(parent);
     m_search_widget->setFixedHeight(30);
     m_search_widget->setObjectName(QStringLiteral("assetSearchWidget"));
+    m_widget_hover->attachToHoverHandler(m_search_widget, Advisor_Info::Asset_Search);
+    m_search_widget->setToolTip( Advisor_Info::Asset_Search[0] );
         m_search_layout = new QVBoxLayout(m_search_widget);
         m_search_layout->setMargin(4);
             m_search_bar = new QLineEdit();

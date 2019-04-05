@@ -235,6 +235,7 @@ QToolButton* FormMain::createToolbarButton(const QString &style_sheet_name, Head
         tool->setCheckable(true);
         tool->setChecked(false);
     }
+    tool->setToolTip( advisor_text[0] );
     tool->setEnabled(enabled);
     tool->setFixedSize(w, h);
     m_widget_hover->attachToHoverHandler(tool, advisor_text);

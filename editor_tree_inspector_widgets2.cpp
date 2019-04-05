@@ -216,6 +216,7 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
         // This is the button that shows the color and color name, clicking it opens a color popup menu
         QPushButton *color_button = new QPushButton();
         color_button->setObjectName(QStringLiteral("buttonColorBox"));
+        color_button->setToolTip( Advisor_Info::ColorButton[0] );
         color_button->setFont(font);
         color_button->setSizePolicy(size_policy);
         color_button->setProperty(User_Property::Key,   QVariant::fromValue( property_key ));
@@ -233,6 +234,7 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
         // This is the color that shows the color picker dropper, clicking it starts the color magnifier
         QPushButton *picker_button = new QPushButton();
         picker_button->setObjectName(QStringLiteral("buttonColorPicker"));
+        picker_button->setToolTip( Advisor_Info::ColorPicker[0] );
         picker_button->setFixedSize(25, 20 + Dr::BorderWidthAsInt() * 2);           // Height has to include border thickness
         connect(picker_button, &QPushButton::pressed, this, [this, picker_button, color_button]() {
             FormColorMagnifier *picker = new FormColorMagnifier(color_button, QCursor::pos(), 115, 115, 8);
@@ -246,6 +248,7 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
         // This is the button that shows the color wheel, clicking it opens the system color dialog
         QPushButton *dialog_button = new QPushButton();
         dialog_button->setObjectName(QStringLiteral("buttonColorDialog"));
+        dialog_button->setToolTip( Advisor_Info::ColorDialog[0] );
         dialog_button->setFixedSize(25, 20 + Dr::BorderWidthAsInt() * 2);           // Height has to include border thickness
         connect(dialog_button, &QPushButton::clicked, [this, color_button] () {
             this->setButtonColorFromSystemDialog(color_button);
@@ -269,10 +272,9 @@ void TreeInspector::setButtonColor(QWidget *button, QColor color)
 {
     QPushButton *push = dynamic_cast<QPushButton*>(button);
     if (push && color.isValid()) {
+        ///Dr::AddToColorHistory( QColor::fromRgba( button->property(User_Property::Color).toUInt() ));
+        Dr::AddToColorHistory( color );
         this->updateColorButton(push, color);
-
-        Dr::AddToColorHistory(color);
-
         this->updateSettingsFromNewValue(push->property(User_Property::Key).toInt(), color.rgba());
     }
 }

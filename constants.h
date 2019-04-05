@@ -83,7 +83,7 @@ namespace Advisor_Info
     const HeaderBodyList Object_Send_to_Front   { "Send to Font",  "Send selected item(s) to the front." };
     const HeaderBodyList Object_Send_Backward   { "Send Backward", "Send selected item(s) back by one." };
     const HeaderBodyList Object_Send_Forward    { "Send Forward",  "Send selected item(s) forward by one." };
-    const HeaderBodyList Object_Reset           { "Reset Object Transform", "Resets selected objects transforms to a Scale of X:1, Y:1 and Rotation of "
+    const HeaderBodyList Object_Reset           { "Reset Transform", "Resets selected objects' transforms to a Scale of X:1, Y:1 and Rotation of "
                                                                             "0 Degrees." };
     const HeaderBodyList Object_Flip_H          { "Flip Horizontal", "Flips the selection horizontally." };
     const HeaderBodyList Object_Flip_V          { "Flip Vertical",   "Flips the selection vertically." };
@@ -111,6 +111,7 @@ namespace Advisor_Info
     // Editor Widgets
     const HeaderBodyList Asset_List             { "Asset List", "These are items that can be dragged into your project. Changing the properties "
                                                                 "of these items will affect all instances of those items project wide." };
+    const HeaderBodyList Asset_Search           { "Asset Search", "Type the name of an asset here to help find it in the Asset List." };
     const HeaderBodyList Stage_View             { "Stage View", "Shows objects and layout of currently selected Stage. Drop assets into Stage "
                                                                 "View to add to Stage." };
     const HeaderBodyList Project_Tree           { "Project Tree", "Lists the items contained within the currently displayed Stage. Select items "
