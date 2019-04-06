@@ -145,9 +145,6 @@ bool ClickAndDragWindow::eventFilter(QObject *obj, QEvent *event)
         m_press_pos = mouse_event->pos();
         m_is_moving = true;
 
-    } else if (event->type() == QEvent::MouseButtonPress) {
-        m_is_moving = true;
-
     } else if (event->type() == QEvent::MouseMove) {
         if (m_is_moving) {
             QMouseEvent *mouse_event = dynamic_cast<QMouseEvent*>(event);

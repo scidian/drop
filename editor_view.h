@@ -229,7 +229,7 @@ public:
     // Getters / Setters
     View_Mode       currentViewMode() { return m_view_mode; }
     QString         currentViewModeAsString();
-    int             currentZoomLevel() { return m_zoom; }
+    double          currentZoomLevel() { return m_zoom_scale; }
     bool            hasShownAScene() const { return m_flag_has_shown_a_scene_yet; }
     void            setHasShownAScene(bool has) { m_flag_has_shown_a_scene_yet = has; }
     void            spaceBarDown();

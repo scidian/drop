@@ -129,7 +129,8 @@ void TreeAssets::buildAssetTree(QString search_text)
         // ***** Store current asset key in widget and install a mouse handler event filter on the item, AssetMouseHandler
         QFrame *single_asset = new QFrame();
         single_asset->setObjectName("assetFrame");
-        single_asset->setProperty(User_Property::Key,   QVariant::fromValue( asset_pair.second->getKey() ));
+        single_asset->setProperty(User_Property::Key,        QVariant::fromValue( asset_pair.second->getKey() ));
+        single_asset->setProperty(User_Property::Mouse_Down, false);
         single_asset->installEventFilter(new AssetMouseHandler(single_asset, m_editor_relay));
         single_asset->setFixedSize(frame_size);
 

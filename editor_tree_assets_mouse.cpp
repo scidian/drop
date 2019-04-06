@@ -5,22 +5,28 @@
 //
 //
 //
+#include <QApplication>
+#include <QDrag>
 #include <QEvent>
+#include <QMimeData>
+#include <QMouseEvent>
 #include <QTimer>
 
 #include "constants.h"
 #include "editor_tree_assets.h"
 #include "enums.h"
 #include "globals.h"
+#include "image_filter_color.h"
 #include "interface_editor_relay.h"
 #include "library.h"
 #include "project.h"
 #include "project_asset.h"
-
+#include "project_font.h"
+#include "settings.h"
+#include "settings_component_property.h"
 
 //####################################################################################
-//##    AssetMouseHandler Class Functions
-//##        eventFilter - handles mouse click on asset, loads object inspector for clicked asset
+//##    AssetMouseHandler Constructor
 //####################################################################################
 AssetMouseHandler::AssetMouseHandler(QObject *parent, IEditorRelay *editor_relay) : QObject(parent), m_editor_relay(editor_relay)
 {
@@ -30,32 +36,59 @@ AssetMouseHandler::AssetMouseHandler(QObject *parent, IEditorRelay *editor_relay
     connect(m_timer, SIGNAL(timeout()), SLOT(startScroll()));
 }
 
+
+//####################################################################################
+//##    eventFilter - handles mouse click on asset,
+//##                  loads object inspector for clicked asset,
+//##                  starts drag and drop event
+//####################################################################################
 bool AssetMouseHandler::eventFilter(QObject *object, QEvent *event)
 {
-    if (!object) return false;
+    // Grab the frame and get some properties from it
     QWidget *asset_frame =  dynamic_cast<QWidget*>(object);
-    QLabel  *label =        asset_frame->findChild<QLabel*>("assetName");
+    if (!asset_frame) return false;
+    QLabel  *label_name =   asset_frame->findChild<QLabel*>("assetName");
+    QLabel  *label_pixmap = asset_frame->findChild<QLabel*>("assetPixmap");
     long     asset_key =    asset_frame->property(User_Property::Key).toLongLong();
 
-    if (event->type() == QEvent::MouseButtonPress)
-    {
+    // On mouse down, update the object inspector, prepare for drag and drop
+    if (event->type() == QEvent::MouseButtonPress) {
         m_editor_relay->buildObjectInspector( { asset_key } );
 
+        QMouseEvent *mouse_event = dynamic_cast<QMouseEvent*>(event);
+        asset_frame->setProperty(User_Property::Mouse_Down,     true);
+        asset_frame->setProperty(User_Property::Mouse_Down_Pos, mouse_event->pos());
+
+    } else if (event->type() == QEvent::MouseButtonRelease) {
+        asset_frame->setProperty(User_Property::Mouse_Down, false);
+
+    // Start drag and drop if necessary
+    } else if (event->type() == QEvent::MouseMove) {
+
+        if (asset_frame->property(User_Property::Mouse_Down).toBool() == true) {
+            QMouseEvent *mouse_event = dynamic_cast<QMouseEvent*>(event);
+
+            QPoint distance = mouse_event->pos() - asset_frame->property(User_Property::Mouse_Down_Pos).toPoint();
+            if (distance.manhattanLength() > 2) {
+                QPoint mouse_in_label = label_pixmap->mapFromParent( mouse_event->pos() );
+                startDragAndDrop( mouse_in_label, label_pixmap, asset_key);
+            }
+        }
 
     // Start scrolling name if name is too wide to be shown
     } else if (event->type() == QEvent::HoverEnter) {
         DrSettings  *asset = m_editor_relay->currentProject()->findSettingsFromKey(asset_key);
         QString asset_name = asset->getComponentPropertyValue(Components::Asset_Settings, Properties::Asset_Name).toString();
 
-        if (asset_name != label->text()) {
+        if (asset_name != label_name->text()) {
             if (scrolling_mutex.tryLock()) {
                 m_flag_scrolling =  true;
                 m_position =        0;
                 m_scroll_text =     asset_name + "     ";
-                m_scroll_width =    Dr::CheckFontWidth(label->font(), m_scroll_text);
-                m_starting_rect =   label->geometry();
-                m_starting_text =   label->text();
-                m_label_to_scroll = label;
+                m_scroll_width =    Dr::CheckFontWidth(label_name->font(), m_scroll_text);
+                m_starting_rect =   label_name->geometry();
+                m_starting_text =   label_name->text();
+                m_label_to_scroll = label_name;
                 m_timer->start();
             }
         }
@@ -67,16 +100,18 @@ bool AssetMouseHandler::eventFilter(QObject *object, QEvent *event)
         m_flag_scrolling = false;
         m_timer->stop();
         if (scrolling_mutex.tryLock() == false) {
-            label->setGeometry( m_starting_rect );
-            label->setText( m_starting_text );
+            label_name->setGeometry( m_starting_rect );
+            label_name->setText( m_starting_text );
         }
         scrolling_mutex.unlock();
     }
 
-
     return QObject::eventFilter(object, event);
 }
 
+//####################################################################################
+//##    Asset Name Label Scrolling for long names
+//####################################################################################
 void AssetMouseHandler::startScroll() { this->handleScroll(m_label_to_scroll, true); }
 
 void AssetMouseHandler::handleScroll(QLabel *label, bool first_time)
@@ -98,6 +133,79 @@ void AssetMouseHandler::handleScroll(QLabel *label, bool first_time)
     // Fire off new call to this function after time has passed
     QTimer::singleShot( 35, this, [this, label] { this->handleScroll(label, false); } );
 }
+
+
+//####################################################################################
+//##    Drag and Drop start for Asset
+//####################################################################################
+void AssetMouseHandler::startDragAndDrop(QPoint mouse_pos, QLabel *label_pixmap, long asset_key)
+{
+    // Get asset from project
+    DrAsset *asset = m_editor_relay->currentProject()->getAsset(asset_key);
+
+    // Pull pixmap of asset and scale based on current view zoom level
+    QPixmap pre_pixmap = *label_pixmap->pixmap();
+    QPixmap pixmap;
+    switch (asset->getAssetType()) {
+    case DrAssetType::Character:
+    case DrAssetType::Object:
+        pixmap = asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
+        break;
+    case DrAssetType::Text:
+        ///pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->getFontPixmap();
+        pixmap = m_editor_relay->currentProject()->getDrFont( asset->getSourceKey() )->createText( "Text" );
+        break;
+    }
+    int scaled_x = static_cast<int>( pixmap.width() *  m_editor_relay->currentViewZoom() );
+    int scaled_y = static_cast<int>( pixmap.height() * m_editor_relay->currentViewZoom() );
+    if (scaled_x <= 5) scaled_x = 5;
+    if (scaled_y <= 5) scaled_y = 5;
+    pixmap = pixmap.scaled(scaled_x, scaled_y, Qt::AspectRatioMode::KeepAspectRatio, Qt::TransformationMode::SmoothTransformation);
+
+    // Calculate hot spot, find mouse coordinates relative to scaled pixmap shown in asset pixmap label
+    int label_pixmap_left = (label_pixmap->width()  / 2) - (label_pixmap->pixmap()->width()  / 2);
+    int label_pixmap_top =  (label_pixmap->height() / 2) - (label_pixmap->pixmap()->height() / 2);
+    double ratio_x = double(pixmap.width())  / double(label_pixmap->pixmap()->width());
+    double ratio_y = double(pixmap.height()) / double(label_pixmap->pixmap()->height());
+    int mouse_x = static_cast<int>( (mouse_pos.x() - label_pixmap_left) * ratio_x );
+    int mouse_y = static_cast<int>( (mouse_pos.y() - label_pixmap_top ) * ratio_y );
+    mouse_x = Dr::Clamp(mouse_x, 1, pixmap.width() -  1);
+    mouse_y = Dr::Clamp(mouse_y, 1, pixmap.height() - 1);
+    QPoint hot_spot = QPoint( mouse_x, mouse_y );
+
+    // Create item data for QDrag event
+    QByteArray itemData;
+    QDataStream dataStream(&itemData, QIODevice::WriteOnly);
+    dataStream << hot_spot << QVariant::fromValue(asset_key);
+    QMimeData *mimeData = new QMimeData;
+    mimeData->setData("application/x-drop-asset-data", itemData);
+
+    // Create drag object
+    QDrag *drag = new QDrag(label_pixmap);
+    drag->setMimeData(mimeData);
+    drag->setPixmap(pixmap);
+    drag->setHotSpot(hot_spot);
+
+    // Execute drag command
+    QPixmap temp_pixmap = DrFilter::changeBrightness(pre_pixmap, -80);
+    label_pixmap->setPixmap(temp_pixmap);
+    drag->exec(Qt::CopyAction, Qt::CopyAction);
+    label_pixmap->setPixmap(pre_pixmap);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

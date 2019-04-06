@@ -25,7 +25,7 @@ private:
     DrProject       *m_parent_project;                  // Holds reference to parent Project class that handles key generation for project
 
     DrAssetType      m_asset_type;                      // Holds asset type (object, character, etc)
-    long             m_source_key;                      // Holds key to source image / font
+    long             m_source_key;                      // Holds key to source (ie. and asset pulls from an DrImage, DrFont, etc)
 
     long             m_width;
     long             m_height;

@@ -147,6 +147,7 @@ public:
     virtual double      currentViewGridAngle() override;
     virtual QPointF     currentViewGridScale() override;
     virtual View_Mode   currentViewMode() override;
+    virtual double      currentViewZoom() override;
     virtual QPointF     roundPointToGrid(QPointF point_in_scene) override;
 
 public slots:

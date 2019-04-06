@@ -40,6 +40,7 @@ public:
     virtual double      currentViewGridAngle() = 0;
     virtual QPointF     currentViewGridScale() = 0;
     virtual View_Mode   currentViewMode() = 0;
+    virtual double      currentViewZoom() = 0;
     virtual QPointF     roundPointToGrid(QPointF point_in_scene) = 0;
 
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) = 0;

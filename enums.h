@@ -105,14 +105,18 @@ enum class Position_Flags {
 //##    Custom QStrings for storing data in QWidgets using setProperty
 //############################
 namespace User_Property {
-    const char Key[7] = "dr_key";                   // Stores Object Key in User Property of widget
-    const char Color[9] = "dr_color";               // Stores a color value (QColor.rgba())
-    const char Order[9] = "dr_order";               // Used for properties with mulitple values (like Size has X and Y),
+    const char Key[7] =         "dr_key";           // Stores Object Key in User Property of widget
+    const char Color[9] =       "dr_color";         // Stores a color value (QColor.rgba())
+    const char Order[9] =       "dr_order";         // Used for properties with mulitple values (like Size has X and Y),
                                                     //      the index of the single property we want (0, 1, 2, etc)
-    const char Header[10] = "dr_header";            // Used for Advisor Text
-    const char Body[8] = "dr_body";                 // Used for Advisor Text
-    const char Mouse_Over[14] = "dr_mouse_over";    // Set to true by WidgetHoverHandler when mouse is over widget
-    const char Mouse_Pos[13] = "dr_mouse_pos";      // Set to mouse position (QPoint) by WidgetHoverHandler when mouse is moving over widget
+
+    const char Header[10] =     "dr_header";        // Used for Advisor Text
+    const char Body[8] =        "dr_body";          // Used for Advisor Text
+
+    const char Mouse_Over[14] =     "dr_mouse_over";        // Set to true by WidgetHoverHandler when mouse is over widget
+    const char Mouse_Pos[13] =      "dr_mouse_pos";         // Set to mouse position (QPoint) by WidgetHoverHandler when mouse is moving over widget
+    const char Mouse_Down[14] =     "dr_mouse_down";        // Set to true when mouse is down so we can prepare for a drag event (used for DrAssets)
+    const char Mouse_Down_Pos[18] = "dr_mouse_down_pos";    // Set to mouse position when mouse button is first pressed (used for DrAssets)
 }
 
 
