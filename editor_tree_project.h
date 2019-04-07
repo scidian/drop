@@ -36,6 +36,7 @@ private:
     long            m_selected_key = c_no_key;          // Holds first selected item in QTreeWidget (treeProject)
     bool            m_allow_selection_event = true;     // When false, stops selectionChanged event from propagating changes to editor
 
+    QStringList     m_drag_formats;
     bool            m_is_dragging;                      // Set to true when we are dragging
     bool            m_can_drop;
     int             m_mouse_x;
@@ -53,7 +54,6 @@ public:
     void                        updateSelectionFromView(QList<QGraphicsItem*> item_list);
 
     // Event Overrides, start at Qt Docs for QTreeWidget Class to find more
-    virtual bool    eventFilter(QObject *obj, QEvent *event) override;                                             // Inherited from QObject
     virtual void    enterEvent(QEvent *event) override;                                                            // Inherited from QWidget
     virtual void    dragMoveEvent(QDragMoveEvent *event) override;                                                 // Inherited from QAbstractItemView
     virtual void    dropEvent(QDropEvent *event) override;                                                         // Inherited from QTreeWidget

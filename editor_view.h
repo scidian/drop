@@ -163,11 +163,12 @@ public:
     explicit DrView(QWidget *parent, DrProject *project, DrScene *from_scene, IEditorRelay *editor_relay);
     virtual ~DrView() override;
 
-    // Event Overrides, start at Qt Docs for QGraphicsView Class to find more
+    // Event Overrides - Paint
     virtual void    drawBackground(QPainter *painter, const QRectF &rect) override;
     virtual void    drawForeground(QPainter *painter, const QRectF &rect) override;
     virtual void    paintEvent(QPaintEvent *event) override;                                // Inherited from QWidget
 
+    // Event Overrides - Input
     virtual void    scrollContentsBy(int dx, int dy) override;                              // Inherited from QAbstractScrollArea
     virtual void    keyPressEvent(QKeyEvent *event) override;                               // Inherited from QWidget
     virtual void    keyReleaseEvent(QKeyEvent *event) override;                             // Inherited from QWidget
@@ -179,6 +180,12 @@ public:
     virtual void    wheelEvent(QWheelEvent *event) override;                                // Inherited from QWidget
 #endif
     virtual void    resizeEvent(QResizeEvent *event) override;                              // Inherited from QWidget
+
+    // Event Overrides - Drag / Drop
+    virtual void    dragEnterEvent(QDragEnterEvent *event) override;
+    virtual void    dragLeaveEvent(QDragLeaveEvent *event) override;
+    virtual void    dragMoveEvent(QDragMoveEvent *event) override;
+    virtual void    dropEvent(QDropEvent *event) override;
 
 
     // View Display Functions

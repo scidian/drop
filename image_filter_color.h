@@ -21,6 +21,8 @@ enum class Filter_Type
     Hue,
     Grayscale,
     Negative,
+
+    Opacity,
 };
 
 
@@ -37,6 +39,7 @@ namespace DrFilter
     QPixmap changeToGrayscale(const QPixmap& pixmap);
     QPixmap changeToNegative(const QPixmap& pixmap);
 
+    QPixmap changeOpacity(const QPixmap& pixmap, int opacity);
 }
 
 #endif // IMAGE_FILTER_COLOR_H

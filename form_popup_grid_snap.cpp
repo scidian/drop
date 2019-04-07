@@ -25,19 +25,18 @@ void FormPopup::buildPopupGridSnap()
     QRect rect1 = font_metrics.boundingRect( option1 );
     QRect rect2 = font_metrics.boundingRect( option2 );
     int width = (rect1.width() > rect2.width()) ? rect1.width() + 50 : rect2.width() + 50;
-    this->setFixedWidth(width);
-    this->setMinimumHeight(rect1.height() + rect2.height() + 42);
+    this->setMinimumWidth(width);
+    this->setMinimumHeight( (rect1.height() * 2) + 40);
 
     QVBoxLayout *layout = new QVBoxLayout(m_inner_widget);
     layout->setContentsMargins(8, 0, 5, 0);
-    layout->setAlignment(Qt::AlignVCenter);
-    layout->setSpacing(10);
+    layout->setSpacing(0);
 
         QRadioButton *button1 = new QRadioButton(option1);  button1->setObjectName(QStringLiteral("popupRadio"));
         QRadioButton *button2 = new QRadioButton(option2);  button2->setObjectName(QStringLiteral("popupRadio"));
 
-        button1->setFont(font);
-        button2->setFont(font);
+        button1->setFont(font); button1->setFixedHeight( rect1.height() );
+        button2->setFont(font); button2->setFixedHeight( rect1.height() );
 
         button1->setChecked( Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool());
         button2->setChecked(!Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool());

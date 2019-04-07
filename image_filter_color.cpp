@@ -66,6 +66,15 @@ QPixmap changeToNegative(const QPixmap& pixmap)
 }
 
 
+
+// Added this to change opacity for drag events
+QPixmap changeOpacity(const QPixmap& pixmap, int opacity)
+{
+    QImage image = applySinglePixelFilter( Filter_Type::Opacity, pixmap.toImage(), opacity);
+    return QPixmap::fromImage( image );
+}
+
+
 //####################################################################################
 //##        Loops through image and changes one pixel at a time based on a
 //##        premultiplied table
@@ -126,6 +135,9 @@ QImage applySinglePixelFilter( Filter_Type filter, const QImage& from_image, int
                         break;
                     case Filter_Type::Negative:
                         color.setRgbF(1.0 - color.redF(), 1.0 - color.greenF(), 1.0 - color.blueF(), color.alphaF());
+                        break;
+                    case Filter_Type::Opacity:
+                        color.setAlpha( Dr::Clamp(color.alpha() + value, 0, 255) );
                         break;
                     }
 

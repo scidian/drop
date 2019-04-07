@@ -156,6 +156,7 @@ void AssetMouseHandler::startDragAndDrop(QPoint mouse_pos, QLabel *label_pixmap,
         pixmap = m_editor_relay->currentProject()->getDrFont( asset->getSourceKey() )->createText( "Text" );
         break;
     }
+    pixmap = DrFilter::changeOpacity(pixmap, -96);
     int scaled_x = static_cast<int>( pixmap.width() *  m_editor_relay->currentViewZoom() );
     int scaled_y = static_cast<int>( pixmap.height() * m_editor_relay->currentViewZoom() );
     if (scaled_x <= 5) scaled_x = 5;
@@ -174,20 +175,21 @@ void AssetMouseHandler::startDragAndDrop(QPoint mouse_pos, QLabel *label_pixmap,
     QPoint hot_spot = QPoint( mouse_x, mouse_y );
 
     // Create item data for QDrag event
-    QByteArray itemData;
-    QDataStream dataStream(&itemData, QIODevice::WriteOnly);
-    dataStream << hot_spot << QVariant::fromValue(asset_key);
-    QMimeData *mimeData = new QMimeData;
-    mimeData->setData("application/x-drop-asset-data", itemData);
+    QByteArray item_data;
+    QDataStream data_stream(&item_data, QIODevice::WriteOnly);
+    QPoint relative_center = pixmap.rect().center() - hot_spot;             // Helps place asset into scene at mouse position
+    data_stream << relative_center << QVariant::fromValue(asset_key);
+    QMimeData *mime_data = new QMimeData;
+    mime_data->setData("application/x-drop-asset-data", item_data);
 
     // Create drag object
     QDrag *drag = new QDrag(label_pixmap);
-    drag->setMimeData(mimeData);
+    drag->setMimeData(mime_data);
     drag->setPixmap(pixmap);
     drag->setHotSpot(hot_spot);
 
     // Execute drag command
-    QPixmap temp_pixmap = DrFilter::changeBrightness(pre_pixmap, -80);
+    QPixmap temp_pixmap = DrFilter::changeOpacity(pre_pixmap, -128);
     label_pixmap->setPixmap(temp_pixmap);
     drag->exec(Qt::CopyAction, Qt::CopyAction);
     label_pixmap->setPixmap(pre_pixmap);

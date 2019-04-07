@@ -95,7 +95,9 @@ SOURCES += \
     colors_palette_material.cpp \
     colors_palette_window_themes.cpp \
     colors_palette_rocky_rover.cpp \
-    colors_palette_blank.cpp
+    colors_palette_blank.cpp \
+    editor_view_drag_drop.cpp \
+    editor_tree_project_drag_drop.cpp
 
 HEADERS += \
     enums.h \
