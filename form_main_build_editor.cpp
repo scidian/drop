@@ -123,6 +123,7 @@ void FormMain::buildWidgetsEditor()
                         // ***** Load our DrView to display our DrScene collection of items
                         viewEditor = new DrView(widgetStageView, project, sceneEditor, this);
                         viewEditor->setObjectName(QStringLiteral("viewEditor"));
+                        viewEditor->setAcceptDrops(true);
                         viewEditor->setFrameShape(QFrame::NoFrame);
                         viewEditor->setDragMode(QGraphicsView::DragMode::NoDrag);
                         viewEditor->setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);

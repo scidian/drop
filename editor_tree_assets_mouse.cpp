@@ -6,6 +6,7 @@
 //
 //
 #include <QApplication>
+#include <QGuiApplication>
 #include <QDrag>
 #include <QEvent>
 #include <QMimeData>
@@ -70,8 +71,7 @@ bool AssetMouseHandler::eventFilter(QObject *object, QEvent *event)
 
             QPoint distance = mouse_event->pos() - asset_frame->property(User_Property::Mouse_Down_Pos).toPoint();
             if (distance.manhattanLength() > 2) {
-                QPoint mouse_in_label = label_pixmap->mapFromParent( mouse_event->pos() );
-                startDragAndDrop( mouse_in_label, label_pixmap, asset_key);
+                startDragAndDrop(label_pixmap, asset_key);
             }
         }
 
@@ -138,7 +138,7 @@ void AssetMouseHandler::handleScroll(QLabel *label, bool first_time)
 //####################################################################################
 //##    Drag and Drop start for Asset
 //####################################################################################
-void AssetMouseHandler::startDragAndDrop(QPoint mouse_pos, QLabel *label_pixmap, long asset_key)
+void AssetMouseHandler::startDragAndDrop(QLabel *label_pixmap, long asset_key)
 {
     // Get asset from project
     DrAsset *asset = m_editor_relay->currentProject()->getAsset(asset_key);
@@ -159,25 +159,17 @@ void AssetMouseHandler::startDragAndDrop(QPoint mouse_pos, QLabel *label_pixmap,
     pixmap = DrFilter::changeOpacity(pixmap, -96);
     int scaled_x = static_cast<int>( pixmap.width() *  m_editor_relay->currentViewZoom() );
     int scaled_y = static_cast<int>( pixmap.height() * m_editor_relay->currentViewZoom() );
-    if (scaled_x <= 5) scaled_x = 5;
-    if (scaled_y <= 5) scaled_y = 5;
+    scaled_x = Dr::Clamp(scaled_x, 5, QGuiApplication::screenAt( QCursor::pos() )->geometry().width()  * 1);
+    scaled_y = Dr::Clamp(scaled_y, 5, QGuiApplication::screenAt( QCursor::pos() )->geometry().height() * 1);
     pixmap = pixmap.scaled(scaled_x, scaled_y, Qt::AspectRatioMode::KeepAspectRatio, Qt::TransformationMode::SmoothTransformation);
 
-    // Calculate hot spot, find mouse coordinates relative to scaled pixmap shown in asset pixmap label
-    int label_pixmap_left = (label_pixmap->width()  / 2) - (label_pixmap->pixmap()->width()  / 2);
-    int label_pixmap_top =  (label_pixmap->height() / 2) - (label_pixmap->pixmap()->height() / 2);
-    double ratio_x = double(pixmap.width())  / double(label_pixmap->pixmap()->width());
-    double ratio_y = double(pixmap.height()) / double(label_pixmap->pixmap()->height());
-    int mouse_x = static_cast<int>( (mouse_pos.x() - label_pixmap_left) * ratio_x );
-    int mouse_y = static_cast<int>( (mouse_pos.y() - label_pixmap_top ) * ratio_y );
-    mouse_x = Dr::Clamp(mouse_x, 1, pixmap.width() -  1);
-    mouse_y = Dr::Clamp(mouse_y, 1, pixmap.height() - 1);
-    QPoint hot_spot = QPoint( mouse_x, mouse_y );
+    // Use center of pixmap as the hot spot
+    QPoint hot_spot = pixmap.rect().center();
 
     // Create item data for QDrag event
     QByteArray item_data;
     QDataStream data_stream(&item_data, QIODevice::WriteOnly);
-    QPoint relative_center = pixmap.rect().center() - hot_spot;             // Helps place asset into scene at mouse position
+    QPoint relative_center = pixmap.rect().center() - hot_spot + QPoint(0, 1);          // Helps place asset into scene at mouse position
     data_stream << relative_center << QVariant::fromValue(asset_key);
     QMimeData *mime_data = new QMimeData;
     mime_data->setData("application/x-drop-asset-data", item_data);
