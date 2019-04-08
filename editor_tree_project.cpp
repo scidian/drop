@@ -60,9 +60,9 @@ void TreeProject::buildProjectTree()
                 QTreeWidgetItem *object_item = new QTreeWidgetItem(stage_item);                             // Create new item and add as child item
                 switch (object->getObjectType()) {
                     case DrObjectType::Object:    object_item->setIcon(0, QIcon(":/tree_icons/tree_object.png")); break;
-                    case DrObjectType::Camera:    object_item->setIcon(0, QIcon(":/tree_icons/tree_camera.png")); break;
-                    case DrObjectType::Character: object_item->setIcon(0, QIcon(":/tree_icons/tree_character.png")); break;
-                    default: break;
+
+                    ///case DrObjectType::Camera:    object_item->setIcon(0, QIcon(":/tree_icons/tree_camera.png")); break;
+                    ///case DrObjectType::Character: object_item->setIcon(0, QIcon(":/tree_icons/tree_character.png")); break;
                 }
 
                 object_item->setText(0, object->getComponentPropertyValue(

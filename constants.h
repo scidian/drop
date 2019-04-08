@@ -20,7 +20,6 @@
 namespace Component_Colors
 {
     const QColor White_Snow     { QColor(255, 252, 249, 255) };
-    const QColor Silver_Sonic   { QColor(117, 112, 131, 255) };
 
     const QColor Orange_Medium  { QColor(221, 110,  66, 255) };
 

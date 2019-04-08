@@ -57,14 +57,14 @@ public:
     void            setDrItem(DrItem *item)     { m_item_in_scene = item; }
 
     // Function calls
-    void initializeObjectSettings(QString new_name);
-    void initializeCameraSettings();
-    void initializeCharacterSettings();
-    void initializeTextSettings();
+    void addComponentSettingsObject(QString new_name);
+    void addComponentSettingsCamera(QString new_name);
+    void addComponentSettingsCharacter(QString new_name);
+    void addComponentSettingsText(QString new_name);
 
-    void initializeComponentAppearance();
-    void initializeComponentMovement();
-    void initializeComponentTransform(double width, double height, double x, double y, long z);
+    void addComponentAppearance();
+    void addComponentMovement();
+    void addComponentTransform(double width, double height, double x, double y, long z);
 
 };
 

@@ -47,20 +47,24 @@ enum class DrType {
 
 // ################## Sub Types ####################
 enum class DrAssetType {
-    Character,
     Object,
     Text,
+
+    //Character,
+    //Action
+    //Logic
 };
 
 enum class DrObjectType {
     Object,
-    Character,
-    Camera,
-    Action,
-    Light,
-    Logic,
-    Particle,
     Text,
+
+    //Character,
+    //Action,
+    //Camera,
+    //Light,
+    //Logic,
+    //Particle,
 };
 
 
@@ -186,13 +190,14 @@ enum class Components
     Stage_Grid,
 
     Object_Settings,
+    Object_Settings_Camera,
+    Object_Settings_Character,
+    Object_Settings_Text,
+
     Object_Transform,
     Object_Layering,
     Object_Movement,
     Object_Appearance,
-
-    Object_Camera_Settings,
-    Object_Character_Settings,
 };
 
 enum class Properties
@@ -274,12 +279,15 @@ enum class Properties
 
     // *****
 
-    // Camera Settings
-    Object_Camera_Zoom,             //double
-
     // Character Settings
     Object_Character_Jump_X,        //double
     Object_Character_Jump_Y,        //double
+
+    // Text Settings
+    Object_Text_User_Text,          //string
+
+    // Camera Settings
+    Object_Camera_Zoom,             //double
 };
 
 

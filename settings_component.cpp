@@ -5,6 +5,7 @@
 //      DrComponent Class Definitions
 //
 //
+#include "library.h"
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
@@ -28,19 +29,27 @@ DrComponent::DrComponent(DrSettings *parent_settings,
     m_turned_on = new_turned_on;
 }
 
-DrComponent::~DrComponent()
-{
+DrComponent::~DrComponent() {
     for (auto i: m_properties) { delete i.second; }
 }
 
 
 
 //####################################################################################
-//##    setProperty functions
+//##    Get / Set Property
 //####################################################################################
 void DrComponent::setProperty(long setting, QVariant value) { m_properties[setting]->setValue(value); }
 void DrComponent::setProperty(Properties setting, QVariant value) { m_properties[static_cast<int>(setting)]->setValue(value); }
 
+DrProperty* DrComponent::getProperty(long setting) {
+    if (m_properties.at(setting) == nullptr)
+        Dr::ShowMessageBox("Did not have property, Type: " + Dr::StringFromType(this->m_parent_settings->getType()) );
+    return m_properties[setting];
+}
+
+DrProperty* DrComponent::getProperty(Properties setting) {
+    return getProperty(static_cast<long>(setting));
+}
 
 
 //####################################################################################
@@ -52,8 +61,7 @@ void DrComponent::addProperty(Properties setting,
                               QString display_name,
                               QString description,
                               bool is_hidden,
-                              bool is_editable)
-{
+                              bool is_editable) {
     DrProperty *prop = new DrProperty(m_parent_settings, this, display_name, description, type, value, static_cast<int>(setting), is_hidden, is_editable);
     m_properties[static_cast<int>(setting)] = prop;
 }

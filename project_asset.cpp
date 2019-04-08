@@ -35,7 +35,6 @@ DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_
     QPixmap my_starting_pixmap;
     switch (new_asset_type) {
     case DrAssetType::Object:
-    case DrAssetType::Character:
         my_starting_pixmap = m_parent_project->getDrImage(source_key)->getPixmapFromImage();
         initializeAssetSettingsObject(m_parent_project->getDrImage(source_key)->getSimplifiedName(), my_starting_pixmap );
         break;

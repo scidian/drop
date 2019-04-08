@@ -49,14 +49,14 @@ DrObject* DrStage::addObject(DrObjectType new_type, long from_asset_key, double 
 {
     QString new_name;
     switch (new_type) {
-    case DrObjectType::Camera:        "Camera " + QString::number(static_cast<long>(m_objects.size() + 1));       break;
-    case DrObjectType::Action:
-    case DrObjectType::Character:
     case DrObjectType::Object:
+    case DrObjectType::Text:
         new_name = m_parent_project->getAsset(from_asset_key)->getComponentProperty(Components::Asset_Settings, Properties::Asset_Name)->getValue().toString();
         break;
-    default:
-        new_name = "Fix me";
+
+    ///case DrObjectType::Camera:
+    ///    "Camera " + QString::number(static_cast<long>(m_objects.size() + 1));
+    ///    break;
     }
 
     long new_object_key = m_parent_project->getNextKey();

@@ -55,8 +55,8 @@ public:
     DrSettings* getParentSettings() { return m_parent_settings; }
 
     PropertyMap getPropertyList() { return m_properties; }
-    DrProperty* getProperty(long setting) { return m_properties[setting]; }
-    DrProperty* getProperty(Properties setting) { return m_properties[static_cast<int>(setting)]; }
+    DrProperty* getProperty(long setting);
+    DrProperty* getProperty(Properties setting);
 
     void setProperty(long setting, QVariant value);
     void setProperty(Properties setting, QVariant value);

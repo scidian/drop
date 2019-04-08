@@ -16,6 +16,8 @@
 #include "interface_editor_relay.h"
 #include "library.h"
 #include "project.h"
+#include "project_asset.h"
+#include "project_font.h"
 #include "project_world.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
@@ -177,7 +179,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
     double  angle     = object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Rotation).toDouble();
     double  pre_angle = item->data(User_Roles::Rotation).toDouble();
     double  transform_scale_x, transform_scale_y;
-
+    QString text;
 
     // ***** Turn off itemChange() signals to stop recursive calling
     item->disableItemChangeFlags();
@@ -244,6 +246,14 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
             item->applyFilters();
             break;
 
+        case Properties::Object_Text_User_Text:
+            text = item->getObject()->getComponentPropertyValue(Components::Object_Settings_Text, Properties::Object_Text_User_Text).toString();
+            if (text == "") text = " ";
+            item->setPixmap( m_editor_relay->currentProject()->getDrFont( item->getAsset()->getSourceKey() )->createText( text ));
+            item->setAssetWidth(  item->pixmap().width() );
+            item->setAssetHeight( item->pixmap().height() );
+            setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
+            break;
 
         default: ;
         }

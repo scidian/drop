@@ -146,13 +146,13 @@ void AssetMouseHandler::startDragAndDrop(QLabel *label_pixmap, long asset_key)
     // Pull pixmap of asset and scale based on current view zoom level
     QPixmap pre_pixmap = *label_pixmap->pixmap();
     QPixmap pixmap;
+    QString text;
     switch (asset->getAssetType()) {
-    case DrAssetType::Character:
     case DrAssetType::Object:
         pixmap = asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
         break;
     case DrAssetType::Text:
-        ///pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->getFontPixmap();
+        //text =   asset->getComponentPropertyValue(Components::Object_Settings_Text, Properties::Object_Text_User_Text).toString();
         pixmap = m_editor_relay->currentProject()->getDrFont( asset->getSourceKey() )->createText( "Text" );
         break;
     }

@@ -158,8 +158,6 @@ void TreeAssets::buildAssetTree(QString search_text)
         vertical_split->setContentsMargins(0, 14, 0, 0);                    // Put some space at the top
             QPixmap pix;
             switch (asset_pair.second->getAssetType()) {
-            case DrAssetType::Character:
-
             case DrAssetType::Object:
                 pix = asset_pair.second->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
                 m_widget_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Object[1] );
@@ -184,8 +182,6 @@ void TreeAssets::buildAssetTree(QString search_text)
 
         // ***** Add widget to proper category
         switch (asset_pair.second->getAssetType()) {
-        case DrAssetType::Character:
-
         case DrAssetType::Object:
             grid_layout_objects->addWidget(single_asset);
             objects_button->setEnabled(true);

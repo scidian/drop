@@ -76,8 +76,11 @@ public:
     long                    getObjectKey()   { return m_object_key; }
     DrAsset*                getAsset()       { return m_asset; }
     long                    getAssetKey()    { return m_asset_key; }
-    double                  getAssetWidth()  { return m_asset_width; }
-    double                  getAssetHeight() { return m_asset_height; }
+
+    double                  getAssetWidth()               { return m_asset_width; }
+    double                  getAssetHeight()              { return m_asset_height; }
+    void                    setAssetWidth(double width)   { m_asset_width  = width; }
+    void                    setAssetHeight(double height) { m_asset_height = height; }
 
     QColor                  getColorAtPoint(QPointF at_local_point);
     QColor                  getColorAtPoint(QPointF at_view_point, QGraphicsView *mouse_over_view);

@@ -15,6 +15,7 @@
 #include "library.h"
 #include "project.h"
 #include "project_asset.h"
+#include "project_font.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
 #include "settings.h"
@@ -37,13 +38,24 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrObject *object,
     m_temp_only  = is_temp_only;
 
     // Load image from asset
-    m_pixmap = m_asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
-    // Apply any filters and sets the items pixmap
-    applyFilters();
+    QString text;
 
-    // Dimensions of associated asset, used for boundingRect
-    m_asset_width =  m_asset->getWidth();
-    m_asset_height = m_asset->getHeight();
+    switch (m_asset->getAssetType()) {
+    case DrAssetType::Object:
+        m_pixmap = m_asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
+        applyFilters();                                 // Apply filters and set pixmap
+        m_asset_width =  m_asset->getWidth();           // Dimensions of associated asset, used for boundingRect
+        m_asset_height = m_asset->getHeight();
+        break;
+    case DrAssetType::Text:
+        text =     m_object->getComponentPropertyValue(Components::Object_Settings_Text, Properties::Object_Text_User_Text).toString();
+        m_pixmap = m_editor_relay->currentProject()->getDrFont( m_asset->getSourceKey() )->createText( text );
+        setPixmap(m_pixmap);
+        m_asset_width =  m_pixmap.width();
+        m_asset_height = m_pixmap.height();
+        break;
+    }
+
 
     // Store some initial user data
     setData(User_Roles::Name, m_asset->getAssetName() );
