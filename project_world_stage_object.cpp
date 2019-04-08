@@ -34,13 +34,24 @@ DrObject::DrObject(DrProject *parent_project, DrWorld *parent_world, DrStage *pa
     DrAsset *asset = dynamic_cast<DrAsset*>(asset_settings);
 
     // Call to load in all the components / properties for this Stage object
-    initializeObjectSettings(new_object_name, asset->getWidth(), asset->getHeight(), x, y, z);
+
 
     switch (new_object_type) {
-    case DrObjectType::Object:       initializeAppearanceSettings();    break;
-    case DrObjectType::Camera:       initializeCameraSettings();        break;
-    case DrObjectType::Character:    initializeCharacterSettings();     break;
-    default: break;
+    case DrObjectType::Object:
+        initializeObjectSettings(new_object_name);
+        initializeComponentTransform(asset->getWidth(), asset->getHeight(), x, y, z);
+        initializeComponentMovement();
+        initializeComponentAppearance();
+        break;
+    case DrObjectType::Camera:
+        initializeCameraSettings();
+        break;
+    case DrObjectType::Character:
+        initializeCharacterSettings();
+        break;
+    case DrObjectType::Text:
+        initializeTextSettings();
+        break;
     }
 
 }
@@ -53,78 +64,24 @@ DrObject::~DrObject()
 
 
 //####################################################################################
-//##    Property loading - initializeObjectSettings
-//##                       initializeCameraSettings
-//##                       initializeCharacterSettings
+//##    Property loading
 //####################################################################################
 
-void DrObject::initializeObjectSettings(QString new_name, double width, double height, double x, double y, long z)
+void DrObject::initializeObjectSettings(QString new_name)
 {
     addComponent(Components::Object_Settings, "Settings", "Basic settings for current object.", Component_Colors::White_Snow, true);
     getComponent(Components::Object_Settings)->setIcon(Component_Icons::Settings);
 
     addPropertyToComponent(Components::Object_Settings, Properties::Object_Name, Property_Type::String, new_name,
-                           "Object Name", "Name of the current object.", true);
+                           "Object Name", "Name of the current object.", false, false);
     addPropertyToComponent(Components::Object_Settings, Properties::Object_Physics, Property_Type::Bool, false,
                            "Physics?", "Should this item be effected by physics?");
     addPropertyToComponent(Components::Object_Settings, Properties::Object_Collide, Property_Type::Bool, true,
                            "Collide?", "Should this item collide with other items?");
     addPropertyToComponent(Components::Object_Settings, Properties::Object_Damage, Property_Type::List, 0,
                            "Damage", "What should this item damage when it collides with something else.");
-
-
-    addComponent(Components::Object_Transform, "Transform", "Sets the physical size and angle of the item in the stage.", Component_Colors::Green_SeaGrass, true);
-    getComponent(Components::Object_Transform)->setIcon(Component_Icons::Transform);
-
-    addPropertyToComponent(Components::Object_Transform, Properties::Object_Position, Property_Type::PositionF, QPointF(x, y),
-                           "Position", "Location of item within the current stage.");
-    addPropertyToComponent(Components::Object_Transform, Properties::Object_Rotation, Property_Type::Angle, 0,
-                           "Rotation", "Angle of item within the stage.");
-    addPropertyToComponent(Components::Object_Transform, Properties::Object_Size, Property_Type::SizeF, QPointF(width, height),
-                           "Size", "Width and Height of object in pixels, affected by Scale property.");
-    addPropertyToComponent(Components::Object_Transform, Properties::Object_Scale, Property_Type::ScaleF, QPointF(1, 1),
-                           "Scale", "X and Y scale of item within the stage.");
-
-    addComponent(Components::Object_Layering, "Layering", "Controls the order items are drawn onto the screen. For \"Z Order\", lower numbers are "
-                                                           "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, true);
-    getComponent(Components::Object_Layering)->setIcon(Component_Icons::Layering);
-
-    addPropertyToComponent(Components::Object_Layering, Properties::Object_Z_Order, Property_Type::Int, QVariant::fromValue(z),
-                           "Z Order", "Arrangement of item along the z axis in the stage");
-    addPropertyToComponent(Components::Object_Layering, Properties::Object_Opacity, Property_Type::Percent, 100,
-                           "Opacity", "How see transparent an item is, 0 (invisible) - 100 (solid)");
-
-    addComponent(Components::Object_Movement, "Movement", "Initial starting velocities of item in stage.", Component_Colors::Red_Faded, true);
-    getComponent(Components::Object_Movement)->setIcon(Component_Icons::Movement);
-
-    addPropertyToComponent(Components::Object_Movement, Properties::Object_Velocity_X, Property_Type::Variable, QPointF(0, 0),
-                           "Velocity X", "Initial horizontal movement speed of item +/- variable amount.");
-    addPropertyToComponent(Components::Object_Movement, Properties::Object_Velocity_Y, Property_Type::Variable, QPointF(0, 0),
-                           "Velocity Y", "Initial vertical movement speed of item +/- variable amount.");
-    addPropertyToComponent(Components::Object_Movement, Properties::Object_Angular_Velocity, Property_Type::Variable, QPointF(0, 0),
-                           "Angular Velocity", "Rotational movement speed of item +/- variable amount.");
-
-
 }
 
-void DrObject::initializeAppearanceSettings()
-{
-    addComponent(Components::Object_Appearance, "Appearance", "Filters for objects as they appear in the Stage. ", Component_Colors::Mellow_Yellow, true);
-    getComponent(Components::Object_Appearance)->setIcon(Component_Icons::Appearance);
-
-    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Brightness, Property_Type::Filter, 0,
-                           "Brightness", "How light / dark this object should appear. \nDefault: \t0 \nRange: \t-255 to 255");
-    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Contrast, Property_Type::Filter, 0,
-                           "Contrast", "Amount of distinguishable difference of colors. \nDefault: \t0 \nRange: \t-255 to 255");
-    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Saturation, Property_Type::Filter, 0,
-                           "Saturation", "How colorful the colors appear. \nDefault: \t0 \nRange: \t-255 to 255");
-    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Hue, Property_Type::FilterAngle, 0,
-                           "Hue", "Rotate color values. \nDefault: \t0 \nRange: \t0 to 360");
-    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Grayscale, Property_Type::Bool, false,
-                           "Grayscale", "Should this object be shown grayscale?");
-    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Negative, Property_Type::Bool, false,
-                           "Negative", "Should this objects colors be inverted?");
-}
 
 void DrObject::initializeCameraSettings()
 {
@@ -148,14 +105,76 @@ void DrObject::initializeCharacterSettings()
                            "Jump Force Y", "Force of jump button in y direction");
 }
 
+void DrObject::initializeTextSettings()
+{
+    addComponent(Components::Object_Character_Settings, "Text Settings", "Settings for this text", Component_Colors::Silver_Sonic, true);
+    getComponent(Components::Object_Character_Settings)->setIcon(Component_Icons::Font);
+
+    addPropertyToComponent(Components::Object_Character_Settings, Properties::Object_Character_Jump_X, Property_Type::Double, 0,
+                           "Jump Force X", "Force of jump button in x direction");
+    addPropertyToComponent(Components::Object_Character_Settings, Properties::Object_Character_Jump_Y, Property_Type::Double, 0,
+                           "Jump Force Y", "Force of jump button in y direction");
+}
 
 
+//####################################################################################
+//##    Shared Components
+//####################################################################################
+void DrObject::initializeComponentAppearance()
+{
+    addComponent(Components::Object_Appearance, "Appearance", "Filters for objects as they appear in the Stage. ", Component_Colors::Mellow_Yellow, true);
+    getComponent(Components::Object_Appearance)->setIcon(Component_Icons::Appearance);
 
+    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Brightness, Property_Type::Filter, 0,
+                           "Brightness", "How light / dark this object should appear. \nDefault: \t0 \nRange: \t-255 to 255");
+    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Contrast, Property_Type::Filter, 0,
+                           "Contrast", "Amount of distinguishable difference of colors. \nDefault: \t0 \nRange: \t-255 to 255");
+    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Saturation, Property_Type::Filter, 0,
+                           "Saturation", "How colorful the colors appear. \nDefault: \t0 \nRange: \t-255 to 255");
+    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Hue, Property_Type::FilterAngle, 0,
+                           "Hue", "Rotate color values. \nDefault: \t0 \nRange: \t0 to 360");
+    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Grayscale, Property_Type::Bool, false,
+                           "Grayscale", "Should this object be shown grayscale?");
+    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Negative, Property_Type::Bool, false,
+                           "Negative", "Should this objects colors be inverted?");
+}
 
+void DrObject::initializeComponentTransform(double width, double height, double x, double y, long z)
+{
+    addComponent(Components::Object_Transform, "Transform", "Sets the physical size and angle of the item in the stage.", Component_Colors::Green_SeaGrass, true);
+    getComponent(Components::Object_Transform)->setIcon(Component_Icons::Transform);
 
+    addPropertyToComponent(Components::Object_Transform, Properties::Object_Position, Property_Type::PositionF, QPointF(x, y),
+                           "Position", "Location of item within the current stage.");
+    addPropertyToComponent(Components::Object_Transform, Properties::Object_Rotation, Property_Type::Angle, 0,
+                           "Rotation", "Angle of item within the stage.");
+    addPropertyToComponent(Components::Object_Transform, Properties::Object_Size, Property_Type::SizeF, QPointF(width, height),
+                           "Size", "Width and Height of object in pixels, affected by Scale property.");
+    addPropertyToComponent(Components::Object_Transform, Properties::Object_Scale, Property_Type::ScaleF, QPointF(1, 1),
+                           "Scale", "X and Y scale of item within the stage.");
 
+    addComponent(Components::Object_Layering, "Layering", "Controls the order items are drawn onto the screen. For \"Z Order\", lower numbers are "
+                                                           "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, true);
+    getComponent(Components::Object_Layering)->setIcon(Component_Icons::Layering);
 
+    addPropertyToComponent(Components::Object_Layering, Properties::Object_Z_Order, Property_Type::Int, QVariant::fromValue(z),
+                           "Z Order", "Arrangement of item along the z axis in the stage");
+    addPropertyToComponent(Components::Object_Layering, Properties::Object_Opacity, Property_Type::Percent, 100,
+                           "Opacity", "How see transparent an item is, 0 (invisible) - 100 (solid)");
+}
 
+void DrObject::initializeComponentMovement()
+{
+    addComponent(Components::Object_Movement, "Movement", "Initial starting velocities of item in stage.", Component_Colors::Red_Faded, true);
+    getComponent(Components::Object_Movement)->setIcon(Component_Icons::Movement);
+
+    addPropertyToComponent(Components::Object_Movement, Properties::Object_Velocity_X, Property_Type::Variable, QPointF(0, 0),
+                           "Velocity X", "Initial horizontal movement speed of item +/- variable amount.");
+    addPropertyToComponent(Components::Object_Movement, Properties::Object_Velocity_Y, Property_Type::Variable, QPointF(0, 0),
+                           "Velocity Y", "Initial vertical movement speed of item +/- variable amount.");
+    addPropertyToComponent(Components::Object_Movement, Properties::Object_Angular_Velocity, Property_Type::Variable, QPointF(0, 0),
+                           "Angular Velocity", "Rotational movement speed of item +/- variable amount.");
+}
 
 
 

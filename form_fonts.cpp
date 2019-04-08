@@ -16,8 +16,11 @@
 //####################################################################################
 //##        Constructor
 //####################################################################################
-FormFonts::FormFonts(DrProject *project, QWidget *parent) : QWidget(parent), m_project(project)
+FormFonts::FormFonts(DrProject *project, QWidget *parent) : QWidget(parent)
 {
+    // ***** Initialize member variables
+    m_project = project;
+
     // ***** Set up initial window
     setWindowFlags(Qt::WindowType::FramelessWindowHint | Qt::WindowType::Tool);
     setMinimumSize(QSize(200, 200));

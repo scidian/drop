@@ -56,11 +56,15 @@ public:
     DrItem*         getDrItem()                 { return m_item_in_scene; }
     void            setDrItem(DrItem *item)     { m_item_in_scene = item; }
 
-    // External calls
-    void initializeObjectSettings(QString new_name, double width, double height, double x, double y, long z);
-    void initializeAppearanceSettings();
+    // Function calls
+    void initializeObjectSettings(QString new_name);
     void initializeCameraSettings();
     void initializeCharacterSettings();
+    void initializeTextSettings();
+
+    void initializeComponentAppearance();
+    void initializeComponentMovement();
+    void initializeComponentTransform(double width, double height, double x, double y, long z);
 
 };
 

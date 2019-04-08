@@ -81,13 +81,16 @@ void DrView::dropEvent(QDropEvent *event)
         for (auto url : url_list)
             path_list.append( url.toLocalFile() );
 
-        // Try to load the first image
+        // Try to load the first image, if it doesnt load, exit. If it does, make sure it is #AARRGGBB and convert to pixmap
         QString file_path = path_list[0];
-        QPixmap pixmap(file_path);
-        if (!pixmap) {
+        QImage image(file_path);
+        if (image.isNull()) {
             event->ignore();
             return;
         }
+        if ( image.format() != QImage::Format::Format_ARGB32 )
+            image = image.convertToFormat( QImage::Format_ARGB32 );
+        QPixmap pixmap = QPixmap::fromImage( image );
 
         // If it was an image, add it to the project and add the object to the scene
         long image_key = m_editor_relay->currentProject()->addImage(file_path);
