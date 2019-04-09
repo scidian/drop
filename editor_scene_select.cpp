@@ -18,8 +18,8 @@
 #include "settings_component_property.h"
 
 //####################################################################################
-//##        SLOT: selectionChanged,
-//##              connected from built in Qt SIGNAL DrScene::selectionChanged()
+//##    SLOT: selectionChanged,
+//##          connected from built in Qt SIGNAL DrScene::selectionChanged()
 //####################################################################################
 //  QList<QGraphicsItem*>   m_selection_items;          // List of selected items
 //  double                  m_selection_angle;          // Angle current selection has been rotated to
@@ -91,7 +91,7 @@ bool DrScene::checkAllSelectedItemsHaveSameAngle()
 
 
 //####################################################################################
-//##        Returns a scene rect containing all the selected items
+//##    Returns a scene rect containing all the selected items
 //####################################################################################
 QRectF DrScene::totalSelectionSceneRect()
 {
@@ -108,7 +108,7 @@ QRectF DrScene::totalSelectionSceneRect()
 }
 
 //####################################################################################
-//##        Returns a transform representing the total changes that have been
+//##    Returns a transform representing the total changes that have been
 //##        applied since selection group creation
 //####################################################################################
 QTransform DrScene::getSelectionTransform()
@@ -122,7 +122,10 @@ QTransform DrScene::getSelectionTransform()
     return t;
 }
 
-// Creates a temporary item group to extract a new bounding box with new location and new shearing removed
+//####################################################################################
+//##    Creates a temporary item group to extract a new bounding box with
+//##        new location and new shearing removed
+//####################################################################################
 void DrScene::updateSelectionBox()
 {
     // Recreate selection bounding box based on new item locations
@@ -171,6 +174,7 @@ QGraphicsItemGroup* DrScene::createEmptyItemGroup(double angle, QPointF scale)
 }
 
 
+
 //####################################################################################
 //##        Selects items based on rows selected in Editor_Project_Tree
 //####################################################################################
@@ -196,9 +200,6 @@ void DrScene::updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list)
 
     blockSignals(false);
 }
-
-
-
 
 
 

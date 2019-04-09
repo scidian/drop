@@ -100,7 +100,8 @@ SOURCES += \
     editor_tree_project_drag_drop.cpp \
     editor_tree_assets_update.cpp \
     editor_tree_project_selection.cpp \
-    editor_tree_project_update.cpp
+    editor_tree_project_update.cpp \
+    editor_scene_update.cpp
 
 HEADERS += \
     enums.h \
