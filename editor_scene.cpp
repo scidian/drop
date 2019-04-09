@@ -143,6 +143,9 @@ void DrScene::setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, dou
 //####################################################################################
 void DrScene::updateChangesInScene(QList<DrSettings*> changed_items, QList<long> property_keys)
 {
+    if (changed_items.isEmpty()) return;
+    if (property_keys.isEmpty()) return;
+
     for (auto settings_item : changed_items) {
         DrType my_type = settings_item->getType();
 
@@ -170,6 +173,9 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
 {
     DrObject *object = dynamic_cast<DrObject*>(changed_item);
     DrItem   *item =   object->getDrItem();
+
+    // Make sure this object is currently being shown in the DrScene
+    if (object->getParentStage()->getKey() != m_current_stage_key) return;
 
     // ***** Some local item variables, prepping for update
     QTransform transform;

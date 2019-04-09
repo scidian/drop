@@ -76,6 +76,8 @@ void FormMain::buildScene(long from_stage_key) {
 
 void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Properties> property_keys)
 {
+    if (changed_items.isEmpty()) return;
+    if (property_keys.isEmpty()) return;
     QList<long> property_keys_as_long = Dr::ConvertPropertyListToLongs(property_keys);
 
     // Don't update inspector constantly while objects are being moved around, very slow

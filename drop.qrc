@@ -91,5 +91,6 @@
         <file>gui_misc/color_wheel.png</file>
         <file>gui_misc/color_palette.png</file>
         <file>gui_misc/color_history.png</file>
+        <file>tree_icons/tree_text.png</file>
     </qresource>
 </RCC>

@@ -106,7 +106,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
 
             QPointF adjust_by = new_center - rounded_center;                                        // Adjust new position based on adjustment
             QPointF adjusted_pos = new_pos - adjust_by;                                             // to grid we just performed
-            return adjusted_pos;
+            return  adjusted_pos;
         }
     }
 
