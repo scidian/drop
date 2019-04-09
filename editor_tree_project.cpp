@@ -31,7 +31,7 @@ void TreeProject::buildProjectTree()
     setAllowSelectionEvent(false);
     this->clear();
 
-    for (auto world_pair: m_project->getWorlds())
+    for (auto world_pair: m_project->getWorldMap())
     {
         QTreeWidgetItem *world_item = new QTreeWidgetItem(this);                                            // Create new item (top level item)
 
@@ -228,7 +228,7 @@ void TreeProject::updateItemNames(QList<DrSettings*> changed_items, QList<long> 
                         row->setText(0, "Stage: " + item->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Name).toString() );
                         break;
                     case Properties::Object_Name:
-                        row->setText(0, item->getComponentPropertyValue(Components::Object_Settings, Properties::Object_Name).toString() );
+                        row->setText(0, item->getComponentPropertyValue(Components::Object_Settings, Properties::Object_Name).toString() );                        
                         break;
                     default: ;
                     }

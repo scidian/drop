@@ -29,7 +29,7 @@
 //####################################################################################
 void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_items, QList<long> property_keys_to_update)
 {
-    if (changed_items.count() == 0) return;
+    if (changed_items.isEmpty()) return;
 
     // !!!!! TEMP: Need to be more than just one item represented in object inspector
     DrSettings* object = changed_items.first();

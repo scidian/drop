@@ -69,15 +69,17 @@ public:
     long        getFirstWorldKey()      { return m_worlds.begin()->first; }
     long        getNumberOfWorlds()     { return static_cast<long>(m_worlds.size()); }
     DrWorld*    getWorld(long key)      { return m_worlds[key]; }
-    WorldMap    getWorlds()             { return m_worlds; }
+    WorldMap    getWorldMap()           { return m_worlds; }
     DrWorld*    getWorldWithName(QString world_name);
 
     DrAsset*    getAsset(long key)      { return m_assets[key]; }
-    AssetMap    getAssets()             { return m_assets; }
+    AssetMap    getAssetMap()           { return m_assets; }
     long        getNumberOfAssets()     { return static_cast<long>(m_assets.size()); }
 
     DrFont*     getDrFont(long key)     { return m_fonts[key]; }
+    FontMap     getDrFontMap()          { return m_fonts; }
     DrImage*    getDrImage(long key)    { return m_images[key]; }
+    ImageMap    getDrImageMap()         { return m_images; }
 
     // Options calls
     QVariant    getOption(Project_Options option_to_get)   { return m_options[option_to_get]; }
