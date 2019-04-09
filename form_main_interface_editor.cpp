@@ -76,14 +76,19 @@ void FormMain::buildScene(long from_stage_key) {
 
 void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Properties> property_keys)
 {
+    // If theres notthing to update, go ahead and get out now
     if (changed_items.isEmpty()) return;
     if (property_keys.isEmpty()) return;
-    QList<long> property_keys_as_long = Dr::ConvertPropertyListToLongs(property_keys);
 
     // Don't update inspector constantly while objects are being moved around, very slow
-    if (currentViewMode() == View_Mode::Translating || currentViewMode() == View_Mode::Disable_Update) return;
+    if (currentViewMode() == View_Mode::Disable_Update) return;
+    if (currentViewMode() == View_Mode::Translating)    return;
+    if (currentViewMode() == View_Mode::Resizing)       return;
 
-    // This order is semi important
+    // Convert list to longs
+    QList<long> property_keys_as_long = Dr::ConvertPropertyListToLongs(property_keys);
+
+    // ***** This order is semi important, best not to try and change it
     if (changed_from != Editor_Widgets::Scene_View)         sceneEditor->updateChangesInScene(changed_items, property_keys_as_long);
     if (changed_from != Editor_Widgets::Object_Inspector)   treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys_as_long);
     if (changed_from != Editor_Widgets::Project_Tree)       treeProjectEditor->updateItemNames(changed_items, property_keys_as_long);
