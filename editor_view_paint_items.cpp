@@ -189,11 +189,11 @@ void DrView::paintItemCenters(QPainter &painter)
     if (m_grid_should_snap == false) return;
     if (m_allow_movement == false) return;
 
-    if (!Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL))
-        ///painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);      // Paints in NOT mode
-        painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_Source);
-    else
-        painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_Source);
+    ///// Paints in NOT mode, doesnt work in OpenGL
+    ///if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL))
+    ///    painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_Source);
+    ///else
+    ///    painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
 
     // Draw crosshairs on SelectionBox center
     if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool()) {
@@ -208,7 +208,8 @@ void DrView::paintItemCenters(QPainter &painter)
         }
     }
 
-    painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOver);
+    ///// Restore normal painting mode
+    ///painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOver);
 }
 
 

@@ -24,19 +24,37 @@
 //##        Drag Handling
 //####################################################################################
 void DrView::dragEnterEvent(QDragEnterEvent *event) {
-    if (event->mimeData()->hasFormat("application/x-drop-asset-data"))          // From asset tree
-            event->acceptProposedAction();
-    else if (event->mimeData()->hasUrls())                                      // External files
-            event->acceptProposedAction();
-    else    event->ignore();
+    if (event->mimeData()->hasFormat("application/x-drop-asset-data")) {                // From asset tree
+        m_drop_might_happen = true;
+        m_drop_location = roundToGrid( mapToScene(event->pos()) );
+        event->acceptProposedAction();
+    } else if (event->mimeData()->hasUrls()) {                                          // External files
+        event->acceptProposedAction();
+    } else  event->ignore();
 }
-void DrView::dragLeaveEvent(QDragLeaveEvent *event) { event->accept(); }
+
+void DrView::dragLeaveEvent(QDragLeaveEvent *event) {
+    // Make sure we stop drawing drop locaiton, calling update to repaint
+    m_drop_might_happen = false;
+    update();
+    event->accept();
+}
+
 void DrView::dragMoveEvent(QDragMoveEvent *event) {
-    if (event->mimeData()->hasFormat("application/x-drop-asset-data"))          // From asset tree
-            event->acceptProposedAction();
-    else if (event->mimeData()->hasUrls())                                      // External files
-            event->acceptProposedAction();
-    else    event->ignore();
+    if (event->mimeData()->hasFormat("application/x-drop-asset-data")) {                // From asset tree
+        m_drop_might_happen = true;
+
+        // If potential drop location has changed, redraw view by calling update
+        QPointF new_rounded_position = roundToGrid( mapToScene(event->pos()) );
+        if (m_drop_location != new_rounded_position) {
+            m_drop_location = roundToGrid( mapToScene(event->pos()) );
+            update();
+        }
+
+        event->acceptProposedAction();
+    } else if (event->mimeData()->hasUrls()) {                                          // External files
+        event->acceptProposedAction();
+    } else    event->ignore();
 }
 
 
@@ -45,9 +63,12 @@ void DrView::dragMoveEvent(QDragMoveEvent *event) {
 //####################################################################################
 void DrView::dropEvent(QDropEvent *event)
 {
+    // Stop drawing crosshairs under item drop
+    m_drop_might_happen = false;
+
     DrStage *stage =     my_scene->getCurrentStageShown();
 
-    // From Asset Tree
+    // ********** From Asset Tree
     if (event->mimeData()->hasFormat("application/x-drop-asset-data")) {
         QByteArray item_data = event->mimeData()->data("application/x-drop-asset-data");
         QDataStream data_stream(&item_data, QIODevice::ReadOnly);
@@ -57,11 +78,16 @@ void DrView::dropEvent(QDropEvent *event)
         QVariant variant_key;
         data_stream >> offset >> variant_key;
 
-        QPointF  position =  mapToScene(event->pos() + offset);
-        long     asset_key = variant_key.toInt();
-        DrAsset *asset =     m_editor_relay->currentProject()->getAsset(asset_key);
+        // Figure out where we want to drop this thing
+        QPointF  position;
+        if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool() == false)
+            position = mapToScene(event->pos() + offset);
+        else
+            position = m_drop_location;
 
         // Create new object from data
+        long      asset_key = variant_key.toInt();
+        DrAsset  *asset =     m_editor_relay->currentProject()->getAsset(asset_key);
         DrObject *object;
         switch (asset->getAssetType()) {
         case DrAssetType::Object:
@@ -77,7 +103,7 @@ void DrView::dropEvent(QDropEvent *event)
 
         event->acceptProposedAction();
 
-    // ***** External Files
+    // ********** External Files
     } else if (event->mimeData()->hasUrls()) {
 
         // Extract the local paths of the files

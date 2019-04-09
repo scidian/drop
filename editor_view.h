@@ -107,6 +107,10 @@ private:
     bool         m_flag_key_down_alt =      false;                  // True when View has focus and alt (option)  is down
     bool         m_flag_key_down_shift =    false;                  // True when View has focus and shift         is down
 
+    // Drag and Drop Variables
+    bool         m_drop_might_happen = false;                       // True when its possible we may get an asset drop and need to draw crosshairs
+    QPointF      m_drop_location;                                   // Potential drop location of drag and drop operation
+
     // Mouse event variables
     QPoint                              m_origin;                   // Stores mouse down position in view coordinates
     QPointF                             m_origin_in_scene;          // Stores mouse down position in scene coordinates
@@ -114,11 +118,6 @@ private:
 
     // Tool Tip Variables
     DrViewToolTip                      *m_tool_tip;                 // Holds our view's custom Tool Tip box
-
-    // View_Mode::Translating Variables
-    QTime                               m_origin_timer;             // Tracks time since mouse down to help buffer movement while selecting
-    bool                                m_allow_movement = false;   // Used along with m_origin_timer to help buffer movement while selecting
-    bool                                m_hide_bounding = false;    // True when moving items to stop bounding box from updating and painting
 
     // Selection Bounding Box Variables
     std::map<Position_Flags, QPolygonF> m_handles;                  // Stores QRects of current selection box handles
@@ -133,6 +132,11 @@ private:
     QList<QGraphicsItem*>           m_items_start;                  // Stores items selected at start of new rubber band box
     QList<QGraphicsItem*>           m_items_keep;                   // Stores list of items to keep on top of rubber band items (with control key)
 
+    // View_Mode::Translating Variables
+    QTime                           m_origin_timer;                 // Tracks time since mouse down to help buffer movement while selecting
+    bool                            m_allow_movement = false;       // Used along with m_origin_timer to help buffer movement while selecting
+    bool                            m_hide_bounding = false;        // True when moving items to stop bounding box from updating and painting
+
     // View_Mode::Resizing Variables
     QRectF                          m_start_resize_rect;            // Stores starting rect of selection before resize starts
     Position_Flags                  m_start_resize_grip;            // Stores which Size Grip Handle we started resize over
@@ -144,10 +148,10 @@ private:
     QMap<Position_Flags, QPointF>   m_pre_resize_corners;           // Stores corner coordinates before resizing starts
     QGraphicsItemGroup             *m_group;                        // Loads a copy of selected items in a new group before resize starts to better calculate resizing
 
-
     // View_Mode::Rotating Variables
     QRectF                          m_rotate_start_rect;            // Stores starting rect of selection before resize starts
     double                          m_rotate_start_angle;           // Stores angle of selection group at start of rotate routine
+
 
     // !!!!! DEBUG: Debugging Variables
     long                            m_debug_fps = 0;         // DEBUG

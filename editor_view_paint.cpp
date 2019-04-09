@@ -93,20 +93,29 @@ void DrView::paintEvent(QPaintEvent *event)
     // If theres no selection we don't need to perform these paint routines
     if (my_scene->getSelectionCount() > 0) {
 
-        paintItemOutlines(painter);                                     // Draw bounding box for each selected item
+        paintItemOutlines(painter);                                                 // Draw bounding box for each selected item
 
         if (m_hide_bounding == false) {
-            paintBoundingBox(painter);                                  // Draw box around entire seleciton, with Size Grip handles
-            paintHandles(painter, m_handles_shape);                     // Draw handles around selected item / bounding box
+            paintBoundingBox(painter);                                              // Draw box around entire seleciton, with Size Grip handles
+            paintHandles(painter, m_handles_shape);                                 // Draw handles around selected item / bounding box
         }
 
         if (m_view_mode == View_Mode::Rotating)
-            paintGroupAngle(painter, my_scene->getSelectionAngle());    // Draw angles if rotating
+            paintGroupAngle(painter, my_scene->getSelectionAngle());                // Draw angles if rotating
 
-        if (m_view_mode == View_Mode::Translating)
+        if (m_view_mode == View_Mode::Translating)                                  // Draw crosshairs if translating
             paintItemCenters(painter);
     }
 
+    // Draw Crosshairs under potential drag and drop
+    Dr::SetLabelText(Label_Names::Label_1, "Drop Might Happen: " + QString::number(m_drop_might_happen) );
+
+    if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool()) {
+        if (m_drop_might_happen)
+            paintCrossHairs(painter, mapFromScene(m_drop_location));
+    }
+
+    // Draw ToolTip
     if (m_tool_tip->isHidden() == false && Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL))
         paintToolTip(painter);
 

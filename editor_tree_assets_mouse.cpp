@@ -156,7 +156,7 @@ void AssetMouseHandler::startDragAndDrop(QLabel *label_pixmap, long asset_key)
         pixmap = m_editor_relay->currentProject()->getDrFont( asset->getSourceKey() )->createText( "Text" );
         break;
     }
-    pixmap = DrFilter::changeOpacity(pixmap, -96);
+    pixmap = DrFilter::changeOpacity(pixmap, -64);
     int scaled_x = static_cast<int>( pixmap.width() *  m_editor_relay->currentViewZoom() );
     int scaled_y = static_cast<int>( pixmap.height() * m_editor_relay->currentViewZoom() );
     scaled_x = Dr::Clamp(scaled_x, 5, QGuiApplication::screenAt( QCursor::pos() )->geometry().width()  * 1);
