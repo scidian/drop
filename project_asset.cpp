@@ -42,6 +42,10 @@ DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_
         my_starting_pixmap = m_parent_project->getDrFont(source_key)->getPixmap();
         initializeAssetSettingsFont(m_parent_project->getDrFont(source_key));
         break;
+    case DrAssetType::Character:
+        my_starting_pixmap = m_parent_project->getDrImage(source_key)->getPixmapFromImage();
+        initializeAssetSettingsCharacter(m_parent_project->getDrImage(source_key)->getSimplifiedName(), my_starting_pixmap );
+        break;
     }
 
     m_width =  my_starting_pixmap.width();
@@ -95,6 +99,24 @@ void DrAsset::initializeAssetSettingsFont(DrFont *font)
 }
 
 
+void DrAsset::initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap)
+{
+    addComponent(Components::Asset_Settings, "Settings", "Basic settings for current asset.", Component_Colors::White_Snow, true);
+    getComponent(Components::Asset_Settings)->setIcon(Component_Icons::Settings);
+
+    addPropertyToComponent(Components::Asset_Settings, Properties::Asset_Name, Property_Type::String, new_name,
+                           "Asset Name", "Name of the current asset.");
+    addPropertyToComponent(Components::Asset_Settings, Properties::Asset_Collision_Shape, Property_Type::Polygon, QPolygonF(),
+                           "Collision Shape", "Shape of the object as it interacts with other objects in the world.");
+
+
+    addComponent(Components::Asset_Animation, "Animation", "Images to show for this asset", Component_Colors::Green_SeaGrass, true);
+    getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
+
+    addPropertyToComponent(Components::Asset_Animation, Properties::Asset_Animation_Default, Property_Type::Image, QVariant(pixmap),
+                           "Default Animation", "Image shown for this object.");
+
+}
 
 
 

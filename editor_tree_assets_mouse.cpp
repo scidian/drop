@@ -149,6 +149,7 @@ void AssetMouseHandler::startDragAndDrop(QLabel *label_pixmap, long asset_key)
     QString text;
     switch (asset->getAssetType()) {
     case DrAssetType::Object:
+    case DrAssetType::Character:
         pixmap = asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
         break;
     case DrAssetType::Text:

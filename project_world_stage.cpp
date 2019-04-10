@@ -47,11 +47,15 @@ DrStage::~DrStage()
 // Adds a new object to the stage
 DrObject* DrStage::addObject(DrObjectType new_type, long from_asset_key, double x, double y, long z)
 {
+    DrAsset *asset = m_parent_project->getAsset(from_asset_key);
+
+    // Figure out name for object
     QString new_name;
     switch (new_type) {
     case DrObjectType::Object:
     case DrObjectType::Text:
-        new_name = m_parent_project->getAsset(from_asset_key)->getComponentProperty(Components::Asset_Settings, Properties::Asset_Name)->getValue().toString();
+    case DrObjectType::Character:
+        new_name = asset->getComponentProperty(Components::Asset_Settings, Properties::Asset_Name)->getValue().toString();
         break;
 
     ///case DrObjectType::Camera:

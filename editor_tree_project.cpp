@@ -61,9 +61,9 @@ void TreeProject::buildProjectTree()
                 switch (object->getObjectType()) {
                     case DrObjectType::Object:    object_item->setIcon(0, QIcon(":/tree_icons/tree_object.png"));       break;
                     case DrObjectType::Text:      object_item->setIcon(0, QIcon(":/tree_icons/tree_text.png"));         break;
+                    case DrObjectType::Character: object_item->setIcon(0, QIcon(":/tree_icons/tree_character.png"));    break;
 
                     ///case DrObjectType::Camera:    object_item->setIcon(0, QIcon(":/tree_icons/tree_camera.png"));       break;
-                    ///case DrObjectType::Character: object_item->setIcon(0, QIcon(":/tree_icons/tree_character.png"));    break;
                 }
 
                 object_item->setText(0, object->getComponentPropertyValue(

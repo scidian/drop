@@ -98,23 +98,30 @@ void TreeAssets::buildAssetTree(QString search_text)
 
 
     // ***** Create new items in list to hold asset categories
-    QTreeWidgetItem *objects_item = new QTreeWidgetItem();
-    QTreeWidgetItem *text_item =    new QTreeWidgetItem();
+    QTreeWidgetItem *character_item =   new QTreeWidgetItem();
+    QTreeWidgetItem *objects_item =     new QTreeWidgetItem();
+    QTreeWidgetItem *text_item =        new QTreeWidgetItem();
+    this->addTopLevelItem(character_item);
     this->addTopLevelItem(objects_item);
     this->addTopLevelItem(text_item);
-    CategoryButton *objects_button = initializeCatergoryButton(objects_item, "  Objects");
-    CategoryButton *text_button =    initializeCatergoryButton(text_item, "  Text");
-    m_widget_hover->attachToHoverHandler(objects_button, Advisor_Info::Asset_Object);
-    m_widget_hover->attachToHoverHandler(text_button, Advisor_Info::Asset_Text);
+    CategoryButton *character_button = initializeCatergoryButton(character_item, "  Characters");
+    CategoryButton *objects_button =   initializeCatergoryButton(objects_item,   "  Objects");
+    CategoryButton *text_button =      initializeCatergoryButton(text_item,      "  Text");
+    m_widget_hover->attachToHoverHandler(character_button, Advisor_Info::Asset_Character);
+    m_widget_hover->attachToHoverHandler(objects_button,   Advisor_Info::Asset_Object);
+    m_widget_hover->attachToHoverHandler(text_button,      Advisor_Info::Asset_Text);
 
 
     // ***** Creates a frame sto hold all assets of each type
-    QFrame      *assets_frame_objects = new QFrame();
-    QFrame      *assets_frame_text =    new QFrame();
-    FlowLayout  *grid_layout_objects =  new FlowLayout(assets_frame_objects, 8, 0, 4, 0, 0, 0);
-    FlowLayout  *grid_layout_text =     new FlowLayout(assets_frame_text, 8, 0, 4, 0, 0, 0);
-    assets_frame_objects->setObjectName("assetsContainer");
-    assets_frame_text->setObjectName(   "assetsContainer");
+    QFrame      *assets_frame_characters = new QFrame();
+    QFrame      *assets_frame_objects =    new QFrame();
+    QFrame      *assets_frame_text =       new QFrame();
+    FlowLayout  *grid_layout_characters =  new FlowLayout(assets_frame_characters, 8, 0, 4, 0, 0, 0);
+    FlowLayout  *grid_layout_objects =     new FlowLayout(assets_frame_objects,    8, 0, 4, 0, 0, 0);
+    FlowLayout  *grid_layout_text =        new FlowLayout(assets_frame_text,       8, 0, 4, 0, 0, 0);
+    assets_frame_characters->setObjectName("assetsContainer");
+    assets_frame_objects->setObjectName(   "assetsContainer");
+    assets_frame_text->setObjectName(      "assetsContainer");
 
 
     // ********** Loop through each object asset and add it to the component frame
@@ -167,6 +174,10 @@ void TreeAssets::buildAssetTree(QString search_text)
                 pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->createText( "Aa" );
                 m_widget_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Text[1] );
                 break;
+            case DrAssetType::Character:
+                pix = asset_pair.second->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
+                m_widget_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Character[1] );
+                break;
             }
 
             QLabel *asset_pix = new QLabel(single_asset);
@@ -190,6 +201,10 @@ void TreeAssets::buildAssetTree(QString search_text)
             grid_layout_text->addWidget(single_asset);
             text_button->setEnabled(true);
             break;
+        case DrAssetType::Character:
+            grid_layout_characters->addWidget(single_asset);
+            character_button->setEnabled(true);
+            break;
         }
 
         rowCount++;
@@ -197,8 +212,9 @@ void TreeAssets::buildAssetTree(QString search_text)
 
 
     // ***** Create a child TreeWidgetItem attached to the TopLevel category item
-    addAssetsToCategory(objects_item, assets_frame_objects);
-    addAssetsToCategory(text_item,    assets_frame_text);
+    addAssetsToCategory(character_item, assets_frame_characters);
+    addAssetsToCategory(objects_item,   assets_frame_objects);
+    addAssetsToCategory(text_item,      assets_frame_text);
 
 
     // ***** Adds a spacer item at the bottom to allow for comfortable scrolling to the bottom of the tree

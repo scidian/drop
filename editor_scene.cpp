@@ -113,7 +113,12 @@ void DrScene::setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin,
     case Position_Flags::Bottom:        item_pos = QPointF( QLineF(item_rect.bottomLeft(), item_rect.bottomRight()).pointAt(.5) ); break;
     case Position_Flags::Left:          item_pos = QPointF( QLineF(item_rect.topLeft(),    item_rect.bottomLeft()).pointAt(.5) );  break;
     case Position_Flags::Right:         item_pos = QPointF( QLineF(item_rect.topRight(),   item_rect.bottomRight()).pointAt(.5) ); break;
-    default:
+
+    // We don't want to process these options, use top left as position
+    case Position_Flags::Total:
+    case Position_Flags::Move_Item:
+    case Position_Flags::Rotate:
+    case Position_Flags::No_Position:
         item_pos = item_rect.topLeft();
     }
     item_pos = item->sceneTransform().map(item_pos);

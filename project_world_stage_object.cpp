@@ -48,11 +48,13 @@ DrObject::DrObject(DrProject *parent_project, DrWorld *parent_world, DrStage *pa
         addComponentSettingsText(new_object_name);
         addComponentTransform(asset->getWidth(), asset->getHeight(), x, y, z);
         break;
+    case DrObjectType::Character:
+        addComponentSettingsCharacter(new_object_name);
+        addComponentTransform(asset->getWidth(), asset->getHeight(), x, y, z);
+        addComponentMovement();
+        addComponentAppearance();
+        break;
 
-
-    //case DrObjectType::Character:
-    //    addComponentSettingsCharacter(new_object_name);
-    //    break;
     //case DrObjectType::Camera:
     //    addComponentSettingsCamera(new_object_name);
     //    break;

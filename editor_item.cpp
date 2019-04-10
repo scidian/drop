@@ -42,6 +42,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrObject *object,
 
     switch (m_asset->getAssetType()) {
     case DrAssetType::Object:
+    case DrAssetType::Character:
         m_pixmap = m_asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
         applyFilters();                                 // Apply filters and set pixmap
         m_asset_width =  m_asset->getWidth();           // Dimensions of associated asset, used for boundingRect

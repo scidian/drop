@@ -51,6 +51,7 @@ public:
     // External calls
     void        initializeAssetSettingsObject(QString new_name, QPixmap pixmap);
     void        initializeAssetSettingsFont(DrFont *font);
+    void        initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap);
 
 };
 

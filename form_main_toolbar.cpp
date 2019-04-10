@@ -90,7 +90,13 @@ void FormMain::setToolbar(Form_Main_Mode new_mode)
         addToolbarGroup( widgetGroupSettings, false );
         break;
 
-    default:    ;
+
+    // !!!!! TODO
+    case Form_Main_Mode::World_Map:
+    case Form_Main_Mode::Stage_Map:
+    case Form_Main_Mode::UI_Editor:
+    case Form_Main_Mode::Program_Loading:
+        break;
     }
 }
 

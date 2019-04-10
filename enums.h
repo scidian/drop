@@ -49,8 +49,8 @@ enum class DrType {
 enum class DrAssetType {
     Object,
     Text,
+    Character,
 
-    //Character,
     //Action
     //Logic
 };
@@ -58,8 +58,8 @@ enum class DrAssetType {
 enum class DrObjectType {
     Object,
     Text,
+    Character,
 
-    //Character,
     //Action,
     //Camera,
     //Light,

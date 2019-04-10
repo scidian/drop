@@ -128,6 +128,7 @@ namespace Advisor_Info
                                                                   "this asset will change all occurences of the asset within the game." };
     const HeaderBodyList Asset_Text             { "Text Asset", "Use text assets to show labels in your game. You can use the as titles or for showing "
                                                                 "values like hit points, coins or distance. " };
+    const HeaderBodyList Asset_Character        { "Character Asset", "This is a player character. " };
 
     // Inspector Widgets
     const HeaderBodyList Variable_Widget        { "Variable Amount", "Plus or minus modifier to initial value, the following value allows for some "
