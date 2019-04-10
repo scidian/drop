@@ -82,7 +82,6 @@ QString StringFromPositionFlag(Position_Flags flag)
     case Position_Flags::Center:        return "Center";
     case Position_Flags::Rotate:        return "Rotate";
     case Position_Flags::Move_Item:     return "Move Item";
-    case Position_Flags::Total:         return "Total";
     case Position_Flags::No_Position:   return "No Position";
     }
 }

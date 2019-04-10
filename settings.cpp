@@ -43,7 +43,7 @@ QString DrSettings::getName() {
     case DrType::Object: return getComponent(Components::Object_Settings)->getProperty(Properties::Object_Name)->getValue().toString();
     case DrType::Asset:  return getComponent(Components::Asset_Settings )->getProperty(Properties::Asset_Name )->getValue().toString();
     }
-    return "Unknown Type";
+    return "Unknown Type, Can't Find Name";
 }
 
 DrProperty* DrSettings::findPropertyFromPropertyKey(long property_key_to_find)

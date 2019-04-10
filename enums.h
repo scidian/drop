@@ -86,7 +86,8 @@ typedef enum {
 
 
 //####################################################################################
-//##    Possible handle rects, order is vector / array index critical
+//##    Possible handle rects - Order used to be vector / array index critical, but it shouldn't be now...
+//##                            Probably still best to leave Top thru Bottom_Right as values 0 thru 7
 //############################
 enum class Position_Flags {
     Top          = 0,
@@ -97,11 +98,10 @@ enum class Position_Flags {
     Bottom_Left  = 5,
     Top_Right    = 6,
     Bottom_Right = 7,
-    Total,
-    No_Position,
-    Move_Item,
+    Center,
     Rotate,
-    Center
+    Move_Item,
+    No_Position,
 };
 
 

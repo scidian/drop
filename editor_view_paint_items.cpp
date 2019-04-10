@@ -107,21 +107,21 @@ void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw)
     painter.setBrush(Dr::GetColor(Window_Colors::Icon_Light));
     painter.resetTransform();
 
-    QVector<QPointF> handles;
-    for (int i = 0; i < static_cast<int>(Position_Flags::Total); i++)
-        handles.append(m_handles_centers[static_cast<Position_Flags>(i)]);
-    handles.append(m_handles_centers[Position_Flags::Rotate] );
+    QList<Position_Flags> handles {
+        Position_Flags::Top,        Position_Flags::Bottom,     Position_Flags::Left,           Position_Flags::Right,
+        Position_Flags::Top_Left,   Position_Flags::Top_Right,  Position_Flags::Bottom_Left,    Position_Flags::Bottom_Right,
+        Position_Flags::Rotate
+    };
 
-    QRectF to_draw;
     double rotate_size  =   10;                         // Determines size of rotate handle
     double handle_size  =    8;                         // Determines size of circular corner and side handles
     double square_scale = .225;                         // Determines size of square   corner and side handles
-    for (int i = 0; i < handles.count(); i++) {
+    for (auto handle : handles) {
 
         // Draw Cornder and Side Handles
-        if (i < (handles.count() - 1)) {
-            to_draw.setX(handles[i].x() - (handle_size / 2));    to_draw.setWidth(handle_size);
-            to_draw.setY(handles[i].y() - (handle_size / 2));    to_draw.setHeight(handle_size);
+        if (handle != Position_Flags::Rotate) {
+            QPointF draw_center = mapFromScene(m_selection_points[handle]);
+            QRectF  to_draw( draw_center.x() - (handle_size / 2), draw_center.y() - (handle_size / 2), handle_size, handle_size);
 
             if (shape_to_draw == Handle_Shapes::Circles) {
                 painter.drawPixmap(to_draw, p_circle, p_circle.rect());
@@ -135,8 +135,9 @@ void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw)
 
         // Draw rotate handle
         } else {
-            to_draw.setX(handles[i].x() - (rotate_size / 2));    to_draw.setWidth(rotate_size);
-            to_draw.setY(handles[i].y() - (rotate_size / 2));    to_draw.setHeight(rotate_size);
+            QPointF draw_center = m_handles_centers[Position_Flags::Rotate];
+            QRectF  to_draw( draw_center.x() - (rotate_size / 2), draw_center.y() - (rotate_size / 2), rotate_size, rotate_size);
+
             painter.drawPixmap(to_draw, p_rotate, p_rotate.rect());
         }
     }
