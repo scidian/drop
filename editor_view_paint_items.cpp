@@ -160,13 +160,13 @@ void DrView::paintGroupAngle(QPainter &painter, double angle)
 
     // !!!!! #DEBUG:    Draws from center to origin point (mouse down), and center to last position (mouse move)
     if (Dr::CheckDebugFlag(Debug_Flags::Paint_Rotating_Angles)) {
-        painter.drawLine(mapFromScene(m_rotate_start_rect.center()), m_origin);
-        painter.drawLine(mapFromScene(m_rotate_start_rect.center()), m_last_mouse_pos);
+        painter.drawLine( m_handles_centers[Position_Flags::Center], m_origin);
+        painter.drawLine( m_handles_centers[Position_Flags::Center], m_last_mouse_pos);
     }
     // !!!!! END
 
     // Map center point to view, create a line going straight up at zero degrees
-    QPointF center_point = mapFromScene(m_rotate_start_rect.center());
+    QPointF center_point = m_handles_centers[Position_Flags::Center];
     QLineF     line_zero = QLineF(center_point, QPointF(center_point.x(), center_point.y() - 30) );
 
     // Make a copy of line rotated at the current Selection Group angle (passed in)

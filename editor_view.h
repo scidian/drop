@@ -150,7 +150,6 @@ private:
     QGraphicsItemGroup             *m_group;                        // Loads a copy of selected items in a new group before resize starts to better calculate resizing
 
     // View_Mode::Rotating Variables
-    QRectF                          m_rotate_start_rect;            // Stores starting rect of selection before resize starts
     double                          m_rotate_start_angle;           // Stores angle of selection group at start of rotate routine
 
 

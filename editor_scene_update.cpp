@@ -26,7 +26,6 @@
 void DrScene::updateChangesInScene(QList<DrSettings*> changed_items, QList<long> property_keys)
 {
     if (changed_items.isEmpty()) return;
-    if (property_keys.isEmpty()) return;
 
     for (auto settings_item : changed_items) {
         DrType my_type = settings_item->getType();

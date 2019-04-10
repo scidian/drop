@@ -38,9 +38,6 @@ void DrView::startRotate(QPoint mouse_in_view, bool use_tool_tip)
         child->setData(User_Roles::Pre_Rotate_Rotation, child_angle);
     }
 
-    // Store starting scene rect of initial selection bounding box
-    m_rotate_start_rect = my_scene->totalSelectionSceneRect();
-
     // Set up our tooltip
     if (use_tool_tip)
         m_tool_tip->startToolTip(m_view_mode, mouse_in_view, m_rotate_start_angle);
@@ -59,8 +56,8 @@ void DrView::rotateSelection(QPointF mouse_in_view, bool use_exact_angle, double
     // ********** Calculate angle between starting mouse coordinate and latest mouse coordinate
     double angle, angle1, angle2;
     if (!use_exact_angle) {
-        angle1 = calcRotationAngleInDegrees( mapFromScene(m_rotate_start_rect.center()), m_origin);
-        angle2 = calcRotationAngleInDegrees( mapFromScene(m_rotate_start_rect.center()), mouse_in_view);
+        angle1 = calcRotationAngleInDegrees( mapFromScene( m_selection_points[Position_Flags::Center] ), m_origin);
+        angle2 = calcRotationAngleInDegrees( mapFromScene( m_selection_points[Position_Flags::Center] ), mouse_in_view);
     } else {
         angle1 = 0;
         angle2 = angle_to_use;
@@ -69,7 +66,7 @@ void DrView::rotateSelection(QPointF mouse_in_view, bool use_exact_angle, double
 
     // ********** Snaps angle to nearest c_angle_step (15) degree increment if angle is with +/-, or to grid angle
     //            Tolerance is decreased the further the mouse cursor is away from the center of the selection rectangle
-    double mouse_distance_to_center = QLineF(mouse_in_view, mapFromScene(m_rotate_start_rect.center())).length();
+    double mouse_distance_to_center = QLineF(mouse_in_view, mapFromScene( m_selection_points[Position_Flags::Center] )).length();
     double tolerance_multiplier = 1;
     if (mouse_distance_to_center > 200) tolerance_multiplier = (200 / mouse_distance_to_center);
     double tolerance =  c_angle_tolerance * tolerance_multiplier;
@@ -117,8 +114,8 @@ void DrView::rotateSelection(QPointF mouse_in_view, bool use_exact_angle, double
 
     // Offset difference of original center bounding box to possible slightly different center of new bounding box
     QPointF offset = group->sceneBoundingRect().center();
-    offset.setX(offset.x() - (offset.x() - m_rotate_start_rect.center().x()) );
-    offset.setY(offset.y() - (offset.y() - m_rotate_start_rect.center().y()) );
+    offset.setX(offset.x() - (offset.x() - m_selection_points[Position_Flags::Center].x()) );
+    offset.setY(offset.y() - (offset.y() - m_selection_points[Position_Flags::Center].y()) );
 
     // Load starting angle pre rotate, and store new angle in item
     double start_angle = my_scene->getSelectionAngle();

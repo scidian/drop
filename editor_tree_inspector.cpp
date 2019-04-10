@@ -108,8 +108,6 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     switch (m_selected_type) {
     case DrType::World:        m_editor_relay->setAdvisorInfo(Advisor_Info::World_Object);         break;
     case DrType::Stage:        m_editor_relay->setAdvisorInfo(Advisor_Info::Stage_Object);         break;
-    ///case DrType::Camera:       m_editor_relay->setAdvisorInfo(Advisor_Info::Camera_Object);        break;
-    ///case DrType::Character:    m_editor_relay->setAdvisorInfo(Advisor_Info::Character_Object);     break;
     case DrType::Object:       m_editor_relay->setAdvisorInfo(Advisor_Info::Object_Object);        break;
     case DrType::Asset:        m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Object);         break;
     default:                   m_editor_relay->setAdvisorInfo(Advisor_Info::Not_Set);

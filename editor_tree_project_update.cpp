@@ -19,7 +19,6 @@
 void TreeProject::updateItemNames(QList<DrSettings*> changed_items, QList<long> property_keys)
 {
     if (changed_items.isEmpty()) return;
-    if (property_keys.isEmpty()) return;
 
     setAllowSelectionEvent(false);
 
