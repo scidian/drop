@@ -1,4 +1,4 @@
-//
+﻿//
 //      Created by Stephens Nunnally on 3/9/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
@@ -113,9 +113,9 @@ void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw)
     handles.append(m_handles_centers[Position_Flags::Rotate] );
 
     QRectF to_draw;
-    double handle_size  =    8;
-    double rotate_size  =   10;
-    double square_scale = .225;
+    double rotate_size  =   10;                         // Determines size of rotate handle
+    double handle_size  =    8;                         // Determines size of circular corner and side handles
+    double square_scale = .225;                         // Determines size of square   corner and side handles
     for (int i = 0; i < handles.count(); i++) {
 
         // Draw Cornder and Side Handles

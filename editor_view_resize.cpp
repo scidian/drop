@@ -55,24 +55,14 @@ void DrView::startResize(QPoint mouse_in_view, bool use_tool_tip)
     m_start_resize_grip = m_over_handle;
     m_start_resize_rect = my_scene->totalSelectionSceneRect();
 
-    // Load selection box corners in scene coordinates
-    QTransform t = my_scene->getSelectionTransform();
-    QRectF     r = my_scene->getSelectionBox().normalized();
-    m_pre_resize_corners[Position_Flags::Top_Left] =     t.map( r.topLeft() );
-    m_pre_resize_corners[Position_Flags::Top_Right] =    t.map( r.topRight() );
-    m_pre_resize_corners[Position_Flags::Bottom_Left] =  t.map( r.bottomLeft() );
-    m_pre_resize_corners[Position_Flags::Bottom_Right] = t.map( r.bottomRight() );
-    m_pre_resize_corners[Position_Flags::Center] =       t.map( r.center() );
-    m_pre_resize_corners[Position_Flags::Top] =          t.map( QLineF(r.topLeft(), r.topRight()).pointAt(.5) );
-    m_pre_resize_corners[Position_Flags::Bottom] =       t.map( QLineF(r.bottomLeft(), r.bottomRight()).pointAt(.5));
-    m_pre_resize_corners[Position_Flags::Left] =         t.map( QLineF(r.topLeft(), r.bottomLeft()).pointAt(.5) );
-    m_pre_resize_corners[Position_Flags::Right] =        t.map( QLineF(r.topRight(), r.bottomRight()).pointAt(.5) );
+    // Save pre resize selection box points
+    for (auto point : m_selection_points) {
+        m_pre_resize_corners[point.first] = m_selection_points[point.first];
+    }
 
     // Set up our custom tool tip
-    double group_width =  QLineF( mapToScene(m_handles_centers[Position_Flags::Left].toPoint()),
-                                  mapToScene(m_handles_centers[Position_Flags::Right].toPoint()) ).length();
-    double group_height = QLineF( mapToScene(m_handles_centers[Position_Flags::Top].toPoint()),
-                                  mapToScene(m_handles_centers[Position_Flags::Bottom].toPoint()) ).length();
+    double group_width =  QLineF( m_selection_points[Position_Flags::Left], m_selection_points[Position_Flags::Right] ).length();
+    double group_height = QLineF( m_selection_points[Position_Flags::Top],  m_selection_points[Position_Flags::Bottom]).length();
     if (use_tool_tip)
         m_tool_tip->startToolTip(m_view_mode, mouse_in_view, QPointF( group_width, group_height ) );
 }
@@ -134,15 +124,12 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_sc
     }
 
     // Load item starting width and height
-    qreal item_width =  m_group->boundingRect().width();
-    qreal item_height = m_group->boundingRect().height();
+    double item_width =  m_group->boundingRect().width();
+    double item_height = m_group->boundingRect().height();
 
     // ********** Find corners / sides we're working with, calculate new width / height
-    QPointF corner_start =    m_handles_centers[static_cast<Position_Flags>(m_start_resize_grip)];
-    QPointF corner_opposite = m_handles_centers[findOppositeSide(m_start_resize_grip)];
-
-    // Find center point, load angle of selection group, load original scale
-    QPointF center_point = QLineF(corner_start, corner_opposite).pointAt(.5);
+    QPointF corner_opposite = m_selection_points[findOppositeSide(m_start_resize_grip)];
+    QPointF center_point =    m_selection_points[Position_Flags::Center];
     double  angle = my_scene->getSelectionAngle();
 
     // Create transform to rotate center line back to zero
@@ -152,8 +139,7 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_sc
     remove_rotation.translate(-center_point.x(), -center_point.y());
 
     // Rotate back to zero degree shape angle, starts in view coordinates - ends up in scene coords
-    QPointF zero_rotated_opposite = remove_rotation.map( corner_opposite );
-    QPointF zero_rotated_opposite_in_scene = mapToScene(zero_rotated_opposite.toPoint());
+    QPointF zero_rotated_opposite_in_scene =remove_rotation.map( corner_opposite );
 
     // Snap if snapping is turned on
     if ((m_grid_resize_snap && m_handles_shape == Handle_Shapes::Squares) && !use_exact_scale) {
@@ -165,7 +151,7 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_sc
     }
 
     // Map resize point to scene coordinates
-    QPointF point_in_shape = mapToScene(remove_rotation.map(mapFromScene(mouse_in_scene)));
+    QPointF point_in_shape = remove_rotation.map( mouse_in_scene);
     double  scale_x;
     double  scale_y;
 
@@ -375,8 +361,8 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale)
     original->setTransform(no_shear);
 
     // Set item to center point of clone
-    QPointF center_point = clone->mapToScene( clone->boundingRect().center() );
-    my_scene->setPositionByOrigin(original, Position_Flags::Center, center_point.x(), center_point.y());
+    QPointF new_center = clone->mapToScene( clone->boundingRect().center() );
+    my_scene->setPositionByOrigin(original, Position_Flags::Center, new_center.x(), new_center.y());
 
 }
 

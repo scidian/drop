@@ -178,14 +178,24 @@ void DrView::updateSelectionBoundingBox(int called_from)
     else                        m_handles_shape = Handle_Shapes::Circles;
 
 
+    // ***** Store selection box points in scene coordinates
+    m_selection_points[Position_Flags::Top_Left] =     transform.map(rect.topLeft());
+    m_selection_points[Position_Flags::Top_Right] =    transform.map(rect.topRight());
+    m_selection_points[Position_Flags::Bottom_Left] =  transform.map(rect.bottomLeft());
+    m_selection_points[Position_Flags::Bottom_Right] = transform.map(rect.bottomRight());
+    m_selection_points[Position_Flags::Center] =       transform.map(rect.center());
+    m_selection_points[Position_Flags::Top] =          transform.map(QPointF( rect.center().x(), rect.top()    ));
+    m_selection_points[Position_Flags::Bottom] =       transform.map(QPointF( rect.center().x(), rect.bottom() ));
+    m_selection_points[Position_Flags::Left] =         transform.map(QPointF( rect.left(),  rect.center().y()  ));
+    m_selection_points[Position_Flags::Right] =        transform.map(QPointF( rect.right(), rect.center().y()  ));
 
-    // ***** Store corner handle polygons
-    QPointF top_left =  transform.map(rect.topLeft());
-    QPointF top_right = transform.map(rect.topRight());
-    QPointF bot_left =  transform.map(rect.bottomLeft());
-    QPointF bot_right = transform.map(rect.bottomRight());
-    QPointF center =    transform.map(rect.center());
-    QTransform remove_rotation = QTransform().translate(center.x(), center.y()).rotate(-angle).translate(-center.x(), -center.y());
+    // Temp variables
+    QPointF top_left =  m_selection_points[Position_Flags::Top_Left];
+    QPointF top_right = m_selection_points[Position_Flags::Top_Right];
+    QPointF bot_left =  m_selection_points[Position_Flags::Bottom_Left];
+    QPointF bot_right = m_selection_points[Position_Flags::Bottom_Right];
+    QPointF center =    m_selection_points[Position_Flags::Center];
+
 
     // ***** Store view coodinate rectangles of corners for size grip handles
     m_handles[Position_Flags::Top_Left] =     rectAtCenterPoint( mapFromScene( top_left  ), corner_size);
@@ -195,6 +205,7 @@ void DrView::updateSelectionBoundingBox(int called_from)
     m_handles[Position_Flags::Center] =       rectAtCenterPoint( mapFromScene( center    ), corner_size);
 
     // ***** Remove rotation from bounding box in scene, map bounding box scene coordinates to view coordinates
+    QTransform remove_rotation = QTransform().translate(center.x(), center.y()).rotate(-angle).translate(-center.x(), -center.y());
     top_left =  mapFromScene( remove_rotation.map(top_left) );
     top_right=  mapFromScene( remove_rotation.map(top_right) );
     bot_left =  mapFromScene( remove_rotation.map(bot_left) );
@@ -218,6 +229,7 @@ void DrView::updateSelectionBoundingBox(int called_from)
     for (auto h : m_handles)
         m_handles_centers[h.first] = h.second.boundingRect().center();
 
+
     // *****  Calculates angles for mouse cursors over sides
     m_handles_angles[Position_Flags::Top] =    QLineF(m_handles_centers[Position_Flags::Top_Left],     m_handles_centers[Position_Flags::Top_Right]).angle();
     m_handles_angles[Position_Flags::Right] =  QLineF(m_handles_centers[Position_Flags::Top_Right],    m_handles_centers[Position_Flags::Bottom_Right]).angle();
@@ -232,6 +244,7 @@ void DrView::updateSelectionBoundingBox(int called_from)
     m_handles_angles[Position_Flags::Bottom_Right] = calculateCornerAngle(m_handles_angles[Position_Flags::Bottom], m_handles_angles[Position_Flags::Right]);
     m_handles_angles[Position_Flags::Bottom_Left] =  calculateCornerAngle(m_handles_angles[Position_Flags::Left],   m_handles_angles[Position_Flags::Bottom]);
     m_handles_angles[Position_Flags::Top_Left] =     calculateCornerAngle(m_handles_angles[Position_Flags::Top],    m_handles_angles[Position_Flags::Left]);
+
 
     // ***** Add handle for rotating
     QPointF scale = my_scene->getSelectionScale();
@@ -248,13 +261,12 @@ void DrView::updateSelectionBoundingBox(int called_from)
     m_handles[Position_Flags::Rotate] = rectAtCenterPoint( zero, corner_size);
     m_handles_centers[Position_Flags::Rotate] = m_handles[Position_Flags::Rotate].boundingRect().center();
 
+
     // ***** If we're resizing we now know the new size, update the tooltip with it
     if (m_view_mode == View_Mode::Resizing) {
         if (m_tool_tip->getTipType() == View_Mode::Resizing) {
-            double group_width =  QLineF( mapToScene(m_handles_centers[Position_Flags::Left].toPoint()),
-                                          mapToScene(m_handles_centers[Position_Flags::Right].toPoint()) ).length();
-            double group_height = QLineF( mapToScene(m_handles_centers[Position_Flags::Top].toPoint()),
-                                          mapToScene(m_handles_centers[Position_Flags::Bottom].toPoint()) ).length();
+            double group_width =  QLineF( m_selection_points[Position_Flags::Left], m_selection_points[Position_Flags::Right] ).length();
+            double group_height = QLineF( m_selection_points[Position_Flags::Top],  m_selection_points[Position_Flags::Bottom]).length();
             m_tool_tip->updateToolTipData( QPointF( group_width, group_height ));
         }
     }
