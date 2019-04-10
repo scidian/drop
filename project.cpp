@@ -82,7 +82,7 @@ DrWorld* DrProject::getWorldWithName(QString world_name)
 {
     QString compare_name;
     for (auto i: m_worlds) {
-        compare_name = i.second->getWorldName();
+        compare_name = i.second->getName();
         if (compare_name == world_name) { return i.second; }
     }
     return nullptr;

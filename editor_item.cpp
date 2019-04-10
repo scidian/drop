@@ -59,7 +59,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrObject *object,
 
 
     // Store some initial user data
-    setData(User_Roles::Name, m_asset->getAssetName() );
+    setData(User_Roles::Name, m_asset->getName() );
     setData(User_Roles::Type, Dr::StringFromType( m_object->getType() ));
     setData(User_Roles::Key, QVariant::fromValue(m_object_key));
 

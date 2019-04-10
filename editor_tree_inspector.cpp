@@ -84,7 +84,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
         if (new_type == DrType::Object) {
             DrObject* object = dynamic_cast<DrObject*>(m_project->findSettingsFromKey(new_key));
             long asset_key = object->getAssetKey();
-            QString asset_name = m_project->findSettingsFromKey(asset_key)->getAssetName();
+            QString asset_name = m_project->findSettingsFromKey(asset_key)->getName();
 
             Dr::SetLabelText(Label_Names::Label_Object_2, "ASSET KEY:  " + QString::number(asset_key) +
                                                               ", NAME: " + asset_name);

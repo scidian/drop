@@ -70,7 +70,7 @@ DrStage* DrWorld::getStageWithName(QString stage_name)
 {
     QString compare_name;
     for (auto i: m_stages) {
-        compare_name = i.second->getStageName();
+        compare_name = i.second->getName();
         if (compare_name == stage_name) { return i.second; }
     }
     return nullptr;

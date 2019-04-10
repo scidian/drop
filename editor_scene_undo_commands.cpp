@@ -88,7 +88,7 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
     // Load stage we're changing to
     DrStage *from_stage = m_project->findStageFromKey(new_stage);
     if (from_stage == nullptr) {
-        return "Redo Select Stage " + displayed->getStageName();
+        return "Redo Select Stage " + displayed->getName();
     }
 
     // Calculate new scene and view rects, clear scene and set sizes
@@ -127,8 +127,8 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
     m_scene->getRelay()->updateItemSelection(Editor_Widgets::Project_Tree);
 
     // Set Undo / Redo text
-    if (is_undo)    return "Redo Select Stage " + displayed->getStageName();
-    else            return "Undo Select Stage " + from_stage->getStageName();
+    if (is_undo)    return "Redo Select Stage " + displayed->getName();
+    else            return "Undo Select Stage " + from_stage->getName();
 }
 
 DrItem* DrScene::addItemToSceneFromObject(DrObject *object)

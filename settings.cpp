@@ -36,10 +36,15 @@ QVariant DrSettings::getComponentPropertyValue(Components component, Properties 
 void DrSettings::setComponentPropertyValue(long component, long property, QVariant value) { m_components[component]->getProperty(property)->setValue(value); }
 void DrSettings::setComponentPropertyValue(Components component, Properties property, QVariant value) { m_components[static_cast<long>(component)]->getProperty(property)->setValue(value); }
 
-QString DrSettings::getWorldName() { return m_components[static_cast<long>(Components::World_Settings) ]->getProperty(Properties::World_Name )->getValue().toString(); }
-QString DrSettings::getStageName() { return m_components[static_cast<long>(Components::Stage_Settings) ]->getProperty(Properties::Stage_Name )->getValue().toString(); }
-QString DrSettings::getObjectName(){ return m_components[static_cast<long>(Components::Object_Settings)]->getProperty(Properties::Object_Name)->getValue().toString(); }
-QString DrSettings::getAssetName() { return m_components[static_cast<long>(Components::Asset_Settings) ]->getProperty(Properties::Asset_Name )->getValue().toString(); }
+QString DrSettings::getName() {
+    switch (getType()) {
+    case DrType::World:  return getComponent(Components::World_Settings )->getProperty(Properties::World_Name )->getValue().toString();
+    case DrType::Stage:  return getComponent(Components::Stage_Settings )->getProperty(Properties::Stage_Name )->getValue().toString();
+    case DrType::Object: return getComponent(Components::Object_Settings)->getProperty(Properties::Object_Name)->getValue().toString();
+    case DrType::Asset:  return getComponent(Components::Asset_Settings )->getProperty(Properties::Asset_Name )->getValue().toString();
+    }
+    return "Unknown Type";
+}
 
 DrProperty* DrSettings::findPropertyFromPropertyKey(long property_key_to_find)
 {

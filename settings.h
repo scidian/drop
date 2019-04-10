@@ -45,6 +45,8 @@ public:
 
     DrSettings*  getSettings()          { return this; }
 
+    QString      getName();
+
     ComponentMap getComponentList()     { return m_components; }
     long         getComponentCount()    { return static_cast<int>(m_components.size()); }
 
@@ -65,11 +67,6 @@ public:
     void         addComponent(Components component, QString display_name, QString description, QColor color, bool is_turned_on);
     void         addPropertyToComponent(Components component, Properties property_number, Property_Type type, QVariant value,
                                 QString display_name, QString description, bool is_hidden = false, bool is_editable = true);
-
-    QString      getWorldName();
-    QString      getStageName();
-    QString      getObjectName();
-    QString      getAssetName();
 
 };
 
