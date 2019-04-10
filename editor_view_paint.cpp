@@ -108,8 +108,6 @@ void DrView::paintEvent(QPaintEvent *event)
     }
 
     // Draw Crosshairs under potential drag and drop
-    Dr::SetLabelText(Label_Names::Label_1, "Drop Might Happen: " + QString::number(m_drop_might_happen) );
-
     if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool()) {
         if (m_drop_might_happen)
             paintCrossHairs(painter, mapFromScene(m_drop_location));

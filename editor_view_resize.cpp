@@ -296,13 +296,6 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_sc
     // ***** Update stored scale and selection box
     my_scene->setSelectionScale( new_scale );
     my_scene->updateSelectionBox();
-
-    // ***** Update tool tip
-    double group_width =  QLineF( mapToScene(m_handles_centers[Position_Flags::Left].toPoint()),
-                                  mapToScene(m_handles_centers[Position_Flags::Right].toPoint()) ).length();
-    double group_height = QLineF( mapToScene(m_handles_centers[Position_Flags::Top].toPoint()),
-                                  mapToScene(m_handles_centers[Position_Flags::Bottom].toPoint()) ).length();
-    m_tool_tip->updateToolTipData( QPointF( group_width, group_height ));
 }
 
 

@@ -52,12 +52,12 @@ void InitializeFlags()
     //SetDebugFlag( Debug_Flags::Label_Rotation_Data );
     SetDebugFlag( Debug_Flags::Label_Selection_Group_Data );
     SetDebugFlag( Debug_Flags::Label_Selected_Item_Data );
-    //SetDebugFlag( Debug_Flags::Label_Where_Update_Box_From );
+    SetDebugFlag( Debug_Flags::Label_Where_Update_Box_From );
 
     //SetDebugFlag( Debug_Flags::Paint_Resize_Calculations );
     //SetDebugFlag( Debug_Flags::Paint_Rotating_Angles );
     SetDebugFlag( Debug_Flags::Paint_Shear_Remove );
-    //SetDebugFlag( Debug_Flags::Paint_Size_Grip_Handles );
+    SetDebugFlag( Debug_Flags::Paint_Size_Grip_Handles );
 }
 
 

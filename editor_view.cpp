@@ -164,11 +164,11 @@ void DrView::updateSelectionBoundingBox(int called_from)
     }
     // !!!!! END
 
-    // Size of side handle boxes
+    // Size of side handle boxes (left, top, right, bottom)
     double side_size = 10;
     double s_half = side_size / 2;
 
-    // Size of corner handle boxes
+    // Size of corner handle boxes (top left, top right, bottom left, bottom right
     double corner_size = 14;
 
     // Check if bounding box handles should be squares or circles
@@ -247,6 +247,17 @@ void DrView::updateSelectionBoundingBox(int called_from)
     zero = rotate.map(zero);
     m_handles[Position_Flags::Rotate] = rectAtCenterPoint( zero, corner_size);
     m_handles_centers[Position_Flags::Rotate] = m_handles[Position_Flags::Rotate].boundingRect().center();
+
+    // ***** If we're resizing we now know the new size, update the tooltip with it
+    if (m_view_mode == View_Mode::Resizing) {
+        if (m_tool_tip->getTipType() == View_Mode::Resizing) {
+            double group_width =  QLineF( mapToScene(m_handles_centers[Position_Flags::Left].toPoint()),
+                                          mapToScene(m_handles_centers[Position_Flags::Right].toPoint()) ).length();
+            double group_height = QLineF( mapToScene(m_handles_centers[Position_Flags::Top].toPoint()),
+                                          mapToScene(m_handles_centers[Position_Flags::Bottom].toPoint()) ).length();
+            m_tool_tip->updateToolTipData( QPointF( group_width, group_height ));
+        }
+    }
 
     my_scene->scene_mutex.unlock();
 }
