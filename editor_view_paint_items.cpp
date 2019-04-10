@@ -156,6 +156,9 @@ void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw)
 //####################################################################################
 void DrView::paintGroupAngle(QPainter &painter, double angle)
 {
+    bool antialiasing_before = painter.testRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::Antialiasing, false);
+
     painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 1));
 
     // !!!!! #DEBUG:    Draws from center to origin point (mouse down), and center to last position (mouse move)
@@ -178,6 +181,7 @@ void DrView::paintGroupAngle(QPainter &painter, double angle)
     // Draw lines
     painter.drawLine( line_zero );
     painter.drawLine( line_rotated );
+    painter.setRenderHint(QPainter::Antialiasing, antialiasing_before);
 }
 
 
