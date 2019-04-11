@@ -15,6 +15,7 @@
 #include "debug.h"
 #include "editor_tree_assets.h"
 #include "globals.h"
+#include "image_filter_color.h"
 #include "interface_editor_relay.h"
 #include "library.h"
 #include "project.h"
@@ -107,6 +108,20 @@ void TreeAssets::buildAssetTree(QString search_text)
     CategoryButton *character_button = initializeCatergoryButton(character_item, "  Characters");
     CategoryButton *objects_button =   initializeCatergoryButton(objects_item,   "  Objects");
     CategoryButton *text_button =      initializeCatergoryButton(text_item,      "  Text");
+
+    QPixmap char_icon( ":/tree_icons/tree_character.png" );
+    char_icon = DrFilter::changeToGrayscale(char_icon);
+    char_icon = DrFilter::changeBrightness(char_icon, 200);
+    character_button->setIcon( char_icon );
+    QPixmap object_icon( ":/tree_icons/tree_object.png" );
+    object_icon = DrFilter::changeToGrayscale(object_icon);
+    object_icon = DrFilter::changeBrightness(object_icon, 200);
+    objects_button->setIcon( object_icon );
+    QPixmap text_icon( ":/tree_icons/tree_text.png" );
+    text_icon = DrFilter::changeToGrayscale(text_icon);
+    text_icon = DrFilter::changeBrightness(text_icon, 200);
+    text_button->setIcon( text_icon );
+
     m_widget_hover->attachToHoverHandler(character_button, Advisor_Info::Asset_Character);
     m_widget_hover->attachToHoverHandler(objects_button,   Advisor_Info::Asset_Object);
     m_widget_hover->attachToHoverHandler(text_button,      Advisor_Info::Asset_Text);
@@ -125,9 +140,14 @@ void TreeAssets::buildAssetTree(QString search_text)
 
 
     // ********** Loop through each object asset and add it to the component frame
+    bool skipped_any = false;
+
     for (auto asset_pair: list_assets) {
         QString asset_name = asset_pair.second->getName();
-        if (!asset_name.toLower().contains(search_text.toLower())) continue;
+        if (!asset_name.toLower().contains(search_text.toLower())) {
+            skipped_any = true;
+            continue;
+        }
 
         QSize frame_size = QSize(100, 66);
         QRect name_rect =  QRect(10, 0, frame_size.width() - 20, 25);
@@ -212,10 +232,15 @@ void TreeAssets::buildAssetTree(QString search_text)
 
 
     // ***** Create a child TreeWidgetItem attached to the TopLevel category item
-    addAssetsToCategory(character_item, assets_frame_characters);
-    addAssetsToCategory(objects_item,   assets_frame_objects);
-    addAssetsToCategory(text_item,      assets_frame_text);
+    if (character_button->isEnabled()) addAssetsToCategory(character_item, assets_frame_characters);
+    if (objects_button->isEnabled())   addAssetsToCategory(objects_item,   assets_frame_objects);
+    if (text_button->isEnabled())      addAssetsToCategory(text_item,      assets_frame_text);
 
+    if (skipped_any) {
+        if (!character_button->isEnabled()) this->takeTopLevelItem( this->indexOfTopLevelItem(character_item) );
+        if (!objects_button->isEnabled())   this->takeTopLevelItem( this->indexOfTopLevelItem(objects_item) );
+        if (!text_button->isEnabled())      this->takeTopLevelItem( this->indexOfTopLevelItem(text_item) );
+    }
 
     // ***** Adds a spacer item at the bottom to allow for comfortable scrolling to the bottom of the tree
     QTreeWidgetItem *spacer_item  = new QTreeWidgetItem();
@@ -241,7 +266,8 @@ void TreeAssets::addAssetsToCategory(QTreeWidgetItem *tree_item, QFrame *asset_f
 // Create and style a buttons to be used as a header items for the categories
 CategoryButton* TreeAssets::initializeCatergoryButton(QTreeWidgetItem *tree_item, QString name)
 {
-    QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; "
+    QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 14px 14px; "
+                                                " padding-left: 10px;"
                                                 " color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
                                                 " border: none; "
                                                 " border-style: solid; "
@@ -256,9 +282,12 @@ CategoryButton* TreeAssets::initializeCatergoryButton(QTreeWidgetItem *tree_item
                                                 " , stop:0.95 " + Dr::GetColor(Window_Colors::Button_Light).darker(400).name() +
                                                 " , stop:1.00 " + Dr::GetColor(Window_Colors::Button_Light).darker(400).name() + "); } "
                                   " QPushButton:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } "
-                                  " QPushButton:pressed { color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } ");
-    CategoryButton *button = new CategoryButton(name, QColor(204, 204, 204), nullptr, tree_item);
-    ///button->setIcon(QIcon(component_map.second->getIcon()));              // TODO: Set Icon call, need to implement
+                                  " QPushButton:pressed  { color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
+                                  " QPushButton:disabled { color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } ");
+    CategoryButton *button = new CategoryButton(name,
+                                                Dr::GetColor(Window_Colors::Text),
+                                                Dr::GetColor(Window_Colors::Text_Dark),
+                                                nullptr, tree_item);
     button->setStyleSheet(buttonColor);
     button->setEnabled(false);
     this->setItemWidget(tree_item, 0, button);                             // Apply the button to the tree item

@@ -136,8 +136,9 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
         grid->setContentsMargins(0, 0, 0, 0);
 
         CategoryButton *category_button = new CategoryButton(QString(" ") + component_pair.second->getDisplayNameQString(),
-                                                             Qt::black, nullptr, category_item);
+                                                             Qt::black, Qt::black, nullptr, category_item);
         QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: black; "
+                                                    " padding-left: 2px;"
                                                     " border: none; "
                                                     " border-style: solid; "
                                                     " border-top-width: " + Dr::BorderWidth() + "; "

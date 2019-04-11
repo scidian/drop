@@ -95,9 +95,9 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     long asset_11 = project->addAsset(DrAssetType::Object, image_11 );          // "Cake Ice Cube"
     long asset_12 = project->addAsset(DrAssetType::Object, image_12 );          // "PlanetWithAReallyLongName"
 
-    project->addAsset(DrAssetType::Text, font_1);       // "Test Font"
-    project->addAsset(DrAssetType::Text, font_2);       // "Test Font 2"
-    project->addAsset(DrAssetType::Text, font_3);       // "Test Font 3"
+    long asset_13 = project->addAsset(DrAssetType::Text, font_1);       // "Test Font"
+    project->addAsset(DrAssetType::Text, font_2);                       // "Test Font 2"
+    project->addAsset(DrAssetType::Text, font_3);                       // "Test Font 3"
     // !!!!! END
 
 
@@ -120,7 +120,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_5,    600,  -600, 30);
     project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_12,   200, -1000,  5);
 
-    //project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Text,   asset_13, 500, -900, 6);
+    project->getWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Text,   asset_13,   500, -900,   6);
 
     project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Character, asset_6, 200,  -600,  4);
     project->getWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_5,    300,  -700, -2);

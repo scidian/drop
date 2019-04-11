@@ -60,7 +60,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrObject *object,
 
     // Store some initial user data
     setData(User_Roles::Name, m_asset->getName() );
-    setData(User_Roles::Type, Dr::StringFromType( m_object->getType() ));
+    setData(User_Roles::Type, Dr::StringFromObjectType( m_object->getObjectType() ));
     setData(User_Roles::Key, QVariant::fromValue(m_object_key));
 
     double  angle =   m_object->getComponentProperty(Components::Object_Transform, Properties::Object_Rotation)->getValue().toDouble();

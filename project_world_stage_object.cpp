@@ -155,7 +155,7 @@ void DrObject::addComponentTransform(double width, double height, double x, doub
     addPropertyToComponent(Components::Object_Layering, Properties::Object_Z_Order, Property_Type::Int, QVariant::fromValue(z),
                            "Z Order", "Arrangement of item along the z axis in the stage");
     addPropertyToComponent(Components::Object_Layering, Properties::Object_Opacity, Property_Type::Percent, 100,
-                           "Opacity", "How see transparent an item is, 0 (invisible) - 100 (solid)");
+                           "Opacity", "How transparent an item is, 0 (invisible) - 100 (solid)");
 }
 
 void DrObject::addComponentMovement()
