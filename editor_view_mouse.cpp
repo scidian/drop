@@ -185,13 +185,13 @@ void DrView::mouseReleaseEvent(QMouseEvent *event)
             m_resize_started = false;
         }
 
-        // Object inspector ignores changes during Translating and Resizing, it's much, much faster this way...
+        // Object inspector ignores changes during Translating and Resizing and Rotating, it's much, much faster this way...
         // Now that mousue has been released, update object inspector property boxes
-        if (m_view_mode == View_Mode::Translating || m_view_mode == View_Mode::Resizing) {
+        if (m_view_mode == View_Mode::Translating || m_view_mode == View_Mode::Resizing || m_view_mode == View_Mode::Rotating) {
             m_view_mode = View_Mode::None;
-            m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View,
-                                                               Dr::ConvertItemListToSettings(my_scene->getSelectionItems()),
-                                                               { Properties::Object_Position, Properties::Object_Size, Properties::Object_Scale });
+            m_editor_relay->updateEditorWidgetsAfterItemChange(
+                        Editor_Widgets::Scene_View, Dr::ConvertItemListToSettings(my_scene->getSelectionItems()),
+                        { Properties::Object_Position, Properties::Object_Size, Properties::Object_Scale, Properties::Object_Rotation });
         }
 
         updateSelectionBoundingBox(6);

@@ -84,6 +84,7 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
     if (currentViewMode() == View_Mode::Disable_Update) return;
     if (currentViewMode() == View_Mode::Translating)    return;
     if (currentViewMode() == View_Mode::Resizing)       return;
+    if (currentViewMode() == View_Mode::Rotating)       return;
 
     // Convert list to longs
     QList<long> property_keys_as_long = Dr::ConvertPropertyListToLongs(property_keys);
