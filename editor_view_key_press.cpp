@@ -16,7 +16,7 @@
 // Key press event
 void DrView::keyPressEvent(QKeyEvent *event)
 {
-    // When space bar is down, enabled mouse press and move to translate viewable area
+    // When space bar is down, enabled mouse press and move to translate viewable area    
     if (event->key() == Qt::Key::Key_Space)     spaceBarDown();
     if (event->key() == Qt::Key::Key_Control)   m_flag_key_down_control = true;
     if (event->key() == Qt::Key::Key_Alt)       m_flag_key_down_alt = true;
@@ -27,6 +27,7 @@ void DrView::keyPressEvent(QKeyEvent *event)
     // Fire mouse move event to update mouse cursor on key presses
     QMouseEvent *fire_mouse_move = new QMouseEvent(QEvent::MouseMove, m_last_mouse_pos, Qt::NoButton,
                                                    Qt::MouseButtons(), Qt::KeyboardModifiers());
+    m_flag_dont_check_keys = true;
     mouseMoveEvent(fire_mouse_move);
 }
 

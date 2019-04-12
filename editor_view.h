@@ -102,6 +102,7 @@ private:
     bool         m_flag_has_shown_a_scene_yet = false;              // False until a scene has been loaded into the view
 
     // Keyboard Flags
+    bool         m_flag_dont_check_keys =   false;                  // True when we don't want mouseMoveEvent to update key flags
     bool         m_flag_key_down_spacebar = false;                  // True when View has focus and spacebar      is down
     bool         m_flag_key_down_control =  false;                  // True when View has focus and control (cmd) is down
     bool         m_flag_key_down_alt =      false;                  // True when View has focus and alt (option)  is down

@@ -36,9 +36,14 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
     if (my_scene->scene_mutex.tryLock(10) == false) return;
 
     // Update keyboard modifiers in case a keyPressEvent snuck through while we didnt have focus
-    m_flag_key_down_control = event->modifiers() & Qt::KeyboardModifier::ControlModifier;
-    m_flag_key_down_alt     = event->modifiers() & Qt::KeyboardModifier::AltModifier;
-    m_flag_key_down_shift   = event->modifiers() & Qt::KeyboardModifier::ShiftModifier;
+    if (!m_flag_dont_check_keys) {
+        m_flag_key_down_control = event->modifiers() & Qt::KeyboardModifier::ControlModifier;
+        m_flag_key_down_alt     = event->modifiers() & Qt::KeyboardModifier::AltModifier;
+        m_flag_key_down_shift   = event->modifiers() & Qt::KeyboardModifier::ShiftModifier;
+    } else {
+        // This variable is used to stop modifier flags from updating when mouseMoveEvent is forcefully called from DrView::keyPressEvent()
+        m_flag_dont_check_keys =  false;
+    }
 
     // Store event mouse position
     m_last_mouse_pos = event->pos();
