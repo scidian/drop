@@ -25,122 +25,122 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    colors/colors.cpp \
+    colors/colors_palette_blank.cpp \
+    colors/colors_palette_material.cpp \
+    colors/colors_palette_rocky_rover.cpp \
+    colors/colors_palette_window_themes.cpp \
+    editor/editor_item.cpp \
+    editor/editor_item_item_change.cpp \
+    editor/editor_item_paint.cpp \
+    editor/editor_scene.cpp \
+    editor/editor_scene_key_press.cpp \
+    editor/editor_scene_select.cpp \
+    editor/editor_scene_undo_commands.cpp \
+    editor/editor_scene_update.cpp \
+    editor/editor_tree_advisor.cpp \
+    editor/editor_tree_assets.cpp \
+    editor/editor_tree_assets_mouse.cpp \
+    editor/editor_tree_assets_update.cpp \
+    editor/editor_tree_inspector.cpp \
+    editor/editor_tree_inspector_update.cpp \
+    editor/editor_tree_inspector_widgets.cpp \
+    editor/editor_tree_inspector_widgets2.cpp \
+    editor/editor_tree_project.cpp \
+    editor/editor_tree_project_drag_drop.cpp \
+    editor/editor_tree_project_selection.cpp \
+    editor/editor_tree_project_update.cpp \
+    editor/editor_view.cpp \
+    editor/editor_view_drag_drop.cpp \
+    editor/editor_view_grid.cpp \
+    editor/editor_view_key_press.cpp \
+    editor/editor_view_mouse.cpp \
+    editor/editor_view_mouse_move.cpp \
+    editor/editor_view_paint.cpp \
+    editor/editor_view_paint_items.cpp \
+    editor/editor_view_resize.cpp \
+    editor/editor_view_rotate.cpp \
+    editor/editor_view_select.cpp \
+    editor/editor_view_tooltip.cpp \
     enums.cpp \
-    form_main.cpp \
+    forms/form_atlas.cpp \
+    forms/form_blank.cpp \
+    forms/form_color_magnifier.cpp \
+    forms/form_fonts.cpp \
+    forms/form_main.cpp \
+    forms/form_main_build.cpp \
+    forms/form_main_build_editor.cpp \
+    forms/form_main_interface_editor.cpp \
+    forms/form_main_menu.cpp \
+    forms/form_main_toolbar.cpp \
+    forms/form_main_toolbar_build.cpp \
+    forms/form_main_toolbar_button_click.cpp \
+    forms/form_popup.cpp \
+    forms/form_popup_colors.cpp \
+    forms/form_popup_grid_snap.cpp \
+    forms/form_settings.cpp \
     main.cpp \
-    editor_tree_inspector.cpp \
-    editor_tree_assets.cpp \
-    editor_tree_advisor.cpp \
-    form_main_menu.cpp \
-    project.cpp \
-    project_world.cpp \
-    project_asset.cpp \
-    settings.cpp \
-    settings_component.cpp \
-    settings_component_property.cpp \
-    colors.cpp \
+    project/project.cpp \
+    project/project_asset.cpp \
+    project/project_font.cpp \
+    project/project_image.cpp \
+    project/project_world.cpp \
+    project/project_world_stage.cpp \
+    project/project_world_stage_object.cpp \
+    settings/settings.cpp \
+    settings/settings_component.cpp \
+    settings/settings_component_property.cpp \
     debug.cpp \
     library_misc.cpp \
-    editor_tree_inspector_widgets.cpp \
-    project_world_stage.cpp \
-    project_world_stage_object.cpp \
-    editor_item.cpp \
-    editor_scene.cpp \
-    editor_scene_undo_commands.cpp \
-    editor_scene_select.cpp \
-    editor_view.cpp \
-    editor_view_mouse.cpp \
-    editor_view_paint.cpp \
-    editor_view_resize.cpp \
-    editor_view_tooltip.cpp \
-    editor_view_rotate.cpp \
-    editor_view_select.cpp \
-    project_image.cpp \
-    editor_tree_project.cpp \
     constants.cpp \
-    editor_view_mouse_move.cpp \
-    editor_tree_inspector_update.cpp \
-    editor_view_grid.cpp \
-    editor_view_key_press.cpp \
-    editor_scene_key_press.cpp \
-    form_main_interface_editor.cpp \
     interface_editor_relay.cpp \
     globals.cpp \
     image_filter_color.cpp \
-    editor_item_item_change.cpp \
-    editor_item_paint.cpp \
-    editor_view_paint_items.cpp \
-    form_main_toolbar.cpp \
     library_style_widget.cpp \
     library_style_sheet.cpp \
-    form_main_build.cpp \
-    form_main_build_editor.cpp \
-    form_main_toolbar_build.cpp \
-    widgets.cpp \
-    widgets_event_filters.cpp \
-    widgets_layout.cpp \
-    project_font.cpp \
-    form_settings.cpp \
-    editor_tree_assets_mouse.cpp \
-    form_main_toolbar_button_click.cpp \
-    library_style_sheet_toolbar.cpp \
-    form_atlas.cpp \
-    form_fonts.cpp \
-    form_popup.cpp \
-    form_blank.cpp \
-    form_color_magnifier.cpp \
-    form_popup_colors.cpp \
-    form_popup_grid_snap.cpp \
-    editor_tree_inspector_widgets2.cpp \
-    colors_palette_material.cpp \
-    colors_palette_window_themes.cpp \
-    colors_palette_rocky_rover.cpp \
-    colors_palette_blank.cpp \
-    editor_view_drag_drop.cpp \
-    editor_tree_project_drag_drop.cpp \
-    editor_tree_assets_update.cpp \
-    editor_tree_project_selection.cpp \
-    editor_tree_project_update.cpp \
-    editor_scene_update.cpp
+    widgets/widgets.cpp \
+    widgets/widgets_event_filters.cpp \
+    widgets/widgets_layout.cpp \
+    library_style_sheet_toolbar.cpp
 
 HEADERS += \
+    colors/colors.h \
+    editor/editor_item.h \
+    editor/editor_scene.h \
+    editor/editor_scene_undo_commands.h \
+    editor/editor_tree_advisor.h \
+    editor/editor_tree_assets.h \
+    editor/editor_tree_inspector.h \
+    editor/editor_tree_project.h \
+    editor/editor_view.h \
     enums.h \
-    form_main.h \
-    editor_tree_inspector.h \
-    editor_tree_assets.h \
-    editor_tree_advisor.h \
-    project.h \
-    project_world.h \
-    project_asset.h \
-    settings.h \
-    settings_component.h \
-    settings_component_property.h \
+    forms/form_atlas.h \
+    forms/form_blank.h \
+    forms/form_color_magnifier.h \
+    forms/form_fonts.h \
+    forms/form_main.h \
+    forms/form_popup.h \
+    forms/form_settings.h \
+    project/project.h \
+    project/project_asset.h \
+    project/project_font.h \
+    project/project_image.h \
+    project/project_world.h \
+    project/project_world_stage.h \
+    project/project_world_stage_object.h \
+    settings/settings.h \
+    settings/settings_component.h \
+    settings/settings_component_property.h \
     library.h \
-    colors.h \
     debug.h \
-    project_world_stage.h \
-    project_world_stage_object.h \
-    editor_item.h \
-    editor_scene.h \
-    editor_view.h \
-    editor_scene_undo_commands.h \
-    project_image.h \
-    editor_tree_project.h \
     constants.h \
     interface_editor_relay.h \
     globals.h \
     image_filter_color.h \
     enums_form_main.h \
-    widgets.h \
-    widgets_event_filters.h \
-    widgets_layout.h \
-    project_font.h \
-    form_settings.h \
-    form_atlas.h \
-    form_fonts.h \
-    form_popup.h \
-    form_blank.h \
-    form_color_magnifier.h
+    widgets/widgets.h \
+    widgets/widgets_event_filters.h \
+    widgets/widgets_layout.h
 
 FORMS +=
 

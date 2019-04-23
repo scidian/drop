@@ -13,9 +13,9 @@
 #include <QSpacerItem>
 #include <QTime>
 
-#include "colors.h"
+#include "colors/colors.h"
 #include "library.h"
-#include "widgets.h"
+#include "widgets/widgets.h"
 
 namespace Dr {
 

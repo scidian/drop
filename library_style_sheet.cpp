@@ -5,7 +5,7 @@
 //      Helpful QWidget / QObject formating functions
 //
 //
-#include "colors.h"
+#include "colors/colors.h"
 #include "library.h"
 
 namespace Dr {
@@ -62,8 +62,8 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
 
         // Horizontal and vertical splitters
         " QSplitter { width: 5px; height: 5px; } "
-        " QSplitter::handle:vertical { image: url(:/gui_misc/splitter_v.png); } "
-        " QSplitter::handle:horizontal { image: url(:/gui_misc/splitter_h.png); } "
+        " QSplitter::handle:vertical { image: url(:/assets/gui_misc/splitter_v.png); } "
+        " QSplitter::handle:horizontal { image: url(:/assets/gui_misc/splitter_h.png); } "
 
         // DrView display area
         " QGraphicsView { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
@@ -173,7 +173,7 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         " QWidget#assetSearchWidget {"
         "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; } "
         " QLineEdit#assetSearchBar { "
-        "       background-image: url(:/gui_misc/search.png); "
+        "       background-image: url(:/assets/gui_misc/search.png); "
         "       background-repeat: no-repeat; "
         "       background-position: left; "
         "       padding: 2 2 3 22; } "
@@ -288,22 +288,22 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         " QRadioButton#popupRadio:checked { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } "
         " QRadioButton#popupRadio:hover   { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       padding-left: 2px; } "
-        " QRadioButton::indicator::checked       { image: url(:/gui_misc/check.png); padding-left: 5px;  padding-right: 4px;  } "
-        " QRadioButton::indicator::checked:hover { image: url(:/gui_misc/check.png); padding-left: 3px;  padding-right: 6px; } "
+        " QRadioButton::indicator::checked       { image: url(:/assets/gui_misc/check.png); padding-left: 5px;  padding-right: 4px;  } "
+        " QRadioButton::indicator::checked:hover { image: url(:/assets/gui_misc/check.png); padding-left: 3px;  padding-right: 6px; } "
         " QRadioButton::indicator::unchecked     { image: none; } "
 
         // Color picker and dialog buttons
         + Dr::StyleSheetColorButton(Dr::GetColor(Window_Colors::Background_Dark),
                                     Dr::GetColor(Window_Colors::Background_Dark),
                                     Dr::GetColor(Window_Colors::Background_Dark), 0, 0, 0, 0, false, true, "#buttonColorPicker") +
-        " QPushButton#buttonColorPicker       { image: url(:/gui_misc/dropper.png);       padding: 3px; } "
+        " QPushButton#buttonColorPicker       { image: url(:/assets/gui_misc/dropper.png);       padding: 3px; } "
         " QPushButton#buttonColorPicker:hover { " +
         StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Light), Dr::GetColor(Window_Colors::Background_Light), 10, 92, true) + " }"
 
         + Dr::StyleSheetColorButton(Dr::GetColor(Window_Colors::Background_Dark),
                                     Dr::GetColor(Window_Colors::Background_Dark),
                                     Dr::GetColor(Window_Colors::Background_Dark), 0, 4, 0, 4, false, true, "#buttonColorDialog") +
-        " QPushButton#buttonColorDialog       { image: url(:/gui_misc/color_wheel.png);   padding: 3px; } "
+        " QPushButton#buttonColorDialog       { image: url(:/assets/gui_misc/color_wheel.png);   padding: 3px; } "
         " QPushButton#buttonColorDialog:hover { " +
         StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Light), Dr::GetColor(Window_Colors::Background_Light), 10, 92, true) + " }"
         " QPushButton#buttonColorDialog:pressed { padding-left: 3px; padding-right: 3px; padding-top: 4px; padding-bottom: 2px; " +
@@ -313,7 +313,7 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         + Dr::StyleSheetColorButton(Dr::GetColor(Window_Colors::Background_Dark),
                                     Dr::GetColor(Window_Colors::Background_Dark),
                                     Dr::GetColor(Window_Colors::Background_Dark), 3, 3, 3, 3, true, true, "#buttonColorPalette") +
-        " QPushButton#buttonColorPalette       { image: url(:/gui_misc/color_palette.png);   padding: 5px; margin-bottom: 1px; } "
+        " QPushButton#buttonColorPalette       { image: url(:/assets/gui_misc/color_palette.png);   padding: 5px; margin-bottom: 1px; } "
         " QPushButton#buttonColorPalette:hover { " +
         StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Light), Dr::GetColor(Window_Colors::Background_Light), 10, 92, true) + " }"
         " QPushButton#buttonColorPalette:pressed { padding-left: 5px; padding-right: 5px; padding-top: 6px; padding-bottom: 4px; " +
@@ -325,7 +325,7 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         + Dr::StyleSheetColorButton(Dr::GetColor(Window_Colors::Background_Dark),
                                     Dr::GetColor(Window_Colors::Background_Dark),
                                     Dr::GetColor(Window_Colors::Background_Dark), 3, 3, 3, 3, true, true, "#buttonColorHistory") +
-        " QPushButton#buttonColorHistory       { image: url(:/gui_misc/color_history.png);   padding: 5px; } "
+        " QPushButton#buttonColorHistory       { image: url(:/assets/gui_misc/color_history.png);   padding: 5px; } "
         " QPushButton#buttonColorHistory:hover { " +
         StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Light), Dr::GetColor(Window_Colors::Background_Light), 10, 92, true) + " }"
         " QPushButton#buttonColorHistory:pressed { padding-left: 5px; padding-right: 5px; padding-top: 6px; padding-bottom: 4px; " +

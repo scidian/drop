@@ -44,9 +44,9 @@
 #include <QApplication>
 #include <QMetaType>
 
-#include "colors.h"
+#include "colors/colors.h"
 #include "debug.h"
-#include "form_main.h"
+#include "forms/form_main.h"
 #include "globals.h"
 
 int main(int argc, char *argv[])

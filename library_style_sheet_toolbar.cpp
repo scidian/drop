@@ -5,7 +5,7 @@
 //
 //
 //
-#include "colors.h"
+#include "colors/colors.h"
 #include "library.h"
 
 namespace Dr {
@@ -121,11 +121,11 @@ QString StyleSheetToolBarModeButton(QString button_name, QString icon_name, QStr
     "       border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
     " QToolButton#" + button_name + ":checked {          border-radius: 4px; border: 1px solid; " + StyleSheetRecessedBackgroundBorder(12, 93) +  "; } "
     " QToolButton#" + button_name + ":hover:checked {    border-radius: 4px; border: 1px solid; " + StyleSheetRecessedBackgroundBorder(12, 93) +  "; } "
-    " QToolButton#" + button_name + "  {                image: url(:/toolbar_icons/" + icon_name + "); padding: 7px; } "
-    " QToolButton#" + button_name + ":pressed {         image: url(:/toolbar_icons/" + icon_faded_name + "); padding: 7px; } "
-    " QToolButton#" + button_name + ":checked {         image: url(:/toolbar_icons/" + icon_name + "); padding: 7px; } "
-    " QToolButton#" + button_name + ":hover:checked {   image: url(:/toolbar_icons/" + icon_name + "); padding: 7px; } "
-    " QToolButton#" + button_name + ":hover:!checked {  image: url(:/toolbar_icons/" + icon_name + "); padding: 7px; } ";
+    " QToolButton#" + button_name + "  {                image: url(:/assets/toolbar_icons/" + icon_name + "); padding: 7px; } "
+    " QToolButton#" + button_name + ":pressed {         image: url(:/assets/toolbar_icons/" + icon_faded_name + "); padding: 7px; } "
+    " QToolButton#" + button_name + ":checked {         image: url(:/assets/toolbar_icons/" + icon_name + "); padding: 7px; } "
+    " QToolButton#" + button_name + ":hover:checked {   image: url(:/assets/toolbar_icons/" + icon_name + "); padding: 7px; } "
+    " QToolButton#" + button_name + ":hover:!checked {  image: url(:/assets/toolbar_icons/" + icon_name + "); padding: 7px; } ";
 }
 
 
@@ -135,10 +135,10 @@ QString StyleSheetToolBarModeButton(QString button_name, QString icon_name, QStr
 QString StyleSheetToolBarButtons(QString button_name, QString icon_unchecked, QString icon_checked, QString icon_disabled,
                                  int padding, int tl, int tr, int bl, int br, bool checkable) {
     QString text =
-        " QToolButton#" + button_name + "          { image: url(:/toolbar_icons/toolbar_" + icon_unchecked + "); "
+        " QToolButton#" + button_name + "          { image: url(:/assets/toolbar_icons/toolbar_" + icon_unchecked + "); "
                                         "            padding: " + QString::number(padding) + "px; } "
-        " QToolButton#" + button_name + ":checked  { image: url(:/toolbar_icons/toolbar_" + icon_checked + ");    } "
-        " QToolButton#" + button_name + ":disabled { image: url(:/toolbar_icons/toolbar_" + icon_disabled + ");   } "
+        " QToolButton#" + button_name + ":checked  { image: url(:/assets/toolbar_icons/toolbar_" + icon_checked + ");    } "
+        " QToolButton#" + button_name + ":disabled { image: url(:/assets/toolbar_icons/toolbar_" + icon_disabled + ");   } "
         " QToolButton#" + button_name + " { border-top-left-radius: " +     QString::number(tl) + "px;  "
                                         "   border-top-right-radius: " +    QString::number(tr) + "px;  "
                                         "   border-bottom-left-radius: " +  QString::number(bl) + "px;  "

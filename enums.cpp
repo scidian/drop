@@ -6,10 +6,10 @@
 //
 //
 #include "enums.h"
-#include "editor_item.h"
-#include "editor_scene.h"
-#include "project_world_stage_object.h"
-#include "settings.h"
+#include "editor/editor_item.h"
+#include "editor/editor_scene.h"
+#include "project/project_world_stage_object.h"
+#include "settings/settings.h"
 
 
 namespace Dr {
