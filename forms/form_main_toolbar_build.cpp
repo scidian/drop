@@ -19,6 +19,7 @@
 #include "form_settings.h"
 #include "globals.h"
 #include "library.h"
+#include "style/style.h"
 #include "widgets/widgets_event_filters.h"
 
 

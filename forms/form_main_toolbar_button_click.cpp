@@ -57,9 +57,7 @@ void FormMain::buttonGroupLayeringClicked(int id)
 
     if (clicked == Buttons_Layering::Send_To_Back) {
 
-
         Dr::ShowMessageBox( project->testSpeedFindSettings(1000) );
-
 
     }
 }

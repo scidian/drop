@@ -79,6 +79,7 @@ SOURCES += \
     forms/form_popup_colors.cpp \
     forms/form_popup_grid_snap.cpp \
     forms/form_settings.cpp \
+    library.cpp \
     main.cpp \
     project/project.cpp \
     project/project_asset.cpp \
@@ -91,17 +92,16 @@ SOURCES += \
     settings/settings_component.cpp \
     settings/settings_component_property.cpp \
     debug.cpp \
-    library_misc.cpp \
     constants.cpp \
     interface_editor_relay.cpp \
     globals.cpp \
     image_filter_color.cpp \
-    library_style_widget.cpp \
-    library_style_sheet.cpp \
+    style/style_format_widgets.cpp \
+    style/style_sheet_main.cpp \
+    style/style_sheet_toolbar.cpp \
     widgets/widgets.cpp \
     widgets/widgets_event_filters.cpp \
-    widgets/widgets_layout.cpp \
-    library_style_sheet_toolbar.cpp
+    widgets/widgets_layout.cpp
 
 HEADERS += \
     colors/colors.h \
@@ -138,6 +138,7 @@ HEADERS += \
     globals.h \
     image_filter_color.h \
     enums_form_main.h \
+    style/style.h \
     widgets/widgets.h \
     widgets/widgets_event_filters.h \
     widgets/widgets_layout.h

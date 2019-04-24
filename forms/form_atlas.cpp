@@ -11,6 +11,7 @@
 #include "form_atlas.h"
 #include "library.h"
 #include "project/project.h"
+#include "style/style.h"
 #include "widgets/widgets_event_filters.h"
 
 //####################################################################################

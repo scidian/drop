@@ -102,6 +102,35 @@ QString RemoveTrailingDecimals(double value, int max_decimal_places)
 }
 
 
+
+//####################################################################################
+//##        These functions check the width of text that would be drawn
+//##        with a particular font
+//####################################################################################
+int CheckFontWidth(QFont font, QString text_to_check)
+{
+    QFontMetrics font_metrics { font };
+    return font_metrics.horizontalAdvance( text_to_check );
+}
+
+// Shortens label text to fit within a widget (max_width), used in editor_tree_assets frames
+QString FitStringToWidth(QFont font, QString text_to_check, int max_width, bool use_dots)
+{
+    QString text = text_to_check;
+    QFontMetrics font_metrics { font };
+    int width = font_metrics.horizontalAdvance( text_to_check );
+
+    int length = text.length();
+    while (width > max_width && length >= 1) {
+        --length;
+        text = text_to_check.left(length);
+        if (use_dots) text += "...";
+        width = font_metrics.horizontalAdvance( text );
+    }
+    return text;
+}
+
+
 //####################################################################################
 //##        Returns System time as string
 //####################################################################################

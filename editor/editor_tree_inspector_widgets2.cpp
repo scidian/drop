@@ -19,6 +19,7 @@
 #include "forms/form_popup.h"
 #include "library.h"
 #include "settings/settings_component_property.h"
+#include "../style/style.h"
 #include "widgets/widgets_event_filters.h"
 
 

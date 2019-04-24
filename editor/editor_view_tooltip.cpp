@@ -19,7 +19,7 @@
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
-
+#include "style/style.h"
 
 
 //####################################################################################

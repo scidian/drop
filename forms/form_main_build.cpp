@@ -22,6 +22,7 @@
 #include "library.h"
 #include "project/project.h"
 #include "project/project_world_stage.h"
+#include "style/style.h"
 #include "widgets/widgets_event_filters.h"
 
 

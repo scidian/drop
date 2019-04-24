@@ -30,6 +30,7 @@
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
+#include "style/style.h"
 
 
 //####################################################################################
@@ -130,12 +131,6 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
     project->findWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_9,    200,  -500,  2);
     project->findWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_10,   400,  -800,  4);
     project->findWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_11,   600, -1100, -2);
-
-
-    for (int i = 0; i < 1150; i++) {
-         project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_1,    100,  -800,  1);
-    }
-
 
     project->setOption(Project_Options::Current_World, 0);
     project->setOption(Project_Options::Current_Stage, QVariant::fromValue(project->findWorldWithName("World 2")->getStageWithName("4")->getKey()) );
