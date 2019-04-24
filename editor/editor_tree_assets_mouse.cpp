@@ -77,7 +77,7 @@ bool AssetMouseHandler::eventFilter(QObject *object, QEvent *event)
 
     // Start scrolling name if name is too wide to be shown
     } else if (event->type() == QEvent::HoverEnter) {
-        DrSettings  *asset = m_editor_relay->currentProject()->findSettingsFromKey(asset_key);
+        DrSettings  *asset = m_editor_relay->currentProject()->findAssetFromKey(asset_key);
         QString asset_name = asset->getComponentPropertyValue(Components::Asset_Settings, Properties::Asset_Name).toString();
 
         if (asset_name != label_name->text()) {

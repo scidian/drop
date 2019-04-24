@@ -92,7 +92,7 @@ void TreeAssets::buildAssetTree(QString search_text)
 
 
     // ***** Retrieve list of assets for project
-    AssetMap list_assets = m_project->getAssetMap();
+    AssetMap &list_assets = m_project->getAssetMap();
     int rowCount = 0;
     this->clear();
     m_asset_frames.clear();

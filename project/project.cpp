@@ -5,10 +5,10 @@
 //      DrProject Class Definitions
 //
 //
-#include <stdexcept>
+#include <QRandomGenerator>
+#include <QTime>
 
 #include "library.h"
-
 #include "project.h"
 #include "project_asset.h"
 #include "project_font.h"
@@ -16,6 +16,7 @@
 #include "project_world.h"
 #include "project_world_stage.h"
 #include "project_world_stage_object.h"
+
 
 //####################################################################################
 //##    Constructor, Destructor
@@ -36,9 +37,10 @@ DrProject::~DrProject()
 }
 
 
-
 //####################################################################################
-//##    Project Children Functions
+//##
+//##    Functions to add different object types into project
+//##
 //####################################################################################
 
 long DrProject::addAsset(DrAssetType new_asset_type, long image_key)
@@ -71,14 +73,97 @@ void DrProject::addWorld()
     do {
         ++test_num;
         new_name = "World " + QString::number(test_num);
-    } while (getWorldWithName(new_name) != nullptr);
+    } while (findWorldWithName(new_name) != nullptr);
 
     long new_world_key = getNextKey();
     m_worlds[new_world_key] = new DrWorld(this, new_world_key, new_name);
 }
 
+
+//####################################################################################
+//##
+//##    Key Finding - These functions search the current project for the specified Key and return the requested info
+//##                    (key's are generated from Project key generator upon object initialization)
+//##
+//####################################################################################
+
+// Returns a pointer to the Base DrSettings class of the object with the specified key
+DrSettings* DrProject::findSettingsFromKey(long check_key)
+{
+    AssetMap::iterator asset_iter = m_assets.find(check_key);
+    if (asset_iter != m_assets.end())   return asset_iter->second;
+
+    ImageMap::iterator image_iter = m_images.find(check_key);
+    if (image_iter != m_images.end())   return image_iter->second;
+
+    FontMap::iterator font_iter = m_fonts.find(check_key);
+    if (font_iter != m_fonts.end())     return font_iter->second;
+
+    WorldMap &worlds = m_worlds;
+    WorldMap::iterator world_iter = worlds.find(check_key);
+    if (world_iter != worlds.end())   return world_iter->second;
+
+    for (auto world_pair : worlds) {
+        StageMap &stages = world_pair.second->getStageMap();
+        StageMap::iterator stage_iter = stages.find(check_key);
+        if (stage_iter != stages.end())     return stage_iter->second;
+
+        for (auto stage_pair : stages) {
+            ObjectMap &objects = stage_pair.second->getObjectMap();
+            ObjectMap::iterator object_iter = objects.find(check_key);
+            if (object_iter != objects.end())   return object_iter->second;
+        }
+    }
+
+    Dr::ShowMessageBox("WARNING: Did not find key (" + QString::number(check_key) +
+                       ") in project! \n"
+                       "Last key used in project: " + QString::number(m_key_generator - 1) + "!\n\n"
+                       "This warning called from \"DrProject::findChildSettingsFromKey\"");
+    return nullptr;
+}
+
+// Searches all member variables / containers for the specified unique project key
+DrType DrProject::findChildTypeFromKey(long check_key) {
+    return findSettingsFromKey(check_key)->getType();
+}
+
+
+DrAsset* DrProject::findAssetFromKey(long check_key)
+{
+    AssetMap::iterator asset_iter = m_assets.find(check_key);
+    if (asset_iter != m_assets.end())
+        return asset_iter->second;
+    else
+        return nullptr;
+}
+
+DrStage* DrProject::findStageFromKey(long check_key)
+{
+    for (auto world_pair : m_worlds) {
+        StageMap &stages = world_pair.second->getStageMap();
+        StageMap::iterator stage_iter = stages.find(check_key);
+
+        if (stage_iter != stages.end())
+            return stage_iter->second;
+    }
+    return nullptr;
+}
+
+DrObject* DrProject::findObjectFromKey(long check_key)
+{
+    for (auto world : m_worlds) {
+        for (auto stage : world.second->getStageMap()) {
+            ObjectMap &objects = stage.second->getObjectMap();
+            ObjectMap::iterator object_iter = objects.find(check_key);
+            if (object_iter != objects.end())
+                return object_iter->second;
+        }
+    }
+    return nullptr;
+}
+
 // Returns a pointer to the World with the mathcing name
-DrWorld* DrProject::getWorldWithName(QString world_name)
+DrWorld* DrProject::findWorldWithName(QString world_name)
 {
     QString compare_name;
     for (auto i: m_worlds) {
@@ -90,52 +175,34 @@ DrWorld* DrProject::getWorldWithName(QString world_name)
 
 
 //####################################################################################
-//##
-//##    Key Finding - These functions search the current project for the specified Key and return the requested info
-//##                    (key's are generated from Project key generator upon object initialization)
-//##
+//##    Tests find function for speed so we can test speed of std::map vs std::unordered_map, etc
 //####################################################################################
-
-DrStage* DrProject::findStageFromKey(long check_key)
+QString DrProject::testSpeedFindSettings(int test_size)
 {
-    for (auto world_pair : m_worlds) {
-        try {  return world_pair.second->getStageMap().at(check_key);  }
-        catch (const std::out_of_range&) {  }               // Not Found
-    }
-    return nullptr;
+    // Show some initial data
+    int     number_of_assets = int(m_key_generator) - 1;
+    QString results =   "Find Speed Test \n---------------\n"
+                        "Number of Assets in Project: " + QString::number(number_of_assets) + "\n"
+                        "Newest Asset Name: " + findSettingsFromKey(number_of_assets)->getName() + "\n"
+                        "Newest Asset Type: " + Dr::StringFromType(findSettingsFromKey(number_of_assets)->getType()) + "\n"
+                        "First  Asset Name: " + findSettingsFromKey(c_key_starting_number)->getName() + "\n"
+                        "First  Asset Type: " + Dr::StringFromType(findSettingsFromKey(c_key_starting_number)->getType()) + "\n\n"
+                        "Number of iterations tested: " + QString::number(test_size) + "\n";
+
+    // Create a vector of random keys to find
+    QVector<int> keys;
+    for (int i = 0; i < test_size; i++)
+        keys.append( QRandomGenerator::global()->bounded(c_key_starting_number, number_of_assets) );
+
+    // Find the random keys within the project
+    QTime timer;
+    timer.restart();
+    for (auto key : keys)
+        findSettingsFromKey(key);
+    results += "Total time taken to find all settings in project: " + QString::number(timer.elapsed()) + "\n\n";
+
+    return results;
 }
-
-// Returns a pointer to the Base DrSettings class of the object with the specified key
-DrSettings* DrProject::findSettingsFromKey(long check_key)
-{
-    try {  return m_assets.at(check_key);  }
-    catch (const std::out_of_range&) {  }                   // Not Found
-
-    for (auto i : m_worlds) {
-        if (i.second->getKey() == check_key) { return i.second->getSettings(); }
-
-        for (auto j : i.second->getStageMap()) {
-            if (j.second->getKey() == check_key) { return j.second->getSettings(); }
-
-            for (auto k : j.second->getObjectMap()) {
-                if (k.second->getKey() == check_key) { return k.second->getSettings(); }
-
-                //************* More types implemented
-            }
-        }
-    }
-
-    Dr::ShowMessageBox("WARNING: Did not find key in project, this warning called from \"DrProject::findChildSettingsFromKey\"");
-    return nullptr;
-}
-
-// Searches all member variables / containers for the specified unique project key
-DrType DrProject::findChildTypeFromKey(long check_key)
-{
-    return findSettingsFromKey(check_key)->getType();
-}
-
-
 
 
 

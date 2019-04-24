@@ -40,7 +40,7 @@ public:
     // Getters and setters
     virtual DrType  getType() override  { return DrType::World; }
     DrProject*      getParentProject()  { return m_parent_project; }
-    StageMap        getStageMap()       { return m_stages; }
+    StageMap&       getStageMap()       { return m_stages; }
 
 
     // External calls

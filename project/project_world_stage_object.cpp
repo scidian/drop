@@ -30,12 +30,10 @@ DrObject::DrObject(DrProject *parent_project, DrWorld *parent_world, DrStage *pa
     m_object_type = new_object_type;                // assign object type
     m_asset_key = from_asset_key;                   // associated asset key
 
-    DrSettings *asset_settings = m_parent_project->findSettingsFromKey(from_asset_key);
-    DrAsset *asset = dynamic_cast<DrAsset*>(asset_settings);
+    DrAsset *asset = m_parent_project->findAssetFromKey(from_asset_key);
+
 
     // Call to load in all the components / properties for this Stage object
-
-
     switch (new_object_type) {
     case DrObjectType::Object:
         addComponentSettingsObject(new_object_name);

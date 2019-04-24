@@ -82,9 +82,9 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
         Dr::SetLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( new_key ) + ", TYPE: " + type_string);
 
         if (new_type == DrType::Object) {
-            DrObject* object = dynamic_cast<DrObject*>(m_project->findSettingsFromKey(new_key));
+            DrObject* object = m_project->findObjectFromKey(new_key);
             long asset_key = object->getAssetKey();
-            QString asset_name = m_project->findSettingsFromKey(asset_key)->getName();
+            QString asset_name = m_project->findAssetFromKey(asset_key)->getName();
 
             Dr::SetLabelText(Label_Names::Label_Object_2, "ASSET KEY:  " + QString::number(asset_key) +
                                                               ", NAME: " + asset_name);
@@ -97,7 +97,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     // If old selection and new selection are both objects, we don't need to completely rebuild inspector, just change values
     if (m_selected_type == DrType::Object && new_type == DrType::Object) {
         m_selected_key =  new_key;
-        updateInspectorPropertyBoxes( { m_project->findSettingsFromKey(m_selected_key) }, { });
+        updateInspectorPropertyBoxes( { m_project->findObjectFromKey(m_selected_key) }, { });
         return;
     } else {
         m_selected_key =  new_key;

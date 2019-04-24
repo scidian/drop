@@ -13,6 +13,8 @@
 #include "form_main.h"
 #include "form_popup.h"
 #include "globals.h"
+#include "library.h"
+#include "project/project.h"
 #include "project/project_world_stage_object.h"
 
 //####################################################################################
@@ -54,6 +56,9 @@ void FormMain::buttonGroupLayeringClicked(int id)
     Buttons_Layering clicked = static_cast<Buttons_Layering>(id);
 
     if (clicked == Buttons_Layering::Send_To_Back) {
+
+
+        Dr::ShowMessageBox( project->testSpeedFindSettings(1000) );
 
 
     }

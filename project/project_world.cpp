@@ -45,12 +45,12 @@ void DrWorld::addStage(QString new_stage_name)
         new_stage_name = "Start Stage";
     }
 
-    m_stages[new_stage_key] = new DrStage(m_parent_project, this, new_stage_key, new_stage_name, need_start_stage);
+    m_stages[new_stage_key] = new DrStage(m_parent_project, this, new_stage_key, new_stage_name, need_start_stage);    
 }
 
 
 //####################################################################################
-//##    Getters - getFirstWorldKey, getWorld (from key), getWorldWithName (from name)
+//##    Getters
 //####################################################################################
 
 // Returns the map Key of the first World in the map container

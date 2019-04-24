@@ -51,7 +51,7 @@ void TreeProject::buildProjectTree()
 
 
             // ***** Iterates through objects based on z-order of each object
-            ObjectMap   objects = stage_pair.second->getObjectMap();
+            ObjectMap  &objects = stage_pair.second->getObjectMap();
             QList<long> keys = stage_pair.second->objectKeysSortedByZOrder();
             for (auto key: keys)
             {

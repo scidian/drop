@@ -47,7 +47,7 @@ public:
     virtual DrType  getType() override  { return DrType::Stage; }
     DrProject*      getParentProject()  { return m_parent_project; }
     DrWorld*        getParentWorld()    { return m_parent_world; }
-    ObjectMap       getObjectMap()      { return m_objects; }
+    ObjectMap&      getObjectMap()      { return m_objects; }
     DrObject*       getObject(long key) { return m_objects[key]; }
 
     QPointF         getViewCenterPoint(){ return m_center_view_point; }

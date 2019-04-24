@@ -153,7 +153,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event)
         long object_count = 0;
         if (my_scene)
             if (my_scene->getCurrentStageShown())
-                object_count = long(my_scene->getCurrentStageShown()->getObjectMap().size());
+                object_count = static_cast<long>(my_scene->getCurrentStageShown()->getObjectMap().size());
         Dr::SetLabelText(Label_Names::Label_Mouse_1, "Mouse Scene X: " + QString::number(mapToScene(m_last_mouse_pos).x()) +
                                                                ", Y: " + QString::number(mapToScene(m_last_mouse_pos).y()) );
         Dr::SetLabelText(Label_Names::Label_Mouse_2, "Mouse View  X: " + QString::number(m_last_mouse_pos.x()) +
