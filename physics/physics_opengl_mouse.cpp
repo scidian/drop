@@ -11,6 +11,7 @@
 
 #include "forms/form_engine.h"
 #include "physics/physics_opengl.h"
+#include "library.h"
 
 //####################################################################################
 //##        Mouse Events
@@ -19,8 +20,11 @@ void PhysicsOpenGL::mousePressEvent(QMouseEvent *event)
 {
     if (m_parent->has_scene == false) return;
 
-    double x = ((event->pos().x() - m_center_of_widget.x()) * 2 );
-    double y = ((event->pos().y() - m_center_of_widget.y()) * 3 );
+    m_parent->label->setText( "Mouse Click at: " + Dr::CurrentTimeAsString());
+
+    double x = ((event->pos().x() - m_parent->camera_pos.x()) * 2 );
+    double y = ((event->pos().y() - m_parent->camera_pos.y()) * 3 );
+    y = -y;
 
     if (m_parent->demo == Demo::Spawn) {
         if (event->button() & Qt::LeftButton) {

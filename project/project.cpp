@@ -199,7 +199,7 @@ QString DrProject::testSpeedFindSettings(int test_size)
     timer.restart();
     for (auto key : keys)
         findSettingsFromKey(key);
-    results += "Total time taken to find all settings in project: " + QString::number(timer.elapsed()) + "\n\n";
+    results += "Total milliseconds taken to find all settings in project: " + QString::number(timer.elapsed()) + "\n\n";
 
     return results;
 }

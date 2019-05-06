@@ -20,6 +20,11 @@
 #include "chipmunk/chipmunk.h"
 #include "physics/physics_sprite.h"
 
+enum class RenderType {
+    Perspective,
+    Orthographic,
+};
+
 enum class Demo {
     Spawn,
     Car,
@@ -57,8 +62,11 @@ private:
 
 public:
     QWidget         *centralWidget;
-    QPushButton     *pushButton,    *pushButton2,   *pushDebug,     *pushSpawn,     *pushCar;
+    QPushButton     *pushButton,    *pushButton2,   *pushDebug;
+    QPushButton     *pushSpawn,     *pushCar;
+    QPushButton     *pushPersp,     *pushOrtho;
     QLabel          *label,         *label2;
+  //  QLabel          *labelOpenGL;
 
     PhysicsOpenGL   *opengl;
 
@@ -68,6 +76,9 @@ public:
     QTime       fps_timer;
     int         fps;
     bool        debug = false;
+
+    RenderType  render_type = RenderType::Orthographic;          // Should render perspective or orthographic?
+    QPointF     camera_pos = QPointF(0, 0);                     // Tells renderer where to center view
 
     bool        has_scene = false;
     Pedal       gas_pedal = Pedal::None;
@@ -106,6 +117,8 @@ private slots:
     void on_pushDebug_clicked();
     void on_pushSpawn_clicked();
     void on_pushCar_clicked();
+    void on_pushPersp_clicked();
+    void on_pushOrtho_clicked();
 
     void buildScene();
     void clearScene();

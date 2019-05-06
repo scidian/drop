@@ -50,9 +50,9 @@ void PhysicsOpenGL::initializeGL() {
 //####################################################################################
 QOpenGLTexture* PhysicsOpenGL::initTexture(QString image_name) {
 
-    // Load image mirrored
+    // Load image, NOTE: QImage is mirrored vertically to account for the fact that OpenGL and QImage use opposite directions for the y axis
     QImage image = QImage(image_name).mirrored();
-    if ( image.format() != QImage::Format::Format_ARGB32 )
+    if (image.format() != QImage::Format::Format_ARGB32 )
         image = image.convertToFormat( QImage::Format_ARGB32 );
 
     // Add a "c_texture_border" pixel border to reduce artifacts during multi sampling
@@ -64,7 +64,16 @@ QOpenGLTexture* PhysicsOpenGL::initTexture(QString image_name) {
     painter.end();
 
     // Create new texture
-    QOpenGLTexture* texture = new QOpenGLTexture( one_pixel_border.toImage() );
+    QOpenGLTexture *texture = new QOpenGLTexture( one_pixel_border.toImage() );
+
+    ///QOpenGLTexture* tile = new QOpenGLTexture(QOpenGLTexture::Target2D);
+    ///tile->setSize(256, 256);
+    ///tile->setFormat(QOpenGLTexture::RGBA8_UNorm);
+    ///// you can manage the number of mimap you desire...
+    ///// by default 256x256 => 9 mipmap levels will be allocated: 256, 128, 64, 32, 16, 8, 4, 2 and 1px to modify this use tile->setMipLevels(n);
+    ///tile->setMinificationFilter(QOpenGLTexture::Nearest);
+    ///tile->setMagnificationFilter(QOpenGLTexture::Nearest);
+    ///tile->setData(image, QOpenGLTexture::GenerateMipMaps);
 
     // These mip map filters allow for nice alpha channels
     texture->setMinificationFilter( QOpenGLTexture::Filter::Nearest);

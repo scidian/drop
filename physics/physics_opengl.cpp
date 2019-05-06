@@ -23,6 +23,13 @@ void PhysicsOpenGL::cleanUp() {
     makeCurrent();
 
     // Destroy OpenGL Resources
+//    if (m_parent->t_ball->isCreated())          m_parent->t_ball->destroy();
+//    if (m_parent->t_metal_block->isCreated())   m_parent->t_metal_block->destroy();
+//    if (m_parent->t_moon_plant->isCreated())    m_parent->t_moon_plant->destroy();
+//    if (m_parent->t_rover_body->isCreated())    m_parent->t_rover_body->destroy();
+//    if (m_parent->t_rover_wheel->isCreated())   m_parent->t_rover_wheel->destroy();
+//    if (m_parent->t_spare_wheel->isCreated())   m_parent->t_spare_wheel->destroy();
+
     delete m_parent->t_ball;
     delete m_parent->t_metal_block;
     delete m_parent->t_moon_plant;
@@ -39,7 +46,6 @@ void PhysicsOpenGL::cleanUp() {
 //####################################################################################
 void PhysicsOpenGL::resizeGL(int w, int h) {
     glViewport( 0, 0, w, h );
-    m_center_of_widget = QPoint( w / 2, h / 2);
 }
 
 

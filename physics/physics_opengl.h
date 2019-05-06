@@ -27,8 +27,6 @@ private:
     float               m_scale = 1.0;                                    // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
     float               m_angle = 0;
 
-    QPointF             m_center_of_widget;
-
 
     QPixmap     p_ball = QPixmap(":/assets/test_images/ball_1.png");
 
@@ -63,6 +61,7 @@ public:
 #endif
 
     // Function Calls
+    void            drawCube();
     QOpenGLTexture* initTexture(QString image_name);
     QPointF         mapToScreen(QVector3D point3D);
     void            zoomInOut(int level);

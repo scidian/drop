@@ -30,12 +30,12 @@ SceneObject* FormEngine::addLine(BodyType body_type, QPointF p1, QPointF p2, dou
     if (body_type != BodyType::Static) {
         QPointF center = QRectF( p1, p2 ).center();
         cpVect cv;
-        cv.x = center.x();  cv.y = -center.y();
+        cv.x = center.x();  cv.y = center.y();
         cpBodySetPosition( line->body, cv );
     }
 
     line->shape_type = ShapeType::Segment;
-    line->shape = cpSegmentShapeNew( line->body, cpv( p1.x(), -p1.y()), cpv(p2.x(), -p2.y()), 2) ;
+    line->shape = cpSegmentShapeNew( line->body, cpv( p1.x(), p1.y()), cpv(p2.x(), p2.y()), 2) ;
     cpShapeSetFriction(     line->shape, friction );
     cpShapeSetElasticity(   line->shape, bounce );          // Ideally between 0 and .99999
     cpSpaceAddShape( space, line->shape );
@@ -67,7 +67,7 @@ SceneObject* FormEngine::addCircle(BodyType body_type, QOpenGLTexture *txt, doub
         case BodyType::Kinematic:   ball->body = cpBodyNewKinematic();              break;
     }
     cpSpaceAddBody(space, ball->body);
-    cpBodySetPosition( ball->body, cpv( x, -y));                                        // Coordinate is center of object
+    cpBodySetPosition( ball->body, cpv( x, y));                                        // Coordinate is center of object
     cpBodySetVelocity( ball->body, cpv( velocity.x(), velocity.y()) );
 
     // Create the collision shape for the ball
@@ -103,7 +103,7 @@ SceneObject* FormEngine::addBlock(BodyType body_type, QOpenGLTexture *txt, doubl
         case BodyType::Kinematic:   block->body = cpBodyNewKinematic();             break;
     }
     cpSpaceAddBody(space, block->body);
-    cpBodySetPosition( block->body, cpv( x, -y));                                        // Coordinate is center of object
+    cpBodySetPosition( block->body, cpv( x, y));                                        // Coordinate is center of object
     cpBodySetVelocity( block->body, cpv( velocity.x(), velocity.y()) );
 
     // Create the collision shape for the block
@@ -147,7 +147,7 @@ SceneObject* FormEngine::addPolygon(BodyType body_type, QOpenGLTexture *txt, dou
         case BodyType::Kinematic:   polygon->body = cpBodyNewKinematic();           break;
     }
     cpSpaceAddBody(space, polygon->body);
-    cpBodySetPosition( polygon->body, cpv( x, -y));                                        // Coordinate is center of object
+    cpBodySetPosition( polygon->body, cpv( x, y));                                        // Coordinate is center of object
     cpBodySetVelocity( polygon->body, cpv( velocity.x(), velocity.y()) );
 
     // Create the collision shape for the flower

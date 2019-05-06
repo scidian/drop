@@ -40,6 +40,8 @@ struct SceneObject {
     bool        is_wheel = false;
     bool        in_scene = true;
 
+    bool        follow = false;
+
     double      angle;
     QPointF     position;
     QPointF     velocity;
