@@ -82,6 +82,8 @@ QString StyleSheetToolBar()
             " QToolButton#buttonSnapOptions                 { margin-left: -1px; } "
             " QToolButton#buttonSnapOptions::menu-indicator { image: none; } " +
 
+    StyleSheetToolBarButtons("buttonPlay",              "play.png",             "play.png",             "play.png",              4, 4, 4, 4, 4, false) +
+
     StyleSheetToolBarButtons("buttonAtlasViewer",       "atlas.png",            "atlas.png",            "atlas.png",             4, 4, 4, 4, 4, false) +
     StyleSheetToolBarButtons("buttonFontBuilder",       "fonts.png",            "fonts.png",            "fonts.png",             4, 4, 4, 4, 4, false) +
     StyleSheetToolBarButtons("buttonSettingsEditor",    "settings.png",         "settings.png",         "settings.png",          4, 4, 4, 4, 4, false) +

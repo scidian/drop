@@ -110,5 +110,6 @@
         <file>assets/toolbar_icons/toolbar_world_map.png</file>
         <file>assets/test_images/metal_block.png</file>
         <file>assets/test_images/spare_wheel.png</file>
+        <file>assets/toolbar_icons/toolbar_play.png</file>
     </qresource>
 </RCC>

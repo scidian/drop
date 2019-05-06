@@ -187,10 +187,10 @@ void FormMain::buildToolBar()
         buttonsGroupPlay->setExclusive(false);
         connect(buttonsGroupPlay, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupPlayClicked(int)));
 
-        tool = createToolbarButton(QStringLiteral("buttonPlay"), Advisor_Info::Play_Game, 34, 26, false, true);
+        tool = createToolbarButton(QStringLiteral("buttonPlay"), Advisor_Info::Play_Game, 48, 26, false, true);
         buttonsGroupPlay->addButton(tool, int(Buttons_Play::Play));
         toolbarLayoutPlay->addWidget(tool);
-        toolbarLayoutPlay->addWidget(createToolbarSpacer(24, 24, false));
+        toolbarLayoutPlay->addWidget(createToolbarSpacer(24, 34, false));
 
 
 

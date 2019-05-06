@@ -299,7 +299,7 @@ void PhysicsOpenGL::drawCube() {
         float x, y, half_width, half_height;
         float half_no_border;
 
-        float multi = 5;
+        float multi =  3;
         float width =  m_parent->t_metal_block->width() *  multi;
         float height = m_parent->t_metal_block->height() * multi;
 
