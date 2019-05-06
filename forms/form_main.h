@@ -87,6 +87,7 @@ private:
     QWidget        *widgetGroupLayering;    QButtonGroup   *buttonsGroupLayering;
     QWidget        *widgetGroupTransform;   QButtonGroup   *buttonsGroupTransform;
     QWidget        *widgetGroupGrid;        QButtonGroup   *buttonsGroupGrid;
+    QWidget        *widgetGroupPlay;        QButtonGroup   *buttonsGroupPlay;
     QWidget        *widgetGroupSettings;
 
 
@@ -183,12 +184,13 @@ private:
     QPushButton*    createPushButton(QString name = "toolbarButton", QString text = "Button");
     QToolButton*    createToolbarButton(const QString &style_sheet_name, HeaderBodyList advisor_text, int w, int h,
                                         bool checkable = false, bool enabled = true);
-    QLabel*         createToolbarSpacer(int height = 24, int space_on_the_right = 1);
+    QLabel*         createToolbarSpacer(int height = 24, int space_on_the_right = 1, bool visible = true);
     void            setToolbar(Form_Main_Mode new_mode);
     void            updateToolbar();
 
 private slots:
     void            buttonGroupModeClicked(int id);
+    void            buttonGroupPlayClicked(int id);
     void            buttonGroupLayeringClicked(int id);
     void            buttonGroupTransformClicked(int id);
     void            buttonGroupGridClicked(int id);

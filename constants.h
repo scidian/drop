@@ -98,6 +98,8 @@ namespace Advisor_Info
                                                                   "with mouse. Either have the center of the selection group snap to the grid, or have each "
                                                                   "object within the group snap to grid individually." };
 
+    const HeaderBodyList Play_Game              { "Play Game",  "Start playing game." };
+
 
     // Form Main Widgets
     const HeaderBodyList Advisor_Window         { "Advisor Window", "Shows a brief description of editor objects." };

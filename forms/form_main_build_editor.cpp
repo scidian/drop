@@ -141,13 +141,8 @@ void FormMain::buildWidgetsEditor()
 
                         if (!Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing))
                             viewEditor->setRenderHint(QPainter::Antialiasing, false);
-                        else {
+                        else
                             viewEditor->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
-                            ///// Enables multisampling
-                            ///QSurfaceFormat format;
-                            ///format.setSamples(2);
-                            ///QSurfaceFormat::setDefaultFormat(format);                   // Set antialiasing samples to 2
-                        }
 
                         if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL)) {
                             QOpenGLWidget *gl_widget = new QOpenGLWidget();

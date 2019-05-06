@@ -25,6 +25,38 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    chipmunk/chipmunk.c \
+    chipmunk/cpArbiter.c \
+    chipmunk/cpArray.c \
+    chipmunk/cpBBTree.c \
+    chipmunk/cpBody.c \
+    chipmunk/cpCollision.c \
+    chipmunk/cpConstraint.c \
+    chipmunk/cpDampedRotarySpring.c \
+    chipmunk/cpDampedSpring.c \
+    chipmunk/cpGearJoint.c \
+    chipmunk/cpGrooveJoint.c \
+    chipmunk/cpHashSet.c \
+    chipmunk/cpHastySpace.c \
+    chipmunk/cpMarch.c \
+    chipmunk/cpPinJoint.c \
+    chipmunk/cpPivotJoint.c \
+    chipmunk/cpPolyShape.c \
+    chipmunk/cpPolyline.c \
+    chipmunk/cpRatchetJoint.c \
+    chipmunk/cpRobust.c \
+    chipmunk/cpRotaryLimitJoint.c \
+    chipmunk/cpShape.c \
+    chipmunk/cpSimpleMotor.c \
+    chipmunk/cpSlideJoint.c \
+    chipmunk/cpSpace.c \
+    chipmunk/cpSpaceComponent.c \
+    chipmunk/cpSpaceDebug.c \
+    chipmunk/cpSpaceHash.c \
+    chipmunk/cpSpaceQuery.c \
+    chipmunk/cpSpaceStep.c \
+    chipmunk/cpSpatialIndex.c \
+    chipmunk/cpSweep1D.c \
     colors/colors.cpp \
     colors/colors_palette_blank.cpp \
     colors/colors_palette_material.cpp \
@@ -66,6 +98,8 @@ SOURCES += \
     forms/form_atlas.cpp \
     forms/form_blank.cpp \
     forms/form_color_magnifier.cpp \
+    forms/form_engine.cpp \
+    forms/form_engine_add.cpp \
     forms/form_fonts.cpp \
     forms/form_main.cpp \
     forms/form_main_build.cpp \
@@ -81,6 +115,12 @@ SOURCES += \
     forms/form_settings.cpp \
     library.cpp \
     main.cpp \
+    physics/physics_opengl.cpp \
+    physics/physics_opengl_initialize.cpp \
+    physics/physics_opengl_keyboard.cpp \
+    physics/physics_opengl_mouse.cpp \
+    physics/physics_opengl_render.cpp \
+    physics/physics_sprite.cpp \
     project/project.cpp \
     project/project_asset.cpp \
     project/project_font.cpp \
@@ -104,6 +144,37 @@ SOURCES += \
     widgets/widgets_layout.cpp
 
 HEADERS += \
+    chipmunk/chipmunk.h \
+    chipmunk/chipmunk_ffi.h \
+    chipmunk/chipmunk_private.h \
+    chipmunk/chipmunk_structs.h \
+    chipmunk/chipmunk_types.h \
+    chipmunk/chipmunk_unsafe.h \
+    chipmunk/cpArbiter.h \
+    chipmunk/cpBB.h \
+    chipmunk/cpBody.h \
+    chipmunk/cpConstraint.h \
+    chipmunk/cpDampedRotarySpring.h \
+    chipmunk/cpDampedSpring.h \
+    chipmunk/cpGearJoint.h \
+    chipmunk/cpGrooveJoint.h \
+    chipmunk/cpHastySpace.h \
+    chipmunk/cpMarch.h \
+    chipmunk/cpPinJoint.h \
+    chipmunk/cpPivotJoint.h \
+    chipmunk/cpPolyShape.h \
+    chipmunk/cpPolyline.h \
+    chipmunk/cpRatchetJoint.h \
+    chipmunk/cpRobust.h \
+    chipmunk/cpRotaryLimitJoint.h \
+    chipmunk/cpShape.h \
+    chipmunk/cpSimpleMotor.h \
+    chipmunk/cpSlideJoint.h \
+    chipmunk/cpSpace.h \
+    chipmunk/cpSpatialIndex.h \
+    chipmunk/cpTransform.h \
+    chipmunk/cpVect.h \
+    chipmunk/prime.h \
     colors/colors.h \
     editor/editor_item.h \
     editor/editor_scene.h \
@@ -117,10 +188,13 @@ HEADERS += \
     forms/form_atlas.h \
     forms/form_blank.h \
     forms/form_color_magnifier.h \
+    forms/form_engine.h \
     forms/form_fonts.h \
     forms/form_main.h \
     forms/form_popup.h \
     forms/form_settings.h \
+    physics/physics_opengl.h \
+    physics/physics_sprite.h \
     project/project.h \
     project/project_asset.h \
     project/project_font.h \
@@ -151,6 +225,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
-    drop.qrc
+    images.qrc \
+    shaders.qrc
 
 DISTFILES +=

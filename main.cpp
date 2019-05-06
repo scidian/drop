@@ -43,6 +43,7 @@
 //
 #include <QApplication>
 #include <QMetaType>
+#include <QSurfaceFormat>
 
 #include "colors/colors.h"
 #include "debug.h"
@@ -53,6 +54,14 @@ int main(int argc, char *argv[])
 {
     // ***** Initiliaze application
     QApplication drop(argc, argv);                  // Declare application
+
+    // ***** Set OpenGL surface format
+    QSurfaceFormat format;
+        ///format.setSamples(2);                                   // Anti-aliasing
+        format.setDepthBufferSize(24);
+        format.setStencilBufferSize(8);
+        format.setProfile(QSurfaceFormat::CoreProfile);
+        QSurfaceFormat::setDefaultFormat(format);
 
     // ***** Load some global data
     Dr::InitializeFlags();                          // Sets debug flags

@@ -10,6 +10,7 @@
 #include "editor/editor_item.h"
 #include "editor/editor_scene.h"
 #include "editor/editor_view.h"
+#include "form_engine.h"
 #include "form_main.h"
 #include "form_popup.h"
 #include "globals.h"
@@ -45,7 +46,6 @@ void FormMain::buttonGroupModeSetChecked(int id)
         button->setDown(!is_button);
     }
 }
-
 
 
 //####################################################################################
@@ -106,7 +106,7 @@ void FormMain::buttonGroupTransformClicked(int id)
 }
 
 //####################################################################################
-//##    buttonGroupReset SLOT and functions
+//##    buttonGroupGrid SLOT and functions
 //####################################################################################
 void FormMain::buttonGroupGridClicked(int id)
 {
@@ -131,6 +131,20 @@ void FormMain::buttonGroupGridClicked(int id)
 
 
 
+//####################################################################################
+//##    buttonGroupPlay SLOT and functions
+//####################################################################################
+void FormMain::buttonGroupPlayClicked(int id)
+{
+    Buttons_Play clicked = static_cast<Buttons_Play>(id);
+
+    if (clicked == Buttons_Play::Play) {
+
+        FormEngine *engine = new FormEngine(this);
+        engine->show();
+
+    }
+}
 
 
 

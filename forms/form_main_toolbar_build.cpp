@@ -39,7 +39,7 @@ void FormMain::buildToolBar()
     toolbar->setFloatable(false);
     toolbar->installEventFilter(new ClickAndDragWindow(toolbar));
 
-    // ***** This is a container object that holds all toolbar buttons, allowing us to put them in a layout
+    // ***** This is a container object that holds all toolbar button groups, allowing us to put them in a layout
     widgetToolbar = new QWidget();
     widgetToolbar->setObjectName(QStringLiteral("widgetToolbar"));
     widgetToolbar->setFixedHeight(46);
@@ -174,6 +174,24 @@ void FormMain::buildToolBar()
 
 
 
+    // ***** Mode "Editor" Add-On, Play: Holds buttons that starts game engine window
+    widgetGroupPlay = new QWidget(widgetToolbar);
+    widgetGroupPlay->hide();
+    widgetGroupPlay->setObjectName(QStringLiteral("widgetGroupPlay"));
+    widgetGroupPlay->setFixedHeight(46);
+        QHBoxLayout *toolbarLayoutPlay = new QHBoxLayout(widgetGroupPlay);
+        toolbarLayoutPlay->setSpacing(1);
+        toolbarLayoutPlay->setContentsMargins(0, 0, 0, 0);
+
+        buttonsGroupPlay = new QButtonGroup();
+        buttonsGroupPlay->setExclusive(false);
+        connect(buttonsGroupPlay, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupPlayClicked(int)));
+
+        tool = createToolbarButton(QStringLiteral("buttonPlay"), Advisor_Info::Play_Game, 34, 26, false, true);
+        buttonsGroupPlay->addButton(tool, int(Buttons_Play::Play));
+        toolbarLayoutPlay->addWidget(tool);
+        toolbarLayoutPlay->addWidget(createToolbarSpacer(24, 24, false));
+
 
 
 
@@ -243,10 +261,13 @@ QToolButton* FormMain::createToolbarButton(const QString &style_sheet_name, Head
     return tool;
 }
 
-QLabel* FormMain::createToolbarSpacer(int height, int space_on_the_right)   // DEFAULTS: height = 24, space_on_the_right = 1
+QLabel* FormMain::createToolbarSpacer(int height, int space_on_the_right, bool visible)   // DEFAULTS: height = 24, space_on_the_right = 1, visible = true
 {
     QLabel *spacer = new QLabel();
-    spacer->setObjectName(QStringLiteral("labelSpacer"));
+    if (visible)
+        spacer->setObjectName(QStringLiteral("labelSpacer"));
+    else
+        spacer->setObjectName(QStringLiteral("labelSpacerNotVisible"));
     spacer->setFixedSize( space_on_the_right, height );
     return spacer;
 }

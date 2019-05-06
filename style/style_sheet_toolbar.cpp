@@ -33,7 +33,8 @@ QString StyleSheetToolBar()
     "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
 
     // QLabel Spacer
-    " QLabel#labelSpacer { border-left: 1px solid; border-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } "
+    " QLabel#labelSpacer {           border-left: 1px solid; border-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } "
+    " QLabel#labelSpacerNotVisible { border-left: 1px solid; border-color: transparent; } "
 
     // Toobar Selectable Buttons
     +
