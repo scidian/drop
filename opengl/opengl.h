@@ -5,8 +5,8 @@
 //
 //
 //
-#ifndef PHYSICS_OPENGL_H
-#define PHYSICS_OPENGL_H
+#ifndef OPENGL_H
+#define OPENGL_H
 
 #include <QOpenGLBuffer>
 #include <QOpenGLFunctions>
@@ -15,17 +15,17 @@
 #include <QOpenGLWidget>
 #include <QMatrix4x4>
 
-class FormEngine;
+class Engine;
 
-class PhysicsOpenGL : public QOpenGLWidget, protected QOpenGLFunctions
+class OpenGL : public QOpenGLWidget, protected QOpenGLFunctions
 {
 private:
-    FormEngine         *m_parent;
+    Engine         *m_engine;
 
-    QMatrix4x4          m_model_view;
-    int                 m_zoom = 250;                                     // Zoom level of current view, 200 is 50% - 250 is 100%
-    float               m_scale = 1.0;                                    // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
-    float               m_angle = 0;
+    QMatrix4x4      m_model_view;
+    int             m_zoom = 250;                                     // Zoom level of current view, 200 is 50% - 250 is 100%
+    float           m_scale = 1.0;                                    // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
+    float           m_angle = 0;
 
 
     QPixmap     p_ball = QPixmap(":/assets/test_images/ball_1.png");
@@ -43,8 +43,8 @@ private:
 
 public:
     // Constructor / Destructor
-    PhysicsOpenGL(QWidget *parent, FormEngine *main_window);
-    ~PhysicsOpenGL() override;
+    OpenGL(QWidget *parent, Engine *engine);
+    ~OpenGL() override;
 
     // Event Overrides
     virtual void    keyPressEvent(QKeyEvent *event) override;
@@ -66,13 +66,15 @@ public:
     QPointF         mapToScreen(QVector3D point3D);
     void            zoomInOut(int level);
 
+    // Getters and Setters
+    float           getScale()      { return m_scale; }
 
 public slots:
     void            cleanUp();
 
 };
 
-#endif // PHYSICS_OPENGL_H
+#endif // OPENGL_H
 
 
 

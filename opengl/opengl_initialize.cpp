@@ -7,29 +7,28 @@
 //
 #include <QPainter>
 
-#include "forms/form_engine.h"
-#include "physics/physics_opengl.h"
-
+#include "engine/engine.h"
+#include "opengl/opengl.h"
 
 //####################################################################################
 //##        Initialize OpenGL Resources
 //####################################################################################
-void PhysicsOpenGL::initializeGL() {
+void OpenGL::initializeGL() {
     // Connect to aboutToBeDestroyed signal to make sure we clean up our resources
     // context() and QOpenGLContext::currentContext() are equivalent when called from initializeGL or paintGL.
-    connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &PhysicsOpenGL::cleanUp);
+    connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &OpenGL::cleanUp);
 
     // Set up the rendering context, load shaders and other resources, etc.:
     initializeOpenGLFunctions();
     glClearColor(0.0, 0.0, 0.0, 1.0f);
 
     // Load resources
-    m_parent->t_ball =        initTexture(":/assets/test_images/ball_1.png");
-    m_parent->t_metal_block = initTexture(":/assets/test_images/metal_block.png");
-    m_parent->t_moon_plant =  initTexture(":/assets/test_images/moon_plant_6.png");
-    m_parent->t_rover_body =  initTexture(":/assets/test_images/rover_body.png");
-    m_parent->t_rover_wheel = initTexture(":/assets/test_images/rover_wheel.png");
-    m_parent->t_spare_wheel = initTexture(":/assets/test_images/spare_wheel.png");
+    m_engine->t_ball =        initTexture(":/assets/test_images/ball_1.png");
+    m_engine->t_metal_block = initTexture(":/assets/test_images/metal_block.png");
+    m_engine->t_moon_plant =  initTexture(":/assets/test_images/moon_plant_6.png");
+    m_engine->t_rover_body =  initTexture(":/assets/test_images/rover_body.png");
+    m_engine->t_rover_wheel = initTexture(":/assets/test_images/rover_wheel.png");
+    m_engine->t_spare_wheel = initTexture(":/assets/test_images/spare_wheel.png");
 
     // Initialize our basic shader, shaders have 2 parts, a Vertex shader followed by a Fragment shader
     QOpenGLShader vShader( QOpenGLShader::Vertex );     vShader.compileSourceFile( ":/shaders/vShader.glsl" );
@@ -48,7 +47,7 @@ void PhysicsOpenGL::initializeGL() {
 //####################################################################################
 //##        Loads a texture
 //####################################################################################
-QOpenGLTexture* PhysicsOpenGL::initTexture(QString image_name) {
+QOpenGLTexture* OpenGL::initTexture(QString image_name) {
 
     // Load image, NOTE: QImage is mirrored vertically to account for the fact that OpenGL and QImage use opposite directions for the y axis
     QImage image = QImage(image_name).mirrored();
@@ -78,6 +77,7 @@ QOpenGLTexture* PhysicsOpenGL::initTexture(QString image_name) {
     // These mip map filters allow for nice alpha channels
     texture->setMinificationFilter( QOpenGLTexture::Filter::Nearest);
     texture->setMagnificationFilter(QOpenGLTexture::Filter::Nearest);
+    ///texture->setWrapMode(QOpenGLTexture::WrapMode::ClampToEdge);             // !!! May need to fixed border artifacts?
 
     return texture;
 }

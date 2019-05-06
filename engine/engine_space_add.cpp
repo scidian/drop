@@ -1,17 +1,16 @@
 //
-//      Created by Stephens Nunnally on 5/2/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/6/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
 //
 //
 //
-#include "form_engine.h"
-
+#include "engine.h"
 
 //######################################################################################################
 //##    Add Line
 //######################################################################################################
-SceneObject* FormEngine::addLine(BodyType body_type, QPointF p1, QPointF p2, double friction, double bounce, double mass) {
+SceneObject* Engine::addLine(BodyType body_type, QPointF p1, QPointF p2, double friction, double bounce, double mass) {
     SceneObject *line = new SceneObject();
 
     cpVect a, b;
@@ -49,7 +48,7 @@ SceneObject* FormEngine::addLine(BodyType body_type, QPointF p1, QPointF p2, dou
 //######################################################################################################
 //##    Add Circle
 //######################################################################################################
-SceneObject* FormEngine::addCircle(BodyType body_type, QOpenGLTexture *txt, double x, double y, double friction, double bounce, double mass, QPointF velocity) {
+SceneObject* Engine::addCircle(BodyType body_type, QOpenGLTexture *txt, double x, double y, double friction, double bounce, double mass, QPointF velocity) {
     SceneObject *ball = new SceneObject();
 
     // Ball Basics
@@ -86,7 +85,7 @@ SceneObject* FormEngine::addCircle(BodyType body_type, QOpenGLTexture *txt, doub
 //######################################################################################################
 //##    Add Block
 //######################################################################################################
-SceneObject* FormEngine::addBlock(BodyType body_type, QOpenGLTexture *txt, double x, double y, double friction, double bounce, double mass, QPointF velocity) {
+SceneObject* Engine::addBlock(BodyType body_type, QOpenGLTexture *txt, double x, double y, double friction, double bounce, double mass, QPointF velocity) {
     SceneObject *block = new SceneObject();
 
     // Block basics
@@ -122,7 +121,7 @@ SceneObject* FormEngine::addBlock(BodyType body_type, QOpenGLTexture *txt, doubl
 //######################################################################################################
 //##    Add Flower
 //######################################################################################################
-SceneObject* FormEngine::addPolygon(BodyType body_type, QOpenGLTexture *txt, double x, double y, QVector<QPointF> points,
+SceneObject* Engine::addPolygon(BodyType body_type, QOpenGLTexture *txt, double x, double y, QVector<QPointF> points,
                                       double friction, double bounce, double mass, QPointF velocity) {
     SceneObject *polygon = new SceneObject();
 
@@ -162,17 +161,6 @@ SceneObject* FormEngine::addPolygon(BodyType body_type, QOpenGLTexture *txt, dou
     objects.append( polygon );
     return polygon;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 

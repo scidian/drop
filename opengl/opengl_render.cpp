@@ -8,22 +8,21 @@
 #include <QtMath>
 #include <QPainter>
 
-#include "forms/form_engine.h"
-#include "physics/physics_opengl.h"
+#include "engine/engine.h"
+#include "opengl/opengl.h"
 
 
 //####################################################################################
 //##        Render, Paint the Scene
 //####################################################################################
-void PhysicsOpenGL::paintGL() {
-
-    // Used to count triangles drawn during this frame
-    int triangles = 0;
-
+void OpenGL::paintGL() {
     // ***** Initialize painter
     QPainter painter;
     painter.begin( this );
     painter.beginNativePainting();
+
+    // Make sure viewport is sized correctly
+    glViewport(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
 
     // Clear OpenGL Buffer
     glClearColor(0.0, 0.0, 0.0, 1.0f);
@@ -54,18 +53,18 @@ void PhysicsOpenGL::paintGL() {
     float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
     m_model_view.setToIdentity();
 
-    if (m_parent->render_type == RenderType::Orthographic) {
+    if (m_engine->render_type == RenderType::Orthographic) {
         double scale =  static_cast<double>(m_scale);
-        float  left =   static_cast<float>(m_parent->camera_pos.x() * scale - (static_cast<double>( width()) / 2.0));
-        float  right =  static_cast<float>(m_parent->camera_pos.x() * scale + (static_cast<double>( width()) / 2.0));
-        float  top =    static_cast<float>(m_parent->camera_pos.y() * scale + (static_cast<double>(height()) / 2.0));
-        float  bottom = static_cast<float>(m_parent->camera_pos.y() * scale - (static_cast<double>(height()) / 2.0));
+        float  left =   static_cast<float>(m_engine->camera_pos.x() * scale - (static_cast<double>( width()) / 2.0));
+        float  right =  static_cast<float>(m_engine->camera_pos.x() * scale + (static_cast<double>( width()) / 2.0));
+        float  top =    static_cast<float>(m_engine->camera_pos.y() * scale + (static_cast<double>(height()) / 2.0));
+        float  bottom = static_cast<float>(m_engine->camera_pos.y() * scale - (static_cast<double>(height()) / 2.0));
         m_model_view.ortho( left, right, bottom, top, -100.0f, 100.0f);
     } else {
         m_model_view.perspective( 60.0f, aspect_ratio, 1.0f, 1000.0f );
 
         // Sets the camera back 800 pixels
-        m_model_view.translate( static_cast<float>(m_parent->camera_pos.x()) * -m_scale, static_cast<float>(m_parent->camera_pos.y()) * -m_scale, -800.0f );
+        m_model_view.translate( static_cast<float>(m_engine->camera_pos.x()) * -m_scale, static_cast<float>(m_engine->camera_pos.y()) * -m_scale, -800.0f );
         m_model_view.scale( m_scale );
     }
     // Rotates the camera around the center of the sceen
@@ -78,10 +77,10 @@ void PhysicsOpenGL::paintGL() {
     if (!m_program.bind()) return;
     m_program.setUniformValue( m_matrixUniform, m_model_view );
 
-    drawCube();     triangles += 10;
+    drawCube();
 
     // ********** Draw each object in space
-    for (auto object : m_parent->objects) {
+    for (auto object : m_engine->objects) {
         if (object->shape_type == ShapeType::Segment) continue;
 
         // ***** Render with texture
@@ -104,7 +103,7 @@ void PhysicsOpenGL::paintGL() {
         QPointF center = object->position;
         float x, y, half_width, half_height;
 
-        if (m_parent->render_type == RenderType::Orthographic) {
+        if (m_engine->render_type == RenderType::Orthographic) {
             x = static_cast<float>(center.x()) * m_scale;
             y = static_cast<float>(center.y()) * m_scale;
             half_width =  float(object->texture->width())  * m_scale / 2.0f;
@@ -148,18 +147,17 @@ void PhysicsOpenGL::paintGL() {
         vertices[11] = 0.00f;
 
         m_program.setAttributeArray( m_vertexAttr, vertices.data(), 3 );
-        m_program.setUniformValue(   m_texUniform, 0 );
+        m_program.setUniformValue( m_texUniform, 0 );                           // Use texture unit 0
         m_program.enableAttributeArray( m_vertexAttr );
 
         // ***** Draw triangles using shader program
-        glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );            // GL_TRIANGLES
-        triangles += 2;
+        glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );                                // GL_TRIANGLES
 
         // ***** Disable arrays
         m_program.disableAttributeArray( m_vertexAttr );
         m_program.disableAttributeArray( m_texCoordAttr );
 
-        //object->texture->release();
+        object->texture->release();
     }
 
     // ***** Disable shader program, end native drawing
@@ -182,8 +180,8 @@ void PhysicsOpenGL::paintGL() {
     // ********** Draws debug shapes onto screen
     painter.setRenderHint(QPainter::Antialiasing, true);
 
-    if (m_parent->debug) {
-        for (auto object : m_parent->objects) {
+    if (m_engine->debug) {
+        for (auto object : m_engine->objects) {
             if (object->in_scene == false) continue;
 
             QColor color;
@@ -249,18 +247,11 @@ void PhysicsOpenGL::paintGL() {
 
 
     // Show frames per second
-    m_parent->fps++;
-    if (m_parent->fps_timer.elapsed() > 1000) {        
-        m_parent->label2->setText("FPS: " + QString::number(m_parent->fps) +
-                                  " - Triangles: " + QString::number(triangles) +
-                                  " - Scale: " + QString::number(double(m_scale)) );
-        m_parent->fps = 0;
-        m_parent->fps_timer.restart();
-
-        int max;
-        ///glGetIntegerv ( GL_MAX_SAMPLES, &max );                  // Finds max multi sampling available on system
-        glGetIntegerv ( GL_MAX_TEXTURE_SIZE, &max );             // Finds max texture size available on system
-        m_parent->label2->setText( m_parent->label2->text() + " - Max: " + QString::number(max));
+    m_engine->fps++;
+    if (m_engine->fps_timer.elapsed() > 1000) {
+        m_engine->last_fps = m_engine->fps;
+        m_engine->fps = 0;
+        m_engine->fps_timer.restart();
     }
 }
 
@@ -272,20 +263,20 @@ void PhysicsOpenGL::paintGL() {
 
 
 // Draws a rotating cube
-void PhysicsOpenGL::drawCube() {
+void OpenGL::drawCube() {
 
     static float angle = 0;
     angle++;
     if (angle > 360) angle = 0;
 
-    m_parent->t_metal_block->bind();
+    m_engine->t_metal_block->bind();
 
     for (int i = 0; i < 5; i++) {
         std::vector<float> texCoords;
         texCoords.clear();
         texCoords.resize( 8 );
-        float one_x = (1 / m_parent->t_metal_block->width())  * c_texture_border;
-        float one_y = (1 / m_parent->t_metal_block->height()) * c_texture_border;
+        float one_x = (1 / m_engine->t_metal_block->width())  * c_texture_border;
+        float one_y = (1 / m_engine->t_metal_block->height()) * c_texture_border;
         texCoords[0] = 1 - one_x;    texCoords[1] = 1 - one_y;
         texCoords[2] =     one_x;    texCoords[3] = 1 - one_y;
         texCoords[4] = 1 - one_x;    texCoords[5] =     one_y;
@@ -300,10 +291,10 @@ void PhysicsOpenGL::drawCube() {
         float half_no_border;
 
         float multi =  3;
-        float width =  m_parent->t_metal_block->width() *  multi;
-        float height = m_parent->t_metal_block->height() * multi;
+        float width =  m_engine->t_metal_block->width() *  multi;
+        float height = m_engine->t_metal_block->height() * multi;
 
-        if (m_parent->render_type == RenderType::Orthographic) {
+        if (m_engine->render_type == RenderType::Orthographic) {
             x = static_cast<float>(center.x()) * m_scale;
             y = static_cast<float>(center.y()) * m_scale;
             half_width =  width  * m_scale / 2.0f;
@@ -358,7 +349,7 @@ void PhysicsOpenGL::drawCube() {
         vertices[11] = 0.00f;
 
         m_program.setAttributeArray( m_vertexAttr, vertices.data(), 3 );
-        m_program.setUniformValue(   m_texUniform, 0 );
+        m_program.setUniformValue( m_texUniform, 0 );
         m_program.enableAttributeArray( m_vertexAttr );
 
         // ***** Draw triangles using shader program
@@ -367,10 +358,9 @@ void PhysicsOpenGL::drawCube() {
         // ***** Disable arrays
         m_program.disableAttributeArray( m_vertexAttr );
         m_program.disableAttributeArray( m_texCoordAttr );
-
-        //object->texture->release();
     }
 
+    m_engine->t_metal_block->release();
 
 }
 

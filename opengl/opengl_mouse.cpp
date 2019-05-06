@@ -9,32 +9,30 @@
 #include <QMouseEvent>
 #include <QRandomGenerator>
 
-#include "forms/form_engine.h"
-#include "physics/physics_opengl.h"
+#include "engine/engine.h"
+#include "opengl/opengl.h"
 #include "library.h"
 
 //####################################################################################
 //##        Mouse Events
 //####################################################################################
-void PhysicsOpenGL::mousePressEvent(QMouseEvent *event)
+void OpenGL::mousePressEvent(QMouseEvent *event)
 {
-    if (m_parent->has_scene == false) return;
+    if (m_engine->has_scene == false) return;
 
-    m_parent->label->setText( "Mouse Click at: " + Dr::CurrentTimeAsString());
-
-    double x = ((event->pos().x() - m_parent->camera_pos.x()) * 2 );
-    double y = ((event->pos().y() - m_parent->camera_pos.y()) * 3 );
+    double x = ((event->pos().x() - m_engine->camera_pos.x()) * 2 );
+    double y = ((event->pos().y() - m_engine->camera_pos.y()) * 3 );
     y = -y;
 
-    if (m_parent->demo == Demo::Spawn) {
+    if (m_engine->demo == Demo::Spawn) {
         if (event->button() & Qt::LeftButton) {
             for (int i = 0; i < 25; i++ ) {
                 double vel_x = QRandomGenerator::global()->bounded(-100, 100);
                 double vel_y = QRandomGenerator::global()->bounded( 100, 500);
-                m_parent->addCircle(BodyType::Dynamic, m_parent->t_ball, x, y, .7, .5, 2, QPointF(vel_x, vel_y) );
+                m_engine->addCircle(BodyType::Dynamic, m_engine->t_ball, x, y, .7, .5, 2, QPointF(vel_x, vel_y) );
             }
         } else if (event->button() & Qt::RightButton) {
-            m_parent->addBlock(BodyType::Dynamic, m_parent->t_metal_block, x, y, 1, 0, 3, QPointF(0, 0));
+            m_engine->addBlock(BodyType::Dynamic, m_engine->t_metal_block, x, y, 1, 0, 3, QPointF(0, 0));
         } else if (event->button() & Qt::MiddleButton) {
             // Polygon shape points should be counter-clockwise
             QVector<QPointF> points;
@@ -43,25 +41,25 @@ void PhysicsOpenGL::mousePressEvent(QMouseEvent *event)
             points.append( QPointF(  5,  60) );
             points.append( QPointF(-46, -10) );
             points.append( QPointF(-38, -55) );
-            m_parent->addPolygon(BodyType::Dynamic, m_parent->t_moon_plant, x, y, points, .15, .4, 2.5, QPointF(0, 0));
+            m_engine->addPolygon(BodyType::Dynamic, m_engine->t_moon_plant, x, y, points, .15, .4, 2.5, QPointF(0, 0));
         }
 
 
-    } else if (m_parent->demo == Demo::Car) {
+    } else if (m_engine->demo == Demo::Car) {
         if (event->button() & Qt::LeftButton) {
-            m_parent->gas_pedal = Pedal::Clockwise;
+            m_engine->gas_pedal = Pedal::Clockwise;
         } else if (event->button() & Qt::RightButton) {
-            m_parent->gas_pedal = Pedal::CounterClockwise;
+            m_engine->gas_pedal = Pedal::CounterClockwise;
         }
     }
 
 }
 
-void PhysicsOpenGL::mouseReleaseEvent(QMouseEvent *event)
+void OpenGL::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (m_parent->demo == Demo::Car)
+    if (m_engine->demo == Demo::Car)
         if (event->buttons() == Qt::MouseButton::NoButton)
-            m_parent->gas_pedal = Pedal::None;
+            m_engine->gas_pedal = Pedal::None;
 }
 
 
@@ -72,7 +70,7 @@ void PhysicsOpenGL::mouseReleaseEvent(QMouseEvent *event)
 
 // Handles zooming in / out of view with mouse wheel
 #if QT_CONFIG(wheelevent)
-void PhysicsOpenGL::wheelEvent(QWheelEvent *event)
+void OpenGL::wheelEvent(QWheelEvent *event)
 {
     // Allow for scene scrolling if ctrl (cmd) is down
     if (event->modifiers() & Qt::KeyboardModifier::ControlModifier) {
@@ -87,13 +85,17 @@ void PhysicsOpenGL::wheelEvent(QWheelEvent *event)
 #endif
 
 
-void PhysicsOpenGL::zoomInOut(int level)
+void OpenGL::zoomInOut(int level)
 {
     m_zoom += level;
     if (m_zoom > 500) m_zoom = 500;
     if (m_zoom < -40) m_zoom = -40;
     m_scale = static_cast<float>(qPow(qreal(2), (m_zoom - 250) / qreal(50)));
 }
+
+
+
+
 
 
 

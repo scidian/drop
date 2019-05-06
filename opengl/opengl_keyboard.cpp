@@ -7,21 +7,20 @@
 //
 #include <QKeyEvent>
 
-#include "forms/form_engine.h"
-#include "physics/physics_opengl.h"
+#include "opengl/opengl.h"
 
 
 //####################################################################################
 //##        Key Events
 //####################################################################################
-void PhysicsOpenGL::keyPressEvent(QKeyEvent *event) {
+void OpenGL::keyPressEvent(QKeyEvent *event) {
     // When space bar is down, enabled mouse press and move to translate viewable area
     if (event->key() == Qt::Key::Key_Space)
         m_flag_spacebar = true;
     QOpenGLWidget::keyPressEvent(event);
 }
 
-void PhysicsOpenGL::keyReleaseEvent(QKeyEvent *event) {
+void OpenGL::keyReleaseEvent(QKeyEvent *event) {
     // When space bar is released, change mode back to select / move items
     if (event->key() == Qt::Key::Key_Space)
         m_flag_spacebar = false;

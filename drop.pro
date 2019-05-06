@@ -94,12 +94,15 @@ SOURCES += \
     editor/editor_view_rotate.cpp \
     editor/editor_view_select.cpp \
     editor/editor_view_tooltip.cpp \
+    engine/engine.cpp \
+    engine/engine_space_add.cpp \
+    engine/engine_space_build.cpp \
+    engine/engine_space_update.cpp \
     enums.cpp \
     forms/form_atlas.cpp \
     forms/form_blank.cpp \
     forms/form_color_magnifier.cpp \
     forms/form_engine.cpp \
-    forms/form_engine_add.cpp \
     forms/form_fonts.cpp \
     forms/form_main.cpp \
     forms/form_main_build.cpp \
@@ -115,12 +118,11 @@ SOURCES += \
     forms/form_settings.cpp \
     library.cpp \
     main.cpp \
-    physics/physics_opengl.cpp \
-    physics/physics_opengl_initialize.cpp \
-    physics/physics_opengl_keyboard.cpp \
-    physics/physics_opengl_mouse.cpp \
-    physics/physics_opengl_render.cpp \
-    physics/physics_sprite.cpp \
+    opengl/opengl.cpp \
+    opengl/opengl_initialize.cpp \
+    opengl/opengl_keyboard.cpp \
+    opengl/opengl_mouse.cpp \
+    opengl/opengl_render.cpp \
     project/project.cpp \
     project/project_asset.cpp \
     project/project_font.cpp \
@@ -184,6 +186,7 @@ HEADERS += \
     editor/editor_tree_inspector.h \
     editor/editor_tree_project.h \
     editor/editor_view.h \
+    engine/engine.h \
     enums.h \
     forms/form_atlas.h \
     forms/form_blank.h \
@@ -193,8 +196,7 @@ HEADERS += \
     forms/form_main.h \
     forms/form_popup.h \
     forms/form_settings.h \
-    physics/physics_opengl.h \
-    physics/physics_sprite.h \
+    opengl/opengl.h \
     project/project.h \
     project/project_asset.h \
     project/project_font.h \
