@@ -17,16 +17,16 @@ class DrProperty;
 
 
 //####################################################################################
-//##    WidgetHoverHandler
+//##    DrFilterHoverHandler
 //##        Catches hover events for widgets on Object Inspector without needing subclassing
 //############################
-class WidgetHoverHandler : public QObject
+class DrFilterHoverHandler : public QObject
 {
     Q_OBJECT
 
 public:
-    WidgetHoverHandler(QObject *parent) : QObject(parent) {}
-    virtual ~WidgetHoverHandler() {}
+    DrFilterHoverHandler(QObject *parent) : QObject(parent) {}
+    virtual ~DrFilterHoverHandler() {}
 
     void            attachToHoverHandler(QWidget *widget, DrProperty *property);
     void            attachToHoverHandler(QWidget *widget, QString header, QString body);
@@ -42,45 +42,45 @@ signals:
 
 
 //####################################################################################
-//##    MouseWheelAdjustmentGuard
+//##    DrFilterMouseWheelAdjustmentGuard
 //##        Stops widget from stealing focus on mouse wheel
 //############################
-class MouseWheelAdjustmentGuard : public QObject
+class DrFilterMouseWheelAdjustmentGuard : public QObject
 {
 public:
-    explicit        MouseWheelAdjustmentGuard(QObject *parent);
+    explicit        DrFilterMouseWheelAdjustmentGuard(QObject *parent);
 protected:
     bool            eventFilter(QObject *obj, QEvent *event) override;
 };
 
 
 //####################################################################################
-//##    PopUpMenuRelocater
+//##    DrFilterPopUpMenuRelocater
 //##        Changes starting position of popup menu
 //############################
-class PopUpMenuRelocater : public QObject
+class DrFilterPopUpMenuRelocater : public QObject
 {
 private:
     int         m_top_offset;
     int         m_left_offset;
 public:
-    explicit        PopUpMenuRelocater(QObject *parent, int top_offset, int left_offset);
+    explicit        DrFilterPopUpMenuRelocater(QObject *parent, int top_offset, int left_offset);
 protected:
     bool            eventFilter(QObject *obj, QEvent *event) override;
 };
 
 
 //####################################################################################
-//##    ClickAndDragWindow
+//##    DrFilterClickAndDragWindow
 //##        Clicking and dragging will move parent window
 //############################
-class ClickAndDragWindow : public QObject
+class DrFilterClickAndDragWindow : public QObject
 {
 private:
     bool            m_is_moving = false;
     QPoint          m_press_pos;
 public:
-    explicit        ClickAndDragWindow(QObject *parent);
+    explicit        DrFilterClickAndDragWindow(QObject *parent);
 protected:
     bool            eventFilter(QObject *obj, QEvent *event) override;
 };

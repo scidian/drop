@@ -19,10 +19,10 @@ class DrObject;
 //####################################################################################
 //##    Change Stage in SceneView
 //############################
-class ChangeStageCommand : public QUndoCommand
+class UndoCommandChangeStage : public QUndoCommand
 {
 public:
-    ChangeStageCommand(DrProject *project, DrScene *scene, long old_stage, long new_stage, QUndoCommand *parent = nullptr);
+    UndoCommandChangeStage(DrProject *project, DrScene *scene, long old_stage, long new_stage, QUndoCommand *parent = nullptr);
 
     void        undo() override;
     void        redo() override;
@@ -41,10 +41,10 @@ private:
 //####################################################################################
 //##    Selection group moved position
 //############################
-class MoveCommand : public QUndoCommand
+class UndoCommandMove : public QUndoCommand
 {
 public:
-    MoveCommand(DrScene *scene, const QPointF &old_pos, QUndoCommand *parent = nullptr);
+    UndoCommandMove(DrScene *scene, const QPointF &old_pos, QUndoCommand *parent = nullptr);
 
     void        undo() override;
     void        redo() override;
@@ -59,10 +59,10 @@ private:
 //####################################################################################
 //##    Selected new group command
 //############################
-class SelectionNewGroupCommand : public QUndoCommand
+class UndoCommandNewSelection : public QUndoCommand
 {
 public:
-    SelectionNewGroupCommand(DrScene *scene,
+    UndoCommandNewSelection(DrScene *scene,
                              QList<DrObject*> old_list,
                              QList<DrObject*> new_list,
                              QUndoCommand *parent = nullptr);

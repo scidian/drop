@@ -19,9 +19,9 @@ class DrProject;
 class DrProperty;
 class DrSettings;
 
-class CategoryButton;
+class DrQPushButtonCategory;
 class IEditorRelay;
-class WidgetHoverHandler;
+class DrFilterHoverHandler;
 
 // Class constants
 constexpr int   c_asset_size_left =  3;                 // Size policy width of left column
@@ -37,15 +37,15 @@ class TreeAssets: public QTreeWidget
     Q_OBJECT
 
 private:
-    DrProject            *m_project;                // Pointer to currently loaded project
-    IEditorRelay         *m_editor_relay;           // Pointer to IEditorRelay class of parent form
-    WidgetHoverHandler   *m_widget_hover;           // Pointer to a widget hover handler
+    DrProject            *m_project;                        // Pointer to currently loaded project
+    IEditorRelay         *m_editor_relay;                   // Pointer to IEditorRelay class of parent form
+    DrFilterHoverHandler *m_filter_hover;                   // Pointer to an event filter hover handler
 
-    QList<QFrame*>        m_asset_frames;           // List of the single row frames that contain name and pixmap labels
+    QList<QFrame*>        m_asset_frames;                   // List of the single row frames that contain name and pixmap labels
 
     QWidget              *m_search_widget;
     QVBoxLayout          *m_search_layout;
-    QLineEdit            *m_search_bar;             // Search bar at bottom of asset dock
+    QLineEdit            *m_search_bar;                     // Search bar at bottom of asset dock
 
 public:
     // Constructor
@@ -54,7 +54,7 @@ public:
     // Tree Building Functions
     void            addAssetsToCategory(QTreeWidgetItem *tree_item, QFrame *asset_frame);
     void            buildAssetTree(QString search_text = "");
-    CategoryButton* initializeCatergoryButton(QTreeWidgetItem *tree_item, QString name);
+    DrQPushButtonCategory* initializeCatergoryButton(QTreeWidgetItem *tree_item, QString name);
 
     // Function Calls
     IEditorRelay*   getRelay() { return m_editor_relay; }
@@ -69,10 +69,10 @@ private slots:
 
 
 //####################################################################################
-//##    AssetMouseHandler
+//##    DrFilterAssetMouseHandler
 //##        Event filter handler for asset items
 //####################################################################################
-class AssetMouseHandler : public QObject
+class DrFilterAssetMouseHandler : public QObject
 {
     Q_OBJECT
 
@@ -92,7 +92,7 @@ private:
     QString            m_starting_text;                 // Label starting text
 
 public:
-    explicit        AssetMouseHandler(QObject *parent, IEditorRelay *editor_relay);
+    explicit        DrFilterAssetMouseHandler(QObject *parent, IEditorRelay *editor_relay);
 
     // Event Overrides
     bool            eventFilter(QObject* object, QEvent* event) override;

@@ -18,8 +18,8 @@
 //##            Checks to make sure if more than one item is selected all new items
 //##            not matching original type are not selected
 //####################################################################################
-void TreeProject::selectionChanged (const QItemSelection &selected, const QItemSelection &deselected)
-{
+void TreeProject::selectionChanged (const QItemSelection &selected, const QItemSelection &deselected) {
+
     // If we're updating selection from outside source this function has been turned off from that source (i.e. updateSelection in IEditorRelay)
     if (!m_allow_selection_event) {
         QTreeWidget::selectionChanged(selected, deselected);
@@ -92,8 +92,7 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
 //####################################################################################
 //##        Selects rows based on items selected in view
 //####################################################################################
-void TreeProject::updateSelectionFromView(QList<QGraphicsItem*> item_list)
-{
+void TreeProject::updateSelectionFromView(QList<QGraphicsItem*> item_list) {
     setAllowSelectionEvent(false);
     clearSelection();
 

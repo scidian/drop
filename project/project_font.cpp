@@ -9,10 +9,12 @@
 
 #include "project_font.h"
 
-
+//####################################################################################
+//##    Constructor
+//####################################################################################
 DrFont::DrFont(DrProject *parent_project, long key, QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects) :
-    m_parent_project(parent_project)
-{
+    m_parent_project(parent_project) {
+
     setKey(key);
 
     m_name =  font_name;
@@ -38,9 +40,11 @@ DrFont::DrFont(DrProject *parent_project, long key, QString font_name, QPixmap f
     p_gradient_color =  Qt::red;
 }
 
+//####################################################################################
+//##    Create Text
+//####################################################################################
 // !!! Need to incorporate letter spacing
-QPixmap DrFont::createText(QString text)
-{
+QPixmap DrFont::createText(QString text) {
     int width = 0;
     int height = m_positions['A'].height();
     for (int i = 0; i < text.length(); i++) {
@@ -67,8 +71,10 @@ QPixmap DrFont::createText(QString text)
 }
 
 
-void DrFont::setTestFontRects()
-{
+//####################################################################################
+//##    Grabs test rects for temp font generation
+//####################################################################################
+void DrFont::setTestFontRects() {
     m_positions['A'] = QRect(  0,   0, 32, 32);
     m_positions['B'] = QRect( 32,   0, 32, 32);
     m_positions['C'] = QRect( 64,   0, 32, 32);

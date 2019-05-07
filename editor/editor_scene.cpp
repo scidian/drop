@@ -32,8 +32,7 @@
 DrScene::DrScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
                  QGraphicsScene(parent),
                  m_project(project),
-                 m_editor_relay(editor_relay)
-{
+                 m_editor_relay(editor_relay) {
     connect(this, SIGNAL(changed(QList<QRectF>)),   this, SLOT(sceneChanged(QList<QRectF>)));
     connect(this, SIGNAL(sceneRectChanged(QRectF)), this, SLOT(sceneRectChanged(QRectF)));
     connect(this, SIGNAL(selectionChanged()),       this, SLOT(selectionChanged()));
@@ -63,8 +62,7 @@ DrScene::~DrScene() {}
 //##        SLOT's: sceneRectChanged, sceneChanged
 //####################################################################################
 // Connected from SIGNAL: QGraphicsScene::sceneRectChanged
-void DrScene::sceneRectChanged(QRectF new_rect)
-{
+void DrScene::sceneRectChanged(QRectF new_rect) {
     Q_UNUSED (new_rect)
     //Dr::SetLabelText(Label_Names::Label_1,
     //                 "SRect X: " + QString::number(round(new_rect.x())) + ", Y: " + QString::number(round(new_rect.y())) +
@@ -73,7 +71,6 @@ void DrScene::sceneRectChanged(QRectF new_rect)
 
 // Connected from SIGNAL: QGraphicsScene::changed
 void DrScene::sceneChanged(QList<QRectF>) {
-
     QRectF my_rect = sceneRect();
     QRectF items_rect = itemsBoundingRect();
     double buffer = 300;
@@ -96,37 +93,35 @@ void DrScene::sceneChanged(QList<QRectF>) {
 //####################################################################################
 //##        setPositionByOrigin - Sets item to new_x, new_y position in scene, offset by_origin point
 //####################################################################################
-void DrScene::setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y)
-{
+void DrScene::setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y) {
     item->setPos(new_x, new_y);
 
     QRectF      item_rect = item->boundingRect();
     QPointF     item_pos;
 
     switch (by_origin) {
-    case Position_Flags::Top_Left:      item_pos = item_rect.topLeft();                  break;
-    case Position_Flags::Top_Right:     item_pos = item_rect.topRight();                 break;
-    case Position_Flags::Center:        item_pos = item_rect.center();                   break;
-    case Position_Flags::Bottom_Left:   item_pos = item_rect.bottomLeft();               break;
-    case Position_Flags::Bottom_Right:  item_pos = item_rect.bottomRight();              break;
-    case Position_Flags::Top:           item_pos = QPointF( QLineF(item_rect.topLeft(),    item_rect.topRight()).pointAt(.5) );    break;
-    case Position_Flags::Bottom:        item_pos = QPointF( QLineF(item_rect.bottomLeft(), item_rect.bottomRight()).pointAt(.5) ); break;
-    case Position_Flags::Left:          item_pos = QPointF( QLineF(item_rect.topLeft(),    item_rect.bottomLeft()).pointAt(.5) );  break;
-    case Position_Flags::Right:         item_pos = QPointF( QLineF(item_rect.topRight(),   item_rect.bottomRight()).pointAt(.5) ); break;
+        case Position_Flags::Top_Left:      item_pos = item_rect.topLeft();                  break;
+        case Position_Flags::Top_Right:     item_pos = item_rect.topRight();                 break;
+        case Position_Flags::Center:        item_pos = item_rect.center();                   break;
+        case Position_Flags::Bottom_Left:   item_pos = item_rect.bottomLeft();               break;
+        case Position_Flags::Bottom_Right:  item_pos = item_rect.bottomRight();              break;
+        case Position_Flags::Top:           item_pos = QPointF( QLineF(item_rect.topLeft(),    item_rect.topRight()).pointAt(.5) );    break;
+        case Position_Flags::Bottom:        item_pos = QPointF( QLineF(item_rect.bottomLeft(), item_rect.bottomRight()).pointAt(.5) ); break;
+        case Position_Flags::Left:          item_pos = QPointF( QLineF(item_rect.topLeft(),    item_rect.bottomLeft()).pointAt(.5) );  break;
+        case Position_Flags::Right:         item_pos = QPointF( QLineF(item_rect.topRight(),   item_rect.bottomRight()).pointAt(.5) ); break;
 
-    // We don't want to process these options, use top left as position
-    case Position_Flags::Move_Item:
-    case Position_Flags::Rotate:
-    case Position_Flags::No_Position:
-        item_pos = item_rect.topLeft();
+        // We don't want to process these options, use top left as position
+        case Position_Flags::Move_Item:
+        case Position_Flags::Rotate:
+        case Position_Flags::No_Position:
+            item_pos = item_rect.topLeft();
     }
     item_pos = item->sceneTransform().map(item_pos);
 
     setPositionByOrigin(item, item_pos, new_x, new_y);
 }
 
-void DrScene::setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y)
-{
+void DrScene::setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y) {
     QPointF     new_pos;
 
     double x_diff = origin_point.x() - new_x;

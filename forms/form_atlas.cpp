@@ -17,8 +17,8 @@
 //####################################################################################
 //##        Constructor
 //####################################################################################
-FormAtlas::FormAtlas(DrProject *project, QWidget *parent) : QWidget(parent)
-{
+FormAtlas::FormAtlas(DrProject *project, QWidget *parent) : QWidget(parent) {
+
     // ***** Initialize member variables
     m_project = project;
 
@@ -30,7 +30,7 @@ FormAtlas::FormAtlas(DrProject *project, QWidget *parent) : QWidget(parent)
 
     // ***** Center window on screen and install dragging event filter
     Dr::CenterFormOnScreen(parent, this);
-    this->installEventFilter(new ClickAndDragWindow(this));
+    this->installEventFilter(new DrFilterClickAndDragWindow(this));
 
     // Create a contianer widget, this will allow Create a layout for the form and add a button
     QVBoxLayout *layout = new QVBoxLayout(this);
@@ -57,8 +57,7 @@ FormAtlas::FormAtlas(DrProject *project, QWidget *parent) : QWidget(parent)
 //####################################################################################
 //##        Keeps container widget same size as form
 //####################################################################################
-void FormAtlas::resizeEvent(QResizeEvent *event)
-{
+void FormAtlas::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);
 
     Dr::ApplyRoundedCornerMask(this, 8, 8);

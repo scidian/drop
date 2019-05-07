@@ -11,8 +11,7 @@
 
 namespace Dr {
 
-void LoadPaletteMaterial(Palette_Info &palette)
-{
+void LoadPaletteMaterial(Palette_Info &palette) {
     palette.name = "Material";
     palette.show_in_list = true;
 

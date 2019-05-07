@@ -21,8 +21,7 @@
 //####################################################################################
 //##        SLOT, Sets the Advisor Dock text
 //####################################################################################
-void TreeAdvisor::changeAdvisor(QString header, QString body)
-{
+void TreeAdvisor::changeAdvisor(QString header, QString body) {
     if (advisor_mutex.tryLock() == false) return;           // Try and lock function to make this thread safe
 
     this->clear();                                          // Clear / delete all from advisor tree
@@ -62,8 +61,7 @@ void TreeAdvisor::changeAdvisor(QString header, QString body)
 //####################################################################################
 //##        EVENT, Handles changing the Advisor on Mouse Enter
 //####################################################################################
-void TreeAdvisor::enterEvent(QEvent *event)
-{
+void TreeAdvisor::enterEvent(QEvent *event) {
     m_editor_relay->setAdvisorInfo(Advisor_Info::Advisor_Window);
     QTreeWidget::enterEvent(event);
 }

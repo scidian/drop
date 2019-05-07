@@ -14,7 +14,7 @@
 #include <QPushButton>
 #include <QTimer>
 
-class Engine;
+class DrEngine;
 class OpenGL;
 
 //####################################################################################
@@ -27,7 +27,7 @@ class FormEngine : public QMainWindow
 
 private:
     QTimer     *m_timer;
-    Engine     *m_engine;
+    DrEngine   *m_engine;
     OpenGL     *m_opengl;
 
 public:

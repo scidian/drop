@@ -62,8 +62,7 @@
 //####################################################################################
 //##        Item Change Event - Allows for auto updating on property changes
 //####################################################################################
-QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value)
-{
+QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value) {
     // If this is a temporary object, or not attached to a scene, do not process change
     if (m_temp_only || !m_editor_relay)
         return QGraphicsPixmapItem::itemChange(change, value);

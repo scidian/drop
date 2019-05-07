@@ -14,13 +14,11 @@
 //####################################################################################
 //##    Palette options for windows
 //############################
-enum class Color_Scheme
-{
+enum class Color_Scheme {
     Dark,       Light,      Blue,       Autumn
 };
 
-enum class Window_Colors
-{
+enum class Window_Colors {
     Shadow,
     Background_Dark,    Background_Light,
     Button_Dark,        Button_Light,
@@ -30,8 +28,7 @@ enum class Window_Colors
     Seperator,
 };
 
-enum class Color_Palettes
-{
+enum class Color_Palettes {
     Basic,
     Blank,
     Material,

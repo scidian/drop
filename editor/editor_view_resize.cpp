@@ -27,9 +27,7 @@
 //####################################################################################
 //##        Starts resizing mode
 //####################################################################################
-
-void DrView::startResize(QPoint mouse_in_view, bool use_tool_tip)
-{
+void DrView::startResize(QPoint mouse_in_view, bool use_tool_tip) {
     // Figure out starting orientation
     m_pre_resize_scale =  QPointF(1, 1);
     if (my_scene->getSelectionScale().x() < 0) m_pre_resize_scale.setX(-1);
@@ -71,38 +69,35 @@ void DrView::startResize(QPoint mouse_in_view, bool use_tool_tip)
 //####################################################################################
 //##        Call appropriate resize function
 //####################################################################################
-void DrView::resizeSelection(QPointF mouse_in_scene, bool use_exact_scale, QPointF scale_to_use)
-{
+void DrView::resizeSelection(QPointF mouse_in_scene, bool use_exact_scale, QPointF scale_to_use) {
     // Figure out what sides to use for x axis and y axis
     switch (m_start_resize_grip) {
-    case Position_Flags::Top_Left:      m_do_x = X_Axis::Left;    m_do_y = Y_Axis::Top;     break;
-    case Position_Flags::Top:           m_do_x = X_Axis::None;    m_do_y = Y_Axis::Top;     break;
-    case Position_Flags::Top_Right:     m_do_x = X_Axis::Right;   m_do_y = Y_Axis::Top;     break;
-    case Position_Flags::Right:         m_do_x = X_Axis::Right;   m_do_y = Y_Axis::None;    break;
-    case Position_Flags::Bottom_Right:  m_do_x = X_Axis::Right;   m_do_y = Y_Axis::Bottom;  break;
-    case Position_Flags::Bottom:        m_do_x = X_Axis::None;    m_do_y = Y_Axis::Bottom;  break;
-    case Position_Flags::Bottom_Left:   m_do_x = X_Axis::Left;    m_do_y = Y_Axis::Bottom;  break;
-    case Position_Flags::Left:          m_do_x = X_Axis::Left;    m_do_y = Y_Axis::None;    break;
-    default:                            m_do_x = X_Axis::None;    m_do_y = Y_Axis::None;
+        case Position_Flags::Top_Left:      m_do_x = X_Axis::Left;    m_do_y = Y_Axis::Top;     break;
+        case Position_Flags::Top:           m_do_x = X_Axis::None;    m_do_y = Y_Axis::Top;     break;
+        case Position_Flags::Top_Right:     m_do_x = X_Axis::Right;   m_do_y = Y_Axis::Top;     break;
+        case Position_Flags::Right:         m_do_x = X_Axis::Right;   m_do_y = Y_Axis::None;    break;
+        case Position_Flags::Bottom_Right:  m_do_x = X_Axis::Right;   m_do_y = Y_Axis::Bottom;  break;
+        case Position_Flags::Bottom:        m_do_x = X_Axis::None;    m_do_y = Y_Axis::Bottom;  break;
+        case Position_Flags::Bottom_Left:   m_do_x = X_Axis::Left;    m_do_y = Y_Axis::Bottom;  break;
+        case Position_Flags::Left:          m_do_x = X_Axis::Left;    m_do_y = Y_Axis::None;    break;
+        default:                            m_do_x = X_Axis::None;    m_do_y = Y_Axis::None;
     }
-
     resizeSelectionWithRotate(mouse_in_scene, use_exact_scale, scale_to_use);
 }
 
 
 // Finds the ooposite side name of side passed in, no error catch if corner passed in
-Position_Flags DrView::findOppositeSide(Position_Flags start_side)
-{
+Position_Flags DrView::findOppositeSide(Position_Flags start_side) {
     switch (start_side) {
-    case Position_Flags::Top:          return Position_Flags::Bottom;
-    case Position_Flags::Bottom:       return Position_Flags::Top;
-    case Position_Flags::Left:         return Position_Flags::Right;
-    case Position_Flags::Right:        return Position_Flags::Left;
-    case Position_Flags::Top_Left:     return Position_Flags::Bottom_Right;
-    case Position_Flags::Top_Right:    return Position_Flags::Bottom_Left;
-    case Position_Flags::Bottom_Left:  return Position_Flags::Top_Right;
-    case Position_Flags::Bottom_Right: return Position_Flags::Top_Left;
-    default:    return Position_Flags::Top;
+        case Position_Flags::Top:          return Position_Flags::Bottom;
+        case Position_Flags::Bottom:       return Position_Flags::Top;
+        case Position_Flags::Left:         return Position_Flags::Right;
+        case Position_Flags::Right:        return Position_Flags::Left;
+        case Position_Flags::Top_Left:     return Position_Flags::Bottom_Right;
+        case Position_Flags::Top_Right:    return Position_Flags::Bottom_Left;
+        case Position_Flags::Bottom_Left:  return Position_Flags::Top_Right;
+        case Position_Flags::Bottom_Right: return Position_Flags::Top_Left;
+        default:    return Position_Flags::Top;
     }
 }
 
@@ -111,8 +106,7 @@ Position_Flags DrView::findOppositeSide(Position_Flags start_side)
 //####################################################################################
 //##        Main resize function
 //####################################################################################
-void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_scale, QPointF scale_to_use)
-{
+void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_scale, QPointF scale_to_use) {
     // Test for scene, convert to our custom class
     if (scene() == nullptr) return;
 
@@ -241,36 +235,35 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_sc
     Position_Flags origin_flag = resize_flag;
     if (scale_y < 0 && scale_x > 0) {
          switch (origin_flag) {
-         case Position_Flags::Bottom:        origin_flag = Position_Flags::Top;              break;
-         case Position_Flags::Bottom_Right:  origin_flag = Position_Flags::Top_Right;        break;
-         case Position_Flags::Bottom_Left:   origin_flag = Position_Flags::Top_Left;         break;
-         case Position_Flags::Top:           origin_flag = Position_Flags::Bottom;           break;
-         case Position_Flags::Top_Right:     origin_flag = Position_Flags::Bottom_Right;     break;
-         case Position_Flags::Top_Left:      origin_flag = Position_Flags::Bottom_Left;      break;
-         default: ;
-
+             case Position_Flags::Bottom:        origin_flag = Position_Flags::Top;              break;
+             case Position_Flags::Bottom_Right:  origin_flag = Position_Flags::Top_Right;        break;
+             case Position_Flags::Bottom_Left:   origin_flag = Position_Flags::Top_Left;         break;
+             case Position_Flags::Top:           origin_flag = Position_Flags::Bottom;           break;
+             case Position_Flags::Top_Right:     origin_flag = Position_Flags::Bottom_Right;     break;
+             case Position_Flags::Top_Left:      origin_flag = Position_Flags::Bottom_Left;      break;
+             default: ;
         }
     } else if (scale_y > 0 && scale_x < 0) {
         switch (origin_flag) {
-        case Position_Flags::Right:         origin_flag = Position_Flags::Left;             break;
-        case Position_Flags::Top_Right:     origin_flag = Position_Flags::Top_Left;         break;
-        case Position_Flags::Bottom_Right:  origin_flag = Position_Flags::Bottom_Left;      break;
-        case Position_Flags::Left:          origin_flag = Position_Flags::Right;            break;
-        case Position_Flags::Top_Left:      origin_flag = Position_Flags::Top_Right;        break;
-        case Position_Flags::Bottom_Left:   origin_flag = Position_Flags::Bottom_Right;     break;
-        default: ;
+            case Position_Flags::Right:         origin_flag = Position_Flags::Left;             break;
+            case Position_Flags::Top_Right:     origin_flag = Position_Flags::Top_Left;         break;
+            case Position_Flags::Bottom_Right:  origin_flag = Position_Flags::Bottom_Left;      break;
+            case Position_Flags::Left:          origin_flag = Position_Flags::Right;            break;
+            case Position_Flags::Top_Left:      origin_flag = Position_Flags::Top_Right;        break;
+            case Position_Flags::Bottom_Left:   origin_flag = Position_Flags::Bottom_Right;     break;
+            default: ;
         }
     } else if (scale_y < 0 && scale_x < 0) {
         switch (origin_flag) {
-        case Position_Flags::Right:         origin_flag = Position_Flags::Left;             break;
-        case Position_Flags::Left:          origin_flag = Position_Flags::Right;            break;
-        case Position_Flags::Top:           origin_flag = Position_Flags::Bottom;           break;
-        case Position_Flags::Bottom:        origin_flag = Position_Flags::Top;              break;
-        case Position_Flags::Top_Right:     origin_flag = Position_Flags::Bottom_Left;      break;
-        case Position_Flags::Bottom_Right:  origin_flag = Position_Flags::Top_Left;         break;
-        case Position_Flags::Top_Left:      origin_flag = Position_Flags::Bottom_Right;     break;
-        case Position_Flags::Bottom_Left:   origin_flag = Position_Flags::Top_Right;        break;
-        default: ;
+            case Position_Flags::Right:         origin_flag = Position_Flags::Left;             break;
+            case Position_Flags::Left:          origin_flag = Position_Flags::Right;            break;
+            case Position_Flags::Top:           origin_flag = Position_Flags::Bottom;           break;
+            case Position_Flags::Bottom:        origin_flag = Position_Flags::Top;              break;
+            case Position_Flags::Top_Right:     origin_flag = Position_Flags::Bottom_Left;      break;
+            case Position_Flags::Bottom_Right:  origin_flag = Position_Flags::Top_Left;         break;
+            case Position_Flags::Top_Left:      origin_flag = Position_Flags::Bottom_Right;     break;
+            case Position_Flags::Bottom_Left:   origin_flag = Position_Flags::Top_Right;        break;
+            default: ;
         }
     }
     QGraphicsItemGroup *temp = my_scene->createEmptyItemGroup(angle);
@@ -288,8 +281,8 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_sc
 //####################################################################################
 //##        Remove shearing from item
 //####################################################################################
-void DrView::removeShearing(QGraphicsItem *item, QPointF scale)
-{
+void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
+
     // Figure out which item in invisible cloned resize group to base transform off of
     DrItem *original = dynamic_cast<DrItem*>(item);
     DrItem *clone = nullptr;

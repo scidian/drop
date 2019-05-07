@@ -12,13 +12,11 @@
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrSettings::DrSettings()
-{
+DrSettings::DrSettings() {
 
 }
 
-DrSettings::~DrSettings()
-{
+DrSettings::~DrSettings() {
     for (auto i: m_components) { delete i.second; }
 }
 
@@ -38,18 +36,17 @@ void DrSettings::setComponentPropertyValue(Components component, Properties prop
 
 QString DrSettings::getName() {
     switch (getType()) {
-    case DrType::World:  return getComponent(Components::World_Settings )->getProperty(Properties::World_Name )->getValue().toString();
-    case DrType::Stage:  return getComponent(Components::Stage_Settings )->getProperty(Properties::Stage_Name )->getValue().toString();
-    case DrType::Object: return getComponent(Components::Object_Settings)->getProperty(Properties::Object_Name)->getValue().toString();
-    case DrType::Asset:  return getComponent(Components::Asset_Settings )->getProperty(Properties::Asset_Name )->getValue().toString();
-    case DrType::Image:  return "DrImage - Unknown Name";
-    case DrType::Font:   return "DrFont - Unknown Name";
+        case DrType::World:  return getComponent(Components::World_Settings )->getProperty(Properties::World_Name )->getValue().toString();
+        case DrType::Stage:  return getComponent(Components::Stage_Settings )->getProperty(Properties::Stage_Name )->getValue().toString();
+        case DrType::Object: return getComponent(Components::Object_Settings)->getProperty(Properties::Object_Name)->getValue().toString();
+        case DrType::Asset:  return getComponent(Components::Asset_Settings )->getProperty(Properties::Asset_Name )->getValue().toString();
+        case DrType::Image:  return "DrImage - Unknown Name";
+        case DrType::Font:   return "DrFont - Unknown Name";
     }
     return "Unknown Type, Can't Find Name";
 }
 
-DrProperty* DrSettings::findPropertyFromPropertyKey(long property_key_to_find)
-{
+DrProperty* DrSettings::findPropertyFromPropertyKey(long property_key_to_find) {
     for (auto component: m_components) {
         for (auto property: component.second->getPropertyList()) {
             if (property.second->getPropertyKey() == property_key_to_find) {
@@ -60,8 +57,7 @@ DrProperty* DrSettings::findPropertyFromPropertyKey(long property_key_to_find)
     return nullptr;
 }
 
-DrComponent* DrSettings::findComponentFromPropertyKey(long property_key_to_find)
-{
+DrComponent* DrSettings::findComponentFromPropertyKey(long property_key_to_find) {
     return findPropertyFromPropertyKey(property_key_to_find)->getParentComponent();
 }
 
@@ -69,14 +65,10 @@ DrComponent* DrSettings::findComponentFromPropertyKey(long property_key_to_find)
 //####################################################################################
 //##    Component Loading - addComponent / addComponentProperty
 //####################################################################################
-
 void DrSettings::addComponent(Components component, QString display_name, QString description, QColor color, bool is_turned_on) {
     DrComponent *comp = new DrComponent(this, display_name, description, color, static_cast<long>(component), is_turned_on);
     m_components[static_cast<long>(component)] = comp;
 }
-
-
-//####################################################################################
 
 void DrSettings::addPropertyToComponent(Components component, Properties property_number, Property_Type type,
                                         QVariant value, QString display_name, QString description, bool is_hidden, bool is_editable) {

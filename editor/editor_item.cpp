@@ -26,8 +26,7 @@
 //####################################################################################
 //##        Constructor & destructor
 //####################################################################################
-DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrObject *object, bool is_temp_only) : m_editor_relay(editor_relay)
-{
+DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrObject *object, bool is_temp_only) : m_editor_relay(editor_relay) {
     // Store relevant project / object data for use later
     m_project    = project;
     m_object     = object;
@@ -41,20 +40,20 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrObject *object,
     QString text;
 
     switch (m_asset->getAssetType()) {
-    case DrAssetType::Object:
-    case DrAssetType::Character:
-        m_pixmap = m_asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
-        applyFilters();                                 // Apply filters and set pixmap
-        m_asset_width =  m_asset->getWidth();           // Dimensions of associated asset, used for boundingRect
-        m_asset_height = m_asset->getHeight();
-        break;
-    case DrAssetType::Text:
-        text =     m_object->getComponentPropertyValue(Components::Object_Settings_Text, Properties::Object_Text_User_Text).toString();
-        m_pixmap = m_editor_relay->currentProject()->getDrFont( m_asset->getSourceKey() )->createText( text );
-        setPixmap(m_pixmap);
-        m_asset_width =  m_pixmap.width();
-        m_asset_height = m_pixmap.height();
-        break;
+        case DrAssetType::Object:
+        case DrAssetType::Character:
+            m_pixmap = m_asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
+            applyFilters();                                 // Apply filters and set pixmap
+            m_asset_width =  m_asset->getWidth();           // Dimensions of associated asset, used for boundingRect
+            m_asset_height = m_asset->getHeight();
+            break;
+        case DrAssetType::Text:
+            text =     m_object->getComponentPropertyValue(Components::Object_Settings_Text, Properties::Object_Text_User_Text).toString();
+            m_pixmap = m_editor_relay->currentProject()->getDrFont( m_asset->getSourceKey() )->createText( text );
+            setPixmap(m_pixmap);
+            m_asset_width =  m_pixmap.width();
+            m_asset_height = m_pixmap.height();
+            break;
     }
 
 
@@ -116,15 +115,13 @@ void DrItem::enableItemChangeFlags() {
 //##        Item Property Overrides
 //####################################################################################
 // Outline of entire object
-QRectF DrItem::boundingRect() const
-{
+QRectF DrItem::boundingRect() const {
     QRectF my_rect = QRectF(0, 0, m_asset_width, m_asset_height);
     return my_rect;
 }
 
 // Seems to define mouseOver events, and intersection events for Rubber Band Box
-QPainterPath DrItem::shape() const
-{
+QPainterPath DrItem::shape() const {
     ///QPainterPath path;
     ///path.addRect(0, 0, m_width, m_height);
     ///return path;
@@ -137,8 +134,7 @@ QPainterPath DrItem::shape() const
 //####################################################################################
 //##        Pixmap Filters
 //####################################################################################
-void DrItem::applyFilters()
-{
+void DrItem::applyFilters() {
     QPixmap new_pixmap = m_pixmap.copy();
 
     int  brightness = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Brightness).toInt();
@@ -148,12 +144,12 @@ void DrItem::applyFilters()
     bool grayscale  = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Grayscale).toBool();
     bool negative   = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Negative).toBool();
 
-    if ( negative )        new_pixmap = DrFilter::changeToNegative(new_pixmap);
-    if ( grayscale )       new_pixmap = DrFilter::changeToGrayscale(new_pixmap);
-    if ( hue        != 0 ) new_pixmap = DrFilter::changeHue(new_pixmap, hue);
-    if ( saturation != 0 ) new_pixmap = DrFilter::changeSaturation(new_pixmap, saturation);
-    if ( contrast   != 0 ) new_pixmap = DrFilter::changeContrast(new_pixmap, contrast);
-    if ( brightness != 0 ) new_pixmap = DrFilter::changeBrightness(new_pixmap, brightness);
+    if ( negative )        new_pixmap = DrImaging::changeToNegative(new_pixmap);
+    if ( grayscale )       new_pixmap = DrImaging::changeToGrayscale(new_pixmap);
+    if ( hue        != 0 ) new_pixmap = DrImaging::changeHue(new_pixmap, hue);
+    if ( saturation != 0 ) new_pixmap = DrImaging::changeSaturation(new_pixmap, saturation);
+    if ( contrast   != 0 ) new_pixmap = DrImaging::changeContrast(new_pixmap, contrast);
+    if ( brightness != 0 ) new_pixmap = DrImaging::changeBrightness(new_pixmap, brightness);
 
     setPixmap(new_pixmap);
 }

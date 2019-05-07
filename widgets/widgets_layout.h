@@ -16,10 +16,10 @@
 class DrProject;
 
 //####################################################################################
-//##    FlowLayout
+//##    DrQLayoutFlow
 //##        A changing GridLayout that adjusts to the size of the parent widget
 //############################
-class FlowLayout : public QLayout
+class DrQLayoutFlow : public QLayout
 {
 private:
     int     doLayout(const QRect &rect, bool testOnly) const;
@@ -32,11 +32,11 @@ private:
 
 
 public:
-    explicit FlowLayout(QWidget *parent, int margin_left = -1, int margin_right = -1, int margin_top = -1, int margin_bottom = -1,
-                        int hSpacing = -1, int vSpacing = -1);
-    explicit FlowLayout(int margin_left = -1, int margin_right = -1, int margin_top = -1, int margin_bottom = -1,
-                        int hSpacing = -1, int vSpacing = -1);
-    ~FlowLayout() override;
+    explicit DrQLayoutFlow(QWidget *parent, int margin_left = -1, int margin_right = -1, int margin_top = -1, int margin_bottom = -1,
+                          int hSpacing = -1, int vSpacing = -1);
+    explicit DrQLayoutFlow(int margin_left = -1, int margin_right = -1, int margin_top = -1, int margin_bottom = -1,
+                          int hSpacing = -1, int vSpacing = -1);
+    ~DrQLayoutFlow() override;
 
     // QLayout Overrides
     void                addItem(QLayoutItem *item) override;

@@ -30,8 +30,7 @@
 //####################################################################################
 //##        DrawBackground / DrawForground, called before and after paintEvent
 //####################################################################################
-void DrView::drawBackground(QPainter *painter, const QRectF &rect)
-{
+void DrView::drawBackground(QPainter *painter, const QRectF &rect) {
     Q_UNUSED(rect);
 
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL)) {
@@ -48,8 +47,7 @@ void DrView::drawBackground(QPainter *painter, const QRectF &rect)
     }
 }
 
-void DrView::drawForeground(QPainter *painter, const QRectF &rect)
-{
+void DrView::drawForeground(QPainter *painter, const QRectF &rect) {
     Q_UNUSED(rect);
 
     if (m_grid_show_on_top == true) {
@@ -66,8 +64,7 @@ void DrView::drawForeground(QPainter *painter, const QRectF &rect)
 //####################################################################################
 //##        PAINT: Main Paint Event for QGraphicsView (DrView)
 //####################################################################################
-void DrView::paintEvent(QPaintEvent *event)
-{
+void DrView::paintEvent(QPaintEvent *event) {
     // ******************** Pass on event to parent class paint items into scene
     QGraphicsView::paintEvent(event);
 
@@ -136,8 +133,7 @@ void DrView::paintEvent(QPaintEvent *event)
 //####################################################################################
 //##        PAINT: Draws grid lines
 //####################################################################################
-void DrView::paintGrid(QPainter &painter)
-{
+void DrView::paintGrid(QPainter &painter) {
     double point_size = 4;
     if (m_zoom_scale <= .50) point_size = 3;
     if (m_zoom_scale >= 2.0) point_size = 6;
@@ -213,12 +209,11 @@ void DrView::paintGrid(QPainter &painter)
 //####################################################################################
 //##        PAINT: Paints Game Frame in Scene Coordinates
 //####################################################################################
-void DrView::paintGameFrame(QPainter &painter)
-{
+void DrView::paintGameFrame(QPainter &painter) {
     QRectF game_frame;
     switch (m_project->getOptionOrientation()) {
-    case Orientation::Portrait:     game_frame = QRectF(0, -1600, 800, 1600);       break;
-    case Orientation::Landscape:    game_frame = QRectF(0, -800, 1600,  800);       break;
+        case Orientation::Portrait:     game_frame = QRectF(0, -1600, 800, 1600);       break;
+        case Orientation::Landscape:    game_frame = QRectF(0, -800, 1600,  800);       break;
     }
 
     painter.setBrush(Qt::NoBrush);
@@ -242,8 +237,7 @@ void DrView::paintGameFrame(QPainter &painter)
 //####################################################################################
 //##        PAINT: Paints tool tip when using OpenGL
 //####################################################################################
-void DrView::paintToolTip(QPainter &painter)
-{
+void DrView::paintToolTip(QPainter &painter) {
     int w = m_tool_tip->geometry().width();
     int h = m_tool_tip->geometry().height();
     int left_offset = m_tool_tip->pos().x();
@@ -268,8 +262,7 @@ void DrView::paintToolTip(QPainter &painter)
 //####################################################################################
 //##        PAINT: Draw our Rubber Band selection box with custom colors
 //####################################################################################
-void DrViewRubberBand::paintEvent(QPaintEvent *)
-{
+void DrViewRubberBand::paintEvent(QPaintEvent *) {
     QStylePainter painter(this);
 
     QColor bg = Dr::GetColor(Window_Colors::Icon_Light);

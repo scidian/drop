@@ -27,8 +27,7 @@
 //##
 //##        Inspector Widget SIGNALS are blocked to prevent recursive updating
 //####################################################################################
-void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_items, QList<long> property_keys_to_update)
-{
+void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_items, QList<long> property_keys_to_update) {
     if (changed_items.isEmpty()) return;
     ///if (property_keys_to_update.isEmpty()) return;   // ********** Don't do this! This function is made so all properties update if none are received
 
@@ -56,65 +55,65 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
         widget->blockSignals(true);
 
         switch (prop->getPropertyType()) {
-        case Property_Type::Bool:       dynamic_cast<QCheckBox*>(widget)->setChecked(prop->getValue().toBool());        break;
+            case Property_Type::Bool:       dynamic_cast<QCheckBox*>(widget)->setChecked(prop->getValue().toBool());        break;
 
-        case Property_Type::Int:
-        case Property_Type::Positive:
-        case Property_Type::Filter:
-        case Property_Type::FilterAngle:
-                                        dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toInt());            break;
+            case Property_Type::Int:
+            case Property_Type::Positive:
+            case Property_Type::Filter:
+            case Property_Type::FilterAngle:
+                                            dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toInt());            break;
 
-        case Property_Type::Double:
-        case Property_Type::Percent:
-        case Property_Type::Angle:
-            if (widget->property(User_Property::Order).toInt() == 2)
-                dynamic_cast<QSlider*>(widget)->setValue(prop->getValue().toInt());
-            else
-                dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toDouble());
-            break;
-
-        case Property_Type::String:     dynamic_cast<QLineEdit*>(widget)->setText(prop->getValue().toString());         break;
-
-        case Property_Type::PositionF:
-        case Property_Type::PointF:
-        case Property_Type::SizeF:
-        case Property_Type::ScaleF:
-        case Property_Type::GridF:
-        case Property_Type::GridScaleF:
-        case Property_Type::Variable:
-            doublespin = dynamic_cast<QDoubleSpinBox*>(widget);
-            if (doublespin->property(User_Property::Order).toInt() == 0)
-                doublespin->setValue(prop->getValue().toPointF().x());
-            else
-                if (prop->getPropertyType() == Property_Type::PositionF)
-                    doublespin->setValue(prop->getValue().toPointF().y() * -1);
+            case Property_Type::Double:
+            case Property_Type::Percent:
+            case Property_Type::Angle:
+                if (widget->property(User_Property::Order).toInt() == 2)
+                    dynamic_cast<QSlider*>(widget)->setValue(prop->getValue().toInt());
                 else
-                    doublespin->setValue(prop->getValue().toPointF().y());
-            break;
+                    dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toDouble());
+                break;
 
-        case Property_Type::List:
-            pushbutton = dynamic_cast<QPushButton*>(widget);
-            pushbutton->setText( pushbutton->menu()->actions().at(prop->getValue().toInt())->text() );
-            pushbutton->menu()->actions().at(prop->getValue().toInt())->setChecked(true);
-            break;
+            case Property_Type::String:     dynamic_cast<QLineEdit*>(widget)->setText(prop->getValue().toString());         break;
 
-        case Property_Type::Color:
-            pushbutton = dynamic_cast<QPushButton*>(widget);
-            this->updateColorButton( pushbutton, QColor::fromRgba(prop->getValue().toUInt()) );
-            break;
+            case Property_Type::PositionF:
+            case Property_Type::PointF:
+            case Property_Type::SizeF:
+            case Property_Type::ScaleF:
+            case Property_Type::GridF:
+            case Property_Type::GridScaleF:
+            case Property_Type::Variable:
+                doublespin = dynamic_cast<QDoubleSpinBox*>(widget);
+                if (doublespin->property(User_Property::Order).toInt() == 0)
+                    doublespin->setValue(prop->getValue().toPointF().x());
+                else
+                    if (prop->getPropertyType() == Property_Type::PositionF)
+                        doublespin->setValue(prop->getValue().toPointF().y() * -1);
+                    else
+                        doublespin->setValue(prop->getValue().toPointF().y());
+                break;
 
-        case Property_Type::Image:                                  // QPixmap
-        case Property_Type::Icon:
-        case Property_Type::Polygon:                                // For Collision Shapes
-        case Property_Type::Vector3D:
+            case Property_Type::List:
+                pushbutton = dynamic_cast<QPushButton*>(widget);
+                pushbutton->setText( pushbutton->menu()->actions().at(prop->getValue().toInt())->text() );
+                pushbutton->menu()->actions().at(prop->getValue().toInt())->setChecked(true);
+                break;
 
-            //################ !!!!!!!!!!!!!!!!!!!!!!!
-            //
-            //      CASES NOT ACCOUNTED FOR
-            //
-            //################ !!!!!!!!!!!!!!!!!!!!!!!
+            case Property_Type::Color:
+                pushbutton = dynamic_cast<QPushButton*>(widget);
+                this->updateColorButton( pushbutton, QColor::fromRgba(prop->getValue().toUInt()) );
+                break;
 
-            break;
+            case Property_Type::Image:                                  // QPixmap
+            case Property_Type::Icon:
+            case Property_Type::Polygon:                                // For Collision Shapes
+            case Property_Type::Vector3D:
+
+                //################ !!!!!!!!!!!!!!!!!!!!!!!
+                //
+                //      CASES NOT ACCOUNTED FOR
+                //
+                //################ !!!!!!!!!!!!!!!!!!!!!!!
+
+                break;
         }
 
         // Turn signals back on
@@ -133,8 +132,7 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 //##        Updates the appropriate DrSettings DrProperty Values of the item changed
 //##            in the object inspector after a new value has been accepted
 //####################################################################################
-void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order)
-{
+void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order) {
     if (m_selected_key == c_no_key) return;
     DrSettings *settings = m_project->findSettingsFromKey( m_selected_key );
 
@@ -144,53 +142,53 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
         DrProperty *property = settings->findPropertyFromPropertyKey(property_key);
 
         switch (property->getPropertyType()) {
-        case Property_Type::Bool:                                   // true or false
-        case Property_Type::Int:                                    // any integer
-        case Property_Type::Positive:                               // integer >= 0
-        case Property_Type::Filter:                                 // integer from -255 to 255
-        case Property_Type::FilterAngle:                            // integer from 0 to 360
-        case Property_Type::Double:                                 // any floating point
-        case Property_Type::Percent:                                // floating point from 0.0 to 100.0
-        case Property_Type::Angle:                                  // floating point for showing degrees
-        case Property_Type::List:                                   // index value
-        case Property_Type::String:
-            property->setValue(new_value);
-            break;
-        case Property_Type::PositionF:                              // Floating pair x and y, y is flipped
-        case Property_Type::PointF:                                 // Floating pair x and y
-        case Property_Type::SizeF:                                  // Floating pair w and h
-        case Property_Type::ScaleF:                                 // Floating pair, has smaller step in spin box
-        case Property_Type::GridF:                                  // Floating pair x and y, minimum value c_minimum_grid_size
-        case Property_Type::GridScaleF:                             // Floating pair x and y, minimum value c_minimum_grid_scale
-        case Property_Type::Variable:                               // floating point pair, number followed by a +/- number
-            temp_pointf = property->getValue().toPointF();
-            if (sub_order == 0)
-                temp_pointf.setX( new_value.toDouble() );
-            else {
-                if (property->getPropertyType() == Property_Type::PositionF)
-                    temp_pointf.setY( new_value.toDouble() * -1);
-                else
-                    temp_pointf.setY( new_value.toDouble() );
-            }
-            property->setValue(temp_pointf);
-            break;
+            case Property_Type::Bool:                                   // true or false
+            case Property_Type::Int:                                    // any integer
+            case Property_Type::Positive:                               // integer >= 0
+            case Property_Type::Filter:                                 // integer from -255 to 255
+            case Property_Type::FilterAngle:                            // integer from 0 to 360
+            case Property_Type::Double:                                 // any floating point
+            case Property_Type::Percent:                                // floating point from 0.0 to 100.0
+            case Property_Type::Angle:                                  // floating point for showing degrees
+            case Property_Type::List:                                   // index value
+            case Property_Type::String:
+                property->setValue(new_value);
+                break;
+            case Property_Type::PositionF:                              // Floating pair x and y, y is flipped
+            case Property_Type::PointF:                                 // Floating pair x and y
+            case Property_Type::SizeF:                                  // Floating pair w and h
+            case Property_Type::ScaleF:                                 // Floating pair, has smaller step in spin box
+            case Property_Type::GridF:                                  // Floating pair x and y, minimum value c_minimum_grid_size
+            case Property_Type::GridScaleF:                             // Floating pair x and y, minimum value c_minimum_grid_scale
+            case Property_Type::Variable:                               // floating point pair, number followed by a +/- number
+                temp_pointf = property->getValue().toPointF();
+                if (sub_order == 0)
+                    temp_pointf.setX( new_value.toDouble() );
+                else {
+                    if (property->getPropertyType() == Property_Type::PositionF)
+                        temp_pointf.setY( new_value.toDouble() * -1);
+                    else
+                        temp_pointf.setY( new_value.toDouble() );
+                }
+                property->setValue(temp_pointf);
+                break;
 
-        case Property_Type::Color:                                  // QColor.rgba()
-            property->setValue(new_value);
-            break;
+            case Property_Type::Color:                                  // QColor.rgba()
+                property->setValue(new_value);
+                break;
 
-        case Property_Type::Image:                                  // QPixmap
-        case Property_Type::Icon:
-        case Property_Type::Polygon:                                // For Collision Shapes
-        case Property_Type::Vector3D:
+            case Property_Type::Image:                                  // QPixmap
+            case Property_Type::Icon:
+            case Property_Type::Polygon:                                // For Collision Shapes
+            case Property_Type::Vector3D:
 
-            //################ !!!!!!!!!!!!!!!!!!!!!!!
-            //
-            //      CASES NOT ACCOUNTED FOR
-            //
-            //################ !!!!!!!!!!!!!!!!!!!!!!!
+                //################ !!!!!!!!!!!!!!!!!!!!!!!
+                //
+                //      CASES NOT ACCOUNTED FOR
+                //
+                //################ !!!!!!!!!!!!!!!!!!!!!!!
 
-            break;
+                break;
         }
 
         m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Object_Inspector, { settings }, { static_cast<Properties>(property_key) } );

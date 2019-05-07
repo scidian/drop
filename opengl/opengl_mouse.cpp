@@ -17,8 +17,8 @@
 //####################################################################################
 //##        Mouse Events
 //####################################################################################
-void OpenGL::mousePressEvent(QMouseEvent *event)
-{
+void OpenGL::mousePressEvent(QMouseEvent *event) {
+
     if (m_engine->has_scene == false) return;
 
     double x =  event->pos().x() - width() / 2;
@@ -34,10 +34,10 @@ void OpenGL::mousePressEvent(QMouseEvent *event)
             for (int i = 0; i < 25; i++ ) {
                 double vel_x = QRandomGenerator::global()->bounded(-100, 100);
                 double vel_y = QRandomGenerator::global()->bounded( 100, 500);
-                m_engine->addCircle(BodyType::Dynamic, 0, x, y, .7, .5, 2, QPointF(vel_x, vel_y) );
+                m_engine->addCircle(Body_Type::Dynamic, 0, x, y, .7, .5, 2, QPointF(vel_x, vel_y) );
             }
         } else if (event->button() & Qt::RightButton) {
-            m_engine->addBlock(BodyType::Dynamic, 1, x, y, 1, 0, 3, QPointF(0, 0));
+            m_engine->addBlock(Body_Type::Dynamic, 1, x, y, 1, 0, 3, QPointF(0, 0));
         } else if (event->button() & Qt::MiddleButton) {
             // Polygon shape points should be counter-clockwise
             QVector<QPointF> points;
@@ -46,7 +46,7 @@ void OpenGL::mousePressEvent(QMouseEvent *event)
             points.append( QPointF(  5,  60) );
             points.append( QPointF(-46, -10) );
             points.append( QPointF(-38, -55) );
-            m_engine->addPolygon(BodyType::Dynamic, 2, x, y, points, .15, .4, 2.5, QPointF(0, 0));
+            m_engine->addPolygon(Body_Type::Dynamic, 2, x, y, points, .15, .4, 2.5, QPointF(0, 0));
         }
 
 
@@ -75,8 +75,7 @@ void OpenGL::mouseReleaseEvent(QMouseEvent *event)
 
 // Handles zooming in / out of view with mouse wheel
 #if QT_CONFIG(wheelevent)
-void OpenGL::wheelEvent(QWheelEvent *event)
-{
+void OpenGL::wheelEvent(QWheelEvent *event) {
     // Allow for scene scrolling if ctrl (cmd) is down
     if (event->modifiers() & Qt::KeyboardModifier::ControlModifier) {
         QOpenGLWidget::wheelEvent(event);
@@ -90,8 +89,7 @@ void OpenGL::wheelEvent(QWheelEvent *event)
 #endif
 
 
-void OpenGL::zoomInOut(int level)
-{
+void OpenGL::zoomInOut(int level) {
     m_zoom += level;
     if (m_zoom > 500) m_zoom = 500;
     if (m_zoom < -40) m_zoom = -40;

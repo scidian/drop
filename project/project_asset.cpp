@@ -21,8 +21,7 @@
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_asset_type, long source_key)
-{
+DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_asset_type, long source_key) {
     m_parent_project = parent_project;
     setKey(new_asset_key);
 
@@ -52,7 +51,7 @@ DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_
     m_height = my_starting_pixmap.height();
 }
 
-DrAsset::~DrAsset() {}
+DrAsset::~DrAsset() { }
 
 
 
@@ -60,8 +59,7 @@ DrAsset::~DrAsset() {}
 //##    Property loading - initializeAssetSettings
 //####################################################################################
 
-void DrAsset::initializeAssetSettingsObject(QString new_name, QPixmap pixmap)
-{
+void DrAsset::initializeAssetSettingsObject(QString new_name, QPixmap pixmap) {
     addComponent(Components::Asset_Settings, "Settings", "Basic settings for current asset.", Component_Colors::White_Snow, true);
     getComponent(Components::Asset_Settings)->setIcon(Component_Icons::Settings);
 
@@ -80,8 +78,7 @@ void DrAsset::initializeAssetSettingsObject(QString new_name, QPixmap pixmap)
 }
 
 
-void DrAsset::initializeAssetSettingsFont(DrFont *font)
-{
+void DrAsset::initializeAssetSettingsFont(DrFont *font) {
     addComponent(Components::Asset_Settings, "Settings", "Basic settings for current asset.", Component_Colors::White_Snow, true);
     getComponent(Components::Asset_Settings)->setIcon(Component_Icons::Settings);
 
@@ -99,8 +96,7 @@ void DrAsset::initializeAssetSettingsFont(DrFont *font)
 }
 
 
-void DrAsset::initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap)
-{
+void DrAsset::initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap) {
     addComponent(Components::Asset_Settings, "Settings", "Basic settings for current asset.", Component_Colors::White_Snow, true);
     getComponent(Components::Asset_Settings)->setIcon(Component_Icons::Settings);
 

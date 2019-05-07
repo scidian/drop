@@ -29,8 +29,7 @@
 //####################################################################################
 void DrScene::keyReleaseEvent(QKeyEvent *event) { QGraphicsScene::keyReleaseEvent(event); }
 
-void DrScene::keyPressEvent(QKeyEvent *event)
-{
+void DrScene::keyPressEvent(QKeyEvent *event) {
     bool update_widgets_when_done = false;
 
     // Amount to move items when arrow keys are pressed
@@ -48,12 +47,12 @@ void DrScene::keyPressEvent(QKeyEvent *event)
     // Process movement key press
     for (auto item : getSelectionItems()) {
         switch (event->key()) {
-        case Qt::Key::Key_Up:     item->moveBy( 0, -move_by);      break;
-        case Qt::Key::Key_Down:   item->moveBy( 0,  move_by);      break;
-        case Qt::Key::Key_Left:   item->moveBy(-move_by,  0);      break;
-        case Qt::Key::Key_Right:  item->moveBy( move_by,  0);      break;
-        case Qt::Key::Key_Comma:  item->setZValue(selectedItems().first()->zValue() - 1);    break;
-        case Qt::Key::Key_Period: item->setZValue(selectedItems().first()->zValue() + 1);    break;
+            case Qt::Key::Key_Up:     item->moveBy( 0, -move_by);      break;
+            case Qt::Key::Key_Down:   item->moveBy( 0,  move_by);      break;
+            case Qt::Key::Key_Left:   item->moveBy(-move_by,  0);      break;
+            case Qt::Key::Key_Right:  item->moveBy( move_by,  0);      break;
+            case Qt::Key::Key_Comma:  item->setZValue(selectedItems().first()->zValue() - 1);    break;
+            case Qt::Key::Key_Period: item->setZValue(selectedItems().first()->zValue() + 1);    break;
         }
     }
     updateSelectionBox();
@@ -76,37 +75,36 @@ void DrScene::keyPressEvent(QKeyEvent *event)
         int     new_z;
 
         switch (event->key()) {
+            // Clone selected items
+            case Qt::Key::Key_W:
+            case Qt::Key::Key_A:
+            case Qt::Key::Key_S:
+            case Qt::Key::Key_D:
+                new_x = drobject->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF().x();
+                new_y = drobject->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF().y();
+                new_z = drobject->getComponentPropertyValue(Components::Object_Layering,  Properties::Object_Z_Order).toInt();
 
-        // Clone selected items
-        case Qt::Key::Key_W:
-        case Qt::Key::Key_A:
-        case Qt::Key::Key_S:
-        case Qt::Key::Key_D:
-            new_x = drobject->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF().x();
-            new_y = drobject->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF().y();
-            new_z = drobject->getComponentPropertyValue(Components::Object_Layering,  Properties::Object_Z_Order).toInt();
+                if (event->key() == Qt::Key::Key_W) new_y = new_y - source_rect.height();
+                if (event->key() == Qt::Key::Key_A) new_x = new_x - source_rect.width();
+                if (event->key() == Qt::Key::Key_S) new_y = new_y + source_rect.height();
+                if (event->key() == Qt::Key::Key_D) new_x = new_x + source_rect.width();
 
-            if (event->key() == Qt::Key::Key_W) new_y = new_y - source_rect.height();
-            if (event->key() == Qt::Key::Key_A) new_x = new_x - source_rect.width();
-            if (event->key() == Qt::Key::Key_S) new_y = new_y + source_rect.height();
-            if (event->key() == Qt::Key::Key_D) new_x = new_x + source_rect.width();
+                new_object = drstage->addObject(drobject->getObjectType(), drobject->getAssetKey(), new_x, new_y, new_z);
+                drstage->copyObjectSettings(drobject, new_object);
+                new_object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Position, QPointF(new_x, new_y));
+                new_object->setComponentPropertyValue(Components::Object_Layering,  Properties::Object_Z_Order, new_z);
 
-            new_object = drstage->addObject(drobject->getObjectType(), drobject->getAssetKey(), new_x, new_y, new_z);
-            drstage->copyObjectSettings(drobject, new_object);
-            new_object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Position, QPointF(new_x, new_y));
-            new_object->setComponentPropertyValue(Components::Object_Layering,  Properties::Object_Z_Order, new_z);
-
-            list_new_items.append( this->addItemToSceneFromObject(new_object) );
-            break;
+                list_new_items.append( this->addItemToSceneFromObject(new_object) );
+                break;
 
 
-        // Delete selected items
-        case Qt::Key::Key_Delete:
-        case Qt::Key::Key_Backspace:
-            drstage->deleteObject(drobject);
-            delete item;
-            update_widgets_when_done = true;
-            break;
+            // Delete selected items
+            case Qt::Key::Key_Delete:
+            case Qt::Key::Key_Backspace:
+                drstage->deleteObject(drobject);
+                delete item;
+                update_widgets_when_done = true;
+                break;
         }
     }
 

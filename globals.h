@@ -19,8 +19,7 @@ class IEditorRelay;
 //####################################################################################
 //##    Program wide options
 //############################
-enum class Preferences
-{
+enum class Preferences {
     World_Editor_Lock_Backgrounds,                  // bool
     World_Editor_Show_Collision_Shapes,             // bool
     World_Editor_Show_Connections,                  // bool

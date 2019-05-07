@@ -22,8 +22,8 @@
 //####################################################################################
 //##        Constructor
 //####################################################################################
-FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent)
-{
+FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent) {
+
     // ***** Initialize member variables
     m_project = project;
 
@@ -36,7 +36,7 @@ FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent
 
     // ***** Center window on screen and install dragging event filter
     Dr::CenterFormOnScreen(parent, this);
-    this->installEventFilter(new ClickAndDragWindow(this));
+    this->installEventFilter(new DrFilterClickAndDragWindow(this));
 
     // Create a contianer widget, this will allow Create a layout for the form and add a button
     QVBoxLayout *layout = new QVBoxLayout(this);
@@ -65,8 +65,7 @@ FormSettings::~FormSettings() { }
 //####################################################################################
 //##        Keeps container widget same size as form
 //####################################################################################
-void FormSettings::resizeEvent(QResizeEvent *event)
-{
+void FormSettings::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);
 
     Dr::ApplyRoundedCornerMask(this, 8, 8);

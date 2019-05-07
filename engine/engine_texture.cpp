@@ -14,7 +14,7 @@
 //####################################################################################
 //##        Constructor
 //####################################################################################
-EngineTexture::EngineTexture(QString from_asset_string) {
+DrEngineTexture::DrEngineTexture(QString from_asset_string) {
     loadTexture(from_asset_string);
 }
 
@@ -22,7 +22,7 @@ EngineTexture::EngineTexture(QString from_asset_string) {
 //####################################################################################
 //##        Loads a texture
 //####################################################################################
-void EngineTexture::loadTexture(QString from_asset_string) {
+void DrEngineTexture::loadTexture(QString from_asset_string) {
 
     // Load image, NOTE: QImage is mirrored vertically to account for the fact that OpenGL and QImage use opposite directions for the y axis
     QImage image = QImage(from_asset_string).mirrored();

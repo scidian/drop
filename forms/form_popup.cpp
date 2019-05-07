@@ -22,8 +22,8 @@
 //##        Constructor
 //####################################################################################
 FormPopup::FormPopup(QWidget *parent, DrProject *project, QWidget *widget_to_use_for_mapToGlobal, int x_offset, int y_offset)
-    : QWidget(parent), m_project(project), m_mapper(widget_to_use_for_mapToGlobal)
-{
+    : QWidget(parent), m_project(project), m_mapper(widget_to_use_for_mapToGlobal) {
+
     m_offset = QPoint(x_offset, y_offset);
 
     // ***** Set up initial window
@@ -53,8 +53,8 @@ void FormPopup::focusOutEvent(QFocusEvent *) { this->close(); }
 //####################################################################################
 //##        Paints arrow at top / bottom of form
 //####################################################################################
-void FormPopup::paintEvent(QPaintEvent *event)
-{
+void FormPopup::paintEvent(QPaintEvent *event) {
+
     QWidget::paintEvent(event);
 
     QPainter painter(this);
@@ -96,8 +96,7 @@ void FormPopup::paintEvent(QPaintEvent *event)
 //####################################################################################
 //##        Closes form if clicked in transparent area
 //####################################################################################
-void FormPopup::mousePressEvent(QMouseEvent *event)
-{
+void FormPopup::mousePressEvent(QMouseEvent *event) {
     if (this->mask().contains(event->pos()) == false)
         this->close();
 }
@@ -106,8 +105,7 @@ void FormPopup::mousePressEvent(QMouseEvent *event)
 //####################################################################################
 //##        Keeps container widget same size as form
 //####################################################################################
-void FormPopup::resizeEvent(QResizeEvent *event)
-{
+void FormPopup::resizeEvent(QResizeEvent *event) {
     Dr::ApplyPopupMask(this, 8, 8, m_below);
 
     QWidget::resizeEvent(event);
@@ -117,8 +115,8 @@ void FormPopup::resizeEvent(QResizeEvent *event)
 //####################################################################################
 //##        Upon first showing, shape window
 //####################################################################################
-void FormPopup::showEvent(QShowEvent *event)
-{
+void FormPopup::showEvent(QShowEvent *event) {
+
     // Find new desired popup location relative to parent button
     QRect  parent_rect = parentWidget()->geometry();
     QPoint center =      m_mapper->mapToGlobal(parent_rect.center());

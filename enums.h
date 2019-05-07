@@ -72,7 +72,7 @@ enum class DrObjectType {
 //####################################################################################
 //##    Custom Qt::UserRole 's for storing data in QWidgets using setData
 //############################
-typedef enum {
+enum User_Roles {
     Key = Qt::UserRole,                             // Stores Object Key in User Data of widget / graphicsitem
 
     Scale,      Pre_Resize_Scale,
@@ -82,7 +82,7 @@ typedef enum {
 
     Name,
     Type,
-} User_Roles;
+};
 
 
 //####################################################################################
@@ -117,8 +117,8 @@ namespace User_Property {
     const char Header[10] =     "dr_header";        // Used for Advisor Text
     const char Body[8] =        "dr_body";          // Used for Advisor Text
 
-    const char Mouse_Over[14] =     "dr_mouse_over";        // Set to true by WidgetHoverHandler when mouse is over widget
-    const char Mouse_Pos[13] =      "dr_mouse_pos";         // Set to mouse position (QPoint) by WidgetHoverHandler when mouse is moving over widget
+    const char Mouse_Over[14] =     "dr_mouse_over";        // Set to true by DrFilterHoverHandler when mouse is over widget
+    const char Mouse_Pos[13] =      "dr_mouse_pos";         // Set to mouse position (QPoint) by DrFilterHoverHandler when mouse is moving over widget
     const char Mouse_Down[14] =     "dr_mouse_down";        // Set to true when mouse is down so we can prepare for a drag event (used for DrAssets)
     const char Mouse_Down_Pos[18] = "dr_mouse_down_pos";    // Set to mouse position when mouse button is first pressed (used for DrAssets)
 }
@@ -127,8 +127,7 @@ namespace User_Property {
 //####################################################################################
 //##    Some public forward function declarations for some enum functions
 //############################
-namespace Dr
-{
+namespace Dr {
     QString     StringFromType(DrType type);
     QString     StringFromAssetType(DrAssetType type);
     QString     StringFromObjectType(DrObjectType type);
@@ -177,8 +176,7 @@ enum class Property_Type {
 //####################################################################################
 //##    Possible components and their properties
 //############################
-enum class Components
-{
+enum class Components {
     Asset_Settings,
     Asset_Animation,
     Asset_Font,
@@ -200,8 +198,8 @@ enum class Components
     Object_Appearance,
 };
 
-enum class Properties
-{
+enum class Properties {
+
     // Settings
     Asset_Name,                     //string
     Asset_Collision_Shape,          //polygon

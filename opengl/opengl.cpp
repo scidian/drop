@@ -12,7 +12,7 @@
 //####################################################################################
 //##        Constructor / Destructor
 //####################################################################################
-OpenGL::OpenGL(QWidget *parent, Engine *engine) : QOpenGLWidget(parent), m_engine(engine) {
+OpenGL::OpenGL(QWidget *parent, DrEngine *engine) : QOpenGLWidget(parent), m_engine(engine) {
     // ***** DO NOT perform any OpenGL resource initialization in constructor, use initializeGL() instead
 }
 

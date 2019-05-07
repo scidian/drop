@@ -18,8 +18,7 @@
 //####################################################################################
 //##    Constructor, Destructor, addObject
 //####################################################################################
-DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world, long new_stage_key, QString new_stage_name, bool is_start_stage)
-{
+DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world, long new_stage_key, QString new_stage_name, bool is_start_stage) {
     m_parent_project = parent_project;              // pointer to parent Project
     m_parent_world = parent_world;                  // pointer to parent World
 
@@ -39,28 +38,26 @@ DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world, long new_stag
     }
 }
 
-DrStage::~DrStage()
-{
+DrStage::~DrStage() {
     for (auto i: m_objects) { delete i.second; }
 }
 
 // Adds a new object to the stage
-DrObject* DrStage::addObject(DrObjectType new_type, long from_asset_key, double x, double y, long z)
-{
+DrObject* DrStage::addObject(DrObjectType new_type, long from_asset_key, double x, double y, long z) {
     DrAsset *asset = m_parent_project->getAsset(from_asset_key);
 
     // Figure out name for object
     QString new_name;
     switch (new_type) {
-    case DrObjectType::Object:
-    case DrObjectType::Text:
-    case DrObjectType::Character:
-        new_name = asset->getComponentProperty(Components::Asset_Settings, Properties::Asset_Name)->getValue().toString();
-        break;
+        case DrObjectType::Object:
+        case DrObjectType::Text:
+        case DrObjectType::Character:
+            new_name = asset->getComponentProperty(Components::Asset_Settings, Properties::Asset_Name)->getValue().toString();
+            break;
 
-    ///case DrObjectType::Camera:
-    ///    "Camera " + QString::number(static_cast<long>(m_objects.size() + 1));
-    ///    break;
+        ///case DrObjectType::Camera:
+        ///    "Camera " + QString::number(static_cast<long>(m_objects.size() + 1));
+        ///    break;
     }
 
     long new_object_key = m_parent_project->getNextKey();
@@ -70,8 +67,7 @@ DrObject* DrStage::addObject(DrObjectType new_type, long from_asset_key, double 
 }
 
 // Copies all component / property settings from one object to another object of the same type
-void DrStage::copyObjectSettings(DrObject *from_object, DrObject *to_object)
-{
+void DrStage::copyObjectSettings(DrObject *from_object, DrObject *to_object) {
     if (from_object->getObjectType() != to_object->getObjectType()) return;
 
     for (auto component : from_object->getComponentList())
@@ -80,15 +76,13 @@ void DrStage::copyObjectSettings(DrObject *from_object, DrObject *to_object)
 }
 
 // Removes an object from the project
-void DrStage::deleteObject(DrObject *object)
-{
+void DrStage::deleteObject(DrObject *object) {
     m_objects.erase(object->getKey());
 }
 
 
 // Returns a list of object keys contained in stage, sorted from high z value to low
-QList<long> DrStage::objectKeysSortedByZOrder()
-{
+QList<long> DrStage::objectKeysSortedByZOrder() {
     std::vector<std::pair<long, long>> zorder_key_pair;
 
     for (auto object : m_objects) {
@@ -111,8 +105,7 @@ QList<long> DrStage::objectKeysSortedByZOrder()
 //##    Property loading - initializeStageSettings
 //####################################################################################
 
-void DrStage::initializeStageSettings(QString new_name)
-{
+void DrStage::initializeStageSettings(QString new_name) {
     addComponent(Components::Stage_Settings, "Settings", "Basic settings for current stage.", Component_Colors::White_Snow, true);
     getComponent(Components::Stage_Settings)->setIcon(Component_Icons::Settings);
 
@@ -151,8 +144,7 @@ void DrStage::initializeStageSettings(QString new_name)
 //####################################################################################
 //##    Remove any references within the current Stage Objects to any GraphicsScene Items
 //####################################################################################
-void DrStage::removeGraphicsItemReferences()
-{
+void DrStage::removeGraphicsItemReferences() {
     for (auto object_pair : getObjectMap()) {
         object_pair.second->setDrItem(nullptr);
     }

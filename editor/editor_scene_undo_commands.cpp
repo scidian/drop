@@ -43,44 +43,41 @@ void DrScene::redoAction() {
     m_undo->redo(); 
 }
 
-void DrScene::newStageSelected(DrProject *project, DrScene *scene, long old_stage, long new_stage)
-{
-    m_undo->push(new ChangeStageCommand(project, scene, old_stage, new_stage));
+void DrScene::newStageSelected(DrProject *project, DrScene *scene, long old_stage, long new_stage) {
+    m_undo->push(new UndoCommandChangeStage(project, scene, old_stage, new_stage));
 }
 
-void DrScene::selectionGroupMoved(DrScene *scene, const QPointF &old_position)
-{   m_undo->push(new MoveCommand(scene, old_position));   }
+void DrScene::selectionGroupMoved(DrScene *scene, const QPointF &old_position) {
+    m_undo->push(new UndoCommandMove(scene, old_position));
+}
 
-void DrScene::selectionGroupNewGroup(DrScene *scene,
-                                                QList<DrObject*> old_list,
-                                                QList<DrObject*> new_list)
-{   m_undo->push(new SelectionNewGroupCommand(scene, old_list, new_list));    }
+void DrScene::selectionGroupNewGroup(DrScene *scene, QList<DrObject*> old_list, QList<DrObject*> new_list) {
+    m_undo->push(new UndoCommandNewSelection(scene, old_list, new_list));
+}
 
 
 
 //####################################################################################
 //##        Move Command on the QUndoStack
 //####################################################################################
-ChangeStageCommand::ChangeStageCommand(DrProject *project, DrScene *scene,
+UndoCommandChangeStage::UndoCommandChangeStage(DrProject *project, DrScene *scene,
                                        long old_stage, long new_stage, QUndoCommand *parent) :
-                                       QUndoCommand(parent), m_project(project), m_scene(scene)
-{
+                                       QUndoCommand(parent), m_project(project), m_scene(scene) {
     m_new_stage = new_stage;
     m_old_stage = old_stage;
 }
 
-void ChangeStageCommand::undo() {
+void UndoCommandChangeStage::undo() {
     QString new_stage_name = changeStage(m_new_stage, m_old_stage, true);
     setText( new_stage_name );
 }
 
-void ChangeStageCommand::redo() {
+void UndoCommandChangeStage::redo() {
     QString new_stage_name = changeStage(m_old_stage, m_new_stage, false);
     setText( new_stage_name );
 }
 
-QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_undo)
-{
+QString UndoCommandChangeStage::changeStage(long old_stage, long new_stage, bool is_undo) {
     // Remove any references within the current project stage objects to any GraphicsScene items
     DrStage *displayed = m_project->findStageFromKey(old_stage);
     if (displayed) displayed->removeGraphicsItemReferences();
@@ -97,8 +94,8 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
     QPointF adjust;
 
     switch (m_project->getOptionOrientation()) {
-    case Orientation::Portrait:     adjust = QPointF(400, -800);    break;
-    case Orientation::Landscape:    adjust = QPointF(800, -400);    break;
+        case Orientation::Portrait:     adjust = QPointF(400, -800);    break;
+        case Orientation::Landscape:    adjust = QPointF(800, -400);    break;
     }
     new_scene_rect.adjust(adjust.x(), adjust.y(), adjust.x(), adjust.y());
     new_view_rect.adjust( adjust.x(), adjust.y(), adjust.x(), adjust.y());
@@ -131,8 +128,7 @@ QString ChangeStageCommand::changeStage(long old_stage, long new_stage, bool is_
     else            return "Undo Select Stage " + from_stage->getName();
 }
 
-DrItem* DrScene::addItemToSceneFromObject(DrObject *object)
-{
+DrItem* DrScene::addItemToSceneFromObject(DrObject *object) {
     // Create new item representing this object
     DrItem *item = new DrItem(m_project, this->getRelay(), object);
 
@@ -162,13 +158,13 @@ DrItem* DrScene::addItemToSceneFromObject(DrObject *object)
 //####################################################################################
 //##        Move Command on the QUndoStack
 //####################################################################################
-MoveCommand::MoveCommand(DrScene *scene, const QPointF &old_pos, QUndoCommand *parent) : QUndoCommand(parent) {
+UndoCommandMove::UndoCommandMove(DrScene *scene, const QPointF &old_pos, QUndoCommand *parent) : QUndoCommand(parent) {
     m_scene = scene;
 //    m_new_pos = m_scene->getSelectionGroup()->sceneTransform().map(m_scene->getSelectionGroup()->boundingRect().center());
     m_old_pos = old_pos;
 }
 
-void MoveCommand::undo() {
+void UndoCommandMove::undo() {
 //    m_scene->setPositionByOrigin(m_scene->getSelectionGroup(), Position_Flags::Center, m_old_pos.x(), m_old_pos.y());
 //    //DELETED: changes now happen through DrItem::itemChange() --- m_scene->updateSelectedItemsPositionData();
 //    emit m_scene->updateViews();
@@ -181,7 +177,7 @@ void MoveCommand::undo() {
 //            .arg(Dr::RemoveTrailingDecimals(m_new_pos.y(), 1)));
 }
 
-void MoveCommand::redo() {
+void UndoCommandMove::redo() {
 //    m_scene->setPositionByOrigin(m_scene->getSelectionGroup(), Position_Flags::Center, m_new_pos.x(), m_new_pos.y());
 //    //DELETED: changes now happen through DrItem::itemChange() --- m_scene->updateSelectedItemsPositionData();
 //    emit m_scene->updateViews();
@@ -199,7 +195,7 @@ void MoveCommand::redo() {
 //####################################################################################
 //##        Deselects old items, Selects one new item
 //####################################################################################
-SelectionNewGroupCommand::SelectionNewGroupCommand(DrScene *scene,
+UndoCommandNewSelection::UndoCommandNewSelection(DrScene *scene,
                                                    QList<DrObject*> old_list,
                                                    QList<DrObject*> new_list,
                                                    QUndoCommand *parent) : QUndoCommand(parent) {
@@ -208,7 +204,7 @@ SelectionNewGroupCommand::SelectionNewGroupCommand(DrScene *scene,
     m_new_list = new_list;
 }
 
-void SelectionNewGroupCommand::undo() {
+void UndoCommandNewSelection::undo() {
 //    m_scene->emptySelectionGroup();
 
 //    for (auto object : m_old_list) m_scene->addItemToSelectionGroup(object->getDrItem());
@@ -223,7 +219,7 @@ void SelectionNewGroupCommand::undo() {
 //        setText("Redo Select None");
 }
 
-void SelectionNewGroupCommand::redo() {
+void UndoCommandNewSelection::redo() {
 //    m_scene->emptySelectionGroup();
 
 //    for (auto object : m_new_list) m_scene->addItemToSelectionGroup(object->getDrItem());

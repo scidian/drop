@@ -37,7 +37,7 @@ void FormMain::buildToolBar()
     toolbar->setFixedHeight(44);
     toolbar->setMovable(false);
     toolbar->setFloatable(false);
-    toolbar->installEventFilter(new ClickAndDragWindow(toolbar));
+    toolbar->installEventFilter(new DrFilterClickAndDragWindow(toolbar));
 
     // ***** This is a container object that holds all toolbar button groups, allowing us to put them in a layout
     widgetToolbar = new QWidget();
@@ -246,8 +246,7 @@ void FormMain::buildToolBar()
 //####################################################################################
 //##    Button creation calls
 //####################################################################################
-QToolButton* FormMain::createToolbarButton(const QString &style_sheet_name, HeaderBodyList advisor_text, int w, int h, bool checkable, bool enabled)
-{
+QToolButton* FormMain::createToolbarButton(const QString &style_sheet_name, HeaderBodyList advisor_text, int w, int h, bool checkable, bool enabled) {
     QToolButton *tool = new QToolButton();
     tool->setObjectName( style_sheet_name );
     if (checkable) {
@@ -257,12 +256,12 @@ QToolButton* FormMain::createToolbarButton(const QString &style_sheet_name, Head
     tool->setToolTip( advisor_text[0] );
     tool->setEnabled(enabled);
     tool->setFixedSize(w, h);
-    m_widget_hover->attachToHoverHandler(tool, advisor_text);
+    m_filter_hover->attachToHoverHandler(tool, advisor_text);
     return tool;
 }
 
-QLabel* FormMain::createToolbarSpacer(int height, int space_on_the_right, bool visible)   // DEFAULTS: height = 24, space_on_the_right = 1, visible = true
-{
+// DEFAULTS: height = 24, space_on_the_right = 1, visible = true
+QLabel* FormMain::createToolbarSpacer(int height, int space_on_the_right, bool visible) {
     QLabel *spacer = new QLabel();
     if (visible)
         spacer->setObjectName(QStringLiteral("labelSpacer"));
@@ -272,8 +271,7 @@ QLabel* FormMain::createToolbarSpacer(int height, int space_on_the_right, bool v
     return spacer;
 }
 
-QPushButton* FormMain::createPushButton(QString name, QString text)
-{
+QPushButton* FormMain::createPushButton(QString name, QString text) {
     QFont font;
     font.setPointSize(Dr::FontSize());
 

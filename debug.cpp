@@ -24,18 +24,15 @@ static bool                                                done_loading = false;
 bool CheckDoneLoading() { return done_loading; }
 void SetDoneLoading(bool done) { done_loading = done; }
 
-bool CheckDebugFlag(Debug_Flags flag)
-{
+bool CheckDebugFlag(Debug_Flags flag) {
     return g_debug_flags.test(static_cast<size_t>(flag));
 }
 
-void SetDebugFlag(Debug_Flags flag)
-{
+void SetDebugFlag(Debug_Flags flag) {
     g_debug_flags.set(static_cast<size_t>(flag));
 }
 
-void InitializeFlags()
-{
+void InitializeFlags() {
     SetDebugFlag( Debug_Flags::Show_Secret_Menu );
     //SetDebugFlag( Debug_Flags::Show_Undo_View );
 

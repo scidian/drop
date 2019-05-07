@@ -11,12 +11,11 @@
 
 
 //####################################################################################
-//##    InspectorCategoryButton Class Functions
+//##    InspectorDrQPushButtonCategory Class Functions
 //####################################################################################
 // Constructor for category button, gives button a way to pass click to custom function
-CategoryButton::CategoryButton(const QString &text, QColor text_color, QColor disabled_color, QWidget *parent, QTreeWidgetItem *parent_tree_item) :
-    QPushButton(text, parent)
-{
+DrQPushButtonCategory::DrQPushButtonCategory(const QString &text, QColor text_color, QColor disabled_color, QWidget *parent, QTreeWidgetItem *parent_tree_item) :
+    QPushButton(text, parent) {
     // Forwards user button click to function that expands / contracts
     connect(this, SIGNAL(clicked()), this, SLOT(buttonPressed()));
 
@@ -26,16 +25,14 @@ CategoryButton::CategoryButton(const QString &text, QColor text_color, QColor di
 }
 
 // Called by click signal, expands or contracts category after user click
-void CategoryButton::buttonPressed()
-{
+void DrQPushButtonCategory::buttonPressed() {
     m_is_shrunk = !m_is_shrunk;
     m_parent_item->setExpanded(!m_is_shrunk);
 
 }
 
 // Override paint event to draw tree exanpsion decoration
-void CategoryButton::paintEvent(QPaintEvent *event)
-{
+void DrQPushButtonCategory::paintEvent(QPaintEvent *event) {
     QPushButton::paintEvent(event);
 
     // Don't draw little triangle if it's going to interfere with category label

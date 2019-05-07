@@ -14,8 +14,7 @@ namespace Dr {
 //################################################################################
 //##    Toolbar Style Sheet
 //################################################################################
-QString StyleSheetToolBar()
-{
+QString StyleSheetToolBar() {
     return
     // Toolbar
     " QToolBar { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "

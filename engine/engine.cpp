@@ -11,12 +11,12 @@
 //######################################################################################################
 //##    Constructor
 //######################################################################################################
-Engine::Engine() {
+DrEngine::DrEngine() {
 
 }
 
 // Needs to be explicitly called by OpenGLWidget
-void Engine::deleteResources() {
+void DrEngine::deleteResources() {
     clearSpace();
 
     for (auto texture : m_textures) {
@@ -32,8 +32,8 @@ void Engine::deleteResources() {
 //######################################################################################################
 //##    Add Texture
 //######################################################################################################
-long Engine::addTexture(QString from_asset_string) {
+long DrEngine::addTexture(QString from_asset_string) {
     long new_number = static_cast<long>(m_textures.size());
-    m_textures[new_number] = new EngineTexture(from_asset_string);
+    m_textures[new_number] = new DrEngineTexture(from_asset_string);
     return new_number;
 }

@@ -28,8 +28,7 @@
 //##        Constructor & destructor
 //####################################################################################
 DrView::DrView(QWidget *parent, DrProject *project, DrScene *from_scene, IEditorRelay *editor_relay) :
-               QGraphicsView(parent), m_project(project), m_editor_relay(editor_relay)
-{
+               QGraphicsView(parent), m_project(project), m_editor_relay(editor_relay) {
     // Initialize rubber band object used as a selection box
     m_rubber_band = new DrViewRubberBand(QRubberBand::Shape::Rectangle, this);
 
@@ -64,8 +63,7 @@ DrView::DrView(QWidget *parent, DrProject *project, DrScene *from_scene, IEditor
 }
 
 
-DrView::~DrView()
-{
+DrView::~DrView() {
     delete m_rubber_band;
     delete m_tool_tip;
 }
@@ -78,8 +76,7 @@ DrView::~DrView()
 //##        Scene Change SLOTs / Events to update selection box when scene / selection changes
 //####################################################################################
 // SLOT: Connected from scene().sceneRectChanged
-void DrView::sceneRectChanged(QRectF new_rect)
-{
+void DrView::sceneRectChanged(QRectF new_rect) {
     double adjust = 4000;
     QRectF adjusted_rect = new_rect.adjusted(-adjust, -adjust, adjust, adjust);
     this->setSceneRect( adjusted_rect );
@@ -98,8 +95,7 @@ void DrView::sceneChanged(QList<QRectF>) { updateSelectionBoundingBox(7); }
 void DrView::selectionChanged()          { updateSelectionBoundingBox(2);}
 
 // EVENT: Called when viewport is dragged or scrollbars are used
-void DrView::scrollContentsBy(int dx, int dy)
-{
+void DrView::scrollContentsBy(int dx, int dy) {
     QGraphicsView::scrollContentsBy(dx, dy);
     updateSelectionBoundingBox(3);
     updateGrid();                       // Updates grid when view is dragged or zoomed, also called from zoom
@@ -111,8 +107,7 @@ void DrView::scrollContentsBy(int dx, int dy)
 //##        Recenters view when window is resized (after FormMain has loaded and view
 //##            has shown a scene at least once)
 //####################################################################################
-void DrView::resizeEvent(QResizeEvent *event)
-{
+void DrView::resizeEvent(QResizeEvent *event) {
     QGraphicsView::resizeEvent(event);
 
     if (!Dr::CheckDoneLoading()) return;
@@ -127,17 +122,16 @@ void DrView::resizeEvent(QResizeEvent *event)
 //####################################################################################
 //##        Returns current view mode as QString
 //####################################################################################
-QString DrView::currentViewModeAsString()
-{
+QString DrView::currentViewModeAsString() {
     switch (m_view_mode) {
-    case View_Mode::None:               return "None";
-    case View_Mode::Disable_Update:     return "Disable Updates";
-    case View_Mode::Selecting:          return "Selecting";
-    case View_Mode::Resizing:           return "Resizing";
-    case View_Mode::Rotating:           return "Rotating";
-    case View_Mode::Translating:        return "Translating";
-    case View_Mode::Dragging:           return "Dragging";
-    case View_Mode::Zooming:            return "Zooming";
+        case View_Mode::None:               return "None";
+        case View_Mode::Disable_Update:     return "Disable Updates";
+        case View_Mode::Selecting:          return "Selecting";
+        case View_Mode::Resizing:           return "Resizing";
+        case View_Mode::Rotating:           return "Rotating";
+        case View_Mode::Translating:        return "Translating";
+        case View_Mode::Dragging:           return "Dragging";
+        case View_Mode::Zooming:            return "Zooming";
     }
 }
 
@@ -146,8 +140,7 @@ QString DrView::currentViewModeAsString()
 //##        Recalculates corner and sides handles,
 //##        Usually called after View or Item changes
 //####################################################################################
-void DrView::updateSelectionBoundingBox(int called_from)
-{
+void DrView::updateSelectionBoundingBox(int called_from) {
     // Test for scene, convert to our custom class and lock the scene
     if (scene() == nullptr) return;
     if (m_hide_bounding == true) return;
@@ -275,14 +268,12 @@ void DrView::updateSelectionBoundingBox(int called_from)
 }
 
 // Helper function, returns a RectF around center point with sides length of rect_size
-QRectF DrView::rectAtCenterPoint(QPoint center, double rect_size)
-{
+QRectF DrView::rectAtCenterPoint(QPoint center, double rect_size) {
     return QRectF(center.x() - rect_size / 2, center.y() - rect_size / 2, rect_size, rect_size);
 }
 
 // Calculates the angle facing away from the corner of two angles, for calculating mouse angle of corners
-double DrView::calculateCornerAngle(double angle1, double angle2)
-{
+double DrView::calculateCornerAngle(double angle1, double angle2) {
     double bigger_angle = angle1;
     if (angle1 < angle2) bigger_angle += 360;
 

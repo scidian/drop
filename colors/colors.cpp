@@ -53,8 +53,7 @@ bool            GetPaletteShowInList(Color_Palettes palette)                { re
 //####################################################################################
 //##        Color History
 //####################################################################################
-void    AddToColorHistory(QColor color)
-{
+void    AddToColorHistory(QColor color) {
     // Load old color history list (up to 36 colors)
     QList<QVariant> variant_list = Dr::GetPreference(Preferences::Color_Popup_History).toList();
 
@@ -83,8 +82,7 @@ void    AddToColorHistory(QColor color)
 //####################################################################################
 //##        Store custom window palette colors
 //####################################################################################
-void    LoadPalettes()
-{
+void    LoadPalettes() {
     LoadPaletteBasic(        g_color_palettes[Color_Palettes::Basic] );
     LoadPaletteBlank(        g_color_palettes[Color_Palettes::Blank] );
     LoadPaletteMaterial(     g_color_palettes[Color_Palettes::Material] );
@@ -148,8 +146,7 @@ void    LoadPalettes()
     g_color_schemes[Color_Scheme::Autumn].insert(std::make_pair(Window_Colors::Icon_Light,      QColor(107, 116, 33)));
 }
 
-void LoadPaletteBasic(Palette_Info &palette)
-{
+void LoadPaletteBasic(Palette_Info &palette) {
     palette.name = "Basic";
     palette.show_in_list = false;
 

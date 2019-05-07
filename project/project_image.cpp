@@ -9,10 +9,11 @@
 
 #include "project_image.h"
 
-// Constructor
+//####################################################################################
+//##    Constructor
+//####################################################################################
 DrImage::DrImage(DrProject *parent_project, long key, QString image_path) :
-    m_parent_project(parent_project)
-{
+    m_parent_project(parent_project) {
     setKey(key);
 
     QFileInfo file_info(image_path);

@@ -37,17 +37,16 @@
 //##        Constructor
 //####################################################################################
 TreeInspector::TreeInspector(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
-                              QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay)
-{
+                              QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay) {
     // Initialize hover handler
-    m_widget_hover = new WidgetHoverHandler(this);
-    connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
+    m_filter_hover = new DrFilterHoverHandler(this);
+    connect(m_filter_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
 
     // Connect this widget to the hover handler
-    m_widget_hover->attachToHoverHandler(this, Advisor_Info::Object_Inspector);
+    m_filter_hover->attachToHoverHandler(this, Advisor_Info::Object_Inspector);
 }
 
-// SLOT: Catches signals from m_widget_hover and passes to InterfaceEditorRelay
+// SLOT: Catches signals from m_filter_hover and passes to InterfaceEditorRelay
 void TreeInspector::setAdvisorInfo(QString header, QString body) { m_editor_relay->setAdvisorInfo(header, body); }
 
 
@@ -57,8 +56,7 @@ void TreeInspector::setAdvisorInfo(QString header, QString body) { m_editor_rela
 //####################################################################################
 //##    Dynamically build object inspector
 //####################################################################################
-void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
-{
+void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
     // If no keys were passed in, clear inspector and exit
     if (key_list.count() == 0) {
         m_selected_key = c_no_key;
@@ -106,11 +104,11 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
 
     // Change Advisor text after new item selection
     switch (m_selected_type) {
-    case DrType::World:        m_editor_relay->setAdvisorInfo(Advisor_Info::World_Object);         break;
-    case DrType::Stage:        m_editor_relay->setAdvisorInfo(Advisor_Info::Stage_Object);         break;
-    case DrType::Object:       m_editor_relay->setAdvisorInfo(Advisor_Info::Object_Object);        break;
-    case DrType::Asset:        m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Object);         break;
-    default:                   m_editor_relay->setAdvisorInfo(Advisor_Info::Not_Set);
+        case DrType::World:        m_editor_relay->setAdvisorInfo(Advisor_Info::World_Object);         break;
+        case DrType::Stage:        m_editor_relay->setAdvisorInfo(Advisor_Info::Stage_Object);         break;
+        case DrType::Object:       m_editor_relay->setAdvisorInfo(Advisor_Info::Object_Object);        break;
+        case DrType::Asset:        m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Object);         break;
+        default:                   m_editor_relay->setAdvisorInfo(Advisor_Info::Not_Set);
     }
 
 
@@ -124,7 +122,6 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
     for (auto component_pair: list_components) {
 
 
-
         // *****Create new item in list to hold component and add the TreeWidgetItem to the tree
         QTreeWidgetItem *category_item = new QTreeWidgetItem();
         category_item->setData(0, User_Roles::Key, QVariant::fromValue(component_pair.second->getComponentKey()));      // Stores component key
@@ -135,7 +132,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
         QGridLayout *grid = new QGridLayout(button_frame);
         grid->setContentsMargins(0, 0, 0, 0);
 
-        CategoryButton *category_button = new CategoryButton(QString(" ") + component_pair.second->getDisplayNameQString(),
+        DrQPushButtonCategory *category_button = new DrQPushButtonCategory(QString(" ") + component_pair.second->getDisplayNameQString(),
                                                              Qt::black, Qt::black, nullptr, category_item);
         QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: black; "
                                                     " padding-left: 2px;"
@@ -155,7 +152,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
                                       " QPushButton:pressed { color: " + component_pair.second->getColor().darker(250).name() + "; } ");
         category_button->setIcon(QIcon(component_pair.second->getIcon()));
         category_button->setStyleSheet(buttonColor);
-        m_widget_hover->attachToHoverHandler(category_button,
+        m_filter_hover->attachToHoverHandler(category_button,
                                              component_pair.second->getDisplayName(),
                                              component_pair.second->getDescription());
 
@@ -194,49 +191,49 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list)
                 sp_right.setHorizontalStretch(c_inspector_size_right);
 
             property_name->setSizePolicy(sp_left);
-            m_widget_hover->attachToHoverHandler(property_name, property_pair.second);
+            m_filter_hover->attachToHoverHandler(property_name, property_pair.second);
             horizontal_split->addWidget(property_name);
 
             QWidget    *new_widget = nullptr;
             DrProperty *prop = property_pair.second;
 
             switch (property_pair.second->getPropertyType()) {
-            case Property_Type::Bool:           new_widget = createCheckBox(        prop, fp, sp_right);                                break;
-            case Property_Type::String:         new_widget = createLineEdit(        prop, fp, sp_right);                                break;
-            case Property_Type::Int:            new_widget = createIntSpinBox(      prop, fp, sp_right, Property_Type::Int);            break;
-            case Property_Type::Positive:       new_widget = createIntSpinBox(      prop, fp, sp_right, Property_Type::Positive);       break;
-            case Property_Type::Filter:         new_widget = createIntSpinBox(      prop, fp, sp_right, Property_Type::Filter);         break;
-            case Property_Type::FilterAngle:    new_widget = createIntSpinBox(      prop, fp, sp_right, Property_Type::FilterAngle);    break;
-            case Property_Type::Double:         new_widget = createDoubleSpinBox(   prop, fp, sp_right, Property_Type::Double);         break;
+                case Property_Type::Bool:           new_widget = createCheckBox(        prop, fp, sp_right);                                break;
+                case Property_Type::String:         new_widget = createLineEdit(        prop, fp, sp_right);                                break;
+                case Property_Type::Int:            new_widget = createIntSpinBox(      prop, fp, sp_right, Property_Type::Int);            break;
+                case Property_Type::Positive:       new_widget = createIntSpinBox(      prop, fp, sp_right, Property_Type::Positive);       break;
+                case Property_Type::Filter:         new_widget = createIntSpinBox(      prop, fp, sp_right, Property_Type::Filter);         break;
+                case Property_Type::FilterAngle:    new_widget = createIntSpinBox(      prop, fp, sp_right, Property_Type::FilterAngle);    break;
+                case Property_Type::Double:         new_widget = createDoubleSpinBox(   prop, fp, sp_right, Property_Type::Double);         break;
 
-         ///case Property_Type::Percent:        new_widget = createDoubleSpinBox(   prop, fp, sp_right, Property_Type::Percent);        break;
-            case Property_Type::Percent:
-                new_widget = createSlider(prop, fp, sp_right, Property_Type::Percent);
-                break;
+             ///case Property_Type::Percent:        new_widget = createDoubleSpinBox(   prop, fp, sp_right, Property_Type::Percent);        break;
+                case Property_Type::Percent:
+                    new_widget = createSlider(prop, fp, sp_right, Property_Type::Percent);
+                    break;
 
-            case Property_Type::Angle:          new_widget = createDoubleSpinBox(   prop, fp, sp_right, Property_Type::Angle);          break;
-            case Property_Type::PositionF:      new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::PositionF);  break;
-            case Property_Type::PointF:         new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::PointF);     break;
-            case Property_Type::SizeF:          new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::SizeF);      break;
-            case Property_Type::ScaleF:         new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::ScaleF);     break;
-            case Property_Type::GridF:          new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::GridF);      break;
-            case Property_Type::GridScaleF:     new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::GridScaleF); break;
-            case Property_Type::Variable:       new_widget = createVariableSpinBoxPair( prop, fp, sp_right);                            break;
-            case Property_Type::List:           new_widget = createListBox(             prop, fp, sp_right);                            break;
-            case Property_Type::Color:          new_widget = createColorBox(            prop, fp, sp_right);                            break;
+                case Property_Type::Angle:          new_widget = createDoubleSpinBox(   prop, fp, sp_right, Property_Type::Angle);          break;
+                case Property_Type::PositionF:      new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::PositionF);  break;
+                case Property_Type::PointF:         new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::PointF);     break;
+                case Property_Type::SizeF:          new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::SizeF);      break;
+                case Property_Type::ScaleF:         new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::ScaleF);     break;
+                case Property_Type::GridF:          new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::GridF);      break;
+                case Property_Type::GridScaleF:     new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::GridScaleF); break;
+                case Property_Type::Variable:       new_widget = createVariableSpinBoxPair( prop, fp, sp_right);                            break;
+                case Property_Type::List:           new_widget = createListBox(             prop, fp, sp_right);                            break;
+                case Property_Type::Color:          new_widget = createColorBox(            prop, fp, sp_right);                            break;
 
-            case Property_Type::Image:                                  // QPixmap
-            case Property_Type::Icon:
-            case Property_Type::Polygon:                                // For Collision Shapes
-            case Property_Type::Vector3D:
+                case Property_Type::Image:                                  // QPixmap
+                case Property_Type::Icon:
+                case Property_Type::Polygon:                                // For Collision Shapes
+                case Property_Type::Vector3D:
 
-                //################ !!!!!!!!!!!!!!!!!!!!!!!
-                //
-                //      CASES NOT ACCOUNTED FOR
-                //
-                //################ !!!!!!!!!!!!!!!!!!!!!!!
+                    //################ !!!!!!!!!!!!!!!!!!!!!!!
+                    //
+                    //      CASES NOT ACCOUNTED FOR
+                    //
+                    //################ !!!!!!!!!!!!!!!!!!!!!!!
 
-                break;
+                    break;
             }
 
             if (new_widget != nullptr) {

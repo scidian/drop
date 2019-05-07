@@ -12,8 +12,7 @@
 
 namespace Dr {
 
-void LoadPaletteBlank(Palette_Info &palette)
-{
+void LoadPaletteBlank(Palette_Info &palette) {
     palette.name = "Blank";
     palette.show_in_list = true;
 

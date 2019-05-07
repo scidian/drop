@@ -17,8 +17,7 @@
 //####################################################################################
 //##    Possible background colors for Component Categories
 //############################
-namespace Component_Colors
-{
+namespace Component_Colors {
     const QColor White_Snow     { QColor(255, 252, 249, 255) };
 
     const QColor Orange_Medium  { QColor(221, 110,  66, 255) };
@@ -44,8 +43,7 @@ namespace Component_Colors
 //####################################################################################
 //##    Possible icons for Component Categories
 //############################
-namespace Component_Icons
-{
+namespace Component_Icons {
     const QString Settings      { QString(":/assets/inspector_icons/comp_settings.png") };
     const QString Physics       { QString(":/assets/inspector_icons/comp_physics.png") };
     const QString Transform     { QString(":/assets/inspector_icons/comp_transform.png") };
@@ -66,8 +64,8 @@ namespace Component_Icons
 //############################
 typedef QList<QString> HeaderBodyList;
 
-namespace Advisor_Info
-{
+namespace Advisor_Info {
+
     // Toolbar Buttons
     const HeaderBodyList Mode_Map               { "World Map", "This mode will allow you to see the layout of your project and how the worlds and "
                                                               "user interfaces in you project connect to each other. " };

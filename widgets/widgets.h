@@ -14,10 +14,10 @@
 
 
 //####################################################################################
-//##    CategoryButton
+//##    DrQPushButtonCategory
 //##        A sub classed QPushButton so we can override events for header buttons in Tree Lists
 //############################
-class CategoryButton : public QPushButton
+class DrQPushButtonCategory : public QPushButton
 {
     Q_OBJECT
 
@@ -29,7 +29,7 @@ private:
     QColor               m_disabled_color;
 
 public:
-    CategoryButton(const QString &text, QColor m_text_color, QColor m_disabled_color, QWidget *parent, QTreeWidgetItem *parent_tree_item);
+    DrQPushButtonCategory(const QString &text, QColor m_text_color, QColor m_disabled_color, QWidget *parent, QTreeWidgetItem *parent_tree_item);
 
     void            paintEvent(QPaintEvent *event);
 

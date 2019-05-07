@@ -51,8 +51,8 @@ FormMain::~FormMain() {
     delete project;
 }
 
-FormMain::FormMain(QWidget *parent) : QMainWindow(parent)
-{
+FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
+
     // ########## Initialize new project, load DrProject options
     project = new DrProject(1);
 
@@ -181,8 +181,7 @@ void FormMain::changePalette(Color_Scheme new_color_scheme) {
 //####################################################################################
 //##        FormMain Wide Event Filter, catches all events
 //####################################################################################
-bool FormMain::eventFilter(QObject *obj, QEvent *event)
-{
+bool FormMain::eventFilter(QObject *obj, QEvent *event) {
     // ***** Some event numbers we know, we can use this to find more
     //int t = event->type();
     //   1 = Timer
@@ -226,31 +225,30 @@ void FormMain::resizeEvent(QResizeEvent *event) {
 //####################################################################################
 //##        Sets the text of a label on FormMain, can be called globally from Dr::SetLabelText
 //####################################################################################
-void FormMain::setLabelText(Label_Names label_name, QString new_text)
-{
+void FormMain::setLabelText(Label_Names label_name, QString new_text) {
     if (Dr::CheckDoneLoading() == false) return;
 
     switch (label_name) {
-    case Label_Names::Label_1:          label1->setText(new_text);         break;
-    case Label_Names::Label_2:          label2->setText(new_text);         break;
-    case Label_Names::Label_3:          label3->setText(new_text);         break;
-    case Label_Names::Label_Mouse_1:    labelMouse1->setText(new_text);   break;
-    case Label_Names::Label_Mouse_2:    labelMouse2->setText(new_text);   break;
+        case Label_Names::Label_1:          label1->setText(new_text);         break;
+        case Label_Names::Label_2:          label2->setText(new_text);         break;
+        case Label_Names::Label_3:          label3->setText(new_text);         break;
+        case Label_Names::Label_Mouse_1:    labelMouse1->setText(new_text);   break;
+        case Label_Names::Label_Mouse_2:    labelMouse2->setText(new_text);   break;
 
-    case Label_Names::Label_Object_1:   labelObject1->setText(new_text);  break;
-    case Label_Names::Label_Object_2:   labelObject2->setText(new_text);  break;
-    case Label_Names::Label_Object_3:   labelObject3->setText(new_text);  break;
-    case Label_Names::Label_Object_4:   labelObject4->setText(new_text);  break;
-    case Label_Names::Label_Object_5:   labelObject5->setText(new_text);  break;
+        case Label_Names::Label_Object_1:   labelObject1->setText(new_text);  break;
+        case Label_Names::Label_Object_2:   labelObject2->setText(new_text);  break;
+        case Label_Names::Label_Object_3:   labelObject3->setText(new_text);  break;
+        case Label_Names::Label_Object_4:   labelObject4->setText(new_text);  break;
+        case Label_Names::Label_Object_5:   labelObject5->setText(new_text);  break;
 
-    case Label_Names::Label_Position:   labelPosition->setText(new_text);  break;
-    case Label_Names::Label_Center:     labelCenter->setText(new_text);    break;
-    case Label_Names::Label_Scale:      labelScale->setText(new_text);     break;
-    case Label_Names::Label_Rotate:     labelRotate->setText(new_text);    break;
-    case Label_Names::Label_Z_Order:    labelZOrder->setText(new_text);   break;
-    case Label_Names::Label_Pos_Flag:   labelPosFlag->setText(new_text);  break;
+        case Label_Names::Label_Position:   labelPosition->setText(new_text);  break;
+        case Label_Names::Label_Center:     labelCenter->setText(new_text);    break;
+        case Label_Names::Label_Scale:      labelScale->setText(new_text);     break;
+        case Label_Names::Label_Rotate:     labelRotate->setText(new_text);    break;
+        case Label_Names::Label_Z_Order:    labelZOrder->setText(new_text);   break;
+        case Label_Names::Label_Pos_Flag:   labelPosFlag->setText(new_text);  break;
 
-    case Label_Names::Label_Bottom:     labelBottom->setText(new_text);    break;
+        case Label_Names::Label_Bottom:     labelBottom->setText(new_text);    break;
     }
 }
 

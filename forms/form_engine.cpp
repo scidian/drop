@@ -27,7 +27,7 @@ FormEngine::FormEngine(QWidget *parent) : QMainWindow(parent) {
     this->setObjectName("Drop Player");
     this->resize(1200, 800);
 
-    m_engine = new Engine();
+    m_engine = new DrEngine();
 
     centralWidget = new QWidget(this);
     centralWidget->setObjectName("centralWidget");
@@ -116,8 +116,8 @@ void FormEngine::on_pushCar_clicked() {
     m_engine->buildSpace();
 }
 
-void FormEngine::on_pushPersp_clicked() { m_engine->render_type = RenderType::Perspective;  }
-void FormEngine::on_pushOrtho_clicked() { m_engine->render_type = RenderType::Orthographic; }
+void FormEngine::on_pushPersp_clicked() { m_engine->render_type = Render_Type::Perspective;  }
+void FormEngine::on_pushOrtho_clicked() { m_engine->render_type = Render_Type::Orthographic; }
 
 
 //######################################################################################################

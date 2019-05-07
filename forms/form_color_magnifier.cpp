@@ -28,8 +28,8 @@ constexpr int c_mouse_y_offset =   3;
 //##    Constructor / Destructor
 //####################################################################################
 FormColorMagnifier::FormColorMagnifier(QWidget *parent, QPoint mouse_pos, int width, int height, double zoom)
-    : QWidget (parent), m_parent(parent), m_width(width), m_height(height), m_zoom(zoom)
-{    
+    : QWidget (parent), m_parent(parent), m_width(width), m_height(height), m_zoom(zoom) {
+
     // Make sure this form is deleted when it closes
     this->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
 
@@ -65,8 +65,7 @@ FormColorMagnifier::~FormColorMagnifier() { }
 //####################################################################################
 //##    SLOT: Take a screenshot of the current screen
 //####################################################################################
-void FormColorMagnifier::grabScreen(QScreen *screen)
-{
+void FormColorMagnifier::grabScreen(QScreen *screen) {
     m_screen = screen;
     QRect sg  = m_screen->geometry();
     m_capture = m_screen->grabWindow( QApplication::desktop()->winId(), sg.x(), sg.y(), sg.width(), sg.height());
@@ -78,15 +77,13 @@ void FormColorMagnifier::grabScreen(QScreen *screen)
 //##    Mouse Events
 //####################################################################################
 void FormColorMagnifier::mousePressEvent(QMouseEvent *event) { QWidget::mousePressEvent(event); }
-void FormColorMagnifier::mouseReleaseEvent(QMouseEvent *)
-{
+void FormColorMagnifier::mouseReleaseEvent(QMouseEvent *) {
     Dr::ClearCursor();
     emit colorGrabbed(m_parent, m_color);
     this->close();
 }
 
-void FormColorMagnifier::mouseMoveEvent(QMouseEvent *event)
-{
+void FormColorMagnifier::mouseMoveEvent(QMouseEvent *event) {
     // Get global mouse position, have form follow us, figure out screen position
     QPoint mouse_pos = event->globalPos();
     this->move(mouse_pos.x() - m_width / 2 - c_form_x_offset, mouse_pos.y() - m_height / 2 - c_form_y_offset);
@@ -99,8 +96,7 @@ void FormColorMagnifier::mouseMoveEvent(QMouseEvent *event)
 }
 
 
-void FormColorMagnifier::updateColor(QPoint mouse_pos)
-{
+void FormColorMagnifier::updateColor(QPoint mouse_pos) {
     // If position out of bounds, exit out
     QPoint screen_pos;
     QRect  sg =  m_screen->geometry();
@@ -130,8 +126,7 @@ void FormColorMagnifier::updateColor(QPoint mouse_pos)
 //####################################################################################
 //##    Creates the Color Magnifier pixmap
 //####################################################################################
-QPixmap FormColorMagnifier::drawCursor(QPoint screen_pos, int width, int height, double zoom)
-{
+QPixmap FormColorMagnifier::drawCursor(QPoint screen_pos, int width, int height, double zoom) {
     // Set round clipping path for pixmap
     QPixmap  small(width, height + c_text_box_height);
     small.fill( Qt::transparent );

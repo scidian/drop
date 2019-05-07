@@ -67,10 +67,10 @@ public:
 
 
 //####################################################################################
-//##    ColorPopup
+//##    FormPopupColor
 //##        A subclassed FormPopup to be used for Color Picker Popup window
 //############################
-class ColorPopup : public FormPopup
+class FormPopupColor : public FormPopup
 {
     Q_OBJECT
 
@@ -84,7 +84,7 @@ private:
     QLabel          *m_color_label;                     // Label that shows the color to be picked
 
 public:
-    ColorPopup(DrProject *project, QWidget *widget_to_use_for_mapToGlobal, QWidget *parent, int x_offset = 0, int y_offset = 5);
+    FormPopupColor(DrProject *project, QWidget *widget_to_use_for_mapToGlobal, QWidget *parent, int x_offset = 0, int y_offset = 5);
 
     // Event Handlers
     virtual void closeEvent(QCloseEvent *event) override;
@@ -108,18 +108,18 @@ signals:
 
 
 //####################################################################################
-//##    ColorPopupPageButton
-//##        A little color box label that shows a color to pick
+//##    DrQPushButtonPageSelect
+//##        Button to select between color box pages
 //############################
-class ColorPopupPageButton : public QPushButton
+class DrQPushButtonPageSelect : public QPushButton
 {
-    ColorPopup  *m_popup;               // ColorPopup form this button is installed on
-    QString      m_description;         // What to show I am in the info label
-    QString      m_text_before;         // Text info color box had before we changed it
+    FormPopupColor *m_popup;                // FormPopupColor form this button is installed on
+    QString         m_description;          // What to show I am in the info label
+    QString         m_text_before;          // Text info color box had before we changed it
 
 public:
-    explicit ColorPopupPageButton(QWidget *parent, ColorPopup *popup, QString description);
-    virtual ~ColorPopupPageButton() override;
+    explicit DrQPushButtonPageSelect(QWidget *parent, FormPopupColor *popup, QString description);
+    virtual ~DrQPushButtonPageSelect() override;
 
     // Event Overrides
     virtual void enterEvent(QEvent *event) override;
@@ -128,20 +128,20 @@ public:
 
 
 //####################################################################################
-//##    ColorSelecterButton
+//##    DrQPushButtonColorSelect
 //##        A little color box label that shows a color to pick
 //############################
-class ColorSelecterButton : public QPushButton
+class DrQPushButtonColorSelect : public QPushButton
 {
-    ColorPopup  *m_popup;               // ColorPopup form this button is installed on
-    QColor       m_color;               // This label's color
+    FormPopupColor *m_popup;                // FormPopupColor form this button is installed on
+    QColor          m_color;                // This label's color
 
-    int          m_width;               // This blocks width
-    int          m_height;              // This blocks height
+    int             m_width;                // This blocks width
+    int             m_height;               // This blocks height
 
 public:
-    explicit ColorSelecterButton(QWidget *parent, ColorPopup *popup, QColor my_color, int width, int height);
-    virtual ~ColorSelecterButton() override;
+    explicit DrQPushButtonColorSelect(QWidget *parent, FormPopupColor *popup, QColor my_color, int width, int height);
+    virtual ~DrQPushButtonColorSelect() override;
 
     // Event Overrides
     virtual void enterEvent(QEvent *event) override;

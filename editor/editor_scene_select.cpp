@@ -25,8 +25,7 @@
 //  double                  m_selection_angle;          // Angle current selection has been rotated to
 //  QPointF                 m_selection_scale;          // Scaling applied to current selection
 //  QRectF                  m_selection_box;            // Starting outline of selected items
-void DrScene::selectionChanged()
-{
+void DrScene::selectionChanged() {
     if (selectedItems() == m_selection_items) return;
 
     resetSelectionGroup();
@@ -42,8 +41,7 @@ void DrScene::selectionChanged()
 }
 
 // Called from selectionChanged(), resets properties of current selection. Checks if items are at resize to grid angle
-void DrScene::resetSelectionGroup()
-{
+void DrScene::resetSelectionGroup() {
     m_selection_items = selectedItems();
     m_selection_scale = QPointF(1, 1);
     m_selection_angle = m_editor_relay->currentViewGridAngle();
@@ -54,8 +52,7 @@ void DrScene::resetSelectionGroup()
 }
 
 // Checks if all selected items are at the current grid angle (to enable snapping)
-bool DrScene::shouldEnableResizeToGrid()
-{
+bool DrScene::shouldEnableResizeToGrid() {
     if (!m_editor_relay) return false;
 
     bool   match_angle = true;
@@ -77,8 +74,7 @@ bool DrScene::shouldEnableResizeToGrid()
 }
 
 // Check that all selected items have similar (parrallel or perpendicular) angles
-bool DrScene::checkAllSelectedItemsHaveSameAngle()
-{
+bool DrScene::checkAllSelectedItemsHaveSameAngle() {
     if (m_selection_items.count() < 1) return false;
     bool have_the_same = true;
     double first_angle = m_selection_items.first()->data(User_Roles::Rotation).toDouble();
@@ -93,8 +89,7 @@ bool DrScene::checkAllSelectedItemsHaveSameAngle()
 //####################################################################################
 //##    Returns a scene rect containing all the selected items
 //####################################################################################
-QRectF DrScene::totalSelectionSceneRect()
-{
+QRectF DrScene::totalSelectionSceneRect() {
     // If no items selected, return empty rect
     QRectF total_rect;
     if (selectedItems().count() < 1) return total_rect;
@@ -111,8 +106,7 @@ QRectF DrScene::totalSelectionSceneRect()
 //##    Returns a transform representing the total changes that have been
 //##        applied since selection group creation
 //####################################################################################
-QTransform DrScene::getSelectionTransform()
-{
+QTransform DrScene::getSelectionTransform() {
     QPointF center = m_selection_box.center();
     QTransform t =   QTransform()
             .translate(center.x(), center.y())
@@ -126,8 +120,7 @@ QTransform DrScene::getSelectionTransform()
 //##    Creates a temporary item group to extract a new bounding box with
 //##        new location and new shearing removed
 //####################################################################################
-void DrScene::updateSelectionBox()
-{
+void DrScene::updateSelectionBox() {
     // Recreate selection bounding box based on new item locations
     double  angle = getSelectionAngle();
     QPointF scale = getSelectionScale();
@@ -157,8 +150,7 @@ void DrScene::updateSelectionBox()
 
 
 // Creates an empty QGraphicsItemGroup at angle starting angle
-QGraphicsItemGroup* DrScene::createEmptyItemGroup(double angle, QPointF scale)
-{
+QGraphicsItemGroup* DrScene::createEmptyItemGroup(double angle, QPointF scale) {
     QGraphicsItemGroup *group = new QGraphicsItemGroup();
     addItem(group);
     QPointF    center = group->boundingRect().center();
@@ -178,8 +170,7 @@ QGraphicsItemGroup* DrScene::createEmptyItemGroup(double angle, QPointF scale)
 //####################################################################################
 //##        Selects items based on rows selected in Editor_Project_Tree
 //####################################################################################
-void DrScene::updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list)
-{
+void DrScene::updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list) {
     // Turn off signals to stop recurssive calling of interface_relay->updateItemSelection()
     blockSignals(true);
 

@@ -14,8 +14,7 @@
 //####################################################################################
 //##        Builds out FormPop's inner widget to show options for grid snapping
 //####################################################################################
-void FormPopup::buildPopupGridSnap()
-{
+void FormPopup::buildPopupGridSnap() {
     QFont font;  font.setPointSize(Dr::FontSize());
     QFontMetrics font_metrics { font };
 

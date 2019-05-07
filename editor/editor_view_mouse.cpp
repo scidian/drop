@@ -33,8 +33,7 @@
 // Forwards a double click as just another mouse down
 void DrView::mouseDoubleClickEvent(QMouseEvent *event) { mousePressEvent(event); }
 
-void DrView::mousePressEvent(QMouseEvent *event)
-{
+void DrView::mousePressEvent(QMouseEvent *event) {
     // Test for scene, convert to our custom class and lock the scene
     if (scene() == nullptr) return;
     if (my_scene->scene_mutex.tryLock(100) == false) return;
@@ -134,8 +133,7 @@ void DrView::mousePressEvent(QMouseEvent *event)
 
 
 // SLOT: Fired from single shot timer when mouse is down, starts tooltip after x milliseconds if user pressed mouse but hasn't started moving it yet
-void DrView::checkTranslateToolTipStarted()
-{
+void DrView::checkTranslateToolTipStarted() {
     if (m_view_mode == View_Mode::Translating) {
         if (m_tool_tip->getTipType() != View_Mode::Translating) {
             my_scene->updateSelectionBox();
@@ -152,8 +150,7 @@ void DrView::checkTranslateToolTipStarted()
 //####################################################################################
 //##        Mouse Released
 //####################################################################################
-void DrView::mouseReleaseEvent(QMouseEvent *event)
-{
+void DrView::mouseReleaseEvent(QMouseEvent *event) {
     // Test for scene, convert to our custom class
     if (scene() == nullptr) return;
 
@@ -211,21 +208,19 @@ void DrView::mouseReleaseEvent(QMouseEvent *event)
 //####################################################################################
 //##        Wheel Event / Zoom Functions
 //####################################################################################
-
 // Handles zooming in / out of view with mouse wheel
 #if QT_CONFIG(wheelevent)
-void DrView::wheelEvent(QWheelEvent *event)
-{
+void DrView::wheelEvent(QWheelEvent *event) {
     // Allow for scene scrolling if ctrl (cmd) is down
     if (event->modifiers() & Qt::KeyboardModifier::ControlModifier) {
         QGraphicsView::wheelEvent(event);
         return;
     }
 
-    if (event->delta() > 0) {
-        zoomInOut(10);  }
-    else {
-        zoomInOut(-10); }
+    if (event->delta() > 0)
+        zoomInOut(10);
+    else
+        zoomInOut(-10);
     event->accept();
 
     // Show tool tip with zoom percentage, if first time start tooltip, otherwise update it
@@ -241,8 +236,7 @@ void DrView::wheelEvent(QWheelEvent *event)
 #endif
 
 // SLOT: Handles hiding tool tip after done zooming
-void DrView::stoppedZooming()
-{
+void DrView::stoppedZooming() {
     // If over 1.2 seconds have passed since last time mouse wheel was activated, stop tool tip
     if (m_tool_tip->getTipType() == View_Mode::Zooming) {
         if (m_zoom_timer.elapsed() > 1200) {
@@ -254,8 +248,7 @@ void DrView::stoppedZooming()
     }
 }
 
-void DrView::zoomInOut(int level)
-{
+void DrView::zoomInOut(int level) {
     m_zoom += level;
     if (m_zoom > 500) m_zoom = 500;
     if (m_zoom < -40) m_zoom = -40;

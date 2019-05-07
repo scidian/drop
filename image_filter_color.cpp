@@ -16,11 +16,11 @@
 #include "library.h"
 
 
-namespace DrFilter
+namespace DrImaging
 {
 
 // Foward declarations
-QImage  applySinglePixelFilter( Filter_Type filter, const QImage& from_image, int value );
+QImage  applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_image, int value );
 
 
 
@@ -28,49 +28,42 @@ QImage  applySinglePixelFilter( Filter_Type filter, const QImage& from_image, in
 //##        External filter calls
 //####################################################################################
 // Range is -255 to 255
-QPixmap changeBrightness(const QPixmap& pixmap, int brightness)
-{
-    QImage image = applySinglePixelFilter( Filter_Type::Brightness, pixmap.toImage(), brightness );
+QPixmap changeBrightness(const QPixmap& pixmap, int brightness) {
+    QImage image = applySinglePixelFilter( Image_Filter_Type::Brightness, pixmap.toImage(), brightness );
     return QPixmap::fromImage( image );
 }
 
 // Contrast is multiplied by 100 in order to avoid floating point numbers
-QPixmap changeContrast(const QPixmap& pixmap, int contrast)
-{
-    QImage image = applySinglePixelFilter( Filter_Type::Contrast, pixmap.toImage(), contrast );
+QPixmap changeContrast(const QPixmap& pixmap, int contrast) {
+    QImage image = applySinglePixelFilter( Image_Filter_Type::Contrast, pixmap.toImage(), contrast );
     return QPixmap::fromImage( image );
 }
 
-QPixmap changeSaturation(const QPixmap& pixmap, int saturation)
-{
-    QImage image = applySinglePixelFilter( Filter_Type::Saturation, pixmap.toImage(), saturation );
+QPixmap changeSaturation(const QPixmap& pixmap, int saturation) {
+    QImage image = applySinglePixelFilter( Image_Filter_Type::Saturation, pixmap.toImage(), saturation );
     return QPixmap::fromImage( image );
 }
 
-QPixmap changeHue(const QPixmap& pixmap, int hue)
-{
-    QImage image = applySinglePixelFilter( Filter_Type::Hue, pixmap.toImage(), hue );
+QPixmap changeHue(const QPixmap& pixmap, int hue) {
+    QImage image = applySinglePixelFilter( Image_Filter_Type::Hue, pixmap.toImage(), hue );
     return QPixmap::fromImage( image );
 }
 
-QPixmap changeToGrayscale(const QPixmap& pixmap)
-{
-    QImage image = applySinglePixelFilter( Filter_Type::Grayscale, pixmap.toImage(), 0 );
+QPixmap changeToGrayscale(const QPixmap& pixmap) {
+    QImage image = applySinglePixelFilter( Image_Filter_Type::Grayscale, pixmap.toImage(), 0 );
     return QPixmap::fromImage( image );
 }
 
-QPixmap changeToNegative(const QPixmap& pixmap)
-{
-    QImage image = applySinglePixelFilter( Filter_Type::Negative, pixmap.toImage(), 0 );
+QPixmap changeToNegative(const QPixmap& pixmap) {
+    QImage image = applySinglePixelFilter( Image_Filter_Type::Negative, pixmap.toImage(), 0 );
     return QPixmap::fromImage( image );
 }
 
 
 
 // Added this to change opacity for drag events
-QPixmap changeOpacity(const QPixmap& pixmap, int opacity)
-{
-    QImage image = applySinglePixelFilter( Filter_Type::Opacity, pixmap.toImage(), opacity);
+QPixmap changeOpacity(const QPixmap& pixmap, int opacity) {
+    QImage image = applySinglePixelFilter( Image_Filter_Type::Opacity, pixmap.toImage(), opacity);
     return QPixmap::fromImage( image );
 }
 
@@ -79,8 +72,8 @@ QPixmap changeOpacity(const QPixmap& pixmap, int opacity)
 //##        Loops through image and changes one pixel at a time based on a
 //##        premultiplied table
 //####################################################################################
-QImage applySinglePixelFilter( Filter_Type filter, const QImage& from_image, int value )
-{
+QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_image, int value ) {
+
     QImage image = from_image;
     image.detach();
 
@@ -91,16 +84,15 @@ QImage applySinglePixelFilter( Filter_Type filter, const QImage& from_image, int
     time_it.restart();
 
 
-    if (image.colorCount() == 0 )      // i.e. Truecolor Rgba
-    {
-        // Just in case
+    // Truecolor Rgba
+    if (image.colorCount() == 0 ) {
 
 
         int table[ 256 ];
         for ( int i = 0; i < 256; ++i ) {
             switch (filter) {
-            case Filter_Type::Brightness:   table[i] = Dr::Clamp( i + value, 0, 255 );                                      break;
-            case Filter_Type::Contrast:     table[i] = Dr::Clamp( (( i - 127 ) * (value + 100) / 100 ) + 127, 0, 255 );     break;
+            case Image_Filter_Type::Brightness:   table[i] = Dr::Clamp( i + value, 0, 255 );                                      break;
+            case Image_Filter_Type::Contrast:     table[i] = Dr::Clamp( (( i - 127 ) * (value + 100) / 100 ) + 127, 0, 255 );     break;
             default: ;
             }
         }
@@ -117,28 +109,28 @@ QImage applySinglePixelFilter( Filter_Type filter, const QImage& from_image, int
                     double temp;
 
                     switch (filter) {
-                    case Filter_Type::Brightness:
-                    case Filter_Type::Contrast:
-                        color.setRed(   table[color.red()]   );
-                        color.setGreen( table[color.green()] );
-                        color.setBlue(  table[color.blue()]  );
-                        break;
-                    case Filter_Type::Saturation:
-                        color.setHsv(color.hue(), Dr::Clamp(color.saturation() + value, 0, 255), color.value(), color.alpha());
-                        break;
-                    case Filter_Type::Hue:
-                        color.setHsv(Dr::Clamp(color.hue() + value, 0, 720), color.saturation(), color.value(), color.alpha());
-                        break;
-                    case Filter_Type::Grayscale:
-                        temp = (color.redF() * 0.21) + (color.greenF() * 0.72) + (color.blueF() * 0.07);
-                        color.setRgbF(temp, temp, temp, color.alphaF());
-                        break;
-                    case Filter_Type::Negative:
-                        color.setRgbF(1.0 - color.redF(), 1.0 - color.greenF(), 1.0 - color.blueF(), color.alphaF());
-                        break;
-                    case Filter_Type::Opacity:
-                        color.setAlpha( Dr::Clamp(color.alpha() + value, 0, 255) );
-                        break;
+                        case Image_Filter_Type::Brightness:
+                        case Image_Filter_Type::Contrast:
+                            color.setRed(   table[color.red()]   );
+                            color.setGreen( table[color.green()] );
+                            color.setBlue(  table[color.blue()]  );
+                            break;
+                        case Image_Filter_Type::Saturation:
+                            color.setHsv(color.hue(), Dr::Clamp(color.saturation() + value, 0, 255), color.value(), color.alpha());
+                            break;
+                        case Image_Filter_Type::Hue:
+                            color.setHsv(Dr::Clamp(color.hue() + value, 0, 720), color.saturation(), color.value(), color.alpha());
+                            break;
+                        case Image_Filter_Type::Grayscale:
+                            temp = (color.redF() * 0.21) + (color.greenF() * 0.72) + (color.blueF() * 0.07);
+                            color.setRgbF(temp, temp, temp, color.alphaF());
+                            break;
+                        case Image_Filter_Type::Negative:
+                            color.setRgbF(1.0 - color.redF(), 1.0 - color.greenF(), 1.0 - color.blueF(), color.alphaF());
+                            break;
+                        case Image_Filter_Type::Opacity:
+                            color.setAlpha( Dr::Clamp(color.alpha() + value, 0, 255) );
+                            break;
                     }
 
                     // Sets the new pixel color
@@ -159,7 +151,7 @@ QImage applySinglePixelFilter( Filter_Type filter, const QImage& from_image, int
     }
 
     // !!!!! DEBUG: Timer that shows how long it took to apply filter
-    //if (filter == Filter_Type::Hue)
+    //if (filter == Image_Filter_Type::Hue)
     //    Dr::SetLabelText(Label_Names::Label_2, "   Hue  Time: " + QString::number(time_it.elapsed()) );
     //else
     //    Dr::SetLabelText(Label_Names::Label_1, " Filter Time: " + QString::number(time_it.elapsed()) );

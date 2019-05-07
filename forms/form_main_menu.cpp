@@ -47,8 +47,7 @@ void FormMain::menuListChildren() {
 }
 
 // SLOT: Updates Undo / Redo text
-void FormMain::editMenuAboutToShow()
-{
+void FormMain::editMenuAboutToShow() {
     QString undo_text = sceneEditor->getCurrentUndo();
     QString redo_text = sceneEditor->getCurrentRedo();
     actionUndo->setText(undo_text);
@@ -72,8 +71,8 @@ void FormMain::editMenuAboutToHide() {
 //####################################################################################
 //##        Sets up FormMain menu system
 //####################################################################################
-void FormMain::buildMenu()
-{
+void FormMain::buildMenu() {
+
     // ***** Create menu bar
     menuBar = new QMenuBar(this);
     menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -126,10 +125,10 @@ void FormMain::buildMenu()
         actionBlue->setCheckable(true);
         actionAutumn->setCheckable(true);
         switch (Dr::GetColorScheme()) {
-        case Color_Scheme::Dark:    actionDark->setChecked(true);    break;
-        case Color_Scheme::Light:   actionLight->setChecked(true);   break;
-        case Color_Scheme::Blue:    actionBlue->setChecked(true);    break;
-        case Color_Scheme::Autumn:  actionAutumn->setChecked(true);  break;
+            case Color_Scheme::Dark:    actionDark->setChecked(true);    break;
+            case Color_Scheme::Light:   actionLight->setChecked(true);   break;
+            case Color_Scheme::Blue:    actionBlue->setChecked(true);    break;
+            case Color_Scheme::Autumn:  actionAutumn->setChecked(true);  break;
         }
     // Instead of traditional SIGNAL to SLOT connect, we can "connect" inline lamda functions directly
     //      to signals. This allows for passing of variables not included in the SIGNAL that was fired.

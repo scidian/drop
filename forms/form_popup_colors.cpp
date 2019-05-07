@@ -16,15 +16,15 @@
 //####################################################################################
 //##        Constructor
 //####################################################################################
-ColorPopup::ColorPopup(DrProject *project, QWidget *widget_to_use_for_mapToGlobal, QWidget *parent, int x_offset, int y_offset)
+FormPopupColor::FormPopupColor(DrProject *project, QWidget *widget_to_use_for_mapToGlobal, QWidget *parent, int x_offset, int y_offset)
     : FormPopup(parent, project, widget_to_use_for_mapToGlobal, x_offset, y_offset) { }
 
 
 //####################################################################################
 //##        Builds a popup with a lot of colors to choose from
 //####################################################################################
-void ColorPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
-{
+void FormPopupColor::buildPopupColors(QWidget *wants_color, QColor start_color) {
+
     // ***** Initialize form variables and settings
     m_wants_return_variable = wants_color;
     m_start_color = start_color;
@@ -33,13 +33,13 @@ void ColorPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
     this->setFixedSize(210, 310);    
 
     // ********* Buttons for changing pages in the QStackWidget
-    ColorPopupPageButton *change0 = new ColorPopupPageButton(getInnerWidget(), this, tr("Color Palette") );
+    DrQPushButtonPageSelect *change0 = new DrQPushButtonPageSelect(getInnerWidget(), this, tr("Color Palette") );
     change0->setObjectName("buttonColorPalette");
     change0->setToolTip(tr("Color Palette"));
     change0->setGeometry( 159, 7, 41, 28);
     change0->setCheckable(true);
 
-    ColorPopupPageButton *change1 = new ColorPopupPageButton(getInnerWidget(), this, tr("Color History") );
+    DrQPushButtonPageSelect *change1 = new DrQPushButtonPageSelect(getInnerWidget(), this, tr("Color History") );
     change1->setObjectName("buttonColorHistory");
     change1->setToolTip(tr("Color History"));
     change1->setGeometry(159, 35, 41, 28);
@@ -106,9 +106,8 @@ void ColorPopup::buildPopupColors(QWidget *wants_color, QColor start_color)
 //####################################################################################
 //##        Creates a block group of color buttons from palette colors
 //####################################################################################
-QWidget* ColorPopup::createColorBlock(Colors type, int start_index, int columns, int rows, int mid_step,
-                                      int block_width, int block_height, int border, int x_spacing, int y_spacing)
-{
+QWidget* FormPopupColor::createColorBlock(Colors type, int start_index, int columns, int rows, int mid_step,
+                                      int block_width, int block_height, int border, int x_spacing, int y_spacing) {
     QWidget *color_block = new QWidget();
 
     int width =  (columns * block_width)  + (x_spacing * (columns - 1)) + 4;
@@ -145,25 +144,25 @@ QWidget* ColorPopup::createColorBlock(Colors type, int start_index, int columns,
                 ++color_index;
             } else {
                 switch (type) {
-                case Colors::Basic:
-                        color = Dr::GetColorFromPalette(Color_Palettes::Basic, color_index);
+                    case Colors::Basic:
+                            color = Dr::GetColorFromPalette(Color_Palettes::Basic, color_index);
+                            ++color_index;
+                        break;
+                    case Colors::Accent:
+                    case Colors::Grays:
+                    case Colors::Main:
+                        if (j < 10) {
+                            color = Dr::GetColorFromPalette(Color_Palettes::Material, color_index);
+                            ++color_index;
+                        } else {
+                            color = color.darker( 150 );
+                            color.setAlphaF(1);
+                        }
+                        break;
+                    case Colors::History:
+                        color = QColor::fromRgba( history.at(color_index).toUInt() );
                         ++color_index;
-                    break;
-                case Colors::Accent:
-                case Colors::Grays:
-                case Colors::Main:
-                    if (j < 10) {
-                        color = Dr::GetColorFromPalette(Color_Palettes::Material, color_index);
-                        ++color_index;
-                    } else {
-                        color = color.darker( 150 );
-                        color.setAlphaF(1);
-                    }
-                    break;
-                case Colors::History:
-                    color = QColor::fromRgba( history.at(color_index).toUInt() );
-                    ++color_index;
-                    break;
+                        break;
                 }
             }
 
@@ -171,7 +170,7 @@ QWidget* ColorPopup::createColorBlock(Colors type, int start_index, int columns,
             if (color == Qt::transparent) continue;
 
             // Otherwise create a new color button
-            ColorSelecterButton *button = new ColorSelecterButton(color_block, this, color, block_width, block_height);
+            DrQPushButtonColorSelect *button = new DrQPushButtonColorSelect(color_block, this, color, block_width, block_height);
             if (!horizontal) button->setGeometry(i * (block_width + x_spacing) + 2, j * (block_height + y_spacing) + 2, block_width, block_height);
             else             button->setGeometry(j * (block_width + x_spacing) + 2, i * (block_height + y_spacing) + 2, block_width, block_height);
 
@@ -195,8 +194,7 @@ QWidget* ColorPopup::createColorBlock(Colors type, int start_index, int columns,
 }
 
 // Creates initial style sheet text for little color boxes
-QString ColorPopup::createButtonStyleSheet(QColor color, int border)
-{
+QString FormPopupColor::createButtonStyleSheet(QColor color, int border) {
     QString style;
     if (color.rgb() == m_start_color.rgb()) {
         style = "QPushButton {  "
@@ -220,8 +218,7 @@ QString ColorPopup::createButtonStyleSheet(QColor color, int border)
 //####################################################################################
 //##        Updates the info label color and text
 //####################################################################################
-void ColorPopup::setInfoLabelColor(QColor color)
-{
+void FormPopupColor::setInfoLabelColor(QColor color) {
     bool white = (color.red() < 160 && color.green() < 160 && color.blue() < 160);
     QString style =
         "   background-color: " + color.name() + "; color: ";
@@ -238,8 +235,7 @@ void ColorPopup::setInfoLabelColor(QColor color)
 //####################################################################################
 //##        On close, save current tab for later
 //####################################################################################
-void ColorPopup::closeEvent(QCloseEvent *event)
-{
+void FormPopupColor::closeEvent(QCloseEvent *event) {
     Dr::SetPreference(Preferences::Color_Popup_Tab, m_palette_block->currentIndex());
     FormPopup::closeEvent(event);
 }
@@ -249,18 +245,17 @@ void ColorPopup::closeEvent(QCloseEvent *event)
 //####################################################################################
 //##        ColorLabel Class Functions
 //####################################################################################
-ColorPopupPageButton::ColorPopupPageButton(QWidget *parent, ColorPopup *popup, QString description) :
-    QPushButton(parent), m_popup(popup), m_description(description)
-{
+DrQPushButtonPageSelect::DrQPushButtonPageSelect(QWidget *parent, FormPopupColor *popup, QString description) :
+    QPushButton(parent), m_popup(popup), m_description(description) {
     setAttribute(Qt::WA_Hover);
 }
-ColorPopupPageButton::~ColorPopupPageButton() { }
+DrQPushButtonPageSelect::~DrQPushButtonPageSelect() { }
 
-void ColorPopupPageButton::enterEvent(QEvent *) {
+void DrQPushButtonPageSelect::enterEvent(QEvent *) {
     m_text_before = m_popup->getColorLabel()->text();
     m_popup->getColorLabel()->setText( m_description );
 }
-void ColorPopupPageButton::leaveEvent(QEvent *) {
+void DrQPushButtonPageSelect::leaveEvent(QEvent *) {
     m_popup->getColorLabel()->setText( m_text_before );
 }
 
@@ -268,16 +263,14 @@ void ColorPopupPageButton::leaveEvent(QEvent *) {
 //####################################################################################
 //##        ColorLabel Class Functions
 //####################################################################################
-ColorSelecterButton::ColorSelecterButton(QWidget *parent, ColorPopup *popup, QColor my_color, int width, int height) :
-    QPushButton(parent), m_popup(popup), m_color(my_color), m_width(width), m_height(height)
-{
+DrQPushButtonColorSelect::DrQPushButtonColorSelect(QWidget *parent, FormPopupColor *popup, QColor my_color, int width, int height) :
+    QPushButton(parent), m_popup(popup), m_color(my_color), m_width(width), m_height(height) {
     setAttribute(Qt::WA_Hover);
     ///setToolTip("R: " + QString::number(m_color.red()) + ", B: " + QString::number(m_color.blue()) + ", G: " + QString::number(m_color.green()));
 }
-ColorSelecterButton::~ColorSelecterButton() { }
+DrQPushButtonColorSelect::~DrQPushButtonColorSelect() { }
 
-void ColorSelecterButton::enterEvent(QEvent *)
-{
+void DrQPushButtonColorSelect::enterEvent(QEvent *) {
     if (m_color == m_popup->getStartColor()) {
         this->move( this->pos() - QPoint(1, 1) );
     } else {
@@ -290,8 +283,7 @@ void ColorSelecterButton::enterEvent(QEvent *)
     m_popup->setInfoLabelColor(m_color);
 }
 
-void ColorSelecterButton::leaveEvent(QEvent *)
-{
+void DrQPushButtonColorSelect::leaveEvent(QEvent *) {
     if (m_color == m_popup->getStartColor()) {
         this->setFixedSize(m_width + 2, m_height + 2);
         this->move( this->pos() + QPoint(1, 1) );
@@ -301,8 +293,7 @@ void ColorSelecterButton::leaveEvent(QEvent *)
     }
 }
 
-void ColorSelecterButton::mouseReleaseEvent(QMouseEvent *)
-{
+void DrQPushButtonColorSelect::mouseReleaseEvent(QMouseEvent *) {
     emit m_popup->colorGrabbed( m_popup->getReturnWidget(), m_color );
     m_popup->close();
 }

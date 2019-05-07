@@ -12,8 +12,7 @@
 
 namespace Dr {
 
-void LoadPaletteRockyRover(Palette_Info &palette)
-{
+void LoadPaletteRockyRover(Palette_Info &palette) {
     palette.name = "Rocky Rover";
     palette.show_in_list = true;
 

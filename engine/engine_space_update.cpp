@@ -11,7 +11,7 @@
 //######################################################################################################
 //##    Update Space
 //######################################################################################################
-void Engine::updateSpace() {
+void DrEngine::updateSpace() {
 
     // ***** Updates physics
     cpSpaceStep(m_space, m_time_step);
@@ -21,7 +21,7 @@ void Engine::updateSpace() {
     for ( auto it = objects.begin(); it != objects.end(); ) {
         SceneObject *object = *it;
 
-        if ((object->body_type == BodyType::Static) || (object->in_scene == false)) {
+        if ((object->body_type == Body_Type::Static) || (object->in_scene == false)) {
             it++;
             continue;
         }

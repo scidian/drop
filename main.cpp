@@ -50,8 +50,8 @@
 #include "forms/form_main.h"
 #include "globals.h"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
+
     // ***** Initiliaze application
     QApplication drop(argc, argv);                  // Declare application
 

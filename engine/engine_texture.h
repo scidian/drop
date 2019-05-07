@@ -11,10 +11,10 @@
 #include <QOpenGLTexture>
 
 //####################################################################################
-//##    EngineTexture
+//##    DrEngineTexture
 //##        Holds an OpenGL texture for use in the Engine
 //############################
-class EngineTexture
+class DrEngineTexture
 {
 private:
     QOpenGLTexture     *m_texture;                      // Stores a pointer to an OpenGLTexture
@@ -24,7 +24,7 @@ private:
 
 public:
     // Constructor / Destructor
-    EngineTexture(QString from_asset_string);
+    DrEngineTexture(QString from_asset_string);
 
     // Function Calls
     void            deleteTexture()   { delete m_texture; }

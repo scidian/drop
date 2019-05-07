@@ -26,7 +26,7 @@ void ChipmunkFreeSpaceChildren(cpSpace *space) {
 //######################################################################################################
 //##    Clear Space
 //######################################################################################################
-void Engine::clearSpace() {
+void DrEngine::clearSpace() {
     if (has_scene) {
         ChipmunkFreeSpaceChildren(m_space);
         cpSpaceFree(m_space);
@@ -48,7 +48,7 @@ enum Txt {
     Spare = 5
 };
 
-void Engine::buildSpace() {
+void DrEngine::buildSpace() {
 
     if (demo == Demo::Spawn) {
         // Set up physics world
@@ -58,14 +58,14 @@ void Engine::buildSpace() {
         cpSpaceSetGravity(m_space, m_gravity);
 
         // Add a static line segment shapes for the ground.
-        this->addLine(BodyType::Static, QPointF(-800,     0), QPointF( 300, -250), 1, .99, 1);
-        this->addLine(BodyType::Static, QPointF( 250,    50), QPointF(1000,  200), 1, .99, 1);
-        this->addLine(BodyType::Static, QPointF(-1100, -300), QPointF(-900, -300), 1, .99, 1);
+        this->addLine(Body_Type::Static, QPointF(-800,     0), QPointF( 300, -250), 1, .99, 1);
+        this->addLine(Body_Type::Static, QPointF( 250,    50), QPointF(1000,  200), 1, .99, 1);
+        this->addLine(Body_Type::Static, QPointF(-1100, -300), QPointF(-900, -300), 1, .99, 1);
 
         // Add one ball
-        this->addCircle(BodyType::Dynamic, Txt::Ball, -100,  100, .7, .5, 2, QPointF( 0, 0));
+        this->addCircle(Body_Type::Dynamic, Txt::Ball, -100,  100, .7, .5, 2, QPointF( 0, 0));
 
-        SceneObject *ball = this->addCircle(BodyType::Kinematic, Txt::Ball, -300,  150, .7, .5, 2, QPointF(25, 0));
+        SceneObject *ball = this->addCircle(Body_Type::Kinematic, Txt::Ball, -300,  150, .7, .5, 2, QPointF(25, 0));
         ball->follow = true;
 
 
@@ -80,90 +80,90 @@ void Engine::buildSpace() {
 
 
         // Add a static line segment shapes for the ground.
-        this->addLine(BodyType::Static, QPointF(-1000,    0), QPointF( 2500,    0), 1, .75, 1);
-        this->addLine(BodyType::Static, QPointF( 2500,    0), QPointF( 2500, 100), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF(-1000,    0), QPointF( 2500,    0), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF( 2500,    0), QPointF( 2500, 100), 1, .75, 1);
 
         // Big ramp
-        this->addLine(BodyType::Static, QPointF(    0,    0), QPointF(300,   50), 1, .75, 1);
-        this->addLine(BodyType::Static, QPointF(  300,   50), QPointF(600,    0), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF(    0,    0), QPointF(300,   50), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF(  300,   50), QPointF(600,    0), 1, .75, 1);
 
         // Little bumps
-        this->addLine(BodyType::Static, QPointF( 1090,    0), QPointF(1120,   4), 1, .75, 1);
-        this->addLine(BodyType::Static, QPointF( 1120,    4), QPointF(1150,   0), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF( 1090,    0), QPointF(1120,   4), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF( 1120,    4), QPointF(1150,   0), 1, .75, 1);
 
-        this->addLine(BodyType::Static, QPointF( 1170,    0), QPointF(1200,   4), 1, .75, 1);
-        this->addLine(BodyType::Static, QPointF( 1200,    4), QPointF(1230,   0), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF( 1170,    0), QPointF(1200,   4), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF( 1200,    4), QPointF(1230,   0), 1, .75, 1);
 
-        this->addLine(BodyType::Static, QPointF( 1250,    0), QPointF(1280,   4), 1, .75, 1);
-        this->addLine(BodyType::Static, QPointF( 1280,    4), QPointF(1310,   0), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF( 1250,    0), QPointF(1280,   4), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF( 1280,    4), QPointF(1310,   0), 1, .75, 1);
 
-        this->addLine(BodyType::Static, QPointF( 1330,    0), QPointF(1360,   4), 1, .75, 1);
-        this->addLine(BodyType::Static, QPointF( 1360,    4), QPointF(1390,   0), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF( 1330,    0), QPointF(1360,   4), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF( 1360,    4), QPointF(1390,   0), 1, .75, 1);
 
-        this->addLine(BodyType::Static, QPointF( 1410,    0), QPointF(1440,   4), 1, .75, 1);
-        this->addLine(BodyType::Static, QPointF( 1440,    4), QPointF(1470,   0), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF( 1410,    0), QPointF(1440,   4), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF( 1440,    4), QPointF(1470,   0), 1, .75, 1);
 
-        this->addLine(BodyType::Static, QPointF( 1490,    0), QPointF(1520,   4), 1, .75, 1);
-        this->addLine(BodyType::Static, QPointF( 1520,    4), QPointF(1550,   0), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF( 1490,    0), QPointF(1520,   4), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF( 1520,    4), QPointF(1550,   0), 1, .75, 1);
 
-        this->addLine(BodyType::Static, QPointF( 1570,    0), QPointF(1600,   4), 1, .75, 1);
-        this->addLine(BodyType::Static, QPointF( 1600,    4), QPointF(1630,   0), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF( 1570,    0), QPointF(1600,   4), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF( 1600,    4), QPointF(1630,   0), 1, .75, 1);
 
-        this->addLine(BodyType::Static, QPointF( 1650,    0), QPointF(1680,   4), 1, .75, 1);
-        this->addLine(BodyType::Static, QPointF( 1680,    4), QPointF(1710,   0), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF( 1650,    0), QPointF(1680,   4), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF( 1680,    4), QPointF(1710,   0), 1, .75, 1);
 
-        this->addLine(BodyType::Static, QPointF( 1730,    0), QPointF(1760,   4), 1, .75, 1);
-        this->addLine(BodyType::Static, QPointF( 1760,    4), QPointF(1790,   0), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF( 1730,    0), QPointF(1760,   4), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF( 1760,    4), QPointF(1790,   0), 1, .75, 1);
 
         // Sample object to find category and mask numbers
-        SceneObject  *base = this->addBlock(BodyType::Kinematic, Txt::Block, 300,   0, 1, .75, 100, QPointF(0, 0));
+        SceneObject  *base = this->addBlock(Body_Type::Kinematic, Txt::Block, 300,   0, 1, .75, 100, QPointF(0, 0));
         cpShapeFilter test = cpShapeGetFilter( base->shape);
 
 
         // Block alignment test
-        this->addBlock(BodyType::Kinematic, Txt::Block, -1000, 220, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block, -1000, 160, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block, -1000, 100, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block, -1000,  40, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block, -1000, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block, -1000, 220, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block, -1000, 160, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block, -1000, 100, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block, -1000,  40, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block, -1000, -20, 1, .75, 100, QPointF(0, 0));
 
-        this->addBlock(BodyType::Kinematic, Txt::Block,  -940, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block,  -880, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block,  -820, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block,  -760, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block,  -700, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block,  -640, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block,  -580, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block,  -520, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block,  -460, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block,  -400, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block,  -340, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block,  -280, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block,  -220, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block,  -160, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block,  -100, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block,   -39, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block,    22, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block,    83, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block,   144, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(BodyType::Kinematic, Txt::Block,   205, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -940, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -880, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -820, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -760, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -700, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -640, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -580, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -520, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -460, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -400, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -340, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -280, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -220, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -160, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -100, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,   -39, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,    22, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,    83, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,   144, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,   205, -20, 1, .75, 100, QPointF(0, 0));
 
 
 
         // Add body
-        SceneObject *rover = this->addBlock(  BodyType::Dynamic, Txt::Rover, -450,  75,   .5, .1, 4, QPointF(0, 0));
+        SceneObject *rover = this->addBlock(  Body_Type::Dynamic, Txt::Rover, -450,  75,   .5, .1, 4, QPointF(0, 0));
         rover->follow = true;
 
         // Add wheels
-        SceneObject *wheel1 = this->addCircle(BodyType::Dynamic, Txt::Wheel, -490,  45, 3.4, .7,  2, QPointF(0, 0));
-        SceneObject *wheel2 = this->addCircle(BodyType::Dynamic, Txt::Wheel, -450,  45, 3.4, .7,  2, QPointF(0, 0));
-        SceneObject *wheel3 = this->addCircle(BodyType::Dynamic, Txt::Wheel, -410,  45, 3.4, .7,  2, QPointF(0, 0));
+        SceneObject *wheel1 = this->addCircle(Body_Type::Dynamic, Txt::Wheel, -490,  45, 3.4, .7,  2, QPointF(0, 0));
+        SceneObject *wheel2 = this->addCircle(Body_Type::Dynamic, Txt::Wheel, -450,  45, 3.4, .7,  2, QPointF(0, 0));
+        SceneObject *wheel3 = this->addCircle(Body_Type::Dynamic, Txt::Wheel, -410,  45, 3.4, .7,  2, QPointF(0, 0));
         wheel1->is_wheel = true;    wheel1->wheel_speed = 80;
         wheel2->is_wheel = true;    wheel2->wheel_speed = 40;
         wheel3->is_wheel = true;    wheel3->wheel_speed = 60;
-        SceneObject *spare1 = this->addCircle(BodyType::Dynamic, Txt::Spare, -510,  35, 3.4, .7, .5, QPointF(0, 0));
+        SceneObject *spare1 = this->addCircle(Body_Type::Dynamic, Txt::Spare, -510,  35, 3.4, .7, .5, QPointF(0, 0));
 
-        //this->addCircle(BodyType::Dynamic, Txt::Ball, -450, -80, 4, 0, 2, QPointF(0, 0));
+        //this->addCircle(Body_Type::Dynamic, Txt::Ball, -450, -80, 4, 0, 2, QPointF(0, 0));
 
         // Set body and wheels to same group so they don't collide
         //EX:

@@ -18,8 +18,7 @@ DrComponent::DrComponent(DrSettings *parent_settings,
                          QString new_description,
                          QColor new_color,
                          long new_key,
-                         bool new_turned_on)
-{
+                         bool new_turned_on) {
     m_parent_settings = parent_settings;
 
     m_display_name = new_display_name;

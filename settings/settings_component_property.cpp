@@ -20,8 +20,7 @@ DrProperty::DrProperty(DrSettings      *parent_settings,
                        QVariant         value,
                        long             new_key,
                        bool             is_hidden,
-                       bool             is_editable)
-{
+                       bool             is_editable) {
     m_parent_settings = parent_settings;
     m_parent_component = parent_component;
 

@@ -22,8 +22,7 @@
 //##        Drag / Drop Events
 //####################################################################################
 // This removes the item from under the mouse, sort of
-void TreeProject::startDrag(Qt::DropActions supportedActions)
-{
+void TreeProject::startDrag(Qt::DropActions supportedActions) {
     // Partly copied from Qt 5.5.5 sources
     QModelIndexList indexes = selectedIndexes();
     if (indexes.count() > 0) {
@@ -46,8 +45,8 @@ void TreeProject::startDrag(Qt::DropActions supportedActions)
 
 
 // Fires when we start dragging
-void TreeProject::dragMoveEvent(QDragMoveEvent *event)
-{
+void TreeProject::dragMoveEvent(QDragMoveEvent *event) {
+
     bool check_format = false;
     for (auto format : m_drag_formats) {
         if (event->mimeData()->hasFormat( format ))
@@ -96,8 +95,7 @@ void TreeProject::dragMoveEvent(QDragMoveEvent *event)
     QTreeWidget::dragMoveEvent(event);
 }
 
-void TreeProject::dropEvent(QDropEvent* event)
-{
+void TreeProject::dropEvent(QDropEvent* event) {
     bool check_format = false;
     for (auto format : m_drag_formats) {
         if (event->mimeData()->hasFormat( format ))
@@ -139,13 +137,9 @@ void TreeProject::dropEvent(QDropEvent* event)
 //##        A sub classed QProxyStyle so we can overwrite events and do some custom
 //##        drawing of TreeWidget list divider in Tree Stage List while dragging
 //####################################################################################
-StageTreeHighlightProxy::~StageTreeHighlightProxy()
-{
-    // Must include definition of a virtual destructor
-}
+TreeStageHighlightProxy::~TreeStageHighlightProxy() { }
 
-void StageTreeHighlightProxy::drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
-{
+void TreeStageHighlightProxy::drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const {
     if (element == QStyle::PE_IndicatorItemViewItemDrop) {
         if (!m_parent_tree->canWeDrop()) { return; }
 

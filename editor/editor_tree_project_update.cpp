@@ -16,8 +16,7 @@
 //####################################################################################
 //##        Updates item names if they have been changed
 //####################################################################################
-void TreeProject::updateItemNames(QList<DrSettings*> changed_items, QList<long> property_keys)
-{
+void TreeProject::updateItemNames(QList<DrSettings*> changed_items, QList<long> property_keys) {
     if (changed_items.isEmpty()) return;
 
     setAllowSelectionEvent(false);

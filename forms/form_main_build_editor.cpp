@@ -59,7 +59,7 @@ void FormMain::buildWidgetsEditor()
         // This sets the border with for the main view area between middle and docks
         verticalLayoutCentral->setContentsMargins(0, 0, 0, 0);
 
-        ColorSplitter *splitterVertical = new ColorSplitter(widgetCentralEditor);
+        DrQSplitterColor *splitterVertical = new DrQSplitterColor(widgetCentralEditor);
         splitterVertical->setObjectName(QStringLiteral("splitterVertical"));
         splitterVertical->setOrientation(Qt::Vertical);
         splitterVertical->setHandleWidth(4);
@@ -71,7 +71,7 @@ void FormMain::buildWidgetsEditor()
                 horizontalLayout->setSpacing(0);
                 horizontalLayout->setContentsMargins(0, 0, 0, 0);
 
-                ColorSplitter *splitterHorizontal = new ColorSplitter(widgetStage);
+                DrQSplitterColor *splitterHorizontal = new DrQSplitterColor(widgetStage);
                 splitterHorizontal->setObjectName(QStringLiteral("splitterHorizontal"));
                 splitterHorizontal->setLineWidth(0);
                 splitterHorizontal->setOrientation(Qt::Horizontal);
@@ -79,7 +79,7 @@ void FormMain::buildWidgetsEditor()
 
                     // ***** Load our custom TreeProject for the Scene List
                     treeProjectEditor = new TreeProject(splitterHorizontal, project, this);
-                    treeProjectEditor->setStyle(new StageTreeHighlightProxy(treeProjectEditor->style(), treeProjectEditor));
+                    treeProjectEditor->setStyle(new TreeStageHighlightProxy(treeProjectEditor->style(), treeProjectEditor));
                         QTreeWidgetItem *header_item_stage = new QTreeWidgetItem();
                         header_item_stage->setIcon(1, QIcon(":/assets/tree_icons/tree_lock_header.png"));
                         treeProjectEditor->setHeaderItem(header_item_stage);
@@ -272,8 +272,7 @@ void FormMain::buildWidgetsEditor()
 }
 
 
-QLabel* FormMain::createLabel(QWidget *parent, QString object_name, QRect label_rect, QFont &label_font)
-{
+QLabel* FormMain::createLabel(QWidget *parent, QString object_name, QRect label_rect, QFont &label_font) {
     QLabel *new_label;
     new_label = new QLabel(parent);
     new_label->setObjectName(object_name);

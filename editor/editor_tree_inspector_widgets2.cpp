@@ -26,9 +26,8 @@
 //####################################################################################
 //##    Checkbox / PaintEvent that draws box and check mark
 //####################################################################################
-QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSizePolicy size_policy)
-{
-    DrCheckBox *check = new DrCheckBox();
+QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSizePolicy size_policy) {
+    DrQCheckBox *check = new DrQCheckBox();
     check->setObjectName("checkInspector");
     check->setFont(font);
     check->setSizePolicy(size_policy);
@@ -36,13 +35,13 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSiz
 
     long property_key = property->getPropertyKey();
 
-    check->setProperty(User_Property::Mouse_Over, false);               // Initialize some mouse user data, WidgetHoverHandler updates this info,
+    check->setProperty(User_Property::Mouse_Over, false);               // Initialize some mouse user data, DrFilterHoverHandler updates this info,
     check->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));         // Used to track when the mouse is within the indicator area for custom paint event
     check->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
 
     check->setChecked(property->getValue().toBool());
 
-    m_widget_hover->attachToHoverHandler(check, property);
+    m_filter_hover->attachToHoverHandler(check, property);
     addToWidgetList(check);
 
     connect (check, &QCheckBox::toggled, [this, property_key](bool checked) { updateSettingsFromNewValue( property_key, checked );  });
@@ -50,8 +49,7 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSiz
     return check;
 }
 
-void DrCheckBox::paintEvent(QPaintEvent *)
-{
+void DrQCheckBox::paintEvent(QPaintEvent *) {
     QRect  checkbox_indicator(5, 0, 26, 22);
     QPoint mouse_position = property(User_Property::Mouse_Pos).toPoint();
 
@@ -97,8 +95,7 @@ void DrCheckBox::paintEvent(QPaintEvent *)
 //####################################################################################
 //##    Line Edit
 //####################################################################################
-QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font, QSizePolicy size_policy)
-{
+QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font, QSizePolicy size_policy) {
     QLineEdit *edit = new QLineEdit();
     edit->setFont(font);
     edit->setSizePolicy(size_policy);
@@ -108,7 +105,7 @@ QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font, QSiz
     edit->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     edit->setText(property->getValue().toString());
 
-    m_widget_hover->attachToHoverHandler(edit, property);
+    m_filter_hover->attachToHoverHandler(edit, property);
     addToWidgetList(edit);
 
     connect (edit,  &QLineEdit::editingFinished,
@@ -122,8 +119,7 @@ QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font, QSiz
 //####################################################################################
 //##    Pushbutton with a popup menu instead of a QComboBox
 //####################################################################################
-QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSizePolicy size_policy)
-{
+QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSizePolicy size_policy) {
     QPushButton *button = new QPushButton();
     button->setObjectName(QStringLiteral("buttonDropDown"));
     button->setFont(font);
@@ -177,16 +173,15 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
 
     button->setMenu(menu);
     button->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
-    menu->installEventFilter(new PopUpMenuRelocater(menu, 2, 0));
-    m_widget_hover->attachToHoverHandler(button, property);
+    menu->installEventFilter(new DrFilterPopUpMenuRelocater(menu, 2, 0));
+    m_filter_hover->attachToHoverHandler(button, property);
     addToWidgetList(button);
 
     return button;
 }
 
 // Shows the QPushButton popupMenu, disables animation while we move it to the position we desire
-void DrDropDownComboBox::showPopup()
-{
+void DrQComboBoxDropDown::showPopup() {
     bool oldAnimationEffects = qApp->isEffectEnabled(Qt::UI_AnimateCombo);
     qApp->setEffectEnabled(Qt::UI_AnimateCombo, false);
 
@@ -202,14 +197,13 @@ void DrDropDownComboBox::showPopup()
 //####################################################################################
 //##    Colorful button used to represent a Color property
 //####################################################################################
-QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizePolicy size_policy)
-{
+QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizePolicy size_policy) {
     long   property_key =  property->getPropertyKey();
     QColor color =     QColor::fromRgba(property->getValue().toUInt());
 
     QWidget *color_box = new QWidget();
     color_box->setSizePolicy(size_policy);
-    m_widget_hover->attachToHoverHandler(color_box, property);
+    m_filter_hover->attachToHoverHandler(color_box, property);
         QHBoxLayout *color_layout = new QHBoxLayout(color_box);
         color_layout->setContentsMargins(0, 0, 0, 0);
         color_layout->setSpacing(0);
@@ -223,12 +217,12 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
         color_button->setProperty(User_Property::Key,   QVariant::fromValue( property_key ));
         this->updateColorButton(color_button, color);
         connect(color_button, &QPushButton::clicked, [this, color_box, color_button, color] () {
-            ColorPopup *color_popup = new ColorPopup(m_project, color_box, color_button, -18, 5);
+            FormPopupColor *color_popup = new FormPopupColor(m_project, color_box, color_button, -18, 5);
             color_popup->buildPopupColors(color_button, QColor::fromRgba(color_button->property(User_Property::Color).toUInt()) );
             connect(color_popup, SIGNAL(colorGrabbed(QWidget*, QColor)), this, SLOT(setButtonColor(QWidget*, QColor)) );
             color_popup->show();
         });
-        m_widget_hover->attachToHoverHandler(color_button, Advisor_Info::ColorButton);
+        m_filter_hover->attachToHoverHandler(color_button, Advisor_Info::ColorButton);
         addToWidgetList(color_button);
         color_layout->addWidget(color_button);
 
@@ -243,7 +237,7 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
             picker->show();
             picker_button->setDown(false);
         });
-        m_widget_hover->attachToHoverHandler(picker_button, Advisor_Info::ColorPicker);
+        m_filter_hover->attachToHoverHandler(picker_button, Advisor_Info::ColorPicker);
         color_layout->addWidget(picker_button);
 
         // This is the button that shows the color wheel, clicking it opens the system color dialog
@@ -254,14 +248,13 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
         connect(dialog_button, &QPushButton::clicked, [this, color_button] () {
             this->setButtonColorFromSystemDialog(color_button);
         });
-        m_widget_hover->attachToHoverHandler(dialog_button, Advisor_Info::ColorDialog);
+        m_filter_hover->attachToHoverHandler(dialog_button, Advisor_Info::ColorDialog);
         color_layout->addWidget(dialog_button);
 
     return color_box;
 }
 
-void TreeInspector::setButtonColorFromSystemDialog(QPushButton *button)
-{
+void TreeInspector::setButtonColorFromSystemDialog(QPushButton *button) {
     QColor old_color= QColor::fromRgba(button->property(User_Property::Color).toUInt());
     QColor color =    QColorDialog::getColor(old_color, this, "Select Color");    //, QColorDialog::ColorDialogOption::ShowAlphaChannel);
     ///QColor color = QColorDialog::getColor(old_color, this, "Select Color", QColorDialog::DontUseNativeDialog);   // Qt Implementation
@@ -269,8 +262,7 @@ void TreeInspector::setButtonColorFromSystemDialog(QPushButton *button)
 }
 
 // SLOT: Receives a new color and updates color button and appropriate Project Settings
-void TreeInspector::setButtonColor(QWidget *button, QColor color)
-{
+void TreeInspector::setButtonColor(QWidget *button, QColor color) {
     QPushButton *push = dynamic_cast<QPushButton*>(button);
     if (push && color.isValid()) {
         ///Dr::AddToColorHistory( QColor::fromRgba( button->property(User_Property::Color).toUInt() ));
@@ -280,8 +272,7 @@ void TreeInspector::setButtonColor(QWidget *button, QColor color)
     }
 }
 
-void TreeInspector::updateColorButton(QPushButton *button, QColor color)
-{
+void TreeInspector::updateColorButton(QPushButton *button, QColor color) {
     QColor text_color = QColor(24, 24, 24);
     QColor highlight =  QColor(0, 0, 0);
     if (color.red() < 128 && color.green() < 128 && color.blue() < 128) {

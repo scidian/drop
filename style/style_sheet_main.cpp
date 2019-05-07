@@ -13,8 +13,8 @@ namespace Dr {
 //####################################################################################
 //##        Apply palette / coloring / styling to children widgets
 //####################################################################################
-void ApplyCustomStyleSheetFormatting(QWidget *widget)
-{
+void ApplyCustomStyleSheetFormatting(QWidget *widget) {
+
     QString style_sheet = QString(
 
         //################################################################################
@@ -27,7 +27,7 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget)
         "       background-color: " + Dr::GetColor(Window_Colors::Text).name() + "; }"
 
         // Example of some custom class coloring
-        " .ColorSplitter {   background: " + Dr::GetColor(Window_Colors::Seperator).name() + "; }"
+        " .DrQSplitterColor {   background: " + Dr::GetColor(Window_Colors::Seperator).name() + "; }"
 
         // Main window background and seperator
         " QMainWindow { background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }" +
@@ -399,8 +399,7 @@ QString StyleSheetPoppedOutBackgroundBorder(QColor background_color, QColor bord
 //################################################################################
 QString StyleSheetColorButton(QColor color, QColor text_color, QColor highlight,
                               int tl_radius, int tr_radius, int bl_radius, int br_radius,
-                              bool left_border, bool right_border, QString name)
-{
+                              bool left_border, bool right_border, QString name) {
     QString style =
     " QPushButton" + name + " { height: 20px; padding-top: 0px;"
     "   color: " + text_color.name() + "; "

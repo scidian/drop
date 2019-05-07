@@ -21,15 +21,13 @@
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrProject::DrProject(long key_generator_starting_number)
-{
+DrProject::DrProject(long key_generator_starting_number) {
     // Don't alllow key to start at less than 1, having an item with key 0 could conflict with nullptr results
     if (key_generator_starting_number <= 1) key_generator_starting_number = 1;
     m_key_generator = key_generator_starting_number;
 }
 
-DrProject::~DrProject()
-{
+DrProject::~DrProject() {
     for (auto i: m_worlds) { delete i.second; }
     for (auto i: m_assets) { delete i.second; }
     for (auto i: m_fonts)  { delete i.second; }
@@ -42,23 +40,19 @@ DrProject::~DrProject()
 //##    Functions to add different object types into project
 //##
 //####################################################################################
-
-long DrProject::addAsset(DrAssetType new_asset_type, long image_key)
-{
+long DrProject::addAsset(DrAssetType new_asset_type, long image_key) {
     long new_asset_key = getNextKey();
     m_assets[new_asset_key] = new DrAsset(this, new_asset_key, new_asset_type, image_key);
     return new_asset_key;
 }
 
-long DrProject::addFont(QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects)
-{
+long DrProject::addFont(QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects) {
     long new_font_key = getNextKey();
     m_fonts[new_font_key] = new DrFont(this, new_font_key, font_name, font_pixmap, font_family, font_size, use_test_rects);
     return new_font_key;
 }
 
-long DrProject::addImage(QString image_path)
-{
+long DrProject::addImage(QString image_path) {
     long new_image_key = getNextKey();
     m_images[new_image_key] = new DrImage(this, new_image_key, image_path);
     return new_image_key;
@@ -66,8 +60,7 @@ long DrProject::addImage(QString image_path)
 
 
 // Adds a World to the map container, finds next availbable "World xxx" name to assign to World
-void DrProject::addWorld()
-{
+void DrProject::addWorld() {
     int test_num = 0;
     QString new_name;
     do {
@@ -88,8 +81,7 @@ void DrProject::addWorld()
 //####################################################################################
 
 // Returns a pointer to the Base DrSettings class of the object with the specified key
-DrSettings* DrProject::findSettingsFromKey(long check_key)
-{
+DrSettings* DrProject::findSettingsFromKey(long check_key) {
     AssetMap::iterator asset_iter = m_assets.find(check_key);
     if (asset_iter != m_assets.end())   return asset_iter->second;
 
@@ -128,8 +120,7 @@ DrType DrProject::findChildTypeFromKey(long check_key) {
 }
 
 
-DrAsset* DrProject::findAssetFromKey(long check_key)
-{
+DrAsset* DrProject::findAssetFromKey(long check_key) {
     AssetMap::iterator asset_iter = m_assets.find(check_key);
     if (asset_iter != m_assets.end())
         return asset_iter->second;
@@ -137,8 +128,7 @@ DrAsset* DrProject::findAssetFromKey(long check_key)
         return nullptr;
 }
 
-DrStage* DrProject::findStageFromKey(long check_key)
-{
+DrStage* DrProject::findStageFromKey(long check_key) {
     for (auto world_pair : m_worlds) {
         StageMap &stages = world_pair.second->getStageMap();
         StageMap::iterator stage_iter = stages.find(check_key);
@@ -149,8 +139,7 @@ DrStage* DrProject::findStageFromKey(long check_key)
     return nullptr;
 }
 
-DrObject* DrProject::findObjectFromKey(long check_key)
-{
+DrObject* DrProject::findObjectFromKey(long check_key) {
     for (auto world : m_worlds) {
         for (auto stage : world.second->getStageMap()) {
             ObjectMap &objects = stage.second->getObjectMap();
@@ -163,8 +152,7 @@ DrObject* DrProject::findObjectFromKey(long check_key)
 }
 
 // Returns a pointer to the World with the mathcing name
-DrWorld* DrProject::findWorldWithName(QString world_name)
-{
+DrWorld* DrProject::findWorldWithName(QString world_name) {
     QString compare_name;
     for (auto i: m_worlds) {
         compare_name = i.second->getName();
@@ -177,8 +165,7 @@ DrWorld* DrProject::findWorldWithName(QString world_name)
 //####################################################################################
 //##    Tests find function for speed so we can test speed of std::map vs std::unordered_map, etc
 //####################################################################################
-QString DrProject::testSpeedFindSettings(int test_size)
-{
+QString DrProject::testSpeedFindSettings(int test_size) {
     // Show some initial data
     int     number_of_assets = int(m_key_generator) - 1;
     QString results =   "Find Speed Test \n---------------\n"

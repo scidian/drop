@@ -19,18 +19,17 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-FlowLayout::FlowLayout(QWidget *parent, int margin_left, int margin_right, int margin_top, int margin_bottom, int hSpacing, int vSpacing)
-    : QLayout(parent), m_hSpace(hSpacing), m_vSpace(vSpacing)
-{
+DrQLayoutFlow::DrQLayoutFlow(QWidget *parent, int margin_left, int margin_right, int margin_top, int margin_bottom, int hSpacing, int vSpacing)
+    : QLayout(parent), m_hSpace(hSpacing), m_vSpace(vSpacing) {
     this->setObjectName("flowLayout");
     setContentsMargins(margin_left, margin_top, margin_right, margin_bottom);
 }
-FlowLayout::FlowLayout(int margin_left, int margin_right, int margin_top, int margin_bottom, int hSpacing, int vSpacing)
-    : m_hSpace(hSpacing), m_vSpace(vSpacing)
-{
+
+DrQLayoutFlow::DrQLayoutFlow(int margin_left, int margin_right, int margin_top, int margin_bottom, int hSpacing, int vSpacing)
+    : m_hSpace(hSpacing), m_vSpace(vSpacing) {
     setContentsMargins(margin_left, margin_top, margin_right, margin_bottom);
 }
-FlowLayout::~FlowLayout() {
+DrQLayoutFlow::~DrQLayoutFlow() {
     QLayoutItem *item;
     while ((item = takeAt(0)))
         delete item;
@@ -40,41 +39,41 @@ FlowLayout::~FlowLayout() {
 //####################################################################################
 //##    Overrides for some basic QLayout values
 //####################################################################################
-void FlowLayout::addItem(QLayoutItem *item) {
+void DrQLayoutFlow::addItem(QLayoutItem *item) {
     item_list.append(item);
 }
 
-int FlowLayout::horizontalSpacing() const {
+int DrQLayoutFlow::horizontalSpacing() const {
     if (m_hSpace >= 0)  return m_hSpace;
     else                return smartSpacing(QStyle::PM_LayoutHorizontalSpacing);
 }
 
-int FlowLayout::verticalSpacing() const {
+int DrQLayoutFlow::verticalSpacing() const {
     if (m_vSpace >= 0)  return m_vSpace;
     else                return smartSpacing(QStyle::PM_LayoutVerticalSpacing);
 }
 
 
-QLayoutItem *FlowLayout::itemAt(int index) const            { return item_list.value(index); }
+QLayoutItem *DrQLayoutFlow::itemAt(int index) const            { return item_list.value(index); }
 
-QLayoutItem *FlowLayout::takeAt(int index) {
+QLayoutItem *DrQLayoutFlow::takeAt(int index) {
     if (index >= 0 && index < item_list.size())
         return item_list.takeAt(index);
     else
         return nullptr;
 }
 
-Qt::Orientations FlowLayout::expandingDirections() const    { return nullptr; }
-int FlowLayout::count() const                               { return item_list.size(); }
-QSize FlowLayout::sizeHint() const                          { return minimumSize(); }
-bool FlowLayout::hasHeightForWidth() const                  { return true; }
-int FlowLayout::heightForWidth(int width) const
+Qt::Orientations DrQLayoutFlow::expandingDirections() const    { return nullptr; }
+int DrQLayoutFlow::count() const                               { return item_list.size(); }
+QSize DrQLayoutFlow::sizeHint() const                          { return minimumSize(); }
+bool DrQLayoutFlow::hasHeightForWidth() const                  { return true; }
+int DrQLayoutFlow::heightForWidth(int width) const
 {
     int height = doLayout(QRect(0, 0, width, 0), true);
     return height;
 }
 
-QSize FlowLayout::minimumSize() const {
+QSize DrQLayoutFlow::minimumSize() const {
     QSize size;
     for (auto item : item_list)
         size = size.expandedTo(item->minimumSize());
@@ -86,7 +85,7 @@ QSize FlowLayout::minimumSize() const {
 //####################################################################################
 //##    Rebuilds the layout on size change
 //####################################################################################
-void FlowLayout::setGeometry(const QRect &rect) {
+void DrQLayoutFlow::setGeometry(const QRect &rect) {
     // Updates asset sizes if necessary
     if (parentWidget()->objectName() == "assetsContainer") {
 
@@ -105,8 +104,7 @@ void FlowLayout::setGeometry(const QRect &rect) {
     }
 }
 
-int FlowLayout::doLayout(const QRect &rect, bool test_only) const
-{
+int DrQLayoutFlow::doLayout(const QRect &rect, bool test_only) const {
     int left, top, right, bottom;
     getContentsMargins(&left, &top, &right, &bottom);
     QRect effective_rect = rect.adjusted(+left, +top, -right, -bottom);
@@ -139,8 +137,7 @@ int FlowLayout::doLayout(const QRect &rect, bool test_only) const
     return new_height;
 }
 
-int FlowLayout::smartSpacing(QStyle::PixelMetric pm) const
-{
+int DrQLayoutFlow::smartSpacing(QStyle::PixelMetric pm) const {
     QObject *parent = this->parent();
     if (!parent) {
         return -1;

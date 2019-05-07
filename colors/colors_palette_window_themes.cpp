@@ -12,8 +12,7 @@
 
 namespace Dr {
 
-void LoadPaletteWindowThemes(Palette_Info &palette)
-{
+void LoadPaletteWindowThemes(Palette_Info &palette) {
     palette.name = "Window Themes";
     palette.show_in_list = true;
 

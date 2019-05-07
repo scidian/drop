@@ -21,8 +21,7 @@
 //####################################################################################
 //##    buttonGroupMode SLOT and functions
 //####################################################################################
-void FormMain::buttonGroupModeClicked(int id)
-{
+void FormMain::buttonGroupModeClicked(int id) {
     buttonGroupModeSetChecked(id);
 
     Form_Main_Mode new_id =     static_cast<Form_Main_Mode>(id);
@@ -37,8 +36,7 @@ void FormMain::buttonGroupModeClicked(int id)
     }
 }
 
-void FormMain::buttonGroupModeSetChecked(int id)
-{
+void FormMain::buttonGroupModeSetChecked(int id) {
     QList<QAbstractButton*> buttons = buttonsGroupMode->buttons();
     for (auto button : buttons) {
         bool is_button = (buttonsGroupMode->button(id) == button);
@@ -51,8 +49,7 @@ void FormMain::buttonGroupModeSetChecked(int id)
 //####################################################################################
 //##    buttonGroupLayering SLOT and functions
 //####################################################################################
-void FormMain::buttonGroupLayeringClicked(int id)
-{
+void FormMain::buttonGroupLayeringClicked(int id) {
     Buttons_Layering clicked = static_cast<Buttons_Layering>(id);
 
     if (clicked == Buttons_Layering::Send_To_Back) {
@@ -66,8 +63,7 @@ void FormMain::buttonGroupLayeringClicked(int id)
 //####################################################################################
 //##    buttonGroupTransform SLOT and functions
 //####################################################################################
-void FormMain::buttonGroupTransformClicked(int id)
-{
+void FormMain::buttonGroupTransformClicked(int id) {
     Buttons_Transform clicked = static_cast<Buttons_Transform>(id);
 
     if (clicked == Buttons_Transform::Reset_Object) {
@@ -108,8 +104,7 @@ void FormMain::buttonGroupTransformClicked(int id)
 //####################################################################################
 //##    buttonGroupGrid SLOT and functions
 //####################################################################################
-void FormMain::buttonGroupGridClicked(int id)
-{
+void FormMain::buttonGroupGridClicked(int id) {
     Buttons_Grid clicked = static_cast<Buttons_Grid>(id);
 
     if (clicked == Buttons_Grid::Snap_Options) {
@@ -134,8 +129,7 @@ void FormMain::buttonGroupGridClicked(int id)
 //####################################################################################
 //##    buttonGroupPlay SLOT and functions
 //####################################################################################
-void FormMain::buttonGroupPlayClicked(int id)
-{
+void FormMain::buttonGroupPlayClicked(int id) {
     Buttons_Play clicked = static_cast<Buttons_Play>(id);
 
     if (clicked == Buttons_Play::Play) {

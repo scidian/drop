@@ -29,8 +29,7 @@
 //####################################################################################
 //##        Mouse Moved
 //####################################################################################
-void DrView::mouseMoveEvent(QMouseEvent *event)
-{
+void DrView::mouseMoveEvent(QMouseEvent *event) {
     // Test for scene, convert to our custom class and lock the scene
     if (scene() == nullptr) return;
     if (my_scene->scene_mutex.tryLock(10) == false) return;

@@ -23,8 +23,7 @@ namespace Dr {
 //##            find a valid screen, it defaults to centering the window on the primary screen
 //####################################################################################
 void CenterFormOnScreen(QWidget *parent_to_find_screen_from, QWidget *form_to_center,
-                        double width_percentage, double height_percentage)
-{
+                        double width_percentage, double height_percentage) {
     QScreen *screen = nullptr;
     QRect    screen_geometry;
     screen = FindScreenFromWidget(parent_to_find_screen_from);
@@ -43,8 +42,7 @@ void CenterFormOnScreen(QWidget *parent_to_find_screen_from, QWidget *form_to_ce
     form_to_center->setGeometry(QStyle::alignedRect( Qt::LeftToRight, Qt::AlignCenter, new_size, screen_geometry ));
 }
 
-QScreen* FindScreenFromWidget(QWidget *widget)
-{
+QScreen* FindScreenFromWidget(QWidget *widget) {
     if (!widget)                            return nullptr;
     if (!widget->window())                  return nullptr;
     if (!widget->window()->windowHandle())  return nullptr;
@@ -55,8 +53,7 @@ QScreen* FindScreenFromWidget(QWidget *widget)
 //####################################################################################
 //##        Gives widget drop shadow
 //####################################################################################
-void ApplyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color)
-{
+void ApplyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color) {
     QGraphicsDropShadowEffect *shadow_effect;
     shadow_effect = new QGraphicsDropShadowEffect();
     shadow_effect->setBlurRadius(blur_radius);
@@ -64,8 +61,8 @@ void ApplyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, 
     shadow_effect->setColor(shadow_color);
     target_widget->setGraphicsEffect(shadow_effect);
 }
-void ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type)
-{
+
+void ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type) {
     switch (shadow_type) {
     case Shadow_Types::Button_Shadow:   ApplyDropShadow(target_widget, 6,  0,  3, Dr::GetColor(Window_Colors::Shadow) );        break;
     case Shadow_Types::Tool_Tip_Shadow: ApplyDropShadow(target_widget, 4,  0,  3, Dr::GetColor(Window_Colors::Shadow) );        break;
@@ -78,8 +75,7 @@ void ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type)
 //##        Gives widget rounded corners,
 //####################################################################################
 // Radius is absolute size
-void ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius, int method)
-{
+void ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius, int method) {
     QPixmap pixmap(widget->rect().width(), widget->rect().height());
     pixmap.fill(Qt::green);
     QPainter paint(&pixmap);
@@ -104,8 +100,7 @@ void ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius, int met
 //##        Gives widget rounded corners, and a pointed top
 //####################################################################################
 // Radius is absolute size
-void ApplyPopupMask(QWidget *widget, int x_radius, int y_radius, bool below)
-{
+void ApplyPopupMask(QWidget *widget, int x_radius, int y_radius, bool below) {
     QPixmap pixmap(widget->rect().width(), widget->rect().height());
     pixmap.fill(Qt::green);
     QPainter paint(&pixmap);

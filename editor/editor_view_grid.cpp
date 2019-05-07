@@ -21,8 +21,7 @@
 //####################################################################################
 //##        Updates grid based on current stage shown, recalculates points and lines
 //####################################################################################
-void DrView::updateGrid()
-{
+void DrView::updateGrid() {
     if (!scene()) return;
     if (!my_scene->getCurrentStageShown()) return;
 
@@ -49,8 +48,7 @@ void DrView::updateGrid()
 //####################################################################################
 //##        Rounds point in scene to nearest point aligned to grid
 //####################################################################################
-QPointF DrView::roundToGrid(QPointF point_in_scene)
-{
+QPointF DrView::roundToGrid(QPointF point_in_scene) {
     // ***** Align new desired center to grid
     QTransform remove_angle = QTransform().rotate(-m_grid_rotate);
     QTransform add_angle =    QTransform().rotate( m_grid_rotate);
@@ -77,8 +75,7 @@ QPointF DrView::roundToGrid(QPointF point_in_scene)
 //####################################################################################
 //##        Recalculates grid points into local QVectors, m_grid_points & m_grid_lines
 //####################################################################################
-void DrView::recalculateGrid()
-{
+void DrView::recalculateGrid() {
     // Map viewport to scene rect
     QRectF  scene_rect = this->scene()->sceneRect();
     QPointF top_left = mapToScene(0, 0);

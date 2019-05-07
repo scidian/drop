@@ -5,6 +5,7 @@
 //
 //
 //
+#include <QApplication>
 #include <QObject>
 #include <QEvent>
 #include <QPainter>
@@ -19,18 +20,16 @@
 
 
 //####################################################################################
-//##    WidgetHoverHandler Class Functions
+//##    DrFilterHoverHandler Class Functions
 //##        This exists as a member object inside some parent classes (instead of being created on the fly like other event filters).
 //##        This is so the SIGNAL, signalMouseHover, only has to be CONNECTed once upon the parent class initialization.
-//##        Otherwise we'd have to pass an IEditorRelay into every class that wanted to initialize a WidgetHoverHandler.
+//##        Otherwise we'd have to pass an IEditorRelay into every class that wanted to initialize a DrFilterHoverHandler.
 //####################################################################################
-bool WidgetHoverHandler::eventFilter(QObject *obj, QEvent *event)
-{
+bool DrFilterHoverHandler::eventFilter(QObject *obj, QEvent *event) {
     QWidget *hover_widget = dynamic_cast<QWidget*>(obj);
     if (!hover_widget) return QObject::eventFilter(obj, event);
 
-    if (event->type() == QEvent::HoverEnter)
-    {
+    if (event->type() == QEvent::HoverEnter) {
         hover_widget->setProperty(User_Property::Mouse_Over, true);
         hover_widget->update();
 
@@ -54,24 +53,21 @@ bool WidgetHoverHandler::eventFilter(QObject *obj, QEvent *event)
 }
 
 //      Sets AdvisorInfo widget user properties
-void WidgetHoverHandler::attachToHoverHandler(QWidget *widget, DrProperty *property)
-{
+void DrFilterHoverHandler::attachToHoverHandler(QWidget *widget, DrProperty *property) {
     widget->setProperty(User_Property::Header, property->getDisplayName());
     widget->setProperty(User_Property::Body, property->getDescription());
     widget->setAttribute(Qt::WidgetAttribute::WA_Hover, true);
     widget->installEventFilter(this);
 }
 
-void WidgetHoverHandler::attachToHoverHandler(QWidget *widget, QString header, QString body)
-{
+void DrFilterHoverHandler::attachToHoverHandler(QWidget *widget, QString header, QString body) {
     widget->setProperty(User_Property::Header, header);
     widget->setProperty(User_Property::Body, body);
     widget->setAttribute(Qt::WidgetAttribute::WA_Hover, true);
     widget->installEventFilter(this);
 }
 
-void WidgetHoverHandler::attachToHoverHandler(QWidget *widget, HeaderBodyList header_body_list)
-{
+void DrFilterHoverHandler::attachToHoverHandler(QWidget *widget, HeaderBodyList header_body_list) {
     widget->setProperty(User_Property::Header, header_body_list[0]);
     widget->setProperty(User_Property::Body, header_body_list[1]);
     widget->setAttribute(Qt::WidgetAttribute::WA_Hover, true);
@@ -82,12 +78,11 @@ void WidgetHoverHandler::attachToHoverHandler(QWidget *widget, HeaderBodyList he
 
 
 //####################################################################################
-//##    MouseWheelAdjustmentGuard Class Functions
+//##    DrFilterMouseWheelAdjustmentGuard Class Functions
 //####################################################################################
-MouseWheelAdjustmentGuard::MouseWheelAdjustmentGuard(QObject *parent) : QObject(parent) {}
+DrFilterMouseWheelAdjustmentGuard::DrFilterMouseWheelAdjustmentGuard(QObject *parent) : QObject(parent) { }
 
-bool MouseWheelAdjustmentGuard::eventFilter(QObject *obj, QEvent *event)
-{
+bool DrFilterMouseWheelAdjustmentGuard::eventFilter(QObject *obj, QEvent *event) {
     const QWidget* widget = static_cast<QWidget*>(obj);
     if (!widget) return QObject::eventFilter(obj, event);
 
@@ -102,20 +97,22 @@ bool MouseWheelAdjustmentGuard::eventFilter(QObject *obj, QEvent *event)
 
 
 //####################################################################################
-//##    PopUpMenuRelocater Class Functions
+//##    DrFilterPopUpMenuRelocater Class Functions
 //####################################################################################
-PopUpMenuRelocater::PopUpMenuRelocater(QObject *parent, int top_offset, int left_offset) : QObject(parent) {
+DrFilterPopUpMenuRelocater::DrFilterPopUpMenuRelocater(QObject *parent, int top_offset, int left_offset) : QObject(parent) {
     m_top_offset =  top_offset;
     m_left_offset = left_offset;
 }
 
-bool PopUpMenuRelocater::eventFilter(QObject *obj, QEvent *event)
-{
+bool DrFilterPopUpMenuRelocater::eventFilter(QObject *obj, QEvent *event) {
     QMenu* menu = dynamic_cast<QMenu*>(obj);
     if (!menu) return QObject::eventFilter(obj, event);
 
     if (event->type() == QEvent::Show)
     {
+        bool oldAnimationEffects = qApp->isEffectEnabled(Qt::UI_AnimateCombo);
+        qApp->setEffectEnabled(Qt::UI_AnimateCombo, false);
+
         QPoint pos = menu->pos();
         int new_x = pos.x() + m_left_offset;
         int new_y = pos.y() + m_top_offset;
@@ -126,6 +123,8 @@ bool PopUpMenuRelocater::eventFilter(QObject *obj, QEvent *event)
         pos.setX(new_x);
         pos.setY(new_y);
         menu->move(pos);
+
+        qApp->setEffectEnabled(Qt::UI_AnimateCombo, oldAnimationEffects);
         return true;
     }
     return QObject::eventFilter(obj, event);
@@ -134,12 +133,11 @@ bool PopUpMenuRelocater::eventFilter(QObject *obj, QEvent *event)
 
 
 //####################################################################################
-//##    ClickAndDragWindow Class Functions
+//##    DrFilterClickAndDragWindow Class Functions
 //####################################################################################
-ClickAndDragWindow::ClickAndDragWindow(QObject *parent) : QObject(parent) {}
+DrFilterClickAndDragWindow::DrFilterClickAndDragWindow(QObject *parent) : QObject(parent) { }
 
-bool ClickAndDragWindow::eventFilter(QObject *obj, QEvent *event)
-{
+bool DrFilterClickAndDragWindow::eventFilter(QObject *obj, QEvent *event) {
     if (event->type() == QEvent::MouseButtonPress) {
         QMouseEvent *mouse_event = dynamic_cast<QMouseEvent*>(event);
         m_press_pos = mouse_event->pos();

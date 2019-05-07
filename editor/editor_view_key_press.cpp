@@ -14,8 +14,7 @@
 //##        Key Events
 //####################################################################################
 // Key press event
-void DrView::keyPressEvent(QKeyEvent *event)
-{
+void DrView::keyPressEvent(QKeyEvent *event) {
     // When space bar is down, enabled mouse press and move to translate viewable area    
     if (event->key() == Qt::Key::Key_Space)     spaceBarDown();
     if (event->key() == Qt::Key::Key_Control)   m_flag_key_down_control = true;
@@ -32,8 +31,7 @@ void DrView::keyPressEvent(QKeyEvent *event)
 }
 
 // Key release event
-void DrView::keyReleaseEvent(QKeyEvent *event)
-{
+void DrView::keyReleaseEvent(QKeyEvent *event) {
     // When space bar is released, change mode back to select / move items
     if (event->key() == Qt::Key::Key_Space)     spaceBarUp();
     if (event->key() == Qt::Key::Key_Control)   m_flag_key_down_control = false;

@@ -15,7 +15,7 @@
 
 #include "chipmunk/chipmunk.h"
 
-enum class RenderType {
+enum class Render_Type {
     Perspective,
     Orthographic,
 };
@@ -32,13 +32,13 @@ enum class Pedal {
     CounterClockwise,
 };
 
-enum class BodyType {
+enum class Body_Type {
     Dynamic,
     Kinematic,
     Static,
 };
 
-enum class ShapeType {
+enum class Shape_Type {
     Circle,                                     // cpCircleShapeNew
     Box,                                        // cpBoxShapeNew
     Segment,    // "Line"                       // cpSegmentShapeNew
@@ -52,8 +52,8 @@ struct SceneObject {
     cpBody     *body;
     cpShape    *shape;
 
-    BodyType    body_type;
-    ShapeType   shape_type;
+    Body_Type   body_type;
+    Shape_Type  shape_type;
 
     double      wheel_speed;
 
@@ -70,21 +70,21 @@ struct SceneObject {
 
 
 // Forward declarations
-class EngineTexture;
-class EngineWorld;
+class DrEngineTexture;
+class DrEngineWorld;
 
 // Type definitions
-typedef std::map<long, EngineTexture*> EngineTextureMap;
-typedef std::map<long, EngineWorld*>   EngineWorldMap;
+typedef std::map<long, DrEngineTexture*> EngineTextureMap;
+typedef std::map<long, DrEngineWorld*>   EngineWorldMap;
 
 // Constants
 constexpr int c_texture_border = 0;
 
 //####################################################################################
-//##    Engine
+//##    DrEngine
 //##        Holds a project ready for use in an OpenGLWidget
 //############################
-class Engine
+class DrEngine
 {
 private:
     EngineTextureMap  m_textures;                               // Map of textures used for this Engine
@@ -112,22 +112,22 @@ public:
     int         fps, last_fps;
     bool        debug = false;
 
-    RenderType  render_type = RenderType::Orthographic;          // Should render perspective or orthographic?
+    Render_Type  render_type = Render_Type::Orthographic;          // Should render perspective or orthographic?
 
     bool        has_scene = false;
     Pedal       gas_pedal = Pedal::None;
 
 
 public:
-    Engine();
+    DrEngine();
 
     //  Friction: 0 = frictionless, unknown limit
     //  Bounce:   0 = no bounce, 1.0 will give a “perfect” bounce. However due to inaccuracies in the simulation using 1.0 or greater is not recommended
     //  Mass:     Not sure
-    SceneObject*    addLine(BodyType body_type, QPointF p1, QPointF p2, double friction, double bounce, double mass);
-    SceneObject*    addCircle(BodyType body_type,  long texture_number, double x, double y, double friction, double bounce, double mass, QPointF velocity);
-    SceneObject*    addBlock( BodyType body_type,  long texture_number, double x, double y, double friction, double bounce, double mass, QPointF velocity);
-    SceneObject*    addPolygon(BodyType body_type, long texture_number, double x, double y, QVector<QPointF> points, double friction, double bounce, double mass, QPointF velocity);
+    SceneObject*    addLine(Body_Type body_type, QPointF p1, QPointF p2, double friction, double bounce, double mass);
+    SceneObject*    addCircle(Body_Type body_type,  long texture_number, double x, double y, double friction, double bounce, double mass, QPointF velocity);
+    SceneObject*    addBlock( Body_Type body_type,  long texture_number, double x, double y, double friction, double bounce, double mass, QPointF velocity);
+    SceneObject*    addPolygon(Body_Type body_type, long texture_number, double x, double y, QVector<QPointF> points, double friction, double bounce, double mass, QPointF velocity);
 
     void        buildSpace();
     void        clearSpace();
@@ -138,7 +138,7 @@ public:
 
     // Textures
     long                addTexture(QString from_asset_string);
-    EngineTexture*      getTexture(long number) { return m_textures[number]; }
+    DrEngineTexture*    getTexture(long number) { return m_textures[number]; }
     EngineTextureMap&   getTextureMap() { return m_textures; }
 
 

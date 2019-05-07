@@ -55,7 +55,16 @@ void OpenGL::paintGL() {
     float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
     m_model_view.setToIdentity();
 
-    if (m_engine->render_type == RenderType::Orthographic) {
+    QVector3D eye( m_engine->getCameraPos().x() * -m_scale, m_engine->getCameraPos().y() * -m_scale, -m_engine->getCameraPos().z() );
+    QVector3D center_of_interest( m_engine->getCameraPos().x() * -m_scale, m_engine->getCameraPos().y() * -m_scale, 0 );
+    QVector3D up(0, 1, 0);
+    QMatrix4x4 model_view, projection;
+    model_view.setToIdentity();
+    model_view.lookAt(eye, center_of_interest, up);
+    projection.setToIdentity();
+    projection.perspective( 50.0f, aspect_ratio, 1.0f, 1000.0f );
+
+    if (m_engine->render_type == Render_Type::Orthographic) {
         double scale =  static_cast<double>(m_scale);
         float cam_x = m_engine->getCameraPos().x() * static_cast<float>(scale);
         float cam_y = m_engine->getCameraPos().y() * static_cast<float>(scale);
@@ -67,11 +76,14 @@ void OpenGL::paintGL() {
         m_model_view.ortho( left, right, bottom, top,  -1.0f, 1.0f);
 
     } else {
-        m_model_view.perspective( 50.0f, aspect_ratio, 1.0f, 1000.0f );
+        ///m_model_view.perspective( 50.0f, aspect_ratio, 1.0f, 1000.0f );
 
         // Sets the camera back 800 pixels
-        m_model_view.translate( m_engine->getCameraPos().x() * -m_scale, m_engine->getCameraPos().y() * -m_scale, m_engine->getCameraPos().z() );
-        m_model_view.scale( m_scale );
+        ///m_model_view.translate( m_engine->getCameraPos().x() * -m_scale, m_engine->getCameraPos().y() * -m_scale, m_engine->getCameraPos().z() );
+        ///m_model_view.scale( m_scale );
+
+        //model_view.scale( m_scale );
+        m_model_view = projection * model_view;
     }
 
     // Rotates the camera around the center of the sceen
@@ -81,10 +93,6 @@ void OpenGL::paintGL() {
 
 
 
-    //myGlobals.matWorld = Matrix.Identity;
-    //myGlobals.matView = Matrix.CreateLookAt(myGlobals.cameraPosition, new Vector3(0, 0, 0), Vector3.Up);
-    //myGlobals.matProj = Matrix.CreateOrthographic(10f, 10f, 0.01f, 500.0f);
-    //mousePoint = theViewport.Project(flex.myCube[block].polyFaces[i].myVertices[ic].Position, globals.matProj, globals.matView, globals.matWorld);
 
 
     // ***** Enable shader program
@@ -95,10 +103,10 @@ void OpenGL::paintGL() {
 
     // ********** Draw each object in space
     for (auto object : m_engine->objects) {
-        if (object->shape_type == ShapeType::Segment) continue;
+        if (object->shape_type == Shape_Type::Segment) continue;
 
         // ***** Render with texture
-        EngineTexture *texture = m_engine->getTexture(object->texture_number);
+        DrEngineTexture *texture = m_engine->getTexture(object->texture_number);
         texture->texture()->bind();
 
         std::vector<float> texCoords;
@@ -118,7 +126,7 @@ void OpenGL::paintGL() {
         QPointF center = object->position;
         float x, y, half_width, half_height;
 
-        if (m_engine->render_type == RenderType::Orthographic) {
+        if (m_engine->render_type == Render_Type::Orthographic) {
             x = static_cast<float>(center.x()) * m_scale;
             y = static_cast<float>(center.y()) * m_scale;
             half_width =  float(texture->width())  * m_scale / 2.0f;
@@ -196,9 +204,9 @@ void OpenGL::paintGL() {
 
             QColor color;
             switch (object->body_type) {
-                case BodyType::Dynamic:         color = Qt::red;        break;
-                case BodyType::Static:          color = Qt::blue;       break;
-                case BodyType::Kinematic:       color = Qt::green;      break;
+                case Body_Type::Dynamic:        color = Qt::red;       break;
+                case Body_Type::Static:         color = Qt::blue;      break;
+                case Body_Type::Kinematic:      color = Qt::green;     break;
             }
 
             QPen cosmetic_pen( QBrush(color), 1);
@@ -208,7 +216,7 @@ void OpenGL::paintGL() {
             brush_color.setAlpha(64);
             painter.setBrush( QBrush( brush_color));
 
-            if (object->shape_type == ShapeType::Circle) {
+            if (object->shape_type == Shape_Type::Circle) {
                 double  radius = cpCircleShapeGetRadius(object->shape) * static_cast<double>(m_scale);
                 float   x_pos = static_cast<float>( object->position.x()) * m_scale;
                 float   y_pos = static_cast<float>( object->position.y()) * m_scale;
@@ -220,18 +228,25 @@ void OpenGL::paintGL() {
                 QPointF l2 = t.map( top );
                 painter.drawLine( point, l2 );
 
-            } else if (object->shape_type == ShapeType::Box) {
+            } else if (object->shape_type == Shape_Type::Box) {
                 double  radius = object->radius * static_cast<double>(m_scale);
                 float   x_pos = static_cast<float>( object->position.x()) * m_scale;
                 float   y_pos = static_cast<float>( object->position.y()) * m_scale;
-                QPointF point = mapToScreen( QVector3D(x_pos, y_pos, 0) );
+                ///QPointF point = mapToScreen( QVector3D(x_pos, y_pos, 0) );
 
-                QRectF  box = QRectF(point.x() - radius, point.y() - radius, radius * 2, radius * 2);
-                QTransform t = QTransform().translate(point.x(), point.y()).rotate(-object->angle).translate(-point.x(), -point.y());
-                QPolygonF rotated_box = t.map( box );
-                painter.drawPolygon( rotated_box );
 
-    //        } else if (object->shape_type == ShapeType::Segment) {
+
+
+//                QVector3D worldPt(7.5, 4.5, 7.5);
+//                QVector3D viewPt = worldPt.project(model_view, projection, viewRect);
+
+
+//                QRectF  box = QRectF(point.x() - radius, point.y() - radius, radius * 2, radius * 2);
+//                QTransform t = QTransform().translate(point.x(), point.y()).rotate(-object->angle).translate(-point.x(), -point.y());
+//                QPolygonF rotated_box = t.map( box );
+//                painter.drawPolygon( rotated_box );
+
+    //        } else if (object->shape_type == Shape_Type::Segment) {
     //            cpVect l1 = cpSegmentShapeGetA( object->shape);
     //            cpVect l2 = cpSegmentShapeGetB( object->shape);
 
@@ -245,7 +260,7 @@ void OpenGL::paintGL() {
     //            painter.setPen( line_pen );
     //            painter.drawLine(p1, p2);
 
-    //        } else if (object->shape_type == ShapeType::Polygon) {
+    //        } else if (object->shape_type == Shape_Type::Polygon) {
     //            QPolygonF poly;
     //            for (int i = 0; i < cpPolyShapeGetCount( object->shape ); i++) {
     //                cpVect vert = cpPolyShapeGetVert( object->shape, i );
@@ -286,7 +301,7 @@ void OpenGL::drawCube() {
     angle++;
     if (angle > 360) angle = 0;
 
-    EngineTexture *texture = m_engine->getTexture( 1 );     // 1 is metal_block
+    DrEngineTexture *texture = m_engine->getTexture( 1 );     // 1 is metal_block
     texture->texture()->bind();
 
     for (int i = 0; i < 5; i++) {
@@ -312,7 +327,7 @@ void OpenGL::drawCube() {
         float width =  texture->width() *  multi;
         float height = texture->height() * multi;
 
-        if (m_engine->render_type == RenderType::Orthographic) {
+        if (m_engine->render_type == Render_Type::Orthographic) {
             x = static_cast<float>(center.x()) * m_scale;
             y = static_cast<float>(center.y()) * m_scale;
             half_width =  width  * m_scale / 2.0f;
@@ -393,7 +408,7 @@ QPointF OpenGL::mapToScreen(QVector3D point3D) {
                                                   point3D.y() - (m_engine->getCameraPos().y() * m_scale),
                                                   point3D.z());
     QVector3D vec;
-    if (m_engine->render_type == RenderType::Orthographic) {
+    if (m_engine->render_type == Render_Type::Orthographic) {
         vec = QVector3D( -point3D.x(), height() - point3D.y(), 0).unproject(identity, m_model_view, QRect(0, 0, width(), height()));
         vec.setX ( -vec.x() );
     } else {

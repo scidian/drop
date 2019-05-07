@@ -18,8 +18,7 @@
 //####################################################################################
 //##    Local Enumerations
 //############################
-enum class Shadow_Types
-{
+enum class Shadow_Types {
     Button_Shadow,
     Tool_Tip_Shadow,
 };

@@ -52,7 +52,7 @@ class DrProject;
 class DrScene;
 class DrView;
 class DrViewRubberBand;
-class WidgetHoverHandler;
+class DrFilterHoverHandler;
 
 
 //####################################################################################
@@ -64,13 +64,12 @@ class FormMain : public QMainWindow, public IEditorRelay
     Q_OBJECT
 
 public:
-    DrProject      *project;                                            // Holds whatever the current open game project is
-
-    Form_Main_Mode  current_mode = Form_Main_Mode::Program_Loading;     // Holds what Form_Main_Mode the program is in
+    DrProject              *project;                                                // Holds whatever the current open game project is
+    Form_Main_Mode          current_mode = Form_Main_Mode::Program_Loading;         // Holds what Form_Main_Mode the program is in
 
 
 private:   
-    WidgetHoverHandler   *m_widget_hover;                               // Pointer to a widget hover handler
+    DrFilterHoverHandler   *m_filter_hover;                                         // Pointer to an event filter hover handler
 
     // ***** Menu Widgets
     QMenuBar       *menuBar;
@@ -208,15 +207,15 @@ signals:
 
 
 //####################################################################################
-//##    ColorSplitter
+//##    DrQSplitterColor
 //##        A demo custom class to show how style sheeting works on a specific class
 //############################
-class ColorSplitter : public QSplitter
+class DrQSplitterColor : public QSplitter
 {
     Q_OBJECT
 
 public:
-    ColorSplitter(QWidget *parent = nullptr) : QSplitter(parent) {}
+    DrQSplitterColor(QWidget *parent = nullptr) : QSplitter(parent) {}
 
 };
 

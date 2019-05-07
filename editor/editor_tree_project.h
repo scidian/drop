@@ -83,14 +83,14 @@ public:
 //##        A sub classed QProxyStyle so we can overwrite events and do some custom
 //##        drawing of TreeWidget list divider in Tree Stage List
 //############################
-class StageTreeHighlightProxy : public QProxyStyle
+class TreeStageHighlightProxy : public QProxyStyle
 {
 private:
     TreeProject     *m_parent_tree;              // Pointer to parent TreeProject
 
 public:
-    explicit StageTreeHighlightProxy(QStyle *baseStyle, TreeProject *parent_tree) : QProxyStyle(baseStyle), m_parent_tree(parent_tree) { }
-    virtual ~StageTreeHighlightProxy() override;
+    explicit TreeStageHighlightProxy(QStyle *baseStyle, TreeProject *parent_tree) : QProxyStyle(baseStyle), m_parent_tree(parent_tree) { }
+    virtual ~TreeStageHighlightProxy() override;
 
     virtual void drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const override;
 

@@ -23,8 +23,8 @@ class DrSettings;
 class DrProperty;
 
 class IEditorRelay;
-class DrTripleSpinBox;
-class WidgetHoverHandler;
+class DrQTripleSpinBox;
+class DrFilterHoverHandler;
 
 // Class constants
 constexpr int    c_inspector_size_left =   3;           // Size policy width of left column
@@ -41,14 +41,14 @@ class TreeInspector: public QTreeWidget
     Q_OBJECT
 
 private:
-    DrProject          *m_project;                      // Pointer to currently loaded project
-    IEditorRelay       *m_editor_relay;                 // Pointer to IEditorRelay class of parent form
-    WidgetHoverHandler *m_widget_hover;                 // Pointer to a widget hover handler
+    DrProject              *m_project;                      // Pointer to currently loaded project
+    IEditorRelay           *m_editor_relay;                 // Pointer to IEditorRelay class of parent form
+    DrFilterHoverHandler   *m_filter_hover;                 // Pointer to an event filter hover handler
 
-    QList<QWidget*>     m_widgets;                      // List of the widgets we built the last time we selected a new item
+    QList<QWidget*>         m_widgets;                      // List of the widgets we built the last time we selected a new item
 
-    long                m_selected_key = c_no_key;      // Unique project key of currently selected item
-    DrType              m_selected_type;                // Stores object type of currently selected item
+    long                    m_selected_key = c_no_key;      // Unique project key of currently selected item
+    DrType                  m_selected_type;                // Stores object type of currently selected item
 
 public:
     explicit        TreeInspector(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
@@ -73,7 +73,7 @@ public:
     QLineEdit*          createLineEdit(DrProperty *property, QFont &font, QSizePolicy size_policy);
     QWidget*            createSlider(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
     QFrame*             createVariableSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy);
-    DrTripleSpinBox*    initializeEmptySpinBox(DrProperty *property, QFont &font, double start_value);
+    DrQTripleSpinBox*   initializeEmptySpinBox(DrProperty *property, QFont &font, double start_value);
     void                setButtonColorFromSystemDialog(QPushButton *button);
     void                updateColorButton(QPushButton *button, QColor color);
 
@@ -89,13 +89,13 @@ private slots:
 //##    TripleSpinBox
 //##        Allows us to control number of decimals being shown in spin box
 //############################
-class DrTripleSpinBox : public QDoubleSpinBox
+class DrQTripleSpinBox : public QDoubleSpinBox
 {
     Q_OBJECT
 
 public:
-    DrTripleSpinBox(QWidget *parent = nullptr) : QDoubleSpinBox(parent) {}
-    virtual ~DrTripleSpinBox() override {}
+    DrQTripleSpinBox(QWidget *parent = nullptr) : QDoubleSpinBox(parent) { }
+    virtual ~DrQTripleSpinBox() override { }
 
 protected:
     virtual QString textFromValue(double value) const override;
@@ -106,13 +106,13 @@ protected:
 //##    DropDownComboBox
 //##        Allows us to move combo listview underneath control to appear as a drop down list
 //############################
-class DrDropDownComboBox : public QComboBox
+class DrQComboBoxDropDown : public QComboBox
 {
     Q_OBJECT
 
 public:
-    DrDropDownComboBox(QWidget *parent = nullptr) : QComboBox(parent) {}
-    virtual ~DrDropDownComboBox() override {}
+    DrQComboBoxDropDown(QWidget *parent = nullptr) : QComboBox(parent) { }
+    virtual ~DrQComboBoxDropDown() override { }
 
 protected:
     virtual void showPopup() override;
@@ -123,13 +123,13 @@ protected:
 //##    CheckBox
 //##        Allows us to move combo listview underneath control to appear as a drop down list
 //############################
-class DrCheckBox : public QCheckBox
+class DrQCheckBox : public QCheckBox
 {
     Q_OBJECT
 
 public:
-    DrCheckBox(QWidget *parent = nullptr) : QCheckBox (parent) {}
-    virtual ~DrCheckBox() override {}
+    DrQCheckBox(QWidget *parent = nullptr) : QCheckBox (parent) { }
+    virtual ~DrQCheckBox() override { }
 
 protected:
     virtual void paintEvent(QPaintEvent *) override;

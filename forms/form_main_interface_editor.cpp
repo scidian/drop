@@ -74,8 +74,8 @@ void FormMain::buildScene(long from_stage_key) {
     sceneEditor->scene_mutex.unlock();
 }
 
-void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Properties> property_keys)
-{
+void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Properties> property_keys) {
+
     // If theres notthing to update, go ahead and get out now
     if (changed_items.isEmpty()) return;
     if (property_keys.isEmpty()) return;
@@ -99,8 +99,7 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
     Dr::SetLabelText(Label_Names::Label_Bottom, "Update Editor Widgets: " + Dr::CurrentTimeAsString() + ", Mode: " + viewEditor->currentViewModeAsString());
 }
 
-void FormMain::updateItemSelection(Editor_Widgets selected_from)
-{
+void FormMain::updateItemSelection(Editor_Widgets selected_from) {
     // Selects items in scene based on new selection in tree view
     if (selected_from != Editor_Widgets::Scene_View)    sceneEditor->updateSelectionFromProjectTree( treeProjectEditor->selectedItems() );
     if (selected_from != Editor_Widgets::Project_Tree)  {

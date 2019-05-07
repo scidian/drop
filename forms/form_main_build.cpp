@@ -29,8 +29,8 @@
 //####################################################################################
 //##        Re-configures FormMain to new mode
 //####################################################################################
-void FormMain::setFormMainMode(Form_Main_Mode new_mode)
-{
+void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
+
     Form_Main_Mode old_mode = current_mode;
     current_mode = new_mode;
 
@@ -42,41 +42,41 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode)
     if ((old_mode != new_mode) && (old_mode != Form_Main_Mode::Program_Loading)) {
         clearToolbar();
         switch (old_mode) {
-        case Form_Main_Mode::World_Editor:
-            widgetCentralEditor = takeCentralWidget();
-            buildObjectInspector( {} );
-            dockAssetsEditor->hide();
-            break;
-        case Form_Main_Mode::Clear:
-            widgetCentral = takeCentralWidget();
-            break;
+            case Form_Main_Mode::World_Editor:
+                widgetCentralEditor = takeCentralWidget();
+                buildObjectInspector( {} );
+                dockAssetsEditor->hide();
+                break;
+            case Form_Main_Mode::Clear:
+                widgetCentral = takeCentralWidget();
+                break;
 
-        default:    Dr::ShowMessageBox("setFormMainMode, clearing - Mode not known");
+            default:    Dr::ShowMessageBox("setFormMainMode, clearing - Mode not known");
         }
     }
     setToolbar(new_mode);           // Sets toolbar widgets for the new mode selected
 
     // ***** Set up new layout
     switch (new_mode) {
-    case Form_Main_Mode::World_Editor:
-        Dr::SetDoneLoading(false);
-            setWindowTitle( tr("Drop") + " - " + project->getOption(Project_Options::Name).toString() );
-            this->setCentralWidget( widgetCentralEditor );
-            buildAssetTree();
-            dockAssetsEditor->show();
-            buildProjectTree();
-            sceneEditor->setCurrentStageKeyShown(c_no_key);
-            buildSceneAfterLoading( project->getOption(Project_Options::Current_Stage).toInt() );    
-        break;
+        case Form_Main_Mode::World_Editor:
+            Dr::SetDoneLoading(false);
+                setWindowTitle( tr("Drop") + " - " + project->getOption(Project_Options::Name).toString() );
+                this->setCentralWidget( widgetCentralEditor );
+                buildAssetTree();
+                dockAssetsEditor->show();
+                buildProjectTree();
+                sceneEditor->setCurrentStageKeyShown(c_no_key);
+                buildSceneAfterLoading( project->getOption(Project_Options::Current_Stage).toInt() );
+            break;
 
-    case Form_Main_Mode::Clear:  
-        while (Dr::CheckDoneLoading() == false) QApplication::processEvents();
-        Dr::SetDoneLoading(false);
-            setWindowTitle( tr("Drop") );
-            this->setCentralWidget( widgetCentral );
-        break;
+        case Form_Main_Mode::Clear:
+            while (Dr::CheckDoneLoading() == false) QApplication::processEvents();
+            Dr::SetDoneLoading(false);
+                setWindowTitle( tr("Drop") );
+                this->setCentralWidget( widgetCentral );
+            break;
 
-    default:    Dr::ShowMessageBox("setFormMainMode, setting - Mode not known");
+        default:    Dr::ShowMessageBox("setFormMainMode, setting - Mode not known");
     }
 
     QApplication::processEvents();
@@ -92,8 +92,7 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode)
 //####################################################################################
 //##        Sets initial settings of FormMain
 //####################################################################################
-void FormMain::initializeFormMainSettings()
-{
+void FormMain::initializeFormMainSettings() {
     // ***** Main window settings
     this->setObjectName(QStringLiteral("formMain"));
     this->setWindowModality(Qt::NonModal);
@@ -110,16 +109,16 @@ void FormMain::initializeFormMainSettings()
     Dr::CenterFormOnScreen(this, this, 80, 100);
 
     // ***** Initialize hover handler
-    m_widget_hover = new WidgetHoverHandler(this);
-    connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
+    m_filter_hover = new DrFilterHoverHandler(this);
+    connect(m_filter_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
 }
 
 
 //####################################################################################
 //##        Builds shared widgets used for all modes of FormMain
 //####################################################################################
-void FormMain::buildWidgetsShared()
-{
+void FormMain::buildWidgetsShared() {
+
     QFont font, font_larger;
     font.setPointSize(Dr::FontSize());
     font_larger.setPointSize(Dr::FontSize() + 2);

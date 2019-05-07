@@ -24,8 +24,7 @@
 //####################################################################################
 //##    Updates status bar, enables / disables buttons as necessary
 //####################################################################################
-void FormMain::updateToolbar()
-{
+void FormMain::updateToolbar() {
     QString selected;
     if (sceneEditor->getSelectionCount() == 0) {
         selected = "No Selection";
@@ -58,8 +57,7 @@ void FormMain::updateToolbar()
 //####################################################################################
 //##    Clears and recreates the toolbar based on the new mode
 //####################################################################################
-void FormMain::clearToolbar()
-{
+void FormMain::clearToolbar() {
     for (auto widget : toolbarWidgets) {
         widgetToolbarLayout->removeWidget( widget );
         widget->hide();
@@ -71,52 +69,44 @@ void FormMain::clearToolbar()
     }
 }
 
-void FormMain::setToolbar(Form_Main_Mode new_mode)
-{
+void FormMain::setToolbar(Form_Main_Mode new_mode) {
     switch (new_mode) {
-    case Form_Main_Mode::World_Editor:
-        addToolbarGroup( widgetGroupLayering,   true );
-        addToolbarGroup( widgetGroupTransform,  true );
-        addToolbarGroup( widgetGroupGrid,       true );
-        addToolbarGroup( widgetGroupPlay,       false );
-        addToolbarGroup( widgetGroupSettings,   false );
+        case Form_Main_Mode::World_Editor:
+            addToolbarGroup( widgetGroupLayering,   true );
+            addToolbarGroup( widgetGroupTransform,  true );
+            addToolbarGroup( widgetGroupGrid,       true );
+            addToolbarGroup( widgetGroupPlay,       false );
+            addToolbarGroup( widgetGroupSettings,   false );
+            break;
 
-// Shouldnt need this any more
-//        for (auto button : buttonsGroupLayering->buttons() )
-//            button->setEnabled(false);
-
-
-        break;
-
-    case Form_Main_Mode::Clear:
-        addToolbarGroup( widgetGroupPlay,       false );
-        addToolbarGroup( widgetGroupSettings,   false );
-        break;
+        case Form_Main_Mode::Clear:
+            addToolbarGroup( widgetGroupPlay,       false );
+            addToolbarGroup( widgetGroupSettings,   false );
+            break;
 
 
-    // !!!!! TODO
-    case Form_Main_Mode::World_Map:
-        addToolbarGroup( widgetGroupPlay,       false );
-        addToolbarGroup( widgetGroupSettings,   false );
-        break;
+        // !!!!! TODO
+        case Form_Main_Mode::World_Map:
+            addToolbarGroup( widgetGroupPlay,       false );
+            addToolbarGroup( widgetGroupSettings,   false );
+            break;
 
-    case Form_Main_Mode::Stage_Map:
-        addToolbarGroup( widgetGroupPlay,       false );
-        addToolbarGroup( widgetGroupSettings,   false );
-        break;
+        case Form_Main_Mode::Stage_Map:
+            addToolbarGroup( widgetGroupPlay,       false );
+            addToolbarGroup( widgetGroupSettings,   false );
+            break;
 
-    case Form_Main_Mode::UI_Editor:
-        addToolbarGroup( widgetGroupPlay,       false );
-        addToolbarGroup( widgetGroupSettings,   false );
-        break;
+        case Form_Main_Mode::UI_Editor:
+            addToolbarGroup( widgetGroupPlay,       false );
+            addToolbarGroup( widgetGroupSettings,   false );
+            break;
 
-    case Form_Main_Mode::Program_Loading:
-        break;
+        case Form_Main_Mode::Program_Loading:
+            break;
     }
 }
 
-void FormMain::addToolbarGroup(QWidget *group, bool add_spacer)
-{
+void FormMain::addToolbarGroup(QWidget *group, bool add_spacer) {
     toolbarWidgets.append(group);
     widgetToolbarLayout->addWidget(group);
     group->show();

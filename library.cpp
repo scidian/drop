@@ -23,8 +23,7 @@ namespace Dr {
 //####################################################################################
 //##        Makes sure scale is not zero so we don't mess up QGraphicsItem transform
 //####################################################################################
-double CheckScaleNotZero(double scale_to_check)
-{
+double CheckScaleNotZero(double scale_to_check) {
     if (scale_to_check <  .001 && scale_to_check >= 0) scale_to_check =  .001;
     if (scale_to_check > -.001 && scale_to_check <= 0) scale_to_check = -.001;
     return scale_to_check;
@@ -34,9 +33,7 @@ double CheckScaleNotZero(double scale_to_check)
 //####################################################################################
 //##        Returns true if 'number_desired' is within +-'tolerance' of 'number_to_check'
 //####################################################################################
-//
-bool IsCloseTo(double number_desired, double number_to_check, double tolerance)
-{
+bool IsCloseTo(double number_desired, double number_to_check, double tolerance) {
     return ( (number_to_check <= (number_desired + tolerance)) && (number_to_check >= (number_desired - tolerance)) );
 }
 
@@ -45,8 +42,7 @@ bool IsCloseTo(double number_desired, double number_to_check, double tolerance)
 //##        Angle Comparision Functions
 //####################################################################################
 // Returns true of the two angles are parrallel or perpendicular
-bool IsSimilarAngle(double angle1, double angle2, double tolerance)
-{
+bool IsSimilarAngle(double angle1, double angle2, double tolerance) {
     while (angle1 >= 90) { angle1 -= 90; }
     while (angle1 <   0) { angle1 += 90; }
     while (angle2 >= 90) { angle2 -= 90; }
@@ -55,8 +51,7 @@ bool IsSimilarAngle(double angle1, double angle2, double tolerance)
 }
 
 // Returns true is 'check_angle' in equal to 0, 90, 180, or 270, i.e. "square" angle
-bool IsSquare(double check_angle)
-{
+bool IsSquare(double check_angle) {
     check_angle = abs(check_angle);
     while (check_angle >= 360) check_angle -= 360;
     if (qFuzzyCompare(check_angle, 0))   return true;
@@ -67,8 +62,7 @@ bool IsSquare(double check_angle)
 }
 
 // Returns 'angle' rounded to the nearest 90 multiple of 'angle_to_find'
-double Closest90DegreeAngle(double angle, double angle_to_find)
-{
+double Closest90DegreeAngle(double angle, double angle_to_find) {
     double closest_angle =    0;
     double distance_apart = 180;
     for (double d = angle_to_find - 1080; d < angle_to_find + 1080; d += 90.0) {
@@ -84,8 +78,7 @@ double Closest90DegreeAngle(double angle, double angle_to_find)
 //####################################################################################
 //##        Trimms double to max_decimal_places, and then removes any trailing zeros
 //####################################################################################
-QString RemoveTrailingDecimals(double value, int max_decimal_places)
-{
+QString RemoveTrailingDecimals(double value, int max_decimal_places) {
     double int_part, decimal_part = 0;
 
     // Remove any extra starting decimal places
@@ -107,15 +100,13 @@ QString RemoveTrailingDecimals(double value, int max_decimal_places)
 //##        These functions check the width of text that would be drawn
 //##        with a particular font
 //####################################################################################
-int CheckFontWidth(QFont font, QString text_to_check)
-{
+int CheckFontWidth(QFont font, QString text_to_check) {
     QFontMetrics font_metrics { font };
     return font_metrics.horizontalAdvance( text_to_check );
 }
 
 // Shortens label text to fit within a widget (max_width), used in editor_tree_assets frames
-QString FitStringToWidth(QFont font, QString text_to_check, int max_width, bool use_dots)
-{
+QString FitStringToWidth(QFont font, QString text_to_check, int max_width, bool use_dots) {
     QString text = text_to_check;
     QFontMetrics font_metrics { font };
     int width = font_metrics.horizontalAdvance( text_to_check );
@@ -134,16 +125,14 @@ QString FitStringToWidth(QFont font, QString text_to_check, int max_width, bool 
 //####################################################################################
 //##        Returns System time as string
 //####################################################################################
-QString CurrentTimeAsString()
-{
+QString CurrentTimeAsString() {
     return QTime().currentTime().toString() + "." + QString::number(QTime().currentTime().msec());
 }
 
 //####################################################################################
 //##        Used to show a modal error message
 //####################################################################################
-void ShowErrorMessage(QString function_name, QString error_message)
-{
+void ShowErrorMessage(QString function_name, QString error_message) {
     QMessageBox::warning(nullptr, "Error", "Error from " + function_name + "(): " + error_message);
 }
 
@@ -151,8 +140,7 @@ void ShowErrorMessage(QString function_name, QString error_message)
 //####################################################################################
 //##        Used to show a modal messagebox
 //####################################################################################
-void ShowMessageBox(QString new_message, QPixmap pixmap)
-{
+void ShowMessageBox(QString new_message, QPixmap pixmap) {
     QMessageBox *msg_box = new QMessageBox(nullptr);
 
     msg_box->setText(new_message);

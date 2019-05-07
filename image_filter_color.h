@@ -13,8 +13,7 @@
 //####################################################################################
 //##    Different types of filters that can be applied to a QPixmap
 //############################
-enum class Filter_Type
-{
+enum class Image_Filter_Type {
     Brightness,
     Contrast,
     Saturation,
@@ -29,8 +28,7 @@ enum class Filter_Type
 //####################################################################################
 //##    Image editing declarations
 //############################
-namespace DrFilter
-{
+namespace DrImaging {
 
     QPixmap changeBrightness(const QPixmap& pixmap, int brightness);
     QPixmap changeContrast(const QPixmap& pixmap, int contrast);

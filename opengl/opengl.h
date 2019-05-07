@@ -15,14 +15,14 @@
 #include <QOpenGLWidget>
 #include <QMatrix4x4>
 
-class Engine;
+class DrEngine;
 
 class OpenGL : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
 
 private:
-    Engine         *m_engine;
+    DrEngine       *m_engine;
 
     QMatrix4x4      m_model_view;
 
@@ -42,7 +42,7 @@ private:
 
 public:
     // Constructor / Destructor
-    OpenGL(QWidget *parent, Engine *engine);
+    OpenGL(QWidget *parent, DrEngine *engine);
     ~OpenGL() override;
 
     // Event Overrides

@@ -36,20 +36,19 @@
 //##        Constructor
 //####################################################################################
 TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
-                       QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay)
-{
+                       QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay) {
     // Initialize hover handler
-    m_widget_hover = new WidgetHoverHandler(this);
-    connect(m_widget_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
+    m_filter_hover = new DrFilterHoverHandler(this);
+    connect(m_filter_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
 
     // Connect this widget to the hover handler
-    m_widget_hover->attachToHoverHandler(this, Advisor_Info::Asset_List);
+    m_filter_hover->attachToHoverHandler(this, Advisor_Info::Asset_List);
 
     // Build search bar
     m_search_widget = new QWidget(parent);
     m_search_widget->setFixedHeight(30);
     m_search_widget->setObjectName(QStringLiteral("assetSearchWidget"));
-    m_widget_hover->attachToHoverHandler(m_search_widget, Advisor_Info::Asset_Search);
+    m_filter_hover->attachToHoverHandler(m_search_widget, Advisor_Info::Asset_Search);
     m_search_widget->setToolTip( Advisor_Info::Asset_Search[0] );
         m_search_layout = new QVBoxLayout(m_search_widget);
         m_search_layout->setMargin(4);
@@ -65,12 +64,11 @@ TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor
     parent->layout()->addWidget(m_search_widget);
 }
 
-// SLOT: Catches signals from m_widget_hover and passes to InterfaceEditorRelay
+// SLOT: Catches signals from m_filter_hover and passes to InterfaceEditorRelay
 void TreeAssets::setAdvisorInfo(QString header, QString body) { m_editor_relay->setAdvisorInfo(header, body); }
 
 // SLOT: Catches signal textChanged() from m_search_bar QLineEdit search bar
-void TreeAssets::searchTextChanged(QString new_text)
-{
+void TreeAssets::searchTextChanged(QString new_text) {
     buildAssetTree(new_text);
 }
 
@@ -79,8 +77,8 @@ void TreeAssets::searchTextChanged(QString new_text)
 //####################################################################################
 //##        Tree Building Functions
 //####################################################################################
-void TreeAssets::buildAssetTree(QString search_text)
-{
+void TreeAssets::buildAssetTree(QString search_text) {
+
     // ***** Initialize some QWidget helper items
     QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
     QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -105,35 +103,35 @@ void TreeAssets::buildAssetTree(QString search_text)
     this->addTopLevelItem(character_item);
     this->addTopLevelItem(objects_item);
     this->addTopLevelItem(text_item);
-    CategoryButton *character_button = initializeCatergoryButton(character_item, "  Characters");
-    CategoryButton *objects_button =   initializeCatergoryButton(objects_item,   "  Objects");
-    CategoryButton *text_button =      initializeCatergoryButton(text_item,      "  Text");
+    DrQPushButtonCategory *character_button = initializeCatergoryButton(character_item, "  Characters");
+    DrQPushButtonCategory *objects_button =   initializeCatergoryButton(objects_item,   "  Objects");
+    DrQPushButtonCategory *text_button =      initializeCatergoryButton(text_item,      "  Text");
 
     QPixmap char_icon( ":/assets/tree_icons/tree_character.png" );
-    char_icon = DrFilter::changeToGrayscale(char_icon);
-    char_icon = DrFilter::changeBrightness(char_icon, 200);
+    char_icon = DrImaging::changeToGrayscale(char_icon);
+    char_icon = DrImaging::changeBrightness(char_icon, 200);
     character_button->setIcon( char_icon );
     QPixmap object_icon( ":/assets/tree_icons/tree_object.png" );
-    object_icon = DrFilter::changeToGrayscale(object_icon);
-    object_icon = DrFilter::changeBrightness(object_icon, 200);
+    object_icon = DrImaging::changeToGrayscale(object_icon);
+    object_icon = DrImaging::changeBrightness(object_icon, 200);
     objects_button->setIcon( object_icon );
     QPixmap text_icon( ":/assets/tree_icons/tree_text.png" );
-    text_icon = DrFilter::changeToGrayscale(text_icon);
-    text_icon = DrFilter::changeBrightness(text_icon, 200);
+    text_icon = DrImaging::changeToGrayscale(text_icon);
+    text_icon = DrImaging::changeBrightness(text_icon, 200);
     text_button->setIcon( text_icon );
 
-    m_widget_hover->attachToHoverHandler(character_button, Advisor_Info::Asset_Character);
-    m_widget_hover->attachToHoverHandler(objects_button,   Advisor_Info::Asset_Object);
-    m_widget_hover->attachToHoverHandler(text_button,      Advisor_Info::Asset_Text);
+    m_filter_hover->attachToHoverHandler(character_button, Advisor_Info::Asset_Character);
+    m_filter_hover->attachToHoverHandler(objects_button,   Advisor_Info::Asset_Object);
+    m_filter_hover->attachToHoverHandler(text_button,      Advisor_Info::Asset_Text);
 
 
     // ***** Creates a frame sto hold all assets of each type
     QFrame      *assets_frame_characters = new QFrame();
     QFrame      *assets_frame_objects =    new QFrame();
     QFrame      *assets_frame_text =       new QFrame();
-    FlowLayout  *grid_layout_characters =  new FlowLayout(assets_frame_characters, 8, 0, 4, 0, 0, 0);
-    FlowLayout  *grid_layout_objects =     new FlowLayout(assets_frame_objects,    8, 0, 4, 0, 0, 0);
-    FlowLayout  *grid_layout_text =        new FlowLayout(assets_frame_text,       8, 0, 4, 0, 0, 0);
+    DrQLayoutFlow  *grid_layout_characters =  new DrQLayoutFlow(assets_frame_characters, 8, 0, 4, 0, 0, 0);
+    DrQLayoutFlow  *grid_layout_objects =     new DrQLayoutFlow(assets_frame_objects,    8, 0, 4, 0, 0, 0);
+    DrQLayoutFlow  *grid_layout_text =        new DrQLayoutFlow(assets_frame_text,       8, 0, 4, 0, 0, 0);
     assets_frame_characters->setObjectName("assetsContainer");
     assets_frame_objects->setObjectName(   "assetsContainer");
     assets_frame_text->setObjectName(      "assetsContainer");
@@ -153,12 +151,12 @@ void TreeAssets::buildAssetTree(QString search_text)
         QRect name_rect =  QRect(10, 0, frame_size.width() - 20, 25);
         QSize pix_size =   QSize(frame_size.width() - 25, frame_size.height() - 30);
 
-        // ***** Store current asset key in widget and install a mouse handler event filter on the item, AssetMouseHandler
+        // ***** Store current asset key in widget and install a mouse handler event filter on the item, DrFilterAssetMouseHandler
         QFrame *single_asset = new QFrame();
         single_asset->setObjectName("assetFrame");
         single_asset->setProperty(User_Property::Key,        QVariant::fromValue( asset_pair.second->getKey() ));
         single_asset->setProperty(User_Property::Mouse_Down, false);
-        single_asset->installEventFilter(new AssetMouseHandler(single_asset, m_editor_relay));
+        single_asset->installEventFilter(new DrFilterAssetMouseHandler(single_asset, m_editor_relay));
         single_asset->setFixedSize(frame_size);
 
         // Store pointer to frame in a list for future reference
@@ -185,19 +183,19 @@ void TreeAssets::buildAssetTree(QString search_text)
         vertical_split->setContentsMargins(0, 14, 0, 0);                    // Put some space at the top
             QPixmap pix;
             switch (asset_pair.second->getAssetType()) {
-            case DrAssetType::Object:
-                pix = asset_pair.second->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
-                m_widget_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Object[1] );
-                break;
-            case DrAssetType::Text:
-                ///pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->getFontPixmap();
-                pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->createText( "Aa" );
-                m_widget_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Text[1] );
-                break;
-            case DrAssetType::Character:
-                pix = asset_pair.second->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
-                m_widget_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Character[1] );
-                break;
+                case DrAssetType::Object:
+                    pix = asset_pair.second->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
+                    m_filter_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Object[1] );
+                    break;
+                case DrAssetType::Text:
+                    ///pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->getFontPixmap();
+                    pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->createText( "Aa" );
+                    m_filter_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Text[1] );
+                    break;
+                case DrAssetType::Character:
+                    pix = asset_pair.second->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
+                    m_filter_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Character[1] );
+                    break;
             }
 
             QLabel *asset_pix = new QLabel(single_asset);
@@ -213,18 +211,18 @@ void TreeAssets::buildAssetTree(QString search_text)
 
         // ***** Add widget to proper category
         switch (asset_pair.second->getAssetType()) {
-        case DrAssetType::Object:
-            grid_layout_objects->addWidget(single_asset);
-            objects_button->setEnabled(true);
-            break;
-        case DrAssetType::Text:
-            grid_layout_text->addWidget(single_asset);
-            text_button->setEnabled(true);
-            break;
-        case DrAssetType::Character:
-            grid_layout_characters->addWidget(single_asset);
-            character_button->setEnabled(true);
-            break;
+            case DrAssetType::Object:
+                grid_layout_objects->addWidget(single_asset);
+                objects_button->setEnabled(true);
+                break;
+            case DrAssetType::Text:
+                grid_layout_text->addWidget(single_asset);
+                text_button->setEnabled(true);
+                break;
+            case DrAssetType::Character:
+                grid_layout_characters->addWidget(single_asset);
+                character_button->setEnabled(true);
+                break;
         }
 
         rowCount++;
@@ -255,8 +253,7 @@ void TreeAssets::buildAssetTree(QString search_text)
 
 
 // Create a child TreeWidgetItem attached to the TopLevel category item
-void TreeAssets::addAssetsToCategory(QTreeWidgetItem *tree_item, QFrame *asset_frame)
-{
+void TreeAssets::addAssetsToCategory(QTreeWidgetItem *tree_item, QFrame *asset_frame) {
     QTreeWidgetItem *asset_collection = new QTreeWidgetItem();
     asset_collection->setDisabled(true);
     tree_item->addChild(asset_collection);
@@ -264,8 +261,7 @@ void TreeAssets::addAssetsToCategory(QTreeWidgetItem *tree_item, QFrame *asset_f
 }
 
 // Create and style a buttons to be used as a header items for the categories
-CategoryButton* TreeAssets::initializeCatergoryButton(QTreeWidgetItem *tree_item, QString name)
-{
+DrQPushButtonCategory* TreeAssets::initializeCatergoryButton(QTreeWidgetItem *tree_item, QString name) {
     QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 14px 14px; "
                                                 " padding-left: 10px;"
                                                 " color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
@@ -284,7 +280,7 @@ CategoryButton* TreeAssets::initializeCatergoryButton(QTreeWidgetItem *tree_item
                                   " QPushButton:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } "
                                   " QPushButton:pressed  { color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
                                   " QPushButton:disabled { color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } ");
-    CategoryButton *button = new CategoryButton(name,
+    DrQPushButtonCategory *button = new DrQPushButtonCategory(name,
                                                 Dr::GetColor(Window_Colors::Text),
                                                 Dr::GetColor(Window_Colors::Text_Dark),
                                                 nullptr, tree_item);
