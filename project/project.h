@@ -39,6 +39,7 @@ typedef std::map<long, DrAsset*> AssetMap;
 typedef std::map<long, DrImage*> ImageMap;
 typedef std::map<Project_Options, QVariant>  OptionMap;
 
+// Constants
 constexpr long c_key_starting_number = 1;
 
 //####################################################################################

@@ -62,7 +62,6 @@ public:
 
     // Function Calls
     void            drawCube();
-    QOpenGLTexture* initTexture(QString image_name);
     QPointF         mapToScreen(QVector3D point3D);
     void            zoomInOut(int level);
 

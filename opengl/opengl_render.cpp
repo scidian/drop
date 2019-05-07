@@ -9,6 +9,7 @@
 #include <QPainter>
 
 #include "engine/engine.h"
+#include "engine/engine_texture.h"
 #include "opengl/opengl.h"
 
 
@@ -84,13 +85,14 @@ void OpenGL::paintGL() {
         if (object->shape_type == ShapeType::Segment) continue;
 
         // ***** Render with texture
-        object->texture->bind();
+        EngineTexture *texture = m_engine->getTexture(object->texture_number);
+        texture->texture()->bind();
 
         std::vector<float> texCoords;
         texCoords.clear();
         texCoords.resize( 8 );
-        float one_x = (1 / object->texture->width())  * c_texture_border;
-        float one_y = (1 / object->texture->height()) * c_texture_border;
+        float one_x = (1 / texture->width())  * c_texture_border;
+        float one_y = (1 / texture->height()) * c_texture_border;
         texCoords[0] = 1 - one_x;    texCoords[1] = 1 - one_y;
         texCoords[2] =     one_x;    texCoords[3] = 1 - one_y;
         texCoords[4] = 1 - one_x;    texCoords[5] =     one_y;
@@ -106,13 +108,13 @@ void OpenGL::paintGL() {
         if (m_engine->render_type == RenderType::Orthographic) {
             x = static_cast<float>(center.x()) * m_scale;
             y = static_cast<float>(center.y()) * m_scale;
-            half_width =  float(object->texture->width())  * m_scale / 2.0f;
-            half_height = float(object->texture->height()) * m_scale / 2.0f;
+            half_width =  float(texture->width())  * m_scale / 2.0f;
+            half_height = float(texture->height()) * m_scale / 2.0f;
         } else {
             x = static_cast<float>(center.x());
             y = static_cast<float>(center.y());
-            half_width =  float(object->texture->width())  / 2.0f;
-            half_height = float(object->texture->height()) / 2.0f;
+            half_width =  float(texture->width())  / 2.0f;
+            half_height = float(texture->height()) / 2.0f;
         }
 
 
@@ -157,7 +159,7 @@ void OpenGL::paintGL() {
         m_program.disableAttributeArray( m_vertexAttr );
         m_program.disableAttributeArray( m_texCoordAttr );
 
-        object->texture->release();
+        texture->texture()->release();
     }
 
     // ***** Disable shader program, end native drawing
@@ -269,14 +271,15 @@ void OpenGL::drawCube() {
     angle++;
     if (angle > 360) angle = 0;
 
-    m_engine->t_metal_block->bind();
+    EngineTexture *texture = m_engine->getTexture( 1 );     // 1 is metal_block
+    texture->texture()->bind();
 
     for (int i = 0; i < 5; i++) {
         std::vector<float> texCoords;
         texCoords.clear();
         texCoords.resize( 8 );
-        float one_x = (1 / m_engine->t_metal_block->width())  * c_texture_border;
-        float one_y = (1 / m_engine->t_metal_block->height()) * c_texture_border;
+        float one_x = (1 / texture->width())  * c_texture_border;
+        float one_y = (1 / texture->height()) * c_texture_border;
         texCoords[0] = 1 - one_x;    texCoords[1] = 1 - one_y;
         texCoords[2] =     one_x;    texCoords[3] = 1 - one_y;
         texCoords[4] = 1 - one_x;    texCoords[5] =     one_y;
@@ -291,8 +294,8 @@ void OpenGL::drawCube() {
         float half_no_border;
 
         float multi =  3;
-        float width =  m_engine->t_metal_block->width() *  multi;
-        float height = m_engine->t_metal_block->height() * multi;
+        float width =  texture->width() *  multi;
+        float height = texture->height() * multi;
 
         if (m_engine->render_type == RenderType::Orthographic) {
             x = static_cast<float>(center.x()) * m_scale;
@@ -360,7 +363,7 @@ void OpenGL::drawCube() {
         m_program.disableAttributeArray( m_texCoordAttr );
     }
 
-    m_engine->t_metal_block->release();
+    texture->texture()->release();
 
 }
 

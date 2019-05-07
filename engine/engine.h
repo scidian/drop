@@ -45,7 +45,7 @@ enum class ShapeType {
 };
 
 struct SceneObject {
-    QOpenGLTexture  *texture;
+    long        texture_number;
 
     cpBody     *body;
     cpShape    *shape;
@@ -67,39 +67,39 @@ struct SceneObject {
 };
 
 
-constexpr int c_texture_border = 0;
-
-
-class EngineImage;
+// Forward declarations
+class EngineTexture;
 class EngineWorld;
 
+// Type definitions
+typedef std::map<long, EngineTexture*> EngineTextureMap;
+typedef std::map<long, EngineWorld*>   EngineWorldMap;
+
+// Constants
+constexpr int c_texture_border = 0;
+
+//####################################################################################
+//##    Engine
+//##        Holds a project ready for use in an OpenGLWidget
+//############################
 class Engine
 {
 private:
-    std::map<long, EngineImage*>    images;
-    std::map<long, EngineWorld*>    worlds;
+    EngineTextureMap  m_textures;
+    EngineWorldMap    m_worlds;
 
-    cpSpace    *space;                          // Current physics space shown on screen
+    cpSpace    *m_space;                        // Current physics space shown on screen
 
-    cpFloat     time_step = 1 / 60.0;           // Current time step, it is *highly* recommended to use a fixed size time step.
-    cpVect      gravity;                        // Current global gravity applied to current space. Defaults to cpvzero. Can be overridden on a per body basis
+    cpFloat     m_time_step = 1 / 60.0;         // Current time step, it is *highly* recommended to use a fixed size time step.
+    cpVect      m_gravity;                      // Current global gravity applied to current space. Defaults to cpvzero. Can be overridden on a per body basis
                                                 //      by writing custom integration functions. Changing the gravity will activate all sleeping bodies in the space.
-    cpFloat     damping;                        // A value of 0.9 means that each body will lose 10% of its velocity per second. Defaults to 1.
+    cpFloat     m_damping;                      // A value of 0.9 means that each body will lose 10% of its velocity per second. Defaults to 1.
                                                 //      Like gravity, it can be overridden on a per body basis.
 
 
 public:
 
     QVector<SceneObject*>   objects;
-
-    // Textures
-    QOpenGLTexture     *t_ball;
-    QOpenGLTexture     *t_metal_block;
-    QOpenGLTexture     *t_moon_plant;
-    QOpenGLTexture     *t_rover_body;
-    QOpenGLTexture     *t_rover_wheel;
-    QOpenGLTexture     *t_spare_wheel;
-
 
     Demo        demo = Demo::Spawn;
     QTime       fps_timer;
@@ -120,26 +120,34 @@ public:
     //  Bounce:   0 = no bounce, 1.0 will give a “perfect” bounce. However due to inaccuracies in the simulation using 1.0 or greater is not recommended
     //  Mass:     Not sure
     SceneObject*    addLine(BodyType body_type, QPointF p1, QPointF p2, double friction, double bounce, double mass);
-    SceneObject*    addCircle(BodyType body_type, QOpenGLTexture *txt, double x, double y, double friction, double bounce, double mass, QPointF velocity);
-    SceneObject*    addBlock(BodyType body_type, QOpenGLTexture *txt, double x, double y, double friction, double bounce, double mass, QPointF velocity);
-    SceneObject*    addPolygon(BodyType body_type, QOpenGLTexture *txt, double x, double y, QVector<QPointF> points, double friction, double bounce, double mass, QPointF velocity);
+    SceneObject*    addCircle(BodyType body_type,  long texture_number, double x, double y, double friction, double bounce, double mass, QPointF velocity);
+    SceneObject*    addBlock( BodyType body_type,  long texture_number, double x, double y, double friction, double bounce, double mass, QPointF velocity);
+    SceneObject*    addPolygon(BodyType body_type, long texture_number, double x, double y, QVector<QPointF> points, double friction, double bounce, double mass, QPointF velocity);
 
     void        buildSpace();
     void        clearSpace();
     void        updateSpace();
 
+    void        deleteResources();
 
-    // Getter and Setters
+
+    // Textures
+    long                addTexture(QString from_asset_string);
+    EngineTexture*      getTexture(long number) { return m_textures[number]; }
+    EngineTextureMap&   getTextureMap() { return m_textures; }
+
+
+    // Getter and Setters    
     bool        debugOn() { return debug; }
 
-    cpSpace*    getSpace()      { return space; }
-    cpFloat     getTimeStep()   { return time_step; }
-    cpVect      getGravity()    { return gravity; }
-    cpFloat     getDamping()    { return damping; }
+    cpSpace*    getSpace()      { return m_space; }
+    cpFloat     getTimeStep()   { return m_time_step; }
+    cpVect      getGravity()    { return m_gravity; }
+    cpFloat     getDamping()    { return m_damping; }
 
-    void        setTimeStep(cpFloat new_time_step) { time_step = new_time_step; }
-    void        setGravity(cpVect new_gravity) { gravity = new_gravity; }
-    void        setDamping(cpFloat new_damping) { damping = new_damping; }
+    void        setTimeStep(cpFloat new_time_step) { m_time_step = new_time_step; }
+    void        setGravity(cpVect new_gravity) { m_gravity = new_gravity; }
+    void        setDamping(cpFloat new_damping) { m_damping = new_damping; }
 
 };
 

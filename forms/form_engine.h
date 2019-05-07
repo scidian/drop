@@ -17,6 +17,10 @@
 class Engine;
 class OpenGL;
 
+//####################################################################################
+//##    FormEngine
+//##        Form that displays the Game Engine
+//############################
 class FormEngine : public QMainWindow
 {
     Q_OBJECT

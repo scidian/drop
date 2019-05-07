@@ -101,8 +101,19 @@ void FormEngine::on_pushDebug_clicked() {
     m_opengl->update();
 }
 
-void FormEngine::on_pushSpawn_clicked() { m_timer->stop();  m_engine->clearSpace();   m_engine->demo = Demo::Spawn;     m_engine->buildSpace();   }
-void FormEngine::on_pushCar_clicked() {   m_timer->stop();  m_engine->clearSpace();   m_engine->demo = Demo::Car;       m_engine->buildSpace();   }
+void FormEngine::on_pushSpawn_clicked() {
+    m_timer->stop();
+    m_engine->clearSpace();
+    m_engine->demo = Demo::Spawn;
+    m_engine->buildSpace();
+}
+
+void FormEngine::on_pushCar_clicked() {
+    m_timer->stop();
+    m_engine->clearSpace();
+    m_engine->demo = Demo::Car;
+    m_engine->buildSpace();
+}
 
 void FormEngine::on_pushPersp_clicked() { m_engine->render_type = RenderType::Perspective;  }
 void FormEngine::on_pushOrtho_clicked() { m_engine->render_type = RenderType::Orthographic; }

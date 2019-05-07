@@ -6,6 +6,7 @@
 //
 //
 #include "engine/engine.h"
+#include "engine/engine_texture.h"
 #include "opengl/opengl.h"
 
 //####################################################################################
@@ -21,12 +22,8 @@ void OpenGL::cleanUp() {
     makeCurrent();
 
     // Destroy OpenGL Resources
-    delete m_engine->t_ball;
-    delete m_engine->t_metal_block;
-    delete m_engine->t_moon_plant;
-    delete m_engine->t_rover_body;
-    delete m_engine->t_rover_wheel;
-    delete m_engine->t_spare_wheel;
+    m_engine->has_scene = false;
+    m_engine->deleteResources();
 
     doneCurrent();
 }

@@ -98,6 +98,7 @@ SOURCES += \
     engine/engine_space_add.cpp \
     engine/engine_space_build.cpp \
     engine/engine_space_update.cpp \
+    engine/engine_texture.cpp \
     enums.cpp \
     forms/form_atlas.cpp \
     forms/form_blank.cpp \
@@ -187,6 +188,7 @@ HEADERS += \
     editor/editor_tree_project.h \
     editor/editor_view.h \
     engine/engine.h \
+    engine/engine_texture.h \
     enums.h \
     forms/form_atlas.h \
     forms/form_blank.h \

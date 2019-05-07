@@ -14,7 +14,7 @@
 void Engine::updateSpace() {
 
     // ***** Updates physics
-    cpSpaceStep(space, time_step);
+    cpSpaceStep(m_space, m_time_step);
 
 
     // ***** Iterate through objects, delete if they go off screen
@@ -59,8 +59,8 @@ void Engine::updateSpace() {
         if (pos.y < -400) {
             object->in_scene = false;
 
-            cpSpaceRemoveShape( space, object->shape );     cpSpaceRemoveBody(  space, object->body  );
-            cpShapeFree( object->shape );                   cpBodyFree(  object->body  );
+            cpSpaceRemoveShape( m_space, object->shape );   cpSpaceRemoveBody( m_space, object->body );
+            cpShapeFree( object->shape );                   cpBodyFree( object->body );
 
             it = objects.erase(it);
         } else {
