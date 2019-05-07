@@ -46,25 +46,26 @@ enum class Shape_Type {
 };
 
 struct SceneObject {
-    long        texture_number;
-    double      radius;
+    cpBody     *body;                       // Physical Body of object
+    cpShape    *shape;                      // Collision Shape of object
 
-    cpBody     *body;
-    cpShape    *shape;
+    Body_Type   body_type;                  // Body_Type
+    Shape_Type  shape_type;                 // Shape_Type
 
-    Body_Type   body_type;
-    Shape_Type  shape_type;
+    long        texture_number;             // Reference to which texture to use from Engine.EngineTexture map
+    double      radius;                     // Used for Shape_Type::Circle collision shapes
+    double      width;                      // Used for Shape_Type::Box collisiuon shapes
+    double      height;                     // Used for Shape_Type::Box collisiuon shapes
 
-    double      wheel_speed;
+    double      wheel_speed;                // Speed at which wheel should spin when gas pedal is pressed
 
-    bool        is_wheel = false;
+    bool        is_wheel = false;           // Set to true if we want wheel to spin from mouse press
     bool        in_scene = true;
+    bool        follow = false;             // Set to true to have camera follow object
 
-    bool        follow = false;
-
-    double      angle;
-    QPointF     position;
-    QPointF     velocity;
+    double      angle;                      // Updated during timer, contains current object angle
+    QPointF     position;                   // Updated during timer, contains current object posiiton
+    QPointF     velocity;                   // Updated during timer, contains current object velocity
 
 };
 
@@ -107,15 +108,15 @@ public:
 
     QVector<SceneObject*>   objects;
 
-    Demo        demo = Demo::Spawn;
-    QTime       fps_timer;
-    int         fps, last_fps;
-    bool        debug = false;
+    Demo            demo = Demo::Spawn;
+    QTime           fps_timer;
+    int             fps, last_fps;
+    bool            debug = false;
 
-    Render_Type  render_type = Render_Type::Orthographic;          // Should render perspective or orthographic?
+    Render_Type     render_type = Render_Type::Orthographic;          // Should render perspective or orthographic?
 
-    bool        has_scene = false;
-    Pedal       gas_pedal = Pedal::None;
+    bool            has_scene = false;
+    Pedal           gas_pedal = Pedal::None;
 
 
 public:

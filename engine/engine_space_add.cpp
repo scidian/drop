@@ -94,7 +94,8 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
     block->texture_number = texture_number;
     cpFloat width =  m_textures[texture_number]->width() -  (c_texture_border * 2);
     cpFloat height = m_textures[texture_number]->height() - (c_texture_border * 2);
-    block->radius =  width / 2;
+    block->width =  width;
+    block->height = height;
     cpFloat moment = cpMomentForBox( mass, width, height);
 
     // Create the body for the block

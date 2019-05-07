@@ -122,6 +122,7 @@ SOURCES += \
     opengl/opengl.cpp \
     opengl/opengl_initialize.cpp \
     opengl/opengl_keyboard.cpp \
+    opengl/opengl_math.cpp \
     opengl/opengl_mouse.cpp \
     opengl/opengl_render.cpp \
     project/project.cpp \
