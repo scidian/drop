@@ -64,7 +64,7 @@ FormEngine::FormEngine(QWidget *parent) : QMainWindow(parent) {
         connect(pushOrtho,   SIGNAL(clicked()), this, SLOT(on_pushOrtho_clicked()));
 
         m_opengl = new OpenGL(centralWidget, m_engine);
-        connect(m_opengl, SIGNAL(updateInfo()), this, SLOT(updateLabels()));
+        connect(m_opengl, SIGNAL(updateInfo(QString)), this, SLOT(updateLabels(QString)));
         layout->addWidget(m_opengl);
 
     this->setCentralWidget(centralWidget);
@@ -132,8 +132,8 @@ void FormEngine::updateEngine() {
 }
 
 // Update helpful labels
-void FormEngine::updateLabels() {
-    label->setText( "Total Items: " + QString::number( m_engine->objects.count()) );
+void FormEngine::updateLabels(QString info) {
+    label->setText( "Total Items: " + QString::number( m_engine->objects.count()) + info);
     label2->setText("FPS: " + QString::number(m_engine->fps) + " - Scale: " + QString::number(double(m_opengl->getScale())) );
 
     int max_sample, max_text, max_number_textures, max_layers;

@@ -21,9 +21,9 @@ void OpenGL::mousePressEvent(QMouseEvent *event)
 {
     if (m_engine->has_scene == false) return;
 
-    double x = ((event->pos().x() - m_engine->camera_pos.x()) * 2 );
-    double y = ((event->pos().y() - m_engine->camera_pos.y()) * 3 );
-    y = -y;
+    double x =  event->pos().x() - width() / 2;
+    double y =  height() - event->pos().y();
+
 
     if (m_engine->demo == Demo::Spawn) {
         if (event->button() & Qt::LeftButton) {

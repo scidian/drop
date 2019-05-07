@@ -29,10 +29,6 @@ private:
     float           m_scale = 1.0;                                    // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
     float           m_angle = 0;
 
-
-    QPixmap     p_ball = QPixmap(":/assets/test_images/ball_1.png");
-
-
     QOpenGLShaderProgram m_program;
     int     m_vertexAttr;
     int     m_texCoordAttr;
@@ -75,18 +71,11 @@ public slots:
     void        cleanUp();
 
 signals:
-    void        updateInfo();
+    void        updateInfo(QString info);
 
 };
 
 #endif // OPENGL_H
-
-
-
-
-
-
-
 
 
 

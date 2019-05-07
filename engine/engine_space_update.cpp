@@ -51,8 +51,7 @@ void Engine::updateSpace() {
         }
 
         if (object->follow == true) {
-            camera_pos.setX( pos.x );
-            camera_pos.setY( pos.y );
+            setCameraPos( static_cast<float>(pos.x), static_cast<float>(pos.y), getCameraPos().z() );
         }
 
         // Delete object if it falls below y = 400

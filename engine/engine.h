@@ -10,6 +10,7 @@
 
 #include <QOpenGLTexture>
 #include <QTime>
+#include <QVector3D>
 #include <map>
 
 #include "chipmunk/chipmunk.h"
@@ -85,8 +86,10 @@ constexpr int c_texture_border = 0;
 class Engine
 {
 private:
-    EngineTextureMap  m_textures;
-    EngineWorldMap    m_worlds;
+    EngineTextureMap  m_textures;                               // Map of textures used for this Engine
+    EngineWorldMap    m_worlds;                                 // Map of Worlds used for this Engine
+
+    QVector3D   m_camera_pos = QVector3D(0, 0, -800);           // Current camera position
 
     cpSpace    *m_space;                        // Current physics space shown on screen
 
@@ -95,6 +98,8 @@ private:
                                                 //      by writing custom integration functions. Changing the gravity will activate all sleeping bodies in the space.
     cpFloat     m_damping;                      // A value of 0.9 means that each body will lose 10% of its velocity per second. Defaults to 1.
                                                 //      Like gravity, it can be overridden on a per body basis.
+
+
 
 
 public:
@@ -107,7 +112,6 @@ public:
     bool        debug = false;
 
     RenderType  render_type = RenderType::Orthographic;          // Should render perspective or orthographic?
-    QPointF     camera_pos = QPointF(0, 0);                      // Tells renderer where to center view
 
     bool        has_scene = false;
     Pedal       gas_pedal = Pedal::None;
@@ -138,15 +142,18 @@ public:
 
 
     // Getter and Setters    
-    cpSpace*        getSpace()      { return m_space; }
+    cpSpace*            getSpace()      { return m_space; }
 
-    const bool&     debugOn() { return debug; }
-    const cpFloat&  getTimeStep()   { return m_time_step; }
-    const cpVect&   getGravity()    { return m_gravity; }
-    const cpFloat&  getDamping()    { return m_damping; }
-    void            setTimeStep(cpFloat new_time_step) { m_time_step = new_time_step; }
-    void            setGravity(cpVect new_gravity) { m_gravity = new_gravity; }
-    void            setDamping(cpFloat new_damping) { m_damping = new_damping; }
+    const bool&         debugOn() { return debug; }
+    const QVector3D&    getCameraPos()  { return m_camera_pos; }
+    const cpFloat&      getTimeStep()   { return m_time_step; }
+    const cpVect&       getGravity()    { return m_gravity; }
+    const cpFloat&      getDamping()    { return m_damping; }
+    void                setCameraPos(QVector3D new_pos) { m_camera_pos = new_pos; }
+    void                setCameraPos(float x, float y, float z) { m_camera_pos = QVector3D(x, y, z); }
+    void                setTimeStep(cpFloat new_time_step) { m_time_step = new_time_step; }
+    void                setGravity(cpVect new_gravity) { m_gravity = new_gravity; }
+    void                setDamping(cpFloat new_damping) { m_damping = new_damping; }
 
 };
 

@@ -7,6 +7,7 @@
 //
 #include <QtMath>
 #include <QPainter>
+#include "glu.h"
 
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
@@ -17,15 +18,13 @@
 //##        Render, Paint the Scene
 //####################################################################################
 void OpenGL::paintGL() {
+
     // ***** Initialize painter
-    QPainter painter;
-    painter.begin( this );
+    QPainter painter( this );
     painter.beginNativePainting();
 
-    // Make sure viewport is sized correctly
-    glViewport(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
-
-    // Clear OpenGL Buffer
+    // ***** Make sure viewport is sized correctly and clear the buffers
+    //glViewport(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
     glClearColor(0.0, 0.0, 0.0, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
@@ -34,6 +33,7 @@ void OpenGL::paintGL() {
     //glEnable( GL_DEPTH_TEST  );                          // Enable depth test
     ///glEnable( GL_MULTISAMPLE );                          // Enable anti aliasing
 
+    // Enable face culling for triangles facing away from view
     glEnable( GL_CULL_FACE );
     glCullFace(  GL_BACK );
     glFrontFace( GL_CCW );
@@ -56,16 +56,19 @@ void OpenGL::paintGL() {
 
     if (m_engine->render_type == RenderType::Orthographic) {
         double scale =  static_cast<double>(m_scale);
-        float  left =   static_cast<float>(m_engine->camera_pos.x() * scale - (static_cast<double>( width()) / 2.0));
-        float  right =  static_cast<float>(m_engine->camera_pos.x() * scale + (static_cast<double>( width()) / 2.0));
-        float  top =    static_cast<float>(m_engine->camera_pos.y() * scale + (static_cast<double>(height()) / 2.0));
-        float  bottom = static_cast<float>(m_engine->camera_pos.y() * scale - (static_cast<double>(height()) / 2.0));
+        float cam_x = m_engine->getCameraPos().x() * static_cast<float>(scale);
+        float cam_y = m_engine->getCameraPos().y() * static_cast<float>(scale);
+
+        float left =   static_cast<float>(cam_x - (width() /  2.0f));
+        float right =  static_cast<float>(cam_x + (width() /  2.0f));
+        float top =    static_cast<float>(cam_y + (height() / 2.0f));
+        float bottom = static_cast<float>(cam_y - (height() / 2.0f));
         m_model_view.ortho( left, right, bottom, top, -100.0f, 100.0f);
     } else {
         m_model_view.perspective( 60.0f, aspect_ratio, 1.0f, 1000.0f );
 
         // Sets the camera back 800 pixels
-        m_model_view.translate( static_cast<float>(m_engine->camera_pos.x()) * -m_scale, static_cast<float>(m_engine->camera_pos.y()) * -m_scale, -800.0f );
+        m_model_view.translate( m_engine->getCameraPos().x() * -m_scale, m_engine->getCameraPos().y() * -m_scale, m_engine->getCameraPos().z() );
         m_model_view.scale( m_scale );
     }
     // Rotates the camera around the center of the sceen
@@ -130,7 +133,7 @@ void OpenGL::paintGL() {
         // ***** Load vertices for this object, this includes added size of c_texture_border
         QVector<float> vertices;
         vertices.clear();
-        vertices.resize( 12 );  // in sets of x, y, z
+        vertices.resize( 12 );              // in sets of x, y, z
         // Top Right
         vertices[0] = top_right.x() + x;
         vertices[1] = top_right.y() + y;
@@ -164,25 +167,20 @@ void OpenGL::paintGL() {
 
     // ***** Disable shader program, end native drawing
     m_program.release();
+
+    glDisable( GL_CULL_FACE );              // Must turn off culling for QPainter for some reason
     painter.endNativePainting();
 
-
-///    for (auto object : m_parent->objects) {
-///        if (object->shape_type == ShapeType::Segment) continue;
-///        QPointF center = object->position;
-///        float x = static_cast<float>(center.x()) * m_scale + static_cast<float>(m_center_of_widget.x());
-///        float y = static_cast<float>(center.y()) * m_scale - static_cast<float>(m_center_of_widget.y());
-///        half_width =  float(object->texture->width())  * m_scale / 2.0f;
-///        half_height = float(object->texture->height()) * m_scale / 2.0f;
-///        // Possible to draw using QPainter
-///        painter.drawPixmap( QPointF(double(x - half_width), double(-y - half_height)), p_ball);
-///    }
 
 
     // ********** Draws debug shapes onto screen
     painter.setRenderHint(QPainter::Antialiasing, true);
 
+    int t = 0;
+    QString info = "";
     if (m_engine->debug) {
+
+
         for (auto object : m_engine->objects) {
             if (object->in_scene == false) continue;
 
@@ -201,17 +199,28 @@ void OpenGL::paintGL() {
             painter.setBrush( QBrush( brush_color));
 
             if (object->shape_type == ShapeType::Circle) {
-    //            double  radius = cpCircleShapeGetRadius(object->shape) * static_cast<double>(m_scale);
-    //            QPointF center = object->position;
-    //            center.setX(  center.x() * static_cast<double>(m_scale) + m_center_of_widget.x() );
-    //            center.setY( -center.y() * static_cast<double>(m_scale) + m_center_of_widget.y() );
+                double radius = cpCircleShapeGetRadius(object->shape) * static_cast<double>(m_scale);
+                float  x_pos = static_cast<float>( object->position.x()) * m_scale;
+                float  y_pos = static_cast<float>( object->position.y()) * m_scale;
 
-    //            QPointF top (center.x(), center.y() - radius);
-    //            painter.drawEllipse( center, radius, radius );
 
-    //            QTransform t = QTransform().translate(center.x(), center.y()).rotate(-object->angle).translate(-center.x(), -center.y());
-    //            QPointF l2 = t.map( top );
-    //            painter.drawLine( center, l2 );
+
+                QMatrix4x4 identity;
+                identity.setToIdentity();
+
+                QVector3D point = QVector3D( -x_pos, height() - y_pos, 0).unproject(m_model_view, identity, QRect(0, 0, width(), height()));
+
+
+                //QPointF top (center.x(), center.y() - radius);
+                double xd = static_cast<double>(point.x());
+                double yd = static_cast<double>(point.y());
+                painter.drawEllipse( QPointF( -xd, yd ), radius, radius );
+
+
+
+                //QTransform t = QTransform().translate(center.x(), center.y()).rotate(-object->angle).translate(-center.x(), -center.y());
+                //QPointF l2 = t.map( top );
+                //painter.drawLine( center, l2 );
 
     //        } else if (object->shape_type == ShapeType::Box) {
     //            QRectF    box = object->item->boundingRect();
@@ -247,11 +256,12 @@ void OpenGL::paintGL() {
 
     painter.end();
 
+    info += ", T: " + QString::number(t);
 
     // Show frames per second
     m_engine->fps++;
     if (m_engine->fps_timer.elapsed() > 1000) {
-        emit updateInfo();
+        emit updateInfo(info);
         m_engine->last_fps = m_engine->fps;
         m_engine->fps = 0;
         m_engine->fps_timer.restart();
@@ -367,7 +377,6 @@ void OpenGL::drawCube() {
     texture->texture()->release();
 
 }
-
 
 
 

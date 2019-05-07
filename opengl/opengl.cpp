@@ -33,7 +33,7 @@ void OpenGL::cleanUp() {
 //##        Handle Window Resizing
 //####################################################################################
 void OpenGL::resizeGL(int w, int h) {
-    glViewport( 0, 0, w, h );
+    glViewport(0, 0, w * devicePixelRatio(), h * devicePixelRatio());
 }
 
 
