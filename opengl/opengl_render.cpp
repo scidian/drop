@@ -52,8 +52,8 @@ void OpenGL::paintGL() {
 
     // ***** Set camera position
     float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
-    m_model_view.setToIdentity();
 
+    QMatrix4x4 matrix_model_view;
     if (m_engine->render_type == RenderType::Orthographic) {
         double scale =  static_cast<double>(m_scale);
         float cam_x = m_engine->getCameraPos().x() * static_cast<float>(scale);
@@ -63,23 +63,32 @@ void OpenGL::paintGL() {
         float right =  static_cast<float>(cam_x + (width() /  2.0f));
         float top =    static_cast<float>(cam_y + (height() / 2.0f));
         float bottom = static_cast<float>(cam_y - (height() / 2.0f));
-        m_model_view.ortho( left, right, bottom, top, -100.0f, 100.0f);
+        matrix_model_view.ortho( left, right, bottom, top,  -1.0f, 1.0f);
+
     } else {
-        m_model_view.perspective( 60.0f, aspect_ratio, 1.0f, 1000.0f );
+        matrix_model_view.perspective( 50.0f, aspect_ratio, 1.0f, 1000.0f );
 
         // Sets the camera back 800 pixels
-        m_model_view.translate( m_engine->getCameraPos().x() * -m_scale, m_engine->getCameraPos().y() * -m_scale, m_engine->getCameraPos().z() );
-        m_model_view.scale( m_scale );
+        matrix_model_view.translate( m_engine->getCameraPos().x() * -m_scale, m_engine->getCameraPos().y() * -m_scale, m_engine->getCameraPos().z() );
+        matrix_model_view.scale( m_scale );
     }
+
     // Rotates the camera around the center of the sceen
     //m_angle += 1.0f;
     //if (m_angle > 360) m_angle = 0;
     //m_model_view.rotate( m_angle, 0.0f, 1.0f, 0.0f );
 
 
+
+    //myGlobals.matWorld = Matrix.Identity;
+    //myGlobals.matView = Matrix.CreateLookAt(myGlobals.cameraPosition, new Vector3(0, 0, 0), Vector3.Up);
+    //myGlobals.matProj = Matrix.CreateOrthographic(10f, 10f, 0.01f, 500.0f);
+    //mousePoint = theViewport.Project(flex.myCube[block].polyFaces[i].myVertices[ic].Position, globals.matProj, globals.matView, globals.matWorld);
+
+
     // ***** Enable shader program
     if (!m_program.bind()) return;
-    m_program.setUniformValue( m_matrixUniform, m_model_view );
+    m_program.setUniformValue( m_matrixUniform, matrix_model_view );
 
     drawCube();
 
@@ -203,12 +212,26 @@ void OpenGL::paintGL() {
                 float  x_pos = static_cast<float>( object->position.x()) * m_scale;
                 float  y_pos = static_cast<float>( object->position.y()) * m_scale;
 
-
-
                 QMatrix4x4 identity;
                 identity.setToIdentity();
 
-                QVector3D point = QVector3D( -x_pos, height() - y_pos, 0).unproject(m_model_view, identity, QRect(0, 0, width(), height()));
+                QMatrix4x4 projection;
+                projection.perspective( 50.0f, aspect_ratio, 1.0f, 1000.0f );
+
+                QMatrix4x4 model_view;
+                model_view.translate( x_pos - (m_engine->getCameraPos().x() * m_scale), y_pos - (m_engine->getCameraPos().y() * m_scale), 0);
+
+
+                QVector3D point;
+                if (m_engine->render_type == RenderType::Orthographic) {
+                    point = QVector3D( -x_pos, height() - y_pos, 0).unproject(identity, matrix_model_view, QRect(0, 0, width(), height()));
+                } else {
+                    point = QVector3D( 0, 0, 0).unproject(model_view, projection, QRect(0, 0, width(), height()));
+                    point.setX( point.x() - width() / 2);
+                    point.setY( point.y() + height() / 2);
+                }
+
+
 
 
                 //QPointF top (center.x(), center.y() - radius);
@@ -217,6 +240,10 @@ void OpenGL::paintGL() {
                 painter.drawEllipse( QPointF( -xd, yd ), radius, radius );
 
 
+                if (t==0) {
+                    info += " - PX: " + QString::number(xd) + ", Y: " + QString::number(yd);
+                }
+                t++;
 
                 //QTransform t = QTransform().translate(center.x(), center.y()).rotate(-object->angle).translate(-center.x(), -center.y());
                 //QPointF l2 = t.map( top );

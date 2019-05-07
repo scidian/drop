@@ -24,6 +24,10 @@ void OpenGL::mousePressEvent(QMouseEvent *event)
     double x =  event->pos().x() - width() / 2;
     double y =  height() - event->pos().y();
 
+    //QVector3D vec;
+
+    //QVector3D vec3 = vec.project()
+
 
     if (m_engine->demo == Demo::Spawn) {
         if (event->button() & Qt::LeftButton) {
