@@ -64,6 +64,7 @@ FormEngine::FormEngine(QWidget *parent) : QMainWindow(parent) {
         connect(pushOrtho,   SIGNAL(clicked()), this, SLOT(on_pushOrtho_clicked()));
 
         m_opengl = new OpenGL(centralWidget, m_engine);
+        connect(m_opengl, SIGNAL(updateInfo()), this, SLOT(updateLabels()));
         layout->addWidget(m_opengl);
 
     this->setCentralWidget(centralWidget);
@@ -120,7 +121,7 @@ void FormEngine::on_pushOrtho_clicked() { m_engine->render_type = RenderType::Or
 
 
 //######################################################################################################
-//##    Update Engine
+//##    Update Engine /  Labels
 //######################################################################################################
 void FormEngine::updateEngine() {
 
@@ -128,23 +129,21 @@ void FormEngine::updateEngine() {
     m_engine->updateSpace();
     m_opengl->update();
 
-    // ***** Update helpful labels
-    static int update_count = 0;
-    ++update_count;
-    if (update_count > 60) {
-        label->setText( "Total Items: " + QString::number( m_engine->objects.count()) );
-        label2->setText("FPS: " + QString::number(m_engine->fps) + " - Scale: " + QString::number(double(m_opengl->getScale())) );
+}
 
-        int max_sample, max_text, max_number_textures, max_layers;
-        glGetIntegerv ( GL_MAX_SAMPLES, &max_sample );                                      // Finds max multi sampling available on system
-        glGetIntegerv ( GL_MAX_TEXTURE_SIZE, &max_text );                                   // Finds max texture size available on system
-        glGetIntegerv ( GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &max_number_textures );        // Finds max number of textures can bind at one time
-        glGetIntegerv ( GL_MAX_ARRAY_TEXTURE_LAYERS, &max_layers );
-        labelOpenGL->setText( "MAX Samples: " +  QString::number(max_sample) +
-                            ", Txt Size: " +   QString::number(max_text) +
-                            ", Txt Layers: " + QString::number(max_layers));
-        update_count = 0;
-    }
+// Update helpful labels
+void FormEngine::updateLabels() {
+    label->setText( "Total Items: " + QString::number( m_engine->objects.count()) );
+    label2->setText("FPS: " + QString::number(m_engine->fps) + " - Scale: " + QString::number(double(m_opengl->getScale())) );
+
+    int max_sample, max_text, max_number_textures, max_layers;
+    glGetIntegerv ( GL_MAX_SAMPLES, &max_sample );                                      // Finds max multi sampling available on system
+    glGetIntegerv ( GL_MAX_TEXTURE_SIZE, &max_text );                                   // Finds max texture size available on system
+    glGetIntegerv ( GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &max_number_textures );        // Finds max number of textures can bind at one time
+    glGetIntegerv ( GL_MAX_ARRAY_TEXTURE_LAYERS, &max_layers );
+    labelOpenGL->setText( "MAX Samples: " +  QString::number(max_sample) +
+                        ", Txt Size: " +   QString::number(max_text) +
+                        ", Txt Layers: " + QString::number(max_layers));
 }
 
 

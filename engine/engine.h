@@ -138,16 +138,15 @@ public:
 
 
     // Getter and Setters    
-    bool        debugOn() { return debug; }
+    cpSpace*        getSpace()      { return m_space; }
 
-    cpSpace*    getSpace()      { return m_space; }
-    cpFloat     getTimeStep()   { return m_time_step; }
-    cpVect      getGravity()    { return m_gravity; }
-    cpFloat     getDamping()    { return m_damping; }
-
-    void        setTimeStep(cpFloat new_time_step) { m_time_step = new_time_step; }
-    void        setGravity(cpVect new_gravity) { m_gravity = new_gravity; }
-    void        setDamping(cpFloat new_damping) { m_damping = new_damping; }
+    const bool&     debugOn() { return debug; }
+    const cpFloat&  getTimeStep()   { return m_time_step; }
+    const cpVect&   getGravity()    { return m_gravity; }
+    const cpFloat&  getDamping()    { return m_damping; }
+    void            setTimeStep(cpFloat new_time_step) { m_time_step = new_time_step; }
+    void            setGravity(cpVect new_gravity) { m_gravity = new_gravity; }
+    void            setDamping(cpFloat new_damping) { m_damping = new_damping; }
 
 };
 

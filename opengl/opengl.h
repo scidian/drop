@@ -19,6 +19,8 @@ class Engine;
 
 class OpenGL : public QOpenGLWidget, protected QOpenGLFunctions
 {
+    Q_OBJECT
+
 private:
     Engine         *m_engine;
 
@@ -68,8 +70,12 @@ public:
     // Getters and Setters
     float           getScale()      { return m_scale; }
 
+
 public slots:
-    void            cleanUp();
+    void        cleanUp();
+
+signals:
+    void        updateInfo();
 
 };
 

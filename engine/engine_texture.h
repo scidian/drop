@@ -31,9 +31,9 @@ public:
     void            loadTexture(QString from_asset_string);
 
     // Getters & Setters
-    int             height() { return m_height; }
-    int             width()  { return m_width; }
-    bool            isTextureLoaded() { return m_texture_loaded; }
+    const int&      height() { return m_height; }
+    const int&      width()  { return m_width; }
+    const bool&     isTextureLoaded() { return m_texture_loaded; }
     QOpenGLTexture* texture()         { return m_texture; }
 };
 

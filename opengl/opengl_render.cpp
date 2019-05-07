@@ -251,6 +251,7 @@ void OpenGL::paintGL() {
     // Show frames per second
     m_engine->fps++;
     if (m_engine->fps_timer.elapsed() > 1000) {
+        emit updateInfo();
         m_engine->last_fps = m_engine->fps;
         m_engine->fps = 0;
         m_engine->fps_timer.restart();

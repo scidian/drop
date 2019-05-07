@@ -56,6 +56,7 @@ private slots:
     void on_pushOrtho_clicked();
 
     void updateEngine();
+    void updateLabels();
 };
 
 
