@@ -125,6 +125,8 @@ SOURCES += \
     opengl/opengl_math.cpp \
     opengl/opengl_mouse.cpp \
     opengl/opengl_render.cpp \
+    opengl/opengl_render_debug.cpp \
+    opengl/opengl_render_test_cube.cpp \
     project/project.cpp \
     project/project_asset.cpp \
     project/project_font.cpp \

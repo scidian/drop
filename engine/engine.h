@@ -63,7 +63,7 @@ struct SceneObject {
     bool        in_scene = true;
     bool        follow = false;             // Set to true to have camera follow object
 
-    double      angle;                      // Updated during timer, contains current object angle
+    double      angle = 0;                  // Updated during timer, contains current object angle
     QPointF     position;                   // Updated during timer, contains current object posiiton
     QPointF     velocity;                   // Updated during timer, contains current object velocity
 

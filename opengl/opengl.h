@@ -62,6 +62,12 @@ public:
 
     // Function Calls
     void            drawCube();
+    void            drawDebugShapes(QPainter &painter);
+    QVector3D       mapFromScreen(double x, double y);
+    QVector3D       mapFromScreen(float x, float y);
+    QVector3D       mapFromScreen(QPointF point);
+    QPointF         mapToScreen(double x, double y, double z);
+    QPointF         mapToScreen(float x, float y, float z);
     QPointF         mapToScreen(QVector3D point3D);
     void            zoomInOut(int level);
 

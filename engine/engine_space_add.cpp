@@ -131,8 +131,10 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
 
     // Polygon Basics
     polygon->texture_number = texture_number;
-    ///cpFloat width =  txt->width() -  (c_texture_border * 2);
-    ///cpFloat height = txt->height() - (c_texture_border * 2);
+    cpFloat width =   m_textures[texture_number]->width() -  (c_texture_border * 2);
+    cpFloat height =  m_textures[texture_number]->height() - (c_texture_border * 2);
+    polygon->width =  width;
+    polygon->height = height;
 
     std::vector<cpVect> verts;
     verts.clear();

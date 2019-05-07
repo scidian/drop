@@ -21,13 +21,9 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
 
     if (m_engine->has_scene == false) return;
 
-    double x =  event->pos().x() - width() / 2;
-    double y =  height() - event->pos().y();
-
-    //QVector3D vec;
-
-    //QVector3D vec3 = vec.project()
-
+    QVector3D vec = mapFromScreen( QPointF(event->pos().x(), event->pos().y()) );
+    double x =  static_cast<double>( vec.x());
+    double y =  static_cast<double>( vec.y());
 
     if (m_engine->demo == Demo::Spawn) {
         if (event->button() & Qt::LeftButton) {
