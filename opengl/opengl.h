@@ -24,6 +24,8 @@ class OpenGL : public QOpenGLWidget, protected QOpenGLFunctions
 private:
     Engine         *m_engine;
 
+    QMatrix4x4      m_model_view;
+
     int             m_zoom = 250;                                     // Zoom level of current view, 200 is 50% - 250 is 100%
     float           m_scale = 1.0;                                    // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
     float           m_angle = 0;

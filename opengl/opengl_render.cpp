@@ -9,6 +9,7 @@
 #include <QPainter>
 #include "glu.h"
 
+#include "chipmunk/chipmunk.h"
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "opengl/opengl.h"
@@ -52,8 +53,8 @@ void OpenGL::paintGL() {
 
     // ***** Set camera position
     float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
+    m_model_view.setToIdentity();
 
-    QMatrix4x4 matrix_model_view;
     if (m_engine->render_type == RenderType::Orthographic) {
         double scale =  static_cast<double>(m_scale);
         float cam_x = m_engine->getCameraPos().x() * static_cast<float>(scale);
@@ -63,14 +64,14 @@ void OpenGL::paintGL() {
         float right =  static_cast<float>(cam_x + (width() /  2.0f));
         float top =    static_cast<float>(cam_y + (height() / 2.0f));
         float bottom = static_cast<float>(cam_y - (height() / 2.0f));
-        matrix_model_view.ortho( left, right, bottom, top,  -1.0f, 1.0f);
+        m_model_view.ortho( left, right, bottom, top,  -1.0f, 1.0f);
 
     } else {
-        matrix_model_view.perspective( 50.0f, aspect_ratio, 1.0f, 1000.0f );
+        m_model_view.perspective( 50.0f, aspect_ratio, 1.0f, 1000.0f );
 
         // Sets the camera back 800 pixels
-        matrix_model_view.translate( m_engine->getCameraPos().x() * -m_scale, m_engine->getCameraPos().y() * -m_scale, m_engine->getCameraPos().z() );
-        matrix_model_view.scale( m_scale );
+        m_model_view.translate( m_engine->getCameraPos().x() * -m_scale, m_engine->getCameraPos().y() * -m_scale, m_engine->getCameraPos().z() );
+        m_model_view.scale( m_scale );
     }
 
     // Rotates the camera around the center of the sceen
@@ -88,7 +89,7 @@ void OpenGL::paintGL() {
 
     // ***** Enable shader program
     if (!m_program.bind()) return;
-    m_program.setUniformValue( m_matrixUniform, matrix_model_view );
+    m_program.setUniformValue( m_matrixUniform, m_model_view );
 
     drawCube();
 
@@ -208,51 +209,27 @@ void OpenGL::paintGL() {
             painter.setBrush( QBrush( brush_color));
 
             if (object->shape_type == ShapeType::Circle) {
-                double radius = cpCircleShapeGetRadius(object->shape) * static_cast<double>(m_scale);
-                float  x_pos = static_cast<float>( object->position.x()) * m_scale;
-                float  y_pos = static_cast<float>( object->position.y()) * m_scale;
+                double  radius = cpCircleShapeGetRadius(object->shape) * static_cast<double>(m_scale);
+                float   x_pos = static_cast<float>( object->position.x()) * m_scale;
+                float   y_pos = static_cast<float>( object->position.y()) * m_scale;
+                QPointF point = mapToScreen( QVector3D(x_pos, y_pos, 0) );
+                painter.drawEllipse( point, radius, radius );
 
-                QMatrix4x4 identity;
-                identity.setToIdentity();
+                QPointF top (point.x(), point.y() - radius);
+                QTransform t = QTransform().translate(point.x(), point.y()).rotate(-object->angle).translate(-point.x(), -point.y());
+                QPointF l2 = t.map( top );
+                painter.drawLine( point, l2 );
 
-                QMatrix4x4 projection;
-                projection.perspective( 50.0f, aspect_ratio, 1.0f, 1000.0f );
+            } else if (object->shape_type == ShapeType::Box) {
+                double  radius = object->radius * static_cast<double>(m_scale);
+                float   x_pos = static_cast<float>( object->position.x()) * m_scale;
+                float   y_pos = static_cast<float>( object->position.y()) * m_scale;
+                QPointF point = mapToScreen( QVector3D(x_pos, y_pos, 0) );
 
-                QMatrix4x4 model_view;
-                model_view.translate( x_pos - (m_engine->getCameraPos().x() * m_scale), y_pos - (m_engine->getCameraPos().y() * m_scale), 0);
-
-
-                QVector3D point;
-                if (m_engine->render_type == RenderType::Orthographic) {
-                    point = QVector3D( -x_pos, height() - y_pos, 0).unproject(identity, matrix_model_view, QRect(0, 0, width(), height()));
-                } else {
-                    point = QVector3D( 0, 0, 0).unproject(model_view, projection, QRect(0, 0, width(), height()));
-                    point.setX( point.x() - width() / 2);
-                    point.setY( point.y() + height() / 2);
-                }
-
-
-
-
-                //QPointF top (center.x(), center.y() - radius);
-                double xd = static_cast<double>(point.x());
-                double yd = static_cast<double>(point.y());
-                painter.drawEllipse( QPointF( -xd, yd ), radius, radius );
-
-
-                if (t==0) {
-                    info += " - PX: " + QString::number(xd) + ", Y: " + QString::number(yd);
-                }
-                t++;
-
-                //QTransform t = QTransform().translate(center.x(), center.y()).rotate(-object->angle).translate(-center.x(), -center.y());
-                //QPointF l2 = t.map( top );
-                //painter.drawLine( center, l2 );
-
-    //        } else if (object->shape_type == ShapeType::Box) {
-    //            QRectF    box = object->item->boundingRect();
-    //            QPolygonF rotated_box = mapFromScene( object->item->sceneTransform().map( box ) );
-    //            painter.drawPolygon( rotated_box );
+                QRectF  box = QRectF(point.x() - radius, point.y() - radius, radius * 2, radius * 2);
+                QTransform t = QTransform().translate(point.x(), point.y()).rotate(-object->angle).translate(-point.x(), -point.y());
+                QPolygonF rotated_box = t.map( box );
+                painter.drawPolygon( rotated_box );
 
     //        } else if (object->shape_type == ShapeType::Segment) {
     //            cpVect l1 = cpSegmentShapeGetA( object->shape);
@@ -405,6 +382,28 @@ void OpenGL::drawCube() {
 
 }
 
+
+
+QPointF OpenGL::mapToScreen(QVector3D point3D) {
+    float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
+
+    QMatrix4x4 identity;    identity.setToIdentity();
+    QMatrix4x4 projection;  projection.perspective( 50.0f, aspect_ratio, 1.0f, 1000.0f );
+    QMatrix4x4 model_view;  model_view.translate( point3D.x() - (m_engine->getCameraPos().x() * m_scale),
+                                                  point3D.y() - (m_engine->getCameraPos().y() * m_scale),
+                                                  point3D.z());
+    QVector3D vec;
+    if (m_engine->render_type == RenderType::Orthographic) {
+        vec = QVector3D( -point3D.x(), height() - point3D.y(), 0).unproject(identity, m_model_view, QRect(0, 0, width(), height()));
+        vec.setX ( -vec.x() );
+    } else {
+        vec = QVector3D( 0, 0, 0).unproject(model_view, projection, QRect(0, 0, width(), height()));
+        vec.setX( -(vec.x() - width() / 2));
+        vec.setY( vec.y() + height() / 2);
+    }
+
+    return QPointF( static_cast<double>(vec.x()), static_cast<double>(vec.y()));
+}
 
 
 

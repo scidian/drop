@@ -47,6 +47,7 @@ enum class ShapeType {
 
 struct SceneObject {
     long        texture_number;
+    double      radius;
 
     cpBody     *body;
     cpShape    *shape;

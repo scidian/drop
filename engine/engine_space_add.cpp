@@ -57,6 +57,7 @@ SceneObject* Engine::addCircle(BodyType body_type, long texture_number, double x
     cpFloat width =  m_textures[texture_number]->width() - (c_texture_border * 2);
     ///cpFloat height = txt->height() - (c_texture_border * 2);
     cpFloat radius = width / 2;
+    ball->radius =   radius;
     cpFloat moment = cpMomentForCircle(mass, 0, radius, cpvzero);                       // The moment of inertia is like mass for rotation
 
     // Create the body for the ball
@@ -93,6 +94,7 @@ SceneObject* Engine::addBlock(BodyType body_type, long texture_number, double x,
     block->texture_number = texture_number;
     cpFloat width =  m_textures[texture_number]->width() -  (c_texture_border * 2);
     cpFloat height = m_textures[texture_number]->height() - (c_texture_border * 2);
+    block->radius =  width / 2;
     cpFloat moment = cpMomentForBox( mass, width, height);
 
     // Create the body for the block
