@@ -15,6 +15,7 @@
 #include <QTimer>
 
 class DrEngine;
+class DrProject;
 class OpenGL;
 
 //####################################################################################
@@ -26,21 +27,23 @@ class FormEngine : public QMainWindow
     Q_OBJECT
 
 private:
-    QTimer     *m_timer;
     DrEngine   *m_engine;
     OpenGL     *m_opengl;
+    DrProject  *m_project;
+
+    QTimer     *m_timer;
 
 public:
     QWidget         *centralWidget;
     QPushButton     *pushButton,    *pushButton2,   *pushDebug;
-    QPushButton     *pushSpawn,     *pushCar;
+    QPushButton     *pushSpawn,     *pushCar,       *pushProject;
     QPushButton     *pushPersp,     *pushOrtho;
     QLabel          *label,         *label2;
     QLabel          *labelOpenGL;
 
 
 public:
-    explicit FormEngine(QWidget *parent = nullptr);
+    explicit FormEngine(DrProject *project, QWidget *parent = nullptr);
     ~FormEngine() override;
 
     // Event Overrides
@@ -52,6 +55,7 @@ private slots:
     void on_pushDebug_clicked();
     void on_pushSpawn_clicked();
     void on_pushCar_clicked();
+    void on_pushProject_clicked();
     void on_pushPersp_clicked();
     void on_pushOrtho_clicked();
 

@@ -23,11 +23,11 @@
 //######################################################################################################
 //##    Constructor / Destructor
 //######################################################################################################
-FormEngine::FormEngine(QWidget *parent) : QMainWindow(parent) {
+FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent), m_project(project) {
     this->setObjectName("Drop Player");
     this->resize(1200, 800);
 
-    m_engine = new DrEngine();
+    m_engine = new DrEngine(project);
 
     centralWidget = new QWidget(this);
     centralWidget->setObjectName("centralWidget");
@@ -35,14 +35,15 @@ FormEngine::FormEngine(QWidget *parent) : QMainWindow(parent) {
 
         QWidget *upperWidget = new QWidget();
         upperWidget->setFixedHeight(90);
-        pushButton =  new QPushButton(upperWidget);     pushButton->setObjectName("pushButton");    pushButton->setGeometry( QRect( 10, 10, 141, 31));
-        pushButton2 = new QPushButton(upperWidget);     pushButton2->setObjectName("pushButton2");  pushButton2->setGeometry(QRect( 10, 50, 141, 31));
-        pushDebug =   new QPushButton(upperWidget);     pushDebug->setObjectName("pushDebug");      pushDebug->setGeometry(  QRect(830, 10, 141, 71));
-        pushSpawn =   new QPushButton(upperWidget);     pushSpawn->setObjectName("pushSpawn");      pushSpawn->setGeometry(  QRect(700, 10, 141, 31));
-        pushCar =     new QPushButton(upperWidget);     pushCar->setObjectName("pushCar");          pushCar->setGeometry(    QRect(700, 50, 141, 31));
-        pushPersp =   new QPushButton(upperWidget);     pushPersp->setObjectName("pushPersp");      pushPersp->setGeometry(  QRect(520, 10, 141, 31));
-        pushOrtho =   new QPushButton(upperWidget);     pushOrtho->setObjectName("pushOrtho");      pushOrtho->setGeometry(  QRect(520, 50, 141, 31));
-        label =       new QLabel(upperWidget);          label->setObjectName("label");              label->setGeometry(      QRect(190, 05, 330, 20));
+        pushButton =  new QPushButton(upperWidget);     pushButton->setObjectName("pushButton");    pushButton->setGeometry( QRect( 10,  0, 141, 25));
+        pushButton2 = new QPushButton(upperWidget);     pushButton2->setObjectName("pushButton2");  pushButton2->setGeometry(QRect( 10, 25, 141, 25));
+        pushDebug =   new QPushButton(upperWidget);     pushDebug->setObjectName("pushDebug");      pushDebug->setGeometry(  QRect(830,  5, 141, 70));
+        pushSpawn =   new QPushButton(upperWidget);     pushSpawn->setObjectName("pushSpawn");      pushSpawn->setGeometry(  QRect(700,  0, 141, 25));
+        pushCar =     new QPushButton(upperWidget);     pushCar->setObjectName("pushCar");          pushCar->setGeometry(    QRect(700, 25, 141, 25));
+        pushProject = new QPushButton(upperWidget);     pushProject->setObjectName("pushProject");  pushProject->setGeometry(QRect(700, 50, 141, 25));
+        pushPersp =   new QPushButton(upperWidget);     pushPersp->setObjectName("pushPersp");      pushPersp->setGeometry(  QRect(520,  0, 141, 25));
+        pushOrtho =   new QPushButton(upperWidget);     pushOrtho->setObjectName("pushOrtho");      pushOrtho->setGeometry(  QRect(520, 25, 141, 25));
+        label =       new QLabel(upperWidget);          label->setObjectName("label");              label->setGeometry(      QRect(190,  0, 330, 20));
         label2 =      new QLabel(upperWidget);          label2->setObjectName("label2");            label2->setGeometry(     QRect(190, 25, 330, 20));
         labelOpenGL = new QLabel(upperWidget);          labelOpenGL->setObjectName("labelOpenGL");  labelOpenGL->setGeometry(QRect(190, 50, 330, 20));
 
@@ -51,6 +52,7 @@ FormEngine::FormEngine(QWidget *parent) : QMainWindow(parent) {
         pushDebug->setText(QApplication::translate(  "MainWindow", "Toggle Debug",      nullptr));
         pushSpawn->setText(QApplication::translate(  "MainWindow", "Spawning Demo",     nullptr));
         pushCar->setText(QApplication::translate(    "MainWindow", "Car Demo",          nullptr));
+        pushProject->setText(QApplication::translate("MainWindow", "Project Demo",      nullptr));
         pushPersp->setText(QApplication::translate(  "MainWindow", "Perspective View",  nullptr));
         pushOrtho->setText(QApplication::translate(  "MainWindow", "Orthographic View", nullptr));
         layout->addWidget(upperWidget);
@@ -60,6 +62,7 @@ FormEngine::FormEngine(QWidget *parent) : QMainWindow(parent) {
         connect(pushDebug,   SIGNAL(clicked()), this, SLOT(on_pushDebug_clicked()));
         connect(pushSpawn,   SIGNAL(clicked()), this, SLOT(on_pushSpawn_clicked()));
         connect(pushCar,     SIGNAL(clicked()), this, SLOT(on_pushCar_clicked()));
+        connect(pushProject, SIGNAL(clicked()), this, SLOT(on_pushProject_clicked()));
         connect(pushPersp,   SIGNAL(clicked()), this, SLOT(on_pushPersp_clicked()));
         connect(pushOrtho,   SIGNAL(clicked()), this, SLOT(on_pushOrtho_clicked()));
 
@@ -113,6 +116,14 @@ void FormEngine::on_pushCar_clicked() {
     m_timer->stop();
     m_engine->clearSpace();
     m_engine->demo = Demo::Car;
+    m_engine->buildSpace();
+}
+
+void FormEngine::on_pushProject_clicked() {
+    m_timer->stop();
+    m_engine->clearSpace();
+    qApp->processEvents();
+    m_engine->demo = Demo::Project;
     m_engine->buildSpace();
 }
 

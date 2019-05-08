@@ -23,6 +23,7 @@ enum class Render_Type {
 enum class Demo {
     Spawn,
     Car,
+    Project,
 };
 
 enum class Pedal {
@@ -45,6 +46,16 @@ enum class Shape_Type {
     Polygon                                     // cpPolyShapeNew
 };
 
+
+enum Txt {
+    Ball = 0,
+    Block = 1,
+    Plant = 2,
+    Rover = 3,
+    Wheel = 4,
+    Spare = 5
+};
+
 struct SceneObject {
     cpBody     *body;                       // Physical Body of object
     cpShape    *shape;                      // Collision Shape of object
@@ -61,7 +72,9 @@ struct SceneObject {
 
     bool        is_wheel = false;           // Set to true if we want wheel to spin from mouse press
     bool        in_scene = true;
+
     bool        follow = false;             // Set to true to have camera follow object
+    bool        collide = true;             // Set to false to have this object not collide with anything
 
     double      angle = 0;                  // Updated during timer, contains current object angle
     QPointF     position;                   // Updated during timer, contains current object posiiton
@@ -73,6 +86,7 @@ struct SceneObject {
 // Forward declarations
 class DrEngineTexture;
 class DrEngineWorld;
+class DrProject;
 
 // Type definitions
 typedef std::map<long, DrEngineTexture*> EngineTextureMap;
@@ -88,6 +102,8 @@ constexpr int c_texture_border = 0;
 class DrEngine
 {
 private:
+    DrProject        *m_project;                                // Pointer to Project to load into Engine
+
     EngineTextureMap  m_textures;                               // Map of textures used for this Engine
     EngineWorldMap    m_worlds;                                 // Map of Worlds used for this Engine
 
@@ -102,10 +118,7 @@ private:
                                                 //      Like gravity, it can be overridden on a per body basis.
 
 
-
-
 public:
-
     QVector<SceneObject*>   objects;
 
     Demo            demo = Demo::Spawn;
@@ -120,18 +133,20 @@ public:
 
 
 public:
-    DrEngine();
+    DrEngine(DrProject *project);
 
     //  Friction: 0 = frictionless, unknown limit
     //  Bounce:   0 = no bounce, 1.0 will give a “perfect” bounce. However due to inaccuracies in the simulation using 1.0 or greater is not recommended
     //  Mass:     Not sure
-    SceneObject*    addLine(Body_Type body_type, QPointF p1, QPointF p2, double friction, double bounce, double mass);
+    SceneObject*    addLine(  Body_Type body_type,  QPointF p1, QPointF p2, double friction, double bounce, double mass);
     SceneObject*    addCircle(Body_Type body_type,  long texture_number, double x, double y, double friction, double bounce, double mass, QPointF velocity);
-    SceneObject*    addBlock( Body_Type body_type,  long texture_number, double x, double y, double friction, double bounce, double mass, QPointF velocity);
+    SceneObject*    addBlock( Body_Type body_type,  long texture_number, double x, double y, double angle, double friction, double bounce, double mass,
+                              QPointF velocity, bool should_collide = true);
     SceneObject*    addPolygon(Body_Type body_type, long texture_number, double x, double y, QVector<QPointF> points, double friction, double bounce, double mass, QPointF velocity);
 
     void        buildSpace();
     void        clearSpace();
+    void        loadSpace();
     void        updateSpace();
 
     void        deleteResources();

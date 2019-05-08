@@ -5,6 +5,7 @@
 //
 //
 //
+#include <QtMath>
 #include "engine.h"
 #include "engine_texture.h"
 
@@ -87,7 +88,8 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
 //######################################################################################################
 //##    Add Block
 //######################################################################################################
-SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double x, double y, double friction, double bounce, double mass, QPointF velocity) {
+SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double x, double y, double angle, double friction, double bounce, double mass,
+                                QPointF velocity, bool should_collide) {
     SceneObject *block = new SceneObject();
 
     // Block basics
@@ -107,14 +109,19 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
     }
     cpSpaceAddBody(m_space, block->body);
     cpBodySetPosition( block->body, cpv( x, y));                                        // Coordinate is center of object
+    cpBodySetAngle(    block->body, qDegreesToRadians(-angle) );
     cpBodySetVelocity( block->body, cpv( velocity.x(), velocity.y()) );
 
     // Create the collision shape for the block
-    block->shape_type = Shape_Type::Box;
-    block->shape = cpBoxShapeNew(block->body, width, height, .01);
-    cpSpaceAddShape(m_space, block->shape);
-    cpShapeSetFriction(   block->shape, friction );
-    cpShapeSetElasticity( block->shape, bounce );
+    if (should_collide == true) {
+        block->shape_type = Shape_Type::Box;
+        block->shape = cpBoxShapeNew(block->body, width, height, .01);
+        cpSpaceAddShape(m_space, block->shape);
+        cpShapeSetFriction(   block->shape, friction );
+        cpShapeSetElasticity( block->shape, bounce );
+    } else {
+        block->collide = false;
+    }
 
     block->in_scene = true;
     objects.append( block );

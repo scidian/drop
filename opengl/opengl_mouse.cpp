@@ -33,7 +33,7 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
                 m_engine->addCircle(Body_Type::Dynamic, 0, x, y, .7, .5, 2, QPointF(vel_x, vel_y) );
             }
         } else if (event->button() & Qt::RightButton) {
-            m_engine->addBlock(Body_Type::Dynamic, 1, x, y, 1, 0, 3, QPointF(0, 0));
+            m_engine->addBlock(Body_Type::Dynamic, 1, x, y, 0, 1, 0, 3, QPointF(0, 0));
         } else if (event->button() & Qt::MiddleButton) {
             // Polygon shape points should be counter-clockwise
             QVector<QPointF> points;
@@ -46,7 +46,7 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
         }
 
 
-    } else if (m_engine->demo == Demo::Car) {
+    } else if (m_engine->demo == Demo::Car || m_engine->demo == Demo::Project) {
         if (event->button() & Qt::LeftButton) {
             m_engine->gas_pedal = Pedal::Clockwise;
         } else if (event->button() & Qt::RightButton) {
@@ -58,7 +58,7 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
 
 void OpenGL::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (m_engine->demo == Demo::Car)
+    if (m_engine->demo == Demo::Car || m_engine->demo == Demo::Project)
         if (event->buttons() == Qt::MouseButton::NoButton)
             m_engine->gas_pedal = Pedal::None;
 }

@@ -19,6 +19,7 @@
 void OpenGL::drawDebugShapes(QPainter &painter) {
     for (auto object : m_engine->objects) {
         if (object->in_scene == false) continue;
+        if (object->collide == false) continue;
 
         QColor color;
         switch (object->body_type) {

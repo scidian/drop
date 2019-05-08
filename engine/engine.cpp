@@ -5,15 +5,14 @@
 //
 //
 //
+#include "project/project.h"
 #include "engine.h"
 #include "engine_texture.h"
 
 //######################################################################################################
 //##    Constructor
 //######################################################################################################
-DrEngine::DrEngine() {
-
-}
+DrEngine::DrEngine(DrProject *project) : m_project(project) { }
 
 // Needs to be explicitly called by OpenGLWidget
 void DrEngine::deleteResources() {

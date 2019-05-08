@@ -38,16 +38,6 @@ void DrEngine::clearSpace() {
 //######################################################################################################
 //##    Build Space
 //######################################################################################################
-
-enum Txt {
-    Ball = 0,
-    Block = 1,
-    Plant = 2,
-    Rover = 3,
-    Wheel = 4,
-    Spare = 5
-};
-
 void DrEngine::buildSpace() {
 
     if (demo == Demo::Spawn) {
@@ -116,42 +106,42 @@ void DrEngine::buildSpace() {
         this->addLine(Body_Type::Static, QPointF( 1760,    4), QPointF(1790,   0), 1, .75, 1);
 
         // Sample object to find category and mask numbers
-        SceneObject  *base = this->addBlock(Body_Type::Kinematic, Txt::Block, 300,   0, 1, .75, 100, QPointF(0, 0));
+        SceneObject  *base = this->addBlock(Body_Type::Kinematic, Txt::Block, 300,   0, 0, 1, .75, 100, QPointF(0, 0));
         cpShapeFilter test = cpShapeGetFilter( base->shape);
 
 
         // Block alignment test
-        this->addBlock(Body_Type::Kinematic, Txt::Block, -1000, 220, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block, -1000, 160, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block, -1000, 100, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block, -1000,  40, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block, -1000, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block, -1000, 220, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block, -1000, 160, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block, -1000, 100, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block, -1000,  40, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block, -1000, -20, 0, 1, .75, 100, QPointF(0, 0));
 
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -940, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -880, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -820, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -760, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -700, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -640, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -580, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -520, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -460, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -400, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -340, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -280, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -220, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -160, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -100, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,   -39, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,    22, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,    83, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,   144, -20, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,   205, -20, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -940, -20, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -880, -20, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -820, -20, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -760, -20, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -700, -20, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -640, -20, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -580, -20, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -520, -20, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -460, -20, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -400, -20, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -340, -20, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -280, -20, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -220, -20, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -160, -20, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,  -100, -20, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,   -39, -20, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,    22, -20, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,    83, -20, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,   144, -20, 0, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Txt::Block,   205, -20, 0, 1, .75, 100, QPointF(0, 0));
 
 
 
         // Add body
-        SceneObject *rover = this->addBlock(  Body_Type::Dynamic, Txt::Rover, -450,  75,   .5, .1, 4, QPointF(0, 0));
+        SceneObject *rover = this->addBlock(  Body_Type::Dynamic, Txt::Rover, -450,  75, 0,   .5, .1, 4, QPointF(0, 0));
         rover->follow = true;
 
         // Add wheels
@@ -203,6 +193,11 @@ void DrEngine::buildSpace() {
         //cpSpaceAddConstraint( m_space, wheel_motor_1);
         //cpConstraint *wheel_motor_2 = cpSimpleMotorNew(rover->body, wheel2->body, .2);
         //cpSpaceAddConstraint( m_space, wheel_motor_2);
+
+    } else if (demo == Demo::Project) {
+
+        loadSpace();
+
     }
 
     has_scene = true;

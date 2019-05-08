@@ -54,8 +54,8 @@ void DrEngine::updateSpace() {
             setCameraPos( static_cast<float>(pos.x), static_cast<float>(pos.y), getCameraPos().z() );
         }
 
-        // Delete object if it falls below y = 400
-        if (pos.y < -400) {
+        // !!!!! TEMP: Delete object if it falls below y = 1000
+        if (pos.y < -1000) {
             object->in_scene = false;
 
             cpSpaceRemoveShape( m_space, object->shape );   cpSpaceRemoveBody( m_space, object->body );

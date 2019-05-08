@@ -95,6 +95,7 @@ SOURCES += \
     editor/editor_view_select.cpp \
     editor/editor_view_tooltip.cpp \
     engine/engine.cpp \
+    engine/engine_load.cpp \
     engine/engine_space_add.cpp \
     engine/engine_space_build.cpp \
     engine/engine_space_update.cpp \
