@@ -140,6 +140,20 @@ namespace Advisor_Info {
 };
 
 
+
+//####################################################################################
+//##    Local Error Codes
+//############################
+
+namespace Error_Code {
+
+    // Class DrSettings Related
+    const QString NoComponent          { "S001" };
+    const QString NoProperty           { "S002" };
+
+}
+
+
 //####################################################################################
 //##    Mouse cursors to use throughout project, defined in constants.cpp
 //############################

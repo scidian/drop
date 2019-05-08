@@ -5,6 +5,9 @@
 //      DrSettings Class Definitions
 //
 //
+#include "constants.h"
+#include "enums.h"
+#include "library.h"
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
@@ -25,14 +28,29 @@ DrSettings::~DrSettings() {
 //####################################################################################
 //##    Component / Property fetching
 //####################################################################################
-
-DrProperty* DrSettings::getComponentProperty(long component, long property) { return m_components[component]->getProperty(property); }
-DrProperty* DrSettings::getComponentProperty(Components component, Properties property) { return m_components[static_cast<long>(component)]->getProperty(property); }
-
-QVariant DrSettings::getComponentPropertyValue(long component, long property) { return m_components[component]->getProperty(property)->getValue(); }
-QVariant DrSettings::getComponentPropertyValue(Components component, Properties property) { return m_components[static_cast<long>(component)]->getProperty(property)->getValue(); }
 void DrSettings::setComponentPropertyValue(long component, long property, QVariant value) { m_components[component]->getProperty(property)->setValue(value); }
 void DrSettings::setComponentPropertyValue(Components component, Properties property, QVariant value) { m_components[static_cast<long>(component)]->getProperty(property)->setValue(value); }
+
+QVariant DrSettings::getComponentPropertyValue(long component, long property) {
+    return getComponentProperty(component, property)->getValue(); }
+QVariant DrSettings::getComponentPropertyValue(Components component, Properties property) {
+    return getComponentProperty(static_cast<long>(component), static_cast<long>(property))->getValue(); }
+DrProperty* DrSettings::getComponentProperty(Components component, Properties property) {
+    return getComponentProperty(static_cast<long>(component), static_cast<long>(property)); }
+
+DrProperty* DrSettings::getComponentProperty(long component, long property) {
+    auto it = m_components.find(component);
+    if (it == m_components.end()) {
+        Dr::ShowMessageBox("ERROR! CODE: " + Error_Code::NoComponent + "\n\n"
+                           "Component not found in current object \n\n"
+                           "Component ID: \t" + QString::number(component) + "\n"
+                           "Object Name: \t" + this->getName() + ". \n"
+                           "Object Type: \t" + Dr::StringFromType(this->getType()) + "\n");
+    }
+    return m_components[component]->getProperty(property);
+}
+
+
 
 QString DrSettings::getName() {
     switch (getType()) {

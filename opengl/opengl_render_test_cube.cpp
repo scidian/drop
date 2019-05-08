@@ -30,8 +30,8 @@ void OpenGL::drawCube() {
         std::vector<float> texCoords;
         texCoords.clear();
         texCoords.resize( 8 );
-        float one_x = (1 / texture->width())  * c_texture_border;
-        float one_y = (1 / texture->height()) * c_texture_border;
+        float one_x =  1 / texture->width();
+        float one_y =  1 / texture->height();
         texCoords[0] = 1 - one_x;    texCoords[1] = 1 - one_y;
         texCoords[2] =     one_x;    texCoords[3] = 1 - one_y;
         texCoords[4] = 1 - one_x;    texCoords[5] =     one_y;
@@ -54,13 +54,13 @@ void OpenGL::drawCube() {
             y = static_cast<float>(center.y()) * m_scale;
             half_width =  width  * m_scale / 2.0f;
             half_height = height * m_scale / 2.0f;
-            half_no_border = (width - c_texture_border * 2 * multi) * m_scale / 2.0f;
+            half_no_border = width * m_scale / 2.0f;
         } else {
             x = static_cast<float>(center.x());
             y = static_cast<float>(center.y());
             half_width =  width  / 2.0f;
             half_height = height / 2.0f;
-            half_no_border = (width - c_texture_border * 2 * multi) / 2.0f;
+            half_no_border = width / 2.0f;
         }
 
 
@@ -82,7 +82,7 @@ void OpenGL::drawCube() {
         bot_left =  QVector3D(-half_width, -half_height, -half_no_border) * matrix;
 
 
-        // ***** Load vertices for this object, this includes added size of c_texture_border
+        // ***** Load vertices for this object
         QVector<float> vertices;
         vertices.clear();
         vertices.resize( 12 );  // in sets of x, y, z

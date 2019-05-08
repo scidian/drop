@@ -40,15 +40,22 @@ DrComponent::~DrComponent() {
 void DrComponent::setProperty(long setting, QVariant value) { m_properties[setting]->setValue(value); }
 void DrComponent::setProperty(Properties setting, QVariant value) { m_properties[static_cast<int>(setting)]->setValue(value); }
 
+DrProperty* DrComponent::getProperty(Properties setting) { return getProperty(static_cast<long>(setting)); }
 DrProperty* DrComponent::getProperty(long setting) {
-    if (m_properties.at(setting) == nullptr)
-        Dr::ShowMessageBox("Did not have property, Type: " + Dr::StringFromType(this->m_parent_settings->getType()) );
+    auto it = m_properties.find(setting);
+    if (it == m_properties.end()) {
+        Dr::ShowMessageBox("ERROR! CODE: " + Error_Code::NoProperty + "\n\n"
+                           "Property not found in object / component \n\n"
+                           "Property ID: \t" +    QString::number(setting) + "\n"
+                           "Component Name: \t" + this->getDisplayName() + "\n"
+                           "Component ID: \t" +   QString::number(this->getComponentKey()) + "\n"
+                           "Object Name: \t" + this->m_parent_settings->getName() + "\n"
+                           "Object Type: \t" + Dr::StringFromType(this->m_parent_settings->getType()) + "\n");
+    }
     return m_properties[setting];
 }
 
-DrProperty* DrComponent::getProperty(Properties setting) {
-    return getProperty(static_cast<long>(setting));
-}
+
 
 
 //####################################################################################

@@ -39,11 +39,15 @@ void DrEngine::loadSpace() {
 
         DrObject *object = object_pair.second;
 
+        if (object->getType() != DrType::Object) continue;
+        if (object->getObjectType() != DrObjectType::Object) continue;
+
         QPointF position = object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF();
+        QPointF scale =    object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale).toPointF();
         double  angle =    object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Rotation).toDouble();
         bool    collide =  object->getComponentPropertyValue(Components::Object_Settings,  Properties::Object_Collide).toBool();
 
-        addBlock(Body_Type::Kinematic, Txt::Rover, position.x(), -position.y(), angle, 1, .75, 100, QPointF(0, 0), collide);
+        addBlock(Body_Type::Kinematic, Txt::Rover, position.x(), -position.y(), angle, scale, 1, .75, 100, QPointF(0, 0), collide);
 
 
     }
@@ -53,7 +57,7 @@ void DrEngine::loadSpace() {
 
 
     // Add body
-    SceneObject *rover = this->addBlock(  Body_Type::Dynamic, Txt::Rover,  350,  75,  0, .5, .1, 4, QPointF(0, 0));
+    SceneObject *rover = this->addBlock(  Body_Type::Dynamic, Txt::Rover,  350,  75,  0, QPointF(1, 1), .5, .1, 4, QPointF(0, 0));
     rover->follow = true;
 
     // Add wheels

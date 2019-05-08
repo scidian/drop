@@ -92,8 +92,6 @@ class DrProject;
 typedef std::map<long, DrEngineTexture*> EngineTextureMap;
 typedef std::map<long, DrEngineWorld*>   EngineWorldMap;
 
-// Constants
-constexpr int c_texture_border = 0;
 
 //####################################################################################
 //##    DrEngine
@@ -140,8 +138,8 @@ public:
     //  Mass:     Not sure
     SceneObject*    addLine(  Body_Type body_type,  QPointF p1, QPointF p2, double friction, double bounce, double mass);
     SceneObject*    addCircle(Body_Type body_type,  long texture_number, double x, double y, double friction, double bounce, double mass, QPointF velocity);
-    SceneObject*    addBlock( Body_Type body_type,  long texture_number, double x, double y, double angle, double friction, double bounce, double mass,
-                              QPointF velocity, bool should_collide = true);
+    SceneObject*    addBlock( Body_Type body_type,  long texture_number, double x, double y, double angle, QPointF scale,
+                              double friction, double bounce, double mass, QPointF velocity, bool should_collide = true);
     SceneObject*    addPolygon(Body_Type body_type, long texture_number, double x, double y, QVector<QPointF> points, double friction, double bounce, double mass, QPointF velocity);
 
     void        buildSpace();

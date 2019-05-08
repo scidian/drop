@@ -33,7 +33,7 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
                 m_engine->addCircle(Body_Type::Dynamic, 0, x, y, .7, .5, 2, QPointF(vel_x, vel_y) );
             }
         } else if (event->button() & Qt::RightButton) {
-            m_engine->addBlock(Body_Type::Dynamic, 1, x, y, 0, 1, 0, 3, QPointF(0, 0));
+            m_engine->addBlock(Body_Type::Dynamic, 1, x, y, 0, QPointF(1, 1), 1, 0, 3, QPointF(0, 0));
         } else if (event->button() & Qt::MiddleButton) {
             // Polygon shape points should be counter-clockwise
             QVector<QPointF> points;

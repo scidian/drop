@@ -32,11 +32,6 @@ void OpenGL::paintGL() {
     //glEnable( GL_DEPTH_TEST  );                          // Enable depth test
     ///glEnable( GL_MULTISAMPLE );                          // Enable anti aliasing
 
-    // Enable face culling for triangles facing away from view
-    glEnable( GL_CULL_FACE );
-    glCullFace(  GL_BACK );
-    glFrontFace( GL_CCW );
-
     // Enable alpha channel
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);      // Standard blend function
@@ -89,13 +84,24 @@ void OpenGL::paintGL() {
 
 
 
-    // ***** Enable shader program
+    // ********** Enable shader program
     if (!m_program.bind()) return;
     m_program.setUniformValue( m_matrixUniform, m_matrix );
 
+
+    // ***** Before rendering 3D objects, enable face culling for triangles facing away from view
+    glEnable( GL_CULL_FACE );
+    glCullFace(  GL_BACK );
+    glFrontFace( GL_CCW );
+
+    // ***** Render 3D Objects
     drawCube();
 
-    // ********** Draw each object in space
+    // ***** Turn off culling before drawing 2D objects, ALSO: Must turn off culling for QPainter to work
+    glDisable( GL_CULL_FACE );
+
+
+    // ***** Render 2D Objects
     for (auto object : m_engine->objects) {
         if (object->shape_type == Shape_Type::Segment) continue;
 
@@ -106,8 +112,8 @@ void OpenGL::paintGL() {
         std::vector<float> texCoords;
         texCoords.clear();
         texCoords.resize( 8 );
-        float one_x = (1 / texture->width())  * c_texture_border;
-        float one_y = (1 / texture->height()) * c_texture_border;
+        float one_x =  1 / texture->width();
+        float one_y =  1 / texture->height();
         texCoords[0] = 1 - one_x;    texCoords[1] = 1 - one_y;
         texCoords[2] =     one_x;    texCoords[3] = 1 - one_y;
         texCoords[4] = 1 - one_x;    texCoords[5] =     one_y;
@@ -123,13 +129,13 @@ void OpenGL::paintGL() {
         if (m_engine->render_type == Render_Type::Orthographic) {
             x = static_cast<float>(center.x()) * m_scale;
             y = static_cast<float>(center.y()) * m_scale;
-            half_width =  float(texture->width())  * m_scale / 2.0f;
-            half_height = float(texture->height()) * m_scale / 2.0f;
+            half_width =  float(object->width)  * m_scale / 2.0f;
+            half_height = float(object->height) * m_scale / 2.0f;
         } else {
             x = static_cast<float>(center.x());
             y = static_cast<float>(center.y());
-            half_width =  float(texture->width())  / 2.0f;
-            half_height = float(texture->height()) / 2.0f;
+            half_width =  float(object->width)  / 2.0f;
+            half_height = float(object->height) / 2.0f;
         }
 
 
@@ -142,7 +148,7 @@ void OpenGL::paintGL() {
         QVector3D bot_left =  QVector3D(-half_width, -half_height, 0) * matrix;
 
 
-        // ***** Load vertices for this object, this includes added size of c_texture_border
+        // ***** Load vertices for this object
         QVector<float> vertices;
         vertices.clear();
         vertices.resize( 12 );              // in sets of x, y, z
@@ -179,8 +185,6 @@ void OpenGL::paintGL() {
 
     // ***** Disable shader program, end native drawing
     m_program.release();
-
-    glDisable( GL_CULL_FACE );              // Must turn off culling for QPainter for some reason
     painter.endNativePainting();
 
 

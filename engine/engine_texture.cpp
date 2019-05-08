@@ -29,16 +29,8 @@ void DrEngineTexture::loadTexture(QString from_asset_string) {
     if (image.format() != QImage::Format::Format_ARGB32 )
         image = image.convertToFormat( QImage::Format_ARGB32 );
 
-    // Add a "c_texture_border" pixel border to reduce artifacts during multi sampling
-    QPixmap one_pixel_border( image.width() + (c_texture_border * 2), image.height() + (c_texture_border * 2));
-    one_pixel_border.fill(Qt::transparent);
-    QPainter painter;
-    painter.begin(&one_pixel_border);
-    painter.drawPixmap( c_texture_border, c_texture_border, image.width(), image.height(), QPixmap::fromImage(image), 0, 0, image.width(), image.height());
-    painter.end();
-
     // Create new texture
-    m_texture = new QOpenGLTexture( one_pixel_border.toImage() );
+    m_texture = new QOpenGLTexture( image );
 
     ///QOpenGLTexture* tile = new QOpenGLTexture(QOpenGLTexture::Target2D);
     ///tile->setSize(256, 256);
