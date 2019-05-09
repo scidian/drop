@@ -145,13 +145,13 @@ void DrEngine::buildSpace() {
         rover->follow = true;
 
         // Add wheels
-        SceneObject *wheel1 = this->addCircle(Body_Type::Dynamic, Txt::Wheel, -490,  45, 3.4, .7,  2, QPointF(0, 0));
-        SceneObject *wheel2 = this->addCircle(Body_Type::Dynamic, Txt::Wheel, -450,  45, 3.4, .7,  2, QPointF(0, 0));
-        SceneObject *wheel3 = this->addCircle(Body_Type::Dynamic, Txt::Wheel, -410,  45, 3.4, .7,  2, QPointF(0, 0));
-        wheel1->is_wheel = true;    wheel1->wheel_speed = 80;
-        wheel2->is_wheel = true;    wheel2->wheel_speed = 40;
-        wheel3->is_wheel = true;    wheel3->wheel_speed = 60;
-        SceneObject *spare1 = this->addCircle(Body_Type::Dynamic, Txt::Spare, -509,  45, 3.4, .7, .5, QPointF(0, 0));
+        SceneObject *wheel1 = this->addCircle(Body_Type::Dynamic, Txt::Wheel, -490,  45, 4, .7,  2, QPointF(0, 0));
+        SceneObject *wheel2 = this->addCircle(Body_Type::Dynamic, Txt::Wheel, -450,  45, 4, .7,  2, QPointF(0, 0));
+        SceneObject *wheel3 = this->addCircle(Body_Type::Dynamic, Txt::Wheel, -410,  45, 4, .7,  2, QPointF(0, 0));
+        wheel1->is_wheel = true;    wheel1->wheel_speed = 90;
+        wheel2->is_wheel = true;    wheel2->wheel_speed = 50;
+        wheel3->is_wheel = true;    wheel3->wheel_speed = 70;
+        SceneObject *spare1 = this->addCircle(Body_Type::Dynamic, Txt::Spare, -509,  45, 4, .7, .5, QPointF(0, 0));
 
         //this->addCircle(Body_Type::Dynamic, Txt::Ball, -450, -80, 4, 0, 2, QPointF(0, 0));
 

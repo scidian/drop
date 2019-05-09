@@ -57,17 +57,17 @@ void DrEngine::loadSpace() {
 
 
     // Add body
-    SceneObject *rover = this->addBlock(  Body_Type::Dynamic, Txt::Rover,  350,  75,  0, QPointF(1, 1), .5, .1, 4, QPointF(0, 0));
+    SceneObject *rover = this->addBlock(  Body_Type::Dynamic, Txt::Rover,  350,  75,   0, QPointF(1, 1), .5, .1, 4, QPointF(0, 0));
     rover->follow = true;
 
     // Add wheels
-    SceneObject *wheel1 = this->addCircle(Body_Type::Dynamic, Txt::Wheel,  310,  45, 3.4, .7,  2, QPointF(0, 0));
-    SceneObject *wheel2 = this->addCircle(Body_Type::Dynamic, Txt::Wheel,  350,  45, 3.4, .7,  2, QPointF(0, 0));
-    SceneObject *wheel3 = this->addCircle(Body_Type::Dynamic, Txt::Wheel,  390,  45, 3.4, .7,  2, QPointF(0, 0));
+    SceneObject *wheel1 = this->addCircle(Body_Type::Dynamic, Txt::Wheel,  310,  45, 4, .7,  2, QPointF(0, 0));
+    SceneObject *wheel2 = this->addCircle(Body_Type::Dynamic, Txt::Wheel,  350,  45, 4, .7,  2, QPointF(0, 0));
+    SceneObject *wheel3 = this->addCircle(Body_Type::Dynamic, Txt::Wheel,  390,  45, 4, .7,  2, QPointF(0, 0));
     wheel1->is_wheel = true;    wheel1->wheel_speed = 80;
     wheel2->is_wheel = true;    wheel2->wheel_speed = 40;
     wheel3->is_wheel = true;    wheel3->wheel_speed = 60;
-    SceneObject *spare1 = this->addCircle(Body_Type::Dynamic, Txt::Spare,  290,  45, 3.4, .7, .5, QPointF(0, 0));
+    SceneObject *spare1 = this->addCircle(Body_Type::Dynamic, Txt::Spare,  290,  45, 4, .7, .5, QPointF(0, 0));
 
     cpShapeFilter test = cpShapeGetFilter( rover->shape );
     cpShapeFilter filter;
