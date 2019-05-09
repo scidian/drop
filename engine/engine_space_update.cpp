@@ -11,10 +11,10 @@
 //######################################################################################################
 //##    Update Space
 //######################################################################################################
-void DrEngine::updateSpace() {
+void DrEngine::updateSpace(double time_passed) {
 
     // ***** Updates physics
-    cpSpaceStep(m_space, m_time_step);
+    cpSpaceStep(m_space, time_passed / 1000 * m_time_warp); ///m_time_step);
 
 
     // ***** Iterate through objects, delete if they go off screen
@@ -51,6 +51,7 @@ void DrEngine::updateSpace() {
         }
 
         if (object->follow == true) {
+            // !!!!! Need to implement a smooth following camera
             setCameraPos( static_cast<float>(pos.x), static_cast<float>(pos.y), getCameraPos().z() );
         }
 

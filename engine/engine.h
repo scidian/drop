@@ -105,14 +105,17 @@ private:
     EngineTextureMap  m_textures;                               // Map of textures used for this Engine
     EngineWorldMap    m_worlds;                                 // Map of Worlds used for this Engine
 
-    QVector3D   m_camera_pos = QVector3D(0, 0, -800);           // Current camera position
+    QVector3D       m_camera_pos = QVector3D(0, 0, -800);           // Current camera position
 
-    cpSpace    *m_space;                        // Current physics space shown on screen
+    cpSpace        *m_space;                    // Current physics space shown on screen
 
-    cpFloat     m_time_step = 1 / 60.0;         // Current time step, it is *highly* recommended to use a fixed size time step.
-    cpVect      m_gravity;                      // Current global gravity applied to current space. Defaults to cpvzero. Can be overridden on a per body basis
+    const cpFloat   m_time_step = 1 / 90.0;     // Speed at which want to try to update the Space, 1 / 90 = 90 times per second to up
+                                                //      It is *highly* recommended to use a fixed size time step (calling Update at a fixed interval)
+    cpFloat         m_time_warp = 1.0;          // Speeds up or slows down physics time, 1 = 100% = Normal Time, Lower than 1 = slower, Higher = faster
+
+    cpVect          m_gravity;                  // Current global gravity applied to current space. Defaults to cpvzero. Can be overridden on a per body basis
                                                 //      by writing custom integration functions. Changing the gravity will activate all sleeping bodies in the space.
-    cpFloat     m_damping;                      // A value of 0.9 means that each body will lose 10% of its velocity per second. Defaults to 1.
+    cpFloat         m_damping;                  // A value of 0.9 means that each body will lose 10% of its velocity per second. Defaults to 1.
                                                 //      Like gravity, it can be overridden on a per body basis.
 
 
@@ -145,7 +148,7 @@ public:
     void        buildSpace();
     void        clearSpace();
     void        loadSpace();
-    void        updateSpace();
+    void        updateSpace(double time_passed);
 
     void        deleteResources();
 
@@ -162,13 +165,15 @@ public:
     const bool&         debugOn() { return debug; }
     const QVector3D&    getCameraPos()  { return m_camera_pos; }
     const cpFloat&      getTimeStep()   { return m_time_step; }
+    const cpFloat&      getTimeWarp()   { return m_time_warp; }
     const cpVect&       getGravity()    { return m_gravity; }
     const cpFloat&      getDamping()    { return m_damping; }
     void                setCameraPos(QVector3D new_pos) { m_camera_pos = new_pos; }
     void                setCameraPos(float x, float y, float z) { m_camera_pos = QVector3D(x, y, z); }
-    void                setTimeStep(cpFloat new_time_step) { m_time_step = new_time_step; }
+    void                setTimeWarp(double new_time_warp) { m_time_warp = new_time_warp; }
     void                setGravity(cpVect new_gravity) { m_gravity = new_gravity; }
     void                setDamping(cpFloat new_damping) { m_damping = new_damping; }
+
 
 };
 

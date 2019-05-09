@@ -12,6 +12,7 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QPushButton>
+#include <QTime>
 #include <QTimer>
 
 class DrEngine;
@@ -32,6 +33,10 @@ private:
     DrProject  *m_project;
 
     QTimer     *m_timer;
+    QTime       m_time_last_update;
+    QTime       m_time_last_render;
+
+    const qreal m_ideal_frames_per_second = 60;
 
 public:
     QWidget         *centralWidget;
@@ -59,6 +64,8 @@ private slots:
     void on_pushPersp_clicked();
     void on_pushOrtho_clicked();
 
+    void startTimers();
+    void stopTimers();
     void updateEngine();
     void updateLabels(QString info);
 };

@@ -73,16 +73,15 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
     this->setCentralWidget(centralWidget);
 
 
-    // Create scene timer and connect it to UpdateScene
+    // Create engine timer and connect
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(updateEngine()));
-
 }
 
 FormEngine::~FormEngine() { }
 
 void FormEngine::closeEvent(QCloseEvent *) {
-    m_timer->stop();
+    stopTimers();
     qApp->processEvents();
 }
 
@@ -94,11 +93,11 @@ void FormEngine::closeEvent(QCloseEvent *) {
 //######################################################################################################
 void FormEngine::on_pushButton_clicked() {
     if (!m_engine->has_scene) return;
-    m_timer->start( int(1000 * m_engine->getTimeStep()) );
-    m_engine->fps_timer.restart();
-    m_engine->fps = 0;
+    startTimers();
 }
-void FormEngine::on_pushButton2_clicked() {   m_timer->stop();  }
+void FormEngine::on_pushButton2_clicked() {
+    stopTimers();
+}
 
 void FormEngine::on_pushDebug_clicked() {
     m_engine->debug = !m_engine->debug;
@@ -106,21 +105,21 @@ void FormEngine::on_pushDebug_clicked() {
 }
 
 void FormEngine::on_pushSpawn_clicked() {
-    m_timer->stop();
+    stopTimers();
     m_engine->clearSpace();
     m_engine->demo = Demo::Spawn;
     m_engine->buildSpace();
 }
 
 void FormEngine::on_pushCar_clicked() {
-    m_timer->stop();
+    stopTimers();
     m_engine->clearSpace();
     m_engine->demo = Demo::Car;
     m_engine->buildSpace();
 }
 
 void FormEngine::on_pushProject_clicked() {
-    m_timer->stop();
+    stopTimers();
     m_engine->clearSpace();
     qApp->processEvents();
     m_engine->demo = Demo::Project;
@@ -134,12 +133,27 @@ void FormEngine::on_pushOrtho_clicked() { m_engine->render_type = Render_Type::O
 //######################################################################################################
 //##    Update Engine /  Labels
 //######################################################################################################
+void FormEngine::startTimers() {
+    m_timer->start( 1 );
+    m_time_last_render.restart();
+    m_time_last_update.restart();
+    m_engine->fps_timer.restart();
+    m_engine->fps = 0;
+}
+void FormEngine::stopTimers() {
+     m_timer->stop();
+}
+
 void FormEngine::updateEngine() {
+    if (m_time_last_update.elapsed() > (m_engine->getTimeStep() * 1000)) {
+        m_engine->updateSpace(m_time_last_update.elapsed());
+        m_time_last_update.restart();
+    }
 
-    // ***** Update engine and render
-    m_engine->updateSpace();
-    m_opengl->update();
-
+    // This would limit to a particular frames per second, for now calling it as much as possible
+    ///if (m_time_last_render.elapsed() > 1000 / m_ideal_frames_per_second) {
+        m_opengl->update();
+    ///    m_time_last_render.restart(); }
 }
 
 // Update helpful labels
