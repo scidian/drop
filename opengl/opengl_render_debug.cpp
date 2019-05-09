@@ -105,9 +105,28 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
                 painter.drawPolygon( rotated_poly );
             }
         }   // End If
+
+
+        //cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(drawContactPoints), &ground_normal);
+
+
+
+
     }   // End For
 
 }
+
+
+static void drawContactPoints(cpBody *, cpArbiter *arb, cpVect *ground_normal) {
+    cpVect n = cpvneg( cpArbiterGetNormal(arb) );
+    if (n.y > ground_normal->y) (*ground_normal) = n;
+}
+
+
+
+
+
+
 
 
 

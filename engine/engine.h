@@ -87,7 +87,6 @@ struct SceneObject {
 };
 
 // Forward declarations
-class DrEngine;
 class DrEngineTexture;
 class DrEngineWorld;
 class DrProject;
@@ -96,10 +95,6 @@ class DrProject;
 typedef std::map<long, DrEngineTexture*> EngineTextureMap;
 typedef std::map<long, DrEngineWorld*>   EngineWorldMap;
 
-// Gloabls
-extern DrEngine *engine;
-extern void selectPlayerGroundNormal(cpBody *, cpArbiter *arb, cpVect *ground_normal);
-extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);
 
 //####################################################################################
 //##    DrEngine
@@ -113,7 +108,7 @@ private:
     EngineTextureMap  m_textures;                               // Map of textures used for this Engine
     EngineWorldMap    m_worlds;                                 // Map of Worlds used for this Engine
 
-    QVector3D       m_camera_pos = QVector3D(0, 0, -800);           // Current camera position
+    QVector3D       m_camera_pos = QVector3D(0, 0, -800);       // Current camera position
 
     cpSpace        *m_space;                    // Current physics space shown on screen
 
@@ -147,8 +142,8 @@ public:
     cpBody         *player_body;
     cpShape        *player_shape;
     cpFloat         remaining_boost;
-    cpBool          grounded;
-    cpBool          last_jump_state;
+    bool            grounded;
+    bool            last_jump_state;
 
 
 public:
@@ -167,6 +162,7 @@ public:
     void        buildSpace();
     void        clearSpace();
     void        loadSpace();
+    void        playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat dt);
     void        updateSpace(double time_passed);
 
     void        deleteResources();

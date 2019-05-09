@@ -9,16 +9,27 @@
 #include "engine/engine.h"
 #include "library.h"
 
-#define JUMP_HEIGHT 50.0
-#define JUMP_BOOST_HEIGHT 100.0
-#define GRAVITY 1000.0
+
+// How fast we start to accelerate on the ground, smaller = faster
+#define PLAYER_GROUND_ACCEL_TIME 0.1
+#define PLAYER_GROUND_ACCEL (PLAYER_VELOCITY / PLAYER_GROUND_ACCEL_TIME)
+
+// How fast we start to accelerate in the air, smaller = faster
+#define PLAYER_AIR_ACCEL_TIME 0.35
+#define PLAYER_AIR_ACCEL (PLAYER_VELOCITY / PLAYER_AIR_ACCEL_TIME)
+
+#define PLAYER_VELOCITY 500.0                   // Movement speed
+#define JUMP_HEIGHT      70.0                   // Jump force (for now only y)
+#define JUMP_TIME_OUT   800.0                   // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
+#define FALL_VELOCITY  1000.0                   // Max fall speed
+
 
 //######################################################################################################
 //##    Update Space
 //######################################################################################################
 void DrEngine::updateSpace(double time_passed) {
 
-    // ***** Updates physics
+    // ***** Updates physics, time_passed is in milliseconds
     cpFloat step_time = time_passed / 1000 * m_time_warp;
     cpSpaceStep(m_space, step_time); ///m_time_step);
 
@@ -32,6 +43,9 @@ void DrEngine::updateSpace(double time_passed) {
             it++;
             continue;
         }
+
+        // Get some Space info
+        cpVect  gravity = cpSpaceGetGravity( m_space );
 
         // Gets velocity
         cpVect  vel = cpBodyGetVelocity( object->body );
@@ -66,17 +80,22 @@ void DrEngine::updateSpace(double time_passed) {
 
 
 
-        // ***** If the jump key was just pressed this frame, jump!
-        remaining_boost -= step_time;
-        bool jump_state = keyboard_y > 0.0;
-        if (jump_state && !last_jump_state && grounded) {
-            cpFloat jump_v = cpfsqrt(2.0 * JUMP_HEIGHT * GRAVITY);
-            cpVect  player_v = cpBodyGetVelocity( player_body );
-            player_v = cpvadd(player_v, cpv(0.0, jump_v));
-            cpBodySetVelocity( player_body, player_v );
-            remaining_boost = JUMP_BOOST_HEIGHT / jump_v;
+        // Update player velocity
+        if (object->player_controls) {
+            playerUpdateVelocity( player_body, gravity, step_time );
+
+            // ***** If the jump key was just pressed this frame and it wasn't pressed last frame, and we're on the ground, jump!
+            if (remaining_boost > 0) remaining_boost -= time_passed;
+            bool jump_state = keyboard_y > 0.0;
+            if (jump_state && !last_jump_state && grounded) {
+                cpFloat jump_v = cpfsqrt(2.0 * JUMP_HEIGHT * -gravity.y);
+                cpVect  player_v = cpBodyGetVelocity( player_body );
+                player_v = cpvadd(player_v, cpv(0.0, jump_v));
+                cpBodySetVelocity( player_body, player_v );
+                remaining_boost = JUMP_TIME_OUT;
+            }
+            last_jump_state = jump_state;
         }
-        last_jump_state = jump_state;
 
 
 
@@ -99,6 +118,61 @@ void DrEngine::updateSpace(double time_passed) {
 }
 
 
+
+static void selectPlayerGroundNormal(cpBody *, cpArbiter *arb, cpVect *ground_normal) {
+    cpVect n = cpvneg( cpArbiterGetNormal(arb) );
+    if (n.y > ground_normal->y)
+        (*ground_normal) = n;
+}
+
+void DrEngine::playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat dt)
+{
+    // Check if jump key is active
+    bool jump_state = keyboard_y > 0.0;
+
+    // Grab the grounding normal from last frame, if we hit the ground, turn of remaining_boost time
+    cpVect ground_normal = cpvzero;
+    cpBodyEachArbiter(player_body, cpBodyArbiterIteratorFunc(selectPlayerGroundNormal), &ground_normal);
+    grounded = (ground_normal.y > 0.0);
+    if (ground_normal.y < 0.0) {
+        remaining_boost = 0.0;
+    }
+
+    // Continues to provide jump velocity, although slowly fades
+    cpBool boost = (jump_state && (remaining_boost > 0.0));
+
+    // Alternative boost extension:
+    ///cpVect g = (boost ? cpvzero : gravity);
+    ///cpBodyUpdateVelocity(body, g, damping, dt);
+
+    // Custom boost extension that provides a little more boost
+    if (boost) {
+        cpVect  player_v = cpBodyGetVelocity( player_body );
+        cpFloat jump_v = cpfsqrt(2.0 * JUMP_HEIGHT * -gravity.y) * dt;
+        player_v = cpvadd(player_v, cpv(0.0, jump_v));
+        cpBodySetVelocity( player_body, player_v );
+    }
+
+    // Target horizontal speed for air / ground control
+    cpFloat target_vx = PLAYER_VELOCITY * keyboard_x;
+
+    // Update the surface velocity and friction
+    cpVect surface_v = cpv(-target_vx, 0.0);
+    cpShapeSetSurfaceVelocity( player_shape, surface_v );
+    cpShapeSetFriction( player_shape, (grounded ? PLAYER_GROUND_ACCEL / -gravity.y : 0.0));
+
+    // Apply air control if not grounded, smoothly accelerate the velocity
+    if (!grounded) {
+        cpVect air_v = cpBodyGetVelocity( player_body );
+        air_v.x = cpflerpconst( air_v.x, target_vx, PLAYER_AIR_ACCEL * dt);
+        cpBodySetVelocity( player_body, air_v );
+    }
+
+    // Set a max fall speed of "FALL_VELOCITY"
+    cpVect body_v = cpBodyGetVelocity( body );
+    body_v.y = cpfclamp(body_v.y, -FALL_VELOCITY, static_cast<double>(INFINITY));
+    cpBodySetVelocity( body, body_v );
+}
 
 
 

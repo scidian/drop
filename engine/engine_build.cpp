@@ -209,17 +209,15 @@ void DrEngine::buildSpace() {
             this->addLine(Body_Type::Static, QPointF(-1000, -200), QPointF(1000, -200), 2, .5, 1);
 
             // Add one ball
-            SceneObject *ball = this->addCircle(Body_Type::Dynamic, Txt::Ball, 0,  0, 2, .5, 200, QPointF( 0, 0), false);
+            SceneObject *ball = this->addCircle(Body_Type::Dynamic, Txt::Ball, 0,  0, 2, .05, 200, QPointF( 0, 0), false);
             ball->follow = true;
+            ball->player_controls = true;
 
             player_body = ball->body;
             player_shape = ball->shape;
             remaining_boost = 0;
             grounded = cpFalse;
             last_jump_state = cpFalse;
-
-            engine = this;
-            cpBodySetVelocityUpdateFunc( ball->body, playerUpdateVelocity );
 
 
     } else if (demo == Demo::Project) {
