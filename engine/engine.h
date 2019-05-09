@@ -23,6 +23,7 @@ enum class Render_Type {
 enum class Demo {
     Spawn,
     Car,
+    Jump,
     Project,
 };
 
@@ -57,29 +58,38 @@ enum Txt {
 };
 
 struct SceneObject {
+    // ***** Object Properties
     cpBody     *body;                       // Physical Body of object
     cpShape    *shape;                      // Collision Shape of object
 
     Body_Type   body_type;                  // Body_Type
     Shape_Type  shape_type;                 // Shape_Type
 
-    long        texture_number;             // Reference to which texture to use from Engine.EngineTexture map
-    double      radius;                     // Used for Shape_Type::Circle collision shapes
-    double      width;                      // Used for Shape_Type::Box collisiuon shapes
-    double      height;                     // Used for Shape_Type::Box collisiuon shapes
-
-    double      wheel_speed;                // Speed at which wheel should spin when gas pedal is pressed
-
-    bool        is_wheel = false;           // Set to true if we want wheel to spin from mouse press
-    bool        in_scene = true;
-
-    bool        follow = false;             // Set to true to have camera follow object
+    bool        in_scene = true;            // True while object exists in Space
     bool        collide = true;             // Set to false to have this object not collide with anything
 
-    double      angle = 0;                  // Updated during timer, contains current object angle
-    QPointF     position;                   // Updated during timer, contains current object posiiton
-    QPointF     velocity;                   // Updated during timer, contains current object velocity
+    long        texture_number;             // Reference to which texture to use from Engine.EngineTexture map
+    double      radius;                     // Used for Shape_Type::Circle collision shapes
+    double      width;                      // Used for Shape_Type::Box collision shapes
+    double      height;                     // Used for Shape_Type::Box collision shapes
 
+
+    // ***** Object interaction
+    bool        follow = false;             // Set to true to have camera follow object
+
+    bool        is_wheel = false;           // Set to true if we want wheel to spin from button press
+    double      wheel_speed;                // If is_wheel, Speed at which wheel should spin when gas pedal is pressed
+
+    int         jump_count = 0;             // Number of jumps can do before touching ground, -1 = infinity, 0 = no jumping, 1 = one jump, 2 = 2, etc
+    cpVect      jump_force = cpv(0, 350);   // If can_jump, Force of jump when button is pressed
+    double      jump_hold = 0;              // Length of time, in milliseconds, we want to allow jump to build bigger and bigger when mouse is held down
+    QTime       jump_time;                  // Used to compare start of jump to jump_hold
+
+
+    // ***** Updated by Engine:
+    double      angle = 0;                  // Current object angle
+    QPointF     position;                   // Current object posiiton
+    QPointF     velocity;                   // Current object velocity
 };
 
 
@@ -131,6 +141,7 @@ public:
 
     bool            has_scene = false;
     Pedal           gas_pedal = Pedal::None;
+    bool            jump_pressed = false;
 
 
 public:

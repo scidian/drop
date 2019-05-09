@@ -19,6 +19,7 @@
 #include "forms/form_engine.h"
 #include "opengl/opengl.h"
 #include "engine/engine.h"
+#include "style/style.h"
 
 //######################################################################################################
 //##    Constructor / Destructor
@@ -26,45 +27,61 @@
 FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent), m_project(project) {
     this->setObjectName("Drop Player");
     this->resize(1200, 800);
+    Dr::ApplyCustomStyleSheetFormatting(this);
 
     m_engine = new DrEngine(project);
 
     centralWidget = new QWidget(this);
     centralWidget->setObjectName("centralWidget");
         QVBoxLayout *layout = new QVBoxLayout(centralWidget);
+        layout->setContentsMargins(3, 3, 3, 3);
 
         QWidget *upperWidget = new QWidget();
-        upperWidget->setFixedHeight(90);
-        pushButton =  new QPushButton(upperWidget);     pushButton->setObjectName("pushButton");    pushButton->setGeometry( QRect( 10,  0, 141, 25));
-        pushButton2 = new QPushButton(upperWidget);     pushButton2->setObjectName("pushButton2");  pushButton2->setGeometry(QRect( 10, 25, 141, 25));
-        pushDebug =   new QPushButton(upperWidget);     pushDebug->setObjectName("pushDebug");      pushDebug->setGeometry(  QRect(830,  5, 141, 70));
-        pushSpawn =   new QPushButton(upperWidget);     pushSpawn->setObjectName("pushSpawn");      pushSpawn->setGeometry(  QRect(700,  0, 141, 25));
-        pushCar =     new QPushButton(upperWidget);     pushCar->setObjectName("pushCar");          pushCar->setGeometry(    QRect(700, 25, 141, 25));
-        pushProject = new QPushButton(upperWidget);     pushProject->setObjectName("pushProject");  pushProject->setGeometry(QRect(700, 50, 141, 25));
-        pushPersp =   new QPushButton(upperWidget);     pushPersp->setObjectName("pushPersp");      pushPersp->setGeometry(  QRect(520,  0, 141, 25));
-        pushOrtho =   new QPushButton(upperWidget);     pushOrtho->setObjectName("pushOrtho");      pushOrtho->setGeometry(  QRect(520, 25, 141, 25));
-        label =       new QLabel(upperWidget);          label->setObjectName("label");              label->setGeometry(      QRect(190,  0, 330, 20));
-        label2 =      new QLabel(upperWidget);          label2->setObjectName("label2");            label2->setGeometry(     QRect(190, 25, 330, 20));
-        labelOpenGL = new QLabel(upperWidget);          labelOpenGL->setObjectName("labelOpenGL");  labelOpenGL->setGeometry(QRect(190, 50, 330, 20));
+        upperWidget->setFixedHeight(100);
+        pushSpawn =   new QPushButton(upperWidget);     pushSpawn->setObjectName("pushSpawn");      pushSpawn->setGeometry(  QRect(  5,  0, 140, 24));
+        pushCar =     new QPushButton(upperWidget);     pushCar->setObjectName("pushCar");          pushCar->setGeometry(    QRect(  5, 24, 140, 24));
+        pushJump =    new QPushButton(upperWidget);     pushJump->setObjectName("pushJump");        pushJump->setGeometry(   QRect(  5, 48, 140, 24));
+        pushProject = new QPushButton(upperWidget);     pushProject->setObjectName("pushProject");  pushProject->setGeometry(QRect(  5, 72, 140, 24));
 
-        pushButton->setText(QApplication::translate( "MainWindow", "Start Scene",       nullptr));
-        pushButton2->setText(QApplication::translate("MainWindow", "Stop Scene",        nullptr));
-        pushDebug->setText(QApplication::translate(  "MainWindow", "Toggle Debug",      nullptr));
+        pushStart =  new QPushButton(upperWidget);      pushStart->setObjectName("pushStart");      pushStart->setGeometry(  QRect(150, 24, 140, 24));
+        pushStop =   new QPushButton(upperWidget);      pushStop->setObjectName("pushStop");        pushStop->setGeometry(   QRect(150, 48, 140, 24));
+
+        pushPersp =   new QPushButton(upperWidget);     pushPersp->setObjectName("pushPersp");      pushPersp->setGeometry(  QRect(300, 24, 140, 24));
+        pushOrtho =   new QPushButton(upperWidget);     pushOrtho->setObjectName("pushOrtho");      pushOrtho->setGeometry(  QRect(300, 48, 140, 24));
+
+        pushDebug =   new QPushButton(upperWidget);     pushDebug->setObjectName("pushDebug");      pushDebug->setGeometry(  QRect(450, 24, 140, 50));
+
+        label =       new QLabel(upperWidget);          label->setObjectName("label");              label->setGeometry(      QRect(600,  0, 330, 20));
+        label2 =      new QLabel(upperWidget);          label2->setObjectName("label2");            label2->setGeometry(     QRect(600, 25, 330, 20));
+        labelOpenGL = new QLabel(upperWidget);          labelOpenGL->setObjectName("labelOpenGL");  labelOpenGL->setGeometry(QRect(600, 50, 330, 20));
+
         pushSpawn->setText(QApplication::translate(  "MainWindow", "Spawning Demo",     nullptr));
         pushCar->setText(QApplication::translate(    "MainWindow", "Car Demo",          nullptr));
+        pushJump->setText(QApplication::translate(   "MainWindow", "Jump Demo",         nullptr));
         pushProject->setText(QApplication::translate("MainWindow", "Project Demo",      nullptr));
+
+        pushStart->setText(QApplication::translate(  "MainWindow", "Start Scene",       nullptr));
+        pushStop->setText(QApplication::translate(   "MainWindow", "Stop Scene",        nullptr));
+
         pushPersp->setText(QApplication::translate(  "MainWindow", "Perspective View",  nullptr));
         pushOrtho->setText(QApplication::translate(  "MainWindow", "Orthographic View", nullptr));
+        pushDebug->setText(QApplication::translate(  "MainWindow", "Toggle Debug",      nullptr));
         layout->addWidget(upperWidget);
 
-        connect(pushButton,  SIGNAL(clicked()), this, SLOT(on_pushButton_clicked()));
-        connect(pushButton2, SIGNAL(clicked()), this, SLOT(on_pushButton2_clicked()));
-        connect(pushDebug,   SIGNAL(clicked()), this, SLOT(on_pushDebug_clicked()));
         connect(pushSpawn,   SIGNAL(clicked()), this, SLOT(on_pushSpawn_clicked()));
         connect(pushCar,     SIGNAL(clicked()), this, SLOT(on_pushCar_clicked()));
+        connect(pushJump,    SIGNAL(clicked()), this, SLOT(on_pushJump_clicked()));
         connect(pushProject, SIGNAL(clicked()), this, SLOT(on_pushProject_clicked()));
+
+        connect(pushStart,   SIGNAL(clicked()), this, SLOT(on_pushButton_clicked()));
+        connect(pushStop,    SIGNAL(clicked()), this, SLOT(on_pushButton2_clicked()));
+
         connect(pushPersp,   SIGNAL(clicked()), this, SLOT(on_pushPersp_clicked()));
         connect(pushOrtho,   SIGNAL(clicked()), this, SLOT(on_pushOrtho_clicked()));
+
+        connect(pushDebug,   SIGNAL(clicked()), this, SLOT(on_pushDebug_clicked()));
+
+
 
         m_opengl = new OpenGL(centralWidget, m_engine);
         connect(m_opengl, SIGNAL(updateInfo(QString)), this, SLOT(updateLabels(QString)));
@@ -118,6 +135,13 @@ void FormEngine::on_pushCar_clicked() {
     m_engine->buildSpace();
 }
 
+void FormEngine::on_pushJump_clicked() {
+    stopTimers();
+    m_engine->clearSpace();
+    m_engine->demo = Demo::Jump;
+    m_engine->buildSpace();
+}
+
 void FormEngine::on_pushProject_clicked() {
     stopTimers();
     m_engine->clearSpace();
@@ -125,6 +149,7 @@ void FormEngine::on_pushProject_clicked() {
     m_engine->demo = Demo::Project;
     m_engine->buildSpace();
 }
+
 
 void FormEngine::on_pushPersp_clicked() { m_engine->render_type = Render_Type::Perspective;  }
 void FormEngine::on_pushOrtho_clicked() { m_engine->render_type = Render_Type::Orthographic; }

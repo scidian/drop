@@ -45,12 +45,18 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
             m_engine->addPolygon(Body_Type::Dynamic, 2, x, y, points, .15, .4, 2.5, QPointF(0, 0));
         }
 
-
     } else if (m_engine->demo == Demo::Car || m_engine->demo == Demo::Project) {
         if (event->button() & Qt::LeftButton) {
             m_engine->gas_pedal = Pedal::Clockwise;
         } else if (event->button() & Qt::RightButton) {
             m_engine->gas_pedal = Pedal::CounterClockwise;
+        }
+
+    } else if (m_engine->demo == Demo::Jump) {
+        if (event->button() & Qt::LeftButton) {
+            m_engine->jump_pressed = true;
+        } else if (event->button() & Qt::RightButton) {
+
         }
     }
 
@@ -58,9 +64,13 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
 
 void OpenGL::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (m_engine->demo == Demo::Car || m_engine->demo == Demo::Project)
+    if (m_engine->demo == Demo::Car || m_engine->demo == Demo::Project) {
         if (event->buttons() == Qt::MouseButton::NoButton)
             m_engine->gas_pedal = Pedal::None;
+    } else if (m_engine->demo == Demo::Jump) {
+        if (event->buttons() == Qt::MouseButton::NoButton)
+            m_engine->jump_pressed = false;
+    }
 }
 
 

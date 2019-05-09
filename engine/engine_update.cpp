@@ -50,6 +50,12 @@ void DrEngine::updateSpace(double time_passed) {
             }
         }
 
+        if (object->jump_count != 0) {
+            if (jump_pressed) {
+                cpBodySetVelocity( object->body, object->jump_force );
+            }
+        }
+
         if (object->follow == true) {
             // !!!!! Need to implement a smooth following camera
             setCameraPos( static_cast<float>(pos.x), static_cast<float>(pos.y), getCameraPos().z() );
@@ -67,6 +73,7 @@ void DrEngine::updateSpace(double time_passed) {
             it++;
         }
     }
+
 
 }
 

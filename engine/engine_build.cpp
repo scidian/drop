@@ -197,6 +197,23 @@ void DrEngine::buildSpace() {
         //cpConstraint *wheel_motor_2 = cpSimpleMotorNew(rover->body, wheel2->body, .2);
         //cpSpaceAddConstraint( m_space, wheel_motor_2);
 
+
+    } else if (demo == Demo::Jump) {
+            // Set up physics world
+            m_gravity = cpv(0, -500);                 // cpVect is a 2D vector and cpv() is a shortcut for initializing them
+            m_space = cpSpaceNew();                   // Creates an empty space
+            cpSpaceSetIterations(m_space, 10);        // 10 is default and should be good enough for most games
+            cpSpaceSetGravity(m_space, m_gravity);
+
+            // Add a static line segment shapes for the ground.
+            this->addLine(Body_Type::Static, QPointF(-1000, -200), QPointF(1000, -200), 1, .5, 1);
+
+            // Add one ball
+            SceneObject *ball = this->addCircle(Body_Type::Dynamic, Txt::Ball, 0,  0, .7, .5, 2, QPointF( 0, 0));
+            ball->follow = true;
+            ball->jump_count = 1;
+
+
     } else if (demo == Demo::Project) {
 
         loadSpace();

@@ -40,9 +40,11 @@ private:
 
 public:
     QWidget         *centralWidget;
-    QPushButton     *pushButton,    *pushButton2,   *pushDebug;
-    QPushButton     *pushSpawn,     *pushCar,       *pushProject;
+    QPushButton     *pushSpawn,     *pushCar,       *pushJump,      *pushProject;
+    QPushButton     *pushStart,     *pushStop;
     QPushButton     *pushPersp,     *pushOrtho;
+    QPushButton     *pushDebug;
+
     QLabel          *label,         *label2;
     QLabel          *labelOpenGL;
 
@@ -60,6 +62,7 @@ private slots:
     void on_pushDebug_clicked();
     void on_pushSpawn_clicked();
     void on_pushCar_clicked();
+    void on_pushJump_clicked();
     void on_pushProject_clicked();
     void on_pushPersp_clicked();
     void on_pushOrtho_clicked();
