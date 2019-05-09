@@ -97,6 +97,7 @@ SOURCES += \
     engine/engine.cpp \
     engine/engine_add.cpp \
     engine/engine_build.cpp \
+    engine/engine_callback.cpp \
     engine/engine_load.cpp \
     engine/engine_texture.cpp \
     engine/engine_update.cpp \

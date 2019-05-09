@@ -50,7 +50,8 @@ SceneObject* DrEngine::addLine(Body_Type body_type, QPointF p1, QPointF p2, doub
 //######################################################################################################
 //##    Add Circle
 //######################################################################################################
-SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, double x, double y, double friction, double bounce, double mass, QPointF velocity) {
+SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, double x, double y, double friction, double bounce, double mass, QPointF velocity,
+                                 bool can_rotate) {
     SceneObject *ball = new SceneObject();
 
     // Ball Basics
@@ -58,7 +59,13 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
     ball->width =  m_textures[texture_number]->width();
     ball->height = m_textures[texture_number]->height();
     ball->radius = ball->width / 2;
-    cpFloat moment = cpMomentForCircle(mass, 0, ball->radius, cpvzero);                       // The moment of inertia is like mass for rotation
+
+    // If we dont want an object to rotate, set moment of inertia to INFINITY
+    cpFloat moment;
+    if (can_rotate)
+        moment = cpMomentForCircle(mass, 0, ball->radius, cpvzero);                     // The moment of inertia is like mass for rotation
+    else
+        moment = static_cast<double>(INFINITY);
 
     // Create the body for the ball
     ball->body_type = body_type;
@@ -68,7 +75,7 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
         case Body_Type::Kinematic:  ball->body = cpBodyNewKinematic();             break;
     }
     cpSpaceAddBody(m_space, ball->body);
-    cpBodySetPosition( ball->body, cpv( x, y));                                        // Coordinate is center of object
+    cpBodySetPosition( ball->body, cpv( x, y));                                         // Coordinate is center of object
     cpBodySetVelocity( ball->body, cpv( velocity.x(), velocity.y()) );
 
     // Create the collision shape for the ball

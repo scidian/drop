@@ -76,15 +76,9 @@ struct SceneObject {
 
     // ***** Object interaction
     bool        follow = false;             // Set to true to have camera follow object
-
+    bool        player_controls = false;    // Set to true to have object controlled by player control buttons, keyboard_x, keyboard_y
     bool        is_wheel = false;           // Set to true if we want wheel to spin from button press
     double      wheel_speed;                // If is_wheel, Speed at which wheel should spin when gas pedal is pressed
-
-    int         jump_count = 0;             // Number of jumps can do before touching ground, -1 = infinity, 0 = no jumping, 1 = one jump, 2 = 2, etc
-    cpVect      jump_force = cpv(0, 350);   // If can_jump, Force of jump when button is pressed
-    double      jump_hold = 0;              // Length of time, in milliseconds, we want to allow jump to build bigger and bigger when mouse is held down
-    QTime       jump_time;                  // Used to compare start of jump to jump_hold
-
 
     // ***** Updated by Engine:
     double      angle = 0;                  // Current object angle
@@ -92,8 +86,8 @@ struct SceneObject {
     QPointF     velocity;                   // Current object velocity
 };
 
-
 // Forward declarations
+class DrEngine;
 class DrEngineTexture;
 class DrEngineWorld;
 class DrProject;
@@ -102,6 +96,10 @@ class DrProject;
 typedef std::map<long, DrEngineTexture*> EngineTextureMap;
 typedef std::map<long, DrEngineWorld*>   EngineWorldMap;
 
+// Gloabls
+extern DrEngine *engine;
+extern void selectPlayerGroundNormal(cpBody *, cpArbiter *arb, cpVect *ground_normal);
+extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);
 
 //####################################################################################
 //##    DrEngine
@@ -132,16 +130,25 @@ private:
 public:
     QVector<SceneObject*>   objects;
 
-    Demo            demo = Demo::Spawn;
     QTime           fps_timer;
     int             fps, last_fps;
     bool            debug = false;
 
+    Demo            demo = Demo::Spawn;
     Render_Type     render_type = Render_Type::Orthographic;          // Should render perspective or orthographic?
 
     bool            has_scene = false;
+
     Pedal           gas_pedal = Pedal::None;
-    bool            jump_pressed = false;
+
+    int             keyboard_x;     // Set to -1 for left, 1 for right
+    bool            keyboard_y;     // Set to -1 for down, 1 for up
+
+    cpBody         *player_body;
+    cpShape        *player_shape;
+    cpFloat         remaining_boost;
+    cpBool          grounded;
+    cpBool          last_jump_state;
 
 
 public:
@@ -151,7 +158,8 @@ public:
     //  Bounce:   0 = no bounce, 1.0 will give a “perfect” bounce. However due to inaccuracies in the simulation using 1.0 or greater is not recommended
     //  Mass:     Not sure
     SceneObject*    addLine(  Body_Type body_type,  QPointF p1, QPointF p2, double friction, double bounce, double mass);
-    SceneObject*    addCircle(Body_Type body_type,  long texture_number, double x, double y, double friction, double bounce, double mass, QPointF velocity);
+    SceneObject*    addCircle(Body_Type body_type,  long texture_number, double x, double y, double friction, double bounce, double mass, QPointF velocity,
+                              bool can_rotate = true);
     SceneObject*    addBlock( Body_Type body_type,  long texture_number, double x, double y, double angle, QPointF scale,
                               double friction, double bounce, double mass, QPointF velocity, bool should_collide = true);
     SceneObject*    addPolygon(Body_Type body_type, long texture_number, double x, double y, QVector<QPointF> points, double friction, double bounce, double mass, QPointF velocity);

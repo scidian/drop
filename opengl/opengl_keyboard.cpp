@@ -7,22 +7,38 @@
 //
 #include <QKeyEvent>
 
+#include "engine/engine.h"
 #include "opengl/opengl.h"
-
+#include "library.h"
 
 //####################################################################################
 //##        Key Events
 //####################################################################################
 void OpenGL::keyPressEvent(QKeyEvent *event) {
-    // When space bar is down, enabled mouse press and move to translate viewable area
-    if (event->key() == Qt::Key::Key_Space)
-        m_flag_spacebar = true;
-    QOpenGLWidget::keyPressEvent(event);
+
+    if (event->key() == Qt::Key::Key_A) {
+        m_engine->keyboard_x = -1;
+
+    } else if (event->key() == Qt::Key::Key_D) {
+        m_engine->keyboard_x =  1;
+
+    } else {
+        QOpenGLWidget::keyPressEvent(event);
+    }
 }
 
 void OpenGL::keyReleaseEvent(QKeyEvent *event) {
-    // When space bar is released, change mode back to select / move items
-    if (event->key() == Qt::Key::Key_Space)
-        m_flag_spacebar = false;
-    QOpenGLWidget::keyReleaseEvent(event);
+
+    if (event->key() == Qt::Key::Key_A) {
+        if (m_engine->keyboard_x < 0.0)
+            m_engine->keyboard_x = 0;
+
+    } else if (event->key() == Qt::Key::Key_D) {
+        if (m_engine->keyboard_x > 0.0)
+            m_engine->keyboard_x = 0;
+
+    } else {
+        QOpenGLWidget::keyReleaseEvent(event);
+    }
+
 }

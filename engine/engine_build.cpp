@@ -200,18 +200,26 @@ void DrEngine::buildSpace() {
 
     } else if (demo == Demo::Jump) {
             // Set up physics world
-            m_gravity = cpv(0, -500);                 // cpVect is a 2D vector and cpv() is a shortcut for initializing them
+            m_gravity = cpv(0, -1000);                // cpVect is a 2D vector and cpv() is a shortcut for initializing them
             m_space = cpSpaceNew();                   // Creates an empty space
             cpSpaceSetIterations(m_space, 10);        // 10 is default and should be good enough for most games
             cpSpaceSetGravity(m_space, m_gravity);
 
             // Add a static line segment shapes for the ground.
-            this->addLine(Body_Type::Static, QPointF(-1000, -200), QPointF(1000, -200), 1, .5, 1);
+            this->addLine(Body_Type::Static, QPointF(-1000, -200), QPointF(1000, -200), 2, .5, 1);
 
             // Add one ball
-            SceneObject *ball = this->addCircle(Body_Type::Dynamic, Txt::Ball, 0,  0, .7, .5, 2, QPointF( 0, 0));
+            SceneObject *ball = this->addCircle(Body_Type::Dynamic, Txt::Ball, 0,  0, 2, .5, 200, QPointF( 0, 0), false);
             ball->follow = true;
-            ball->jump_count = 1;
+
+            player_body = ball->body;
+            player_shape = ball->shape;
+            remaining_boost = 0;
+            grounded = cpFalse;
+            last_jump_state = cpFalse;
+
+            engine = this;
+            cpBodySetVelocityUpdateFunc( ball->body, playerUpdateVelocity );
 
 
     } else if (demo == Demo::Project) {
@@ -222,7 +230,6 @@ void DrEngine::buildSpace() {
 
     has_scene = true;
 }
-
 
 
 

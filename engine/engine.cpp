@@ -12,7 +12,12 @@
 //######################################################################################################
 //##    Constructor
 //######################################################################################################
-DrEngine::DrEngine(DrProject *project) : m_project(project) { }
+DrEngine::DrEngine(DrProject *project) : m_project(project) {
+
+    keyboard_x = 0;
+    keyboard_y = 0;
+
+}
 
 // Needs to be explicitly called by OpenGLWidget
 void DrEngine::deleteResources() {

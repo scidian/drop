@@ -37,9 +37,6 @@ private:
     int     m_matrixUniform;
     int     m_texUniform;
 
-    // Flags
-    bool          m_flag_spacebar = false;
-
 
 public:
     // Constructor / Destructor

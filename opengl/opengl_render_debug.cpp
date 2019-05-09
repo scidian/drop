@@ -37,6 +37,10 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         brush_color.setAlpha(64);
         painter.setBrush( QBrush( brush_color));
 
+
+
+
+
         if (object->shape_type == Shape_Type::Circle) {
             double radius = QLineF( mapToScreen( cpCircleShapeGetRadius(object->shape), 0.0, 0.0), mapToScreen( 0.0, 0.0, 0.0 )).length();
             QPointF point = mapToScreen( object->position.x(), object->position.y(), 0.0 );

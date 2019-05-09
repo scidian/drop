@@ -54,7 +54,7 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
 
     } else if (m_engine->demo == Demo::Jump) {
         if (event->button() & Qt::LeftButton) {
-            m_engine->jump_pressed = true;
+            m_engine->keyboard_y = 1;
         } else if (event->button() & Qt::RightButton) {
 
         }
@@ -67,9 +67,10 @@ void OpenGL::mouseReleaseEvent(QMouseEvent *event)
     if (m_engine->demo == Demo::Car || m_engine->demo == Demo::Project) {
         if (event->buttons() == Qt::MouseButton::NoButton)
             m_engine->gas_pedal = Pedal::None;
+
     } else if (m_engine->demo == Demo::Jump) {
         if (event->buttons() == Qt::MouseButton::NoButton)
-            m_engine->jump_pressed = false;
+            m_engine->keyboard_y = 0;
     }
 }
 
