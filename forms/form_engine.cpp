@@ -172,6 +172,10 @@ void FormEngine::stopTimers() {
 void FormEngine::updateEngine() {
     if (m_time_last_update.elapsed() > (m_engine->getTimeStep() * 1000)) {
         m_engine->updateSpace(m_time_last_update.elapsed());
+
+        m_opengl->cube_angle += static_cast<float>(m_time_last_update.elapsed()) * 0.5f;
+        if (m_opengl->cube_angle > 360) m_opengl->cube_angle = 0;
+
         m_time_last_update.restart();
     }
 

@@ -17,11 +17,7 @@
 //####################################################################################
 //##        Draws a 3D rotating cube for demo purposes
 //####################################################################################
-void OpenGL::drawCube() {
-
-    static float angle = 0;
-    angle++;
-    if (angle > 360) angle = 0;
+void OpenGL::drawCube(QVector3D center) {
 
     DrEngineTexture *texture = m_engine->getTexture( 1 );     // 1 is metal_block
     texture->texture()->bind();
@@ -41,8 +37,8 @@ void OpenGL::drawCube() {
 
 
         // ***** Get object position data
-        QPointF center = QPointF(0, 300);
-        float x, y, half_width, half_height;
+        float x, y, z;
+        float half_width, half_height;
         float half_no_border;
 
         float multi =  3;
@@ -52,12 +48,14 @@ void OpenGL::drawCube() {
         if (m_engine->render_type == Render_Type::Orthographic) {
             x = static_cast<float>(center.x()) * m_scale;
             y = static_cast<float>(center.y()) * m_scale;
+            z = static_cast<float>(center.z()) * m_scale;
             half_width =  width  * m_scale / 2.0f;
             half_height = height * m_scale / 2.0f;
             half_no_border = width * m_scale / 2.0f;
         } else {
             x = static_cast<float>(center.x());
             y = static_cast<float>(center.y());
+            z = static_cast<float>(center.z());
             half_width =  width  / 2.0f;
             half_height = height / 2.0f;
             half_no_border = width / 2.0f;
@@ -67,10 +65,10 @@ void OpenGL::drawCube() {
         // ***** Create rotation matrix, apply rotation to object
         QMatrix4x4 matrix;
         if (i == 4) {
-            matrix.rotate( static_cast<float>( -angle  ), 0.0, 0.0, 1.0 );
+            matrix.rotate( static_cast<float>( -cube_angle  ), 0.0, 0.0, 1.0 );
             matrix.rotate( -90, 1.0, 0.0, 0.0 );
         } else {
-            matrix.rotate( static_cast<float>( angle + (90 * i) ), 0.0, 1.0, 0.0 );
+            matrix.rotate( static_cast<float>( cube_angle + (90 * i) ), 0.0, 1.0, 0.0 );
         }
         matrix.rotate( static_cast<float>( 45               ), 1.0, 0.0, 1.0 );
 
@@ -89,19 +87,19 @@ void OpenGL::drawCube() {
         // Top Right
         vertices[0] = top_right.x() + x;
         vertices[1] = top_right.y() + y;
-        vertices[2] = 0.00f;
+        vertices[2] = -z;
         // Top Left
         vertices[3] = top_left.x()  + x;
         vertices[4] = top_left.y()  + y;
-        vertices[5] = 0.00f;
+        vertices[5] = -z;
         // Bottom Right
         vertices[6] = bot_right.x() + x;
         vertices[7] = bot_right.y() + y;
-        vertices[8] = 0.00f;
+        vertices[8] = -z;
         // Bottom Left
         vertices[ 9] = bot_left.x() + x;
         vertices[10] = bot_left.y() + y;
-        vertices[11] = 0.00f;
+        vertices[11] = -z;
 
         m_program.setAttributeArray( m_vertexAttr, vertices.data(), 3 );
         m_program.setUniformValue( m_texUniform, 0 );
@@ -113,10 +111,10 @@ void OpenGL::drawCube() {
         // ***** Disable arrays
         m_program.disableAttributeArray( m_vertexAttr );
         m_program.disableAttributeArray( m_texCoordAttr );
-    }
+
+    }   // For i
 
     texture->texture()->release();
-
 }
 
 

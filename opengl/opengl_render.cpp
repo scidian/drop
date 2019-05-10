@@ -67,7 +67,7 @@ void OpenGL::paintGL() {
         float right =  static_cast<float>(cam_x + (width() /  2.0f));
         float top =    static_cast<float>(cam_y + (height() / 2.0f));
         float bottom = static_cast<float>(cam_y - (height() / 2.0f));
-        m_projection.ortho( left, right, bottom, top,  -1.0f, 1.0f);
+        m_projection.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
 
     } else {
         m_projection.perspective( 70.0f, aspect_ratio, 1.0f, 5000.0f );
@@ -98,7 +98,7 @@ void OpenGL::paintGL() {
     glFrontFace( GL_CCW );
 
     // ***** Render 3D Objects
-    drawCube();
+    drawCube( QVector3D(0, 300,    0) );
 
     // ***** Turn off culling before drawing 2D objects, ALSO: Must turn off culling for QPainter to work
     glDisable( GL_CULL_FACE );
@@ -185,6 +185,19 @@ void OpenGL::paintGL() {
 
         texture->texture()->release();
     }
+
+
+
+
+
+    // ***** Render Front 3D Objects
+    glEnable( GL_CULL_FACE );       glCullFace(  GL_BACK );     glFrontFace( GL_CCW );
+    drawCube( QVector3D(0, 300,  -800) );
+    glDisable( GL_CULL_FACE );
+
+
+
+
 
     // ***** Disable shader program, end native drawing
     m_program.release();

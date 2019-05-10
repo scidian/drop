@@ -39,6 +39,10 @@ private:
 
 
 public:
+    float    cube_angle = 0;
+
+
+public:
     // Constructor / Destructor
     OpenGL(QWidget *parent, DrEngine *engine);
     ~OpenGL() override;
@@ -58,7 +62,7 @@ public:
 #endif
 
     // Function Calls
-    void            drawCube();
+    void            drawCube(QVector3D center);
     void            drawDebugShapes(QPainter &painter);
     QVector3D       mapFromScreen(double x, double y);
     QVector3D       mapFromScreen(float x, float y);
