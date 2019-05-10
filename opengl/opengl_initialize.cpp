@@ -50,10 +50,11 @@ void OpenGL::initializeGL() {
     m_program.addShader( &fShader );
     m_program.link();
 
-    m_vertexAttr =      m_program.attributeLocation( "vertex" );
-    m_texCoordAttr =    m_program.attributeLocation( "texCoord" );
-    m_matrixUniform =   m_program.uniformLocation(   "matrix" );
-    m_texUniform =      m_program.uniformLocation(   "tex" );
+    m_attribute_vertex =    m_program.attributeLocation( "vertex" );
+    m_attribute_tex_coord = m_program.attributeLocation( "texCoord" );
+    m_uniform_matrix =      m_program.uniformLocation(   "matrix" );
+    m_uniform_texture =     m_program.uniformLocation(   "tex" );
+    m_uniform_alpha =       m_program.uniformLocation( "alpha" );
 }
 
 

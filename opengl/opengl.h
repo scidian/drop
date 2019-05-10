@@ -36,11 +36,12 @@ private:
     float           m_background_blue = 0;
 
     QOpenGLShaderProgram m_program;
-    int     m_vertexAttr;
-    int     m_texCoordAttr;
-    int     m_matrixUniform;
-    int     m_texUniform;
 
+    int     m_attribute_vertex;
+    int     m_attribute_tex_coord;
+    int     m_uniform_matrix;
+    int     m_uniform_texture;
+    int     m_uniform_alpha;
 
 public:
     float    cube_angle = 0;

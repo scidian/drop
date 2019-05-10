@@ -93,7 +93,7 @@ void OpenGL::paintGL() {
 
     // ********** Enable shader program
     if (!m_program.bind()) return;
-    m_program.setUniformValue( m_matrixUniform, m_matrix );
+    m_program.setUniformValue( m_uniform_matrix, m_matrix );
 
 
     // ***** Before rendering 3D objects, enable face culling for triangles facing away from view
@@ -135,8 +135,8 @@ void OpenGL::paintGL() {
         texCoords[2] =     one_x;    texCoords[3] = 1 - one_y;
         texCoords[4] = 1 - one_x;    texCoords[5] =     one_y;
         texCoords[6] =     one_x;    texCoords[7] =     one_y;
-        m_program.setAttributeArray( m_texCoordAttr, texCoords.data(), 2 );
-        m_program.enableAttributeArray( m_texCoordAttr );
+        m_program.setAttributeArray( m_attribute_tex_coord, texCoords.data(), 2 );
+        m_program.enableAttributeArray( m_attribute_tex_coord );
 
 
         // ***** Get object position data
@@ -188,16 +188,18 @@ void OpenGL::paintGL() {
         vertices[10] = bot_left.y() + y;
         vertices[11] = z;
 
-        m_program.setAttributeArray( m_vertexAttr, vertices.data(), 3 );
-        m_program.setUniformValue( m_texUniform, 0 );                           // Use texture unit 0
-        m_program.enableAttributeArray( m_vertexAttr );
+        m_program.setAttributeArray( m_attribute_vertex, vertices.data(), 3 );
+        m_program.enableAttributeArray( m_attribute_vertex );
+
+        m_program.setUniformValue( m_uniform_texture, 0 );                          // Use texture unit 0
+        m_program.setUniformValue( m_uniform_alpha, object->alpha );                // Add object alpha
 
         // ***** Draw triangles using shader program
-        glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );                                // GL_TRIANGLES
+        glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );                                    // GL_TRIANGLES
 
         // ***** Disable arrays
-        m_program.disableAttributeArray( m_vertexAttr );
-        m_program.disableAttributeArray( m_texCoordAttr );
+        m_program.disableAttributeArray( m_attribute_vertex );
+        m_program.disableAttributeArray( m_attribute_tex_coord );
 
         texture->texture()->release();
     }

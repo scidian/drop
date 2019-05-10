@@ -3,8 +3,9 @@
 //
 //
 //
-uniform sampler2D  tex;     // Input
-varying highp vec4 texc;    // Input from Vertex Shader
+uniform float alpha;            // Input
+uniform sampler2D  tex;         // Input
+varying highp vec4 texc;        // Input from Vertex Shader
 
 void main( void )
 {
@@ -14,6 +15,7 @@ void main( void )
     //gl_FragColor = vec4(outColor, ts.a);
 
     // Grab color straight from texture wothout doing anything
-    gl_FragColor = texture2D( tex, texc.st ).rgba;
+    vec4 texture_color = texture2D( tex, texc.st ).rgba;
+    gl_FragColor = texture_color * vec4(alpha, alpha, alpha, alpha);       // Multiply in alpha channel for semi-transparent objects
 
 }
