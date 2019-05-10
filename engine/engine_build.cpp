@@ -207,6 +207,9 @@ void DrEngine::buildSpace() {
 
             // Add a static line segment shapes for the ground.
             this->addLine(Body_Type::Static, QPointF(-1000, -200), QPointF(1000, -200), 2, .5, 1);
+            this->addLine(Body_Type::Static, QPointF( -300,  150), QPointF(-100,  150), 2, .5, 1);
+            this->addLine(Body_Type::Static, QPointF(  500, -100), QPointF( 700, -100), 2, .5, 1);
+            this->addLine(Body_Type::Static, QPointF(  100,    0), QPointF( 300,    0), 2, .5, 1);
 
             // Add one ball
             SceneObject *ball = this->addCircle(Body_Type::Dynamic, Txt::Ball, 0,  0, 2, .01, 200, QPointF( 0, 0), false);

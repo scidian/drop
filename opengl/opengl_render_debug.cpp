@@ -13,6 +13,9 @@
 #include "engine/engine_texture.h"
 #include "opengl/opengl.h"
 
+// Forward declare
+static void drawContactPoints(cpBody *body, cpArbiter *arb, QVector<QPointF> *point_list);
+
 //####################################################################################
 //##        Draws the Collision Shapes using QPainter
 //####################################################################################
@@ -36,10 +39,6 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         QColor brush_color = color;
         brush_color.setAlpha(64);
         painter.setBrush( QBrush( brush_color));
-
-
-
-
 
         if (object->shape_type == Shape_Type::Circle) {
             double radius = QLineF( mapToScreen( cpCircleShapeGetRadius(object->shape), 0.0, 0.0), mapToScreen( 0.0, 0.0, 0.0 )).length();
@@ -105,21 +104,43 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
                 painter.drawPolygon( rotated_poly );
             }
         }   // End If
-
-
-        //cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(drawContactPoints), &ground_normal);
-
+    }   // End For
 
 
 
+    // ***** Draw debug collision points
+    QPen line_pen( QBrush(QColor(128, 0, 128)), 3 * static_cast<double>(m_scale));
+    painter.setPen( line_pen );
+
+    for (auto object : m_engine->objects) {
+        if (object->in_scene == false) continue;
+        if (object->collide == false) continue;
+
+        QVector<QPointF> point_list;
+        point_list.clear();
+        cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(drawContactPoints), &point_list);
+
+        if (point_list.size() > 0) {
+            for (auto contact : point_list) {
+                QPointF point = mapToScreen( contact.x(), contact.y(), 0.0 );
+
+                if (rect().contains(point.toPoint())) {
+                    QTransform t = QTransform().translate(point.x(), point.y()).rotate(-object->angle).translate(-point.x(), -point.y());
+                    QPoint dot = t.map( point ).toPoint();
+                    painter.drawPoint( dot );
+                    //painter.drawLine( dot.x() - 1, dot.y() - 1, dot.x() + 1, dot.y() + 1);
+                    //painter.drawLine( dot.x() - 1, dot.y() + 1, dot.x() + 1, dot.y() - 1);
+                }
+            }
+        } // End If
     }   // End For
 
 }
 
 
-static void drawContactPoints(cpBody *, cpArbiter *arb, cpVect *ground_normal) {
-    cpVect n = cpvneg( cpArbiterGetNormal(arb) );
-    if (n.y > ground_normal->y) (*ground_normal) = n;
+static void drawContactPoints(cpBody *, cpArbiter *arb, QVector<QPointF> *point_list) {
+    cpContactPointSet contact = cpArbiterGetContactPointSet( arb );
+    point_list->append( QPointF( contact.points->pointA.x, contact.points->pointA.y ) );
 }
 
 
