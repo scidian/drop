@@ -26,8 +26,9 @@
 //######################################################################################################
 FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent), m_project(project) {
     this->setObjectName("Drop Player");
-    this->resize(1200, 800);
+    this->resize(1200, 900);
     Dr::ApplyCustomStyleSheetFormatting(this);
+    Dr::CenterFormOnScreen(parent, this);
 
     m_engine = new DrEngine(project);
 
@@ -78,6 +79,7 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
         pushDebug1->setText(QApplication::translate(  "MainWindow", "Debug Shapes",     nullptr));  pushDebug1->setStyleSheet("color: white");
         pushDebug2->setText(QApplication::translate(  "MainWindow", "Debug Collision",  nullptr));  pushDebug2->setStyleSheet("color: white");
 
+        updateCheckedButtons();
         layout->addWidget(upperWidget);
 
 
@@ -110,6 +112,14 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
     // Create engine timer and connect
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(updateEngine()));
+
+
+    QTimer::singleShot( 0, this, [this] {
+        qApp->processEvents();
+        m_engine->buildSpace( m_engine->demo_space );
+        m_engine->addPlayer( m_engine->demo_player );
+        startTimers();
+    } );
 }
 
 FormEngine::~FormEngine() { }
@@ -217,7 +227,6 @@ void FormEngine::on_pushBlocks_clicked() {
 }
 void FormEngine::on_pushProject_clicked() {
     stopTimers();
-    ///qApp->processEvents();
     m_engine->buildSpace( Demo_Space::Project );
     m_engine->addPlayer( m_engine->demo_player );
     startTimers();

@@ -90,17 +90,17 @@ void DrView::dropEvent(QDropEvent *event) {
         DrObject *object;
         switch (asset->getAssetType()) {
             case DrAssetType::Object:
-                object = stage->addObject(DrObjectType::Object, asset_key, position.x(), position.y(), 0);      // FIX: z order
+                object = stage->addObject(DrObjectType::Object, asset_key, position.x(), -position.y(), 0);      // FIX: z order
                 my_scene->addItemToSceneFromObject( object );
                 break;
 
             case DrAssetType::Text:
-                object = stage->addObject(DrObjectType::Text, asset_key, position.x(), position.y(), 0);        // FIX: z order
+                object = stage->addObject(DrObjectType::Text, asset_key, position.x(), -position.y(), 0);        // FIX: z order
                 my_scene->addItemToSceneFromObject( object );
                 break;
 
             case DrAssetType::Character:
-                object = stage->addObject(DrObjectType::Character, asset_key, position.x(), position.y(), 0);   // FIX: z order
+                object = stage->addObject(DrObjectType::Character, asset_key, position.x(), -position.y(), 0);   // FIX: z order
                 my_scene->addItemToSceneFromObject( object );
                 break;
         }
@@ -133,7 +133,7 @@ void DrView::dropEvent(QDropEvent *event) {
 
         // Add object at mouse position
         QPointF  position =  mapToScene(event->pos());
-        DrObject *object = stage->addObject(DrObjectType::Object, asset_key, position.x(), position.y(), 0);    // FIX: z order
+        DrObject *object = stage->addObject(DrObjectType::Object, asset_key, position.x(), -position.y(), 0);    // FIX: z order
         my_scene->addItemToSceneFromObject( object );
 
         //######################

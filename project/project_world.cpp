@@ -83,21 +83,26 @@ void DrWorld::initializeWorldSettings(QString new_name) {
                            "Game Direction", "Default direction, in degrees, to load new stages, 0 - right, 90 - up, 180 - left, 270 - down, etc.");
     addPropertyToComponent(Components::World_Settings, Properties::World_Score_Multiplier, Property_Type::Double, 1.0,
                            "Score Multiplier", "Value used as multiplier to adjust speed at which distance scoring is calculated.");
+    addPropertyToComponent(Components::World_Settings, Properties::World_Use_Background_Color, Property_Type::Bool, false,
+                           "Use Bg Color?", "Enable this to use background color for this world, otherwise defaults to transparent.");
+    addPropertyToComponent(Components::World_Settings, Properties::World_Background_Color, Property_Type::Color, QColor(16, 16, 16, 255).rgba(),
+                           "Background", "Background Color for this world. Must enable to use, otherwise defaults to transparent.");
 
-    addComponent(Components::World_Physics, "Physics", "Starting physics settings for current world.", Component_Colors::Orange_Medium, true);
+    addComponent(Components::World_Physics, "Physics", "Starting physics settings for current world, this affects all objects that have \"Physics?\" "
+                                                       "enabled.", Component_Colors::Orange_Medium, true);
     getComponent(Components::World_Physics)->setIcon(Component_Icons::Physics);
-    addPropertyToComponent(Components::World_Physics, Properties::World_Use_Physics, Property_Type::Bool, true,
-                           "Use Physics?", "Whether or not physics is turned on in current world.");
     addPropertyToComponent(Components::World_Physics, Properties::World_Gravity, Property_Type::PointF, QPointF(0.0, 10.0),
-                           "Gravity", "Amount of gravity in x and y directions, can be negative.");
+                           "Gravity", "Amount of gravity in x and y directions, can be negative. For example, with a value of -500 for y objects will "
+                                      "fall upward).");
     addPropertyToComponent(Components::World_Physics, Properties::World_Time_Warp, Property_Type::Double, 60.0,
-                           "Time Warp", "Update calculations per second.");
+                           "Time Warp", "Physics time multiplier. Default value of 1.0 is Normal time. For example, a value of 0.5 will halve the "
+                                        "speed at which the world changes. A value of 2.0 will double the speed.");
     addPropertyToComponent(Components::World_Physics, Properties::World_Friction, Property_Type::Double, 10.0,
-                           "Friction", "Global friction setting.");
+                           "Friction", "Global surface friction setting.");
     addPropertyToComponent(Components::World_Physics, Properties::World_Drag, Property_Type::Double, 5.0,
-                           "Velocity Drag", "Velocity drag.");
-    addPropertyToComponent(Components::World_Physics, Properties::World_Bounce, Property_Type::Double, 5.0,
-                           "Bounce", "Global bounce setting.");
+                           "Dampening", "Value that reduces drag as time goes on.");
+    addPropertyToComponent(Components::World_Physics, Properties::World_Bounce, Property_Type::Double, 50,
+                           "Bounce", "Global bounce setting.");     // Chipmunk Physics can take a value of 0 to .9999999
 
 }
 

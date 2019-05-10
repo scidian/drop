@@ -93,6 +93,8 @@ private:
     QPointF      m_grid_scale { 1, 1 };                             // X and Y scaling for after grid has been rotated
     double       m_grid_rotate = 0;                                 // Rotation of grid lines
     QColor       m_grid_color;                                      // Grid color
+    bool         m_back_color_use = false;                          // Should we use background color?
+    QColor       m_back_color;                                      // World background color
 
     bool         m_grid_should_snap = true;                         // Should snap to grid?
     bool         m_grid_resize_snap = true;                         // Should snap while resizing?

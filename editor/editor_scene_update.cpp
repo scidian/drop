@@ -32,7 +32,7 @@ void DrScene::updateChangesInScene(QList<DrSettings*> changed_items, QList<long>
         if (my_type == DrType::Object) {
             updateItemInScene(settings_item, property_keys);
 
-        } else if (my_type == DrType::Stage || my_type == DrType::StartStage) {
+        } else if (my_type == DrType::Stage || my_type == DrType::StartStage || my_type == DrType::World) {
             emit updateGrid();
         }
 

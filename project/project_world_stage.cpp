@@ -42,7 +42,13 @@ DrStage::~DrStage() {
     for (auto i: m_objects) { delete i.second; }
 }
 
-// Adds a new object to the stage
+//####################################################################################
+//##
+//##    Adds a new object to the Stage
+//##
+//##    ***** NOTE: Y Axis is in Game Engine coordinates (i.e. positive is up, negative is down)
+//##
+//####################################################################################
 DrObject* DrStage::addObject(DrObjectType new_type, long from_asset_key, double x, double y, long z, bool should_collide) {
     DrAsset *asset = m_parent_project->getAsset(from_asset_key);
 

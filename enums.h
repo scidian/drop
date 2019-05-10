@@ -217,9 +217,10 @@ enum class Properties {
     World_Name,                     //string
     World_Game_Direction,           //float
     World_Score_Multiplier,         //float
+    World_Use_Background_Color,     //bool
+    World_Background_Color,         //color
 
     // Physics
-    World_Use_Physics,              //bool
     World_Gravity,                  //pointf (x, y)
     World_Time_Warp,                //float
     World_Friction,                 //float

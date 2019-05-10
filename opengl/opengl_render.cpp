@@ -24,7 +24,10 @@ void OpenGL::paintGL() {
 
     // ***** Make sure viewport is sized correctly and clear the buffers
     //glViewport(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
-    glClearColor(0.0, 0.0, 0.0, 1.0f);
+    float background_red =   static_cast<float>(m_engine->getBackgroundColor().redF());
+    float background_green = static_cast<float>(m_engine->getBackgroundColor().greenF());
+    float background_blue =  static_cast<float>(m_engine->getBackgroundColor().blueF());
+    glClearColor(background_red, background_green, background_blue, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
@@ -188,7 +191,7 @@ void OpenGL::paintGL() {
 
     // ***** Render Front 3D Objects
     glEnable( GL_CULL_FACE );       glCullFace(  GL_BACK );     glFrontFace( GL_CCW );
-    drawCube( QVector3D(0, 300, 800) );
+    drawCube( QVector3D(0, 300, 600) );
     glDisable( GL_CULL_FACE );
 
 

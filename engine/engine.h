@@ -131,6 +131,8 @@ private:
     cpFloat         m_damping;                  // A value of 0.9 means that each body will lose 10% of its velocity per second. Defaults to 1.
                                                 //      Like gravity, it can be overridden on a per body basis.
 
+    QColor          m_background_color {0,0,0}; // Background color to use to clear screen during render
+
 
 public:
     QVector<SceneObject*>   objects;
@@ -141,8 +143,8 @@ public:
     bool            debug_shapes =      false;
     bool            debug_collisions =  false;
 
-    Demo_Space      demo_space =  Demo_Space::Blocks;
-    Demo_Player     demo_player = Demo_Player::Jump;
+    Demo_Space      demo_space =  Demo_Space::Project;
+    Demo_Player     demo_player = Demo_Player::Car;
 
     Render_Type     render_type = Render_Type::Orthographic;          // Should render perspective or orthographic?
 
@@ -192,19 +194,22 @@ public:
 
 
     // Getter and Setters    
-    DrProject*          getProject()    { return m_project; }
-    cpSpace*            getSpace()      { return m_space; }
+    DrProject*          getProject()            { return m_project; }
+    cpSpace*            getSpace()              { return m_space; }
 
-    const QVector3D&    getCameraPos()  { return m_camera_pos; }
-    const cpFloat&      getTimeStep()   { return m_time_step; }
-    const cpFloat&      getTimeWarp()   { return m_time_warp; }
-    const cpVect&       getGravity()    { return m_gravity; }
-    const cpFloat&      getDamping()    { return m_damping; }
+    const QVector3D&    getCameraPos()          { return m_camera_pos; }
+    const cpFloat&      getTimeStep()           { return m_time_step; }
+    const cpFloat&      getTimeWarp()           { return m_time_warp; }
+    const cpVect&       getGravity()            { return m_gravity; }
+    const cpFloat&      getDamping()            { return m_damping; }
+    const QColor&       getBackgroundColor()    { return m_background_color; }
+
     void                setCameraPos(QVector3D new_pos) { m_camera_pos = new_pos; }
     void                setCameraPos(float x, float y, float z) { m_camera_pos = QVector3D(x, y, z); }
     void                setTimeWarp(double new_time_warp) { m_time_warp = new_time_warp; }
     void                setGravity(cpVect new_gravity) { m_gravity = new_gravity; }
     void                setDamping(cpFloat new_damping) { m_damping = new_damping; }
+    void                setBackgroundColor(QColor new_color) { m_background_color = new_color; }
 
 
 };

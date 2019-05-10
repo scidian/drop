@@ -141,8 +141,8 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
     project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_top,      822,   -50,  4);
     project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_top,     1233,   -50,  4);
 
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_block,    400,   150,  3);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_block,    525,   200,  3);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_block,    400,   200,  3);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_block,    550,   200,  3);
     project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_block,    750,   350,  3);
 
     // Stage 2 Misc Test

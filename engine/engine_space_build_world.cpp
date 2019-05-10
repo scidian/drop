@@ -51,6 +51,7 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
     // Set up physics world
     demo_space = new_space_type;                // Save Space type
     clearSpace();                               // Clear existing Space
+    m_background_color = QColor(0,0,0);
 
     m_space = cpSpaceNew();                     // Creates an empty space
     cpSpaceSetIterations(m_space, 10);          // 10 is default and should be good enough for most games
@@ -61,6 +62,10 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         // Find current stage shown in editor
         long current_stage = m_project->getOption(Project_Options::Current_Stage).toInt();
         DrStage *stage = m_project->findStageFromKey( current_stage );
+        DrWorld *world = stage->getParentWorld();
+
+        if (world->getComponentPropertyValue(Components::World_Settings, Properties::World_Use_Background_Color).toBool())
+            m_background_color =  QColor::fromRgba(world->getComponentPropertyValue(Components::World_Settings, Properties::World_Background_Color).toUInt());
 
         // Load objects
         for (auto object_pair : stage->getObjectMap()) {
