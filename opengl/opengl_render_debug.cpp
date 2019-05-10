@@ -21,7 +21,6 @@ static void drawContactPoints(cpBody *body, cpArbiter *arb, QVector<QPointF> *po
 //####################################################################################
 void OpenGL::drawDebugShapes(QPainter &painter) {
 
-
     for (auto object : m_engine->objects) {
         if (object->in_scene == false) continue;
         if (object->collide == false) continue;
@@ -41,68 +40,84 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         painter.setBrush( QBrush( brush_color));
 
         if (object->shape_type == Shape_Type::Circle) {
-            double radius = QLineF( mapToScreen( cpCircleShapeGetRadius(object->shape), 0.0, 0.0), mapToScreen( 0.0, 0.0, 0.0 )).length();
-            QPointF point = mapToScreen( object->position.x(), object->position.y(), 0.0 );
+            QTransform t = QTransform().translate(object->position.x(), object->position.y());
+            QPointF top = t.map(QPointF( 0, object->height / 2));
+            QPointF mid = t.map(QPointF( 0, 0));
+            QPointF l1 = mapToScreen( top.x(), top.y(), 0);
+            QPointF l2 = mapToScreen( mid.x(), mid.y(), 0);
+            double radius = QLineF(l1, l2).length();
 
             // Don't draw if not touching or inside of visible area
-            QRect bounding_box = QRectF( point.x() - radius, point.y() - radius, radius * 2, radius * 2).toRect();
-            if (rect().intersects(bounding_box) || rect().contains(bounding_box)) {
-                painter.drawEllipse( point, radius, radius );
-                QPointF top (point.x(), point.y() - radius);
-                QTransform t = QTransform().translate(point.x(), point.y()).rotate(-object->angle).translate(-point.x(), -point.y());
-                QPointF l2 = t.map( top );
-                painter.drawLine( point, l2 );
+            QRect bounding_box = QRectF( l2.x() - radius, l2.y() - radius, radius * 2, radius * 2).toRect();
+            if ((rect().intersects(bounding_box) || rect().contains(bounding_box)) &&
+                (bounding_box.width() * 0.1 < width()) && (bounding_box.height() * 0.1 < height())) {
+                painter.drawEllipse( l2, radius, radius );
+                t = QTransform().translate(object->position.x(), object->position.y()).rotate( object->angle);
+                top = t.map(QPointF( 0, object->height / 2));
+                l1 = mapToScreen( top.x(), top.y(), 0);
+                painter.drawLine( l1, l2 );
             }
 
         } else if (object->shape_type == Shape_Type::Box) {
-            double width =  QLineF( mapToScreen( object->width, 0.0, 0.0),  mapToScreen( 0.0, 0.0, 0.0) ).length();
-            double height = QLineF( mapToScreen( object->height, 0.0, 0.0), mapToScreen( 0.0, 0.0, 0.0 )).length();
-            QPointF point = mapToScreen( object->position.x(), object->position.y(), 0.0);
-            QRectF  box = QRectF(point.x() - width / 2, point.y() - height / 2, width, height);
-            QTransform t = QTransform().translate(point.x(), point.y()).rotate(-object->angle).translate(-point.x(), -point.y());
-            QPolygonF rotated_box = t.map( box );
+            QTransform t = QTransform().translate(object->position.x(), object->position.y()).rotate( object->angle);
+            QPointF top_left =  t.map(QPointF( -object->width / 2,  object->height / 2));
+            QPointF top_right = t.map(QPointF(  object->width / 2,  object->height / 2));
+            QPointF bot_right = t.map(QPointF(  object->width / 2, -object->height / 2));
+            QPointF bot_left =  t.map(QPointF( -object->width / 2, -object->height / 2));
+
+            QPolygonF transformed;
+            transformed.append( mapToScreen( top_left.x(),  top_left.y(),  0) );
+            transformed.append( mapToScreen( top_right.x(), top_right.y(), 0) );
+            transformed.append( mapToScreen( bot_right.x(), bot_right.y(), 0) );
+            transformed.append( mapToScreen( bot_left.x(),  bot_left.y(),  0) );
 
             // Don't draw if not touching or inside of visible area
-            QRect bounding_box = rotated_box.boundingRect().toRect();
-            if (rect().intersects(bounding_box) || rect().contains(bounding_box)) {
-                painter.drawPolygon( rotated_box );
-                QPointF top (point.x(), point.y() - height / 2);
-                QPointF l2 = t.map( top );
-                painter.drawLine( point, l2 );
+            QRect bounding_box = transformed.boundingRect().toRect();
+            if ((rect().intersects(bounding_box) || rect().contains(bounding_box)) &&
+                (bounding_box.width() * 0.1 < width()) && (bounding_box.height() * 0.1 < height())) {
+                painter.drawPolygon( transformed );
+
+                QPointF top = t.map(QPointF( 0, object->height / 2));
+                QPointF mid = t.map(QPointF( 0, 0));
+                QPointF l1 = mapToScreen( top.x(),  top.y(),  0);
+                QPointF l2 = mapToScreen( mid.x(),  mid.y(),  0);
+                painter.drawLine( l1, l2 );
             }
 
         } else if (object->shape_type == Shape_Type::Segment) {
-            cpVect l1 = cpSegmentShapeGetA( object->shape);
-            cpVect l2 = cpSegmentShapeGetB( object->shape);
-            QPointF p1, p2;
-            p1.setX(l1.x);  p1.setY(l1.y);
-            p2.setX(l2.x);  p2.setY(l2.y);
+            cpVect a = cpSegmentShapeGetA( object->shape);
+            cpVect b = cpSegmentShapeGetB( object->shape);
+            QPointF p1 = QPointF( a.x, a.y );
+            QPointF p2 = QPointF( b.x, b.y );
+
             p1 = mapToScreen( p1.x(), p1.y(), 0.0 );
             p2 = mapToScreen( p2.x(), p2.y(), 0.0 );
 
             // Don't draw if not touching or inside of visible area
             QRect bounding_box = QRectF(p1, p2).toRect().normalized();
-            if (rect().intersects(bounding_box) || rect().contains(bounding_box)) {
+            if ((rect().intersects(bounding_box) || rect().contains(bounding_box)) &&
+                (bounding_box.width() * 0.1 < width()) && (bounding_box.height() * 0.1 < height())) {
                 QPen line_pen( QBrush(color), 2);
                 painter.setPen( line_pen );
                 painter.drawLine(p1, p2);
             }
 
         } else if (object->shape_type == Shape_Type::Polygon) {
+            QTransform t = QTransform().translate(object->position.x(), object->position.y()).rotate( object->angle);
             QPolygonF poly;
             for (int i = 0; i < cpPolyShapeGetCount( object->shape ); i++) {
-                cpVect vert = cpPolyShapeGetVert( object->shape, i );
-                poly.append( mapToScreen( vert.x + object->position.x(), vert.y + object->position.y(), 0 ));
+                cpVect  vert  = cpPolyShapeGetVert( object->shape, i );
+                QPointF trans = t.map(QPointF(vert.x, vert.y));
+                poly.append( mapToScreen( trans.x(), trans.y(), 0 ));
             }
-            QPointF center = mapToScreen( object->position.x(), object->position.y(), 0 );
-            QTransform t = QTransform().translate(center.x(), center.y()).rotate(-object->angle).translate(-center.x(), -center.y());
-            QPolygonF rotated_poly = t.map( poly );
 
             // Don't draw if not touching or inside of visible area
-            QRect bounding_box = rotated_poly.boundingRect().toRect();
-            if (rect().intersects(bounding_box) || rect().contains(bounding_box)) {
-                painter.drawPolygon( rotated_poly );
+            QRect bounding_box = poly.boundingRect().toRect();
+            if ((rect().intersects(bounding_box) || rect().contains(bounding_box)) &&
+                (bounding_box.width() * 0.1 < width()) && (bounding_box.height() * 0.1 < height())) {
+                painter.drawPolygon( poly );
             }
+
         }   // End If
     }   // End For
 
@@ -128,8 +143,9 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
                     QTransform t = QTransform().translate(point.x(), point.y()).rotate(-object->angle).translate(-point.x(), -point.y());
                     QPoint dot = t.map( point ).toPoint();
                     painter.drawPoint( dot );
-                    //painter.drawLine( dot.x() - 1, dot.y() - 1, dot.x() + 1, dot.y() + 1);
-                    //painter.drawLine( dot.x() - 1, dot.y() + 1, dot.x() + 1, dot.y() - 1);
+                    //// Draw crosses instead of dots
+                    ///painter.drawLine( dot.x() - 1, dot.y() - 1, dot.x() + 1, dot.y() + 1);
+                    ///painter.drawLine( dot.x() - 1, dot.y() + 1, dot.x() + 1, dot.y() - 1);
                 }
             }
         } // End If

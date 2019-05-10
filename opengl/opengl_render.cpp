@@ -50,7 +50,11 @@ void OpenGL::paintGL() {
     //  -Y down,  Y up
     //  -Z front, Z back
     float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
-    QVector3D  eye(     m_engine->getCameraPos().x() * m_scale,     m_engine->getCameraPos().y() * m_scale,   -m_engine->getCameraPos().z() );
+
+    QVector3D  perspective_offset ( 300.0f, 300.0f, 0.0f);
+    QVector3D  eye(     m_engine->getCameraPos().x() * m_scale + perspective_offset.x(),
+                        m_engine->getCameraPos().y() * m_scale + perspective_offset.y(),
+                       -m_engine->getCameraPos().z() );
     QVector3D  look_at( m_engine->getCameraPos().x() * m_scale,     m_engine->getCameraPos().y() * m_scale,    0 );
     QVector3D  up(      0, 1, 0);
     m_model_view.setToIdentity();
@@ -59,7 +63,6 @@ void OpenGL::paintGL() {
     if (m_engine->render_type == Render_Type::Orthographic) {
         float cam_x = m_engine->getCameraPos().x() * m_scale;
         float cam_y = m_engine->getCameraPos().y() * m_scale;
-
         float left =   static_cast<float>(cam_x - (width() /  2.0f));
         float right =  static_cast<float>(cam_x + (width() /  2.0f));
         float top =    static_cast<float>(cam_y + (height() / 2.0f));
@@ -67,7 +70,7 @@ void OpenGL::paintGL() {
         m_projection.ortho( left, right, bottom, top,  -1.0f, 1.0f);
 
     } else {
-        m_projection.perspective( 50.0f, aspect_ratio, 1.0f, 1000.0f );
+        m_projection.perspective( 70.0f, aspect_ratio, 1.0f, 5000.0f );
 
         m_model_view.lookAt(eye, look_at, up);
         m_model_view.scale( m_scale );
