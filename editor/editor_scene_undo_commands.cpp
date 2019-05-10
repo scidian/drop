@@ -9,7 +9,7 @@
 #include "editor_scene.h"
 #include "editor_scene_undo_commands.h"
 #include "globals.h"
-#include "library.h"
+#include "helper.h"
 #include "project/project.h"
 #include "project/project_world_stage.h"
 #include "project/project_world_stage_object.h"

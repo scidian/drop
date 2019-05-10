@@ -9,7 +9,7 @@
 #include <QVBoxLayout>
 
 #include "form_fonts.h"
-#include "library.h"
+#include "helper.h"
 #include "project/project.h"
 #include "style/style.h"
 #include "widgets/widgets_event_filters.h"

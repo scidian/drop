@@ -19,7 +19,7 @@
 #include "editor/editor_view.h"
 #include "form_main.h"
 #include "globals.h"
-#include "library.h"
+#include "helper.h"
 #include "project/project.h"
 #include "project/project_world_stage.h"
 #include "style/style.h"

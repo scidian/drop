@@ -14,7 +14,7 @@
 #include "form_main.h"
 #include "form_popup.h"
 #include "globals.h"
-#include "library.h"
+#include "helper.h"
 #include "project/project.h"
 #include "project/project_world_stage_object.h"
 

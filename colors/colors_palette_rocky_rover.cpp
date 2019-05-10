@@ -8,7 +8,7 @@
 #include <QColor>
 
 #include "colors.h"
-#include "library.h"
+#include "helper.h"
 
 namespace Dr {
 

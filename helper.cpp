@@ -14,7 +14,7 @@
 #include <QTime>
 
 #include "colors/colors.h"
-#include "library.h"
+#include "helper.h"
 #include "widgets/widgets.h"
 
 namespace Dr {

@@ -7,7 +7,7 @@
 //
 #include <QtMath>
 #include "engine/engine.h"
-#include "library.h"
+#include "helper.h"
 
 
 // How fast we start to accelerate on the ground, smaller = faster

@@ -13,7 +13,7 @@
 #include "editor_tree_project.h"
 #include "globals.h"
 #include "interface_editor_relay.h"
-#include "library.h"
+#include "helper.h"
 #include "project/project.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"

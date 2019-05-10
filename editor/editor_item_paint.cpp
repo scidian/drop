@@ -13,7 +13,7 @@
 #include "editor_item.h"
 #include "enums.h"
 #include "interface_editor_relay.h"
-#include "library.h"
+#include "helper.h"
 #include "project/project_world_stage_object.h"
 
 

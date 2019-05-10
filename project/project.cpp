@@ -8,7 +8,7 @@
 #include <QRandomGenerator>
 #include <QTime>
 
-#include "library.h"
+#include "helper.h"
 #include "project.h"
 #include "project_asset.h"
 #include "project_font.h"

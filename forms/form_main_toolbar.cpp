@@ -15,7 +15,7 @@
 #include "enums_form_main.h"
 #include "form_main.h"
 #include "globals.h"
-#include "library.h"
+#include "helper.h"
 #include "project/project.h"
 #include "project/project_world_stage_object.h"
 #include "widgets/widgets_event_filters.h"

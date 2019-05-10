@@ -14,7 +14,7 @@
 #include "project/project_world_stage_object.h"
 #include "engine.h"
 #include "engine_texture.h"
-#include "library.h"
+#include "helper.h"
 
 //######################################################################################################
 //##    Load Current World, Scene into Space

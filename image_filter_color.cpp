@@ -13,7 +13,7 @@
 
 #include "globals.h"
 #include "image_filter_color.h"
-#include "library.h"
+#include "helper.h"
 
 
 namespace DrImaging

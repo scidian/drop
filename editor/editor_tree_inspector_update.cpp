@@ -14,7 +14,7 @@
 #include "editor_tree_inspector.h"
 #include "enums.h"
 #include "interface_editor_relay.h"
-#include "library.h"
+#include "helper.h"
 #include "project/project.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"

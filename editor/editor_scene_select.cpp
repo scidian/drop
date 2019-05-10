@@ -8,7 +8,7 @@
 #include "editor_item.h"
 #include "editor_scene.h"
 #include "globals.h"
-#include "library.h"
+#include "helper.h"
 #include "project/project.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"

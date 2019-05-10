@@ -17,7 +17,7 @@
 #include "editor/editor_view.h"
 #include "form_main.h"
 #include "globals.h"
-#include "library.h"
+#include "helper.h"
 
 
 //####################################################################################

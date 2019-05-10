@@ -7,7 +7,7 @@
 //
 #include "editor_tree_assets.h"
 #include "interface_editor_relay.h"
-#include "library.h"
+#include "helper.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_world.h"

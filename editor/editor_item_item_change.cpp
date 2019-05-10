@@ -54,7 +54,7 @@
 #include "enums.h"
 #include "globals.h"
 #include "interface_editor_relay.h"
-#include "library.h"
+#include "helper.h"
 #include "project/project_world_stage.h"
 #include "project/project_world_stage_object.h"
 

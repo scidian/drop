@@ -2,11 +2,11 @@
 //      Created by Stephens Nunnally on 1/21/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      Misc Helpful Math, Output, and QWidget / QObject functions
+//      Misc helpful math, string and output functions
 //
 //
-#ifndef LIBRARY_WIDGET_H
-#define LIBRARY_WIDGET_H
+#ifndef HELPER_WIDGET_H
+#define HELPER_WIDGET_H
 
 #include <QBitmap>
 #include <QLabel>
@@ -53,7 +53,7 @@ void        ShowMessageBox(QString new_message, QPixmap pixmap = QPixmap());
 
 }
 
-#endif // LIBRARY_WIDGET_H
+#endif // HELPER_WIDGET_H
 
 
 

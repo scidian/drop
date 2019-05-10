@@ -118,7 +118,8 @@ SOURCES += \
     forms/form_popup_colors.cpp \
     forms/form_popup_grid_snap.cpp \
     forms/form_settings.cpp \
-    library.cpp \
+    helper.cpp \
+    library/polypartition.cpp \
     main.cpp \
     opengl/opengl.cpp \
     opengl/opengl_initialize.cpp \
@@ -202,6 +203,8 @@ HEADERS += \
     forms/form_main.h \
     forms/form_popup.h \
     forms/form_settings.h \
+    helper.h \
+    library/polypartition.h \
     opengl/opengl.h \
     project/project.h \
     project/project_asset.h \
@@ -213,7 +216,6 @@ HEADERS += \
     settings/settings.h \
     settings/settings_component.h \
     settings/settings_component_property.h \
-    library.h \
     debug.h \
     constants.h \
     interface_editor_relay.h \

@@ -11,7 +11,7 @@
 #include "editor_view.h"
 #include "enums.h"
 #include "globals.h"
-#include "library.h"
+#include "helper.h"
 
 
 //####################################################################################

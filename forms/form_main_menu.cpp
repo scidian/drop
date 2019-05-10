@@ -20,7 +20,7 @@
 #include "editor/editor_tree_project.h"
 #include "editor/editor_view.h"
 #include "form_main.h"
-#include "library.h"
+#include "helper.h"
 
 
 //####################################################################################

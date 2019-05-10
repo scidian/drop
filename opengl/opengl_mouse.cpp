@@ -12,7 +12,7 @@
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "opengl/opengl.h"
-#include "library.h"
+#include "helper.h"
 
 //####################################################################################
 //##        Mouse Events

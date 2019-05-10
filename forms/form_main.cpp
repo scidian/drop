@@ -21,7 +21,7 @@
 #include "editor/editor_tree_project.h"
 #include "form_main.h"
 #include "globals.h"
-#include "library.h"
+#include "helper.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_world.h"

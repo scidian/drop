@@ -11,7 +11,7 @@
 #include <QSpinBox>
 
 #include "editor_tree_inspector.h"
-#include "library.h"
+#include "helper.h"
 #include "settings/settings_component_property.h"
 #include "widgets/widgets_event_filters.h"
 

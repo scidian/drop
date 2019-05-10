@@ -19,6 +19,9 @@
  * SOFTWARE.
  */
 
+// For more info on this library:
+//      https://chipmunk-physics.net
+
 #ifndef CHIPMUNK_H
 #define CHIPMUNK_H
 
