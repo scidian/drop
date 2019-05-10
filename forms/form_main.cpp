@@ -117,9 +117,9 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
 
 
     // Stage 4 Rover Test
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_planet,  -800,   400,  1, false);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_planet,   200,   600,  1, false);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_planet,  1200,   475,  1, false);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_planet,  -800,   400,  1);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_planet,   200,   600,  1);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_planet,  1200,   475,  1);
 
     project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_plant,   -900,    55,  1, false);
     project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_plant,    900,    55,  1, false);
@@ -141,9 +141,9 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
     project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_top,      822,   -50,  4);
     project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_top,     1233,   -50,  4);
 
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_block,    400,   100,  3);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_block,    500,   200,  3);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_block,    700,   350,  3);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_block,    400,   150,  3);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_block,    525,   200,  3);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_block,    750,   350,  3);
 
     // Stage 2 Misc Test
     project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Character, a_ball,  200,   600,  4);
@@ -161,7 +161,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
     project->findWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, a_cake3,    600,  1100, -2);
 
     project->setOption(Project_Options::Current_World, 0);
-    project->setOption(Project_Options::Current_Stage, QVariant::fromValue(project->findWorldWithName("World 2")->getStageWithName("2")->getKey()) );
+    project->setOption(Project_Options::Current_Stage, QVariant::fromValue(project->findWorldWithName("World 2")->getStageWithName("4")->getKey()) );
     // !!!!! END
 
 

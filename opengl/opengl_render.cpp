@@ -94,12 +94,10 @@ void OpenGL::paintGL() {
 
 
     // ***** Before rendering 3D objects, enable face culling for triangles facing away from view
-    glEnable( GL_CULL_FACE );
-    glCullFace(  GL_BACK );
-    glFrontFace( GL_CCW );
+    glEnable( GL_CULL_FACE );       glCullFace(  GL_BACK );     glFrontFace( GL_CCW );
 
     // ***** Render 3D Objects
-    drawCube( QVector3D( 0, 300, 0) );
+    drawCube( QVector3D( -400, 400, -300) );
 
     // ***** Turn off culling before drawing 2D objects, ALSO: Must turn off culling for QPainter to work
     glDisable( GL_CULL_FACE );
@@ -188,16 +186,10 @@ void OpenGL::paintGL() {
     }
 
 
-
-
-
     // ***** Render Front 3D Objects
     glEnable( GL_CULL_FACE );       glCullFace(  GL_BACK );     glFrontFace( GL_CCW );
     drawCube( QVector3D(0, 300, 800) );
     glDisable( GL_CULL_FACE );
-
-
-
 
 
     // ***** Disable shader program, end native drawing
@@ -208,7 +200,8 @@ void OpenGL::paintGL() {
 
     // ********** Draws debug shapes onto screen
     painter.setRenderHint(QPainter::Antialiasing, true);
-    if (m_engine->debug) drawDebugShapes(painter);
+    if (m_engine->debug_shapes)     drawDebugShapes(painter);
+    if (m_engine->debug_collisions) drawDebugCollisions(painter);
 
     painter.end();
 

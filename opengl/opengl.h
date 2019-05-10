@@ -64,6 +64,7 @@ public:
     // Function Calls
     void            drawCube(QVector3D center);
     void            drawDebugShapes(QPainter &painter);
+    void            drawDebugCollisions(QPainter &painter);
     QVector3D       mapFromScreen(double x, double y);
     QVector3D       mapFromScreen(float x, float y);
     QVector3D       mapFromScreen(QPointF point);

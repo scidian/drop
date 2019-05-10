@@ -38,49 +38,66 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
         QWidget *upperWidget = new QWidget();
         upperWidget->setFixedHeight(100);
-        pushSpawn =   new QPushButton(upperWidget);     pushSpawn->setObjectName("pushSpawn");      pushSpawn->setGeometry(  QRect(  5,  0, 140, 24));
-        pushCar =     new QPushButton(upperWidget);     pushCar->setObjectName("pushCar");          pushCar->setGeometry(    QRect(  5, 24, 140, 24));
-        pushJump =    new QPushButton(upperWidget);     pushJump->setObjectName("pushJump");        pushJump->setGeometry(   QRect(  5, 48, 140, 24));
-        pushProject = new QPushButton(upperWidget);     pushProject->setObjectName("pushProject");  pushProject->setGeometry(QRect(  5, 72, 140, 24));
+        pushSpawn =   new QToolButton(upperWidget);     pushSpawn->setObjectName("pushSpawn");      pushSpawn->setGeometry(  QRect(  5,  5, 140, 20));
+        pushCar =     new QToolButton(upperWidget);     pushCar->setObjectName("pushCar");          pushCar->setGeometry(    QRect(  5, 30, 140, 20));
+        pushJump =    new QToolButton(upperWidget);     pushJump->setObjectName("pushJump");        pushJump->setGeometry(   QRect(  5, 55, 140, 20));
 
-        pushStart =  new QPushButton(upperWidget);      pushStart->setObjectName("pushStart");      pushStart->setGeometry(  QRect(150, 24, 140, 24));
-        pushStop =   new QPushButton(upperWidget);      pushStop->setObjectName("pushStop");        pushStop->setGeometry(   QRect(150, 48, 140, 24));
+        pushLine1 =   new QToolButton(upperWidget);     pushLine1->setObjectName("pushLine1");      pushLine1->setGeometry(  QRect(150,  5, 140, 20));
+        pushLine2 =   new QToolButton(upperWidget);     pushLine2->setObjectName("pushLine2");      pushLine2->setGeometry(  QRect(150, 30, 140, 20));
+        pushBlocks =  new QToolButton(upperWidget);     pushBlocks->setObjectName("pushBlocks");    pushBlocks->setGeometry( QRect(150, 55, 140, 20));
+        pushProject = new QToolButton(upperWidget);     pushProject->setObjectName("pushProject");  pushProject->setGeometry(QRect(150, 80, 140, 20));
 
-        pushPersp =   new QPushButton(upperWidget);     pushPersp->setObjectName("pushPersp");      pushPersp->setGeometry(  QRect(300, 24, 140, 24));
-        pushOrtho =   new QPushButton(upperWidget);     pushOrtho->setObjectName("pushOrtho");      pushOrtho->setGeometry(  QRect(300, 48, 140, 24));
+        pushStart =  new QToolButton(upperWidget);      pushStart->setObjectName("pushStart");      pushStart->setGeometry(  QRect(300, 24, 140, 20));
+        pushStop =   new QToolButton(upperWidget);      pushStop->setObjectName("pushStop");        pushStop->setGeometry(   QRect(300, 48, 140, 20));
 
-        pushDebug =   new QPushButton(upperWidget);     pushDebug->setObjectName("pushDebug");      pushDebug->setGeometry(  QRect(450, 24, 140, 50));
+        pushPersp =   new QToolButton(upperWidget);     pushPersp->setObjectName("pushPersp");      pushPersp->setGeometry(  QRect(450, 24, 140, 20));
+        pushOrtho =   new QToolButton(upperWidget);     pushOrtho->setObjectName("pushOrtho");      pushOrtho->setGeometry(  QRect(450, 48, 140, 20));
 
-        label =       new QLabel(upperWidget);          label->setObjectName("label");              label->setGeometry(      QRect(600,  0, 330, 20));
-        label2 =      new QLabel(upperWidget);          label2->setObjectName("label2");            label2->setGeometry(     QRect(600, 25, 330, 20));
-        labelOpenGL = new QLabel(upperWidget);          labelOpenGL->setObjectName("labelOpenGL");  labelOpenGL->setGeometry(QRect(600, 50, 330, 20));
+        pushDebug1 =  new QToolButton(upperWidget);     pushDebug1->setObjectName("pushDebug1");    pushDebug1->setGeometry( QRect(600,  5, 140, 45));
+        pushDebug2 =  new QToolButton(upperWidget);     pushDebug2->setObjectName("pushDebug2");    pushDebug2->setGeometry( QRect(600, 55, 140, 45));
 
-        pushSpawn->setText(QApplication::translate(  "MainWindow", "Spawning Demo",     nullptr));
-        pushCar->setText(QApplication::translate(    "MainWindow", "Car Demo",          nullptr));
-        pushJump->setText(QApplication::translate(   "MainWindow", "Jump Demo",         nullptr));
-        pushProject->setText(QApplication::translate("MainWindow", "Project Demo",      nullptr));
+        label =       new QLabel(upperWidget);          label->setObjectName("label");              label->setGeometry(      QRect(750,  0, 330, 20));
+        label2 =      new QLabel(upperWidget);          label2->setObjectName("label2");            label2->setGeometry(     QRect(750, 25, 330, 20));
+        labelOpenGL = new QLabel(upperWidget);          labelOpenGL->setObjectName("labelOpenGL");  labelOpenGL->setGeometry(QRect(750, 50, 330, 20));
 
-        pushStart->setText(QApplication::translate(  "MainWindow", "Start Scene",       nullptr));
-        pushStop->setText(QApplication::translate(   "MainWindow", "Stop Scene",        nullptr));
+        pushSpawn->setText(QApplication::translate(  "MainWindow", "Spawning Demo",     nullptr));  pushSpawn->setStyleSheet("color: white");
+        pushCar->setText(QApplication::translate(    "MainWindow", "Car Demo",          nullptr));  pushCar->setStyleSheet("color: white");
+        pushJump->setText(QApplication::translate(   "MainWindow", "Jump Demo",         nullptr));  pushJump->setStyleSheet("color: white");
 
-        pushPersp->setText(QApplication::translate(  "MainWindow", "Perspective View",  nullptr));
-        pushOrtho->setText(QApplication::translate(  "MainWindow", "Orthographic View", nullptr));
-        pushDebug->setText(QApplication::translate(  "MainWindow", "Toggle Debug",      nullptr));
+        pushLine1->setText(QApplication::translate(  "MainWindow", "Line1 World",       nullptr));  pushLine1->setStyleSheet("color: white");
+        pushLine2->setText(QApplication::translate(  "MainWindow", "Line2 World",       nullptr));  pushLine2->setStyleSheet("color: white");
+        pushBlocks->setText(QApplication::translate( "MainWindow", "Blocks World",      nullptr));  pushBlocks->setStyleSheet("color: white");
+        pushProject->setText(QApplication::translate("MainWindow", "Load Project",      nullptr));  pushProject->setStyleSheet("color: white");
+
+        pushStart->setText(QApplication::translate(  "MainWindow", "Start Scene",       nullptr));  pushStart->setStyleSheet("color: white");
+        pushStop->setText(QApplication::translate(   "MainWindow", "Stop Scene",        nullptr));  pushStop->setStyleSheet("color: white");
+
+        pushPersp->setText(QApplication::translate(  "MainWindow", "Perspective View",  nullptr));  pushPersp->setStyleSheet("color: white");
+        pushOrtho->setText(QApplication::translate(  "MainWindow", "Orthographic View", nullptr));  pushOrtho->setStyleSheet("color: white");
+
+        pushDebug1->setText(QApplication::translate(  "MainWindow", "Debug Shapes",     nullptr));  pushDebug1->setStyleSheet("color: white");
+        pushDebug2->setText(QApplication::translate(  "MainWindow", "Debug Collision",  nullptr));  pushDebug2->setStyleSheet("color: white");
+
         layout->addWidget(upperWidget);
+
 
         connect(pushSpawn,   SIGNAL(clicked()), this, SLOT(on_pushSpawn_clicked()));
         connect(pushCar,     SIGNAL(clicked()), this, SLOT(on_pushCar_clicked()));
         connect(pushJump,    SIGNAL(clicked()), this, SLOT(on_pushJump_clicked()));
+
+        connect(pushLine1,   SIGNAL(clicked()), this, SLOT(on_pushLines1_clicked()));
+        connect(pushLine2,   SIGNAL(clicked()), this, SLOT(on_pushLines2_clicked()));
+        connect(pushBlocks,  SIGNAL(clicked()), this, SLOT(on_pushBlocks_clicked()));
         connect(pushProject, SIGNAL(clicked()), this, SLOT(on_pushProject_clicked()));
 
-        connect(pushStart,   SIGNAL(clicked()), this, SLOT(on_pushButton_clicked()));
-        connect(pushStop,    SIGNAL(clicked()), this, SLOT(on_pushButton2_clicked()));
+        connect(pushStart,   SIGNAL(clicked()), this, SLOT(on_pushStart_clicked()));
+        connect(pushStop,    SIGNAL(clicked()), this, SLOT(on_pushStop_clicked()));
 
         connect(pushPersp,   SIGNAL(clicked()), this, SLOT(on_pushPersp_clicked()));
         connect(pushOrtho,   SIGNAL(clicked()), this, SLOT(on_pushOrtho_clicked()));
 
-        connect(pushDebug,   SIGNAL(clicked()), this, SLOT(on_pushDebug_clicked()));
-
+        connect(pushDebug1,  SIGNAL(clicked()), this, SLOT(on_pushDebug1_clicked()));
+        connect(pushDebug2,  SIGNAL(clicked()), this, SLOT(on_pushDebug2_clicked()));
 
 
         m_opengl = new OpenGL(centralWidget, m_engine);
@@ -102,57 +119,6 @@ void FormEngine::closeEvent(QCloseEvent *) {
     qApp->processEvents();
 }
 
-
-
-
-//######################################################################################################
-//##    Button Handling
-//######################################################################################################
-void FormEngine::on_pushButton_clicked() {
-    if (!m_engine->has_scene) return;
-    startTimers();
-}
-void FormEngine::on_pushButton2_clicked() {
-    stopTimers();
-}
-
-void FormEngine::on_pushDebug_clicked() {
-    m_engine->debug = !m_engine->debug;
-    m_opengl->update();
-}
-
-void FormEngine::on_pushSpawn_clicked() {
-    stopTimers();
-    m_engine->clearSpace();
-    m_engine->demo = Demo::Spawn;
-    m_engine->buildSpace();
-}
-
-void FormEngine::on_pushCar_clicked() {
-    stopTimers();
-    m_engine->clearSpace();
-    m_engine->demo = Demo::Car;
-    m_engine->buildSpace();
-}
-
-void FormEngine::on_pushJump_clicked() {
-    stopTimers();
-    m_engine->clearSpace();
-    m_engine->demo = Demo::Jump;
-    m_engine->buildSpace();
-}
-
-void FormEngine::on_pushProject_clicked() {
-    stopTimers();
-    m_engine->clearSpace();
-    qApp->processEvents();
-    m_engine->demo = Demo::Project;
-    m_engine->buildSpace();
-}
-
-
-void FormEngine::on_pushPersp_clicked() { m_engine->render_type = Render_Type::Perspective;  }
-void FormEngine::on_pushOrtho_clicked() { m_engine->render_type = Render_Type::Orthographic; }
 
 
 //######################################################################################################
@@ -199,6 +165,115 @@ void FormEngine::updateLabels(QString info) {
                         ", Txt Size: " +   QString::number(max_text) +
                         ", Txt Layers: " + QString::number(max_layers));
 }
+
+
+
+
+//######################################################################################################
+//##    Button Handling
+//######################################################################################################
+void FormEngine::on_pushSpawn_clicked() {
+    stopTimers();
+    m_engine->buildSpace( m_engine->demo_space );
+    m_engine->addPlayer( Demo_Player::Spawn );
+    startTimers();
+    updateCheckedButtons();
+}
+void FormEngine::on_pushCar_clicked() {
+    stopTimers();
+    m_engine->buildSpace( m_engine->demo_space );
+    m_engine->addPlayer( Demo_Player::Car );
+    startTimers();
+    updateCheckedButtons();
+}
+void FormEngine::on_pushJump_clicked() {
+    stopTimers();
+    m_engine->buildSpace( m_engine->demo_space );
+    m_engine->addPlayer( Demo_Player::Jump );
+    startTimers();
+    updateCheckedButtons();
+}
+
+void FormEngine::on_pushLines1_clicked() {
+    stopTimers();
+    m_engine->buildSpace( Demo_Space::Lines1 );
+    m_engine->addPlayer( m_engine->demo_player );
+    startTimers();
+    updateCheckedButtons();
+}
+void FormEngine::on_pushLines2_clicked() {
+    stopTimers();
+    m_engine->buildSpace( Demo_Space::Lines2 );
+    m_engine->addPlayer( m_engine->demo_player );
+    startTimers();
+    updateCheckedButtons();
+}
+void FormEngine::on_pushBlocks_clicked() {
+    stopTimers();
+    m_engine->buildSpace( Demo_Space::Blocks );
+    m_engine->addPlayer( m_engine->demo_player );
+    startTimers();
+    updateCheckedButtons();
+}
+void FormEngine::on_pushProject_clicked() {
+    stopTimers();
+    ///qApp->processEvents();
+    m_engine->buildSpace( Demo_Space::Project );
+    m_engine->addPlayer( m_engine->demo_player );
+    startTimers();
+    updateCheckedButtons();
+}
+
+
+void FormEngine::on_pushStart_clicked() {
+    if (!m_engine->has_scene) return;
+    startTimers();
+}
+void FormEngine::on_pushStop_clicked() {
+    stopTimers();
+}
+
+void FormEngine::on_pushPersp_clicked() { m_engine->render_type = Render_Type::Perspective;  updateCheckedButtons(); }
+void FormEngine::on_pushOrtho_clicked() { m_engine->render_type = Render_Type::Orthographic; updateCheckedButtons(); }
+
+void FormEngine::on_pushDebug1_clicked() {
+    m_engine->debug_shapes = !m_engine->debug_shapes;
+    m_opengl->update();
+    updateCheckedButtons();
+}
+void FormEngine::on_pushDebug2_clicked() {
+    m_engine->debug_collisions = !m_engine->debug_collisions;
+    m_opengl->update();
+    updateCheckedButtons();
+}
+
+
+//######################################################################################################
+//##    Update Checked Buttons
+//######################################################################################################
+void FormEngine::updateCheckedButtons() {
+    if (m_engine->demo_player == Demo_Player::Spawn) pushSpawn->setDown(true);   else pushSpawn->setDown(false);
+    if (m_engine->demo_player == Demo_Player::Car)   pushCar->setDown(true);     else pushCar->setDown(false);
+    if (m_engine->demo_player == Demo_Player::Jump)  pushJump->setDown(true);    else pushJump->setDown(false);
+
+    if (m_engine->demo_space == Demo_Space::Lines1)  pushLine1->setDown(true);   else pushLine1->setDown(false);
+    if (m_engine->demo_space == Demo_Space::Lines2)  pushLine2->setDown(true);   else pushLine2->setDown(false);
+    if (m_engine->demo_space == Demo_Space::Blocks)  pushBlocks->setDown(true);  else pushBlocks->setDown(false);
+    if (m_engine->demo_space == Demo_Space::Project) pushProject->setDown(true); else pushProject->setDown(false);
+
+    if (m_engine->render_type == Render_Type::Perspective)  pushPersp->setDown(true); else pushPersp->setDown(false);
+    if (m_engine->render_type == Render_Type::Orthographic) pushOrtho->setDown(true); else pushOrtho->setDown(false);
+
+    if (m_engine->debug_shapes)     pushDebug1->setDown(true); else pushDebug1->setDown(false);
+    if (m_engine->debug_collisions) pushDebug2->setDown(true); else pushDebug2->setDown(false);
+}
+
+
+
+
+
+
+
 
 
 

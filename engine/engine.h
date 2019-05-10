@@ -20,10 +20,16 @@ enum class Render_Type {
     Orthographic,
 };
 
-enum class Demo {
+enum class Demo_Player {
     Spawn,
     Car,
     Jump,
+};
+
+enum class Demo_Space {
+    Lines1,
+    Lines2,
+    Blocks,
     Project,
 };
 
@@ -131,9 +137,13 @@ public:
 
     QTime           fps_timer;
     int             fps, last_fps;
-    bool            debug = false;
 
-    Demo            demo = Demo::Spawn;
+    bool            debug_shapes =      false;
+    bool            debug_collisions =  false;
+
+    Demo_Space      demo_space =  Demo_Space::Blocks;
+    Demo_Player     demo_player = Demo_Player::Jump;
+
     Render_Type     render_type = Render_Type::Orthographic;          // Should render perspective or orthographic?
 
     bool            has_scene = false;
@@ -165,9 +175,9 @@ public:
                               double friction, double bounce, double mass, QPointF velocity, bool should_collide = true);
     SceneObject*    addPolygon(Body_Type body_type, long texture_number, double x, double y, QVector<QPointF> points, double friction, double bounce, double mass, QPointF velocity);
 
-    void        buildSpace();
+    void        addPlayer(Demo_Player new_player_type);
+    void        buildSpace(Demo_Space new_space_type);
     void        clearSpace();
-    void        loadSpace();
     void        playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat dt);
     void        updateSpace(double time_passed);
 
@@ -184,8 +194,6 @@ public:
     // Getter and Setters    
     DrProject*          getProject()    { return m_project; }
     cpSpace*            getSpace()      { return m_space; }
-
-    const bool&         debugOn() { return debug; }
 
     const QVector3D&    getCameraPos()  { return m_camera_pos; }
     const cpFloat&      getTimeStep()   { return m_time_step; }

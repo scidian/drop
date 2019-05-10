@@ -25,15 +25,15 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
     double x =  static_cast<double>( vec.x());
     double y =  static_cast<double>( vec.y());
 
-    if (m_engine->demo == Demo::Spawn) {
+    if (m_engine->demo_player == Demo_Player::Spawn) {
         if (event->button() & Qt::LeftButton) {
             for (int i = 0; i < 25; i++ ) {
                 double vel_x = QRandomGenerator::global()->bounded(-100, 100);
                 double vel_y = QRandomGenerator::global()->bounded( 100, 500);
-                m_engine->addCircle(Body_Type::Dynamic, 0, x, y, .7, .5, 2, QPointF(vel_x, vel_y) );
+                m_engine->addCircle(Body_Type::Dynamic, Test_Textures::Ball, x, y, .7, .5, 2, QPointF(vel_x, vel_y) );
             }
         } else if (event->button() & Qt::RightButton) {
-            m_engine->addBlock(Body_Type::Dynamic, 1, x, y, 0, QPointF(1, 1), 1, 0, 3, QPointF(0, 0));
+            m_engine->addBlock(Body_Type::Dynamic, Test_Textures::Block, x, y, 0, QPointF(1, 1), 1, 0, 3, QPointF(0, 0));
         } else if (event->button() & Qt::MiddleButton) {
 
             // Polygon shape points should be counter-clockwise
@@ -44,18 +44,17 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
             points.append( QPointF(-46, -10) );     // Left Middle
             points.append( QPointF(-10, -30) );     // Left Mid Middle Concave <-- point is ignored by Chipmunk
             points.append( QPointF(-38, -55) );     // Left Bottom
-            m_engine->addPolygon(Body_Type::Dynamic, 2, x, y, points, .15, .4, 2.5, QPointF(0, 0));
-
+            m_engine->addPolygon(Body_Type::Dynamic, Test_Textures::Plant, x, y, points, .15, .4, 2.5, QPointF(0, 0));
         }
 
-    } else if (m_engine->demo == Demo::Car || m_engine->demo == Demo::Project) {
+    } else if (m_engine->demo_player == Demo_Player::Car) {
         if (event->button() & Qt::LeftButton) {
             m_engine->gas_pedal = Pedal::Clockwise;
         } else if (event->button() & Qt::RightButton) {
             m_engine->gas_pedal = Pedal::CounterClockwise;
         }
 
-    } else if (m_engine->demo == Demo::Jump) {
+    } else if (m_engine->demo_player == Demo_Player::Jump) {
         if (event->button() & Qt::LeftButton) {
             m_engine->keyboard_y = 1;
             m_engine->jump_state = Jump_State::Need_To_Jump;
@@ -68,11 +67,11 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
 
 void OpenGL::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (m_engine->demo == Demo::Car || m_engine->demo == Demo::Project) {
+    if (m_engine->demo_player == Demo_Player::Car) {
         if (event->buttons() == Qt::MouseButton::NoButton)
             m_engine->gas_pedal = Pedal::None;
 
-    } else if (m_engine->demo == Demo::Jump) {
+    } else if (m_engine->demo_player == Demo_Player::Jump) {
         if (event->buttons() == Qt::MouseButton::NoButton)
             m_engine->keyboard_y = 0;
     }

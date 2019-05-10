@@ -12,6 +12,7 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QPushButton>
+#include <QToolButton>
 #include <QTime>
 #include <QTimer>
 
@@ -40,10 +41,11 @@ private:
 
 public:
     QWidget         *centralWidget;
-    QPushButton     *pushSpawn,     *pushCar,       *pushJump,      *pushProject;
-    QPushButton     *pushStart,     *pushStop;
-    QPushButton     *pushPersp,     *pushOrtho;
-    QPushButton     *pushDebug;
+    QToolButton     *pushSpawn,     *pushCar,       *pushJump;
+    QToolButton     *pushLine1,     *pushLine2,     *pushBlocks,      *pushProject;
+    QToolButton     *pushStart,     *pushStop;
+    QToolButton     *pushPersp,     *pushOrtho;
+    QToolButton     *pushDebug1,    *pushDebug2;
 
     QLabel          *label,         *label2;
     QLabel          *labelOpenGL;
@@ -57,18 +59,27 @@ public:
     virtual void closeEvent(QCloseEvent *event) override;
 
 private slots:
-    void on_pushButton_clicked();
-    void on_pushButton2_clicked();
-    void on_pushDebug_clicked();
     void on_pushSpawn_clicked();
     void on_pushCar_clicked();
     void on_pushJump_clicked();
+
+    void on_pushLines1_clicked();
+    void on_pushLines2_clicked();
+    void on_pushBlocks_clicked();
     void on_pushProject_clicked();
+
+    void on_pushStart_clicked();
+    void on_pushStop_clicked();
+
     void on_pushPersp_clicked();
     void on_pushOrtho_clicked();
 
+    void on_pushDebug1_clicked();
+    void on_pushDebug2_clicked();
+
     void startTimers();
     void stopTimers();
+    void updateCheckedButtons();
     void updateEngine();
     void updateLabels(QString info);
 };

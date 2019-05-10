@@ -96,8 +96,8 @@ SOURCES += \
     editor/editor_view_tooltip.cpp \
     engine/engine.cpp \
     engine/engine_add.cpp \
-    engine/engine_build.cpp \
-    engine/engine_load.cpp \
+    engine/engine_space_build_player.cpp \
+    engine/engine_space_build_world.cpp \
     engine/engine_texture.cpp \
     engine/engine_update.cpp \
     enums.cpp \
