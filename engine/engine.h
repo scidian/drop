@@ -34,6 +34,11 @@ enum class Pedal {
     CounterClockwise,
 };
 
+enum class Jump_State {
+    Need_To_Jump,
+    Jumped
+};
+
 enum class Body_Type {
     Dynamic,
     Kinematic,
@@ -136,14 +141,16 @@ public:
 
     Pedal           gas_pedal = Pedal::None;
 
-    int             keyboard_x;     // Set to -1 for left, 1 for right
-    bool            keyboard_y;     // Set to -1 for down, 1 for up
+    int             keyboard_x;                     // Set to -1 for left, 1 for right
+    bool            keyboard_y;                     // Set to -1 for down, 1 for up
 
     cpBody         *player_body;
     cpShape        *player_shape;
+    int             jump_count;
+    int             remaining_jumps;
     cpFloat         remaining_boost;
     bool            grounded;
-    bool            last_jump_state;
+    Jump_State      jump_state;
 
 
 public:

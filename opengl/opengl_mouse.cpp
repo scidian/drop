@@ -55,6 +55,7 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
     } else if (m_engine->demo == Demo::Jump) {
         if (event->button() & Qt::LeftButton) {
             m_engine->keyboard_y = 1;
+            m_engine->jump_state = Jump_State::Need_To_Jump;
         } else if (event->button() & Qt::RightButton) {
 
         }

@@ -19,8 +19,8 @@
 #define PLAYER_AIR_ACCEL (PLAYER_VELOCITY / PLAYER_AIR_ACCEL_TIME)
 
 #define PLAYER_VELOCITY 500.0                   // Movement speed
-#define JUMP_HEIGHT      70.0                   // Jump force (for now only y)
-#define JUMP_TIME_OUT   800.0                   // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
+#define JUMP_HEIGHT      90.0                   // Jump force (for now only y)
+#define JUMP_TIME_OUT   900.0                   // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
 #define FALL_VELOCITY  1000.0                   // Max fall speed
 
 
@@ -86,17 +86,18 @@ void DrEngine::updateSpace(double time_passed) {
 
             // ***** If the jump key was just pressed this frame and it wasn't pressed last frame, and we're on the ground, jump!
             if (remaining_boost > 0) remaining_boost -= time_passed;
-            bool jump_state = keyboard_y > 0.0;
-            if (jump_state && !last_jump_state && grounded) {
+
+            if ((jump_state == Jump_State::Need_To_Jump) && (grounded || (jump_count == -1) || (remaining_jumps > 0))) {
                 cpFloat jump_v = cpfsqrt(2.0 * JUMP_HEIGHT * -gravity.y);
                 cpVect  player_v = cpBodyGetVelocity( player_body );
+                player_v.y = 0;
                 player_v = cpvadd(player_v, cpv(0.0, jump_v));
                 cpBodySetVelocity( player_body, player_v );
                 remaining_boost = JUMP_TIME_OUT;
+                --remaining_jumps;
             }
-            last_jump_state = jump_state;
+            jump_state = Jump_State::Jumped;
         }
-
 
 
 
@@ -128,18 +129,22 @@ static void selectPlayerGroundNormal(cpBody *, cpArbiter *arb, cpVect *ground_no
 void DrEngine::playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat dt)
 {
     // Check if jump key is active
-    bool jump_state = keyboard_y > 0.0;
+    bool jump_button_down = keyboard_y > 0.0;
 
     // Grab the grounding normal from last frame, if we hit the ground, turn of remaining_boost time
     cpVect ground_normal = cpvzero;
     cpBodyEachArbiter(player_body, cpBodyArbiterIteratorFunc(selectPlayerGroundNormal), &ground_normal);
     grounded = (ground_normal.y > 0.0);
+    if (grounded) {
+        remaining_jumps = jump_count;
+        remaining_boost = 0.0;
+    }
     if (ground_normal.y < 0.0) {
         remaining_boost = 0.0;
     }
 
     // Continues to provide jump velocity, although slowly fades
-    cpBool boost = (jump_state && (remaining_boost > 0.0));
+    cpBool boost = (jump_button_down && (remaining_boost > 0.0));
 
     // Alternative boost extension:
     ///cpVect g = (boost ? cpvzero : gravity);

@@ -209,15 +209,24 @@ void DrEngine::buildSpace() {
             this->addLine(Body_Type::Static, QPointF(-1000, -200), QPointF(1000, -200), 2, .5, 1);
 
             // Add one ball
-            SceneObject *ball = this->addCircle(Body_Type::Dynamic, Txt::Ball, 0,  0, 2, .05, 200, QPointF( 0, 0), false);
+            SceneObject *ball = this->addCircle(Body_Type::Dynamic, Txt::Ball, 0,  0, 2, .01, 200, QPointF( 0, 0), false);
+
+            // Camera should follow player
             ball->follow = true;
+
+            // Turn on jump / movement buttons
             ball->player_controls = true;
 
-            player_body = ball->body;
+            // Set player info
+            player_body =  ball->body;
             player_shape = ball->shape;
+            jump_count = 2;
+
+            // Reset jump variables for this player
+            remaining_jumps = jump_count;
             remaining_boost = 0;
             grounded = cpFalse;
-            last_jump_state = cpFalse;
+            jump_state = Jump_State::Jumped;
 
 
     } else if (demo == Demo::Project) {
