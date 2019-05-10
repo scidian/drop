@@ -95,6 +95,8 @@ struct SceneObject {
     double      angle = 0;                  // Current object angle
     QPointF     position;                   // Current object posiiton
     QPointF     velocity;                   // Current object velocity
+    double      z_order;                    // Used for layering
+
 };
 
 // Forward declarations
@@ -171,11 +173,12 @@ public:
     //  Bounce:   0 = no bounce, 1.0 will give a “perfect” bounce. However due to inaccuracies in the simulation using 1.0 or greater is not recommended
     //  Mass:     Not sure
     SceneObject*    addLine(  Body_Type body_type,  QPointF p1, QPointF p2, double friction, double bounce, double mass);
-    SceneObject*    addCircle(Body_Type body_type,  long texture_number, double x, double y, double friction, double bounce, double mass, QPointF velocity,
-                              bool can_rotate = true);
-    SceneObject*    addBlock( Body_Type body_type,  long texture_number, double x, double y, double angle, QPointF scale,
+    SceneObject*    addCircle(Body_Type body_type,  long texture_number, double x, double y, double z,
+                              double friction, double bounce, double mass, QPointF velocity, bool can_rotate = true);
+    SceneObject*    addBlock( Body_Type body_type,  long texture_number, double x, double y, double z, double angle, QPointF scale,
                               double friction, double bounce, double mass, QPointF velocity, bool should_collide = true);
-    SceneObject*    addPolygon(Body_Type body_type, long texture_number, double x, double y, QVector<QPointF> points, double friction, double bounce, double mass, QPointF velocity);
+    SceneObject*    addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, QVector<QPointF> points,
+                               double friction, double bounce, double mass, QPointF velocity);
 
     void        addPlayer(Demo_Player new_player_type);
     void        buildSpace(Demo_Space new_space_type);

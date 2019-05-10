@@ -20,7 +20,7 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         m_gravity = cpv(0, -500);                           // cpVect is a 2D vector and cpv() is a shortcut for initializing them
         cpSpaceSetGravity(m_space, m_gravity);
 
-        SceneObject *ball = this->addCircle(Body_Type::Kinematic, Test_Textures::Ball, -300,  150, .7, .5, 2, QPointF(15, 0));
+        SceneObject *ball = this->addCircle(Body_Type::Kinematic, Test_Textures::Ball, -300,  150, 0, .7, .5, 2, QPointF(15, 0));
         ball->follow = true;
 
 
@@ -33,17 +33,17 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
 
 
         // Add body
-        SceneObject *rover = this->addBlock(  Body_Type::Dynamic, Test_Textures::Rover,   50,  75,   0, QPointF(1, 1), .5, .1, 4, QPointF(0, 0));
+        SceneObject *rover = this->addBlock(  Body_Type::Dynamic, Test_Textures::Rover,   50,  75, 0,   0, QPointF(1, 1), .5, .1, 4, QPointF(0, 0));
         rover->follow = true;
 
         // Add wheels
-        SceneObject *wheel1 = this->addCircle(Body_Type::Dynamic, Test_Textures::Wheel,   10,  45, 4, .7,  2, QPointF(0, 0));
-        SceneObject *wheel2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Wheel,   50,  45, 4, .7,  2, QPointF(0, 0));
-        SceneObject *wheel3 = this->addCircle(Body_Type::Dynamic, Test_Textures::Wheel,   90,  45, 4, .7,  2, QPointF(0, 0));
+        SceneObject *wheel1 = this->addCircle(Body_Type::Dynamic, Test_Textures::Wheel,   10,  45, .01, 4, .7,  2, QPointF(0, 0));
+        SceneObject *wheel2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Wheel,   50,  45, .01, 4, .7,  2, QPointF(0, 0));
+        SceneObject *wheel3 = this->addCircle(Body_Type::Dynamic, Test_Textures::Wheel,   90,  45, .01, 4, .7,  2, QPointF(0, 0));
         wheel1->is_wheel = true;    wheel1->wheel_speed = 80;
         wheel2->is_wheel = true;    wheel2->wheel_speed = 40;
         wheel3->is_wheel = true;    wheel3->wheel_speed = 60;
-        SceneObject *spare1 = this->addCircle(Body_Type::Dynamic, Test_Textures::Spare,  -10,  45, 4, .7, .5, QPointF(0, 0));
+        SceneObject *spare1 = this->addCircle(Body_Type::Dynamic, Test_Textures::Spare,  -10,  45, .01, 4, .7, .5, QPointF(0, 0));
 
         // Set body and wheels to same group so they don't collide
         //EX:
@@ -104,7 +104,7 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         m_gravity = cpv(0, -1000);
         cpSpaceSetGravity(m_space, m_gravity);
 
-        SceneObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 0,  50, 2, .01, 200, QPointF( 0, 0), false);
+        SceneObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 0,  50, 0, 2, .01, 200, QPointF( 0, 0), false);
 
         // Camera should follow player
         ball->follow = true;

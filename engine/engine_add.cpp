@@ -50,8 +50,8 @@ SceneObject* DrEngine::addLine(Body_Type body_type, QPointF p1, QPointF p2, doub
 //######################################################################################################
 //##    Add Circle
 //######################################################################################################
-SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, double x, double y, double friction, double bounce, double mass, QPointF velocity,
-                                 bool can_rotate) {
+SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, double x, double y, double z,
+                                 double friction, double bounce, double mass, QPointF velocity, bool can_rotate) {
     SceneObject *ball = new SceneObject();
 
     // Ball Basics
@@ -59,6 +59,7 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
     ball->width =  m_textures[texture_number]->width();
     ball->height = m_textures[texture_number]->height();
     ball->radius = ball->width / 2;
+    ball->z_order = z;
 
     // If we dont want an object to rotate, set moment of inertia to INFINITY
     cpFloat moment;
@@ -94,7 +95,7 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
 //######################################################################################################
 //##    Add Block
 //######################################################################################################
-SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double x, double y, double angle, QPointF scale,
+SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale,
                                 double friction, double bounce, double mass, QPointF velocity, bool should_collide) {
     SceneObject *block = new SceneObject();
 
@@ -102,6 +103,7 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
     block->texture_number = texture_number;
     block->width =  m_textures[texture_number]->width()  * scale.x();
     block->height = m_textures[texture_number]->height() * scale.y();
+    block->z_order = z;
     cpFloat moment = cpMomentForBox( mass, block->width, block->height);
 
     // Create the body for the block
@@ -139,7 +141,7 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
 //######################################################################################################
 //##    Add Flower
 //######################################################################################################
-SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, double x, double y, QVector<QPointF> points,
+SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, QVector<QPointF> points,
                                       double friction, double bounce, double mass, QPointF velocity) {
     SceneObject *polygon = new SceneObject();
 
@@ -147,6 +149,7 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
     polygon->texture_number = texture_number;
     polygon->width =  m_textures[texture_number]->width();
     polygon->height = m_textures[texture_number]->height();
+    polygon->z_order = z;
 
     std::vector<cpVect> verts;
     verts.clear();

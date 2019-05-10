@@ -141,8 +141,8 @@ void DrObject::addComponentTransform(double width, double height, double x, doub
     addComponent(Components::Object_Layering, "Layering", "Controls the order items are drawn onto the screen. For \"Z Order\", lower numbers are "
                                                            "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, true);
     getComponent(Components::Object_Layering)->setIcon(Component_Icons::Layering);
-    addPropertyToComponent(Components::Object_Layering, Properties::Object_Z_Order, Property_Type::Int, QVariant::fromValue(z),
-                           "Z Order", "Arrangement of item along the z axis in the stage");
+    addPropertyToComponent(Components::Object_Layering, Properties::Object_Z_Order, Property_Type::Double, QVariant::fromValue(z),
+                           "Z Order", "Arrangement of item along the z axis in the stage.");
     addPropertyToComponent(Components::Object_Layering, Properties::Object_Opacity, Property_Type::Percent, 100,
                            "Opacity", "How transparent an item is, 0 (invisible) - 100 (solid)");
 }

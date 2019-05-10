@@ -8,6 +8,8 @@
 #include <QtMath>
 #include <QPainter>
 
+#include <vector>
+
 #include "chipmunk/chipmunk.h"
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
@@ -89,8 +91,6 @@ void OpenGL::paintGL() {
 
 
 
-
-
     // ********** Enable shader program
     if (!m_program.bind()) return;
     m_program.setUniformValue( m_matrixUniform, m_matrix );
@@ -106,9 +106,21 @@ void OpenGL::paintGL() {
     glDisable( GL_CULL_FACE );
 
 
+
+
+    // ***** Create a vector of the scene objects, ignoring lines and sort it by depth
+    std::vector<std::pair<int, double>> v;
+    for (int i = 0; i < m_engine->objects.count(); i++) {
+        if (m_engine->objects[i]->shape_type == Shape_Type::Segment) continue;
+        v.push_back(std::make_pair(i, m_engine->objects[i]->z_order));
+    }
+    sort(v.begin(), v.end(), [] (std::pair<int, double>&i, std::pair<int, double>&j) { return i.second < j.second; });
+
+
     // ***** Render 2D Objects
-    for (auto object : m_engine->objects) {
-        if (object->shape_type == Shape_Type::Segment) continue;
+    ///for (auto object : m_engine->objects) {
+    for (ulong i = 0; i < static_cast<ulong>(v.size()); i++) {
+        SceneObject *object = m_engine->objects[ v[i].first ];
 
         // ***** Render with texture
         DrEngineTexture *texture = m_engine->getTexture(object->texture_number);
@@ -129,16 +141,18 @@ void OpenGL::paintGL() {
 
         // ***** Get object position data
         QPointF center = object->position;
-        float x, y, half_width, half_height;
+        float x, y, z, half_width, half_height;
 
         if (m_engine->render_type == Render_Type::Orthographic) {
             x = static_cast<float>(center.x()) * m_scale;
             y = static_cast<float>(center.y()) * m_scale;
+            z = static_cast<float>(object->z_order) * m_scale;
             half_width =  float(object->width)  * m_scale / 2.0f;
             half_height = float(object->height) * m_scale / 2.0f;
         } else {
             x = static_cast<float>(center.x());
             y = static_cast<float>(center.y());
+            z = static_cast<float>(object->z_order);
             half_width =  float(object->width)  / 2.0f;
             half_height = float(object->height) / 2.0f;
         }
@@ -160,19 +174,19 @@ void OpenGL::paintGL() {
         // Top Right
         vertices[0] = top_right.x() + x;
         vertices[1] = top_right.y() + y;
-        vertices[2] = 0.00f;
+        vertices[2] = z;
         // Top Left
         vertices[3] = top_left.x()  + x;
         vertices[4] = top_left.y()  + y;
-        vertices[5] = 0.00f;
+        vertices[5] = z;
         // Bottom Right
         vertices[6] = bot_right.x() + x;
         vertices[7] = bot_right.y() + y;
-        vertices[8] = 0.00f;
+        vertices[8] = z;
         // Bottom Left
         vertices[ 9] = bot_left.x() + x;
         vertices[10] = bot_left.y() + y;
-        vertices[11] = 0.00f;
+        vertices[11] = z;
 
         m_program.setAttributeArray( m_vertexAttr, vertices.data(), 3 );
         m_program.setUniformValue( m_texUniform, 0 );                           // Use texture unit 0

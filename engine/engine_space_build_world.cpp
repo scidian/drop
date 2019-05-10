@@ -78,10 +78,11 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
             QPointF position = object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF();
             QPointF scale =    object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale).toPointF();
             double  angle =    object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Rotation).toDouble();
+            double  z_order =  object->getComponentPropertyValue(Components::Object_Layering,  Properties::Object_Z_Order).toDouble();
             bool    collide =  object->getComponentPropertyValue(Components::Object_Settings,  Properties::Object_Collide).toBool();
 
             long    asset_key = object->getAssetKey();
-            addBlock(Body_Type::Kinematic, asset_key, position.x(), -position.y(), angle, scale, 1, .75, 100, QPointF(0, 0), collide);
+            addBlock(Body_Type::Kinematic, asset_key, position.x(), -position.y(), z_order, angle, scale, 1, .75, 100, QPointF(0, 0), collide);
         }
 
 
@@ -128,32 +129,32 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         this->addLine(Body_Type::Static, QPointF( 1760,    4), QPointF(1790,   0), 1, .75, 1);
 
         // Block alignment test
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, 220, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, 160, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, 100, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000,  40, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, 220, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, 160, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, 100, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000,  40, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
 
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -940, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -880, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -820, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -760, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -700, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -640, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -580, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -520, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -460, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -400, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -340, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -280, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -220, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -160, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -100, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,   -39, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,    22, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,    83, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,   144, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,   205, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -940, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -880, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -820, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -760, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -700, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -640, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -580, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -520, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -460, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -400, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -340, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -280, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -220, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -160, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -100, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,   -39, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,    22, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,    83, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,   144, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,   205, -20, 0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
 
     }
 
