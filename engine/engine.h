@@ -113,7 +113,7 @@ private:
     EngineTextureMap  m_textures;                               // Map of textures used for this Engine
     EngineWorldMap    m_worlds;                                 // Map of Worlds used for this Engine
 
-    QVector3D       m_camera_pos = QVector3D(0, 0, -800);       // Current camera position
+    QVector3D       m_camera_pos = QVector3D(0, 0, 800);        // Current camera position
 
     cpSpace        *m_space;                    // Current physics space shown on screen
 

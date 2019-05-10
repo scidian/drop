@@ -87,19 +87,19 @@ void OpenGL::drawCube(QVector3D center) {
         // Top Right
         vertices[0] = top_right.x() + x;
         vertices[1] = top_right.y() + y;
-        vertices[2] = -z;
+        vertices[2] = z;
         // Top Left
         vertices[3] = top_left.x()  + x;
         vertices[4] = top_left.y()  + y;
-        vertices[5] = -z;
+        vertices[5] = z;
         // Bottom Right
         vertices[6] = bot_right.x() + x;
         vertices[7] = bot_right.y() + y;
-        vertices[8] = -z;
+        vertices[8] = z;
         // Bottom Left
         vertices[ 9] = bot_left.x() + x;
         vertices[10] = bot_left.y() + y;
-        vertices[11] = -z;
+        vertices[11] = z;
 
         m_program.setAttributeArray( m_vertexAttr, vertices.data(), 3 );
         m_program.setUniformValue( m_texUniform, 0 );

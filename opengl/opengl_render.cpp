@@ -48,14 +48,15 @@ void OpenGL::paintGL() {
     // Axis:
     //  -X left,  X right
     //  -Y down,  Y up
-    //  -Z front, Z back
+    //  -Z back,  Z front
     float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
 
     QVector3D  perspective_offset ( 300.0f, 300.0f, 0.0f);
     QVector3D  eye(     m_engine->getCameraPos().x() * m_scale + perspective_offset.x(),
                         m_engine->getCameraPos().y() * m_scale + perspective_offset.y(),
-                       -m_engine->getCameraPos().z() );
-    QVector3D  look_at( m_engine->getCameraPos().x() * m_scale,     m_engine->getCameraPos().y() * m_scale,    0 );
+                        m_engine->getCameraPos().z() );
+    QVector3D  look_at( m_engine->getCameraPos().x() * m_scale,
+                        m_engine->getCameraPos().y() * m_scale,    0 );
     QVector3D  up(      0, 1, 0);
     m_model_view.setToIdentity();
     m_projection.setToIdentity();
@@ -98,7 +99,7 @@ void OpenGL::paintGL() {
     glFrontFace( GL_CCW );
 
     // ***** Render 3D Objects
-    drawCube( QVector3D(0, 300,    0) );
+    drawCube( QVector3D( 0, 300, 0) );
 
     // ***** Turn off culling before drawing 2D objects, ALSO: Must turn off culling for QPainter to work
     glDisable( GL_CULL_FACE );
@@ -192,7 +193,7 @@ void OpenGL::paintGL() {
 
     // ***** Render Front 3D Objects
     glEnable( GL_CULL_FACE );       glCullFace(  GL_BACK );     glFrontFace( GL_CCW );
-    drawCube( QVector3D(0, 300,  -800) );
+    drawCube( QVector3D(0, 300, 800) );
     glDisable( GL_CULL_FACE );
 
 
