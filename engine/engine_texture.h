@@ -25,10 +25,12 @@ private:
 public:
     // Constructor / Destructor
     DrEngineTexture(QString from_asset_string);
+    DrEngineTexture(QPixmap &from_pixmap);
 
     // Function Calls
     void            deleteTexture()   { delete m_texture; }
     void            loadTexture(QString from_asset_string);
+    void            loadTexture(QPixmap &from_pixmap);
 
     // Getters & Setters
     const int&      height() { return m_height; }

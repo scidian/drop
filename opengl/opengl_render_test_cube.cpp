@@ -19,7 +19,7 @@
 //####################################################################################
 void OpenGL::drawCube(QVector3D center) {
 
-    DrEngineTexture *texture = m_engine->getTexture( 1 );     // 1 is metal_block
+    DrEngineTexture *texture = m_engine->getTexture( Test_Textures::Block );
     texture->texture()->bind();
 
     for (int i = 0; i < 5; i++) {

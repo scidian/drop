@@ -36,8 +36,12 @@ void DrEngine::deleteResources() {
 //######################################################################################################
 //##    Add Texture
 //######################################################################################################
-long DrEngine::addTexture(QString from_asset_string) {
-    long new_number = static_cast<long>(m_textures.size());
-    m_textures[new_number] = new DrEngineTexture(from_asset_string);
-    return new_number;
+DrEngineTexture* DrEngine::addTexture(long texture_id, QString from_asset_string) {
+    m_textures[texture_id] = new DrEngineTexture(from_asset_string);
+    return m_textures[texture_id];
+}
+
+DrEngineTexture* DrEngine::addTexture(long texture_id, QPixmap &pixmap) {
+    m_textures[texture_id] = new DrEngineTexture(pixmap);
+    return m_textures[texture_id];
 }

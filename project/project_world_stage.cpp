@@ -43,7 +43,7 @@ DrStage::~DrStage() {
 }
 
 // Adds a new object to the stage
-DrObject* DrStage::addObject(DrObjectType new_type, long from_asset_key, double x, double y, long z) {
+DrObject* DrStage::addObject(DrObjectType new_type, long from_asset_key, double x, double y, long z, bool should_collide) {
     DrAsset *asset = m_parent_project->getAsset(from_asset_key);
 
     // Figure out name for object
@@ -62,7 +62,7 @@ DrObject* DrStage::addObject(DrObjectType new_type, long from_asset_key, double 
 
     long new_object_key = m_parent_project->getNextKey();
     m_objects[new_object_key] = new DrObject(m_parent_project, m_parent_world, this, new_object_key,
-                                             new_name, new_type, from_asset_key, x, y, z);
+                                             new_name, new_type, from_asset_key, x, y, z, should_collide);
     return m_objects[new_object_key];
 }
 

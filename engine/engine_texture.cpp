@@ -18,6 +18,9 @@ DrEngineTexture::DrEngineTexture(QString from_asset_string) {
     loadTexture(from_asset_string);
 }
 
+DrEngineTexture::DrEngineTexture(QPixmap &from_pixmap) {
+    loadTexture(from_pixmap);
+}
 
 //####################################################################################
 //##        Loads a texture
@@ -51,7 +54,18 @@ void DrEngineTexture::loadTexture(QString from_asset_string) {
     m_texture_loaded = true;
 }
 
+void DrEngineTexture::loadTexture(QPixmap &from_pixmap) {
+    // Create new texture
+    m_texture = new QOpenGLTexture( from_pixmap.toImage().mirrored() );
 
+    // These mip map filters allow for nice alpha channels
+    m_texture->setMinificationFilter( QOpenGLTexture::Filter::Nearest);
+    m_texture->setMagnificationFilter(QOpenGLTexture::Filter::Nearest);
+
+    m_width =  m_texture->width();
+    m_height = m_texture->height();
+    m_texture_loaded = true;
+}
 
 
 

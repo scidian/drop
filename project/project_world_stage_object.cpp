@@ -19,7 +19,7 @@
 //####################################################################################
 DrObject::DrObject(DrProject *parent_project, DrWorld *parent_world, DrStage *parent_stage,
                    long new_object_key, QString new_object_name, DrObjectType new_object_type,
-                   long from_asset_key, double x, double y, long z) {
+                   long from_asset_key, double x, double y, long z, bool should_collide) {
     m_parent_project = parent_project;              // pointer to parent Project
     m_parent_world = parent_world;                  // pointer to parent World
     m_parent_stage = parent_stage;                  // pointer to parent Stage
@@ -35,19 +35,19 @@ DrObject::DrObject(DrProject *parent_project, DrWorld *parent_world, DrStage *pa
     // Call to load in all the components / properties for this Stage object
     switch (new_object_type) {
         case DrObjectType::Object:
-            addComponentSettingsObject(new_object_name);
-            addComponentTransform(asset->getWidth(), asset->getHeight(), x, y, z);
+            addComponentSettingsObject(new_object_name, should_collide);
+            addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, z);
             addComponentMovement();
             addComponentAppearance();
             break;
 
         case DrObjectType::Text:
             addComponentSettingsText(new_object_name);
-            addComponentTransform(asset->getWidth(), asset->getHeight(), x, y, z);
+            addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, z);
             break;
         case DrObjectType::Character:
             addComponentSettingsCharacter(new_object_name);
-            addComponentTransform(asset->getWidth(), asset->getHeight(), x, y, z);
+            addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, z);
             addComponentMovement();
             addComponentAppearance();
             break;
@@ -67,14 +67,14 @@ DrObject::~DrObject() { }
 //##    Property loading
 //####################################################################################
 
-void DrObject::addComponentSettingsObject(QString new_name) {
+void DrObject::addComponentSettingsObject(QString new_name, bool should_collide) {
     addComponent(Components::Object_Settings, "Settings", "Basic settings for current object.", Component_Colors::White_Snow, true);
     getComponent(Components::Object_Settings)->setIcon(Component_Icons::Settings);
     addPropertyToComponent(Components::Object_Settings, Properties::Object_Name, Property_Type::String, new_name,
                            "Object Name", "Name of the current object.", false, false);
     addPropertyToComponent(Components::Object_Settings, Properties::Object_Physics, Property_Type::Bool, false,
                            "Physics?", "Should this item be effected by physics?");
-    addPropertyToComponent(Components::Object_Settings, Properties::Object_Collide, Property_Type::Bool, true,
+    addPropertyToComponent(Components::Object_Settings, Properties::Object_Collide, Property_Type::Bool, should_collide,
                            "Collide?", "Should this item collide with other items?");
     addPropertyToComponent(Components::Object_Settings, Properties::Object_Damage, Property_Type::List, 0,
                            "Damage", "What should this item damage when it collides with something else.");

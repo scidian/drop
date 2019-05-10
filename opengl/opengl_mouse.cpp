@@ -35,14 +35,17 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
         } else if (event->button() & Qt::RightButton) {
             m_engine->addBlock(Body_Type::Dynamic, 1, x, y, 0, QPointF(1, 1), 1, 0, 3, QPointF(0, 0));
         } else if (event->button() & Qt::MiddleButton) {
+
             // Polygon shape points should be counter-clockwise
             QVector<QPointF> points;
-            points.append( QPointF( 20, -55) );
-            points.append( QPointF( 45,  15) );
-            points.append( QPointF(  5,  60) );
-            points.append( QPointF(-46, -10) );
-            points.append( QPointF(-38, -55) );
+            points.append( QPointF( 20, -55) );     // Right Bottom
+            points.append( QPointF( 45,  15) );     // Right Middle
+            points.append( QPointF(  5,  60) );     // Top
+            points.append( QPointF(-46, -10) );     // Left Middle
+            points.append( QPointF(-10, -30) );     // Left Mid Middle Concave <-- point is ignored by Chipmunk
+            points.append( QPointF(-38, -55) );     // Left Bottom
             m_engine->addPolygon(Body_Type::Dynamic, 2, x, y, points, .15, .4, 2.5, QPointF(0, 0));
+
         }
 
     } else if (m_engine->demo == Demo::Car || m_engine->demo == Demo::Project) {

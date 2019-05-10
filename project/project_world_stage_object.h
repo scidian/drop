@@ -40,7 +40,7 @@ private:
 public:
     // Constructor & destructor
     explicit DrObject(DrProject *parent_project, DrWorld *parent_world, DrStage *parent_stage, long new_object_key,
-                      QString new_object_name, DrObjectType new_object_type, long from_asset_key, double x, double y, long z);
+                      QString new_object_name, DrObjectType new_object_type, long from_asset_key, double x, double y, long z, bool should_collide = true);
     virtual ~DrObject() override;
 
     // DrSettings Base Class Overrides
@@ -57,7 +57,7 @@ public:
     void            setDrItem(DrItem *item)     { m_item_in_scene = item; }
 
     // Function calls
-    void addComponentSettingsObject(QString new_name);
+    void addComponentSettingsObject(QString new_name, bool should_collide = true);
     void addComponentSettingsCamera(QString new_name);
     void addComponentSettingsCharacter(QString new_name);
     void addComponentSettingsText(QString new_name);

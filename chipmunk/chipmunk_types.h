@@ -225,12 +225,12 @@ typedef uint32_t cpCollisionID;
 
 #ifndef CP_NO_GROUP
 /// Value for cpShape.group signifying that a shape is in no group.
-	#define CP_NO_GROUP ((cpGroup)0)
+    #define CP_NO_GROUP ( (cpGroup)(0) )
 #endif
 
 #ifndef CP_ALL_CATEGORIES
 /// Value for cpShape.layers signifying that a shape is in every layer.
-	#define CP_ALL_CATEGORIES (~(cpBitmask)0)
+    #define CP_ALL_CATEGORIES ( ~(cpBitmask)0 )
 #endif
 
 #ifndef CP_WILDCARD_COLLISION_TYPE

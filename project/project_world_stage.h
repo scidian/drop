@@ -56,7 +56,7 @@ public:
     bool            isStartStage()      { return m_is_start_stage; }
 
     // Misc Stage Functions
-    DrObject*       addObject(DrObjectType new_type, long from_asset_key, double x, double y, long z);
+    DrObject*       addObject(DrObjectType new_type, long from_asset_key, double x, double y, long z, bool should_collide = true);
     void            copyObjectSettings(DrObject *from_object, DrObject *to_object);
     void            deleteObject(DrObject *object) ;
 

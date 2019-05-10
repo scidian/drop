@@ -53,9 +53,9 @@ void DrEngine::buildSpace() {
         this->addLine(Body_Type::Static, QPointF(-1100, -300), QPointF(-900, -300), 1, .99, 1);
 
         // Add one ball
-        this->addCircle(Body_Type::Dynamic, Txt::Ball, -100,  100, .7, .5, 2, QPointF( 0, 0));
+        this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, -100,  100, .7, .5, 2, QPointF( 0, 0));
 
-        SceneObject *ball = this->addCircle(Body_Type::Kinematic, Txt::Ball, -300,  150, .7, .5, 2, QPointF(25, 0));
+        SceneObject *ball = this->addCircle(Body_Type::Kinematic, Test_Textures::Ball, -300,  150, .7, .5, 2, QPointF(25, 0));
         ball->follow = true;
 
 
@@ -105,65 +105,72 @@ void DrEngine::buildSpace() {
         this->addLine(Body_Type::Static, QPointF( 1730,    0), QPointF(1760,   4), 1, .75, 1);
         this->addLine(Body_Type::Static, QPointF( 1760,    4), QPointF(1790,   0), 1, .75, 1);
 
-        // Sample object to find category and mask numbers
-        SceneObject  *base = this->addBlock(Body_Type::Kinematic, Txt::Block, 300,   0, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        cpShapeFilter test = cpShapeGetFilter( base->shape);
-
-
         // Block alignment test
-        this->addBlock(Body_Type::Kinematic, Txt::Block, -1000, 220, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block, -1000, 160, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block, -1000, 100, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block, -1000,  40, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block, -1000, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, 220, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, 160, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, 100, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000,  40, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
 
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -940, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -880, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -820, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -760, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -700, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -640, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -580, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -520, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -460, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -400, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -340, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -280, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -220, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -160, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,  -100, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,   -39, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,    22, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,    83, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,   144, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Txt::Block,   205, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -940, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -880, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -820, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -760, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -700, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -640, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -580, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -520, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -460, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -400, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -340, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -280, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -220, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -160, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -100, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,   -39, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,    22, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,    83, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,   144, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,   205, -20, 0, QPointF(1, 1), 1, .75, 100, QPointF(0, 0));
 
 
 
         // Add body
-        SceneObject *rover = this->addBlock(  Body_Type::Dynamic, Txt::Rover, -450,  75, 0, QPointF(1, 1),   .5, .1, 4, QPointF(0, 0));
+        SceneObject *rover = this->addBlock(  Body_Type::Dynamic, Test_Textures::Rover, -450,  75, 0, QPointF(1, 1),   .5, .1, 4, QPointF(0, 0));
         rover->follow = true;
 
         // Add wheels
-        SceneObject *wheel1 = this->addCircle(Body_Type::Dynamic, Txt::Wheel, -490,  45, 4, .7,  2, QPointF(0, 0));
-        SceneObject *wheel2 = this->addCircle(Body_Type::Dynamic, Txt::Wheel, -450,  45, 4, .7,  2, QPointF(0, 0));
-        SceneObject *wheel3 = this->addCircle(Body_Type::Dynamic, Txt::Wheel, -410,  45, 4, .7,  2, QPointF(0, 0));
+        SceneObject *wheel1 = this->addCircle(Body_Type::Dynamic, Test_Textures::Wheel, -490,  45, 4, .7,  2, QPointF(0, 0));
+        SceneObject *wheel2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Wheel, -450,  45, 4, .7,  2, QPointF(0, 0));
+        SceneObject *wheel3 = this->addCircle(Body_Type::Dynamic, Test_Textures::Wheel, -410,  45, 4, .7,  2, QPointF(0, 0));
         wheel1->is_wheel = true;    wheel1->wheel_speed = 90;
         wheel2->is_wheel = true;    wheel2->wheel_speed = 50;
         wheel3->is_wheel = true;    wheel3->wheel_speed = 70;
-        SceneObject *spare1 = this->addCircle(Body_Type::Dynamic, Txt::Spare, -509,  45, 4, .7, .5, QPointF(0, 0));
+        SceneObject *spare1 = this->addCircle(Body_Type::Dynamic, Test_Textures::Spare, -509,  45, 4, .7, .5, QPointF(0, 0));
 
-        //this->addCircle(Body_Type::Dynamic, Txt::Ball, -450, -80, 4, 0, 2, QPointF(0, 0));
+
 
         // Set body and wheels to same group so they don't collide
         //EX:
         //#define GRABBABLE_MASK_BIT (1<<31)
         //cpShapeFilter GRAB_FILTER = {CP_NO_GROUP, GRABBABLE_MASK_BIT, GRABBABLE_MASK_BIT};
         //cpShapeFilter NOT_GRABBABLE_FILTER = {CP_NO_GROUP, ~GRABBABLE_MASK_BIT, ~GRABBABLE_MASK_BIT};
+        //
+        // filter.group = no_group = 0 = could collide all
+        //              = set all children to unique project_id to stop them from colliding with each other
+        // categories   = what not to collide with  (player, player bullet, enemy, enemy bullet, wall, etc)
+        // mask         = what to collide with      (walls, enemy bullet)
+        //
+        enum Shape_Groups {
+            A = 1 << 0,
+            B = 1 << 1,
+            C = 1 << 2,
+        };
+
         cpShapeFilter filter;
         filter.group = 43;
-        filter.mask = test.mask;
-        filter.categories = test.categories;
+        filter.categories = CP_ALL_CATEGORIES;
+        filter.mask =       CP_ALL_CATEGORIES;
         cpShapeSetFilter( rover->shape,  filter);
         cpShapeSetFilter( wheel1->shape, filter);
         cpShapeSetFilter( wheel2->shape, filter);
@@ -208,11 +215,11 @@ void DrEngine::buildSpace() {
             // Add a static line segment shapes for the ground.
             this->addLine(Body_Type::Static, QPointF(-1000, -200), QPointF(1000, -200), 2, .5, 1);
             this->addLine(Body_Type::Static, QPointF( -300,  150), QPointF(-100,  150), 2, .5, 1);
-            this->addLine(Body_Type::Static, QPointF(  500, -100), QPointF( 700, -100), 2, .5, 1);
             this->addLine(Body_Type::Static, QPointF(  100,    0), QPointF( 300,    0), 2, .5, 1);
+            this->addLine(Body_Type::Static, QPointF(  500, -100), QPointF( 700, -100), 2, .5, 1);
 
             // Add one ball
-            SceneObject *ball = this->addCircle(Body_Type::Dynamic, Txt::Ball, 0,  0, 2, .01, 200, QPointF( 0, 0), false);
+            SceneObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 0,  0, 2, .01, 200, QPointF( 0, 0), false);
 
             // Camera should follow player
             ball->follow = true;

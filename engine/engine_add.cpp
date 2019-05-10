@@ -120,6 +120,9 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
     if (should_collide == true) {
         block->shape_type = Shape_Type::Box;
         block->shape = cpBoxShapeNew(block->body, block->width, block->height, .01);
+
+
+
         cpSpaceAddShape(m_space, block->shape);
         cpShapeSetFriction(   block->shape, friction );
         cpShapeSetElasticity( block->shape, bounce );

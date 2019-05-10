@@ -53,13 +53,13 @@ enum class Shape_Type {
 };
 
 
-enum Txt {
-    Ball = 0,
-    Block = 1,
-    Plant = 2,
-    Rover = 3,
-    Wheel = 4,
-    Spare = 5
+enum Test_Textures {
+    Ball =  -1,
+    Block = -2,
+    Plant = -3,
+    Rover = -4,
+    Wheel = -5,
+    Spare = -6
 };
 
 struct SceneObject {
@@ -108,14 +108,13 @@ typedef std::map<long, DrEngineWorld*>   EngineWorldMap;
 class DrEngine
 {
 private:
-    DrProject        *m_project;                                // Pointer to Project to load into Engine
+    DrProject          *m_project;                              // Pointer to Project to load into Engine
+    EngineTextureMap    m_textures;                             // Map of textures used for this Engine
+    EngineWorldMap      m_worlds;                               // Map of Worlds used for this Engine
 
-    EngineTextureMap  m_textures;                               // Map of textures used for this Engine
-    EngineWorldMap    m_worlds;                                 // Map of Worlds used for this Engine
 
+    cpSpace        *m_space;                                    // Current physics space shown on screen
     QVector3D       m_camera_pos = QVector3D(0, 0, 800);        // Current camera position
-
-    cpSpace        *m_space;                    // Current physics space shown on screen
 
     const cpFloat   m_time_step = 1 / 90.0;     // Speed at which want to try to update the Space, 1 / 90 = 90 times per second to up
                                                 //      It is *highly* recommended to use a fixed size time step (calling Update at a fixed interval)
@@ -176,15 +175,18 @@ public:
 
 
     // Textures
-    long                addTexture(QString from_asset_string);
-    DrEngineTexture*    getTexture(long number) { return m_textures[number]; }
+    DrEngineTexture*    addTexture(long texture_id, QString from_asset_string);
+    DrEngineTexture*    addTexture(long texture_id, QPixmap &pixmap);
+    DrEngineTexture*    getTexture(long texture_id) { return m_textures[texture_id]; }
     EngineTextureMap&   getTextureMap() { return m_textures; }
 
 
     // Getter and Setters    
+    DrProject*          getProject()    { return m_project; }
     cpSpace*            getSpace()      { return m_space; }
 
     const bool&         debugOn() { return debug; }
+
     const QVector3D&    getCameraPos()  { return m_camera_pos; }
     const cpFloat&      getTimeStep()   { return m_time_step; }
     const cpFloat&      getTimeWarp()   { return m_time_warp; }

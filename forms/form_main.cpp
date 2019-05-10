@@ -74,6 +74,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
     long image_10 = project->addImage(":/assets/test_images/cake_chocolate.png");
     long image_11 = project->addImage(":/assets/test_images/cake_ice_cube.png");
     long image_12 = project->addImage(":/assets/test_images/planetwithareallylongname.png");
+    long image_13 = project->addImage(":/assets/test_images/metal_block.png");
 
     long font_1 =   project->addFont("Distance Font", QPixmap(":/assets/test_images/test_font.png"),   "Arial",          20, true);
     long font_2 =   project->addFont("Coin Count",    QPixmap(":/assets/test_images/test_font_2.png"), "Britannic Bold", 15, true);
@@ -82,23 +83,23 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
 
 
     // !!!!! #TEMP: Add assets
-    long asset_6  = project->addAsset(DrAssetType::Character, image_6 );        // "Ball 1"
+    long a_ball   =  project->addAsset(DrAssetType::Character, image_6 );       // "Ball 1"
+    long a_square =  project->addAsset(DrAssetType::Object, image_1 );          // "Dr Square"
+    long a_ground  = project->addAsset(DrAssetType::Object, image_2 );          // "Ground Fill"
+    long a_top  =    project->addAsset(DrAssetType::Object, image_3 );          // "Ground Top"
+    long a_plant  =  project->addAsset(DrAssetType::Object, image_4 );          // "Moon Plant 6"
+    long a_block  =  project->addAsset(DrAssetType::Object, image_13 );         // "Metal Block"
+    long a_planet =  project->addAsset(DrAssetType::Object, image_12 );         // "PlanetWithAReallyLongName"
+    long a_rover  =  project->addAsset(DrAssetType::Object, image_5 );          // "Rover Body"
+    long a_water  =  project->addAsset(DrAssetType::Object, image_7 );          // "Water 1"
+    long a_wheel  =  project->addAsset(DrAssetType::Object, image_8 );          // "Rover Wheel"
+    long a_cake1  =  project->addAsset(DrAssetType::Object, image_9 );          // "Cake Block"
+    long a_cake2 =   project->addAsset(DrAssetType::Object, image_10 );         // "Cake Chocolate"
+    long a_cake3 =   project->addAsset(DrAssetType::Object, image_11 );         // "Cake Ice Cube"
 
-    long asset_1  = project->addAsset(DrAssetType::Object, image_1 );           // "Dr Square"
-    long asset_2  = project->addAsset(DrAssetType::Object, image_2 );           // "Ground Fill"
-    long asset_3  = project->addAsset(DrAssetType::Object, image_3 );           // "Ground Top"
-    long asset_4  = project->addAsset(DrAssetType::Object, image_4 );           // "Moon Plant 6"
-    long asset_5  = project->addAsset(DrAssetType::Object, image_5 );           // "Rover Body"
-    long asset_7  = project->addAsset(DrAssetType::Object, image_7 );           // "Water 1"
-    long asset_8  = project->addAsset(DrAssetType::Object, image_8 );           // "Rover Wheel"
-    long asset_9  = project->addAsset(DrAssetType::Object, image_9 );           // "Cake Block"
-    long asset_10 = project->addAsset(DrAssetType::Object, image_10 );          // "Cake Chocolate"
-    long asset_11 = project->addAsset(DrAssetType::Object, image_11 );          // "Cake Ice Cube"
-    long asset_12 = project->addAsset(DrAssetType::Object, image_12 );          // "PlanetWithAReallyLongName"
-
-    long asset_13 = project->addAsset(DrAssetType::Text, font_1);       // "Test Font"
-    project->addAsset(DrAssetType::Text, font_2);                       // "Test Font 2"
-    project->addAsset(DrAssetType::Text, font_3);                       // "Test Font 3"
+    long a_font =    project->addAsset(DrAssetType::Text, font_1);          // "Test Font"
+    project->addAsset(DrAssetType::Text, font_2);                           // "Test Font 2"
+    project->addAsset(DrAssetType::Text, font_3);                           // "Test Font 3"
     // !!!!! END
 
 
@@ -113,27 +114,54 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
     project->findWorldWithName("World 2")->addStage();
     project->findWorldWithName("World 2")->addStage();
 
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_1,    100,  -800,  1);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_1,    600,  -700,  2);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_2,    250,  -300,  3);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_3,    300,  -500, 10);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_4,    407,  -600, 11);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_5,    600,  -600, 30);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, asset_12,   200, -1000,  5);
 
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Text,   asset_13,   500, -900,   6);
 
-    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Character, asset_6, 200,  -600,  4);
-    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_5,    300,  -700, -2);
-    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_7,    200,  -300,  1);
-    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, asset_8,    400,  -500,  2);
+    // Stage 4 Rover Test
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_planet,  -800,   400,  1, false);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_planet,   200,   600,  1, false);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_planet,  1200,   475,  1, false);
 
-    project->findWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_9,    200,  -500,  2);
-    project->findWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_10,   400,  -800,  4);
-    project->findWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, asset_11,   600, -1100, -2);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_plant,   -900,    55,  1, false);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_plant,    900,    55,  1, false);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_plant,   1400,    55,  1, false);
+
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground, -1233,  -200,  3);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,  -822,  -200,  3);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,  -411,  -200,  3);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,     0,  -200,  3);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,   411,  -200,  3);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,   822,  -200,  3);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,  1233,  -200,  3);
+
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_top,    -1233,   -50,  4);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_top,     -822,   -50,  4);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_top,     -411,   -50,  4);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_top,        0,   -50,  4);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_top,      411,   -50,  4);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_top,      822,   -50,  4);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_top,     1233,   -50,  4);
+
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_block,    400,   100,  3);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_block,    500,   200,  3);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_block,    700,   350,  3);
+
+    // Stage 2 Misc Test
+    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Character, a_ball,  200,   600,  4);
+    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_square,   100,   800,  1);
+    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_square,   600,   700,  2);
+    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_rover,    300,   700, -2);
+    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_water,    200,   300,  1);
+    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_wheel,    400,   500,  2);
+    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Text,   a_font,     500,   900,  6);
+    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_ground,   711,   300,  3);
+
+    // Stage 5 Iso Cake Test
+    project->findWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, a_cake1,    200,   500,  2);
+    project->findWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, a_cake2,    400,   800,  4);
+    project->findWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, a_cake3,    600,  1100, -2);
 
     project->setOption(Project_Options::Current_World, 0);
-    project->setOption(Project_Options::Current_Stage, QVariant::fromValue(project->findWorldWithName("World 2")->getStageWithName("4")->getKey()) );
+    project->setOption(Project_Options::Current_Stage, QVariant::fromValue(project->findWorldWithName("World 2")->getStageWithName("2")->getKey()) );
     // !!!!! END
 
 
