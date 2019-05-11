@@ -54,18 +54,19 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
                                  double friction, double bounce, double mass, QPointF velocity, bool can_rotate) {
     SceneObject *ball = new SceneObject();
 
+    //  !!!!! TEMP: Should be passed in by function to allow for custom radius
+    double radius = m_textures[texture_number]->width() / 2;    // Radius of collision shape
+    cpVect offset = cpv(0, 0);                                  // Offset of collision shape
+
     // Ball Basics
     ball->texture_number = texture_number;
-    ball->width =  m_textures[texture_number]->width();
-    ball->height = m_textures[texture_number]->height();
-    ball->radius = ball->width / 2;
     ball->z_order = z;
     ball->alpha = static_cast<float>(opacity);
 
     // If we dont want an object to rotate, set moment of inertia to INFINITY
     cpFloat moment;
     if (can_rotate)
-        moment = cpMomentForCircle(mass, 0, ball->radius, cpvzero);                     // The moment of inertia is like mass for rotation
+        moment = cpMomentForCircle(mass, 0, radius, offset);                     // The moment of inertia is like mass for rotation
     else
         moment = static_cast<double>(INFINITY);
 
@@ -82,7 +83,7 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
 
     // Create the collision shape for the ball
     ball->shape_type = Shape_Type::Circle;
-    ball->shape = cpCircleShapeNew(ball->body, ball->radius, cpvzero);
+    ball->shape = cpCircleShapeNew(ball->body, radius, offset);
     cpSpaceAddShape(m_space, ball->shape);
     cpShapeSetFriction(   ball->shape, friction  );
     cpShapeSetElasticity( ball->shape, bounce );
@@ -100,13 +101,15 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
                                 double friction, double bounce, double mass, QPointF velocity, bool should_collide) {
     SceneObject *block = new SceneObject();
 
+    //  !!!!! TEMP: Should be passed in by function to allow for custom radius
+    double width  = m_textures[texture_number]->width()  * scale.x();       // Width of collision shape
+    double height = m_textures[texture_number]->height() * scale.y();       // Height of collision shape
+
     // Block basics
     block->texture_number = texture_number;
-    block->width =  m_textures[texture_number]->width()  * scale.x();
-    block->height = m_textures[texture_number]->height() * scale.y();
     block->z_order = z;
     block->alpha = static_cast<float>(opacity);
-    cpFloat moment = cpMomentForBox( mass, block->width, block->height);
+    cpFloat moment = cpMomentForBox( mass, width, height);
 
     // Create the body for the block
     block->body_type = body_type;
@@ -123,10 +126,7 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
     // Create the collision shape for the block
     if (should_collide == true) {
         block->shape_type = Shape_Type::Box;
-        block->shape = cpBoxShapeNew(block->body, block->width, block->height, .01);
-
-
-
+        block->shape = cpBoxShapeNew(block->body, width, height, .01);
         cpSpaceAddShape(m_space, block->shape);
         cpShapeSetFriction(   block->shape, friction );
         cpShapeSetElasticity( block->shape, bounce );
@@ -149,8 +149,6 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
 
     // Polygon Basics
     polygon->texture_number = texture_number;
-    polygon->width =  m_textures[texture_number]->width();
-    polygon->height = m_textures[texture_number]->height();
     polygon->z_order = z;
     polygon->alpha = static_cast<float>(opacity);
 

@@ -40,92 +40,24 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         painter.setBrush( QBrush( brush_color));
 
         if (object->shape_type == Shape_Type::Circle) {
-//            QTransform t = QTransform().translate(object->position.x(), object->position.y());
-//            QPointF top = t.map(QPointF( 0, object->height / 2));
-//            QPointF mid = t.map(QPointF( 0, 0));
-//            QPointF l1 = mapToScreen( top.x(), top.y(), 0);
-//            QPointF l2 = mapToScreen( mid.x(), mid.y(), 0);
-//            double radius = QLineF(l1, l2).length();
-
-//            // Don't draw if not touching or inside of visible area
-//            QRect bounding_box = QRectF( l2.x() - radius, l2.y() - radius, radius * 2, radius * 2).toRect();
-//            if ((rect().intersects(bounding_box) || rect().contains(bounding_box)) &&
-//                (bounding_box.width() * 0.1 < width()) && (bounding_box.height() * 0.1 < height())) {
-//                painter.drawEllipse( l2, radius, radius );
-//                t = QTransform().translate(object->position.x(), object->position.y()).rotate( object->angle);
-//                top = t.map(QPointF( 0, object->height / 2));
-//                l1 = mapToScreen( top.x(), top.y(), 0);
-//                painter.drawLine( l1, l2 );
-//            }
-
-
+            double radius = cpCircleShapeGetRadius(object->shape);
             QTransform t = QTransform().translate(object->position.x(), object->position.y());
-            QPointF top_left =  t.map(QPointF( -object->radius,  object->radius));
-            QPointF top_right = t.map(QPointF(  object->radius,  object->radius));
-            QPointF bot_left =  t.map(QPointF( -object->radius, -object->radius));
-            QPointF bot_right = t.map(QPointF(  object->radius, -object->radius));
-            top_left =  mapToScreen( top_left.x(),  top_left.y(),  0);
-            top_right = mapToScreen( top_right.x(),  top_right.y(),  0);
-            bot_left =  mapToScreen( bot_left.x(), bot_left.y(), 0);
-            bot_right = mapToScreen( bot_right.x(), bot_right.y(), 0);
-
-            QPointF o_left =  t.map(QPointF( -object->radius, 0));
-            QPointF o_right = t.map(QPointF(  object->radius, 0));
-            QPointF n_left =  mapToScreen( o_left.x(),  o_left.y(),  0);
-            QPointF n_right = mapToScreen( o_right.x(), o_right.y(), 0);
-            double sh = QLineF(o_left, o_right).length() / QLineF(n_left, n_right).length() ;
-            double sv = 0;
-
-            top_left.setY ( (top_left.y() +  top_right.y()) / 2 );
-            top_left.setX ( (top_left.x() +  bot_left.x()) /  2 );
-            bot_right.setY ((bot_right.y() + bot_left.y()) /  2 );
-            bot_right.setX ((bot_right.x() + top_right.x()) / 2 );
+            QPointF top = t.map(QPointF( 0, radius ));
+            QPointF mid = t.map(QPointF( 0, 0));
+            QPointF l1 = mapToScreen( top.x(), top.y(), 0);
+            QPointF l2 = mapToScreen( mid.x(), mid.y(), 0);
+            double new_radius = QLineF(l1, l2).length();
 
             // Don't draw if not touching or inside of visible area
-            QRectF bbf = QRectF(top_left, bot_right).normalized();
-            QRect  bounding_box = bbf.toRect();
+            QRect bounding_box = QRectF( l2.x() - new_radius, l2.y() - new_radius, new_radius * 2, new_radius * 2).toRect();
             if ((rect().intersects(bounding_box) || rect().contains(bounding_box)) &&
                 (bounding_box.width() * 0.1 < width()) && (bounding_box.height() * 0.1 < height())) {
+                painter.drawEllipse( l2, new_radius, new_radius );
 
-                painter.translate( bbf.center().x(),  bbf.center().y());
-                painter.shear( -sh, sv );
-                painter.translate(-bbf.center().x(), -bbf.center().y());
-                painter.drawEllipse( bbf );
-                painter.resetTransform();
-
-
+                // Draw orientation line
                 t = QTransform().translate(object->position.x(), object->position.y()).rotate( object->angle);
-                QPointF top = t.map(QPointF( 0, object->height / 2));
-                QPointF mid = t.map(QPointF( 0, 0));
-                QPointF l1 = mapToScreen( top.x(),  top.y(),  0);
-                QPointF l2 = mapToScreen( mid.x(),  mid.y(),  0);
-                painter.drawLine( l1, l2 );
-            }
-
-
-        } else if (object->shape_type == Shape_Type::Box) {
-            QTransform t = QTransform().translate(object->position.x(), object->position.y()).rotate( object->angle);
-            QPointF top_left =  t.map(QPointF( -object->width / 2,  object->height / 2));
-            QPointF top_right = t.map(QPointF(  object->width / 2,  object->height / 2));
-            QPointF bot_right = t.map(QPointF(  object->width / 2, -object->height / 2));
-            QPointF bot_left =  t.map(QPointF( -object->width / 2, -object->height / 2));
-
-            QPolygonF transformed;
-            transformed.append( mapToScreen( top_left.x(),  top_left.y(),  0) );
-            transformed.append( mapToScreen( top_right.x(), top_right.y(), 0) );
-            transformed.append( mapToScreen( bot_right.x(), bot_right.y(), 0) );
-            transformed.append( mapToScreen( bot_left.x(),  bot_left.y(),  0) );
-
-            // Don't draw if not touching or inside of visible area
-            QRect bounding_box = transformed.boundingRect().toRect();
-            if ((rect().intersects(bounding_box) || rect().contains(bounding_box)) &&
-                (bounding_box.width() * 0.1 < width()) && (bounding_box.height() * 0.1 < height())) {
-                painter.drawPolygon( transformed );
-
-                QPointF top = t.map(QPointF( 0, object->height / 2));
-                QPointF mid = t.map(QPointF( 0, 0));
-                QPointF l1 = mapToScreen( top.x(),  top.y(),  0);
-                QPointF l2 = mapToScreen( mid.x(),  mid.y(),  0);
+                top = t.map(QPointF( 0, radius ));
+                l1 = mapToScreen( top.x(), top.y(), 0);
                 painter.drawLine( l1, l2 );
             }
 
@@ -147,20 +79,31 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
                 painter.drawLine(p1, p2);
             }
 
-        } else if (object->shape_type == Shape_Type::Polygon) {
+        } else if (object->shape_type == Shape_Type::Polygon || object->shape_type == Shape_Type::Box) {
             QTransform t = QTransform().translate(object->position.x(), object->position.y()).rotate( object->angle);
-            QPolygonF poly;
+            QPolygonF polygon, mapped;
             for (int i = 0; i < cpPolyShapeGetCount( object->shape ); i++) {
                 cpVect  vert  = cpPolyShapeGetVert( object->shape, i );
-                QPointF trans = t.map(QPointF(vert.x, vert.y));
-                poly.append( mapToScreen( trans.x(), trans.y(), 0 ));
+                polygon.append( QPointF( vert.x, vert.y ));
+
+                QPointF trans = t.map( polygon[i] );
+                mapped.append( mapToScreen(trans.x(), trans.y(), 0));
             }
 
             // Don't draw if not touching or inside of visible area
-            QRect bounding_box = poly.boundingRect().toRect();
+            QRect bounding_box = mapped.boundingRect().toRect();
             if ((rect().intersects(bounding_box) || rect().contains(bounding_box)) &&
                 (bounding_box.width() * 0.1 < width()) && (bounding_box.height() * 0.1 < height())) {
-                painter.drawPolygon( poly );
+                painter.drawPolygon( mapped );
+
+                // Draw orientation line
+                if (object->shape_type == Shape_Type::Box) {
+                    QPointF mid = t.map(QPointF( 0, 0));
+                    QPointF top = t.map(QPointF( 0, polygon.boundingRect().height() / 2 ));
+                    QPointF l1 = mapToScreen( mid.x(),  mid.y(),  0);
+                    QPointF l2 = mapToScreen( top.x(),  top.y(),  0);
+                    painter.drawLine( l1, l2 );
+                }
             }
 
         }   // End If

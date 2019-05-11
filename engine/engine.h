@@ -80,10 +80,6 @@ struct SceneObject {
     bool        collide = true;             // Set to false to have this object not collide with anything
 
     long        texture_number;             // Reference to which texture to use from Engine.EngineTexture map
-    double      radius;                     // Used for Shape_Type::Circle collision shapes
-    double      width;                      // Used for Shape_Type::Box collision shapes
-    double      height;                     // Used for Shape_Type::Box collision shapes
-
 
     // ***** Object interaction
     bool        follow = false;             // Set to true to have camera follow object

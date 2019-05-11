@@ -47,7 +47,7 @@ QVector3D OpenGL::mapFromScreen(QPointF point) {
         vec.setZ( vec.z() / m_scale );
     } else {
         // In perspective mode we have to find what the Z value is for a projected vector first
-        QVector3D Z(0, 0, 0);
+        QVector3D Z( 0, 0, 0);
         Z = Z.project(m_model_view, m_projection, QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio()));
 
         // Then we use that Z value to unproject
