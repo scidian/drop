@@ -114,11 +114,9 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
     connect(m_timer, SIGNAL(timeout()), this, SLOT(updateEngine()));
 
 
+    // Load demo after form finishes loading
     QTimer::singleShot( 0, this, [this] {
-        qApp->processEvents();
-        m_engine->buildSpace( m_engine->demo_space );
-        m_engine->addPlayer( m_engine->demo_player );
-        startTimers();
+        loadDemo( m_engine->demo_space, m_engine->demo_player );
     } );
 }
 
@@ -129,6 +127,15 @@ void FormEngine::closeEvent(QCloseEvent *) {
     qApp->processEvents();
 }
 
+
+void FormEngine::loadDemo(Demo_Space using_space, Demo_Player using_player ) {
+    stopTimers();
+    qApp->processEvents();
+    m_engine->buildSpace( using_space );
+    m_engine->addPlayer( using_player );
+    startTimers();
+    updateCheckedButtons();
+}
 
 
 //######################################################################################################
@@ -182,56 +189,14 @@ void FormEngine::updateLabels(QString info) {
 //######################################################################################################
 //##    Button Handling
 //######################################################################################################
-void FormEngine::on_pushSpawn_clicked() {
-    stopTimers();
-    m_engine->buildSpace( m_engine->demo_space );
-    m_engine->addPlayer( Demo_Player::Spawn );
-    startTimers();
-    updateCheckedButtons();
-}
-void FormEngine::on_pushCar_clicked() {
-    stopTimers();
-    m_engine->buildSpace( m_engine->demo_space );
-    m_engine->addPlayer( Demo_Player::Car );
-    startTimers();
-    updateCheckedButtons();
-}
-void FormEngine::on_pushJump_clicked() {
-    stopTimers();
-    m_engine->buildSpace( m_engine->demo_space );
-    m_engine->addPlayer( Demo_Player::Jump );
-    startTimers();
-    updateCheckedButtons();
-}
+void FormEngine::on_pushSpawn_clicked() {   loadDemo(m_engine->demo_space,  Demo_Player::Spawn ); }
+void FormEngine::on_pushCar_clicked() {     loadDemo(m_engine->demo_space,  Demo_Player::Car ); }
+void FormEngine::on_pushJump_clicked() {    loadDemo(m_engine->demo_space,  Demo_Player::Jump ); }
 
-void FormEngine::on_pushLines1_clicked() {
-    stopTimers();
-    m_engine->buildSpace( Demo_Space::Lines1 );
-    m_engine->addPlayer( m_engine->demo_player );
-    startTimers();
-    updateCheckedButtons();
-}
-void FormEngine::on_pushLines2_clicked() {
-    stopTimers();
-    m_engine->buildSpace( Demo_Space::Lines2 );
-    m_engine->addPlayer( m_engine->demo_player );
-    startTimers();
-    updateCheckedButtons();
-}
-void FormEngine::on_pushBlocks_clicked() {
-    stopTimers();
-    m_engine->buildSpace( Demo_Space::Blocks );
-    m_engine->addPlayer( m_engine->demo_player );
-    startTimers();
-    updateCheckedButtons();
-}
-void FormEngine::on_pushProject_clicked() {
-    stopTimers();
-    m_engine->buildSpace( Demo_Space::Project );
-    m_engine->addPlayer( m_engine->demo_player );
-    startTimers();
-    updateCheckedButtons();
-}
+void FormEngine::on_pushLines1_clicked() {  loadDemo(Demo_Space::Lines1,    m_engine->demo_player ); }
+void FormEngine::on_pushLines2_clicked() {  loadDemo(Demo_Space::Lines2,    m_engine->demo_player ); }
+void FormEngine::on_pushBlocks_clicked() {  loadDemo(Demo_Space::Blocks,    m_engine->demo_player ); }
+void FormEngine::on_pushProject_clicked() { loadDemo(Demo_Space::Project,   m_engine->demo_player ); }
 
 
 void FormEngine::on_pushStart_clicked() {

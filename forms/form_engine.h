@@ -16,7 +16,8 @@
 #include <QTime>
 #include <QTimer>
 
-class DrEngine;
+#include "engine/engine.h"
+
 class DrProject;
 class OpenGL;
 
@@ -52,13 +53,24 @@ public:
 
 
 public:
+    // Constructor / Destructor
     explicit FormEngine(DrProject *project, QWidget *parent = nullptr);
     ~FormEngine() override;
 
     // Event Overrides
     virtual void closeEvent(QCloseEvent *event) override;
 
+    // Function Calls
+    void loadDemo(Demo_Space using_space, Demo_Player using_player);
+    void startTimers();
+    void stopTimers();
+    void updateCheckedButtons();
+
+
 private slots:
+    void updateEngine();
+    void updateLabels(QString info);
+
     void on_pushSpawn_clicked();
     void on_pushCar_clicked();
     void on_pushJump_clicked();
@@ -77,11 +89,6 @@ private slots:
     void on_pushDebug1_clicked();
     void on_pushDebug2_clicked();
 
-    void startTimers();
-    void stopTimers();
-    void updateCheckedButtons();
-    void updateEngine();
-    void updateLabels(QString info);
 };
 
 

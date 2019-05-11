@@ -84,9 +84,11 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     addPropertyToComponent(Components::World_Settings, Properties::World_Score_Multiplier, Property_Type::Double, 1.0,
                            "Score Multiplier", "Value used as multiplier to adjust speed at which distance scoring is calculated.");
     addPropertyToComponent(Components::World_Settings, Properties::World_Use_Background_Color, Property_Type::Bool, false,
-                           "Use Bg Color?", "Enable this to use background color for this world, otherwise defaults to transparent.");
+                           "Use Bg Color?", "Use Background Color? Check this box to use base Background Color for this world, otherwise"
+                                            "background defaults to transparent.");
     addPropertyToComponent(Components::World_Settings, Properties::World_Background_Color, Property_Type::Color, QColor(16, 16, 16, 255).rgba(),
-                           "Background", "Background Color for this world. Must enable to use, otherwise defaults to transparent.");
+                           "Background", "This is the base Background Color for this world. Must enable to use, otherwise background defaults to "
+                                         "transparent.");
 
     addComponent(Components::World_Physics, "Physics", "Starting physics settings for current world, this affects all objects that have \"Physics?\" "
                                                        "enabled.", Component_Colors::Orange_Medium, true);
