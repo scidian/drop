@@ -130,11 +130,17 @@ void FormEngine::closeEvent(QCloseEvent *) {
 
 void FormEngine::loadDemo(Demo_Space using_space, Demo_Player using_player ) {
     stopTimers();
-    qApp->processEvents();
+
+    // ***** The following are the steps to load a new Space
+    m_engine->clearSpace();
     m_engine->buildSpace( using_space );
     m_engine->addPlayer( using_player );
-    startTimers();
+    m_engine->updateSpace( 0 );
+
+    // Finished loading Space, update buttons and start timer
     updateCheckedButtons();
+    m_engine->has_scene = true;
+    startTimers();
 }
 
 
@@ -153,6 +159,9 @@ void FormEngine::stopTimers() {
 }
 
 void FormEngine::updateEngine() {
+
+    if (!m_engine->has_scene) return;
+
     if (m_time_last_update.elapsed() > (m_engine->getTimeStep() * 1000)) {
         m_engine->updateSpace(m_time_last_update.elapsed());
 

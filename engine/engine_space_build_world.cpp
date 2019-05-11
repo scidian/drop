@@ -5,6 +5,8 @@
 //
 //
 //
+#include <QApplication>
+
 #include "engine/engine.h"
 #include "engine_texture.h"
 #include "project/project.h"
@@ -36,10 +38,11 @@ void ChipmunkFreeSpaceChildren(cpSpace *space) {
 //######################################################################################################
 void DrEngine::clearSpace() {
     if (has_scene) {
+        has_scene = false;
+        qApp->processEvents();
         ChipmunkFreeSpaceChildren(m_space);
         cpSpaceFree(m_space);
         objects.clear();
-        has_scene = false;
     }
 }
 
@@ -50,7 +53,6 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
 
     // Set up physics world
     demo_space = new_space_type;                // Save Space type
-    clearSpace();                               // Clear existing Space
     m_background_color = QColor(0,0,0);
 
     m_space = cpSpaceNew();                     // Creates an empty space
@@ -158,8 +160,6 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         this->addBlock(Body_Type::Kinematic, Test_Textures::Block,   205, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
 
     }
-
-    has_scene = true;
 }
 
 
