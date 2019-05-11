@@ -68,17 +68,31 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
             top_right = mapToScreen( top_right.x(),  top_right.y(),  0);
             bot_left =  mapToScreen( bot_left.x(), bot_left.y(), 0);
             bot_right = mapToScreen( bot_right.x(), bot_right.y(), 0);
+
+            QPointF o_left =  t.map(QPointF( -object->radius, 0));
+            QPointF o_right = t.map(QPointF(  object->radius, 0));
+            QPointF n_left =  mapToScreen( o_left.x(),  o_left.y(),  0);
+            QPointF n_right = mapToScreen( o_right.x(), o_right.y(), 0);
+            double sh = QLineF(o_left, o_right).length() / QLineF(n_left, n_right).length() ;
+            double sv = 0;
+
             top_left.setY ( (top_left.y() +  top_right.y()) / 2 );
             top_left.setX ( (top_left.x() +  bot_left.x()) /  2 );
             bot_right.setY ((bot_right.y() + bot_left.y()) /  2 );
             bot_right.setX ((bot_right.x() + top_right.x()) / 2 );
 
             // Don't draw if not touching or inside of visible area
-            QRect bounding_box = QRectF(top_left, bot_right).normalized().toRect();
+            QRectF bbf = QRectF(top_left, bot_right).normalized();
+            QRect  bounding_box = bbf.toRect();
             if ((rect().intersects(bounding_box) || rect().contains(bounding_box)) &&
                 (bounding_box.width() * 0.1 < width()) && (bounding_box.height() * 0.1 < height())) {
-                //painter.drawPolygon( transformed );
-                painter.drawEllipse( QRectF(top_left, bot_right).normalized() );
+
+                painter.translate( bbf.center().x(),  bbf.center().y());
+                painter.shear( -sh, sv );
+                painter.translate(-bbf.center().x(), -bbf.center().y());
+                painter.drawEllipse( bbf );
+                painter.resetTransform();
+
 
                 t = QTransform().translate(object->position.x(), object->position.y()).rotate( object->angle);
                 QPointF top = t.map(QPointF( 0, object->height / 2));
