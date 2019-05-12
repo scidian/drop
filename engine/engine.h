@@ -80,6 +80,8 @@ struct SceneObject {
     bool        collide = true;             // Set to false to have this object not collide with anything
 
     long        texture_number;             // Reference to which texture to use from Engine.EngineTexture map
+    float       scale_x = 1.0f;             // Scale of object in world
+    float       scale_y = 1.0f;             // Scale of object in world
 
     // ***** Object interaction
     bool        follow = false;             // Set to true to have camera follow object

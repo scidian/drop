@@ -60,7 +60,7 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
             m_engine->keyboard_y = 1;
             m_engine->jump_state = Jump_State::Need_To_Jump;
         } else if (event->button() & Qt::RightButton) {
-
+            m_engine->addBlock(Body_Type::Dynamic, Test_Textures::Block, x, y, z, 0, QPointF(1, 1), 1, .6, .3, 25, QPointF(0, 0));
         }
     }
 

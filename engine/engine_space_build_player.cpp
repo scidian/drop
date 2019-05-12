@@ -92,6 +92,9 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
     } else if (demo_player == Demo_Player::Jump) {
         m_gravity = cpv(0, -1000);
         cpSpaceSetGravity(m_space, m_gravity);
+        m_damping = 1;
+        cpSpaceSetDamping(m_space, m_damping);
+
 
         SceneObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 0,  50, 0, 1, 2, .01, 200, QPointF( 0, 0), false);
 

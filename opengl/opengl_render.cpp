@@ -149,14 +149,14 @@ void OpenGL::paintGL() {
             x = static_cast<float>(center.x()) * m_scale;
             y = static_cast<float>(center.y()) * m_scale;
             z = static_cast<float>(object->z_order) * m_scale;
-            half_width =  float(texture->width())  * m_scale / 2.0f;
-            half_height = float(texture->height()) * m_scale / 2.0f;
+            half_width =  float(texture->width()) *  object->scale_x * m_scale / 2.0f;
+            half_height = float(texture->height()) * object->scale_y * m_scale / 2.0f;
         } else {
             x = static_cast<float>(center.x());
             y = static_cast<float>(center.y());
             z = static_cast<float>(object->z_order);
-            half_width =  float(texture->width())  / 2.0f;
-            half_height = float(texture->height()) / 2.0f;
+            half_width =  float(texture->width()) *  object->scale_x / 2.0f;
+            half_height = float(texture->height()) * object->scale_y / 2.0f;
         }
 
 

@@ -144,6 +144,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
                 (bounding_box.width() * 0.1 < width()) && (bounding_box.height() * 0.1 < height())) {
                 painter.drawPolygon( mapped );
 
+
                 // Draw orientation line
                 if (object->shape_type == Shape_Type::Box) {
                     QPointF mid = t.map(QPointF( 0, 0));

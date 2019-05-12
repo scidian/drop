@@ -83,9 +83,11 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
             double  z_order =  object->getComponentPropertyValue(Components::Object_Layering,  Properties::Object_Z_Order).toDouble();
             double  alpha =    object->getComponentPropertyValue(Components::Object_Layering,  Properties::Object_Opacity).toDouble() / 100;
             bool    collide =  object->getComponentPropertyValue(Components::Object_Settings,  Properties::Object_Collide).toBool();
+            bool    physics =  object->getComponentPropertyValue(Components::Object_Settings,  Properties::Object_Physics).toBool();
+            Body_Type btype =  physics? Body_Type::Dynamic : Body_Type::Kinematic;
 
             long    asset_key = object->getAssetKey();
-            addBlock(Body_Type::Kinematic, asset_key, position.x(), -position.y(), z_order, angle, scale, alpha, 1, .75, 100, QPointF(0, 0), collide);
+            addBlock(btype, asset_key, position.x(), -position.y(), z_order, angle, scale, alpha, .5, .5, 25, QPointF(0, 0), collide);
         }
 
 

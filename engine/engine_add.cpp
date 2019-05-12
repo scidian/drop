@@ -104,6 +104,8 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
     //  !!!!! TEMP: Should be passed in by function to allow for custom radius
     double width  = m_textures[texture_number]->width()  * scale.x();       // Width of collision shape
     double height = m_textures[texture_number]->height() * scale.y();       // Height of collision shape
+    block->scale_x = static_cast<float>(scale.x());
+    block->scale_y = static_cast<float>(scale.y());
 
     // Block basics
     block->texture_number = texture_number;
