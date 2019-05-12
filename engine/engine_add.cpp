@@ -147,7 +147,8 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
 
 
 //######################################################################################################
-//##    Add Flower
+//##    Add Polygon
+//##        ***** NOTE: Vertices must be in COUNTER-CLOCKWISE ordering
 //######################################################################################################
 SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double opacity, QVector<QPointF> points,
                                       double friction, double bounce, double mass, QPointF velocity) {

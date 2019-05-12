@@ -7,17 +7,29 @@
 //
 #include <QtMath>
 #include <QPainter>
+#include <cmath>
 
 #include "chipmunk/chipmunk.h"
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "opengl/opengl.h"
 
-// Forward declare
-static void drawContactPoints(cpBody *body, cpArbiter *arb, QVector<QPointF> *point_list);
-
+//####################################################################################
+//##        Custom helper Chipmunk Callbacks
+//####################################################################################
+// Used for Arbiter iterator to get a list of all arbiters (collision points) attached to a body
+static void getContactPoints(cpBody *, cpArbiter *arb, QVector<QPointF> *point_list) {
+    cpContactPointSet contact = cpArbiterGetContactPointSet( arb );
+    point_list->append( QPointF( contact.points->pointA.x, contact.points->pointA.y ) );
+}
+// Used for Arbiter iterator to get a list of Normals (angles) of all arbiters (collision points) attached to a body
+static void getContactNormals(cpBody *, cpArbiter *arb, QVector<cpVect> *normal_list) {
+    cpVect normal = cpArbiterGetNormal( arb );
+    normal_list->append( normal );
+}
 // Used for shape iterator to get a list of all shapes attached to a body
 static void getShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_list) { shape_list->append(shape); }
+
 
 //####################################################################################
 //##        Draws the Collision Shapes using QPainter
@@ -182,40 +194,46 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 void OpenGL::drawDebugCollisions(QPainter &painter) {
 
     // ***** Draw debug collision points
-    QPen line_pen( QBrush(QColor(128, 0, 128)), 4 * static_cast<double>(m_scale));
+    QPen line_pen( QBrush(QColor(128, 0, 128)), 2 * static_cast<double>(m_scale));
     painter.setPen( line_pen );
 
     for (auto object : m_engine->objects) {
         if (object->in_scene == false) continue;
         if (object->collide == false) continue;
 
-        QVector<QPointF> point_list;
-        point_list.clear();
-        cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(drawContactPoints), &point_list);
+        QVector<QPointF> point_list;    point_list.clear();
+        cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(getContactPoints), &point_list);
 
-        if (point_list.size() > 0) {
-            for (auto contact : point_list) {
-                QPointF point = mapToScreen( contact.x(), contact.y(), 0.0 );
+        QVector<cpVect>  normal_list;   normal_list.clear();
+        cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(getContactNormals), &normal_list);
 
-                if (rect().contains(point.toPoint())) {
-                    QTransform t = QTransform().translate(point.x(), point.y()).rotate(-object->angle).translate(-point.x(), -point.y());
-                    QPoint dot = t.map( point ).toPoint();
-                    painter.drawPoint( dot );
-                    //// Draw crosses instead of dots
-                    ///painter.drawLine( dot.x() - 1, dot.y() - 1, dot.x() + 1, dot.y() + 1);
-                    ///painter.drawLine( dot.x() - 1, dot.y() + 1, dot.x() + 1, dot.y() - 1);
-                }
+        for (int i = 0; i < point_list.size(); i++) {
+            QPointF contact = point_list[i];
+            QPointF point = mapToScreen( contact.x(), contact.y(), 0.0 );
+
+            double angle_in_radians = std::atan2(normal_list[i].y, normal_list[i].x);
+            double angle_in_degrees = (angle_in_radians / M_PI) * 180.0;
+
+            if (rect().contains(point.toPoint())) {
+                QTransform t = QTransform().translate(point.x(), point.y()).rotate(-object->angle).translate(-point.x(), -point.y());
+                QPoint dot = t.map( point ).toPoint();
+
+                ///painter.drawPoint( dot );
+                //// Draw crosses instead of dots
+                ///painter.drawLine( dot.x() - 1, dot.y() - 1, dot.x() + 1, dot.y() + 1);
+                ///painter.drawLine( dot.x() - 1, dot.y() + 1, dot.x() + 1, dot.y() - 1);
+
+                painter.translate(point.x(), point.y());
+                painter.rotate(angle_in_degrees);
+                painter.translate(-point.x(), -point.y());
+                painter.drawLine( dot.x(), dot.y() - 4, dot.x(), dot.y() + 4);
+                painter.resetTransform();
             }
-        } // End If
+        }   // End For
     }   // End For
 
 }
 
-
-static void drawContactPoints(cpBody *, cpArbiter *arb, QVector<QPointF> *point_list) {
-    cpContactPointSet contact = cpArbiterGetContactPointSet( arb );
-    point_list->append( QPointF( contact.points->pointA.x, contact.points->pointA.y ) );
-}
 
 
 
