@@ -121,16 +121,20 @@ private:
     cpSpace        *m_space;                                    // Current physics space shown on screen
     QVector3D       m_camera_pos = QVector3D(0, 0, 800);        // Current camera position
 
-    const cpFloat   m_time_step = 1 / 90.0;     // Speed at which want to try to update the Space, 1 / 90 = 90 times per second to up
-                                                //      It is *highly* recommended to use a fixed size time step (calling Update at a fixed interval)
-    cpFloat         m_time_warp = 1.0;          // Speeds up or slows down physics time, 1 = 100% = Normal Time, Lower than 1 = slower, Higher = faster
+    const cpFloat   m_time_step = 1 / 90.0;         // Speed at which want to try to update the Space, 1 / 90 = 90 times per second to up
+                                                    //      It is *highly* recommended to use a fixed size time step (calling Update at a fixed interval)
+    cpFloat         m_time_warp = 1.0;              // Speeds up or slows down physics time, 1 = 100% = Normal Time, Lower than 1 = slower, Higher = faster
 
-    cpVect          m_gravity;                  // Current global gravity applied to current space. Defaults to cpvzero. Can be overridden on a per body basis
-                                                //      by writing custom integration functions. Changing the gravity will activate all sleeping bodies in the space.
-    cpFloat         m_damping;                  // A value of 0.9 means that each body will lose 10% of its velocity per second. Defaults to 1.
-                                                //      Like gravity, it can be overridden on a per body basis.
+    cpVect          m_gravity;                      // Current global gravity applied to current space. Defaults to cpvzero. Can be overridden on
+                                                    //      a per body basis by writing custom integration functions. Changing the gravity will
+                                                    //      activate all sleeping bodies in the space.
+    cpFloat         m_damping;                      // A value of 0.9 means that each body will lose 10% of its velocity per second. Defaults to 1.
+                                                    //      Like gravity, it can be overridden on a per body basis.
 
-    QColor          m_background_color {0,0,0}; // Background color to use to clear screen during render
+    double          m_delete_threshold_x = 5000;    // X distance away from camera an object can be before it's removed from the scene
+    double          m_delete_threshold_y = 5000;    // Y distance away from camera an object can be before it's removed from the scene
+
+    QColor          m_background_color {0,0,0};     // Background color to use to clear screen during render
 
 
 public:
@@ -181,6 +185,7 @@ public:
     void        buildSpace(Demo_Space new_space_type);
     void        clearSpace();
     void        playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat dt);
+    void        removeObject(SceneObject *object);
     void        updateSpace(double time_passed);
 
     void        deleteResources();
@@ -202,6 +207,8 @@ public:
     const cpFloat&      getTimeWarp()           { return m_time_warp; }
     const cpVect&       getGravity()            { return m_gravity; }
     const cpFloat&      getDamping()            { return m_damping; }
+    const double&       getDeleteThresholdX()   { return m_delete_threshold_x; }
+    const double&       getDeleteThresholdY()   { return m_delete_threshold_y; }
     const QColor&       getBackgroundColor()    { return m_background_color; }
 
     void                setCameraPos(QVector3D new_pos) { m_camera_pos = new_pos; }
@@ -209,6 +216,8 @@ public:
     void                setTimeWarp(double new_time_warp) { m_time_warp = new_time_warp; }
     void                setGravity(cpVect new_gravity) { m_gravity = new_gravity; }
     void                setDamping(cpFloat new_damping) { m_damping = new_damping; }
+    void                setDeleteThresholdX(double new_x)   { m_delete_threshold_x = new_x; }
+    void                setDeleteThresholdY(double new_y)   { m_delete_threshold_y = new_y; }
     void                setBackgroundColor(QColor new_color) { m_background_color = new_color; }
 
 

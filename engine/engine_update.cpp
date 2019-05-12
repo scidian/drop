@@ -24,6 +24,7 @@
 #define FALL_VELOCITY  1000.0                   // Max fall speed
 
 
+
 //######################################################################################################
 //##    Update Space
 //######################################################################################################
@@ -38,7 +39,7 @@ void DrEngine::updateSpace(double time_passed) {
     for ( auto it = objects.begin(); it != objects.end(); ) {
         SceneObject *object = *it;
 
-        // ***** Skip object if statc or no linger in Space
+        // ***** Skip object if statc or no longer in Space
         if ((object->body_type == Body_Type::Static) || (object->in_scene == false)) {
             it++;
             continue;
@@ -102,12 +103,13 @@ void DrEngine::updateSpace(double time_passed) {
 
 
 
-        // ***** !!!!! TEMP: Delete object if it falls below y = 1000
-        if (pos.y < -1000) {
-            object->in_scene = false;
+        // Delete object if ends up outside the deletion threshold
+        if ( (pos.y < static_cast<double>(getCameraPos().y()) - m_delete_threshold_y) ||
+             (pos.y > static_cast<double>(getCameraPos().y()) + m_delete_threshold_y) ||
+             (pos.x < static_cast<double>(getCameraPos().x()) - m_delete_threshold_x) ||
+             (pos.x > static_cast<double>(getCameraPos().x()) + m_delete_threshold_x) ) {
 
-            cpSpaceRemoveShape( m_space, object->shape );   cpSpaceRemoveBody( m_space, object->body );
-            cpShapeFree( object->shape );                   cpBodyFree( object->body );
+            removeObject(object);
 
             it = objects.erase(it);
         } else {
@@ -119,7 +121,36 @@ void DrEngine::updateSpace(double time_passed) {
 }
 
 
+//######################################################################################################
+//##    Removes an object from the Space
+//######################################################################################################
+// Used for constarint iterator to get a list of all constraints attached to a body
+static void getJointList(cpBody *, cpConstraint *constraint, QVector<cpConstraint*> *joint_list) { joint_list->append(constraint); }
 
+void DrEngine::removeObject(SceneObject *object) {
+    object->in_scene = false;
+
+    if (object->shape) {
+        cpSpaceRemoveShape(m_space, object->shape);
+        cpShapeFree(object->shape);
+    }
+
+    QVector<cpConstraint*> joint_list;
+    cpBodyEachConstraint(object->body, cpBodyConstraintIteratorFunc(getJointList), &joint_list);
+    for (auto joint : joint_list) {
+        cpSpaceRemoveConstraint(m_space, joint);
+        cpConstraintFree(joint);
+    }
+
+    cpSpaceRemoveBody(m_space, object->body);
+    cpBodyFree(object->body);
+}
+
+
+
+//######################################################################################################
+//##    Updates Jump Player Velocity
+//######################################################################################################
 static void selectPlayerGroundNormal(cpBody *, cpArbiter *arb, cpVect *ground_normal) {
     cpVect n = cpvneg( cpArbiterGetNormal(arb) );
     if (n.y > ground_normal->y)

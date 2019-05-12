@@ -30,8 +30,6 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         cpSpaceSetGravity(m_space, m_gravity);
         cpSpaceSetDamping(m_space, m_damping);
 
-
-
         // Add body
         SceneObject *rover = this->addBlock(  Body_Type::Dynamic, Test_Textures::Rover,   50,  75, 0,   0, QPointF(1, 1), 1, .5, .1, 4, QPointF(0, 0));
         rover->follow = true;
@@ -72,25 +70,16 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         cpShapeSetFilter( wheel3->shape, filter);
         cpShapeSetFilter( spare1->shape, filter);
 
-        // Old solid pin joint
-        //cpSpaceAddConstraint( m_space, cpPivotJointNew(rover->body, wheel1->body, cpBodyGetPosition(wheel1->body)) );
-        //cpSpaceAddConstraint( m_space, cpPivotJointNew(rover->body, wheel2->body, cpBodyGetPosition(wheel2->body)) );
-
         // New bouncy shocks joint, Grooves a/b are relative to the car, anchor point B is on the wheel
         cpSpaceAddConstraint(m_space, cpGrooveJointNew( rover->body, wheel1->body, cpv(-40,  15), cpv(-40, -28), cpvzero));
         cpSpaceAddConstraint(m_space, cpGrooveJointNew( rover->body, wheel2->body, cpv(  0,  15), cpv(  0, -28), cpvzero));
         cpSpaceAddConstraint(m_space, cpGrooveJointNew( rover->body, wheel3->body, cpv( 40,  15), cpv( 40, -28), cpvzero));
 
-        //cpSpaceAddConstraint(m_space, cpGrooveJointNew( rover->body, spare1->body, cpv(-40,  15), cpv(-65, -30), cpvzero));
-        //cpSpaceAddConstraint(m_space, cpGrooveJointNew( rover->body, spare2->body, cpv( 40,  15), cpv( 65, -30), cpvzero));
-
         cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->body, wheel1->body, cpv(-40, 0), cpvzero, 50.0, 90.0, 50.0)); // Higher damp = less mushy, 100 = pretty stiff
         cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->body, wheel2->body, cpv(  0, 0), cpvzero, 50.0, 90.0, 25.0));
         cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->body, wheel3->body, cpv( 40, 0), cpvzero, 50.0, 90.0, 40.0));
 
-        //cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->body, spare1->body, cpv(-40, 0), cpvzero, 40.0, 30.0,  5.0));
-        //cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->body, spare2->body, cpv( 40, 0), cpvzero, 40.0, 30.0,  5.0));
-
+        // Old school solid pin joint
         cpSpaceAddConstraint( m_space, cpPivotJointNew(rover->body, spare1->body, cpBodyGetPosition(spare1->body)) );
 
         // Simple Motor Example, Applies constant speed to joint

@@ -165,7 +165,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 void OpenGL::drawDebugCollisions(QPainter &painter) {
 
     // ***** Draw debug collision points
-    QPen line_pen( QBrush(QColor(128, 0, 128)), 3 * static_cast<double>(m_scale));
+    QPen line_pen( QBrush(QColor(128, 0, 128)), 4 * static_cast<double>(m_scale));
     painter.setPen( line_pen );
 
     for (auto object : m_engine->objects) {
