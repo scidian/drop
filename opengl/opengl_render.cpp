@@ -124,7 +124,9 @@ void OpenGL::paintGL() {
 
         // ***** Render with texture
         DrEngineTexture *texture = m_engine->getTexture(object->texture_number);
-        texture->texture()->bind();
+
+        if (!texture->texture()->isBound())
+            texture->texture()->bind();
 
         std::vector<float> texCoords;
         texCoords.clear();
@@ -201,7 +203,7 @@ void OpenGL::paintGL() {
         m_program.disableAttributeArray( m_attribute_vertex );
         m_program.disableAttributeArray( m_attribute_tex_coord );
 
-        texture->texture()->release();
+        ///texture->texture()->release();
     }
 
 
