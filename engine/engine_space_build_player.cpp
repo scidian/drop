@@ -8,8 +8,14 @@
 #include "engine/engine.h"
 #include "engine_texture.h"
 
+
+//######################################################################################################
+//##    Chipmunk Callbacks
+//##        Grabs data from Space
+//######################################################################################################
 // Used for shape iterator to get a list of all shapes attached to a body
 static void getShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_list) { shape_list->append(shape); }
+
 
 //######################################################################################################
 //##    Add Player to Space

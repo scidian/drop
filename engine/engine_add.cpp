@@ -13,19 +13,6 @@
 #include "library/graham_scan.h"
 #include "library/poly_partition.h"
 
-enum CollisionTypes {
-    COLLISION_TYPE_ONE_WAY = 1,
-};
-
-static cpBool PreSolve(cpArbiter *arb, cpSpace *, void *) {
-    CP_ARBITER_GET_SHAPES(arb, a, b);
-    cpVect *direction = static_cast<cpVect*>(cpShapeGetUserData(a));
-
-    if(cpvdot(cpArbiterGetNormal(arb), (*direction)) < 0)
-        return cpArbiterIgnore(arb);
-    return cpTrue;
-}
-
 
 //######################################################################################################
 //##    Add Line
@@ -58,15 +45,6 @@ SceneObject* DrEngine::addLine(Body_Type body_type, QPointF p1, QPointF p2, doub
     cpShapeSetFriction(     line->shape, friction );
     cpShapeSetElasticity(   line->shape, bounce );          // Ideally between 0 and .99999
     cpSpaceAddShape( m_space, line->shape );
-
-    // One way collision support
-    line->one_way = true;
-    cpShapeSetCollisionType(line->shape, COLLISION_TYPE_ONE_WAY);       // We'll use the data pointer for the OneWayPlatform direction
-    line->one_way_direction = cpv(0, 1);                                // Let objects pass upwards
-    cpShapeSetUserData(line->shape, &line->one_way_direction);
-    cpCollisionHandler *handler = cpSpaceAddWildcardHandler(m_space, COLLISION_TYPE_ONE_WAY);
-    handler->preSolveFunc = PreSolve;
-
 
     line->in_scene = true;
     objects.append( line );

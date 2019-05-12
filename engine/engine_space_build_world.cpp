@@ -18,31 +18,32 @@
 #include "project/project_world_stage_object.h"
 #include "helper.h"
 
-static void ShapeFreeWrap(cpSpace *space, cpShape *shape, void *) { cpSpaceRemoveShape(space, shape);   cpShapeFree(shape); }
-static void PostShapeFree(cpShape *shape, cpSpace *space) { cpSpaceAddPostStepCallback(space, cpPostStepFunc(ShapeFreeWrap), shape, nullptr); }
-static void ConstraintFreeWrap(cpSpace *space, cpConstraint *constraint, void *) { cpSpaceRemoveConstraint(space, constraint); cpConstraintFree(constraint); }
-static void PostConstraintFree(cpConstraint *constraint, cpSpace *space) { cpSpaceAddPostStepCallback(space, cpPostStepFunc(ConstraintFreeWrap), constraint, nullptr); }
-static void BodyFreeWrap(cpSpace *space, cpBody *body, void *) { cpSpaceRemoveBody(space, body); cpBodyFree(body); }
-static void PostBodyFree(cpBody *body, cpSpace *space) { cpSpaceAddPostStepCallback(space, cpPostStepFunc(BodyFreeWrap), body, nullptr); }
 
-// Safe and future proof way to remove and free all objects that have been added to the space.
-void ChipmunkFreeSpaceChildren(cpSpace *space) {
-    // Must remove these BEFORE freeing the body or you will access dangling pointers.
-    cpSpaceEachShape(space, cpSpaceShapeIteratorFunc(PostShapeFree), space);
-    cpSpaceEachConstraint(space, cpSpaceConstraintIteratorFunc(PostConstraintFree), space);
-    cpSpaceEachBody(space, cpSpaceBodyIteratorFunc(PostBodyFree), space);
+//######################################################################################################
+//##    Chipmunk Callbacks
+//##        Support for one way platform (collision)
+//######################################################################################################
+// Used for shape iterator to get a list of all shapes attached to a body
+static void getShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_list) { shape_list->append(shape); }
+
+static cpBool PreSolve(cpArbiter *arb, cpSpace *, void *) {
+    CP_ARBITER_GET_SHAPES(arb, a, b);
+    cpVect *direction = static_cast<cpVect*>(cpShapeGetUserData(a));
+
+    if(cpvdot(cpArbiterGetNormal(arb), (*direction)) < 0)
+        return cpArbiterIgnore(arb);
+    return cpTrue;
 }
 
-//######################################################################################################
-//##    Clear Space
-//######################################################################################################
-void DrEngine::clearSpace() {
-    if (has_scene) {
-        has_scene = false;
-        qApp->processEvents();
-        ChipmunkFreeSpaceChildren(m_space);
-        cpSpaceFree(m_space);
-        objects.clear();
+void DrEngine::oneWayPlatform(SceneObject *object, cpVect direction) {
+    object->one_way = true;
+    object->one_way_direction = direction;                                  // Let objects pass upwards
+
+    QVector<cpShape*> shape_list;
+    cpBodyEachShape(object->body, cpBodyShapeIteratorFunc(getShapeList), &shape_list);
+    for (auto shape : shape_list) {
+        cpShapeSetCollisionType(shape, COLLISION_TYPE_ONE_WAY);           // We'll use the data pointer for the OneWayPlatform direction
+        cpShapeSetUserData(shape, &object->one_way_direction);
     }
 }
 
@@ -51,14 +52,20 @@ void DrEngine::clearSpace() {
 //######################################################################################################
 void DrEngine::buildSpace(Demo_Space new_space_type) {
 
-    // Set up physics world
+    // ***** Set up physics world
     demo_space = new_space_type;                // Save Space type
     m_background_color = QColor(0,0,0);
 
     m_space = cpSpaceNew();                     // Creates an empty space
     cpSpaceSetIterations(m_space, 10);          // 10 is default and should be good enough for most games
 
-    // Build desired demo Space
+
+    // ***** Add handler for one way collisions
+    cpCollisionHandler *handler = cpSpaceAddWildcardHandler(m_space, COLLISION_TYPE_ONE_WAY);
+    handler->preSolveFunc = PreSolve;
+
+
+    // ***** Build desired demo Space
     if (demo_space == Demo_Space::Project) {
 
         // Find current stage shown in editor
@@ -99,10 +106,15 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
 
     } else if (demo_space == Demo_Space::Lines2) {
         // Add a static line segment shapes for the ground
-        this->addLine(Body_Type::Static, QPointF(-1000, -200), QPointF(1000, -200), 2, .5, 1);
-        this->addLine(Body_Type::Static, QPointF( -300,  150), QPointF(-100,  150), 2, .5, 1);
+        SceneObject *line1 = this->addLine(Body_Type::Static, QPointF(-1000, -200), QPointF(1000, -200), 2, .5, 1);
+        SceneObject *line2 = this->addLine(Body_Type::Static, QPointF(  500, -100), QPointF( 700, -100), 2, .5, 1);
         this->addLine(Body_Type::Static, QPointF(  100,    0), QPointF( 300,    0), 2, .5, 1);
-        this->addLine(Body_Type::Static, QPointF(  500, -100), QPointF( 700, -100), 2, .5, 1);
+        this->addLine(Body_Type::Static, QPointF( -300,  150), QPointF(-100,  150), 2, .5, 1);
+
+        // One way platform support
+        oneWayPlatform(line1, cpv(0, 1));                        // Let objects pass upwards
+        oneWayPlatform(line2, cpv(0, 1));                        // Let objects pass upwards
+
 
     } else if (demo_space == Demo_Space::Blocks) {
         // Add a static line segment shapes for the ground
@@ -139,6 +151,9 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, 100, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
         this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000,  40, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
         this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
+
+        SceneObject *block = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -400, 120, 100, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
+        oneWayPlatform(block, cpv(0, 1));
 
         this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -940, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
         this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -880, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));

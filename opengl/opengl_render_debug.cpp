@@ -14,8 +14,10 @@
 #include "engine/engine_texture.h"
 #include "opengl/opengl.h"
 
+
 //####################################################################################
-//##        Custom helper Chipmunk Callbacks
+//##    Chipmunk Callbacks
+//##        Grabs data from Space
 //####################################################################################
 // Used for Arbiter iterator to get a list of all arbiters (collision points) attached to a body
 static void getContactPoints(cpBody *, cpArbiter *arb, QVector<QPointF> *point_list) {
@@ -32,7 +34,7 @@ static void getShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_list
 
 
 //####################################################################################
-//##        Draws the Collision Shapes using QPainter
+//##    Draws the Collision Shapes using QPainter
 //####################################################################################
 void OpenGL::drawDebugShapes(QPainter &painter) {
 
@@ -189,7 +191,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 
 
 //####################################################################################
-//##        Draws the Collision Points using QPainter
+//##    Draws the Collision Points using QPainter
 //####################################################################################
 void OpenGL::drawDebugCollisions(QPainter &painter) {
 

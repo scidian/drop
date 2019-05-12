@@ -58,6 +58,9 @@ enum class Shape_Type {
     Polygon                                     // cpPolyShapeNew
 };
 
+enum CollisionTypes {
+    COLLISION_TYPE_ONE_WAY = 1,
+};
 
 enum Test_Textures {
     Ball =  -1,
@@ -190,6 +193,7 @@ public:
     void        addPlayer(Demo_Player new_player_type);
     void        buildSpace(Demo_Space new_space_type);
     void        clearSpace();
+    void        oneWayPlatform(SceneObject *object, cpVect direction);
     void        playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat dt);
     void        removeObject(SceneObject *object);
     void        updateSpace(double time_passed);
