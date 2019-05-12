@@ -119,7 +119,8 @@ SOURCES += \
     forms/form_popup_grid_snap.cpp \
     forms/form_settings.cpp \
     helper.cpp \
-    library/polypartition.cpp \
+    library/graham_scan.cpp \
+    library/poly_partition.cpp \
     main.cpp \
     opengl/opengl.cpp \
     opengl/opengl_initialize.cpp \
@@ -204,7 +205,8 @@ HEADERS += \
     forms/form_popup.h \
     forms/form_settings.h \
     helper.h \
-    library/polypartition.h \
+    library/graham_scan.h \
+    library/poly_partition.h \
     opengl/opengl.h \
     project/project.h \
     project/project_asset.h \

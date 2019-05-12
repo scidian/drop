@@ -8,6 +8,8 @@
 #include <QtMath>
 #include "engine.h"
 #include "engine_texture.h"
+#include "helper.h"
+#include "library/graham_scan.h"
 
 //######################################################################################################
 //##    Add Line
@@ -157,9 +159,8 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
     std::vector<cpVect> verts;
     verts.clear();
     verts.resize( static_cast<ulong>(points.count()) );
-    for (int i = 0; i < points.count(); i++) {
+    for (int i = 0; i < points.count(); i++)
         verts[static_cast<ulong>(i)] = cpv( points[i].x(), points[i].y() );
-    }
     cpFloat moment = cpMomentForPoly( mass, points.count(), verts.data(), cpvzero, 0 );
 
     // Create the body for the polygon
@@ -172,6 +173,21 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
     cpSpaceAddBody(m_space, polygon->body);
     cpBodySetPosition( polygon->body, cpv( x, y));                                        // Coordinate is center of object
     cpBodySetVelocity( polygon->body, cpv( velocity.x(), velocity.y()) );
+
+
+    QVector<gsPoint> point_list;
+    for (int i = 0; i < points.count(); i++)
+        point_list.append( gsPoint {points[i].x(), points[i].y()} );
+    QVector<QPointF> new_points = convexHull(point_list, point_list.count());
+
+    if (new_points.count() == 0)
+        Dr::ShowMessageBox("Could not form convex hull.");
+    else if (new_points.count() == point_list.count())
+        Dr::ShowMessageBox("Shape is convex!");
+    else
+        Dr::ShowMessageBox("Shape is concave!");
+
+
 
     // Create the collision shape for the flower
     polygon->shape_type = Shape_Type::Polygon;

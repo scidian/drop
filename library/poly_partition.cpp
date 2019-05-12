@@ -30,7 +30,7 @@
 
 using namespace std;
 
-#include "polypartition.h"
+#include "poly_partition.h"
 
 #define TPPL_VERTEXTYPE_REGULAR 0
 #define TPPL_VERTEXTYPE_START   1
@@ -1060,11 +1060,11 @@ int TPPLPartition::ConvexPartition_OPT(TPPLPoly *poly, TPPLPolyList *parts) {
 	return ret;
 }
 
-//triangulates a set of polygons by first partitioning them into monotone polygons
-//O(n*log(n)) time complexity, O(n) space complexity
-//the algorithm used here is outlined in the book
-//"Computational Geometry: Algorithms and Applications" 
-//by Mark de Berg, Otfried Cheong, Marc van Kreveld and Mark Overmars
+// Triangulates a set of polygons by first partitioning them into monotone polygons
+// O(n*log(n)) time complexity, O(n) space complexity
+// The algorithm used here is outlined in the book
+//      "Computational Geometry: Algorithms and Applications"
+//      by Mark de Berg, Otfried Cheong, Marc van Kreveld and Mark Overmars
 int TPPLPartition::MonotonePartition(TPPLPolyList *inpolys, TPPLPolyList *monotonePolys) {
 	TPPLPolyList::iterator iter;
     MonotoneVertex *vertices = nullptr;
