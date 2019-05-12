@@ -83,6 +83,7 @@ void DrStage::copyObjectSettings(DrObject *from_object, DrObject *to_object) {
 
 // Removes an object from the project
 void DrStage::deleteObject(DrObject *object) {
+    delete object;
     m_objects.erase(object->getKey());
 }
 

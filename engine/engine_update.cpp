@@ -111,6 +111,7 @@ void DrEngine::updateSpace(double time_passed) {
 
             removeObject(object);
 
+            delete object;
             it = objects.erase(it);
         } else {
             it++;
