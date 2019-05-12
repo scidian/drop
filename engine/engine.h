@@ -84,6 +84,9 @@ struct SceneObject {
     float       scale_x = 1.0f;             // Scale of object in world
     float       scale_y = 1.0f;             // Scale of object in world
 
+    bool        one_way = false;            // Set to true if we're using this object as a one way platform
+    cpVect      one_way_direction {0, 1};   // Direction of Normal for one way platforms
+
     // ***** Object interaction
     bool        follow = false;             // Set to true to have camera follow object
     bool        player_controls = false;    // Set to true to have object controlled by player control buttons, keyboard_x, keyboard_y

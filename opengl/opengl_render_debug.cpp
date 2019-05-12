@@ -218,11 +218,8 @@ void OpenGL::drawDebugCollisions(QPainter &painter) {
                 QTransform t = QTransform().translate(point.x(), point.y()).rotate(-object->angle).translate(-point.x(), -point.y());
                 QPoint dot = t.map( point ).toPoint();
 
+                //// Draw dots
                 ///painter.drawPoint( dot );
-                //// Draw crosses instead of dots
-                ///painter.drawLine( dot.x() - 1, dot.y() - 1, dot.x() + 1, dot.y() + 1);
-                ///painter.drawLine( dot.x() - 1, dot.y() + 1, dot.x() + 1, dot.y() - 1);
-
                 painter.translate(point.x(), point.y());
                 painter.rotate(angle_in_degrees);
                 painter.translate(-point.x(), -point.y());
