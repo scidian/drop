@@ -16,6 +16,9 @@
 // Forward declare
 static void drawContactPoints(cpBody *body, cpArbiter *arb, QVector<QPointF> *point_list);
 
+// Used for shape iterator to get a list of all shapes attached to a body
+static void getShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_list) { shape_list->append(shape); }
+
 //####################################################################################
 //##        Draws the Collision Shapes using QPainter
 //####################################################################################
@@ -24,6 +27,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
     for (auto object : m_engine->objects) {
         if (object->in_scene == false) continue;
         if (object->collide == false) continue;
+        if (!object->has_been_processed) continue;
 
         QColor color;
         switch (object->body_type) {
@@ -128,36 +132,48 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
             }
 
         } else if (object->shape_type == Shape_Type::Polygon || object->shape_type == Shape_Type::Box) {
-            QTransform t = QTransform().translate(object->position.x(), object->position.y()).rotate( object->angle);
-            QPolygonF polygon, mapped;
-            for (int i = 0; i < cpPolyShapeGetCount( object->shape ); i++) {
-                cpVect  vert  = cpPolyShapeGetVert( object->shape, i );
-                polygon.append( QPointF( vert.x, vert.y ));
 
-                QPointF trans = t.map( polygon[i] );
-                mapped.append( mapToScreen(trans.x(), trans.y(), 0));
-            }
+            QVector<cpShape*> shape_list;
+            cpBodyEachShape(object->body, cpBodyShapeIteratorFunc(getShapeList), &shape_list);
 
-            // Don't draw if not touching or inside of visible area
-            QRect bounding_box = mapped.boundingRect().toRect();
-            if ((rect().intersects(bounding_box) || rect().contains(bounding_box)) &&
-                (bounding_box.width() * 0.1 < width()) && (bounding_box.height() * 0.1 < height())) {
-                painter.drawPolygon( mapped );
+            //if (object->follow) {
+            //    painter.drawText( QPointF(20, 20), "Shapes: " + QString::number(shape_list.count()));
+            // }
 
+            for (auto shape : shape_list) {
+                QTransform t = QTransform().translate(object->position.x(), object->position.y()).rotate( object->angle);
+                QPolygonF polygon, mapped;
+                for (int i = 0; i < cpPolyShapeGetCount( shape ); i++) {
+                    cpVect  vert  = cpPolyShapeGetVert( shape, i );
+                    polygon.append( QPointF( vert.x, vert.y ));
 
-                // Draw orientation line
-                if (object->shape_type == Shape_Type::Box) {
-                    QPointF mid = t.map(QPointF( 0, 0));
-                    QPointF top = t.map(QPointF( 0, polygon.boundingRect().height() / 2 ));
-                    QPointF l1 = mapToScreen( mid.x(),  mid.y(),  0);
-                    QPointF l2 = mapToScreen( top.x(),  top.y(),  0);
-                    painter.drawLine( l1, l2 );
+                    QPointF trans = t.map( polygon[i] );
+                    mapped.append( mapToScreen(trans.x(), trans.y(), 0));
+                }
+
+                // Don't draw if not touching or inside of visible area
+                QRect bounding_box = mapped.boundingRect().toRect();
+                if ((rect().intersects(bounding_box) || rect().contains(bounding_box)) &&
+                    (bounding_box.width() * 0.1 < width()) && (bounding_box.height() * 0.1 < height())) {
+                    painter.drawPolygon( mapped );
+
+                    // Draw orientation line
+                    if (object->shape_type == Shape_Type::Box) {
+                        QPointF mid = t.map(QPointF( 0, 0));
+                        QPointF top = t.map(QPointF( 0, polygon.boundingRect().height() / 2 ));
+                        QPointF l1 = mapToScreen( mid.x(),  mid.y(),  0);
+                        QPointF l2 = mapToScreen( top.x(),  top.y(),  0);
+                        painter.drawLine( l1, l2 );
+                    }
                 }
             }
 
         }   // End If
     }   // End For
 }
+
+
+
 
 
 //####################################################################################

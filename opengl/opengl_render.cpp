@@ -121,6 +121,7 @@ void OpenGL::paintGL() {
     ///for (auto object : m_engine->objects) {
     for (ulong i = 0; i < static_cast<ulong>(v.size()); i++) {
         SceneObject *object = m_engine->objects[ v[i].first ];
+        if (!object->has_been_processed) continue;
 
         // ***** Render with texture
         DrEngineTexture *texture = m_engine->getTexture(object->texture_number);

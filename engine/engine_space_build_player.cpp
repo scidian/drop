@@ -8,6 +8,8 @@
 #include "engine/engine.h"
 #include "engine_texture.h"
 
+// Used for shape iterator to get a list of all shapes attached to a body
+static void getShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_list) { shape_list->append(shape); }
 
 //######################################################################################################
 //##    Add Player to Space
@@ -31,7 +33,22 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         cpSpaceSetDamping(m_space, m_damping);
 
         // Add body
-        SceneObject *rover = this->addBlock(  Body_Type::Dynamic, Test_Textures::Rover,   50,  75, 0,   0, QPointF(1, 1), 1, .5, .1, 4, QPointF(0, 0));
+        QVector<QPointF> points;
+        points.append( QPointF( -45.5,  -5.0 ));
+        points.append( QPointF( -45.5,  16.0 ));
+        points.append( QPointF( -54.5,  18.0 ));
+        points.append( QPointF( -57.0,  -5.0 ));
+        points.append( QPointF( -57.0, -24.0 ));
+        points.append( QPointF(  58.5, -24.0 ));
+        points.append( QPointF(  50.5,  -5.0 ));
+        points.append( QPointF(  48.0,  16.0 ));
+        points.append( QPointF(  37.0,  23.0 ));
+        points.append( QPointF(  31.0,  23.0 ));
+        points.append( QPointF(  20.0,  16.0 ));
+        points.append( QPointF(   5.5,  16.0 ));
+        points.append( QPointF(   5.5,  -5.0 ));
+        SceneObject *rover = this->addPolygon(Body_Type::Dynamic, Test_Textures::Rover,  50, 75, 0, 1, points, .5, .1, 4, QPointF(0, 0));
+        ///SceneObject *rover = this->addBlock(  Body_Type::Dynamic, Test_Textures::Rover,  50, 75, 0, 0, QPointF(1, 1), 1, .5, .1, 4, QPointF(0, 0));
         rover->follow = true;
 
         // Add wheels
@@ -41,7 +58,10 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         wheel1->is_wheel = true;    wheel1->wheel_speed = 80;
         wheel2->is_wheel = true;    wheel2->wheel_speed = 40;
         wheel3->is_wheel = true;    wheel3->wheel_speed = 60;
-        SceneObject *spare1 = this->addCircle(Body_Type::Dynamic, Test_Textures::Spare,  -10,  45, .01, 1, 4, .7, .5, QPointF(0, 0));
+        SceneObject *spare1 = this->addCircle(Body_Type::Dynamic, Test_Textures::Spare,  -13,  45, .01, 1, 4, .7, .5, QPointF(0, 0));
+
+        // Add Careful Cargo
+        this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 30, 115, 0, 1, .7, 0, 2, QPointF(0, 0));
 
         // Set body and wheels to same group so they don't collide
         //EX:
@@ -64,7 +84,10 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         filter.group = 43;
         filter.categories = CP_ALL_CATEGORIES;
         filter.mask =       CP_ALL_CATEGORIES;
-        cpShapeSetFilter( rover->shape,  filter);
+        QVector<cpShape*> shape_list;
+        cpBodyEachShape(rover->body, cpBodyShapeIteratorFunc(getShapeList), &shape_list);
+        for (auto shape : shape_list)
+            cpShapeSetFilter( shape,  filter);
         cpShapeSetFilter( wheel1->shape, filter);
         cpShapeSetFilter( wheel2->shape, filter);
         cpShapeSetFilter( wheel3->shape, filter);

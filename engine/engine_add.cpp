@@ -6,10 +6,12 @@
 //
 //
 #include <QtMath>
+
 #include "engine.h"
 #include "engine_texture.h"
 #include "helper.h"
 #include "library/graham_scan.h"
+#include "library/poly_partition.h"
 
 //######################################################################################################
 //##    Add Line
@@ -175,32 +177,54 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
     cpBodySetVelocity( polygon->body, cpv( velocity.x(), velocity.y()) );
 
 
-    QVector<gsPoint> point_list;
-    for (int i = 0; i < points.count(); i++)
-        point_list.append( gsPoint {points[i].x(), points[i].y()} );
+    // ***** Determine if polygon is concave, if it is create multiple shapes, otherwise create one shape
+    QVector<gsPoint> point_list;                                        // Used by library Graham Scan
+    std::list<TPPLPoly> testpolys, result;                              // Used by library Poly Partition
+    TPPLPoly poly;
+    poly.Init(points.count());
+    for (int i = 0; i < points.count(); i++) {
+        point_list.append( gsPoint{points[i].x(), points[i].y()} );
+        poly[i].x = points[i].x();
+        poly[i].y = points[i].y();
+    }
+    testpolys.push_back( poly );
     QVector<QPointF> new_points = convexHull(point_list, point_list.count());
 
-    if (new_points.count() == 0)
-        Dr::ShowMessageBox("Could not form convex hull.");
-    else if (new_points.count() == point_list.count())
-        Dr::ShowMessageBox("Shape is convex!");
-    else
-        Dr::ShowMessageBox("Shape is concave!");
-
-
-
-    // Create the collision shape for the flower
     polygon->shape_type = Shape_Type::Polygon;
-    polygon->shape = cpPolyShapeNew( polygon->body, points.count(), verts.data(), cpTransformIdentity, .01);
-    cpSpaceAddShape(m_space, polygon->shape);
 
-    cpShapeSetFriction(   polygon->shape, friction );
-    cpShapeSetElasticity( polygon->shape, bounce );
+    // Shape is convex or could not determine convex hull
+    if (new_points.count() == 0) Dr::ShowMessageBox("Warning! Could not form convex hull!");
+    if ((new_points.count() == point_list.count() || (new_points.count() == 0))) {
+        polygon->shape = cpPolyShapeNew( polygon->body, points.count(), verts.data(), cpTransformIdentity, .01);
+        cpSpaceAddShape(m_space, polygon->shape);
+        cpShapeSetFriction(   polygon->shape, friction );
+        cpShapeSetElasticity( polygon->shape, bounce );
+
+    // Shape is concave
+    } else {
+        TPPLPartition pp;
+        pp.ConvexPartition_OPT(&(*testpolys.begin()), &result);
+        ///pp.ConvexPartition_HM(&testpolys, &result);
+
+        for (auto poly : result) {
+            std::vector<cpVect> verts;
+            verts.clear();
+            verts.resize( static_cast<ulong>( poly.GetNumPoints()) );
+            for (int i = 0; i < poly.GetNumPoints(); i++)
+                verts[static_cast<ulong>(i)] = cpv( poly[i].x, poly[i].y );
+            polygon->shape = cpPolyShapeNew( polygon->body, static_cast<int>(poly.GetNumPoints()), verts.data(), cpTransformIdentity, .01);
+            cpSpaceAddShape(m_space, polygon->shape);
+            cpShapeSetFriction(   polygon->shape, friction );
+            cpShapeSetElasticity( polygon->shape, bounce );
+        }
+    }
 
     polygon->in_scene = true;
     objects.append( polygon );
     return polygon;
 }
+
+
 
 
 

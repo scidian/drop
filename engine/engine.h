@@ -77,6 +77,7 @@ struct SceneObject {
     Shape_Type  shape_type;                 // Shape_Type
 
     bool        in_scene = true;            // True while object exists in Space
+    bool        has_been_processed= false;  // Set to true after an initial updateSpace call has been ran while the object was in the Space
     bool        collide = true;             // Set to false to have this object not collide with anything
 
     long        texture_number;             // Reference to which texture to use from Engine.EngineTexture map

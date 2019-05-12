@@ -38,6 +38,7 @@ void DrEngine::updateSpace(double time_passed) {
     // ********** Iterate through objects, delete if they go off screen
     for ( auto it = objects.begin(); it != objects.end(); ) {
         SceneObject *object = *it;
+        object->has_been_processed = true;
 
         // ***** Skip object if statc or no longer in Space
         if ((object->body_type == Body_Type::Static) || (object->in_scene == false)) {
@@ -127,13 +128,17 @@ void DrEngine::updateSpace(double time_passed) {
 //######################################################################################################
 // Used for constarint iterator to get a list of all constraints attached to a body
 static void getJointList(cpBody *, cpConstraint *constraint, QVector<cpConstraint*> *joint_list) { joint_list->append(constraint); }
+// Used for shape iterator to get a list of all shapes attached to a body
+static void getShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_list) { shape_list->append(shape); }
 
 void DrEngine::removeObject(SceneObject *object) {
     object->in_scene = false;
 
-    if (object->shape) {
-        cpSpaceRemoveShape(m_space, object->shape);
-        cpShapeFree(object->shape);
+    QVector<cpShape*> shape_list;
+    cpBodyEachShape(object->body, cpBodyShapeIteratorFunc(getShapeList), &shape_list);
+    for (auto shape : shape_list) {
+        cpSpaceRemoveShape(m_space, shape);
+        cpShapeFree(shape);
     }
 
     QVector<cpConstraint*> joint_list;
