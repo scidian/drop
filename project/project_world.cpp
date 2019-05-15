@@ -22,7 +22,7 @@ DrWorld::DrWorld(DrProject *parent_project, long new_world_key, QString new_worl
 
     initializeWorldSettings(new_world_name);
 
-    addStage();
+    addStage();         // Adds the initial "Start Stage"
 }
 
 DrWorld::~DrWorld() {
@@ -43,6 +43,8 @@ void DrWorld::addStage(QString new_stage_name) {
     }
 
     m_stages[new_stage_key] = new DrStage(m_parent_project, this, new_stage_key, new_stage_name, need_start_stage);    
+
+
 }
 
 
@@ -55,7 +57,7 @@ long DrWorld::getFirstStageKey() {
 }
 
 // Returns a pointer to the World with the associated Key from the map container
-DrStage* DrWorld::getStage(long from_stage_key) {
+DrStage* DrWorld::getStageFromKey(long from_stage_key) {
     return m_stages[from_stage_key];
 }
 

@@ -13,10 +13,10 @@
 enum class Project_Options {
     Name,                       // string
 
-    Current_World,              // int
-    Current_Stage,              // int
+    Current_World,              // long
+    Current_Stage,              // long
 
-    Orientation,                // int (Orientation)
+    Orientation,                // int (enum Orientation)
 };
 
 enum class Orientation {

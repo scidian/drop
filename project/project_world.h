@@ -48,7 +48,7 @@ public:
     void        initializeWorldSettings(QString new_name);
 
     long        getFirstStageKey();
-    DrStage*    getStage(long from_stage_key);
+    DrStage*    getStageFromKey(long from_stage_key);
     DrStage*    getStageWithName(QString stage_name);
 
 

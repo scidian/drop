@@ -7,7 +7,7 @@
 //
 #include <QApplication>
 
-#include "engine/engine.h"
+#include "engine.h"
 #include "engine_texture.h"
 #include "project/project.h"
 #include "project/project_asset.h"
@@ -68,34 +68,19 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
     // ***** Build desired demo Space
     if (demo_space == Demo_Space::Project) {
 
-        // Find current stage shown in editor
-        long current_stage = m_project->getOption(Project_Options::Current_Stage).toInt();
-        DrStage *stage = m_project->findStageFromKey( current_stage );
-        DrWorld *world = stage->getParentWorld();
+        // Find current world shown in editor, load Start Stage of that world
+        m_current_world = m_project->getOption(Project_Options::Current_World).toLongLong();
+        DrWorld *world = m_project->getWorld(m_current_world);
+        DrStage *stage = world->getStageFromKey(world->getFirstStageKey());
 
         if (world->getComponentPropertyValue(Components::World_Settings, Properties::World_Use_Background_Color).toBool())
             m_background_color =  QColor::fromRgba(world->getComponentPropertyValue(Components::World_Settings, Properties::World_Background_Color).toUInt());
 
-        // Load objects
-        for (auto object_pair : stage->getObjectMap()) {
+        m_game_direction += world->getComponentPropertyValue(Components::World_Settings, Properties::World_Game_Direction).toDouble();
+        m_game_start = QPointF(0, 0);       // Set starting load position
+        m_loaded_to = 0;                    // Reset how far we've loaded
 
-            DrObject *object = object_pair.second;
-
-            if (object->getType() != DrType::Object) continue;
-            if (object->getObjectType() != DrObjectType::Object) continue;
-
-            QPointF position = object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF();
-            QPointF scale =    object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale).toPointF();
-            double  angle =    object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Rotation).toDouble();
-            double  z_order =  object->getComponentPropertyValue(Components::Object_Layering,  Properties::Object_Z_Order).toDouble();
-            double  alpha =    object->getComponentPropertyValue(Components::Object_Layering,  Properties::Object_Opacity).toDouble() / 100;
-            bool    collide =  object->getComponentPropertyValue(Components::Object_Settings,  Properties::Object_Collide).toBool();
-            bool    physics =  object->getComponentPropertyValue(Components::Object_Settings,  Properties::Object_Physics).toBool();
-            Body_Type btype =  physics? Body_Type::Dynamic : Body_Type::Kinematic;
-
-            long    asset_key = object->getAssetKey();
-            addBlock(btype, asset_key, position.x(), -position.y(), z_order, angle, scale, alpha, .5, .5, 25, QPointF(0, 0), collide);
-        }
+        loadStageToSpace(stage, 0, 0);      // Load current stage to origin position
 
 
     } else if (demo_space == Demo_Space::Lines1) {

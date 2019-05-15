@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 5/7/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//
+//      Draws the debug shapes
 //
 //
 #include <QtMath>
@@ -150,9 +150,9 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
             QVector<cpShape*> shape_list;
             cpBodyEachShape(object->body, cpBodyShapeIteratorFunc(getShapeList), &shape_list);
 
-            //if (object->follow) {
-            //    painter.drawText( QPointF(20, 20), "Shapes: " + QString::number(shape_list.count()));
-            // }
+            if (object->follow) {
+               painter.drawText( QPointF(20, 20), "Shapes: " + QString::number(shape_list.count()));
+            }
 
             for (auto shape : shape_list) {
                 QTransform t = QTransform().translate(object->position.x(), object->position.y()).rotate( object->angle);

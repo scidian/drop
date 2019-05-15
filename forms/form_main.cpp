@@ -108,60 +108,66 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
     // Create a new project and add some stuff to it
     project->addWorld();
     project->addWorld();
-    project->findWorldWithName("World 2")->addStage();
-    project->findWorldWithName("World 2")->addStage("asdfasdfasdfasdfasfdasdfasdfasdfasdfasdfasdfasdfasd");
-    project->findWorldWithName("World 2")->addStage();
-    project->findWorldWithName("World 2")->addStage();
-    project->findWorldWithName("World 2")->addStage();
+    project->findWorldWithName("World 2")->addStage();                                  // Stage 2
+    project->findWorldWithName("World 2")->addStage("asdfasdfasdfasdfasdfasdfasd");     // Stage 3
+    project->findWorldWithName("World 2")->addStage();                                  // Stage 4
 
 
 
     // Stage 4 Rover Test
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_planet,  -800,   400,  1);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_planet,   200,   600,  1);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_planet,  1200,   475,  1);
+    long start_stage = project->findWorldWithName("World 2")->getFirstStageKey();
+    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_planet,   200,   600,  1);
+    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_planet,  1200,   475,  1);
 
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_plant,   -900,    55,  1, false);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_plant,    900,    55,  1, false);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_plant,   1400,    55,  1, false);
+    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_plant,    900,    55,  1, false);
+    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_plant,   1400,    55,  1, false);
 
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground, -1233,  -200,  3);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,  -822,  -200,  3);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,  -411,  -200,  3);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,     0,  -200,  3);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,   411,  -200,  3);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,   822,  -200,  3);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,  1233,  -200,  3);
+    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_ground,  -411,  -200,  3);
+    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_ground,     0,  -200,  3);
+    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_ground,   411,  -200,  3);
+    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_ground,   822,  -200,  3);
+    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_ground,  1233,  -200,  3);
 
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_top,    -1233,   -50,  4);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_top,     -822,   -50,  4);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_top,     -411,   -50,  4);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_top,        0,   -50,  4);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_top,      411,   -50,  4);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_top,      822,   -50,  4);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_top,     1233,   -50,  4);
+    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_top,     -411,   -50,  4);
+    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_top,        0,   -50,  4);
+    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_top,      411,   -50,  4);
+    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_top,      822,   -50,  4);
+    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_top,     1233,   -50,  4);
 
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_block,    400,   200,  3);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_block,    550,   200,  3);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_block,    750,   350,  3);
+    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_block,    400,   200,  3);
+    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_block,    550,   200,  3);
+    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_block,    750,   350,  3);
 
     // Stage 2 Misc Test
     project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Character, a_ball,  200,   600,  4);
-    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_square,   100,   800,  1);
     project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_square,   600,   700,  2);
     project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_rover,    300,   700, -2);
-    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_water,    200,   300,  1);
+    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_water,    200,   300,  1, false);
     project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_wheel,    400,   500,  2);
     project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Text,   a_font,     500,   900,  6);
-    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_ground,   711,   300,  3);
 
-    // Stage 5 Iso Cake Test
-    project->findWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, a_cake1,    200,   500,  2);
-    project->findWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, a_cake2,    400,   800,  4);
-    project->findWorldWithName("World 2")->getStageWithName("5")->addObject(DrObjectType::Object, a_cake3,    600,  1100, -2);
+    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_ground,   200,  -200,  3);
+    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_ground,   600,  -200,  3);
+    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_ground,  1000,  -200,  3);
 
-    project->setOption(Project_Options::Current_World, 0);
-    project->setOption(Project_Options::Current_Stage, QVariant::fromValue(project->findWorldWithName("World 2")->getStageWithName("4")->getKey()) );
+    // Stage 3 Ground
+    project->findWorldWithName("World 2")->getStageWithName("asdfasdfasdfasdfasdfasdfasd")->addObject(DrObjectType::Object, a_ground,   200,  -200,  3);
+    project->findWorldWithName("World 2")->getStageWithName("asdfasdfasdfasdfasdfasdfasd")->addObject(DrObjectType::Object, a_ground,   600,  -200,  3);
+    project->findWorldWithName("World 2")->getStageWithName("asdfasdfasdfasdfasdfasdfasd")->addObject(DrObjectType::Object, a_ground,  1000,  -200,  3);
+
+    // Stage 4 Iso Cake Test
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_cake1,    200,   500,  2);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_cake2,    400,   800,  4);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_cake3,    600,  1100, -2);
+
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,   200,  -200,  3);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,   600,  -200,  3);
+    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,  1000,  -200,  3);
+
+    DrStage* current_stage = project->findWorldWithName("World 2")->getStageFromKey(start_stage);
+    project->setOption(Project_Options::Current_Stage, QVariant::fromValue(current_stage->getKey()) );
+    project->setOption(Project_Options::Current_World, QVariant::fromValue(current_stage->getParentWorld()->getKey()) );
+
     // !!!!! END
 
 

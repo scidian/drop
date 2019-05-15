@@ -172,14 +172,14 @@ void FormEngine::updateEngine() {
     }
 
     // This would limit to a particular frames per second, for now calling it as much as possible
-    ///if (m_time_last_render.elapsed() > 1000 / m_ideal_frames_per_second) {
+    if (m_time_last_render.elapsed() > 1000 / m_ideal_frames_per_second) {
         m_opengl->update();
-    ///    m_time_last_render.restart(); }
+        m_time_last_render.restart(); }
 }
 
 // Update helpful labels
 void FormEngine::updateLabels(QString info) {
-    label->setText( "Total Items: " + QString::number( m_engine->objects.count()) + info);
+    label->setText( "Total Items: " + QString::number( m_engine->objects.count()) + " - " + info);
     label2->setText("FPS: " + QString::number(m_engine->fps) + " - Scale: " + QString::number(double(m_opengl->getScale())) );
 
     int max_sample, max_text, max_number_textures, max_layers;

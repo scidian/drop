@@ -11,6 +11,7 @@
 #include "globals.h"
 #include "helper.h"
 #include "project/project.h"
+#include "project/project_world.h"
 #include "project/project_world_stage.h"
 #include "project/project_world_stage_object.h"
 
@@ -102,6 +103,7 @@ QString UndoCommandChangeStage::changeStage(long old_stage, long new_stage, bool
 
     m_scene->setCurrentStageShown(from_stage);
     m_scene->setCurrentStageKeyShown(m_new_stage);
+    m_project->setOption(Project_Options::Current_World, QVariant::fromValue(from_stage->getParentWorld()->getKey()) );
     m_project->setOption(Project_Options::Current_Stage, QVariant::fromValue(from_stage->getKey()) );
 
     m_scene->clear();

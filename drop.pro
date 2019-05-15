@@ -99,6 +99,7 @@ SOURCES += \
     engine/engine_space_build_player.cpp \
     engine/engine_space_build_world.cpp \
     engine/engine_space_clear.cpp \
+    engine/engine_space_load.cpp \
     engine/engine_texture.cpp \
     engine/engine_update.cpp \
     enums.cpp \

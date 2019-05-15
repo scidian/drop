@@ -109,6 +109,7 @@ struct SceneObject {
 class DrEngineTexture;
 class DrEngineWorld;
 class DrProject;
+class DrStage;
 
 // Type definitions
 typedef std::map<long, DrEngineTexture*> EngineTextureMap;
@@ -145,12 +146,21 @@ private:
 
     QColor          m_background_color {0,0,0};     // Background color to use to clear screen during render
 
+    long            m_current_world;                // Key of current world shown from Project
+    double          m_game_direction = 0;           // Direction to load new levels, 0 = to the right, 90 = up, 180 = to the left, etc
+    QPointF         m_game_start {0, 0};            // Origin point start stage loaded at
+    double          m_game_distance = 0;            // Keeps track of distance traveled linearly from the start
+    double          m_load_buffer = 3000;           // Distance further from m_game_distance we should already have preloaded
+    double          m_loaded_to = 0;                // Last distance we loaded a new stage
+
+
 
 public:
     QVector<SceneObject*>   objects;
 
     QTime           fps_timer;
     int             fps, last_fps;
+    QString         info;
 
     bool            debug_shapes =      false;
     bool            debug_collisions =  false;
@@ -193,6 +203,7 @@ public:
     void        addPlayer(Demo_Player new_player_type);
     void        buildSpace(Demo_Space new_space_type);
     void        clearSpace();
+    void        loadStageToSpace(DrStage *stage, double offset_x, double offset_y);
     void        oneWayPlatform(SceneObject *object, cpVect direction);
     void        playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat dt);
     void        removeObject(SceneObject *object);

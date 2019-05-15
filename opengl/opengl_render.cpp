@@ -24,8 +24,8 @@ void OpenGL::paintGL() {
     QPainter painter( this );
     painter.beginNativePainting();
 
-    // ***** Make sure viewport is sized correctly and clear the buffers
-    //glViewport(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
+    // ********** Make sure viewport is sized correctly and clear the buffers
+    ///glViewport(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
     float background_red =   static_cast<float>(m_engine->getBackgroundColor().redF());
     float background_green = static_cast<float>(m_engine->getBackgroundColor().greenF());
     float background_blue =  static_cast<float>(m_engine->getBackgroundColor().blueF());
@@ -34,7 +34,7 @@ void OpenGL::paintGL() {
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 
-    //glEnable( GL_DEPTH_TEST  );                          // Enable depth test
+    ///glEnable( GL_DEPTH_TEST  );                          // Enable depth test
     ///glEnable( GL_MULTISAMPLE );                          // Enable anti aliasing
 
     // Enable alpha channel
@@ -74,17 +74,14 @@ void OpenGL::paintGL() {
         float top =    static_cast<float>(cam_y + (height() / 2.0f));
         float bottom = static_cast<float>(cam_y - (height() / 2.0f));
         m_projection.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
-
     } else {
         m_projection.perspective( 70.0f, aspect_ratio, 1.0f, 5000.0f );
-
         m_model_view.lookAt(eye, look_at, up);
         m_model_view.scale( m_scale );
         // Rotates the camera around the center of the sceen
         ///m_angle += 1.0f;
         ///if (m_angle > 360) m_angle = 0;
         ///m_model_view.rotate( m_angle, 0.0f, 1.0f, 0.0f );
-
     }
     QMatrix4x4 m_matrix = m_projection * m_model_view;
 
@@ -96,22 +93,24 @@ void OpenGL::paintGL() {
     m_program.setUniformValue( m_uniform_matrix, m_matrix );
 
 
-    // ***** Before rendering 3D objects, enable face culling for triangles facing away from view
-    glEnable( GL_CULL_FACE );       glCullFace(  GL_BACK );     glFrontFace( GL_CCW );
+    // ***** Render 3D Objects - before rendering 3D objects, enable face culling for triangles facing away from view
+    glEnable( GL_CULL_FACE );
+    glCullFace(  GL_BACK );
+    glFrontFace( GL_CCW );
 
-    // ***** Render 3D Objects
     drawCube( QVector3D( -400, 400, -300) );
 
-    // ***** Turn off culling before drawing 2D objects, ALSO: Must turn off culling for QPainter to work
+    // Turn off culling before drawing 2D objects, ALSO: Must turn OFF culling for QPainter to work
     glDisable( GL_CULL_FACE );
 
 
 
 
-    // ***** Create a vector of the scene objects, ignoring lines and sort it by depth
+    // ***** Create a vector of the scene objects (ignoring lines / segments) and sort it by depth
     std::vector<std::pair<int, double>> v;
     for (int i = 0; i < m_engine->objects.count(); i++) {
-        if (m_engine->objects[i]->shape_type == Shape_Type::Segment) continue;
+        if (m_engine->objects[i]->shape_type == Shape_Type::Segment)
+            continue;
         v.push_back(std::make_pair(i, m_engine->objects[i]->z_order));
     }
     sort(v.begin(), v.end(), [] (std::pair<int, double>&i, std::pair<int, double>&j) { return i.second < j.second; });
@@ -209,8 +208,12 @@ void OpenGL::paintGL() {
 
 
     // ***** Render Front 3D Objects
-    glEnable( GL_CULL_FACE );       glCullFace(  GL_BACK );     glFrontFace( GL_CCW );
+    glEnable( GL_CULL_FACE );
+    glCullFace(  GL_BACK );
+    glFrontFace( GL_CCW );
+
     drawCube( QVector3D(0, 300, 600) );
+
     glDisable( GL_CULL_FACE );
 
 
@@ -231,7 +234,7 @@ void OpenGL::paintGL() {
     // ***** Show frames per second
     m_engine->fps++;
     if (m_engine->fps_timer.elapsed() > 1000) {
-        emit updateInfo("");
+        emit updateInfo(m_engine->info);
         m_engine->last_fps = m_engine->fps;
         m_engine->fps = 0;
         m_engine->fps_timer.restart();
