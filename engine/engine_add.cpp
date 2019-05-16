@@ -201,23 +201,29 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
 
 
     // ***** Determine if polygon is concave, if it is create multiple shapes, otherwise create one shape
-    QVector<gsPoint> point_list;                                        // Used by library Graham Scan
     std::list<TPPLPoly> testpolys, result;                              // Used by library Poly Partition
     TPPLPoly poly;
     poly.Init(points.count());
     for (int i = 0; i < points.count(); i++) {
-        point_list.append( gsPoint{points[i].x(), points[i].y()} );
         poly[i].x = points[i].x();
         poly[i].y = points[i].y();
     }
     testpolys.push_back( poly );
-    QVector<QPointF> new_points = convexHull(point_list, point_list.count());
+
+    // Calculate the convex hull of a given set of points. Returns the count of points in the hull. Result must be a pointer to a cpVect array
+    // with at least count elements. If result is NULL, then verts array wil be reduced instead. first is an optional pointer to an integer to store
+    // where the first vertex in the hull came from (i.e. verts[first] == result[0]) tol is the allowed amount to shrink the hull when simplifying it.
+    // A tolerance of 0.0 creates an exact hull.
+    cpVect hull[99];
+    int first = 0;
+    int old_point_count =static_cast<int>(verts.size());
+    int new_point_count = cpConvexHull(old_point_count, verts.data(), hull, &first, 0.0);
 
     polygon->shape_type = Shape_Type::Polygon;
 
     // Shape is convex or could not determine convex hull
-    if (new_points.count() == 0) Dr::ShowMessageBox("Warning! Could not form convex hull!");
-    if ((new_points.count() == point_list.count() || (new_points.count() == 0))) {
+    if (new_point_count == 0) Dr::ShowMessageBox("Warning! Could not form convex hull!");
+    if ((new_point_count == old_point_count || (new_point_count == 0))) {
         polygon->shape = cpPolyShapeNew( polygon->body, points.count(), verts.data(), cpTransformIdentity, .01);
         cpSpaceAddShape(m_space, polygon->shape);
         cpShapeSetFriction(   polygon->shape, friction );
