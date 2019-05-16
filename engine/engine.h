@@ -90,6 +90,9 @@ struct SceneObject {
     bool        one_way = false;            // Set to true if we're using this object as a one way platform
     cpVect      one_way_direction {0, 1};   // Direction of Normal for one way platforms
 
+    bool        custom_friction = false;    // Set to true if we don't want this item affected by global m_friction
+    bool        custom_bounce = false;      // Set to true if we don't want this item affected by global m_bounce
+
     // ***** Object interaction
     bool        follow = false;             // Set to true to have camera follow object
     bool        player_controls = false;    // Set to true to have object controlled by player control buttons, keyboard_x, keyboard_y
@@ -131,7 +134,7 @@ private:
     cpSpace        *m_space;                                    // Current physics space shown on screen
     QVector3D       m_camera_pos = QVector3D(0, 0, 800);        // Current camera position
 
-    const cpFloat   m_time_step = 1 / 90.0;         // Speed at which want to try to update the Space, 1 / 90 = 90 times per second to up
+    const cpFloat   m_time_step = 1 / 120.0;        // Speed at which want to try to update the Space, 1 / 90 = 90 times per second to up
                                                     //      It is *highly* recommended to use a fixed size time step (calling Update at a fixed interval)
     cpFloat         m_time_warp = 1.0;              // Speeds up or slows down physics time, 1 = 100% = Normal Time, Lower than 1 = slower, Higher = faster
 
@@ -140,6 +143,13 @@ private:
                                                     //      activate all sleeping bodies in the space.
     cpFloat         m_damping;                      // A value of 0.9 means that each body will lose 10% of its velocity per second. Defaults to 1.
                                                     //      Like gravity, it can be overridden on a per body basis.
+                                                    //      Minimum value 0.0, max unknown, values > 1 objects will gain velocity
+    cpFloat         m_friction;                     // Default object Friction, can be overridden on a per body basis
+                                                    //      0 = frictionless, unknown limit
+    cpFloat         m_bounce;                       // Default object Elasticity, can be overridden on a per body basis
+                                                    //      0 = no bounce, 1.0 will give a “perfect” bounce.
+                                                    //      Due to inaccuracies in the simulation using 1.0 or greater is not recommended
+
 
     double          m_delete_threshold_x = 5000;    // X distance away from camera an object can be before it's removed from the scene
     double          m_delete_threshold_y = 5000;    // Y distance away from camera an object can be before it's removed from the scene
@@ -189,9 +199,6 @@ public:
 public:
     DrEngine(DrProject *project);
 
-    //  Friction: 0 = frictionless, unknown limit
-    //  Bounce:   0 = no bounce, 1.0 will give a “perfect” bounce. However due to inaccuracies in the simulation using 1.0 or greater is not recommended
-    //  Mass:     Not sure
     SceneObject*    addLine(  Body_Type body_type,  QPointF p1, QPointF p2, double friction, double bounce, double mass);
     SceneObject*    addCircle(Body_Type body_type,  long texture_number, double x, double y, double z, double opacity,
                               double friction, double bounce, double mass, QPointF velocity, bool can_rotate = true);
@@ -202,10 +209,13 @@ public:
 
     void        addPlayer(Demo_Player new_player_type);
     void        buildSpace(Demo_Space new_space_type);
+    void        checkObjectCustomFrictionBounce(SceneObject *object, double &friction, double &bounce);
     void        clearSpace();
     void        loadStageToSpace(DrStage *stage, double offset_x, double offset_y);
     void        oneWayPlatform(SceneObject *object, cpVect direction);
     void        playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat dt);
+    void        setObjectBounce(SceneObject *object, const cpFloat &bounce);
+    void        setObjectFriction(SceneObject *object, const cpFloat &friction);
     void        removeObject(SceneObject *object);
     void        updateSpace(double time_passed);
 
@@ -228,6 +238,9 @@ public:
     const cpFloat&      getTimeWarp()           { return m_time_warp; }
     const cpVect&       getGravity()            { return m_gravity; }
     const cpFloat&      getDamping()            { return m_damping; }
+    const cpFloat&      getFriction()           { return m_friction; }
+    const cpFloat&      getBounce()             { return m_bounce; }
+
     const double&       getDeleteThresholdX()   { return m_delete_threshold_x; }
     const double&       getDeleteThresholdY()   { return m_delete_threshold_y; }
     const QColor&       getBackgroundColor()    { return m_background_color; }
@@ -237,6 +250,9 @@ public:
     void                setTimeWarp(double new_time_warp) { m_time_warp = new_time_warp; }
     void                setGravity(cpVect new_gravity) { m_gravity = new_gravity; }
     void                setDamping(cpFloat new_damping) { m_damping = new_damping; }
+    void                setFriction(cpFloat new_friction) { m_friction = new_friction; }
+    void                setBounce(cpFloat new_bounce) { m_bounce = new_bounce; }
+
     void                setDeleteThresholdX(double new_x)   { m_delete_threshold_x = new_x; }
     void                setDeleteThresholdY(double new_y)   { m_delete_threshold_y = new_y; }
     void                setBackgroundColor(QColor new_color) { m_background_color = new_color; }

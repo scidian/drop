@@ -29,17 +29,18 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
     ///if (m_engine->render_type == Render_Type::Orthographic) z = 0.0;
     ///m_engine->info = "X: " + QString::number(x) + " " + "Y: " + QString::number(y) + " " + "Z: " + QString::number(z);
 
-
+    double friction = m_engine->getFriction();
+    double bounce = m_engine->getBounce();
 
     if (m_engine->demo_player == Demo_Player::Spawn) {
         if (event->button() & Qt::LeftButton) {
             for (int i = 0; i < 25; i++ ) {
                 double vel_x = QRandomGenerator::global()->bounded(-100, 100);
                 double vel_y = QRandomGenerator::global()->bounded( 100, 500);
-                m_engine->addCircle(Body_Type::Dynamic, Test_Textures::Ball, x, y, z, 1, .7, .5, 2, QPointF(vel_x, vel_y) );
+                m_engine->addCircle(Body_Type::Dynamic, Test_Textures::Ball, x, y, z, 1, friction, bounce, 2, QPointF(vel_x, vel_y) );
             }
         } else if (event->button() & Qt::MiddleButton) {
-            m_engine->addBlock(Body_Type::Dynamic, Test_Textures::Block, x, y, z, 0, QPointF(1, 1), 1, 1, 0, 3, QPointF(0, 0));
+            m_engine->addBlock(Body_Type::Dynamic, Test_Textures::Block, x, y, z, 0, QPointF(1, 1), 1, friction, bounce, 3, QPointF(0, 0));
         } else if (event->button() & Qt::RightButton) {
 
             // Polygon shape points should be counter-clockwise
@@ -50,7 +51,7 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
             points.append( QPointF(-10, -30) );     // Left Mid Middle Concave <-- point is ignored by Chipmunk
             points.append( QPointF(-46, -10) );     // Left Middle
             points.append( QPointF(-38, -55) );     // Left Bottom
-            m_engine->addPolygon(Body_Type::Dynamic, Test_Textures::Plant, x, y, z, 1, points, .15, .4, 2.5, QPointF(0, 0));
+            m_engine->addPolygon(Body_Type::Dynamic, Test_Textures::Plant, x, y, z, 1, points, friction, bounce, 2.5, QPointF(0, 0));
         }
 
     } else if (m_engine->demo_player == Demo_Player::Car) {
@@ -65,7 +66,7 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
             m_engine->keyboard_y = 1;
             m_engine->jump_state = Jump_State::Need_To_Jump;
         } else if (event->button() & Qt::RightButton) {
-            m_engine->addBlock(Body_Type::Dynamic, Test_Textures::Block, x, y, z, 0, QPointF(1, 1), 1, .6, .3, 25, QPointF(0, 0));
+            m_engine->addBlock(Body_Type::Dynamic, Test_Textures::Block, x, y, z, 0, QPointF(1, 1), 1, friction, bounce, 25, QPointF(0, 0));
         }
     }
 

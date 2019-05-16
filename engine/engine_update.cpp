@@ -28,6 +28,25 @@
 #define FALL_VELOCITY  1000.0                   // Max fall speed
 
 
+//######################################################################################################
+//##    Chipmunk Callbacks
+//##        Support for changing shape Friction and Bounce (Elasticity) during gameplay
+//######################################################################################################
+// Used for shape iterator to get a list of all shapes attached to a body
+static void getShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_list) { shape_list->append(shape); }
+
+void DrEngine::setObjectFriction(SceneObject *object, const cpFloat &friction) {
+    QVector<cpShape*> shape_list;
+    cpBodyEachShape(object->body, cpBodyShapeIteratorFunc(getShapeList), &shape_list);
+    for (auto shape : shape_list)
+        cpShapeSetFriction( shape, friction );
+}
+void DrEngine::setObjectBounce(SceneObject *object, const cpFloat &bounce) {
+    QVector<cpShape*> shape_list;
+    cpBodyEachShape(object->body, cpBodyShapeIteratorFunc(getShapeList), &shape_list);
+    for (auto shape : shape_list)
+        cpShapeSetElasticity( shape, bounce );
+}
 
 //######################################################################################################
 //##    Update Space
@@ -63,6 +82,18 @@ void DrEngine::updateSpace(double time_passed) {
             object->position.setY( pos.y );
         cpFloat angle = cpBodyGetAngle( object->body );
             object->angle = qRadiansToDegrees( angle );
+
+        // ***** Update global friction and bounce to all objects if globals have changed (possibly due to Gameplay Action)
+        cpFloat friction;
+        cpFloat bounce;
+        if ( object->shape ) {
+            friction = cpShapeGetFriction( object->shape );
+            bounce = cpShapeGetElasticity( object->shape );
+            if (qFuzzyCompare(friction, m_friction) == false && object->custom_friction == false)
+                setObjectFriction( object, m_friction );
+            if (qFuzzyCompare(bounce, m_bounce) == false && object->custom_bounce == false)
+                setObjectBounce( object, m_bounce );
+        }
 
 
         // ***** Process Button Presses
@@ -102,6 +133,17 @@ void DrEngine::updateSpace(double time_passed) {
         // ***** Update player velocity
         if (object->player_controls) {
             playerUpdateVelocity( player_body, gravity, step_time );
+
+// Trying out some custom velocity updates
+//            static double target_vx;
+//            static int    last_key_x;
+//            if (keyboard_x != 0 and keyboard_x != last_key_x) {
+//                target_vx = 500 * keyboard_x;
+//                last_key_x = keyboard_x;
+//            }
+//            cpVect p_vel = cpBodyGetVelocity( player_body );
+//            p_vel.x = cpflerpconst( p_vel.x, target_vx, (500 / .35) * step_time);
+//            cpBodySetVelocity( player_body, p_vel );
 
             // ***** If the jump key was just pressed this frame and it wasn't pressed last frame, and we're on the ground, jump!
             if (remaining_boost > 0) remaining_boost -= time_passed;

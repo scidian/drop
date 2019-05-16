@@ -13,6 +13,18 @@
 #include "library/graham_scan.h"
 #include "library/poly_partition.h"
 
+// Checks if we should use custom friction and bounce for this item (pass in as negative values)
+void DrEngine::checkObjectCustomFrictionBounce(SceneObject *object, double &friction, double &bounce) {
+    if (friction < 0) {
+        object->custom_friction = true;
+        friction = abs(friction);
+    }
+    if (bounce < 0) {
+        object->custom_bounce = true;
+        bounce = abs(bounce);
+    }
+}
+
 
 //######################################################################################################
 //##    Add Line
@@ -54,10 +66,13 @@ SceneObject* DrEngine::addLine(Body_Type body_type, QPointF p1, QPointF p2, doub
 
 //######################################################################################################
 //##    Add Circle
+//##        Pass negative friction and negative bounce to enable custom per item friction / bounce
 //######################################################################################################
 SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, double x, double y, double z, double opacity,
                                  double friction, double bounce, double mass, QPointF velocity, bool can_rotate) {
     SceneObject *ball = new SceneObject();
+
+    checkObjectCustomFrictionBounce(ball, friction, bounce);
 
     //  !!!!! TEMP: Should be passed in by function to allow for custom radius
     double radius = m_textures[texture_number]->width() / 2;    // Radius of collision shape
@@ -105,6 +120,8 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
 SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
                                 double friction, double bounce, double mass, QPointF velocity, bool should_collide) {
     SceneObject *block = new SceneObject();
+
+    checkObjectCustomFrictionBounce(block, friction, bounce);
 
     //  !!!!! TEMP: Should be passed in by function to allow for custom radius
     double width  = m_textures[texture_number]->width()  * scale.x();       // Width of collision shape
@@ -154,6 +171,8 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
 SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double opacity, QVector<QPointF> points,
                                       double friction, double bounce, double mass, QPointF velocity) {
     SceneObject *polygon = new SceneObject();
+
+    checkObjectCustomFrictionBounce(polygon, friction, bounce);
 
     // Polygon Basics
     polygon->texture_number = texture_number;

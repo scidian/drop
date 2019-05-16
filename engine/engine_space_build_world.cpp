@@ -68,6 +68,9 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
     // ***** Build desired demo Space
     if (demo_space == Demo_Space::Project) {
 
+        m_friction = 0.5;
+        m_bounce = 0.5;
+
         // Find current world shown in editor, load Start Stage of that world
         m_current_world = m_project->getOption(Project_Options::Current_World).toLongLong();
         DrWorld *world = m_project->getWorld(m_current_world);
@@ -84,17 +87,23 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
 
 
     } else if (demo_space == Demo_Space::Lines1) {
-        // Add a static line segment shapes for the ground
-        this->addLine(Body_Type::Static, QPointF(-800,     0), QPointF( 300, -250), 1, .99, 1);
-        this->addLine(Body_Type::Static, QPointF( 250,    50), QPointF(1000,  200), 1, .99, 1);
-        this->addLine(Body_Type::Static, QPointF(-1100, -300), QPointF(-900, -300), 1, .99, 1);
+        m_friction = 1;
+        m_bounce = 0.999;
+
+        // Static line segment shapes for the ground
+        this->addLine(Body_Type::Static, QPointF(-800,     0), QPointF( 300, -250), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( 250,    50), QPointF(1000,  200), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF(-1100, -300), QPointF(-900, -300), m_friction, m_bounce, 1);
 
     } else if (demo_space == Demo_Space::Lines2) {
-        // Add a static line segment shapes for the ground
-        SceneObject *line1 = this->addLine(Body_Type::Static, QPointF(-1000, -200), QPointF(1000, -200), 2, .5, 1);
-        SceneObject *line2 = this->addLine(Body_Type::Static, QPointF(  500, -100), QPointF( 700, -100), 2, .5, 1);
-        this->addLine(Body_Type::Static, QPointF(  100,    0), QPointF( 300,    0), 2, .5, 1);
-        this->addLine(Body_Type::Static, QPointF( -300,  150), QPointF(-100,  150), 2, .5, 1);
+        m_friction = 2;
+        m_bounce = 0.5;
+
+        // Static line segment shapes for the ground
+        SceneObject *line1 = this->addLine(Body_Type::Static, QPointF(-1000, -200), QPointF(1000, -200), m_friction, m_bounce, 1);
+        SceneObject *line2 = this->addLine(Body_Type::Static, QPointF(  500, -100), QPointF( 700, -100), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF(  100,    0), QPointF( 300,    0), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( -300,  150), QPointF(-100,  150), m_friction, m_bounce, 1);
 
         // One way platform support
         oneWayPlatform(line1, cpv(0, 1));                        // Let objects pass upwards
@@ -102,64 +111,68 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
 
 
     } else if (demo_space == Demo_Space::Blocks) {
-        // Add a static line segment shapes for the ground
-        this->addLine(Body_Type::Static, QPointF(-1000,    0), QPointF( 2500,    0), 1, .75, 1);
-        this->addLine(Body_Type::Static, QPointF( 2500,    0), QPointF( 2500, 100), 1, .75, 1);
+        m_friction = 1;
+        m_bounce = 0.75;
+
+        // Static line segment shapes for the ground
+        this->addLine(Body_Type::Static, QPointF(-1000,   0), QPointF( 2500,   0), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( 2500,   0), QPointF( 2500, 100), m_friction, m_bounce, 1);
 
         // Big ramp
-        this->addLine(Body_Type::Static, QPointF(    0,    0), QPointF(300,   50), 1, .75, 1);
-        this->addLine(Body_Type::Static, QPointF(  300,   50), QPointF(600,    0), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF(    0,    0), QPointF(300,   50), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF(  300,   50), QPointF(600,    0), m_friction, m_bounce, 1);
 
         // Little bumps
-        this->addLine(Body_Type::Static, QPointF( 1090,    0), QPointF(1120,   4), 1, .75, 1);
-        this->addLine(Body_Type::Static, QPointF( 1120,    4), QPointF(1150,   0), 1, .75, 1);
-        this->addLine(Body_Type::Static, QPointF( 1170,    0), QPointF(1200,   4), 1, .75, 1);
-        this->addLine(Body_Type::Static, QPointF( 1200,    4), QPointF(1230,   0), 1, .75, 1);
-        this->addLine(Body_Type::Static, QPointF( 1250,    0), QPointF(1280,   4), 1, .75, 1);
-        this->addLine(Body_Type::Static, QPointF( 1280,    4), QPointF(1310,   0), 1, .75, 1);
-        this->addLine(Body_Type::Static, QPointF( 1330,    0), QPointF(1360,   4), 1, .75, 1);
-        this->addLine(Body_Type::Static, QPointF( 1360,    4), QPointF(1390,   0), 1, .75, 1);
-        this->addLine(Body_Type::Static, QPointF( 1410,    0), QPointF(1440,   4), 1, .75, 1);
-        this->addLine(Body_Type::Static, QPointF( 1440,    4), QPointF(1470,   0), 1, .75, 1);
-        this->addLine(Body_Type::Static, QPointF( 1490,    0), QPointF(1520,   4), 1, .75, 1);
-        this->addLine(Body_Type::Static, QPointF( 1520,    4), QPointF(1550,   0), 1, .75, 1);
-        this->addLine(Body_Type::Static, QPointF( 1570,    0), QPointF(1600,   4), 1, .75, 1);
-        this->addLine(Body_Type::Static, QPointF( 1600,    4), QPointF(1630,   0), 1, .75, 1);
-        this->addLine(Body_Type::Static, QPointF( 1650,    0), QPointF(1680,   4), 1, .75, 1);
-        this->addLine(Body_Type::Static, QPointF( 1680,    4), QPointF(1710,   0), 1, .75, 1);
-        this->addLine(Body_Type::Static, QPointF( 1730,    0), QPointF(1760,   4), 1, .75, 1);
-        this->addLine(Body_Type::Static, QPointF( 1760,    4), QPointF(1790,   0), 1, .75, 1);
+        this->addLine(Body_Type::Static, QPointF( 1090,    0), QPointF(1120,   4), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( 1120,    4), QPointF(1150,   0), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( 1170,    0), QPointF(1200,   4), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( 1200,    4), QPointF(1230,   0), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( 1250,    0), QPointF(1280,   4), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( 1280,    4), QPointF(1310,   0), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( 1330,    0), QPointF(1360,   4), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( 1360,    4), QPointF(1390,   0), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( 1410,    0), QPointF(1440,   4), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( 1440,    4), QPointF(1470,   0), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( 1490,    0), QPointF(1520,   4), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( 1520,    4), QPointF(1550,   0), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( 1570,    0), QPointF(1600,   4), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( 1600,    4), QPointF(1630,   0), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( 1650,    0), QPointF(1680,   4), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( 1680,    4), QPointF(1710,   0), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( 1730,    0), QPointF(1760,   4), m_friction, m_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( 1760,    4), QPointF(1790,   0), m_friction, m_bounce, 1);
 
         // Block alignment test
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, 220, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, 160, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, 100, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000,  40, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, 220, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, 160, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, 100, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000,  40, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
 
-        SceneObject *block = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -400, 120, 100, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
+        SceneObject *block = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -400, 120, 100, 0,
+                                            QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
         oneWayPlatform(block, cpv(0, 1));
 
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -940, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -880, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -820, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -760, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -700, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -640, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -580, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -520, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -460, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -400, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -340, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -280, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -220, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -160, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -100, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,   -39, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,    22, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,    83, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,   144, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,   205, -20, 0, 0, QPointF(1, 1), 1, 1, .75, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -940, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -880, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -820, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -760, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -700, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -640, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -580, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -520, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -460, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -400, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -340, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -280, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -220, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -160, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -100, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,   -39, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,    22, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,    83, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,   144, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,   205, -20, 0, 0, QPointF(1, 1), 1, m_friction, m_bounce, 100, QPointF(0, 0));
 
     }
 }

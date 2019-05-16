@@ -151,7 +151,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
             cpBodyEachShape(object->body, cpBodyShapeIteratorFunc(getShapeList), &shape_list);
 
             if (object->follow) {
-               painter.drawText( QPointF(20, 20), "Shapes: " + QString::number(shape_list.count()));
+               //painter.drawText( QPointF(20, 20), "Shapes: " + QString::number(shape_list.count()));
             }
 
             for (auto shape : shape_list) {
