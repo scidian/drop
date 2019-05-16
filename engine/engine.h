@@ -212,10 +212,12 @@ public:
                               bool should_collide = true, bool can_rotate = true);
 
     SceneObject*    addBlock( Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
-                              double friction, double bounce, double mass, QPointF velocity, bool should_collide = true, bool can_rotate = true);
+                              double friction, double bounce, double mass, QPointF velocity,
+                              bool should_collide = true, bool can_rotate = true);
 
     SceneObject*    addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
-                               QVector<QPointF> points, double friction, double bounce, double mass, QPointF velocity);
+                               QVector<QPointF> points, double friction, double bounce, double mass, QPointF velocity,
+                               bool should_collide = true, bool can_rotate = true);
 
     void        addPlayer(Demo_Player new_player_type);
     void        buildSpace(Demo_Space new_space_type);

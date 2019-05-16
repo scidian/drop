@@ -75,8 +75,8 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         wheel1->is_wheel = true;    wheel1->wheel_speed = 90;
         wheel2->is_wheel = true;    wheel2->wheel_speed = 45;
         wheel3->is_wheel = true;    wheel3->wheel_speed = 70;
-        SceneObject *spare1 = this->addCircle(Body_Type::Dynamic, Test_Textures::Spare, -10,  50, .01, c_norotate, QPointF(1, 1), c_opaque,
-                                              spare_radius, QPointF(-2, 2), -4, -.7, .5, QPointF(0, 0));
+        SceneObject *spare1 = this->addCircle(Body_Type::Dynamic, Test_Textures::Spare, -10,  50, .01, c_norotate, c_scale1x1, c_opaque,
+                                              spare_radius, c_center, -4, -.7, .5, QPointF(0, 0));
 
         // Add Careful Cargo
         this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 30, 115, 0, c_norotate, c_scale1x1, c_opaque,

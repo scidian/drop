@@ -65,6 +65,16 @@ SceneObject* DrEngine::addLine(Body_Type body_type, QPointF p1, QPointF p2, doub
 }
 
 
+QVector<QPointF> createEllipseFromCircle(const QPointF &center, const double &radius) {
+    QVector<QPointF> ellipse;
+    for (int i = 0; i < 24; i++) {
+        QTransform t = QTransform().translate(center.x(), center.y()).rotate((i * 15));
+        QPointF point = t.map(QPointF( 0, radius));
+        ellipse.append( point );
+    }
+    return ellipse;
+}
+
 
 //######################################################################################################
 //##    Add Circle
@@ -75,8 +85,8 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
                                  bool should_collide, bool can_rotate) {
     // Check if not square scale, if so call addPolygon with a polygon ellipse instead
     if (qFuzzyCompare(scale.x(), scale.y()) == false) {
-
-
+        QVector<QPointF> ellipse = createEllipseFromCircle(shape_offset, shape_radius);
+        return addPolygon(body_type, texture_number, x, y, z, angle, scale, opacity, ellipse, friction, bounce, mass, velocity, should_collide, can_rotate);
     }
 
     // Otherwise continue with circle
@@ -184,7 +194,8 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
 //##        ***** NOTE: Vertices must be in COUNTER-CLOCKWISE ordering
 //######################################################################################################
 SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
-                                  QVector<QPointF> points, double friction, double bounce, double mass, QPointF velocity) {
+                                  QVector<QPointF> points, double friction, double bounce, double mass, QPointF velocity,
+                                  bool should_collide, bool can_rotate) {
     SceneObject *polygon = new SceneObject();
 
     checkObjectCustomFrictionBounce(polygon, friction, bounce);
@@ -203,7 +214,10 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
     verts.resize( static_cast<ulong>(old_point_count) );
     for (int i = 0; i < old_point_count; i++)
         verts[static_cast<ulong>(i)] = cpv( points[i].x() * scale.x(), points[i].y() * scale.y());
-    cpFloat moment = cpMomentForPoly( mass, old_point_count, verts.data(), cpvzero, 0 );
+
+    cpFloat moment;
+    if (can_rotate) moment = cpMomentForPoly( mass, old_point_count, verts.data(), cpvzero, 0 );
+    else            moment = static_cast<double>(INFINITY);
 
     // Create the body for the polygon
     polygon->body_type = body_type;
@@ -217,6 +231,13 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
     cpBodySetAngle(    polygon->body, qDegreesToRadians(-angle) );
     cpBodySetVelocity( polygon->body, cpv( velocity.x(), velocity.y()) );
 
+    // If we don't collide with this, exit now
+    if (should_collide == false) {
+        polygon->collide = false;
+        polygon->in_scene = true;
+        objects.append( polygon );
+        return polygon;
+    }
 
     // ***** Determine if polygon is concave, if it is create multiple shapes, otherwise create one shape
     std::list<TPPLPoly> testpolys, result;                              // Used by library Poly Partition
