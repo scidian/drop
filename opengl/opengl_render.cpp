@@ -56,7 +56,7 @@ void OpenGL::paintGL() {
     //  -Z back,  Z front
     float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
 
-    QVector3D  perspective_offset ( 300.0f, 300.0f, 0.0f);
+    QVector3D  perspective_offset ( 250.0f, 250.0f, 0.0f);
     QVector3D  eye(     m_engine->getCameraPos().x() * m_scale + perspective_offset.x(),
                         m_engine->getCameraPos().y() * m_scale + perspective_offset.y(),
                         m_engine->getCameraPos().z() );

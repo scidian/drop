@@ -5,7 +5,7 @@
 //
 //
 //
-#include "engine/engine.h"
+#include "engine.h"
 #include "engine_texture.h"
 
 
@@ -30,7 +30,9 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         cpSpaceSetGravity(m_space, m_gravity);
         cpSpaceSetDamping(m_space, m_damping);
 
-        SceneObject *ball = this->addCircle(Body_Type::Kinematic, Test_Textures::Ball, -300,  150, 0, 1, -.7, -.5, 2, QPointF(15, 0));
+        double ball_radius = m_textures[Test_Textures::Ball]->width() / 2.0;
+        SceneObject *ball = this->addCircle(Body_Type::Kinematic, Test_Textures::Ball, -300,  150, 0, c_norotate, c_scale1x1, c_opaque, ball_radius, c_center,
+                                            -.7, -.5, 2, QPointF(15, 0));
         ball->follow = true;
 
 
@@ -60,16 +62,24 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         rover->follow = true;
 
         // Add wheels
-        SceneObject *wheel1 = this->addCircle(Body_Type::Dynamic, Test_Textures::Wheel,   10,  45, .01, 1, -4, -.7,  2, QPointF(0, 0));
-        SceneObject *wheel2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Wheel,   50,  45, .01, 1, -4, -.7,  2, QPointF(0, 0));
-        SceneObject *wheel3 = this->addCircle(Body_Type::Dynamic, Test_Textures::Wheel,   90,  45, .01, 1, -4, -.7,  2, QPointF(0, 0));
+        double ball_radius =  m_textures[Test_Textures::Ball]->width()  / 2.0;
+        double wheel_radius = m_textures[Test_Textures::Wheel]->width() / 2.0;
+        double spare_radius = m_textures[Test_Textures::Spare]->width() / 2.0;
+        SceneObject *wheel1 = this->addCircle(Body_Type::Dynamic, Test_Textures::Wheel,  10,  45, .01, c_norotate, c_scale1x1, c_opaque,
+                                              wheel_radius, c_center, -4, -.7,  2, QPointF(0, 0));
+        SceneObject *wheel2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Wheel,  50,  45, .01, c_norotate, c_scale1x1, c_opaque,
+                                              wheel_radius, c_center, -4, -.7,  2, QPointF(0, 0));
+        SceneObject *wheel3 = this->addCircle(Body_Type::Dynamic, Test_Textures::Wheel,  90,  45, .01, c_norotate, c_scale1x1, c_opaque,
+                                              wheel_radius, c_center, -4, -.7,  2, QPointF(0, 0));
         wheel1->is_wheel = true;    wheel1->wheel_speed = 90;
         wheel2->is_wheel = true;    wheel2->wheel_speed = 45;
         wheel3->is_wheel = true;    wheel3->wheel_speed = 70;
-        SceneObject *spare1 = this->addCircle(Body_Type::Dynamic, Test_Textures::Spare,  -10,  50, .01, 1, -4, -.7, .5, QPointF(0, 0));
+        SceneObject *spare1 = this->addCircle(Body_Type::Dynamic, Test_Textures::Spare, -10,  50, .01, c_norotate, QPointF(1, 1), c_opaque,
+                                              spare_radius, QPointF(-2, 2), -4, -.7, .5, QPointF(0, 0));
 
         // Add Careful Cargo
-        this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 30, 115, 0, 1, -.7, -.001, 2, QPointF(0, 0));
+        this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 30, 115, 0, c_norotate, c_scale1x1, c_opaque,
+                        ball_radius, c_center, -.7, -.001, 2, QPointF(0, 0));
 
         // Set body and wheels to same group so they don't collide
         //EX:
@@ -126,7 +136,9 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         m_damping = 1;
         cpSpaceSetDamping(m_space, m_damping);
 
-        SceneObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 0,  50, 0, 1, -2, -.01, 200, QPointF( 0, 0), false);
+        double ball_radius =  m_textures[Test_Textures::Ball]->width()  / 2.0;
+        SceneObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 0,  50, 0, c_norotate, c_scale1x1, c_opaque,
+                                            ball_radius, c_center, -2, -.01, 200, QPointF( 0, 0), false);
 
         // Camera should follow player
         ball->follow = true;

@@ -119,6 +119,12 @@ typedef std::map<long, DrEngineTexture*> EngineTextureMap;
 typedef std::map<long, DrEngineWorld*>   EngineWorldMap;
 
 
+// Constants
+constexpr QPointF c_center   {0, 0};
+constexpr QPointF c_scale1x1 {1, 1};
+constexpr double  c_norotate {0};
+constexpr double  c_opaque   {1};
+
 //####################################################################################
 //##    DrEngine
 //##        Holds a project ready for use in an OpenGLWidget
@@ -200,10 +206,14 @@ public:
     DrEngine(DrProject *project);
 
     SceneObject*    addLine(  Body_Type body_type,  QPointF p1, QPointF p2, double friction, double bounce, double mass);
-    SceneObject*    addCircle(Body_Type body_type,  long texture_number, double x, double y, double z, double opacity,
+
+    SceneObject*    addCircle(Body_Type body_type,  long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
+                              double shape_radius, QPointF shape_center,
                               double friction, double bounce, double mass, QPointF velocity, bool can_rotate = true);
+
     SceneObject*    addBlock( Body_Type body_type,  long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
                               double friction, double bounce, double mass, QPointF velocity, bool should_collide = true);
+
     SceneObject*    addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double opacity, QVector<QPointF> points,
                                double friction, double bounce, double mass, QPointF velocity);
 

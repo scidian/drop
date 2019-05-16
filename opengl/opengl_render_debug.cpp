@@ -59,13 +59,14 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 
         if (object->shape_type == Shape_Type::Circle) {
 
+            cpVect offset = cpCircleShapeGetOffset(object->shape);
             double radius = cpCircleShapeGetRadius(object->shape);
-            QTransform t = QTransform().translate(object->position.x(), object->position.y());
+            QTransform t = QTransform().translate(object->position.x(), object->position.y()).rotate(object->angle);
 
             // Draw Normal circle since camera is facing straight on
             if (m_engine->render_type == Render_Type::Orthographic) {
-                QPointF mid =   t.map(QPointF( 0, 0 ));
-                QPointF top =   t.map(QPointF( 0,  radius ));
+                QPointF mid =   t.map( QPointF( offset.x, offset.y ) );
+                QPointF top =   t.map( QPointF( offset.x, offset.y + radius ));
                 QPointF l1 = mapToScreen( top.x(), top.y(), 0);
                 QPointF l2 = mapToScreen( mid.x(), mid.y(), 0);
                 double new_radius = QLineF(l1, l2).length();
@@ -74,27 +75,24 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
                 QRect bounding_box = QRectF( l2.x() - new_radius, l2.y() - new_radius, new_radius * 2, new_radius * 2).toRect();
                 if ((rect().intersects(bounding_box) || rect().contains(bounding_box)) &&
                     (bounding_box.width() * 0.1 < width()) && (bounding_box.height() * 0.1 < height())) {
+                    // Draw circle
                     painter.drawEllipse( l2, new_radius, new_radius );
-
                     // Draw orientation line
-                    t = QTransform().translate(object->position.x(), object->position.y()).rotate( object->angle);
-                    top = t.map(QPointF( 0, radius ));
-                    l1 = mapToScreen( top.x(), top.y(), 0);
                     painter.drawLine( l1, l2 );
                 }
 
             // Draw skewed circle with QPainterPath using bezier curves
             } if (m_engine->render_type == Render_Type::Perspective) {
 
-                QPointF mid =   t.map(QPointF( 0, 0 ));
-                QPointF top =   t.map(QPointF( 0,  radius ));
-                QPointF bot =   t.map(QPointF( 0, -radius ));
-                QPointF left =  t.map(QPointF( -radius, 0 ));
-                QPointF right = t.map(QPointF(  radius, 0 ));
-                QPointF tl =    t.map(QPointF( -radius * .92,  radius * .92 ));
-                QPointF tr =    t.map(QPointF(  radius * .92,  radius * .92 ));
-                QPointF bl =    t.map(QPointF( -radius * .92, -radius * .92 ));
-                QPointF br =    t.map(QPointF(  radius * .92, -radius * .92 ));
+                QPointF mid =   t.map(QPointF( offset.x, offset.y ));
+                QPointF top =   t.map(QPointF( offset.x, offset.y + radius ));
+                QPointF bot =   t.map(QPointF( offset.x, offset.y - radius ));
+                QPointF left =  t.map(QPointF( offset.x - radius, offset.y ));
+                QPointF right = t.map(QPointF( offset.x + radius, offset.y ));
+                QPointF tl =    t.map(QPointF( (offset.x - radius) * .92, (offset.y + radius) * .92 ));
+                QPointF tr =    t.map(QPointF( (offset.x + radius) * .92, (offset.y + radius) * .92 ));
+                QPointF bl =    t.map(QPointF( (offset.x - radius) * .92, (offset.y - radius) * .92 ));
+                QPointF br =    t.map(QPointF( (offset.x + radius) * .92, (offset.y - radius) * .92 ));
 
                 mid =   mapToScreen( mid.x(),   mid.y(),   0);
                 top =   mapToScreen( top.x(),   top.y(),   0);
@@ -116,13 +114,10 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
                 QRect bounding_box = path.boundingRect().normalized().toRect();
                 if ((rect().intersects(bounding_box) || rect().contains(bounding_box)) &&
                     (bounding_box.width() * 0.1 < width()) && (bounding_box.height() * 0.1 < height())) {
+                    // Draw Circle
                     painter.drawPath( path );
-
                     // Draw orientation line
-                    t = QTransform().translate(object->position.x(), object->position.y()).rotate( object->angle);
-                    QPointF rotated_top = t.map(QPointF( 0, radius ));
-                    rotated_top = mapToScreen( rotated_top.x(), rotated_top.y(), 0);
-                    painter.drawLine( rotated_top, mid );
+                    painter.drawLine( top, mid );
                 }
             }
 
@@ -167,6 +162,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 
                 // Don't draw if not touching or inside of visible area
                 QRect bounding_box = mapped.boundingRect().toRect();
+
                 if ((rect().intersects(bounding_box) || rect().contains(bounding_box)) &&
                     (bounding_box.width() * 0.1 < width()) && (bounding_box.height() * 0.1 < height())) {
                     painter.drawPolygon( mapped );
