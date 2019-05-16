@@ -57,7 +57,8 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         points.append( QPointF(  20.0,  16.0 ));
         points.append( QPointF(   5.5,  16.0 ));
         points.append( QPointF(   5.5,  -5.0 ));
-        SceneObject *rover = this->addPolygon(Body_Type::Dynamic, Test_Textures::Rover,  50, 75, 0, 1, points, -.5, -.1, 4, QPointF(0, 0));
+        SceneObject *rover = this->addPolygon(Body_Type::Dynamic, Test_Textures::Rover,  50, 75, 0, c_norotate, c_scale1x1, c_opaque,
+                                              points, -.5, -.1, 4, QPointF(0, 0));
         ///SceneObject *rover = this->addBlock(  Body_Type::Dynamic, Test_Textures::Rover,  50, 75, 0, 0, QPointF(1, 1), 1, .5, .1, 4, QPointF(0, 0));
         rover->follow = true;
 
@@ -138,9 +139,9 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
 
         double ball_radius =  m_textures[Test_Textures::Ball]->width()  / 2.0;
         SceneObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 0,  50, 0, c_norotate, c_scale1x1, c_opaque,
-                                            ball_radius, c_center, -2, -.01, 200, QPointF( 0, 0), false);
+                                            ball_radius, c_center, -2, -.01, 200, QPointF( 0, 0), true, false);
 
-        // Camera should follow player
+        // Camera should follow ball
         ball->follow = true;
 
         // Turn on jump / movement buttons

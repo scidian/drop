@@ -71,36 +71,31 @@ SceneObject* DrEngine::addLine(Body_Type body_type, QPointF p1, QPointF p2, doub
 //##        Pass negative friction and negative bounce to enable custom per item friction / bounce
 //######################################################################################################
 SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
-                                 double shape_radius, QPointF shape_center,
-                                 double friction, double bounce, double mass, QPointF velocity, bool can_rotate) {
+                                 double shape_radius, QPointF shape_offset, double friction, double bounce, double mass, QPointF velocity,
+                                 bool should_collide, bool can_rotate) {
     // Check if not square scale, if so call addPolygon with a polygon ellipse instead
     if (qFuzzyCompare(scale.x(), scale.y()) == false) {
+
 
     }
 
     // Otherwise continue with circle
     SceneObject *ball = new SceneObject();
-
     checkObjectCustomFrictionBounce(ball, friction, bounce);
 
-    //  !!!!! TEMP: Should be passed in by function to allow for custom radius
-    ///double radius = m_textures[texture_number]->width() / 2;                    // Radius of collision shape
-    double radius = shape_radius * scale.x();                                   // Radius of collision shape
-    cpVect offset = cpv(shape_center.x(), shape_center.y());                    // Offset of collision shape
-    ball->scale_x = static_cast<float>(scale.x());
-    ball->scale_y = static_cast<float>(scale.y());
-
     // Ball Basics
-    ball->texture_number = texture_number;
+    double radius = shape_radius * scale.x();                                   // Radius of collision shape
+    cpVect offset = cpv(shape_offset.x(), shape_offset.y());                    // Offset of collision shape
+    ball->scale_x = static_cast<float>(scale.x());                              // Save x scale for later
+    ball->scale_y = static_cast<float>(scale.y());                              // Save y scale for later
+    ball->texture_number = texture_number;                                      // Texture to render from
     ball->z_order = z;
     ball->alpha = static_cast<float>(opacity);
 
     // If we dont want an object to rotate, set moment of inertia to INFINITY
     cpFloat moment;
-    if (can_rotate)
-        moment = cpMomentForCircle(mass, 0, radius, offset);                    // The moment of inertia is like mass for rotation
-    else
-        moment = static_cast<double>(INFINITY);
+    if (can_rotate) moment = cpMomentForCircle(mass, 0, radius, offset);                    // The moment of inertia is like mass for rotation
+    else            moment = static_cast<double>(INFINITY);
 
     // Create the body for the ball
     ball->body_type = body_type;
@@ -115,11 +110,15 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
     cpBodySetVelocity( ball->body, cpv( velocity.x(), velocity.y()) );
 
     // Create the collision shape for the ball
-    ball->shape_type = Shape_Type::Circle;
-    ball->shape = cpCircleShapeNew(ball->body, radius, offset);
-    cpSpaceAddShape(m_space, ball->shape);
-    cpShapeSetFriction(   ball->shape, friction  );
-    cpShapeSetElasticity( ball->shape, bounce );
+    if (should_collide == true) {
+        ball->shape_type = Shape_Type::Circle;
+        ball->shape = cpCircleShapeNew(ball->body, radius, offset);
+        cpSpaceAddShape(m_space, ball->shape);
+        cpShapeSetFriction(   ball->shape, friction  );
+        cpShapeSetElasticity( ball->shape, bounce );
+    } else {
+        ball->collide = false;
+    }
 
     ball->in_scene = true;
     objects.append( ball );
@@ -127,11 +126,12 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
 }
 
 
+
 //######################################################################################################
 //##    Add Block - This is a TEMP call, better to just use addPolygon with 4 points passed in
 //######################################################################################################
 SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
-                                double friction, double bounce, double mass, QPointF velocity, bool should_collide) {
+                                double friction, double bounce, double mass, QPointF velocity, bool should_collide, bool can_rotate) {
     SceneObject *block = new SceneObject();
 
     checkObjectCustomFrictionBounce(block, friction, bounce);
@@ -145,7 +145,10 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
     block->texture_number = texture_number;
     block->z_order = z;
     block->alpha = static_cast<float>(opacity);
-    cpFloat moment = cpMomentForBox( mass, width, height);
+
+    cpFloat moment;
+    if (can_rotate) moment = cpMomentForBox( mass, width, height);          // The moment of inertia is like mass for rotation
+    else            moment = static_cast<double>(INFINITY);
 
     // Create the body for the block
     block->body_type = body_type;
@@ -180,24 +183,27 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
 //##    Add Polygon
 //##        ***** NOTE: Vertices must be in COUNTER-CLOCKWISE ordering
 //######################################################################################################
-SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double opacity,
-                                  QVector<QPointF> points,
-                                  double friction, double bounce, double mass, QPointF velocity) {
+SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
+                                  QVector<QPointF> points, double friction, double bounce, double mass, QPointF velocity) {
     SceneObject *polygon = new SceneObject();
 
     checkObjectCustomFrictionBounce(polygon, friction, bounce);
 
     // Polygon Basics
+    polygon->scale_x = static_cast<float>(scale.x());                              // Save x scale for later
+    polygon->scale_y = static_cast<float>(scale.y());                              // Save y scale for later
     polygon->texture_number = texture_number;
     polygon->z_order = z;
     polygon->alpha = static_cast<float>(opacity);
 
+    int old_point_count =static_cast<int>(points.size());
+
     std::vector<cpVect> verts;
     verts.clear();
-    verts.resize( static_cast<ulong>(points.count()) );
-    for (int i = 0; i < points.count(); i++)
-        verts[static_cast<ulong>(i)] = cpv( points[i].x(), points[i].y() );
-    cpFloat moment = cpMomentForPoly( mass, points.count(), verts.data(), cpvzero, 0 );
+    verts.resize( static_cast<ulong>(old_point_count) );
+    for (int i = 0; i < old_point_count; i++)
+        verts[static_cast<ulong>(i)] = cpv( points[i].x() * scale.x(), points[i].y() * scale.y());
+    cpFloat moment = cpMomentForPoly( mass, old_point_count, verts.data(), cpvzero, 0 );
 
     // Create the body for the polygon
     polygon->body_type = body_type;
@@ -208,16 +214,17 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
     }
     cpSpaceAddBody(m_space, polygon->body);
     cpBodySetPosition( polygon->body, cpv( x, y));                                        // Coordinate is center of object
+    cpBodySetAngle(    polygon->body, qDegreesToRadians(-angle) );
     cpBodySetVelocity( polygon->body, cpv( velocity.x(), velocity.y()) );
 
 
     // ***** Determine if polygon is concave, if it is create multiple shapes, otherwise create one shape
     std::list<TPPLPoly> testpolys, result;                              // Used by library Poly Partition
     TPPLPoly poly;
-    poly.Init(points.count());
-    for (int i = 0; i < points.count(); i++) {
-        poly[i].x = points[i].x();
-        poly[i].y = points[i].y();
+    poly.Init(old_point_count);
+    for (int i = 0; i < old_point_count; i++) {
+        poly[i].x = points[i].x() * scale.x();
+        poly[i].y = points[i].y() * scale.y();
     }
     testpolys.push_back( poly );
 
@@ -227,7 +234,6 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
     // A tolerance of 0.0 creates an exact hull.
     cpVect hull[99];
     int first = 0;
-    int old_point_count =static_cast<int>(verts.size());
     int new_point_count = cpConvexHull(old_point_count, verts.data(), hull, &first, 0.0);
 
     polygon->shape_type = Shape_Type::Polygon;
@@ -235,7 +241,7 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
     // Shape is convex or could not determine convex hull
     if (new_point_count == 0) Dr::ShowMessageBox("Warning! Could not form convex hull!");
     if ((new_point_count == old_point_count || (new_point_count == 0))) {
-        polygon->shape = cpPolyShapeNew( polygon->body, points.count(), verts.data(), cpTransformIdentity, .01);
+        polygon->shape = cpPolyShapeNew( polygon->body, old_point_count, verts.data(), cpTransformIdentity, .01);
         cpSpaceAddShape(m_space, polygon->shape);
         cpShapeSetFriction(   polygon->shape, friction );
         cpShapeSetElasticity( polygon->shape, bounce );
@@ -263,6 +269,9 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
     objects.append( polygon );
     return polygon;
 }
+
+
+
 
 
 

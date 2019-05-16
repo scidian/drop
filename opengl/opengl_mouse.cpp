@@ -54,7 +54,8 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
             points.append( QPointF(-10, -30) );     // Left Mid Middle Concave <-- point is ignored by Chipmunk
             points.append( QPointF(-46, -10) );     // Left Middle
             points.append( QPointF(-38, -55) );     // Left Bottom
-            m_engine->addPolygon(Body_Type::Dynamic, Test_Textures::Plant, x, y, z, 1, points, friction, bounce, 2.5, QPointF(0, 0));
+            m_engine->addPolygon(Body_Type::Dynamic, Test_Textures::Plant, x, y, z, c_norotate, QPointF(2, .5), c_opaque,
+                                 points, friction, bounce, 2.5, QPointF(0, 0));
         }
 
     } else if (m_engine->demo_player == Demo_Player::Car) {
