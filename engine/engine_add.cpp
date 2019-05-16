@@ -13,7 +13,9 @@
 #include "library/graham_scan.h"
 #include "library/poly_partition.h"
 
-// Checks if we should use custom friction and bounce for this item (pass in as negative values)
+//######################################################################################################
+//##    Check for custom Friction and Bounce (pass in to add*** object call as negative values)
+//######################################################################################################
 void DrEngine::checkObjectCustomFrictionBounce(SceneObject *object, double &friction, double &bounce) {
     if (friction < 0) {
         object->custom_friction = true;

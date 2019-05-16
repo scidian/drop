@@ -88,7 +88,7 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
 
     } else if (demo_space == Demo_Space::Lines1) {
         m_friction = 1;
-        m_bounce = 0.999;
+        m_bounce = 0.8;
 
         // Static line segment shapes for the ground
         this->addLine(Body_Type::Static, QPointF(-800,     0), QPointF( 300, -250), m_friction, m_bounce, 1);

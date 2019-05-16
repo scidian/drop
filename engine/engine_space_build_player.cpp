@@ -43,7 +43,7 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         // Add body
         QVector<QPointF> points;
         points.append( QPointF( -45.5,  -5.0 ));
-        points.append( QPointF( -45.5,  16.0 ));
+        points.append( QPointF( -45.5,  18.0 ));
         points.append( QPointF( -54.5,  18.0 ));
         points.append( QPointF( -57.0,  -5.0 ));
         points.append( QPointF( -57.0, -24.0 ));
@@ -66,7 +66,7 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         wheel1->is_wheel = true;    wheel1->wheel_speed = 90;
         wheel2->is_wheel = true;    wheel2->wheel_speed = 45;
         wheel3->is_wheel = true;    wheel3->wheel_speed = 70;
-        SceneObject *spare1 = this->addCircle(Body_Type::Dynamic, Test_Textures::Spare,  -9,  50, .01, 1, -4, -.7, .5, QPointF(0, 0));
+        SceneObject *spare1 = this->addCircle(Body_Type::Dynamic, Test_Textures::Spare,  -10,  50, .01, 1, -4, -.7, .5, QPointF(0, 0));
 
         // Add Careful Cargo
         this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 30, 115, 0, 1, -.7, -.001, 2, QPointF(0, 0));
