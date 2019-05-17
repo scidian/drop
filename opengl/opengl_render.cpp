@@ -131,15 +131,14 @@ void OpenGL::paintGL() {
         std::vector<float> texCoords;
         texCoords.clear();
         texCoords.resize( 8 );
-        float one_x =  (1 / texture->width())  * c_texture_border;
-        float one_y =  (1 / texture->height()) * c_texture_border;
+        float one_x =  (1 / texture->width())  * (c_texture_border);
+        float one_y =  (1 / texture->height()) * (c_texture_border);
         texCoords[0] = 1 - one_x;    texCoords[1] = 1 - one_y;
         texCoords[2] =     one_x;    texCoords[3] = 1 - one_y;
         texCoords[4] = 1 - one_x;    texCoords[5] =     one_y;
         texCoords[6] =     one_x;    texCoords[7] =     one_y;
         m_program.setAttributeArray( m_attribute_tex_coord, texCoords.data(), 2 );
         m_program.enableAttributeArray( m_attribute_tex_coord );
-
 
         // ***** Get object position data
         QPointF center = object->position;

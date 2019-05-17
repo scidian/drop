@@ -167,7 +167,7 @@ void FormEngine::updateEngine() {
     if (update_milliseconds > (m_engine->getTimeStep() * 1000)) {
         m_engine->updateSpace(update_milliseconds);
 
-        m_opengl->cube_angle += static_cast<float>(update_milliseconds) * 0.5f;
+        m_opengl->cube_angle += static_cast<float>(update_milliseconds) * 0.1f;
         if (m_opengl->cube_angle > 360) m_opengl->cube_angle = 0;
 
         m_time_update = Clock::now();
