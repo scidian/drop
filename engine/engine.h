@@ -94,7 +94,6 @@ struct SceneObject {
     bool        custom_bounce = false;      // Set to true if we don't want this item affected by global m_bounce
 
     // ***** Object interaction
-    bool        follow = false;             // Set to true to have camera follow object
     double      last_position_x;            // Previous frame position to help determine speed for camera
     double      last_position_y;            // Previous frame position to help determine speed for camera
 
@@ -112,18 +111,18 @@ struct SceneObject {
 };
 
 // Forward declarations
+class DrEngineCamera;
 class DrEngineTexture;
 class DrEngineWorld;
 class DrProject;
 class DrStage;
 
 // Type definitions
+typedef std::map<long, DrEngineCamera*>  EngineCameraMap;
 typedef std::map<long, DrEngineTexture*> EngineTextureMap;
-typedef std::map<long, DrEngineWorld*>   EngineWorldMap;
-
 
 // Constants
-constexpr int     c_texture_border = 0;     // Padding added on to textures for anti-aliasing
+constexpr int     c_texture_border = 1;     // Padding added on to textures for anti-aliasing
 
 constexpr QPointF c_center   {0, 0};
 constexpr QPointF c_scale1x1 {1, 1};
@@ -138,17 +137,14 @@ class DrEngine
 {
 private:
     DrProject          *m_project;                              // Pointer to Project to load into Engine
-    EngineTextureMap    m_textures;                             // Map of textures used for this Engine
-    EngineWorldMap      m_worlds;                               // Map of Worlds used for this Engine
 
+    EngineCameraMap     m_cameras;                              // Map of Cameras used for this Engine
+    EngineTextureMap    m_textures;                             // Map of Textures used for this Engine
 
     cpSpace        *m_space;                                    // Current physics space shown on screen
-    QVector3D       m_camera_pos = QVector3D(0, 0, 800);        // Current camera position
-    QVector3D       m_camera_speed = QVector3D(0, 0, 0);        // Current camera speed
 
-    QVector<double> avg_speed_x;
-    QVector<double> avg_speed_y;
-
+    long            m_active_camera = 0;            // Key to active camera in the Engine
+    long            m_camera_keys = 1;              // ID Generator for cameras, camera IDs start at 1, 0 == no camera
 
     const int       m_iterations = 10;              // Times physics are processed each update, 10 is default and should be good enough for most games
     const cpFloat   m_time_step = 1 / 90.0;         // Speed at which want to try to update the Space, 1 / 90 = 90 times per second to up
@@ -245,6 +241,14 @@ public:
     void        deleteResources();
 
 
+    // Cameras
+    long                addCamera(SceneObject* object_to_follow = nullptr);
+    long                addCamera(float x, float y, float z);
+    void                clearCameras();
+    const long&         getActiveCamera()       { return m_active_camera; }
+    void                setActiveCamera(long new_camera) { m_active_camera = new_camera; }
+    EngineCameraMap&    getCameraMap() { return m_cameras; }
+
     // Textures
     DrEngineTexture*    addTexture(long texture_id, QString from_asset_string);
     DrEngineTexture*    addTexture(long texture_id, QPixmap &pixmap);
@@ -256,8 +260,6 @@ public:
     DrProject*          getProject()            { return m_project; }
     cpSpace*            getSpace()              { return m_space; }
 
-    const QVector3D&    getCameraPos()          { return m_camera_pos; }
-    const QVector3D&    getCameraSpeed()        { return m_camera_speed; }
     const cpFloat&      getTimeStep()           { return m_time_step; }
     const cpFloat&      getTimeWarp()           { return m_time_warp; }
     const cpVect&       getGravity()            { return m_gravity; }
@@ -269,10 +271,6 @@ public:
     const double&       getDeleteThresholdY()   { return m_delete_threshold_y; }
     const QColor&       getBackgroundColor()    { return m_background_color; }
 
-    void                setCameraPos(QVector3D new_pos) { m_camera_pos = new_pos; }
-    void                setCameraPos(float x, float y, float z) { m_camera_pos = QVector3D(x, y, z); }
-    void                setCameraSpeed(QVector3D new_speed) { m_camera_pos = new_speed; }
-    void                setCameraSpeed(float x, float y, float z) { m_camera_pos = QVector3D(x, y, z); }
     void                setTimeWarp(double new_time_warp) { m_time_warp = new_time_warp; }
     void                setGravity(cpVect new_gravity) { m_gravity = new_gravity; }
     void                setDamping(cpFloat new_damping) { m_damping = new_damping; }

@@ -30,15 +30,19 @@ void OpenGL::paintGL() {
     float background_green = static_cast<float>(m_engine->getBackgroundColor().greenF());
     float background_blue =  static_cast<float>(m_engine->getBackgroundColor().blueF());
     glClearColor(background_red, background_green, background_blue, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
-    ///glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-    ///glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);// | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 
-    // Enable depth test
+    // Enable depth / stencil test
     ///glEnable( GL_DEPTH_TEST  );
+    ///glEnable( GL_STENCIL_TEST );
 
     // Enable anti aliasing
-    glEnable( GL_MULTISAMPLE );
+    ///glEnable( GL_MULTISAMPLE );
+    ///glEnable(GL_POLYGON_SMOOTH);
+    ///glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
+    ///glSampleCoverage(GL_SAMPLE_ALPHA_TO_COVERAGE, GL_TRUE);
 
     // Enable alpha channel
     glEnable(GL_BLEND);

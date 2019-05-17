@@ -43,9 +43,6 @@ private:
     int     m_uniform_texture;
     int     m_uniform_alpha;
 
-public:
-    float    cube_angle = 0;
-
 
 public:
     // Constructor / Destructor

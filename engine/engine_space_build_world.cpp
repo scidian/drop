@@ -59,10 +59,8 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
     m_space = cpSpaceNew();                             // Creates an empty space
     cpSpaceSetIterations(m_space, m_iterations);        // Sets how many times physics are processed each update
 
-    // Reset camera
-    avg_speed_x.clear();
-    avg_speed_y.clear();
-    m_camera_speed = QVector3D(0, 0, 0);
+    // Reset cameras
+    clearCameras();
 
     // ***** Add handler for one way collisions
     cpCollisionHandler *handler = cpSpaceAddWildcardHandler(m_space, COLLISION_TYPE_ONE_WAY);

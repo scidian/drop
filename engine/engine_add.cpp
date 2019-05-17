@@ -101,6 +101,8 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
     ball->texture_number = texture_number;                                      // Texture to render from
     ball->z_order = z;
     ball->alpha = static_cast<float>(opacity);
+    ball->position.setX(x);
+    ball->position.setY(y);
     ball->last_position_x = x;
     ball->last_position_y = y;
 
@@ -152,6 +154,8 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
     double height = (m_textures[texture_number]->height() - c_texture_border*2) * scale.y();       // Height of collision shape
     block->scale_x = static_cast<float>(scale.x());
     block->scale_y = static_cast<float>(scale.y());
+    block->position.setX(x);
+    block->position.setY(y);
     block->last_position_x = x;
     block->last_position_y = y;
 
@@ -210,6 +214,8 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
     polygon->texture_number = texture_number;
     polygon->z_order = z;
     polygon->alpha = static_cast<float>(opacity);
+    polygon->position.setX(x);
+    polygon->position.setY(y);
     polygon->last_position_x = x;
     polygon->last_position_y = y;
 

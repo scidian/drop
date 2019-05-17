@@ -96,6 +96,7 @@ SOURCES += \
     editor/editor_view_tooltip.cpp \
     engine/engine.cpp \
     engine/engine_add.cpp \
+    engine/engine_camera.cpp \
     engine/engine_space_build_player.cpp \
     engine/engine_space_build_world.cpp \
     engine/engine_space_clear.cpp \
@@ -195,6 +196,7 @@ HEADERS += \
     editor/editor_tree_project.h \
     editor/editor_view.h \
     engine/engine.h \
+    engine/engine_camera.h \
     engine/engine_texture.h \
     enums.h \
     forms/form_atlas.h \
