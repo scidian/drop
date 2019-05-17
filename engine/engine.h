@@ -122,12 +122,14 @@ typedef std::map<long, DrEngineCamera*>  EngineCameraMap;
 typedef std::map<long, DrEngineTexture*> EngineTextureMap;
 
 // Constants
-constexpr int     c_texture_border = 1;     // Padding added on to textures for anti-aliasing
+constexpr int       c_texture_border = 1;       // Padding added on to textures for anti-aliasing
 
-constexpr QPointF c_center   {0, 0};
-constexpr QPointF c_scale1x1 {1, 1};
-constexpr double  c_norotate {0};
-constexpr double  c_opaque   {1};
+constexpr QVector3D c_no_camera {0, 0, 800};    // Default camera position if there is no active camera
+
+constexpr QPointF   c_center   {0, 0};
+constexpr QPointF   c_scale1x1 {1, 1};
+constexpr double    c_norotate {0};
+constexpr double    c_opaque   {1};
 
 //####################################################################################
 //##    DrEngine
@@ -247,7 +249,10 @@ public:
     void                clearCameras();
     const long&         getActiveCamera()       { return m_active_camera; }
     void                setActiveCamera(long new_camera) { m_active_camera = new_camera; }
+    DrEngineCamera*     getCamera(long camera_id) { return m_cameras[camera_id]; }
     EngineCameraMap&    getCameraMap() { return m_cameras; }
+    QVector3D           getCameraPos();
+    void                updateCameras();
 
     // Textures
     DrEngineTexture*    addTexture(long texture_id, QString from_asset_string);

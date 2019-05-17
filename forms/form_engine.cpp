@@ -19,6 +19,7 @@
 #include "forms/form_engine.h"
 #include "opengl/opengl.h"
 #include "engine/engine.h"
+#include "engine/engine_camera.h"
 #include "style/style.h"
 
 //######################################################################################################
@@ -162,24 +163,30 @@ void FormEngine::updateEngine() {
 
     if (!m_engine->has_scene) return;
 
-    // Update camera
+    // Move Camera
     double camera_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_camera).count() / 1000000.0;
     if (camera_milliseconds > 1) {
         float step_time = static_cast<float>(camera_milliseconds);
         float lerp = .1f;
-        QVector3D cam = m_engine->getCameraPos();
-        QVector3D speed = m_engine->getCameraSpeed();
-        m_engine->setCameraPos( cam.x() + (speed.x() * lerp * step_time),
-                                cam.y() + (speed.y() * lerp * step_time),
-                                cam.z() + (speed.z() * lerp * step_time));
-        m_time_camera = Clock::now();
+
+        if (m_engine->getActiveCamera() != 0) {
+            DrEngineCamera *camera = m_engine->getCamera(m_engine->getActiveCamera());
+            QVector3D pos = camera->getPosition();
+            QVector3D speed = camera->getSpeed();
+            camera->setPosition( pos.x() + (speed.x() * lerp * step_time),
+                                 pos.y() + (speed.y() * lerp * step_time),
+                                 pos.z() + (speed.z() * lerp * step_time));
+            m_time_camera = Clock::now();
+        }
     }
 
-    // Update physics
+    // ***** MAIN UPDATE LOOP: Space (Physics), Render, Cameras
     double update_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_update).count() / 1000000.0;
     if (update_milliseconds > (m_engine->getTimeStep() * 1000)) {
-        m_engine->updateSpace(update_milliseconds);
-        m_opengl->update();
+
+        m_engine->updateSpace(update_milliseconds);     // Physics
+        m_engine->updateCameras();                      // Cameras
+        m_opengl->update();                             // Render
 
         m_time_update = Clock::now();
     }

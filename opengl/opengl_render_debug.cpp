@@ -38,6 +38,10 @@ static void getShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_list
 //####################################################################################
 void OpenGL::drawDebugShapes(QPainter &painter) {
 
+
+    //painter.drawText( QPointF(20, 20), "Shapes: " + QString::number(shape_list.count()));
+
+
     for (auto object : m_engine->objects) {
         if (object->in_scene == false) continue;
         if (object->collide == false) continue;
@@ -144,10 +148,6 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 
             QVector<cpShape*> shape_list;
             cpBodyEachShape(object->body, cpBodyShapeIteratorFunc(getShapeList), &shape_list);
-
-            if (object->follow) {
-               //painter.drawText( QPointF(20, 20), "Shapes: " + QString::number(shape_list.count()));
-            }
 
             for (auto shape : shape_list) {
                 QTransform t = QTransform().translate(object->position.x(), object->position.y()).rotate( object->angle);

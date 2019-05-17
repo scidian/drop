@@ -35,10 +35,9 @@ void DrEngine::deleteResources() {
 
 
 //######################################################################################################
-//##    Add Camera
+//##    DrEngineCamera
 //######################################################################################################
 long DrEngine::addCamera(SceneObject* object_to_follow) {
-
     DrEngineCamera *camera = new DrEngineCamera(this, 0, 0, 800);
     m_cameras[m_camera_keys] = camera;
 
@@ -47,7 +46,6 @@ long DrEngine::addCamera(SceneObject* object_to_follow) {
         camera->setPositionX( static_cast<float>(object_to_follow->position.x()) );
         camera->setPositionY( static_cast<float>(object_to_follow->position.y()) );
     }
-
     // Increment camera ID generator, return current camera ID
     m_camera_keys++;
     return (m_camera_keys - 1);
@@ -62,15 +60,24 @@ long DrEngine::addCamera(float x, float y, float z) {
 }
 
 void DrEngine::clearCameras() {
-    for (auto camera_pair : m_cameras) {
+    for (auto camera_pair : m_cameras)
         delete camera_pair.second;
+    m_cameras.clear();
+}
+
+QVector3D DrEngine::getCameraPos() {
+    if (m_active_camera == 0)   return c_no_camera;
+    else                        return m_cameras[m_active_camera]->getPosition();
+}
+
+void DrEngine::updateCameras() {
+    for (auto camera_pair : m_cameras) {
+        camera_pair.second->updateCamera();
     }
 }
 
-
-
 //######################################################################################################
-//##    Add Texture
+//##    DrEngineTexture
 //######################################################################################################
 DrEngineTexture* DrEngine::addTexture(long texture_id, QString from_asset_string) {
     m_textures[texture_id] = new DrEngineTexture(from_asset_string);

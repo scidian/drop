@@ -9,6 +9,7 @@
 #include <QRandomGenerator>
 #include <numeric>
 #include "engine/engine.h"
+#include "engine/engine_camera.h"
 #include "helper.h"
 #include "project/project.h"
 #include "project/project_world.h"
@@ -54,7 +55,6 @@ void DrEngine::setObjectBounce(SceneObject *object, const cpFloat &bounce) {
 //######################################################################################################
 void DrEngine::updateSpace(double time_passed) {
 
-    bool should_add_stage = false;
 
     // ***** Updates physics, time_passed is in milliseconds
     cpFloat step_time = time_passed / 1000.0 * m_time_warp;
@@ -62,6 +62,7 @@ void DrEngine::updateSpace(double time_passed) {
 
     // Get some Space info
     cpVect  gravity = cpSpaceGetGravity( m_space );
+
 
     // ********** Iterate through objects, delete if they go off screen
     for ( auto it = objects.begin(); it != objects.end(); ) {
@@ -73,6 +74,10 @@ void DrEngine::updateSpace(double time_passed) {
             it++;
             continue;
         }
+
+        // ***** Save objects last position, used by other objects
+        object->last_position_x = object->position.x();
+        object->last_position_y = object->position.y();
 
         // ***** Get some info about the current object from the space and save it to the current SceneObject
         cpVect  vel = cpBodyGetVelocity( object->body );
@@ -156,6 +161,25 @@ void DrEngine::updateSpace(double time_passed) {
             it++;
         }
     }   // End For
+
+
+
+
+
+
+    // ***** Calculate distance and load new stage if we need to
+    bool should_add_stage = false;
+    if (demo_space == Demo_Space::Project && has_scene == true) {
+        QTransform t = QTransform().translate(m_game_start.x(), m_game_start.y())
+                                   .rotate(m_game_direction)
+                                   .translate(-m_game_start.x(), -m_game_start.y());
+        QPointF rotated = t.map( QPointF( static_cast<double>(getCameraPos().x()), static_cast<double>(getCameraPos().y()) ));
+        m_game_distance = rotated.x() - m_game_start.x();
+        ///info = "Distance: " + QString::number(m_game_distance) + ", Loaded To: " + QString::number(m_loaded_to);
+
+        if (m_loaded_to - m_game_distance < m_load_buffer)
+            should_add_stage = true;
+    }
 
 
     // ********** Adds a Stage if necessary
