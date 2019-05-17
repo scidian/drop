@@ -26,45 +26,58 @@ DrEngineTexture::DrEngineTexture(QPixmap &from_pixmap) {
 //##        Loads a texture
 //####################################################################################
 void DrEngineTexture::loadTexture(QString from_asset_string) {
-
-    // Load image, NOTE: QImage is mirrored vertically to account for the fact that OpenGL and QImage use opposite directions for the y axis
-    QImage image = QImage(from_asset_string).mirrored();
+    QImage image = QImage(from_asset_string);
     if (image.format() != QImage::Format::Format_ARGB32 )
         image = image.convertToFormat( QImage::Format_ARGB32 );
 
-    // Create new texture
-    m_texture = new QOpenGLTexture( image );
-
-    ///QOpenGLTexture* tile = new QOpenGLTexture(QOpenGLTexture::Target2D);
-    ///tile->setSize(256, 256);
-    ///tile->setFormat(QOpenGLTexture::RGBA8_UNorm);
-    ///// you can manage the number of mimap you desire...
-    ///// by default 256x256 => 9 mipmap levels will be allocated: 256, 128, 64, 32, 16, 8, 4, 2 and 1px to modify this use tile->setMipLevels(n);
-    ///tile->setMinificationFilter(QOpenGLTexture::Nearest);
-    ///tile->setMagnificationFilter(QOpenGLTexture::Nearest);
-    ///tile->setData(image, QOpenGLTexture::GenerateMipMaps);
-
-    // These mip map filters allow for nice alpha channels
-    m_texture->setMinificationFilter( QOpenGLTexture::Filter::Nearest);
-    m_texture->setMagnificationFilter(QOpenGLTexture::Filter::Nearest);
-    ///m_texture->setWrapMode(QOpenGLTexture::WrapMode::ClampToEdge);             // !!! May need to fixed border artifacts?
-
-    m_width =  m_texture->width();
-    m_height = m_texture->height();
-    m_texture_loaded = true;
+    QPixmap pix = QPixmap::fromImage( image );
+    loadTexture( pix );
 }
 
 void DrEngineTexture::loadTexture(QPixmap &from_pixmap) {
-    // Create new texture
-    m_texture = new QOpenGLTexture( from_pixmap.toImage().mirrored() );
 
-    // These mip map filters allow for nice alpha channels
-    m_texture->setMinificationFilter( QOpenGLTexture::Filter::Nearest);
-    m_texture->setMagnificationFilter(QOpenGLTexture::Filter::Nearest);
+     // Load image, NOTE: QImage is mirrored vertically to account for the fact that OpenGL and QImage use opposite directions for the y axis
+     QImage image = from_pixmap.toImage().mirrored();
 
-    m_width =  m_texture->width();
-    m_height = m_texture->height();
-    m_texture_loaded = true;
+     // Add a "c_texture_border" pixel border to reduce artifacts during multi sampling
+     QPixmap one_pixel_border( image.width() + (c_texture_border*2), image.height() + (c_texture_border*2));
+     one_pixel_border.fill(Qt::transparent);
+     QPainter painter;
+     painter.begin(&one_pixel_border);
+     painter.drawPixmap( c_texture_border, c_texture_border, image.width(), image.height(), QPixmap::fromImage(image), 0, 0, image.width(), image.height());
+     painter.end();
+
+     // Create new texture
+     m_texture = new QOpenGLTexture( one_pixel_border.toImage() );
+
+     ///QOpenGLTexture* tile = new QOpenGLTexture(QOpenGLTexture::Target2D);
+     ///tile->setSize(256, 256);
+     ///tile->setFormat(QOpenGLTexture::RGBA8_UNorm);
+     ///// you can manage the number of mimap you desire...
+     ///// by default 256x256 => 9 mipmap levels will be allocated: 256, 128, 64, 32, 16, 8, 4, 2 and 1px to modify this use tile->setMipLevels(n);
+     ///tile->setMinificationFilter(QOpenGLTexture::Nearest);
+     ///tile->setMagnificationFilter(QOpenGLTexture::Nearest);
+     ///tile->setData(image, QOpenGLTexture::GenerateMipMaps);
+
+     //m_texture->setMinificationFilter( QOpenGLTexture::Filter::Nearest);                  // no anti aliasing
+     //m_texture->setMinificationFilter( QOpenGLTexture::Filter::NearestMipMapLinear);      // small is edgy
+     //m_texture->setMinificationFilter( QOpenGLTexture::Filter::NearestMipMapNearest);     // small is edgy
+     //m_texture->setMinificationFilter( QOpenGLTexture::Filter::Linear);                   // good
+     //m_texture->setMinificationFilter( QOpenGLTexture::Filter::LinearMipMapLinear);       // a little fuzzy
+     m_texture->setMinificationFilter( QOpenGLTexture::Filter::LinearMipMapNearest);        // good
+
+     //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::Nearest);                  // no anti aliasing
+     //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::NearestMipMapLinear);      //
+     //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::NearestMipMapNearest);     //
+     m_texture->setMagnificationFilter(QOpenGLTexture::Filter::Linear);                     //
+     //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::LinearMipMapLinear);       // good
+     //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::LinearMipMapNearest);      // good
+
+     m_texture->setWrapMode(QOpenGLTexture::WrapMode::ClampToEdge);             // !!! May need to fixed border artifacts?
+
+     m_width =  m_texture->width();
+     m_height = m_texture->height();
+     m_texture_loaded = true;
 }
 
 

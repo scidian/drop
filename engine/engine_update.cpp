@@ -57,7 +57,7 @@ void DrEngine::updateSpace(double time_passed) {
     bool should_add_stage = false;
 
     // ***** Updates physics, time_passed is in milliseconds
-    cpFloat step_time = time_passed / 1000 * m_time_warp;
+    cpFloat step_time = time_passed / 1000.0 * m_time_warp;
     cpSpaceStep(m_space, step_time);
 
     // Get some Space info
@@ -114,21 +114,21 @@ void DrEngine::updateSpace(double time_passed) {
 
             // ***** Camera updates
             ///info = ", " + QString::number( pos.x - getCameraPos().x() );
-            ///setCameraPos( static_cast<float>(pos.x), static_cast<float>(pos.y), getCameraPos().z() );
+            setCameraPos( static_cast<float>(pos.x), static_cast<float>(pos.y), getCameraPos().z() );
 
-            avg_speed_x.push_back( pos.x - object->last_position_x );
-            avg_speed_y.push_back( pos.y - object->last_position_y );
-            if (avg_speed_x.size() > 60) avg_speed_x.pop_front();
-            if (avg_speed_y.size() > 60) avg_speed_y.pop_front();
-            object->last_position_x = pos.x;
-            object->last_position_y = pos.y;
+//            avg_speed_x.push_back( pos.x - object->last_position_x );
+//            avg_speed_y.push_back( pos.y - object->last_position_y );
+//            if (avg_speed_x.size() > 60) avg_speed_x.pop_front();
+//            if (avg_speed_y.size() > 60) avg_speed_y.pop_front();
+//            object->last_position_x = pos.x;
+//            object->last_position_y = pos.y;
 
-            double average_x = std::accumulate( avg_speed_x.begin(), avg_speed_x.end(), 0.0) / avg_speed_x.size();
-            double average_y = std::accumulate( avg_speed_y.begin(), avg_speed_y.end(), 0.0) / avg_speed_y.size();
+//            double average_x = std::accumulate( avg_speed_x.begin(), avg_speed_x.end(), 0.0) / avg_speed_x.size();
+//            double average_y = std::accumulate( avg_speed_y.begin(), avg_speed_y.end(), 0.0) / avg_speed_y.size();
 
-            m_camera_speed = QVector3D( static_cast<float>(average_x), static_cast<float>(average_y), 0);
+//            m_camera_speed = QVector3D( static_cast<float>(average_x), static_cast<float>(average_y), 0);
 
-            info = ", " + QString::number( static_cast<double>(m_camera_speed.x()) );
+//            info = ", " + QString::number( static_cast<double>(m_camera_speed.x()) );
 
 
 

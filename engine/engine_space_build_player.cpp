@@ -30,11 +30,11 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         cpSpaceSetGravity(m_space, m_gravity);
         cpSpaceSetDamping(m_space, m_damping);
 
-        double ball_radius = m_textures[Test_Textures::Ball]->width() / 2.0;
+        double ball_radius = (m_textures[Test_Textures::Ball]->width() - c_texture_border*2) / 2.0;
         SceneObject *ball = this->addCircle(Body_Type::Kinematic, Test_Textures::Ball, -300,  150, 0, c_norotate, c_scale1x1, c_opaque, ball_radius, c_center,
                                             -.7, -.5, 2, QPointF(15, 0));
         ball->follow = true;
-        setCameraPos( -300, 150, 0 );
+        setCameraPos( -300, 150, getCameraPos().z() );
 
 
     } else if (demo_player == Demo_Player::Car) {
@@ -62,12 +62,12 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
                                               points, -.5, -.1, 4, QPointF(0, 0));
         ///SceneObject *rover = this->addBlock(  Body_Type::Dynamic, Test_Textures::Rover,  50, 75, 0, 0, QPointF(1, 1), 1, .5, .1, 4, QPointF(0, 0));
         rover->follow = true;
-        setCameraPos( 50, 75, 0 );
+        setCameraPos( 50, 75, getCameraPos().z() );
 
         // Add wheels
-        double ball_radius =  m_textures[Test_Textures::Ball]->width()  / 2.0;
-        double wheel_radius = m_textures[Test_Textures::Wheel]->width() / 2.0;
-        double spare_radius = m_textures[Test_Textures::Spare]->width() / 2.0;
+        double ball_radius =  (m_textures[Test_Textures::Ball]->width() -  c_texture_border*2) / 2.0;
+        double wheel_radius = (m_textures[Test_Textures::Wheel]->width() - c_texture_border*2) / 2.0;
+        double spare_radius = (m_textures[Test_Textures::Spare]->width() - c_texture_border*2) / 2.0;
         SceneObject *wheel1 = this->addCircle(Body_Type::Dynamic, Test_Textures::Wheel,  10,  45, .01, c_norotate, c_scale1x1, c_opaque,
                                               wheel_radius, c_center, -4, -.7,  2, QPointF(0, 0));
         SceneObject *wheel2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Wheel,  50,  45, .01, c_norotate, c_scale1x1, c_opaque,
@@ -139,13 +139,13 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         m_damping = 1;
         cpSpaceSetDamping(m_space, m_damping);
 
-        double ball_radius =  m_textures[Test_Textures::Ball]->width()  / 2.0;
+        double ball_radius = (m_textures[Test_Textures::Ball]->width() - c_texture_border*2) / 2.0;
         SceneObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 0,  50, 0, c_norotate, c_scale1x1, c_opaque,
                                             ball_radius, c_center, -2, -.01, 200, QPointF( 0, 0), true, false);
 
         // Camera should follow ball
         ball->follow = true;
-        setCameraPos( 0, 50, 0 );
+        setCameraPos( 0, 50, getCameraPos().z() );
 
         // Turn on jump / movement buttons
         ball->player_controls = true;

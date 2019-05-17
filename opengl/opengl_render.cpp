@@ -35,7 +35,7 @@ void OpenGL::paintGL() {
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 
     ///glEnable( GL_DEPTH_TEST  );                          // Enable depth test
-    ///glEnable( GL_MULTISAMPLE );                          // Enable anti aliasing
+    glEnable( GL_MULTISAMPLE );                          // Enable anti aliasing
 
     // Enable alpha channel
     glEnable(GL_BLEND);
@@ -56,7 +56,7 @@ void OpenGL::paintGL() {
     //  -Z back,  Z front
     float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
 
-    QVector3D  perspective_offset ( 250.0f, 250.0f, 0.0f);
+    QVector3D  perspective_offset ( 50.0f, 50.0f, 0.0f);
     QVector3D  eye(     m_engine->getCameraPos().x() * m_scale + perspective_offset.x(),
                         m_engine->getCameraPos().y() * m_scale + perspective_offset.y(),
                         m_engine->getCameraPos().z() );
@@ -126,13 +126,13 @@ void OpenGL::paintGL() {
         DrEngineTexture *texture = m_engine->getTexture(object->texture_number);
 
         if (!texture->texture()->isBound())
-            texture->texture()->bind();
+            texture->texture()->bind();        
 
         std::vector<float> texCoords;
         texCoords.clear();
         texCoords.resize( 8 );
-        float one_x =  1 / texture->width();
-        float one_y =  1 / texture->height();
+        float one_x =  (1 / texture->width())  * c_texture_border;
+        float one_y =  (1 / texture->height()) * c_texture_border;
         texCoords[0] = 1 - one_x;    texCoords[1] = 1 - one_y;
         texCoords[2] =     one_x;    texCoords[3] = 1 - one_y;
         texCoords[4] = 1 - one_x;    texCoords[5] =     one_y;
@@ -169,7 +169,7 @@ void OpenGL::paintGL() {
         QVector3D bot_left =  QVector3D(-half_width, -half_height, 0) * matrix;
 
 
-        // ***** Load vertices for this object
+        // ***** Load vertices for this object, this includes added size of c_texture_border
         QVector<float> vertices;
         vertices.clear();
         vertices.resize( 12 );              // in sets of x, y, z

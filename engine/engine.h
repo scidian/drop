@@ -123,6 +123,8 @@ typedef std::map<long, DrEngineWorld*>   EngineWorldMap;
 
 
 // Constants
+constexpr int     c_texture_border = 16;     // Padding added on to textures for anti-aliasing
+
 constexpr QPointF c_center   {0, 0};
 constexpr QPointF c_scale1x1 {1, 1};
 constexpr double  c_norotate {0};

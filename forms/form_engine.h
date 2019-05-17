@@ -16,10 +16,16 @@
 #include <QTime>
 #include <QTimer>
 
+#include <chrono>
+
 #include "engine/engine.h"
 
+// Forward declarations
 class DrProject;
 class OpenGL;
+
+// Type definitions
+typedef std::chrono::high_resolution_clock Clock;
 
 //####################################################################################
 //##    FormEngine
@@ -30,16 +36,15 @@ class FormEngine : public QMainWindow
     Q_OBJECT
 
 private:
-    DrEngine   *m_engine;
-    OpenGL     *m_opengl;
-    DrProject  *m_project;
+    DrEngine           *m_engine;
+    OpenGL             *m_opengl;
+    DrProject          *m_project;
 
-    QTimer     *m_timer;
-    QTime       m_time_last_update;
-    QTime       m_time_last_render;
-    QTime       m_time_last_timer;
+    QTimer             *m_timer;
+    Clock::time_point   m_time_update;
+    Clock::time_point   m_time_render;
 
-    const qreal m_ideal_frames_per_second = 60;
+    const double        m_ideal_frames_per_second = 60;
 
 public:
     QWidget         *centralWidget;

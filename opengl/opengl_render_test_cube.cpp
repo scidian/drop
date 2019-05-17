@@ -26,8 +26,8 @@ void OpenGL::drawCube(QVector3D center) {
         std::vector<float> texCoords;
         texCoords.clear();
         texCoords.resize( 8 );
-        float one_x =  1 / texture->width();
-        float one_y =  1 / texture->height();
+        float one_x = (1 / texture->width())  * c_texture_border;
+        float one_y = (1 / texture->height()) * c_texture_border;
         texCoords[0] = 1 - one_x;    texCoords[1] = 1 - one_y;
         texCoords[2] =     one_x;    texCoords[3] = 1 - one_y;
         texCoords[4] = 1 - one_x;    texCoords[5] =     one_y;
@@ -41,7 +41,7 @@ void OpenGL::drawCube(QVector3D center) {
         float half_width, half_height;
         float half_no_border;
 
-        float multi =  3;
+        float multi =  3;   // multiplier to make this bigger
         float width =  texture->width() *  multi;
         float height = texture->height() * multi;
 
@@ -51,16 +51,15 @@ void OpenGL::drawCube(QVector3D center) {
             z = static_cast<float>(center.z()) * m_scale;
             half_width =  width  * m_scale / 2.0f;
             half_height = height * m_scale / 2.0f;
-            half_no_border = width * m_scale / 2.0f;
+            half_no_border =  (width - (c_texture_border*2*multi)) * m_scale / 2.0f;
         } else {
             x = static_cast<float>(center.x());
             y = static_cast<float>(center.y());
             z = static_cast<float>(center.z());
             half_width =  width  / 2.0f;
             half_height = height / 2.0f;
-            half_no_border = width / 2.0f;
+            half_no_border = (width - (c_texture_border*2*multi)) / 2.0f;
         }
-
 
         // ***** Create rotation matrix, apply rotation to object
         QMatrix4x4 matrix;
