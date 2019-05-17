@@ -95,6 +95,9 @@ struct SceneObject {
 
     // ***** Object interaction
     bool        follow = false;             // Set to true to have camera follow object
+    double      last_position_x;            // Previous frame position to help determine speed for camera
+    double      last_position_y;            // Previous frame position to help determine speed for camera
+
     bool        player_controls = false;    // Set to true to have object controlled by player control buttons, keyboard_x, keyboard_y
     bool        is_wheel = false;           // Set to true if we want wheel to spin from button press
     double      wheel_speed;                // If is_wheel, Speed at which wheel should spin when gas pedal is pressed
@@ -139,8 +142,14 @@ private:
 
     cpSpace        *m_space;                                    // Current physics space shown on screen
     QVector3D       m_camera_pos = QVector3D(0, 0, 800);        // Current camera position
+    QVector3D       m_camera_speed = QVector3D(0, 0, 0);        // Current camera speed
 
-    const cpFloat   m_time_step = 1 / 120.0;        // Speed at which want to try to update the Space, 1 / 90 = 90 times per second to up
+    QVector<double> avg_speed_x;
+    QVector<double> avg_speed_y;
+
+
+    const int       m_iterations = 10;              // Times physics are processed each update, 10 is default and should be good enough for most games
+    const cpFloat   m_time_step = 1 / 90.0;         // Speed at which want to try to update the Space, 1 / 90 = 90 times per second to up
                                                     //      It is *highly* recommended to use a fixed size time step (calling Update at a fixed interval)
     cpFloat         m_time_warp = 1.0;              // Speeds up or slows down physics time, 1 = 100% = Normal Time, Lower than 1 = slower, Higher = faster
 
@@ -246,6 +255,7 @@ public:
     cpSpace*            getSpace()              { return m_space; }
 
     const QVector3D&    getCameraPos()          { return m_camera_pos; }
+    const QVector3D&    getCameraSpeed()        { return m_camera_speed; }
     const cpFloat&      getTimeStep()           { return m_time_step; }
     const cpFloat&      getTimeWarp()           { return m_time_warp; }
     const cpVect&       getGravity()            { return m_gravity; }
@@ -259,6 +269,8 @@ public:
 
     void                setCameraPos(QVector3D new_pos) { m_camera_pos = new_pos; }
     void                setCameraPos(float x, float y, float z) { m_camera_pos = QVector3D(x, y, z); }
+    void                setCameraSpeed(QVector3D new_speed) { m_camera_pos = new_speed; }
+    void                setCameraSpeed(float x, float y, float z) { m_camera_pos = QVector3D(x, y, z); }
     void                setTimeWarp(double new_time_warp) { m_time_warp = new_time_warp; }
     void                setGravity(cpVect new_gravity) { m_gravity = new_gravity; }
     void                setDamping(cpFloat new_damping) { m_damping = new_damping; }

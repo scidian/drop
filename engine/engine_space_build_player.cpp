@@ -34,6 +34,7 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         SceneObject *ball = this->addCircle(Body_Type::Kinematic, Test_Textures::Ball, -300,  150, 0, c_norotate, c_scale1x1, c_opaque, ball_radius, c_center,
                                             -.7, -.5, 2, QPointF(15, 0));
         ball->follow = true;
+        setCameraPos( -300, 150, 0 );
 
 
     } else if (demo_player == Demo_Player::Car) {
@@ -61,6 +62,7 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
                                               points, -.5, -.1, 4, QPointF(0, 0));
         ///SceneObject *rover = this->addBlock(  Body_Type::Dynamic, Test_Textures::Rover,  50, 75, 0, 0, QPointF(1, 1), 1, .5, .1, 4, QPointF(0, 0));
         rover->follow = true;
+        setCameraPos( 50, 75, 0 );
 
         // Add wheels
         double ball_radius =  m_textures[Test_Textures::Ball]->width()  / 2.0;
@@ -143,6 +145,7 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
 
         // Camera should follow ball
         ball->follow = true;
+        setCameraPos( 0, 50, 0 );
 
         // Turn on jump / movement buttons
         ball->player_controls = true;

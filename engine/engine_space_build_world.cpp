@@ -53,12 +53,16 @@ void DrEngine::oneWayPlatform(SceneObject *object, cpVect direction) {
 void DrEngine::buildSpace(Demo_Space new_space_type) {
 
     // ***** Set up physics world
-    demo_space = new_space_type;                // Save Space type
+    demo_space = new_space_type;                        // Save Space type
     m_background_color = QColor(0,0,0);
 
-    m_space = cpSpaceNew();                     // Creates an empty space
-    cpSpaceSetIterations(m_space, 10);          // 10 is default and should be good enough for most games
+    m_space = cpSpaceNew();                             // Creates an empty space
+    cpSpaceSetIterations(m_space, m_iterations);        // Sets how many times physics are processed each update
 
+    // Reset camera
+    avg_speed_x.clear();
+    avg_speed_y.clear();
+    m_camera_speed = QVector3D(0, 0, 0);
 
     // ***** Add handler for one way collisions
     cpCollisionHandler *handler = cpSpaceAddWildcardHandler(m_space, COLLISION_TYPE_ONE_WAY);

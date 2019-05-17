@@ -162,6 +162,17 @@ void FormEngine::updateEngine() {
 
     if (!m_engine->has_scene) return;
 
+    // Update camera every frame
+//    float  step_time = m_time_last_timer.elapsed();
+//    float  lerp = .1f;
+//    QVector3D cam = m_engine->getCameraPos();
+//    QVector3D speed = m_engine->getCameraSpeed();
+//    m_engine->setCameraPos( cam.x() + (speed.x() * lerp * step_time),
+//                            cam.y() + (speed.y() * lerp * step_time),
+//                            cam.z() + (speed.z() * lerp * step_time));
+//    m_time_last_timer.restart();
+
+    // Update physics
     if (m_time_last_update.elapsed() > (m_engine->getTimeStep() * 1000)) {
         m_engine->updateSpace(m_time_last_update.elapsed());
 
@@ -171,16 +182,27 @@ void FormEngine::updateEngine() {
         m_time_last_update.restart();
     }
 
-    // This would limit to a particular frames per second, for now calling it as much as possible
+    // Update rendering, limit to m_ideal_frames_per_second
     if (m_time_last_render.elapsed() > 1000 / m_ideal_frames_per_second) {
+
+        float  step_time = m_time_last_render.elapsed();
+        float  lerp = .1f;
+        QVector3D cam = m_engine->getCameraPos();
+        QVector3D speed = m_engine->getCameraSpeed();
+        m_engine->setCameraPos( cam.x() + (speed.x() * lerp * step_time),
+                                cam.y() + (speed.y() * lerp * step_time),
+                                cam.z() + (speed.z() * lerp * step_time));
+
+
         m_opengl->update();
-        m_time_last_render.restart(); }
+        m_time_last_render.restart();
+    }
 }
 
 // Update helpful labels
 void FormEngine::updateLabels(QString info) {
     label->setText( "Total Items: " + QString::number( m_engine->objects.count()) + " - " + info);
-    label2->setText("FPS: " + QString::number(m_engine->fps) + " - Scale: " + QString::number(double(m_opengl->getScale())) );
+    label2->setText("FPS: " + QString::number(m_engine->last_fps) + " - Scale: " + QString::number(double(m_opengl->getScale())) );
 
     int max_sample, max_text, max_number_textures, max_layers;
     glGetIntegerv ( GL_MAX_SAMPLES, &max_sample );                                      // Finds max multi sampling available on system

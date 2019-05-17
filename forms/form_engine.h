@@ -37,6 +37,7 @@ private:
     QTimer     *m_timer;
     QTime       m_time_last_update;
     QTime       m_time_last_render;
+    QTime       m_time_last_timer;
 
     const qreal m_ideal_frames_per_second = 60;
 
