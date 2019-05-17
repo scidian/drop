@@ -35,7 +35,7 @@ private:
     float           m_background_green = 0;
     float           m_background_blue = 0;
 
-    QOpenGLShaderProgram m_program;
+    QOpenGLShaderProgram    m_shader;
 
     int     m_attribute_vertex;
     int     m_attribute_tex_coord;
@@ -67,9 +67,6 @@ public:
 #endif
 
     // Function Calls
-    void            drawCube(QVector3D center);
-    void            drawDebugShapes(QPainter &painter);
-    void            drawDebugCollisions(QPainter &painter);
     QVector3D       mapFromScreen(double x, double y);
     QVector3D       mapFromScreen(float x, float y);
     QVector3D       mapFromScreen(QPointF point);
@@ -77,6 +74,13 @@ public:
     QPointF         mapToScreen(float x, float y, float z);
     QPointF         mapToScreen(QVector3D point3D);
     void            zoomInOut(int level);
+
+    // Render Calls
+    void            drawCube(QVector3D center);
+    void            drawDebugShapes(QPainter &painter);
+    void            drawDebugCollisions(QPainter &painter);
+    void            renderSceneObjects();
+    void            updateViewMatrix();
 
     // Getters and Setters
     float           getScale()      { return m_scale; }

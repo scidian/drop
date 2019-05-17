@@ -16,6 +16,9 @@ void main( void )
 
     // Grab color straight from texture wothout doing anything
     vec4 texture_color = texture2D( tex, texc.st ).rgba;
-    gl_FragColor = texture_color * vec4(alpha, alpha, alpha, alpha);       // Multiply in alpha channel for semi-transparent objects
+
+    // Multiply in alpha channel for semi-transparent objects
+    gl_FragColor = texture_color * vec4(alpha, alpha, alpha, alpha);
 
 }
+

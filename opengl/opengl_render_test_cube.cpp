@@ -26,14 +26,14 @@ void OpenGL::drawCube(QVector3D center) {
         std::vector<float> texCoords;
         texCoords.clear();
         texCoords.resize( 8 );
-        float one_x = (1 / texture->width())  * (c_texture_border);
-        float one_y = (1 / texture->height()) * (c_texture_border);
+        float one_x = (1 / texture->width());//  * (c_texture_border);
+        float one_y = (1 / texture->height());// * (c_texture_border);
         texCoords[0] = 1 - one_x;    texCoords[1] = 1 - one_y;
         texCoords[2] =     one_x;    texCoords[3] = 1 - one_y;
         texCoords[4] = 1 - one_x;    texCoords[5] =     one_y;
         texCoords[6] =     one_x;    texCoords[7] =     one_y;
-        m_program.setAttributeArray( m_attribute_tex_coord, texCoords.data(), 2 );
-        m_program.enableAttributeArray( m_attribute_tex_coord );
+        m_shader.setAttributeArray( m_attribute_tex_coord, texCoords.data(), 2 );
+        m_shader.enableAttributeArray( m_attribute_tex_coord );
 
 
         // ***** Get object position data
@@ -100,18 +100,18 @@ void OpenGL::drawCube(QVector3D center) {
         vertices[10] = bot_left.y() + y;
         vertices[11] = z;
 
-        m_program.setAttributeArray( m_attribute_vertex, vertices.data(), 3 );
-        m_program.enableAttributeArray( m_attribute_vertex );
+        m_shader.setAttributeArray( m_attribute_vertex, vertices.data(), 3 );
+        m_shader.enableAttributeArray( m_attribute_vertex );
 
-        m_program.setUniformValue( m_uniform_texture, 0 );
-        m_program.setUniformValue( m_uniform_alpha, 1.0f );
+        m_shader.setUniformValue( m_uniform_texture, 0 );
+        m_shader.setUniformValue( m_uniform_alpha, 1.0f );
 
         // ***** Draw triangles using shader program
         glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );                                    // GL_TRIANGLES
 
         // ***** Disable arrays
-        m_program.disableAttributeArray( m_attribute_vertex );
-        m_program.disableAttributeArray( m_attribute_tex_coord );
+        m_shader.disableAttributeArray( m_attribute_vertex );
+        m_shader.disableAttributeArray( m_attribute_tex_coord );
 
     }   // For i
 

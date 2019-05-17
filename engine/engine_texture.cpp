@@ -59,19 +59,19 @@ void DrEngineTexture::loadTexture(QPixmap &from_pixmap) {
      ///tile->setMagnificationFilter(QOpenGLTexture::Nearest);
      ///tile->setData(image, QOpenGLTexture::GenerateMipMaps);
 
-     m_texture->setMinificationFilter( QOpenGLTexture::Filter::Nearest);                  // no anti aliasing
+     //m_texture->setMinificationFilter( QOpenGLTexture::Filter::Nearest);                  // no anti aliasing
      //m_texture->setMinificationFilter( QOpenGLTexture::Filter::NearestMipMapLinear);      // small is edgy
      //m_texture->setMinificationFilter( QOpenGLTexture::Filter::NearestMipMapNearest);     // small is edgy
      //m_texture->setMinificationFilter( QOpenGLTexture::Filter::Linear);                   // good
      //m_texture->setMinificationFilter( QOpenGLTexture::Filter::LinearMipMapLinear);       // a little fuzzy
-   //  m_texture->setMinificationFilter( QOpenGLTexture::Filter::LinearMipMapNearest);        // good
+     m_texture->setMinificationFilter( QOpenGLTexture::Filter::LinearMipMapNearest);        // good
 
-     m_texture->setMagnificationFilter(QOpenGLTexture::Filter::Nearest);                  // no anti aliasing
+     //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::Nearest);                  // no anti aliasing
      //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::NearestMipMapLinear);      //
      //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::NearestMipMapNearest);     //
-   //  m_texture->setMagnificationFilter(QOpenGLTexture::Filter::Linear);                     //
+     //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::Linear);                     //
      //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::LinearMipMapLinear);       // good
-     //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::LinearMipMapNearest);      // good
+     m_texture->setMagnificationFilter(QOpenGLTexture::Filter::LinearMipMapNearest);      // good
 
      m_texture->setWrapMode(QOpenGLTexture::WrapMode::ClampToEdge);             // !!! May need to fixed border artifacts?
 

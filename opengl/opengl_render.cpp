@@ -30,32 +30,64 @@ void OpenGL::paintGL() {
     float background_green = static_cast<float>(m_engine->getBackgroundColor().greenF());
     float background_blue =  static_cast<float>(m_engine->getBackgroundColor().blueF());
     glClearColor(background_red, background_green, background_blue, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
+    ///glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    ///glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 
-    ///glEnable( GL_DEPTH_TEST  );                          // Enable depth test
-    glEnable( GL_MULTISAMPLE );                          // Enable anti aliasing
+    // Enable depth test
+    ///glEnable( GL_DEPTH_TEST  );
+
+    // Enable anti aliasing
+    glEnable( GL_MULTISAMPLE );
 
     // Enable alpha channel
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);      // Standard blend function
-    ///glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
-    ///glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
     // Alpha clamping
     ///glEnable(GL_ALPHA_TEST);
     ///glAlphaFunc(GL_GREATER,0);                           // 0.0 (transparent) to 1.0 (opaque)
 
 
+    // ***** Update Camera / Matrices
+    updateViewMatrix();
 
-    // ********** Set camera position
-    // Axis:
-    //  -X left,  X right
-    //  -Y down,  Y up
-    //  -Z back,  Z front
+    // ***** Render Scene
+    renderSceneObjects();
+
+    // ***** Disable shader program, end native drawing
+    painter.endNativePainting();
+
+    // ********** Draws debug shapes onto screen
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    if (m_engine->debug_shapes)     drawDebugShapes(painter);
+    if (m_engine->debug_collisions) drawDebugCollisions(painter);
+
+    painter.end();
+
+    // ***** Show frames per second
+    m_engine->fps++;
+    if (m_engine->fps_timer.elapsed() > 1000) {
+        m_engine->last_fps = m_engine->fps;
+        emit updateInfo(m_engine->info);
+        m_engine->fps = 1;
+        m_engine->fps_timer.restart();
+    }
+}
+
+
+
+//####################################################################################
+//##        Update the view matrices before rendering
+//####################################################################################
+void OpenGL::updateViewMatrix() {
+    //          Axis:
+    //              -X left,  X right
+    //              -Y down,  Y up
+    //              -Z back,  Z front
     float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
 
+    // Set camera position
     QVector3D  perspective_offset ( 50.0f, 50.0f, 0.0f);
     QVector3D  eye(     m_engine->getCameraPos().x() * m_scale + perspective_offset.x(),
                         m_engine->getCameraPos().y() * m_scale + perspective_offset.y(),
@@ -63,9 +95,10 @@ void OpenGL::paintGL() {
     QVector3D  look_at( m_engine->getCameraPos().x() * m_scale,
                         m_engine->getCameraPos().y() * m_scale,    0 );
     QVector3D  up(      0, 1, 0);
+
+    // Create Matrices
     m_model_view.setToIdentity();
     m_projection.setToIdentity();
-
     if (m_engine->render_type == Render_Type::Orthographic) {
         float cam_x = m_engine->getCameraPos().x() * m_scale;
         float cam_y = m_engine->getCameraPos().y() * m_scale;
@@ -83,27 +116,28 @@ void OpenGL::paintGL() {
         ///if (m_angle > 360) m_angle = 0;
         ///m_model_view.rotate( m_angle, 0.0f, 1.0f, 0.0f );
     }
-    QMatrix4x4 m_matrix = m_projection * m_model_view;
+
+}
 
 
-
+//####################################################################################
+//##        Render, Paint the Scene
+//####################################################################################
+void OpenGL::renderSceneObjects() {
 
     // ********** Enable shader program
-    if (!m_program.bind()) return;
-    m_program.setUniformValue( m_uniform_matrix, m_matrix );
+    if (!m_shader.bind()) return;
+
+    QMatrix4x4 m_matrix = m_projection * m_model_view;
+    m_shader.setUniformValue( m_uniform_matrix, m_matrix );
 
 
     // ***** Render 3D Objects - before rendering 3D objects, enable face culling for triangles facing away from view
-    glEnable( GL_CULL_FACE );
-    glCullFace(  GL_BACK );
-    glFrontFace( GL_CCW );
-
+    glEnable( GL_CULL_FACE );       glCullFace(  GL_BACK );     glFrontFace( GL_CCW );
     drawCube( QVector3D( -400, 400, -300) );
 
     // Turn off culling before drawing 2D objects, ALSO: Must turn OFF culling for QPainter to work
     glDisable( GL_CULL_FACE );
-
-
 
 
     // ***** Create a vector of the scene objects (ignoring lines / segments) and sort it by depth
@@ -115,7 +149,6 @@ void OpenGL::paintGL() {
     }
     sort(v.begin(), v.end(), [] (std::pair<int, double>&i, std::pair<int, double>&j) { return i.second < j.second; });
 
-
     // ***** Render 2D Objects
     ///for (auto object : m_engine->objects) {
     for (ulong i = 0; i < static_cast<ulong>(v.size()); i++) {
@@ -126,19 +159,19 @@ void OpenGL::paintGL() {
         DrEngineTexture *texture = m_engine->getTexture(object->texture_number);
 
         if (!texture->texture()->isBound())
-            texture->texture()->bind();        
+            texture->texture()->bind();
 
         std::vector<float> texCoords;
         texCoords.clear();
         texCoords.resize( 8 );
-        float one_x =  (1 / texture->width())  * (c_texture_border);
-        float one_y =  (1 / texture->height()) * (c_texture_border);
+        float one_x =  (1 / texture->width()) ;// * (c_texture_border + 1);
+        float one_y =  (1 / texture->height());// * (c_texture_border + 1);
         texCoords[0] = 1 - one_x;    texCoords[1] = 1 - one_y;
         texCoords[2] =     one_x;    texCoords[3] = 1 - one_y;
         texCoords[4] = 1 - one_x;    texCoords[5] =     one_y;
         texCoords[6] =     one_x;    texCoords[7] =     one_y;
-        m_program.setAttributeArray( m_attribute_tex_coord, texCoords.data(), 2 );
-        m_program.enableAttributeArray( m_attribute_tex_coord );
+        m_shader.setAttributeArray( m_attribute_tex_coord, texCoords.data(), 2 );
+        m_shader.enableAttributeArray( m_attribute_tex_coord );
 
         // ***** Get object position data
         QPointF center = object->position;
@@ -154,8 +187,8 @@ void OpenGL::paintGL() {
             x = static_cast<float>(center.x());
             y = static_cast<float>(center.y());
             z = static_cast<float>(object->z_order);
-            half_width =  float(texture->width()) *  object->scale_x / 2.0f;
-            half_height = float(texture->height()) * object->scale_y / 2.0f;
+            half_width =  float(texture->width()) *  object->scale_x / 2.0f + 1.0f;
+            half_height = float(texture->height()) * object->scale_y / 2.0f + 1.0f;
         }
 
 
@@ -189,59 +222,31 @@ void OpenGL::paintGL() {
         vertices[10] = bot_left.y() + y;
         vertices[11] = z;
 
-        m_program.setAttributeArray( m_attribute_vertex, vertices.data(), 3 );
-        m_program.enableAttributeArray( m_attribute_vertex );
+        m_shader.setAttributeArray( m_attribute_vertex, vertices.data(), 3 );
+        m_shader.enableAttributeArray( m_attribute_vertex );
 
-        m_program.setUniformValue( m_uniform_texture, 0 );                          // Use texture unit 0
-        m_program.setUniformValue( m_uniform_alpha, object->alpha );                // Add object alpha
+        m_shader.setUniformValue( m_uniform_texture, 0 );                          // Use texture unit 0
+        m_shader.setUniformValue( m_uniform_alpha, object->alpha );                // Add object alpha
 
         // ***** Draw triangles using shader program
         glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );                                    // GL_TRIANGLES
 
         // ***** Disable arrays
-        m_program.disableAttributeArray( m_attribute_vertex );
-        m_program.disableAttributeArray( m_attribute_tex_coord );
+        m_shader.disableAttributeArray( m_attribute_vertex );
+        m_shader.disableAttributeArray( m_attribute_tex_coord );
 
         ///texture->texture()->release();
     }
 
-
     // ***** Render Front 3D Objects
-    glEnable( GL_CULL_FACE );
-    glCullFace(  GL_BACK );
-    glFrontFace( GL_CCW );
-
+    glEnable( GL_CULL_FACE );   glCullFace(  GL_BACK );     glFrontFace( GL_CCW );
     drawCube( QVector3D(0, 300, 600) );
-
     glDisable( GL_CULL_FACE );
 
+    // *****Disable shader program
+    m_shader.release();
 
-    // ***** Disable shader program, end native drawing
-    m_program.release();
-    painter.endNativePainting();
-
-
-
-    // ********** Draws debug shapes onto screen
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    if (m_engine->debug_shapes)     drawDebugShapes(painter);
-    if (m_engine->debug_collisions) drawDebugCollisions(painter);
-
-    painter.end();
-
-
-    // ***** Show frames per second
-    m_engine->fps++;
-    if (m_engine->fps_timer.elapsed() > 1000) {
-        m_engine->last_fps = m_engine->fps;
-        emit updateInfo(m_engine->info);
-        m_engine->fps = 1;
-        m_engine->fps_timer.restart();
-    }
 }
-
-
-
 
 
 

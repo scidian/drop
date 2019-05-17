@@ -44,17 +44,18 @@ void OpenGL::initializeGL() {
 
 
     // Initialize our basic shader, shaders have 2 parts, a Vertex shader followed by a Fragment shader
-    QOpenGLShader vShader( QOpenGLShader::Vertex );     vShader.compileSourceFile( ":/shaders/vShader.glsl" );
-    QOpenGLShader fShader( QOpenGLShader::Fragment );   fShader.compileSourceFile( ":/shaders/fShader.glsl" );
-    m_program.addShader( &vShader );
-    m_program.addShader( &fShader );
-    m_program.link();
+    QOpenGLShader vShader( QOpenGLShader::Vertex );     vShader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader fShader( QOpenGLShader::Fragment );   fShader.compileSourceFile( ":/shaders/default_frag.glsl" );
+    m_shader.addShader( &vShader );
+    m_shader.addShader( &fShader );
+    m_shader.link();
 
-    m_attribute_vertex =    m_program.attributeLocation( "vertex" );
-    m_attribute_tex_coord = m_program.attributeLocation( "texCoord" );
-    m_uniform_matrix =      m_program.uniformLocation(   "matrix" );
-    m_uniform_texture =     m_program.uniformLocation(   "tex" );
-    m_uniform_alpha =       m_program.uniformLocation( "alpha" );
+    m_attribute_vertex =    m_shader.attributeLocation( "vertex" );
+    m_attribute_tex_coord = m_shader.attributeLocation( "texCoord" );
+    m_uniform_matrix =      m_shader.uniformLocation(   "matrix" );
+    m_uniform_texture =     m_shader.uniformLocation(   "tex" );
+    m_uniform_alpha =       m_shader.uniformLocation(   "alpha" );
+
 }
 
 
