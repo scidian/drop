@@ -133,31 +133,26 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
 
     } else if (demo_player == Demo_Player::Jump) {
         m_gravity = cpv(0, -1000);
-        cpSpaceSetGravity(m_space, m_gravity);
         m_damping = 1;
+        cpSpaceSetGravity(m_space, m_gravity);
         cpSpaceSetDamping(m_space, m_damping);
 
+        // Create character
         double ball_radius = m_textures[Test_Textures::Ball]->width() / 2.0;
         SceneObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 0,  50, 0, c_norotate, c_scale1x1, c_opaque,
                                             ball_radius, c_center, -2, -.01, 200, QPointF( 0, 0), true, false);
 
-        // Camera should follow ball
-        setActiveCamera( addCamera(ball) );
+        setActiveCamera( addCamera(ball) );     // Create camera and set as active
+        ball->player_controls = true;           // Turn on jump / movement buttons
+        ball->jump_count = 2;                   // Set jump count
 
-        // Turn on jump / movement buttons
-        ball->player_controls = true;
+        SceneObject *ball2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 600,  50, 0, c_norotate, c_scale1x1, c_opaque,
+                                             ball_radius, c_center, -2, -.01, 200, QPointF( 0, 0), true, false);
+        addCamera(ball2);
+        ball2->jump_count = 2;
 
-        // Set player info
-        player_body =  ball->body;
-        player_shape = ball->shape;
-        jump_count = 2;
-
-        // Reset jump variables for this player
-        remaining_jumps = jump_count;
-        remaining_boost = 0;
-        grounded = cpFalse;
-        jump_state = Jump_State::Jumped;
-
+        demo_jumper_1 = ball;
+        demo_jumper_2 = ball2;
     }
 
 }

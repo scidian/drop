@@ -43,6 +43,8 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
         pushSpawn =   new QToolButton(upperWidget);     pushSpawn->setObjectName("pushSpawn");      pushSpawn->setGeometry(  QRect(  5,  5, 140, 20));
         pushCar =     new QToolButton(upperWidget);     pushCar->setObjectName("pushCar");          pushCar->setGeometry(    QRect(  5, 30, 140, 20));
         pushJump =    new QToolButton(upperWidget);     pushJump->setObjectName("pushJump");        pushJump->setGeometry(   QRect(  5, 55, 140, 20));
+        pushPlay1 =   new QToolButton(upperWidget);     pushPlay1->setObjectName("pushPlay1");      pushPlay1->setGeometry(  QRect( 35, 80,  30, 20));
+        pushPlay2 =   new QToolButton(upperWidget);     pushPlay2->setObjectName("pushPlay2");      pushPlay2->setGeometry(  QRect( 85, 80,  30, 20));
 
         pushLine1 =   new QToolButton(upperWidget);     pushLine1->setObjectName("pushLine1");      pushLine1->setGeometry(  QRect(150,  5, 140, 20));
         pushLine2 =   new QToolButton(upperWidget);     pushLine2->setObjectName("pushLine2");      pushLine2->setGeometry(  QRect(150, 30, 140, 20));
@@ -65,6 +67,8 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
         pushSpawn->setText(QApplication::translate(  "MainWindow", "Spawning Demo",     nullptr));  pushSpawn->setStyleSheet("color: white");
         pushCar->setText(QApplication::translate(    "MainWindow", "Car Demo",          nullptr));  pushCar->setStyleSheet("color: white");
         pushJump->setText(QApplication::translate(   "MainWindow", "Jump Demo",         nullptr));  pushJump->setStyleSheet("color: white");
+        pushPlay1->setText(QApplication::translate(  "MainWindow", "1",                 nullptr));  pushPlay1->setStyleSheet("color: white");
+        pushPlay2->setText(QApplication::translate(  "MainWindow", "2",                 nullptr));  pushPlay2->setStyleSheet("color: white");
 
         pushLine1->setText(QApplication::translate(  "MainWindow", "Line1 World",       nullptr));  pushLine1->setStyleSheet("color: white");
         pushLine2->setText(QApplication::translate(  "MainWindow", "Line2 World",       nullptr));  pushLine2->setStyleSheet("color: white");
@@ -87,6 +91,8 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
         connect(pushSpawn,   SIGNAL(clicked()), this, SLOT(on_pushSpawn_clicked()));
         connect(pushCar,     SIGNAL(clicked()), this, SLOT(on_pushCar_clicked()));
         connect(pushJump,    SIGNAL(clicked()), this, SLOT(on_pushJump_clicked()));
+        connect(pushPlay1,   SIGNAL(clicked()), this, SLOT(on_pushPlay1_clicked()));
+        connect(pushPlay2,   SIGNAL(clicked()), this, SLOT(on_pushPlay2_clicked()));
 
         connect(pushLine1,   SIGNAL(clicked()), this, SLOT(on_pushLines1_clicked()));
         connect(pushLine2,   SIGNAL(clicked()), this, SLOT(on_pushLines2_clicked()));
@@ -205,6 +211,21 @@ void FormEngine::on_pushSpawn_clicked() {   loadDemo(m_engine->demo_space,  Demo
 void FormEngine::on_pushCar_clicked() {     loadDemo(m_engine->demo_space,  Demo_Player::Car ); }
 void FormEngine::on_pushJump_clicked() {    loadDemo(m_engine->demo_space,  Demo_Player::Jump ); }
 
+void FormEngine::on_pushPlay1_clicked() {
+    m_engine->demo_jumper_1->player_controls = true;
+    m_engine->demo_jumper_1->lost_control = false;
+    m_engine->demo_jumper_2->player_controls = false;
+    m_engine->demo_jumper_2->lost_control = true;
+    m_engine->switchCameras(m_engine->demo_jumper_1->active_camera);
+}
+void FormEngine::on_pushPlay2_clicked() {
+    m_engine->demo_jumper_1->player_controls = false;
+    m_engine->demo_jumper_1->lost_control = true;
+    m_engine->demo_jumper_2->player_controls = true;
+    m_engine->demo_jumper_2->lost_control = false;
+    m_engine->switchCameras(m_engine->demo_jumper_2->active_camera);
+}
+
 void FormEngine::on_pushLines1_clicked() {  loadDemo(Demo_Space::Lines1,    m_engine->demo_player ); }
 void FormEngine::on_pushLines2_clicked() {  loadDemo(Demo_Space::Lines2,    m_engine->demo_player ); }
 void FormEngine::on_pushBlocks_clicked() {  loadDemo(Demo_Space::Blocks,    m_engine->demo_player ); }
@@ -240,7 +261,15 @@ void FormEngine::on_pushDebug2_clicked() {
 void FormEngine::updateCheckedButtons() {
     if (m_engine->demo_player == Demo_Player::Spawn) pushSpawn->setDown(true);   else pushSpawn->setDown(false);
     if (m_engine->demo_player == Demo_Player::Car)   pushCar->setDown(true);     else pushCar->setDown(false);
-    if (m_engine->demo_player == Demo_Player::Jump)  pushJump->setDown(true);    else pushJump->setDown(false);
+    if (m_engine->demo_player == Demo_Player::Jump)  {
+        pushJump->setDown(true);
+        pushPlay1->setEnabled(true);
+        pushPlay2->setEnabled(true);
+    } else {
+        pushJump->setDown(false);
+        pushPlay1->setEnabled(false);
+        pushPlay2->setEnabled(false);
+    }
 
     if (m_engine->demo_space == Demo_Space::Lines1)  pushLine1->setDown(true);   else pushLine1->setDown(false);
     if (m_engine->demo_space == Demo_Space::Lines2)  pushLine2->setDown(true);   else pushLine2->setDown(false);

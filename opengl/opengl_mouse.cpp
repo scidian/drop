@@ -67,8 +67,7 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
 
     } else if (m_engine->demo_player == Demo_Player::Jump) {
         if (event->button() & Qt::LeftButton) {
-            m_engine->keyboard_y = 1;
-            m_engine->jump_state = Jump_State::Need_To_Jump;
+            m_engine->jump_button = 1;
         } else if (event->button() & Qt::RightButton) {
             m_engine->addBlock(Body_Type::Dynamic, Test_Textures::Block, x, y, z, 0, QPointF(1, 1), 1, friction, bounce, 25, QPointF(0, 0));
         }
@@ -84,7 +83,7 @@ void OpenGL::mouseReleaseEvent(QMouseEvent *event)
 
     } else if (m_engine->demo_player == Demo_Player::Jump) {
         if (event->buttons() == Qt::MouseButton::NoButton)
-            m_engine->keyboard_y = 0;
+            m_engine->jump_button = 0;
     }
 }
 

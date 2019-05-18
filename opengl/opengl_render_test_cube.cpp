@@ -20,7 +20,7 @@
 void OpenGL::drawCube(QVector3D center) {
 
     static float cube_angle;
-    cube_angle += .01f;
+    cube_angle += .1f;
     if (cube_angle > 360) cube_angle = 0;
 
     DrEngineTexture *texture = m_engine->getTexture( Test_Textures::Block );

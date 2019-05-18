@@ -35,66 +35,6 @@ void DrEngine::deleteResources() {
 
 
 //######################################################################################################
-//##    DrEngineCamera
-//######################################################################################################
-long DrEngine::addCamera(SceneObject* object_to_follow) {
-    DrEngineCamera *camera = new DrEngineCamera(this, 0, 0, 800);
-    m_cameras[m_camera_keys] = camera;
-
-    if (object_to_follow != nullptr) {
-        camera->followObject(object_to_follow);
-        camera->setPositionX( static_cast<float>(object_to_follow->position.x()) );
-        camera->setPositionY( static_cast<float>(object_to_follow->position.y()) );
-    }
-    // Increment camera ID generator, return current camera ID
-    m_camera_keys++;
-    return (m_camera_keys - 1);
-}
-
-long DrEngine::addCamera(float x, float y, float z) {
-    DrEngineCamera *camera = new DrEngineCamera(this, x, y, z);
-    m_cameras[m_camera_keys] = camera;
-    // Increment camera ID generator, return current camera ID
-    m_camera_keys++;
-    return (m_camera_keys - 1);
-}
-
-void DrEngine::clearCameras() {
-    for (auto camera_pair : m_cameras)
-        delete camera_pair.second;
-    m_cameras.clear();
-}
-
-// Updates all cameras based on the objects they're following
-void DrEngine::moveCameras(float milliseconds) {
-    for (auto camera_pair : m_cameras)
-        camera_pair.second->moveCamera(milliseconds);
-}
-
-// Moves all cameras to their new locations based on their speed, etc
-void DrEngine::updateCameras() {
-    for (auto camera_pair : m_cameras)
-        camera_pair.second->updateCamera();
-}
-
-//######################################################################################################
-//##    Returns camera position, this should also handle camera switching
-//######################################################################################################
-QVector3D DrEngine::getCameraPos() {
-    if (m_active_camera == 0) {
-        return c_no_camera;
-    } else if (m_switching_cameras == false) {
-        return m_cameras[m_active_camera]->getPosition();
-    } else {
-
-        // !!!!! TODO: Tweening between cameras
-
-        return QVector3D(0, 0, 0);
-    }
-}
-
-
-//######################################################################################################
 //##    DrEngineTexture
 //######################################################################################################
 DrEngineTexture* DrEngine::addTexture(long texture_id, QString from_asset_string) {

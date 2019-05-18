@@ -27,12 +27,13 @@ private:
     QVector3D       m_position = QVector3D(0, 0, 0);            // Current camera position
     QVector3D       m_speed = QVector3D(0, 0, 0);               // Current camera speed
 
+    QVector3D       m_target;                                   // Calculated point this camera is moving towards
+
+    SceneObject    *m_follow;                                   // Object this camera should follow
     QVector<double> m_avg_speed_x;                              // Average x speed of object this camera is following
     QVector<double> m_avg_speed_y;
 
-    QVector3D       m_target;
 
-    SceneObject    *m_follow;                                   // Object this camera should follow
 
 public:
     // Constructor
@@ -40,7 +41,7 @@ public:
 
     // Function Calls
     void        followObject(SceneObject *object) { m_follow = object; }
-    void        moveCamera(float milliseconds);
+    void        moveCamera(const float& milliseconds);
     void        updateCamera();
 
     // Getters / Setters

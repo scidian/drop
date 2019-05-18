@@ -42,7 +42,7 @@ enum class Pedal {
 
 enum class Jump_State {
     Need_To_Jump,
-    Jumped
+    Jumped,
 };
 
 enum class Body_Type {
@@ -87,6 +87,8 @@ struct SceneObject {
     float       scale_x = 1.0f;             // Scale of object in world
     float       scale_y = 1.0f;             // Scale of object in world
 
+    long        active_camera = 0;          // Set to ID of last camera that followed this object, 0 == no camera
+
     bool        one_way = false;            // Set to true if we're using this object as a one way platform
     cpVect      one_way_direction {0, 1};   // Direction of Normal for one way platforms
 
@@ -95,8 +97,15 @@ struct SceneObject {
 
     // ***** Object interaction
     bool        player_controls = false;    // Set to true to have object controlled by player control buttons, keyboard_x, keyboard_y
+    bool        lost_control = false;       // Set to true when players switch and this player still needs update velocity, but no more button control
     bool        is_wheel = false;           // Set to true if we want wheel to spin from button press
     double      wheel_speed;                // If is_wheel, Speed at which wheel should spin when gas pedal is pressed
+
+    int         jump_count = 0;             // How many jumps this player is allowed, -1 = unlimited, 0 = cannot jump, 1 = 1, 2 = 2, etc
+    int         remaining_jumps = 0;        // How many jumps player has left before it must hit ground
+    cpFloat     remaining_boost = 0;
+    bool        grounded = false;
+    Jump_State  jump_state = Jump_State::Jumped;
 
     // ***** Updated by Engine:
     double      angle = 0;                  // Current object angle
@@ -136,22 +145,26 @@ constexpr double    c_opaque   {1};
 class DrEngine
 {
 private:
-    DrProject          *m_project;                              // Pointer to Project to load into Engine
+    // Locals
+    DrProject          *m_project;                      // Pointer to Project to load into Engine
 
-    EngineCameraMap     m_cameras;                              // Map of Cameras used for this Engine
-    EngineTextureMap    m_textures;                             // Map of Textures used for this Engine
+    EngineCameraMap     m_cameras;                      // Map of Cameras used for this Engine
+    EngineTextureMap    m_textures;                     // Map of Textures used for this Engine
 
-    cpSpace        *m_space;                                    // Current physics space shown on screen
-
+    // Camera Variables
     long            m_active_camera = 0;            // Key to active camera in the Engine
     long            m_camera_keys = 1;              // ID Generator for cameras, camera IDs start at 1, 0 == no camera
     bool            m_switching_cameras = false;    // True when we want to start tweening towards a new camera
+    QVector3D       m_temp_position;                // Used for tweening between cameras
 
+    // Chipmunk Physics Space
+    cpSpace        *m_space;                        // Current physics space shown on screen
+                                                    //
     const int       m_iterations = 10;              // Times physics are processed each update, 10 is default and should be good enough for most games
     const cpFloat   m_time_step = 1 / 90.0;         // Speed at which want to try to update the Space, 1 / 90 = 90 times per second to up
                                                     //      It is *highly* recommended to use a fixed size time step (calling Update at a fixed interval)
     cpFloat         m_time_warp = 1.0;              // Speeds up or slows down physics time, 1 = 100% = Normal Time, Lower than 1 = slower, Higher = faster
-
+                                                    //
     cpVect          m_gravity;                      // Current global gravity applied to current space. Defaults to cpvzero. Can be overridden on
                                                     //      a per body basis by writing custom integration functions. Changing the gravity will
                                                     //      activate all sleeping bodies in the space.
@@ -164,12 +177,11 @@ private:
                                                     //      0 = no bounce, 1.0 will give a “perfect” bounce.
                                                     //      Due to inaccuracies in the simulation using 1.0 or greater is not recommended
 
-
+    // Scene Variables
     double          m_delete_threshold_x = 5000;    // X distance away from camera an object can be before it's removed from the scene
     double          m_delete_threshold_y = 5000;    // Y distance away from camera an object can be before it's removed from the scene
 
     QColor          m_background_color {0,0,0};     // Background color to use to clear screen during render
-
     long            m_current_world;                // Key of current world shown from Project
     double          m_game_direction = 0;           // Direction to load new levels, 0 = to the right, 90 = up, 180 = to the left, etc
     QPointF         m_game_start {0, 0};            // Origin point start stage loaded at
@@ -191,6 +203,8 @@ public:
 
     Demo_Space      demo_space =  Demo_Space::Project;
     Demo_Player     demo_player = Demo_Player::Car;
+    SceneObject    *demo_jumper_1;
+    SceneObject    *demo_jumper_2;
 
     Render_Type     render_type = Render_Type::Orthographic;          // Should render perspective or orthographic?
 
@@ -198,17 +212,9 @@ public:
 
     Pedal           gas_pedal = Pedal::None;
 
-    int             keyboard_x;                     // Set to -1 for left, 1 for right
-    bool            keyboard_y;                     // Set to -1 for down, 1 for up
-
-    cpBody         *player_body;
-    cpShape        *player_shape;
-    int             jump_count;
-    int             remaining_jumps;
-    cpFloat         remaining_boost;
-    bool            grounded;
-    Jump_State      jump_state;
-
+    int             keyboard_x;                             // Set to -1 for left, 1 for right
+    int             keyboard_y;                             // Set to -1 for down, 1 for up
+    bool            jump_button;                            // Set to 0 for not pressed, 1 for pressed
 
 public:
     DrEngine(DrProject *project);
@@ -233,7 +239,7 @@ public:
     void        clearSpace();
     void        loadStageToSpace(DrStage *stage, double offset_x, double offset_y);
     void        oneWayPlatform(SceneObject *object, cpVect direction);
-    void        playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat dt);
+    void        playerUpdateVelocity(SceneObject *object, cpVect gravity, cpFloat dt);
     void        setObjectBounce(SceneObject *object, const cpFloat &bounce);
     void        setObjectFriction(SceneObject *object, const cpFloat &friction);
     void        removeObject(SceneObject *object);
@@ -252,6 +258,7 @@ public:
     EngineCameraMap&    getCameraMap() { return m_cameras; }
     QVector3D           getCameraPos();
     void                moveCameras(float milliseconds);
+    void                switchCameras(long new_camera);
     void                updateCameras();
 
     // Textures
