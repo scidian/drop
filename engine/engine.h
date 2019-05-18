@@ -94,9 +94,6 @@ struct SceneObject {
     bool        custom_bounce = false;      // Set to true if we don't want this item affected by global m_bounce
 
     // ***** Object interaction
-    double      last_position_x;            // Previous frame position to help determine speed for camera
-    double      last_position_y;            // Previous frame position to help determine speed for camera
-
     bool        player_controls = false;    // Set to true to have object controlled by player control buttons, keyboard_x, keyboard_y
     bool        is_wheel = false;           // Set to true if we want wheel to spin from button press
     double      wheel_speed;                // If is_wheel, Speed at which wheel should spin when gas pedal is pressed
@@ -107,6 +104,9 @@ struct SceneObject {
     QPointF     velocity;                   // Current object velocity
     double      z_order;                    // Used for layering
     float       alpha;                      // Transparency of object
+
+    double      last_position_x;            // Previous frame position, for whatever may need it
+    double      last_position_y;            // Previous frame position, for whatever may need it
 
 };
 
@@ -147,6 +147,7 @@ private:
 
     long            m_active_camera = 0;            // Key to active camera in the Engine
     long            m_camera_keys = 1;              // ID Generator for cameras, camera IDs start at 1, 0 == no camera
+    bool            m_switching_cameras = false;    // True when we want to start tweening towards a new camera
 
     const int       m_iterations = 10;              // Times physics are processed each update, 10 is default and should be good enough for most games
     const cpFloat   m_time_step = 1 / 90.0;         // Speed at which want to try to update the Space, 1 / 90 = 90 times per second to up

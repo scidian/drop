@@ -54,7 +54,6 @@ long DrEngine::addCamera(SceneObject* object_to_follow) {
 long DrEngine::addCamera(float x, float y, float z) {
     DrEngineCamera *camera = new DrEngineCamera(this, x, y, z);
     m_cameras[m_camera_keys] = camera;
-
     // Increment camera ID generator, return current camera ID
     m_camera_keys++;
     return (m_camera_keys - 1);
@@ -64,11 +63,6 @@ void DrEngine::clearCameras() {
     for (auto camera_pair : m_cameras)
         delete camera_pair.second;
     m_cameras.clear();
-}
-
-QVector3D DrEngine::getCameraPos() {
-    if (m_active_camera == 0)   return c_no_camera;
-    else                        return m_cameras[m_active_camera]->getPosition();
 }
 
 // Updates all cameras based on the objects they're following
@@ -82,6 +76,20 @@ void DrEngine::updateCameras() {
     for (auto camera_pair : m_cameras)
         camera_pair.second->updateCamera();
 }
+
+//######################################################################################################
+//##    Returns camera position, this should also handle camera switching
+//######################################################################################################
+QVector3D DrEngine::getCameraPos() {
+    if (m_active_camera == 0) {
+        return c_no_camera;
+    } else if (m_switching_cameras == false) {
+        return m_cameras[m_active_camera]->getPosition();
+    } else {
+
+    }
+}
+
 
 //######################################################################################################
 //##    DrEngineTexture

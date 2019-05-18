@@ -30,6 +30,8 @@ private:
     QVector<double> m_avg_speed_x;                              // Average x speed of object this camera is following
     QVector<double> m_avg_speed_y;
 
+    QVector3D       m_target;
+
     SceneObject    *m_follow;                                   // Object this camera should follow
 
 public:

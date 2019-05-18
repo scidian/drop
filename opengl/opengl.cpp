@@ -5,6 +5,8 @@
 //
 //
 //
+#include <QSurfaceFormat>
+
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "opengl/opengl.h"
@@ -17,6 +19,7 @@ OpenGL::OpenGL(QWidget *parent, DrEngine *engine) : QOpenGLWidget(parent), m_eng
     // ***** DO NOT perform any OpenGL resource initialization in constructor, use initializeGL() instead    
     setFocusPolicy(Qt::FocusPolicy::StrongFocus);            // Must setFocus to accept KeyPress events
 
+    setFormat(QSurfaceFormat::defaultFormat());
 }
 
 OpenGL::~OpenGL() { }

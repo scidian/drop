@@ -27,10 +27,7 @@ DrEngineTexture::DrEngineTexture(QPixmap &from_pixmap) {
 //##        Loads a texture
 //####################################################################################
 void DrEngineTexture::loadTexture(QString from_asset_string) {
-    QImage image = QImage(from_asset_string);
-    image = image.convertToFormat( QImage::Format_ARGB32 );
-
-    QPixmap pix = QPixmap::fromImage( image );
+    QPixmap pix = QPixmap( from_asset_string );
     loadTexture( pix );
 }
 
@@ -49,11 +46,8 @@ void DrEngineTexture::loadTexture(QPixmap &from_pixmap) {
     painter.drawPixmap( c_texture_border, c_texture_border, image.width(), image.height(), QPixmap::fromImage(image), 0, 0, image.width(), image.height());
     painter.end();
 
-    image = one_pixel_border.toImage();
-    image = image.convertToFormat( QImage::Format_ARGB32 );
-
     // Create new texture
-    m_texture = new QOpenGLTexture( image );
+    m_texture = new QOpenGLTexture( one_pixel_border.toImage() );
 
     ///QOpenGLTexture* m_texture = new QOpenGLTexture(QOpenGLTexture::Target2DArray);
     ///m_texture->setSize(one_pixel_border.width(), one_pixel_border.height());
