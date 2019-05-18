@@ -52,16 +52,17 @@
 
 int main(int argc, char *argv[]) {
 
+    // ***** Set OpenGL surface format
+    QSurfaceFormat format = QSurfaceFormat();
+    format.setVersion(2,1);
+    format.setDepthBufferSize(24);
+    format.setStencilBufferSize(8);
+    format.setSamples(2);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    QSurfaceFormat::setDefaultFormat(format);
+
     // ***** Initiliaze application
     QApplication drop(argc, argv);                  // Declare application
-
-    // ***** Set OpenGL surface format
-    QSurfaceFormat format;
-        ///format.setSamples(1);                       // Anti-aliasing
-        format.setDepthBufferSize(24);
-        format.setStencilBufferSize(8);
-        format.setProfile(QSurfaceFormat::CoreProfile);
-        QSurfaceFormat::setDefaultFormat(format);
 
     // ***** Load some global data
     Dr::InitializeFlags();                          // Sets debug flags
@@ -70,13 +71,14 @@ int main(int argc, char *argv[]) {
 
     // ***** Create main form
     FormMain form_main(nullptr);                    // Declare / Load FormMain, pass Globals helper
+
     Dr::SetActiveFormMain(&form_main);              // Set main form to active FormMain
     Dr::SetActiveEditorRelay(&form_main);           // Set main form to active EditorRelay
     qApp->installEventFilter(&form_main);           // Installs an application wide event filter attached to FormMain (acts as key grabber)
     form_main.show();                               // Show FormMain
 
     // ***** Process events and mark as loaded
-    QApplication::processEvents();                  // Ensure FormMain finishes showing
+    qApp->processEvents();                          // Ensure FormMain finishes showing
     Dr::SetDoneLoading(true);                       // Marks FormMain as finished loading
 
     // ***** Run Program
@@ -86,8 +88,6 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
-
-
 
 
 

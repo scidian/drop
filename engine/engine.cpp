@@ -54,6 +54,7 @@ long DrEngine::addCamera(SceneObject* object_to_follow) {
 long DrEngine::addCamera(float x, float y, float z) {
     DrEngineCamera *camera = new DrEngineCamera(this, x, y, z);
     m_cameras[m_camera_keys] = camera;
+
     // Increment camera ID generator, return current camera ID
     m_camera_keys++;
     return (m_camera_keys - 1);
@@ -70,10 +71,16 @@ QVector3D DrEngine::getCameraPos() {
     else                        return m_cameras[m_active_camera]->getPosition();
 }
 
+// Updates all cameras based on the objects they're following
+void DrEngine::moveCameras(float milliseconds) {
+    for (auto camera_pair : m_cameras)
+        camera_pair.second->moveCamera(milliseconds);
+}
+
+// Moves all cameras to their new locations based on their speed, etc
 void DrEngine::updateCameras() {
-    for (auto camera_pair : m_cameras) {
+    for (auto camera_pair : m_cameras)
         camera_pair.second->updateCamera();
-    }
 }
 
 //######################################################################################################

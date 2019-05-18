@@ -38,8 +38,8 @@ public:
 
     // Function Calls
     void        followObject(SceneObject *object) { m_follow = object; }
+    void        moveCamera(float milliseconds);
     void        updateCamera();
-    void        updateFollow();
 
     // Getters / Setters
     const QVector3D&    getPosition()   { return m_position; }

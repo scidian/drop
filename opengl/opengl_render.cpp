@@ -19,10 +19,15 @@
 //##        Render, Paint the Scene
 //####################################################################################
 void OpenGL::paintGL() {
+    ///auto ver = glGetString(GL_VERSION);
+    ///m_engine->info = QString::fromUtf8(reinterpret_cast<const char*>(ver));
 
     // ********** Initialize painter
     QPainter painter( this );
     painter.beginNativePainting();
+
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::HighQualityAntialiasing);
 
     // ********** Make sure viewport is sized correctly and clear the buffers
     ///glViewport(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
@@ -31,15 +36,15 @@ void OpenGL::paintGL() {
     float background_blue =  static_cast<float>(m_engine->getBackgroundColor().blueF());
     glClearColor(background_red, background_green, background_blue, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);// | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+ //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+ //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 
     // Enable depth / stencil test
     ///glEnable( GL_DEPTH_TEST  );
     ///glEnable( GL_STENCIL_TEST );
 
     // Enable anti aliasing
-    ///glEnable( GL_MULTISAMPLE );
+    glEnable( GL_MULTISAMPLE );
     ///glEnable(GL_POLYGON_SMOOTH);
     ///glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
     ///glSampleCoverage(GL_SAMPLE_ALPHA_TO_COVERAGE, GL_TRUE);
@@ -77,6 +82,10 @@ void OpenGL::paintGL() {
         m_engine->fps = 1;
         m_engine->fps_timer.restart();
     }
+
+
+
+
 }
 
 
