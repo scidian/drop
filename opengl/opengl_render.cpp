@@ -15,16 +15,14 @@
 #include "engine/engine_texture.h"
 #include "opengl/opengl.h"
 
+
 //####################################################################################
 //##        Render, Paint the Scene
 //####################################################################################
 void OpenGL::paintGL() {
+    // Find OpenGL Version supported on this system
     ///auto ver = glGetString(GL_VERSION);
     ///m_engine->info = QString::fromUtf8(reinterpret_cast<const char*>(ver));
-
-    // ********** Initialize painter
-    QPainter painter( this );
-    painter.beginNativePainting();
 
     // ********** Make sure viewport is sized correctly and clear the buffers
     ///glViewport(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
@@ -32,23 +30,23 @@ void OpenGL::paintGL() {
     float background_green = static_cast<float>(m_engine->getBackgroundColor().greenF());
     float background_blue =  static_cast<float>(m_engine->getBackgroundColor().blueF());
     glClearColor(background_red, background_green, background_blue, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);///) | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
+    ///glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    ///glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 
     // Enable depth / stencil test
     ///glEnable( GL_DEPTH_TEST  );
     ///glEnable( GL_STENCIL_TEST );
 
-    // Enable anti aliasing
-    ///glEnable( GL_MULTISAMPLE );
-    ///glEnable(GL_POLYGON_SMOOTH);
-    ///glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
-    ///glSampleCoverage(GL_SAMPLE_ALPHA_TO_COVERAGE, GL_TRUE);
-
     // Enable alpha channel
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);      // Standard blend function
+
+    // Enable anti aliasing
+    glEnable( GL_MULTISAMPLE );
+    ///glEnable(GL_POLYGON_SMOOTH);
+    ///glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
+    ///glSampleCoverage(GL_SAMPLE_ALPHA_TO_COVERAGE, GL_TRUE);
 
     // Alpha clamping
     ///glEnable(GL_ALPHA_TEST);
@@ -61,15 +59,14 @@ void OpenGL::paintGL() {
     // ***** Render Scene
     renderSceneObjects();
 
-    // ***** Disable shader program, end native drawing
-    painter.endNativePainting();
 
     // ********** Draws debug shapes onto screen
+    QPainter painter( this );
     painter.setRenderHint(QPainter::Antialiasing, true);
     if (m_engine->debug_shapes)     drawDebugShapes(painter);
     if (m_engine->debug_collisions) drawDebugCollisions(painter);
-
     painter.end();
+
 
     // ***** Show frames per second
     m_engine->fps++;
@@ -79,10 +76,6 @@ void OpenGL::paintGL() {
         m_engine->fps = 1;
         m_engine->fps_timer.restart();
     }
-
-
-
-
 }
 
 
@@ -98,7 +91,7 @@ void OpenGL::updateViewMatrix() {
     float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
 
     // Set camera position
-    QVector3D  perspective_offset ( 50.0f, 50.0f, 0.0f);
+    QVector3D  perspective_offset ( 200.0f, 200.0f, 0.0f);
     QVector3D  eye(     m_engine->getCameraPos().x() * m_scale + perspective_offset.x(),
                         m_engine->getCameraPos().y() * m_scale + perspective_offset.y(),
                         m_engine->getCameraPos().z() );
@@ -130,24 +123,29 @@ void OpenGL::updateViewMatrix() {
 }
 
 
+
 //####################################################################################
 //##        Render, Paint the Scene
 //####################################################################################
+// Before rendering 3D objects, enable face culling for triangles facing away from view
+void OpenGL::cullingOn() {      glEnable( GL_CULL_FACE );   glCullFace(  GL_BACK );     glFrontFace( GL_CCW ); }
+// Turn off culling before drawing 2D quads, NOTE: Must turn OFF culling for QPainter to work
+void OpenGL::cullingOff() {     glDisable( GL_CULL_FACE ); }
+
+// Renders All Scene Objects
 void OpenGL::renderSceneObjects() {
 
-    // ********** Enable shader program
+    // ***** Enable shader program
     if (!m_shader.bind()) return;
 
+    // ***** Calculate / Apply Matrix
     QMatrix4x4 m_matrix = m_projection * m_model_view;
     m_shader.setUniformValue( m_uniform_matrix, m_matrix );
 
-
-    // ***** Render 3D Objects - before rendering 3D objects, enable face culling for triangles facing away from view
-    glEnable( GL_CULL_FACE );       glCullFace(  GL_BACK );     glFrontFace( GL_CCW );
+    // ***** Render 3D Objects
+    cullingOn();
     drawCube( QVector3D( -400, 400, -300) );
-
-    // Turn off culling before drawing 2D objects, ALSO: Must turn OFF culling for QPainter to work
-    glDisable( GL_CULL_FACE );
+    cullingOff();
 
 
     // ***** Create a vector of the scene objects (ignoring lines / segments) and sort it by depth
@@ -158,6 +156,7 @@ void OpenGL::renderSceneObjects() {
         v.push_back(std::make_pair(i, m_engine->objects[i]->z_order));
     }
     sort(v.begin(), v.end(), [] (std::pair<int, double>&i, std::pair<int, double>&j) { return i.second < j.second; });
+
 
     // ***** Render 2D Objects
     ///for (auto object : m_engine->objects) {
@@ -174,8 +173,8 @@ void OpenGL::renderSceneObjects() {
         std::vector<float> texCoords;
         texCoords.clear();
         texCoords.resize( 8 );
-        float one_x =  (1 / texture->width()) ;// * (c_texture_border + 1);
-        float one_y =  (1 / texture->height());// * (c_texture_border + 1);
+        float one_x =  (1 / texture->width()) ;
+        float one_y =  (1 / texture->height());
         texCoords[0] = 1 - one_x;    texCoords[1] = 1 - one_y;
         texCoords[2] =     one_x;    texCoords[3] = 1 - one_y;
         texCoords[4] = 1 - one_x;    texCoords[5] =     one_y;
@@ -210,8 +209,7 @@ void OpenGL::renderSceneObjects() {
         QVector3D bot_right = QVector3D( half_width, -half_height, 0) * matrix;
         QVector3D bot_left =  QVector3D(-half_width, -half_height, 0) * matrix;
 
-
-        // ***** Load vertices for this object, this includes added size of c_texture_border
+        // ***** Load vertices for this object
         QVector<float> vertices;
         vertices.clear();
         vertices.resize( 12 );              // in sets of x, y, z
@@ -249,17 +247,13 @@ void OpenGL::renderSceneObjects() {
     }
 
     // ***** Render Front 3D Objects
-    glEnable( GL_CULL_FACE );   glCullFace(  GL_BACK );     glFrontFace( GL_CCW );
+    cullingOn();
     drawCube( QVector3D(0, 300, 600) );
-    glDisable( GL_CULL_FACE );
+    cullingOff();
 
     // *****Disable shader program
     m_shader.release();
-
 }
-
-
-
 
 
 

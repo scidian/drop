@@ -15,11 +15,8 @@
 //##        Constructor / Destructor
 //####################################################################################
 OpenGL::OpenGL(QWidget *parent, DrEngine *engine) : QOpenGLWidget(parent), m_engine(engine) {
-
     // ***** DO NOT perform any OpenGL resource initialization in constructor, use initializeGL() instead    
     setFocusPolicy(Qt::FocusPolicy::StrongFocus);            // Must setFocus to accept KeyPress events
-
-    setFormat(QSurfaceFormat::defaultFormat());
 }
 
 OpenGL::~OpenGL() { }

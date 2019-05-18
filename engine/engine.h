@@ -122,8 +122,6 @@ typedef std::map<long, DrEngineCamera*>  EngineCameraMap;
 typedef std::map<long, DrEngineTexture*> EngineTextureMap;
 
 // Constants
-constexpr int       c_texture_border = 1;       // Padding added on to textures for anti-aliasing
-
 constexpr QVector3D c_no_camera {0, 0, 800};    // Default camera position if there is no active camera
 
 constexpr QPointF   c_center   {0, 0};

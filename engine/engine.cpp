@@ -87,6 +87,9 @@ QVector3D DrEngine::getCameraPos() {
         return m_cameras[m_active_camera]->getPosition();
     } else {
 
+        // !!!!! TODO: Tweening between cameras
+
+        return QVector3D(0, 0, 0);
     }
 }
 

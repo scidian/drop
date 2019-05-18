@@ -52,17 +52,17 @@
 
 int main(int argc, char *argv[]) {
 
-    // ***** Set OpenGL surface format
-    QSurfaceFormat format = QSurfaceFormat();
-    format.setVersion(2,0);
-    //format.setDepthBufferSize(24);
-    //format.setStencilBufferSize(8);
-    format.setSamples(2);
-    format.setProfile(QSurfaceFormat::CoreProfile);
-    QSurfaceFormat::setDefaultFormat(format);
-
     // ***** Initiliaze application
     QApplication drop(argc, argv);                  // Declare application
+
+    // ***** Set OpenGL surface format
+    QSurfaceFormat format;
+    format.setSamples(2);
+    format.setDepthBufferSize(24);
+    ///format.setStencilBufferSize(8);
+    ///format.setProfile(QSurfaceFormat::CoreProfile);
+    /// ///format.setVersion(2,0);
+    QSurfaceFormat::setDefaultFormat(format);
 
     // ***** Load some global data
     Dr::InitializeFlags();                          // Sets debug flags
@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
     Dr::LoadPreferences();                          // Loads user preferences
 
     // ***** Create main form
-    FormMain form_main(nullptr);                    // Declare / Load FormMain, pass Globals helper
+    FormMain form_main;                             // Declare / Load FormMain, pass Globals helper
 
     Dr::SetActiveFormMain(&form_main);              // Set main form to active FormMain
     Dr::SetActiveEditorRelay(&form_main);           // Set main form to active EditorRelay

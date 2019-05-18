@@ -38,16 +38,16 @@ void DrEngineTexture::loadTexture(QPixmap &from_pixmap) {
     image = image.convertToFormat( QImage::Format_ARGB32 );
 
     // Add a "c_texture_border" pixel border to reduce artifacts during multi sampling
-    QPixmap one_pixel_border( image.width() + (c_texture_border*2), image.height() + (c_texture_border*2));
-    one_pixel_border.fill(Qt::transparent);
-    QPainter painter;
-    painter.begin(&one_pixel_border);
-    painter.setRenderHint(QPainter::Antialiasing, false);
-    painter.drawPixmap( c_texture_border, c_texture_border, image.width(), image.height(), QPixmap::fromImage(image), 0, 0, image.width(), image.height());
-    painter.end();
+    ///QPixmap one_pixel_border( image.width() + (c_texture_border*2), image.height() + (c_texture_border*2));
+    ///one_pixel_border.fill(Qt::transparent);
+    ///QPainter painter;
+    ///painter.begin(&one_pixel_border);
+    ///painter.setRenderHint(QPainter::Antialiasing, false);
+    ///painter.drawPixmap( c_texture_border, c_texture_border, image.width(), image.height(), QPixmap::fromImage(image), 0, 0, image.width(), image.height());
+    ///painter.end();
 
     // Create new texture
-    m_texture = new QOpenGLTexture( one_pixel_border.toImage() );
+    m_texture = new QOpenGLTexture( image );
 
     ///QOpenGLTexture* m_texture = new QOpenGLTexture(QOpenGLTexture::Target2DArray);
     ///m_texture->setSize(one_pixel_border.width(), one_pixel_border.height());
@@ -58,19 +58,19 @@ void DrEngineTexture::loadTexture(QPixmap &from_pixmap) {
     ///m_texture->setMagnificationFilter(QOpenGLTexture::Nearest);
     ///m_texture->setData(one_pixel_border.toImage(), QOpenGLTexture::GenerateMipMaps);
 
-    m_texture->setMinificationFilter( QOpenGLTexture::Filter::Nearest);                  // no anti aliasing
+    //m_texture->setMinificationFilter( QOpenGLTexture::Filter::Nearest);                  // no anti aliasing
     //m_texture->setMinificationFilter( QOpenGLTexture::Filter::NearestMipMapLinear);      // small is edgy
     //m_texture->setMinificationFilter( QOpenGLTexture::Filter::NearestMipMapNearest);     // small is edgy
-  //  m_texture->setMinificationFilter( QOpenGLTexture::Filter::Linear);                   // good
+    m_texture->setMinificationFilter( QOpenGLTexture::Filter::Linear);                     // good
     //m_texture->setMinificationFilter( QOpenGLTexture::Filter::LinearMipMapLinear);       // a little fuzzy
-    //m_texture->setMinificationFilter( QOpenGLTexture::Filter::LinearMipMapNearest);        // good
+    //m_texture->setMinificationFilter( QOpenGLTexture::Filter::LinearMipMapNearest);      // good
 
-    m_texture->setMagnificationFilter(QOpenGLTexture::Filter::Nearest);                  // no anti aliasing
+    //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::Nearest);                  // no anti aliasing
     //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::NearestMipMapLinear);      //
     //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::NearestMipMapNearest);     //
-  //  m_texture->setMagnificationFilter(QOpenGLTexture::Filter::Linear);                   //
+    //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::Linear);                   //
     //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::LinearMipMapLinear);       // good
-    //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::LinearMipMapNearest);        // good
+    m_texture->setMagnificationFilter(QOpenGLTexture::Filter::LinearMipMapNearest);        // good
 
     m_texture->setWrapMode(QOpenGLTexture::WrapMode::ClampToEdge);             // !!! May need to fixed border artifacts?
 

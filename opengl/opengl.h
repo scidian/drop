@@ -73,6 +73,8 @@ public:
     void            zoomInOut(int level);
 
     // Render Calls
+    void            cullingOn();
+    void            cullingOff();
     void            drawCube(QVector3D center);
     void            drawDebugShapes(QPainter &painter);
     void            drawDebugCollisions(QPainter &painter);

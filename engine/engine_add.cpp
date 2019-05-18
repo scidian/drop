@@ -150,8 +150,8 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
 
     checkObjectCustomFrictionBounce(block, friction, bounce);
 
-    double width  = (m_textures[texture_number]->width() -  c_texture_border*2) * scale.x();       // Width of collision shape
-    double height = (m_textures[texture_number]->height() - c_texture_border*2) * scale.y();       // Height of collision shape
+    double width  = m_textures[texture_number]->width() * scale.x();        // Width of collision shape
+    double height = m_textures[texture_number]->height() * scale.y();       // Height of collision shape
     block->scale_x = static_cast<float>(scale.x());
     block->scale_y = static_cast<float>(scale.y());
     block->position.setX(x);
