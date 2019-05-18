@@ -85,9 +85,9 @@ void OpenGL::paintGL() {
 //####################################################################################
 void OpenGL::updateViewMatrix() {
     //          Axis:
-    //              -X left,  X right
-    //              -Y down,  Y up
-    //              -Z back,  Z front
+    //              -X left,  +X right
+    //              -Y down,  +Y up
+    //              -Z back,  +Z front
     float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
 
     // Set camera position
@@ -203,11 +203,11 @@ void OpenGL::renderSceneObjects() {
 
         // ***** Create rotation matrix, apply rotation to object
         QMatrix4x4 matrix;
-        matrix.rotate( static_cast<float>(-object->angle), 0.0, 0.0, 1.0 );
-        QVector3D top_right = QVector3D( half_width,  half_height, 0) * matrix;
-        QVector3D top_left =  QVector3D(-half_width,  half_height, 0) * matrix;
-        QVector3D bot_right = QVector3D( half_width, -half_height, 0) * matrix;
-        QVector3D bot_left =  QVector3D(-half_width, -half_height, 0) * matrix;
+        matrix.rotate( static_cast<float>(object->angle), 0.0, 0.0, 1.0 );
+        QVector3D top_right = matrix * QVector3D( half_width,  half_height, 0);
+        QVector3D top_left =  matrix * QVector3D(-half_width,  half_height, 0);
+        QVector3D bot_right = matrix * QVector3D( half_width, -half_height, 0);
+        QVector3D bot_left =  matrix * QVector3D(-half_width, -half_height, 0);
 
         // ***** Load vertices for this object
         QVector<float> vertices;

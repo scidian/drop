@@ -54,9 +54,20 @@ void DrView::drawForeground(QPainter *painter, const QRectF &rect) {
         paintGrid(*painter);
     }
 
-    if (my_scene->getCurrentStageShown()) {
+    // Calculate game frame and draw Frame and Scene Bounds
+    QRectF game_frame;
+    int width =  m_project->getOption(Project_Options::Width).toInt();
+    int height = m_project->getOption(Project_Options::Height).toInt();
+    switch (m_project->getOptionOrientation()) {
+        case Orientation::Portrait:     game_frame = QRectF(0, -height, width, height);       break;
+        case Orientation::Landscape:    game_frame = QRectF(0, -width, height,  width);       break;
+    }
+
+    DrStage *stage = my_scene->getCurrentStageShown();
+    if (stage) {
         if (my_scene->getCurrentStageShown()->isStartStage())
-            paintGameFrame(*painter);
+            paintGameFrame(*painter, game_frame);
+        paintSceneBounds(*painter, game_frame, stage);
     }
 }
 
@@ -212,12 +223,7 @@ void DrView::paintGrid(QPainter &painter) {
 //####################################################################################
 //##        PAINT: Paints Game Frame in Scene Coordinates
 //####################################################################################
-void DrView::paintGameFrame(QPainter &painter) {
-    QRectF game_frame;
-    switch (m_project->getOptionOrientation()) {
-        case Orientation::Portrait:     game_frame = QRectF(0, -1600, 800, 1600);       break;
-        case Orientation::Landscape:    game_frame = QRectF(0, -800, 1600,  800);       break;
-    }
+void DrView::paintGameFrame(QPainter &painter, const QRectF& game_frame) {
 
     painter.setBrush(Qt::NoBrush);
     QColor frame_color = Dr::GetColor(Window_Colors::Button_Light);
@@ -235,6 +241,57 @@ void DrView::paintGameFrame(QPainter &painter) {
     painter.drawRoundedRect(game_frame, 25, 25);
 }
 
+
+//####################################################################################
+//##        PAINT: Paints Scene Bounds in Scene Coordinates
+//####################################################################################
+void DrView::paintSceneBounds(QPainter &painter, const QRectF& game_frame, DrStage* stage) {
+
+    long scene_size = stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();
+
+    // Draw start bracket
+    QPainterPath left, right, direction, arrow;
+    left.moveTo(  15, 0);
+    left.lineTo(   0, 0);
+    left.lineTo(   0, -game_frame.height() );
+    left.lineTo(  15, -game_frame.height() );
+
+    // End Bracket
+    right.moveTo(-15, 0);
+    right.lineTo(  0, 0);
+    right.lineTo(  0, -game_frame.height() );
+    right.lineTo(-15, -game_frame.height() );
+    right.translate( scene_size, 0 );
+
+    // Directional Arrow
+    arrow.moveTo(  0, -game_frame.height()/2 );
+    arrow.lineTo( 30, -game_frame.height()/2);
+    arrow.translate( scene_size, 0 );
+
+    // Direction Box
+    direction.addRect( -10, -game_frame.height()/2 - 10, 20, 20);
+    direction.translate( scene_size, 0 );
+
+    painter.setBrush( Qt::NoBrush );
+    QColor line_color = Dr::GetColor(Window_Colors::Icon_Dark);
+    QPen frame_pen_outline = QPen(line_color.darker(200), 3);
+    QPen frame_pen_inside  = QPen(line_color.lighter(200), 1);
+    frame_pen_outline.setCosmetic( true );
+    frame_pen_inside.setCosmetic(  true );
+
+    painter.setPen( frame_pen_outline );    painter.drawPath(left);
+    painter.setPen( frame_pen_inside );     painter.drawPath(left);
+
+    painter.setPen( frame_pen_outline );    painter.drawPath(right);
+    painter.setPen( frame_pen_inside );     painter.drawPath(right);
+
+    painter.setBrush( Dr::GetColor(Window_Colors::Icon_Light) );
+    painter.setPen( frame_pen_outline );    painter.drawPath(arrow);
+    painter.setPen( frame_pen_inside );     painter.drawPath(arrow);
+
+    painter.setPen( frame_pen_outline );    painter.drawPath(direction);
+    painter.setPen( frame_pen_inside );     painter.drawPath(direction);
+}
 
 
 //####################################################################################

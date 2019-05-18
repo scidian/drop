@@ -17,7 +17,7 @@ class FormMain;
 class IEditorRelay;
 
 //####################################################################################
-//##    Program wide options
+//##    Program Wide Options / Settings / Preferences)
 //############################
 enum class Preferences {
     World_Editor_Lock_Backgrounds,                  // bool
@@ -34,7 +34,6 @@ enum class Preferences {
     Color_Popup_History,                            // QList<QVariant> (QVariant = qRgba = unsigned int)
     Color_Popup_Tab,                                // int - 0 = Palette, 1 = History
 };
-
 
 //####################################################################################
 //##    Global function declarations

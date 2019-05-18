@@ -18,6 +18,7 @@
 
 // Forward declarations
 class DrProject;
+class DrStage;
 class DrObject;
 class DrItem;
 class SelectionGroup;
@@ -216,12 +217,13 @@ public:
     // Paint Functions
     void            paintBoundingBox(QPainter &painter);
     void            paintCrossHairs(QPainter &painter, QPoint center);
-    void            paintGameFrame(QPainter &painter);
+    void            paintGameFrame(QPainter &painter, const QRectF& game_frame);
     void            paintGrid(QPainter &painter);
     void            paintGroupAngle(QPainter &painter, double angle);
     void            paintHandles(QPainter &painter, Handle_Shapes shape_to_draw);
     void            paintItemOutlines(QPainter &painter);
     void            paintItemCenters(QPainter &painter);
+    void            paintSceneBounds(QPainter &painter, const QRectF& game_frame, DrStage* stage);
     void            paintToolTip(QPainter &painter);
 
     // Selection Functions

@@ -18,7 +18,6 @@ enum class Properties;
 // Global Enum Constants
 constexpr int    c_no_key = -1;             // Value that represents no item selected
 
-
 //####################################################################################
 //##
 //##    Main Types of entities possible in project

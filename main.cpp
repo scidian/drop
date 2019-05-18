@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
 
     // ***** Set OpenGL surface format
     QSurfaceFormat format;
-    format.setSamples(2);
+    format.setSamples(4);
     format.setDepthBufferSize(24);
     ///format.setStencilBufferSize(8);
     ///format.setProfile(QSurfaceFormat::CoreProfile);

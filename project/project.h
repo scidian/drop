@@ -11,12 +11,14 @@
 #include "settings/settings.h"
 
 enum class Project_Options {
-    Name,                       // string
+    Name,                   // string,  Name of Current Project
 
-    Current_World,              // long
-    Current_Stage,              // long
+    Current_World,          // long,    World currently displayed in editor
+    Current_Stage,          // long,    Scene currently displayed in editor
 
-    Orientation,                // int (enum Orientation)
+    Orientation,            // int,     This Projects target device orientation (enum Orientation)
+    Width,                  // long,    This Projects target device window width,  usually 800
+    Height,                 // long,    This Projects target device window height, usually 1600
 };
 
 enum class Orientation {

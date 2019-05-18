@@ -26,7 +26,7 @@ void OpenGL::drawCube(QVector3D center) {
     DrEngineTexture *texture = m_engine->getTexture( Test_Textures::Block );
     texture->texture()->bind();
 
-    for (int i = 0; i < 5; i++) {
+    for (int loop = 0; loop < 6; loop++) {
         std::vector<float> texCoords;
         texCoords.clear();
         texCoords.resize( 8 );
@@ -65,23 +65,29 @@ void OpenGL::drawCube(QVector3D center) {
             half_no_border = width / 2.0f;
         }
 
-        // ***** Create rotation matrix, apply rotation to object
+        // ***** Create rotation matrix, NOTE: rotations happend in reverse order
         QMatrix4x4 matrix;
-        if (i == 4) {
-            matrix.rotate( static_cast<float>( -cube_angle  ), 0.0, 0.0, 1.0 );
-            matrix.rotate( -90, 1.0, 0.0, 0.0 );
+        matrix.rotate( 45.0f, 1.0, 0.0, 1.0 );                                              // Kick at a cool angle
+
+        // Top of Cube
+        if (loop == 4) {
+            matrix.rotate( cube_angle + static_cast<float>(90*loop), 0.0, 1.0, 0.0 );       // Spins around y axis, Twirl
+            matrix.rotate( -90.0f, 1.0, 0.0, 0.0 );                                         // Spins around x axis, Flip up to top
+        } else if (loop == 5) {
+            matrix.rotate( cube_angle + static_cast<float>(90*loop), 0.0, 1.0, 0.0 );       // Spins around y axis, Twirl
+            matrix.rotate( 90.0f, 1.0, 0.0, 0.0 );                                          // Spins around x axis, Flip down to bottom
         } else {
-            matrix.rotate( static_cast<float>( cube_angle + (90 * i) ), 0.0, 1.0, 0.0 );
+            //matrix.rotate( cube_angle + static_cast<float>(90*loop), 1.0, 0.0, 0.0 );       // Spins around x axis
+            matrix.rotate( cube_angle + static_cast<float>(90*loop), 0.0, 1.0, 0.0 );       // Spins around y axis
+            //matrix.rotate( cube_angle + static_cast<float>(90*loop), 0.0, 0.0, 1.0 );       // Spins around z axis
         }
-        matrix.rotate( static_cast<float>( 45               ), 1.0, 0.0, 1.0 );
 
 
         QVector3D top_right, top_left, bot_right, bot_left;
-        top_right = QVector3D( half_width,  half_height, -half_no_border) * matrix;
-        top_left =  QVector3D(-half_width,  half_height, -half_no_border) * matrix;
-        bot_right = QVector3D( half_width, -half_height, -half_no_border) * matrix;
-        bot_left =  QVector3D(-half_width, -half_height, -half_no_border) * matrix;
-
+        top_right = matrix * QVector3D( half_width,  half_height, half_no_border);
+        top_left =  matrix * QVector3D(-half_width,  half_height, half_no_border);
+        bot_right = matrix * QVector3D( half_width, -half_height, half_no_border);
+        bot_left =  matrix * QVector3D(-half_width, -half_height, half_no_border);
 
         // ***** Load vertices for this object
         QVector<float> vertices;

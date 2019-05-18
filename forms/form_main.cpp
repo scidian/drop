@@ -58,6 +58,8 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
 
     project->setOption(Project_Options::Name, "Rocky Rover");
     project->setOption(Project_Options::Orientation, static_cast<int>(Orientation::Portrait));
+    project->setOption(Project_Options::Width,   800);
+    project->setOption(Project_Options::Height, 1600);
 
 
 
