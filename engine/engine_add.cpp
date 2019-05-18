@@ -67,8 +67,9 @@ SceneObject* DrEngine::addLine(Body_Type body_type, QPointF p1, QPointF p2, doub
 
 QVector<QPointF> createEllipseFromCircle(const QPointF &center, const double &radius) {
     QVector<QPointF> ellipse;
-    for (int i = 0; i < 24; i++) {
-        QTransform t = QTransform().translate(center.x(), center.y()).rotate((i * 15));
+    int count = 18;
+    for (int i = 0; i < count; i++) {
+        QTransform t = QTransform().translate(center.x(), center.y()).rotate(i * 360.0 / count);
         QPointF point = t.map(QPointF( 0, radius));
         ellipse.append( point );
     }

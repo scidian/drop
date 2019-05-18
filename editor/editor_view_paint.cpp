@@ -251,20 +251,24 @@ void DrView::paintSceneBounds(QPainter &painter, const QRectF& game_frame, DrSta
 
     // Draw start bracket
     QPainterPath left, right, direction, arrow;
-    left.moveTo(  15, 0);
+    left.moveTo(  30, 0);
     left.lineTo(   0, 0);
     left.lineTo(   0, -game_frame.height() );
-    left.lineTo(  15, -game_frame.height() );
+    left.lineTo(  30, -game_frame.height() );
 
     // End Bracket
-    right.moveTo(-15, 0);
+    right.moveTo(-30, 0);
     right.lineTo(  0, 0);
     right.lineTo(  0, -game_frame.height() );
-    right.lineTo(-15, -game_frame.height() );
+    right.lineTo(-30, -game_frame.height() );
     right.translate( scene_size, 0 );
 
     // Directional Arrow
     arrow.moveTo(  0, -game_frame.height()/2 );
+    arrow.lineTo( 30, -game_frame.height()/2);
+    arrow.lineTo( 30, -game_frame.height()/2 - 10);
+    arrow.lineTo( 45, -game_frame.height()/2);
+    arrow.lineTo( 30, -game_frame.height()/2 + 10);
     arrow.lineTo( 30, -game_frame.height()/2);
     arrow.translate( scene_size, 0 );
 
@@ -273,24 +277,30 @@ void DrView::paintSceneBounds(QPainter &painter, const QRectF& game_frame, DrSta
     direction.translate( scene_size, 0 );
 
     painter.setBrush( Qt::NoBrush );
-    QColor line_color = Dr::GetColor(Window_Colors::Icon_Dark);
-    QPen frame_pen_outline = QPen(line_color.darker(200), 3);
-    QPen frame_pen_inside  = QPen(line_color.lighter(200), 1);
+    QColor line_color = Dr::GetColor(Window_Colors::Seperator);
+    QColor fill_color = Dr::GetColor(Window_Colors::Icon_Dark);
+    QPen frame_pen_outline = QPen(line_color, 4);
+    QPen frame_pen_inside  = QPen(fill_color, 2);
     frame_pen_outline.setCosmetic( true );
     frame_pen_inside.setCosmetic(  true );
 
-    painter.setPen( frame_pen_outline );    painter.drawPath(left);
-    painter.setPen( frame_pen_inside );     painter.drawPath(left);
+    painter.setPen( frame_pen_outline );
+    painter.drawPath(left);
+    painter.drawPath(right);
 
-    painter.setPen( frame_pen_outline );    painter.drawPath(right);
-    painter.setPen( frame_pen_inside );     painter.drawPath(right);
+    painter.setPen( frame_pen_inside );
+    painter.drawPath(left);
+    painter.drawPath(right);
 
-    painter.setBrush( Dr::GetColor(Window_Colors::Icon_Light) );
-    painter.setPen( frame_pen_outline );    painter.drawPath(arrow);
-    painter.setPen( frame_pen_inside );     painter.drawPath(arrow);
+    painter.setBrush( Dr::GetColor(Window_Colors::Icon_Dark) );
 
-    painter.setPen( frame_pen_outline );    painter.drawPath(direction);
-    painter.setPen( frame_pen_inside );     painter.drawPath(direction);
+    painter.setPen( frame_pen_outline );
+    painter.drawPath(direction);
+    painter.drawPath(arrow);
+
+    painter.setPen( frame_pen_inside );
+    painter.drawPath(arrow);
+    painter.drawPath(direction);
 }
 
 

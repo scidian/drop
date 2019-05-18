@@ -42,7 +42,7 @@ static inline void smoothMoveMaxSpeed(QVector3D& start, const QVector3D &target,
 //##    DrEngine - Camera Functions
 //######################################################################################################
 long DrEngine::addCamera(SceneObject* object_to_follow) {
-    DrEngineCamera *camera = new DrEngineCamera(this, 0, 0, 800);
+    DrEngineCamera *camera = new DrEngineCamera(0, 0, 800);
     m_cameras[m_camera_keys] = camera;
 
     if (object_to_follow != nullptr) {
@@ -57,7 +57,7 @@ long DrEngine::addCamera(SceneObject* object_to_follow) {
 }
 
 long DrEngine::addCamera(float x, float y, float z) {
-    DrEngineCamera *camera = new DrEngineCamera(this, x, y, z);
+    DrEngineCamera *camera = new DrEngineCamera(x, y, z);
     m_cameras[m_camera_keys] = camera;
     // Increment camera ID generator, return current camera ID
     m_camera_keys++;
@@ -119,7 +119,7 @@ QVector3D DrEngine::getCameraPos() {
 //######################################################################################################
 //##    DrEngineCamera - Constructor / Destructor
 //######################################################################################################
-DrEngineCamera::DrEngineCamera(DrEngine *engine, float x, float y, float z) : m_engine(engine) {
+DrEngineCamera::DrEngineCamera(float x, float y, float z) {
     m_position = QVector3D(x, y, z);
     m_target = m_position;
     m_avg_speed_x.clear();
