@@ -130,7 +130,7 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 void DrEngine::updateSpace(double time_passed) {
 
     // ***** Updates physics, time_passed is in milliseconds
-    cpFloat step_time = time_passed / 1000.0 * m_time_warp;
+    double step_time = time_passed / 1000.0 * m_time_warp;
     cpSpaceStep(m_space, step_time);
 
 }

@@ -177,7 +177,7 @@ void FormEngine::updateEngine() {
         m_engine->updateSpace(update_milliseconds);                                     // Physics Engine
         m_engine->updateSpaceHelper();                                                  // Additional Physics Updating
 
-        m_engine->moveCameras(static_cast<float>(update_milliseconds));                 // Move Cameras
+        m_engine->moveCameras(update_milliseconds);                                     // Move Cameras
         m_engine->updateCameras();                                                      // Update Camera Targets
     }
 

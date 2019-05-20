@@ -256,7 +256,7 @@ public:
     DrEngineCamera*     getCamera(long camera_id) { return m_cameras[camera_id]; }
     EngineCameraMap&    getCameraMap() { return m_cameras; }
     QVector3D           getCameraPos();
-    void                moveCameras(float milliseconds);
+    void                moveCameras(double milliseconds);
     void                switchCameras(long new_camera);
     void                updateCameras();
 

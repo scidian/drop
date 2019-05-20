@@ -66,13 +66,13 @@ void DrEngine::clearCameras() {
 }
 
 // Updates all cameras based on the objects they're following
-void DrEngine::moveCameras(float milliseconds) {
+void DrEngine::moveCameras(double milliseconds) {
     for (auto camera_pair : m_cameras) {
-        camera_pair.second->moveCamera(milliseconds);
+        camera_pair.second->moveCamera(static_cast<float>(milliseconds));
 
         if (m_switching_cameras) {
             QVector3D target = getCamera(m_active_camera)->getPosition();
-            smoothMove(m_temp_position, target, .0050f, milliseconds );
+            smoothMove(m_temp_position, target, .0050f, static_cast<float>(milliseconds) );
             ///smoothMoveMaxSpeed(m_temp_position, target, 4.0f);
             if ( m_temp_position.distanceToPoint(target) < 1 ) m_switching_cameras = false;
         }
