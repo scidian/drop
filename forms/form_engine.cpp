@@ -159,6 +159,7 @@ void FormEngine::startTimers() {
     m_timer->start( 0 );                                        // Timeout of zero will call this timeout every pass of the event loop
     m_time_update = Clock::now();
     m_time_render = Clock::now();
+    m_time_camera = Clock::now();
     m_engine->fps_timer.restart();
     m_engine->fps = 0;
 }
@@ -169,19 +170,26 @@ void FormEngine::stopTimers() {
 void FormEngine::updateEngine() {
     if (!m_engine->has_scene) return;
 
-    // ***** MAIN UPDATE LOOP: Space (Physics), Cameras
+    // ***** Seperate Camera Update
+    double camera_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_camera).count() / 1000000.0;
+    if (camera_milliseconds > 1) {
+        m_time_camera = Clock::now();
+        m_engine->moveCameras(camera_milliseconds);                                     // Move Cameras
+    }
+
+    // ***** MAIN UPDATE LOOP: Space (Physics)
     double update_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_update).count() / 1000000.0;
     if (update_milliseconds > (m_engine->getTimeStep() * 1000.0)) {
         m_time_update = Clock::now();                                                   // Update time counter immediately
-
         m_engine->updateSpace(update_milliseconds);                                     // Physics Engine
         m_engine->updateSpaceHelper();                                                  // Additional Physics Updating
-
-        m_engine->moveCameras(update_milliseconds);                                     // Move Cameras
         m_engine->updateCameras();                                                      // Update Camera Targets
+
+        if (update_milliseconds > 16.8 || update_milliseconds < 16.5)
+            updateLabels("UT: " + QString::number(update_milliseconds));
     }
 
-    // ***** Seperate Render Timer if we want it
+    // ***** Seperate Render Update
     double render_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_render).count() / 1000000.0;
     if (render_milliseconds > (1000.0 / m_ideal_frames_per_second)) {
         m_time_render = Clock::now();                                                   // Update time counter immediately

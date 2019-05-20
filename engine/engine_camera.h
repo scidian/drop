@@ -39,7 +39,7 @@ public:
 
     // Function Calls
     void        followObject(SceneObject *object) { m_follow = object; }
-    void        moveCamera(const float& milliseconds);
+    void        moveCamera(const double& milliseconds);
     void        updateCamera();
 
     // Getters / Setters

@@ -23,7 +23,8 @@ static inline float drfclamp(float f, float min, float max) { return drfmin(drfm
 // Linearly interpolate from f1 to f2 by no more than d
 static inline float drflerpconst(float f1, float f2, float d) { return f1 + drfclamp(f2 - f1, -d, d); }
 // Linearly interpolate (or extrapolate) between f1 and f2 by t percent
-static inline float drflerp(float f1, float f2, float t) { return f1*(1.0f - t) + f2*t; }
+static inline float  drflerp(float f1, float f2, float t) { return f1*(1.0f - t) + f2*t; }
+static inline double drdlerp(double f1, double f2, double t) { return f1*(1.0 - t) + f2*t; }
 
 static inline void smoothMove(QVector3D& start, const QVector3D &target, const float& lerp, const float& milliseconds) {
     start.setX( drflerp( start.x(), target.x(), lerp * milliseconds) );
@@ -68,7 +69,7 @@ void DrEngine::clearCameras() {
 // Updates all cameras based on the objects they're following
 void DrEngine::moveCameras(double milliseconds) {
     for (auto camera_pair : m_cameras) {
-        camera_pair.second->moveCamera(static_cast<float>(milliseconds));
+        camera_pair.second->moveCamera(milliseconds);
 
         if (m_switching_cameras) {
             QVector3D target = getCamera(m_active_camera)->getPosition();
@@ -125,11 +126,16 @@ DrEngineCamera::DrEngineCamera(float x, float y, float z) {
 //######################################################################################################
 //##    Moves camera based on current speed / settings
 //######################################################################################################
-void DrEngineCamera::moveCamera(const float& milliseconds) {
-    float lerp = .01f * milliseconds;
-    m_position.setX( drflerp( m_position.x(), m_target.x(), lerp) );
-    m_position.setY( drflerp( m_position.y(), m_target.y(), lerp) );
-    m_position.setZ( drflerp( m_position.z(), m_target.z(), lerp) );
+void DrEngineCamera::moveCamera(const double& milliseconds) {
+    //float lerp = .01f * milliseconds;
+    //m_position.setX( drflerp( m_position.x(), m_target.x(), lerp) );
+    //m_position.setY( drflerp( m_position.y(), m_target.y(), lerp) );
+    //m_position.setZ( drflerp( m_position.z(), m_target.z(), lerp) );
+
+    double lerp = 0.065 * milliseconds;
+    m_position.setX( static_cast<float>(drdlerp( static_cast<double>(m_position.x()), static_cast<double>(m_target.x()), lerp)) );
+    m_position.setY( static_cast<float>(drdlerp( static_cast<double>(m_position.y()), static_cast<double>(m_target.y()), lerp)) );
+    m_position.setZ( static_cast<float>(drdlerp( static_cast<double>(m_position.z()), static_cast<double>(m_target.z()), lerp)) );
 }
 
 //######################################################################################################
@@ -149,13 +155,13 @@ void DrEngineCamera::updateCamera() {
         m_avg_speed_y.push_back( m_follow->position.y() - m_follow->last_position_y );      m_avg_speed_y.pop_front();
         double average_x = std::accumulate( m_avg_speed_x.begin(), m_avg_speed_x.end(), 0.0) / m_avg_speed_x.size();
         double average_y = std::accumulate( m_avg_speed_y.begin(), m_avg_speed_y.end(), 0.0) / m_avg_speed_y.size();
-        float pos_x = static_cast<float>(m_follow->last_position_x + average_x);
-        float pos_y = static_cast<float>(m_follow->last_position_y + average_y);
-        m_target.setX( pos_x );
-        m_target.setY( pos_y );
+        //float pos_x = static_cast<float>(m_follow->last_position_x + average_x);
+        //float pos_y = static_cast<float>(m_follow->last_position_y + average_y);
+        //m_target.setX( pos_x );
+        //m_target.setY( pos_y );
         // Alternate move based on last camera position instead of last object position
-        ///m_target.setX( m_target.x() + average_x );
-        ///m_target.setY( m_target.y() + average_y  );
+        m_target.setX( m_target.x() + average_x );
+        m_target.setY( m_target.y() + average_y  );
 
         ///m_engine->info = ", " + QString::number( average_x );
     }

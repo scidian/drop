@@ -72,7 +72,7 @@ void OpenGL::paintGL() {
     m_engine->fps++;
     if (m_engine->fps_timer.elapsed() > 1000) {
         m_engine->last_fps = m_engine->fps;
-        emit updateInfo(m_engine->info);
+        //emit updateInfo(m_engine->info);
         m_engine->fps = 0;
         m_engine->fps_timer.restart();
     }
