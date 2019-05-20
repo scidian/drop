@@ -117,8 +117,8 @@ QVector3D DrEngine::getCameraPos() {
 DrEngineCamera::DrEngineCamera(float x, float y, float z) {
     m_position = QVector3D(x, y, z);
     m_target = m_position;
-    m_avg_speed_x.clear();  m_avg_speed_x.fill(0, 60);
-    m_avg_speed_y.clear();  m_avg_speed_y.fill(0, 60);
+    m_avg_speed_x.clear();  m_avg_speed_x.fill(0, 20);
+    m_avg_speed_y.clear();  m_avg_speed_y.fill(0, 20);
     m_speed = QVector3D(0, 0, 0);
 }
 
@@ -141,17 +141,21 @@ void DrEngineCamera::updateCamera() {
     if (m_follow != nullptr) {
         // Basic Camera = Position
         ///m_engine->info = ", " + QString::number( pos.x - getCameraPos().x() );
-        ///setPosition( static_cast<float>(m_follow->position.x()), static_cast<float>(m_follow->position.y()), m_position.z() );
+        m_target.setX( static_cast<float>(m_follow->position.x()) );
+        m_target.setY( static_cast<float>(m_follow->position.y()) );
 
         // Calculate the average object speed
-        m_avg_speed_x.push_back( m_follow->position.x() - m_follow->last_position_x );      m_avg_speed_x.pop_front();
-        m_avg_speed_y.push_back( m_follow->position.y() - m_follow->last_position_y );      m_avg_speed_y.pop_front();
-        double average_x = std::accumulate( m_avg_speed_x.begin(), m_avg_speed_x.end(), 0.0) / m_avg_speed_x.size();
-        double average_y = std::accumulate( m_avg_speed_y.begin(), m_avg_speed_y.end(), 0.0) / m_avg_speed_y.size();
-        float pos_x = static_cast<float>(m_follow->last_position_x + average_x);
-        float pos_y = static_cast<float>(m_follow->last_position_y + average_y);
-        m_target.setX( pos_x );
-        m_target.setY( pos_y );
+        ///m_avg_speed_x.push_back( m_follow->position.x() - m_follow->last_position_x );      m_avg_speed_x.pop_front();
+        ///m_avg_speed_y.push_back( m_follow->position.y() - m_follow->last_position_y );      m_avg_speed_y.pop_front();
+        ///double average_x = std::accumulate( m_avg_speed_x.begin(), m_avg_speed_x.end(), 0.0) / m_avg_speed_x.size();
+        ///double average_y = std::accumulate( m_avg_speed_y.begin(), m_avg_speed_y.end(), 0.0) / m_avg_speed_y.size();
+        ///float pos_x = static_cast<float>(m_follow->last_position_x + average_x);
+        ///float pos_y = static_cast<float>(m_follow->last_position_y + average_y);
+        ///m_target.setX( pos_x );
+        ///m_target.setY( pos_y );
+        // Alternate move based on last camera position instead of last object position
+        ///m_target.setX( m_target.x() + average_x );
+        ///m_target.setY( m_target.y() + average_y  );
 
         ///m_engine->info = ", " + QString::number( average_x );
     }
