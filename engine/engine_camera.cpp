@@ -132,7 +132,7 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
     //m_position.setY( drflerp( m_position.y(), m_target.y(), lerp) );
     //m_position.setZ( drflerp( m_position.z(), m_target.z(), lerp) );
 
-    double lerp = 0.065 * milliseconds;
+    double lerp = 0.015 * milliseconds;
     m_position.setX( static_cast<float>(drdlerp( static_cast<double>(m_position.x()), static_cast<double>(m_target.x()), lerp)) );
     m_position.setY( static_cast<float>(drdlerp( static_cast<double>(m_position.y()), static_cast<double>(m_target.y()), lerp)) );
     m_position.setZ( static_cast<float>(drdlerp( static_cast<double>(m_position.z()), static_cast<double>(m_target.z()), lerp)) );
@@ -145,23 +145,33 @@ void DrEngineCamera::updateCamera() {
 
     // Movement is based on following an object
     if (m_follow != nullptr) {
-        // Basic Camera = Position
         ///m_engine->info = ", " + QString::number( pos.x - getCameraPos().x() );
-        ///m_target.setX( static_cast<float>(m_follow->position.x()) );
-        ///m_target.setY( static_cast<float>(m_follow->position.y()) );
 
         // Calculate the average object speed
-        m_avg_speed_x.push_back( m_follow->position.x() - m_follow->last_position_x );      m_avg_speed_x.pop_front();
-        m_avg_speed_y.push_back( m_follow->position.y() - m_follow->last_position_y );      m_avg_speed_y.pop_front();
+        m_avg_speed_x.push_back( m_follow->position.x() - m_follow->last_position.x() );      m_avg_speed_x.pop_front();
+        m_avg_speed_y.push_back( m_follow->position.y() - m_follow->last_position.y() );      m_avg_speed_y.pop_front();
         double average_x = std::accumulate( m_avg_speed_x.begin(), m_avg_speed_x.end(), 0.0) / m_avg_speed_x.size();
         double average_y = std::accumulate( m_avg_speed_y.begin(), m_avg_speed_y.end(), 0.0) / m_avg_speed_y.size();
-        //float pos_x = static_cast<float>(m_follow->last_position_x + average_x);
-        //float pos_y = static_cast<float>(m_follow->last_position_y + average_y);
-        //m_target.setX( pos_x );
-        //m_target.setY( pos_y );
-        // Alternate move based on last camera position instead of last object position
-        m_target.setX( m_target.x() + average_x );
-        m_target.setY( m_target.y() + average_y  );
+
+        // Basic Camera = Object Position
+        ///m_target.setX( static_cast<float>(m_follow->position.x()) );
+        ///m_target.setY( static_cast<float>(m_follow->position.y()) );
+        // Move based on Last Camera Position + Average
+        ///m_target.setX( m_target.x() + static_cast<float>(average_x) );
+        ///m_target.setY( m_target.y() + static_cast<float>(average_y) );
+        // Move based on Last Object Position + Average
+        ///m_target.setX( static_cast<float>(m_follow->last_position_x + average_x) );
+        ///m_target.setY( static_cast<float>(m_follow->last_position_y + average_y) );
+
+        double target_x = static_cast<double>(m_target.x());
+        double target_y = static_cast<double>(m_target.y());
+
+        double pos_x = ((m_follow->last_position.x() + average_x) + (target_x + average_x) + (m_follow->position.x())) / 3.0;
+        double pos_y = ((m_follow->last_position.y() + average_y) + (target_y + average_y) + (m_follow->position.y())) / 3.0;
+
+        m_target.setX( static_cast<float>(pos_x) );
+        m_target.setY( static_cast<float>(pos_y) );
+
 
         ///m_engine->info = ", " + QString::number( average_x );
     }

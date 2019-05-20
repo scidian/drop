@@ -162,8 +162,8 @@ void DrEngine::updateSpaceHelper() {
         object->velocity.setX( vel.x );
         object->velocity.setX( vel.y );
         object->angle = qRadiansToDegrees( angle );
-        object->last_position_x = object->position.x();
-        object->last_position_y = object->position.y();
+        object->last_position.setX( object->position.x() );
+        object->last_position.setY( object->position.y() );
         object->position.setX( pos.x );
         object->position.setY( pos.y );
 

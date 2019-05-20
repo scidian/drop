@@ -116,9 +116,7 @@ struct SceneObject {
     double      z_order;                    // Used for layering
     float       alpha;                      // Transparency of object
 
-    double      last_position_x;            // Previous frame position, for whatever may need it
-    double      last_position_y;            // Previous frame position, for whatever may need it
-
+    QPointF     last_position;              // Previous frame position, for whatever may need it
 };
 
 // Forward declarations
@@ -163,7 +161,7 @@ private:
     cpSpace        *m_space;                        // Current physics space shown on screen
                                                     //
     const int       m_iterations = 10;              // Times physics are processed each update, 10 is default and should be good enough for most games
-    const double    m_time_step = 1 / 60.0;         // Speed at which want to try to update the Space, 1 / 90 = 90 times per second to up
+    const double    m_time_step = 1 / 60.0;         // Speed at which want to try to update the Space, 1 / 60 = 60 times per second to up
                                                     //      It is *highly* recommended to use a fixed size time step (calling Update at a fixed interval)
     cpFloat         m_time_warp = 1.0;              // Speeds up or slows down physics time, 1 = 100% = Normal Time, Lower than 1 = slower, Higher = faster
                                                     //
