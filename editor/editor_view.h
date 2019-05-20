@@ -79,6 +79,9 @@ private:
     QTime        m_zoom_timer;                                      // Used to auto hide zoom tool tip after time has passed
     int          m_rotate = 0;                              // NOT IMPLEMENTED: Rotation of current view
 
+    // Stage Drawing Variables
+    QRectF       m_game_frame;                                      // Used to overlay screen size / draw Stage Boundary
+
     // Grid Drawing Variables
     QVector<QPointF> m_grid_points;                                 // Holds latest calculated grid points
     QVector<QLineF>  m_grid_lines;                                  // Holds latest calculated grid lines
@@ -217,13 +220,13 @@ public:
     // Paint Functions
     void            paintBoundingBox(QPainter &painter);
     void            paintCrossHairs(QPainter &painter, QPoint center);
-    void            paintGameFrame(QPainter &painter, const QRectF& game_frame);
+    void            paintGameFrame(QPainter &painter);
     void            paintGrid(QPainter &painter);
     void            paintGroupAngle(QPainter &painter, double angle);
     void            paintHandles(QPainter &painter, Handle_Shapes shape_to_draw);
     void            paintItemOutlines(QPainter &painter);
     void            paintItemCenters(QPainter &painter);
-    void            paintSceneBounds(QPainter &painter, const QRectF& game_frame, DrStage* stage);
+    void            paintStageBounds(QPainter &painter, DrStage* stage);
     void            paintToolTip(QPainter &painter);
 
     // Selection Functions

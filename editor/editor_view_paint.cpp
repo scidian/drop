@@ -5,6 +5,7 @@
 //      Graphics View Paint Overrides
 //
 //
+#include <QDebug>
 #include <QPaintEngine>
 #include <QPaintEvent>
 #include <QStylePainter>
@@ -42,6 +43,14 @@ void DrView::drawBackground(QPainter *painter, const QRectF &rect) {
         f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
     }
 
+    // Calculate Game Frame
+    int width =  m_project->getOption(Project_Options::Width).toInt();
+    int height = m_project->getOption(Project_Options::Height).toInt();
+    switch (m_project->getOptionOrientation()) {
+        case Orientation::Portrait:     m_game_frame = QRectF(0, -height, width, height);       break;
+        case Orientation::Landscape:    m_game_frame = QRectF(0, -width, height,  width);       break;
+    }
+
     if (m_grid_show_on_top == false) {
         paintGrid(*painter);
     }
@@ -54,20 +63,11 @@ void DrView::drawForeground(QPainter *painter, const QRectF &rect) {
         paintGrid(*painter);
     }
 
-    // Calculate game frame and draw Frame and Scene Bounds
-    QRectF game_frame;
-    int width =  m_project->getOption(Project_Options::Width).toInt();
-    int height = m_project->getOption(Project_Options::Height).toInt();
-    switch (m_project->getOptionOrientation()) {
-        case Orientation::Portrait:     game_frame = QRectF(0, -height, width, height);       break;
-        case Orientation::Landscape:    game_frame = QRectF(0, -width, height,  width);       break;
-    }
-
+    // Draw Game Frame
     DrStage *stage = my_scene->getCurrentStageShown();
     if (stage) {
-        if (my_scene->getCurrentStageShown()->isStartStage())
-            paintGameFrame(*painter, game_frame);
-        paintSceneBounds(*painter, game_frame, stage);
+        if (stage->isStartStage())
+            paintGameFrame(*painter);
     }
 }
 
@@ -83,11 +83,12 @@ void DrView::paintEvent(QPaintEvent *event) {
     if (scene() == nullptr) return;
 
     // Store current center point of scene, so that if we go to a new scene and come back we stay in the same place
-    if (my_scene->getCurrentStageShown() && Dr::CheckDoneLoading()) {
+    DrStage *stage = my_scene->getCurrentStageShown();
+    if (stage && Dr::CheckDoneLoading()) {
         QRect  viewport_rect(0, 0, this->viewport()->width(), this->viewport()->height());
         QRectF visible_scene_rect = this->mapToScene(viewport_rect).boundingRect();
         QPointF center_point = visible_scene_rect.center();
-        my_scene->getCurrentStageShown()->setViewCenterPoint( center_point );
+        stage->setViewCenterPoint( center_point );
     }
 
     // Initiate QPainter object
@@ -114,6 +115,10 @@ void DrView::paintEvent(QPaintEvent *event) {
         if (m_view_mode == View_Mode::Translating)                                  // Draw crosshairs if translating
             paintItemCenters(painter);
     }
+
+    // Draw Stage Boundary
+    if (stage)
+        paintStageBounds(painter, stage);
 
     // Draw Crosshairs under potential drag and drop
     if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool()) {
@@ -223,7 +228,7 @@ void DrView::paintGrid(QPainter &painter) {
 //####################################################################################
 //##        PAINT: Paints Game Frame in Scene Coordinates
 //####################################################################################
-void DrView::paintGameFrame(QPainter &painter, const QRectF& game_frame) {
+void DrView::paintGameFrame(QPainter &painter) {
 
     painter.setBrush(Qt::NoBrush);
     QColor frame_color = Dr::GetColor(Window_Colors::Button_Light);
@@ -235,72 +240,64 @@ void DrView::paintGameFrame(QPainter &painter, const QRectF& game_frame) {
     frame_pen_inside.setCosmetic(  true );
 
     painter.setPen( frame_pen_outline );
-    painter.drawRoundedRect(game_frame, 25, 25);
+    painter.drawRoundedRect(m_game_frame, 25, 25);
 
     painter.setPen( frame_pen_inside );
-    painter.drawRoundedRect(game_frame, 25, 25);
+    painter.drawRoundedRect(m_game_frame, 25, 25);
 }
 
 
 //####################################################################################
-//##        PAINT: Paints Scene Bounds in Scene Coordinates
+//##        PAINT: Paints Stage Bounds in Scene Coordinates
 //####################################################################################
-void DrView::paintSceneBounds(QPainter &painter, const QRectF& game_frame, DrStage* stage) {
+void DrView::paintStageBounds(QPainter &painter, DrStage* stage) {
+    long stage_size = stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();
 
-    long scene_size = stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();
-
-    // Draw start bracket
+    // Draw start bracket (in Scene coordinates)
     QPainterPath left, right, direction, arrow;
     left.moveTo(  30, 0);
     left.lineTo(   0, 0);
-    left.lineTo(   0, -game_frame.height() );
-    left.lineTo(  30, -game_frame.height() );
+    left.lineTo(   0, -m_game_frame.height() );
+    left.lineTo(  30, -m_game_frame.height() );
 
-    // End Bracket
+    // End Bracket (in Scene Coordinates)
     right.moveTo(-30, 0);
     right.lineTo(  0, 0);
-    right.lineTo(  0, -game_frame.height() );
-    right.lineTo(-30, -game_frame.height() );
-    right.translate( scene_size, 0 );
+    right.lineTo(  0, -m_game_frame.height() );
+    right.lineTo(-30, -m_game_frame.height() );
+    right.translate( stage_size, 0 );
 
-    // Directional Arrow
-    arrow.moveTo(  0, -game_frame.height()/2 );
-    arrow.lineTo( 30, -game_frame.height()/2);
-    arrow.lineTo( 30, -game_frame.height()/2 - 10);
-    arrow.lineTo( 45, -game_frame.height()/2);
-    arrow.lineTo( 30, -game_frame.height()/2 + 10);
-    arrow.lineTo( 30, -game_frame.height()/2);
-    arrow.translate( scene_size, 0 );
+    // Direction Box (in View Coordinates)
+    QPoint middle_right = mapFromScene( QPointF(stage_size, -m_game_frame.height()/2) );
+    direction.addRect( middle_right.x() - 5, middle_right.y() - 5, 10, 10);
 
-    // Direction Box
-    direction.addRect( -10, -game_frame.height()/2 - 10, 20, 20);
-    direction.translate( scene_size, 0 );
+    // Directional Arrow (in View Coordinates)
+    arrow.moveTo( middle_right.x() + 11, middle_right.y());
+    arrow.lineTo( middle_right.x() + 15, middle_right.y());
+    arrow.lineTo( middle_right.x() + 15, middle_right.y() - 5);
+    arrow.lineTo( middle_right.x() + 23, middle_right.y());
+    arrow.lineTo( middle_right.x() + 15, middle_right.y() + 5);
+    arrow.lineTo( middle_right.x() + 15, middle_right.y());
 
     painter.setBrush( Qt::NoBrush );
-    QColor line_color = Dr::GetColor(Window_Colors::Seperator);
+    QColor line_color = Dr::GetColor(Window_Colors::Background_Dark);
     QColor fill_color = Dr::GetColor(Window_Colors::Icon_Dark);
     QPen frame_pen_outline = QPen(line_color, 4);
     QPen frame_pen_inside  = QPen(fill_color, 2);
-    frame_pen_outline.setCosmetic( true );
-    frame_pen_inside.setCosmetic(  true );
 
+    painter.setPen( frame_pen_outline );    painter.drawPath( mapFromScene(left) );     painter.drawPath( mapFromScene(right) );
+    painter.setPen( frame_pen_inside );     painter.drawPath( mapFromScene(left) );     painter.drawPath( mapFromScene(right) );
+
+    painter.setBrush( Dr::GetColor(Window_Colors::Button_Dark) );
     painter.setPen( frame_pen_outline );
-    painter.drawPath(left);
-    painter.drawPath(right);
+    painter.drawPath( direction );
+    painter.drawPath( arrow );
 
     painter.setPen( frame_pen_inside );
-    painter.drawPath(left);
-    painter.drawPath(right);
+    painter.drawPath( direction );
 
-    painter.setBrush( Dr::GetColor(Window_Colors::Icon_Dark) );
-
-    painter.setPen( frame_pen_outline );
-    painter.drawPath(direction);
-    painter.drawPath(arrow);
-
-    painter.setPen( frame_pen_inside );
-    painter.drawPath(arrow);
-    painter.drawPath(direction);
+    painter.setBrush( Dr::GetColor(Window_Colors::Icon_Light) );
+    painter.drawPath( arrow );
 }
 
 
