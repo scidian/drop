@@ -34,7 +34,7 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
 
     if (m_engine->demo_player == Demo_Player::Spawn) {
         if (event->button() & Qt::LeftButton) {
-            for (int i = 0; i < 100; i++ ) {
+            for (int i = 0; i < 30; i++ ) {
                 double vel_x = QRandomGenerator::global()->bounded(-100, 100);
                 double vel_y = QRandomGenerator::global()->bounded( 100, 500);
 
@@ -75,7 +75,9 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
         if (event->button() & Qt::LeftButton) {
             m_engine->jump_button = 1;
         } else if (event->button() & Qt::RightButton) {
-            m_engine->addBlock(Body_Type::Dynamic, Test_Textures::Block, x, y, z, 0, QPointF(1, 1), 1, friction, bounce, 25, QPointF(0, 0));
+            for (int i = 0; i < 30; i++ ) {
+                m_engine->addBlock(Body_Type::Dynamic, Test_Textures::Block, x, y, z, 0, QPointF(1, 1), 1, friction, bounce, 25, QPointF(0, 0));
+            }
         }
     }
 

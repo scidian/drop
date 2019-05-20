@@ -75,16 +75,16 @@ void DrEngine::updateSpaceHelper(double time_passed) {
             object->position.setY( pos.y );
 
         // ***** Update global friction and bounce to all objects if globals have changed (possibly due to Gameplay Action)
-        cpFloat friction;
-        cpFloat bounce;
-        for (auto shape : object->shapes) {
-            friction = cpShapeGetFriction( shape );
-            bounce = cpShapeGetElasticity( shape );
-            if (qFuzzyCompare(friction, m_friction) == false && object->custom_friction == false)
-                cpShapeSetFriction( shape, friction );
-            if (qFuzzyCompare(bounce, m_bounce) == false && object->custom_bounce == false)
-                cpShapeSetElasticity( shape, bounce );
-        }
+//        cpFloat friction;
+//        cpFloat bounce;
+//        for (auto shape : object->shapes) {
+//            friction = cpShapeGetFriction( shape );
+//            bounce = cpShapeGetElasticity( shape );
+//            if (qFuzzyCompare(friction, m_friction) == false && object->custom_friction == false)
+//                cpShapeSetFriction( shape, friction );
+//            if (qFuzzyCompare(bounce, m_bounce) == false && object->custom_bounce == false)
+//                cpShapeSetElasticity( shape, bounce );
+//        }
 
 
         // ***** Process Button Presses

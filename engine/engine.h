@@ -250,8 +250,7 @@ public:
 
 
     // Cameras
-    long                addCamera(SceneObject* object_to_follow = nullptr);
-    long                addCamera(float x, float y, float z);
+    long                addCamera(SceneObject* object_to_follow = nullptr, float x = 0, float y = 0, float z = 800);
     void                clearCameras();
     const long&         getActiveCamera()       { return m_active_camera; }
     void                setActiveCamera(long new_camera) { m_active_camera = new_camera; }
