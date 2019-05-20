@@ -71,13 +71,15 @@ enum Test_Textures {
     Spare = -6
 };
 
+typedef std::map<cpShape*, Shape_Type> ShapeMap;
+
 struct SceneObject {
     // ***** Object Properties
-    cpBody     *body;                       // Physical Body of object
-    cpShape    *shape;                      // Collision Shape of object
+    cpBody             *body;               // Physical Body of object
+    Body_Type           body_type;          // Body_Type
 
-    Body_Type   body_type;                  // Body_Type
-    Shape_Type  shape_type;                 // Shape_Type
+    QVector<cpShape*>   shapes;             // Collision Shapes of object
+    ShapeMap            shape_type;         // Shape Types of Shapes of Object
 
     bool        in_scene = true;            // True while object exists in Space
     bool        has_been_processed= false;  // Set to true after an initial updateSpace call has been ran while the object was in the Space
@@ -240,10 +242,9 @@ public:
     void        loadStageToSpace(DrStage *stage, double offset_x, double offset_y);
     void        oneWayPlatform(SceneObject *object, cpVect direction);
     void        playerUpdateVelocity(SceneObject *object, cpVect gravity, cpFloat dt);
-    void        setObjectBounce(SceneObject *object, const cpFloat &bounce);
-    void        setObjectFriction(SceneObject *object, const cpFloat &friction);
     void        removeObject(SceneObject *object);
     void        updateSpace(double time_passed);
+    void        updateSpaceHelper(double time_passed);
 
     void        deleteResources();
 

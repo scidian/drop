@@ -23,9 +23,6 @@
 //##    Chipmunk Callbacks
 //##        Support for one way platform (collision)
 //######################################################################################################
-// Used for shape iterator to get a list of all shapes attached to a body
-static void getShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_list) { shape_list->append(shape); }
-
 static cpBool PreSolve(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b);
     cpVect *direction = static_cast<cpVect*>(cpShapeGetUserData(a));
@@ -39,9 +36,7 @@ void DrEngine::oneWayPlatform(SceneObject *object, cpVect direction) {
     object->one_way = true;
     object->one_way_direction = direction;                                  // Let objects pass upwards
 
-    QVector<cpShape*> shape_list;
-    cpBodyEachShape(object->body, cpBodyShapeIteratorFunc(getShapeList), &shape_list);
-    for (auto shape : shape_list) {
+    for (auto shape : object->shapes) {
         cpShapeSetCollisionType(shape, COLLISION_TYPE_ONE_WAY);           // We'll use the data pointer for the OneWayPlatform direction
         cpShapeSetUserData(shape, &object->one_way_direction);
     }

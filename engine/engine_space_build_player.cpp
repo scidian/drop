@@ -10,14 +10,6 @@
 
 
 //######################################################################################################
-//##    Chipmunk Callbacks
-//##        Grabs data from Space
-//######################################################################################################
-// Used for shape iterator to get a list of all shapes attached to a body
-static void getShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_list) { shape_list->append(shape); }
-
-
-//######################################################################################################
 //##    Add Player to Space
 //######################################################################################################
 void DrEngine::addPlayer(Demo_Player new_player_type) {
@@ -103,14 +95,11 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         filter.group = 43;
         filter.categories = CP_ALL_CATEGORIES;
         filter.mask =       CP_ALL_CATEGORIES;
-        QVector<cpShape*> shape_list;
-        cpBodyEachShape(rover->body, cpBodyShapeIteratorFunc(getShapeList), &shape_list);
-        for (auto shape : shape_list)
-            cpShapeSetFilter( shape,  filter);
-        cpShapeSetFilter( wheel1->shape, filter);
-        cpShapeSetFilter( wheel2->shape, filter);
-        cpShapeSetFilter( wheel3->shape, filter);
-        cpShapeSetFilter( spare1->shape, filter);
+        for (auto shape : rover->shapes)  cpShapeSetFilter( shape,  filter);
+        for (auto shape : wheel1->shapes) cpShapeSetFilter( shape, filter);
+        for (auto shape : wheel2->shapes) cpShapeSetFilter( shape, filter);
+        for (auto shape : wheel3->shapes) cpShapeSetFilter( shape, filter);
+        for (auto shape : spare1->shapes) cpShapeSetFilter( shape, filter);
 
         // New bouncy shocks joint, Grooves a/b are relative to the car, anchor point B is on the wheel
         cpSpaceAddConstraint(m_space, cpGrooveJointNew( rover->body, wheel1->body, cpv(-40,  15), cpv(-40, -28), cpvzero));

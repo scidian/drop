@@ -43,6 +43,7 @@ private:
     QTimer             *m_timer;
     Clock::time_point   m_time_update;
     Clock::time_point   m_time_camera;
+    Clock::time_point   m_time_render;
 
     const double        m_ideal_frames_per_second = 60;
 

@@ -158,6 +158,7 @@ void FormEngine::startTimers() {
     m_timer->start( 1 );
     m_time_update = Clock::now();
     m_time_camera = Clock::now();
+    m_time_render = Clock::now();
     m_engine->fps_timer.restart();
     m_engine->fps = 0;
 }
@@ -176,13 +177,21 @@ void FormEngine::updateEngine() {
         m_time_camera = Clock::now();
     }
 
-    // ***** MAIN UPDATE LOOP: Space (Physics), Render, Cameras
+    // ***** MAIN UPDATE LOOP: Space (Physics), Cameras
     double update_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_update).count() / 1000000.0;
     if (update_milliseconds > (m_engine->getTimeStep() * 1000)) {
-        m_engine->updateSpace(update_milliseconds);     // Physics
-        m_engine->updateCameras();                      // Cameras
-        m_opengl->update();                             // Render
-        m_time_update = Clock::now();
+        m_engine->updateSpace(update_milliseconds);             // Physics Engine
+        m_time_update = Clock::now();                           // Update time counter immediately after updating physics
+        m_engine->updateSpaceHelper(update_milliseconds);       // Additional Physics Updating
+        m_engine->updateCameras();                              // Cameras
+        m_opengl->update();                                     // Render
+    }
+
+    // ***** Seperate Render Timer if we want it
+    double render_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_render).count() / 1000000.0;
+    if (render_milliseconds > (1000 / m_ideal_frames_per_second)) {
+        /// can call render here instead of main loop
+        m_time_render = Clock::now();
     }
 }
 

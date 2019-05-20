@@ -53,11 +53,13 @@ SceneObject* DrEngine::addLine(Body_Type body_type, QPointF p1, QPointF p2, doub
         cpBodySetPosition( line->body, cv );
     }
 
-    line->shape_type = Shape_Type::Segment;
-    line->shape = cpSegmentShapeNew( line->body, cpv( p1.x(), p1.y()), cpv(p2.x(), p2.y()), 2) ;
-    cpShapeSetFriction(     line->shape, friction );
-    cpShapeSetElasticity(   line->shape, bounce );          // Ideally between 0 and .99999
-    cpSpaceAddShape( m_space, line->shape );
+    cpShape *shape = cpSegmentShapeNew( line->body, cpv( p1.x(), p1.y()), cpv(p2.x(), p2.y()), 2) ;
+    cpShapeSetFriction( shape, friction );
+    cpShapeSetElasticity( shape, bounce );          // Ideally between 0 and .99999
+    cpSpaceAddShape( m_space, shape );
+
+    line->shapes.push_back( shape );
+    line->shape_type[shape] = Shape_Type::Segment;
 
     line->in_scene = true;
     objects.append( line );
@@ -126,11 +128,13 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
 
     // Create the collision shape for the ball
     if (should_collide == true) {
-        ball->shape_type = Shape_Type::Circle;
-        ball->shape = cpCircleShapeNew(ball->body, radius, offset);
-        cpSpaceAddShape(m_space, ball->shape);
-        cpShapeSetFriction(   ball->shape, friction  );
-        cpShapeSetElasticity( ball->shape, bounce );
+        cpShape *shape = cpCircleShapeNew(ball->body, radius, offset);
+        cpSpaceAddShape(m_space, shape);
+        cpShapeSetFriction( shape, friction  );
+        cpShapeSetElasticity( shape, bounce );
+
+        ball->shapes.push_back( shape );
+        ball->shape_type[shape] = Shape_Type::Circle;
     } else {
         ball->collide = false;
     }
@@ -183,11 +187,13 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
 
     // Create the collision shape for the block
     if (should_collide == true) {
-        block->shape_type = Shape_Type::Box;
-        block->shape = cpBoxShapeNew(block->body, width, height, .01);
-        cpSpaceAddShape(m_space, block->shape);
-        cpShapeSetFriction(   block->shape, friction );
-        cpShapeSetElasticity( block->shape, bounce );
+        cpShape *shape = cpBoxShapeNew(block->body, width, height, .01);
+        cpSpaceAddShape(m_space, shape);
+        cpShapeSetFriction( shape, friction );
+        cpShapeSetElasticity( shape, bounce );
+
+        block->shapes.push_back( shape );
+        block->shape_type[shape] = Shape_Type::Box;
     } else {
         block->collide = false;
     }
@@ -270,15 +276,16 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
     int first = 0;
     int new_point_count = cpConvexHull(old_point_count, verts.data(), hull, &first, 0.0);
 
-    polygon->shape_type = Shape_Type::Polygon;
-
     // Shape is convex or could not determine convex hull
     if (new_point_count == 0) Dr::ShowMessageBox("Warning! Could not form convex hull!");
+    cpShape *shape;
     if ((new_point_count == old_point_count || (new_point_count == 0))) {
-        polygon->shape = cpPolyShapeNew( polygon->body, old_point_count, verts.data(), cpTransformIdentity, .01);
-        cpSpaceAddShape(m_space, polygon->shape);
-        cpShapeSetFriction(   polygon->shape, friction );
-        cpShapeSetElasticity( polygon->shape, bounce );
+        shape = cpPolyShapeNew( polygon->body, old_point_count, verts.data(), cpTransformIdentity, .01);
+        cpSpaceAddShape(m_space, shape);
+        cpShapeSetFriction( shape, friction );
+        cpShapeSetElasticity( shape, bounce );
+        polygon->shapes.push_back( shape );
+        polygon->shape_type[shape] = Shape_Type::Polygon;
 
     // Shape is concave
     } else {
@@ -292,10 +299,12 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
             verts.resize( static_cast<ulong>( poly.GetNumPoints()) );
             for (int i = 0; i < poly.GetNumPoints(); i++)
                 verts[static_cast<ulong>(i)] = cpv( poly[i].x, poly[i].y );
-            polygon->shape = cpPolyShapeNew( polygon->body, static_cast<int>(poly.GetNumPoints()), verts.data(), cpTransformIdentity, .01);
-            cpSpaceAddShape(m_space, polygon->shape);
-            cpShapeSetFriction(   polygon->shape, friction );
-            cpShapeSetElasticity( polygon->shape, bounce );
+            shape = cpPolyShapeNew( polygon->body, static_cast<int>(poly.GetNumPoints()), verts.data(), cpTransformIdentity, .01);
+            cpSpaceAddShape(m_space, shape);
+            cpShapeSetFriction( shape, friction );
+            cpShapeSetElasticity( shape, bounce );
+            polygon->shapes.push_back( shape );
+            polygon->shape_type[shape] = Shape_Type::Polygon;
         }
     }
 

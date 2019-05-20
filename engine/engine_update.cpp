@@ -31,38 +31,23 @@
 
 
 //######################################################################################################
-//##    Chipmunk Callbacks
-//##        Support for changing shape Friction and Bounce (Elasticity) during gameplay
-//######################################################################################################
-// Used for shape iterator to get a list of all shapes attached to a body
-static void getShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_list) { shape_list->append(shape); }
-
-void DrEngine::setObjectFriction(SceneObject *object, const cpFloat &friction) {
-    QVector<cpShape*> shape_list;
-    cpBodyEachShape(object->body, cpBodyShapeIteratorFunc(getShapeList), &shape_list);
-    for (auto shape : shape_list)
-        cpShapeSetFriction( shape, friction );
-}
-void DrEngine::setObjectBounce(SceneObject *object, const cpFloat &bounce) {
-    QVector<cpShape*> shape_list;
-    cpBodyEachShape(object->body, cpBodyShapeIteratorFunc(getShapeList), &shape_list);
-    for (auto shape : shape_list)
-        cpShapeSetElasticity( shape, bounce );
-}
-
-//######################################################################################################
-//##    Update Space
+//##    Update Space steps the physics calculations
+//##        updateSpaceHelper meant to be called immediately afterwards
 //######################################################################################################
 void DrEngine::updateSpace(double time_passed) {
-
 
     // ***** Updates physics, time_passed is in milliseconds
     cpFloat step_time = time_passed / 1000.0 * m_time_warp;
     cpSpaceStep(m_space, step_time);
 
+}
+
+void DrEngine::updateSpaceHelper(double time_passed) {
+    // Calculate step time
+    cpFloat step_time = time_passed / 1000.0 * m_time_warp;
+
     // Get some Space info
     cpVect  gravity = cpSpaceGetGravity( m_space );
-
 
     // ********** Iterate through objects, delete if they go off screen
     for ( auto it = objects.begin(); it != objects.end(); ) {
@@ -92,13 +77,13 @@ void DrEngine::updateSpace(double time_passed) {
         // ***** Update global friction and bounce to all objects if globals have changed (possibly due to Gameplay Action)
         cpFloat friction;
         cpFloat bounce;
-        if ( object->shape ) {
-            friction = cpShapeGetFriction( object->shape );
-            bounce = cpShapeGetElasticity( object->shape );
+        for (auto shape : object->shapes) {
+            friction = cpShapeGetFriction( shape );
+            bounce = cpShapeGetElasticity( shape );
             if (qFuzzyCompare(friction, m_friction) == false && object->custom_friction == false)
-                setObjectFriction( object, m_friction );
+                cpShapeSetFriction( shape, friction );
             if (qFuzzyCompare(bounce, m_bounce) == false && object->custom_bounce == false)
-                setObjectBounce( object, m_bounce );
+                cpShapeSetElasticity( shape, bounce );
         }
 
 
@@ -215,10 +200,6 @@ static void selectPlayerGroundNormal(cpBody *, cpArbiter *arb, cpVect *ground_no
 
 void DrEngine::playerUpdateVelocity(SceneObject *object, cpVect gravity, cpFloat dt)
 {
-    // Get shapes attached to body
-    QVector<cpShape*> shape_list;
-    cpBodyEachShape(object->body, cpBodyShapeIteratorFunc(getShapeList), &shape_list);
-
     // If player is still active get keyboard status
     int key_y, key_x, key_jump;
     if (object->lost_control) {
@@ -266,7 +247,7 @@ void DrEngine::playerUpdateVelocity(SceneObject *object, cpVect gravity, cpFloat
 
     // Update the surface velocity and friction
     cpVect surface_v = cpv(-target_vx, 0.0);
-    for (auto shape : shape_list) {
+    for (auto shape : object->shapes) {
         cpShapeSetSurfaceVelocity( shape, surface_v );
         cpShapeSetFriction( shape, (object->grounded ? PLAYER_GROUND_ACCEL / -gravity.y : 0.0));
     }

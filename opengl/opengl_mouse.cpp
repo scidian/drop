@@ -34,14 +34,14 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
 
     if (m_engine->demo_player == Demo_Player::Spawn) {
         if (event->button() & Qt::LeftButton) {
-            for (int i = 0; i < 25; i++ ) {
+            for (int i = 0; i < 100; i++ ) {
                 double vel_x = QRandomGenerator::global()->bounded(-100, 100);
                 double vel_y = QRandomGenerator::global()->bounded( 100, 500);
 
                 double ball_radius =  m_engine->getTexture(Test_Textures::Ball)->width()  / 2.0;
 
                 if (QRandomGenerator::global()->bounded(0, 2) == 0) {
-                    m_engine->addCircle(Body_Type::Dynamic, Test_Textures::Ball, x, y, z, c_norotate, QPointF(1, .85), c_opaque,
+                    m_engine->addCircle(Body_Type::Dynamic, Test_Textures::Ball, x, y, z, c_norotate, QPointF(1, 1), c_opaque,
                                         ball_radius, c_center, friction, bounce, 2, QPointF(vel_x, vel_y) );
                 } else {
                     m_engine->addCircle(Body_Type::Dynamic, Test_Textures::Ball, x, y, z, c_norotate, c_scale1x1, c_opaque,

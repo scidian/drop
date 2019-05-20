@@ -151,8 +151,12 @@ void OpenGL::renderSceneObjects() {
     // ***** Create a vector of the scene objects (ignoring lines / segments) and sort it by depth
     std::vector<std::pair<int, double>> v;
     for (int i = 0; i < m_engine->objects.count(); i++) {
-        if (m_engine->objects[i]->shape_type == Shape_Type::Segment)
-            continue;
+        bool skip = false;
+        for (auto shape : m_engine->objects[i]->shapes)
+            if (m_engine->objects[i]->shape_type[shape] == Shape_Type::Segment)
+                skip = true;
+        if (skip) continue;
+
         v.push_back(std::make_pair(i, m_engine->objects[i]->z_order));
     }
     sort(v.begin(), v.end(), [] (std::pair<int, double>&i, std::pair<int, double>&j) { return i.second < j.second; });
