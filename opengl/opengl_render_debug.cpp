@@ -59,6 +59,9 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         brush_color.setAlpha(64);
         painter.setBrush( QBrush( brush_color));
 
+        // Used to store combined polygon of a multi-shape body
+        QPolygonF object_poly;
+
         for (auto shape : object->shapes) {
 
             if (object->shape_type[shape] == Shape_Type::Circle) {
@@ -159,7 +162,6 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 
                 if ((rect().intersects(bounding_box) || rect().contains(bounding_box)) &&
                     (bounding_box.width() * 0.1 < width()) && (bounding_box.height() * 0.1 < height())) {
-                    painter.drawPolygon( mapped );
 
                     // Draw orientation line
                     if (object->shape_type[shape] == Shape_Type::Box) {
@@ -167,13 +169,21 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
                         QPointF top = t.map(QPointF( 0, polygon.boundingRect().height() / 2 ));
                         QPointF l1 = mapToScreen( mid.x(),  mid.y(),  0);
                         QPointF l2 = mapToScreen( top.x(),  top.y(),  0);
+                        painter.drawPolygon( mapped );
                         painter.drawLine( l1, l2 );
+                    } else {
+                        object_poly = object_poly.united( mapped );
                     }
                 }
 
             }   // End If
 
         }   // End For shape
+
+        // Draw a multi shape Shape_Type::Polygon
+        if (!object_poly.isEmpty())
+            painter.drawPolygon( object_poly );
+
     }   // End For object
 }
 
