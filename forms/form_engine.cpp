@@ -158,8 +158,8 @@ void FormEngine::loadDemo(Demo_Space using_space, Demo_Player using_player ) {
 void FormEngine::startTimers() {
     m_timer->start( 0 );                                        // Timeout of zero will call this timeout every pass of the event loop
     m_time_update = Clock::now();
-    m_time_camera = Clock::now();
     m_time_render = Clock::now();
+    m_time_camera = Clock::now();
     m_engine->fps_timer.restart();
     m_engine->fps = 0;
 }
@@ -168,7 +168,6 @@ void FormEngine::stopTimers() {
 }
 
 void FormEngine::updateEngine() {
-
     if (!m_engine->has_scene) return;
 
     // ***** Move Cameras
@@ -179,25 +178,17 @@ void FormEngine::updateEngine() {
     // ***** MAIN UPDATE LOOP: Space (Physics), Cameras
     double update_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_update).count() / 1000000.0;
     if (update_milliseconds > (m_engine->getTimeStep() * 1000)) {
+        m_time_update = Clock::now();                           // Update time counter immediately
         m_engine->updateSpace(update_milliseconds);             // Physics Engine
-        m_time_update = Clock::now();                           // Update time counter immediately after updating physics
-
         m_engine->updateSpaceHelper();                          // Additional Physics Updating
-
         m_engine->updateCameras();                              // Cameras
-
-        ///m_opengl->update();                                     // Render
     }
 
     // ***** Seperate Render Timer if we want it
     double render_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_render).count() / 1000000.0;
     if (render_milliseconds > (1000 / m_ideal_frames_per_second)) {
-        /// can call render here if we want
+        m_time_render = Clock::now();                           // Update time counter immediately
         m_opengl->update();                                     // Render
-
-        updateLabels(m_engine->info);
-
-        m_time_render = Clock::now();
     }
 }
 
@@ -229,16 +220,12 @@ void FormEngine::on_pushCar_clicked() {     loadDemo(m_engine->demo_space,  Demo
 void FormEngine::on_pushJump_clicked() {    loadDemo(m_engine->demo_space,  Demo_Player::Jump ); }
 
 void FormEngine::on_pushPlay1_clicked() {
-    m_engine->demo_jumper_1->player_controls = true;
     m_engine->demo_jumper_1->lost_control = false;
-    m_engine->demo_jumper_2->player_controls = false;
     m_engine->demo_jumper_2->lost_control = true;
     m_engine->switchCameras(m_engine->demo_jumper_1->active_camera);
 }
 void FormEngine::on_pushPlay2_clicked() {
-    m_engine->demo_jumper_1->player_controls = false;
     m_engine->demo_jumper_1->lost_control = true;
-    m_engine->demo_jumper_2->player_controls = true;
     m_engine->demo_jumper_2->lost_control = false;
     m_engine->switchCameras(m_engine->demo_jumper_2->active_camera);
 }

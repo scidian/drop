@@ -130,7 +130,7 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 void DrEngine::updateSpace(double time_passed) {
 
     // ***** Updates physics, time_passed is in milliseconds
-    cpFloat step_time = m_time_step;//time_passed / 1000.0 * m_time_warp;
+    cpFloat step_time = time_passed / 1000.0 * m_time_warp;
     cpSpaceStep(m_space, step_time);
 
 }
@@ -141,9 +141,6 @@ void DrEngine::updateSpaceHelper() {
     g_keyboard_x =  keyboard_x;
     g_keyboard_y =  keyboard_y;
     g_jump_button = jump_button;
-
-
-
     info = g_info;
 
 

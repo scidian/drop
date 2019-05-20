@@ -133,22 +133,20 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         SceneObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 0,  50, 0, c_norotate, c_scale1x1, c_opaque,
                                             ball_radius, c_center, -2, -.01, 200, QPointF( 0, 0), true, false);
 
-        setActiveCamera( addCamera(ball) );                                 // Create camera and set as active
-
+        setActiveCamera( addCamera(ball) );                                 // Create camera AND set as active
         ball->jump_count = 2;                                               // Set jump count
-        ball->player_controls = true;                                       // Turn on jump / movement buttons
-
         cpBodySetUserData(ball->body, ball);
         cpBodySetVelocityUpdateFunc(ball->body, playerUpdateVelocity);
 
-
-
-
         SceneObject *ball2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 600,  50, 0, c_norotate, c_scale1x1, c_opaque,
                                              ball_radius, c_center, -2, -.01, 200, QPointF( 0, 0), true, false);
-        addCamera(ball2);
-        ball2->jump_count = 2;
+        addCamera(ball2);                                                   // Create camera
+        ball2->jump_count = 2;                                              // Set jump count
+        ball2->lost_control = true;                                         // Turn on jump / movement buttons
+        cpBodySetUserData(ball2->body, ball2);
+        cpBodySetVelocityUpdateFunc(ball2->body, playerUpdateVelocity);
 
+        // TEMP demo variables
         demo_jumper_1 = ball;
         demo_jumper_2 = ball2;
     }

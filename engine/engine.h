@@ -98,8 +98,8 @@ struct SceneObject {
     bool        custom_bounce = false;      // Set to true if we don't want this item affected by global m_bounce
 
     // ***** Object interaction
-    bool        player_controls = false;    // Set to true to have object controlled by player control buttons, keyboard_x, keyboard_y
-    bool        lost_control = false;       // Set to true when players switch and this player still needs update velocity, but no more button control
+    bool        lost_control = false;       // Set to true when players should not have button control
+                                            //      (players are cpBody* that have been assigned the cpBodyUpdateVelocityFunc playerUpdateVelocity callback)
     bool        is_wheel = false;           // Set to true if we want wheel to spin from button press
     double      wheel_speed;                // If is_wheel, Speed at which wheel should spin when gas pedal is pressed
 
@@ -163,7 +163,7 @@ private:
     cpSpace        *m_space;                        // Current physics space shown on screen
                                                     //
     const int       m_iterations = 10;              // Times physics are processed each update, 10 is default and should be good enough for most games
-    const cpFloat   m_time_step = 1 / 90.0;         // Speed at which want to try to update the Space, 1 / 90 = 90 times per second to up
+    const cpFloat   m_time_step = 1 / 60.0;         // Speed at which want to try to update the Space, 1 / 90 = 90 times per second to up
                                                     //      It is *highly* recommended to use a fixed size time step (calling Update at a fixed interval)
     cpFloat         m_time_warp = 1.0;              // Speeds up or slows down physics time, 1 = 100% = Normal Time, Lower than 1 = slower, Higher = faster
                                                     //
