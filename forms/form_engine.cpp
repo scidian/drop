@@ -63,6 +63,7 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
         label =       new QLabel(upperWidget);          label->setObjectName("label");              label->setGeometry(      QRect(750,  0, 330, 20));
         label2 =      new QLabel(upperWidget);          label2->setObjectName("label2");            label2->setGeometry(     QRect(750, 25, 330, 20));
         labelOpenGL = new QLabel(upperWidget);          labelOpenGL->setObjectName("labelOpenGL");  labelOpenGL->setGeometry(QRect(750, 50, 330, 20));
+        labelInfo =   new QLabel(upperWidget);          labelInfo->setObjectName("labelInfo");      labelInfo->setGeometry(  QRect(750, 75, 330, 20));
 
         pushSpawn->setText(QApplication::translate(  "MainWindow", "Spawning Demo",     nullptr));  pushSpawn->setStyleSheet("color: white");
         pushCar->setText(QApplication::translate(    "MainWindow", "Car Demo",          nullptr));  pushCar->setStyleSheet("color: white");
@@ -155,7 +156,7 @@ void FormEngine::loadDemo(Demo_Space using_space, Demo_Player using_player ) {
 //##    Update Engine /  Labels
 //######################################################################################################
 void FormEngine::startTimers() {
-    m_timer->start( 1 );
+    m_timer->start( 0 );                                        // Timeout of zero will call this timeout every pass of the event loop
     m_time_update = Clock::now();
     m_time_camera = Clock::now();
     m_time_render = Clock::now();
@@ -179,24 +180,30 @@ void FormEngine::updateEngine() {
     double update_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_update).count() / 1000000.0;
     if (update_milliseconds > (m_engine->getTimeStep() * 1000)) {
         m_engine->updateSpace(update_milliseconds);             // Physics Engine
-        m_engine->updateSpaceHelper(update_milliseconds);       // Additional Physics Updating
         m_time_update = Clock::now();                           // Update time counter immediately after updating physics
 
+        m_engine->updateSpaceHelper();                          // Additional Physics Updating
+
         m_engine->updateCameras();                              // Cameras
-        m_opengl->update();                                     // Render
+
+        ///m_opengl->update();                                     // Render
     }
 
     // ***** Seperate Render Timer if we want it
     double render_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_render).count() / 1000000.0;
     if (render_milliseconds > (1000 / m_ideal_frames_per_second)) {
         /// can call render here if we want
+        m_opengl->update();                                     // Render
+
+        updateLabels(m_engine->info);
+
         m_time_render = Clock::now();
     }
 }
 
 // Update helpful labels
 void FormEngine::updateLabels(QString info) {
-    label->setText( "Total Items: " + QString::number( m_engine->objects.count()) + " - " + info);
+    label->setText( "Total Items: " + QString::number( m_engine->objects.count()));
     label2->setText("FPS: " + QString::number(m_engine->last_fps) + " - Scale: " + QString::number(double(m_opengl->getScale())) );
 
     int max_sample, max_text, max_number_textures, max_layers;
@@ -207,6 +214,8 @@ void FormEngine::updateLabels(QString info) {
     labelOpenGL->setText( "MAX Samples: " +  QString::number(max_sample) +
                         ", Txt Size: " +   QString::number(max_text) +
                         ", Txt Layers: " + QString::number(max_layers));
+
+    labelInfo->setText( info );
 }
 
 

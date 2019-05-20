@@ -56,7 +56,7 @@ public:
     QToolButton     *pushDebug1,    *pushDebug2;
 
     QLabel          *label,         *label2;
-    QLabel          *labelOpenGL;
+    QLabel          *labelOpenGL,   *labelInfo;
 
 
 public:

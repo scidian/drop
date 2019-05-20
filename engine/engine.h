@@ -241,10 +241,9 @@ public:
     void        clearSpace();
     void        loadStageToSpace(DrStage *stage, double offset_x, double offset_y);
     void        oneWayPlatform(SceneObject *object, cpVect direction);
-    void        playerUpdateVelocity(SceneObject *object, cpVect gravity, cpFloat dt);
     void        removeObject(SceneObject *object);
     void        updateSpace(double time_passed);
-    void        updateSpaceHelper(double time_passed);
+    void        updateSpaceHelper();
 
     void        deleteResources();
 

@@ -8,6 +8,8 @@
 #include "engine.h"
 #include "engine_texture.h"
 
+// Forward declare for external Chipmunk callback
+extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);
 
 //######################################################################################################
 //##    Add Player to Space
@@ -131,9 +133,16 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         SceneObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 0,  50, 0, c_norotate, c_scale1x1, c_opaque,
                                             ball_radius, c_center, -2, -.01, 200, QPointF( 0, 0), true, false);
 
-        setActiveCamera( addCamera(ball) );     // Create camera and set as active
-        ball->player_controls = true;           // Turn on jump / movement buttons
-        ball->jump_count = 2;                   // Set jump count
+        setActiveCamera( addCamera(ball) );                                 // Create camera and set as active
+
+        ball->jump_count = 2;                                               // Set jump count
+        ball->player_controls = true;                                       // Turn on jump / movement buttons
+
+        cpBodySetUserData(ball->body, ball);
+        cpBodySetVelocityUpdateFunc(ball->body, playerUpdateVelocity);
+
+
+
 
         SceneObject *ball2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 600,  50, 0, c_norotate, c_scale1x1, c_opaque,
                                              ball_radius, c_center, -2, -.01, 200, QPointF( 0, 0), true, false);
