@@ -9,18 +9,15 @@
 #include "engine.h"
 
 
-#define MOVE_SPEED_X    400.0                   // Movement speed x
-#define MOVE_SPEED_Y      0.0                   // Movement speed y
-
-#define PLATFORM_FRICTION 0.45                  // 0 to 1+, unknown limit
-
-
-
-
-// Definition of global variables to be used to pass info to callbacks
+//######################################################################################################
+//##    Definition of Global Variables to be used to pass info to callbacks
+//######################################################################################################
 int      g_keyboard_x = 0;
 int      g_keyboard_y = 0;
 bool     g_jump_button = false;
+bool     g_rotate_cw = false;
+bool     g_rotate_ccw = false;
+
 QString  g_info = "";
 
 
@@ -39,11 +36,14 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     SceneObject *object = static_cast<SceneObject*>(cpBodyGetUserData(body));
 
     // ***** Get Keys - If player is still active get keyboard status
-    int key_y = 0, key_x = 0, key_jump = 0;
+    int key_y = 0,      key_x = 0,      key_jump = 0;
+    int key_cw = 0,     key_ccw = 0;
     if (!object->lost_control) {
         key_x =     g_keyboard_x;
         key_y =     g_keyboard_y;
         key_jump =  g_jump_button;
+        key_cw =    g_rotate_cw;
+        key_ccw =   g_rotate_ccw;
     }
 
     // ***** Ground Check - Grab the grounding normal from last frame, if we hit the ground, turn off remaining_boost time
@@ -94,50 +94,41 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
 
 
+    // ***** Velocity - Target horizontal speed for air / ground control
+    cpVect  body_v = cpBodyGetVelocity( object->body );
 
-    // ***** Rotation - If object can rotate it doesn't receive movement from movement keys, process velocity and get out
-    if (object->can_rotate) {
-        cpBodyUpdateVelocity(body, gravity, damping, dt);
-        return;
-    }
+    cpFloat target_vx = object->move_speed_x * key_x;
+    cpFloat target_vy = object->move_speed_y * key_y;
 
-
-    // ***** Target horizontal speed for air / ground control
-    cpFloat target_vx = MOVE_SPEED_X * key_x;
-
-    // Platform Friction
-    for (auto shape : object->shapes) {
-        cpShapeSetFriction( shape, PLATFORM_FRICTION );
-    }
-
-
-    // Velocity
-    cpVect body_v = cpBodyGetVelocity( object->body );
-
-    double air_accel =    MOVE_SPEED_X / (object->air_drag + .001);
-    double ground_accel = MOVE_SPEED_X / (object->ground_drag + .001);
+    double air_accel_x =    object->move_speed_x / (object->air_drag + .001);
+    double air_accel_y =    object->move_speed_y / (object->air_drag + .001);
+    double ground_accel_x = object->move_speed_x / (object->ground_drag + .001);
+    double ground_accel_y = object->move_speed_y / (object->ground_drag + .001);
 
     if (!object->grounded) {
 
         if ((qFuzzyCompare(body_v.x, 0) == false && qFuzzyCompare(target_vx, 0) == false) ||
             (body_v.x <= 0 && target_vx > 0) || (body_v.x >= 0 && target_vx < 0)) {
-            body_v.x = cpflerpconst( body_v.x, target_vx, air_accel * dt);
+            body_v.x = cpflerpconst( body_v.x, target_vx, air_accel_x * dt);
         }
 
-
-
+        if ((qFuzzyCompare(body_v.y, 0) == false && qFuzzyCompare(target_vy, 0) == false) ||
+            (body_v.y <= 0 && target_vy > 0) || (body_v.y >= 0 && target_vy < 0)) {
+            body_v.y = cpflerpconst( body_v.y, target_vy, air_accel_y * dt);
+        }
 
     } else {
 
         if (qFuzzyCompare(target_vx, 0) == false)
-            body_v.x = cpflerpconst( body_v.x, target_vx, ground_accel * dt);
-        else
-            body_v.x = cpflerpconst( body_v.x, 0, 1000 * PLATFORM_FRICTION * dt);
+            body_v.x = cpflerpconst( body_v.x, target_vx, ground_accel_x * dt);
 
+        if (qFuzzyCompare(target_vy, 0) == false)
+            body_v.y = cpflerpconst( body_v.y, target_vy, ground_accel_y * dt);
     }
 
 
-    // Max Speed - Limit Velocity
+
+    // ***** Max Speed - Limit Velocity
     body_v.x = cpfclamp(body_v.x, -object->max_speed_x, object->max_speed_x);
     body_v.y = cpfclamp(body_v.y, -object->max_speed_y, object->max_speed_y);
     cpBodySetVelocity( object->body, body_v );

@@ -30,10 +30,17 @@ void DrEngine::updateSpace(double time_passed) {
 
 void DrEngine::updateSpaceHelper() {
 
-    // Update global variables for use in callbacks
+    // ***** Update global variables for use in callbacks
     g_keyboard_x =  keyboard_x;
     g_keyboard_y =  keyboard_y;
     g_jump_button = jump_button;
+
+    switch (gas_pedal) {
+        case Pedal::Clockwise:          g_rotate_cw = true;     g_rotate_cw = false;        break;
+        case Pedal::CounterClockwise:   g_rotate_cw = false;    g_rotate_cw = true;         break;
+        default:                        g_rotate_cw = false;    g_rotate_cw = false;        break;
+    }
+
     info = g_info;
 
 

@@ -98,8 +98,10 @@ void OpenGL::mouseReleaseEvent(QMouseEvent *event)
             m_engine->gas_pedal = Pedal::None;
 
     } else if (m_engine->demo_player == Demo_Player::Jump) {
-        if (event->buttons() == Qt::MouseButton::NoButton)
+        if (event->buttons() == Qt::MouseButton::NoButton) {
             m_engine->jump_button = false;
+            m_engine->gas_pedal = Pedal::None;
+        }
     }
 }
 

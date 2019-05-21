@@ -94,6 +94,8 @@ constexpr double    c_opaque   {1};             // Default transparency of fully
 extern int      g_keyboard_x;                   // Used to pass keyboard x button state to static callback functions
 extern int      g_keyboard_y;                   // Used to pass keyboard y button state to static callback functions
 extern bool     g_jump_button;                  // Used to pass jump button state to static callback functions
+extern bool     g_rotate_cw;                    // Used to pass rotate clockwise button state
+extern bool     g_rotate_ccw;                   // Used to pass rotate counter clockwise button state
 extern QString  g_info;
 
 // Global Forward Declaratopns for static Chipmunk callbacks
@@ -138,6 +140,8 @@ struct SceneObject {
     double      max_speed_x =  1000.0;      // Maximum speed x of object
     double      max_speed_y =  1000.0;      // Maximum speed y of object
 
+    double      move_speed_x =  400.0;      // Movement speed x
+    double      move_speed_y =    0.0;      // Movement speed y
 
     double      jump_force_x =    0.0;      // Jump force x
     double      jump_force_y =  250.0;      // Jump force y
@@ -225,27 +229,27 @@ private:
 public:
     QVector<SceneObject*>   objects;
 
-    QTime           fps_timer;
-    int             fps, last_fps;
-    QString         info;
+    bool            has_scene = false;
+    Render_Type     render_type = Render_Type::Orthographic;          // Should render perspective or orthographic?
+
+    int             keyboard_x;                             // Set to -1 for left, 1 for right
+    int             keyboard_y;                             // Set to -1 for down, 1 for up
+    bool            jump_button;                            // Set to 0 for not pressed, 1 for pressed
+    Pedal           gas_pedal = Pedal::None;                // Pedal enumeration for rotate key state
 
     bool            debug_shapes =      false;
     bool            debug_collisions =  false;
+
+    QTime           fps_timer;
+    int             fps, last_fps;
+    QString         info;
 
     Demo_Space      demo_space =  Demo_Space::Project;
     Demo_Player     demo_player = Demo_Player::Car;
     SceneObject    *demo_jumper_1;
     SceneObject    *demo_jumper_2;
 
-    Render_Type     render_type = Render_Type::Orthographic;          // Should render perspective or orthographic?
 
-    bool            has_scene = false;
-
-    Pedal           gas_pedal = Pedal::None;
-
-    int             keyboard_x;                             // Set to -1 for left, 1 for right
-    int             keyboard_y;                             // Set to -1 for down, 1 for up
-    bool            jump_button;                            // Set to 0 for not pressed, 1 for pressed
 
 public:
     DrEngine(DrProject *project);
