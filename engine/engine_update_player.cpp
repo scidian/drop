@@ -9,16 +9,11 @@
 #include "engine.h"
 
 
-#define MOVE_SPEED_X    250.0                   // Movement speed x
+#define MOVE_SPEED_X    400.0                   // Movement speed x
 #define MOVE_SPEED_Y      0.0                   // Movement speed y
 
-#define JUMP_FORCE_X      0.0                   // Jump force x
-#define JUMP_FORCE_Y     90.0                   // Jump force y
+#define PLATFORM_FRICTION 0.45                  // 0 to 1+, unknown limit
 
-
-#define PLATFORM_FRICTION 0.15                  // 0 to 1+, unknown limit
-
-#define AIR_DRAG_X        0.2                   // Air drag x, 0 to 1
 
 
 
@@ -64,8 +59,9 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     if (object->remaining_boost > 0) object->remaining_boost -= dt;
     if (key_jump && object->remaining_boost > 0.0) {
         cpVect  player_v = cpBodyGetVelocity( object->body );
-        cpFloat jump_v = cpfsqrt(2.0 * JUMP_FORCE_Y * -gravity.y) * dt;
-        player_v = cpvadd(player_v, cpv(0.0, jump_v));
+        cpFloat jump_vx = object->jump_force_x * 2.0 * dt;
+        cpFloat jump_vy = object->jump_force_y * 2.0 * dt;
+        player_v = cpvadd(player_v, cpv(jump_vx, jump_vy));
         cpBodySetVelocity( object->body, player_v );
     }
 
@@ -76,20 +72,34 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
             (object->remaining_jumps > 0 && object->jump_count != object->remaining_jumps) ||       // Already jumped once from ground and jumps remaining
             (object->jump_count == -1) ) {                                                          // Unlimited jumping
 
-            object->jump_state = Jump_State::Jumped;
-            cpFloat jump_vx = cpfsqrt(2.0 * JUMP_FORCE_X * -gravity.x);
-            cpFloat jump_vy = cpfsqrt(2.0 * JUMP_FORCE_Y * -gravity.y);
+            // Calculate jumps forces
+            object->jump_state = Jump_State::Jumped;                                                // Mark current jump button press as processed
+            cpFloat jump_vx = object->jump_force_x * 2.0; //cpfsqrt(2.0 * object->jump_force_x * -gravity.x);
+            cpFloat jump_vy = object->jump_force_y * 2.0; //cpfsqrt(2.0 * object->jump_force_y * -gravity.y);
 
-            // Starting a new jump so cancel out last jump
+            // Starting a new jump so cancel out last jump forces
             cpVect  player_v = cpBodyGetVelocity( object->body );
-            player_v.y = 0;
+            if (qFuzzyCompare(jump_vx, 0) == false) player_v.x = 0;
+            if (qFuzzyCompare(jump_vy, 0) == false) player_v.y = 0;
             player_v = cpvadd(player_v, cpv(jump_vx, jump_vy));
             cpBodySetVelocity( object->body, player_v );
+
+            // Reset timeout boost and subtract remaining jumps until ground
             object->remaining_boost = object->jump_timeout / 1000;
             object->remaining_jumps--;
         }
     }
+    // If jump button is let go, reset this objects ability to receive a jump command
     if (!g_jump_button) object->jump_state = Jump_State::Need_To_Jump;
+
+
+
+
+    // ***** Rotation - If object can rotate it doesn't receive movement from movement keys, process velocity and get out
+    if (object->can_rotate) {
+        cpBodyUpdateVelocity(body, gravity, damping, dt);
+        return;
+    }
 
 
     // ***** Target horizontal speed for air / ground control
@@ -104,15 +114,18 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     // Velocity
     cpVect body_v = cpBodyGetVelocity( object->body );
 
-    double AIR_DRAG = .25;
-    double GROUND_DRAG = .15;
-
-    double air_accel =    MOVE_SPEED_X / (AIR_DRAG + .001);
-    double ground_accel = MOVE_SPEED_X / (GROUND_DRAG + .001);
+    double air_accel =    MOVE_SPEED_X / (object->air_drag + .001);
+    double ground_accel = MOVE_SPEED_X / (object->ground_drag + .001);
 
     if (!object->grounded) {
 
-        body_v.x = cpflerpconst( body_v.x, target_vx, air_accel * dt);
+        if ((qFuzzyCompare(body_v.x, 0) == false && qFuzzyCompare(target_vx, 0) == false) ||
+            (body_v.x <= 0 && target_vx > 0) || (body_v.x >= 0 && target_vx < 0)) {
+            body_v.x = cpflerpconst( body_v.x, target_vx, air_accel * dt);
+        }
+
+
+
 
     } else {
 

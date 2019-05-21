@@ -135,20 +135,26 @@ struct SceneObject {
     bool        lost_control = false;       // Set to true when players should not have button control
                                             //      (players are cpBody* that have been assigned the cpBodyUpdateVelocityFunc playerUpdateVelocity callback)
 
-    double      max_speed_x = 1000;         // Maximum speed x of object
-    double      max_speed_y = 1000;         // Maximum speed y of object
+    double      max_speed_x =  1000.0;      // Maximum speed x of object
+    double      max_speed_y =  1000.0;      // Maximum speed y of object
 
-    double      jump_timeout = 800.0;       // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
-    int         jump_count = 0;             // How many jumps this player is allowed, -1 = unlimited, 0 = cannot jump, 1 = 1, 2 = 2, etc
+
+    double      jump_force_x =    0.0;      // Jump force x
+    double      jump_force_y =  250.0;      // Jump force y
+    double      jump_timeout =  800.0;      // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
+    int         jump_count =        0;      // How many jumps this player is allowed, -1 = unlimited, 0 = cannot jump, 1 = 1, 2 = 2, etc
 
     bool        can_rotate = true;          // Set during object creation, moment of inertia is set to infinity to stop rotation
+
+    double      air_drag =       0.50;      // Affects acceleration in air (0 to 1+)
+    double      ground_drag =    0.25;      // Affects acceleration on the ground (0 to 1+)
 
     bool        air_jump = true;            // Can this player jump while in the air (even if only has 1 jump, ex: fell off platform)
 
 
     // ***** Updated by Engine:
     bool        should_process = true;      // True while object exists in Space
-    bool        has_been_processed= false;  // Set to true after an initial updateSpace call has been ran once while the object was in the Space
+    bool        has_been_processed = false; // Set to true after an initial updateSpace call has been ran once while the object was in the Space
 
     int         remaining_jumps = 0;                // How many jumps player has left before it must hit ground before it can jump again
     cpFloat     remaining_boost = 0;                // Used by Engine Update to process Jump Timeout boost

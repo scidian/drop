@@ -81,9 +81,9 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
             }
         } else {
             if (event->button() & Qt::LeftButton)
-                m_engine->gas_pedal = Pedal::Clockwise;
-            else if (event->button() & Qt::RightButton)
                 m_engine->gas_pedal = Pedal::CounterClockwise;
+            else if (event->button() & Qt::RightButton)
+                m_engine->gas_pedal = Pedal::Clockwise;
             else if (event->button() & Qt::MiddleButton)
                 m_engine->jump_button = true;
         }

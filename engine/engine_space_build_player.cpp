@@ -128,15 +128,15 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
 
         // Create character
         double ball_radius = m_textures[Test_Textures::Ball]->width() / 2.0;
-        SceneObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 0,  50, 0, c_norotate, c_scale1x1, c_opaque,
+        SceneObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 400,  50, 0, c_norotate, c_scale1x1, c_opaque,
                                             ball_radius, c_center, -2, -.01, 200, QPointF( 0, 0), true, false);
         assignPlayerControls(ball, true, true, true);
         ball->jump_count = 2;
         ball->air_jump = false;
 
 
-        SceneObject *ball2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 600,  50, 0, c_norotate, c_scale1x1, c_opaque,
-                                             ball_radius, c_center, -2, -.01, 200, QPointF( 0, 0), true, true);
+        SceneObject *ball2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 100,  50, 0, c_norotate, c_scale1x1, c_opaque,
+                                             ball_radius, c_center, -2, -.1, 200, QPointF( 0, 0), true, true);
         assignPlayerControls(ball2, false, true, false);
         ball2->jump_count = -1;
         ball2->rotate_speed = 20;
