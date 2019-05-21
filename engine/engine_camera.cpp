@@ -132,7 +132,7 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
     //m_position.setY( drflerp( m_position.y(), m_target.y(), lerp) );
     //m_position.setZ( drflerp( m_position.z(), m_target.z(), lerp) );
 
-    double lerp = 0.015 * milliseconds;
+    double lerp = 0.0115 * milliseconds;
     m_position.setX( static_cast<float>(drdlerp( static_cast<double>(m_position.x()), static_cast<double>(m_target.x()), lerp)) );
     m_position.setY( static_cast<float>(drdlerp( static_cast<double>(m_position.y()), static_cast<double>(m_target.y()), lerp)) );
     m_position.setZ( static_cast<float>(drdlerp( static_cast<double>(m_position.z()), static_cast<double>(m_target.z()), lerp)) );

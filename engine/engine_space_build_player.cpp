@@ -8,8 +8,6 @@
 #include "engine.h"
 #include "engine_texture.h"
 
-// Forward declare for external Chipmunk callback
-extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);
 
 //######################################################################################################
 //##    Add Player to Space
@@ -31,8 +29,8 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
 
 
     } else if (demo_player == Demo_Player::Car) {
-        m_gravity = cpv(0, -500);                           // cpVect is a 2D vector and cpv() is a shortcut for initializing them
-        m_damping = .7;                                     // Kind of like air drag
+        m_gravity = cpv(0, -1000);                          // cpVect is a 2D vector and cpv() is a shortcut for initializing them
+        m_damping = .8;                                     // Kind of like air drag
         cpSpaceSetGravity(m_space, m_gravity);
         cpSpaceSetDamping(m_space, m_damping);
 
@@ -66,9 +64,9 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
                                               wheel_radius, c_center, -4, -.7,  2, QPointF(0, 0));
         SceneObject *wheel3 = this->addCircle(Body_Type::Dynamic, Test_Textures::Wheel,  90,  45, .01, c_norotate, c_scale1x1, c_opaque,
                                               wheel_radius, c_center, -4, -.7,  2, QPointF(0, 0));
-        wheel1->is_wheel = true;    wheel1->wheel_speed = 90;
-        wheel2->is_wheel = true;    wheel2->wheel_speed = 45;
-        wheel3->is_wheel = true;    wheel3->wheel_speed = 70;
+        wheel1->is_wheel = true;    wheel1->wheel_speed = 110;
+        wheel2->is_wheel = true;    wheel2->wheel_speed = 60;
+        wheel3->is_wheel = true;    wheel3->wheel_speed = 90;
         SceneObject *spare1 = this->addCircle(Body_Type::Dynamic, Test_Textures::Spare, -10,  50, .01, c_norotate, c_scale1x1, c_opaque,
                                               spare_radius, c_center, -4, -.7, .5, QPointF(0, 0));
 
@@ -108,9 +106,9 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         cpSpaceAddConstraint(m_space, cpGrooveJointNew( rover->body, wheel2->body, cpv(  0,  15), cpv(  0, -28), cpvzero));
         cpSpaceAddConstraint(m_space, cpGrooveJointNew( rover->body, wheel3->body, cpv( 40,  15), cpv( 40, -28), cpvzero));
 
-        cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->body, wheel1->body, cpv(-40, 0), cpvzero, 50.0, 90.0, 50.0)); // Higher damp = less mushy, 100 = pretty stiff
-        cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->body, wheel2->body, cpv(  0, 0), cpvzero, 50.0, 90.0, 25.0));
-        cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->body, wheel3->body, cpv( 40, 0), cpvzero, 50.0, 90.0, 40.0));
+        cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->body, wheel1->body, cpv(-40, 0), cpvzero, 50.0, 300.0, 50.0));
+        cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->body, wheel2->body, cpv(  0, 0), cpvzero, 50.0, 300.0, 25.0));
+        cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->body, wheel3->body, cpv( 40, 0), cpvzero, 50.0, 300.0, 40.0));
 
         // Old school solid pin joint
         cpSpaceAddConstraint( m_space, cpPivotJointNew(rover->body, spare1->body, cpBodyGetPosition(spare1->body)) );
@@ -132,19 +130,11 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         double ball_radius = m_textures[Test_Textures::Ball]->width() / 2.0;
         SceneObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 0,  50, 0, c_norotate, c_scale1x1, c_opaque,
                                             ball_radius, c_center, -2, -.01, 200, QPointF( 0, 0), true, false);
-
-        setActiveCamera( addCamera(ball) );                                 // Create camera AND set as active
-        ball->jump_count = 2;                                               // Set jump count
-        cpBodySetUserData(ball->body, ball);
-        cpBodySetVelocityUpdateFunc(ball->body, playerUpdateVelocity);
+        assignPlayerControls(ball, 2, true, true, true);
 
         SceneObject *ball2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 600,  50, 0, c_norotate, c_scale1x1, c_opaque,
-                                             ball_radius, c_center, -2, -.01, 200, QPointF( 0, 0), true, false);
-        addCamera(ball2);                                                   // Create camera
-        ball2->jump_count = 2;                                              // Set jump count
-        ball2->lost_control = true;                                         // Turn on jump / movement buttons
-        cpBodySetUserData(ball2->body, ball2);
-        cpBodySetVelocityUpdateFunc(ball2->body, playerUpdateVelocity);
+                                             ball_radius, c_center, -2, -.01, 200, QPointF( 0, 0), true, true);
+        assignPlayerControls(ball2, 2, false, true, false);
 
         // TEMP demo variables
         demo_jumper_1 = ball;
@@ -152,6 +142,25 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
     }
 
 }
+
+
+// Sets up an object to be controlled as a "player"
+void DrEngine::assignPlayerControls(SceneObject *object, int jump_count, bool has_controls_now, bool add_camera, bool set_active_camera) {
+    // Create camera
+    if (add_camera) {
+        long camera_key = addCamera(object);
+        if (set_active_camera) setActiveCamera(camera_key);
+    }
+    object->jump_count = jump_count;                                        // Set jump count
+    object->lost_control = !has_controls_now;                               // Turn on jump / movement buttons
+    cpBodySetUserData(object->body, object);                                // Set chipmunk User Data, store SceneObject for later
+    cpBodySetVelocityUpdateFunc(object->body, playerUpdateVelocity);        // Assign the playerUpdate callback function
+}
+
+
+
+
+
 
 
 

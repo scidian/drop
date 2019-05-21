@@ -103,6 +103,7 @@ SOURCES += \
     engine/engine_space_load.cpp \
     engine/engine_texture.cpp \
     engine/engine_update.cpp \
+    engine/engine_update_player.cpp \
     enums.cpp \
     forms/form_atlas.cpp \
     forms/form_blank.cpp \

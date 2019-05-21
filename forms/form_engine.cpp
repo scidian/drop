@@ -185,6 +185,8 @@ void FormEngine::updateEngine() {
         m_engine->updateSpaceHelper();                                                  // Additional Physics Updating
         m_engine->updateCameras();                                                      // Update Camera Targets
 
+        m_opengl->update();                                                             // Render
+
         if (update_milliseconds > 16.8 || update_milliseconds < 16.5)
             updateLabels("UT: " + QString::number(update_milliseconds));
     }
@@ -193,7 +195,7 @@ void FormEngine::updateEngine() {
     double render_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_render).count() / 1000000.0;
     if (render_milliseconds > (1000.0 / m_ideal_frames_per_second)) {
         m_time_render = Clock::now();                                                   // Update time counter immediately
-        m_opengl->update();                                                             // Render
+        ///m_opengl->update();                                                             // Render
     }
 }
 

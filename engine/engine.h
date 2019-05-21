@@ -71,8 +71,39 @@ enum Test_Textures {
     Spare = -6
 };
 
+// Forward declarations
+class DrEngineCamera;
+class DrEngineTexture;
+class DrEngineWorld;
+class DrProject;
+class DrStage;
+
+// Type definitions
+typedef std::map<long, DrEngineCamera*>  EngineCameraMap;
+typedef std::map<long, DrEngineTexture*> EngineTextureMap;
 typedef std::map<cpShape*, Shape_Type> ShapeMap;
 
+// Constants for calling engine addObject calls
+constexpr QVector3D c_no_camera {0, 0, 800};    // Default camera position if there is no active camera
+constexpr QPointF   c_center   {0, 0};          // Default offset in no offset
+constexpr QPointF   c_scale1x1 {1, 1};          // Default scale of 1x1
+constexpr double    c_norotate {0};             // Default rotation amount of zero
+constexpr double    c_opaque   {1};             // Default transparency of fully opaque
+
+// Global Variables - defined in engine_update_player.cpp
+extern int      g_keyboard_x;                   // Used to pass keyboard x button state to static callback functions
+extern int      g_keyboard_y;                   // Used to pass keyboard y button state to static callback functions
+extern bool     g_jump_button;                  // Used to pass jump button state to static callback functions
+extern QString  g_info;
+
+// Global Forward Declaratopns for static Chipmunk callbacks
+extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);            // defined in engine_udate_player.cpp
+
+
+//####################################################################################
+//##    SceneObject
+//##        Holds on object for use in a cpSpace
+//############################
 struct SceneObject {
     // ***** Object Properties
     cpBody             *body;               // Physical Body of object
@@ -119,24 +150,6 @@ struct SceneObject {
     QPointF     last_position;              // Previous frame position, for whatever may need it
 };
 
-// Forward declarations
-class DrEngineCamera;
-class DrEngineTexture;
-class DrEngineWorld;
-class DrProject;
-class DrStage;
-
-// Type definitions
-typedef std::map<long, DrEngineCamera*>  EngineCameraMap;
-typedef std::map<long, DrEngineTexture*> EngineTextureMap;
-
-// Constants
-constexpr QVector3D c_no_camera {0, 0, 800};    // Default camera position if there is no active camera
-
-constexpr QPointF   c_center   {0, 0};
-constexpr QPointF   c_scale1x1 {1, 1};
-constexpr double    c_norotate {0};
-constexpr double    c_opaque   {1};
 
 //####################################################################################
 //##    DrEngine
@@ -146,10 +159,10 @@ class DrEngine
 {
 private:
     // Locals
-    DrProject          *m_project;                      // Pointer to Project to load into Engine
+    DrProject          *m_project;                  // Pointer to Project to load into Engine
 
-    EngineCameraMap     m_cameras;                      // Map of Cameras used for this Engine
-    EngineTextureMap    m_textures;                     // Map of Textures used for this Engine
+    EngineCameraMap     m_cameras;                  // Map of Cameras used for this Engine
+    EngineTextureMap    m_textures;                 // Map of Textures used for this Engine
 
     // Camera Variables
     long            m_active_camera = 0;            // Key to active camera in the Engine
@@ -234,6 +247,7 @@ public:
                                bool should_collide = true, bool can_rotate = true);
 
     void        addPlayer(Demo_Player new_player_type);
+    void        assignPlayerControls(SceneObject *object, int jump_count, bool has_controls_now, bool add_camera, bool set_active_camera);
     void        buildSpace(Demo_Space new_space_type);
     void        checkObjectCustomFrictionBounce(SceneObject *object, double &friction, double &bounce);
     void        clearSpace();
