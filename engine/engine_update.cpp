@@ -42,8 +42,8 @@ void DrEngine::updateSpaceHelper() {
         SceneObject *object = *it;
         object->has_been_processed = true;
 
-        // ***** Skip object if static or no longer in Space
-        if ((object->body_type == Body_Type::Static) || (object->in_scene == false)) {
+        // ***** Skip object if static; or if not yet in Space / no longer in Space
+        if ((object->body_type == Body_Type::Static) || (object->should_process == false)) {
             it++;
             continue;
         }
@@ -75,10 +75,10 @@ void DrEngine::updateSpaceHelper() {
 
         // ***** Process Button Presses
         // If is a wheel, apply gas pedal
-        if (object->is_wheel) {
+        if (qFuzzyCompare(object->rotate_speed, 0) == false) {
             switch (gas_pedal) {
-                case Pedal::Clockwise:          cpBodySetAngularVelocity( object->body, -object->wheel_speed );     break;
-                case Pedal::CounterClockwise:   cpBodySetAngularVelocity( object->body,  object->wheel_speed );     break;
+                case Pedal::Clockwise:          cpBodySetAngularVelocity( object->body, -object->rotate_speed );     break;
+                case Pedal::CounterClockwise:   cpBodySetAngularVelocity( object->body,  object->rotate_speed );     break;
                 case Pedal::Brake:              cpBodySetAngularVelocity( object->body,  0 );                       break;
                 case Pedal::None:               break;
             }

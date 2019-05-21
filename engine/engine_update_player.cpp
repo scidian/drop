@@ -12,17 +12,11 @@
 #define MOVE_SPEED_X    500.0                   // Movement speed x
 #define MOVE_SPEED_Y      0.0                   // Movement speed y
 
-#define MAX_SPEED_X    1000.0                   // Max fall speed x
-#define MAX_SPEED_Y    1000.0                   // Max fall speed y
-
-
-
 #define JUMP_FORCE_X      0.0                   // Jump force x
 #define JUMP_FORCE_Y     90.0                   // Jump force y
-#define JUMP_TIME_OUT   800.0                   // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
 
 
-#define PLATFORM_FRICTION 0.5                   // 0 to 1+, unknwon limit
+#define PLATFORM_FRICTION 0.15                   // 0 to 1+, unknwon limit
 
 #define AIR_DRAG_X        0.2                   // Air drag x, 0 to 1
 
@@ -88,7 +82,7 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
         player_v.y = 0;                                                 // Starting a new jump so cancel out last jump
         player_v = cpvadd(player_v, cpv(jump_vx, jump_vy));
         cpBodySetVelocity( object->body, player_v );
-        object->remaining_boost = JUMP_TIME_OUT / 1000;
+        object->remaining_boost = object->jump_timeout / 1000;
         object->remaining_jumps--;
     }
     if (!g_jump_button) object->jump_state = Jump_State::Need_To_Jump;
@@ -106,8 +100,11 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     // Velocity
     cpVect body_v = cpBodyGetVelocity( object->body );
 
-    double air_accel =    MOVE_SPEED_X / 0.35;
-    double ground_accel = MOVE_SPEED_X / 0.15;
+    double AIR_DRAG = .25 ;//.25
+    double GROUND_DRAG = 0;//.15
+
+    double air_accel =    MOVE_SPEED_X / (AIR_DRAG + .001);
+    double ground_accel = MOVE_SPEED_X / (GROUND_DRAG + .001);
 
     if (!object->grounded) {
 
@@ -117,15 +114,15 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
         if (qFuzzyCompare(target_vx, 0) == false)
             body_v.x = cpflerpconst( body_v.x, target_vx, ground_accel * dt);
-        else
-            body_v.x = cpflerpconst( body_v.x, 0, ground_accel * dt);
+        //else
+        //    body_v.x = cpflerpconst( body_v.x, 0, ground_accel * dt);
 
     }
 
 
     // Max Speed - Limit Velocity
-    body_v.x = cpfclamp(body_v.x, -MAX_SPEED_X, MAX_SPEED_X);
-    body_v.y = cpfclamp(body_v.y, -MAX_SPEED_Y, MAX_SPEED_Y);
+    body_v.x = cpfclamp(body_v.x, -object->max_speed_x, object->max_speed_x);
+    body_v.y = cpfclamp(body_v.y, -object->max_speed_y, object->max_speed_y);
     cpBodySetVelocity( object->body, body_v );
 
     // ***** Update Velocity - NOTE: MUST CALL actual Update Velocity function some time during this callback!

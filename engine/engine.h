@@ -105,20 +105,21 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 //##        Holds on object for use in a cpSpace
 //############################
 struct SceneObject {
-    // ***** Object Properties
+    // ***** Object Pieces
     cpBody             *body;               // Physical Body of object
     Body_Type           body_type;          // Body_Type
 
     QVector<cpShape*>   shapes;             // Collision Shapes of object
     ShapeMap            shape_type;         // Shape Types of Shapes of Object
 
-    bool        in_scene = true;            // True while object exists in Space
-    bool        has_been_processed= false;  // Set to true after an initial updateSpace call has been ran while the object was in the Space
+    // ***** Object Properties
     bool        collide = true;             // Set to false to have this object not collide with anything
 
     long        texture_number;             // Reference to which texture to use from Engine.EngineTexture map
     float       scale_x = 1.0f;             // Scale of object in world
     float       scale_y = 1.0f;             // Scale of object in world
+    float       alpha;                      // Transparency of object
+    double      z_order;                    // Used for layering
 
     long        active_camera = 0;          // Set to ID of last camera that followed this object, 0 == no camera
 
@@ -128,26 +129,37 @@ struct SceneObject {
     bool        custom_friction = false;    // Set to true if we don't want this item affected by global m_friction
     bool        custom_bounce = false;      // Set to true if we don't want this item affected by global m_bounce
 
-    // ***** Object interaction
+    double      rotate_speed = 0;           // Speed at which object should spin when Motor Rotate (gas pedal) is pressed
+
+    // ***** Object interaction             // These properties are used by objects that have been attached to playerUpdateVelocity
     bool        lost_control = false;       // Set to true when players should not have button control
                                             //      (players are cpBody* that have been assigned the cpBodyUpdateVelocityFunc playerUpdateVelocity callback)
-    bool        is_wheel = false;           // Set to true if we want wheel to spin from button press
-    double      wheel_speed;                // If is_wheel, Speed at which wheel should spin when gas pedal is pressed
 
+    double      max_speed_x = 1000;         // Maximum speed x of object
+    double      max_speed_y = 1000;         // Maximum speed y of object
+
+    double      jump_timeout = 800.0;       // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
     int         jump_count = 0;             // How many jumps this player is allowed, -1 = unlimited, 0 = cannot jump, 1 = 1, 2 = 2, etc
-    int         remaining_jumps = 0;        // How many jumps player has left before it must hit ground
-    cpFloat     remaining_boost = 0;
-    bool        grounded = false;
-    Jump_State  jump_state = Jump_State::Jumped;
+
+    bool        can_rotate = true;          // Set during object creation, moment of inertia is set to infinity to stop rotation
+
+    bool        air_jump = false;           // Can this player jump while in the air (even if only has 1 jump, ex: fell off platform)
+
 
     // ***** Updated by Engine:
-    double      angle = 0;                  // Current object angle
-    QPointF     position;                   // Current object posiiton
-    QPointF     velocity;                   // Current object velocity
-    double      z_order;                    // Used for layering
-    float       alpha;                      // Transparency of object
+    bool        should_process = true;      // True while object exists in Space
+    bool        has_been_processed= false;  // Set to true after an initial updateSpace call has been ran once while the object was in the Space
 
+    int         remaining_jumps = 0;                // How many jumps player has left before it must hit ground before it can jump again
+    cpFloat     remaining_boost = 0;                // Used by Engine Update to process Jump Timeout boost
+    bool        grounded = false;                   // Used by Engine Update to keep track of if this object is
+    Jump_State  jump_state = Jump_State::Jumped;    // Used by Engine Update to keep track of if the current jump button press has been processed
+
+    double      angle = 0;                  // Current object angle
+    QPointF     velocity;                   // Current object velocity
+    QPointF     position;                   // Current object posiiton
     QPointF     last_position;              // Previous frame position, for whatever may need it
+
 };
 
 
@@ -247,7 +259,7 @@ public:
                                bool should_collide = true, bool can_rotate = true);
 
     void        addPlayer(Demo_Player new_player_type);
-    void        assignPlayerControls(SceneObject *object, int jump_count, bool has_controls_now, bool add_camera, bool set_active_camera);
+    void        assignPlayerControls(SceneObject *object, bool has_controls_now, bool add_camera, bool set_active_camera);
     void        buildSpace(Demo_Space new_space_type);
     void        checkObjectCustomFrictionBounce(SceneObject *object, double &friction, double &bounce);
     void        clearSpace();

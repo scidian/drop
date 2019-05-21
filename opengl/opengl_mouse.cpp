@@ -65,19 +65,27 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
         }
 
     } else if (m_engine->demo_player == Demo_Player::Car) {
-        if (event->button() & Qt::LeftButton) {
+        if (event->button() & Qt::LeftButton)
             m_engine->gas_pedal = Pedal::Clockwise;
-        } else if (event->button() & Qt::RightButton) {
+        else if (event->button() & Qt::RightButton)
             m_engine->gas_pedal = Pedal::CounterClockwise;
-        }
 
     } else if (m_engine->demo_player == Demo_Player::Jump) {
-        if (event->button() & Qt::LeftButton) {
-            m_engine->jump_button = true;
-        } else if (event->button() & Qt::RightButton) {
-            for (int i = 0; i < 25; i++ ) {
-                m_engine->addBlock(Body_Type::Dynamic, Test_Textures::Block, x, y, z, 0, QPointF(1, 1), 1, friction, bounce, 25, QPointF(0, 0));
+        if (m_engine->demo_jumper_1->lost_control == false) {
+            if (event->button() & Qt::LeftButton) {
+                m_engine->jump_button = true;
+            } else if (event->button() & Qt::RightButton) {
+                for (int i = 0; i < 25; i++ ) {
+                    m_engine->addBlock(Body_Type::Dynamic, Test_Textures::Block, x, y, z, 0, QPointF(1, 1), 1, friction, bounce, 25, QPointF(0, 0));
+                }
             }
+        } else {
+            if (event->button() & Qt::LeftButton)
+                m_engine->gas_pedal = Pedal::Clockwise;
+            else if (event->button() & Qt::RightButton)
+                m_engine->gas_pedal = Pedal::CounterClockwise;
+            else if (event->button() & Qt::MiddleButton)
+                m_engine->jump_button = true;
         }
     }
 

@@ -61,7 +61,7 @@ SceneObject* DrEngine::addLine(Body_Type body_type, QPointF p1, QPointF p2, doub
     line->shapes.push_back( shape );
     line->shape_type[shape] = Shape_Type::Segment;
 
-    line->in_scene = true;
+    line->should_process = true;
     objects.append( line );
     return line;
 }
@@ -111,6 +111,7 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
 
     // If we dont want an object to rotate, set moment of inertia to INFINITY
     cpFloat moment;
+    ball->can_rotate = can_rotate;
     if (can_rotate) moment = cpMomentForCircle(mass, 0, radius, offset);                    // The moment of inertia is like mass for rotation
     else            moment = static_cast<double>(INFINITY);
 
@@ -139,7 +140,7 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
         ball->collide = false;
     }
 
-    ball->in_scene = true;
+    ball->should_process = true;
     objects.append( ball );
     return ball;
 }
@@ -170,6 +171,7 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
     block->alpha = static_cast<float>(opacity);
 
     cpFloat moment;
+    block->can_rotate = can_rotate;
     if (can_rotate) moment = cpMomentForBox( mass, width, height);          // The moment of inertia is like mass for rotation
     else            moment = static_cast<double>(INFINITY);
 
@@ -198,7 +200,7 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
         block->collide = false;
     }
 
-    block->in_scene = true;
+    block->should_process = true;
     objects.append( block );
     return block;
 }
@@ -235,6 +237,7 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
         verts[static_cast<ulong>(i)] = cpv( points[i].x() * scale.x(), points[i].y() * scale.y());
 
     cpFloat moment;
+    polygon->can_rotate = can_rotate;
     if (can_rotate) moment = cpMomentForPoly( mass, old_point_count, verts.data(), cpvzero, 0 );
     else            moment = static_cast<double>(INFINITY);
 
@@ -250,10 +253,10 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
     cpBodySetAngle(    polygon->body, qDegreesToRadians(-angle) );
     cpBodySetVelocity( polygon->body, cpv( velocity.x(), velocity.y()) );
 
-    // If we don't collide with this, exit now
+    // If we don't collide with this, exit now without attaching any shapes
     if (should_collide == false) {
         polygon->collide = false;
-        polygon->in_scene = true;
+        polygon->should_process = true;
         objects.append( polygon );
         return polygon;
     }
@@ -308,7 +311,7 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
         }
     }
 
-    polygon->in_scene = true;
+    polygon->should_process = true;
     objects.append( polygon );
     return polygon;
 }

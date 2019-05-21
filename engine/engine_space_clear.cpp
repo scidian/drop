@@ -54,7 +54,7 @@ void DrEngine::clearSpace() {
 //##    Removes an object from the Space
 //######################################################################################################
 void DrEngine::removeObject(SceneObject *object) {
-    object->in_scene = false;
+    object->should_process = false;
 
     QVector<cpShape*> shape_list;
     cpBodyEachShape(object->body, cpBodyShapeIteratorFunc(getShapeList), &shape_list);

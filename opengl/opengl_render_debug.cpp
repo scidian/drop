@@ -41,7 +41,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 
 
     for (auto object : m_engine->objects) {
-        if (object->in_scene == false) continue;
+        if (object->should_process == false) continue;
         if (object->collide == false) continue;
         if (!object->has_been_processed) continue;
 
@@ -201,7 +201,7 @@ void OpenGL::drawDebugCollisions(QPainter &painter) {
     painter.setPen( line_pen );
 
     for (auto object : m_engine->objects) {
-        if (object->in_scene == false) continue;
+        if (object->should_process == false) continue;
         if (object->collide == false) continue;
 
         QVector<QPointF> point_list;    point_list.clear();

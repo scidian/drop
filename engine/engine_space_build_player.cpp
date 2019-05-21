@@ -64,9 +64,9 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
                                               wheel_radius, c_center, -4, -.7,  2, QPointF(0, 0));
         SceneObject *wheel3 = this->addCircle(Body_Type::Dynamic, Test_Textures::Wheel,  90,  45, .01, c_norotate, c_scale1x1, c_opaque,
                                               wheel_radius, c_center, -4, -.7,  2, QPointF(0, 0));
-        wheel1->is_wheel = true;    wheel1->wheel_speed = 110;
-        wheel2->is_wheel = true;    wheel2->wheel_speed = 60;
-        wheel3->is_wheel = true;    wheel3->wheel_speed = 90;
+        wheel1->rotate_speed = 110;
+        wheel2->rotate_speed =  60;
+        wheel3->rotate_speed =  90;
         SceneObject *spare1 = this->addCircle(Body_Type::Dynamic, Test_Textures::Spare, -10,  50, .01, c_norotate, c_scale1x1, c_opaque,
                                               spare_radius, c_center, -4, -.7, .5, QPointF(0, 0));
 
@@ -130,11 +130,14 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         double ball_radius = m_textures[Test_Textures::Ball]->width() / 2.0;
         SceneObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 0,  50, 0, c_norotate, c_scale1x1, c_opaque,
                                             ball_radius, c_center, -2, -.01, 200, QPointF( 0, 0), true, false);
-        assignPlayerControls(ball, 2, true, true, true);
+        assignPlayerControls(ball, true, true, true);
+        ball->jump_count = 2;
 
         SceneObject *ball2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 600,  50, 0, c_norotate, c_scale1x1, c_opaque,
                                              ball_radius, c_center, -2, -.01, 200, QPointF( 0, 0), true, true);
-        assignPlayerControls(ball2, 2, false, true, false);
+        assignPlayerControls(ball2, false, true, false);
+        ball2->jump_count = -1;
+        ball2->rotate_speed = 20;
 
         // TEMP demo variables
         demo_jumper_1 = ball;
@@ -144,14 +147,13 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
 }
 
 
-// Sets up an object to be controlled as a "player"
-void DrEngine::assignPlayerControls(SceneObject *object, int jump_count, bool has_controls_now, bool add_camera, bool set_active_camera) {
+// Sets up an object to be controlled as a "player", i.e. have playerUpdateVelocity function attached as a callback during cpSpaceStep
+void DrEngine::assignPlayerControls(SceneObject *object, bool has_controls_now, bool add_camera, bool set_active_camera) {
     // Create camera
     if (add_camera) {
         long camera_key = addCamera(object);
         if (set_active_camera) setActiveCamera(camera_key);
     }
-    object->jump_count = jump_count;                                        // Set jump count
     object->lost_control = !has_controls_now;                               // Turn on jump / movement buttons
     cpBodySetUserData(object->body, object);                                // Set chipmunk User Data, store SceneObject for later
     cpBodySetVelocityUpdateFunc(object->body, playerUpdateVelocity);        // Assign the playerUpdate callback function
