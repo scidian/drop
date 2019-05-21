@@ -9,27 +9,23 @@
 #include "engine.h"
 
 
-
-// How fast we start to accelerate on the ground, smaller = faster
-#define PLAYER_GROUND_ACCEL_TIME 0.1
-#define PLAYER_GROUND_ACCEL 5 //(MOVE_SPEED_X / PLAYER_GROUND_ACCEL_TIME)
-
-// How fast we start to accelerate in the air, smaller = faster
-#define PLAYER_AIR_ACCEL_TIME 0.35
-#define PLAYER_AIR_ACCEL (MOVE_SPEED_X / PLAYER_AIR_ACCEL_TIME)
-
+#define MOVE_SPEED_X    500.0                   // Movement speed x
+#define MOVE_SPEED_Y      0.0                   // Movement speed y
 
 #define MAX_SPEED_X    1000.0                   // Max fall speed x
 #define MAX_SPEED_Y    1000.0                   // Max fall speed y
 
-#define MOVE_SPEED_X    500.0                   // Movement speed x
-#define MOVE_SPEED_Y      0.0                   // Movement speed y
+
 
 #define JUMP_FORCE_X      0.0                   // Jump force x
 #define JUMP_FORCE_Y     90.0                   // Jump force y
 #define JUMP_TIME_OUT   800.0                   // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
 
-#define PLATFORM_FRICTION 0.2
+
+#define PLATFORM_FRICTION 0.5                   // 0 to 1+, unknwon limit
+
+#define AIR_DRAG_X        0.2                   // Air drag x, 0 to 1
+
 
 
 // Definition of global variables to be used to pass info to callbacks
@@ -107,19 +103,25 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     }
 
 
-    // Air Velocity - If not grounded, smoothly accelerate the velocity
+    // Velocity
     cpVect body_v = cpBodyGetVelocity( object->body );
 
-    if (object->grounded == false) {
-        body_v.x = cpflerpconst( body_v.x, target_vx, PLAYER_AIR_ACCEL * dt);
+    double air_accel =    MOVE_SPEED_X / 0.35;
+    double ground_accel = MOVE_SPEED_X / 0.15;
+
+    if (!object->grounded) {
+
+        body_v.x = cpflerpconst( body_v.x, target_vx, air_accel * dt);
+
     } else {
 
         if (qFuzzyCompare(target_vx, 0) == false)
-            body_v.x = cpflerpconst( body_v.x, target_vx, 1000 * dt);
-
-
+            body_v.x = cpflerpconst( body_v.x, target_vx, ground_accel * dt);
+        else
+            body_v.x = cpflerpconst( body_v.x, 0, ground_accel * dt);
 
     }
+
 
     // Max Speed - Limit Velocity
     body_v.x = cpfclamp(body_v.x, -MAX_SPEED_X, MAX_SPEED_X);
