@@ -143,7 +143,7 @@ struct SceneObject {
 
     bool        can_rotate = true;          // Set during object creation, moment of inertia is set to infinity to stop rotation
 
-    bool        air_jump = false;           // Can this player jump while in the air (even if only has 1 jump, ex: fell off platform)
+    bool        air_jump = true;            // Can this player jump while in the air (even if only has 1 jump, ex: fell off platform)
 
 
     // ***** Updated by Engine:

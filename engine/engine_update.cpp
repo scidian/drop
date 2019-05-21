@@ -23,7 +23,7 @@
 void DrEngine::updateSpace(double time_passed) {
 
     // ***** Updates physics, time_passed is in milliseconds
-    double step_time = m_time_step;//time_passed / 1000.0 * m_time_warp;
+    double step_time = time_passed / 1000.0 * m_time_warp;
     cpSpaceStep(m_space, step_time);
 
 }
@@ -77,8 +77,8 @@ void DrEngine::updateSpaceHelper() {
         // If is a wheel, apply gas pedal
         if (qFuzzyCompare(object->rotate_speed, 0) == false) {
             switch (gas_pedal) {
-                case Pedal::Clockwise:          cpBodySetAngularVelocity( object->body, -object->rotate_speed );     break;
-                case Pedal::CounterClockwise:   cpBodySetAngularVelocity( object->body,  object->rotate_speed );     break;
+                case Pedal::Clockwise:          cpBodySetAngularVelocity( object->body, -object->rotate_speed );    break;
+                case Pedal::CounterClockwise:   cpBodySetAngularVelocity( object->body,  object->rotate_speed );    break;
                 case Pedal::Brake:              cpBodySetAngularVelocity( object->body,  0 );                       break;
                 case Pedal::None:               break;
             }

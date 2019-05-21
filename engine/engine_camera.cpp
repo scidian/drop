@@ -163,11 +163,8 @@ void DrEngineCamera::updateCamera() {
         ///m_target.setX( static_cast<float>(m_follow->last_position_x + average_x) );
         ///m_target.setY( static_cast<float>(m_follow->last_position_y + average_y) );
 
-        double target_x = static_cast<double>(m_target.x());
-        double target_y = static_cast<double>(m_target.y());
-
-        double pos_x = ((m_follow->last_position.x() + average_x) + (target_x + average_x) + (m_follow->position.x())) / 3.0;
-        double pos_y = ((m_follow->last_position.y() + average_y) + (target_y + average_y) + (m_follow->position.y())) / 3.0;
+        double pos_x = ((m_follow->last_position.x() + average_x)*3 + (static_cast<double>(m_target.x()) + average_x) + (m_follow->position.x())) / 5.0;
+        double pos_y = ((m_follow->last_position.y() + average_y)*3 + (static_cast<double>(m_target.y()) + average_y) + (m_follow->position.y())) / 5.0;
 
         m_target.setX( static_cast<float>(pos_x) );
         m_target.setY( static_cast<float>(pos_y) );

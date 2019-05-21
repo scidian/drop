@@ -132,6 +132,8 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
                                             ball_radius, c_center, -2, -.01, 200, QPointF( 0, 0), true, false);
         assignPlayerControls(ball, true, true, true);
         ball->jump_count = 2;
+        ball->air_jump = false;
+
 
         SceneObject *ball2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 600,  50, 0, c_norotate, c_scale1x1, c_opaque,
                                              ball_radius, c_center, -2, -.01, 200, QPointF( 0, 0), true, true);

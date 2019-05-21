@@ -9,14 +9,14 @@
 #include "engine.h"
 
 
-#define MOVE_SPEED_X    500.0                   // Movement speed x
+#define MOVE_SPEED_X    250.0                   // Movement speed x
 #define MOVE_SPEED_Y      0.0                   // Movement speed y
 
 #define JUMP_FORCE_X      0.0                   // Jump force x
 #define JUMP_FORCE_Y     90.0                   // Jump force y
 
 
-#define PLATFORM_FRICTION 0.15                   // 0 to 1+, unknwon limit
+#define PLATFORM_FRICTION 0.15                  // 0 to 1+, unknown limit
 
 #define AIR_DRAG_X        0.2                   // Air drag x, 0 to 1
 
@@ -61,9 +61,7 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     }
 
     // ***** Process Boost - Continues to provide jump velocity, although slowly fades
-    if (object->remaining_boost > 0) {
-        object->remaining_boost -= dt;
-    }
+    if (object->remaining_boost > 0) object->remaining_boost -= dt;
     if (key_jump && object->remaining_boost > 0.0) {
         cpVect  player_v = cpBodyGetVelocity( object->body );
         cpFloat jump_v = cpfsqrt(2.0 * JUMP_FORCE_Y * -gravity.y) * dt;
@@ -71,19 +69,25 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
         cpBodySetVelocity( object->body, player_v );
     }
 
-    // ***** Process Jump - If the jump key was just pressed this frame and it wasn't pressed last frame, and we're on the ground, jump!
-    if (    (g_jump_button == true) && (object->jump_state == Jump_State::Need_To_Jump) && (object->lost_control == false) &&
-            (object->grounded || (object->jump_count == -1) || (object->remaining_jumps > 0))   ) {
-        object->jump_state = Jump_State::Jumped;
-        cpFloat jump_vx = cpfsqrt(2.0 * JUMP_FORCE_X * -gravity.x);
-        cpFloat jump_vy = cpfsqrt(2.0 * JUMP_FORCE_Y * -gravity.y);
+    // ***** Process Jump - If the jump key was just pressed this frame and it wasn't pressed last frame, jump!
+    if ((key_jump == true) && (object->jump_state == Jump_State::Need_To_Jump)) {
+        if ((object->grounded) ||                                                                   // Jump from ground
+            (object->air_jump && object->remaining_jumps > 0) ||                                    // Jump from air if jumps remaining
+            (object->remaining_jumps > 0 && object->jump_count != object->remaining_jumps) ||       // Already jumped once from ground and jumps remaining
+            (object->jump_count == -1) ) {                                                          // Unlimited jumping
 
-        cpVect  player_v = cpBodyGetVelocity( object->body );
-        player_v.y = 0;                                                 // Starting a new jump so cancel out last jump
-        player_v = cpvadd(player_v, cpv(jump_vx, jump_vy));
-        cpBodySetVelocity( object->body, player_v );
-        object->remaining_boost = object->jump_timeout / 1000;
-        object->remaining_jumps--;
+            object->jump_state = Jump_State::Jumped;
+            cpFloat jump_vx = cpfsqrt(2.0 * JUMP_FORCE_X * -gravity.x);
+            cpFloat jump_vy = cpfsqrt(2.0 * JUMP_FORCE_Y * -gravity.y);
+
+            // Starting a new jump so cancel out last jump
+            cpVect  player_v = cpBodyGetVelocity( object->body );
+            player_v.y = 0;
+            player_v = cpvadd(player_v, cpv(jump_vx, jump_vy));
+            cpBodySetVelocity( object->body, player_v );
+            object->remaining_boost = object->jump_timeout / 1000;
+            object->remaining_jumps--;
+        }
     }
     if (!g_jump_button) object->jump_state = Jump_State::Need_To_Jump;
 
@@ -100,8 +104,8 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     // Velocity
     cpVect body_v = cpBodyGetVelocity( object->body );
 
-    double AIR_DRAG = .25 ;//.25
-    double GROUND_DRAG = 0;//.15
+    double AIR_DRAG = .25;
+    double GROUND_DRAG = .15;
 
     double air_accel =    MOVE_SPEED_X / (AIR_DRAG + .001);
     double ground_accel = MOVE_SPEED_X / (GROUND_DRAG + .001);
@@ -114,8 +118,8 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
         if (qFuzzyCompare(target_vx, 0) == false)
             body_v.x = cpflerpconst( body_v.x, target_vx, ground_accel * dt);
-        //else
-        //    body_v.x = cpflerpconst( body_v.x, 0, ground_accel * dt);
+        else
+            body_v.x = cpflerpconst( body_v.x, 0, 1000 * PLATFORM_FRICTION * dt);
 
     }
 
