@@ -126,13 +126,8 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         cpSpaceSetGravity(m_space, m_gravity);
         cpSpaceSetDamping(m_space, m_damping);
 
-        // Create character
         double ball_radius = m_textures[Test_Textures::Ball]->width() / 2.0;
-        SceneObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 200,  50, 0, c_norotate, c_scale1x1, c_opaque,
-                                            ball_radius, c_center, -.25, -.25, 200, QPointF( 0, 0), true, false);
-        assignPlayerControls(ball, true, true, true);
-        ball->jump_count = 2;
-        ball->air_jump = false;
+
 
 
         SceneObject *ball2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 800,  50, 0, c_norotate, c_scale1x1, c_opaque,
@@ -140,6 +135,19 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         assignPlayerControls(ball2, false, true, false);
         ball2->jump_count = -1;
         ball2->rotate_speed = 20;
+
+
+
+
+        SceneObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 200,  50, 0, c_norotate, c_scale1x1, c_opaque,
+                                            ball_radius, c_center, -.5, -.25, 200, QPointF( 0, 0), true, false);
+        assignPlayerControls(ball, true, true, true);
+        ball->jump_count = 1;
+        ball->air_jump = false;
+        ball->wall_jump = true;
+
+
+
 
         // TEMP demo variables
         demo_jumper_1 = ball;

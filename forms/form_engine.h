@@ -76,7 +76,7 @@ public:
 
 private slots:
     void updateEngine();
-    void updateLabels(QString info);
+    void updateLabels();
 
     void on_pushSpawn_clicked();
     void on_pushCar_clicked();

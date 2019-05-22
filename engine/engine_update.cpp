@@ -41,7 +41,7 @@ void DrEngine::updateSpaceHelper() {
         default:                        g_rotate_cw = false;    g_rotate_cw = false;        break;
     }
 
-    info = g_info;
+    g_gravity_normal = cpvnormalize( cpSpaceGetGravity(m_space) );
 
 
     // ********** Iterate through objects, delete if they go off screen
@@ -106,7 +106,6 @@ void DrEngine::updateSpaceHelper() {
             it++;
         }
     }   // End For
-
 
 
 

@@ -18,18 +18,29 @@ bool     g_jump_button = false;
 bool     g_rotate_cw = false;
 bool     g_rotate_ccw = false;
 
+cpVect   g_gravity_normal = cpv(0, 0);
+
 QString  g_info = "";
+
+
+//######################################################################################################
+//##    Calculate angles of player collisions to find if we're on ground
+//######################################################################################################
+static void selectPlayerGroundNormal(cpBody *, cpArbiter *arb, double *smallest_dot_product) {
+    // Get normal vector of collision
+    cpVect n = cpvneg( cpArbiterGetNormal(arb) );
+
+    // Compare angle of gravity to angle of normal
+    double dot = cpvdot( n, g_gravity_normal );
+
+    // Store the lowest dot product we find, 1 == gravity, -1 == opposite direction of gravity, 0 == perpendicular to gravity
+    if (dot < (*smallest_dot_product)) (*smallest_dot_product) = dot;
+}
 
 
 //######################################################################################################
 //##    Updates Jump Player Velocity
 //######################################################################################################
-static void selectPlayerGroundNormal(cpBody *, cpArbiter *arb, cpVect *ground_normal) {
-    cpVect n = cpvneg( cpArbiterGetNormal(arb) );
-    if (n.y > ground_normal->y)
-        (*ground_normal) = n;
-}
-
 // NOTE: The order of the ground check, jump operations is important
 extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt) {
     // Grab object from User Data
@@ -47,10 +58,17 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     }
 
     // ***** Ground Check - Grab the grounding normal from last frame, if we hit the ground, turn off remaining_boost time
-    cpVect ground_normal = cpvzero;
-    cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(selectPlayerGroundNormal), &ground_normal);
-    object->grounded = (ground_normal.y > 0.0);
-    if (object->grounded || ground_normal.y < 0.0) {
+    double smallest_dot_product = 1.0;
+    cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(selectPlayerGroundNormal), &smallest_dot_product);
+
+    object->on_wall =  smallest_dot_product <  0.15;
+    if (object->on_wall) object->remaining_wall_time = .25;                 // Give player some time to do a wall jump
+    else                 object->remaining_wall_time -= dt;
+    if (object->remaining_wall_time < 0) object->remaining_wall_time = 0;
+
+    object->grounded = smallest_dot_product < -0.30;
+    if (object->grounded || object->on_wall) {
+        ///object->on_wall = false;
         object->remaining_jumps = object->jump_count;
         object->remaining_boost = 0.0;
     }
@@ -68,6 +86,8 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     // ***** Process Jump - If the jump key was just pressed this frame and it wasn't pressed last frame, jump!
     if ((key_jump == true) && (object->jump_state == Jump_State::Need_To_Jump)) {
         if ((object->grounded) ||                                                                   // Jump from ground
+            (object->remaining_wall_time > 0.0 ) ||                                                 // Jump from wall
+            ///(object->on_wall && object->remaining_jumps > 0) ||                                  // Jump from wall if jumps remaining
             (object->air_jump && object->remaining_jumps > 0) ||                                    // Jump from air if jumps remaining
             (object->remaining_jumps > 0 && object->jump_count != object->remaining_jumps) ||       // Already jumped once from ground and jumps remaining
             (object->jump_count == -1) ) {                                                          // Unlimited jumping
@@ -87,6 +107,7 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
             // Reset timeout boost and subtract remaining jumps until ground
             object->remaining_boost = object->jump_timeout / 1000;
             object->remaining_jumps--;
+            if (object->remaining_jumps < -1) object->remaining_jumps = -1;
         }
     }
     // If jump button is let go, reset this objects ability to receive a jump command
@@ -105,7 +126,7 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     double ground_accel_x = object->move_speed_x / (object->ground_drag + .001);
     double ground_accel_y = object->move_speed_y / (object->ground_drag + .001);
 
-    if (!object->grounded) {
+    if (!object->grounded && (!object->on_wall)) {
 
         if ((qFuzzyCompare(body_v.x, 0) == false && qFuzzyCompare(target_vx, 0) == false) ||
             (body_v.x <= 0 && target_vx > 0) || (body_v.x >= 0 && target_vx < 0)) {

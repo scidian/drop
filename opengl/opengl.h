@@ -89,7 +89,7 @@ public slots:
     void        cleanUp();
 
 signals:
-    void        updateInfo(QString info);
+    void        updateInfo();
 
 };
 

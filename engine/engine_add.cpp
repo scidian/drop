@@ -12,6 +12,8 @@
 #include "helper.h"
 #include "library/poly_partition.h"
 
+constexpr double c_extra_radius = 0.01;
+
 //######################################################################################################
 //##    Check for custom Friction and Bounce (pass in to add*** object call as negative values)
 //######################################################################################################
@@ -189,7 +191,7 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
 
     // Create the collision shape for the block
     if (should_collide == true) {
-        cpShape *shape = cpBoxShapeNew(block->body, width, height, .01);
+        cpShape *shape = cpBoxShapeNew(block->body, width, height, c_extra_radius);
         cpSpaceAddShape(m_space, shape);
         cpShapeSetFriction( shape, friction );
         cpShapeSetElasticity( shape, bounce );
@@ -283,7 +285,7 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
     if (new_point_count == 0) Dr::ShowMessageBox("Warning! Could not form convex hull!");
     cpShape *shape;
     if ((new_point_count == old_point_count || (new_point_count == 0))) {
-        shape = cpPolyShapeNew( polygon->body, old_point_count, verts.data(), cpTransformIdentity, .01);
+        shape = cpPolyShapeNew( polygon->body, old_point_count, verts.data(), cpTransformIdentity, c_extra_radius);
         cpSpaceAddShape(m_space, shape);
         cpShapeSetFriction( shape, friction );
         cpShapeSetElasticity( shape, bounce );
@@ -302,7 +304,7 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
             verts.resize( static_cast<ulong>( poly.GetNumPoints()) );
             for (int i = 0; i < poly.GetNumPoints(); i++)
                 verts[static_cast<ulong>(i)] = cpv( poly[i].x, poly[i].y );
-            shape = cpPolyShapeNew( polygon->body, static_cast<int>(poly.GetNumPoints()), verts.data(), cpTransformIdentity, .01);
+            shape = cpPolyShapeNew( polygon->body, static_cast<int>(poly.GetNumPoints()), verts.data(), cpTransformIdentity, c_extra_radius);
             cpSpaceAddShape(m_space, shape);
             cpShapeSetFriction( shape, friction );
             cpShapeSetElasticity( shape, bounce );

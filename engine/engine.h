@@ -96,6 +96,7 @@ extern int      g_keyboard_y;                   // Used to pass keyboard y butto
 extern bool     g_jump_button;                  // Used to pass jump button state to static callback functions
 extern bool     g_rotate_cw;                    // Used to pass rotate clockwise button state
 extern bool     g_rotate_ccw;                   // Used to pass rotate counter clockwise button state
+extern cpVect   g_gravity_normal;               // Stores a gravity as a normalized vector for use in static callback functions
 extern QString  g_info;
 
 // Global Forward Declaratopns for static Chipmunk callbacks
@@ -141,7 +142,7 @@ struct SceneObject {
     double      max_speed_y =  1000.0;      // Maximum speed y of object
 
     double      move_speed_x =  400.0;      // Movement speed x
-    double      move_speed_y =    0.0;      // Movement speed y
+    double      move_speed_y =  400.0;      // Movement speed y
 
     double      jump_force_x =    0.0;      // Jump force x
     double      jump_force_y =  250.0;      // Jump force y
@@ -154,6 +155,7 @@ struct SceneObject {
     double      ground_drag =    0.25;      // Affects acceleration on the ground (0 to 1+)
 
     bool        air_jump = true;            // Can this player jump while in the air (even if only has 1 jump, ex: fell off platform)
+    bool        wall_jump = false;          // Can this player jump off of walls?
 
 
     // ***** Updated by Engine:
@@ -161,8 +163,10 @@ struct SceneObject {
     bool        has_been_processed = false; // Set to true after an initial updateSpace call has been ran once while the object was in the Space
 
     int         remaining_jumps = 0;                // How many jumps player has left before it must hit ground before it can jump again
-    cpFloat     remaining_boost = 0;                // Used by Engine Update to process Jump Timeout boost
-    bool        grounded = false;                   // Used by Engine Update to keep track of if this object is
+    double      remaining_boost = 0;                // Used by Engine Update to process Jump Timeout boost
+    double      remaining_wall_time = 0;            // Used by Engine Update to allow some time for a wall jump to occur
+    bool        grounded = false;                   // Used by Engine Update to keep track of if this object is on the ground
+    bool        on_wall = false;                    // Used by Engine Update to keep track of if this object is on a wall
     Jump_State  jump_state = Jump_State::Jumped;    // Used by Engine Update to keep track of if the current jump button press has been processed
 
     double      angle = 0;                  // Current object angle
@@ -242,7 +246,6 @@ public:
 
     QTime           fps_timer;
     int             fps, last_fps;
-    QString         info;
 
     Demo_Space      demo_space =  Demo_Space::Project;
     Demo_Player     demo_player = Demo_Player::Car;
