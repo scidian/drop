@@ -24,6 +24,8 @@ SceneObject* DrEngine::addLine(Body_Type body_type, QPointF p1, QPointF p2, doub
     SceneObject *line = new SceneObject();
 
     // Check for default (-1) or custom friction / bounce settings
+    line->custom_friction = friction;
+    line->custom_bounce =   bounce;
     if (friction < 0) friction = m_friction;
     if (bounce < 0)   bounce = m_bounce;
 
@@ -93,6 +95,8 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
     SceneObject *ball = new SceneObject();
 
     // Check for default (-1) or custom friction / bounce settings
+    ball->custom_friction = friction;
+    ball->custom_bounce =   bounce;
     if (friction < 0) friction = m_friction;
     if (bounce < 0)   bounce = m_bounce;
 
@@ -160,6 +164,8 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
     SceneObject *block = new SceneObject();
 
     // Check for default (-1) or custom friction / bounce settings
+    block->custom_friction = friction;
+    block->custom_bounce =   bounce;
     if (friction < 0) friction = m_friction;
     if (bounce < 0)   bounce = m_bounce;
 
@@ -229,6 +235,8 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
     SceneObject *polygon = new SceneObject();
 
     // Check for default (-1) or custom friction / bounce settings
+    polygon->custom_friction = friction;
+    polygon->custom_bounce =   bounce;
     if (friction < 0) friction = m_friction;
     if (bounce < 0)   bounce = m_bounce;
 

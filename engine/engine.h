@@ -110,63 +110,63 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 //##        Holds on object for use in a cpSpace
 //############################
 struct SceneObject {
-    // ***** Object Pieces
-    cpBody             *body;               // Physical Body of object
-    Body_Type           body_type;          // Body_Type
+    // ***** Object Info
+    cpBody             *body;                   // Physical Body of object
+    Body_Type           body_type;              // Body_Type
 
-    QVector<cpShape*>   shapes;             // Collision Shapes of object
-    ShapeMap            shape_type;         // Shape Types of Shapes of Object
+    QVector<cpShape*>   shapes;                 // Collision Shapes of object
+    ShapeMap            shape_type;             // Shape Types of Shapes of Object
 
     // ***** Object Properties
-    bool        does_collide = true;        // Set to false to have this object not collide with anything
+    bool        does_collide = true;            // Set to false to have this object not collide with anything
 
-    long        texture_number;             // Reference to which texture to use from Engine.EngineTexture map
-    float       scale_x = 1.0f;             // Scale of object in world
-    float       scale_y = 1.0f;             // Scale of object in world
-    float       alpha;                      // Transparency of object
-    double      z_order;                    // Used for layering
+    long        texture_number;                 // Reference to which texture to use from Engine.EngineTexture map
+    float       scale_x = 1.0f;                 // Scale of object in world
+    float       scale_y = 1.0f;                 // Scale of object in world
+    float       alpha;                          // Transparency of object
+    double      z_order;                        // Used for layering
 
-    long        active_camera = 0;          // Set to ID of last camera that followed this object, 0 == no camera
+    long        active_camera = 0;              // Set to ID of last camera that followed this object, 0 == no camera
 
-    bool        one_way = false;            // Set to true if we're using this object as a one way platform
-    cpVect      one_way_direction {0, 1};   // Direction of Normal for one way platforms
+    bool        one_way = false;                // Set to true if we're using this object as a one way platform
+    cpVect      one_way_direction {0, 1};       // Direction of Normal for one way platforms
 
-    bool        custom_friction = false;    // Set to true if we don't want this item affected by global m_friction
-    bool        custom_bounce = false;      // Set to true if we don't want this item affected by global m_bounce
+    double      custom_friction = c_friction;   // Defaults to c_friction (-1) if this item uses global m_friction, otherwise stores custom friction
+    double      custom_bounce = c_bounce;       // Defaults to c_bounce (-1) if this item uses global m_bounce, otherwise stores custom bounce
 
-    double      rotate_speed = 0;           // Speed at which object should spin when Motor Rotate (gas pedal) is pressed
+    double      rotate_speed = 0;               // Speed at which object should spin when Motor Rotate (gas pedal) is pressed
 
-    // ***** Object interaction             // These properties are used by objects that have been attached to playerUpdateVelocity
-    bool        lost_control = false;       // Set to true when players should not have button control
-                                            //      (players are cpBody* that have been assigned the cpBodyUpdateVelocityFunc playerUpdateVelocity callback)
+    // ***** Object interaction                 // These properties are used by objects that have been attached to playerUpdateVelocity
+    bool        lost_control = false;           // Set to true when players should not have button control
+                                                //      (players are cpBody* that have been assigned the cpBodyUpdateVelocityFunc playerUpdateVelocity callback)
 
-    double      max_speed_x =  1000.0;      // Maximum speed x of object
-    double      max_speed_y =  1000.0;      // Maximum speed y of object
+    double      max_speed_x =  1000.0;          // Maximum speed x of object
+    double      max_speed_y =  1000.0;          // Maximum speed y of object
 
-    double      forced_speed_x =  0.0;      // Forced move speed x of object
-    double      forced_speed_y =  0.0;      // Forced move speed y of object
+    double      forced_speed_x =  0.0;          // Forced move speed x of object
+    double      forced_speed_y =  0.0;          // Forced move speed y of object
 
-    double      move_speed_x =  400.0;      // Movement speed x
-    double      move_speed_y =  100.0;      // Movement speed y
+    double      move_speed_x =  400.0;          // Movement speed x
+    double      move_speed_y =    0.0;          // Movement speed y
 
-    double      jump_force_x =    0.0;      // Jump force x
-    double      jump_force_y =  250.0;      // Jump force y
-    double      jump_timeout =  800.0;      // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
-    int         jump_count =        0;      // How many jumps this player is allowed, -1 = unlimited, 0 = cannot jump, 1 = 1, 2 = 2, etc
+    double      jump_force_x =    0.0;          // Jump force x
+    double      jump_force_y =  250.0;          // Jump force y
+    double      jump_timeout =  800.0;          // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
+    int         jump_count =        0;          // How many jumps this player is allowed, -1 = unlimited, 0 = cannot jump, 1 = 1, 2 = 2, etc
 
-    bool        can_rotate = true;          // To be set during object creation, moment of inertia is set to infinity to stop rotation
-    bool        ignore_gravity = false;     // If turned to true, this object no longer is affected by gravity
+    bool        can_rotate = true;              // To be set during object creation, moment of inertia is set to infinity to stop rotation
+    bool        ignore_gravity = false;         // If turned to true, this object no longer is affected by gravity
 
-    double      air_drag =       0.50;      // Affects acceleration in air (0 to 1+)
-    double      ground_drag =    0.25;      // Affects acceleration on the ground (0 to 1+)
+    double      air_drag =       0.50;          // Affects acceleration in air (0 to 1+)
+    double      ground_drag =    0.25;          // Affects acceleration on the ground (0 to 1+)
 
-    bool        air_jump = true;            // Can this player jump while in the air (even if only has 1 jump, ex: fell off platform)
-    bool        wall_jump = false;          // Can this player jump off of walls?
+    bool        air_jump = true;                // Can this player jump while in the air (even if only has 1 jump, ex: fell off platform)
+    bool        wall_jump = false;              // Can this player jump off of walls?
 
 
     // ***** Updated by Engine:
-    bool        should_process = true;      // True while object exists in Space
-    bool        has_been_processed = false; // Set to true after an initial updateSpace call has been ran once while the object was in the Space
+    bool        should_process = true;          // True while object exists in Space
+    bool        has_been_processed = false;     // Set to true after an initial updateSpace call has been ran once while the object was in the Space
 
     int         remaining_jumps = 0;                    // How many jumps player has left before it must hit ground before it can jump again
     double      remaining_boost = 0;                    // Used by Engine Update to process Jump Timeout boost
@@ -177,10 +177,10 @@ struct SceneObject {
     double      last_touched_ground_dot = 1.0;          // Dot product of the last touched surface
     Jump_State  jump_state = Jump_State::Jumped;        // Used by Engine Update to keep track of if the current jump button press has been processed
 
-    double      angle = 0;                  // Current object angle
-    QPointF     velocity;                   // Current object velocity
-    QPointF     position;                   // Current object posiiton
-    QPointF     last_position;              // Previous frame position, for whatever may need it
+    double      angle = 0;                      // Current object angle
+    QPointF     velocity;                       // Current object velocity
+    QPointF     position;                       // Current object posiiton
+    QPointF     last_position;                  // Previous frame position, for whatever may need it
 
 };
 

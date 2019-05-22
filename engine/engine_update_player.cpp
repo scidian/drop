@@ -57,8 +57,6 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     // Grab object from User Data
     SceneObject *object = static_cast<SceneObject*>(cpBodyGetUserData(body));
 
-    g_info = "Mass: " + QString::number(cpBodyGetMass(body));
-
     // ***** Get Keys - If player is still active get keyboard status
     int key_y = 0,      key_x = 0,      key_jump = 0;
     int key_cw = 0,     key_ccw = 0;
@@ -76,8 +74,8 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(selectPlayerGroundNormal), &ground);
 
     // Figure out if any collision points count as ground or as wall
-    object->on_wall =  ground.dot_product <= 0.50;      // 0.50 == approx ~30 degrees (slightly overhanging)
-    object->grounded = ground.dot_product < -0.30;
+    object->on_wall =  ground.dot_product <= 0.50 && object->wall_jump;         //  0.50 == approx up to ~30 degrees roof (slightly overhanging)
+    object->grounded = ground.dot_product < -0.30;                              // -0.30 == approx up to ~20 degrees slab (slightly less than vertical)
     if (object->grounded || object->on_wall) {
         object->last_touched_ground_normal = ground.normal;
         object->last_touched_ground_dot = ground.dot_product;
@@ -85,12 +83,12 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
         object->remaining_boost = 0.0;
     }
 
-    // Update wall jump time
-    if (object->on_wall) object->remaining_wall_time = 0.25;                                        // Give player some time to do a wall jump
-    else                 object->remaining_wall_time -= dt;
-    if (object->grounded || object->remaining_wall_time < 0.0) {
-        object->remaining_wall_time = 0.0;
-    }
+    // Update wall jump time (gives player some time to do a wall jump)
+    object->remaining_wall_time -= dt;
+    if (object->on_wall)
+        object->remaining_wall_time = 0.25;
+    if (object->grounded || object->remaining_wall_time < 0.0)
+        object->remaining_wall_time = 0.00;
 
 
     // ***** Process Boost - Continues to provide jump velocity, although slowly fades
@@ -112,24 +110,27 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
             (object->remaining_jumps > 0 && object->jump_count != object->remaining_jumps) ||       // Already jumped once from ground and jumps remaining
             (object->jump_count == -1) ) {                                                          // Unlimited jumping
 
-            // Calculate jumps forces
-            object->jump_state = Jump_State::Jumped;                                                // Mark current jump button press as processed
-            cpFloat jump_vx = object->jump_force_x * 2.0; ///cpfsqrt(2.0 * object->jump_force_x * -gravity.x);
-            cpFloat jump_vy = object->jump_force_y * 2.0; ///cpfsqrt(2.0 * object->jump_force_y * -gravity.y);
+            // Mark current jump button press as processed
+            object->jump_state = Jump_State::Jumped;
 
-            // Figure out wall jump forces
+            // Calculate wall jump forces
+            cpFloat jump_vx, jump_vy;
             if (!object->grounded && object->remaining_wall_time > 0.0) {
                 double angle = atan2(object->last_touched_ground_normal.y, object->last_touched_ground_normal.x) - atan2(g_gravity_normal.y, g_gravity_normal.x);
                 angle = qRadiansToDegrees( angle ) - 180;
-                qDebug() << "Wall jump - Angle: " << angle << ", Dot: " << object->last_touched_ground_dot;
+                ///qDebug() << "Wall jump - Angle: " << angle << ", Dot: " << object->last_touched_ground_dot;
                 if (angle < -180) angle += 360;
                 if (angle >  180) angle -= 360;
-                angle /= 2.5;
+                angle /= 3;
 
-                QTransform t = QTransform().rotate(angle);
-                QPointF jump  = t.map( QPointF(object->jump_force_x, object->jump_force_y) );
-                jump_vx = jump.x() * 2.0;
-                jump_vy = jump.y() * 2.0;
+                QPointF wall_jump_force = QTransform().rotate(angle).map( QPointF(object->jump_force_x, object->jump_force_y) );
+                jump_vx = wall_jump_force.x() * 2.0;
+                jump_vy = wall_jump_force.y() * 2.0;
+
+            // Calculate ground jump forces
+            } else {
+                jump_vx = object->jump_force_x * 2.0;   ///cpfsqrt(2.0 * object->jump_force_x * -gravity.x);
+                jump_vy = object->jump_force_y * 2.0;   ///cpfsqrt(2.0 * object->jump_force_y * -gravity.y);
             }
 
             // Starting a new jump so partially cancel any previous jump forces

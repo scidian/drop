@@ -8,8 +8,9 @@
 #include <QtMath>
 #include <QRandomGenerator>
 #include <numeric>
-#include "engine/engine.h"
-#include "engine/engine_camera.h"
+
+#include "engine.h"
+#include "engine_camera.h"
 #include "helper.h"
 #include "project/project.h"
 #include "project/project_world.h"
@@ -67,18 +68,20 @@ void DrEngine::updateSpaceHelper() {
         object->position.setX( pos.x );
         object->position.setY( pos.y );
 
-        // ***** Update global friction and bounce to all objects if globals have changed (possibly due to Gameplay Action)
-//        cpFloat friction;
-//        cpFloat bounce;
-//        for (auto shape : object->shapes) {
-//            friction = cpShapeGetFriction( shape );
-//            bounce = cpShapeGetElasticity( shape );
-//            if (qFuzzyCompare(friction, m_friction) == false && object->custom_friction == false)
-//                cpShapeSetFriction( shape, friction );
-//            if (qFuzzyCompare(bounce, m_bounce) == false && object->custom_bounce == false)
-//                cpShapeSetElasticity( shape, bounce );
-//        }
 
+        // ***** Update global friction and bounce to all objects if globals have changed (possibly due to Gameplay Action)
+//        if (qFuzzyCompare(object->custom_friction, c_friction) == false) {
+//            for (auto shape : object->shapes) {
+//                cpFloat friction = cpShapeGetFriction( shape );
+//                if (qFuzzyCompare(friction, m_friction) == false) cpShapeSetFriction( shape, m_friction );
+//            }
+//        }
+//        if (qFuzzyCompare(object->custom_bounce, c_bounce) == false) {
+//            for (auto shape : object->shapes) {
+//                cpFloat bounce = cpShapeGetElasticity( shape );
+//                if (qFuzzyCompare(bounce, m_bounce) == false) cpShapeSetElasticity( shape, m_bounce );
+//            }
+//        }
 
         // ***** Process Button Presses
         // If is a wheel, apply gas pedal
