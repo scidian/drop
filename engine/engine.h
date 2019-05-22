@@ -134,7 +134,7 @@ struct SceneObject {
     double      custom_friction = c_friction;   // Defaults to c_friction (-1) if this item uses global m_friction, otherwise stores custom friction
     double      custom_bounce = c_bounce;       // Defaults to c_bounce (-1) if this item uses global m_bounce, otherwise stores custom bounce
 
-    double      rotate_speed = 0;               // Speed at which object should spin when Motor Rotate (gas pedal) is pressed
+    double      rotate_speed =  0;              // Speed at which object should spin when Motor Rotate (gas pedal) is pressed
 
     // ***** Object interaction                 // These properties are used by objects that have been attached to playerUpdateVelocity
     bool        lost_control = false;           // Set to true when players should not have button control
@@ -157,8 +157,9 @@ struct SceneObject {
     bool        can_rotate = true;              // To be set during object creation, moment of inertia is set to infinity to stop rotation
     bool        ignore_gravity = false;         // If turned to true, this object no longer is affected by gravity
 
-    double      air_drag =       0.50;          // Affects acceleration in air (0 to 1+)
-    double      ground_drag =    0.25;          // Affects acceleration on the ground (0 to 1+)
+    double      air_drag =       0.50;          // Affects acceleration and decceleration in air (0 to 1+)
+    double      ground_drag =    0.25;          // Affects acceleration and decceleration on the ground (0 to 1+)
+    double      rotate_drag =    0.25;          // Affects rotation acceleration and decceleration (0 to 1+)
 
     bool        air_jump = true;                // Can this player jump while in the air (even if only has 1 jump, ex: fell off platform)
     bool        wall_jump = false;              // Can this player jump off of walls?

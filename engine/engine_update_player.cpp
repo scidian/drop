@@ -191,33 +191,46 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     cpFloat target_vx = (object->move_speed_x * key_x) + object->forced_speed_x;
     cpFloat target_vy = (object->move_speed_y * key_y) + object->forced_speed_y;
 
-    double air_accel_x =    object->move_speed_x / (object->air_drag + .001);
-    double air_accel_y =    object->move_speed_y / (object->air_drag + .001);
-    double ground_accel_x = object->move_speed_x / (object->ground_drag + .001);
-    double ground_accel_y = object->move_speed_y / (object->ground_drag + .001);
+    // Local Constants
+    constexpr double c_buffer =      0.001;
+    constexpr double c_drag_ground = 0.005;
+    constexpr double c_drag_air =    0.005;
+    constexpr double c_drag_rotate = 0.025;
+
+    double air_accel_x =    object->move_speed_x / (object->air_drag + c_buffer);
+    double air_accel_y =    object->move_speed_y / (object->air_drag + c_buffer);
+    double ground_accel_x = object->move_speed_x / (object->ground_drag + c_buffer);
+    double ground_accel_y = object->move_speed_y / (object->ground_drag + c_buffer);
 
     if (!object->grounded && !object->on_wall) {
 
         if ((qFuzzyCompare(body_v.x, 0) == false && qFuzzyCompare(target_vx, 0) == false) ||
             (body_v.x <= 0 && target_vx > 0) || (body_v.x >= 0 && target_vx < 0))
                 body_v.x = cpflerpconst( body_v.x, target_vx, air_accel_x * dt);
-        else    body_v.x = cpflerpconst( body_v.x, 0, object->air_drag / .005 * dt);
+        else    body_v.x = cpflerpconst( body_v.x, 0, object->air_drag / c_drag_air * dt);
 
         if ((qFuzzyCompare(body_v.y, 0) == false && qFuzzyCompare(target_vy, 0) == false) ||
             (body_v.y <= 0 && target_vy > 0) || (body_v.y >= 0 && target_vy < 0))
                 body_v.y = cpflerpconst( body_v.y, target_vy, air_accel_y * dt);
-        else    body_v.y = cpflerpconst( body_v.y, 0, object->air_drag / .005 * dt);
+        else    body_v.y = cpflerpconst( body_v.y, 0, object->air_drag / c_drag_air * dt);
 
     } else {
 
         if (qFuzzyCompare(target_vx, 0) == false)
                 body_v.x = cpflerpconst( body_v.x, target_vx, ground_accel_x * dt);
-        else    body_v.x = cpflerpconst( body_v.x, target_vx, object->ground_drag / .005 * dt);
+        else    body_v.x = cpflerpconst( body_v.x, target_vx, object->ground_drag / c_drag_ground * dt);
 
         if (qFuzzyCompare(target_vy, 0) == false)
                 body_v.y = cpflerpconst( body_v.y, target_vy, ground_accel_y * dt);
-        else    body_v.y = cpflerpconst( body_v.y, target_vy, object->ground_drag / .005 * dt);
+        else    body_v.y = cpflerpconst( body_v.y, target_vy, object->ground_drag / c_drag_ground * dt);
     }
+
+
+    // ***** Rotation drag
+    double body_r = cpBodyGetAngularVelocity( body );
+    body_r = cpflerpconst( body_r, 0, object->rotate_drag / c_drag_rotate * dt);
+    cpBodySetAngularVelocity( body, body_r );
+
 
     // ***** Max Speed - Limit Velocity
     body_v.x = cpfclamp(body_v.x, -object->max_speed_x, object->max_speed_x);
@@ -230,6 +243,20 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     else
         cpBodyUpdateVelocity(body, gravity, damping, dt);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -213,6 +213,9 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
     block->does_collide = should_collide;
     cpShapeSetSensor( shape, !should_collide );
 
+
+
+
     // If we don't want the body to rotate, overwrite the precalculated moment of inertia with infinity
     block->can_rotate = can_rotate;
     if (!can_rotate) cpBodySetMoment( block->body, static_cast<double>(INFINITY) );

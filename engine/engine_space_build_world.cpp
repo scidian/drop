@@ -146,9 +146,21 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000,  40, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
         this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
 
-        SceneObject *block = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -400, 120, 100, 0,
-                                            QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
+        SceneObject *block =  this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -300, 120, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
         oneWayPlatform(block, cpv(0, 1));
+
+        SceneObject *block2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -150, 120, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
+        block2->rotate_speed = 2;
+
+        SceneObject *belt =  this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -500, 120, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
+        SceneObject *belt2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -560, 120, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
+        SceneObject *belt3 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -620, 120, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
+        SceneObject *belt4 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -680, 120, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
+
+        cpShapeSetSurfaceVelocity( belt->shapes.first(),  cpv(1000, 0) );
+        cpShapeSetSurfaceVelocity( belt2->shapes.first(), cpv(1000, 0) );
+        cpShapeSetSurfaceVelocity( belt3->shapes.first(), cpv(1000, 0) );
+        cpShapeSetSurfaceVelocity( belt4->shapes.first(), cpv(1000, 0) );
 
         this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -940, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
         this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -880, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));

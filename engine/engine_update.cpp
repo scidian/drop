@@ -83,6 +83,7 @@ void DrEngine::updateSpaceHelper() {
 //            }
 //        }
 
+
         // ***** Process Button Presses
         // If is a wheel, apply gas pedal
         if (qFuzzyCompare(object->rotate_speed, 0) == false) {
