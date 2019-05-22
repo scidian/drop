@@ -42,7 +42,6 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 
     for (auto object : m_engine->objects) {
         if (object->should_process == false) continue;
-        if (object->collide == false) continue;
         if (!object->has_been_processed) continue;
 
         QColor color;
@@ -51,6 +50,8 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
             case Body_Type::Static:         color = Qt::blue;      break;
             case Body_Type::Kinematic:      color = Qt::green;     break;
         }
+        if (!object->does_collide) color = Qt::yellow;
+
 
         QPen cosmetic_pen( QBrush(color), 1);
         cosmetic_pen.setCosmetic(true);
@@ -202,7 +203,6 @@ void OpenGL::drawDebugCollisions(QPainter &painter) {
 
     for (auto object : m_engine->objects) {
         if (object->should_process == false) continue;
-        if (object->collide == false) continue;
 
         QVector<QPointF> point_list;    point_list.clear();
         cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(getContactPoints), &point_list);

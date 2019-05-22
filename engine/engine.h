@@ -55,7 +55,7 @@ enum class Shape_Type {
     Circle,                                     // cpCircleShapeNew
     Box,                                        // cpBoxShapeNew
     Segment,    // "Line"                       // cpSegmentShapeNew
-    Polygon                                     // cpPolyShapeNew
+    Polygon,                                    // cpPolyShapeNew
 };
 
 enum CollisionTypes {
@@ -116,7 +116,7 @@ struct SceneObject {
     ShapeMap            shape_type;         // Shape Types of Shapes of Object
 
     // ***** Object Properties
-    bool        collide = true;             // Set to false to have this object not collide with anything
+    bool        does_collide = true;        // Set to false to have this object not collide with anything
 
     long        texture_number;             // Reference to which texture to use from Engine.EngineTexture map
     float       scale_x = 1.0f;             // Scale of object in world

@@ -199,7 +199,7 @@ typedef uint32_t cpCollisionID;
 	typedef CP_COLLISION_TYPE_TYPE cpCollisionType;
 #else
 /// Type used for cpSpace.collision_type.
-	typedef uintptr_t cpCollisionType;
+    typedef uintptr_t cpCollisionType;       // <-- Original from Chipmunk Library
 #endif
 
 #ifdef CP_GROUP_TYPE

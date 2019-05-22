@@ -148,7 +148,6 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     }
 
 
-
     // ***** Max Speed - Limit Velocity
     body_v.x = cpfclamp(body_v.x, -object->max_speed_x, object->max_speed_x);
     body_v.y = cpfclamp(body_v.y, -object->max_speed_y, object->max_speed_y);

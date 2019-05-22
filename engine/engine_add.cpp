@@ -130,17 +130,16 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
     cpBodySetVelocity( ball->body, cpv( velocity.x(), velocity.y()) );
 
     // Create the collision shape for the ball
-    if (should_collide == true) {
-        cpShape *shape = cpCircleShapeNew(ball->body, radius, offset);
-        cpSpaceAddShape(m_space, shape);
-        cpShapeSetFriction( shape, friction  );
-        cpShapeSetElasticity( shape, bounce );
+    cpShape *shape = cpCircleShapeNew(ball->body, radius, offset);
+    cpShapeSetFriction( shape, friction  );
+    cpShapeSetElasticity( shape, bounce );
+    cpSpaceAddShape(m_space, shape);
 
-        ball->shapes.push_back( shape );
-        ball->shape_type[shape] = Shape_Type::Circle;
-    } else {
-        ball->collide = false;
-    }
+    ball->shapes.push_back( shape );
+    ball->shape_type[shape] = Shape_Type::Circle;
+
+    ball->does_collide = should_collide;
+    cpShapeSetSensor( shape, !should_collide );
 
     ball->should_process = true;
     objects.append( ball );
@@ -190,17 +189,16 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
     cpBodySetVelocity( block->body, cpv( velocity.x(), velocity.y()) );
 
     // Create the collision shape for the block
-    if (should_collide == true) {
-        cpShape *shape = cpBoxShapeNew(block->body, width, height, c_extra_radius);
-        cpSpaceAddShape(m_space, shape);
-        cpShapeSetFriction( shape, friction );
-        cpShapeSetElasticity( shape, bounce );
+    cpShape *shape = cpBoxShapeNew(block->body, width, height, c_extra_radius);
+    cpShapeSetFriction( shape, friction );
+    cpShapeSetElasticity( shape, bounce );
+    cpSpaceAddShape(m_space, shape);
 
-        block->shapes.push_back( shape );
-        block->shape_type[shape] = Shape_Type::Box;
-    } else {
-        block->collide = false;
-    }
+    block->shapes.push_back( shape );
+    block->shape_type[shape] = Shape_Type::Box;
+
+    block->does_collide = should_collide;
+    cpShapeSetSensor( shape, !should_collide );
 
     block->should_process = true;
     objects.append( block );
@@ -255,14 +253,6 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
     cpBodySetAngle(    polygon->body, qDegreesToRadians(-angle) );
     cpBodySetVelocity( polygon->body, cpv( velocity.x(), velocity.y()) );
 
-    // If we don't collide with this, exit now without attaching any shapes
-    if (should_collide == false) {
-        polygon->collide = false;
-        polygon->should_process = true;
-        objects.append( polygon );
-        return polygon;
-    }
-
     // ***** Determine if polygon is concave, if it is create multiple shapes, otherwise create one shape
     std::list<TPPLPoly> testpolys, result;                              // Used by library Poly Partition
     TPPLPoly poly;
@@ -286,11 +276,15 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
     cpShape *shape;
     if ((new_point_count == old_point_count || (new_point_count == 0))) {
         shape = cpPolyShapeNew( polygon->body, old_point_count, verts.data(), cpTransformIdentity, c_extra_radius);
-        cpSpaceAddShape(m_space, shape);
         cpShapeSetFriction( shape, friction );
         cpShapeSetElasticity( shape, bounce );
+        cpSpaceAddShape(m_space, shape);
+
         polygon->shapes.push_back( shape );
         polygon->shape_type[shape] = Shape_Type::Polygon;
+
+        polygon->does_collide = should_collide;
+        cpShapeSetSensor( shape, !should_collide );
 
     // Shape is concave
     } else {
@@ -305,11 +299,15 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
             for (int i = 0; i < poly.GetNumPoints(); i++)
                 verts[static_cast<ulong>(i)] = cpv( poly[i].x, poly[i].y );
             shape = cpPolyShapeNew( polygon->body, static_cast<int>(poly.GetNumPoints()), verts.data(), cpTransformIdentity, c_extra_radius);
-            cpSpaceAddShape(m_space, shape);
             cpShapeSetFriction( shape, friction );
             cpShapeSetElasticity( shape, bounce );
+            cpSpaceAddShape(m_space, shape);
+
             polygon->shapes.push_back( shape );
             polygon->shape_type[shape] = Shape_Type::Polygon;
+
+            polygon->does_collide = should_collide;
+            cpShapeSetSensor( shape, !should_collide );
         }
     }
 

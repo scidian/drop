@@ -91,10 +91,12 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
             C = 1 << 2,
         };
 
+        unsigned int all_categories = ~(static_cast<unsigned int>(0));
+
         cpShapeFilter filter;
         filter.group = 43;
-        filter.categories = CP_ALL_CATEGORIES;
-        filter.mask =       CP_ALL_CATEGORIES;
+        filter.categories = all_categories;     // CP_ALL_CATEGORIES
+        filter.mask =       all_categories;     // CP_ALL_CATEGORIES
         for (auto shape : rover->shapes)  cpShapeSetFilter( shape,  filter);
         for (auto shape : wheel1->shapes) cpShapeSetFilter( shape, filter);
         for (auto shape : wheel2->shapes) cpShapeSetFilter( shape, filter);
