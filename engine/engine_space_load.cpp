@@ -31,7 +31,7 @@ void DrEngine::loadStageToSpace(DrStage *stage, double offset_x, double offset_y
         long        asset_key = object->getAssetKey();
 
         addBlock(body, asset_key, position.x() + offset_x, -position.y() + offset_y, z_order,
-                 angle, scale, alpha, m_friction, m_bounce, 25, QPointF(0, 0), collide);
+                 angle, scale, alpha, c_friction, c_bounce, QPointF(0, 0), collide);
     }
 
     // Update distance we've loaded scenes to

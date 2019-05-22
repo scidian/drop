@@ -89,6 +89,8 @@ constexpr QPointF   c_center   {0, 0};          // Default offset in no offset
 constexpr QPointF   c_scale1x1 {1, 1};          // Default scale of 1x1
 constexpr double    c_norotate {0};             // Default rotation amount of zero
 constexpr double    c_opaque   {1};             // Default transparency of fully opaque
+constexpr double    c_friction = -1;            // Flag for add**** call to use world friction setting
+constexpr double    c_bounce =   -1;            // Flag for add**** call to use world bounce setting
 
 // Global Variables - defined in engine_update_player.cpp
 extern int      g_keyboard_x;                   // Used to pass keyboard x button state to static callback functions
@@ -260,21 +262,20 @@ public:
     SceneObject*    addLine(  Body_Type body_type,  QPointF p1, QPointF p2, double friction, double bounce, double mass);
 
     SceneObject*    addCircle(Body_Type body_type,  long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
-                              double shape_radius, QPointF shape_offset, double friction, double bounce, double mass, QPointF velocity,
+                              double shape_radius, QPointF shape_offset, double friction, double bounce, QPointF velocity,
                               bool should_collide = true, bool can_rotate = true);
 
     SceneObject*    addBlock( Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
-                              double friction, double bounce, double mass, QPointF velocity,
+                              double friction, double bounce, QPointF velocity,
                               bool should_collide = true, bool can_rotate = true);
 
     SceneObject*    addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
-                               QVector<QPointF> points, double friction, double bounce, double mass, QPointF velocity,
+                               QVector<QPointF> points, double friction, double bounce, QPointF velocity,
                                bool should_collide = true, bool can_rotate = true);
 
     void        addPlayer(Demo_Player new_player_type);
     void        assignPlayerControls(SceneObject *object, bool has_controls_now, bool add_camera, bool set_active_camera);
     void        buildSpace(Demo_Space new_space_type);
-    void        checkObjectCustomFrictionBounce(SceneObject *object, double &friction, double &bounce);
     void        clearSpace();
     void        loadStageToSpace(DrStage *stage, double offset_x, double offset_y);
     void        oneWayPlatform(SceneObject *object, cpVect direction);

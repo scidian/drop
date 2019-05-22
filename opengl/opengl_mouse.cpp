@@ -29,8 +29,6 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
     ///if (m_engine->render_type == Render_Type::Orthographic) z = 0.0;
     ///m_engine->info = "X: " + QString::number(x) + " " + "Y: " + QString::number(y) + " " + "Z: " + QString::number(z);
 
-    double friction = m_engine->getFriction();
-    double bounce = m_engine->getBounce();
 
     if (m_engine->demo_player == Demo_Player::Spawn) {
         if (event->button() & Qt::LeftButton) {
@@ -42,14 +40,14 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
 
                 if (QRandomGenerator::global()->bounded(0, 2) == 0) {
                     m_engine->addCircle(Body_Type::Dynamic, Test_Textures::Ball, x, y, z, c_norotate, QPointF(1, 1), c_opaque,
-                                        ball_radius, c_center, friction, bounce, 2, QPointF(vel_x, vel_y) );
+                                        ball_radius, c_center, c_friction, c_bounce, QPointF(vel_x, vel_y) );
                 } else {
                     m_engine->addCircle(Body_Type::Dynamic, Test_Textures::Ball, x, y, z, c_norotate, c_scale1x1, c_opaque,
-                                        ball_radius, c_center, friction, bounce, 2, QPointF(vel_x, vel_y) );
+                                        ball_radius, c_center, c_friction, c_bounce, QPointF(vel_x, vel_y) );
                 }
             }
         } else if (event->button() & Qt::MiddleButton) {
-            m_engine->addBlock(Body_Type::Dynamic, Test_Textures::Block, x, y, z, 0, QPointF(1, 1), 1, friction, bounce, 3, QPointF(0, 0));
+            m_engine->addBlock(Body_Type::Dynamic, Test_Textures::Block, x, y, z, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
         } else if (event->button() & Qt::RightButton) {
 
             // Polygon shape points should be counter-clockwise
@@ -61,7 +59,7 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
             points.append( QPointF(-46, -10) );     // Left Middle
             points.append( QPointF(-38, -55) );     // Left Bottom
             m_engine->addPolygon(Body_Type::Dynamic, Test_Textures::Plant, x, y, z, c_norotate, QPointF(2, .5), c_opaque,
-                                 points, friction, bounce, 2.5, QPointF(0, 0));
+                                 points, c_friction, c_bounce, QPointF(0, 0));
         }
 
     } else if (m_engine->demo_player == Demo_Player::Car) {
@@ -76,7 +74,7 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
                 m_engine->jump_button = true;
             } else if (event->button() & Qt::RightButton) {
                 for (int i = 0; i < 25; i++ ) {
-                    m_engine->addBlock(Body_Type::Dynamic, Test_Textures::Block, x, y, z, 0, QPointF(1, 1), 1, friction, bounce, 25, QPointF(0, 0));
+                    m_engine->addBlock(Body_Type::Dynamic, Test_Textures::Block, x, y, z, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
                 }
             }
         } else {

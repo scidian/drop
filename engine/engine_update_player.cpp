@@ -46,6 +46,8 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     // Grab object from User Data
     SceneObject *object = static_cast<SceneObject*>(cpBodyGetUserData(body));
 
+    g_info = "Mass: " + QString::number(cpBodyGetMass(body));
+
     // ***** Get Keys - If player is still active get keyboard status
     int key_y = 0,      key_x = 0,      key_jump = 0;
     int key_cw = 0,     key_ccw = 0;
