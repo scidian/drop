@@ -147,7 +147,7 @@ struct SceneObject {
     double      forced_speed_y =  0.0;      // Forced move speed y of object
 
     double      move_speed_x =  400.0;      // Movement speed x
-    double      move_speed_y =  400.0;      // Movement speed y
+    double      move_speed_y =  100.0;      // Movement speed y
 
     double      jump_force_x =    0.0;      // Jump force x
     double      jump_force_y =  250.0;      // Jump force y
@@ -168,12 +168,14 @@ struct SceneObject {
     bool        should_process = true;      // True while object exists in Space
     bool        has_been_processed = false; // Set to true after an initial updateSpace call has been ran once while the object was in the Space
 
-    int         remaining_jumps = 0;                // How many jumps player has left before it must hit ground before it can jump again
-    double      remaining_boost = 0;                // Used by Engine Update to process Jump Timeout boost
-    double      remaining_wall_time = 0;            // Used by Engine Update to allow some time for a wall jump to occur
-    bool        grounded = false;                   // Used by Engine Update to keep track of if this object is on the ground
-    bool        on_wall = false;                    // Used by Engine Update to keep track of if this object is on a wall
-    Jump_State  jump_state = Jump_State::Jumped;    // Used by Engine Update to keep track of if the current jump button press has been processed
+    int         remaining_jumps = 0;                    // How many jumps player has left before it must hit ground before it can jump again
+    double      remaining_boost = 0;                    // Used by Engine Update to process Jump Timeout boost
+    double      remaining_wall_time = 0;                // Used by Engine Update to allow some time for a wall jump to occur
+    bool        grounded = false;                       // Used by Engine Update to keep track of if this object is on the ground
+    bool        on_wall = false;                        // Used by Engine Update to keep track of if this object is on a wall
+    cpVect      last_touched_ground_normal = cpvzero;   // Normal Vector of the last touched surface
+    double      last_touched_ground_dot = 1.0;          // Dot product of the last touched surface
+    Jump_State  jump_state = Jump_State::Jumped;        // Used by Engine Update to keep track of if the current jump button press has been processed
 
     double      angle = 0;                  // Current object angle
     QPointF     velocity;                   // Current object velocity

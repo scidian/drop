@@ -144,7 +144,7 @@ void OpenGL::renderSceneObjects() {
 
     // ***** Render 3D Objects
     cullingOn();
-    drawCube( QVector3D( -400, 400, -300) );
+    drawCube( QVector3D( 2000, 400, -300) );
     cullingOff();
 
 
@@ -252,7 +252,7 @@ void OpenGL::renderSceneObjects() {
 
     // ***** Render Front 3D Objects
     cullingOn();
-    drawCube( QVector3D(0, 500, 600) );
+    drawCube( QVector3D(1600, 500, 600) );
     cullingOff();
 
     // *****Disable shader program

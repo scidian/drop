@@ -5,6 +5,9 @@
 //
 //
 //
+#include <QtMath>
+#include <QDebug>
+
 #include "chipmunk/chipmunk.h"
 #include "engine.h"
 
@@ -26,7 +29,12 @@ QString  g_info = "";
 //######################################################################################################
 //##    Calculate angles of player collisions to find if we're on ground
 //######################################################################################################
-static void selectPlayerGroundNormal(cpBody *, cpArbiter *arb, double *smallest_dot_product) {
+struct Ground_Data {
+    cpVect normal;
+    double dot_product;
+};
+
+static void selectPlayerGroundNormal(cpBody *, cpArbiter *arb, Ground_Data *ground) {
     // Get normal vector of collision
     cpVect n = cpvneg( cpArbiterGetNormal(arb) );
 
@@ -34,7 +42,10 @@ static void selectPlayerGroundNormal(cpBody *, cpArbiter *arb, double *smallest_
     double dot = cpvdot( n, g_gravity_normal );
 
     // Store the lowest dot product we find, 1 == gravity, -1 == opposite direction of gravity, 0 == perpendicular to gravity
-    if (dot < (*smallest_dot_product)) (*smallest_dot_product) = dot;
+    if (dot < (*ground).dot_product) {
+        (*ground).dot_product = dot;
+        (*ground).normal = n;
+    }
 }
 
 
@@ -60,20 +71,27 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     }
 
     // ***** Ground Check - Grab the grounding normal from last frame, if we hit the ground, turn off remaining_boost time
-    double smallest_dot_product = 1.0;
-    cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(selectPlayerGroundNormal), &smallest_dot_product);
+    Ground_Data ground;
+    ground.dot_product = 2.0;
+    cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(selectPlayerGroundNormal), &ground);
 
-    object->on_wall =  smallest_dot_product <  0.15;
-    if (object->on_wall) object->remaining_wall_time = .25;                 // Give player some time to do a wall jump
-    else                 object->remaining_wall_time -= dt;
-    if (object->remaining_wall_time < 0) object->remaining_wall_time = 0;
-
-    object->grounded = smallest_dot_product < -0.30;
+    // Figure out if any collision points count as ground or as wall
+    object->on_wall =  ground.dot_product <= 0.50;      // 0.50 == approx ~30 degrees (slightly overhanging)
+    object->grounded = ground.dot_product < -0.30;
     if (object->grounded || object->on_wall) {
-        ///object->on_wall = false;
+        object->last_touched_ground_normal = ground.normal;
+        object->last_touched_ground_dot = ground.dot_product;
         object->remaining_jumps = object->jump_count;
         object->remaining_boost = 0.0;
     }
+
+    // Update wall jump time
+    if (object->on_wall) object->remaining_wall_time = 0.25;                                        // Give player some time to do a wall jump
+    else                 object->remaining_wall_time -= dt;
+    if (object->grounded || object->remaining_wall_time < 0.0) {
+        object->remaining_wall_time = 0.0;
+    }
+
 
     // ***** Process Boost - Continues to provide jump velocity, although slowly fades
     if (object->remaining_boost > 0) object->remaining_boost -= dt;
@@ -96,22 +114,70 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
             // Calculate jumps forces
             object->jump_state = Jump_State::Jumped;                                                // Mark current jump button press as processed
-            cpFloat jump_vx = object->jump_force_x * 2.0; //cpfsqrt(2.0 * object->jump_force_x * -gravity.x);
-            cpFloat jump_vy = object->jump_force_y * 2.0; //cpfsqrt(2.0 * object->jump_force_y * -gravity.y);
+            cpFloat jump_vx = object->jump_force_x * 2.0; ///cpfsqrt(2.0 * object->jump_force_x * -gravity.x);
+            cpFloat jump_vy = object->jump_force_y * 2.0; ///cpfsqrt(2.0 * object->jump_force_y * -gravity.y);
 
-            // Starting a new jump so cancel out last jump forces
+            // Figure out wall jump forces
+            if (!object->grounded && object->remaining_wall_time > 0.0) {
+                double angle = atan2(object->last_touched_ground_normal.y, object->last_touched_ground_normal.x) - atan2(g_gravity_normal.y, g_gravity_normal.x);
+                angle = qRadiansToDegrees( angle ) - 180;
+                qDebug() << "Wall jump - Angle: " << angle << ", Dot: " << object->last_touched_ground_dot;
+                if (angle < -180) angle += 360;
+                if (angle >  180) angle -= 360;
+                angle /= 2.5;
+
+                QTransform t = QTransform().rotate(angle);
+                QPointF jump  = t.map( QPointF(object->jump_force_x, object->jump_force_y) );
+                jump_vx = jump.x() * 2.0;
+                jump_vy = jump.y() * 2.0;
+            }
+
+            // Starting a new jump so partially cancel any previous jump forces
             cpVect  player_v = cpBodyGetVelocity( object->body );
-            if (qFuzzyCompare(jump_vx, 0) == false) player_v.x = 0;
-            if (qFuzzyCompare(jump_vy, 0) == false) player_v.y = 0;
+            if (player_v.x < 0) {
+                if (jump_vx < 0) {
+                    if (player_v.x - (jump_vx*.5) < 0) player_v.x -= jump_vx*.5;
+                    else                               player_v.x = 0;
+                } else if (jump_vx > 0) {
+                    player_v.x = 0;
+                }
+            } else if (player_v.x > 0) {
+                if (jump_vx > 0) {
+                    if (player_v.x - (jump_vx*.5) > 0) player_v.x -= jump_vx*.5;
+                    else                               player_v.x = 0;
+                } else if (jump_vx < 0) {
+                    player_v.x = 0;
+                }
+            }
+            if (player_v.y < 0) {
+                if (jump_vy < 0) {
+                    if (player_v.y - (jump_vy*.5) < 0) player_v.y -= jump_vy*.5;
+                    else                               player_v.y = 0;
+                } else if (jump_vy > 0) {
+                    player_v.y = 0;
+                }
+            } else if (player_v.y > 0) {
+                if (jump_vy > 0) {
+                    if (player_v.y - (jump_vy*.5) > 0) player_v.y -= jump_vy*.5;
+                    else                               player_v.y = 0;
+                } else if (jump_vy < 0) {
+                    player_v.y = 0;
+                }
+            }
+            ///if (qFuzzyCompare(jump_vx, 0) == false) player_v.x = 0;
+            ///if (qFuzzyCompare(jump_vy, 0) == false) player_v.y = 0;
+
             player_v = cpvadd(player_v, cpv(jump_vx, jump_vy));
             cpBodySetVelocity( object->body, player_v );
 
-            // Reset timeout boost and subtract remaining jumps until ground
+            // Reset wall_timeout, jump timeout boost and subtract remaining jumps until ground
+            object->remaining_wall_time = 0.0;
             object->remaining_boost = object->jump_timeout / 1000;
             object->remaining_jumps--;
             if (object->remaining_jumps < -1) object->remaining_jumps = -1;
         }
     }
+
     // If jump button is let go, reset this objects ability to receive a jump command
     if (!g_jump_button) object->jump_state = Jump_State::Need_To_Jump;
 

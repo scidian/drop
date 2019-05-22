@@ -147,7 +147,7 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         ball->air_jump = false;
         ball->wall_jump = true;
 
-        ball->ignore_gravity = true;
+        //ball->ignore_gravity = true;
 
 
         // TEMP demo variables
