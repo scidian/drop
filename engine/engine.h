@@ -143,6 +143,9 @@ struct SceneObject {
     double      max_speed_x =  1000.0;      // Maximum speed x of object
     double      max_speed_y =  1000.0;      // Maximum speed y of object
 
+    double      forced_speed_x =  0.0;      // Forced move speed x of object
+    double      forced_speed_y =  0.0;      // Forced move speed y of object
+
     double      move_speed_x =  400.0;      // Movement speed x
     double      move_speed_y =  400.0;      // Movement speed y
 
@@ -151,7 +154,8 @@ struct SceneObject {
     double      jump_timeout =  800.0;      // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
     int         jump_count =        0;      // How many jumps this player is allowed, -1 = unlimited, 0 = cannot jump, 1 = 1, 2 = 2, etc
 
-    bool        can_rotate = true;          // Set during object creation, moment of inertia is set to infinity to stop rotation
+    bool        can_rotate = true;          // To be set during object creation, moment of inertia is set to infinity to stop rotation
+    bool        ignore_gravity = false;     // If turned to true, this object no longer is affected by gravity
 
     double      air_drag =       0.50;      // Affects acceleration in air (0 to 1+)
     double      ground_drag =    0.25;      // Affects acceleration on the ground (0 to 1+)

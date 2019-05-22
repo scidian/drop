@@ -145,6 +145,10 @@ CP_EXPORT void cpBodySetPositionUpdateFunc(cpBody *body, cpBodyPositionFunc posi
 
 /// Default velocity integration function..
 CP_EXPORT void cpBodyUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);
+
+/// Custom Drop Creator add on function that ignores gravity during BodyUpdateVelocity
+CP_EXPORT void cpBodyUpdateVelocityNoGravity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);
+
 /// Default position integration function.
 CP_EXPORT void cpBodyUpdatePosition(cpBody *body, cpFloat dt);
 

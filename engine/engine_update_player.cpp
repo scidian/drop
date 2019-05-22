@@ -120,35 +120,37 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     // ***** Velocity - Target horizontal speed for air / ground control
     cpVect  body_v = cpBodyGetVelocity( object->body );
 
-    cpFloat target_vx = object->move_speed_x * key_x;
-    cpFloat target_vy = object->move_speed_y * key_y;
+    // Calculate target velocity, includes any Forced Movement
+    cpFloat target_vx = (object->move_speed_x * key_x) + object->forced_speed_x;
+    cpFloat target_vy = (object->move_speed_y * key_y) + object->forced_speed_y;
 
     double air_accel_x =    object->move_speed_x / (object->air_drag + .001);
     double air_accel_y =    object->move_speed_y / (object->air_drag + .001);
     double ground_accel_x = object->move_speed_x / (object->ground_drag + .001);
     double ground_accel_y = object->move_speed_y / (object->ground_drag + .001);
 
-    if (!object->grounded && (!object->on_wall)) {
+    if (!object->grounded && !object->on_wall) {
 
         if ((qFuzzyCompare(body_v.x, 0) == false && qFuzzyCompare(target_vx, 0) == false) ||
-            (body_v.x <= 0 && target_vx > 0) || (body_v.x >= 0 && target_vx < 0)) {
-            body_v.x = cpflerpconst( body_v.x, target_vx, air_accel_x * dt);
-        }
+            (body_v.x <= 0 && target_vx > 0) || (body_v.x >= 0 && target_vx < 0))
+                body_v.x = cpflerpconst( body_v.x, target_vx, air_accel_x * dt);
+        else    body_v.x = cpflerpconst( body_v.x, 0, object->air_drag / .005 * dt);
 
         if ((qFuzzyCompare(body_v.y, 0) == false && qFuzzyCompare(target_vy, 0) == false) ||
-            (body_v.y <= 0 && target_vy > 0) || (body_v.y >= 0 && target_vy < 0)) {
-            body_v.y = cpflerpconst( body_v.y, target_vy, air_accel_y * dt);
-        }
+            (body_v.y <= 0 && target_vy > 0) || (body_v.y >= 0 && target_vy < 0))
+                body_v.y = cpflerpconst( body_v.y, target_vy, air_accel_y * dt);
+        else    body_v.y = cpflerpconst( body_v.y, 0, object->air_drag / .005 * dt);
 
     } else {
 
         if (qFuzzyCompare(target_vx, 0) == false)
-            body_v.x = cpflerpconst( body_v.x, target_vx, ground_accel_x * dt);
+                body_v.x = cpflerpconst( body_v.x, target_vx, ground_accel_x * dt);
+        else    body_v.x = cpflerpconst( body_v.x, target_vx, object->ground_drag / .005 * dt);
 
         if (qFuzzyCompare(target_vy, 0) == false)
-            body_v.y = cpflerpconst( body_v.y, target_vy, ground_accel_y * dt);
+                body_v.y = cpflerpconst( body_v.y, target_vy, ground_accel_y * dt);
+        else    body_v.y = cpflerpconst( body_v.y, target_vy, object->ground_drag / .005 * dt);
     }
-
 
     // ***** Max Speed - Limit Velocity
     body_v.x = cpfclamp(body_v.x, -object->max_speed_x, object->max_speed_x);
@@ -156,7 +158,10 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     cpBodySetVelocity( object->body, body_v );
 
     // ***** Update Velocity - NOTE: MUST CALL actual Update Velocity function some time during this callback!
-    cpBodyUpdateVelocity(body, gravity, damping, dt);
+    if (object->ignore_gravity)
+        cpBodyUpdateVelocityNoGravity(body, gravity, damping, dt);
+    else
+        cpBodyUpdateVelocity(body, gravity, damping, dt);
 }
 
 
