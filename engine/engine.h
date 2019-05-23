@@ -178,10 +178,11 @@ struct SceneObject {
     double      last_touched_ground_dot = 1.0;          // Dot product of the last touched surface
     Jump_State  jump_state = Jump_State::Jumped;        // Used by Engine Update to keep track of if the current jump button press has been processed
 
-    double      angle = 0;                      // Current object angle
-    QPointF     velocity;                       // Current object velocity
-    QPointF     position;                       // Current object posiiton
-    QPointF     last_position;                  // Previous frame position, for whatever may need it
+    double              angle = 0;                      // Current object angle
+    QPointF             velocity;                       // Current object velocity
+    QPointF             position;                       // Current object posiiton
+    QVector<double>     position_history_x;             // Previous frame positions, for whatever may need it
+    QVector<double>     position_history_y;             // Previous frame positions, for whatever may need it
 
 };
 
@@ -253,7 +254,8 @@ public:
     bool            debug_shapes =      false;
     bool            debug_collisions =  false;
 
-    int             fps = 0;
+    int             fps_render = 60;
+    int             fps_physics = 60;
 
     Demo_Space      demo_space =  Demo_Space::Project;
     Demo_Player     demo_player = Demo_Player::Car;

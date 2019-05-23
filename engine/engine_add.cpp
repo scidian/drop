@@ -16,6 +16,7 @@
 constexpr double c_extra_radius =    0.010;         // Radius added on to block and polygon shapes for better collisions
 constexpr double c_mass_multiplier = 0.002;         // Shapes Area times this multiplier = shape mass
 
+constexpr int    c_position_history = 3;
 
 //######################################################################################################
 //##    Add Line
@@ -110,8 +111,10 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
     ball->alpha = static_cast<float>(opacity);
     ball->position.setX(x);
     ball->position.setY(y);
-    ball->last_position.setX(x);
-    ball->last_position.setY(y);
+    ball->position_history_x.clear();
+    ball->position_history_y.clear();
+    ball->position_history_x.fill( ball->position.x(), c_position_history );
+    ball->position_history_y.fill( ball->position.y(), c_position_history );
 
     // Create the body for the ball
     ball->body_type = body_type;
@@ -175,8 +178,10 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
     block->scale_y = static_cast<float>(scale.y());
     block->position.setX(x);
     block->position.setY(y);
-    block->last_position.setX(x);
-    block->last_position.setY(y);
+    block->position_history_x.clear();
+    block->position_history_y.clear();
+    block->position_history_x.fill( block->position.x(), c_position_history );
+    block->position_history_y.fill( block->position.y(), c_position_history );
 
     // Block basics
     block->texture_number = texture_number;
@@ -251,8 +256,10 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
     polygon->alpha = static_cast<float>(opacity);
     polygon->position.setX(x);
     polygon->position.setY(y);
-    polygon->last_position.setX(x);
-    polygon->last_position.setY(y);
+    polygon->position_history_x.clear();
+    polygon->position_history_y.clear();
+    polygon->position_history_x.fill( polygon->position.x(), c_position_history );
+    polygon->position_history_y.fill( polygon->position.y(), c_position_history );
 
     int old_point_count =static_cast<int>(points.size());
 

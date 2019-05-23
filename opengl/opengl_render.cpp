@@ -69,13 +69,13 @@ void OpenGL::paintGL() {
     if (m_engine->debug_collisions) drawDebugCollisions(painter);
     painter.end();
 
-    // ***** Update frames per second
+    // ********** Calculates Render Frames per Second
     static Clock::time_point fps_time = Clock::now();
     static int fps_count = 0;
     ++fps_count;
     double fps_milli = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - fps_time).count() / 1000000.0;
     if (fps_milli > 1000.0) {
-        m_engine->fps = fps_count;
+        m_engine->fps_render = fps_count;
         fps_count = 0;
         fps_time = Clock::now();
     }
@@ -190,7 +190,13 @@ void OpenGL::renderSceneObjects() {
         m_shader.enableAttributeArray( m_attribute_tex_coord );
 
         // ***** Get object position data
-        QPointF center = object->position;
+        ///QPointF center = object->position;
+        double pos_x = std::accumulate( object->position_history_x.begin(), object->position_history_x.end(), 0.0);
+        double pos_y = std::accumulate( object->position_history_y.begin(), object->position_history_y.end(), 0.0);
+        pos_x = (pos_x + object->position.x()*2) / (object->position_history_x.size() + 2.0);
+        pos_y = (pos_y + object->position.y()*2) / (object->position_history_y.size() + 2.0);
+        QPointF center = QPointF(pos_x, pos_y);
+
         float x, y, z, half_width, half_height;
 
         if (m_engine->render_type == Render_Type::Orthographic) {

@@ -60,10 +60,10 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
         pushDebug1 =  new QToolButton(upperWidget);     pushDebug1->setObjectName("pushDebug1");    pushDebug1->setGeometry( QRect(600,  5, 140, 45));
         pushDebug2 =  new QToolButton(upperWidget);     pushDebug2->setObjectName("pushDebug2");    pushDebug2->setGeometry( QRect(600, 55, 140, 45));
 
-        label =       new QLabel(upperWidget);          label->setObjectName("label");              label->setGeometry(      QRect(750,  0, 330, 20));
+        label =       new QLabel(upperWidget);          label->setObjectName("label");              label->setGeometry(      QRect(750,  5, 330, 20));
         label2 =      new QLabel(upperWidget);          label2->setObjectName("label2");            label2->setGeometry(     QRect(750, 25, 330, 20));
-        labelOpenGL = new QLabel(upperWidget);          labelOpenGL->setObjectName("labelOpenGL");  labelOpenGL->setGeometry(QRect(750, 50, 330, 20));
-        labelInfo =   new QLabel(upperWidget);          labelInfo->setObjectName("labelInfo");      labelInfo->setGeometry(  QRect(750, 75, 330, 20));
+        labelOpenGL = new QLabel(upperWidget);          labelOpenGL->setObjectName("labelOpenGL");  labelOpenGL->setGeometry(QRect(750, 45, 330, 20));
+        labelInfo =   new QLabel(upperWidget);          labelInfo->setObjectName("labelInfo");      labelInfo->setGeometry(  QRect(750, 65, 330, 20));
 
         pushSpawn->setText(QApplication::translate(  "MainWindow", "Spawning Demo",     nullptr));  pushSpawn->setStyleSheet("color: white");
         pushCar->setText(QApplication::translate(    "MainWindow", "Car Demo",          nullptr));  pushCar->setStyleSheet("color: white");
@@ -171,10 +171,10 @@ void FormEngine::updateEngine() {
 
         // ***** Seperate Camera Update
         double camera_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_camera).count() / 1000000.0;
-        if (camera_milliseconds > 1) {
+        if (camera_milliseconds > 1.0) {
             m_time_camera = Clock::now();
-                m_engine->updateCameras();                                                  // Update Camera Targets
                 m_engine->moveCameras(camera_milliseconds);                                 // Move Cameras
+                ///m_engine->updateCameras();                                                  // Update Camera Targets
             qApp->processEvents();
         }
 
@@ -184,7 +184,8 @@ void FormEngine::updateEngine() {
             m_time_update = Clock::now();
                 m_engine->updateSpace(update_milliseconds);                                 // Physics Engine
                 m_engine->updateSpaceHelper();                                              // Additional Physics Updating
-                m_opengl->update();                                                         // Render
+                m_engine->updateCameras();                                                  // Update Camera Targets
+                ///m_opengl->update();                                                         // Render
             qApp->processEvents();
         }
 
@@ -192,7 +193,7 @@ void FormEngine::updateEngine() {
         double render_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_render).count() / 1000000.0;
         if (render_milliseconds > (1000.0 / m_ideal_frames_per_second)) {
             m_time_render = Clock::now();
-                /// Can Render Here Instead
+                m_opengl->update();                                                         // Render
                 updateLabels();
             qApp->processEvents();
         }
@@ -205,8 +206,8 @@ void FormEngine::updateEngine() {
 //##    Update helpful labels
 //######################################################################################################
 void FormEngine::updateLabels() {
-    label->setText( "# Items: " + QString::number( m_engine->objects.count()));
-    label2->setText("FPS: " + QString::number(m_engine->fps) + " - Scale: " + QString::number(double(m_opengl->getScale())) );
+    label->setText( "Items: " + QString::number( m_engine->objects.count()) + " - Scale: " + QString::number(double(m_opengl->getScale())) );
+    label2->setText("FPS - Render: " + QString::number(m_engine->fps_render) + ", Physics: " + QString::number(m_engine->fps_physics) );
 
     ///int max_sample, max_text, max_number_textures, max_layers;
     ///glGetIntegerv ( GL_MAX_SAMPLES, &max_sample );                                      // Finds max multi sampling available on system

@@ -11,6 +11,7 @@
 
 #include "engine.h"
 #include "engine_camera.h"
+#include "forms/form_engine.h"
 #include "helper.h"
 #include "project/project.h"
 #include "project/project_world.h"
@@ -58,14 +59,19 @@ void DrEngine::updateSpaceHelper() {
         // ***** Get some info about the current object from the space and save it to the current SceneObject
         cpVect  vel = cpBodyGetVelocity( object->body );
         cpFloat angle = cpBodyGetAngle( object->body );
-        cpVect  pos = cpBodyGetPosition( object->body );
         object->velocity.setX( vel.x );
         object->velocity.setX( vel.y );
         object->angle = qRadiansToDegrees( angle );
-        object->last_position.setX( object->position.x() );
-        object->last_position.setY( object->position.y() );
+
+
+        object->position_history_x.push_front( object->position.x() );    object->position_history_x.pop_back();
+        object->position_history_y.push_front( object->position.y() );    object->position_history_y.pop_back();
+
+        cpVect  pos = cpBodyGetPosition( object->body );
         object->position.setX( pos.x );
         object->position.setY( pos.y );
+
+
 
 
         // ***** Update global friction and bounce to all objects if globals have changed (possibly due to Gameplay Action)
@@ -142,6 +148,17 @@ void DrEngine::updateSpaceHelper() {
         DrStage *stage = stages[stage_num];
 
         loadStageToSpace( stage, m_loaded_to, 0);
+    }
+
+    // ********** Calculates Physics Updates Frames per Second
+    static Clock::time_point fps_time = Clock::now();
+    static int fps_count = 0;
+    ++fps_count;
+    double fps_milli = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - fps_time).count() / 1000000.0;
+    if (fps_milli > 1000.0) {
+        fps_physics = fps_count;
+        fps_count = 0;
+        fps_time = Clock::now();
     }
 }
 

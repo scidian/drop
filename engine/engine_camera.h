@@ -22,6 +22,8 @@ struct SceneObject;
 class DrEngineCamera
 {
 private:
+    DrEngine       *m_engine;                                   // Pointer to the parent Engine
+
     QVector3D       m_position = QVector3D(0, 0, 0);            // Current camera position
     QVector3D       m_speed = QVector3D(0, 0, 0);               // Current camera speed
 
@@ -35,7 +37,7 @@ private:
 
 public:
     // Constructor
-    DrEngineCamera(float x = 0, float y = 0, float z = 0);
+    DrEngineCamera(DrEngine *engine, float x = 0, float y = 0, float z = 0);
 
     // Function Calls
     void        followObject(SceneObject *object) { m_follow = object; }
