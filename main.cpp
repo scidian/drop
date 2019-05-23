@@ -57,11 +57,13 @@ int main(int argc, char *argv[]) {
 
     // ***** Set OpenGL surface format
     QSurfaceFormat format;
-    format.setSamples(4);
-    format.setDepthBufferSize(24);
+    format.setSamples(4);                                           // Multi-sampling (Anti-Aliasing)
+    format.setDepthBufferSize(24);                                  // Enable Depth Buffer
+    ///format.setSwapInterval(1);                                   // Enable V-Sync
+    ///format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);        // Use Off Screen Double Buffer
     ///format.setStencilBufferSize(8);
     ///format.setProfile(QSurfaceFormat::CoreProfile);
-    /// ///format.setVersion(2,0);
+    ///format.setVersion(2,0);
     QSurfaceFormat::setDefaultFormat(format);
 
     // ***** Load some global data
@@ -84,11 +86,9 @@ int main(int argc, char *argv[]) {
     // ***** Run Program
     drop.exec();
 
-    //Dr::ShowMessageBox("Finished running program");
-
+    ///Dr::ShowMessageBox("Finished running program");
     return 0;
 }
-
 
 
 

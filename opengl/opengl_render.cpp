@@ -70,12 +70,17 @@ void OpenGL::paintGL() {
     painter.end();
 
     // ***** Update frames per second
-    m_engine->fps++;
-    if (m_engine->fps_timer.elapsed() > 1000) {
-        m_engine->last_fps = m_engine->fps;
-        m_engine->fps = 0;
-        m_engine->fps_timer.restart();
+    static Clock::time_point fps_time = Clock::now();
+    static int fps_count = 0;
+    ++fps_count;
+    double fps_milli = std::chrono::duration_cast<std::chrono::milliseconds>(Clock::now() - fps_time).count();
+    if (fps_milli > 1000) {
+        m_engine->fps = fps_count;
+        fps_count = 0;
+        fps_time = Clock::now();
     }
+
+    glEnd();
 }
 
 
@@ -105,10 +110,10 @@ void OpenGL::updateViewMatrix() {
     if (m_engine->render_type == Render_Type::Orthographic) {
         float cam_x = m_engine->getCameraPos().x() * m_scale;
         float cam_y = m_engine->getCameraPos().y() * m_scale;
-        float left =   static_cast<float>(cam_x - (width() /  2.0f));
-        float right =  static_cast<float>(cam_x + (width() /  2.0f));
-        float top =    static_cast<float>(cam_y + (height() / 2.0f));
-        float bottom = static_cast<float>(cam_y - (height() / 2.0f));
+        float left =   cam_x - (width() /  2.0f);
+        float right =  cam_x + (width() /  2.0f);
+        float top =    cam_y + (height() / 2.0f);
+        float bottom = cam_y - (height() / 2.0f);
         m_projection.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
     } else {
         m_projection.perspective( 70.0f, aspect_ratio, 1.0f, 5000.0f );

@@ -253,8 +253,7 @@ public:
     bool            debug_shapes =      false;
     bool            debug_collisions =  false;
 
-    QTime           fps_timer;
-    int             fps, last_fps;
+    int             fps = 0;
 
     Demo_Space      demo_space =  Demo_Space::Project;
     Demo_Player     demo_player = Demo_Player::Car;

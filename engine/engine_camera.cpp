@@ -144,10 +144,23 @@ void DrEngineCamera::updateCamera() {
     if (m_follow != nullptr) {
 
         // Calculate the average object speed
-        m_avg_speed_x.push_back( m_follow->position.x() - m_follow->last_position.x() );      m_avg_speed_x.pop_front();
-        m_avg_speed_y.push_back( m_follow->position.y() - m_follow->last_position.y() );      m_avg_speed_y.pop_front();
-        double average_x = std::accumulate( m_avg_speed_x.begin(), m_avg_speed_x.end(), 0.0) / m_avg_speed_x.size();
-        double average_y = std::accumulate( m_avg_speed_y.begin(), m_avg_speed_y.end(), 0.0) / m_avg_speed_y.size();
+        static double total_x = 0, total_y = 0;
+
+        m_avg_speed_x.push_back( m_follow->position.x() - m_follow->last_position.x() );
+        total_x += m_avg_speed_x.back();
+        total_x -= m_avg_speed_x.front();
+        m_avg_speed_x.pop_front();
+
+        m_avg_speed_y.push_back( m_follow->position.y() - m_follow->last_position.y() );
+        total_y += m_avg_speed_y.back();
+        total_y -= m_avg_speed_y.front();
+        m_avg_speed_y.pop_front();
+
+        //double average_x = std::accumulate( m_avg_speed_x.begin(), m_avg_speed_x.end(), 0.0) / m_avg_speed_x.size();
+        //double average_y = std::accumulate( m_avg_speed_y.begin(), m_avg_speed_y.end(), 0.0) / m_avg_speed_y.size();
+
+        double average_x = total_x / m_avg_speed_x.size();
+        double average_y = total_y / m_avg_speed_y.size();
 
         // Basic Camera = Object Position
         ///m_target.setX( static_cast<float>(m_follow->position.x()) );
@@ -159,8 +172,8 @@ void DrEngineCamera::updateCamera() {
         ///m_target.setX( static_cast<float>(m_follow->last_position.x() + average_x) );
         ///m_target.setY( static_cast<float>(m_follow->last_position.y() + average_y) );
 
-        double pos_x = ((m_follow->last_position.x() + average_x) + (static_cast<double>(m_target.x()) + average_x)*3 + (m_follow->position.x())) / 5.0;
-        double pos_y = ((m_follow->last_position.y() + average_y) + (static_cast<double>(m_target.y()) + average_y)*3 + (m_follow->position.y())) / 5.0;
+        double pos_x = ((m_follow->last_position.x() + average_x) + (static_cast<double>(m_target.x()) + average_x)*4 + (m_follow->position.x())) / 6.0;
+        double pos_y = ((m_follow->last_position.y() + average_y) + (static_cast<double>(m_target.y()) + average_y)*4 + (m_follow->position.y())) / 6.0;
         m_target.setX( static_cast<float>(pos_x) );
         m_target.setY( static_cast<float>(pos_y) );
 
