@@ -191,13 +191,8 @@ void OpenGL::renderSceneObjects() {
 
         // ***** Get object position data
         QPointF center = object->position;
-        if (object->body_type == Body_Type::Dynamic) {
-            double pos_x = (object->previous_position.x() + object->position.x()*3) / 4.0;
-            double pos_y = (object->previous_position.y() + object->position.y()*3) / 4.0;
-            center = QPointF(pos_x, pos_y);
-        }
-
         float x, y, z, half_width, half_height;
+
         if (m_engine->render_type == Render_Type::Orthographic) {
             x = static_cast<float>(center.x()) * m_scale;
             y = static_cast<float>(center.y()) * m_scale;
