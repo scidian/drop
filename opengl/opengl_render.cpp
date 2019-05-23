@@ -73,14 +73,12 @@ void OpenGL::paintGL() {
     static Clock::time_point fps_time = Clock::now();
     static int fps_count = 0;
     ++fps_count;
-    double fps_milli = std::chrono::duration_cast<std::chrono::milliseconds>(Clock::now() - fps_time).count();
-    if (fps_milli > 1000) {
+    double fps_milli = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - fps_time).count() / 1000000.0;
+    if (fps_milli > 1000.0) {
         m_engine->fps = fps_count;
         fps_count = 0;
         fps_time = Clock::now();
     }
-
-    glEnd();
 }
 
 

@@ -45,7 +45,7 @@ private:
     Clock::time_point   m_time_render;
     Clock::time_point   m_time_camera;
 
-    const double        m_ideal_frames_per_second = 90;
+    const double        m_ideal_frames_per_second = 60;
 
 public:
     QWidget         *centralWidget;
