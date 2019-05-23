@@ -12,7 +12,9 @@
 
 #include "chipmunk/chipmunk.h"
 #include "engine/engine.h"
+#include "engine/engine_camera.h"
 #include "engine/engine_texture.h"
+#include "forms/form_engine.h"
 #include "opengl/opengl.h"
 
 

@@ -27,7 +27,7 @@ private:
 
     QVector3D       m_target;                                   // Calculated point this camera is moving towards
 
-    SceneObject    *m_follow;                                   // Object this camera should follow
+    SceneObject    *m_follow = nullptr;                         // Object this camera should follow
     QVector<double> m_avg_speed_x;                              // Average x speed of object this camera is following
     QVector<double> m_avg_speed_y;
 
@@ -43,6 +43,7 @@ public:
     void        updateCamera();
 
     // Getters / Setters
+    SceneObject*        getObjectFollowing() { return m_follow; }
     const QVector3D&    getPosition()   { return m_position; }
     const QVector3D&    getSpeed()      { return m_speed; }
     void                setPosition(QVector3D new_position) {       m_position = new_position; }
