@@ -52,13 +52,21 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         }
         if (!object->does_collide) color = Qt::yellow;
 
-
+        // Set up QPainter
         QPen cosmetic_pen( QBrush(color), 1);
         cosmetic_pen.setCosmetic(true);
         painter.setPen( cosmetic_pen );
         QColor brush_color = color;
         brush_color.setAlpha(64);
         painter.setBrush( QBrush( brush_color));
+
+        // Load Object Position
+        QPointF center = object->position;
+        if (object->body_type == Body_Type::Dynamic) {
+            double pos_x = (object->previous_position.x() + object->position.x()*3) / 4.0;
+            double pos_y = (object->previous_position.y() + object->position.y()*3) / 4.0;
+            center = QPointF(pos_x, pos_y);
+        }
 
         // Used to store combined polygon of a multi-shape body
         QPolygonF object_poly;
@@ -68,7 +76,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
             if (object->shape_type[shape] == Shape_Type::Circle) {
                 cpVect offset = cpCircleShapeGetOffset(shape);
                 double radius = cpCircleShapeGetRadius(shape);
-                QTransform t = QTransform().translate(object->position.x(), object->position.y()).rotate(object->angle);
+                QTransform t = QTransform().translate(center.x(), center.y()).rotate(object->angle);
 
                 // Draw Normal circle since camera is facing straight on
                 if (m_engine->render_type == Render_Type::Orthographic) {
@@ -148,7 +156,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 
             } else if (object->shape_type[shape] == Shape_Type::Polygon || object->shape_type[shape] == Shape_Type::Box) {
 
-                QTransform t = QTransform().translate(object->position.x(), object->position.y()).rotate( object->angle);
+                QTransform t = QTransform().translate(center.x(), center.y()).rotate( object->angle);
                 QPolygonF polygon, mapped;
                 for (int i = 0; i < cpPolyShapeGetCount( shape ); i++) {
                     cpVect  vert  = cpPolyShapeGetVert( shape, i );
@@ -204,6 +212,15 @@ void OpenGL::drawDebugCollisions(QPainter &painter) {
     for (auto object : m_engine->objects) {
         if (object->should_process == false) continue;
 
+        QPointF diff { 0, 0 };
+        if (object->body_type == Body_Type::Dynamic) {
+            double pos_x = (object->previous_position.x() + object->position.x()*3) / 4.0;
+            double pos_y = (object->previous_position.y() + object->position.y()*3) / 4.0;
+            diff = object->position - QPointF(pos_x, pos_y);
+        } else {
+            continue;
+        }
+
         QVector<QPointF> point_list;    point_list.clear();
         cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(getContactPoints), &point_list);
 
@@ -212,7 +229,7 @@ void OpenGL::drawDebugCollisions(QPainter &painter) {
 
         for (int i = 0; i < point_list.size(); i++) {
             QPointF contact = point_list[i];
-            QPointF point = mapToScreen( contact.x(), contact.y(), 0.0 );
+            QPointF point = mapToScreen( contact.x() - diff.x(), contact.y() - diff.y(), 0.0 );
 
             double angle_in_radians = std::atan2(normal_list[i].y, normal_list[i].x);
             double angle_in_degrees = (angle_in_radians / M_PI) * 180.0;

@@ -63,14 +63,10 @@ void DrEngine::updateSpaceHelper() {
         object->velocity.setX( vel.y );
         object->angle = qRadiansToDegrees( angle );
 
-
-        object->position_history_x.push_front( object->position.x() );    object->position_history_x.pop_back();
-        object->position_history_y.push_front( object->position.y() );    object->position_history_y.pop_back();
-
         cpVect  pos = cpBodyGetPosition( object->body );
+        object->previous_position = object->position;
         object->position.setX( pos.x );
         object->position.setY( pos.y );
-
 
 
 

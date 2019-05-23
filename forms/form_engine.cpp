@@ -171,31 +171,32 @@ void FormEngine::updateEngine() {
 
         // ***** Seperate Camera Update
         double camera_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_camera).count() / 1000000.0;
-        if (camera_milliseconds > 1.0) {
+        if (camera_milliseconds > 4) {
             m_time_camera = Clock::now();
-                m_engine->moveCameras(camera_milliseconds);                                 // Move Cameras
-                ///m_engine->updateCameras();                                                  // Update Camera Targets
-            qApp->processEvents();
+
+            m_engine->moveCameras(camera_milliseconds);                                 // Move Cameras
         }
 
         // ***** MAIN UPDATE LOOP: Space (Physics)
         double update_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_update).count() / 1000000.0;
         if (update_milliseconds > (m_engine->getTimeStep() * 1000.0)) {
             m_time_update = Clock::now();
-                m_engine->updateSpace(update_milliseconds);                                 // Physics Engine
-                m_engine->updateSpaceHelper();                                              // Additional Physics Updating
-                m_engine->updateCameras();                                                  // Update Camera Targets
-                ///m_opengl->update();                                                         // Render
-            qApp->processEvents();
+
+            m_engine->updateSpace(update_milliseconds);                                 // Physics Engine
+            m_engine->updateSpaceHelper();                                              // Additional Physics Updating
+            m_engine->updateCameras();                                                  // Update Camera Targets
+
+            m_opengl->update();                                                         // Render
         }
 
         // ***** Seperate Render Update
         double render_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_render).count() / 1000000.0;
         if (render_milliseconds > (1000.0 / m_ideal_frames_per_second)) {
             m_time_render = Clock::now();
-                m_opengl->update();                                                         // Render
-                updateLabels();
-            qApp->processEvents();
+
+            m_opengl->update();                                                         // Render
+
+            updateLabels();
         }
 
     } while (m_timer->isActive());

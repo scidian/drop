@@ -190,15 +190,14 @@ void OpenGL::renderSceneObjects() {
         m_shader.enableAttributeArray( m_attribute_tex_coord );
 
         // ***** Get object position data
-        ///QPointF center = object->position;
-        double pos_x = std::accumulate( object->position_history_x.begin(), object->position_history_x.end(), 0.0);
-        double pos_y = std::accumulate( object->position_history_y.begin(), object->position_history_y.end(), 0.0);
-        pos_x = (pos_x + object->position.x()*2) / (object->position_history_x.size() + 2.0);
-        pos_y = (pos_y + object->position.y()*2) / (object->position_history_y.size() + 2.0);
-        QPointF center = QPointF(pos_x, pos_y);
+        QPointF center = object->position;
+        if (object->body_type == Body_Type::Dynamic) {
+            double pos_x = (object->previous_position.x() + object->position.x()*3) / 4.0;
+            double pos_y = (object->previous_position.y() + object->position.y()*3) / 4.0;
+            center = QPointF(pos_x, pos_y);
+        }
 
         float x, y, z, half_width, half_height;
-
         if (m_engine->render_type == Render_Type::Orthographic) {
             x = static_cast<float>(center.x()) * m_scale;
             y = static_cast<float>(center.y()) * m_scale;

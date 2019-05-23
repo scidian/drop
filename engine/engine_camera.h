@@ -45,6 +45,7 @@ public:
     void        updateCamera();
 
     // Getters / Setters
+    DrEngine*           getEngine() { return m_engine; }
     SceneObject*        getObjectFollowing() { return m_follow; }
     const QVector3D&    getPosition()   { return m_position; }
     const QVector3D&    getSpeed()      { return m_speed; }
