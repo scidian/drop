@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
     QSurfaceFormat format;
     format.setSamples(4);                                           // Multi-sampling (Anti-Aliasing)
     format.setDepthBufferSize(24);                                  // Enable Depth Buffer
-    format.setSwapInterval(1);                                      // Enable V-Sync
+    ///format.setSwapInterval(1);                                      // Enable V-Sync
     ///format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);        // Use Off Screen Double Buffer
     ///format.setStencilBufferSize(8);
     ///format.setProfile(QSurfaceFormat::CoreProfile);

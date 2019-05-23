@@ -77,6 +77,7 @@ class DrEngineTexture;
 class DrEngineWorld;
 class DrProject;
 class DrStage;
+class FormEngine;
 
 // Type definitions
 typedef std::map<long, DrEngineCamera*>  EngineCameraMap;
@@ -193,6 +194,7 @@ class DrEngine
 {
 private:
     // Locals
+    FormEngine         *m_form_engine;              // Pointer to Parent FormEngine
     DrProject          *m_project;                  // Pointer to Project to load into Engine
 
     EngineCameraMap     m_cameras;                  // Map of Cameras used for this Engine
@@ -252,8 +254,8 @@ public:
     bool            debug_shapes =      false;
     bool            debug_collisions =  false;
 
-    int             fps_render = 60;
-    int             fps_physics = 60;
+    double          fps_render =  60.0;
+    double          fps_physics = 60.0;
 
     Demo_Space      demo_space =  Demo_Space::Project;
     Demo_Player     demo_player = Demo_Player::Car;
@@ -263,7 +265,7 @@ public:
 
 
 public:
-    DrEngine(DrProject *project);
+    DrEngine(FormEngine *form_engine, DrProject *project);
 
     SceneObject*    addLine(  Body_Type body_type,  QPointF p1, QPointF p2, double friction, double bounce, double mass);
 
@@ -312,6 +314,7 @@ public:
 
 
     // Getter and Setters    
+    FormEngine*         getFormEngine()         { return m_form_engine; }
     DrProject*          getProject()            { return m_project; }
     cpSpace*            getSpace()              { return m_space; }
 

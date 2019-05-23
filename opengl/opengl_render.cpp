@@ -15,6 +15,7 @@
 #include "engine/engine_camera.h"
 #include "engine/engine_texture.h"
 #include "forms/form_engine.h"
+#include "helper.h"
 #include "opengl/opengl.h"
 
 
@@ -122,7 +123,6 @@ void OpenGL::updateViewMatrix() {
         ///if (m_angle > 360) m_angle = 0;
         ///m_model_view.rotate( m_angle, 0.0f, 1.0f, 0.0f );
     }
-
 }
 
 
@@ -191,8 +191,12 @@ void OpenGL::renderSceneObjects() {
 
         // ***** Get object position data
         QPointF center = object->position;
-        float x, y, z, half_width, half_height;
+        if (object->body_type == Body_Type::Dynamic) {
+            double percent = m_form_engine->getTimerMilliseconds(Engine_Timer::Update) / (1000.0 / m_engine->fps_physics);
+            center = (object->previous_position * (1.0 - percent)) + (object->position * percent);
+        }
 
+        float x, y, z, half_width, half_height;
         if (m_engine->render_type == Render_Type::Orthographic) {
             x = static_cast<float>(center.x()) * m_scale;
             y = static_cast<float>(center.y()) * m_scale;

@@ -31,7 +31,7 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
     Dr::ApplyCustomStyleSheetFormatting(this);
     Dr::CenterFormOnScreen(parent, this);
 
-    m_engine = new DrEngine(project);
+    m_engine = new DrEngine(this, project);
 
     centralWidget = new QWidget(this);
     centralWidget->setObjectName("centralWidget");
@@ -110,7 +110,7 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
         connect(pushDebug2,  SIGNAL(clicked()), this, SLOT(on_pushDebug2_clicked()));
 
 
-        m_opengl = new OpenGL(centralWidget, m_engine);
+        m_opengl = new OpenGL(centralWidget, this, m_engine);
         layout->addWidget(m_opengl);
 
     this->setCentralWidget(centralWidget);
@@ -163,6 +163,13 @@ void FormEngine::startTimers() {
 void FormEngine::stopTimers() {
      m_timer->stop();
 }
+double FormEngine::getTimerMilliseconds(Engine_Timer time_since_last) {
+    switch (time_since_last) {
+        case Engine_Timer::Update:  return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_update).count() / 1000000.0;
+        case Engine_Timer::Render:  return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_render).count() / 1000000.0;
+        case Engine_Timer::Camera:  return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_camera).count() / 1000000.0;
+    }
+}
 
 void FormEngine::updateEngine() {
     do {
@@ -170,23 +177,23 @@ void FormEngine::updateEngine() {
         if (!m_engine->has_scene) continue;
 
         // ***** Seperate Camera Update
-        double camera_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_camera).count() / 1000000.0;
-        if (camera_milliseconds > 4) {
+        double camera_milliseconds = getTimerMilliseconds(Engine_Timer::Camera);
+        if (camera_milliseconds > 1.0) {
             m_time_camera = Clock::now();
             m_engine->moveCameras(camera_milliseconds);                                 // Move Cameras
         }
 
         // ***** MAIN UPDATE LOOP: Space (Physics)
-        double update_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_update).count() / 1000000.0;
+        double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
         if (update_milliseconds > (m_engine->getTimeStep() * 1000.0)) {
-            m_time_update = Clock::now();
             m_engine->updateSpace(update_milliseconds);                                 // Physics Engine
+            m_time_update = Clock::now();
             m_engine->updateSpaceHelper();                                              // Additional Physics Updating
             m_engine->updateCameras();                                                  // Update Camera Targets
         }
 
         // ***** Seperate Render Update
-        double render_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_render).count() / 1000000.0;
+        double render_milliseconds = getTimerMilliseconds(Engine_Timer::Render);
         if (render_milliseconds > (1000.0 / m_ideal_frames_per_second)) {
             m_time_render = Clock::now();
             m_opengl->update();                                                         // Render

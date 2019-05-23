@@ -13,7 +13,7 @@
 //######################################################################################################
 //##    Constructor
 //######################################################################################################
-DrEngine::DrEngine(DrProject *project) : m_project(project) {
+DrEngine::DrEngine(FormEngine *form_engine, DrProject *project) : m_form_engine(form_engine), m_project(project) {
 
     keyboard_x = 0;
     keyboard_y = 0;

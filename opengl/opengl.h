@@ -16,13 +16,15 @@
 #include <QMatrix4x4>
 
 class DrEngine;
+class FormEngine;
 
 class OpenGL : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
 
 private:
-    DrEngine       *m_engine;
+    FormEngine     *m_form_engine;                                  // Pointer to parent FormEngine
+    DrEngine       *m_engine;                                       // Pointer to Engine instance that will run in this OpenGLWidget
 
     QMatrix4x4      m_model_view;
     QMatrix4x4      m_projection;
@@ -46,7 +48,7 @@ private:
 
 public:
     // Constructor / Destructor
-    OpenGL(QWidget *parent, DrEngine *engine);
+    OpenGL(QWidget *parent, FormEngine *form_engine, DrEngine *engine);
     ~OpenGL() override;
 
     // Event Overrides

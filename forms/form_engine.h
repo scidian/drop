@@ -20,6 +20,12 @@
 
 #include "engine/engine.h"
 
+enum class Engine_Timer {
+    Update,
+    Render,
+    Camera,
+};
+
 // Forward declarations
 class DrProject;
 class OpenGL;
@@ -68,10 +74,13 @@ public:
     virtual void closeEvent(QCloseEvent *event) override;
 
     // Function Calls
-    void loadDemo(Demo_Space using_space, Demo_Player using_player);
-    void startTimers();
-    void stopTimers();
-    void updateCheckedButtons();
+    DrEngine*   getEngine() { return m_engine; }
+    OpenGL*     getOpenGL() { return m_opengl; }
+    double      getTimerMilliseconds(Engine_Timer time_since_last);
+    void        loadDemo(Demo_Space using_space, Demo_Player using_player);
+    void        startTimers();
+    void        stopTimers();
+    void        updateCheckedButtons();
 
 
 private slots:

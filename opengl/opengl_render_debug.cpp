@@ -12,6 +12,7 @@
 #include "chipmunk/chipmunk.h"
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
+#include "forms/form_engine.h"
 #include "opengl/opengl.h"
 
 
@@ -52,6 +53,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         }
         if (!object->does_collide) color = Qt::yellow;
 
+        // Set up QPainter
         QPen cosmetic_pen( QBrush(color), 1);
         cosmetic_pen.setCosmetic(true);
         painter.setPen( cosmetic_pen );
@@ -59,8 +61,15 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         brush_color.setAlpha(64);
         painter.setBrush( QBrush( brush_color));
 
-        QPointF   center = object->position;        // Loads Object Position
-        QPolygonF object_poly;                      // Used to store combined polygon of a multi-shape body
+        // Load Object Position
+        QPointF center = object->position;
+        if (object->body_type == Body_Type::Dynamic) {
+            double percent = m_form_engine->getTimerMilliseconds(Engine_Timer::Update) / (1000.0 / m_engine->fps_physics);
+            center = (object->previous_position * (1.0 - percent)) + (object->position * percent);
+        }
+
+        // Used to store combined polygon of a multi-shape body
+        QPolygonF object_poly;
 
         for (auto shape : object->shapes) {
 
@@ -203,6 +212,16 @@ void OpenGL::drawDebugCollisions(QPainter &painter) {
     for (auto object : m_engine->objects) {
         if (object->should_process == false) continue;
 
+        QPointF diff { 0, 0 };
+        if (object->body_type == Body_Type::Dynamic) {
+            QPointF center = object->position;
+            double percent = m_form_engine->getTimerMilliseconds(Engine_Timer::Update) / (1000.0 / m_engine->fps_physics);
+            center = (object->previous_position * (1.0 - percent)) + (object->position * percent);
+            diff = object->position - center;
+        } else {
+            continue;
+        }
+
         QVector<QPointF> point_list;    point_list.clear();
         cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(getContactPoints), &point_list);
 
@@ -211,7 +230,7 @@ void OpenGL::drawDebugCollisions(QPainter &painter) {
 
         for (int i = 0; i < point_list.size(); i++) {
             QPointF contact = point_list[i];
-            QPointF point = mapToScreen( contact.x(), contact.y(), 0.0 );
+            QPointF point = mapToScreen( contact.x() - diff.x(), contact.y() - diff.y(), 0.0 );
 
             double angle_in_radians = std::atan2(normal_list[i].y, normal_list[i].x);
             double angle_in_degrees = (angle_in_radians / M_PI) * 180.0;
