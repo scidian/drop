@@ -57,6 +57,7 @@ public:
     void                setSpeedX(float x) { m_speed.setX(x); }
     void                setSpeedY(float y) { m_speed.setY(y); }
     void                setSpeedZ(float z) { m_speed.setZ(z); }
+    void                setTarget(QVector3D target) { m_target = target; }
 
 };
 

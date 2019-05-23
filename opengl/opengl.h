@@ -88,9 +88,6 @@ public:
 public slots:
     void        cleanUp();
 
-signals:
-    void        updateInfo();
-
 };
 
 #endif // OPENGL_H

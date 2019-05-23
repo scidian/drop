@@ -209,7 +209,7 @@ private:
     cpSpace        *m_space;                        // Current physics space shown on screen
                                                     //
     const int       m_iterations = 10;              // Times physics are processed each update, 10 is default and should be good enough for most games
-    const double    m_time_step = 1 / 60.0;         // Speed at which want to try to update the Space, 1 / 60 = 60 times per second to up
+    const double    m_time_step = 1.0 / 60.0;       // Speed at which want to try to update the Space, 1 / 60 = 60 times per second to up
                                                     //      It is *highly* recommended to use a fixed size time step (calling Update at a fixed interval)
     cpFloat         m_time_warp = 1.0;              // Speeds up or slows down physics time, 1 = 100% = Normal Time, Lower than 1 = slower, Higher = faster
                                                     //
@@ -231,11 +231,11 @@ private:
 
     QColor          m_background_color {0,0,0};     // Background color to use to clear screen during render
     long            m_current_world;                // Key of current world shown from Project
-    double          m_game_direction = 0;           // Direction to load new levels, 0 = to the right, 90 = up, 180 = to the left, etc
+    double          m_game_direction = 0.0;         // Direction to load new levels, 0 = to the right, 90 = up, 180 = to the left, etc
     QPointF         m_game_start {0, 0};            // Origin point start stage loaded at
-    double          m_game_distance = 0;            // Keeps track of distance traveled linearly from the start
+    double          m_game_distance = 0.0;          // Keeps track of distance traveled linearly from the start
     double          m_load_buffer = 3000;           // Distance further from m_game_distance we should already have preloaded
-    double          m_loaded_to = 0;                // Last distance we loaded a new stage
+    double          m_loaded_to = 0.0;              // Last distance we loaded a new stage
 
 
 

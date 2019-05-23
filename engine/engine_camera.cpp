@@ -53,6 +53,7 @@ long DrEngine::addCamera(SceneObject* object_to_follow, float x, float y, float 
         object_to_follow->active_camera = m_camera_keys;
         camera->setPositionX( static_cast<float>(object_to_follow->position.x()) );
         camera->setPositionY( static_cast<float>(object_to_follow->position.y()) );
+        camera->setTarget( QVector3D(camera->getPosition().x(), camera->getPosition().y(), 0));
     }
     // Increment camera ID generator, return current camera ID
     m_camera_keys++;
@@ -127,25 +128,20 @@ DrEngineCamera::DrEngineCamera(float x, float y, float z) {
 //##    Moves camera based on current speed / settings
 //######################################################################################################
 void DrEngineCamera::moveCamera(const double& milliseconds) {
-    //float lerp = .01f * milliseconds;
-    //m_position.setX( drflerp( m_position.x(), m_target.x(), lerp) );
-    //m_position.setY( drflerp( m_position.y(), m_target.y(), lerp) );
-    //m_position.setZ( drflerp( m_position.z(), m_target.z(), lerp) );
-
     double lerp = 0.0115 * milliseconds;
     m_position.setX( static_cast<float>(drdlerp( static_cast<double>(m_position.x()), static_cast<double>(m_target.x()), lerp)) );
     m_position.setY( static_cast<float>(drdlerp( static_cast<double>(m_position.y()), static_cast<double>(m_target.y()), lerp)) );
     m_position.setZ( static_cast<float>(drdlerp( static_cast<double>(m_position.z()), static_cast<double>(m_target.z()), lerp)) );
+    ///m_position.setX( m_target.x() );
+    ///m_position.setY( m_target.y() );
 }
 
 //######################################################################################################
 //##    DrEngineCamera - Update Camera Position
 //######################################################################################################
 void DrEngineCamera::updateCamera() {
-
     // Movement is based on following an object
     if (m_follow != nullptr) {
-        ///m_engine->info = ", " + QString::number( pos.x - getCameraPos().x() );
 
         // Calculate the average object speed
         m_avg_speed_x.push_back( m_follow->position.x() - m_follow->last_position.x() );      m_avg_speed_x.pop_front();
@@ -160,19 +156,16 @@ void DrEngineCamera::updateCamera() {
         ///m_target.setX( m_target.x() + static_cast<float>(average_x) );
         ///m_target.setY( m_target.y() + static_cast<float>(average_y) );
         // Move based on Last Object Position + Average
-        ///m_target.setX( static_cast<float>(m_follow->last_position_x + average_x) );
-        ///m_target.setY( static_cast<float>(m_follow->last_position_y + average_y) );
+        ///m_target.setX( static_cast<float>(m_follow->last_position.x() + average_x) );
+        ///m_target.setY( static_cast<float>(m_follow->last_position.y() + average_y) );
 
-        double pos_x = ((m_follow->last_position.x() + average_x)*3 + (static_cast<double>(m_target.x()) + average_x) + (m_follow->position.x())) / 5.0;
-        double pos_y = ((m_follow->last_position.y() + average_y)*3 + (static_cast<double>(m_target.y()) + average_y) + (m_follow->position.y())) / 5.0;
-
+        double pos_x = ((m_follow->last_position.x() + average_x) + (static_cast<double>(m_target.x()) + average_x)*3 + (m_follow->position.x())) / 5.0;
+        double pos_y = ((m_follow->last_position.y() + average_y) + (static_cast<double>(m_target.y()) + average_y)*3 + (m_follow->position.y())) / 5.0;
         m_target.setX( static_cast<float>(pos_x) );
         m_target.setY( static_cast<float>(pos_y) );
 
-
-        ///m_engine->info = ", " + QString::number( average_x );
+        ///g_info = ", " + QString::number( average_x );
     }
-
 }
 
 

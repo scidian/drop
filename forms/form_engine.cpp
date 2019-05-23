@@ -111,7 +111,6 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
 
         m_opengl = new OpenGL(centralWidget, m_engine);
-        connect(m_opengl, SIGNAL(updateInfo()), this, SLOT(updateLabels()));
         layout->addWidget(m_opengl);
 
     this->setCentralWidget(centralWidget);
@@ -156,57 +155,65 @@ void FormEngine::loadDemo(Demo_Space using_space, Demo_Player using_player ) {
 //##    Update Engine /  Labels
 //######################################################################################################
 void FormEngine::startTimers() {
-    m_timer->start( 0 );                                        // Timeout of zero will call this timeout every pass of the event loop
     m_time_update = Clock::now();
     m_time_render = Clock::now();
     m_time_camera = Clock::now();
     m_engine->fps_timer.restart();
     m_engine->fps = 0;
+    m_timer->start( 1 );                                        // Timeout of zero will call this timeout every pass of the event loop
 }
 void FormEngine::stopTimers() {
      m_timer->stop();
 }
 
 void FormEngine::updateEngine() {
-    if (!m_engine->has_scene) return;
+    do {
+        qApp->processEvents();
+        if (!m_engine->has_scene) continue;
 
-    // ***** Seperate Camera Update
-    double camera_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_camera).count() / 1000000.0;
-    if (camera_milliseconds > 1) {
-        m_time_camera = Clock::now();
-        m_engine->moveCameras(camera_milliseconds);                                     // Move Cameras
-    }
+        // ***** Seperate Camera Update
+        double camera_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_camera).count() / 1000000.0;
+        if (camera_milliseconds > 1) {
+            m_time_camera = Clock::now();
+            m_engine->moveCameras(camera_milliseconds);                                     // Move Cameras
+            qApp->processEvents();
+        }
 
-    // ***** MAIN UPDATE LOOP: Space (Physics)
-    double update_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_update).count() / 1000000.0;
-    if (update_milliseconds > (m_engine->getTimeStep() * 1000.0)) {
-        m_time_update = Clock::now();                                                   // Update time counter immediately
-        m_engine->updateSpace(update_milliseconds);                                     // Physics Engine
-        m_engine->updateSpaceHelper();                                                  // Additional Physics Updating
-        m_engine->updateCameras();                                                      // Update Camera Targets
-    }
+        // ***** MAIN UPDATE LOOP: Space (Physics)
+        double update_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_update).count() / 1000000.0;
+        if (update_milliseconds > (m_engine->getTimeStep() * 1000.0)) {
+            m_time_update = Clock::now();                                                   // Update time counter immediately
+            m_engine->updateSpace(update_milliseconds);                                     // Physics Engine
+            m_engine->updateSpaceHelper();                                                  // Additional Physics Updating
+            m_engine->updateCameras();                                                      // Update Camera Targets
+            updateLabels();
+            qApp->processEvents();
+        }
 
-    // ***** Seperate Render Update
-    double render_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_render).count() / 1000000.0;
-    if (render_milliseconds > (1000.0 / m_ideal_frames_per_second)) {
-        m_time_render = Clock::now();                                                   // Update time counter immediately
-        m_opengl->update();                                                             // Render
-    }
+        // ***** Seperate Render Update
+        double render_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_render).count() / 1000000.0;
+        if (render_milliseconds > (1000.0 / m_ideal_frames_per_second)) {
+            m_time_render = Clock::now();                                                   // Update time counter immediately
+            m_opengl->update();                                                             // Render
+            qApp->processEvents();
+        }
+
+    } while (m_timer->isActive());
 }
 
 // Update helpful labels
 void FormEngine::updateLabels() {
-    label->setText( "Total Items: " + QString::number( m_engine->objects.count()));
+    label->setText( "# Items: " + QString::number( m_engine->objects.count()));
     label2->setText("FPS: " + QString::number(m_engine->last_fps) + " - Scale: " + QString::number(double(m_opengl->getScale())) );
 
-    int max_sample, max_text, max_number_textures, max_layers;
-    glGetIntegerv ( GL_MAX_SAMPLES, &max_sample );                                      // Finds max multi sampling available on system
-    glGetIntegerv ( GL_MAX_TEXTURE_SIZE, &max_text );                                   // Finds max texture size available on system
-    glGetIntegerv ( GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &max_number_textures );        // Finds max number of textures can bind at one time
-    glGetIntegerv ( GL_MAX_ARRAY_TEXTURE_LAYERS, &max_layers );
-    labelOpenGL->setText( "MAX Samples: " +  QString::number(max_sample) +
-                        ", Txt Size: " +   QString::number(max_text) +
-                        ", Txt Layers: " + QString::number(max_layers));
+//    int max_sample, max_text, max_number_textures, max_layers;
+//    glGetIntegerv ( GL_MAX_SAMPLES, &max_sample );                                      // Finds max multi sampling available on system
+//    glGetIntegerv ( GL_MAX_TEXTURE_SIZE, &max_text );                                   // Finds max texture size available on system
+//    glGetIntegerv ( GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &max_number_textures );        // Finds max number of textures can bind at one time
+//    glGetIntegerv ( GL_MAX_ARRAY_TEXTURE_LAYERS, &max_layers );
+//    labelOpenGL->setText( "MAX Samples: " +  QString::number(max_sample) +
+//                        ", Txt Size: " +   QString::number(max_text) +
+//                        ", Txt Layers: " + QString::number(max_layers));
 
     labelInfo->setText( g_info );
 }

@@ -67,12 +67,10 @@ void OpenGL::paintGL() {
     if (m_engine->debug_collisions) drawDebugCollisions(painter);
     painter.end();
 
-
-    // ***** Show frames per second
+    // ***** Update frames per second
     m_engine->fps++;
     if (m_engine->fps_timer.elapsed() > 1000) {
         m_engine->last_fps = m_engine->fps;
-        emit updateInfo();
         m_engine->fps = 0;
         m_engine->fps_timer.restart();
     }
@@ -194,14 +192,14 @@ void OpenGL::renderSceneObjects() {
             x = static_cast<float>(center.x()) * m_scale;
             y = static_cast<float>(center.y()) * m_scale;
             z = static_cast<float>(object->z_order) * m_scale;
-            half_width =  float(texture->width()) *  object->scale_x * m_scale / 2.0f;
-            half_height = float(texture->height()) * object->scale_y * m_scale / 2.0f;
+            half_width =  static_cast<float>(texture->width()) *  object->scale_x * m_scale / 2.0f;
+            half_height = static_cast<float>(texture->height()) * object->scale_y * m_scale / 2.0f;
         } else {
             x = static_cast<float>(center.x());
             y = static_cast<float>(center.y());
             z = static_cast<float>(object->z_order);
-            half_width =  float(texture->width()) *  object->scale_x / 2.0f + 1.0f;
-            half_height = float(texture->height()) * object->scale_y / 2.0f + 1.0f;
+            half_width =  static_cast<float>(texture->width()) *  object->scale_x / 2.0f + 1.0f;
+            half_height = static_cast<float>(texture->height()) * object->scale_y / 2.0f + 1.0f;
         }
 
 
@@ -214,7 +212,7 @@ void OpenGL::renderSceneObjects() {
         QVector3D bot_left =  matrix * QVector3D(-half_width, -half_height, 0);
 
         // ***** Load vertices for this object
-        QVector<float> vertices;
+        QVector<GLfloat> vertices;
         vertices.clear();
         vertices.resize( 12 );              // in sets of x, y, z
         // Top Right

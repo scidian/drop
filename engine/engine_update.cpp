@@ -21,12 +21,11 @@
 //##    Update Space steps the physics calculations
 //##        updateSpaceHelper meant to be called immediately afterwards
 //######################################################################################################
-void DrEngine::updateSpace(double time_passed) {
 
-    // ***** Updates physics, time_passed is in milliseconds
+// NOTE: time_passed is in milliseconds
+void DrEngine::updateSpace(double time_passed) {
     double step_time = time_passed / 1000.0 * m_time_warp;
     cpSpaceStep(m_space, step_time);
-
 }
 
 void DrEngine::updateSpaceHelper() {
