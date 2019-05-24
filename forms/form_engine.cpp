@@ -155,9 +155,10 @@ void FormEngine::loadDemo(Demo_Space using_space, Demo_Player using_player ) {
 //##    Update Engine
 //######################################################################################################
 void FormEngine::startTimers() {
-    m_time_update = Clock::now();
-    m_time_render = Clock::now();
-    m_time_camera = Clock::now();
+    m_time_update =  Clock::now();
+    m_time_render =  Clock::now();
+    m_time_camera =  Clock::now();
+    m_time_physics = Clock::now();
     m_timer->start( 1 );                                        // Timeout of zero will call this timeout every pass of the event loop
 }
 void FormEngine::stopTimers() {
@@ -168,6 +169,7 @@ double FormEngine::getTimerMilliseconds(Engine_Timer time_since_last) {
         case Engine_Timer::Update:  return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_update).count() / 1000000.0;
         case Engine_Timer::Render:  return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_render).count() / 1000000.0;
         case Engine_Timer::Camera:  return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_camera).count() / 1000000.0;
+        case Engine_Timer::Physics: return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_physics).count() / 1000000.0;
     }
 }
 
@@ -186,9 +188,12 @@ void FormEngine::updateEngine() {
         // ***** MAIN UPDATE LOOP: Space (Physics)
         double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
         if (update_milliseconds > (m_engine->getTimeStep() * 1000.0)) {
+            m_time_update =  Clock::now();
+
             m_engine->updateSpace(update_milliseconds);                                 // Physics Engine
-            m_time_update = Clock::now();
             m_engine->updateSpaceHelper();                                              // Additional Physics Updating
+            m_time_physics = Clock::now();                                              // Record time done with Step
+
             m_engine->updateCameras();                                                  // Update Camera Targets
         }
 

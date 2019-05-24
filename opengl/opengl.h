@@ -45,6 +45,8 @@ private:
     int     m_uniform_texture;
     int     m_uniform_alpha;
 
+    double  m_one_frame_time;
+    double  m_time_percent;
 
 public:
     // Constructor / Destructor

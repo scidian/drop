@@ -23,6 +23,8 @@
 //##        Render, Paint the Scene
 //####################################################################################
 void OpenGL::paintGL() {
+    Clock::time_point frame_time = Clock::now();
+
     // Find OpenGL Version supported on this system
     ///auto ver = glGetString(GL_VERSION);
     ///m_engine->info = QString::fromUtf8(reinterpret_cast<const char*>(ver));
@@ -59,6 +61,9 @@ void OpenGL::paintGL() {
     // ***** Update Camera / Matrices
     updateViewMatrix();
 
+    // Calculate time since last physics update as a percentage
+    m_time_percent = (m_form_engine->getTimerMilliseconds(Engine_Timer::Physics) + m_one_frame_time) / (1000.0 / m_engine->fps_physics);
+
     // ***** Render Scene
     renderSceneObjects();
 
@@ -80,6 +85,8 @@ void OpenGL::paintGL() {
         fps_count = 0;
         fps_time = Clock::now();
     }
+
+    m_one_frame_time = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - frame_time).count() / 1000000.0;
 }
 
 
@@ -192,8 +199,7 @@ void OpenGL::renderSceneObjects() {
         // ***** Get object position data
         QPointF center = object->position;
         if (object->body_type == Body_Type::Dynamic) {
-            double percent = m_form_engine->getTimerMilliseconds(Engine_Timer::Update) / (1000.0 / m_engine->fps_physics);
-            center = (object->previous_position * (1.0 - percent)) + (object->position * percent);
+            center = (object->previous_position * (1.0 - m_time_percent)) + (object->position * m_time_percent);
         }
 
         float x, y, z, half_width, half_height;

@@ -24,6 +24,7 @@ enum class Engine_Timer {
     Update,
     Render,
     Camera,
+    Physics,
 };
 
 // Forward declarations
@@ -50,6 +51,7 @@ private:
     Clock::time_point   m_time_update;
     Clock::time_point   m_time_render;
     Clock::time_point   m_time_camera;
+    Clock::time_point   m_time_physics;
 
     const double        m_ideal_frames_per_second = 120;
 

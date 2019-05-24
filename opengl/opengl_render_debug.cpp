@@ -64,8 +64,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         // Load Object Position
         QPointF center = object->position;
         if (object->body_type == Body_Type::Dynamic) {
-            double percent = m_form_engine->getTimerMilliseconds(Engine_Timer::Update) / (1000.0 / m_engine->fps_physics);
-            center = (object->previous_position * (1.0 - percent)) + (object->position * percent);
+            center = (object->previous_position * (1.0 - m_time_percent)) + (object->position * m_time_percent);
         }
 
         // Used to store combined polygon of a multi-shape body
@@ -214,10 +213,7 @@ void OpenGL::drawDebugCollisions(QPainter &painter) {
 
         QPointF diff { 0, 0 };
         if (object->body_type == Body_Type::Dynamic) {
-            QPointF center = object->position;
-            double percent = m_form_engine->getTimerMilliseconds(Engine_Timer::Update) / (1000.0 / m_engine->fps_physics);
-            center = (object->previous_position * (1.0 - percent)) + (object->position * percent);
-            diff = object->position - center;
+            diff = object->position - ((object->previous_position * (1.0 - m_time_percent)) + (object->position * m_time_percent));
         } else {
             continue;
         }
