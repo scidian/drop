@@ -62,10 +62,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         painter.setBrush( QBrush( brush_color));
 
         // Load Object Position
-        QPointF center = object->position;
-        if (object->body_type == Body_Type::Dynamic) {
-            center = (object->previous_position * (1.0 - m_time_percent)) + (object->position * m_time_percent);
-        }
+        QPointF center = (object->previous_position * (1.0 - m_time_percent)) + (object->position * m_time_percent);
 
         // Used to store combined polygon of a multi-shape body
         QPolygonF object_poly;
@@ -211,12 +208,7 @@ void OpenGL::drawDebugCollisions(QPainter &painter) {
     for (auto object : m_engine->objects) {
         if (object->should_process == false) continue;
 
-        QPointF diff { 0, 0 };
-        if (object->body_type == Body_Type::Dynamic) {
-            diff = object->position - ((object->previous_position * (1.0 - m_time_percent)) + (object->position * m_time_percent));
-        } else {
-            continue;
-        }
+        QPointF diff = object->position - ((object->previous_position * (1.0 - m_time_percent)) + (object->position * m_time_percent));
 
         QVector<QPointF> point_list;    point_list.clear();
         cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(getContactPoints), &point_list);

@@ -23,7 +23,9 @@
 //##        Render, Paint the Scene
 //####################################################################################
 void OpenGL::paintGL() {
-    Clock::time_point frame_time = Clock::now();
+
+    // Start timer that calculates how long one render takes to shown onto screen
+    m_time_frame = Clock::now();
 
     // Find OpenGL Version supported on this system
     ///auto ver = glGetString(GL_VERSION);
@@ -61,8 +63,8 @@ void OpenGL::paintGL() {
     // ***** Update Camera / Matrices
     updateViewMatrix();
 
-    // Calculate time since last physics update as a percentage
-    m_time_percent = (m_form_engine->getTimerMilliseconds(Engine_Timer::Physics) + m_one_frame_time) / (1000.0 / m_engine->fps_physics);
+    // ***** Calculate time since last physics update as a percentage (and add how long a render takes)
+    m_time_percent = (m_form_engine->getTimerMilliseconds(Engine_Timer::Physics) + m_time_one_frame_takes_to_render) / (1000.0 / m_engine->fps_physics);
 
     // ***** Render Scene
     renderSceneObjects();
@@ -76,17 +78,13 @@ void OpenGL::paintGL() {
     painter.end();
 
     // ********** Calculates Render Frames per Second
-    static Clock::time_point fps_time = Clock::now();
-    static int fps_count = 0;
-    ++fps_count;
-    double fps_milli = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - fps_time).count() / 1000000.0;
+    ++m_fps_count;
+    double fps_milli = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_fps).count() / 1000000.0;
     if (fps_milli > 1000.0) {
-        m_engine->fps_render = fps_count;
-        fps_count = 0;
-        fps_time = Clock::now();
+        m_engine->fps_render = m_fps_count;
+        m_fps_count = 0;
+        m_time_fps = Clock::now();
     }
-
-    m_one_frame_time = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - frame_time).count() / 1000000.0;
 }
 
 
@@ -197,10 +195,7 @@ void OpenGL::renderSceneObjects() {
         m_shader.enableAttributeArray( m_attribute_tex_coord );
 
         // ***** Get object position data
-        QPointF center = object->position;
-        if (object->body_type == Body_Type::Dynamic) {
-            center = (object->previous_position * (1.0 - m_time_percent)) + (object->position * m_time_percent);
-        }
+        QPointF center = (object->previous_position * (1.0 - m_time_percent)) + (object->position * m_time_percent);
 
         float x, y, z, half_width, half_height;
         if (m_engine->render_type == Render_Type::Orthographic) {

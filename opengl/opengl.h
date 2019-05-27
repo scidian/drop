@@ -15,9 +15,20 @@
 #include <QOpenGLWidget>
 #include <QMatrix4x4>
 
+#include <chrono>
+
+// Forward Declarations
 class DrEngine;
 class FormEngine;
 
+// Type definitions
+typedef std::chrono::high_resolution_clock Clock;
+
+
+//####################################################################################
+//##    OpenGL
+//##        A modern OpenGL Widget
+//############################
 class OpenGL : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
@@ -37,16 +48,20 @@ private:
     float           m_background_green = 0;
     float           m_background_blue = 0;
 
+    // Shader Variables
     QOpenGLShaderProgram    m_shader;
-
     int     m_attribute_vertex;
     int     m_attribute_tex_coord;
     int     m_uniform_matrix;
     int     m_uniform_texture;
     int     m_uniform_alpha;
 
-    double  m_one_frame_time;
-    double  m_time_percent;
+    // Timer Variables
+    Clock::time_point m_time_fps = Clock::now();
+    Clock::time_point m_time_frame = Clock::now();
+    double  m_time_one_frame_takes_to_render = 0.0;
+    double  m_time_percent = 1.0;
+    int     m_fps_count = 0;                                        // Counts renders to calculate frames per second
 
 public:
     // Constructor / Destructor
@@ -86,7 +101,11 @@ public:
     void            updateViewMatrix();
 
     // Getters and Setters
-    float           getScale()      { return m_scale; }
+    float               getScale()          { return m_scale; }
+    Clock::time_point&  getTimeFrameStart() { return m_time_frame; }
+    double              getTimePercent()    { return m_time_percent; }
+
+    void                setTimeOneFrameTakesToRender(double milliseconds)  { m_time_one_frame_takes_to_render = milliseconds; }
 
 
 public slots:

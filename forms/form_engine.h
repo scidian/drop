@@ -86,6 +86,8 @@ public:
 
 
 private slots:
+    void frameSwapped();
+
     void updateEngine();
     void updateLabels();
 

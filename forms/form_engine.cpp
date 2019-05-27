@@ -111,6 +111,8 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
 
         m_opengl = new OpenGL(centralWidget, this, m_engine);
+        connect(m_opengl, SIGNAL(frameSwapped()), this, SLOT(frameSwapped()));
+        ///connect(m_opengl, SIGNAL(frameSwapped()), m_opengl, SLOT(update()));             // Creates non-stop updates
         layout->addWidget(m_opengl);
 
     this->setCentralWidget(centralWidget);
@@ -189,7 +191,6 @@ void FormEngine::updateEngine() {
         double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
         if (update_milliseconds > (m_engine->getTimeStep() * 1000.0)) {
             m_time_update =  Clock::now();
-
             m_engine->updateSpace(update_milliseconds);                                 // Physics Engine
             m_engine->updateSpaceHelper();                                              // Additional Physics Updating
             m_time_physics = Clock::now();                                              // Record time done with Step
@@ -206,6 +207,12 @@ void FormEngine::updateEngine() {
         }
 
     } while (m_timer->isActive());
+}
+
+// Emitted by QOpenGLWidget when back buffer is swapped to screen
+void FormEngine::frameSwapped() {
+    // Updates timer that tracks how long a paintGL() call takes to shown onto screen from when first started
+    m_opengl->setTimeOneFrameTakesToRender( std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_opengl->getTimeFrameStart()).count() / 1000000.0 );
 }
 
 
