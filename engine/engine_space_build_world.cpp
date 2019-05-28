@@ -26,8 +26,8 @@
 //######################################################################################################
 static cpBool PreSolveDamageEnemy(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b);
-    SceneObject *object_a = static_cast<SceneObject*>(cpShapeGetUserData(a));
-    SceneObject *object_b = static_cast<SceneObject*>(cpShapeGetUserData(b));
+    DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
+    DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
 
     if (object_a->collision_type == Collision_Type::Damage_Enemy) {
         if (object_b->collision_type == Collision_Type::Damage_Player || object_b->collision_type == Collision_Type::Damage_Player_One_Way) {
@@ -50,14 +50,14 @@ static cpBool PreSolveDamageEnemy(cpArbiter *arb, cpSpace *, void *) {
 
 static cpBool PreSolveOneWay(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b);
-    SceneObject *object = static_cast<SceneObject*>(cpShapeGetUserData(a));
+    DrEngineObject *object = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
 
     if (cpvdot(cpArbiterGetNormal(arb), object->one_way_direction) < 0.0)
         return cpArbiterIgnore(arb);
     return cpTrue;
 }
 
-void DrEngine::oneWayPlatform(SceneObject *object, cpVect direction) {
+void DrEngine::oneWayPlatform(DrEngineObject *object, cpVect direction) {
     object->one_way = true;
     object->one_way_direction = direction;              // Let objects pass if going Direction
 
@@ -130,8 +130,8 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         m_bounce = 0.5;
 
         // Static line segment shapes for the ground
-        SceneObject *line1 = this->addLine(Body_Type::Static, QPointF(-1000, -200), QPointF(1000, -200), c_friction, c_bounce, 1);
-        SceneObject *line2 = this->addLine(Body_Type::Static, QPointF(  500, -100), QPointF( 700, -100), c_friction, c_bounce, 1);
+        DrEngineObject *line1 = this->addLine(Body_Type::Static, QPointF(-1000, -200), QPointF(1000, -200), c_friction, c_bounce, 1);
+        DrEngineObject *line2 = this->addLine(Body_Type::Static, QPointF(  500, -100), QPointF( 700, -100), c_friction, c_bounce, 1);
         this->addLine(Body_Type::Static, QPointF(  100,    0), QPointF( 300,    0), c_friction, c_bounce, 1);
         this->addLine(Body_Type::Static, QPointF( -300,  150), QPointF(-100,  150), c_friction, c_bounce, 1);
 
@@ -145,13 +145,13 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         m_bounce = 0.5;
 
         // Test one way block
-        SceneObject *block =  this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -300, 120, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
+        DrEngineObject *block =  this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -300, 120, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
         oneWayPlatform(block, cpv(0, 1));
         block->collision_type = Collision_Type::Damage_Player;
         block->health = 1;
 
         // Test rotate block
-        SceneObject *block2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -150, 120, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
+        DrEngineObject *block2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -150, 120, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
         block2->rotate_speed = 2;
 
         // Static line segment shapes for the ground
@@ -189,10 +189,10 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000,  40, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
         this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
 
-        SceneObject *belt =  this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -500, 120, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
-        SceneObject *belt2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -560, 120, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
-        SceneObject *belt3 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -620, 120, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
-        SceneObject *belt4 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -680, 120, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
+        DrEngineObject *belt =  this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -500, 120, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
+        DrEngineObject *belt2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -560, 120, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
+        DrEngineObject *belt3 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -620, 120, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
+        DrEngineObject *belt4 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -680, 120, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
 
         cpShapeSetSurfaceVelocity( belt->shapes.first(),  cpv(1000, 0) );
         cpShapeSetSurfaceVelocity( belt2->shapes.first(), cpv(1000, 0) );

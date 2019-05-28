@@ -42,7 +42,7 @@ static inline void smoothMove(QVector3D& start, const QVector3D &target, const f
 //##    DrEngine - Camera Functions
 //######################################################################################################
 // Default parameters: nullptr, 0, 0, 800
-long DrEngine::addCamera(SceneObject* object_to_follow, float x, float y, float z) {
+long DrEngine::addCamera(DrEngineObject* object_to_follow, float x, float y, float z) {
     DrEngineCamera *camera = new DrEngineCamera(this, x, y, z);
     m_cameras[m_camera_keys] = camera;
 

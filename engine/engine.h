@@ -124,7 +124,7 @@ private:
 
 
 public:
-    QVector<SceneObject*>   objects;
+    QVector<DrEngineObject*>    objects;
 
     bool            has_scene = false;
     Render_Type     render_type = Render_Type::Orthographic;          // Should render perspective or orthographic?
@@ -142,35 +142,35 @@ public:
 
     Demo_Space      demo_space =  Demo_Space::Project;
     Demo_Player     demo_player = Demo_Player::Car;
-    SceneObject    *demo_jumper_1;
-    SceneObject    *demo_jumper_2;
+    DrEngineObject *demo_jumper_1;
+    DrEngineObject *demo_jumper_2;
 
 
 
 public:
     DrEngine(FormEngine *form_engine, DrProject *project);
 
-    SceneObject*    addLine(  Body_Type body_type,  QPointF p1, QPointF p2, double friction, double bounce, double mass);
+    DrEngineObject* addLine(  Body_Type body_type,  QPointF p1, QPointF p2, double friction, double bounce, double mass);
 
-    SceneObject*    addCircle(Body_Type body_type,  long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
+    DrEngineObject* addCircle(Body_Type body_type,  long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
                               double shape_radius, QPointF shape_offset, double friction, double bounce, QPointF velocity,
                               bool should_collide = true, bool can_rotate = true);
 
-    SceneObject*    addBlock( Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
+    DrEngineObject* addBlock( Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
                               double friction, double bounce, QPointF velocity,
                               bool should_collide = true, bool can_rotate = true);
 
-    SceneObject*    addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
+    DrEngineObject* addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
                                QVector<QPointF> points, double friction, double bounce, QPointF velocity,
                                bool should_collide = true, bool can_rotate = true);
 
     void        addPlayer(Demo_Player new_player_type);
-    void        assignPlayerControls(SceneObject *object, bool has_controls_now, bool add_camera, bool set_active_camera);
+    void        assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera);
     void        buildSpace(Demo_Space new_space_type);
     void        clearSpace();
     void        loadStageToSpace(DrStage *stage, double offset_x, double offset_y);
-    void        oneWayPlatform(SceneObject *object, cpVect direction);
-    void        removeObject(SceneObject *object);
+    void        oneWayPlatform(DrEngineObject *object, cpVect direction);
+    void        removeObject(DrEngineObject *object);
     void        updateSpace(double time_passed);
     void        updateSpaceHelper();
 
@@ -178,7 +178,7 @@ public:
 
 
     // Cameras
-    long                addCamera(SceneObject* object_to_follow = nullptr, float x = 0, float y = 0, float z = 800);
+    long                addCamera(DrEngineObject* object_to_follow = nullptr, float x = 0, float y = 0, float z = 800);
     void                clearCameras();
     const long&         getActiveCamera()       { return m_active_camera; }
     void                setActiveCamera(long new_camera) { m_active_camera = new_camera; }

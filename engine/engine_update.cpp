@@ -47,7 +47,7 @@ void DrEngine::updateSpaceHelper() {
 
     // ********** Iterate through objects, delete if they go off screen
     for ( auto it = objects.begin(); it != objects.end(); ) {
-        SceneObject *object = *it;
+        DrEngineObject *object = *it;
         object->has_been_processed = true;
 
         // ***** Skip object if static; or if not yet in Space / no longer in Space
@@ -56,7 +56,7 @@ void DrEngine::updateSpaceHelper() {
             continue;
         }
 
-        // ***** Get some info about the current object from the space and save it to the current SceneObject
+        // ***** Get some info about the current object from the space and save it to the current DrEngineObject
         cpVect  vel = cpBodyGetVelocity( object->body );
         cpFloat angle = cpBodyGetAngle( object->body );
         object->velocity.setX( vel.x );

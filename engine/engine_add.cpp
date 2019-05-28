@@ -19,8 +19,8 @@ constexpr double c_mass_multiplier = 0.002;         // Shapes Area times this mu
 //######################################################################################################
 //##    Add Line
 //######################################################################################################
-SceneObject* DrEngine::addLine(Body_Type body_type, QPointF p1, QPointF p2, double friction, double bounce, double mass) {
-    SceneObject *line = new SceneObject();
+DrEngineObject* DrEngine::addLine(Body_Type body_type, QPointF p1, QPointF p2, double friction, double bounce, double mass) {
+    DrEngineObject *line = new DrEngineObject();
 
     // Check for default (-1) or custom friction / bounce settings
     line->custom_friction = friction;
@@ -40,7 +40,7 @@ SceneObject* DrEngine::addLine(Body_Type body_type, QPointF p1, QPointF p2, doub
         case Body_Type::Kinematic:   line->body = cpBodyNewKinematic();          break;
     }
     cpSpaceAddBody(m_space, line->body);
-    cpBodySetUserData(line->body, line);                        // Set chipmunk User Data, store SceneObject for later
+    cpBodySetUserData(line->body, line);                        // Set chipmunk User Data, store DrEngineObject for later
 
     if (body_type != Body_Type::Static) {
         QPointF center = QRectF( p1, p2 ).center();
@@ -53,7 +53,7 @@ SceneObject* DrEngine::addLine(Body_Type body_type, QPointF p1, QPointF p2, doub
     cpShapeSetFriction( shape, friction );
     cpShapeSetElasticity( shape, bounce );                      // Ideally between 0 and .99999
     cpSpaceAddShape( m_space, shape );
-    cpShapeSetUserData( shape, line );                          // Set UserData to SceneObject pointer
+    cpShapeSetUserData( shape, line );                          // Set UserData to DrEngineObject pointer
 
     line->shapes.push_back( shape );
     line->shape_type[shape] = Shape_Type::Segment;
@@ -83,9 +83,9 @@ QVector<QPointF> createEllipseFromCircle(const QPointF &center, const double &ra
 //##    Add Circle
 //##        Pass -1 for friction and/or bounce to use default world friction and bounce settings
 //######################################################################################################
-SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
-                                 double shape_radius, QPointF shape_offset, double friction, double bounce, QPointF velocity,
-                                 bool should_collide, bool can_rotate) {
+DrEngineObject* DrEngine::addCircle(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
+                                    double shape_radius, QPointF shape_offset, double friction, double bounce, QPointF velocity,
+                                    bool should_collide, bool can_rotate) {
     // Check if not square scale, if so call addPolygon with a polygon ellipse instead
     if (qFuzzyCompare(scale.x(), scale.y()) == false) {
         QVector<QPointF> ellipse = createEllipseFromCircle(shape_offset, shape_radius);
@@ -93,7 +93,7 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
     }
 
     // Otherwise continue with circle
-    SceneObject *ball = new SceneObject();
+    DrEngineObject *ball = new DrEngineObject();
 
     // Check for default (-1) or custom friction / bounce settings
     ball->custom_friction = friction;
@@ -121,7 +121,7 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
         case Body_Type::Kinematic:  ball->body = cpBodyNewKinematic();              break;
     }
     cpSpaceAddBody(m_space, ball->body);
-    cpBodySetUserData(ball->body, ball);                                        // Set chipmunk User Data, store SceneObject for later
+    cpBodySetUserData(ball->body, ball);                                        // Set chipmunk User Data, store DrEngineObject for later
 
     cpBodySetPosition( ball->body, cpv( x, y));                                 // Coordinate is center of object
     cpBodySetAngle(    ball->body, qDegreesToRadians(-angle) );
@@ -136,7 +136,7 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
     cpShapeSetFriction( shape, friction  );
     cpShapeSetElasticity( shape, bounce );
     cpSpaceAddShape( m_space, shape );
-    cpShapeSetUserData( shape, ball );                                          // Set UserData to SceneObject pointer
+    cpShapeSetUserData( shape, ball );                                          // Set UserData to DrEngineObject pointer
 
     // Add shape to the list of shapes for this body
     ball->shapes.push_back( shape );
@@ -162,9 +162,9 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
 //##    Add Block - This is a !!!!! #TEMP: call, better to just use addPolygon with 4 points passed in
 //##        Pass -1 for friction and/or bounce to use default world friction and bounce settings
 //######################################################################################################
-SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
-                                double friction, double bounce, QPointF velocity, bool should_collide, bool can_rotate) {
-    SceneObject *block = new SceneObject();
+DrEngineObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
+                                   double friction, double bounce, QPointF velocity, bool should_collide, bool can_rotate) {
+    DrEngineObject *block = new DrEngineObject();
 
     // Check for default (-1) or custom friction / bounce settings
     block->custom_friction = friction;
@@ -193,7 +193,7 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
         case Body_Type::Kinematic:  block->body = cpBodyNewKinematic();             break;
     }
     cpSpaceAddBody(m_space, block->body);
-    cpBodySetUserData(block->body, block);                                  // Set chipmunk User Data, store SceneObject for later
+    cpBodySetUserData(block->body, block);                                  // Set chipmunk User Data, store DrEngineObject for later
 
     cpBodySetPosition( block->body, cpv( x, y));                            // Coordinate is center of object
     cpBodySetAngle(    block->body, qDegreesToRadians(-angle) );
@@ -208,7 +208,7 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
     cpShapeSetFriction( shape, friction );
     cpShapeSetElasticity( shape, bounce );
     cpSpaceAddShape( m_space, shape );
-    cpShapeSetUserData( shape, block );                                     // Set UserData to SceneObject pointer
+    cpShapeSetUserData( shape, block );                                     // Set UserData to DrEngineObject pointer
 
     // Add shape to the list of shapes for this body
     block->shapes.push_back( shape );
@@ -237,10 +237,10 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
 //##        ***** NOTE: Vertices must be in COUNTER-CLOCKWISE ordering
 //##              ALSO: Pass -1 for friction and/or bounce to use default world friction and bounce settings
 //######################################################################################################
-SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
-                                  QVector<QPointF> points, double friction, double bounce, QPointF velocity,
-                                  bool should_collide, bool can_rotate) {
-    SceneObject *polygon = new SceneObject();
+DrEngineObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
+                                     QVector<QPointF> points, double friction, double bounce, QPointF velocity,
+                                     bool should_collide, bool can_rotate) {
+    DrEngineObject *polygon = new DrEngineObject();
 
     // Check for default (-1) or custom friction / bounce settings
     polygon->custom_friction = friction;
@@ -275,7 +275,7 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
         case Body_Type::Kinematic:  polygon->body = cpBodyNewKinematic();           break;
     }
     cpSpaceAddBody(m_space, polygon->body);
-    cpBodySetUserData(polygon->body, polygon);                              // Set chipmunk User Data, store SceneObject for later
+    cpBodySetUserData(polygon->body, polygon);                              // Set chipmunk User Data, store DrEngineObject for later
 
     cpBodySetPosition( polygon->body, cpv( x, y));                          // Coordinate is center of object
     cpBodySetAngle(    polygon->body, qDegreesToRadians(-angle) );
@@ -311,7 +311,7 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
         cpShapeSetFriction( shape, friction );
         cpShapeSetElasticity( shape, bounce );
         cpSpaceAddShape( m_space, shape );
-        cpShapeSetUserData( shape, polygon );                                     // Set UserData to SceneObject pointer
+        cpShapeSetUserData( shape, polygon );                                     // Set UserData to DrEngineObject pointer
 
         // Add shape to the list of shapes for this body
         polygon->shapes.push_back( shape );
@@ -341,7 +341,7 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
             cpShapeSetFriction( shape, friction );
             cpShapeSetElasticity( shape, bounce );
             cpSpaceAddShape(m_space, shape);
-            cpShapeSetUserData( shape, polygon );                                     // Set UserData to SceneObject pointer
+            cpShapeSetUserData( shape, polygon );                                     // Set UserData to DrEngineObject pointer
 
             // Add shape to the list of shapes for this body
             polygon->shapes.push_back( shape );

@@ -55,7 +55,7 @@ static void selectPlayerGroundNormal(cpBody *, cpArbiter *arb, Ground_Data *grou
 // NOTE: The order of the ground check, jump operations is important
 extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt) {
     // Grab object from User Data
-    SceneObject *object = static_cast<SceneObject*>(cpBodyGetUserData(body));
+    DrEngineObject *object = static_cast<DrEngineObject*>(cpBodyGetUserData(body));
 
     // ***** Get Keys - If player is still active get keyboard status
     int key_y = 0,      key_x = 0,      key_jump = 0;

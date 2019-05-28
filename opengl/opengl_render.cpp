@@ -67,7 +67,7 @@ void OpenGL::paintGL() {
     m_time_percent = (m_form_engine->getTimerMilliseconds(Engine_Timer::Physics) + m_time_one_frame_takes_to_render) / (1000.0 / m_engine->fps_physics);
 
     // ***** Render Scene
-    renderSceneObjects();
+    drawObjects();
 
 
     // ********** Draws debug shapes onto screen
@@ -141,7 +141,7 @@ void OpenGL::cullingOn() {      glEnable( GL_CULL_FACE );   glCullFace(  GL_BACK
 void OpenGL::cullingOff() {     glDisable( GL_CULL_FACE ); }
 
 // Renders All Scene Objects
-void OpenGL::renderSceneObjects() {
+void OpenGL::drawObjects() {
 
     // ***** Enable shader program
     if (!m_shader.bind()) return;
@@ -173,7 +173,7 @@ void OpenGL::renderSceneObjects() {
     // ***** Render 2D Objects
     ///for (auto object : m_engine->objects) {
     for (ulong i = 0; i < static_cast<ulong>(v.size()); i++) {
-        SceneObject *object = m_engine->objects[ v[i].first ];
+        DrEngineObject *object = m_engine->objects[ v[i].first ];
         if (!object->has_been_processed) continue;
 
         // ***** Render with texture

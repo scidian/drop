@@ -97,7 +97,7 @@ public:
     void            drawCube(QVector3D center);
     void            drawDebugShapes(QPainter &painter);
     void            drawDebugCollisions(QPainter &painter);
-    void            renderSceneObjects();
+    void            drawObjects();
     void            updateViewMatrix();
 
     // Getters and Setters

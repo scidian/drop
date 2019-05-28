@@ -14,11 +14,14 @@ void DrEngine::loadStageToSpace(DrStage *stage, double offset_x, double offset_y
     // Load objects
     for (auto object_pair : stage->getObjectMap()) {
 
+        // Grab current object
         DrObject *object = object_pair.second;
 
+        // Check if Object type
         if (object->getType() != DrType::Object) continue;
         if (object->getObjectType() != DrObjectType::Object) continue;
 
+        // ***** Load Object properties
         QPointF     position =      object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF();
         QPointF     scale =         object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale).toPointF();
         double      angle =         object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Rotation).toDouble();
@@ -27,12 +30,13 @@ void DrEngine::loadStageToSpace(DrStage *stage, double offset_x, double offset_y
         bool        collide =       object->getComponentPropertyValue(Components::Object_Settings,  Properties::Object_Collide).toBool();
         bool        physics =       object->getComponentPropertyValue(Components::Object_Settings,  Properties::Object_Physics).toBool();
         Body_Type   body =          physics? Body_Type::Dynamic : Body_Type::Kinematic;
+        long        asset_key =     object->getAssetKey();
 
-        long        asset_key = object->getAssetKey();
+        // ***** Add the block to the cpSpace
+        DrEngineObject *block =     addBlock(body, asset_key, position.x() + offset_x, -position.y() + offset_y, z_order,
+                                             angle, scale, alpha, c_friction, c_bounce, QPointF(0, 0), collide);
 
-        SceneObject *block = addBlock(body, asset_key, position.x() + offset_x, -position.y() + offset_y, z_order,
-                                      angle, scale, alpha, c_friction, c_bounce, QPointF(0, 0), collide);
-
+        // ***** Set collision type
         Collision_Type collision_type = Collision_Type::Damage_None;
         long           damage_type = object->getComponentPropertyValue(Components::Object_Settings, Properties::Object_Damage).toInt();
         switch (damage_type) {
@@ -41,7 +45,6 @@ void DrEngine::loadStageToSpace(DrStage *stage, double offset_x, double offset_y
             case 2: collision_type = Collision_Type::Damage_Enemy;  break;
             case 3: collision_type = Collision_Type::Damage_All;    break;
         }
-
         block->collision_type = collision_type;
         for (auto shape : block->shapes)
             cpShapeSetCollisionType(shape, static_cast<cpCollisionType>(collision_type));

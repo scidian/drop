@@ -12,8 +12,8 @@
 #include <QVector3D>
 
 // Forward Declarations
-class DrEngine;
-struct SceneObject;
+class  DrEngine;
+struct DrEngineObject;
 
 //####################################################################################
 //##    DrEngineCamera
@@ -29,7 +29,7 @@ private:
 
     QVector3D       m_target;                                   // Calculated point this camera is moving towards
 
-    SceneObject    *m_follow = nullptr;                         // Object this camera should follow
+    DrEngineObject *m_follow = nullptr;                         // Object this camera should follow
     QVector<double> m_avg_speed_x;                              // Average x speed of object this camera is following
     QVector<double> m_avg_speed_y;
 
@@ -40,13 +40,13 @@ public:
     DrEngineCamera(DrEngine *engine, float x = 0, float y = 0, float z = 0);
 
     // Function Calls
-    void        followObject(SceneObject *object) { m_follow = object; }
+    void        followObject(DrEngineObject *object) { m_follow = object; }
     void        moveCamera(const double& milliseconds);
     void        updateCamera();
 
     // Getters / Setters
     DrEngine*           getEngine() { return m_engine; }
-    SceneObject*        getObjectFollowing() { return m_follow; }
+    DrEngineObject*     getObjectFollowing() { return m_follow; }
     const QVector3D&    getPosition()   { return m_position; }
     const QVector3D&    getSpeed()      { return m_speed; }
     void                setPosition(QVector3D new_position) {       m_position = new_position; }

@@ -68,10 +68,10 @@ extern QString      g_info;
 
 
 //####################################################################################
-//##    SceneObject
+//##    DrEngineObject
 //##        Holds on object for use in a cpSpace
 //############################
-struct SceneObject {
+struct DrEngineObject {
     // ***** Object Info
     cpBody             *body;                   // Physical Body of object
     Body_Type           body_type;              // Body_Type
