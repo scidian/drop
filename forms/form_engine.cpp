@@ -28,17 +28,18 @@
 //######################################################################################################
 FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent), m_project(project) {
 
-    // Make sure this form is deleted when it closes
-    this->setAttribute(Qt::WA_DeleteOnClose, true);
-
-    // Set up initial window
+    // ***** Set up initial window
+    this->setAttribute( Qt::WA_DeleteOnClose, true );               // Make sure this form is deleted when it closes
+    this->setAttribute( Qt::WA_QuitOnClose, false );                // We don't want Drop to stay open when FormMain is closed and this is still open
     this->setObjectName("Drop Player");
     this->resize(1200, 900);
     Dr::ApplyCustomStyleSheetFormatting(this);
     Dr::CenterFormOnScreen(parent, this);
 
+    // ***** Create an instance of the game engine
     m_engine = new DrEngine(this, project);
 
+    // ***** Build this form
     centralWidget = new QWidget(this);
     centralWidget->setObjectName("centralWidget");
         QVBoxLayout *layout = new QVBoxLayout(centralWidget);
