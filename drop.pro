@@ -198,6 +198,7 @@ HEADERS += \
     editor/editor_view.h \
     engine/engine.h \
     engine/engine_camera.h \
+    engine/engine_object.h \
     engine/engine_texture.h \
     enums.h \
     forms/form_atlas.h \

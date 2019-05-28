@@ -22,24 +22,44 @@
 //##                                                                                ##
 //####################################################################################
 //
+//  Code Flags
+//      !!!!!  NOTE:                Important reminder
+//      !!!!! #DEBUG:               Code used for debugging only
+//      !!!!! #TEMP:                Needs to be fixed at some point
+//
+//
+//  Main Components
+//  ---------------
 //  FormMain                        (4) Modes: World Map: World / UI Layout
 //                                             World Editor
 //                                             UI Editor
 //                                             Stage Map: Stage Layout??
-//      Atlas Viewer                View / Edit Project Atlases
-//      Font Builder                Create / View Fonts for Use in Project
-//      Settings Manager            View / edit project settings
+//      FormAtlas                   View / Edit Project Atlases
+//      FormCollision               Edit Collision Shape
+//      FormFonts                   Create / View Fonts for Use in Project
+//      FormObjectEditor            Edit object's ObjectMaps
+//      FormSettings                View / edit project settings
 //
-//      Collision Shape Editor      Edit Collision Shape
-//      Object Editor               Edit object's ObjectMaps
-//  FormStartup                     Pick Recent Project, News, Create New Project / Select Template
-//  FormColorPicker                 Implement our own color picker, Color Grabber, Palette Tab
+//  FormEngine                      Runs the game engine
+//
+//
+//  Helper Components
+//  -----------------
+//      FormColorMagnifier          Custom color picking maginfier
+//      FormPopup                   Can handle misc popup windows / alerts
+//      FormPopupColors             Custom color popup, palette tab and color history
+//
+//
+//
+//
 //
 //  Future:
-//      Image Editor                Draw shapes, objects for use in Assets, vectors, custom format, export
-//      Particle Editor             Make custom particles
-//      Sound Editor
-//      Animation Editor
+//      FormStartup                 Pick Recent Project, News, Create New Project / Select Template
+//      FormImageEditor             Draw shapes, objects for use in Assets, vectors, custom format, export
+//      FormParticleEditor          Make custom particles
+//      FormSoundEditor
+//      FormAnimationEditor
+//
 //
 #include <QApplication>
 #include <QMetaType>
@@ -89,6 +109,16 @@ int main(int argc, char *argv[]) {
     ///Dr::ShowMessageBox("Finished running program");
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

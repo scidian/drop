@@ -152,7 +152,7 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         //ball->move_speed_y = 400;
 
 
-        // TEMP demo variables
+        // !!!!! #TEMP: demo variables
         demo_jumper_1 = ball;
         demo_jumper_2 = ball2;
     }

@@ -95,7 +95,7 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
     if (changed_from != Editor_Widgets::Project_Tree)       treeProjectEditor->updateItemNames(changed_items, property_keys_as_long);
     if (changed_from != Editor_Widgets::Asset_Tree)         treeAssetEditor->updateAssetList(changed_items, property_keys_as_long);
 
-    // !!!!! TEMP: Testing to make sure not running non stop
+    // !!!!! #TEMP: Testing to make sure not running non stop
     Dr::SetLabelText(Label_Names::Label_Bottom, "Update Editor Widgets: " + Dr::CurrentTimeAsString() + ", Mode: " + viewEditor->currentViewModeAsString());
 }
 
@@ -112,7 +112,7 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from) {
     this->updateToolbar();
 
 
-    // !!!!! TEMP: Testing to make sure not running non stop
+    // !!!!! #TEMP: Testing to make sure not running non stop
     Dr::SetLabelText(Label_Names::Label_Bottom, "Update Selection: " + Dr::CurrentTimeAsString());
 }
 

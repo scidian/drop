@@ -151,7 +151,7 @@ void DrView::updateSelectionBoundingBox(int called_from) {
     if (my_scene->getSelectionCount() < 1) return;
     if (my_scene->scene_mutex.tryLock(0) == false) return;
 
-    // !!!!! DEBUG: Shows where the call to the UpdateSelectionBoxData function originated from
+    // !!!!! #DEBUG: Shows where the call to the UpdateSelectionBoxData function originated from
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Where_Update_Box_From)) {
         Dr::SetLabelText(Label_Names::Label_2, "SB From: " + QString::number(called_from) + ", " + Dr::CurrentTimeAsString() );
     }
@@ -182,7 +182,7 @@ void DrView::updateSelectionBoundingBox(int called_from) {
     m_selection_points[Position_Flags::Left] =         transform.map(QPointF( rect.left(),  rect.center().y()  ));
     m_selection_points[Position_Flags::Right] =        transform.map(QPointF( rect.right(), rect.center().y()  ));
 
-    // Temp variables
+    // Starting positions
     QPointF top_left =  m_selection_points[Position_Flags::Top_Left];
     QPointF top_right = m_selection_points[Position_Flags::Top_Right];
     QPointF bot_left =  m_selection_points[Position_Flags::Bottom_Left];

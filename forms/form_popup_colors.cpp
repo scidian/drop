@@ -28,7 +28,7 @@ void FormPopupColor::buildPopupColors(QWidget *wants_color, QColor start_color) 
     // ***** Initialize form variables and settings
     m_wants_return_variable = wants_color;
     m_start_color = start_color;
-    m_current_palette = Color_Palettes::Material;            // TEMP !!!!!
+    m_current_palette = Color_Palettes::Material;            // !!!!! #TEMP:
 
     this->setFixedSize(210, 310);    
 

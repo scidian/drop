@@ -150,7 +150,7 @@ QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_imag
         Dr::ShowMessageBox("Image only has 256 colors!");
     }
 
-    // !!!!! DEBUG: Timer that shows how long it took to apply filter
+    // !!!!! #DEBUG: Timer that shows how long it took to apply filter
     //if (filter == Image_Filter_Type::Hue)
     //    Dr::SetLabelText(Label_Names::Label_2, "   Hue  Time: " + QString::number(time_it.elapsed()) );
     //else

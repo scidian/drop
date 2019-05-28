@@ -64,7 +64,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
     QGraphicsItem *check_item = itemAt(m_last_mouse_pos);
 
 
-    // !!!!! DEBUG: Shows red, green, blue and alpha of pixel under mouse
+    // !!!!! #DEBUG: Shows red, green, blue and alpha of pixel under mouse
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Top_Item_RGBA)) {
         QColor pixel_color = dynamic_cast<DrItem*>(check_item)->getColorAtPoint(m_last_mouse_pos, this);
         Dr::SetLabelText(Label_Names::Label_1, "R: " + QString::number(pixel_color.red()) +

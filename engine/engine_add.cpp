@@ -159,7 +159,7 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
 
 
 //######################################################################################################
-//##    Add Block - This is a TEMP call, better to just use addPolygon with 4 points passed in
+//##    Add Block - This is a !!!!! #TEMP: call, better to just use addPolygon with 4 points passed in
 //##        Pass -1 for friction and/or bounce to use default world friction and bounce settings
 //######################################################################################################
 SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
