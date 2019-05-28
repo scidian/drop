@@ -73,8 +73,13 @@ void OpenGL::paintGL() {
     // ********** Draws debug shapes onto screen
     QPainter painter( this );
     painter.setRenderHint(QPainter::Antialiasing, true);
-    if (m_engine->debug_shapes)     drawDebugShapes(painter);
-    if (m_engine->debug_collisions) drawDebugCollisions(painter);
+    if (m_engine->debug_shapes) {
+        drawDebugShapes(painter);
+        drawDebugJoints(painter);
+    }
+    if (m_engine->debug_collisions) {
+        drawDebugCollisions(painter);
+    }
     painter.end();
 
     // ********** Calculates Render Frames per Second
@@ -174,7 +179,7 @@ void OpenGL::drawObjects() {
     ///for (auto object : m_engine->objects) {
     for (ulong i = 0; i < static_cast<ulong>(v.size()); i++) {
         DrEngineObject *object = m_engine->objects[ v[i].first ];
-        if (!object->has_been_processed) continue;
+        if (!object->has_been_processed) continue;                          // Don't draw Segments (lines)
 
         // ***** Render with texture
         DrEngineTexture *texture = m_engine->getTexture(object->texture_number);

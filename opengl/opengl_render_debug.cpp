@@ -21,15 +21,17 @@
 //##        Grabs data from Space
 //####################################################################################
 // Used for Arbiter iterator to get a list of all arbiters (collision points) attached to a body
-static void getContactPoints(cpBody *, cpArbiter *arb, QVector<QPointF> *point_list) {
+static void getBodyContactPoints(cpBody *, cpArbiter *arb, QVector<QPointF> *point_list) {
     cpContactPointSet contact = cpArbiterGetContactPointSet( arb );
     point_list->append( QPointF( contact.points->pointA.x, contact.points->pointA.y ) );
 }
 // Used for Arbiter iterator to get a list of Normals (angles) of all arbiters (collision points) attached to a body
-static void getContactNormals(cpBody *, cpArbiter *arb, QVector<cpVect> *normal_list) {
+static void getBodyContactNormals(cpBody *, cpArbiter *arb, QVector<cpVect> *normal_list) {
     cpVect normal = cpArbiterGetNormal( arb );
     normal_list->append( normal );
 }
+// Used for constraint iterator to get a list of all Constraints (joints) in cpSpace
+static void getSpaceJointList(cpConstraint *constraint, QVector<cpConstraint*> *joint_list) { joint_list->append(constraint); }
 
 
 //####################################################################################
@@ -45,15 +47,33 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         if (!object->should_process)        continue;
         if (!object->has_been_processed)    continue;
 
+        // Figure out what color to make the debug shapes
         QColor color;
-        switch (object->body_type) {
-            case Body_Type::Dynamic:        color = Qt::red;       break;
-            case Body_Type::Static:         color = Qt::blue;      break;
-            case Body_Type::Kinematic:      color = Qt::green;     break;
+        switch (object->collision_type) {
+            case Collision_Type::Damage_None:
+            case Collision_Type::Damage_None_One_Way:
+                color = QColor(0, 255, 0);              // Green
+                break;
+            case Collision_Type::Damage_Player:
+            case Collision_Type::Damage_Player_One_Way:
+                color = QColor(255, 0, 0);              // Red
+                break;
+            case Collision_Type::Damage_Enemy:
+            case Collision_Type::Damage_Enemy_One_Way:
+                color = QColor(0, 0, 255);              // Blue
+                break;
+            case Collision_Type::Damage_All:
+            case Collision_Type::Damage_All_One_Way:
+                color = QColor(128, 0, 128);            // Purple
+                break;
         }
-        if (!object->does_collide) color = Qt::yellow;
-        if (object->health <= 0) color = Qt::white;
-
+        ///switch (object->body_type) {
+        ///    case Body_Type::Dynamic:        color = Qt::red;       break;
+        ///    case Body_Type::Static:         color = Qt::blue;      break;
+        ///    case Body_Type::Kinematic:      color = Qt::green;     break;
+        ///}
+        if (!object->does_collide) color = color.lighter();
+        if (object->health <= 0) color = Qt::gray;
 
         // Set up QPainter
         QPen cosmetic_pen( QBrush(color), 1);
@@ -196,6 +216,40 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 
 
 
+//####################################################################################
+//##    Draws the active Constraints using QPainter
+//####################################################################################
+void OpenGL::drawDebugJoints(QPainter &painter) {
+
+    // Orange
+    QPen pen( QBrush(QColor(255, 128, 0)), 1.5 * static_cast<double>(m_scale), Qt::SolidLine, Qt::PenCapStyle::RoundCap);
+    painter.setPen( pen );
+
+    // Get a list of the constraints in the Space
+    QVector<cpConstraint*> joint_list;
+    joint_list.clear();
+    cpSpaceEachConstraint(m_engine->getSpace(), cpSpaceConstraintIteratorFunc(getSpaceJointList), &joint_list);
+
+    // Draw the Joints
+    for (auto joint : joint_list) {
+        cpBody *body_a = cpConstraintGetBodyA( joint );
+        cpBody *body_b = cpConstraintGetBodyB( joint );
+
+        // Grab DrEngineObjects from cpUserData
+        DrEngineObject *object_a = static_cast<DrEngineObject*>(cpBodyGetUserData(body_a));
+        DrEngineObject *object_b = static_cast<DrEngineObject*>(cpBodyGetUserData(body_b));
+
+        // Load Object Positions
+        QPointF center_a = (object_a->previous_position * (1.0 - m_time_percent)) + (object_a->position * m_time_percent);
+        QPointF center_b = (object_b->previous_position * (1.0 - m_time_percent)) + (object_b->position * m_time_percent);
+        QPointF l1 = mapToScreen( center_a.x(), center_a.y(), 0);
+        QPointF l2 = mapToScreen( center_b.x(), center_b.y(), 0);
+
+        painter.drawLine( l1, l2 );
+    }
+}
+
+
 
 
 //####################################################################################
@@ -203,18 +257,18 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 //####################################################################################
 void OpenGL::drawDebugCollisions(QPainter &painter) {
 
-    // ***** Draw debug collision points
-    QPen line_pen( QBrush(QColor(128, 0, 128)), 2 * static_cast<double>(m_scale));
-    painter.setPen( line_pen );
+    QPen pen( QBrush(Qt::white), 2.5 * static_cast<double>(m_scale), Qt::SolidLine, Qt::PenCapStyle::RoundCap);
+    painter.setPen( pen );
 
     for (auto object : m_engine->objects) {
-        if (object->should_process == false) continue;
+        if (!object->should_process)                 continue;
+        if (!object->has_been_processed)             continue;
         if (object->body_type != Body_Type::Dynamic) continue;
 
         QVector<QPointF> point_list;    point_list.clear();
         QVector<cpVect>  normal_list;   normal_list.clear();
-        cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(getContactPoints), &point_list);        
-        cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(getContactNormals), &normal_list);
+        cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(getBodyContactPoints),  &point_list);
+        cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(getBodyContactNormals), &normal_list);
 
         QPointF diff = object->position - ((object->previous_position * (1.0 - m_time_percent)) + (object->position * m_time_percent));
 
@@ -230,7 +284,6 @@ void OpenGL::drawDebugCollisions(QPainter &painter) {
                 QPoint dot = t.map( point ).toPoint();
 
                 //// Draw dots
-                ///painter.drawPoint( dot );
                 painter.translate(point.x(), point.y());
                 painter.rotate(angle_in_degrees);
                 painter.translate(-point.x(), -point.y());

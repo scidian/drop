@@ -95,8 +95,9 @@ public:
     void            cullingOn();
     void            cullingOff();
     void            drawCube(QVector3D center);
-    void            drawDebugShapes(QPainter &painter);
     void            drawDebugCollisions(QPainter &painter);
+    void            drawDebugJoints(QPainter &painter);
+    void            drawDebugShapes(QPainter &painter);
     void            drawObjects();
     void            updateViewMatrix();
 
