@@ -16,9 +16,6 @@
 //##        Initialize OpenGL Resources
 //####################################################################################
 void OpenGL::initializeGL() {
-    // Connect to aboutToBeDestroyed signal to make sure we clean up our resources
-    // context() and QOpenGLContext::currentContext() are equivalent when called from initializeGL or paintGL.
-    connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &OpenGL::cleanUp);    
 
     // Set up the rendering context, load shaders and other resources, etc.:
     initializeOpenGLFunctions();

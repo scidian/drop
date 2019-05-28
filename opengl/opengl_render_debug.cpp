@@ -211,6 +211,10 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         if (!object_poly.isEmpty())
             painter.drawPolygon( object_poly );
 
+
+        painter.drawText( mapToScreen(center.x(), center.y(), 0), "Hp: " + QString::number(object->health));
+
+
     }   // End For object
 }
 

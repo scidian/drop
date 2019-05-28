@@ -24,31 +24,7 @@
 //##    Chipmunk Callbacks
 //##        Support for one way platform (collision)
 //######################################################################################################
-static cpBool PreSolveDamageEnemy(cpArbiter *arb, cpSpace *, void *) {
-    CP_ARBITER_GET_SHAPES(arb, a, b);
-    DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
-    DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
-
-    if (object_a->collision_type == Collision_Type::Damage_Enemy) {
-        if (object_b->collision_type == Collision_Type::Damage_Player || object_b->collision_type == Collision_Type::Damage_Player_One_Way) {
-
-            if (object_b->health > 0) {
-
-                qDebug() << "Hit";
-
-                object_b->health -= object_a->damage;
-
-                if (object_b->health < 0) object_b->health = 0;
-
-            }
-
-        }
-    }
-
-    return cpTrue;
-}
-
-static cpBool PreSolveOneWay(cpArbiter *arb, cpSpace *, void *) {
+static cpBool BeginFuncOneWay(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b);
     DrEngineObject *object = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
 
@@ -56,7 +32,6 @@ static cpBool PreSolveOneWay(cpArbiter *arb, cpSpace *, void *) {
         return cpArbiterIgnore(arb);
     return cpTrue;
 }
-
 void DrEngine::oneWayPlatform(DrEngineObject *object, cpVect direction) {
     object->one_way = true;
     object->one_way_direction = direction;              // Let objects pass if going Direction
@@ -66,6 +41,34 @@ void DrEngine::oneWayPlatform(DrEngineObject *object, cpVect direction) {
     }
 }
 
+static cpBool PreSolveFuncDamage(cpArbiter *arb, cpSpace *, void *) {
+    CP_ARBITER_GET_SHAPES(arb, a, b);
+    DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
+    DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
+
+    if (object_a->damage <= 0) return cpTrue;                                   // Object does no damage, exit
+
+    bool should_damage = false;
+    if ((object_a->collision_type == Collision_Type::Damage_Enemy  || object_a->collision_type == Collision_Type::Damage_Enemy_One_Way) &&
+        (object_b->collision_type == Collision_Type::Damage_Player || object_b->collision_type == Collision_Type::Damage_Player_One_Way))
+        should_damage = true;
+
+    if ((object_a->collision_type == Collision_Type::Damage_Player || object_a->collision_type == Collision_Type::Damage_Player_One_Way) &&
+        (object_b->collision_type == Collision_Type::Damage_Enemy  || object_b->collision_type == Collision_Type::Damage_Enemy_One_Way))
+        should_damage = true;
+
+    if ((object_a->collision_type == Collision_Type::Damage_All || object_a->collision_type == Collision_Type::Damage_All_One_Way))
+        should_damage = true;
+
+    if (should_damage) {
+        if (object_b->health > 0) {
+            object_b->health -= object_a->damage;
+            if (object_b->health < 0) object_b->health = 0;
+        }
+    }
+    return cpTrue;
+}
+
 //######################################################################################################
 //##    Build Space
 //######################################################################################################
@@ -73,7 +76,7 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
 
     // ***** Set up physics world
     demo_space = new_space_type;                        // Save Space type
-    m_background_color = QColor(0,0,0);
+    m_background_color = QColor(0, 0, 0);
 
     m_space = cpSpaceNew();                             // Creates an empty space
     cpSpaceSetIterations(m_space, m_iterations);        // Sets how many times physics are processed each update
@@ -81,18 +84,29 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
     // Reset cameras
     clearCameras();
 
-    // ***** Add handler for one way collisions
-    cpCollisionHandler *damage_enemy_handler = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Enemy));
-    damage_enemy_handler->preSolveFunc = PreSolveDamageEnemy;
-
+    // ***** CollisionHandlers: One Way Collisions
     cpCollisionHandler *one_way_handler1 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_None_One_Way));
     cpCollisionHandler *one_way_handler2 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Player_One_Way));
     cpCollisionHandler *one_way_handler3 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Enemy_One_Way));
     cpCollisionHandler *one_way_handler4 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_All_One_Way));
-    one_way_handler1->preSolveFunc = PreSolveOneWay;
-    one_way_handler2->preSolveFunc = PreSolveOneWay;
-    one_way_handler3->preSolveFunc = PreSolveOneWay;
-    one_way_handler4->preSolveFunc = PreSolveOneWay;
+    one_way_handler1->beginFunc = BeginFuncOneWay;
+    one_way_handler2->beginFunc = BeginFuncOneWay;
+    one_way_handler3->beginFunc = BeginFuncOneWay;
+    one_way_handler4->beginFunc = BeginFuncOneWay;
+
+    // ***** CollisionHandlers: Damage / Health
+    cpCollisionHandler *damage_handler1 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Player));
+    cpCollisionHandler *damage_handler2 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Player_One_Way));
+    cpCollisionHandler *damage_handler3 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Enemy));
+    cpCollisionHandler *damage_handler4 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Enemy_One_Way));
+    cpCollisionHandler *damage_handler5 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_All));
+    cpCollisionHandler *damage_handler6 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_All_One_Way));
+    damage_handler1->preSolveFunc = PreSolveFuncDamage;
+    damage_handler2->preSolveFunc = PreSolveFuncDamage;
+    damage_handler3->preSolveFunc = PreSolveFuncDamage;
+    damage_handler4->preSolveFunc = PreSolveFuncDamage;
+    damage_handler5->preSolveFunc = PreSolveFuncDamage;
+    damage_handler6->preSolveFunc = PreSolveFuncDamage;
 
 
     // ***** Build desired demo Space

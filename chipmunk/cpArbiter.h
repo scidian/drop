@@ -47,7 +47,7 @@ CP_EXPORT void cpArbiterSetSurfaceVelocity(cpArbiter *arb, cpVect vr);
 /// Get the user data pointer associated with this pair of colliding objects.
 CP_EXPORT cpDataPointer cpArbiterGetUserData(const cpArbiter *arb);
 /// Set a user data point associated with this pair of colliding objects.
-/// If you need to perform any cleanup for this pointer, you must do it yourself, in the separate callback for instance.
+/// If you need to perform any clean up for this pointer, you must do it yourself, in the separate callback for instance.
 CP_EXPORT void cpArbiterSetUserData(cpArbiter *arb, cpDataPointer userData);
 
 /// Calculate the total impulse including the friction that was applied by this arbiter.

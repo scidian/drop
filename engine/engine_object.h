@@ -92,7 +92,7 @@ struct DrEngineObject {
 
     Collision_Type  collision_type = Collision_Type::Damage_None;       // Specifies what other types of objects this object can damage
     long        health = 1;                                             // Object Health, -1 = infinite
-    long        damage = 0;                                             // Damage caused to other objects of Type collision_type
+    long        damage = 1;                                             // Damage caused to other objects of Type collision_type
 
     bool        one_way = false;                // Set to true if we're using this object as a one way platform
     cpVect      one_way_direction {0, 1};       // Direction of Normal for one way platforms

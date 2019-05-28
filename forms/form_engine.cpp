@@ -8,6 +8,7 @@
 #include <QtMath>
 
 #include <QApplication>
+#include <QCloseEvent>
 #include <QGraphicsLineItem>
 #include <QLayout>
 #include <QMessageBox>
@@ -26,6 +27,11 @@
 //##    Constructor / Destructor
 //######################################################################################################
 FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent), m_project(project) {
+
+    // Make sure this form is deleted when it closes
+    this->setAttribute(Qt::WA_DeleteOnClose, true);
+
+    // Set up initial window
     this->setObjectName("Drop Player");
     this->resize(1200, 900);
     Dr::ApplyCustomStyleSheetFormatting(this);
@@ -131,9 +137,13 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
 FormEngine::~FormEngine() { }
 
-void FormEngine::closeEvent(QCloseEvent *) {
+void FormEngine::closeEvent(QCloseEvent *event) {
+    // Wait for update timer to stop
     stopTimers();
-    qApp->processEvents();
+    do { qApp->processEvents(); } while (m_running);
+
+    // Allow window close
+    event->accept();
 }
 
 
@@ -161,10 +171,10 @@ void FormEngine::startTimers() {
     m_time_render =  Clock::now();
     m_time_camera =  Clock::now();
     m_time_physics = Clock::now();
-    m_timer->start( 1 );                                        // Timeout of zero will call this timeout every pass of the event loop
+    m_timer->start( 0 );                                        // Timeout of zero will call this timeout every pass of the event loop
 }
 void FormEngine::stopTimers() {
-     m_timer->stop();
+    m_timer->stop();
 }
 double FormEngine::getTimerMilliseconds(Engine_Timer time_since_last) {
     switch (time_since_last) {
@@ -176,37 +186,36 @@ double FormEngine::getTimerMilliseconds(Engine_Timer time_since_last) {
 }
 
 void FormEngine::updateEngine() {
-    do {
-        qApp->processEvents();
-        if (!m_engine->has_scene) continue;
+    if (!m_engine->has_scene) return;
+    m_running = true;
 
-        // ***** Seperate Camera Update
-        double camera_milliseconds = getTimerMilliseconds(Engine_Timer::Camera);
-        if (camera_milliseconds > 1.0) {
-            m_time_camera = Clock::now();
-            m_engine->moveCameras(camera_milliseconds);                                 // Move Cameras
-        }
+    // ***** Seperate Camera Update
+    double camera_milliseconds = getTimerMilliseconds(Engine_Timer::Camera);
+    if (camera_milliseconds > 1.0) {
+        m_time_camera = Clock::now();
+        m_engine->moveCameras(camera_milliseconds);                                 // Move Cameras
+    }
 
-        // ***** MAIN UPDATE LOOP: Space (Physics)
-        double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
-        if (update_milliseconds > (m_engine->getTimeStep() * 1000.0)) {
-            m_time_update =  Clock::now();
-            m_engine->updateSpace(update_milliseconds);                                 // Physics Engine
-            m_engine->updateSpaceHelper();                                              // Additional Physics Updating
-            m_time_physics = Clock::now();                                              // Record time done with Step
+    // ***** MAIN UPDATE LOOP: Space (Physics)
+    double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
+    if (update_milliseconds > (m_engine->getTimeStep() * 1000.0)) {
+        m_time_update =  Clock::now();
+        m_engine->updateSpace(update_milliseconds);                                 // Physics Engine
+        m_engine->updateSpaceHelper();                                              // Additional Physics Updating
+        m_time_physics = Clock::now();                                              // Record time done with Step
 
-            m_engine->updateCameras();                                                  // Update Camera Targets
-        }
+        m_engine->updateCameras();                                                  // Update Camera Targets
+    }
 
-        // ***** Seperate Render Update
-        double render_milliseconds = getTimerMilliseconds(Engine_Timer::Render);
-        if (render_milliseconds > (1000.0 / m_ideal_frames_per_second)) {
-            m_time_render = Clock::now();
-            m_opengl->update();                                                         // Render
-            updateLabels();
-        }
+    // ***** Seperate Render Update
+    double render_milliseconds = getTimerMilliseconds(Engine_Timer::Render);
+    if (render_milliseconds > (1000.0 / m_ideal_frames_per_second)) {
+        m_time_render = Clock::now();
+        m_opengl->update();                                                         // Render
+        updateLabels();
+    }
 
-    } while (m_timer->isActive());
+    m_running = false;
 }
 
 // Emitted by QOpenGLWidget when back buffer is swapped to screen

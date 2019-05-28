@@ -366,7 +366,7 @@ query_helper(cpSpaceHash *hash, cpSpaceHashBin **bin_ptr, void *obj, cpSpatialIn
 			hand->stamp = hash->stamp;
 		} else {
 			// The object for this handle has been removed
-			// cleanup this cell and restart the query
+            // clean up this cell and restart the query
 			remove_orphaned_handles(hash, bin_ptr);
 			goto restart; // GCC not smart enough/able to tail call an inlined function.
 		}
@@ -474,7 +474,7 @@ segmentQuery_helper(cpSpaceHash *hash, cpSpaceHashBin **bin_ptr, void *obj, cpSp
 			hand->stamp = hash->stamp;
 		} else {
 			// The object for this handle has been removed
-			// cleanup this cell and restart the query
+            // clean up this cell and restart the query
 			remove_orphaned_handles(hash, bin_ptr);
 			goto restart; // GCC not smart enough/able to tail call an inlined function.
 		}

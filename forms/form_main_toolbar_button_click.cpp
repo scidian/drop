@@ -134,8 +134,7 @@ void FormMain::buttonGroupPlayClicked(int id) {
 
     if (clicked == Buttons_Play::Play) {
 
-        qApp->processEvents();
-        FormEngine *engine = new FormEngine(project);      // !!! Does not like to be a child
+        FormEngine *engine = new FormEngine(project);               // !!!!! NOTE: Does not like to be a child?
         engine->show();
 
     }

@@ -55,6 +55,8 @@ private:
 
     const double        m_ideal_frames_per_second = 120;
 
+    bool                m_running = false;
+
 public:
     QWidget         *centralWidget;
     QToolButton     *pushSpawn,     *pushCar,       *pushJump,      *pushPlay1, *pushPlay2;

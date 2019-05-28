@@ -109,9 +109,6 @@ public:
     void                setTimeOneFrameTakesToRender(double milliseconds)  { m_time_one_frame_takes_to_render = milliseconds; }
 
 
-public slots:
-    void        cleanUp();
-
 };
 
 #endif // OPENGL_H

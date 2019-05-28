@@ -19,9 +19,7 @@ OpenGL::OpenGL(QWidget *parent, FormEngine *form_engine, DrEngine *engine) : QOp
     setFocusPolicy(Qt::FocusPolicy::StrongFocus);            // Must setFocus to accept KeyPress events
 }
 
-OpenGL::~OpenGL() { }
-
-void OpenGL::cleanUp() {
+OpenGL::~OpenGL() {
     makeCurrent();
 
     // Destroy OpenGL Resources

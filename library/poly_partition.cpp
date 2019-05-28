@@ -1320,7 +1320,7 @@ int TPPLPartition::MonotonePartition(TPPLPolyList *inpolys, TPPLPolyList *monoto
 		}
 	}
 
-	//cleanup
+    // clean up
 	delete [] vertices;
 	delete [] priority;
 	delete [] vertextypes;
@@ -1328,7 +1328,7 @@ int TPPLPartition::MonotonePartition(TPPLPolyList *inpolys, TPPLPolyList *monoto
 	delete [] helpers;
 	delete [] used;
 
-	if(error) {
+    if (error) {
 		return 0;
 	} else {
 		return 1;
