@@ -29,6 +29,10 @@ const T& Clamp(const T& number_to_check, const T& min, const T& max) {
     else                            return number_to_check;
 }
 
+template<class T>
+const T& EnumToInt(const T& enum_to_convert) {
+    return static_cast<int>(enum_to_convert);
+}
 
 // Comparison Functions
 double      CheckScaleNotZero(double scale_to_check);

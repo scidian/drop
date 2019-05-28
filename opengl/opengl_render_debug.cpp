@@ -42,8 +42,8 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 
 
     for (auto object : m_engine->objects) {
-        if (object->should_process == false) continue;
-        if (!object->has_been_processed) continue;
+        if (!object->should_process)        continue;
+        if (!object->has_been_processed)    continue;
 
         QColor color;
         switch (object->body_type) {
@@ -52,6 +52,8 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
             case Body_Type::Kinematic:      color = Qt::green;     break;
         }
         if (!object->does_collide) color = Qt::yellow;
+        if (object->health <= 0) color = Qt::white;
+
 
         // Set up QPainter
         QPen cosmetic_pen( QBrush(color), 1);
@@ -207,14 +209,14 @@ void OpenGL::drawDebugCollisions(QPainter &painter) {
 
     for (auto object : m_engine->objects) {
         if (object->should_process == false) continue;
-
-        QPointF diff = object->position - ((object->previous_position * (1.0 - m_time_percent)) + (object->position * m_time_percent));
+        if (object->body_type != Body_Type::Dynamic) continue;
 
         QVector<QPointF> point_list;    point_list.clear();
-        cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(getContactPoints), &point_list);
-
         QVector<cpVect>  normal_list;   normal_list.clear();
+        cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(getContactPoints), &point_list);        
         cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(getContactNormals), &normal_list);
+
+        QPointF diff = object->position - ((object->previous_position * (1.0 - m_time_percent)) + (object->position * m_time_percent));
 
         for (int i = 0; i < point_list.size(); i++) {
             QPointF contact = point_list[i];

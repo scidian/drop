@@ -167,8 +167,12 @@ void DrEngine::assignPlayerControls(SceneObject *object, bool has_controls_now, 
         long camera_key = addCamera(object);
         if (set_active_camera) setActiveCamera(camera_key);
     }
+    object->collision_type = Collision_Type::Damage_Enemy;
+    for (auto shape : object->shapes)
+        cpShapeSetCollisionType(shape, static_cast<cpCollisionType>(Collision_Type::Damage_Enemy));
+    object->health = 1;
+    object->damage = 1;
     object->lost_control = !has_controls_now;                               // Turn on jump / movement buttons
-    cpBodySetUserData(object->body, object);                                // Set chipmunk User Data, store SceneObject for later
     cpBodySetVelocityUpdateFunc(object->body, playerUpdateVelocity);        // Assign the playerUpdate callback function
 }
 

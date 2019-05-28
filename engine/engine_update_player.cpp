@@ -70,7 +70,7 @@ extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
     // ***** Ground Check - Grab the grounding normal from last frame, if we hit the ground, turn off remaining_boost time
     Ground_Data ground;
-    ground.dot_product = 2.0;
+    ground.dot_product = 2.0;                                                   // 2.0 is an impossible test number, dot products will always be between -1.0 to 1.0
     cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(selectPlayerGroundNormal), &ground);
 
     // Figure out if any collision points count as ground or as wall

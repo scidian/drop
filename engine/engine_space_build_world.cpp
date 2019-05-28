@@ -6,6 +6,7 @@
 //
 //
 #include <QApplication>
+#include <QDebug>
 
 #include "engine.h"
 #include "engine_texture.h"
@@ -23,22 +24,45 @@
 //##    Chipmunk Callbacks
 //##        Support for one way platform (collision)
 //######################################################################################################
-static cpBool PreSolve(cpArbiter *arb, cpSpace *, void *) {
+static cpBool PreSolveDamageEnemy(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b);
-    cpVect *direction = static_cast<cpVect*>(cpShapeGetUserData(a));
+    SceneObject *object_a = static_cast<SceneObject*>(cpShapeGetUserData(a));
+    SceneObject *object_b = static_cast<SceneObject*>(cpShapeGetUserData(b));
 
-    if(cpvdot(cpArbiterGetNormal(arb), (*direction)) < 0)
+    if (object_a->collision_type == Collision_Type::Damage_Enemy) {
+        if (object_b->collision_type == Collision_Type::Damage_Player || object_b->collision_type == Collision_Type::Damage_Player_One_Way) {
+
+            if (object_b->health > 0) {
+
+                qDebug() << "Hit";
+
+                object_b->health -= object_a->damage;
+
+                if (object_b->health < 0) object_b->health = 0;
+
+            }
+
+        }
+    }
+
+    return cpTrue;
+}
+
+static cpBool PreSolveOneWay(cpArbiter *arb, cpSpace *, void *) {
+    CP_ARBITER_GET_SHAPES(arb, a, b);
+    SceneObject *object = static_cast<SceneObject*>(cpShapeGetUserData(a));
+
+    if (cpvdot(cpArbiterGetNormal(arb), object->one_way_direction) < 0.0)
         return cpArbiterIgnore(arb);
     return cpTrue;
 }
 
 void DrEngine::oneWayPlatform(SceneObject *object, cpVect direction) {
     object->one_way = true;
-    object->one_way_direction = direction;                                  // Let objects pass upwards
+    object->one_way_direction = direction;              // Let objects pass if going Direction
 
     for (auto shape : object->shapes) {
-        cpShapeSetCollisionType(shape, COLLISION_TYPE_ONE_WAY);           // We'll use the data pointer for the OneWayPlatform direction
-        cpShapeSetUserData(shape, &object->one_way_direction);
+        cpShapeSetCollisionType(shape, static_cast<cpCollisionType>(Collision_Type::Damage_None_One_Way));
     }
 }
 
@@ -58,8 +82,17 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
     clearCameras();
 
     // ***** Add handler for one way collisions
-    cpCollisionHandler *handler = cpSpaceAddWildcardHandler(m_space, COLLISION_TYPE_ONE_WAY);
-    handler->preSolveFunc = PreSolve;
+    cpCollisionHandler *damage_enemy_handler = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Enemy));
+    damage_enemy_handler->preSolveFunc = PreSolveDamageEnemy;
+
+    cpCollisionHandler *one_way_handler1 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_None_One_Way));
+    cpCollisionHandler *one_way_handler2 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Player_One_Way));
+    cpCollisionHandler *one_way_handler3 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Enemy_One_Way));
+    cpCollisionHandler *one_way_handler4 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_All_One_Way));
+    one_way_handler1->preSolveFunc = PreSolveOneWay;
+    one_way_handler2->preSolveFunc = PreSolveOneWay;
+    one_way_handler3->preSolveFunc = PreSolveOneWay;
+    one_way_handler4->preSolveFunc = PreSolveOneWay;
 
 
     // ***** Build desired demo Space
@@ -111,6 +144,16 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         m_friction = 0.5;
         m_bounce = 0.5;
 
+        // Test one way block
+        SceneObject *block =  this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -300, 120, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
+        oneWayPlatform(block, cpv(0, 1));
+        block->collision_type = Collision_Type::Damage_Player;
+        block->health = 1;
+
+        // Test rotate block
+        SceneObject *block2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -150, 120, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
+        block2->rotate_speed = 2;
+
         // Static line segment shapes for the ground
         this->addLine(Body_Type::Static, QPointF(-1000,   0), QPointF( 2500,   0), c_friction, c_bounce, 1);
         this->addLine(Body_Type::Static, QPointF( 2500,   0), QPointF( 2500, 100), c_friction, c_bounce, 1);
@@ -145,12 +188,6 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, 100, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
         this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000,  40, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
         this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-
-        SceneObject *block =  this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -300, 120, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
-        oneWayPlatform(block, cpv(0, 1));
-
-        SceneObject *block2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -150, 120, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
-        block2->rotate_speed = 2;
 
         SceneObject *belt =  this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -500, 120, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
         SceneObject *belt2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -560, 120, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));

@@ -58,8 +58,15 @@ enum class Shape_Type {
     Polygon,                                    // cpPolyShapeNew
 };
 
-enum CollisionTypes {
-    COLLISION_TYPE_ONE_WAY = 1,
+enum class Collision_Type {
+    Damage_None =           1,
+    Damage_Player =         2,
+    Damage_Enemy =          3,
+    Damage_All =            4,
+    Damage_None_One_Way =   5,
+    Damage_Player_One_Way = 6,
+    Damage_Enemy_One_Way =  7,
+    Damage_All_One_Way =    8,
 };
 
 enum Test_Textures {
@@ -128,6 +135,10 @@ struct SceneObject {
     double      z_order;                        // Used for layering
 
     long        active_camera = 0;              // Set to ID of last camera that followed this object, 0 == no camera
+
+    Collision_Type  collision_type = Collision_Type::Damage_None;
+    long        health = 1;                     // Object Health, -1 = infinite
+    long        damage = 0;                     // Damage caused to other objects of Type collision_type
 
     bool        one_way = false;                // Set to true if we're using this object as a one way platform
     cpVect      one_way_direction {0, 1};       // Direction of Normal for one way platforms

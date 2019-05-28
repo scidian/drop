@@ -40,6 +40,7 @@ SceneObject* DrEngine::addLine(Body_Type body_type, QPointF p1, QPointF p2, doub
         case Body_Type::Kinematic:   line->body = cpBodyNewKinematic();          break;
     }
     cpSpaceAddBody(m_space, line->body);
+    cpBodySetUserData(line->body, line);                        // Set chipmunk User Data, store SceneObject for later
 
     if (body_type != Body_Type::Static) {
         QPointF center = QRectF( p1, p2 ).center();
@@ -50,8 +51,9 @@ SceneObject* DrEngine::addLine(Body_Type body_type, QPointF p1, QPointF p2, doub
 
     cpShape *shape = cpSegmentShapeNew( line->body, cpv( p1.x(), p1.y()), cpv(p2.x(), p2.y()), 2) ;
     cpShapeSetFriction( shape, friction );
-    cpShapeSetElasticity( shape, bounce );          // Ideally between 0 and .99999
+    cpShapeSetElasticity( shape, bounce );                      // Ideally between 0 and .99999
     cpSpaceAddShape( m_space, shape );
+    cpShapeSetUserData( shape, line );                          // Set UserData to SceneObject pointer
 
     line->shapes.push_back( shape );
     line->shape_type[shape] = Shape_Type::Segment;
@@ -119,6 +121,8 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
         case Body_Type::Kinematic:  ball->body = cpBodyNewKinematic();              break;
     }
     cpSpaceAddBody(m_space, ball->body);
+    cpBodySetUserData(ball->body, ball);                                        // Set chipmunk User Data, store SceneObject for later
+
     cpBodySetPosition( ball->body, cpv( x, y));                                 // Coordinate is center of object
     cpBodySetAngle(    ball->body, qDegreesToRadians(-angle) );
     cpBodySetVelocity( ball->body, cpv( velocity.x(), velocity.y()) );
@@ -131,7 +135,8 @@ SceneObject* DrEngine::addCircle(Body_Type body_type, long texture_number, doubl
     cpShapeSetMass( shape, area );
     cpShapeSetFriction( shape, friction  );
     cpShapeSetElasticity( shape, bounce );
-    cpSpaceAddShape(m_space, shape);
+    cpSpaceAddShape( m_space, shape );
+    cpShapeSetUserData( shape, ball );                                          // Set UserData to SceneObject pointer
 
     // Add shape to the list of shapes for this body
     ball->shapes.push_back( shape );
@@ -188,7 +193,9 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
         case Body_Type::Kinematic:  block->body = cpBodyNewKinematic();             break;
     }
     cpSpaceAddBody(m_space, block->body);
-    cpBodySetPosition( block->body, cpv( x, y));                                        // Coordinate is center of object
+    cpBodySetUserData(block->body, block);                                  // Set chipmunk User Data, store SceneObject for later
+
+    cpBodySetPosition( block->body, cpv( x, y));                            // Coordinate is center of object
     cpBodySetAngle(    block->body, qDegreesToRadians(-angle) );
     cpBodySetVelocity( block->body, cpv( velocity.x(), velocity.y()) );
 
@@ -200,7 +207,8 @@ SceneObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double
     cpShapeSetMass( shape, area );
     cpShapeSetFriction( shape, friction );
     cpShapeSetElasticity( shape, bounce );
-    cpSpaceAddShape(m_space, shape);
+    cpSpaceAddShape( m_space, shape );
+    cpShapeSetUserData( shape, block );                                     // Set UserData to SceneObject pointer
 
     // Add shape to the list of shapes for this body
     block->shapes.push_back( shape );
@@ -241,8 +249,8 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
     if (bounce < 0)   bounce = m_bounce;
 
     // Polygon Basics
-    polygon->scale_x = static_cast<float>(scale.x());                              // Save x scale for later
-    polygon->scale_y = static_cast<float>(scale.y());                              // Save y scale for later
+    polygon->scale_x = static_cast<float>(scale.x());                       // Save x scale for later
+    polygon->scale_y = static_cast<float>(scale.y());                       // Save y scale for later
     polygon->texture_number = texture_number;
     polygon->z_order = z;
     polygon->alpha = static_cast<float>(opacity);
@@ -267,12 +275,14 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
         case Body_Type::Kinematic:  polygon->body = cpBodyNewKinematic();           break;
     }
     cpSpaceAddBody(m_space, polygon->body);
-    cpBodySetPosition( polygon->body, cpv( x, y));                                        // Coordinate is center of object
+    cpBodySetUserData(polygon->body, polygon);                              // Set chipmunk User Data, store SceneObject for later
+
+    cpBodySetPosition( polygon->body, cpv( x, y));                          // Coordinate is center of object
     cpBodySetAngle(    polygon->body, qDegreesToRadians(-angle) );
     cpBodySetVelocity( polygon->body, cpv( velocity.x(), velocity.y()) );
 
     // ***** Determine if polygon is concave, if it is create multiple shapes, otherwise create one shape
-    std::list<TPPLPoly> testpolys, result;                              // Used by library Poly Partition
+    std::list<TPPLPoly> testpolys, result;                                  // Used by library Poly Partition
     TPPLPoly poly;
     poly.Init(old_point_count);
     for (int i = 0; i < old_point_count; i++) {
@@ -300,7 +310,8 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
         cpShapeSetMass( shape, area );
         cpShapeSetFriction( shape, friction );
         cpShapeSetElasticity( shape, bounce );
-        cpSpaceAddShape(m_space, shape);
+        cpSpaceAddShape( m_space, shape );
+        cpShapeSetUserData( shape, polygon );                                     // Set UserData to SceneObject pointer
 
         // Add shape to the list of shapes for this body
         polygon->shapes.push_back( shape );
@@ -330,6 +341,7 @@ SceneObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, doub
             cpShapeSetFriction( shape, friction );
             cpShapeSetElasticity( shape, bounce );
             cpSpaceAddShape(m_space, shape);
+            cpShapeSetUserData( shape, polygon );                                     // Set UserData to SceneObject pointer
 
             // Add shape to the list of shapes for this body
             polygon->shapes.push_back( shape );
