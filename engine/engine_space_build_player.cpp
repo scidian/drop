@@ -167,9 +167,7 @@ void DrEngine::assignPlayerControls(DrEngineObject *object, bool has_controls_no
         long camera_key = addCamera(object);
         if (set_active_camera) setActiveCamera(camera_key);
     }
-    object->collision_type = Collision_Type::Damage_Enemy;
-    for (auto shape : object->shapes)
-        cpShapeSetCollisionType(shape, static_cast<cpCollisionType>(Collision_Type::Damage_Enemy));
+    setCollisionType(object, Collision_Type::Damage_Enemy);
     object->health = 1;
     object->damage = 1;
     object->lost_control = !has_controls_now;                               // Turn on jump / movement buttons

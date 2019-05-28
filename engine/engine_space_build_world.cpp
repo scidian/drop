@@ -27,7 +27,6 @@
 static cpBool BeginFuncOneWay(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b);
     DrEngineObject *object = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
-
     if (cpvdot(cpArbiterGetNormal(arb), object->one_way_direction) < 0.0)
         return cpArbiterIgnore(arb);
     return cpTrue;
@@ -35,9 +34,11 @@ static cpBool BeginFuncOneWay(cpArbiter *arb, cpSpace *, void *) {
 void DrEngine::oneWayPlatform(DrEngineObject *object, cpVect direction) {
     object->one_way = true;
     object->one_way_direction = direction;              // Let objects pass if going Direction
-
-    for (auto shape : object->shapes) {
-        cpShapeSetCollisionType(shape, static_cast<cpCollisionType>(Collision_Type::Damage_None_One_Way));
+    switch (object->collision_type) {
+        case Collision_Type::Damage_None:   case Collision_Type::Damage_None_One_Way:   setCollisionType(object, Collision_Type::Damage_None_One_Way);   break;
+        case Collision_Type::Damage_Player: case Collision_Type::Damage_Player_One_Way: setCollisionType(object, Collision_Type::Damage_Player_One_Way); break;
+        case Collision_Type::Damage_Enemy:  case Collision_Type::Damage_Enemy_One_Way:  setCollisionType(object, Collision_Type::Damage_Enemy_One_Way);  break;
+        case Collision_Type::Damage_All:    case Collision_Type::Damage_All_One_Way:    setCollisionType(object, Collision_Type::Damage_All_One_Way);    break;
     }
 }
 
@@ -45,7 +46,6 @@ static cpBool PreSolveFuncDamage(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b);
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
-
     if (object_a->damage <= 0) return cpTrue;                                   // Object does no damage, exit
 
     bool should_damage = false;
@@ -67,6 +67,13 @@ static cpBool PreSolveFuncDamage(cpArbiter *arb, cpSpace *, void *) {
         }
     }
     return cpTrue;
+}
+
+void DrEngine::setCollisionType(DrEngineObject *object, Collision_Type type) {
+    object->collision_type = type;
+    for (auto shape : object->shapes) {
+        cpShapeSetCollisionType(shape, static_cast<cpCollisionType>(type));
+    }
 }
 
 //######################################################################################################
@@ -160,13 +167,14 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
 
         // Test one way block
         DrEngineObject *block =  this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -300, 120, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
-        oneWayPlatform(block, cpv(0, 1));
         block->collision_type = Collision_Type::Damage_Player;
-        block->health = 1;
+        oneWayPlatform(block, cpv(0, 1));
 
         // Test rotate block
         DrEngineObject *block2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -150, 120, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
+        block->collision_type = Collision_Type::Damage_Player;
         block2->rotate_speed = 2;
+
 
         // Static line segment shapes for the ground
         this->addLine(Body_Type::Static, QPointF(-1000,   0), QPointF( 2500,   0), c_friction, c_bounce, 1);

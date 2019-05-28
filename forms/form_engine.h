@@ -65,9 +65,6 @@ public:
     QToolButton     *pushPersp,     *pushOrtho;
     QToolButton     *pushDebug1,    *pushDebug2;
 
-    QLabel          *label,         *label2;
-    QLabel          *labelOpenGL,   *labelInfo;
-
 
 public:
     // Constructor / Destructor
@@ -89,9 +86,7 @@ public:
 
 private slots:
     void frameSwapped();
-
     void updateEngine();
-    void updateLabels();
 
     void on_pushSpawn_clicked();
     void on_pushCar_clicked();
@@ -112,7 +107,6 @@ private slots:
 
     void on_pushDebug1_clicked();
     void on_pushDebug2_clicked();
-
 };
 
 

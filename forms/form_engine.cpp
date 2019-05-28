@@ -67,11 +67,6 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
         pushDebug1 =  new QToolButton(upperWidget);     pushDebug1->setObjectName("pushDebug1");    pushDebug1->setGeometry( QRect(600,  5, 140, 45));
         pushDebug2 =  new QToolButton(upperWidget);     pushDebug2->setObjectName("pushDebug2");    pushDebug2->setGeometry( QRect(600, 55, 140, 45));
 
-        label =       new QLabel(upperWidget);          label->setObjectName("label");              label->setGeometry(      QRect(750,  5, 330, 20));
-        label2 =      new QLabel(upperWidget);          label2->setObjectName("label2");            label2->setGeometry(     QRect(750, 25, 330, 20));
-        labelOpenGL = new QLabel(upperWidget);          labelOpenGL->setObjectName("labelOpenGL");  labelOpenGL->setGeometry(QRect(750, 45, 330, 20));
-        labelInfo =   new QLabel(upperWidget);          labelInfo->setObjectName("labelInfo");      labelInfo->setGeometry(  QRect(750, 65, 330, 20));
-
         pushSpawn->setText(QApplication::translate(  "MainWindow", "Spawning Demo",     nullptr));  pushSpawn->setStyleSheet("color: white");
         pushCar->setText(QApplication::translate(    "MainWindow", "Car Demo",          nullptr));  pushCar->setStyleSheet("color: white");
         pushJump->setText(QApplication::translate(   "MainWindow", "Jump Demo",         nullptr));  pushJump->setStyleSheet("color: white");
@@ -213,7 +208,6 @@ void FormEngine::updateEngine() {
     if (render_milliseconds > (1000.0 / m_ideal_frames_per_second)) {
         m_time_render = Clock::now();
         m_opengl->update();                                                         // Render
-        updateLabels();
     }
 
     m_running = false;
@@ -224,27 +218,6 @@ void FormEngine::frameSwapped() {
     // Updates timer that tracks how long a paintGL() call takes to shown onto screen from when first started
     m_opengl->setTimeOneFrameTakesToRender( std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_opengl->getTimeFrameStart()).count() / 1000000.0 );
 }
-
-
-//######################################################################################################
-//##    Update helpful labels
-//######################################################################################################
-void FormEngine::updateLabels() {
-    label->setText( "Items: " + QString::number( m_engine->objects.count()) + " - Scale: " + QString::number(double(m_opengl->getScale())) );
-    label2->setText("FPS - Render: " + QString::number(m_engine->fps_render) + ", Physics: " + QString::number(m_engine->fps_physics) );
-
-    ///int max_sample, max_text, max_number_textures, max_layers;
-    ///glGetIntegerv ( GL_MAX_SAMPLES, &max_sample );                                      // Finds max multi sampling available on system
-    ///glGetIntegerv ( GL_MAX_TEXTURE_SIZE, &max_text );                                   // Finds max texture size available on system
-    ///glGetIntegerv ( GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &max_number_textures );        // Finds max number of textures can bind at one time
-    ///glGetIntegerv ( GL_MAX_ARRAY_TEXTURE_LAYERS, &max_layers );
-    ///labelOpenGL->setText( "MAX Samples: " +  QString::number(max_sample) +
-    ///                    ", Txt Size: " +   QString::number(max_text) +
-    ///                    ", Txt Layers: " + QString::number(max_layers));
-
-    labelInfo->setText( g_info );
-}
-
 
 
 

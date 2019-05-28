@@ -80,6 +80,21 @@ void OpenGL::paintGL() {
     if (m_engine->debug_collisions) {
         drawDebugCollisions(painter);
     }
+
+    QFont font("Arial", 12);
+    painter.setFont(font);
+    painter.setPen( Qt::white );
+    painter.drawText( QPointF(20, 20), "Items: " + QString::number( m_engine->objects.count()) + ", Scale: " + QString::number(double(m_scale)) );
+    painter.drawText( QPointF(20, 40), "FPS: " + QString::number(m_engine->fps_render) + ", Physics: " + QString::number(m_engine->fps_physics));
+    painter.drawText( QPointF(20, 60), g_info);
+
+    ///int max_sample, max_text, max_number_textures, max_layers;
+    ///glGetIntegerv ( GL_MAX_SAMPLES, &max_sample );                                      // Finds max multi sampling available on system
+    ///glGetIntegerv ( GL_MAX_TEXTURE_SIZE, &max_text );                                   // Finds max texture size available on system
+    ///glGetIntegerv ( GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &max_number_textures );        // Finds max number of textures can bind at one time
+    ///glGetIntegerv ( GL_MAX_ARRAY_TEXTURE_LAYERS, &max_layers );
+    ///painter.drawText( QPointF(20, 80), "Max Samples: " +  QString::number(max_sample));
+
     painter.end();
 
     // ********** Calculates Render Frames per Second

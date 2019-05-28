@@ -45,10 +45,7 @@ void DrEngine::loadStageToSpace(DrStage *stage, double offset_x, double offset_y
             case 2: collision_type = Collision_Type::Damage_Enemy;  break;
             case 3: collision_type = Collision_Type::Damage_All;    break;
         }
-        block->collision_type = collision_type;
-        for (auto shape : block->shapes)
-            cpShapeSetCollisionType(shape, static_cast<cpCollisionType>(collision_type));
-
+        setCollisionType(block, collision_type);
     }
 
     // Update distance we've loaded scenes to

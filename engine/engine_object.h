@@ -142,7 +142,7 @@ struct DrEngineObject {
     bool        on_wall = false;                        // Used by Engine Update to keep track of if this object is on a wall
     cpVect      last_touched_ground_normal = cpvzero;   // Normal Vector of the last touched surface
     double      last_touched_ground_dot = 1.0;          // Dot product of the last touched surface
-    Jump_State  jump_state = Jump_State::Jumped;        // Used by Engine Update to keep track of if the current jump button press has been processed
+    Jump_State  jump_state = Jump_State::Need_To_Jump;  // Used by Engine Update to keep track of if the current jump button press has been processed
 
     double      angle = 0;                      // Current object angle
     QPointF     velocity;                       // Current object velocity

@@ -39,10 +39,6 @@ static void getSpaceJointList(cpConstraint *constraint, QVector<cpConstraint*> *
 //####################################################################################
 void OpenGL::drawDebugShapes(QPainter &painter) {
 
-
-    //painter.drawText( QPointF(20, 20), "Shapes: " + QString::number(shape_list.count()));
-
-
     for (auto object : m_engine->objects) {
         if (!object->should_process)        continue;
         if (!object->has_been_processed)    continue;
@@ -207,13 +203,28 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 
         }   // End For shape
 
-        // Draw a multi shape Shape_Type::Polygon
+
+        // ***** Draw a multi shape Shape_Type::Polygon
         if (!object_poly.isEmpty())
             painter.drawPolygon( object_poly );
 
+        // ***** Draw Hit Points
+        QPoint text_coord = mapToScreen(center.x(), center.y(), 0).toPoint();
 
-        painter.drawText( mapToScreen(center.x(), center.y(), 0), "Hp: " + QString::number(object->health));
+        if (rect().contains(text_coord)) {
+            QFont health_font("Arial", int(18 * m_scale));
 
+            // Health as a QPainterPath
+            QPainterPath health;
+            health.addText(mapToScreen(center.x(), center.y(), 0), health_font, QString::number(object->health));
+            painter.setBrush(QBrush(color));
+            painter.setPen(QPen(Qt::black, 0.5 * static_cast<double>(m_scale), Qt::SolidLine, Qt::PenCapStyle::RoundCap));
+            painter.translate( -health.boundingRect().width(), health.boundingRect().height());
+            painter.drawPath(health);
+            painter.resetTransform();
+            ///painter.setFont( health_font);
+            ///painter.drawText( mapToScreen(center.x(), center.y(), 0), QString::number(object->health) );
+        }
 
     }   // End For object
 }
