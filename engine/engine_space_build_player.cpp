@@ -146,7 +146,7 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         ball->jump_count = 1;
         ball->air_jump = false;
         ball->wall_jump = true;
-
+        ball->health = 200;
 
         //ball->ignore_gravity = true;
         //ball->move_speed_y = 400;

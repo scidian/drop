@@ -97,19 +97,33 @@ void DrEngine::updateSpaceHelper() {
         }
 
 
-        // ***** Delete object if ends up outside the deletion threshold
+
+
+
+        // ***** Check for Object Removal
+        bool remove = false;
+        if (object->alive && object->health == 0) {
+            object->alive = false;
+            object->death_timer.restart();
+        }
+
+        // Delete object if it has been long enough after death
+        if (!object->alive) {
+            if (object->death_timer.elapsed() >= object->death_delay) remove = true;
+        }
+
+        // Delete object if ends up outside the deletion threshold
         if ( (pos.y < static_cast<double>(getCameraPos().y()) - m_delete_threshold_y) ||
              (pos.y > static_cast<double>(getCameraPos().y()) + m_delete_threshold_y) ||
              (pos.x < static_cast<double>(getCameraPos().x()) - m_delete_threshold_x) ||
-             (pos.x > static_cast<double>(getCameraPos().x()) + m_delete_threshold_x) ) {
+             (pos.x > static_cast<double>(getCameraPos().x()) + m_delete_threshold_x) ) remove = true;
 
+        // Process removal
+        if (remove) {
             removeObject(object);
-
             delete object;
             it = objects.erase(it);
-        } else {
-            it++;
-        }
+        } else it++;
     }   // End For
 
 

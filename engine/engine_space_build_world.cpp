@@ -42,11 +42,17 @@ void DrEngine::oneWayPlatform(DrEngineObject *object, cpVect direction) {
     }
 }
 
+
+//######################################################################################################
+//##    Chipmunk Callbacks
+//##        Support for object collisions
+//######################################################################################################
 static cpBool PreSolveFuncDamage(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b);
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
     if (object_a->damage <= 0) return cpTrue;                                   // Object does no damage, exit
+    if (!object_a->alive) return cpFalse;                                       // If object is dead, cancel collision
 
     bool should_damage = false;
     if ((object_a->collision_type == Collision_Type::Damage_Enemy  || object_a->collision_type == Collision_Type::Damage_Enemy_One_Way) &&
@@ -59,13 +65,18 @@ static cpBool PreSolveFuncDamage(cpArbiter *arb, cpSpace *, void *) {
          object_b->collision_type == Collision_Type::Damage_All    || object_b->collision_type == Collision_Type::Damage_All_One_Way))
         should_damage = true;
 
-    if ((object_a->collision_type == Collision_Type::Damage_All || object_a->collision_type == Collision_Type::Damage_All_One_Way))
+    if ((object_a->collision_type == Collision_Type::Damage_All    || object_a->collision_type == Collision_Type::Damage_All_One_Way))
         should_damage = true;
 
     if (should_damage) {
         if (object_b->health > 0) {
             object_b->health -= object_a->damage;
-            if (object_b->health < 0) object_b->health = 0;
+
+            // If we killed object, cancel collision
+            if (object_b->health <= 0) {
+                object_b->health = 0;
+                return cpFalse;
+            }
         }
     }
     return cpTrue;
@@ -78,6 +89,7 @@ void DrEngine::setCollisionType(DrEngineObject *object, Collision_Type type) {
     }
 }
 
+
 //######################################################################################################
 //##    Build Space
 //######################################################################################################
@@ -89,6 +101,7 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
 
     m_space = cpSpaceNew();                             // Creates an empty space
     cpSpaceSetIterations(m_space, m_iterations);        // Sets how many times physics are processed each update
+    cpSpaceSetSleepTimeThreshold(m_space, 0.25);        // Objects will sleep after this long of not moving
 
     // Reset cameras
     clearCameras();

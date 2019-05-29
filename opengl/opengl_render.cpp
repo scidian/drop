@@ -74,6 +74,7 @@ void OpenGL::paintGL() {
     if (m_engine->debug_shapes) {
         drawDebugShapes(painter);
         drawDebugJoints(painter);
+        drawDebugHealth(painter);
     }
     if (m_engine->debug_collisions) {
         drawDebugCollisions(painter);
@@ -263,8 +264,15 @@ void OpenGL::drawObjects() {
         m_shader.setAttributeArray( m_attribute_vertex, vertices.data(), 3 );
         m_shader.enableAttributeArray( m_attribute_vertex );
 
-        m_shader.setUniformValue( m_uniform_texture, 0 );                          // Use texture unit 0
-        m_shader.setUniformValue( m_uniform_alpha, object->alpha );                // Add object alpha
+        m_shader.setUniformValue( m_uniform_texture, 0 );                           // Use texture unit 0
+
+        // Fade away dying object
+        float alpha = object->alpha;                                                // Start with object alpha
+        if (!object->alive && object->fade_on_death) {
+            double fade_percent = 1.0 - (static_cast<double>(object->death_timer.elapsed()) / static_cast<double>(object->death_delay));
+            alpha *= static_cast<float>(fade_percent);
+        }
+        m_shader.setUniformValue( m_uniform_alpha, alpha );
 
         // ***** Draw triangles using shader program
         glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );                                    // GL_TRIANGLES

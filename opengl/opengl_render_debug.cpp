@@ -36,6 +36,22 @@ static void getSpaceJointList(cpConstraint *constraint, QVector<cpConstraint*> *
 
 
 //####################################################################################
+//##    Assigns Debug color based on Collision Type
+//####################################################################################
+QColor OpenGL::collisionTypeDebugColor(Collision_Type collision_type) {
+    switch (collision_type) {
+        case Collision_Type::Damage_None:
+        case Collision_Type::Damage_None_One_Way:   return QColor(0, 255, 0);              // Green
+        case Collision_Type::Damage_Player:
+        case Collision_Type::Damage_Player_One_Way: return QColor(255, 0, 0);              // Red
+        case Collision_Type::Damage_Enemy:
+        case Collision_Type::Damage_Enemy_One_Way:  return QColor(0, 0, 255);              // Blue
+        case Collision_Type::Damage_All:
+        case Collision_Type::Damage_All_One_Way:    return QColor(128, 0, 128);            // Purple
+    }
+}
+
+//####################################################################################
 //##    Draws the Collision Shapes using QPainter
 //####################################################################################
 void OpenGL::drawDebugShapes(QPainter &painter) {
@@ -45,32 +61,9 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         if (!object->has_been_processed)    continue;
 
         // Figure out what color to make the debug shapes
-        QColor color;
-        switch (object->collision_type) {
-            case Collision_Type::Damage_None:
-            case Collision_Type::Damage_None_One_Way:
-                color = QColor(0, 255, 0);              // Green
-                break;
-            case Collision_Type::Damage_Player:
-            case Collision_Type::Damage_Player_One_Way:
-                color = QColor(255, 0, 0);              // Red
-                break;
-            case Collision_Type::Damage_Enemy:
-            case Collision_Type::Damage_Enemy_One_Way:
-                color = QColor(0, 0, 255);              // Blue
-                break;
-            case Collision_Type::Damage_All:
-            case Collision_Type::Damage_All_One_Way:
-                color = QColor(128, 0, 128);            // Purple
-                break;
-        }
-        ///switch (object->body_type) {
-        ///    case Body_Type::Dynamic:        color = Qt::red;       break;
-        ///    case Body_Type::Static:         color = Qt::blue;      break;
-        ///    case Body_Type::Kinematic:      color = Qt::green;     break;
-        ///}
-        if (!object->does_collide) color = color.lighter();
+        QColor color = collisionTypeDebugColor(object->collision_type);
         if (object->health <= 0) color = Qt::gray;
+        if (!object->does_collide) color = color.lighter();
 
         // Set up QPainter
         QPen cosmetic_pen( QBrush(color), 1);
@@ -209,25 +202,6 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         if (!object_poly.isEmpty())
             painter.drawPolygon( object_poly );
 
-//        // ***** Draw Hit Points
-//        QPointF text_coord = mapToScreen(center.x(), center.y(), 0);
-
-//        if (rect().contains( text_coord.toPoint() )) {
-//            QFont health_font("Avenir", static_cast<int>(18 * m_scale));
-
-//            // Health as a QPainterPath
-//            QPainterPath health;
-//            QString hp = QString::number(object->health);
-//            health.addText(text_coord, health_font, hp);
-//            painter.setBrush(QBrush(color.darker()));
-//            painter.setPen(Qt::NoPen);
-
-//            double fw = Dr::CheckFontWidth(health_font, hp);
-//            painter.translate( -(fw / 2.0), health.boundingRect().height());
-//            painter.drawPath(health);
-//            painter.resetTransform();
-//        }
-
     }   // End For object
 }
 
@@ -238,8 +212,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 //####################################################################################
 void OpenGL::drawDebugJoints(QPainter &painter) {
 
-    // Orange
-    QPen pen( QBrush(QColor(255, 128, 0)), 1.5 * static_cast<double>(m_scale), Qt::SolidLine, Qt::PenCapStyle::RoundCap);
+    QPen pen( QBrush(QColor(255, 255, 255)), 1.25 * static_cast<double>(m_scale), Qt::SolidLine, Qt::PenCapStyle::RoundCap);
     painter.setPen( pen );
 
     // Get a list of the constraints in the Space
@@ -267,6 +240,38 @@ void OpenGL::drawDebugJoints(QPainter &painter) {
 }
 
 
+void OpenGL::drawDebugHealth(QPainter &painter) {
+
+    QFont health_font("Avenir", static_cast<int>(18 * m_scale));
+    painter.setPen(Qt::NoPen);
+
+    for (auto object : m_engine->objects) {
+        if (!object->should_process)        continue;
+        if (!object->has_been_processed)    continue;
+
+        // Figure out what color to make the debug shapes
+        QColor color = collisionTypeDebugColor(object->collision_type);
+        color = QColor(255 - color.red(), 255 - color.green(), 255 - color.blue());
+
+        // Load Object Position
+        QPointF center = (object->previous_position * (1.0 - m_time_percent)) + (object->position * m_time_percent);
+        QPointF text_coord = mapToScreen(center.x(), center.y(), 0);
+
+        if (rect().contains( text_coord.toPoint() )) {
+            // Health as a QPainterPath
+            QPainterPath health;
+            QString hp = QString::number(object->health);
+            health.addText(text_coord, health_font, hp);
+            painter.setBrush( QBrush(color) );
+
+            double fw = Dr::CheckFontWidth(health_font, hp);
+            painter.translate( -(fw / 2.0), health.boundingRect().height() * 1.5);
+            painter.drawPath(health);
+            painter.resetTransform();
+        }
+    }
+
+}
 
 
 //####################################################################################

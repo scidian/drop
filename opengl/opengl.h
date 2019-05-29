@@ -18,6 +18,7 @@
 #include <chrono>
 
 // Forward Declarations
+enum class Collision_Type;
 class DrEngine;
 class FormEngine;
 
@@ -92,10 +93,12 @@ public:
     void            zoomInOut(int level);
 
     // Render Calls
+    QColor          collisionTypeDebugColor(Collision_Type collision_type);
     void            cullingOn();
     void            cullingOff();
     void            drawCube(QVector3D center);
     void            drawDebugCollisions(QPainter &painter);
+    void            drawDebugHealth(QPainter &painter);
     void            drawDebugJoints(QPainter &painter);
     void            drawDebugShapes(QPainter &painter);
     void            drawObjects();

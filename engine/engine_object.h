@@ -9,6 +9,7 @@
 #define ENGINE_OBJECT_H
 
 #include <QPointF>
+#include <QTime>
 #include <QVector>
 #include <QVector3D>
 #include <map>
@@ -85,14 +86,16 @@ struct DrEngineObject {
     long        texture_number;                 // Reference to which texture to use from Engine.EngineTexture map
     float       scale_x = 1.0f;                 // Scale of object in world
     float       scale_y = 1.0f;                 // Scale of object in world
-    float       alpha;                          // Transparency of object
+    float       alpha;                          // Transparency of object (0.0 invisible, 1.0 opaque)
     double      z_order;                        // Used for layering
 
     long        active_camera = 0;              // Set to ID of last camera that followed this object, 0 == no camera
 
     Collision_Type  collision_type = Collision_Type::Damage_None;       // Specifies what other types of objects this object can damage
-    long        health = 1;                                             // Object Health, -1 = infinite
+    long        health = 50;                                             // Object Health, -1 = infinite
     long        damage = 1;                                             // Damage caused to other objects of Type collision_type
+    long        death_delay = 1000;                                     // Time it takes for item to be removed in milliseconds (0 == remove immediately)
+    bool        fade_on_death = true;                                   // If true, object is slowly faded over death_delay time
 
     bool        one_way = false;                // Set to true if we're using this object as a one way platform
     cpVect      one_way_direction {0, 1};       // Direction of Normal for one way platforms
@@ -143,6 +146,9 @@ struct DrEngineObject {
     cpVect      last_touched_ground_normal = cpvzero;   // Normal Vector of the last touched surface
     double      last_touched_ground_dot = 1.0;          // Dot product of the last touched surface
     Jump_State  jump_state = Jump_State::Need_To_Jump;  // Used by Engine Update to keep track of if the current jump button press has been processed
+
+    bool        alive = true;                   // When health turn to zero, false, and object removed from scene after remove_delay
+    QTime       death_timer;                    // Used to incorporate death_delay for object removal
 
     double      angle = 0;                      // Current object angle
     QPointF     velocity;                       // Current object velocity
