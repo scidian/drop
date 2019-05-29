@@ -28,6 +28,15 @@ void OpenGL::paintGL() {
     ///auto ver = glGetString(GL_VERSION);
     ///m_engine->info = QString::fromUtf8(reinterpret_cast<const char*>(ver));
 
+    // ********** Calculates Render Frames per Second
+    ++m_fps_count;
+    double fps_milli = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_fps).count() / 1000000.0;
+    if (fps_milli > 1000.0) {
+        m_engine->fps_render = m_fps_count;
+        m_fps_count = 0;
+        m_time_fps = Clock::now();
+    }
+
     // ********** Make sure viewport is sized correctly and clear the buffers
     ///glViewport(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
     float background_red =   static_cast<float>(m_engine->getBackgroundColor().redF());
@@ -37,10 +46,6 @@ void OpenGL::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);///) | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
     ///glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
     ///glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-
-    // Enable depth / stencil test
-    ///glEnable( GL_DEPTH_TEST  );
-    ///glEnable( GL_STENCIL_TEST );
 
     // Enable alpha channel
     glEnable(GL_BLEND);
@@ -52,6 +57,10 @@ void OpenGL::paintGL() {
     ///glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
     ///glSampleCoverage(GL_SAMPLE_ALPHA_TO_COVERAGE, GL_TRUE);
 
+    // Enable depth / stencil test
+    ///glEnable( GL_DEPTH_TEST  );
+    ///glEnable( GL_STENCIL_TEST );
+
     // Alpha clamping
     ///glEnable(GL_ALPHA_TEST);
     ///glAlphaFunc(GL_GREATER,0);                           // 0.0 (transparent) to 1.0 (opaque)
@@ -59,10 +68,6 @@ void OpenGL::paintGL() {
 
     // ***** Update Camera / Matrices
     updateViewMatrix();
-
-    // ***** Calculate time since last physics update as a percentage (and add how long a render takes)
-    m_time_percent = (m_form_engine->getTimerMilliseconds(Engine_Timer::Physics) + m_time_one_frame_takes_to_render) / m_form_engine->getLastPhysicsTime();
-    setTimeFrameStart(Clock::now());                        // Timer tracks how long one render takes to end up on screen from this point
 
     // ***** Render Scene
     drawObjects();
@@ -95,15 +100,6 @@ void OpenGL::paintGL() {
     ///painter.drawText( QPointF(20, 80), "Max Samples: " +  QString::number(max_sample));
 
     painter.end();
-
-    // ********** Calculates Render Frames per Second
-    ++m_fps_count;
-    double fps_milli = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_fps).count() / 1000000.0;
-    if (fps_milli > 1000.0) {
-        m_engine->fps_render = m_fps_count;
-        m_fps_count = 0;
-        m_time_fps = Clock::now();
-    }
 }
 
 

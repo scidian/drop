@@ -167,6 +167,7 @@ void FormEngine::startTimers() {
     m_time_render =  Clock::now();
     m_time_camera =  Clock::now();
     m_time_physics = Clock::now();
+    m_time_frame =   Clock::now();
     m_timer->start( 0 );                                        // Timeout of zero will call this timeout every pass of the event loop
 }
 void FormEngine::stopTimers() {
@@ -178,6 +179,16 @@ double FormEngine::getTimerMilliseconds(Engine_Timer time_since_last) {
         case Engine_Timer::Render:  return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_render).count() /  1000000.0;
         case Engine_Timer::Camera:  return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_camera).count() /  1000000.0;
         case Engine_Timer::Physics: return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_physics).count() / 1000000.0;
+        case Engine_Timer::Frame:   return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_frame).count() /   1000000.0;
+    }
+}
+void FormEngine::resetTimer(Engine_Timer timer_to_reset) {
+    switch (timer_to_reset) {
+        case Engine_Timer::Update:  m_time_update =  Clock::now();      break;
+        case Engine_Timer::Render:  m_time_render =  Clock::now();      break;
+        case Engine_Timer::Camera:  m_time_camera =  Clock::now();      break;
+        case Engine_Timer::Physics: m_time_physics = Clock::now();      break;
+        case Engine_Timer::Frame:   m_time_frame =   Clock::now();      break;
     }
 }
 
@@ -188,32 +199,35 @@ void FormEngine::updateEngine() {
     // ***** Seperate Camera Update
     double camera_milliseconds = getTimerMilliseconds(Engine_Timer::Camera);
     if (camera_milliseconds > 1.0) {
-        m_time_camera = Clock::now();
+        resetTimer(Engine_Timer::Camera);
         m_engine->moveCameras(camera_milliseconds);                                 // Move Cameras
     }
 
     // ***** MAIN UPDATE LOOP: Space (Physics)
     double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
-    if (update_milliseconds > (m_engine->getTimeStep() * 1000.0)) {
-        m_time_update =  Clock::now();
+    if (update_milliseconds > m_engine->getTimeStepAsMilliseconds()) {
+        resetTimer(Engine_Timer::Update);
 
         m_engine->updateSpace(update_milliseconds);                                 // Physics Engine
         m_physics_milliseconds = getTimerMilliseconds(Engine_Timer::Physics);       // Store how long between this physics step
-        m_time_physics = Clock::now();                                              // Record time done with Step
+        resetTimer(Engine_Timer::Physics);                                          // Record time done with SpaceStep
         m_engine->updateSpaceHelper();                                              // Additional Physics Updating
 
         m_engine->updateCameras();                                                  // Update Camera Targets
     }
 
-    // ***** If we're bogged down or have a lot of objects, lower frame rate
+    // ***** If we're bogged down, lower frame rate
     double target_frame_rate = (1000.0 / m_ideal_frames_per_second);
-    if ((m_engine->fps_physics / (1.0 / m_engine->getTimeStep()) < 0.94) ||
-        (m_engine->objects.count() > 500)) target_frame_rate = (1000.0 / m_lower_frames_per_second);
+    if (m_engine->objects.count() > 500) target_frame_rate =  (1000.0 / m_lower_frames_per_second);
 
     // ***** Seperate Render Update
     double render_milliseconds = getTimerMilliseconds(Engine_Timer::Render);
     if (render_milliseconds > target_frame_rate) {
-        m_time_render = Clock::now();
+        resetTimer(Engine_Timer::Render);
+
+        // Calculate time since last physics update as a percentage (and add how long a render takes)
+        m_opengl->setTimePercent( (getTimerMilliseconds(Engine_Timer::Physics) + m_time_one_frame_takes_to_render) / (m_physics_milliseconds + 0.001) );
+        resetTimer(Engine_Timer::Frame);                                            // Track how long one render takes to end up on screen from this point
         m_opengl->update();                                                         // Render
     }
 
@@ -222,8 +236,7 @@ void FormEngine::updateEngine() {
 
 // Emitted by QOpenGLWidget when back buffer is swapped to screen
 void FormEngine::frameSwapped() {
-    // Updates timer that tracks how long a paintGL() call takes to shown onto screen from when first started
-    m_opengl->setTimeOneFrameTakesToRender( std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_opengl->getTimeFrameStart()).count() / 1000000.0 );
+    m_time_one_frame_takes_to_render = getTimerMilliseconds(Engine_Timer::Frame);   // Figures out time since m_opengl->update() was called till buffer swap
 }
 
 

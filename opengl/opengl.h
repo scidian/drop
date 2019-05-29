@@ -59,8 +59,6 @@ private:
 
     // Timer Variables
     Clock::time_point m_time_fps = Clock::now();
-    Clock::time_point m_time_frame = Clock::now();
-    double  m_time_one_frame_takes_to_render = 0.0;
     double  m_time_percent = 1.0;
     int     m_fps_count = 0;                                        // Counts renders to calculate frames per second
 
@@ -106,12 +104,8 @@ public:
 
     // Getters and Setters
     float               getScale()          { return m_scale; }
-    Clock::time_point&  getTimeFrameStart() { return m_time_frame; }
     double              getTimePercent()    { return m_time_percent; }
-
-    void                setTimeFrameStart(Clock::time_point time) { m_time_frame = time; }
-    void                setTimeOneFrameTakesToRender(double milliseconds)  { m_time_one_frame_takes_to_render = milliseconds; }
-
+    void                setTimePercent(double percent) { m_time_percent = percent; }
 
 };
 

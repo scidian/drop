@@ -25,6 +25,7 @@ enum class Engine_Timer {
     Render,
     Camera,
     Physics,
+    Frame,
 };
 
 // Forward declarations
@@ -43,21 +44,28 @@ class FormEngine : public QMainWindow
     Q_OBJECT
 
 private:
+    // Local Variables
     DrEngine           *m_engine;
     OpenGL             *m_opengl;
     DrProject          *m_project;
 
+    // Timer Variables
     QTimer             *m_timer;
-    Clock::time_point   m_time_update;
-    Clock::time_point   m_time_render;
-    Clock::time_point   m_time_camera;
-    Clock::time_point   m_time_physics;
-    double              m_physics_milliseconds;
+    Clock::time_point   m_time_update;                          // Checks time between SpaceStep calls
+    Clock::time_point   m_time_render;                          // Checks time between paintGL calls
+    Clock::time_point   m_time_camera;                          // Checks time between moveCamera calls
+    Clock::time_point   m_time_physics;                         // Stores time since last physics call
+    Clock::time_point   m_time_frame;                           // Stores time since last paint call
 
+    double              m_physics_milliseconds = 0.0;
+    double              m_time_one_frame_takes_to_render = 0.0;
+
+    bool                m_running = false;
+
+    // Settings
     const double        m_ideal_frames_per_second = 120;
     const double        m_lower_frames_per_second =  60;
 
-    bool                m_running = false;
 
 public:
     QWidget         *centralWidget;
@@ -79,9 +87,9 @@ public:
     // Function Calls
     DrEngine*   getEngine() { return m_engine; }
     OpenGL*     getOpenGL() { return m_opengl; }
-    double      getLastPhysicsTime() { return (m_physics_milliseconds > 0.0) ? m_physics_milliseconds : 0.00001; }
     double      getTimerMilliseconds(Engine_Timer time_since_last);
     void        loadDemo(Demo_Space using_space, Demo_Player using_player);
+    void        resetTimer(Engine_Timer timer_to_reset);
     void        startTimers();
     void        stopTimers();
     void        updateCheckedButtons();

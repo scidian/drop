@@ -201,20 +201,21 @@ public:
 
 
     // Getter and Setters    
-    FormEngine*         getFormEngine()         { return m_form_engine; }
-    DrProject*          getProject()            { return m_project; }
-    cpSpace*            getSpace()              { return m_space; }
+    FormEngine*         getFormEngine()             { return m_form_engine; }
+    DrProject*          getProject()                { return m_project; }
+    cpSpace*            getSpace()                  { return m_space; }
 
-    const cpFloat&      getTimeStep()           { return m_time_step; }
-    const cpFloat&      getTimeWarp()           { return m_time_warp; }
-    const cpVect&       getGravity()            { return m_gravity; }
-    const cpFloat&      getDamping()            { return m_damping; }
-    const cpFloat&      getFriction()           { return m_friction; }
-    const cpFloat&      getBounce()             { return m_bounce; }
+    cpFloat             getTimeStepAsMilliseconds() { return (1000.0 * m_time_step); }
+    const cpFloat&      getTimeStep()               { return m_time_step; }
+    const cpFloat&      getTimeWarp()               { return m_time_warp; }
+    const cpVect&       getGravity()                { return m_gravity; }
+    const cpFloat&      getDamping()                { return m_damping; }
+    const cpFloat&      getFriction()               { return m_friction; }
+    const cpFloat&      getBounce()                 { return m_bounce; }
 
-    const double&       getDeleteThresholdX()   { return m_delete_threshold_x; }
-    const double&       getDeleteThresholdY()   { return m_delete_threshold_y; }
-    const QColor&       getBackgroundColor()    { return m_background_color; }
+    const double&       getDeleteThresholdX()       { return m_delete_threshold_x; }
+    const double&       getDeleteThresholdY()       { return m_delete_threshold_y; }
+    const QColor&       getBackgroundColor()        { return m_background_color; }
 
     void                setTimeWarp(double new_time_warp) { m_time_warp = new_time_warp; }
     void                setGravity(cpVect new_gravity) { m_gravity = new_gravity; }

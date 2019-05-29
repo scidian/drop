@@ -169,7 +169,6 @@ void DrEngineCamera::updateCamera() {
 
         // Interpolates object from previous frame to this frame
         ///double  percent = m_engine->getFormEngine()->getTimerMilliseconds(Engine_Timer::Physics) / (1000.0 / m_engine->fps_physics);
-        ///double  percent = m_engine->getFormEngine()->getTimerMilliseconds(Engine_Timer::Physics) / m_engine->getFormEngine()->getLastPhysicsTime();
         ///QPointF smoothed = (m_follow->previous_position * (1.0 - percent)) + (m_follow->position * percent);
         ///double  pos_x = (smoothed.x() + (static_cast<double>(m_target.x()) + average_x)*2.0) / 3.0;
         ///double  pos_y = (smoothed.y() + (static_cast<double>(m_target.y()) + average_y)*2.0) / 3.0;

@@ -98,16 +98,9 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
 
     m_space = cpSpaceNew();                             // Creates an empty space
     cpSpaceSetIterations(m_space, m_iterations);        // Sets how many times physics are processed each update
-
-    // Sleep settings
-    cpSpaceSetSleepTimeThreshold(m_space, 0.5);         // Objects will sleep after this long of not moving
-    ///cpSpaceSetIdleSpeedThreshold(m_space, 25.0);     // Set automatically based on gravity
-
-    // Some other pretty good sleep settings
-    ///cpSpaceSetSleepTimeThreshold(m_space, 0.20);     // Objects will sleep after this long of not moving
-    ///cpSpaceSetIdleSpeedThreshold(m_space, 25.0);     // Speed at which an objet will start ot fall asleep
-
     cpSpaceSetCollisionSlop(m_space, 0.5);              // Allows for a little overlap, makes sleep happier
+    cpSpaceSetSleepTimeThreshold(m_space, 0.50);        // Objects will sleep after this long of not moving
+    ///cpSpaceSetIdleSpeedThreshold(m_space, 25.0);     // Can set this manually, but also set automatically based on gravity
 
 
     // ***** Reset cameras
