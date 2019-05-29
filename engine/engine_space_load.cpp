@@ -22,6 +22,7 @@ void DrEngine::loadStageToSpace(DrStage *stage, double offset_x, double offset_y
         if (object->getObjectType() != DrObjectType::Object) continue;
 
         // ***** Load Object properties
+        long        asset_key =     object->getAssetKey();
         QPointF     position =      object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF();
         QPointF     scale =         object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale).toPointF();
         double      angle =         object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Rotation).toDouble();
@@ -29,8 +30,16 @@ void DrEngine::loadStageToSpace(DrStage *stage, double offset_x, double offset_y
         double      alpha =         object->getComponentPropertyValue(Components::Object_Layering,  Properties::Object_Opacity).toDouble() / 100;
         bool        collide =       object->getComponentPropertyValue(Components::Object_Settings,  Properties::Object_Collide).toBool();
         bool        physics =       object->getComponentPropertyValue(Components::Object_Settings,  Properties::Object_Physics).toBool();
-        Body_Type   body =          physics? Body_Type::Dynamic : Body_Type::Kinematic;
-        long        asset_key =     object->getAssetKey();
+
+        ///Body_Type   body =          physics? Body_Type::Dynamic : Body_Type::Kinematic;
+
+        Body_Type body;
+        if (physics) {
+            body = Body_Type::Dynamic;
+        } else {
+            body = Body_Type::Static;
+        }
+
 
         // ***** Add the block to the cpSpace
         DrEngineObject *block =     addBlock(body, asset_key, position.x() + offset_x, -position.y() + offset_y, z_order,

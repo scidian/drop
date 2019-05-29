@@ -92,7 +92,7 @@ struct DrEngineObject {
     long        active_camera = 0;              // Set to ID of last camera that followed this object, 0 == no camera
 
     Collision_Type  collision_type = Collision_Type::Damage_None;       // Specifies what other types of objects this object can damage
-    long        health = 50;                                             // Object Health, -1 = infinite
+    long        health = 3;                                             // Object Health, -1 = infinite
     long        damage = 1;                                             // Damage caused to other objects of Type collision_type
     long        death_delay = 1000;                                     // Time it takes for item to be removed in milliseconds (0 == remove immediately)
     bool        fade_on_death = true;                                   // If true, object is slowly faded over death_delay time

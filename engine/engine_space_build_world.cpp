@@ -22,35 +22,21 @@
 
 //######################################################################################################
 //##    Chipmunk Callbacks
-//##        Support for one way platform (collision)
+//##        Support for object collisions and one way platforms
 //######################################################################################################
-static cpBool BeginFuncOneWay(cpArbiter *arb, cpSpace *, void *) {
-    CP_ARBITER_GET_SHAPES(arb, a, b);
-    DrEngineObject *object = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
-    if (cpvdot(cpArbiterGetNormal(arb), object->one_way_direction) < 0.0)
-        return cpArbiterIgnore(arb);
-    return cpTrue;
-}
-void DrEngine::oneWayPlatform(DrEngineObject *object, cpVect direction) {
-    object->one_way = true;
-    object->one_way_direction = direction;              // Let objects pass if going Direction
-    switch (object->collision_type) {
-        case Collision_Type::Damage_None:   case Collision_Type::Damage_None_One_Way:   setCollisionType(object, Collision_Type::Damage_None_One_Way);   break;
-        case Collision_Type::Damage_Player: case Collision_Type::Damage_Player_One_Way: setCollisionType(object, Collision_Type::Damage_Player_One_Way); break;
-        case Collision_Type::Damage_Enemy:  case Collision_Type::Damage_Enemy_One_Way:  setCollisionType(object, Collision_Type::Damage_Enemy_One_Way);  break;
-        case Collision_Type::Damage_All:    case Collision_Type::Damage_All_One_Way:    setCollisionType(object, Collision_Type::Damage_All_One_Way);    break;
-    }
-}
-
-
-//######################################################################################################
-//##    Chipmunk Callbacks
-//##        Support for object collisions
-//######################################################################################################
-static cpBool PreSolveFuncDamage(cpArbiter *arb, cpSpace *, void *) {
+static cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b);
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
+
+    // Check for one way platform
+    if (object_a->one_way) {
+        if (cpvdot(cpArbiterGetNormal(arb), object_a->one_way_direction) < 0.0)
+            return cpArbiterIgnore(arb);
+    } else if (object_b->one_way) {
+        if (cpvdot(cpArbiterGetNormal(arb), object_b->one_way_direction) > 0.0)
+            return cpArbiterIgnore(arb);
+    }
     if (object_a->damage <= 0) return cpTrue;                                   // Object does no damage, exit
     if (!object_a->alive) return cpFalse;                                       // If object is dead, cancel collision
 
@@ -82,6 +68,17 @@ static cpBool PreSolveFuncDamage(cpArbiter *arb, cpSpace *, void *) {
     return cpTrue;
 }
 
+void DrEngine::oneWayPlatform(DrEngineObject *object, cpVect direction) {
+    object->one_way = true;
+    object->one_way_direction = direction;              // Let objects pass if going Direction
+    switch (object->collision_type) {
+        case Collision_Type::Damage_None:   case Collision_Type::Damage_None_One_Way:   setCollisionType(object, Collision_Type::Damage_None_One_Way);   break;
+        case Collision_Type::Damage_Player: case Collision_Type::Damage_Player_One_Way: setCollisionType(object, Collision_Type::Damage_Player_One_Way); break;
+        case Collision_Type::Damage_Enemy:  case Collision_Type::Damage_Enemy_One_Way:  setCollisionType(object, Collision_Type::Damage_Enemy_One_Way);  break;
+        case Collision_Type::Damage_All:    case Collision_Type::Damage_All_One_Way:    setCollisionType(object, Collision_Type::Damage_All_One_Way);    break;
+    }
+}
+
 void DrEngine::setCollisionType(DrEngineObject *object, Collision_Type type) {
     object->collision_type = type;
     for (auto shape : object->shapes) {
@@ -101,34 +98,29 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
 
     m_space = cpSpaceNew();                             // Creates an empty space
     cpSpaceSetIterations(m_space, m_iterations);        // Sets how many times physics are processed each update
-    cpSpaceSetSleepTimeThreshold(m_space, 0.25);        // Objects will sleep after this long of not moving
+    cpSpaceSetSleepTimeThreshold(m_space, 0.20);        // Objects will sleep after this long of not moving
+    cpSpaceSetIdleSpeedThreshold(m_space, 25.0);
 
     // Reset cameras
     clearCameras();
 
-    // ***** CollisionHandlers: One Way Collisions
-    cpCollisionHandler *one_way_handler1 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_None_One_Way));
-    cpCollisionHandler *one_way_handler2 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Player_One_Way));
-    cpCollisionHandler *one_way_handler3 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Enemy_One_Way));
-    cpCollisionHandler *one_way_handler4 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_All_One_Way));
-    one_way_handler1->beginFunc = BeginFuncOneWay;
-    one_way_handler2->beginFunc = BeginFuncOneWay;
-    one_way_handler3->beginFunc = BeginFuncOneWay;
-    one_way_handler4->beginFunc = BeginFuncOneWay;
-
-    // ***** CollisionHandlers: Damage / Health
-    cpCollisionHandler *damage_handler1 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Player));
-    cpCollisionHandler *damage_handler2 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Player_One_Way));
-    cpCollisionHandler *damage_handler3 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Enemy));
-    cpCollisionHandler *damage_handler4 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Enemy_One_Way));
-    cpCollisionHandler *damage_handler5 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_All));
-    cpCollisionHandler *damage_handler6 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_All_One_Way));
-    damage_handler1->preSolveFunc = PreSolveFuncDamage;
-    damage_handler2->preSolveFunc = PreSolveFuncDamage;
-    damage_handler3->preSolveFunc = PreSolveFuncDamage;
-    damage_handler4->preSolveFunc = PreSolveFuncDamage;
-    damage_handler5->preSolveFunc = PreSolveFuncDamage;
-    damage_handler6->preSolveFunc = PreSolveFuncDamage;
+    // ***** Custom Wildcard beginFunc CollisionHandlers: Damage / Health
+    cpCollisionHandler *damage_handler1 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_None));
+    cpCollisionHandler *damage_handler2 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_None_One_Way));
+    cpCollisionHandler *damage_handler3 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Player));
+    cpCollisionHandler *damage_handler4 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Player_One_Way));
+    cpCollisionHandler *damage_handler5 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Enemy));
+    cpCollisionHandler *damage_handler6 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Enemy_One_Way));
+    cpCollisionHandler *damage_handler7 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_All));
+    cpCollisionHandler *damage_handler8 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_All_One_Way));
+    damage_handler1->beginFunc = BeginFuncWildcard;
+    damage_handler2->beginFunc = BeginFuncWildcard;
+    damage_handler3->beginFunc = BeginFuncWildcard;
+    damage_handler4->beginFunc = BeginFuncWildcard;
+    damage_handler5->beginFunc = BeginFuncWildcard;
+    damage_handler6->beginFunc = BeginFuncWildcard;
+    damage_handler7->beginFunc = BeginFuncWildcard;
+    damage_handler8->beginFunc = BeginFuncWildcard;
 
 
     // ***** Build desired demo Space

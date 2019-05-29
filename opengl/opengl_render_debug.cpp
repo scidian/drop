@@ -63,6 +63,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         // Figure out what color to make the debug shapes
         QColor color = collisionTypeDebugColor(object->collision_type);
         if (object->health <= 0) color = Qt::gray;
+        if (cpBodyIsSleeping(object->body)) color = Qt::yellow;
         if (!object->does_collide) color = color.lighter();
 
         // Set up QPainter

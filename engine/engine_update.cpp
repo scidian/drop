@@ -48,60 +48,63 @@ void DrEngine::updateSpaceHelper() {
     // ********** Iterate through objects, delete if they go off screen
     for ( auto it = objects.begin(); it != objects.end(); ) {
         DrEngineObject *object = *it;
+        bool remove = false;
         object->has_been_processed = true;
 
         // ***** Skip object if static; or if not yet in Space / no longer in Space
-        if ((object->body_type == Body_Type::Static) || (object->should_process == false)) {
+        if (object->should_process == false) {
             it++;
             continue;
         }
 
-        // ***** Get some info about the current object from the space and save it to the current DrEngineObject
-        cpVect  vel = cpBodyGetVelocity( object->body );
-        cpFloat angle = cpBodyGetAngle( object->body );
-        object->velocity.setX( vel.x );
-        object->velocity.setX( vel.y );
-        object->angle = qRadiansToDegrees( angle );
+        // ***** Process non-static object movement
+        if ((object->body_type != Body_Type::Static)) {
 
-        cpVect  pos = cpBodyGetPosition( object->body );
-        object->previous_position = object->position;
-        object->position.setX( pos.x );
-        object->position.setY( pos.y );
+            // ***** Get some info about the current object from the space and save it to the current DrEngineObject
+            cpVect  vel = cpBodyGetVelocity( object->body );
+            cpFloat angle = cpBodyGetAngle( object->body );
+            object->velocity.setX( vel.x );
+            object->velocity.setX( vel.y );
+            object->angle = qRadiansToDegrees( angle );
 
+            cpVect  pos = cpBodyGetPosition( object->body );
+            object->previous_position = object->position;
+            object->position.setX( pos.x );
+            object->position.setY( pos.y );
 
+            // ***** Update global friction and bounce to all objects if globals have changed (possibly due to Gameplay Action)
+    //        if (qFuzzyCompare(object->custom_friction, c_friction) == false) {
+    //            for (auto shape : object->shapes) {
+    //                cpFloat friction = cpShapeGetFriction( shape );
+    //                if (qFuzzyCompare(friction, m_friction) == false) cpShapeSetFriction( shape, m_friction );
+    //            }
+    //        }
+    //        if (qFuzzyCompare(object->custom_bounce, c_bounce) == false) {
+    //            for (auto shape : object->shapes) {
+    //                cpFloat bounce = cpShapeGetElasticity( shape );
+    //                if (qFuzzyCompare(bounce, m_bounce) == false) cpShapeSetElasticity( shape, m_bounce );
+    //            }
+    //        }
 
-        // ***** Update global friction and bounce to all objects if globals have changed (possibly due to Gameplay Action)
-//        if (qFuzzyCompare(object->custom_friction, c_friction) == false) {
-//            for (auto shape : object->shapes) {
-//                cpFloat friction = cpShapeGetFriction( shape );
-//                if (qFuzzyCompare(friction, m_friction) == false) cpShapeSetFriction( shape, m_friction );
-//            }
-//        }
-//        if (qFuzzyCompare(object->custom_bounce, c_bounce) == false) {
-//            for (auto shape : object->shapes) {
-//                cpFloat bounce = cpShapeGetElasticity( shape );
-//                if (qFuzzyCompare(bounce, m_bounce) == false) cpShapeSetElasticity( shape, m_bounce );
-//            }
-//        }
-
-
-        // ***** Process Button Presses
-        // If is a wheel, apply gas pedal
-        if (qFuzzyCompare(object->rotate_speed, 0) == false) {
-            switch (gas_pedal) {
-                case Pedal::Clockwise:          cpBodySetAngularVelocity( object->body, -object->rotate_speed );    break;
-                case Pedal::CounterClockwise:   cpBodySetAngularVelocity( object->body,  object->rotate_speed );    break;
-                case Pedal::Brake:              cpBodySetAngularVelocity( object->body,  0 );                       break;
-                case Pedal::None:               break;
+            // ***** Process Button Presses
+            // If is a wheel, apply gas pedal
+            if (qFuzzyCompare(object->rotate_speed, 0) == false) {
+                switch (gas_pedal) {
+                    case Pedal::Clockwise:          cpBodySetAngularVelocity( object->body, -object->rotate_speed );    break;
+                    case Pedal::CounterClockwise:   cpBodySetAngularVelocity( object->body,  object->rotate_speed );    break;
+                    case Pedal::Brake:              cpBodySetAngularVelocity( object->body,  0 );                       break;
+                    case Pedal::None:               break;
+                }
             }
+
+            // ***** Delete object if ends up outside the deletion threshold
+            if ( (pos.y < static_cast<double>(getCameraPos().y()) - m_delete_threshold_y) ||
+                 (pos.y > static_cast<double>(getCameraPos().y()) + m_delete_threshold_y) ||
+                 (pos.x < static_cast<double>(getCameraPos().x()) - m_delete_threshold_x) ||
+                 (pos.x > static_cast<double>(getCameraPos().x()) + m_delete_threshold_x) ) remove = true;
         }
 
-
-
-
-
         // ***** Check for Object Removal
-        bool remove = false;
         if (object->alive && object->health == 0) {
             object->alive = false;
             object->death_timer.restart();
@@ -111,12 +114,6 @@ void DrEngine::updateSpaceHelper() {
         if (!object->alive) {
             if (object->death_timer.elapsed() >= object->death_delay) remove = true;
         }
-
-        // Delete object if ends up outside the deletion threshold
-        if ( (pos.y < static_cast<double>(getCameraPos().y()) - m_delete_threshold_y) ||
-             (pos.y > static_cast<double>(getCameraPos().y()) + m_delete_threshold_y) ||
-             (pos.x < static_cast<double>(getCameraPos().x()) - m_delete_threshold_x) ||
-             (pos.x > static_cast<double>(getCameraPos().x()) + m_delete_threshold_x) ) remove = true;
 
         // Process removal
         if (remove) {
