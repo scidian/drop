@@ -57,20 +57,17 @@ void DrEngine::updateSpaceHelper() {
             continue;
         }
 
-        // ***** Process non-static object movement
-        if ((object->body_type != Body_Type::Static)) {
+        // ***** Get some info about the current object from the space and save it to the current DrEngineObject
+        cpVect  vel = cpBodyGetVelocity( object->body );
+        cpFloat angle = cpBodyGetAngle( object->body );
+        object->velocity.setX( vel.x );
+        object->velocity.setX( vel.y );
+        object->angle = qRadiansToDegrees( angle );
 
-            // ***** Get some info about the current object from the space and save it to the current DrEngineObject
-            cpVect  vel = cpBodyGetVelocity( object->body );
-            cpFloat angle = cpBodyGetAngle( object->body );
-            object->velocity.setX( vel.x );
-            object->velocity.setX( vel.y );
-            object->angle = qRadiansToDegrees( angle );
-
-            cpVect  pos = cpBodyGetPosition( object->body );
-            object->previous_position = object->position;
-            object->position.setX( pos.x );
-            object->position.setY( pos.y );
+        cpVect  pos = cpBodyGetPosition( object->body );
+        object->previous_position = object->position;
+        object->position.setX( pos.x );
+        object->position.setY( pos.y );
 
             // ***** Update global friction and bounce to all objects if globals have changed (possibly due to Gameplay Action)
     //        if (qFuzzyCompare(object->custom_friction, c_friction) == false) {
@@ -86,6 +83,9 @@ void DrEngine::updateSpaceHelper() {
     //            }
     //        }
 
+        // ***** Process non-static object movement
+        if ((object->body_type != Body_Type::Static)) {
+
             // ***** Process Button Presses
             // If is a wheel, apply gas pedal
             if (qFuzzyCompare(object->rotate_speed, 0) == false) {
@@ -97,12 +97,9 @@ void DrEngine::updateSpaceHelper() {
                 }
             }
 
-            // ***** Delete object if ends up outside the deletion threshold
-            if ( (pos.y < static_cast<double>(getCameraPos().y()) - m_delete_threshold_y) ||
-                 (pos.y > static_cast<double>(getCameraPos().y()) + m_delete_threshold_y) ||
-                 (pos.x < static_cast<double>(getCameraPos().x()) - m_delete_threshold_x) ||
-                 (pos.x > static_cast<double>(getCameraPos().x()) + m_delete_threshold_x) ) remove = true;
+
         }
+
 
         // ***** Check for Object Removal
         if (object->alive && object->health == 0) {
@@ -114,6 +111,10 @@ void DrEngine::updateSpaceHelper() {
         if (!object->alive) {
             if (object->death_timer.elapsed() >= object->death_delay) remove = true;
         }
+
+        // Delete object if ends up outside the deletion threshold
+        QRectF threshold(getCameraPosXD() - m_delete_threshold_x, getCameraPosYD() - m_delete_threshold_y, m_delete_threshold_x*2.0, m_delete_threshold_y*2.0);
+        if (!threshold.contains(QPointF(pos.x, pos.y))) remove = true;
 
         // Process removal
         if (remove) {

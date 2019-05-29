@@ -73,35 +73,6 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 30, 115, 0, c_norotate, c_scale1x1, c_opaque,
                         ball_radius, c_center, 0.7, 0, QPointF(0, 0));
 
-        // Set body and wheels to same group so they don't collide
-        //EX:
-        //#define GRABBABLE_MASK_BIT (1<<31)
-        //cpShapeFilter GRAB_FILTER = {CP_NO_GROUP, GRABBABLE_MASK_BIT, GRABBABLE_MASK_BIT};
-        //cpShapeFilter NOT_GRABBABLE_FILTER = {CP_NO_GROUP, ~GRABBABLE_MASK_BIT, ~GRABBABLE_MASK_BIT};
-        //
-        // filter.group = no_group = 0 = could collide all
-        //              = set all children to unique project_id to stop them from colliding with each other
-        // categories   = what not to collide with  (player, player bullet, enemy, enemy bullet, wall, etc)
-        // mask         = what to collide with      (walls, enemy bullet)
-        //
-        enum Shape_Groups {
-            A = 1 << 0,
-            B = 1 << 1,
-            C = 1 << 2,
-        };
-
-        unsigned int all_categories = ~(static_cast<unsigned int>(0));
-
-        cpShapeFilter filter;
-        filter.group = 43;
-        filter.categories = all_categories;     // CP_ALL_CATEGORIES
-        filter.mask =       all_categories;     // CP_ALL_CATEGORIES
-        for (auto shape : rover->shapes)  cpShapeSetFilter( shape, filter);
-        for (auto shape : wheel1->shapes) cpShapeSetFilter( shape, filter);
-        for (auto shape : wheel2->shapes) cpShapeSetFilter( shape, filter);
-        for (auto shape : wheel3->shapes) cpShapeSetFilter( shape, filter);
-        for (auto shape : spare1->shapes) cpShapeSetFilter( shape, filter);
-
         // New bouncy shocks joint, Grooves a/b are relative to the car, anchor point B is on the wheel
         cpSpaceAddConstraint(m_space, cpGrooveJointNew( rover->body, wheel1->body, cpv(-40,  15), cpv(-40, -28), cpvzero));
         cpSpaceAddConstraint(m_space, cpGrooveJointNew( rover->body, wheel2->body, cpv(  0,  15), cpv(  0, -28), cpvzero));
@@ -115,10 +86,48 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         cpSpaceAddConstraint( m_space, cpPivotJointNew(rover->body, spare1->body, cpBodyGetPosition(spare1->body)) );
 
         // Simple Motor Example, Applies constant speed to joint
-        //cpConstraint *wheel_motor_1 = cpSimpleMotorNew(rover->body, wheel1->body, 25);
-        //cpSpaceAddConstraint( m_space, wheel_motor_1);
-        //cpConstraint *wheel_motor_2 = cpSimpleMotorNew(rover->body, wheel2->body, .2);
-        //cpSpaceAddConstraint( m_space, wheel_motor_2);
+        ///cpConstraint *wheel_motor_1 = cpSimpleMotorNew(rover->body, wheel1->body, 25);
+        ///cpSpaceAddConstraint( m_space, wheel_motor_1);
+        ///cpConstraint *wheel_motor_2 = cpSimpleMotorNew(rover->body, wheel2->body, .2);
+        ///cpSpaceAddConstraint( m_space, wheel_motor_2);
+
+        // Set body and wheels to same group so they don't collide, example:
+        //
+        // #define GRABBABLE_MASK_BIT (1<<31)
+        // cpShapeFilter GRAB_FILTER = {CP_NO_GROUP, GRABBABLE_MASK_BIT, GRABBABLE_MASK_BIT};
+        // cpShapeFilter NOT_GRABBABLE_FILTER = {CP_NO_GROUP, ~GRABBABLE_MASK_BIT, ~GRABBABLE_MASK_BIT};
+        //
+        // filter.group = no_group = 0 = could collide all
+        //              = set all children to unique project_id to stop them from colliding with each other
+        // categories   = what not to collide with  (player, player bullet, enemy, enemy bullet, wall, etc)
+        // mask         = what to collide with      (walls, enemy bullet)
+        //
+        enum Shape_Groups {
+            A = 1 << 0,
+            B = 1 << 1,
+            C = 1 << 2,
+        };
+        unsigned int all_categories = ~(static_cast<unsigned int>(0));
+
+        cpShapeFilter filter;
+        filter.group = 43;                      // Any int > 0, maybe use unique project id of parent? or keep a key generator when Engine starts
+        filter.categories = all_categories;     // CP_ALL_CATEGORIES
+        filter.mask =       all_categories;     // CP_ALL_CATEGORIES
+        for (auto shape : rover->shapes)  cpShapeSetFilter( shape, filter);
+        for (auto shape : wheel1->shapes) cpShapeSetFilter( shape, filter);
+        for (auto shape : wheel2->shapes) cpShapeSetFilter( shape, filter);
+        for (auto shape : wheel3->shapes) cpShapeSetFilter( shape, filter);
+        for (auto shape : spare1->shapes) cpShapeSetFilter( shape, filter);
+
+
+        // Set constrained objects not to collide with each other, unfortunately they still collide with other parts of the car
+        ///cpConstraintSetCollideBodies(groove1, cpFalse);
+        ///cpConstraintSetCollideBodies(groove2, cpFalse);
+        ///cpConstraintSetCollideBodies(groove3, cpFalse);
+        ///cpConstraintSetCollideBodies(spring1, cpFalse);
+        ///cpConstraintSetCollideBodies(spring2, cpFalse);
+        ///cpConstraintSetCollideBodies(spring3, cpFalse);
+        ///cpConstraintSetCollideBodies(joint1,  cpFalse);
 
 
     } else if (demo_player == Demo_Player::Jump) {
@@ -132,7 +141,7 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
 
 
         DrEngineObject *ball2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 800,  50, 0, c_norotate, c_scale1x1, c_opaque,
-                                                ball_radius, c_center, 1, 0.25, QPointF( 0, 0), true, true);
+                                                ball_radius, c_center, 1, 0.5, QPointF( 0, 0), true, true);
         assignPlayerControls(ball2, false, true, false);
         ball2->jump_count = -1;
         ball2->rotate_speed = 20;
@@ -141,7 +150,7 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
 
 
         DrEngineObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 200,  50, 0, c_norotate, c_scale1x1, c_opaque,
-                                               ball_radius, c_center, 0.25, 0.25, QPointF( 0, 0), true, false);
+                                               ball_radius, c_center, 0.25, 0.5, QPointF( 0, 0), true, false);
         assignPlayerControls(ball, true, true, true);
         ball->jump_count = 1;
         ball->air_jump = false;

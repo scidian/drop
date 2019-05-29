@@ -83,8 +83,8 @@ void OpenGL::paintGL() {
     QFont font("Avenir", 12);
     painter.setFont(font);
     painter.setPen( Qt::white );
-    painter.drawText( QPointF(20, 20), "Items: " + QString::number( m_engine->objects.count()) + ", Scale: " + QString::number(double(m_scale)) );
-    painter.drawText( QPointF(20, 40), "FPS: " + QString::number(m_engine->fps_render) + ", Physics: " + QString::number(m_engine->fps_physics));
+    painter.drawText( QPointF(20, 20), "Items: " + QString::number(m_engine->objects.count()) + ", Scale: " + QString::number(double(m_scale)) );
+    painter.drawText( QPointF(20, 40), "FPS: " + QString::number(m_engine->fps_render) + ", Physics: " + QString::number(m_engine->fps_physics) );
     painter.drawText( QPointF(20, 60), g_info);
 
     ///int max_sample, max_text, max_number_textures, max_layers;

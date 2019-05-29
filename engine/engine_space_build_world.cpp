@@ -98,11 +98,21 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
 
     m_space = cpSpaceNew();                             // Creates an empty space
     cpSpaceSetIterations(m_space, m_iterations);        // Sets how many times physics are processed each update
-    cpSpaceSetSleepTimeThreshold(m_space, 0.20);        // Objects will sleep after this long of not moving
-    cpSpaceSetIdleSpeedThreshold(m_space, 25.0);
 
-    // Reset cameras
+    // Sleep settings
+    cpSpaceSetSleepTimeThreshold(m_space, 0.5);         // Objects will sleep after this long of not moving
+    ///cpSpaceSetIdleSpeedThreshold(m_space, 25.0);     // Set automatically based on gravity
+
+    // Some other pretty good sleep settings
+    ///cpSpaceSetSleepTimeThreshold(m_space, 0.20);     // Objects will sleep after this long of not moving
+    ///cpSpaceSetIdleSpeedThreshold(m_space, 25.0);     // Speed at which an objet will start ot fall asleep
+
+    cpSpaceSetCollisionSlop(m_space, 0.5);              // Allows for a little overlap, makes sleep happier
+
+
+    // ***** Reset cameras
     clearCameras();
+
 
     // ***** Custom Wildcard beginFunc CollisionHandlers: Damage / Health
     cpCollisionHandler *damage_handler1 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_None));
@@ -127,7 +137,7 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
     if (demo_space == Demo_Space::Project) {
 
         m_friction = 0.5;
-        m_bounce = 0.5;
+        m_bounce =   0.1;
 
         // Find current world shown in editor, load Start Stage of that world
         m_current_world = m_project->getOption(Project_Options::Current_World).toLongLong();

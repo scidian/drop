@@ -205,9 +205,10 @@ void FormEngine::updateEngine() {
         m_engine->updateCameras();                                                  // Update Camera Targets
     }
 
-    // ***** Check if we're bogged down, lower frame rate
+    // ***** If we're bogged down or have a lot of objects, lower frame rate
     double target_frame_rate = (1000.0 / m_ideal_frames_per_second);
-    if (m_engine->fps_physics / (1.0 / m_engine->getTimeStep()) < 0.90) target_frame_rate = (1000.0 / 60.0);
+    if ((m_engine->fps_physics / (1.0 / m_engine->getTimeStep()) < 0.94) ||
+        (m_engine->objects.count() > 500)) target_frame_rate = (1000.0 / m_lower_frames_per_second);
 
     // ***** Seperate Render Update
     double render_milliseconds = getTimerMilliseconds(Engine_Timer::Render);

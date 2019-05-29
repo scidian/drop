@@ -106,7 +106,9 @@ QVector3D DrEngine::getCameraPos() {
         return m_temp_position;
     }
 }
-
+double DrEngine::getCameraPosXD() { return static_cast<double>(getCameraPos().x()); }
+double DrEngine::getCameraPosYD() { return static_cast<double>(getCameraPos().y()); }
+double DrEngine::getCameraPosZD() { return static_cast<double>(getCameraPos().z()); }
 
 //######################################################################################################
 //######################################################################################################

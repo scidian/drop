@@ -55,6 +55,7 @@ private:
     double              m_physics_milliseconds;
 
     const double        m_ideal_frames_per_second = 120;
+    const double        m_lower_frames_per_second =  60;
 
     bool                m_running = false;
 
