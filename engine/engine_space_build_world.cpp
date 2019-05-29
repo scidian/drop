@@ -50,11 +50,13 @@ static cpBool PreSolveFuncDamage(cpArbiter *arb, cpSpace *, void *) {
 
     bool should_damage = false;
     if ((object_a->collision_type == Collision_Type::Damage_Enemy  || object_a->collision_type == Collision_Type::Damage_Enemy_One_Way) &&
-        (object_b->collision_type == Collision_Type::Damage_Player || object_b->collision_type == Collision_Type::Damage_Player_One_Way))
+        (object_b->collision_type == Collision_Type::Damage_Player || object_b->collision_type == Collision_Type::Damage_Player_One_Way ||
+         object_b->collision_type == Collision_Type::Damage_All    || object_b->collision_type == Collision_Type::Damage_All_One_Way))
         should_damage = true;
 
     if ((object_a->collision_type == Collision_Type::Damage_Player || object_a->collision_type == Collision_Type::Damage_Player_One_Way) &&
-        (object_b->collision_type == Collision_Type::Damage_Enemy  || object_b->collision_type == Collision_Type::Damage_Enemy_One_Way))
+        (object_b->collision_type == Collision_Type::Damage_Enemy  || object_b->collision_type == Collision_Type::Damage_Enemy_One_Way ||
+         object_b->collision_type == Collision_Type::Damage_All    || object_b->collision_type == Collision_Type::Damage_All_One_Way))
         should_damage = true;
 
     if ((object_a->collision_type == Collision_Type::Damage_All || object_a->collision_type == Collision_Type::Damage_All_One_Way))

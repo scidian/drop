@@ -24,9 +24,6 @@
 //####################################################################################
 void OpenGL::paintGL() {
 
-    // Start timer that calculates how long one render takes to shown onto screen
-    m_time_frame = Clock::now();
-
     // Find OpenGL Version supported on this system
     ///auto ver = glGetString(GL_VERSION);
     ///m_engine->info = QString::fromUtf8(reinterpret_cast<const char*>(ver));
@@ -63,8 +60,13 @@ void OpenGL::paintGL() {
     // ***** Update Camera / Matrices
     updateViewMatrix();
 
+    // ***** Timer tracks how long one render takes to end up on screen from this point
+    setTimeFrameStart(Clock::now());
+
     // ***** Calculate time since last physics update as a percentage (and add how long a render takes)
-    m_time_percent = (m_form_engine->getTimerMilliseconds(Engine_Timer::Physics) + m_time_one_frame_takes_to_render) / (1000.0 / m_engine->fps_physics);
+    ///m_time_percent = (m_form_engine->getTimerMilliseconds(Engine_Timer::Physics) + m_time_one_frame_takes_to_render) / (1000.0 / m_engine->fps_physics);
+    m_time_percent = (m_form_engine->getTimerMilliseconds(Engine_Timer::Physics) + m_time_one_frame_takes_to_render) / m_form_engine->getLastPhysicsTime();
+
 
     // ***** Render Scene
     drawObjects();
@@ -81,7 +83,7 @@ void OpenGL::paintGL() {
         drawDebugCollisions(painter);
     }
 
-    QFont font("Arial", 12);
+    QFont font("Avenir", 12);
     painter.setFont(font);
     painter.setPen( Qt::white );
     painter.drawText( QPointF(20, 20), "Items: " + QString::number( m_engine->objects.count()) + ", Scale: " + QString::number(double(m_scale)) );
@@ -171,10 +173,9 @@ void OpenGL::drawObjects() {
     m_shader.setUniformValue( m_uniform_matrix, m_matrix );
 
     // ***** Render 3D Objects
-    cullingOn();
-    drawCube( QVector3D( 2000, 400, -300) );
-    cullingOff();
-
+    ///cullingOn();
+    ///drawCube( QVector3D( 2000, 400, -300) );
+    ///cullingOff();
 
     // ***** Create a vector of the scene objects (ignoring lines / segments) and sort it by depth
     std::vector<std::pair<int, double>> v;
@@ -198,7 +199,6 @@ void OpenGL::drawObjects() {
 
         // ***** Render with texture
         DrEngineTexture *texture = m_engine->getTexture(object->texture_number);
-
         if (!texture->texture()->isBound())
             texture->texture()->bind();
 
@@ -215,7 +215,9 @@ void OpenGL::drawObjects() {
         m_shader.enableAttributeArray( m_attribute_tex_coord );
 
         // ***** Get object position data
-        QPointF center = (object->previous_position * (1.0 - m_time_percent)) + (object->position * m_time_percent);
+        QPointF center = object->position;
+        center.setX( (object->previous_position.x() * (1.0 - m_time_percent)) + (object->position.x() * m_time_percent));
+        center.setY( (object->previous_position.y() * (1.0 - m_time_percent)) + (object->position.y() * m_time_percent));
 
         float x, y, z, half_width, half_height;
         if (m_engine->render_type == Render_Type::Orthographic) {
@@ -279,9 +281,9 @@ void OpenGL::drawObjects() {
     }
 
     // ***** Render Front 3D Objects
-    cullingOn();
-    drawCube( QVector3D(1600, 500, 600) );
-    cullingOff();
+    ///cullingOn();
+    ///drawCube( QVector3D(1600, 500, 600) );
+    ///cullingOff();
 
     // *****Disable shader program
     m_shader.release();

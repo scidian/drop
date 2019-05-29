@@ -52,6 +52,7 @@ private:
     Clock::time_point   m_time_render;
     Clock::time_point   m_time_camera;
     Clock::time_point   m_time_physics;
+    double              m_physics_milliseconds;
 
     const double        m_ideal_frames_per_second = 120;
 
@@ -77,6 +78,7 @@ public:
     // Function Calls
     DrEngine*   getEngine() { return m_engine; }
     OpenGL*     getOpenGL() { return m_opengl; }
+    double      getLastPhysicsTime() { return (m_physics_milliseconds > 0.0) ? m_physics_milliseconds : 0.00001; }
     double      getTimerMilliseconds(Engine_Timer time_since_last);
     void        loadDemo(Demo_Space using_space, Demo_Player using_player);
     void        startTimers();

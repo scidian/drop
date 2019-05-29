@@ -13,6 +13,7 @@
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "forms/form_engine.h"
+#include "helper.h"
 #include "opengl/opengl.h"
 
 
@@ -208,23 +209,24 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         if (!object_poly.isEmpty())
             painter.drawPolygon( object_poly );
 
-        // ***** Draw Hit Points
-        QPoint text_coord = mapToScreen(center.x(), center.y(), 0).toPoint();
+//        // ***** Draw Hit Points
+//        QPointF text_coord = mapToScreen(center.x(), center.y(), 0);
 
-        if (rect().contains(text_coord)) {
-            QFont health_font("Arial", int(18 * m_scale));
+//        if (rect().contains( text_coord.toPoint() )) {
+//            QFont health_font("Avenir", static_cast<int>(18 * m_scale));
 
-            // Health as a QPainterPath
-            QPainterPath health;
-            health.addText(mapToScreen(center.x(), center.y(), 0), health_font, QString::number(object->health));
-            painter.setBrush(QBrush(color));
-            painter.setPen(QPen(Qt::black, 0.5 * static_cast<double>(m_scale), Qt::SolidLine, Qt::PenCapStyle::RoundCap));
-            painter.translate( -health.boundingRect().width(), health.boundingRect().height());
-            painter.drawPath(health);
-            painter.resetTransform();
-            ///painter.setFont( health_font);
-            ///painter.drawText( mapToScreen(center.x(), center.y(), 0), QString::number(object->health) );
-        }
+//            // Health as a QPainterPath
+//            QPainterPath health;
+//            QString hp = QString::number(object->health);
+//            health.addText(text_coord, health_font, hp);
+//            painter.setBrush(QBrush(color.darker()));
+//            painter.setPen(Qt::NoPen);
+
+//            double fw = Dr::CheckFontWidth(health_font, hp);
+//            painter.translate( -(fw / 2.0), health.boundingRect().height());
+//            painter.drawPath(health);
+//            painter.resetTransform();
+//        }
 
     }   // End For object
 }

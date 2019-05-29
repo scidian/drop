@@ -196,16 +196,22 @@ void FormEngine::updateEngine() {
     double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
     if (update_milliseconds > (m_engine->getTimeStep() * 1000.0)) {
         m_time_update =  Clock::now();
+
         m_engine->updateSpace(update_milliseconds);                                 // Physics Engine
-        m_engine->updateSpaceHelper();                                              // Additional Physics Updating
+        m_physics_milliseconds = getTimerMilliseconds(Engine_Timer::Physics);       // Store how long between this physics step
         m_time_physics = Clock::now();                                              // Record time done with Step
+        m_engine->updateSpaceHelper();                                              // Additional Physics Updating
 
         m_engine->updateCameras();                                                  // Update Camera Targets
     }
 
+    // ***** Check if we're bogged down, lower frame rate
+    double target_frame_rate = (1000.0 / m_ideal_frames_per_second);
+    if (m_engine->fps_physics / (1.0 / m_engine->getTimeStep()) < 0.90) target_frame_rate = (1000.0 / 60.0);
+
     // ***** Seperate Render Update
     double render_milliseconds = getTimerMilliseconds(Engine_Timer::Render);
-    if (render_milliseconds > (1000.0 / m_ideal_frames_per_second)) {
+    if (render_milliseconds > target_frame_rate) {
         m_time_render = Clock::now();
         m_opengl->update();                                                         // Render
     }

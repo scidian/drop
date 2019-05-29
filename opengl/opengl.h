@@ -106,6 +106,7 @@ public:
     Clock::time_point&  getTimeFrameStart() { return m_time_frame; }
     double              getTimePercent()    { return m_time_percent; }
 
+    void                setTimeFrameStart(Clock::time_point time) { m_time_frame = time; }
     void                setTimeOneFrameTakesToRender(double milliseconds)  { m_time_one_frame_takes_to_render = milliseconds; }
 
 

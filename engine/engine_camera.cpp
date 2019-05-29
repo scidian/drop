@@ -118,8 +118,8 @@ QVector3D DrEngine::getCameraPos() {
 DrEngineCamera::DrEngineCamera(DrEngine *engine, float x, float y, float z) : m_engine(engine) {
     m_position = QVector3D(x, y, z);
     m_target = m_position;
-    m_avg_speed_x.clear();  m_avg_speed_x.fill(0, 30);
-    m_avg_speed_y.clear();  m_avg_speed_y.fill(0, 30);
+    m_avg_speed_x.clear();  m_avg_speed_x.fill(0, 10);
+    m_avg_speed_y.clear();  m_avg_speed_y.fill(0, 10);
     m_speed = QVector3D(0, 0, 0);
 }
 
@@ -166,10 +166,14 @@ void DrEngineCamera::updateCamera() {
         ///double pos_y = (m_follow->position.y() + (static_cast<double>(m_target.y()) + average_y)*3.0 + (m_follow->previous_position.y() + average_y)) / 5.0;
 
         // Interpolates object from previous frame to this frame
-        double  percent = m_engine->getFormEngine()->getTimerMilliseconds(Engine_Timer::Physics) / (1000.0 / m_engine->fps_physics);
-        QPointF smoothed = (m_follow->previous_position * (1.0 - percent)) + (m_follow->position * percent);
-        double  pos_x = (smoothed.x() + (static_cast<double>(m_target.x()) + average_x)*2.0) / 3.0;
-        double  pos_y = (smoothed.y() + (static_cast<double>(m_target.y()) + average_y)*2.0) / 3.0;
+        ///double  percent = m_engine->getFormEngine()->getTimerMilliseconds(Engine_Timer::Physics) / (1000.0 / m_engine->fps_physics);
+        ///double  percent = m_engine->getFormEngine()->getTimerMilliseconds(Engine_Timer::Physics) / m_engine->getFormEngine()->getLastPhysicsTime();
+        ///QPointF smoothed = (m_follow->previous_position * (1.0 - percent)) + (m_follow->position * percent);
+        ///double  pos_x = (smoothed.x() + (static_cast<double>(m_target.x()) + average_x)*2.0) / 3.0;
+        ///double  pos_y = (smoothed.y() + (static_cast<double>(m_target.y()) + average_y)*2.0) / 3.0;
+
+        double  pos_x = static_cast<double>(m_target.x()) + average_x;
+        double  pos_y = static_cast<double>(m_target.y()) + average_y;
 
         m_target.setX( static_cast<float>(pos_x) );
         m_target.setY( static_cast<float>(pos_y) );
