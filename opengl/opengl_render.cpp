@@ -60,13 +60,9 @@ void OpenGL::paintGL() {
     // ***** Update Camera / Matrices
     updateViewMatrix();
 
-    // ***** Timer tracks how long one render takes to end up on screen from this point
-    setTimeFrameStart(Clock::now());
-
     // ***** Calculate time since last physics update as a percentage (and add how long a render takes)
-    ///m_time_percent = (m_form_engine->getTimerMilliseconds(Engine_Timer::Physics) + m_time_one_frame_takes_to_render) / (1000.0 / m_engine->fps_physics);
     m_time_percent = (m_form_engine->getTimerMilliseconds(Engine_Timer::Physics) + m_time_one_frame_takes_to_render) / m_form_engine->getLastPhysicsTime();
-
+    setTimeFrameStart(Clock::now());                        // Timer tracks how long one render takes to end up on screen from this point
 
     // ***** Render Scene
     drawObjects();
