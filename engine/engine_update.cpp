@@ -101,15 +101,23 @@ void DrEngine::updateSpaceHelper() {
         }
 
 
-        // ***** Check for Object Removal
-        if (object->alive && object->health == 0) {
-            object->alive = false;
-            object->death_timer.restart();
-        }
-
-        // Delete object if it has been long enough after death
-        if (!object->alive) {
-            if (object->death_timer.elapsed() >= object->death_delay) remove = true;
+        // ***** Check for Object Death / Fade / Removal
+        if (object->health == 0) {
+            if (!object->dying) {
+                object->dying = true;
+                object->death_timer.restart();
+            }
+            if (object->dying && object->alive) {
+                if (object->death_timer.elapsed() >= object->death_delay) {
+                    object->alive = false;
+                    object->fade_timer.restart();
+                }
+            }
+            if (!object->alive) {
+                if (object->fade_timer.elapsed() >= object->fade_delay) {
+                    remove = true;
+                }
+            }
         }
 
         // Delete object if ends up outside the deletion threshold

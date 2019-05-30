@@ -48,7 +48,8 @@ static cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
         if (cpvdot(cpArbiterGetNormal(arb), object_b->one_way_direction) > 0.0)
             return cpArbiterIgnore(arb);
     }
-    if (object_a->damage <= 0) return cpTrue;                                   // Object does no damage, exit
+    if ( object_a->damage <= 0) return cpTrue;                                  // Object does no damage, exit
+    if ( object_a->alive && object_a->dying) return cpTrue;                     // Don't deal damage while dying
     if (!object_a->alive) return cpFalse;                                       // If object is dead, cancel collision
 
     bool should_damage = false;
@@ -72,10 +73,20 @@ static cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
             // If we killed object, cancel collision
             if (object_b->health <= 0) {
                 object_b->health = 0;
-                return cpFalse;
+                if (object_b->death_delay == 0) return cpFalse;
             }
         }
     }
+    return cpTrue;
+}
+
+static cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
+    CP_ARBITER_GET_SHAPES(arb, a, b);
+    DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
+    ///DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
+
+    if (!object_a->alive) return cpFalse;                                       // If object is dead, cancel collision
+
     return cpTrue;
 }
 
@@ -118,23 +129,21 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
     clearCameras();
 
 
-    // ***** Custom Wildcard beginFunc CollisionHandlers: Damage / Health
-    cpCollisionHandler *damage_handler1 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_None));
-    cpCollisionHandler *damage_handler2 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_None_One_Way));
-    cpCollisionHandler *damage_handler3 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Player));
-    cpCollisionHandler *damage_handler4 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Player_One_Way));
-    cpCollisionHandler *damage_handler5 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Enemy));
-    cpCollisionHandler *damage_handler6 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_Enemy_One_Way));
-    cpCollisionHandler *damage_handler7 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_All));
-    cpCollisionHandler *damage_handler8 = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(Collision_Type::Damage_All_One_Way));
-    damage_handler1->beginFunc = BeginFuncWildcard;
-    damage_handler2->beginFunc = BeginFuncWildcard;
-    damage_handler3->beginFunc = BeginFuncWildcard;
-    damage_handler4->beginFunc = BeginFuncWildcard;
-    damage_handler5->beginFunc = BeginFuncWildcard;
-    damage_handler6->beginFunc = BeginFuncWildcard;
-    damage_handler7->beginFunc = BeginFuncWildcard;
-    damage_handler8->beginFunc = BeginFuncWildcard;
+    // ***** Custom Wildcard beginFunc CollisionHandlers: Damage / Health    
+    QVector<Collision_Type> collide_types { Collision_Type::Damage_None,
+                                            Collision_Type::Damage_Player,
+                                            Collision_Type::Damage_Enemy,
+                                            Collision_Type::Damage_All,
+                                            Collision_Type::Damage_None_One_Way,
+                                            Collision_Type::Damage_Player_One_Way,
+                                            Collision_Type::Damage_Enemy_One_Way,
+                                            Collision_Type::Damage_All_One_Way };
+    for (Collision_Type c : collide_types) {
+        cpCollisionHandler *damage_handler = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(c));
+        damage_handler->beginFunc = BeginFuncWildcard;
+        damage_handler->preSolveFunc = PreSolveFuncWildcard;
+        qDebug() << static_cast<int>(c);
+    }
 
 
     // ***** Build desired demo Space

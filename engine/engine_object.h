@@ -14,6 +14,8 @@
 #include <QVector3D>
 #include <map>
 
+#include <iostream>
+
 #include "chipmunk/chipmunk.h"
 
 // Local Enumerations
@@ -92,10 +94,11 @@ struct DrEngineObject {
     long        active_camera = 0;              // Set to ID of last camera that followed this object, 0 == no camera
 
     Collision_Type  collision_type = Collision_Type::Damage_None;       // Specifies what other types of objects this object can damage
-    long        health = 3;                                             // Object Health, -1 = infinite
+    long        health = 1;                                             // Object Health, -1 = infinite
     long        damage = 1;                                             // Damage caused to other objects of Type collision_type
-    long        death_delay = 1000;                                     // Time it takes for item to be removed in milliseconds (0 == remove immediately)
+    long        death_delay = 100;                                      // Time it takes for item to die (can't deal damage while dying), in milliseconds
     bool        fade_on_death = true;                                   // If true, object is slowly faded over death_delay time
+    long        fade_delay = 750;                                       // Time it takes for item to be removed after death, in milliseconds (0 == remove immediately)
 
     bool        one_way = false;                // Set to true if we're using this object as a one way platform
     cpVect      one_way_direction {0, 1};       // Direction of Normal for one way platforms
@@ -147,8 +150,10 @@ struct DrEngineObject {
     double      last_touched_ground_dot = 1.0;          // Dot product of the last touched surface
     Jump_State  jump_state = Jump_State::Need_To_Jump;  // Used by Engine Update to keep track of if the current jump button press has been processed
 
-    bool        alive = true;                   // When health turn to zero, false, and object removed from scene after remove_delay
-    QTime       death_timer;                    // Used to incorporate death_delay for object removal
+    bool        dying = false;                  // When health turns to zero, dying becomes true for death_delay time, then alive becomes false
+    QTime       death_timer;                    // Used to incorporate death_delay for object dying
+    bool        alive = true;                   // After item has been dying for death_delay time, alive becomes false, then fades for fade_delay time
+    QTime       fade_timer;                     // Used to incorporate fade_delay for object fade / removal
 
     double      angle = 0;                      // Current object angle
     QPointF     velocity;                       // Current object velocity
