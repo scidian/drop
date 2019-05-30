@@ -10,6 +10,25 @@
 
 
 //######################################################################################################
+//##    Sets up an object to be controlled as a "player"
+//##        i.e. have playerUpdateVelocity function attached as a callback during cpSpaceStep
+//######################################################################################################
+// Sets up an object to be controlled as a "player", i.e. have playerUpdateVelocity function attached as a callback during cpSpaceStep
+void DrEngine::assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera) {
+    // Create camera
+    if (add_camera) {
+        long camera_key = addCamera(object);
+        if (set_active_camera) setActiveCamera(camera_key);
+    }
+    setCollisionType(object, Collision_Type::Damage_Enemy);
+    object->health = 1;
+    object->damage = 1;
+    object->lost_control = !has_controls_now;                               // Turn on jump / movement buttons
+    cpBodySetVelocityUpdateFunc(object->body, playerUpdateVelocity);        // Assign the playerUpdate callback function
+}
+
+
+//######################################################################################################
 //##    Add Player to Space
 //######################################################################################################
 void DrEngine::addPlayer(Demo_Player new_player_type) {
@@ -26,6 +45,40 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         DrEngineObject *ball = this->addCircle(Body_Type::Kinematic, Test_Textures::Ball, -300,  150, 0, c_norotate, c_scale1x1, c_opaque, ball_radius, c_center,
                                                0.7, 0.5, QPointF(15, 0));
         setActiveCamera( addCamera(ball) );
+
+
+    } else if (demo_player == Demo_Player::Jump) {
+        m_gravity = cpv(0, -1000);
+        m_damping = 1;
+        cpSpaceSetGravity(m_space, m_gravity);
+        cpSpaceSetDamping(m_space, m_damping);
+
+        double ball_radius = m_textures[Test_Textures::Ball]->width() / 2.0;
+
+
+        DrEngineObject *ball2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 800,  50, 0, c_norotate, c_scale1x1, c_opaque,
+                                                ball_radius, c_center, 1, 0.5, QPointF( 0, 0), true, true);
+        assignPlayerControls(ball2, false, true, false);
+        ball2->jump_count = -1;
+        ball2->rotate_speed = 20;
+
+
+
+        DrEngineObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 200,  50, 0, c_norotate, c_scale1x1, c_opaque,
+                                               ball_radius, c_center, 0.25, 0.5, QPointF( 0, 0), true, false);
+        assignPlayerControls(ball, true, true, true);
+        ball->jump_count = 1;
+        ball->air_jump = false;
+        ball->wall_jump = true;
+        ball->health = 200;
+
+        //ball->ignore_gravity = true;
+        //ball->move_speed_y = 400;
+
+
+        // !!!!! #TEMP: demo variables
+        demo_jumper_1 = ball;
+        demo_jumper_2 = ball2;
 
 
     } else if (demo_player == Demo_Player::Car) {
@@ -128,60 +181,10 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         ///cpConstraintSetCollideBodies(spring2, cpFalse);
         ///cpConstraintSetCollideBodies(spring3, cpFalse);
         ///cpConstraintSetCollideBodies(joint1,  cpFalse);
-
-
-    } else if (demo_player == Demo_Player::Jump) {
-        m_gravity = cpv(0, -1000);
-        m_damping = 1;
-        cpSpaceSetGravity(m_space, m_gravity);
-        cpSpaceSetDamping(m_space, m_damping);
-
-        double ball_radius = m_textures[Test_Textures::Ball]->width() / 2.0;
-
-
-
-        DrEngineObject *ball2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 800,  50, 0, c_norotate, c_scale1x1, c_opaque,
-                                                ball_radius, c_center, 1, 0.5, QPointF( 0, 0), true, true);
-        assignPlayerControls(ball2, false, true, false);
-        ball2->jump_count = -1;
-        ball2->rotate_speed = 20;
-
-
-
-
-        DrEngineObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 200,  50, 0, c_norotate, c_scale1x1, c_opaque,
-                                               ball_radius, c_center, 0.25, 0.5, QPointF( 0, 0), true, false);
-        assignPlayerControls(ball, true, true, true);
-        ball->jump_count = 1;
-        ball->air_jump = false;
-        ball->wall_jump = true;
-        ball->health = 200;
-
-        //ball->ignore_gravity = true;
-        //ball->move_speed_y = 400;
-
-
-        // !!!!! #TEMP: demo variables
-        demo_jumper_1 = ball;
-        demo_jumper_2 = ball2;
     }
-
 }
 
 
-// Sets up an object to be controlled as a "player", i.e. have playerUpdateVelocity function attached as a callback during cpSpaceStep
-void DrEngine::assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera) {
-    // Create camera
-    if (add_camera) {
-        long camera_key = addCamera(object);
-        if (set_active_camera) setActiveCamera(camera_key);
-    }
-    setCollisionType(object, Collision_Type::Damage_Enemy);
-    object->health = 1;
-    object->damage = 1;
-    object->lost_control = !has_controls_now;                               // Turn on jump / movement buttons
-    cpBodySetVelocityUpdateFunc(object->body, playerUpdateVelocity);        // Assign the playerUpdate callback function
-}
 
 
 
