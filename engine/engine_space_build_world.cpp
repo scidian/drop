@@ -142,7 +142,6 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         cpCollisionHandler *damage_handler = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(c));
         damage_handler->beginFunc = BeginFuncWildcard;
         damage_handler->preSolveFunc = PreSolveFuncWildcard;
-        qDebug() << static_cast<int>(c);
     }
 
 

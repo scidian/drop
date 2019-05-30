@@ -114,6 +114,7 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
         m_opengl = new OpenGL(centralWidget, this, m_engine);
         connect(m_opengl, SIGNAL(frameSwapped()), this, SLOT(frameSwapped()));
+        connect(m_opengl, SIGNAL(aboutToCompose()), this, SLOT(aboutToCompose()));
         ///connect(m_opengl, SIGNAL(frameSwapped()), m_opengl, SLOT(update()));             // Creates non-stop updates
         layout->addWidget(m_opengl);
 
@@ -216,7 +217,7 @@ void FormEngine::updateEngine() {
 
     // ***** If we're bogged down, lower frame rate
     double target_frame_rate = (1000.0 / m_ideal_frames_per_second);
-    if (m_engine->objects.count() > 500) target_frame_rate =  (1000.0 / m_lower_frames_per_second);
+    if (m_engine->objects.count() > 250) target_frame_rate =  (1000.0 / m_lower_frames_per_second);
 
     // ***** Seperate Render Update
     double render_milliseconds = getTimerMilliseconds(Engine_Timer::Render);
@@ -224,8 +225,9 @@ void FormEngine::updateEngine() {
         resetTimer(Engine_Timer::Render);
 
         // Calculate time since last physics update as a percentage (and add how long a render takes)
-        m_opengl->setTimePercent( (getTimerMilliseconds(Engine_Timer::Physics) + m_time_one_frame_takes_to_render) / (m_physics_milliseconds + 0.001) );
+        m_opengl->setTimePercent( (getTimerMilliseconds(Engine_Timer::Physics) + m_time_one_frame_takes_to_render) / (m_physics_milliseconds + 0.0000001) );
         resetTimer(Engine_Timer::Frame);                                            // Track how long one render takes to end up on screen from this point
+
         m_opengl->update();                                                         // Render
     }
 
@@ -237,6 +239,9 @@ void FormEngine::frameSwapped() {
     m_time_one_frame_takes_to_render = getTimerMilliseconds(Engine_Timer::Frame);   // Figures out time since m_opengl->update() was called till buffer swap
 }
 
+void FormEngine::aboutToCompose() {
+
+}
 
 
 //######################################################################################################

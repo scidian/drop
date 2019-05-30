@@ -96,6 +96,7 @@ public:
 
 
 private slots:
+    void aboutToCompose();
     void frameSwapped();
     void updateEngine();
 
