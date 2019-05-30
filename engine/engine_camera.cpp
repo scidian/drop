@@ -129,7 +129,7 @@ DrEngineCamera::DrEngineCamera(DrEngine *engine, float x, float y, float z) : m_
 //##    Moves camera based on current speed / settings
 //######################################################################################################
 void DrEngineCamera::moveCamera(const double& milliseconds) {
-    double lerp = 0.0115 * milliseconds;
+    double lerp = 0.01 * milliseconds;
     m_position.setX( static_cast<float>(drdlerp( static_cast<double>(m_position.x()), static_cast<double>(m_target.x()), lerp)) );
     m_position.setY( static_cast<float>(drdlerp( static_cast<double>(m_position.y()), static_cast<double>(m_target.y()), lerp)) );
     m_position.setZ( static_cast<float>(drdlerp( static_cast<double>(m_position.z()), static_cast<double>(m_target.z()), lerp)) );
@@ -168,7 +168,8 @@ void DrEngineCamera::updateCamera() {
         ///double pos_y = (m_follow->position.y() + (static_cast<double>(m_target.y()) + average_y)*3.0 + (m_follow->previous_position.y() + average_y)) / 5.0;
 
         // Interpolates object from previous frame to this frame
-        ///double  percent = m_engine->getFormEngine()->getTimerMilliseconds(Engine_Timer::Physics) / (1000.0 / m_engine->fps_physics);
+        ///double percent = m_engine->getFormEngine()->getTimerMilliseconds(Engine_Timer::Physics) / (1000.0 / m_engine->fps_physics);
+        ///double percent = m_engine->getFormEngine()->getOpenGL()->getTimePercent();
         ///QPointF smoothed = (m_follow->previous_position * (1.0 - percent)) + (m_follow->position * percent);
         ///double  pos_x = (smoothed.x() + (static_cast<double>(m_target.x()) + average_x)*2.0) / 3.0;
         ///double  pos_y = (smoothed.y() + (static_cast<double>(m_target.y()) + average_y)*2.0) / 3.0;

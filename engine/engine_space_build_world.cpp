@@ -19,6 +19,17 @@
 #include "project/project_world_stage_object.h"
 #include "helper.h"
 
+//  Arbiter Callbacks:
+//      begin:      Called when objects first touch. Return true from the callback to process the collision normally or false to cause Chipmunk to ignore
+//                      the collision entirely. If you return false, the preSolve() and postSolve() callbacks will never be run, but you will still recieve a
+//                      separate event when the shapes stop overlapping.
+//      presolve:   Called every frame, Two shapes are touching during this step. Return false from the callback to make Chipmunk ignore the collision this step
+//                      or true to process it normally. Additionally, you may override collision values using cpArbiterSetFriction(), cpArbiterSetElasticity() or
+//                      cpArbiterSetSurfaceVelocity()
+//      postsolve:  Two shapes are touching and their collision response has been processed. You can retrieve the collision impulse or kinetic energy at this
+//                      time if you want to use it to calculate sound volumes or damage amounts.
+//      seperate:   Two shapes have just stopped touching for the first time this step. To ensure that begin() / separate() are always called in balanced pairs,
+//                      it will also be called when removing a shape while its in contact with something or when deallocating the space.
 
 //######################################################################################################
 //##    Chipmunk Callbacks

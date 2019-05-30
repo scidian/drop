@@ -196,13 +196,6 @@ void FormEngine::updateEngine() {
     if (!m_engine->has_scene) return;
     m_running = true;
 
-    // ***** Seperate Camera Update
-    double camera_milliseconds = getTimerMilliseconds(Engine_Timer::Camera);
-    if (camera_milliseconds > 1.0) {
-        resetTimer(Engine_Timer::Camera);
-        m_engine->moveCameras(camera_milliseconds);                                 // Move Cameras
-    }
-
     // ***** MAIN UPDATE LOOP: Space (Physics)
     double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
     if (update_milliseconds > m_engine->getTimeStepAsMilliseconds()) {
@@ -215,6 +208,11 @@ void FormEngine::updateEngine() {
 
         m_engine->updateCameras();                                                  // Update Camera Targets
     }
+
+    // ***** Seperate Camera Update
+    double camera_milliseconds = getTimerMilliseconds(Engine_Timer::Camera);
+    resetTimer(Engine_Timer::Camera);
+    m_engine->moveCameras(camera_milliseconds);                                 // Move Cameras
 
     // ***** If we're bogged down, lower frame rate
     double target_frame_rate = (1000.0 / m_ideal_frames_per_second);
