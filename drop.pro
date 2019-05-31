@@ -202,6 +202,7 @@ HEADERS += \
     engine/engine_object.h \
     engine/engine_texture.h \
     enums.h \
+    enums_engine.h \
     forms/form_atlas.h \
     forms/form_blank.h \
     forms/form_color_magnifier.h \

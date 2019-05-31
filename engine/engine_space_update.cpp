@@ -47,9 +47,19 @@ void DrEngine::updateSpaceHelper() {
 
     // ********** Iterate through objects, delete if they go off screen
     for ( auto it = objects.begin(); it != objects.end(); ) {
+
+        // ***** Initial loop variables
         DrEngineObject *object = *it;
         bool remove = false;
-        object->has_been_processed = true;
+
+        // ***** Get time since last update
+        if (!object->has_been_processed) {
+            object->has_been_processed = true;
+            object->time_since_last_update = 0.0;
+        } else {
+            object->time_since_last_update = millisecondsElapsed(object->update_timer);
+        }
+        resetTimer(object->update_timer);
 
         // ***** Skip object if static; or if not yet in Space / no longer in Space
         if (object->should_process == false) {
@@ -58,16 +68,12 @@ void DrEngine::updateSpaceHelper() {
         }
 
         // ***** Get some info about the current object from the space and save it to the current DrEngineObject
-        cpVect  vel = cpBodyGetVelocity( object->body );
-        cpFloat angle = cpBodyGetAngle( object->body );
-        object->velocity.setX( vel.x );
-        object->velocity.setX( vel.y );
-        object->angle = qRadiansToDegrees( angle );
-
-        cpVect  pos = cpBodyGetPosition( object->body );
+        object->angle = qRadiansToDegrees( cpBodyGetAngle( object->body ) );
         object->previous_position = object->position;
-        object->position.setX( pos.x );
-        object->position.setY( pos.y );
+        cpVect  new_position = cpBodyGetPosition( object->body );
+        object->position.setX( new_position.x );
+        object->position.setY( new_position.y );
+
 
             // ***** Update global friction and bounce to all objects if globals have changed (possibly due to Gameplay Action)
     //        if (qFuzzyCompare(object->custom_friction, c_friction) == false) {
@@ -101,20 +107,31 @@ void DrEngine::updateSpaceHelper() {
         }
 
 
+        // ***** Auto Damage
+        bool sleeping = cpBodyIsSleeping(object->body);
+        if (!sleeping && object->health >= c_epsilon) {
+            if (object->auto_damage < c_epsilon || object->auto_damage > c_epsilon) {
+                object->health -= object->auto_damage * (object->time_since_last_update / 1000.0);
+                if (object->health > object->max_health && object->max_health >= c_epsilon) object->health = object->max_health;
+                if (object->health <= c_epsilon) object->health = 0.0;
+            }
+        }
+
+
         // ***** Check for Object Death / Fade / Removal
         if (object->health < c_epsilon) {
             if (!object->dying) {
                 object->dying = true;
-                object->death_timer.restart();
+                resetTimer(object->death_timer);
             }
             if (object->dying && object->alive) {
-                if (object->death_timer.elapsed() >= object->death_delay) {
+                if (millisecondsElapsed(object->death_timer) >= object->death_delay) {
                     object->alive = false;
-                    object->fade_timer.restart();
+                    resetTimer(object->fade_timer);
                 }
             }
             if (!object->alive) {
-                if (object->fade_timer.elapsed() >= object->fade_delay) {
+                if (millisecondsElapsed(object->fade_timer) >= object->fade_delay) {
                     remove = true;
                 }
             }
@@ -122,7 +139,7 @@ void DrEngine::updateSpaceHelper() {
 
         // Delete object if ends up outside the deletion threshold
         QRectF threshold(getCameraPosXD() - m_delete_threshold_x, getCameraPosYD() - m_delete_threshold_y, m_delete_threshold_x*2.0, m_delete_threshold_y*2.0);
-        if (!threshold.contains(QPointF(pos.x, pos.y))) remove = true;
+        if (!threshold.contains(QPointF(new_position.x, new_position.y))) remove = true;
 
         // Process removal
         if (remove) {

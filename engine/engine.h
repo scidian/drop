@@ -15,31 +15,7 @@
 
 #include "chipmunk/chipmunk.h"
 #include "engine_object.h"
-
-
-// !!!!! #TEMP: Temporary Demo Enums
-enum class Demo_Player {
-    Spawn,
-    Car,
-    Jump,
-};
-
-enum class Demo_Space {
-    Lines1,
-    Lines2,
-    Blocks,
-    Project,
-};
-
-enum Test_Textures {
-    Ball =  -1,
-    Block = -2,
-    Plant = -3,
-    Rover = -4,
-    Wheel = -5,
-    Spare = -6
-};
-// ########## !!!!! END
+#include "enums_engine.h"
 
 // Local Enumerations
 enum class Render_Type {
@@ -126,32 +102,37 @@ private:
 
 
 public:
-    QVector<DrEngineObject*>    objects;
+    // Local Variables
+    QVector<DrEngineObject*> objects;                                   // Holds all objects shown in cpSpace
+    bool                     has_scene = false;                         // True after a scene has been loaded into cpSpace
+    Render_Type              render_type = Render_Type::Orthographic;   // Should render perspective or orthographic?
 
-    bool            has_scene = false;
-    Render_Type     render_type = Render_Type::Orthographic;          // Should render perspective or orthographic?
-
+    // Input Keys
     int             keyboard_x;                             // Set to -1 for left, 1 for right
     int             keyboard_y;                             // Set to -1 for down, 1 for up
-    bool            jump_button;                            // Set to 0 for not pressed, 1 for pressed
+    bool            jump_button = false;                    // Set to False for Not-Pressed, True for Pressed
     Pedal           gas_pedal = Pedal::None;                // Pedal enumeration for rotate key state
 
+    // Debug Variables
     bool            debug_shapes =      false;
     bool            debug_collisions =  false;
 
     double          fps_render =  60.0;
     double          fps_physics = 60.0;
 
+    // Demo Variables
     Demo_Space      demo_space =  Demo_Space::Project;
-    Demo_Player     demo_player = Demo_Player::Car;
+    Demo_Player     demo_player = Demo_Player::Jump;
     DrEngineObject *demo_jumper_1;
     DrEngineObject *demo_jumper_2;
 
 
 
 public:
+    // Constructor
     DrEngine(FormEngine *form_engine, DrProject *project);
 
+    // Space Construction / Handling
     DrEngineObject* addLine(  Body_Type body_type,  QPointF p1, QPointF p2, double friction, double bounce, double mass);
 
     DrEngineObject* addCircle(Body_Type body_type,  long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
@@ -176,8 +157,10 @@ public:
     void        updateSpace(double time_passed);
     void        updateSpaceHelper();
 
+    // Misc
     void        deleteResources();
-
+    double      millisecondsElapsed(const DrTime &timer);
+    void        resetTimer(DrTime &timer);
 
     // Cameras
     long                addCamera(DrEngineObject* object_to_follow = nullptr, float x = 0, float y = 0, float z = 800);

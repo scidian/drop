@@ -258,7 +258,7 @@ void OpenGL::drawDebugHealth(QPainter &painter) {
         if (rect().contains( text_coord.toPoint() )) {
             // Health as a QPainterPath
             QPainterPath health;
-            QString hp = QString::number(int(object->health));
+            QString hp = Dr::RemoveTrailingDecimals( object->health, 2 );
             health.addText(text_coord, health_font, hp);
             painter.setBrush( QBrush(color) );
 

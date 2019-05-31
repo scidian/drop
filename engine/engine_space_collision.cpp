@@ -27,28 +27,13 @@ enum class One_Way2 {                    // One Way Collide
     Damage_Direction,                   // Only gives damage from one_way_direction (block with
 };
 
+// Internal Linkage (File Scope) Forward Declarations
+static void BodyAddRecoil(cpSpace *, cpArbiter *arb, DrEngineObject *object);
+
 //######################################################################################################
 //##    Chipmunk Collision Callbacks
 //##        Support for object collisions, damage, recoil, one way platforms and more
 //######################################################################################################
-static void BodyAddRecoil(cpSpace *, cpArbiter *arb, DrEngineObject *object) {
-    // METHOD: Apply damage_recoil opposite velocity
-    cpVect n = cpArbiterGetNormal(arb);                         // Get Normal of contact point
-    cpVect velocity = cpBodyGetVelocity(object->body);          // Get current velocity of body
-    if (abs(velocity.x) < 1.0 && abs(velocity.y) < 1.0)         // If object isnt moving, give it the velocity towards the collision
-        velocity = cpvneg(cpArbiterGetNormal(arb));
-    double dot = cpvdot(velocity, n);                           // Calculate dot product (difference of angle from collision normal)
-    if (dot < 0.0) {                                            // If objects velocity if goings towards collision point, reflect it
-        QPointF v = QPointF(velocity.x, velocity.y);                // Convert to QPointF for better vector math operators than cpVect
-        v = v - (2.0 * dot * QPointF(n.x, n.y));                    // Reflect velocity normal across the plane of the collision normal
-        velocity = cpv(v.x(), v.y());                               // Convert back to cpVect
-    }
-    velocity = cpvnormalize(velocity);                          // Normalize body velocity
-    velocity.x *= object->damage_recoil;                        // Apply recoil force x to new direction vector
-    velocity.y *= object->damage_recoil;                        // Apply recoil force y to new direction vector
-    cpBodySetVelocity( object->body, velocity );                // Set body to new velocity
-}
-
 extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b);
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
@@ -126,13 +111,26 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
 }
 
 
-void DrEngine::setCollisionType(DrEngineObject *object, Collision_Type type) {
-    object->collision_type = type;
-    for (auto shape : object->shapes) {
-        cpShapeSetCollisionType(shape, static_cast<cpCollisionType>(type));
+//######################################################################################################
+//##    Applies Recoil Force after being damaged another object
+//######################################################################################################
+static void BodyAddRecoil(cpSpace *, cpArbiter *arb, DrEngineObject *object) {
+    // METHOD: Apply damage_recoil opposite velocity
+    cpVect n = cpArbiterGetNormal(arb);                         // Get Normal of contact point
+    cpVect velocity = cpBodyGetVelocity(object->body);          // Get current velocity of body
+    if (abs(velocity.x) < 1.0 && abs(velocity.y) < 1.0)         // If object isnt moving, give it the velocity towards the collision
+        velocity = cpvneg(cpArbiterGetNormal(arb));
+    double dot = cpvdot(velocity, n);                           // Calculate dot product (difference of angle from collision normal)
+    if (dot < 0.0) {                                            // If objects velocity if goings towards collision point, reflect it
+        QPointF v = QPointF(velocity.x, velocity.y);                // Convert to QPointF for better vector math operators than cpVect
+        v = v - (2.0 * dot * QPointF(n.x, n.y));                    // Reflect velocity normal across the plane of the collision normal
+        velocity = cpv(v.x(), v.y());                               // Convert back to cpVect
     }
+    velocity = cpvnormalize(velocity);                          // Normalize body velocity
+    velocity.x *= object->damage_recoil;                        // Apply recoil force x to new direction vector
+    velocity.y *= object->damage_recoil;                        // Apply recoil force y to new direction vector
+    cpBodySetVelocity( object->body, velocity );                // Set body to new velocity
 }
-
 
 
 

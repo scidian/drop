@@ -15,10 +15,9 @@
 #include <QToolButton>
 #include <QTime>
 #include <QTimer>
-
 #include <chrono>
 
-#include "engine/engine.h"
+#include "enums_engine.h"
 
 enum class Engine_Timer {
     Update,
@@ -29,6 +28,7 @@ enum class Engine_Timer {
 };
 
 // Forward declarations
+class DrEngine;
 class DrProject;
 class OpenGL;
 

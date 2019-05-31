@@ -14,7 +14,6 @@
 #include <QOpenGLTexture>
 #include <QOpenGLWidget>
 #include <QMatrix4x4>
-
 #include <chrono>
 
 // Forward Declarations

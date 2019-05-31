@@ -9,6 +9,10 @@
 #include "project/project_world_stage.h"
 #include "project/project_world_stage_object.h"
 
+
+//######################################################################################################
+//##    Load DrProject Stage to Space
+//######################################################################################################
 void DrEngine::loadStageToSpace(DrStage *stage, double offset_x, double offset_y) {
 
     // Load objects
@@ -60,6 +64,28 @@ void DrEngine::loadStageToSpace(DrStage *stage, double offset_x, double offset_y
     m_loaded_to += stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();
 
 }
+
+
+//######################################################################################################
+//##    Set Collision Type of Object
+//######################################################################################################
+void DrEngine::setCollisionType(DrEngineObject *object, Collision_Type type) {
+    object->collision_type = type;
+    for (auto shape : object->shapes) {
+        cpShapeSetCollisionType(shape, static_cast<cpCollisionType>(type));
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -40,6 +40,13 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
     clearCameras();
 
 
+    // ***** Reset keys
+    keyboard_x = 0;
+    keyboard_y = 0;
+    jump_button = false;
+    gas_pedal = Pedal::None;
+
+
     // ***** Custom Wildcard beginFunc CollisionHandlers: Damage / Health    
     QVector<Collision_Type> collide_types { Collision_Type::Damage_None,
                                             Collision_Type::Damage_Player,
@@ -108,6 +115,9 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         // Test rotate block
         DrEngineObject *block2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -350, 150, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
         block2->rotate_speed = 2.0;
+        block2->health = 4;
+        block2->auto_damage = .2;
+
 
         // Test destroyable block
         DrEngineObject *block3 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -200, 150, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));

@@ -35,6 +35,15 @@ void DrEngine::deleteResources() {
 
 
 //######################################################################################################
+//##    High-Res Timer Functions
+//######################################################################################################
+double DrEngine::millisecondsElapsed(const DrTime &timer) {
+    return (std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - timer).count() /  1000000.0);
+}
+void DrEngine::resetTimer(DrTime &timer) { timer = Clock::now(); }
+
+
+//######################################################################################################
 //##    DrEngineTexture
 //######################################################################################################
 DrEngineTexture* DrEngine::addTexture(long texture_id, QString from_asset_string) {

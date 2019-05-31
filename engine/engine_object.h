@@ -12,11 +12,11 @@
 #include <QTime>
 #include <QVector>
 #include <QVector3D>
+#include <chrono>
 #include <map>
 
-#include <iostream>
-
 #include "chipmunk/chipmunk.h"
+#include "enums_engine.h"
 
 // Local Enumerations
 enum class Body_Type {
@@ -52,6 +52,8 @@ enum class Jump_State {
 
 // Type Definitions
 typedef std::map<cpShape*, Shape_Type> ShapeMap;
+typedef std::chrono::high_resolution_clock Clock;
+typedef Clock::time_point DrTime;
 
 // Constants for calling engine addObject calls
 constexpr double    c_epsilon = 0.0000001;      // Floating point zero
@@ -60,8 +62,9 @@ constexpr QPointF   c_center    {0, 0};         // Default offset in no offset
 constexpr QPointF   c_scale1x1  {1, 1};         // Default scale of 1x1
 constexpr double    c_norotate  {0};            // Default rotation amount of zero
 constexpr double    c_opaque    {1};            // Default transparency of fully opaque
-constexpr double    c_friction = -1;            // Flag for add**** call to use world friction setting
-constexpr double    c_bounce =   -1;            // Flag for add**** call to use world bounce setting
+constexpr double    c_friction =  -1;           // Flag for add**** call to use world friction setting
+constexpr double    c_bounce =    -1;           // Flag for add**** call to use world bounce setting
+constexpr int       c_unlimited = -1;           // Flag for ranged items to be unlimited (health, jump_count)
 
 // Global Variables - defined in engine_update_player.cpp
 extern int          g_keyboard_x;               // Used to pass keyboard x button state to static callback functions
@@ -96,10 +99,11 @@ struct DrEngineObject {
 
     long        active_camera = 0;              // Set to ID of last camera that followed this object, 0 == no camera
 
-    Collision_Type  collision_type = Collision_Type::Damage_None;       // Specifies what other types of objects this object can damage
-    double      max_health = 100.0;                                     // Maximum object health
-    double      health = 3.0;                                           // Object Health, -1 = infinite
+    Collision_Type collision_type = Collision_Type::Damage_None;        // Specifies what other types of objects this object can damage
+    double      max_health = 100.0;                                     // Maximum object health, c_unlimited (-1) = no maximum
+    double      health = 3.0;                                           // Object Health, c_unlimited (-1) = infinite, otherwise should be > 0
     double      damage = 1.0;                                           // Damage caused to other objects of Type collision_type
+    double      auto_damage = 0.0;                                      // Take x damage per second (can be negative, i.e. add health)
     long        death_delay = 100;                                      // Time it takes for item to die (can't deal damage while dying), in milliseconds
     bool        fade_on_death = true;                                   // If true, object is slowly faded over death_delay time
     long        fade_delay = 750;                                       // Time it takes for item to be removed after death, in milliseconds (0 == remove immediately)
@@ -129,7 +133,7 @@ struct DrEngineObject {
     double      jump_force_x =    0.0;          // Jump force x
     double      jump_force_y =  250.0;          // Jump force y
     double      jump_timeout =  800.0;          // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
-    int         jump_count =        0;          // How many jumps this player is allowed, -1 = unlimited, 0 = cannot jump, 1 = 1, 2 = 2, etc
+    int         jump_count =        0;          // How many jumps this player is allowed, c_unlimited (-1) = unlimited, 0 = cannot jump, 1 = 1, 2 = 2, etc
 
     bool        can_rotate = true;              // To be set during object creation, moment of inertia is set to infinity to stop rotation
     bool        ignore_gravity = false;         // If turned to true, this object no longer is affected by gravity
@@ -155,15 +159,16 @@ struct DrEngineObject {
     double      last_touched_ground_dot = 1.0;          // Dot product of the last touched surface
     Jump_State  jump_state = Jump_State::Need_To_Jump;  // Used by Engine Update to keep track of if the current jump button press has been processed
 
-    bool        dying = false;                  // When health turns to zero, dying becomes true for death_delay time, then alive becomes false
-    QTime       death_timer;                    // Used to incorporate death_delay for object dying
-    bool        alive = true;                   // After item has been dying for death_delay time, alive becomes false, then fades for fade_delay time
-    QTime       fade_timer;                     // Used to incorporate fade_delay for object fade / removal
+    bool        dying = false;                          // When health turns to zero, dying becomes true for death_delay time, then alive becomes false
+    bool        alive = true;                           // After item has been dying for death_delay time, alive becomes false, then fades for fade_delay time
+    DrTime      death_timer = Clock::now();             // Used to incorporate death_delay for object dying
+    DrTime      fade_timer = Clock::now();              // Used to incorporate fade_delay for object fade / removal
+    DrTime      update_timer = Clock::now();            // Used to keep track of time passed since last object update
+    double      time_since_last_update = 0.0;           // Milliseconds since last update
 
-    double      angle = 0.0;                    // Current object angle
-    QPointF     velocity;                       // Current object velocity
-    QPointF     position;                       // Current object posiiton
-    QPointF     previous_position;              // Previous frame position, for whatever may need it
+    double      angle = 0.0;                        // Current object angle
+    QPointF     position;                           // Current object posiiton
+    QPointF     previous_position;                  // Previous frame position, for whatever may need it
 };
 
 
