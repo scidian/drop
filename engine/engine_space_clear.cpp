@@ -31,10 +31,10 @@ void ChipmunkFreeSpaceChildren(cpSpace *space) {
 }
 
 // Used for constraint iterator to get a list of all constraints attached to a body
-static void getBodyJointList(cpBody *, cpConstraint *constraint, QVector<cpConstraint*> *joint_list) { joint_list->append(constraint); }
+static void GetBodyJointList(cpBody *, cpConstraint *constraint, QVector<cpConstraint*> *joint_list) { joint_list->append(constraint); }
 
 // Used for shape iterator to get a list of all shapes attached to a body
-static void getBodyShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_list) { shape_list->append(shape); }
+static void GetBodyShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_list) { shape_list->append(shape); }
 
 
 //######################################################################################################
@@ -58,14 +58,14 @@ void DrEngine::removeObject(DrEngineObject *object) {
     object->should_process = false;
 
     QVector<cpShape*> shape_list;
-    cpBodyEachShape(object->body, cpBodyShapeIteratorFunc(getBodyShapeList), &shape_list);
+    cpBodyEachShape(object->body, cpBodyShapeIteratorFunc(GetBodyShapeList), &shape_list);
     for (auto shape : shape_list) {
         cpSpaceRemoveShape(m_space, shape);
         cpShapeFree(shape);
     }
 
     QVector<cpConstraint*> joint_list;
-    cpBodyEachConstraint(object->body, cpBodyConstraintIteratorFunc(getBodyJointList), &joint_list);
+    cpBodyEachConstraint(object->body, cpBodyConstraintIteratorFunc(GetBodyJointList), &joint_list);
     for (auto joint : joint_list) {
         cpSpaceRemoveConstraint(m_space, joint);
         cpConstraintFree(joint);

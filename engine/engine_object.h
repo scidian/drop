@@ -26,10 +26,10 @@ enum class Body_Type {
 };
 
 enum class Shape_Type {
-    Circle,                                     // cpCircleShapeNew
-    Box,                                        // cpBoxShapeNew
-    Segment,    // "Line"                       // cpSegmentShapeNew
-    Polygon,                                    // cpPolyShapeNew
+    Circle,                             // cpCircleShapeNew
+    Box,                                // cpBoxShapeNew
+    Segment,    // "Line"               // cpSegmentShapeNew
+    Polygon,                            // cpPolyShapeNew
 };
 
 enum class Collision_Type {
@@ -37,10 +37,13 @@ enum class Collision_Type {
     Damage_Player =         2,
     Damage_Enemy =          3,
     Damage_All =            4,
-    Damage_None_One_Way =   5,
-    Damage_Player_One_Way = 6,
-    Damage_Enemy_One_Way =  7,
-    Damage_All_One_Way =    8,
+};
+
+enum class One_Way {                    // One Way Collide
+    None,
+    Pass_Through,                       // Objects can pass through going one_way_direction
+    Weak_Point,                         // Only takes damage from one_way_direction
+    Damage_Direction,                   // Only gives damage from one_way_direction (block with
 };
 
 enum class Jump_State {
@@ -53,10 +56,10 @@ typedef std::map<cpShape*, Shape_Type> ShapeMap;
 
 // Constants for calling engine addObject calls
 constexpr QVector3D c_no_camera {0, 0, 800};    // Default camera position if there is no active camera
-constexpr QPointF   c_center   {0, 0};          // Default offset in no offset
-constexpr QPointF   c_scale1x1 {1, 1};          // Default scale of 1x1
-constexpr double    c_norotate {0};             // Default rotation amount of zero
-constexpr double    c_opaque   {1};             // Default transparency of fully opaque
+constexpr QPointF   c_center    {0, 0};         // Default offset in no offset
+constexpr QPointF   c_scale1x1  {1, 1};         // Default scale of 1x1
+constexpr double    c_norotate  {0};            // Default rotation amount of zero
+constexpr double    c_opaque    {1};            // Default transparency of fully opaque
 constexpr double    c_friction = -1;            // Flag for add**** call to use world friction setting
 constexpr double    c_bounce =   -1;            // Flag for add**** call to use world bounce setting
 
@@ -100,17 +103,17 @@ struct DrEngineObject {
     bool        fade_on_death = true;                                   // If true, object is slowly faded over death_delay time
     long        fade_delay = 750;                                       // Time it takes for item to be removed after death, in milliseconds (0 == remove immediately)
 
-    bool        one_way = false;                // Set to true if we're using this object as a one way platform
-    cpVect      one_way_direction {0, 1};       // Direction of Normal for one way platforms
+    One_Way     one_way = One_Way::None;        // Set to true if we're using this object as a one way platform
+    cpVect      one_way_direction {0, 1};       // Direction of Normal for one way, defaults to Up (i.e. character can pass upwards through the bottom of a block)
 
     double      custom_friction = c_friction;   // Defaults to c_friction (-1) if this item uses global m_friction, otherwise stores custom friction
     double      custom_bounce = c_bounce;       // Defaults to c_bounce (-1) if this item uses global m_bounce, otherwise stores custom bounce
 
     double      rotate_speed =  0;              // Speed at which object should spin when Motor Rotate (gas pedal) is pressed
 
-    // ***** Object interaction                 // These properties are used by objects that have been attached to playerUpdateVelocity
+    // ***** Object interaction                 // These properties are used by objects that have been attached to PlayerUpdateVelocity
     bool        lost_control = false;           // Set to true when players should not have button control
-                                                //      (players are cpBody* that have been assigned the cpBodyUpdateVelocityFunc playerUpdateVelocity callback)
+                                                //      (players are cpBody* that have been assigned the cpBodyUpdateVelocityFunc PlayerUpdateVelocity callback)
 
     double      max_speed_x =  1000.0;          // Maximum speed x of object
     double      max_speed_y =  1000.0;          // Maximum speed y of object

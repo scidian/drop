@@ -67,7 +67,9 @@ typedef std::map<long, DrEngineCamera*>  EngineCameraMap;
 typedef std::map<long, DrEngineTexture*> EngineTextureMap;
 
 // Global Forward Declaratopns for static Chipmunk callbacks
-extern void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);            // defined in engine_udate_player.cpp
+extern cpBool   BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                       // defined in engine_space_collision.cpp
+extern cpBool   PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                    // defined in engine_space_collision.cpp
+extern void     PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);            // defined in engine_space_update_player.cpp
 
 //####################################################################################
 //##    DrEngine
@@ -169,7 +171,6 @@ public:
     void        buildSpace(Demo_Space new_space_type);
     void        clearSpace();
     void        loadStageToSpace(DrStage *stage, double offset_x, double offset_y);
-    void        oneWayPlatform(DrEngineObject *object, cpVect direction);
     void        removeObject(DrEngineObject *object);
     void        setCollisionType(DrEngineObject *object, Collision_Type type);
     void        updateSpace(double time_passed);

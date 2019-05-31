@@ -40,7 +40,6 @@ void DrEngine::loadStageToSpace(DrStage *stage, double offset_x, double offset_y
             body = Body_Type::Static;
         }
 
-
         // ***** Add the block to the cpSpace
         DrEngineObject *block =     addBlock(body, asset_key, position.x() + offset_x, -position.y() + offset_y, z_order,
                                              angle, scale, alpha, c_friction, c_bounce, QPointF(0, 0), collide);

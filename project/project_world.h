@@ -32,18 +32,18 @@ private:
     DrProject  *m_parent_project;                           // Holds reference to parent Project class that handles key generation for project
 
 public:
-    // Constructor & destructor
+    // Constructor & Destructor
     DrWorld(DrProject *parent_project, long new_world_key, QString new_world_name);
     virtual ~DrWorld() override;
 
 
-    // Getters and setters
+    // Getters and Setters
     virtual DrType  getType() override  { return DrType::World; }
     DrProject*      getParentProject()  { return m_parent_project; }
     StageMap&       getStageMap()       { return m_stages; }
 
 
-    // External calls
+    // Function Calls
     void        addStage(QString new_stage_name = "");
     void        initializeWorldSettings(QString new_name);
 

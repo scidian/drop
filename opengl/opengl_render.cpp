@@ -170,6 +170,7 @@ void OpenGL::drawObjects() {
     ///drawCube( QVector3D( 2000, 400, -300) );
     ///cullingOff();
 
+
     // ***** Create a vector of the scene objects (ignoring lines / segments) and sort it by depth
     std::vector<std::pair<int, double>> v;
     for (int i = 0; i < m_engine->objects.count(); i++) {

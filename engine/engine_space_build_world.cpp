@@ -19,95 +19,6 @@
 #include "project/project_world_stage_object.h"
 #include "helper.h"
 
-//  Arbiter Callbacks:
-//      begin:      Called when objects first touch. Return true from the callback to process the collision normally or false to cause Chipmunk to ignore
-//                      the collision entirely. If you return false, the preSolve() and postSolve() callbacks will never be run, but you will still recieve a
-//                      separate event when the shapes stop overlapping.
-//      presolve:   Called every frame, Two shapes are touching during this step. Return false from the callback to make Chipmunk ignore the collision this step
-//                      or true to process it normally. Additionally, you may override collision values using cpArbiterSetFriction(), cpArbiterSetElasticity() or
-//                      cpArbiterSetSurfaceVelocity()
-//      postsolve:  Two shapes are touching and their collision response has been processed. You can retrieve the collision impulse or kinetic energy at this
-//                      time if you want to use it to calculate sound volumes or damage amounts.
-//      seperate:   Two shapes have just stopped touching for the first time this step. To ensure that begin() / separate() are always called in balanced pairs,
-//                      it will also be called when removing a shape while its in contact with something or when deallocating the space.
-
-//######################################################################################################
-//##    Chipmunk Callbacks
-//##        Support for object collisions and one way platforms
-//######################################################################################################
-static cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
-    CP_ARBITER_GET_SHAPES(arb, a, b);
-    DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
-    DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
-
-    // Check for one way platform
-    if (object_a->one_way) {
-        if (cpvdot(cpArbiterGetNormal(arb), object_a->one_way_direction) < 0.0)
-            return cpArbiterIgnore(arb);
-    } else if (object_b->one_way) {
-        if (cpvdot(cpArbiterGetNormal(arb), object_b->one_way_direction) > 0.0)
-            return cpArbiterIgnore(arb);
-    }
-    if ( object_a->damage <= 0) return cpTrue;                                  // Object does no damage, exit
-    if ( object_a->alive && object_a->dying) return cpTrue;                     // Don't deal damage while dying
-    if (!object_a->alive) return cpFalse;                                       // If object is dead, cancel collision
-
-    bool should_damage = false;
-    if ((object_a->collision_type == Collision_Type::Damage_Enemy  || object_a->collision_type == Collision_Type::Damage_Enemy_One_Way) &&
-        (object_b->collision_type == Collision_Type::Damage_Player || object_b->collision_type == Collision_Type::Damage_Player_One_Way ||
-         object_b->collision_type == Collision_Type::Damage_All    || object_b->collision_type == Collision_Type::Damage_All_One_Way))
-        should_damage = true;
-
-    if ((object_a->collision_type == Collision_Type::Damage_Player || object_a->collision_type == Collision_Type::Damage_Player_One_Way) &&
-        (object_b->collision_type == Collision_Type::Damage_Enemy  || object_b->collision_type == Collision_Type::Damage_Enemy_One_Way ||
-         object_b->collision_type == Collision_Type::Damage_All    || object_b->collision_type == Collision_Type::Damage_All_One_Way))
-        should_damage = true;
-
-    if ((object_a->collision_type == Collision_Type::Damage_All    || object_a->collision_type == Collision_Type::Damage_All_One_Way))
-        should_damage = true;
-
-    if (should_damage) {
-        if (object_b->health > 0) {
-            object_b->health -= object_a->damage;
-
-            // If we killed object, cancel collision
-            if (object_b->health <= 0) {
-                object_b->health = 0;
-                if (object_b->death_delay == 0) return cpFalse;
-            }
-        }
-    }
-    return cpTrue;
-}
-
-static cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
-    CP_ARBITER_GET_SHAPES(arb, a, b);
-    DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
-    ///DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
-
-    if (!object_a->alive) return cpFalse;                                       // If object is dead, cancel collision
-
-    return cpTrue;
-}
-
-void DrEngine::oneWayPlatform(DrEngineObject *object, cpVect direction) {
-    object->one_way = true;
-    object->one_way_direction = direction;              // Let objects pass if going Direction
-    switch (object->collision_type) {
-        case Collision_Type::Damage_None:   case Collision_Type::Damage_None_One_Way:   setCollisionType(object, Collision_Type::Damage_None_One_Way);   break;
-        case Collision_Type::Damage_Player: case Collision_Type::Damage_Player_One_Way: setCollisionType(object, Collision_Type::Damage_Player_One_Way); break;
-        case Collision_Type::Damage_Enemy:  case Collision_Type::Damage_Enemy_One_Way:  setCollisionType(object, Collision_Type::Damage_Enemy_One_Way);  break;
-        case Collision_Type::Damage_All:    case Collision_Type::Damage_All_One_Way:    setCollisionType(object, Collision_Type::Damage_All_One_Way);    break;
-    }
-}
-
-void DrEngine::setCollisionType(DrEngineObject *object, Collision_Type type) {
-    object->collision_type = type;
-    for (auto shape : object->shapes) {
-        cpShapeSetCollisionType(shape, static_cast<cpCollisionType>(type));
-    }
-}
-
 
 //######################################################################################################
 //##    Build Space
@@ -133,11 +44,7 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
     QVector<Collision_Type> collide_types { Collision_Type::Damage_None,
                                             Collision_Type::Damage_Player,
                                             Collision_Type::Damage_Enemy,
-                                            Collision_Type::Damage_All,
-                                            Collision_Type::Damage_None_One_Way,
-                                            Collision_Type::Damage_Player_One_Way,
-                                            Collision_Type::Damage_Enemy_One_Way,
-                                            Collision_Type::Damage_All_One_Way };
+                                            Collision_Type::Damage_All };
     for (Collision_Type c : collide_types) {
         cpCollisionHandler *damage_handler = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(c));
         damage_handler->beginFunc = BeginFuncWildcard;
@@ -167,8 +74,8 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
 
 
     } else if (demo_space == Demo_Space::Lines1) {
-        m_friction = 1;
-        m_bounce = 0.8;
+        m_friction = 1.0;
+        m_bounce =   0.8;
 
         // Static line segment shapes for the ground
         this->addLine(Body_Type::Static, QPointF(-800,     0), QPointF( 300, -250), c_friction, c_bounce, 1);
@@ -176,8 +83,8 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         this->addLine(Body_Type::Static, QPointF(-1100, -300), QPointF(-900, -300), c_friction, c_bounce, 1);
 
     } else if (demo_space == Demo_Space::Lines2) {
-        m_friction = 2;
-        m_bounce = 0.5;
+        m_friction = 2.0;
+        m_bounce =   0.5;
 
         // Static line segment shapes for the ground
         DrEngineObject *line1 = this->addLine(Body_Type::Static, QPointF(-1000, -200), QPointF(1000, -200), c_friction, c_bounce, 1);
@@ -186,24 +93,29 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         this->addLine(Body_Type::Static, QPointF( -300,  150), QPointF(-100,  150), c_friction, c_bounce, 1);
 
         // One way platform support
-        oneWayPlatform(line1, cpv(0, 1));                        // Let objects pass upwards
-        oneWayPlatform(line2, cpv(0, 1));                        // Let objects pass upwards
-
+        line1->one_way = One_Way::Pass_Through; line1->one_way_direction = cpv(0, 1);                // Let objects pass upwards
+        line2->one_way = One_Way::Pass_Through; line2->one_way_direction = cpv(0, 1);                // Let objects pass upwards
 
     } else if (demo_space == Demo_Space::Blocks) {
         m_friction = 0.5;
-        m_bounce = 0.5;
+        m_bounce =   0.1;
 
         // Test one way block
-        DrEngineObject *block =  this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -300, 120, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
-        block->collision_type = Collision_Type::Damage_Player;
-        oneWayPlatform(block, cpv(0, 1));
+        DrEngineObject *block = this->addBlock(Body_Type::Static, Test_Textures::Block, -500, 150, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
+        setCollisionType(block, Collision_Type::Damage_Player);
+        block->one_way = One_Way::Pass_Through; block->one_way_direction = cpv(0, 1);                // Let objects pass upwards
 
         // Test rotate block
-        DrEngineObject *block2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -150, 120, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
-        block->collision_type = Collision_Type::Damage_Player;
+        DrEngineObject *block2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -350, 150, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
         block2->rotate_speed = 2;
 
+        // Test destroyable block
+        DrEngineObject *block3 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -200, 150, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
+        setCollisionType(block3, Collision_Type::Damage_Player);
+        block3->one_way = One_Way::Weak_Point;
+        block3->one_way_direction = cpv(0, 1);                // Take damage from below only
+        block3->health = 1;
+        block3->damage = 1;
 
         // Static line segment shapes for the ground
         this->addLine(Body_Type::Static, QPointF(-1000,   0), QPointF( 2500,   0), c_friction, c_bounce, 1);
@@ -234,21 +146,26 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         this->addLine(Body_Type::Static, QPointF( 1760,    4), QPointF(1790,   0), c_friction, c_bounce, 1);
 
         // Block alignment test
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, 220, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, 160, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, 100, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000,  40, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1240, 220, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1240, 160, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1240, 100, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1240,  40, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1240, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
 
-        DrEngineObject *belt =  this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -500, 120, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
-        DrEngineObject *belt2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -560, 120, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
-        DrEngineObject *belt3 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -620, 120, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
-        DrEngineObject *belt4 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -680, 120, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
+        DrEngineObject *belt =  this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -680, 150, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
+        DrEngineObject *belt2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -740, 150, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
+        DrEngineObject *belt3 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -800, 150, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
+        DrEngineObject *belt4 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -860, 150, 100, 0, QPointF(1, 1), 1, 2.0, m_bounce, QPointF(0, 0));
 
         cpShapeSetSurfaceVelocity( belt->shapes.first(),  cpv(1000, 0) );
         cpShapeSetSurfaceVelocity( belt2->shapes.first(), cpv(1000, 0) );
         cpShapeSetSurfaceVelocity( belt3->shapes.first(), cpv(1000, 0) );
         cpShapeSetSurfaceVelocity( belt4->shapes.first(), cpv(1000, 0) );
+
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1180, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1120, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1060, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
 
         this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -940, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
         this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -880, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));

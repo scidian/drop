@@ -22,17 +22,17 @@
 //##        Grabs data from Space
 //####################################################################################
 // Used for Arbiter iterator to get a list of all arbiters (collision points) attached to a body
-static void getBodyContactPoints(cpBody *, cpArbiter *arb, QVector<QPointF> *point_list) {
+static void GetBodyContactPoints(cpBody *, cpArbiter *arb, QVector<QPointF> *point_list) {
     cpContactPointSet contact = cpArbiterGetContactPointSet( arb );
     point_list->append( QPointF( contact.points->pointA.x, contact.points->pointA.y ) );
 }
 // Used for Arbiter iterator to get a list of Normals (angles) of all arbiters (collision points) attached to a body
-static void getBodyContactNormals(cpBody *, cpArbiter *arb, QVector<cpVect> *normal_list) {
+static void GetBodyContactNormals(cpBody *, cpArbiter *arb, QVector<cpVect> *normal_list) {
     cpVect normal = cpArbiterGetNormal( arb );
     normal_list->append( normal );
 }
 // Used for constraint iterator to get a list of all Constraints (joints) in cpSpace
-static void getSpaceJointList(cpConstraint *constraint, QVector<cpConstraint*> *joint_list) { joint_list->append(constraint); }
+static void GetSpaceJointList(cpConstraint *constraint, QVector<cpConstraint*> *joint_list) { joint_list->append(constraint); }
 
 
 //####################################################################################
@@ -40,14 +40,10 @@ static void getSpaceJointList(cpConstraint *constraint, QVector<cpConstraint*> *
 //####################################################################################
 QColor OpenGL::collisionTypeDebugColor(Collision_Type collision_type) {
     switch (collision_type) {
-        case Collision_Type::Damage_None:
-        case Collision_Type::Damage_None_One_Way:   return QColor(0, 255, 0);              // Green
-        case Collision_Type::Damage_Player:
-        case Collision_Type::Damage_Player_One_Way: return QColor(255, 0, 0);              // Red
-        case Collision_Type::Damage_Enemy:
-        case Collision_Type::Damage_Enemy_One_Way:  return QColor(0, 0, 255);              // Blue
-        case Collision_Type::Damage_All:
-        case Collision_Type::Damage_All_One_Way:    return QColor(128, 0, 128);            // Purple
+        case Collision_Type::Damage_None:           return QColor(0, 255, 0);              // Green
+        case Collision_Type::Damage_Player:         return QColor(255, 0, 0);              // Red
+        case Collision_Type::Damage_Enemy:          return QColor(0, 0, 255);              // Blue
+        case Collision_Type::Damage_All:            return QColor(128, 0, 128);            // Purple
     }
 }
 
@@ -219,7 +215,7 @@ void OpenGL::drawDebugJoints(QPainter &painter) {
     // Get a list of the constraints in the Space
     QVector<cpConstraint*> joint_list;
     joint_list.clear();
-    cpSpaceEachConstraint(m_engine->getSpace(), cpSpaceConstraintIteratorFunc(getSpaceJointList), &joint_list);
+    cpSpaceEachConstraint(m_engine->getSpace(), cpSpaceConstraintIteratorFunc(GetSpaceJointList), &joint_list);
 
     // Draw the Joints
     for (auto joint : joint_list) {
@@ -290,8 +286,8 @@ void OpenGL::drawDebugCollisions(QPainter &painter) {
 
         QVector<QPointF> point_list;    point_list.clear();
         QVector<cpVect>  normal_list;   normal_list.clear();
-        cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(getBodyContactPoints),  &point_list);
-        cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(getBodyContactNormals), &normal_list);
+        cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(GetBodyContactPoints),  &point_list);
+        cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(GetBodyContactNormals), &normal_list);
 
         QPointF diff = object->position - ((object->previous_position * (1.0 - m_time_percent)) + (object->position * m_time_percent));
 

@@ -60,7 +60,7 @@ public:
     void         setComponentPropertyValue(long component, long property, QVariant value);
     void         setComponentPropertyValue(Components component, Properties property, QVariant value);
 
-    // External Calls
+    // Function Calls
     DrComponent* findComponentFromPropertyKey(long property_key_to_find);
     DrProperty*  findPropertyFromPropertyKey(long property_key_to_find);
 

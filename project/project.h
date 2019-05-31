@@ -63,7 +63,7 @@ private:
 
 
 public:
-    // Constructor & destructor
+    // Constructor & Destructor
     DrProject(long key_generator_starting_number = c_key_starting_number);
     ~DrProject();
 
@@ -86,14 +86,14 @@ public:
     DrImage*    getDrImage(long key)    { return m_images[key]; }
     ImageMap&   getDrImageMap()         { return m_images; }
 
-    // Options calls
+    // Options Calls
     QVariant    getOption(Project_Options option_to_get)   { return m_options[option_to_get]; }
     void        setOption(Project_Options option_to_set, QVariant new_value) { m_options[option_to_set] = new_value; }
 
     Orientation getOptionOrientation() { return static_cast<Orientation>( m_options[Project_Options::Orientation].toInt()); }
 
 
-    // External calls
+    // Function Calls
     DrSettings*     findSettingsFromKey(long check_key);
     DrType          findChildTypeFromKey(long check_key);
 
@@ -103,7 +103,7 @@ public:
 
     QString         testSpeedFindSettings(int test_size);
 
-    // Children creation calls
+    // Children Creation Calls
     void            addWorld();
     long            addAsset(DrAssetType new_asset_type, long image_key);
     long            addFont( QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects = false);

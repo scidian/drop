@@ -39,12 +39,12 @@ private:
 
 
 public:
-    // Constructor & destructor
+    // Constructor / Destructor
     DrComponent(DrSettings *parent_settings, QString new_display_name, QString new_description, QColor new_color, long new_key, bool new_turned_on);
     ~DrComponent();
 
 
-    // Getters and setters
+    // Getters and Setters
     QString         getDisplayName() { return m_display_name; }
     QString         getDisplayNameQString() { return m_display_name; }
     QString         getDescription() { return m_description; }
@@ -72,7 +72,7 @@ public:
 
 
 
-    // External calls
+    // Function Calls
     void addProperty(Properties     property_number,
                      Property_Type  type,
                      QVariant       value,

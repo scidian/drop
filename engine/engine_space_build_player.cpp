@@ -11,9 +11,9 @@
 
 //######################################################################################################
 //##    Sets up an object to be controlled as a "player"
-//##        i.e. have playerUpdateVelocity function attached as a callback during cpSpaceStep
+//##        i.e. have PlayerUpdateVelocity function attached as a callback during cpSpaceStep
 //######################################################################################################
-// Sets up an object to be controlled as a "player", i.e. have playerUpdateVelocity function attached as a callback during cpSpaceStep
+// Sets up an object to be controlled as a "player", i.e. have PlayerUpdateVelocity function attached as a callback during cpSpaceStep
 void DrEngine::assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera) {
     // Create camera
     if (add_camera) {
@@ -24,7 +24,7 @@ void DrEngine::assignPlayerControls(DrEngineObject *object, bool has_controls_no
     object->health = 1;
     object->damage = 1;
     object->lost_control = !has_controls_now;                               // Turn on jump / movement buttons
-    cpBodySetVelocityUpdateFunc(object->body, playerUpdateVelocity);        // Assign the playerUpdate callback function
+    cpBodySetVelocityUpdateFunc(object->body, PlayerUpdateVelocity);        // Assign the playerUpdate callback function
 }
 
 

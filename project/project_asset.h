@@ -34,12 +34,12 @@ private:
     long             m_group_number;                    // Keeps track of what group to be in on the asset list tree
 
 public:
-    // Constructor & destructor
+    // Constructor & Destructor
     explicit DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_asset_type, long source_key);
     virtual ~DrAsset() override;
 
 
-    // Getters and setters
+    // Getters / Setters
     virtual DrType  getType() override  { return DrType::Asset; }
     DrAssetType     getAssetType()      { return m_asset_type; }
 
@@ -48,7 +48,7 @@ public:
     long            getHeight()         { return m_height; }
     long            getSourceKey()      { return m_source_key; }
 
-    // External calls
+    // Function Calls
     void        initializeAssetSettingsObject(QString new_name, QPixmap pixmap);
     void        initializeAssetSettingsFont(DrFont *font);
     void        initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap);
