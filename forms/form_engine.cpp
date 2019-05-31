@@ -225,7 +225,7 @@ void FormEngine::updateEngine() {
         resetTimer(Engine_Timer::Render);
 
         // Calculate time since last physics update as a percentage (and add how long a render takes)
-        m_opengl->setTimePercent( (getTimerMilliseconds(Engine_Timer::Physics) + m_time_one_frame_takes_to_render) / (m_physics_milliseconds + 0.0000001) );
+        m_opengl->setTimePercent( (getTimerMilliseconds(Engine_Timer::Physics) + m_time_one_frame_takes_to_render) / (m_physics_milliseconds + c_epsilon) );
         resetTimer(Engine_Timer::Frame);                                            // Track how long one render takes to end up on screen from this point
 
         m_opengl->update();                                                         // Render

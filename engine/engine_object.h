@@ -54,6 +54,7 @@ enum class Jump_State {
 typedef std::map<cpShape*, Shape_Type> ShapeMap;
 
 // Constants for calling engine addObject calls
+constexpr double    c_epsilon = 0.0000001;      // Floating point zero
 constexpr QVector3D c_no_camera {0, 0, 800};    // Default camera position if there is no active camera
 constexpr QPointF   c_center    {0, 0};         // Default offset in no offset
 constexpr QPointF   c_scale1x1  {1, 1};         // Default scale of 1x1
@@ -96,12 +97,13 @@ struct DrEngineObject {
     long        active_camera = 0;              // Set to ID of last camera that followed this object, 0 == no camera
 
     Collision_Type  collision_type = Collision_Type::Damage_None;       // Specifies what other types of objects this object can damage
-    long        health = 3;                                             // Object Health, -1 = infinite
-    long        damage = 1;                                             // Damage caused to other objects of Type collision_type
+    double      max_health = 100.0;                                     // Maximum object health
+    double      health = 3.0;                                           // Object Health, -1 = infinite
+    double      damage = 1.0;                                           // Damage caused to other objects of Type collision_type
     long        death_delay = 100;                                      // Time it takes for item to die (can't deal damage while dying), in milliseconds
     bool        fade_on_death = true;                                   // If true, object is slowly faded over death_delay time
     long        fade_delay = 750;                                       // Time it takes for item to be removed after death, in milliseconds (0 == remove immediately)
-    double      damage_recoil = 300.0;                                  // How much opposite force to apply when receiving damage
+    double      damage_recoil = 200.0;                                  // How much opposite force to apply when receiving damage
 
     One_Way     one_way = One_Way::None;        // Set to true if we're using this object as a one way platform
     cpVect      one_way_direction {0, 1};       // Direction of Normal for one way, defaults to Up (i.e. character can pass upwards through the bottom of a block)
@@ -109,7 +111,7 @@ struct DrEngineObject {
     double      custom_friction = c_friction;   // Defaults to c_friction (-1) if this item uses global m_friction, otherwise stores custom friction
     double      custom_bounce = c_bounce;       // Defaults to c_bounce (-1) if this item uses global m_bounce, otherwise stores custom bounce
 
-    double      rotate_speed =  0;              // Speed at which object should spin when Motor Rotate (gas pedal) is pressed
+    double      rotate_speed =  0.0;            // Speed at which object should spin when Motor Rotate (gas pedal) is pressed
 
     // ***** Object interaction                 // These properties are used by objects that have been attached to PlayerUpdateVelocity
     bool        lost_control = false;           // Set to true when players should not have button control
@@ -145,8 +147,8 @@ struct DrEngineObject {
     bool        has_been_processed = false;     // Set to true after an initial updateSpace call has been ran once while the object was in the Space
 
     int         remaining_jumps = 0;                    // How many jumps player has left before it must hit ground before it can jump again
-    double      remaining_boost = 0;                    // Used by Engine Update to process Jump Timeout boost
-    double      remaining_wall_time = 0;                // Used by Engine Update to allow some time for a wall jump to occur
+    double      remaining_boost = 0.0;                  // Used by Engine Update to process Jump Timeout boost
+    double      remaining_wall_time = 0.0;              // Used by Engine Update to allow some time for a wall jump to occur
     bool        grounded = false;                       // Used by Engine Update to keep track of if this object is on the ground
     bool        on_wall = false;                        // Used by Engine Update to keep track of if this object is on a wall
     cpVect      last_touched_ground_normal = cpvzero;   // Normal Vector of the last touched surface
@@ -158,7 +160,7 @@ struct DrEngineObject {
     bool        alive = true;                   // After item has been dying for death_delay time, alive becomes false, then fades for fade_delay time
     QTime       fade_timer;                     // Used to incorporate fade_delay for object fade / removal
 
-    double      angle = 0;                      // Current object angle
+    double      angle = 0.0;                    // Current object angle
     QPointF     velocity;                       // Current object velocity
     QPointF     position;                       // Current object posiiton
     QPointF     previous_position;              // Previous frame position, for whatever may need it

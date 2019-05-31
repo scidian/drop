@@ -107,15 +107,15 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
 
         // Test rotate block
         DrEngineObject *block2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -350, 150, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
-        block2->rotate_speed = 2;
+        block2->rotate_speed = 2.0;
 
         // Test destroyable block
         DrEngineObject *block3 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -200, 150, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
         setCollisionType(block3, Collision_Type::Damage_Player);
         block3->one_way = One_Way::Weak_Spot;
         block3->one_way_direction = cpv(0, 1);                // Take damage from below only
-        block3->health = 1;
-        block3->damage = 1;
+        block3->health = 1.0;
+        block3->damage = 1.0;
 
         // Static line segment shapes for the ground
         this->addLine(Body_Type::Static, QPointF(-1000,   0), QPointF( 2500,   0), c_friction, c_bounce, 1);

@@ -21,8 +21,6 @@ void DrEngine::assignPlayerControls(DrEngineObject *object, bool has_controls_no
         if (set_active_camera) setActiveCamera(camera_key);
     }
     setCollisionType(object, Collision_Type::Damage_Enemy);
-    object->health = 1;
-    object->damage = 1;
     object->lost_control = !has_controls_now;                               // Turn on jump / movement buttons
     cpBodySetVelocityUpdateFunc(object->body, PlayerUpdateVelocity);        // Assign the playerUpdate callback function
 }
@@ -70,7 +68,7 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         ball->jump_count = 1;
         ball->air_jump = false;
         ball->wall_jump = true;
-        ball->health = 200;
+        ball->health = 200.0;
 
         //ball->ignore_gravity = true;
         //ball->move_speed_y = 400;

@@ -102,7 +102,7 @@ void DrEngine::updateSpaceHelper() {
 
 
         // ***** Check for Object Death / Fade / Removal
-        if (object->health == 0) {
+        if (object->health < c_epsilon) {
             if (!object->dying) {
                 object->dying = true;
                 object->death_timer.restart();

@@ -35,15 +35,15 @@ static void BodyAddRecoil(cpSpace *, cpArbiter *arb, DrEngineObject *object) {
     // METHOD: Apply damage_recoil opposite velocity
     cpVect n = cpArbiterGetNormal(arb);                         // Get Normal of contact point
     cpVect velocity = cpBodyGetVelocity(object->body);          // Get current velocity of body
-    if (velocity.x < 1.0 && velocity.y < 1.0)                   // If object isnt moving, give it the velocity towards the collision
+    if (abs(velocity.x) < 1.0 && abs(velocity.y) < 1.0)         // If object isnt moving, give it the velocity towards the collision
         velocity = cpvneg(cpArbiterGetNormal(arb));
-    velocity = cpvnormalize(velocity);                          // Normalize body velocity
     double dot = cpvdot(velocity, n);                           // Calculate dot product (difference of angle from collision normal)
     if (dot < 0.0) {                                            // If objects velocity if goings towards collision point, reflect it
-        QPointF v = QPointF(velocity.x, velocity.y);                // Convert to QPointF for better built in math than cpVect
+        QPointF v = QPointF(velocity.x, velocity.y);                // Convert to QPointF for better vector math operators than cpVect
         v = v - (2.0 * dot * QPointF(n.x, n.y));                    // Reflect velocity normal across the plane of the collision normal
         velocity = cpv(v.x(), v.y());                               // Convert back to cpVect
     }
+    velocity = cpvnormalize(velocity);                          // Normalize body velocity
     velocity.x *= object->damage_recoil;                        // Apply recoil force x to new direction vector
     velocity.y *= object->damage_recoil;                        // Apply recoil force y to new direction vector
     cpBodySetVelocity( object->body, velocity );                // Set body to new velocity
@@ -64,7 +64,7 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
             return cpArbiterIgnore(arb);
     }
 
-    if ( object_a->damage <= 0) return cpTrue;                                      // Object does no damage, exit
+    if ( object_a->damage <= c_epsilon) return cpTrue;                              // Object does no damage, exit
     if ( object_a->alive && object_a->dying) return cpTrue;                         // Don't deal damage while dying
     if (!object_a->alive) return cpFalse;                                           // If object a is dead, cancel collision
     if (!object_b->alive) return cpFalse;                                           // If object b is dead, cancel collision
@@ -88,17 +88,17 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
             should_damage = false;
     }
     if (object_b->one_way == One_Way::Weak_Spot) {                                  // Don't deal damage unless you are hitting its weak spot
-        if (cpvdot(cpArbiterGetNormal(arb), object_b->one_way_direction) < 0.001)
+        if (cpvdot(cpArbiterGetNormal(arb), object_b->one_way_direction) < 0.001)   // i.e. floating point for <= 0
             should_damage = false;
     }
 
     if (should_damage) {
-        if (object_b->health > 0) {
+        if (object_b->health > 0.0) {
             object_b->health -= object_a->damage;
 
             // If we killed object, cancel collision
-            if (object_b->health <= 0) {
-                object_b->health = 0;
+            if (object_b->health <= c_epsilon) {
+                object_b->health = 0.0;
                 if (object_b->death_delay == 0) return cpFalse;
             }
 
