@@ -42,8 +42,7 @@ enum class Collision_Type {
 enum class One_Way {                    // One Way Collide
     None,
     Pass_Through,                       // Objects can pass through going one_way_direction
-    Weak_Point,                         // Only takes damage from one_way_direction
-    Damage_Direction,                   // Only gives damage from one_way_direction (block with
+    Weak_Spot,                          // Only takes damage from one_way_direction (bustable block, turtle enemy)
 };
 
 enum class Jump_State {
@@ -97,11 +96,12 @@ struct DrEngineObject {
     long        active_camera = 0;              // Set to ID of last camera that followed this object, 0 == no camera
 
     Collision_Type  collision_type = Collision_Type::Damage_None;       // Specifies what other types of objects this object can damage
-    long        health = 1;                                             // Object Health, -1 = infinite
+    long        health = 3;                                             // Object Health, -1 = infinite
     long        damage = 1;                                             // Damage caused to other objects of Type collision_type
     long        death_delay = 100;                                      // Time it takes for item to die (can't deal damage while dying), in milliseconds
     bool        fade_on_death = true;                                   // If true, object is slowly faded over death_delay time
     long        fade_delay = 750;                                       // Time it takes for item to be removed after death, in milliseconds (0 == remove immediately)
+    double      damage_recoil = 150.0;                                  // How much opposite force to apply when receiving damage
 
     One_Way     one_way = One_Way::None;        // Set to true if we're using this object as a one way platform
     cpVect      one_way_direction {0, 1};       // Direction of Normal for one way, defaults to Up (i.e. character can pass upwards through the bottom of a block)

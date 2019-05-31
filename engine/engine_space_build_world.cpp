@@ -112,7 +112,7 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         // Test destroyable block
         DrEngineObject *block3 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -200, 150, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
         setCollisionType(block3, Collision_Type::Damage_Player);
-        block3->one_way = One_Way::Weak_Point;
+        block3->one_way = One_Way::Weak_Spot;
         block3->one_way_direction = cpv(0, 1);                // Take damage from below only
         block3->health = 1;
         block3->damage = 1;

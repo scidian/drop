@@ -20,6 +20,7 @@
 // Forward Declarations
 enum class Collision_Type;
 class DrEngine;
+struct DrEngineObject;
 class FormEngine;
 
 // Type definitions
@@ -91,7 +92,6 @@ public:
     void            zoomInOut(int level);
 
     // Render Calls
-    QColor          collisionTypeDebugColor(Collision_Type collision_type);
     void            cullingOn();
     void            cullingOff();
     void            drawCube(QVector3D center);
@@ -100,6 +100,7 @@ public:
     void            drawDebugJoints(QPainter &painter);
     void            drawDebugShapes(QPainter &painter);
     void            drawObjects();
+    QColor          objectDebugColor(DrEngineObject *object);
     void            updateViewMatrix();
 
     // Getters and Setters

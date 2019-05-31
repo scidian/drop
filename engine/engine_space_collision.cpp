@@ -5,6 +5,7 @@
 //
 //
 //
+#include <QDebug>
 #include "engine.h"
 
 //  Arbiter Callbacks:
@@ -27,20 +28,28 @@ enum class One_Way2 {                    // One Way Collide
 };
 
 //######################################################################################################
-//##    Chipmunk Callbacks
-//##        Support for object collisions and one way platforms
+//##    Chipmunk Collision Callbacks
+//##        Support for object collisions, damage, recoil, one way platforms and more
 //######################################################################################################
+static void BodyAddRecoil(cpSpace *, cpArbiter *arb, DrEngineObject *object) {
+    cpVect recoil = cpvmult(cpArbiterGetNormal(arb), object->damage_recoil);
+    cpVect force =  cpvadd( cpBodyGetForce(object->body), recoil);
+    cpBodySetVelocity( object->body, force );
+    ///cpBodyApplyImpulseAtWorldPoint( object->body, recoil, cpArbiterGetPointB(arb, 0) );
+    ///cpBodyApplyImpulseAtWorldPoint( object->body, recoil, cpArbiterGetPointB(arb, 0) );
+}
+
 extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b);
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
 
     // Check for one way platform
-    if (object_a->one_way == One_Way::Pass_Through) {                               // Don't deal damage if something is passing through you
+    if (object_a->one_way == One_Way::Pass_Through) {                               // Don't collide with something trying to pass through you
         if (cpvdot(cpArbiterGetNormal(arb), object_a->one_way_direction) < 0.0)
             return cpArbiterIgnore(arb);
     }
-    if (object_b->one_way == One_Way::Pass_Through) {                               // Don't hurt it if you're just passing through it
+    if (object_b->one_way == One_Way::Pass_Through) {                               // Don't collide with something you want to pass through
         if (cpvdot(cpArbiterGetNormal(arb), object_b->one_way_direction) > 0.0)
             return cpArbiterIgnore(arb);
     }
@@ -64,11 +73,11 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
         should_damage = true;
 
     // Check for one way weak point
-    if (object_a->one_way == One_Way::Weak_Point) {                                 // Don't deal damage if coming from any other direction but one_way_direction
+    if (object_a->one_way == One_Way::Weak_Spot) {                                  // Don't deal damage if something comes at your weak (vulnerable) spot
         if (cpvdot(cpArbiterGetNormal(arb), object_a->one_way_direction) < 0.0)
             should_damage = false;
     }
-    if (object_b->one_way == One_Way::Weak_Point) {                                 // Don't deal damage if coming from any other direction but one_way_direction
+    if (object_b->one_way == One_Way::Weak_Spot) {                                  // Don't deal damage unless you are hitting its weak spot
         if (cpvdot(cpArbiterGetNormal(arb), object_b->one_way_direction) < 0.001)
             should_damage = false;
     }
@@ -81,6 +90,14 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
             if (object_b->health <= 0) {
                 object_b->health = 0;
                 if (object_b->death_delay == 0) return cpFalse;
+            }
+
+            // Add recoil to object if necessary
+            if (object_b->damage_recoil > 0.0 && object_b->body_type == Body_Type::Dynamic) {
+                if (cpBodyIsSleeping(object_b->body))
+                    cpSpaceAddPostStepCallback(cpBodyGetSpace(object_b->body), cpPostStepFunc(BodyAddRecoil), arb, object_b);
+                else
+                    BodyAddRecoil(cpBodyGetSpace(object_b->body), arb, object_b);
             }
         }
     }

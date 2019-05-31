@@ -38,9 +38,11 @@ static void GetSpaceJointList(cpConstraint *constraint, QVector<cpConstraint*> *
 //####################################################################################
 //##    Assigns Debug color based on Collision Type
 //####################################################################################
-QColor OpenGL::collisionTypeDebugColor(Collision_Type collision_type) {
-    switch (collision_type) {
-        case Collision_Type::Damage_None:           return QColor(0, 255, 0);              // Green
+QColor OpenGL::objectDebugColor(DrEngineObject *object) {
+    switch (object->collision_type) {
+        case Collision_Type::Damage_None:
+            if (cpBodyIsSleeping(object->body))     return Qt::yellow;
+            else                                    return QColor(0, 255, 0);              // Green
         case Collision_Type::Damage_Player:         return QColor(255, 0, 0);              // Red
         case Collision_Type::Damage_Enemy:          return QColor(0, 0, 255);              // Blue
         case Collision_Type::Damage_All:            return QColor(128, 0, 128);            // Purple
@@ -57,9 +59,8 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         if (!object->has_been_processed)    continue;
 
         // Figure out what color to make the debug shapes
-        QColor color = collisionTypeDebugColor(object->collision_type);
+        QColor color = objectDebugColor(object);
         if (object->health <= 0) color = Qt::gray;
-        if (cpBodyIsSleeping(object->body)) color = Qt::yellow;
         if (!object->does_collide) color = color.lighter();
 
         // Set up QPainter
@@ -247,7 +248,7 @@ void OpenGL::drawDebugHealth(QPainter &painter) {
         if (!object->has_been_processed)    continue;
 
         // Figure out what color to make the debug shapes
-        QColor color = collisionTypeDebugColor(object->collision_type);
+        QColor color = objectDebugColor(object);
         color = QColor(255 - color.red(), 255 - color.green(), 255 - color.blue());
 
         // Load Object Position
