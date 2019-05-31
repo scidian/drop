@@ -8,7 +8,6 @@
 #ifndef ENUMS_ENGINE_H
 #define ENUMS_ENGINE_H
 
-
 //####################################################################################
 //##    !!!!! #TEMP: Temporary Demo Enums
 //############################
@@ -35,7 +34,57 @@ enum Test_Textures {
 
 
 
+//####################################################################################
+//##    DrEngineObject Enumerations
+//############################
+enum class Body_Type {
+    Dynamic,
+    Kinematic,
+    Static,
+};
+
+enum class Shape_Type {
+    Circle,                             // cpCircleShapeNew
+    Box,                                // cpBoxShapeNew
+    Segment,    // "Line"               // cpSegmentShapeNew
+    Polygon,                            // cpPolyShapeNew
+};
+
+enum class Collision_Type {
+    Damage_None =           1,
+    Damage_Player =         2,
+    Damage_Enemy =          3,
+    Damage_All =            4,
+};
+
+
+
+
+
 
 
 
 #endif // ENUMS_ENGINE_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

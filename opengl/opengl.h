@@ -16,10 +16,11 @@
 #include <QMatrix4x4>
 #include <chrono>
 
+#include "enums_engine.h"
+
 // Forward Declarations
-enum class Collision_Type;
 class DrEngine;
-struct DrEngineObject;
+class DrEngineObject;
 class FormEngine;
 
 // Type definitions

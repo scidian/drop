@@ -6,6 +6,7 @@
 //
 //
 #include "engine.h"
+#include "engine_object.h"
 #include "project/project_world_stage.h"
 #include "project/project_world_stage_object.h"
 

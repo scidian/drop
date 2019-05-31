@@ -17,10 +17,11 @@
 #include <QTimer>
 #include <QWindow>
 
-#include "forms/form_engine.h"
-#include "opengl/opengl.h"
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
+#include "engine/engine_object.h"
+#include "forms/form_engine.h"
+#include "opengl/opengl.h"
 #include "style/style.h"
 
 //######################################################################################################

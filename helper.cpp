@@ -21,6 +21,23 @@ namespace Dr {
 
 
 //####################################################################################
+//##        Returns System time as string
+//####################################################################################
+QString CurrentTimeAsString() {
+    return QTime().currentTime().toString() + "." + QString::number(QTime().currentTime().msec());
+}
+
+
+//######################################################################################################
+//##        High-Res Timer Functions
+//######################################################################################################
+double MillisecondsElapsed(const DrTime &timer) {
+    return (std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - timer).count() /  1000000.0);
+}
+void ResetTimer(DrTime &timer) { timer = Clock::now(); }
+
+
+//####################################################################################
 //##        Makes sure scale is not zero so we don't mess up QGraphicsItem transform
 //####################################################################################
 double CheckScaleNotZero(double scale_to_check) {
@@ -121,13 +138,6 @@ QString FitStringToWidth(QFont font, QString text_to_check, int max_width, bool 
     return text;
 }
 
-
-//####################################################################################
-//##        Returns System time as string
-//####################################################################################
-QString CurrentTimeAsString() {
-    return QTime().currentTime().toString() + "." + QString::number(QTime().currentTime().msec());
-}
 
 //####################################################################################
 //##        Used to show a modal error message

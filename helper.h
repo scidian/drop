@@ -13,7 +13,10 @@
 #include <QPainter>
 #include <QScreen>
 #include <QWidget>
+#include <chrono>
 
+typedef std::chrono::high_resolution_clock Clock;
+typedef Clock::time_point DrTime;
 
 //####################################################################################
 //##    A library of helpful functions within the global Dr namespace
@@ -34,11 +37,15 @@ const T& EnumToInt(const T& enum_to_convert) {
     return static_cast<int>(enum_to_convert);
 }
 
+// Time Functions
+QString     CurrentTimeAsString();
+double      MillisecondsElapsed(const DrTime &timer);
+void        ResetTimer(DrTime &timer);
+
 // Comparison Functions
 double      CheckScaleNotZero(double scale_to_check);
 bool        IsCloseTo(double number_desired, double number_to_check, double tolerance);
 QString     RemoveTrailingDecimals(double value, int max_decimal_places);
-
 
 // Angle Functions
 double      Closest90DegreeAngle(double angle, double angle_to_find);
@@ -50,7 +57,6 @@ int         CheckFontWidth(QFont font, QString text_to_check);
 QString     FitStringToWidth(QFont font, QString text_to_check, int max_width = 80, bool use_dots = true);
 
 // User Interaction
-QString     CurrentTimeAsString();
 void        ShowErrorMessage(QString function_name, QString error_message);
 void        ShowMessageBox(QString new_message, QPixmap pixmap = QPixmap());
 
@@ -58,6 +64,11 @@ void        ShowMessageBox(QString new_message, QPixmap pixmap = QPixmap());
 }
 
 #endif // HELPER_WIDGET_H
+
+
+
+
+
 
 
 

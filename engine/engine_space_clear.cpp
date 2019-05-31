@@ -7,8 +7,8 @@
 //
 #include <QApplication>
 
-#include "engine/engine.h"
-
+#include "engine.h"
+#include "engine_object.h"
 
 //######################################################################################################
 //##    Chipmunk Callbacks

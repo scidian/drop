@@ -6,6 +6,7 @@
 //
 //
 #include "engine/engine.h"
+#include "engine/engine_object.h"
 #include "opengl/opengl.h"
 #include "project/project.h"
 #include "project/project_asset.h"

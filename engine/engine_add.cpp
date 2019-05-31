@@ -8,6 +8,7 @@
 #include <QtMath>
 
 #include "engine.h"
+#include "engine_object.h"
 #include "engine_texture.h"
 #include "helper.h"
 #include "library/poly_partition.h"

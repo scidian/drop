@@ -12,32 +12,11 @@
 #include <QTime>
 #include <QVector>
 #include <QVector3D>
-#include <chrono>
 #include <map>
 
 #include "chipmunk/chipmunk.h"
 #include "enums_engine.h"
-
-// Local Enumerations
-enum class Body_Type {
-    Dynamic,
-    Kinematic,
-    Static,
-};
-
-enum class Shape_Type {
-    Circle,                             // cpCircleShapeNew
-    Box,                                // cpBoxShapeNew
-    Segment,    // "Line"               // cpSegmentShapeNew
-    Polygon,                            // cpPolyShapeNew
-};
-
-enum class Collision_Type {
-    Damage_None =           1,
-    Damage_Player =         2,
-    Damage_Enemy =          3,
-    Damage_All =            4,
-};
+#include "helper.h"
 
 enum class One_Way {                    // One Way Collide
     None,
@@ -52,8 +31,6 @@ enum class Jump_State {
 
 // Type Definitions
 typedef std::map<cpShape*, Shape_Type> ShapeMap;
-typedef std::chrono::high_resolution_clock Clock;
-typedef Clock::time_point DrTime;
 
 // Constants for calling engine addObject calls
 constexpr double    c_epsilon = 0.0000001;      // Floating point zero
@@ -80,7 +57,9 @@ extern QString      g_info;
 //##    DrEngineObject
 //##        Holds on object for use in a cpSpace
 //############################
-struct DrEngineObject {
+class DrEngineObject {
+
+public:
     // ***** Object Info
     cpBody             *body;                   // Physical Body of object
     Body_Type           body_type;              // Body_Type
@@ -163,12 +142,19 @@ struct DrEngineObject {
     bool        alive = true;                           // After item has been dying for death_delay time, alive becomes false, then fades for fade_delay time
     DrTime      death_timer = Clock::now();             // Used to incorporate death_delay for object dying
     DrTime      fade_timer = Clock::now();              // Used to incorporate fade_delay for object fade / removal
+
     DrTime      update_timer = Clock::now();            // Used to keep track of time passed since last object update
     double      time_since_last_update = 0.0;           // Milliseconds since last update
 
     double      angle = 0.0;                        // Current object angle
     QPointF     position;                           // Current object posiiton
     QPointF     previous_position;                  // Previous frame position, for whatever may need it
+
+
+public:
+    DrEngineObject() {}
+
+
 };
 
 

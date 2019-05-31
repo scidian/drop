@@ -9,6 +9,7 @@
 
 #include "engine.h"
 #include "engine_camera.h"
+#include "engine_object.h"
 #include "forms/form_engine.h"
 #include "opengl/opengl.h"
 

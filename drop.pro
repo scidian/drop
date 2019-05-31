@@ -97,6 +97,7 @@ SOURCES += \
     engine/engine.cpp \
     engine/engine_add.cpp \
     engine/engine_camera.cpp \
+    engine/engine_object.cpp \
     engine/engine_space_build_player.cpp \
     engine/engine_space_build_world.cpp \
     engine/engine_space_clear.cpp \

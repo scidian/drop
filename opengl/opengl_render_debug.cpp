@@ -9,8 +9,8 @@
 #include <QPainter>
 #include <cmath>
 
-#include "chipmunk/chipmunk.h"
 #include "engine/engine.h"
+#include "engine/engine_object.h"
 #include "engine/engine_texture.h"
 #include "forms/form_engine.h"
 #include "helper.h"

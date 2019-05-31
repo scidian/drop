@@ -11,6 +11,7 @@
 
 #include "engine.h"
 #include "engine_camera.h"
+#include "engine_object.h"
 #include "forms/form_engine.h"
 #include "helper.h"
 #include "project/project.h"
@@ -57,9 +58,9 @@ void DrEngine::updateSpaceHelper() {
             object->has_been_processed = true;
             object->time_since_last_update = 0.0;
         } else {
-            object->time_since_last_update = millisecondsElapsed(object->update_timer);
+            object->time_since_last_update = Dr::MillisecondsElapsed(object->update_timer);
         }
-        resetTimer(object->update_timer);
+        Dr::ResetTimer(object->update_timer);
 
         // ***** Skip object if static; or if not yet in Space / no longer in Space
         if (object->should_process == false) {
@@ -108,8 +109,7 @@ void DrEngine::updateSpaceHelper() {
 
 
         // ***** Auto Damage
-        bool sleeping = cpBodyIsSleeping(object->body);
-        if (!sleeping && object->health >= c_epsilon) {
+        if (object->health >= c_epsilon) {
             if (object->auto_damage < c_epsilon || object->auto_damage > c_epsilon) {
                 object->health -= object->auto_damage * (object->time_since_last_update / 1000.0);
                 if (object->health > object->max_health && object->max_health >= c_epsilon) object->health = object->max_health;
@@ -122,16 +122,16 @@ void DrEngine::updateSpaceHelper() {
         if (object->health < c_epsilon) {
             if (!object->dying) {
                 object->dying = true;
-                resetTimer(object->death_timer);
+                Dr::ResetTimer(object->death_timer);
             }
             if (object->dying && object->alive) {
-                if (millisecondsElapsed(object->death_timer) >= object->death_delay) {
+                if (Dr::MillisecondsElapsed(object->death_timer) >= object->death_delay) {
                     object->alive = false;
-                    resetTimer(object->fade_timer);
+                    Dr::ResetTimer(object->fade_timer);
                 }
             }
             if (!object->alive) {
-                if (millisecondsElapsed(object->fade_timer) >= object->fade_delay) {
+                if (Dr::MillisecondsElapsed(object->fade_timer) >= object->fade_delay) {
                     remove = true;
                 }
             }
@@ -184,14 +184,14 @@ void DrEngine::updateSpaceHelper() {
     }
 
     // ********** Calculates Physics Updates Frames per Second
-    static Clock::time_point fps_time = Clock::now();
+    static DrTime fps_time = Clock::now();
     static int fps_count = 0;
     ++fps_count;
-    double fps_milli = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - fps_time).count() / 1000000.0;
+    double fps_milli = Dr::MillisecondsElapsed(fps_time);
     if (fps_milli > 1000.0) {
         fps_physics = fps_count;
         fps_count = 0;
-        fps_time = Clock::now();
+        Dr::ResetTimer(fps_time);
     }
 }
 

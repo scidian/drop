@@ -12,8 +12,8 @@
 #include <QVector3D>
 
 // Forward Declarations
-class  DrEngine;
-struct DrEngineObject;
+class DrEngine;
+class DrEngineObject;
 
 //####################################################################################
 //##    DrEngineCamera

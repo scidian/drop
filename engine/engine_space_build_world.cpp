@@ -9,6 +9,7 @@
 #include <QDebug>
 
 #include "engine.h"
+#include "engine_object.h"
 #include "engine_texture.h"
 #include "project/project.h"
 #include "project/project_asset.h"

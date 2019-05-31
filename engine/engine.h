@@ -14,7 +14,6 @@
 #include <map>
 
 #include "chipmunk/chipmunk.h"
-#include "engine_object.h"
 #include "enums_engine.h"
 
 // Local Enumerations
@@ -32,6 +31,7 @@ enum class Pedal {
 
 // Forward declarations
 class DrEngineCamera;
+class DrEngineObject;
 class DrEngineTexture;
 class DrEngineWorld;
 class DrProject;
@@ -40,6 +40,7 @@ class FormEngine;
 
 // Type definitions
 typedef std::map<long, DrEngineCamera*>  EngineCameraMap;
+typedef QVector<DrEngineObject*>         EngineObjects;
 typedef std::map<long, DrEngineTexture*> EngineTextureMap;
 
 // Global Forward Declaratopns for static Chipmunk callbacks
@@ -103,9 +104,9 @@ private:
 
 public:
     // Local Variables
-    QVector<DrEngineObject*> objects;                                   // Holds all objects shown in cpSpace
-    bool                     has_scene = false;                         // True after a scene has been loaded into cpSpace
-    Render_Type              render_type = Render_Type::Orthographic;   // Should render perspective or orthographic?
+    EngineObjects   objects;                                    // Holds all objects shown in cpSpace
+    bool            has_scene = false;                          // True after a scene has been loaded into cpSpace
+    Render_Type     render_type = Render_Type::Orthographic;    // Should render perspective or orthographic?
 
     // Input Keys
     int             keyboard_x;                             // Set to -1 for left, 1 for right
@@ -129,8 +130,9 @@ public:
 
 
 public:
-    // Constructor
+    // Constructor / Destrcutor / Cleanup
     DrEngine(FormEngine *form_engine, DrProject *project);
+    void deleteResources();
 
     // Space Construction / Handling
     DrEngineObject* addLine(  Body_Type body_type,  QPointF p1, QPointF p2, double friction, double bounce, double mass);
@@ -147,20 +149,15 @@ public:
                                QVector<QPointF> points, double friction, double bounce, QPointF velocity,
                                bool should_collide = true, bool can_rotate = true);
 
-    void        addPlayer(Demo_Player new_player_type);
-    void        assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera);
-    void        buildSpace(Demo_Space new_space_type);
-    void        clearSpace();
-    void        loadStageToSpace(DrStage *stage, double offset_x, double offset_y);
-    void        removeObject(DrEngineObject *object);
-    void        setCollisionType(DrEngineObject *object, Collision_Type type);
-    void        updateSpace(double time_passed);
-    void        updateSpaceHelper();
-
-    // Misc
-    void        deleteResources();
-    double      millisecondsElapsed(const DrTime &timer);
-    void        resetTimer(DrTime &timer);
+    void            addPlayer(Demo_Player new_player_type);
+    void            assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera);
+    void            buildSpace(Demo_Space new_space_type);
+    void            clearSpace();
+    void            loadStageToSpace(DrStage *stage, double offset_x, double offset_y);
+    void            removeObject(DrEngineObject *object);
+    void            setCollisionType(DrEngineObject *object, Collision_Type type);
+    void            updateSpace(double time_passed);
+    void            updateSpaceHelper();
 
     // Cameras
     long                addCamera(DrEngineObject* object_to_follow = nullptr, float x = 0, float y = 0, float z = 800);

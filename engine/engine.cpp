@@ -5,10 +5,10 @@
 //
 //
 //
-#include "project/project.h"
 #include "engine.h"
 #include "engine_camera.h"
 #include "engine_texture.h"
+#include "project/project.h"
 
 //######################################################################################################
 //##    Constructor
@@ -32,15 +32,6 @@ void DrEngine::deleteResources() {
         delete texture.second;
     }
 }
-
-
-//######################################################################################################
-//##    High-Res Timer Functions
-//######################################################################################################
-double DrEngine::millisecondsElapsed(const DrTime &timer) {
-    return (std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - timer).count() /  1000000.0);
-}
-void DrEngine::resetTimer(DrTime &timer) { timer = Clock::now(); }
 
 
 //######################################################################################################

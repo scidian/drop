@@ -8,6 +8,7 @@
 #include <QSurfaceFormat>
 
 #include "engine/engine.h"
+#include "engine/engine_object.h"
 #include "engine/engine_texture.h"
 #include "opengl/opengl.h"
 
