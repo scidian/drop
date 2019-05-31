@@ -32,11 +32,21 @@ enum class One_Way2 {                    // One Way Collide
 //##        Support for object collisions, damage, recoil, one way platforms and more
 //######################################################################################################
 static void BodyAddRecoil(cpSpace *, cpArbiter *arb, DrEngineObject *object) {
-    cpVect recoil = cpvmult(cpArbiterGetNormal(arb), object->damage_recoil);
-    cpVect force =  cpvadd( cpBodyGetForce(object->body), recoil);
-    cpBodySetVelocity( object->body, force );
-    ///cpBodyApplyImpulseAtWorldPoint( object->body, recoil, cpArbiterGetPointB(arb, 0) );
-    ///cpBodyApplyImpulseAtWorldPoint( object->body, recoil, cpArbiterGetPointB(arb, 0) );
+    // METHOD: Apply damage_recoil opposite velocity
+    cpVect n = cpArbiterGetNormal(arb);                         // Get Normal of contact point
+    cpVect velocity = cpBodyGetVelocity(object->body);          // Get current velocity of body
+    if (velocity.x < 1.0 && velocity.y < 1.0)                   // If object isnt moving, give it the velocity towards the collision
+        velocity = cpvneg(cpArbiterGetNormal(arb));
+    velocity = cpvnormalize(velocity);                          // Normalize body velocity
+    double dot = cpvdot(velocity, n);                           // Calculate dot product (difference of angle from collision normal)
+    if (dot < 0.0) {                                            // If objects velocity if goings towards collision point, reflect it
+        QPointF v = QPointF(velocity.x, velocity.y);                // Convert to QPointF for better built in math than cpVect
+        v = v - (2.0 * dot * QPointF(n.x, n.y));                    // Reflect velocity normal across the plane of the collision normal
+        velocity = cpv(v.x(), v.y());                               // Convert back to cpVect
+    }
+    velocity.x *= object->damage_recoil;                        // Apply recoil force x to new direction vector
+    velocity.y *= object->damage_recoil;                        // Apply recoil force y to new direction vector
+    cpBodySetVelocity( object->body, velocity );                // Set body to new velocity
 }
 
 extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {

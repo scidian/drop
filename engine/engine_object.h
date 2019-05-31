@@ -101,7 +101,7 @@ struct DrEngineObject {
     long        death_delay = 100;                                      // Time it takes for item to die (can't deal damage while dying), in milliseconds
     bool        fade_on_death = true;                                   // If true, object is slowly faded over death_delay time
     long        fade_delay = 750;                                       // Time it takes for item to be removed after death, in milliseconds (0 == remove immediately)
-    double      damage_recoil = 150.0;                                  // How much opposite force to apply when receiving damage
+    double      damage_recoil = 300.0;                                  // How much opposite force to apply when receiving damage
 
     One_Way     one_way = One_Way::None;        // Set to true if we're using this object as a one way platform
     cpVect      one_way_direction {0, 1};       // Direction of Normal for one way, defaults to Up (i.e. character can pass upwards through the bottom of a block)
