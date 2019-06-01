@@ -62,12 +62,14 @@ class DrView : public QGraphicsView
     Q_OBJECT
 
 private:
-    // Local, Instance Specific Member Variables
+    // External Borrowed Objects
     DrProject              *m_project;                              // Pointer to currently loaded project
     IEditorRelay           *m_editor_relay;                         // Pointer to IEditorRelay class of parent form
-    View_Mode               m_view_mode = View_Mode::None;          // Tracks current view interaction mode
 
-    DrScene                *my_scene;                               // Holds the scene() this view is set to as a DrScene class
+    DrScene                *my_scene;                               // Holds the scene() this view is set to as a DrScene Class
+
+    // Local Variables
+    View_Mode               m_view_mode = View_Mode::None;          // Tracks current view interaction mode
 
     const QPixmap p_circle = QPixmap(":/assets/gui_misc/handle_circle.png");
     const QPixmap p_square = QPixmap(":/assets/gui_misc/handle_square.png");

@@ -41,8 +41,11 @@ class TreeInspector: public QTreeWidget
     Q_OBJECT
 
 private:
+    // External Borrowed Objects
     DrProject              *m_project;                      // Pointer to currently loaded project
     IEditorRelay           *m_editor_relay;                 // Pointer to IEditorRelay class of parent form
+
+    // Local Variables
     DrFilterHoverHandler   *m_filter_hover;                 // Pointer to an event filter hover handler
 
     QList<QWidget*>         m_widgets;                      // List of the widgets we built the last time we selected a new item

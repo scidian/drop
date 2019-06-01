@@ -37,8 +37,11 @@ class FormPopup : public QWidget
     Q_OBJECT
 
 private:
+    // External Borrowed Objects
     DrProject       *m_project;                         // Pointer to the open project
     QWidget         *m_mapper;                          // Widget to use for mapping to global coordinates (usually same as parent)
+
+    // Local Variables
     QWidget         *m_inner_widget;                    // Inner container widget, allows for a double form border
 
     QVBoxLayout     *m_layout;                          // Layout for *this form

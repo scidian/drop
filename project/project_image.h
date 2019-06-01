@@ -24,8 +24,10 @@ class DrProject;
 class DrImage : public DrSettings
 {
 private:
+    // External Borrowed Objects
     DrProject       *m_parent_project;                  // Holds reference to parent Project class that handles key generation for project
 
+    // Local Variables
     QString          m_full_path;                       // Full path,  i.e.  ":/images/more/pretty_tree_1.png"
     QString          m_filename;                        // Image name, i.e.  "pretty_tree_1.png"
     QString          m_simple_name;                     // Simple name, i.e. "pretty tree 1

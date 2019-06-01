@@ -19,7 +19,10 @@ class DrProject;
 class FormBlank : public QWidget
 {
 private:
+    // External Borrowed Objects
     DrProject   *m_project;                         // Pointer to the open project
+
+    // Local Variables
     QWidget     *m_inner_widget;                    // Container widget, allows for a double form border
 
 public:

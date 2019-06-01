@@ -17,6 +17,7 @@
 class DrEngineTexture
 {
 private:
+    // Local Variables
     QOpenGLTexture     *m_texture;                      // Stores a pointer to an OpenGLTexture
     bool                m_texture_loaded = false;       // True once a texture has been loaded
     int                 m_width;                        // Width of texture

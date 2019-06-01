@@ -26,15 +26,14 @@ class DrStage;
 class DrObject : public DrSettings
 {
 private:
-    // Local variables
-    DrObjectType    m_object_type;                      // Holds type of current object
-
+    // External Borrowed Objects
     DrProject      *m_parent_project;                   // Holds reference to parent Project class that handles key generation for project
     DrWorld        *m_parent_world;                     // Holds reference to parent World class
     DrStage        *m_parent_stage;                     // Holds reference to parent Stage class
 
+    // Local Variables
+    DrObjectType    m_object_type;                      // Holds type of current object
     long            m_asset_key;                        // Holds the associated asset key, this way we know what image to grab for GraphicsView
-
     DrItem         *m_item_in_scene = nullptr;          // Holds a pointer to a QGraphicsItem if this object is currently represented in the editor
 
 public:

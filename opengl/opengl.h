@@ -36,9 +36,11 @@ class OpenGL : public QOpenGLWidget, protected QOpenGLFunctions
     Q_OBJECT
 
 private:
+    // External Borrowed Objects
     FormEngine     *m_form_engine;                                  // Pointer to parent FormEngine
     DrEngine       *m_engine;                                       // Pointer to Engine instance that will run in this OpenGLWidget
 
+    // Local Variables
     QMatrix4x4      m_model_view;
     QMatrix4x4      m_projection;
 

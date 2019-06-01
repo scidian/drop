@@ -22,8 +22,10 @@ class DrEngineObject;
 class DrEngineCamera
 {
 private:
+    // External Borrowed Objects
     DrEngine       *m_engine;                                   // Pointer to the parent Engine
 
+    // Local Variables
     QVector3D       m_position = QVector3D(0, 0, 0);            // Current camera position
     QVector3D       m_speed = QVector3D(0, 0, 0);               // Current camera speed
 

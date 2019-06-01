@@ -37,8 +37,11 @@ class TreeAssets: public QTreeWidget
     Q_OBJECT
 
 private:
+    // External Borrowed Objects
     DrProject            *m_project;                        // Pointer to currently loaded project
     IEditorRelay         *m_editor_relay;                   // Pointer to IEditorRelay class of parent form
+
+    // Local Variables
     DrFilterHoverHandler *m_filter_hover;                   // Pointer to an event filter hover handler
 
     QList<QFrame*>        m_asset_frames;                   // List of the single row frames that contain name and pixmap labels
@@ -77,9 +80,10 @@ class DrFilterAssetMouseHandler : public QObject
     Q_OBJECT
 
 private:
+    // External Borrowed Objects
     IEditorRelay      *m_editor_relay;                  // Pointer to IEditorRelay class of parent form
 
-    // Following variables are used for Asset Name scrolling on mouse over
+    // Local Variables - Following variables are used for Asset Name scrolling on mouse over
     QMutex             scrolling_mutex { QMutex::NonRecursive };
     QTimer            *m_timer;                         // Timer used to start scrolling
     bool               m_flag_scrolling = false;        // Flag to track when scrolling is active

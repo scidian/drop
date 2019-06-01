@@ -23,7 +23,10 @@ class FormColorMagnifier : public QWidget
     Q_OBJECT
 
 private:
+    // External Borrowed Objects
     QWidget    *m_parent;                       // Parent widget that wants the color
+
+    // Local Variables
     QLabel     *m_label;                        // Draws the magnifier on the form
     QColor      m_color = Qt::black;            // Holds current color
     QPixmap     m_capture;                      // Holds a QPixmap screen shot of the current screen

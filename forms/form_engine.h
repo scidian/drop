@@ -44,10 +44,12 @@ class FormEngine : public QMainWindow
     Q_OBJECT
 
 private:
+    // External Borrowed Objects
+    DrProject          *m_project;
+
     // Local Variables
     DrEngine           *m_engine;
     OpenGL             *m_opengl;
-    DrProject          *m_project;
 
     // Timer Variables
     QTimer             *m_timer;

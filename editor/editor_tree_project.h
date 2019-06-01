@@ -20,7 +20,6 @@ class DrScene;
 class DrProject;
 class DrSettings;
 
-
 //####################################################################################
 //##    TreeProject
 //##        A Tree List of Current Project
@@ -30,9 +29,11 @@ class TreeProject: public QTreeWidget
     Q_OBJECT
 
 private:
+    // External Borrowed Objects
     DrProject      *m_project;                          // Pointer to currently loaded project
     IEditorRelay   *m_editor_relay;                     // Pointer to IEditorRelay class of parent form
 
+    // Local Variables
     long            m_selected_key = c_no_key;          // Holds first selected item in QTreeWidget (treeProject)
     bool            m_allow_selection_event = true;     // When false, stops selectionChanged event from propagating changes to editor
 
@@ -86,6 +87,7 @@ public:
 class TreeStageHighlightProxy : public QProxyStyle
 {
 private:
+    // External Borrowed Objects
     TreeProject     *m_parent_tree;              // Pointer to parent TreeProject
 
 public:

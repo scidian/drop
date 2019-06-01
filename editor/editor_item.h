@@ -24,18 +24,21 @@ class IEditorRelay;
 //############################
 class DrItem : public QGraphicsPixmapItem
 {
+
 private:
-    DrProject      *m_project;                              // Stores a pointer to the parent project
+    // External Borrowed Objects
+    DrProject      *m_project;                              // Pointer to the parent project
     IEditorRelay   *m_editor_relay;                         // Pointer to IEditorRelay class of parent form
 
-    DrObject       *m_object = nullptr;                     // Stores the pointer to the object for this item
-    long            m_object_key;                           // Stores the object project key this item represents
+    DrObject       *m_object = nullptr;                     // Pointer to the object for this item
+    long            m_object_key;                           // Stores the object Project Key this item represents
 
-    DrAsset        *m_asset = nullptr;                      // Stores pointer to the asset for this item
-    long            m_asset_key;                            // Stores the asset project key this item is drawn from
+    DrAsset        *m_asset = nullptr;                      // Pointer to the asset for this item
+    long            m_asset_key;                            // Stores the asset Project Key this item is drawn from
     double          m_asset_width;                          // Width of asset this item is drawn from
     double          m_asset_height;                         // Height of asset this item is drawn from
 
+    // Local Variables
     QPixmap         m_pixmap;                               // Pixmap used to represent this object, filters are applied to this
 
     double          m_start_x;                              // Stores the item position the first time it was loaded
@@ -46,6 +49,7 @@ private:
                                                             // object in the project data model
 
 public:
+    // Constructor
     DrItem(DrProject *project, IEditorRelay *editor_relay, DrObject *object, bool is_temp_only = false);
 
     // Base Getter Overrides

@@ -23,9 +23,11 @@ class TreeAdvisor: public QTreeWidget
     Q_OBJECT
 
 private:
+    // External Borrowed Objects
     DrProject      *m_project;                                      // Pointer to currently loaded project
     IEditorRelay   *m_editor_relay;                                 // Pointer to IEditorRelay class of parent form
 
+    // Local Variables
     QString         advisor_header { "No Data" };                   // Keeps current Advisor Header
     QMutex          advisor_mutex { QMutex::NonRecursive };         // Used to keep building function thread safe
 

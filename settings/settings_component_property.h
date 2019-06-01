@@ -22,7 +22,7 @@ class DrComponent;
 class DrProperty
 {
 private:
-    // Local variables
+    // External Borrowed Objects
     DrSettings   *m_parent_settings;
     DrComponent  *m_parent_component;
 

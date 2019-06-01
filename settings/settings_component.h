@@ -25,10 +25,11 @@ typedef std::map<long, DrProperty*> PropertyMap;
 class DrComponent
 {
 private:
-    // Local variables
-    PropertyMap m_properties;                                       // Map of pointers to DrProperty classes
-
+    // External Borrowed Objects
     DrSettings *m_parent_settings;                                  // Point to the DrSettings class that holds this component
+
+    // Local Variables
+    PropertyMap m_properties;                                       // Map of pointers to DrProperty classes
 
     QString     m_display_name = "Unknown Component";
     QString     m_description = "No description";

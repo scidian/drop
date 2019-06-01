@@ -21,6 +21,15 @@ class DrObject;
 //############################
 class UndoCommandChangeStage : public QUndoCommand
 {
+private:
+    // External Borrowed Objects
+    DrProject  *m_project;
+    DrScene    *m_scene;
+
+    // Local Variables
+    long        m_old_stage;
+    long        m_new_stage;
+
 public:
     UndoCommandChangeStage(DrProject *project, DrScene *scene, long old_stage, long new_stage, QUndoCommand *parent = nullptr);
 
@@ -28,12 +37,6 @@ public:
     void        redo() override;
 
     QString     changeStage(long old_stage, long new_stage, bool is_undo);
-
-private:
-    DrProject  *m_project;
-    DrScene    *m_scene;
-    long        m_old_stage;
-    long        m_new_stage;
 };
 
 
@@ -43,16 +46,19 @@ private:
 //############################
 class UndoCommandMove : public QUndoCommand
 {
+private:
+    // External Borrowed Objects
+    DrScene    *m_scene;
+
+    // Local Variables
+    QPointF     m_old_pos;
+    QPointF     m_new_pos;
+
 public:
     UndoCommandMove(DrScene *scene, const QPointF &old_pos, QUndoCommand *parent = nullptr);
 
     void        undo() override;
     void        redo() override;
-
-private:
-    DrScene    *m_scene;
-    QPointF     m_old_pos;
-    QPointF     m_new_pos;
 };
 
 
@@ -60,19 +66,19 @@ private:
 //##    Selected new group command
 //############################
 class UndoCommandNewSelection : public QUndoCommand
-{
-public:
-    UndoCommandNewSelection(DrScene *scene,
-                             QList<DrObject*> old_list,
-                             QList<DrObject*> new_list,
-                             QUndoCommand *parent = nullptr);
-    void        undo() override;
-    void        redo() override;
-
+{ 
 private:
-    DrScene             *m_scene;
+    // External Borrowed Objects
+    DrScene    *m_scene;
+
+    // Local Variables
     QList<DrObject*>     m_old_list;
     QList<DrObject*>     m_new_list;
+
+public:
+    UndoCommandNewSelection(DrScene *scene, QList<DrObject*> old_list, QList<DrObject*> new_list, QUndoCommand *parent = nullptr);
+    void        undo() override;
+    void        redo() override;
 };
 
 

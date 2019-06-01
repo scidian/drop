@@ -64,6 +64,7 @@ class FormMain : public QMainWindow, public IEditorRelay
     Q_OBJECT
 
 public:
+    // Local Variables
     DrProject              *project;                                                // Holds whatever the current open game project is
     Form_Main_Mode          current_mode = Form_Main_Mode::Program_Loading;         // Holds what Form_Main_Mode the program is in
 

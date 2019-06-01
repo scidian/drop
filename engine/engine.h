@@ -55,10 +55,11 @@ extern void     PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat dampi
 class DrEngine
 {
 private:
-    // Locals
+    // External Borrowed Objects
     FormEngine         *m_form_engine;              // Pointer to Parent FormEngine
     DrProject          *m_project;                  // Pointer to Project to load into Engine
 
+    // Local Variables
     EngineCameraMap     m_cameras;                  // Map of Cameras used for this Engine
     EngineTextureMap    m_textures;                 // Map of Textures used for this Engine
 
@@ -101,7 +102,7 @@ private:
     double          m_loaded_to = 0.0;              // Last distance we loaded a new stage
 
 
-
+// ***** Public Variables not yet implemented into function calls / getters / setters
 public:
     // Local Variables
     EngineObjects   objects;                                    // Holds all objects shown in cpSpace

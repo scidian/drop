@@ -22,8 +22,10 @@ class DrProject;
 class DrAsset : public DrSettings
 {
 private:
+    // External Borrowed Objects
     DrProject       *m_parent_project;                  // Holds reference to parent Project class that handles key generation for project
 
+    // Local Variables
     DrAssetType      m_asset_type;                      // Holds asset type (object, character, etc)
     long             m_source_key;                      // Holds key to source (ie. and asset pulls from an DrImage, DrFont, etc)
 

@@ -23,8 +23,10 @@ class DrProject;
 class DrFont : public DrSettings
 {
 private:
+    // External Borrowed Objects
     DrProject              *m_parent_project;               // Holds reference to parent Project class that handles key generation for project
 
+    // Local Variables
     QPixmap                 m_pixmap;                       // Stored font pixmap
     std::map<char, QRect>   m_positions;                    // Holds rects for each character in the pixmap
     std::map<char, QSize>   m_spacing;                      // Horizontal and vertical spacing for each character

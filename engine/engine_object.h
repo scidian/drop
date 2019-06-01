@@ -61,7 +61,6 @@ extern QString      g_info;
 class DrEngineObject
 {
 private:
-
     // ***** Object Properties - Basic
     bool        m_does_collide = true;              // Set to false to have this object not collide with anything
     long        m_texture_number;                   // Reference to which texture to use from Engine->EngineTexture map

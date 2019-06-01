@@ -31,23 +31,23 @@ class DrScene : public QGraphicsScene
     Q_OBJECT
 
 private:
-    // Local member variables
-    DrProject              *m_project;                      // Pointer to currently loaded project
-    IEditorRelay           *m_editor_relay;                 // Pointer to IEditorRelay class of parent form
+    // External Borrowed Objects
+    DrProject      *m_project;                              // Pointer to currently loaded project
+    IEditorRelay   *m_editor_relay;                         // Pointer to IEditorRelay class of parent form
 
-    DrStage                *m_current_stage = nullptr;      // Holds a pointer to the current DrStage being shown
-    long                    m_current_stage_key = c_no_key; // Holds the project key of the currently shown DrStage, starts at c_no_key, i.e. "none"
+    // Local Variables
+    QUndoStack     *m_undo;                                 // Object that holds list of changes to QGraphicsScene for use with undo / redo
 
-    QUndoStack             *m_undo;
+    DrStage        *m_current_stage = nullptr;              // Holds a pointer to the current DrStage being shown
+    long            m_current_stage_key = c_no_key;         // Holds the Project Key of the currently shown DrStage, starts at c_no_key, i.e. "none"
 
-
-    // Selection variables
+    // Selection Variables
     QList<QGraphicsItem*>   m_selection_items;              // List of selected items
     double                  m_selection_angle;              // Angle current selection has been rotated to
     QPointF                 m_selection_scale;              // Scaling applied to current selection
     QRectF                  m_selection_box;                // Starting outline of selected items
 
-    // Selection movement variables
+    // Selection Movement Variables
     bool                    m_calculated_adjust;            // If an item has already recalculated new center, use that
     QPointF                 m_pre_move_center;              // Stores a premove center for group grid snapping
     QPointF                 m_move_adjustment;              // Amount to move items by during translation
