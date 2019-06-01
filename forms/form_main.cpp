@@ -46,128 +46,128 @@ FormMain::~FormMain() {
     sceneEditor->deleteLater();
 
     // Delete widgets not currently attached to main form
-    if (current_mode != Form_Main_Mode::World_Editor)   widgetCentralEditor->deleteLater();
-    if (current_mode != Form_Main_Mode::Clear)          widgetCentral->deleteLater();
-    delete project;
+    if (m_current_mode != Form_Main_Mode::World_Editor)   widgetCentralEditor->deleteLater();
+    if (m_current_mode != Form_Main_Mode::Clear)          widgetCentral->deleteLater();
+    delete m_project;
 }
 
 FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
 
     // ########## Initialize new project, load DrProject options
-    project = new DrProject(1);
+    m_project = new DrProject(1);
 
-    project->setOption(Project_Options::Name, "Rocky Rover");
-    project->setOption(Project_Options::Orientation, static_cast<int>(Orientation::Portrait));
-    project->setOption(Project_Options::Width,   800);
-    project->setOption(Project_Options::Height, 1600);
+    m_project->setOption(Project_Options::Name, "Rocky Rover");
+    m_project->setOption(Project_Options::Orientation, static_cast<int>(Orientation::Portrait));
+    m_project->setOption(Project_Options::Width,   800);
+    m_project->setOption(Project_Options::Height, 1600);
 
 
 
     // !!!!! #TEMP: Add stored project files
-    long image_1  = project->addImage(":/assets/test_images/test_square.png");
-    long image_2  = project->addImage(":/assets/test_images/ground_fill.png");
-    long image_3  = project->addImage(":/assets/test_images/ground_top.png");
-    long image_4  = project->addImage(":/assets/test_images/moon_plant_6.png");
-    long image_5  = project->addImage(":/assets/test_images/rover_body.png");
-    long image_6  = project->addImage(":/assets/test_images/ball_1.png");
-    long image_7  = project->addImage(":/assets/test_images/water_1.png");
-    long image_8  = project->addImage(":/assets/test_images/rover_wheel.png");
-    long image_9  = project->addImage(":/assets/test_images/cake_block.png");
-    long image_10 = project->addImage(":/assets/test_images/cake_chocolate.png");
-    long image_11 = project->addImage(":/assets/test_images/cake_ice_cube.png");
-    long image_12 = project->addImage(":/assets/test_images/planetwithareallylongname.png");
-    long image_13 = project->addImage(":/assets/test_images/metal_block.png");
+    long image_1  = m_project->addImage(":/assets/test_images/test_square.png");
+    long image_2  = m_project->addImage(":/assets/test_images/ground_fill.png");
+    long image_3  = m_project->addImage(":/assets/test_images/ground_top.png");
+    long image_4  = m_project->addImage(":/assets/test_images/moon_plant_6.png");
+    long image_5  = m_project->addImage(":/assets/test_images/rover_body.png");
+    long image_6  = m_project->addImage(":/assets/test_images/ball_1.png");
+    long image_7  = m_project->addImage(":/assets/test_images/water_1.png");
+    long image_8  = m_project->addImage(":/assets/test_images/rover_wheel.png");
+    long image_9  = m_project->addImage(":/assets/test_images/cake_block.png");
+    long image_10 = m_project->addImage(":/assets/test_images/cake_chocolate.png");
+    long image_11 = m_project->addImage(":/assets/test_images/cake_ice_cube.png");
+    long image_12 = m_project->addImage(":/assets/test_images/planetwithareallylongname.png");
+    long image_13 = m_project->addImage(":/assets/test_images/metal_block.png");
 
-    long font_1 =   project->addFont("Distance Font", QPixmap(":/assets/test_images/test_font.png"),   "Arial",          20, true);
-    long font_2 =   project->addFont("Coin Count",    QPixmap(":/assets/test_images/test_font_2.png"), "Britannic Bold", 15, true);
-    long font_3 =   project->addFont("I Love Julie",  QPixmap(":/assets/test_images/test_font_3.png"), "Bauhaus 93",     36, true);
+    long font_1 =   m_project->addFont("Distance Font", QPixmap(":/assets/test_images/test_font.png"),   "Arial",          20, true);
+    long font_2 =   m_project->addFont("Coin Count",    QPixmap(":/assets/test_images/test_font_2.png"), "Britannic Bold", 15, true);
+    long font_3 =   m_project->addFont("I Love Julie",  QPixmap(":/assets/test_images/test_font_3.png"), "Bauhaus 93",     36, true);
 
 
 
     // !!!!! #TEMP: Add assets
-    long a_ball   =  project->addAsset(DrAssetType::Character, image_6 );       // "Ball 1"
-    long a_square =  project->addAsset(DrAssetType::Object, image_1 );          // "Dr Square"
-    long a_ground  = project->addAsset(DrAssetType::Object, image_2 );          // "Ground Fill"
-    long a_top  =    project->addAsset(DrAssetType::Object, image_3 );          // "Ground Top"
-    long a_plant  =  project->addAsset(DrAssetType::Object, image_4 );          // "Moon Plant 6"
-    long a_block  =  project->addAsset(DrAssetType::Object, image_13 );         // "Metal Block"
-    long a_planet =  project->addAsset(DrAssetType::Object, image_12 );         // "PlanetWithAReallyLongName"
+    long a_ball   =  m_project->addAsset(DrAssetType::Character, image_6 );         // "Ball 1"
+    long a_square =  m_project->addAsset(DrAssetType::Object, image_1 );            // "Dr Square"
+    long a_ground  = m_project->addAsset(DrAssetType::Object, image_2 );            // "Ground Fill"
+    long a_top  =    m_project->addAsset(DrAssetType::Object, image_3 );            // "Ground Top"
+    long a_plant  =  m_project->addAsset(DrAssetType::Object, image_4 );            // "Moon Plant 6"
+    long a_block  =  m_project->addAsset(DrAssetType::Object, image_13 );           // "Metal Block"
+    long a_planet =  m_project->addAsset(DrAssetType::Object, image_12 );           // "PlanetWithAReallyLongName"
 
-    long a_cake1  =  project->addAsset(DrAssetType::Object, image_9 );          // "Cake Block"
-    long a_cake2 =   project->addAsset(DrAssetType::Object, image_10 );         // "Cake Chocolate"
-    long a_cake3 =   project->addAsset(DrAssetType::Object, image_11 );         // "Cake Ice Cube"
+    long a_cake1  =  m_project->addAsset(DrAssetType::Object, image_9 );            // "Cake Block"
+    long a_cake2 =   m_project->addAsset(DrAssetType::Object, image_10 );           // "Cake Chocolate"
+    long a_cake3 =   m_project->addAsset(DrAssetType::Object, image_11 );           // "Cake Ice Cube"
 
-    project->addAsset(DrAssetType::Object, image_7 );                           // "Water 1"
-    project->addAsset(DrAssetType::Object, image_5 );                           // "Rover Body"
-    project->addAsset(DrAssetType::Object, image_8 );                           // "Rover Wheel"
+    m_project->addAsset(DrAssetType::Object, image_7 );                             // "Water 1"
+    m_project->addAsset(DrAssetType::Object, image_5 );                             // "Rover Body"
+    m_project->addAsset(DrAssetType::Object, image_8 );                             // "Rover Wheel"
 
-    long a_font =    project->addAsset(DrAssetType::Text, font_1);              // "Test Font"
-    project->addAsset(DrAssetType::Text, font_2);                               // "Test Font 2"
-    project->addAsset(DrAssetType::Text, font_3);                               // "Test Font 3"
+    long a_font =    m_project->addAsset(DrAssetType::Text, font_1);                // "Test Font"
+    m_project->addAsset(DrAssetType::Text, font_2);                                 // "Test Font 2"
+    m_project->addAsset(DrAssetType::Text, font_3);                                 // "Test Font 3"
     // !!!!! END
 
 
 
     // !!!!! #TEMP: New Project
     // Create a new project and add some stuff to it
-    project->addWorld();
-    project->addWorld();
-    project->findWorldWithName("World 2")->addStage();                                  // Stage 2
-    project->findWorldWithName("World 2")->addStage("asdfasdfasdfasdfasdfasdfasd");     // Stage 3
-    project->findWorldWithName("World 2")->addStage();                                  // Stage 4
+    m_project->addWorld();
+    m_project->addWorld();
+    m_project->findWorldWithName("World 2")->addStage();                                    // Stage 2
+    m_project->findWorldWithName("World 2")->addStage("asdfasdfasdfasdfasdfasdfasd");       // Stage 3
+    m_project->findWorldWithName("World 2")->addStage();                                    // Stage 4
 
 
 
     // Stage 4 Rover Test
-    long start_stage = project->findWorldWithName("World 2")->getFirstStageKey();
-    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_planet,   200,   600,  1);
-    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_planet,  1200,   475,  1);
+    long start_stage = m_project->findWorldWithName("World 2")->getFirstStageKey();
+    m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_planet,   200,   600,  1);
+    m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_planet,  1200,   475,  1);
 
-    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_plant,    900,    55,  1, false);
-    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_plant,   1400,    55,  1, false);
+    m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_plant,    900,    55,  1, false);
+    m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_plant,   1400,    55,  1, false);
 
-    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_ground,  -411,  -200,  3);
-    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_ground,     0,  -200,  3);
-    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_ground,   411,  -200,  3);
-    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_ground,   822,  -200,  3);
-    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_ground,  1233,  -200,  3);
+    m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_ground,  -411,  -200,  3);
+    m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_ground,     0,  -200,  3);
+    m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_ground,   411,  -200,  3);
+    m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_ground,   822,  -200,  3);
+    m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_ground,  1233,  -200,  3);
 
-    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_top,     -411,   -50,  4);
-    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_top,        0,   -50,  4);
-    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_top,      411,   -50,  4);
-    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_top,      822,   -50,  4);
-    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_top,     1233,   -50,  4);
+    m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_top,     -411,   -50,  4);
+    m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_top,        0,   -50,  4);
+    m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_top,      411,   -50,  4);
+    m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_top,      822,   -50,  4);
+    m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_top,     1233,   -50,  4);
 
-    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_block,    400,   200,  3);
-    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_block,    550,   200,  3);
-    project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_block,    750,   350,  3);
+    m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_block,    400,   200,  3);
+    m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_block,    550,   200,  3);
+    m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addObject(DrObjectType::Object, a_block,    750,   350,  3);
 
     // Stage 2 Misc Test
-    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Character, a_ball,  200,   600,  4);
-    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_square,   600,   700,  2);
-    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Text,   a_font,     500,   900,  6);
+    m_project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Character, a_ball,  200,   600,  4);
+    m_project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_square,   600,   700,  2);
+    m_project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Text,   a_font,     500,   900,  6);
 
-    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_ground,   200,  -200,  3);
-    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_ground,   600,  -200,  3);
-    project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_ground,  1000,  -200,  3);
+    m_project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_ground,   200,  -200,  3);
+    m_project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_ground,   600,  -200,  3);
+    m_project->findWorldWithName("World 2")->getStageWithName("2")->addObject(DrObjectType::Object, a_ground,  1000,  -200,  3);
 
     // Stage 3 Ground
-    project->findWorldWithName("World 2")->getStageWithName("asdfasdfasdfasdfasdfasdfasd")->addObject(DrObjectType::Object, a_ground,   200,  -200,  3);
-    project->findWorldWithName("World 2")->getStageWithName("asdfasdfasdfasdfasdfasdfasd")->addObject(DrObjectType::Object, a_ground,   600,  -200,  3);
-    project->findWorldWithName("World 2")->getStageWithName("asdfasdfasdfasdfasdfasdfasd")->addObject(DrObjectType::Object, a_ground,  1000,  -200,  3);
+    m_project->findWorldWithName("World 2")->getStageWithName("asdfasdfasdfasdfasdfasdfasd")->addObject(DrObjectType::Object, a_ground,   200,  -200,  3);
+    m_project->findWorldWithName("World 2")->getStageWithName("asdfasdfasdfasdfasdfasdfasd")->addObject(DrObjectType::Object, a_ground,   600,  -200,  3);
+    m_project->findWorldWithName("World 2")->getStageWithName("asdfasdfasdfasdfasdfasdfasd")->addObject(DrObjectType::Object, a_ground,  1000,  -200,  3);
 
     // Stage 4 Iso Cake Test
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_cake1,    200,   500,  2);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_cake2,    400,   800,  4);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_cake3,    600,  1100, -2);
+    m_project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_cake1,    200,   500,  2);
+    m_project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_cake2,    400,   800,  4);
+    m_project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_cake3,    600,  1100, -2);
 
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,   200,  -200,  3);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,   600,  -200,  3);
-    project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,  1000,  -200,  3);
+    m_project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,   200,  -200,  3);
+    m_project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,   600,  -200,  3);
+    m_project->findWorldWithName("World 2")->getStageWithName("4")->addObject(DrObjectType::Object, a_ground,  1000,  -200,  3);
 
-    DrStage* current_stage = project->findWorldWithName("World 2")->getStageFromKey(start_stage);
-    project->setOption(Project_Options::Current_Stage, QVariant::fromValue(current_stage->getKey()) );
-    project->setOption(Project_Options::Current_World, QVariant::fromValue(current_stage->getParentWorld()->getKey()) );
+    DrStage* current_stage = m_project->findWorldWithName("World 2")->getStageFromKey(start_stage);
+    m_project->setOption(Project_Options::Current_Stage, QVariant::fromValue(current_stage->getKey()) );
+    m_project->setOption(Project_Options::Current_World, QVariant::fromValue(current_stage->getParentWorld()->getKey()) );
 
     // !!!!! END
 
@@ -207,7 +207,7 @@ void FormMain::changePalette(Color_Scheme new_color_scheme) {
     Dr::SetColorScheme(new_color_scheme);
     Dr::ApplyCustomStyleSheetFormatting(this);
 
-    if (current_mode == Form_Main_Mode::World_Editor)
+    if (m_current_mode == Form_Main_Mode::World_Editor)
         viewEditor->updateGrid();
 }
 
@@ -234,14 +234,14 @@ bool FormMain::eventFilter(QObject *obj, QEvent *event) {
     if (event->type() == QEvent::KeyPress)
     {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        if (keyEvent->key() == Qt::Key::Key_Space && current_mode == Form_Main_Mode::World_Editor)
+        if (keyEvent->key() == Qt::Key::Key_Space && m_current_mode == Form_Main_Mode::World_Editor)
             if (viewEditor->hasFocus() == false)
                 viewEditor->spaceBarDown();
     }
     if (event->type() == QEvent::KeyRelease)
     {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        if (keyEvent->key() == Qt::Key::Key_Space && current_mode == Form_Main_Mode::World_Editor)
+        if (keyEvent->key() == Qt::Key::Key_Space && m_current_mode == Form_Main_Mode::World_Editor)
             if (viewEditor->hasFocus() == false)
                 viewEditor->spaceBarUp();
     }

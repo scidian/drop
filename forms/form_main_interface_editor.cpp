@@ -68,7 +68,7 @@ void FormMain::buildScene(long from_stage_key) {
     if (sceneEditor->scene_mutex.tryLock(10) == false) return;
 
     if (sceneEditor->getCurrentStageKeyShown() != from_stage_key) {
-        emit newStageSelected(project, sceneEditor, sceneEditor->getCurrentStageKeyShown(), from_stage_key);
+        emit newStageSelected(m_project, sceneEditor, sceneEditor->getCurrentStageKeyShown(), from_stage_key);
     }
 
     sceneEditor->scene_mutex.unlock();
@@ -120,7 +120,7 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from) {
 
 
 
-DrProject* FormMain::currentProject() { return project; }
+DrProject* FormMain::currentProject() { return m_project; }
 // Fires a single shot timer to update view coordinates after event calls are done,
 // sometimes centerOn function doesnt work until after an update() has been processed in the event loop
 void FormMain::centerViewOnPoint(QPointF center_point) {

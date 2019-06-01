@@ -207,21 +207,21 @@ void FormMain::buildToolBar()
         tool = createToolbarButton(QStringLiteral("buttonFontBuilder"), Advisor_Info::Settings_Font_Builder, 34, 26, false);
         toolbarLayoutSettings->addWidget(tool);
         connect(tool, &QPushButton::clicked, [this] () {
-            FormFonts *font_editor = new FormFonts(project, this);
+            FormFonts *font_editor = new FormFonts(m_project, this);
             font_editor->show();
         });
 
         tool = createToolbarButton(QStringLiteral("buttonAtlasViewer"), Advisor_Info::Settings_Atlas_Viewer, 34, 26, false);
         toolbarLayoutSettings->addWidget(tool);
         connect(tool, &QPushButton::clicked, [this] () {
-            FormAtlas *atlas_editor = new FormAtlas(project, this);
+            FormAtlas *atlas_editor = new FormAtlas(m_project, this);
             atlas_editor->show();
         });
 
         tool = createToolbarButton(QStringLiteral("buttonSettingsEditor"), Advisor_Info::Settings_Manager, 34, 26, false);
         toolbarLayoutSettings->addWidget(tool);
         connect(tool, &QPushButton::clicked, [this] () {
-            FormSettings *settings_editor = new FormSettings(project, this);
+            FormSettings *settings_editor = new FormSettings(m_project, this);
             settings_editor->show();
         });
 

@@ -63,14 +63,12 @@ class FormMain : public QMainWindow, public IEditorRelay
 {
     Q_OBJECT
 
-public:
-    // Local Variables
-    DrProject              *project;                                                // Holds whatever the current open game project is
-    Form_Main_Mode          current_mode = Form_Main_Mode::Program_Loading;         // Holds what Form_Main_Mode the program is in
-
-
-private:   
+private:
+    // ***** Local Variables
+    DrProject              *m_project;                                              // BASE DEFINITION of DrProject!!!!! Holds current open game project
     DrFilterHoverHandler   *m_filter_hover;                                         // Pointer to an event filter hover handler
+
+    Form_Main_Mode          m_current_mode = Form_Main_Mode::Program_Loading;       // Holds what Form_Main_Mode state formMain is in
 
     // ***** Menu Widgets
     QMenuBar       *menuBar;
@@ -112,8 +110,7 @@ private:
     // "Editor" Status Bar Widgets
     QLabel         *labelSelected;
 
-public:
-
+//public:
     // ***** Labels to display info
     QLabel         *label1,         *label2,        *label3,        *labelMouse1,   *labelMouse2;
     QLabel         *labelObject1,   *labelObject2,  *labelObject3,  *labelObject4,  *labelObject5;

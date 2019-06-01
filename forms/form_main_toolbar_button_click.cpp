@@ -24,8 +24,8 @@
 void FormMain::buttonGroupModeClicked(int id) {
     buttonGroupModeSetChecked(id);
 
-    Form_Main_Mode new_id =     static_cast<Form_Main_Mode>(id);
-    if (current_mode == new_id) return;
+    Form_Main_Mode new_id = static_cast<Form_Main_Mode>(id);
+    if (m_current_mode == new_id) return;
 
     if (new_id == Form_Main_Mode::World_Map) {
         this->setFormMainMode(Form_Main_Mode::Clear);
@@ -54,7 +54,7 @@ void FormMain::buttonGroupLayeringClicked(int id) {
 
     if (clicked == Buttons_Layering::Send_To_Back) {
 
-        Dr::ShowMessageBox( project->testSpeedFindSettings(1000) );
+        Dr::ShowMessageBox( m_project->testSpeedFindSettings(1000) );
 
     }
 }
@@ -108,7 +108,7 @@ void FormMain::buttonGroupGridClicked(int id) {
     Buttons_Grid clicked = static_cast<Buttons_Grid>(id);
 
     if (clicked == Buttons_Grid::Snap_Options) {
-        FormPopup *popupGrid = new FormPopup(buttonsGroupGrid->button(id), project, widgetGroupGrid);
+        FormPopup *popupGrid = new FormPopup(buttonsGroupGrid->button(id), m_project, widgetGroupGrid);
         popupGrid->buildPopupGridSnap();
         popupGrid->show();
 
@@ -134,7 +134,7 @@ void FormMain::buttonGroupPlayClicked(int id) {
 
     if (clicked == Buttons_Play::Play) {
 
-        FormEngine *engine = new FormEngine(project);               // !!!!! NOTE: Does not like to be a child?
+        FormEngine *engine = new FormEngine(m_project);             // !!!!! NOTE: Does not like to be a child?
         engine->show();
 
     }

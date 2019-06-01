@@ -42,7 +42,7 @@ void FormMain::updateToolbar() {
         if (sceneEditor->getSelectionCount() == 1) {
             DrObject *object = dynamic_cast<DrItem*>( sceneEditor->getSelectionItems().first() )->getObject();
             if (dynamic_cast<DrItem*>( sceneEditor->getSelectionItems().first() )->getObject())
-                selected = project->findSettingsFromKey(object->getAssetKey())->getName();
+                selected = m_project->findSettingsFromKey(object->getAssetKey())->getName();
 
         } else if (sceneEditor->getSelectionCount() > 1) {
             selected = QString::number( sceneEditor->getSelectionCount() ) + " Objects";

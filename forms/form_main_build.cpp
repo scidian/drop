@@ -31,8 +31,8 @@
 //####################################################################################
 void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
 
-    Form_Main_Mode old_mode = current_mode;
-    current_mode = new_mode;
+    Form_Main_Mode old_mode = m_current_mode;
+    m_current_mode = new_mode;
 
     lockDockWidth( dockAdvisor, dockAdvisor->width() );
     lockDockWidth( dockInspector, dockInspector->width() );
@@ -60,13 +60,13 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
     switch (new_mode) {
         case Form_Main_Mode::World_Editor:
             Dr::SetDoneLoading(false);
-                setWindowTitle( tr("Drop") + " - " + project->getOption(Project_Options::Name).toString() );
+                setWindowTitle( tr("Drop") + " - " + m_project->getOption(Project_Options::Name).toString() );
                 this->setCentralWidget( widgetCentralEditor );
                 buildAssetTree();
                 dockAssetsEditor->show();
                 buildProjectTree();
                 sceneEditor->setCurrentStageKeyShown(c_no_key);
-                buildSceneAfterLoading( project->getOption(Project_Options::Current_Stage).toInt() );
+                buildSceneAfterLoading( m_project->getOption(Project_Options::Current_Stage).toInt() );
             break;
 
         case Form_Main_Mode::Clear:
@@ -159,7 +159,7 @@ void FormMain::buildWidgetsShared() {
             verticalLayoutAdvisor->setContentsMargins(0, 0, 0, 0);
 
                 // ***** Load our custom TreeAdvisor for the helpful advisor text
-                treeAdvisor = new TreeAdvisor(widgetAdvisor, project, this);
+                treeAdvisor = new TreeAdvisor(widgetAdvisor, m_project, this);
                 treeAdvisor->setObjectName(QStringLiteral("treeAdvisor"));
                 treeAdvisor->setColumnCount(1);
                 treeAdvisor->setFont(font_larger);
@@ -198,7 +198,7 @@ void FormMain::buildWidgetsShared() {
             verticalLayoutObject->setContentsMargins(0, 0, 0, 0);
 
                 // ***** Load our custom TreeObjectInspector for the Stage List
-                treeInspector = new TreeInspector(widgetInspector, project, this);
+                treeInspector = new TreeInspector(widgetInspector, m_project, this);
                 treeInspector->setObjectName(QStringLiteral("treeObject"));
                 treeInspector->setColumnCount(1);
                 treeInspector->setFont(font);

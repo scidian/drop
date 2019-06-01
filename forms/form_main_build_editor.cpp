@@ -42,7 +42,7 @@ void FormMain::buildWidgetsEditor()
 
 
     // ***** Initialize scene used for showing stages World Editor Mode viewEditor widget
-    sceneEditor = new DrScene(this, project, this);
+    sceneEditor = new DrScene(this, m_project, this);
 
     // Connects signal used to populate scene
     connect(this,       SIGNAL(newStageSelected(DrProject*, DrScene*, long, long)),
@@ -78,7 +78,7 @@ void FormMain::buildWidgetsEditor()
                 splitterHorizontal->setHandleWidth(4);
 
                     // ***** Load our custom TreeProject for the Scene List
-                    treeProjectEditor = new TreeProject(splitterHorizontal, project, this);
+                    treeProjectEditor = new TreeProject(splitterHorizontal, m_project, this);
                     treeProjectEditor->setStyle(new TreeStageHighlightProxy(treeProjectEditor->style(), treeProjectEditor));
                         QTreeWidgetItem *header_item_stage = new QTreeWidgetItem();
                         header_item_stage->setIcon(1, QIcon(":/assets/tree_icons/tree_lock_header.png"));
@@ -121,7 +121,7 @@ void FormMain::buildWidgetsEditor()
                         verticalLayoutView->setContentsMargins(0, 0, 0, 0);
 
                         // ***** Load our DrView to display our DrScene collection of items
-                        viewEditor = new DrView(widgetStageView, project, sceneEditor, this);
+                        viewEditor = new DrView(widgetStageView, m_project, sceneEditor, this);
                         viewEditor->setObjectName(QStringLiteral("viewEditor"));
                         viewEditor->setAcceptDrops(true);
                         viewEditor->setFrameShape(QFrame::NoFrame);
@@ -236,7 +236,7 @@ void FormMain::buildWidgetsEditor()
             verticalLayoutAsset->setContentsMargins(0, 0, 0, 0);
 
                 // ***** Load our custom TreeObjectInspector for the Stage List
-                treeAssetEditor = new TreeAssets(widgetAssestEditor, project, this);
+                treeAssetEditor = new TreeAssets(widgetAssestEditor, m_project, this);
                 treeAssetEditor->setObjectName(QStringLiteral("treeAssetEditor"));
                 treeAssetEditor->setColumnCount(1);
                 treeAssetEditor->setFont(font);
