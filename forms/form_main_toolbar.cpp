@@ -85,7 +85,7 @@ void FormMain::setToolbar(Form_Main_Mode new_mode) {
             break;
 
 
-        // !!!!! TODO
+        // !!!!! #TODO:
         case Form_Main_Mode::World_Map:
             addToolbarGroup( widgetGroupPlay,       false );
             addToolbarGroup( widgetGroupSettings,   false );

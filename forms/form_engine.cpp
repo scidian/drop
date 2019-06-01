@@ -135,6 +135,10 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
 FormEngine::~FormEngine() { }
 
+
+//######################################################################################################
+//##    Event Handling
+//######################################################################################################
 void FormEngine::closeEvent(QCloseEvent *event) {
     // Wait for update timer to stop
     stopTimers();
@@ -144,7 +148,24 @@ void FormEngine::closeEvent(QCloseEvent *event) {
     event->accept();
 }
 
+// Grabs all events
+bool FormEngine::event(QEvent *event) {
+    switch(event->type()) {
+        case QEvent::WindowActivate:
+            m_opengl->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
+            break;
+        case QEvent::WindowDeactivate:
+            // #TODO: Need put sleeping OpenGL code here
+            break;
+        default:;
+    }
+    return QMainWindow::event(event);
+}
 
+
+//######################################################################################################
+//##    Loads a Demo
+//######################################################################################################
 void FormEngine::loadDemo(Demo_Space using_space, Demo_Player using_player ) {
     stopTimers();
 

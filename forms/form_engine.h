@@ -83,6 +83,7 @@ public:
 
     // Event Overrides
     virtual void closeEvent(QCloseEvent *event) override;
+    virtual bool event(QEvent *event) override;
 
     // Function Calls
     DrEngine*   getEngine() { return m_engine; }

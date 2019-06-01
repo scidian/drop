@@ -6,6 +6,7 @@
 //
 //
 #include <QApplication>
+#include <QDebug>
 
 #include "engine.h"
 #include "engine_object.h"
@@ -35,6 +36,13 @@ static void GetBodyJointList(cpBody *, cpConstraint *constraint, QVector<cpConst
 
 // Used for shape iterator to get a list of all shapes attached to a body
 static void GetBodyShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_list) { shape_list->append(shape); }
+
+
+//######################################################################################################
+//##    Wake All Sleeping Bodies
+//######################################################################################################
+static void WakeBody(cpBody *body, cpSpace *) { cpBodyActivate(body); }
+void DrEngine::wakeAllBodies() { if (has_scene) cpSpaceEachBody(m_space, cpSpaceBodyIteratorFunc(WakeBody), m_space); }
 
 
 //######################################################################################################

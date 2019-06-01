@@ -75,20 +75,26 @@ void DrEngine::updateSpaceHelper() {
         object->position.setX( new_position.x );
         object->position.setY( new_position.y );
 
+        // **** Check that any object with custom PlayerUpdateVelocity callback is awake so it can access key / button events
+        bool sleeping = cpBodyIsSleeping(object->body);
+        if (object->key_controls && !object->lost_control && sleeping) {
+            cpBodyActivate(object->body);
+        }
 
-            // ***** Update global friction and bounce to all objects if globals have changed (possibly due to Gameplay Action)
-    //        if (qFuzzyCompare(object->custom_friction, c_friction) == false) {
-    //            for (auto shape : object->shapes) {
-    //                cpFloat friction = cpShapeGetFriction( shape );
-    //                if (qFuzzyCompare(friction, m_friction) == false) cpShapeSetFriction( shape, m_friction );
-    //            }
-    //        }
-    //        if (qFuzzyCompare(object->custom_bounce, c_bounce) == false) {
-    //            for (auto shape : object->shapes) {
-    //                cpFloat bounce = cpShapeGetElasticity( shape );
-    //                if (qFuzzyCompare(bounce, m_bounce) == false) cpShapeSetElasticity( shape, m_bounce );
-    //            }
-    //        }
+//        // ***** Update global friction and bounce to all objects if globals have changed (possibly due to Gameplay Action)
+//        if (qFuzzyCompare(object->custom_friction, c_friction) == false) {
+//            for (auto shape : object->shapes) {
+//                cpFloat friction = cpShapeGetFriction( shape );
+//                if (qFuzzyCompare(friction, m_friction) == false) cpShapeSetFriction( shape, m_friction );
+//            }
+//        }
+//        if (qFuzzyCompare(object->custom_bounce, c_bounce) == false) {
+//            for (auto shape : object->shapes) {
+//                cpFloat bounce = cpShapeGetElasticity( shape );
+//                if (qFuzzyCompare(bounce, m_bounce) == false) cpShapeSetElasticity( shape, m_bounce );
+//            }
+//        }
+
 
         // ***** Process non-static object movement
         if ((object->body_type != Body_Type::Static)) {

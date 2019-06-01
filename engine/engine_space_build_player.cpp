@@ -22,6 +22,7 @@ void DrEngine::assignPlayerControls(DrEngineObject *object, bool has_controls_no
         if (set_active_camera) setActiveCamera(camera_key);
     }
     object->setCollisionType(Collision_Type::Damage_Enemy);
+    object->key_controls = true;
     object->lost_control = !has_controls_now;                               // Turn on jump / movement buttons
     cpBodySetVelocityUpdateFunc(object->body, PlayerUpdateVelocity);        // Assign the playerUpdate callback function
 }
@@ -34,19 +35,7 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
 
     demo_player = new_player_type;
 
-    if (demo_player == Demo_Player::Spawn) {
-        m_gravity = cpv(0, -500);                           // cpVect is a 2D vector and cpv() is a shortcut for initializing them
-        m_damping = 1;
-        cpSpaceSetGravity(m_space, m_gravity);
-        cpSpaceSetDamping(m_space, m_damping);
-
-        double ball_radius = m_textures[Test_Textures::Ball]->width() / 2.0;
-        DrEngineObject *ball = this->addCircle(Body_Type::Kinematic, Test_Textures::Ball, -300,  150, 0, c_norotate, c_scale1x1, c_opaque, ball_radius, c_center,
-                                               0.7, 0.5, QPointF(15, 0));
-        setActiveCamera( addCamera(ball) );
-
-
-    } else if (demo_player == Demo_Player::Jump) {
+    if (demo_player == Demo_Player::Jump) {
         m_gravity = cpv(0, -1000);
         m_damping = 1;
         cpSpaceSetGravity(m_space, m_gravity);
@@ -78,6 +67,18 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         // !!!!! #TEMP: demo variables
         demo_jumper_1 = ball;
         demo_jumper_2 = ball2;
+
+
+    } else if (demo_player == Demo_Player::Spawn) {
+        m_gravity = cpv(0, -500);                           // cpVect is a 2D vector and cpv() is a shortcut for initializing them
+        m_damping = 1;
+        cpSpaceSetGravity(m_space, m_gravity);
+        cpSpaceSetDamping(m_space, m_damping);
+
+        double ball_radius = m_textures[Test_Textures::Ball]->width() / 2.0;
+        DrEngineObject *ball = this->addCircle(Body_Type::Kinematic, Test_Textures::Ball, -300,  150, 0, c_norotate, c_scale1x1, c_opaque, ball_radius, c_center,
+                                               0.7, 0.5, QPointF(15, 0));
+        setActiveCamera( addCamera(ball) );
 
 
     } else if (demo_player == Demo_Player::Car) {

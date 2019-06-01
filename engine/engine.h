@@ -157,6 +157,7 @@ public:
     void            removeObject(DrEngineObject *object);
     void            updateSpace(double time_passed);
     void            updateSpaceHelper();
+    void            wakeAllBodies();
 
     // Cameras
     long                addCamera(DrEngineObject* object_to_follow = nullptr, float x = 0, float y = 0, float z = 800);

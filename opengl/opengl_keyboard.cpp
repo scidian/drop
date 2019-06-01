@@ -55,5 +55,4 @@ void OpenGL::keyReleaseEvent(QKeyEvent *event) {
     } else {
         QOpenGLWidget::keyReleaseEvent(event);
     }
-
 }

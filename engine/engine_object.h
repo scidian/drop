@@ -106,8 +106,10 @@ public:
     double      rotate_speed =  0.0;            // Speed at which object should spin when Motor Rotate (gas pedal) is pressed
 
     // ***** Object interaction                 // These properties are used by objects that have been attached to PlayerUpdateVelocity
-    bool        lost_control = false;           // Set to true when players should not have button control
+    bool        key_controls = false;           // Set to true when object is a "player" and should respond to key / button / mouse events
                                                 //      (players are cpBody* that have been assigned the cpBodyUpdateVelocityFunc PlayerUpdateVelocity callback)
+    bool        lost_control = false;           // Set to true when players should not have button control but have been assigned key_controls
+
 
     double      max_speed_x =  1000.0;          // Maximum speed x of object
     double      max_speed_y =  1000.0;          // Maximum speed y of object
