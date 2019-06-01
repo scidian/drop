@@ -32,10 +32,15 @@ const T& Clamp(const T& number_to_check, const T& min, const T& max) {
     else                            return number_to_check;
 }
 
-template<class T>
-const T& EnumToInt(const T& enum_to_convert) {
-    return static_cast<int>(enum_to_convert);
-}
+// Casts an Enum value to an int
+template<class T> const T& EnumToInt(const T& enum_to_convert) { return static_cast<int>(enum_to_convert); }
+
+// Return the Max of two values
+template<class T> const T& Max(const T& a, const T& b) { return (a > b) ? a : b; }
+
+// Return the Min of two values
+template<class T> const T& Min(const T& a, const T& b) { return (a < b) ? a : b; }
+
 
 // Time Functions
 QString     CurrentTimeAsString();

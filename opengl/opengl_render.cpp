@@ -179,7 +179,7 @@ void OpenGL::drawObjects() {
                 skip = true;
         if (skip) continue;
 
-        v.push_back(std::make_pair(i, m_engine->objects[i]->z_order));
+        v.push_back(std::make_pair(i, m_engine->objects[i]->getZOrder()));
     }
     sort(v.begin(), v.end(), [] (std::pair<int, double>&i, std::pair<int, double>&j) { return i.second < j.second; });
 
@@ -191,7 +191,7 @@ void OpenGL::drawObjects() {
         if (!object->has_been_processed) continue;                          // Don't draw Segments (lines)
 
         // ***** Render with texture
-        DrEngineTexture *texture = m_engine->getTexture(object->texture_number);
+        DrEngineTexture *texture = m_engine->getTexture(object->getTextureNumber());
         if (!texture->texture()->isBound())
             texture->texture()->bind();
 
@@ -216,15 +216,15 @@ void OpenGL::drawObjects() {
         if (m_engine->render_type == Render_Type::Orthographic) {
             x = static_cast<float>(center.x()) * m_scale;
             y = static_cast<float>(center.y()) * m_scale;
-            z = static_cast<float>(object->z_order) * m_scale;
-            half_width =  static_cast<float>(texture->width()) *  object->scale_x * m_scale / 2.0f;
-            half_height = static_cast<float>(texture->height()) * object->scale_y * m_scale / 2.0f;
+            z = static_cast<float>(object->getZOrder()) * m_scale;
+            half_width =  static_cast<float>(texture->width()) *  object->getScaleX() * m_scale / 2.0f;
+            half_height = static_cast<float>(texture->height()) * object->getScaleY() * m_scale / 2.0f;
         } else {
             x = static_cast<float>(center.x());
             y = static_cast<float>(center.y());
-            z = static_cast<float>(object->z_order);
-            half_width =  static_cast<float>(texture->width()) *  object->scale_x / 2.0f + 1.0f;
-            half_height = static_cast<float>(texture->height()) * object->scale_y / 2.0f + 1.0f;
+            z = static_cast<float>(object->getZOrder());
+            half_width =  static_cast<float>(texture->width()) *  object->getScaleX() / 2.0f + 1.0f;
+            half_height = static_cast<float>(texture->height()) * object->getScaleY() / 2.0f + 1.0f;
         }
 
 
@@ -263,7 +263,7 @@ void OpenGL::drawObjects() {
         m_shader.setUniformValue( m_uniform_texture, 0 );                           // Use texture unit 0
 
         // Fade away dying object
-        float alpha = object->alpha;                                                // Start with object alpha
+        float alpha = object->getOpacity();                                         // Start with object alpha
         if (!object->alive && object->fade_on_death) {
             double fade_percent = 1.0 - (static_cast<double>(Dr::MillisecondsElapsed(object->fade_timer)) / static_cast<double>(object->fade_delay));
             alpha *= static_cast<float>(fade_percent);

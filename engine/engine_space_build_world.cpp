@@ -87,7 +87,7 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
 
         // Static line segment shapes for the ground
         this->addLine(Body_Type::Static, QPointF(-800,     0), QPointF( 300, -250), c_friction, c_bounce, 1);
-        this->addLine(Body_Type::Static, QPointF( 250,    50), QPointF(1000,  200), c_friction, c_bounce, 1);
+        this->addLine(Body_Type::Static, QPointF( 250,    50), QPointF(1750,  350), c_friction, c_bounce, 1);
         this->addLine(Body_Type::Static, QPointF(-1100, -300), QPointF(-900, -300), c_friction, c_bounce, 1);
 
     } else if (demo_space == Demo_Space::Lines2) {
@@ -110,7 +110,7 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
 
         // Test one way block
         DrEngineObject *block = this->addBlock(Body_Type::Static, Test_Textures::Block, -500, 150, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
-        setCollisionType(block, Collision_Type::Damage_Player);
+        block->setCollisionType(Collision_Type::Damage_Player);
         block->one_way = One_Way::Pass_Through; block->one_way_direction = cpv(0, 1);                // Let objects pass upwards
 
         // Test rotate block
@@ -122,7 +122,7 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
 
         // Test destroyable block
         DrEngineObject *block3 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -200, 150, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
-        setCollisionType(block3, Collision_Type::Damage_Player);
+        block3->setCollisionType(Collision_Type::Damage_Player);
         block3->one_way = One_Way::Weak_Spot;
         block3->one_way_direction = cpv(0, 1);                // Take damage from below only
         block3->health = 1.0;

@@ -58,16 +58,7 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
 
     // Check for dealing damage
     bool should_damage = false;
-    if ((object_a->collision_type == Collision_Type::Damage_Enemy) &&
-        (object_b->collision_type == Collision_Type::Damage_Player || object_b->collision_type == Collision_Type::Damage_All))
-        should_damage = true;
-
-    if ((object_a->collision_type == Collision_Type::Damage_Player) &&
-        (object_b->collision_type == Collision_Type::Damage_Enemy  || object_b->collision_type == Collision_Type::Damage_All))
-        should_damage = true;
-
-    if (object_a->collision_type == Collision_Type::Damage_All)
-        should_damage = true;
+    if (object_a->shouldDamage(object_b->getCollisionType())) should_damage = true;
 
     // Check for one way weak point
     if (object_a->one_way == One_Way::Weak_Spot) {                                  // Don't deal damage if something comes at your weak (vulnerable) spot

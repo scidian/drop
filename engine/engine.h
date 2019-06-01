@@ -155,7 +155,6 @@ public:
     void            clearSpace();
     void            loadStageToSpace(DrStage *stage, double offset_x, double offset_y);
     void            removeObject(DrEngineObject *object);
-    void            setCollisionType(DrEngineObject *object, Collision_Type type);
     void            updateSpace(double time_passed);
     void            updateSpaceHelper();
 

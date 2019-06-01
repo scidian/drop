@@ -58,29 +58,13 @@ void DrEngine::loadStageToSpace(DrStage *stage, double offset_x, double offset_y
             case 2: collision_type = Collision_Type::Damage_Enemy;  break;
             case 3: collision_type = Collision_Type::Damage_All;    break;
         }
-        setCollisionType(block, collision_type);
+        block->setCollisionType(collision_type);
     }
 
     // Update distance we've loaded scenes to
     m_loaded_to += stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();
 
 }
-
-
-//######################################################################################################
-//##    Set Collision Type of Object
-//######################################################################################################
-void DrEngine::setCollisionType(DrEngineObject *object, Collision_Type type) {
-    object->collision_type = type;
-    for (auto shape : object->shapes) {
-        cpShapeSetCollisionType(shape, static_cast<cpCollisionType>(type));
-    }
-}
-
-
-
-
-
 
 
 

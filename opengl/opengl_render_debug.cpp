@@ -39,7 +39,7 @@ static void GetSpaceJointList(cpConstraint *constraint, QVector<cpConstraint*> *
 //##    Assigns Debug color based on Collision Type
 //####################################################################################
 QColor OpenGL::objectDebugColor(DrEngineObject *object) {
-    switch (object->collision_type) {
+    switch (object->getCollisionType()) {
         case Collision_Type::Damage_None:
             if (cpBodyIsSleeping(object->body))     return Qt::yellow;
             else                                    return QColor(0, 255, 0);              // Green
@@ -61,7 +61,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         // Figure out what color to make the debug shapes
         QColor color = objectDebugColor(object);
         if (object->health <= c_epsilon) color = Qt::gray;
-        if (!object->does_collide) color = color.lighter();
+        if (!object->doesCollide()) color = color.lighter();
 
         // Set up QPainter
         QPen cosmetic_pen( QBrush(color), 1);

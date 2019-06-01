@@ -33,23 +33,24 @@ enum class Jump_State {
 typedef std::map<cpShape*, Shape_Type> ShapeMap;
 
 // Constants for calling engine addObject calls
-constexpr double    c_epsilon = 0.0000001;      // Floating point zero
-constexpr QVector3D c_no_camera {0, 0, 800};    // Default camera position if there is no active camera
-constexpr QPointF   c_center    {0, 0};         // Default offset in no offset
-constexpr QPointF   c_scale1x1  {1, 1};         // Default scale of 1x1
-constexpr double    c_norotate  {0};            // Default rotation amount of zero
-constexpr double    c_opaque    {1};            // Default transparency of fully opaque
-constexpr double    c_friction =  -1;           // Flag for add**** call to use world friction setting
-constexpr double    c_bounce =    -1;           // Flag for add**** call to use world bounce setting
-constexpr int       c_unlimited = -1;           // Flag for ranged items to be unlimited (health, jump_count)
+constexpr double    c_epsilon = 0.0000001;              // Floating point zero
+constexpr QPointF   c_center    {0, 0};                 // Default offset in no offset
+constexpr QPointF   c_scale1x1  {1, 1};                 // Default scale of 1x1
+constexpr QVector3D c_default_camera_pos {0, 0, 800};   // Default camera position if there is no active camera
+constexpr long      c_no_camera =  0;                   // Default camera position if there is no active camera
+constexpr double    c_norotate =   0;                   // Default rotation amount of zero
+constexpr double    c_opaque =     1;                   // Default transparency of fully opaque
+constexpr double    c_friction =  -1;                   // Flag for add**** call to use world friction setting
+constexpr double    c_bounce =    -1;                   // Flag for add**** call to use world bounce setting
+constexpr int       c_unlimited = -1;                   // Flag for ranged items to be unlimited (health, jump_count)
 
 // Global Variables - defined in engine_update_player.cpp
-extern int          g_keyboard_x;               // Used to pass keyboard x button state to static callback functions
-extern int          g_keyboard_y;               // Used to pass keyboard y button state to static callback functions
-extern bool         g_jump_button;              // Used to pass jump button state to static callback functions
-extern bool         g_rotate_cw;                // Used to pass rotate clockwise button state
-extern bool         g_rotate_ccw;               // Used to pass rotate counter clockwise button state
-extern cpVect       g_gravity_normal;           // Stores a gravity as a normalized vector for use in static callback functions
+extern int          g_keyboard_x;                       // Used to pass keyboard x button state to static callback functions
+extern int          g_keyboard_y;                       // Used to pass keyboard y button state to static callback functions
+extern bool         g_jump_button;                      // Used to pass jump button state to static callback functions
+extern bool         g_rotate_cw;                        // Used to pass rotate clockwise button state
+extern bool         g_rotate_ccw;                       // Used to pass rotate counter clockwise button state
+extern cpVect       g_gravity_normal;                   // Stores a gravity as a normalized vector for use in static callback functions
 extern QString      g_info;
 
 
@@ -57,7 +58,24 @@ extern QString      g_info;
 //##    DrEngineObject
 //##        Holds on object for use in a cpSpace
 //############################
-class DrEngineObject {
+class DrEngineObject
+{
+private:
+
+    // ***** Object Properties - Basic
+    bool        m_does_collide = true;              // Set to false to have this object not collide with anything
+    long        m_texture_number;                   // Reference to which texture to use from Engine->EngineTexture map
+
+    float       m_scale_x = 1.0f;                   // Scale of object in world
+    float       m_scale_y = 1.0f;                   // Scale of object in world
+    float       m_alpha = 1.0;                      // Transparency of object (0.0 invisible, 1.0 opaque)
+    double      m_z_order;                          // Used for layering
+
+    // ***** Object Properties - Camera
+    long        m_active_camera = c_no_camera;      // Set to ID of last camera that followed this object, 0 == no camera
+
+    // ***** Object Properties - Health / Damage
+    Collision_Type m_collision_type = Collision_Type::Damage_None;      // Specifies what other types of objects this object can damage
 
 public:
     // ***** Object Info
@@ -67,21 +85,12 @@ public:
     QVector<cpShape*>   shapes;                 // Collision Shapes of object
     ShapeMap            shape_type;             // Shape Types of Shapes of Object
 
-    // ***** Object Properties
-    bool        does_collide = true;            // Set to false to have this object not collide with anything
 
-    long        texture_number;                 // Reference to which texture to use from Engine.EngineTexture map
-    float       scale_x = 1.0f;                 // Scale of object in world
-    float       scale_y = 1.0f;                 // Scale of object in world
-    float       alpha;                          // Transparency of object (0.0 invisible, 1.0 opaque)
-    double      z_order;                        // Used for layering
 
-    long        active_camera = 0;              // Set to ID of last camera that followed this object, 0 == no camera
-
-    Collision_Type collision_type = Collision_Type::Damage_None;        // Specifies what other types of objects this object can damage
+    /// ***** Object Properties - Health / Damage
     double      max_health = 100.0;                                     // Maximum object health, c_unlimited (-1) = no maximum
     double      health = 3.0;                                           // Object Health, c_unlimited (-1) = infinite, otherwise should be > 0
-    double      damage = 1.0;                                           // Damage caused to other objects of Type collision_type
+    double      damage = 1.0;                                           // Damage caused to other objects of Type m_collision_type
     double      auto_damage = 0.0;                                      // Take x damage per second (can be negative, i.e. add health)
     long        death_delay = 100;                                      // Time it takes for item to die (can't deal damage while dying), in milliseconds
     bool        fade_on_death = true;                                   // If true, object is slowly faded over death_delay time
@@ -155,13 +164,52 @@ public:
     DrEngineObject() {}
 
 
+    // Object Properties - Basic
+    const bool&     doesCollide() { return m_does_collide; }
+    const long&     getTextureNumber() { return m_texture_number; }
+    const float&    getScaleX() { return m_scale_x; }
+    const float&    getScaleY() { return m_scale_y; }
+    const float&    getOpacity() { return m_alpha; }
+    const double&   getZOrder() { return m_z_order; }
+
+    void            setDoesCollide(bool should_collide) { m_does_collide = should_collide; }
+    void            setTextureNumber(long texture_number) { m_texture_number = texture_number; }
+    void            setScaleX(float new_scale_x)  { m_scale_x = new_scale_x; }
+    void            setScaleX(double new_scale_x) { m_scale_x = static_cast<float>(new_scale_x); }
+    void            setScaleY(float new_scale_y)  { m_scale_y = new_scale_y; }
+    void            setScaleY(double new_scale_y) { m_scale_y = static_cast<float>(new_scale_y); }
+    void            setOpacity(float new_alphaf)  { m_alpha = new_alphaf; }
+    void            setOpacity(double new_alphaf) { m_alpha = static_cast<float>(new_alphaf); }
+    void            setZOrder(double new_z_order) { m_z_order = new_z_order; }
+
+    // Object Properties - Camera
+    const long&     getActiveCameraKey() { return m_active_camera; }
+    bool            hasActiveCamera() { return (m_active_camera == c_no_camera) ? false : true; }
+    void            setActiveCameraKey(const long& new_camera_key) { m_active_camera = new_camera_key; }
+
+    // Object Properties - Health / Damage
+    Collision_Type  getCollisionType() { return m_collision_type; }
+
+    void            setCollisionType(Collision_Type what_should_collide);
+    bool            shouldDamage(Collision_Type check_can_damage);
+
+
+
 };
 
 
 
-
-
 #endif // ENGINE_OBJECT_H
+
+
+
+
+
+
+
+
+
+
 
 
 

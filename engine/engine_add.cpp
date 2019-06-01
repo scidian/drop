@@ -105,11 +105,11 @@ DrEngineObject* DrEngine::addCircle(Body_Type body_type, long texture_number, do
     // Ball Basics
     double radius = shape_radius * scale.x();                                   // Radius of collision shape
     cpVect offset = cpv(shape_offset.x(), shape_offset.y());                    // Offset of collision shape
-    ball->scale_x = static_cast<float>(scale.x());                              // Save x scale for later
-    ball->scale_y = static_cast<float>(scale.y());                              // Save y scale for later
-    ball->texture_number = texture_number;                                      // Texture to render from
-    ball->z_order = z;
-    ball->alpha = static_cast<float>(opacity);
+    ball->setScaleX(scale.x());                                                 // Save x scale for later
+    ball->setScaleY(scale.y());                                                 // Save y scale for later
+    ball->setTextureNumber(texture_number);                                     // Texture to render from
+    ball->setZOrder(z);
+    ball->setOpacity(opacity);
     ball->position.setX(x);
     ball->position.setY(y);
     ball->previous_position = ball->position;
@@ -144,7 +144,7 @@ DrEngineObject* DrEngine::addCircle(Body_Type body_type, long texture_number, do
     ball->shape_type[shape] = Shape_Type::Circle;
 
     // If we don't want the object to collide with other objects, set as sensor
-    ball->does_collide = should_collide;
+    ball->setDoesCollide(should_collide);
     cpShapeSetSensor( shape, !should_collide );
 
     // If we don't want the body to rotate, overwrite the precalculated moment of inertia with infinity
@@ -175,16 +175,16 @@ DrEngineObject* DrEngine::addBlock(Body_Type body_type, long texture_number, dou
 
     double width  = m_textures[texture_number]->width() * scale.x();        // Width of collision shape
     double height = m_textures[texture_number]->height() * scale.y();       // Height of collision shape
-    block->scale_x = static_cast<float>(scale.x());
-    block->scale_y = static_cast<float>(scale.y());
+    block->setScaleX(scale.x());
+    block->setScaleY(scale.y());
     block->position.setX(x);
     block->position.setY(y);
     block->previous_position = block->position;
 
     // Block basics
-    block->texture_number = texture_number;
-    block->z_order = z;
-    block->alpha = static_cast<float>(opacity);
+    block->setTextureNumber(texture_number);
+    block->setZOrder(z);
+    block->setOpacity(opacity);
 
     // Create the body for the block
     block->body_type = body_type;
@@ -216,7 +216,7 @@ DrEngineObject* DrEngine::addBlock(Body_Type body_type, long texture_number, dou
     block->shape_type[shape] = Shape_Type::Box;
 
     // If we don't want the object to collide with other objects, set as sensor
-    block->does_collide = should_collide;
+    block->setDoesCollide(should_collide);
     cpShapeSetSensor( shape, !should_collide );
 
 
@@ -250,11 +250,11 @@ DrEngineObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, d
     if (bounce < 0)   bounce = m_bounce;
 
     // Polygon Basics
-    polygon->scale_x = static_cast<float>(scale.x());                       // Save x scale for later
-    polygon->scale_y = static_cast<float>(scale.y());                       // Save y scale for later
-    polygon->texture_number = texture_number;
-    polygon->z_order = z;
-    polygon->alpha = static_cast<float>(opacity);
+    polygon->setScaleX(scale.x());                                          // Save x scale for later
+    polygon->setScaleY(scale.y());                                          // Save y scale for later
+    polygon->setTextureNumber(texture_number);
+    polygon->setZOrder(z);
+    polygon->setOpacity(opacity);
     polygon->position.setX(x);
     polygon->position.setY(y);
     polygon->previous_position = polygon->position;
@@ -319,7 +319,7 @@ DrEngineObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, d
         polygon->shape_type[shape] = Shape_Type::Polygon;
 
         // If we don't want the object to collide with other objects, set as sensor
-        polygon->does_collide = should_collide;
+        polygon->setDoesCollide(should_collide);
         cpShapeSetSensor( shape, !should_collide );
 
     // Shape is concave
@@ -349,7 +349,7 @@ DrEngineObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, d
             polygon->shape_type[shape] = Shape_Type::Polygon;
 
             // If we don't want the object to collide with other objects, set as sensor
-            polygon->does_collide = should_collide;
+            polygon->setDoesCollide(should_collide);
             cpShapeSetSensor( shape, !should_collide );
         }
     }

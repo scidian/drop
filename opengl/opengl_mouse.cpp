@@ -33,7 +33,7 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
 
     if (m_engine->demo_player == Demo_Player::Spawn) {
         if (event->button() & Qt::LeftButton) {
-            for (int i = 0; i < 25; i++ ) {
+            for (int i = 0; i < 50; i++ ) {
                 double vel_x = QRandomGenerator::global()->bounded(-100, 100);
                 double vel_y = QRandomGenerator::global()->bounded( 100, 500);
 

@@ -16,12 +16,6 @@
 //######################################################################################################
 //##    Clamps and Flerps
 //######################################################################################################
-// Return the max of two float
-static inline float Drfmax(float a, float b) { return (a > b) ? a : b; }
-// Return the min of two float
-static inline float Drfmin(float a, float b) { return (a < b) ? a : b; }
-// Clamp f to be between min and max
-static inline float Drfclamp(float f, float min, float max) { return Drfmin(Drfmax(f, min), max); }
 // Linearly interpolate (or extrapolate) between f1 and f2 by t percent
 static inline float  Drflerp(float f1, float f2, float t) { return f1*(1.0f - t) + f2*t; }
 static inline double Drdlerp(double f1, double f2, double t) { return f1*(1.0 - t) + f2*t; }
@@ -50,7 +44,7 @@ long DrEngine::addCamera(DrEngineObject* object_to_follow, float x, float y, flo
     // If an object was passed in, attach camera to that object
     if (object_to_follow != nullptr) {
         camera->followObject(object_to_follow);
-        object_to_follow->active_camera = m_camera_keys;
+        object_to_follow->setActiveCameraKey(m_camera_keys);
         camera->setPositionX( static_cast<float>(object_to_follow->position.x()) );
         camera->setPositionY( static_cast<float>(object_to_follow->position.y()) );
         camera->setTarget( QVector3D(camera->getPosition().x(), camera->getPosition().y(), z));
@@ -100,7 +94,7 @@ void DrEngine::switchCameras(long new_camera) {
 //######################################################################################################
 QVector3D DrEngine::getCameraPos() {
     if (m_active_camera == 0) {
-        return c_no_camera;
+        return c_default_camera_pos;
     } else if (m_switching_cameras == false) {
         return m_cameras[m_active_camera]->getPosition();
     } else {

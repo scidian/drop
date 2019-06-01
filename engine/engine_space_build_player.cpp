@@ -21,7 +21,7 @@ void DrEngine::assignPlayerControls(DrEngineObject *object, bool has_controls_no
         long camera_key = addCamera(object);
         if (set_active_camera) setActiveCamera(camera_key);
     }
-    setCollisionType(object, Collision_Type::Damage_Enemy);
+    object->setCollisionType(Collision_Type::Damage_Enemy);
     object->lost_control = !has_controls_now;                               // Turn on jump / movement buttons
     cpBodySetVelocityUpdateFunc(object->body, PlayerUpdateVelocity);        // Assign the playerUpdate callback function
 }
