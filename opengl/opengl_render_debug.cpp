@@ -61,7 +61,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 
         // Figure out what color to make the debug shapes
         QColor color = objectDebugColor(object);
-        if (object->health <= c_epsilon) color = Qt::gray;
+        if (object->dying || !object->alive) color = Qt::gray;
         if (!object->doesCollide()) color = color.lighter();
 
         // Set up QPainter
@@ -259,7 +259,7 @@ void OpenGL::drawDebugHealth(QPainter &painter) {
         if (rect().contains( text_coord.toPoint() )) {
             // Health as a QPainterPath
             QPainterPath health;
-            QString hp = Dr::RemoveTrailingDecimals( object->health, 2 );
+            QString hp = Dr::RemoveTrailingDecimals( object->getHealth(), 2 );
             health.addText(text_coord, health_font, hp);
             painter.setBrush( QBrush(color) );
 

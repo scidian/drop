@@ -51,14 +51,13 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
             return cpArbiterIgnore(arb);
     }
 
-    if ( object_a->damage <= c_epsilon) return cpTrue;                              // Object does no damage, exit
     if ( object_a->alive && object_a->dying) return cpTrue;                         // Don't deal damage while dying
     if (!object_a->alive) return cpFalse;                                           // If object a is dead, cancel collision
     if (!object_b->alive) return cpFalse;                                           // If object b is dead, cancel collision
+    if (!object_a->doesDamage()) return cpTrue;                                     // Object does no damage, exit
 
     // Check for dealing damage
-    bool should_damage = false;
-    if (object_a->shouldDamage(object_b->getCollisionType())) should_damage = true;
+    bool should_damage = object_a->shouldDamage(object_b->getCollisionType());
 
     // Check for one way weak point
     if (object_a->one_way == One_Way::Weak_Spot) {                                  // Don't deal damage if something comes at your weak (vulnerable) spot
@@ -71,22 +70,17 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     }
 
     if (should_damage) {
-        if (object_b->health > 0.0) {
-            object_b->health -= object_a->damage;
+        bool killed = object_b->takeDamage( object_a->getDamage(), object_a->hasDeathTouch() );
 
-            // If we killed object, cancel collision
-            if (object_b->health <= c_epsilon) {
-                object_b->health = 0.0;
-                if (object_b->death_delay == 0) return cpFalse;
-            }
+        // If we killed object, cancel collision
+        if (killed && object_b->death_delay == 0) return cpFalse;
 
-            // Add recoil to object if necessary
-            if (object_b->damage_recoil > 0.0 && object_b->body_type == Body_Type::Dynamic) {
-                if (cpBodyIsSleeping(object_b->body))
-                    cpSpaceAddPostStepCallback(cpBodyGetSpace(object_b->body), cpPostStepFunc(BodyAddRecoil), arb, object_b);
-                else
-                    BodyAddRecoil(cpBodyGetSpace(object_b->body), arb, object_b);
-            }
+        // Add recoil to object if necessary and not invincible
+        if (!object_b->isInvincible() && object_b->damage_recoil > 0.0 && object_b->body_type == Body_Type::Dynamic) {
+            if (cpBodyIsSleeping(object_b->body))
+                cpSpaceAddPostStepCallback(cpBodyGetSpace(object_b->body), cpPostStepFunc(BodyAddRecoil), arb, object_b);
+            else
+                BodyAddRecoil(cpBodyGetSpace(object_b->body), arb, object_b);
         }
     }
     return cpTrue;

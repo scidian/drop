@@ -58,10 +58,11 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         ball->jump_count = 1;
         ball->air_jump = false;
         ball->wall_jump = true;
-        ball->health = 200.0;
+        ball->setHealth( 80.0 );
 
-        //ball->ignore_gravity = true;
-        //ball->move_speed_y = 400;
+        ///ball->setDeathTouch(true);
+        ///ball->ignore_gravity = true;
+        ///ball->move_speed_y = 400;
 
 
         // !!!!! #TEMP: demo variables

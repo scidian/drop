@@ -74,7 +74,15 @@ private:
     long        m_active_camera = c_no_camera;      // Set to ID of last camera that followed this object, 0 == no camera
 
     // ***** Object Properties - Health / Damage
-    Collision_Type m_collision_type = Collision_Type::Damage_None;      // Specifies what other types of objects this object can damage
+    Collision_Type  m_collision_type = Collision_Type::Damage_None;     // Specifies which types of objects this object can damage
+    bool            m_invincible = false;                               // When true this object takes no damage nor damage_recoil force, cannot be killed
+    bool            m_death_touch = false;                              // When true kills everything on contact, even unlimited health... but not invincible objects
+    double          m_max_health = 100.0;                               // Maximum object health, c_unlimited (-1) = no maximum
+    double          m_health = 3.0;                                     // Object Health, c_unlimited (-1) = infinite, otherwise should be > 0
+    double          m_damage = 1.0;                                     // Damage caused to other objects of Type m_collision_type
+
+
+
 
 public:
     // ***** Object Info
@@ -87,14 +95,16 @@ public:
 
 
     /// ***** Object Properties - Health / Damage
-    double      max_health = 100.0;                                     // Maximum object health, c_unlimited (-1) = no maximum
-    double      health = 3.0;                                           // Object Health, c_unlimited (-1) = infinite, otherwise should be > 0
-    double      damage = 1.0;                                           // Damage caused to other objects of Type m_collision_type
+
     double      auto_damage = 0.0;                                      // Take x damage per second (can be negative, i.e. add health)
     long        death_delay = 100;                                      // Time it takes for item to die (can't deal damage while dying), in milliseconds
     bool        fade_on_death = true;                                   // If true, object is slowly faded over death_delay time
     long        fade_delay = 750;                                       // Time it takes for item to be removed after death, in milliseconds (0 == remove immediately)
     double      damage_recoil = 200.0;                                  // How much opposite force to apply when receiving damage
+
+
+
+
 
     One_Way     one_way = One_Way::None;        // Set to true if we're using this object as a one way platform
     cpVect      one_way_direction {0, 1};       // Direction of Normal for one way, defaults to Up (i.e. character can pass upwards through the bottom of a block)
@@ -190,9 +200,22 @@ public:
 
     // Object Properties - Health / Damage
     Collision_Type  getCollisionType() { return m_collision_type; }
+    const bool&     isInvincible() { return m_invincible; }
+    const bool&     hasDeathTouch() { return m_death_touch; }
+    const double&   getMaxHealth() { return m_max_health; }
+    const double&   getHealth() { return m_health; }
+    const double&   getDamage() { return m_damage; }
 
     void            setCollisionType(Collision_Type what_should_collide);
+    void            setInvincible(bool invincible) { m_invincible = invincible; }
+    void            setDeathTouch(bool should_have_death_touch) { m_death_touch = should_have_death_touch; }
+    void            setMaxHealth(double new_max_health) { m_max_health = new_max_health; }
+    void            setHealth(double new_health) { m_health = new_health; }
+    void            setDamage(double new_damage) { m_damage = new_damage; }
+
+    bool            doesDamage();
     bool            shouldDamage(Collision_Type check_can_damage);
+    bool            takeDamage(double damage_to_take, bool death_touch = false);
 
 
 

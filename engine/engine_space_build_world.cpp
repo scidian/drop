@@ -113,10 +113,13 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         block->setCollisionType(Collision_Type::Damage_Player);
         block->one_way = One_Way::Pass_Through; block->one_way_direction = cpv(0, 1);                // Let objects pass upwards
 
+        ///block->setInvincible(true);
+        ///block->setDamage(-1);
+
         // Test rotate block
         DrEngineObject *block2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -350, 150, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
         block2->rotate_speed = 2.0;
-        block2->health = 4;
+        block2->setHealth( 4.0 );
         block2->auto_damage = .2;
 
 
@@ -125,8 +128,8 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         block3->setCollisionType(Collision_Type::Damage_Player);
         block3->one_way = One_Way::Weak_Spot;
         block3->one_way_direction = cpv(0, 1);                // Take damage from below only
-        block3->health = 1.0;
-        block3->damage = 1.0;
+        block3->setHealth( 1.0 );
+        block3->setDamage( 1.0 );
 
         // Static line segment shapes for the ground
         this->addLine(Body_Type::Static, QPointF(-1000,   0), QPointF( 2500,   0), c_friction, c_bounce, 1);
