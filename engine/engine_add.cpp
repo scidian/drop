@@ -24,8 +24,8 @@ DrEngineObject* DrEngine::addLine(Body_Type body_type, QPointF p1, QPointF p2, d
     DrEngineObject *line = new DrEngineObject();
 
     // Check for default (-1) or custom friction / bounce settings
-    line->custom_friction = friction;
-    line->custom_bounce =   bounce;
+    line->setCustomFriction(friction);
+    line->setCustomBounce(bounce);
     if (friction < 0) friction = m_friction;
     if (bounce < 0)   bounce = m_bounce;
 
@@ -97,8 +97,8 @@ DrEngineObject* DrEngine::addCircle(Body_Type body_type, long texture_number, do
     DrEngineObject *ball = new DrEngineObject();
 
     // Check for default (-1) or custom friction / bounce settings
-    ball->custom_friction = friction;
-    ball->custom_bounce =   bounce;
+    ball->setCustomFriction(friction);
+    ball->setCustomBounce(bounce);
     if (friction < 0) friction = m_friction;
     if (bounce < 0)   bounce = m_bounce;
 
@@ -148,7 +148,7 @@ DrEngineObject* DrEngine::addCircle(Body_Type body_type, long texture_number, do
     cpShapeSetSensor( shape, !should_collide );
 
     // If we don't want the body to rotate, overwrite the precalculated moment of inertia with infinity
-    ball->can_rotate = can_rotate;
+    ball->setCanRotate( can_rotate );
     if (!can_rotate) cpBodySetMoment( ball->body, static_cast<double>(INFINITY) );
 
     // Turn on object and add it to the list of objects in the current Space
@@ -168,8 +168,8 @@ DrEngineObject* DrEngine::addBlock(Body_Type body_type, long texture_number, dou
     DrEngineObject *block = new DrEngineObject();
 
     // Check for default (-1) or custom friction / bounce settings
-    block->custom_friction = friction;
-    block->custom_bounce =   bounce;
+    block->setCustomFriction(friction);
+    block->setCustomBounce(bounce);
     if (friction < 0) friction = m_friction;
     if (bounce < 0)   bounce = m_bounce;
 
@@ -223,7 +223,7 @@ DrEngineObject* DrEngine::addBlock(Body_Type body_type, long texture_number, dou
 
 
     // If we don't want the body to rotate, overwrite the precalculated moment of inertia with infinity
-    block->can_rotate = can_rotate;
+    block->setCanRotate( can_rotate );
     if (!can_rotate) cpBodySetMoment( block->body, static_cast<double>(INFINITY) );
 
     // Turn on object and add it to the list of objects in the current Space
@@ -244,8 +244,8 @@ DrEngineObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, d
     DrEngineObject *polygon = new DrEngineObject();
 
     // Check for default (-1) or custom friction / bounce settings
-    polygon->custom_friction = friction;
-    polygon->custom_bounce =   bounce;
+    polygon->setCustomFriction(friction);
+    polygon->setCustomBounce(bounce);
     if (friction < 0) friction = m_friction;
     if (bounce < 0)   bounce = m_bounce;
 
@@ -355,7 +355,7 @@ DrEngineObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, d
     }
 
     // If we don't want the body to rotate, overwrite the precalculated moment of inertia with infinity
-    polygon->can_rotate = can_rotate;
+    polygon->setCanRotate( can_rotate );
     if (!can_rotate) cpBodySetMoment( polygon->body, static_cast<double>(INFINITY) );
 
     // Turn on object and add it to the list of objects in the current Space

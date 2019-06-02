@@ -278,7 +278,7 @@ void OpenGL::drawDebugHealth(QPainter &painter) {
 //####################################################################################
 void OpenGL::drawDebugCollisions(QPainter &painter) {
 
-    QPen pen( QBrush(Qt::white), 2.5 * static_cast<double>(m_scale), Qt::SolidLine, Qt::PenCapStyle::RoundCap);
+    QPen pen( QBrush(Qt::red), 2.5 * static_cast<double>(m_scale), Qt::SolidLine, Qt::PenCapStyle::RoundCap);
     painter.setPen( pen );
 
     for (auto object : m_engine->objects) {

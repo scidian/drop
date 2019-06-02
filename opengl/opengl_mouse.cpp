@@ -70,7 +70,7 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
             m_engine->gas_pedal = Pedal::CounterClockwise;
 
     } else if (m_engine->demo_player == Demo_Player::Jump) {
-        if (m_engine->demo_jumper_1->lost_control == false) {
+        if (m_engine->demo_jumper_1->hasLostControl() == false) {
             if (event->button() & Qt::LeftButton) {
                 m_engine->jump_button = true;
             } else if (event->button() & Qt::RightButton) {

@@ -62,8 +62,18 @@ extern QString      g_info;
 //############################
 class DrEngineObject
 {
+
+public:
+    // ***** Object Body and Shapes
+    cpBody             *body;                   // Physical Body of object
+    Body_Type           body_type;              // Body_Type
+
+    QVector<cpShape*>   shapes;                 // Collision Shapes of object
+    ShapeMap            shape_type;             // Shape Types of Shapes of Object
+
+
 private:
-    // ***** Object Properties - Basic
+    // ***** Object Basic Settings
     bool        m_does_collide = true;              // Set to false to have this object not collide with anything
     long        m_texture_number;                   // Reference to which texture to use from Engine->EngineTexture map
 
@@ -75,77 +85,70 @@ private:
     // ***** Object Properties - Camera
     long        m_active_camera = c_no_camera;      // Set to ID of last camera that followed this object, 0 == no camera
 
+    // ***** Object Properties - Bounce / Friction
+    double      m_custom_friction = c_friction;     // Defaults to c_friction (-1) if this item uses global m_friction, otherwise stores custom friction
+    double      m_custom_bounce = c_bounce;         // Defaults to c_bounce (-1) if this item uses global m_bounce, otherwise stores custom bounce
+
+    // ***** Object Properties - One Way
+    One_Way     m_one_way = One_Way::None;          // Set one way collision type desired (None, Pass Through, Weak_Spot)
+    cpVect      m_one_way_direction {0, 1};         // Direction for one way collision, defaults to Up (i.e. objects can pass upwards through the bottom of a block)
+
     // ***** Object Properties - Health / Damage
     Collision_Type  m_collision_type = Collision_Type::Damage_None;     // Specifies which types of objects this object can damage
     bool            m_invincible = false;                               // When true this object takes no damage nor damage_recoil force, cannot be killed
-    bool            m_death_touch = false;                              // When true kills everything on contact, even unlimited health... but not invincible objects
+    bool            m_death_touch = false;                              // When true kills everything on contact, even unlimited health...but not invincible objects
     double          m_max_health = 100.0;                               // Maximum object health, c_no_max_health (-1) = no maximum
     double          m_health = 3.0;                                     // Object Health, c_unlimited_health (-1) = infinite, otherwise should be > 0
     double          m_damage = 1.0;                                     // Damage caused to other objects of Type m_collision_type
-    double          m_auto_damage = 0.0;        // Take x damage per second (can be negative, i.e. add health)
-    long            m_death_delay = 100;        // Time it takes for item to die (can't deal damage while dying), in milliseconds
-    bool            m_fade_on_death = true;     // If true, object is slowly faded over death_delay time
-    long            m_fade_delay = 750;         // Time it takes for item to be removed after death, in milliseconds (0 == remove immediately)
-    double          m_damage_recoil = 200.0;    // How much opposite force to apply when receiving damage
+    double          m_auto_damage = 0.0;            // Take x damage per second (can be negative, i.e. add health)
+    long            m_death_delay = 100;            // Time it takes for item to die (can't deal damage while dying), in milliseconds
+    bool            m_fade_on_death = true;         // If true, object is slowly faded over death_delay time
+    long            m_fade_delay = 750;             // Time it takes for item to be removed after death, in milliseconds (0 == remove immediately)
+    double          m_damage_recoil = 200.0;        // How much opposite force to apply when receiving damage
 
-    // ***** Object Properties - One Way
-    One_Way     m_one_way = One_Way::None;      // Set one way collision type desired (None, Pass Through, Weak_Spot)
-    cpVect      m_one_way_direction {0, 1};     // Direction of Normal for one way, defaults to Up (i.e. character can pass upwards through the bottom of a block)
+    // ***** Object Movement - Rotation
+    double          m_rotate_speed =  0.0;          // Speed at which object should spin when Motor Rotate (gas pedal) is pressed
+
+
+
+    // ***** Object Movemnt - PlayerUpdateVelocity Callback Func
+    bool        m_key_controls = false;             // Set to true when object is a "player" and should respond to key / button / mouse events
+                                                    //      (players are cpBody* that have been assigned the cpBodyUpdateVelocityFunc PlayerUpdateVelocity callback)
+    bool        m_lost_control = false;             // Set to true when players should not have button control but have been assigned key_controls
+
+    double      m_max_speed_x =  1000.0;            // Maximum speed x of object
+    double      m_max_speed_y =  1000.0;            // Maximum speed y of object
+
+    double      m_forced_speed_x =  0.0;            // Forced move speed x of object
+    double      m_forced_speed_y =  0.0;            // Forced move speed y of object
+
+    double      m_move_speed_x =  400.0;            // Movement speed x
+    double      m_move_speed_y =    0.0;            // Movement speed y
+
+    double      m_jump_force_x =    0.0;            // Jump force x
+    double      m_jump_force_y =  250.0;            // Jump force y
+    long        m_jump_timeout =  800.0;            // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
+    int         m_jump_count =        0;            // How many jumps this player is allowed, -1 = c_unlimited_jump, 0 = cannot jump, 1 = 1, 2 = 2, etc
+
+    double      m_air_drag =       0.50;            // Affects acceleration and decceleration in air (0 to 1+)
+    double      m_ground_drag =    0.25;            // Affects acceleration and decceleration on the ground (0 to 1+)
+    double      m_rotate_drag =    0.25;            // Affects rotation acceleration and decceleration (0 to 1+)
+
+    bool        m_air_jump = true;                  // Can this player jump while in the air (even if only has 1 jump, ex: fell off platform)
+    bool        m_wall_jump = false;                // Can this player jump off of walls?
+
+    bool        m_can_rotate = true;                // To be set during object creation, moment of inertia is set to infinity to stop rotation
+    bool        m_ignore_gravity = false;           // If turned to true, this object no longer is affected by gravity
+
+
+
 
 
 
 public:
-    // ***** Object Info
-    cpBody             *body;                   // Physical Body of object
-    Body_Type           body_type;              // Body_Type
-
-    QVector<cpShape*>   shapes;                 // Collision Shapes of object
-    ShapeMap            shape_type;             // Shape Types of Shapes of Object
-
-
-
-
-    // ***** Object Properties - Bounce / Friction
-    double      custom_friction = c_friction;   // Defaults to c_friction (-1) if this item uses global m_friction, otherwise stores custom friction
-    double      custom_bounce = c_bounce;       // Defaults to c_bounce (-1) if this item uses global m_bounce, otherwise stores custom bounce
-
-    // ***** Object Properties - Movement
-    double      rotate_speed =  0.0;            // Speed at which object should spin when Motor Rotate (gas pedal) is pressed
-
-    // ***** Object interaction                 // These properties are used by objects that have been attached to PlayerUpdateVelocity
-    bool        key_controls = false;           // Set to true when object is a "player" and should respond to key / button / mouse events
-                                                //      (players are cpBody* that have been assigned the cpBodyUpdateVelocityFunc PlayerUpdateVelocity callback)
-    bool        lost_control = false;           // Set to true when players should not have button control but have been assigned key_controls
-
-
-    double      max_speed_x =  1000.0;          // Maximum speed x of object
-    double      max_speed_y =  1000.0;          // Maximum speed y of object
-
-    double      forced_speed_x =  0.0;          // Forced move speed x of object
-    double      forced_speed_y =  0.0;          // Forced move speed y of object
-
-    double      move_speed_x =  400.0;          // Movement speed x
-    double      move_speed_y =    0.0;          // Movement speed y
-
-    double      jump_force_x =    0.0;          // Jump force x
-    double      jump_force_y =  250.0;          // Jump force y
-    double      jump_timeout =  800.0;          // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
-    int         jump_count =        0;          // How many jumps this player is allowed, c_unlimited_jump (-1) = unlimited, 0 = cannot jump, 1 = 1, 2 = 2, etc
-
-    bool        can_rotate = true;              // To be set during object creation, moment of inertia is set to infinity to stop rotation
-    bool        ignore_gravity = false;         // If turned to true, this object no longer is affected by gravity
-
-    double      air_drag =       0.50;          // Affects acceleration and decceleration in air (0 to 1+)
-    double      ground_drag =    0.25;          // Affects acceleration and decceleration on the ground (0 to 1+)
-    double      rotate_drag =    0.25;          // Affects rotation acceleration and decceleration (0 to 1+)
-
-    bool        air_jump = true;                // Can this player jump while in the air (even if only has 1 jump, ex: fell off platform)
-    bool        wall_jump = false;              // Can this player jump off of walls?
-
-
     // ***** Updated by Engine:
-    bool        should_process = true;          // True while object exists in Space
-    bool        has_been_processed = false;     // Set to true after an initial updateSpace call has been ran once while the object was in the Space
+    bool        should_process = true;              // True while object exists in Space
+    bool        has_been_processed = false;         // Set to true after an initial updateSpace call has been ran once while the object was in the Space
 
     int         remaining_jumps = 0;                    // How many jumps player has left before it must hit ground before it can jump again
     double      remaining_boost = 0.0;                  // Used by Engine Update to process Jump Timeout boost
@@ -173,7 +176,7 @@ public:
     DrEngineObject() {}
 
 
-    // Object Properties - Basic
+    // Object Basic Settings
     const bool&     doesCollide() { return m_does_collide; }
     const long&     getTextureNumber() { return m_texture_number; }
     const float&    getScaleX() { return m_scale_x; }
@@ -195,6 +198,20 @@ public:
     const long&     getActiveCameraKey() { return m_active_camera; }
     bool            hasActiveCamera() { return (m_active_camera == c_no_camera) ? false : true; }
     void            setActiveCameraKey(const long& new_camera_key) { m_active_camera = new_camera_key; }
+
+    // Object Properties - Bounce / Friction
+    const double&   getCustomFriction() { return m_custom_friction; }
+    const double&   getCustomBounce() { return m_custom_bounce; }
+    void            setCustomFriction(double new_friction) { m_custom_friction = new_friction; }
+    void            setCustomBounce(double new_bounce) { m_custom_bounce = new_bounce; }
+
+    // Object Properties - One Way
+    One_Way     getOneWay() { return m_one_way; }
+    cpVect      getOneWayDirection() { return m_one_way_direction; }
+
+    void        setOneWay(One_Way one_way_type) { m_one_way = one_way_type; }
+    void        setOneWayDirection(cpVect direction) { m_one_way_direction = direction; }
+    void        setOneWayDirection(QPointF direction) { m_one_way_direction = cpv(direction.x(), direction.y()); }
 
     // Object Properties - Health / Damage
     Collision_Type  getCollisionType() { return m_collision_type; }
@@ -225,16 +242,52 @@ public:
     bool            shouldDamage(Collision_Type check_can_damage);
     bool            takeDamage(double damage_to_take, bool death_touch = false);
 
-    // Object Properties - One Way
-    One_Way     getOneWay() { return m_one_way; }
-    cpVect      getOneWayDirection() { return m_one_way_direction; }
+    // Object Movement - Rotation
+    const double&   getRotateSpeed() { return m_rotate_speed; }
+    void            setRotateSpeed(double new_rotate_speed) { m_rotate_speed = new_rotate_speed; }
 
-    void        setOneWay(One_Way one_way_type) { m_one_way = one_way_type; }
-    void        setOneWayDirection(cpVect direction) { m_one_way_direction = direction; }
-    void        setOneWayDirection(QPointF direction) { m_one_way_direction = cpv(direction.x(), direction.y()); }
+    // Object Movemnt - PlayerUpdateVelocity Callback Func
+    const bool&     hasKeyControls() { return m_key_controls; }
+    const bool&     hasLostControl() { return m_lost_control; }
+    const double&   getMaxSpeedX() { return m_max_speed_x; }
+    const double&   getMaxSpeedY() { return m_max_speed_y; }
+    const double&   getForcedSpeedX() { return m_forced_speed_x; }
+    const double&   getForcedSpeedY() { return m_forced_speed_y; }
+    const double&   getMoveSpeedX() { return m_move_speed_x; }
+    const double&   getMoveSpeedY() { return m_move_speed_y; }
+    const double&   getJumpForceX() { return m_jump_force_x; }
+    const double&   getJumpForceY() { return m_jump_force_y; }
+    const long&     getJumpTimeout() { return m_jump_timeout; }
+    const int&      getJumpCount() { return m_jump_count; }
 
-    //
+    const double&   getAirDrag() { return m_air_drag; }
+    const double&   getGroundDrag() { return m_ground_drag; }
+    const double&   getRotateDrag() { return m_rotate_drag; }
+    const bool&     canAirJump() { return m_air_jump; }
+    const bool&     canWallJump() { return m_wall_jump; }
+    const bool&     canRotate() { return m_can_rotate; }
+    const bool&     ignoreGravity() { return m_ignore_gravity; }
 
+    void            setKeyControls(bool has_key_controls) { m_key_controls = has_key_controls; }
+    void            setLostControl(bool lost_control) { m_lost_control = lost_control; }
+    void            setMaxSpeedX(double new_max_speed_x) { m_max_speed_x = new_max_speed_x; }
+    void            setMaxSpeedY(double new_max_speed_y) { m_max_speed_y = new_max_speed_y; }
+    void            setForcedSpeedX(double new_forced_speed_x) { m_max_speed_x = new_forced_speed_x; }
+    void            setForcedSpeedY(double new_forced_speed_y) { m_max_speed_y = new_forced_speed_y; }
+    void            setMoveSpeedX(double new_move_speed_x) { m_max_speed_x = new_move_speed_x; }
+    void            setMoveSpeedY(double new_move_speed_y) { m_max_speed_y = new_move_speed_y; }
+    void            setJumpForceX(double new_jump_force_x) { m_jump_force_x = new_jump_force_x; }
+    void            setJumpForceY(double new_jump_force_y) { m_jump_force_y = new_jump_force_y; }
+    void            setJumpTimeout(long new_jump_timeout) { m_jump_timeout = new_jump_timeout; }
+    void            setJumpCount(int new_jump_count) { m_jump_count = new_jump_count; }
+
+    void            setAirDrag(double new_air_drag) { m_air_drag = new_air_drag; }
+    void            setGroundDrag(double new_ground_drag) { m_ground_drag = new_ground_drag; }
+    void            setRotateDrag(double new_rotate_drag) { m_rotate_drag = new_rotate_drag; }
+    void            setCanAirJump(bool can_air_jump) { m_air_jump = can_air_jump; }
+    void            setCanWallJump(bool can_wall_jump) { m_wall_jump = can_wall_jump; }
+    void            setCanRotate(bool can_rotate) { m_can_rotate = can_rotate; }
+    void            setIgnoreGravity(bool ignore_gravity) { m_ignore_gravity = ignore_gravity; }
 
 };
 

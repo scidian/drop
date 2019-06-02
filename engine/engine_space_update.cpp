@@ -77,18 +77,18 @@ void DrEngine::updateSpaceHelper() {
 
         // **** Check that any object with custom PlayerUpdateVelocity callback is awake so it can access key / button events
         bool sleeping = cpBodyIsSleeping(object->body);
-        if (object->key_controls && !object->lost_control && sleeping) {
+        if (object->hasKeyControls() && !object->hasLostControl() && sleeping) {
             cpBodyActivate(object->body);
         }
 
 //        // ***** Update global friction and bounce to all objects if globals have changed (possibly due to Gameplay Action)
-//        if (qFuzzyCompare(object->custom_friction, c_friction) == false) {
+//        if (qFuzzyCompare(object->getCustomFriction(), c_friction) == false) {
 //            for (auto shape : object->shapes) {
 //                cpFloat friction = cpShapeGetFriction( shape );
 //                if (qFuzzyCompare(friction, m_friction) == false) cpShapeSetFriction( shape, m_friction );
 //            }
 //        }
-//        if (qFuzzyCompare(object->custom_bounce, c_bounce) == false) {
+//        if (qFuzzyCompare(object->getCustomBounce(), c_bounce) == false) {
 //            for (auto shape : object->shapes) {
 //                cpFloat bounce = cpShapeGetElasticity( shape );
 //                if (qFuzzyCompare(bounce, m_bounce) == false) cpShapeSetElasticity( shape, m_bounce );
@@ -101,11 +101,11 @@ void DrEngine::updateSpaceHelper() {
 
             // ***** Process Button Presses
             // If is a wheel, apply gas pedal
-            if (qFuzzyCompare(object->rotate_speed, 0) == false) {
+            if (qFuzzyCompare(object->getRotateSpeed(), 0) == false) {
                 switch (gas_pedal) {
-                    case Pedal::Clockwise:          cpBodySetAngularVelocity( object->body, -object->rotate_speed );    break;
-                    case Pedal::CounterClockwise:   cpBodySetAngularVelocity( object->body,  object->rotate_speed );    break;
-                    case Pedal::Brake:              cpBodySetAngularVelocity( object->body,  0 );                       break;
+                    case Pedal::Clockwise:          cpBodySetAngularVelocity( object->body, -object->getRotateSpeed() );    break;
+                    case Pedal::CounterClockwise:   cpBodySetAngularVelocity( object->body,  object->getRotateSpeed() );    break;
+                    case Pedal::Brake:              cpBodySetAngularVelocity( object->body,  0 );                           break;
                     case Pedal::None:               break;
                 }
             }

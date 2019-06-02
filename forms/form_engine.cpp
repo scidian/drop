@@ -274,13 +274,13 @@ void FormEngine::on_pushCar_clicked() {     loadDemo(m_engine->demo_space,  Demo
 void FormEngine::on_pushJump_clicked() {    loadDemo(m_engine->demo_space,  Demo_Player::Jump ); }
 
 void FormEngine::on_pushPlay1_clicked() {
-    m_engine->demo_jumper_1->lost_control = false;
-    m_engine->demo_jumper_2->lost_control = true;
+    m_engine->demo_jumper_1->setLostControl(false);
+    m_engine->demo_jumper_2->setLostControl(true);
     m_engine->switchCameras(m_engine->demo_jumper_1->getActiveCameraKey());
 }
 void FormEngine::on_pushPlay2_clicked() {
-    m_engine->demo_jumper_1->lost_control = true;
-    m_engine->demo_jumper_2->lost_control = false;
+    m_engine->demo_jumper_1->setLostControl(true);
+    m_engine->demo_jumper_2->setLostControl(false);
     m_engine->switchCameras(m_engine->demo_jumper_2->getActiveCameraKey());
 }
 

@@ -21,9 +21,9 @@ void DrEngine::assignPlayerControls(DrEngineObject *object, bool has_controls_no
         long camera_key = addCamera(object);
         if (set_active_camera) setActiveCamera(camera_key);
     }
-    object->setCollisionType(Collision_Type::Damage_Enemy);
-    object->key_controls = true;
-    object->lost_control = !has_controls_now;                               // Turn on jump / movement buttons
+    object->setCollisionType( Collision_Type::Damage_Enemy );
+    object->setKeyControls( true);
+    object->setLostControl( !has_controls_now );                            // Turn on jump / movement buttons
     cpBodySetVelocityUpdateFunc(object->body, PlayerUpdateVelocity);        // Assign the playerUpdate callback function
 }
 
@@ -47,22 +47,22 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         DrEngineObject *ball2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 800,  50, 0, c_norotate, c_scale1x1, c_opaque,
                                                 ball_radius, c_center, 1, 0.5, QPointF( 0, 0), true, true);
         assignPlayerControls(ball2, false, true, false);
-        ball2->jump_count = -1;
-        ball2->rotate_speed = 20;
+        ball2->setJumpCount( c_unlimited_jump );
+        ball2->setRotateSpeed( 20.0 );
 
 
 
         DrEngineObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 200,  50, 0, c_norotate, c_scale1x1, c_opaque,
                                                ball_radius, c_center, 0.25, 0.5, QPointF( 0, 0), true, false);
         assignPlayerControls(ball, true, true, true);
-        ball->jump_count = 1;
-        ball->air_jump = false;
-        ball->wall_jump = true;
+        ball->setJumpCount( 1 );
+        ball->setCanAirJump( false );
+        ball->setCanWallJump( true );
         ball->setHealth( 80.0 );
 
-        ///ball->setDeathTouch(true);
-        ///ball->ignore_gravity = true;
-        ///ball->move_speed_y = 400;
+        ///ball->setDeathTouch( true );
+        ///ball->setIgnoreGravity( true );
+        ///ball->setMoveSpeedY( 400 );
 
 
         // !!!!! #TEMP: demo variables
@@ -117,9 +117,9 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
                                                  wheel_radius, c_center, 3, 0.7, QPointF(0, 0));
         DrEngineObject *wheel3 = this->addCircle(Body_Type::Dynamic, Test_Textures::Wheel,  90,  45, .01, c_norotate, c_scale1x1, c_opaque,
                                                  wheel_radius, c_center, 3, 0.7, QPointF(0, 0));
-        wheel1->rotate_speed = 110;
-        wheel2->rotate_speed =  60;
-        wheel3->rotate_speed =  90;
+        wheel1->setRotateSpeed( 110.0 );
+        wheel2->setRotateSpeed(  60.0 );
+        wheel3->setRotateSpeed(  90.0 );
         DrEngineObject *spare1 = this->addCircle(Body_Type::Dynamic, Test_Textures::Spare, -11,  49, .01, c_norotate, c_scale1x1, c_opaque,
                                                  spare_radius, c_center, 4, 0.7, QPointF(0, 0));
 

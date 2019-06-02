@@ -118,7 +118,7 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
 
         // Test rotate block
         DrEngineObject *block2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -350, 150, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
-        block2->rotate_speed = 2.0;
+        block2->setRotateSpeed( 2.0 );
         block2->setHealth( 4.0 );
         block2->setAutoDamage( 0.2 );
 

@@ -60,7 +60,7 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     // ***** Get Keys - If player is still active get keyboard status
     int key_y = 0,      key_x = 0,      key_jump = 0;
     int key_cw = 0,     key_ccw = 0;
-    if (!object->lost_control) {
+    if (!object->hasLostControl()) {
         key_x =     g_keyboard_x;
         key_y =     g_keyboard_y;
         key_jump =  g_jump_button;
@@ -74,12 +74,12 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(SelectPlayerGroundNormal), &ground);
 
     // Figure out if any collision points count as ground or as wall
-    object->on_wall =  ground.dot_product <= 0.50 && object->wall_jump;         //  0.50 == approx up to ~30 degrees roof (slightly overhanging)
+    object->on_wall =  ground.dot_product <= 0.50 && object->canWallJump();     //  0.50 == approx up to ~30 degrees roof (slightly overhanging)
     object->grounded = ground.dot_product < -0.30;                              // -0.30 == approx up to ~20 degrees slab (slightly less than vertical)
     if (object->grounded || object->on_wall) {
         object->last_touched_ground_normal = ground.normal;
         object->last_touched_ground_dot = ground.dot_product;
-        object->remaining_jumps = object->jump_count;
+        object->remaining_jumps = object->getJumpCount();
         object->remaining_boost = 0.0;
     }
 
@@ -95,8 +95,8 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     if (object->remaining_boost > 0) object->remaining_boost -= dt;
     if (key_jump && object->remaining_boost > 0.0) {
         cpVect  player_v = cpBodyGetVelocity( object->body );
-        cpFloat jump_vx = object->jump_force_x * 2.0 * dt;
-        cpFloat jump_vy = object->jump_force_y * 2.0 * dt;
+        cpFloat jump_vx = object->getJumpForceX() * 2.0 * dt;
+        cpFloat jump_vy = object->getJumpForceY() * 2.0 * dt;
         player_v = cpvadd(player_v, cpv(jump_vx, jump_vy));
         cpBodySetVelocity( object->body, player_v );
     }
@@ -106,9 +106,9 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
         if ((object->grounded) ||                                                                   // Jump from ground
             (object->remaining_wall_time > 0.0 ) ||                                                 // Jump from wall
             ///(object->on_wall && object->remaining_jumps > 0) ||                                  // Jump from wall if jumps remaining
-            (object->air_jump && object->remaining_jumps > 0) ||                                    // Jump from air if jumps remaining
-            (object->remaining_jumps > 0 && object->jump_count != object->remaining_jumps) ||       // Already jumped once from ground and jumps remaining
-            (object->jump_count == -1) ) {                                                          // Unlimited jumping
+            (object->canAirJump() && object->remaining_jumps > 0) ||                                // Jump from air if jumps remaining
+            (object->remaining_jumps > 0 && object->getJumpCount() != object->remaining_jumps) ||   // Already jumped once from ground and jumps remaining
+            (object->getJumpCount() == -1) ) {                                                      // Unlimited jumping
 
             // Mark current jump button press as processed
             object->jump_state = Jump_State::Jumped;
@@ -123,14 +123,14 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
                 if (angle >  180) angle -= 360;
                 angle /= 3;
 
-                QPointF wall_jump_force = QTransform().rotate(angle).map( QPointF(object->jump_force_x, object->jump_force_y) );
+                QPointF wall_jump_force = QTransform().rotate(angle).map( QPointF(object->getJumpForceX(), object->getJumpForceY()) );
                 jump_vx = wall_jump_force.x() * 2.0;
                 jump_vy = wall_jump_force.y() * 2.0;
 
             // Calculate ground jump forces
             } else {
-                jump_vx = object->jump_force_x * 2.0;   ///cpfsqrt(2.0 * object->jump_force_x * -gravity.x);
-                jump_vy = object->jump_force_y * 2.0;   ///cpfsqrt(2.0 * object->jump_force_y * -gravity.y);
+                jump_vx = object->getJumpForceX() * 2.0;   ///cpfsqrt(2.0 * object->getJumpForceX() * -gravity.x);
+                jump_vy = object->getJumpForceY() * 2.0;   ///cpfsqrt(2.0 * object->getJumpForceY() * -gravity.y);
             }
 
             // Starting a new jump so partially cancel any previous jump forces
@@ -173,7 +173,7 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
             // Reset wall_timeout, jump timeout boost and subtract remaining jumps until ground
             object->remaining_wall_time = 0.0;
-            object->remaining_boost = object->jump_timeout / 1000;
+            object->remaining_boost = static_cast<double>(object->getJumpTimeout()) / 1000.0;
             object->remaining_jumps--;
             if (object->remaining_jumps < -1) object->remaining_jumps = -1;
         }
@@ -188,8 +188,8 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     cpVect  body_v = cpBodyGetVelocity( object->body );
 
     // Calculate target velocity, includes any Forced Movement
-    cpFloat target_vx = (object->move_speed_x * key_x) + object->forced_speed_x;
-    cpFloat target_vy = (object->move_speed_y * key_y) + object->forced_speed_y;
+    cpFloat target_vx = (object->getMoveSpeedX() * key_x) + object->getForcedSpeedX();
+    cpFloat target_vy = (object->getMoveSpeedY() * key_y) + object->getForcedSpeedY();
 
     // Local Constants
     constexpr double c_buffer =      0.001;
@@ -197,48 +197,48 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     constexpr double c_drag_air =    0.005;
     constexpr double c_drag_rotate = 0.025;
 
-    double air_accel_x =    object->move_speed_x / (object->air_drag + c_buffer);
-    double air_accel_y =    object->move_speed_y / (object->air_drag + c_buffer);
-    double ground_accel_x = object->move_speed_x / (object->ground_drag + c_buffer);
-    double ground_accel_y = object->move_speed_y / (object->ground_drag + c_buffer);
+    double air_accel_x =    object->getMoveSpeedX() / (object->getAirDrag() + c_buffer);
+    double air_accel_y =    object->getMoveSpeedY() / (object->getAirDrag() + c_buffer);
+    double ground_accel_x = object->getMoveSpeedX() / (object->getGroundDrag() + c_buffer);
+    double ground_accel_y = object->getMoveSpeedY() / (object->getGroundDrag() + c_buffer);
 
     if (!object->grounded && !object->on_wall) {
 
         if ((qFuzzyCompare(body_v.x, 0) == false && qFuzzyCompare(target_vx, 0) == false) ||
             (body_v.x <= 0 && target_vx > 0) || (body_v.x >= 0 && target_vx < 0))
                 body_v.x = cpflerpconst( body_v.x, target_vx, air_accel_x * dt);
-        else    body_v.x = cpflerpconst( body_v.x, 0, object->air_drag / c_drag_air * dt);
+        else    body_v.x = cpflerpconst( body_v.x, 0, object->getAirDrag() / c_drag_air * dt);
 
         if ((qFuzzyCompare(body_v.y, 0) == false && qFuzzyCompare(target_vy, 0) == false) ||
             (body_v.y <= 0 && target_vy > 0) || (body_v.y >= 0 && target_vy < 0))
                 body_v.y = cpflerpconst( body_v.y, target_vy, air_accel_y * dt);
-        else    body_v.y = cpflerpconst( body_v.y, 0, object->air_drag / c_drag_air * dt);
+        else    body_v.y = cpflerpconst( body_v.y, 0, object->getAirDrag() / c_drag_air * dt);
 
     } else {
 
         if (qFuzzyCompare(target_vx, 0) == false)
                 body_v.x = cpflerpconst( body_v.x, target_vx, ground_accel_x * dt);
-        else    body_v.x = cpflerpconst( body_v.x, target_vx, object->ground_drag / c_drag_ground * dt);
+        else    body_v.x = cpflerpconst( body_v.x, target_vx, object->getGroundDrag() / c_drag_ground * dt);
 
         if (qFuzzyCompare(target_vy, 0) == false)
                 body_v.y = cpflerpconst( body_v.y, target_vy, ground_accel_y * dt);
-        else    body_v.y = cpflerpconst( body_v.y, target_vy, object->ground_drag / c_drag_ground * dt);
+        else    body_v.y = cpflerpconst( body_v.y, target_vy, object->getGroundDrag() / c_drag_ground * dt);
     }
 
 
     // ***** Rotation drag
     double body_r = cpBodyGetAngularVelocity( body );
-    body_r = cpflerpconst( body_r, 0, object->rotate_drag / c_drag_rotate * dt);
+    body_r = cpflerpconst( body_r, 0, object->getRotateDrag() / c_drag_rotate * dt);
     cpBodySetAngularVelocity( body, body_r );
 
 
     // ***** Max Speed - Limit Velocity
-    body_v.x = cpfclamp(body_v.x, -object->max_speed_x, object->max_speed_x);
-    body_v.y = cpfclamp(body_v.y, -object->max_speed_y, object->max_speed_y);
+    body_v.x = cpfclamp(body_v.x, -object->getMaxSpeedX(), object->getMaxSpeedX());
+    body_v.y = cpfclamp(body_v.y, -object->getMaxSpeedY(), object->getMaxSpeedY());
     cpBodySetVelocity( object->body, body_v );
 
     // ***** Update Velocity - NOTE: MUST CALL actual Update Velocity function some time during this callback!
-    if (object->ignore_gravity)
+    if (object->ignoreGravity())
         cpBodyUpdateVelocityNoGravity(body, gravity, damping, dt);
     else
         cpBodyUpdateVelocity(body, gravity, damping, dt);
