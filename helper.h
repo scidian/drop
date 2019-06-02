@@ -60,6 +60,7 @@ bool        IsSquare(double check_angle);
 // String Functions
 int         CheckFontWidth(QFont font, QString text_to_check);
 QString     FitStringToWidth(QFont font, QString text_to_check, int max_width = 80, bool use_dots = true);
+QString     StringFromBool(bool boolean);
 
 // User Interaction
 void        ShowErrorMessage(QString function_name, QString error_message);

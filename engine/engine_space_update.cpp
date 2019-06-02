@@ -114,8 +114,8 @@ void DrEngine::updateSpaceHelper() {
 
         // ***** Auto Damage
         if (object->getHealth() > c_epsilon) {
-            if (object->getAutoDamage() < c_epsilon || object->getAutoDamage() > c_epsilon) {
-                object->takeDamage( object->getAutoDamage() * (object->getTimeSinceLastUpdate() / 1000.0) );
+            if (object->getAutoDamage() < -c_epsilon || object->getAutoDamage() > c_epsilon) {
+                object->takeDamage( object->getAutoDamage() * (object->getTimeSinceLastUpdate() / 1000.0), false );
             }
         }
 

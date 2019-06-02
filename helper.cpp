@@ -138,6 +138,8 @@ QString FitStringToWidth(QFont font, QString text_to_check, int max_width, bool 
     return text;
 }
 
+QString StringFromBool(bool boolean) { return boolean? "True" : "False"; }
+
 
 //####################################################################################
 //##        Used to show a modal error message

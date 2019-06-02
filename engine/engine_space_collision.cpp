@@ -51,6 +51,15 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
             return cpArbiterIgnore(arb);
     }
 
+    return cpTrue;
+}
+
+
+extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
+    CP_ARBITER_GET_SHAPES(arb, a, b);
+    DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
+    DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
+
     if ( object_a->isAlive() && object_a->isDying()) return cpTrue;                     // Don't deal damage while dying
     if (!object_a->isAlive()) return cpFalse;                                           // If object a is dead, cancel collision
     if (!object_b->isAlive()) return cpFalse;                                           // If object b is dead, cancel collision
@@ -69,8 +78,11 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
             should_damage = false;
     }
 
+    if (Dr::MillisecondsElapsed(object_b->getDamageTimer()) < object_b->getDamageDelay())
+        should_damage = false;
+
     if (should_damage) {
-        bool killed = object_b->takeDamage( object_a->getDamage(), object_a->hasDeathTouch() );
+        bool killed = object_b->takeDamage( object_a->getDamage(), true, object_a->hasDeathTouch() );
 
         // If we killed object and object wants instant death, cancel collision
         if (killed && object_b->getDeathDelay() == 0) return cpFalse;
@@ -83,17 +95,6 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
                 BodyAddRecoil(cpBodyGetSpace(object_b->body), arb, object_b);
         }
     }
-    return cpTrue;
-}
-
-
-extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
-    CP_ARBITER_GET_SHAPES(arb, a, b);
-    DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
-    ///DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
-
-    if (!object_a->isAlive()) return cpFalse;                                           // If object is dead, cancel collision
-
     return cpTrue;
 }
 

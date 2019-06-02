@@ -97,12 +97,13 @@ private:
     cpVect          m_one_way_direction {0, 1};     // Direction for one way collision, defaults to Up (i.e. objects can pass upwards through the bottom of a block)
 
     // ***** Object Properties - Health / Damage
-    Collision_Type  m_collision_type = Collision_Type::Damage_None;     // Specifies which types of objects this object can damage
-    bool            m_invincible = false;                               // When true this object takes no damage nor damage_recoil force, cannot be killed
-    bool            m_death_touch = false;                              // When true kills everything on contact, even unlimited health...but not invincible objects
-    double          m_max_health = 100.0;                               // Maximum object health, c_no_max_health (-1) = no maximum
-    double          m_health = 3.0;                                     // Object Health, c_unlimited_health (-1) = infinite, otherwise should be > 0
-    double          m_damage = 1.0;                                     // Damage caused to other objects of Type m_collision_type
+    Collision_Type  m_collision_type = Collision_Type::Damage_None; // Specifies which types of objects this object can damage
+    bool            m_invincible = false;                           // When true this object takes no damage nor damage_recoil force, cannot be killed
+    bool            m_death_touch = false;                          // When true kills everything on contact, even unlimited health...but not invincible objects
+    double          m_max_health = 100.0;                           // Maximum object health, c_no_max_health (-1) = no maximum
+    double          m_health = 3.0;                                 // Object Health, c_unlimited_health (-1) = infinite, otherwise should be > 0
+    double          m_damage = 1.0;                                 // Damage caused to other objects of Type m_collision_type
+    long            m_damage_delay = 500;                           // Minimum time in milliseconds that must pass between receiving damage
     double          m_auto_damage = 0.0;            // Take x damage per second (can be negative, i.e. add health)
     long            m_death_delay = 100;            // Time it takes for item to die (can't deal damage while dying), in milliseconds
     bool            m_fade_on_death = true;         // If true, object is slowly faded over death_delay time
@@ -128,8 +129,8 @@ private:
 
     double          m_jump_force_x =    0.0;        // Jump force x
     double          m_jump_force_y =  250.0;        // Jump force y
-    long            m_jump_timeout =  800.0;        // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
-    int             m_jump_count =        0;        // How many jumps this player is allowed, -1 = c_unlimited_jump, 0 = cannot jump, 1 = 1, 2 = 2, etc
+    long            m_jump_timeout =  800;          // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
+    int             m_jump_count =      0;          // How many jumps this player is allowed, -1 = c_unlimited_jump, 0 = cannot jump, 1 = 1, 2 = 2, etc
 
     double          m_air_drag =       0.50;        // Affects acceleration and decceleration in air (0 to 1+)
     double          m_ground_drag =    0.25;        // Affects acceleration and decceleration on the ground (0 to 1+)
@@ -162,6 +163,7 @@ private:
     bool        m_dying = false;                            // When health turns to zero, dying becomes true for death_delay time, then alive becomes false
     bool        m_alive = true;                             // After item has been dying for death_delay time, alive becomes false, then fades for fade_delay time
 
+    DrTime      m_damage_timer = Clock::now();              // Used to track last time this object was damaged to implement m_damage_delay
     DrTime      m_death_timer =  Clock::now();              // Used to incorporate death_delay for object dying
     DrTime      m_fade_timer =   Clock::now();              // Used to incorporate fade_delay for object fade / removal
     DrTime      m_update_timer = Clock::now();              // Used to keep track of time passed since last object update
@@ -220,6 +222,7 @@ public:
     const double&   getMaxHealth() { return m_max_health; }
     const double&   getHealth() { return m_health; }
     const double&   getDamage() { return m_damage; }
+    const long&     getDamageDelay() { return m_damage_delay; }
     const double&   getAutoDamage() { return m_auto_damage; }
     const long&     getDeathDelay() { return m_death_delay; }
     const bool&     getFadeOnDeath() { return m_fade_on_death; }
@@ -232,6 +235,7 @@ public:
     void            setMaxHealth(double new_max_health) { m_max_health = new_max_health; }
     void            setHealth(double new_health) { m_health = new_health; }
     void            setDamage(double new_damage) { m_damage = new_damage; }
+    void            setDamageDelay(long new_damage_delay) { m_damage_delay = new_damage_delay; }
     void            setAutoDamage(double new_auto_damage) { m_auto_damage = new_auto_damage; }
     void            setDeathDelay(long new_death_delay_in_milliseconds) { m_death_delay = new_death_delay_in_milliseconds; }
     void            setFadeOnDeath(bool should_fade) { m_fade_on_death = should_fade; }
@@ -240,7 +244,7 @@ public:
 
     bool            doesDamage();
     bool            shouldDamage(Collision_Type check_can_damage);
-    bool            takeDamage(double damage_to_take, bool death_touch = false);
+    bool            takeDamage(double damage_to_take, bool reset_damage_timer = true, bool death_touch = false);
 
     // Object Movement - Rotation
     const double&   getRotateSpeed() { return m_rotate_speed; }
@@ -318,6 +322,7 @@ public:
     void            setDying(bool is_dying) { m_dying = is_dying; }
     void            setAlive(bool is_alive) { m_alive = is_alive; }
 
+    DrTime&         getDamageTimer() { return m_damage_timer; }
     DrTime&         getDeathTimer() { return m_death_timer; }
     DrTime&         getFadeTimer() { return m_fade_timer; }
     DrTime&         getUpdateTimer() { return m_update_timer; }
