@@ -42,12 +42,12 @@ bool DrEngineObject::takeDamage(double damage_to_take, bool death_touch) {
     if (!alive || dying) return true;
 
     // Check if unlimited health
-    bool unlimited_health = (m_health < c_epsilon);
+    bool unlimited_health = (m_health < 0.0);
 
     // HEALING: If damage was negative (healing), add health, check max_health and exit
     if (damage_to_take < 0.0 && !unlimited_health) {
         m_health += abs(damage_to_take);
-        if (m_health > m_max_health && m_max_health >= c_epsilon) m_health = m_max_health;
+        if (m_health > m_max_health && m_max_health > c_epsilon) m_health = m_max_health;
         return false;
     }
 

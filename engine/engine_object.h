@@ -42,7 +42,9 @@ constexpr double    c_norotate =   0;                   // Default rotation amou
 constexpr double    c_opaque =     1;                   // Default transparency of fully opaque
 constexpr double    c_friction =  -1;                   // Flag for add**** call to use world friction setting
 constexpr double    c_bounce =    -1;                   // Flag for add**** call to use world bounce setting
-constexpr int       c_unlimited = -1;                   // Flag for ranged items to be unlimited (health, jump_count)
+constexpr int       c_no_max_health = -1;               // Flag for no maximum health
+constexpr int       c_unlimited_health = -1;            // Flag for unlimited health
+constexpr int       c_unlimited_jump =   -1;            // Flag for unlimited jump
 
 // Global Variables - defined in engine_update_player.cpp
 extern int          g_keyboard_x;                       // Used to pass keyboard x button state to static callback functions
@@ -77,10 +79,18 @@ private:
     Collision_Type  m_collision_type = Collision_Type::Damage_None;     // Specifies which types of objects this object can damage
     bool            m_invincible = false;                               // When true this object takes no damage nor damage_recoil force, cannot be killed
     bool            m_death_touch = false;                              // When true kills everything on contact, even unlimited health... but not invincible objects
-    double          m_max_health = 100.0;                               // Maximum object health, c_unlimited (-1) = no maximum
-    double          m_health = 3.0;                                     // Object Health, c_unlimited (-1) = infinite, otherwise should be > 0
+    double          m_max_health = 100.0;                               // Maximum object health, c_no_max_health (-1) = no maximum
+    double          m_health = 3.0;                                     // Object Health, c_unlimited_health (-1) = infinite, otherwise should be > 0
     double          m_damage = 1.0;                                     // Damage caused to other objects of Type m_collision_type
+    double          m_auto_damage = 0.0;        // Take x damage per second (can be negative, i.e. add health)
+    long            m_death_delay = 100;        // Time it takes for item to die (can't deal damage while dying), in milliseconds
+    bool            m_fade_on_death = true;     // If true, object is slowly faded over death_delay time
+    long            m_fade_delay = 750;         // Time it takes for item to be removed after death, in milliseconds (0 == remove immediately)
+    double          m_damage_recoil = 200.0;    // How much opposite force to apply when receiving damage
 
+    // ***** Object Properties - One Way
+    One_Way     m_one_way = One_Way::None;      // Set one way collision type desired (None, Pass Through, Weak_Spot)
+    cpVect      m_one_way_direction {0, 1};     // Direction of Normal for one way, defaults to Up (i.e. character can pass upwards through the bottom of a block)
 
 
 
@@ -94,24 +104,12 @@ public:
 
 
 
-    /// ***** Object Properties - Health / Damage
 
-    double      auto_damage = 0.0;                                      // Take x damage per second (can be negative, i.e. add health)
-    long        death_delay = 100;                                      // Time it takes for item to die (can't deal damage while dying), in milliseconds
-    bool        fade_on_death = true;                                   // If true, object is slowly faded over death_delay time
-    long        fade_delay = 750;                                       // Time it takes for item to be removed after death, in milliseconds (0 == remove immediately)
-    double      damage_recoil = 200.0;                                  // How much opposite force to apply when receiving damage
-
-
-
-
-
-    One_Way     one_way = One_Way::None;        // Set to true if we're using this object as a one way platform
-    cpVect      one_way_direction {0, 1};       // Direction of Normal for one way, defaults to Up (i.e. character can pass upwards through the bottom of a block)
-
+    // ***** Object Properties - Bounce / Friction
     double      custom_friction = c_friction;   // Defaults to c_friction (-1) if this item uses global m_friction, otherwise stores custom friction
     double      custom_bounce = c_bounce;       // Defaults to c_bounce (-1) if this item uses global m_bounce, otherwise stores custom bounce
 
+    // ***** Object Properties - Movement
     double      rotate_speed =  0.0;            // Speed at which object should spin when Motor Rotate (gas pedal) is pressed
 
     // ***** Object interaction                 // These properties are used by objects that have been attached to PlayerUpdateVelocity
@@ -132,7 +130,7 @@ public:
     double      jump_force_x =    0.0;          // Jump force x
     double      jump_force_y =  250.0;          // Jump force y
     double      jump_timeout =  800.0;          // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
-    int         jump_count =        0;          // How many jumps this player is allowed, c_unlimited (-1) = unlimited, 0 = cannot jump, 1 = 1, 2 = 2, etc
+    int         jump_count =        0;          // How many jumps this player is allowed, c_unlimited_jump (-1) = unlimited, 0 = cannot jump, 1 = 1, 2 = 2, etc
 
     bool        can_rotate = true;              // To be set during object creation, moment of inertia is set to infinity to stop rotation
     bool        ignore_gravity = false;         // If turned to true, this object no longer is affected by gravity
@@ -205,6 +203,11 @@ public:
     const double&   getMaxHealth() { return m_max_health; }
     const double&   getHealth() { return m_health; }
     const double&   getDamage() { return m_damage; }
+    const double&   getAutoDamage() { return m_auto_damage; }
+    const long&     getDeathDelay() { return m_death_delay; }
+    const bool&     getFadeOnDeath() { return m_fade_on_death; }
+    const long&     getFadeDelay() { return m_fade_delay; }
+    const double&   getDamageRecoil() { return m_damage_recoil; }
 
     void            setCollisionType(Collision_Type what_should_collide);
     void            setInvincible(bool invincible) { m_invincible = invincible; }
@@ -212,11 +215,25 @@ public:
     void            setMaxHealth(double new_max_health) { m_max_health = new_max_health; }
     void            setHealth(double new_health) { m_health = new_health; }
     void            setDamage(double new_damage) { m_damage = new_damage; }
+    void            setAutoDamage(double new_auto_damage) { m_auto_damage = new_auto_damage; }
+    void            setDeathDelay(long new_death_delay_in_milliseconds) { m_death_delay = new_death_delay_in_milliseconds; }
+    void            setFadeOnDeath(bool should_fade) { m_fade_on_death = should_fade; }
+    void            setFadeDelay(long new_fade_dealy_in_milliseconds) { m_fade_delay = new_fade_dealy_in_milliseconds; }
+    void            setDamageRecoil(double new_damage_recoil_force) { m_damage_recoil = new_damage_recoil_force; }
 
     bool            doesDamage();
     bool            shouldDamage(Collision_Type check_can_damage);
     bool            takeDamage(double damage_to_take, bool death_touch = false);
 
+    // Object Properties - One Way
+    One_Way     getOneWay() { return m_one_way; }
+    cpVect      getOneWayDirection() { return m_one_way_direction; }
+
+    void        setOneWay(One_Way one_way_type) { m_one_way = one_way_type; }
+    void        setOneWayDirection(cpVect direction) { m_one_way_direction = direction; }
+    void        setOneWayDirection(QPointF direction) { m_one_way_direction = cpv(direction.x(), direction.y()); }
+
+    //
 
 
 };

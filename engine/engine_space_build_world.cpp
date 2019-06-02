@@ -101,8 +101,8 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         this->addLine(Body_Type::Static, QPointF( -300,  150), QPointF(-100,  150), c_friction, c_bounce, 1);
 
         // One way platform support
-        line1->one_way = One_Way::Pass_Through; line1->one_way_direction = cpv(0, 1);                // Let objects pass upwards
-        line2->one_way = One_Way::Pass_Through; line2->one_way_direction = cpv(0, 1);                // Let objects pass upwards
+        line1->setOneWay( One_Way::Pass_Through ); line1->setOneWayDirection( cpv(0, 1) );          // Let objects pass upwards
+        line2->setOneWay( One_Way::Pass_Through ); line2->setOneWayDirection( cpv(0, 1) );          // Let objects pass upwards
 
     } else if (demo_space == Demo_Space::Blocks) {
         m_friction = 0.5;
@@ -111,7 +111,7 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         // Test one way block
         DrEngineObject *block = this->addBlock(Body_Type::Static, Test_Textures::Block, -500, 150, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
         block->setCollisionType(Collision_Type::Damage_Player);
-        block->one_way = One_Way::Pass_Through; block->one_way_direction = cpv(0, 1);                // Let objects pass upwards
+        block->setOneWay( One_Way::Pass_Through ); block->setOneWayDirection( cpv(0, 1) );          // Let objects pass upwards
 
         ///block->setInvincible(true);
         ///block->setDamage(-1);
@@ -120,14 +120,14 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         DrEngineObject *block2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -350, 150, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
         block2->rotate_speed = 2.0;
         block2->setHealth( 4.0 );
-        block2->auto_damage = .2;
+        block2->setAutoDamage( 0.2 );
 
 
         // Test destroyable block
         DrEngineObject *block3 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -200, 150, 100, 0, QPointF(1, 1), 1, m_friction, m_bounce, QPointF(0, 0));
         block3->setCollisionType(Collision_Type::Damage_Player);
-        block3->one_way = One_Way::Weak_Spot;
-        block3->one_way_direction = cpv(0, 1);                // Take damage from below only
+        block3->setOneWay( One_Way::Weak_Spot );
+        block3->setOneWayDirection( cpv(0, 1) );                                                    // Take damage from below only
         block3->setHealth( 1.0 );
         block3->setDamage( 1.0 );
 

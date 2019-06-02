@@ -115,27 +115,27 @@ void DrEngine::updateSpaceHelper() {
 
 
         // ***** Auto Damage
-        if (object->getHealth() >= c_epsilon) {
-            if (object->auto_damage < c_epsilon || object->auto_damage > c_epsilon) {
-                object->takeDamage( object->auto_damage * (object->time_since_last_update / 1000.0) );
+        if (object->getHealth() > c_epsilon) {
+            if (object->getAutoDamage() < c_epsilon || object->getAutoDamage() > c_epsilon) {
+                object->takeDamage( object->getAutoDamage() * (object->time_since_last_update / 1000.0) );
             }
         }
 
 
         // ***** Check for Object Death / Fade / Removal
-        if (object->getHealth() < c_epsilon && object->getHealth() > c_unlimited) {
+        if (object->getHealth() <= c_epsilon && object->getHealth() > c_unlimited_health) {
             if (!object->dying) {
                 object->dying = true;
                 Dr::ResetTimer(object->death_timer);
             }
             if (object->dying && object->alive) {
-                if (Dr::MillisecondsElapsed(object->death_timer) >= object->death_delay) {
+                if (Dr::MillisecondsElapsed(object->death_timer) >= object->getDeathDelay()) {
                     object->alive = false;
                     Dr::ResetTimer(object->fade_timer);
                 }
             }
             if (!object->alive) {
-                if (Dr::MillisecondsElapsed(object->fade_timer) >= object->fade_delay) {
+                if (Dr::MillisecondsElapsed(object->fade_timer) >= object->getFadeDelay()) {
                     remove = true;
                 }
             }

@@ -42,41 +42,41 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
 
     // Check for one way platform
-    if (object_a->one_way == One_Way::Pass_Through) {                               // Don't collide with something trying to pass through you
-        if (cpvdot(cpArbiterGetNormal(arb), object_a->one_way_direction) < 0.0)
+    if (object_a->getOneWay() == One_Way::Pass_Through) {                               // Don't collide with something trying to pass through you
+        if (cpvdot(cpArbiterGetNormal(arb), object_a->getOneWayDirection()) < 0.0)
             return cpArbiterIgnore(arb);
     }
-    if (object_b->one_way == One_Way::Pass_Through) {                               // Don't collide with something you want to pass through
-        if (cpvdot(cpArbiterGetNormal(arb), object_b->one_way_direction) > 0.0)
+    if (object_b->getOneWay() == One_Way::Pass_Through) {                               // Don't collide with something you want to pass through
+        if (cpvdot(cpArbiterGetNormal(arb), object_b->getOneWayDirection()) > 0.0)
             return cpArbiterIgnore(arb);
     }
 
-    if ( object_a->alive && object_a->dying) return cpTrue;                         // Don't deal damage while dying
-    if (!object_a->alive) return cpFalse;                                           // If object a is dead, cancel collision
-    if (!object_b->alive) return cpFalse;                                           // If object b is dead, cancel collision
-    if (!object_a->doesDamage()) return cpTrue;                                     // Object does no damage, exit
+    if ( object_a->alive && object_a->dying) return cpTrue;                             // Don't deal damage while dying
+    if (!object_a->alive) return cpFalse;                                               // If object a is dead, cancel collision
+    if (!object_b->alive) return cpFalse;                                               // If object b is dead, cancel collision
+    if (!object_a->doesDamage()) return cpTrue;                                         // Object does no damage, exit
 
     // Check for dealing damage
     bool should_damage = object_a->shouldDamage(object_b->getCollisionType());
 
     // Check for one way weak point
-    if (object_a->one_way == One_Way::Weak_Spot) {                                  // Don't deal damage if something comes at your weak (vulnerable) spot
-        if (cpvdot(cpArbiterGetNormal(arb), object_a->one_way_direction) < 0.0)
+    if (object_a->getOneWay() == One_Way::Weak_Spot) {                                  // Don't deal damage if something comes at your weak (vulnerable) spot
+        if (cpvdot(cpArbiterGetNormal(arb), object_a->getOneWayDirection()) < 0.0)
             should_damage = false;
     }
-    if (object_b->one_way == One_Way::Weak_Spot) {                                  // Don't deal damage unless you are hitting its weak spot
-        if (cpvdot(cpArbiterGetNormal(arb), object_b->one_way_direction) < 0.001)   // i.e. floating point for <= 0
+    if (object_b->getOneWay() == One_Way::Weak_Spot) {                                  // Don't deal damage unless you are hitting its weak spot
+        if (cpvdot(cpArbiterGetNormal(arb), object_b->getOneWayDirection()) < 0.001)    // i.e. floating point for <= 0
             should_damage = false;
     }
 
     if (should_damage) {
         bool killed = object_b->takeDamage( object_a->getDamage(), object_a->hasDeathTouch() );
 
-        // If we killed object, cancel collision
-        if (killed && object_b->death_delay == 0) return cpFalse;
+        // If we killed object and object wants instant death, cancel collision
+        if (killed && object_b->getDeathDelay() == 0) return cpFalse;
 
         // Add recoil to object if necessary and not invincible
-        if (!object_b->isInvincible() && object_b->damage_recoil > 0.0 && object_b->body_type == Body_Type::Dynamic) {
+        if (!object_b->isInvincible() && object_b->getDamageRecoil() > 0.0 && object_b->body_type == Body_Type::Dynamic) {
             if (cpBodyIsSleeping(object_b->body))
                 cpSpaceAddPostStepCallback(cpBodyGetSpace(object_b->body), cpPostStepFunc(BodyAddRecoil), arb, object_b);
             else
@@ -92,7 +92,7 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     ///DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
 
-    if (!object_a->alive) return cpFalse;                                       // If object is dead, cancel collision
+    if (!object_a->alive) return cpFalse;                                               // If object is dead, cancel collision
 
     return cpTrue;
 }
@@ -114,8 +114,8 @@ static void BodyAddRecoil(cpSpace *, cpArbiter *arb, DrEngineObject *object) {
         velocity = cpv(v.x(), v.y());                               // Convert back to cpVect
     }
     velocity = cpvnormalize(velocity);                          // Normalize body velocity
-    velocity.x *= object->damage_recoil;                        // Apply recoil force x to new direction vector
-    velocity.y *= object->damage_recoil;                        // Apply recoil force y to new direction vector
+    velocity.x *= object->getDamageRecoil();                    // Apply recoil force x to new direction vector
+    velocity.y *= object->getDamageRecoil();                    // Apply recoil force y to new direction vector
     cpBodySetVelocity( object->body, velocity );                // Set body to new velocity
 }
 

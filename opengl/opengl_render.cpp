@@ -264,8 +264,8 @@ void OpenGL::drawObjects() {
 
         // Fade away dying object
         float alpha = object->getOpacity();                                         // Start with object alpha
-        if (!object->alive && object->fade_on_death) {
-            double fade_percent = 1.0 - (static_cast<double>(Dr::MillisecondsElapsed(object->fade_timer)) / static_cast<double>(object->fade_delay));
+        if (!object->alive && object->getFadeOnDeath()) {
+            double fade_percent = 1.0 - (static_cast<double>(Dr::MillisecondsElapsed(object->fade_timer)) / static_cast<double>(object->getFadeDelay()));
             alpha *= static_cast<float>(fade_percent);
         }
         m_shader.setUniformValue( m_uniform_alpha, alpha );
