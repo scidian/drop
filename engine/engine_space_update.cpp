@@ -54,26 +54,24 @@ void DrEngine::updateSpaceHelper() {
         bool remove = false;
 
         // ***** Get time since last update
-        if (!object->has_been_processed) {
-            object->has_been_processed = true;
-            object->time_since_last_update = 0.0;
+        if (!object->hasBeenProcessed()) {
+            object->setHasBeenProcessed(true);
+            object->setTimeSinceLastUpdate( 0.0 );
         } else {
-            object->time_since_last_update = Dr::MillisecondsElapsed(object->update_timer);
+            object->setTimeSinceLastUpdate( Dr::MillisecondsElapsed(object->getUpdateTimer()) );
         }
-        Dr::ResetTimer(object->update_timer);
+        Dr::ResetTimer(object->getUpdateTimer());
 
         // ***** Skip object if static; or if not yet in Space / no longer in Space
-        if (object->should_process == false) {
+        if (!object->shouldProcess()) {
             it++;
             continue;
         }
 
         // ***** Get some info about the current object from the space and save it to the current DrEngineObject
-        object->angle = qRadiansToDegrees( cpBodyGetAngle( object->body ) );
-        object->previous_position = object->position;
         cpVect  new_position = cpBodyGetPosition( object->body );
-        object->position.setX( new_position.x );
-        object->position.setY( new_position.y );
+        object->updateBodyPosition( QPointF( new_position.x, new_position.y ));
+        object->updateBodyAngle( qRadiansToDegrees( cpBodyGetAngle( object->body )) );
 
         // **** Check that any object with custom PlayerUpdateVelocity callback is awake so it can access key / button events
         bool sleeping = cpBodyIsSleeping(object->body);
@@ -117,25 +115,25 @@ void DrEngine::updateSpaceHelper() {
         // ***** Auto Damage
         if (object->getHealth() > c_epsilon) {
             if (object->getAutoDamage() < c_epsilon || object->getAutoDamage() > c_epsilon) {
-                object->takeDamage( object->getAutoDamage() * (object->time_since_last_update / 1000.0) );
+                object->takeDamage( object->getAutoDamage() * (object->getTimeSinceLastUpdate() / 1000.0) );
             }
         }
 
 
         // ***** Check for Object Death / Fade / Removal
         if (object->getHealth() <= c_epsilon && object->getHealth() > c_unlimited_health) {
-            if (!object->dying) {
-                object->dying = true;
-                Dr::ResetTimer(object->death_timer);
+            if (!object->isDying()) {
+                object->setDying( true );
+                Dr::ResetTimer(object->getDeathTimer());
             }
-            if (object->dying && object->alive) {
-                if (Dr::MillisecondsElapsed(object->death_timer) >= object->getDeathDelay()) {
-                    object->alive = false;
-                    Dr::ResetTimer(object->fade_timer);
+            if (object->isDying() && object->isAlive()) {
+                if (Dr::MillisecondsElapsed(object->getDeathTimer()) >= object->getDeathDelay()) {
+                    object->setAlive( false );
+                    Dr::ResetTimer(object->getFadeTimer());
                 }
             }
-            if (!object->alive) {
-                if (Dr::MillisecondsElapsed(object->fade_timer) >= object->getFadeDelay()) {
+            if (!object->isAlive()) {
+                if (Dr::MillisecondsElapsed(object->getFadeTimer()) >= object->getFadeDelay()) {
                     remove = true;
                 }
             }

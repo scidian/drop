@@ -7,6 +7,13 @@
 //
 #include "engine_object.h"
 
+//######################################################################################################
+//##    Update Functions
+//######################################################################################################
+void DrEngineObject::updateBodyPosition(QPointF updated_position, bool update_previous_position_also) {
+    m_previous_position = update_previous_position_also ? updated_position : m_position;
+    m_position = updated_position;
+}
 
 //######################################################################################################
 //##    Collision Type of Object
@@ -39,7 +46,7 @@ bool DrEngineObject::shouldDamage(Collision_Type check_damage) {
 // Returns TRUE: just killed this object / object dead, FALSE: did not kill this object / object alive
 bool DrEngineObject::takeDamage(double damage_to_take, bool death_touch) {
     // If dying or dead exit now
-    if (!alive || dying) return true;
+    if (!m_alive || m_dying) return true;
 
     // Check if unlimited health
     bool unlimited_health = (m_health < 0.0);

@@ -65,33 +65,36 @@ class DrEngineObject
 
 public:
     // ***** Object Body and Shapes
-    cpBody             *body;                   // Physical Body of object
-    Body_Type           body_type;              // Body_Type
+    cpBody             *body;               // Physical Body of object
+    Body_Type           body_type;          // Body_Type
 
-    QVector<cpShape*>   shapes;                 // Collision Shapes of object
-    ShapeMap            shape_type;             // Shape Types of Shapes of Object
+    QVector<cpShape*>   shapes;             // Collision Shapes of object
+    ShapeMap            shape_type;         // Shape Types of Shapes of Object
 
 
 private:
+    // ********** Object Component Properties
+    //      To be set for each object as desired
+    //
     // ***** Object Basic Settings
-    bool        m_does_collide = true;              // Set to false to have this object not collide with anything
-    long        m_texture_number;                   // Reference to which texture to use from Engine->EngineTexture map
+    bool            m_does_collide = true;          // Set to false to have this object not collide with anything
+    long            m_texture_number;               // Reference to which texture to use from Engine->EngineTexture map
 
-    float       m_scale_x = 1.0f;                   // Scale of object in world
-    float       m_scale_y = 1.0f;                   // Scale of object in world
-    float       m_alpha = 1.0;                      // Transparency of object (0.0 invisible, 1.0 opaque)
-    double      m_z_order;                          // Used for layering
+    float           m_scale_x = 1.0f;               // Scale of object in world
+    float           m_scale_y = 1.0f;               // Scale of object in world
+    float           m_alpha = 1.0;                  // Transparency of object (0.0 invisible, 1.0 opaque)
+    double          m_z_order;                      // Used for layering
 
     // ***** Object Properties - Camera
-    long        m_active_camera = c_no_camera;      // Set to ID of last camera that followed this object, 0 == no camera
+    long            m_active_camera = c_no_camera;  // Set to ID of last camera that followed this object, 0 == no camera
 
     // ***** Object Properties - Bounce / Friction
-    double      m_custom_friction = c_friction;     // Defaults to c_friction (-1) if this item uses global m_friction, otherwise stores custom friction
-    double      m_custom_bounce = c_bounce;         // Defaults to c_bounce (-1) if this item uses global m_bounce, otherwise stores custom bounce
+    double          m_custom_friction = c_friction; // Defaults to c_friction (-1) if this item uses global m_friction, otherwise stores custom friction
+    double          m_custom_bounce = c_bounce;     // Defaults to c_bounce (-1) if this item uses global m_bounce, otherwise stores custom bounce
 
     // ***** Object Properties - One Way
-    One_Way     m_one_way = One_Way::None;          // Set one way collision type desired (None, Pass Through, Weak_Spot)
-    cpVect      m_one_way_direction {0, 1};         // Direction for one way collision, defaults to Up (i.e. objects can pass upwards through the bottom of a block)
+    One_Way         m_one_way = One_Way::None;      // Set one way collision type desired (None, Pass Through, Weak_Spot)
+    cpVect          m_one_way_direction {0, 1};     // Direction for one way collision, defaults to Up (i.e. objects can pass upwards through the bottom of a block)
 
     // ***** Object Properties - Health / Damage
     Collision_Type  m_collision_type = Collision_Type::Damage_None;     // Specifies which types of objects this object can damage
@@ -109,67 +112,64 @@ private:
     // ***** Object Movement - Rotation
     double          m_rotate_speed =  0.0;          // Speed at which object should spin when Motor Rotate (gas pedal) is pressed
 
-
-
     // ***** Object Movemnt - PlayerUpdateVelocity Callback Func
-    bool        m_key_controls = false;             // Set to true when object is a "player" and should respond to key / button / mouse events
+    bool            m_key_controls = false;         // Set to true when object is a "player" and should respond to key / button / mouse events
                                                     //      (players are cpBody* that have been assigned the cpBodyUpdateVelocityFunc PlayerUpdateVelocity callback)
-    bool        m_lost_control = false;             // Set to true when players should not have button control but have been assigned key_controls
+    bool            m_lost_control = false;         // Set to true when players should not have button control but have been assigned key_controls
 
-    double      m_max_speed_x =  1000.0;            // Maximum speed x of object
-    double      m_max_speed_y =  1000.0;            // Maximum speed y of object
+    double          m_max_speed_x =  1000.0;        // Maximum speed x of object
+    double          m_max_speed_y =  1000.0;        // Maximum speed y of object
 
-    double      m_forced_speed_x =  0.0;            // Forced move speed x of object
-    double      m_forced_speed_y =  0.0;            // Forced move speed y of object
+    double          m_forced_speed_x =  0.0;        // Forced move speed x of object
+    double          m_forced_speed_y =  0.0;        // Forced move speed y of object
 
-    double      m_move_speed_x =  400.0;            // Movement speed x
-    double      m_move_speed_y =    0.0;            // Movement speed y
+    double          m_move_speed_x =  400.0;        // Movement speed x
+    double          m_move_speed_y =    0.0;        // Movement speed y
 
-    double      m_jump_force_x =    0.0;            // Jump force x
-    double      m_jump_force_y =  250.0;            // Jump force y
-    long        m_jump_timeout =  800.0;            // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
-    int         m_jump_count =        0;            // How many jumps this player is allowed, -1 = c_unlimited_jump, 0 = cannot jump, 1 = 1, 2 = 2, etc
+    double          m_jump_force_x =    0.0;        // Jump force x
+    double          m_jump_force_y =  250.0;        // Jump force y
+    long            m_jump_timeout =  800.0;        // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
+    int             m_jump_count =        0;        // How many jumps this player is allowed, -1 = c_unlimited_jump, 0 = cannot jump, 1 = 1, 2 = 2, etc
 
-    double      m_air_drag =       0.50;            // Affects acceleration and decceleration in air (0 to 1+)
-    double      m_ground_drag =    0.25;            // Affects acceleration and decceleration on the ground (0 to 1+)
-    double      m_rotate_drag =    0.25;            // Affects rotation acceleration and decceleration (0 to 1+)
+    double          m_air_drag =       0.50;        // Affects acceleration and decceleration in air (0 to 1+)
+    double          m_ground_drag =    0.25;        // Affects acceleration and decceleration on the ground (0 to 1+)
+    double          m_rotate_drag =    0.25;        // Affects rotation acceleration and decceleration (0 to 1+)
 
-    bool        m_air_jump = true;                  // Can this player jump while in the air (even if only has 1 jump, ex: fell off platform)
-    bool        m_wall_jump = false;                // Can this player jump off of walls?
+    bool            m_air_jump = true;              // Can this player jump while in the air (even if only has 1 jump, ex: fell off platform)
+    bool            m_wall_jump = false;            // Can this player jump off of walls?
 
-    bool        m_can_rotate = true;                // To be set during object creation, moment of inertia is set to infinity to stop rotation
-    bool        m_ignore_gravity = false;           // If turned to true, this object no longer is affected by gravity
-
-
+    bool            m_can_rotate = true;            // To be set during object creation, moment of inertia is set to infinity to stop rotation
+    bool            m_ignore_gravity = false;       // If turned to true, this object no longer is affected by gravity
 
 
+    // ********** Local Variables Updated by Engine
+    //                NOT TO BE SET BY USER
+    //
+    bool        m_should_process = true;                    // True while object exists in Space
+    bool        m_has_been_processed = false;               // Set to true after an initial updateSpace call has been ran once while the object was in the Space
 
+    int         m_remaining_jumps = 0;                      // How many jumps player has left before it must hit ground before it can jump again
+    double      m_remaining_boost = 0.0;                    // Used by Engine Update to process Jump Timeout boost
+    double      m_remaining_wall_time = 0.0;                // Used by Engine Update to allow some time for a wall jump to occur
 
-public:
-    // ***** Updated by Engine:
-    bool        should_process = true;              // True while object exists in Space
-    bool        has_been_processed = false;         // Set to true after an initial updateSpace call has been ran once while the object was in the Space
+    bool        m_grounded = false;                         // Used by Engine Update to keep track of if this object is on the ground
+    bool        m_on_wall = false;                          // Used by Engine Update to keep track of if this object is on a wall
 
-    int         remaining_jumps = 0;                    // How many jumps player has left before it must hit ground before it can jump again
-    double      remaining_boost = 0.0;                  // Used by Engine Update to process Jump Timeout boost
-    double      remaining_wall_time = 0.0;              // Used by Engine Update to allow some time for a wall jump to occur
-    bool        grounded = false;                       // Used by Engine Update to keep track of if this object is on the ground
-    bool        on_wall = false;                        // Used by Engine Update to keep track of if this object is on a wall
-    cpVect      last_touched_ground_normal = cpvzero;   // Normal Vector of the last touched surface
-    double      last_touched_ground_dot = 1.0;          // Dot product of the last touched surface
-    Jump_State  jump_state = Jump_State::Need_To_Jump;  // Used by Engine Update to keep track of if the current jump button press has been processed
+    cpVect      m_last_touched_ground_normal = cpvzero;     // Normal Vector of the last touched surface
+    double      m_last_touched_ground_dot = 1.0;            // Dot product of the last touched surface
+    Jump_State  m_jump_state = Jump_State::Need_To_Jump;    // Used by Engine Update to keep track of if the current jump button press has been processed
 
-    bool        dying = false;                          // When health turns to zero, dying becomes true for death_delay time, then alive becomes false
-    bool        alive = true;                           // After item has been dying for death_delay time, alive becomes false, then fades for fade_delay time
-    DrTime      death_timer = Clock::now();             // Used to incorporate death_delay for object dying
-    DrTime      fade_timer = Clock::now();              // Used to incorporate fade_delay for object fade / removal
+    bool        m_dying = false;                            // When health turns to zero, dying becomes true for death_delay time, then alive becomes false
+    bool        m_alive = true;                             // After item has been dying for death_delay time, alive becomes false, then fades for fade_delay time
 
-    DrTime      update_timer = Clock::now();            // Used to keep track of time passed since last object update
-    double      time_since_last_update = 0.0;           // Milliseconds since last update
+    DrTime      m_death_timer =  Clock::now();              // Used to incorporate death_delay for object dying
+    DrTime      m_fade_timer =   Clock::now();              // Used to incorporate fade_delay for object fade / removal
+    DrTime      m_update_timer = Clock::now();              // Used to keep track of time passed since last object update
+    double      m_time_since_last_update = 0.0;             // Milliseconds since last update
 
-    double      angle = 0.0;                        // Current object angle
-    QPointF     position;                           // Current object posiiton
-    QPointF     previous_position;                  // Previous frame position, for whatever may need it
+    double      m_angle = 0.0;                              // Current object->body angle, updated every frame by updateSpaceHelper()
+    QPointF     m_position;                                 // Current object->body posiiton, updated every frame by updateSpaceHelper()
+    QPointF     m_previous_position;                        // Previous frame position, updated every frame by updateSpaceHelper()
 
 
 public:
@@ -288,6 +288,48 @@ public:
     void            setCanWallJump(bool can_wall_jump) { m_wall_jump = can_wall_jump; }
     void            setCanRotate(bool can_rotate) { m_can_rotate = can_rotate; }
     void            setIgnoreGravity(bool ignore_gravity) { m_ignore_gravity = ignore_gravity; }
+
+
+    // ***** Local Variables - Updated By Engine
+    const bool&     shouldProcess() { return m_should_process; }
+    const bool&     hasBeenProcessed() { return m_has_been_processed; }
+    void            setShouldProcess(bool should_keep_processing) { m_should_process = should_keep_processing; }
+    void            setHasBeenProcessed(bool processed) { m_has_been_processed = processed; }
+
+    const int&      getRemainingJumps() { return m_remaining_jumps; }
+    const double&   getRemainingBoost() { return m_remaining_boost; }
+    const double&   getRemainingWallTime() { return m_remaining_wall_time; }
+    const bool&     isOnGround() { return m_grounded; }
+    const bool&     isOnWall() { return m_on_wall; }
+    const cpVect&   getLastTouchedGroundNormal() { return m_last_touched_ground_normal; }
+    const double&   getLastTouchedGroundDot() { return m_last_touched_ground_dot; }
+    Jump_State      getJumpState() { return m_jump_state; }
+    void            setRemainingJumps(int new_remaining_jumps) { m_remaining_jumps = new_remaining_jumps; }
+    void            setRemainingBoost(double boost_time) { m_remaining_boost = boost_time; }
+    void            setRemainingWallTime(double wall_time) { m_remaining_wall_time = wall_time; }
+    void            setOnGround(bool on_ground) { m_grounded = on_ground; }
+    void            setOnWall(bool on_wall) { m_on_wall = on_wall; }
+    void            setLastTouchedGroundNormal(cpVect last_touched_normal) { m_last_touched_ground_normal = last_touched_normal; }
+    void            setLastTouchedGroundDot(double last_touched_dot) { m_last_touched_ground_dot = last_touched_dot; }
+    void            setJumpState(Jump_State new_jump_state) { m_jump_state = new_jump_state; }
+
+    const bool&     isDying() { return m_dying; }
+    const bool&     isAlive() { return m_alive; }
+    void            setDying(bool is_dying) { m_dying = is_dying; }
+    void            setAlive(bool is_alive) { m_alive = is_alive; }
+
+    DrTime&         getDeathTimer() { return m_death_timer; }
+    DrTime&         getFadeTimer() { return m_fade_timer; }
+    DrTime&         getUpdateTimer() { return m_update_timer; }
+    const double&   getTimeSinceLastUpdate() { return m_time_since_last_update; }
+    void            setTimeSinceLastUpdate(double new_time) { m_time_since_last_update = new_time; }
+
+    // Object->Body Data - Updated every frame by updateSpaceHelper()
+    const double&   getBodyAngle() { return m_angle; }
+    QPointF         getBodyPosition() { return m_position; }
+    QPointF         getBodyPreviousPosition() { return m_previous_position; }
+    void            updateBodyAngle(double updated_angle) { m_angle = updated_angle; }
+    void            updateBodyPosition(QPointF updated_position, bool update_previous_position_also = false);
 
 };
 

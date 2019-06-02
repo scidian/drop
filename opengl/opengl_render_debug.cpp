@@ -56,12 +56,12 @@ QColor OpenGL::objectDebugColor(DrEngineObject *object) {
 void OpenGL::drawDebugShapes(QPainter &painter) {
 
     for (auto object : m_engine->objects) {
-        if (!object->should_process)        continue;
-        if (!object->has_been_processed)    continue;
+        if (!object->shouldProcess())       continue;
+        if (!object->hasBeenProcessed())    continue;
 
         // Figure out what color to make the debug shapes
         QColor color = objectDebugColor(object);
-        if (object->dying || !object->alive) color = Qt::gray;
+        if (object->isDying() || !object->isAlive()) color = Qt::gray;
         if (!object->doesCollide()) color = color.lighter();
 
         // Set up QPainter
@@ -73,7 +73,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         painter.setBrush( QBrush( brush_color));
 
         // Load Object Position
-        QPointF center = (object->previous_position * (1.0 - m_time_percent)) + (object->position * m_time_percent);
+        QPointF center = (object->getBodyPreviousPosition() * (1.0 - m_time_percent)) + (object->getBodyPosition() * m_time_percent);
 
         // Used to store combined polygon of a multi-shape body
         QPolygonF object_poly;
@@ -83,7 +83,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
             if (object->shape_type[shape] == Shape_Type::Circle) {
                 cpVect offset = cpCircleShapeGetOffset(shape);
                 double radius = cpCircleShapeGetRadius(shape);
-                QTransform t = QTransform().translate(center.x(), center.y()).rotate(object->angle);
+                QTransform t = QTransform().translate(center.x(), center.y()).rotate(object->getBodyAngle());
 
                 // Draw Normal circle since camera is facing straight on
                 if (m_engine->render_type == Render_Type::Orthographic) {
@@ -163,7 +163,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 
             } else if (object->shape_type[shape] == Shape_Type::Polygon || object->shape_type[shape] == Shape_Type::Box) {
 
-                QTransform t = QTransform().translate(center.x(), center.y()).rotate( object->angle);
+                QTransform t = QTransform().translate(center.x(), center.y()).rotate( object->getBodyAngle());
                 QPolygonF polygon, mapped;
                 for (int i = 0; i < cpPolyShapeGetCount( shape ); i++) {
                     cpVect  vert  = cpPolyShapeGetVert( shape, i );
@@ -229,8 +229,8 @@ void OpenGL::drawDebugJoints(QPainter &painter) {
         DrEngineObject *object_b = static_cast<DrEngineObject*>(cpBodyGetUserData(body_b));
 
         // Load Object Positions
-        QPointF center_a = (object_a->previous_position * (1.0 - m_time_percent)) + (object_a->position * m_time_percent);
-        QPointF center_b = (object_b->previous_position * (1.0 - m_time_percent)) + (object_b->position * m_time_percent);
+        QPointF center_a = (object_a->getBodyPreviousPosition() * (1.0 - m_time_percent)) + (object_a->getBodyPosition() * m_time_percent);
+        QPointF center_b = (object_b->getBodyPreviousPosition() * (1.0 - m_time_percent)) + (object_b->getBodyPosition() * m_time_percent);
         QPointF l1 = mapToScreen( center_a.x(), center_a.y(), 0);
         QPointF l2 = mapToScreen( center_b.x(), center_b.y(), 0);
 
@@ -245,15 +245,15 @@ void OpenGL::drawDebugHealth(QPainter &painter) {
     painter.setPen(Qt::NoPen);
 
     for (auto object : m_engine->objects) {
-        if (!object->should_process)        continue;
-        if (!object->has_been_processed)    continue;
+        if (!object->shouldProcess())       continue;
+        if (!object->hasBeenProcessed())    continue;
 
         // Figure out what color to make the debug shapes
         QColor color = objectDebugColor(object);
         color = QColor(255 - color.red(), 255 - color.green(), 255 - color.blue());
 
         // Load Object Position
-        QPointF center = (object->previous_position * (1.0 - m_time_percent)) + (object->position * m_time_percent);
+        QPointF center = (object->getBodyPreviousPosition() * (1.0 - m_time_percent)) + (object->getBodyPosition() * m_time_percent);
         QPointF text_coord = mapToScreen(center.x(), center.y(), 0);
 
         if (rect().contains( text_coord.toPoint() )) {
@@ -282,8 +282,8 @@ void OpenGL::drawDebugCollisions(QPainter &painter) {
     painter.setPen( pen );
 
     for (auto object : m_engine->objects) {
-        if (!object->should_process)                 continue;
-        if (!object->has_been_processed)             continue;
+        if (!object->shouldProcess())                continue;
+        if (!object->hasBeenProcessed())             continue;
         if (object->body_type != Body_Type::Dynamic) continue;
 
         QVector<QPointF> point_list;    point_list.clear();
@@ -291,7 +291,7 @@ void OpenGL::drawDebugCollisions(QPainter &painter) {
         cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(GetBodyContactPoints),  &point_list);
         cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(GetBodyContactNormals), &normal_list);
 
-        QPointF diff = object->position - ((object->previous_position * (1.0 - m_time_percent)) + (object->position * m_time_percent));
+        QPointF diff = object->getBodyPosition() - ((object->getBodyPreviousPosition() * (1.0 - m_time_percent)) + (object->getBodyPosition() * m_time_percent));
 
         for (int i = 0; i < point_list.size(); i++) {
             QPointF contact = point_list[i];
@@ -301,7 +301,7 @@ void OpenGL::drawDebugCollisions(QPainter &painter) {
             double angle_in_degrees = (angle_in_radians / M_PI) * 180.0;
 
             if (rect().contains(point.toPoint())) {
-                QTransform t = QTransform().translate(point.x(), point.y()).rotate(-object->angle).translate(-point.x(), -point.y());
+                QTransform t = QTransform().translate(point.x(), point.y()).rotate(-object->getBodyAngle()).translate(-point.x(), -point.y());
                 QPoint dot = t.map( point ).toPoint();
 
                 //// Draw dots

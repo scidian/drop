@@ -59,7 +59,6 @@ DrEngineObject* DrEngine::addLine(Body_Type body_type, QPointF p1, QPointF p2, d
     line->shapes.push_back( shape );
     line->shape_type[shape] = Shape_Type::Segment;
 
-    line->should_process = true;
     objects.append( line );
     return line;
 }
@@ -110,9 +109,7 @@ DrEngineObject* DrEngine::addCircle(Body_Type body_type, long texture_number, do
     ball->setTextureNumber(texture_number);                                     // Texture to render from
     ball->setZOrder(z);
     ball->setOpacity(opacity);
-    ball->position.setX(x);
-    ball->position.setY(y);
-    ball->previous_position = ball->position;
+    ball->updateBodyPosition( QPointF(x, y), true );
 
     // Create the body for the ball
     ball->body_type = body_type;
@@ -151,8 +148,7 @@ DrEngineObject* DrEngine::addCircle(Body_Type body_type, long texture_number, do
     ball->setCanRotate( can_rotate );
     if (!can_rotate) cpBodySetMoment( ball->body, static_cast<double>(INFINITY) );
 
-    // Turn on object and add it to the list of objects in the current Space
-    ball->should_process = true;
+    // Add ball to the list of objects in the current Space
     objects.append( ball );
     return ball;
 }
@@ -177,9 +173,7 @@ DrEngineObject* DrEngine::addBlock(Body_Type body_type, long texture_number, dou
     double height = m_textures[texture_number]->height() * scale.y();       // Height of collision shape
     block->setScaleX(scale.x());
     block->setScaleY(scale.y());
-    block->position.setX(x);
-    block->position.setY(y);
-    block->previous_position = block->position;
+    block->updateBodyPosition( QPointF(x, y), true );
 
     // Block basics
     block->setTextureNumber(texture_number);
@@ -226,8 +220,7 @@ DrEngineObject* DrEngine::addBlock(Body_Type body_type, long texture_number, dou
     block->setCanRotate( can_rotate );
     if (!can_rotate) cpBodySetMoment( block->body, static_cast<double>(INFINITY) );
 
-    // Turn on object and add it to the list of objects in the current Space
-    block->should_process = true;
+    // Add block to the list of objects in the current Space
     objects.append( block );
     return block;
 }
@@ -255,9 +248,7 @@ DrEngineObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, d
     polygon->setTextureNumber(texture_number);
     polygon->setZOrder(z);
     polygon->setOpacity(opacity);
-    polygon->position.setX(x);
-    polygon->position.setY(y);
-    polygon->previous_position = polygon->position;
+    polygon->updateBodyPosition( QPointF(x, y), true );
 
     int old_point_count =static_cast<int>(points.size());
 
@@ -358,8 +349,7 @@ DrEngineObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, d
     polygon->setCanRotate( can_rotate );
     if (!can_rotate) cpBodySetMoment( polygon->body, static_cast<double>(INFINITY) );
 
-    // Turn on object and add it to the list of objects in the current Space
-    polygon->should_process = true;
+    // Add polygon to the list of objects in the current Space
     objects.append( polygon );
     return polygon;    
 }

@@ -68,32 +68,32 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
         key_ccw =   g_rotate_ccw;
     }
 
-    // ***** Ground Check - Grab the grounding normal from last frame, if we hit the ground, turn off remaining_boost time
+    // ***** Ground Check - Grab the grounding normal from last frame, if we hit the ground, turn off m_remaining_boost time
     Ground_Data ground;
     ground.dot_product = 2.0;                                                   // 2.0 is an impossible test number, dot products will always be between -1.0 to 1.0
     cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(SelectPlayerGroundNormal), &ground);
 
     // Figure out if any collision points count as ground or as wall
-    object->on_wall =  ground.dot_product <= 0.50 && object->canWallJump();     //  0.50 == approx up to ~30 degrees roof (slightly overhanging)
-    object->grounded = ground.dot_product < -0.30;                              // -0.30 == approx up to ~20 degrees slab (slightly less than vertical)
-    if (object->grounded || object->on_wall) {
-        object->last_touched_ground_normal = ground.normal;
-        object->last_touched_ground_dot = ground.dot_product;
-        object->remaining_jumps = object->getJumpCount();
-        object->remaining_boost = 0.0;
+    object->setOnWall( ground.dot_product <= 0.50 && object->canWallJump() );   //  0.50 == approx up to ~30 degrees roof (slightly overhanging)
+    object->setOnGround( ground.dot_product < -0.30 );                          // -0.30 == approx up to ~20 degrees slab (slightly less than vertical)
+    if (object->isOnGround() || object->isOnWall()) {
+        object->setLastTouchedGroundNormal( ground.normal );
+        object->setLastTouchedGroundDot( ground.dot_product );
+        object->setRemainingJumps( object->getJumpCount() );
+        object->setRemainingBoost( 0.0 );
     }
 
     // Update wall jump time (gives player some time to do a wall jump)
-    object->remaining_wall_time -= dt;
-    if (object->on_wall)
-        object->remaining_wall_time = 0.25;
-    if (object->grounded || object->remaining_wall_time < 0.0)
-        object->remaining_wall_time = 0.00;
+    object->setRemainingWallTime( object->getRemainingWallTime() - dt );
+    if (object->isOnWall())
+        object->setRemainingWallTime( 0.25 );
+    if (object->isOnGround() || object->getRemainingWallTime() < 0.0)
+        object->setRemainingWallTime( 0.00 );
 
 
     // ***** Process Boost - Continues to provide jump velocity, although slowly fades
-    if (object->remaining_boost > 0) object->remaining_boost -= dt;
-    if (key_jump && object->remaining_boost > 0.0) {
+    if (object->getRemainingBoost() > 0) object->setRemainingBoost( object->getRemainingBoost() - dt );
+    if (key_jump && object->getRemainingBoost() > 0.0) {
         cpVect  player_v = cpBodyGetVelocity( object->body );
         cpFloat jump_vx = object->getJumpForceX() * 2.0 * dt;
         cpFloat jump_vy = object->getJumpForceY() * 2.0 * dt;
@@ -102,23 +102,23 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     }
 
     // ***** Process Jump - If the jump key was just pressed this frame and it wasn't pressed last frame, jump!
-    if ((key_jump == true) && (object->jump_state == Jump_State::Need_To_Jump)) {
-        if ((object->grounded) ||                                                                   // Jump from ground
-            (object->remaining_wall_time > 0.0 ) ||                                                 // Jump from wall
-            ///(object->on_wall && object->remaining_jumps > 0) ||                                  // Jump from wall if jumps remaining
-            (object->canAirJump() && object->remaining_jumps > 0) ||                                // Jump from air if jumps remaining
-            (object->remaining_jumps > 0 && object->getJumpCount() != object->remaining_jumps) ||   // Already jumped once from ground and jumps remaining
-            (object->getJumpCount() == -1) ) {                                                      // Unlimited jumping
+    if ((key_jump == true) && (object->getJumpState() == Jump_State::Need_To_Jump)) {
+        if ( object->isOnGround() ||                                                                        // Jump from ground
+            (object->getRemainingWallTime() > 0.0 ) ||                                                      // Jump from wall
+            ///(object->isOnWall() && object->getRemainingJumps() > 0) ||                                   // Jump from wall if jumps remaining
+            (object->canAirJump() && object->getRemainingJumps() > 0) ||                                    // Jump from air if jumps remaining
+            (object->getRemainingJumps() > 0 && object->getJumpCount() != object->getRemainingJumps()) ||   // Already jumped once from ground and jumps remaining
+            (object->getJumpCount() == -1) ) {                                                              // Unlimited jumping
 
             // Mark current jump button press as processed
-            object->jump_state = Jump_State::Jumped;
+            object->setJumpState( Jump_State::Jumped );
 
             // Calculate wall jump forces
             cpFloat jump_vx, jump_vy;
-            if (!object->grounded && object->remaining_wall_time > 0.0) {
-                double angle = atan2(object->last_touched_ground_normal.y, object->last_touched_ground_normal.x) - atan2(g_gravity_normal.y, g_gravity_normal.x);
+            if (!object->isOnGround() && object->getRemainingWallTime() > 0.0) {
+                double angle = atan2(object->getLastTouchedGroundNormal().y, object->getLastTouchedGroundNormal().x) - atan2(g_gravity_normal.y, g_gravity_normal.x);
                 angle = qRadiansToDegrees( angle ) - 180;
-                ///qDebug() << "Wall jump - Angle: " << angle << ", Dot: " << object->last_touched_ground_dot;
+                ///qDebug() << "Wall jump - Angle: " << angle << ", Dot: " << object->getLastTouchedGroundDot();
                 if (angle < -180) angle += 360;
                 if (angle >  180) angle -= 360;
                 angle /= 3;
@@ -172,15 +172,15 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
             cpBodySetVelocity( object->body, player_v );
 
             // Reset wall_timeout, jump timeout boost and subtract remaining jumps until ground
-            object->remaining_wall_time = 0.0;
-            object->remaining_boost = static_cast<double>(object->getJumpTimeout()) / 1000.0;
-            object->remaining_jumps--;
-            if (object->remaining_jumps < -1) object->remaining_jumps = -1;
+            object->setRemainingWallTime( 0.0 );
+            object->setRemainingBoost( static_cast<double>(object->getJumpTimeout()) / 1000.0 );
+            object->setRemainingJumps( object->getRemainingJumps() - 1 );
+            if (object->getRemainingJumps() < c_unlimited_jump) object->setRemainingJumps( c_unlimited_jump );
         }
     }
 
     // If jump button is let go, reset this objects ability to receive a jump command
-    if (!g_jump_button) object->jump_state = Jump_State::Need_To_Jump;
+    if (!g_jump_button) object->setJumpState( Jump_State::Need_To_Jump );
 
 
 
@@ -202,7 +202,7 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     double ground_accel_x = object->getMoveSpeedX() / (object->getGroundDrag() + c_buffer);
     double ground_accel_y = object->getMoveSpeedY() / (object->getGroundDrag() + c_buffer);
 
-    if (!object->grounded && !object->on_wall) {
+    if (!object->isOnGround() && !object->isOnWall()) {
 
         if ((qFuzzyCompare(body_v.x, 0) == false && qFuzzyCompare(target_vx, 0) == false) ||
             (body_v.x <= 0 && target_vx > 0) || (body_v.x >= 0 && target_vx < 0))

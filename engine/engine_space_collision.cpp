@@ -51,9 +51,9 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
             return cpArbiterIgnore(arb);
     }
 
-    if ( object_a->alive && object_a->dying) return cpTrue;                             // Don't deal damage while dying
-    if (!object_a->alive) return cpFalse;                                               // If object a is dead, cancel collision
-    if (!object_b->alive) return cpFalse;                                               // If object b is dead, cancel collision
+    if ( object_a->isAlive() && object_a->isDying()) return cpTrue;                     // Don't deal damage while dying
+    if (!object_a->isAlive()) return cpFalse;                                           // If object a is dead, cancel collision
+    if (!object_b->isAlive()) return cpFalse;                                           // If object b is dead, cancel collision
     if (!object_a->doesDamage()) return cpTrue;                                         // Object does no damage, exit
 
     // Check for dealing damage
@@ -92,7 +92,7 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     ///DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
 
-    if (!object_a->alive) return cpFalse;                                               // If object is dead, cancel collision
+    if (!object_a->isAlive()) return cpFalse;                                           // If object is dead, cancel collision
 
     return cpTrue;
 }

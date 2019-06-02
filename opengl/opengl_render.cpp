@@ -175,7 +175,7 @@ void OpenGL::drawObjects() {
     for (int i = 0; i < m_engine->objects.count(); i++) {
         bool skip = false;
         for (auto shape : m_engine->objects[i]->shapes)
-            if (m_engine->objects[i]->shape_type[shape] == Shape_Type::Segment)
+            if (m_engine->objects[i]->shape_type[shape] == Shape_Type::Segment)         // Don't draw Segments (lines)
                 skip = true;
         if (skip) continue;
 
@@ -184,13 +184,13 @@ void OpenGL::drawObjects() {
     sort(v.begin(), v.end(), [] (std::pair<int, double>&i, std::pair<int, double>&j) { return i.second < j.second; });
 
 
-    // ***** Render 2D Objects
+    // ********** Render 2D Objects
     ///for (auto object : m_engine->objects) {
     for (ulong i = 0; i < static_cast<ulong>(v.size()); i++) {
         DrEngineObject *object = m_engine->objects[ v[i].first ];
-        if (!object->has_been_processed) continue;                          // Don't draw Segments (lines)
+        if (!object->hasBeenProcessed()) continue;
 
-        // ***** Render with texture
+        // ***** Get texture to render with, set texture coordinates
         DrEngineTexture *texture = m_engine->getTexture(object->getTextureNumber());
         if (!texture->texture()->isBound())
             texture->texture()->bind();
@@ -208,9 +208,9 @@ void OpenGL::drawObjects() {
         m_shader.enableAttributeArray( m_attribute_tex_coord );
 
         // ***** Get object position data
-        QPointF center = object->position;
-        center.setX( (object->previous_position.x() * (1.0 - m_time_percent)) + (object->position.x() * m_time_percent));
-        center.setY( (object->previous_position.y() * (1.0 - m_time_percent)) + (object->position.y() * m_time_percent));
+        QPointF center = object->getBodyPosition();
+        center.setX( (object->getBodyPreviousPosition().x() * (1.0 - m_time_percent)) + (object->getBodyPosition().x() * m_time_percent));
+        center.setY( (object->getBodyPreviousPosition().y() * (1.0 - m_time_percent)) + (object->getBodyPosition().y() * m_time_percent));
 
         float x, y, z, half_width, half_height;
         if (m_engine->render_type == Render_Type::Orthographic) {
@@ -230,7 +230,7 @@ void OpenGL::drawObjects() {
 
         // ***** Create rotation matrix, apply rotation to object
         QMatrix4x4 matrix;
-        matrix.rotate( static_cast<float>(object->angle), 0.0, 0.0, 1.0 );
+        matrix.rotate( static_cast<float>(object->getBodyAngle()), 0.0, 0.0, 1.0 );
         QVector3D top_right = matrix * QVector3D( half_width,  half_height, 0);
         QVector3D top_left =  matrix * QVector3D(-half_width,  half_height, 0);
         QVector3D bot_right = matrix * QVector3D( half_width, -half_height, 0);
@@ -264,8 +264,8 @@ void OpenGL::drawObjects() {
 
         // Fade away dying object
         float alpha = object->getOpacity();                                         // Start with object alpha
-        if (!object->alive && object->getFadeOnDeath()) {
-            double fade_percent = 1.0 - (static_cast<double>(Dr::MillisecondsElapsed(object->fade_timer)) / static_cast<double>(object->getFadeDelay()));
+        if (!object->isAlive() && object->getFadeOnDeath()) {
+            double fade_percent = 1.0 - (static_cast<double>(Dr::MillisecondsElapsed(object->getFadeTimer())) / static_cast<double>(object->getFadeDelay()));
             alpha *= static_cast<float>(fade_percent);
         }
         m_shader.setUniformValue( m_uniform_alpha, alpha );

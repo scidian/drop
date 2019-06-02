@@ -45,8 +45,8 @@ long DrEngine::addCamera(DrEngineObject* object_to_follow, float x, float y, flo
     if (object_to_follow != nullptr) {
         camera->followObject(object_to_follow);
         object_to_follow->setActiveCameraKey(m_camera_keys);
-        camera->setPositionX( static_cast<float>(object_to_follow->position.x()) );
-        camera->setPositionY( static_cast<float>(object_to_follow->position.y()) );
+        camera->setPositionX( static_cast<float>(object_to_follow->getBodyPosition().x()) );
+        camera->setPositionY( static_cast<float>(object_to_follow->getBodyPosition().y()) );
         camera->setTarget( QVector3D(camera->getPosition().x(), camera->getPosition().y(), z));
     }
     // Increment camera ID generator, return current camera ID
@@ -140,8 +140,8 @@ void DrEngineCamera::updateCamera() {
     if (m_follow != nullptr) {
 
         // Calculate the average object Speed
-        m_avg_speed_x.push_back( m_follow->position.x() - m_follow->previous_position.x() );
-        m_avg_speed_y.push_back( m_follow->position.y() - m_follow->previous_position.y() );
+        m_avg_speed_x.push_back( m_follow->getBodyPosition().x() - m_follow->getBodyPreviousPosition().x() );
+        m_avg_speed_y.push_back( m_follow->getBodyPosition().y() - m_follow->getBodyPreviousPosition().y() );
         m_avg_speed_x.pop_front();
         m_avg_speed_y.pop_front();
         double average_x = 0;
@@ -150,22 +150,24 @@ void DrEngineCamera::updateCamera() {
         if (m_avg_speed_y.size() > 0) average_y = std::accumulate( m_avg_speed_y.begin(), m_avg_speed_y.end(), 0.0) / m_avg_speed_y.size();
 
         // Basic Camera = Object Position
-        ///m_target.setX( static_cast<float>(m_follow->position.x()) );
-        ///m_target.setY( static_cast<float>(m_follow->position.y()) );
+        ///m_target.setX( static_cast<float>(m_follow->getBodyPosition().x()) );
+        ///m_target.setY( static_cast<float>(m_follow->getBodyPosition().y()) );
         // Move based on Last Camera Position + Average
         ///m_target.setX( m_target.x() + static_cast<float>(average_x) );
         ///m_target.setY( m_target.y() + static_cast<float>(average_y) );
         // Move based on Last Object Position + Average
-        ///m_target.setX( static_cast<float>(m_follow->previous_position.x() + average_x) );
-        ///m_target.setY( static_cast<float>(m_follow->previous_position.y() + average_y) );
+        ///m_target.setX( static_cast<float>(m_follow->getBodyPreviousPosition().x() + average_x) );
+        ///m_target.setY( static_cast<float>(m_follow->getBodyPreviousPosition().y() + average_y) );
         // Average of all three options
-        ///double pos_x = (m_follow->position.x() + (static_cast<double>(m_target.x()) + average_x)*3.0 + (m_follow->previous_position.x() + average_x)) / 5.0;
-        ///double pos_y = (m_follow->position.y() + (static_cast<double>(m_target.y()) + average_y)*3.0 + (m_follow->previous_position.y() + average_y)) / 5.0;
+        ///double pos_x = ((m_follow->getBodyPosition().x()) + ((static_cast<double>(m_target.x()) + average_x)*3.0) +
+        ///                (m_follow->getBodyPreviousPosition().x() + average_x)) / 5.0;
+        ///double pos_y = ((m_follow->getBodyPosition().y()) + ((static_cast<double>(m_target.y()) + average_y)*3.0) +
+        ///                (m_follow->getBodyPreviousPosition().y() + average_y)) / 5.0;
 
         // Interpolates object from previous frame to this frame
         ///double percent = m_engine->getFormEngine()->getTimerMilliseconds(Engine_Timer::Physics) / (1000.0 / m_engine->fps_physics);
         ///double percent = m_engine->getFormEngine()->getOpenGL()->getTimePercent();
-        ///QPointF smoothed = (m_follow->previous_position * (1.0 - percent)) + (m_follow->position * percent);
+        ///QPointF smoothed = (m_follow->getBodyPreviousPosition() * (1.0 - percent)) + (m_follow->getBodyPosition() * percent);
         ///double  pos_x = (smoothed.x() + (static_cast<double>(m_target.x()) + average_x)*2.0) / 3.0;
         ///double  pos_y = (smoothed.y() + (static_cast<double>(m_target.y()) + average_y)*2.0) / 3.0;
 
