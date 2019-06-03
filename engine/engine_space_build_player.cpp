@@ -62,7 +62,8 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
 
         ///ball->setDeathTouch( true );
         ///ball->setIgnoreGravity( true );
-        ///ball->setMoveSpeedY( 400 );
+
+        ball->setMoveSpeedY( 300 );
 
 
         // !!!!! #TEMP: demo variables

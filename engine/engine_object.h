@@ -83,7 +83,7 @@ private:
     float           m_scale_x = 1.0f;               // Scale of object in world
     float           m_scale_y = 1.0f;               // Scale of object in world
     float           m_alpha = 1.0;                  // Transparency of object (0.0 invisible, 1.0 opaque)
-    double          m_z_order;                      // Used for layering
+    double          m_z_order = 0.0;                // Used for layering
 
     // ***** Object Properties - Camera
     long            m_active_camera = c_no_camera;  // Set to ID of last camera that followed this object, 0 == no camera
@@ -126,7 +126,7 @@ private:
     double          m_forced_speed_y =  0.0;        // Forced move speed y of object
 
     double          m_move_speed_x =  400.0;        // Movement speed x
-    double          m_move_speed_y =  100.0;        // Movement speed y
+    double          m_move_speed_y =    0.0;        // Movement speed y
 
     double          m_jump_force_x =    0.0;        // Jump force x
     double          m_jump_force_y =  250.0;        // Jump force y
@@ -280,10 +280,10 @@ public:
     void            setLostControl(bool lost_control) { m_lost_control = lost_control; }
     void            setMaxSpeedX(double new_max_speed_x) { m_max_speed_x = new_max_speed_x; }
     void            setMaxSpeedY(double new_max_speed_y) { m_max_speed_y = new_max_speed_y; }
-    void            setForcedSpeedX(double new_forced_speed_x) { m_max_speed_x = new_forced_speed_x; }
-    void            setForcedSpeedY(double new_forced_speed_y) { m_max_speed_y = new_forced_speed_y; }
-    void            setMoveSpeedX(double new_move_speed_x) { m_max_speed_x = new_move_speed_x; }
-    void            setMoveSpeedY(double new_move_speed_y) { m_max_speed_y = new_move_speed_y; }
+    void            setForcedSpeedX(double new_forced_speed_x) { m_forced_speed_x = new_forced_speed_x; }
+    void            setForcedSpeedY(double new_forced_speed_y) { m_forced_speed_y = new_forced_speed_y; }
+    void            setMoveSpeedX(double new_move_speed_x) { m_move_speed_x = new_move_speed_x; }
+    void            setMoveSpeedY(double new_move_speed_y) { m_move_speed_y = new_move_speed_y; }
     void            setJumpForceX(double new_jump_force_x) { m_jump_force_x = new_jump_force_x; }
     void            setJumpForceY(double new_jump_force_y) { m_jump_force_y = new_jump_force_y; }
     void            setJumpTimeout(long new_jump_timeout) { m_jump_timeout = new_jump_timeout; }

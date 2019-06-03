@@ -22,7 +22,7 @@
 //      seperate:   Two shapes have just stopped touching for the first time this step. To ensure that begin() / separate() are always called in balanced pairs,
 //                      it will also be called when removing a shape while its in contact with something or when deallocating the space.
 
-enum class One_Way2 {                    // One Way Collide
+enum class One_Way2 {                   // One Way Collide
     None,
     Pass_Through,                       // Objects can pass through going one_way_direction
     Weak_Point,                         // Only takes damage from one_way_direction
@@ -32,6 +32,8 @@ enum class One_Way2 {                    // One Way Collide
 // Internal Linkage (File Scope) Forward Declarations
 static void BodyAddRecoil(cpSpace *, cpArbiter *arb, DrEngineObject *object);
 
+constexpr double c_speed_slowdown = 0.30;                   // Multiplier to slow down object velocity, associated with m_cancel_gravity objects
+
 //######################################################################################################
 //##    Chipmunk Collision Callbacks
 //##        Support for object collisions, damage, recoil, one way platforms and more
@@ -40,6 +42,13 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b);
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
+
+    // Temp cancel gravity on another object if colliding and should cancel it, also slow down object on contact
+    if ( object_b->getCancelGravity()) {
+        cpVect vel = cpBodyGetVelocity( object_a->body );
+        cpBodySetVelocity( object_a->body, cpv(vel.x * c_speed_slowdown, vel.y * c_speed_slowdown) );
+        object_a->setTempNoGravity(true);
+    }
 
     // Check for one way platform
     if (object_a->getOneWay() == One_Way::Pass_Through) {                               // Don't collide with something trying to pass through you
@@ -105,8 +114,12 @@ extern void SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
 
-    // Stop canceling gravity when seperates
-    if (object_b->getCancelGravity()) object_a->setTempNoGravity(false);
+    // Stop canceling gravity when seperates, and slow it down as it exits
+    if (object_b->getCancelGravity()) {
+        cpVect vel = cpBodyGetVelocity( object_a->body );
+        cpBodySetVelocity( object_a->body, cpv(vel.x * c_speed_slowdown, vel.y * c_speed_slowdown) );
+        object_a->setTempNoGravity(false);
+    }
 }
 
 //######################################################################################################

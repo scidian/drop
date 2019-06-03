@@ -191,6 +191,25 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     cpFloat target_vx = (object->getMoveSpeedX() * key_x) + object->getForcedSpeedX();
     cpFloat target_vy = (object->getMoveSpeedY() * key_y) + object->getForcedSpeedY();
 
+    // This code subtracts gravity from target speed, not sure if we want to leave this in
+    //      (useful for allowing movement force against gravity for m_cancel_gravity property, i.e. climbing up ladders)
+    if (!object->ignoreGravity()) {
+        if (target_vy < 0) {
+            target_vy -= gravity.y;
+            if (target_vy > 0) target_vy = 0;
+        } else if (target_vy > 0) {
+            target_vy += gravity.y;
+            if (target_vy < 0) target_vy = 0;
+        }
+        if (target_vx < 0) {
+            target_vx -= gravity.x;
+            if (target_vx > 0) target_vx = 0;
+        } else if (target_vx > 0) {
+            target_vx += gravity.x;
+            if (target_vx < 0) target_vx = 0;
+        }
+    }
+
     // Local Constants
     constexpr double c_buffer =      0.001;
     constexpr double c_drag_ground = 0.005;
