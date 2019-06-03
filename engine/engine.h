@@ -46,6 +46,7 @@ typedef std::map<long, DrEngineTexture*> EngineTextureMap;
 // Global Forward Declaratopns for static Chipmunk callbacks
 extern cpBool   BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                       // defined in engine_space_collision.cpp
 extern cpBool   PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                    // defined in engine_space_collision.cpp
+extern void     SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                    // defined in engine_space_collision.cpp
 extern void     PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);            // defined in engine_space_update_player.cpp
 
 //####################################################################################

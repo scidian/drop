@@ -54,9 +54,10 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
                                             Collision_Type::Damage_Enemy,
                                             Collision_Type::Damage_All };
     for (Collision_Type c : collide_types) {
-        cpCollisionHandler *damage_handler = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(c));
-        damage_handler->beginFunc = BeginFuncWildcard;
-        damage_handler->preSolveFunc = PreSolveFuncWildcard;
+        cpCollisionHandler *custom_collision_handler = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(c));
+        custom_collision_handler->beginFunc = BeginFuncWildcard;
+        custom_collision_handler->preSolveFunc = PreSolveFuncWildcard;
+        custom_collision_handler->separateFunc = SeperateFuncWildcard;
     }
 
 
@@ -175,6 +176,20 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         cpShapeSetSurfaceVelocity( belt2->shapes.first(), cpv(1000, 0) );
         cpShapeSetSurfaceVelocity( belt3->shapes.first(), cpv(1000, 0) );
         cpShapeSetSurfaceVelocity( belt4->shapes.first(), cpv(1000, 0) );
+
+        DrEngineObject *ladder = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -980, 100, -1, 0, QPointF(1, 3), 1,
+                                                m_friction, m_bounce, QPointF(0, 0), false);
+        ladder->setCancelGravity( true );
+
+        DrEngineObject *ladder2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, 300, 225, -1, 0, QPointF(6, 2), 1,
+                                                m_friction, m_bounce, QPointF(0, 0), true);
+        ladder2->setCancelGravity( true );
+
+        double ball_radius = m_textures[Test_Textures::Ball]->width() / 2.0;
+        DrEngineObject *ladder_ball = this->addCircle(Body_Type::Kinematic, Test_Textures::Ball, 800, 200, 0, c_norotate, QPointF(3, 3), c_opaque,
+                                                      ball_radius, c_center, m_friction, 0, QPointF(0, 0));
+        ladder_ball->setCancelGravity(true);
+        ladder_ball->setRotateSpeed(4);
 
         this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1180, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
         this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1120, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));

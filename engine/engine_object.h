@@ -92,9 +92,10 @@ private:
     double          m_custom_friction = c_friction; // Defaults to c_friction (-1) if this item uses global m_friction, otherwise stores custom friction
     double          m_custom_bounce = c_bounce;     // Defaults to c_bounce (-1) if this item uses global m_bounce, otherwise stores custom bounce
 
-    // ***** Object Properties - One Way
+    // ***** Object Properties - One Way / Collision
     One_Way         m_one_way = One_Way::None;      // Set one way collision type desired (None, Pass Through, Weak_Spot)
     cpVect          m_one_way_direction {0, 1};     // Direction for one way collision, defaults to Up (i.e. objects can pass upwards through the bottom of a block)
+    bool            m_cancel_gravity = false;       // Cancels gravity on objects that collide (used to make climbable ladders, trees etc)
 
     // ***** Object Properties - Health / Damage
     Collision_Type  m_collision_type = Collision_Type::Damage_None; // Specifies which types of objects this object can damage
@@ -125,7 +126,7 @@ private:
     double          m_forced_speed_y =  0.0;        // Forced move speed y of object
 
     double          m_move_speed_x =  400.0;        // Movement speed x
-    double          m_move_speed_y =    0.0;        // Movement speed y
+    double          m_move_speed_y =  100.0;        // Movement speed y
 
     double          m_jump_force_x =    0.0;        // Jump force x
     double          m_jump_force_y =  250.0;        // Jump force y
@@ -155,6 +156,7 @@ private:
 
     bool        m_grounded = false;                         // Used by Engine Update to keep track of if this object is on the ground
     bool        m_on_wall = false;                          // Used by Engine Update to keep track of if this object is on a wall
+    bool        m_temp_no_gravity = false;                  // Set to true colliding with a gravity canceling object (ladder, tree, etc)
 
     cpVect      m_last_touched_ground_normal = cpvzero;     // Normal Vector of the last touched surface
     double      m_last_touched_ground_dot = 1.0;            // Dot product of the last touched surface
@@ -207,13 +209,15 @@ public:
     void            setCustomFriction(double new_friction) { m_custom_friction = new_friction; }
     void            setCustomBounce(double new_bounce) { m_custom_bounce = new_bounce; }
 
-    // Object Properties - One Way
+    // Object Properties - One Way / Collision
     One_Way     getOneWay() { return m_one_way; }
     cpVect      getOneWayDirection() { return m_one_way_direction; }
+    bool        getCancelGravity() { return m_cancel_gravity; }
 
     void        setOneWay(One_Way one_way_type) { m_one_way = one_way_type; }
     void        setOneWayDirection(cpVect direction) { m_one_way_direction = direction; }
     void        setOneWayDirection(QPointF direction) { m_one_way_direction = cpv(direction.x(), direction.y()); }
+    void        setCancelGravity(bool should_cancel_gravity) { m_cancel_gravity = should_cancel_gravity; }
 
     // Object Properties - Health / Damage
     Collision_Type  getCollisionType() { return m_collision_type; }
@@ -270,7 +274,7 @@ public:
     const bool&     canAirJump() { return m_air_jump; }
     const bool&     canWallJump() { return m_wall_jump; }
     const bool&     canRotate() { return m_can_rotate; }
-    const bool&     ignoreGravity() { return m_ignore_gravity; }
+    bool            ignoreGravity() { return (m_ignore_gravity || m_temp_no_gravity); }
 
     void            setKeyControls(bool has_key_controls) { m_key_controls = has_key_controls; }
     void            setLostControl(bool lost_control) { m_lost_control = lost_control; }
@@ -305,6 +309,7 @@ public:
     const double&   getRemainingWallTime() { return m_remaining_wall_time; }
     const bool&     isOnGround() { return m_grounded; }
     const bool&     isOnWall() { return m_on_wall; }
+    const bool&     getTempNoGravity() { return m_temp_no_gravity; }
     const cpVect&   getLastTouchedGroundNormal() { return m_last_touched_ground_normal; }
     const double&   getLastTouchedGroundDot() { return m_last_touched_ground_dot; }
     Jump_State      getJumpState() { return m_jump_state; }
@@ -313,6 +318,7 @@ public:
     void            setRemainingWallTime(double wall_time) { m_remaining_wall_time = wall_time; }
     void            setOnGround(bool on_ground) { m_grounded = on_ground; }
     void            setOnWall(bool on_wall) { m_on_wall = on_wall; }
+    void            setTempNoGravity(bool gravity_on) { m_temp_no_gravity = gravity_on; }
     void            setLastTouchedGroundNormal(cpVect last_touched_normal) { m_last_touched_ground_normal = last_touched_normal; }
     void            setLastTouchedGroundDot(double last_touched_dot) { m_last_touched_ground_dot = last_touched_dot; }
     void            setJumpState(Jump_State new_jump_state) { m_jump_state = new_jump_state; }

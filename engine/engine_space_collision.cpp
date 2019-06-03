@@ -63,7 +63,9 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     if ( object_a->isAlive() && object_a->isDying()) return cpTrue;                     // Don't deal damage while dying
     if (!object_a->isAlive()) return cpFalse;                                           // If object a is dead, cancel collision
     if (!object_b->isAlive()) return cpFalse;                                           // If object b is dead, cancel collision
+    if ( object_b->getCancelGravity()) object_a->setTempNoGravity(true);                // Temp cancel gravity on another object if colliding and should cancel it
     if (!object_a->doesDamage()) return cpTrue;                                         // Object does no damage, exit
+
 
     // Check for dealing damage
     bool should_damage = object_a->shouldDamage(object_b->getCollisionType());
@@ -98,6 +100,14 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     return cpTrue;
 }
 
+extern void SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
+    CP_ARBITER_GET_SHAPES(arb, a, b);
+    DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
+    DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
+
+    // Stop canceling gravity when seperates
+    if (object_b->getCancelGravity()) object_a->setTempNoGravity(false);
+}
 
 //######################################################################################################
 //##    Applies Recoil Force after being damaged another object

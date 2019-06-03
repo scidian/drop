@@ -238,10 +238,12 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     cpBodySetVelocity( object->body, body_v );
 
     // ***** Update Velocity - NOTE: MUST CALL actual Update Velocity function some time during this callback!
-    if (object->ignoreGravity())
+    if (object->ignoreGravity()) {
+        ///if (object->getTempNoGravity()) cpBodySetVelocity( object->body, cpv(target_vx, target_vy) );
         cpBodyUpdateVelocityNoGravity(body, gravity, damping, dt);
-    else
+    } else {
         cpBodyUpdateVelocity(body, gravity, damping, dt);
+    }
 }
 
 
