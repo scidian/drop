@@ -9,12 +9,13 @@ uniform   mediump mat4 matrix;      // Input
 
 varying   highp   vec4 texc;        // Output
 
-void main( void )
-{
+void main( void ) {
+
     // Adjust traingle through camera matrix
     gl_Position = matrix * vertex;
 
     // Send texture coordinate to fragment shader
     texc =        texCoord;
+
 }
 

@@ -75,7 +75,15 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
                 m_engine->jump_button = true;
             } else if (event->button() & Qt::RightButton) {
                 for (int i = 0; i < 25; i++ ) {
-                    m_engine->addBlock(Body_Type::Dynamic, Test_Textures::Block, x, y, z, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+                    DrEngineObject *block = m_engine->addBlock(Body_Type::Dynamic, Test_Textures::Block, x, y, z, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+                    double hue = QRandomGenerator::global()->bounded(1.0);
+                    block->hue = static_cast<float>(hue);
+
+                    double saturation = QRandomGenerator::global()->bounded(1.0) - 0.25;
+                    block->saturation = static_cast<float>(saturation);
+
+                    double contrast = QRandomGenerator::global()->bounded(0.5) - 0.125;
+                    block->contrast = static_cast<float>(contrast);
                 }
             }
         } else {

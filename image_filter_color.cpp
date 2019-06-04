@@ -122,7 +122,7 @@ QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_imag
                             color.setHsv(Dr::Clamp(color.hue() + value, 0, 720), color.saturation(), color.value(), color.alpha());
                             break;
                         case Image_Filter_Type::Grayscale:
-                            temp = (color.redF() * 0.21) + (color.greenF() * 0.72) + (color.blueF() * 0.07);
+                            temp = (color.redF() * 0.2126) + (color.greenF() * 0.7152) + (color.blueF() * 0.0722);
                             color.setRgbF(temp, temp, temp, color.alphaF());
                             break;
                         case Image_Filter_Type::Negative:

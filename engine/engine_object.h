@@ -33,7 +33,7 @@ enum class Jump_State {
 typedef std::map<cpShape*, Shape_Type> ShapeMap;
 
 // Constants for calling engine addObject calls
-constexpr double    c_epsilon = 0.0000001;              // Floating point zero
+constexpr double    c_epsilon = 0.000001;               // Floating point zero
 constexpr QPointF   c_center    {0, 0};                 // Default offset in no offset
 constexpr QPointF   c_scale1x1  {1, 1};                 // Default scale of 1x1
 constexpr QVector3D c_default_camera_pos {0, 0, 800};   // Default camera position if there is no active camera
@@ -142,6 +142,15 @@ private:
 
     bool            m_can_rotate = true;            // To be set during object creation, moment of inertia is set to infinity to stop rotation
     bool            m_ignore_gravity = false;       // If turned to true, this object no longer is affected by gravity
+
+
+public:
+    bool            negative = false;               // Negative         True / False
+    bool            grayscale = false;              // Grayscale        True / False
+    float           hue = 0.0f;                     // Hue              Editor:    0 to 360     Shader:  0.0 to 1.0
+    float           saturation = 0.0f;              // Saturation       Editor: -255 to 255     Shader: -1.0 to 1.0
+    float           contrast = 0.0f;                // Contrast         Editor: -255 to 255     Shader: -1.0 to 1.0
+    float           brightness = 0.0f;              // Brightness       Editor: -255 to 255     Shader: -1.0 to 1.0
 
 
     // ********** Local Variables Updated by Engine

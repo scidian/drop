@@ -268,7 +268,14 @@ void OpenGL::drawObjects() {
             double fade_percent = 1.0 - (static_cast<double>(Dr::MillisecondsElapsed(object->getFadeTimer())) / static_cast<double>(object->getFadeDelay()));
             alpha *= static_cast<float>(fade_percent);
         }
-        m_shader.setUniformValue( m_uniform_alpha, alpha );
+        m_shader.setUniformValue( m_uniform_alpha,      alpha );
+
+        m_shader.setUniformValue( m_uniform_negative,   object->negative );
+        m_shader.setUniformValue( m_uniform_grayscale,  object->grayscale );
+        m_shader.setUniformValue( m_uniform_hue,        object->hue );
+        m_shader.setUniformValue( m_uniform_saturation, object->saturation );
+        m_shader.setUniformValue( m_uniform_contrast,   object->contrast );
+        m_shader.setUniformValue( m_uniform_brightness, object->brightness );
 
         // ***** Draw triangles using shader program
         glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );                                    // GL_TRIANGLES

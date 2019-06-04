@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
     ///format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);        // Use Off Screen Double Buffer
     ///format.setStencilBufferSize(8);
     ///format.setProfile(QSurfaceFormat::CoreProfile);
-    ///format.setVersion(2,0);
+    ///format.setVersion(3,3);
     QSurfaceFormat::setDefaultFormat(format);
 
     // ***** Load some global data

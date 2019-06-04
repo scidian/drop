@@ -59,14 +59,27 @@ void DrEngine::loadStageToSpace(DrStage *stage, double offset_x, double offset_y
             case 3: collision_type = Collision_Type::Damage_All;    break;
         }
         block->setCollisionType(collision_type);
+
+
+        float brightness = object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Brightness).toInt() / 255.f;
+        float contrast =   object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Contrast).toInt() / 255.f;
+        float saturation = object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Saturation).toInt() / 255.f;
+        float hue =        object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Hue).toInt() / 360.f;
+        bool  grayscale =  object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Grayscale).toBool();
+        bool  negative =   object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Negative).toBool();
+
+        block->brightness = brightness;
+        block->contrast =   contrast;
+        block->saturation = saturation;
+        block->hue =        hue;
+        block->grayscale =  grayscale;
+        block->negative =   negative;
     }
 
     // Update distance we've loaded scenes to
     m_loaded_to += stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();
 
 }
-
-
 
 
 

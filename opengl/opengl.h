@@ -58,7 +58,15 @@ private:
     int     m_attribute_tex_coord;
     int     m_uniform_matrix;
     int     m_uniform_texture;
+
+    // Custom Shader Input
     int     m_uniform_alpha;
+    int     m_uniform_negative;
+    int     m_uniform_grayscale;
+    int     m_uniform_hue;
+    int     m_uniform_saturation;
+    int     m_uniform_contrast;
+    int     m_uniform_brightness;
 
     // Timer Variables
     Clock::time_point m_time_fps = Clock::now();

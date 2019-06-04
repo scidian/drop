@@ -52,7 +52,14 @@ void OpenGL::initializeGL() {
     m_attribute_tex_coord = m_shader.attributeLocation( "texCoord" );
     m_uniform_matrix =      m_shader.uniformLocation(   "matrix" );
     m_uniform_texture =     m_shader.uniformLocation(   "tex" );
+
     m_uniform_alpha =       m_shader.uniformLocation(   "alpha" );
+    m_uniform_negative =    m_shader.uniformLocation(   "negative" );
+    m_uniform_grayscale =   m_shader.uniformLocation(   "grayscale" );
+    m_uniform_hue =         m_shader.uniformLocation(   "hue" );
+    m_uniform_saturation =  m_shader.uniformLocation(   "saturation" );
+    m_uniform_contrast =    m_shader.uniformLocation(   "contrast" );
+    m_uniform_brightness =  m_shader.uniformLocation(   "brightness" );
 
 }
 
