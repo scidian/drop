@@ -27,16 +27,16 @@ void OpenGL::drawCube(QVector3D center) {
     texture->texture()->bind();
 
     for (int loop = 0; loop < 6; loop++) {
-        std::vector<float> texCoords;
-        texCoords.clear();
-        texCoords.resize( 8 );
+        std::vector<float> texture_coordinates;
+        texture_coordinates.clear();
+        texture_coordinates.resize( 8 );
         float one_x = (1 / texture->width());
         float one_y = (1 / texture->height());
-        texCoords[0] = 1 - one_x;    texCoords[1] = 1 - one_y;
-        texCoords[2] =     one_x;    texCoords[3] = 1 - one_y;
-        texCoords[4] = 1 - one_x;    texCoords[5] =     one_y;
-        texCoords[6] =     one_x;    texCoords[7] =     one_y;
-        m_shader.setAttributeArray( m_attribute_tex_coord, texCoords.data(), 2 );
+        texture_coordinates[0] = 1 - one_x;    texture_coordinates[1] = 1 - one_y;
+        texture_coordinates[2] =     one_x;    texture_coordinates[3] = 1 - one_y;
+        texture_coordinates[4] = 1 - one_x;    texture_coordinates[5] =     one_y;
+        texture_coordinates[6] =     one_x;    texture_coordinates[7] =     one_y;
+        m_shader.setAttributeArray( m_attribute_tex_coord, texture_coordinates.data(), 2 );
         m_shader.enableAttributeArray( m_attribute_tex_coord );
 
 

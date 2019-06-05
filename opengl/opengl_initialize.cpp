@@ -48,18 +48,20 @@ void OpenGL::initializeGL() {
     m_shader.addShader( &fShader );
     m_shader.link();
 
+    // Vertex Shader Input
     m_attribute_vertex =    m_shader.attributeLocation( "vertex" );
-    m_attribute_tex_coord = m_shader.attributeLocation( "texCoord" );
-    m_uniform_matrix =      m_shader.uniformLocation(   "matrix" );
-    m_uniform_texture =     m_shader.uniformLocation(   "tex" );
+    m_attribute_tex_coord = m_shader.attributeLocation( "texture_coordinates" );
+    m_uniform_matrix =      m_shader.uniformLocation(   "u_matrix" );
 
-    m_uniform_alpha =       m_shader.uniformLocation(   "alpha" );
-    m_uniform_negative =    m_shader.uniformLocation(   "negative" );
-    m_uniform_grayscale =   m_shader.uniformLocation(   "grayscale" );
-    m_uniform_hue =         m_shader.uniformLocation(   "hue" );
-    m_uniform_saturation =  m_shader.uniformLocation(   "saturation" );
-    m_uniform_contrast =    m_shader.uniformLocation(   "contrast" );
-    m_uniform_brightness =  m_shader.uniformLocation(   "brightness" );
+    // Fragment Shader Input
+    m_uniform_texture =     m_shader.uniformLocation(   "u_tex" );
+    m_uniform_alpha =       m_shader.uniformLocation(   "u_alpha" );
+    m_uniform_negative =    m_shader.uniformLocation(   "u_negative" );
+    m_uniform_grayscale =   m_shader.uniformLocation(   "u_grayscale" );
+    m_uniform_hue =         m_shader.uniformLocation(   "u_hue" );
+    m_uniform_saturation =  m_shader.uniformLocation(   "u_saturation" );
+    m_uniform_contrast =    m_shader.uniformLocation(   "u_contrast" );
+    m_uniform_brightness =  m_shader.uniformLocation(   "u_brightness" );
 
 }
 

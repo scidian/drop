@@ -258,10 +258,12 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
         spin->setSizePolicy(size_policy);
         spin->setDecimals(3);
         switch (spin_type) {
-            case Property_Type::Double:     spin->setRange(-100000000, 100000000);              spin->setSingleStep(5);     break;
-            case Property_Type::Percent:    spin->setRange(0, 100);    spin->setSuffix("%");    spin->setSingleStep(5);     break;
-            case Property_Type::Angle:      spin->setRange(-360, 360); spin->setSuffix("°");    spin->setSingleStep(5);     break;
-            default:                        spin->setRange(-100000000, 100000000);
+            case Property_Type::Double:         spin->setRange(-100000000, 100000000);              spin->setSingleStep(5);     break;
+            case Property_Type::Percent:        spin->setRange(   0, 100); spin->setSuffix("%");    spin->setSingleStep(5);     break;
+            case Property_Type::Angle:          spin->setRange(-360, 360); spin->setSuffix("°");    spin->setSingleStep(5);     break;
+            case Property_Type::Filter:         spin->setRange(-255, 255);                          spin->setSingleStep(5);     break;
+            case Property_Type::FilterAngle:    spin->setRange(   0, 360);                          spin->setSingleStep(5);     break;
+            default:                            spin->setRange(-100000000, 100000000);
         }
         spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);                 // Hides little up / down buttons
         spin->setProperty(User_Property::Key, QVariant::fromValue( property_key ));         // Store property key within item

@@ -1,21 +1,27 @@
+#ifdef GL_ES
+precision mediump float;
+#endif
 //
 //
 //
 //
 //
-attribute highp   vec4 vertex;      // Input
-attribute highp   vec4 texCoord;    // Input
-uniform   mediump mat4 matrix;      // Input
 
-varying   highp   vec4 texc;        // Output
+// Input from Engine
+attribute highp     vec4 vertex;                    // Input
+attribute highp     vec4 texture_coordinates;       // Input
+uniform   mediump   mat4 u_matrix;                  // Input
+
+// Output to Fragment Shader
+varying   highp     vec4 coordinates;               // Output
 
 void main( void ) {
 
     // Adjust traingle through camera matrix
-    gl_Position = matrix * vertex;
+    gl_Position = u_matrix * vertex;
 
     // Send texture coordinate to fragment shader
-    texc =        texCoord;
+    coordinates =        texture_coordinates;
 
 }
 

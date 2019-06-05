@@ -79,11 +79,10 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
                     double hue = QRandomGenerator::global()->bounded(1.0);
                     block->hue = static_cast<float>(hue);
 
-                    double saturation = QRandomGenerator::global()->bounded(1.0) - 0.25;
-                    block->saturation = static_cast<float>(saturation);
-
-                    double contrast = QRandomGenerator::global()->bounded(0.5) - 0.125;
-                    block->contrast = static_cast<float>(contrast);
+                    ///double saturation = QRandomGenerator::global()->bounded(0.5) - 0.125;
+                    ///block->saturation = static_cast<float>(saturation);
+                    ///double contrast = QRandomGenerator::global()->bounded(0.5) - 0.125;
+                    ///block->contrast = static_cast<float>(contrast);
                 }
             }
         } else {
