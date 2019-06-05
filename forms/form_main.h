@@ -126,6 +126,7 @@ public:
     void                setLabelText(Label_Names label_name, QString new_text);
 
     // Event Handlers
+    virtual void        closeEvent(QCloseEvent *event) override;                                            // Inherited from QWidget
     virtual bool        eventFilter(QObject *obj, QEvent *event) override;                                  // Inherited from QObject
     virtual void        resizeEvent(QResizeEvent *event) override;                                          // Inherited from QWidget
 

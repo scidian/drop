@@ -250,6 +250,12 @@ bool FormMain::eventFilter(QObject *obj, QEvent *event) {
     return QObject::eventFilter(obj, event);
 }
 
+// Overrides close event to make sure all rogue windows are closed
+void FormMain::closeEvent(QCloseEvent *event) {
+    qApp->closeAllWindows();
+    event->accept();
+}
+
 // Overrides resize event to keep toolbar proper width
 void FormMain::resizeEvent(QResizeEvent *event) {
     QMainWindow::resizeEvent(event);
