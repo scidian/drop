@@ -60,9 +60,20 @@ void main( void ) {
     vec4 texture_color;
     if (u_pixel_x > 1.0 || u_pixel_y > 1.0) {
         float dx = u_pixel_x * (1.0 / u_width);
-        float dy = 1.0 * (1.0 / u_height);
+        float dy = u_pixel_y * (1.0 / u_height);
         vec2 coord = coordinates.st;
              coord = vec2(dx * floor(coord.x / dx) + (dx / 2.0), dy * floor(coord.y / dy) + (dy / 2.0));
+
+        //vec2 coord = coordinates.st;
+        //float dx = u_pixel_x;
+        //float dy = u_pixel_y;
+        //float x = coord.x * u_width;
+        //float y = coord.y * u_height;
+        //float x_coord = clamp( dx * floor(x / dx) + (dx / 2.0), 0.0, u_width - 1.0);
+        //float y_coord = clamp( dy * floor(y / dy) + (dy / 2.0), 0.0, u_height - 1.0);
+        //coord.x = x_coord * (1.0 / u_width);
+        //coord.y = y_coord * (1.0 / u_height);
+
         texture_color = texture2D(u_tex, coord).rgba;
     } else {
         texture_color = texture2D(u_tex, coordinates.st).rgba;                      // If not pixelated, grab initial texture color at the current location

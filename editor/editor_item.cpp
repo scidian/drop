@@ -137,13 +137,16 @@ QPainterPath DrItem::shape() const {
 void DrItem::applyFilters() {
     QPixmap new_pixmap = m_pixmap.copy();
 
-    int  brightness = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Brightness).toInt();
-    int  contrast   = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Contrast).toInt();
-    int  saturation = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Saturation).toInt();
-    int  hue        = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Hue).toInt();
-    bool grayscale  = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Grayscale).toBool();
-    bool negative   = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Negative).toBool();
+    int     brightness = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Brightness).toInt();
+    int     contrast   = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Contrast).toInt();
+    int     saturation = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Saturation).toInt();
+    int     hue        = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Hue).toInt();
+    bool    grayscale  = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Grayscale).toBool();
+    bool    negative   = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Negative).toBool();
+    QPointF pixelation = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Pixelation).toPointF();
 
+    if (pixelation.x() > 1.0 || pixelation.y() > 1.0)
+                           new_pixmap = DrImaging::changePixelation(new_pixmap, pixelation);
     if ( negative )        new_pixmap = DrImaging::changeToNegative(new_pixmap);
     if ( grayscale )       new_pixmap = DrImaging::changeToGrayscale(new_pixmap);
     if ( hue        != 0 ) new_pixmap = DrImaging::changeHue(new_pixmap, hue);

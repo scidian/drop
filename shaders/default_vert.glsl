@@ -21,7 +21,7 @@ void main( void ) {
     gl_Position = u_matrix * vertex;
 
     // Send texture coordinate to fragment shader
-    coordinates =        texture_coordinates;
+    coordinates = texture_coordinates;
 
 }
 

@@ -20,6 +20,7 @@ enum class Image_Filter_Type {
     Hue,
     Grayscale,
     Negative,
+    Pixelation,
 
     Opacity,
 };
@@ -36,6 +37,7 @@ namespace DrImaging {
     QPixmap changeHue(const QPixmap& pixmap, int hue);
     QPixmap changeToGrayscale(const QPixmap& pixmap);
     QPixmap changeToNegative(const QPixmap& pixmap);
+    QPixmap changePixelation(const QPixmap& pixmap, QPointF pixelation);
 
     QPixmap changeOpacity(const QPixmap& pixmap, int opacity);
 }

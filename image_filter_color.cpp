@@ -20,8 +20,8 @@ namespace DrImaging
 {
 
 // Foward declarations
-QImage  applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_image, int value );
-
+QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_image, int value );
+QImage applyPixelation( const QImage& from_image, QPointF data_pair );
 
 
 //####################################################################################
@@ -59,7 +59,10 @@ QPixmap changeToNegative(const QPixmap& pixmap) {
     return QPixmap::fromImage( image );
 }
 
-
+QPixmap changePixelation(const QPixmap& pixmap, QPointF pixelation) {
+    QImage image = applyPixelation( pixmap.toImage(), pixelation );
+    return QPixmap::fromImage( image );
+}
 
 // Added this to change opacity for drag events
 QPixmap changeOpacity(const QPixmap& pixmap, int opacity) {
@@ -72,21 +75,18 @@ QPixmap changeOpacity(const QPixmap& pixmap, int opacity) {
 //##        Loops through image and changes one pixel at a time based on a
 //##        premultiplied table
 //####################################################################################
-QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_image, int value ) {
+QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_image, int value) {
 
     QImage image = from_image;
     image.detach();
-
     if ( image.format() != QImage::Format::Format_ARGB32 )
         image = image.convertToFormat( QImage::Format_ARGB32 );
 
     QTime time_it;
     time_it.restart();
 
-
     // Truecolor Rgba
     if (image.colorCount() == 0 ) {
-
 
         int table[ 256 ];
         for ( int i = 0; i < 256; ++i ) {
@@ -131,13 +131,13 @@ QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_imag
                         case Image_Filter_Type::Opacity:
                             color.setAlpha( Dr::Clamp(color.alpha() + value, 0, 255) );
                             break;
+                        case Image_Filter_Type::Pixelation: ;                                           // Different Function
                     }
 
                     // Sets the new pixel color
                     line[x] = color.rgba();
 
                 }
-
             }
 
 
@@ -158,6 +158,47 @@ QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_imag
 
     return image;
 }
+
+
+
+//####################################################################################
+//##        Pixelates Image
+//####################################################################################
+QImage applyPixelation(const QImage& from_image, QPointF data_pair ) {
+    QImage image = from_image;
+    image.detach();
+    if ( image.format() != QImage::Format::Format_ARGB32 )
+        image = image.convertToFormat( QImage::Format_ARGB32 );
+
+    // Truecolor Rgba
+    if (image.colorCount() == 0 ) {
+        if ( image.hasAlphaChannel() ) {
+
+            // Grab all the scan lines
+            QVector<QRgb*> lines;
+            for( int y = 0; y < image.height(); ++y ) {
+                lines.append( reinterpret_cast<QRgb*>(image.scanLine(y)) );
+            }
+
+            // Loop through every pixel
+            for( int y = 0; y < image.height(); ++y ) {
+                for( int x = 0; x < image.width(); ++x ) {
+                    double dx = data_pair.x();
+                    double dy = data_pair.y();
+
+                    double x_coord = Dr::Clamp( dx * floor(x / dx) + (dx / 2.0), 0.0, image.width() - 1.0);
+                    double y_coord = Dr::Clamp( dy * floor(y / dy) + (dy / 2.0), 0.0, image.height() - 1.0);
+
+                    lines[y][x] = lines[static_cast<int>(y_coord)][static_cast<int>(x_coord)];
+                }
+            }
+
+        } else {    Dr::ShowMessageBox("Image missing alpha channel!"); }
+    } else {    Dr::ShowMessageBox("Image only has 256 colors!"); }
+
+    return image;
+}
+
 
 
 

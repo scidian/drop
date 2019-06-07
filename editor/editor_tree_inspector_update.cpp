@@ -59,13 +59,13 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 
             case Property_Type::Int:
             case Property_Type::Positive:
-            case Property_Type::Filter:
-            case Property_Type::FilterAngle:
                                             dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toInt());            break;
 
             case Property_Type::Double:
             case Property_Type::Percent:
             case Property_Type::Angle:
+            case Property_Type::Filter:
+            case Property_Type::FilterAngle:
                 if (widget->property(User_Property::Order).toInt() == 2)
                     dynamic_cast<QSlider*>(widget)->setValue(prop->getValue().toInt());
                 else

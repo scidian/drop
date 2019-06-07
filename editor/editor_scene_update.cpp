@@ -127,6 +127,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
             case Properties::Object_Filter_Hue:
             case Properties::Object_Filter_Grayscale:
             case Properties::Object_Filter_Negative:
+            case Properties::Object_Filter_Pixelation:
                 item->applyFilters();
                 break;
 
