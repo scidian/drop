@@ -15,7 +15,12 @@ varying highp vec4  coordinates;                    // Texture Coodinates
 uniform sampler2D   u_tex;                          // Texture
 uniform lowp float  u_alpha;                        // Opacity
 
+uniform lowp float  u_width;                        // Width of gl window
+uniform lowp float  u_height;                       // Height of gl window
+
 // EXACT SAME ORDER AS IN EDITOR!!!!!
+uniform lowp float  u_pixel_x;// = 1.0;             // Pixel Width X    1.0 Normal, 4.0 is nice pixelation
+uniform lowp float  u_pixel_y;// = 1.0;             // Pixel Width Y    1.0 Normal, 4.0 is nice pixelation
 uniform      bool   u_negative;// = false;          // Negative         True / False
 uniform      bool   u_grayscale;// = false;         // Grayscale        True / False
 uniform lowp float  u_hue;// = 0.0;                 // Hue              Editor:    0 to 360     Shader:  0.0 to 1.0
@@ -44,16 +49,28 @@ vec3 hsv2rgb(vec3 c) {
 
 void main( void ) {
 
-    vec4 texture_color = texture2D(u_tex, coordinates.st).rgba;                     // Grab initial texture color at the current location
-    vec4 alpha_in = vec4(u_alpha, u_alpha, u_alpha, u_alpha);                       // For adding in existing opacity of object
-    vec3 fragRGB = texture_color.rgb;                                               // Save rgb as a vec3 for working with
-
     // ********** NORMAL: No post processing, just get texture color and multiply in alpha channel (from editor) for semi-transparent objects
     //gl_FragColor = texture2D( u_tex, coordinates.st ).rgba * alpha_in;
     // ***** RED: Makes everything green
     //gl_FragColor = vec4(1,0,0,1) * texture2D( u_tex, coordinates.st ).rgba * alpha_in;
     // ***** GREEN: Makes everything green
     //gl_FragColor = vec4(0,1,0,1) * texture2D( u_tex, coordinates.st ).rgba * alpha_in;
+
+    // ***** PIXELATED
+    vec4 texture_color;
+    if (u_pixel_x > 1.0 || u_pixel_y > 1.0) {
+        float dx = u_pixel_x * (1.0 / u_width);
+        float dy = 1.0 * (1.0 / u_height);
+        vec2 coord = coordinates.st;
+             coord = vec2(dx * floor(coord.x / dx) + (dx / 2.0), dy * floor(coord.y / dy) + (dy / 2.0));
+        texture_color = texture2D(u_tex, coord).rgba;
+    } else {
+        texture_color = texture2D(u_tex, coordinates.st).rgba;                      // If not pixelated, grab initial texture color at the current location
+    }
+
+    vec4 alpha_in = vec4(u_alpha, u_alpha, u_alpha, u_alpha);                       // For adding in existing opacity of object
+    vec3 fragRGB = texture_color.rgb;                                               // Save rgb as a vec3 for working with
+
 
     // ***** NEGATIVE
     if (u_negative) fragRGB = 1.0 - fragRGB;
@@ -78,6 +95,7 @@ void main( void ) {
     fragRGB.rgb =  ((fragRGB.rgb - 0.5) * (u_contrast + 0.392) / 0.392) + 0.5;      // Contrast
     fragRGB.rgb += u_brightness;                                                    // Brightness
     fragRGB.rgb =  clamp(fragRGB.rgb, 0.0, 1.0);
+
 
     gl_FragColor = vec4(fragRGB, texture_color.a) * alpha_in;
 

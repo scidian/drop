@@ -127,14 +127,22 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
             break;
         case Property_Type::SizeF:
             spin_left->setPrefix("W: ");        spin_right->setPrefix("H: ");   break;
+        case Property_Type::PositiveSizeF:
+            spin_left->setPrefix("W: ");        spin_right->setPrefix("H: ");
+            spin_left->setRange( 1.0, 100000000);
+            spin_right->setRange(1.0, 100000000);
+        break;
         default: ;
     }
     if (spin_type == Property_Type::ScaleF || spin_type == Property_Type::GridScaleF) {
         spin_left->setSingleStep(.1);
         spin_right->setSingleStep(.1);
+    } else if (spin_type == Property_Type::PositiveSizeF) {
+        spin_left->setSingleStep(1.0);
+        spin_right->setSingleStep(1.0);
     } else {
-        spin_left->setSingleStep(5);
-        spin_right->setSingleStep(5);
+        spin_left->setSingleStep(5.0);
+        spin_right->setSingleStep(5.0);
     }
 
     horizontal_split->addWidget(spin_left);

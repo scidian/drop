@@ -166,7 +166,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
         QFrame *properties_frame = new QFrame();
         properties_frame->setObjectName("propertiesFrame");
         QBoxLayout *vertical_layout = new QVBoxLayout(properties_frame);
-        vertical_layout->setSpacing(6);
+        vertical_layout->setSpacing(4);
         vertical_layout->setMargin(0);
         vertical_layout->setContentsMargins(6,4,8,4);
 
@@ -198,27 +198,28 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
             DrProperty *prop = property_pair.second;
 
             switch (property_pair.second->getPropertyType()) {
-                case Property_Type::Bool:           new_widget = createCheckBox(        prop, fp, sp_right);                                break;
-                case Property_Type::String:         new_widget = createLineEdit(        prop, fp, sp_right);                                break;
-                case Property_Type::Int:            new_widget = createIntSpinBox(      prop, fp, sp_right, Property_Type::Int);            break;
-                case Property_Type::Positive:       new_widget = createIntSpinBox(      prop, fp, sp_right, Property_Type::Positive);       break;
-                ///case Property_Type::Filter:      new_widget = createIntSpinBox(      prop, fp, sp_right, Property_Type::Filter);         break;
-                case Property_Type::Filter:         new_widget = createSlider(prop, fp, sp_right, Property_Type::Filter);                   break;
-                ///case Property_Type::FilterAngle: new_widget = createIntSpinBox(      prop, fp, sp_right, Property_Type::FilterAngle);    break;
-                case Property_Type::FilterAngle:    new_widget = createSlider(prop, fp, sp_right, Property_Type::FilterAngle);              break;
-                case Property_Type::Double:         new_widget = createDoubleSpinBox(   prop, fp, sp_right, Property_Type::Double);         break;
-                ///case Property_Type::Percent:     new_widget = createDoubleSpinBox(   prop, fp, sp_right, Property_Type::Percent);     break;
-                case Property_Type::Percent:        new_widget = createSlider(prop, fp, sp_right, Property_Type::Percent);                  break;
-                case Property_Type::Angle:          new_widget = createDoubleSpinBox(   prop, fp, sp_right, Property_Type::Angle);          break;
-                case Property_Type::PositionF:      new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::PositionF);  break;
-                case Property_Type::PointF:         new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::PointF);     break;
-                case Property_Type::SizeF:          new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::SizeF);      break;
-                case Property_Type::ScaleF:         new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::ScaleF);     break;
-                case Property_Type::GridF:          new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::GridF);      break;
-                case Property_Type::GridScaleF:     new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::GridScaleF); break;
-                case Property_Type::Variable:       new_widget = createVariableSpinBoxPair( prop, fp, sp_right);                            break;
-                case Property_Type::List:           new_widget = createListBox(             prop, fp, sp_right);                            break;
-                case Property_Type::Color:          new_widget = createColorBox(            prop, fp, sp_right);                            break;
+                case Property_Type::Bool:           new_widget = createCheckBox(        prop, fp, sp_right);                                    break;
+                case Property_Type::String:         new_widget = createLineEdit(        prop, fp, sp_right);                                    break;
+                case Property_Type::Int:            new_widget = createIntSpinBox(      prop, fp, sp_right, Property_Type::Int);                break;
+                case Property_Type::Positive:       new_widget = createIntSpinBox(      prop, fp, sp_right, Property_Type::Positive);           break;
+                ///case Property_Type::Filter:      new_widget = createIntSpinBox(      prop, fp, sp_right, Property_Type::Filter);                break;
+                case Property_Type::Filter:         new_widget = createSlider(prop, fp, sp_right, Property_Type::Filter);                       break;
+                ///case Property_Type::FilterAngle: new_widget = createIntSpinBox(      prop, fp, sp_right, Property_Type::FilterAngle);           break;
+                case Property_Type::FilterAngle:    new_widget = createSlider(prop, fp, sp_right, Property_Type::FilterAngle);                  break;
+                case Property_Type::Double:         new_widget = createDoubleSpinBox(   prop, fp, sp_right, Property_Type::Double);             break;
+                ///case Property_Type::Percent:     new_widget = createDoubleSpinBox(   prop, fp, sp_right, Property_Type::Percent);               break;
+                case Property_Type::Percent:        new_widget = createSlider(prop, fp, sp_right, Property_Type::Percent);                      break;
+                case Property_Type::Angle:          new_widget = createDoubleSpinBox(   prop, fp, sp_right, Property_Type::Angle);              break;
+                case Property_Type::PositionF:      new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::PositionF);      break;
+                case Property_Type::PointF:         new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::PointF);         break;
+                case Property_Type::SizeF:          new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::SizeF);          break;
+                case Property_Type::PositiveSizeF:  new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::PositiveSizeF);  break;
+                case Property_Type::ScaleF:         new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::ScaleF);         break;
+                case Property_Type::GridF:          new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::GridF);          break;
+                case Property_Type::GridScaleF:     new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::GridScaleF);     break;
+                case Property_Type::Variable:       new_widget = createVariableSpinBoxPair( prop, fp, sp_right);                                break;
+                case Property_Type::List:           new_widget = createListBox(             prop, fp, sp_right);                                break;
+                case Property_Type::Color:          new_widget = createColorBox(            prop, fp, sp_right);                                break;
 
                 case Property_Type::Image:                                  // QPixmap
                 case Property_Type::Icon:

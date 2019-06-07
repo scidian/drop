@@ -60,14 +60,16 @@ void DrEngine::loadStageToSpace(DrStage *stage, double offset_x, double offset_y
         }
         block->setCollisionType(collision_type);
 
+        QPointF pixelation = object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Pixelation).toPointF();
+        float   brightness = object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Brightness).toInt() / 255.f;
+        float   contrast =   object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Contrast).toInt() / 255.f;
+        float   saturation = object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Saturation).toInt() / 255.f;
+        float   hue =        object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Hue).toInt() / 360.f;
+        bool    grayscale =  object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Grayscale).toBool();
+        bool    negative =   object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Negative).toBool();
 
-        float brightness = object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Brightness).toInt() / 255.f;
-        float contrast =   object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Contrast).toInt() / 255.f;
-        float saturation = object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Saturation).toInt() / 255.f;
-        float hue =        object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Hue).toInt() / 360.f;
-        bool  grayscale =  object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Grayscale).toBool();
-        bool  negative =   object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Negative).toBool();
-
+        block->pixel_x =    static_cast<float>(pixelation.x());
+        block->pixel_y =    static_cast<float>(pixelation.y());
         block->brightness = brightness;
         block->contrast =   contrast;
         block->saturation = saturation;

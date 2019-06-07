@@ -60,13 +60,17 @@ private:
     int     m_uniform_texture;
 
     // Custom Shader Input
-    int     m_uniform_alpha;
-    int     m_uniform_negative;
-    int     m_uniform_grayscale;
-    int     m_uniform_hue;
-    int     m_uniform_saturation;
-    int     m_uniform_contrast;
-    int     m_uniform_brightness;
+    int     m_uniform_width;                    // Width of texture
+    int     m_uniform_height;                   // Height of texture
+    int     m_uniform_alpha;                    // Opacity
+    int     m_uniform_pixel_x;                  // Pixelation X value
+    int     m_uniform_pixel_y;                  // Pixelation Y value
+    int     m_uniform_negative;                 // Negative?
+    int     m_uniform_grayscale;                // Grayscale?
+    int     m_uniform_hue;                      // Hue, 0.0 to 1.0
+    int     m_uniform_saturation;               // Saturation, -1.0 to 1.0
+    int     m_uniform_contrast;                 // Contrast,   -1.0 to 1.0
+    int     m_uniform_brightness;               // Brightness, -1.0 to 1.0
 
     // Timer Variables
     Clock::time_point m_time_fps = Clock::now();

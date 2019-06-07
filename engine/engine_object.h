@@ -143,16 +143,6 @@ private:
     bool            m_can_rotate = true;            // To be set during object creation, moment of inertia is set to infinity to stop rotation
     bool            m_ignore_gravity = false;       // If turned to true, this object no longer is affected by gravity
 
-
-public:
-    bool            negative = false;               // Negative         True / False
-    bool            grayscale = false;              // Grayscale        True / False
-    float           hue = 0.0f;                     // Hue              Editor:    0 to 360     Shader:  0.0 to 1.0
-    float           saturation = 0.0f;              // Saturation       Editor: -255 to 255     Shader: -1.0 to 1.0
-    float           contrast = 0.0f;                // Contrast         Editor: -255 to 255     Shader: -1.0 to 1.0
-    float           brightness = 0.0f;              // Brightness       Editor: -255 to 255     Shader: -1.0 to 1.0
-
-
     // ********** Local Variables Updated by Engine
     //                NOT TO BE SET BY USER
     //
@@ -183,6 +173,19 @@ public:
     double      m_angle = 0.0;                              // Current object->body angle, updated every frame by updateSpaceHelper()
     QPointF     m_position;                                 // Current object->body posiiton, updated every frame by updateSpaceHelper()
     QPointF     m_previous_position;                        // Previous frame position, updated every frame by updateSpaceHelper()
+
+
+public:
+    // ********** Image Post Processing Attributes
+    float       pixel_x = 1.0;                              // Pixelation X     1.0+
+    float       pixel_y = 1.0;                              // Pixelation Y     1.0+
+    bool        negative = false;                           // Negative         True / False
+    bool        grayscale = false;                          // Grayscale        True / False
+    float       hue = 0.0f;                                 // Hue              Editor:    0 to 360     Shader:  0.0 to 1.0
+    float       saturation = 0.0f;                          // Saturation       Editor: -255 to 255     Shader: -1.0 to 1.0
+    float       contrast = 0.0f;                            // Contrast         Editor: -255 to 255     Shader: -1.0 to 1.0
+    float       brightness = 0.0f;                          // Brightness       Editor: -255 to 255     Shader: -1.0 to 1.0
+
 
 
 public:

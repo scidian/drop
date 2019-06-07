@@ -158,6 +158,7 @@ enum class Property_Type {
                             //                                updateInspectorPropertyBoxes(), updateToolTipData()
     PointF,                 // QPointF      Floating pair x and y
     SizeF,                  // QPointF      Floating pair w and h
+    PositiveSizeF,          // QPointF      Floating pair x and y, both numbers are >= 1.0
     ScaleF,                 // QPointF      Floating pair, has smaller increment step in spin box
     GridF,                  // QPointF      Floating pair x and y, minimum value of c_minimum_grid_size for both x and y
     GridScaleF,             // QPointF      Floating pair x and y, minimum value of c_minimum_grid_scale for both x and y
@@ -267,6 +268,7 @@ enum class Properties {
     Object_Angular_Velocity,        //variable
 
     // Appearance
+    Object_Filter_Pixelation,       //positive size
     Object_Filter_Brightness,       //filter
     Object_Filter_Contrast,         //filter
     Object_Filter_Saturation,       //filter

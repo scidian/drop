@@ -113,9 +113,14 @@ void OpenGL::drawCube(QVector3D center) {
         m_shader.setAttributeArray( m_attribute_vertex, vertices.data(), 3 );
         m_shader.enableAttributeArray( m_attribute_vertex );
 
-        m_shader.setUniformValue( m_uniform_texture, 0 );
+        m_shader.setUniformValue( m_uniform_texture,    0 );
 
-        m_shader.setUniformValue( m_uniform_alpha, 1.0f );
+        m_shader.setUniformValue( m_uniform_alpha,      1.0f );
+        m_shader.setUniformValue( m_uniform_width,      static_cast<float>(texture->width()) );
+        m_shader.setUniformValue( m_uniform_height,     static_cast<float>(texture->height()) );
+
+        m_shader.setUniformValue( m_uniform_pixel_x,    1.0f );
+        m_shader.setUniformValue( m_uniform_pixel_y,    1.0f );
         m_shader.setUniformValue( m_uniform_negative,   false );
         m_shader.setUniformValue( m_uniform_grayscale,  false );
         m_shader.setUniformValue( m_uniform_hue,        0.0f );

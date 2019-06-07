@@ -161,6 +161,9 @@ void DrObject::addComponentMovement() {
 void DrObject::addComponentAppearance() {
     addComponent(Components::Object_Appearance, "Appearance", "Filters for objects as they appear in the Stage. ", Component_Colors::Mellow_Yellow, true);
     getComponent(Components::Object_Appearance)->setIcon(Component_Icons::Appearance);
+
+    addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Pixelation, Property_Type::PositiveSizeF, QPointF(1.0, 1.0),
+                           "Pixelation", "Size of x and y pixels, larger numbers provide more pixelation.");
     addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Brightness, Property_Type::Filter, 0,
                            "Brightness", "How light / dark this object should appear. \nDefault: \t0 \nRange: \t-255 to 255");
     addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Contrast, Property_Type::Filter, 0,

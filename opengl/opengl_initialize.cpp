@@ -55,7 +55,11 @@ void OpenGL::initializeGL() {
 
     // Fragment Shader Input
     m_uniform_texture =     m_shader.uniformLocation(   "u_tex" );
-    m_uniform_alpha =       m_shader.uniformLocation(   "u_alpha" );
+    m_uniform_alpha =       m_shader.uniformLocation(   "u_alpha" );    
+    m_uniform_width =       m_shader.uniformLocation(   "u_width" );
+    m_uniform_height =      m_shader.uniformLocation(   "u_height" );
+    m_uniform_pixel_x =     m_shader.uniformLocation(   "u_pixel_x" );
+    m_uniform_pixel_y =     m_shader.uniformLocation(   "u_pixel_y" );
     m_uniform_negative =    m_shader.uniformLocation(   "u_negative" );
     m_uniform_grayscale =   m_shader.uniformLocation(   "u_grayscale" );
     m_uniform_hue =         m_shader.uniformLocation(   "u_hue" );

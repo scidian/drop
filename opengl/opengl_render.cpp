@@ -269,7 +269,11 @@ void OpenGL::drawObjects() {
             alpha *= static_cast<float>(fade_percent);
         }
         m_shader.setUniformValue( m_uniform_alpha,      alpha );
+        m_shader.setUniformValue( m_uniform_width,      static_cast<float>(texture->width()) );
+        m_shader.setUniformValue( m_uniform_height,     static_cast<float>(texture->height()) );
 
+        m_shader.setUniformValue( m_uniform_pixel_x,    object->pixel_x );
+        m_shader.setUniformValue( m_uniform_pixel_y,    object->pixel_y );
         m_shader.setUniformValue( m_uniform_negative,   object->negative );
         m_shader.setUniformValue( m_uniform_grayscale,  object->grayscale );
         m_shader.setUniformValue( m_uniform_hue,        object->hue );
