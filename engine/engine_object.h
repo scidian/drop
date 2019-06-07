@@ -34,9 +34,9 @@ typedef std::map<cpShape*, Shape_Type> ShapeMap;
 
 // Constants for calling engine addObject calls
 constexpr double    c_epsilon = 0.000001;               // Floating point zero
-constexpr QPointF   c_center    {0, 0};                 // Default offset in no offset
-constexpr QPointF   c_scale1x1  {1, 1};                 // Default scale of 1x1
-constexpr QVector3D c_default_camera_pos {0, 0, 800};   // Default camera position if there is no active camera
+const     QPointF   c_center    {0, 0};                 // Default offset in no offset
+const     QPointF   c_scale1x1  {1, 1};                 // Default scale of 1x1
+const     QVector3D c_default_camera_pos {0, 0, 800};   // Default camera position if there is no active camera
 constexpr long      c_no_camera =  0;                   // Default camera position if there is no active camera
 constexpr double    c_norotate =   0;                   // Default rotation amount of zero
 constexpr double    c_opaque =     1;                   // Default transparency of fully opaque
