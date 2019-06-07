@@ -59,11 +59,12 @@ void main( void ) {
     // ***** PIXELATED
     vec4 texture_color;
     if (u_pixel_x > 1.0 || u_pixel_y > 1.0) {
-        float dx = u_pixel_x * (1.0 / u_width);
-        float dy = u_pixel_y * (1.0 / u_height);
+        float dx = u_pixel_x * 0.99 * (1.0 / u_width);          // 99 Percent is slight modifier found to be more like the function in Image_Filter_Color.cpp
+        float dy = u_pixel_y * 0.99 * (1.0 / u_height);         // 99 Percent is slight modifier found to be more like the function in Image_Filter_Color.cpp
         vec2 coord = coordinates.st;
              coord = vec2(dx * floor(coord.x / dx) + (dx / 2.0), dy * floor(coord.y / dy) + (dy / 2.0));
 
+        // ALTERNATIVE COORDINATE CALCULATION
         //vec2 coord = coordinates.st;
         //float dx = u_pixel_x;
         //float dy = u_pixel_y;
