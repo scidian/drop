@@ -6,6 +6,7 @@
 //
 //
 #include <QtMath>
+#include <QOpenGLFramebufferObject>
 #include <QPainter>
 #include <vector>
 
@@ -19,7 +20,7 @@
 
 
 //####################################################################################
-//##        Render, Paint the Scene
+//##        Render, Paint the Scene (called by update())
 //####################################################################################
 void OpenGL::paintGL() {
 
@@ -35,6 +36,29 @@ void OpenGL::paintGL() {
         m_fps_count = 0;
         m_time_fps = Clock::now();
     }
+
+
+    // Allocate additional FBO for rendering or resize it if widget size changed
+    bool create_fbo = false;
+    if (!m_fbo || !m_texture_fbo)
+        create_fbo = true;
+    else if (m_fbo->width() != width() || m_fbo->height() != height())
+        create_fbo = true;
+
+    if (create_fbo) {
+        delete m_fbo;
+        delete m_texture_fbo;
+        QOpenGLFramebufferObjectFormat format;
+        format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
+        format.setMipmap(true);
+        format.setSamples(4);
+        format.setTextureTarget(GL_TEXTURE_2D);
+        format.setInternalTextureFormat(GL_RGBA32F_ARB);
+        m_fbo = new QOpenGLFramebufferObject(width(), height(), format);
+        m_texture_fbo = new QOpenGLFramebufferObject( width(), height() );
+    }
+    m_fbo->bind();
+
 
     // ********** Make sure viewport is sized correctly and clear the buffers
     ///glViewport(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
@@ -52,9 +76,6 @@ void OpenGL::paintGL() {
 
     // Enable anti aliasing
     glEnable( GL_MULTISAMPLE );
-    ///glEnable(GL_POLYGON_SMOOTH);
-    ///glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
-    ///glSampleCoverage(GL_SAMPLE_ALPHA_TO_COVERAGE, GL_TRUE);
 
     // Enable depth / stencil test
     ///glEnable( GL_DEPTH_TEST  );
@@ -70,6 +91,97 @@ void OpenGL::paintGL() {
 
     // ***** Render Scene
     drawObjects();
+
+
+
+
+
+
+
+    m_fbo->release();
+    QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_fbo);
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, m_texture_fbo->texture());
+
+    if (!m_shader.bind()) return;
+
+
+    float left =   0.0f - (width() /  2.0f);
+    float right =  0.0f + (width() /  2.0f);
+    float top =    0.0f + (height() / 2.0f);
+    float bottom = 0.0f - (height() / 2.0f);
+    QMatrix4x4 m_matrix;
+    m_matrix.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
+
+    m_shader.setUniformValue( m_uniform_matrix, m_matrix );
+
+    std::vector<float> texture_coordinates;
+    texture_coordinates.clear();
+    texture_coordinates.resize( 8 );
+    texture_coordinates[0] = 1;    texture_coordinates[1] = 1;
+    texture_coordinates[2] = 0;    texture_coordinates[3] = 1;
+    texture_coordinates[4] = 1;    texture_coordinates[5] = 0;
+    texture_coordinates[6] = 0;    texture_coordinates[7] = 0;
+    m_shader.setAttributeArray( m_attribute_tex_coord, texture_coordinates.data(), 2 );
+    m_shader.enableAttributeArray( m_attribute_tex_coord );
+
+
+    QVector3D top_right = QVector3D( right, top, 0);
+    QVector3D top_left =  QVector3D( left,  top, 0);
+    QVector3D bot_right = QVector3D( right, bottom, 0);
+    QVector3D bot_left =  QVector3D( left,  bottom, 0);
+
+    // ***** Load vertices for this object
+    QVector<GLfloat> vertices;
+    vertices.clear();
+    vertices.resize( 12 );              // in sets of x, y, z
+    // Top Right
+    vertices[0] = top_right.x();
+    vertices[1] = top_right.y();
+    vertices[2] = 0;
+    // Top Left
+    vertices[3] = top_left.x();
+    vertices[4] = top_left.y();
+    vertices[5] = 0;
+    // Bottom Right
+    vertices[6] = bot_right.x();
+    vertices[7] = bot_right.y();
+    vertices[8] = 0;
+    // Bottom Left
+    vertices[ 9] = bot_left.x();
+    vertices[10] = bot_left.y();
+    vertices[11] = 0;
+
+    m_shader.setAttributeArray( m_attribute_vertex, vertices.data(), 3 );
+    m_shader.enableAttributeArray( m_attribute_vertex );
+
+    m_shader.setUniformValue( m_uniform_texture,    0 );                        // Use texture unit 0
+
+    m_shader.setUniformValue( m_uniform_alpha,      1.0f );
+    m_shader.setUniformValue( m_uniform_width,      static_cast<float>(width()) );
+    m_shader.setUniformValue( m_uniform_height,     static_cast<float>(height()) );
+
+    m_shader.setUniformValue( m_uniform_pixel_x,    1.0f );
+    m_shader.setUniformValue( m_uniform_pixel_y,    1.0f );
+    m_shader.setUniformValue( m_uniform_negative,   false );
+    m_shader.setUniformValue( m_uniform_grayscale,  false );
+    m_shader.setUniformValue( m_uniform_hue,        0.0f );
+    m_shader.setUniformValue( m_uniform_saturation, 0.0f );
+    m_shader.setUniformValue( m_uniform_contrast,   0.0f );
+    m_shader.setUniformValue( m_uniform_brightness, 0.0f );
+
+    // ***** Draw triangles using shader program
+    glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );                                    // GL_TRIANGLES
+
+    // ***** Disable arrays
+    m_shader.disableAttributeArray( m_attribute_vertex );
+    m_shader.disableAttributeArray( m_attribute_tex_coord );
+
+    m_shader.release();
+
+
 
 
     // ********** Draws debug shapes onto screen
@@ -198,12 +310,10 @@ void OpenGL::drawObjects() {
         std::vector<float> texture_coordinates;
         texture_coordinates.clear();
         texture_coordinates.resize( 8 );
-        float one_x =  (1 / texture->width()) ;
-        float one_y =  (1 / texture->height());
-        texture_coordinates[0] = 1 - one_x;    texture_coordinates[1] = 1 - one_y;
-        texture_coordinates[2] =     one_x;    texture_coordinates[3] = 1 - one_y;
-        texture_coordinates[4] = 1 - one_x;    texture_coordinates[5] =     one_y;
-        texture_coordinates[6] =     one_x;    texture_coordinates[7] =     one_y;
+        texture_coordinates[0] = 1;    texture_coordinates[1] = 1;
+        texture_coordinates[2] = 0;    texture_coordinates[3] = 1;
+        texture_coordinates[4] = 1;    texture_coordinates[5] = 0;
+        texture_coordinates[6] = 0;    texture_coordinates[7] = 0;
         m_shader.setAttributeArray( m_attribute_tex_coord, texture_coordinates.data(), 2 );
         m_shader.enableAttributeArray( m_attribute_tex_coord );
 
@@ -299,6 +409,12 @@ void OpenGL::drawObjects() {
     // *****Disable shader program
     m_shader.release();
 }
+
+
+
+
+
+
 
 
 

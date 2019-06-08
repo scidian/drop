@@ -235,7 +235,7 @@ void FormEngine::updateEngine() {
     // ***** Seperate Camera Update
     double camera_milliseconds = getTimerMilliseconds(Engine_Timer::Camera);
     resetTimer(Engine_Timer::Camera);
-    m_engine->moveCameras(camera_milliseconds);                                 // Move Cameras
+    m_engine->moveCameras(camera_milliseconds);                                     // Move Cameras
 
     // ***** If we're bogged down, lower frame rate
     double target_frame_rate = (1000.0 / m_ideal_frames_per_second);

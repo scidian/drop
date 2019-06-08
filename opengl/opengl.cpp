@@ -28,6 +28,9 @@ OpenGL::~OpenGL() {
     m_engine->has_scene = false;
     m_engine->deleteResources();
 
+    delete m_fbo;
+    delete m_texture_fbo;
+
     doneCurrent();
 }
 

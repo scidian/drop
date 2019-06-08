@@ -9,6 +9,7 @@
 #define OPENGL_H
 
 #include <QOpenGLBuffer>
+#include <QOpenGLFramebufferObject>
 #include <QOpenGLFunctions>
 #include <QOpenGLShader>
 #include <QOpenGLTexture>
@@ -51,6 +52,10 @@ private:
     float           m_background_red = 0;
     float           m_background_green = 0;
     float           m_background_blue = 0;
+
+    // Frame Buffer
+    QOpenGLFramebufferObject *m_fbo = nullptr;                      // Used for offscreen rendering
+    QOpenGLFramebufferObject *m_texture_fbo = nullptr;              // m_fbo must be copied to a non-multisampled fbo before being used as a texture
 
     // Shader Variables
     QOpenGLShaderProgram    m_shader;
