@@ -255,7 +255,7 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
 
     QWidget *slider_pair = new QWidget();
     slider_pair->setSizePolicy(size_policy);
-    m_filter_hover->attachToHoverHandler(slider_pair, property);                            // Connecto to hover handler for advisor
+    m_filter_hover->attachToHoverHandler(slider_pair, property);                            // Connect to hover handler for advisor
 
     QHBoxLayout *horizontal_split = new QHBoxLayout(slider_pair);
     horizontal_split->setSpacing(6);
