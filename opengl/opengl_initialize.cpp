@@ -66,6 +66,7 @@ void OpenGL::initializeGL() {
     m_uniform_saturation =  m_shader.uniformLocation(   "u_saturation" );
     m_uniform_contrast =    m_shader.uniformLocation(   "u_contrast" );
     m_uniform_brightness =  m_shader.uniformLocation(   "u_brightness" );
+    m_uniform_kernel =      m_shader.uniformLocation(   "u_kernel" );
 
 }
 

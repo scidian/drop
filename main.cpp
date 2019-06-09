@@ -74,35 +74,35 @@
 int main(int argc, char *argv[]) {
 
     // ***** Initiliaze application
-    QApplication drop(argc, argv);                  // Declare application
+    QApplication drop(argc, argv);                              // Declare application
 
-    // ***** Set OpenGL surface format
+    // ***** Set OpenGL surface format of QOpenGLWidgets
     QSurfaceFormat format;
-    format.setSamples(4);                                           // Multi-sampling (Anti-Aliasing)
-    format.setDepthBufferSize(24);                                  // Enable Depth Buffer
-    ///format.setSwapInterval(1);                                   // Enable V-Sync??
-    ///format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);        // Use Off Screen Double Buffer
+    format.setDepthBufferSize(24);                              // Enable Depth Buffer
+    ///format.setSamples(4);                                    // Multi-sampling, not needed if rendering to offscreen fbo with its own multisampling
+    ///format.setSwapInterval(1);                               // Enable V-Sync??
+    ///format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);    // Use Off Screen Double Buffer
     ///format.setStencilBufferSize(8);
     ///format.setProfile(QSurfaceFormat::CoreProfile);
     ///format.setVersion(3,3);
     QSurfaceFormat::setDefaultFormat(format);
 
     // ***** Load some global data
-    Dr::InitializeFlags();                          // Sets debug flags
-    Dr::LoadPalettes();                             // Loads color data into global vector
-    Dr::LoadPreferences();                          // Loads user preferences
+    Dr::InitializeFlags();                                      // Sets debug flags
+    Dr::LoadPalettes();                                         // Loads color data into global vector
+    Dr::LoadPreferences();                                      // Loads user preferences
 
     // ***** Create main form
-    FormMain form_main;                             // Declare / Load FormMain, pass Globals helper
+    FormMain form_main;                                         // Declare / Load FormMain, pass Globals helper
 
-    Dr::SetActiveFormMain(&form_main);              // Set main form to active FormMain
-    Dr::SetActiveEditorRelay(&form_main);           // Set main form to active EditorRelay
-    qApp->installEventFilter(&form_main);           // Installs an application wide event filter attached to FormMain (acts as key grabber)
-    form_main.show();                               // Show FormMain
+    Dr::SetActiveFormMain(&form_main);                          // Set main form to active FormMain
+    Dr::SetActiveEditorRelay(&form_main);                       // Set main form to active EditorRelay
+    qApp->installEventFilter(&form_main);                       // Installs an application wide event filter attached to FormMain (acts as key grabber)
+    form_main.show();                                           // Show FormMain
 
     // ***** Process events and mark as loaded
-    qApp->processEvents();                          // Ensure FormMain finishes showing
-    Dr::SetDoneLoading(true);                       // Marks FormMain as finished loading
+    qApp->processEvents();                                      // Ensure FormMain finishes showing
+    Dr::SetDoneLoading(true);                                   // Marks FormMain as finished loading
 
     // ***** Run Program
     drop.exec();

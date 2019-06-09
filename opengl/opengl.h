@@ -76,6 +76,7 @@ private:
     int     m_uniform_saturation;               // Saturation, -1.0 to 1.0
     int     m_uniform_contrast;                 // Contrast,   -1.0 to 1.0
     int     m_uniform_brightness;               // Brightness, -1.0 to 1.0
+    int     m_uniform_kernel;                   // Kernel Effects?
 
     // Timer Variables
     Clock::time_point m_time_fps = Clock::now();
@@ -111,16 +112,20 @@ public:
     void            zoomInOut(int level);
 
     // Render Calls
+    void            bindOffscreenBuffer();
     void            cullingOn();
     void            cullingOff();
     void            drawCube(QVector3D center);
+    void            drawDebug(QPainter &painter);
     void            drawDebugCollisions(QPainter &painter);
     void            drawDebugHealth(QPainter &painter);
     void            drawDebugJoints(QPainter &painter);
     void            drawDebugShapes(QPainter &painter);
-    void            drawObjects();
+    void            drawFrameBufferToScreenBuffer();
+    void            drawSpace();
     QColor          objectDebugColor(DrEngineObject *object);
     void            updateViewMatrix();
+    void            setWholeTextureCoordinates(std::vector<float> &texture_coords);
 
     // Getters and Setters
     float               getScale()          { return m_scale; }

@@ -19,6 +19,19 @@
 //####################################################################################
 void OpenGL::drawCube(QVector3D center) {
 
+    // ***** Enable shader program
+    if (!m_shader.bind()) return;
+
+    // ***** Set Matrix for Shader, calculates current matrix
+    QMatrix4x4 m_matrix = m_projection * m_model_view;
+    m_shader.setUniformValue( m_uniform_matrix, m_matrix );
+
+    // ***** Set Texture Coordinates for Shader
+    std::vector<float> texture_coordinates;
+    setWholeTextureCoordinates(texture_coordinates);
+    m_shader.setAttributeArray( m_attribute_tex_coord, texture_coordinates.data(), 2 );
+    m_shader.enableAttributeArray( m_attribute_tex_coord );
+
     static float cube_angle;
     cube_angle += .1f;
     if (cube_angle > 360) cube_angle = 0;
@@ -26,23 +39,12 @@ void OpenGL::drawCube(QVector3D center) {
     DrEngineTexture *texture = m_engine->getTexture( Test_Textures::Block );
     texture->texture()->bind();
 
+    // ***** Draw the six sides of the cube
     for (int loop = 0; loop < 6; loop++) {
-        std::vector<float> texture_coordinates;
-        texture_coordinates.clear();
-        texture_coordinates.resize( 8 );
-        texture_coordinates[0] = 1;    texture_coordinates[1] = 1;
-        texture_coordinates[2] = 0;    texture_coordinates[3] = 1;
-        texture_coordinates[4] = 1;    texture_coordinates[5] = 0;
-        texture_coordinates[6] = 0;    texture_coordinates[7] = 0;
-        m_shader.setAttributeArray( m_attribute_tex_coord, texture_coordinates.data(), 2 );
-        m_shader.enableAttributeArray( m_attribute_tex_coord );
-
-
-        // ***** Get object position data
+        // Get object position data
         float x, y, z;
         float half_width, half_height;
         float half_no_border;
-
         float multi =  3;   // multiplier to make this bigger
         float width =  texture->width() *  multi;
         float height = texture->height() * multi;
@@ -80,43 +82,29 @@ void OpenGL::drawCube(QVector3D center) {
             //matrix.rotate( cube_angle + static_cast<float>(90*loop), 0.0, 0.0, 1.0 );       // Spins around z axis
         }
 
-
+        // ***** Load vertices for this object
         QVector3D top_right, top_left, bot_right, bot_left;
         top_right = matrix * QVector3D( half_width,  half_height, half_no_border);
         top_left =  matrix * QVector3D(-half_width,  half_height, half_no_border);
         bot_right = matrix * QVector3D( half_width, -half_height, half_no_border);
         bot_left =  matrix * QVector3D(-half_width, -half_height, half_no_border);
 
-        // ***** Load vertices for this object
         QVector<float> vertices;
         vertices.clear();
         vertices.resize( 12 );  // in sets of x, y, z
-        // Top Right
-        vertices[0] = top_right.x() + x;
-        vertices[1] = top_right.y() + y;
-        vertices[2] = z;
-        // Top Left
-        vertices[3] = top_left.x()  + x;
-        vertices[4] = top_left.y()  + y;
-        vertices[5] = z;
-        // Bottom Right
-        vertices[6] = bot_right.x() + x;
-        vertices[7] = bot_right.y() + y;
-        vertices[8] = z;
-        // Bottom Left
-        vertices[ 9] = bot_left.x() + x;
-        vertices[10] = bot_left.y() + y;
-        vertices[11] = z;
+        vertices[ 0] = top_right.x() + x;       vertices[ 1] = top_right.y() + y;       vertices[ 2] = z;           // Top Right
+        vertices[ 3] = top_left.x()  + x;       vertices[ 4] = top_left.y()  + y;       vertices[ 5] = z;           // Top Left
+        vertices[ 6] = bot_right.x() + x;       vertices[ 7] = bot_right.y() + y;       vertices[ 8] = z;           // Bottom Right
+        vertices[ 9] = bot_left.x() + x;        vertices[10] = bot_left.y() + y;        vertices[11] = z;           // Bottom Left
 
         m_shader.setAttributeArray( m_attribute_vertex, vertices.data(), 3 );
         m_shader.enableAttributeArray( m_attribute_vertex );
 
+        // Set shader variables
         m_shader.setUniformValue( m_uniform_texture,    0 );
-
         m_shader.setUniformValue( m_uniform_alpha,      1.0f );
         m_shader.setUniformValue( m_uniform_width,      static_cast<float>(texture->width()) );
         m_shader.setUniformValue( m_uniform_height,     static_cast<float>(texture->height()) );
-
         m_shader.setUniformValue( m_uniform_pixel_x,    1.0f );
         m_shader.setUniformValue( m_uniform_pixel_y,    1.0f );
         m_shader.setUniformValue( m_uniform_negative,   false );
@@ -125,18 +113,31 @@ void OpenGL::drawCube(QVector3D center) {
         m_shader.setUniformValue( m_uniform_saturation, 0.0f );
         m_shader.setUniformValue( m_uniform_contrast,   0.0f );
         m_shader.setUniformValue( m_uniform_brightness, 0.0f );
+        m_shader.setUniformValue( m_uniform_kernel,     false );
 
         // ***** Draw triangles using shader program
         glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );                                    // GL_TRIANGLES
 
         // ***** Disable arrays
         m_shader.disableAttributeArray( m_attribute_vertex );
-        m_shader.disableAttributeArray( m_attribute_tex_coord );
-
     }   // For i
 
+    // Release Texture and Shader
     texture->texture()->release();
+    m_shader.disableAttributeArray( m_attribute_tex_coord );
+    m_shader.release();
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
