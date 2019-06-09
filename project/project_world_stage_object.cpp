@@ -73,13 +73,15 @@ void DrObject::addComponentSettingsObject(QString new_name, bool should_collide)
     addPropertyToComponent(Components::Object_Settings, Properties::Object_Name, Property_Type::String, new_name,
                            "Object Name", "Name of the current object.", false, false);
     addPropertyToComponent(Components::Object_Settings, Properties::Object_Physics_Type, Property_Type::List, 0,
-                           "Physics", "<b>Static</b> - Can not move. <br> "
-                                      "<b>Kinematic</b> - Moves at fixed speed. <br> "
-                                      "<b>Dynamic</b> - Physics object.");
+                           "Object Type", "<b>Static</b> - Can not move. <br> "
+                                          "<b>Kinematic</b> - Moves at fixed speed. <br> "
+                                          "<b>Dynamic</b> - Physics object.");
     addPropertyToComponent(Components::Object_Settings, Properties::Object_Collide, Property_Type::Bool, should_collide,
-                           "Collide?", "Should this object collide with Dynamic (physics) objects?");
+                           "Collide?", "Should this object collide with Dynamic Objects? Objects not marked to collide "
+                                       "still provide damage and sound reponses when coming into contact with other objects.");
     addPropertyToComponent(Components::Object_Settings, Properties::Object_Damage, Property_Type::List, 0,
-                           "Damage", "What should this object damage when it collides with another object.");
+                           "Damage", "Choose the type of object this object will damage when coming into contact. By choosing \"Damage Player\" this "
+                                     "object will be treated as an enemy and vice versa.");
 }
 
 
@@ -150,14 +152,19 @@ void DrObject::addComponentTransform(double width, double height, double x, doub
 }
 
 void DrObject::addComponentMovement() {
-    addComponent(Components::Object_Movement, "Movement", "Initial starting velocities of object in stage.", Component_Colors::Red_Faded, true);
+    addComponent(Components::Object_Movement, "Movement", "Initial starting velocities of object in stage. <br><br> "
+                                                          "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use these settings!",
+                                                          Component_Colors::Red_Faded, true);
     getComponent(Components::Object_Movement)->setIcon(Component_Icons::Movement);
     addPropertyToComponent(Components::Object_Movement, Properties::Object_Velocity_X, Property_Type::Variable, QPointF(0, 0),
-                           "Velocity X", "Initial horizontal movement speed of object +/- variable amount.");
+                           "Velocity X", "Initial horizontal movement speed of object +/- variable amount.  <br><br> "
+                                         "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use these settings!", false, false);
     addPropertyToComponent(Components::Object_Movement, Properties::Object_Velocity_Y, Property_Type::Variable, QPointF(0, 0),
-                           "Velocity Y", "Initial vertical movement speed of object +/- variable amount.");
+                           "Velocity Y", "Initial vertical movement speed of object +/- variable amount.  <br><br> "
+                                         "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use these settings!", false, false);
     addPropertyToComponent(Components::Object_Movement, Properties::Object_Angular_Velocity, Property_Type::Variable, QPointF(0, 0),
-                           "Angular Velocity", "Rotational movement speed of object +/- variable amount.");
+                           "Angular Velocity", "Rotational movement speed of object +/- variable amount. <br><br> "
+                                               "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use these settings!", false, false);
 }
 
 void DrObject::addComponentAppearance() {

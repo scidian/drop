@@ -38,7 +38,7 @@ private:
     // Should this appear in the object inspector
     bool          m_is_hidden =         false;
 
-    // Shoudl this be editable in the object inspector
+    // Should this be editable in the object inspector
     bool          m_is_editable =       true;
 
 public:

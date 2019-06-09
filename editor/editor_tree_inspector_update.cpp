@@ -5,9 +5,10 @@
 //      Update Functions for Tree Inspector
 //
 //
+#include <QAction>
+#include <QDebug>
 #include <QDoubleSpinBox>
 #include <QLineEdit>
-#include <QAction>
 #include <QMenu>
 
 #include "colors/colors.h"
@@ -53,6 +54,9 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 
         // Must turn off signals while updating or we will cause recursive function calling as changes to the widgets are connected to updateObjectFromNewValue()
         widget->blockSignals(true);
+
+        // Enable / disable widgets as necessary
+        widget->setEnabled( prop->isEditable() );
 
         switch (prop->getPropertyType()) {
             case Property_Type::Bool:       dynamic_cast<QCheckBox*>(widget)->setChecked(prop->getValue().toBool());        break;

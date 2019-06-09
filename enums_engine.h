@@ -38,9 +38,9 @@ enum Test_Textures {
 //##    DrEngineObject Enumerations
 //############################
 enum class Body_Type {
-    Dynamic,
-    Kinematic,
-    Static,
+    Static =    0,                      // Order is important
+    Kinematic = 1,
+    Dynamic =   2,
 };
 
 enum class Shape_Type {

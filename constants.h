@@ -138,6 +138,12 @@ namespace Advisor_Info {
     const HeaderBodyList Object_Dynamic         { "Dynamic",    "Objects obey the laws of physics. Can be moved by forces, are affected by gravity. Best for "
                                                                 "players, small enemies, car bodies, wheels, balls, boxes, etc."};
 
+    const HeaderBodyList Damage_None            { "No Damage",      "This object does not damage other objects." };
+    const HeaderBodyList Damage_Player          { "Damage Player",  "This is an enemy object. It will damage player objects that it comes into contact with." };
+    const HeaderBodyList Damage_Enemy           { "Damage Enemy",   "This is a player object. It will damage enemy objects that it comes into contact with." };
+    const HeaderBodyList Damage_All             { "Damage All",     "This object can be damaged by players and enemies. It will damage all objects it comes "
+                                                                    "into contact with. "};
+
     // Inspector Widgets
     const HeaderBodyList Variable_Widget        { "Variable Amount", "Plus or minus modifier to initial value, the following value allows for some "
                                                                      "variable amount to the initial value. For example, an initial value of 100 with "

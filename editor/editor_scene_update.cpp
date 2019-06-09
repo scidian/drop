@@ -7,6 +7,7 @@
 //
 #include "editor_item.h"
 #include "editor_scene.h"
+#include "enums_engine.h"
 #include "helper.h"
 #include "project/project.h"
 #include "project/project_asset.h"
@@ -72,10 +73,24 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
     // ***** Go through each property that we have been notified has changed and update as appropriately
     for (auto one_property : property_keys) {
         Properties property = static_cast<Properties>(one_property);
-
         QVariant new_value  = object->findPropertyFromPropertyKey(one_property)->getValue();
 
+        Body_Type type;
+        bool pretest, test;
         switch (property) {
+            case Properties::Object_Physics_Type:
+                pretest = object->getComponentProperty(Components::Object_Movement, Properties::Object_Velocity_X)->isEditable();
+                type = static_cast<Body_Type>(object->getComponentPropertyValue(Components::Object_Settings, Properties::Object_Physics_Type).toInt());
+                test = (type == Body_Type::Kinematic || type == Body_Type::Dynamic) ? true : false;
+                if (test != pretest) {
+                    object->getComponentProperty(Components::Object_Movement, Properties::Object_Velocity_X)->setEditable(test);
+                    object->getComponentProperty(Components::Object_Movement, Properties::Object_Velocity_Y)->setEditable(test);
+                    object->getComponentProperty(Components::Object_Movement, Properties::Object_Angular_Velocity)->setEditable(test);
+                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { object } ,
+                                    { Properties::Object_Velocity_X, Properties::Object_Velocity_Y, Properties::Object_Angular_Velocity });
+                }
+                break;
+
             case Properties::Object_Position:
                 setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
                 break;

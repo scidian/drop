@@ -237,7 +237,6 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
             }
 
             if (new_widget != nullptr) {
-                new_widget->setEnabled(property_pair.second->isEditable());
                 horizontal_split->addWidget(new_widget);
             }
 
@@ -252,6 +251,14 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
 
         // Apply the property frame widget to the tree item
         this->setItemWidget(property_item, 0, properties_frame);
+    }
+
+    // ***** Disable / enable widgets based on property status
+    for (auto widget : m_widgets) {
+        long prop_key = widget->property(User_Property::Key).toInt();
+        DrProperty *prop = m_project->findSettingsFromKey( m_selected_key )->findPropertyFromPropertyKey(prop_key);
+        if (prop == nullptr) continue;
+        widget->setEnabled( prop->isEditable() );
     }
 
     this->expandAll();

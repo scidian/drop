@@ -172,6 +172,17 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
             this->updateSettingsFromNewValue(property_key, action->property(User_Property::Order).toInt());
         });
 
+        if (property_key == static_cast<int>(Properties::Object_Damage)) {
+            connect(action,   &QAction::hovered, [this, string_count]() {
+                switch (string_count) {
+                    case 0: this->setAdvisorInfo( Advisor_Info::Damage_None[0],     Advisor_Info::Damage_None[1]);          break;
+                    case 1: this->setAdvisorInfo( Advisor_Info::Damage_Player[0],   Advisor_Info::Damage_Player[1]);        break;
+                    case 2: this->setAdvisorInfo( Advisor_Info::Damage_Enemy[0],    Advisor_Info::Damage_Enemy[1]);         break;
+                    case 3: this->setAdvisorInfo( Advisor_Info::Damage_All[0],      Advisor_Info::Damage_All[1]);           break;
+                }
+            });
+        }
+
         if (property_key == static_cast<int>(Properties::Object_Physics_Type)) {
             connect(action,   &QAction::hovered, [this, string_count]() {
                 switch (string_count) {
