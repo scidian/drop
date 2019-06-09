@@ -63,6 +63,7 @@ void OpenGL::paintGL() {
     QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_fbo);
 
     // ***** Renders Frame Buffer Object to screen buffer as a textured quad, with post processing available
+    m_fbo->bindDefault();
     drawFrameBufferToScreenBuffer();
 }
 

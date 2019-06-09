@@ -72,12 +72,14 @@ void DrObject::addComponentSettingsObject(QString new_name, bool should_collide)
     getComponent(Components::Object_Settings)->setIcon(Component_Icons::Settings);
     addPropertyToComponent(Components::Object_Settings, Properties::Object_Name, Property_Type::String, new_name,
                            "Object Name", "Name of the current object.", false, false);
-    addPropertyToComponent(Components::Object_Settings, Properties::Object_Physics, Property_Type::Bool, false,
-                           "Physics?", "Should this item be effected by physics?");
+    addPropertyToComponent(Components::Object_Settings, Properties::Object_Physics_Type, Property_Type::List, 0,
+                           "Physics", "<b>Static</b> - Can not move. <br> "
+                                      "<b>Kinematic</b> - Moves at fixed speed. <br> "
+                                      "<b>Dynamic</b> - Physics object.");
     addPropertyToComponent(Components::Object_Settings, Properties::Object_Collide, Property_Type::Bool, should_collide,
-                           "Collide?", "Should this item collide with other items?");
+                           "Collide?", "Should this object collide with Dynamic (physics) objects?");
     addPropertyToComponent(Components::Object_Settings, Properties::Object_Damage, Property_Type::List, 0,
-                           "Damage", "What should this item damage when it collides with something else.");
+                           "Damage", "What should this object damage when it collides with another object.");
 }
 
 
@@ -127,35 +129,35 @@ void DrObject::addComponentSettingsCamera(QString new_name) {
 //##    Shared Components
 //####################################################################################
 void DrObject::addComponentTransform(double width, double height, double x, double y, long z) {
-    addComponent(Components::Object_Transform, "Transform", "Sets the physical size and angle of the item in the stage.", Component_Colors::Green_SeaGrass, true);
+    addComponent(Components::Object_Transform, "Transform", "Sets the physical size and angle of the object in the stage.", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Object_Transform)->setIcon(Component_Icons::Transform);
     addPropertyToComponent(Components::Object_Transform, Properties::Object_Position, Property_Type::PositionF, QPointF(x, y),
-                           "Position", "Location of item within the current stage.");
+                           "Position", "Location of object within the current stage.");
     addPropertyToComponent(Components::Object_Transform, Properties::Object_Rotation, Property_Type::Angle, 0,
-                           "Rotation", "Angle of item within the stage.");
+                           "Rotation", "Angle of object within the stage.");
     addPropertyToComponent(Components::Object_Transform, Properties::Object_Size, Property_Type::SizeF, QPointF(width, height),
                            "Size", "Width and Height of object in pixels, affected by Scale property.");
     addPropertyToComponent(Components::Object_Transform, Properties::Object_Scale, Property_Type::ScaleF, QPointF(1, 1),
-                           "Scale", "X and Y scale of item within the stage.");
+                           "Scale", "X and Y scale of object within the stage.");
 
-    addComponent(Components::Object_Layering, "Layering", "Controls the order items are drawn onto the screen. For \"Z Order\", lower numbers are "
+    addComponent(Components::Object_Layering, "Layering", "Controls the order object are drawn onto the screen. For \"Z Order\", lower numbers are "
                                                            "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, true);
     getComponent(Components::Object_Layering)->setIcon(Component_Icons::Layering);
     addPropertyToComponent(Components::Object_Layering, Properties::Object_Z_Order, Property_Type::Double, QVariant::fromValue(z),
-                           "Z Order", "Arrangement of item along the z axis in the stage.");
+                           "Z Order", "Arrangement of object along the z axis in the stage.");
     addPropertyToComponent(Components::Object_Layering, Properties::Object_Opacity, Property_Type::Percent, 100,
-                           "Opacity", "How transparent an item is, 0 (invisible) - 100 (solid)");
+                           "Opacity", "How transparent this object is, 0 (invisible) - 100 (solid)");
 }
 
 void DrObject::addComponentMovement() {
-    addComponent(Components::Object_Movement, "Movement", "Initial starting velocities of item in stage.", Component_Colors::Red_Faded, true);
+    addComponent(Components::Object_Movement, "Movement", "Initial starting velocities of object in stage.", Component_Colors::Red_Faded, true);
     getComponent(Components::Object_Movement)->setIcon(Component_Icons::Movement);
     addPropertyToComponent(Components::Object_Movement, Properties::Object_Velocity_X, Property_Type::Variable, QPointF(0, 0),
-                           "Velocity X", "Initial horizontal movement speed of item +/- variable amount.");
+                           "Velocity X", "Initial horizontal movement speed of object +/- variable amount.");
     addPropertyToComponent(Components::Object_Movement, Properties::Object_Velocity_Y, Property_Type::Variable, QPointF(0, 0),
-                           "Velocity Y", "Initial vertical movement speed of item +/- variable amount.");
+                           "Velocity Y", "Initial vertical movement speed of object +/- variable amount.");
     addPropertyToComponent(Components::Object_Movement, Properties::Object_Angular_Velocity, Property_Type::Variable, QPointF(0, 0),
-                           "Angular Velocity", "Rotational movement speed of item +/- variable amount.");
+                           "Angular Velocity", "Rotational movement speed of object +/- variable amount.");
 }
 
 void DrObject::addComponentAppearance() {

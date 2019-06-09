@@ -34,15 +34,13 @@ void DrEngine::loadStageToSpace(DrStage *stage, double offset_x, double offset_y
         double      z_order =       object->getComponentPropertyValue(Components::Object_Layering,  Properties::Object_Z_Order).toDouble();
         double      alpha =         object->getComponentPropertyValue(Components::Object_Layering,  Properties::Object_Opacity).toDouble() / 100;
         bool        collide =       object->getComponentPropertyValue(Components::Object_Settings,  Properties::Object_Collide).toBool();
-        bool        physics =       object->getComponentPropertyValue(Components::Object_Settings,  Properties::Object_Physics).toBool();
+        int         physics =       object->getComponentPropertyValue(Components::Object_Settings, Properties::Object_Physics_Type).toInt();
 
-        ///Body_Type   body =          physics? Body_Type::Dynamic : Body_Type::Kinematic;
-
-        Body_Type body;
-        if (physics) {
-            body = Body_Type::Dynamic;
-        } else {
-            body = Body_Type::Static;
+        Body_Type body = Body_Type::Static;
+        switch (physics) {
+            case 0: body = Body_Type::Static;       break;
+            case 1: body = Body_Type::Kinematic;    break;
+            case 2: body = Body_Type::Dynamic;      break;
         }
 
         // ***** Add the block to the cpSpace

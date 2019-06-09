@@ -36,6 +36,11 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
     cpSpaceSetSleepTimeThreshold(m_space, 0.50);        // Objects will sleep after this long of not moving
     ///cpSpaceSetIdleSpeedThreshold(m_space, 25.0);     // Can set this manually, but also set automatically based on gravity
 
+    // Default gravity / damping settings
+    m_gravity = cpv(0, -1000);                          // cpVect is a 2D vector and cpv() is a shortcut for initializing them
+    m_damping = 1;                                      // Kind of like air drag
+    cpSpaceSetGravity(m_space, m_gravity);
+    cpSpaceSetDamping(m_space, m_damping);
 
     // ***** Reset cameras
     clearCameras();
@@ -64,22 +69,32 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
     // ***** Build desired demo Space
     if (demo_space == Demo_Space::Project) {
 
-        m_friction = 0.5;
-        m_bounce =   0.1;
-
-        // Find current world shown in editor, load Start Stage of that world
+        // ***** Find current world shown in editor, load Start Stage of that world
         m_current_world = m_project->getOption(Project_Options::Current_World).toLongLong();
         DrWorld *world = m_project->getWorld(m_current_world);
         DrStage *stage = world->getStageFromKey(world->getFirstStageKey());
 
-        if (world->getComponentPropertyValue(Components::World_Settings, Properties::World_Use_Background_Color).toBool())
-            m_background_color =  QColor::fromRgba(world->getComponentPropertyValue(Components::World_Settings, Properties::World_Background_Color).toUInt());
-
+        // ***** World Settings
         m_game_direction += world->getComponentPropertyValue(Components::World_Settings, Properties::World_Game_Direction).toDouble();
         m_game_start = QPointF(0, 0);       // Set starting load position
         m_loaded_to = 0;                    // Reset how far we've loaded
 
-        loadStageToSpace(stage, 0, 0);      // Load current stage to origin position
+        if (world->getComponentPropertyValue(Components::World_Settings, Properties::World_Use_Background_Color).toBool())
+            m_background_color =  QColor::fromRgba(world->getComponentPropertyValue(Components::World_Settings, Properties::World_Background_Color).toUInt());
+
+        // ***** World Physics Properties
+        m_time_warp = world->getComponentPropertyValue(Components::World_Physics, Properties::World_Time_Warp).toDouble();
+        QPointF get_gravity =   world->getComponentPropertyValue(Components::World_Physics, Properties::World_Gravity).toPointF();
+        m_gravity = cpv(get_gravity.x(), get_gravity.y());
+        m_damping =   world->getComponentPropertyValue(Components::World_Physics, Properties::World_Drag).toDouble();
+        m_friction =  world->getComponentPropertyValue(Components::World_Physics, Properties::World_Friction).toDouble();
+        m_bounce =    world->getComponentPropertyValue(Components::World_Physics, Properties::World_Bounce).toDouble();
+
+        cpSpaceSetGravity(m_space, m_gravity);
+        cpSpaceSetDamping(m_space, m_damping);
+
+        // ***** Load Current Stage to origin position
+        loadStageToSpace(stage, 0, 0);
 
 
     } else if (demo_space == Demo_Space::Lines1) {

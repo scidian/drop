@@ -95,18 +95,21 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     addComponent(Components::World_Physics, "Physics", "Starting physics settings for current world, this affects all objects that have \"Physics?\" "
                                                        "enabled.", Component_Colors::Orange_Medium, true);
     getComponent(Components::World_Physics)->setIcon(Component_Icons::Physics);
-    addPropertyToComponent(Components::World_Physics, Properties::World_Gravity, Property_Type::PointF, QPointF(0.0, 10.0),
-                           "Gravity", "Amount of gravity in x and y directions, can be negative. For example, with a value of -500 for y objects will "
-                                      "fall upward).");
-    addPropertyToComponent(Components::World_Physics, Properties::World_Time_Warp, Property_Type::Double, 60.0,
-                           "Time Warp", "Physics time multiplier. Default value of 1.0 is Normal time. For example, a value of 0.5 will halve the "
+    addPropertyToComponent(Components::World_Physics, Properties::World_Time_Warp, Property_Type::PositiveDouble, 1.0,
+                           "Time Warp", "Physics update time multiplier. Default value of 1.0 is Normal speed. For example, a value of 0.5 will halve the "
                                         "speed at which the world changes. A value of 2.0 will double the speed.");
-    addPropertyToComponent(Components::World_Physics, Properties::World_Friction, Property_Type::Double, 10.0,
-                           "Friction", "Global surface friction setting.");
-    addPropertyToComponent(Components::World_Physics, Properties::World_Drag, Property_Type::Double, 5.0,
-                           "Dampening", "Value that reduces drag as time goes on.");
-    addPropertyToComponent(Components::World_Physics, Properties::World_Bounce, Property_Type::Double, 50,
-                           "Bounce", "Global bounce setting.");     // Chipmunk Physics can take a value of 0 to .9999999
+    addPropertyToComponent(Components::World_Physics, Properties::World_Gravity, Property_Type::PointF, QPointF(0.0, -1000.0),
+                           "Gravity", "Amount of gravity in X and Y directions, can be negative or positive. For example, a value of -1000 for Y and objects will "
+                                      "fall down; a value of 1000 for Y and objects will fall up.");
+    addPropertyToComponent(Components::World_Physics, Properties::World_Drag, Property_Type::PositiveDouble, 1.0,
+                           "Damping", "A value of 0.9 means each object will lose 10% of it's velocity per second. Defaults to 1.0, can be greater than 1.0 "
+                                      "(objects will gain velocity). A value of 0.0 causes objects to lose all velocity immediately.");
+    addPropertyToComponent(Components::World_Physics, Properties::World_Friction, Property_Type::PositiveDouble, 0.5,
+                           "Friction", "Global surface friction setting, greater than or equal to 0.0 (no limit, but generally less than 10.0). Friction can be "
+                                       "overriden on a per object basis.");
+    addPropertyToComponent(Components::World_Physics, Properties::World_Bounce, Property_Type::PositiveDouble, 0.1,
+                           "Bounce", "Global bounce setting, greater than or equal to 0.0 (no limit, but generally less than or equal to 1.0). Bounce can be "
+                                     "overriden on a per object basis.");
 
 }
 

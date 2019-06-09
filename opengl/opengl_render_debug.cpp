@@ -38,16 +38,25 @@ static void GetSpaceJointList(cpConstraint *constraint, QVector<cpConstraint*> *
 //####################################################################################
 //##    Assigns Debug color based on Collision Type
 //####################################################################################
-QColor OpenGL::objectDebugColor(DrEngineObject *object) {
+QColor OpenGL::objectDebugColor(DrEngineObject *object, bool text_color) {
+    QColor color, font_color;
 
     switch (object->getCollisionType()) {
-        case Collision_Type::Damage_None:
-            if (cpBodyIsSleeping(object->body)) return Qt::yellow;
-            else                                return QColor(0, 255, 0);              // Green
-        case Collision_Type::Damage_Player:     return QColor(255, 0, 0);              // Red
-        case Collision_Type::Damage_Enemy:      return QColor(0, 0, 255);              // Blue
-        case Collision_Type::Damage_All:        return QColor(128, 0, 128);            // Purple
+        case Collision_Type::Damage_None:       color = QColor(0, 255, 0);      break;          // Green
+        case Collision_Type::Damage_Player:     color = QColor(255, 0, 0);      break;          // Red
+        case Collision_Type::Damage_Enemy:      color = QColor(0, 0, 255);      break;          // Blue
+        case Collision_Type::Damage_All:        color = QColor(128, 0, 128);    break;          // Purple
     }
+
+    if (cpBodyIsSleeping(object->body)) {
+        font_color = color;
+        color = Qt::yellow;
+    } else {
+        font_color = QColor(255 - color.red(), 255 - color.green(), 255 - color.blue());
+    }
+
+    if (text_color) return font_color;
+    else            return color;
 }
 
 
@@ -280,8 +289,7 @@ void OpenGL::drawDebugHealth(QPainter &painter) {
         if (!object->hasBeenProcessed())    continue;
 
         // Figure out what color to make the debug shapes
-        QColor color = objectDebugColor(object);
-        color = QColor(255 - color.red(), 255 - color.green(), 255 - color.blue());
+        QColor color = objectDebugColor(object, true);
 
         // Load Object Position
         QPointF center = (object->getBodyPreviousPosition() * (1.0 - m_time_percent)) + (object->getBodyPosition() * m_time_percent);

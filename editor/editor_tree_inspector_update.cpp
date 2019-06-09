@@ -62,6 +62,7 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
                                             dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toInt());            break;
 
             case Property_Type::Double:
+            case Property_Type::PositiveDouble:
             case Property_Type::Percent:
             case Property_Type::Angle:
             case Property_Type::Filter:
@@ -149,6 +150,7 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
             case Property_Type::Filter:                                 // integer from -255 to 255
             case Property_Type::FilterAngle:                            // integer from 0 to 360
             case Property_Type::Double:                                 // any floating point
+            case Property_Type::PositiveDouble:
             case Property_Type::Percent:                                // floating point from 0.0 to 100.0
             case Property_Type::Angle:                                  // floating point for showing degrees
             case Property_Type::List:                                   // index value

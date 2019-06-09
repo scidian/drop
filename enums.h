@@ -148,6 +148,7 @@ enum class Property_Type {
     FilterAngle,            // long         integer from    0 to 360, used for image filters
 
     Double,                 // double       any floating point number
+    PositiveDouble,         // double       any floating point number >= 0.0
     Percent,                // double       floating point from 0.0 to 100.0
     Angle,                  // double       floating point for showing degrees, shows degree symbol in spinbox
     String,                 // QString
@@ -248,9 +249,9 @@ enum class Properties {
 
     // Settings
     Object_Name,                    //string
-    Object_Physics,                 //bool
+    Object_Physics_Type,            //list (static, kinematic, dynamic)
     Object_Collide,                 //bool
-    Object_Damage,                  //list
+    Object_Damage,                  //list (none, player, enemy, all)
 
     // Transform
     Object_Position,                //positionf

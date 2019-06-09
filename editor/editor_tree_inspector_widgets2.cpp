@@ -133,6 +133,10 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
                 << tr("Damage Player")
                 << tr("Damage Enemy")
                 << tr("Damage All");
+    } else if   (property_key == static_cast<int>(Properties::Object_Physics_Type)) {
+        options << tr("Static")
+                << tr("Kinematic")
+                << tr("Dynamic");
     } else if   (property_key == static_cast<int>(Properties::Stage_Grid_Style)) {
         options << tr("Lines")
                 << tr("Dots");
@@ -167,6 +171,16 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
             button->setText(action->text());
             this->updateSettingsFromNewValue(property_key, action->property(User_Property::Order).toInt());
         });
+
+        if (property_key == static_cast<int>(Properties::Object_Physics_Type)) {
+            connect(action,   &QAction::hovered, [this, string_count]() {
+                switch (string_count) {
+                    case 0: this->setAdvisorInfo( Advisor_Info::Object_Static[0],    Advisor_Info::Object_Static[1]);       break;
+                    case 1: this->setAdvisorInfo( Advisor_Info::Object_Kinematic[0], Advisor_Info::Object_Kinematic[1]);    break;
+                    case 2: this->setAdvisorInfo( Advisor_Info::Object_Dynamic[0],   Advisor_Info::Object_Dynamic[1]);      break;
+                }
+            });
+        }
 
         string_count++;
     }

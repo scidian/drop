@@ -123,7 +123,7 @@ public:
     void            drawDebugShapes(QPainter &painter);
     void            drawFrameBufferToScreenBuffer();
     void            drawSpace();
-    QColor          objectDebugColor(DrEngineObject *object);
+    QColor          objectDebugColor(DrEngineObject *object, bool text_color = false);
     void            updateViewMatrix();
     void            setWholeTextureCoordinates(std::vector<float> &texture_coords);
 

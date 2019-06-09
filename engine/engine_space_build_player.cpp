@@ -36,22 +36,8 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
     demo_player = new_player_type;
 
     if (demo_player == Demo_Player::Jump) {
-        m_gravity = cpv(0, -1000);
-        m_damping = 1;
-        cpSpaceSetGravity(m_space, m_gravity);
-        cpSpaceSetDamping(m_space, m_damping);
 
-        double ball_radius = m_textures[Test_Textures::Ball]->width() / 2.0;
-
-
-        DrEngineObject *ball2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 800,  50, 0, c_norotate, c_scale1x1, c_opaque,
-                                                ball_radius, c_center, 1, 0.5, QPointF( 0, 0), true, true);
-        assignPlayerControls(ball2, false, true, false);
-        ball2->setJumpCount( c_unlimited_jump );
-        ball2->setRotateSpeed( 20.0 );
-
-
-
+        double ball_radius = m_textures[Test_Textures::Ball]->width() / 2.0;        
         DrEngineObject *ball = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 200,  50, 0, c_norotate, c_scale1x1, c_opaque,
                                                ball_radius, c_center, 0.25, 0.5, QPointF( 0, 0), true, false);
         assignPlayerControls(ball, true, true, true);
@@ -66,17 +52,18 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
         ball->setMoveSpeedY( 300 );
 
 
+        DrEngineObject *ball2 = this->addCircle(Body_Type::Dynamic, Test_Textures::Ball, 800,  50, 0, c_norotate, c_scale1x1, c_opaque,
+                                                ball_radius, c_center, 1, 0.5, QPointF( 0, 0), true, true);
+        assignPlayerControls(ball2, false, true, false);
+        ball2->setJumpCount( c_unlimited_jump );
+        ball2->setRotateSpeed( 20.0 );
+
         // !!!!! #TEMP: demo variables
         demo_jumper_1 = ball;
         demo_jumper_2 = ball2;
 
 
     } else if (demo_player == Demo_Player::Spawn) {
-        m_gravity = cpv(0, -500);                           // cpVect is a 2D vector and cpv() is a shortcut for initializing them
-        m_damping = 1;
-        cpSpaceSetGravity(m_space, m_gravity);
-        cpSpaceSetDamping(m_space, m_damping);
-
         double ball_radius = m_textures[Test_Textures::Ball]->width() / 2.0;
         DrEngineObject *ball = this->addCircle(Body_Type::Kinematic, Test_Textures::Ball, -300,  150, 0, c_norotate, c_scale1x1, c_opaque, ball_radius, c_center,
                                                0.7, 0.5, QPointF(15, 0));
@@ -84,11 +71,6 @@ void DrEngine::addPlayer(Demo_Player new_player_type) {
 
 
     } else if (demo_player == Demo_Player::Car) {
-        m_gravity = cpv(0, -1000);                          // cpVect is a 2D vector and cpv() is a shortcut for initializing them
-        m_damping = .8;                                     // Kind of like air drag
-        cpSpaceSetGravity(m_space, m_gravity);
-        cpSpaceSetDamping(m_space, m_damping);
-
         // Add body
         QVector<QPointF> points;
         points.append( QPointF( -45.5,  -5.0 ));

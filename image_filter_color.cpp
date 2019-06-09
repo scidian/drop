@@ -92,7 +92,7 @@ QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_imag
         for ( int i = 0; i < 256; ++i ) {
             switch (filter) {
             case Image_Filter_Type::Brightness:   table[i] = Dr::Clamp( i + value, 0, 255 );                                      break;
-            case Image_Filter_Type::Contrast:     table[i] = Dr::Clamp( (( i - 127 ) * (value + 100) / 100 ) + 127, 0, 255 );     break;
+            case Image_Filter_Type::Contrast:     table[i] = Dr::Clamp( (( i - 127 ) * (value + 128) / 128 ) + 127, 0, 255 );     break;
             default: ;
             }
         }

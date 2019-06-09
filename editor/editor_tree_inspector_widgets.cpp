@@ -63,10 +63,11 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     spin->setSizePolicy(size_policy);
     spin->setDecimals(3);
     switch (spin_type) {
-        case Property_Type::Double:     spin->setRange(-100000000, 100000000);              spin->setSingleStep(5);     break;
-        case Property_Type::Percent:    spin->setRange(0, 100);     spin->setSuffix("%");   spin->setSingleStep(5);     break;
-        case Property_Type::Angle:      spin->setRange(-360, 360);  spin->setSuffix("°");   spin->setSingleStep(5);     break;
-        default:                        spin->setRange(-100000000, 100000000);
+        case Property_Type::Double:         spin->setRange(-100000000, 100000000);              spin->setSingleStep(5);     break;
+        case Property_Type::PositiveDouble: spin->setRange(0, 100000000);                       spin->setSingleStep(0.1);   break;
+        case Property_Type::Percent:        spin->setRange(0, 100);     spin->setSuffix("%");   spin->setSingleStep(5);     break;
+        case Property_Type::Angle:          spin->setRange(-360, 360);  spin->setSuffix("°");   spin->setSingleStep(5);     break;
+        default:                            spin->setRange(-100000000, 100000000);
     }
     spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);     // Hides little up / down buttons
 

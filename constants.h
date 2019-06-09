@@ -130,6 +130,14 @@ namespace Advisor_Info {
                                                                 "values like hit points, coins or distance. " };
     const HeaderBodyList Asset_Character        { "Character Asset", "This is a player character. " };
 
+    // Object Types
+    const HeaderBodyList Object_Static          { "Static",     "Object can not move. Provides greatest performance, dynamic objects touching static "
+                                                                "objects can fall asleep. Best for ground, walls, fixed enemies (spikes, lava), etc." };
+    const HeaderBodyList Object_Kinematic       { "Kinematic",  "Objects can move at fixed speeds. These objects are not affected by physical or "
+                                                                "gravitational forces. Best for doors, moving platforms, some enemies, etc." };
+    const HeaderBodyList Object_Dynamic         { "Dynamic",    "Objects obey the laws of physics. Can be moved by forces, are affected by gravity. Best for "
+                                                                "players, small enemies, car bodies, wheels, balls, boxes, etc."};
+
     // Inspector Widgets
     const HeaderBodyList Variable_Widget        { "Variable Amount", "Plus or minus modifier to initial value, the following value allows for some "
                                                                      "variable amount to the initial value. For example, an initial value of 100 with "
