@@ -28,7 +28,8 @@ private:
     IEditorRelay   *m_editor_relay;                                 // Pointer to IEditorRelay class of parent form
 
     // Local Variables
-    QString         advisor_header { "No Data" };                   // Keeps current Advisor Header
+    QString         m_advisor_header { "No Data" };                   // Keeps current Advisor Header
+
     QMutex          advisor_mutex { QMutex::NonRecursive };         // Used to keep building function thread safe
 
 public:
@@ -41,7 +42,7 @@ public:
 
     // Getters and setters
     void            changeAdvisor(QString header, QString body);
-    QString         getAdvisorHeader() { return advisor_header; }
+    QString         getAdvisorHeader() { return m_advisor_header; }
 
 };
 

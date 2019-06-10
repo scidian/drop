@@ -23,15 +23,19 @@
 //####################################################################################
 void TreeAdvisor::changeAdvisor(QString header, QString body) {
     if (advisor_mutex.tryLock() == false) return;           // Try and lock function to make this thread safe
-
     this->clear();                                          // Clear / delete all from advisor tree
+    m_advisor_header = header;                              // Save Header for reference later
 
-    advisor_header = header;
-    QString body_text = body;
+    // Set font sizes
+    QFont header_font, body_font;
+    header_font.setPointSize(Dr::FontSize() + 1);
+    header_font.setBold(true);
+    body_font.setPointSize(Dr::FontSize());
 
     // Insert top level item to act as header
     QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(this);
-    topLevelItem->setText(0, advisor_header);
+    topLevelItem->setFont(0, header_font);
+    topLevelItem->setText(0, header);
     this->addTopLevelItem(topLevelItem);
 
     // Create child tree item for body
@@ -39,13 +43,12 @@ void TreeAdvisor::changeAdvisor(QString header, QString body) {
     topLevelItem->addChild(sub_item);
 
     // Create a label to display body text and format
-    QLabel *body_label = new QLabel(body_text);
-    QFont font_label;
-    font_label.setPointSize(Dr::FontSize());
-    body_label->setFont(font_label);
+    QLabel *body_label = new QLabel(body);
+    body_label->setFont(body_font);
     body_label->setWordWrap(true);
     body_label->setScaledContents(true);
     body_label->setAlignment(Qt::AlignTop);
+    body_label->setContentsMargins(0, 0, 5, 0);
 
     // Apply label to tree, expand all
     this->setItemWidget(sub_item, 0, body_label);           // Apply text label to tree
