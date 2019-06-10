@@ -128,17 +128,17 @@ QString RemoveTrailingDecimals(double value, int max_decimal_places) {
 void LoadCustomFonts() {
     g_font_id =          QFontDatabase::addApplicationFont(":/assets/fonts/Aileron-Regular.otf");
     g_font_id_bold =     QFontDatabase::addApplicationFont(":/assets/fonts/Aileron-Bold.otf");
-    g_font_family =      QFontDatabase::applicationFontFamilies(g_font_id).at(0);
-    g_font_family_bold = QFontDatabase::applicationFontFamilies(g_font_id_bold).at(0);
 
     if (g_font_id >= 0) {
+        g_font_family =      QFontDatabase::applicationFontFamilies(g_font_id).at(0);
+        g_font_family_bold = QFontDatabase::applicationFontFamilies(g_font_id_bold).at(0);
         QFont font = CustomFont();
         qApp->setFont(font);
     }
 }
 
 // Returns custom font family
-QString FontFamily() { return (g_font_id == -1) ? "Arial" : g_font_family; }
+QString FontFamily() { return (g_font_id >= 0) ? g_font_family : "Arial"; }
 
 // Project wide font size
 int FontSize()  { return 11; }

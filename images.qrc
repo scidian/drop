@@ -113,5 +113,6 @@
         <file>assets/toolbar_icons/toolbar_play.png</file>
         <file>assets/fonts/Aileron-Regular.otf</file>
         <file>assets/fonts/Aileron-Bold.otf</file>
+        <file>assets/engine/numbers.png</file>
     </qresource>
 </RCC>

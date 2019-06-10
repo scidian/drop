@@ -47,8 +47,7 @@ QColor OpenGL::objectDebugColor(DrEngineObject *object, bool text_color) {
         case Collision_Type::Damage_Enemy:      color = QColor(0, 0, 255);      break;          // Blue
         case Collision_Type::Damage_All:        color = QColor(128, 0, 128);    break;          // Purple
     }
-
-    font_color = color;//.darker(200);
+    font_color = color;
 
     if (cpBodyIsSleeping(object->body)) {
         ///font_color = color;

@@ -23,12 +23,13 @@ void OpenGL::initializeGL() {
     glClearColor(0.0, 0.0, 0.0, 1.0f);
 
     // Load test resources
-    m_engine->addTexture(Test_Textures::Ball,  ":/assets/test_images/ball_1.png");          // -1
-    m_engine->addTexture(Test_Textures::Block, ":/assets/test_images/metal_block.png");     // -2
-    m_engine->addTexture(Test_Textures::Plant, ":/assets/test_images/moon_plant_6.png");    // -3
-    m_engine->addTexture(Test_Textures::Rover, ":/assets/test_images/rover_body.png");      // -4
-    m_engine->addTexture(Test_Textures::Wheel, ":/assets/test_images/rover_wheel.png");     // -5
-    m_engine->addTexture(Test_Textures::Spare, ":/assets/test_images/spare_wheel.png");     // -6
+    m_engine->addTexture(Asset_Textures::Numbers,   ":/assets/test_images/ball_1.png");         // -1
+    m_engine->addTexture(Asset_Textures::Ball,      ":/assets/test_images/ball_1.png");         // -4
+    m_engine->addTexture(Asset_Textures::Block,     ":/assets/test_images/metal_block.png");    // -5
+    m_engine->addTexture(Asset_Textures::Plant,     ":/assets/test_images/moon_plant_6.png");   // -6
+    m_engine->addTexture(Asset_Textures::Rover,     ":/assets/test_images/rover_body.png");     // -7
+    m_engine->addTexture(Asset_Textures::Wheel,     ":/assets/test_images/rover_wheel.png");    // -8
+    m_engine->addTexture(Asset_Textures::Spare,     ":/assets/test_images/spare_wheel.png");    // -9
 
     // Load resources from project
     for (auto asset_pair : m_engine->getProject()->getAssetMap() ) {

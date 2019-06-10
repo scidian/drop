@@ -36,7 +36,7 @@ void OpenGL::drawCube(QVector3D center) {
     cube_angle += .1f;
     if (cube_angle > 360) cube_angle = 0;
 
-    DrEngineTexture *texture = m_engine->getTexture( Test_Textures::Block );
+    DrEngineTexture *texture = m_engine->getTexture( Asset_Textures::Block );
     texture->texture()->bind();
 
     // ***** Draw the six sides of the cube

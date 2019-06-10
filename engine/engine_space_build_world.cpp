@@ -126,20 +126,20 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         m_bounce =   0.1;
 
         // ***** One Way Block
-        DrEngineObject *block = this->addBlock(Body_Type::Static, Test_Textures::Block, -500, 150, 100, 0, c_scale1x1, 1, m_friction, m_bounce, QPointF(0, 0));
+        DrEngineObject *block = this->addBlock(Body_Type::Static, Asset_Textures::Block, -500, 150, 100, 0, c_scale1x1, 1, m_friction, m_bounce, QPointF(0, 0));
         block->setCollisionType(Collision_Type::Damage_Player);
         block->setOneWay( One_Way::Pass_Through ); block->setOneWayDirection( cpv(0, 1) );          // Let objects pass upwards
         ///block->setInvincible(true);
         ///block->setDamage(-1);
 
         // ***** Rotating Block
-        DrEngineObject *block2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -350, 150, 100, 0, c_scale1x1, 1, m_friction, m_bounce, QPointF(0, 0));
+        DrEngineObject *block2 = this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, -350, 150, 100, 0, c_scale1x1, 1, m_friction, m_bounce, QPointF(0, 0));
         block2->setRotateSpeed( 2.0 );
         block2->setHealth( 4.0 );
         block2->setAutoDamage( 0.2 );
 
         // ***** Destroyable block
-        DrEngineObject *block3 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -200, 150, 100, 0, c_scale1x1, 1, m_friction, m_bounce, QPointF(0, 0));
+        DrEngineObject *block3 = this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, -200, 150, 100, 0, c_scale1x1, 1, m_friction, m_bounce, QPointF(0, 0));
         block3->setCollisionType(Collision_Type::Damage_Player);
         block3->setOneWay( One_Way::Weak_Spot );
         block3->setOneWayDirection( cpv(0, 1) );                                                    // Take damage from below only
@@ -147,10 +147,10 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         block3->setDamage( 1.0 );
 
         // ***** Conveyor Belt Blocks
-        DrEngineObject *belt =  this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -680, 150, 100, 0, c_scale1x1, 1, 2.0, m_bounce, QPointF(0, 0));
-        DrEngineObject *belt2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -740, 150, 100, 0, c_scale1x1, 1, 2.0, m_bounce, QPointF(0, 0));
-        DrEngineObject *belt3 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -800, 150, 100, 0, c_scale1x1, 1, 2.0, m_bounce, QPointF(0, 0));
-        DrEngineObject *belt4 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -860, 150, 100, 0, c_scale1x1, 1, 2.0, m_bounce, QPointF(0, 0));
+        DrEngineObject *belt =  this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, -680, 150, 100, 0, c_scale1x1, 1, 2.0, m_bounce, QPointF(0, 0));
+        DrEngineObject *belt2 = this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, -740, 150, 100, 0, c_scale1x1, 1, 2.0, m_bounce, QPointF(0, 0));
+        DrEngineObject *belt3 = this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, -800, 150, 100, 0, c_scale1x1, 1, 2.0, m_bounce, QPointF(0, 0));
+        DrEngineObject *belt4 = this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, -860, 150, 100, 0, c_scale1x1, 1, 2.0, m_bounce, QPointF(0, 0));
 
         cpShapeSetSurfaceVelocity( belt->shapes.first(),  cpv(1000, 0) );
         cpShapeSetSurfaceVelocity( belt2->shapes.first(), cpv(1000, 0) );
@@ -158,31 +158,31 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         cpShapeSetSurfaceVelocity( belt4->shapes.first(), cpv(1000, 0) );
 
         // ***** Ladder / Sticky Blocks
-        DrEngineObject *ladder = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -980, 100, -1, 0, QPointF(1, 3), 1,
+        DrEngineObject *ladder = this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, -980, 100, -1, 0, QPointF(1, 3), 1,
                                                 m_friction, m_bounce, QPointF(0, 0), false);
         ladder->setCancelGravity( true );
 
-        DrEngineObject *ladder2 = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, 300, 225, -1, 0, QPointF(6, 2), 1,
+        DrEngineObject *ladder2 = this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, 300, 225, -1, 0, QPointF(6, 2), 1,
                                                 m_friction, m_bounce, QPointF(0, 0), true);
         ladder2->setCancelGravity( true );
 
-        double ball_radius = m_textures[Test_Textures::Ball]->width() / 2.0;
-        DrEngineObject *ladder_ball = this->addCircle(Body_Type::Kinematic, Test_Textures::Ball, 800, 200, 0, c_norotate, QPointF(3, 3), c_opaque,
+        double ball_radius = m_textures[Asset_Textures::Ball]->width() / 2.0;
+        DrEngineObject *ladder_ball = this->addCircle(Body_Type::Kinematic, Asset_Textures::Ball, 800, 200, 0, c_norotate, QPointF(3, 3), c_opaque,
                                                       ball_radius, c_center, m_friction, 0, QPointF(0, 0));
         ladder_ball->setCancelGravity(true);
         ladder_ball->setRotateSpeed(4);
 
         // ***** Bridge Test
-        DrEngineObject *anchor_a = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, 2500, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
-        DrEngineObject *chain_1 =  this->addBlock(Body_Type::Dynamic,   Test_Textures::Block, 2600, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
-        DrEngineObject *chain_2 =  this->addBlock(Body_Type::Dynamic,   Test_Textures::Block, 2700, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
-        DrEngineObject *chain_3 =  this->addBlock(Body_Type::Dynamic,   Test_Textures::Block, 2800, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
-        DrEngineObject *chain_4 =  this->addBlock(Body_Type::Dynamic,   Test_Textures::Block, 2900, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
-        DrEngineObject *chain_5 =  this->addBlock(Body_Type::Dynamic,   Test_Textures::Block, 3000, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
-        DrEngineObject *chain_6 =  this->addBlock(Body_Type::Dynamic,   Test_Textures::Block, 3100, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
-        DrEngineObject *chain_7 =  this->addBlock(Body_Type::Dynamic,   Test_Textures::Block, 3200, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
-        DrEngineObject *chain_8 =  this->addBlock(Body_Type::Dynamic,   Test_Textures::Block, 3300, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
-        DrEngineObject *anchor_b = this->addBlock(Body_Type::Kinematic, Test_Textures::Block, 3400, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
+        DrEngineObject *anchor_a = this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, 2500, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
+        DrEngineObject *chain_1 =  this->addBlock(Body_Type::Dynamic,   Asset_Textures::Block, 2600, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
+        DrEngineObject *chain_2 =  this->addBlock(Body_Type::Dynamic,   Asset_Textures::Block, 2700, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
+        DrEngineObject *chain_3 =  this->addBlock(Body_Type::Dynamic,   Asset_Textures::Block, 2800, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
+        DrEngineObject *chain_4 =  this->addBlock(Body_Type::Dynamic,   Asset_Textures::Block, 2900, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
+        DrEngineObject *chain_5 =  this->addBlock(Body_Type::Dynamic,   Asset_Textures::Block, 3000, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
+        DrEngineObject *chain_6 =  this->addBlock(Body_Type::Dynamic,   Asset_Textures::Block, 3100, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
+        DrEngineObject *chain_7 =  this->addBlock(Body_Type::Dynamic,   Asset_Textures::Block, 3200, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
+        DrEngineObject *chain_8 =  this->addBlock(Body_Type::Dynamic,   Asset_Textures::Block, 3300, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
+        DrEngineObject *anchor_b = this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, 3400, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
 
         cpSpaceAddConstraint( m_space, cpPivotJointNew(anchor_a->body, chain_1->body, cpBodyGetPosition(chain_1->body)) );
         cpSpaceAddConstraint( m_space, cpPivotJointNew(chain_1->body,  chain_2->body, cpBodyGetPosition(chain_2->body)) );
@@ -241,38 +241,38 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         this->addLine(Body_Type::Static, QPointF( 1760,    4), QPointF(1790,   0), c_friction, c_bounce, 1);
 
         // ***** Block alignment test
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1240, 220, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1240, 160, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1240, 100, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1240,  40, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1240, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, -1240, 220, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, -1240, 160, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, -1240, 100, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, -1240,  40, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, -1240, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
 
         // ***** Ground / Left Wall Blocks
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1180, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1120, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1060, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block, -1000, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, -1180, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, -1120, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, -1060, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, -1000, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
 
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -940, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -880, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -820, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -760, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -700, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -640, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -580, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -520, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -460, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -400, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -340, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -280, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -220, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -160, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,  -100, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,   -39, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,    22, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,    83, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,   144, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
-        this->addBlock(Body_Type::Kinematic, Test_Textures::Block,   205, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block,  -940, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block,  -880, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block,  -820, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block,  -760, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block,  -700, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block,  -640, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block,  -580, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block,  -520, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block,  -460, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block,  -400, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block,  -340, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block,  -280, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block,  -220, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block,  -160, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block,  -100, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block,   -39, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block,    22, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block,    83, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block,   144, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
+        this->addBlock(Body_Type::Kinematic, Asset_Textures::Block,   205, -20, 0, 0, QPointF(1, 1), 1, c_friction, c_bounce, QPointF(0, 0));
     }
 }
 

@@ -22,16 +22,18 @@ enum class Demo_Space {
     Blocks,
     Project,
 };
-enum Test_Textures {
-    Ball =  -1,
-    Block = -2,
-    Plant = -3,
-    Rover = -4,
-    Wheel = -5,
-    Spare = -6
-};
 // ########## !!!!! END
 
+
+enum Asset_Textures {
+    Numbers = -1,
+    Ball =  -4,
+    Block = -5,
+    Plant = -6,
+    Rover = -7,
+    Wheel = -8,
+    Spare = -9
+};
 
 
 //####################################################################################
