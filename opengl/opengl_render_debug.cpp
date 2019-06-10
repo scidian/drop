@@ -69,7 +69,8 @@ void OpenGL::drawDebug(QPainter &painter) {
     if (m_engine->debug_shapes) {
         drawDebugShapes(painter);
         drawDebugJoints(painter);
-        drawDebugHealth(painter);
+        ///drawDebugHealth(painter);
+        drawDebugHealthNative(painter);
     }
     if (m_engine->debug_collisions) {
         drawDebugCollisions(painter);
@@ -280,8 +281,10 @@ void OpenGL::drawDebugJoints(QPainter &painter) {
 }
 
 
+//####################################################################################
+//##    Draws the health of each object using QPainter
+//####################################################################################
 void OpenGL::drawDebugHealth(QPainter &painter) {
-
     QFont health_font("Avenir", static_cast<int>(18 * m_scale));
     painter.setPen(Qt::NoPen);
 
@@ -309,8 +312,120 @@ void OpenGL::drawDebugHealth(QPainter &painter) {
             painter.resetTransform();
         }
     }
-
 }
+
+
+//####################################################################################
+//##    Draws the health of each object using Native GL Drawing
+//####################################################################################
+void OpenGL::drawDebugHealthNative(QPainter &painter) {
+    painter.beginNativePainting();
+
+    const float font_size = 16.0f;
+
+    // ***** Enable shader program
+    if (!m_shader.bind()) return;
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);      // Standard blend function
+
+    DrEngineTexture *texture = m_engine->getTexture( Asset_Textures::Numbers );
+    texture->texture()->bind();
+
+    // ***** Set Matrix for Shader, calculates current matrix
+    QMatrix4x4 m_matrix = m_projection * m_model_view;
+    m_shader.setUniformValue( m_uniform_matrix, m_matrix );
+
+
+
+    for (auto object : m_engine->objects) {
+        if (!object->shouldProcess())       continue;
+        if (!object->hasBeenProcessed())    continue;
+
+        // Figure out what color to make the debug shapes
+        QColor color = objectDebugColor(object, true);
+
+        // Load Object Position
+        QPointF center = (object->getBodyPreviousPosition() * (1.0 - m_time_percent)) + (object->getBodyPosition() * m_time_percent);
+
+        // ***** Set Texture Coordinates for Shader
+        std::vector<float> texture_coordinates;
+        texture_coordinates.clear();
+        texture_coordinates.resize( 8 );
+        texture_coordinates[0] = 1;    texture_coordinates[1] = 1;
+        texture_coordinates[2] = 0;    texture_coordinates[3] = 1;
+        texture_coordinates[4] = 1;    texture_coordinates[5] = 0;
+        texture_coordinates[6] = 0;    texture_coordinates[7] = 0;
+        m_shader.setAttributeArray( m_attribute_tex_coord, texture_coordinates.data(), 2 );
+        m_shader.enableAttributeArray( m_attribute_tex_coord );
+
+
+        float x, y, z, half_width, half_height;
+        if (m_engine->render_type == Render_Type::Orthographic) {
+            x = static_cast<float>(center.x()) * m_scale;
+            y = static_cast<float>(center.y()) * m_scale;
+            z = static_cast<float>(object->getZOrder()) * m_scale;
+            half_width =  font_size *  object->getScaleX() * m_scale / 2.0f;
+            half_height = font_size * object->getScaleY() * m_scale / 2.0f;
+        } else {
+            x = static_cast<float>(center.x());
+            y = static_cast<float>(center.y());
+            z = static_cast<float>(object->getZOrder());
+            half_width =  font_size *  object->getScaleX() / 2.0f + 1.0f;
+            half_height = font_size * object->getScaleY() / 2.0f + 1.0f;
+        }
+
+        // ***** Create rotation matrix, apply rotation to object
+        QVector3D top_right = QVector3D( half_width,  half_height, 0);
+        QVector3D top_left =  QVector3D(-half_width,  half_height, 0);
+        QVector3D bot_right = QVector3D( half_width, -half_height, 0);
+        QVector3D bot_left =  QVector3D(-half_width, -half_height, 0);
+
+
+        // ***** Load vertices for this object
+        QVector<GLfloat> vertices;
+        vertices.clear();
+        vertices.resize( 12 );              // in sets of x, y, z
+        // Top Right
+        vertices[0] = top_right.x() + x;
+        vertices[1] = top_right.y() + y;
+        vertices[2] = z;
+        // Top Left
+        vertices[3] = top_left.x()  + x;
+        vertices[4] = top_left.y()  + y;
+        vertices[5] = z;
+        // Bottom Right
+        vertices[6] = bot_right.x() + x;
+        vertices[7] = bot_right.y() + y;
+        vertices[8] = z;
+        // Bottom Left
+        vertices[ 9] = bot_left.x() + x;
+        vertices[10] = bot_left.y() + y;
+        vertices[11] = z;
+
+        m_shader.setAttributeArray( m_attribute_vertex, vertices.data(), 3 );
+        m_shader.enableAttributeArray( m_attribute_vertex );
+
+        // ***** Set Shader Variables
+        setShaderDefaultValues(static_cast<float>(texture->width()), static_cast<float>(texture->height()));
+
+        // ***** Draw triangles using shader program
+        glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );                                        // GL_TRIANGLES
+
+        // Release bound items
+        m_shader.disableAttributeArray( m_attribute_vertex );
+    }
+
+
+
+
+    // ***** Disable shader program
+    m_shader.disableAttributeArray( m_attribute_tex_coord );
+    m_shader.release();
+
+    painter.endNativePainting();
+}
+
+
 
 
 //####################################################################################

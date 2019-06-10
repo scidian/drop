@@ -101,19 +101,7 @@ void OpenGL::drawCube(QVector3D center) {
         m_shader.enableAttributeArray( m_attribute_vertex );
 
         // Set shader variables
-        m_shader.setUniformValue( m_uniform_texture,    0 );
-        m_shader.setUniformValue( m_uniform_alpha,      1.0f );
-        m_shader.setUniformValue( m_uniform_width,      static_cast<float>(texture->width()) );
-        m_shader.setUniformValue( m_uniform_height,     static_cast<float>(texture->height()) );
-        m_shader.setUniformValue( m_uniform_pixel_x,    1.0f );
-        m_shader.setUniformValue( m_uniform_pixel_y,    1.0f );
-        m_shader.setUniformValue( m_uniform_negative,   false );
-        m_shader.setUniformValue( m_uniform_grayscale,  false );
-        m_shader.setUniformValue( m_uniform_hue,        0.0f );
-        m_shader.setUniformValue( m_uniform_saturation, 0.0f );
-        m_shader.setUniformValue( m_uniform_contrast,   0.0f );
-        m_shader.setUniformValue( m_uniform_brightness, 0.0f );
-        m_shader.setUniformValue( m_uniform_kernel,     false );
+        setShaderDefaultValues(static_cast<float>(texture->width()), static_cast<float>(texture->height()));
 
         // ***** Draw triangles using shader program
         glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );                                    // GL_TRIANGLES

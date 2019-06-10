@@ -163,7 +163,7 @@ void OpenGL::updateViewMatrix() {
 
 
 //####################################################################################
-//##        Applis coordinates that represents an entire texture
+//##        Applies coordinates that represents an entire texture
 //####################################################################################
 void OpenGL::setWholeTextureCoordinates(std::vector<float> &texture_coords) {
     texture_coords.clear();
@@ -189,11 +189,14 @@ void OpenGL::drawFrameBufferToScreenBuffer() {
 
     if (!m_shader.bind()) return;
 
+    float fbo_width =  static_cast<float>(width() *  devicePixelRatio());
+    float fbo_height = static_cast<float>(height() * devicePixelRatio());
+
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
-    float left =   0.0f - (width() *  devicePixelRatio() / 2.0f);
-    float right =  0.0f + (width() *  devicePixelRatio() / 2.0f);
-    float top =    0.0f + (height() * devicePixelRatio() / 2.0f);
-    float bottom = 0.0f - (height() * devicePixelRatio() / 2.0f);
+    float left =   0.0f - (fbo_width / 2.0f);
+    float right =  0.0f + (fbo_width / 2.0f);
+    float top =    0.0f + (fbo_height / 2.0f);
+    float bottom = 0.0f - (fbo_height / 2.0f);
     QMatrix4x4 m_matrix;
     m_matrix.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
     m_shader.setUniformValue( m_uniform_matrix, m_matrix );
@@ -221,22 +224,10 @@ void OpenGL::drawFrameBufferToScreenBuffer() {
     m_shader.enableAttributeArray( m_attribute_vertex );
 
     // Set variables for shader
-    m_shader.setUniformValue( m_uniform_texture,    0 );                                // Use texture unit 0
-    m_shader.setUniformValue( m_uniform_alpha,      1.0f );
-    m_shader.setUniformValue( m_uniform_width,      static_cast<float>(width()) );
-    m_shader.setUniformValue( m_uniform_height,     static_cast<float>(height()) );
-    m_shader.setUniformValue( m_uniform_pixel_x,    1.0f );
-    m_shader.setUniformValue( m_uniform_pixel_y,    1.0f );
-    m_shader.setUniformValue( m_uniform_negative,   false );
-    m_shader.setUniformValue( m_uniform_grayscale,  false );
-    m_shader.setUniformValue( m_uniform_hue,        0.0f );
-    m_shader.setUniformValue( m_uniform_saturation, 0.0f );
-    m_shader.setUniformValue( m_uniform_contrast,   0.0f );
-    m_shader.setUniformValue( m_uniform_brightness, 0.0f );
-    m_shader.setUniformValue( m_uniform_kernel,     false );                            // Currently overrides other effects if set to true
+    setShaderDefaultValues( fbo_width, fbo_height );
 
     // Draw triangles using shader program
-    glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );                                            // GL_TRIANGLES
+    glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );                                // GL_TRIANGLES
 
     // Disable arrays
     m_shader.disableAttributeArray( m_attribute_vertex );
@@ -247,7 +238,24 @@ void OpenGL::drawFrameBufferToScreenBuffer() {
 }
 
 
-
+//####################################################################################
+//##        Sets shader variables to default normal render
+//####################################################################################
+void OpenGL::setShaderDefaultValues(float texture_width, float texture_height) {
+    m_shader.setUniformValue( m_uniform_texture,    0 );                    // Use texture unit "0"
+    m_shader.setUniformValue( m_uniform_alpha,      1.0f );
+    m_shader.setUniformValue( m_uniform_width,      texture_width  );
+    m_shader.setUniformValue( m_uniform_height,     texture_height );
+    m_shader.setUniformValue( m_uniform_pixel_x,    1.0f );
+    m_shader.setUniformValue( m_uniform_pixel_y,    1.0f );
+    m_shader.setUniformValue( m_uniform_negative,   false );
+    m_shader.setUniformValue( m_uniform_grayscale,  false );
+    m_shader.setUniformValue( m_uniform_hue,        0.0f );
+    m_shader.setUniformValue( m_uniform_saturation, 0.0f );
+    m_shader.setUniformValue( m_uniform_contrast,   0.0f );
+    m_shader.setUniformValue( m_uniform_brightness, 0.0f );
+    m_shader.setUniformValue( m_uniform_kernel,     false );                // Currently overrides other effects if set to true
+}
 
 
 

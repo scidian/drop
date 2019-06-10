@@ -119,12 +119,14 @@ public:
     void            drawDebug(QPainter &painter);
     void            drawDebugCollisions(QPainter &painter);
     void            drawDebugHealth(QPainter &painter);
+    void            drawDebugHealthNative(QPainter &painter);
     void            drawDebugJoints(QPainter &painter);
     void            drawDebugShapes(QPainter &painter);
     void            drawFrameBufferToScreenBuffer();
     void            drawSpace();
     QColor          objectDebugColor(DrEngineObject *object, bool text_color = false);
     void            updateViewMatrix();
+    void            setShaderDefaultValues(float texture_width, float texture_height);
     void            setWholeTextureCoordinates(std::vector<float> &texture_coords);
 
     // Getters and Setters

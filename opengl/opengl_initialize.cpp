@@ -23,7 +23,7 @@ void OpenGL::initializeGL() {
     glClearColor(0.0, 0.0, 0.0, 1.0f);
 
     // Load test resources
-    m_engine->addTexture(Asset_Textures::Numbers,   ":/assets/test_images/ball_1.png");         // -1
+    m_engine->addTexture(Asset_Textures::Numbers,   ":/assets/engine/numbers.png");             // -1
     m_engine->addTexture(Asset_Textures::Ball,      ":/assets/test_images/ball_1.png");         // -4
     m_engine->addTexture(Asset_Textures::Block,     ":/assets/test_images/metal_block.png");    // -5
     m_engine->addTexture(Asset_Textures::Plant,     ":/assets/test_images/moon_plant_6.png");   // -6
