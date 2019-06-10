@@ -25,8 +25,7 @@
 //####################################################################################
 void FormMain::buildWidgetsEditor()
 {
-    QFont font;
-    font.setPointSize(Dr::FontSize());
+    QFont font = Dr::CustomFont();
 
     QSizePolicy sizePolicy(                     QSizePolicy::Preferred,         QSizePolicy::Preferred);
     QSizePolicy sizePolicyPreferredHorizontal(  QSizePolicy::Preferred,         QSizePolicy::Preferred);

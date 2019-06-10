@@ -111,5 +111,7 @@
         <file>assets/test_images/metal_block.png</file>
         <file>assets/test_images/spare_wheel.png</file>
         <file>assets/toolbar_icons/toolbar_play.png</file>
+        <file>assets/fonts/Aileron-Regular.otf</file>
+        <file>assets/fonts/Aileron-Bold.otf</file>
     </qresource>
 </RCC>

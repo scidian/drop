@@ -6,6 +6,7 @@
 //
 //
 #include "colors/colors.h"
+#include "helper.h"
 #include "style.h"
 
 namespace Dr {

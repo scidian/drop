@@ -55,7 +55,6 @@ namespace Dr {
 
     QString         BorderWidth();                              // Project wide border width for Style Sheets, as QString
     int             BorderWidthAsInt();                         // Project wide border width for Style Sheets, as Int
-    int             FontSize();                                 // Project wide font size
 
     Color_Scheme    GetColorScheme();
     QColor          GetColor(Window_Colors color_role);    

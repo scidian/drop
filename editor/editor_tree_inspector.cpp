@@ -181,8 +181,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
             horizontal_split->setContentsMargins(0,0,0,0);
 
             QLabel *property_name = new QLabel(property_pair.second->getDisplayName());
-            QFont fp;
-            fp.setPointSize(Dr::FontSize());
+            QFont fp = Dr::CustomFont();
             property_name->setFont(fp);
                 QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
                 sp_left.setHorizontalStretch(c_inspector_size_left);

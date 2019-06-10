@@ -25,8 +25,6 @@ static Color_Palette_Map g_color_palettes;                                      
 
 QString BorderWidth()       { return "1px"; }                                   // Project wide border width for Style Sheets, as QString
 int     BorderWidthAsInt()  { return 1; }                                       // Project wide border width for Style Sheets, as Int
-int     FontSize()          { return 11;  }                                     // Project wide font size
-
 
 //####################################################################################
 //##        Retreive custom colors

@@ -23,7 +23,6 @@ typedef Clock::time_point DrTime;
 //############################
 namespace Dr {
 
-
 // Comparison Template Function, Returns number_to_check fit to within the bounds of min / max
 template<class T>
 const T& Clamp(const T& number_to_check, const T& min, const T& max) {
@@ -56,6 +55,12 @@ QString     RemoveTrailingDecimals(double value, int max_decimal_places);
 double      Closest90DegreeAngle(double angle, double angle_to_find);
 bool        IsSimilarAngle(double angle1, double angle2, double tolerance = .001);
 bool        IsSquare(double check_angle);
+
+// Custom Font Functions
+QFont       CustomFont();
+QString     FontFamily();
+int         FontSize();
+void        LoadCustomFonts();
 
 // String Functions
 int         CheckFontWidth(QFont font, QString text_to_check);

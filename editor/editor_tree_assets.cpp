@@ -5,6 +5,7 @@
 //      Tree Asset Definitions
 //
 //
+#include <QDebug>
 #include <QEvent>
 #include <QFrame>
 #include <QLabel>
@@ -55,8 +56,7 @@ TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor
             m_search_bar = new QLineEdit();
             m_search_bar->setObjectName("assetSearchBar");
             m_search_bar->setPlaceholderText("Search");
-                QFont font;
-                font.setPointSize(Dr::FontSize());
+                QFont font = Dr::CustomFont();
             m_search_bar->setFont(font);
             connect (m_search_bar, SIGNAL(textChanged(QString)), this, SLOT(searchTextChanged(QString)) );
         m_search_layout->addWidget(m_search_bar);
@@ -85,9 +85,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
     sp_left.setHorizontalStretch(c_asset_size_left);
     sp_right.setHorizontalStretch(c_asset_size_right);
 
-    QFont font;
-    font.setPointSize(Dr::FontSize());
-
+    QFont font = Dr::CustomFont();
 
     // ***** Retrieve list of assets for project
     AssetMap &list_assets = m_project->getAssetMap();

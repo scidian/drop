@@ -272,8 +272,7 @@ QLabel* FormMain::createToolbarSpacer(int height, int space_on_the_right, bool v
 }
 
 QPushButton* FormMain::createPushButton(QString name, QString text) {
-    QFont font;
-    font.setPointSize(Dr::FontSize());
+    QFont font = Dr::CustomFont();
 
     QPushButton *button = new QPushButton();
     button->setObjectName( name );

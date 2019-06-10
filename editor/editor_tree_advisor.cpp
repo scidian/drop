@@ -9,6 +9,7 @@
 
 #include "colors/colors.h"
 #include "editor_tree_advisor.h"
+#include "helper.h"
 #include "interface_editor_relay.h"
 #include "project/project.h"
 #include "project/project_world.h"
@@ -22,15 +23,16 @@
 //##        SLOT, Sets the Advisor Dock text
 //####################################################################################
 void TreeAdvisor::changeAdvisor(QString header, QString body) {
-    if (advisor_mutex.tryLock() == false) return;           // Try and lock function to make this thread safe
+    if (advisor_mutex.tryLock() == false) return;           // Try and lock mutex to make this thread safe
+
     this->clear();                                          // Clear / delete all from advisor tree
     m_advisor_header = header;                              // Save Header for reference later
 
     // Set font sizes
-    QFont header_font, body_font;
+    QFont header_font = Dr::CustomFont();
+    QFont body_font = Dr::CustomFont();
     header_font.setPointSize(Dr::FontSize() + 1);
     header_font.setBold(true);
-    body_font.setPointSize(Dr::FontSize());
 
     // Insert top level item to act as header
     QTreeWidgetItem *topLevelItem = new QTreeWidgetItem(this);

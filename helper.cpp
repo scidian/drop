@@ -5,19 +5,26 @@
 //      Helpful misc functions
 //
 //
-
-#include <cmath>
-
+#include <QApplication>
+#include <QFontDatabase>
 #include <QGridLayout>
 #include <QMessageBox>
 #include <QSpacerItem>
 #include <QTime>
+#include <cmath>
 
 #include "colors/colors.h"
 #include "helper.h"
 #include "widgets/widgets.h"
 
 namespace Dr {
+
+
+// Internal file linkage variables
+static int      g_font_id;                      // Keeps id of our custom font
+static int      g_font_id_bold;                 // Keeps id of our custom font
+static QString  g_font_family;                  // Keeps family name of our custom font
+static QString  g_font_family_bold;             // Keeps family name of our custom font
 
 
 //####################################################################################
@@ -111,6 +118,36 @@ QString RemoveTrailingDecimals(double value, int max_decimal_places) {
     return QString::number(value, 'f', count);
 }
 
+
+
+//####################################################################################
+//##
+//##        Custom Font Functions
+//##
+//####################################################################################
+void LoadCustomFonts() {
+    g_font_id =          QFontDatabase::addApplicationFont(":/assets/fonts/Aileron-Regular.otf");
+    g_font_id_bold =     QFontDatabase::addApplicationFont(":/assets/fonts/Aileron-Bold.otf");
+    g_font_family =      QFontDatabase::applicationFontFamilies(g_font_id).at(0);
+    g_font_family_bold = QFontDatabase::applicationFontFamilies(g_font_id_bold).at(0);
+
+    if (g_font_id >= 0) {
+        QFont font = CustomFont();
+        qApp->setFont(font);
+    }
+}
+
+// Returns custom font family
+QString FontFamily() { return (g_font_id == -1) ? "Arial" : g_font_family; }
+
+// Project wide font size
+int FontSize()  { return 11; }
+
+QFont CustomFont() {
+    QFont font(FontFamily());
+    font.setPointSize(FontSize());
+    return font;
+}
 
 
 //####################################################################################

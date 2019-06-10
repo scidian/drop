@@ -119,8 +119,8 @@ void FormMain::initializeFormMainSettings() {
 //####################################################################################
 void FormMain::buildWidgetsShared() {
 
-    QFont font, font_larger;
-    font.setPointSize(Dr::FontSize());
+    QFont font = Dr::CustomFont();
+    QFont font_larger = Dr::CustomFont();
     font_larger.setPointSize(Dr::FontSize() + 2);
 
     QSizePolicy sizePolicy(                     QSizePolicy::Preferred,         QSizePolicy::Preferred);

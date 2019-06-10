@@ -10,12 +10,13 @@
 #include "form_main.h"
 #include "form_popup.h"
 #include "globals.h"
+#include "helper.h"
 
 //####################################################################################
 //##        Builds out FormPop's inner widget to show options for grid snapping
 //####################################################################################
 void FormPopup::buildPopupGridSnap() {
-    QFont font;  font.setPointSize(Dr::FontSize());
+    QFont font = Dr::CustomFont();
     QFontMetrics font_metrics { font };
 
     // Figure out best size of popup

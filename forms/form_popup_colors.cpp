@@ -69,8 +69,7 @@ void FormPopupColor::buildPopupColors(QWidget *wants_color, QColor start_color) 
         m_color_label = new QLabel();
         m_color_label->setAlignment(Qt::AlignCenter);
         m_color_label->setFixedSize(192, 20);
-            QFont font;
-            font.setPointSize(Dr::FontSize());
+            QFont font = Dr::CustomFont();
             m_color_label->setFont( font );
         setInfoLabelColor(start_color);
 

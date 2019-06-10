@@ -7,15 +7,15 @@
 //
 #include <QApplication>
 #include <QDesktopWidget>
-#include <QGuiApplication>
-#include <QScreen>
-
 #include <QGridLayout>
+#include <QGuiApplication>
 #include <QPainter>
+#include <QScreen>
 
 #include "form_color_magnifier.h"
 #include "form_main.h"
 #include "globals.h"
+#include "helper.h"
 
 constexpr int c_text_box_height = 35;
 
@@ -178,7 +178,7 @@ QPixmap FormColorMagnifier::drawCursor(QPoint screen_pos, int width, int height,
     ///QString color_string = "R: " + QString::number(m_color.red()) +
     ///                      " G: " + QString::number(m_color.green()) +
     ///                      " B: " + QString::number(m_color.blue());
-    QFont font;    font.setPointSize( Dr::FontSize() );
+    QFont font = Dr::CustomFont();
     paint.setFont( font );
     paint.drawText( text_rect, Qt::AlignCenter, m_color.name().toUpper() );
     paint.end();

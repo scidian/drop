@@ -70,6 +70,7 @@
 #include "debug.h"
 #include "forms/form_main.h"
 #include "globals.h"
+#include "helper.h"
 
 int main(int argc, char *argv[]) {
 
@@ -89,6 +90,7 @@ int main(int argc, char *argv[]) {
 
     // ***** Load some global data
     Dr::InitializeFlags();                                      // Sets debug flags
+    Dr::LoadCustomFonts();                                      // Loads font from resource file
     Dr::LoadPalettes();                                         // Loads color data into global vector
     Dr::LoadPreferences();                                      // Loads user preferences
 
