@@ -105,7 +105,7 @@ void OpenGL::bindOffscreenBuffer() {
 
     // Enable alpha channel
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);      // Standard blend function
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                  // Standard blend function
 
     // Enable anti aliasing
     glEnable( GL_MULTISAMPLE );
@@ -116,7 +116,7 @@ void OpenGL::bindOffscreenBuffer() {
 
     // Alpha clamping
     ///glEnable(GL_ALPHA_TEST);
-    ///glAlphaFunc(GL_GREATER,0);                           // 0.0 (transparent) to 1.0 (opaque)
+    ///glAlphaFunc(GL_GREATER,0);                                       // 0.0 (transparent) to 1.0 (opaque)
 }
 
 
@@ -254,6 +254,7 @@ void OpenGL::setShaderDefaultValues(float texture_width, float texture_height) {
     m_shader.setUniformValue( m_uniform_saturation, 0.0f );
     m_shader.setUniformValue( m_uniform_contrast,   0.0f );
     m_shader.setUniformValue( m_uniform_brightness, 0.0f );
+    m_shader.setUniformValue( m_uniform_tint,       0.0f, 0.0f, 0.0f );     // Add 0 to red, green, and blue
     m_shader.setUniformValue( m_uniform_kernel,     false );                // Currently overrides other effects if set to true
 }
 

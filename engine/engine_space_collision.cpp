@@ -32,7 +32,7 @@ enum class One_Way2 {                   // One Way Collide
 // Internal Linkage (File Scope) Forward Declarations
 static void BodyAddRecoil(cpSpace *, cpArbiter *arb, DrEngineObject *object);
 
-constexpr double c_speed_slowdown = 0.30;                   // Multiplier to slow down object velocity, associated with m_cancel_gravity objects
+constexpr double c_speed_slowdown = 0.50;                   // Multiplier to slow down object velocity, associated with m_cancel_gravity objects
 
 //######################################################################################################
 //##    Chipmunk Collision Callbacks
@@ -116,8 +116,6 @@ extern void SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
 
     // Stop canceling gravity when seperates, and slow it down as it exits
     if (object_b->getCancelGravity()) {
-        cpVect vel = cpBodyGetVelocity( object_a->body );
-        cpBodySetVelocity( object_a->body, cpv(vel.x * c_speed_slowdown, vel.y * c_speed_slowdown) );
         object_a->setTempNoGravity(false);
     }
 }

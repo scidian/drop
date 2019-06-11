@@ -210,38 +210,46 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
         }
     }
 
-    // Local Constants
-    constexpr double c_buffer =      0.001;
-    constexpr double c_drag_ground = 0.005;
-    constexpr double c_drag_air =    0.005;
-    constexpr double c_drag_rotate = 0.025;
+    // Some drag multipliers
+    double c_buffer =      0.001;
+    double c_drag_ground = 0.005;
+    double c_drag_air =    0.005;
+    double c_drag_rotate = 0.025;
 
-    double air_accel_x =    object->getMoveSpeedX() / (object->getAirDrag() + c_buffer);
-    double air_accel_y =    object->getMoveSpeedY() / (object->getAirDrag() + c_buffer);
-    double ground_accel_x = object->getMoveSpeedX() / (object->getGroundDrag() + c_buffer);
-    double ground_accel_y = object->getMoveSpeedY() / (object->getGroundDrag() + c_buffer);
+    // This increases slowdown speed while in contact with a ladder (cancel gravity object)
+    if (object->getTempNoGravity()) {
+        c_drag_air    = 0.0001;
+        c_drag_ground = 0.0001;
+    }
+
+    double air_drag =       object->getAirDrag();
+    double ground_drag =    object->getGroundDrag();
+    double air_accel_x =    object->getMoveSpeedX() / (air_drag + c_buffer);
+    double air_accel_y =    object->getMoveSpeedY() / (air_drag + c_buffer);
+    double ground_accel_x = object->getMoveSpeedX() / (ground_drag + c_buffer);
+    double ground_accel_y = object->getMoveSpeedY() / (ground_drag + c_buffer);
 
     if (!object->isOnGround() && !object->isOnWall()) {
 
         if ((qFuzzyCompare(body_v.x, 0) == false && qFuzzyCompare(target_vx, 0) == false) ||
             (body_v.x <= 0 && target_vx > 0) || (body_v.x >= 0 && target_vx < 0))
                 body_v.x = cpflerpconst( body_v.x, target_vx, air_accel_x * dt);
-        else    body_v.x = cpflerpconst( body_v.x, 0, object->getAirDrag() / c_drag_air * dt);
+        else    body_v.x = cpflerpconst( body_v.x, 0, air_drag / c_drag_air * dt);
 
         if ((qFuzzyCompare(body_v.y, 0) == false && qFuzzyCompare(target_vy, 0) == false) ||
             (body_v.y <= 0 && target_vy > 0) || (body_v.y >= 0 && target_vy < 0))
                 body_v.y = cpflerpconst( body_v.y, target_vy, air_accel_y * dt);
-        else    body_v.y = cpflerpconst( body_v.y, 0, object->getAirDrag() / c_drag_air * dt);
+        else    body_v.y = cpflerpconst( body_v.y, 0, air_drag / c_drag_air * dt);
 
     } else {
 
         if (qFuzzyCompare(target_vx, 0) == false)
                 body_v.x = cpflerpconst( body_v.x, target_vx, ground_accel_x * dt);
-        else    body_v.x = cpflerpconst( body_v.x, target_vx, object->getGroundDrag() / c_drag_ground * dt);
+        else    body_v.x = cpflerpconst( body_v.x, target_vx, ground_drag / c_drag_ground * dt);
 
         if (qFuzzyCompare(target_vy, 0) == false)
                 body_v.y = cpflerpconst( body_v.y, target_vy, ground_accel_y * dt);
-        else    body_v.y = cpflerpconst( body_v.y, target_vy, object->getGroundDrag() / c_drag_ground * dt);
+        else    body_v.y = cpflerpconst( body_v.y, target_vy, ground_drag / c_drag_ground * dt);
     }
 
 
@@ -258,7 +266,6 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
     // ***** Update Velocity - NOTE: MUST CALL actual Update Velocity function some time during this callback!
     if (object->ignoreGravity()) {
-        ///if (object->getTempNoGravity()) cpBodySetVelocity( object->body, cpv(target_vx, target_vy) );
         cpBodyUpdateVelocityNoGravity(body, gravity, damping, dt);
     } else {
         cpBodyUpdateVelocity(body, gravity, damping, dt);

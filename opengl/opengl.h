@@ -76,6 +76,7 @@ private:
     int     m_uniform_saturation;               // Saturation, -1.0 to 1.0
     int     m_uniform_contrast;                 // Contrast,   -1.0 to 1.0
     int     m_uniform_brightness;               // Brightness, -1.0 to 1.0
+    int     m_uniform_tint;                     // Tint, red/green/blue
     int     m_uniform_kernel;                   // Kernel Effects?
 
     // Timer Variables
@@ -127,6 +128,7 @@ public:
     QColor          objectDebugColor(DrEngineObject *object, bool text_color = false);
     void            updateViewMatrix();
     void            setShaderDefaultValues(float texture_width, float texture_height);
+    void            setNumberTextureCoordinates(QString letter, std::vector<float> &texture_coordinates);
     void            setWholeTextureCoordinates(std::vector<float> &texture_coords);
 
     // Getters and Setters

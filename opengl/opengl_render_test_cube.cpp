@@ -104,7 +104,7 @@ void OpenGL::drawCube(QVector3D center) {
         setShaderDefaultValues(static_cast<float>(texture->width()), static_cast<float>(texture->height()));
 
         // ***** Draw triangles using shader program
-        glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );                                    // GL_TRIANGLES
+        glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
 
         // ***** Disable arrays
         m_shader.disableAttributeArray( m_attribute_vertex );

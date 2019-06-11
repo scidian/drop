@@ -140,10 +140,11 @@ void OpenGL::drawSpace() {
         m_shader.setUniformValue( m_uniform_saturation, object->saturation );
         m_shader.setUniformValue( m_uniform_contrast,   object->contrast );
         m_shader.setUniformValue( m_uniform_brightness, object->brightness );
+        m_shader.setUniformValue( m_uniform_tint,       0.0f, 0.0f, 0.0f );
         m_shader.setUniformValue( m_uniform_kernel,     false );
 
         // ***** Draw triangles using shader program
-        glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );                                    // GL_TRIANGLES
+        glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
 
 
         // Release bound items

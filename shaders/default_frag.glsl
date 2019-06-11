@@ -28,6 +28,7 @@ uniform lowp float  u_saturation;// = 0.0;          // Saturation       Editor: 
 uniform lowp float  u_contrast;// = 0.0;            // Contrast         Editor: -255 to 255     Shader: -1.0 to 1.0
 uniform lowp float  u_brightness;// = 0.0;          // Brightness       Editor: -255 to 255     Shader: -1.0 to 1.0
 
+uniform lowp vec3   u_tint;// = vec3(0, 0, 0);      // Tint, adds rgb to final output
 uniform      bool   u_kernel;// = false;            // Kernel Effects? (blur, sharpen, etc)
 
 
@@ -96,6 +97,7 @@ void main( void ) {
     // ***** CONTRAST / BRIGHTNESS ADJUSTMENT
     fragRGB.rgb =  ((fragRGB.rgb - 0.5) * (u_contrast + 0.392) / 0.392) + 0.5;      // Contrast
     fragRGB.rgb += u_brightness;                                                    // Brightness
+    fragRGB.rgb += u_tint;                                                          // Tint
     fragRGB.rgb =  clamp(fragRGB.rgb, 0.0, 1.0);
 
 
