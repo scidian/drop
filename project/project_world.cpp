@@ -111,6 +111,25 @@ void DrWorld::initializeWorldSettings(QString new_name) {
                            "Bounce", "Global bounce setting, greater than or equal to 0.0 (no limit, but generally less than or equal to 1.0). Bounce can be "
                                      "overriden on a per object basis.");
 
+    addComponent(Components::World_Appearance, "Appearance", "These filters affect the entire world after it has been rendered.",
+                                               Component_Colors::Mellow_Yellow, true);
+    getComponent(Components::World_Appearance)->setIcon(Component_Icons::Appearance);
+
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Pixelation, Property_Type::PositiveSizeF, QPointF(1.0, 1.0),
+                           "Pixelation", "Size of x and y pixels, larger numbers provide more pixelation.");
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Brightness, Property_Type::Filter, 0,
+                           "Brightness", "How light / dark this world should appear. \nDefault: \t0 \nRange: \t-255 to 255");
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Contrast, Property_Type::Filter, 0,
+                           "Contrast", "Amount of distinguishable difference of colors. \nDefault: \t0 \nRange: \t-255 to 255");
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Saturation, Property_Type::Filter, 0,
+                           "Saturation", "How colorful the colors appear. \nDefault: \t0 \nRange: \t-255 to 255");
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Hue, Property_Type::FilterAngle, 0,
+                           "Hue", "Rotate color values. \nDefault: \t0 \nRange: \t0 to 360");
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Grayscale, Property_Type::Bool, false,
+                           "Grayscale", "Should this world be shown grayscale?");
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Negative, Property_Type::Bool, false,
+                           "Negative", "Should this world's colors be inverted?");
+
 }
 
 

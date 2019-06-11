@@ -55,7 +55,7 @@ QVector3D OpenGL::mapFromScreen(QPointF point) {
         ///glReadPixels( static_cast<int>(x_pos), static_cast<int>(y_pos), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z );
 
         // Old way to unproject, returns unpredictable z coordinate that cannot easily be moved to z plane 0...
-        /////In perspective mode we have to find what the Z value is for a projected vector first
+        ///// Find what the Z value is for a projected vector
         ///QVector3D find_z(0, 0, 0);
         ///find_z = find_z.project(m_model_view, m_projection, QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio()));
         ///// Then we use that Z value to unproject

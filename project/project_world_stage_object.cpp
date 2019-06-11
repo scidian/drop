@@ -184,7 +184,7 @@ void DrObject::addComponentAppearance() {
     addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Grayscale, Property_Type::Bool, false,
                            "Grayscale", "Should this object be shown grayscale?");
     addPropertyToComponent(Components::Object_Appearance, Properties::Object_Filter_Negative, Property_Type::Bool, false,
-                           "Negative", "Should this objects colors be inverted?");
+                           "Negative", "Should this object's colors be inverted?");
 }
 
 

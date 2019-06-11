@@ -93,6 +93,17 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         cpSpaceSetGravity(m_space, m_gravity);
         cpSpaceSetDamping(m_space, m_damping);
 
+        // ***** World appearance settings
+        QPointF pixelation = world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Pixelation).toPointF();
+        pixel_x =     static_cast<float>(pixelation.x());
+        pixel_y =     static_cast<float>(pixelation.y());
+        brightness =  world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Brightness).toInt() / 255.f;
+        contrast =    world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Contrast).toInt() / 255.f;
+        saturation =  world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Saturation).toInt() / 255.f;
+        hue =         world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Hue).toInt() / 360.f;
+        grayscale =   world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Grayscale).toBool();
+        negative =    world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Negative).toBool();
+
         // ***** Load Current Stage to origin position
         loadStageToSpace(stage, 0, 0);
 

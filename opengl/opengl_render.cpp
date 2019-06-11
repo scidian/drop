@@ -227,6 +227,15 @@ void OpenGL::drawFrameBufferToScreenBuffer() {
     // Set variables for shader
     setShaderDefaultValues( fbo_width, fbo_height );
 
+    m_shader.setUniformValue( m_uniform_pixel_x,    m_engine->pixel_x );
+    m_shader.setUniformValue( m_uniform_pixel_y,    m_engine->pixel_y );
+    m_shader.setUniformValue( m_uniform_negative,   m_engine->negative );
+    m_shader.setUniformValue( m_uniform_grayscale,  m_engine->grayscale );
+    m_shader.setUniformValue( m_uniform_hue,        m_engine->hue );
+    m_shader.setUniformValue( m_uniform_saturation, m_engine->saturation );
+    m_shader.setUniformValue( m_uniform_contrast,   m_engine->contrast );
+    m_shader.setUniformValue( m_uniform_brightness, m_engine->brightness );
+
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );                                // GL_TRIANGLES
 

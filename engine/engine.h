@@ -103,6 +103,19 @@ private:
     double          m_loaded_to = 0.0;              // Last distance we loaded a new stage
 
 
+    // World Variables
+public:
+    // Image Post Processing Attributes
+    float       pixel_x = 1.0;                              // Pixelation X     1.0+
+    float       pixel_y = 1.0;                              // Pixelation Y     1.0+
+    bool        negative = false;                           // Negative         True / False
+    bool        grayscale = false;                          // Grayscale        True / False
+    float       hue = 0.0f;                                 // Hue              Editor:    0 to 360     Shader:  0.0 to 1.0
+    float       saturation = 0.0f;                          // Saturation       Editor: -255 to 255     Shader: -1.0 to 1.0
+    float       contrast = 0.0f;                            // Contrast         Editor: -255 to 255     Shader: -1.0 to 1.0
+    float       brightness = 0.0f;                          // Brightness       Editor: -255 to 255     Shader: -1.0 to 1.0
+
+
 // ***** Public Variables not yet implemented into function calls / getters / setters
 public:
     // Local Variables

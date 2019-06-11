@@ -184,6 +184,7 @@ enum class Components {
 
     World_Settings,
     World_Physics,
+    World_Appearance,
 
     Stage_Settings,
     Stage_Grid,
@@ -227,6 +228,16 @@ enum class Properties {
     World_Friction,                 //float
     World_Drag,                     //float
     World_Bounce ,                  //float
+
+    // Appearance
+    World_Filter_Pixelation,        //positive size
+    World_Filter_Brightness,        //filter
+    World_Filter_Contrast,          //filter
+    World_Filter_Saturation,        //filter
+    World_Filter_Hue,               //filter angle
+    World_Filter_Grayscale,         //bool
+    World_Filter_Negative,          //bool
+
 
     // ********************
 
