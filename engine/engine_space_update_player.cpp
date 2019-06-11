@@ -52,7 +52,7 @@ static void SelectPlayerGroundNormal(cpBody *, cpArbiter *arb, Ground_Data *grou
 //######################################################################################################
 //##    Updates Jump Player Velocity
 //######################################################################################################
-// NOTE: The order of the ground check, jump operations is important
+// #NOTE: The order of the ground check, jump operations is important
 extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt) {
     // Grab object from User Data
     DrEngineObject *object = static_cast<DrEngineObject*>(cpBodyGetUserData(body));
@@ -264,7 +264,7 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     body_v.y = cpfclamp(body_v.y, -object->getMaxSpeedY(), object->getMaxSpeedY());
     cpBodySetVelocity( object->body, body_v );
 
-    // ***** Update Velocity - NOTE: MUST CALL actual Update Velocity function some time during this callback!
+    // ***** Update Velocity - #NOTE: MUST CALL actual Update Velocity function some time during this callback!
     if (object->ignoreGravity()) {
         cpBodyUpdateVelocityNoGravity(body, gravity, damping, dt);
     } else {

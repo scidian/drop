@@ -177,8 +177,8 @@ void FormMain::buildWidgetsEditor()
 
                 splitterHorizontal->addWidget(widgetStageView);
                 splitterHorizontal->setSizes(QList<int> { 150, 300 });      // Sets tree_stage (stage assests) startup width to 150
-                                                                            // NOTE: You can save and restore the sizes of the widgets from a QByteArray
-                                                                            //       using QSplitter.saveState() and QSplitter.restoreState() respectively
+                                                                            // #NOTE: You can save and restore the sizes of the widgets from a QByteArray
+                                                                            //        using QSplitter.saveState() and QSplitter.restoreState() respectively
             horizontalLayout->addWidget(splitterHorizontal);
         splitterVertical->addWidget(widgetStage);
 

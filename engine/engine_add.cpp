@@ -228,8 +228,8 @@ DrEngineObject* DrEngine::addBlock(Body_Type body_type, long texture_number, dou
 
 //######################################################################################################
 //##    Add Polygon
-//##        ***** NOTE: Vertices must be in COUNTER-CLOCKWISE ordering
-//##              ALSO: Pass -1 for friction and/or bounce to use default world friction and bounce settings
+//##        !!!!! #NOTE: Vertices must be in COUNTER-CLOCKWISE ordering
+//##              ALSO:  Pass -1 for friction and/or bounce to use default world friction and bounce settings
 //######################################################################################################
 DrEngineObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
                                      QVector<QPointF> points, double friction, double bounce, QPointF velocity,

@@ -33,7 +33,7 @@ void DrEngineTexture::loadTexture(QString from_asset_string) {
 
 void DrEngineTexture::loadTexture(QPixmap &from_pixmap) {
 
-    // Load image, NOTE: QImage is mirrored vertically to account for the fact that OpenGL and QImage use opposite directions for the y axis
+    // Load image, #NOTE: QImage is mirrored vertically to account for the fact that OpenGL and QImage use opposite directions for the y axis
     QImage image = from_pixmap.toImage().mirrored();
     image = image.convertToFormat( QImage::Format_ARGB32 );
 

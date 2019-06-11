@@ -46,7 +46,7 @@ DrStage::~DrStage() {
 //##
 //##    Adds a new object to the Stage
 //##
-//##    ***** NOTE: Y Axis is in Game Engine coordinates (i.e. positive is up, negative is down)
+//##    ***** #NOTE: Y Axis is in Game Engine coordinates (i.e. positive is up, negative is down)
 //##
 //####################################################################################
 DrObject* DrStage::addObject(DrObjectType new_type, long from_asset_key, double x, double y, long z, bool should_collide) {

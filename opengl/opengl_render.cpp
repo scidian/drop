@@ -125,9 +125,9 @@ void OpenGL::bindOffscreenBuffer() {
 //####################################################################################
 void OpenGL::updateViewMatrix() {
     //          Axis:
-    //              -X left,  +X right
-    //              -Y down,  +Y up
-    //              -Z back,  +Z front
+    //              -X left,        +X right
+    //              -Y down,        +Y up
+    //              -Z back,        +Z front (close to camera)
     float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
 
     // Set camera position
@@ -136,15 +136,15 @@ void OpenGL::updateViewMatrix() {
                         m_engine->getCameraPos().y() * m_scale + perspective_offset.y(),
                         m_engine->getCameraPos().z() );
     QVector3D  look_at( m_engine->getCameraPos().x() * m_scale,
-                        m_engine->getCameraPos().y() * m_scale,    0 );
-    QVector3D  up(      0, 1, 0);
+                        m_engine->getCameraPos().y() * m_scale, 0.0f );
+    QVector3D  up(      0.0f, 1.0f, 0.0f);
 
     // Create Matrices
     m_model_view.setToIdentity();
     m_projection.setToIdentity();
     if (m_engine->render_type == Render_Type::Orthographic) {
-        float cam_x = m_engine->getCameraPos().x() * m_scale;
-        float cam_y = m_engine->getCameraPos().y() * m_scale;
+        float cam_x =  m_engine->getCameraPos().x() * m_scale;
+        float cam_y =  m_engine->getCameraPos().y() * m_scale;
         float left =   cam_x - (width() /  2.0f);
         float right =  cam_x + (width() /  2.0f);
         float top =    cam_y + (height() / 2.0f);
@@ -154,6 +154,7 @@ void OpenGL::updateViewMatrix() {
         m_projection.perspective( 70.0f, aspect_ratio, 1.0f, 5000.0f );
         m_model_view.lookAt(eye, look_at, up);
         m_model_view.scale( m_scale );
+
         // Rotates the camera around the center of the sceen
         ///m_angle += 1.0f;
         ///if (m_angle > 360) m_angle = 0;
@@ -193,8 +194,8 @@ void OpenGL::drawFrameBufferToScreenBuffer() {
     float fbo_height = static_cast<float>(height() * devicePixelRatio());
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
-    float left =   0.0f - (fbo_width / 2.0f);
-    float right =  0.0f + (fbo_width / 2.0f);
+    float left =   0.0f - (fbo_width  / 2.0f);
+    float right =  0.0f + (fbo_width  / 2.0f);
     float top =    0.0f + (fbo_height / 2.0f);
     float bottom = 0.0f - (fbo_height / 2.0f);
     QMatrix4x4 m_matrix;

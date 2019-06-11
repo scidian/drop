@@ -74,7 +74,7 @@ void DrView::mousePressEvent(QMouseEvent *event) {
             // ******************* If no modifier keys are down, only select item under mouse. Also updates the object inspector
             //                           if the item clicked was already selected (but the object inspector was showing something
             //                           else like an asset or something)
-            //                     NOTE: If object was not already selected the object inspector will be updated when the
+            //                    #NOTE: If object was not already selected the object inspector will be updated when the
             //                           DrScene::selectionChanged slot fires
             if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
 

@@ -31,7 +31,7 @@
  */
 
 //####################################################################################
-//##        NOTE: Push function executes redo() function of command when called
+//##        #NOTE: Push function executes redo() function of command when called
 //##
 //##        SLOT, Needs to be connected to
 //##            - Mouse release on View

@@ -65,7 +65,7 @@ void OpenGL::drawCube(QVector3D center) {
             half_no_border = width / 2.0f;
         }
 
-        // ***** Create rotation matrix, NOTE: rotations happend in reverse order
+        // ***** Create rotation matrix, #NOTE: rotations happend in reverse order
         QMatrix4x4 matrix;
         matrix.rotate( 45.0f, 1.0, 0.0, 1.0 );                                              // Kick at a cool angle
 

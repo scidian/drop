@@ -134,7 +134,7 @@ void FormMain::buttonGroupPlayClicked(int id) {
 
     if (clicked == Buttons_Play::Play) {
 
-        FormEngine *engine = new FormEngine(m_project);             // !!!!! NOTE: Does not like to be a child?
+        FormEngine *engine = new FormEngine(m_project);             // !!!!! #NOTE: Does not like to be a child?
         engine->show();
 
     }

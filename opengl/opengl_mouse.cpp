@@ -22,15 +22,14 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
 
     if (m_engine->has_scene == false) return;
 
+    // Convert mouse click to world coordinates
     QVector3D vec = mapFromScreen( QPointF(event->pos().x(), event->pos().y()) );
-
     double x = static_cast<double>(vec.x());
     double y = static_cast<double>(vec.y());
-    double z = 0.0; ///static_cast<double>(vec.z());
-    ///if (m_engine->render_type == Render_Type::Orthographic) z = 0.0;
-    ///m_engine->info = "X: " + QString::number(x) + " " + "Y: " + QString::number(y) + " " + "Z: " + QString::number(z);
+    double z = static_cast<double>(vec.z());
+    if (m_engine->render_type == Render_Type::Orthographic) z = 0.0;
 
-
+    // Process click
     if (m_engine->demo_player == Demo_Player::Spawn) {
         if (event->button() & Qt::LeftButton) {
             for (int i = 0; i < 50; i++ ) {

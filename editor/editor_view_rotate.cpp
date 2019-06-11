@@ -201,11 +201,11 @@ Transform_Data DrView::decomposeTransform(QTransform &from_transform, bool qr_ty
 double DrView::calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt) {
     // Calculate the angle theta from the deltaY and deltaX values (atan2 returns radians values from [-PI, PI])
     // 0 currently points EAST
-    // NOTE: By preserving Y and X param order to atan2,  we are expecting a CLOCKWISE angle direction
+    // #NOTE: By preserving Y and X param order to atan2,  we are expecting a CLOCKWISE angle direction
     double theta = qAtan2(targetPt.y() - centerPt.y(), targetPt.x() - centerPt.x());
 
     // Rotate the theta angle clockwise by 90 degrees (this makes 0 point NORTH)
-    // NOTE: adding to an angle rotates it clockwise, subtracting would rotate it counter-clockwise
+    // #NOTE: adding to an angle rotates it clockwise, subtracting would rotate it counter-clockwise
     theta += 3.141592653589793238463 / 2.0;
 
     // Convert from radians to degrees this will give you an angle from [0->270], [-180,0]

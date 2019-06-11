@@ -25,7 +25,7 @@
 //####################################################################################
 // Before rendering 3D objects, enable face culling for triangles facing away from view
 void OpenGL::cullingOn() {      glEnable( GL_CULL_FACE );   glCullFace(  GL_BACK );     glFrontFace( GL_CCW ); }
-// Turn off culling before drawing 2D quads, NOTE: Must turn OFF culling for QPainter to work
+// Turn off culling before drawing 2D quads, #NOTE: Must turn OFF culling for QPainter to work
 void OpenGL::cullingOff() {     glDisable( GL_CULL_FACE ); }
 
 // Renders All Scene Objects
