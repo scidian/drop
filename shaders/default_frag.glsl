@@ -53,13 +53,6 @@ vec3 hsv2rgb(vec3 c) {
 
 void main( void ) {
 
-    // ********** NORMAL: No post processing, just get texture color and multiply in alpha channel (from editor) for semi-transparent objects
-    //gl_FragColor = texture2D( u_tex, coordinates.st ).rgba * alpha_in;
-    // ***** RED: Makes everything green
-    //gl_FragColor = vec4(1,0,0,1) * texture2D( u_tex, coordinates.st ).rgba * alpha_in;
-    // ***** GREEN: Makes everything green
-    //gl_FragColor = vec4(0,1,0,1) * texture2D( u_tex, coordinates.st ).rgba * alpha_in;
-
     // ***** PIXELATED
     vec4 texture_color;
     if (u_pixel_x > 1.0 || u_pixel_y > 1.0) {       
