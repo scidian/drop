@@ -11,6 +11,7 @@
 #include "engine.h"
 #include "engine_object.h"
 #include "engine_texture.h"
+#include "engine_world.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_font.h"
@@ -24,10 +25,10 @@
 //######################################################################################################
 //##    Build Space
 //######################################################################################################
-void DrEngine::buildSpace(Demo_Space new_space_type) {
+void DrEngineWorld::buildSpace(Demo_Space new_space_type) {
 
     // ***** Set up physics world
-    demo_space = new_space_type;                        // Save Space type
+    m_engine->demo_space = new_space_type;              // Save Space type
     m_background_color = QColor(0, 0, 0);
 
     m_space = cpSpaceNew();                             // Creates an empty space
@@ -47,10 +48,10 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
 
 
     // ***** Reset keys
-    keyboard_x = 0;
-    keyboard_y = 0;
-    jump_button = false;
-    gas_pedal = Pedal::None;
+    m_engine->keyboard_x = 0;
+    m_engine->keyboard_y = 0;
+    m_engine->jump_button = false;
+    m_engine->gas_pedal = Pedal::None;
 
 
     // ***** Custom Wildcard beginFunc CollisionHandlers: Damage / Health    
@@ -67,11 +68,11 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
 
 
     // ***** Build desired demo Space
-    if (demo_space == Demo_Space::Project) {
+    if (m_engine->demo_space == Demo_Space::Project) {
 
         // ***** Find current world shown in editor, load Start Stage of that world
-        m_current_world = m_project->getOption(Project_Options::Current_World).toLongLong();
-        DrWorld *world = m_project->getWorld(m_current_world);
+
+        DrWorld *world = m_project->getWorld(m_engine->getCurrentEditorWorld());
         DrStage *stage = world->getStageFromKey(world->getFirstStageKey());
 
         // ***** World Settings
@@ -109,7 +110,7 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         loadStageToSpace(stage, 0, 0);
 
 
-    } else if (demo_space == Demo_Space::Lines1) {
+    } else if (m_engine->demo_space == Demo_Space::Lines1) {
         m_friction = 1.0;
         m_bounce =   0.8;
 
@@ -118,7 +119,7 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         this->addLine(Body_Type::Static, QPointF( 250,    50), QPointF(1750,  350), c_friction, c_bounce, 1);
         this->addLine(Body_Type::Static, QPointF(-1100, -300), QPointF(-900, -300), c_friction, c_bounce, 1);
 
-    } else if (demo_space == Demo_Space::Lines2) {
+    } else if (m_engine->demo_space == Demo_Space::Lines2) {
         m_friction = 2.0;
         m_bounce =   0.5;
 
@@ -133,7 +134,7 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         line2->setOneWay( One_Way::Pass_Through ); line2->setOneWayDirection( cpv(0, 1) );          // Let objects pass upwards
 
 
-    } else if (demo_space == Demo_Space::Blocks) {
+    } else if (m_engine->demo_space == Demo_Space::Blocks) {
         m_friction = 0.5;
         m_bounce =   0.1;
 
@@ -178,7 +179,7 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
                                                 m_friction, m_bounce, QPointF(0, 0), true);
         ladder2->setCancelGravity( true );
 
-        double ball_radius = m_textures[Asset_Textures::Ball]->width() / 2.0;
+        double ball_radius = m_engine->getTextureMap()[Asset_Textures::Ball]->width() / 2.0;
         DrEngineObject *ladder_ball = this->addCircle(Body_Type::Kinematic, Asset_Textures::Ball, 800, 200, 0, c_norotate, QPointF(3, 3), c_opaque,
                                                       ball_radius, c_center, m_friction, 0, QPointF(0, 0));
         ladder_ball->setCancelGravity(true);

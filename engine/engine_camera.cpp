@@ -10,6 +10,7 @@
 #include "engine.h"
 #include "engine_camera.h"
 #include "engine_object.h"
+#include "engine_world.h"
 #include "forms/form_engine.h"
 #include "opengl/opengl.h"
 
@@ -37,7 +38,7 @@ static inline void SmoothMove(QVector3D& start, const QVector3D &target, const f
 //##    DrEngine - Camera Functions
 //######################################################################################################
 // Default parameters: nullptr, 0, 0, 800
-long DrEngine::addCamera(DrEngineObject* object_to_follow, float x, float y, float z) {
+long DrEngineWorld::addCamera(DrEngineObject* object_to_follow, float x, float y, float z) {
     DrEngineCamera *camera = new DrEngineCamera(this, x, y, z);
     m_cameras[m_camera_keys] = camera;
 
@@ -55,14 +56,14 @@ long DrEngine::addCamera(DrEngineObject* object_to_follow, float x, float y, flo
 }
 
 // Removes all cameras from engine
-void DrEngine::clearCameras() {
+void DrEngineWorld::clearCameras() {
     for (auto camera_pair : m_cameras)
         delete camera_pair.second;
     m_cameras.clear();
 }
 
 // Updates all cameras based on the objects they're following
-void DrEngine::moveCameras(double milliseconds) {
+void DrEngineWorld::moveCameras(double milliseconds) {
     for (auto camera_pair : m_cameras) {
         camera_pair.second->moveCamera(milliseconds);
 
@@ -76,13 +77,13 @@ void DrEngine::moveCameras(double milliseconds) {
 }
 
 // Moves all cameras to their new locations based on their speed, etc
-void DrEngine::updateCameras() {
+void DrEngineWorld::updateCameras() {
     for (auto camera_pair : m_cameras)
         camera_pair.second->updateCamera();
 }
 
 // Initiates a move to a new camera
-void DrEngine::switchCameras(long new_camera) {
+void DrEngineWorld::switchCameras(long new_camera) {
     m_temp_position = getCameraPos();
     m_switching_cameras = true;
     m_active_camera = new_camera;
@@ -92,7 +93,7 @@ void DrEngine::switchCameras(long new_camera) {
 //######################################################################################################
 //##    DrEngine - Returns camera position, also takes into handle camera switching
 //######################################################################################################
-QVector3D DrEngine::getCameraPos() {
+QVector3D DrEngineWorld::getCameraPos() {
     if (m_active_camera == 0) {
         return c_default_camera_pos;
     } else if (m_switching_cameras == false) {
@@ -101,9 +102,9 @@ QVector3D DrEngine::getCameraPos() {
         return m_temp_position;
     }
 }
-double DrEngine::getCameraPosXD() { return static_cast<double>(getCameraPos().x()); }
-double DrEngine::getCameraPosYD() { return static_cast<double>(getCameraPos().y()); }
-double DrEngine::getCameraPosZD() { return static_cast<double>(getCameraPos().z()); }
+double DrEngineWorld::getCameraPosXD() { return static_cast<double>(getCameraPos().x()); }
+double DrEngineWorld::getCameraPosYD() { return static_cast<double>(getCameraPos().y()); }
+double DrEngineWorld::getCameraPosZD() { return static_cast<double>(getCameraPos().z()); }
 
 //######################################################################################################
 //######################################################################################################
@@ -112,7 +113,7 @@ double DrEngine::getCameraPosZD() { return static_cast<double>(getCameraPos().z(
 //######################################################################################################
 //##    DrEngineCamera - Constructor / Destructor
 //######################################################################################################
-DrEngineCamera::DrEngineCamera(DrEngine *engine, float x, float y, float z) : m_engine(engine) {
+DrEngineCamera::DrEngineCamera(DrEngineWorld *world, float x, float y, float z) : m_world(world) {
     m_position = QVector3D(x, y, z);
     m_target = m_position;
     m_avg_speed_x.clear();  m_avg_speed_x.fill(0, 10);

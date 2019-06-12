@@ -12,6 +12,7 @@
 #include "engine/engine.h"
 #include "engine/engine_object.h"
 #include "engine/engine_texture.h"
+#include "engine/engine_world.h"
 #include "forms/form_engine.h"
 #include "helper.h"
 #include "opengl/opengl.h"
@@ -79,7 +80,7 @@ void OpenGL::drawDebug(QPainter &painter) {
     QFont font("Avenir", 12);
     painter.setFont(font);
     painter.setPen( Qt::white );
-    painter.drawText( QPointF(20, 20), "Items: " + QString::number(m_engine->objects.count()) + ", Scale: " + QString::number(double(m_scale)) );
+    painter.drawText( QPointF(20, 20), "Items: " + QString::number(m_engine->getCurrentWorld()->objects.count()) + ", Scale: " + QString::number(double(m_scale)) );
     painter.drawText( QPointF(20, 40), "FPS: " + QString::number(m_engine->fps_render) + ", Physics: " + QString::number(m_engine->fps_physics) );
     painter.drawText( QPointF(20, 60), g_info);
 
@@ -97,7 +98,7 @@ void OpenGL::drawDebug(QPainter &painter) {
 //####################################################################################
 void OpenGL::drawDebugShapes(QPainter &painter) {
 
-    for (auto object : m_engine->objects) {
+    for (auto object : m_engine->getCurrentWorld()->objects) {
         if (!object->shouldProcess())       continue;
         if (!object->hasBeenProcessed())    continue;
 
@@ -128,7 +129,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
                 QTransform t = QTransform().translate(center.x(), center.y()).rotate(object->getBodyAngle());
 
                 // Draw Normal circle since camera is facing straight on
-                if (m_engine->render_type == Render_Type::Orthographic) {
+                if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
                     QPointF mid =   t.map( QPointF( offset.x, offset.y ) );
                     QPointF top =   t.map( QPointF( offset.x, offset.y + radius ));
                     QPointF l1 = mapToScreen( top.x(), top.y(), 0);
@@ -146,7 +147,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
                     }
 
                 // Draw skewed circle with QPainterPath using bezier curves
-                } if (m_engine->render_type == Render_Type::Perspective) {
+                } if (m_engine->getCurrentWorld()->render_type == Render_Type::Perspective) {
                     QPointF mid =   t.map(QPointF( offset.x, offset.y ));
                     QPointF top =   t.map(QPointF( offset.x, offset.y + radius ));
                     QPointF bot =   t.map(QPointF( offset.x, offset.y - radius ));
@@ -259,7 +260,7 @@ void OpenGL::drawDebugJoints(QPainter &painter) {
     // Get a list of the constraints in the Space
     QVector<cpConstraint*> joint_list;
     joint_list.clear();
-    cpSpaceEachConstraint(m_engine->getSpace(), cpSpaceConstraintIteratorFunc(GetSpaceJointList), &joint_list);
+    cpSpaceEachConstraint(m_engine->getCurrentWorld()->getSpace(), cpSpaceConstraintIteratorFunc(GetSpaceJointList), &joint_list);
 
     // Draw the Joints
     for (auto joint : joint_list) {
@@ -290,7 +291,7 @@ void OpenGL::drawDebugCollisions(QPainter &painter) {
     QPen pen( QBrush(Qt::red), 2.5 * static_cast<double>(m_scale), Qt::SolidLine, Qt::PenCapStyle::RoundCap);
     painter.setPen( pen );
 
-    for (auto object : m_engine->objects) {
+    for (auto object : m_engine->getCurrentWorld()->objects) {
         if (!object->shouldProcess())                continue;
         if (!object->hasBeenProcessed())             continue;
         if (object->body_type != Body_Type::Dynamic) continue;

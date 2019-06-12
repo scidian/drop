@@ -15,6 +15,7 @@
 #include "engine/engine_camera.h"
 #include "engine/engine_object.h"
 #include "engine/engine_texture.h"
+#include "engine/engine_world.h"
 #include "forms/form_engine.h"
 #include "helper.h"
 #include "opengl/opengl.h"
@@ -95,9 +96,9 @@ void OpenGL::bindOffscreenBuffer() {
     m_fbo->bind();
 
     // Clear the buffers
-    float background_red =   static_cast<float>(m_engine->getBackgroundColor().redF());
-    float background_green = static_cast<float>(m_engine->getBackgroundColor().greenF());
-    float background_blue =  static_cast<float>(m_engine->getBackgroundColor().blueF());
+    float background_red =   static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().redF());
+    float background_green = static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().greenF());
+    float background_blue =  static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().blueF());
     glClearColor(background_red, background_green, background_blue, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);///) | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
     ///glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
@@ -132,19 +133,19 @@ void OpenGL::updateViewMatrix() {
 
     // Set camera position
     QVector3D  perspective_offset ( 200.0f, 200.0f, 0.0f);
-    QVector3D  eye(     m_engine->getCameraPos().x() * m_scale + perspective_offset.x(),
-                        m_engine->getCameraPos().y() * m_scale + perspective_offset.y(),
-                        m_engine->getCameraPos().z() );
-    QVector3D  look_at( m_engine->getCameraPos().x() * m_scale,
-                        m_engine->getCameraPos().y() * m_scale, 0.0f );
+    QVector3D  eye(     m_engine->getCurrentWorld()->getCameraPos().x() * m_scale + perspective_offset.x(),
+                        m_engine->getCurrentWorld()->getCameraPos().y() * m_scale + perspective_offset.y(),
+                        m_engine->getCurrentWorld()->getCameraPos().z() );
+    QVector3D  look_at( m_engine->getCurrentWorld()->getCameraPos().x() * m_scale,
+                        m_engine->getCurrentWorld()->getCameraPos().y() * m_scale, 0.0f );
     QVector3D  up(      0.0f, 1.0f, 0.0f);
 
     // Create Matrices
     m_model_view.setToIdentity();
     m_projection.setToIdentity();
-    if (m_engine->render_type == Render_Type::Orthographic) {
-        float cam_x =  m_engine->getCameraPos().x() * m_scale;
-        float cam_y =  m_engine->getCameraPos().y() * m_scale;
+    if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
+        float cam_x =  m_engine->getCurrentWorld()->getCameraPos().x() * m_scale;
+        float cam_y =  m_engine->getCurrentWorld()->getCameraPos().y() * m_scale;
         float left =   cam_x - (width() /  2.0f);
         float right =  cam_x + (width() /  2.0f);
         float top =    cam_y + (height() / 2.0f);
@@ -227,15 +228,15 @@ void OpenGL::drawFrameBufferToScreenBuffer() {
     // Set variables for shader
     setShaderDefaultValues( fbo_width, fbo_height );
 
-    m_shader.setUniformValue( m_uniform_bitrate,    m_engine->bitrate );
-    m_shader.setUniformValue( m_uniform_pixel_x,    m_engine->pixel_x );
-    m_shader.setUniformValue( m_uniform_pixel_y,    m_engine->pixel_y );
-    m_shader.setUniformValue( m_uniform_negative,   m_engine->negative );
-    m_shader.setUniformValue( m_uniform_grayscale,  m_engine->grayscale );
-    m_shader.setUniformValue( m_uniform_hue,        m_engine->hue );
-    m_shader.setUniformValue( m_uniform_saturation, m_engine->saturation );
-    m_shader.setUniformValue( m_uniform_contrast,   m_engine->contrast );
-    m_shader.setUniformValue( m_uniform_brightness, m_engine->brightness );
+    m_shader.setUniformValue( m_uniform_bitrate,    m_engine->getCurrentWorld()->bitrate );
+    m_shader.setUniformValue( m_uniform_pixel_x,    m_engine->getCurrentWorld()->pixel_x );
+    m_shader.setUniformValue( m_uniform_pixel_y,    m_engine->getCurrentWorld()->pixel_y );
+    m_shader.setUniformValue( m_uniform_negative,   m_engine->getCurrentWorld()->negative );
+    m_shader.setUniformValue( m_uniform_grayscale,  m_engine->getCurrentWorld()->grayscale );
+    m_shader.setUniformValue( m_uniform_hue,        m_engine->getCurrentWorld()->hue );
+    m_shader.setUniformValue( m_uniform_saturation, m_engine->getCurrentWorld()->saturation );
+    m_shader.setUniformValue( m_uniform_contrast,   m_engine->getCurrentWorld()->contrast );
+    m_shader.setUniformValue( m_uniform_brightness, m_engine->getCurrentWorld()->brightness );
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );                                // GL_TRIANGLES

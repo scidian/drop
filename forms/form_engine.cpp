@@ -20,6 +20,7 @@
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
 #include "engine/engine_object.h"
+#include "engine/engine_world.h"
 #include "forms/form_engine.h"
 #include "opengl/opengl.h"
 #include "style/style.h"
@@ -170,14 +171,15 @@ void FormEngine::loadDemo(Demo_Space using_space, Demo_Player using_player ) {
     stopTimers();
 
     // ***** The following are the steps to load a new Space
-    m_engine->clearSpace();
-    m_engine->buildSpace( using_space );
-    m_engine->addPlayer( using_player );
-    m_engine->updateSpace( 0 );
+    m_engine->getCurrentWorld()->clearSpace();
+    m_engine->getCurrentWorld()->buildSpace( using_space );
+    m_engine->getCurrentWorld()->addPlayer( using_player );
+    m_engine->getCurrentWorld()->updateSpace( 0 );
 
     // Finished loading Space, update buttons and start timer
     updateCheckedButtons();
-    m_engine->has_scene = true;
+    m_engine->getCurrentWorld()->has_scene = true;
+
     startTimers();
 }
 
@@ -216,30 +218,30 @@ void FormEngine::resetTimer(Engine_Timer timer_to_reset) {
 }
 
 void FormEngine::updateEngine() {
-    if (!m_engine->has_scene) return;
+    if (!m_engine->getCurrentWorld()->has_scene) return;
     m_running = true;
 
     // ***** MAIN UPDATE LOOP: Space (Physics)
     double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
-    if (update_milliseconds > m_engine->getTimeStepAsMilliseconds()) {
+    if (update_milliseconds > m_engine->getCurrentWorld()->getTimeStepAsMilliseconds()) {
         resetTimer(Engine_Timer::Update);
 
-        m_engine->updateSpace(update_milliseconds);                                 // Physics Engine
-        m_physics_milliseconds = getTimerMilliseconds(Engine_Timer::Physics);       // Store how long between this physics step
-        resetTimer(Engine_Timer::Physics);                                          // Record time done with SpaceStep
-        m_engine->updateSpaceHelper();                                              // Additional Physics Updating
+        m_engine->getCurrentWorld()->updateSpace(update_milliseconds);                      // Physics Engine
+        m_physics_milliseconds = getTimerMilliseconds(Engine_Timer::Physics);               // Store how long between this physics step
+        resetTimer(Engine_Timer::Physics);                                                  // Record time done with SpaceStep
+        m_engine->getCurrentWorld()->updateSpaceHelper();                                   // Additional Physics Updating
 
-        m_engine->updateCameras();                                                  // Update Camera Targets
+        m_engine->getCurrentWorld()->updateCameras();                                       // Update Camera Targets
     }
 
     // ***** Seperate Camera Update
     double camera_milliseconds = getTimerMilliseconds(Engine_Timer::Camera);
     resetTimer(Engine_Timer::Camera);
-    m_engine->moveCameras(camera_milliseconds);                                     // Move Cameras
+    m_engine->getCurrentWorld()->moveCameras(camera_milliseconds);                          // Move Cameras
 
     // ***** If we're bogged down, lower frame rate
     double target_frame_rate = (1000.0 / m_ideal_frames_per_second);
-    if (m_engine->objects.count() > 250) target_frame_rate =  (1000.0 / m_lower_frames_per_second);
+    if (m_engine->getCurrentWorld()->objects.count() > 250) target_frame_rate =  (1000.0 / m_lower_frames_per_second);
 
     // ***** Seperate Render Update
     double render_milliseconds = getTimerMilliseconds(Engine_Timer::Render);
@@ -248,9 +250,9 @@ void FormEngine::updateEngine() {
 
         // Calculate time since last physics update as a percentage (and add how long a render takes)
         m_opengl->setTimePercent( (getTimerMilliseconds(Engine_Timer::Physics) + m_time_one_frame_takes_to_render) / (m_physics_milliseconds + c_epsilon) );
-        resetTimer(Engine_Timer::Frame);                                            // Track how long one render takes to end up on screen from this point
+        resetTimer(Engine_Timer::Frame);                                                    // Track how long one render takes to end up on screen from this point
 
-        m_opengl->update();                                                         // Render
+        m_opengl->update();                                                                 // Render
     }
 
     m_running = false;
@@ -276,12 +278,12 @@ void FormEngine::on_pushJump_clicked() {    loadDemo(m_engine->demo_space,  Demo
 void FormEngine::on_pushPlay1_clicked() {
     m_engine->demo_jumper_1->setLostControl(false);
     m_engine->demo_jumper_2->setLostControl(true);
-    m_engine->switchCameras(m_engine->demo_jumper_1->getActiveCameraKey());
+    m_engine->getCurrentWorld()->switchCameras(m_engine->demo_jumper_1->getActiveCameraKey());
 }
 void FormEngine::on_pushPlay2_clicked() {
     m_engine->demo_jumper_1->setLostControl(true);
     m_engine->demo_jumper_2->setLostControl(false);
-    m_engine->switchCameras(m_engine->demo_jumper_2->getActiveCameraKey());
+    m_engine->getCurrentWorld()->switchCameras(m_engine->demo_jumper_2->getActiveCameraKey());
 }
 
 void FormEngine::on_pushLines1_clicked() {  loadDemo(Demo_Space::Lines1,    m_engine->demo_player ); }
@@ -291,15 +293,15 @@ void FormEngine::on_pushProject_clicked() { loadDemo(Demo_Space::Project,   m_en
 
 
 void FormEngine::on_pushStart_clicked() {
-    if (!m_engine->has_scene) return;
+    if (!m_engine->getCurrentWorld()->has_scene) return;
     startTimers();
 }
 void FormEngine::on_pushStop_clicked() {
     stopTimers();
 }
 
-void FormEngine::on_pushPersp_clicked() { m_engine->render_type = Render_Type::Perspective;  updateCheckedButtons(); }
-void FormEngine::on_pushOrtho_clicked() { m_engine->render_type = Render_Type::Orthographic; updateCheckedButtons(); }
+void FormEngine::on_pushPersp_clicked() { m_engine->getCurrentWorld()->render_type = Render_Type::Perspective;  updateCheckedButtons(); }
+void FormEngine::on_pushOrtho_clicked() { m_engine->getCurrentWorld()->render_type = Render_Type::Orthographic; updateCheckedButtons(); }
 
 void FormEngine::on_pushDebug1_clicked() {
     m_engine->debug_shapes = !m_engine->debug_shapes;
@@ -334,8 +336,8 @@ void FormEngine::updateCheckedButtons() {
     if (m_engine->demo_space == Demo_Space::Blocks)  pushBlocks->setDown(true);  else pushBlocks->setDown(false);
     if (m_engine->demo_space == Demo_Space::Project) pushProject->setDown(true); else pushProject->setDown(false);
 
-    if (m_engine->render_type == Render_Type::Perspective)  pushPersp->setDown(true); else pushPersp->setDown(false);
-    if (m_engine->render_type == Render_Type::Orthographic) pushOrtho->setDown(true); else pushOrtho->setDown(false);
+    if (m_engine->getCurrentWorld()->render_type == Render_Type::Perspective)  pushPersp->setDown(true); else pushPersp->setDown(false);
+    if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) pushOrtho->setDown(true); else pushOrtho->setDown(false);
 
     if (m_engine->debug_shapes)     pushDebug1->setDown(true); else pushDebug1->setDown(false);
     if (m_engine->debug_collisions) pushDebug2->setDown(true); else pushDebug2->setDown(false);

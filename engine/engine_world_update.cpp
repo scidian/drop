@@ -12,6 +12,7 @@
 #include "engine.h"
 #include "engine_camera.h"
 #include "engine_object.h"
+#include "engine_world.h"
 #include "forms/form_engine.h"
 #include "helper.h"
 #include "project/project.h"
@@ -25,19 +26,19 @@
 //######################################################################################################
 
 // #NOTE: time_passed is in milliseconds
-void DrEngine::updateSpace(double time_passed) {
+void DrEngineWorld::updateSpace(double time_passed) {
     double step_time = time_passed / 1000.0 * m_time_warp;
     cpSpaceStep(m_space, step_time);
 }
 
-void DrEngine::updateSpaceHelper() {
+void DrEngineWorld::updateSpaceHelper() {
 
     // ***** Update global variables for use in callbacks
-    g_keyboard_x =  keyboard_x;
-    g_keyboard_y =  keyboard_y;
-    g_jump_button = jump_button;
+    g_keyboard_x =  m_engine->keyboard_x;
+    g_keyboard_y =  m_engine->keyboard_y;
+    g_jump_button = m_engine->jump_button;
 
-    switch (gas_pedal) {
+    switch (m_engine->gas_pedal) {
         case Pedal::Clockwise:          g_rotate_cw = true;     g_rotate_cw = false;        break;
         case Pedal::CounterClockwise:   g_rotate_cw = false;    g_rotate_cw = true;         break;
         default:                        g_rotate_cw = false;    g_rotate_cw = false;        break;
@@ -100,7 +101,7 @@ void DrEngine::updateSpaceHelper() {
             // ***** Process Button Presses
             // If is a wheel, apply gas pedal
             if (qFuzzyCompare(object->getRotateSpeed(), 0) == false) {
-                switch (gas_pedal) {
+                switch (m_engine->gas_pedal) {
                     case Pedal::Clockwise:          cpBodySetAngularVelocity( object->body, -object->getRotateSpeed() );    break;
                     case Pedal::CounterClockwise:   cpBodySetAngularVelocity( object->body,  object->getRotateSpeed() );    break;
                     case Pedal::Brake:              cpBodySetAngularVelocity( object->body,  0 );                           break;
@@ -155,7 +156,7 @@ void DrEngine::updateSpaceHelper() {
 
     // ***** Calculate distance and load new stage if we need to
     bool should_add_stage = false;
-    if (demo_space == Demo_Space::Project && has_scene == true) {
+    if (m_engine->demo_space == Demo_Space::Project && has_scene == true) {
         QTransform t = QTransform().translate(m_game_start.x(), m_game_start.y())
                                    .rotate(m_game_direction)
                                    .translate(-m_game_start.x(), -m_game_start.y());
@@ -169,7 +170,7 @@ void DrEngine::updateSpaceHelper() {
 
     // ********** Adds a Stage if necessary
     if (should_add_stage) {
-        DrWorld *world = m_project->getWorld(m_current_world);
+        DrWorld *world = m_project->getWorld(m_world);
 
         // Pick a random stage other than start stage
         QVector<DrStage*> stages;
@@ -191,7 +192,7 @@ void DrEngine::updateSpaceHelper() {
     ++fps_count;
     double fps_milli = Dr::MillisecondsElapsed(fps_time);
     if (fps_milli > 1000.0) {
-        fps_physics = fps_count;
+        m_engine->fps_physics = fps_count;
         fps_count = 0;
         Dr::ResetTimer(fps_time);
     }

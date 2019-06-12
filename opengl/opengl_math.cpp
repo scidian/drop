@@ -10,6 +10,7 @@
 
 #include "engine/engine.h"
 #include "engine/engine_object.h"
+#include "engine/engine_world.h"
 #include "opengl/opengl.h"
 
 
@@ -21,7 +22,7 @@ QPointF OpenGL::mapToScreen(float x,  float y,  float z)  { return mapToScreen( 
 QPointF OpenGL::mapToScreen(QVector3D point3D) {
     float x_pos, y_pos, z_pos;
 
-    if (m_engine->render_type == Render_Type::Orthographic) {
+    if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
         x_pos = point3D.x() * m_scale;
         y_pos = point3D.y() * m_scale;
         z_pos = point3D.z() * m_scale;
@@ -42,7 +43,7 @@ QVector3D OpenGL::mapFromScreen(QPointF point) {
     float y_pos = static_cast<float>( height() - point.y() );
 
     QVector3D vec;
-    if (m_engine->render_type == Render_Type::Orthographic) {
+    if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
         vec = QVector3D( x_pos, y_pos, 0).unproject( m_model_view, m_projection, QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio()));
         vec.setX( vec.x() / m_scale );
         vec.setY( vec.y() / m_scale );

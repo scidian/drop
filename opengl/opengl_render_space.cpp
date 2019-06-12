@@ -15,6 +15,7 @@
 #include "engine/engine_camera.h"
 #include "engine/engine_object.h"
 #include "engine/engine_texture.h"
+#include "engine/engine_world.h"
 #include "forms/form_engine.h"
 #include "helper.h"
 #include "opengl/opengl.h"
@@ -46,21 +47,22 @@ void OpenGL::drawSpace() {
 
     // ***** Create a vector of the scene objects (ignoring lines / segments) and sort it by depth
     std::vector<std::pair<int, double>> v;
-    for (int i = 0; i < m_engine->objects.count(); i++) {
-        bool skip = false;
-        for (auto shape : m_engine->objects[i]->shapes)
-            if (m_engine->objects[i]->shape_type[shape] == Shape_Type::Segment)         // Don't draw Segments (lines)
-                skip = true;
-        if (skip) continue;
+    for (int i = 0; i < m_engine->getCurrentWorld()->objects.count(); i++) {
+        bool skip_object = false;
+        for (auto shape : m_engine->getCurrentWorld()->objects[i]->shapes) {
+            if (m_engine->getCurrentWorld()->objects[i]->shape_type[shape] == Shape_Type::Segment)          // Don't draw Segments (lines)
+                skip_object = true;
+        }
+        if (skip_object) continue;
 
-        v.push_back(std::make_pair(i, m_engine->objects[i]->getZOrder()));
+        v.push_back(std::make_pair(i, m_engine->getCurrentWorld()->objects[i]->getZOrder()));
     }
     sort(v.begin(), v.end(), [] (std::pair<int, double>&i, std::pair<int, double>&j) { return i.second < j.second; });
 
     // ********** Render 2D Objects
     ///for (auto object : m_engine->objects) {
     for (ulong i = 0; i < static_cast<ulong>(v.size()); i++) {
-        DrEngineObject *object = m_engine->objects[ v[i].first ];
+        DrEngineObject *object = m_engine->getCurrentWorld()->objects[ v[i].first ];
         if (!object->hasBeenProcessed()) continue;
 
         // ***** Get texture to render with, set texture coordinates
@@ -74,7 +76,7 @@ void OpenGL::drawSpace() {
         center.setY( (object->getBodyPreviousPosition().y() * (1.0 - m_time_percent)) + (object->getBodyPosition().y() * m_time_percent));
 
         float x, y, z, half_width, half_height;
-        if (m_engine->render_type == Render_Type::Orthographic) {
+        if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
             x = static_cast<float>(center.x()) * m_scale;
             y = static_cast<float>(center.y()) * m_scale;
             z = static_cast<float>(object->getZOrder()) * m_scale;

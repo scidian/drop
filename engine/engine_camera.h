@@ -14,6 +14,7 @@
 // Forward Declarations
 class DrEngine;
 class DrEngineObject;
+class DrEngineWorld;
 
 //####################################################################################
 //##    DrEngineCamera
@@ -23,7 +24,7 @@ class DrEngineCamera
 {
 private:
     // External Borrowed Objects
-    DrEngine       *m_engine;                                   // Pointer to the parent Engine
+    DrEngineWorld  *m_world;                                    // Pointer to the parent DrEngineWorld
 
     // Local Variables
     QVector3D       m_position = QVector3D(0, 0, 0);            // Current camera position
@@ -39,7 +40,7 @@ private:
 
 public:
     // Constructor
-    DrEngineCamera(DrEngine *engine, float x = 0, float y = 0, float z = 0);
+    DrEngineCamera(DrEngineWorld *engine_world, float x = 0, float y = 0, float z = 0);
 
     // Function Calls
     void        followObject(DrEngineObject *object) { m_follow = object; }
@@ -47,7 +48,7 @@ public:
     void        updateCamera();
 
     // Getters / Setters
-    DrEngine*           getEngine() { return m_engine; }
+    DrEngineWorld*      getEngineWorld() { return m_world; }
     DrEngineObject*     getObjectFollowing() { return m_follow; }
     const QVector3D&    getPosition()   { return m_position; }
     const QVector3D&    getSpeed()      { return m_speed; }

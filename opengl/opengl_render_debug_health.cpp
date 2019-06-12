@@ -12,6 +12,7 @@
 #include "engine/engine.h"
 #include "engine/engine_object.h"
 #include "engine/engine_texture.h"
+#include "engine/engine_world.h"
 #include "forms/form_engine.h"
 #include "helper.h"
 #include "opengl/opengl.h"
@@ -24,7 +25,7 @@ void OpenGL::drawDebugHealth(QPainter &painter) {
     QFont health_font("Avenir", static_cast<int>(18 * m_scale));
     painter.setPen(Qt::NoPen);
 
-    for (auto object : m_engine->objects) {
+    for (auto object : m_engine->getCurrentWorld()->objects) {
         if (!object->shouldProcess())       continue;
         if (!object->hasBeenProcessed())    continue;
 
@@ -74,7 +75,7 @@ void OpenGL::drawDebugHealthNative(QPainter &painter) {
     m_shader.setUniformValue( m_uniform_matrix, m_matrix );
 
     // ***** Loop through each object and draws its health
-    for (auto object : m_engine->objects) {
+    for (auto object : m_engine->getCurrentWorld()->objects) {
         if (!object->shouldProcess())       continue;
         if (!object->hasBeenProcessed())    continue;
 
@@ -85,7 +86,7 @@ void OpenGL::drawDebugHealthNative(QPainter &painter) {
         // ***** Load object position
         QPointF center = (object->getBodyPreviousPosition() * (1.0 - m_time_percent)) + (object->getBodyPosition() * m_time_percent);
         float x, y, z, half_width, half_height;
-        if (m_engine->render_type == Render_Type::Orthographic) {
+        if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
             x = static_cast<float>(center.x()) * m_scale;
             y = static_cast<float>(center.y() - static_cast<double>(font_size)) * m_scale;
             z = static_cast<float>(object->getZOrder()) * m_scale;

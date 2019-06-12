@@ -7,6 +7,7 @@
 //
 #include "engine.h"
 #include "engine_object.h"
+#include "engine_world.h"
 #include "project/project_world_stage.h"
 #include "project/project_world_stage_object.h"
 
@@ -14,7 +15,7 @@
 //######################################################################################################
 //##    Load DrProject Stage to Space
 //######################################################################################################
-void DrEngine::loadStageToSpace(DrStage *stage, double offset_x, double offset_y) {
+void DrEngineWorld::loadStageToSpace(DrStage *stage, double offset_x, double offset_y) {
 
     // Load objects
     for (auto object_pair : stage->getObjectMap()) {

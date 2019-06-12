@@ -9,6 +9,7 @@
 
 #include "engine.h"
 #include "engine_object.h"
+#include "engine_world.h"
 
 //  Arbiter Callbacks:
 //      begin:      Called when objects first touch. Return true from the callback to process the collision normally or false to cause Chipmunk to ignore

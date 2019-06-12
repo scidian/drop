@@ -10,6 +10,7 @@
 #include "engine.h"
 #include "engine_object.h"
 #include "engine_texture.h"
+#include "engine_world.h"
 #include "helper.h"
 #include "library/poly_partition.h"
 
@@ -20,7 +21,7 @@ constexpr double c_mass_multiplier = 0.002;         // Shapes Area times this mu
 //######################################################################################################
 //##    Add Line
 //######################################################################################################
-DrEngineObject* DrEngine::addLine(Body_Type body_type, QPointF p1, QPointF p2, double friction, double bounce, double mass) {
+DrEngineObject* DrEngineWorld::addLine(Body_Type body_type, QPointF p1, QPointF p2, double friction, double bounce, double mass) {
     DrEngineObject *line = new DrEngineObject();
 
     // Check for default (-1) or custom friction / bounce settings
@@ -83,7 +84,7 @@ QVector<QPointF> createEllipseFromCircle(const QPointF &center, const double &ra
 //##    Add Circle
 //##        Pass -1 for friction and/or bounce to use default world friction and bounce settings
 //######################################################################################################
-DrEngineObject* DrEngine::addCircle(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
+DrEngineObject* DrEngineWorld::addCircle(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
                                     double shape_radius, QPointF shape_offset, double friction, double bounce, QPointF velocity,
                                     bool should_collide, bool can_rotate) {
     // Check if not square scale, if so call addPolygon with a polygon ellipse instead
@@ -159,7 +160,7 @@ DrEngineObject* DrEngine::addCircle(Body_Type body_type, long texture_number, do
 //##    Add Block - This is a !!!!! #TEMP: call, better to just use addPolygon with 4 points passed in
 //##        Pass -1 for friction and/or bounce to use default world friction and bounce settings
 //######################################################################################################
-DrEngineObject* DrEngine::addBlock(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
+DrEngineObject* DrEngineWorld::addBlock(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
                                    double friction, double bounce, QPointF velocity, bool should_collide, bool can_rotate) {
     DrEngineObject *block = new DrEngineObject();
 
@@ -169,8 +170,8 @@ DrEngineObject* DrEngine::addBlock(Body_Type body_type, long texture_number, dou
     if (friction < 0) friction = m_friction;
     if (bounce < 0)   bounce = m_bounce;
 
-    double width  = m_textures[texture_number]->width() * scale.x();        // Width of collision shape
-    double height = m_textures[texture_number]->height() * scale.y();       // Height of collision shape
+    double width  = m_engine->getTextureMap()[texture_number]->width() * scale.x();        // Width of collision shape
+    double height = m_engine->getTextureMap()[texture_number]->height() * scale.y();       // Height of collision shape
     block->setScaleX(scale.x());
     block->setScaleY(scale.y());
     block->updateBodyPosition( QPointF(x, y), true );
@@ -231,7 +232,7 @@ DrEngineObject* DrEngine::addBlock(Body_Type body_type, long texture_number, dou
 //##        !!!!! #NOTE: Vertices must be in COUNTER-CLOCKWISE ordering
 //##              ALSO:  Pass -1 for friction and/or bounce to use default world friction and bounce settings
 //######################################################################################################
-DrEngineObject* DrEngine::addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
+DrEngineObject* DrEngineWorld::addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
                                      QVector<QPointF> points, double friction, double bounce, QPointF velocity,
                                      bool should_collide, bool can_rotate) {
     DrEngineObject *polygon = new DrEngineObject();

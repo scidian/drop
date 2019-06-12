@@ -97,7 +97,7 @@ void main( void ) {
     // ***** BITRATE ADJUSTMENT (16 bit down to 1 bit)
     if (u_bitrate < 16.0) {
         float bit_depth = pow(2.0, u_bitrate);
-        fragRGB = vec3(floor(fragRGB.r * bit_depth),floor(fragRGB.g * bit_depth),floor(fragRGB.b * bit_depth)) / bit_depth;
+        fragRGB = vec3(floor(fragRGB.r * bit_depth), floor(fragRGB.g * bit_depth), floor(fragRGB.b * bit_depth)) / bit_depth;
     }
 
 

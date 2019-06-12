@@ -8,6 +8,7 @@
 #include "engine.h"
 #include "engine_camera.h"
 #include "engine_texture.h"
+#include "engine_world.h"
 #include "project/project.h"
 
 //######################################################################################################
@@ -18,12 +19,19 @@ DrEngine::DrEngine(FormEngine *form_engine, DrProject *project) : m_form_engine(
     keyboard_x = 0;
     keyboard_y = 0;
 
+    m_current_editor_world = m_project->getOption(Project_Options::Current_World).toLongLong();
+    m_current_world = m_current_editor_world;
+
+    m_worlds[m_current_world] = new DrEngineWorld(this, project, m_current_world);
+
 }
 
 // Needs to be explicitly called by OpenGLWidget
 void DrEngine::deleteResources() {
-    clearSpace();
-    clearCameras();
+
+    for (auto world : m_worlds) {
+        delete world.second;
+    }
 
     for (auto texture : m_textures) {
         if (texture.second->isTextureLoaded()) {

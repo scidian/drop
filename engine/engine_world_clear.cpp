@@ -10,6 +10,7 @@
 
 #include "engine.h"
 #include "engine_object.h"
+#include "engine_world.h"
 
 //######################################################################################################
 //##    Chipmunk Callbacks
@@ -42,13 +43,13 @@ static void GetBodyShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_
 //##    Wake All Sleeping Bodies
 //######################################################################################################
 static void WakeBody(cpBody *body, cpSpace *) { cpBodyActivate(body); }
-void DrEngine::wakeAllBodies() { if (has_scene) cpSpaceEachBody(m_space, cpSpaceBodyIteratorFunc(WakeBody), m_space); }
+void DrEngineWorld::wakeAllBodies() { if (has_scene) cpSpaceEachBody(m_space, cpSpaceBodyIteratorFunc(WakeBody), m_space); }
 
 
 //######################################################################################################
 //##    Clear Space
 //######################################################################################################
-void DrEngine::clearSpace() {
+void DrEngineWorld::clearSpace() {
     if (has_scene) {
         has_scene = false;
         qApp->processEvents();
@@ -62,7 +63,7 @@ void DrEngine::clearSpace() {
 //######################################################################################################
 //##    Removes an object from the Space
 //######################################################################################################
-void DrEngine::removeObject(DrEngineObject *object) {
+void DrEngineWorld::removeObject(DrEngineObject *object) {
     object->setShouldProcess(false);
 
     QVector<cpShape*> shape_list;

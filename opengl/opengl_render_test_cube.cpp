@@ -11,6 +11,7 @@
 #include "engine/engine.h"
 #include "engine/engine_object.h"
 #include "engine/engine_texture.h"
+#include "engine/engine_world.h"
 #include "opengl/opengl.h"
 
 
@@ -49,7 +50,7 @@ void OpenGL::drawCube(QVector3D center) {
         float width =  texture->width() *  multi;
         float height = texture->height() * multi;
 
-        if (m_engine->render_type == Render_Type::Orthographic) {
+        if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
             x = static_cast<float>(center.x()) * m_scale;
             y = static_cast<float>(center.y()) * m_scale;
             z = static_cast<float>(center.z()) * m_scale;

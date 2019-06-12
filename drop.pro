@@ -95,17 +95,18 @@ SOURCES += \
     editor/editor_view_select.cpp \
     editor/editor_view_tooltip.cpp \
     engine/engine.cpp \
-    engine/engine_add.cpp \
     engine/engine_camera.cpp \
     engine/engine_object.cpp \
-    engine/engine_space_build_player.cpp \
-    engine/engine_space_build_world.cpp \
-    engine/engine_space_clear.cpp \
-    engine/engine_space_collision.cpp \
-    engine/engine_space_load.cpp \
-    engine/engine_space_update.cpp \
-    engine/engine_space_update_player.cpp \
     engine/engine_texture.cpp \
+    engine/engine_world.cpp \
+    engine/engine_world_add_object.cpp \
+    engine/engine_world_build_player.cpp \
+    engine/engine_world_build_world.cpp \
+    engine/engine_world_clear.cpp \
+    engine/engine_world_collision.cpp \
+    engine/engine_world_load.cpp \
+    engine/engine_world_update.cpp \
+    engine/engine_world_update_player.cpp \
     enums.cpp \
     forms/form_atlas.cpp \
     forms/form_blank.cpp \
@@ -204,6 +205,7 @@ HEADERS += \
     engine/engine_camera.h \
     engine/engine_object.h \
     engine/engine_texture.h \
+    engine/engine_world.h \
     enums.h \
     enums_engine.h \
     forms/form_atlas.h \

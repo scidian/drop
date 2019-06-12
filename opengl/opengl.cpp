@@ -24,10 +24,9 @@ OpenGL::OpenGL(QWidget *parent, FormEngine *form_engine, DrEngine *engine) : QOp
 OpenGL::~OpenGL() {
     makeCurrent();
 
-    // Destroy OpenGL Resources
-    m_engine->has_scene = false;
     m_engine->deleteResources();
 
+    // Destroy OpenGL Resources
     delete m_fbo;
     delete m_texture_fbo;
 
