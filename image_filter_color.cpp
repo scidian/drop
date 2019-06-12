@@ -6,6 +6,7 @@
 //
 //
 #include <QtMath>
+#include <QDebug>
 #include <QImage>
 #include <QPixmap>
 #include <QRgb>
@@ -98,7 +99,6 @@ QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_imag
         }
 
         if ( image.hasAlphaChannel() ) {
-
             // Loop through every pixel
             for( int y = 0; y < image.height(); ++y ) {
                 QRgb* line = reinterpret_cast<QRgb*>( image.scanLine( y ));
@@ -108,6 +108,8 @@ QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_imag
                     QColor color = QColor::fromRgba( line[x] );
                     double temp;
 
+                    int hue;
+
                     switch (filter) {
                         case Image_Filter_Type::Brightness:
                         case Image_Filter_Type::Contrast:
@@ -116,7 +118,10 @@ QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_imag
                             color.setBlue(  table[color.blue()]  );
                             break;
                         case Image_Filter_Type::Saturation:
-                            color.setHsv(color.hue(), Dr::Clamp(color.saturation() + value, 0, 255), color.value(), color.alpha());
+                            // !!!!! #NOTE: QColor returns -1 if image is grayscale
+                            //              If thats the case give it a default hue of 0 (red) to match shader
+                            hue = (color.hue() == -1) ? 0 : color.hue();
+                            color.setHsv(hue, Dr::Clamp(color.saturation() + value, 0, 255), color.value(), color.alpha());
                             break;
                         case Image_Filter_Type::Hue:
                             color.setHsv(Dr::Clamp(color.hue() + value, 0, 720), color.saturation(), color.value(), color.alpha());

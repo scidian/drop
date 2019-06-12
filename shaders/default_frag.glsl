@@ -28,11 +28,12 @@ uniform lowp float  u_saturation;// = 0.0;          // Saturation       Editor: 
 uniform lowp float  u_contrast;// = 0.0;            // Contrast         Editor: -255 to 255     Shader: -1.0 to 1.0
 uniform lowp float  u_brightness;// = 0.0;          // Brightness       Editor: -255 to 255     Shader: -1.0 to 1.0
 
+uniform lowp float  u_bitrate;// = 256;             // Bitrate          Editor:    1 to  16
 uniform lowp vec3   u_tint;// = vec3(0, 0, 0);      // Tint, adds rgb to final output
 uniform      bool   u_kernel;// = false;            // Kernel Effects? (blur, sharpen, etc)
 
 
-// ***** Convert red/green/blue to hue/saturation/value
+// ***** Convert red/green/blue to hue/saturation/vibrance
 vec3 rgb2hsv(vec3 c) {
     vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
     vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
@@ -42,7 +43,7 @@ vec3 rgb2hsv(vec3 c) {
     return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
 }
 
-// ***** Convert hue/saturation/value to red/green/blue
+// ***** Convert hue/saturation/vibrance to red/green/blue
 vec3 hsv2rgb(vec3 c) {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
@@ -61,7 +62,7 @@ void main( void ) {
 
     // ***** PIXELATED
     vec4 texture_color;
-    if (u_pixel_x > 1.0 || u_pixel_y > 1.0) {
+    if (u_pixel_x > 1.0 || u_pixel_y > 1.0) {       
         float dx = u_pixel_x * 0.99 * (1.0 / u_width);          // 99 Percent is slight modifier found to be more like the function in Image_Filter_Color.cpp
         float dy = u_pixel_y * 0.99 * (1.0 / u_height);         // 99 Percent is slight modifier found to be more like the function in Image_Filter_Color.cpp
         vec2 coord = coordinates.st;
@@ -88,9 +89,9 @@ void main( void ) {
     if (u_hue > 0.0 || u_saturation > 0.0) {
         vec3 fragHSV = rgb2hsv(fragRGB).xyz;
         fragHSV.x += u_hue;
-        fragHSV.y += u_saturation;
         fragHSV.x =  mod(fragHSV.x, 1.0);
-        fragHSV.yz = clamp(fragHSV.yz, 0.0, 1.0);
+        fragHSV.y += u_saturation;
+        fragHSV.y =  clamp(fragHSV.y, 0.0, 1.0);
         fragRGB = hsv2rgb(fragHSV);
     }
 
@@ -99,6 +100,12 @@ void main( void ) {
     fragRGB.rgb += u_brightness;                                                    // Brightness
     fragRGB.rgb += u_tint;                                                          // Tint
     fragRGB.rgb =  clamp(fragRGB.rgb, 0.0, 1.0);
+
+    // ***** BITRATE ADJUSTMENT (16 bit down to 1 bit)
+    if (u_bitrate < 16.0) {
+        float bit_depth = pow(2.0, u_bitrate);
+        fragRGB = vec3(floor(fragRGB.r * bit_depth),floor(fragRGB.g * bit_depth),floor(fragRGB.b * bit_depth)) / bit_depth;
+    }
 
 
     gl_FragColor = vec4(fragRGB, texture_color.a) * alpha_in;

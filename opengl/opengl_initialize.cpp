@@ -59,6 +59,7 @@ void OpenGL::initializeGL() {
     m_uniform_alpha =       m_shader.uniformLocation(   "u_alpha" );    
     m_uniform_width =       m_shader.uniformLocation(   "u_width" );
     m_uniform_height =      m_shader.uniformLocation(   "u_height" );
+    m_uniform_bitrate =     m_shader.uniformLocation(   "u_bitrate" );
     m_uniform_pixel_x =     m_shader.uniformLocation(   "u_pixel_x" );
     m_uniform_pixel_y =     m_shader.uniformLocation(   "u_pixel_y" );
     m_uniform_negative =    m_shader.uniformLocation(   "u_negative" );

@@ -94,6 +94,7 @@ void DrEngine::buildSpace(Demo_Space new_space_type) {
         cpSpaceSetDamping(m_space, m_damping);
 
         // ***** World appearance settings
+        bitrate =     world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Bitrate).toInt();
         QPointF pixelation = world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Pixelation).toPointF();
         pixel_x =     static_cast<float>(pixelation.x());
         pixel_y =     static_cast<float>(pixelation.y());

@@ -106,6 +106,7 @@ private:
     // World Variables
 public:
     // Image Post Processing Attributes
+    float       bitrate = 16.0;                             // Bitrate          1 to 16
     float       pixel_x = 1.0;                              // Pixelation X     1.0+
     float       pixel_y = 1.0;                              // Pixelation Y     1.0+
     bool        negative = false;                           // Negative         True / False

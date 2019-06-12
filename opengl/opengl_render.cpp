@@ -227,6 +227,7 @@ void OpenGL::drawFrameBufferToScreenBuffer() {
     // Set variables for shader
     setShaderDefaultValues( fbo_width, fbo_height );
 
+    m_shader.setUniformValue( m_uniform_bitrate,    m_engine->bitrate );
     m_shader.setUniformValue( m_uniform_pixel_x,    m_engine->pixel_x );
     m_shader.setUniformValue( m_uniform_pixel_y,    m_engine->pixel_y );
     m_shader.setUniformValue( m_uniform_negative,   m_engine->negative );
@@ -256,6 +257,7 @@ void OpenGL::setShaderDefaultValues(float texture_width, float texture_height) {
     m_shader.setUniformValue( m_uniform_alpha,      1.0f );
     m_shader.setUniformValue( m_uniform_width,      texture_width  );
     m_shader.setUniformValue( m_uniform_height,     texture_height );
+    m_shader.setUniformValue( m_uniform_bitrate,    16.0f );
     m_shader.setUniformValue( m_uniform_pixel_x,    1.0f );
     m_shader.setUniformValue( m_uniform_pixel_y,    1.0f );
     m_shader.setUniformValue( m_uniform_negative,   false );

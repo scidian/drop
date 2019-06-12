@@ -25,6 +25,8 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, QSi
     switch (spin_type) {
         case Property_Type::Int:            spin->setRange(-100000000, 100000000);      spin->setSingleStep(  5 );      break;
         case Property_Type::Positive:       spin->setRange(0, 100000000);               spin->setSingleStep(  5 );      break;
+        case Property_Type::BitRate:        spin->setRange(1, 16);                      spin->setSingleStep(  1 );      break;
+        case Property_Type::BitDepth:       spin->setRange(0, 255);                     spin->setSingleStep(  5 );      break;
         case Property_Type::Filter:         spin->setRange(-255, 255);                  spin->setSingleStep( 10 );      break;
         case Property_Type::FilterAngle:    spin->setRange(0, 360);                     spin->setSingleStep(  5 );      break;
         default:                            spin->setRange(-100000000, 100000000);

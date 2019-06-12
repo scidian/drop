@@ -132,6 +132,7 @@ void OpenGL::drawSpace() {
         m_shader.setUniformValue( m_uniform_alpha,      alpha );
         m_shader.setUniformValue( m_uniform_width,      static_cast<float>(texture->width()) );
         m_shader.setUniformValue( m_uniform_height,     static_cast<float>(texture->height()) );
+        m_shader.setUniformValue( m_uniform_bitrate,    16.0f );
         m_shader.setUniformValue( m_uniform_pixel_x,    object->pixel_x );
         m_shader.setUniformValue( m_uniform_pixel_y,    object->pixel_y );
         m_shader.setUniformValue( m_uniform_negative,   object->negative );
@@ -145,7 +146,6 @@ void OpenGL::drawSpace() {
 
         // ***** Draw triangles using shader program
         glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
-
 
         // Release bound items
         m_shader.disableAttributeArray( m_attribute_vertex );

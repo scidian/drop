@@ -144,6 +144,8 @@ enum class Property_Type {
     Bool,                   // bool         true or false
     Int,                    // long         any integer
     Positive,               // long         integer >= 0
+    BitRate,                // long         integer from    1 to  16, used for bit rate
+    BitDepth,               // long         integer from    0 to 255
     Filter,                 // long         integer from -255 to 255, used for image filters
     FilterAngle,            // long         integer from    0 to 360, used for image filters
 
@@ -230,6 +232,7 @@ enum class Properties {
     World_Bounce ,                  //float
 
     // Appearance
+    World_Filter_Bitrate,           //bitrate
     World_Filter_Pixelation,        //positive size
     World_Filter_Brightness,        //filter
     World_Filter_Contrast,          //filter

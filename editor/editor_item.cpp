@@ -139,8 +139,8 @@ void DrItem::applyFilters() {
 
     int     brightness = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Brightness).toInt();
     int     contrast   = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Contrast).toInt();
-    int     saturation = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Saturation).toInt();
     int     hue        = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Hue).toInt();
+    int     saturation = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Saturation).toInt();
     bool    grayscale  = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Grayscale).toBool();
     bool    negative   = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Negative).toBool();
     QPointF pixelation = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Pixelation).toPointF();
@@ -149,8 +149,11 @@ void DrItem::applyFilters() {
                            new_pixmap = DrImaging::changePixelation(new_pixmap, pixelation);
     if ( negative )        new_pixmap = DrImaging::changeToNegative(new_pixmap);
     if ( grayscale )       new_pixmap = DrImaging::changeToGrayscale(new_pixmap);
-    if ( hue        != 0 ) new_pixmap = DrImaging::changeHue(new_pixmap, hue);
+
+    // Important to do saturation first, then hue
     if ( saturation != 0 ) new_pixmap = DrImaging::changeSaturation(new_pixmap, saturation);
+    if ( hue        != 0 ) new_pixmap = DrImaging::changeHue(new_pixmap, hue);
+
     if ( contrast   != 0 ) new_pixmap = DrImaging::changeContrast(new_pixmap, contrast);
     if ( brightness != 0 ) new_pixmap = DrImaging::changeBrightness(new_pixmap, brightness);
 

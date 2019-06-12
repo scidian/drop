@@ -115,6 +115,9 @@ void DrWorld::initializeWorldSettings(QString new_name) {
                                                Component_Colors::Mellow_Yellow, true);
     getComponent(Components::World_Appearance)->setIcon(Component_Icons::Appearance);
 
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Bitrate, Property_Type::BitRate, 16,
+                           "Bit Depth", "Standard graphics output has 255 bit depth, you can use this to down rate the color palette (reduce number of colors). "
+                                        "Combining this with Pixelation gives a great retro look.");
     addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Pixelation, Property_Type::PositiveSizeF, QPointF(1.0, 1.0),
                            "Pixelation", "Size of x and y pixels, larger numbers provide more pixelation.");
     addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Brightness, Property_Type::Filter, 0,

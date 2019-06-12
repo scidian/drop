@@ -68,6 +68,7 @@ private:
     int     m_uniform_width;                    // Width of texture
     int     m_uniform_height;                   // Height of texture
     int     m_uniform_alpha;                    // Opacity
+    int     m_uniform_bitrate;                  // Bitrate
     int     m_uniform_pixel_x;                  // Pixelation X value
     int     m_uniform_pixel_y;                  // Pixelation Y value
     int     m_uniform_negative;                 // Negative?
