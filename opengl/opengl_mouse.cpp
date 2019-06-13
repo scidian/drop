@@ -64,9 +64,12 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
         }
 
     } else if (m_engine->demo_player == Demo_Player::Car) {
-        if (event->button() & Qt::LeftButton)
-            m_engine->gas_pedal = Pedal::Clockwise;
-        else if (event->button() & Qt::RightButton)
+        if (event->button() & Qt::LeftButton) {
+            if (event->pos().x() < width() / 2)
+                m_engine->gas_pedal = Pedal::Clockwise;
+            else
+                m_engine->gas_pedal = Pedal::CounterClockwise;
+        } else if (event->button() & Qt::RightButton)
             m_engine->gas_pedal = Pedal::CounterClockwise;
 
     } else if (m_engine->demo_player == Demo_Player::Jump) {

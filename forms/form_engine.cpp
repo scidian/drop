@@ -62,6 +62,7 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
         pushStart =  new QToolButton(upperWidget);      pushStart->setObjectName("pushStart");      pushStart->setGeometry(  QRect(300, 24, 140, 20));
         pushStop =   new QToolButton(upperWidget);      pushStop->setObjectName("pushStop");        pushStop->setGeometry(   QRect(300, 48, 140, 20));
+        pushClose =   new QToolButton(upperWidget);     pushClose->setObjectName("pushClose");      pushClose->setGeometry(  QRect(320, 72, 100, 20));
 
         pushPersp =   new QToolButton(upperWidget);     pushPersp->setObjectName("pushPersp");      pushPersp->setGeometry(  QRect(450, 24, 140, 20));
         pushOrtho =   new QToolButton(upperWidget);     pushOrtho->setObjectName("pushOrtho");      pushOrtho->setGeometry(  QRect(450, 48, 140, 20));
@@ -82,12 +83,13 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
         pushStart->setText(QApplication::translate(  "MainWindow", "Start Scene",       nullptr));  pushStart->setStyleSheet("color: white");
         pushStop->setText(QApplication::translate(   "MainWindow", "Stop Scene",        nullptr));  pushStop->setStyleSheet("color: white");
+        pushClose->setText(QApplication::translate(  "MainWindow", "Close",             nullptr));  pushClose->setStyleSheet("color: white");
 
         pushPersp->setText(QApplication::translate(  "MainWindow", "Perspective View",  nullptr));  pushPersp->setStyleSheet("color: white");
         pushOrtho->setText(QApplication::translate(  "MainWindow", "Orthographic View", nullptr));  pushOrtho->setStyleSheet("color: white");
 
-        pushDebug1->setText(QApplication::translate(  "MainWindow", "Debug Shapes",     nullptr));  pushDebug1->setStyleSheet("color: white");
-        pushDebug2->setText(QApplication::translate(  "MainWindow", "Debug Collision",  nullptr));  pushDebug2->setStyleSheet("color: white");
+        pushDebug1->setText(QApplication::translate( "MainWindow", "Debug Shapes",     nullptr));   pushDebug1->setStyleSheet("color: white");
+        pushDebug2->setText(QApplication::translate( "MainWindow", "Debug Collision",  nullptr));   pushDebug2->setStyleSheet("color: white");
 
         updateCheckedButtons();
         layout->addWidget(upperWidget);
@@ -106,6 +108,7 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
         connect(pushStart,   SIGNAL(clicked()), this, SLOT(on_pushStart_clicked()));
         connect(pushStop,    SIGNAL(clicked()), this, SLOT(on_pushStop_clicked()));
+        connect(pushClose,   SIGNAL(clicked()), this, SLOT(on_pushClose_clicked()));
 
         connect(pushPersp,   SIGNAL(clicked()), this, SLOT(on_pushPersp_clicked()));
         connect(pushOrtho,   SIGNAL(clicked()), this, SLOT(on_pushOrtho_clicked()));
@@ -311,6 +314,9 @@ void FormEngine::on_pushStart_clicked() {
 }
 void FormEngine::on_pushStop_clicked() {
     stopTimers();
+}
+void FormEngine::on_pushClose_clicked() {
+    this->close();
 }
 
 void FormEngine::on_pushPersp_clicked() { m_engine->getCurrentWorld()->render_type = Render_Type::Perspective;  updateCheckedButtons(); }
