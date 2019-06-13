@@ -15,13 +15,14 @@
 
 
 //####################################################################################
-//##        Maps 3D Point to / from 2d QOpenGLWidget Coordinates
+//##        Maps 3D Point to / from 2D QOpenGLWidget Coordinates
 //####################################################################################
 QPointF OpenGL::mapToScreen(double x, double y, double z) { return mapToScreen( QVector3D(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)) ); }
 QPointF OpenGL::mapToScreen(float x,  float y,  float z)  { return mapToScreen( QVector3D(x, y, z )); }
 QPointF OpenGL::mapToScreen(QVector3D point3D) {
-    float x_pos, y_pos, z_pos;
+    QRect viewport = QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
 
+    float x_pos, y_pos, z_pos;
     if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
         x_pos = point3D.x() * m_scale;
         y_pos = point3D.y() * m_scale;
@@ -31,20 +32,21 @@ QPointF OpenGL::mapToScreen(QVector3D point3D) {
         y_pos = point3D.y();
         z_pos = point3D.z();
     }
-    QVector3D vec = QVector3D( x_pos, y_pos, z_pos).project( m_model_view, m_projection,
-                                                             QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio()));
-    return QPointF( static_cast<double>(vec.x()),  static_cast<double>(height() - vec.y()) );
+    QVector3D vec = QVector3D( x_pos, y_pos, z_pos).project( m_model_view, m_projection, viewport);
+    return QPointF( static_cast<double>(vec.x()),  static_cast<double>((height() * devicePixelRatio()) - vec.y()) );
 }
 
 QVector3D OpenGL::mapFromScreen(double x, double y) { return mapFromScreen( QPointF(x, y)); }
 QVector3D OpenGL::mapFromScreen(float x, float y)   { return mapFromScreen( QPointF(static_cast<double>(x), static_cast<double>(y)) ); }
 QVector3D OpenGL::mapFromScreen(QPointF point) {
-    float x_pos = static_cast<float>( point.x() );
-    float y_pos = static_cast<float>( height() - point.y() );
+    QRect viewport = QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
+
+    float x_pos = static_cast<float>(             point.x()  * devicePixelRatio() );
+    float y_pos = static_cast<float>( (height() - point.y()) * devicePixelRatio() );
 
     QVector3D vec;
     if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
-        vec = QVector3D( x_pos, y_pos, 0).unproject( m_model_view, m_projection, QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio()));
+        vec = QVector3D( x_pos, y_pos, 0).unproject( m_model_view, m_projection, viewport);
         vec.setX( vec.x() / m_scale );
         vec.setY( vec.y() / m_scale );
         vec.setZ( vec.z() / m_scale );
@@ -58,9 +60,9 @@ QVector3D OpenGL::mapFromScreen(QPointF point) {
         // Old way to unproject, returns unpredictable z coordinate that cannot easily be moved to z plane 0...
         ///// Find what the Z value is for a projected vector
         ///QVector3D find_z(0, 0, 0);
-        ///find_z = find_z.project(m_model_view, m_projection, QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio()));
+        ///find_z = find_z.project(m_model_view, m_projection, viewport);
         ///// Then we use that Z value to unproject
-        ///vec = QVector3D( x_pos, y_pos, find_z.z()).unproject( m_model_view, m_projection, QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio()));
+        ///vec = QVector3D( x_pos, y_pos, find_z.z()).unproject( m_model_view, m_projection, viewport);
 
         // ********** New Perspective Unproject Method
         // Since two points determine a line, we actually need to call unproject() twice: once with screen z == 0.0, then again with screen z == 1.0
@@ -71,8 +73,8 @@ QVector3D OpenGL::mapFromScreen(QPointF point) {
 
         // Unproject at near and far plane
         QVector3D near, far;
-        near = QVector3D( x_pos, y_pos, 0.0f).unproject( m_model_view, m_projection, QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio()));
-        far =  QVector3D( x_pos, y_pos, 1.0f).unproject( m_model_view, m_projection, QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio()));
+        near = QVector3D( x_pos, y_pos, 0.0f).unproject( m_model_view, m_projection, viewport);
+        far =  QVector3D( x_pos, y_pos, 1.0f).unproject( m_model_view, m_projection, viewport);
 
         // Find distance to z plane 0 as a percentage, and interpolate between the two near and far plane mouse points
         float z_total = abs(near.z()) + abs(far.z());

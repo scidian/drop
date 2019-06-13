@@ -38,24 +38,24 @@ class OpenGL : public QOpenGLWidget, protected QOpenGLFunctions
 
 private:
     // External Borrowed Objects
-    FormEngine     *m_form_engine;                                  // Pointer to parent FormEngine
-    DrEngine       *m_engine;                                       // Pointer to Engine instance that will run in this OpenGLWidget
+    FormEngine     *m_form_engine;                              // Pointer to parent FormEngine
+    DrEngine       *m_engine;                                   // Pointer to Engine instance that will run in this OpenGLWidget
 
     // Local Variables
     QMatrix4x4      m_model_view;
     QMatrix4x4      m_projection;
 
-    int             m_zoom = 250;                                   // Zoom level of current view, 200 is 50% - 250 is 100%
-    float           m_scale = 1.0;                                  // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
-    float           m_angle = 0;
+    int             m_zoom =  250;                              // Zoom level of current view, 200 is 50% - 250 is 100%
+    float           m_scale = 1.0;                              // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
+    float           m_angle =   0;
 
     float           m_background_red = 0;
     float           m_background_green = 0;
     float           m_background_blue = 0;
 
     // Frame Buffer
-    QOpenGLFramebufferObject *m_fbo = nullptr;                      // Used for offscreen rendering
-    QOpenGLFramebufferObject *m_texture_fbo = nullptr;              // m_fbo must be copied to a non-multisampled fbo before being used as a texture
+    QOpenGLFramebufferObject *m_fbo = nullptr;                  // Used for offscreen rendering
+    QOpenGLFramebufferObject *m_texture_fbo = nullptr;          // m_fbo must be copied to a non-multisampled fbo before being used as a texture
 
     // Shader Variables
     QOpenGLShaderProgram    m_shader;
@@ -65,25 +65,20 @@ private:
     int     m_uniform_texture;
 
     // Custom Shader Input
-    int     m_uniform_width;                    // Width of texture
-    int     m_uniform_height;                   // Height of texture
-    int     m_uniform_alpha;                    // Opacity
-    int     m_uniform_bitrate;                  // Bitrate
-    int     m_uniform_pixel_x;                  // Pixelation X value
-    int     m_uniform_pixel_y;                  // Pixelation Y value
-    int     m_uniform_negative;                 // Negative?
-    int     m_uniform_grayscale;                // Grayscale?
-    int     m_uniform_hue;                      // Hue, 0.0 to 1.0
-    int     m_uniform_saturation;               // Saturation, -1.0 to 1.0
-    int     m_uniform_contrast;                 // Contrast,   -1.0 to 1.0
-    int     m_uniform_brightness;               // Brightness, -1.0 to 1.0
-    int     m_uniform_tint;                     // Tint, red/green/blue
-    int     m_uniform_kernel;                   // Kernel Effects?
-
-    // Timer Variables
-    Clock::time_point m_time_fps = Clock::now();
-    double  m_time_percent = 1.0;
-    int     m_fps_count = 0;                                        // Counts renders to calculate frames per second
+    int     m_uniform_width;                                    // Width of texture
+    int     m_uniform_height;                                   // Height of texture
+    int     m_uniform_alpha;                                    // Opacity
+    int     m_uniform_bitrate;                                  // Bitrate
+    int     m_uniform_pixel_x;                                  // Pixelation X value
+    int     m_uniform_pixel_y;                                  // Pixelation Y value
+    int     m_uniform_negative;                                 // Negative?
+    int     m_uniform_grayscale;                                // Grayscale?
+    int     m_uniform_hue;                                      // Hue, 0.0 to 1.0
+    int     m_uniform_saturation;                               // Saturation, -1.0 to 1.0
+    int     m_uniform_contrast;                                 // Contrast,   -1.0 to 1.0
+    int     m_uniform_brightness;                               // Brightness, -1.0 to 1.0
+    int     m_uniform_tint;                                     // Tint, red/green/blue
+    int     m_uniform_kernel;                                   // Kernel Effects?
 
 public:
     // Constructor / Destructor
@@ -128,14 +123,13 @@ public:
     void            drawSpace();
     QColor          objectDebugColor(DrEngineObject *object, bool text_color = false);
     void            updateViewMatrix();
+    void            setGLFlags();
     void            setShaderDefaultValues(float texture_width, float texture_height);
     void            setNumberTextureCoordinates(QString letter, std::vector<float> &texture_coordinates);
     void            setWholeTextureCoordinates(std::vector<float> &texture_coords);
 
     // Getters and Setters
     float               getScale()          { return m_scale; }
-    double              getTimePercent()    { return m_time_percent; }
-    void                setTimePercent(double percent) { m_time_percent = percent; }
 
 };
 

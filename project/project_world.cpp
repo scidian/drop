@@ -101,9 +101,10 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     addPropertyToComponent(Components::World_Physics, Properties::World_Gravity, Property_Type::PointF, QPointF(0.0, -1000.0),
                            "Gravity", "Amount of gravity in X and Y directions, can be negative or positive. For example, a value of -1000 for Y and objects will "
                                       "fall down; a value of 1000 for Y and objects will fall up.");
-    addPropertyToComponent(Components::World_Physics, Properties::World_Drag, Property_Type::PositiveDouble, 1.0,
-                           "Damping", "A value of 0.9 means each object will lose 10% of it's velocity per second. Defaults to 1.0, can be greater than 1.0 "
-                                      "(objects will gain velocity). A value of 0.0 causes objects to lose all velocity immediately.");
+    addPropertyToComponent(Components::World_Physics, Properties::World_Drag, Property_Type::PositiveDouble, 0.9,
+                           "Damping", "Defauly value of 0.9 means objects will lose 10% of their velocity per second. Value of 1.0 means objects will not lose "
+                                      "velocity, can be greater than 1.0 (objects will gain velocity). A value of 0.0 causes objects to lose all "
+                                      "velocity immediately.");
     addPropertyToComponent(Components::World_Physics, Properties::World_Friction, Property_Type::PositiveDouble, 0.5,
                            "Friction", "Global surface friction setting, greater than or equal to 0.0 (no limit, but generally less than 10.0). Friction can be "
                                        "overriden on a per object basis.");

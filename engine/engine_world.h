@@ -63,7 +63,7 @@ private:
     QVector3D       m_temp_position;                // Used for tweening between cameras
 
     // Chipmunk Physics Space
-    cpSpace        *m_space;                        // Current physics space shown on screen
+    cpSpace        *m_space = nullptr;              // Current physics space shown on screen
                                                     //
     const int       m_iterations = 10;              // Times physics are processed each update, 10 is default and should be good enough for most games
     const double    m_time_step = 1.0 / 60.0;       // Speed at which want to try to update the Space, 1 / 60 = 60 times per second to up

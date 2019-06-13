@@ -40,7 +40,7 @@ void DrView::drawBackground(QPainter *painter, const QRectF &rect) {
                         static_cast<float>(Dr::GetColor(Window_Colors::Background_Dark).greenF()),
                         static_cast<float>(Dr::GetColor(Window_Colors::Background_Dark).blueF()),
                         1.0f);
-        f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
+        f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     }
 
     // Calculate Game Frame

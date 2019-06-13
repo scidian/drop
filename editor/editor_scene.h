@@ -36,7 +36,7 @@ private:
     IEditorRelay   *m_editor_relay;                         // Pointer to IEditorRelay class of parent form
 
     // Local Variables
-    QUndoStack     *m_undo;                                 // Object that holds list of changes to QGraphicsScene for use with undo / redo
+    QUndoStack     *m_undo = nullptr;                       // Object that holds list of changes to QGraphicsScene for use with undo / redo
 
     DrStage        *m_current_stage = nullptr;              // Holds a pointer to the current DrStage being shown
     long            m_current_stage_key = c_no_key;         // Holds the Project Key of the currently shown DrStage, starts at c_no_key, i.e. "none"

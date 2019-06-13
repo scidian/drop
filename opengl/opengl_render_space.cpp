@@ -45,6 +45,7 @@ void OpenGL::drawSpace() {
     m_shader.setAttributeArray( m_attribute_tex_coord, texture_coordinates.data(), 2 );
     m_shader.enableAttributeArray( m_attribute_tex_coord );
 
+
     // ***** Create a vector of the scene objects (ignoring lines / segments) and sort it by depth
     std::vector<std::pair<int, double>> v;
     for (int i = 0; i < m_engine->getCurrentWorld()->objects.count(); i++) {
@@ -54,10 +55,10 @@ void OpenGL::drawSpace() {
                 skip_object = true;
         }
         if (skip_object) continue;
-
         v.push_back(std::make_pair(i, m_engine->getCurrentWorld()->objects[i]->getZOrder()));
     }
     sort(v.begin(), v.end(), [] (std::pair<int, double>&i, std::pair<int, double>&j) { return i.second < j.second; });
+
 
     // ********** Render 2D Objects
     ///for (auto object : m_engine->objects) {
@@ -72,8 +73,6 @@ void OpenGL::drawSpace() {
 
         // ***** Get object position data
         QPointF center = object->getBodyPosition();
-        center.setX( (object->getBodyPreviousPosition().x() * (1.0 - m_time_percent)) + (object->getBodyPosition().x() * m_time_percent));
-        center.setY( (object->getBodyPreviousPosition().y() * (1.0 - m_time_percent)) + (object->getBodyPosition().y() * m_time_percent));
 
         float x, y, z, half_width, half_height;
         if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
@@ -86,8 +85,8 @@ void OpenGL::drawSpace() {
             x = static_cast<float>(center.x());
             y = static_cast<float>(center.y());
             z = static_cast<float>(object->getZOrder());
-            half_width =  static_cast<float>(texture->width()) *  object->getScaleX() / 2.0f + 1.0f;
-            half_height = static_cast<float>(texture->height()) * object->getScaleY() / 2.0f + 1.0f;
+            half_width =  static_cast<float>(texture->width()) *  object->getScaleX() / 2.0f;
+            half_height = static_cast<float>(texture->height()) * object->getScaleY() / 2.0f;
         }
 
         // ***** Create rotation matrix, apply rotation to object

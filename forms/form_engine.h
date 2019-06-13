@@ -23,8 +23,6 @@ enum class Engine_Timer {
     Update,
     Render,
     Camera,
-    Physics,
-    Frame,
 };
 
 // Forward declarations
@@ -52,30 +50,37 @@ private:
     OpenGL             *m_opengl;
 
     // Timer Variables
-    QTimer             *m_timer;
+    QTimer             *m_update_timer;
+
     Clock::time_point   m_time_update;                          // Checks time between SpaceStep calls
     Clock::time_point   m_time_render;                          // Checks time between paintGL calls
     Clock::time_point   m_time_camera;                          // Checks time between moveCamera calls
     Clock::time_point   m_time_physics;                         // Stores time since last physics call
     Clock::time_point   m_time_frame;                           // Stores time since last paint call
 
-    double              m_physics_milliseconds = 0.0;
-    double              m_time_one_frame_takes_to_render = 0.0;
-
     bool                m_running = false;
-
-    // Settings
-    const double        m_ideal_frames_per_second = 120;
-    const double        m_lower_frames_per_second =  60;
 
 
 public:
-    QWidget         *centralWidget;
-    QToolButton     *pushSpawn,     *pushCar,       *pushJump,      *pushPlay1, *pushPlay2;
-    QToolButton     *pushLine1,     *pushLine2,     *pushBlocks,    *pushProject;
-    QToolButton     *pushStart,     *pushStop;
-    QToolButton     *pushPersp,     *pushOrtho;
-    QToolButton     *pushDebug1,    *pushDebug2;
+    const double    m_ideal_frames_per_second =  60;
+    bool            m_wait_vsync = false;
+
+    // FPS Variables
+    Clock::time_point   m_time_fps = Clock::now();
+    double              fps_count_render =   0.0;
+    double              fps_count_camera =   0.0;
+    double              fps_count_physics =  0.0;
+    double              fps_render =        60.0;
+    double              fps_physics =       60.0;
+    double              fps_camera =        60.0;
+
+    // Widgets
+    QWidget        *centralWidget;
+    QToolButton    *pushSpawn,      *pushCar,       *pushJump,      *pushPlay1, *pushPlay2;
+    QToolButton    *pushLine1,      *pushLine2,     *pushBlocks,    *pushProject;
+    QToolButton    *pushStart,      *pushStop;
+    QToolButton    *pushPersp,      *pushOrtho;
+    QToolButton    *pushDebug1,     *pushDebug2;
 
 
 public:
@@ -101,6 +106,7 @@ public:
 private slots:
     void aboutToCompose();
     void frameSwapped();
+    void moveCameras();
     void updateEngine();
 
     void on_pushSpawn_clicked();

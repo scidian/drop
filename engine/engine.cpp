@@ -43,6 +43,19 @@ void DrEngine::deleteResources() {
 
 
 //######################################################################################################
+//##    Convenience Functions
+//######################################################################################################
+QString DrEngine::pedalAsString() {
+    switch (gas_pedal) {
+        case Pedal::None:               return "None";
+        case Pedal::Brake:              return "Brake";
+        case Pedal::Clockwise:          return "Clockwise";
+        case Pedal::CounterClockwise:   return "Counter Clockwise";
+    }
+}
+
+
+//######################################################################################################
 //##    DrEngineTexture
 //######################################################################################################
 DrEngineTexture* DrEngine::addTexture(long texture_id, QString from_asset_string) {

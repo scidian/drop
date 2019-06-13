@@ -46,7 +46,7 @@ private:
     IEditorRelay           *m_editor_relay;                 // Pointer to IEditorRelay class of parent form
 
     // Local Variables
-    DrFilterHoverHandler   *m_filter_hover;                 // Pointer to an event filter hover handler
+    DrFilterHoverHandler   *m_filter_hover = nullptr;       // Pointer to an event filter hover handler
 
     QList<QWidget*>         m_widgets;                      // List of the widgets we built the last time we selected a new item
 

@@ -81,7 +81,8 @@ void OpenGL::drawDebug(QPainter &painter) {
     painter.setFont(font);
     painter.setPen( Qt::white );
     painter.drawText( QPointF(20, 20), "Items: " + QString::number(m_engine->getCurrentWorld()->objects.count()) + ", Scale: " + QString::number(double(m_scale)) );
-    painter.drawText( QPointF(20, 40), "FPS: " + QString::number(m_engine->fps_render) + ", Physics: " + QString::number(m_engine->fps_physics) );
+    painter.drawText( QPointF(20, 40), "FPS: " +       QString::number(m_engine->getFormEngine()->fps_render)
+                                     + ", Physics: " + QString::number(m_engine->getFormEngine()->fps_physics));
     painter.drawText( QPointF(20, 60), g_info);
 
     ///int max_sample, max_text, max_number_textures, max_layers;
@@ -97,6 +98,10 @@ void OpenGL::drawDebug(QPainter &painter) {
 //##    Draws the Collision Shapes using QPainter
 //####################################################################################
 void OpenGL::drawDebugShapes(QPainter &painter) {
+
+    int open_gl_width =  width() *  devicePixelRatio();
+    int open_gl_height = height() * devicePixelRatio();
+    QRect open_gl_rect = QRect(0, 0, open_gl_width, open_gl_height);
 
     for (auto object : m_engine->getCurrentWorld()->objects) {
         if (!object->shouldProcess())       continue;
@@ -116,7 +121,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         painter.setBrush( QBrush( brush_color));
 
         // Load Object Position
-        QPointF center = (object->getBodyPreviousPosition() * (1.0 - m_time_percent)) + (object->getBodyPosition() * m_time_percent);
+        QPointF center = object->getBodyPosition();
 
         // Used to store combined polygon of a multi-shape body
         QPolygonF object_poly;
@@ -138,8 +143,8 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 
                     // Don't draw if not touching or inside of visible area
                     QRect bounding_box = QRectF( l2.x() - new_radius, l2.y() - new_radius, new_radius * 2, new_radius * 2).toRect();
-                    if ((rect().intersects(bounding_box) || rect().contains(bounding_box)) &&
-                        (bounding_box.width() * 0.1 < width()) && (bounding_box.height() * 0.1 < height())) {
+                    if ((open_gl_rect.intersects(bounding_box) || open_gl_rect.contains(bounding_box)) &&
+                        (bounding_box.width() * 0.1 < open_gl_width) && (bounding_box.height() * 0.1 < open_gl_height)) {
                         // Draw circle
                         painter.drawEllipse( l2, new_radius, new_radius );
                         // Draw orientation line
@@ -176,8 +181,8 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 
                     // Don't draw if not touching or inside of visible area
                     QRect bounding_box = path.boundingRect().normalized().toRect();
-                    if ((rect().intersects(bounding_box) || rect().contains(bounding_box)) &&
-                        (bounding_box.width() * 0.1 < width()) && (bounding_box.height() * 0.1 < height())) {
+                    if ((open_gl_rect.intersects(bounding_box) || open_gl_rect.contains(bounding_box)) &&
+                        (bounding_box.width() * 0.1 < open_gl_width) && (bounding_box.height() * 0.1 < open_gl_height)) {
                         // Draw Circle
                         painter.drawPath( path );
                         // Draw orientation line
@@ -197,8 +202,8 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 
                 // Don't draw if not touching or inside of visible area
                 QRect bounding_box = QRectF(p1, p2).toRect().normalized();
-                if ((rect().intersects(bounding_box) || rect().contains(bounding_box)) &&
-                    (bounding_box.width() * 0.1 < width()) && (bounding_box.height() * 0.1 < height())) {
+                if ((open_gl_rect.intersects(bounding_box) || open_gl_rect.contains(bounding_box)) &&
+                    (bounding_box.width() * 0.1 < open_gl_width) && (bounding_box.height() * 0.1 < open_gl_height)) {
                     QPen line_pen( QBrush(color), 2);
                     painter.setPen( line_pen );
                     painter.drawLine(p1, p2);
@@ -219,8 +224,8 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
                 // Don't draw if not touching or inside of visible area
                 QRect bounding_box = mapped.boundingRect().toRect();
 
-                if ((rect().intersects(bounding_box) || rect().contains(bounding_box)) &&
-                    (bounding_box.width() * 0.1 < width()) && (bounding_box.height() * 0.1 < height())) {
+                if ((open_gl_rect.intersects(bounding_box) || open_gl_rect.contains(bounding_box)) &&
+                    (bounding_box.width() * 0.1 < open_gl_width) && (bounding_box.height() * 0.1 < open_gl_height)) {
 
                     // Draw orientation line
                     if (object->shape_type[shape] == Shape_Type::Box) {
@@ -272,8 +277,8 @@ void OpenGL::drawDebugJoints(QPainter &painter) {
         DrEngineObject *object_b = static_cast<DrEngineObject*>(cpBodyGetUserData(body_b));
 
         // Load Object Positions
-        QPointF center_a = (object_a->getBodyPreviousPosition() * (1.0 - m_time_percent)) + (object_a->getBodyPosition() * m_time_percent);
-        QPointF center_b = (object_b->getBodyPreviousPosition() * (1.0 - m_time_percent)) + (object_b->getBodyPosition() * m_time_percent);
+        QPointF center_a = object_a->getBodyPosition();
+        QPointF center_b = object_b->getBodyPosition();
         QPointF l1 = mapToScreen( center_a.x(), center_a.y(), 0);
         QPointF l2 = mapToScreen( center_b.x(), center_b.y(), 0);
 
@@ -288,6 +293,10 @@ void OpenGL::drawDebugJoints(QPainter &painter) {
 //####################################################################################
 void OpenGL::drawDebugCollisions(QPainter &painter) {
 
+    int open_gl_width =  width() *  devicePixelRatio();
+    int open_gl_height = height() * devicePixelRatio();
+    QRect open_gl_rect = QRect(0, 0, open_gl_width, open_gl_height);
+
     QPen pen( QBrush(Qt::red), 2.5 * static_cast<double>(m_scale), Qt::SolidLine, Qt::PenCapStyle::RoundCap);
     painter.setPen( pen );
 
@@ -301,16 +310,14 @@ void OpenGL::drawDebugCollisions(QPainter &painter) {
         cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(GetBodyContactPoints),  &point_list);
         cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(GetBodyContactNormals), &normal_list);
 
-        QPointF diff = object->getBodyPosition() - ((object->getBodyPreviousPosition() * (1.0 - m_time_percent)) + (object->getBodyPosition() * m_time_percent));
-
         for (int i = 0; i < point_list.size(); i++) {
             QPointF contact = point_list[i];
-            QPointF point = mapToScreen( contact.x() - diff.x(), contact.y() - diff.y(), 0.0 );
+            QPointF point = mapToScreen( contact.x(), contact.y(), 0.0 );
 
             double angle_in_radians = std::atan2(normal_list[i].y, normal_list[i].x);
             double angle_in_degrees = (angle_in_radians / M_PI) * 180.0;
 
-            if (rect().contains(point.toPoint())) {
+            if (open_gl_rect.contains(point.toPoint())) {
                 QTransform t = QTransform().translate(point.x(), point.y()).rotate(-object->getBodyAngle()).translate(-point.x(), -point.y());
                 QPoint dot = t.map( point ).toPoint();
 

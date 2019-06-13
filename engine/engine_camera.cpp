@@ -40,6 +40,8 @@ static inline void SmoothMove(QVector3D& start, const QVector3D &target, const f
 // Default parameters: nullptr, 0, 0, 800
 long DrEngineWorld::addCamera(DrEngineObject* object_to_follow, float x, float y, float z) {
     DrEngineCamera *camera = new DrEngineCamera(this, x, y, z);
+    camera->setCameraKey(m_camera_keys);
+
     m_cameras[m_camera_keys] = camera;
 
     // If an object was passed in, attach camera to that object
@@ -78,8 +80,9 @@ void DrEngineWorld::moveCameras(double milliseconds) {
 
 // Moves all cameras to their new locations based on their speed, etc
 void DrEngineWorld::updateCameras() {
-    for (auto camera_pair : m_cameras)
+    for (auto camera_pair : m_cameras) {
         camera_pair.second->updateCamera();
+    }
 }
 
 // Initiates a move to a new camera
@@ -116,8 +119,8 @@ double DrEngineWorld::getCameraPosZD() { return static_cast<double>(getCameraPos
 DrEngineCamera::DrEngineCamera(DrEngineWorld *world, float x, float y, float z) : m_world(world) {
     m_position = QVector3D(x, y, z);
     m_target = m_position;
-    m_avg_speed_x.clear();  m_avg_speed_x.fill(0, 10);
-    m_avg_speed_y.clear();  m_avg_speed_y.fill(0, 10);
+    m_avg_speed_x.clear();  m_avg_speed_x.fill(0, 20);
+    m_avg_speed_y.clear();  m_avg_speed_y.fill(0, 20);
     m_speed = QVector3D(0, 0, 0);
 }
 
@@ -151,29 +154,20 @@ void DrEngineCamera::updateCamera() {
         if (m_avg_speed_y.size() > 0) average_y = std::accumulate( m_avg_speed_y.begin(), m_avg_speed_y.end(), 0.0) / m_avg_speed_y.size();
 
         // Basic Camera = Object Position
-        ///m_target.setX( static_cast<float>(m_follow->getBodyPosition().x()) );
-        ///m_target.setY( static_cast<float>(m_follow->getBodyPosition().y()) );
+        ///double pos_x = m_follow->getBodyPosition().x();
+        ///double pos_y = m_follow->getBodyPosition().y();
         // Move based on Last Camera Position + Average
-        ///m_target.setX( m_target.x() + static_cast<float>(average_x) );
-        ///m_target.setY( m_target.y() + static_cast<float>(average_y) );
+        ///double pos_x = m_target.x() + average_x;
+        ///double pos_y = m_target.y() + average_y;
         // Move based on Last Object Position + Average
-        ///m_target.setX( static_cast<float>(m_follow->getBodyPreviousPosition().x() + average_x) );
-        ///m_target.setY( static_cast<float>(m_follow->getBodyPreviousPosition().y() + average_y) );
+        ///double pos_x = m_follow->getBodyPreviousPosition().x() + average_x;
+        ///double pos_y = m_follow->getBodyPreviousPosition().y() + average_y;
+
         // Average of all three options
-        ///double pos_x = ((m_follow->getBodyPosition().x()) + ((static_cast<double>(m_target.x()) + average_x)*3.0) +
-        ///                (m_follow->getBodyPreviousPosition().x() + average_x)) / 5.0;
-        ///double pos_y = ((m_follow->getBodyPosition().y()) + ((static_cast<double>(m_target.y()) + average_y)*3.0) +
-        ///                (m_follow->getBodyPreviousPosition().y() + average_y)) / 5.0;
-
-        // Interpolates object from previous frame to this frame
-        ///double percent = m_engine->getFormEngine()->getTimerMilliseconds(Engine_Timer::Physics) / (1000.0 / m_engine->fps_physics);
-        ///double percent = m_engine->getFormEngine()->getOpenGL()->getTimePercent();
-        ///QPointF smoothed = (m_follow->getBodyPreviousPosition() * (1.0 - percent)) + (m_follow->getBodyPosition() * percent);
-        ///double  pos_x = (smoothed.x() + (static_cast<double>(m_target.x()) + average_x)*2.0) / 3.0;
-        ///double  pos_y = (smoothed.y() + (static_cast<double>(m_target.y()) + average_y)*2.0) / 3.0;
-
-        double  pos_x = static_cast<double>(m_target.x()) + average_x;
-        double  pos_y = static_cast<double>(m_target.y()) + average_y;
+        double pos_x = ((m_follow->getBodyPosition().x()) + ((static_cast<double>(m_target.x()) + average_x)*3.0) +
+                        (m_follow->getBodyPreviousPosition().x() + average_x)) / 5.0;
+        double pos_y = ((m_follow->getBodyPosition().y()) + ((static_cast<double>(m_target.y()) + average_y)*3.0) +
+                        (m_follow->getBodyPreviousPosition().y() + average_y)) / 5.0;
 
         m_target.setX( static_cast<float>(pos_x) );
         m_target.setY( static_cast<float>(pos_y) );

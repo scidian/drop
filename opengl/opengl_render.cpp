@@ -29,29 +29,15 @@ void OpenGL::paintGL() {
     ///auto ver = glGetString(GL_VERSION);
     ///m_engine->info = QString::fromUtf8(reinterpret_cast<const char*>(ver));
 
-    // ***** Calculates Render Frames per Second
-    ++m_fps_count;
-    double fps_milli = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_fps).count() / 1000000.0;
-    if (fps_milli > 1000.0) {
-        m_engine->fps_render = m_fps_count;
-        m_fps_count = 0;
-        m_time_fps = Clock::now();
-    }
+    // ***** Set Up Before Render
+    bindOffscreenBuffer();                          // Create / Bind Offscreen Frame Buffer Object
+    setGLFlags();                                   // Clear GL, Enable alpha / multisampling, etc
+    updateViewMatrix();                             // Update Camera / View Matrix
 
-    // ***** Create / Bind Offscreen Frame Buffer Object
-    bindOffscreenBuffer();
-
-    // ***** Update Camera / Matrices
-    updateViewMatrix();
-
-    // ***** Render Background 3D Objects
-    ///cullingOn();     drawCube( QVector3D( 2000, 400, -300) );        cullingOff();
-
-    // ***** Render cpSpace Objects
-    drawSpace();
-
-    // ***** Render Foreground 3D Objects
-    ///cullingOn();     drawCube( QVector3D(1600, 500, 600) );          cullingOff();
+    // ***** Render
+    drawCube( QVector3D( 2000, 400, -300) );        // Render Background 3D Objects
+    drawSpace();                                    // Render cpSpace Objects
+    drawCube( QVector3D(1600, 500, 600) );          // Render Foreground 3D Objects
 
     // ***** Draws Debug Shapes / Text Onto Frame Buffer Object
     QOpenGLPaintDevice paint_gl(width() * devicePixelRatio(), height() * devicePixelRatio());
@@ -66,6 +52,9 @@ void OpenGL::paintGL() {
     // ***** Renders Frame Buffer Object to screen buffer as a textured quad, with post processing available
     m_fbo->bindDefault();
     drawFrameBufferToScreenBuffer();
+
+    // ***** Update FPS
+    ++m_form_engine->fps_count_render;
 }
 
 
@@ -85,22 +74,28 @@ void OpenGL::bindOffscreenBuffer() {
         delete m_fbo;
         delete m_texture_fbo;
         QOpenGLFramebufferObjectFormat format;
-        format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
+        format.setAttachment(QOpenGLFramebufferObject::Attachment::CombinedDepthStencil);
         format.setSamples(4);
         ///format.setTextureTarget(GL_TEXTURE_2D);                      // This is set automatically, cannot be gl_texture_2d if multisampling is enabled
         ///format.setInternalTextureFormat(GL_RGBA32F_ARB);             // This is set automatically depending on the system
-        ///format.setMipmap(true);
+        ///format.setMipmap(true);                                      // Don't need
         m_fbo = new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format);
         m_texture_fbo = new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio());
     }
     m_fbo->bind();
+}
 
+
+//####################################################################################
+//##        Clear / Enable Flags
+//####################################################################################
+void OpenGL::setGLFlags() {
     // Clear the buffers
     float background_red =   static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().redF());
     float background_green = static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().greenF());
     float background_blue =  static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().blueF());
     glClearColor(background_red, background_green, background_blue, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);///) | GL_STENCIL_BUFFER_BIT | GL_ACCUM_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);/// | GL_ACCUM_BUFFER_BIT);
     ///glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
     ///glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 
@@ -108,8 +103,10 @@ void OpenGL::bindOffscreenBuffer() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                  // Standard blend function
 
-    // Enable anti aliasing
+    // Enable anti aliasing if not on mobile
+#if not defined(Q_OS_ANDROID) && not defined(Q_OS_IOS)
     glEnable( GL_MULTISAMPLE );
+#endif
 
     // Enable depth / stencil test
     ///glEnable( GL_DEPTH_TEST  );
@@ -146,10 +143,10 @@ void OpenGL::updateViewMatrix() {
     if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
         float cam_x =  m_engine->getCurrentWorld()->getCameraPos().x() * m_scale;
         float cam_y =  m_engine->getCurrentWorld()->getCameraPos().y() * m_scale;
-        float left =   cam_x - (width() /  2.0f);
-        float right =  cam_x + (width() /  2.0f);
-        float top =    cam_y + (height() / 2.0f);
-        float bottom = cam_y - (height() / 2.0f);
+        float left =   cam_x - (width() *  devicePixelRatio() / 2.0f);
+        float right =  cam_x + (width() *  devicePixelRatio() / 2.0f);
+        float top =    cam_y + (height() * devicePixelRatio() / 2.0f);
+        float bottom = cam_y - (height() * devicePixelRatio() / 2.0f);
         m_projection.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
     } else {
         m_projection.perspective( 70.0f, aspect_ratio, 1.0f, 5000.0f );
@@ -185,20 +182,17 @@ void OpenGL::drawFrameBufferToScreenBuffer() {
 
     // Clear the screen buffer
     glClearColor(0.0, 0.0, 0.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, m_texture_fbo->texture());
 
     if (!m_shader.bind()) return;
 
-    float fbo_width =  static_cast<float>(width() *  devicePixelRatio());
-    float fbo_height = static_cast<float>(height() * devicePixelRatio());
-
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
-    float left =   0.0f - (fbo_width  / 2.0f);
-    float right =  0.0f + (fbo_width  / 2.0f);
-    float top =    0.0f + (fbo_height / 2.0f);
-    float bottom = 0.0f - (fbo_height / 2.0f);
+    float left =   0.0f - (m_texture_fbo->width()  / 2.0f);
+    float right =  0.0f + (m_texture_fbo->width()  / 2.0f);
+    float top =    0.0f + (m_texture_fbo->height() / 2.0f);
+    float bottom = 0.0f - (m_texture_fbo->height() / 2.0f);
     QMatrix4x4 m_matrix;
     m_matrix.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
     m_shader.setUniformValue( m_uniform_matrix, m_matrix );
@@ -226,7 +220,7 @@ void OpenGL::drawFrameBufferToScreenBuffer() {
     m_shader.enableAttributeArray( m_attribute_vertex );
 
     // Set variables for shader
-    setShaderDefaultValues( fbo_width, fbo_height );
+    setShaderDefaultValues( m_texture_fbo->width(), m_texture_fbo->height() );
 
     m_shader.setUniformValue( m_uniform_bitrate,    m_engine->getCurrentWorld()->bitrate );
     m_shader.setUniformValue( m_uniform_pixel_x,    m_engine->getCurrentWorld()->pixel_x );

@@ -124,8 +124,8 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
 
     // Create engine timer and connect
-    m_timer = new QTimer(this);
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(updateEngine()));
+    m_update_timer = new QTimer(this);
+    connect(m_update_timer, SIGNAL(timeout()), this, SLOT(updateEngine()));
 
 
     // Load demo after form finishes loading
@@ -193,18 +193,16 @@ void FormEngine::startTimers() {
     m_time_camera =  Clock::now();
     m_time_physics = Clock::now();
     m_time_frame =   Clock::now();
-    m_timer->start( 0 );                                        // Timeout of zero will call this timeout every pass of the event loop
+    m_update_timer->start( 0 );                         // Timeout of zero will call this timeout every pass of the event loop
 }
 void FormEngine::stopTimers() {
-    m_timer->stop();
+    m_update_timer->stop();
 }
 double FormEngine::getTimerMilliseconds(Engine_Timer time_since_last) {
     switch (time_since_last) {
         case Engine_Timer::Update:  return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_update).count() /  1000000.0;
         case Engine_Timer::Render:  return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_render).count() /  1000000.0;
         case Engine_Timer::Camera:  return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_camera).count() /  1000000.0;
-        case Engine_Timer::Physics: return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_physics).count() / 1000000.0;
-        case Engine_Timer::Frame:   return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_frame).count() /   1000000.0;
     }
 }
 void FormEngine::resetTimer(Engine_Timer timer_to_reset) {
@@ -212,55 +210,70 @@ void FormEngine::resetTimer(Engine_Timer timer_to_reset) {
         case Engine_Timer::Update:  m_time_update =  Clock::now();      break;
         case Engine_Timer::Render:  m_time_render =  Clock::now();      break;
         case Engine_Timer::Camera:  m_time_camera =  Clock::now();      break;
-        case Engine_Timer::Physics: m_time_physics = Clock::now();      break;
-        case Engine_Timer::Frame:   m_time_frame =   Clock::now();      break;
     }
 }
 
+// ***** Seperate Camera Update
+void FormEngine::moveCameras() {
+    double camera_milliseconds = getTimerMilliseconds(Engine_Timer::Camera);
+    resetTimer(Engine_Timer::Camera);
+    m_engine->getCurrentWorld()->moveCameras(camera_milliseconds);
+    ++fps_count_camera;
+}
+
+// ***** MAIN UPDATE LOOP: Space (Physics), Rendering
 void FormEngine::updateEngine() {
     if (!m_engine->getCurrentWorld()->has_scene) return;
     m_running = true;
 
-    // ***** MAIN UPDATE LOOP: Space (Physics)
+    // ***** Calculates Render Frames per Second
+    double fps_milli = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_fps).count() / 1000000.0;
+    if (fps_milli > 1000.0) {
+        fps_render =  fps_count_render;         fps_count_render =  0;
+        fps_physics = fps_count_physics;        fps_count_physics = 0;
+        fps_camera =  fps_count_camera;         fps_count_camera = 0;
+        m_time_fps =  Clock::now();
+    }
+
+    // ***** Update Physics and Render
+#if defined (Q_OS_MACOS)
     double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
     if (update_milliseconds > m_engine->getCurrentWorld()->getTimeStepAsMilliseconds()) {
         resetTimer(Engine_Timer::Update);
-
         m_engine->getCurrentWorld()->updateSpace(update_milliseconds);                      // Physics Engine
-        m_physics_milliseconds = getTimerMilliseconds(Engine_Timer::Physics);               // Store how long between this physics step
-        resetTimer(Engine_Timer::Physics);                                                  // Record time done with SpaceStep
         m_engine->getCurrentWorld()->updateSpaceHelper();                                   // Additional Physics Updating
-
         m_engine->getCurrentWorld()->updateCameras();                                       // Update Camera Targets
-    }
-
-    // ***** Seperate Camera Update
-    double camera_milliseconds = getTimerMilliseconds(Engine_Timer::Camera);
-    resetTimer(Engine_Timer::Camera);
-    m_engine->getCurrentWorld()->moveCameras(camera_milliseconds);                          // Move Cameras
-
-    // ***** If we're bogged down, lower frame rate
-    double target_frame_rate = (1000.0 / m_ideal_frames_per_second);
-    if (m_engine->getCurrentWorld()->objects.count() > 250) target_frame_rate =  (1000.0 / m_lower_frames_per_second);
-
-    // ***** Seperate Render Update
-    double render_milliseconds = getTimerMilliseconds(Engine_Timer::Render);
-    if (render_milliseconds > target_frame_rate) {
-        resetTimer(Engine_Timer::Render);
-
-        // Calculate time since last physics update as a percentage (and add how long a render takes)
-        m_opengl->setTimePercent( (getTimerMilliseconds(Engine_Timer::Physics) + m_time_one_frame_takes_to_render) / (m_physics_milliseconds + c_epsilon) );
-        resetTimer(Engine_Timer::Frame);                                                    // Track how long one render takes to end up on screen from this point
-
+        moveCameras();                                                                      // Move Cameras
         m_opengl->update();                                                                 // Render
     }
+
+    // Additional render on MacOS (smooths more with vsync being disabled)
+    if (m_engine->getCurrentWorld()->objects.count() < 250) {
+        double render_milliseconds = getTimerMilliseconds(Engine_Timer::Render);
+        if (render_milliseconds > (1000.0 / m_ideal_frames_per_second)) {
+            resetTimer(Engine_Timer::Render);
+            m_opengl->update();                                                             // Render
+        }
+    }
+#else
+    if (m_wait_vsync == false) {
+        m_wait_vsync = true;
+        double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
+        resetTimer(Engine_Timer::Update);
+        m_engine->getCurrentWorld()->updateSpace(update_milliseconds);                      // Physics Engine
+        m_engine->getCurrentWorld()->updateSpaceHelper();                                   // Additional Physics Updating
+        m_engine->getCurrentWorld()->updateCameras();                                       // Update Camera Targets
+        moveCameras();                                                                      // Move Cameras
+        m_opengl->update();                                                                 // Render
+    }
+#endif
 
     m_running = false;
 }
 
 // Emitted by QOpenGLWidget when back buffer is swapped to screen
 void FormEngine::frameSwapped() {
-    m_time_one_frame_takes_to_render = getTimerMilliseconds(Engine_Timer::Frame);   // Figures out time since m_opengl->update() was called till buffer swap
+    m_wait_vsync = false;
 }
 
 void FormEngine::aboutToCompose() {
@@ -305,12 +318,10 @@ void FormEngine::on_pushOrtho_clicked() { m_engine->getCurrentWorld()->render_ty
 
 void FormEngine::on_pushDebug1_clicked() {
     m_engine->debug_shapes = !m_engine->debug_shapes;
-    m_opengl->update();
     updateCheckedButtons();
 }
 void FormEngine::on_pushDebug2_clicked() {
     m_engine->debug_collisions = !m_engine->debug_collisions;
-    m_opengl->update();
     updateCheckedButtons();
 }
 

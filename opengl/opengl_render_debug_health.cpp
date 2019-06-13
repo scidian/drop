@@ -33,7 +33,7 @@ void OpenGL::drawDebugHealth(QPainter &painter) {
         QColor color = objectDebugColor(object, true);
 
         // Load Object Position
-        QPointF center = (object->getBodyPreviousPosition() * (1.0 - m_time_percent)) + (object->getBodyPosition() * m_time_percent);
+        QPointF center =object->getBodyPosition();
         QPointF text_coord = mapToScreen(center.x(), center.y(), 0);
 
         if (rect().contains( text_coord.toPoint() )) {
@@ -84,7 +84,7 @@ void OpenGL::drawDebugHealthNative(QPainter &painter) {
         if (hp.length() < 1) continue;
 
         // ***** Load object position
-        QPointF center = (object->getBodyPreviousPosition() * (1.0 - m_time_percent)) + (object->getBodyPosition() * m_time_percent);
+        QPointF center = object->getBodyPosition();
         float x, y, z, half_width, half_height;
         if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
             x = static_cast<float>(center.x()) * m_scale;
@@ -96,8 +96,8 @@ void OpenGL::drawDebugHealthNative(QPainter &painter) {
             x = static_cast<float>(center.x());
             y = static_cast<float>(center.y() - static_cast<double>(font_size));
             z = static_cast<float>(object->getZOrder());
-            half_width =  font_size / 2.0f + 1.0f;
-            half_height = font_size / 2.0f + 1.0f;
+            half_width =  font_size / 2.0f;
+            half_height = font_size / 2.0f;
         }
 
         QVector3D top_right = QVector3D( half_width,  half_height, 0);

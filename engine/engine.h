@@ -66,9 +66,6 @@ public:
     bool            debug_shapes =      false;
     bool            debug_collisions =  false;
 
-    double          fps_render =  60.0;
-    double          fps_physics = 60.0;
-
     // Demo Variables
     Demo_Space      demo_space =  Demo_Space::Project;
     Demo_Player     demo_player = Demo_Player::Jump;
@@ -97,6 +94,8 @@ public:
     DrEngineWorld*      getWorld(long world_key)    { return m_worlds[world_key]; }
 
     long                getCurrentEditorWorld()     { return m_current_editor_world; }
+
+    QString             pedalAsString();
 
 };
 

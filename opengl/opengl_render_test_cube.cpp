@@ -19,6 +19,8 @@
 //##        Draws a 3D rotating cube for demo purposes
 //####################################################################################
 void OpenGL::drawCube(QVector3D center) {
+    // ***** Turn culling on for 3d drawing
+    cullingOn();
 
     // ***** Enable shader program
     if (!m_shader.bind()) return;
@@ -115,6 +117,9 @@ void OpenGL::drawCube(QVector3D center) {
     texture->texture()->release();
     m_shader.disableAttributeArray( m_attribute_tex_coord );
     m_shader.release();
+
+    // ***** Turn culling off now that we're done with 3d drawing
+    cullingOff();
 }
 
 

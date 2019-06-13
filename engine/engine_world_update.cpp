@@ -28,6 +28,7 @@
 // #NOTE: time_passed is in milliseconds
 void DrEngineWorld::updateSpace(double time_passed) {
     double step_time = time_passed / 1000.0 * m_time_warp;
+    ///double step_time = m_time_step * m_time_warp;
     cpSpaceStep(m_space, step_time);
 }
 
@@ -186,16 +187,9 @@ void DrEngineWorld::updateSpaceHelper() {
         loadStageToSpace( stage, m_loaded_to, 0);
     }
 
-    // ********** Calculates Physics Updates Frames per Second
-    static DrTime fps_time = Clock::now();
-    static int fps_count = 0;
-    ++fps_count;
-    double fps_milli = Dr::MillisecondsElapsed(fps_time);
-    if (fps_milli > 1000.0) {
-        m_engine->fps_physics = fps_count;
-        fps_count = 0;
-        Dr::ResetTimer(fps_time);
-    }
+
+    // ********** Updates Physics Frames per Second
+    ++m_engine->getFormEngine()->fps_count_physics;
 }
 
 
