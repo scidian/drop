@@ -34,11 +34,11 @@ typedef std::map<long, DrEngineCamera*>  EngineCameraMap;
 typedef QVector<DrEngineObject*>         EngineObjects;
 
 // Global Forward Declaratopns for static Chipmunk callbacks
-extern cpBool   BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                       // defined in engine_space_collision.cpp
-extern cpBool   PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                    // defined in engine_space_collision.cpp
-extern void     SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                    // defined in engine_space_collision.cpp
-extern void     PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);            // defined in engine_space_update_player.cpp
-
+extern cpBool   BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                       // defined in engine_world_collision.cpp
+extern cpBool   PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                    // defined in engine_world_collision.cpp
+extern void     SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                    // defined in engine_world_collision.cpp
+extern void     PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);            // defined in engine_world_update_player.cpp
+extern void     KinematicUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);         // defined in engine_world_update_object.cpp
 
 //####################################################################################
 //##    DrEngineWorld

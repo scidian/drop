@@ -66,28 +66,39 @@ void DrQCheckBox::paintEvent(QPaintEvent *) {
         middle = Dr::GetColor(Window_Colors::Background_Dark);
     }
 
-    // Draw bottom highlight
-    painter.setPen( QPen( Dr::GetColor(Window_Colors::Background_Dark).lighter(200), Dr::BorderWidthAsInt() ) );
-    painter.setBrush( Qt::NoBrush );
-    painter.drawRoundedRect(6, 1, 20, 20, 4, 4);
+    if (this->isEnabled()) {
+        // Draw bottom highlight
+        painter.setPen( QPen( Dr::GetColor(Window_Colors::Background_Dark).lighter(200), Dr::BorderWidthAsInt() ) );
+        painter.setBrush( Qt::NoBrush );
+        painter.drawRoundedRect(6, 1, 20, 20, 4, 4);
 
-    // Draw main square
-    QLinearGradient gradient(6, 1, 5, 20);
-    gradient.setColorAt(0.00, top);
-    gradient.setColorAt(0.14, top);
-    gradient.setColorAt(0.18, middle);
-    gradient.setColorAt(1.00, middle);
-    painter.setBrush(gradient);
-    painter.setPen( QPen( Dr::GetColor(Window_Colors::Background_Dark).darker(200), Dr::BorderWidthAsInt() ) );
-    painter.drawRoundedRect(6, 1, 20, 19, 4, 4);
+        // Draw main square
+        QLinearGradient gradient(6, 1, 5, 20);
+        gradient.setColorAt(0.00, top);
+        gradient.setColorAt(0.14, top);
+        gradient.setColorAt(0.18, middle);
+        gradient.setColorAt(1.00, middle);
+        painter.setBrush(gradient);
+        painter.setPen( QPen( Dr::GetColor(Window_Colors::Background_Dark).darker(200), Dr::BorderWidthAsInt() ) );
+        painter.drawRoundedRect(6, 1, 20, 19, 4, 4);
 
-    // Draw check mark
-    if (checkState()) {
-        painter.setPen( QPen( Dr::GetColor(Window_Colors::Text), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ) );
-        QVector<QLineF> check;
-        check.append( QLineF( 11, 13, 13, 16) );
-        check.append( QLineF( 14, 16, 21,  8) );
-        painter.drawLines(check);
+        // Draw check mark
+        if (checkState()) {
+            painter.setPen( QPen( Dr::GetColor(Window_Colors::Text), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ) );
+            QVector<QLineF> check;
+            check.append( QLineF( 11, 13, 13, 16) );
+            check.append( QLineF( 14, 16, 21,  8) );
+            painter.drawLines(check);
+        }
+    } else {
+        // Draw check mark
+        if (checkState()) {
+            painter.setPen( QPen( Dr::GetColor(Window_Colors::Text_Dark), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ) );
+            QVector<QLineF> check;
+            check.append( QLineF( 11, 13, 13, 16) );
+            check.append( QLineF( 14, 16, 21,  8) );
+            painter.drawLines(check);
+        }
     }
 }
 

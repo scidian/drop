@@ -24,7 +24,7 @@ void DrEngineWorld::assignPlayerControls(DrEngineObject *object, bool has_contro
     object->setCollisionType( Collision_Type::Damage_Enemy );
     object->setKeyControls( true);
     object->setLostControl( !has_controls_now );                            // Turn on jump / movement buttons
-    cpBodySetVelocityUpdateFunc(object->body, PlayerUpdateVelocity);        // Assign the playerUpdate callback function
+    cpBodySetVelocityUpdateFunc(object->body, PlayerUpdateVelocity);        // Assign the PlayerUpdateVelocity callback function
 }
 
 

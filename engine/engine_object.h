@@ -92,10 +92,16 @@ private:
     double          m_custom_friction = c_friction; // Defaults to c_friction (-1) if this item uses global m_friction, otherwise stores custom friction
     double          m_custom_bounce = c_bounce;     // Defaults to c_bounce (-1) if this item uses global m_bounce, otherwise stores custom bounce
 
+    // ***** Object Properties - Movement
+    double          m_velocity_x;                   // Original x velocity when loaded into scene, used for KinematicUpdateVelocity func
+    double          m_velocity_y;                   // Original y velocity when loaded into scene, used for KinematicUpdateVelocity func
+    double          m_spin_velocity;                // Original angular velocity when loaded into scene, !!!!! #NOTE: In radians !!!!!
+    bool            m_use_angle_velocity = true;    // Should the angle of the object affect velocity? (only for Kinematic)
+
     // ***** Object Properties - One Way / Collision
     One_Way         m_one_way = One_Way::None;      // Set one way collision type desired (None, Pass Through, Weak_Spot)
     cpVect          m_one_way_direction {0, 1};     // Direction for one way collision, defaults to Up (i.e. objects can pass upwards through the bottom of a block)
-    bool            m_cancel_gravity = false;       // Cancels gravity on objects that collide (used to make climbable ladders, trees etc)
+    double          m_gravity_multiplier = 1.0;     // Use to cancel gravity (0.0) on objects that collide (climbable ladders), or to reduce gravity (sticky wall)
 
     // ***** Object Properties - Health / Damage
     Collision_Type  m_collision_type = Collision_Type::Damage_None; // Specifies which types of objects this object can damage
@@ -114,7 +120,7 @@ private:
     // ***** Object Movement - Rotation
     double          m_rotate_speed =  0.0;          // Speed at which object should spin when Motor Rotate (gas pedal) is pressed
 
-    // ***** Object Movemnt - PlayerUpdateVelocity Callback Func
+    // ***** Object Movement - PlayerUpdateVelocity Callback Func
     bool            m_key_controls = false;         // Set to true when object is a "player" and should respond to key / button / mouse events
                                                     //      (players are cpBody* that have been assigned the cpBodyUpdateVelocityFunc PlayerUpdateVelocity callback)
     bool            m_lost_control = false;         // Set to true when players should not have button control but have been assigned key_controls
@@ -155,7 +161,7 @@ private:
 
     bool        m_grounded = false;                         // Used by Engine Update to keep track of if this object is on the ground
     bool        m_on_wall = false;                          // Used by Engine Update to keep track of if this object is on a wall
-    bool        m_temp_no_gravity = false;                  // Set to true colliding with a gravity canceling object (ladder, tree, etc)
+    double      m_temp_gravity_multiplier = 1.0;            // Set multipler (0.0, 0.5, etc) when colliding with a gravity multiplying object (ladder, wall, etc)
 
     cpVect      m_last_touched_ground_normal = cpvzero;     // Normal Vector of the last touched surface
     double      m_last_touched_ground_dot = 1.0;            // Dot product of the last touched surface
@@ -221,15 +227,25 @@ public:
     void            setCustomFriction(double new_friction) { m_custom_friction = new_friction; }
     void            setCustomBounce(double new_bounce) { m_custom_bounce = new_bounce; }
 
-    // Object Properties - One Way / Collision
-    One_Way     getOneWay() { return m_one_way; }
-    cpVect      getOneWayDirection() { return m_one_way_direction; }
-    bool        getCancelGravity() { return m_cancel_gravity; }
+    // Object Properties - Movement
+    const double&   getOriginalVelocityX() { return m_velocity_x; }
+    const double&   getOriginalVelocityY() { return m_velocity_y; }
+    const double&   getOriginalSpinVelocity() { return m_spin_velocity; }                                                 // !!!!! In Radians
+    const bool&     getUseAngleVelocity() { return m_use_angle_velocity; }
+    void            setOriginalVelocityX(double vel_x) { m_velocity_x = vel_x; }
+    void            setOriginalVelocityY(double vel_y) { m_velocity_y = vel_y; }
+    void            setOriginalSpinVelocity(double radian_velocity) { m_spin_velocity = radian_velocity; }                // !!!!! In Radians
+    void            setUseAngleVelocity(bool angle_affects_velocity) { m_use_angle_velocity = angle_affects_velocity; }
 
-    void        setOneWay(One_Way one_way_type) { m_one_way = one_way_type; }
-    void        setOneWayDirection(cpVect direction) { m_one_way_direction = direction; }
-    void        setOneWayDirection(QPointF direction) { m_one_way_direction = cpv(direction.x(), direction.y()); }
-    void        setCancelGravity(bool should_cancel_gravity) { m_cancel_gravity = should_cancel_gravity; }
+    // Object Properties - One Way / Collision
+    One_Way         getOneWay() { return m_one_way; }
+    cpVect          getOneWayDirection() { return m_one_way_direction; }
+    const double&   getGravityMultiplier() { return m_gravity_multiplier; }
+
+    void            setOneWay(One_Way one_way_type) { m_one_way = one_way_type; }
+    void            setOneWayDirection(cpVect direction) { m_one_way_direction = direction; }
+    void            setOneWayDirection(QPointF direction) { m_one_way_direction = cpv(direction.x(), direction.y()); }
+    void            setGravityMultiplier(double gravity_multiplier) { m_gravity_multiplier = gravity_multiplier; }
 
     // Object Properties - Health / Damage
     Collision_Type  getCollisionType() { return m_collision_type; }
@@ -286,7 +302,7 @@ public:
     const bool&     canAirJump() { return m_air_jump; }
     const bool&     canWallJump() { return m_wall_jump; }
     const bool&     canRotate() { return m_can_rotate; }
-    bool            ignoreGravity() { return (m_ignore_gravity || m_temp_no_gravity); }
+    bool            ignoreGravity() { return m_ignore_gravity; }
 
     void            setKeyControls(bool has_key_controls) { m_key_controls = has_key_controls; }
     void            setLostControl(bool lost_control) { m_lost_control = lost_control; }
@@ -321,7 +337,7 @@ public:
     const double&   getRemainingWallTime() { return m_remaining_wall_time; }
     const bool&     isOnGround() { return m_grounded; }
     const bool&     isOnWall() { return m_on_wall; }
-    const bool&     getTempNoGravity() { return m_temp_no_gravity; }
+    const double&   getTempGravityMultiplier() { return m_temp_gravity_multiplier; }
     const cpVect&   getLastTouchedGroundNormal() { return m_last_touched_ground_normal; }
     const double&   getLastTouchedGroundDot() { return m_last_touched_ground_dot; }
     Jump_State      getJumpState() { return m_jump_state; }
@@ -330,7 +346,7 @@ public:
     void            setRemainingWallTime(double wall_time) { m_remaining_wall_time = wall_time; }
     void            setOnGround(bool on_ground) { m_grounded = on_ground; }
     void            setOnWall(bool on_wall) { m_on_wall = on_wall; }
-    void            setTempNoGravity(bool gravity_on) { m_temp_no_gravity = gravity_on; }
+    void            setTempGravityMultiplier(double gravity_multiplier) { m_temp_gravity_multiplier = gravity_multiplier; }
     void            setLastTouchedGroundNormal(cpVect last_touched_normal) { m_last_touched_ground_normal = last_touched_normal; }
     void            setLastTouchedGroundDot(double last_touched_dot) { m_last_touched_ground_dot = last_touched_dot; }
     void            setJumpState(Jump_State new_jump_state) { m_jump_state = new_jump_state; }

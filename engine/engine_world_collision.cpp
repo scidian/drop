@@ -45,10 +45,10 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
 
     // Temp cancel gravity on another object if colliding and should cancel it, also slow down object on contact
-    if ( object_b->getCancelGravity()) {
+    if ( qFuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false ) {
         cpVect vel = cpBodyGetVelocity( object_a->body );
         cpBodySetVelocity( object_a->body, cpv(vel.x * c_speed_slowdown, vel.y * c_speed_slowdown) );
-        object_a->setTempNoGravity(true);
+        object_a->setTempGravityMultiplier( object_b->getGravityMultiplier() );
     }
 
     // Check for one way platform
@@ -73,7 +73,8 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     if ( object_a->isAlive() && object_a->isDying()) return cpTrue;                     // Don't deal damage while dying
     if (!object_a->isAlive()) return cpFalse;                                           // If object a is dead, cancel collision
     if (!object_b->isAlive()) return cpFalse;                                           // If object b is dead, cancel collision
-    if ( object_b->getCancelGravity()) object_a->setTempNoGravity(true);                // Temp cancel gravity on another object if colliding and should cancel it
+    if ( qFuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false )                // Temp cancel / reduce / increade gravity on another
+        object_a->setTempGravityMultiplier( object_b->getGravityMultiplier() );         //      object if colliding and should cancel / adjust it
     if (!object_a->doesDamage()) return cpTrue;                                         // Object does no damage, exit
 
 
@@ -113,12 +114,10 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
 extern void SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b);
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
-    DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
+    ///DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
 
-    // Stop canceling gravity when seperates, and slow it down as it exits
-    if (object_b->getCancelGravity()) {
-        object_a->setTempNoGravity(false);
-    }
+    // Stop canceling gravity when seperates
+    object_a->setTempGravityMultiplier( 1.0 );
 }
 
 //######################################################################################################

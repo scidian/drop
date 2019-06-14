@@ -193,21 +193,19 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
     // This code subtracts gravity from target speed, not sure if we want to leave this in
     //      (useful for allowing movement force against gravity for m_cancel_gravity property, i.e. climbing up ladders)
-    if (!object->ignoreGravity()) {
-        if (target_vy < 0) {
-            target_vy -= gravity.y;
-            if (target_vy > 0) target_vy = 0;
-        } else if (target_vy > 0) {
-            target_vy += gravity.y;
-            if (target_vy < 0) target_vy = 0;
-        }
-        if (target_vx < 0) {
-            target_vx -= gravity.x;
-            if (target_vx > 0) target_vx = 0;
-        } else if (target_vx > 0) {
-            target_vx += gravity.x;
-            if (target_vx < 0) target_vx = 0;
-        }
+    if (target_vy < 0) {
+        target_vy -= gravity.y * object->getTempGravityMultiplier();
+        if (target_vy > 0) target_vy = 0;
+    } else if (target_vy > 0) {
+        target_vy += gravity.y * object->getTempGravityMultiplier();
+        if (target_vy < 0) target_vy = 0;
+    }
+    if (target_vx < 0) {
+        target_vx -= gravity.x * object->getTempGravityMultiplier();
+        if (target_vx > 0) target_vx = 0;
+    } else if (target_vx > 0) {
+        target_vx += gravity.x * object->getTempGravityMultiplier();
+        if (target_vx < 0) target_vx = 0;
     }
 
     // Some drag multipliers
@@ -217,11 +215,12 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     double c_drag_rotate = 0.025;
 
     // This increases slowdown speed while in contact with a ladder (cancel gravity object)
-    if (object->getTempNoGravity()) {
-        c_drag_air    = 0.0001;
-        c_drag_ground = 0.0001;
+    if (qFuzzyCompare(object->getTempGravityMultiplier(), 1.0) == false) {
+        c_drag_air    = (c_drag_air * object->getTempGravityMultiplier()) + 0.0001;
+        c_drag_ground = (c_drag_ground * object->getTempGravityMultiplier()) + 0.0001;
     }
 
+    // Calculate air / ground acceleration
     double air_drag =       object->getAirDrag();
     double ground_drag =    object->getGroundDrag();
     double air_accel_x =    object->getMoveSpeedX() / (air_drag + c_buffer);
@@ -229,8 +228,8 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     double ground_accel_x = object->getMoveSpeedX() / (ground_drag + c_buffer);
     double ground_accel_y = object->getMoveSpeedY() / (ground_drag + c_buffer);
 
+    // Interpolate towards desired velocity if in air
     if (!object->isOnGround() && !object->isOnWall()) {
-
         if ((qFuzzyCompare(body_v.x, 0) == false && qFuzzyCompare(target_vx, 0) == false) ||
             (body_v.x <= 0 && target_vx > 0) || (body_v.x >= 0 && target_vx < 0))
                 body_v.x = cpflerpconst( body_v.x, target_vx, air_accel_x * dt);
@@ -241,8 +240,8 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
                 body_v.y = cpflerpconst( body_v.y, target_vy, air_accel_y * dt);
         else    body_v.y = cpflerpconst( body_v.y, 0, air_drag / c_drag_air * dt);
 
+    // Interpolate towards desired velocity if on ground / wall
     } else {
-
         if (qFuzzyCompare(target_vx, 0) == false)
                 body_v.x = cpflerpconst( body_v.x, target_vx, ground_accel_x * dt);
         else    body_v.x = cpflerpconst( body_v.x, target_vx, ground_drag / c_drag_ground * dt);
@@ -264,11 +263,12 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     body_v.y = cpfclamp(body_v.y, -object->getMaxSpeedY(), object->getMaxSpeedY());
     cpBodySetVelocity( object->body, body_v );
 
+
     // ***** Update Velocity - #NOTE: MUST CALL actual Update Velocity function some time during this callback!
     if (object->ignoreGravity()) {
         cpBodyUpdateVelocityNoGravity(body, gravity, damping, dt);
     } else {
-        cpBodyUpdateVelocity(body, gravity, damping, dt);
+        cpBodyUpdateVelocity(body, cpv(gravity.x * object->getTempGravityMultiplier(), gravity.y * object->getTempGravityMultiplier()), damping, dt);
     }
 }
 

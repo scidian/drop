@@ -280,7 +280,8 @@ enum class Properties {
     // Movement
     Object_Velocity_X,              //variable
     Object_Velocity_Y,              //variable
-    Object_Angular_Velocity,        //variable
+    Object_Spin_Velocity,           //variable
+    Object_Angle_Velocity,          //bool
 
     // Appearance
     Object_Filter_Pixelation,       //positive size

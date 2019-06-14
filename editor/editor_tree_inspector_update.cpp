@@ -52,7 +52,8 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
         DrProperty *prop = object->findPropertyFromPropertyKey(prop_key);
         if (prop == nullptr) continue;
 
-        // Must turn off signals while updating or we will cause recursive function calling as changes to the widgets are connected to updateObjectFromNewValue()
+        // ***** Must turn off signals while updating or we will cause recursive function calling as changes to the
+        //       widgets are connected to updateObjectFromNewValue()
         widget->blockSignals(true);
 
         // Enable / disable widgets as necessary

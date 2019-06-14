@@ -85,9 +85,16 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
                 if (test != pretest) {
                     object->getComponentProperty(Components::Object_Movement, Properties::Object_Velocity_X)->setEditable(test);
                     object->getComponentProperty(Components::Object_Movement, Properties::Object_Velocity_Y)->setEditable(test);
-                    object->getComponentProperty(Components::Object_Movement, Properties::Object_Angular_Velocity)->setEditable(test);
+                    object->getComponentProperty(Components::Object_Movement, Properties::Object_Spin_Velocity)->setEditable(test);
                     m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { object } ,
-                                    { Properties::Object_Velocity_X, Properties::Object_Velocity_Y, Properties::Object_Angular_Velocity });
+                                    { Properties::Object_Velocity_X, Properties::Object_Velocity_Y, Properties::Object_Spin_Velocity });
+                }
+
+                pretest = object->getComponentProperty(Components::Object_Movement, Properties::Object_Angle_Velocity)->isEditable();
+                test = (type == Body_Type::Kinematic) ? true : false;
+                if (test != pretest) {
+                    object->getComponentProperty(Components::Object_Movement, Properties::Object_Angle_Velocity)->setEditable(test);
+                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { object } , { Properties::Object_Angle_Velocity });
                 }
                 break;
 

@@ -76,9 +76,14 @@ DrObject* DrStage::addObject(DrObjectType new_type, long from_asset_key, double 
 void DrStage::copyObjectSettings(DrObject *from_object, DrObject *to_object) {
     if (from_object->getObjectType() != to_object->getObjectType()) return;
 
-    for (auto component : from_object->getComponentList())
-        for (auto property : component.second->getPropertyList())
-            to_object->setComponentPropertyValue(component.first, property.first, property.second->getValue());
+    for (auto component : from_object->getComponentList()) {
+        for (auto property : component.second->getPropertyList()) {
+            DrProperty *to_property = to_object->getComponentProperty(component.first, property.first);
+            to_property->setValue(property.second->getValue());
+            to_property->setEditable(property.second->isEditable());
+            to_property->setHidden(property.second->isHidden());
+        }
+    }
 }
 
 // Removes an object from the project

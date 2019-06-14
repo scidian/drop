@@ -106,6 +106,7 @@ SOURCES += \
     engine/engine_world_collision.cpp \
     engine/engine_world_load.cpp \
     engine/engine_world_update.cpp \
+    engine/engine_world_update_object.cpp \
     engine/engine_world_update_player.cpp \
     enums.cpp \
     forms/form_atlas.cpp \

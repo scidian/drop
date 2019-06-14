@@ -157,14 +157,18 @@ void DrObject::addComponentMovement() {
                                                           Component_Colors::Red_Faded, true);
     getComponent(Components::Object_Movement)->setIcon(Component_Icons::Movement);
     addPropertyToComponent(Components::Object_Movement, Properties::Object_Velocity_X, Property_Type::Variable, QPointF(0, 0),
-                           "Velocity X", "Initial horizontal movement speed of object +/- variable amount.  <br><br> "
-                                         "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use these settings!", false, false);
+                           "Velocity X", "Initial horizontal movement speed of object, +/- variable amount.  <br><br> "
+                                         "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!", false, false);
     addPropertyToComponent(Components::Object_Movement, Properties::Object_Velocity_Y, Property_Type::Variable, QPointF(0, 0),
-                           "Velocity Y", "Initial vertical movement speed of object +/- variable amount.  <br><br> "
-                                         "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use these settings!", false, false);
-    addPropertyToComponent(Components::Object_Movement, Properties::Object_Angular_Velocity, Property_Type::Variable, QPointF(0, 0),
-                           "Angular Velocity", "Rotational movement speed of object +/- variable amount. <br><br> "
-                                               "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use these settings!", false, false);
+                           "Velocity Y", "Initial vertical movement speed of object, +/- variable amount.  <br><br> "
+                                         "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!", false, false);
+    addPropertyToComponent(Components::Object_Movement, Properties::Object_Spin_Velocity, Property_Type::Variable, QPointF(0, 0),
+                           "Spin Velocity", "Initial rotational speed object, +/- variable amount. <br><br> "
+                                               "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!", false, false);
+    addPropertyToComponent(Components::Object_Movement, Properties::Object_Angle_Velocity, Property_Type::Bool, true,
+                           "Angle Velocity?", "Should the angle of this object affect it's velocity? (allows object to move "
+                                              "along an arc instead of spinning in place) <br> "
+                                               "<b>NOTE:</b> Object Type must be <b>Kinematic</b> to use this setting!", false, false);
 }
 
 void DrObject::addComponentAppearance() {

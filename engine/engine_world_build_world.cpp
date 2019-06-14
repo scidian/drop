@@ -173,17 +173,21 @@ void DrEngineWorld::buildSpace(Demo_Space new_space_type) {
         // ***** Ladder / Sticky Blocks
         DrEngineObject *ladder = this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, -980, 100, -1, 0, QPointF(1, 3), 1,
                                                 m_friction, m_bounce, QPointF(0, 0), false);
-        ladder->setCancelGravity( true );
+        ladder->setGravityMultiplier( 0.0 );
 
         DrEngineObject *ladder2 = this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, 300, 225, -1, 0, QPointF(6, 2), 1,
                                                 m_friction, m_bounce, QPointF(0, 0), true);
-        ladder2->setCancelGravity( true );
+        ladder2->setGravityMultiplier( 0.1 );
 
         double ball_radius = m_engine->getTextureMap()[Asset_Textures::Ball]->width() / 2.0;
         DrEngineObject *ladder_ball = this->addCircle(Body_Type::Kinematic, Asset_Textures::Ball, 800, 200, 0, c_norotate, QPointF(3, 3), c_opaque,
                                                       ball_radius, c_center, m_friction, 0, QPointF(0, 0));
-        ladder_ball->setCancelGravity(true);
+        ladder_ball->setGravityMultiplier( 0.0 );
         ladder_ball->setRotateSpeed(4);
+
+        DrEngineObject *ladder3 = this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, 1300, 325, -1, 0, QPointF(6, 6), 1,
+                                                m_friction, m_bounce, QPointF(0, 0), true);
+        ladder3->setGravityMultiplier( 0.3 );
 
         // ***** Bridge Test
         DrEngineObject *anchor_a = this->addBlock(Body_Type::Kinematic, Asset_Textures::Block, 2500, -10, -1, 0, QPointF(1.5, .1), 1, m_friction, m_bounce, QPointF(0, 0));
