@@ -109,7 +109,6 @@ SOURCES += \
     engine/engine_world_update_object.cpp \
     engine/engine_world_update_player.cpp \
     enums.cpp \
-    forms/form_atlas.cpp \
     forms/form_blank.cpp \
     forms/form_color_magnifier.cpp \
     forms/form_engine.cpp \
@@ -122,6 +121,7 @@ SOURCES += \
     forms/form_main_toolbar.cpp \
     forms/form_main_toolbar_build.cpp \
     forms/form_main_toolbar_button_click.cpp \
+    forms/form_playground.cpp \
     forms/form_popup.cpp \
     forms/form_popup_colors.cpp \
     forms/form_popup_grid_snap.cpp \
@@ -139,6 +139,7 @@ SOURCES += \
     opengl/opengl_render_debug_health.cpp \
     opengl/opengl_render_space.cpp \
     opengl/opengl_render_test_cube.cpp \
+    playground/playground.cpp \
     project/project.cpp \
     project/project_asset.cpp \
     project/project_font.cpp \
@@ -209,17 +210,18 @@ HEADERS += \
     engine/engine_world.h \
     enums.h \
     enums_engine.h \
-    forms/form_atlas.h \
     forms/form_blank.h \
     forms/form_color_magnifier.h \
     forms/form_engine.h \
     forms/form_fonts.h \
     forms/form_main.h \
+    forms/form_playground.h \
     forms/form_popup.h \
     forms/form_settings.h \
     helper.h \
     library/poly_partition.h \
     opengl/opengl.h \
+    playground/playground.h \
     project/project.h \
     project/project_asset.h \
     project/project_font.h \

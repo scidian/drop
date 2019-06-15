@@ -114,5 +114,6 @@
         <file>assets/fonts/Aileron-Regular.otf</file>
         <file>assets/fonts/Aileron-Bold.otf</file>
         <file>assets/engine/numbers.png</file>
+        <file>assets/toolbar_icons/toolbar_playground.png</file>
     </qresource>
 </RCC>

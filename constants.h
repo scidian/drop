@@ -68,11 +68,11 @@ namespace Advisor_Info {
 
     // Toolbar Buttons
     const HeaderBodyList Mode_Map               { "World Map", "This mode will allow you to see the layout of your project and how the worlds and "
-                                                              "user interfaces in you project connect to each other. " };
+                                                              "user interfaces in you project connect to each other." };
     const HeaderBodyList Mode_Editor            { "World Editor Mode", "This mode will allow you to edit the contents of each world. It is where "
                                                                       "you can design each Stage and lay out your levels." };
-    const HeaderBodyList Mode_UI                { "UI Editor Mode", "This mode will allow you to edit the user interfaces of your project. " };
-    const HeaderBodyList Settings_Atlas_Viewer  { "Atlas Viewer", "View and manage sprite sheets used by your game." };
+    const HeaderBodyList Mode_UI                { "UI Editor Mode", "This mode will allow you to edit the user interfaces of your project." };
+    const HeaderBodyList Settings_Playground    { "Physics Playground", "Play with the physics engine to learn more about the physics properties." };
     const HeaderBodyList Settings_Font_Builder  { "Font Builder", "Create and edit fonts usued for Text objects." };
     const HeaderBodyList Settings_Manager       { "Settings Manager", "View and edit project settings." };
 

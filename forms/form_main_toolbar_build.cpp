@@ -12,7 +12,7 @@
 #include <QToolButton>
 
 #include "enums_form_main.h"
-#include "form_atlas.h"
+#include "form_playground.h"
 #include "form_fonts.h"
 #include "form_main.h"
 #include "form_popup.h"
@@ -204,18 +204,18 @@ void FormMain::buildToolBar()
         toolbarLayoutSettings->setSpacing(5);
         toolbarLayoutSettings->setContentsMargins(0, 0, 0, 0);
 
+        tool = createToolbarButton(QStringLiteral("buttonPlayground"), Advisor_Info::Settings_Playground, 34, 26, false);
+        toolbarLayoutSettings->addWidget(tool);
+        connect(tool, &QPushButton::clicked, [this] () {
+            FormPlayground *playground = new FormPlayground(m_project, this);
+            playground->show();
+        });
+
         tool = createToolbarButton(QStringLiteral("buttonFontBuilder"), Advisor_Info::Settings_Font_Builder, 34, 26, false);
         toolbarLayoutSettings->addWidget(tool);
         connect(tool, &QPushButton::clicked, [this] () {
             FormFonts *font_editor = new FormFonts(m_project, this);
             font_editor->show();
-        });
-
-        tool = createToolbarButton(QStringLiteral("buttonAtlasViewer"), Advisor_Info::Settings_Atlas_Viewer, 34, 26, false);
-        toolbarLayoutSettings->addWidget(tool);
-        connect(tool, &QPushButton::clicked, [this] () {
-            FormAtlas *atlas_editor = new FormAtlas(m_project, this);
-            atlas_editor->show();
         });
 
         tool = createToolbarButton(QStringLiteral("buttonSettingsEditor"), Advisor_Info::Settings_Manager, 34, 26, false);

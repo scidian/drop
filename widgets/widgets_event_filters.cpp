@@ -6,6 +6,7 @@
 //
 //
 #include <QApplication>
+#include <QDebug>
 #include <QObject>
 #include <QEvent>
 #include <QPainter>
@@ -138,22 +139,41 @@ bool DrFilterPopUpMenuRelocater::eventFilter(QObject *obj, QEvent *event) {
 DrFilterClickAndDragWindow::DrFilterClickAndDragWindow(QObject *parent) : QObject(parent) { }
 
 bool DrFilterClickAndDragWindow::eventFilter(QObject *obj, QEvent *event) {
-    if (event->type() == QEvent::MouseButtonPress) {
-        QMouseEvent *mouse_event = dynamic_cast<QMouseEvent*>(event);
-        m_press_pos = mouse_event->pos();
-        m_is_moving = true;
+    QMouseEvent *mouse_event;
+    QWidget     *widget;
 
-    } else if (event->type() == QEvent::MouseMove) {
-        if (m_is_moving) {
-            QMouseEvent *mouse_event = dynamic_cast<QMouseEvent*>(event);
-            QWidget     *widget =      dynamic_cast<QWidget*>(obj);
-            QPoint       diff =        mouse_event->pos() - m_press_pos;
+    if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseMove || event->type() == QEvent::MouseButtonRelease) {
+        mouse_event = dynamic_cast<QMouseEvent*>(event);
+        widget =      dynamic_cast<QWidget*>(obj);
 
-            widget->window()->move( widget->window()->pos() + diff );
+        if (event->type() == QEvent::MouseButtonPress) {
+            m_press_pos = mouse_event->pos();
+            m_is_moving = true;
+
+        } else if (event->type() == QEvent::MouseMove) {
+            if (m_is_moving) {
+                QPoint diff = mouse_event->pos() - m_press_pos;
+                widget->window()->move( widget->window()->pos() + diff );
+            }
+
+        } else if (event->type() == QEvent::MouseButtonRelease) {
+            m_is_moving = false;
         }
     }
     return QObject::eventFilter(obj, event);
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
