@@ -40,13 +40,13 @@ void FormPlayground::buildForm() {
             m_side_bar->setFixedWidth(200);
             QVBoxLayout *side_layout = new QVBoxLayout(m_side_bar);
 
-                m_start_timers = new QPushButton("Start Timers");
+                m_start_timers = new QPushButton("Start Physics");
                 m_start_timers->setObjectName("button");
                 Dr::ApplyDropShadowByType(m_start_timers, Shadow_Types::Button_Shadow);
                 connect(m_start_timers, &QPushButton::clicked, [this] () { this->startTimers(); });
                 side_layout->addWidget(m_start_timers);
 
-                m_stop_timers = new QPushButton("Stop Timers");
+                m_stop_timers = new QPushButton("Stop Physics");
                 m_stop_timers->setObjectName("button");
                 Dr::ApplyDropShadowByType(m_stop_timers, Shadow_Types::Button_Shadow);
                 connect(m_stop_timers, &QPushButton::clicked, [this] () { this->stopTimers(); });

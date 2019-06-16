@@ -5,10 +5,13 @@
 //
 //
 //
+#include <QDebug>
+#include <QGraphicsWidget>
 #include <QStyleOptionGraphicsItem>
 
 #include "form_playground.h"
 #include "globals.h"
+#include "helper.h"
 #include "playground.h"
 #include "playground_toy.h"
 

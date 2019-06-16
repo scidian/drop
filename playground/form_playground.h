@@ -61,7 +61,7 @@ private:
     // Timer Variables
     QTimer              *m_update_timer;
     Clock::time_point    m_time_update;                     // Checks time between SpaceStep calls
-    bool                 m_running = false;
+    bool                 m_updating = false;
 
 public:
     FormPlayground(QWidget *parent = nullptr);
@@ -78,6 +78,7 @@ public:
 
     // Getters / Setters
     QGraphicsScene*         getScene() { return m_play_scene; }
+    bool                    isUpdating() { return m_updating; }
 
     void                    setObjectInfo(QString new_info) { m_object_info->setText(new_info); }
     void                    setWorldInfo(QString new_info) { m_world_info->setText(new_info); }
