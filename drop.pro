@@ -140,6 +140,7 @@ SOURCES += \
     opengl/opengl_render_test_cube.cpp \
     playground/form_playground.cpp \
     playground/form_playground_build.cpp \
+    playground/form_playground_items.cpp \
     playground/form_playground_view.cpp \
     playground/playground.cpp \
     playground/playground_add_toy.cpp \

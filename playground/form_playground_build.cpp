@@ -39,12 +39,38 @@ void FormPlayground::buildForm() {
             m_side_bar = new QWidget();
             m_side_bar->setFixedWidth(200);
             QVBoxLayout *side_layout = new QVBoxLayout(m_side_bar);
-                QLabel *label1 = new QLabel("Settings");
-                side_layout->addWidget(label1);
+
+                m_start_timers = new QPushButton("Start Timers");
+                m_start_timers->setObjectName("button");
+                Dr::ApplyDropShadowByType(m_start_timers, Shadow_Types::Button_Shadow);
+                connect(m_start_timers, &QPushButton::clicked, [this] () { this->startTimers(); });
+                side_layout->addWidget(m_start_timers);
+
+                m_stop_timers = new QPushButton("Stop Timers");
+                m_stop_timers->setObjectName("button");
+                Dr::ApplyDropShadowByType(m_stop_timers, Shadow_Types::Button_Shadow);
+                connect(m_stop_timers, &QPushButton::clicked, [this] () { this->stopTimers(); });
+                side_layout->addWidget(m_stop_timers);
+
+                m_reset_world = new QPushButton("Reset World");
+                m_reset_world->setObjectName("button");
+                Dr::ApplyDropShadowByType(m_reset_world, Shadow_Types::Button_Shadow);
+                connect(m_reset_world, &QPushButton::clicked, [this] () { this->resetWorld(); });
+                side_layout->addWidget(m_reset_world);
+
+                m_world_info = new QLabel("World Info");
+                side_layout->addWidget(m_world_info);
+
+                m_object_info = new QLabel("<center>No Item Selected</center>");
+                side_layout->addWidget(m_object_info);
+
             main_area_layout->addWidget(m_side_bar);
 
-            // ***** QGraphicsView (DrPlaygroundView)
+            // ***** Initialize QGraphicsScene for use in DrPlaygroundView
             m_play_scene = new QGraphicsScene();
+            connect(m_play_scene, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
+
+            // ***** QGraphicsView (DrPlaygroundView)
             m_play_view = new DrPlaygroundView(m_play_scene, m_playground);
             m_play_view->setObjectName(QStringLiteral("playView"));
             m_play_view->setAcceptDrops(false);
@@ -80,68 +106,6 @@ void FormPlayground::buildForm() {
     m_grip =  new QSizeGrip(this);
     m_grip2 = new QSizeGrip(m_inner_widget);
 }
-
-
-//####################################################################################
-//##        Adds QGraphicsItems to Represent Playground Toys
-//####################################################################################
-QGraphicsLineItem* FormPlayground::addGraphicsLine(DrToy *toy, QColor color) {
-    // Create new LineItem
-    QGraphicsLineItem *line = new QGraphicsLineItem();
-    line->setPen( QPen(color, 2));
-
-    cpVect p1 = cpSegmentShapeGetA(toy->shape);
-    cpVect p2 = cpSegmentShapeGetB(toy->shape);
-    line->setLine(p1.x, -p1.y, p2.x, -p2.y);
-
-    // Store reference to the associated DrToy in the Space
-    line->setData(User_Roles::Key, QVariant::fromValue<DrToy*>(toy));
-
-    // Add to QGraphicsScene
-    m_play_scene->addItem(line);
-    return line;
-}
-
-QGraphicsEllipseItem* FormPlayground::addGraphicsCircle(DrToy *toy, QColor color) {
-    // Create new LineItem
-    DrPlaygroundCircle *circle = new DrPlaygroundCircle();
-    circle->setPen( QPen(color, 2));
-
-    double radius = cpCircleShapeGetRadius(toy->shape);
-    circle->setPos(QPointF(toy->m_position.x(), -toy->m_position.y()));
-    circle->setRect( QRectF(-radius, -radius, radius*2.0, radius*2.0) );
-
-    // Store reference to the associated DrToy in the Space
-    circle->setData(User_Roles::Key, QVariant::fromValue<DrToy*>(toy));
-
-    // Add to QGraphicsScene
-    m_play_scene->addItem(circle);
-    return circle;
-}
-
-
-QGraphicsRectItem* FormPlayground::addGraphicsBox(DrToy *toy, QColor color) {
-    // Create new LineItem
-    DrPlaygroundBox *box = new DrPlaygroundBox();
-    box->setPen( QPen(color, 2));
-
-    box->setPos(QPointF(toy->m_position.x(), -toy->m_position.y()));
-    box->setRect( QRectF(-(toy->m_width/2.0), -(toy->m_height/2.0), toy->m_width, toy->m_height) );
-
-    // Store reference to the associated DrToy in the Space
-    box->setData(User_Roles::Key, QVariant::fromValue<DrToy*>(toy));
-
-    // Add to QGraphicsScene
-    m_play_scene->addItem(box);
-    return box;
-}
-
-
-
-
-
-
-
 
 
 

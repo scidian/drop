@@ -5,6 +5,7 @@
 //
 //
 //
+#include <QApplication>
 #include <QMouseEvent>
 #include <QPushButton>
 #include <QSizeGrip>
@@ -48,7 +49,7 @@ FormPlayground::FormPlayground(QWidget *parent) : QWidget(parent) {
 
     // ***** Build Space and start update timer
     m_playground->buildSpace();
-    startTimers();
+    stopTimers();                                           // Call this to enable movable items while update timer is not running
 }
 
 
@@ -68,17 +69,39 @@ void FormPlayground::resizeEvent(QResizeEvent *event) {
 
 
 //######################################################################################################
-//##    Update Engine
+//##    Timers
 //######################################################################################################
 void FormPlayground::startTimers() {
+    m_start_timers->setEnabled(false);
+    m_stop_timers->setEnabled(true);
+    for (auto item : m_play_scene->items()) {
+        item->setFlag(QGraphicsItem::ItemIsMovable, false);
+        item->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, false);
+    }
     m_time_update =  Clock::now();
-    m_update_timer->start( 1 );                         // Timeout of zero will call this timeout every pass of the event loop
+    m_update_timer->start( 1 );                             // Timeout of zero will call this timeout every pass of the event loop
 }
 void FormPlayground::stopTimers() {
+    m_start_timers->setEnabled(true);
+    m_stop_timers->setEnabled(false);
     m_update_timer->stop();
+    do { qApp->processEvents(); } while (m_running);        // Make sure we're not running updateEngine before we turn on ItemSendsScenePositionChanges
+    for (auto item : m_play_scene->items()) {
+        item->setFlag(QGraphicsItem::ItemIsMovable, true);
+        item->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
+    }
+}
+void FormPlayground::resetWorld() {
+    m_update_timer->stop();
+    m_playground->clearSpace();
+    m_playground->buildSpace();
+    stopTimers();                                           // Call this to enable movable items while update timer is not running
 }
 
-// Main Update Routine, connected to m_update_timer
+
+//######################################################################################################
+//##    Main Update Routine, connected to m_update_timer
+//######################################################################################################
 void FormPlayground::updateEngine() {
     if (!m_playground->has_scene) return;
     m_running = true;
@@ -95,6 +118,27 @@ void FormPlayground::updateEngine() {
 }
 
 
+//######################################################################################################
+//##    QGraphicsScene selection changed
+//######################################################################################################
+void FormPlayground::selectionChanged() {
+    if (m_play_scene->selectedItems().count() < 1) {
+        setObjectInfo("<center>No Item Selected</center>");
+        return;
+    }
+
+    QGraphicsItem *item = m_play_scene->selectedItems().first();
+    DrToy *toy = item->data(User_Roles::Toy).value<DrToy*>();
+
+    QString info;
+    info += "<center><b>Object Info</b></center><br>";
+    info += "<b>Body Type:</b> " + Dr::StringFromBodyType(toy->body_type) + "<br>";
+    info += "<b>Shape Type:</b> " + Dr::StringFromShapeType(toy->shape_type) + "<br>";
+    info += "<b>Friction:</b> " + QString::number( cpShapeGetFriction(toy->shape) ) + "<br>";
+    info += "<b>Bounce:</b> " + QString::number( cpShapeGetElasticity(toy->shape)) + "<br>";
+
+    setObjectInfo(info);
+}
 
 
 

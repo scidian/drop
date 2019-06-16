@@ -14,6 +14,9 @@
 #include "chipmunk/chipmunk.h"
 #include "enums_engine.h"
 
+// Forward Declarations
+class DrPlayground;
+
 // Local Constants
 constexpr double    c_friction =  -1;                   // Flag for add**** call to use world friction setting
 constexpr double    c_bounce =    -1;                   // Flag for add**** call to use world bounce setting
@@ -26,14 +29,18 @@ class DrToy
 {
 
 public:
+    // ***** External Borrowed Objects
+    DrPlayground       *m_playground;           // Parent DrPlayground
+
+
     // ***** Object Body and Shape
-    cpBody             *body;               // Physical Body of object
-    Body_Type           body_type;          // Body_Type
+    cpBody             *body;                   // Physical Body of object
+    Body_Type           body_type;              // Body_Type
 
-    cpShape            *shape;              // Collision Shape of object
-    Shape_Type          shape_type;         // Shape_Type
+    cpShape            *shape;                  // Collision Shape of object
+    Shape_Type          shape_type;             // Shape_Type
 
-    QGraphicsItem      *graphic;            // Pointer to the QGraphicsItem that represents this toy on the Playground QGraphicsScene
+    QGraphicsItem      *graphic;                // Pointer to the QGraphicsItem that represents this toy on the Playground QGraphicsScene
 
 
     // ********** Object Component Properties
@@ -112,7 +119,7 @@ public:
 
 
 public:
-    DrToy() {}
+    DrToy(DrPlayground *playground) : m_playground(playground) {}
 
 
 };

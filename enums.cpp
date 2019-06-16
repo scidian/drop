@@ -6,6 +6,7 @@
 //
 //
 #include "enums.h"
+#include "enums_engine.h"
 #include "editor/editor_item.h"
 #include "editor/editor_scene.h"
 #include "project/project_world_stage_object.h"
@@ -79,6 +80,23 @@ QString StringFromPositionFlag(Position_Flags flag) {
         case Position_Flags::Rotate:        return "Rotate";
         case Position_Flags::Move_Item:     return "Move Item";
         case Position_Flags::No_Position:   return "No Position";
+    }
+}
+
+QString StringFromBodyType(Body_Type type) {
+    switch (type) {
+        case Body_Type::Static:             return "Static";
+        case Body_Type::Dynamic:            return "Dynamic";
+        case Body_Type::Kinematic:          return "Kinematic";
+    }
+}
+
+QString StringFromShapeType(Shape_Type type) {
+    switch (type) {
+        case Shape_Type::Segment:           return "Segment";
+        case Shape_Type::Box:               return "Box";
+        case Shape_Type::Circle:            return "Circle";
+        case Shape_Type::Polygon:           return "Polygon";
     }
 }
 

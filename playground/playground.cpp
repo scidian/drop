@@ -19,7 +19,22 @@ DrPlayground::~DrPlayground() {
 }
 
 
+//######################################################################################################
+//##    Returns object at point in Space, or nullptr if there is none
+//######################################################################################################
+DrToy* DrPlayground::findToyAtPoint(cpVect point, double max_distance) {
+    DrToy* toy = nullptr;
+    cpShape *shape = nullptr;
 
+    cpPointQueryInfo *query_info {};
+    shape = cpSpacePointQueryNearest( m_space, point, max_distance, CP_SHAPE_FILTER_ALL, query_info );
+
+    if (shape) {
+        toy = static_cast<DrToy*>(cpShapeGetUserData(shape));
+    }
+
+    return toy;
+}
 
 
 

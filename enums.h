@@ -81,6 +81,8 @@ enum User_Roles {
 
     Name,
     Type,
+
+    Toy,
 };
 
 

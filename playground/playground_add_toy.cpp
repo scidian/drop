@@ -20,7 +20,7 @@ constexpr double c_mass_multiplier = 0.002;         // Shapes Area times this mu
 //##    Add Line
 //######################################################################################################
 DrToy* DrPlayground::addLine(Body_Type body_type, QColor color, QPointF p1, QPointF p2, double friction, double bounce, double mass) {
-    DrToy *line = new DrToy();
+    DrToy *line = new DrToy(this);
 
     // Check for default (-1) or custom friction / bounce settings
     line->m_custom_friction = friction;
@@ -73,7 +73,7 @@ DrToy* DrPlayground::addLine(Body_Type body_type, QColor color, QPointF p1, QPoi
 //######################################################################################################
 DrToy* DrPlayground::addCircle(Body_Type body_type, QColor color, double x, double y, double angle, double shape_radius,
                                double friction, double bounce, bool should_collide, bool can_rotate) {
-    DrToy *ball = new DrToy();
+    DrToy *ball = new DrToy(this);
 
     // Check for default (-1) or custom friction / bounce settings
     ball->m_custom_friction = friction;
@@ -136,7 +136,7 @@ DrToy* DrPlayground::addCircle(Body_Type body_type, QColor color, double x, doub
 //######################################################################################################
 DrToy* DrPlayground::addBlock(Body_Type body_type, QColor color, double x, double y, double angle, double width, double height,
                               double friction, double bounce, bool should_collide, bool can_rotate) {
-    DrToy *block = new DrToy();
+    DrToy *block = new DrToy(this);
 
     // Check for default (-1) or custom friction / bounce settings
     block->m_custom_friction = friction;

@@ -6,6 +6,7 @@
 //
 //
 #include "colors/colors.h"
+#include "form_playground.h"
 #include "playground.h"
 #include "playground_toy.h"
 
@@ -15,14 +16,14 @@
 //######################################################################################################
 void DrPlayground::buildSpace() {
 
-    // Sets up cpSpace object
+    // ***** Sets up cpSpace object
     m_space = cpSpaceNew();                             // Creates an empty space
     cpSpaceSetIterations(m_space, m_iterations);        // Sets how many times physics are processed each update
     cpSpaceSetCollisionSlop(m_space, 0.5);              // Allows for a little overlap, makes sleep happier
     cpSpaceSetSleepTimeThreshold(m_space, 0.50);        // Objects will sleep after this long of not moving
     ///cpSpaceSetIdleSpeedThreshold(m_space, 25.0);     // Can set this manually, but also set automatically based on gravity
 
-    // Default gravity / damping settings
+    // ***** Default gravity / damping settings
     m_gravity = cpv(0, -1000);                          // cpVect is a 2D vector and cpv() is a shortcut for initializing them
     m_damping = 1;                                      // Kind of like air drag
     m_friction = 0.8;
@@ -30,6 +31,12 @@ void DrPlayground::buildSpace() {
 
     cpSpaceSetGravity(m_space, m_gravity);
     cpSpaceSetDamping(m_space, m_damping);
+    setWorldInfo();
+
+    // ***** Add Mouse Body that is used to join to objects to move them around with the mouse
+    mouse_body = cpBodyNewKinematic();
+    cpSpaceAddBody(m_space, mouse_body);
+
 
     // Static line segment shapes for the walls
     this->addLine(Body_Type::Static, Qt::gray, QPointF(-1000,  1000), QPointF( 1000,  1000), c_friction, c_bounce, 1);      // Top
@@ -84,6 +91,19 @@ void DrPlayground::buildSpace() {
 }
 
 
+//######################################################################################################
+//##    Populates World Info Label
+//######################################################################################################
+void DrPlayground::setWorldInfo() {
+    QString info;
+    info += "<center><b>World Info</b></center><br>";
+    info += "<b>Time Warp:</b> " + QString::number(m_time_warp) + "<br>";
+    info += "<b>Gavity X:</b> " + QString::number(m_gravity.x) + ", <b>Y:</b> " + QString::number(m_gravity.y) + "<br>";
+    info += "<b>Damping:</b> " + QString::number(m_damping) + "<br>";
+    info += "<b>Friction:</b> " + QString::number(m_friction) + "<br>";
+    info += "<b>Bounce:</b> " + QString::number(m_bounce) + "<br>";
+    m_form_playground->setWorldInfo(info);
+}
 
 
 

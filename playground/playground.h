@@ -52,10 +52,13 @@ private:
     cpFloat         m_bounce;                       // Default object Elasticity, can be overridden on a per body basis
                                                     //      0 = no bounce, 1.0 will give a “perfect” bounce.
                                                     //      Due to inaccuracies in the simulation using 1.0 or greater is not recommended
+
 public:
     // Local Variables
     Toys            objects;                        // Holds all objects shown in cpSpace
     bool            has_scene = false;              // True after a scene has been loaded into cpSpace
+
+    cpBody         *mouse_body;                     // A body to use for mouse tracking / grabbing
 
 public:
     // Constructor / Destrcutor / Cleanup
@@ -71,11 +74,15 @@ public:
 
     void        buildSpace();
     void        clearSpace();
+    DrToy*      findToyAtPoint(cpVect point, double max_distance);
     void        removeObject(DrToy *toy);
+    void        setWorldInfo();
     void        updateSpace(double time_passed);
     void        updateSpaceHelper();
+    void        wakeAllBodies();
 
     // Getters / Setters
+    cpSpace*            getSpace() { return m_space; }
     cpFloat             getTimeStepAsMilliseconds() { return (1000.0 * m_time_step); }
 
 };

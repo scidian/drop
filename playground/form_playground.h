@@ -10,6 +10,8 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QLabel>
+#include <QPushButton>
 #include <QSizeGrip>
 #include <QTimer>
 #include <QWidget>
@@ -41,7 +43,14 @@ private:
     // Widgets
     QWidget             *m_inner_widget;                    // Container widget, allows for a double form border
     QSizeGrip           *m_grip, *m_grip2;
+
     QWidget             *m_side_bar;
+    QPushButton         *m_start_timers;
+    QPushButton         *m_stop_timers;
+    QPushButton         *m_reset_world;
+    QLabel              *m_world_info;
+    QLabel              *m_object_info;
+
     QWidget             *m_main_area;
     DrPlaygroundView    *m_play_view;
     QGraphicsScene      *m_play_scene;
@@ -65,16 +74,22 @@ public:
     QGraphicsEllipseItem*   addGraphicsCircle(DrToy *toy, QColor color);
     QGraphicsRectItem*      addGraphicsBox(DrToy *toy, QColor color);
     void                    buildForm();
-    void                    startTimers();
-    void                    stopTimers();
     void                    updateGraphicsView();
 
     // Getters / Setters
     QGraphicsScene*         getScene() { return m_play_scene; }
 
-public slots:
-    void                    updateEngine();
+    void                    setObjectInfo(QString new_info) { m_object_info->setText(new_info); }
+    void                    setWorldInfo(QString new_info) { m_world_info->setText(new_info); }
 
+
+public slots:
+    void        updateEngine();
+
+    void        selectionChanged();
+    void        startTimers();
+    void        stopTimers();
+    void        resetWorld();
 };
 
 
@@ -91,15 +106,19 @@ private:
      DrPlayground        *m_playground;                     // Class that holds the Playground Physics Space
 
     // Display Variables
-    int          m_zoom = 200;                              // Zoom level of current view, 200 is 50% - 250 is 100%
-    double       m_zoom_scale = 1;                          // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
+    int             m_zoom = 200;                           // Zoom level of current view, 200 is 50% - 250 is 100%
+    double          m_zoom_scale = 1;                       // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
+
+    cpConstraint   *mouse_joint = nullptr;                  // Joint to use to attach to mouse
 
 public:
     // Constructor / Destructor
     DrPlaygroundView(QGraphicsScene *scene, DrPlayground *playground) : QGraphicsView(scene), m_playground(playground) { }
 
     // Event Overrides
+    void            mouseMoveEvent(QMouseEvent *event) override;
     void            mousePressEvent(QMouseEvent *event) override;
+    void            mouseReleaseEvent(QMouseEvent *event) override;
 #if QT_CONFIG(wheelevent)
     virtual void    wheelEvent(QWheelEvent *event) override;                                // Inherited from QWidget
 #endif
@@ -109,6 +128,23 @@ public:
 
     // Getters / Setters
     void            setZoomLevel(int level) { m_zoom = level; }
+};
+
+
+//####################################################################################
+//##    DrPlaygroundLine
+//##        A sub classed QGraphicsLineItem for custom drawing
+//############################
+class DrPlaygroundLine : public QGraphicsLineItem
+{
+public:
+    // Constructor / Destructor
+    DrPlaygroundLine() {}
+
+    // Event Overrides
+    virtual QVariant        itemChange(GraphicsItemChange change, const QVariant &value) override;
+    virtual void            paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
+    virtual QPainterPath    shape() const override;
 };
 
 
@@ -123,13 +159,14 @@ public:
     DrPlaygroundCircle() {}
 
     // Event Overrides
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
+    virtual QVariant    itemChange(GraphicsItemChange change, const QVariant &value) override;
+    virtual void        paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 };
 
 
 //####################################################################################
 //##    DrPlaygroundBox
-//##        A sub classed QGraphicsEllipseItem for custom drawing
+//##        A sub classed QGraphicsRectItem for custom drawing
 //############################
 class DrPlaygroundBox : public QGraphicsRectItem
 {
@@ -138,7 +175,8 @@ public:
     DrPlaygroundBox() {}
 
     // Event Overrides
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
+    virtual QVariant    itemChange(GraphicsItemChange change, const QVariant &value) override;
+    virtual void        paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 };
 
 

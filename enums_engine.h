@@ -8,6 +8,8 @@
 #ifndef ENUMS_ENGINE_H
 #define ENUMS_ENGINE_H
 
+#include <QString>
+
 //####################################################################################
 //##    !!!!! #TEMP: Temporary Demo Enums
 //############################
@@ -60,7 +62,13 @@ enum class Collision_Type {
 };
 
 
-
+//####################################################################################
+//##    Some public forward function declarations for some enum functions
+//############################
+namespace Dr {
+    QString     StringFromBodyType(Body_Type type);
+    QString     StringFromShapeType(Shape_Type type);
+}
 
 
 

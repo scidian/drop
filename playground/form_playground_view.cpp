@@ -12,6 +12,7 @@
 
 #include "colors/colors.h"
 #include "form_playground.h"
+#include "helper.h"
 #include "playground.h"
 #include "playground_toy.h"
 
@@ -27,40 +28,50 @@ void FormPlayground::updateGraphicsView() {
 
 
 //####################################################################################
-//##        Custom Item Painting
-//####################################################################################
-void DrPlaygroundCircle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    QGraphicsEllipseItem::paint(painter, option, widget);
-    painter->setPen( this->pen() );
-    painter->drawLine( 0, 0, 0, -static_cast<int>(this->rect().height() / 2));
-}
-
-void DrPlaygroundBox::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    QGraphicsRectItem::paint(painter, option, widget);
-    painter->setPen( this->pen() );
-    painter->drawLine( 0, 0, 0, -static_cast<int>(this->rect().height() / 2));
-}
-
-
-//####################################################################################
 //##        Mouse Handling
 //####################################################################################
 void DrPlaygroundView::mousePressEvent(QMouseEvent *event) {
-
     QRect box { -990, -990, 1980, 1980 };
     QPointF pos = mapToScene( event->pos() );
 
     if (event->button() == Qt::MouseButton::LeftButton) {
-        if (box.contains(pos.toPoint())) {
-            m_playground->addCircle(Body_Type::Dynamic, Dr::GetColor(Window_Colors::Icon_Light), pos.x(), -pos.y(), 0, 50, c_friction, c_bounce, true, true);
+        cpVect cp_pos = cpv(mapToScene(event->pos()).x(), -mapToScene(event->pos()).y());
+        DrToy *click = m_playground->findToyAtPoint(cp_pos, 5);
+
+        if (click) {
+            if (click->body_type != Body_Type::Static) {
+                mouse_joint = cpPivotJointNew(m_playground->mouse_body, click->body, cpBodyGetPosition(click->body));
+                cpSpaceAddConstraint( m_playground->getSpace(), mouse_joint );
+            }
         }
+
     } else if (event->button() == Qt::MouseButton::RightButton) {
         if (box.contains(pos.toPoint())) {
-            m_playground->addBlock(Body_Type::Dynamic, Dr::GetColor(Window_Colors::Text), pos.x(), -pos.y(), 0, 50, 50, c_friction, c_bounce, true, true);
+            m_playground->addCircle(Body_Type::Dynamic, Dr::GetColor(Window_Colors::Icon_Light), pos.x(), -pos.y(), 0, 50, c_friction, c_bounce, true, true);
+            ///m_playground->addBlock(Body_Type::Dynamic, Dr::GetColor(Window_Colors::Text), pos.x(), -pos.y(), 0, 50, 50, c_friction, c_bounce, true, true);
         }
     }
 
+    QGraphicsView::mousePressEvent(event);
 }
+
+void DrPlaygroundView::mouseReleaseEvent(QMouseEvent *event) {
+    if (event->button() == Qt::MouseButton::LeftButton) {
+        if (mouse_joint) {
+            cpSpaceRemoveConstraint(m_playground->getSpace(), mouse_joint);
+            cpConstraintFree(mouse_joint);
+            mouse_joint = nullptr;
+        }
+    }
+    QGraphicsView::mouseReleaseEvent(event);
+}
+
+void DrPlaygroundView::mouseMoveEvent(QMouseEvent *event) {
+    cpVect pos = cpv(mapToScene(event->pos()).x(), -mapToScene(event->pos()).y());
+    cpBodySetPosition(m_playground->mouse_body, pos);
+    QGraphicsView::mouseMoveEvent(event);
+}
+
 
 //####################################################################################
 //##        Wheel Event / Zoom Functions

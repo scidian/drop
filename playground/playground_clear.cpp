@@ -54,6 +54,12 @@ void DrPlayground::clearSpace() {
     }
 }
 
+//######################################################################################################
+//##    Wake All Sleeping Bodies
+//######################################################################################################
+static void WakeBody(cpBody *body, cpSpace *) { cpBodyActivate(body); }
+void DrPlayground::wakeAllBodies() { if (has_scene) cpSpaceEachBody(m_space, cpSpaceBodyIteratorFunc(WakeBody), m_space); }
+
 
 //######################################################################################################
 //##    Removes an object from the Space

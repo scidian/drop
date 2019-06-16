@@ -87,6 +87,8 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget) {
         "       background: " + Dr::GetColor(Window_Colors::Midlight).name() + "; }"
         " QPushButton#button:pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
+        " QPushButton#button:disabled { color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
 
         //################################################################################
         //##    Scroll bars, used mostly in QGraphicsView
