@@ -11,7 +11,7 @@
 //##    Constructor
 //######################################################################################################
 DrPlayground::DrPlayground(FormPlayground *form_playground) : m_form_playground(form_playground) {
-    buildSpace();
+
 }
 
 DrPlayground::~DrPlayground() {

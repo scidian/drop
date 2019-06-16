@@ -1,61 +1,22 @@
 //
-//      Created by Stephens Nunnally on 3/24/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 6/15/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
 //
 //
 //
+#include <QLabel>
 #include <QMouseEvent>
 #include <QPushButton>
 #include <QSizeGrip>
 #include <QStatusBar>
 #include <QVBoxLayout>
 
-#include "chipmunk/chipmunk.h"
 #include "form_playground.h"
 #include "globals.h"
 #include "helper.h"
-#include "playground/playground.h"
-#include "playground/playground_toy.h"
-#include "project/project.h"
 #include "style/style.h"
 #include "widgets/widgets_event_filters.h"
-
-//####################################################################################
-//##        Constructor
-//####################################################################################
-FormPlayground::FormPlayground(QWidget *parent) : QWidget(parent) {
-
-    // ***** Set up initial window
-    setWindowFlags(Qt::WindowType::FramelessWindowHint | Qt::WindowType::Tool);
-    setMinimumSize(QSize(600, 400));
-    resize(1200, 900);
-    setMouseTracking(true);
-    setObjectName(QStringLiteral("childForm"));
-    Dr::ApplyCustomStyleSheetFormatting(this);
-
-    // ***** Center window on screen and install dragging event filter
-    Dr::CenterFormOnScreen(parent, this);
-    this->installEventFilter(new DrFilterClickAndDragWindow(this));
-
-    buildForm();
-
-    m_playground = new DrPlayground(this);
-}
-
-
-//####################################################################################
-//##        Keeps container widget same size as form
-//####################################################################################
-void FormPlayground::resizeEvent(QResizeEvent *event) {
-    QWidget::resizeEvent(event);
-
-    Dr::ApplyRoundedCornerMask(this, 8, 8);
-
-    m_grip->setGeometry( this->width() - 10, this->height() - 10, 15, 15);
-    m_grip2->setGeometry(this->width() - 10, this->height() - 10, 15, 15);
-}
-
 
 //####################################################################################
 //##        Builds Form
@@ -84,7 +45,7 @@ void FormPlayground::buildForm() {
 
             // ***** QGraphicsView (DrPlaygroundView)
             m_play_scene = new QGraphicsScene();
-            m_play_view = new DrPlaygroundView(m_play_scene);
+            m_play_view = new DrPlaygroundView(m_play_scene, m_playground);
             m_play_view->setObjectName(QStringLiteral("playView"));
             m_play_view->setAcceptDrops(false);
             m_play_view->setFrameShape(QFrame::NoFrame);
@@ -93,10 +54,10 @@ void FormPlayground::buildForm() {
             m_play_view->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);
             m_play_view->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
             m_play_view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
-            m_play_view->setSceneRect(-1500, -1500, 3000, 3000);
+            m_play_view->setSceneRect(-1000, -1000, 2000, 2000);
 
             // Set initial zoom level
-            m_play_view->setZoomLevel(150);
+            m_play_view->setZoomLevel(180);
             m_play_view->zoomInOut(0);
 
             main_area_layout->addWidget(m_play_view);
@@ -140,6 +101,41 @@ QGraphicsLineItem* FormPlayground::addGraphicsLine(DrToy *toy, QColor color) {
     m_play_scene->addItem(line);
     return line;
 }
+
+QGraphicsEllipseItem* FormPlayground::addGraphicsCircle(DrToy *toy, QColor color) {
+    // Create new LineItem
+    DrPlaygroundCircle *circle = new DrPlaygroundCircle();
+    circle->setPen( QPen(color, 2));
+
+    double radius = cpCircleShapeGetRadius(toy->shape);
+    circle->setPos(QPointF(toy->m_position.x(), -toy->m_position.y()));
+    circle->setRect( QRectF(-radius, -radius, radius*2.0, radius*2.0) );
+
+    // Store reference to the associated DrToy in the Space
+    circle->setData(User_Roles::Key, QVariant::fromValue<DrToy*>(toy));
+
+    // Add to QGraphicsScene
+    m_play_scene->addItem(circle);
+    return circle;
+}
+
+
+QGraphicsRectItem* FormPlayground::addGraphicsBox(DrToy *toy, QColor color) {
+    // Create new LineItem
+    DrPlaygroundBox *box = new DrPlaygroundBox();
+    box->setPen( QPen(color, 2));
+
+    box->setPos(QPointF(toy->m_position.x(), -toy->m_position.y()));
+    box->setRect( QRectF(-(toy->m_width/2.0), -(toy->m_height/2.0), toy->m_width, toy->m_height) );
+
+    // Store reference to the associated DrToy in the Space
+    box->setData(User_Roles::Key, QVariant::fromValue<DrToy*>(toy));
+
+    // Add to QGraphicsScene
+    m_play_scene->addItem(box);
+    return box;
+}
+
 
 
 

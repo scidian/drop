@@ -12,13 +12,13 @@
 #include <QToolButton>
 
 #include "enums_form_main.h"
-#include "form_playground.h"
 #include "form_fonts.h"
 #include "form_main.h"
 #include "form_popup.h"
 #include "form_settings.h"
 #include "globals.h"
 #include "helper.h"
+#include "playground/form_playground.h"
 #include "style/style.h"
 #include "widgets/widgets_event_filters.h"
 

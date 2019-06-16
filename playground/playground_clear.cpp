@@ -8,7 +8,7 @@
 #include <QApplication>
 #include <QGraphicsScene>
 
-#include "forms/form_playground.h"
+#include "form_playground.h"
 #include "playground.h"
 #include "playground_toy.h"
 

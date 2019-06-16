@@ -215,8 +215,6 @@ DrEngineObject* DrEngineWorld::addBlock(Body_Type body_type, long texture_number
     cpShapeSetSensor( shape, !should_collide );
 
 
-
-
     // If we don't want the body to rotate, overwrite the precalculated moment of inertia with infinity
     block->setCanRotate( can_rotate );
     if (!can_rotate) cpBodySetMoment( block->body, static_cast<double>(INFINITY) );
@@ -225,6 +223,7 @@ DrEngineObject* DrEngineWorld::addBlock(Body_Type body_type, long texture_number
     objects.append( block );
     return block;
 }
+
 
 
 //######################################################################################################

@@ -51,13 +51,11 @@ private:
 
     // Timer Variables
     QTimer             *m_update_timer;
-
     Clock::time_point   m_time_update;                          // Checks time between SpaceStep calls
     Clock::time_point   m_time_render;                          // Checks time between paintGL calls
     Clock::time_point   m_time_camera;                          // Checks time between moveCamera calls
     Clock::time_point   m_time_physics;                         // Stores time since last physics call
     Clock::time_point   m_time_frame;                           // Stores time since last paint call
-
     bool                m_running = false;
 
 

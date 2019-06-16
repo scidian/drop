@@ -63,11 +63,21 @@ public:
     ~DrPlayground();
 
     // Space Construction / Handling
-    DrToy*          addLine(Body_Type body_type, QColor color, QPointF p1, QPointF p2, double friction, double bounce, double mass);
+    DrToy*      addLine(  Body_Type body_type, QColor color, QPointF p1, QPointF p2, double friction, double bounce, double mass);
+    DrToy*      addCircle(Body_Type body_type, QColor color, double x, double y, double angle, double shape_radius,
+                          double friction, double bounce, bool should_collide, bool can_rotate);
+    DrToy*      addBlock( Body_Type body_type, QColor color, double x, double y, double angle, double width, double height,
+                          double friction, double bounce, bool should_collide, bool can_rotate);
 
-    void            buildSpace();
-    void            clearSpace();
-    void            removeObject(DrToy *toy);
+    void        buildSpace();
+    void        clearSpace();
+    void        removeObject(DrToy *toy);
+    void        updateSpace(double time_passed);
+    void        updateSpaceHelper();
+
+    // Getters / Setters
+    cpFloat             getTimeStepAsMilliseconds() { return (1000.0 * m_time_step); }
+
 };
 
 

@@ -41,12 +41,6 @@ public:
     //
     // ***** Object Basic Settings
     bool            m_does_collide = true;          // Set to false to have this object not collide with anything
-    long            m_texture_number;               // Reference to which texture to use from Engine->EngineTexture map
-
-    float           m_scale_x = 1.0f;               // Scale of object in world
-    float           m_scale_y = 1.0f;               // Scale of object in world
-    float           m_alpha = 1.0;                  // Transparency of object (0.0 invisible, 1.0 opaque)
-    double          m_z_order = 0.0;                // Used for layering
 
     // ***** Object Properties - Bounce / Friction
     double          m_custom_friction = c_friction; // Defaults to c_friction (-1) if this item uses global m_friction, otherwise stores custom friction
@@ -109,11 +103,12 @@ public:
     //
     bool        m_should_process = true;                    // True while object exists in Space
     bool        m_has_been_processed = false;               // Set to true after an initial updateSpace call has been ran once while the object was in the Space
+    bool        m_remove = false;                           // Set to true to mark for removal
 
     double      m_angle = 0.0;                              // Current object->body angle, updated every frame by updateSpaceHelper()
     QPointF     m_position;                                 // Current object->body posiiton, updated every frame by updateSpaceHelper()
-    QPointF     m_previous_position;                        // Previous frame position, updated every frame by updateSpaceHelper()
-
+    double      m_width;                                    // Stores width of Box toys
+    double      m_height;                                   // Stores height of Box toys
 
 
 public:
