@@ -151,7 +151,9 @@ bool DrFilterClickAndDragWindow::eventFilter(QObject *obj, QEvent *event) {
             m_is_moving = true;
 
         } else if (event->type() == QEvent::MouseMove) {
-            if (m_is_moving) {
+            if (mouse_event->buttons() == Qt::NoButton) {
+                m_is_moving = false;
+            } else if (m_is_moving) {
                 QPoint diff = mouse_event->pos() - m_press_pos;
                 widget->window()->move( widget->window()->pos() + diff );
             }

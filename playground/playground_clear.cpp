@@ -1,16 +1,16 @@
 //
-//      Created by Stephens Nunnally on 5/12/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 6/15/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
 //
 //
 //
 #include <QApplication>
-#include <QDebug>
+#include <QGraphicsScene>
 
-#include "engine.h"
-#include "engine_object.h"
-#include "engine_world.h"
+#include "forms/form_playground.h"
+#include "playground.h"
+#include "playground_toy.h"
 
 //######################################################################################################
 //##    Chipmunk Callbacks
@@ -35,27 +35,22 @@ static void ChipmunkFreeSpaceChildren(cpSpace *space) {
 // Used for constraint iterator to get a list of all constraints attached to a body
 static void GetBodyJointList(cpBody *, cpConstraint *constraint, QVector<cpConstraint*> *joint_list) { joint_list->append(constraint); }
 
-// Used for shape iterator to get a list of all shapes attached to a body
-static void GetBodyShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_list) { shape_list->append(shape); }
-
-
-//######################################################################################################
-//##    Wake All Sleeping Bodies
-//######################################################################################################
-static void WakeBody(cpBody *body, cpSpace *) { cpBodyActivate(body); }
-void DrEngineWorld::wakeAllBodies() { if (has_scene) cpSpaceEachBody(m_space, cpSpaceBodyIteratorFunc(WakeBody), m_space); }
-
 
 //######################################################################################################
 //##    Clear Space
 //######################################################################################################
-void DrEngineWorld::clearSpace() {
+void DrPlayground::clearSpace() {
     if (has_scene) {
         has_scene = false;
         qApp->processEvents();
         ChipmunkFreeSpaceChildren(m_space);
         cpSpaceFree(m_space);
         objects.clear();
+
+        for (auto graphic : m_form_playground->getScene()->items()) {
+            m_form_playground->getScene()->removeItem( graphic );
+            delete graphic;
+        }
     }
 }
 
@@ -63,26 +58,33 @@ void DrEngineWorld::clearSpace() {
 //######################################################################################################
 //##    Removes an object from the Space
 //######################################################################################################
-void DrEngineWorld::removeObject(DrEngineObject *object) {
-    object->setShouldProcess(false);
+void DrPlayground::removeObject(DrToy *toy) {
+    toy->m_should_process = false;
 
-    QVector<cpShape*> shape_list;
-    cpBodyEachShape(object->body, cpBodyShapeIteratorFunc(GetBodyShapeList), &shape_list);
-    for (auto shape : shape_list) {
-        cpSpaceRemoveShape(m_space, shape);
-        cpShapeFree(shape);
-    }
+    cpSpaceRemoveShape(m_space, toy->shape);
+    cpShapeFree(toy->shape);
 
     QVector<cpConstraint*> joint_list;
-    cpBodyEachConstraint(object->body, cpBodyConstraintIteratorFunc(GetBodyJointList), &joint_list);
+    cpBodyEachConstraint(toy->body, cpBodyConstraintIteratorFunc(GetBodyJointList), &joint_list);
     for (auto joint : joint_list) {
         cpSpaceRemoveConstraint(m_space, joint);
         cpConstraintFree(joint);
     }
 
-    cpSpaceRemoveBody(m_space, object->body);
-    cpBodyFree(object->body);
+    cpSpaceRemoveBody(m_space, toy->body);
+    cpBodyFree(toy->body);
+
+    if (toy->graphic->scene()) {
+        toy->graphic->scene()->removeItem( toy->graphic );
+        delete toy->graphic;
+    }
 }
+
+
+
+
+
+
 
 
 

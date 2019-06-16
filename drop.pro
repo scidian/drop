@@ -122,6 +122,7 @@ SOURCES += \
     forms/form_main_toolbar_build.cpp \
     forms/form_main_toolbar_button_click.cpp \
     forms/form_playground.cpp \
+    forms/form_playground_view.cpp \
     forms/form_popup.cpp \
     forms/form_popup_colors.cpp \
     forms/form_popup_grid_snap.cpp \
@@ -140,6 +141,10 @@ SOURCES += \
     opengl/opengl_render_space.cpp \
     opengl/opengl_render_test_cube.cpp \
     playground/playground.cpp \
+    playground/playground_add_toy.cpp \
+    playground/playground_build.cpp \
+    playground/playground_clear.cpp \
+    playground/playground_toy.cpp \
     project/project.cpp \
     project/project_asset.cpp \
     project/project_font.cpp \
@@ -222,6 +227,7 @@ HEADERS += \
     library/poly_partition.h \
     opengl/opengl.h \
     playground/playground.h \
+    playground/playground_toy.h \
     project/project.h \
     project/project_asset.h \
     project/project_font.h \

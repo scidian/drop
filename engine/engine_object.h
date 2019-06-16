@@ -58,7 +58,7 @@ extern QString      g_info;
 
 //####################################################################################
 //##    DrEngineObject
-//##        Holds on object for use in a cpSpace
+//##        Holds one object for use in a cpSpace
 //############################
 class DrEngineObject
 {

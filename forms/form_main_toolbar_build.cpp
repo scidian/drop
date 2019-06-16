@@ -207,7 +207,7 @@ void FormMain::buildToolBar()
         tool = createToolbarButton(QStringLiteral("buttonPlayground"), Advisor_Info::Settings_Playground, 34, 26, false);
         toolbarLayoutSettings->addWidget(tool);
         connect(tool, &QPushButton::clicked, [this] () {
-            FormPlayground *playground = new FormPlayground(m_project, this);
+            FormPlayground *playground = new FormPlayground(this);
             playground->show();
         });
 
