@@ -23,6 +23,7 @@
 class DrPlayground;
 class DrPlaygroundView;
 class DrProject;
+class DrQTripleSpinBox;
 
 // QVariant Declaration for storing DrToy pointers with QWidget setData functions
 Q_DECLARE_METATYPE(DrToy*)
@@ -39,19 +40,24 @@ class FormPlayground : public QWidget
 {
     Q_OBJECT
 
-private:
+public:
     // Widgets
     QWidget             *m_inner_widget;                    // Container widget, allows for a double form border
     QSizeGrip           *m_grip, *m_grip2;
 
     QWidget             *m_side_bar;
-    QPushButton         *m_start_timers;
-    QPushButton         *m_stop_timers;
-    QPushButton         *m_reset_world;
+    QPushButton         *m_start_timers,    *m_stop_timers,     *m_reset_world;
+
+    QWidget             *m_world_widget;
     QLabel              *m_world_info;
+    QLabel              *m_world_info_time_warp, *m_world_info_gravity, *m_world_info_damping, *m_world_info_friction, *m_world_info_bounce;
+    DrQTripleSpinBox    *m_spin_time_warp, *m_spin_gravity_x, *m_spin_gravity_y;
+
     QLabel              *m_object_info;
     QLabel              *m_debug;
 
+
+private:
     QWidget             *m_main_area;
     DrPlaygroundView    *m_play_view;
     QGraphicsScene      *m_play_scene;
@@ -75,6 +81,7 @@ public:
     QGraphicsLineItem*      addGraphicsLine(DrToy *toy, QColor color);
     QGraphicsEllipseItem*   addGraphicsCircle(DrToy *toy, QColor color);
     QGraphicsRectItem*      addGraphicsBox(DrToy *toy, QColor color);
+    void                    addItemToScene(DrToy *toy, QGraphicsItem *item);
     void                    buildForm();
     void                    disableItemFlags();
     void                    enableItemFlags();
@@ -84,15 +91,13 @@ public:
     QGraphicsScene*         getScene() { return m_play_scene; }
     bool                    isTimerActive() { return m_update_timer->isActive(); }
     bool                    isUpdating() { return m_updating; }
-
     void                    setObjectInfo(QString new_info) { m_object_info->setText(new_info); }
-    void                    setWorldInfo(QString new_info) { m_world_info->setText(new_info); }
 
 
 public slots:
     void        updateEngine();
 
-    void        selectionChanged();
+    void        clickedItem(DrToy *toy);
     void        startTimers();
     void        stopTimers();
     void        resetWorld();
@@ -109,7 +114,8 @@ class DrPlaygroundView : public QGraphicsView
 
 private:
     // External Borrowed Objects
-     DrPlayground        *m_playground;                     // Class that holds the Playground Physics Space
+    FormPlayground      *m_form_playground;                 // Parent FormPlayground
+    DrPlayground        *m_playground;                      // Class that holds the Playground Physics Space
 
     // Display Variables
     int             m_zoom = 200;                           // Zoom level of current view, 200 is 50% - 250 is 100%
@@ -119,7 +125,8 @@ private:
 
 public:
     // Constructor / Destructor
-    DrPlaygroundView(QGraphicsScene *scene, DrPlayground *playground) : QGraphicsView(scene), m_playground(playground) { }
+    DrPlaygroundView(QGraphicsScene *scene, FormPlayground *form, DrPlayground *playground) :
+        QGraphicsView(scene), m_form_playground(form), m_playground(playground) { }
 
     // Event Overrides
     void            mouseMoveEvent(QMouseEvent *event) override;

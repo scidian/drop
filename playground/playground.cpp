@@ -21,6 +21,19 @@ DrPlayground::~DrPlayground() {
 
 
 //######################################################################################################
+//##    Setters
+//######################################################################################################
+void DrPlayground::setGravityX(double gravity_x) {
+    m_gravity.x = gravity_x;
+    cpSpaceSetGravity( m_space, m_gravity);
+}
+void DrPlayground::setGravityY(double gravity_y) {
+    m_gravity.y = gravity_y;
+    cpSpaceSetGravity( m_space, m_gravity);
+}
+
+
+//######################################################################################################
 //##    Returns object at point in Space, or nullptr if there is none
 //######################################################################################################
 DrToy* DrPlayground::findToyAtPoint(cpVect point, double max_distance) {

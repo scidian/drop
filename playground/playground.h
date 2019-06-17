@@ -86,6 +86,9 @@ public:
     cpSpace*            getSpace() { return m_space; }
     cpFloat             getTimeStepAsMilliseconds() { return (1000.0 * m_time_step); }
 
+    void                setGravityX(double gravity_x);
+    void                setGravityY(double gravity_y);
+    void                setTimeWarp(double time_warp) { m_time_warp = time_warp; }
 };
 
 

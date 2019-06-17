@@ -30,7 +30,7 @@ FormPlayground::FormPlayground(QWidget *parent) : QWidget(parent) {
     setWindowFlags(Qt::WindowType::FramelessWindowHint | Qt::WindowType::Tool);
     setMinimumSize(QSize(600, 400));
     resize(1200, 900);
-    setAttribute( Qt::WA_DeleteOnClose, true );             // Make sure this form is deleted when it closes
+    setAttribute( Qt::WA_DeleteOnClose, true );                         // Make sure this form is deleted when it closes
     setMouseTracking(true);
     setObjectName(QStringLiteral("childForm"));
     Dr::ApplyCustomStyleSheetFormatting(this);
@@ -48,12 +48,12 @@ FormPlayground::FormPlayground(QWidget *parent) : QWidget(parent) {
     // ***** Create engine timer and connect
     m_update_timer = new QTimer(this);
     connect(m_update_timer, SIGNAL(timeout()), this, SLOT(updateEngine()));                     // Connect to timer
-    connect(m_play_scene, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));          // Connect to scene selection changed
 
     // ***** Build Space and start update timer
     m_playground->buildSpace();
     m_playground->updateSpace( 0 );
-    stopTimers();                                           // Call this to enable movable items while update timer is not running
+    stopTimers();                                                       // Call this to enable movable items while update timer is not running
+    m_play_view->setFocus();
 }
 
 FormPlayground::~FormPlayground() {
@@ -83,7 +83,7 @@ void FormPlayground::startTimers() {
     m_stop_timers->setEnabled(true);
     disableItemFlags();
     m_time_update = Clock::now();
-    m_update_timer->start( 1 );                             // Timeout of zero will call this timeout every pass of the event loop
+    m_update_timer->start( 1 );                                         // Timeout of zero will call this timeout every pass of the event loop
 }
 void FormPlayground::stopTimers() {
     m_start_timers->setEnabled(true);
@@ -97,24 +97,32 @@ void FormPlayground::resetWorld() {
     m_playground->clearSpace();
     m_playground->buildSpace();
     m_playground->updateSpace( 0 );
-    stopTimers();                                           // Call this to enable movable items while update timer is not running
+    stopTimers();                                                       // Call this to enable movable items while update timer is not running
 }
 
 void FormPlayground::disableItemFlags() {
     for (auto item : m_play_scene->items()) {
         item->setFlag(QGraphicsItem::ItemIsMovable, false);
         item->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, false);
+
+        item->setFlag(QGraphicsItem::ItemIsSelectable, false);          // !!!!! QtBug - Built In Selection was Blocking Event Thread
+        item->setFlag(QGraphicsItem::ItemIsFocusable, false);
     }
 }
 void FormPlayground::enableItemFlags() {
     for (auto item : m_play_scene->items()) {
         item->setFlag(QGraphicsItem::ItemIsMovable, true);
         item->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
+
+        item->setFlag(QGraphicsItem::ItemIsSelectable, false);          // !!!!! QtBug - Built In Selection was Blocking Event Thread
+        item->setFlag(QGraphicsItem::ItemIsFocusable, false);
     }
 }
 
 //######################################################################################################
+//##
 //##    Main Update Routine, connected to m_update_timer
+//##
 //######################################################################################################
 void FormPlayground::updateEngine() {
     if (!m_playground->has_scene) return;
@@ -123,28 +131,25 @@ void FormPlayground::updateEngine() {
     double update_milliseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_update).count() /  1000000.0;
     if (update_milliseconds > m_playground->getTimeStepAsMilliseconds()) {
         m_time_update =  Clock::now();
-        m_playground->updateSpace(update_milliseconds);                      // Physics Engine
-        m_playground->updateSpaceHelper();                                   // Additional Physics Updating
+        m_playground->updateSpace(update_milliseconds);                 // Physics Engine
+        m_playground->updateSpaceHelper();                              // Additional Physics Updating
         updateGraphicsView();
+
+        m_debug->setText(Dr::CurrentTimeAsString());
     }
-    m_debug->setText(Dr::CurrentTimeAsString());
 
     m_updating = false;
 }
 
 
 //######################################################################################################
-//##    QGraphicsScene selection changed
+//##    Selected Different Item
 //######################################################################################################
-void FormPlayground::selectionChanged() {
-    if (m_play_scene->selectedItems().count() < 1) {
+void FormPlayground::clickedItem(DrToy *toy) {
+    if (toy == nullptr) {
         setObjectInfo("<center>No Item Selected</center>");
         return;
     }
-
-    QGraphicsItem *item = m_play_scene->selectedItems().first();
-    DrToy *toy = item->data(User_Roles::Toy).value<DrToy*>();
-    if (!toy) return;
 
     QString info;
     info += "<center><b>Object Info</b></center><br>";

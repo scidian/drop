@@ -6,7 +6,9 @@
 //
 //
 #include "colors/colors.h"
+#include "editor/editor_tree_inspector.h"
 #include "form_playground.h"
+#include "helper.h"
 #include "playground.h"
 #include "playground_toy.h"
 
@@ -31,7 +33,6 @@ void DrPlayground::buildSpace() {
 
     cpSpaceSetGravity(m_space, m_gravity);
     cpSpaceSetDamping(m_space, m_damping);
-    setWorldInfo();
 
     // ***** Add Mouse Body that is used to join to objects to move them around with the mouse
     mouse_body = cpBodyNewKinematic();
@@ -88,6 +89,8 @@ void DrPlayground::buildSpace() {
 
     // Mark Space as Built
     has_scene = true;
+
+    setWorldInfo();
 }
 
 
@@ -95,14 +98,22 @@ void DrPlayground::buildSpace() {
 //##    Populates World Info Label
 //######################################################################################################
 void DrPlayground::setWorldInfo() {
-    QString info;
-    info += "<center><b>World Info</b></center><br>";
-    info += "<b>Time Warp</b>  x " + QString::number(m_time_warp) + "<br>";
-    info += "<b>Gavity X:</b> " + QString::number(m_gravity.x) + ", <b>Y:</b> " + QString::number(m_gravity.y) + "<br>";
-    info += "<b>Damping:</b> " + QString::number(m_damping) + "<br>";
-    info += "<b>Friction:</b> " + QString::number(m_friction) + "<br>";
-    info += "<b>Bounce:</b> " + QString::number(m_bounce) + "<br>";
-    m_form_playground->setWorldInfo(info);
+    m_form_playground->m_spin_time_warp->blockSignals(true);
+    m_form_playground->m_spin_time_warp->setValue(m_time_warp);
+    m_form_playground->m_spin_time_warp->blockSignals(false);
+
+    m_form_playground->m_spin_gravity_x->blockSignals(true);
+    m_form_playground->m_spin_gravity_x->setValue(m_gravity.x);
+    m_form_playground->m_spin_gravity_x->blockSignals(false);
+
+    m_form_playground->m_spin_gravity_y->blockSignals(true);
+    m_form_playground->m_spin_gravity_y->setValue(m_gravity.y);
+    m_form_playground->m_spin_gravity_y->blockSignals(false);
+
+    m_form_playground->m_world_info_damping->setText( "<b>Damping:</b> " +  Dr::RemoveTrailingDecimals(m_damping, 3));
+
+    m_form_playground->m_world_info_friction->setText("<b>Friction:</b> " + Dr::RemoveTrailingDecimals(m_friction, 3));
+    m_form_playground->m_world_info_bounce->setText(  "<b>Bounce:</b> " +   Dr::RemoveTrailingDecimals(m_bounce, 3));
 }
 
 
