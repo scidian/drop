@@ -65,11 +65,13 @@ class DrEngineObject
 
 public:
     // ***** Object Body and Shapes
-    cpBody             *body;               // Physical Body of object
-    Body_Type           body_type;          // Body_Type
+    cpBody             *body;                   // Physical Body of object
+    Body_Type           body_type;              // Body_Type
 
-    QVector<cpShape*>   shapes;             // Collision Shapes of object
-    ShapeMap            shape_type;         // Shape Types of Shapes of Object
+    QVector<cpShape*>   shapes;                 // Collision Shapes of object
+    ShapeMap            shape_type;             // Shape Types of Shapes of Object
+
+    double              z_order = 0.0;          // Used for layering, needs to be public for sorting
 
 
 private:
@@ -83,7 +85,6 @@ private:
     float           m_scale_x = 1.0f;               // Scale of object in world
     float           m_scale_y = 1.0f;               // Scale of object in world
     float           m_alpha = 1.0;                  // Transparency of object (0.0 invisible, 1.0 opaque)
-    double          m_z_order = 0.0;                // Used for layering
 
     // ***** Object Properties - Camera
     long            m_active_camera = c_no_camera;  // Set to ID of last camera that followed this object, 0 == no camera
@@ -204,7 +205,7 @@ public:
     const float&    getScaleX() { return m_scale_x; }
     const float&    getScaleY() { return m_scale_y; }
     const float&    getOpacity() { return m_alpha; }
-    const double&   getZOrder() { return m_z_order; }
+    const double&   getZOrder() { return z_order; }
 
     void            setDoesCollide(bool should_collide) { m_does_collide = should_collide; }
     void            setTextureNumber(long texture_number) { m_texture_number = texture_number; }
@@ -214,7 +215,7 @@ public:
     void            setScaleY(double new_scale_y) { m_scale_y = static_cast<float>(new_scale_y); }
     void            setOpacity(float new_alphaf)  { m_alpha = new_alphaf; }
     void            setOpacity(double new_alphaf) { m_alpha = static_cast<float>(new_alphaf); }
-    void            setZOrder(double new_z_order) { m_z_order = new_z_order; }
+    void            setZOrder(double new_z_order) { z_order = new_z_order; }
 
     // Object Properties - Camera
     const long&     getActiveCameraKey() { return m_active_camera; }

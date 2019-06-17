@@ -32,6 +32,10 @@ void OpenGL::cullingOff() {     glDisable( GL_CULL_FACE ); }
 // Renders All Scene Objects
 void OpenGL::drawSpace() {
 
+    // ***** Make sure objects vector is sorted by depth
+    EngineObjects objects = m_engine->getCurrentWorld()->objects;
+    std::sort(objects.begin(), objects.end(), [] (const DrEngineObject *a, const DrEngineObject *b) { return a->z_order < b->z_order; });
+
     // ***** Enable shader program
     if (!m_shader.bind()) return;
 
@@ -45,26 +49,17 @@ void OpenGL::drawSpace() {
     m_shader.setAttributeArray( m_attribute_tex_coord, texture_coordinates.data(), 2 );
     m_shader.enableAttributeArray( m_attribute_tex_coord );
 
+    // ********** Render 2D Objects
+    for (auto object : objects) {
+        if (!object->hasBeenProcessed()) continue;
 
-    // ***** Create a vector of the scene objects (ignoring lines / segments) and sort it by depth
-    std::vector<std::pair<int, double>> v;
-    for (int i = 0; i < m_engine->getCurrentWorld()->objects.count(); i++) {
+        // ***** Don't draw Segments (lines)
         bool skip_object = false;
-        for (auto shape : m_engine->getCurrentWorld()->objects[i]->shapes) {
-            if (m_engine->getCurrentWorld()->objects[i]->shape_type[shape] == Shape_Type::Segment)          // Don't draw Segments (lines)
+        for (auto shape : object->shapes) {
+            if (object->shape_type[shape] == Shape_Type::Segment)
                 skip_object = true;
         }
         if (skip_object) continue;
-        v.push_back(std::make_pair(i, m_engine->getCurrentWorld()->objects[i]->getZOrder()));
-    }
-    sort(v.begin(), v.end(), [] (std::pair<int, double>&i, std::pair<int, double>&j) { return i.second < j.second; });
-
-
-    // ********** Render 2D Objects
-    ///for (auto object : m_engine->objects) {
-    for (ulong i = 0; i < static_cast<ulong>(v.size()); i++) {
-        DrEngineObject *object = m_engine->getCurrentWorld()->objects[ v[i].first ];
-        if (!object->hasBeenProcessed()) continue;
 
         // ***** Get texture to render with, set texture coordinates
         DrEngineTexture *texture = m_engine->getTexture(object->getTextureNumber());
@@ -78,13 +73,13 @@ void OpenGL::drawSpace() {
         if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
             x = static_cast<float>(center.x()) * m_scale;
             y = static_cast<float>(center.y()) * m_scale;
-            z = static_cast<float>(object->getZOrder()) * m_scale;
+            z = static_cast<float>(object->z_order) * m_scale;
             half_width =  static_cast<float>(texture->width()) *  object->getScaleX() * m_scale / 2.0f;
             half_height = static_cast<float>(texture->height()) * object->getScaleY() * m_scale / 2.0f;
         } else {
             x = static_cast<float>(center.x());
             y = static_cast<float>(center.y());
-            z = static_cast<float>(object->getZOrder());
+            z = static_cast<float>(object->z_order);
             half_width =  static_cast<float>(texture->width()) *  object->getScaleX() / 2.0f;
             half_height = static_cast<float>(texture->height()) * object->getScaleY() / 2.0f;
         }
