@@ -54,9 +54,14 @@ void OpenGL::paintGL() {
 
 
     // ***** Render 2D Lights
-    //bindShadowBuffer();
+    bindShadowBuffer();
+    renderShadowMap();
 
-
+    static long count = 0;
+    count++;
+    if (count == 700) {
+        Dr::ShowMessageBox("Shadow", QPixmap::fromImage(m_shadow_fbo->toImage()));
+    }
 
     // ***** Renders Frame Buffer Object to screen buffer as a textured quad, with post processing available
     m_fbo->bindDefault();
@@ -98,9 +103,7 @@ void OpenGL::bindOffscreenBuffer() {
     float background_green = static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().greenF());
     float background_blue =  static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().blueF());
     glClearColor(background_red, background_green, background_blue, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);/// | GL_ACCUM_BUFFER_BIT);
-    ///glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-    ///glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     // Enable alpha channel
     glEnable(GL_BLEND);
@@ -236,7 +239,7 @@ void OpenGL::drawFrameBufferToScreenBuffer() {
     m_shader.setUniformValue( m_uniform_brightness, m_engine->getCurrentWorld()->brightness );
 
     // Draw triangles using shader program
-    glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );                                // GL_TRIANGLES
+    glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
 
     // Disable arrays
     m_shader.disableAttributeArray( m_attribute_vertex );

@@ -12,7 +12,7 @@ varying highp vec4  coordinates;                    // Texture Coodinates
 
 // ***** Input from Engine
 uniform sampler2D   u_texture;
-uniform vec2        resolution;
+uniform vec2        u_resolution;
 
 // Alpha threshold for our occlusion map
 const float         THRESHOLD = 0.75;
@@ -20,9 +20,9 @@ const float         THRESHOLD = 0.75;
 void main(void) {
     float distance = 1.0;
 
-    for (float y=0.0; y<resolution.y; y+=1.0) {
+    for (float y=0.0; y<u_resolution.y; y+=1.0) {
         //rectangular to polar filter
-        vec2 norm = vec2(coordinates.s, y/resolution.y) * 2.0 - 1.0;
+        vec2 norm = vec2(coordinates.s, y/u_resolution.y) * 2.0 - 1.0;
         float theta = 3.14*1.5 + norm.x * 3.14;
         float r = (1.0 + norm.y) * 0.5;
 
@@ -33,7 +33,7 @@ void main(void) {
         vec4 data = texture2D(u_texture, coord);
 
         //the current distance is how far from the top we've come
-        float dst = y/resolution.y;
+        float dst = y/u_resolution.y;
 
         //if we've hit an opaque fragment (occluder), then get new distance
         //if the new distance is below the current, then we'll use that for our ray

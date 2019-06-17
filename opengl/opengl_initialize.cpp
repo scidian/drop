@@ -18,7 +18,7 @@
 //####################################################################################
 void OpenGL::initializeGL() {
 
-    // Set up the rendering context, load shaders and other resources, etc.:
+    // ***** Set up the rendering context, load shaders and other resources, etc.:
     initializeOpenGLFunctions();
     glClearColor(0.0, 0.0, 0.0, 1.0f);
 
@@ -31,7 +31,8 @@ void OpenGL::initializeGL() {
     m_engine->addTexture(Asset_Textures::Wheel,     ":/assets/test_images/rover_wheel.png");    // -8
     m_engine->addTexture(Asset_Textures::Spare,     ":/assets/test_images/spare_wheel.png");    // -9
 
-    // Load resources from project
+
+    // ***** Load resources from project
     for (auto asset_pair : m_engine->getProject()->getAssetMap() ) {
         DrAsset *asset = asset_pair.second;
 
@@ -42,7 +43,7 @@ void OpenGL::initializeGL() {
     }
 
 
-    // Initialize our basic shader, shaders have 2 parts, a Vertex shader followed by a Fragment shader
+    // ***** Initialize our basic shader, shaders have 2 parts, a Vertex shader followed by a Fragment shader
     QOpenGLShader vShader( QOpenGLShader::Vertex );     vShader.compileSourceFile( ":/shaders/default_vert.glsl" );
     QOpenGLShader fShader( QOpenGLShader::Fragment );   fShader.compileSourceFile( ":/shaders/default_frag.glsl" );
     m_shader.addShader( &vShader );
@@ -70,6 +71,23 @@ void OpenGL::initializeGL() {
     m_uniform_brightness =  m_shader.uniformLocation(   "u_brightness" );
     m_uniform_tint =        m_shader.uniformLocation(   "u_tint" );
     m_uniform_kernel =      m_shader.uniformLocation(   "u_kernel" );
+
+
+    // ***** Initialize our Shadow Map Shader
+    QOpenGLShader vShadowShader( QOpenGLShader::Vertex );     vShadowShader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader fShadowShader( QOpenGLShader::Fragment );   fShadowShader.compileSourceFile( ":/shaders/shadow_map_frag.glsl" );
+    m_shadow_shader.addShader( &vShadowShader );
+    m_shadow_shader.addShader( &fShadowShader );
+    m_shadow_shader.link();
+
+    // Shadow Vertex Shader Input
+    m_attribute_shadow_vertex =     m_shadow_shader.attributeLocation( "vertex" );
+    m_attribute_shadow_tex_coord =  m_shadow_shader.attributeLocation( "texture_coordinates" );
+    m_uniform_shadow_matrix =       m_shadow_shader.uniformLocation(   "u_matrix" );
+
+    // Shadow Fragment Shader Input
+    m_uniform_shadow_texture =      m_shadow_shader.uniformLocation(   "u_texture" );
+    m_uniform_shadow_resolution =   m_shadow_shader.uniformLocation(   "u_resolution" );
 
 }
 

@@ -59,13 +59,13 @@ private:
     QOpenGLFramebufferObject *m_shadow_fbo = nullptr;           // Used for 2D soft shadows
 
     // Shader Variables
-    QOpenGLShaderProgram    m_shader;
+    QOpenGLShaderProgram m_shader;
     int     m_attribute_vertex;
     int     m_attribute_tex_coord;
     int     m_uniform_matrix;
-    int     m_uniform_texture;
 
     // Custom Shader Input
+    int     m_uniform_texture;
     int     m_uniform_width;                                    // Width of texture
     int     m_uniform_height;                                   // Height of texture
     int     m_uniform_alpha;                                    // Opacity
@@ -80,6 +80,16 @@ private:
     int     m_uniform_brightness;                               // Brightness, -1.0 to 1.0
     int     m_uniform_tint;                                     // Tint, red/green/blue
     int     m_uniform_kernel;                                   // Kernel Effects?
+
+    // Shadow Map Shader
+    QOpenGLShaderProgram m_shadow_shader;
+    int     m_attribute_shadow_vertex;
+    int     m_attribute_shadow_tex_coord;
+    int     m_uniform_shadow_matrix;
+
+    int     m_uniform_shadow_texture;
+    int     m_uniform_shadow_resolution;
+
 
 public:
     // Constructor / Destructor
@@ -130,6 +140,7 @@ public:
 
     // Soft Shadows
     void            bindShadowBuffer();
+    void            renderShadowMap();
 
     // Getters and Setters
     float           getScale()          { return m_scale; }
