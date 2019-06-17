@@ -30,20 +30,30 @@ void DrPlaygroundLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 
 void DrPlaygroundCircle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     int pen_size = (this->data(User_Roles::Selected).toBool()) ? c_pen_selected_size : c_pen_size;
-    setPen( QPen(pen().brush(), pen_size) );
-    QGraphicsEllipseItem::paint(painter, option, widget);
+    setPen( QPen( QBrush(data(User_Roles::Color).value<QColor>()), pen_size) );
 
-    // Draw orientation line
-    painter->drawLine( 0, 0, 0, -static_cast<int>(this->rect().height() / 2));
+    DrToy *toy = this->data(User_Roles::Toy).value<DrToy*>();
+    if (toy && toy->body_type == Body_Type::Dynamic) {
+        bool sleeping = cpBodyIsSleeping( toy->body );
+        if (sleeping) setPen( QPen(Qt::yellow, pen_size) );
+    }
+
+    QGraphicsEllipseItem::paint(painter, option, widget);                               // Draw circle
+    painter->drawLine( 0, 0, 0, -static_cast<int>(this->rect().height() / 2));          // Draw orientation line
 }
 
 void DrPlaygroundBox::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     int pen_size = (this->data(User_Roles::Selected).toBool()) ? c_pen_selected_size : c_pen_size;
-    setPen( QPen(pen().brush(), pen_size) );
-    QGraphicsRectItem::paint(painter, option, widget);
+    setPen( QPen( QBrush(data(User_Roles::Color).value<QColor>()), pen_size) );
 
-    // Draw orientation line
-    painter->drawLine( 0, 0, 0, -static_cast<int>(this->rect().height() / 2));
+    DrToy *toy = this->data(User_Roles::Toy).value<DrToy*>();
+    if (toy && toy->body_type == Body_Type::Dynamic) {
+        bool sleeping = cpBodyIsSleeping( toy->body );
+        if (sleeping) setPen( QPen(Qt::yellow, pen_size) );
+    }
+
+    QGraphicsRectItem::paint(painter, option, widget);                                  // Draw box
+    painter->drawLine( 0, 0, 0, -static_cast<int>(this->rect().height() / 2));          // Draw orientation line
 }
 
 
@@ -56,7 +66,7 @@ QGraphicsLineItem* FormPlayground::addGraphicsLine(DrToy *toy, QColor color) {
     cpVect p1 = cpSegmentShapeGetA(toy->shape);
     cpVect p2 = cpSegmentShapeGetB(toy->shape);
     line->setLine(p1.x, -p1.y, p2.x, -p2.y);
-    addItemToScene(toy, line);
+    addItemToScene(toy, line, color);
     return line;
 }
 
@@ -66,7 +76,7 @@ QGraphicsEllipseItem* FormPlayground::addGraphicsCircle(DrToy *toy, QColor color
     double radius = cpCircleShapeGetRadius(toy->shape);
     circle->setPos(QPointF(toy->m_position.x(), -toy->m_position.y()));
     circle->setRect( QRectF(-radius, -radius, radius*2.0, radius*2.0) );
-    addItemToScene(toy, circle);
+    addItemToScene(toy, circle, color);
     return circle;
 }
 
@@ -76,12 +86,13 @@ QGraphicsRectItem* FormPlayground::addGraphicsBox(DrToy *toy, QColor color) {
     box->setPen( QPen(color, c_pen_size));
     box->setPos(QPointF(toy->m_position.x(), -toy->m_position.y()));
     box->setRect( QRectF(-(toy->m_width/2.0), -(toy->m_height/2.0), toy->m_width, toy->m_height) );
-    addItemToScene(toy, box);
+    addItemToScene(toy, box, color);
     return box;
 }
 
-void FormPlayground::addItemToScene(DrToy *toy, QGraphicsItem *item) {
+void FormPlayground::addItemToScene(DrToy *toy, QGraphicsItem *item, QColor color) {
     item->setData(User_Roles::Toy, QVariant::fromValue<DrToy*>(toy));               // Store reference to the associated DrToy in the Space
+    item->setData(User_Roles::Color, color);                                        // Stores color of object
     item->setData(User_Roles::Selected, false);                                     // Used to keep track of which Item is selected in Scene
     m_play_scene->addItem(item);                                                    // Add to QGraphicsScene
 }

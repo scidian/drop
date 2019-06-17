@@ -81,7 +81,7 @@ public:
     QGraphicsLineItem*      addGraphicsLine(DrToy *toy, QColor color);
     QGraphicsEllipseItem*   addGraphicsCircle(DrToy *toy, QColor color);
     QGraphicsRectItem*      addGraphicsBox(DrToy *toy, QColor color);
-    void                    addItemToScene(DrToy *toy, QGraphicsItem *item);
+    void                    addItemToScene(DrToy *toy, QGraphicsItem *item, QColor color);
     void                    buildForm();
     void                    disableItemFlags();
     void                    enableItemFlags();

@@ -29,7 +29,7 @@ FormPlayground::FormPlayground(QWidget *parent) : QWidget(parent) {
     // ***** Set up initial window
     setWindowFlags(Qt::WindowType::FramelessWindowHint | Qt::WindowType::Tool);
     setMinimumSize(QSize(600, 400));
-    resize(1200, 900);
+    resize(1100, 900);
     setAttribute( Qt::WA_DeleteOnClose, true );                         // Make sure this form is deleted when it closes
     setMouseTracking(true);
     setObjectName(QStringLiteral("childForm"));
