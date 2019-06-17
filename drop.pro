@@ -138,6 +138,7 @@ SOURCES += \
     opengl/opengl_render_debug_health.cpp \
     opengl/opengl_render_space.cpp \
     opengl/opengl_render_test_cube.cpp \
+    opengl/opengl_shadows.cpp \
     playground/form_playground.cpp \
     playground/form_playground_build.cpp \
     playground/form_playground_items.cpp \

@@ -29,15 +29,18 @@ void OpenGL::paintGL() {
     ///auto ver = glGetString(GL_VERSION);
     ///m_engine->info = QString::fromUtf8(reinterpret_cast<const char*>(ver));
 
-    // ***** Set Up Before Render
-    bindOffscreenBuffer();                          // Create / Bind Offscreen Frame Buffer Object
-    setGLFlags();                                   // Clear GL, Enable alpha / multisampling, etc
-    updateViewMatrix();                             // Update Camera / View Matrix
+    // ***** Make sure objects vector is sorted by depth
+    EngineObjects objects = m_engine->getCurrentWorld()->objects;
+    std::sort(objects.begin(), objects.end(), [] (const DrEngineObject *a, const DrEngineObject *b) { return a->z_order < b->z_order; });
 
-    // ***** Render
-    drawCube( QVector3D( 2000, 400, -300) );        // Render Background 3D Objects
-    drawSpace();                                    // Render cpSpace Objects
-    drawCube( QVector3D(1600, 500, 600) );          // Render Foreground 3D Objects
+    // ***** Update Camera / View Matrix
+    updateViewMatrix();
+
+    // ***** Render Onto Frame Buffer Object
+    bindOffscreenBuffer();                                      // Create / Bind Offscreen Frame Buffer Object
+    ///drawCube( QVector3D( 2000, 400, -300) );                    // Render Background 3D Objects
+    drawSpace();                                                // Render cpSpace Objects
+    ///drawCube( QVector3D(1600, 500, 600) );                      // Render Foreground 3D Objects
 
     // ***** Draws Debug Shapes / Text Onto Frame Buffer Object
     QOpenGLPaintDevice paint_gl(width() * devicePixelRatio(), height() * devicePixelRatio());
@@ -48,6 +51,12 @@ void OpenGL::paintGL() {
     // ***** Relase Frame Buffer Object and copy it onto a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
     m_fbo->release();
     QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_fbo);
+
+
+    // ***** Render 2D Lights
+    //bindShadowBuffer();
+
+
 
     // ***** Renders Frame Buffer Object to screen buffer as a textured quad, with post processing available
     m_fbo->bindDefault();
@@ -83,13 +92,7 @@ void OpenGL::bindOffscreenBuffer() {
         m_texture_fbo = new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio());
     }
     m_fbo->bind();
-}
 
-
-//####################################################################################
-//##        Clear / Enable Flags
-//####################################################################################
-void OpenGL::setGLFlags() {
     // Clear the buffers
     float background_red =   static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().redF());
     float background_green = static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().greenF());

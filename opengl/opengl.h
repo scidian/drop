@@ -53,9 +53,10 @@ private:
     float           m_background_green = 0;
     float           m_background_blue = 0;
 
-    // Frame Buffer
+    // Frame Buffers
     QOpenGLFramebufferObject *m_fbo = nullptr;                  // Used for offscreen rendering
     QOpenGLFramebufferObject *m_texture_fbo = nullptr;          // m_fbo must be copied to a non-multisampled fbo before being used as a texture
+    QOpenGLFramebufferObject *m_shadow_fbo = nullptr;           // Used for 2D soft shadows
 
     // Shader Variables
     QOpenGLShaderProgram    m_shader;
@@ -123,13 +124,15 @@ public:
     void            drawSpace();
     QColor          objectDebugColor(DrEngineObject *object, bool text_color = false);
     void            updateViewMatrix();
-    void            setGLFlags();
     void            setShaderDefaultValues(float texture_width, float texture_height);
     void            setNumberTextureCoordinates(QString letter, std::vector<float> &texture_coordinates);
     void            setWholeTextureCoordinates(std::vector<float> &texture_coords);
 
+    // Soft Shadows
+    void            bindShadowBuffer();
+
     // Getters and Setters
-    float               getScale()          { return m_scale; }
+    float           getScale()          { return m_scale; }
 
 };
 

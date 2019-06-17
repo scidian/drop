@@ -32,10 +32,6 @@ void OpenGL::cullingOff() {     glDisable( GL_CULL_FACE ); }
 // Renders All Scene Objects
 void OpenGL::drawSpace() {
 
-    // ***** Make sure objects vector is sorted by depth
-    EngineObjects objects = m_engine->getCurrentWorld()->objects;
-    std::sort(objects.begin(), objects.end(), [] (const DrEngineObject *a, const DrEngineObject *b) { return a->z_order < b->z_order; });
-
     // ***** Enable shader program
     if (!m_shader.bind()) return;
 
@@ -50,6 +46,7 @@ void OpenGL::drawSpace() {
     m_shader.enableAttributeArray( m_attribute_tex_coord );
 
     // ********** Render 2D Objects
+    EngineObjects objects = m_engine->getCurrentWorld()->objects;
     for (auto object : objects) {
         if (!object->hasBeenProcessed()) continue;
 
