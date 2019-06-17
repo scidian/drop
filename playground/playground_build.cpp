@@ -97,7 +97,7 @@ void DrPlayground::buildSpace() {
 void DrPlayground::setWorldInfo() {
     QString info;
     info += "<center><b>World Info</b></center><br>";
-    info += "<b>Time Warp:</b> " + QString::number(m_time_warp) + "<br>";
+    info += "<b>Time Warp</b>  x " + QString::number(m_time_warp) + "<br>";
     info += "<b>Gavity X:</b> " + QString::number(m_gravity.x) + ", <b>Y:</b> " + QString::number(m_gravity.y) + "<br>";
     info += "<b>Damping:</b> " + QString::number(m_damping) + "<br>";
     info += "<b>Friction:</b> " + QString::number(m_friction) + "<br>";

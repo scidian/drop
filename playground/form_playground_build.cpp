@@ -43,19 +43,19 @@ void FormPlayground::buildForm() {
                 m_start_timers = new QPushButton("Start Physics");
                 m_start_timers->setObjectName("button");
                 Dr::ApplyDropShadowByType(m_start_timers, Shadow_Types::Button_Shadow);
-                connect(m_start_timers, &QPushButton::clicked, [this] () { this->startTimers(); });
+                connect(m_start_timers, SIGNAL(pressed()), SLOT(startTimers()) );
                 side_layout->addWidget(m_start_timers);
 
                 m_stop_timers = new QPushButton("Stop Physics");
                 m_stop_timers->setObjectName("button");
                 Dr::ApplyDropShadowByType(m_stop_timers, Shadow_Types::Button_Shadow);
-                connect(m_stop_timers, &QPushButton::clicked, [this] () { this->stopTimers(); });
+                connect(m_stop_timers, SIGNAL(pressed()), SLOT(stopTimers()) );
                 side_layout->addWidget(m_stop_timers);
 
                 m_reset_world = new QPushButton("Reset World");
                 m_reset_world->setObjectName("button");
                 Dr::ApplyDropShadowByType(m_reset_world, Shadow_Types::Button_Shadow);
-                connect(m_reset_world, &QPushButton::clicked, [this] () { this->resetWorld(); });
+                connect(m_reset_world, SIGNAL(pressed()), SLOT(resetWorld()) );
                 side_layout->addWidget(m_reset_world);
 
                 m_world_info = new QLabel("World Info");
@@ -64,11 +64,14 @@ void FormPlayground::buildForm() {
                 m_object_info = new QLabel("<center>No Item Selected</center>");
                 side_layout->addWidget(m_object_info);
 
+                m_debug = new QLabel("Timer");
+                m_debug->setAlignment(Qt::AlignCenter);
+                side_layout->addWidget(m_debug);
+
             main_area_layout->addWidget(m_side_bar);
 
             // ***** Initialize QGraphicsScene for use in DrPlaygroundView
             m_play_scene = new QGraphicsScene();
-            connect(m_play_scene, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
 
             // ***** QGraphicsView (DrPlaygroundView)
             m_play_view = new DrPlaygroundView(m_play_scene, m_playground);

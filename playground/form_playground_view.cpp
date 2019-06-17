@@ -31,24 +31,32 @@ void FormPlayground::updateGraphicsView() {
 //##        Mouse Handling
 //####################################################################################
 void DrPlaygroundView::mousePressEvent(QMouseEvent *event) {
-    QRect box { -990, -990, 1980, 1980 };
+    QRect   box { -990, -990, 1980, 1980 };
     QPointF pos = mapToScene( event->pos() );
 
     if (event->button() == Qt::MouseButton::LeftButton) {
-        cpVect cp_pos = cpv(mapToScene(event->pos()).x(), -mapToScene(event->pos()).y());
-        DrToy *click = m_playground->findToyAtPoint(cp_pos, 5);
+        if (m_playground->getFormPlayground()->isTimerActive()) {
+            cpVect cp_pos = cpv(mapToScene(event->pos()).x(), -mapToScene(event->pos()).y());
+            DrToy *click = m_playground->findToyAtPoint(cp_pos, 5);
 
-        if (click) {
-            if (click->body_type != Body_Type::Static) {
-                mouse_joint = cpPivotJointNew(m_playground->mouse_body, click->body, cpBodyGetPosition(click->body));
-                cpSpaceAddConstraint( m_playground->getSpace(), mouse_joint );
+            if (click) {
+                if (click->body_type != Body_Type::Static) {
+                    mouse_joint = cpPivotJointNew(m_playground->mouse_body, click->body, cpBodyGetPosition(click->body));
+                    cpSpaceAddConstraint( m_playground->getSpace(), mouse_joint );
+                }
             }
         }
 
     } else if (event->button() == Qt::MouseButton::RightButton) {
+        // If clicked within gray lines, add toy to playground
         if (box.contains(pos.toPoint())) {
-            m_playground->addCircle(Body_Type::Dynamic, Dr::GetColor(Window_Colors::Icon_Light), pos.x(), -pos.y(), 0, 50, c_friction, c_bounce, true, true);
-            ///m_playground->addBlock(Body_Type::Dynamic, Dr::GetColor(Window_Colors::Text), pos.x(), -pos.y(), 0, 50, 50, c_friction, c_bounce, true, true);
+            DrToy *toy = m_playground->addCircle(Body_Type::Dynamic, Dr::GetColor(Window_Colors::Icon_Light), pos.x(), -pos.y(), 0, 50,
+                                                 c_friction, c_bounce, true, true);
+            // If timer isnt running, allow QGraphicItem movement
+            if (m_playground->getFormPlayground()->isTimerActive() == false) {
+                toy->graphic->setFlag(QGraphicsItem::ItemIsMovable, true);
+                toy->graphic->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
+            }
         }
     }
 
@@ -57,18 +65,23 @@ void DrPlaygroundView::mousePressEvent(QMouseEvent *event) {
 
 void DrPlaygroundView::mouseReleaseEvent(QMouseEvent *event) {
     if (event->button() == Qt::MouseButton::LeftButton) {
-        if (mouse_joint) {
-            cpSpaceRemoveConstraint(m_playground->getSpace(), mouse_joint);
-            cpConstraintFree(mouse_joint);
-            mouse_joint = nullptr;
+        // On mouse up, if timer is running and there was an object linked to the mouse_body, destroy the mouse_joint
+        if (m_playground->getFormPlayground()->isTimerActive()) {
+            if (mouse_joint) {
+                cpSpaceRemoveConstraint(m_playground->getSpace(), mouse_joint);
+                cpConstraintFree(mouse_joint);
+                mouse_joint = nullptr;
+            }
         }
     }
     QGraphicsView::mouseReleaseEvent(event);
 }
 
 void DrPlaygroundView::mouseMoveEvent(QMouseEvent *event) {
-    cpVect pos = cpv(mapToScene(event->pos()).x(), -mapToScene(event->pos()).y());
-    cpBodySetPosition(m_playground->mouse_body, pos);
+    if (m_playground->getFormPlayground()->isTimerActive()) {
+        cpVect pos = cpv(mapToScene(event->pos()).x(), -mapToScene(event->pos()).y());
+        cpBodySetPosition(m_playground->mouse_body, pos);
+    }
     QGraphicsView::mouseMoveEvent(event);
 }
 

@@ -149,14 +149,19 @@ QGraphicsRectItem* FormPlayground::addGraphicsBox(DrToy *toy, QColor color) {
 //####################################################################################
 static QVariant UpdateToyPosition(QGraphicsItem *item, const QVariant &value) {
     // Value is new scene position
-    QPointF new_pos =    value.toPointF();
+    QPointF new_pos = value.toPointF();
+
+    // Attempt to grab DrToy pointer from userData of QGraphicsItem
     DrToy *toy = item->data(User_Roles::Toy).value<DrToy*>();
+    if (!toy) return new_pos;
+
     cpBodySetPosition( toy->body, cpv(new_pos.x(), -new_pos.y()) );
 
+    // If we moved a static object, make sure any dynamic objects touching it are awake
     if (toy->body_type == Body_Type::Static) {
         cpSpace *space = cpBodyGetSpace( toy->body );
         cpSpaceReindexShapesForBody(space, toy->body);
-        toy->m_playground->wakeAllBodies();                         // If we moved a static object, make sure any dynamic objects touching it are awake
+        toy->m_playground->wakeAllBodies();
     }
     return new_pos;
 }

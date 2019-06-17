@@ -82,6 +82,7 @@ public:
     void        wakeAllBodies();
 
     // Getters / Setters
+    FormPlayground*     getFormPlayground() { return m_form_playground; }
     cpSpace*            getSpace() { return m_space; }
     cpFloat             getTimeStepAsMilliseconds() { return (1000.0 * m_time_step); }
 

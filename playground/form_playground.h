@@ -50,6 +50,7 @@ private:
     QPushButton         *m_reset_world;
     QLabel              *m_world_info;
     QLabel              *m_object_info;
+    QLabel              *m_debug;
 
     QWidget             *m_main_area;
     DrPlaygroundView    *m_play_view;
@@ -65,6 +66,7 @@ private:
 
 public:
     FormPlayground(QWidget *parent = nullptr);
+    ~FormPlayground() override;
 
     // Event Overrides
     virtual void resizeEvent(QResizeEvent *event) override;
@@ -74,10 +76,13 @@ public:
     QGraphicsEllipseItem*   addGraphicsCircle(DrToy *toy, QColor color);
     QGraphicsRectItem*      addGraphicsBox(DrToy *toy, QColor color);
     void                    buildForm();
+    void                    disableItemFlags();
+    void                    enableItemFlags();
     void                    updateGraphicsView();
 
     // Getters / Setters
     QGraphicsScene*         getScene() { return m_play_scene; }
+    bool                    isTimerActive() { return m_update_timer->isActive(); }
     bool                    isUpdating() { return m_updating; }
 
     void                    setObjectInfo(QString new_info) { m_object_info->setText(new_info); }

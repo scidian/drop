@@ -43,15 +43,17 @@ static void GetBodyShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_
 //##    Wake All Sleeping Bodies
 //######################################################################################################
 static void WakeBody(cpBody *body, cpSpace *) {
-    if (cpBodyIsSleeping(body)) cpBodyActivate(body);
+    if (cpBodyGetType(body) == CP_BODY_TYPE_DYNAMIC) {
+        if (cpBodyIsSleeping(body)) {
+            cpBodyActivate(body);
+        }
+    }
 }
 void DrEngineWorld::wakeAllBodies() {
     if (has_scene) {
         cpSpaceEachBody(m_space, cpSpaceBodyIteratorFunc(WakeBody), m_space);
-        cpSpaceStep(m_space, 0);
     }
 }
-
 
 //######################################################################################################
 //##    Clear Space
