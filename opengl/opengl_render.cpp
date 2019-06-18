@@ -72,7 +72,10 @@ void OpenGL::paintGL() {
 
     // ***** Bind default Qt FrameBuffer, clear and set up for drawing
     QOpenGLFramebufferObject::bindDefault();
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    float background_red =   static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().redF());
+    float background_green = static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().greenF());
+    float background_blue =  static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().blueF());
+    glClearColor(background_red, background_green, background_blue, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     // ***** Renders 2D Lights
@@ -109,10 +112,7 @@ void OpenGL::bindOffscreenBuffer() {
     m_fbo->bind();
 
     // Clear the buffers
-    float background_red =   static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().redF());
-    float background_green = static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().greenF());
-    float background_blue =  static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().blueF());
-    glClearColor(background_red, background_green, background_blue, 0.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     // Enable alpha channel

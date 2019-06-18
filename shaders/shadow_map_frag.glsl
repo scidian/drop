@@ -16,7 +16,7 @@ uniform vec2        u_resolution;
 
 // Other Variables
 const float         THRESHOLD = 0.5;                // Alpha threshold for our occlusion map
-const float         PI = 3.14;                      // Pi
+const float         PI = 3.14159;                   // Pi
 
 void main(void) {
     float distance = 1.0;

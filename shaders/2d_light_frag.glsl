@@ -15,7 +15,7 @@ uniform sampler2D   u_texture;
 uniform vec2        u_resolution;
 uniform vec3        u_color;
 
-const float         PI = 3.14;
+const float         PI = 3.14159;
 
 // Sample from the 1D Distance (Shadow) Map
 float sample(vec2 coord, float r) {

@@ -18,8 +18,7 @@ const float c_light_size   = 1024;          // test size
 void OpenGL::bindShadowBuffer() {
 
     int light_radius = static_cast<int>(c_light_size * m_scale);
-
-    int shadow_size = static_cast<int>(c_light_size);
+    int shadow_size =  static_cast<int>(c_light_size);
 
     if (!m_shadow_fbo || m_shadow_fbo->width() != shadow_size) {
         QOpenGLFramebufferObjectFormat format;
@@ -109,6 +108,10 @@ void OpenGL::drawShadowMap() {
 
 
 void OpenGL::draw2DLights() {
+
+    // Enable alpha channel
+///    glEnable(GL_BLEND);
+///    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                  // Standard blend function
 
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, m_shadow_fbo->texture());
