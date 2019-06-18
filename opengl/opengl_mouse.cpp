@@ -130,8 +130,8 @@ void OpenGL::wheelEvent(QWheelEvent *event) {
         return;
     }
 
-    if (event->delta() > 0) { zoomInOut(10);  }
-    else                    { zoomInOut(-10); }
+    if (event->delta() > 0) { zoomInOut( 1);  }
+    else                    { zoomInOut(-1); }
     event->accept();
 }
 #endif
@@ -141,7 +141,7 @@ void OpenGL::zoomInOut(int level) {
     m_zoom += level;
     if (m_zoom > 500) m_zoom = 500;
     if (m_zoom < -40) m_zoom = -40;
-    m_scale = static_cast<float>(qPow(qreal(2), (m_zoom - 250) / qreal(50)));
+    m_scale = static_cast<float>(qPow(2.0, (m_zoom - 250.0) / 50.0));
 }
 
 

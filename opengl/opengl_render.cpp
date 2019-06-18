@@ -20,9 +20,6 @@
 #include "helper.h"
 #include "opengl/opengl.h"
 
-// Local constants
-const float c_light_size =   1024.f;      // test size
-const int   c_light_size_i = 1024;        // test size as int
 
 //####################################################################################
 //##        Render, Paint the Scene (called by update())

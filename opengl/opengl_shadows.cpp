@@ -19,25 +19,25 @@ void OpenGL::bindShadowBuffer() {
 
     int light_radius = static_cast<int>(c_light_size * m_scale);
 
-    if (!m_shadow_fbo || m_shadow_fbo->width() != static_cast<int>(c_light_size)) {
-        delete m_shadow_fbo;
+    int shadow_size = static_cast<int>(c_light_size);
 
+    if (!m_shadow_fbo || m_shadow_fbo->width() != shadow_size) {
         QOpenGLFramebufferObjectFormat format;
         format.setAttachment(QOpenGLFramebufferObject::Attachment::NoAttachment);
-        m_shadow_fbo =  new QOpenGLFramebufferObject(static_cast<int>(c_light_size), 1, format);
+        delete m_shadow_fbo;
+        m_shadow_fbo = new QOpenGLFramebufferObject(shadow_size, 1, format);
     }
 
     if (!m_light_fbo || m_light_fbo->width() != light_radius || m_light_fbo->height() != light_radius) {
-        delete m_light_fbo;
-
         QOpenGLFramebufferObjectFormat format;
         format.setAttachment(QOpenGLFramebufferObject::Attachment::NoAttachment);
-        m_light_fbo =   new QOpenGLFramebufferObject(light_radius, light_radius, format);
+        delete m_light_fbo;
+        m_light_fbo =  new QOpenGLFramebufferObject(light_radius, light_radius, format);
     }
 
     m_shadow_fbo->bind();
 
-    // Clear the FBO
+    // Clear the Shadow Frame Buffer Object
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 }
@@ -48,16 +48,16 @@ void OpenGL::drawShadowMap() {
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, m_light_fbo->texture());
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);           // Texture X Plane
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);           // Texture Y Plane
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);           // Texture Z Plane
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);           // Texture X Plane
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);           // Texture Y Plane
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);           // Texture Z Plane
 
     if (!m_shadow_shader.bind()) return;
 
     // Give the shader our light_size resolution
-    m_shadow_shader.setUniformValue( m_uniform_shadow_resolution, c_light_size, c_light_size );
+    m_shadow_shader.setUniformValue( m_uniform_shadow_resolution, m_light_fbo->width(), m_light_fbo->height() );
 
     // Reset our projection matrix to the FBO size
     float left =   0.0f - (m_shadow_fbo->width()  / 2.0f);
@@ -75,10 +75,10 @@ void OpenGL::drawShadowMap() {
     m_shadow_shader.enableAttributeArray( m_attribute_shadow_tex_coord );
 
     // Load vertices for this object
-    left =   0.0f - (m_light_fbo->width() / 2.0f);
-    right =  0.0f + (m_light_fbo->width() / 2.0f);
-    top =    0.0f + (m_light_fbo->height() / 2.0f);
-    bottom = 0.0f - (m_light_fbo->height() / 2.0f);
+    left =   0.0f - ((m_light_fbo->width() )  / 2.0f);
+    right =  0.0f + ((m_light_fbo->width() )  / 2.0f);
+    top =    0.0f + ((m_light_fbo->height() ) / 2.0f);
+    bottom = 0.0f - ((m_light_fbo->height() ) / 2.0f);
     QVector3D top_right = QVector3D( right, top, 0);
     QVector3D top_left =  QVector3D( left,  top, 0);
     QVector3D bot_right = QVector3D( right, bottom, 0);
@@ -116,7 +116,7 @@ void OpenGL::draw2DLights() {
     if (!m_light_shader.bind()) return;
 
     // Give the shader our light_size resolution, color
-    m_light_shader.setUniformValue( m_uniform_light_resolution, c_light_size, c_light_size );
+    m_light_shader.setUniformValue( m_uniform_light_resolution, m_light_fbo->width(), m_light_fbo->height() );
     m_light_shader.setUniformValue( m_uniform_light_color, 0.5f, 0.0f, 0.5f );
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
@@ -144,10 +144,10 @@ void OpenGL::draw2DLights() {
     m_light_shader.enableAttributeArray( m_attribute_light_tex_coord );
 
     // Load vertices for this object
-    left =   0.0f - ((m_light_fbo->width() / m_scale) / 2.0f);
-    right =  0.0f + ((m_light_fbo->width() / m_scale)  / 2.0f);
-    top =    0.0f + ((m_light_fbo->height() / m_scale)  / 2.0f);
-    bottom = 0.0f - ((m_light_fbo->height() / m_scale)  / 2.0f);
+    left =   0.0f - ((m_light_fbo->width() )  / 2.0f);
+    right =  0.0f + ((m_light_fbo->width() )  / 2.0f);
+    top =    0.0f + ((m_light_fbo->height() ) / 2.0f);
+    bottom = 0.0f - ((m_light_fbo->height() ) / 2.0f);
     QVector3D top_right = QVector3D( right, top, 0);
     QVector3D top_left =  QVector3D( left,  top, 0);
     QVector3D bot_right = QVector3D( right, bottom, 0);

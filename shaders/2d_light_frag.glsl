@@ -23,7 +23,7 @@ float sample(vec2 coord, float r) {
 }
 
 void main(void) {
-    // Rectangular to Polar
+    // Rectangular to Polar  * 1.141435
     vec2  norm =    coordinates.st * 2.0 - 1.0;
     float theta =   atan(norm.y, norm.x);
     float r =       length(norm);
