@@ -20,6 +20,9 @@
 #include "helper.h"
 #include "opengl/opengl.h"
 
+// Local constants
+const float c_light_size =   1024.f;      // test size
+const int   c_light_size_i = 1024;        // test size as int
 
 //####################################################################################
 //##        Render, Paint the Scene (called by update())
@@ -38,9 +41,9 @@ void OpenGL::paintGL() {
 
     // ***** Render Onto Frame Buffer Object
     bindOffscreenBuffer();                                      // Create / Bind Offscreen Frame Buffer Object
-    ///drawCube( QVector3D( 2000, 400, -300) );                    // Render Background 3D Objects
+    ///drawCube( QVector3D( 2000, 400, -300) );                 // Render Background 3D Objects
     drawSpace();                                                // Render cpSpace Objects
-    ///drawCube( QVector3D(1600, 500, 600) );                      // Render Foreground 3D Objects
+    ///drawCube( QVector3D(1600, 500, 600) );                   // Render Foreground 3D Objects
 
     // ***** Draws Debug Shapes / Text Onto Frame Buffer Object
     QOpenGLPaintDevice paint_gl(width() * devicePixelRatio(), height() * devicePixelRatio());
@@ -52,19 +55,33 @@ void OpenGL::paintGL() {
     m_fbo->release();
     QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_fbo);
 
-
-    // ***** Render 2D Lights
+    // ***** Calculate 2D Light Shadow Maps
     bindShadowBuffer();
-    renderShadowMap();
+    QOpenGLFramebufferObject::blitFramebuffer(
+                m_light_fbo, QRect(0, 0, m_light_fbo->width(), m_light_fbo->height()),
+                m_texture_fbo, QRect(static_cast<int>(width() / 2.0 - m_light_fbo->width() / 2.0),
+                                     static_cast<int>(height()/ 2.0 - m_light_fbo->height()/ 2.0), m_light_fbo->width(), m_light_fbo->height()),
+                GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    drawShadowMap();
+    m_shadow_fbo->release();
 
-    static long count = 0;
-    count++;
-    if (count == 700) {
-        Dr::ShowMessageBox("Shadow", QPixmap::fromImage(m_shadow_fbo->toImage()));
-    }
+//static int count = 0;
+//count++;
+//if (count % 600 == 0) {
+//    ///Dr::ShowMessageBox("Light", QPixmap::fromImage(m_shadow_fbo->toImage()));
+//    Dr::ShowMessageBox("Light", QPixmap::fromImage(m_light_fbo->toImage()));
+//}
+
+
+    // ***** Bind default Qt FrameBuffer, clear and set up for drawing
+    QOpenGLFramebufferObject::bindDefault();
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    // ***** Renders 2D Lights
+    draw2DLights();
 
     // ***** Renders Frame Buffer Object to screen buffer as a textured quad, with post processing available
-    m_fbo->bindDefault();
     drawFrameBufferToScreenBuffer();
 
     // ***** Update FPS
@@ -76,15 +93,8 @@ void OpenGL::paintGL() {
 //##        Allocate additional FBO for rendering or resize it if widget size changed
 //####################################################################################
 void OpenGL::bindOffscreenBuffer() {
-    bool create_fbo = false;
-    // Check if exists first
-    if (!m_fbo || !m_texture_fbo)
-        create_fbo = true;
-    // Or if it does exist, check the width and height
-    else if (m_fbo->width() != width() || m_fbo->height() != height())
-        create_fbo = true;
 
-    if (create_fbo) {
+    if (!m_fbo || !m_texture_fbo || (m_fbo->width() != width() || m_fbo->height() != height())) {
         delete m_fbo;
         delete m_texture_fbo;
         QOpenGLFramebufferObjectFormat format;
@@ -94,7 +104,10 @@ void OpenGL::bindOffscreenBuffer() {
         ///format.setInternalTextureFormat(GL_RGBA32F_ARB);             // This is set automatically depending on the system
         ///format.setMipmap(true);                                      // Don't need
         m_fbo = new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format);
-        m_texture_fbo = new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio());
+
+        QOpenGLFramebufferObjectFormat format2;
+        format.setAttachment(QOpenGLFramebufferObject::Attachment::NoAttachment);
+        m_texture_fbo = new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format2);
     }
     m_fbo->bind();
 
@@ -102,7 +115,7 @@ void OpenGL::bindOffscreenBuffer() {
     float background_red =   static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().redF());
     float background_green = static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().greenF());
     float background_blue =  static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().blueF());
-    glClearColor(background_red, background_green, background_blue, 1.0f);
+    glClearColor(background_red, background_green, background_blue, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     // Enable alpha channel
@@ -147,8 +160,8 @@ void OpenGL::updateViewMatrix() {
     m_model_view.setToIdentity();
     m_projection.setToIdentity();
     if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
-        float cam_x =  m_engine->getCurrentWorld()->getCameraPos().x() * m_scale;
-        float cam_y =  m_engine->getCurrentWorld()->getCameraPos().y() * m_scale;
+        float cam_x =  (m_engine->getCurrentWorld()->getCameraPos().x()) * m_scale;
+        float cam_y =  (m_engine->getCurrentWorld()->getCameraPos().y() + 200) * m_scale;
         float left =   cam_x - (width() *  devicePixelRatio() / 2.0f);
         float right =  cam_x + (width() *  devicePixelRatio() / 2.0f);
         float top =    cam_y + (height() * devicePixelRatio() / 2.0f);
@@ -186,9 +199,11 @@ void OpenGL::setWholeTextureCoordinates(std::vector<float> &texture_coords) {
 //####################################################################################
 void OpenGL::drawFrameBufferToScreenBuffer() {
 
-    // Clear the screen buffer
-    glClearColor(0.0, 0.0, 0.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    // Enable alpha channel
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                  // Standard blend function
+
+    // Bind offscreen frame buffer object as a texture
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, m_texture_fbo->texture());
 

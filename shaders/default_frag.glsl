@@ -10,7 +10,6 @@ precision mediump float;
 // ***** Input from Vertex Shader
 varying highp vec4  coordinates;                    // Texture Coodinates
 
-
 // ***** Input from Engine
 uniform sampler2D   u_tex;                          // Texture
 uniform lowp float  u_alpha;                        // Opacity

@@ -20,7 +20,7 @@ void OpenGL::initializeGL() {
 
     // ***** Set up the rendering context, load shaders and other resources, etc.:
     initializeOpenGLFunctions();
-    glClearColor(0.0, 0.0, 0.0, 1.0f);
+    glClearColor(0.0, 0.0, 0.0, 0.0f);
 
     // Load test resources
     m_engine->addTexture(Asset_Textures::Numbers,   ":/assets/engine/numbers.png");             // -1
@@ -88,6 +88,24 @@ void OpenGL::initializeGL() {
     // Shadow Fragment Shader Input
     m_uniform_shadow_texture =      m_shadow_shader.uniformLocation(   "u_texture" );
     m_uniform_shadow_resolution =   m_shadow_shader.uniformLocation(   "u_resolution" );
+
+
+    // ***** Initialize our 2D Light Shader
+    QOpenGLShader vLightShader( QOpenGLShader::Vertex );     vLightShader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader fLightShader( QOpenGLShader::Fragment );   fLightShader.compileSourceFile( ":/shaders/2d_light_frag.glsl" );
+    m_light_shader.addShader( &vLightShader );
+    m_light_shader.addShader( &fLightShader );
+    m_light_shader.link();
+
+    // 2D Light Vertex Shader Input
+    m_attribute_light_vertex =      m_light_shader.attributeLocation( "vertex" );
+    m_attribute_light_tex_coord =   m_light_shader.attributeLocation( "texture_coordinates" );
+    m_uniform_light_matrix =        m_light_shader.uniformLocation(   "u_matrix" );
+
+    // 2D Light Fragment Shader Input
+    m_uniform_light_texture =       m_light_shader.uniformLocation(   "u_texture" );
+    m_uniform_light_resolution =    m_light_shader.uniformLocation(   "u_resolution" );
+    m_uniform_light_color =         m_light_shader.uniformLocation(   "u_color" );
 
 }
 

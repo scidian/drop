@@ -56,7 +56,9 @@ private:
     // Frame Buffers
     QOpenGLFramebufferObject *m_fbo = nullptr;                  // Used for offscreen rendering
     QOpenGLFramebufferObject *m_texture_fbo = nullptr;          // m_fbo must be copied to a non-multisampled fbo before being used as a texture
+
     QOpenGLFramebufferObject *m_shadow_fbo = nullptr;           // Used for 2D soft shadows
+    QOpenGLFramebufferObject *m_light_fbo = nullptr;            // Used for 2D soft shadows
 
     // Shader Variables
     QOpenGLShaderProgram m_shader;
@@ -78,7 +80,7 @@ private:
     int     m_uniform_saturation;                               // Saturation, -1.0 to 1.0
     int     m_uniform_contrast;                                 // Contrast,   -1.0 to 1.0
     int     m_uniform_brightness;                               // Brightness, -1.0 to 1.0
-    int     m_uniform_tint;                                     // Tint, red/green/blue
+    int     m_uniform_tint;                                     // Tint, red/green/blue (0 to 1, 0 to 1, 0 to 1)
     int     m_uniform_kernel;                                   // Kernel Effects?
 
     // Shadow Map Shader
@@ -89,6 +91,16 @@ private:
 
     int     m_uniform_shadow_texture;
     int     m_uniform_shadow_resolution;
+
+    // 2D Light Shader
+    QOpenGLShaderProgram m_light_shader;
+    int     m_attribute_light_vertex;
+    int     m_attribute_light_tex_coord;
+    int     m_uniform_light_matrix;
+
+    int     m_uniform_light_texture;
+    int     m_uniform_light_resolution;
+    int     m_uniform_light_color;                              // Color of light, red/green/blue (0 to 1, 0 to 1, 0 to 1)
 
 
 public:
@@ -140,7 +152,8 @@ public:
 
     // Soft Shadows
     void            bindShadowBuffer();
-    void            renderShadowMap();
+    void            draw2DLights();
+    void            drawShadowMap();
 
     // Getters and Setters
     float           getScale()          { return m_scale; }

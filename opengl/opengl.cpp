@@ -29,6 +29,8 @@ OpenGL::~OpenGL() {
     // Destroy OpenGL Resources
     delete m_fbo;
     delete m_texture_fbo;
+    delete m_shadow_fbo;
+    delete m_light_fbo;
 
     doneCurrent();
 }
