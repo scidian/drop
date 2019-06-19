@@ -91,6 +91,7 @@ private:
 
     int     m_uniform_shadow_texture;
     int     m_uniform_shadow_resolution;
+    int     m_uniform_shadow_ray_count;
 
     // 2D Light Shader
     QOpenGLShaderProgram m_light_shader;
@@ -101,6 +102,7 @@ private:
     int     m_uniform_light_texture;
     int     m_uniform_light_resolution;
     int     m_uniform_light_color;                              // Color of light, red/green/blue (0 to 1, 0 to 1, 0 to 1)
+    int     m_uniform_light_cone;
 
 
 public:

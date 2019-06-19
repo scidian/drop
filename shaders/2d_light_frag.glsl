@@ -14,6 +14,7 @@ varying highp vec2  coordinates;                    // Texture Coodinates
 uniform sampler2D   u_texture;
 uniform vec2        u_resolution;
 uniform vec3        u_color;
+uniform vec2        u_cone;
 
 const float         PI = 3.14159;
 
@@ -28,6 +29,16 @@ void main(void) {
     float theta =   atan(norm.y, norm.x);
     float r =       length(norm);
     float coord =   (theta + PI) / (2.0 * PI);
+
+    // Check that pixel is within allowed light cone
+    if (theta < 0.0) theta += (2.0 * PI);
+    if (u_cone.x > u_cone.y) {
+        if (theta < u_cone.x && theta > u_cone.y)
+            return;
+    } else {
+        if (theta < u_cone.x || theta > u_cone.y)
+            return;
+    }
 
     // The tex coord to sample our 1D lookup texture, always 0.0 on y axis
     vec2  tc = vec2(coord, 0.0);

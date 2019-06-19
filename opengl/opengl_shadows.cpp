@@ -5,6 +5,7 @@
 //
 //
 //
+#include <QtMath>
 #include <QOpenGLFramebufferObject>
 
 #include "engine/engine.h"
@@ -16,8 +17,8 @@
 #include "opengl/opengl.h"
 
 
-const int   c_angles = 720;              // Number of rays to send out
-const float c_light_size = 1194;         // Test Light Size
+const int   c_angles = 1024;             // Number of rays to send out
+const float c_light_size = 1500;         // Test Light Size
 
 static int  light_radius;
 static int  light_radius_fitted;
@@ -51,10 +52,14 @@ void OpenGL::bindLightBuffer(bool initialize_only) {
 //##        Allocate Shadow Frame Buffer Object
 //####################################################################################
 void OpenGL::bindShadowBuffer(bool initialize_only) {
+    // Shadow map size is the smallest of c_angles, light_radius_fitted, and width()
+    int shadow_size = (light_radius_fitted < c_angles) ? light_radius_fitted : c_angles;
+        shadow_size = (width() < shadow_size) ? width() : shadow_size;
+
     // Check Frame Buffer Object is initialized
-    if (!m_shadow_fbo || m_shadow_fbo->width() != c_angles) {
+    if (!m_shadow_fbo || m_shadow_fbo->width() != shadow_size) {
         delete m_shadow_fbo;
-        m_shadow_fbo = new QOpenGLFramebufferObject(c_angles, 1);
+        m_shadow_fbo = new QOpenGLFramebufferObject(shadow_size, 1);
     }
 
     // Bind and clear buffer
@@ -66,26 +71,20 @@ void OpenGL::bindShadowBuffer(bool initialize_only) {
 }
 
 
-
-
 //####################################################################################
 //##        Renders the 1D Shadow Map based on the Occluder Map
 //####################################################################################
 void OpenGL::drawShadowMap() {
-
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, m_light_fbo->texture());
 
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);           // Texture X Plane
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);           // Texture Y Plane
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);           // Texture Z Plane
-
     if (!m_shadow_shader.bind()) return;
 
-    // Give the shader our light_size resolution
-    m_shadow_shader.setUniformValue( m_uniform_shadow_resolution, c_angles, light_radius / m_scale );
+    // ***** Give the shader our Ray Count and Scaled Light Radius
+    m_shadow_shader.setUniformValue( m_uniform_shadow_ray_count,  static_cast<float>(m_shadow_fbo->width()) );
+
+    float screen_scale = (width() / c_light_size);
+    m_shadow_shader.setUniformValue( m_uniform_shadow_resolution, light_radius, (light_radius / m_scale) * screen_scale );
 
     // Reset our projection matrix to the FBO size
     float left =   0.0f - ((m_shadow_fbo->width() )  / 2.0f);
@@ -126,7 +125,6 @@ void OpenGL::drawShadowMap() {
 //##        Renders the light to the Default Screen Buffer using the Shadow Map
 //####################################################################################
 void OpenGL::draw2DLights() {
-
     // Enable alpha channel
 ///    glEnable(GL_BLEND);
 ///    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                  // Standard blend function
@@ -145,6 +143,16 @@ void OpenGL::draw2DLights() {
     // Give the shader our light_size resolution, color
     m_light_shader.setUniformValue( m_uniform_light_resolution, light_radius, shrink_multiplier );
     m_light_shader.setUniformValue( m_uniform_light_color, 0.75f, 0.2f, 0.75f );
+
+    //float cone_1 = qDegreesToRadians( 30.0f);
+    //float cone_2 = qDegreesToRadians(330.0f);
+    //float cone_1 = qDegreesToRadians(330.0f);
+    //float cone_2 = qDegreesToRadians( 30.0f);
+    float cone_1 = qDegreesToRadians(  0.0f);
+    float cone_2 = qDegreesToRadians(360.0f);
+    if (cone_1 < 0.0f) cone_1 += (2.0f * 3.141592f);
+    if (cone_2 < 0.0f) cone_2 += (2.0f * 3.141592f);
+    m_light_shader.setUniformValue( m_uniform_light_cone, cone_1, cone_2);
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
     float left =   0.0f - (m_texture_fbo->width()  / 2.0f);
@@ -183,7 +191,6 @@ void OpenGL::draw2DLights() {
 
     // Release Shader
     m_light_shader.release();
-
 }
 
 

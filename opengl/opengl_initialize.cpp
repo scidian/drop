@@ -88,6 +88,7 @@ void OpenGL::initializeGL() {
     // Shadow Fragment Shader Input
     m_uniform_shadow_texture =      m_shadow_shader.uniformLocation(   "u_texture" );
     m_uniform_shadow_resolution =   m_shadow_shader.uniformLocation(   "u_resolution" );
+    m_uniform_shadow_ray_count =    m_shadow_shader.uniformLocation(   "u_ray_count" );
 
 
     // ***** Initialize our 2D Light Shader
@@ -106,6 +107,7 @@ void OpenGL::initializeGL() {
     m_uniform_light_texture =       m_light_shader.uniformLocation(   "u_texture" );
     m_uniform_light_resolution =    m_light_shader.uniformLocation(   "u_resolution" );
     m_uniform_light_color =         m_light_shader.uniformLocation(   "u_color" );
+    m_uniform_light_cone =          m_light_shader.uniformLocation(   "u_cone" );
 
 }
 
