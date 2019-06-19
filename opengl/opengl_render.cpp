@@ -29,7 +29,7 @@ void OpenGL::paintGL() {
     ///auto ver = glGetString(GL_VERSION);
     ///m_engine->info = QString::fromUtf8(reinterpret_cast<const char*>(ver));
 
-    // ***** Make sure objects vector is sorted by depth
+    // ***** Make sure Objects vector is sorted by depth
     EngineObjects objects = m_engine->getCurrentWorld()->objects;
     std::sort(objects.begin(), objects.end(), [] (const DrEngineObject *a, const DrEngineObject *b) { return a->z_order < b->z_order; });
 
@@ -37,37 +37,40 @@ void OpenGL::paintGL() {
     updateViewMatrix();
 
     // ***** Render Onto Frame Buffer Object
-    bindOffscreenBuffer();                                      // Create / Bind Offscreen Frame Buffer Object
-    ///drawCube( QVector3D( 2000, 400, -300) );                 // Render Background 3D Objects
-    drawSpace();                                                // Render cpSpace Objects
-    ///drawCube( QVector3D(1600, 500, 600) );                   // Render Foreground 3D Objects
+    bindOffscreenBuffer();                                              // Create / Bind Offscreen Frame Buffer Object
+    ///drawCube( QVector3D( 2000, 400, -300) );                         // Render Background 3D Objects
+    drawSpace();                                                        // Render cpSpace Objects
+    ///drawCube( QVector3D(1600, 500, 600) );                           // Render Foreground 3D Objects
+    m_fbo->release();                                                   // Relase Frame Buffer Object
+    QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_fbo);    // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
 
-    // ***** Draws Debug Shapes / Text Onto Frame Buffer Object
-    QOpenGLPaintDevice paint_gl(width() * devicePixelRatio(), height() * devicePixelRatio());
-    QPainter painter (&paint_gl);
-    drawDebug(painter);
-    painter.end();
-
-    // ***** Relase Frame Buffer Object and copy it onto a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
-    m_fbo->release();
-    QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_fbo);
 
     // ***** Calculate 2D Light Shadow Maps
-    bindShadowBuffer();
+    bindLightBuffer(true);
     QOpenGLFramebufferObject::blitFramebuffer(
-                m_light_fbo, QRect(0, 0, m_light_fbo->width(), m_light_fbo->height()),
-                m_texture_fbo, QRect(static_cast<int>(width() / 2.0 - m_light_fbo->width() / 2.0),
-                                     static_cast<int>(height()/ 2.0 - m_light_fbo->height()/ 2.0), m_light_fbo->width(), m_light_fbo->height()),
+                m_light_fbo,   QRect(0, 0, m_light_fbo->width(), m_light_fbo->height()),
+                m_texture_fbo, QRect(static_cast<int>( (m_texture_fbo->width() / 2.0) - (m_light_fbo->width() / 2.0)),
+                                     static_cast<int>( (m_texture_fbo->height()/ 2.0) - (m_light_fbo->height()/ 2.0)),
+                                     m_light_fbo->width(), m_light_fbo->height()),
                 GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    bindShadowBuffer(false);
     drawShadowMap();
     m_shadow_fbo->release();
 
-//static int count = 0;
+
+g_info = "W: " + QString::number(m_texture_fbo->width()) + ", H: " + QString::number(m_texture_fbo->height());
+g_info += ", LFBO W: " + QString::number(m_light_fbo->width()) + ", H: " + QString::number(m_light_fbo->height());
+g_info += ", SFBO W: " + QString::number(m_shadow_fbo->width()) + ", H: " + QString::number(m_shadow_fbo->height());
+
+
+//static int count = 1;
 //count++;
 //if (count % 600 == 0) {
-//    ///Dr::ShowMessageBox("Light", QPixmap::fromImage(m_shadow_fbo->toImage()));
-//    Dr::ShowMessageBox("Light", QPixmap::fromImage(m_light_fbo->toImage()));
+//    Dr::ShowMessageBox("Light", QPixmap::fromImage(m_shadow_fbo->toImage()));
+//    ///Dr::ShowMessageBox("Light", QPixmap::fromImage(m_light_fbo->toImage()));
+//    count = 1;
 //}
+
 
 
     // ***** Bind default Qt FrameBuffer, clear and set up for drawing
@@ -83,6 +86,12 @@ void OpenGL::paintGL() {
 
     // ***** Renders Frame Buffer Object to screen buffer as a textured quad, with post processing available
     drawFrameBufferToScreenBuffer();
+
+    // ***** Draws Debug Shapes / Text Onto Frame Buffer Object
+    QOpenGLPaintDevice paint_gl(width() * devicePixelRatio(), height() * devicePixelRatio());
+    QPainter painter (&paint_gl);
+    drawDebug(painter);
+    painter.end();
 
     // ***** Update FPS
     ++m_form_engine->fps_count_render;
@@ -127,10 +136,6 @@ void OpenGL::bindOffscreenBuffer() {
     // Enable depth / stencil test
     ///glEnable( GL_DEPTH_TEST  );
     ///glEnable( GL_STENCIL_TEST );
-
-    // Alpha clamping
-    ///glEnable(GL_ALPHA_TEST);
-    ///glAlphaFunc(GL_GREATER,0);                                       // 0.0 (transparent) to 1.0 (opaque)
 }
 
 
@@ -189,6 +194,21 @@ void OpenGL::setWholeTextureCoordinates(std::vector<float> &texture_coords) {
     texture_coords[6] = 0;    texture_coords[7] = 0;
 }
 
+//####################################################################################
+//##        Returns list of vertices at z plane 0 from sides passed in
+//####################################################################################
+void OpenGL::setVertexFromSides(QVector<GLfloat> &vertices, float left, float right, float top, float bottom) {
+    QVector3D top_right = QVector3D( right, top, 0);
+    QVector3D top_left =  QVector3D( left,  top, 0);
+    QVector3D bot_right = QVector3D( right, bottom, 0);
+    QVector3D bot_left =  QVector3D( left,  bottom, 0);
+    vertices.clear();
+    vertices.resize( 12 );              // in sets of x, y, z
+    vertices[ 0] = top_right.x();       vertices[ 1] = top_right.y();       vertices[ 2] = 0;           // Top Right
+    vertices[ 3] = top_left.x();        vertices[ 4] = top_left.y();        vertices[ 5] = 0;           // Top Left
+    vertices[ 6] = bot_right.x();       vertices[ 7] = bot_right.y();       vertices[ 8] = 0;           // Bottom Right
+    vertices[ 9] = bot_left.x();        vertices[10] = bot_left.y();        vertices[11] = 0;           // Bottom Left
+}
 
 //####################################################################################
 //##        Renders Frame Buffer Object to screen buffer as a textured quad
@@ -222,18 +242,8 @@ void OpenGL::drawFrameBufferToScreenBuffer() {
     m_shader.enableAttributeArray( m_attribute_tex_coord );
 
     // Load vertices for this object
-    QVector3D top_right = QVector3D( right, top, 0);
-    QVector3D top_left =  QVector3D( left,  top, 0);
-    QVector3D bot_right = QVector3D( right, bottom, 0);
-    QVector3D bot_left =  QVector3D( left,  bottom, 0);
-
     QVector<GLfloat> vertices;
-    vertices.clear();
-    vertices.resize( 12 );              // in sets of x, y, z
-    vertices[ 0] = top_right.x();       vertices[ 1] = top_right.y();       vertices[ 2] = 0;           // Top Right
-    vertices[ 3] = top_left.x();        vertices[ 4] = top_left.y();        vertices[ 5] = 0;           // Top Left
-    vertices[ 6] = bot_right.x();       vertices[ 7] = bot_right.y();       vertices[ 8] = 0;           // Bottom Right
-    vertices[ 9] = bot_left.x();        vertices[10] = bot_left.y();        vertices[11] = 0;           // Bottom Left
+    setVertexFromSides(vertices, left, right, top, bottom);
     m_shader.setAttributeArray( m_attribute_vertex, vertices.data(), 3 );
     m_shader.enableAttributeArray( m_attribute_vertex );
 

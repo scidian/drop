@@ -17,7 +17,7 @@ varying   highp     vec4 coordinates;               // Output
 
 void main( void ) {
 
-    // Adjust traingle through camera matrix
+    // Adjust triangle through camera matrix
     gl_Position = u_matrix * vertex;
 
     // Send texture coordinate to fragment shader
