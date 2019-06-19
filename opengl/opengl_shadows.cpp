@@ -7,7 +7,13 @@
 //
 #include <QOpenGLFramebufferObject>
 
-#include "opengl.h"
+#include "engine/engine.h"
+#include "engine/engine_object.h"
+#include "engine/engine_texture.h"
+#include "engine/engine_world.h"
+#include "engine/form_engine.h"
+#include "helper.h"
+#include "opengl/opengl.h"
 
 const float c_light_size   = 1024;          // test size
 
@@ -18,7 +24,7 @@ const float c_light_size   = 1024;          // test size
 void OpenGL::bindShadowBuffer() {
 
     int light_radius = static_cast<int>(c_light_size * m_scale);
-    int shadow_size =  static_cast<int>(c_light_size);
+    int shadow_size =  static_cast<int>(c_light_size * m_scale);
 
     if (!m_shadow_fbo || m_shadow_fbo->width() != shadow_size) {
         QOpenGLFramebufferObjectFormat format;
@@ -39,6 +45,11 @@ void OpenGL::bindShadowBuffer() {
     // Clear the Shadow Frame Buffer Object
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+
+
+    g_info = "W: " + QString::number(width()) + ", H: " + QString::number(height());
+    g_info += ", LFBO W: " + QString::number(m_light_fbo->width()) + ", H: " + QString::number(m_light_fbo->height());
+    g_info += ", SFBO W: " + QString::number(m_shadow_fbo->width()) + ", H: " + QString::number(m_shadow_fbo->height());
 }
 
 
@@ -131,7 +142,7 @@ void OpenGL::draw2DLights() {
     m_matrix.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
 
     m_matrix.flipCoordinates();
-    m_matrix.rotate(-30, 0, 0, 1);
+    //m_matrix.rotate(-30, 0, 0, 1);
 
     m_light_shader.setUniformValue( m_uniform_light_matrix, m_matrix );
 
