@@ -130,8 +130,8 @@ void OpenGL::wheelEvent(QWheelEvent *event) {
         return;
     }
 
-    if (event->delta() > 0) { zoomInOut( 1);  }
-    else                    { zoomInOut(-1); }
+    if (event->delta() > 0) { zoomInOut( 10); }
+    else                    { zoomInOut(-10); }
     event->accept();
 }
 #endif

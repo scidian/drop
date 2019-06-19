@@ -26,8 +26,8 @@ static int  light_radius_fitted;
 //##        Allocate Light Occluder Frame Buffer Object
 //####################################################################################
 void OpenGL::bindLightBuffer(bool initialize_only) {
+    // Calculate size of light texture (fbo)
     light_radius = static_cast<int>(c_light_size * m_scale);
-
     light_radius_fitted = light_radius;
     if (light_radius > width()*2 && light_radius > height()*2) {
         light_radius_fitted = (width() > height()) ? width()*2 : height()*2;
@@ -51,13 +51,10 @@ void OpenGL::bindLightBuffer(bool initialize_only) {
 //##        Allocate Shadow Frame Buffer Object
 //####################################################################################
 void OpenGL::bindShadowBuffer(bool initialize_only) {
-    //int shadow_size =  static_cast<int>(c_light_size * m_scale);
-    int shadow_size =  c_angles;
-
     // Check Frame Buffer Object is initialized
-    if (!m_shadow_fbo || m_shadow_fbo->width() != shadow_size) {
+    if (!m_shadow_fbo || m_shadow_fbo->width() != c_angles) {
         delete m_shadow_fbo;
-        m_shadow_fbo = new QOpenGLFramebufferObject(shadow_size, 1);
+        m_shadow_fbo = new QOpenGLFramebufferObject(c_angles, 1);
     }
 
     // Bind and clear buffer
@@ -71,7 +68,9 @@ void OpenGL::bindShadowBuffer(bool initialize_only) {
 
 
 
-
+//####################################################################################
+//##        Renders the 1D Shadow Map based on the Occluder Map
+//####################################################################################
 void OpenGL::drawShadowMap() {
 
     glEnable(GL_TEXTURE_2D);
@@ -86,7 +85,7 @@ void OpenGL::drawShadowMap() {
     if (!m_shadow_shader.bind()) return;
 
     // Give the shader our light_size resolution
-    m_shadow_shader.setUniformValue( m_uniform_shadow_resolution, c_angles, light_radius );
+    m_shadow_shader.setUniformValue( m_uniform_shadow_resolution, c_angles, light_radius / m_scale );
 
     // Reset our projection matrix to the FBO size
     float left =   0.0f - ((m_shadow_fbo->width() )  / 2.0f);
@@ -123,6 +122,9 @@ void OpenGL::drawShadowMap() {
 }
 
 
+//####################################################################################
+//##        Renders the light to the Default Screen Buffer using the Shadow Map
+//####################################################################################
 void OpenGL::draw2DLights() {
 
     // Enable alpha channel
@@ -134,6 +136,7 @@ void OpenGL::draw2DLights() {
 
     if (!m_light_shader.bind()) return;
 
+    // Find out if light texture has been reduced to fit in the screen
     float shrink_multiplier = 1.0f;
     if (light_radius_fitted < light_radius) {
         shrink_multiplier = float(light_radius) / float(light_radius_fitted);
