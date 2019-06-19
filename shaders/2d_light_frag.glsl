@@ -8,7 +8,7 @@ precision mediump float;
 //
 
 // ***** Input from Vertex Shader
-varying highp vec4  coordinates;                    // Texture Coodinates
+varying highp vec2  coordinates;                    // Texture Coodinates
 
 // ***** Input from Engine
 uniform sampler2D   u_texture;
@@ -30,32 +30,30 @@ void main(void) {
     float coord =   (theta + PI) / (2.0 * PI);
 
     // The tex coord to sample our 1D lookup texture, always 0.0 on y axis
-    vec2 tc = vec2(coord, 0.0);
+    vec2  tc = vec2(coord, 0.0);
 
     // The center tex coord, which gives us hard shadows
     float center = sample(tc, r);
 
     // We multiply the blur amount by our distance from center, this leads to more blurriness as the shadow "fades away"
-    float blur = (1.0 / u_resolution.x) * smoothstep(0.0, 1.0, r);
+    float blur = (1.0 / u_resolution.x) * (smoothstep(0.0, 1.0, r) * u_resolution.y);
 
     // Now we use a simple gaussian blur, sum of 1.0 == in light, 0.0 == in shadow
     float sum = 0.0;
-    sum += sample(vec2(tc.x - 4.0*blur, tc.y), r) * 0.05;
-    sum += sample(vec2(tc.x - 3.0*blur, tc.y), r) * 0.09;
-    sum += sample(vec2(tc.x - 2.0*blur, tc.y), r) * 0.12;
-    sum += sample(vec2(tc.x - 1.0*blur, tc.y), r) * 0.15;
+    sum += sample(vec2(tc.x - 4.0 * blur, tc.y), r) * 0.05;
+    sum += sample(vec2(tc.x - 3.0 * blur, tc.y), r) * 0.09;
+    sum += sample(vec2(tc.x - 2.0 * blur, tc.y), r) * 0.12;
+    sum += sample(vec2(tc.x - 1.0 * blur, tc.y), r) * 0.15;
     sum += center * 0.16;
-    sum += sample(vec2(tc.x + 1.0*blur, tc.y), r) * 0.15;
-    sum += sample(vec2(tc.x + 2.0*blur, tc.y), r) * 0.12;
-    sum += sample(vec2(tc.x + 3.0*blur, tc.y), r) * 0.09;
-    sum += sample(vec2(tc.x + 4.0*blur, tc.y), r) * 0.05;
+    sum += sample(vec2(tc.x + 1.0 * blur, tc.y), r) * 0.15;
+    sum += sample(vec2(tc.x + 2.0 * blur, tc.y), r) * 0.12;
+    sum += sample(vec2(tc.x + 3.0 * blur, tc.y), r) * 0.09;
+    sum += sample(vec2(tc.x + 4.0 * blur, tc.y), r) * 0.05;
 
     // Multiply the summed amount by our distance, which gives us a radial falloff, then multiply by light color
-    float amount = sum * smoothstep(1.0, 0.0, r);
+    float amount = sum * (smoothstep(1.0, 0.0, r) * u_resolution.y);
     gl_FragColor = vec4(u_color, 1.0) * vec4(amount, amount, amount, amount);
 }
-
-
 
 
 

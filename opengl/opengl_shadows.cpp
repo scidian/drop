@@ -15,20 +15,28 @@
 #include "helper.h"
 #include "opengl/opengl.h"
 
-// Test Light Size
-const float c_light_size = 1024;
 
+const int   c_angles = 720;              // Number of rays to send out
+const float c_light_size = 1194;         // Test Light Size
+
+static int  light_radius;
+static int  light_radius_fitted;
 
 //####################################################################################
 //##        Allocate Light Occluder Frame Buffer Object
 //####################################################################################
 void OpenGL::bindLightBuffer(bool initialize_only) {
-    int light_radius = static_cast<int>(c_light_size * m_scale);
+    light_radius = static_cast<int>(c_light_size * m_scale);
+
+    light_radius_fitted = light_radius;
+    if (light_radius > width()*2 && light_radius > height()*2) {
+        light_radius_fitted = (width() > height()) ? width()*2 : height()*2;
+    }
 
     // Check Frame Buffer Object is initialized
-    if (!m_light_fbo || m_light_fbo->width() != light_radius || m_light_fbo->height() != light_radius) {
+    if (!m_light_fbo || m_light_fbo->width() != light_radius_fitted || m_light_fbo->height() != light_radius_fitted) {
         delete m_light_fbo;
-        m_light_fbo =  new QOpenGLFramebufferObject(light_radius, light_radius);
+        m_light_fbo =  new QOpenGLFramebufferObject(light_radius_fitted, light_radius_fitted);
     }
 
     // Bind and clear buffer
@@ -43,7 +51,8 @@ void OpenGL::bindLightBuffer(bool initialize_only) {
 //##        Allocate Shadow Frame Buffer Object
 //####################################################################################
 void OpenGL::bindShadowBuffer(bool initialize_only) {
-    int shadow_size =  static_cast<int>(c_light_size * m_scale);
+    //int shadow_size =  static_cast<int>(c_light_size * m_scale);
+    int shadow_size =  c_angles;
 
     // Check Frame Buffer Object is initialized
     if (!m_shadow_fbo || m_shadow_fbo->width() != shadow_size) {
@@ -77,19 +86,13 @@ void OpenGL::drawShadowMap() {
     if (!m_shadow_shader.bind()) return;
 
     // Give the shader our light_size resolution
-    m_shadow_shader.setUniformValue( m_uniform_shadow_resolution, m_light_fbo->width(), m_light_fbo->height() );
+    m_shadow_shader.setUniformValue( m_uniform_shadow_resolution, c_angles, light_radius );
 
     // Reset our projection matrix to the FBO size
-//    float left =   0.0f - (1 / 2.0f);
-//    float right =  0.0f + (1 / m_scale / 2.0f);
-//    float top =    0.0f + (1 / m_scale / 2.0f);
-//    float bottom = 0.0f - (1 / m_scale / 2.0f);
-
-    float left =   0.0f - ((m_light_fbo->width() )  / 2.0f);
-    float right =  0.0f + ((m_light_fbo->width() )  / 2.0f);
-    float top =    0.0f + ((m_light_fbo->height() ) / 2.0f);
-    float bottom = 0.0f - ((m_light_fbo->height() ) / 2.0f);
-
+    float left =   0.0f - ((m_shadow_fbo->width() )  / 2.0f);
+    float right =  0.0f + ((m_shadow_fbo->width() )  / 2.0f);
+    float top =    0.0f + ((m_shadow_fbo->height() ) / 2.0f);
+    float bottom = 0.0f - ((m_shadow_fbo->height() ) / 2.0f);
     QMatrix4x4 m_matrix;
     m_matrix.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
     m_shadow_shader.setUniformValue( m_uniform_shadow_matrix, m_matrix );
@@ -131,8 +134,13 @@ void OpenGL::draw2DLights() {
 
     if (!m_light_shader.bind()) return;
 
+    float shrink_multiplier = 1.0f;
+    if (light_radius_fitted < light_radius) {
+        shrink_multiplier = float(light_radius) / float(light_radius_fitted);
+    }
+
     // Give the shader our light_size resolution, color
-    m_light_shader.setUniformValue( m_uniform_light_resolution, m_light_fbo->width(), m_light_fbo->height() );
+    m_light_shader.setUniformValue( m_uniform_light_resolution, light_radius, shrink_multiplier );
     m_light_shader.setUniformValue( m_uniform_light_color, 0.75f, 0.2f, 0.75f );
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
@@ -142,7 +150,6 @@ void OpenGL::draw2DLights() {
     float bottom = 0.0f - (m_texture_fbo->height() / 2.0f);
     QMatrix4x4 m_matrix;
     m_matrix.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
-    m_matrix.flipCoordinates();
 
     m_light_shader.setUniformValue( m_uniform_light_matrix, m_matrix );
 

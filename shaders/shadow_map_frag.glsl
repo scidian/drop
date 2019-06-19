@@ -8,35 +8,36 @@ precision mediump float;
 //
 
 // ***** Input from Vertex Shader
-varying highp vec4  coordinates;                    // Texture Coodinates
+varying highp vec2  coordinates;                    // Texture Coodinates
 
 // ***** Input from Engine
 uniform sampler2D   u_texture;
 uniform vec2        u_resolution;
 
 // Other Variables
-const float         THRESHOLD = 0.5;                // Alpha threshold for our occlusion map
+const float         THRESHOLD = 0.75;               // Alpha threshold for our occlusion map
 const float         PI = 3.14159;                   // Pi
 
 void main(void) {
     float distance = 1.0;
+    float rays =       u_resolution.x;
     float ray_length = u_resolution.y;
 
-    for (float travel_y = 0.0; travel_y < ray_length; travel_y += 1.0) {
+    for (float travel_y = 0.0; travel_y < ray_length; travel_y += 1.0 * (ray_length / rays)) {
 
         // Rectangular to Polar filter
-        vec2  norm =  vec2(coordinates.s, travel_y / u_resolution.y) * 2.0 - 1.0;
+        vec2   norm = vec2(coordinates.s * (ray_length / rays), travel_y / ray_length) * 2.0 - 1.0;
         float theta = PI * 1.5 + norm.x * PI;
-        float r = (1.0 + norm.y) * 0.5;
+        float     r = (1.0 + norm.y) * 0.5;
 
         // Coordinate which we will sample from occluder map
-        vec2 coord = vec2(-r * sin(theta), -r * cos(theta)) / 2.0 + 0.5;
+        vec2 coord = vec2(-r * sin(theta), r * cos(theta)) / 2.0 + 0.5;
 
-        // Sample the occlusion map
+        // Sample the occluder map
         vec4 data = texture2D(u_texture, coord).rgba;
 
         // Current distance is how far from the top we've come
-        float dst = travel_y / u_resolution.y;
+        float dst = travel_y / ray_length;
 
         // If we've hit an opaque fragment (occluder), then get new distance
         // If the new distance is below the current, then we'll use that for our ray
