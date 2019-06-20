@@ -9,7 +9,7 @@
 #include "enums_engine.h"
 #include "editor/editor_item.h"
 #include "editor/editor_scene.h"
-#include "project/project_world_stage_object.h"
+#include "project/project_world_stage_thing.h"
 #include "settings/settings.h"
 
 
@@ -30,7 +30,7 @@ QString StringFromType(DrType type) {
         case DrType::Foreground:   return "Foreground";
         case DrType::StartStage:   return "Start Stage";
         case DrType::Variable:     return "Variable";
-        case DrType::Object:       return "Object";
+        case DrType::Thing:        return "Thing";
         case DrType::UI:           return "UI";
         case DrType::Label:        return "Label";
         case DrType::Button:       return "Button";
@@ -43,26 +43,26 @@ QString StringFromType(DrType type) {
 
 QString StringFromAssetType(DrAssetType type) {
     switch (type) {
-        case DrAssetType::Object:      return "Object Asset";
-        case DrAssetType::Text:        return "Text Asset";
-        case DrAssetType::Character:     return "Character Asset";
+        case DrAssetType::Object:       return "Object Asset";
+        case DrAssetType::Text:         return "Text Asset";
+        case DrAssetType::Character:    return "Character Asset";
 
         ///case DrAssetType::Action:        return "Action Asset";
     }
     return "Unknown";
 }
 
-QString StringFromObjectType(DrObjectType type) {
+QString StringFromThingType(DrThingType type) {
     switch (type) {
-        case DrObjectType::Object:       return "Object";
-        case DrObjectType::Text:         return "Text";
-        case DrObjectType::Character:    return "Character";
+        case DrThingType::Object:       return "Object";
+        case DrThingType::Text:         return "Text";
+        case DrThingType::Character:    return "Character";
 
-        ///case DrObjectType::Action:       return "Action";
-        ///case DrObjectType::Camera:       return "Camera";
-        ///case DrObjectType::Light:        return "Light";
-        ///case DrObjectType::Logic:        return "Logic";
-        ///case DrObjectType::Particle:     return "Particle";
+        ///case DrThingType::Action:       return "Action";
+        ///case DrThingType::Camera:       return "Camera";
+        ///case DrThingType::Light:        return "Light";
+        ///case DrThingType::Logic:        return "Logic";
+        ///case DrThingType::Particle:     return "Particle";
     }
 }
 
@@ -112,8 +112,8 @@ QList<DrSettings*> ConvertItemListToSettings(QList<QGraphicsItem*> list) {
     QList<DrSettings*> new_list;
     for (auto item : list) {
         DrItem* as_item = dynamic_cast<DrItem*>(item);
-        DrObject* as_object = as_item->getObject();
-        new_list.append(dynamic_cast<DrSettings*>(as_object));
+        DrThing* as_thing = as_item->getThing();
+        new_list.append(dynamic_cast<DrSettings*>(as_thing));
     }
     return new_list;
 }

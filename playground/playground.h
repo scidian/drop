@@ -30,7 +30,7 @@ typedef QVector<DrToy*> Toys;
 class DrPlayground
 {
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     FormPlayground *m_form_playground;              // Parent form
 
     // Chipmunk Physics Space

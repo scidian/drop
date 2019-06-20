@@ -15,7 +15,7 @@
 #include "project_image.h"
 #include "project_world.h"
 #include "project_world_stage.h"
-#include "project_world_stage_object.h"
+#include "project_world_stage_thing.h"
 
 
 //####################################################################################
@@ -37,7 +37,7 @@ DrProject::~DrProject() {
 
 //####################################################################################
 //##
-//##    Functions to add different object types into project
+//##    Functions to add different item types into project
 //##
 //####################################################################################
 long DrProject::addAsset(DrAssetType new_asset_type, long image_key) {
@@ -76,11 +76,11 @@ void DrProject::addWorld() {
 //####################################################################################
 //##
 //##    Key Finding - These functions search the current project for the specified Key and return the requested info
-//##                    (key's are generated from Project key generator upon object initialization)
+//##                  (key's are generated from Project key generator upon item initialization)
 //##
 //####################################################################################
 
-// Returns a pointer to the Base DrSettings class of the object with the specified key
+// Returns a pointer to the Base DrSettings class of the item with the specified key
 DrSettings* DrProject::findSettingsFromKey(long check_key) {
     AssetMap::iterator asset_iter = m_assets.find(check_key);
     if (asset_iter != m_assets.end())   return asset_iter->second;
@@ -101,9 +101,9 @@ DrSettings* DrProject::findSettingsFromKey(long check_key) {
         if (stage_iter != stages.end())     return stage_iter->second;
 
         for (auto stage_pair : stages) {
-            ObjectMap &objects = stage_pair.second->getObjectMap();
-            ObjectMap::iterator object_iter = objects.find(check_key);
-            if (object_iter != objects.end())   return object_iter->second;
+            ThingMap &things = stage_pair.second->getThingMap();
+            ThingMap::iterator thing_iter = things.find(check_key);
+            if (thing_iter != things.end()) return thing_iter->second;
         }
     }
 
@@ -139,13 +139,13 @@ DrStage* DrProject::findStageFromKey(long check_key) {
     return nullptr;
 }
 
-DrObject* DrProject::findObjectFromKey(long check_key) {
+DrThing* DrProject::findThingFromKey(long check_key) {
     for (auto world : m_worlds) {
         for (auto stage : world.second->getStageMap()) {
-            ObjectMap &objects = stage.second->getObjectMap();
-            ObjectMap::iterator object_iter = objects.find(check_key);
-            if (object_iter != objects.end())
-                return object_iter->second;
+            ThingMap &things = stage.second->getThingMap();
+            ThingMap::iterator thing_iter = things.find(check_key);
+            if (thing_iter != things.end())
+                return thing_iter->second;
         }
     }
     return nullptr;

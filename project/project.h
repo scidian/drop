@@ -32,7 +32,7 @@ class DrFont;
 class DrImage;
 class DrWorld;
 class DrStage;
-class DrObject;
+class DrThing;
 
 // Type definitions
 typedef std::map<long, DrWorld*> WorldMap;
@@ -52,7 +52,7 @@ class DrProject
 {
 private:
     // Project Variables
-    long        m_key_generator;                        // Variable to hand out unique id key's to all children objects
+    long        m_key_generator;                        // Variable to hand out unique id key's to all children items
 
     WorldMap    m_worlds;                               // Holds worlds for the project
     AssetMap    m_assets;                               // Holds assets for the project
@@ -99,7 +99,7 @@ public:
 
     DrAsset*        findAssetFromKey(long check_key);
     DrStage*        findStageFromKey(long check_key);
-    DrObject*       findObjectFromKey(long check_key);
+    DrThing*        findThingFromKey(long check_key);
 
     QString         testSpeedFindSettings(int test_size);
 

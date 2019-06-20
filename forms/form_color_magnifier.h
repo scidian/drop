@@ -23,7 +23,7 @@ class FormColorMagnifier : public QWidget
     Q_OBJECT
 
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     QWidget    *m_parent;                       // Parent widget that wants the color
 
     // Local Variables

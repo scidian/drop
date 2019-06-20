@@ -29,7 +29,7 @@ class TreeProject: public QTreeWidget
     Q_OBJECT
 
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrProject      *m_project;                          // Pointer to currently loaded project
     IEditorRelay   *m_editor_relay;                     // Pointer to IEditorRelay class of parent form
 
@@ -87,7 +87,7 @@ public:
 class TreeStageHighlightProxy : public QProxyStyle
 {
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     TreeProject     *m_parent_tree;              // Pointer to parent TreeProject
 
 public:

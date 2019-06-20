@@ -18,7 +18,7 @@
 #include "project/project.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"
-#include "project/project_world_stage_object.h"
+#include "project/project_world_stage_thing.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
@@ -57,8 +57,8 @@ DrView::DrView(QWidget *parent, DrProject *project, DrScene *from_scene, IEditor
     connect(this,   SIGNAL(selectionGroupMoved(DrScene*, QPointF)),
             my_scene, SLOT(selectionGroupMoved(DrScene*, QPointF)));
 
-    connect(this,   SIGNAL(selectionGroupNewGroup(DrScene*, QList<DrObject*>, QList<DrObject*>)),
-            my_scene, SLOT(selectionGroupNewGroup(DrScene*, QList<DrObject*>, QList<DrObject*>)) );
+    connect(this,   SIGNAL(selectionGroupNewGroup(DrScene*, QList<DrThing*>, QList<DrThing*>)),
+            my_scene, SLOT(selectionGroupNewGroup(DrScene*, QList<DrThing*>, QList<DrThing*>)) );
 
 }
 

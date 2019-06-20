@@ -10,7 +10,7 @@
 #include "project/project.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"
-#include "project/project_world_stage_object.h"
+#include "project/project_world_stage_thing.h"
 
 
 //####################################################################################
@@ -42,16 +42,16 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
 
         //******************************************************
 
-        // Call to undo command to change scene to newly selected Stage or newly selected object's parent Stage
+        // Call to undo command to change scene to newly selected Stage or newly selected thing's parent Stage
         DrSettings *selected_item = m_project->findSettingsFromKey(selected_key);
         if (selected_item != nullptr) {
             DrType selected_type = selected_item->getType();
             long change_to_key = c_no_key;
             if (selected_type == DrType::Stage || selected_type == DrType::StartStage) {
                 change_to_key = selected_key;
-            } else if (selected_type == DrType::Object) {
-                DrObject *as_object = dynamic_cast<DrObject*>(selected_item);
-                change_to_key = as_object->getParentStage()->getKey();
+            } else if (selected_type == DrType::Thing) {
+                DrThing *as_thing = dynamic_cast<DrThing*>(selected_item);
+                change_to_key = as_thing->getParentStage()->getKey();
             }
             if (change_to_key != c_no_key) {
                 m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree);          // selects none in scene before rebuilding scene
@@ -59,7 +59,7 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
             }
         }
 
-        // Callsto outside update functions to rebuild object inspector
+        // Calls to outside update functions to rebuild object inspector
         m_editor_relay->buildObjectInspector(QList<long> { selected_key });
 
         //******************************************************

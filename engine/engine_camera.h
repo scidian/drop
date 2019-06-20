@@ -23,7 +23,7 @@ class DrEngineWorld;
 class DrEngineCamera
 {
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrEngineWorld  *m_world;                                    // Pointer to the parent DrEngineWorld
 
     // Local Variables

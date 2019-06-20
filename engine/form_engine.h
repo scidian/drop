@@ -42,7 +42,7 @@ class FormEngine : public QMainWindow
     Q_OBJECT
 
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrProject          *m_project;
 
     // Local Variables

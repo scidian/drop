@@ -23,7 +23,7 @@
 
 
 //####################################################################################
-//##        Updates the property boxes already in the object inspector when a new
+//##        Updates the property boxes already in the Object Inspector when a new
 //##            item is selected or when something in the project has changed
 //##
 //##        Inspector Widget SIGNALS are blocked to prevent recursive updating
@@ -32,12 +32,12 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
     if (changed_items.isEmpty()) return;
     ///if (property_keys_to_update.isEmpty()) return;   // ********** Don't do this! This function is made so all properties update if none are received
 
-    // !!!!! #TEMP: Need to be more than just one item represented in object inspector
-    DrSettings* object = changed_items.first();
+    // !!!!! #TEMP: Need to be more than just one item represented in Object Inspector
+    DrSettings* thing = changed_items.first();
     // !!!!!
 
-    if (object->getKey() != m_selected_key) return;
-    if (m_selected_type != DrType::Object) return;
+    if (thing->getKey() != m_selected_key) return;
+    if (m_selected_type != DrType::Thing) return;
 
     // Forward definitions for widgets used in switch statement
     QPushButton     *pushbutton;
@@ -49,11 +49,11 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
         if (property_keys_to_update.contains(prop_key) == false &&
             property_keys_to_update.count() != 0) continue;
 
-        DrProperty *prop = object->findPropertyFromPropertyKey(prop_key);
+        DrProperty *prop = thing->findPropertyFromPropertyKey(prop_key);
         if (prop == nullptr) continue;
 
         // ***** Must turn off signals while updating or we will cause recursive function calling as changes to the
-        //       widgets are connected to updateObjectFromNewValue()
+        //       widgets are connected to updateThingFromNewValue()
         widget->blockSignals(true);
 
         // Enable / disable widgets as necessary
@@ -136,10 +136,10 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 
 //####################################################################################
 //##        SLOT: connceted from SIGNAL that is emmited when the user changes the values
-//##            of the input boxes in the object inspector.
+//##            of the input boxes in the Object Inspector.
 //##
 //##        Updates the appropriate DrSettings DrProperty Values of the item changed
-//##            in the object inspector after a new value has been accepted
+//##            in the Object Inspector after a new value has been accepted
 //####################################################################################
 void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order) {
     if (m_selected_key == c_no_key) return;

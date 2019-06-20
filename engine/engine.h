@@ -42,7 +42,7 @@ typedef std::map<long, DrEngineWorld*>   EngineWorldMap;
 class DrEngine
 {
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     FormEngine         *m_form_engine;              // Pointer to Parent FormEngine
     DrProject          *m_project;                  // Pointer to Project to load into Engine
 

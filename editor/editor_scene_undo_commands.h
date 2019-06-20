@@ -14,7 +14,7 @@
 // Forward declarations
 class DrProject;
 class DrScene;
-class DrObject;
+class DrThing;
 
 //####################################################################################
 //##    Change Stage in SceneView
@@ -22,7 +22,7 @@ class DrObject;
 class UndoCommandChangeStage : public QUndoCommand
 {
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrProject  *m_project;
     DrScene    *m_scene;
 
@@ -47,7 +47,7 @@ public:
 class UndoCommandMove : public QUndoCommand
 {
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrScene    *m_scene;
 
     // Local Variables
@@ -68,15 +68,15 @@ public:
 class UndoCommandNewSelection : public QUndoCommand
 { 
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrScene    *m_scene;
 
     // Local Variables
-    QList<DrObject*>     m_old_list;
-    QList<DrObject*>     m_new_list;
+    QList<DrThing*>     m_old_list;
+    QList<DrThing*>     m_new_list;
 
 public:
-    UndoCommandNewSelection(DrScene *scene, QList<DrObject*> old_list, QList<DrObject*> new_list, QUndoCommand *parent = nullptr);
+    UndoCommandNewSelection(DrScene *scene, QList<DrThing*> old_list, QList<DrThing*> new_list, QUndoCommand *parent = nullptr);
     void        undo() override;
     void        redo() override;
 };

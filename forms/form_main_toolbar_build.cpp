@@ -74,7 +74,7 @@ void FormMain::buildToolBar()
         toolbarLayoutMode->addWidget(tool);
 
 
-    // ***** Mode "Editor" Add-On, Layering: Holds buttons that send objects to front / back
+    // ***** Mode "Editor" Add-On, Layering: Holds buttons that send Things to front / back
     widgetGroupLayering = new QWidget(widgetToolbar);
     widgetGroupLayering->hide();
     widgetGroupLayering->setObjectName(QStringLiteral("widgetGroupLayering"));
@@ -87,24 +87,24 @@ void FormMain::buildToolBar()
         buttonsGroupLayering->setExclusive(false);
         connect(buttonsGroupLayering, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupLayeringClicked(int)));
 
-        tool = createToolbarButton(QStringLiteral("buttonSendToBack"), Advisor_Info::Object_Send_to_Back, 34, 26, false, false);
+        tool = createToolbarButton(QStringLiteral("buttonSendToBack"), Advisor_Info::Thing_Send_to_Back, 34, 26, false, false);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_To_Back));
         toolbarLayoutLayering->addWidget(tool);
 
-        tool = createToolbarButton(QStringLiteral("buttonSendBackward"), Advisor_Info::Object_Send_Backward, 34, 26, false, false);
+        tool = createToolbarButton(QStringLiteral("buttonSendBackward"), Advisor_Info::Thing_Send_Backward, 34, 26, false, false);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_Backward));
         toolbarLayoutLayering->addWidget(tool);
 
-        tool = createToolbarButton(QStringLiteral("buttonSendForward"), Advisor_Info::Object_Send_Forward, 34, 26, false, false);
+        tool = createToolbarButton(QStringLiteral("buttonSendForward"), Advisor_Info::Thing_Send_Forward, 34, 26, false, false);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_Forward));
         toolbarLayoutLayering->addWidget(tool);
 
-        tool = createToolbarButton(QStringLiteral("buttonSendToFront"), Advisor_Info::Object_Send_to_Front, 34, 26, false, false);
+        tool = createToolbarButton(QStringLiteral("buttonSendToFront"), Advisor_Info::Thing_Send_to_Front, 34, 26, false, false);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_To_Front));
         toolbarLayoutLayering->addWidget(tool);
 
 
-    // ***** Mode "Editor" Add-On, Transform: Holds buttons that flip / rotate objects
+    // ***** Mode "Editor" Add-On, Transform: Holds buttons that flip / rotate things
     widgetGroupTransform = new QWidget(widgetToolbar);
     widgetGroupTransform->hide();
     widgetGroupTransform->setObjectName(QStringLiteral("widgetGroupTransform"));
@@ -117,23 +117,23 @@ void FormMain::buildToolBar()
         buttonsGroupTransform->setExclusive(false);
         connect(buttonsGroupTransform, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupTransformClicked(int)));
 
-        tool = createToolbarButton(QStringLiteral("buttonResetObject"), Advisor_Info::Object_Reset, 34, 26, false, false);
+        tool = createToolbarButton(QStringLiteral("buttonResetObject"), Advisor_Info::Thing_Reset, 34, 26, false, false);
         buttonsGroupTransform->addButton(tool, int(Buttons_Transform::Reset_Object));
         toolbarLayoutTransform->addWidget(tool);
 
-        tool = createToolbarButton(QStringLiteral("buttonTransformFlipH"), Advisor_Info::Object_Flip_H, 34, 26, false, false);
+        tool = createToolbarButton(QStringLiteral("buttonTransformFlipH"), Advisor_Info::Thing_Flip_H, 34, 26, false, false);
         buttonsGroupTransform->addButton(tool, int(Buttons_Transform::Flip_H));
         toolbarLayoutTransform->addWidget(tool);
 
-        tool = createToolbarButton(QStringLiteral("buttonTransformFlipV"), Advisor_Info::Object_Flip_V, 34, 26, false, false);
+        tool = createToolbarButton(QStringLiteral("buttonTransformFlipV"), Advisor_Info::Thing_Flip_V, 34, 26, false, false);
         buttonsGroupTransform->addButton(tool, int(Buttons_Transform::Flip_V));
         toolbarLayoutTransform->addWidget(tool);
 
-        tool = createToolbarButton(QStringLiteral("buttonTransformRotateL"), Advisor_Info::Object_Rotate_L, 34, 26, false, false);
+        tool = createToolbarButton(QStringLiteral("buttonTransformRotateL"), Advisor_Info::Thing_Rotate_L, 34, 26, false, false);
         buttonsGroupTransform->addButton(tool, int(Buttons_Transform::Rotate_L));
         toolbarLayoutTransform->addWidget(tool);
 
-        tool = createToolbarButton(QStringLiteral("buttonTransformRotateR"), Advisor_Info::Object_Rotate_R, 34, 26, false, false);
+        tool = createToolbarButton(QStringLiteral("buttonTransformRotateR"), Advisor_Info::Thing_Rotate_R, 34, 26, false, false);
         buttonsGroupTransform->addButton(tool, int(Buttons_Transform::Rotate_R));
         toolbarLayoutTransform->addWidget(tool);
 

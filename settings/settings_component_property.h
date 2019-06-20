@@ -22,7 +22,7 @@ class DrComponent;
 class DrProperty
 {
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrSettings   *m_parent_settings;
     DrComponent  *m_parent_component;
 

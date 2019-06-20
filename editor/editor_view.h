@@ -19,7 +19,7 @@
 // Forward declarations
 class DrProject;
 class DrStage;
-class DrObject;
+class DrThing;
 class DrItem;
 class SelectionGroup;
 class IEditorRelay;
@@ -62,7 +62,7 @@ class DrView : public QGraphicsView
     Q_OBJECT
 
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrProject              *m_project;                              // Pointer to currently loaded project
     IEditorRelay           *m_editor_relay;                         // Pointer to IEditorRelay class of parent form
 
@@ -269,7 +269,7 @@ public slots:
 signals:
     // Signals used to fire UndoStack Commands
     void    selectionGroupMoved(DrScene *scene, const QPointF &old_position);
-    void    selectionGroupNewGroup(DrScene *scene, QList<DrObject*> old_list, QList<DrObject*> new_list);
+    void    selectionGroupNewGroup(DrScene *scene, QList<DrThing*> old_list, QList<DrThing*> new_list);
 
 };
 

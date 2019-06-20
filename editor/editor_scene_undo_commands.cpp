@@ -13,7 +13,7 @@
 #include "project/project.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"
-#include "project/project_world_stage_object.h"
+#include "project/project_world_stage_thing.h"
 
 
 /*
@@ -52,7 +52,7 @@ void DrScene::selectionGroupMoved(DrScene *scene, const QPointF &old_position) {
     m_undo->push(new UndoCommandMove(scene, old_position));
 }
 
-void DrScene::selectionGroupNewGroup(DrScene *scene, QList<DrObject*> old_list, QList<DrObject*> new_list) {
+void DrScene::selectionGroupNewGroup(DrScene *scene, QList<DrThing*> old_list, QList<DrThing*> new_list) {
     m_undo->push(new UndoCommandNewSelection(scene, old_list, new_list));
 }
 
@@ -79,7 +79,7 @@ void UndoCommandChangeStage::redo() {
 }
 
 QString UndoCommandChangeStage::changeStage(long old_stage, long new_stage, bool is_undo) {
-    // Remove any references within the current project stage objects to any GraphicsScene items
+    // Remove any references within the current project stage things to any GraphicsScene items
     DrStage *displayed = m_project->findStageFromKey(old_stage);
     if (displayed) displayed->removeGraphicsItemReferences();
 
@@ -111,9 +111,9 @@ QString UndoCommandChangeStage::changeStage(long old_stage, long new_stage, bool
     emit m_scene->setViewRect(new_view_rect);
     emit m_scene->updateGrid();
 
-    // Load all our objects from data model into QGraphicsItems
-    for (auto object_pair : from_stage->getObjectMap()) {
-        m_scene->addItemToSceneFromObject(object_pair.second);
+    // Load all our Things from data model into QGraphicsItems
+    for (auto thing_pair : from_stage->getThingMap()) {
+        m_scene->addItemToSceneFromThing(thing_pair.second);
     }
 
     // Center the view on the new stage
@@ -130,9 +130,9 @@ QString UndoCommandChangeStage::changeStage(long old_stage, long new_stage, bool
     else            return "Undo Select Stage " + from_stage->getName();
 }
 
-DrItem* DrScene::addItemToSceneFromObject(DrObject *object) {
-    // Create new item representing this object
-    DrItem *item = new DrItem(m_project, this->getRelay(), object);
+DrItem* DrScene::addItemToSceneFromThing(DrThing *thing) {
+    // Create new item representing this Thing
+    DrItem *item = new DrItem(m_project, this->getRelay(), thing);
 
     // Temporarily disable geometry signal itemChange updates
     item->disableItemChangeFlags();
@@ -149,8 +149,8 @@ DrItem* DrScene::addItemToSceneFromObject(DrObject *object) {
     // Re enable geometry signal itemChange() updates
     item->enableItemChangeFlags();
 
-    // Assign this QGraphicsItem we just made to the object in the project so it can reference it later
-    object->setDrItem(item);
+    // Assign this QGraphicsItem we just made to the Thing in the project so it can reference it later
+    thing->setDrItem(item);
 
     return item;
 }
@@ -198,8 +198,8 @@ void UndoCommandMove::redo() {
 //##        Deselects old items, Selects one new item
 //####################################################################################
 UndoCommandNewSelection::UndoCommandNewSelection(DrScene *scene,
-                                                   QList<DrObject*> old_list,
-                                                   QList<DrObject*> new_list,
+                                                   QList<DrThing*> old_list,
+                                                   QList<DrThing*> new_list,
                                                    QUndoCommand *parent) : QUndoCommand(parent) {
     m_scene = scene;
     m_old_list = old_list;
@@ -209,7 +209,7 @@ UndoCommandNewSelection::UndoCommandNewSelection(DrScene *scene,
 void UndoCommandNewSelection::undo() {
 //    m_scene->emptySelectionGroup();
 
-//    for (auto object : m_old_list) m_scene->addItemToSelectionGroup(object->getDrItem());
+//    for (auto thing : m_old_list) m_scene->addItemToSelectionGroup(thing->getDrItem());
 
 //    m_scene->updateStageTreeSelection();
 //    emit m_scene->updateViews();
@@ -224,7 +224,7 @@ void UndoCommandNewSelection::undo() {
 void UndoCommandNewSelection::redo() {
 //    m_scene->emptySelectionGroup();
 
-//    for (auto object : m_new_list) m_scene->addItemToSelectionGroup(object->getDrItem());
+//    for (auto thing : m_new_list) m_scene->addItemToSelectionGroup(thing->getDrItem());
 
 //    m_scene->updateStageTreeSelection();
 //    emit m_scene->updateViews();

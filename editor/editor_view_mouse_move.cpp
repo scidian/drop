@@ -20,7 +20,7 @@
 #include "project/project.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"
-#include "project/project_world_stage_object.h"
+#include "project/project_world_stage_thing.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
@@ -149,21 +149,21 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
 
     // !!!!! #DEBUG:    Draw mouse coords on screen
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Mouse_Coordinates)) {
-        long object_count = 0;
+        long thing_count = 0;
         if (my_scene)
             if (my_scene->getCurrentStageShown())
-                object_count = static_cast<long>(my_scene->getCurrentStageShown()->getObjectMap().size());
+                thing_count = static_cast<long>(my_scene->getCurrentStageShown()->getThingMap().size());
         Dr::SetLabelText(Label_Names::Label_Mouse_1, "Mouse Scene X: " + QString::number(mapToScene(m_last_mouse_pos).x()) +
                                                                ", Y: " + QString::number(mapToScene(m_last_mouse_pos).y()) );
         Dr::SetLabelText(Label_Names::Label_Mouse_2, "Mouse View  X: " + QString::number(m_last_mouse_pos.x()) +
                                                                ", Y: " + QString::number(m_last_mouse_pos.y()) );
         Dr::SetLabelText(Label_Names::Label_Pos_Flag, "Pos Flag: " + Dr::StringFromPositionFlag(m_over_handle) + QString("\t") +
                                                      "Pos Angle: " + QString::number(a) + QString("\t") +
-                                                    "Item Count: " + QString::number(object_count)  );
+                                                    "Item Count: " + QString::number(thing_count)  );
     }
     // !!!!! END
 
-    // !!!!! #DEBUG:    Showing object data
+    // !!!!! #DEBUG:    Showing Item Data
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Selected_Item_Data) && check_item != nullptr) {
         QGraphicsItem *item = check_item;
         QPointF my_scale =  item->data(User_Roles::Scale).toPointF();

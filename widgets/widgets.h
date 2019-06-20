@@ -22,7 +22,7 @@ class DrQPushButtonCategory : public QPushButton
     Q_OBJECT
 
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     QTreeWidget          m_parent_tree;
     QTreeWidgetItem     *m_parent_item;
 

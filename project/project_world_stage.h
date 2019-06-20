@@ -15,10 +15,10 @@
 class DrProject;
 class DrAsset;
 class DrWorld;
-class DrObject;
+class DrThing;
 
 // Type definitions
-typedef std::map<long, DrObject*> ObjectMap;
+typedef std::map<long, DrThing*> ThingMap;
 
 
 //####################################################################################
@@ -28,12 +28,12 @@ typedef std::map<long, DrObject*> ObjectMap;
 class DrStage : public DrSettings
 {
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrProject  *m_parent_project;                           // Holds reference to parent Project class that handles key generation for project
     DrWorld    *m_parent_world;                             // Holds reference to parent World class
 
     // Local variables
-    ObjectMap   m_objects;                                  // Map of pointers to DrObject classes       (holds the objects for current stage)
+    ThingMap    m_things;                                   // Map of pointers to DrThing classes (holds the things for current stage)
 
     bool        m_is_start_stage;                           // True if this is the first stage in a world
     QPointF     m_center_view_point {0, 0};                 // Holds the center point the view was on last time this stage was shown
@@ -48,8 +48,8 @@ public:
     virtual DrType  getType() override  { return DrType::Stage; }
     DrProject*      getParentProject()  { return m_parent_project; }
     DrWorld*        getParentWorld()    { return m_parent_world; }
-    ObjectMap&      getObjectMap()      { return m_objects; }
-    DrObject*       getObject(long key) { return m_objects[key]; }
+    ThingMap&       getThingMap()       { return m_things; }
+    DrThing*        getThing(long key)  { return m_things[key]; }
 
     QPointF         getViewCenterPoint(){ return m_center_view_point; }
     void            setViewCenterPoint(QPointF new_point) { m_center_view_point = new_point; }
@@ -57,11 +57,11 @@ public:
     bool            isStartStage()      { return m_is_start_stage; }
 
     // Misc Stage Functions
-    DrObject*       addObject(DrObjectType new_type, long from_asset_key, double x, double y, long z, bool should_collide = true);
-    void            copyObjectSettings(DrObject *from_object, DrObject *to_object);
-    void            deleteObject(DrObject *object) ;
+    DrThing*        addThing(DrThingType new_type, long from_asset_key, double x, double y, long z, bool should_collide = true);
+    void            copyThingSettings(DrThing *from_thing, DrThing *to_thing);
+    void            deleteThing(DrThing *thing) ;
 
-    QList<long>     objectKeysSortedByZOrder();
+    QList<long>     thingKeysSortedByZOrder();
     void            initializeStageSettings(QString new_name);
     void            removeGraphicsItemReferences();
 

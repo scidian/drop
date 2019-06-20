@@ -29,7 +29,7 @@ class DrToy
 {
 
 public:
-    // ***** External Borrowed Objects
+    // ***** External Borrowed Pointers
     DrPlayground       *m_playground;           // Parent DrPlayground
 
 

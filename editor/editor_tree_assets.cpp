@@ -24,7 +24,7 @@
 #include "project/project_font.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"
-#include "project/project_world_stage_object.h"
+#include "project/project_world_stage_thing.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"

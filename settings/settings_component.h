@@ -25,7 +25,7 @@ typedef std::map<long, DrProperty*> PropertyMap;
 class DrComponent
 {
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrSettings *m_parent_settings;                                  // Point to the DrSettings class that holds this component
 
     // Local Variables

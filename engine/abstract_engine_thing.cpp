@@ -7,7 +7,6 @@
 //
 #include "abstract_engine_thing.h"
 
-DrEngineThing::DrEngineThing()
-{
+DrEngineThing::DrEngineThing() {
 
 }

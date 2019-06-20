@@ -31,7 +31,7 @@ class DrScene : public QGraphicsScene
     Q_OBJECT
 
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrProject      *m_project;                              // Pointer to currently loaded project
     IEditorRelay   *m_editor_relay;                         // Pointer to IEditorRelay class of parent form
 
@@ -68,7 +68,7 @@ public:
     virtual void    keyReleaseEvent(QKeyEvent *event) override;                            // Inherited from QGraphicsScene
 
     // Scene Functions
-    DrItem*         addItemToSceneFromObject(DrObject *object);
+    DrItem*         addItemToSceneFromThing(DrThing *thing);
     void            setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y);
     void            setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y);
 
@@ -132,7 +132,7 @@ public slots:
     // Undo Commands
     void            newStageSelected(DrProject *project, DrScene *scene, long old_stage, long new_stage);
     void            selectionGroupMoved(DrScene *scene, const QPointF &old_position);
-    void            selectionGroupNewGroup(DrScene *scene, QList<DrObject*> old_list, QList<DrObject*> new_list);
+    void            selectionGroupNewGroup(DrScene *scene, QList<DrThing*> old_list, QList<DrThing*> new_list);
 
 signals:
     void            setViewRect(QRectF new_rect);                           // Connected to setViewRect() function of attached Views

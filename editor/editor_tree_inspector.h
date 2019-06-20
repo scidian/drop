@@ -18,7 +18,7 @@
 
 // Forward declarations
 class DrProject;
-class DrObject;
+class DrThing;
 class DrSettings;
 class DrProperty;
 
@@ -41,7 +41,7 @@ class TreeInspector: public QTreeWidget
     Q_OBJECT
 
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrProject              *m_project;                      // Pointer to currently loaded project
     IEditorRelay           *m_editor_relay;                 // Pointer to IEditorRelay class of parent form
 

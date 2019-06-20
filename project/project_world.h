@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 12/7/18, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      DrWorld - Class to hold all stages, variables and objects for one world
+//      DrWorld - Class to hold all stages, variables and things for one world
 //
 //
 
@@ -21,12 +21,12 @@ typedef std::map<long, DrStage*> StageMap;
 
 //####################################################################################
 //##    DrWorld
-//##        Class to hold all stages, variables and objects for one world
+//##        Class to hold all stages, variables and things for one world
 //############################
 class DrWorld : public DrSettings
 {
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrProject  *m_parent_project;                           // Holds reference to parent Project class that handles key generation for project
 
     // Local variables

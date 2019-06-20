@@ -12,7 +12,7 @@
 #include "project_image.h"
 #include "project_world.h"
 #include "project_world_stage.h"
-#include "project_world_stage_object.h"
+#include "project_world_stage_thing.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
@@ -66,14 +66,14 @@ void DrAsset::initializeAssetSettingsObject(QString new_name, QPixmap pixmap) {
     addPropertyToComponent(Components::Asset_Settings, Properties::Asset_Name, Property_Type::String, new_name,
                            "Asset Name", "Name of the current asset.");
     addPropertyToComponent(Components::Asset_Settings, Properties::Asset_Collision_Shape, Property_Type::Polygon, QPolygonF(),
-                           "Collision Shape", "Shape of the object as it interacts with other objects in the world.");
+                           "Collision Shape", "Shape of the Object as it interacts with other Objects in the world.");
 
 
     addComponent(Components::Asset_Animation, "Animation", "Images to show for this asset", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
 
     addPropertyToComponent(Components::Asset_Animation, Properties::Asset_Animation_Default, Property_Type::Image, QVariant(pixmap),
-                           "Default Animation", "Image shown for this object.");
+                           "Default Animation", "Image shown for this Object.");
 
 }
 
@@ -103,14 +103,14 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap)
     addPropertyToComponent(Components::Asset_Settings, Properties::Asset_Name, Property_Type::String, new_name,
                            "Asset Name", "Name of the current asset.");
     addPropertyToComponent(Components::Asset_Settings, Properties::Asset_Collision_Shape, Property_Type::Polygon, QPolygonF(),
-                           "Collision Shape", "Shape of the object as it interacts with other objects in the world.");
+                           "Collision Shape", "Shape of the Object as it interacts with other Objects in the world.");
 
 
     addComponent(Components::Asset_Animation, "Animation", "Images to show for this asset", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
 
     addPropertyToComponent(Components::Asset_Animation, Properties::Asset_Animation_Default, Property_Type::Image, QVariant(pixmap),
-                           "Default Animation", "Image shown for this object.");
+                           "Default Animation", "Image shown for this Object.");
 
 }
 

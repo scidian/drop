@@ -23,7 +23,7 @@ class TreeAdvisor: public QTreeWidget
     Q_OBJECT
 
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrProject      *m_project;                                      // Pointer to currently loaded project
     IEditorRelay   *m_editor_relay;                                 // Pointer to IEditorRelay class of parent form
 

@@ -48,7 +48,7 @@ class DrEngineWorld
 {
 
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrEngine           *m_engine;                   // Pointer to Parent Engine
     DrProject          *m_project;                  // Pointer to Project loaded into Engine
 

@@ -113,7 +113,7 @@ class DrPlaygroundView : public QGraphicsView
     Q_OBJECT
 
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     FormPlayground      *m_form_playground;                 // Parent FormPlayground
     DrPlayground        *m_playground;                      // Class that holds the Playground Physics Space
 

@@ -12,7 +12,7 @@
 #include "project/project_asset.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"
-#include "project/project_world_stage_object.h"
+#include "project/project_world_stage_thing.h"
 
 
 //####################################################################################
@@ -45,13 +45,13 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
                         asset = m_project->getAsset(item_key);
                         asset_text = item->getComponentPropertyValue(Components::Asset_Settings, Properties::Asset_Name).toString();
 
-                        // Update all objects in the project that use this asset name
+                        // Update all Things in the project that use this asset name
                         for (auto world : m_project->getWorldMap()) {
                             for (auto stage : world.second->getStageMap()) {
-                                for (auto object : stage.second->getObjectMap()) {
-                                    if (object.second->getAssetKey() == asset->getKey()) {
-                                        object.second->setComponentPropertyValue(Components::Object_Settings, Properties::Object_Name, asset_text);
-                                        newly_changed_items.append(object.second);
+                                for (auto thing : stage.second->getThingMap()) {
+                                    if (thing.second->getAssetKey() == asset->getKey()) {
+                                        thing.second->setComponentPropertyValue(Components::Object_Settings, Properties::Object_Name, asset_text);
+                                        newly_changed_items.append(thing.second);
                                         if (!newly_changed_properties.contains(Properties::Object_Name)) {
                                             newly_changed_properties.append(Properties::Object_Name);
                                         }
@@ -77,7 +77,7 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
     }
     update();
 
-    // If some assets were changed, and objects were updated, so update those objects in the other widgets
+    // If some assets were changed, and items were updated, update those items in the other widgets
     if (newly_changed_items.isEmpty() == false)
         m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Asset_Tree, newly_changed_items, newly_changed_properties);
 }

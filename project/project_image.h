@@ -19,12 +19,12 @@ class DrProject;
 
 //####################################################################################
 //##    DrImage
-//##        Class to hold an immage for use in a project, can be pulled for asset or objects
+//##        Class to hold an immage for use in a project, can be pulled for asset or things
 //############################
 class DrImage : public DrSettings
 {
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrProject       *m_parent_project;                  // Holds reference to parent Project class that handles key generation for project
 
     // Local Variables

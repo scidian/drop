@@ -16,7 +16,7 @@
 #include "globals.h"
 #include "helper.h"
 #include "project/project.h"
-#include "project/project_world_stage_object.h"
+#include "project/project_world_stage_thing.h"
 
 //####################################################################################
 //##    buttonGroupMode SLOT and functions
@@ -72,11 +72,11 @@ void FormMain::buttonGroupTransformClicked(int id) {
 
         for (auto item : sceneEditor->getSelectionItems()) {
             DrItem   *dritem = dynamic_cast<DrItem*>(item);
-            DrObject *object = dritem->getObject();
+            DrThing  *thing = dritem->getThing();
 
-            settings.append(object);
-            object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale, QPointF(1, 1));
-            object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Rotation, 0);
+            settings.append(thing);
+            thing->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale, QPointF(1, 1));
+            thing->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Rotation, 0);
         }
         sceneEditor->resetSelectionGroup();
         updateEditorWidgetsAfterItemChange(Editor_Widgets::ToolBar, settings, properties );

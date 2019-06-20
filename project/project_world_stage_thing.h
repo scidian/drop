@@ -2,12 +2,12 @@
 //      Created by Stephens Nunnally on 12/7/18, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      DrObject - Class to hold one object within a stage, can holds more objects?
+//      DrThing - Class to hold one Thing within a Stage, can holds more Things?
 //
 //
 
-#ifndef DROBJECT_H
-#define DROBJECT_H
+#ifndef DRTHING_H
+#define DRTHING_H
 
 #include "settings/settings.h"
 
@@ -20,33 +20,33 @@ class DrStage;
 
 
 //####################################################################################
-//##    DrObject
-//##        Class to hold one object within a stage
+//##    DrThing
+//##        Class to hold one Thing within a Stage
 //############################
-class DrObject : public DrSettings
+class DrThing : public DrSettings
 {
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrProject      *m_parent_project;                   // Holds reference to parent Project class that handles key generation for project
     DrWorld        *m_parent_world;                     // Holds reference to parent World class
     DrStage        *m_parent_stage;                     // Holds reference to parent Stage class
 
     // Local Variables
-    DrObjectType    m_object_type;                      // Holds type of current object
+    DrThingType     m_thing_type;                       // Holds type of current Thing
     long            m_asset_key;                        // Holds the associated asset key, this way we know what image to grab for GraphicsView
-    DrItem         *m_item_in_scene = nullptr;          // Holds a pointer to a QGraphicsItem if this object is currently represented in the editor
+    DrItem         *m_item_in_scene = nullptr;          // Holds a pointer to a QGraphicsItem if this Thing is currently represented in the editor
 
 public:
     // Constructor & destructor
-    explicit DrObject(DrProject *parent_project, DrWorld *parent_world, DrStage *parent_stage, long new_object_key,
-                      QString new_object_name, DrObjectType new_object_type, long from_asset_key, double x, double y, long z, bool should_collide = true);
-    virtual ~DrObject() override;
+    explicit DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *parent_stage, long new_thing_key,
+                     QString new_thing_name, DrThingType new_thing_type, long from_asset_key, double x, double y, long z, bool should_collide = true);
+    virtual ~DrThing() override;
 
     // DrSettings Base Class Overrides
-    virtual DrType  getType() override          { return DrType::Object; }
+    virtual DrType  getType() override          { return DrType::Thing; }
 
     // Getters and setters
-    DrObjectType    getObjectType()             { return m_object_type; }
+    DrThingType     getThingType()              { return m_thing_type; }
     DrProject*      getParentProject()          { return m_parent_project; }
     DrWorld*        getParentWorld()            { return m_parent_world; }
     DrStage*        getParentStage()            { return m_parent_stage; }
@@ -68,7 +68,7 @@ public:
 };
 
 
-#endif // DROBJECT_H
+#endif // DRTHING_H
 
 
 

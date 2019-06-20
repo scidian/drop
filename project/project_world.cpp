@@ -8,7 +8,7 @@
 #include "project.h"
 #include "project_world.h"
 #include "project_world_stage.h"
-#include "project_world_stage_object.h"
+#include "project_world_stage_thing.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
@@ -92,15 +92,15 @@ void DrWorld::initializeWorldSettings(QString new_name) {
                            "Background", "This is the base Background Color for this world. Must enable to use, otherwise background defaults to "
                                          "transparent.");
 
-    addComponent(Components::World_Physics, "Physics", "Starting physics settings for current world, this affects all objects that have \"Physics?\" "
+    addComponent(Components::World_Physics, "Physics", "Starting physics settings for current world, this affects all Objects that have \"Physics?\" "
                                                        "enabled.", Component_Colors::Orange_Medium, true);
     getComponent(Components::World_Physics)->setIcon(Component_Icons::Physics);
     addPropertyToComponent(Components::World_Physics, Properties::World_Time_Warp, Property_Type::PositiveDouble, 1.0,
                            "Time Warp", "Physics update time multiplier. Default value of 1.0 is Normal speed. For example, a value of 0.5 will halve the "
                                         "speed at which the world changes. A value of 2.0 will double the speed.");
     addPropertyToComponent(Components::World_Physics, Properties::World_Gravity, Property_Type::PointF, QPointF(0.0, -1000.0),
-                           "Gravity", "Amount of gravity in X and Y directions, can be negative or positive. For example, a value of -1000 for Y and objects will "
-                                      "fall down; a value of 1000 for Y and objects will fall up.");
+                           "Gravity", "Amount of gravity in X and Y directions, can be negative or positive. For example, a value of -1000 for Y and Objects will "
+                                      "fall down; a value of 1000 for Y and Objects will fall up.");
     addPropertyToComponent(Components::World_Physics, Properties::World_Drag, Property_Type::PositiveDouble, 0.9,
                            "Damping", "Defauly value of 0.9 means objects will lose 10% of their velocity per second. Value of 1.0 means objects will not lose "
                                       "velocity, can be greater than 1.0 (objects will gain velocity). A value of 0.0 causes objects to lose all "

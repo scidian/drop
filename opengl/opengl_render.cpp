@@ -30,8 +30,8 @@ void OpenGL::paintGL() {
     ///m_engine->info = QString::fromUtf8(reinterpret_cast<const char*>(ver));
 
     // ***** Make sure Objects vector is sorted by depth
-    EngineObjects objects = m_engine->getCurrentWorld()->objects;
-    std::sort(objects.begin(), objects.end(), [] (const DrEngineObject *a, const DrEngineObject *b) { return a->z_order < b->z_order; });
+    EngineObjects &objects = m_engine->getCurrentWorld()->objects;
+    std::sort(objects.begin(), objects.end(), [] (const DrEngineThing *a, const DrEngineThing *b) { return a->z_order < b->z_order; });
 
     // ***** Update Camera / View Matrix
     updateViewMatrix();
@@ -58,10 +58,9 @@ void OpenGL::paintGL() {
     m_shadow_fbo->release();
 
 
-g_info = "W: " + QString::number(m_texture_fbo->width()) + ", H: " + QString::number(m_texture_fbo->height());
-g_info += ", LFBO W: " + QString::number(m_light_fbo->width()) + ", H: " + QString::number(m_light_fbo->height());
-g_info += ", SFBO W: " + QString::number(m_shadow_fbo->width()) + ", H: " + QString::number(m_shadow_fbo->height());
-
+//g_info = "W: " + QString::number(m_texture_fbo->width()) + ", H: " + QString::number(m_texture_fbo->height());
+//g_info += ", LFBO W: " + QString::number(m_light_fbo->width()) + ", H: " + QString::number(m_light_fbo->height());
+//g_info += ", SFBO W: " + QString::number(m_shadow_fbo->width()) + ", H: " + QString::number(m_shadow_fbo->height());
 
 //static int count = 1;
 //count++;
@@ -259,6 +258,8 @@ void OpenGL::drawFrameBufferToScreenBuffer() {
     m_shader.setUniformValue( m_uniform_saturation, m_engine->getCurrentWorld()->saturation );
     m_shader.setUniformValue( m_uniform_contrast,   m_engine->getCurrentWorld()->contrast );
     m_shader.setUniformValue( m_uniform_brightness, m_engine->getCurrentWorld()->brightness );
+
+    ///m_shader.setUniformValue( m_uniform_kernel,     true );                // Turns on Kernel filter
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

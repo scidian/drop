@@ -37,7 +37,7 @@ class FormPopup : public QWidget
     Q_OBJECT
 
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrProject       *m_project;                         // Pointer to the open project
     QWidget         *m_mapper;                          // Widget to use for mapping to global coordinates (usually same as parent)
 

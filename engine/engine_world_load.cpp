@@ -12,7 +12,7 @@
 #include "engine_object.h"
 #include "engine_world.h"
 #include "project/project_world_stage.h"
-#include "project/project_world_stage_object.h"
+#include "project/project_world_stage_thing.h"
 
 
 //######################################################################################################
@@ -20,25 +20,25 @@
 //######################################################################################################
 void DrEngineWorld::loadStageToSpace(DrStage *stage, double offset_x, double offset_y) {
 
-    // Load objects
-    for (auto object_pair : stage->getObjectMap()) {
+    // Load Things
+    for (auto thing_pair : stage->getThingMap()) {
 
-        // ***** Grab current object
-        DrObject *object = object_pair.second;
+        // ***** Grab current Thing
+        DrThing *thing = thing_pair.second;
 
-        // ***** Check if Object type
-        if (object->getType() != DrType::Object) continue;
-        if (object->getObjectType() != DrObjectType::Object) continue;
+        // ***** Check if Thing type
+        if (thing->getType() != DrType::Thing) continue;
+        if (thing->getThingType() != DrThingType::Object) continue;
 
-        // ***** Load Object properties
-        long        asset_key =     object->getAssetKey();
-        QPointF     position =      object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF();
-        QPointF     scale =         object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale).toPointF();
-        double      angle =         object->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Rotation).toDouble();
-        double      z_order =       object->getComponentPropertyValue(Components::Object_Layering,  Properties::Object_Z_Order).toDouble();
-        double      alpha =         object->getComponentPropertyValue(Components::Object_Layering,  Properties::Object_Opacity).toDouble() / 100;
-        bool        collide =       object->getComponentPropertyValue(Components::Object_Settings,  Properties::Object_Collide).toBool();
-        int         physics =       object->getComponentPropertyValue(Components::Object_Settings,  Properties::Object_Physics_Type).toInt();
+        // ***** Load Thing properties
+        long        asset_key =     thing->getAssetKey();
+        QPointF     position =      thing->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF();
+        QPointF     scale =         thing->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale).toPointF();
+        double      angle =         thing->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Rotation).toDouble();
+        double      z_order =       thing->getComponentPropertyValue(Components::Object_Layering,  Properties::Object_Z_Order).toDouble();
+        double      alpha =         thing->getComponentPropertyValue(Components::Object_Layering,  Properties::Object_Opacity).toDouble() / 100;
+        bool        collide =       thing->getComponentPropertyValue(Components::Object_Settings,  Properties::Object_Collide).toBool();
+        int         physics =       thing->getComponentPropertyValue(Components::Object_Settings,  Properties::Object_Physics_Type).toInt();
 
         Body_Type body = Body_Type::Static;
         switch (physics) {
@@ -53,7 +53,7 @@ void DrEngineWorld::loadStageToSpace(DrStage *stage, double offset_x, double off
 
         // ***** Set collision type
         Collision_Type collision_type = Collision_Type::Damage_None;
-        long           damage_type = object->getComponentPropertyValue(Components::Object_Settings, Properties::Object_Damage).toInt();
+        long           damage_type = thing->getComponentPropertyValue(Components::Object_Settings, Properties::Object_Damage).toInt();
         switch (damage_type) {
             case 0: collision_type = Collision_Type::Damage_None;   break;
             case 1: collision_type = Collision_Type::Damage_Player; break;
@@ -63,10 +63,10 @@ void DrEngineWorld::loadStageToSpace(DrStage *stage, double offset_x, double off
         block->setCollisionType(collision_type);
 
         // ***** Velocity settings
-        QPointF vel_x = object->getComponentPropertyValue(Components::Object_Movement, Properties::Object_Velocity_X).toPointF();
-        QPointF vel_y = object->getComponentPropertyValue(Components::Object_Movement, Properties::Object_Velocity_Y).toPointF();
-        QPointF rotation_vel =  object->getComponentPropertyValue(Components::Object_Movement, Properties::Object_Spin_Velocity).toPointF();
-        bool    angle_velocty = object->getComponentPropertyValue(Components::Object_Movement, Properties::Object_Angle_Velocity).toBool();
+        QPointF vel_x = thing->getComponentPropertyValue(Components::Object_Movement, Properties::Object_Velocity_X).toPointF();
+        QPointF vel_y = thing->getComponentPropertyValue(Components::Object_Movement, Properties::Object_Velocity_Y).toPointF();
+        QPointF rotation_vel =  thing->getComponentPropertyValue(Components::Object_Movement, Properties::Object_Spin_Velocity).toPointF();
+        bool    angle_velocty = thing->getComponentPropertyValue(Components::Object_Movement, Properties::Object_Angle_Velocity).toBool();
 
         cpVect velocity;
         velocity.x = vel_x.x() + (QRandomGenerator::global()->bounded(vel_x.y() * 2.0) - vel_x.y());
@@ -88,13 +88,13 @@ void DrEngineWorld::loadStageToSpace(DrStage *stage, double offset_x, double off
         }
 
         // ***** Appearance settings
-        QPointF pixelation = object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Pixelation).toPointF();
-        float   brightness = object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Brightness).toInt() / 255.f;
-        float   contrast =   object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Contrast).toInt() / 255.f;
-        float   saturation = object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Saturation).toInt() / 255.f;
-        float   hue =        object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Hue).toInt() / 360.f;
-        bool    grayscale =  object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Grayscale).toBool();
-        bool    negative =   object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Negative).toBool();
+        QPointF pixelation = thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Pixelation).toPointF();
+        float   brightness = thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Brightness).toInt() / 255.f;
+        float   contrast =   thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Contrast).toInt() / 255.f;
+        float   saturation = thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Saturation).toInt() / 255.f;
+        float   hue =        thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Hue).toInt() / 360.f;
+        bool    grayscale =  thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Grayscale).toBool();
+        bool    negative =   thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Negative).toBool();
         block->pixel_x =    static_cast<float>(pixelation.x());
         block->pixel_y =    static_cast<float>(pixelation.y());
         block->brightness = brightness;

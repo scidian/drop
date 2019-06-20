@@ -18,7 +18,7 @@
 #include "project/project_asset.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"
-#include "project/project_world_stage_object.h"
+#include "project/project_world_stage_thing.h"
 
 //####################################################################################
 //##        Drag Handling
@@ -84,24 +84,24 @@ void DrView::dropEvent(QDropEvent *event) {
         else
             position = m_drop_location;
 
-        // Create new object from data
+        // Create new Thing from drop data
         long      asset_key = variant_key.toInt();
         DrAsset  *asset =     m_editor_relay->currentProject()->getAsset(asset_key);
-        DrObject *object;
+        DrThing  *thing;
         switch (asset->getAssetType()) {
             case DrAssetType::Object:
-                object = stage->addObject(DrObjectType::Object, asset_key, position.x(), -position.y(), 0);      // FIX: z order
-                my_scene->addItemToSceneFromObject( object );
+                thing = stage->addThing(DrThingType::Object, asset_key, position.x(), -position.y(), 0);      // FIX: z order
+                my_scene->addItemToSceneFromThing( thing );
                 break;
 
             case DrAssetType::Text:
-                object = stage->addObject(DrObjectType::Text, asset_key, position.x(), -position.y(), 0);        // FIX: z order
-                my_scene->addItemToSceneFromObject( object );
+                thing = stage->addThing(DrThingType::Text, asset_key, position.x(), -position.y(), 0);        // FIX: z order
+                my_scene->addItemToSceneFromThing( thing );
                 break;
 
             case DrAssetType::Character:
-                object = stage->addObject(DrObjectType::Character, asset_key, position.x(), -position.y(), 0);   // FIX: z order
-                my_scene->addItemToSceneFromObject( object );
+                thing = stage->addThing(DrThingType::Character, asset_key, position.x(), -position.y(), 0);   // FIX: z order
+                my_scene->addItemToSceneFromThing( thing );
                 break;
         }
 
@@ -127,14 +127,14 @@ void DrView::dropEvent(QDropEvent *event) {
             image = image.convertToFormat( QImage::Format_ARGB32 );
         QPixmap pixmap = QPixmap::fromImage( image );
 
-        // If it was an image, add it to the project and add the object to the scene
+        // If it was an image, add it to the project and add the Thing to the scene
         long image_key = m_editor_relay->currentProject()->addImage(file_path);
         long asset_key = m_editor_relay->currentProject()->addAsset(DrAssetType::Object, image_key );
 
-        // Add object at mouse position
+        // Add Object Thing at mouse position
         QPointF  position =  mapToScene(event->pos());
-        DrObject *object = stage->addObject(DrObjectType::Object, asset_key, position.x(), -position.y(), 0);    // FIX: z order
-        my_scene->addItemToSceneFromObject( object );
+        DrThing *thing = stage->addThing(DrThingType::Object, asset_key, position.x(), -position.y(), 0);    // FIX: z order
+        my_scene->addItemToSceneFromThing( thing );
 
         //######################
         //######################

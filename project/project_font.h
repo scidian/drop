@@ -23,7 +23,7 @@ class DrProject;
 class DrFont : public DrSettings
 {
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrProject              *m_parent_project;               // Holds reference to parent Project class that handles key generation for project
 
     // Local Variables

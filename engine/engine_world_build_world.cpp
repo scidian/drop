@@ -18,7 +18,7 @@
 #include "project/project_image.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"
-#include "project/project_world_stage_object.h"
+#include "project/project_world_stage_thing.h"
 #include "helper.h"
 
 

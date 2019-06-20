@@ -17,7 +17,7 @@
 #include "project/project.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"
-#include "project/project_world_stage_object.h"
+#include "project/project_world_stage_thing.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
@@ -50,27 +50,27 @@ void TreeProject::buildProjectTree() {
             stage_item->setData(0, User_Roles::Key, QVariant::fromValue(stage_pair.second->getKey()));
 
 
-            // ***** Iterates through objects based on z-order of each object
-            ObjectMap  &objects = stage_pair.second->getObjectMap();
-            QList<long> keys = stage_pair.second->objectKeysSortedByZOrder();
+            // ***** Iterates through Things based on z-order of each Thing
+            ThingMap &things = stage_pair.second->getThingMap();
+            QList<long> keys = stage_pair.second->thingKeysSortedByZOrder();
             for (auto key: keys)
             {
-                DrObject *object = objects[key];
+                DrThing *thing = things[key];
 
-                QTreeWidgetItem *object_item = new QTreeWidgetItem(stage_item);                             // Create new item and add as child item
-                switch (object->getObjectType()) {
-                    case DrObjectType::Object:    object_item->setIcon(0, QIcon(":/assets/tree_icons/tree_object.png"));       break;
-                    case DrObjectType::Text:      object_item->setIcon(0, QIcon(":/assets/tree_icons/tree_text.png"));         break;
-                    case DrObjectType::Character: object_item->setIcon(0, QIcon(":/assets/tree_icons/tree_character.png"));    break;
+                QTreeWidgetItem *thing_item = new QTreeWidgetItem(stage_item);                             // Create new item and add as child item
+                switch (thing->getThingType()) {
+                    case DrThingType::Object:    thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_object.png"));       break;
+                    case DrThingType::Text:      thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_text.png"));         break;
+                    case DrThingType::Character: thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_character.png"));    break;
 
-                    ///case DrObjectType::Camera:    object_item->setIcon(0, QIcon(":/assets/tree_icons/tree_camera.png"));       break;
+                    ///case DrThingType::Camera:    thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_camera.png"));       break;
                 }
 
-                object_item->setText(0, object->getComponentPropertyValue(
-                                        Components::Object_Settings, Properties::Object_Name).toString());          // Set text for item
-                object_item->setData(0, User_Roles::Key, QVariant::fromValue(object->getKey()));            // Store item key in user data
+                thing_item->setText(0, thing->getComponentPropertyValue(
+                                       Components::Object_Settings, Properties::Object_Name).toString());   // Set text for item
+                thing_item->setData(0, User_Roles::Key, QVariant::fromValue(thing->getKey()));              // Store item key in user data
 
-                stage_item->addChild(object_item);
+                stage_item->addChild(thing_item);
 
                 // Add lock box
                 QString check_images = QString(" QCheckBox::indicator { width: 12px; height: 12px; }"
@@ -79,7 +79,7 @@ void TreeProject::buildProjectTree() {
                 QCheckBox *lock_item = new QCheckBox();
                 lock_item->setFocusPolicy(Qt::FocusPolicy::NoFocus);
                 lock_item->setStyleSheet(check_images);
-                this->setItemWidget(object_item, 1, lock_item);
+                this->setItemWidget(thing_item, 1, lock_item);
 
             }
         }

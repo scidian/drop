@@ -17,7 +17,7 @@
 #include "globals.h"
 #include "helper.h"
 #include "project/project.h"
-#include "project/project_world_stage_object.h"
+#include "project/project_world_stage_thing.h"
 #include "widgets/widgets_event_filters.h"
 
 
@@ -40,12 +40,12 @@ void FormMain::updateToolbar() {
             if (!button->isEnabled()) button->setEnabled(true);
 
         if (sceneEditor->getSelectionCount() == 1) {
-            DrObject *object = dynamic_cast<DrItem*>( sceneEditor->getSelectionItems().first() )->getObject();
-            if (dynamic_cast<DrItem*>( sceneEditor->getSelectionItems().first() )->getObject())
-                selected = m_project->findSettingsFromKey(object->getAssetKey())->getName();
+            DrThing *thing = dynamic_cast<DrItem*>( sceneEditor->getSelectionItems().first() )->getThing();
+            if (dynamic_cast<DrItem*>( sceneEditor->getSelectionItems().first() )->getThing())
+                selected = m_project->findSettingsFromKey(thing->getAssetKey())->getName();
 
         } else if (sceneEditor->getSelectionCount() > 1) {
-            selected = QString::number( sceneEditor->getSelectionCount() ) + " Objects";
+            selected = QString::number( sceneEditor->getSelectionCount() ) + " Things";
         }
     }
 

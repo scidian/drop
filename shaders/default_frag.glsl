@@ -132,17 +132,17 @@ void main( void ) {
         //float kernel_3 = 1.0; float kernel_4 = -8.00; float kernel_5 = 1.0;
         //float kernel_6 = 1.0; float kernel_7 =  1.00; float kernel_8 = 1.0;
 
-        vec3 sample_tex_0 = texture2D(u_tex, coordinates.st + offset_0).rgb;
-        vec3 sample_tex_1 = texture2D(u_tex, coordinates.st + offset_1).rgb;
-        vec3 sample_tex_2 = texture2D(u_tex, coordinates.st + offset_2).rgb;
-        vec3 sample_tex_3 = texture2D(u_tex, coordinates.st + offset_3).rgb;
-        vec3 sample_tex_4 = texture2D(u_tex, coordinates.st + offset_4).rgb;
-        vec3 sample_tex_5 = texture2D(u_tex, coordinates.st + offset_5).rgb;
-        vec3 sample_tex_6 = texture2D(u_tex, coordinates.st + offset_6).rgb;
-        vec3 sample_tex_7 = texture2D(u_tex, coordinates.st + offset_7).rgb;
-        vec3 sample_tex_8 = texture2D(u_tex, coordinates.st + offset_8).rgb;
+        vec4 sample_tex_0 = texture2D(u_tex, coordinates.st + offset_0).rgba;
+        vec4 sample_tex_1 = texture2D(u_tex, coordinates.st + offset_1).rgba;
+        vec4 sample_tex_2 = texture2D(u_tex, coordinates.st + offset_2).rgba;
+        vec4 sample_tex_3 = texture2D(u_tex, coordinates.st + offset_3).rgba;
+        vec4 sample_tex_4 = texture2D(u_tex, coordinates.st + offset_4).rgba;
+        vec4 sample_tex_5 = texture2D(u_tex, coordinates.st + offset_5).rgba;
+        vec4 sample_tex_6 = texture2D(u_tex, coordinates.st + offset_6).rgba;
+        vec4 sample_tex_7 = texture2D(u_tex, coordinates.st + offset_7).rgba;
+        vec4 sample_tex_8 = texture2D(u_tex, coordinates.st + offset_8).rgba;
 
-        vec3 col = vec3(0.0, 0.0, 0.0);
+        vec4 col = vec4(0.0, 0.0, 0.0, 0.0);
         col += sample_tex_0 * kernel_0;
         col += sample_tex_1 * kernel_1;
         col += sample_tex_2 * kernel_2;
@@ -153,7 +153,7 @@ void main( void ) {
         col += sample_tex_7 * kernel_7;
         col += sample_tex_8 * kernel_8;
 
-        gl_FragColor = vec4(col, texture2D( u_tex, coordinates.st ).a * u_alpha);
+        gl_FragColor = vec4(col.rgb, texture2D( u_tex, coordinates.st ).a * u_alpha);
     }
 
 }

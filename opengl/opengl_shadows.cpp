@@ -144,11 +144,11 @@ void OpenGL::draw2DLights() {
     m_light_shader.setUniformValue( m_uniform_light_resolution, light_radius, shrink_multiplier);
     m_light_shader.setUniformValue( m_uniform_light_color, 0.75f, 0.2f, 0.75f );
 
-    //float cone_1 = qDegreesToRadians( 30.0f);
-    //float cone_2 = qDegreesToRadians(330.0f);
-    //float cone_1 = qDegreesToRadians(330.0f);
-    //float cone_2 = qDegreesToRadians( 30.0f);
-    float cone_1 = qDegreesToRadians(  0.0f);
+    ///float cone_1 = qDegreesToRadians( 30.0f);    // Pac-man
+    ///float cone_2 = qDegreesToRadians(330.0f);
+    ///float cone_1 = qDegreesToRadians(330.0f);    // Small cone
+    ///float cone_2 = qDegreesToRadians( 30.0f);
+    float cone_1 = qDegreesToRadians(  0.0f);       // Whole Circle
     float cone_2 = qDegreesToRadians(360.0f);
     if (cone_1 < 0.0f) cone_1 += (2.0f * 3.141592f);
     if (cone_2 < 0.0f) cone_2 += (2.0f * 3.141592f);

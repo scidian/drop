@@ -13,7 +13,7 @@
 #include "enums_form_main.h"
 
 // Forward declarations
-class DrObject;
+class DrThing;
 class DrProject;
 class DrSettings;
 

@@ -25,7 +25,7 @@
 #include "project/project_asset.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"
-#include "project/project_world_stage_object.h"
+#include "project/project_world_stage_thing.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
@@ -79,9 +79,9 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
         QString type_string = Dr::StringFromType(new_type);
         Dr::SetLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( new_key ) + ", TYPE: " + type_string);
 
-        if (new_type == DrType::Object) {
-            DrObject* object = m_project->findObjectFromKey(new_key);
-            long asset_key = object->getAssetKey();
+        if (new_type == DrType::Thing) {
+            DrThing* thing = m_project->findThingFromKey(new_key);
+            long asset_key = thing->getAssetKey();
             QString asset_name = m_project->findAssetFromKey(asset_key)->getName();
 
             Dr::SetLabelText(Label_Names::Label_Object_2, "ASSET KEY:  " + QString::number(asset_key) +
@@ -92,10 +92,10 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
     }
     // !!!!! END
 
-    // If old selection and new selection are both objects, we don't need to completely rebuild inspector, just change values
-    if (m_selected_type == DrType::Object && new_type == DrType::Object) {
+    // If old selection and new selection are both Object Things, we don't need to completely rebuild inspector, just change values
+    if (m_selected_type == DrType::Thing && new_type == DrType::Thing) {
         m_selected_key =  new_key;
-        updateInspectorPropertyBoxes( { m_project->findObjectFromKey(m_selected_key) }, { });
+        updateInspectorPropertyBoxes( { m_project->findThingFromKey(m_selected_key) }, { });
         return;
     } else {
         m_selected_key =  new_key;
@@ -104,10 +104,10 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
 
     // Change Advisor text after new item selection
     switch (m_selected_type) {
-        case DrType::World:        m_editor_relay->setAdvisorInfo(Advisor_Info::World_Object);         break;
-        case DrType::Stage:        m_editor_relay->setAdvisorInfo(Advisor_Info::Stage_Object);         break;
-        case DrType::Object:       m_editor_relay->setAdvisorInfo(Advisor_Info::Object_Object);        break;
-        case DrType::Asset:        m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Object);         break;
+        case DrType::World:        m_editor_relay->setAdvisorInfo(Advisor_Info::World_Description);     break;
+        case DrType::Stage:        m_editor_relay->setAdvisorInfo(Advisor_Info::Stage_Description);     break;
+        case DrType::Thing:        m_editor_relay->setAdvisorInfo(Advisor_Info::Thing_Description);     break;
+        case DrType::Asset:        m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Object);          break;
         default:                   m_editor_relay->setAdvisorInfo(Advisor_Info::Not_Set);
     }
 

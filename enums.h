@@ -32,7 +32,7 @@ enum class DrType {
         StartStage,
             Background,
             Foreground,
-            Object,
+            Thing,
     Variable,
 
     UI,
@@ -54,7 +54,7 @@ enum class DrAssetType {
     //Logic
 };
 
-enum class DrObjectType {
+enum class DrThingType {
     Object,
     Text,
     Character,
@@ -133,7 +133,7 @@ namespace User_Property {
 namespace Dr {
     QString     StringFromType(DrType type);
     QString     StringFromAssetType(DrAssetType type);
-    QString     StringFromObjectType(DrObjectType type);
+    QString     StringFromThingType(DrThingType type);
     QString     StringFromPositionFlag(Position_Flags flag);
 
     QList<long>         ConvertPropertyListToLongs(QList<Properties> list);

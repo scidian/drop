@@ -37,7 +37,7 @@ class TreeAssets: public QTreeWidget
     Q_OBJECT
 
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrProject            *m_project;                        // Pointer to currently loaded project
     IEditorRelay         *m_editor_relay;                   // Pointer to IEditorRelay class of parent form
 
@@ -80,7 +80,7 @@ class DrFilterAssetMouseHandler : public QObject
     Q_OBJECT
 
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     IEditorRelay      *m_editor_relay;                  // Pointer to IEditorRelay class of parent form
 
     // Local Variables - Following variables are used for Asset Name scrolling on mouse over

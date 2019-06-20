@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 12/7/18, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      DrObject Class Definitions
+//      DrItem Class Definitions
 //
 //
 #include "colors/colors.h"
@@ -17,7 +17,7 @@
 #include "project/project_asset.h"
 #include "project/project_font.h"
 #include "project/project_world_stage.h"
-#include "project/project_world_stage_object.h"
+#include "project/project_world_stage_thing.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
@@ -26,12 +26,12 @@
 //####################################################################################
 //##        Constructor & destructor
 //####################################################################################
-DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrObject *object, bool is_temp_only) : m_editor_relay(editor_relay) {
-    // Store relevant project / object data for use later
+DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, bool is_temp_only) : m_editor_relay(editor_relay) {
+    // Store relevant project / thing data for use later
     m_project    = project;
-    m_object     = object;
-    m_object_key = object->getKey();
-    m_asset_key  = m_object->getAssetKey();
+    m_thing      = thing;
+    m_thing_key  = thing->getKey();
+    m_asset_key  = m_thing->getAssetKey();
     m_asset      = project->getAsset(m_asset_key);
 
     m_temp_only  = is_temp_only;
@@ -48,7 +48,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrObject *object,
             m_asset_height = m_asset->getHeight();
             break;
         case DrAssetType::Text:
-            text =     m_object->getComponentPropertyValue(Components::Object_Settings_Text, Properties::Object_Text_User_Text).toString();
+            text =     m_thing->getComponentPropertyValue(Components::Object_Settings_Text, Properties::Object_Text_User_Text).toString();
             m_pixmap = m_editor_relay->currentProject()->getDrFont( m_asset->getSourceKey() )->createText( text );
             setPixmap(m_pixmap);
             m_asset_width =  m_pixmap.width();
@@ -59,13 +59,13 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrObject *object,
 
     // Store some initial user data
     setData(User_Roles::Name, m_asset->getName() );
-    setData(User_Roles::Type, Dr::StringFromObjectType( m_object->getObjectType() ));
-    setData(User_Roles::Key, QVariant::fromValue(m_object_key));
+    setData(User_Roles::Type, Dr::StringFromThingType( m_thing->getThingType() ));
+    setData(User_Roles::Key, QVariant::fromValue(m_thing_key));
 
-    double  angle =   m_object->getComponentProperty(Components::Object_Transform, Properties::Object_Rotation)->getValue().toDouble();
-    QPointF scale =   m_object->getComponentProperty(Components::Object_Transform, Properties::Object_Scale)->getValue().toPointF();
-    double  z_order = m_object->getComponentProperty(Components::Object_Layering,  Properties::Object_Z_Order)->getValue().toDouble();
-    double  opacity = m_object->getComponentProperty(Components::Object_Layering,  Properties::Object_Opacity)->getValue().toDouble();
+    double  angle =   m_thing->getComponentProperty(Components::Object_Transform, Properties::Object_Rotation)->getValue().toDouble();
+    QPointF scale =   m_thing->getComponentProperty(Components::Object_Transform, Properties::Object_Scale)->getValue().toPointF();
+    double  z_order = m_thing->getComponentProperty(Components::Object_Layering,  Properties::Object_Z_Order)->getValue().toDouble();
+    double  opacity = m_thing->getComponentProperty(Components::Object_Layering,  Properties::Object_Opacity)->getValue().toDouble();
     setData(User_Roles::Rotation, angle);
     setData(User_Roles::Scale,    scale);
     setData(User_Roles::Z_Order,  z_order);
@@ -84,7 +84,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrObject *object,
     setTransform(t);
 
     // Load starting position
-    QPointF start_pos = m_object->getComponentProperty(Components::Object_Transform, Properties::Object_Position)->getValue().toPointF();
+    QPointF start_pos = m_thing->getComponentProperty(Components::Object_Transform, Properties::Object_Position)->getValue().toPointF();
     m_start_x = start_pos.x();
     m_start_y = start_pos.y();
 
@@ -114,7 +114,7 @@ void DrItem::enableItemChangeFlags() {
 //####################################################################################
 //##        Item Property Overrides
 //####################################################################################
-// Outline of entire object
+// Outline of entire item
 QRectF DrItem::boundingRect() const {
     QRectF my_rect = QRectF(0, 0, m_asset_width, m_asset_height);
     return my_rect;
@@ -137,13 +137,13 @@ QPainterPath DrItem::shape() const {
 void DrItem::applyFilters() {
     QPixmap new_pixmap = m_pixmap.copy();
 
-    int     brightness = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Brightness).toInt();
-    int     contrast   = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Contrast).toInt();
-    int     hue        = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Hue).toInt();
-    int     saturation = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Saturation).toInt();
-    bool    grayscale  = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Grayscale).toBool();
-    bool    negative   = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Negative).toBool();
-    QPointF pixelation = m_object->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Pixelation).toPointF();
+    int     brightness = m_thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Brightness).toInt();
+    int     contrast   = m_thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Contrast).toInt();
+    int     hue        = m_thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Hue).toInt();
+    int     saturation = m_thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Saturation).toInt();
+    bool    grayscale  = m_thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Grayscale).toBool();
+    bool    negative   = m_thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Negative).toBool();
+    QPointF pixelation = m_thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Pixelation).toPointF();
 
     if (pixelation.x() > 1.0 || pixelation.y() > 1.0)
                            new_pixmap = DrImaging::changePixelation(new_pixmap, pixelation);

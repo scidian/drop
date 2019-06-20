@@ -46,7 +46,7 @@ void OpenGL::drawSpace() {
     m_shader.enableAttributeArray( m_attribute_tex_coord );
 
     // ********** Render 2D Objects
-    EngineObjects objects = m_engine->getCurrentWorld()->objects;
+    EngineObjects &objects = m_engine->getCurrentWorld()->objects;
     for (auto object : objects) {
         if (!object->hasBeenProcessed()) continue;
 

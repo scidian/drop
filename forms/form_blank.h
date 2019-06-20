@@ -19,7 +19,7 @@ class DrProject;
 class FormBlank : public QWidget
 {
 private:
-    // External Borrowed Objects
+    // External Borrowed Pointers
     DrProject   *m_project;                         // Pointer to the open project
 
     // Local Variables

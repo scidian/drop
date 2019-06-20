@@ -10,13 +10,13 @@
 #include "project_asset.h"
 #include "project_world.h"
 #include "project_world_stage.h"
-#include "project_world_stage_object.h"
+#include "project_world_stage_thing.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
 
 //####################################################################################
-//##    Constructor, Destructor, addObject
+//##    Constructor, Destructor
 //####################################################################################
 DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world, long new_stage_key, QString new_stage_name, bool is_start_stage) {
     m_parent_project = parent_project;              // pointer to parent Project
@@ -26,59 +26,59 @@ DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world, long new_stag
 
     m_is_start_stage = is_start_stage;              // is this a start stage or not, can only be one start stage per World
 
-    initializeStageSettings(new_stage_name);        // call to load in all the components / properties for this Stage object
+    initializeStageSettings(new_stage_name);        // call to load in all the components / properties for this Stage thing
 
     if (m_is_start_stage) {
         // If start stage, make name hidden to stop user from changing it
         DrProperty *my_name = getComponentProperty(Components::Stage_Settings, Properties::Stage_Name);
         my_name->setHidden(true);
 
-        ///addObject(DrType::Camera, new DrAsset(), 0, 0);
-        ///addObject(DrType::Character, new DrAsset(), 0, 0);
+        ///addThing(DrType::Camera, new DrAsset(), 0, 0);
+        ///addThing(DrType::Character, new DrAsset(), 0, 0);
     }
 }
 
 DrStage::~DrStage() {
-    for (auto i: m_objects) { delete i.second; }
+    for (auto i: m_things) { delete i.second; }
 }
 
 //####################################################################################
 //##
-//##    Adds a new object to the Stage
+//##    Adds a new Thing to the Stage
 //##
 //##    ***** #NOTE: Y Axis is in Game Engine coordinates (i.e. positive is up, negative is down)
 //##
 //####################################################################################
-DrObject* DrStage::addObject(DrObjectType new_type, long from_asset_key, double x, double y, long z, bool should_collide) {
+DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, double y, long z, bool should_collide) {
     DrAsset *asset = m_parent_project->getAsset(from_asset_key);
 
-    // Figure out name for object
+    // Figure out name for Thing
     QString new_name;
     switch (new_type) {
-        case DrObjectType::Object:
-        case DrObjectType::Text:
-        case DrObjectType::Character:
+        case DrThingType::Object:
+        case DrThingType::Text:
+        case DrThingType::Character:
             new_name = asset->getComponentProperty(Components::Asset_Settings, Properties::Asset_Name)->getValue().toString();
             break;
 
-        ///case DrObjectType::Camera:
-        ///    "Camera " + QString::number(static_cast<long>(m_objects.size() + 1));
+        ///case DrThingType::Camera:
+        ///    "Camera " + QString::number(static_cast<long>(m_things.size() + 1));
         ///    break;
     }
 
-    long new_object_key = m_parent_project->getNextKey();
-    m_objects[new_object_key] = new DrObject(m_parent_project, m_parent_world, this, new_object_key,
+    long new_thing_key = m_parent_project->getNextKey();
+    m_things[new_thing_key] = new DrThing(m_parent_project, m_parent_world, this, new_thing_key,
                                              new_name, new_type, from_asset_key, x, y, z, should_collide);
-    return m_objects[new_object_key];
+    return m_things[new_thing_key];
 }
 
-// Copies all component / property settings from one object to another object of the same type
-void DrStage::copyObjectSettings(DrObject *from_object, DrObject *to_object) {
-    if (from_object->getObjectType() != to_object->getObjectType()) return;
+// Copies all component / property settings from one Thing to another Thing of the same type
+void DrStage::copyThingSettings(DrThing *from_thing, DrThing *to_thing) {
+    if (from_thing->getThingType() != to_thing->getThingType()) return;
 
-    for (auto component : from_object->getComponentList()) {
+    for (auto component : from_thing->getComponentList()) {
         for (auto property : component.second->getPropertyList()) {
-            DrProperty *to_property = to_object->getComponentProperty(component.first, property.first);
+            DrProperty *to_property = to_thing->getComponentProperty(component.first, property.first);
             to_property->setValue(property.second->getValue());
             to_property->setEditable(property.second->isEditable());
             to_property->setHidden(property.second->isHidden());
@@ -87,19 +87,19 @@ void DrStage::copyObjectSettings(DrObject *from_object, DrObject *to_object) {
 }
 
 // Removes an object from the project
-void DrStage::deleteObject(DrObject *object) {
-    delete object;
-    m_objects.erase(object->getKey());
+void DrStage::deleteThing(DrThing *thing) {
+    m_things.erase(thing->getKey());
+    delete thing;
 }
 
 
-// Returns a list of object keys contained in stage, sorted from high z value to low
-QList<long> DrStage::objectKeysSortedByZOrder() {
+// Returns a list of Thing keys contained in stage, sorted from high z value to low
+QList<long> DrStage::thingKeysSortedByZOrder() {
     std::vector<std::pair<long, long>> zorder_key_pair;
 
-    for (auto object : m_objects) {
-        long z_order = object.second->getComponentProperty(Components::Object_Layering, Properties::Object_Z_Order)->getValue().toInt();
-        zorder_key_pair.push_back(std::make_pair(z_order, object.first));
+    for (auto thing : m_things) {
+        long z_order = thing.second->getComponentProperty(Components::Object_Layering, Properties::Object_Z_Order)->getValue().toInt();
+        zorder_key_pair.push_back(std::make_pair(z_order, thing.first));
     }
 
     std::sort(zorder_key_pair.begin(), zorder_key_pair.end());
@@ -154,11 +154,11 @@ void DrStage::initializeStageSettings(QString new_name) {
 
 
 //####################################################################################
-//##    Remove any references within the current Stage Objects to any GraphicsScene Items
+//##    Remove any references within the current Stage Things to any GraphicsScene Items
 //####################################################################################
 void DrStage::removeGraphicsItemReferences() {
-    for (auto object_pair : getObjectMap()) {
-        object_pair.second->setDrItem(nullptr);
+    for (auto thing_pair : getThingMap()) {
+        thing_pair.second->setDrItem(nullptr);
     }
 }
 

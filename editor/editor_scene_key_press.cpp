@@ -18,7 +18,7 @@
 #include "project/project.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"
-#include "project/project_world_stage_object.h"
+#include "project/project_world_stage_thing.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
@@ -67,9 +67,9 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
 
     for (auto item : list_old_items) {
         DrItem   *dritem   = dynamic_cast<DrItem*>(item);
-        DrObject *drobject = dritem->getObject();
-        DrStage  *drstage  = drobject->getParentStage();
-        DrObject *new_object;
+        DrThing  *drthing =  dritem->getThing();
+        DrStage  *drstage  = drthing->getParentStage();
+        DrThing  *new_object;
 
         double  new_x, new_y;
         int     new_z;
@@ -80,28 +80,28 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
             case Qt::Key::Key_A:
             case Qt::Key::Key_S:
             case Qt::Key::Key_D:
-                new_x = drobject->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF().x();
-                new_y = drobject->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF().y();
-                new_z = drobject->getComponentPropertyValue(Components::Object_Layering,  Properties::Object_Z_Order).toInt();
+                new_x = drthing->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF().x();
+                new_y = drthing->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF().y();
+                new_z = drthing->getComponentPropertyValue(Components::Object_Layering,  Properties::Object_Z_Order).toInt();
 
                 if (event->key() == Qt::Key::Key_W) new_y = new_y - source_rect.height();
                 if (event->key() == Qt::Key::Key_A) new_x = new_x - source_rect.width();
                 if (event->key() == Qt::Key::Key_S) new_y = new_y + source_rect.height();
                 if (event->key() == Qt::Key::Key_D) new_x = new_x + source_rect.width();
 
-                new_object = drstage->addObject(drobject->getObjectType(), drobject->getAssetKey(), new_x, new_y, new_z);
-                drstage->copyObjectSettings(drobject, new_object);
+                new_object = drstage->addThing(drthing->getThingType(), drthing->getAssetKey(), new_x, new_y, new_z);
+                drstage->copyThingSettings(drthing, new_object);
                 new_object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Position, QPointF(new_x, new_y));
                 new_object->setComponentPropertyValue(Components::Object_Layering,  Properties::Object_Z_Order, new_z);
 
-                list_new_items.append( this->addItemToSceneFromObject(new_object) );
+                list_new_items.append( this->addItemToSceneFromThing(new_object) );
                 break;
 
 
             // Delete selected items
             case Qt::Key::Key_Delete:
             case Qt::Key::Key_Backspace:
-                drstage->deleteObject(drobject);
+                drstage->deleteThing(drthing);
                 delete item;
                 update_widgets_when_done = true;
                 break;
