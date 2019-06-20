@@ -73,28 +73,28 @@ namespace Advisor_Info {
                                                                       "you can design each Stage and lay out your levels." };
     const HeaderBodyList Mode_UI                { "UI Editor Mode", "This mode will allow you to edit the user interfaces of your project." };
     const HeaderBodyList Settings_Playground    { "Physics Playground", "Play with the physics engine to learn more about the physics properties." };
-    const HeaderBodyList Settings_Font_Builder  { "Font Builder", "Create and edit fonts usued for Text Things." };
+    const HeaderBodyList Settings_Font_Builder  { "Font Builder", "Create and edit fonts usued for Text items." };
     const HeaderBodyList Settings_Manager       { "Settings Manager", "View and edit project settings." };
 
     const HeaderBodyList Thing_Send_to_Back     { "Send to Back",  "Send selected item(s) to the back." };
     const HeaderBodyList Thing_Send_to_Front    { "Send to Font",  "Send selected item(s) to the front." };
     const HeaderBodyList Thing_Send_Backward    { "Send Backward", "Send selected item(s) back by one." };
     const HeaderBodyList Thing_Send_Forward     { "Send Forward",  "Send selected item(s) forward by one." };
-    const HeaderBodyList Thing_Reset            { "Reset Transform", "Resets selected things' transforms to a Scale of X:1, Y:1 and Rotation of "
+    const HeaderBodyList Thing_Reset            { "Reset Transform", "Resets selected objects' transforms to a Scale of X:1, Y:1 and Rotation of "
                                                                             "0 Degrees." };
     const HeaderBodyList Thing_Flip_H           { "Flip Horizontal", "Flips the selection horizontally." };
     const HeaderBodyList Thing_Flip_V           { "Flip Vertical",   "Flips the selection vertically." };
     const HeaderBodyList Thing_Rotate_L         { "Rotate Left",  "Rotates selection counter-clockwise by 90 degrees." };
     const HeaderBodyList Thing_Rotate_R         { "Rotate Right", "Rotates selection clockwise by 90 degrees." };
 
-    const HeaderBodyList Grid_Show_On_Top       { "Grid on Top?", "Draws grid lines on top of things in editor." };
-    const HeaderBodyList Resize_To_Grid         { "Resize to Grid?", "Snaps corners and edges of things to grid while resizing. Only works if the angle "
-                                                                     "of the thing matches the angle of the grid, and the Grid Scale X and Y are the same. "
+    const HeaderBodyList Grid_Show_On_Top       { "Grid on Top?", "Draws grid lines on top of objects in editor." };
+    const HeaderBodyList Resize_To_Grid         { "Resize to Grid?", "Snaps corners and edges of objects to grid while resizing. Only works if the angle "
+                                                                     "of the object matches the angle of the grid, and the Grid Scale X and Y are the same. "
                                                                      "Selection handles will change to square shape to signify snapping is possible."};
-    const HeaderBodyList Grid_Snap_To_Grid      { "Snap to Grid?", "Snaps things to grid lines when moving things around with the mouse." };
-    const HeaderBodyList Grid_Snap_Options      { "Snap Options", "Choose how things snap to grid while multiple things are selected, and things are moved "
+    const HeaderBodyList Grid_Snap_To_Grid      { "Snap to Grid?", "Snaps objects to grid lines when moving objects around with the mouse." };
+    const HeaderBodyList Grid_Snap_Options      { "Snap Options", "Choose how objects snap to grid while multiple objects are selected, and objects are moved "
                                                                   "with mouse. Either have the center of the selection group snap to the grid, or have each "
-                                                                  "thing within the group snap to grid individually." };
+                                                                  "object within the group snap to grid individually." };
 
     const HeaderBodyList Play_Game              { "Play Game",  "Start playing game." };
 
@@ -111,7 +111,7 @@ namespace Advisor_Info {
     const HeaderBodyList Asset_List             { "Asset List", "These are items that can be dragged into your project. Changing the properties "
                                                                 "of these items will affect all instances of those items project wide." };
     const HeaderBodyList Asset_Search           { "Asset Search", "Type the name of an asset here to help find it in the Asset List." };
-    const HeaderBodyList Stage_View             { "Stage View", "Shows things and layout of currently selected Stage. Drop assets into Stage "
+    const HeaderBodyList Stage_View             { "Stage View", "Shows objects and layout of currently selected Stage. Drop assets into Stage "
                                                                 "View to add to Stage." };
     const HeaderBodyList Project_Tree           { "Project Tree", "Lists the items contained within the currently displayed Stage. Select items "
                                                                   "to view / adjust properties for each item." };
@@ -119,9 +119,9 @@ namespace Advisor_Info {
     // Project Types
     const HeaderBodyList World_Description      { "World", "A World is a container of Stages." };
     const HeaderBodyList Stage_Description      { "Stage", "A Stage is a container of Things." };
-    const HeaderBodyList Camera_Thing           { "Camera Thing", "This is a Camera Thing. This will decide what the player sees." };
-    const HeaderBodyList Character_Thing        { "Character Thing", "This is a Character Thing." };
-    const HeaderBodyList Thing_Description      { "Thing", "This is an Thing in a Stage." };
+    const HeaderBodyList Camera_Thing           { "Camera", "This is a Camera. This will decide what the player sees." };
+    const HeaderBodyList Character_Thing        { "Character", "This is a Character." };
+    const HeaderBodyList Thing_Description      { "Thing", "This is a Thing in a Stage." };
 
     // Asset Types
     const HeaderBodyList Asset_Object           { "Object Asset", "This is an Object that can have many copies of itself placed into your game. Any change to "

@@ -80,9 +80,9 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
             case Qt::Key::Key_A:
             case Qt::Key::Key_S:
             case Qt::Key::Key_D:
-                new_x = drthing->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF().x();
-                new_y = drthing->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF().y();
-                new_z = drthing->getComponentPropertyValue(Components::Object_Layering,  Properties::Object_Z_Order).toInt();
+                new_x = drthing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF().x();
+                new_y = drthing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF().y();
+                new_z = drthing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toInt();
 
                 if (event->key() == Qt::Key::Key_W) new_y = new_y - source_rect.height();
                 if (event->key() == Qt::Key::Key_A) new_x = new_x - source_rect.width();
@@ -91,8 +91,8 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
 
                 new_object = drstage->addThing(drthing->getThingType(), drthing->getAssetKey(), new_x, new_y, new_z);
                 drstage->copyThingSettings(drthing, new_object);
-                new_object->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Position, QPointF(new_x, new_y));
-                new_object->setComponentPropertyValue(Components::Object_Layering,  Properties::Object_Z_Order, new_z);
+                new_object->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position, QPointF(new_x, new_y));
+                new_object->setComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order, new_z);
 
                 list_new_items.append( this->addItemToSceneFromThing(new_object) );
                 break;

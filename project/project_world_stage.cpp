@@ -98,7 +98,7 @@ QList<long> DrStage::thingKeysSortedByZOrder() {
     std::vector<std::pair<long, long>> zorder_key_pair;
 
     for (auto thing : m_things) {
-        long z_order = thing.second->getComponentProperty(Components::Object_Layering, Properties::Object_Z_Order)->getValue().toInt();
+        long z_order = thing.second->getComponentProperty(Components::Thing_Layering, Properties::Thing_Z_Order)->getValue().toInt();
         zorder_key_pair.push_back(std::make_pair(z_order, thing.first));
     }
 

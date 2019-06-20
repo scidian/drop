@@ -68,15 +68,15 @@ void FormMain::buttonGroupTransformClicked(int id) {
 
     if (clicked == Buttons_Transform::Reset_Object) {
         QList<DrSettings*> settings;
-        QList<Properties>  properties { Properties::Object_Scale, Properties::Object_Rotation};
+        QList<Properties>  properties { Properties::Thing_Scale, Properties::Thing_Rotation };
 
         for (auto item : sceneEditor->getSelectionItems()) {
             DrItem   *dritem = dynamic_cast<DrItem*>(item);
             DrThing  *thing = dritem->getThing();
 
             settings.append(thing);
-            thing->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale, QPointF(1, 1));
-            thing->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Rotation, 0);
+            thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale, QPointF(1, 1));
+            thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation, 0);
         }
         sceneEditor->resetSelectionGroup();
         updateEditorWidgetsAfterItemChange(Editor_Widgets::ToolBar, settings, properties );

@@ -59,10 +59,10 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
 
     // ***** Some local item variables, prepping for update
     QTransform transform;
-    QPointF position  = thing->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF();
-    QPointF scale     = thing->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale).toPointF();
-    QPointF size      = thing->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Size).toPointF();
-    double  angle     = thing->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Rotation).toDouble();
+    QPointF position  = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
+    QPointF scale     = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
+    QPointF size      = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF();
+    double  angle     = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
     double  pre_angle = item->data(User_Roles::Rotation).toDouble();
     double  transform_scale_x, transform_scale_y;
     QString text;
@@ -78,36 +78,36 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
         Body_Type type;
         bool pretest, test;
         switch (property) {
-            case Properties::Object_Physics_Type:
-                pretest = thing->getComponentProperty(Components::Object_Movement, Properties::Object_Velocity_X)->isEditable();
-                type = static_cast<Body_Type>(thing->getComponentPropertyValue(Components::Object_Settings, Properties::Object_Physics_Type).toInt());
+            case Properties::Thing_Physics_Type:
+                pretest = thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Velocity_X)->isEditable();
+                type = static_cast<Body_Type>(thing->getComponentPropertyValue(Components::Thing_Settings, Properties::Thing_Physics_Type).toInt());
                 test = (type == Body_Type::Kinematic || type == Body_Type::Dynamic) ? true : false;
                 if (test != pretest) {
-                    thing->getComponentProperty(Components::Object_Movement, Properties::Object_Velocity_X)->setEditable(test);
-                    thing->getComponentProperty(Components::Object_Movement, Properties::Object_Velocity_Y)->setEditable(test);
-                    thing->getComponentProperty(Components::Object_Movement, Properties::Object_Spin_Velocity)->setEditable(test);
+                    thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Velocity_X)->setEditable(test);
+                    thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Velocity_Y)->setEditable(test);
+                    thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Spin_Velocity)->setEditable(test);
                     m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { thing } ,
-                                    { Properties::Object_Velocity_X, Properties::Object_Velocity_Y, Properties::Object_Spin_Velocity });
+                                    { Properties::Thing_Velocity_X, Properties::Thing_Velocity_Y, Properties::Thing_Spin_Velocity });
                 }
 
-                pretest = thing->getComponentProperty(Components::Object_Movement, Properties::Object_Angle_Velocity)->isEditable();
+                pretest = thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Angle_Velocity)->isEditable();
                 test = (type == Body_Type::Kinematic) ? true : false;
                 if (test != pretest) {
-                    thing->getComponentProperty(Components::Object_Movement, Properties::Object_Angle_Velocity)->setEditable(test);
-                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { thing } , { Properties::Object_Angle_Velocity });
+                    thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Angle_Velocity)->setEditable(test);
+                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { thing } , { Properties::Thing_Angle_Velocity });
                 }
                 break;
 
-            case Properties::Object_Position:
+            case Properties::Thing_Position:
                 setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
                 break;
 
-            case Properties::Object_Size:
-            case Properties::Object_Scale:
-            case Properties::Object_Rotation:
+            case Properties::Thing_Size:
+            case Properties::Thing_Scale:
+            case Properties::Thing_Rotation:
 
                 // If property that changed was size, calculate the proper scale based on size
-                if (property == Properties::Object_Size) {
+                if (property == Properties::Thing_Size) {
                         scale.setX( size.x() / item->getAssetWidth()  );
                         scale.setY( size.y() / item->getAssetHeight() );
                 // Otherwise calculate the size based on the scale
@@ -127,34 +127,34 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
                 setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
 
                 // If size or scale was changed, update the other and update the widgets in the Object Inspector
-                if (property == Properties::Object_Size) {
-                    thing->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale, scale);
-                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { thing } , { Properties::Object_Scale });
+                if (property == Properties::Thing_Size) {
+                    thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale, scale);
+                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { thing } , { Properties::Thing_Scale });
                 }
-                if (property == Properties::Object_Scale) {
-                    thing->setComponentPropertyValue(Components::Object_Transform, Properties::Object_Size, size);
-                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { thing } , { Properties::Object_Size });
+                if (property == Properties::Thing_Scale) {
+                    thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size, size);
+                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { thing } , { Properties::Thing_Size });
                 }
 
                 break;
 
-            case Properties::Object_Z_Order:
+            case Properties::Thing_Z_Order:
                 item->setZValue(new_value.toDouble());
                 break;
 
 
-            case Properties::Object_Filter_Brightness:
-            case Properties::Object_Filter_Contrast:
-            case Properties::Object_Filter_Saturation:
-            case Properties::Object_Filter_Hue:
-            case Properties::Object_Filter_Grayscale:
-            case Properties::Object_Filter_Negative:
-            case Properties::Object_Filter_Pixelation:
+            case Properties::Thing_Filter_Brightness:
+            case Properties::Thing_Filter_Contrast:
+            case Properties::Thing_Filter_Saturation:
+            case Properties::Thing_Filter_Hue:
+            case Properties::Thing_Filter_Grayscale:
+            case Properties::Thing_Filter_Negative:
+            case Properties::Thing_Filter_Pixelation:
                 item->applyFilters();
                 break;
 
-            case Properties::Object_Text_User_Text:
-                text = item->getThing()->getComponentPropertyValue(Components::Object_Settings_Text, Properties::Object_Text_User_Text).toString();
+            case Properties::Thing_Text_User_Text:
+                text = item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
                 if (text == "") text = " ";
                 item->setPixmap( m_editor_relay->currentProject()->getDrFont( item->getAsset()->getSourceKey() )->createText( text ));
                 item->setAssetWidth(  item->pixmap().width() );

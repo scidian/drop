@@ -56,7 +56,7 @@ QString DrSettings::getName() {
     switch (getType()) {
         case DrType::World:  return getComponent(Components::World_Settings )->getProperty(Properties::World_Name )->getValue().toString();
         case DrType::Stage:  return getComponent(Components::Stage_Settings )->getProperty(Properties::Stage_Name )->getValue().toString();
-        case DrType::Thing:  return getComponent(Components::Object_Settings)->getProperty(Properties::Object_Name)->getValue().toString();
+        case DrType::Thing:  return getComponent(Components::Thing_Settings)->getProperty(Properties::Thing_Name)->getValue().toString();
         case DrType::Asset:  return getComponent(Components::Asset_Settings )->getProperty(Properties::Asset_Name )->getValue().toString();
         case DrType::Image:  return "DrImage - Unknown Name";
         case DrType::Font:   return "DrFont - Unknown Name";

@@ -149,7 +149,7 @@ void DrFilterAssetMouseHandler::startDragAndDrop(QLabel *label_pixmap, long asse
             pixmap = asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
             break;
         case DrAssetType::Text:
-            //text =   asset->getComponentPropertyValue(Components::Object_Settings_Text, Properties::Object_Text_User_Text).toString();
+            //text =   asset->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
             pixmap = m_editor_relay->currentProject()->getDrFont( asset->getSourceKey() )->createText( "Text" );
             break;
     }

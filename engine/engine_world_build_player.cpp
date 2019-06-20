@@ -86,7 +86,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         points.append( QPointF(  20.0,  16.0 ));
         points.append( QPointF(   5.5,  16.0 ));
         points.append( QPointF(   5.5,  -5.0 ));
-        DrEngineObject *rover = this->addPolygon(Body_Type::Kinematic, Asset_Textures::Rover,  50, 75, 0, c_norotate, c_scale1x1, c_opaque,
+        DrEngineObject *rover = this->addPolygon(Body_Type::Dynamic, Asset_Textures::Rover,  50, 75, 0, c_norotate, c_scale1x1, c_opaque,
                                                  points, 0.5, 0.1, QPointF(0, 0));
         setActiveCamera( addCamera(rover) );
 

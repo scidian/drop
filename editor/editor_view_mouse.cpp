@@ -188,7 +188,7 @@ void DrView::mouseReleaseEvent(QMouseEvent *event) {
             m_view_mode = View_Mode::None;
             m_editor_relay->updateEditorWidgetsAfterItemChange(
                         Editor_Widgets::Scene_View, Dr::ConvertItemListToSettings(my_scene->getSelectionItems()),
-                        { Properties::Object_Position, Properties::Object_Size, Properties::Object_Scale, Properties::Object_Rotation });
+                        { Properties::Thing_Position, Properties::Thing_Size, Properties::Thing_Scale, Properties::Thing_Rotation });
         }
 
         updateSelectionBoundingBox(6);

@@ -32,13 +32,13 @@ void DrEngineWorld::loadStageToSpace(DrStage *stage, double offset_x, double off
 
         // ***** Load Thing properties
         long        asset_key =     thing->getAssetKey();
-        QPointF     position =      thing->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Position).toPointF();
-        QPointF     scale =         thing->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Scale).toPointF();
-        double      angle =         thing->getComponentPropertyValue(Components::Object_Transform, Properties::Object_Rotation).toDouble();
-        double      z_order =       thing->getComponentPropertyValue(Components::Object_Layering,  Properties::Object_Z_Order).toDouble();
-        double      alpha =         thing->getComponentPropertyValue(Components::Object_Layering,  Properties::Object_Opacity).toDouble() / 100;
-        bool        collide =       thing->getComponentPropertyValue(Components::Object_Settings,  Properties::Object_Collide).toBool();
-        int         physics =       thing->getComponentPropertyValue(Components::Object_Settings,  Properties::Object_Physics_Type).toInt();
+        QPointF     position =      thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
+        QPointF     scale =         thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
+        double      angle =         thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
+        double      z_order =       thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
+        double      alpha =         thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toDouble() / 100;
+        bool        collide =       thing->getComponentPropertyValue(Components::Thing_Settings,  Properties::Thing_Collide).toBool();
+        int         physics =       thing->getComponentPropertyValue(Components::Thing_Settings,  Properties::Thing_Physics_Type).toInt();
 
         Body_Type body = Body_Type::Static;
         switch (physics) {
@@ -53,7 +53,7 @@ void DrEngineWorld::loadStageToSpace(DrStage *stage, double offset_x, double off
 
         // ***** Set collision type
         Collision_Type collision_type = Collision_Type::Damage_None;
-        long           damage_type = thing->getComponentPropertyValue(Components::Object_Settings, Properties::Object_Damage).toInt();
+        long           damage_type = thing->getComponentPropertyValue(Components::Thing_Settings, Properties::Thing_Damage).toInt();
         switch (damage_type) {
             case 0: collision_type = Collision_Type::Damage_None;   break;
             case 1: collision_type = Collision_Type::Damage_Player; break;
@@ -63,10 +63,10 @@ void DrEngineWorld::loadStageToSpace(DrStage *stage, double offset_x, double off
         block->setCollisionType(collision_type);
 
         // ***** Velocity settings
-        QPointF vel_x = thing->getComponentPropertyValue(Components::Object_Movement, Properties::Object_Velocity_X).toPointF();
-        QPointF vel_y = thing->getComponentPropertyValue(Components::Object_Movement, Properties::Object_Velocity_Y).toPointF();
-        QPointF rotation_vel =  thing->getComponentPropertyValue(Components::Object_Movement, Properties::Object_Spin_Velocity).toPointF();
-        bool    angle_velocty = thing->getComponentPropertyValue(Components::Object_Movement, Properties::Object_Angle_Velocity).toBool();
+        QPointF vel_x = thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Velocity_X).toPointF();
+        QPointF vel_y = thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Velocity_Y).toPointF();
+        QPointF rotation_vel =  thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Spin_Velocity).toPointF();
+        bool    angle_velocty = thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Angle_Velocity).toBool();
 
         cpVect velocity;
         velocity.x = vel_x.x() + (QRandomGenerator::global()->bounded(vel_x.y() * 2.0) - vel_x.y());
@@ -88,13 +88,13 @@ void DrEngineWorld::loadStageToSpace(DrStage *stage, double offset_x, double off
         }
 
         // ***** Appearance settings
-        QPointF pixelation = thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Pixelation).toPointF();
-        float   brightness = thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Brightness).toInt() / 255.f;
-        float   contrast =   thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Contrast).toInt() / 255.f;
-        float   saturation = thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Saturation).toInt() / 255.f;
-        float   hue =        thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Hue).toInt() / 360.f;
-        bool    grayscale =  thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Grayscale).toBool();
-        bool    negative =   thing->getComponentPropertyValue(Components::Object_Appearance, Properties::Object_Filter_Negative).toBool();
+        QPointF pixelation = thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
+        float   brightness = thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Brightness).toInt() / 255.f;
+        float   contrast =   thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Contrast).toInt() / 255.f;
+        float   saturation = thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Saturation).toInt() / 255.f;
+        float   hue =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Hue).toInt() / 360.f;
+        bool    grayscale =  thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Grayscale).toBool();
+        bool    negative =   thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Negative).toBool();
         block->pixel_x =    static_cast<float>(pixelation.x());
         block->pixel_y =    static_cast<float>(pixelation.y());
         block->brightness = brightness;

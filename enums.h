@@ -195,15 +195,15 @@ enum class Components {
     Stage_Settings,
     Stage_Grid,
 
-    Object_Settings,
-    Object_Settings_Camera,
-    Object_Settings_Character,
-    Object_Settings_Text,
+    Thing_Settings,
+    Thing_Settings_Camera,
+    Thing_Settings_Character,
+    Thing_Settings_Text,
 
-    Object_Transform,
-    Object_Layering,
-    Object_Movement,
-    Object_Appearance,
+    Thing_Transform,
+    Thing_Layering,
+    Thing_Movement,
+    Thing_Appearance,
 };
 
 enum class Properties {
@@ -266,48 +266,48 @@ enum class Properties {
     // ********************
 
     // Settings
-    Object_Name,                    //string
-    Object_Physics_Type,            //list (static, kinematic, dynamic)
-    Object_Collide,                 //bool
-    Object_Damage,                  //list (none, player, enemy, all)
+    Thing_Name,                     //string
+    Thing_Physics_Type,             //list (static, kinematic, dynamic)
+    Thing_Collide,                  //bool
+    Thing_Damage,                   //list (none, player, enemy, all)
 
     // Transform
-    Object_Position,                //positionf
-    Object_Rotation,                //angle
-    Object_Size,                    //sizef
-    Object_Scale,                   //scale
+    Thing_Position,                 //positionf
+    Thing_Rotation,                 //angle
+    Thing_Size,                     //sizef
+    Thing_Scale,                    //scale
 
     // Layering
-    Object_Z_Order,                 //int
-    Object_Opacity,                 //percent
+    Thing_Z_Order,                  //int
+    Thing_Opacity,                  //percent
 
     // Movement
-    Object_Velocity_X,              //variable
-    Object_Velocity_Y,              //variable
-    Object_Spin_Velocity,           //variable
-    Object_Angle_Velocity,          //bool
+    Thing_Velocity_X,               //variable
+    Thing_Velocity_Y,               //variable
+    Thing_Spin_Velocity,            //variable
+    Thing_Angle_Velocity,           //bool
 
     // Appearance
-    Object_Filter_Pixelation,       //positive size
-    Object_Filter_Brightness,       //filter
-    Object_Filter_Contrast,         //filter
-    Object_Filter_Saturation,       //filter
-    Object_Filter_Hue,              //filter angle
-    Object_Filter_Grayscale,        //bool
-    Object_Filter_Negative,         //bool
+    Thing_Filter_Pixelation,        //positive size
+    Thing_Filter_Brightness,        //filter
+    Thing_Filter_Contrast,          //filter
+    Thing_Filter_Saturation,        //filter
+    Thing_Filter_Hue,               //filter angle
+    Thing_Filter_Grayscale,         //bool
+    Thing_Filter_Negative,          //bool
 
 
     // *****
 
     // Character Settings
-    Object_Character_Jump_X,        //double
-    Object_Character_Jump_Y,        //double
+    Thing_Character_Jump_X,         //double
+    Thing_Character_Jump_Y,         //double
 
     // Text Settings
-    Object_Text_User_Text,          //string
+    Thing_Text_User_Text,           //string
 
     // Camera Settings
-    Object_Camera_Zoom,             //double
+    Thing_Camera_Zoom,              //double
 };
 
 

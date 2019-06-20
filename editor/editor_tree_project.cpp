@@ -67,7 +67,7 @@ void TreeProject::buildProjectTree() {
                 }
 
                 thing_item->setText(0, thing->getComponentPropertyValue(
-                                       Components::Object_Settings, Properties::Object_Name).toString());   // Set text for item
+                                       Components::Thing_Settings, Properties::Thing_Name).toString());     // Set text for item
                 thing_item->setData(0, User_Roles::Key, QVariant::fromValue(thing->getKey()));              // Store item key in user data
 
                 stage_item->addChild(thing_item);

@@ -37,8 +37,8 @@ void TreeProject::updateItemNames(QList<DrSettings*> changed_items, QList<long> 
                     case Properties::Stage_Name:
                         row->setText(0, "Stage: " + item->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Name).toString() );
                         break;
-                    case Properties::Object_Name:
-                        row->setText(0, item->getComponentPropertyValue(Components::Object_Settings, Properties::Object_Name).toString() );
+                    case Properties::Thing_Name:
+                        row->setText(0, item->getComponentPropertyValue(Components::Thing_Settings, Properties::Thing_Name).toString() );
                         break;
                     default: ;
                     }
