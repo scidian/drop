@@ -8,15 +8,7 @@
 #ifndef ENGINE_OBJECT_H
 #define ENGINE_OBJECT_H
 
-#include <QPointF>
-#include <QTime>
-#include <QVector>
-#include <QVector3D>
-#include <map>
-
-#include "chipmunk/chipmunk.h"
-#include "enums_engine.h"
-#include "helper.h"
+#include "abstract_engine_thing.h"
 
 enum class One_Way {                    // One Way Collide
     None,
@@ -28,9 +20,6 @@ enum class Jump_State {
     Need_To_Jump,
     Jumped,
 };
-
-// Type Definitions
-typedef std::map<cpShape*, Shape_Type> ShapeMap;
 
 // Constants for calling engine addObject calls
 constexpr double    c_epsilon = 0.000001;               // Floating point zero
@@ -60,19 +49,8 @@ extern QString      g_info;
 //##    DrEngineObject
 //##        Holds one object for use in a cpSpace
 //############################
-class DrEngineObject
+class DrEngineObject : public DrEngineThing
 {
-
-public:
-    // ***** Object Body and Shapes
-    cpBody             *body;                   // Physical Body of object
-    Body_Type           body_type;              // Body_Type
-
-    QVector<cpShape*>   shapes;                 // Collision Shapes of object
-    ShapeMap            shape_type;             // Shape Types of Shapes of Object
-
-    double              z_order = 0.0;          // Used for layering, needs to be public for sorting
-
 
 private:
     // ********** Object Component Properties
@@ -205,7 +183,6 @@ public:
     const float&    getScaleX() { return m_scale_x; }
     const float&    getScaleY() { return m_scale_y; }
     const float&    getOpacity() { return m_alpha; }
-    const double&   getZOrder() { return z_order; }
 
     void            setDoesCollide(bool should_collide) { m_does_collide = should_collide; }
     void            setTextureNumber(long texture_number) { m_texture_number = texture_number; }
@@ -215,7 +192,7 @@ public:
     void            setScaleY(double new_scale_y) { m_scale_y = static_cast<float>(new_scale_y); }
     void            setOpacity(float new_alphaf)  { m_alpha = new_alphaf; }
     void            setOpacity(double new_alphaf) { m_alpha = static_cast<float>(new_alphaf); }
-    void            setZOrder(double new_z_order) { z_order = new_z_order; }
+
 
     // Object Properties - Camera
     const long&     getActiveCameraKey() { return m_active_camera; }

@@ -94,8 +94,10 @@ SOURCES += \
     editor/editor_view_rotate.cpp \
     editor/editor_view_select.cpp \
     editor/editor_view_tooltip.cpp \
+    engine/abstract_engine_thing.cpp \
     engine/engine.cpp \
     engine/engine_camera.cpp \
+    engine/engine_light.cpp \
     engine/engine_object.cpp \
     engine/engine_texture.cpp \
     engine/engine_world.cpp \
@@ -212,8 +214,10 @@ HEADERS += \
     editor/editor_tree_inspector.h \
     editor/editor_tree_project.h \
     editor/editor_view.h \
+    engine/abstract_engine_thing.h \
     engine/engine.h \
     engine/engine_camera.h \
+    engine/engine_light.h \
     engine/engine_object.h \
     engine/engine_texture.h \
     engine/engine_world.h \

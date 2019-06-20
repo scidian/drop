@@ -16,6 +16,9 @@ uniform vec2        u_resolution;
 uniform vec3        u_color;
 uniform vec2        u_cone;
 
+float               u_light_shadows = 2.0;
+float               u_intensity = 1.0;
+
 const float         PI = 3.14159;
 
 // Sample from the 1D Distance (Shadow) Map
@@ -60,6 +63,10 @@ void main(void) {
     sum += sample(vec2(tc.x + 2.0 * blur, tc.y), r) * 0.12;
     sum += sample(vec2(tc.x + 3.0 * blur, tc.y), r) * 0.09;
     sum += sample(vec2(tc.x + 4.0 * blur, tc.y), r) * 0.05;
+
+    // Add intensity and lighting in the shadows
+    sum = (sum + u_light_shadows) / (1.0 + u_light_shadows);
+    sum *= u_intensity;
 
     // Multiply the summed amount by our distance, which gives us a radial falloff, then multiply by light color
     float amount = sum * (smoothstep(1.0, 0.0, r) * u_resolution.y);

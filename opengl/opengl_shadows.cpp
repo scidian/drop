@@ -30,8 +30,8 @@ void OpenGL::bindLightBuffer(bool initialize_only) {
     // Calculate size of light texture (fbo)
     light_radius = static_cast<int>(c_light_size * m_scale);
     light_radius_fitted = light_radius;
-    if (light_radius > width()*2 && light_radius > height()*2) {
-        light_radius_fitted = (width() > height()) ? width()*2 : height()*2;
+    if (light_radius > width()*2*devicePixelRatio() && light_radius > height()*2*devicePixelRatio()) {
+        light_radius_fitted = (width() > height()) ? width()*2*devicePixelRatio() : height()*2*devicePixelRatio();
     }
 
     // Check Frame Buffer Object is initialized
@@ -54,7 +54,7 @@ void OpenGL::bindLightBuffer(bool initialize_only) {
 void OpenGL::bindShadowBuffer(bool initialize_only) {
     // Shadow map size is the smallest of c_angles, light_radius_fitted, and width()
     int shadow_size = (light_radius_fitted < c_angles) ? light_radius_fitted : c_angles;
-        shadow_size = (width() < shadow_size) ? width() : shadow_size;
+        shadow_size = (width()*devicePixelRatio() < shadow_size) ? width()*devicePixelRatio() : shadow_size;
 
     // Check Frame Buffer Object is initialized
     if (!m_shadow_fbo || m_shadow_fbo->width() != shadow_size) {
@@ -83,7 +83,7 @@ void OpenGL::drawShadowMap() {
     // ***** Give the shader our Ray Count and Scaled Light Radius
     m_shadow_shader.setUniformValue( m_uniform_shadow_ray_count,  static_cast<float>(m_shadow_fbo->width()) );
 
-    float screen_scale = (width() / c_light_size);
+    float screen_scale = (width()*devicePixelRatio() / c_light_size);
     m_shadow_shader.setUniformValue( m_uniform_shadow_resolution, light_radius, (light_radius / m_scale) * screen_scale );
 
     // Reset our projection matrix to the FBO size
@@ -134,14 +134,14 @@ void OpenGL::draw2DLights() {
 
     if (!m_light_shader.bind()) return;
 
-    // Find out if light texture has been reduced to fit in the screen
+    // Find out if light texture has been reduced to fit in the screen, if so increase brightness of light as we get closer
     float shrink_multiplier = 1.0f;
     if (light_radius_fitted < light_radius) {
-        shrink_multiplier = float(light_radius) / float(light_radius_fitted);
+        shrink_multiplier = static_cast<float>( qSqrt(double(light_radius) / double(light_radius_fitted)) );
     }
 
     // Give the shader our light_size resolution, color
-    m_light_shader.setUniformValue( m_uniform_light_resolution, light_radius, shrink_multiplier );
+    m_light_shader.setUniformValue( m_uniform_light_resolution, light_radius, shrink_multiplier);
     m_light_shader.setUniformValue( m_uniform_light_color, 0.75f, 0.2f, 0.75f );
 
     //float cone_1 = qDegreesToRadians( 30.0f);
