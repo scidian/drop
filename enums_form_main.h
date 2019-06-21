@@ -14,10 +14,15 @@
 //############################
 enum class Form_Main_Mode {
     Program_Loading,
-    World_Map,          // "Map"
-    World_Editor,       // "Editor"
-    UI_Editor,          // "UI"
+
+    World_Map,          // "Map"    (Program Node Layout)
+    World_Editor,       // "Editor" (Physics World)
+    UI_Editor,          // "UI"     (UI Layer)
+
     Stage_Map,
+    // App_Editor,
+    // Puzzle_World,
+
     Clear,
 };
 
@@ -28,7 +33,7 @@ enum class Form_Main_Mode {
 //############################
 enum class Editor_Widgets {
     Asset_Tree,
-    Object_Inspector,
+    Inspector_Tree,
     Project_Tree,
     Scene_View,
     ToolBar,

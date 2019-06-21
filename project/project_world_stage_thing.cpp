@@ -34,6 +34,13 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
 
     // Call to load in all the components / properties for this Stage thing
     switch (new_thing_type) {
+        case DrThingType::Character:
+            addComponentSettingsCharacter(new_thing_name);
+            addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, z);
+            addComponentMovement();
+            addComponentAppearance();
+            break;
+
         case DrThingType::Object:
             addComponentSettingsObject(new_thing_name, should_collide);
             addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, z);
@@ -44,12 +51,6 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
         case DrThingType::Text:
             addComponentSettingsText(new_thing_name);
             addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, z);
-            break;
-        case DrThingType::Character:
-            addComponentSettingsCharacter(new_thing_name);
-            addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, z);
-            addComponentMovement();
-            addComponentAppearance();
             break;
 
         //case DrThingType::Camera:
@@ -67,41 +68,10 @@ DrThing::~DrThing() { }
 //##    Property loading
 //####################################################################################
 
-void DrThing::addComponentSettingsObject(QString new_name, bool should_collide) {
-    addComponent(Components::Thing_Settings, "Settings", "Basic settings for current Object.", Component_Colors::White_Snow, true);
-    getComponent(Components::Thing_Settings)->setIcon(Component_Icons::Settings);
-    addPropertyToComponent(Components::Thing_Settings, Properties::Thing_Name, Property_Type::String, new_name,
-                           "Object Name", "Name of the current Object.", false, false);
-    addPropertyToComponent(Components::Thing_Settings, Properties::Thing_Physics_Type, Property_Type::List, 0,
-                           "Object Type", "<b>Static</b> - Can not move. <br> "
-                                          "<b>Kinematic</b> - Moves at fixed speed. <br> "
-                                          "<b>Dynamic</b> - Physics object.");
-    addPropertyToComponent(Components::Thing_Settings, Properties::Thing_Collide, Property_Type::Bool, should_collide,
-                           "Collide?", "Should this Object collide with Dynamic Objects? Objects not marked to collide "
-                                       "still provide damage and sound reponses when coming into contact with other Objects.");
-    addPropertyToComponent(Components::Thing_Settings, Properties::Thing_Damage, Property_Type::List, 0,
-                           "Damage", "Choose the type of Object this will damage when coming into contact. By choosing \"Damage Player\" this "
-                                     "Object will be treated as an enemy and vice versa.");
-}
-
-
-void DrThing::addComponentSettingsText(QString new_name) {
-    addComponent(Components::Thing_Settings, "Settings", "Basic settings for current Text.", Component_Colors::White_Snow, true);
-    getComponent(Components::Thing_Settings)->setIcon(Component_Icons::Settings);
-    addPropertyToComponent(Components::Thing_Settings, Properties::Thing_Name, Property_Type::String, new_name,
-                           "Text Name", "Name of the current Text.", false, false);
-
-    addComponent(Components::Thing_Settings_Text, "Text Settings", "Settings for this Text.", Component_Colors::Orange_Medium, true);
-    getComponent(Components::Thing_Settings_Text)->setIcon(Component_Icons::Font);
-    addPropertyToComponent(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text, Property_Type::String, "Text",
-                           "User Text", "Custom text value to be shown in this Text.");
-}
-
-
 void DrThing::addComponentSettingsCharacter(QString new_name) {
-    addComponent(Components::Thing_Settings, "Settings", "Basic settings for current Character.", Component_Colors::White_Snow, true);
-    getComponent(Components::Thing_Settings)->setIcon(Component_Icons::Settings);
-    addPropertyToComponent(Components::Thing_Settings, Properties::Thing_Name, Property_Type::String, new_name,
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
                            "Character Name", "Name of the current Character.", false, false);
 
     addComponent(Components::Thing_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::Mustard_Yellow, true);
@@ -112,10 +82,50 @@ void DrThing::addComponentSettingsCharacter(QString new_name) {
                            "Jump Force Y", "Force of jump button in y direction");
 }
 
+void DrThing::addComponentSettingsObject(QString new_name, bool should_collide) {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
+                           "Object Name", "Name of the current Object.", false, false);
+
+    addComponent(Components::Thing_Settings_Object, "Object Settings", "Settings for current Object.", Component_Colors::White_Snow, true);
+    getComponent(Components::Thing_Settings_Object)->setIcon(Component_Icons::Object);
+    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Physics_Type, Property_Type::List, 0,
+                           "Object Type", "<b>Static</b> - Can not move. <br> "
+                                          "<b>Kinematic</b> - Moves at fixed speed. <br> "
+                                          "<b>Dynamic</b> - Physics object.");
+    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Collide, Property_Type::Bool, should_collide,
+                           "Collide?", "Should this Object collide with Dynamic Objects? Objects not marked to collide "
+                                       "still provide damage and sound reponses when coming into contact with other Objects.");
+    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Damage, Property_Type::List, 0,
+                           "Damage", "Choose the type of Object this will damage when coming into contact. By choosing \"Damage Player\" this "
+                                     "Object will be treated as an enemy and vice versa.");
+}
+
+void DrThing::addComponentSettingsLight(QColor color) {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Light",
+                           "Effect Name", "Name of the current Effect.", false, false);
+}
+
+void DrThing::addComponentSettingsText(QString new_name) {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
+                           "Text Name", "Name of the current Text Box.", false, false);
+
+    addComponent(Components::Thing_Settings_Text, "Text Settings", "Settings for current Text Box.", Component_Colors::Orange_Medium, true);
+    getComponent(Components::Thing_Settings_Text)->setIcon(Component_Icons::Font);
+    addPropertyToComponent(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text, Property_Type::String, "Text",
+                           "User Text", "Custom text value to be shown in this Text Box.");
+}
+
+
 void DrThing::addComponentSettingsCamera(QString new_name) {
-    addComponent(Components::Thing_Settings, "Settings", "Basic settings for current Camera.", Component_Colors::White_Snow, true);
-    getComponent(Components::Thing_Settings)->setIcon(Component_Icons::Settings);
-    addPropertyToComponent(Components::Thing_Settings, Properties::Thing_Name, Property_Type::String, new_name,
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
                            "Camera Name", "Name of the current Camera.", false, false);
 
     addComponent(Components::Thing_Settings_Camera, "Camera Settings", "Settings for this Camera.", Component_Colors::Beige_Apricot, true);

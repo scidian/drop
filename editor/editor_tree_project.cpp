@@ -36,8 +36,7 @@ void TreeProject::buildProjectTree() {
         QTreeWidgetItem *world_item = new QTreeWidgetItem(this);                                            // Create new item (top level item)
 
         world_item->setIcon(0, QIcon(":/assets/tree_icons/tree_world.png"));                                // Loads icon for world
-        world_item->setText(0, "World: " + world_pair.second->getComponentPropertyValue(
-                               Components::World_Settings, Properties::World_Name).toString());             // Set text for item
+        world_item->setText(0, "World: " + world_pair.second->getName());                                   // Set text for item
         world_item->setData(0, User_Roles::Key, QVariant::fromValue(world_pair.second->getKey()));
         this->addTopLevelItem(world_item);                                                                  // Add it on our tree as the top item.
 
@@ -45,8 +44,7 @@ void TreeProject::buildProjectTree() {
         {
             QTreeWidgetItem *stage_item = new QTreeWidgetItem(world_item);                                  // Create new item and add as child item
             stage_item->setIcon(0, QIcon(":/assets/tree_icons/tree_stage.png"));                            // Loads icon for stage
-            stage_item->setText(0, "Stage: " + stage_pair.second->getComponentPropertyValue(
-                                   Components::Stage_Settings, Properties::Stage_Name).toString());         // Set text for item
+            stage_item->setText(0, "Stage: " + stage_pair.second->getName());                               // Set text for item
             stage_item->setData(0, User_Roles::Key, QVariant::fromValue(stage_pair.second->getKey()));
 
 
@@ -59,15 +57,14 @@ void TreeProject::buildProjectTree() {
 
                 QTreeWidgetItem *thing_item = new QTreeWidgetItem(stage_item);                             // Create new item and add as child item
                 switch (thing->getThingType()) {
-                    case DrThingType::Object:    thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_object.png"));       break;
-                    case DrThingType::Text:      thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_text.png"));         break;
-                    case DrThingType::Character: thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_character.png"));    break;
-
-                    ///case DrThingType::Camera:    thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_camera.png"));       break;
+                    case DrThingType::Object:    thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_object.png"));      break;
+                    case DrThingType::Text:      thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_text.png"));        break;
+                    case DrThingType::Character: thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_character.png"));   break;
+                    case DrThingType::Light:     thing_item->setIcon(0, QIcon(":/assers/tree_icons/tree_light.png"));       break;
+                    ///case DrThingType::Camera:    thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_camera.png"));      break;
                 }
 
-                thing_item->setText(0, thing->getComponentPropertyValue(
-                                       Components::Thing_Settings, Properties::Thing_Name).toString());     // Set text for item
+                thing_item->setText(0, thing->getName());                                                   // Set text for item
                 thing_item->setData(0, User_Roles::Key, QVariant::fromValue(thing->getKey()));              // Store item key in user data
 
                 stage_item->addChild(thing_item);

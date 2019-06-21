@@ -38,7 +38,7 @@
 //####################################################################################
 //enum class Editor_Widgets {
 //    Asset_Tree,
-//    Object_Inspector,
+//    Inspector_Tree,
 //    Project_Tree,
 //    Scene_View,
 //  Toolbar?
@@ -47,13 +47,13 @@ void FormMain::buildAssetTree() {
     treeAssetEditor->buildAssetTree();
 }
 
-// Sends new list to Object Inspector
-void FormMain::buildObjectInspector(QList<long> key_list) {
+// Sends new list to Inspector
+void FormMain::buildInspector(QList<long> key_list) {
     // If we're currently in the middle of selecting with rubber band box, don't update yet
     if (currentViewMode() == View_Mode::Selecting) return;
 
-    // If key_list.count() == 0, then an empty list was passed in. This will clear the object inspector.
-    // If we're doing anything at all in viewEditor (i.e. View_Mode != None), let's wait to clear the inspector.
+    // If key_list.count() == 0, then an empty list was passed in. This will clear the Inspector.
+    // If we're doing anything at all in viewEditor (i.e. View_Mode != None), let's wait to clear the Inspector.
     if (currentViewMode() != View_Mode::None && key_list.count() == 0) return;
 
     treeInspector->buildInspectorFromKeys(key_list);
@@ -80,7 +80,7 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
     if (changed_items.isEmpty()) return;
     if (property_keys.isEmpty()) return;
 
-    // Don't update inspector constantly while objects are being moved around, very slow
+    // Don't update Inspector constantly while objects are being moved around, very slow
     if (currentViewMode() == View_Mode::Disable_Update) return;
     if (currentViewMode() == View_Mode::Translating)    return;
     if (currentViewMode() == View_Mode::Resizing)       return;
@@ -91,7 +91,7 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
 
     // ***** This order is semi important, best not to try and change it
     if (changed_from != Editor_Widgets::Scene_View)         sceneEditor->updateChangesInScene(changed_items, property_keys_as_long);
-    if (changed_from != Editor_Widgets::Object_Inspector)   treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys_as_long);
+    if (changed_from != Editor_Widgets::Inspector_Tree)     treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys_as_long);
     if (changed_from != Editor_Widgets::Project_Tree)       treeProjectEditor->updateItemNames(changed_items, property_keys_as_long);
     if (changed_from != Editor_Widgets::Asset_Tree)         treeAssetEditor->updateAssetList(changed_items, property_keys_as_long);
 

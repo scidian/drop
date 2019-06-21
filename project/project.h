@@ -46,7 +46,7 @@ constexpr long c_key_starting_number = 1;
 
 //####################################################################################
 //##    DrProject
-//##        Class to hold data for one project
+//##        Class to hold data for one Project
 //############################
 class DrProject
 {

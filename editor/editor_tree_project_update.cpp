@@ -30,17 +30,20 @@ void TreeProject::updateItemNames(QList<DrSettings*> changed_items, QList<long> 
                 for (auto property : property_keys) {
                     Properties check_property = static_cast<Properties>(property);
 
-                    switch (check_property) {
-                    case Properties::World_Name:
-                        row->setText(0, "World: " + item->getComponentPropertyValue(Components::World_Settings, Properties::World_Name).toString() );
-                        break;
-                    case Properties::Stage_Name:
-                        row->setText(0, "Stage: " + item->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Name).toString() );
-                        break;
-                    case Properties::Thing_Name:
-                        row->setText(0, item->getComponentPropertyValue(Components::Thing_Settings, Properties::Thing_Name).toString() );
-                        break;
-                    default: ;
+                    if (check_property == Properties::Entity_Name) {
+                        switch (item->getType()) {
+                            case DrType::World:
+                                row->setText(0, "World: " + item->getName());
+                                break;
+                            case DrType::Stage:
+                            case DrType::StartStage:
+                                row->setText(0, "Stage: " + item->getName());
+                                break;
+                            case DrType::Thing:
+                                row->setText(0, item->getName());
+                                break;
+                            default: ;
+                        }
                     }
                 }
             }

@@ -44,7 +44,7 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
         switch (old_mode) {
             case Form_Main_Mode::World_Editor:
                 widgetCentralEditor = takeCentralWidget();
-                buildObjectInspector( {} );
+                buildInspector( {} );
                 dockAssetsEditor->hide();
                 break;
             case Form_Main_Mode::Clear:
@@ -197,7 +197,7 @@ void FormMain::buildWidgetsShared() {
             verticalLayoutObject->setSpacing(0);
             verticalLayoutObject->setContentsMargins(0, 0, 0, 0);
 
-                // ***** Load our custom TreeObjectInspector for the Stage List
+                // ***** Load our custom TreeInspector for the Stage List
                 treeInspector = new TreeInspector(widgetInspector, m_project, this);
                 treeInspector->setObjectName(QStringLiteral("treeObject"));
                 treeInspector->setColumnCount(1);

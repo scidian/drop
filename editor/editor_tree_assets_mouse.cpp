@@ -39,7 +39,7 @@ DrFilterAssetMouseHandler::DrFilterAssetMouseHandler(QObject *parent, IEditorRel
 
 //####################################################################################
 //##    eventFilter - handles mouse click on asset,
-//##                  loads object inspector for clicked asset,
+//##                  loads Inspector for clicked asset,
 //##                  starts drag and drop event
 //####################################################################################
 bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
@@ -50,9 +50,9 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
     QLabel  *label_pixmap = asset_frame->findChild<QLabel*>("assetPixmap");
     long     asset_key =    asset_frame->property(User_Property::Key).toLongLong();
 
-    // On mouse down, update the object inspector, prepare for drag and drop
+    // On mouse down, update the Inspector, prepare for drag and drop
     if (event->type() == QEvent::MouseButtonPress) {
-        m_editor_relay->buildObjectInspector( { asset_key } );
+        m_editor_relay->buildInspector( { asset_key } );
 
         QMouseEvent *mouse_event = dynamic_cast<QMouseEvent*>(event);
         asset_frame->setProperty(User_Property::Mouse_Down,     true);
@@ -76,7 +76,7 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
     // Start scrolling name if name is too wide to be shown
     } else if (event->type() == QEvent::HoverEnter) {
         DrSettings  *asset = m_editor_relay->currentProject()->findAssetFromKey(asset_key);
-        QString asset_name = asset->getComponentPropertyValue(Components::Asset_Settings, Properties::Asset_Name).toString();
+        QString asset_name = asset->getName();
 
         if (asset_name != label_name->text()) {
             if (scrolling_mutex.tryLock()) {

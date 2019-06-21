@@ -41,19 +41,19 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
                     Properties check_property = static_cast<Properties>(property);
 
                     switch (check_property) {
-                    case Properties::Asset_Name:
+                    case Properties::Entity_Name:
                         asset = m_project->getAsset(item_key);
-                        asset_text = item->getComponentPropertyValue(Components::Asset_Settings, Properties::Asset_Name).toString();
+                        asset_text = item->getName();
 
                         // Update all Things in the project that use this asset name
                         for (auto world : m_project->getWorldMap()) {
                             for (auto stage : world.second->getStageMap()) {
                                 for (auto thing : stage.second->getThingMap()) {
                                     if (thing.second->getAssetKey() == asset->getKey()) {
-                                        thing.second->setComponentPropertyValue(Components::Thing_Settings, Properties::Thing_Name, asset_text);
+                                        thing.second->setComponentPropertyValue(Components::Entity_Name, Properties::Entity_Name, asset_text);
                                         newly_changed_items.append(thing.second);
-                                        if (!newly_changed_properties.contains(Properties::Thing_Name)) {
-                                            newly_changed_properties.append(Properties::Thing_Name);
+                                        if (!newly_changed_properties.contains(Properties::Entity_Name)) {
+                                            newly_changed_properties.append(Properties::Entity_Name);
                                         }
                                     }
                                 }

@@ -23,7 +23,7 @@
 
 
 //####################################################################################
-//##        Updates the property boxes already in the Object Inspector when a new
+//##        Updates the property boxes already in the Inspector when a new
 //##            item is selected or when something in the project has changed
 //##
 //##        Inspector Widget SIGNALS are blocked to prevent recursive updating
@@ -32,7 +32,7 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
     if (changed_items.isEmpty()) return;
     ///if (property_keys_to_update.isEmpty()) return;   // ********** Don't do this! This function is made so all properties update if none are received
 
-    // !!!!! #TEMP: Need to be more than just one item represented in Object Inspector
+    // !!!!! #TEMP: Need to be more than just one item represented in Inspector
     DrSettings* thing = changed_items.first();
     // !!!!!
 
@@ -136,10 +136,10 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 
 //####################################################################################
 //##        SLOT: connceted from SIGNAL that is emmited when the user changes the values
-//##            of the input boxes in the Object Inspector.
+//##            of the input boxes in the Inspector.
 //##
 //##        Updates the appropriate DrSettings DrProperty Values of the item changed
-//##            in the Object Inspector after a new value has been accepted
+//##            in the Inspector after a new value has been accepted
 //####################################################################################
 void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order) {
     if (m_selected_key == c_no_key) return;
@@ -204,7 +204,7 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
                 break;
         }
 
-        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Object_Inspector, { settings }, { static_cast<Properties>(property_key) } );
+        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Inspector_Tree, { settings }, { static_cast<Properties>(property_key) } );
     }
 }
 

@@ -20,7 +20,8 @@ constexpr int    c_no_key = -1;             // Value that represents no item sel
 
 //####################################################################################
 //##
-//##    Main Types of entities possible in project
+//##    Main Types of entities possible in Project
+//##        - All entities inherit DrSettings to use DrComponents which contain DrProperties compatible with the Inspector
 //##
 //############################
 enum class DrType {
@@ -46,22 +47,23 @@ enum class DrType {
 
 // ################## Sub Types ####################
 enum class DrAssetType {
-    Object,
-    Text,
     Character,
+    Object,
+    Effect,
+    Text,
 
-    //Action
-    //Logic
+    //Action,
+    //Logic,
 };
 
 enum class DrThingType {
-    Object,
-    Text,
     Character,
+    Object,
+    Light,
+    Text,
 
     //Action,
     //Camera,
-    //Light,
     //Logic,
     //Particle,
 };
@@ -184,9 +186,12 @@ enum class Property_Type {
 //##    Possible components and their properties
 //############################
 enum class Components {
-    Asset_Settings,
+
+    Entity_Name,
+
+    Asset_Object_Settings,
+    Asset_Font_Settings,
     Asset_Animation,
-    Asset_Font,
 
     World_Settings,
     World_Physics,
@@ -195,10 +200,10 @@ enum class Components {
     Stage_Settings,
     Stage_Grid,
 
-    Thing_Settings,
-    Thing_Settings_Camera,
     Thing_Settings_Character,
+    Thing_Settings_Object,
     Thing_Settings_Text,
+    Thing_Settings_Camera,
 
     Thing_Transform,
     Thing_Layering,
@@ -208,8 +213,11 @@ enum class Components {
 
 enum class Properties {
 
+    Entity_Name,
+
+    // ********************
+
     // Settings
-    Asset_Name,                     //string
     Asset_Collision_Shape,          //polygon
 
     // Animation
@@ -222,7 +230,6 @@ enum class Properties {
     // ********************
 
     // Settings
-    World_Name,                     //string
     World_Game_Direction,           //float
     World_Score_Multiplier,         //float
     World_Use_Background_Color,     //bool
@@ -249,7 +256,6 @@ enum class Properties {
     // ********************
 
     // Settings
-    Stage_Name,                     //string
     Stage_Start,                    //positive
     Stage_End,                      //positive
     Stage_Size,                     //positive
@@ -266,7 +272,6 @@ enum class Properties {
     // ********************
 
     // Settings
-    Thing_Name,                     //string
     Thing_Physics_Type,             //list (static, kinematic, dynamic)
     Thing_Collide,                  //bool
     Thing_Damage,                   //list (none, player, enemy, all)

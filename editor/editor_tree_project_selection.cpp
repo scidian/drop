@@ -30,7 +30,7 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
     QList<QTreeWidgetItem*> item_list = this->selectedItems();
     if (item_list.size() == 0) {
         this->setSelectedKey(0);
-        m_editor_relay->buildObjectInspector(QList<long> { });
+        m_editor_relay->buildInspector(QList<long> { });
         m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree);
         return;
     }
@@ -59,8 +59,8 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
             }
         }
 
-        // Calls to outside update functions to rebuild object inspector
-        m_editor_relay->buildObjectInspector(QList<long> { selected_key });
+        // Calls to outside update functions to rebuild Inspector
+        m_editor_relay->buildInspector(QList<long> { selected_key });
 
         //******************************************************
 

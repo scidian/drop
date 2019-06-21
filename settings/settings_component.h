@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 12/13/18, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      DrComponent - Class to hold a component for all DrClass objects
+//      DrComponent - Class to hold a component for all Project objects
 //
 //
 
@@ -20,7 +20,7 @@ typedef std::map<long, DrProperty*> PropertyMap;
 
 //####################################################################################
 //##    DrComponent
-//##        Class to hold a component for all DrClass objects
+//##        Class to hold a component for all Project objects
 //############################
 class DrComponent
 {

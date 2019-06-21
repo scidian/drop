@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 1/3/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      A sub classed QTreeWidget so we can override events for Object Inspector List
+//      A sub classed QTreeWidget so we can override events for Inspector List
 //
 //
 #ifndef EDITOR_TREE_INSPECTOR_H

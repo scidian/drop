@@ -11,7 +11,7 @@
 
 
 //####################################################################################
-//##    InspectorDrQPushButtonCategory Class Functions
+//##    DrQPushButtonCategory Class Functions
 //####################################################################################
 // Constructor for category button, gives button a way to pass click to custom function
 DrQPushButtonCategory::DrQPushButtonCategory(const QString &text, QColor text_color, QColor disabled_color, QWidget *parent, QTreeWidgetItem *parent_tree_item) :

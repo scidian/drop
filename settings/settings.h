@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 12/13/18, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      DrSettings - Class to hold settings and a collection of components for all DrClass objects
+//      DrSettings - Class to hold settings and a collection of components for all Project objects
 //
 //
 
@@ -22,7 +22,7 @@ typedef std::map<long, DrComponent*> ComponentMap;
 
 //####################################################################################
 //##    DrComponent
-//##        Class to hold a component for all DrClass objects
+//##        Class to hold a component for all Project objects
 //############################
 class DrSettings
 {

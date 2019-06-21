@@ -23,7 +23,7 @@ enum class Debug_Flags {
     Label_Mouse_Coordinates,            // Show mouse position coordinates while moving over DrView
     Label_Top_Item_RGBA,                // Show red, green, blue, alpha of pixel on item at top of mouse position
 
-    Label_Object_Inspector_Build,       // Show info about item sent to Object Inspector Tree
+    Label_Inspector_Build,              // Show info about item sent to Inspector Tree
     Label_Stage_Tree_Drag,              // Show info about dragging event of Stage Tree
 
     Label_Rotation_Data,                // Show rotation data while in View_Mode::Rotating in DrView

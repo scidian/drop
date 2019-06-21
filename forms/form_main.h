@@ -13,9 +13,9 @@
 //      Main Components of FormMain while in normal "World Editor" mode:
 //          Tool Bar
 //          Advisor (Dock)
-//          Object Inspector (Dock)
+//          Inspector (Dock)
 //
-//          Components That Have Items that Can Appear in Object Inspector:
+//          Components That Have Items that Can Appear in Inspector:
 //              Asset List
 //              Scene View
 //                  Status Bar
@@ -92,7 +92,7 @@ private:
 
     // ***** Shared FormMain Widgets
     TreeAdvisor    *treeAdvisor;                            // Custom classes for Advisor Window
-    TreeInspector  *treeInspector;                          // Custom classes for Object Inspector
+    TreeInspector  *treeInspector;                          // Custom classes for Inspector Window
     QDockWidget    *dockAdvisor, *dockInspector;
     QWidget        *widgetCentral, *widgetAdvisor, *widgetInspector;
 
@@ -133,7 +133,7 @@ public:
 
     // Interface Relay Implementations
     virtual void        buildAssetTree() override;
-    virtual void        buildObjectInspector(QList<long> key_list) override;
+    virtual void        buildInspector(QList<long> key_list) override;
     virtual void        buildProjectTree() override;
     virtual void        buildScene(long from_stage_key) override;
 

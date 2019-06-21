@@ -194,10 +194,10 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget) {
         //################################################################################
         //##    Inspector Widgets - Spinboxes, LineEdits, Pushbutton Menus, Sliders
         //################################################################################
-        // Check boxes, mostly in object inspector
+        // Check boxes, mostly in Inspector
         " QCheckBox#checkInspector::indicator { height: 22px; width: 32px; }"
 
-        // Spin boxes, mostly in object inspector
+        // Spin boxes, mostly in Inspector
         " QAbstractSpinBox {        border: " + Dr::BorderWidth() + " solid; height: 20px; "
         "       border-top-left-radius: 4px; border-bottom-left-radius: 6px; border-top-right-radius: 4px; border-bottom-right-radius: 6px;"
         "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; " + StyleSheetRecessedBackgroundBorder(15, 92) +
@@ -212,7 +212,7 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget) {
         " QAbstractSpinBox::!enabled { background: transparent; border: none; "
         "       color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
 
-        // Line Edit, mostly in object inspector
+        // Line Edit, mostly in Inspector
         " QLineEdit {               border: " + Dr::BorderWidth() + " solid; height: 20px; "
         "       border-top-left-radius: 4px; border-bottom-left-radius: 6px; border-top-right-radius: 4px; border-bottom-right-radius: 6px;"
         "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; " + StyleSheetRecessedBackgroundBorder(15, 92) +

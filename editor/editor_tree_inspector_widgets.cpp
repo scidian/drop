@@ -78,7 +78,7 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     spin->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     spin->setValue(property->getValue().toDouble());
 
-    // Connect HoverHandler with proper text, add this widget to list of widgets in object inspector
+    // Connect HoverHandler with proper text, add this widget to list of widgets in Inspector
     m_filter_hover->attachToHoverHandler(spin, property);
     addToWidgetList(spin);
 
@@ -256,6 +256,7 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
     long property_key = property->getPropertyKey();
 
     QWidget *slider_pair = new QWidget();
+    slider_pair->setMaximumHeight(28);
     slider_pair->setSizePolicy(size_policy);
     m_filter_hover->attachToHoverHandler(slider_pair, property);                            // Connect to hover handler for advisor
 
@@ -265,6 +266,7 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
 
         DrQTripleSpinBox *spin = new DrQTripleSpinBox();
         spin->setFont(font);
+        spin->setMinimumWidth(40);
         size_policy.setHorizontalStretch(1);
         spin->setSizePolicy(size_policy);
         spin->setDecimals(3);
@@ -286,6 +288,7 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
         spin->installEventFilter(new DrFilterMouseWheelAdjustmentGuard(spin));
 
         QSlider *slider = new QSlider(Qt::Orientation::Horizontal);
+        slider->setMaximumHeight(26);
         size_policy.setHorizontalStretch(3);
         slider->setSizePolicy(size_policy);
         slider->setTickPosition(QSlider::TickPosition::NoTicks);

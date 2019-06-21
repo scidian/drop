@@ -30,8 +30,8 @@ DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world, long new_stag
 
     if (m_is_start_stage) {
         // If start stage, make name hidden to stop user from changing it
-        DrProperty *my_name = getComponentProperty(Components::Stage_Settings, Properties::Stage_Name);
-        my_name->setHidden(true);
+        DrProperty *my_name = getComponentProperty(Components::Entity_Name, Properties::Entity_Name);
+        my_name->setEditable(false);
 
         ///addThing(DrType::Camera, new DrAsset(), 0, 0);
         ///addThing(DrType::Character, new DrAsset(), 0, 0);
@@ -55,10 +55,11 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
     // Figure out name for Thing
     QString new_name;
     switch (new_type) {
-        case DrThingType::Object:
-        case DrThingType::Text:
         case DrThingType::Character:
-            new_name = asset->getComponentProperty(Components::Asset_Settings, Properties::Asset_Name)->getValue().toString();
+        case DrThingType::Object:
+        case DrThingType::Light:
+        case DrThingType::Text:
+            new_name = asset->getComponentProperty(Components::Entity_Name, Properties::Entity_Name)->getValue().toString();
             break;
 
         ///case DrThingType::Camera:
@@ -118,11 +119,13 @@ QList<long> DrStage::thingKeysSortedByZOrder() {
 //####################################################################################
 
 void DrStage::initializeStageSettings(QString new_name) {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
+                           "Stage Name", "Name of the current stage.");
+
     addComponent(Components::Stage_Settings, "Settings", "Basic settings for current stage.", Component_Colors::White_Snow, true);
     getComponent(Components::Stage_Settings)->setIcon(Component_Icons::Settings);
-
-    addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Name, Property_Type::String, new_name,
-                           "Stage Name", "Name of the current stage.");
     addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Start, Property_Type::Positive, 0,
                            "Start", "Start showing stage at this distance.");
     addPropertyToComponent(Components::Stage_Settings, Properties::Stage_End, Property_Type::Positive, 1200,

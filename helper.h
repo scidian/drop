@@ -32,7 +32,7 @@ const T& Clamp(const T& number_to_check, const T& min, const T& max) {
 }
 
 // Casts an Enum value to an int
-template<class T> const T& EnumToInt(const T& enum_to_convert) { return static_cast<int>(enum_to_convert); }
+template<class T> int EnumToInt(const T& enum_to_convert) { return static_cast<int>(enum_to_convert); }
 
 // Return the Max of two values
 template<class T> const T& Max(const T& a, const T& b) { return (a > b) ? a : b; }

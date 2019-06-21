@@ -80,7 +80,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
         switch (property) {
             case Properties::Thing_Physics_Type:
                 pretest = thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Velocity_X)->isEditable();
-                type = static_cast<Body_Type>(thing->getComponentPropertyValue(Components::Thing_Settings, Properties::Thing_Physics_Type).toInt());
+                type = static_cast<Body_Type>(thing->getComponentPropertyValue(Components::Thing_Settings_Object, Properties::Thing_Physics_Type).toInt());
                 test = (type == Body_Type::Kinematic || type == Body_Type::Dynamic) ? true : false;
                 if (test != pretest) {
                     thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Velocity_X)->setEditable(test);
@@ -126,7 +126,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
                 item->setTransform(transform);
                 setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
 
-                // If size or scale was changed, update the other and update the widgets in the Object Inspector
+                // If size or scale was changed, update the other and update the widgets in the Inspector
                 if (property == Properties::Thing_Size) {
                     thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale, scale);
                     m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { thing } , { Properties::Thing_Scale });

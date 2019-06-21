@@ -56,10 +56,11 @@ public:
     void            setDrItem(DrItem *item)     { m_item_in_scene = item; }
 
     // Function calls
-    void addComponentSettingsObject(QString new_name, bool should_collide = true);
-    void addComponentSettingsCamera(QString new_name);
     void addComponentSettingsCharacter(QString new_name);
+    void addComponentSettingsObject(QString new_name, bool should_collide = true);
+    void addComponentSettingsLight(QColor color);
     void addComponentSettingsText(QString new_name);
+    void addComponentSettingsCamera(QString new_name);
 
     void addComponentAppearance();
     void addComponentMovement();

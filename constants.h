@@ -44,14 +44,16 @@ namespace Component_Colors {
 //##    Possible icons for Component Categories
 //############################
 namespace Component_Icons {
+    const QString Name          { QString(":/assets/inspector_icons/comp_name.png") };
     const QString Settings      { QString(":/assets/inspector_icons/comp_settings.png") };
     const QString Physics       { QString(":/assets/inspector_icons/comp_physics.png") };
     const QString Transform     { QString(":/assets/inspector_icons/comp_transform.png") };
     const QString Layering      { QString(":/assets/inspector_icons/comp_layering.png") };
     const QString Movement      { QString(":/assets/inspector_icons/comp_movement.png") };
     const QString Appearance    { QString(":/assets/inspector_icons/comp_appearance.png") };
-    const QString Camera        { QString(":/assets/inspector_icons/comp_camera.png") };
     const QString Character     { QString(":/assets/inspector_icons/comp_character.png") };
+    const QString Camera        { QString(":/assets/inspector_icons/comp_camera.png") };
+    const QString Object        { QString(":/assets/inspector_icons/comp_object.png") };
     const QString Animation     { QString(":/assets/inspector_icons/comp_animation.png") };
     const QString Font          { QString(":/assets/inspector_icons/comp_font.png") };
     const QString None          { QString("") };
@@ -76,16 +78,16 @@ namespace Advisor_Info {
     const HeaderBodyList Settings_Font_Builder  { "Font Builder", "Create and edit fonts usued for Text items." };
     const HeaderBodyList Settings_Manager       { "Settings Manager", "View and edit project settings." };
 
-    const HeaderBodyList Thing_Send_to_Back     { "Send to Back",  "Send selected item(s) to the back." };
-    const HeaderBodyList Thing_Send_to_Front    { "Send to Font",  "Send selected item(s) to the front." };
-    const HeaderBodyList Thing_Send_Backward    { "Send Backward", "Send selected item(s) back by one." };
-    const HeaderBodyList Thing_Send_Forward     { "Send Forward",  "Send selected item(s) forward by one." };
-    const HeaderBodyList Thing_Reset            { "Reset Transform", "Resets selected objects' transforms to a Scale of X:1, Y:1 and Rotation of "
+    const HeaderBodyList Send_to_Back           { "Send to Back",  "Send selected item(s) to the back." };
+    const HeaderBodyList Send_to_Front          { "Send to Font",  "Send selected item(s) to the front." };
+    const HeaderBodyList Send_Backward          { "Send Backward", "Send selected item(s) back by one." };
+    const HeaderBodyList Send_Forward           { "Send Forward",  "Send selected item(s) forward by one." };
+    const HeaderBodyList Reset                  { "Reset Transform", "Resets selected objects' transforms to a Scale of X:1, Y:1 and Rotation of "
                                                                             "0 Degrees." };
-    const HeaderBodyList Thing_Flip_H           { "Flip Horizontal", "Flips the selection horizontally." };
-    const HeaderBodyList Thing_Flip_V           { "Flip Vertical",   "Flips the selection vertically." };
-    const HeaderBodyList Thing_Rotate_L         { "Rotate Left",  "Rotates selection counter-clockwise by 90 degrees." };
-    const HeaderBodyList Thing_Rotate_R         { "Rotate Right", "Rotates selection clockwise by 90 degrees." };
+    const HeaderBodyList Flip_H                 { "Flip Horizontal", "Flips the selection horizontally." };
+    const HeaderBodyList Flip_V                 { "Flip Vertical",   "Flips the selection vertically." };
+    const HeaderBodyList Rotate_L               { "Rotate Left",  "Rotates selection counter-clockwise by 90 degrees." };
+    const HeaderBodyList Rotate_R               { "Rotate Right", "Rotates selection clockwise by 90 degrees." };
 
     const HeaderBodyList Grid_Show_On_Top       { "Grid on Top?", "Draws grid lines on top of objects in editor." };
     const HeaderBodyList Resize_To_Grid         { "Resize to Grid?", "Snaps corners and edges of objects to grid while resizing. Only works if the angle "
@@ -101,7 +103,7 @@ namespace Advisor_Info {
 
     // Form Main Widgets
     const HeaderBodyList Advisor_Window         { "Advisor Window", "Shows a brief description of editor items." };
-    const HeaderBodyList Object_Inspector       { "Object Inspector", "Displays editable properties of currently selected item." };
+    const HeaderBodyList Inspector_Window       { "Inspector", "Displays components / properties of currently selected item." };
 
     const HeaderBodyList ColorButton            { "Color Button", "Click this to open a color popup that has a convenient color selection." };
     const HeaderBodyList ColorPicker            { "Color Picker", "Press and hold this button to use a magnifying lens to pick a color off of the screen." };
@@ -125,10 +127,10 @@ namespace Advisor_Info {
 
     // Asset Types
     const HeaderBodyList Asset_Object           { "Object Asset", "This is an Object that can have many copies of itself placed into your game. Any change to "
-                                                                  "this asset will change all occurences of the asset within the game." };
-    const HeaderBodyList Asset_Text             { "Text Asset", "Use text assets to show labels in your game. You can use the as titles or for showing "
-                                                                "values like hit points, coins or distance. " };
-    const HeaderBodyList Asset_Character        { "Character Asset", "This is a player character. " };
+                                                                  "this Asset will change all occurences of the Asset within the game." };
+    const HeaderBodyList Asset_Text             { "Text Asset", "Use Text Assets to show text boxes in your game. You can use them as titles or for showing "
+                                                                "values like hit points, coins or distance." };
+    const HeaderBodyList Asset_Character        { "Character Asset", "This is a player character." };
 
     // Object Types
     const HeaderBodyList Object_Static          { "Static",     "Object can not move. Best performance, dynamic objects touching static objects can rest "

@@ -59,59 +59,53 @@ DrAsset::~DrAsset() { }
 //##    Property loading - initializeAssetSettings
 //####################################################################################
 
-void DrAsset::initializeAssetSettingsObject(QString new_name, QPixmap pixmap) {
-    addComponent(Components::Asset_Settings, "Settings", "Basic settings for current asset.", Component_Colors::White_Snow, true);
-    getComponent(Components::Asset_Settings)->setIcon(Component_Icons::Settings);
+void DrAsset::initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap) {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
+                           "Asset Name", "Name of the current Asset.");
 
-    addPropertyToComponent(Components::Asset_Settings, Properties::Asset_Name, Property_Type::String, new_name,
-                           "Asset Name", "Name of the current asset.");
-    addPropertyToComponent(Components::Asset_Settings, Properties::Asset_Collision_Shape, Property_Type::Polygon, QPolygonF(),
-                           "Collision Shape", "Shape of the Object as it interacts with other Objects in the world.");
+    addComponent(Components::Asset_Object_Settings, "Asset Settings", "Basic settings for current Object Asset.", Component_Colors::White_Snow, true);
+    getComponent(Components::Asset_Object_Settings)->setIcon(Component_Icons::Settings);
+    addPropertyToComponent(Components::Asset_Object_Settings, Properties::Asset_Collision_Shape, Property_Type::Polygon, QPolygonF(),
+                           "Collision Shape", "Shape of the Asset as it interacts with other Assets in the world.");
 
-
-    addComponent(Components::Asset_Animation, "Animation", "Images to show for this asset", Component_Colors::Green_SeaGrass, true);
+    addComponent(Components::Asset_Animation, "Animation", "Images to show for this Asset.", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
-
     addPropertyToComponent(Components::Asset_Animation, Properties::Asset_Animation_Default, Property_Type::Image, QVariant(pixmap),
-                           "Default Animation", "Image shown for this Object.");
+                           "Default Animation", "Image shown for this Asset.");
+}
 
+void DrAsset::initializeAssetSettingsObject(QString new_name, QPixmap pixmap) {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
+                           "Asset Name", "Name of the current Asset.");
+
+    addComponent(Components::Asset_Object_Settings, "Asset Settings", "Basic settings for current Object Asset.", Component_Colors::White_Snow, true);
+    getComponent(Components::Asset_Object_Settings)->setIcon(Component_Icons::Settings);
+    addPropertyToComponent(Components::Asset_Object_Settings, Properties::Asset_Collision_Shape, Property_Type::Polygon, QPolygonF(),
+                           "Collision Shape", "Shape of the Asset as it interacts with other Assets in the world.");
+
+    addComponent(Components::Asset_Animation, "Animation", "Images to show for this Asset.", Component_Colors::Green_SeaGrass, true);
+    getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
+    addPropertyToComponent(Components::Asset_Animation, Properties::Asset_Animation_Default, Property_Type::Image, QVariant(pixmap),
+                           "Default Animation", "Image shown for this Asset.");
 }
 
 
 void DrAsset::initializeAssetSettingsFont(DrFont *font) {
-    addComponent(Components::Asset_Settings, "Settings", "Basic settings for current asset.", Component_Colors::White_Snow, true);
-    getComponent(Components::Asset_Settings)->setIcon(Component_Icons::Settings);
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, font->getName(),
+                           "Asset Name", "Name of the current Asset.");
 
-    addPropertyToComponent(Components::Asset_Settings, Properties::Asset_Name, Property_Type::String, font->getName(),
-                           "Asset Name", "Name of the current asset.");
-
-    addComponent(Components::Asset_Font, "Font", "Font properties for this text asset.", Component_Colors::Orange_Medium, true);
-    getComponent(Components::Asset_Font)->setIcon(Component_Icons::Font);
-
-    addPropertyToComponent(Components::Asset_Font, Properties::Asset_Font_Family, Property_Type::String, font->getPropertyFontFamily(),
+    addComponent(Components::Asset_Font_Settings, "Font Settings", "Font settings for this Text Asset.", Component_Colors::Orange_Medium, true);
+    getComponent(Components::Asset_Font_Settings)->setIcon(Component_Icons::Font);
+    addPropertyToComponent(Components::Asset_Font_Settings, Properties::Asset_Font_Family, Property_Type::String, font->getPropertyFontFamily(),
                            "Font Family", "Font used for this text asset.", false, false);
-    addPropertyToComponent(Components::Asset_Font, Properties::Asset_Font_Size, Property_Type::Int, font->getPropertyFontSize(),
+    addPropertyToComponent(Components::Asset_Font_Settings, Properties::Asset_Font_Size, Property_Type::Int, font->getPropertyFontSize(),
                            "Font Size", "Font size of this text asset.", false, false);
-
-}
-
-
-void DrAsset::initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap) {
-    addComponent(Components::Asset_Settings, "Settings", "Basic settings for current asset.", Component_Colors::White_Snow, true);
-    getComponent(Components::Asset_Settings)->setIcon(Component_Icons::Settings);
-
-    addPropertyToComponent(Components::Asset_Settings, Properties::Asset_Name, Property_Type::String, new_name,
-                           "Asset Name", "Name of the current asset.");
-    addPropertyToComponent(Components::Asset_Settings, Properties::Asset_Collision_Shape, Property_Type::Polygon, QPolygonF(),
-                           "Collision Shape", "Shape of the Object as it interacts with other Objects in the world.");
-
-
-    addComponent(Components::Asset_Animation, "Animation", "Images to show for this asset", Component_Colors::Green_SeaGrass, true);
-    getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
-
-    addPropertyToComponent(Components::Asset_Animation, Properties::Asset_Animation_Default, Property_Type::Image, QVariant(pixmap),
-                           "Default Animation", "Image shown for this Object.");
-
 }
 
 

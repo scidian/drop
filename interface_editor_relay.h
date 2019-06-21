@@ -28,7 +28,7 @@ public:
     virtual ~IEditorRelay();
 
     virtual void        buildAssetTree() = 0;
-    virtual void        buildObjectInspector(QList<long> key_list) = 0;
+    virtual void        buildInspector(QList<long> key_list) = 0;
     virtual void        buildProjectTree() = 0;
     virtual void        buildScene(long from_stage_key) = 0;
 

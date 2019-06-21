@@ -18,7 +18,7 @@ class DrProperty;
 
 //####################################################################################
 //##    DrFilterHoverHandler
-//##        Catches hover events for widgets on Object Inspector without needing subclassing
+//##        Catches hover events for widgets without needing subclassing
 //############################
 class DrFilterHoverHandler : public QObject
 {

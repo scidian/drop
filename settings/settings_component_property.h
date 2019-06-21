@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 12/13/18, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      DrProperty - Class to hold one property of any DrClass object component
+//      DrProperty - Class to hold one property of any Project object component
 //
 //
 
@@ -17,7 +17,7 @@ class DrComponent;
 
 //####################################################################################
 //##    DrProperty
-//##        Class to hold one property of any DrClass object component
+//##        Class to hold one property of any Project object component
 //############################
 class DrProperty
 {
@@ -35,10 +35,10 @@ private:
     // The unique id of this property within the parent object
     long          m_property_key;
 
-    // Should this appear in the object inspector
+    // Should this appear in the Inspector
     bool          m_is_hidden =         false;
 
-    // Should this be editable in the object inspector
+    // Should this be editable in the Inspector
     bool          m_is_editable =       true;
 
 public:

@@ -77,10 +77,13 @@ DrStage* DrWorld::getStageWithName(QString stage_name) {
 //####################################################################################
 
 void DrWorld::initializeWorldSettings(QString new_name) {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
+                           "World Name", "Name of the current world.");
+
     addComponent(Components::World_Settings, "Settings", "Basic settings for current world.", Component_Colors::White_Snow, true);
     getComponent(Components::World_Settings)->setIcon(Component_Icons::Settings);
-    addPropertyToComponent(Components::World_Settings, Properties::World_Name, Property_Type::String, new_name,
-                           "World Name", "Name of the current world.");
     addPropertyToComponent(Components::World_Settings, Properties::World_Game_Direction, Property_Type::Double, 0.0,
                            "Game Direction", "Default direction, in degrees, to load new stages, 0 - right, 90 - up, 180 - left, 270 - down, etc.");
     addPropertyToComponent(Components::World_Settings, Properties::World_Score_Multiplier, Property_Type::Double, 1.0,

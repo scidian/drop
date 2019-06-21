@@ -61,7 +61,6 @@
         <file>assets/inspector_icons/comp_layering.png</file>
         <file>assets/inspector_icons/comp_movement.png</file>
         <file>assets/inspector_icons/comp_physics.png</file>
-        <file>assets/inspector_icons/comp_settings.png</file>
         <file>assets/inspector_icons/comp_transform.png</file>
         <file>assets/tree_icons/tree_action.png</file>
         <file>assets/tree_icons/tree_bullet.png</file>
@@ -115,5 +114,9 @@
         <file>assets/fonts/Aileron-Bold.otf</file>
         <file>assets/engine/numbers.png</file>
         <file>assets/toolbar_icons/toolbar_playground.png</file>
+        <file>assets/tree_icons/tree_light.png</file>
+        <file>assets/inspector_icons/comp_name.png</file>
+        <file>assets/inspector_icons/comp_settings.png</file>
+        <file>assets/inspector_icons/comp_object.png</file>
     </qresource>
 </RCC>

@@ -71,10 +71,10 @@ void DrView::mousePressEvent(QMouseEvent *event) {
             }
 
 
-            // ******************* If no modifier keys are down, only select item under mouse. Also updates the object inspector
-            //                           if the item clicked was already selected (but the object inspector was showing something
+            // ******************* If no modifier keys are down, only select item under mouse. Also updates the Inspector
+            //                           if the item clicked was already selected (but the Inspector was showing something
             //                           else like an asset or something)
-            //                    #NOTE: If object was not already selected the object inspector will be updated when the
+            //                    #NOTE: If object was not already selected the Inspector will be updated when the
             //                           DrScene::selectionChanged slot fires
             if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
 
@@ -85,7 +85,7 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                         my_scene->clearSelection();
                         m_origin_item->setSelected(true);
                     } else {
-                        m_editor_relay->buildObjectInspector( { static_cast<long>(m_origin_item->data(User_Roles::Key).toLongLong()) } );
+                        m_editor_relay->buildInspector( { static_cast<long>(m_origin_item->data(User_Roles::Key).toLongLong()) } );
                     }
 
                     // ***** Process press event for item movement (Translation)
@@ -161,14 +161,14 @@ void DrView::mouseReleaseEvent(QMouseEvent *event) {
         m_rubber_band->hide();
         m_tool_tip->stopToolTip();
 
-        // We have it so that object inspector only completely changes itself based on selection from scene view on mouse up
+        // We have it so that Inspector only completely changes itself based on selection from scene view on mouse up
         // (i.e. after rubber band box mode is over so it's not trying to change a ton and slow thigs down)
         if (m_view_mode == View_Mode::Selecting) {
             m_view_mode = View_Mode::None;
             if (my_scene->getSelectionCount() > 0)
-                m_editor_relay->buildObjectInspector( { static_cast<long>(my_scene->getSelectionItems().first()->data(User_Roles::Key).toLongLong()) } );
+                m_editor_relay->buildInspector( { static_cast<long>(my_scene->getSelectionItems().first()->data(User_Roles::Key).toLongLong()) } );
             else
-                m_editor_relay->buildObjectInspector( { } );
+                m_editor_relay->buildInspector( { } );
             m_editor_relay->updateItemSelection(Editor_Widgets::Scene_View);
         }
 
@@ -182,8 +182,8 @@ void DrView::mouseReleaseEvent(QMouseEvent *event) {
             m_resize_started = false;
         }
 
-        // Object inspector ignores changes during Translating and Resizing and Rotating, it's much, much faster this way...
-        // Now that mousue has been released, update object inspector property boxes
+        // Inspector ignores changes during Translating and Resizing and Rotating, it's much, much faster this way...
+        // Now that mousue has been released, update Inspector property boxes
         if (m_view_mode == View_Mode::Translating || m_view_mode == View_Mode::Resizing || m_view_mode == View_Mode::Rotating) {
             m_view_mode = View_Mode::None;
             m_editor_relay->updateEditorWidgetsAfterItemChange(
