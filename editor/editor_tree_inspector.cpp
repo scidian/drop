@@ -94,13 +94,16 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
 
     // If old selection and new selection are both Object Things, we don't need to completely rebuild Inspector, just change values
     if (m_selected_type == DrType::Thing && new_type == DrType::Thing) {
-        m_selected_key =  new_key;
-        updateInspectorPropertyBoxes( { m_project->findThingFromKey(m_selected_key) }, { });
-        return;
-    } else {
-        m_selected_key =  new_key;
-        m_selected_type = new_type;
+        DrThingType type1 = m_project->findThingFromKey(m_selected_key)->getThingType();
+        DrThingType type2 = m_project->findThingFromKey(new_key)->getThingType();
+        if (type1 == type2) {
+            m_selected_key = new_key;
+            updateInspectorPropertyBoxes( { m_project->findThingFromKey(m_selected_key) }, { });
+            return;
+        }
     }
+    m_selected_key =  new_key;
+    m_selected_type = new_type;
 
     // Change Advisor text after new item selection
     switch (m_selected_type) {
