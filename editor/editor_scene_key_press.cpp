@@ -101,15 +101,19 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
             // Delete selected items
             case Qt::Key::Key_Delete:
             case Qt::Key::Key_Backspace:
+                blockSignals(true);
                 drstage->deleteThing(drthing);
+                list_old_items.removeOne(item);
+                removeItem( item );
                 delete item;
                 update_widgets_when_done = true;
+                blockSignals(false);
                 break;
         }
     }
 
     // If we added (copied) new items to scene, select those items
-    if (list_new_items.count() > 0) {
+    if (list_new_items.count() > 0 || list_old_items.count() == 0) {
         blockSignals(true);
         this->clearSelection();
         for (auto item : list_new_items)
