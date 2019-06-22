@@ -15,13 +15,13 @@
 enum class Form_Main_Mode {
     Program_Loading,
 
-    World_Map,          // "Map"    (Program Node Layout)
-    World_Editor,       // "Editor" (Physics World)
-    UI_Editor,          // "UI"     (UI Layer)
+    World_Map,                  // "Map"
+    World_Editor,               // "Editor" (Physics)
+    UI_Editor,                  // "UI"
 
     Stage_Map,
     // App_Editor,
-    // Puzzle_World,
+    // Puzzle_World_Editor,
 
     Clear,
 };

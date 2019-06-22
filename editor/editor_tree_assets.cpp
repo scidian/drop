@@ -97,12 +97,15 @@ void TreeAssets::buildAssetTree(QString search_text) {
     // ***** Create new items in list to hold asset categories
     QTreeWidgetItem *character_item =   new QTreeWidgetItem();
     QTreeWidgetItem *objects_item =     new QTreeWidgetItem();
+    QTreeWidgetItem *effects_item =     new QTreeWidgetItem();
     QTreeWidgetItem *text_item =        new QTreeWidgetItem();
     this->addTopLevelItem(character_item);
     this->addTopLevelItem(objects_item);
+    this->addTopLevelItem(effects_item);
     this->addTopLevelItem(text_item);
     DrQPushButtonCategory *character_button = initializeCatergoryButton(character_item, "  Characters");
     DrQPushButtonCategory *objects_button =   initializeCatergoryButton(objects_item,   "  Objects");
+    DrQPushButtonCategory *effects_button =   initializeCatergoryButton(effects_item,   "  Effects");
     DrQPushButtonCategory *text_button =      initializeCatergoryButton(text_item,      "  Text");
 
     QPixmap char_icon( ":/assets/tree_icons/tree_character.png" );
@@ -113,6 +116,10 @@ void TreeAssets::buildAssetTree(QString search_text) {
     object_icon = DrImaging::changeToGrayscale(object_icon);
     object_icon = DrImaging::changeBrightness(object_icon, 200);
     objects_button->setIcon( object_icon );
+    QPixmap effects_icon( ":/assets/tree_icons/tree_light.png" );
+    effects_icon = DrImaging::changeToGrayscale(effects_icon);
+    effects_icon = DrImaging::changeBrightness(effects_icon, 200);
+    effects_button->setIcon( effects_icon );
     QPixmap text_icon( ":/assets/tree_icons/tree_text.png" );
     text_icon = DrImaging::changeToGrayscale(text_icon);
     text_icon = DrImaging::changeBrightness(text_icon, 200);
@@ -120,18 +127,22 @@ void TreeAssets::buildAssetTree(QString search_text) {
 
     m_filter_hover->attachToHoverHandler(character_button, Advisor_Info::Asset_Character);
     m_filter_hover->attachToHoverHandler(objects_button,   Advisor_Info::Asset_Object);
+    m_filter_hover->attachToHoverHandler(text_button,      Advisor_Info::Asset_Effect);
     m_filter_hover->attachToHoverHandler(text_button,      Advisor_Info::Asset_Text);
 
 
-    // ***** Creates a frame sto hold all assets of each type
+    // ***** Creates a frame to hold all assets of each type
     QFrame      *assets_frame_characters = new QFrame();
     QFrame      *assets_frame_objects =    new QFrame();
+    QFrame      *assets_frame_effects =    new QFrame();
     QFrame      *assets_frame_text =       new QFrame();
     DrQLayoutFlow  *grid_layout_characters =  new DrQLayoutFlow(assets_frame_characters, 8, 0, 4, 0, 0, 0);
     DrQLayoutFlow  *grid_layout_objects =     new DrQLayoutFlow(assets_frame_objects,    8, 0, 4, 0, 0, 0);
+    DrQLayoutFlow  *grid_layout_effects =     new DrQLayoutFlow(assets_frame_effects,    8, 0, 4, 0, 0, 0);
     DrQLayoutFlow  *grid_layout_text =        new DrQLayoutFlow(assets_frame_text,       8, 0, 4, 0, 0, 0);
     assets_frame_characters->setObjectName("assetsContainer");
     assets_frame_objects->setObjectName(   "assetsContainer");
+    grid_layout_effects->setObjectName(    "assetsContainer");
     assets_frame_text->setObjectName(      "assetsContainer");
 
 

@@ -70,12 +70,12 @@ namespace Advisor_Info {
 
     // Toolbar Buttons
     const HeaderBodyList Mode_Map               { "World Map", "This mode will allow you to see the layout of your project and how the worlds and "
-                                                              "user interfaces in you project connect to each other." };
-    const HeaderBodyList Mode_Editor            { "World Editor Mode", "This mode will allow you to edit the contents of each world. It is where "
-                                                                      "you can design each Stage and lay out your levels." };
-    const HeaderBodyList Mode_UI                { "UI Editor Mode", "This mode will allow you to edit the user interfaces of your project." };
-    const HeaderBodyList Settings_Playground    { "Physics Playground", "Play with the physics engine to learn more about the physics properties." };
-    const HeaderBodyList Settings_Font_Builder  { "Font Builder", "Create and edit fonts usued for Text items." };
+                                                               "user interfaces in your project connect to each other." };
+    const HeaderBodyList Mode_Editor            { "World Editor Mode", "This mode will allow you to edit the contents of each physics world. It is where "
+                                                                       "you can design each Stage and lay out your worlds / levels." };
+    const HeaderBodyList Mode_UI                { "UI Editor Mode", "This mode will allow you to edit the user interface layer of your project." };
+    const HeaderBodyList Settings_Playground    { "Physics Playground", "Play with the physics engine to learn more about physics properties." };
+    const HeaderBodyList Settings_Font_Builder  { "Font Builder", "Create and edit fonts usued for Text Boxes." };
     const HeaderBodyList Settings_Manager       { "Settings Manager", "View and edit project settings." };
 
     const HeaderBodyList Send_to_Back           { "Send to Back",  "Send selected item(s) to the back." };
@@ -89,14 +89,14 @@ namespace Advisor_Info {
     const HeaderBodyList Rotate_L               { "Rotate Left",  "Rotates selection counter-clockwise by 90 degrees." };
     const HeaderBodyList Rotate_R               { "Rotate Right", "Rotates selection clockwise by 90 degrees." };
 
-    const HeaderBodyList Grid_Show_On_Top       { "Grid on Top?", "Draws grid lines on top of objects in editor." };
+    const HeaderBodyList Grid_Show_On_Top       { "Grid on Top?",    "Draws grid lines on top of objects in editor." };
     const HeaderBodyList Resize_To_Grid         { "Resize to Grid?", "Snaps corners and edges of objects to grid while resizing. Only works if the angle "
                                                                      "of the object matches the angle of the grid, and the Grid Scale X and Y are the same. "
                                                                      "Selection handles will change to square shape to signify snapping is possible."};
-    const HeaderBodyList Grid_Snap_To_Grid      { "Snap to Grid?", "Snaps objects to grid lines when moving objects around with the mouse." };
-    const HeaderBodyList Grid_Snap_Options      { "Snap Options", "Choose how objects snap to grid while multiple objects are selected, and objects are moved "
-                                                                  "with mouse. Either have the center of the selection group snap to the grid, or have each "
-                                                                  "object within the group snap to grid individually." };
+    const HeaderBodyList Grid_Snap_To_Grid      { "Snap to Grid?",   "Snaps objects to grid lines when moving objects around with the mouse." };
+    const HeaderBodyList Grid_Snap_Options      { "Snap Options",    "Choose how objects snap to grid while multiple objects are selected, and objects are moved "
+                                                                     "with mouse. Either have the center of the selection group snap to the grid, or have each "
+                                                                     "object within the group snap to grid individually." };
 
     const HeaderBodyList Play_Game              { "Play Game",  "Start playing game." };
 
@@ -126,11 +126,14 @@ namespace Advisor_Info {
     const HeaderBodyList Thing_Description      { "Thing", "This is a Thing in a Stage." };
 
     // Asset Types
-    const HeaderBodyList Asset_Object           { "Object Asset", "This is an Object that can have many copies of itself placed into your game. Any change to "
-                                                                  "this Asset will change all occurences of the Asset within the game." };
+    const HeaderBodyList Asset_Character        { "Character Asset", "This is a player character." };
+    const HeaderBodyList Asset_Object           { "Object Asset", "This is an object that can have many copies of itself placed into your game. Any change to "
+                                                                  "this Asset will change all occurences of the Asset within your game." };
+    const HeaderBodyList Asset_Effect           { "Effect Asset", "This is a special effect for use in your game." };
     const HeaderBodyList Asset_Text             { "Text Asset", "Use Text Assets to show text boxes in your game. You can use them as titles or for showing "
                                                                 "values like hit points, coins or distance." };
-    const HeaderBodyList Asset_Character        { "Character Asset", "This is a player character." };
+
+
 
     // Object Types
     const HeaderBodyList Object_Static          { "Static",     "Object can not move. Best performance, dynamic objects touching static objects can rest "

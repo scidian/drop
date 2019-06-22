@@ -17,7 +17,7 @@ uniform vec3        u_color;
 uniform vec2        u_cone;
 
 float               u_light_shadows = 5.0;
-float               u_intensity = 1.0;
+float               u_intensity = 4.0;
 
 const float         PI = 3.14159;
 

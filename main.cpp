@@ -31,13 +31,12 @@
 //
 //  Main Components
 //  ---------------
-//  FormMain                        (4) Modes:  World Map: World / UI Layout
-//                                              World (Physics) Editor
-//                                              UI Editor
-//                                              Stage Map: Stage Layout??
-//
-//                                  Future:     App Editor
-//                                              Puzzle World Editor
+//  FormMain                        Modes:  World Map: World / UI Layout
+//                                          Physics World Editor
+//                                          UI Editor
+//                                          Stage Map: Stage Layout??
+//                                        FUTURE: App Editor
+//                                        FUTURE: Puzzle World Editor
 //
 //      FormCollision               Edit Collision Shape
 //      FormFonts                   Create / View Fonts for Use in Project
