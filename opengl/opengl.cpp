@@ -21,17 +21,14 @@ OpenGL::OpenGL(QWidget *parent, FormEngine *form_engine, DrEngine *engine) : QOp
     setFocusPolicy(Qt::FocusPolicy::StrongFocus);            // Must setFocus to accept KeyPress events
 }
 
+// Destroy OpenGL Resources
 OpenGL::~OpenGL() {
+    m_engine->clearWorlds();
+
     makeCurrent();
-
-    m_engine->deleteResources();
-
-    // Destroy OpenGL Resources
-    delete m_fbo;
-    delete m_texture_fbo;
-    delete m_shadow_fbo;
-    delete m_light_fbo;
-
+        m_engine->deleteTextures();
+        delete m_fbo;
+        delete m_texture_fbo;
     doneCurrent();
 }
 

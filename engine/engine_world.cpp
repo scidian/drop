@@ -5,6 +5,7 @@
 //
 //
 //
+#include "engine_light.h"
 #include "engine_world.h"
 
 
@@ -17,6 +18,5 @@ DrEngineWorld::DrEngineWorld(DrEngine *engine, DrProject *project, long world_ke
 
 DrEngineWorld::~DrEngineWorld() {
     clearSpace();
-    clearCameras();
 }
 

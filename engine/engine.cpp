@@ -27,12 +27,14 @@ DrEngine::DrEngine(FormEngine *form_engine, DrProject *project) : m_form_engine(
 }
 
 // Needs to be explicitly called by OpenGLWidget
-void DrEngine::deleteResources() {
-
+void DrEngine::clearWorlds() {
     for (auto world : m_worlds) {
         delete world.second;
     }
+}
 
+// Needs to be explicitly called by OpenGLWidget
+void DrEngine::deleteTextures() {
     for (auto texture : m_textures) {
         if (texture.second->isTextureLoaded()) {
             texture.second->deleteTexture();

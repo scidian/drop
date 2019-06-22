@@ -21,6 +21,7 @@
 
 // Forward Declarations
 class DrEngine;
+class DrEngineLight;
 class DrEngineObject;
 class FormEngine;
 
@@ -56,9 +57,6 @@ private:
     // Frame Buffers
     QOpenGLFramebufferObject *m_fbo = nullptr;                  // Used for offscreen rendering
     QOpenGLFramebufferObject *m_texture_fbo = nullptr;          // m_fbo must be copied to a non-multisampled fbo before being used as a texture
-
-    QOpenGLFramebufferObject *m_shadow_fbo = nullptr;           // Used for 2D soft shadows
-    QOpenGLFramebufferObject *m_light_fbo = nullptr;            // Used for 2D soft shadows
 
     // Shader Variables
     QOpenGLShaderProgram m_shader;
@@ -156,10 +154,10 @@ public:
     void            setWholeTextureCoordinates(std::vector<float> &texture_coords);
 
     // Soft Shadows
-    void            bindLightBuffer(bool initialize_only = false);
-    void            bindShadowBuffer(bool initialize_only = false);
-    void            draw2DLights();
-    void            drawShadowMap();
+    void            bindLightBuffer(DrEngineLight *light);
+    void            bindShadowBuffer(DrEngineLight *light);
+    void            draw2DLight(DrEngineLight *light);
+    void            drawShadowMap(DrEngineLight *light);
 
     // Getters and Setters
     float           getScale()          { return m_scale; }

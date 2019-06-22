@@ -9,9 +9,12 @@
 #include <QDebug>
 
 #include "engine.h"
+#include "engine_light.h"
 #include "engine_object.h"
 #include "engine_texture.h"
 #include "engine_world.h"
+#include "form_engine.h"
+#include "opengl/opengl.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_font.h"
@@ -65,6 +68,23 @@ void DrEngineWorld::buildSpace(Demo_Space new_space_type) {
         custom_collision_handler->preSolveFunc = PreSolveFuncWildcard;
         custom_collision_handler->separateFunc = SeperateFuncWildcard;
     }
+
+
+
+    // !!!!! #TEMP add lights
+    m_engine->getFormEngine()->getOpenGL()->makeCurrent();
+
+    DrEngineLight *light1 = new DrEngineLight();
+    light1->position = QPointF(-350, 300);
+    light1->color = Qt::blue;
+    DrEngineLight *light2 = new DrEngineLight();
+    light2->position = QPointF(1000, 250);
+    light2->color = Qt::yellow;
+    lights.append(light1);
+    lights.append(light2);
+
+    m_engine->getFormEngine()->getOpenGL()->doneCurrent();
+
 
 
     // ***** Build desired demo Space

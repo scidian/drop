@@ -9,6 +9,7 @@
 #include <QDebug>
 
 #include "engine.h"
+#include "engine_light.h"
 #include "engine_object.h"
 #include "engine_world.h"
 
@@ -65,6 +66,9 @@ void DrEngineWorld::clearSpace() {
         ChipmunkFreeSpaceChildren(m_space);
         cpSpaceFree(m_space);
         objects.clear();
+
+        clearCameras();
+        clearLights();
     }
 }
 

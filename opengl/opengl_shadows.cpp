@@ -9,6 +9,7 @@
 #include <QOpenGLFramebufferObject>
 
 #include "engine/engine.h"
+#include "engine/engine_light.h"
 #include "engine/engine_object.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
@@ -17,80 +18,84 @@
 #include "opengl/opengl.h"
 
 
-const int   c_angles = 1024;             // Maximum number of rays to send out
-const float c_light_size = 1500;         // Test Light Size
+const int   c_max_rays = 1024;             // Maximum number of rays to send out
 
-static int  light_radius;
-static int  light_radius_fitted;
 
 //####################################################################################
 //##        Allocate Light Occluder Frame Buffer Object
 //####################################################################################
-void OpenGL::bindLightBuffer(bool initialize_only) {
+void OpenGL::bindLightBuffer(DrEngineLight *light) {
     // Calculate size of light texture (fbo)
-    light_radius = static_cast<int>(c_light_size * m_scale);
-    light_radius_fitted = light_radius;
-    if (light_radius > width()*2*devicePixelRatio() && light_radius > height()*2*devicePixelRatio()) {
-        light_radius_fitted = (width() > height()) ? width()*2*devicePixelRatio() : height()*2*devicePixelRatio();
+    light->light_radius = static_cast<int>(light->light_size * m_scale);
+    light->light_radius_fitted = light->light_radius;
+    if (light->light_radius > width()*2*devicePixelRatio() && light->light_radius > height()*2*devicePixelRatio()) {
+        light->light_radius_fitted = (width() > height()) ? width()*2*devicePixelRatio() : height()*2*devicePixelRatio();
     }
 
     // Check Frame Buffer Object is initialized
-    if (!m_light_fbo || m_light_fbo->width() != light_radius_fitted || m_light_fbo->height() != light_radius_fitted) {
-        delete m_light_fbo;
-        m_light_fbo =  new QOpenGLFramebufferObject(light_radius_fitted, light_radius_fitted);
+    bool need_to_create_new = false;
+    if (light->occluder_fbo == nullptr)
+        need_to_create_new = true;
+    else if (light->occluder_fbo->width() != light->light_radius_fitted || light->occluder_fbo->height() != light->light_radius_fitted)
+        need_to_create_new = true;
+    if (need_to_create_new) {
+        delete light->occluder_fbo;
+        light->occluder_fbo = new QOpenGLFramebufferObject(light->light_radius_fitted, light->light_radius_fitted);
     }
 
     // Bind and clear buffer
-    if (initialize_only == false) {
-        m_light_fbo->bind();
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-    }
+    light->occluder_fbo->bind();
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
 }
+
 
 //####################################################################################
 //##        Allocate Shadow Frame Buffer Object
 //####################################################################################
-void OpenGL::bindShadowBuffer(bool initialize_only) {
+void OpenGL::bindShadowBuffer(DrEngineLight *light) {
     // Shadow map size is the smallest of c_angles, light_radius_fitted, and width()
-    int shadow_size = (light_radius_fitted < c_angles) ? light_radius_fitted : c_angles;
+    int shadow_size = (light->light_radius_fitted < c_max_rays) ? light->light_radius_fitted : c_max_rays;
         shadow_size = (width()*devicePixelRatio() < shadow_size) ? width()*devicePixelRatio() : shadow_size;
 
     // Check Frame Buffer Object is initialized
-    if (!m_shadow_fbo || m_shadow_fbo->width() != shadow_size) {
-        delete m_shadow_fbo;
-        m_shadow_fbo = new QOpenGLFramebufferObject(shadow_size, 1);
+    bool need_to_create_new = false;
+    if (light->shadow_fbo == nullptr)
+        need_to_create_new = true;
+    else if (light->shadow_fbo->width() != shadow_size)
+        need_to_create_new = true;
+    if (need_to_create_new) {
+        delete light->shadow_fbo;
+        light->shadow_fbo = new QOpenGLFramebufferObject(shadow_size, 1);
     }
 
     // Bind and clear buffer
-    if (initialize_only == false) {
-        m_shadow_fbo->bind();
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-    }
+    light->shadow_fbo->bind();
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 
 //####################################################################################
 //##        Renders the 1D Shadow Map based on the Occluder Map
 //####################################################################################
-void OpenGL::drawShadowMap() {
+void OpenGL::drawShadowMap(DrEngineLight *light) {
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, m_light_fbo->texture());
+    glBindTexture(GL_TEXTURE_2D, light->occluder_fbo->texture());
 
     if (!m_shadow_shader.bind()) return;
 
     // ***** Give the shader our Ray Count and Scaled Light Radius
-    m_shadow_shader.setUniformValue( m_uniform_shadow_ray_count,  static_cast<float>(m_shadow_fbo->width()) );
+    m_shadow_shader.setUniformValue( m_uniform_shadow_ray_count,  static_cast<float>(light->shadow_fbo->width()) );
 
-    float screen_scale = (width()*devicePixelRatio() / c_light_size);
-    m_shadow_shader.setUniformValue( m_uniform_shadow_resolution, light_radius, (light_radius / m_scale) * screen_scale );
+    float screen_scale = (width()*devicePixelRatio() / light->light_size);
+    m_shadow_shader.setUniformValue( m_uniform_shadow_resolution, light->light_radius, (light->light_radius / m_scale) * screen_scale );
 
     // Reset our projection matrix to the FBO size
-    float left =   0.0f - ((m_shadow_fbo->width() )  / 2.0f);
-    float right =  0.0f + ((m_shadow_fbo->width() )  / 2.0f);
-    float top =    0.0f + ((m_shadow_fbo->height() ) / 2.0f);
-    float bottom = 0.0f - ((m_shadow_fbo->height() ) / 2.0f);
+    float left =   0.0f - ((light->shadow_fbo->width() )  / 2.0f);
+    float right =  0.0f + ((light->shadow_fbo->width() )  / 2.0f);
+    float top =    0.0f + ((light->shadow_fbo->height() ) / 2.0f);
+    float bottom = 0.0f - ((light->shadow_fbo->height() ) / 2.0f);
     QMatrix4x4 m_matrix;
     m_matrix.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
     m_shadow_shader.setUniformValue( m_uniform_shadow_matrix, m_matrix );
@@ -124,25 +129,29 @@ void OpenGL::drawShadowMap() {
 //####################################################################################
 //##        Renders the light to the Default Screen Buffer using the Shadow Map
 //####################################################################################
-void OpenGL::draw2DLights() {
+void OpenGL::draw2DLight(DrEngineLight *light) {
+
     // Enable alpha channel
-///    glEnable(GL_BLEND);
-///    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                  // Standard blend function
+    ///glEnable(GL_BLEND);
+    ///glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                  // Standard blend function
 
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, m_shadow_fbo->texture());
+    glBindTexture(GL_TEXTURE_2D, light->shadow_fbo->texture());
 
     if (!m_light_shader.bind()) return;
 
     // Find out if light texture has been reduced to fit in the screen, if so increase brightness of light as we get closer
     float shrink_multiplier = 1.0f;
-    if (light_radius_fitted < light_radius) {
-        shrink_multiplier = static_cast<float>( qSqrt(double(light_radius) / double(light_radius_fitted)) );
+    if (light->light_radius_fitted < light->light_radius) {
+        shrink_multiplier = static_cast<float>( qSqrt(double(light->light_radius) / double(light->light_radius_fitted)) );
     }
 
     // Give the shader our light_size resolution, color
-    m_light_shader.setUniformValue( m_uniform_light_resolution, light_radius, shrink_multiplier);
-    m_light_shader.setUniformValue( m_uniform_light_color, 0.75f, 0.2f, 0.75f );
+    m_light_shader.setUniformValue( m_uniform_light_resolution, light->light_radius, shrink_multiplier);
+    m_light_shader.setUniformValue( m_uniform_light_color,
+                                    static_cast<float>(light->color.redF()),
+                                    static_cast<float>(light->color.greenF()),
+                                    static_cast<float>(light->color.blueF()) );
 
     ///float cone_1 = qDegreesToRadians( 30.0f);    // Pac-man
     ///float cone_2 = qDegreesToRadians(330.0f);
@@ -158,12 +167,16 @@ void OpenGL::draw2DLights() {
     m_light_shader.setUniformValue( m_uniform_light_intensity,  1.0f );
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
-    float left =   0.0f - (m_texture_fbo->width()  / 2.0f);
-    float right =  0.0f + (m_texture_fbo->width()  / 2.0f);
-    float top =    0.0f + (m_texture_fbo->height() / 2.0f);
-    float bottom = 0.0f - (m_texture_fbo->height() / 2.0f);
-    QMatrix4x4 m_matrix;
-    m_matrix.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
+    //float left =   0.0f - (m_texture_fbo->width()  / 2.0f);
+    //float right =  0.0f + (m_texture_fbo->width()  / 2.0f);
+    //float top =    0.0f + (m_texture_fbo->height() / 2.0f);
+    //float bottom = 0.0f - (m_texture_fbo->height() / 2.0f);
+    //QMatrix4x4 m_matrix;
+    //m_matrix.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
+    // ***** Set Matrix for Shader, calculates current matrix
+    QMatrix4x4 m_matrix = m_projection * m_model_view;
+    m_shader.setUniformValue( m_uniform_matrix, m_matrix );
+
 
     m_light_shader.setUniformValue( m_uniform_light_matrix, m_matrix );
 
@@ -174,10 +187,10 @@ void OpenGL::draw2DLights() {
     m_light_shader.enableAttributeArray( m_attribute_light_tex_coord );
 
     // Load vertices for this object
-    left =   0.0f - ((m_light_fbo->width() )  / 2.0f);
-    right =  0.0f + ((m_light_fbo->width() )  / 2.0f);
-    top =    0.0f + ((m_light_fbo->height() ) / 2.0f);
-    bottom = 0.0f - ((m_light_fbo->height() ) / 2.0f);
+    float left =   static_cast<float>( light->position.x() * double(m_scale)) - ((light->occluder_fbo->width() )  / 2.0f);
+    float right =  static_cast<float>( light->position.x() * double(m_scale)) + ((light->occluder_fbo->width() )  / 2.0f);
+    float top =    static_cast<float>( light->position.y() * double(m_scale)) + ((light->occluder_fbo->height() ) / 2.0f);
+    float bottom = static_cast<float>( light->position.y() * double(m_scale)) - ((light->occluder_fbo->height() ) / 2.0f);
     QVector<GLfloat> vertices;
     setVertexFromSides(vertices, left, right, top, bottom);
     m_light_shader.setAttributeArray(    m_attribute_light_vertex, vertices.data(), 3 );

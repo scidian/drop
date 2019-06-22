@@ -24,6 +24,7 @@ enum class Render_Type {
 
 // Forward declarations
 class DrEngine;
+class DrEngineLight;
 class DrEngineCamera;
 class DrEngineObject;
 class DrProject;
@@ -31,6 +32,7 @@ class DrStage;
 
 // Type Definitions
 typedef std::map<long, DrEngineCamera*>  EngineCameraMap;
+typedef QVector<DrEngineLight*>          EngineLights;
 typedef QVector<DrEngineObject*>         EngineObjects;
 
 // Global Forward Declaratopns for static Chipmunk callbacks
@@ -113,6 +115,8 @@ public:
     float           brightness = 0.0f;                          // Brightness       Editor: -255 to 255     Shader: -1.0 to 1.0
 
 
+    EngineLights    lights;
+
 
 public:
     // Constructor / Destrcutor / Cleanup
@@ -158,6 +162,9 @@ public:
     void                moveCameras(double milliseconds);
     void                switchCameras(long new_camera);
     void                updateCameras();
+
+    // Lights
+    void                clearLights();
 
     // Getter and Setters
     DrEngine*           getEngine()                 { return m_engine; }

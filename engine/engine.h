@@ -24,6 +24,7 @@ enum class Pedal {
 };
 
 // Forward declarations
+class DrEngineLight;
 class DrEngineObject;
 class DrEngineTexture;
 class DrEngineWorld;
@@ -73,11 +74,11 @@ public:
     DrEngineObject *demo_jumper_2;
 
 
-
 public:
     // Constructor / Destrcutor / Cleanup
     DrEngine(FormEngine *form_engine, DrProject *project);
-    void deleteResources();
+    void    clearWorlds();
+    void    deleteTextures();
 
     // Textures
     DrEngineTexture*    addTexture(long texture_id, QString from_asset_string);

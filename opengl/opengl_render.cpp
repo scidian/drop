@@ -13,6 +13,7 @@
 
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
+#include "engine/engine_light.h"
 #include "engine/engine_object.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
@@ -46,16 +47,24 @@ void OpenGL::paintGL() {
 
 
     // ***** Calculate 2D Light Shadow Maps
-    bindLightBuffer(true);
-    QOpenGLFramebufferObject::blitFramebuffer(
-                m_light_fbo,   QRect(0, 0, m_light_fbo->width(), m_light_fbo->height()),
-                m_texture_fbo, QRect(static_cast<int>( (m_texture_fbo->width() / 2.0) - (m_light_fbo->width() / 2.0)),
-                                     static_cast<int>( (m_texture_fbo->height()/ 2.0) - (m_light_fbo->height()/ 2.0)),
-                                     m_light_fbo->width(), m_light_fbo->height()),
-                GL_COLOR_BUFFER_BIT, GL_NEAREST);
-    bindShadowBuffer(false);
-    drawShadowMap();
-    m_shadow_fbo->release();
+    for (auto light : m_engine->getCurrentWorld()->lights) {
+        if (light == nullptr) continue;
+
+        light->screen_pos = mapToScreen(light->position.x(), light->position.y(), 0.0);
+
+        bindLightBuffer(light);
+        QOpenGLFramebufferObject::blitFramebuffer(
+                    light->occluder_fbo, QRect(0, 0, light->occluder_fbo->width(), light->occluder_fbo->height()),
+                    m_texture_fbo, QRect(static_cast<int>( light->screen_pos.x() - (light->occluder_fbo->width() / 2.0)),
+                                         static_cast<int>( light->screen_pos.y() - (light->occluder_fbo->height()/ 2.0)),
+                                         light->occluder_fbo->width(), light->occluder_fbo->height()),
+                    GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        light->occluder_fbo->release();
+
+        bindShadowBuffer(light);
+        drawShadowMap(light);
+        light->shadow_fbo->release();
+    }
 
 
 //g_info = "W: " + QString::number(m_texture_fbo->width()) + ", H: " + QString::number(m_texture_fbo->height());
@@ -81,7 +90,10 @@ void OpenGL::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     // ***** Renders 2D Lights
-    draw2DLights();
+    for (auto light : m_engine->getCurrentWorld()->lights) {
+        if (light == nullptr) continue;
+        draw2DLight(light);
+    }
 
     // ***** Renders Frame Buffer Object to screen buffer as a textured quad, with post processing available
     drawFrameBufferToScreenBuffer();
