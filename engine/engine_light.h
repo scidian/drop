@@ -22,8 +22,8 @@ public:
     QPointF         position = QPointF(0.0, 0.0);           // Light position in the world
     QColor          color = QColor(192, 64, 192);           // Color of light
     QPointF         cone = QPointF(0.0, 360.0);             // Start / end angle of light
-    double          shadows = 1.0;                          // Visibility of shadows, 0 to 100
-    double          intensity = 1.0;                        // Intensity of light, 0 to 100
+    float           shadows = 1.0f;                         // Visibility of shadows, 0 to 100
+    float           intensity = 1.0f;                       // Intensity of light, 0 to 100
 
 
 

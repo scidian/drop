@@ -132,8 +132,8 @@ void OpenGL::drawShadowMap(DrEngineLight *light) {
 void OpenGL::draw2DLight(DrEngineLight *light) {
 
     // Enable alpha channel
-    ///glEnable(GL_BLEND);
-    ///glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                  // Standard blend function
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                  // Standard blend function
 
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, light->shadow_fbo->texture());
@@ -163,8 +163,8 @@ void OpenGL::draw2DLight(DrEngineLight *light) {
     if (cone_2 < 0.0f) cone_2 += (2.0f * 3.141592f);
     m_light_shader.setUniformValue( m_uniform_light_cone, cone_1, cone_2);
 
-    m_light_shader.setUniformValue( m_uniform_light_shadows,    1.0f );
-    m_light_shader.setUniformValue( m_uniform_light_intensity,  1.0f );
+    m_light_shader.setUniformValue( m_uniform_light_shadows,   light->shadows );
+    m_light_shader.setUniformValue( m_uniform_light_intensity, light->intensity );
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
     QMatrix4x4 m_matrix = m_projection * m_model_view;
