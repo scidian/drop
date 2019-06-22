@@ -18,7 +18,7 @@
 #include "opengl/opengl.h"
 
 
-const int   c_max_rays = 1024;             // Maximum number of rays to send out
+const int   c_max_rays = 2048;             // Maximum number of rays to send out
 
 
 //####################################################################################
@@ -167,17 +167,7 @@ void OpenGL::draw2DLight(DrEngineLight *light) {
     m_light_shader.setUniformValue( m_uniform_light_intensity,  1.0f );
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
-    //float left =   0.0f - (m_texture_fbo->width()  / 2.0f);
-    //float right =  0.0f + (m_texture_fbo->width()  / 2.0f);
-    //float top =    0.0f + (m_texture_fbo->height() / 2.0f);
-    //float bottom = 0.0f - (m_texture_fbo->height() / 2.0f);
-    //QMatrix4x4 m_matrix;
-    //m_matrix.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
-    // ***** Set Matrix for Shader, calculates current matrix
     QMatrix4x4 m_matrix = m_projection * m_model_view;
-    m_shader.setUniformValue( m_uniform_matrix, m_matrix );
-
-
     m_light_shader.setUniformValue( m_uniform_light_matrix, m_matrix );
 
     // Set Texture Coordinates for Shader

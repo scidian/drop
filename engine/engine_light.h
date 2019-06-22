@@ -26,6 +26,7 @@ public:
     double          intensity = 1.0;                        // Intensity of light, 0 to 100
 
 
+
     // ***** For use by engine
     QPointF         screen_pos = QPointF(0,0);              // Position of the center of the light as rendered to screen
     int             light_radius = 0;                       // Size of light frame buffer object
@@ -40,6 +41,8 @@ public:
     // Constructor / Destructor
     DrEngineLight();
     ~DrEngineLight();
+
+    // Getters / Setters
 
 
 };

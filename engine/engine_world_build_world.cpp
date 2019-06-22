@@ -77,12 +77,24 @@ void DrEngineWorld::buildSpace(Demo_Space new_space_type) {
     DrEngineLight *light1 = new DrEngineLight();
     light1->position = QPointF(-350, 300);
     light1->color = Qt::blue;
+    light1->intensity = 3.0;
+
     DrEngineLight *light2 = new DrEngineLight();
     light2->position = QPointF(1000, 250);
     light2->color = Qt::yellow;
+    light2->intensity = 2.0;
+
+    DrEngineLight *light3 = new DrEngineLight();
+    light3->position = QPointF(2000, 1000);
+    light3->color = Qt::red;
+    light3->intensity = 1.0;
+    light3->shadows = 5.0;
+    light3->light_size = 5000;
+
+
     lights.append(light1);
     lights.append(light2);
-
+    lights.append(light3);
     m_engine->getFormEngine()->getOpenGL()->doneCurrent();
 
 

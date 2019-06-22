@@ -52,11 +52,14 @@ void OpenGL::paintGL() {
 
         light->screen_pos = mapToScreen(light->position.x(), light->position.y(), 0.0);
 
+        double middle = m_texture_fbo->height() / 2.0;
+        double y_diff = middle - light->screen_pos.y();
+
         bindLightBuffer(light);
         QOpenGLFramebufferObject::blitFramebuffer(
                     light->occluder_fbo, QRect(0, 0, light->occluder_fbo->width(), light->occluder_fbo->height()),
                     m_texture_fbo, QRect(static_cast<int>( light->screen_pos.x() - (light->occluder_fbo->width() / 2.0)),
-                                         static_cast<int>( light->screen_pos.y() - (light->occluder_fbo->height()/ 2.0)),
+                                         static_cast<int>( light->screen_pos.y() - (light->occluder_fbo->height()/ 2.0) + (y_diff * 2.0)),
                                          light->occluder_fbo->width(), light->occluder_fbo->height()),
                     GL_COLOR_BUFFER_BIT, GL_NEAREST);
         light->occluder_fbo->release();
@@ -71,9 +74,8 @@ void OpenGL::paintGL() {
 //g_info += ", LFBO W: " + QString::number(m_light_fbo->width()) + ", H: " + QString::number(m_light_fbo->height());
 //g_info += ", SFBO W: " + QString::number(m_shadow_fbo->width()) + ", H: " + QString::number(m_shadow_fbo->height());
 
-//static int count = 1;
-//count++;
-//if (count % 600 == 0) {
+//static int count = 1;     count++;
+//if (count > 600 == 0) {
 //    Dr::ShowMessageBox("Light", QPixmap::fromImage(m_shadow_fbo->toImage()));
 //    ///Dr::ShowMessageBox("Light", QPixmap::fromImage(m_light_fbo->toImage()));
 //    count = 1;
