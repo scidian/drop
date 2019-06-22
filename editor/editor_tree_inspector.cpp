@@ -72,18 +72,18 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
     // If Inspector already contaitns this item exit now
     if (new_key == c_no_key) return;
     if (new_key == m_selected_key) return;
-    DrType new_type = m_project->findChildTypeFromKey( new_key );
+
+    DrSettings *new_settings = m_project->findSettingsFromKey( new_key );
+    DrType new_type = new_settings->getType();
 
     // !!!!! #DEBUG:    Show selected item key and info
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Inspector_Build)) {
         QString type_string = Dr::StringFromType(new_type);
         Dr::SetLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( new_key ) + ", TYPE: " + type_string);
-
         if (new_type == DrType::Thing) {
             DrThing* thing = m_project->findThingFromKey(new_key);
             long asset_key = thing->getAssetKey();
             QString asset_name = m_project->findAssetFromKey(asset_key)->getName();
-
             Dr::SetLabelText(Label_Names::Label_Object_2, "ASSET KEY:  " + QString::number(asset_key) +
                                                               ", NAME: " + asset_name);
         } else {
@@ -94,11 +94,11 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
 
     // If old selection and new selection are both Object Things, we don't need to completely rebuild Inspector, just change values
     if (m_selected_type == DrType::Thing && new_type == DrType::Thing) {
-        DrThingType type1 = m_project->findThingFromKey(m_selected_key)->getThingType();
-        DrThingType type2 = m_project->findThingFromKey(new_key)->getThingType();
-        if (type1 == type2) {
+        DrThing *thing1 = dynamic_cast<DrThing*>(m_project->findSettingsFromKey(m_selected_key));
+        DrThing *thing2 = dynamic_cast<DrThing*>(new_settings);
+        if (thing1->getThingType() == thing2->getThingType()) {
             m_selected_key = new_key;
-            updateInspectorPropertyBoxes( { m_project->findThingFromKey(m_selected_key) }, { });
+            updateInspectorPropertyBoxes( { thing2 }, { });
             return;
         }
     }
@@ -107,16 +107,18 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
 
     // Change Advisor text after new item selection
     switch (m_selected_type) {
+        case DrType::Asset:        m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Object);          break;
         case DrType::World:        m_editor_relay->setAdvisorInfo(Advisor_Info::World_Description);     break;
         case DrType::Stage:        m_editor_relay->setAdvisorInfo(Advisor_Info::Stage_Description);     break;
-        case DrType::Thing:        m_editor_relay->setAdvisorInfo(Advisor_Info::Thing_Description);     break;
-        case DrType::Asset:        m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Object);          break;
+        case DrType::Thing:
+            m_editor_relay->setAdvisorInfo(new_settings->getName(), Dr::StringFromThingType(dynamic_cast<DrThing*>(new_settings)->getThingType()) );
+            break;
         default:                   m_editor_relay->setAdvisorInfo(Advisor_Info::Not_Set);
     }
 
 
     // Retrieve list of components for selected item
-    ComponentMap list_components = m_project->findSettingsFromKey( m_selected_key )->getComponentList();
+    ComponentMap list_components = new_settings->getComponentList();
 
     // Loop through each component and add it to the Inspector list
     this->clear();

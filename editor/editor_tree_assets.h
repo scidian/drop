@@ -55,9 +55,9 @@ public:
     explicit        TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
 
     // Tree Building Functions
-    void            addAssetsToCategory(QTreeWidgetItem *tree_item, QFrame *asset_frame);
-    void            buildAssetTree(QString search_text = "");
-    DrQPushButtonCategory* initializeCatergoryButton(QTreeWidgetItem *tree_item, QString name);
+    void                    addAssetsToCategory(QTreeWidgetItem *tree_item, QFrame *asset_frame);
+    void                    buildAssetTree(QString search_text = "");
+    DrQPushButtonCategory*  createCategoryButton(QTreeWidgetItem *item, QString name, QString icon_resource, QList<QString> advisor_info);
 
     // Function Calls
     IEditorRelay*   getRelay() { return m_editor_relay; }

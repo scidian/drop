@@ -11,13 +11,13 @@ precision mediump float;
 varying highp vec2  coordinates;                    // Texture Coodinates
 
 // ***** Input from Engine
-uniform sampler2D   u_texture;
-uniform vec2        u_resolution;
-uniform vec3        u_color;
-uniform vec2        u_cone;
+uniform sampler2D   u_texture;                      // Shadow Map 1D
+uniform vec2        u_resolution;                   // Light Radius, Shrink Multiplier
 
-float               u_light_shadows = 5.0;
-float               u_intensity = 4.0;
+uniform vec3        u_color;                        // Light Color, r/g/b       0.0 to 1.0 x 3
+uniform vec2        u_cone;                         // Start angle, End Angle   0.0, 360.0 is Full Circle
+uniform float       u_light_shadows;                // Visible shadows          0.0 to 100.0
+uniform float       u_intensity;                    // Intensity                0.0 to 100.0?
 
 const float         PI = 3.14159;
 

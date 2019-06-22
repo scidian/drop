@@ -17,7 +17,7 @@
 #include "opengl/opengl.h"
 
 
-const int   c_angles = 1024;             // Number of rays to send out
+const int   c_angles = 1024;             // Maximum number of rays to send out
 const float c_light_size = 1500;         // Test Light Size
 
 static int  light_radius;
@@ -41,7 +41,7 @@ void OpenGL::bindLightBuffer(bool initialize_only) {
     }
 
     // Bind and clear buffer
-    if (!initialize_only == false) {
+    if (initialize_only == false) {
         m_light_fbo->bind();
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -153,6 +153,9 @@ void OpenGL::draw2DLights() {
     if (cone_1 < 0.0f) cone_1 += (2.0f * 3.141592f);
     if (cone_2 < 0.0f) cone_2 += (2.0f * 3.141592f);
     m_light_shader.setUniformValue( m_uniform_light_cone, cone_1, cone_2);
+
+    m_light_shader.setUniformValue( m_uniform_light_shadows,    1.0f );
+    m_light_shader.setUniformValue( m_uniform_light_intensity,  1.0f );
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
     float left =   0.0f - (m_texture_fbo->width()  / 2.0f);

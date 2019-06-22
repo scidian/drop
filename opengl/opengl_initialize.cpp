@@ -108,6 +108,8 @@ void OpenGL::initializeGL() {
     m_uniform_light_resolution =    m_light_shader.uniformLocation(   "u_resolution" );
     m_uniform_light_color =         m_light_shader.uniformLocation(   "u_color" );
     m_uniform_light_cone =          m_light_shader.uniformLocation(   "u_cone" );
+    m_uniform_light_shadows =       m_light_shader.uniformLocation(   "u_light_shadows" );
+    m_uniform_light_intensity =     m_light_shader.uniformLocation(   "u_intensity" );
 
 }
 

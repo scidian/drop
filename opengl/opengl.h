@@ -103,6 +103,8 @@ private:
     int     m_uniform_light_resolution;
     int     m_uniform_light_color;                              // Color of light, red/green/blue (0 to 1, 0 to 1, 0 to 1)
     int     m_uniform_light_cone;
+    int     m_uniform_light_shadows;
+    int     m_uniform_light_intensity;
 
 
 public:
