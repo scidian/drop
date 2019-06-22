@@ -61,7 +61,7 @@ public:
 
     // Function Calls
     IEditorRelay*   getRelay() { return m_editor_relay; }
-    void            forceUpdateOfItemSizes() { this->scheduleDelayedItemsLayout(); }
+    void            forceUpdateOfItemSizes() { this->scheduleDelayedItemsLayout(); }                    // !!!!! #NOTE: Forces updating of QTreeWidget, yay!
     void            updateAssetList(QList<DrSettings*> changed_items, QList<long> property_keys);
 
 private slots:
