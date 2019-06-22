@@ -77,21 +77,22 @@ void DrEngineWorld::buildSpace(Demo_Space new_space_type) {
     DrEngineLight *light1 = new DrEngineLight();
     light1->position = QPointF(-350, 300);
     light1->color = Qt::blue;
-    light1->intensity = 3.0f;
-    light1->shadows = 0.0f;
+    light1->intensity = 1.0f;
+    light1->shadows = 2.0f;
+    light1->light_size = 2000;
 
     DrEngineLight *light2 = new DrEngineLight();
-    light2->position = QPointF(1000, 250);
+    light2->position = QPointF(1400, 250);
     light2->color = Qt::yellow;
-    light2->intensity = 2.0f;
+    light2->intensity = 1.0f;
     light2->shadows = 5.0f;
 
     DrEngineLight *light3 = new DrEngineLight();
-    light3->position = QPointF(0, 20);
+    light3->position = QPointF(500, 75);
     light3->color = Qt::red;
     light3->intensity = 1.0f;
     light3->shadows = 5.0f;
-    light3->light_size = 2000;
+    light3->light_size = 2500;
 
 
     lights.append(light1);

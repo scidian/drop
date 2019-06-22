@@ -69,19 +69,31 @@ void OpenGL::paintGL() {
         light->shadow_fbo->release();
     }
 
+    // Debug buffer sizes
+    ///g_info = "W: " + QString::number(m_texture_fbo->width()) + ", H: " + QString::number(m_texture_fbo->height());
+    ///g_info += ", LFBO W: " + QString::number(m_light_fbo->width()) + ", H: " + QString::number(m_light_fbo->height());
+    ///g_info += ", SFBO W: " + QString::number(m_shadow_fbo->width()) + ", H: " + QString::number(m_shadow_fbo->height());
+    // Debug buffer images
+    ///static int count = 1;     count++;
+    ///if (count > 600 == 0) {
+    ///    Dr::ShowMessageBox("Light", QPixmap::fromImage(m_shadow_fbo->toImage()));
+    ///    ///Dr::ShowMessageBox("Light", QPixmap::fromImage(m_light_fbo->toImage()));
+    ///    count = 1;
+    ///}
 
-//g_info = "W: " + QString::number(m_texture_fbo->width()) + ", H: " + QString::number(m_texture_fbo->height());
-//g_info += ", LFBO W: " + QString::number(m_light_fbo->width()) + ", H: " + QString::number(m_light_fbo->height());
-//g_info += ", SFBO W: " + QString::number(m_shadow_fbo->width()) + ", H: " + QString::number(m_shadow_fbo->height());
-
-//static int count = 1;     count++;
-//if (count > 600 == 0) {
-//    Dr::ShowMessageBox("Light", QPixmap::fromImage(m_shadow_fbo->toImage()));
-//    ///Dr::ShowMessageBox("Light", QPixmap::fromImage(m_light_fbo->toImage()));
-//    count = 1;
-//}
 
 
+    // ***** Renders 2D Lights
+    if (m_engine->getCurrentWorld()->lights.count() > 0) {
+        m_lights_fbo->bind();
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        for (auto light : m_engine->getCurrentWorld()->lights) {
+            if (light == nullptr) continue;
+            draw2DLight(light);
+        }
+        m_lights_fbo->release();
+    }
 
     // ***** Bind default Qt FrameBuffer, clear and set up for drawing
     QOpenGLFramebufferObject::bindDefault();
@@ -91,14 +103,10 @@ void OpenGL::paintGL() {
     glClearColor(background_red, background_green, background_blue, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    // ***** Renders 2D Lights
-    for (auto light : m_engine->getCurrentWorld()->lights) {
-        if (light == nullptr) continue;
-        draw2DLight(light);
-    }
-
     // ***** Renders Frame Buffer Object to screen buffer as a textured quad, with post processing available
-    drawFrameBufferToScreenBuffer();
+    if (m_engine->getCurrentWorld()->lights.count() > 0)
+        drawFrameBufferToScreenBuffer(m_lights_fbo);
+    drawFrameBufferToScreenBuffer(m_texture_fbo);
 
     // ***** Draws Debug Shapes / Text Onto Frame Buffer Object
     QOpenGLPaintDevice paint_gl(width() * devicePixelRatio(), height() * devicePixelRatio());
@@ -116,9 +124,10 @@ void OpenGL::paintGL() {
 //####################################################################################
 void OpenGL::bindOffscreenBuffer() {
 
-    if (!m_fbo || !m_texture_fbo || (m_fbo->width() != width() || m_fbo->height() != height())) {
+    if (!m_fbo || !m_texture_fbo || ! m_lights_fbo || (m_fbo->width() != width() || m_fbo->height() != height())) {
         delete m_fbo;
         delete m_texture_fbo;
+        delete m_lights_fbo;
         QOpenGLFramebufferObjectFormat format;
         format.setAttachment(QOpenGLFramebufferObject::Attachment::CombinedDepthStencil);
         format.setSamples(4);
@@ -130,6 +139,7 @@ void OpenGL::bindOffscreenBuffer() {
         QOpenGLFramebufferObjectFormat format2;
         format.setAttachment(QOpenGLFramebufferObject::Attachment::NoAttachment);
         m_texture_fbo = new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format2);
+        m_lights_fbo =  new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format2);
     }
     m_fbo->bind();
 
@@ -227,7 +237,7 @@ void OpenGL::setVertexFromSides(QVector<GLfloat> &vertices, float left, float ri
 //##        Renders Frame Buffer Object to screen buffer as a textured quad
 //##            Post processing available through the fragment shader
 //####################################################################################
-void OpenGL::drawFrameBufferToScreenBuffer() {
+void OpenGL::drawFrameBufferToScreenBuffer(QOpenGLFramebufferObject *fbo) {
 
     // Enable alpha channel
     glEnable(GL_BLEND);
@@ -235,15 +245,15 @@ void OpenGL::drawFrameBufferToScreenBuffer() {
 
     // Bind offscreen frame buffer object as a texture
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, m_texture_fbo->texture());
+    glBindTexture(GL_TEXTURE_2D, fbo->texture());
 
     if (!m_shader.bind()) return;
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
-    float left =   0.0f - (m_texture_fbo->width()  / 2.0f);
-    float right =  0.0f + (m_texture_fbo->width()  / 2.0f);
-    float top =    0.0f + (m_texture_fbo->height() / 2.0f);
-    float bottom = 0.0f - (m_texture_fbo->height() / 2.0f);
+    float left =   0.0f - (fbo->width()  / 2.0f);
+    float right =  0.0f + (fbo->width()  / 2.0f);
+    float top =    0.0f + (fbo->height() / 2.0f);
+    float bottom = 0.0f - (fbo->height() / 2.0f);
     QMatrix4x4 m_matrix;
     m_matrix.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
     m_shader.setUniformValue( m_uniform_matrix, m_matrix );
@@ -261,7 +271,7 @@ void OpenGL::drawFrameBufferToScreenBuffer() {
     m_shader.enableAttributeArray( m_attribute_vertex );
 
     // Set variables for shader
-    setShaderDefaultValues( m_texture_fbo->width(), m_texture_fbo->height() );
+    setShaderDefaultValues( fbo->width(), fbo->height() );
 
     m_shader.setUniformValue( m_uniform_bitrate,    m_engine->getCurrentWorld()->bitrate );
     m_shader.setUniformValue( m_uniform_pixel_x,    m_engine->getCurrentWorld()->pixel_x );

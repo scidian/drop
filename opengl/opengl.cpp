@@ -29,6 +29,7 @@ OpenGL::~OpenGL() {
         m_engine->deleteTextures();
         delete m_fbo;
         delete m_texture_fbo;
+        delete m_lights_fbo;
     doneCurrent();
 }
 

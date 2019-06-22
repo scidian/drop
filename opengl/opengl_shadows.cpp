@@ -18,7 +18,7 @@
 #include "opengl/opengl.h"
 
 
-const int   c_max_rays = 2048;             // Maximum number of rays to send out
+const int   c_max_rays = 1024;             // Maximum number of rays to send out
 
 
 //####################################################################################

@@ -57,6 +57,7 @@ private:
     // Frame Buffers
     QOpenGLFramebufferObject *m_fbo = nullptr;                  // Used for offscreen rendering
     QOpenGLFramebufferObject *m_texture_fbo = nullptr;          // m_fbo must be copied to a non-multisampled fbo before being used as a texture
+    QOpenGLFramebufferObject *m_lights_fbo = nullptr;           // Loads all the lights for rendering onto default screen buffer
 
     // Shader Variables
     QOpenGLShaderProgram m_shader;
@@ -144,7 +145,7 @@ public:
     void            drawDebugHealthNative(QPainter &painter);
     void            drawDebugJoints(QPainter &painter);
     void            drawDebugShapes(QPainter &painter);
-    void            drawFrameBufferToScreenBuffer();
+    void            drawFrameBufferToScreenBuffer(QOpenGLFramebufferObject *fbo);
     void            drawSpace();
     QColor          objectDebugColor(DrEngineObject *object, bool text_color = false);
     void            updateViewMatrix();
