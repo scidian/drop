@@ -30,7 +30,6 @@ OpenGL::~OpenGL() {
         delete m_render_fbo;
         delete m_texture_fbo;
         delete m_occluder_fbo;
-        delete m_lights_fbo;
     doneCurrent();
 }
 

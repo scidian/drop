@@ -11,15 +11,15 @@
 #include <QOpenGLFramebufferObject>
 
 #include "chipmunk/chipmunk.h"
+#include "engine_object.h"
 #include "enums_engine.h"
 #include "helper.h"
 
-class DrEngineLight
+class DrEngineLight : public DrEngineObject
 {
 public:
 
-    float           light_size = 1500;                      // Diameter of light
-    QPointF         position = QPointF(0.0, 0.0);           // Light position in the world
+    float           light_size = 1500.0f;                   // Diameter of light
     QColor          color = QColor(192, 64, 192);           // Color of light
     QPointF         cone = QPointF(0.0, 360.0);             // Start / end angle of light
                                                             //      float cone_1 = qDegreesToRadians( 30.0f);    // Pac-man
@@ -46,9 +46,10 @@ public:
 public:
     // Constructor / Destructor
     DrEngineLight();
-    ~DrEngineLight();
+    virtual ~DrEngineLight() override;
 
-    // Getters / Setters
+    // Virtual Functions
+    virtual bool    isLight() override { return true; }
 
 
 };

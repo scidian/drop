@@ -35,7 +35,6 @@ void OpenGL::paintGL() {
     std::sort(objects.begin(), objects.end(), [] (const DrEngineThing *a, const DrEngineThing *b) { return a->z_order < b->z_order; });
 
 
-
     // ***** If there are Lights, Render Occluder Map, Calculate Shadow Maps
     if (m_engine->getCurrentWorld()->lights.count() > 0) {
 
@@ -47,12 +46,12 @@ void OpenGL::paintGL() {
         // ***** Calculate 2D Light Shadow Maps
         for (auto light : m_engine->getCurrentWorld()->lights) {
             if (light == nullptr) continue;
-
-            light->screen_pos = mapToOccluder( QVector3D(static_cast<float>(light->position.x()), static_cast<float>(light->position.y()), 0.0f));
+            light->screen_pos = mapToOccluder( QVector3D(static_cast<float>(light->getBodyPosition().x()),
+                                                         static_cast<float>(light->getBodyPosition().y()), 0.0f));
             double middle = m_texture_fbo->height() / 2.0;
             double y_diff = middle - light->screen_pos.y();
 
-            bindLightBuffer(light);
+            bindLightOcculderBuffer(light);
             QOpenGLFramebufferObject::blitFramebuffer(
                         light->occluder_fbo, QRect(0, 0, light->occluder_fbo->width(), light->occluder_fbo->height()),
                         m_occluder_fbo, QRect(
@@ -63,23 +62,11 @@ void OpenGL::paintGL() {
                         GL_COLOR_BUFFER_BIT, GL_NEAREST);
             light->occluder_fbo->release();
 
-            bindShadowBuffer(light);
+            bindLightShadowBuffer(light);
             drawShadowMap(light);
             light->shadow_fbo->release();
         }
-
-        // ***** Renders 2D Lights onto Light frame buffer
-        m_lights_fbo->bind();
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        for (auto light : m_engine->getCurrentWorld()->lights) {
-            if (light == nullptr) continue;
-            draw2DLight(light);
-        }
-        m_lights_fbo->release();
     }
-
-
 
     // ***** Render Onto Frame Buffer Object
     updateViewMatrix();                                                         // Update Camera / View Matrix
@@ -99,8 +86,6 @@ void OpenGL::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     // ***** Renders Frame Buffer Object to screen buffer as a textured quad, with post processing available
-    if (m_engine->getCurrentWorld()->lights.count() > 0)
-        drawFrameBufferToScreenBuffer(m_lights_fbo, true);
     drawFrameBufferToScreenBuffer(m_texture_fbo);
 
     // ***** Draws Debug Shapes / Text Onto Frame Buffer Object
@@ -119,11 +104,10 @@ void OpenGL::paintGL() {
 //####################################################################################
 void OpenGL::bindOffscreenBuffer() {
 
-    if (!m_render_fbo || !m_texture_fbo || ! m_lights_fbo ||
+    if (!m_render_fbo || !m_texture_fbo ||
         (m_render_fbo->width() != width()*devicePixelRatio() || m_render_fbo->height() != height()*devicePixelRatio())) {
         delete m_render_fbo;
         delete m_texture_fbo;
-        delete m_lights_fbo;
         QOpenGLFramebufferObjectFormat format;
         format.setAttachment(QOpenGLFramebufferObject::Attachment::CombinedDepthStencil);
         format.setSamples(4);
@@ -135,7 +119,6 @@ void OpenGL::bindOffscreenBuffer() {
         QOpenGLFramebufferObjectFormat format2;
         format.setAttachment(QOpenGLFramebufferObject::Attachment::NoAttachment);
         m_texture_fbo = new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format2);
-        m_lights_fbo =  new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format2);
     }
     m_render_fbo->bind();
 

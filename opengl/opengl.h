@@ -29,7 +29,7 @@ class FormEngine;
 typedef std::chrono::high_resolution_clock Clock;
 
 // OpenGL Constants
-const float c_occluder_scale = .75f;            // Scale to use for occlusion map
+const float c_occluder_scale = 0.75f;           // Scale to use for occlusion map
 const int   c_max_rays = 4096;                  // Maximum number of rays to send out during shadow map calculations
 
 
@@ -62,8 +62,6 @@ private:
     QOpenGLFramebufferObject *m_render_fbo = nullptr;           // Used for offscreen rendering
     QOpenGLFramebufferObject *m_texture_fbo = nullptr;          // m_render_fbo must be copied to a non-multisampled fbo before being used as a texture
     QOpenGLFramebufferObject *m_occluder_fbo = nullptr;         // Used for rendering an occlusion map for use with lights
-
-    QOpenGLFramebufferObject *m_lights_fbo = nullptr;           // Loads all the lights for rendering onto default screen buffer
 
     // Shader Variables
     QOpenGLShaderProgram m_shader;
@@ -174,9 +172,9 @@ public:
     void            setWholeTextureCoordinates(std::vector<float> &texture_coords);
 
     // Soft Shadows
-    void            bindLightBuffer(DrEngineLight *light);
     void            bindOccluderBuffer();
-    void            bindShadowBuffer(DrEngineLight *light);
+    void            bindLightOcculderBuffer(DrEngineLight *light);
+    void            bindLightShadowBuffer(DrEngineLight *light);
     void            draw2DLight(DrEngineLight *light);
     void            drawShadowMap(DrEngineLight *light);
 

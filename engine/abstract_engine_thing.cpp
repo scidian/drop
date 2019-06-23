@@ -10,3 +10,8 @@
 DrEngineThing::DrEngineThing() {
 
 }
+
+DrEngineThing::~DrEngineThing() {
+
+}
+

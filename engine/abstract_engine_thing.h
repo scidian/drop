@@ -32,10 +32,12 @@ public:
 
     double              z_order = 0.0;          // Used for layering, needs to be public for sorting
 
-
 public:
     DrEngineThing();
+    virtual ~DrEngineThing();
 
+    // Virtual Functions
+    virtual bool    isLight() { return false; }
 
     // Getters / Setters
     const double&   getZOrder() { return z_order; }

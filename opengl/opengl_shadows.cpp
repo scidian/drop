@@ -37,7 +37,7 @@ void OpenGL::bindOccluderBuffer() {
 //####################################################################################
 //##        Allocate Light Occluder Frame Buffer Object
 //####################################################################################
-void OpenGL::bindLightBuffer(DrEngineLight *light) {
+void OpenGL::bindLightOcculderBuffer(DrEngineLight *light) {
     // Calculate size of light texture (fbo)
     light->light_radius = static_cast<int>(light->light_size * m_scale);
     light->light_radius_fitted = light->light_radius;
@@ -66,7 +66,7 @@ void OpenGL::bindLightBuffer(DrEngineLight *light) {
 //####################################################################################
 //##        Allocate Shadow Frame Buffer Object
 //####################################################################################
-void OpenGL::bindShadowBuffer(DrEngineLight *light) {
+void OpenGL::bindLightShadowBuffer(DrEngineLight *light) {
     // Shadow map size is the smallest of c_angles, light_radius_fitted, and width()
     int shadow_size = (light->light_radius_fitted < c_max_rays) ? light->light_radius_fitted : c_max_rays;
         shadow_size = (width()*devicePixelRatio() < shadow_size) ? width()*devicePixelRatio() : shadow_size;
@@ -144,10 +144,6 @@ void OpenGL::drawShadowMap(DrEngineLight *light) {
 //####################################################################################
 void OpenGL::draw2DLight(DrEngineLight *light) {
 
-    // Enable alpha channel
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                  // Standard blend function
-
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, light->shadow_fbo->texture());
 
@@ -176,6 +172,17 @@ void OpenGL::draw2DLight(DrEngineLight *light) {
     m_light_shader.setUniformValue( m_uniform_light_blur,      light->blur );
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
+//    QMatrix4x4 matrix;
+//    matrix.setToIdentity();
+//    float cam_x =  (m_engine->getCurrentWorld()->getCameraPos().x()) * m_scale;
+//    float cam_y =  (m_engine->getCurrentWorld()->getCameraPos().y() + 200) * m_scale;
+//    float left =   cam_x - (width() *  devicePixelRatio() / 2.0f);
+//    float right =  cam_x + (width() *  devicePixelRatio() / 2.0f);
+//    float top =    cam_y + (height() * devicePixelRatio() / 2.0f);
+//    float bottom = cam_y - (height() * devicePixelRatio() / 2.0f);
+//    matrix.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
+//    m_light_shader.setUniformValue( m_uniform_light_matrix, matrix );
+
     QMatrix4x4 m_matrix = m_projection * m_model_view;
     m_light_shader.setUniformValue( m_uniform_light_matrix, m_matrix );
 
@@ -186,10 +193,10 @@ void OpenGL::draw2DLight(DrEngineLight *light) {
     m_light_shader.enableAttributeArray( m_attribute_light_tex_coord );
 
     // Load vertices for this object
-    float left =   static_cast<float>( light->position.x() * double(m_scale)) - ((light->occluder_fbo->width() )  / 2.0f);
-    float right =  static_cast<float>( light->position.x() * double(m_scale)) + ((light->occluder_fbo->width() )  / 2.0f);
-    float top =    static_cast<float>( light->position.y() * double(m_scale)) + ((light->occluder_fbo->height() ) / 2.0f);
-    float bottom = static_cast<float>( light->position.y() * double(m_scale)) - ((light->occluder_fbo->height() ) / 2.0f);
+    float left =   static_cast<float>( light->getBodyPosition().x() * double(m_scale)) - ((light->occluder_fbo->width() )  / 2.0f);
+    float right =  static_cast<float>( light->getBodyPosition().x() * double(m_scale)) + ((light->occluder_fbo->width() )  / 2.0f);
+    float top =    static_cast<float>( light->getBodyPosition().y() * double(m_scale)) + ((light->occluder_fbo->height() ) / 2.0f);
+    float bottom = static_cast<float>( light->getBodyPosition().y() * double(m_scale)) - ((light->occluder_fbo->height() ) / 2.0f);
     QVector<GLfloat> vertices;
     setVertexFromSides(vertices, left, right, top, bottom);
     m_light_shader.setAttributeArray(    m_attribute_light_vertex, vertices.data(), 3 );

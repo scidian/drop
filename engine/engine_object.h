@@ -62,7 +62,7 @@ private:
 
     float           m_scale_x = 1.0f;               // Scale of object in world
     float           m_scale_y = 1.0f;               // Scale of object in world
-    float           m_alpha = 1.0;                  // Transparency of object (0.0 invisible, 1.0 opaque)
+    float           m_alpha = 1.0f;                 // Transparency of object (0.0 invisible, 1.0 opaque)
 
     // ***** Object Properties - Camera
     long            m_active_camera = c_no_camera;  // Set to ID of last camera that followed this object, 0 == no camera
@@ -174,8 +174,8 @@ public:
 
 
 public:
-    DrEngineObject() {}
-
+    DrEngineObject();
+    virtual ~DrEngineObject();
 
     // Object Basic Settings
     const bool&     doesCollide() { return m_does_collide; }
