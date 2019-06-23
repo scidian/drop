@@ -103,6 +103,7 @@ void OpenGL::drawShadowMap(DrEngineLight *light) {
 
     float screen_scale = (width()*devicePixelRatio() / light->light_size);
     m_shadow_shader.setUniformValue( m_uniform_shadow_resolution, light->light_radius, (light->light_radius / m_scale) * screen_scale );
+    m_shadow_shader.setUniformValue( m_uniform_shadow_depth,      static_cast<float>(light->getZOrder()) );
 
     // Reset our projection matrix to the FBO size
     float left =   0.0f - ((light->shadow_fbo->width() )  / 2.0f);

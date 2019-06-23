@@ -88,6 +88,7 @@ void OpenGL::initializeGL() {
     // Shadow Fragment Shader Input
     m_uniform_occluder_texture =      m_occluder_shader.uniformLocation(   "u_texture" );
     m_uniform_occluder_alpha =        m_occluder_shader.uniformLocation(   "u_alpha" );
+    m_uniform_occluder_depth =        m_occluder_shader.uniformLocation(   "u_depth" );
 
 
     // ***** Initialize our Shadow Map Shader
@@ -106,6 +107,7 @@ void OpenGL::initializeGL() {
     m_uniform_shadow_texture =      m_shadow_shader.uniformLocation(   "u_texture" );
     m_uniform_shadow_resolution =   m_shadow_shader.uniformLocation(   "u_resolution" );
     m_uniform_shadow_ray_count =    m_shadow_shader.uniformLocation(   "u_ray_count" );
+    m_uniform_shadow_depth =        m_shadow_shader.uniformLocation(   "u_depth" );
 
 
     // ***** Initialize our 2D Light Shader

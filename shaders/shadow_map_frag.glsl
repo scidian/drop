@@ -15,6 +15,9 @@ uniform sampler2D   u_texture;
 uniform vec2        u_resolution;
 uniform float       u_ray_count;
 
+uniform float       u_depth;                        // Z-Order of item, (recalculated to number from 0.0 to 1.0
+                                                    //                   assuming near / far plane of -1000 to 1000)
+
 // Other Variables
 const float         THRESHOLD = 0.75;               // Alpha threshold for our occlusion map
 const float         PI = 3.14159;                   // Pi
@@ -22,6 +25,7 @@ const float         PI = 3.14159;                   // Pi
 void main(void) {
     float distance =     1.0;
     float rays =         u_ray_count;
+    float z =           (u_depth + 1000.0) / 2000.0;
     float full_length =  u_resolution.x;
     float ray_length =   u_resolution.y;
     float ray_diff =     ray_length / rays;
@@ -46,7 +50,7 @@ void main(void) {
         // If we've hit an opaque fragment (occluder), then get new distance...
         // If the new distance is below the current, then we'll use that for our ray
         float caster = data.a;
-        if (caster > THRESHOLD) {
+        if (caster > THRESHOLD && z <= data.r) {
             // Adds a little extra to get light closer to edges
             distance = min(distance, dst) + small_length;
 

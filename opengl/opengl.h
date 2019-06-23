@@ -94,6 +94,7 @@ private:
 
     int     m_uniform_occluder_texture;
     int     m_uniform_occluder_alpha;
+    int     m_uniform_occluder_depth;
 
     // Shadow Map Shader
     QOpenGLShaderProgram m_shadow_shader;
@@ -104,6 +105,7 @@ private:
     int     m_uniform_shadow_texture;
     int     m_uniform_shadow_resolution;
     int     m_uniform_shadow_ray_count;
+    int     m_uniform_shadow_depth;
 
     // 2D Light Shader
     QOpenGLShaderProgram m_light_shader;

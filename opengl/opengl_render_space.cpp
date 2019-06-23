@@ -262,6 +262,7 @@ void OpenGL::drawSpaceOccluder() {
             alpha *= static_cast<float>(fade_percent);
         }
         m_occluder_shader.setUniformValue( m_uniform_occluder_alpha,      alpha );
+        m_occluder_shader.setUniformValue( m_uniform_occluder_depth,      static_cast<float>(object->getZOrder()) );
 
         // ***** Draw triangles using shader program
         glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

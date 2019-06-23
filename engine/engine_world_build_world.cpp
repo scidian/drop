@@ -92,6 +92,7 @@ void DrEngineWorld::buildSpace(Demo_Space new_space_type) {
     light2->blur = 1.0f;
     light2->shadows = 1.0f;
     light2->light_size = 1500;
+    light2->setZOrder(300);
     light2->setShouldProcess(false);
     light2->setHasBeenProcessed(true);
     objects.append(light2);
