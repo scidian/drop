@@ -73,6 +73,23 @@ void OpenGL::initializeGL() {
     m_uniform_kernel =      m_shader.uniformLocation(   "u_kernel" );
 
 
+    // ***** Initialize our Occluder Map Shader
+    QOpenGLShader vOccluderShader( QOpenGLShader::Vertex );     vOccluderShader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader fOccluderShader( QOpenGLShader::Fragment );   fOccluderShader.compileSourceFile( ":/shaders/occluder_frag.glsl" );
+    m_occluder_shader.addShader( &vOccluderShader );
+    m_occluder_shader.addShader( &fOccluderShader );
+    m_occluder_shader.link();
+
+    // Shadow Vertex Shader Input
+    m_attribute_occluder_vertex =     m_occluder_shader.attributeLocation( "vertex" );
+    m_attribute_occluder_tex_coord =  m_occluder_shader.attributeLocation( "texture_coordinates" );
+    m_uniform_occluder_matrix =       m_occluder_shader.uniformLocation(   "u_matrix" );
+
+    // Shadow Fragment Shader Input
+    m_uniform_occluder_texture =      m_occluder_shader.uniformLocation(   "u_texture" );
+    m_uniform_occluder_alpha =        m_occluder_shader.uniformLocation(   "u_alpha" );
+
+
     // ***** Initialize our Shadow Map Shader
     QOpenGLShader vShadowShader( QOpenGLShader::Vertex );     vShadowShader.compileSourceFile( ":/shaders/default_vert.glsl" );
     QOpenGLShader fShadowShader( QOpenGLShader::Fragment );   fShadowShader.compileSourceFile( ":/shaders/shadow_map_frag.glsl" );
@@ -110,6 +127,7 @@ void OpenGL::initializeGL() {
     m_uniform_light_cone =          m_light_shader.uniformLocation(   "u_cone" );
     m_uniform_light_shadows =       m_light_shader.uniformLocation(   "u_light_shadows" );
     m_uniform_light_intensity =     m_light_shader.uniformLocation(   "u_intensity" );
+    m_uniform_light_blur =          m_light_shader.uniformLocation(   "u_blur" );
 
 }
 

@@ -17,9 +17,22 @@
 #include "helper.h"
 #include "opengl/opengl.h"
 
+//####################################################################################
+//##        Allocate Occluder Map
+//####################################################################################
+void OpenGL::bindOccluderBuffer() {
+    int desired_x = width()* devicePixelRatio();
+    int desired_y = height()*devicePixelRatio();
+    if (!m_occluder_fbo || (m_occluder_fbo->width() != desired_x || m_occluder_fbo->height() != desired_y)) {
+        delete m_occluder_fbo;
+        m_occluder_fbo =  new QOpenGLFramebufferObject(desired_x, desired_y);
+    }
+    m_occluder_fbo->bind();
 
-const int   c_max_rays = 1024;             // Maximum number of rays to send out
-
+    // Clear the buffers
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+}
 
 //####################################################################################
 //##        Allocate Light Occluder Frame Buffer Object
@@ -127,7 +140,7 @@ void OpenGL::drawShadowMap(DrEngineLight *light) {
 
 
 //####################################################################################
-//##        Renders the light to the Default Screen Buffer using the Shadow Map
+//##        Renders the light to the using the Shadow Map
 //####################################################################################
 void OpenGL::draw2DLight(DrEngineLight *light) {
 
@@ -153,18 +166,14 @@ void OpenGL::draw2DLight(DrEngineLight *light) {
                                     static_cast<float>(light->color.greenF()),
                                     static_cast<float>(light->color.blueF()) );
 
-    ///float cone_1 = qDegreesToRadians( 30.0f);    // Pac-man
-    ///float cone_2 = qDegreesToRadians(330.0f);
-    ///float cone_1 = qDegreesToRadians(330.0f);    // Small cone
-    ///float cone_2 = qDegreesToRadians( 30.0f);
-    float cone_1 = qDegreesToRadians(  0.0f);       // Whole Circle
-    float cone_2 = qDegreesToRadians(360.0f);
+    float cone_1 = qDegreesToRadians(static_cast<float>(light->cone.x()));
+    float cone_2 = qDegreesToRadians(static_cast<float>(light->cone.y()));
     if (cone_1 < 0.0f) cone_1 += (2.0f * 3.141592f);
     if (cone_2 < 0.0f) cone_2 += (2.0f * 3.141592f);
     m_light_shader.setUniformValue( m_uniform_light_cone, cone_1, cone_2);
-
     m_light_shader.setUniformValue( m_uniform_light_shadows,   light->shadows );
     m_light_shader.setUniformValue( m_uniform_light_intensity, light->intensity );
+    m_light_shader.setUniformValue( m_uniform_light_blur,      light->blur );
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
     QMatrix4x4 m_matrix = m_projection * m_model_view;

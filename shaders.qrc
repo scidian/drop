@@ -4,5 +4,6 @@
         <file>shaders/default_vert.glsl</file>
         <file>shaders/shadow_map_frag.glsl</file>
         <file>shaders/2d_light_frag.glsl</file>
+        <file>shaders/occluder_frag.glsl</file>
     </qresource>
 </RCC>

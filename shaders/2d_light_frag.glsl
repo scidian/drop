@@ -12,12 +12,13 @@ varying highp vec2  coordinates;                    // Texture Coodinates
 
 // ***** Input from Engine
 uniform sampler2D   u_texture;                      // Shadow Map 1D
-uniform vec2        u_resolution;                   // Light Radius, Shrink Multiplier
+uniform highp vec2  u_resolution;                   // Light Radius, Shrink Multiplier
 
 uniform vec3        u_color;                        // Light Color, r/g/b       0.0 to 1.0 x 3
-uniform vec2        u_cone;                         // Start angle, End Angle   0.0, 360.0 is Full Circle
-uniform float       u_light_shadows;                // Visible shadows          0.0 to 100.0
-uniform float       u_intensity;                    // Intensity                0.0 to 100.0?
+uniform lowp vec2   u_cone;                         // Start angle, End Angle   0.0, 360.0 is Full Circle
+uniform lowp float  u_light_shadows;                // Visible shadows          0.0 to 100.0
+uniform lowp float  u_intensity;                    // Intensity                0.0 to 100.0?
+uniform lowp float  u_blur;                         // Blur                     0.0 to 100.0
 
 const float         PI = 3.14159;
 
@@ -50,7 +51,7 @@ void main(void) {
     float center = sample(tc, r);
 
     // We multiply the blur amount by our distance from center, this leads to more blurriness as the shadow "fades away"
-    float blur = (1.0 / u_resolution.x) * (smoothstep(0.0, 1.0, r) * u_resolution.y);
+    float blur = (1.0 / u_resolution.x) * (smoothstep(0.0, 1.0, r) * u_resolution.y) * (u_blur * 0.1);
 
     // Now we use a simple gaussian blur, sum of 1.0 == in light, 0.0 == in shadow
     float sum = 0.0;
@@ -68,8 +69,10 @@ void main(void) {
     sum = (sum + u_light_shadows) / (1.0 + u_light_shadows);
     sum *= u_intensity;
 
-    // Multiply the summed amount by our distance, which gives us a radial falloff, then multiply by light color
+    // Multiply the sum by our distance, which gives us a radial falloff
     float amount = sum * (smoothstep(1.0, 0.0, r) * u_resolution.y);
+
+    // Multiply by light color
     gl_FragColor = vec4(u_color, 1.0) * vec4(amount, amount, amount, amount);
 }
 

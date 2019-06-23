@@ -46,7 +46,7 @@ QVector3D OpenGL::mapFromScreen(QPointF point) {
 
     QVector3D vec;
     if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
-        vec = QVector3D( x_pos, y_pos, 0).unproject( m_model_view, m_projection, viewport);
+        vec = QVector3D( x_pos, y_pos, 0 ).unproject( m_model_view, m_projection, viewport);
         vec.setX( vec.x() / m_scale );
         vec.setY( vec.y() / m_scale );
         vec.setZ( vec.z() / m_scale );
@@ -73,8 +73,8 @@ QVector3D OpenGL::mapFromScreen(QPointF point) {
 
         // Unproject at near and far plane
         QVector3D near, far;
-        near = QVector3D( x_pos, y_pos, 0.0f).unproject( m_model_view, m_projection, viewport);
-        far =  QVector3D( x_pos, y_pos, 1.0f).unproject( m_model_view, m_projection, viewport);
+        near = QVector3D( x_pos, y_pos, 0.0f ).unproject( m_model_view, m_projection, viewport);
+        far =  QVector3D( x_pos, y_pos, 1.0f ).unproject( m_model_view, m_projection, viewport);
 
         // Find distance to z plane 0 as a percentage, and interpolate between the two near and far plane mouse points
         float z_total = abs(near.z()) + abs(far.z());
@@ -88,6 +88,27 @@ QVector3D OpenGL::mapFromScreen(QPointF point) {
 
     return vec;
 }
+
+
+//####################################################################################
+//##        Maps 3D Point to / from 2D Occluder Map Coordinates
+//####################################################################################
+QPointF OpenGL::mapToOccluder(QVector3D point3D) {
+    QRect viewport = QRect(0, 0, m_occluder_fbo->width() * devicePixelRatio(), m_occluder_fbo->height() * devicePixelRatio());
+
+    float x_pos, y_pos, z_pos;
+    x_pos = point3D.x() * c_occluder_scale * m_scale;
+    y_pos = point3D.y() * c_occluder_scale * m_scale;
+    z_pos = point3D.z() * c_occluder_scale * m_scale;
+
+    QMatrix4x4 identity;
+    identity.setToIdentity();
+    QVector3D vec = QVector3D(x_pos, y_pos, z_pos).project( identity, occluderMatrix(), viewport);
+    return QPointF( static_cast<double>(vec.x()),  static_cast<double>((height() * devicePixelRatio()) - vec.y()) );
+}
+
+
+
 
 
 

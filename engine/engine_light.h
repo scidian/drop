@@ -22,9 +22,15 @@ public:
     QPointF         position = QPointF(0.0, 0.0);           // Light position in the world
     QColor          color = QColor(192, 64, 192);           // Color of light
     QPointF         cone = QPointF(0.0, 360.0);             // Start / end angle of light
+                                                            //      float cone_1 = qDegreesToRadians( 30.0f);    // Pac-man
+                                                            //      float cone_2 = qDegreesToRadians(330.0f);
+                                                            //      float cone_1 = qDegreesToRadians(330.0f);    // Small cone
+                                                            //      float cone_2 = qDegreesToRadians( 30.0f);
+                                                            //      float cone_1 = qDegreesToRadians(  0.0f);   // Whole Circle
+                                                            //      float cone_2 = qDegreesToRadians(360.0f);
     float           shadows = 1.0f;                         // Visibility of shadows, 0 to 100
     float           intensity = 1.0f;                       // Intensity of light, 0 to 100
-
+    float           blur = 1.0f;                            // Blur of shadows, 0 to 100
 
 
     // ***** For use by engine

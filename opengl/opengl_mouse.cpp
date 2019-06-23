@@ -141,7 +141,7 @@ void OpenGL::zoomInOut(int level) {
     m_zoom += level;
     if (m_zoom > 500) m_zoom = 500;
     if (m_zoom < -40) m_zoom = -40;
-    m_scale = static_cast<float>(qPow(2.0, (m_zoom - 250.0) / 50.0));
+    m_transfer_scale = static_cast<float>(qPow(2.0, (m_zoom - 250.0) / 50.0));
 }
 
 

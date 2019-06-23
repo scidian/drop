@@ -25,8 +25,12 @@ class DrEngineLight;
 class DrEngineObject;
 class FormEngine;
 
-// Type definitions
+// Type Definitions
 typedef std::chrono::high_resolution_clock Clock;
+
+// OpenGL Constants
+const float c_occluder_scale = .75f;            // Scale to use for occlusion map
+const int   c_max_rays = 4096;                  // Maximum number of rays to send out during shadow map calculations
 
 
 //####################################################################################
@@ -55,8 +59,10 @@ private:
     float           m_background_blue = 0;
 
     // Frame Buffers
-    QOpenGLFramebufferObject *m_fbo = nullptr;                  // Used for offscreen rendering
-    QOpenGLFramebufferObject *m_texture_fbo = nullptr;          // m_fbo must be copied to a non-multisampled fbo before being used as a texture
+    QOpenGLFramebufferObject *m_render_fbo = nullptr;           // Used for offscreen rendering
+    QOpenGLFramebufferObject *m_texture_fbo = nullptr;          // m_render_fbo must be copied to a non-multisampled fbo before being used as a texture
+    QOpenGLFramebufferObject *m_occluder_fbo = nullptr;         // Used for rendering an occlusion map for use with lights
+
     QOpenGLFramebufferObject *m_lights_fbo = nullptr;           // Loads all the lights for rendering onto default screen buffer
 
     // Shader Variables
@@ -83,6 +89,15 @@ private:
     int     m_uniform_kernel;                                   // Kernel Effects?
 
     // Shadow Map Shader
+    QOpenGLShaderProgram m_occluder_shader;
+    int     m_attribute_occluder_vertex;
+    int     m_attribute_occluder_tex_coord;
+    int     m_uniform_occluder_matrix;
+
+    int     m_uniform_occluder_texture;
+    int     m_uniform_occluder_alpha;
+
+    // Shadow Map Shader
     QOpenGLShaderProgram m_shadow_shader;
     int     m_attribute_shadow_vertex;
     int     m_attribute_shadow_tex_coord;
@@ -104,6 +119,7 @@ private:
     int     m_uniform_light_cone;
     int     m_uniform_light_shadows;
     int     m_uniform_light_intensity;
+    int     m_uniform_light_blur;
 
 
 public:
@@ -132,6 +148,7 @@ public:
     QPointF         mapToScreen(double x, double y, double z);
     QPointF         mapToScreen(float x, float y, float z);
     QPointF         mapToScreen(QVector3D point3D);
+    QPointF         mapToOccluder(QVector3D point3D);
     void            zoomInOut(int level);
 
     // Render Calls
@@ -145,10 +162,12 @@ public:
     void            drawDebugHealthNative(QPainter &painter);
     void            drawDebugJoints(QPainter &painter);
     void            drawDebugShapes(QPainter &painter);
-    void            drawFrameBufferToScreenBuffer(QOpenGLFramebufferObject *fbo);
+    void            drawFrameBufferToScreenBuffer(QOpenGLFramebufferObject *fbo, bool use_kernel = false);
     void            drawSpace();
+    void            drawSpaceOccluder();
     QColor          objectDebugColor(DrEngineObject *object, bool text_color = false);
     void            updateViewMatrix();
+    QMatrix4x4      occluderMatrix();
     void            setShaderDefaultValues(float texture_width, float texture_height);
     void            setNumberTextureCoordinates(QString letter, std::vector<float> &texture_coordinates);
     void            setVertexFromSides(QVector<GLfloat> &vertices, float left, float right, float top, float bottom);
@@ -156,6 +175,7 @@ public:
 
     // Soft Shadows
     void            bindLightBuffer(DrEngineLight *light);
+    void            bindOccluderBuffer();
     void            bindShadowBuffer(DrEngineLight *light);
     void            draw2DLight(DrEngineLight *light);
     void            drawShadowMap(DrEngineLight *light);

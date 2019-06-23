@@ -34,57 +34,41 @@ void OpenGL::paintGL() {
     EngineObjects &objects = m_engine->getCurrentWorld()->objects;
     std::sort(objects.begin(), objects.end(), [] (const DrEngineThing *a, const DrEngineThing *b) { return a->z_order < b->z_order; });
 
-    // ***** Update Camera / View Matrix
-    updateViewMatrix();
-
-    // ***** Render Onto Frame Buffer Object
-    bindOffscreenBuffer();                                              // Create / Bind Offscreen Frame Buffer Object
-    ///drawCube( QVector3D( 2000, 400, -300) );                         // Render Background 3D Objects
-    drawSpace();                                                        // Render cpSpace Objects
-    ///drawCube( QVector3D(1600, 500, 600) );                           // Render Foreground 3D Objects
-    m_fbo->release();                                                   // Relase Frame Buffer Object
-    QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_fbo);    // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
 
 
-    // ***** Calculate 2D Light Shadow Maps
-    for (auto light : m_engine->getCurrentWorld()->lights) {
-        if (light == nullptr) continue;
-
-        light->screen_pos = mapToScreen(light->position.x(), light->position.y(), 0.0);
-
-        double middle = m_texture_fbo->height() / 2.0;
-        double y_diff = middle - light->screen_pos.y();
-
-        bindLightBuffer(light);
-        QOpenGLFramebufferObject::blitFramebuffer(
-                    light->occluder_fbo, QRect(0, 0, light->occluder_fbo->width(), light->occluder_fbo->height()),
-                    m_texture_fbo, QRect(static_cast<int>( light->screen_pos.x() - (light->occluder_fbo->width() / 2.0)),
-                                         static_cast<int>( light->screen_pos.y() - (light->occluder_fbo->height()/ 2.0) + (y_diff * 2.0)),
-                                         light->occluder_fbo->width(), light->occluder_fbo->height()),
-                    GL_COLOR_BUFFER_BIT, GL_NEAREST);
-        light->occluder_fbo->release();
-
-        bindShadowBuffer(light);
-        drawShadowMap(light);
-        light->shadow_fbo->release();
-    }
-
-    // Debug buffer sizes
-    ///g_info = "W: " + QString::number(m_texture_fbo->width()) + ", H: " + QString::number(m_texture_fbo->height());
-    ///g_info += ", LFBO W: " + QString::number(m_light_fbo->width()) + ", H: " + QString::number(m_light_fbo->height());
-    ///g_info += ", SFBO W: " + QString::number(m_shadow_fbo->width()) + ", H: " + QString::number(m_shadow_fbo->height());
-    // Debug buffer images
-    ///static int count = 1;     count++;
-    ///if (count > 600 == 0) {
-    ///    Dr::ShowMessageBox("Light", QPixmap::fromImage(m_shadow_fbo->toImage()));
-    ///    ///Dr::ShowMessageBox("Light", QPixmap::fromImage(m_light_fbo->toImage()));
-    ///    count = 1;
-    ///}
-
-
-
-    // ***** Renders 2D Lights
+    // ***** If there are Lights, Render Occluder Map, Calculate Shadow Maps
     if (m_engine->getCurrentWorld()->lights.count() > 0) {
+
+        // ***** Render all objects to an occluder map
+        bindOccluderBuffer();
+        drawSpaceOccluder();
+        m_occluder_fbo->release();
+
+        // ***** Calculate 2D Light Shadow Maps
+        for (auto light : m_engine->getCurrentWorld()->lights) {
+            if (light == nullptr) continue;
+
+            light->screen_pos = mapToOccluder( QVector3D(static_cast<float>(light->position.x()), static_cast<float>(light->position.y()), 0.0f));
+            double middle = m_texture_fbo->height() / 2.0;
+            double y_diff = middle - light->screen_pos.y();
+
+            bindLightBuffer(light);
+            QOpenGLFramebufferObject::blitFramebuffer(
+                        light->occluder_fbo, QRect(0, 0, light->occluder_fbo->width(), light->occluder_fbo->height()),
+                        m_occluder_fbo, QRect(
+                            static_cast<int>(light->screen_pos.x() - (light->occluder_fbo->width() / 2.0 * double(c_occluder_scale))),
+                            static_cast<int>(light->screen_pos.y() - (light->occluder_fbo->height()/ 2.0 * double(c_occluder_scale)) + (y_diff * 2.0)),
+                            static_cast<int>(light->occluder_fbo->width()* c_occluder_scale),
+                            static_cast<int>(light->occluder_fbo->height()*c_occluder_scale)),
+                        GL_COLOR_BUFFER_BIT, GL_NEAREST);
+            light->occluder_fbo->release();
+
+            bindShadowBuffer(light);
+            drawShadowMap(light);
+            light->shadow_fbo->release();
+        }
+
+        // ***** Renders 2D Lights onto Light frame buffer
         m_lights_fbo->bind();
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -94,6 +78,17 @@ void OpenGL::paintGL() {
         }
         m_lights_fbo->release();
     }
+
+
+
+    // ***** Render Onto Frame Buffer Object
+    updateViewMatrix();                                                         // Update Camera / View Matrix
+    bindOffscreenBuffer();                                                      // Create / Bind Offscreen Frame Buffer Object
+    ///drawCube( QVector3D( 2000, 400, -300) );                                 // Render Background 3D Objects
+    drawSpace();                                                                // Render cpSpace Objects
+    ///drawCube( QVector3D(1600, 500, 600) );                                   // Render Foreground 3D Objects
+    m_render_fbo->release();                                                    // Relase Frame Buffer Object
+    QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);     // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
 
     // ***** Bind default Qt FrameBuffer, clear and set up for drawing
     QOpenGLFramebufferObject::bindDefault();
@@ -105,7 +100,7 @@ void OpenGL::paintGL() {
 
     // ***** Renders Frame Buffer Object to screen buffer as a textured quad, with post processing available
     if (m_engine->getCurrentWorld()->lights.count() > 0)
-        drawFrameBufferToScreenBuffer(m_lights_fbo);
+        drawFrameBufferToScreenBuffer(m_lights_fbo, true);
     drawFrameBufferToScreenBuffer(m_texture_fbo);
 
     // ***** Draws Debug Shapes / Text Onto Frame Buffer Object
@@ -124,8 +119,9 @@ void OpenGL::paintGL() {
 //####################################################################################
 void OpenGL::bindOffscreenBuffer() {
 
-    if (!m_fbo || !m_texture_fbo || ! m_lights_fbo || (m_fbo->width() != width() || m_fbo->height() != height())) {
-        delete m_fbo;
+    if (!m_render_fbo || !m_texture_fbo || ! m_lights_fbo ||
+        (m_render_fbo->width() != width()*devicePixelRatio() || m_render_fbo->height() != height()*devicePixelRatio())) {
+        delete m_render_fbo;
         delete m_texture_fbo;
         delete m_lights_fbo;
         QOpenGLFramebufferObjectFormat format;
@@ -134,14 +130,14 @@ void OpenGL::bindOffscreenBuffer() {
         ///format.setTextureTarget(GL_TEXTURE_2D);                      // This is set automatically, cannot be gl_texture_2d if multisampling is enabled
         ///format.setInternalTextureFormat(GL_RGBA32F_ARB);             // This is set automatically depending on the system
         ///format.setMipmap(true);                                      // Don't need
-        m_fbo = new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format);
+        m_render_fbo = new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format);
 
         QOpenGLFramebufferObjectFormat format2;
         format.setAttachment(QOpenGLFramebufferObject::Attachment::NoAttachment);
         m_texture_fbo = new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format2);
         m_lights_fbo =  new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format2);
     }
-    m_fbo->bind();
+    m_render_fbo->bind();
 
     // Clear the buffers
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -237,7 +233,7 @@ void OpenGL::setVertexFromSides(QVector<GLfloat> &vertices, float left, float ri
 //##        Renders Frame Buffer Object to screen buffer as a textured quad
 //##            Post processing available through the fragment shader
 //####################################################################################
-void OpenGL::drawFrameBufferToScreenBuffer(QOpenGLFramebufferObject *fbo) {
+void OpenGL::drawFrameBufferToScreenBuffer(QOpenGLFramebufferObject *fbo, bool use_kernel) {
 
     // Enable alpha channel
     glEnable(GL_BLEND);
@@ -283,7 +279,7 @@ void OpenGL::drawFrameBufferToScreenBuffer(QOpenGLFramebufferObject *fbo) {
     m_shader.setUniformValue( m_uniform_contrast,   m_engine->getCurrentWorld()->contrast );
     m_shader.setUniformValue( m_uniform_brightness, m_engine->getCurrentWorld()->brightness );
 
-    ///m_shader.setUniformValue( m_uniform_kernel,     true );                // Turns on Kernel filter
+    m_shader.setUniformValue( m_uniform_kernel,     use_kernel );                // Turns on Kernel filter (blur / sharpen / etc)
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
