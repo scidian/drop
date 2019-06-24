@@ -29,8 +29,8 @@ class FormEngine;
 typedef std::chrono::high_resolution_clock Clock;
 
 // OpenGL Constants
-const float c_occluder_scale = 0.75f;           // Scale to use for occlusion map
-const int   c_max_rays = 4096;                  // Maximum number of rays to send out during shadow map calculations
+const float c_occluder_scale = 1.00f;           // Scale to use for occlusion map
+const int   c_max_rays = 2048;                  // Maximum number of rays to send out during shadow map calculations
 
 
 //####################################################################################
@@ -149,6 +149,7 @@ public:
     QPointF         mapToScreen(float x, float y, float z);
     QPointF         mapToScreen(QVector3D point3D);
     QPointF         mapToOccluder(QVector3D point3D);
+    float           viewScale();
     void            zoomInOut(int level);
 
     // Render Calls

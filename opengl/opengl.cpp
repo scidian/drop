@@ -10,6 +10,7 @@
 #include "engine/engine.h"
 #include "engine/engine_object.h"
 #include "engine/engine_texture.h"
+#include "engine/engine_world.h"
 #include "engine/form_engine.h"
 #include "opengl/opengl.h"
 
@@ -31,6 +32,14 @@ OpenGL::~OpenGL() {
         delete m_texture_fbo;
         delete m_occluder_fbo;
     doneCurrent();
+}
+
+
+//####################################################################################
+//##        Return Scale Being Used
+//####################################################################################
+float OpenGL::viewScale() {
+    return (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) ? m_scale : 1.0f;
 }
 
 

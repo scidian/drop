@@ -15,7 +15,7 @@ uniform sampler2D   u_texture;
 uniform vec2        u_resolution;
 uniform float       u_ray_count;
 
-uniform float       u_depth;                        // Z-Order of item, (recalculated to number from 0.0 to 1.0
+uniform highp float u_depth;                        // Z-Order of item, (recalculated to number from 0.0 to 1.0
                                                     //                   assuming near / far plane of -1000 to 1000)
 
 // Other Variables
@@ -25,7 +25,7 @@ const float         PI = 3.14159;                   // Pi
 void main(void) {
     float distance =     1.0;
     float rays =         u_ray_count;
-    float z =           (u_depth + 1000.0) / 2000.0;
+    float z =           (u_depth + 990.0) / 2000.0;     // 2000 / 255 = 7.8, so offset light by 10 (1000 - 10 = 990, approx value of 1) for better z ordering
     float full_length =  u_resolution.x;
     float ray_length =   u_resolution.y;
     float ray_diff =     ray_length / rays;

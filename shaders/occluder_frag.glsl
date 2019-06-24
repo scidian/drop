@@ -14,7 +14,7 @@ varying highp vec2  coordinates;                    // Texture Coodinates
 uniform sampler2D   u_tex;                          // Texture
 uniform lowp float  u_alpha;                        // Opacity
 
-uniform float       u_depth;                        // Z-Order of item, (recalculated to number from 0.0 to 1.0
+uniform highp float u_depth;                        // Z-Order of item, (recalculated to number from 0.0 to 1.0
                                                     //                   assuming near / far plane of -1000 to 1000)
 
 void main( void ) {

@@ -23,15 +23,9 @@ QPointF OpenGL::mapToScreen(QVector3D point3D) {
     QRect viewport = QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
 
     float x_pos, y_pos, z_pos;
-    if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
-        x_pos = point3D.x() * m_scale;
-        y_pos = point3D.y() * m_scale;
-        z_pos = point3D.z() * m_scale;
-    } else {
-        x_pos = point3D.x();
-        y_pos = point3D.y();
-        z_pos = point3D.z();
-    }
+    x_pos = point3D.x() * viewScale();
+    y_pos = point3D.y() * viewScale();
+    z_pos = point3D.z() * viewScale();
     QVector3D vec = QVector3D( x_pos, y_pos, z_pos).project( m_model_view, m_projection, viewport);
     return QPointF( static_cast<double>(vec.x()),  static_cast<double>((height() * devicePixelRatio()) - vec.y()) );
 }
@@ -97,9 +91,9 @@ QPointF OpenGL::mapToOccluder(QVector3D point3D) {
     QRect viewport = QRect(0, 0, m_occluder_fbo->width() * devicePixelRatio(), m_occluder_fbo->height() * devicePixelRatio());
 
     float x_pos, y_pos, z_pos;
-    x_pos = point3D.x() * c_occluder_scale * m_scale;
-    y_pos = point3D.y() * c_occluder_scale * m_scale;
-    z_pos = point3D.z() * c_occluder_scale * m_scale;
+    x_pos = point3D.x() * c_occluder_scale * viewScale();
+    y_pos = point3D.y() * c_occluder_scale * viewScale();
+    z_pos = point3D.z() * c_occluder_scale * viewScale();
 
     QMatrix4x4 identity;
     identity.setToIdentity();

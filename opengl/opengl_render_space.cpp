@@ -86,19 +86,12 @@ void OpenGL::drawSpace() {
         QPointF center = object->getBodyPosition();
 
         float x, y, z, half_width, half_height;
-        if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
-            x = static_cast<float>(center.x()) * m_scale;
-            y = static_cast<float>(center.y()) * m_scale;
-            z = static_cast<float>(object->z_order) * m_scale;
-            half_width =  texture_width *  object->getScaleX() * m_scale / 2.0f;
-            half_height = texture_height * object->getScaleY() * m_scale / 2.0f;
-        } else {
-            x = static_cast<float>(center.x());
-            y = static_cast<float>(center.y());
-            z = static_cast<float>(object->z_order);
-            half_width =  texture_width *  object->getScaleX() / 2.0f;
-            half_height = texture_height * object->getScaleY() / 2.0f;
-        }
+        x = static_cast<float>(center.x()) * viewScale();
+        y = static_cast<float>(center.y()) * viewScale();
+        z = static_cast<float>(object->z_order) * viewScale();
+        half_width =  texture_width *  object->getScaleX() * viewScale() / 2.0f;
+        half_height = texture_height * object->getScaleY() * viewScale() / 2.0f;
+
 
         // ***** Create rotation matrix, apply rotation to object
         QMatrix4x4 matrix;
@@ -179,12 +172,12 @@ void OpenGL::drawSpace() {
 QMatrix4x4 OpenGL::occluderMatrix() {
     QMatrix4x4 matrix;
     matrix.setToIdentity();
-    float cam_x =  (m_engine->getCurrentWorld()->getCameraPos().x()) * m_scale * c_occluder_scale;
-    float cam_y =  (m_engine->getCurrentWorld()->getCameraPos().y() + 200) * m_scale * c_occluder_scale;
-    float left =   cam_x - (width() *  devicePixelRatio() / 2.0f);
-    float right =  cam_x + (width() *  devicePixelRatio() / 2.0f);
-    float top =    cam_y + (height() * devicePixelRatio() / 2.0f);
-    float bottom = cam_y - (height() * devicePixelRatio() / 2.0f);
+    float cam_x =  (m_engine->getCurrentWorld()->getCameraPos().x()) * viewScale() * c_occluder_scale;
+    float cam_y =  (m_engine->getCurrentWorld()->getCameraPos().y() + 200) * viewScale() * c_occluder_scale;
+    float left =   cam_x - (m_occluder_fbo->width() / 2.0f);
+    float right =  cam_x + (m_occluder_fbo->width() / 2.0f);
+    float top =    cam_y + (m_occluder_fbo->height() / 2.0f);
+    float bottom = cam_y - (m_occluder_fbo->height() / 2.0f);
     matrix.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
     return matrix;
 }
@@ -226,12 +219,11 @@ void OpenGL::drawSpaceOccluder() {
         QPointF center = object->getBodyPosition();
 
         float x, y, z, half_width, half_height;
-        x = static_cast<float>(center.x()) * m_scale * c_occluder_scale;
-        y = static_cast<float>(center.y()) * m_scale * c_occluder_scale;
-        z = static_cast<float>(object->z_order) * m_scale * c_occluder_scale;
-        half_width =  static_cast<float>(texture->width()) *  object->getScaleX() * m_scale * c_occluder_scale / 2.0f;
-        half_height = static_cast<float>(texture->height()) * object->getScaleY() * m_scale * c_occluder_scale / 2.0f;
-
+        x = static_cast<float>(center.x()) * viewScale() * c_occluder_scale;
+        y = static_cast<float>(center.y()) * viewScale() * c_occluder_scale;
+        z = static_cast<float>(object->z_order) * viewScale() * c_occluder_scale;
+        half_width =  static_cast<float>(texture->width()) *  object->getScaleX() * viewScale() * c_occluder_scale / 2.0f;
+        half_height = static_cast<float>(texture->height()) * object->getScaleY() * viewScale() * c_occluder_scale / 2.0f;
 
         // ***** Create rotation matrix, apply rotation to object
         QMatrix4x4 matrix;
@@ -244,7 +236,7 @@ void OpenGL::drawSpaceOccluder() {
         // ***** Load vertices for this object
         QVector<GLfloat> vertices;
         vertices.clear();
-        vertices.resize( 12 );              // in sets of x, y, z
+        vertices.resize( 12 );                  // in sets of x, y, z
         vertices[0] = top_right.x() + x;        vertices[1] = top_right.y() + y;        vertices[2] = z;            // Top Right
         vertices[3] = top_left.x()  + x;        vertices[4] = top_left.y()  + y;        vertices[5] = z;            // Top Left
         vertices[6] = bot_right.x() + x;        vertices[7] = bot_right.y() + y;        vertices[8] = z;            // Bottom Right
@@ -253,10 +245,11 @@ void OpenGL::drawSpaceOccluder() {
         m_occluder_shader.enableAttributeArray( m_attribute_occluder_vertex );
 
         // ***** Set Shader Variables
+        // Texture unit 0
         m_occluder_shader.setUniformValue( m_uniform_occluder_texture, 0 );
 
-        // Fade away dying object
-        float alpha = object->getOpacity();                                         // Start with object alpha
+        // Fade away dying object, start with object alpha
+        float alpha = object->getOpacity();
         if (!object->isAlive() && object->getFadeOnDeath()) {
             double fade_percent = 1.0 - (static_cast<double>(Dr::MillisecondsElapsed(object->getFadeTimer())) / static_cast<double>(object->getFadeDelay()));
             alpha *= static_cast<float>(fade_percent);

@@ -52,21 +52,12 @@ void OpenGL::drawCube(QVector3D center) {
         float width =  texture->width() *  multi;
         float height = texture->height() * multi;
 
-        if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
-            x = static_cast<float>(center.x()) * m_scale;
-            y = static_cast<float>(center.y()) * m_scale;
-            z = static_cast<float>(center.z()) * m_scale;
-            half_width =  width  * m_scale / 2.0f;
-            half_height = height * m_scale / 2.0f;
-            half_no_border =  width * m_scale / 2.0f;
-        } else {
-            x = static_cast<float>(center.x());
-            y = static_cast<float>(center.y());
-            z = static_cast<float>(center.z());
-            half_width =  width  / 2.0f;
-            half_height = height / 2.0f;
-            half_no_border = width / 2.0f;
-        }
+        x = static_cast<float>(center.x()) * viewScale();
+        y = static_cast<float>(center.y()) * viewScale();
+        z = static_cast<float>(center.z()) * viewScale();
+        half_width =  width  * viewScale() / 2.0f;
+        half_height = height * viewScale() / 2.0f;
+        half_no_border =  width * viewScale() / 2.0f;
 
         // ***** Create rotation matrix, #NOTE: rotations happend in reverse order
         QMatrix4x4 matrix;
