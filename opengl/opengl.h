@@ -29,7 +29,7 @@ class FormEngine;
 typedef std::chrono::high_resolution_clock Clock;
 
 // OpenGL Constants
-const float c_occluder_scale = 1.00f;           // Scale to use for occlusion map
+const float c_occluder_scale = 0.50f;           // Scale to use for occlusion map
 const int   c_max_rays = 2048;                  // Maximum number of rays to send out during shadow map calculations
 
 
@@ -175,7 +175,7 @@ public:
     void            setWholeTextureCoordinates(std::vector<float> &texture_coords);
 
     // Soft Shadows
-    void            bindOccluderBuffer();
+    void            bindOccluderMapBuffer();
     void            bindLightOcculderBuffer(DrEngineLight *light);
     void            bindLightShadowBuffer(DrEngineLight *light);
     void            draw2DLight(DrEngineLight *light);

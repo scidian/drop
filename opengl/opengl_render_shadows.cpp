@@ -17,15 +17,14 @@
 #include "helper.h"
 #include "opengl/opengl.h"
 
+const int c_max_fbo_size = 4096;
+
 //####################################################################################
 //##        Allocate Occluder Map
 //####################################################################################
-void OpenGL::bindOccluderBuffer() {
-    //int desired_x = width()* devicePixelRatio();
-    //int desired_y = height()*devicePixelRatio();
-
-    int desired_x = 4096 * devicePixelRatio();
-    int desired_y = 4096 * devicePixelRatio();
+void OpenGL::bindOccluderMapBuffer() {
+    int desired_x = c_max_fbo_size * devicePixelRatio();
+    int desired_y = c_max_fbo_size * devicePixelRatio();
 
     if (!m_occluder_fbo || (m_occluder_fbo->width() != desired_x || m_occluder_fbo->height() != desired_y)) {
         delete m_occluder_fbo;
@@ -44,10 +43,7 @@ void OpenGL::bindOccluderBuffer() {
 void OpenGL::bindLightOcculderBuffer(DrEngineLight *light) {
     // Calculate size of light texture (fbo)
     light->light_radius = static_cast<int>(light->light_size * viewScale());
-    light->light_radius_fitted = light->light_radius;
-    if (light->light_radius > width()*2*devicePixelRatio() && light->light_radius > height()*2*devicePixelRatio()) {
-        light->light_radius_fitted = (width() > height()) ? width()*2*devicePixelRatio() : height()*2*devicePixelRatio();
-    }
+    light->light_radius_fitted = (light->light_radius > c_max_fbo_size) ? c_max_fbo_size : light->light_radius;
 
     // Check Frame Buffer Object is initialized
     bool need_to_create_new = false;

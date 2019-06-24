@@ -29,7 +29,7 @@ void main(void) {
     float full_length =  u_resolution.x;
     float ray_length =   u_resolution.y;
     float ray_diff =     ray_length / rays;
-    float small_length = 0.02 / (ray_length * (ray_length / full_length));
+    float small_length = 0.01 / (ray_length * (ray_length / full_length));
 
     for (float travel_y = 0.0; travel_y < ray_length; travel_y += 1.0 * ray_diff) {
 

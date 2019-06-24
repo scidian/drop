@@ -38,21 +38,13 @@ void OpenGL::paintGL() {
     // ***** If there are Lights, Render Occluder Map, Calculate Shadow Maps
     if (m_engine->getCurrentWorld()->lights.count() > 0) {
         // Render all objects to an Occluder Map
-        bindOccluderBuffer();
+        bindOccluderMapBuffer();
         glViewport(0, 0, m_occluder_fbo->width(), m_occluder_fbo->height());
         drawSpaceOccluder();
         m_occluder_fbo->release();
         glViewport(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
 
-//        static int count = 0;
-//        count++;
-//        if (count % 600 == 0) {
-//            Dr::ShowMessageBox("fbo", QPixmap::fromImage(m_occluder_fbo->toImage()).scaled(512, 512) );
-//            count = 1;
-//        }
-
-
-        // Calculate 2D Light Shadow Maps
+        // Calculate Light 1D Shadow Maps
         for (auto light : m_engine->getCurrentWorld()->lights) {
             if (light == nullptr) continue;
             light->screen_pos = mapToOccluder( QVector3D(static_cast<float>(light->getBodyPosition().x()),
