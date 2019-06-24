@@ -28,10 +28,17 @@ class FormEngine;
 // Type Definitions
 typedef std::chrono::high_resolution_clock Clock;
 
-// OpenGL Constants
-const float c_occluder_scale = 0.50f;           // Scale to use for occlusion map
-const int   c_max_rays = 2048;                  // Maximum number of rays to send out during shadow map calculations
+// Open GL Globals - defined in opengl_initialize.cpp
+extern int  g_max_texture_size;
+extern int  g_max_rays;
+extern int  g_max_occluder_fbo_size;
+extern int  g_max_light_fbo_size;
 
+// 2D Light Constants
+const float c_occluder_scale = 3.00f;               // Scale to use for occlusion map (higher the number, less shaky the shadows)
+const int   c_desired_max_rays =           4096;    // Desired max number of rays to send out during shadow map calculations
+const int   c_desired_occluder_fbo_size =  8192;    // Desired max width and height of offscreen fbo used for shadow map
+const int   c_desired_light_fbo_size =     4096;    // Desired max width and height of offscreen fbo used for lights
 
 //####################################################################################
 //##    OpenGL
@@ -114,12 +121,15 @@ private:
     int     m_uniform_light_matrix;
 
     int     m_uniform_light_texture;
-    int     m_uniform_light_resolution;
+    int     m_uniform_light_diameter;
+    int     m_uniform_light_fitted;
+    int     m_uniform_light_shrink;
     int     m_uniform_light_color;                              // Color of light, red/green/blue (0 to 1, 0 to 1, 0 to 1)
     int     m_uniform_light_cone;
     int     m_uniform_light_shadows;
     int     m_uniform_light_intensity;
     int     m_uniform_light_blur;
+    int     m_uniform_light_draw_shadows;
 
 
 public:
@@ -178,8 +188,9 @@ public:
     void            bindOccluderMapBuffer();
     void            bindLightOcculderBuffer(DrEngineLight *light);
     void            bindLightShadowBuffer(DrEngineLight *light);
+    void            draw1DShadowMap(DrEngineLight *light);
     void            draw2DLight(DrEngineLight *light);
-    void            drawShadowMap(DrEngineLight *light);
+    void            drawShadowMaps();
 
     // Getters and Setters
     float           getScale()          { return m_scale; }

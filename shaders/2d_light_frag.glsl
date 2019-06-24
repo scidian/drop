@@ -12,13 +12,16 @@ varying highp vec2  coordinates;                    // Texture Coodinates
 
 // ***** Input from Engine
 uniform sampler2D   u_texture;                      // Shadow Map 1D
-uniform highp vec2  u_resolution;                   // Light Radius, Shrink Multiplier
+uniform float       u_light_diameter;               // Original Light Diameter
+uniform float       u_light_fitted;                 // Light Diameter Fit to Max
+uniform float       u_shrink;                       // Shrink multiplier
 
 uniform vec3        u_color;                        // Light Color, r/g/b       0.0 to 1.0 x 3
 uniform lowp vec2   u_cone;                         // Start angle, End Angle   0.0, 360.0 is Full Circle
 uniform lowp float  u_light_shadows;                // Visible shadows          0.0 to 100.0
 uniform lowp float  u_intensity;                    // Intensity                0.0 to 100.0?
 uniform lowp float  u_blur;                         // Blur                     0.0 to 100.0
+uniform bool        u_draw_shadows;                 // Draw shadows             yes or no
 
 const float         PI = 3.14159;
 
@@ -28,6 +31,9 @@ float sample(vec2 coord, float r) {
 }
 
 void main(void) {
+    //shrink_multiplier = static_cast<float>( qSqrt(double(light->getLightDiameter()) / double(light->getLightDiameterFitted())) );
+    //m_light_shader.setUniformValue( m_uniform_light_resolution, light->getLightDiameter(), shrink_multiplier);
+
     // Rectangular to Polar
     vec2  norm =    coordinates.st * 2.0 - 1.0;
     float theta =   atan(norm.y, norm.x);
@@ -44,33 +50,38 @@ void main(void) {
             return;
     }
 
-    // The tex coord to sample our 1D lookup texture, always 0.0 on y axis
-    vec2  tc = vec2(coord, 0.0);
-
-    // The center tex coord, which gives us hard shadows
-    float center = sample(tc, r);
-
-    // We multiply the blur amount by our distance from center, this leads to more blurriness as the shadow "fades away"
-    float blur = (1.0 / u_resolution.x) * (smoothstep(0.0, 1.0, r) * u_resolution.y) * (u_blur * 0.1);
-
-    // Now we use a simple gaussian blur, sum of 1.0 == in light, 0.0 == in shadow
     float sum = 0.0;
-    sum += sample(vec2(tc.x - 4.0 * blur, tc.y), r) * 0.05;
-    sum += sample(vec2(tc.x - 3.0 * blur, tc.y), r) * 0.09;
-    sum += sample(vec2(tc.x - 2.0 * blur, tc.y), r) * 0.12;
-    sum += sample(vec2(tc.x - 1.0 * blur, tc.y), r) * 0.15;
-    sum += center * 0.16;
-    sum += sample(vec2(tc.x + 1.0 * blur, tc.y), r) * 0.15;
-    sum += sample(vec2(tc.x + 2.0 * blur, tc.y), r) * 0.12;
-    sum += sample(vec2(tc.x + 3.0 * blur, tc.y), r) * 0.09;
-    sum += sample(vec2(tc.x + 4.0 * blur, tc.y), r) * 0.05;
+    if (u_draw_shadows) {
+        // The tex coord to sample our 1D lookup texture, always 0.0 on y axis
+        vec2  tc = vec2(coord, 0.0);
+
+        // The center tex coord, which gives us hard shadows
+        float center = sample(tc, r);
+
+        // We multiply the blur amount by our distance from center, this leads to more blurriness as the shadow "fades away"
+        float blur = (1.0 / u_light_diameter) * (smoothstep(0.0, 1.0, r) * u_shrink) * (u_blur * 0.1);
+
+        // Now we use a simple gaussian blur, sum of 1.0 == in light, 0.0 == in shadow
+        sum += sample(vec2(tc.x - 4.0 * blur, tc.y), r) * 0.05;
+        sum += sample(vec2(tc.x - 3.0 * blur, tc.y), r) * 0.09;
+        sum += sample(vec2(tc.x - 2.0 * blur, tc.y), r) * 0.12;
+        sum += sample(vec2(tc.x - 1.0 * blur, tc.y), r) * 0.15;
+        sum += center * 0.16;
+        sum += sample(vec2(tc.x + 1.0 * blur, tc.y), r) * 0.15;
+        sum += sample(vec2(tc.x + 2.0 * blur, tc.y), r) * 0.12;
+        sum += sample(vec2(tc.x + 3.0 * blur, tc.y), r) * 0.09;
+        sum += sample(vec2(tc.x + 4.0 * blur, tc.y), r) * 0.05;
+    } else {
+        sum = 1.0;
+    }
 
     // Add intensity and lighting in the shadows
-    sum = (sum + u_light_shadows) / (1.0 + u_light_shadows);
     sum *= u_intensity;
+    float  increase_shadows = u_light_shadows * 2.0;
+    sum = (sum + (increase_shadows * u_intensity)) / (1.0 + (increase_shadows * u_intensity));
 
     // Multiply the sum by our distance, which gives us a radial falloff
-    float amount = sum * (smoothstep(1.0, 0.0, r) * u_resolution.y);
+    float amount = sum * smoothstep(1.0, 0.0, (r * (u_light_diameter / u_light_fitted)));// * u_shrink);
 
     // Multiply by light color
     gl_FragColor = vec4(u_color, 1.0) * vec4(amount, amount, amount, amount);

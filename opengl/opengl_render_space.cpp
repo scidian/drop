@@ -200,7 +200,7 @@ void OpenGL::drawSpaceOccluder() {
     EngineObjects &objects = m_engine->getCurrentWorld()->objects;
     for (auto object : objects) {
         if (!object->hasBeenProcessed()) continue;
-        if (!object->shouldProcess()) continue;
+        if ( object->isLight()) continue;
 
         // ***** Don't draw Segments (lines)
         bool skip_object = false;

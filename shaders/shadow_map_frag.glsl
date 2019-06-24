@@ -31,7 +31,7 @@ void main(void) {
     float ray_diff =     ray_length / rays;
     float small_length = 0.01 / (ray_length * (ray_length / full_length));
 
-    for (float travel_y = 0.0; travel_y < ray_length; travel_y += 1.0 * ray_diff) {
+    for (float travel_y = 0.0; travel_y < ray_length; travel_y += ray_diff) {
 
         // Rectangular to Polar filter
         vec2   norm = vec2(coordinates.s * ray_diff, (travel_y / ray_length) ) * 2.0 - 1.0;

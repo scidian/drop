@@ -34,40 +34,8 @@ void OpenGL::paintGL() {
     EngineObjects &objects = m_engine->getCurrentWorld()->objects;
     std::sort(objects.begin(), objects.end(), [] (const DrEngineThing *a, const DrEngineThing *b) { return a->z_order < b->z_order; });
 
-
     // ***** If there are Lights, Render Occluder Map, Calculate Shadow Maps
-    if (m_engine->getCurrentWorld()->lights.count() > 0) {
-        // Render all objects to an Occluder Map
-        bindOccluderMapBuffer();
-        glViewport(0, 0, m_occluder_fbo->width(), m_occluder_fbo->height());
-        drawSpaceOccluder();
-        m_occluder_fbo->release();
-        glViewport(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
-
-        // Calculate Light 1D Shadow Maps
-        for (auto light : m_engine->getCurrentWorld()->lights) {
-            if (light == nullptr) continue;
-            light->screen_pos = mapToOccluder( QVector3D(static_cast<float>(light->getBodyPosition().x()),
-                                                         static_cast<float>(light->getBodyPosition().y()), 0.0f));
-            double middle = m_texture_fbo->height() / 2.0;
-            double y_diff = middle - light->screen_pos.y();
-
-            bindLightOcculderBuffer(light);
-            QOpenGLFramebufferObject::blitFramebuffer(
-                        light->occluder_fbo, QRect(0, 0, light->occluder_fbo->width(), light->occluder_fbo->height()),
-                        m_occluder_fbo, QRect(
-                            static_cast<int>(light->screen_pos.x() - (light->occluder_fbo->width() / 2.0 * double(c_occluder_scale))),
-                            static_cast<int>(light->screen_pos.y() - (light->occluder_fbo->height()/ 2.0 * double(c_occluder_scale)) + (y_diff * 2.0)),
-                            static_cast<int>(light->occluder_fbo->width()* c_occluder_scale),
-                            static_cast<int>(light->occluder_fbo->height()*c_occluder_scale)),
-                        GL_COLOR_BUFFER_BIT, GL_NEAREST);
-            light->occluder_fbo->release();
-
-            bindLightShadowBuffer(light);
-            drawShadowMap(light);
-            light->shadow_fbo->release();
-        }
-    }
+    drawShadowMaps();
 
     // ***** Render Onto Frame Buffer Object
     updateViewMatrix();                                                         // Update Camera / View Matrix
@@ -104,7 +72,7 @@ void OpenGL::paintGL() {
 //##        Allocate additional FBO for rendering or resize it if widget size changed
 //####################################################################################
 void OpenGL::bindOffscreenBuffer() {
-
+    // Check that off screen buffers are initialized
     if (!m_render_fbo || !m_texture_fbo ||
         (m_render_fbo->width() != width()*devicePixelRatio() || m_render_fbo->height() != height()*devicePixelRatio())) {
         delete m_render_fbo;
@@ -115,7 +83,7 @@ void OpenGL::bindOffscreenBuffer() {
         ///format.setTextureTarget(GL_TEXTURE_2D);                      // This is set automatically, cannot be gl_texture_2d if multisampling is enabled
         ///format.setInternalTextureFormat(GL_RGBA32F_ARB);             // This is set automatically depending on the system
         ///format.setMipmap(true);                                      // Don't need
-        m_render_fbo = new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format);
+        m_render_fbo =  new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format);
 
         QOpenGLFramebufferObjectFormat format2;
         format.setAttachment(QOpenGLFramebufferObject::Attachment::NoAttachment);
@@ -172,6 +140,7 @@ void OpenGL::updateViewMatrix() {
         float top =    cam_y + (height() * devicePixelRatio() / 2.0f);
         float bottom = cam_y - (height() * devicePixelRatio() / 2.0f);
         m_projection.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
+        m_model_view.scale( m_scale );
     } else {
         m_projection.perspective( 70.0f, aspect_ratio, 1.0f, 5000.0f );
         m_model_view.lookAt(eye, look_at, up);

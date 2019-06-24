@@ -83,6 +83,7 @@ void DrEngineWorld::buildSpace(Demo_Space new_space_type) {
     light1->light_size = 2000;
     light1->setShouldProcess(false);
     light1->setHasBeenProcessed(true);
+ //   light1->draw_shadows = false;
     objects.append(light1);
 
     DrEngineLight *light2 = new DrEngineLight();
@@ -95,6 +96,7 @@ void DrEngineWorld::buildSpace(Demo_Space new_space_type) {
     light2->setZOrder(300);
     light2->setShouldProcess(false);
     light2->setHasBeenProcessed(true);
+ //   light2->draw_shadows = false;
     objects.append(light2);
 
     DrEngineLight *light3 = new DrEngineLight();
@@ -106,11 +108,52 @@ void DrEngineWorld::buildSpace(Demo_Space new_space_type) {
     light3->light_size = 2500;
     light3->setShouldProcess(false);
     light3->setHasBeenProcessed(true);
+ //   light3->draw_shadows = false;
     objects.append(light3);
+
+    DrEngineLight *light4 = new DrEngineLight();
+    light4->updateBodyPosition( QPointF(1350, 300) );
+    light4->color = Qt::green;
+    light4->intensity = 3.0f;
+    light4->shadows = 5.0f;
+    light4->blur = 0.0f;
+    light4->light_size = 2000;
+    light4->setShouldProcess(false);
+    light4->setHasBeenProcessed(true);
+//    light4->draw_shadows = false;
+    objects.append(light4);
+
+    DrEngineLight *light5 = new DrEngineLight();
+    light5->updateBodyPosition( QPointF(2000, 250) );
+    light5->color = QColor(192, 64, 192);
+    light5->intensity = 1.0f;
+    light5->blur = 1.0f;
+    light5->shadows = 1.0f;
+    light5->light_size = 1500;
+    light5->setZOrder(300);
+    light5->setShouldProcess(false);
+    light5->setHasBeenProcessed(true);
+//    light5->draw_shadows = false;
+    objects.append(light5);
+
+    DrEngineLight *light6 = new DrEngineLight();
+    light6->updateBodyPosition( QPointF(2700, 800) );
+    light6->color = Qt::white;
+    light6->intensity = 1.5;
+    light6->shadows = 25.0f;
+    light6->blur = 50.0f;
+    light6->light_size = 4000;
+    light6->setShouldProcess(false);
+    light6->setHasBeenProcessed(true);
+    light6->draw_shadows = true;
+    objects.append(light6);
 
     lights.append(light1);
     lights.append(light2);
     lights.append(light3);
+    lights.append(light4);
+    lights.append(light5);
+    lights.append(light6);
     m_engine->getFormEngine()->getOpenGL()->doneCurrent();
 
 

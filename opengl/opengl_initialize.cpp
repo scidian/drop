@@ -13,6 +13,12 @@
 #include "settings/settings.h"
 #include "settings/settings_component_property.h"
 
+// OpenGL Constant Definitions
+int g_max_texture_size =        2048;
+int g_max_rays =                2048;
+int g_max_occluder_fbo_size =   2048;
+int g_max_light_fbo_size =      2048;
+
 //####################################################################################
 //##        Initialize OpenGL Resources
 //####################################################################################
@@ -21,6 +27,12 @@ void OpenGL::initializeGL() {
     // ***** Set up the rendering context, load shaders and other resources, etc.:
     initializeOpenGLFunctions();
     glClearColor(0.0, 0.0, 0.0, 0.0f);
+
+    // Load some global OpenGL Info
+    glGetIntegerv ( GL_MAX_TEXTURE_SIZE, &g_max_texture_size );
+    g_max_rays =              (g_max_texture_size < c_desired_max_rays) ?          g_max_texture_size : c_desired_max_rays;
+    g_max_occluder_fbo_size = (g_max_texture_size < c_desired_occluder_fbo_size) ? g_max_texture_size : c_desired_occluder_fbo_size;
+    g_max_light_fbo_size =    (g_max_texture_size < c_desired_light_fbo_size) ?    g_max_texture_size : c_desired_light_fbo_size;
 
     // Load test resources
     m_engine->addTexture(Asset_Textures::Numbers,   ":/assets/engine/numbers.png");             // -1
@@ -124,12 +136,15 @@ void OpenGL::initializeGL() {
 
     // 2D Light Fragment Shader Input
     m_uniform_light_texture =       m_light_shader.uniformLocation(   "u_texture" );
-    m_uniform_light_resolution =    m_light_shader.uniformLocation(   "u_resolution" );
+    m_uniform_light_diameter =      m_light_shader.uniformLocation(   "u_light_diameter" );
+    m_uniform_light_fitted =        m_light_shader.uniformLocation(   "u_light_fitted" );
+    m_uniform_light_shrink =        m_light_shader.uniformLocation(   "u_shrink" );
     m_uniform_light_color =         m_light_shader.uniformLocation(   "u_color" );
     m_uniform_light_cone =          m_light_shader.uniformLocation(   "u_cone" );
     m_uniform_light_shadows =       m_light_shader.uniformLocation(   "u_light_shadows" );
     m_uniform_light_intensity =     m_light_shader.uniformLocation(   "u_intensity" );
     m_uniform_light_blur =          m_light_shader.uniformLocation(   "u_blur" );
+    m_uniform_light_draw_shadows =  m_light_shader.uniformLocation(   "u_draw_shadows" );
 
 }
 
