@@ -24,9 +24,9 @@ QPointF OpenGL::mapToScreen(QVector3D point3D) {
     QRect viewport = QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
 
     float x_pos, y_pos, z_pos;
-    x_pos = point3D.x() * viewScale();
-    y_pos = point3D.y() * viewScale();
-    z_pos = point3D.z() * viewScale();
+    x_pos = point3D.x();
+    y_pos = point3D.y();
+    z_pos = point3D.z();
     QVector3D vec = QVector3D( x_pos, y_pos, z_pos).project( m_model_view, m_projection, viewport);
     return QPointF( static_cast<double>(vec.x()),  static_cast<double>((height() * devicePixelRatio()) - vec.y()) );
 }
@@ -42,9 +42,9 @@ QVector3D OpenGL::mapFromScreen(QPointF point) {
     QVector3D vec;
     if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
         vec = QVector3D( x_pos, y_pos, 0 ).unproject( m_model_view, m_projection, viewport);
-        vec.setX( vec.x() / m_scale );
-        vec.setY( vec.y() / m_scale );
-        vec.setZ( vec.z() / m_scale );
+        vec.setX( vec.x() );
+        vec.setY( vec.y() );
+        vec.setZ( vec.z() );
     } else {
         // Possible way to read from the depth buffer
         ///GLdouble depthScale;
@@ -89,12 +89,12 @@ QVector3D OpenGL::mapFromScreen(QPointF point) {
 //##        Maps 3D Point to / from 2D Occluder Map Coordinates
 //####################################################################################
 QPointF OpenGL::mapToOccluder(QVector3D point3D) {
-    QRect viewport = QRect(0, 0, m_occluder_fbo->width() * devicePixelRatio(), m_occluder_fbo->height() * devicePixelRatio());
+    QRect viewport = QRect(0, 0, m_occluder_fbo->width(), m_occluder_fbo->height());
 
     float x_pos, y_pos, z_pos;
-    x_pos = point3D.x() * c_occluder_scale * viewScale();
-    y_pos = point3D.y() * c_occluder_scale * viewScale();
-    z_pos = point3D.z() * c_occluder_scale * viewScale();
+    x_pos = point3D.x();
+    y_pos = point3D.y();
+    z_pos = point3D.z();
 
     QMatrix4x4 identity;
     identity.setToIdentity();

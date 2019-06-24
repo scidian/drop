@@ -138,7 +138,6 @@ void OpenGL::initializeGL() {
     m_uniform_light_texture =       m_light_shader.uniformLocation(   "u_texture" );
     m_uniform_light_diameter =      m_light_shader.uniformLocation(   "u_light_diameter" );
     m_uniform_light_fitted =        m_light_shader.uniformLocation(   "u_light_fitted" );
-    m_uniform_light_shrink =        m_light_shader.uniformLocation(   "u_shrink" );
     m_uniform_light_color =         m_light_shader.uniformLocation(   "u_color" );
     m_uniform_light_cone =          m_light_shader.uniformLocation(   "u_cone" );
     m_uniform_light_shadows =       m_light_shader.uniformLocation(   "u_light_shadows" );

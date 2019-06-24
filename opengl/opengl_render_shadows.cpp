@@ -31,7 +31,7 @@ void OpenGL::drawShadowMaps() {
         if (light->draw_shadows == true)  has_shadows = true;
 
         // Calculate size of light texture (fbo)
-        light->setLightDiameter( static_cast<int>(light->light_size * viewScale()) );
+        light->setLightDiameter( static_cast<int>(light->light_size) );
         light->setLightDiameterFitted( (light->getLightDiameter() > g_max_light_fbo_size) ? g_max_light_fbo_size : light->getLightDiameter() );
     }
     if (!has_shadows) return;
@@ -59,10 +59,11 @@ void OpenGL::drawShadowMaps() {
         QOpenGLFramebufferObject::blitFramebuffer(
                     light->occluder_fbo, QRect(0, 0, light->occluder_fbo->width(), light->occluder_fbo->height()),
                     m_occluder_fbo, QRect(
-                        static_cast<int>(floor(light->getScreenPos().x() - (light->occluder_fbo->width() / 2.0 * double(c_occluder_scale)))),
-                        static_cast<int>(floor(light->getScreenPos().y() - (light->occluder_fbo->height()/ 2.0 * double(c_occluder_scale)) + (y_diff * 2.0))),
-                        static_cast<int>(light->occluder_fbo->width()* c_occluder_scale),
-                        static_cast<int>(light->occluder_fbo->height()*c_occluder_scale)),
+                        static_cast<int>( floor(light->getScreenPos().x() - ((light->occluder_fbo->width() / 2.0) * double(c_occluder_scale * m_scale))) ),
+                        static_cast<int>( floor(light->getScreenPos().y() - ((light->occluder_fbo->height()/ 2.0) * double(c_occluder_scale * m_scale)) + (y_diff * 2.0)) ),
+                        static_cast<int>( light->occluder_fbo->width()  * (c_occluder_scale * m_scale) ),
+                        static_cast<int>( light->occluder_fbo->height() * (c_occluder_scale * m_scale) )
+                        ),
                     GL_COLOR_BUFFER_BIT, GL_NEAREST);
         light->occluder_fbo->release();
 
@@ -177,7 +178,7 @@ void OpenGL::draw1DShadowMap(DrEngineLight *light) {
     m_shadow_shader.setUniformValue( m_uniform_shadow_ray_count,  static_cast<float>(light->shadow_fbo->width()) );
 
     float screen_scale = (width()*devicePixelRatio() / light->light_size);
-    m_shadow_shader.setUniformValue( m_uniform_shadow_resolution, light->getLightDiameter(), (light->getLightDiameter() / viewScale()) * screen_scale );
+    m_shadow_shader.setUniformValue( m_uniform_shadow_resolution, light->getLightDiameter(), light->getLightDiameter() * screen_scale );
     m_shadow_shader.setUniformValue( m_uniform_shadow_depth,      static_cast<float>(light->getZOrder()) );
 
     // Draw triangles using shader program
@@ -215,10 +216,10 @@ void OpenGL::draw2DLight(DrEngineLight *light) {
     m_light_shader.enableAttributeArray( m_attribute_light_tex_coord );
 
     // Load vertices for this object
-    float left =   ( static_cast<float>(light->getBodyPosition().x()) * viewScale() ) - (light->getLightDiameterFitted() / 2.0f);
-    float right =  ( static_cast<float>(light->getBodyPosition().x()) * viewScale() ) + (light->getLightDiameterFitted() / 2.0f);
-    float top =    ( static_cast<float>(light->getBodyPosition().y()) * viewScale() ) + (light->getLightDiameterFitted() / 2.0f);
-    float bottom = ( static_cast<float>(light->getBodyPosition().y()) * viewScale() ) - (light->getLightDiameterFitted() / 2.0f);
+    float left =   static_cast<float>(light->getBodyPosition().x()) - (light->getLightDiameterFitted() / 2.0f);
+    float right =  static_cast<float>(light->getBodyPosition().x()) + (light->getLightDiameterFitted() / 2.0f);
+    float top =    static_cast<float>(light->getBodyPosition().y()) + (light->getLightDiameterFitted() / 2.0f);
+    float bottom = static_cast<float>(light->getBodyPosition().y()) - (light->getLightDiameterFitted() / 2.0f);
     QVector<GLfloat> vertices;
     setVertexFromSides(vertices, left, right, top, bottom);
     m_light_shader.setAttributeArray(    m_attribute_light_vertex, vertices.data(), 3 );
@@ -227,16 +228,9 @@ void OpenGL::draw2DLight(DrEngineLight *light) {
     // Use texture unit 0
     m_light_shader.setUniformValue( m_uniform_light_texture, 0 );
 
-    // Find out if light texture has been reduced to fit in the screen, if so increase brightness of light as we get closer
-    float shrink_multiplier = 1.0f;
-    if (light->getLightDiameterFitted() < light->getLightDiameter()) {
-        shrink_multiplier = static_cast<float>( qSqrt(double(light->getLightDiameter()) / double(light->getLightDiameterFitted())) );
-    }
-
     // Give shader the light_size diameter, fitted diameter, color
     m_light_shader.setUniformValue( m_uniform_light_diameter, static_cast<float>(light->getLightDiameter()) );
     m_light_shader.setUniformValue( m_uniform_light_fitted,   static_cast<float>(light->getLightDiameterFitted()) );
-    m_light_shader.setUniformValue( m_uniform_light_shrink,   shrink_multiplier );
     m_light_shader.setUniformValue( m_uniform_light_color,
                                     static_cast<float>(light->color.redF()),
                                     static_cast<float>(light->color.greenF()),
@@ -249,9 +243,9 @@ void OpenGL::draw2DLight(DrEngineLight *light) {
     if (cone_2 < 0.0f) cone_2 += (2.0f * 3.141592f);
     m_light_shader.setUniformValue( m_uniform_light_cone, cone_1, cone_2 );
 
-    // Give shader shadow visibility, light intensity, blur values, whether or not to draw shadows
-    m_light_shader.setUniformValue( m_uniform_light_shadows,        light->shadows );
+    // Give shader shadow visibility, reduced fade, blur values, whether or not to draw shadows
     m_light_shader.setUniformValue( m_uniform_light_intensity,      light->intensity );
+    m_light_shader.setUniformValue( m_uniform_light_shadows,        light->shadows );
     m_light_shader.setUniformValue( m_uniform_light_blur,           light->blur );
     m_light_shader.setUniformValue( m_uniform_light_draw_shadows,   light->draw_shadows );
 

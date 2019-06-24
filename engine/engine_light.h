@@ -32,9 +32,9 @@ public:
                                                             //      float cone_2 = qDegreesToRadians( 30.0f);
                                                             //      float cone_1 = qDegreesToRadians(  0.0f);   // Whole Circle
                                                             //      float cone_2 = qDegreesToRadians(360.0f);
-    float           shadows = 1.0f;                         // Visibility of shadows, 0 to 100
-    float           intensity = 1.0f;                       // Intensity of light, 0 to 100
-    float           blur = 1.0f;                            // Blur of shadows, 0 to 100
+    float           shadows = 1.0f;                         // Visibility of shadows,   0 to 100, no light      to  barely visible
+    float           intensity = 0.0f;                       // Increase intensity,      0 to 100, none / normal to  very bright
+    float           blur = 1.0f;                            // Blur of shadows,         0 to 100, no blur       to  very blurry
     bool            draw_shadows = true;                    // Should this light produc shadows?
 
     // Frame Buffer Objects for use during Render

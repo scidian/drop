@@ -84,13 +84,13 @@ void OpenGL::drawSpace() {
 
         // ***** Get object position data
         QPointF center = object->getBodyPosition();
-
-        float x, y, z, half_width, half_height;
-        x = static_cast<float>(center.x()) * viewScale();
-        y = static_cast<float>(center.y()) * viewScale();
-        z = static_cast<float>(object->z_order) * viewScale();
-        half_width =  texture_width *  object->getScaleX() * viewScale() / 2.0f;
-        half_height = texture_height * object->getScaleY() * viewScale() / 2.0f;
+        float   x, y, z;
+        float   half_width, half_height;
+        x = static_cast<float>(center.x());
+        y = static_cast<float>(center.y());
+        z = static_cast<float>(object->z_order);
+        half_width =  texture_width *  object->getScaleX() / 2.0f;
+        half_height = texture_height * object->getScaleY() / 2.0f;
 
 
         // ***** Create rotation matrix, apply rotation to object
@@ -104,7 +104,7 @@ void OpenGL::drawSpace() {
         // ***** Load vertices for this object
         QVector<GLfloat> vertices;
         vertices.clear();
-        vertices.resize( 12 );              // in sets of x, y, z
+        vertices.resize( 12 );                      // in sets of x, y, z
         if (object->isLight()) {
             double w = width() *  devicePixelRatio();
             double h = height() * devicePixelRatio();
@@ -112,10 +112,10 @@ void OpenGL::drawSpace() {
             QVector3D top_right = mapFromScreen(  w, 0.0);
             QVector3D bot_left =  mapFromScreen(0.0,   h);
             QVector3D bot_right = mapFromScreen(  w,   h);
-            vertices[ 0] = top_right.x();      vertices[ 1] = top_right.y();      vertices[ 2] = 0;                 // Top Right
-            vertices[ 3] = top_left.x();       vertices[ 4] = top_left.y();       vertices[ 5] = 0;                 // Top Left
-            vertices[ 6] = bot_right.x();      vertices[ 7] = bot_right.y();      vertices[ 8] = 0;                 // Bottom Right
-            vertices[ 9] = bot_left.x();       vertices[10] = bot_left.y();       vertices[11] = 0;                 // Bottom Left
+            vertices[ 0] = top_right.x();           vertices[ 1] = top_right.y();           vertices[ 2] = 0;       // Top Right
+            vertices[ 3] = top_left.x();            vertices[ 4] = top_left.y();            vertices[ 5] = 0;       // Top Left
+            vertices[ 6] = bot_right.x();           vertices[ 7] = bot_right.y();           vertices[ 8] = 0;       // Bottom Right
+            vertices[ 9] = bot_left.x();            vertices[10] = bot_left.y();            vertices[11] = 0;       // Bottom Left
         } else {
             vertices[ 0] = top_right.x() + x;       vertices[ 1] = top_right.y() + y;       vertices[ 2] = z;       // Top Right
             vertices[ 3] = top_left.x()  + x;       vertices[ 4] = top_left.y()  + y;       vertices[ 5] = z;       // Top Left
@@ -172,13 +172,14 @@ void OpenGL::drawSpace() {
 QMatrix4x4 OpenGL::occluderMatrix() {
     QMatrix4x4 matrix;
     matrix.setToIdentity();
-    float cam_x =  (m_engine->getCurrentWorld()->getCameraPos().x()) * viewScale() * c_occluder_scale;
-    float cam_y =  (m_engine->getCurrentWorld()->getCameraPos().y() + 200) * viewScale() * c_occluder_scale;
+    float cam_x =  (m_engine->getCurrentWorld()->getCameraPos().x()) * m_scale * c_occluder_scale;
+    float cam_y =  (m_engine->getCurrentWorld()->getCameraPos().y() + 200) * m_scale * c_occluder_scale;
     float left =   cam_x - (m_occluder_fbo->width() / 2.0f);
     float right =  cam_x + (m_occluder_fbo->width() / 2.0f);
     float top =    cam_y + (m_occluder_fbo->height() / 2.0f);
     float bottom = cam_y - (m_occluder_fbo->height() / 2.0f);
     matrix.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
+    matrix.scale( m_scale * c_occluder_scale );
     return matrix;
 }
 
@@ -219,11 +220,11 @@ void OpenGL::drawSpaceOccluder() {
         QPointF center = object->getBodyPosition();
 
         float x, y, z, half_width, half_height;
-        x = static_cast<float>(center.x()) * viewScale() * c_occluder_scale;
-        y = static_cast<float>(center.y()) * viewScale() * c_occluder_scale;
-        z = static_cast<float>(object->z_order) * viewScale() * c_occluder_scale;
-        half_width =  static_cast<float>(texture->width()) *  object->getScaleX() * viewScale() * c_occluder_scale / 2.0f;
-        half_height = static_cast<float>(texture->height()) * object->getScaleY() * viewScale() * c_occluder_scale / 2.0f;
+        x = static_cast<float>(center.x());
+        y = static_cast<float>(center.y());
+        z = static_cast<float>(object->z_order);
+        half_width =  static_cast<float>(texture->width()) *  object->getScaleX() / 2.0f;
+        half_height = static_cast<float>(texture->height()) * object->getScaleY() / 2.0f;
 
         // ***** Create rotation matrix, apply rotation to object
         QMatrix4x4 matrix;

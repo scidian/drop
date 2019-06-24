@@ -35,10 +35,10 @@ extern int  g_max_occluder_fbo_size;
 extern int  g_max_light_fbo_size;
 
 // 2D Light Constants
-const float c_occluder_scale = 3.00f;               // Scale to use for occlusion map (higher the number, less shaky the shadows)
-const int   c_desired_max_rays =           4096;    // Desired max number of rays to send out during shadow map calculations
-const int   c_desired_occluder_fbo_size =  8192;    // Desired max width and height of offscreen fbo used for shadow map
-const int   c_desired_light_fbo_size =     4096;    // Desired max width and height of offscreen fbo used for lights
+const float c_occluder_scale =                3.0f;     // Scale to use for occlusion map (higher the number, less shaky the shadows)
+const int   c_desired_max_rays =           4096;        // Desired max number of rays to send out during shadow map calculations
+const int   c_desired_occluder_fbo_size =  8192;        // Desired max width and height of offscreen fbo used for shadow map
+const int   c_desired_light_fbo_size =     4096;        // Desired max width and height of offscreen fbo used for lights
 
 //####################################################################################
 //##    OpenGL
@@ -123,7 +123,6 @@ private:
     int     m_uniform_light_texture;
     int     m_uniform_light_diameter;
     int     m_uniform_light_fitted;
-    int     m_uniform_light_shrink;
     int     m_uniform_light_color;                              // Color of light, red/green/blue (0 to 1, 0 to 1, 0 to 1)
     int     m_uniform_light_cone;
     int     m_uniform_light_shadows;
@@ -159,7 +158,6 @@ public:
     QPointF         mapToScreen(float x, float y, float z);
     QPointF         mapToScreen(QVector3D point3D);
     QPointF         mapToOccluder(QVector3D point3D);
-    float           viewScale();
     void            zoomInOut(int level);
 
     // Render Calls
