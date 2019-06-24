@@ -98,12 +98,12 @@ void DrEngineWorld::buildSpace(Demo_Space new_space_type) {
     objects.append(light2);
 
     DrEngineLight *light3 = new DrEngineLight();
-    light3->updateBodyPosition( QPointF(700, 1000) );
+    light3->updateBodyPosition( QPointF(700, 800) );
     light3->color = Qt::red;
-    light3->intensity = 2.0f;
+    light3->intensity = 1.5;
     light3->shadows = 5.0f;
-    light3->blur = 25.0f;
-    light3->light_size = 3000;
+    light3->blur = 50.0f;
+    light3->light_size = 2500;
     light3->setShouldProcess(false);
     light3->setHasBeenProcessed(true);
     objects.append(light3);
