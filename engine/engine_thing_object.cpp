@@ -5,7 +5,11 @@
 //
 //
 //
-#include "engine_object.h"
+#include <QtMath>
+
+#include "engine.h"
+#include "engine_thing_object.h"
+
 
 //######################################################################################################
 //##    Constructor / Destructor
@@ -25,6 +29,79 @@ void DrEngineObject::updateBodyPosition(QPointF updated_position, bool update_pr
     m_previous_position = update_previous_position_also ? updated_position : m_position;
     m_position = updated_position;
 }
+
+bool DrEngineObject::update(double , double , QRectF &area) {
+    if (!should_process) return false;
+    bool remove = false;
+
+    // ***** Get some info about the current object from the space and save it to the current DrEngineObject
+    cpVect  new_position = cpBodyGetPosition( body );
+    updateBodyPosition( QPointF( new_position.x, new_position.y ));
+    updateBodyAngle( qRadiansToDegrees( cpBodyGetAngle( body )) );
+
+    // **** Check that any object with custom PlayerUpdateVelocity callback is awake so it can access key / button events
+    bool sleeping = cpBodyIsSleeping(body);
+    if (hasKeyControls() && !hasLostControl() && sleeping) {
+        cpBodyActivate(body);
+    }
+
+//    // ***** Update global friction and bounce to all objects if globals have changed (possibly due to Gameplay Action)
+//    if (qFuzzyCompare(object->getCustomFriction(), c_friction) == false) {
+//        for (auto shape : object->shapes) {
+//            cpFloat friction = cpShapeGetFriction( shape );
+//            if (qFuzzyCompare(friction, m_friction) == false) cpShapeSetFriction( shape, m_friction );
+//        }
+//    }
+//    if (qFuzzyCompare(object->getCustomBounce(), c_bounce) == false) {
+//        for (auto shape : object->shapes) {
+//            cpFloat bounce = cpShapeGetElasticity( shape );
+//            if (qFuzzyCompare(bounce, m_bounce) == false) cpShapeSetElasticity( shape, m_bounce );
+//        }
+//    }
+
+    // ***** Process non-static object movement
+    if (body_type != Body_Type::Static) {
+        // If has rotate speed (wheels, etc.), apply gas pedal
+        switch (g_pedal) {
+            case Pedal::None:               break;
+            case Pedal::Clockwise:          cpBodySetAngularVelocity( body, -getRotateSpeed() );    break;
+            case Pedal::CounterClockwise:   cpBodySetAngularVelocity( body,  getRotateSpeed() );    break;
+            case Pedal::Brake:              cpBodySetAngularVelocity( body,  0 );                   break;
+        }
+    }
+
+    // ***** Auto Damage
+    if (getHealth() > c_epsilon) {
+        if (getAutoDamage() < -c_epsilon || getAutoDamage() > c_epsilon) {
+            takeDamage( getAutoDamage() * (time_since_last_update / 1000.0), false );
+        }
+    }
+
+    // ***** Check for Object Death / Fade / Removal
+    if (getHealth() <= c_epsilon && getHealth() > c_unlimited_health) {
+        if (!isDying()) {
+            setDying( true );
+            Dr::ResetTimer(getDeathTimer());
+        }
+        if (isDying() && isAlive()) {
+            if (Dr::MillisecondsElapsed(getDeathTimer()) >= getDeathDelay()) {
+                setAlive( false );
+                Dr::ResetTimer(getFadeTimer());
+            }
+        }
+        if (!isAlive()) {
+            if (Dr::MillisecondsElapsed(getFadeTimer()) >= getFadeDelay()) {
+                remove = true;
+            }
+        }
+    }
+
+    // Delete object if ends up outside the deletion threshold
+    if (!area.contains(QPointF(new_position.x, new_position.y))) remove = true;
+
+    return remove;
+};
+
 
 //######################################################################################################
 //##    Collision Type of Object

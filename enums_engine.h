@@ -39,6 +39,17 @@ enum Asset_Textures {
 
 
 //####################################################################################
+//##    Control Enumerations
+//############################
+enum class Pedal {
+    Brake,
+    None,
+    Clockwise,
+    CounterClockwise,
+};
+
+
+//####################################################################################
 //##    DrEngineObject Enumerations
 //############################
 enum class Body_Type {

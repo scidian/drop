@@ -8,7 +8,7 @@
 #include <QtMath>
 
 #include "engine.h"
-#include "engine_object.h"
+#include "engine_thing_object.h"
 #include "engine_texture.h"
 #include "engine_world.h"
 #include "helper.h"
@@ -60,7 +60,7 @@ DrEngineObject* DrEngineWorld::addLine(Body_Type body_type, QPointF p1, QPointF 
     line->shapes.push_back( shape );
     line->shape_type[shape] = Shape_Type::Segment;
 
-    objects.append( line );
+    m_things.append( line );
     return line;
 }
 
@@ -108,7 +108,7 @@ DrEngineObject* DrEngineWorld::addCircle(Body_Type body_type, long texture_numbe
     ball->setScaleX(scale.x());                                                 // Save x scale for later
     ball->setScaleY(scale.y());                                                 // Save y scale for later
     ball->setTextureNumber(texture_number);                                     // Texture to render from
-    ball->setZOrder(z);
+    ball->z_order = z;
     ball->setOpacity(opacity);
     ball->updateBodyPosition( QPointF(x, y), true );
 
@@ -150,7 +150,7 @@ DrEngineObject* DrEngineWorld::addCircle(Body_Type body_type, long texture_numbe
     if (!can_rotate) cpBodySetMoment( ball->body, static_cast<double>(INFINITY) );
 
     // Add ball to the list of objects in the current Space
-    objects.append( ball );
+    m_things.append( ball );
     return ball;
 }
 
@@ -178,7 +178,7 @@ DrEngineObject* DrEngineWorld::addBlock(Body_Type body_type, long texture_number
 
     // Block basics
     block->setTextureNumber(texture_number);
-    block->setZOrder(z);
+    block->z_order = z;
     block->setOpacity(opacity);
 
     // Create the body for the block
@@ -220,7 +220,7 @@ DrEngineObject* DrEngineWorld::addBlock(Body_Type body_type, long texture_number
     if (!can_rotate) cpBodySetMoment( block->body, static_cast<double>(INFINITY) );
 
     // Add block to the list of objects in the current Space
-    objects.append( block );
+    m_things.append( block );
     return block;
 }
 
@@ -246,7 +246,7 @@ DrEngineObject* DrEngineWorld::addPolygon(Body_Type body_type, long texture_numb
     polygon->setScaleX(scale.x());                                          // Save x scale for later
     polygon->setScaleY(scale.y());                                          // Save y scale for later
     polygon->setTextureNumber(texture_number);
-    polygon->setZOrder(z);
+    polygon->z_order = z;
     polygon->setOpacity(opacity);
     polygon->updateBodyPosition( QPointF(x, y), true );
 
@@ -350,7 +350,7 @@ DrEngineObject* DrEngineWorld::addPolygon(Body_Type body_type, long texture_numb
     if (!can_rotate) cpBodySetMoment( polygon->body, static_cast<double>(INFINITY) );
 
     // Add polygon to the list of objects in the current Space
-    objects.append( polygon );
+    m_things.append( polygon );
     return polygon;    
 }
 

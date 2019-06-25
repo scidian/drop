@@ -8,7 +8,7 @@
 #include <QDebug>
 
 #include "engine.h"
-#include "engine_object.h"
+#include "engine_thing_object.h"
 #include "engine_world.h"
 
 //  Arbiter Callbacks:

@@ -53,13 +53,19 @@ class DrProject
 private:
     // Project Variables
     long        m_key_generator;                        // Variable to hand out unique id key's to all children items
+    OptionMap   m_options;                              // Map holding DrProject Wide options
 
+    // **********
+    //      Every Item In These Projects Maps:
+    //          - Inherit DrSettings for DrComponent / DrProperty usage
+    //          - Is assigned an unique key upon creation from DrProject::getNextKey()
+    //
     WorldMap    m_worlds;                               // Holds worlds for the project
     AssetMap    m_assets;                               // Holds assets for the project
-    FontMap     m_fonts;
+    FontMap     m_fonts;                                // Holds custom fonts for the project
     ImageMap    m_images;                               // Holds images for the project
 
-    OptionMap   m_options;                              // Map holding DrProject Wide options
+
 
 
 public:

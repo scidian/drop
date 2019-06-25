@@ -10,7 +10,7 @@
 #include <cmath>
 
 #include "engine/engine.h"
-#include "engine/engine_object.h"
+#include "engine/engine_thing_object.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
 #include "engine/form_engine.h"
@@ -80,17 +80,17 @@ void OpenGL::drawDebug(QPainter &painter) {
     QFont font("Avenir", 12);
     painter.setFont(font);
     painter.setPen( Qt::white );
-    painter.drawText( QPointF(20, 20), "Items: " + QString::number(m_engine->getCurrentWorld()->objects.count()) + ", Scale: " + QString::number(double(m_scale)) );
+    painter.drawText( QPointF(20, 20), "Items: " + QString::number(m_engine->getCurrentWorld()->getThings().count()) + ", Scale: " + QString::number(double(m_scale)) );
     painter.drawText( QPointF(20, 40), "FPS: " +       QString::number(m_engine->getFormEngine()->fps_render)
                                      + ", Physics: " + QString::number(m_engine->getFormEngine()->fps_physics));
     painter.drawText( QPointF(20, 60), g_info);
 
-    ///int max_sample, max_text, max_number_textures, max_layers;
+    ///int max_sample = 0, max_text = 0, max_number_textures = 0, max_layers = 0;
     ///glGetIntegerv ( GL_MAX_SAMPLES, &max_sample );                                      // Finds max multi sampling available on system
     ///glGetIntegerv ( GL_MAX_TEXTURE_SIZE, &max_text );                                   // Finds max texture size available on system
     ///glGetIntegerv ( GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &max_number_textures );        // Finds max number of textures can bind at one time
     ///glGetIntegerv ( GL_MAX_ARRAY_TEXTURE_LAYERS, &max_layers );
-    ///painter.drawText( QPointF(20, 80), "Max Samples: " +  QString::number(max_sample));
+    ///painter.drawText( QPointF(20, 80), "Max Texture Size: " +  QString::number(g_max_texture_size));
 }
 
 
@@ -103,9 +103,12 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
     int open_gl_height = height() * devicePixelRatio();
     QRect open_gl_rect = QRect(0, 0, open_gl_width, open_gl_height);
 
-    for (auto object : m_engine->getCurrentWorld()->objects) {
-        if (!object->shouldProcess())       continue;
-        if (!object->hasBeenProcessed())    continue;
+    for (auto thing : m_engine->getCurrentWorld()->getThings()) {
+        if (!thing->should_process)         continue;
+        if (!thing->has_been_processed)     continue;
+
+        if (thing->getThingType() != DrThingType::Object) continue;
+        DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
 
         // Figure out what color to make the debug shapes
         QColor color = objectDebugColor(object);
@@ -300,10 +303,12 @@ void OpenGL::drawDebugCollisions(QPainter &painter) {
     QPen pen( QBrush(Qt::red), 2.5 * static_cast<double>(m_scale), Qt::SolidLine, Qt::PenCapStyle::RoundCap);
     painter.setPen( pen );
 
-    for (auto object : m_engine->getCurrentWorld()->objects) {
-        if (!object->shouldProcess())                continue;
-        if (!object->hasBeenProcessed())             continue;
-        if (object->body_type != Body_Type::Dynamic) continue;
+    for (auto thing : m_engine->getCurrentWorld()->getThings()) {
+        if (!thing->should_process)                         continue;
+        if (!thing->has_been_processed)                     continue;
+        if ( thing->body_type != Body_Type::Dynamic)        continue;
+        if ( thing->getThingType() != DrThingType::Object)  continue;
+        DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
 
         QVector<QPointF> point_list;    point_list.clear();
         QVector<cpVect>  normal_list;   normal_list.clear();

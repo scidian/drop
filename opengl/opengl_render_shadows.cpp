@@ -9,8 +9,8 @@
 #include <QOpenGLFramebufferObject>
 
 #include "engine/engine.h"
-#include "engine/engine_light.h"
-#include "engine/engine_object.h"
+#include "engine/engine_thing_light.h"
+#include "engine/engine_thing_object.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
 #include "engine/form_engine.h"
@@ -22,11 +22,11 @@
 //##        Main Shadow Map / Occluder / Render Routine
 //####################################################################################
 void OpenGL::drawShadowMaps() {
-    if (m_engine->getCurrentWorld()->lights.count() <= 0) return;
+    if (m_engine->getCurrentWorld()->m_lights.count() <= 0) return;
 
     // ***** Check for lights with shadows, if there are non we don't need to draw occluder map
     bool has_shadows = false;
-    for (auto light : m_engine->getCurrentWorld()->lights) {
+    for (auto light : m_engine->getCurrentWorld()->m_lights) {
         if (light == nullptr) continue;
         if (light->draw_shadows == true)  has_shadows = true;
 
@@ -43,8 +43,15 @@ void OpenGL::drawShadowMaps() {
     m_occluder_fbo->release();
     glViewport(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
 
+//static int count = 0;
+//count++;
+//if (count % 600 == 0) {
+//    Dr::ShowMessageBox("hi", QPixmap::fromImage( m_occluder_fbo->toImage() ).scaled(512, 512) );
+//    count = 0;
+//}
+
     // ***** Calculate Light 1D Shadow Maps
-    for (auto light : m_engine->getCurrentWorld()->lights) {
+    for (auto light : m_engine->getCurrentWorld()->m_lights) {
         if (light == nullptr) continue;
         if (light->draw_shadows == false) continue;
 
@@ -156,7 +163,7 @@ void OpenGL::draw1DShadowMap(DrEngineLight *light) {
     float top =    0.0f + ((light->shadow_fbo->height() ) / 2.0f);
     float bottom = 0.0f - ((light->shadow_fbo->height() ) / 2.0f);
     QMatrix4x4 m_matrix;
-    m_matrix.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
+    m_matrix.ortho( left, right, bottom, top, -5000.0f, 5000.0f);
     m_shadow_shader.setUniformValue( m_uniform_shadow_matrix, m_matrix );
 
     // Set Texture Coordinates for Shader
@@ -179,7 +186,7 @@ void OpenGL::draw1DShadowMap(DrEngineLight *light) {
 
     float screen_scale = (width()*devicePixelRatio() / light->light_size);
     m_shadow_shader.setUniformValue( m_uniform_shadow_resolution, light->getLightDiameter(), light->getLightDiameter() * screen_scale );
-    m_shadow_shader.setUniformValue( m_uniform_shadow_depth,      static_cast<float>(light->getZOrder()) );
+    m_shadow_shader.setUniformValue( m_uniform_shadow_depth,      static_cast<float>(light->z_order) );
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

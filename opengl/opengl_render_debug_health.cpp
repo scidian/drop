@@ -10,7 +10,7 @@
 #include <cmath>
 
 #include "engine/engine.h"
-#include "engine/engine_object.h"
+#include "engine/engine_thing_object.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
 #include "engine/form_engine.h"
@@ -25,9 +25,11 @@ void OpenGL::drawDebugHealth(QPainter &painter) {
     QFont health_font("Avenir", static_cast<int>(18 * m_scale));
     painter.setPen(Qt::NoPen);
 
-    for (auto object : m_engine->getCurrentWorld()->objects) {
-        if (!object->shouldProcess())       continue;
-        if (!object->hasBeenProcessed())    continue;
+    for (auto thing : m_engine->getCurrentWorld()->getThings()) {
+        if (!thing->should_process)                         continue;
+        if (!thing->has_been_processed)                     continue;
+        if ( thing->getThingType() != DrThingType::Object)  continue;
+        DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
 
         // Figure out what color to make the debug shapes
         QColor color = objectDebugColor(object, true);
@@ -75,9 +77,11 @@ void OpenGL::drawDebugHealthNative(QPainter &painter) {
     m_shader.setUniformValue( m_uniform_matrix, m_matrix );
 
     // ***** Loop through each object and draws its health
-    for (auto object : m_engine->getCurrentWorld()->objects) {
-        if (!object->shouldProcess())       continue;
-        if (!object->hasBeenProcessed())    continue;
+    for (auto thing : m_engine->getCurrentWorld()->getThings()) {
+        if (!thing->should_process)                         continue;
+        if (!thing->has_been_processed)                     continue;
+        if ( thing->getThingType() != DrThingType::Object)  continue;
+        DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
 
         // Get health as string
         QString hp = Dr::RemoveTrailingDecimals( object->getHealth(), 2 );
@@ -85,20 +89,13 @@ void OpenGL::drawDebugHealthNative(QPainter &painter) {
 
         // ***** Load object position
         QPointF center = object->getBodyPosition();
-        float x, y, z, half_width, half_height;
-        if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
-            x = static_cast<float>(center.x()) * m_scale;
-            y = static_cast<float>(center.y() - static_cast<double>(font_size)) * m_scale;
-            z = static_cast<float>(object->getZOrder()) * m_scale;
-            half_width =  font_size * m_scale / 2.0f;
-            half_height = font_size * m_scale / 2.0f;
-        } else {
-            x = static_cast<float>(center.x());
-            y = static_cast<float>(center.y() - static_cast<double>(font_size));
-            z = static_cast<float>(object->getZOrder());
-            half_width =  font_size / 2.0f;
-            half_height = font_size / 2.0f;
-        }
+        float x, y, z;
+        float half_width, half_height;
+        x = static_cast<float>(center.x());
+        y = static_cast<float>(center.y() - static_cast<double>(font_size));
+        z = static_cast<float>(object->z_order);
+        half_width =  font_size / 2.0f;
+        half_height = font_size / 2.0f;
 
         QVector3D top_right = QVector3D( half_width,  half_height, 0);
         QVector3D top_left =  QVector3D(-half_width,  half_height, 0);

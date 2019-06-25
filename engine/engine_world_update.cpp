@@ -11,7 +11,8 @@
 
 #include "engine.h"
 #include "engine_camera.h"
-#include "engine_object.h"
+#include "engine_thing_light.h"
+#include "engine_thing_object.h"
 #include "engine_world.h"
 #include "form_engine.h"
 #include "helper.h"
@@ -32,127 +33,36 @@ void DrEngineWorld::updateSpace(double time_passed) {
     cpSpaceStep(m_space, step_time);
 }
 
-void DrEngineWorld::updateSpaceHelper() {
+void DrEngineWorld::updateSpaceHelper(double time_passed) {
+
+    // Calculate area that if Things are within, they can stay in the Space
+    QRectF threshold(getCameraPosXD() - m_delete_threshold_x, getCameraPosYD() - m_delete_threshold_y, m_delete_threshold_x*2.0, m_delete_threshold_y*2.0);
 
     // ***** Update global variables for use in callbacks
+    g_gravity_normal = cpvnormalize( cpSpaceGetGravity(m_space) );
     g_keyboard_x =  m_engine->keyboard_x;
     g_keyboard_y =  m_engine->keyboard_y;
     g_jump_button = m_engine->jump_button;
-
-    switch (m_engine->gas_pedal) {
-        case Pedal::Clockwise:          g_rotate_cw = true;     g_rotate_cw = false;        break;
-        case Pedal::CounterClockwise:   g_rotate_cw = false;    g_rotate_cw = true;         break;
-        default:                        g_rotate_cw = false;    g_rotate_cw = false;        break;
-    }
-
-    g_gravity_normal = cpvnormalize( cpSpaceGetGravity(m_space) );
+    g_pedal =       m_engine->gas_pedal;
 
 
-    // ********** Iterate through objects, delete if they go off screen
-    for ( auto it = objects.begin(); it != objects.end(); ) {
+    // ********** Iterate through Things, delete if they go off screen
+    for ( auto it = m_things.begin(); it != m_things.end(); ) {
+        DrEngineThing *thing = *it;
 
-        // ***** Initial loop variables
-        DrEngineObject *object = *it;
-        bool remove = false;
-
-        // ***** Get time since last update
-        if (!object->hasBeenProcessed()) {
-            object->setHasBeenProcessed(true);
-            object->setTimeSinceLastUpdate( 0.0 );
-        } else {
-            object->setTimeSinceLastUpdate( Dr::MillisecondsElapsed(object->getUpdateTimer()) );
-        }
-        Dr::ResetTimer(object->getUpdateTimer());
-
-        // ***** Skip object if static; or if not yet in Space / no longer in Space
-        if (!object->shouldProcess()) {
-            it++;
-            continue;
-        }
-
-        // ***** Get some info about the current object from the space and save it to the current DrEngineObject
-        cpVect  new_position = cpBodyGetPosition( object->body );
-        object->updateBodyPosition( QPointF( new_position.x, new_position.y ));
-        object->updateBodyAngle( qRadiansToDegrees( cpBodyGetAngle( object->body )) );
-
-        // **** Check that any object with custom PlayerUpdateVelocity callback is awake so it can access key / button events
-        bool sleeping = cpBodyIsSleeping(object->body);
-        if (object->hasKeyControls() && !object->hasLostControl() && sleeping) {
-            cpBodyActivate(object->body);
-        }
-
-//        // ***** Update global friction and bounce to all objects if globals have changed (possibly due to Gameplay Action)
-//        if (qFuzzyCompare(object->getCustomFriction(), c_friction) == false) {
-//            for (auto shape : object->shapes) {
-//                cpFloat friction = cpShapeGetFriction( shape );
-//                if (qFuzzyCompare(friction, m_friction) == false) cpShapeSetFriction( shape, m_friction );
-//            }
-//        }
-//        if (qFuzzyCompare(object->getCustomBounce(), c_bounce) == false) {
-//            for (auto shape : object->shapes) {
-//                cpFloat bounce = cpShapeGetElasticity( shape );
-//                if (qFuzzyCompare(bounce, m_bounce) == false) cpShapeSetElasticity( shape, m_bounce );
-//            }
-//        }
-
-
-        // ***** Process non-static object movement
-        if ((object->body_type != Body_Type::Static)) {
-
-            // ***** Process Button Presses
-            // If is a wheel, apply gas pedal
-            if (qFuzzyCompare(object->getRotateSpeed(), 0) == false) {
-                switch (m_engine->gas_pedal) {
-                    case Pedal::Clockwise:          cpBodySetAngularVelocity( object->body, -object->getRotateSpeed() );    break;
-                    case Pedal::CounterClockwise:   cpBodySetAngularVelocity( object->body,  object->getRotateSpeed() );    break;
-                    case Pedal::Brake:              cpBodySetAngularVelocity( object->body,  0 );                           break;
-                    case Pedal::None:               break;
-                }
-            }
-
-
-        }
-
-
-        // ***** Auto Damage
-        if (object->getHealth() > c_epsilon) {
-            if (object->getAutoDamage() < -c_epsilon || object->getAutoDamage() > c_epsilon) {
-                object->takeDamage( object->getAutoDamage() * (object->getTimeSinceLastUpdate() / 1000.0), false );
-            }
-        }
-
-
-        // ***** Check for Object Death / Fade / Removal
-        if (object->getHealth() <= c_epsilon && object->getHealth() > c_unlimited_health) {
-            if (!object->isDying()) {
-                object->setDying( true );
-                Dr::ResetTimer(object->getDeathTimer());
-            }
-            if (object->isDying() && object->isAlive()) {
-                if (Dr::MillisecondsElapsed(object->getDeathTimer()) >= object->getDeathDelay()) {
-                    object->setAlive( false );
-                    Dr::ResetTimer(object->getFadeTimer());
-                }
-            }
-            if (!object->isAlive()) {
-                if (Dr::MillisecondsElapsed(object->getFadeTimer()) >= object->getFadeDelay()) {
-                    remove = true;
-                }
-            }
-        }
-
-        // Delete object if ends up outside the deletion threshold
-        QRectF threshold(getCameraPosXD() - m_delete_threshold_x, getCameraPosYD() - m_delete_threshold_y, m_delete_threshold_x*2.0, m_delete_threshold_y*2.0);
-        if (!threshold.contains(QPointF(new_position.x, new_position.y))) remove = true;
+        // ***** Update Thing
+        thing->calculateTimeSinceLastUpdate();
+        bool remove = thing->update(time_passed, m_time_warp, threshold);
 
         // Process removal
         if (remove) {
-            removeObject(object);
-            delete object;
-            it = objects.erase(it);
-        } else it++;
+            removeThing(thing);
+            delete thing;
+            it = m_things.erase(it);
+        } else {
+            it++;
+        }
     }   // End For
-
 
 
     // ***** Calculate distance and load new stage if we need to

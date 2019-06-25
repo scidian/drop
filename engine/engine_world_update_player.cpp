@@ -9,7 +9,7 @@
 #include <QDebug>
 
 #include "engine.h"
-#include "engine_object.h"
+#include "engine_thing_object.h"
 #include "engine_world.h"
 
 //######################################################################################################
@@ -18,8 +18,7 @@
 int      g_keyboard_x = 0;
 int      g_keyboard_y = 0;
 bool     g_jump_button = false;
-bool     g_rotate_cw = false;
-bool     g_rotate_ccw = false;
+Pedal    g_pedal = Pedal::None;
 
 cpVect   g_gravity_normal = cpv(0, 0);
 
@@ -59,13 +58,10 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
     // ***** Get Keys - If player is still active get keyboard status
     int key_y = 0,      key_x = 0,      key_jump = 0;
-    int key_cw = 0,     key_ccw = 0;
     if (!object->hasLostControl()) {
         key_x =     g_keyboard_x;
         key_y =     g_keyboard_y;
         key_jump =  g_jump_button;
-        key_cw =    g_rotate_cw;
-        key_ccw =   g_rotate_ccw;
     }
 
     // ***** Ground Check - Grab the grounding normal from last frame, if we hit the ground, turn off m_remaining_boost time

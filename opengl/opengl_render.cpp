@@ -13,8 +13,8 @@
 
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
-#include "engine/engine_light.h"
-#include "engine/engine_object.h"
+#include "engine/engine_thing_light.h"
+#include "engine/engine_thing_object.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
 #include "engine/form_engine.h"
@@ -30,9 +30,9 @@ void OpenGL::paintGL() {
     ///auto ver = glGetString(GL_VERSION);
     ///m_engine->info = QString::fromUtf8(reinterpret_cast<const char*>(ver));
 
-    // ***** Make sure Objects vector is sorted by depth
-    EngineObjects &objects = m_engine->getCurrentWorld()->objects;
-    std::sort(objects.begin(), objects.end(), [] (const DrEngineThing *a, const DrEngineThing *b) { return a->z_order < b->z_order; });
+    // ***** Make sure Things vector is sorted by depth
+    EngineThings &things = m_engine->getCurrentWorld()->getThings();
+    std::sort(things.begin(), things.end(), [] (const DrEngineThing *a, const DrEngineThing *b) { return a->z_order < b->z_order; });
 
     // ***** If there are Lights, Render Occluder Map, Calculate Shadow Maps
     drawShadowMaps();
@@ -121,7 +121,8 @@ void OpenGL::updateViewMatrix() {
     float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
 
     // Set camera position
-    QVector3D  perspective_offset ( 200.0f, 200.0f, 0.0f);
+    //QVector3D  perspective_offset ( 200.0f, 200.0f, 0.0f);
+    QVector3D  perspective_offset ( 0.0f, 0.0f, 0.0f);
     QVector3D  eye(     m_engine->getCurrentWorld()->getCameraPos().x() * m_scale + perspective_offset.x(),
                         m_engine->getCurrentWorld()->getCameraPos().y() * m_scale + perspective_offset.y(),
                         m_engine->getCurrentWorld()->getCameraPos().z() );
@@ -139,10 +140,10 @@ void OpenGL::updateViewMatrix() {
         float right =  cam_x + (width() *  devicePixelRatio() / 2.0f);
         float top =    cam_y + (height() * devicePixelRatio() / 2.0f);
         float bottom = cam_y - (height() * devicePixelRatio() / 2.0f);
-        m_projection.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
+        m_projection.ortho( left, right, bottom, top, -5000.0f, 5000.0f);
         m_model_view.scale( m_scale );
     } else {
-        m_projection.perspective( 70.0f, aspect_ratio, 1.0f, 5000.0f );
+        m_projection.perspective( 70.0f, aspect_ratio, 1.0f, 10000.0f );
         m_model_view.lookAt(eye, look_at, up);
         m_model_view.scale( m_scale );
 
@@ -204,7 +205,7 @@ void OpenGL::drawFrameBufferToScreenBuffer(QOpenGLFramebufferObject *fbo, bool u
     float top =    0.0f + (fbo->height() / 2.0f);
     float bottom = 0.0f - (fbo->height() / 2.0f);
     QMatrix4x4 m_matrix;
-    m_matrix.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
+    m_matrix.ortho( left, right, bottom, top, -5000.0f, 5000.0f);
     m_shader.setUniformValue( m_uniform_matrix, m_matrix );
 
     // Set Texture Coordinates for Shader

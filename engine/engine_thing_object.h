@@ -8,7 +8,8 @@
 #ifndef ENGINE_OBJECT_H
 #define ENGINE_OBJECT_H
 
-#include "abstract_engine_thing.h"
+#include "enums_engine.h"
+#include "engine_thing.h"
 
 enum class One_Way {                    // One Way Collide
     None,
@@ -39,8 +40,7 @@ constexpr int       c_unlimited_jump =   -1;            // Flag for unlimited ju
 extern int          g_keyboard_x;                       // Used to pass keyboard x button state to static callback functions
 extern int          g_keyboard_y;                       // Used to pass keyboard y button state to static callback functions
 extern bool         g_jump_button;                      // Used to pass jump button state to static callback functions
-extern bool         g_rotate_cw;                        // Used to pass rotate clockwise button state
-extern bool         g_rotate_ccw;                       // Used to pass rotate counter clockwise button state
+extern Pedal        g_pedal;                            // Used to pass Pedal button state
 extern cpVect       g_gravity_normal;                   // Stores a gravity as a normalized vector for use in static callback functions
 extern QString      g_info;
 
@@ -131,9 +131,6 @@ private:
     // ********** Local Variables Updated by Engine
     //                NOT TO BE SET BY USER
     //
-    bool        m_should_process = true;                    // True while object exists in Space
-    bool        m_has_been_processed = false;               // Set to true after an initial updateSpace call has been ran once while the object was in the Space
-
     int         m_remaining_jumps = 0;                      // How many jumps player has left before it must hit ground before it can jump again
     double      m_remaining_boost = 0.0;                    // Used by Engine Update to process Jump Timeout boost
     double      m_remaining_wall_time = 0.0;                // Used by Engine Update to allow some time for a wall jump to occur
@@ -152,8 +149,6 @@ private:
     DrTime      m_damage_timer = Clock::now();              // Used to track last time this object was damaged to implement m_damage_delay
     DrTime      m_death_timer =  Clock::now();              // Used to incorporate death_delay for object dying
     DrTime      m_fade_timer =   Clock::now();              // Used to incorporate fade_delay for object fade / removal
-    DrTime      m_update_timer = Clock::now();              // Used to keep track of time passed since last object update
-    double      m_time_since_last_update = 0.0;             // Milliseconds since last update
 
     double      m_angle = 0.0;                              // Current object->body angle, updated every frame by updateSpaceHelper()
     QPointF     m_position;                                 // Current object->body posiiton, updated every frame by updateSpaceHelper()
@@ -174,8 +169,14 @@ public:
 
 
 public:
+    // Constructor / Destructor
     DrEngineObject();
-    virtual ~DrEngineObject();
+    virtual ~DrEngineObject() override;
+
+    // Abstract Engine Thing Overrides
+    virtual DrThingType getThingType() override { return DrThingType::Object; }
+    virtual bool        update(double time_passed, double time_warp, QRectF &area) override;
+
 
     // Object Basic Settings
     const bool&     doesCollide() { return m_does_collide; }
@@ -305,11 +306,6 @@ public:
 
 
     // ***** Local Variables - Updated By Engine
-    const bool&     shouldProcess() { return m_should_process; }
-    const bool&     hasBeenProcessed() { return m_has_been_processed; }
-    void            setShouldProcess(bool should_keep_processing) { m_should_process = should_keep_processing; }
-    void            setHasBeenProcessed(bool processed) { m_has_been_processed = processed; }
-
     const int&      getRemainingJumps() { return m_remaining_jumps; }
     const double&   getRemainingBoost() { return m_remaining_boost; }
     const double&   getRemainingWallTime() { return m_remaining_wall_time; }
@@ -337,9 +333,7 @@ public:
     DrTime&         getDamageTimer() { return m_damage_timer; }
     DrTime&         getDeathTimer() { return m_death_timer; }
     DrTime&         getFadeTimer() { return m_fade_timer; }
-    DrTime&         getUpdateTimer() { return m_update_timer; }
-    const double&   getTimeSinceLastUpdate() { return m_time_since_last_update; }
-    void            setTimeSinceLastUpdate(double new_time) { m_time_since_last_update = new_time; }
+
 
     // Object->Body Data - Updated every frame by updateSpaceHelper()
     const double&   getBodyAngle() { return m_angle; }

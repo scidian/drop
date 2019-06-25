@@ -9,9 +9,12 @@
 #include <QDebug>
 
 #include "engine.h"
-#include "engine_light.h"
-#include "engine_object.h"
+#include "engine_camera.h"
+#include "engine_thing_light.h"
+#include "engine_thing_object.h"
 #include "engine_world.h"
+#include "form_engine.h"
+#include "opengl/opengl.h"
 
 //######################################################################################################
 //##    Chipmunk Callbacks
@@ -65,37 +68,69 @@ void DrEngineWorld::clearSpace() {
         qApp->processEvents();
         ChipmunkFreeSpaceChildren(m_space);
         cpSpaceFree(m_space);
-        objects.clear();
+        m_things.clear();
 
         clearCameras();
         clearLights();
     }
 }
 
+// Removes all cameras from engine
+void DrEngineWorld::clearCameras() {
+    for (auto camera_pair : m_cameras)
+        delete camera_pair.second;
+    m_cameras.clear();
+}
+
+// Removes all lights from engine
+void DrEngineWorld::clearLights() {
+    m_engine->getFormEngine()->getOpenGL()->makeCurrent();
+    for (DrEngineLight *light : m_lights) {
+        delete light->occluder_fbo;
+        delete light->shadow_fbo;
+        delete light;
+    }
+    m_lights.clear();
+    m_engine->getFormEngine()->getOpenGL()->doneCurrent();
+}
+
 
 //######################################################################################################
 //##    Removes an object from the Space
 //######################################################################################################
-void DrEngineWorld::removeObject(DrEngineObject *object) {
-    object->setShouldProcess(false);
+void DrEngineWorld::removeThing(DrEngineThing *thing) {
+    thing->should_process = false;
 
-    QVector<cpShape*> shape_list;
-    cpBodyEachShape(object->body, cpBodyShapeIteratorFunc(GetBodyShapeList), &shape_list);
-    for (auto shape : shape_list) {
-        cpSpaceRemoveShape(m_space, shape);
-        cpShapeFree(shape);
+    if (thing->body) {
+        QVector<cpShape*> shape_list;
+        cpBodyEachShape(thing->body, cpBodyShapeIteratorFunc(GetBodyShapeList), &shape_list);
+        for (auto shape : shape_list) {
+            cpSpaceRemoveShape(m_space, shape);
+            cpShapeFree(shape);
+        }
+        QVector<cpConstraint*> joint_list;
+        cpBodyEachConstraint(thing->body, cpBodyConstraintIteratorFunc(GetBodyJointList), &joint_list);
+        for (auto joint : joint_list) {
+            cpSpaceRemoveConstraint(m_space, joint);
+            cpConstraintFree(joint);
+        }
+        cpSpaceRemoveBody(m_space, thing->body);
+        cpBodyFree(thing->body);
+        thing->body = nullptr;
     }
-
-    QVector<cpConstraint*> joint_list;
-    cpBodyEachConstraint(object->body, cpBodyConstraintIteratorFunc(GetBodyJointList), &joint_list);
-    for (auto joint : joint_list) {
-        cpSpaceRemoveConstraint(m_space, joint);
-        cpConstraintFree(joint);
-    }
-
-    cpSpaceRemoveBody(m_space, object->body);
-    cpBodyFree(object->body);
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

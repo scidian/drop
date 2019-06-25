@@ -9,7 +9,7 @@
 #include <QRandomGenerator>
 
 #include "engine.h"
-#include "engine_object.h"
+#include "engine_thing_object.h"
 #include "engine_world.h"
 #include "project/project_world_stage.h"
 #include "project/project_world_stage_thing.h"

@@ -9,7 +9,7 @@
 
 #include "engine.h"
 #include "engine_camera.h"
-#include "engine_object.h"
+#include "engine_thing_object.h"
 #include "engine_world.h"
 #include "form_engine.h"
 #include "opengl/opengl.h"
@@ -35,7 +35,7 @@ static inline void SmoothMove(QVector3D& start, const QVector3D &target, const f
 
 
 //######################################################################################################
-//##    DrEngine - Camera Functions
+//##    DrEngineWorld - Camera Functions
 //######################################################################################################
 // Default parameters: nullptr, 0, 0, 800
 long DrEngineWorld::addCamera(DrEngineObject* object_to_follow, float x, float y, float z) {
@@ -55,13 +55,6 @@ long DrEngineWorld::addCamera(DrEngineObject* object_to_follow, float x, float y
     // Increment camera ID generator, return current camera ID
     m_camera_keys++;
     return (m_camera_keys - 1);
-}
-
-// Removes all cameras from engine
-void DrEngineWorld::clearCameras() {
-    for (auto camera_pair : m_cameras)
-        delete camera_pair.second;
-    m_cameras.clear();
 }
 
 // Updates all cameras based on the objects they're following
@@ -94,7 +87,7 @@ void DrEngineWorld::switchCameras(long new_camera) {
 
 
 //######################################################################################################
-//##    DrEngine - Returns camera position, also takes into handle camera switching
+//##    DrEngineWorld - Returns camera position, also takes into handle camera switching
 //######################################################################################################
 QVector3D DrEngineWorld::getCameraPos() {
     if (m_active_camera == 0) {

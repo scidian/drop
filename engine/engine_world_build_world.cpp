@@ -9,8 +9,8 @@
 #include <QDebug>
 
 #include "engine.h"
-#include "engine_light.h"
-#include "engine_object.h"
+#include "engine_thing_light.h"
+#include "engine_thing_object.h"
 #include "engine_texture.h"
 #include "engine_world.h"
 #include "form_engine.h"
@@ -81,9 +81,8 @@ void DrEngineWorld::buildSpace(Demo_Space new_space_type) {
     light1->shadows = 0.0f;
     light1->blur = 0.0f;
     light1->light_size = 2000;
-    light1->setShouldProcess(false);
-    light1->setHasBeenProcessed(true);
-    objects.append(light1);
+    light1->should_process = false;
+    light1->has_been_processed = true;
 
     DrEngineLight *light2 = new DrEngineLight();
     light2->updateBodyPosition( QPointF(3700, 200) );
@@ -92,9 +91,8 @@ void DrEngineWorld::buildSpace(Demo_Space new_space_type) {
     light2->shadows = 1.0f;
     light2->blur = 5.0f;
     light2->light_size = 1200;
-    light2->setShouldProcess(false);
-    light2->setHasBeenProcessed(true);
-    objects.append(light2);
+    light2->should_process = false;
+    light2->has_been_processed = true;
 
     DrEngineLight *light3 = new DrEngineLight();
     light3->updateBodyPosition( QPointF(700, 800) );
@@ -103,20 +101,19 @@ void DrEngineWorld::buildSpace(Demo_Space new_space_type) {
     light3->shadows = 5.0f;
     light3->blur = 50.0f;
     light3->light_size = 3500;
-    light3->setShouldProcess(false);
-    light3->setHasBeenProcessed(true);
-    objects.append(light3);
+    light3->should_process = false;
+    light3->has_been_processed = true;
 
     DrEngineLight *light4 = new DrEngineLight();
     light4->updateBodyPosition( QPointF(1350, 300) );
     light4->color = Qt::green;
-    light4->intensity = 10.0f;
+    light4->intensity = 1.0f;
     light4->shadows = 10.0f;
     light4->blur = 50.0f;
     light4->light_size = 2000;
-    light4->setShouldProcess(false);
-    light4->setHasBeenProcessed(true);
-    objects.append(light4);
+    light4->should_process = false;
+    light4->has_been_processed = true;
+    light4->pulse = QVector3D( 0.8f, 0.82f, 0.20f);
 
     DrEngineLight *light5 = new DrEngineLight();
     light5->updateBodyPosition( QPointF(2000, 250) );
@@ -125,10 +122,9 @@ void DrEngineWorld::buildSpace(Demo_Space new_space_type) {
     light5->blur = 0.0f;
     light5->shadows = 1.0f;
     light5->light_size = 900;
-    light5->setZOrder(300);
-    light5->setShouldProcess(false);
-    light5->setHasBeenProcessed(true);
-    objects.append(light5);
+    light5->z_order = 300;
+    light5->should_process = false;
+    light5->has_been_processed = true;
 
     DrEngineLight *light6 = new DrEngineLight();
     light6->updateBodyPosition( QPointF(2700, 800) );
@@ -137,17 +133,24 @@ void DrEngineWorld::buildSpace(Demo_Space new_space_type) {
     light6->shadows = 5.0f;
     light6->blur = 50.0f;
     light6->light_size = 4000;
-    light6->setShouldProcess(false);
-    light6->setHasBeenProcessed(true);
+    light6->should_process = false;
+    light6->has_been_processed = true;
     light6->draw_shadows = false;
-    objects.append(light6);
 
-    lights.append(light1);
-    lights.append(light2);
-    lights.append(light3);
-    lights.append(light4);
-    lights.append(light5);
-    lights.append(light6);
+
+    m_lights.append(light1);
+//    m_lights.append(light2);
+//    m_lights.append(light3);
+//    m_lights.append(light4);
+//    m_lights.append(light5);
+//    m_lights.append(light6);
+
+    m_things.append(light1);
+    //m_things.append(light2);
+    //m_things.append(light3);
+    //m_things.append(light4);
+    //m_things.append(light5);
+    //m_things.append(light6);
     m_engine->getFormEngine()->getOpenGL()->doneCurrent();
 
 

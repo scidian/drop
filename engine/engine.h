@@ -15,14 +15,6 @@
 #include "chipmunk/chipmunk.h"
 #include "enums_engine.h"
 
-// Local Enumerations
-enum class Pedal {
-    Brake,
-    None,
-    Clockwise,
-    CounterClockwise,
-};
-
 // Forward declarations
 class DrEngineLight;
 class DrEngineObject;

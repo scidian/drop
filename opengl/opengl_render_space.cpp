@@ -13,8 +13,8 @@
 
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
-#include "engine/engine_light.h"
-#include "engine/engine_object.h"
+#include "engine/engine_thing_light.h"
+#include "engine/engine_thing_object.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
 #include "engine/form_engine.h"
@@ -45,22 +45,21 @@ void OpenGL::drawSpace() {
     m_shader.enableAttributeArray( m_attribute_tex_coord );
 
     // ********** Render 2D Objects
-    EngineObjects &objects = m_engine->getCurrentWorld()->objects;
-    for (auto object : objects) {
-        if (!object->hasBeenProcessed()) continue;
+    for (auto thing : m_engine->getCurrentWorld()->getThings()) {
+        if (!thing->has_been_processed) continue;
 
         // ***** Don't draw Segments (lines)
         bool skip_object = false;
-        for (auto shape : object->shapes) {
-            if (object->shape_type[shape] == Shape_Type::Segment)
+        for (auto shape : thing->shapes) {
+            if (thing->shape_type[shape] == Shape_Type::Segment)
                 skip_object = true;
         }
         if (skip_object) continue;
 
-        // ***** Get texture to render with, set texture coordinates
+        // ***** If light, draw with seperate shader then move to next Thing
         float texture_width = 0, texture_height = 0;
-        if (object->isLight()) {
-            DrEngineLight *light = dynamic_cast<DrEngineLight*>(object);
+        if (thing->getThingType() == DrThingType::Light) {
+            DrEngineLight *light = dynamic_cast<DrEngineLight*>(thing);
             if (light) {
                 // ***** Renders 2D Lights onto Light frame buffer
                 m_shader.disableAttributeArray( m_attribute_tex_coord );
@@ -71,16 +70,21 @@ void OpenGL::drawSpace() {
                 m_shader.setAttributeArray( m_attribute_tex_coord, texture_coordinates.data(), 2 );
                 m_shader.enableAttributeArray( m_attribute_tex_coord );
                 continue;
-            } else {
-                continue;
             }
-        } else {
-            DrEngineTexture *texture = m_engine->getTexture(object->getTextureNumber());
-            if (!texture->texture()->isBound())
-                texture->texture()->bind();
-            texture_width =  texture->width();
-            texture_height = texture->height();
+            continue;
+        } else if (thing->getThingType() != DrThingType::Object) {
+            continue;
         }
+
+        // ***** Convert Thing to Object, Continue with Render
+        DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
+
+        // ***** Get texture to render with, set texture coordinates
+        DrEngineTexture *texture = m_engine->getTexture(object->getTextureNumber());
+        if (!texture->texture()->isBound())
+            texture->texture()->bind();
+        texture_width =  texture->width();
+        texture_height = texture->height();
 
         // ***** Get object position data
         QPointF center = object->getBodyPosition();
@@ -105,40 +109,23 @@ void OpenGL::drawSpace() {
         QVector<GLfloat> vertices;
         vertices.clear();
         vertices.resize( 12 );                      // in sets of x, y, z
-        if (object->isLight()) {
-            double w = width() *  devicePixelRatio();
-            double h = height() * devicePixelRatio();
-            QVector3D top_left =  mapFromScreen(0.0, 0.0);
-            QVector3D top_right = mapFromScreen(  w, 0.0);
-            QVector3D bot_left =  mapFromScreen(0.0,   h);
-            QVector3D bot_right = mapFromScreen(  w,   h);
-            vertices[ 0] = top_right.x();           vertices[ 1] = top_right.y();           vertices[ 2] = 0;       // Top Right
-            vertices[ 3] = top_left.x();            vertices[ 4] = top_left.y();            vertices[ 5] = 0;       // Top Left
-            vertices[ 6] = bot_right.x();           vertices[ 7] = bot_right.y();           vertices[ 8] = 0;       // Bottom Right
-            vertices[ 9] = bot_left.x();            vertices[10] = bot_left.y();            vertices[11] = 0;       // Bottom Left
-        } else {
-            vertices[ 0] = top_right.x() + x;       vertices[ 1] = top_right.y() + y;       vertices[ 2] = z;       // Top Right
-            vertices[ 3] = top_left.x()  + x;       vertices[ 4] = top_left.y()  + y;       vertices[ 5] = z;       // Top Left
-            vertices[ 6] = bot_right.x() + x;       vertices[ 7] = bot_right.y() + y;       vertices[ 8] = z;       // Bottom Right
-            vertices[ 9] = bot_left.x()  + x;       vertices[10] = bot_left.y() +  y;       vertices[11] = z;       // Bottom Left
-        }
+        vertices[ 0] = top_right.x() + x;       vertices[ 1] = top_right.y() + y;       vertices[ 2] = z;       // Top Right
+        vertices[ 3] = top_left.x()  + x;       vertices[ 4] = top_left.y()  + y;       vertices[ 5] = z;       // Top Left
+        vertices[ 6] = bot_right.x() + x;       vertices[ 7] = bot_right.y() + y;       vertices[ 8] = z;       // Bottom Right
+        vertices[ 9] = bot_left.x()  + x;       vertices[10] = bot_left.y() +  y;       vertices[11] = z;       // Bottom Left
         m_shader.setAttributeArray( m_attribute_vertex, vertices.data(), 3 );
         m_shader.enableAttributeArray( m_attribute_vertex );
 
         // ***** Set Shader Variables
         m_shader.setUniformValue( m_uniform_texture, 0 );                           // Use texture unit 0
 
-        if (object->isLight())
-            m_shader.setUniformValue( m_uniform_alpha,  object->getOpacity() );
-        else {
-            // Fade away dying object
-            float alpha = object->getOpacity();                                     // Start with object alpha
-            if (!object->isAlive() && object->getFadeOnDeath()) {
-                double fade_percent = 1.0 - (static_cast<double>(Dr::MillisecondsElapsed(object->getFadeTimer())) / static_cast<double>(object->getFadeDelay()));
-                alpha *= static_cast<float>(fade_percent);
-            }
-            m_shader.setUniformValue( m_uniform_alpha,  alpha );
+        // Fade away dying object
+        float alpha = object->getOpacity();                                     // Start with object alpha
+        if (!object->isAlive() && object->getFadeOnDeath()) {
+            double fade_percent = 1.0 - (static_cast<double>(Dr::MillisecondsElapsed(object->getFadeTimer())) / static_cast<double>(object->getFadeDelay()));
+            alpha *= static_cast<float>(fade_percent);
         }
+        m_shader.setUniformValue( m_uniform_alpha,      alpha );
         m_shader.setUniformValue( m_uniform_width,      texture_width );
         m_shader.setUniformValue( m_uniform_height,     texture_height );
         m_shader.setUniformValue( m_uniform_bitrate,    16.0f );
@@ -178,7 +165,7 @@ QMatrix4x4 OpenGL::occluderMatrix() {
     float right =  cam_x + (m_occluder_fbo->width() / 2.0f);
     float top =    cam_y + (m_occluder_fbo->height() / 2.0f);
     float bottom = cam_y - (m_occluder_fbo->height() / 2.0f);
-    matrix.ortho( left, right, bottom, top,  -1000.0f, 1000.0f);
+    matrix.ortho( left, right, bottom, top, -10000.0f, 10000.0f);
     matrix.scale( m_scale * c_occluder_scale );
     return matrix;
 }
@@ -198,10 +185,10 @@ void OpenGL::drawSpaceOccluder() {
     m_occluder_shader.enableAttributeArray( m_attribute_occluder_tex_coord );
 
     // ********** Render 2D Objects
-    EngineObjects &objects = m_engine->getCurrentWorld()->objects;
-    for (auto object : objects) {
-        if (!object->hasBeenProcessed()) continue;
-        if ( object->isLight()) continue;
+    for (auto thing : m_engine->getCurrentWorld()->getThings()) {
+        if (!thing->has_been_processed) continue;
+        if ( thing->getThingType() != DrThingType::Object) continue;
+        DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
 
         // ***** Don't draw Segments (lines)
         bool skip_object = false;
@@ -256,7 +243,7 @@ void OpenGL::drawSpaceOccluder() {
             alpha *= static_cast<float>(fade_percent);
         }
         m_occluder_shader.setUniformValue( m_uniform_occluder_alpha,      alpha );
-        m_occluder_shader.setUniformValue( m_uniform_occluder_depth,      static_cast<float>(object->getZOrder()) );
+        m_occluder_shader.setUniformValue( m_uniform_occluder_depth,      static_cast<float>(object->z_order) );
 
         // ***** Draw triangles using shader program
         glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

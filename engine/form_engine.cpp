@@ -19,7 +19,7 @@
 
 #include "engine.h"
 #include "engine_camera.h"
-#include "engine_object.h"
+#include "engine_thing_object.h"
 #include "engine_world.h"
 #include "form_engine.h"
 #include "opengl/opengl.h"
@@ -244,14 +244,14 @@ void FormEngine::updateEngine() {
     if (update_milliseconds > m_engine->getCurrentWorld()->getTimeStepAsMilliseconds()) {
         resetTimer(Engine_Timer::Update);
         m_engine->getCurrentWorld()->updateSpace(update_milliseconds);                      // Physics Engine
-        m_engine->getCurrentWorld()->updateSpaceHelper();                                   // Additional Physics Updating
+        m_engine->getCurrentWorld()->updateSpaceHelper(update_milliseconds);                // Additional Physics Updating
         m_engine->getCurrentWorld()->updateCameras();                                       // Update Camera Targets
         moveCameras();                                                                      // Move Cameras
         m_opengl->update();                                                                 // Render
     }
 
     // Additional render on MacOS (smooths more with vsync being disabled)
-    if (m_engine->getCurrentWorld()->objects.count() < 250 && m_engine->getCurrentWorld()->lights.count() <= 0) {
+    if (m_engine->getCurrentWorld()->getThings().count() < 250 && m_engine->getCurrentWorld()->m_lights.count() <= 0) {
         double render_milliseconds = getTimerMilliseconds(Engine_Timer::Render);
         if (render_milliseconds > (1000.0 / m_ideal_frames_per_second)) {
             resetTimer(Engine_Timer::Render);
@@ -264,7 +264,7 @@ void FormEngine::updateEngine() {
         double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
         resetTimer(Engine_Timer::Update);
         m_engine->getCurrentWorld()->updateSpace(update_milliseconds);                      // Physics Engine
-        m_engine->getCurrentWorld()->updateSpaceHelper();                                   // Additional Physics Updating
+        m_engine->getCurrentWorld()->updateSpaceHelper(update_milliseconds);                // Additional Physics Updating
         m_engine->getCurrentWorld()->updateCameras();                                       // Update Camera Targets
         moveCameras();                                                                      // Move Cameras
         m_opengl->update();                                                                 // Render

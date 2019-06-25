@@ -11,7 +11,8 @@
 #include <QOpenGLFramebufferObject>
 
 #include "chipmunk/chipmunk.h"
-#include "engine_object.h"
+#include "engine_thing_object.h"
+#include "enums.h"
 #include "enums_engine.h"
 #include "helper.h"
 
@@ -33,9 +34,11 @@ public:
                                                             //      float cone_1 = qDegreesToRadians(  0.0f);   // Whole Circle
                                                             //      float cone_2 = qDegreesToRadians(360.0f);
     float           shadows = 1.0f;                         // Visibility of shadows,   0 to 100, no light      to  barely visible
-    float           intensity = 0.0f;                       // Increase intensity,      0 to 100, none / normal to  very bright
+    float           intensity = 1.0f;                       // Increase intensity,      0 to 100, none / normal to  very bright
     float           blur = 1.0f;                            // Blur of shadows,         0 to 100, no blur       to  very blurry
     bool            draw_shadows = true;                    // Should this light produc shadows?
+
+    QVector3D       pulse = QVector3D(1, 1, 0);             // Minimum intensity, Max Intensity, Change per second
 
     // Frame Buffer Objects for use during Render
     QOpenGLFramebufferObject *occluder_fbo = nullptr;       // Off screen Frame Buffer Object for Occluder Map
@@ -44,10 +47,11 @@ public:
 
 private:
     // ***** For use by engine
-    QPointF         m_screen_pos = QPointF(0,0);              // Position of the center of the light as rendered to screen
-    int             m_light_diameter = 0;                     // Size of light frame buffer object
-    int             m_light_diameter_fitted = 0;              // Size fit to screen size * 2
-    bool            m_visible = false;                        // Tracks if light is in view
+    QPointF         m_screen_pos = QPointF(0,0);            // Position of the center of the light as rendered to screen
+    int             m_light_diameter = 0;                   // Size of light frame buffer object
+    int             m_light_diameter_fitted = 0;            // Size fit to screen size * 2
+    float           m_pulse_direction = 0;                  // Used to pulse light
+    bool            m_visible = false;                      // Tracks if light is in view
 
 
 public:
@@ -55,18 +59,21 @@ public:
     DrEngineLight();
     virtual ~DrEngineLight() override;
 
-    // Virtual Functions
-    virtual bool    isLight() override { return true; }
+    // Abstract Engine Thing Overrides
+    virtual DrThingType getThingType() override { return DrThingType::Light; }
+    virtual bool        update(double time_passed, double time_warp, QRectF &area) override;
 
     // Getters / Setters
     QPointF     getScreenPos() { return m_screen_pos; }
     int         getLightDiameter() { return m_light_diameter; }
     int         getLightDiameterFitted() { return m_light_diameter_fitted; }
+    float       getPulseDirection() { return m_pulse_direction; }
     bool        isInView() { return m_visible; }
 
     void        setScreenPos(QPointF new_pos) { m_screen_pos = new_pos; }
     void        setLightDiameter(int new_diameter) { m_light_diameter = new_diameter; }
     void        setLightDiameterFitted(int new_diameter) { m_light_diameter_fitted = new_diameter; }
+    void        setPulseDirection(float new_direction) { m_pulse_direction = new_direction; }
     void        setIsInView(bool in_view) { m_visible = in_view; }
 
 };

@@ -27,13 +27,14 @@ class DrEngine;
 class DrEngineLight;
 class DrEngineCamera;
 class DrEngineObject;
+class DrEngineThing;
 class DrProject;
 class DrStage;
 
 // Type Definitions
 typedef std::map<long, DrEngineCamera*>  EngineCameraMap;
 typedef QVector<DrEngineLight*>          EngineLights;
-typedef QVector<DrEngineObject*>         EngineObjects;
+typedef QVector<DrEngineThing*>          EngineThings;
 
 // Global Forward Declaratopns for static Chipmunk callbacks
 extern cpBool   BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                       // defined in engine_world_collision.cpp
@@ -56,7 +57,9 @@ private:
 
     // Local Variables
     long                m_world;                    // Key of world from Project represented in this instance of DrEngineWorld
+    EngineThings        m_things;                   // Holds all things being used in this World / cpSpace
     EngineCameraMap     m_cameras;                  // Map of Cameras used for this Engine
+
 
     // Camera Variables
     long            m_active_camera = 0;            // Key to active camera in the Engine
@@ -98,8 +101,6 @@ private:
 
 // ***** Public Variables not yet implemented into function calls / getters / setters
 public:
-    // Local Variables
-    EngineObjects   objects;                                    // Holds all objects shown in cpSpace
     bool            has_scene = false;                          // True after a scene has been loaded into cpSpace
     Render_Type     render_type = Render_Type::Orthographic;    // Should render perspective or orthographic?
 
@@ -114,8 +115,7 @@ public:
     float           contrast = 0.0f;                            // Contrast         Editor: -255 to 255     Shader: -1.0 to 1.0
     float           brightness = 0.0f;                          // Brightness       Editor: -255 to 255     Shader: -1.0 to 1.0
 
-
-    EngineLights    lights;
+    EngineLights    m_lights;                       // List of Lights created and stored in EngineThings
 
 
 public:
@@ -143,9 +143,9 @@ public:
     void            buildSpace(Demo_Space new_space_type);
     void            clearSpace();
     void            loadStageToSpace(DrStage *stage, double offset_x, double offset_y);
-    void            removeObject(DrEngineObject *object);
+    void            removeThing(DrEngineThing *thing);
     void            updateSpace(double time_passed);
-    void            updateSpaceHelper();
+    void            updateSpaceHelper(double time_passed);
     void            wakeAllBodies();
 
     // Cameras
@@ -170,6 +170,7 @@ public:
     DrEngine*           getEngine()                 { return m_engine; }
     DrProject*          getProject()                { return m_project; }
     cpSpace*            getSpace()                  { return m_space; }
+    EngineThings&       getThings()                 { return m_things; }
 
     cpFloat             getTimeStepAsMilliseconds() { return (1000.0 * m_time_step); }
     const cpFloat&      getTimeStep()               { return m_time_step; }
