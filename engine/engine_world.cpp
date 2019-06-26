@@ -20,3 +20,13 @@ DrEngineWorld::~DrEngineWorld() {
     clearSpace();
 }
 
+
+//######################################################################################################
+//##    Finds a Thing by Unique Key
+//######################################################################################################
+DrEngineThing* DrEngineWorld::findThingByKey(long key) {
+    for (auto thing : m_things) {
+        if (thing->getKey() == key) return thing;
+    }
+    return nullptr;
+}

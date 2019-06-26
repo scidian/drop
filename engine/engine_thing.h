@@ -38,9 +38,15 @@ public:
 
 
 private:
+    // ***** Engine Info
+    long            m_key;                              // Unique key for this item
+
     // ***** Basic Thing Settings
-    QPointF         m_position;                 // Current center posiiton
-    float           m_alpha = 1.0f;             // Transparency of object (0.0 invisible, 1.0 opaque)
+    QPointF         m_position;                         // Current center posiiton
+    float           m_alpha = 1.0f;                     // Transparency of object (0.0 invisible, 1.0 opaque)
+
+    // ***** Object Properties - Camera
+    long            m_active_camera = 0;                // Set to ID of last camera that followed this object, 0 == no camera
 
 
 public:
@@ -53,7 +59,7 @@ public:
 
 
 public:
-    DrEngineThing();
+    DrEngineThing(long unique_key);
     virtual ~DrEngineThing();
 
     // Abstract Virtual Functions
@@ -62,7 +68,7 @@ public:
 
     // Functions
     void                calculateTimeSinceLastUpdate();                                     // Processes update timer
-
+    long                getKey() { return m_key; }                                          // Gets unique item key
 
     // Getters / Setters
     virtual QPointF         getPosition() { return m_position; }                            // Returns Thing center position in world coordinates
@@ -71,6 +77,11 @@ public:
     virtual void            setPosition(QPointF position) { m_position = position; }
     virtual void            setOpacity(float  new_alpha) { m_alpha = new_alpha; }
 
+
+    // Object Properties - Camera
+    const long&     getActiveCameraKey() { return m_active_camera; }
+    bool            hasActiveCamera() { return (m_active_camera == 0) ? false : true; }
+    void            setActiveCameraKey(const long& new_camera_key) { m_active_camera = new_camera_key; }
 
 };
 

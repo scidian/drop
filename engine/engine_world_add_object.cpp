@@ -22,7 +22,7 @@ constexpr double c_mass_multiplier = 0.002;         // Shapes Area times this mu
 //##    Add Line
 //######################################################################################################
 DrEngineObject* DrEngineWorld::addLine(Body_Type body_type, QPointF p1, QPointF p2, double friction, double bounce, double mass) {
-    DrEngineObject *line = new DrEngineObject();
+    DrEngineObject *line = new DrEngineObject(getNextKey());
 
     // Check for default (-1) or custom friction / bounce settings
     line->setCustomFriction(friction);
@@ -94,7 +94,7 @@ DrEngineObject* DrEngineWorld::addCircle(Body_Type body_type, long texture_numbe
     }
 
     // Otherwise continue with circle
-    DrEngineObject *ball = new DrEngineObject();
+    DrEngineObject *ball = new DrEngineObject(getNextKey());
 
     // Check for default (-1) or custom friction / bounce settings
     ball->setCustomFriction(friction);
@@ -162,7 +162,7 @@ DrEngineObject* DrEngineWorld::addCircle(Body_Type body_type, long texture_numbe
 //######################################################################################################
 DrEngineObject* DrEngineWorld::addBlock(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
                                    double friction, double bounce, QPointF velocity, bool should_collide, bool can_rotate) {
-    DrEngineObject *block = new DrEngineObject();
+    DrEngineObject *block = new DrEngineObject(getNextKey());
 
     // Check for default (-1) or custom friction / bounce settings
     block->setCustomFriction(friction);
@@ -234,7 +234,7 @@ DrEngineObject* DrEngineWorld::addBlock(Body_Type body_type, long texture_number
 DrEngineObject* DrEngineWorld::addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
                                      QVector<QPointF> points, double friction, double bounce, QPointF velocity,
                                      bool should_collide, bool can_rotate) {
-    DrEngineObject *polygon = new DrEngineObject();
+    DrEngineObject *polygon = new DrEngineObject(getNextKey());
 
     // Check for default (-1) or custom friction / bounce settings
     polygon->setCustomFriction(friction);

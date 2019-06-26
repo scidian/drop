@@ -18,7 +18,7 @@
 void DrEngineWorld::assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera) {
     // Create camera
     if (add_camera) {
-        long camera_key = addCamera(object);
+        long camera_key = addCamera(object->getKey());
         if (set_active_camera) setActiveCamera(camera_key);
     }
     object->setCollisionType( Collision_Type::Damage_Enemy );
@@ -67,7 +67,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         double ball_radius = m_engine->getTextureMap()[Asset_Textures::Ball]->width() / 2.0;
         DrEngineObject *ball = this->addCircle(Body_Type::Kinematic, Asset_Textures::Ball, -300,  150, 0, c_norotate, c_scale1x1, c_opaque, ball_radius, c_center,
                                                0.7, 0.5, QPointF(15, 0));
-        setActiveCamera( addCamera(ball) );
+        setActiveCamera( addCamera(ball->getKey()) );
 
 
     } else if (m_engine->demo_player == Demo_Player::Car) {
@@ -88,7 +88,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         points.append( QPointF(   5.5,  -5.0 ));
         DrEngineObject *rover = this->addPolygon(Body_Type::Dynamic, Asset_Textures::Rover,  50, 75, 0, c_norotate, c_scale1x1, c_opaque,
                                                  points, 0.5, 0.1, QPointF(0, 0));
-        setActiveCamera( addCamera(rover) );
+        setActiveCamera( addCamera(rover->getKey()) );
 
         // Add wheels
         double ball_radius =  m_engine->getTextureMap()[Asset_Textures::Ball]->width() /  2.0;

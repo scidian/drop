@@ -68,7 +68,7 @@ private:
 
 public:
     // Constructor / Destructor
-    DrEngineLight(DrEngineWorld *world, DrOpenGL *open_gl);
+    DrEngineLight(DrEngineWorld *world, DrOpenGL *open_gl, long unique_key);
     virtual ~DrEngineLight() override;
 
     // Abstract Engine Thing Overrides

@@ -27,7 +27,6 @@ constexpr double    c_epsilon = 0.000001;               // Floating point zero
 const     QPointF   c_center    {0, 0};                 // Default offset in no offset
 const     QPointF   c_scale1x1  {1, 1};                 // Default scale of 1x1
 const     QVector3D c_default_camera_pos {0, 0, 800};   // Default camera position if there is no active camera
-constexpr long      c_no_camera =  0;                   // Default camera position if there is no active camera
 constexpr double    c_norotate =   0;                   // Default rotation amount of zero
 constexpr double    c_opaque =     1;                   // Default transparency of fully opaque
 constexpr double    c_friction =  -1;                   // Flag for add**** call to use world friction setting
@@ -63,9 +62,6 @@ private:
     float           m_scale_x = 1.0f;               // Scale of object in world
     float           m_scale_y = 1.0f;               // Scale of object in world
 
-
-    // ***** Object Properties - Camera
-    long            m_active_camera = c_no_camera;  // Set to ID of last camera that followed this object, 0 == no camera
 
     // ***** Object Properties - Bounce / Friction
     double          m_custom_friction = c_friction; // Defaults to c_friction (-1) if this item uses global m_friction, otherwise stores custom friction
@@ -169,7 +165,7 @@ public:
 
 public:
     // Constructor / Destructor
-    DrEngineObject();
+    DrEngineObject(long unique_key);
     virtual ~DrEngineObject() override;
 
     // Abstract Engine Thing Overrides
@@ -190,11 +186,6 @@ public:
     void            setScaleY(float new_scale_y)  { m_scale_y = new_scale_y; }
     void            setScaleY(double new_scale_y) { m_scale_y = static_cast<float>(new_scale_y); }
 
-
-    // Object Properties - Camera
-    const long&     getActiveCameraKey() { return m_active_camera; }
-    bool            hasActiveCamera() { return (m_active_camera == c_no_camera) ? false : true; }
-    void            setActiveCameraKey(const long& new_camera_key) { m_active_camera = new_camera_key; }
 
     // Object Properties - Bounce / Friction
     const double&   getCustomFriction() { return m_custom_friction; }

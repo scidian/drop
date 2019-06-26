@@ -27,14 +27,14 @@ private:
     DrEngineWorld  *m_world;                                    // Pointer to the parent DrEngineWorld
 
     // Local Variables
-    long            m_camera_key;                               // Key of this camera in the DrEngineWorld EngineCameraMap
+    long            m_key;                                      // Unique DrEngineWorld Key of for this camera in the DrEngineWorld EngineCameraMap
 
     QVector3D       m_position = QVector3D(0, 0, 0);            // Current camera position
     QVector3D       m_speed = QVector3D(0, 0, 0);               // Current camera speed
 
     QVector3D       m_target;                                   // Calculated point this camera is moving towards
 
-    DrEngineObject *m_follow = nullptr;                         // Object this camera should follow
+    long            m_follow_key = 0;                           // Unique DrEngineWorld key this camera should follow
     QVector<double> m_avg_speed_x;                              // Average x speed of object this camera is following
     QVector<double> m_avg_speed_y;
 
@@ -42,21 +42,20 @@ private:
 
 public:
     // Constructor
-    DrEngineCamera(DrEngineWorld *engine_world, float x = 0, float y = 0, float z = 0);
+    DrEngineCamera(DrEngineWorld *engine_world, long unique_key, float x = 0, float y = 0, float z = 0);
 
     // Function Calls
-    void        followObject(DrEngineObject *object) { m_follow = object; }
+    void        followObject(long follow_key) { m_follow_key = follow_key; }
     void        moveCamera(const double& milliseconds);
     void        updateCamera();
 
     // Getters / Setters
-    DrEngineWorld*      getEngineWorld() { return m_world; }
-    long                getKey()         { return m_camera_key; }
-    DrEngineObject*     getObjectFollowing() { return m_follow; }
-    const QVector3D&    getPosition()   { return m_position; }
-    const QVector3D&    getSpeed()      { return m_speed; }
+    DrEngineWorld*      getEngineWorld()    { return m_world; }
+    long                getKey()            { return m_key; }
+    long                getThingFollowing() { return m_follow_key; }
+    const QVector3D&    getPosition()       { return m_position; }
+    const QVector3D&    getSpeed()          { return m_speed; }
 
-    void                setCameraKey(long key) { m_camera_key = key; }
     void                setPosition(QVector3D new_position) {       m_position = new_position; }
     void                setPosition(double x, double y, double z) { m_position = QVector3D(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)); }
     void                setPosition(float x, float y, float z) {    m_position = QVector3D(x, y, z); }

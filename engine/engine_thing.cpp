@@ -11,8 +11,8 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrEngineThing::DrEngineThing() {
-
+DrEngineThing::DrEngineThing(long unique_key) {
+    m_key = unique_key;
 }
 
 DrEngineThing::~DrEngineThing() {

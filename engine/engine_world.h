@@ -57,16 +57,22 @@ private:
     DrProject          *m_project;                  // Pointer to Project loaded into Engine
 
     // Local Variables
+    long                m_key_generator = 1;        // Variable to hand out unique id key's to all children items, keys start at 1
     long                m_world;                    // Key of world from Project represented in this instance of DrEngineWorld
+
+    // **********
+    //      Every Item In These Projects Maps:
+    //          - Is assigned an unique key upon creation from DrEngineWorld::getNextKey()
+    //
     EngineThings        m_things;                   // Holds all things being used in this World / cpSpace
     EngineCameraMap     m_cameras;                  // Map of Cameras used for this Engine
 
 
     // Camera Variables
-    long            m_active_camera = 0;            // Key to active camera in the Engine
-    long            m_camera_keys = 1;              // ID Generator for cameras, camera IDs start at 1, 0 == no camera
+    long            m_active_camera = 0;            // Key to active camera in the Engine, 0 == No Camera
     bool            m_switching_cameras = false;    // True when we want to start tweening towards a new camera
     QVector3D       m_temp_position;                // Used for tweening between cameras
+
 
     // Chipmunk Physics Space
     cpSpace        *m_space = nullptr;              // Current physics space shown on screen
@@ -123,6 +129,9 @@ public:
     DrEngineWorld(DrEngine *engine, DrProject *project, long world_key);
     ~DrEngineWorld();
 
+    // Important Functions
+    long            getNextKey()            { return m_key_generator++; }
+
     // Space Construction / Handling
     DrEngineObject* addLine(  Body_Type body_type,  QPointF p1, QPointF p2, double friction, double bounce, double mass);
 
@@ -142,6 +151,7 @@ public:
     void            assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera);
     void            buildSpace(Demo_Space new_space_type);
     void            clearSpace();
+    DrEngineThing*  findThingByKey(long key);
     void            loadStageToSpace(DrStage *stage, double offset_x, double offset_y);
     void            removeThing(DrEngineThing *thing);
     void            updateSpace(double time_passed);
@@ -149,7 +159,7 @@ public:
     void            wakeAllBodies();
 
     // Cameras
-    long                addCamera(DrEngineObject* object_to_follow = nullptr, float x = 0, float y = 0, float z = 800);
+    long                addCamera(long thing_key_to_follow = 0, float x = 0, float y = 0, float z = 800);
     const long&         getActiveCamera()       { return m_active_camera; }
     void                setActiveCamera(long new_camera) { m_active_camera = new_camera; }
     DrEngineCamera*     getCamera(long camera_id) { return m_cameras[camera_id]; }

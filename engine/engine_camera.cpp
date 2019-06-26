@@ -38,23 +38,22 @@ static inline void SmoothMove(QVector3D& start, const QVector3D &target, const f
 //##    DrEngineWorld - Camera Functions
 //######################################################################################################
 // Default parameters: nullptr, 0, 0, 800
-long DrEngineWorld::addCamera(DrEngineObject* object_to_follow, float x, float y, float z) {
-    DrEngineCamera *camera = new DrEngineCamera(this, x, y, z);
-    camera->setCameraKey(m_camera_keys);
+long DrEngineWorld::addCamera(long thing_key_to_follow, float x, float y, float z) {
+    long new_key = getNextKey();
+    DrEngineCamera *camera = new DrEngineCamera(this, new_key, x, y, z);
 
-    m_cameras[m_camera_keys] = camera;
+    m_cameras[new_key] = camera;
 
     // If an object was passed in, attach camera to that object
-    if (object_to_follow != nullptr) {
-        camera->followObject( object_to_follow );
-        camera->setPositionX( static_cast<float>(object_to_follow->getPosition().x()) );
-        camera->setPositionY( static_cast<float>(object_to_follow->getPosition().y()) );
+    DrEngineThing *follow = findThingByKey(thing_key_to_follow);
+    if (follow) {
+        camera->followObject( thing_key_to_follow );
+        camera->setPositionX( static_cast<float>(follow->getPosition().x()) );
+        camera->setPositionY( static_cast<float>(follow->getPosition().y()) );
         camera->setTarget( QVector3D(camera->getPosition().x(), camera->getPosition().y(), z));
-        object_to_follow->setActiveCameraKey(m_camera_keys);
+        follow->setActiveCameraKey(new_key);
     }
-    // Increment camera ID generator, return current camera ID
-    m_camera_keys++;
-    return (m_camera_keys - 1);
+    return new_key;
 }
 
 // Updates all cameras based on the objects they're following
@@ -109,7 +108,8 @@ double DrEngineWorld::getCameraPosZD() { return static_cast<double>(getCameraPos
 //######################################################################################################
 //##    DrEngineCamera - Constructor / Destructor
 //######################################################################################################
-DrEngineCamera::DrEngineCamera(DrEngineWorld *world, float x, float y, float z) : m_world(world) {
+DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, float y, float z) : m_world(world) {
+    m_key = unique_key;
     m_position = QVector3D(x, y, z);
     m_target = m_position;
     m_avg_speed_x.clear();  m_avg_speed_x.fill(0, 20);
@@ -134,11 +134,13 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
 //######################################################################################################
 void DrEngineCamera::updateCamera() {
     // Movement is based on following an object stored in m_follow
-    QPointF follow_pos, follow_previous_pos;
-    try { follow_pos = m_follow->getPosition(); }
-    catch (...) { m_follow = nullptr; return; }
-    try { follow_previous_pos = m_follow->getPreviousPosition(); }
-    catch (...) { m_follow = nullptr; return; }
+    if (m_follow_key == 0) return;
+    DrEngineThing *follow = m_world->findThingByKey(m_follow_key);
+    if (follow == nullptr) {                                m_follow_key = 0;   return;     }
+    if (follow->getThingType() != DrThingType::Object) {    m_follow_key = 0;   return;     }
+    DrEngineObject *object = dynamic_cast<DrEngineObject*>(follow);
+    QPointF follow_pos = object->getPosition();
+    QPointF follow_previous_pos = object->getPreviousPosition();
 
     // Calculate the average object Speed
     m_avg_speed_x.push_back( follow_pos.x() - follow_previous_pos.x() );

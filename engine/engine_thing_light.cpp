@@ -16,7 +16,7 @@
 //######################################################################################################
 //##    Constructor / Destructor
 //######################################################################################################
-DrEngineLight::DrEngineLight(DrEngineWorld *world, DrOpenGL *opengl) : m_world(world), m_opengl(opengl) {
+DrEngineLight::DrEngineLight(DrEngineWorld *world, DrOpenGL *opengl, long unique_key) : DrEngineObject(unique_key), m_world(world), m_opengl(opengl) {
     m_world->light_count++;
 }
 
@@ -68,7 +68,7 @@ bool DrEngineLight::update(double time_passed, double time_warp, QRectF &area) {
 DrEngineLight* DrEngineWorld::addLight(double x, double y, double z, QColor color, float diameter, QPointF cone,
                                        float intensity, float shadows, bool draw_shadows, float blur,
                                        float pulse, float pulse_speed, float opacity) {
-    DrEngineLight *light = new DrEngineLight(this, m_engine->getFormEngine()->getOpenGL());
+    DrEngineLight *light = new DrEngineLight(this, m_engine->getFormEngine()->getOpenGL(), getNextKey());
     light->setPosition( QPointF(x, y) );
     light->z_order = z - 0.0001;
     light->color = color;
