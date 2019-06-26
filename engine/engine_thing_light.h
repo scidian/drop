@@ -51,6 +51,7 @@ private:
     int             m_light_diameter = 0;                   // Size of light frame buffer object
     int             m_light_diameter_fitted = 0;            // Size fit to screen size * 2
     float           m_pulse_direction = 0;                  // Used to pulse light
+    float           m_pulse_target;                         // Pulse target intensity
     bool            m_visible = false;                      // Tracks if light is in view
 
 

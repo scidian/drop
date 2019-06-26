@@ -5,6 +5,8 @@
 //
 //
 //
+#include <QRandomGenerator>
+
 #include "engine.h"
 #include "engine_thing_light.h"
 #include "engine_world.h"
@@ -37,13 +39,19 @@ bool DrEngineLight::update(double time_passed, double time_warp, QRectF &area) {
             pulse.setY( pulse.x() );
             pulse.setX( temp );
         }
-        if (qFuzzyCompare(m_pulse_direction, 0)) m_pulse_direction = pulse.z() / static_cast<float>(time_passed / 1000.0 * time_warp);
+        if (qFuzzyCompare(m_pulse_direction, 0)) {
+            m_pulse_direction = pulse.z();
+            m_pulse_target = (pulse.z() < 0) ? pulse.x() : pulse.y();
+        }
 
-        intensity += m_pulse_direction;
-        if (intensity > pulse.y() && m_pulse_direction > 0) {
-            m_pulse_direction = -(abs(pulse.z() / 60.0f));
-        } else if (intensity < pulse.x() && m_pulse_direction < 0) {
-            m_pulse_direction =  (abs(pulse.z() / 60.0f));
+        intensity += m_pulse_direction * static_cast<float>((time_passed / 1000.0) * time_warp);;
+
+        if        (m_pulse_direction > 0 && intensity > m_pulse_target) {
+            m_pulse_direction = -(abs(pulse.z()));
+            m_pulse_target = pulse.x();// - (pulse.x() * static_cast<float>(QRandomGenerator().bounded(0.5)));
+        } else if (m_pulse_direction < 0 && intensity < m_pulse_target) {
+            m_pulse_direction =  (abs(pulse.z()));
+            m_pulse_target = pulse.y();// + (pulse.y() * static_cast<float>(QRandomGenerator().bounded(0.5)));
         }
     }
 

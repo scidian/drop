@@ -141,14 +141,14 @@ void DrEngineWorld::buildSpace(Demo_Space new_space_type) {
     m_lights.append(light1);
 //    m_lights.append(light2);
 //    m_lights.append(light3);
-//    m_lights.append(light4);
+    m_lights.append(light4);
 //    m_lights.append(light5);
 //    m_lights.append(light6);
 
     m_things.append(light1);
     //m_things.append(light2);
     //m_things.append(light3);
-    //m_things.append(light4);
+    m_things.append(light4);
     //m_things.append(light5);
     //m_things.append(light6);
     m_engine->getFormEngine()->getOpenGL()->doneCurrent();
