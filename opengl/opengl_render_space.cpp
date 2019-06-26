@@ -48,14 +48,6 @@ void DrOpenGL::drawSpace() {
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
         if (!thing->has_been_processed) continue;
 
-        // ***** Don't draw Segments (lines)
-        bool skip_object = false;
-        for (auto shape : thing->shapes) {
-            if (thing->shape_type[shape] == Shape_Type::Segment)
-                skip_object = true;
-        }
-        if (skip_object) continue;
-
         // ***** If light, draw with seperate shader then move to next Thing
         float texture_width = 0, texture_height = 0;
         if (thing->getThingType() == DrThingType::Light) {
@@ -73,12 +65,19 @@ void DrOpenGL::drawSpace() {
                 continue;
             }
             continue;
-        } else if (thing->getThingType() != DrThingType::Object) {
-            continue;
         }
 
         // ***** Convert Thing to Object, Continue with Render
+        if (thing->getThingType() != DrThingType::Object) continue;
         DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
+
+        // ***** Don't draw Segments (lines)
+        bool skip_object = false;
+        for (auto shape : object->shapes) {
+            if (object->shape_type[shape] == Shape_Type::Segment)
+                skip_object = true;
+        }
+        if (skip_object) continue;
 
         // ***** Get texture to render with, set texture coordinates
         DrEngineTexture *texture = m_engine->getTexture(object->getTextureNumber());

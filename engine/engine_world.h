@@ -153,7 +153,6 @@ public:
     void            clearSpace();
     DrEngineThing*  findThingByKey(long key);
     void            loadStageToSpace(DrStage *stage, double offset_x, double offset_y);
-    void            removeThing(DrEngineThing *thing);
     void            updateSpace(double time_passed);
     void            updateSpaceHelper(double time_passed);
     void            wakeAllBodies();

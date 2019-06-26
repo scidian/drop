@@ -306,9 +306,10 @@ void DrOpenGL::drawDebugCollisions(QPainter &painter) {
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
         if (!thing->should_process)                         continue;
         if (!thing->has_been_processed)                     continue;
-        if ( thing->body_type != Body_Type::Dynamic)        continue;
         if ( thing->getThingType() != DrThingType::Object)  continue;
+
         DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
+        if ( object->body_type != Body_Type::Dynamic)        continue;
 
         QVector<QPointF> point_list;    point_list.clear();
         QVector<cpVect>  normal_list;   normal_list.clear();

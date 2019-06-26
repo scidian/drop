@@ -27,15 +27,8 @@ typedef std::map<cpShape*, Shape_Type> ShapeMap;
 class DrEngineThing
 {
 public:
-    // ***** Object Body and Shapes
-    cpBody             *body = nullptr;         // Physical Body of object
-    Body_Type           body_type;              // Body_Type
-
-    QVector<cpShape*>   shapes;                 // Collision Shapes of object
-    ShapeMap            shape_type;             // Shape Types of Shapes of Object
-
-    double              z_order = 0.0;          // Used for layering, needs to be public for use with std::sort
-
+    // ***** Layout Variable
+    double          z_order = 0.0;                      // Used for layering, needs to be public for use with std::sort
 
 private:
     // ***** Engine Info
@@ -45,7 +38,7 @@ private:
     QPointF         m_position;                         // Current center posiiton
     float           m_alpha = 1.0f;                     // Transparency of object (0.0 invisible, 1.0 opaque)
 
-    // ***** Object Properties - Camera
+    // ***** Thing Properties - Camera
     long            m_active_camera = 0;                // Set to ID of last camera that followed this object, 0 == no camera
 
 

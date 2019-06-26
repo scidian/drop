@@ -46,7 +46,6 @@ void DrEngineWorld::updateSpaceHelper(double time_passed) {
     g_jump_button = m_engine->jump_button;
     g_pedal =       m_engine->gas_pedal;
 
-
     // ********** Iterate through Things, delete if they go off screen
     for ( auto it = m_things.begin(); it != m_things.end(); ) {
         DrEngineThing *thing = *it;
@@ -57,12 +56,13 @@ void DrEngineWorld::updateSpaceHelper(double time_passed) {
 
         // ***** Process Removal
         if (remove) {
-            removeThing(thing);
             delete thing;
             it = m_things.erase(it);
-        } else {
-            it++;
+            continue;
         }
+
+        // ***** Increment for loop
+        it++;
     }   // End For
 
 

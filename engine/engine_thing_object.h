@@ -50,6 +50,14 @@ extern QString      g_info;
 //############################
 class DrEngineObject : public DrEngineThing
 {
+public:
+    // ***** Object Body and Shapes
+    cpBody             *body = nullptr;         // Physical Body of object
+    Body_Type           body_type;              // Body_Type
+
+    QVector<cpShape*>   shapes;                 // Collision Shapes of object
+    ShapeMap            shape_type;             // Shape Types of Shapes of Object
+
 
 private:
     // ********** Object Component Properties

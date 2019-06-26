@@ -22,6 +22,7 @@ DrEngineLight::DrEngineLight(DrEngineWorld *world, DrOpenGL *opengl, long unique
 
 
 DrEngineLight::~DrEngineLight() {
+    should_process = false;
     m_world->light_count--;
 
     m_opengl->makeCurrent();
