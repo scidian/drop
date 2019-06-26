@@ -10,6 +10,7 @@
 #define DRCOMPONENT_H
 
 #include "enums.h"
+#include "enums_dr_settings.h"
 
 // Forward Declarations
 class DrSettings;

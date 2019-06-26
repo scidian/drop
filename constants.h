@@ -45,17 +45,21 @@ namespace Component_Colors {
 //############################
 namespace Component_Icons {
     const QString Name          { QString(":/assets/inspector_icons/comp_name.png") };
+
     const QString Settings      { QString(":/assets/inspector_icons/comp_settings.png") };
+    const QString Character     { QString(":/assets/inspector_icons/comp_character.png") };
+    const QString Object        { QString(":/assets/inspector_icons/comp_object.png") };
+    const QString Light         { QString(":/assets/inspector_icons/comp_font.png") };
+    const QString Font          { QString(":/assets/inspector_icons/comp_font.png") };
+    const QString Camera        { QString(":/assets/inspector_icons/comp_camera.png") };
+
     const QString Physics       { QString(":/assets/inspector_icons/comp_physics.png") };
     const QString Transform     { QString(":/assets/inspector_icons/comp_transform.png") };
     const QString Layering      { QString(":/assets/inspector_icons/comp_layering.png") };
     const QString Movement      { QString(":/assets/inspector_icons/comp_movement.png") };
-    const QString Appearance    { QString(":/assets/inspector_icons/comp_appearance.png") };
-    const QString Character     { QString(":/assets/inspector_icons/comp_character.png") };
-    const QString Camera        { QString(":/assets/inspector_icons/comp_camera.png") };
-    const QString Object        { QString(":/assets/inspector_icons/comp_object.png") };
+    const QString Appearance    { QString(":/assets/inspector_icons/comp_appearance.png") };    
     const QString Animation     { QString(":/assets/inspector_icons/comp_animation.png") };
-    const QString Font          { QString(":/assets/inspector_icons/comp_font.png") };
+
     const QString None          { QString("") };
 };
 

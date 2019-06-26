@@ -13,14 +13,15 @@ varying highp vec2  coordinates;                    // Texture Coodinates
 // ***** Input from Engine
 uniform sampler2D   u_texture;                      // Shadow Map 1D
 uniform float       u_light_diameter;               // Original Light Diameter
-uniform float       u_light_fitted;                 // Light Diameter Fit to Max
+uniform float       u_light_fitted;                 // Light Diameter Fit to Max Size
+uniform lowp float  u_alpha;                        // Opacity of light                 0.0 to 1.0
 
-uniform vec3        u_color;                        // Light Color, r/g/b       0.0 to 1.0 x 3
-uniform lowp vec2   u_cone;                         // Start angle, End Angle   0.0, 360.0 is Full Circle
-uniform lowp float  u_light_shadows;                // Visible shadows          0.0 to 100.0
-uniform lowp float  u_intensity;                    // Intensity                0.0 to 100.0?
-uniform lowp float  u_blur;                         // Blur                     0.0 to 100.0
-uniform bool        u_draw_shadows;                 // Draw shadows             yes or no
+uniform vec3        u_color;                        // Light Color, r/g/b               0.0 to 1.0 x 3
+uniform lowp vec2   u_cone;                         // Start angle, End Angle           0.0, 360.0 is Full Circle
+uniform lowp float  u_light_shadows;                // Visible shadows                  0.0 to 100.0
+uniform lowp float  u_intensity;                    // Intensity                        0.0 to 100.0?
+uniform lowp float  u_blur;                         // Blur                             0.0 to 100.0
+uniform bool        u_draw_shadows;                 // Draw shadows                     true or false
 
 const float         PI = 3.14159;
 
@@ -87,7 +88,7 @@ void main(void) {
     float amount = sum * smoothstep(1.0, 0.0, r * shrink);
 
     // Multiply by light color
-    gl_FragColor = vec4(u_color, 1.0) * vec4(amount, amount, amount, amount);
+    gl_FragColor = vec4(u_color, u_alpha) * vec4(amount, amount, amount, amount);
 }
 
 

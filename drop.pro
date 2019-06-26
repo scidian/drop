@@ -223,6 +223,7 @@ HEADERS += \
     engine/engine_world.h \
     engine/form_engine.h \
     enums.h \
+    enums_dr_settings.h \
     enums_engine.h \
     forms/form_blank.h \
     forms/form_color_magnifier.h \

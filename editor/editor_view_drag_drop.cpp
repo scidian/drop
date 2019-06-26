@@ -90,17 +90,17 @@ void DrView::dropEvent(QDropEvent *event) {
         DrThing  *thing;
         switch (asset->getAssetType()) {
             case DrAssetType::Object:
-                thing = stage->addThing(DrThingType::Object, asset_key, position.x(), -position.y(), 0);      // FIX: z order
+                thing = stage->addThing(DrThingType::Object,    asset_key, position.x(), -position.y(), 0);         // FIX: z order
                 my_scene->addItemToSceneFromThing( thing );
                 break;
 
             case DrAssetType::Text:
-                thing = stage->addThing(DrThingType::Text, asset_key, position.x(), -position.y(), 0);        // FIX: z order
+                thing = stage->addThing(DrThingType::Text,      asset_key, position.x(), -position.y(), 0);         // FIX: z order
                 my_scene->addItemToSceneFromThing( thing );
                 break;
 
             case DrAssetType::Character:
-                thing = stage->addThing(DrThingType::Character, asset_key, position.x(), -position.y(), 0);   // FIX: z order
+                thing = stage->addThing(DrThingType::Character, asset_key, position.x(), -position.y(), 0);         // FIX: z order
                 my_scene->addItemToSceneFromThing( thing );
                 break;
         }

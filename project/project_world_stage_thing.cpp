@@ -19,7 +19,9 @@
 //####################################################################################
 DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *parent_stage,
                  long new_thing_key, QString new_thing_name, DrThingType new_thing_type,
-                 long from_asset_key, double x, double y, long z, bool should_collide) {
+                 long from_asset_key,
+                 double x, double y, long z,
+                 bool should_collide) {
     m_parent_project = parent_project;              // pointer to parent Project
     m_parent_world = parent_world;                  // pointer to parent World
     m_parent_stage = parent_stage;                  // pointer to parent Stage
@@ -53,9 +55,9 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, z);
             break;
 
-        //case DrThingType::Camera:
-        //    addComponentSettingsCamera(new_thing_name);
-        //    break;
+        case DrThingType::Light:
+            addComponentSettingsLight(Qt::white);
+            break;
     }
 
 }
@@ -90,14 +92,14 @@ void DrThing::addComponentSettingsObject(QString new_name, bool should_collide) 
 
     addComponent(Components::Thing_Settings_Object, "Object Settings", "Settings for current Object.", Component_Colors::White_Snow, true);
     getComponent(Components::Thing_Settings_Object)->setIcon(Component_Icons::Object);
-    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Physics_Type, Property_Type::List, 0,
+    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Object_Physics_Type, Property_Type::List, 0,
                            "Object Type", "<b>Static</b> - Can not move. <br> "
                                           "<b>Kinematic</b> - Moves at fixed speed. <br> "
                                           "<b>Dynamic</b> - Physics object.");
-    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Collide, Property_Type::Bool, should_collide,
+    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Object_Collide, Property_Type::Bool, should_collide,
                            "Collide?", "Should this Object collide with Dynamic Objects? Objects not marked to collide "
                                        "still provide damage and sound reponses when coming into contact with other Objects.");
-    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Damage, Property_Type::List, 0,
+    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Object_Damage, Property_Type::List, 0,
                            "Damage", "Choose the type of Object this will damage when coming into contact. By choosing \"Damage Player\" this "
                                      "Object will be treated as an enemy and vice versa.");
 }
@@ -107,6 +109,11 @@ void DrThing::addComponentSettingsLight(QColor color) {
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Light",
                            "Effect Name", "Name of the current Effect.", false, false);
+
+    addComponent(Components::Thing_Settings_Light, "Light Settings", "Settings for current Light.", Component_Colors::Mellow_Yellow, true);
+    getComponent(Components::Thing_Settings_Light)->setIcon(Component_Icons::Light);
+    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Color, Property_Type::Color, color.rgba(),
+                           "Light Color", "The Color for this Light.");
 }
 
 void DrThing::addComponentSettingsText(QString new_name) {

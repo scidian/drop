@@ -62,7 +62,7 @@ private:
 
     float           m_scale_x = 1.0f;               // Scale of object in world
     float           m_scale_y = 1.0f;               // Scale of object in world
-    float           m_alpha = 1.0f;                 // Transparency of object (0.0 invisible, 1.0 opaque)
+
 
     // ***** Object Properties - Camera
     long            m_active_camera = c_no_camera;  // Set to ID of last camera that followed this object, 0 == no camera
@@ -150,9 +150,8 @@ private:
     DrTime      m_death_timer =  Clock::now();              // Used to incorporate death_delay for object dying
     DrTime      m_fade_timer =   Clock::now();              // Used to incorporate fade_delay for object fade / removal
 
-    double      m_angle = 0.0;                              // Current object->body angle, updated every frame by updateSpaceHelper()
-    QPointF     m_position;                                 // Current object->body posiiton, updated every frame by updateSpaceHelper()
-    QPointF     m_previous_position;                        // Previous frame position, updated every frame by updateSpaceHelper()
+    double      m_angle = 0.0;                              // Current object->body angle, updated every frame by update()
+    QPointF     m_previous_position;                        // Previous frame position, updated every frame by update()
 
 
 public:
@@ -183,7 +182,6 @@ public:
     const long&     getTextureNumber() { return m_texture_number; }
     const float&    getScaleX() { return m_scale_x; }
     const float&    getScaleY() { return m_scale_y; }
-    const float&    getOpacity() { return m_alpha; }
 
     void            setDoesCollide(bool should_collide) { m_does_collide = should_collide; }
     void            setTextureNumber(long texture_number) { m_texture_number = texture_number; }
@@ -191,8 +189,6 @@ public:
     void            setScaleX(double new_scale_x) { m_scale_x = static_cast<float>(new_scale_x); }
     void            setScaleY(float new_scale_y)  { m_scale_y = new_scale_y; }
     void            setScaleY(double new_scale_y) { m_scale_y = static_cast<float>(new_scale_y); }
-    void            setOpacity(float new_alphaf)  { m_alpha = new_alphaf; }
-    void            setOpacity(double new_alphaf) { m_alpha = static_cast<float>(new_alphaf); }
 
 
     // Object Properties - Camera
@@ -336,9 +332,8 @@ public:
 
 
     // Object->Body Data - Updated every frame by updateSpaceHelper()
-    const double&   getBodyAngle() { return m_angle; }
-    QPointF         getBodyPosition() { return m_position; }
-    QPointF         getBodyPreviousPosition() { return m_previous_position; }
+    const double&   getAngle() { return m_angle; }
+    QPointF         getPreviousPosition() { return m_previous_position; }
     void            updateBodyAngle(double updated_angle) { m_angle = updated_angle; }
     void            updateBodyPosition(QPointF updated_position, bool update_previous_position_also = false);
 

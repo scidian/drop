@@ -37,6 +37,13 @@ public:
     double              z_order = 0.0;          // Used for layering, needs to be public for use with std::sort
 
 
+private:
+    // ***** Basic Thing Settings
+    QPointF         m_position;                 // Current center posiiton
+    float           m_alpha = 1.0f;             // Transparency of object (0.0 invisible, 1.0 opaque)
+
+
+public:
     // ********** Local Variables Updated by Engine
     //                NOT TO BE SET BY USER
     bool        should_process = true;                  // True while object exists in Space
@@ -49,12 +56,21 @@ public:
     DrEngineThing();
     virtual ~DrEngineThing();
 
-    // Virtual Functions
+    // Abstract Virtual Functions
     virtual DrThingType getThingType() = 0;                                                 // Returns DrThingType of this Thing
     virtual bool        update(double time_passed, double time_warp, QRectF &area) = 0;     // Process one update iteration for this Thing
 
     // Functions
     void                calculateTimeSinceLastUpdate();                                     // Processes update timer
+
+
+    // Getters / Setters
+    virtual QPointF         getPosition() { return m_position; }                            // Returns Thing center position in world coordinates
+    virtual const float&    getOpacity() { return m_alpha; }                                // Returns Opacity (alpha 0.0 to 1.0) of Thing
+
+    virtual void            setPosition(QPointF position) { m_position = position; }
+    virtual void            setOpacity(float new_alpha) { m_alpha = new_alpha; }
+
 
 };
 

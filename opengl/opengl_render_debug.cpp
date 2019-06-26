@@ -124,7 +124,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
         painter.setBrush( QBrush( brush_color));
 
         // Load Object Position
-        QPointF center = object->getBodyPosition();
+        QPointF center = object->getPosition();
 
         // Used to store combined polygon of a multi-shape body
         QPolygonF object_poly;
@@ -134,7 +134,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
             if (object->shape_type[shape] == Shape_Type::Circle) {
                 cpVect offset = cpCircleShapeGetOffset(shape);
                 double radius = cpCircleShapeGetRadius(shape);
-                QTransform t = QTransform().translate(center.x(), center.y()).rotate(object->getBodyAngle());
+                QTransform t = QTransform().translate(center.x(), center.y()).rotate(object->getAngle());
 
                 // Draw Normal circle since camera is facing straight on
                 if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
@@ -214,7 +214,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 
             } else if (object->shape_type[shape] == Shape_Type::Polygon || object->shape_type[shape] == Shape_Type::Box) {
 
-                QTransform t = QTransform().translate(center.x(), center.y()).rotate( object->getBodyAngle());
+                QTransform t = QTransform().translate(center.x(), center.y()).rotate( object->getAngle());
                 QPolygonF polygon, mapped;
                 for (int i = 0; i < cpPolyShapeGetCount( shape ); i++) {
                     cpVect  vert  = cpPolyShapeGetVert( shape, i );
@@ -280,8 +280,8 @@ void OpenGL::drawDebugJoints(QPainter &painter) {
         DrEngineObject *object_b = static_cast<DrEngineObject*>(cpBodyGetUserData(body_b));
 
         // Load Object Positions
-        QPointF center_a = object_a->getBodyPosition();
-        QPointF center_b = object_b->getBodyPosition();
+        QPointF center_a = object_a->getPosition();
+        QPointF center_b = object_b->getPosition();
         QPointF l1 = mapToScreen( center_a.x(), center_a.y(), 0);
         QPointF l2 = mapToScreen( center_b.x(), center_b.y(), 0);
 
@@ -323,7 +323,7 @@ void OpenGL::drawDebugCollisions(QPainter &painter) {
             double angle_in_degrees = (angle_in_radians / M_PI) * 180.0;
 
             if (open_gl_rect.contains(point.toPoint())) {
-                QTransform t = QTransform().translate(point.x(), point.y()).rotate(-object->getBodyAngle()).translate(-point.x(), -point.y());
+                QTransform t = QTransform().translate(point.x(), point.y()).rotate(-object->getAngle()).translate(-point.x(), -point.y());
                 QPoint dot = t.map( point ).toPoint();
 
                 //// Draw dots

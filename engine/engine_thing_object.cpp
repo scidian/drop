@@ -26,8 +26,8 @@ DrEngineObject::~DrEngineObject() {
 //##    Update Functions
 //######################################################################################################
 void DrEngineObject::updateBodyPosition(QPointF updated_position, bool update_previous_position_also) {
-    m_previous_position = update_previous_position_also ? updated_position : m_position;
-    m_position = updated_position;
+    m_previous_position = update_previous_position_also ? updated_position : getPosition();
+    setPosition( updated_position );
 }
 
 bool DrEngineObject::update(double , double , QRectF &area) {

@@ -48,15 +48,15 @@ bool DrEngineLight::update(double time_passed, double time_warp, QRectF &area) {
 
         if        (m_pulse_direction > 0 && intensity > m_pulse_target) {
             m_pulse_direction = -(abs(pulse.z()));
-            m_pulse_target = pulse.x();// - (pulse.x() * static_cast<float>(QRandomGenerator().bounded(0.5)));
+            m_pulse_target = pulse.x();/// - (pulse.x() * static_cast<float>(QRandomGenerator().bounded(0.5)));
         } else if (m_pulse_direction < 0 && intensity < m_pulse_target) {
             m_pulse_direction =  (abs(pulse.z()));
-            m_pulse_target = pulse.y();// + (pulse.y() * static_cast<float>(QRandomGenerator().bounded(0.5)));
+            m_pulse_target = pulse.y();/// + (pulse.y() * static_cast<float>(QRandomGenerator().bounded(0.5)));
         }
     }
 
     // ***** Delete object if ends up outside the deletion threshold
-    if (area.contains(getBodyPosition()) == false) remove = true;
+    if (area.contains(getPosition()) == false) remove = true;
 
     return false;
 }

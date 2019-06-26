@@ -87,7 +87,7 @@ void OpenGL::drawSpace() {
         texture_height = texture->height();
 
         // ***** Get object position data
-        QPointF center = object->getBodyPosition();
+        QPointF center = object->getPosition();
         float   x, y, z;
         float   half_width, half_height;
         x = static_cast<float>(center.x());
@@ -99,7 +99,7 @@ void OpenGL::drawSpace() {
 
         // ***** Create rotation matrix, apply rotation to object
         QMatrix4x4 matrix;
-        matrix.rotate( static_cast<float>(object->getBodyAngle()), 0.0, 0.0, 1.0 );
+        matrix.rotate( static_cast<float>(object->getAngle()), 0.0, 0.0, 1.0 );
         QVector3D top_right = matrix * QVector3D( half_width,  half_height, 0);
         QVector3D top_left =  matrix * QVector3D(-half_width,  half_height, 0);
         QVector3D bot_right = matrix * QVector3D( half_width, -half_height, 0);
@@ -204,7 +204,7 @@ void OpenGL::drawSpaceOccluder() {
             texture->texture()->bind();
 
         // ***** Get object position data
-        QPointF center = object->getBodyPosition();
+        QPointF center = object->getPosition();
 
         float x, y, z, half_width, half_height;
         x = static_cast<float>(center.x());
@@ -215,7 +215,7 @@ void OpenGL::drawSpaceOccluder() {
 
         // ***** Create rotation matrix, apply rotation to object
         QMatrix4x4 matrix;
-        matrix.rotate( static_cast<float>(object->getBodyAngle()), 0.0, 0.0, 1.0 );
+        matrix.rotate( static_cast<float>(object->getAngle()), 0.0, 0.0, 1.0 );
         QVector3D top_right = matrix * QVector3D( half_width,  half_height, 0);
         QVector3D top_left =  matrix * QVector3D(-half_width,  half_height, 0);
         QVector3D bot_right = matrix * QVector3D( half_width, -half_height, 0);

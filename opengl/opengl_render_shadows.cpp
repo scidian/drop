@@ -56,8 +56,8 @@ void OpenGL::drawShadowMaps() {
         if (light->draw_shadows == false) continue;
 
         // Calculate light position on Occluder Map
-        light->setScreenPos( mapToOccluder( QVector3D(static_cast<float>(light->getBodyPosition().x()),
-                                                      static_cast<float>(light->getBodyPosition().y()), 0.0f)) );
+        light->setScreenPos( mapToOccluder( QVector3D(static_cast<float>(light->getPosition().x()),
+                                                      static_cast<float>(light->getPosition().y()), 0.0f)) );
         double middle = m_texture_fbo->height() / 2.0;
         double y_diff = middle - light->getScreenPos().y();
 
@@ -184,7 +184,7 @@ void OpenGL::draw1DShadowMap(DrEngineLight *light) {
     // ***** Give the shader our Ray Count and Scaled Light Radius
     m_shadow_shader.setUniformValue( m_uniform_shadow_ray_count,  static_cast<float>(light->shadow_fbo->width()) );
 
-    float screen_scale = (width()*devicePixelRatio() / light->light_size);
+    float screen_scale = width()*devicePixelRatio() / light->light_size;
     m_shadow_shader.setUniformValue( m_uniform_shadow_resolution, light->getLightDiameter(), light->getLightDiameter() * screen_scale );
     m_shadow_shader.setUniformValue( m_uniform_shadow_depth,      static_cast<float>(light->z_order) );
 
@@ -223,10 +223,10 @@ void OpenGL::draw2DLight(DrEngineLight *light) {
     m_light_shader.enableAttributeArray( m_attribute_light_tex_coord );
 
     // Load vertices for this object
-    float left =   static_cast<float>(light->getBodyPosition().x()) - (light->getLightDiameterFitted() / 2.0f);
-    float right =  static_cast<float>(light->getBodyPosition().x()) + (light->getLightDiameterFitted() / 2.0f);
-    float top =    static_cast<float>(light->getBodyPosition().y()) + (light->getLightDiameterFitted() / 2.0f);
-    float bottom = static_cast<float>(light->getBodyPosition().y()) - (light->getLightDiameterFitted() / 2.0f);
+    float left =   static_cast<float>(light->getPosition().x()) - (light->getLightDiameterFitted() / 2.0f);
+    float right =  static_cast<float>(light->getPosition().x()) + (light->getLightDiameterFitted() / 2.0f);
+    float top =    static_cast<float>(light->getPosition().y()) + (light->getLightDiameterFitted() / 2.0f);
+    float bottom = static_cast<float>(light->getPosition().y()) - (light->getLightDiameterFitted() / 2.0f);
     QVector<GLfloat> vertices;
     setVertexFromSides(vertices, left, right, top, bottom);
     m_light_shader.setAttributeArray(    m_attribute_light_vertex, vertices.data(), 3 );
@@ -235,9 +235,12 @@ void OpenGL::draw2DLight(DrEngineLight *light) {
     // Use texture unit 0
     m_light_shader.setUniformValue( m_uniform_light_texture, 0 );
 
-    // Give shader the light_size diameter, fitted diameter, color
-    m_light_shader.setUniformValue( m_uniform_light_diameter, static_cast<float>(light->getLightDiameter()) );
-    m_light_shader.setUniformValue( m_uniform_light_fitted,   static_cast<float>(light->getLightDiameterFitted()) );
+    // Give shader the light_size diameter, fitted diameter
+    m_light_shader.setUniformValue( m_uniform_light_diameter,   static_cast<float>(light->getLightDiameter()) );
+    m_light_shader.setUniformValue( m_uniform_light_fitted,     static_cast<float>(light->getLightDiameterFitted()) );
+
+    // Give shader the opacity, light color
+    m_light_shader.setUniformValue( m_uniform_light_alpha,      light->getOpacity() );
     m_light_shader.setUniformValue( m_uniform_light_color,
                                     static_cast<float>(light->color.redF()),
                                     static_cast<float>(light->color.greenF()),

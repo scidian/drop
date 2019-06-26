@@ -123,6 +123,7 @@ private:
     int     m_uniform_light_texture;
     int     m_uniform_light_diameter;
     int     m_uniform_light_fitted;
+    int     m_uniform_light_alpha;
     int     m_uniform_light_color;                              // Color of light, red/green/blue (0 to 1, 0 to 1, 0 to 1)
     int     m_uniform_light_cone;
     int     m_uniform_light_shadows;

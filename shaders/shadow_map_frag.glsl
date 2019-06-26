@@ -11,11 +11,12 @@ precision mediump float;
 varying highp vec2  coordinates;                    // Texture Coodinates
 
 // ***** Input from Engine
-uniform sampler2D   u_texture;
-uniform vec2        u_resolution;
-uniform float       u_ray_count;
+uniform sampler2D   u_texture;                      // Occluder Map Texture
+uniform vec2        u_resolution;                   // X: Total diameter of light
+                                                    // Y: Diameter scaled based on screen size to light diameter ratio
+uniform float       u_ray_count;                    // Width of 1D Shadow Map (i.e. number of rays to send out)
 
-uniform highp float u_depth;                        // Z-Order of item
+uniform highp float u_depth;                        // Z-Order of light
 
 // Other Variables
 const float         THRESHOLD = 0.75;               // Alpha threshold for our occlusion map

@@ -11,6 +11,7 @@
 
 #include "constants.h"
 #include "enums.h"
+#include "enums_dr_settings.h"
 
 // Forward declarations
 class DrProperty;

@@ -33,18 +33,18 @@ DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_
 
     QPixmap my_starting_pixmap;
     switch (new_asset_type) {
-    case DrAssetType::Object:
-        my_starting_pixmap = m_parent_project->getDrImage(source_key)->getPixmapFromImage();
-        initializeAssetSettingsObject(m_parent_project->getDrImage(source_key)->getSimplifiedName(), my_starting_pixmap );
-        break;
-    case DrAssetType::Text:
-        my_starting_pixmap = m_parent_project->getDrFont(source_key)->getPixmap();
-        initializeAssetSettingsFont(m_parent_project->getDrFont(source_key));
-        break;
-    case DrAssetType::Character:
-        my_starting_pixmap = m_parent_project->getDrImage(source_key)->getPixmapFromImage();
-        initializeAssetSettingsCharacter(m_parent_project->getDrImage(source_key)->getSimplifiedName(), my_starting_pixmap );
-        break;
+        case DrAssetType::Object:
+            my_starting_pixmap = m_parent_project->getDrImage(source_key)->getPixmapFromImage();
+            initializeAssetSettingsObject(m_parent_project->getDrImage(source_key)->getSimplifiedName(), my_starting_pixmap );
+            break;
+        case DrAssetType::Text:
+            my_starting_pixmap = m_parent_project->getDrFont(source_key)->getPixmap();
+            initializeAssetSettingsFont(m_parent_project->getDrFont(source_key));
+            break;
+        case DrAssetType::Character:
+            my_starting_pixmap = m_parent_project->getDrImage(source_key)->getPixmapFromImage();
+            initializeAssetSettingsCharacter(m_parent_project->getDrImage(source_key)->getSimplifiedName(), my_starting_pixmap );
+            break;
     }
 
     m_width =  my_starting_pixmap.width();

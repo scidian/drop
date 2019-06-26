@@ -139,12 +139,12 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
     long   property_key =  property->getPropertyKey();
 
     QStringList options;
-    if          (property_key == static_cast<int>(Properties::Thing_Damage)) {
+    if          (property_key == static_cast<int>(Properties::Thing_Object_Damage)) {
         options << tr("No Damage")
                 << tr("Damage Player")
                 << tr("Damage Enemy")
                 << tr("Damage All");
-    } else if   (property_key == static_cast<int>(Properties::Thing_Physics_Type)) {
+    } else if   (property_key == static_cast<int>(Properties::Thing_Object_Physics_Type)) {
         options << tr("Static")
                 << tr("Kinematic")
                 << tr("Dynamic");
@@ -183,7 +183,7 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
             this->updateSettingsFromNewValue(property_key, action->property(User_Property::Order).toInt());
         });
 
-        if (property_key == static_cast<int>(Properties::Thing_Damage)) {
+        if (property_key == static_cast<int>(Properties::Thing_Object_Damage)) {
             connect(action,   &QAction::hovered, [this, string_count]() {
                 switch (string_count) {
                     case 0: this->setAdvisorInfo( Advisor_Info::Damage_None[0],     Advisor_Info::Damage_None[1]);          break;
@@ -194,7 +194,7 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
             });
         }
 
-        if (property_key == static_cast<int>(Properties::Thing_Physics_Type)) {
+        if (property_key == static_cast<int>(Properties::Thing_Object_Physics_Type)) {
             connect(action,   &QAction::hovered, [this, string_count]() {
                 switch (string_count) {
                     case 0: this->setAdvisorInfo( Advisor_Info::Object_Static[0],    Advisor_Info::Object_Static[1]);       break;

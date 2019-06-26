@@ -78,9 +78,9 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
         Body_Type type;
         bool pretest, test;
         switch (property) {
-            case Properties::Thing_Physics_Type:
+            case Properties::Thing_Object_Physics_Type:
                 pretest = thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Velocity_X)->isEditable();
-                type = static_cast<Body_Type>(thing->getComponentPropertyValue(Components::Thing_Settings_Object, Properties::Thing_Physics_Type).toInt());
+                type = static_cast<Body_Type>(thing->getComponentPropertyValue(Components::Thing_Settings_Object, Properties::Thing_Object_Physics_Type).toInt());
                 test = (type == Body_Type::Kinematic || type == Body_Type::Dynamic) ? true : false;
                 if (test != pretest) {
                     thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Velocity_X)->setEditable(test);

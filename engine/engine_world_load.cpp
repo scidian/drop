@@ -37,8 +37,8 @@ void DrEngineWorld::loadStageToSpace(DrStage *stage, double offset_x, double off
         double      angle =         thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
         double      z_order =       thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
         double      alpha =         thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toDouble() / 100;
-        bool        collide =       thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Collide).toBool();
-        int         physics =       thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Physics_Type).toInt();
+        bool        collide =       thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Collide).toBool();
+        int         physics =       thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Physics_Type).toInt();
 
         Body_Type body = Body_Type::Static;
         switch (physics) {
@@ -53,7 +53,7 @@ void DrEngineWorld::loadStageToSpace(DrStage *stage, double offset_x, double off
 
         // ***** Set collision type
         Collision_Type collision_type = Collision_Type::Damage_None;
-        long           damage_type = thing->getComponentPropertyValue(Components::Thing_Settings_Object, Properties::Thing_Damage).toInt();
+        long           damage_type = thing->getComponentPropertyValue(Components::Thing_Settings_Object, Properties::Thing_Object_Damage).toInt();
         switch (damage_type) {
             case 0: collision_type = Collision_Type::Damage_None;   break;
             case 1: collision_type = Collision_Type::Damage_Player; break;

@@ -35,7 +35,7 @@ void OpenGL::drawDebugHealth(QPainter &painter) {
         QColor color = objectDebugColor(object, true);
 
         // Load Object Position
-        QPointF center =object->getBodyPosition();
+        QPointF center =object->getPosition();
         QPointF text_coord = mapToScreen(center.x(), center.y(), 0);
 
         if (rect().contains( text_coord.toPoint() )) {
@@ -88,7 +88,7 @@ void OpenGL::drawDebugHealthNative(QPainter &painter) {
         if (hp.length() < 1) continue;
 
         // ***** Load object position
-        QPointF center = object->getBodyPosition();
+        QPointF center = object->getPosition();
         float x, y, z;
         float half_width, half_height;
         x = static_cast<float>(center.x());
