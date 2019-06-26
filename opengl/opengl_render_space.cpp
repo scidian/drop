@@ -62,6 +62,7 @@ void OpenGL::drawSpace() {
             DrEngineLight *light = dynamic_cast<DrEngineLight*>(thing);
             if (light) {
                 // ***** Renders 2D Lights onto Light frame buffer
+                if (!light->isInView()) continue;
                 m_shader.disableAttributeArray( m_attribute_tex_coord );
                 m_shader.release();
                 draw2DLight(light);
@@ -112,7 +113,7 @@ void OpenGL::drawSpace() {
         vertices[ 0] = top_right.x() + x;       vertices[ 1] = top_right.y() + y;       vertices[ 2] = z;       // Top Right
         vertices[ 3] = top_left.x()  + x;       vertices[ 4] = top_left.y()  + y;       vertices[ 5] = z;       // Top Left
         vertices[ 6] = bot_right.x() + x;       vertices[ 7] = bot_right.y() + y;       vertices[ 8] = z;       // Bottom Right
-        vertices[ 9] = bot_left.x()  + x;       vertices[10] = bot_left.y() +  y;       vertices[11] = z;       // Bottom Left
+        vertices[ 9] = bot_left.x()  + x;       vertices[10] = bot_left.y()  +  y;      vertices[11] = z;       // Bottom Left
         m_shader.setAttributeArray( m_attribute_vertex, vertices.data(), 3 );
         m_shader.enableAttributeArray( m_attribute_vertex );
 
@@ -225,10 +226,10 @@ void OpenGL::drawSpaceOccluder() {
         QVector<GLfloat> vertices;
         vertices.clear();
         vertices.resize( 12 );                  // in sets of x, y, z
-        vertices[0] = top_right.x() + x;        vertices[1] = top_right.y() + y;        vertices[2] = z;            // Top Right
-        vertices[3] = top_left.x()  + x;        vertices[4] = top_left.y()  + y;        vertices[5] = z;            // Top Left
-        vertices[6] = bot_right.x() + x;        vertices[7] = bot_right.y() + y;        vertices[8] = z;            // Bottom Right
-        vertices[ 9] = bot_left.x() + x;        vertices[10] = bot_left.y() + y;        vertices[11] = z;           // Bottom Left
+        vertices[ 0] = top_right.x() + x;       vertices[1] = top_right.y() + y;        vertices[ 2] = z;           // Top Right
+        vertices[ 3] = top_left.x()  + x;       vertices[4] = top_left.y()  + y;        vertices[ 5] = z;           // Top Left
+        vertices[ 6] = bot_right.x() + x;       vertices[7] = bot_right.y() + y;        vertices[ 8] = z;           // Bottom Right
+        vertices[ 9] = bot_left.x()  + x;       vertices[10] = bot_left.y() + y;        vertices[11] = z;           // Bottom Left
         m_occluder_shader.setAttributeArray( m_attribute_occluder_vertex, vertices.data(), 3 );
         m_occluder_shader.enableAttributeArray( m_attribute_occluder_vertex );
 

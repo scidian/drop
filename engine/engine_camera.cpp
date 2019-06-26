@@ -136,9 +136,14 @@ void DrEngineCamera::updateCamera() {
     // Movement is based on following an object
     if (m_follow != nullptr) {
 
-        // Calculate the average object Speed
-        m_avg_speed_x.push_back( m_follow->getPosition().x() - m_follow->getPreviousPosition().x() );
-        m_avg_speed_y.push_back( m_follow->getPosition().y() - m_follow->getPreviousPosition().y() );
+        // Calculate the average object Speed, use try catch in case something happens to m_follow during this routine
+        try {
+            m_avg_speed_x.push_back( m_follow->getPosition().x() - m_follow->getPreviousPosition().x() );
+            m_avg_speed_y.push_back( m_follow->getPosition().y() - m_follow->getPreviousPosition().y() );
+        } catch (double) {
+            return;
+        }
+
         m_avg_speed_x.pop_front();
         m_avg_speed_y.pop_front();
         double average_x = 0;
@@ -156,12 +161,16 @@ void DrEngineCamera::updateCamera() {
         ///double pos_x = m_follow->getBodyPreviousPosition().x() + average_x;
         ///double pos_y = m_follow->getBodyPreviousPosition().y() + average_y;
 
-        // Average of all three options
-        double pos_x = ((m_follow->getPosition().x()) + ((static_cast<double>(m_target.x()) + average_x)*3.0) +
-                        (m_follow->getPreviousPosition().x() + average_x)) / 5.0;
-        double pos_y = ((m_follow->getPosition().y()) + ((static_cast<double>(m_target.y()) + average_y)*3.0) +
-                        (m_follow->getPreviousPosition().y() + average_y)) / 5.0;
-
+        // Average of all three options, use try catch in case something happens to m_follow during this routine
+        double pos_x, pos_y;
+        try {
+            pos_x = ((m_follow->getPosition().x()) + ((static_cast<double>(m_target.x()) + average_x)*3.0) +
+                     (m_follow->getPreviousPosition().x() + average_x)) / 5.0;
+            pos_y = ((m_follow->getPosition().y()) + ((static_cast<double>(m_target.y()) + average_y)*3.0) +
+                     (m_follow->getPreviousPosition().y() + average_y)) / 5.0;
+        } catch (double) {
+            return;
+        }
         m_target.setX( static_cast<float>(pos_x) );
         m_target.setY( static_cast<float>(pos_y) );
 

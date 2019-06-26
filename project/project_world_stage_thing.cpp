@@ -38,25 +38,29 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
     switch (new_thing_type) {
         case DrThingType::Character:
             addComponentSettingsCharacter(new_thing_name);
-            addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, z);
+            addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y);
+            addComponentLayering(z);
             addComponentMovement();
             addComponentAppearance();
             break;
 
         case DrThingType::Object:
             addComponentSettingsObject(new_thing_name, should_collide);
-            addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, z);
+            addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y);
+            addComponentLayering(z);
             addComponentMovement();
             addComponentAppearance();
             break;
 
         case DrThingType::Text:
             addComponentSettingsText(new_thing_name);
-            addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, z);
+            addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y);
+            addComponentLayering(z);
             break;
 
         case DrThingType::Light:
             addComponentSettingsLight(Qt::white);
+            addComponentLayering(z);
             break;
     }
 
@@ -147,7 +151,7 @@ void DrThing::addComponentSettingsCamera(QString new_name) {
 //####################################################################################
 //##    Shared Components
 //####################################################################################
-void DrThing::addComponentTransform(double width, double height, double x, double y, long z) {
+void DrThing::addComponentTransform(double width, double height, double x, double y) {
     addComponent(Components::Thing_Transform, "Transform", "Sets the physical size and angle of the object in the stage.", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Thing_Transform)->setIcon(Component_Icons::Transform);
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Position, Property_Type::PositionF, QPointF(x, y),
@@ -158,7 +162,9 @@ void DrThing::addComponentTransform(double width, double height, double x, doubl
                            "Size", "Width and Height of object in pixels, affected by Scale property.");
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Scale, Property_Type::ScaleF, QPointF(1, 1),
                            "Scale", "X and Y scale of object within the stage.");
+}
 
+void DrThing::addComponentLayering(double z) {
     addComponent(Components::Thing_Layering, "Layering", "Controls the order Objects are drawn onto the screen. For \"Z Order\", lower numbers are "
                                                            "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, true);
     getComponent(Components::Thing_Layering)->setIcon(Component_Icons::Layering);

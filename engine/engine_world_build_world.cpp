@@ -127,9 +127,9 @@ void DrEngineWorld::buildSpace(Demo_Space new_space_type) {
     light5->has_been_processed = true;
 
     DrEngineLight *light6 = new DrEngineLight();
-    light6->updateBodyPosition( QPointF(2700, 800) );
+    light6->updateBodyPosition( QPointF(2700, 1000) );
     light6->color = Qt::white;
-    light6->intensity = 2.0;
+    light6->intensity = 2.0f;
     light6->shadows = 5.0f;
     light6->blur = 50.0f;
     light6->light_size = 4000;
@@ -139,18 +139,18 @@ void DrEngineWorld::buildSpace(Demo_Space new_space_type) {
 
 
     m_lights.append(light1);
-//    m_lights.append(light2);
-//    m_lights.append(light3);
+    m_lights.append(light2);
+    m_lights.append(light3);
     m_lights.append(light4);
-//    m_lights.append(light5);
-//    m_lights.append(light6);
+    m_lights.append(light5);
+    m_lights.append(light6);
 
     m_things.append(light1);
-    //m_things.append(light2);
-    //m_things.append(light3);
+    m_things.append(light2);
+    m_things.append(light3);
     m_things.append(light4);
-    //m_things.append(light5);
-    //m_things.append(light6);
+    m_things.append(light5);
+    m_things.append(light6);
     m_engine->getFormEngine()->getOpenGL()->doneCurrent();
 
 

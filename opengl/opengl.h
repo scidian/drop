@@ -38,7 +38,7 @@ extern int  g_max_light_fbo_size;
 const float c_occluder_scale =                3.0f;     // Scale to use for occlusion map (higher the number, less shaky the shadows)
 const int   c_desired_max_rays =           4096;        // Desired max number of rays to send out during shadow map calculations
 const int   c_desired_occluder_fbo_size =  8192;        // Desired max width and height of offscreen fbo used for shadow map
-const int   c_desired_light_fbo_size =     4096;        // Desired max width and height of offscreen fbo used for lights
+const int   c_desired_light_fbo_size =     8192;        // Desired max width and height of offscreen fbo used for lights
 
 //####################################################################################
 //##    OpenGL

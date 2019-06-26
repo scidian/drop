@@ -28,7 +28,7 @@ void OpenGL::drawShadowMaps() {
     bool has_shadows = false;
     for (auto light : m_engine->getCurrentWorld()->m_lights) {
         if (light == nullptr) continue;
-        if (light->draw_shadows == true)  has_shadows = true;
+        if (light->draw_shadows == true) has_shadows = true;
 
         // Calculate size of light texture (fbo)
         light->setLightDiameter( static_cast<int>(light->light_size) );
@@ -43,16 +43,29 @@ void OpenGL::drawShadowMaps() {
     m_occluder_fbo->release();
     glViewport(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
 
-//static int count = 0;
-//count++;
-//if (count % 600 == 0) {
-//    Dr::ShowMessageBox("hi", QPixmap::fromImage( m_occluder_fbo->toImage() ).scaled(512, 512) );
-//    count = 0;
-//}
+    // Code to have the Occluder Map fbo pop up so we can take a look
+    ///static int count = 0;
+    ///count++;
+    ///if (count % 600 == 0) {
+    ///    Dr::ShowMessageBox("hi", QPixmap::fromImage( m_occluder_fbo->toImage() ).scaled(512, 512) );
+    ///    count = 0;
+    ///}
 
     // ***** Calculate Light 1D Shadow Maps
     for (auto light : m_engine->getCurrentWorld()->m_lights) {
         if (light == nullptr) continue;
+
+        // Check if light is in view to be rendered, if not, pass to next light
+        double  light_radius = light->getLightDiameterFitted() / 2.0;
+        QPoint top_left =  mapToScreen(light->getPosition().x() - light_radius, light->getPosition().y() + light_radius, 0.0 ).toPoint();
+        QPoint top_right = mapToScreen(light->getPosition().x() + light_radius, light->getPosition().y() + light_radius, 0.0 ).toPoint();
+        QPoint bot_left =  mapToScreen(light->getPosition().x() - light_radius, light->getPosition().y() - light_radius, 0.0 ).toPoint();
+        QPoint bot_right = mapToScreen(light->getPosition().x() + light_radius, light->getPosition().y() - light_radius, 0.0 ).toPoint();
+        QPolygon light_box; light_box << top_left << top_right << bot_left << bot_right;
+        QRect in_view = QRect(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
+        light->setIsInView( light_box.boundingRect().intersects(in_view) || light_box.boundingRect().contains(in_view) ||
+                            in_view.contains(light_box.boundingRect()) );
+        if (light->isInView() == false) continue;
         if (light->draw_shadows == false) continue;
 
         // Calculate light position on Occluder Map
