@@ -17,13 +17,13 @@
 //####################################################################################
 //##        Constructor / Destructor
 //####################################################################################
-OpenGL::OpenGL(QWidget *parent, FormEngine *form_engine, DrEngine *engine) : QOpenGLWidget(parent), m_form_engine(form_engine), m_engine(engine) {
+DrOpenGL::DrOpenGL(QWidget *parent, FormEngine *form_engine, DrEngine *engine) : QOpenGLWidget(parent), m_form_engine(form_engine), m_engine(engine) {
     // ***** DO NOT perform any OpenGL resource initialization in constructor, use initializeGL() instead    
     setFocusPolicy(Qt::FocusPolicy::StrongFocus);            // Must setFocus to accept KeyPress events
 }
 
 // Destroy OpenGL Resources
-OpenGL::~OpenGL() {
+DrOpenGL::~DrOpenGL() {
     m_engine->clearWorlds();
 
     makeCurrent();
@@ -38,7 +38,7 @@ OpenGL::~OpenGL() {
 //####################################################################################
 //##        Handle Window Resizing
 //####################################################################################
-void OpenGL::resizeGL(int w, int h) {
+void DrOpenGL::resizeGL(int w, int h) {
     glViewport(0, 0, w * devicePixelRatio(), h * devicePixelRatio());
 }
 

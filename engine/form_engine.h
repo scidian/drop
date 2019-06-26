@@ -27,8 +27,8 @@ enum class Engine_Timer {
 
 // Forward declarations
 class DrEngine;
+class DrOpenGL;
 class DrProject;
-class OpenGL;
 
 // Type definitions
 typedef std::chrono::high_resolution_clock Clock;
@@ -47,7 +47,7 @@ private:
 
     // Local Variables
     DrEngine           *m_engine;
-    OpenGL             *m_opengl;
+    DrOpenGL           *m_opengl;
 
     // Timer Variables
     QTimer             *m_update_timer;
@@ -92,7 +92,7 @@ public:
 
     // Function Calls
     DrEngine*   getEngine() { return m_engine; }
-    OpenGL*     getOpenGL() { return m_opengl; }
+    DrOpenGL*   getOpenGL() { return m_opengl; }
     double      getTimerMilliseconds(Engine_Timer time_since_last);
     void        loadDemo(Demo_Space using_space, Demo_Player using_player);
     void        resetTimer(Engine_Timer timer_to_reset);

@@ -15,7 +15,7 @@
 //####################################################################################
 //##        Key Events
 //####################################################################################
-void OpenGL::keyPressEvent(QKeyEvent *event) {
+void DrOpenGL::keyPressEvent(QKeyEvent *event) {
 
     if (event->key() == Qt::Key::Key_A) {
         m_engine->keyboard_x = -1;
@@ -34,7 +34,7 @@ void OpenGL::keyPressEvent(QKeyEvent *event) {
     }
 }
 
-void OpenGL::keyReleaseEvent(QKeyEvent *event) {
+void DrOpenGL::keyReleaseEvent(QKeyEvent *event) {
 
     if (event->key() == Qt::Key::Key_A) {
         if (m_engine->keyboard_x < 0.0)
@@ -56,3 +56,13 @@ void OpenGL::keyReleaseEvent(QKeyEvent *event) {
         QOpenGLWidget::keyReleaseEvent(event);
     }
 }
+
+
+
+
+
+
+
+
+
+

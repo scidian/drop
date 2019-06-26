@@ -21,7 +21,7 @@
 //####################################################################################
 //##    Draws the health of each object using QPainter
 //####################################################################################
-void OpenGL::drawDebugHealth(QPainter &painter) {
+void DrOpenGL::drawDebugHealth(QPainter &painter) {
     QFont health_font("Avenir", static_cast<int>(18 * m_scale));
     painter.setPen(Qt::NoPen);
 
@@ -57,7 +57,7 @@ void OpenGL::drawDebugHealth(QPainter &painter) {
 //####################################################################################
 //##    Draws the health of each object using Native GL
 //####################################################################################
-void OpenGL::drawDebugHealthNative(QPainter &painter) {
+void DrOpenGL::drawDebugHealthNative(QPainter &painter) {
     painter.beginNativePainting();
 
     const float font_size = 12.0f;
@@ -154,7 +154,7 @@ void OpenGL::drawDebugHealthNative(QPainter &painter) {
 }
 
 
-void OpenGL::setNumberTextureCoordinates(QString letter, std::vector<float> &c) {
+void DrOpenGL::setNumberTextureCoordinates(QString letter, std::vector<float> &c) {
     //                        Top Right                     Top Left                    Bottom Right                Bottom Left
     if      (letter == "1") { c[0] = 0.25; c[1] = 1.00;     c[2] = 0.00; c[3] = 1.00;   c[4] = 0.25; c[5] = 0.75;   c[6] = 0.00; c[7] = 0.75; }
     else if (letter == "2") { c[0] = 0.50; c[1] = 1.00;     c[2] = 0.25; c[3] = 1.00;   c[4] = 0.50; c[5] = 0.75;   c[6] = 0.25; c[7] = 0.75; }

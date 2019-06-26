@@ -39,7 +39,7 @@ static void GetSpaceJointList(cpConstraint *constraint, QVector<cpConstraint*> *
 //####################################################################################
 //##    Assigns Debug color based on Collision Type
 //####################################################################################
-QColor OpenGL::objectDebugColor(DrEngineObject *object, bool text_color) {
+QColor DrOpenGL::objectDebugColor(DrEngineObject *object, bool text_color) {
     QColor color, font_color;
 
     switch (object->getCollisionType()) {
@@ -65,7 +65,7 @@ QColor OpenGL::objectDebugColor(DrEngineObject *object, bool text_color) {
 //####################################################################################
 //##    Main Debug / Text Rendering Function
 //####################################################################################
-void OpenGL::drawDebug(QPainter &painter) {
+void DrOpenGL::drawDebug(QPainter &painter) {
     painter.setRenderHint(QPainter::Antialiasing, true);
     if (m_engine->debug_shapes) {
         drawDebugShapes(painter);
@@ -97,7 +97,7 @@ void OpenGL::drawDebug(QPainter &painter) {
 //####################################################################################
 //##    Draws the Collision Shapes using QPainter
 //####################################################################################
-void OpenGL::drawDebugShapes(QPainter &painter) {
+void DrOpenGL::drawDebugShapes(QPainter &painter) {
 
     int open_gl_width =  width() *  devicePixelRatio();
     int open_gl_height = height() * devicePixelRatio();
@@ -260,7 +260,7 @@ void OpenGL::drawDebugShapes(QPainter &painter) {
 //####################################################################################
 //##    Draws the active Constraints using QPainter
 //####################################################################################
-void OpenGL::drawDebugJoints(QPainter &painter) {
+void DrOpenGL::drawDebugJoints(QPainter &painter) {
 
     QPen pen( QBrush(QColor(255, 255, 255)), 1.25 * static_cast<double>(m_scale), Qt::SolidLine, Qt::PenCapStyle::RoundCap);
     painter.setPen( pen );
@@ -294,7 +294,7 @@ void OpenGL::drawDebugJoints(QPainter &painter) {
 //####################################################################################
 //##    Draws the Collision Points using QPainter
 //####################################################################################
-void OpenGL::drawDebugCollisions(QPainter &painter) {
+void DrOpenGL::drawDebugCollisions(QPainter &painter) {
 
     int open_gl_width =  width() *  devicePixelRatio();
     int open_gl_height = height() * devicePixelRatio();

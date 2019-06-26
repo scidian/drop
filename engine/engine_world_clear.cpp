@@ -28,9 +28,9 @@ static void PostShapeFree(cpShape *shape, cpSpace *space) { cpSpaceAddPostStepCa
 static void PostConstraintFree(cpConstraint *constraint, cpSpace *space) { cpSpaceAddPostStepCallback(space, cpPostStepFunc(ConstraintFreeWrap), constraint, nullptr); }
 static void PostBodyFree(cpBody *body, cpSpace *space) { cpSpaceAddPostStepCallback(space, cpPostStepFunc(BodyFreeWrap), body, nullptr); }
 
-// Safe and future proof way to remove and free all objects that have been added to the space.
+// Safe and future proof way to remove and free all objects that have been added to the space
 static void ChipmunkFreeSpaceChildren(cpSpace *space) {
-    // Must remove these BEFORE freeing the body or you will access dangling pointers.
+    // Must remove Shape and Constraint BEFORE freeing the Body or you will access dangling pointers
     cpSpaceEachShape(space, cpSpaceShapeIteratorFunc(PostShapeFree), space);
     cpSpaceEachConstraint(space, cpSpaceConstraintIteratorFunc(PostConstraintFree), space);
     cpSpaceEachBody(space, cpSpaceBodyIteratorFunc(PostBodyFree), space);
@@ -65,33 +65,21 @@ void DrEngineWorld::wakeAllBodies() {
 void DrEngineWorld::clearSpace() {
     if (has_scene) {
         has_scene = false;
-        qApp->processEvents();
+
+        // Clear cpSpace
         ChipmunkFreeSpaceChildren(m_space);
         cpSpaceFree(m_space);
+
+        // Clear all Things (objects, lights, etc.)
+        for (auto thing : m_things)
+            delete thing;
         m_things.clear();
 
-        clearCameras();
-        clearLights();
+        // Clear all Cameras
+        for (auto camera_pair : m_cameras)
+            delete camera_pair.second;
+        m_cameras.clear();
     }
-}
-
-// Removes all cameras from engine
-void DrEngineWorld::clearCameras() {
-    for (auto camera_pair : m_cameras)
-        delete camera_pair.second;
-    m_cameras.clear();
-}
-
-// Removes all lights from engine
-void DrEngineWorld::clearLights() {
-    m_engine->getFormEngine()->getOpenGL()->makeCurrent();
-    for (DrEngineLight *light : m_lights) {
-        delete light->occluder_fbo;
-        delete light->shadow_fbo;
-        delete light;
-    }
-    m_lights.clear();
-    m_engine->getFormEngine()->getOpenGL()->doneCurrent();
 }
 
 

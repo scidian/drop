@@ -25,7 +25,7 @@
 //####################################################################################
 //##        Render, Paint the Scene (called by update())
 //####################################################################################
-void OpenGL::paintGL() {
+void DrOpenGL::paintGL() {
     // ***** Find OpenGL Version supported on this system
     ///auto ver = glGetString(GL_VERSION);
     ///m_engine->info = QString::fromUtf8(reinterpret_cast<const char*>(ver));
@@ -71,7 +71,7 @@ void OpenGL::paintGL() {
 //####################################################################################
 //##        Allocate additional FBO for rendering or resize it if widget size changed
 //####################################################################################
-void OpenGL::bindOffscreenBuffer() {
+void DrOpenGL::bindOffscreenBuffer() {
     // Check that off screen buffers are initialized
     if (!m_render_fbo || !m_texture_fbo ||
         (m_render_fbo->width() != width()*devicePixelRatio() || m_render_fbo->height() != height()*devicePixelRatio())) {
@@ -113,7 +113,7 @@ void OpenGL::bindOffscreenBuffer() {
 //####################################################################################
 //##        Update the view matrices before rendering
 //####################################################################################
-void OpenGL::updateViewMatrix() {
+void DrOpenGL::updateViewMatrix() {
     //          Axis:
     //              -X left,        +X right
     //              -Y down,        +Y up
@@ -158,7 +158,7 @@ void OpenGL::updateViewMatrix() {
 //####################################################################################
 //##        Applies coordinates that represents an entire texture
 //####################################################################################
-void OpenGL::setWholeTextureCoordinates(std::vector<float> &texture_coords) {
+void DrOpenGL::setWholeTextureCoordinates(std::vector<float> &texture_coords) {
     texture_coords.clear();
     texture_coords.resize( 8 );
     texture_coords[0] = 1;    texture_coords[1] = 1;
@@ -170,7 +170,7 @@ void OpenGL::setWholeTextureCoordinates(std::vector<float> &texture_coords) {
 //####################################################################################
 //##        Returns list of vertices at z plane 0 from sides passed in
 //####################################################################################
-void OpenGL::setVertexFromSides(QVector<GLfloat> &vertices, float left, float right, float top, float bottom) {
+void DrOpenGL::setVertexFromSides(QVector<GLfloat> &vertices, float left, float right, float top, float bottom) {
     QVector3D top_right = QVector3D( right, top, 0);
     QVector3D top_left =  QVector3D( left,  top, 0);
     QVector3D bot_right = QVector3D( right, bottom, 0);
@@ -187,7 +187,7 @@ void OpenGL::setVertexFromSides(QVector<GLfloat> &vertices, float left, float ri
 //##        Renders Frame Buffer Object to screen buffer as a textured quad
 //##            Post processing available through the fragment shader
 //####################################################################################
-void OpenGL::drawFrameBufferToScreenBuffer(QOpenGLFramebufferObject *fbo, bool use_kernel) {
+void DrOpenGL::drawFrameBufferToScreenBuffer(QOpenGLFramebufferObject *fbo, bool use_kernel) {
 
     // Enable alpha channel
     glEnable(GL_BLEND);
@@ -250,7 +250,7 @@ void OpenGL::drawFrameBufferToScreenBuffer(QOpenGLFramebufferObject *fbo, bool u
 //####################################################################################
 //##        Sets shader variables to default normal render
 //####################################################################################
-void OpenGL::setShaderDefaultValues(float texture_width, float texture_height) {
+void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height) {
     m_shader.setUniformValue( m_uniform_texture,    0 );                    // Use texture unit "0"
     m_shader.setUniformValue( m_uniform_alpha,      1.0f );
     m_shader.setUniformValue( m_uniform_width,      texture_width  );

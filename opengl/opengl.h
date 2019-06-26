@@ -41,10 +41,10 @@ const int   c_desired_occluder_fbo_size =  8192;        // Desired max width and
 const int   c_desired_light_fbo_size =     8192;        // Desired max width and height of offscreen fbo used for lights
 
 //####################################################################################
-//##    OpenGL
+//##    DrOpenGL
 //##        A modern OpenGL Widget
 //############################
-class OpenGL : public QOpenGLWidget, protected QOpenGLFunctions
+class DrOpenGL : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
 
@@ -134,8 +134,8 @@ private:
 
 public:
     // Constructor / Destructor
-    OpenGL(QWidget *parent, FormEngine *form_engine, DrEngine *engine);
-    ~OpenGL() override;
+    DrOpenGL(QWidget *parent, FormEngine *form_engine, DrEngine *engine);
+    ~DrOpenGL() override;
 
     // Event Overrides
     virtual void    keyPressEvent(QKeyEvent *event) override;

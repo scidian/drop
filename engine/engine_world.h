@@ -28,6 +28,7 @@ class DrEngineLight;
 class DrEngineCamera;
 class DrEngineObject;
 class DrEngineThing;
+class DrOpenGL;
 class DrProject;
 class DrStage;
 
@@ -103,6 +104,7 @@ private:
 public:
     bool            has_scene = false;                          // True after a scene has been loaded into cpSpace
     Render_Type     render_type = Render_Type::Orthographic;    // Should render perspective or orthographic?
+    long            light_count = 0;                            // Stores number of lights in scene
 
     // Image Post Processing Variables
     float           bitrate = 16.0;                             // Bitrate          1 to 16
@@ -115,8 +117,6 @@ public:
     float           contrast = 0.0f;                            // Contrast         Editor: -255 to 255     Shader: -1.0 to 1.0
     float           brightness = 0.0f;                          // Brightness       Editor: -255 to 255     Shader: -1.0 to 1.0
 
-    EngineLights    m_lights;                       // List of Lights created and stored in EngineThings
-
 
 public:
     // Constructor / Destrcutor / Cleanup
@@ -126,15 +126,15 @@ public:
     // Space Construction / Handling
     DrEngineObject* addLine(  Body_Type body_type,  QPointF p1, QPointF p2, double friction, double bounce, double mass);
 
-    DrEngineObject* addCircle(Body_Type body_type,  long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
+    DrEngineObject* addCircle(Body_Type body_type,  long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
                               double shape_radius, QPointF shape_offset, double friction, double bounce, QPointF velocity,
                               bool should_collide = true, bool can_rotate = true);
 
-    DrEngineObject* addBlock( Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
+    DrEngineObject* addBlock( Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
                               double friction, double bounce, QPointF velocity,
                               bool should_collide = true, bool can_rotate = true);
 
-    DrEngineObject* addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, double opacity,
+    DrEngineObject* addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
                                QVector<QPointF> points, double friction, double bounce, QPointF velocity,
                                bool should_collide = true, bool can_rotate = true);
 
@@ -150,7 +150,6 @@ public:
 
     // Cameras
     long                addCamera(DrEngineObject* object_to_follow = nullptr, float x = 0, float y = 0, float z = 800);
-    void                clearCameras();
     const long&         getActiveCamera()       { return m_active_camera; }
     void                setActiveCamera(long new_camera) { m_active_camera = new_camera; }
     DrEngineCamera*     getCamera(long camera_id) { return m_cameras[camera_id]; }
@@ -164,7 +163,8 @@ public:
     void                updateCameras();
 
     // Lights
-    void                clearLights();
+    DrEngineLight*      addLight(double x, double y, double z, QColor color, float diameter, QPointF cone, float intensity,
+                                 float shadows, bool draw_shadows, float blur, float pulse, float pulse_speed, float opacity);
 
     // Getter and Setters
     DrEngine*           getEngine()                 { return m_engine; }

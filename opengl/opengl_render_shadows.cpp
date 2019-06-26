@@ -21,20 +21,38 @@
 //####################################################################################
 //##        Main Shadow Map / Occluder / Render Routine
 //####################################################################################
-void OpenGL::drawShadowMaps() {
-    if (m_engine->getCurrentWorld()->m_lights.count() <= 0) return;
+void DrOpenGL::drawShadowMaps() {
+    if (m_engine->getCurrentWorld()->light_count <= 0) return;
 
     // ***** Check for lights with shadows, if there are non we don't need to draw occluder map
-    bool has_shadows = false;
-    for (auto light : m_engine->getCurrentWorld()->m_lights) {
-        if (light == nullptr) continue;
-        if (light->draw_shadows == true) has_shadows = true;
+    QVector<DrEngineLight*> shadow_lights;
+    shadow_lights.clear();
+    for (auto thing : m_engine->getCurrentWorld()->getThings()) {
+        if (thing == nullptr) continue;
+        if (thing->getThingType() != DrThingType::Light) continue;
+
+        DrEngineLight *light = dynamic_cast<DrEngineLight*>(thing);
 
         // Calculate size of light texture (fbo)
         light->setLightDiameter( static_cast<int>(light->light_size) );
         light->setLightDiameterFitted( (light->getLightDiameter() > g_max_light_fbo_size) ? g_max_light_fbo_size : light->getLightDiameter() );
+
+        // Check if light is in view to be rendered
+        double light_radius = light->getLightDiameterFitted() / 2.0;
+        QPoint top_left =  mapToScreen(light->getPosition().x() - light_radius, light->getPosition().y() + light_radius, 0.0 ).toPoint();
+        QPoint top_right = mapToScreen(light->getPosition().x() + light_radius, light->getPosition().y() + light_radius, 0.0 ).toPoint();
+        QPoint bot_left =  mapToScreen(light->getPosition().x() - light_radius, light->getPosition().y() - light_radius, 0.0 ).toPoint();
+        QPoint bot_right = mapToScreen(light->getPosition().x() + light_radius, light->getPosition().y() - light_radius, 0.0 ).toPoint();
+        QPolygon light_box; light_box << top_left << top_right << bot_left << bot_right;
+        QRect in_view = QRect(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
+        light->setIsInView( light_box.boundingRect().intersects(in_view) || light_box.boundingRect().contains(in_view) ||
+                            in_view.contains(light_box.boundingRect()) );
+
+        // If light needs shadows and is visible, add to shadow processing list
+        if (light->draw_shadows && light->isInView())
+            shadow_lights.append(light);
     }
-    if (!has_shadows) return;
+    if (shadow_lights.count() <= 0) return;
 
     // ***** Render all Space Objects to an off-screen Frame Buffer Object Occluder Map
     bindOccluderMapBuffer();
@@ -52,22 +70,7 @@ void OpenGL::drawShadowMaps() {
     ///}
 
     // ***** Calculate Light 1D Shadow Maps
-    for (auto light : m_engine->getCurrentWorld()->m_lights) {
-        if (light == nullptr) continue;
-
-        // Check if light is in view to be rendered, if not, pass to next light
-        double  light_radius = light->getLightDiameterFitted() / 2.0;
-        QPoint top_left =  mapToScreen(light->getPosition().x() - light_radius, light->getPosition().y() + light_radius, 0.0 ).toPoint();
-        QPoint top_right = mapToScreen(light->getPosition().x() + light_radius, light->getPosition().y() + light_radius, 0.0 ).toPoint();
-        QPoint bot_left =  mapToScreen(light->getPosition().x() - light_radius, light->getPosition().y() - light_radius, 0.0 ).toPoint();
-        QPoint bot_right = mapToScreen(light->getPosition().x() + light_radius, light->getPosition().y() - light_radius, 0.0 ).toPoint();
-        QPolygon light_box; light_box << top_left << top_right << bot_left << bot_right;
-        QRect in_view = QRect(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
-        light->setIsInView( light_box.boundingRect().intersects(in_view) || light_box.boundingRect().contains(in_view) ||
-                            in_view.contains(light_box.boundingRect()) );
-        if (light->isInView() == false) continue;
-        if (light->draw_shadows == false) continue;
-
+    for (auto light : shadow_lights) {
         // Calculate light position on Occluder Map
         light->setScreenPos( mapToOccluder( QVector3D(static_cast<float>(light->getPosition().x()),
                                                       static_cast<float>(light->getPosition().y()), 0.0f)) );
@@ -98,7 +101,7 @@ void OpenGL::drawShadowMaps() {
 //####################################################################################
 //##        Allocate Occluder Map
 //####################################################################################
-void OpenGL::bindOccluderMapBuffer() {
+void DrOpenGL::bindOccluderMapBuffer() {
     int desired_x = g_max_occluder_fbo_size;
     int desired_y = g_max_occluder_fbo_size;
 
@@ -116,7 +119,7 @@ void OpenGL::bindOccluderMapBuffer() {
 //####################################################################################
 //##        Allocate Light Occluder Frame Buffer Object
 //####################################################################################
-void OpenGL::bindLightOcculderBuffer(DrEngineLight *light) {
+void DrOpenGL::bindLightOcculderBuffer(DrEngineLight *light) {
     // Check Frame Buffer Object is initialized
     bool need_to_create_new = false;
     if (light->occluder_fbo == nullptr)
@@ -138,7 +141,7 @@ void OpenGL::bindLightOcculderBuffer(DrEngineLight *light) {
 //####################################################################################
 //##        Allocate Shadow Frame Buffer Object
 //####################################################################################
-void OpenGL::bindLightShadowBuffer(DrEngineLight *light) {
+void DrOpenGL::bindLightShadowBuffer(DrEngineLight *light) {
     // Shadow map size is the smallest of c_angles, light_radius_fitted, and width()
     int shadow_size = (light->getLightDiameterFitted() < g_max_rays) ? light->getLightDiameterFitted() : g_max_rays;
         shadow_size = (width()*devicePixelRatio() < shadow_size) ? width()*devicePixelRatio() : shadow_size;
@@ -164,7 +167,7 @@ void OpenGL::bindLightShadowBuffer(DrEngineLight *light) {
 //####################################################################################
 //##        Renders the 1D Shadow Map based on the Occluder Map
 //####################################################################################
-void OpenGL::draw1DShadowMap(DrEngineLight *light) {
+void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, light->occluder_fbo->texture());
 
@@ -216,7 +219,7 @@ void OpenGL::draw1DShadowMap(DrEngineLight *light) {
 //####################################################################################
 //##        Renders the light to the using the Shadow Map
 //####################################################################################
-void OpenGL::draw2DLight(DrEngineLight *light) {
+void DrOpenGL::draw2DLight(DrEngineLight *light) {
 
     if (light->draw_shadows) {
         glEnable(GL_TEXTURE_2D);

@@ -16,13 +16,18 @@
 //######################################################################################################
 //##    Constructor / Destructor
 //######################################################################################################
-DrEngineLight::DrEngineLight() {
-
+DrEngineLight::DrEngineLight(DrEngineWorld *world, DrOpenGL *opengl) : m_world(world), m_opengl(opengl) {
+    m_world->light_count++;
 }
 
 
 DrEngineLight::~DrEngineLight() {
+    m_world->light_count--;
 
+    m_opengl->makeCurrent();
+    delete occluder_fbo;
+    delete shadow_fbo;
+    m_opengl->doneCurrent();
 }
 
 
@@ -33,35 +38,57 @@ bool DrEngineLight::update(double time_passed, double time_warp, QRectF &area) {
     bool remove = false;
 
     // ***** Pulse light
-    if (qFuzzyCompare(pulse.z(), 0) == false) {
-        if (pulse.y() < pulse.x()) {
-            float temp = pulse.y();
-            pulse.setY( pulse.x() );
-            pulse.setX( temp );
-        }
+    if (qFuzzyCompare(pulse_speed, 0) == false) {
         if (qFuzzyCompare(m_pulse_direction, 0)) {
-            m_pulse_direction = pulse.z();
-            m_pulse_target = (pulse.z() < 0) ? pulse.x() : pulse.y();
+            m_pulse_direction = pulse_speed;
+            m_pulse_target = (pulse_speed < 0) ? m_start_intensity - pulse : m_start_intensity + pulse;
         }
 
         intensity += m_pulse_direction * static_cast<float>((time_passed / 1000.0) * time_warp);;
 
         if        (m_pulse_direction > 0 && intensity > m_pulse_target) {
-            m_pulse_direction = -(abs(pulse.z()));
-            m_pulse_target = pulse.x();/// - (pulse.x() * static_cast<float>(QRandomGenerator().bounded(0.5)));
+            m_pulse_direction = -(abs(pulse_speed));
+            m_pulse_target = m_start_intensity - pulse;
         } else if (m_pulse_direction < 0 && intensity < m_pulse_target) {
-            m_pulse_direction =  (abs(pulse.z()));
-            m_pulse_target = pulse.y();/// + (pulse.y() * static_cast<float>(QRandomGenerator().bounded(0.5)));
+            m_pulse_direction =  (abs(pulse_speed));
+            m_pulse_target = m_start_intensity + pulse;
         }
     }
 
     // ***** Delete object if ends up outside the deletion threshold
     if (area.contains(getPosition()) == false) remove = true;
-
-    return false;
+    return remove;
 }
 
 
+
+//######################################################################################################
+//##    DrEngineWorld - Light Functions
+//######################################################################################################
+DrEngineLight* DrEngineWorld::addLight(double x, double y, double z, QColor color, float diameter, QPointF cone,
+                                       float intensity, float shadows, bool draw_shadows, float blur,
+                                       float pulse, float pulse_speed, float opacity) {
+    DrEngineLight *light = new DrEngineLight(this, m_engine->getFormEngine()->getOpenGL());
+    light->setPosition( QPointF(x, y) );
+    light->z_order = z - 0.0001;
+    light->color = color;
+    light->light_size = diameter;
+    light->cone = cone;
+    light->intensity = intensity;
+    light->setStartIntensity( intensity );
+    light->shadows = shadows;
+    light->draw_shadows = draw_shadows;
+    light->blur = blur;
+    light->pulse = pulse;
+    light->pulse_speed = pulse_speed;
+    light->setOpacity( opacity );
+
+    light->should_process = false;
+    light->has_been_processed = true;
+
+    m_things.append(light);
+    return light;
+}
 
 
 

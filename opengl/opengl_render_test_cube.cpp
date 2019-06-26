@@ -18,7 +18,7 @@
 //####################################################################################
 //##        Draws a 3D rotating cube for demo purposes
 //####################################################################################
-void OpenGL::drawCube(QVector3D center) {
+void DrOpenGL::drawCube(QVector3D center) {
     // ***** Turn culling on for 3d drawing
     cullingOn();
 

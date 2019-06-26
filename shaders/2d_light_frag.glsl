@@ -42,13 +42,25 @@ void main(void) {
 
     float shrink =      u_light_diameter / u_light_fitted;
     float intensity =   sqrt(u_intensity);
+    float blur =        u_blur + 0.001;
+    float opacity =     u_alpha;
 
     // Check that pixel is within allowed light cone
-    if (theta < 0.0) theta += (2.0 * PI);
-    if (u_cone.x > u_cone.y) {
-        if (theta < u_cone.x && theta > u_cone.y)   return;
+    if (theta < 0.0) theta += (2.0 * PI);                       // Add 360 degrees in radians if theta is less than zero
+    if (u_cone.x > u_cone.y) {                                  // #NOTE: 1 Degree in Radians is 0.0174533
+        if (theta < u_cone.x && theta > u_cone.y) {
+            float diff_x = smoothstep(0.0, 1.0, ((u_cone.x - theta) / 0.0174533) * (1.0 / blur));
+            float diff_y = smoothstep(0.0, 1.0, ((theta - u_cone.y) / 0.0174533) * (1.0 / blur));
+            opacity -= min(diff_x, diff_y);
+            if (opacity <= 0.01) return;
+        }
     } else {
-        if (theta < u_cone.x || theta > u_cone.y)   return;
+        if (theta < u_cone.x || theta > u_cone.y) {
+            float diff_x = smoothstep(0.0, 1.0, ((u_cone.x - theta) / 0.0174533) * (1.0 / blur));
+            float diff_y = smoothstep(0.0, 1.0, ((theta - u_cone.y) / 0.0174533) * (1.0 / blur));
+            opacity -= max(diff_x, diff_y);
+            if (opacity <= 0.01) return;
+        }
     }
 
     float sum = 0.0;
@@ -60,7 +72,7 @@ void main(void) {
         float center = sample(tc, r);
 
         // We multiply the blur amount by our distance from center, this leads to more blurriness as the shadow "fades away"
-        float blur = (1.0 / u_light_diameter) * smoothstep(0.0, 1.0, r * shrink) * (u_blur * 0.1);
+        float blur = (1.0 / u_light_diameter) * smoothstep(0.0, 1.0, r * shrink) * (blur * 0.1);
 
         // Now we use a simple gaussian blur, sum of 1.0 == in light, 0.0 == in shadow
         sum += sample(vec2(tc.x - 4.0 * blur, tc.y), r) * 0.05;
@@ -88,7 +100,7 @@ void main(void) {
     float amount = sum * smoothstep(1.0, 0.0, r * shrink);
 
     // Multiply by light color
-    gl_FragColor = vec4(u_color, u_alpha) * vec4(amount, amount, amount, amount);
+    gl_FragColor = vec4(u_color, opacity) * vec4(amount, amount, amount, amount);
 }
 
 

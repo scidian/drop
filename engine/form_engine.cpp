@@ -117,7 +117,7 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
         connect(pushDebug2,  SIGNAL(clicked()), this, SLOT(on_pushDebug2_clicked()));
 
 
-        m_opengl = new OpenGL(centralWidget, this, m_engine);
+        m_opengl = new DrOpenGL(centralWidget, this, m_engine);
         connect(m_opengl, SIGNAL(frameSwapped()), this, SLOT(frameSwapped()));
         connect(m_opengl, SIGNAL(aboutToCompose()), this, SLOT(aboutToCompose()));
         ///connect(m_opengl, SIGNAL(frameSwapped()), m_opengl, SLOT(update()));             // Creates non-stop updates
@@ -251,7 +251,7 @@ void FormEngine::updateEngine() {
     }
 
     // Additional render on MacOS (smooths more with vsync being disabled)
-    if (m_engine->getCurrentWorld()->getThings().count() < 250 && m_engine->getCurrentWorld()->m_lights.count() <= 0) {
+    if (m_engine->getCurrentWorld()->getThings().count() < 250 && m_engine->getCurrentWorld()->light_count <= 0) {
         double render_milliseconds = getTimerMilliseconds(Engine_Timer::Render);
         if (render_milliseconds > (1000.0 / m_ideal_frames_per_second)) {
             resetTimer(Engine_Timer::Render);

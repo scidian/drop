@@ -69,7 +69,7 @@ public:
     virtual const float&    getOpacity() { return m_alpha; }                                // Returns Opacity (alpha 0.0 to 1.0) of Thing
 
     virtual void            setPosition(QPointF position) { m_position = position; }
-    virtual void            setOpacity(float new_alpha) { m_alpha = new_alpha; }
+    virtual void            setOpacity(float  new_alpha) { m_alpha = new_alpha; }
 
 
 };

@@ -46,9 +46,6 @@ void DrEngineWorld::buildSpace(Demo_Space new_space_type) {
     cpSpaceSetGravity(m_space, m_gravity);
     cpSpaceSetDamping(m_space, m_damping);
 
-    // ***** Reset cameras
-    clearCameras();
-
 
     // ***** Reset keys
     m_engine->keyboard_x = 0;
@@ -71,86 +68,17 @@ void DrEngineWorld::buildSpace(Demo_Space new_space_type) {
 
 
 
-    // !!!!! #TEMP add lights
+    // !!!!! #TEMP add lights, must makeCurrent() before initializing lights!!! (because they have OpenglFrameBufferObject pointers)
     m_engine->getFormEngine()->getOpenGL()->makeCurrent();
 
-    DrEngineLight *light1 = new DrEngineLight();
-    light1->updateBodyPosition( QPointF(-350, 300) );
-    light1->color = Qt::blue;
-    light1->intensity = 0.85f;
-    light1->shadows = 0.0f;
-    light1->blur = 0.0f;
-    light1->light_size = 2000;
-    light1->should_process = false;
-    light1->has_been_processed = true;
+    addLight( -350,  300,  0, Qt::blue ,             2000, QPointF(  0, 360),  0.85f,  0.0f,  true,  0.0f, 0.00f, 0.00f, c_opaque);
+    addLight(  700,  800,  0, Qt::red  ,             3500, QPointF(  0, 360),  1.50f,  5.0f,  true, 50.0f, 0.00f, 0.00f, c_opaque);
+    addLight( 1350,  300,  0, Qt::green,             2000, QPointF(  0, 360),  0.81f, 10.0f,  true, 50.0f, 0.02f, 0.20f, c_opaque);
+    addLight( 2000,  250, 20, QColor(192,  64, 192),  900, QPointF(  0, 360), 10.00f,  1.0f, false,  0.0f, 0.00f, 0.00f, c_opaque);
+    addLight( 2700, 1000, -1, Qt::white,             4000, QPointF( 45, 315),  2.00f,  5.0f, false, 30.0f, 0.00f, 0.00f, c_opaque);
+    addLight( 3700,  200,  0, Qt::gray ,             1200, QPointF(  0, 360),  1.00f,  1.0f,  true,  5.0f, 0.00f, 0.00f, c_opaque);
+    addLight( 4200, 1000, -1, Qt::yellow,            4000, QPointF(257, 283),  1.10f,  8.0f,  true, 15.0f, 0.10f, 0.50f, 0.75f);
 
-    DrEngineLight *light2 = new DrEngineLight();
-    light2->updateBodyPosition( QPointF(3700, 200) );
-    light2->color = Qt::gray;
-    light2->intensity = 1.0;
-    light2->shadows = 1.0f;
-    light2->blur = 5.0f;
-    light2->light_size = 1200;
-    light2->should_process = false;
-    light2->has_been_processed = true;
-
-    DrEngineLight *light3 = new DrEngineLight();
-    light3->updateBodyPosition( QPointF(700, 800) );
-    light3->color = Qt::red;
-    light3->intensity = 1.5;
-    light3->shadows = 5.0f;
-    light3->blur = 50.0f;
-    light3->light_size = 3500;
-    light3->should_process = false;
-    light3->has_been_processed = true;
-
-    DrEngineLight *light4 = new DrEngineLight();
-    light4->updateBodyPosition( QPointF(1350, 300) );
-    light4->color = Qt::green;
-    light4->intensity = 1.0f;
-    light4->shadows = 10.0f;
-    light4->blur = 50.0f;
-    light4->light_size = 2000;
-    light4->should_process = false;
-    light4->has_been_processed = true;
-    light4->pulse = QVector3D( 0.8f, 0.82f, 0.20f);
-
-    DrEngineLight *light5 = new DrEngineLight();
-    light5->updateBodyPosition( QPointF(2000, 250) );
-    light5->color = QColor(192, 64, 192);
-    light5->intensity = 10.0f;
-    light5->blur = 0.0f;
-    light5->shadows = 1.0f;
-    light5->light_size = 900;
-    light5->z_order = 300;
-    light5->should_process = false;
-    light5->has_been_processed = true;
-
-    DrEngineLight *light6 = new DrEngineLight();
-    light6->updateBodyPosition( QPointF(2700, 1000) );
-    light6->color = Qt::white;
-    light6->intensity = 2.0f;
-    light6->shadows = 5.0f;
-    light6->blur = 50.0f;
-    light6->light_size = 4000;
-    light6->should_process = false;
-    light6->has_been_processed = true;
-    light6->draw_shadows = false;
-
-
-    m_lights.append(light1);
-    m_lights.append(light2);
-    m_lights.append(light3);
-    m_lights.append(light4);
-    m_lights.append(light5);
-    m_lights.append(light6);
-
-    m_things.append(light1);
-    m_things.append(light2);
-    m_things.append(light3);
-    m_things.append(light4);
-    m_things.append(light5);
-    m_things.append(light6);
     m_engine->getFormEngine()->getOpenGL()->doneCurrent();
 
 

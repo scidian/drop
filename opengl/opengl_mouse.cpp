@@ -19,7 +19,7 @@
 //####################################################################################
 //##        Mouse Events
 //####################################################################################
-void OpenGL::mousePressEvent(QMouseEvent *event) {
+void DrOpenGL::mousePressEvent(QMouseEvent *event) {
 
     if (m_engine->getCurrentWorld()->has_scene == false) return;
 
@@ -101,7 +101,7 @@ void OpenGL::mousePressEvent(QMouseEvent *event) {
 
 }
 
-void OpenGL::mouseReleaseEvent(QMouseEvent *event)
+void DrOpenGL::mouseReleaseEvent(QMouseEvent *event)
 {
     if (m_engine->demo_player == Demo_Player::Car) {
         if (event->buttons() == Qt::MouseButton::NoButton)
@@ -123,7 +123,7 @@ void OpenGL::mouseReleaseEvent(QMouseEvent *event)
 
 // Handles zooming in / out of view with mouse wheel
 #if QT_CONFIG(wheelevent)
-void OpenGL::wheelEvent(QWheelEvent *event) {
+void DrOpenGL::wheelEvent(QWheelEvent *event) {
     // Allow for scene scrolling if ctrl (cmd) is down
     if (event->modifiers() & Qt::KeyboardModifier::ControlModifier) {
         QOpenGLWidget::wheelEvent(event);
@@ -137,7 +137,7 @@ void OpenGL::wheelEvent(QWheelEvent *event) {
 #endif
 
 
-void OpenGL::zoomInOut(int level) {
+void DrOpenGL::zoomInOut(int level) {
     m_zoom += level;
     if (m_zoom > 500) m_zoom = 500;
     if (m_zoom < -40) m_zoom = -40;

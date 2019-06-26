@@ -16,6 +16,7 @@
 #include "engine_world.h"
 #include "form_engine.h"
 #include "helper.h"
+#include "opengl/opengl.h"
 #include "project/project.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"
@@ -54,7 +55,7 @@ void DrEngineWorld::updateSpaceHelper(double time_passed) {
         thing->calculateTimeSinceLastUpdate();
         bool remove = thing->update(time_passed, m_time_warp, threshold);
 
-        // Process removal
+        // ***** Process Removal
         if (remove) {
             removeThing(thing);
             delete thing;

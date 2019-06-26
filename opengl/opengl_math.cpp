@@ -18,9 +18,9 @@
 //####################################################################################
 //##        Maps 3D Point to / from 2D QOpenGLWidget Coordinates
 //####################################################################################
-QPointF OpenGL::mapToScreen(double x, double y, double z) { return mapToScreen( QVector3D(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)) ); }
-QPointF OpenGL::mapToScreen(float x,  float y,  float z)  { return mapToScreen( QVector3D(x, y, z )); }
-QPointF OpenGL::mapToScreen(QVector3D point3D) {
+QPointF DrOpenGL::mapToScreen(double x, double y, double z) { return mapToScreen( QVector3D(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z))); }
+QPointF DrOpenGL::mapToScreen(float  x, float  y, float  z) { return mapToScreen( QVector3D(x, y, z )); }
+QPointF DrOpenGL::mapToScreen(QVector3D point3D) {
     QRect viewport = QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
 
     float x_pos, y_pos, z_pos;
@@ -31,9 +31,9 @@ QPointF OpenGL::mapToScreen(QVector3D point3D) {
     return QPointF( static_cast<double>(vec.x()),  static_cast<double>((height() * devicePixelRatio()) - vec.y()) );
 }
 
-QVector3D OpenGL::mapFromScreen(double x, double y) { return mapFromScreen( QPointF(x, y)); }
-QVector3D OpenGL::mapFromScreen(float x, float y)   { return mapFromScreen( QPointF(static_cast<double>(x), static_cast<double>(y)) ); }
-QVector3D OpenGL::mapFromScreen(QPointF point) {
+QVector3D DrOpenGL::mapFromScreen(double x, double y) { return mapFromScreen( QPointF(x, y)); }
+QVector3D DrOpenGL::mapFromScreen(float x, float y)   { return mapFromScreen( QPointF(static_cast<double>(x), static_cast<double>(y)) ); }
+QVector3D DrOpenGL::mapFromScreen(QPointF point) {
     QRect viewport = QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
 
     float x_pos = static_cast<float>(             point.x()  * devicePixelRatio() );
@@ -88,7 +88,7 @@ QVector3D OpenGL::mapFromScreen(QPointF point) {
 //####################################################################################
 //##        Maps 3D Point to / from 2D Occluder Map Coordinates
 //####################################################################################
-QPointF OpenGL::mapToOccluder(QVector3D point3D) {
+QPointF DrOpenGL::mapToOccluder(QVector3D point3D) {
     QRect viewport = QRect(0, 0, m_occluder_fbo->width(), m_occluder_fbo->height());
 
     float x_pos, y_pos, z_pos;

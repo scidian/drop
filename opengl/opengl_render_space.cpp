@@ -26,12 +26,12 @@
 //##        Render, Paint the Scene
 //####################################################################################
 // Before rendering 3D objects, enable face culling for triangles facing away from view
-void OpenGL::cullingOn() {      glEnable( GL_CULL_FACE );   glCullFace(  GL_BACK );     glFrontFace( GL_CCW ); }
+void DrOpenGL::cullingOn() {    glEnable( GL_CULL_FACE );   glCullFace(  GL_BACK );     glFrontFace( GL_CCW ); }
 // Turn off culling before drawing 2D quads, #NOTE: Must turn OFF culling for QPainter to work
-void OpenGL::cullingOff() {     glDisable( GL_CULL_FACE ); }
+void DrOpenGL::cullingOff() {   glDisable( GL_CULL_FACE ); }
 
 // Renders All Scene Objects
-void OpenGL::drawSpace() {
+void DrOpenGL::drawSpace() {
     // ***** Enable shader program
     if (!m_shader.bind()) return;
 
@@ -157,7 +157,7 @@ void OpenGL::drawSpace() {
 //####################################################################################
 //##        Renders All Scene Objects to an occluder map
 //####################################################################################
-QMatrix4x4 OpenGL::occluderMatrix() {
+QMatrix4x4 DrOpenGL::occluderMatrix() {
     QMatrix4x4 matrix;
     matrix.setToIdentity();
     float cam_x =  (m_engine->getCurrentWorld()->getCameraPos().x()) * m_scale * c_occluder_scale;
@@ -171,7 +171,7 @@ QMatrix4x4 OpenGL::occluderMatrix() {
     return matrix;
 }
 
-void OpenGL::drawSpaceOccluder() {
+void DrOpenGL::drawSpaceOccluder() {
     // ***** Enable shader program
     if (!m_occluder_shader.bind()) return;
 

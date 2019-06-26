@@ -22,7 +22,7 @@ int g_max_light_fbo_size =      2048;
 //####################################################################################
 //##        Initialize OpenGL Resources
 //####################################################################################
-void OpenGL::initializeGL() {
+void DrOpenGL::initializeGL() {
 
     // ***** Set up the rendering context, load shaders and other resources, etc.:
     initializeOpenGLFunctions();

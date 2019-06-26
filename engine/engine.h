@@ -20,6 +20,7 @@ class DrEngineLight;
 class DrEngineObject;
 class DrEngineTexture;
 class DrEngineWorld;
+class DrOpenGL;
 class DrProject;
 class DrStage;
 class FormEngine;
