@@ -12,10 +12,10 @@
 #include "playground_toy.h"
 
 
-//######################################################################################################
+//####################################################################################
 //##    Update Space steps the physics calculations
 //##        updateSpaceHelper meant to be called immediately afterwards
-//######################################################################################################
+//####################################################################################
 
 // #NOTE: time_passed is in milliseconds
 void DrPlayground::updateSpace(double time_passed) {

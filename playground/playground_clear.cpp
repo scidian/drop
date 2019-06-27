@@ -12,10 +12,10 @@
 #include "playground.h"
 #include "playground_toy.h"
 
-//######################################################################################################
+//####################################################################################
 //##    Chipmunk Callbacks
 //##        Clears bodies / shapes / constraints
-//######################################################################################################
+//####################################################################################
 static void ShapeFreeWrap(cpSpace *space, cpShape *shape, void *) { cpSpaceRemoveShape(space, shape);   cpShapeFree(shape); }
 static void ConstraintFreeWrap(cpSpace *space, cpConstraint *constraint, void *) { cpSpaceRemoveConstraint(space, constraint); cpConstraintFree(constraint); }
 static void BodyFreeWrap(cpSpace *space, cpBody *body, void *) { cpSpaceRemoveBody(space, body); cpBodyFree(body); }
@@ -36,9 +36,9 @@ static void ChipmunkFreeSpaceChildren(cpSpace *space) {
 static void GetBodyJointList(cpBody *, cpConstraint *constraint, QVector<cpConstraint*> *joint_list) { joint_list->append(constraint); }
 
 
-//######################################################################################################
+//####################################################################################
 //##    Clear Space
-//######################################################################################################
+//####################################################################################
 void DrPlayground::clearSpace() {
     if (has_scene) {
         has_scene = false;
@@ -54,9 +54,9 @@ void DrPlayground::clearSpace() {
     }
 }
 
-//######################################################################################################
+//####################################################################################
 //##    Wake All Sleeping Bodies
-//######################################################################################################
+//####################################################################################
 static void WakeBody(cpBody *body, cpSpace *) {
     if (cpBodyGetType(body) == CP_BODY_TYPE_DYNAMIC) {
         if (cpBodyIsSleeping(body)) {
@@ -71,9 +71,9 @@ void DrPlayground::wakeAllBodies() {
 }
 
 
-//######################################################################################################
+//####################################################################################
 //##    Removes an object from the Space
-//######################################################################################################
+//####################################################################################
 void DrPlayground::removeObject(DrToy *toy) {
     toy->m_should_process = false;
 

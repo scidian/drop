@@ -13,9 +13,9 @@
 #include "engine_world.h"
 
 
-//######################################################################################################
+//####################################################################################
 //##    Updates Kinematic Angular Velocity
-//######################################################################################################
+//####################################################################################
 extern void KinematicUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt) {
     // Grab object from User Data
     DrEngineObject *object = static_cast<DrEngineObject*>(cpBodyGetUserData(body));

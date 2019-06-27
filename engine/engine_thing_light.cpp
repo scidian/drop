@@ -13,9 +13,9 @@
 #include "form_engine.h"
 #include "opengl/opengl.h"
 
-//######################################################################################################
+//####################################################################################
 //##    Constructor / Destructor
-//######################################################################################################
+//####################################################################################
 DrEngineLight::DrEngineLight(DrEngineWorld *world, DrOpenGL *opengl, long unique_key) : DrEngineObject(unique_key), m_world(world), m_opengl(opengl) {
     m_world->light_count++;
 }
@@ -32,9 +32,9 @@ DrEngineLight::~DrEngineLight() {
 }
 
 
-//######################################################################################################
+//####################################################################################
 //##    Override for DrEngineThing::update() - Pulses Light
-//######################################################################################################
+//####################################################################################
 bool DrEngineLight::update(double time_passed, double time_warp, QRectF &area) {
     bool remove = false;
 
@@ -63,9 +63,9 @@ bool DrEngineLight::update(double time_passed, double time_warp, QRectF &area) {
 
 
 
-//######################################################################################################
+//####################################################################################
 //##    DrEngineWorld - Light Functions
-//######################################################################################################
+//####################################################################################
 DrEngineLight* DrEngineWorld::addLight(double x, double y, double z, QColor color, float diameter, QPointF cone,
                                        float intensity, float shadows, bool draw_shadows, float blur,
                                        float pulse, float pulse_speed, float opacity) {

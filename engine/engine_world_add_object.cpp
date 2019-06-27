@@ -18,9 +18,9 @@
 constexpr double c_extra_radius =    0.010;         // Radius added on to block and polygon shapes for better collisions
 constexpr double c_mass_multiplier = 0.002;         // Shapes Area times this multiplier = shape mass
 
-//######################################################################################################
+//####################################################################################
 //##    Add Line
-//######################################################################################################
+//####################################################################################
 DrEngineObject* DrEngineWorld::addLine(Body_Type body_type, QPointF p1, QPointF p2, double friction, double bounce, double mass) {
     DrEngineObject *line = new DrEngineObject(getNextKey());
 
@@ -65,9 +65,9 @@ DrEngineObject* DrEngineWorld::addLine(Body_Type body_type, QPointF p1, QPointF 
 }
 
 
-//######################################################################################################
+//####################################################################################
 //##    Creates a list of Vertices that represent a scaled circle
-//######################################################################################################
+//####################################################################################
 QVector<QPointF> createEllipseFromCircle(const QPointF &center, const double &radius) {
     QVector<QPointF> ellipse;
     int count = 18;
@@ -80,10 +80,10 @@ QVector<QPointF> createEllipseFromCircle(const QPointF &center, const double &ra
 }
 
 
-//######################################################################################################
+//####################################################################################
 //##    Add Circle
 //##        Pass -1 for friction and/or bounce to use default world friction and bounce settings
-//######################################################################################################
+//####################################################################################
 DrEngineObject* DrEngineWorld::addCircle(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
                                     double shape_radius, QPointF shape_offset, double friction, double bounce, QPointF velocity,
                                     bool should_collide, bool can_rotate) {
@@ -156,10 +156,10 @@ DrEngineObject* DrEngineWorld::addCircle(Body_Type body_type, long texture_numbe
 
 
 
-//######################################################################################################
+//####################################################################################
 //##    Add Block - This is a !!!!! #TEMP: call, better to just use addPolygon with 4 points passed in
 //##        Pass -1 for friction and/or bounce to use default world friction and bounce settings
-//######################################################################################################
+//####################################################################################
 DrEngineObject* DrEngineWorld::addBlock(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
                                    double friction, double bounce, QPointF velocity, bool should_collide, bool can_rotate) {
     DrEngineObject *block = new DrEngineObject(getNextKey());
@@ -226,11 +226,11 @@ DrEngineObject* DrEngineWorld::addBlock(Body_Type body_type, long texture_number
 
 
 
-//######################################################################################################
+//####################################################################################
 //##    Add Polygon
 //##        !!!!! #NOTE: Vertices must be in COUNTER-CLOCKWISE ordering
 //##              ALSO:  Pass -1 for friction and/or bounce to use default world friction and bounce settings
-//######################################################################################################
+//####################################################################################
 DrEngineObject* DrEngineWorld::addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
                                      QVector<QPointF> points, double friction, double bounce, QPointF velocity,
                                      bool should_collide, bool can_rotate) {

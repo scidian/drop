@@ -10,10 +10,10 @@
 #include "engine_texture.h"
 #include "engine_world.h"
 
-//######################################################################################################
+//####################################################################################
 //##    Sets up an object to be controlled as a "player"
 //##        i.e. have PlayerUpdateVelocity function attached as a callback during cpSpaceStep
-//######################################################################################################
+//####################################################################################
 // Sets up an object to be controlled as a "player", i.e. have PlayerUpdateVelocity function attached as a callback during cpSpaceStep
 void DrEngineWorld::assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera) {
     // Create camera
@@ -28,9 +28,9 @@ void DrEngineWorld::assignPlayerControls(DrEngineObject *object, bool has_contro
 }
 
 
-//######################################################################################################
+//####################################################################################
 //##    Add Player to Space
-//######################################################################################################
+//####################################################################################
 void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
     m_engine->demo_player = new_player_type;

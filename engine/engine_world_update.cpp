@@ -22,10 +22,10 @@
 #include "project/project_world_stage.h"
 
 
-//######################################################################################################
+//####################################################################################
 //##    Update Space steps the physics calculations
 //##        updateSpaceHelper meant to be called immediately afterwards
-//######################################################################################################
+//####################################################################################
 
 // #NOTE: time_passed is in milliseconds
 void DrEngineWorld::updateSpace(double time_passed) {

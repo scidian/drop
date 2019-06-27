@@ -16,9 +16,9 @@
 constexpr double c_extra_radius =    0.010;         // Radius added on to block and polygon shapes for better collisions
 constexpr double c_mass_multiplier = 0.002;         // Shapes Area times this multiplier = shape mass
 
-//######################################################################################################
+//####################################################################################
 //##    Add Line
-//######################################################################################################
+//####################################################################################
 DrToy* DrPlayground::addLine(Body_Type body_type, QColor color, QPointF p1, QPointF p2, double friction, double bounce, double mass) {
     DrToy *line = new DrToy(this);
 
@@ -67,10 +67,10 @@ DrToy* DrPlayground::addLine(Body_Type body_type, QColor color, QPointF p1, QPoi
 
 
 
-//######################################################################################################
+//####################################################################################
 //##    Add Circle
 //##        Pass -1 for friction and/or bounce to use default world friction and bounce settings
-//######################################################################################################
+//####################################################################################
 DrToy* DrPlayground::addCircle(Body_Type body_type, QColor color, double x, double y, double angle, double shape_radius,
                                double friction, double bounce, bool should_collide, bool can_rotate) {
     DrToy *ball = new DrToy(this);
@@ -130,10 +130,10 @@ DrToy* DrPlayground::addCircle(Body_Type body_type, QColor color, double x, doub
 }
 
 
-//######################################################################################################
+//####################################################################################
 //##    Add Block
 //##        Pass -1 for friction and/or bounce to use default world friction and bounce settings
-//######################################################################################################
+//####################################################################################
 DrToy* DrPlayground::addBlock(Body_Type body_type, QColor color, double x, double y, double angle, double width, double height,
                               double friction, double bounce, bool should_collide, bool can_rotate) {
     DrToy *block = new DrToy(this);

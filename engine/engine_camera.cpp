@@ -14,9 +14,9 @@
 #include "form_engine.h"
 #include "opengl/opengl.h"
 
-//######################################################################################################
+//####################################################################################
 //##    Clamps and Flerps
-//######################################################################################################
+//####################################################################################
 // Linearly interpolate (or extrapolate) between f1 and f2 by t percent
 static inline float  Drflerp(float f1, float f2, float t) { return f1*(1.0f - t) + f2*t; }
 static inline double Drdlerp(double f1, double f2, double t) { return f1*(1.0 - t) + f2*t; }
@@ -34,9 +34,9 @@ static inline void SmoothMove(QVector3D& start, const QVector3D &target, const f
 ///}
 
 
-//######################################################################################################
+//####################################################################################
 //##    DrEngineWorld - Camera Functions
-//######################################################################################################
+//####################################################################################
 // Default parameters: nullptr, 0, 0, 800
 long DrEngineWorld::addCamera(long thing_key_to_follow, float x, float y, float z) {
     long new_key = getNextKey();
@@ -85,9 +85,9 @@ void DrEngineWorld::switchCameras(long new_camera) {
 }
 
 
-//######################################################################################################
+//####################################################################################
 //##    DrEngineWorld - Returns camera position, also takes into handle camera switching
-//######################################################################################################
+//####################################################################################
 QVector3D DrEngineWorld::getCameraPos() {
     if (m_active_camera == 0) {
         return c_default_camera_pos;
@@ -101,13 +101,13 @@ double DrEngineWorld::getCameraPosXD() { return static_cast<double>(getCameraPos
 double DrEngineWorld::getCameraPosYD() { return static_cast<double>(getCameraPos().y()); }
 double DrEngineWorld::getCameraPosZD() { return static_cast<double>(getCameraPos().z()); }
 
-//######################################################################################################
-//######################################################################################################
+//####################################################################################
+//####################################################################################
 
 
-//######################################################################################################
+//####################################################################################
 //##    DrEngineCamera - Constructor / Destructor
-//######################################################################################################
+//####################################################################################
 DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, float y, float z) : m_world(world) {
     m_key = unique_key;
     m_position = QVector3D(x, y, z);
@@ -117,9 +117,9 @@ DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, f
     m_speed = QVector3D(0, 0, 0);
 }
 
-//######################################################################################################
+//####################################################################################
 //##    Moves camera based on current speed / settings
-//######################################################################################################
+//####################################################################################
 void DrEngineCamera::moveCamera(const double& milliseconds) {
     double lerp = 0.01 * milliseconds;
     m_position.setX( static_cast<float>(Drdlerp( static_cast<double>(m_position.x()), static_cast<double>(m_target.x()), lerp)) );
@@ -129,9 +129,9 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
     ///m_position.setY( m_target.y() );
 }
 
-//######################################################################################################
+//####################################################################################
 //##    DrEngineCamera - Update Camera Position
-//######################################################################################################
+//####################################################################################
 void DrEngineCamera::updateCamera() {
     // Movement is based on following an object stored in m_follow
     if (m_follow_key == 0) return;

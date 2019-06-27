@@ -35,10 +35,10 @@ static void BodyAddRecoil(cpSpace *, cpArbiter *arb, DrEngineObject *object);
 
 constexpr double c_speed_slowdown = 0.50;                   // Multiplier to slow down object velocity, associated with m_cancel_gravity objects
 
-//######################################################################################################
+//####################################################################################
 //##    Chipmunk Collision Callbacks
 //##        Support for object collisions, damage, recoil, one way platforms and more
-//######################################################################################################
+//####################################################################################
 extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b);
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
@@ -120,9 +120,9 @@ extern void SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     object_a->setTempGravityMultiplier( 1.0 );
 }
 
-//######################################################################################################
+//####################################################################################
 //##    Applies Recoil Force after being damaged another object
-//######################################################################################################
+//####################################################################################
 static void BodyAddRecoil(cpSpace *, cpArbiter *arb, DrEngineObject *object) {
     // METHOD: Apply damage_recoil opposite velocity
     cpVect n = cpArbiterGetNormal(arb);                         // Get Normal of contact point

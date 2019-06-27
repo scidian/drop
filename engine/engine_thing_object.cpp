@@ -11,18 +11,18 @@
 #include "engine_thing_object.h"
 
 
-//######################################################################################################
+//####################################################################################
 //##    Chipmunk Callbacks
-//######################################################################################################
+//####################################################################################
 // Used for constraint iterator to get a list of all constraints attached to a body
 static void GetBodyJointList(cpBody *, cpConstraint *constraint, QVector<cpConstraint*> *joint_list) { joint_list->append(constraint); }
 // Used for shape iterator to get a list of all shapes attached to a body
 static void GetBodyShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_list) { shape_list->append(shape); }
 
 
-//######################################################################################################
+//####################################################################################
 //##    Constructor / Destructor
-//######################################################################################################
+//####################################################################################
 DrEngineObject::DrEngineObject(long unique_key) : DrEngineThing(unique_key) {
 
 }
@@ -51,9 +51,9 @@ DrEngineObject::~DrEngineObject() {
     }
 }
 
-//######################################################################################################
+//####################################################################################
 //##    Update Functions
-//######################################################################################################
+//####################################################################################
 void DrEngineObject::updateBodyPosition(QPointF updated_position, bool update_previous_position_also) {
     m_previous_position = update_previous_position_also ? updated_position : getPosition();
     setPosition( updated_position );
@@ -132,9 +132,9 @@ bool DrEngineObject::update(double , double , QRectF &area) {
 };
 
 
-//######################################################################################################
+//####################################################################################
 //##    Collision Type of Object
-//######################################################################################################
+//####################################################################################
 void DrEngineObject::setCollisionType(Collision_Type what_should_collide) {
     m_collision_type = what_should_collide;
     for (auto shape : shapes) {
@@ -157,9 +157,9 @@ bool DrEngineObject::shouldDamage(Collision_Type check_damage) {
 }
 
 
-//######################################################################################################
+//####################################################################################
 //##    Take Damage / Heal
-//######################################################################################################
+//####################################################################################
 // Returns TRUE: just killed this object / object dead, FALSE: did not kill this object / object alive
 bool DrEngineObject::takeDamage(double damage_to_take, bool reset_damage_timer, bool death_touch) {
     // If dying or dead exit now

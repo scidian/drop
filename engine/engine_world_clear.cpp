@@ -16,10 +16,10 @@
 #include "form_engine.h"
 #include "opengl/opengl.h"
 
-//######################################################################################################
+//####################################################################################
 //##    Chipmunk Callbacks
 //##        Clears bodies / shapes / constraints
-//######################################################################################################
+//####################################################################################
 static void ShapeFreeWrap(cpSpace *space, cpShape *shape, void *) { cpSpaceRemoveShape(space, shape);   cpShapeFree(shape); }
 static void ConstraintFreeWrap(cpSpace *space, cpConstraint *constraint, void *) { cpSpaceRemoveConstraint(space, constraint); cpConstraintFree(constraint); }
 static void BodyFreeWrap(cpSpace *space, cpBody *body, void *) { cpSpaceRemoveBody(space, body); cpBodyFree(body); }
@@ -37,9 +37,9 @@ static void ChipmunkFreeSpaceChildren(cpSpace *space) {
 }
 
 
-//######################################################################################################
+//####################################################################################
 //##    Wake All Sleeping Bodies
-//######################################################################################################
+//####################################################################################
 static void WakeBody(cpBody *body, cpSpace *) {
     if (cpBodyGetType(body) == CP_BODY_TYPE_DYNAMIC) {
         if (cpBodyIsSleeping(body)) {
@@ -53,9 +53,9 @@ void DrEngineWorld::wakeAllBodies() {
     }
 }
 
-//######################################################################################################
+//####################################################################################
 //##    Clear Space
-//######################################################################################################
+//####################################################################################
 void DrEngineWorld::clearSpace() {
     if (has_scene) {
         has_scene = false;
