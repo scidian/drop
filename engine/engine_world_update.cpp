@@ -24,7 +24,7 @@
 
 //####################################################################################
 //##    Update Space steps the physics calculations
-//##        updateSpaceHelper meant to be called immediately afterwards
+//##        updateWorld meant to be called immediately afterwards
 //####################################################################################
 
 // #NOTE: time_passed is in milliseconds
@@ -34,7 +34,7 @@ void DrEngineWorld::updateSpace(double time_passed) {
     cpSpaceStep(m_space, step_time);
 }
 
-void DrEngineWorld::updateSpaceHelper(double time_passed) {
+void DrEngineWorld::updateWorld(double time_passed) {
 
     // Calculate area that if Things are within, they can stay in the Space
     QRectF threshold(getCameraPosXD() - m_delete_threshold_x, getCameraPosYD() - m_delete_threshold_y, m_delete_threshold_x*2.0, m_delete_threshold_y*2.0);

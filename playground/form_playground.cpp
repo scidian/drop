@@ -132,7 +132,7 @@ void FormPlayground::updateEngine() {
     if (update_milliseconds > m_playground->getTimeStepAsMilliseconds()) {
         m_time_update =  Clock::now();
         m_playground->updateSpace(update_milliseconds);                 // Physics Engine
-        m_playground->updateSpaceHelper();                              // Additional Physics Updating
+        m_playground->updateWorld();                                    // Additional World / Toy Updating
         updateGraphicsView();
 
         m_debug->setText(Dr::CurrentTimeAsString());

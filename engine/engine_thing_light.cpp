@@ -16,19 +16,50 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrEngineLight::DrEngineLight(DrEngineWorld *world, DrOpenGL *opengl, long unique_key) : DrEngineObject(unique_key), m_world(world), m_opengl(opengl) {
-    m_world->light_count++;
+DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key,
+                             double x, double y, double z, QColor color, float diameter, QPointF cone, float intensity,
+                             float shadows, bool draw_shadows, float blur, float pulse, float pulse_speed, float opacity)
+    : DrEngineObject(world, unique_key, Body_Type::Static, 0, x, y, (z - 0.0001)) {
+
+//    this->setPosition( QPointF(x, y) );
+//    this->z_order = z - 0.0001;
+    this->color = color;
+    this->light_size = diameter;
+    this->cone = cone;
+    this->intensity = intensity;
+    this->setStartIntensity( intensity );
+    this->shadows = shadows;
+    this->draw_shadows = draw_shadows;
+    this->blur = blur;
+    this->pulse = pulse;
+    this->pulse_speed = pulse_speed;
+    this->setOpacity( opacity );
+
+    world->getEngine()->getFormEngine()->getOpenGL()->makeCurrent();
+    this->occluder_fbo = new QOpenGLFramebufferObject(1, 1);
+    this->shadow_fbo =   new QOpenGLFramebufferObject(1, 1);
+    world->getEngine()->getFormEngine()->getOpenGL()->doneCurrent();
+
+    this->should_process = false;
 }
 
 
 DrEngineLight::~DrEngineLight() {
     should_process = false;
-    m_world->light_count--;
+    getWorld()->light_count--;
 
-    m_opengl->makeCurrent();
+    getWorld()->getEngine()->getFormEngine()->getOpenGL()->makeCurrent();
     delete occluder_fbo;
     delete shadow_fbo;
-    m_opengl->doneCurrent();
+    getWorld()->getEngine()->getFormEngine()->getOpenGL()->doneCurrent();
+}
+
+
+//####################################################################################
+//##    Override for DrEngineThing::addToWorld()
+//####################################################################################
+void DrEngineLight::addToWorld() {
+    getWorld()->light_count++;
 }
 
 
@@ -59,36 +90,6 @@ bool DrEngineLight::update(double time_passed, double time_warp, QRectF &area) {
     // ***** Delete object if ends up outside the deletion threshold
     if (area.contains(getPosition()) == false) remove = true;
     return remove;
-}
-
-
-
-//####################################################################################
-//##    DrEngineWorld - Light Functions
-//####################################################################################
-DrEngineLight* DrEngineWorld::addLight(double x, double y, double z, QColor color, float diameter, QPointF cone,
-                                       float intensity, float shadows, bool draw_shadows, float blur,
-                                       float pulse, float pulse_speed, float opacity) {
-    DrEngineLight *light = new DrEngineLight(this, m_engine->getFormEngine()->getOpenGL(), getNextKey());
-    light->setPosition( QPointF(x, y) );
-    light->z_order = z - 0.0001;
-    light->color = color;
-    light->light_size = diameter;
-    light->cone = cone;
-    light->intensity = intensity;
-    light->setStartIntensity( intensity );
-    light->shadows = shadows;
-    light->draw_shadows = draw_shadows;
-    light->blur = blur;
-    light->pulse = pulse;
-    light->pulse_speed = pulse_speed;
-    light->setOpacity( opacity );
-
-    light->should_process = false;
-    light->has_been_processed = true;
-
-    m_things.append(light);
-    return light;
 }
 
 

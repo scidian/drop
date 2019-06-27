@@ -17,7 +17,7 @@ DrEngineWorld::DrEngineWorld(DrEngine *engine, DrProject *project, long world_ke
 }
 
 DrEngineWorld::~DrEngineWorld() {
-    clearSpace();
+    clearWorld();
 }
 
 
@@ -29,4 +29,19 @@ DrEngineThing* DrEngineWorld::findThingByKey(long key) {
         if (thing->getKey() == key) return thing;
     }
     return nullptr;
+}
+
+
+//####################################################################################
+//##    Adds Things to the World
+//####################################################################################
+void DrEngineWorld::addThings(QList<DrEngineThing*> things) {
+    for (auto thing : things) {
+        thing->addToWorld();
+        m_things.append(thing);
+    }
+}
+void DrEngineWorld::addThing( DrEngineThing *thing) {
+    thing->addToWorld();
+    m_things.append(thing);
 }

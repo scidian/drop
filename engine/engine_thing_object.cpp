@@ -9,24 +9,61 @@
 
 #include "engine.h"
 #include "engine_thing_object.h"
+#include "engine_world.h"
 
 
 //####################################################################################
 //##    Chipmunk Callbacks
 //####################################################################################
-// Used for constraint iterator to get a list of all constraints attached to a body
+// Iterators to get a list of all constraints, shapes, etc attached to a body
 static void GetBodyJointList(cpBody *, cpConstraint *constraint, QVector<cpConstraint*> *joint_list) { joint_list->append(constraint); }
-// Used for shape iterator to get a list of all shapes attached to a body
 static void GetBodyShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_list) { shape_list->append(shape); }
 
 
 //####################################################################################
-//##    Constructor / Destructor
+//##    Object Constructor
+//##        Pass -1 for friction and/or bounce to use default world friction and bounce settings
 //####################################################################################
-DrEngineObject::DrEngineObject(long unique_key) : DrEngineThing(unique_key) {
+DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key) : DrEngineThing (world, unique_key) { }
 
+DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, Body_Type body_type, long texture_number,
+                               double x, double y, double z, QPointF scale, double friction, double bounce,
+                               bool should_collide, bool can_rotate, double angle, float opacity) : DrEngineThing (world, unique_key) {
+    // Basics
+    this->setTextureNumber(texture_number);                                     // Texture to render from
+    this->setScaleX(scale.x());                                                 // Save x scale for later
+    this->setScaleY(scale.y());                                                 // Save y scale for later
+    this->z_order = z;
+    this->updateBodyPosition( QPointF(x, y), true );
+
+    this->setCustomFriction(friction);
+    this->setCustomBounce(bounce);
+    this->setOpacity(opacity);
+    this->setDoesCollide(should_collide);
+    this->setCanRotate( can_rotate );
+
+    // Create Body
+    this->body_type = body_type;
+    switch (body_type) {
+        case Body_Type::Static:      this->body = cpBodyNewStatic();            break;
+        case Body_Type::Dynamic:     this->body = cpBodyNew( 0.0, 0.0 );        break;
+        case Body_Type::Kinematic:   this->body = cpBodyNewKinematic();         break;
+    }
+    cpSpaceAddBody(world->getSpace(), this->body);
+    cpBodySetUserData( this->body, this);                                       // Set chipmunk User Data, store DrEngineObject* for use later
+    cpBodySetPosition( this->body, cpv( x, y));
+    cpBodySetAngle(    this->body, qDegreesToRadians(-angle) );
+
+    // If we moved a static object, recalculate object positions
+    if (this->body_type == Body_Type::Static) {
+        cpSpaceReindexShapesForBody(getWorld()->getSpace(), this->body);
+    }
 }
 
+
+//####################################################################################
+//##    Destructor
+//####################################################################################
 DrEngineObject::~DrEngineObject() {
     should_process = false;
 
@@ -51,8 +88,17 @@ DrEngineObject::~DrEngineObject() {
     }
 }
 
+
 //####################################################################################
-//##    Update Functions
+//##    Override for DrEngineThing::addToWorld()
+//####################################################################################
+void DrEngineObject::addToWorld() {
+
+}
+
+
+//####################################################################################
+//##    Updates - Override for DrEngineThing::update()
 //####################################################################################
 void DrEngineObject::updateBodyPosition(QPointF updated_position, bool update_previous_position_also) {
     m_previous_position = update_previous_position_also ? updated_position : getPosition();
@@ -73,6 +119,14 @@ bool DrEngineObject::update(double , double , QRectF &area) {
     if (hasKeyControls() && !hasLostControl() && sleeping) {
         cpBodyActivate(body);
     }
+
+
+
+
+    if (this->custom == 1) {
+        g_info = "Moment: " + QString::number( cpBodyGetMoment(this->body) );
+    }
+
 
 //    // ***** Update global friction and bounce to all objects if globals have changed (possibly due to Gameplay Action)
 //    if (qFuzzyCompare(object->getCustomFriction(), c_friction) == false) {

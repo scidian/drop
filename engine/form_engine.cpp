@@ -174,8 +174,8 @@ void FormEngine::loadDemo(Demo_Space using_space, Demo_Player using_player ) {
     stopTimers();
 
     // ***** The following are the steps to load a new Space
-    m_engine->getCurrentWorld()->clearSpace();
-    m_engine->getCurrentWorld()->buildSpace( using_space );
+    m_engine->getCurrentWorld()->clearWorld();
+    m_engine->getCurrentWorld()->buildWorld( using_space );
     m_engine->getCurrentWorld()->addPlayer( using_player );
     m_engine->getCurrentWorld()->updateSpace( 0 );
 
@@ -244,7 +244,7 @@ void FormEngine::updateEngine() {
     if (update_milliseconds > m_engine->getCurrentWorld()->getTimeStepAsMilliseconds()) {
         resetTimer(Engine_Timer::Update);
         m_engine->getCurrentWorld()->updateSpace(update_milliseconds);                      // Physics Engine
-        m_engine->getCurrentWorld()->updateSpaceHelper(update_milliseconds);                // Additional Physics Updating
+        m_engine->getCurrentWorld()->updateWorld(update_milliseconds);                      // Additional World / Thing Updating
         m_engine->getCurrentWorld()->updateCameras();                                       // Update Camera Targets
         moveCameras();                                                                      // Move Cameras
         m_opengl->update();                                                                 // Render
@@ -264,7 +264,7 @@ void FormEngine::updateEngine() {
         double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
         resetTimer(Engine_Timer::Update);
         m_engine->getCurrentWorld()->updateSpace(update_milliseconds);                      // Physics Engine
-        m_engine->getCurrentWorld()->updateSpaceHelper(update_milliseconds);                // Additional Physics Updating
+        m_engine->getCurrentWorld()->updateWorld(update_milliseconds);                      // Additional World / Thing Updating
         m_engine->getCurrentWorld()->updateCameras();                                       // Update Camera Targets
         moveCameras();                                                                      // Move Cameras
         m_opengl->update();                                                                 // Render

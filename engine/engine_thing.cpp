@@ -11,7 +11,8 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrEngineThing::DrEngineThing(long unique_key) {
+DrEngineThing::DrEngineThing(DrEngineWorld* world, long unique_key) {
+    m_world = world;
     m_key = unique_key;
 }
 
@@ -24,7 +25,6 @@ DrEngineThing::~DrEngineThing() {
 //##    Get time since last update
 //####################################################################################
 void DrEngineThing::calculateTimeSinceLastUpdate() {
-    time_since_last_update = has_been_processed ? Dr::MillisecondsElapsed( update_timer ) : 0.0;
-    has_been_processed = true;
+    time_since_last_update = Dr::MillisecondsElapsed( update_timer );
     Dr::ResetTimer( update_timer );
 }

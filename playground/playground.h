@@ -78,7 +78,7 @@ public:
     void        removeObject(DrToy *toy);
     void        setWorldInfo();
     void        updateSpace(double time_passed);
-    void        updateSpaceHelper();
+    void        updateWorld();
     void        wakeAllBodies();
 
     // Getters / Setters

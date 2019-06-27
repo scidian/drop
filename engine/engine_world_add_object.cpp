@@ -14,15 +14,13 @@
 #include "helper.h"
 #include "library/poly_partition.h"
 
-// Local Constants
-constexpr double c_extra_radius =    0.010;         // Radius added on to block and polygon shapes for better collisions
-constexpr double c_mass_multiplier = 0.002;         // Shapes Area times this multiplier = shape mass
+
 
 //####################################################################################
 //##    Add Line
 //####################################################################################
 DrEngineObject* DrEngineWorld::addLine(Body_Type body_type, QPointF p1, QPointF p2, double friction, double bounce, double mass) {
-    DrEngineObject *line = new DrEngineObject(getNextKey());
+    DrEngineObject *line = new DrEngineObject(this, getNextKey());
 
     // Check for default (-1) or custom friction / bounce settings
     line->setCustomFriction(friction);
@@ -68,7 +66,7 @@ DrEngineObject* DrEngineWorld::addLine(Body_Type body_type, QPointF p1, QPointF 
 //####################################################################################
 //##    Creates a list of Vertices that represent a scaled circle
 //####################################################################################
-QVector<QPointF> createEllipseFromCircle(const QPointF &center, const double &radius) {
+static QVector<QPointF> createEllipseFromCircle(const QPointF &center, const double &radius) {
     QVector<QPointF> ellipse;
     int count = 18;
     for (int i = 0; i < count; i++) {
@@ -94,7 +92,7 @@ DrEngineObject* DrEngineWorld::addCircle(Body_Type body_type, long texture_numbe
     }
 
     // Otherwise continue with circle
-    DrEngineObject *ball = new DrEngineObject(getNextKey());
+    DrEngineObject *ball = new DrEngineObject(this, getNextKey());
 
     // Check for default (-1) or custom friction / bounce settings
     ball->setCustomFriction(friction);
@@ -162,7 +160,7 @@ DrEngineObject* DrEngineWorld::addCircle(Body_Type body_type, long texture_numbe
 //####################################################################################
 DrEngineObject* DrEngineWorld::addBlock(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
                                    double friction, double bounce, QPointF velocity, bool should_collide, bool can_rotate) {
-    DrEngineObject *block = new DrEngineObject(getNextKey());
+    DrEngineObject *block = new DrEngineObject(this, getNextKey());
 
     // Check for default (-1) or custom friction / bounce settings
     block->setCustomFriction(friction);
@@ -234,7 +232,7 @@ DrEngineObject* DrEngineWorld::addBlock(Body_Type body_type, long texture_number
 DrEngineObject* DrEngineWorld::addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
                                      QVector<QPointF> points, double friction, double bounce, QPointF velocity,
                                      bool should_collide, bool can_rotate) {
-    DrEngineObject *polygon = new DrEngineObject(getNextKey());
+    DrEngineObject *polygon = new DrEngineObject(this, getNextKey());
 
     // Check for default (-1) or custom friction / bounce settings
     polygon->setCustomFriction(friction);
@@ -351,9 +349,8 @@ DrEngineObject* DrEngineWorld::addPolygon(Body_Type body_type, long texture_numb
 
     // Add polygon to the list of objects in the current Space
     m_things.append( polygon );
-    return polygon;    
+    return polygon;
 }
-
 
 
 

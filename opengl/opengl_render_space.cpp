@@ -46,7 +46,6 @@ void DrOpenGL::drawSpace() {
 
     // ********** Render 2D Objects
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
-        if (!thing->has_been_processed) continue;
 
         // ***** If light, draw with seperate shader then move to next Thing
         float texture_width = 0, texture_height = 0;
@@ -186,7 +185,6 @@ void DrOpenGL::drawSpaceOccluder() {
 
     // ********** Render 2D Objects
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
-        if (!thing->has_been_processed) continue;
         if ( thing->getThingType() != DrThingType::Object) continue;
         DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
 

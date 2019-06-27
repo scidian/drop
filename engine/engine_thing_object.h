@@ -35,6 +35,10 @@ constexpr int       c_no_max_health = -1;               // Flag for no maximum h
 constexpr int       c_unlimited_health = -1;            // Flag for unlimited health
 constexpr int       c_unlimited_jump =   -1;            // Flag for unlimited jump
 
+// Constants for Object Body / Shape Creation
+constexpr double    c_extra_radius =    0.010;          // Radius added on to block and polygon shapes for better collisions
+constexpr double    c_mass_multiplier = 0.002;          // Shapes Area times this multiplier = shape mass
+
 // Global Variables - defined in engine_update_player.cpp
 extern int          g_keyboard_x;                       // Used to pass keyboard x button state to static callback functions
 extern int          g_keyboard_y;                       // Used to pass keyboard y button state to static callback functions
@@ -51,19 +55,20 @@ extern QString      g_info;
 class DrEngineObject : public DrEngineThing
 {
 public:
-    // ***** Object Body and Shapes
+    // Object Body and Shapes
     cpBody             *body = nullptr;         // Physical Body of object
     Body_Type           body_type;              // Body_Type
 
     QVector<cpShape*>   shapes;                 // Collision Shapes of object
     ShapeMap            shape_type;             // Shape Types of Shapes of Object
 
+    int custom = 0;
 
 private:
-    // ********** Object Component Properties
+    // ***** Object Component Properties
     //      To be set for each object as desired
     //
-    // ***** Object Basic Settings
+    // Object Basic Settings
     bool            m_does_collide = true;          // Set to false to have this object not collide with anything
     long            m_texture_number;               // Reference to which texture to use from Engine->EngineTexture map
 
@@ -71,22 +76,22 @@ private:
     float           m_scale_y = 1.0f;               // Scale of object in world
 
 
-    // ***** Object Properties - Bounce / Friction
+    // Object Properties - Bounce / Friction
     double          m_custom_friction = c_friction; // Defaults to c_friction (-1) if this item uses global m_friction, otherwise stores custom friction
     double          m_custom_bounce = c_bounce;     // Defaults to c_bounce (-1) if this item uses global m_bounce, otherwise stores custom bounce
 
-    // ***** Object Properties - Movement
+    // Object Properties - Movement
     double          m_velocity_x;                   // Original x velocity when loaded into scene, used for KinematicUpdateVelocity func
     double          m_velocity_y;                   // Original y velocity when loaded into scene, used for KinematicUpdateVelocity func
     double          m_spin_velocity;                // Original angular velocity when loaded into scene, !!!!! #NOTE: In radians !!!!!
     bool            m_use_angle_velocity = true;    // Should the angle of the object affect velocity? (only for Kinematic)
 
-    // ***** Object Properties - One Way / Collision
+    // Object Properties - One Way / Collision
     One_Way         m_one_way = One_Way::None;      // Set one way collision type desired (None, Pass Through, Weak_Spot)
     cpVect          m_one_way_direction {0, 1};     // Direction for one way collision, defaults to Up (i.e. objects can pass upwards through the bottom of a block)
     double          m_gravity_multiplier = 1.0;     // Use to cancel gravity (0.0) on objects that collide (climbable ladders), or to reduce gravity (sticky wall)
 
-    // ***** Object Properties - Health / Damage
+    // Object Properties - Health / Damage
     Collision_Type  m_collision_type = Collision_Type::Damage_None; // Specifies which types of objects this object can damage
     bool            m_invincible = false;                           // When true this object takes no damage nor damage_recoil force, cannot be killed
     bool            m_death_touch = false;                          // When true kills everything on contact, even unlimited health...but not invincible objects
@@ -100,10 +105,10 @@ private:
     long            m_fade_delay = 750;             // Time it takes for item to be removed after death, in milliseconds (0 == remove immediately)
     double          m_damage_recoil = 200.0;        // How much opposite force to apply when receiving damage
 
-    // ***** Object Movement - Rotation
+    // Object Movement - Rotation
     double          m_rotate_speed =  0.0;          // Speed at which object should spin when Motor Rotate (gas pedal) is pressed
 
-    // ***** Object Movement - PlayerUpdateVelocity Callback Func
+    // Object Movement - PlayerUpdateVelocity Callback Func
     bool            m_key_controls = false;         // Set to true when object is a "player" and should respond to key / button / mouse events
                                                     //      (players are cpBody* that have been assigned the cpBodyUpdateVelocityFunc PlayerUpdateVelocity callback)
     bool            m_lost_control = false;         // Set to true when players should not have button control but have been assigned key_controls
@@ -132,8 +137,8 @@ private:
     bool            m_can_rotate = true;            // To be set during object creation, moment of inertia is set to infinity to stop rotation
     bool            m_ignore_gravity = false;       // If turned to true, this object no longer is affected by gravity
 
-    // ********** Local Variables Updated by Engine
-    //                NOT TO BE SET BY USER
+    // ***** Local Variables Updated by Engine
+    //              NOT TO BE SET BY USER
     //
     int         m_remaining_jumps = 0;                      // How many jumps player has left before it must hit ground before it can jump again
     double      m_remaining_boost = 0.0;                    // Used by Engine Update to process Jump Timeout boost
@@ -159,7 +164,7 @@ private:
 
 
 public:
-    // ********** Image Post Processing Attributes
+    // ***** Image Post Processing Attributes
     float       pixel_x = 1.0;                              // Pixelation X     1.0+
     float       pixel_y = 1.0;                              // Pixelation Y     1.0+
     bool        negative = false;                           // Negative         True / False
@@ -173,12 +178,26 @@ public:
 
 public:
     // Constructor / Destructor
-    DrEngineObject(long unique_key);
+    DrEngineObject(DrEngineWorld *world, long unique_key);
+    DrEngineObject(DrEngineWorld *world, long unique_key, Body_Type body_type, long texture_number,
+                   double x, double y, double z, QPointF scale = c_scale1x1, double friction = c_friction, double bounce = c_bounce,
+                   bool should_collide = true, bool can_rotate = true, double angle = c_norotate, float opacity = c_opaque);
     virtual ~DrEngineObject() override;
 
     // Abstract Engine Thing Overrides
+    virtual void        addToWorld() override;
     virtual DrThingType getThingType() override { return DrThingType::Object; }
     virtual bool        update(double time_passed, double time_warp, QRectF &area) override;
+
+    // Shape Creation
+    void    addShapeBox(double width, double height);
+    void    addShapeBoxFromTexture(long texture_number);
+    void    addShapeCircle(double circle_radius, QPointF shape_offset);
+    void    addShapePolygon(QVector<QPointF> &points);
+    void    addShapeSegment(QPointF p1, QPointF p2, double padding);
+    void    applyShapeSettings(cpShape *shape, double area, Shape_Type shape_type);
+
+
 
 
     // Object Basic Settings
@@ -330,7 +349,7 @@ public:
     DrTime&         getFadeTimer() { return m_fade_timer; }
 
 
-    // Object->Body Data - Updated every frame by updateSpaceHelper()
+    // Object->Body Data - Updated every frame by updateWorld()
     const double&   getAngle() { return m_angle; }
     QPointF         getPreviousPosition() { return m_previous_position; }
     void            updateBodyAngle(double updated_angle) { m_angle = updated_angle; }

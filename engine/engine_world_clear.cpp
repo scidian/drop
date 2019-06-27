@@ -54,9 +54,9 @@ void DrEngineWorld::wakeAllBodies() {
 }
 
 //####################################################################################
-//##    Clear Space
+//##    Clear World of All Things, Clears Space of All Bodies
 //####################################################################################
-void DrEngineWorld::clearSpace() {
+void DrEngineWorld::clearWorld() {
     if (has_scene) {
         has_scene = false;
 

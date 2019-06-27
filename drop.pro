@@ -100,6 +100,7 @@ SOURCES += \
     engine/engine_thing.cpp \
     engine/engine_thing_light.cpp \
     engine/engine_thing_object.cpp \
+    engine/engine_thing_object_create.cpp \
     engine/engine_world.cpp \
     engine/engine_world_add_object.cpp \
     engine/engine_world_build_player.cpp \

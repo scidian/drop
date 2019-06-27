@@ -14,7 +14,7 @@
 
 //####################################################################################
 //##    Update Space steps the physics calculations
-//##        updateSpaceHelper meant to be called immediately afterwards
+//##        updateWorld meant to be called immediately afterwards
 //####################################################################################
 
 // #NOTE: time_passed is in milliseconds
@@ -26,11 +26,10 @@ void DrPlayground::updateSpace(double time_passed) {
 
 
 // ********** Iterate through objects, delete if necessary
-void DrPlayground::updateSpaceHelper() {
+void DrPlayground::updateWorld() {
     for ( auto it = objects.begin(); it != objects.end(); ) {
         // ***** Initial loop variables
         DrToy *object = *it;
-        object->m_has_been_processed = true;
 
         // ***** Skip object if static; or if not yet in Space / no longer in Space
         if (!object->m_should_process) {
@@ -43,14 +42,16 @@ void DrPlayground::updateSpaceHelper() {
         object->m_position = QPointF( new_position.x, new_position.y );
         object->m_angle = qRadiansToDegrees( cpBodyGetAngle( object->body ));
 
-
-        // ***** Process removal
+        // ***** Process removal, skip to next For iteration
         if (object->m_remove) {
             removeObject(object);
             delete object;
             it = objects.erase(it);
-        } else it++;
+            continue;
+        }
 
+        // Increment For iteration
+        it++;
     }   // End For
 }
 

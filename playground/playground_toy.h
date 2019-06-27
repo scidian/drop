@@ -29,11 +29,11 @@ class DrToy
 {
 
 public:
-    // ***** External Borrowed Pointers
+    // External Borrowed Pointers
     DrPlayground       *m_playground;           // Parent DrPlayground
 
 
-    // ***** Object Body and Shape
+    // Object Body and Shape
     cpBody             *body;                   // Physical Body of object
     Body_Type           body_type;              // Body_Type
 
@@ -43,23 +43,23 @@ public:
     QGraphicsItem      *graphic;                // Pointer to the QGraphicsItem that represents this toy on the Playground QGraphicsScene
 
 
-    // ********** Object Component Properties
+    // ***** Object Component Properties
     //      To be set for each object as desired
     //
-    // ***** Object Basic Settings
+    // Object Basic Settings
     bool            m_does_collide = true;          // Set to false to have this object not collide with anything
 
-    // ***** Object Properties - Bounce / Friction
+    // Object Properties - Bounce / Friction
     double          m_custom_friction = c_friction; // Defaults to c_friction (-1) if this item uses global m_friction, otherwise stores custom friction
     double          m_custom_bounce = c_bounce;     // Defaults to c_bounce (-1) if this item uses global m_bounce, otherwise stores custom bounce
 
-    // ***** Object Properties - Movement
+    // Object Properties - Movement
     double          m_velocity_x;                   // Original x velocity when loaded into scene, used for KinematicUpdateVelocity func
     double          m_velocity_y;                   // Original y velocity when loaded into scene, used for KinematicUpdateVelocity func
     double          m_spin_velocity;                // Original angular velocity when loaded into scene, !!!!! #NOTE: In radians !!!!!
     bool            m_use_angle_velocity = true;    // Should the angle of the object affect velocity? (only for Kinematic)
 
-    // ***** Object Properties - Health / Damage
+    // Object Properties - Health / Damage
     Collision_Type  m_collision_type = Collision_Type::Damage_None; // Specifies which types of objects this object can damage
     bool            m_invincible = false;                           // When true this object takes no damage nor damage_recoil force, cannot be killed
     bool            m_death_touch = false;                          // When true kills everything on contact, even unlimited health...but not invincible objects
@@ -73,10 +73,10 @@ public:
     long            m_fade_delay = 750;             // Time it takes for item to be removed after death, in milliseconds (0 == remove immediately)
     double          m_damage_recoil = 200.0;        // How much opposite force to apply when receiving damage
 
-    // ***** Object Movement - Rotation
+    // Object Movement - Rotation
     double          m_rotate_speed =  0.0;          // Speed at which object should spin when Motor Rotate (gas pedal) is pressed
 
-    // ***** Object Movement - PlayerUpdateVelocity Callback Func
+    // Object Movement - PlayerUpdateVelocity Callback Func
     bool            m_key_controls = false;         // Set to true when object is a "player" and should respond to key / button / mouse events
                                                     //      (players are cpBody* that have been assigned the cpBodyUpdateVelocityFunc PlayerUpdateVelocity callback)
     bool            m_lost_control = false;         // Set to true when players should not have button control but have been assigned key_controls
@@ -109,11 +109,10 @@ public:
     //                NOT TO BE SET BY USER
     //
     bool        m_should_process = true;                    // True while object exists in Space
-    bool        m_has_been_processed = false;               // Set to true after an initial updateSpace call has been ran once while the object was in the Space
     bool        m_remove = false;                           // Set to true to mark for removal
 
-    double      m_angle = 0.0;                              // Current object->body angle, updated every frame by updateSpaceHelper()
-    QPointF     m_position;                                 // Current object->body posiiton, updated every frame by updateSpaceHelper()
+    double      m_angle = 0.0;                              // Current object->body angle, updated every frame by updateWorld()
+    QPointF     m_position;                                 // Current object->body posiiton, updated every frame by updateWorld()
     double      m_width;                                    // Stores width of Box toys
     double      m_height;                                   // Stores height of Box toys
 

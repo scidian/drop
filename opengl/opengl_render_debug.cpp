@@ -105,7 +105,6 @@ void DrOpenGL::drawDebugShapes(QPainter &painter) {
 
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
         if (!thing->should_process)         continue;
-        if (!thing->has_been_processed)     continue;
 
         if (thing->getThingType() != DrThingType::Object) continue;
         DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
@@ -305,7 +304,6 @@ void DrOpenGL::drawDebugCollisions(QPainter &painter) {
 
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
         if (!thing->should_process)                         continue;
-        if (!thing->has_been_processed)                     continue;
         if ( thing->getThingType() != DrThingType::Object)  continue;
 
         DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);

@@ -130,32 +130,36 @@ public:
     ~DrEngineWorld();
 
     // Important Functions
+    DrEngineThing*  findThingByKey(long key);
     long            getNextKey()            { return m_key_generator++; }
+
+
+    // World Construction / Handling
+    void            addThing(DrEngineThing *thing);
+    void            addThings(QList<DrEngineThing*> things);
+    void            buildWorld(Demo_Space new_space_type);
+    void            clearWorld();
+
 
     // Space Construction / Handling
     DrEngineObject* addLine(  Body_Type body_type,  QPointF p1, QPointF p2, double friction, double bounce, double mass);
-
     DrEngineObject* addCircle(Body_Type body_type,  long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
                               double shape_radius, QPointF shape_offset, double friction, double bounce, QPointF velocity,
                               bool should_collide = true, bool can_rotate = true);
-
     DrEngineObject* addBlock( Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
                               double friction, double bounce, QPointF velocity,
                               bool should_collide = true, bool can_rotate = true);
-
     DrEngineObject* addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
                                QVector<QPointF> points, double friction, double bounce, QPointF velocity,
                                bool should_collide = true, bool can_rotate = true);
 
     void            addPlayer(Demo_Player new_player_type);
     void            assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera);
-    void            buildSpace(Demo_Space new_space_type);
-    void            clearSpace();
-    DrEngineThing*  findThingByKey(long key);
     void            loadStageToSpace(DrStage *stage, double offset_x, double offset_y);
     void            updateSpace(double time_passed);
-    void            updateSpaceHelper(double time_passed);
+    void            updateWorld(double time_passed);
     void            wakeAllBodies();
+
 
     // Cameras
     long                addCamera(long thing_key_to_follow = 0, float x = 0, float y = 0, float z = 800);
@@ -170,10 +174,6 @@ public:
     void                moveCameras(double milliseconds);
     void                switchCameras(long new_camera);
     void                updateCameras();
-
-    // Lights
-    DrEngineLight*      addLight(double x, double y, double z, QColor color, float diameter, QPointF cone, float intensity,
-                                 float shadows, bool draw_shadows, float blur, float pulse, float pulse_speed, float opacity);
 
     // Getter and Setters
     DrEngine*           getEngine()                 { return m_engine; }

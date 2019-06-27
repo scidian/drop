@@ -36,7 +36,7 @@ void DrEngineWorld::loadStageToSpace(DrStage *stage, double offset_x, double off
         QPointF     scale =         thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
         double      angle =         thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
         double      z_order =       thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
-        double      alpha =         thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toDouble() / 100;
+        float       alpha =         thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
         bool        collide =       thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Collide).toBool();
         int         physics =       thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Physics_Type).toInt();
 
@@ -48,8 +48,10 @@ void DrEngineWorld::loadStageToSpace(DrStage *stage, double offset_x, double off
         }
 
         // ***** Add the block to the cpSpace
-        DrEngineObject *block =     addBlock(body, asset_key, position.x() + offset_x, -position.y() + offset_y, z_order,
-                                             angle, scale, alpha, c_friction, c_bounce, QPointF(0, 0), collide);
+        DrEngineObject *block = new DrEngineObject(this, getNextKey(), body, asset_key, position.x() + offset_x, -position.y() + offset_y, z_order,
+                                                   scale, c_friction, c_bounce, collide, true, angle, alpha);
+        block->addShapeBoxFromTexture(asset_key);
+        addThing(block);
 
         // ***** Set collision type
         Collision_Type collision_type = Collision_Type::Damage_None;

@@ -15,10 +15,6 @@
 #include "enums.h"
 #include "enums_engine.h"
 
-// Forward Declarations
-class DrEngineWorld;
-class DrOpenGL;
-
 
 //####################################################################################
 //##    DrEngineLight
@@ -27,11 +23,6 @@ class DrOpenGL;
 class DrEngineLight : public DrEngineObject
 {
 public:
-    // Extrernal Borrowed Pointers
-    DrEngineWorld  *m_world = nullptr;                      // Parent DrEngineWorld
-    DrOpenGL       *m_opengl = nullptr;                     // Parent DrOpenGL object, used for makeCurrent() calls
-
-
     // Light Settings
     float           light_size = 1500.0f;                   // Diameter of light
     QColor          color = QColor(192, 64, 192);           // Color of light
@@ -68,10 +59,13 @@ private:
 
 public:
     // Constructor / Destructor
-    DrEngineLight(DrEngineWorld *world, DrOpenGL *open_gl, long unique_key);
+    DrEngineLight(DrEngineWorld *world, long unique_key,
+                  double x, double y, double z, QColor color, float diameter, QPointF cone, float intensity,
+                  float shadows, bool draw_shadows, float blur, float pulse, float pulse_speed, float opacity);
     virtual ~DrEngineLight() override;
 
     // Abstract Engine Thing Overrides
+    virtual void        addToWorld() override;
     virtual DrThingType getThingType() override { return DrThingType::Light; }
     virtual bool        update(double time_passed, double time_warp, QRectF &area) override;
 
