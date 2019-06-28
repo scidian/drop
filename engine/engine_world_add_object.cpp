@@ -168,7 +168,7 @@ DrEngineObject* DrEngineWorld::addBlock(Body_Type body_type, long texture_number
     if (friction < 0) friction = m_friction;
     if (bounce < 0)   bounce = m_bounce;
 
-    double width  = m_engine->getTextureMap()[texture_number]->width() * scale.x();        // Width of collision shape
+    double width  = m_engine->getTextureMap()[texture_number]->width() *  scale.x();       // Width of collision shape
     double height = m_engine->getTextureMap()[texture_number]->height() * scale.y();       // Height of collision shape
     block->setScaleX(scale.x());
     block->setScaleY(scale.y());

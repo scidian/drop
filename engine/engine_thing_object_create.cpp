@@ -34,14 +34,14 @@ static QVector<QPointF> createEllipseFromCircle(const QPointF &center, const dou
 //####################################################################################
 void DrEngineObject::addShapeBox(double width, double height) {
     cpShape *shape = cpBoxShapeNew(this->body, width * static_cast<double>(this->getScaleX()), height * static_cast<double>(this->getScaleY()), c_extra_radius);
-    double    area =  (width * height) * c_mass_multiplier;
+    double    area = (width * height);
     applyShapeSettings(shape, area, Shape_Type::Box);
 }
 void DrEngineObject::addShapeBoxFromTexture(long texture_number) {
     double width =  getWorld()->getEngine()->getTextureMap()[texture_number]->width() *  static_cast<double>(this->getScaleX());
     double height = getWorld()->getEngine()->getTextureMap()[texture_number]->height() * static_cast<double>(this->getScaleY());
     cpShape *shape = cpBoxShapeNew(this->body, width, height, c_extra_radius);
-    double    area = (width * height) * c_mass_multiplier;
+    double    area = (width * height);
     applyShapeSettings(shape, area, Shape_Type::Box);
 }
 
@@ -54,14 +54,14 @@ void DrEngineObject::addShapeCircle(double circle_radius, QPointF shape_offset) 
         double  radius = circle_radius * static_cast<double>(this->getScaleX());
         cpVect  offset = cpv(shape_offset.x(), shape_offset.y());                           // Offset of collision shape
         cpShape *shape = cpCircleShapeNew(this->body, radius, offset);
-        double    area = cpAreaForCircle( 0, circle_radius ) * c_mass_multiplier;
+        double    area = cpAreaForCircle( 0, circle_radius );
         applyShapeSettings(shape, area, Shape_Type::Circle);
     }
 }
 
 void DrEngineObject::addShapeSegment(QPointF p1, QPointF p2, double padding) {
     cpShape *shape = cpSegmentShapeNew(this->body, cpv(p1.x(), p1.y()), cpv(p2.x(), p2.y()), padding);
-    double   area =  cpAreaForSegment(cpv(p1.x(), p1.y()), cpv(p2.x(), p2.y()), padding) * c_mass_multiplier;
+    double   area =  cpAreaForSegment(cpv(p1.x(), p1.y()), cpv(p2.x(), p2.y()), padding);
     applyShapeSettings(shape, area, Shape_Type::Segment);
 }
 
@@ -100,7 +100,7 @@ void DrEngineObject::addShapePolygon(QVector<QPointF> &points) {
     if (new_point_count == 0) Dr::ShowMessageBox("Warning! Could not form convex hull!");
     if ((new_point_count == old_point_count || (new_point_count == 0))) {
         cpShape *shape = cpPolyShapeNew( this->body, old_point_count, verts.data(), cpTransformIdentity, c_extra_radius);
-        double   area =  cpAreaForPoly(old_point_count, verts.data(), c_extra_radius ) * c_mass_multiplier;
+        double   area =  cpAreaForPoly(old_point_count, verts.data(), c_extra_radius );
         applyShapeSettings(shape, area, Shape_Type::Polygon);
 
     // Shape is concave
@@ -116,7 +116,7 @@ void DrEngineObject::addShapePolygon(QVector<QPointF> &points) {
             for (int i = 0; i < poly.GetNumPoints(); i++)
                 verts[static_cast<ulong>(i)] = cpv( poly[i].x, poly[i].y );
             cpShape *shape = cpPolyShapeNew( this->body, static_cast<int>(poly.GetNumPoints()), verts.data(), cpTransformIdentity, c_extra_radius);
-            double   area =  cpAreaForPoly(static_cast<int>(poly.GetNumPoints()), verts.data(), c_extra_radius ) * c_mass_multiplier;
+            double   area =  cpAreaForPoly(static_cast<int>(poly.GetNumPoints()), verts.data(), c_extra_radius );
             applyShapeSettings(shape, area, Shape_Type::Polygon);
         }
     }
@@ -127,28 +127,22 @@ void DrEngineObject::addShapePolygon(QVector<QPointF> &points) {
 //##    Applies Object Settings to Shape
 //####################################################################################
 void DrEngineObject::applyShapeSettings(cpShape *shape, double area, Shape_Type shape_type) {
-    // Setting mass of shape, body mass and moment of inertia are calculated by Chipmunk
-    cpShapeSetMass( shape, area );
-
     // Figrue out friction and bounce to use for this object
     double friction = (this->getCustomFriction() < 0) ? getWorld()->getFriction() : this->getCustomFriction();
     double bounce =   (this->getCustomBounce() < 0)   ? getWorld()->getBounce()   : this->getCustomBounce();
+
+    // Setting mass of shape, body mass and moment of inertia are calculated by Chipmunk
+    cpShapeSetMass( shape, area * c_mass_multiplier );
     cpShapeSetFriction( shape, friction );
     cpShapeSetElasticity( shape, bounce );                                          // Ideally between 0 and .99999
-
-    // Add shape to Space
-    cpSpaceAddShape( getWorld()->getSpace(), shape );
     cpShapeSetUserData( shape, this );                                              // Set UserData to DrEngineObject pointer
+
+    // If we don't want the object to collide with other objects, set as sensor
+    cpShapeSetSensor( shape, !(this->doesCollide()) );
 
     // Add shape to the list of shapes for this body
     this->shapes.push_back( shape );
     this->shape_type[shape] = shape_type;
-
-    // If we don't want the object to collide with other objects, set as sensor
-    cpShapeSetSensor( shape, !this->doesCollide() );
-
-    // If we don't want the body to rotate, overwrite the precalculated moment of inertia with infinity
-    if (!this->canRotate()) cpBodySetMoment( this->body, static_cast<double>(INFINITY) );
 }
 
 

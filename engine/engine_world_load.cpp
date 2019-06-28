@@ -40,18 +40,22 @@ void DrEngineWorld::loadStageToSpace(DrStage *stage, double offset_x, double off
         bool        collide =       thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Collide).toBool();
         int         physics =       thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Physics_Type).toInt();
 
-        Body_Type body = Body_Type::Static;
+        Body_Type body_type = Body_Type::Static;
         switch (physics) {
-            case 0: body = Body_Type::Static;       break;
-            case 1: body = Body_Type::Kinematic;    break;
-            case 2: body = Body_Type::Dynamic;      break;
+            case 0: body_type = Body_Type::Static;       break;
+            case 1: body_type = Body_Type::Kinematic;    break;
+            case 2: body_type = Body_Type::Dynamic;      break;
         }
 
         // ***** Add the block to the cpSpace
-        DrEngineObject *block = new DrEngineObject(this, getNextKey(), body, asset_key, position.x() + offset_x, -position.y() + offset_y, z_order,
-                                                   scale, c_friction, c_bounce, collide, true, angle, alpha);
-        block->addShapeBoxFromTexture(asset_key);
-        addThing(block);
+///        DrEngineObject *block = new DrEngineObject(this, getNextKey(), body_type, asset_key, position.x() + offset_x, -position.y() + offset_y, z_order,
+///                                                   scale, c_friction, c_bounce, collide, true, angle, alpha);
+        ///block->addShapeBoxFromTexture(asset_key);
+        ///addThing(block);
+        DrEngineObject *block =     addBlock(body_type, asset_key, position.x() + offset_x, -position.y() + offset_y, z_order,
+                                                     angle, scale, alpha, c_friction, c_bounce, QPointF(0, 0), collide);
+
+
 
         // ***** Set collision type
         Collision_Type collision_type = Collision_Type::Damage_None;
@@ -75,12 +79,12 @@ void DrEngineWorld::loadStageToSpace(DrStage *stage, double offset_x, double off
         velocity.y = vel_y.x() + (QRandomGenerator::global()->bounded(vel_y.y() * 2.0) - vel_y.y());
         double deg_angular = rotation_vel.x() + (QRandomGenerator::global()->bounded(rotation_vel.y() * 2.0) - rotation_vel.y());
         double rad_angular = qDegreesToRadians( deg_angular );
-        if (body != Body_Type::Static) {
+        if (body_type != Body_Type::Static) {
             cpBodySetVelocity( block->body, velocity );
             cpBodySetAngularVelocity( block->body, rad_angular );
 
             // Attach KinematicUpdateVelocity callback function
-            if (body == Body_Type::Kinematic) {
+            if (body_type == Body_Type::Kinematic) {
                 block->setOriginalVelocityX( velocity.x );
                 block->setOriginalVelocityY( velocity.y );
                 block->setOriginalSpinVelocity( rad_angular );

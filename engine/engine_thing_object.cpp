@@ -40,7 +40,7 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, Body_Type 
     this->setCustomBounce(bounce);
     this->setOpacity(opacity);
     this->setDoesCollide(should_collide);
-    this->setCanRotate( can_rotate );
+    this->setCanRotate(can_rotate);
 
     // Create Body
     this->body_type = body_type;
@@ -49,15 +49,9 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, Body_Type 
         case Body_Type::Dynamic:     this->body = cpBodyNew( 0.0, 0.0 );        break;
         case Body_Type::Kinematic:   this->body = cpBodyNewKinematic();         break;
     }
-    cpSpaceAddBody(world->getSpace(), this->body);
-    cpBodySetUserData( this->body, this);                                       // Set chipmunk User Data, store DrEngineObject* for use later
-    cpBodySetPosition( this->body, cpv( x, y));
+    cpBodySetPosition( this->body, cpv(x, y));
     cpBodySetAngle(    this->body, qDegreesToRadians(-angle) );
-
-    // If we moved a static object, recalculate object positions
-    if (this->body_type == Body_Type::Static) {
-        cpSpaceReindexShapesForBody(getWorld()->getSpace(), this->body);
-    }
+    cpBodySetUserData( this->body, this);                                       // Set chipmunk User Data, store DrEngineObject* for use later
 }
 
 
@@ -93,7 +87,17 @@ DrEngineObject::~DrEngineObject() {
 //##    Override for DrEngineThing::addToWorld()
 //####################################################################################
 void DrEngineObject::addToWorld() {
+    // Add Body and Shapes to Space
+    cpSpaceAddBody(getWorld()->getSpace(), this->body);
+    for (auto shape : shapes)
+        cpSpaceAddShape( getWorld()->getSpace(), shape );
 
+    // If we don't want the body to rotate, overwrite the precalculated moment of inertia with infinity
+    if (this->canRotate() == false)
+        cpBodySetMoment( this->body, static_cast<double>(INFINITY) );
+
+    // Reset Update Timer
+    Dr::ResetTimer( update_timer );
 }
 
 
@@ -110,7 +114,7 @@ bool DrEngineObject::update(double , double , QRectF &area) {
     bool remove = false;
 
     // ***** Get some info about the current object from the space and save it to the current DrEngineObject
-    cpVect  new_position = cpBodyGetPosition( body );
+    cpVect new_position = cpBodyGetPosition( body );
     updateBodyPosition( QPointF( new_position.x, new_position.y ));
     updateBodyAngle( qRadiansToDegrees( cpBodyGetAngle( body )) );
 

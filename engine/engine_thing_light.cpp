@@ -19,10 +19,10 @@
 DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key,
                              double x, double y, double z, QColor color, float diameter, QPointF cone, float intensity,
                              float shadows, bool draw_shadows, float blur, float pulse, float pulse_speed, float opacity)
-    : DrEngineObject(world, unique_key, Body_Type::Static, 0, x, y, (z - 0.0001)) {
+    : DrEngineObject(world, unique_key) {
 
-//    this->setPosition( QPointF(x, y) );
-//    this->z_order = z - 0.0001;
+    this->setPosition( QPointF(x, y) );
+    this->z_order = z - 0.0001;
     this->color = color;
     this->light_size = diameter;
     this->cone = cone;
