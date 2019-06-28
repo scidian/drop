@@ -84,6 +84,31 @@ void DrEngineWorld::switchCameras(long new_camera) {
     m_active_camera = new_camera;
 }
 
+void DrEngineWorld::switchCameraToNext() {
+    auto it = m_cameras.find(m_active_camera);
+    it++;
+    if (it == m_cameras.end()) it = m_cameras.begin();
+    long new_key = (*it).second->getKey();
+
+    if (new_key != m_active_camera) {
+        if (m_cameras[m_active_camera]->getThingFollowing() != 0) {
+            DrEngineThing *thing = findThingByKey(m_cameras[m_active_camera]->getThingFollowing());
+            if (thing && thing->getThingType() == DrThingType::Object) {
+                DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
+                object->setLostControl(true);
+            }
+        }
+        if (m_cameras[new_key]->getThingFollowing() != 0) {
+            DrEngineThing *thing = findThingByKey(m_cameras[new_key]->getThingFollowing());
+            if (thing && thing->getThingType() == DrThingType::Object) {
+                DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
+                object->setLostControl(false);
+            }
+        }
+        switchCameras(new_key);
+    }
+}
+
 
 //####################################################################################
 //##    DrEngineWorld - Returns camera position, also takes into handle camera switching

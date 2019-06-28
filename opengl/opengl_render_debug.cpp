@@ -67,13 +67,13 @@ QColor DrOpenGL::objectDebugColor(DrEngineObject *object, bool text_color) {
 //####################################################################################
 void DrOpenGL::drawDebug(QPainter &painter) {
     painter.setRenderHint(QPainter::Antialiasing, true);
-    if (m_engine->debug_shapes) {
+    if (m_form_engine->debug_shapes) {
         drawDebugShapes(painter);
         drawDebugJoints(painter);
         ///drawDebugHealth(painter);
         drawDebugHealthNative(painter);
     }
-    if (m_engine->debug_collisions) {
+    if (m_form_engine->debug_collisions) {
         drawDebugCollisions(painter);
     }
 
@@ -104,8 +104,6 @@ void DrOpenGL::drawDebugShapes(QPainter &painter) {
     QRect open_gl_rect = QRect(0, 0, open_gl_width, open_gl_height);
 
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
-        if (!thing->should_process)         continue;
-
         if (thing->getThingType() != DrThingType::Object) continue;
         DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
 
@@ -303,7 +301,6 @@ void DrOpenGL::drawDebugCollisions(QPainter &painter) {
     painter.setPen( pen );
 
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
-        if (!thing->should_process)                         continue;
         if ( thing->getThingType() != DrThingType::Object)  continue;
 
         DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);

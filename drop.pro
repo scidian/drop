@@ -148,7 +148,6 @@ SOURCES += \
     playground/playground_add_toy.cpp \
     playground/playground_build.cpp \
     playground/playground_clear.cpp \
-    playground/playground_toy.cpp \
     playground/playground_update.cpp \
     project/project.cpp \
     project/project_asset.cpp \

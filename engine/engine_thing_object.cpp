@@ -59,8 +59,6 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, Body_Type 
 //##    Destructor
 //####################################################################################
 DrEngineObject::~DrEngineObject() {
-    should_process = false;
-
     if (body) {
         cpSpace *space = cpBodyGetSpace(body);
 
@@ -110,7 +108,6 @@ void DrEngineObject::updateBodyPosition(QPointF updated_position, bool update_pr
 }
 
 bool DrEngineObject::update(double , double , QRectF &area) {
-    if (!should_process) return false;
     bool remove = false;
 
     // ***** Get some info about the current object from the space and save it to the current DrEngineObject

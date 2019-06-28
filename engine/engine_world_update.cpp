@@ -41,10 +41,6 @@ void DrEngineWorld::updateWorld(double time_passed) {
 
     // ***** Update global variables for use in callbacks
     g_gravity_normal = cpvnormalize( cpSpaceGetGravity(m_space) );
-    g_keyboard_x =  m_engine->keyboard_x;
-    g_keyboard_y =  m_engine->keyboard_y;
-    g_jump_button = m_engine->jump_button;
-    g_pedal =       m_engine->gas_pedal;
 
     // ********** Iterate through Things, delete if they go off screen
     for ( auto it = m_things.begin(); it != m_things.end(); ) {
@@ -68,7 +64,7 @@ void DrEngineWorld::updateWorld(double time_passed) {
 
     // ***** Calculate distance and load new stage if we need to
     bool should_add_stage = false;
-    if (m_engine->demo_space == Demo_Space::Project && has_scene == true) {
+    if (demo_space == Demo_Space::Project && has_scene == true) {
         QTransform t = QTransform().translate(m_game_start.x(), m_game_start.y())
                                    .rotate(m_game_direction)
                                    .translate(-m_game_start.x(), -m_game_start.y());
@@ -97,10 +93,6 @@ void DrEngineWorld::updateWorld(double time_passed) {
 
         loadStageToSpace( stage, m_loaded_to, 0);
     }
-
-
-    // ********** Updates Physics Frames per Second
-    ++m_engine->getFormEngine()->fps_count_physics;
 }
 
 

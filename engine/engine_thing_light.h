@@ -20,7 +20,7 @@
 //##    DrEngineLight
 //##        Holds a 2D Light w/ Pixel Perfect Shadows for use in the Engine
 //############################
-class DrEngineLight : public DrEngineObject
+class DrEngineLight : public DrEngineThing
 {
 public:
     // Light Settings
@@ -40,11 +40,6 @@ public:
 
     float           pulse = 0.0f;                           // -/+ amount starting from intensity to pulse between
     float           pulse_speed = 0.0f;                     // Amound to change per second when pulsing
-
-    // Frame Buffer Objects for use during Render
-    QOpenGLFramebufferObject *occluder_fbo = nullptr;       // Off screen Frame Buffer Object for Occluder Map
-    QOpenGLFramebufferObject *shadow_fbo = nullptr;         // Off screen Frame Buffer Object for 1D Shadow Map
-
 
 private:
     // ***** For use by engine

@@ -12,13 +12,14 @@
 #include "engine_thing_object.h"
 #include "engine_world.h"
 
+
 //####################################################################################
 //##    Definition of Global Variables to be used to pass info to callbacks
 //####################################################################################
-int      g_keyboard_x = 0;
-int      g_keyboard_y = 0;
-bool     g_jump_button = false;
-Pedal    g_pedal = Pedal::None;
+int      g_keyboard_x = 0;                              // Set to -1 for left, 1 for right
+int      g_keyboard_y = 0;                              // Set to -1 for down, 1 for up
+bool     g_jump_button = false;                         // Set to False for Not-Pressed, True for Pressed
+Pedal    g_pedal = Pedal::None;                         // Pedal enumeration for rotate key state
 
 cpVect   g_gravity_normal = cpv(0, 0);
 

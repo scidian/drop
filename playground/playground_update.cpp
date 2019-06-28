@@ -31,12 +31,6 @@ void DrPlayground::updateWorld() {
         // ***** Initial loop variables
         DrToy *object = *it;
 
-        // ***** Skip object if static; or if not yet in Space / no longer in Space
-        if (!object->m_should_process) {
-            it++;
-            continue;
-        }
-
         // ***** Get some info about the current object from the space and save it to the current DrEngineObject
         cpVect  new_position = cpBodyGetPosition( object->body );
         object->m_position = QPointF( new_position.x, new_position.y );

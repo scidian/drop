@@ -18,16 +18,16 @@
 void DrOpenGL::keyPressEvent(QKeyEvent *event) {
 
     if (event->key() == Qt::Key::Key_A) {
-        m_engine->keyboard_x = -1;
+        g_keyboard_x = -1;
 
     } else if (event->key() == Qt::Key::Key_D) {
-        m_engine->keyboard_x =  1;
+        g_keyboard_x =  1;
 
     } else if (event->key() == Qt::Key::Key_W) {
-        m_engine->keyboard_y =  1;
+        g_keyboard_y =  1;
 
     } else if (event->key() == Qt::Key::Key_S) {
-        m_engine->keyboard_y = -1;
+        g_keyboard_y = -1;
 
     } else {
         QOpenGLWidget::keyPressEvent(event);
@@ -37,20 +37,20 @@ void DrOpenGL::keyPressEvent(QKeyEvent *event) {
 void DrOpenGL::keyReleaseEvent(QKeyEvent *event) {
 
     if (event->key() == Qt::Key::Key_A) {
-        if (m_engine->keyboard_x < 0.0)
-            m_engine->keyboard_x = 0;
+        if (g_keyboard_x < 0.0)
+            g_keyboard_x = 0;
 
     } else if (event->key() == Qt::Key::Key_D) {
-        if (m_engine->keyboard_x > 0.0)
-            m_engine->keyboard_x = 0;
+        if (g_keyboard_x > 0.0)
+            g_keyboard_x = 0;
 
     } else if (event->key() == Qt::Key::Key_W) {
-        if (m_engine->keyboard_y > 0.0)
-            m_engine->keyboard_y = 0;
+        if (g_keyboard_y > 0.0)
+            g_keyboard_y = 0;
 
     } else if (event->key() == Qt::Key::Key_S) {
-        if (m_engine->keyboard_y < 0.0)
-            m_engine->keyboard_y = 0;
+        if (g_keyboard_y < 0.0)
+            g_keyboard_y = 0;
 
     } else {
         QOpenGLWidget::keyReleaseEvent(event);

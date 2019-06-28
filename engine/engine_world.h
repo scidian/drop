@@ -28,12 +28,14 @@ class DrEngineLight;
 class DrEngineCamera;
 class DrEngineObject;
 class DrEngineThing;
+class DrEngineTexture;
 class DrOpenGL;
 class DrProject;
 class DrStage;
 
 // Type Definitions
 typedef std::map<long, DrEngineCamera*>  EngineCameraMap;
+typedef std::map<long, DrEngineTexture*> EngineTextureMap;
 typedef QVector<DrEngineLight*>          EngineLights;
 typedef QVector<DrEngineThing*>          EngineThings;
 
@@ -53,8 +55,8 @@ class DrEngineWorld
 
 private:
     // External Borrowed Pointers
-    DrEngine           *m_engine;                   // Pointer to Parent Engine
     DrProject          *m_project;                  // Pointer to Project loaded into Engine
+    EngineTextureMap   &m_textures;                 // Reference to map of Textures used for Rendering
 
     // Local Variables
     long                m_key_generator = 1;        // Variable to hand out unique id key's to all children items, keys start at 1
@@ -109,8 +111,10 @@ private:
 // ***** Public Variables not yet implemented into function calls / getters / setters
 public:
     bool            has_scene = false;                          // True after a scene has been loaded into cpSpace
+    Demo_Space      demo_space =  Demo_Space::Project;
     Render_Type     render_type = Render_Type::Orthographic;    // Should render perspective or orthographic?
     long            light_count = 0;                            // Stores number of lights in scene
+    QList<long>     mark_light_as_deleted;                      // Marks a light as removed from scene for use by other parts of engine (shadow fbos)
 
     // Image Post Processing Variables
     float           bitrate = 16.0;                             // Bitrate          1 to 16
@@ -126,7 +130,7 @@ public:
 
 public:
     // Constructor / Destrcutor / Cleanup
-    DrEngineWorld(DrEngine *engine, DrProject *project, long world_key);
+    DrEngineWorld(DrProject *project, EngineTextureMap &textures, long world_key);
     ~DrEngineWorld();
 
     // Important Functions
@@ -135,31 +139,20 @@ public:
 
 
     // World Construction / Handling
-    void            addThing(DrEngineThing *thing);
-    void            addThings(QList<DrEngineThing*> things);
-    void            buildWorld(Demo_Space new_space_type);
-    void            clearWorld();
-
-
-    // Space Construction / Handling
-//    DrEngineObject* addLine(  Body_Type body_type,  QPointF p1, QPointF p2, double friction, double bounce, double mass);
-//    DrEngineObject* addCircle(Body_Type body_type,  long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
-//                              double shape_radius, QPointF shape_offset, double friction, double bounce, QPointF velocity,
-//                              bool should_collide = true, bool can_rotate = true);
-//    DrEngineObject* addBlock( Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
-//                              double friction, double bounce, QPointF velocity,
-//                              bool should_collide = true, bool can_rotate = true);
-//    DrEngineObject* addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
-//                               QVector<QPointF> points, double friction, double bounce, QPointF velocity,
-//                               bool should_collide = true, bool can_rotate = true);
-
     void            addPlayer(Demo_Player new_player_type);
     void            assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera);
+    void            addThing(DrEngineThing *thing);
+    void            addThings(QList<DrEngineThing*> things);
+    void            buildWorld(Demo_Space new_space_type, long current_editor_world);
+    void            clearWorld();
     void            loadStageToSpace(DrStage *stage, double offset_x, double offset_y);
     void            updateSpace(double time_passed);
     void            updateWorld(double time_passed);
     void            wakeAllBodies();
 
+    // Textures
+    DrEngineTexture*    getTexture(long texture_id) { return m_textures[texture_id]; }
+    EngineTextureMap&   getTextureMap() { return m_textures; }
 
     // Cameras
     long                addCamera(long thing_key_to_follow = 0, float x = 0, float y = 0, float z = 800);
@@ -172,11 +165,12 @@ public:
     double              getCameraPosYD();
     double              getCameraPosZD();
     void                moveCameras(double milliseconds);
+    void                switchCameraToNext();
     void                switchCameras(long new_camera);
     void                updateCameras();
 
     // Getter and Setters
-    DrEngine*           getEngine()                 { return m_engine; }
+    //DrEngine*           getEngine()                 { return m_engine; }
     DrProject*          getProject()                { return m_project; }
     cpSpace*            getSpace()                  { return m_space; }
     EngineThings&       getThings()                 { return m_things; }

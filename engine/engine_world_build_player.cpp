@@ -33,9 +33,7 @@ void DrEngineWorld::assignPlayerControls(DrEngineObject *object, bool has_contro
 //####################################################################################
 void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
-    m_engine->demo_player = new_player_type;
-
-    if (m_engine->demo_player == Demo_Player::Jump) {
+    if (new_player_type == Demo_Player::Jump) {
         DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 200, 50, 0, c_scale1x1, 0.25, 0.5, true, false);
         ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
         addThing(ball1);
@@ -58,12 +56,8 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ball2->setJumpCount( c_unlimited_jump );
         ball2->setRotateSpeed( 20.0 );
 
-        // !!!!! #TEMP: demo variables
-        m_engine->demo_jumper_1 = ball1;
-        m_engine->demo_jumper_2 = ball2;
 
-
-    } else if (m_engine->demo_player == Demo_Player::Spawn) {
+    } else if (new_player_type == Demo_Player::Spawn) {
         DrEngineObject *ball1;
         ball1 = new DrEngineObject(this, getNextKey(), Body_Type::Kinematic, Asset_Textures::Ball, -300, 150, 0, c_scale1x1, 0.7, 0.5);
         ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
@@ -74,7 +68,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         setActiveCamera( addCamera(ball1->getKey()) );
 
 
-    } else if (m_engine->demo_player == Demo_Player::Car) {
+    } else if (new_player_type == Demo_Player::Car) {
         // Add body
         QVector<QPointF> points;
         points.append( QPointF( -45.5,  -5.0 ));

@@ -26,7 +26,6 @@ void DrOpenGL::drawDebugHealth(QPainter &painter) {
     painter.setPen(Qt::NoPen);
 
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
-        if (!thing->should_process)                         continue;
         if ( thing->getThingType() != DrThingType::Object)  continue;
         DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
 
@@ -77,7 +76,6 @@ void DrOpenGL::drawDebugHealthNative(QPainter &painter) {
 
     // ***** Loop through each object and draws its health
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
-        if (!thing->should_process)                         continue;
         if ( thing->getThingType() != DrThingType::Object)  continue;
         DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
 

@@ -19,7 +19,7 @@
 DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key,
                              double x, double y, double z, QColor color, float diameter, QPointF cone, float intensity,
                              float shadows, bool draw_shadows, float blur, float pulse, float pulse_speed, float opacity)
-    : DrEngineObject(world, unique_key) {
+    : DrEngineThing(world, unique_key) {
 
     this->setPosition( QPointF(x, y) );
     this->z_order = z - 0.0001;
@@ -34,24 +34,11 @@ DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key,
     this->pulse = pulse;
     this->pulse_speed = pulse_speed;
     this->setOpacity( opacity );
-
-    world->getEngine()->getFormEngine()->getOpenGL()->makeCurrent();
-    this->occluder_fbo = new QOpenGLFramebufferObject(1, 1);
-    this->shadow_fbo =   new QOpenGLFramebufferObject(1, 1);
-    world->getEngine()->getFormEngine()->getOpenGL()->doneCurrent();
-
-    this->should_process = false;
 }
 
 
 DrEngineLight::~DrEngineLight() {
-    should_process = false;
-    getWorld()->light_count--;
-
-    getWorld()->getEngine()->getFormEngine()->getOpenGL()->makeCurrent();
-    delete occluder_fbo;
-    delete shadow_fbo;
-    getWorld()->getEngine()->getFormEngine()->getOpenGL()->doneCurrent();
+    getWorld()->mark_light_as_deleted << getKey();
 }
 
 

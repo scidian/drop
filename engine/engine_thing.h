@@ -51,7 +51,6 @@ private:
 public:
     // ********** Local Variables Updated by Engine
     //                NOT TO BE SET BY USER
-    bool        should_process = true;                  // True while object exists in Space
     double      time_since_last_update = 0.0;           // Milliseconds since update() was called last
     DrTime      update_timer = Clock::now();            // Used to keep track of time passed since update() was called last
 
@@ -69,6 +68,12 @@ public:
     void                calculateTimeSinceLastUpdate();                                     // Processes update timer
     long                getKey() { return m_key; }                                          // Gets unique item key
 
+
+    // Thing Properties - Camera
+    const long&             getActiveCameraKey() { return m_active_camera; }
+    bool                    hasActiveCamera() { return (m_active_camera == 0) ? false : true; }
+    void                    setActiveCameraKey(const long& new_camera_key) { m_active_camera = new_camera_key; }
+
     // Getters / Setters
     virtual QPointF         getPosition() { return m_position; }                            // Returns Thing center position in world coordinates
     virtual const float&    getOpacity() { return m_alpha; }                                // Returns Opacity (alpha 0.0 to 1.0) of Thing
@@ -77,12 +82,6 @@ public:
     virtual void            setPosition(QPointF position) { m_position = position; }
     virtual void            setOpacity(float  new_alpha) { m_alpha = new_alpha; }
     void                    setWorld(DrEngineWorld *world) { m_world = world; }
-
-
-    // Object Properties - Camera
-    const long&     getActiveCameraKey() { return m_active_camera; }
-    bool            hasActiveCamera() { return (m_active_camera == 0) ? false : true; }
-    void            setActiveCameraKey(const long& new_camera_key) { m_active_camera = new_camera_key; }
 
 };
 

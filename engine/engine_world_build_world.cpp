@@ -28,11 +28,11 @@
 //####################################################################################
 //##    Build Space
 //####################################################################################
-void DrEngineWorld::buildWorld(Demo_Space new_space_type) {
+void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_world) {
 
     // ***** Set up physics world
-    m_engine->demo_space = new_space_type;              // Save Space type
     m_background_color = QColor(0, 0, 0);
+    demo_space = new_space_type;
 
     m_space = cpSpaceNew();                             // Creates an empty space
     cpSpaceSetIterations(m_space, m_iterations);        // Sets how many times physics are processed each update
@@ -45,14 +45,6 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type) {
     m_damping = 1;                                      // Kind of like air drag
     cpSpaceSetGravity(m_space, m_gravity);
     cpSpaceSetDamping(m_space, m_damping);
-
-
-    // ***** Reset keys
-    m_engine->keyboard_x = 0;
-    m_engine->keyboard_y = 0;
-    m_engine->jump_button = false;
-    m_engine->gas_pedal = Pedal::None;
-
 
     // ***** Custom Wildcard beginFunc CollisionHandlers: Damage / Health    
     QVector<Collision_Type> collide_types { Collision_Type::Damage_None,
@@ -81,11 +73,11 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type) {
 
 
     // ***** Build desired demo Space
-    if (m_engine->demo_space == Demo_Space::Project) {
+    if (new_space_type == Demo_Space::Project) {
 
         // ***** Find current world shown in editor, load Start Stage of that world
 
-        DrWorld *world = m_project->getWorld(m_engine->getCurrentEditorWorld());
+        DrWorld *world = m_project->getWorld(current_editor_world);
         DrStage *stage = world->getStageFromKey(world->getFirstStageKey());
 
         // ***** World Settings
@@ -123,7 +115,7 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type) {
         loadStageToSpace(stage, 0, 0);
 
 
-    } else if (m_engine->demo_space == Demo_Space::Lines1) {
+    } else if (new_space_type == Demo_Space::Lines1) {
         m_friction = 1.0;
         m_bounce =   0.8;
 
@@ -134,7 +126,7 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type) {
         addThings( { line1, line2, line3 } );
 
 
-    } else if (m_engine->demo_space == Demo_Space::Lines2) {
+    } else if (new_space_type == Demo_Space::Lines2) {
         m_friction = 2.0;
         m_bounce =   0.5;
 
@@ -150,7 +142,7 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type) {
         line2->setOneWay( One_Way::Pass_Through ); line2->setOneWayDirection( cpv(0, 1) );          // Let objects pass upwards
 
 
-    } else if (m_engine->demo_space == Demo_Space::Blocks) {
+    } else if (new_space_type == Demo_Space::Blocks) {
         m_friction = 0.5;
         m_bounce =   0.1;
 

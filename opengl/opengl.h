@@ -70,6 +70,10 @@ private:
     QOpenGLFramebufferObject *m_texture_fbo = nullptr;          // m_render_fbo must be copied to a non-multisampled fbo before being used as a texture
     QOpenGLFramebufferObject *m_occluder_fbo = nullptr;         // Used for rendering an occlusion map for use with lights
 
+    // Frame Buffer Objects for use during Render
+    std::map<long, QOpenGLFramebufferObject*> m_occluders;      // Off screen Frame Buffer Objects for Light Occluder Maps
+    std::map<long, QOpenGLFramebufferObject*> m_shadows;        // Off screen Frame Buffer Objects for Light 1D Shadow Maps
+
     // Shader Variables
     QOpenGLShaderProgram m_shader;
     int     m_attribute_vertex;
@@ -187,6 +191,7 @@ public:
     void            bindOccluderMapBuffer();
     void            bindLightOcculderBuffer(DrEngineLight *light);
     void            bindLightShadowBuffer(DrEngineLight *light);
+    void            checkLightBuffers();
     void            draw1DShadowMap(DrEngineLight *light);
     void            draw2DLight(DrEngineLight *light);
     void            drawShadowMaps();

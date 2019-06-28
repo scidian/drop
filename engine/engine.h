@@ -29,6 +29,15 @@ class FormEngine;
 typedef std::map<long, DrEngineTexture*> EngineTextureMap;
 typedef std::map<long, DrEngineWorld*>   EngineWorldMap;
 
+// Input / Engine Globals - defined in engine_update_player.cpp
+extern int          g_keyboard_x;                       // Used to pass keyboard x button state to static callback functions
+extern int          g_keyboard_y;                       // Used to pass keyboard y button state to static callback functions
+extern bool         g_jump_button;                      // Used to pass jump button state to static callback functions
+extern Pedal        g_pedal;                            // Used to pass Pedal button state
+extern cpVect       g_gravity_normal;                   // Stores a gravity as a normalized vector for use in static callback functions
+extern QString      g_info;
+
+
 //####################################################################################
 //##    DrEngine
 //##        Holds a project ready for use in an OpenGLWidget
@@ -45,26 +54,6 @@ private:
     EngineWorldMap      m_worlds;                   // Map of Physics Worlds loaded into the Engine
     long                m_current_world;            // Project Key of current world shown in Engine
     long                m_current_editor_world;     // Project Key of current world shown in EDITOR
-
-
-
-// ***** Public Variables not yet implemented into function calls / getters / setters
-public:
-    // Input Keys
-    int             keyboard_x;                             // Set to -1 for left, 1 for right
-    int             keyboard_y;                             // Set to -1 for down, 1 for up
-    bool            jump_button = false;                    // Set to False for Not-Pressed, True for Pressed
-    Pedal           gas_pedal = Pedal::None;                // Pedal enumeration for rotate key state
-
-    // Debug Variables
-    bool            debug_shapes =      false;
-    bool            debug_collisions =  false;
-
-    // Demo Variables
-    Demo_Space      demo_space =  Demo_Space::Project;
-    Demo_Player     demo_player = Demo_Player::Jump;
-    DrEngineObject *demo_jumper_1;
-    DrEngineObject *demo_jumper_2;
 
 
 public:
@@ -84,15 +73,13 @@ public:
     FormEngine*         getFormEngine()             { return m_form_engine; }
     DrProject*          getProject()                { return m_project; }
 
+    long                getCurrentEditorWorld()     { return m_current_editor_world; }
     DrEngineWorld*      getCurrentWorld()           { return m_worlds[m_current_world]; }
     DrEngineWorld*      getWorld(long world_key)    { return m_worlds[world_key]; }
-
-    long                getCurrentEditorWorld()     { return m_current_editor_world; }
 
     QString             pedalAsString();
 
 };
-
 
 
 #endif // ENGINE_H

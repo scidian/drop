@@ -133,7 +133,7 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
     // Load demo after form finishes loading
     QTimer::singleShot( 0, this, [this] {
-        loadDemo( m_engine->demo_space, m_engine->demo_player );
+        loadDemo( demo_space, demo_player );
     } );
 }
 
@@ -170,12 +170,22 @@ bool FormEngine::event(QEvent *event) {
 //####################################################################################
 //##    Loads a Demo
 //####################################################################################
-void FormEngine::loadDemo(Demo_Space using_space, Demo_Player using_player ) {
+void FormEngine::loadDemo(Demo_Space using_space, Demo_Player using_player) {
     stopTimers();
+
+    // ***** Reset keys
+    g_keyboard_x = 0;
+    g_keyboard_y = 0;
+    g_jump_button = false;
+    g_pedal = Pedal::None;
+
+    // Save Demo Types
+    demo_player = using_player;
+    demo_space = using_space;
 
     // ***** The following are the steps to load a new Space
     m_engine->getCurrentWorld()->clearWorld();
-    m_engine->getCurrentWorld()->buildWorld( using_space );
+    m_engine->getCurrentWorld()->buildWorld( using_space, m_engine->getCurrentEditorWorld() );
     m_engine->getCurrentWorld()->addPlayer( using_player );
     m_engine->getCurrentWorld()->updateSpace( 0 );
 
@@ -245,6 +255,7 @@ void FormEngine::updateEngine() {
         resetTimer(Engine_Timer::Update);
         m_engine->getCurrentWorld()->updateSpace(update_milliseconds);                      // Physics Engine
         m_engine->getCurrentWorld()->updateWorld(update_milliseconds);                      // Additional World / Thing Updating
+        ++m_engine->getFormEngine()->fps_count_physics;                                     // Updates Physics Frames per Second
         m_engine->getCurrentWorld()->updateCameras();                                       // Update Camera Targets
         moveCameras();                                                                      // Move Cameras
         m_opengl->update();                                                                 // Render
@@ -265,6 +276,7 @@ void FormEngine::updateEngine() {
         resetTimer(Engine_Timer::Update);
         m_engine->getCurrentWorld()->updateSpace(update_milliseconds);                      // Physics Engine
         m_engine->getCurrentWorld()->updateWorld(update_milliseconds);                      // Additional World / Thing Updating
+        ++m_engine->getFormEngine()->fps_count_physics;                                     // Updates Physics Frames per Second
         m_engine->getCurrentWorld()->updateCameras();                                       // Update Camera Targets
         moveCameras();                                                                      // Move Cameras
         m_opengl->update();                                                                 // Render
@@ -287,25 +299,21 @@ void FormEngine::aboutToCompose() {
 //####################################################################################
 //##    Button Handling
 //####################################################################################
-void FormEngine::on_pushSpawn_clicked() {   loadDemo(m_engine->demo_space,  Demo_Player::Spawn ); }
-void FormEngine::on_pushCar_clicked() {     loadDemo(m_engine->demo_space,  Demo_Player::Car ); }
-void FormEngine::on_pushJump_clicked() {    loadDemo(m_engine->demo_space,  Demo_Player::Jump ); }
+void FormEngine::on_pushSpawn_clicked() {   loadDemo(demo_space,  Demo_Player::Spawn ); }
+void FormEngine::on_pushCar_clicked() {     loadDemo(demo_space,  Demo_Player::Car ); }
+void FormEngine::on_pushJump_clicked() {    loadDemo(demo_space,  Demo_Player::Jump ); }
 
 void FormEngine::on_pushPlay1_clicked() {
-    m_engine->demo_jumper_1->setLostControl(false);
-    m_engine->demo_jumper_2->setLostControl(true);
-    m_engine->getCurrentWorld()->switchCameras(m_engine->demo_jumper_1->getActiveCameraKey());
+    m_engine->getCurrentWorld()->switchCameraToNext();
 }
 void FormEngine::on_pushPlay2_clicked() {
-    m_engine->demo_jumper_1->setLostControl(true);
-    m_engine->demo_jumper_2->setLostControl(false);
-    m_engine->getCurrentWorld()->switchCameras(m_engine->demo_jumper_2->getActiveCameraKey());
+    m_engine->getCurrentWorld()->switchCameraToNext();
 }
 
-void FormEngine::on_pushLines1_clicked() {  loadDemo(Demo_Space::Lines1,    m_engine->demo_player ); }
-void FormEngine::on_pushLines2_clicked() {  loadDemo(Demo_Space::Lines2,    m_engine->demo_player ); }
-void FormEngine::on_pushBlocks_clicked() {  loadDemo(Demo_Space::Blocks,    m_engine->demo_player ); }
-void FormEngine::on_pushProject_clicked() { loadDemo(Demo_Space::Project,   m_engine->demo_player ); }
+void FormEngine::on_pushLines1_clicked() {  loadDemo(Demo_Space::Lines1,    demo_player ); }
+void FormEngine::on_pushLines2_clicked() {  loadDemo(Demo_Space::Lines2,    demo_player ); }
+void FormEngine::on_pushBlocks_clicked() {  loadDemo(Demo_Space::Blocks,    demo_player ); }
+void FormEngine::on_pushProject_clicked() { loadDemo(Demo_Space::Project,   demo_player ); }
 
 
 void FormEngine::on_pushStart_clicked() {
@@ -323,11 +331,11 @@ void FormEngine::on_pushPersp_clicked() { m_engine->getCurrentWorld()->render_ty
 void FormEngine::on_pushOrtho_clicked() { m_engine->getCurrentWorld()->render_type = Render_Type::Orthographic; updateCheckedButtons(); }
 
 void FormEngine::on_pushDebug1_clicked() {
-    m_engine->debug_shapes = !m_engine->debug_shapes;
+    debug_shapes = !debug_shapes;
     updateCheckedButtons();
 }
 void FormEngine::on_pushDebug2_clicked() {
-    m_engine->debug_collisions = !m_engine->debug_collisions;
+    debug_collisions = !debug_collisions;
     updateCheckedButtons();
 }
 
@@ -336,9 +344,9 @@ void FormEngine::on_pushDebug2_clicked() {
 //##    Update Checked Buttons
 //####################################################################################
 void FormEngine::updateCheckedButtons() {
-    if (m_engine->demo_player == Demo_Player::Spawn) pushSpawn->setDown(true);   else pushSpawn->setDown(false);
-    if (m_engine->demo_player == Demo_Player::Car)   pushCar->setDown(true);     else pushCar->setDown(false);
-    if (m_engine->demo_player == Demo_Player::Jump)  {
+    if (demo_player == Demo_Player::Spawn) pushSpawn->setDown(true);   else pushSpawn->setDown(false);
+    if (demo_player == Demo_Player::Car)   pushCar->setDown(true);     else pushCar->setDown(false);
+    if (demo_player == Demo_Player::Jump)  {
         pushJump->setDown(true);
         pushPlay1->setEnabled(true);
         pushPlay2->setEnabled(true);
@@ -348,16 +356,16 @@ void FormEngine::updateCheckedButtons() {
         pushPlay2->setEnabled(false);
     }
 
-    if (m_engine->demo_space == Demo_Space::Lines1)  pushLine1->setDown(true);   else pushLine1->setDown(false);
-    if (m_engine->demo_space == Demo_Space::Lines2)  pushLine2->setDown(true);   else pushLine2->setDown(false);
-    if (m_engine->demo_space == Demo_Space::Blocks)  pushBlocks->setDown(true);  else pushBlocks->setDown(false);
-    if (m_engine->demo_space == Demo_Space::Project) pushProject->setDown(true); else pushProject->setDown(false);
+    if (demo_space == Demo_Space::Lines1)  pushLine1->setDown(true);   else pushLine1->setDown(false);
+    if (demo_space == Demo_Space::Lines2)  pushLine2->setDown(true);   else pushLine2->setDown(false);
+    if (demo_space == Demo_Space::Blocks)  pushBlocks->setDown(true);  else pushBlocks->setDown(false);
+    if (demo_space == Demo_Space::Project) pushProject->setDown(true); else pushProject->setDown(false);
 
     if (m_engine->getCurrentWorld()->render_type == Render_Type::Perspective)  pushPersp->setDown(true); else pushPersp->setDown(false);
     if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) pushOrtho->setDown(true); else pushOrtho->setDown(false);
 
-    if (m_engine->debug_shapes)     pushDebug1->setDown(true); else pushDebug1->setDown(false);
-    if (m_engine->debug_collisions) pushDebug2->setDown(true); else pushDebug2->setDown(false);
+    if (debug_shapes)     pushDebug1->setDown(true); else pushDebug1->setDown(false);
+    if (debug_collisions) pushDebug2->setDown(true); else pushDebug2->setDown(false);
 }
 
 

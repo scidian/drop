@@ -17,7 +17,7 @@ DrEngineThing::DrEngineThing(DrEngineWorld* world, long unique_key) {
 }
 
 DrEngineThing::~DrEngineThing() {
-    should_process = false;
+
 }
 
 

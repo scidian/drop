@@ -75,8 +75,6 @@ void DrPlayground::wakeAllBodies() {
 //##    Removes an object from the Space
 //####################################################################################
 void DrPlayground::removeObject(DrToy *toy) {
-    toy->m_should_process = false;
-
     cpSpaceRemoveShape(m_space, toy->shape);
     cpShapeFree(toy->shape);
 

@@ -38,8 +38,8 @@ void DrEngineObject::addShapeBox(double width, double height) {
     applyShapeSettings(shape, area, Shape_Type::Box);
 }
 void DrEngineObject::addShapeBoxFromTexture(long texture_number) {
-    double width =  getWorld()->getEngine()->getTextureMap()[texture_number]->width();
-    double height = getWorld()->getEngine()->getTextureMap()[texture_number]->height();
+    double width =  getWorld()->getTexture(texture_number)->width();
+    double height = getWorld()->getTexture(texture_number)->height();
     addShapeBox(width, height);
 }
 
@@ -57,7 +57,7 @@ void DrEngineObject::addShapeCircle(double circle_radius, QPointF shape_offset) 
     }
 }
 void DrEngineObject::addShapeCircleFromTexture(long texture_number) {
-    double radius = getWorld()->getEngine()->getTextureMap()[texture_number]->width() / 2.0;
+    double radius = getWorld()->getTexture(texture_number)->width() / 2.0;
     addShapeCircle(radius, QPointF(0, 0));
 }
 

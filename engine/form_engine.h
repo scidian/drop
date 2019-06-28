@@ -60,8 +60,16 @@ private:
 
 
 public:
-    const double    m_ideal_frames_per_second =  60;
-    bool            m_wait_vsync = false;
+    // Widgets
+    QWidget        *centralWidget;
+    QToolButton    *pushSpawn,      *pushCar,       *pushJump,      *pushPlay1, *pushPlay2;
+    QToolButton    *pushLine1,      *pushLine2,     *pushBlocks,    *pushProject;
+    QToolButton    *pushStart,      *pushStop,      *pushClose;
+    QToolButton    *pushPersp,      *pushOrtho;
+    QToolButton    *pushDebug1,     *pushDebug2;
+
+    const double        m_ideal_frames_per_second =  60;
+    bool                m_wait_vsync = false;
 
     // FPS Variables
     Clock::time_point   m_time_fps = Clock::now();
@@ -72,14 +80,13 @@ public:
     double              fps_physics =       60.0;
     double              fps_camera =        60.0;
 
-    // Widgets
-    QWidget        *centralWidget;
-    QToolButton    *pushSpawn,      *pushCar,       *pushJump,      *pushPlay1, *pushPlay2;
-    QToolButton    *pushLine1,      *pushLine2,     *pushBlocks,    *pushProject;
-    QToolButton    *pushStart,      *pushStop,      *pushClose;
-    QToolButton    *pushPersp,      *pushOrtho;
-    QToolButton    *pushDebug1,     *pushDebug2;
+    // Debug Variables
+    bool                debug_shapes =      false;
+    bool                debug_collisions =  false;
 
+    // Demo Variables
+    Demo_Space          demo_space =  Demo_Space::Project;
+    Demo_Player         demo_player = Demo_Player::Jump;
 
 public:
     // Constructor / Destructor

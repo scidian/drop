@@ -13,6 +13,7 @@
 #include "engine/engine_thing_object.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
+#include "engine/form_engine.h"
 #include "opengl/opengl.h"
 #include "helper.h"
 
@@ -32,7 +33,7 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
 
     // Process click
     DrEngineWorld *world = m_engine->getCurrentWorld();
-    if (m_engine->demo_player == Demo_Player::Spawn) {
+    if (m_form_engine->demo_player == Demo_Player::Spawn) {
         if (event->button() & Qt::LeftButton) {
             for (int i = 0; i < 50; i++ ) {
                 double vel_x = QRandomGenerator::global()->bounded(-100, 100);
@@ -72,41 +73,32 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
             world->addThing(plant);
         }
 
-    } else if (m_engine->demo_player == Demo_Player::Car) {
+    } else if (m_form_engine->demo_player == Demo_Player::Car) {
         if (event->button() & Qt::LeftButton) {
             if (event->pos().x() < width() / 2)
-                m_engine->gas_pedal = Pedal::Clockwise;
+                g_pedal = Pedal::Clockwise;
             else
-                m_engine->gas_pedal = Pedal::CounterClockwise;
+                g_pedal = Pedal::CounterClockwise;
         } else if (event->button() & Qt::RightButton)
-            m_engine->gas_pedal = Pedal::CounterClockwise;
+            g_pedal = Pedal::CounterClockwise;
 
-    } else if (m_engine->demo_player == Demo_Player::Jump) {
-        if (m_engine->demo_jumper_1->hasLostControl() == false) {
-            if (event->button() & Qt::LeftButton) {
-                m_engine->jump_button = true;
-            } else if (event->button() & Qt::RightButton) {
-                for (int i = 0; i < 25; i++ ) {
-                    DrEngineObject *block = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Block, x, y, z);
-                    block->addShapeBoxFromTexture(Asset_Textures::Block);
-                    world->addThing(block);
+    } else if (m_form_engine->demo_player == Demo_Player::Jump) {
+        if (event->button() & Qt::LeftButton) {
+            g_jump_button = true;
+        } else if (event->button() & Qt::RightButton) {
+            for (int i = 0; i < 25; i++ ) {
+                DrEngineObject *block = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Block, x, y, z);
+                block->addShapeBoxFromTexture(Asset_Textures::Block);
+                world->addThing(block);
 
-                    double hue = QRandomGenerator::global()->bounded(1.0);
-                    block->hue = static_cast<float>(hue);
+                double hue = QRandomGenerator::global()->bounded(1.0);
+                block->hue = static_cast<float>(hue);
 
-                    ///double saturation = QRandomGenerator::global()->bounded(0.5) - 0.125;
-                    ///block->saturation = static_cast<float>(saturation);
-                    ///double contrast = QRandomGenerator::global()->bounded(0.5) - 0.125;
-                    ///block->contrast = static_cast<float>(contrast);
-                }
+                ///double saturation = QRandomGenerator::global()->bounded(0.5) - 0.125;
+                ///block->saturation = static_cast<float>(saturation);
+                ///double contrast = QRandomGenerator::global()->bounded(0.5) - 0.125;
+                ///block->contrast = static_cast<float>(contrast);
             }
-        } else {
-            if (event->button() & Qt::LeftButton)
-                m_engine->gas_pedal = Pedal::CounterClockwise;
-            else if (event->button() & Qt::RightButton)
-                m_engine->gas_pedal = Pedal::Clockwise;
-            else if (event->button() & Qt::MiddleButton)
-                m_engine->jump_button = true;
         }
     }
 
@@ -114,14 +106,14 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
 
 void DrOpenGL::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (m_engine->demo_player == Demo_Player::Car) {
+    if (m_form_engine->demo_player == Demo_Player::Car) {
         if (event->buttons() == Qt::MouseButton::NoButton)
-            m_engine->gas_pedal = Pedal::None;
+            g_pedal = Pedal::None;
 
-    } else if (m_engine->demo_player == Demo_Player::Jump) {
+    } else if (m_form_engine->demo_player == Demo_Player::Jump) {
         if (event->buttons() == Qt::MouseButton::NoButton) {
-            m_engine->jump_button = false;
-            m_engine->gas_pedal = Pedal::None;
+            g_jump_button = false;
+            g_pedal = Pedal::None;
         }
     }
 }

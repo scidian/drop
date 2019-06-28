@@ -31,6 +31,12 @@ DrOpenGL::~DrOpenGL() {
         delete m_render_fbo;
         delete m_texture_fbo;
         delete m_occluder_fbo;
+
+        for (auto fbo_pair : m_occluders)
+            delete fbo_pair.second;
+        for (auto fbo_pair : m_shadows)
+            delete fbo_pair.second;
+
     doneCurrent();
 }
 

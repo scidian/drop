@@ -39,15 +39,6 @@ constexpr int       c_unlimited_jump =   -1;            // Flag for unlimited ju
 constexpr double    c_extra_radius =    0.010;          // Radius added on to block and polygon shapes for better collisions
 constexpr double    c_mass_multiplier = 0.002;          // Shapes Area times this multiplier = shape mass
 
-// Global Variables - defined in engine_update_player.cpp
-extern int          g_keyboard_x;                       // Used to pass keyboard x button state to static callback functions
-extern int          g_keyboard_y;                       // Used to pass keyboard y button state to static callback functions
-extern bool         g_jump_button;                      // Used to pass jump button state to static callback functions
-extern Pedal        g_pedal;                            // Used to pass Pedal button state
-extern cpVect       g_gravity_normal;                   // Stores a gravity as a normalized vector for use in static callback functions
-extern QString      g_info;
-
-
 //####################################################################################
 //##    DrEngineObject
 //##        Holds one object for use in a cpSpace

@@ -24,6 +24,9 @@
 void DrOpenGL::drawShadowMaps() {
     if (m_engine->getCurrentWorld()->light_count <= 0) return;
 
+    // ***** Clear list of which lights exist
+    checkLightBuffers();
+
     // ***** Check for lights with shadows, if there are non we don't need to draw occluder map
     QVector<DrEngineLight*> shadow_lights;
     shadow_lights.clear();
@@ -52,6 +55,7 @@ void DrOpenGL::drawShadowMaps() {
         if (light->draw_shadows && light->isInView())
             shadow_lights.append(light);
     }
+    m_engine->getCurrentWorld()->light_count = shadow_lights.count();
     if (shadow_lights.count() <= 0) return;
 
     // ***** Render all Space Objects to an off-screen Frame Buffer Object Occluder Map
@@ -79,24 +83,53 @@ void DrOpenGL::drawShadowMaps() {
 
         // Blit the area of the occluder map the light will take up to the Light Occluder FBO
         bindLightOcculderBuffer(light);
+        QOpenGLFramebufferObject *light_fbo = m_occluders[light->getKey()];
         QOpenGLFramebufferObject::blitFramebuffer(
-                    light->occluder_fbo, QRect(0, 0, light->occluder_fbo->width(), light->occluder_fbo->height()),
+                    light_fbo, QRect(0, 0, light_fbo->width(), light_fbo->height()),
                     m_occluder_fbo, QRect(
-                        static_cast<int>( floor(light->getScreenPos().x() - ((light->occluder_fbo->width() / 2.0) * double(c_occluder_scale * m_scale))) ),
-                        static_cast<int>( floor(light->getScreenPos().y() - ((light->occluder_fbo->height()/ 2.0) * double(c_occluder_scale * m_scale)) + (y_diff * 2.0)) ),
-                        static_cast<int>( light->occluder_fbo->width()  * (c_occluder_scale * m_scale) ),
-                        static_cast<int>( light->occluder_fbo->height() * (c_occluder_scale * m_scale) )
+                        static_cast<int>( floor(light->getScreenPos().x() - ((light_fbo->width() / 2.0) * double(c_occluder_scale * m_scale))) ),
+                        static_cast<int>( floor(light->getScreenPos().y() - ((light_fbo->height()/ 2.0) * double(c_occluder_scale * m_scale)) + (y_diff * 2.0)) ),
+                        static_cast<int>( light_fbo->width()  * (c_occluder_scale * m_scale) ),
+                        static_cast<int>( light_fbo->height() * (c_occluder_scale * m_scale) )
                         ),
                     GL_COLOR_BUFFER_BIT, GL_NEAREST);
-        light->occluder_fbo->release();
+        m_occluders[light->getKey()]->release();
 
         // Draw the 1D Shadow Map from the Occluder Map
         bindLightShadowBuffer(light);
         draw1DShadowMap(light);
-        light->shadow_fbo->release();
+        m_shadows[light->getKey()]->release();
     } // End For
 }
 
+
+//####################################################################################
+//##    Check that lights still exist, if not delete buffers
+//####################################################################################
+void DrOpenGL::checkLightBuffers() {
+    // Go through deleted keys
+    for (auto key : m_engine->getCurrentWorld()->mark_light_as_deleted) {
+        // Delete occluder fbo
+        for (auto it = m_occluders.begin(); it != m_occluders.end(); ) {
+            if ((*it).first == key) {
+                delete (*it).second;
+                it = m_occluders.erase(it);
+                continue;
+            }
+            it++;
+        }
+        // Delete shadow fbo
+        for (auto it = m_shadows.begin(); it != m_shadows.end(); ) {
+            if ((*it).first == key) {
+                delete (*it).second;
+                it = m_shadows.erase(it);
+                continue;
+            }
+            it++;
+        }
+    }
+    m_engine->getCurrentWorld()->mark_light_as_deleted.clear();
+}
 
 //####################################################################################
 //##        Allocate Occluder Map
@@ -122,17 +155,17 @@ void DrOpenGL::bindOccluderMapBuffer() {
 void DrOpenGL::bindLightOcculderBuffer(DrEngineLight *light) {
     // Check Frame Buffer Object is initialized
     bool need_to_create_new = false;
-    if (light->occluder_fbo == nullptr)
+    if (!(m_occluders[light->getKey()]))
         need_to_create_new = true;
-    else if (light->occluder_fbo->width() != light->getLightDiameterFitted() || light->occluder_fbo->height() != light->getLightDiameterFitted())
+    else if (m_occluders[light->getKey()]->width() != light->getLightDiameterFitted() || m_occluders[light->getKey()]->height() != light->getLightDiameterFitted())
         need_to_create_new = true;
     if (need_to_create_new) {
-        delete light->occluder_fbo;
-        light->occluder_fbo = new QOpenGLFramebufferObject(light->getLightDiameterFitted(), light->getLightDiameterFitted());
+        delete m_occluders[light->getKey()];
+        m_occluders[light->getKey()] = new QOpenGLFramebufferObject(light->getLightDiameterFitted(), light->getLightDiameterFitted());
     }
 
     // Bind and clear buffer
-    light->occluder_fbo->bind();
+    m_occluders[light->getKey()]->bind();
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 }
@@ -148,17 +181,17 @@ void DrOpenGL::bindLightShadowBuffer(DrEngineLight *light) {
 
     // Check Frame Buffer Object is initialized
     bool need_to_create_new = false;
-    if (light->shadow_fbo == nullptr)
+    if (m_shadows[light->getKey()] == nullptr)
         need_to_create_new = true;
-    else if (light->shadow_fbo->width() != shadow_size)
+    else if (m_shadows[light->getKey()]->width() != shadow_size)
         need_to_create_new = true;
     if (need_to_create_new) {
-        delete light->shadow_fbo;
-        light->shadow_fbo = new QOpenGLFramebufferObject(shadow_size, 1);
+        delete m_shadows[light->getKey()];
+        m_shadows[light->getKey()] = new QOpenGLFramebufferObject(shadow_size, 1);
     }
 
     // Bind and clear buffer
-    light->shadow_fbo->bind();
+    m_shadows[light->getKey()]->bind();
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 }
@@ -169,15 +202,15 @@ void DrOpenGL::bindLightShadowBuffer(DrEngineLight *light) {
 //####################################################################################
 void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, light->occluder_fbo->texture());
+    glBindTexture(GL_TEXTURE_2D, m_occluders[light->getKey()]->texture());
 
     if (!m_shadow_shader.bind()) return;
 
     // Reset our projection matrix to the FBO size
-    float left =   0.0f - ((light->shadow_fbo->width() )  / 2.0f);
-    float right =  0.0f + ((light->shadow_fbo->width() )  / 2.0f);
-    float top =    0.0f + ((light->shadow_fbo->height() ) / 2.0f);
-    float bottom = 0.0f - ((light->shadow_fbo->height() ) / 2.0f);
+    float left =   0.0f - ((m_shadows[light->getKey()]->width() )  / 2.0f);
+    float right =  0.0f + ((m_shadows[light->getKey()]->width() )  / 2.0f);
+    float top =    0.0f + ((m_shadows[light->getKey()]->height() ) / 2.0f);
+    float bottom = 0.0f - ((m_shadows[light->getKey()]->height() ) / 2.0f);
     QMatrix4x4 m_matrix;
     m_matrix.ortho( left, right, bottom, top, -5000.0f, 5000.0f);
     m_shadow_shader.setUniformValue( m_uniform_shadow_matrix, m_matrix );
@@ -198,7 +231,7 @@ void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
     m_shadow_shader.setUniformValue( m_uniform_shadow_texture, 0 );
 
     // ***** Give the shader our Ray Count and Scaled Light Radius
-    m_shadow_shader.setUniformValue( m_uniform_shadow_ray_count,  static_cast<float>(light->shadow_fbo->width()) );
+    m_shadow_shader.setUniformValue( m_uniform_shadow_ray_count,  static_cast<float>(m_shadows[light->getKey()]->width()) );
 
     float screen_scale = width()*devicePixelRatio() / light->light_size;
     m_shadow_shader.setUniformValue( m_uniform_shadow_resolution, light->getLightDiameter(), light->getLightDiameter() * screen_scale );
@@ -223,7 +256,7 @@ void DrOpenGL::draw2DLight(DrEngineLight *light) {
 
     if (light->draw_shadows) {
         glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, light->shadow_fbo->texture());
+        glBindTexture(GL_TEXTURE_2D, m_shadows[light->getKey()]->texture());
     }
 
     if (!m_light_shader.bind()) return;

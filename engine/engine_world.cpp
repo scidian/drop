@@ -12,7 +12,8 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrEngineWorld::DrEngineWorld(DrEngine *engine, DrProject *project, long world_key) : m_engine(engine), m_project(project) {
+DrEngineWorld::DrEngineWorld(DrProject *project, EngineTextureMap &textures, long world_key) : m_textures(textures) {
+    m_project = project;
     m_world = world_key;
 }
 
