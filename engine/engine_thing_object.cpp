@@ -124,14 +124,6 @@ bool DrEngineObject::update(double , double , QRectF &area) {
         cpBodyActivate(body);
     }
 
-
-
-
-    if (this->custom == 1) {
-        g_info = "Moment: " + QString::number( cpBodyGetMoment(this->body) );
-    }
-
-
 //    // ***** Update global friction and bounce to all objects if globals have changed (possibly due to Gameplay Action)
 //    if (qFuzzyCompare(object->getCustomFriction(), c_friction) == false) {
 //        for (auto shape : object->shapes) {
@@ -149,11 +141,13 @@ bool DrEngineObject::update(double , double , QRectF &area) {
     // ***** Process non-static object movement
     if (body_type != Body_Type::Static) {
         // If has rotate speed (wheels, etc.), apply gas pedal
-        switch (g_pedal) {
-            case Pedal::None:               break;
-            case Pedal::Clockwise:          cpBodySetAngularVelocity( body, -getRotateSpeed() );    break;
-            case Pedal::CounterClockwise:   cpBodySetAngularVelocity( body,  getRotateSpeed() );    break;
-            case Pedal::Brake:              cpBodySetAngularVelocity( body,  0 );                   break;
+        if (qFuzzyCompare(getRotateSpeed(), 0) == false) {
+            switch (g_pedal) {
+                case Pedal::None:               break;
+                case Pedal::Clockwise:          cpBodySetAngularVelocity( body, -getRotateSpeed() );    break;
+                case Pedal::CounterClockwise:   cpBodySetAngularVelocity( body,  getRotateSpeed() );    break;
+                case Pedal::Brake:              cpBodySetAngularVelocity( body,  0 );                   break;
+            }
         }
     }
 

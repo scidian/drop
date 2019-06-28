@@ -38,11 +38,9 @@ void DrEngineObject::addShapeBox(double width, double height) {
     applyShapeSettings(shape, area, Shape_Type::Box);
 }
 void DrEngineObject::addShapeBoxFromTexture(long texture_number) {
-    double width =  getWorld()->getEngine()->getTextureMap()[texture_number]->width() *  static_cast<double>(this->getScaleX());
-    double height = getWorld()->getEngine()->getTextureMap()[texture_number]->height() * static_cast<double>(this->getScaleY());
-    cpShape *shape = cpBoxShapeNew(this->body, width, height, c_extra_radius);
-    double    area = (width * height);
-    applyShapeSettings(shape, area, Shape_Type::Box);
+    double width =  getWorld()->getEngine()->getTextureMap()[texture_number]->width();
+    double height = getWorld()->getEngine()->getTextureMap()[texture_number]->height();
+    addShapeBox(width, height);
 }
 
 void DrEngineObject::addShapeCircle(double circle_radius, QPointF shape_offset) {
@@ -57,6 +55,10 @@ void DrEngineObject::addShapeCircle(double circle_radius, QPointF shape_offset) 
         double    area = cpAreaForCircle( 0, circle_radius );
         applyShapeSettings(shape, area, Shape_Type::Circle);
     }
+}
+void DrEngineObject::addShapeCircleFromTexture(long texture_number) {
+    double radius = getWorld()->getEngine()->getTextureMap()[texture_number]->width() / 2.0;
+    addShapeCircle(radius, QPointF(0, 0));
 }
 
 void DrEngineObject::addShapeSegment(QPointF p1, QPointF p2, double padding) {

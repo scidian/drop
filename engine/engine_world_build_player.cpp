@@ -36,9 +36,8 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
     m_engine->demo_player = new_player_type;
 
     if (m_engine->demo_player == Demo_Player::Jump) {
-        DrEngineObject *ball1;
-        ball1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 200, 50, 0, c_scale1x1, 0.25, 0.5, true, false);
-        ball1->addShapeCircle(m_engine->getTextureMap()[Asset_Textures::Ball]->width() / 2.0, QPointF(0, 0));
+        DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 200, 50, 0, c_scale1x1, 0.25, 0.5, true, false);
+        ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
         addThing(ball1);
 
         assignPlayerControls(ball1, true, true, true);
@@ -51,9 +50,8 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ball1->setMoveSpeedY( 300 );
 
 
-        DrEngineObject *ball2;
-        ball2 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 800, 50, 0, c_scale1x1, 1, 0.5);
-        ball2->addShapeCircle(m_engine->getTextureMap()[Asset_Textures::Ball]->width() / 2.0, QPointF(0, 0));
+        DrEngineObject *ball2 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 800, 50, 0, c_scale1x1, 1, 0.5);
+        ball2->addShapeCircleFromTexture(Asset_Textures::Ball);
         addThing(ball2);
 
         assignPlayerControls(ball2, false, true, false);
@@ -68,7 +66,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
     } else if (m_engine->demo_player == Demo_Player::Spawn) {
         DrEngineObject *ball1;
         ball1 = new DrEngineObject(this, getNextKey(), Body_Type::Kinematic, Asset_Textures::Ball, -300, 150, 0, c_scale1x1, 0.7, 0.5);
-        ball1->addShapeCircle(m_engine->getTextureMap()[Asset_Textures::Ball]->width() / 2.0, QPointF(0, 0));
+        ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
         addThing(ball1);
 
         ball1->setOriginalVelocityX( 15 );
@@ -92,53 +90,32 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         points.append( QPointF(  20.0,  16.0 ));
         points.append( QPointF(   5.5,  16.0 ));
         points.append( QPointF(   5.5,  -5.0 ));
-//        DrEngineObject *rover = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Rover, 50, 75, 0, c_scale1x1, 5, 0.1, true);
-//        rover->addShapePolygon(points);
-//        addThing(rover);
-        DrEngineObject *rover = this->addPolygon(Body_Type::Dynamic, Asset_Textures::Rover,  50, 75, 0, c_norotate, c_scale1x1, c_opaque, points, 0.5, 0.1, QPointF(0, 0));
-
+        DrEngineObject *rover = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Rover, 50, 75, 0, c_scale1x1, 5, 0.1, true);
+        rover->addShapePolygon(points);
+        addThing(rover);
         setActiveCamera( addCamera(rover->getKey()) );
 
 
-//        cpBodySetMass( rover->body, 1);
-//        cpBodySetMoment( rover->body, 1500);
-//        rover->custom = 1;
-
-
         // Add wheels
-        double ball_radius =  m_engine->getTextureMap()[Asset_Textures::Ball ]->width() / 2.0;
-        double wheel_radius = m_engine->getTextureMap()[Asset_Textures::Wheel]->width() / 2.0;
-        double spare_radius = m_engine->getTextureMap()[Asset_Textures::Spare]->width() / 2.0;
-
-        DrEngineObject *wheel1 = this->addCircle(Body_Type::Dynamic, Asset_Textures::Wheel,  10,  45, .01, c_norotate, c_scale1x1, c_opaque,
-                                                 wheel_radius, c_center, 3, 0.7, QPointF(0, 0));
-        DrEngineObject *wheel2 = this->addCircle(Body_Type::Dynamic, Asset_Textures::Wheel,  50,  45, .01, c_norotate, c_scale1x1, c_opaque,
-                                                 wheel_radius, c_center, 3, 0.7, QPointF(0, 0));
-        DrEngineObject *wheel3 = this->addCircle(Body_Type::Dynamic, Asset_Textures::Wheel,  90,  45, .01, c_norotate, c_scale1x1, c_opaque,
-                                                 wheel_radius, c_center, 3, 0.7, QPointF(0, 0));
-        //DrEngineObject *wheel1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Wheel,  10,  45, .01, c_scale1x1, 3, 0.7);
-        //DrEngineObject *wheel2 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Wheel,  50,  45, .01, c_scale1x1, 3, 0.7);
-        //DrEngineObject *wheel3 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Wheel,  90,  45, .01, c_scale1x1, 3, 0.7);
-        //wheel1->addShapeCircle(wheel_radius, QPointF(0, 0));    addThing( wheel1 );
-        //wheel2->addShapeCircle(wheel_radius, QPointF(0, 0));    addThing( wheel2 );
-        //wheel3->addShapeCircle(wheel_radius, QPointF(0, 0));    addThing( wheel3 );
-        ///addThings( { wheel1, wheel2, wheel3 } );
+        DrEngineObject *wheel1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Wheel,  10,  45, .01, c_scale1x1, 3, 0.7);
+        DrEngineObject *wheel2 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Wheel,  50,  45, .01, c_scale1x1, 3, 0.7);
+        DrEngineObject *wheel3 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Wheel,  90,  45, .01, c_scale1x1, 3, 0.7);
+        wheel1->addShapeCircleFromTexture(Asset_Textures::Wheel);
+        wheel2->addShapeCircleFromTexture(Asset_Textures::Wheel);
+        wheel3->addShapeCircleFromTexture(Asset_Textures::Wheel);
+        addThings( { wheel1, wheel2, wheel3 } );
         wheel1->setRotateSpeed( 110.0 );
         wheel2->setRotateSpeed(  60.0 );
         wheel3->setRotateSpeed(  90.0 );
 
-        DrEngineObject *spare1 = this->addCircle(Body_Type::Dynamic, Asset_Textures::Spare, -11,  49, .01, c_norotate, c_scale1x1, c_opaque,
-                                                         spare_radius, c_center, 4, 0.7, QPointF(0, 0));
-        //DrEngineObject *spare1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Spare, -11,  49, .01, c_scale1x1, 4, 0.7);
-        //spare1->addShapeCircle(spare_radius, QPointF(0, 0));
-        //addThing(spare1);
+        DrEngineObject *spare1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Spare, -11,  49, .01, c_scale1x1, 4, 0.7);
+        spare1->addShapeCircleFromTexture(Asset_Textures::Spare);
+        addThing(spare1);
 
         // Add Careful Cargo
-        this->addCircle(Body_Type::Dynamic, Asset_Textures::Ball, 30, 115, 0, c_norotate, c_scale1x1, c_opaque,
-                                ball_radius, c_center, 0.7, 0, QPointF(0, 0));
-        //DrEngineObject *cargo = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 30, 115, 0, c_scale1x1, 0.7, 0);
-        //cargo->addShapeCircle(ball_radius, QPointF(0, 0));
-        //addThing(cargo);
+        DrEngineObject *cargo = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 30, 115, 0, c_scale1x1, 0.7, 0);
+        cargo->addShapeCircleFromTexture(Asset_Textures::Ball);
+        addThing(cargo);
 
         // New bouncy shocks joint, Grooves a/b are relative to the car, anchor point B is on the wheel
         cpSpaceAddConstraint(m_space, cpGrooveJointNew( rover->body, wheel1->body, cpv(-40,  15), cpv(-40, -28), cpvzero));

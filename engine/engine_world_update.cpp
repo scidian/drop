@@ -105,6 +105,25 @@ void DrEngineWorld::updateWorld(double time_passed) {
 
 
 
+//####################################################################################
+//##    Updates Kinematic Angular Velocity
+//####################################################################################
+extern void KinematicUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt) {
+    // Grab object from User Data
+    DrEngineObject *object = static_cast<DrEngineObject*>(cpBodyGetUserData(body));
+
+    // Figure out new velocity based on current object angle
+    if (object->getUseAngleVelocity()) {
+        double  angle = qRadiansToDegrees( cpBodyGetAngle(body) );
+        QPointF original = QPointF( object->getOriginalVelocityX(), object->getOriginalVelocityY() );
+        QPointF rotated = QTransform().rotate(angle).map(original);
+        cpBodySetVelocity( body, cpv(rotated.x(), rotated.y()) );
+    }
+
+    // Call real update function
+    cpBodyUpdateVelocity(body, gravity, damping, dt);
+}
+
 
 
 

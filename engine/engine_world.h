@@ -68,12 +68,6 @@ private:
     EngineCameraMap     m_cameras;                  // Map of Cameras used for this Engine
 
 
-    // Camera Variables
-    long            m_active_camera = 0;            // Key to active camera in the Engine, 0 == No Camera
-    bool            m_switching_cameras = false;    // True when we want to start tweening towards a new camera
-    QVector3D       m_temp_position;                // Used for tweening between cameras
-
-
     // Chipmunk Physics Space
     cpSpace        *m_space = nullptr;              // Current physics space shown on screen
                                                     //
@@ -93,6 +87,12 @@ private:
     cpFloat         m_bounce;                       // Default object Elasticity, can be overridden on a per body basis
                                                     //      0 = no bounce, 1.0 will give a “perfect” bounce.
                                                     //      Due to inaccuracies in the simulation using 1.0 or greater is not recommended
+
+    // Camera Variables
+    long            m_active_camera = 0;            // Key to active camera in the Engine, 0 == No Camera
+    bool            m_switching_cameras = false;    // True when we want to start tweening towards a new camera
+    QVector3D       m_temp_position;                // Used for tweening between cameras
+
 
     // Scene Variables
     double          m_delete_threshold_x = 5000;    // X distance away from camera an object can be before it's removed from the scene
@@ -142,16 +142,16 @@ public:
 
 
     // Space Construction / Handling
-    DrEngineObject* addLine(  Body_Type body_type,  QPointF p1, QPointF p2, double friction, double bounce, double mass);
-    DrEngineObject* addCircle(Body_Type body_type,  long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
-                              double shape_radius, QPointF shape_offset, double friction, double bounce, QPointF velocity,
-                              bool should_collide = true, bool can_rotate = true);
-    DrEngineObject* addBlock( Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
-                              double friction, double bounce, QPointF velocity,
-                              bool should_collide = true, bool can_rotate = true);
-    DrEngineObject* addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
-                               QVector<QPointF> points, double friction, double bounce, QPointF velocity,
-                               bool should_collide = true, bool can_rotate = true);
+//    DrEngineObject* addLine(  Body_Type body_type,  QPointF p1, QPointF p2, double friction, double bounce, double mass);
+//    DrEngineObject* addCircle(Body_Type body_type,  long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
+//                              double shape_radius, QPointF shape_offset, double friction, double bounce, QPointF velocity,
+//                              bool should_collide = true, bool can_rotate = true);
+//    DrEngineObject* addBlock( Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
+//                              double friction, double bounce, QPointF velocity,
+//                              bool should_collide = true, bool can_rotate = true);
+//    DrEngineObject* addPolygon(Body_Type body_type, long texture_number, double x, double y, double z, double angle, QPointF scale, float opacity,
+//                               QVector<QPointF> points, double friction, double bounce, QPointF velocity,
+//                               bool should_collide = true, bool can_rotate = true);
 
     void            addPlayer(Demo_Player new_player_type);
     void            assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera);

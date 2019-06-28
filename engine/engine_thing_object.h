@@ -62,8 +62,6 @@ public:
     QVector<cpShape*>   shapes;                 // Collision Shapes of object
     ShapeMap            shape_type;             // Shape Types of Shapes of Object
 
-    int custom = 0;
-
 private:
     // ***** Object Component Properties
     //      To be set for each object as desired
@@ -179,8 +177,8 @@ public:
 public:
     // Constructor / Destructor
     DrEngineObject(DrEngineWorld *world, long unique_key);
-    DrEngineObject(DrEngineWorld *world, long unique_key, Body_Type body_type, long texture_number,
-                   double x, double y, double z, QPointF scale = c_scale1x1, double friction = c_friction, double bounce = c_bounce,
+    DrEngineObject(DrEngineWorld *world, long unique_key, Body_Type body_type, long texture_number = 0,
+                   double x = 0, double y = 0, double z = 0, QPointF scale = c_scale1x1, double friction = c_friction, double bounce = c_bounce,
                    bool should_collide = true, bool can_rotate = true, double angle = c_norotate, float opacity = c_opaque);
     virtual ~DrEngineObject() override;
 
@@ -193,8 +191,9 @@ public:
     void    addShapeBox(double width, double height);
     void    addShapeBoxFromTexture(long texture_number);
     void    addShapeCircle(double circle_radius, QPointF shape_offset);
+    void    addShapeCircleFromTexture(long texture_number);
     void    addShapePolygon(QVector<QPointF> &points);
-    void    addShapeSegment(QPointF p1, QPointF p2, double padding);
+    void    addShapeSegment(QPointF p1, QPointF p2, double padding = 2.0);
     void    applyShapeSettings(cpShape *shape, double area, Shape_Type shape_type);
 
 

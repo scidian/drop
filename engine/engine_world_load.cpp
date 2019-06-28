@@ -48,14 +48,10 @@ void DrEngineWorld::loadStageToSpace(DrStage *stage, double offset_x, double off
         }
 
         // ***** Add the block to the cpSpace
-///        DrEngineObject *block = new DrEngineObject(this, getNextKey(), body_type, asset_key, position.x() + offset_x, -position.y() + offset_y, z_order,
-///                                                   scale, c_friction, c_bounce, collide, true, angle, alpha);
-        ///block->addShapeBoxFromTexture(asset_key);
-        ///addThing(block);
-        DrEngineObject *block =     addBlock(body_type, asset_key, position.x() + offset_x, -position.y() + offset_y, z_order,
-                                                     angle, scale, alpha, c_friction, c_bounce, QPointF(0, 0), collide);
-
-
+        DrEngineObject *block = new DrEngineObject(this, getNextKey(), body_type, asset_key, position.x() + offset_x, -position.y() + offset_y, z_order,
+                                                   scale, c_friction, c_bounce, collide, true, angle, alpha);
+        block->addShapeBoxFromTexture(asset_key);
+        addThing(block);
 
         // ***** Set collision type
         Collision_Type collision_type = Collision_Type::Damage_None;

@@ -102,14 +102,12 @@ SOURCES += \
     engine/engine_thing_object.cpp \
     engine/engine_thing_object_create.cpp \
     engine/engine_world.cpp \
-    engine/engine_world_add_object.cpp \
     engine/engine_world_build_player.cpp \
     engine/engine_world_build_world.cpp \
     engine/engine_world_clear.cpp \
     engine/engine_world_collision.cpp \
     engine/engine_world_load.cpp \
     engine/engine_world_update.cpp \
-    engine/engine_world_update_object.cpp \
     engine/engine_world_update_player.cpp \
     engine/form_engine.cpp \
     enums.cpp \
