@@ -28,6 +28,7 @@ enum class Orientation {
 
 // Forward declarations
 class DrAsset;
+class DrEffect;
 class DrFont;
 class DrImage;
 class DrWorld;
@@ -35,10 +36,11 @@ class DrStage;
 class DrThing;
 
 // Type definitions
-typedef std::map<long, DrWorld*> WorldMap;
-typedef std::map<long, DrFont*>  FontMap;
-typedef std::map<long, DrAsset*> AssetMap;
-typedef std::map<long, DrImage*> ImageMap;
+typedef std::map<long, DrWorld*>  WorldMap;
+typedef std::map<long, DrAsset*>  AssetMap;
+typedef std::map<long, DrEffect*> EffectMap;
+typedef std::map<long, DrFont*>   FontMap;
+typedef std::map<long, DrImage*>  ImageMap;
 typedef std::map<Project_Options, QVariant>  OptionMap;
 
 // Constants
@@ -62,6 +64,7 @@ private:
     //
     WorldMap    m_worlds;                               // Holds worlds for the project
     AssetMap    m_assets;                               // Holds assets for the project
+    EffectMap   m_effects;                              // Holds effects for the project
     FontMap     m_fonts;                                // Holds custom fonts for the project
     ImageMap    m_images;                               // Holds images for the project
 
@@ -87,6 +90,8 @@ public:
     AssetMap&   getAssetMap()           { return m_assets; }
     long        getNumberOfAssets()     { return static_cast<long>(m_assets.size()); }
 
+    DrEffect*   getDrEffect(long key)   { return m_effects[key]; }
+    EffectMap&  getDrEffectMap()        { return m_effects; }
     DrFont*     getDrFont(long key)     { return m_fonts[key]; }
     FontMap&    getDrFontMap()          { return m_fonts; }
     DrImage*    getDrImage(long key)    { return m_images[key]; }
@@ -112,6 +117,7 @@ public:
     // Children Creation Calls
     void            addWorld();
     long            addAsset(DrAssetType new_asset_type, long image_key);
+    long            addEffect(QString effect_name, DrEffectType effect_type);
     long            addFont( QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects = false);
     long            addImage(QString image_path);
 

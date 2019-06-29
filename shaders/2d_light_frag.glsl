@@ -23,7 +23,10 @@ uniform lowp float  u_intensity;                    // Intensity                
 uniform lowp float  u_blur;                         // Blur                             0.0 to 100.0
 uniform bool        u_draw_shadows;                 // Draw shadows                     true or false
 
-const float         PI = 3.14159;
+const float         PI =  3.1415926;
+const float         RAD = 6.2831853;                // 2.0 * PI is 360 degrees in radians
+const float         DEG = 0.0174533;                // One Degree in Radians is 0.0174533
+
 
 // Sample from the 1D Distance (Shadow) Map
 float sample(vec2 coord, float r) {
@@ -31,37 +34,56 @@ float sample(vec2 coord, float r) {
 }
 
 void main(void) {
-    //shrink_multiplier = static_cast<float>( qSqrt(double(light->getLightDiameter()) / double(light->getLightDiameterFitted())) );
-    //m_light_shader.setUniformValue( m_uniform_light_resolution, light->getLightDiameter(), shrink_multiplier);
 
     // Rectangular to Polar
     vec2  norm =        coordinates.st * 2.0 - 1.0;
     float theta =       atan(norm.y, norm.x);
     float r =           length(norm);
-    float coord =       (theta + PI) / (2.0 * PI);
+    float coord =       (theta + PI) / RAD;
 
     float shrink =      u_light_diameter / u_light_fitted;
-    float intensity =   sqrt(u_intensity);
     float blur =        u_blur + 0.001;
     float opacity =     u_alpha;
 
+
+    // Adjust our 0 to 100 range for intensity to better range (0 to 50 becomes 0 to 1, 50 to 100 becomes 1 to 10
+    float intensity;
+    if (u_intensity >= 50.0) {
+        intensity = (u_intensity - 40.0) / 10.0;
+    } else {
+        intensity = u_intensity / 50.0;
+    }
+
+
     // Check that pixel is within allowed light cone
-    if (theta < 0.0) theta += (2.0 * PI);                       // Add 360 degrees in radians if theta is less than zero
-    if (u_cone.x > u_cone.y) {                                  // #NOTE: 1 Degree in Radians is 0.0174533
+    if (theta < 0.0) theta += RAD;                              // Add 360 degrees in radians if theta is less than zero
+    if (u_cone.x > u_cone.y) {
         if (theta < u_cone.x && theta > u_cone.y) {
-            float diff_x = smoothstep(0.0, 1.0, ((u_cone.x - theta) / 0.0174533) * (1.0 / blur));
-            float diff_y = smoothstep(0.0, 1.0, ((theta - u_cone.y) / 0.0174533) * (1.0 / blur));
+            float diff_x = smoothstep(0.0, 1.0, ((u_cone.x - theta) / DEG) * (1.0/blur));
+            float diff_y = smoothstep(0.0, 1.0, ((theta - u_cone.y) / DEG) * (1.0/blur));
             opacity -= min(diff_x, diff_y);
             if (opacity <= 0.01) return;
         }
     } else {
         if (theta < u_cone.x || theta > u_cone.y) {
-            float diff_x = smoothstep(0.0, 1.0, ((u_cone.x - theta) / 0.0174533) * (1.0 / blur));
-            float diff_y = smoothstep(0.0, 1.0, ((theta - u_cone.y) / 0.0174533) * (1.0 / blur));
-            opacity -= max(diff_x, diff_y);
+            float diff_x = 0.0;
+            float diff_y = 0.0;
+            if (theta > u_cone.y) {
+                diff_x = smoothstep(0.0, 1.0, ((u_cone.x + RAD - theta) / DEG) * (1.0/blur));
+                diff_y = smoothstep(0.0, 1.0, ((theta - u_cone.y)       / DEG) * (1.0/blur));
+            } else if (theta < u_cone.x) {
+                diff_x = smoothstep(0.0, 1.0, ((u_cone.x - theta)       / DEG) * (1.0/blur));
+                diff_y = smoothstep(0.0, 1.0, ((theta + RAD - u_cone.y) / DEG) * (1.0/blur));
+            }
+            opacity -= min(diff_x, diff_y);
             if (opacity <= 0.01) return;
         }
     }
+
+
+    // Multiply the sum by our distance, which gives us a radial falloff
+    float amount = intensity * smoothstep(1.0, 0.0, r * shrink);
+
 
     float sum = 0.0;
     if (u_draw_shadows) {
@@ -72,7 +94,7 @@ void main(void) {
         float center = sample(tc, r);
 
         // We multiply the blur amount by our distance from center, this leads to more blurriness as the shadow "fades away"
-        float blur = (1.0 / u_light_diameter) * smoothstep(0.0, 1.0, r * shrink) * (blur * 0.1);
+        float blur = (1.0 / u_light_diameter) * smoothstep(0.0, 1.0, r * shrink) * (blur * 0.05);       // The 0.05 reduces our blur down, could be adjusted
 
         // Now we use a simple gaussian blur, sum of 1.0 == in light, 0.0 == in shadow
         sum += sample(vec2(tc.x - 4.0 * blur, tc.y), r) * 0.05;
@@ -85,23 +107,17 @@ void main(void) {
         sum += sample(vec2(tc.x + 3.0 * blur, tc.y), r) * 0.09;
         sum += sample(vec2(tc.x + 4.0 * blur, tc.y), r) * 0.05;
 
-        // Increase intensity, reduce shadows
-        sum *= intensity;
-        float reduce_shadows = u_light_shadows * 2.0;
-        sum = (sum + reduce_shadows) / (1.0 + reduce_shadows);
+        // At this point sum is less than or equal to 1.0
+        sum *= amount;
 
-        // If we need to reduce intensity
-        if (intensity < 1.0) sum *= intensity;
-    } else {
-        sum = 1.0 * intensity;
+        float shade = (amount - sum) * (u_light_shadows / 100.0);
+        amount -= shade;
     }
-
-    // Multiply the sum by our distance, which gives us a radial falloff
-    float amount = sum * smoothstep(1.0, 0.0, r * shrink);
 
     // Multiply by light color
     gl_FragColor = vec4(u_color, opacity) * vec4(amount, amount, amount, amount);
 }
+
 
 
 

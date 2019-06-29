@@ -24,8 +24,7 @@ typedef Clock::time_point DrTime;
 namespace Dr {
 
 // Comparison Template Function, Returns number_to_check fit to within the bounds of min / max
-template<class T>
-const T& Clamp(const T& number_to_check, const T& min, const T& max) {
+template<class T> T Clamp(const T& number_to_check, const T& min, const T& max) {
     if      (number_to_check < min) return min;
     else if (number_to_check > max) return max;
     else                            return number_to_check;
@@ -35,10 +34,13 @@ const T& Clamp(const T& number_to_check, const T& min, const T& max) {
 template<class T> int EnumToInt(const T& enum_to_convert) { return static_cast<int>(enum_to_convert); }
 
 // Return the Max of two values
-template<class T> const T& Max(const T& a, const T& b) { return (a > b) ? a : b; }
+template<class T> T Max(const T& a, const T& b) { return (a > b) ? a : b; }
 
 // Return the Min of two values
-template<class T> const T& Min(const T& a, const T& b) { return (a < b) ? a : b; }
+template<class T> T Min(const T& a, const T& b) { return (a < b) ? a : b; }
+
+// Linear Interpolation between two values
+template<class T> T Lerp(const T& f1, const T& f2, const T& t) { return (f1 * (static_cast<T>(1.0) - t)) + (f2 * t); }
 
 
 // Time Functions

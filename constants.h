@@ -49,7 +49,7 @@ namespace Component_Icons {
     const QString Settings      { QString(":/assets/inspector_icons/comp_settings.png") };
     const QString Character     { QString(":/assets/inspector_icons/comp_character.png") };
     const QString Object        { QString(":/assets/inspector_icons/comp_object.png") };
-    const QString Light         { QString(":/assets/inspector_icons/comp_effects.png") };
+    const QString Light         { QString(":/assets/inspector_icons/comp_light.png") };
     const QString Font          { QString(":/assets/inspector_icons/comp_font.png") };
     const QString Camera        { QString(":/assets/inspector_icons/comp_camera.png") };
 

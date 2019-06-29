@@ -11,6 +11,7 @@
 #include "helper.h"
 #include "project.h"
 #include "project_asset.h"
+#include "project_effect.h"
 #include "project_font.h"
 #include "project_image.h"
 #include "project_world.h"
@@ -44,6 +45,12 @@ long DrProject::addAsset(DrAssetType new_asset_type, long image_key) {
     long new_asset_key = getNextKey();
     m_assets[new_asset_key] = new DrAsset(this, new_asset_key, new_asset_type, image_key);
     return new_asset_key;
+}
+
+long DrProject::addEffect(QString effect_name, DrEffectType effect_type) {
+    long new_effect_key = getNextKey();
+    m_effects[new_effect_key] = new DrEffect(this, new_effect_key, effect_name, effect_type);
+    return new_effect_key;
 }
 
 long DrProject::addFont(QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects) {

@@ -151,6 +151,7 @@ SOURCES += \
     playground/playground_update.cpp \
     project/project.cpp \
     project/project_asset.cpp \
+    project/project_effect.cpp \
     project/project_font.cpp \
     project/project_image.cpp \
     project/project_world.cpp \
@@ -237,6 +238,7 @@ HEADERS += \
     playground/playground_toy.h \
     project/project.h \
     project/project_asset.h \
+    project/project_effect.h \
     project/project_font.h \
     project/project_image.h \
     project/project_world.h \

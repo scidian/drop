@@ -23,7 +23,7 @@ enum class Property_Type {
 
     Double,                 // double       any floating point number
     PositiveDouble,         // double       any floating point number >= 0.0
-    Percent,                // double       floating point from 0.0 to 100.0
+    Percent,                // double       floating point from 0.0 to 100.0, shows percent symbol
     Angle,                  // double       floating point for showing degrees, shows degree symbol in spinbox
     String,                 // QString
 
@@ -176,6 +176,14 @@ enum class Properties {
 
     // Text Settings
     Thing_Light_Color,              //color
+    Thing_Light_Cone_Start,         //filter angle      0 to 360
+    Thing_Light_Cone_End,           //filter angle      0 to 360
+    Thing_Light_Intensity,          //0 to 100
+    Thing_Light_Blur,               //0 to 100
+    Thing_Light_Draw_Shadows,       //bool
+    Thing_Light_Shadows,            //0 to 100
+    Thing_Light_Pulse,              //float
+    Thing_Light_Pulse_Speed,        //float
 
     // Text Settings
     Thing_Text_User_Text,           //string

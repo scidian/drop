@@ -22,6 +22,7 @@
 #include "helper.h"
 #include "project/project.h"
 #include "project/project_asset.h"
+#include "project/project_effect.h"
 #include "project/project_font.h"
 #include "settings/settings.h"
 #include "settings/settings_component_property.h"
@@ -147,6 +148,9 @@ void DrFilterAssetMouseHandler::startDragAndDrop(QLabel *label_pixmap, long asse
         case DrAssetType::Object:
         case DrAssetType::Character:
             pixmap = asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
+            break;
+        case DrAssetType::Effect:
+            pixmap = m_editor_relay->currentProject()->getDrEffect( asset->getSourceKey() )->getPixmap();
             break;
         case DrAssetType::Text:
             //text =   asset->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();

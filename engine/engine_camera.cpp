@@ -15,16 +15,12 @@
 #include "opengl/opengl.h"
 
 //####################################################################################
-//##    Clamps and Flerps
+//##    Lerps an X,Y,Z triplet
 //####################################################################################
-// Linearly interpolate (or extrapolate) between f1 and f2 by t percent
-static inline float  Drflerp(float f1, float f2, float t) { return f1*(1.0f - t) + f2*t; }
-static inline double Drdlerp(double f1, double f2, double t) { return f1*(1.0 - t) + f2*t; }
-
 static inline void SmoothMove(QVector3D& start, const QVector3D &target, const float& lerp, const float& milliseconds) {
-    start.setX( Drflerp( start.x(), target.x(), lerp * milliseconds) );
-    start.setY( Drflerp( start.y(), target.y(), lerp * milliseconds) );
-    start.setZ( Drflerp( start.z(), target.z(), lerp * milliseconds) );
+    start.setX( Dr::Lerp( start.x(), target.x(), lerp * milliseconds) );
+    start.setY( Dr::Lerp( start.y(), target.y(), lerp * milliseconds) );
+    start.setZ( Dr::Lerp( start.z(), target.z(), lerp * milliseconds) );
 }
 
 ///static inline void smoothMoveMaxSpeed(QVector3D& start, const QVector3D &target, const float& max) {
@@ -147,9 +143,9 @@ DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, f
 //####################################################################################
 void DrEngineCamera::moveCamera(const double& milliseconds) {
     double lerp = 0.01 * milliseconds;
-    m_position.setX( static_cast<float>(Drdlerp( static_cast<double>(m_position.x()), static_cast<double>(m_target.x()), lerp)) );
-    m_position.setY( static_cast<float>(Drdlerp( static_cast<double>(m_position.y()), static_cast<double>(m_target.y()), lerp)) );
-    m_position.setZ( static_cast<float>(Drdlerp( static_cast<double>(m_position.z()), static_cast<double>(m_target.z()), lerp)) );
+    m_position.setX( static_cast<float>( Dr::Lerp( static_cast<double>(m_position.x()), static_cast<double>(m_target.x()), lerp)) );
+    m_position.setY( static_cast<float>( Dr::Lerp( static_cast<double>(m_position.y()), static_cast<double>(m_target.y()), lerp)) );
+    m_position.setZ( static_cast<float>( Dr::Lerp( static_cast<double>(m_position.z()), static_cast<double>(m_target.z()), lerp)) );
     ///m_position.setX( m_target.x() );
     ///m_position.setY( m_target.y() );
 }

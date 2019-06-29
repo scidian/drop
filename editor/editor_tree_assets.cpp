@@ -21,6 +21,7 @@
 #include "helper.h"
 #include "project/project.h"
 #include "project/project_asset.h"
+#include "project/project_effect.h"
 #include "project/project_font.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"
@@ -111,7 +112,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
         switch (item_pair.first) {
             case DrAssetType::Character: c = createCategoryButton(item_pair.second, "  Characters", "tree_character.png", Advisor_Info::Asset_Character);   break;
             case DrAssetType::Object:    c = createCategoryButton(item_pair.second, "  Objects",    "tree_object.png",    Advisor_Info::Asset_Object);      break;
-            case DrAssetType::Effect:    c = createCategoryButton(item_pair.second, "  Effects",    "tree_light.png",     Advisor_Info::Asset_Effect);      break;
+            case DrAssetType::Effect:    c = createCategoryButton(item_pair.second, "  Effects",    "tree_effects.png",   Advisor_Info::Asset_Effect);      break;
             case DrAssetType::Text:      c = createCategoryButton(item_pair.second, "  Text",       "tree_text.png",      Advisor_Info::Asset_Text);        break;
         }
         category_buttons[item_pair.first] = c;
@@ -166,18 +167,22 @@ void TreeAssets::buildAssetTree(QString search_text) {
         vertical_split->setContentsMargins(0, 14, 0, 0);                    // Put some space at the top
             QPixmap pix;
             switch (asset_pair.second->getAssetType()) {
+                case DrAssetType::Character:
+                    pix = asset_pair.second->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
+                    m_filter_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Character[1] );
+                    break;
                 case DrAssetType::Object:
                     pix = asset_pair.second->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
                     m_filter_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Object[1] );
+                    break;
+                case DrAssetType::Effect:
+                    pix = m_project->getDrEffect( asset_pair.second->getSourceKey() )->getPixmap();
+                    m_filter_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Effect[1] );
                     break;
                 case DrAssetType::Text:
                     ///pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->getFontPixmap();
                     pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->createText( "Aa" );
                     m_filter_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Text[1] );
-                    break;
-                case DrAssetType::Character:
-                    pix = asset_pair.second->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
-                    m_filter_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Character[1] );
                     break;
             }
 
@@ -230,7 +235,10 @@ void TreeAssets::addAssetsToCategory(QTreeWidgetItem *tree_item, QFrame *asset_f
 
 // Create and style a buttons to be used as a header items for the categories
 DrQPushButtonCategory* TreeAssets::createCategoryButton(QTreeWidgetItem *item, QString name, QString icon_resource, QList<QString> advisor_info) {
-    QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 14px 14px; "
+    QString icon_size = "14px 14px";
+    if (name.toLower().contains("effects")) icon_size = "20px 18px";
+
+    QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: " + icon_size + "; "
                                                 " padding-left: 10px;"
                                                 " color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
                                                 " border: none; "

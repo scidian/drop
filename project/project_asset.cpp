@@ -6,8 +6,10 @@
 //
 //
 #include "helper.h"
+#include "image_filter_color.h"
 #include "project.h"
 #include "project_asset.h"
+#include "project_effect.h"
 #include "project_font.h"
 #include "project_image.h"
 #include "project_world.h"
@@ -33,18 +35,27 @@ DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_
 
     QPixmap my_starting_pixmap;
     switch (new_asset_type) {
+        case DrAssetType::Character:
+            my_starting_pixmap = m_parent_project->getDrImage(source_key)->getPixmapFromImage();
+            initializeAssetSettingsCharacter(m_parent_project->getDrImage(source_key)->getSimplifiedName(), my_starting_pixmap );
+            break;
         case DrAssetType::Object:
             my_starting_pixmap = m_parent_project->getDrImage(source_key)->getPixmapFromImage();
             initializeAssetSettingsObject(m_parent_project->getDrImage(source_key)->getSimplifiedName(), my_starting_pixmap );
+            break;
+        case DrAssetType::Effect:
+            switch (m_parent_project->getDrEffect(source_key)->getEffectType()) {
+                case DrEffectType::Light:
+                    my_starting_pixmap = m_parent_project->getDrEffect(source_key)->getPixmap();
+                    initializeAssetSettingsEffect("Light");
+                    break;
+            }
             break;
         case DrAssetType::Text:
             my_starting_pixmap = m_parent_project->getDrFont(source_key)->getPixmap();
             initializeAssetSettingsFont(m_parent_project->getDrFont(source_key));
             break;
-        case DrAssetType::Character:
-            my_starting_pixmap = m_parent_project->getDrImage(source_key)->getPixmapFromImage();
-            initializeAssetSettingsCharacter(m_parent_project->getDrImage(source_key)->getSimplifiedName(), my_starting_pixmap );
-            break;
+
     }
 
     m_width =  my_starting_pixmap.width();
@@ -91,6 +102,13 @@ void DrAsset::initializeAssetSettingsObject(QString new_name, QPixmap pixmap) {
     getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
     addPropertyToComponent(Components::Asset_Animation, Properties::Asset_Animation_Default, Property_Type::Image, QVariant(pixmap),
                            "Default Animation", "Image shown for this Asset.");
+}
+
+void DrAsset::initializeAssetSettingsEffect(QString new_name) {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
+                           "Asset Name", "Name of the current Asset.", false, false);
 }
 
 

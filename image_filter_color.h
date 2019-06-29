@@ -40,6 +40,9 @@ namespace DrImaging {
     QPixmap changePixelation(const QPixmap& pixmap, QPointF pixelation);
 
     QPixmap changeOpacity(const QPixmap& pixmap, int opacity);
+
+    QPixmap drawLight(QColor color, int diameter, float cone_start, float cone_end, float intensity, float blur);
+
 }
 
 #endif // IMAGE_FILTER_COLOR_H

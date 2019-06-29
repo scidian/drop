@@ -68,6 +68,9 @@ enum class DrThingType {
     //Particle,
 };
 
+enum class DrEffectType {
+    Light,
+};
 
 
 //####################################################################################

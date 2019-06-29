@@ -9,8 +9,10 @@
 #include "editor_scene.h"
 #include "enums_engine.h"
 #include "helper.h"
+#include "image_filter_color.h"
 #include "project/project.h"
 #include "project/project_asset.h"
+#include "project/project_effect.h"
 #include "project/project_font.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"
@@ -77,6 +79,8 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
 
         Body_Type type;
         bool pretest, test;
+        QColor c;
+        float f1, f2, f3, f4;
         switch (property) {
             case Properties::Thing_Object_Physics_Type:
                 pretest = thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Velocity_X)->isEditable();
@@ -151,6 +155,21 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
             case Properties::Thing_Filter_Negative:
             case Properties::Thing_Filter_Pixelation:
                 item->applyFilters();
+                break;
+
+            case Properties::Thing_Light_Color:
+            case Properties::Thing_Light_Cone_Start:
+            case Properties::Thing_Light_Cone_End:
+            case Properties::Thing_Light_Intensity:
+            case Properties::Thing_Light_Blur:
+                c =  QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Color).toUInt());
+                f1 = item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start).toFloat();
+                f2 = item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toFloat();
+                f3 = item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity).toFloat();
+                f4 = item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Blur).toFloat();
+                item->setPixmap( DrImaging::drawLight( c, 400, f1, f2, f3, f4 ) );
+                item->setAssetWidth(  item->pixmap().width() );
+                item->setAssetHeight( item->pixmap().height() );
                 break;
 
             case Properties::Thing_Text_User_Text:

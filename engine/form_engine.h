@@ -62,7 +62,7 @@ private:
 public:
     // Widgets
     QWidget        *centralWidget;
-    QToolButton    *pushSpawn,      *pushCar,       *pushJump,      *pushPlay1, *pushPlay2;
+    QToolButton    *pushSpawn,      *pushCar,       *pushJump,      *pushCamera;
     QToolButton    *pushLine1,      *pushLine2,     *pushBlocks,    *pushProject;
     QToolButton    *pushStart,      *pushStop,      *pushClose;
     QToolButton    *pushPersp,      *pushOrtho;
@@ -117,8 +117,7 @@ private slots:
     void on_pushSpawn_clicked();
     void on_pushCar_clicked();
     void on_pushJump_clicked();
-    void on_pushPlay1_clicked();
-    void on_pushPlay2_clicked();
+    void on_pushCamera_clicked();
 
     void on_pushLines1_clicked();
     void on_pushLines2_clicked();

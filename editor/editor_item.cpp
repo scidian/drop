@@ -15,6 +15,7 @@
 #include "helper.h"
 #include "project/project.h"
 #include "project/project_asset.h"
+#include "project/project_effect.h"
 #include "project/project_font.h"
 #include "project/project_world_stage.h"
 #include "project/project_world_stage_thing.h"
@@ -46,6 +47,21 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
             applyFilters();                                 // Apply filters and set pixmap
             m_asset_width =  m_asset->getWidth();           // Dimensions of associated asset, used for boundingRect
             m_asset_height = m_asset->getHeight();
+            break;
+        case DrAssetType::Effect:
+            switch (m_editor_relay->currentProject()->getDrEffect( m_asset->getSourceKey() )->getEffectType()) {
+                case DrEffectType::Light:
+                    uint light_color =  m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Color)->getValue().toUInt();
+                    float cone_start =  m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start)->getValue().toFloat();
+                    float cone_end =    m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End)->getValue().toFloat();
+                    float intensity =   m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity)->getValue().toFloat();
+                    float blur =        m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Blur)->getValue().toFloat();
+                    m_pixmap = DrImaging::drawLight( QColor::fromRgba( light_color ), 400, cone_start, cone_end, intensity, blur);
+                    break;
+            }
+            setPixmap(m_pixmap);
+            m_asset_width =  m_pixmap.width();
+            m_asset_height = m_pixmap.height();
             break;
         case DrAssetType::Text:
             text =     m_thing->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();

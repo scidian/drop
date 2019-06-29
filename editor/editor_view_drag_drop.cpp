@@ -16,6 +16,7 @@
 #include "interface_editor_relay.h"
 #include "project/project.h"
 #include "project/project_asset.h"
+#include "project/project_effect.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"
 #include "project/project_world_stage_thing.h"
@@ -87,22 +88,30 @@ void DrView::dropEvent(QDropEvent *event) {
         // Create new Thing from drop data
         long      asset_key = variant_key.toInt();
         DrAsset  *asset =     m_editor_relay->currentProject()->getAsset(asset_key);
+        DrEffect *effect;
         DrThing  *thing;
         switch (asset->getAssetType()) {
-            case DrAssetType::Object:
-                thing = stage->addThing(DrThingType::Object,    asset_key, position.x(), -position.y(), 0);         // FIX: z order
-                my_scene->addItemToSceneFromThing( thing );
-                break;
-
-            case DrAssetType::Text:
-                thing = stage->addThing(DrThingType::Text,      asset_key, position.x(), -position.y(), 0);         // FIX: z order
-                my_scene->addItemToSceneFromThing( thing );
-                break;
-
             case DrAssetType::Character:
                 thing = stage->addThing(DrThingType::Character, asset_key, position.x(), -position.y(), 0);         // FIX: z order
                 my_scene->addItemToSceneFromThing( thing );
                 break;
+            case DrAssetType::Object:
+                thing = stage->addThing(DrThingType::Object,    asset_key, position.x(), -position.y(), 0);         // FIX: z order
+                my_scene->addItemToSceneFromThing( thing );
+                break;
+            case DrAssetType::Effect:
+                effect = m_project->getDrEffect( asset->getSourceKey() );
+                switch (effect->getEffectType()) {
+                    case DrEffectType::Light:
+                        thing = stage->addThing(DrThingType::Light, asset_key, position.x(), -position.y(), 0);     // FIX: z order
+                        my_scene->addItemToSceneFromThing( thing );
+                        break;
+                }
+                break;
+            case DrAssetType::Text:
+                thing = stage->addThing(DrThingType::Text,      asset_key, position.x(), -position.y(), 0);         // FIX: z order
+                my_scene->addItemToSceneFromThing( thing );
+                break;    
         }
 
         event->acceptProposedAction();

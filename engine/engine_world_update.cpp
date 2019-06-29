@@ -91,7 +91,7 @@ void DrEngineWorld::updateWorld(double time_passed) {
         int stage_num = QRandomGenerator::global()->bounded(0, stage_count);
         DrStage *stage = stages[stage_num];
 
-        loadStageToSpace( stage, m_loaded_to, 0);
+        loadStageToWorld( stage, m_loaded_to, 0);
     }
 }
 

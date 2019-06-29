@@ -119,5 +119,7 @@
         <file>assets/inspector_icons/comp_settings.png</file>
         <file>assets/inspector_icons/comp_object.png</file>
         <file>assets/inspector_icons/comp_effects.png</file>
+        <file>assets/tree_icons/tree_effects.png</file>
+        <file>assets/inspector_icons/comp_light.png</file>
     </qresource>
 </RCC>

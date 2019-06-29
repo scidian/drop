@@ -51,9 +51,11 @@ public:
     long            getSourceKey()      { return m_source_key; }
 
     // Function Calls
-    void        initializeAssetSettingsObject(QString new_name, QPixmap pixmap);
-    void        initializeAssetSettingsFont(DrFont *font);
     void        initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap);
+    void        initializeAssetSettingsObject(QString new_name, QPixmap pixmap);
+    void        initializeAssetSettingsEffect(QString new_name);
+    void        initializeAssetSettingsFont(DrFont *font);
+
 
 };
 
