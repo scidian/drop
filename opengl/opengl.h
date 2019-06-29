@@ -184,7 +184,7 @@ public:
     QMatrix4x4      occluderMatrix();
     void            setShaderDefaultValues(float texture_width, float texture_height);
     void            setNumberTextureCoordinates(QString letter, std::vector<float> &texture_coordinates);
-    void            setVertexFromSides(QVector<GLfloat> &vertices, float left, float right, float top, float bottom);
+    void            setVertexFromSides(QVector<GLfloat> &vertices, float left, float right, float top, float bottom, float z);
     void            setWholeTextureCoordinates(std::vector<float> &texture_coords);
 
     // Soft Shadows

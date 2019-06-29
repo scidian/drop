@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 4/9/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//
+//      Very Important File! Updates Items in the GraphicsScene based on changes elsewhere
 //
 //
 #include "editor_item.h"
@@ -10,6 +10,7 @@
 #include "enums_engine.h"
 #include "helper.h"
 #include "image_filter_color.h"
+#include "globals.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_effect.h"
@@ -110,7 +111,19 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
             case Properties::Thing_Scale:
             case Properties::Thing_Rotation:
 
-                // If property that changed was size, calculate the proper scale based on size
+                // ***** Keep Thing Square: Size / scale change override for Things that need to be square (light, etc)
+                //       Search keywords: "keep square", "locked", "same size"
+                pretest = false;
+                if (thing->getThingType() == DrThingType::Light) {
+                    if (property == Properties::Thing_Size) {
+                        if (Dr::IsCloseTo(scale.y(), size.y() / item->getAssetHeight(), 0.001)) size.setY(size.x());    else size.setX(size.y());
+                    } else {
+                        if (Dr::IsCloseTo(size.y(), scale.y() * item->getAssetHeight(), 0.001)) scale.setY(scale.x());  else scale.setX(scale.y());
+                    }
+                    pretest = true;
+                }
+
+                // ***** If property that changed was size, calculate the proper scale based on size
                 if (property == Properties::Thing_Size) {
                         scale.setX( size.x() / item->getAssetWidth()  );
                         scale.setY( size.y() / item->getAssetHeight() );
@@ -120,8 +133,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
                         size.setY(  scale.y() * item->getAssetHeight() );
                 }
 
-                // Store the item transform data, one of which will have been new. Then recalculate the transform and move the object
-
+                // ***** Store the item transform data, one of which will have been new. Then recalculate the transform and move the object
                 item->setData(User_Roles::Scale, scale );
                 item->setData(User_Roles::Rotation, angle );
                 transform_scale_x = Dr::CheckScaleNotZero(scale.x());
@@ -130,12 +142,12 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
                 item->setTransform(transform);
                 setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
 
-                // If size or scale was changed, update the other and update the widgets in the Inspector
-                if (property == Properties::Thing_Size) {
+                // ***** If size or scale was changed, update the other and update the widgets in the Inspector
+                if (property == Properties::Thing_Size || pretest) {
                     thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale, scale);
                     m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { thing } , { Properties::Thing_Scale });
                 }
-                if (property == Properties::Thing_Scale) {
+                if (property == Properties::Thing_Scale || pretest) {
                     thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size, size);
                     m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { thing } , { Properties::Thing_Size });
                 }

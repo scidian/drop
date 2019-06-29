@@ -156,16 +156,35 @@ void DrOpenGL::drawSpace() {
 //##        Renders All Scene Objects to an occluder map
 //####################################################################################
 QMatrix4x4 DrOpenGL::occluderMatrix() {
-    QMatrix4x4 matrix;
+    float aspect_ratio = static_cast<float>(m_occluder_fbo->width()) / static_cast<float>(m_occluder_fbo->height());
+
+    // Set camera position
+    QVector3D  eye(     m_engine->getCurrentWorld()->getCameraPos().x() * m_scale,
+                        m_engine->getCurrentWorld()->getCameraPos().y() * m_scale,
+                        m_engine->getCurrentWorld()->getCameraPos().z() );
+    QVector3D  look_at( m_engine->getCurrentWorld()->getCameraPos().x() * m_scale,
+                        m_engine->getCurrentWorld()->getCameraPos().y() * m_scale, 0.0f );
+    QVector3D  up(      0.0f, 1.0f, 0.0f);
+
+    // Create Matrices
+    QMatrix4x4 matrix, matrix2;
     matrix.setToIdentity();
-    float cam_x =  (m_engine->getCurrentWorld()->getCameraPos().x()) * m_scale * c_occluder_scale;
-    float cam_y =  (m_engine->getCurrentWorld()->getCameraPos().y() + 200) * m_scale * c_occluder_scale;
-    float left =   cam_x - (m_occluder_fbo->width() / 2.0f);
-    float right =  cam_x + (m_occluder_fbo->width() / 2.0f);
-    float top =    cam_y + (m_occluder_fbo->height() / 2.0f);
-    float bottom = cam_y - (m_occluder_fbo->height() / 2.0f);
-    matrix.ortho( left, right, bottom, top, -10000.0f, 10000.0f);
-    matrix.scale( m_scale * c_occluder_scale );
+    matrix2.setToIdentity();
+    if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
+        float cam_x =  (m_engine->getCurrentWorld()->getCameraPos().x()) * m_scale * c_occluder_scale;
+        float cam_y =  (m_engine->getCurrentWorld()->getCameraPos().y() + 200) * m_scale * c_occluder_scale;
+        float left =   cam_x - (m_occluder_fbo->width() / 2.0f);
+        float right =  cam_x + (m_occluder_fbo->width() / 2.0f);
+        float top =    cam_y + (m_occluder_fbo->height() / 2.0f);
+        float bottom = cam_y - (m_occluder_fbo->height() / 2.0f);
+        matrix.ortho( left, right, bottom, top, -10000.0f, 10000.0f);
+        matrix.scale( m_scale * c_occluder_scale );
+    } else {
+        matrix.perspective( 70.0f, aspect_ratio, 1.0f, 10000.0f );
+        matrix2.lookAt(eye, look_at, up);
+        matrix2.scale( m_scale );
+        matrix *= matrix2;
+    }
     return matrix;
 }
 

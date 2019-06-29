@@ -121,8 +121,8 @@ void DrOpenGL::updateViewMatrix() {
     float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
 
     // Set camera position
-    //QVector3D  perspective_offset ( 200.0f, 200.0f, 0.0f);
     QVector3D  perspective_offset ( 0.0f, 0.0f, 0.0f);
+    ///QVector3D  perspective_offset ( 200.0f, 200.0f, 0.0f);
     QVector3D  eye(     m_engine->getCurrentWorld()->getCameraPos().x() * m_scale + perspective_offset.x(),
                         m_engine->getCurrentWorld()->getCameraPos().y() * m_scale + perspective_offset.y(),
                         m_engine->getCurrentWorld()->getCameraPos().z() );
@@ -170,17 +170,17 @@ void DrOpenGL::setWholeTextureCoordinates(std::vector<float> &texture_coords) {
 //####################################################################################
 //##        Returns list of vertices at z plane 0 from sides passed in
 //####################################################################################
-void DrOpenGL::setVertexFromSides(QVector<GLfloat> &vertices, float left, float right, float top, float bottom) {
+void DrOpenGL::setVertexFromSides(QVector<GLfloat> &vertices, float left, float right, float top, float bottom, float z) {
     QVector3D top_right = QVector3D( right, top, 0);
     QVector3D top_left =  QVector3D( left,  top, 0);
     QVector3D bot_right = QVector3D( right, bottom, 0);
     QVector3D bot_left =  QVector3D( left,  bottom, 0);
     vertices.clear();
     vertices.resize( 12 );              // in sets of x, y, z
-    vertices[ 0] = top_right.x();       vertices[ 1] = top_right.y();       vertices[ 2] = 0;           // Top Right
-    vertices[ 3] = top_left.x();        vertices[ 4] = top_left.y();        vertices[ 5] = 0;           // Top Left
-    vertices[ 6] = bot_right.x();       vertices[ 7] = bot_right.y();       vertices[ 8] = 0;           // Bottom Right
-    vertices[ 9] = bot_left.x();        vertices[10] = bot_left.y();        vertices[11] = 0;           // Bottom Left
+    vertices[ 0] = top_right.x();       vertices[ 1] = top_right.y();       vertices[ 2] = z;           // Top Right
+    vertices[ 3] = top_left.x();        vertices[ 4] = top_left.y();        vertices[ 5] = z;           // Top Left
+    vertices[ 6] = bot_right.x();       vertices[ 7] = bot_right.y();       vertices[ 8] = z;           // Bottom Right
+    vertices[ 9] = bot_left.x();        vertices[10] = bot_left.y();        vertices[11] = z;           // Bottom Left
 }
 
 //####################################################################################
@@ -216,7 +216,7 @@ void DrOpenGL::drawFrameBufferToScreenBuffer(QOpenGLFramebufferObject *fbo, bool
 
     // Load vertices for this object
     QVector<GLfloat> vertices;
-    setVertexFromSides(vertices, left, right, top, bottom);
+    setVertexFromSides(vertices, left, right, top, bottom, 0.0f);
     m_shader.setAttributeArray( m_attribute_vertex, vertices.data(), 3 );
     m_shader.enableAttributeArray( m_attribute_vertex );
 

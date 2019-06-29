@@ -286,13 +286,6 @@ QPixmap drawLight(QColor color, int diameter, float cone_start, float cone_end, 
                     // Multiply the intensity by our distance, which gives us a radial falloff
                     float amount = Dr::Lerp(1.0f, 0.0f, r) * intensity;
 
-                    //float amount = intensity;
-                    //float reduce_shadows = shadows * 2.0f;
-                    //amount = (amount + reduce_shadows) / (1.0f + reduce_shadows);
-                    //if (intensity < 1.0f) amount *= intensity;
-                    //amount *= Dr::Lerp(1.0f, 0.0f, r);
-
-
                     // Multiply by light color
                     int red =   Dr::Clamp(static_cast<int>(color.red() * amount),      0, 255 );
                     int green = Dr::Clamp(static_cast<int>(color.green() * amount),    0, 255 );

@@ -99,8 +99,8 @@ void DrWorld::initializeWorldSettings(QString new_name) {
                                                        "enabled.", Component_Colors::Orange_Medium, true);
     getComponent(Components::World_Physics)->setIcon(Component_Icons::Physics);
     addPropertyToComponent(Components::World_Physics, Properties::World_Time_Warp, Property_Type::PositiveDouble, 1.0,
-                           "Time Warp", "Physics update time multiplier. Default value of 1.0 is Normal speed. For example, a value of 0.5 will halve the "
-                                        "speed at which the world changes. A value of 2.0 will double the speed.");
+                           "Time Warp", "Physics update time multiplier, affects the speed the world changes. Default value of 1.0 is Normal speed. A value of 0.5 "
+                                        "will halve the speed, a value of 2.0 will double it. Generally keep this less than 10.");
     addPropertyToComponent(Components::World_Physics, Properties::World_Gravity, Property_Type::PointF, QPointF(0.0, -1000.0),
                            "Gravity", "Amount of gravity in X and Y directions, can be negative or positive. For example, a value of -1000 for Y and Objects will "
                                       "fall down; a value of 1000 for Y and Objects will fall up.");

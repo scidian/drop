@@ -42,6 +42,7 @@ void DrOpenGL::drawShadowMaps() {
         light->setLightDiameter( static_cast<int>(light->light_size) );
         light->setLightDiameterFitted( (light->getLightDiameter() > g_max_light_fbo_size) ? g_max_light_fbo_size : light->getLightDiameter() );
 
+
         // Check if light is in view to be rendered
         double light_radius = light->getLightDiameterFitted() / 2.0;
         QPoint top_left =  mapToScreen(light->getPosition().x() - light_radius, light->getPosition().y() + light_radius, 0.0 ).toPoint();
@@ -225,7 +226,7 @@ void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
 
     // Load vertices for this object
     QVector<GLfloat> vertices;
-    setVertexFromSides(vertices, left, right, top, bottom);
+    setVertexFromSides(vertices, left, right, top, bottom, 0.0f);
     m_shadow_shader.setAttributeArray(    m_attribute_shadow_vertex, vertices.data(), 3 );
     m_shadow_shader.enableAttributeArray( m_attribute_shadow_vertex );
 
@@ -279,7 +280,7 @@ void DrOpenGL::draw2DLight(DrEngineLight *light) {
     float top =    static_cast<float>(light->getPosition().y()) + (light->getLightDiameterFitted() / 2.0f);
     float bottom = static_cast<float>(light->getPosition().y()) - (light->getLightDiameterFitted() / 2.0f);
     QVector<GLfloat> vertices;
-    setVertexFromSides(vertices, left, right, top, bottom);
+    setVertexFromSides(vertices, left, right, top, bottom, static_cast<float>(light->z_order));
     m_light_shader.setAttributeArray(    m_attribute_light_vertex, vertices.data(), 3 );
     m_light_shader.enableAttributeArray( m_attribute_light_vertex );
 
