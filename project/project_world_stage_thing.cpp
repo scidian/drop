@@ -125,12 +125,12 @@ void DrThing::addComponentSettingsLight(QColor color) {
                            "Cone End", "Ending angle of light, Cone Angles travel in counter-clockwise direction.");
     addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity, Property_Type::Percent, 50.0,
                            "Intensity", "How intense the light is starting from the middle out.");
-    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Blur, Property_Type::Percent, 10.0,
+    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Blur, Property_Type::Percent, 50.0,
                            "Blur", "How much to blur the light's edges and shadows.");
     addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Draw_Shadows, Property_Type::Bool, 50.0,
                            "Cast Shadows", "Should this light cast shadows? <b>NOTE:</b> The use of many shadow casting lights on the screen at one "
                                            "time can slow down older devices.");
-    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Shadows, Property_Type::Percent, 50.0,
+    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Shadows, Property_Type::Percent, 25.0,
                            "Shadow Amount", "How much light should shine through the shadows. 0 is No Light, 100 is Most Light.");
     addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse, Property_Type::Double, 0.0,
                            "Pulse Amount", "This value will cause light to pulse back and forth +/- the Pulse Amount from the lights Intensity.");

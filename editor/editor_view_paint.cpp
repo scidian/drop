@@ -170,10 +170,7 @@ void DrView::paintGrid(QPainter &painter) {
         if (abs(grid_view.width()) >= 1)  new_width  = abs(grid_view.width());  else new_width = 1;
         if (abs(grid_view.height()) >= 1) new_height = abs(grid_view.height()); else new_height = 1;
         m_grid_buffer = QPixmap(new_width, new_height);
-        if (m_back_color_use)
-            m_grid_buffer.fill( m_back_color );
-        else
-            m_grid_buffer.fill( QColor(0, 0, 0, 0) );
+        m_grid_buffer.fill( QColor(0, 0, 0, 0) );
 
         QPainter *grid_painter = new QPainter(&m_grid_buffer);
         grid_painter->setBrush(Qt::NoBrush);

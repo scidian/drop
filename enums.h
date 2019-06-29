@@ -31,15 +31,18 @@ enum class DrType {
     World,
         Stage,
         StartStage,
-            Background,
-            Foreground,
             Thing,
-    Variable,
 
-    UI,
-        Label,
-        Button,
-        Joystick,
+
+    //        Background,
+    //        Foreground,
+
+    //Variable,
+
+    //UI,
+    //    Label,
+    //    Button,
+    //    Joystick,
 
     NotFound,
     BaseClass,

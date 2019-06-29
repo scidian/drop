@@ -132,6 +132,12 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value) {
         // Value is new item QTransform
         QTransform new_transform = value.value<QTransform>();
 
+        if (m_thing->getType() == DrType::Thing) {
+            if (m_thing->getThingType() == DrThingType::Light) {
+                scale.setY(scale.x());
+            }
+        }
+
         double size_x = m_asset_width *  scale.x();
         double size_y = m_asset_height * scale.y();
 

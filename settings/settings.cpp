@@ -56,11 +56,14 @@ QString DrSettings::getName() {
     switch (getType()) {
         case DrType::World:
         case DrType::Stage:
+        case DrType::StartStage:
         case DrType::Thing:
         case DrType::Asset:
             return getComponent(Components::Entity_Name)->getProperty(Properties::Entity_Name)->getValue().toString();
-        case DrType::Image:  return "DrImage - Unknown Name";
-        case DrType::Font:   return "DrFont - Unknown Name";
+        case DrType::Image:     return "DrImage - Unknown Name";
+        case DrType::Font:      return "DrFont - Unknown Name";
+        case DrType::NotFound:  return "Type NotFound";
+        case DrType::BaseClass: return "Base DrSettings Class";
     }
     return "Unknown Type, Can't Find Name";
 }

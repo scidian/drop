@@ -133,7 +133,7 @@ namespace Advisor_Info {
     const HeaderBodyList Asset_Character        { "Character Asset", "This is a player character." };
     const HeaderBodyList Asset_Object           { "Object Asset", "This is an object that can have many copies of itself placed into your game. Any change to "
                                                                   "this Asset will change all occurences of the Asset within your game." };
-    const HeaderBodyList Asset_Effect           { "Effect Asset", "This is a special effect for use in your game." };
+    const HeaderBodyList Asset_Effect           { "Effect Asset", "Special effects provide an extra level of detail to make your game more visually appealing." };
     const HeaderBodyList Asset_Text             { "Text Asset", "Use Text Assets to show text boxes in your game. You can use them as titles or for showing "
                                                                 "values like hit points, coins or distance." };
 

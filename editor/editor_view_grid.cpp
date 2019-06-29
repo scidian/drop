@@ -44,6 +44,9 @@ void DrView::updateGrid() {
     m_grid_resize_snap =  Dr::GetPreference(Preferences::World_Editor_Resize_To_Grid).toBool();
     m_grid_show_on_top =  Dr::GetPreference(Preferences::World_Editor_Grid_On_Top).toBool();
 
+    QColor background = (m_back_color_use) ? m_back_color : Dr::GetColor(Window_Colors::Background_Dark);
+    this->setStyleSheet("background: " + background.name() + ";");
+
     recalculateGrid();
     m_grid_needs_redraw = true;                 // Flag grid for redraw during next paintEvent
     scene()->update(this->sceneRect());         // Forces repaint of view

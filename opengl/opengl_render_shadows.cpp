@@ -28,6 +28,7 @@ void DrOpenGL::drawShadowMaps() {
     checkLightBuffers();
 
     // ***** Check for lights with shadows, if there are non we don't need to draw occluder map
+    int light_count = 0;
     QVector<DrEngineLight*> shadow_lights;
     shadow_lights.clear();
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
@@ -35,6 +36,7 @@ void DrOpenGL::drawShadowMaps() {
         if (thing->getThingType() != DrThingType::Light) continue;
 
         DrEngineLight *light = dynamic_cast<DrEngineLight*>(thing);
+        light_count++;
 
         // Calculate size of light texture (fbo)
         light->setLightDiameter( static_cast<int>(light->light_size) );
@@ -55,7 +57,7 @@ void DrOpenGL::drawShadowMaps() {
         if (light->draw_shadows && light->isInView())
             shadow_lights.append(light);
     }
-    m_engine->getCurrentWorld()->light_count = shadow_lights.count();
+    m_engine->getCurrentWorld()->light_count = light_count;
     if (shadow_lights.count() <= 0) return;
 
     // ***** Render all Space Objects to an off-screen Frame Buffer Object Occluder Map
