@@ -38,7 +38,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
     switch (new_thing_type) {
         case DrThingType::Character:
             addComponentSettingsCharacter(new_thing_name);
-            addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y);
+            addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, DrThingType::Character);
             addComponentLayering(z);
             addComponentMovement();
             addComponentAppearance();
@@ -46,7 +46,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
 
         case DrThingType::Object:
             addComponentSettingsObject(new_thing_name, should_collide);
-            addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y);
+            addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, DrThingType::Object);
             addComponentLayering(z);
             addComponentMovement();
             addComponentAppearance();
@@ -54,13 +54,13 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
 
         case DrThingType::Text:
             addComponentSettingsText(new_thing_name);
-            addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y);
+            addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, DrThingType::Text);
             addComponentLayering(z);
             break;
 
         case DrThingType::Light:
             addComponentSettingsLight(Qt::white);
-            addComponentTransform(400, 400, x, -y);
+            addComponentTransform(400, 400, x, -y, DrThingType::Light);
             addComponentLayering(z);
             break;
     }
@@ -169,15 +169,20 @@ void DrThing::addComponentSettingsCamera(QString new_name) {
 //####################################################################################
 //##    Shared Components
 //####################################################################################
-void DrThing::addComponentTransform(double width, double height, double x, double y) {
+void DrThing::addComponentTransform(double width, double height, double x, double y, DrThingType type) {
     addComponent(Components::Thing_Transform, "Transform", "Sets the physical size and angle of the object in the stage.", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Thing_Transform)->setIcon(Component_Icons::Transform);
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Position, Property_Type::PositionF, QPointF(x, y),
                            "Position", "Location of object within the current stage.");
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Rotation, Property_Type::Angle, 0,
                            "Rotation", "Angle of object within the stage.");
+    QString size_text = "Width and Height of object in pixels, affected by Scale property.";
+    if (type == DrThingType::Light) {
+            size_text = "Width and Height of object in pixels, affected by Scale property. "
+                        "<br><b>NOTE:</b> For best performace on older devices, Light size is best kept under 4096.";
+    }
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Size, Property_Type::SizeF, QPointF(width, height),
-                           "Size", "Width and Height of object in pixels, affected by Scale property.");
+                           "Size", size_text);
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Scale, Property_Type::ScaleF, QPointF(1, 1),
                            "Scale", "X and Y scale of object within the stage.");
 }
