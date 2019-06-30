@@ -16,12 +16,6 @@
 #include "chipmunk/chipmunk.h"
 #include "enums_engine.h"
 
-// Local Enumerations
-enum class Render_Type {
-    Perspective,
-    Orthographic,
-};
-
 // Forward declarations
 class DrEngine;
 class DrEngineLight;

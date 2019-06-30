@@ -65,6 +65,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
         ball1->setOriginalVelocityX( 15 );
         ball1->setOriginalVelocityY(  0 );
+        cpBodySetVelocityUpdateFunc(ball1->body, KinematicUpdateVelocity);
         setActiveCamera( addCamera(ball1->getKey()) );
 
 

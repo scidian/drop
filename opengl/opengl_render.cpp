@@ -38,7 +38,7 @@ void DrOpenGL::paintGL() {
     drawShadowMaps();
 
     // ***** Render Onto Frame Buffer Object
-    updateViewMatrix();                                                         // Update Camera / View Matrix
+    updateViewMatrix(m_engine->getCurrentWorld()->render_type);                 // Update Camera / View Matrix
     bindOffscreenBuffer();                                                      // Create / Bind Offscreen Frame Buffer Object
     ///drawCube( QVector3D( 2000, 400, -300) );                                 // Render Background 3D Objects
     drawSpace();                                                                // Render cpSpace Objects
@@ -113,36 +113,39 @@ void DrOpenGL::bindOffscreenBuffer() {
 //####################################################################################
 //##        Update the view matrices before rendering
 //####################################################################################
-void DrOpenGL::updateViewMatrix() {
+void DrOpenGL::updateViewMatrix(Render_Type render_type) {
     //          Axis:
     //              -X left,        +X right
     //              -Y down,        +Y up
     //              -Z back,        +Z front (close to camera)
     float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
 
-    // Set camera position
-    QVector3D  perspective_offset ( 0.0f, 0.0f, 0.0f);
-    ///QVector3D  perspective_offset ( 200.0f, 200.0f, 0.0f);
-    QVector3D  eye(     m_engine->getCurrentWorld()->getCameraPos().x() * m_scale + perspective_offset.x(),
-                        m_engine->getCurrentWorld()->getCameraPos().y() * m_scale + perspective_offset.y(),
-                        m_engine->getCurrentWorld()->getCameraPos().z() );
-    QVector3D  look_at( m_engine->getCurrentWorld()->getCameraPos().x() * m_scale,
-                        m_engine->getCurrentWorld()->getCameraPos().y() * m_scale, 0.0f );
-    QVector3D  up(      0.0f, 1.0f, 0.0f);
-
-    // Create Matrices
+    // Orthographic
     m_model_view.setToIdentity();
     m_projection.setToIdentity();
-    if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
+    if (render_type == Render_Type::Orthographic) {
         float cam_x =  (m_engine->getCurrentWorld()->getCameraPos().x()) * m_scale;
-        float cam_y =  (m_engine->getCurrentWorld()->getCameraPos().y() + 200) * m_scale;
+        float cam_y =  (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale;
         float left =   cam_x - (width() *  devicePixelRatio() / 2.0f);
         float right =  cam_x + (width() *  devicePixelRatio() / 2.0f);
         float top =    cam_y + (height() * devicePixelRatio() / 2.0f);
         float bottom = cam_y - (height() * devicePixelRatio() / 2.0f);
         m_projection.ortho( left, right, bottom, top, -5000.0f, 5000.0f);
         m_model_view.scale( m_scale );
+
+    // Perspective
     } else {
+        // Set camera position
+        QVector3D  perspective_offset ( 0.0f, 0.0f, 0.0f);
+        ///QVector3D  perspective_offset ( 200.0f, 200.0f, 0.0f);
+        QVector3D  eye(     m_engine->getCurrentWorld()->getCameraPos().x() * m_scale + perspective_offset.x(),
+                            m_engine->getCurrentWorld()->getCameraPos().y() * m_scale + perspective_offset.y(),
+                            m_engine->getCurrentWorld()->getCameraPos().z() );
+        QVector3D  look_at( m_engine->getCurrentWorld()->getCameraPos().x() * m_scale,
+                            m_engine->getCurrentWorld()->getCameraPos().y() * m_scale,
+                            0.0f );
+        QVector3D  up(      0.0f, 1.0f, 0.0f);
+
         m_projection.perspective( 70.0f, aspect_ratio, 1.0f, 10000.0f );
         m_model_view.lookAt(eye, look_at, up);
         m_model_view.scale( m_scale );

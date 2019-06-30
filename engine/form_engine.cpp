@@ -241,7 +241,7 @@ void FormEngine::updateEngine() {
     if (fps_milli > 1000.0) {
         fps_render =  fps_count_render;         fps_count_render =  0;
         fps_physics = fps_count_physics;        fps_count_physics = 0;
-        fps_camera =  fps_count_camera;         fps_count_camera = 0;
+        fps_camera =  fps_count_camera;         fps_count_camera =  0;
         m_time_fps =  Clock::now();
     }
 
@@ -259,7 +259,7 @@ void FormEngine::updateEngine() {
     }
 
     // Additional render on MacOS (smooths more with vsync being disabled)
-    if (m_engine->getCurrentWorld()->getThings().count() < 250 && m_engine->getCurrentWorld()->light_count <= 1) {
+    if (m_engine->getCurrentWorld()->getThings().count() < 250 && m_engine->getCurrentWorld()->light_count <= 0) {
         double render_milliseconds = getTimerMilliseconds(Engine_Timer::Render);
         if (render_milliseconds > (1000.0 / m_ideal_frames_per_second)) {
             resetTimer(Engine_Timer::Render);

@@ -35,7 +35,8 @@ extern int  g_max_occluder_fbo_size;
 extern int  g_max_light_fbo_size;
 
 // 2D Light Constants
-const float c_occluder_scale =                3.0f;     // Scale to use for occlusion map (higher the number, less shaky the shadows)
+const float c_occluder_scale_ortho =          3.0f;     // Scale to use for occlusion map (higher the number, less shaky the shadows)
+const float c_occluder_scale_proj =           1.00f;    // Scale to use for occlusion map (higher the number, less shaky the shadows)
 const int   c_desired_max_rays =           4096;        // Desired max number of rays to send out during shadow map calculations
 const int   c_desired_occluder_fbo_size =  8192;        // Desired max width and height of offscreen fbo used for shadow map
 const int   c_desired_light_fbo_size =     8192;        // Desired max width and height of offscreen fbo used for lights
@@ -162,7 +163,7 @@ public:
     QPointF         mapToScreen(double x, double y, double z);
     QPointF         mapToScreen(float x, float y, float z);
     QPointF         mapToScreen(QVector3D point3D);
-    QPointF         mapToOccluder(QVector3D point3D);
+    QPointF         mapToFBO(QVector3D point3D, QOpenGLFramebufferObject *fbo, QMatrix4x4 matrix);
     void            zoomInOut(int level);
 
     // Render Calls
@@ -180,8 +181,8 @@ public:
     void            drawSpace();
     void            drawSpaceOccluder();
     QColor          objectDebugColor(DrEngineObject *object, bool text_color = false);
-    void            updateViewMatrix();
-    QMatrix4x4      occluderMatrix();
+    QMatrix4x4      occluderMatrix(Render_Type render_type);
+    void            updateViewMatrix(Render_Type render_type);
     void            setShaderDefaultValues(float texture_width, float texture_height);
     void            setNumberTextureCoordinates(QString letter, std::vector<float> &texture_coordinates);
     void            setVertexFromSides(QVector<GLfloat> &vertices, float left, float right, float top, float bottom, float z);

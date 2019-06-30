@@ -39,6 +39,19 @@ enum Asset_Textures {
 
 
 //####################################################################################
+//##    Render Enumerations
+//############################
+enum class Render_Type {
+    Perspective,
+    Orthographic,
+};
+
+enum class Matrix_Type {
+    Model_View,
+    Projection,
+};
+
+//####################################################################################
 //##    Control Enumerations
 //############################
 enum class Pedal {

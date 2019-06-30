@@ -16,6 +16,24 @@
 
 
 //####################################################################################
+//##        Maps 3D Point to / from 2D FBO Map Coordinates
+//####################################################################################
+QPointF DrOpenGL::mapToFBO(QVector3D point3D, QOpenGLFramebufferObject *fbo, QMatrix4x4 matrix) {
+    QRect viewport = QRect(0, 0, fbo->width(), fbo->height());
+
+    float x_pos, y_pos, z_pos;
+    x_pos = point3D.x();
+    y_pos = point3D.y();
+    z_pos = point3D.z();
+
+    QMatrix4x4 identity;
+    identity.setToIdentity();
+    QVector3D vec = QVector3D(x_pos, y_pos, z_pos).project( identity, matrix, viewport );
+    return QPointF( static_cast<double>(vec.x()),  static_cast<double>((height() * devicePixelRatio()) - vec.y()) );
+}
+
+
+//####################################################################################
 //##        Maps 3D Point to / from 2D QOpenGLWidget Coordinates
 //####################################################################################
 QPointF DrOpenGL::mapToScreen(double x, double y, double z) { return mapToScreen( QVector3D(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z))); }
@@ -27,7 +45,7 @@ QPointF DrOpenGL::mapToScreen(QVector3D point3D) {
     x_pos = point3D.x();
     y_pos = point3D.y();
     z_pos = point3D.z();
-    QVector3D vec = QVector3D( x_pos, y_pos, z_pos).project( m_model_view, m_projection, viewport);
+    QVector3D vec = QVector3D( x_pos, y_pos, z_pos).project( m_model_view, m_projection, viewport );
     return QPointF( static_cast<double>(vec.x()),  static_cast<double>((height() * devicePixelRatio()) - vec.y()) );
 }
 
@@ -82,24 +100,6 @@ QVector3D DrOpenGL::mapFromScreen(QPointF point) {
     }
 
     return vec;
-}
-
-
-//####################################################################################
-//##        Maps 3D Point to / from 2D Occluder Map Coordinates
-//####################################################################################
-QPointF DrOpenGL::mapToOccluder(QVector3D point3D) {
-    QRect viewport = QRect(0, 0, m_occluder_fbo->width(), m_occluder_fbo->height());
-
-    float x_pos, y_pos, z_pos;
-    x_pos = point3D.x();
-    y_pos = point3D.y();
-    z_pos = point3D.z();
-
-    QMatrix4x4 identity;
-    identity.setToIdentity();
-    QVector3D vec = QVector3D(x_pos, y_pos, z_pos).project( identity, occluderMatrix(), viewport);
-    return QPointF( static_cast<double>(vec.x()),  static_cast<double>((height() * devicePixelRatio()) - vec.y()) );
 }
 
 

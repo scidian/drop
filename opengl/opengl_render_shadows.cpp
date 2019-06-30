@@ -42,7 +42,6 @@ void DrOpenGL::drawShadowMaps() {
         light->setLightDiameter( static_cast<int>(light->light_size) );
         light->setLightDiameterFitted( (light->getLightDiameter() > g_max_light_fbo_size) ? g_max_light_fbo_size : light->getLightDiameter() );
 
-
         // Check if light is in view to be rendered
         double light_radius = light->getLightDiameterFitted() / 2.0;
         QPoint top_left =  mapToScreen(light->getPosition().x() - light_radius, light->getPosition().y() + light_radius, 0.0 ).toPoint();
@@ -79,10 +78,27 @@ void DrOpenGL::drawShadowMaps() {
     // ***** Calculate Light 1D Shadow Maps
     for (auto light : shadow_lights) {
         // Calculate light position on Occluder Map
-        light->setScreenPos( mapToOccluder( QVector3D(static_cast<float>(light->getPosition().x()),
-                                                      static_cast<float>(light->getPosition().y()), 0.0f)) );
+        light->setScreenPos( mapToFBO( QVector3D(static_cast<float>(light->getPosition().x()), static_cast<float>(light->getPosition().y()),
+                                                 static_cast<float>(light->z_order)),
+                                       m_occluder_fbo, occluderMatrix(m_engine->getCurrentWorld()->render_type)) );
         double middle = m_texture_fbo->height() / 2.0;
         double y_diff = middle - light->getScreenPos().y();
+
+        // Adjust scale for Perspective Mode lights
+        double o_scale = static_cast<double>(c_occluder_scale_ortho * m_scale);
+        if (m_engine->getCurrentWorld()->render_type == Render_Type::Perspective) {
+            QPointF map_0_a = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x()), 0.0f, 0.0f),
+                                          m_occluder_fbo, occluderMatrix(Render_Type::Perspective) );
+            QPointF map_0_b = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x() + (light->getLightDiameterFitted()/2.0)), 0.0f, 0.0f),
+                                          m_occluder_fbo, occluderMatrix(Render_Type::Perspective) );
+            QPointF map_z_a = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x()), 0.0f, static_cast<float>(light->z_order)),
+                                          m_occluder_fbo, occluderMatrix(Render_Type::Perspective) );
+            QPointF map_z_b = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x() + (light->getLightDiameterFitted()/2.0)), 0.0f, static_cast<float>(light->z_order)),
+                                          m_occluder_fbo, occluderMatrix(Render_Type::Perspective) );
+            double map_0 = (map_0_a.x() > map_0_b.x()) ? (map_0_a.x() - map_0_b.x()) : (map_0_b.x() - map_0_a.x());
+            double map_z = (map_z_a.x() > map_z_b.x()) ? (map_z_a.x() - map_z_b.x()) : (map_z_b.x() - map_z_a.x());
+            o_scale *= (map_z / map_0);
+        }
 
         // Blit the area of the occluder map the light will take up to the Light Occluder FBO
         bindLightOcculderBuffer(light);
@@ -90,10 +106,10 @@ void DrOpenGL::drawShadowMaps() {
         QOpenGLFramebufferObject::blitFramebuffer(
                     light_fbo, QRect(0, 0, light_fbo->width(), light_fbo->height()),
                     m_occluder_fbo, QRect(
-                        static_cast<int>( floor(light->getScreenPos().x() - ((light_fbo->width() / 2.0) * double(c_occluder_scale * m_scale))) ),
-                        static_cast<int>( floor(light->getScreenPos().y() - ((light_fbo->height()/ 2.0) * double(c_occluder_scale * m_scale)) + (y_diff * 2.0)) ),
-                        static_cast<int>( light_fbo->width()  * (c_occluder_scale * m_scale) ),
-                        static_cast<int>( light_fbo->height() * (c_occluder_scale * m_scale) )
+                        static_cast<int>( floor(light->getScreenPos().x() - ((light_fbo->width() / 2.0) * o_scale)) ),
+                        static_cast<int>( floor(light->getScreenPos().y() - ((light_fbo->height()/ 2.0) * o_scale) + (y_diff * 2.0)) ),
+                        static_cast<int>( light_fbo->width()  * o_scale ),
+                        static_cast<int>( light_fbo->height() * o_scale )
                         ),
                     GL_COLOR_BUFFER_BIT, GL_NEAREST);
         m_occluders[light->getKey()]->release();

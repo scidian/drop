@@ -15,6 +15,9 @@
 #include "project/project_world_stage.h"
 #include "project/project_world_stage_thing.h"
 
+// Local Constants
+const double    c_light_size_adjuster = 1.15;           // Multiplier to equal out the slight rendering difference between shader and pixmap drawing functions
+
 
 //####################################################################################
 //##    Load DrProject Stage to World / Space
@@ -66,7 +69,7 @@ void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double off
     float       pulse =         thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse).toFloat();
     float       pulse_speed =   thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse_Speed).toFloat();
 
-    light_size *= 1.15;
+    light_size *= c_light_size_adjuster;
 
     addThing( new DrEngineLight(this, getNextKey(), position.x() + offset_x, -position.y() + offset_y, z_order, light_color, static_cast<float>(light_size),
                                 QPointF(cone_start, cone_end), intensity, shadows, draw_shadows, blur, pulse, pulse_speed, alpha));
