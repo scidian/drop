@@ -183,7 +183,7 @@ QMatrix4x4 DrOpenGL::occluderMatrix(Render_Type render_type) {
                             m_engine->getCurrentWorld()->getCameraPos().y() * m_scale * c_occluder_scale_proj,
                             0.0f );
         QVector3D  up(      0.0f, 1.0f, 0.0f);
-        matrix.perspective( 120.0f, aspect_ratio, 1.0f, 10000.0f );
+        matrix.perspective( 119.0f, aspect_ratio, 1.0f, 10000.0f );     // !!!!! FIX: Not sure how 119 is better for square occluder_fbo vs 70 for screen texture_fbo
         matrix2.lookAt(eye, look_at, up);
         matrix2.scale( m_scale * c_occluder_scale_proj);
         matrix *= matrix2;

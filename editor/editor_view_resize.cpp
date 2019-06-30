@@ -177,8 +177,15 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_sc
     if (scale_y <  .0001 && scale_y >= 0) scale_y =  .0001;
     if (scale_y > -.0001 && scale_y <= 0) scale_y = -.0001;
 
+    // Check if a light is selected (or another item that needs to be square)
+    bool contains_square_item = false;
+    // Incorporated this into removeShearing, but this works too for a group of items that need to remain square
+    ///for (auto child : my_scene->getSelectionItems()) {
+    ///    contains_square_item |= containsSquareItem(child);
+    ///}
+
     // If shift or control keys are down, maintain starting aspect ratio
-    if (m_flag_key_down_shift) {
+    if (m_flag_key_down_shift || contains_square_item) {
         double pre_resize_ratio;
         if (m_do_y == Y_Axis::None) {
             pre_resize_ratio = m_pre_resize_scale.y() / m_pre_resize_scale.x();
@@ -227,8 +234,9 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_sc
 
     // ***** Remove any shearing
     QPointF new_scale(scale_x, scale_y);
-    for (auto child : my_scene->getSelectionItems())
+    for (auto child : my_scene->getSelectionItems()) {
         removeShearing(child, new_scale);
+    }
 
 
     // ***** Aligns new selected items origin location with proper resize starting point
@@ -267,8 +275,9 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_sc
         }
     }
     QGraphicsItemGroup *temp = my_scene->createEmptyItemGroup(angle);
-    for (auto child : my_scene->getSelectionItems())
+    for (auto child : my_scene->getSelectionItems()) {
         temp->addToGroup(child);
+    }
     my_scene->setPositionByOrigin(temp, origin_flag, new_pos.x(), new_pos.y());
     my_scene->destroyItemGroup(temp);
 
@@ -343,6 +352,16 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
         }
     }
 
+    // Checks if Items should have to remain Square shaped (light, etc) and forces it to do so
+    if (original->getThing()) {
+        if (original->getThing()->getThingType() == DrThingType::Light) {
+            if (qFuzzyCompare(start_scale.x(), new_scale_x))
+                new_scale_x = new_scale_y;
+            else
+                new_scale_y = new_scale_x;
+        }
+    }
+
     // Update item property
     original->setData(User_Roles::Scale, QPointF(new_scale_x, new_scale_y) );
     double transform_scale_x = Dr::CheckScaleNotZero(new_scale_x);
@@ -359,6 +378,19 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
 
 }
 
+
+//####################################################################################
+//##        Checks if any of these Items should have to remain Square shaped
+//####################################################################################
+bool DrView::containsSquareItem(QGraphicsItem *item) {
+    DrItem *original = dynamic_cast<DrItem*>(item);
+    if (!original) return false;
+
+    DrThing *thing = original->getThing();
+    if (!thing) return false;
+
+    return (thing->getThingType() == DrThingType::Light);
+}
 
 
 
