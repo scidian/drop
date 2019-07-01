@@ -137,11 +137,11 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type, bool use_offset) {
     } else {
         // Set camera position
         QVector3D  perspective_offset = use_offset ? QVector3D(200.0f, 200.0f, 0.0f) : QVector3D(0.0f, 0.0f, 0.0f);
-        QVector3D  eye(     m_engine->getCurrentWorld()->getCameraPos().x() * m_scale + perspective_offset.x(),
-                            m_engine->getCurrentWorld()->getCameraPos().y() * m_scale + perspective_offset.y() + 100,
+        QVector3D  eye(     m_engine->getCurrentWorld()->getCameraPos().x()        * m_scale + perspective_offset.x(),
+                           (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale + perspective_offset.y(),
                             m_engine->getCurrentWorld()->getCameraPos().z() );
-        QVector3D  look_at( m_engine->getCurrentWorld()->getCameraPos().x() * m_scale,
-                            m_engine->getCurrentWorld()->getCameraPos().y() * m_scale + 100,
+        QVector3D  look_at( m_engine->getCurrentWorld()->getCameraPos().x()        * m_scale,
+                           (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale,
                             0.0f );
         QVector3D  up(      0.0f, 1.0f, 0.0f);
 

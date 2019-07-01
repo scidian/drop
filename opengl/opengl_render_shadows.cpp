@@ -27,7 +27,7 @@ void DrOpenGL::drawShadowMaps() {
     // ***** Clear list of which lights exist
     checkLightBuffers();
 
-    // ***** Check for lights with shadows, if there are non we don't need to draw occluder map
+    // ***** Check for lights with shadows, if there are none we don't need to draw occluder map
     int light_count = 0;
     QVector<DrEngineLight*> shadow_lights;
     shadow_lights.clear();
@@ -113,7 +113,6 @@ void DrOpenGL::drawShadowMaps() {
             ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 0.70f;      // field of view = 70
             ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 1.00f;      // field of view = 53
             ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 1.20f;      // field of view = 45
-            ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 1.50f;      // field of view = 35
             o_scale = static_cast<double>(c_occluder_scale_proj * m_scale * screen_scale);
         }
 
@@ -126,8 +125,7 @@ void DrOpenGL::drawShadowMaps() {
                         static_cast<int>( floor(light->getScreenPos().x() - ((light_fbo->width() / 2.0) * o_scale)) ),
                         static_cast<int>( floor(light->getScreenPos().y() - ((light_fbo->height()/ 2.0) * o_scale) + (y_diff * 2.0)) ),
                         static_cast<int>( light_fbo->width()  * o_scale ),
-                        static_cast<int>( light_fbo->height() * o_scale )
-                        ),
+                        static_cast<int>( light_fbo->height() * o_scale )),
                     GL_COLOR_BUFFER_BIT, GL_NEAREST);
         m_occluders[light->getKey()]->release();
 
