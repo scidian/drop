@@ -38,13 +38,13 @@ void DrOpenGL::paintGL() {
     drawShadowMaps();
 
     // ***** Render Onto Frame Buffer Object
-    updateViewMatrix(m_engine->getCurrentWorld()->render_type);                 // Update Camera / View Matrix
-    bindOffscreenBuffer();                                                      // Create / Bind Offscreen Frame Buffer Object
-    ///drawCube( QVector3D( 2000, 400, -300) );                                 // Render Background 3D Objects
-    drawSpace();                                                                // Render cpSpace Objects
-    ///drawCube( QVector3D(1600, 500, 600) );                                   // Render Foreground 3D Objects
-    m_render_fbo->release();                                                    // Relase Frame Buffer Object
-    QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);     // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
+    updateViewMatrix(m_engine->getCurrentWorld()->render_type, c_use_cam_offset);   // Update Camera / View Matrix
+    bindOffscreenBuffer();                                                          // Create / Bind Offscreen Frame Buffer Object
+    ///drawCube( QVector3D( 2000, 400, -300) );                                     // Render Background 3D Objects
+    drawSpace();                                                                    // Render cpSpace Objects
+    ///drawCube( QVector3D(1600, 500, 600) );                                       // Render Foreground 3D Objects
+    m_render_fbo->release();                                                        // Relase Frame Buffer Object
+    QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);         // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
 
     // ***** Bind default Qt FrameBuffer, clear and set up for drawing
     QOpenGLFramebufferObject::bindDefault();
@@ -113,7 +113,7 @@ void DrOpenGL::bindOffscreenBuffer() {
 //####################################################################################
 //##        Update the view matrices before rendering
 //####################################################################################
-void DrOpenGL::updateViewMatrix(Render_Type render_type) {
+void DrOpenGL::updateViewMatrix(Render_Type render_type, bool use_offset) {
     //          Axis:
     //              -X left,        +X right
     //              -Y down,        +Y up
@@ -136,17 +136,16 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
     // Perspective
     } else {
         // Set camera position
-        QVector3D  perspective_offset ( 0.0f, 0.0f, 0.0f);
-        ///QVector3D  perspective_offset ( 200.0f, 200.0f, 0.0f);
+        QVector3D  perspective_offset = use_offset ? QVector3D(200.0f, 200.0f, 0.0f) : QVector3D(0.0f, 0.0f, 0.0f);
         QVector3D  eye(     m_engine->getCurrentWorld()->getCameraPos().x() * m_scale + perspective_offset.x(),
-                            m_engine->getCurrentWorld()->getCameraPos().y() * m_scale + perspective_offset.y(),
+                            m_engine->getCurrentWorld()->getCameraPos().y() * m_scale + perspective_offset.y() + 100,
                             m_engine->getCurrentWorld()->getCameraPos().z() );
         QVector3D  look_at( m_engine->getCurrentWorld()->getCameraPos().x() * m_scale,
-                            m_engine->getCurrentWorld()->getCameraPos().y() * m_scale,
+                            m_engine->getCurrentWorld()->getCameraPos().y() * m_scale + 100,
                             0.0f );
         QVector3D  up(      0.0f, 1.0f, 0.0f);
 
-        m_projection.perspective( 70.0f, aspect_ratio, 1.0f, 10000.0f );
+        m_projection.perspective( c_field_of_view, aspect_ratio, 1.0f, 10000.0f );
         m_model_view.lookAt(eye, look_at, up);
         m_model_view.scale( m_scale );
 

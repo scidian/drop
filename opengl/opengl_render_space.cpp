@@ -155,7 +155,7 @@ void DrOpenGL::drawSpace() {
 //####################################################################################
 //##        Renders All Scene Objects to an occluder map
 //####################################################################################
-QMatrix4x4 DrOpenGL::occluderMatrix(Render_Type render_type) {
+QMatrix4x4 DrOpenGL::occluderMatrix(Render_Type render_type, bool use_offset) {
     float aspect_ratio = static_cast<float>(m_occluder_fbo->width()) / static_cast<float>(m_occluder_fbo->height());
 
     // Orthographic
@@ -175,15 +175,15 @@ QMatrix4x4 DrOpenGL::occluderMatrix(Render_Type render_type) {
     // Perspective
     } else {
         // Set camera position
-        QVector3D  perspective_offset = QVector3D( 0.0f, 0.0f, 0.0f);
+        QVector3D  perspective_offset = use_offset? QVector3D( 200.0f, 200.0f, 0.0f) : QVector3D( 0.0f, 0.0f, 0.0f);
         QVector3D  eye(     m_engine->getCurrentWorld()->getCameraPos().x() * m_scale * c_occluder_scale_proj + perspective_offset.x(),
-                            m_engine->getCurrentWorld()->getCameraPos().y() * m_scale * c_occluder_scale_proj + perspective_offset.y(),
+                            m_engine->getCurrentWorld()->getCameraPos().y() * m_scale * c_occluder_scale_proj + perspective_offset.y() + 100,
                             m_engine->getCurrentWorld()->getCameraPos().z());
         QVector3D  look_at( m_engine->getCurrentWorld()->getCameraPos().x() * m_scale * c_occluder_scale_proj,
-                            m_engine->getCurrentWorld()->getCameraPos().y() * m_scale * c_occluder_scale_proj,
+                            m_engine->getCurrentWorld()->getCameraPos().y() * m_scale * c_occluder_scale_proj + 100,
                             0.0f );
         QVector3D  up(      0.0f, 1.0f, 0.0f);
-        matrix.perspective( 119.0f, aspect_ratio, 1.0f, 10000.0f );     // !!!!! FIX: Not sure how 119 is better for square occluder_fbo vs 70 for screen texture_fbo
+        matrix.perspective( c_field_of_view, aspect_ratio, 1.0f, 10000.0f );
         matrix2.lookAt(eye, look_at, up);
         matrix2.scale( m_scale * c_occluder_scale_proj);
         matrix *= matrix2;
@@ -196,7 +196,7 @@ void DrOpenGL::drawSpaceOccluder() {
     if (!m_occluder_shader.bind()) return;
 
     // ***** Set Matrix for Shader
-    m_occluder_shader.setUniformValue( m_uniform_occluder_matrix, occluderMatrix(m_engine->getCurrentWorld()->render_type) );
+    m_occluder_shader.setUniformValue( m_uniform_occluder_matrix, occluderMatrix(m_engine->getCurrentWorld()->render_type, c_use_cam_offset) );
 
     // ***** Set Texture Coordinates for Shader
     std::vector<float> texture_coordinates;

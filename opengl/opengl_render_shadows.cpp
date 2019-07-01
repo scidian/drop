@@ -42,12 +42,30 @@ void DrOpenGL::drawShadowMaps() {
         light->setLightDiameter( static_cast<int>(light->light_size) );
         light->setLightDiameterFitted( (light->getLightDiameter() > g_max_light_fbo_size) ? g_max_light_fbo_size : light->getLightDiameter() );
 
+        // In perspective mode we still draw the light the same size as z-order 0 even if its far away, this allows for cool large lights (like a big sun)
+        //      far away. This calculates the size difference for rendering later
+        double light_radius = (light->getLightDiameterFitted() / 2.0);
+        if (m_engine->getCurrentWorld()->render_type == Render_Type::Perspective && m_occluder_fbo) {
+            QPointF map_0_a = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x()), 0.0f, 0.0f),
+                                          m_occluder_fbo, occluderMatrix(Render_Type::Perspective, false) );
+            QPointF map_0_b = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x() + (light->getLightDiameterFitted()/2.0)), 0.0f, 0.0f),
+                                          m_occluder_fbo, occluderMatrix(Render_Type::Perspective, false) );
+            QPointF map_z_a = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x()), 0.0f, static_cast<float>(light->z_order)),
+                                          m_occluder_fbo, occluderMatrix(Render_Type::Perspective, false) );
+            QPointF map_z_b = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x() + (light->getLightDiameterFitted()/2.0)), 0.0f,
+                                                  static_cast<float>(light->z_order)),
+                                          m_occluder_fbo, occluderMatrix(Render_Type::Perspective, false) );
+            double map_0 = (map_0_a.x() > map_0_b.x()) ? (map_0_a.x() - map_0_b.x()) : (map_0_b.x() - map_0_a.x());
+            double map_z = (map_z_a.x() > map_z_b.x()) ? (map_z_a.x() - map_z_b.x()) : (map_z_b.x() - map_z_a.x());
+            light->setPerspectiveScale( float(map_z / map_0) );
+            light_radius /= static_cast<double>(light->getPerspectiveScale() + 0.0001f);
+        }
+
         // Check if light is in view to be rendered
-        double light_radius = light->getLightDiameterFitted() / 2.0;
-        QPoint top_left =  mapToScreen(light->getPosition().x() - light_radius, light->getPosition().y() + light_radius, 0.0 ).toPoint();
-        QPoint top_right = mapToScreen(light->getPosition().x() + light_radius, light->getPosition().y() + light_radius, 0.0 ).toPoint();
-        QPoint bot_left =  mapToScreen(light->getPosition().x() - light_radius, light->getPosition().y() - light_radius, 0.0 ).toPoint();
-        QPoint bot_right = mapToScreen(light->getPosition().x() + light_radius, light->getPosition().y() - light_radius, 0.0 ).toPoint();
+        QPoint top_left =  mapToScreen(light->getPosition().x() - light_radius, light->getPosition().y() + light_radius, light->z_order ).toPoint();
+        QPoint top_right = mapToScreen(light->getPosition().x() + light_radius, light->getPosition().y() + light_radius, light->z_order ).toPoint();
+        QPoint bot_left =  mapToScreen(light->getPosition().x() - light_radius, light->getPosition().y() - light_radius, light->z_order ).toPoint();
+        QPoint bot_right = mapToScreen(light->getPosition().x() + light_radius, light->getPosition().y() - light_radius, light->z_order ).toPoint();
         QPolygon light_box; light_box << top_left << top_right << bot_left << bot_right;
         QRect in_view = QRect(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
         light->setIsInView( light_box.boundingRect().intersects(in_view) || light_box.boundingRect().contains(in_view) ||
@@ -67,11 +85,11 @@ void DrOpenGL::drawShadowMaps() {
     m_occluder_fbo->release();
     glViewport(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
 
-    // Code to have the Occluder Map fbo pop up so we can take a look
+    // ***** Code to have the Occluder Map fbo pop up so we can take a look
     ///static int count = 0;
     ///count++;
     ///if (count % 600 == 0) {
-    ///    Dr::ShowMessageBox("hi", QPixmap::fromImage( m_occluder_fbo->toImage() ).scaled(512, 512) );
+    ///    Dr::ShowMessageBox("fbo", QPixmap::fromImage( m_occluder_fbo->toImage() ).scaled(512, 512) );
     ///    count = 0;
     ///}
 
@@ -80,24 +98,23 @@ void DrOpenGL::drawShadowMaps() {
         // Calculate light position on Occluder Map
         light->setScreenPos( mapToFBO( QVector3D(static_cast<float>(light->getPosition().x()), static_cast<float>(light->getPosition().y()),
                                                  static_cast<float>(light->z_order)),
-                                       m_occluder_fbo, occluderMatrix(m_engine->getCurrentWorld()->render_type)) );
+                                       m_occluder_fbo, occluderMatrix(m_engine->getCurrentWorld()->render_type, false)) );
         double middle = m_texture_fbo->height() / 2.0;
         double y_diff = middle - light->getScreenPos().y();
 
         // Adjust scale for Perspective Mode lights
-        double o_scale = static_cast<double>(c_occluder_scale_ortho * m_scale);
-        if (m_engine->getCurrentWorld()->render_type == Render_Type::Perspective) {
-            QPointF map_0_a = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x()), 0.0f, 0.0f),
-                                          m_occluder_fbo, occluderMatrix(Render_Type::Perspective) );
-            QPointF map_0_b = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x() + (light->getLightDiameterFitted()/2.0)), 0.0f, 0.0f),
-                                          m_occluder_fbo, occluderMatrix(Render_Type::Perspective) );
-            QPointF map_z_a = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x()), 0.0f, static_cast<float>(light->z_order)),
-                                          m_occluder_fbo, occluderMatrix(Render_Type::Perspective) );
-            QPointF map_z_b = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x() + (light->getLightDiameterFitted()/2.0)), 0.0f, static_cast<float>(light->z_order)),
-                                          m_occluder_fbo, occluderMatrix(Render_Type::Perspective) );
-            double map_0 = (map_0_a.x() > map_0_b.x()) ? (map_0_a.x() - map_0_b.x()) : (map_0_b.x() - map_0_a.x());
-            double map_z = (map_z_a.x() > map_z_b.x()) ? (map_z_a.x() - map_z_b.x()) : (map_z_b.x() - map_z_a.x());
-            o_scale *= (map_z / map_0);
+        double o_scale;
+        if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
+            o_scale = static_cast<double>(c_occluder_scale_ortho * m_scale);
+        } else {
+            float screen_scale = 1.0f;
+            screen_scale = (m_occluder_fbo->height() / 800.0f) * 1.00f;         // field of view = 52.5 (in use)
+            ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 0.45f;      // field of view = 95
+            ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 0.70f;      // field of view = 70
+            ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 1.00f;      // field of view = 53
+            ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 1.20f;      // field of view = 45
+            ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 1.50f;      // field of view = 35
+            o_scale = static_cast<double>(c_occluder_scale_proj * m_scale * screen_scale);
         }
 
         // Blit the area of the occluder map the light will take up to the Light Occluder FBO
@@ -154,8 +171,18 @@ void DrOpenGL::checkLightBuffers() {
 //##        Allocate Occluder Map
 //####################################################################################
 void DrOpenGL::bindOccluderMapBuffer() {
-    int desired_x = g_max_occluder_fbo_size;
-    int desired_y = g_max_occluder_fbo_size;
+    int desired_x, desired_y;
+
+    // Orthographic we can use a larger buffer size
+    if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
+        desired_x = g_max_occluder_fbo_size;
+        desired_y = g_max_occluder_fbo_size;
+
+    // Perspective uses same size as off screen buffer to match view angles
+    } else {
+        desired_x = width()* devicePixelRatio();
+        desired_y = height()*devicePixelRatio();
+    }
 
     if (!m_occluder_fbo || (m_occluder_fbo->width() != desired_x || m_occluder_fbo->height() != desired_y)) {
         delete m_occluder_fbo;
@@ -178,6 +205,8 @@ void DrOpenGL::bindLightOcculderBuffer(DrEngineLight *light) {
         need_to_create_new = true;
     else if (m_occluders[light->getKey()]->width() != light->getLightDiameterFitted() || m_occluders[light->getKey()]->height() != light->getLightDiameterFitted())
         need_to_create_new = true;
+
+    // Initialize light fbo
     if (need_to_create_new) {
         delete m_occluders[light->getKey()];
         m_occluders[light->getKey()] = new QOpenGLFramebufferObject(light->getLightDiameterFitted(), light->getLightDiameterFitted());
@@ -204,6 +233,8 @@ void DrOpenGL::bindLightShadowBuffer(DrEngineLight *light) {
         need_to_create_new = true;
     else if (m_shadows[light->getKey()]->width() != shadow_size)
         need_to_create_new = true;
+
+    // Initialize shadow fbo
     if (need_to_create_new) {
         delete m_shadows[light->getKey()];
         m_shadows[light->getKey()] = new QOpenGLFramebufferObject(shadow_size, 1);
@@ -280,9 +311,11 @@ void DrOpenGL::draw2DLight(DrEngineLight *light) {
 
     if (!m_light_shader.bind()) return;
 
-    // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
+    // Set Matrix for to draw the Light, turn off perspective offset before drawing light
+    updateViewMatrix(m_engine->getCurrentWorld()->render_type, false);
     QMatrix4x4 m_matrix = m_projection * m_model_view;
     m_light_shader.setUniformValue( m_uniform_light_matrix, m_matrix );
+    updateViewMatrix(m_engine->getCurrentWorld()->render_type, c_use_cam_offset);
 
     // Set Texture Coordinates for Shader
     std::vector<float> texture_coordinates;
@@ -291,11 +324,13 @@ void DrOpenGL::draw2DLight(DrEngineLight *light) {
     m_light_shader.enableAttributeArray( m_attribute_light_tex_coord );
 
     // Load vertices for this object
-    float left =   static_cast<float>(light->getPosition().x()) - (light->getLightDiameterFitted() / 2.0f);
-    float right =  static_cast<float>(light->getPosition().x()) + (light->getLightDiameterFitted() / 2.0f);
-    float top =    static_cast<float>(light->getPosition().y()) + (light->getLightDiameterFitted() / 2.0f);
-    float bottom = static_cast<float>(light->getPosition().y()) - (light->getLightDiameterFitted() / 2.0f);
+    float perspective_scale = (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) ? 1.0 : (light->getPerspectiveScale() + 0.0001f);
+    float left =   static_cast<float>(light->getPosition().x()) - (light->getLightDiameterFitted()/perspective_scale / 2.0f);
+    float right =  static_cast<float>(light->getPosition().x()) + (light->getLightDiameterFitted()/perspective_scale / 2.0f);
+    float top =    static_cast<float>(light->getPosition().y()) + (light->getLightDiameterFitted()/perspective_scale / 2.0f);
+    float bottom = static_cast<float>(light->getPosition().y()) - (light->getLightDiameterFitted()/perspective_scale / 2.0f);
     QVector<GLfloat> vertices;
+
     setVertexFromSides(vertices, left, right, top, bottom, static_cast<float>(light->z_order));
     m_light_shader.setAttributeArray(    m_attribute_light_vertex, vertices.data(), 3 );
     m_light_shader.enableAttributeArray( m_attribute_light_vertex );

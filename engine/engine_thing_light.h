@@ -49,6 +49,7 @@ private:
     float           m_start_intensity = 1.0f;               // Saves start intensity for use with pulsing
     float           m_pulse_direction = 0.0f;               // Used to pulse light
     float           m_pulse_target;                         // Pulse target intensity
+    float           m_perspective_scale = 1.0f;             // Scales light at a far away zorder for Perspective Rendering
     bool            m_visible = false;                      // Tracks if light is in view
 
 
@@ -70,14 +71,18 @@ public:
     int         getLightDiameterFitted() { return m_light_diameter_fitted; }
     float       getStartIntensity() { return m_start_intensity; }
     float       getPulseDirection() { return m_pulse_direction; }
+    float       getPerspectiveScale() { return m_perspective_scale; }
     bool        isInView() { return m_visible; }
+
 
     void        setScreenPos(QPointF new_pos) { m_screen_pos = new_pos; }
     void        setLightDiameter(int new_diameter) { m_light_diameter = new_diameter; }
     void        setLightDiameterFitted(int new_diameter) { m_light_diameter_fitted = new_diameter; }
     void        setStartIntensity(float intensity) { m_start_intensity = intensity; }
     void        setPulseDirection(float new_direction) { m_pulse_direction = new_direction; }
+    void        setPerspectiveScale(float scale) { m_perspective_scale = scale; }
     void        setIsInView(bool in_view) { m_visible = in_view; }
+
 
 };
 
