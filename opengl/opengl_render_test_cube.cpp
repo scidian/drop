@@ -25,6 +25,10 @@ void DrOpenGL::drawCube(QVector3D center) {
     // ***** Enable shader program
     if (!m_shader.bind()) return;
 
+    // ***** Standard blend function
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     // ***** Set Matrix for Shader, calculates current matrix
     QMatrix4x4 m_matrix = m_projection * m_model_view;
     m_shader.setUniformValue( m_uniform_matrix, m_matrix );

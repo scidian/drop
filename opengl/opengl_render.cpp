@@ -30,6 +30,13 @@ void DrOpenGL::paintGL() {
     ///auto ver = glGetString(GL_VERSION);
     ///m_engine->info = QString::fromUtf8(reinterpret_cast<const char*>(ver));
 
+    // Enable alpha channel blending
+    glEnable(GL_BLEND);
+
+    // Enable depth / stencil test
+    ///glEnable( GL_DEPTH_TEST  );
+    ///glEnable( GL_STENCIL_TEST );
+
     // ***** Make sure Things vector is sorted by depth
     EngineThings &things = m_engine->getCurrentWorld()->getThings();
     std::sort(things.begin(), things.end(), [] (const DrEngineThing *a, const DrEngineThing *b) { return a->z_order < b->z_order; });
@@ -43,7 +50,7 @@ void DrOpenGL::paintGL() {
     ///drawCube( QVector3D( 2000, 400, -300) );                                     // Render Background 3D Objects
     drawSpace();                                                                    // Render cpSpace Objects
     ///drawCube( QVector3D(1600, 500, 600) );                                       // Render Foreground 3D Objects
-    m_render_fbo->release();                                                        // Relase Frame Buffer Object
+    releaseOffscreenBuffer();                                                       // Release Frame Buffer Object
     QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);         // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
 
     // ***** Bind default Qt FrameBuffer, clear and set up for drawing
@@ -69,7 +76,9 @@ void DrOpenGL::paintGL() {
 
 
 //####################################################################################
-//##        Allocate additional FBO for rendering or resize it if widget size changed
+//##        Initializes Off Screen FBO
+//##            - Used for offscreen rendering, allows for entire scene to have post
+//##              processing shaders applied at one time
 //####################################################################################
 void DrOpenGL::bindOffscreenBuffer() {
     // Check that off screen buffers are initialized
@@ -95,67 +104,24 @@ void DrOpenGL::bindOffscreenBuffer() {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    // Enable alpha channel
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                  // Standard blend function
-
     // Enable anti aliasing if not on mobile
 #if not defined(Q_OS_ANDROID) && not defined(Q_OS_IOS)
     glEnable( GL_MULTISAMPLE );
 #endif
 
-    // Enable depth / stencil test
-    ///glEnable( GL_DEPTH_TEST  );
-    ///glEnable( GL_STENCIL_TEST );
 }
 
-
 //####################################################################################
-//##        Update the view matrices before rendering
+//##        Relase Off Screen Frame Buffer Object
 //####################################################################################
-void DrOpenGL::updateViewMatrix(Render_Type render_type, bool use_offset) {
-    //          Axis:
-    //              -X left,        +X right
-    //              -Y down,        +Y up
-    //              -Z back,        +Z front (close to camera)
-    float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
+void DrOpenGL::releaseOffscreenBuffer() {
+    m_render_fbo->release();
 
-    // Orthographic
-    m_model_view.setToIdentity();
-    m_projection.setToIdentity();
-    if (render_type == Render_Type::Orthographic) {
-        float cam_x =  (m_engine->getCurrentWorld()->getCameraPos().x()) * m_scale;
-        float cam_y =  (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale;
-        float left =   cam_x - (width() *  devicePixelRatio() / 2.0f);
-        float right =  cam_x + (width() *  devicePixelRatio() / 2.0f);
-        float top =    cam_y + (height() * devicePixelRatio() / 2.0f);
-        float bottom = cam_y - (height() * devicePixelRatio() / 2.0f);
-        m_projection.ortho( left, right, bottom, top, -5000.0f, 5000.0f);
-        m_model_view.scale( m_scale );
-
-    // Perspective
-    } else {
-        // Set camera position
-        QVector3D  perspective_offset = use_offset ? QVector3D(200.0f, 200.0f, 0.0f) : QVector3D(0.0f, 0.0f, 0.0f);
-        QVector3D  eye(     m_engine->getCurrentWorld()->getCameraPos().x()        * m_scale + perspective_offset.x(),
-                           (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale + perspective_offset.y(),
-                            m_engine->getCurrentWorld()->getCameraPos().z() );
-        QVector3D  look_at( m_engine->getCurrentWorld()->getCameraPos().x()        * m_scale,
-                           (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale,
-                            0.0f );
-        QVector3D  up(      0.0f, 1.0f, 0.0f);
-
-        m_projection.perspective( c_field_of_view, aspect_ratio, 1.0f, 10000.0f );
-        m_model_view.lookAt(eye, look_at, up);
-        m_model_view.scale( m_scale );
-
-        // Rotates the camera around the center of the sceen
-        ///m_angle += 1.0f;
-        ///if (m_angle > 360) m_angle = 0;
-        ///m_model_view.rotate( m_angle, 0.0f, 1.0f, 0.0f );
-    }
+    // Turn off anti aliasing if not on mobile
+#if not defined(Q_OS_ANDROID) && not defined(Q_OS_IOS)
+    glDisable( GL_MULTISAMPLE );
+#endif
 }
-
 
 //####################################################################################
 //##        Applies coordinates that represents an entire texture

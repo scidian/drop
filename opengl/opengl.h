@@ -188,6 +188,7 @@ public:
     QColor          objectDebugColor(DrEngineObject *object, bool text_color = false);
     QMatrix4x4      occluderMatrix(Render_Type render_type, bool use_offset);
     void            updateViewMatrix(Render_Type render_type, bool use_offset);
+    void            releaseOffscreenBuffer();
     void            setShaderDefaultValues(float texture_width, float texture_height);
     void            setNumberTextureCoordinates(QString letter, std::vector<float> &texture_coordinates);
     void            setVertexFromSides(QVector<GLfloat> &vertices, float left, float right, float top, float bottom, float z);

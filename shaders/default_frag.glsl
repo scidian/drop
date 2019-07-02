@@ -93,10 +93,23 @@ void main( void ) {
     fragRGB.rgb += u_tint;                                                          // Tint
     fragRGB.rgb =  clamp(fragRGB.rgb, 0.0, 1.0);
 
+
+
     // ***** BITRATE ADJUSTMENT (16 bit down to 1 bit)
     if (u_bitrate < 16.0) {
         float bit_depth = pow(2.0, u_bitrate);
         fragRGB = vec3(floor(fragRGB.r * bit_depth), floor(fragRGB.g * bit_depth), floor(fragRGB.b * bit_depth)) / bit_depth;
+
+        // ***** Alternate Method
+        //float numColors = pow(2.0, u_bitrate);
+        //float gamma = 1.5;                                                        // (adjustable)
+        //vec3 c = fragRGB.rgb;
+        //c = pow(c, vec3(gamma, gamma, gamma));
+        //c = c * numColors;
+        //c = floor(c);
+        //c = c / numColors;
+        //c = pow(c, vec3(1.0/gamma));
+        //fragRGB = c;
     }
 
 

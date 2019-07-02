@@ -21,6 +21,51 @@
 #include "helper.h"
 #include "opengl/opengl.h"
 
+//####################################################################################
+//##        Update the view matrices before rendering
+//####################################################################################
+void DrOpenGL::updateViewMatrix(Render_Type render_type, bool use_offset) {
+    //          Axis:
+    //              -X left,        +X right
+    //              -Y down,        +Y up
+    //              -Z back,        +Z front (close to camera)
+    float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
+
+    // Orthographic
+    m_model_view.setToIdentity();
+    m_projection.setToIdentity();
+    if (render_type == Render_Type::Orthographic) {
+        float cam_x =  (m_engine->getCurrentWorld()->getCameraPos().x()) * m_scale;
+        float cam_y =  (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale;
+        float left =   cam_x - (width() *  devicePixelRatio() / 2.0f);
+        float right =  cam_x + (width() *  devicePixelRatio() / 2.0f);
+        float top =    cam_y + (height() * devicePixelRatio() / 2.0f);
+        float bottom = cam_y - (height() * devicePixelRatio() / 2.0f);
+        m_projection.ortho( left, right, bottom, top, -5000.0f, 5000.0f);
+        m_model_view.scale( m_scale );
+
+    // Perspective
+    } else {
+        // Set camera position
+        QVector3D  perspective_offset = use_offset ? QVector3D(200.0f, 200.0f, 0.0f) : QVector3D(0.0f, 0.0f, 0.0f);
+        QVector3D  eye(     m_engine->getCurrentWorld()->getCameraPos().x()        * m_scale + perspective_offset.x(),
+                           (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale + perspective_offset.y(),
+                            m_engine->getCurrentWorld()->getCameraPos().z() );
+        QVector3D  look_at( m_engine->getCurrentWorld()->getCameraPos().x()        * m_scale,
+                           (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale,
+                            0.0f );
+        QVector3D  up(      0.0f, 1.0f, 0.0f);
+
+        m_projection.perspective( c_field_of_view, aspect_ratio, 1.0f, 10000.0f );
+        m_model_view.lookAt(eye, look_at, up);
+        m_model_view.scale( m_scale );
+
+        // Rotates the camera around the center of the sceen
+        ///m_angle += 1.0f;
+        ///if (m_angle > 360) m_angle = 0;
+        ///m_model_view.rotate( m_angle, 0.0f, 1.0f, 0.0f );
+    }
+}
 
 //####################################################################################
 //##        Render, Paint the Scene
@@ -34,6 +79,10 @@ void DrOpenGL::cullingOff() {   glDisable( GL_CULL_FACE ); }
 void DrOpenGL::drawSpace() {
     // ***** Enable shader program
     if (!m_shader.bind()) return;
+
+    // ***** Standard blend function
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // ***** Set Matrix for Shader, calculates current matrix
     m_shader.setUniformValue( m_uniform_matrix, (m_projection * m_model_view) );
@@ -54,10 +103,12 @@ void DrOpenGL::drawSpace() {
             if (light) {
                 // ***** Renders 2D Lights onto Light frame buffer
                 if (!light->isInView()) continue;
+                glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);                            // Light blend function
                 m_shader.disableAttributeArray( m_attribute_tex_coord );
                 m_shader.release();
                 draw2DLight(light);
                 if (!m_shader.bind()) return;
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                  // Standard blend function
                 m_shader.setUniformValue( m_uniform_matrix, (m_projection * m_model_view) );
                 m_shader.setAttributeArray( m_attribute_tex_coord, texture_coordinates.data(), 2 );
                 m_shader.enableAttributeArray( m_attribute_tex_coord );
@@ -153,7 +204,11 @@ void DrOpenGL::drawSpace() {
 
 
 //####################################################################################
-//##        Renders All Scene Objects to an occluder map
+//####################################################################################
+
+
+//####################################################################################
+//##        Occluder Map FBO Matrices
 //####################################################################################
 QMatrix4x4 DrOpenGL::occluderMatrix(Render_Type render_type, bool use_offset) {
     float aspect_ratio = static_cast<float>(m_occluder_fbo->width()) / static_cast<float>(m_occluder_fbo->height());
@@ -191,6 +246,10 @@ QMatrix4x4 DrOpenGL::occluderMatrix(Render_Type render_type, bool use_offset) {
     return matrix;
 }
 
+
+//####################################################################################
+//##        Renders the light to the using the Shadow Map
+//####################################################################################
 void DrOpenGL::drawSpaceOccluder() {
     // ***** Enable shader program
     if (!m_occluder_shader.bind()) return;
