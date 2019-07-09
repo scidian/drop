@@ -240,8 +240,10 @@ QMatrix4x4 DrOpenGL::occluderMatrix(Render_Type render_type, bool use_offset) {
     if (render_type == Render_Type::Orthographic) {
         float cam_x =  (m_engine->getCurrentWorld()->getCameraPos().x()) * m_scale * c_occluder_scale_ortho;
         float cam_y =  (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale * c_occluder_scale_ortho;
-        float left =   cam_x - (m_occluder_fbo->width() / 2.0f);
-        float right =  cam_x + (m_occluder_fbo->width() / 2.0f);
+        cam_x = (int(cam_x) / 5) * 5;
+        cam_y = (int(cam_y) / 5) * 5;
+        float left =   cam_x - (m_occluder_fbo->width() /  2.0f);
+        float right =  cam_x + (m_occluder_fbo->width() /  2.0f);
         float top =    cam_y + (m_occluder_fbo->height() / 2.0f);
         float bottom = cam_y - (m_occluder_fbo->height() / 2.0f);
         matrix.ortho( left, right, bottom, top, -5000.0f * c_occluder_scale_ortho, 5000.0f * c_occluder_scale_ortho);
@@ -251,13 +253,13 @@ QMatrix4x4 DrOpenGL::occluderMatrix(Render_Type render_type, bool use_offset) {
     } else {
         // Set camera position
         QVector3D  perspective_offset = use_offset? QVector3D( 200.0f, 200.0f, 0.0f) : QVector3D( 0.0f, 0.0f, 0.0f);
-        QVector3D  eye(     m_engine->getCurrentWorld()->getCameraPos().x()        * m_scale * c_occluder_scale_proj + perspective_offset.x(),
-                           (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale * c_occluder_scale_proj + perspective_offset.y(),
-                            m_engine->getCurrentWorld()->getCameraPos().z());
-        QVector3D  look_at( m_engine->getCurrentWorld()->getCameraPos().x()        * m_scale * c_occluder_scale_proj,
-                           (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale * c_occluder_scale_proj,
-                            0.0f );
-        QVector3D  up(      0.0f, 1.0f, 0.0f);        
+        float cam_x =  (m_engine->getCurrentWorld()->getCameraPos().x()) * m_scale * c_occluder_scale_proj;
+        float cam_y =  (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale * c_occluder_scale_proj;
+        cam_x = (int(cam_x) / 5) * 5;
+        cam_y = (int(cam_y) / 5) * 5;
+        QVector3D  eye(     cam_x + perspective_offset.x(), cam_y + perspective_offset.y(), m_engine->getCurrentWorld()->getCameraPos().z());
+        QVector3D  look_at( cam_x, cam_y, 0.0f );
+        QVector3D  up(      0.0f,   1.0f, 0.0f );
         matrix.perspective( c_field_of_view, aspect_ratio, 1.0f, 10000.0f );
         matrix2.lookAt(eye, look_at, up);
         matrix2.scale( m_scale * c_occluder_scale_proj);
@@ -313,8 +315,8 @@ void DrOpenGL::drawSpaceOccluder() {
         x = static_cast<float>(center.x());
         y = static_cast<float>(center.y());
         z = static_cast<float>(object->z_order);
-        half_width =  (static_cast<float>(texture->width()) *  object->getScaleX() * 1.00f) / 2.0f;
-        half_height = (static_cast<float>(texture->height()) * object->getScaleY() * 1.00f) / 2.0f;
+        half_width =  (static_cast<float>(texture->width()) *  object->getScaleX() * 0.98f) / 2.0f;
+        half_height = (static_cast<float>(texture->height()) * object->getScaleY() * 0.98f) / 2.0f;
 
         // ***** Create rotation matrix, apply rotation to object
         QMatrix4x4 matrix;
