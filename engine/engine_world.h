@@ -95,7 +95,7 @@ private:
     double          m_delete_threshold_x = 5000;    // X distance away from camera an object can be before it's removed from the scene
     double          m_delete_threshold_y = 5000;    // Y distance away from camera an object can be before it's removed from the scene
 
-    QColor          m_background_color {0,0,0};     // Background color to use to clear screen during render
+    QColor          m_background_color {0,0,0,1};   // Background color to use to clear screen during render
     double          m_game_direction = 0.0;         // Direction to load new levels, 0 = to the right, 90 = up, 180 = to the left, etc
     QPointF         m_game_start {0, 0};            // Origin point start stage loaded at
     double          m_game_distance = 0.0;          // Keeps track of distance traveled linearly from the start

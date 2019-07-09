@@ -77,6 +77,7 @@ void DrOpenGL::cullingOff() {   glDisable( GL_CULL_FACE ); }
 
 // Renders All Scene Objects
 void DrOpenGL::drawSpace() {
+
     // ***** Enable shader program
     if (!m_shader.bind()) return;
 
@@ -103,7 +104,24 @@ void DrOpenGL::drawSpace() {
             if (light) {
                 // ***** Renders 2D Lights onto Light frame buffer
                 if (!light->isInView()) continue;
-                glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);                            // Light blend function
+
+                // To Add Lights Together
+                ///glBlendFunc(GL_ONE, GL_ONE);
+
+
+                // Standard blend function
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+                // Best Light blend function
+                //glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
+
+                // Another light blend function
+                ///glBlendFunc(GL_CONSTANT_ALPHA, GL_CONSTANT_ALPHA);
+                ///glBlendColor(light->color.redF(), light->color.greenF(), light->color.blueF(), light->getOpacity());
+
+                // "Screen" (slembcke) light blend function
+                //glBlendFunc(GL_DST_COLOR, GL_ZERO);
+
                 m_shader.disableAttributeArray( m_attribute_tex_coord );
                 m_shader.release();
                 draw2DLight(light);
@@ -189,6 +207,8 @@ void DrOpenGL::drawSpace() {
         m_shader.setUniformValue( m_uniform_brightness, object->brightness );
         m_shader.setUniformValue( m_uniform_tint,       0.0f, 0.0f, 0.0f );
         m_shader.setUniformValue( m_uniform_kernel,     false );
+        ///m_shader.setUniformValue( m_uniform_kernel,     true );
+
 
         // ***** Draw triangles using shader program
         glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
@@ -224,7 +244,7 @@ QMatrix4x4 DrOpenGL::occluderMatrix(Render_Type render_type, bool use_offset) {
         float right =  cam_x + (m_occluder_fbo->width() / 2.0f);
         float top =    cam_y + (m_occluder_fbo->height() / 2.0f);
         float bottom = cam_y - (m_occluder_fbo->height() / 2.0f);
-        matrix.ortho( left, right, bottom, top, -5000.0f, 5000.0f);
+        matrix.ortho( left, right, bottom, top, -5000.0f * c_occluder_scale_ortho, 5000.0f * c_occluder_scale_ortho);
         matrix.scale( m_scale * c_occluder_scale_ortho );
 
     // Perspective
@@ -253,6 +273,11 @@ QMatrix4x4 DrOpenGL::occluderMatrix(Render_Type render_type, bool use_offset) {
 void DrOpenGL::drawSpaceOccluder() {
     // ***** Enable shader program
     if (!m_occluder_shader.bind()) return;
+
+    // ***** Standard blend function
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glDisable(GL_BLEND);
 
     // ***** Set Matrix for Shader
     m_occluder_shader.setUniformValue( m_uniform_occluder_matrix, occluderMatrix(m_engine->getCurrentWorld()->render_type, c_use_cam_offset) );
@@ -288,8 +313,8 @@ void DrOpenGL::drawSpaceOccluder() {
         x = static_cast<float>(center.x());
         y = static_cast<float>(center.y());
         z = static_cast<float>(object->z_order);
-        half_width =  (static_cast<float>(texture->width()) *  object->getScaleX() * 0.98f) / 2.0f;
-        half_height = (static_cast<float>(texture->height()) * object->getScaleY() * 0.98f) / 2.0f;
+        half_width =  (static_cast<float>(texture->width()) *  object->getScaleX() * 1.00f) / 2.0f;
+        half_height = (static_cast<float>(texture->height()) * object->getScaleY() * 1.00f) / 2.0f;
 
         // ***** Create rotation matrix, apply rotation to object
         QMatrix4x4 matrix;

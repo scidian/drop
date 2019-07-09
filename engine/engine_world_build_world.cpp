@@ -86,7 +86,7 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
         m_loaded_to = 0;                    // Reset how far we've loaded
 
         if (world->getComponentPropertyValue(Components::World_Settings, Properties::World_Use_Background_Color).toBool())
-            m_background_color =  QColor::fromRgba(world->getComponentPropertyValue(Components::World_Settings, Properties::World_Background_Color).toUInt());
+            m_background_color = QColor::fromRgba(world->getComponentPropertyValue(Components::World_Settings, Properties::World_Background_Color).toUInt());
 
         // ***** World Physics Properties
         m_time_warp = world->getComponentPropertyValue(Components::World_Physics, Properties::World_Time_Warp).toDouble();

@@ -47,18 +47,15 @@ void DrOpenGL::paintGL() {
     // ***** Render Onto Frame Buffer Object
     updateViewMatrix(m_engine->getCurrentWorld()->render_type, c_use_cam_offset);   // Update Camera / View Matrix
     bindOffscreenBuffer();                                                          // Create / Bind Offscreen Frame Buffer Object
-    ///drawCube( QVector3D( 2000, 400, -300) );                                     // Render Background 3D Objects
+    drawCube( QVector3D( 2000, 400, -300) );                                     // Render Background 3D Objects
     drawSpace();                                                                    // Render cpSpace Objects
-    ///drawCube( QVector3D(1600, 500, 600) );                                       // Render Foreground 3D Objects
+    drawCube( QVector3D(1600, 500, 600) );                                       // Render Foreground 3D Objects
     releaseOffscreenBuffer();                                                       // Release Frame Buffer Object
     QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);         // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
 
     // ***** Bind default Qt FrameBuffer, clear and set up for drawing
     QOpenGLFramebufferObject::bindDefault();
-    float background_red =   static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().redF());
-    float background_green = static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().greenF());
-    float background_blue =  static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().blueF());
-    glClearColor(background_red, background_green, background_blue, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     // ***** Renders Frame Buffer Object to screen buffer as a textured quad, with post processing available
@@ -101,8 +98,12 @@ void DrOpenGL::bindOffscreenBuffer() {
     m_render_fbo->bind();
 
     // Clear the buffers
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    float background_red =   static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().redF());
+    float background_green = static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().greenF());
+    float background_blue =  static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().blueF());
+    glClearColor(background_red, background_green, background_blue, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
 
     // Enable anti aliasing if not on mobile
 #if not defined(Q_OS_ANDROID) && not defined(Q_OS_IOS)

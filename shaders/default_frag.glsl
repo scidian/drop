@@ -1,5 +1,6 @@
+#version 120
 #ifdef GL_ES
-precision mediump float;
+precision highp float;
 #endif
 //
 //
@@ -118,6 +119,10 @@ void main( void ) {
 
     // ******************** KERNEL EFFECTS
     if (u_kernel) {
+        // Temp can use to darken pixels
+        //gl_FragColor = gl_FragColor * 0.3;
+        //return;
+
         float offset_x = 1.0 / u_width;
         float offset_y = 1.0 / u_height;
         vec2 offset_0 = vec2(-offset_x,  offset_y);     // top-left

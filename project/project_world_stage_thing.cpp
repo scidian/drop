@@ -130,7 +130,7 @@ void DrThing::addComponentSettingsLight(QColor color) {
     addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Draw_Shadows, Property_Type::Bool, 50.0,
                            "Cast Shadows", "Should this light cast shadows? <b>NOTE:</b> The use of many shadow casting lights on the screen at one "
                                            "time can slow down older devices.");
-    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Shadows, Property_Type::Percent, 25.0,
+    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Shadows, Property_Type::Percent, 50.0,
                            "Shadow Amount", "How much light should shine through the shadows. 0 is No Light, 100 is Most Light.");
     addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse, Property_Type::Double, 0.0,
                            "Pulse Amount", "This value will cause light to pulse back and forth +/- the Pulse Amount from the lights Intensity.");
@@ -170,31 +170,31 @@ void DrThing::addComponentSettingsCamera(QString new_name) {
 //##    Shared Components
 //####################################################################################
 void DrThing::addComponentTransform(double width, double height, double x, double y, DrThingType type) {
-    addComponent(Components::Thing_Transform, "Transform", "Sets the physical size and angle of the object in the stage.", Component_Colors::Green_SeaGrass, true);
+    addComponent(Components::Thing_Transform, "Transform", "Sets the physical size and angle of the item in the stage.", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Thing_Transform)->setIcon(Component_Icons::Transform);
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Position, Property_Type::PositionF, QPointF(x, y),
-                           "Position", "Location of object within the current stage.");
+                           "Position", "Location of item within the current stage.");
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Rotation, Property_Type::Angle, 0,
-                           "Rotation", "Angle of object within the stage.");
-    QString size_text = "Width and Height of object in pixels, affected by Scale property.";
+                           "Rotation", "Angle of item within the stage.");
+    QString size_text = "Width and Height of item in pixels, affected by Scale property.";
     if (type == DrThingType::Light) {
-            size_text = "Width and Height of object in pixels, affected by Scale property. "
+            size_text = "Width and Height of item in pixels, affected by Scale property. "
                         "<br><b>NOTE:</b> For best performace on older devices, Light size is best kept under 4096.";
     }
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Size, Property_Type::SizeF, QPointF(width, height),
                            "Size", size_text);
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Scale, Property_Type::ScaleF, QPointF(1, 1),
-                           "Scale", "X and Y scale of object within the stage.");
+                           "Scale", "X and Y scale of item within the stage.");
 }
 
 void DrThing::addComponentLayering(double z) {
-    addComponent(Components::Thing_Layering, "Layering", "Controls the order Objects are drawn onto the screen. For \"Z Order\", lower numbers are "
+    addComponent(Components::Thing_Layering, "Layering", "Controls the order items are drawn onto the screen. For \"Z Order\", lower numbers are "
                                                            "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, true);
     getComponent(Components::Thing_Layering)->setIcon(Component_Icons::Layering);
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Z_Order, Property_Type::Double, QVariant::fromValue(z),
-                           "Z Order", "Arrangement of Object along the z axis in the stage.");
+                           "Z Order", "Arrangement of item along the z axis in the stage.");
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Opacity, Property_Type::Percent, 100,
-                           "Opacity", "How transparent this Object is, 0 (invisible) - 100 (solid)");
+                           "Opacity", "How transparent this item is, 0 (invisible) - 100 (solid)");
 }
 
 void DrThing::addComponentMovement() {
@@ -218,13 +218,13 @@ void DrThing::addComponentMovement() {
 }
 
 void DrThing::addComponentAppearance() {
-    addComponent(Components::Thing_Appearance, "Appearance", "Filters for Objects as they appear in the Stage. ", Component_Colors::Mellow_Yellow, true);
+    addComponent(Components::Thing_Appearance, "Appearance", "Filters for items as they appear in the Stage. ", Component_Colors::Mellow_Yellow, true);
     getComponent(Components::Thing_Appearance)->setIcon(Component_Icons::Appearance);
 
     addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation, Property_Type::PositiveSizeF, QPointF(1.0, 1.0),
                            "Pixelation", "Size of x and y pixels, larger numbers provide more pixelation.");
     addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Brightness, Property_Type::Filter, 0,
-                           "Brightness", "How light / dark this Object should appear. \nDefault: \t0 \nRange: \t-255 to 255");
+                           "Brightness", "How light / dark this item should appear. \nDefault: \t0 \nRange: \t-255 to 255");
     addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Contrast, Property_Type::Filter, 0,
                            "Contrast", "Amount of distinguishable difference of colors. \nDefault: \t0 \nRange: \t-255 to 255");
     addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Saturation, Property_Type::Filter, 0,
@@ -232,9 +232,9 @@ void DrThing::addComponentAppearance() {
     addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Hue, Property_Type::FilterAngle, 0,
                            "Hue", "Rotate color values. \nDefault: \t0 \nRange: \t0 to 360");
     addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Grayscale, Property_Type::Bool, false,
-                           "Grayscale", "Should this Object be shown grayscale?");
+                           "Grayscale", "Should this item be shown grayscale?");
     addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Negative, Property_Type::Bool, false,
-                           "Negative", "Should this Object's colors be inverted?");
+                           "Negative", "Should this item's colors be inverted?");
 }
 
 

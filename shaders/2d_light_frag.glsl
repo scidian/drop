@@ -1,5 +1,6 @@
+#version 120
 #ifdef GL_ES
-precision mediump float;
+precision highp float;
 #endif
 //
 //
@@ -12,6 +13,8 @@ varying highp vec2  coordinates;                    // Texture Coodinates
 
 // ***** Input from Engine
 uniform sampler2D   u_texture;                      // Shadow Map 1D
+uniform sampler2D   u_base_texture;                 // Base Output Texture (already drawn screen)
+
 uniform float       u_light_diameter;               // Original Light Diameter
 uniform float       u_light_fitted;                 // Light Diameter Fit to Max Size
 uniform lowp float  u_alpha;                        // Opacity of light                 0.0 to 1.0
@@ -62,7 +65,7 @@ void main(void) {
             float diff_x = smoothstep(0.0, 1.0, ((u_cone.x - theta) / DEG) * (1.0/blur));
             float diff_y = smoothstep(0.0, 1.0, ((theta - u_cone.y) / DEG) * (1.0/blur));
             opacity -= min(diff_x, diff_y);
-            if (opacity <= 0.01) return;
+            if (opacity <= 0.01) discard;
         }
     } else {
         if (theta < u_cone.x || theta > u_cone.y) {
@@ -76,7 +79,7 @@ void main(void) {
                 diff_y = smoothstep(0.0, 1.0, ((theta + RAD - u_cone.y) / DEG) * (1.0/blur));
             }
             opacity -= min(diff_x, diff_y);
-            if (opacity <= 0.01) return;
+            if (opacity <= 0.01) discard;
         }
     }
 
@@ -93,19 +96,21 @@ void main(void) {
         // The center tex coord, which gives us hard shadows
         float center = sample(tc, r);
 
-        // We multiply the blur amount by our distance from center, this leads to more blurriness as the shadow "fades away"
-        float blur = (1.0 / u_light_diameter) * smoothstep(0.0, 1.0, r * shrink) * (blur * 0.05);       // The 0.05 reduces our blur down, could be adjusted
+        // Calculate blur
+        float center_dist =   smoothstep(0.0, 1.0, r * shrink);                 // Multiply blur amount by distance from center, more bluriness as the shadow "fades away"
+        //float center_dist +=  ((0.5 - center_dist) * 2.0);                    // Adding 2.0 sets the minimum blur at the center, can be adjusted
+        float fuzz = (1.0 / u_light_diameter) * (blur * 0.05) * center_dist;    // The 0.05 reduces our blur down, could be adjusted
 
         // Now we use a simple gaussian blur, sum of 1.0 == in light, 0.0 == in shadow
-        sum += sample(vec2(tc.x - 4.0 * blur, tc.y), r) * 0.05;
-        sum += sample(vec2(tc.x - 3.0 * blur, tc.y), r) * 0.09;
-        sum += sample(vec2(tc.x - 2.0 * blur, tc.y), r) * 0.12;
-        sum += sample(vec2(tc.x - 1.0 * blur, tc.y), r) * 0.15;
+        sum += sample(vec2(tc.x - 4.0 * fuzz, tc.y), r) * 0.05;
+        sum += sample(vec2(tc.x - 3.0 * fuzz, tc.y), r) * 0.09;
+        sum += sample(vec2(tc.x - 2.0 * fuzz, tc.y), r) * 0.12;
+        sum += sample(vec2(tc.x - 1.0 * fuzz, tc.y), r) * 0.15;
         sum += center * 0.16;
-        sum += sample(vec2(tc.x + 1.0 * blur, tc.y), r) * 0.15;
-        sum += sample(vec2(tc.x + 2.0 * blur, tc.y), r) * 0.12;
-        sum += sample(vec2(tc.x + 3.0 * blur, tc.y), r) * 0.09;
-        sum += sample(vec2(tc.x + 4.0 * blur, tc.y), r) * 0.05;
+        sum += sample(vec2(tc.x + 1.0 * fuzz, tc.y), r) * 0.15;
+        sum += sample(vec2(tc.x + 2.0 * fuzz, tc.y), r) * 0.12;
+        sum += sample(vec2(tc.x + 3.0 * fuzz, tc.y), r) * 0.09;
+        sum += sample(vec2(tc.x + 4.0 * fuzz, tc.y), r) * 0.05;
 
         // At this point sum is less than or equal to 1.0
         sum *= amount;
@@ -116,6 +121,35 @@ void main(void) {
 
     // Multiply by light color
     gl_FragColor = vec4(u_color, opacity) * vec4(amount, amount, amount, amount);
+
+
+
+//    // Hard Light Blending
+//    vec4 upper = light_color;   //texture2D(texLmap, v_vTexcoord);
+//    vec4 lower = texture2D(u_base_texture, coordinates.st);
+//    vec4 out_color = vec4(0.0, 0.0, 0.0, upper.a);
+//    if (upper.r > 0.5) {
+//        out_color.r = (1.0 - (1.0-lower.r) * (1.0-2.0*(upper.r-0.5)));
+//    } else {
+//        out_color.r = lower.r * (2.0*upper.r);
+//    }
+//    if (upper.g > 0.5) {
+//        out_color.g = (1.0 - (1.0-lower.g) * (1.0-2.0*(upper.g-0.5)));
+//    } else {
+//        out_color.g = lower.g * (2.0*upper.g);
+//    }
+//    if (upper.b > 0.5) {
+//        out_color.b = (1.0 - (1.0-lower.b) * (1.0-2.0*(upper.b-0.5)));
+//    } else {
+//        out_color.b = lower.b * (2.0*upper.b);
+//    }
+//    if (upper.a > 0.5) {
+//        out_color.a = (1.0 - (1.0-lower.a) * (1.0-2.0*(upper.a-0.5)));
+//    } else {
+//        out_color.a = lower.a * (2.0*upper.a);
+//    }
+//    gl_FragColor = vec4(out_color.rgb, upper.a);
+
 }
 
 

@@ -88,7 +88,7 @@ void DrOpenGL::drawShadowMaps() {
     // ***** Code to have the Occluder Map fbo pop up so we can take a look
     ///static int count = 0;
     ///count++;
-    ///if (count % 600 == 0) {
+    ///if (count % 500 == 0) {
     ///    Dr::ShowMessageBox("fbo", QPixmap::fromImage( m_occluder_fbo->toImage() ).scaled(512, 512) );
     ///    count = 0;
     ///}
@@ -111,7 +111,7 @@ void DrOpenGL::drawShadowMaps() {
             screen_scale = (m_occluder_fbo->height() / 800.0f) * 1.00f;         // field of view = 52.5 (in use)
             ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 0.45f;      // field of view = 95
             ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 0.70f;      // field of view = 70
-            ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 1.00f;      // field of view = 53
+            ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 1.00f;      // field of view = 52.5
             ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 1.20f;      // field of view = 45
             o_scale = static_cast<double>(c_occluder_scale_proj * m_scale * screen_scale);
         }
@@ -166,7 +166,7 @@ void DrOpenGL::checkLightBuffers() {
 }
 
 //####################################################################################
-//##        Allocate Occluder Map
+//##        Allocate Occluder Map (For Whole Scene)
 //####################################################################################
 void DrOpenGL::bindOccluderMapBuffer() {
     int desired_x, desired_y;
@@ -194,7 +194,7 @@ void DrOpenGL::bindOccluderMapBuffer() {
 }
 
 //####################################################################################
-//##        Allocate Light Occluder Frame Buffer Object
+//##        Allocate Light Occluder Frame Buffer Object (For Each Light)
 //####################################################################################
 void DrOpenGL::bindLightOcculderBuffer(DrEngineLight *light) {
     // Check Frame Buffer Object is initialized
@@ -246,13 +246,18 @@ void DrOpenGL::bindLightShadowBuffer(DrEngineLight *light) {
 
 
 //####################################################################################
-//##        Renders the 1D Shadow Map based on the Occluder Map
+//##        Renders the 1D Shadow Map based on the Occluder Map (For Each Light)
 //####################################################################################
 void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
+    // Bind Shadow Shader
+    if (!m_shadow_shader.bind()) return;
+
+    // Bind Light Occluder as a texture
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, m_occluders[light->getKey()]->texture());
 
-    if (!m_shadow_shader.bind()) return;
+    // Disable blending
+    glDisable(GL_BLEND);
 
     // Reset our projection matrix to the FBO size
     float left =   0.0f - ((m_shadows[light->getKey()]->width() )  / 2.0f);
@@ -308,6 +313,9 @@ void DrOpenGL::draw2DLight(DrEngineLight *light) {
     }
 
     if (!m_light_shader.bind()) return;
+
+//    glBindTexture(GL_TEXTURE_2D, m_render_fbo->texture());
+//    m_light_shader.setUniformValue( m_uniform_light_base_texture, 1 );         // Use texture unit 1
 
     // Set Matrix for to draw the Light, turn off perspective offset before drawing light
     updateViewMatrix(m_engine->getCurrentWorld()->render_type, false);

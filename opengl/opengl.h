@@ -35,7 +35,7 @@ extern int  g_max_occluder_fbo_size;
 extern int  g_max_light_fbo_size;
 
 // Rendering Constants
-const bool  c_use_cam_offset = false;
+const bool  c_use_cam_offset = true;
 const float c_field_of_view = 52.5f;                    // Close to Orthographic size when using standard widescreen ratio
 
 // 2D Light Constants
@@ -131,6 +131,7 @@ private:
     int     m_uniform_light_matrix;
 
     int     m_uniform_light_texture;
+    int     m_uniform_light_base_texture;
     int     m_uniform_light_diameter;
     int     m_uniform_light_fitted;
     int     m_uniform_light_alpha;

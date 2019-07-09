@@ -22,7 +22,7 @@ DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key,
     : DrEngineThing(world, unique_key) {
 
     this->setPosition( QPointF(x, y) );
-    this->z_order = z - 0.0001;
+    this->z_order = z;
     this->color = color;
     this->light_size = diameter;
     this->cone = cone;
@@ -73,6 +73,9 @@ bool DrEngineLight::update(double time_passed, double time_warp, QRectF &area) {
             m_pulse_target = m_start_intensity + pulse;
         }
     }
+
+    // !!!!! TEMP: Move light
+    ///this->setPosition(QPointF(this->getPosition().x() + 2, this->getPosition().y()));
 
     // ***** Delete object if ends up outside the deletion threshold
     if (area.contains(getPosition()) == false) remove = true;
