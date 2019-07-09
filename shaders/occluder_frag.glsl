@@ -19,10 +19,10 @@ uniform highp float     u_depth;                    // Z-Order of item, assuming
 // Packs a float into a color
 highp vec3 packColor(float f) {
     highp vec3 color;
-    color.b = floor(f / 256.0 / 256.0);
+    color.b = floor(f / 65536.0);
     color.g = floor((f - (color.b * 65536.0)) / 256.0);
     color.r = floor((f - (color.b * 65536.0)) - (color.g * 256.0));
-    return color / 255.0;                           // vec3 has 3 components in range [0..255], normalize it
+    return color / 255.0;                           // Return has 3 components in range [0..255], normalize them
 }
 
 void main( void ) {
@@ -30,8 +30,7 @@ void main( void ) {
     highp float z =  clamp(u_depth, -5000.0, 5000.0);                           // Clamp to within near and far plane
                 z += 5000.0;                                                    // Add 5000 to equalize negative z numbers
                 z *= 1000.0;                                                    // Multiply by 1000 to remove decimals
-
-    highp vec3  color_out = packColor(z);
+    highp vec3  color_out = packColor(z);                                       // Pack z order into a vec3
 
     gl_FragColor = highp vec4(color_out, texture2D(u_tex, coordinates.st).a * u_alpha);
 

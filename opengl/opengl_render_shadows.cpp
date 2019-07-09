@@ -306,13 +306,14 @@ void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
 //##        Renders the light to the using the Shadow Map
 //####################################################################################
 void DrOpenGL::draw2DLight(DrEngineLight *light) {
+    // Bind Light Shader
+    if (!m_light_shader.bind()) return;
 
+    // If drawing Shadows, Bind Shadow Map as a texture
     if (light->draw_shadows) {
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, m_shadows[light->getKey()]->texture());
     }
-
-    if (!m_light_shader.bind()) return;
 
 //    glBindTexture(GL_TEXTURE_2D, m_render_fbo->texture());
 //    m_light_shader.setUniformValue( m_uniform_light_base_texture, 1 );         // Use texture unit 1

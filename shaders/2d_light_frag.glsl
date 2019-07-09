@@ -12,8 +12,8 @@ precision highp float;
 varying highp vec2  coordinates;                    // Texture Coodinates
 
 // ***** Input from Engine
-uniform sampler2D   u_texture;                      // Shadow Map 1D
-uniform sampler2D   u_base_texture;                 // Base Output Texture (already drawn screen)
+uniform highp sampler2D u_texture;                  // Shadow Map 1D
+uniform       sampler2D u_base_texture;             // Base Output Texture (already drawn screen)
 
 uniform float       u_light_diameter;               // Original Light Diameter
 uniform float       u_light_fitted;                 // Light Diameter Fit to Max Size
@@ -26,27 +26,28 @@ uniform lowp float  u_intensity;                    // Intensity                
 uniform lowp float  u_blur;                         // Blur                             0.0 to 100.0
 uniform bool        u_draw_shadows;                 // Draw shadows                     true or false
 
-const float         PI =  3.1415926;
-const float         RAD = 6.2831853;                // 2.0 * PI is 360 degrees in radians
-const float         DEG = 0.0174533;                // One Degree in Radians is 0.0174533
+const   highp float PI =  3.1415926;
+const   highp float RAD = 6.2831853;                // 2.0 * PI is 360 degrees in radians
+const   highp float DEG = 0.0174533;                // One Degree in Radians is 0.0174533
 
 
 // Sample from the 1D Distance (Shadow) Map
-float sample(vec2 coord, float r) {
-    return step(r, texture2D(u_texture, coord).r);
+float sampleShadow(vec2 coord_in, float r) {
+    return step(r, texture2D(u_texture, coord_in).r);
 }
 
 void main(void) {
 
-    // Rectangular to Polar
-    vec2  norm =        coordinates.st * 2.0 - 1.0;
-    float theta =       atan(norm.y, norm.x);
-    float r =           length(norm);
-    float coord =       (theta + PI) / RAD;
-
+    // User Inputs
     float shrink =      u_light_diameter / u_light_fitted;
     float blur =        u_blur + 0.001;
     float opacity =     u_alpha;
+
+    // Rectangular to Polar
+    vec2  norm =        coordinates.st * 2.0 - 1.0;
+    float theta =       atan(norm.y, norm.x);
+    float radius =      length(norm);
+    float coord =       (theta + PI) / RAD;
 
 
     // Adjust our 0 to 100 range for intensity to better range (0 to 50 becomes 0 to 1, 50 to 100 becomes 1 to 10
@@ -85,7 +86,7 @@ void main(void) {
 
 
     // Multiply the sum by our distance, which gives us a radial falloff
-    float amount = intensity * smoothstep(1.0, 0.0, r * shrink);
+    float amount = intensity * smoothstep(1.0, 0.0, radius * shrink);
 
 
     float sum = 0.0;
@@ -94,23 +95,24 @@ void main(void) {
         vec2  tc = vec2(coord, 0.0);
 
         // The center tex coord, which gives us hard shadows
-        float center = sample(tc, r);
+        float center = sampleShadow(tc, radius);
 
         // Calculate blur
-        float center_dist =   smoothstep(0.0, 1.0, r * shrink);                 // Multiply blur amount by distance from center, more bluriness as the shadow "fades away"
-        //float center_dist +=  ((0.5 - center_dist) * 2.0);                    // Adding 2.0 sets the minimum blur at the center, can be adjusted
-        float fuzz = (1.0 / u_light_diameter) * (blur * 0.05) * center_dist;    // The 0.05 reduces our blur down, could be adjusted
+        float radial_blur = 1.5;                                                            // Ability to increase (1.5) blur away towards edges
+        float center_dist = smoothstep(0.0, 1.0, radius * radial_blur * shrink);            // To be multiplied into fuzz, more bluriness as the shadow "fades away"
+              center_dist += ((1.0 - center_dist) * 0.50);                                  // Adding 0.50 sets the minimum blur at the center, can be adjusted
+        float fuzz = (1.0 / u_light_diameter) * (blur * 0.05) * center_dist;                // The 0.05 reduces our blur down, could be adjusted
 
         // Now we use a simple gaussian blur, sum of 1.0 == in light, 0.0 == in shadow
-        sum += sample(vec2(tc.x - 4.0 * fuzz, tc.y), r) * 0.05;
-        sum += sample(vec2(tc.x - 3.0 * fuzz, tc.y), r) * 0.09;
-        sum += sample(vec2(tc.x - 2.0 * fuzz, tc.y), r) * 0.12;
-        sum += sample(vec2(tc.x - 1.0 * fuzz, tc.y), r) * 0.15;
+        sum += sampleShadow(vec2(tc.x - 4.0 * fuzz, tc.y), radius) * 0.05;
+        sum += sampleShadow(vec2(tc.x - 3.0 * fuzz, tc.y), radius) * 0.09;
+        sum += sampleShadow(vec2(tc.x - 2.0 * fuzz, tc.y), radius) * 0.12;
+        sum += sampleShadow(vec2(tc.x - 1.0 * fuzz, tc.y), radius) * 0.15;
         sum += center * 0.16;
-        sum += sample(vec2(tc.x + 1.0 * fuzz, tc.y), r) * 0.15;
-        sum += sample(vec2(tc.x + 2.0 * fuzz, tc.y), r) * 0.12;
-        sum += sample(vec2(tc.x + 3.0 * fuzz, tc.y), r) * 0.09;
-        sum += sample(vec2(tc.x + 4.0 * fuzz, tc.y), r) * 0.05;
+        sum += sampleShadow(vec2(tc.x + 1.0 * fuzz, tc.y), radius) * 0.15;
+        sum += sampleShadow(vec2(tc.x + 2.0 * fuzz, tc.y), radius) * 0.12;
+        sum += sampleShadow(vec2(tc.x + 3.0 * fuzz, tc.y), radius) * 0.09;
+        sum += sampleShadow(vec2(tc.x + 4.0 * fuzz, tc.y), radius) * 0.05;
 
         // At this point sum is less than or equal to 1.0
         sum *= amount;

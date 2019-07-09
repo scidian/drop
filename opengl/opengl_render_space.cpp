@@ -113,14 +113,14 @@ void DrOpenGL::drawSpace() {
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
                 // Best Light blend function
-                //glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
+                ///glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
 
                 // Another light blend function
                 ///glBlendFunc(GL_CONSTANT_ALPHA, GL_CONSTANT_ALPHA);
                 ///glBlendColor(light->color.redF(), light->color.greenF(), light->color.blueF(), light->getOpacity());
 
                 // "Screen" (slembcke) light blend function
-                //glBlendFunc(GL_DST_COLOR, GL_ZERO);
+                ///glBlendFunc(GL_DST_COLOR, GL_ZERO);
 
                 m_shader.disableAttributeArray( m_attribute_tex_coord );
                 m_shader.release();
