@@ -65,7 +65,9 @@ void main(void) {
                 // Adds a little extra to get light closer to edges
                 float add_extra = (ray_diff * small_length);
                 if (theta < 0.0) theta += RAD;                              // Add 360 degrees in radians if theta is less than zero
-                if (theta > (PI / 2.0) && theta < (PI + PI / 2.0))          // If angle in towards the bottom of screen, reduce add_extra
+                if ((theta > 1.57 && theta < 4.80) ||                       // If angle in towards the bottom of screen (> 90 and < 270), reduce add_extra
+                    (theta > 5.25 && theta < 5.60) ||                       //      Or if angle is around 315 degrees
+                    (theta > 6.00))                                         //      Or if angle is close to being back around to straight up, 350+ degrees
                     add_extra *= 0.1;
                 distance = min(distance, dst) + add_extra;
 

@@ -17,7 +17,7 @@ uniform highp float     u_alpha;                    // Opacity
 uniform highp float     u_depth;                    // Z-Order of item, assuming max distances -5000 to 5000
 
 // Packs a float into a color
-highp vec3 packColor(float f) {
+highp vec3 packColor(highp float f) {
     highp vec3 color;
     color.b = floor(f / 65536.0);
     color.g = floor((f - (color.b * 65536.0)) / 256.0);

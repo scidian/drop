@@ -315,9 +315,6 @@ void DrOpenGL::draw2DLight(DrEngineLight *light) {
         glBindTexture(GL_TEXTURE_2D, m_shadows[light->getKey()]->texture());
     }
 
-//    glBindTexture(GL_TEXTURE_2D, m_render_fbo->texture());
-//    m_light_shader.setUniformValue( m_uniform_light_base_texture, 1 );         // Use texture unit 1
-
     // Set Matrix for to draw the Light, turn off perspective offset before drawing light
     updateViewMatrix(m_engine->getCurrentWorld()->render_type, false);
     QMatrix4x4 m_matrix = m_projection * m_model_view;

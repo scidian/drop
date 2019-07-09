@@ -131,7 +131,6 @@ private:
     int     m_uniform_light_matrix;
 
     int     m_uniform_light_texture;
-    int     m_uniform_light_base_texture;
     int     m_uniform_light_diameter;
     int     m_uniform_light_fitted;
     int     m_uniform_light_alpha;
