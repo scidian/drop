@@ -346,8 +346,8 @@ void DrOpenGL::drawSpaceOccluder() {
         x = static_cast<float>(center.x());
         y = static_cast<float>(center.y());
         z = static_cast<float>(object->z_order);
-        half_width =  (static_cast<float>(texture->width()) *  object->getScaleX() * 0.98f) / 2.0f;
-        half_height = (static_cast<float>(texture->height()) * object->getScaleY() * 0.98f) / 2.0f;
+        half_width =  (static_cast<float>(texture->width()) *  object->getScaleX() * 1.00f) / 2.0f;
+        half_height = (static_cast<float>(texture->height()) * object->getScaleY() * 1.00f) / 2.0f;
 
         // ***** Create rotation matrix, apply rotation to object
         QMatrix4x4 matrix;

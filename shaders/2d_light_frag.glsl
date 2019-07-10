@@ -26,15 +26,26 @@ uniform highp float u_blur;                         // Blur                     
 uniform bool        u_draw_shadows;                 // Draw shadows                     true or false
 uniform bool        u_is_glow;                      // True if this is a glow light
 
+// Local Constants / Variables
 const   highp float PI =  3.1415926;
 const   highp float RAD = 6.2831853;                // 2.0 * PI is 360 degrees in radians
 const   highp float DEG = 0.0174533;                // One Degree in Radians is 0.0174533
 
+        highp float shadow_fade;                    // Used to fade the start of shadows
+
 
 // Sample from the 1D Distance (Shadow) Map
 highp float sampleShadow(highp vec2 coord_in, highp float r) {
-    return step(r, texture2D(u_texture, coord_in).r);
+    // Original Return
+    //return step(r, texture2D(u_texture, coord_in).r);
+
+    // Playing Around With Fading Shadows
+    //return (texture2D(u_texture, coord_in).r / r);
+
+    // Fades into the start of Shadow
+    return 1.0 - clamp((r - texture2D(u_texture, coord_in).r) * shadow_fade, 0.0, 1.0);
 }
+
 
 void main(void) {
 
@@ -86,22 +97,28 @@ void main(void) {
 
 
     // Multiply the sum by our distance, which gives us a radial falloff
-    highp float amount = intensity * smoothstep(1.0, 0.0, radius * shrink);
+    highp float falloff = intensity * smoothstep(1.0, 0.0, radius * shrink);
 
+    // Set Shadow fade amount based on light type
+    if (u_is_glow) {
+        shadow_fade = 10.0;             // Equals distance of 0.10)
+    } else {
+        shadow_fade = 50.0;             // Equals distance of 0.02
+    }
 
     highp float sum = 0.0;
     if (u_draw_shadows) {
-        // The tex coord to sample our 1D lookup texture, always 0.0 on y axis
+        // The texture coordinate to sample our 1D lookup texture, always 0.0 on y axis
         highp vec2  tc = highp vec2(coord, 0.0);
 
-        // The center tex coord, which gives us hard shadows
+        // The center sample, which gives us hard shadows
         highp float center = sampleShadow(tc, radius);
 
         // Calculate blur
         highp float radial_blur = 1.5;                                                      // Ability to increase (1.5) blur away towards edges
         highp float center_dist = smoothstep(0.0, 1.0, radius * radial_blur * shrink);      // To be multiplied into fuzz, more bluriness as the shadow "fades away"
-                    center_dist += ((1.0 - center_dist) * 0.50);                            // Adding 0.50 sets the minimum blur at the center, can be adjusted
-        highp float fuzz = (1.0 / u_light_diameter) * (blur * 0.05) * center_dist;          // The 0.05 reduces our blur down, could be adjusted
+                    center_dist += ((1.0 - center_dist) * 0.50);                            // Adding (0.50) sets the minimum blur at the center, can be adjusted
+        highp float fuzz = (1.0 / u_light_diameter) * (blur * 0.05) * center_dist;          // The (0.05) reduces our blur down, could be adjusted
 
         // Now we use a simple gaussian blur, sum of 1.0 == in light, 0.0 == in shadow
         sum += sampleShadow(highp vec2(tc.x - 4.0 * fuzz, tc.y), radius) * 0.05;
@@ -115,18 +132,16 @@ void main(void) {
         sum += sampleShadow(highp vec2(tc.x + 4.0 * fuzz, tc.y), radius) * 0.05;
 
         // At this point sum is less than or equal to 1.0
-        sum *= amount;
+        sum *= falloff;
 
-        highp float shade = (amount - sum) * (u_light_shadows / 100.0);
-        amount -= shade;
+        highp float shade = (falloff - sum) * (u_light_shadows / 100.0);
+        falloff -= shade;
     }
 
     // Multiply by light color
-//    if (u_is_glow) {
-//        gl_FragColor = highp vec4(u_color, amount);
-//    } else {
-        gl_FragColor = highp vec4(u_color, opacity) * highp vec4(amount, amount, amount, amount);
-    //}
+    gl_FragColor = highp vec4(u_color, opacity) * highp vec4(falloff, falloff, falloff, falloff);
+
+
 
 
 //    // Hard Light Blending
