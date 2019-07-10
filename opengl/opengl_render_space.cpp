@@ -236,18 +236,18 @@ bool DrOpenGL::drawGlowBuffer() {
 
     glEnable(GL_BLEND);
 
-    // "Screen" (slembcke) light blend function
-    glBlendFunc(GL_DST_COLOR, GL_ZERO);
+    // "Screen" (slembcke) light blend function, works good, but doesnt get brighter than texture colors
+    /// glBlendFunc(GL_DST_COLOR, GL_ZERO);
 
-    // To Add Lights Together
-    ///glBlendFunc(GL_ONE, GL_ONE);
+    // Best Light blend function, a little but of oversaturation, but looks nice
+    glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
 
-    // Best Light blend function
-    ///glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
-
-    // Another light blend function
+    // Another light blend function, was good for singular lights, but doesnt work for multicolored glow map
     ///glBlendFunc(GL_CONSTANT_ALPHA, GL_CONSTANT_ALPHA);
     ///glBlendColor(light->color.redF(), light->color.greenF(), light->color.blueF(), light->getOpacity());
+
+    // To Add Lights Together, not really great for lighting though
+    ///glBlendFunc(GL_ONE, GL_ONE);
 
     drawFrameBufferToScreenBuffer(m_glow_fbo, true);
     return true;
