@@ -35,7 +35,6 @@ void main(void) {
     highp float full_length =  u_resolution.x;
     highp float ray_length =   u_resolution.y;
     highp float ray_diff =     ray_length / rays;
-    highp float small_length = 0.05 / (ray_length * (ray_length / full_length));
 
     for (highp float travel_y = 0.0; travel_y < ray_length; travel_y += ray_diff) {
 
@@ -61,25 +60,10 @@ void main(void) {
 
             // Make sure light is behind object in z order
             if (u_depth <= z) {
-
-                // Adds a little extra to get light closer to edges,
-                // Make some adjustments for larger ends / corners
-                float add_extra = 0.0; //(ray_diff * small_length);
-//                if (theta < 0.0) theta += RAD;                              // Add 360 degrees in radians if theta is less than zero
-//                if (theta > 1.57 && theta < 4.80) {                         // If angle in towards the bottom of screen (> 90 and < 270), reduce add_extra
-//                    if (theta > 3.90)
-//                        add_extra *= 0.05;
-//                    else
-//                        add_extra *= 0.10;
-//                } else if ((theta > 4.88 && theta < 5.65) ||                //      Or if angle is around 280 to 315 degrees
-//                           (theta > 6.00)) {                                //      Or if angle is close to being back around to straight up, 350+ degrees
-//                    add_extra *= 0.10;
-//                }
-                distance = min(distance, dst) + add_extra;
+                distance = min(distance, dst);
 
                 // We are very close, move on
-                if (distance <= add_extra) break;
-
+                if (distance <= 0.0) break;
             }
         }
 

@@ -42,7 +42,7 @@ highp float sampleShadow(highp vec2 coord_in, highp float r) {
     // Playing Around With Fading Shadows
     //return (texture2D(u_texture, coord_in).r / r);
 
-    // Fades into the start of Shadow
+    // Awesome!!! Fades into the start of Shadow
     return 1.0 - clamp((r - texture2D(u_texture, coord_in).r) * shadow_fade, 0.0, 1.0);
 }
 
