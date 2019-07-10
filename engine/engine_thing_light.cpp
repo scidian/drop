@@ -76,7 +76,7 @@ bool DrEngineLight::update(double time_passed, double time_warp, QRectF &area) {
     }
 
     // !!!!! TEMP: Move light
-    this->setPosition(QPointF(this->getPosition().x() + 2, this->getPosition().y()));
+    ///this->setPosition(QPointF(this->getPosition().x() + 2, this->getPosition().y()));
 
     // ***** Delete object if ends up outside the deletion threshold
     if (area.contains(getPosition()) == false) remove = true;

@@ -28,13 +28,22 @@ highp float unpackColor(highp vec3 color) {
     return (color.r * 255.0) + (color.g * 255.0) * 256.0 + (color.b * 255.0) * 256.0 * 256.0;
 }
 
+// Returns a random number, that is between 0.0 and 0.999999 inclusive.
+float random(vec2 p) {
+    return fract(cos(dot(p, vec2(23.14069263277926, 2.665144142690225))) * 12345.6789);
+}
+
+// Fragment Shader
 void main(void) {        
 
     highp float distance =     1.0;
-    highp float rays =         u_ray_count;
+    highp float rays =         u_ray_count;             // Width of 1D Shadow Map (i.e. number of rays to send out)
     highp float full_length =  u_resolution.x;
     highp float ray_length =   u_resolution.y;
     highp float ray_diff =     ray_length / rays;
+
+    bool  covered = false;
+    float countdown = 0.0;
 
     for (highp float travel_y = 0.0; travel_y < ray_length; travel_y += ray_diff) {
 
@@ -60,14 +69,37 @@ void main(void) {
 
             // Make sure light is behind object in z order
             if (u_depth <= z) {
-                distance = min(distance, dst);
+                // We check from the inside out, so if we made it here, we've hit the closest occluder to the center
 
-                // We are very close, move on
-                if (distance <= 0.0) break;
+//                // If the light is covered, allow some light to extrude, mark as covered here to start this process
+//                if (travel_y <= 0.00001) {
+//                    covered = true;
+//                }
+
+                // If light is not covered, we have hit the closest occluder (shadow object), we can exit
+                if (!covered) {
+                    distance = dst;
+                    break;
+                }
+                continue;
             }
         }
 
-    }
+//        // If light is covered, we let some light extrude out
+//        if (covered) {
+//            countdown = 1.5 + (random(vec2(coord.x, theta)) * 0.20);
+//            covered = false;
+//        }
+//        // While countdown is greater than zero light is allowed to continue
+//        if (countdown > 0.0) {
+//            countdown -= 0.05;
+//            if (countdown <= 0.00001) {
+//                distance = dst;
+//                break;
+//            }
+//        }
+
+    }   // End For
 
     gl_FragColor = highp vec4(highp vec3(distance), 1.0);
 }

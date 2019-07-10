@@ -136,6 +136,7 @@ void DrOpenGL::initializeGL() {
 
     // 2D Light Fragment Shader Input
     m_uniform_light_texture =       m_light_shader.uniformLocation(   "u_texture" );
+    m_uniform_light_ray_count =     m_light_shader.uniformLocation(   "u_ray_count" );
     m_uniform_light_diameter =      m_light_shader.uniformLocation(   "u_light_diameter" );
     m_uniform_light_fitted =        m_light_shader.uniformLocation(   "u_light_fitted" );
     m_uniform_light_alpha =         m_light_shader.uniformLocation(   "u_alpha" );

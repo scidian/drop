@@ -13,6 +13,7 @@ varying highp vec2  coordinates;                    // Texture Coodinates
 
 // ***** Input from Engine
 uniform highp sampler2D u_texture;                  // Shadow Map 1D
+uniform highp float     u_ray_count;                // Width of 1D Shadow Map
 
 uniform highp float u_light_diameter;               // Original Light Diameter
 uniform highp float u_light_fitted;                 // Light Diameter Fit to Max Size
@@ -99,12 +100,14 @@ void main(void) {
     // Multiply the sum by our distance, which gives us a radial falloff
     highp float falloff = intensity * smoothstep(1.0, 0.0, radius * shrink);
 
+
     // Set Shadow fade amount based on light type
     if (u_is_glow) {
-        shadow_fade = 10.0;             // Equals distance of 0.10)
+        shadow_fade = 10.0;             // Equals distance of 0.10
     } else {
         shadow_fade = 50.0;             // Equals distance of 0.02
     }
+
 
     highp float sum = 0.0;
     if (u_draw_shadows) {

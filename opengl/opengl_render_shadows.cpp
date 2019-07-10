@@ -382,12 +382,15 @@ void DrOpenGL::draw2DLight(DrEngineLight *light) {
     // Use texture unit 0
     m_light_shader.setUniformValue( m_uniform_light_texture, 0 );
 
+    // Give the shader our Ray Count (Shadow Map width)
+    m_light_shader.setUniformValue( m_uniform_light_ray_count,      static_cast<float>(m_shadows[light->getKey()]->width()) );
+
     // Give shader the light_size diameter, fitted diameter
-    m_light_shader.setUniformValue( m_uniform_light_diameter,   static_cast<float>(light->getLightDiameter()) );
-    m_light_shader.setUniformValue( m_uniform_light_fitted,     static_cast<float>(light->getLightDiameterFitted()) );
+    m_light_shader.setUniformValue( m_uniform_light_diameter,       static_cast<float>(light->getLightDiameter()) );
+    m_light_shader.setUniformValue( m_uniform_light_fitted,         static_cast<float>(light->getLightDiameterFitted()) );
 
     // Give shader the opacity, light color
-    m_light_shader.setUniformValue( m_uniform_light_alpha,      light->getOpacity() );
+    m_light_shader.setUniformValue( m_uniform_light_alpha,          light->getOpacity() );
     m_light_shader.setUniformValue( m_uniform_light_color,
                                     static_cast<float>(light->color.redF()),
                                     static_cast<float>(light->color.greenF()),
