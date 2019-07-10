@@ -151,18 +151,11 @@ void DrOpenGL::drawGlowLights() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    // Draw Glow Lights onto Glow FBO
     for (auto light : m_glow_lights) {
         draw2DLight(light);
     }
-
     m_glow_fbo->release();
-
-//    static int count = 0;
-//    count++;
-//    if (count % 500 == 0) {
-//        Dr::ShowMessageBox("fbo", QPixmap::fromImage( m_glow_fbo->toImage() ).scaled(512, 512, Qt::AspectRatioMode::KeepAspectRatio) );
-//        count = 0;
-//    }
 }
 
 

@@ -42,7 +42,7 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type, bool use_offset) {
         float right =  cam_x + (width() *  devicePixelRatio() / 2.0f);
         float top =    cam_y + (height() * devicePixelRatio() / 2.0f);
         float bottom = cam_y - (height() * devicePixelRatio() / 2.0f);
-        m_projection.ortho( left, right, bottom, top, -5000.0f, 5000.0f);
+        m_projection.ortho( left, right, bottom, top, -5000.0f * m_scale, 5000.0f * m_scale);
         m_model_view.scale( m_scale );
 
     // Perspective
@@ -277,7 +277,7 @@ QMatrix4x4 DrOpenGL::occluderMatrix(Render_Type render_type, bool use_offset) {
         float right =  cam_x + (m_occluder_fbo->width() /  2.0f);
         float top =    cam_y + (m_occluder_fbo->height() / 2.0f);
         float bottom = cam_y - (m_occluder_fbo->height() / 2.0f);
-        matrix.ortho( left, right, bottom, top, -5000.0f * c_occluder_scale_ortho, 5000.0f * c_occluder_scale_ortho);
+        matrix.ortho( left, right, bottom, top, -5000.0f * m_scale * c_occluder_scale_ortho, 5000.0f * m_scale * c_occluder_scale_ortho);
         matrix.scale( m_scale * c_occluder_scale_ortho );
 
     // Perspective
