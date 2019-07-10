@@ -100,6 +100,9 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
         cpSpaceSetDamping(m_space, m_damping);
 
         // ***** World appearance settings
+        m_ambient_light =       world->getComponentPropertyValue(Components::World_Lighting, Properties::World_Light_Ambient).toDouble();
+        m_glow_light_z_order =  world->getComponentPropertyValue(Components::World_Lighting, Properties::World_Light_Layer).toDouble();
+
         bitrate =     world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Bitrate).toInt();
         QPointF pixelation = world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Pixelation).toPointF();
         pixel_x =     static_cast<float>(pixelation.x());

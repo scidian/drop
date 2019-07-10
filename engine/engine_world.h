@@ -95,6 +95,9 @@ private:
     double          m_delete_threshold_x = 5000;    // X distance away from camera an object can be before it's removed from the scene
     double          m_delete_threshold_y = 5000;    // Y distance away from camera an object can be before it's removed from the scene
 
+    double          m_ambient_light = 100.0;        // Ambient light percentage to use for World, mostly for use with Glow Lights
+    double          m_glow_light_z_order = 0.0;     // Z Ordering for Glow Lights
+
     QColor          m_background_color {0,0,0,1};   // Background color to use to clear screen during render
     double          m_game_direction = 0.0;         // Direction to load new levels, 0 = to the right, 90 = up, 180 = to the left, etc
     QPointF         m_game_start {0, 0};            // Origin point start stage loaded at
@@ -183,6 +186,8 @@ public:
     const double&       getDeleteThresholdX()       { return m_delete_threshold_x; }
     const double&       getDeleteThresholdY()       { return m_delete_threshold_y; }
     const QColor&       getBackgroundColor()        { return m_background_color; }
+    const double&       getAmbientLight()           { return m_ambient_light; }
+    const double&       getGlowZOrder()             { return m_glow_light_z_order; }
 
     void                setTimeWarp(double new_time_warp) { m_time_warp = new_time_warp; }
     void                setGravity(cpVect new_gravity) { m_gravity = new_gravity; }
@@ -190,9 +195,11 @@ public:
     void                setFriction(cpFloat new_friction) { m_friction = new_friction; }
     void                setBounce(cpFloat new_bounce) { m_bounce = new_bounce; }
 
-    void                setDeleteThresholdX(double new_x)   { m_delete_threshold_x = new_x; }
-    void                setDeleteThresholdY(double new_y)   { m_delete_threshold_y = new_y; }
+    void                setDeleteThresholdX(double new_x)    { m_delete_threshold_x = new_x; }
+    void                setDeleteThresholdY(double new_y)    { m_delete_threshold_y = new_y; }
     void                setBackgroundColor(QColor new_color) { m_background_color = new_color; }
+    void                setAmbientLight(double new_ambient)  { m_ambient_light = new_ambient; }
+    void                setGlowZOrder(double new_z_order)    { m_glow_light_z_order = new_z_order; }
 
 };
 

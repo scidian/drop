@@ -24,6 +24,7 @@ uniform highp float u_light_shadows;                // Visible shadows          
 uniform highp float u_intensity;                    // Intensity                        0.0 to 100.0?
 uniform highp float u_blur;                         // Blur                             0.0 to 100.0
 uniform bool        u_draw_shadows;                 // Draw shadows                     true or false
+uniform bool        u_is_glow;                      // True if this is a glow light
 
 const   highp float PI =  3.1415926;
 const   highp float RAD = 6.2831853;                // 2.0 * PI is 360 degrees in radians
@@ -121,8 +122,11 @@ void main(void) {
     }
 
     // Multiply by light color
-    gl_FragColor = highp vec4(u_color, opacity) * highp vec4(amount, amount, amount, amount);
-
+//    if (u_is_glow) {
+//        gl_FragColor = highp vec4(u_color, amount);
+//    } else {
+        gl_FragColor = highp vec4(u_color, opacity) * highp vec4(amount, amount, amount, amount);
+    //}
 
 
 //    // Hard Light Blending

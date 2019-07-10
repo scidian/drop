@@ -85,6 +85,10 @@ enum class Collision_Type {
     Damage_All =            4,
 };
 
+enum class Light_Type {
+    Opaque,
+    Glow,
+};
 
 //####################################################################################
 //##    Some public forward function declarations for some enum functions

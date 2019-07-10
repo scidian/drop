@@ -24,6 +24,7 @@ class DrEngineLight : public DrEngineThing
 {
 public:
     // Light Settings
+    Light_Type      light_type = Light_Type::Opaque;        // Type of Light: Opaque or Glow
     float           light_size = 1500.0f;                   // Diameter of light
     QColor          color = QColor(192, 64, 192);           // Color of light
     QPointF         cone = QPointF(0.0, 360.0);             // Start / end angle of light
@@ -56,7 +57,7 @@ private:
 public:
     // Constructor / Destructor
     DrEngineLight(DrEngineWorld *world, long unique_key,
-                  double x, double y, double z, QColor color, float diameter, QPointF cone, float intensity,
+                  double x, double y, double z, Light_Type type, QColor color, float diameter, QPointF cone, float intensity,
                   float shadows, bool draw_shadows, float blur, float pulse, float pulse_speed, float opacity);
     virtual ~DrEngineLight() override;
 

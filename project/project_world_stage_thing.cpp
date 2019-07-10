@@ -20,7 +20,7 @@
 DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *parent_stage,
                  long new_thing_key, QString new_thing_name, DrThingType new_thing_type,
                  long from_asset_key,
-                 double x, double y, long z,
+                 double x, double y, double z,
                  bool should_collide) {
     m_parent_project = parent_project;              // pointer to parent Project
     m_parent_world = parent_world;                  // pointer to parent World
@@ -117,6 +117,9 @@ void DrThing::addComponentSettingsLight(QColor color) {
 
     addComponent(Components::Thing_Settings_Light, "Light Settings", "Settings for current Light.", Component_Colors::Mellow_Yellow, true);
     getComponent(Components::Thing_Settings_Light)->setIcon(Component_Icons::Light);
+    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Type, Property_Type::List, 0,
+                           "Light Type", "<b>Opaque</b> - Solid texture, does not provide lighting. <br> "
+                                         "<b>Glow</b> - Provides diffuse lighting, no z ordering available. ");
     addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Color, Property_Type::Color, color.rgba(),
                            "Light Color", "The Color for this Light.");
     addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start, Property_Type::FilterAngle, 0,
@@ -192,7 +195,7 @@ void DrThing::addComponentLayering(double z) {
                                                            "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, true);
     getComponent(Components::Thing_Layering)->setIcon(Component_Icons::Layering);
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Z_Order, Property_Type::Double, QVariant::fromValue(z),
-                           "Z Order", "Arrangement of item along the z axis in the stage.");
+                           "Z Order", "Arrangement of item along the z axis in the stage. Should be between -5000 and 5000 to be visible.");
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Opacity, Property_Type::Percent, 100,
                            "Opacity", "How transparent this item is, 0 (invisible) - 100 (solid)");
 }

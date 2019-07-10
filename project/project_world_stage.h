@@ -57,7 +57,7 @@ public:
     bool            isStartStage()      { return m_is_start_stage; }
 
     // Misc Stage Functions
-    DrThing*        addThing(DrThingType new_type, long from_asset_key, double x, double y, long z, bool should_collide = true);
+    DrThing*        addThing(DrThingType new_type, long from_asset_key, double x, double y, double z, bool should_collide = true);
     void            copyThingSettings(DrThing *from_thing, DrThing *to_thing);
     void            deleteThing(DrThing *thing) ;
 

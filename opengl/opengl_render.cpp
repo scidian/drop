@@ -30,12 +30,8 @@ void DrOpenGL::paintGL() {
     ///auto ver = glGetString(GL_VERSION);
     ///m_engine->info = QString::fromUtf8(reinterpret_cast<const char*>(ver));
 
-    // Enable alpha channel blending
-    glEnable(GL_BLEND);
-
-    // Enable depth / stencil test
-    ///glEnable( GL_DEPTH_TEST  );
-    ///glEnable( GL_STENCIL_TEST );
+    // ***** Update Camera / View Matrix
+    updateViewMatrix(m_engine->getCurrentWorld()->render_type, c_use_cam_offset);
 
     // ***** Make sure Things vector is sorted by depth
     EngineThings &things = m_engine->getCurrentWorld()->getThings();
@@ -43,13 +39,13 @@ void DrOpenGL::paintGL() {
 
     // ***** If there are Lights, Render Occluder Map, Calculate Shadow Maps
     drawShadowMaps();
+    drawGlowLights();
 
     // ***** Render Onto Frame Buffer Object
-    updateViewMatrix(m_engine->getCurrentWorld()->render_type, c_use_cam_offset);   // Update Camera / View Matrix
     bindOffscreenBuffer();                                                          // Create / Bind Offscreen Frame Buffer Object
-    drawCube( QVector3D( 2000, 400, -300) );                                     // Render Background 3D Objects
+    ///drawCube( QVector3D( 2000, 400, -300) );                                     // Render Background 3D Objects
     drawSpace();                                                                    // Render cpSpace Objects
-    drawCube( QVector3D(1600, 500, 600) );                                       // Render Foreground 3D Objects
+    ///drawCube( QVector3D(1600, 500, 600) );                                       // Render Foreground 3D Objects
     releaseOffscreenBuffer();                                                       // Release Frame Buffer Object
     QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);         // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
 
@@ -92,7 +88,7 @@ void DrOpenGL::bindOffscreenBuffer() {
         m_render_fbo =  new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format);
 
         QOpenGLFramebufferObjectFormat format2;
-        format.setAttachment(QOpenGLFramebufferObject::Attachment::NoAttachment);
+        format2.setAttachment(QOpenGLFramebufferObject::Attachment::NoAttachment);
         m_texture_fbo = new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format2);
     }
     m_render_fbo->bind();

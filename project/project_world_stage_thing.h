@@ -39,7 +39,7 @@ private:
 public:
     // Constructor & destructor
     explicit DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *parent_stage, long new_thing_key,
-                     QString new_thing_name, DrThingType new_thing_type, long from_asset_key, double x, double y, long z, bool should_collide = true);
+                     QString new_thing_name, DrThingType new_thing_type, long from_asset_key, double x, double y, double z, bool should_collide = true);
     virtual ~DrThing() override;
 
     // DrSettings Base Class Overrides

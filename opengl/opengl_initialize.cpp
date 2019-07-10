@@ -145,6 +145,7 @@ void DrOpenGL::initializeGL() {
     m_uniform_light_intensity =     m_light_shader.uniformLocation(   "u_intensity" );
     m_uniform_light_blur =          m_light_shader.uniformLocation(   "u_blur" );
     m_uniform_light_draw_shadows =  m_light_shader.uniformLocation(   "u_draw_shadows" );
+    m_uniform_light_is_glow =       m_light_shader.uniformLocation(   "u_is_glow" );
 
 }
 

@@ -61,6 +61,7 @@ enum class Components {
 
     World_Settings,
     World_Physics,
+    World_Lighting,
     World_Appearance,
 
     Stage_Settings,
@@ -97,17 +98,21 @@ enum class Properties {
     // ******************** DrWorld Component Properties
 
     // Settings
-    World_Game_Direction,           //float
-    World_Score_Multiplier,         //float
+    World_Game_Direction,           //double
+    World_Score_Multiplier,         //double
     World_Use_Background_Color,     //bool
     World_Background_Color,         //color
 
     // Physics
     World_Gravity,                  //pointf (x, y)
-    World_Time_Warp,                //float
-    World_Friction,                 //float
-    World_Drag,                     //float
-    World_Bounce ,                  //float
+    World_Time_Warp,                //double
+    World_Friction,                 //double
+    World_Drag,                     //double
+    World_Bounce ,                  //double
+
+    // Lighting
+    World_Light_Ambient,            //double
+    World_Light_Layer,              //percent
 
     // Appearance
     World_Filter_Bitrate,           //bitrate
@@ -145,7 +150,7 @@ enum class Properties {
     Thing_Scale,                    //scale
 
     // Layering
-    Thing_Z_Order,                  //int
+    Thing_Z_Order,                  //double
     Thing_Opacity,                  //percent
 
     // Movement
@@ -175,6 +180,7 @@ enum class Properties {
     Thing_Object_Damage,            //list (none, player, enemy, all)
 
     // Text Settings
+    Thing_Light_Type,               //list (Opaque, Glow)
     Thing_Light_Color,              //color
     Thing_Light_Cone_Start,         //filter angle      0 to 360
     Thing_Light_Cone_End,           //filter angle      0 to 360
@@ -182,8 +188,8 @@ enum class Properties {
     Thing_Light_Blur,               //0 to 100
     Thing_Light_Draw_Shadows,       //bool
     Thing_Light_Shadows,            //0 to 100
-    Thing_Light_Pulse,              //float
-    Thing_Light_Pulse_Speed,        //float
+    Thing_Light_Pulse,              //double
+    Thing_Light_Pulse_Speed,        //double
 
     // Text Settings
     Thing_Text_User_Text,           //string

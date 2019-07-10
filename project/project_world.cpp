@@ -115,10 +115,16 @@ void DrWorld::initializeWorldSettings(QString new_name) {
                            "Bounce", "Global bounce setting, greater than or equal to 0.0 (no limit, but generally less than or equal to 1.0). Bounce can be "
                                      "overriden on a per object basis.");
 
+    addComponent(Components::World_Lighting, "Lighting", "Lighting settings for current World.", Component_Colors::Mustard_Yellow, true);
+    getComponent(Components::World_Lighting)->setIcon(Component_Icons::Light);
+    addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Ambient, Property_Type::Percent, 100,
+                           "Ambient Light", "Used to darken World, mostly for the purpose of lighting it with Glow Lights.");
+    addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Layer, Property_Type::Double, 0.0,
+                           "Light Layer", "Location along the z axis (Z Order) to draw Glow Lights. Should be between -5000 and 5000 to be visible.");
+
     addComponent(Components::World_Appearance, "Appearance", "These filters affect the entire world after it has been rendered.",
                                                Component_Colors::Mellow_Yellow, true);
     getComponent(Components::World_Appearance)->setIcon(Component_Icons::Appearance);
-
     addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Bitrate, Property_Type::BitRate, 16,
                            "Bit Depth", "Standard output has 16 bit color channel depth, you can use this to reduce the number of available colors. "
                                         "Combining this with Pixelation gives a great retro look.");

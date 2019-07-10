@@ -18,6 +18,7 @@
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
 #include "engine/form_engine.h"
+#include "enums_engine.h"
 #include "helper.h"
 #include "opengl/opengl.h"
 
@@ -75,9 +76,7 @@ void DrOpenGL::cullingOn() {    glEnable( GL_CULL_FACE );   glCullFace(  GL_BACK
 // Turn off culling before drawing 2D quads, #NOTE: Must turn OFF culling for QPainter to work
 void DrOpenGL::cullingOff() {   glDisable( GL_CULL_FACE ); }
 
-// Renders All Scene Objects
-void DrOpenGL::drawSpace() {
-
+void DrOpenGL::setUpSpaceShader(std::vector<float> &texture_coords) {
     // ***** Enable shader program
     if (!m_shader.bind()) return;
 
@@ -89,10 +88,16 @@ void DrOpenGL::drawSpace() {
     m_shader.setUniformValue( m_uniform_matrix, (m_projection * m_model_view) );
 
     // ***** Set Texture Coordinates for Shader
+    m_shader.setAttributeArray( m_attribute_tex_coord, texture_coords.data(), 2 );
+    m_shader.enableAttributeArray( m_attribute_tex_coord );
+}
+
+// Renders All Scene Objects
+void DrOpenGL::drawSpace() {
+
     std::vector<float> texture_coordinates;
     setWholeTextureCoordinates(texture_coordinates);
-    m_shader.setAttributeArray( m_attribute_tex_coord, texture_coordinates.data(), 2 );
-    m_shader.enableAttributeArray( m_attribute_tex_coord );
+    setUpSpaceShader(texture_coordinates);
 
     // ********** Render 2D Objects
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
@@ -102,35 +107,19 @@ void DrOpenGL::drawSpace() {
         if (thing->getThingType() == DrThingType::Light) {
             DrEngineLight *light = dynamic_cast<DrEngineLight*>(thing);
             if (light) {
-                // ***** Renders 2D Lights onto Light frame buffer
                 if (!light->isInView()) continue;
 
-                // To Add Lights Together
-                ///glBlendFunc(GL_ONE, GL_ONE);
+                if (light->light_type == Light_Type::Opaque) {
+                    m_shader.disableAttributeArray( m_attribute_tex_coord );
+                    m_shader.release();
+                    draw2DLight(light);
+                    setUpSpaceShader(texture_coordinates);
+                    continue;
+
+                } else if (light->light_type == Light_Type::Glow) {
 
 
-                // Standard blend function
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-                // Best Light blend function
-                ///glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
-
-                // Another light blend function
-                ///glBlendFunc(GL_CONSTANT_ALPHA, GL_CONSTANT_ALPHA);
-                ///glBlendColor(light->color.redF(), light->color.greenF(), light->color.blueF(), light->getOpacity());
-
-                // "Screen" (slembcke) light blend function
-                ///glBlendFunc(GL_DST_COLOR, GL_ZERO);
-
-                m_shader.disableAttributeArray( m_attribute_tex_coord );
-                m_shader.release();
-                draw2DLight(light);
-                if (!m_shader.bind()) return;
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                  // Standard blend function
-                m_shader.setUniformValue( m_uniform_matrix, (m_projection * m_model_view) );
-                m_shader.setAttributeArray( m_attribute_tex_coord, texture_coordinates.data(), 2 );
-                m_shader.enableAttributeArray( m_attribute_tex_coord );
-                continue;
+                }
             }
             continue;
         }

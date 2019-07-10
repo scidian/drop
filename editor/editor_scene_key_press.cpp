@@ -71,8 +71,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
         DrStage  *drstage  = drthing->getParentStage();
         DrThing  *new_object;
 
-        double  new_x, new_y;
-        int     new_z;
+        double  new_x, new_y, new_z;
 
         switch (event->key()) {
             // Clone selected items
@@ -82,7 +81,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
             case Qt::Key::Key_D:
                 new_x = drthing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF().x();
                 new_y = drthing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF().y();
-                new_z = drthing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toInt();
+                new_z = drthing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
 
                 if (event->key() == Qt::Key::Key_W) new_y = new_y - source_rect.height();
                 if (event->key() == Qt::Key::Key_A) new_x = new_x - source_rect.width();

@@ -29,13 +29,14 @@ void DrOpenGL::drawShadowMaps() {
 
     // ***** Check for lights with shadows, if there are none we don't need to draw occluder map
     int light_count = 0;
-    QVector<DrEngineLight*> shadow_lights;
-    shadow_lights.clear();
+    m_shadow_lights.clear();
+    m_glow_lights.clear();
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
         if (thing == nullptr) continue;
         if (thing->getThingType() != DrThingType::Light) continue;
 
         DrEngineLight *light = dynamic_cast<DrEngineLight*>(thing);
+        if (light->light_type == Light_Type::Glow) m_glow_lights.append(light);
         light_count++;
 
         // Calculate size of light texture (fbo)
@@ -73,10 +74,10 @@ void DrOpenGL::drawShadowMaps() {
 
         // If light needs shadows and is visible, add to shadow processing list
         if (light->draw_shadows && light->isInView())
-            shadow_lights.append(light);
+            m_shadow_lights.append(light);
     }
     m_engine->getCurrentWorld()->light_count = light_count;
-    if (shadow_lights.count() <= 0) return;
+    if (m_shadow_lights.count() <= 0) return;
 
     // ***** Render all Space Objects to an off-screen Frame Buffer Object Occluder Map
     bindOccluderMapBuffer();
@@ -94,7 +95,7 @@ void DrOpenGL::drawShadowMaps() {
     ///}
 
     // ***** Calculate Light 1D Shadow Maps
-    for (auto light : shadow_lights) {
+    for (auto light : m_shadow_lights) {
         // Calculate light position on Occluder Map
         light->setScreenPos( mapToFBO( QVector3D(static_cast<float>(light->getPosition().x()), static_cast<float>(light->getPosition().y()),
                                                  static_cast<float>(light->z_order)),
@@ -138,6 +139,49 @@ void DrOpenGL::drawShadowMaps() {
 
 
 //####################################################################################
+//##        Renders Glow Lights on Glow fbo
+//####################################################################################
+void DrOpenGL::drawGlowLights() {
+    // Check that we should draw Glow Light Buffer, if so bind it
+    double ambient_light = m_engine->getCurrentWorld()->getAmbientLight() / 100.0;
+    if (m_glow_lights.count() <= 0 && Dr::IsCloseTo(1.0, ambient_light, .001)) return;
+    bindGlowLightsBuffer(static_cast<float>(ambient_light));
+
+    // Standard blend function
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // To Add Lights Together
+    ///glBlendFunc(GL_ONE, GL_ONE);
+
+    // Best Light blend function
+    ///glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
+
+    // "Screen" (slembcke) light blend function
+    ///glBlendFunc(GL_DST_COLOR, GL_ZERO);
+
+    for (auto light : m_glow_lights) {
+        // Another light blend function
+        ///glBlendFunc(GL_CONSTANT_ALPHA, GL_CONSTANT_ALPHA);
+        ///glBlendColor(light->color.redF(), light->color.greenF(), light->color.blueF(), light->getOpacity());
+
+        draw2DLight(light);
+    }
+
+    m_glow_fbo->release();
+
+
+
+    static int count = 0;
+    count++;
+    if (count % 500 == 0) {
+        Dr::ShowMessageBox("fbo", QPixmap::fromImage( m_glow_fbo->toImage() ).scaled(512, 512, Qt::AspectRatioMode::KeepAspectRatio) );
+        count = 0;
+    }
+}
+
+
+//####################################################################################
 //##    Check that lights still exist, if not delete buffers
 //####################################################################################
 void DrOpenGL::checkLightBuffers() {
@@ -163,6 +207,24 @@ void DrOpenGL::checkLightBuffers() {
         }
     }
     m_engine->getCurrentWorld()->mark_light_as_deleted.clear();
+}
+
+//####################################################################################
+//##        Allocate Glow Light FBO - To Render All Glow Lights at Once
+//####################################################################################
+void DrOpenGL::bindGlowLightsBuffer(float ambient_light) {
+    // Check that off screen buffers are initialized
+    if (!m_glow_fbo || (m_glow_fbo->width() != width()*devicePixelRatio() || m_glow_fbo->height() != height()*devicePixelRatio())) {
+        delete m_glow_fbo;
+        QOpenGLFramebufferObjectFormat format2;
+        format2.setAttachment(QOpenGLFramebufferObject::Attachment::NoAttachment);
+        m_glow_fbo = new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format2);
+    }
+    m_glow_fbo->bind();
+
+    // Clear the buffer
+    glClearColor(ambient_light, ambient_light, ambient_light, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 //####################################################################################
@@ -365,6 +427,7 @@ void DrOpenGL::draw2DLight(DrEngineLight *light) {
     m_light_shader.setUniformValue( m_uniform_light_shadows,        light->shadows );
     m_light_shader.setUniformValue( m_uniform_light_blur,           light->blur );
     m_light_shader.setUniformValue( m_uniform_light_draw_shadows,   light->draw_shadows );
+    m_light_shader.setUniformValue( m_uniform_light_is_glow,        (light->light_type == Light_Type::Glow));
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

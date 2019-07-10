@@ -49,7 +49,7 @@ DrStage::~DrStage() {
 //##    ***** #NOTE: Y Axis is in Game Engine coordinates (i.e. positive is up, negative is down)
 //##
 //####################################################################################
-DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, double y, long z, bool should_collide) {
+DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, double y, double z, bool should_collide) {
     DrAsset *asset = m_parent_project->getAsset(from_asset_key);
 
     // Figure out name for Thing

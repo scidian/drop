@@ -151,6 +151,9 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
     } else if   (property_key == static_cast<int>(Properties::Stage_Grid_Style)) {
         options << tr("Lines")
                 << tr("Dots");
+    } else if   (property_key == static_cast<int>(Properties::Thing_Light_Type)) {
+        options << tr("Opaque")
+                << tr("Glow");
     } else {
         options << tr("Unknown List");
     }
@@ -200,6 +203,15 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
                     case 0: this->setAdvisorInfo( Advisor_Info::Object_Static[0],    Advisor_Info::Object_Static[1]);       break;
                     case 1: this->setAdvisorInfo( Advisor_Info::Object_Kinematic[0], Advisor_Info::Object_Kinematic[1]);    break;
                     case 2: this->setAdvisorInfo( Advisor_Info::Object_Dynamic[0],   Advisor_Info::Object_Dynamic[1]);      break;
+                }
+            });
+        }
+
+        if (property_key == static_cast<int>(Properties::Thing_Light_Type)) {
+            connect(action,   &QAction::hovered, [this, string_count]() {
+                switch (string_count) {
+                    case 0: this->setAdvisorInfo( Advisor_Info::Light_Opaque[0],    Advisor_Info::Light_Opaque[1]);          break;
+                    case 1: this->setAdvisorInfo( Advisor_Info::Light_Glow[0],      Advisor_Info::Light_Glow[1]);           break;
                 }
             });
         }

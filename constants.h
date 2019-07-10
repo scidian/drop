@@ -154,6 +154,11 @@ namespace Advisor_Info {
     const HeaderBodyList Damage_All             { "Damage All",     "This object can be damaged by players and enemies. It will damage all objects it comes "
                                                                     "into contact with. "};
 
+    const HeaderBodyList Light_Opaque           { "Opaque Light",   "Light is drawn as solid texture, does not provide actual lighting to scene, only shadows. "
+                                                                    "However, light is able to be layered in a specific z order." };
+    const HeaderBodyList Light_Glow             { "Glow Light",     "Light provides diffuse lighting. Ambient light setting should be adjusted in World Settings "
+                                                                    "to take advantage of Glow Lights. All Glow Lights are drawn at Z Order specified in World Settings."};
+
     // Inspector Widgets
     const HeaderBodyList Variable_Widget        { "Variable Amount", "Plus or minus modifier to initial value, the following value allows for some "
                                                                      "variable amount to the initial value. For example, an initial value of 100 with "

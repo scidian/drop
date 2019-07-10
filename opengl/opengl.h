@@ -74,11 +74,16 @@ private:
     // Frame Buffers
     QOpenGLFramebufferObject *m_render_fbo = nullptr;           // Used for offscreen rendering
     QOpenGLFramebufferObject *m_texture_fbo = nullptr;          // m_render_fbo must be copied to a non-multisampled fbo before being used as a texture
+    QOpenGLFramebufferObject *m_glow_fbo = nullptr;             // Used for rendering Glow Lights onto scene all at once
     QOpenGLFramebufferObject *m_occluder_fbo = nullptr;         // Used for rendering an occlusion map for use with lights
 
     // Frame Buffer Objects for use during Render
     std::map<long, QOpenGLFramebufferObject*> m_occluders;      // Off screen Frame Buffer Objects for Light Occluder Maps
     std::map<long, QOpenGLFramebufferObject*> m_shadows;        // Off screen Frame Buffer Objects for Light 1D Shadow Maps
+
+    // Vectors to keep track of lights
+    QVector<DrEngineLight*> m_shadow_lights;
+    QVector<DrEngineLight*> m_glow_lights;
 
     // Shader Variables
     QOpenGLShaderProgram m_shader;
@@ -140,6 +145,7 @@ private:
     int     m_uniform_light_intensity;
     int     m_uniform_light_blur;
     int     m_uniform_light_draw_shadows;
+    int     m_uniform_light_is_glow;
 
 
 public:
@@ -191,16 +197,19 @@ public:
     void            releaseOffscreenBuffer();
     void            setShaderDefaultValues(float texture_width, float texture_height);
     void            setNumberTextureCoordinates(QString letter, std::vector<float> &texture_coordinates);
+    void            setUpSpaceShader(std::vector<float> &texture_coords);
     void            setVertexFromSides(QVector<GLfloat> &vertices, float left, float right, float top, float bottom, float z);
     void            setWholeTextureCoordinates(std::vector<float> &texture_coords);
 
     // Soft Shadows
+    void            bindGlowLightsBuffer(float ambient_light);
     void            bindOccluderMapBuffer();
     void            bindLightOcculderBuffer(DrEngineLight *light);
     void            bindLightShadowBuffer(DrEngineLight *light);
     void            checkLightBuffers();
     void            draw1DShadowMap(DrEngineLight *light);
     void            draw2DLight(DrEngineLight *light);
+    void            drawGlowLights();
     void            drawShadowMaps();
 
     // Getters and Setters

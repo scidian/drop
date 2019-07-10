@@ -58,6 +58,7 @@ void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double off
     float       alpha =         thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
     double      light_size =    thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF().x();
     QColor      light_color =   QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Color).toUInt());
+    int         light_type =    thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Type).toInt();
 
     double      cone_start =    thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start).toDouble();
     double      cone_end =      thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toDouble();
@@ -71,7 +72,8 @@ void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double off
 
     light_size *= c_light_size_adjuster;
 
-    addThing( new DrEngineLight(this, getNextKey(), position.x() + offset_x, -position.y() + offset_y, z_order, light_color, static_cast<float>(light_size),
+    addThing( new DrEngineLight(this, getNextKey(), position.x() + offset_x, -position.y() + offset_y, z_order, static_cast<Light_Type>(light_type),
+                                light_color, static_cast<float>(light_size),
                                 QPointF(cone_start, cone_end), intensity, shadows, draw_shadows, blur, pulse, pulse_speed, alpha));
 }
 
