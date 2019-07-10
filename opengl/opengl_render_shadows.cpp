@@ -151,33 +151,18 @@ void DrOpenGL::drawGlowLights() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    // To Add Lights Together
-    ///glBlendFunc(GL_ONE, GL_ONE);
-
-    // Best Light blend function
-    ///glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
-
-    // "Screen" (slembcke) light blend function
-    ///glBlendFunc(GL_DST_COLOR, GL_ZERO);
-
     for (auto light : m_glow_lights) {
-        // Another light blend function
-        ///glBlendFunc(GL_CONSTANT_ALPHA, GL_CONSTANT_ALPHA);
-        ///glBlendColor(light->color.redF(), light->color.greenF(), light->color.blueF(), light->getOpacity());
-
         draw2DLight(light);
     }
 
     m_glow_fbo->release();
 
-
-
-    static int count = 0;
-    count++;
-    if (count % 500 == 0) {
-        Dr::ShowMessageBox("fbo", QPixmap::fromImage( m_glow_fbo->toImage() ).scaled(512, 512, Qt::AspectRatioMode::KeepAspectRatio) );
-        count = 0;
-    }
+//    static int count = 0;
+//    count++;
+//    if (count % 500 == 0) {
+//        Dr::ShowMessageBox("fbo", QPixmap::fromImage( m_glow_fbo->toImage() ).scaled(512, 512, Qt::AspectRatioMode::KeepAspectRatio) );
+//        count = 0;
+//    }
 }
 
 

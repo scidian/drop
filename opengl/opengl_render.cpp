@@ -55,6 +55,8 @@ void DrOpenGL::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     // ***** Renders Frame Buffer Object to screen buffer as a textured quad, with post processing available
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                  // Standard blend function
     drawFrameBufferToScreenBuffer(m_texture_fbo);
 
     // ***** Draws Debug Shapes / Text Onto Frame Buffer Object
@@ -154,10 +156,6 @@ void DrOpenGL::setVertexFromSides(QVector<GLfloat> &vertices, float left, float 
 //####################################################################################
 void DrOpenGL::drawFrameBufferToScreenBuffer(QOpenGLFramebufferObject *fbo, bool use_kernel) {
 
-    // Enable alpha channel
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                  // Standard blend function
-
     // Bind offscreen frame buffer object as a texture
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, fbo->texture());
@@ -232,10 +230,6 @@ void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height)
     m_shader.setUniformValue( m_uniform_tint,       0.0f, 0.0f, 0.0f );     // Add 0 to red, green, and blue
     m_shader.setUniformValue( m_uniform_kernel,     false );                // Currently overrides other effects if set to true
 }
-
-
-
-
 
 
 

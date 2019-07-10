@@ -189,6 +189,7 @@ public:
     void            drawDebugJoints(QPainter &painter);
     void            drawDebugShapes(QPainter &painter);
     void            drawFrameBufferToScreenBuffer(QOpenGLFramebufferObject *fbo, bool use_kernel = false);
+    bool            drawGlowBuffer();
     void            drawSpace();
     void            drawSpaceOccluder();
     QColor          objectDebugColor(DrEngineObject *object, bool text_color = false);

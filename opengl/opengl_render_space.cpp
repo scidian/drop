@@ -95,12 +95,23 @@ void DrOpenGL::setUpSpaceShader(std::vector<float> &texture_coords) {
 // Renders All Scene Objects
 void DrOpenGL::drawSpace() {
 
+    bool has_rendered_glow_lights = false;
+
+    // Initialize shader settings
     std::vector<float> texture_coordinates;
     setWholeTextureCoordinates(texture_coordinates);
     setUpSpaceShader(texture_coordinates);
 
     // ********** Render 2D Objects
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
+
+        // ***** When we have gone past glow z_order, draw the lights to the scene
+        if (!has_rendered_glow_lights && (thing->z_order > m_engine->getCurrentWorld()->getGlowZOrder())) {
+            m_shader.disableAttributeArray( m_attribute_tex_coord );
+            m_shader.release();
+            has_rendered_glow_lights = drawGlowBuffer();
+            setUpSpaceShader(texture_coordinates);
+        }
 
         // ***** If light, draw with seperate shader then move to next Thing
         float texture_width = 0, texture_height = 0;
@@ -209,6 +220,37 @@ void DrOpenGL::drawSpace() {
     // ***** Disable shader program
     m_shader.disableAttributeArray( m_attribute_tex_coord );
     m_shader.release();
+
+    // ***** If we didn't draw Glow Lights yet, do it now
+    if (!has_rendered_glow_lights) drawGlowBuffer();
+}
+
+
+//####################################################################################
+//##        Draws Glow Buffer onto screen buffer
+//####################################################################################
+bool DrOpenGL::drawGlowBuffer() {
+    // Check that we should draw Glow Light Buffer
+    double ambient_light = m_engine->getCurrentWorld()->getAmbientLight() / 100.0;
+    if (m_glow_lights.count() <= 0 && Dr::IsCloseTo(1.0, ambient_light, .001)) return true;
+
+    glEnable(GL_BLEND);
+
+    // "Screen" (slembcke) light blend function
+    glBlendFunc(GL_DST_COLOR, GL_ZERO);
+
+    // To Add Lights Together
+    ///glBlendFunc(GL_ONE, GL_ONE);
+
+    // Best Light blend function
+    ///glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
+
+    // Another light blend function
+    ///glBlendFunc(GL_CONSTANT_ALPHA, GL_CONSTANT_ALPHA);
+    ///glBlendColor(light->color.redF(), light->color.greenF(), light->color.blueF(), light->getOpacity());
+
+    drawFrameBufferToScreenBuffer(m_glow_fbo, true);
+    return true;
 }
 
 
