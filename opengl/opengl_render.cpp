@@ -154,7 +154,7 @@ void DrOpenGL::setVertexFromSides(QVector<GLfloat> &vertices, float left, float 
 //##        Renders Frame Buffer Object to screen buffer as a textured quad
 //##            Post processing available through the fragment shader
 //####################################################################################
-void DrOpenGL::drawFrameBufferToScreenBuffer(QOpenGLFramebufferObject *fbo, bool use_kernel) {
+void DrOpenGL::drawFrameBufferToScreenBufferDefaultShader(QOpenGLFramebufferObject *fbo, bool use_kernel) {
 
     // Bind offscreen frame buffer object as a texture
     glEnable(GL_TEXTURE_2D);
@@ -232,6 +232,55 @@ void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height)
 }
 
 
+//####################################################################################
+//##        Renders Frame Buffer Object to screen buffer as a textured quad
+//##            Uses "Screen" shader to multiply glow lights into texture
+//####################################################################################
+void DrOpenGL::drawFrameBufferToScreenBufferScreenShader(QOpenGLFramebufferObject *fbo, bool use_kernel) {
+
+    // Bind offscreen frame buffer object as a texture
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, fbo->texture());
+
+    if (!m_shader.bind()) return;
+
+    // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
+    float left =   0.0f - (fbo->width()  / 2.0f);
+    float right =  0.0f + (fbo->width()  / 2.0f);
+    float top =    0.0f + (fbo->height() / 2.0f);
+    float bottom = 0.0f - (fbo->height() / 2.0f);
+    QMatrix4x4 m_matrix;
+    m_matrix.ortho( left, right, bottom, top, -5000.0f, 5000.0f);
+    m_shader.setUniformValue( m_uniform_matrix, m_matrix );
+
+    // Set Texture Coordinates for Shader
+    std::vector<float> texture_coordinates;
+    setWholeTextureCoordinates(texture_coordinates);
+    m_shader.setAttributeArray( m_attribute_tex_coord, texture_coordinates.data(), 2 );
+    m_shader.enableAttributeArray( m_attribute_tex_coord );
+
+    // Load vertices for this object
+    QVector<GLfloat> vertices;
+    setVertexFromSides(vertices, left, right, top, bottom, 0.0f);
+    m_shader.setAttributeArray( m_attribute_vertex, vertices.data(), 3 );
+    m_shader.enableAttributeArray( m_attribute_vertex );
+
+    // Set variables for shader
+    setShaderDefaultValues( fbo->width(), fbo->height() );
+
+
+    m_shader.setUniformValue( m_uniform_kernel,     use_kernel );                // Turns on Kernel filter (blur / sharpen / etc)
+
+    // Draw triangles using shader program
+    glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
+
+    // Disable arrays
+    m_shader.disableAttributeArray( m_attribute_vertex );
+    m_shader.disableAttributeArray( m_attribute_tex_coord );
+
+    // Release Shader
+    m_shader.release();
+}
 
 
 

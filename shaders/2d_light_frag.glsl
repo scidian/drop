@@ -144,35 +144,6 @@ void main(void) {
     // Multiply by light color
     gl_FragColor = highp vec4(u_color, opacity) * highp vec4(falloff, falloff, falloff, falloff);
 
-
-
-
-//    // Hard Light Blending
-//    vec4 upper = light_color;   //texture2D(texLmap, v_vTexcoord);
-//    vec4 lower = texture2D(u_base_texture, coordinates.st);
-//    vec4 out_color = vec4(0.0, 0.0, 0.0, upper.a);
-//    if (upper.r > 0.5) {
-//        out_color.r = (1.0 - (1.0-lower.r) * (1.0-2.0*(upper.r-0.5)));
-//    } else {
-//        out_color.r = lower.r * (2.0*upper.r);
-//    }
-//    if (upper.g > 0.5) {
-//        out_color.g = (1.0 - (1.0-lower.g) * (1.0-2.0*(upper.g-0.5)));
-//    } else {
-//        out_color.g = lower.g * (2.0*upper.g);
-//    }
-//    if (upper.b > 0.5) {
-//        out_color.b = (1.0 - (1.0-lower.b) * (1.0-2.0*(upper.b-0.5)));
-//    } else {
-//        out_color.b = lower.b * (2.0*upper.b);
-//    }
-//    if (upper.a > 0.5) {
-//        out_color.a = (1.0 - (1.0-lower.a) * (1.0-2.0*(upper.a-0.5)));
-//    } else {
-//        out_color.a = lower.a * (2.0*upper.a);
-//    }
-//    gl_FragColor = vec4(out_color.rgb, upper.a);
-
 }
 
 

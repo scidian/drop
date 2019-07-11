@@ -190,7 +190,8 @@ public:
     void            drawDebugHealthNative(QPainter &painter);
     void            drawDebugJoints(QPainter &painter);
     void            drawDebugShapes(QPainter &painter);
-    void            drawFrameBufferToScreenBuffer(QOpenGLFramebufferObject *fbo, bool use_kernel = false);
+    void            drawFrameBufferToScreenBufferDefaultShader(QOpenGLFramebufferObject *fbo, bool use_kernel = false);
+    void            drawFrameBufferToScreenBufferScreenShader(QOpenGLFramebufferObject *fbo, bool use_kernel = false);
     bool            drawGlowBuffer();
     void            drawSpace();
     void            drawSpaceOccluder();
