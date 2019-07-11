@@ -383,7 +383,8 @@ void DrOpenGL::draw2DLight(DrEngineLight *light) {
     m_light_shader.setUniformValue( m_uniform_light_texture, 0 );
 
     // Give the shader our Ray Count (Shadow Map width)
-    m_light_shader.setUniformValue( m_uniform_light_ray_count,      static_cast<float>(m_shadows[light->getKey()]->width()) );
+    float shadow_width = (light->draw_shadows) ? m_shadows[light->getKey()]->width() : 0.0f;
+    m_light_shader.setUniformValue( m_uniform_light_ray_count,      static_cast<float>(shadow_width) );
 
     // Give shader the light_size diameter, fitted diameter
     m_light_shader.setUniformValue( m_uniform_light_diameter,       static_cast<float>(light->getLightDiameter()) );
