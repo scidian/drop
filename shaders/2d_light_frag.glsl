@@ -22,7 +22,7 @@ uniform lowp  float u_alpha;                        // Opacity of light         
 uniform highp vec3  u_color;                        // Light Color, r/g/b               0.0 to 1.0 x 3
 uniform lowp  vec2  u_cone;                         // Start angle, End Angle           0.0, 360.0 is Full Circle
 uniform highp float u_light_shadows;                // Visible shadows                  0.0 to 100.0
-uniform highp float u_intensity;                    // Intensity                        0.0 to 100.0?
+uniform highp float u_intensity;                    // Intensity                        0.0 to 100.0
 uniform highp float u_blur;                         // Blur                             0.0 to 100.0
 uniform bool        u_draw_shadows;                 // Draw shadows                     true or false
 uniform bool        u_is_glow;                      // True if this is a glow light

@@ -10,6 +10,7 @@
 #include <QRandomGenerator>
 
 #include "engine/engine.h"
+#include "engine/engine_thing_light.h"
 #include "engine/engine_thing_object.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
@@ -21,7 +22,6 @@
 //##        Mouse Events
 //####################################################################################
 void DrOpenGL::mousePressEvent(QMouseEvent *event) {
-
     if (m_engine->getCurrentWorld()->has_scene == false) return;
 
     // Convert mouse click to world coordinates
@@ -82,7 +82,7 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
         } else if (event->button() & Qt::RightButton)
             g_pedal = Pedal::CounterClockwise;
 
-    } else if (m_form_engine->demo_player == Demo_Player::Jump) {
+    } else if (m_form_engine->demo_player == Demo_Player::Jump || m_form_engine->demo_player == Demo_Player::Light) {
         if (event->button() & Qt::LeftButton) {
             g_jump_button = true;
         } else if (event->button() & Qt::RightButton) {
@@ -104,13 +104,12 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
 
 }
 
-void DrOpenGL::mouseReleaseEvent(QMouseEvent *event)
-{
+void DrOpenGL::mouseReleaseEvent(QMouseEvent *event) {
     if (m_form_engine->demo_player == Demo_Player::Car) {
         if (event->buttons() == Qt::MouseButton::NoButton)
             g_pedal = Pedal::None;
 
-    } else if (m_form_engine->demo_player == Demo_Player::Jump) {
+    } else if (m_form_engine->demo_player == Demo_Player::Jump || m_form_engine->demo_player == Demo_Player::Light) {
         if (event->buttons() == Qt::MouseButton::NoButton) {
             g_jump_button = false;
             g_pedal = Pedal::None;
@@ -118,7 +117,18 @@ void DrOpenGL::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
+void DrOpenGL::mouseMoveEvent(QMouseEvent *event) {
+    if (m_engine->getCurrentWorld()->has_scene == false) return;
 
+    if (m_form_engine->demo_player == Demo_Player::Light) {
+        DrEngineObject *ball = m_engine->getCurrentWorld()->ball;
+
+        QPointF ball_pos = mapToScreen( ball->getPosition().x(), ball->getPosition().y(), ball->z_order );
+        double angle = QLineF( ball_pos, event->pos() ).angle();
+
+        m_engine->getCurrentWorld()->light1->setAngle(angle);
+    }
+}
 
 //####################################################################################
 //##        Wheel Event / Zoom Functions

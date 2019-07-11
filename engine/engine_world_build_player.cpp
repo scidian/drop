@@ -6,6 +6,7 @@
 //
 //
 #include "engine.h"
+#include "engine_thing_light.h"
 #include "engine_thing_object.h"
 #include "engine_texture.h"
 #include "engine_world.h"
@@ -33,6 +34,8 @@ void DrEngineWorld::assignPlayerControls(DrEngineObject *object, bool has_contro
 //####################################################################################
 void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
+    demo_player = new_player_type;
+
     if (new_player_type == Demo_Player::Jump) {
         DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 200, 50, 0, c_scale1x1, 0.25, 0.5, true, false);
         ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
@@ -56,6 +59,24 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ball2->setJumpCount( c_unlimited_jump );
         ball2->setRotateSpeed( 20.0 );
 
+    } else if (new_player_type == Demo_Player::Light) {
+        DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 200, 50, 0, c_scale1x1, 0.25, 0.5, true, false);
+        ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
+        addThing(ball1);
+
+        assignPlayerControls(ball1, true, true, true);
+        ball1->setJumpCount( -1 );
+        ball1->setMoveSpeedY( 300 );
+        ball1->cast_shadows = false;
+
+        this->setAmbientLight(3.0);
+        this->setBackgroundColor(QColor(32, 32, 32));
+        this->setGlowZOrder(100.0);
+
+        ball = ball1;
+        light1 = new DrEngineLight(this, getNextKey(), 250, 25, 0, Light_Type::Glow, QColor(255, 255, 153), 3000, QPointF(335,  25), 54, 50.0f, true, 15.0f, 0.00f, 0.00f, 1.0);
+        light2 = new DrEngineLight(this, getNextKey(), 250, 25, 0, Light_Type::Glow, QColor(255, 215, 215),  300, QPointF(  0, 360), 56, 50.0f, true, 10.0f, 0.00f, 0.00f, 1.0);
+        addThings( { light1, light2 } );
 
     } else if (new_player_type == Demo_Player::Spawn) {
         DrEngineObject *ball1;

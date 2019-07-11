@@ -159,6 +159,7 @@ public:
     virtual void    keyReleaseEvent(QKeyEvent *event) override;
     virtual void    mousePressEvent(QMouseEvent *event) override;
     virtual void    mouseReleaseEvent(QMouseEvent *event) override;
+    virtual void    mouseMoveEvent(QMouseEvent *event) override;
 
     // OpenGL Overrides
     virtual void    initializeGL() override;

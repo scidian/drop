@@ -52,7 +52,7 @@ private:
     float           m_pulse_target;                         // Pulse target intensity
     float           m_perspective_scale = 1.0f;             // Scales light at a far away zorder for Perspective Rendering
     bool            m_visible = false;                      // Tracks if light is in view
-
+    QPointF         m_rotated_cone = QPointF(0, 360);       // Cone set to current angle
 
 public:
     // Constructor / Destructor
@@ -64,6 +64,7 @@ public:
     // Abstract Engine Thing Overrides
     virtual void        addToWorld() override;
     virtual DrThingType getThingType() override { return DrThingType::Light; }
+    virtual void        setAngle(double new_angle) override;
     virtual bool        update(double time_passed, double time_warp, QRectF &area) override;
 
     // Getters / Setters
@@ -74,7 +75,7 @@ public:
     float       getPulseDirection() { return m_pulse_direction; }
     float       getPerspectiveScale() { return m_perspective_scale; }
     bool        isInView() { return m_visible; }
-
+    QPointF     getRotatedCone() { return m_rotated_cone; }
 
     void        setScreenPos(QPointF new_pos) { m_screen_pos = new_pos; }
     void        setLightDiameter(int new_diameter) { m_light_diameter = new_diameter; }

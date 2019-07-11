@@ -108,11 +108,17 @@ private:
 
 // ***** Public Variables not yet implemented into function calls / getters / setters
 public:
-    bool            has_scene = false;                          // True after a scene has been loaded into cpSpace
-    Demo_Space      demo_space =  Demo_Space::Project;
+    bool            has_scene = false;                          // True after a scene has been loaded into cpSpace    
     Render_Type     render_type = Render_Type::Orthographic;    // Should render perspective or orthographic?
     long            light_count = 0;                            // Stores number of lights in scene
     QList<long>     mark_light_as_deleted;                      // Marks a light as removed from scene for use by other parts of engine (shadow fbos)
+
+    // !!!!! #TEMP: Variables
+    Demo_Space      demo_space =  Demo_Space::Project;
+    Demo_Player     demo_player = Demo_Player::Jump;
+    DrEngineObject *ball;
+    DrEngineLight  *light1;
+    DrEngineLight  *light2;
 
     // Image Post Processing Variables
     float           bitrate = 16.0;                             // Bitrate          1 to 16

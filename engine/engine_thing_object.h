@@ -148,7 +148,6 @@ private:
     DrTime      m_death_timer =  Clock::now();              // Used to incorporate death_delay for object dying
     DrTime      m_fade_timer =   Clock::now();              // Used to incorporate fade_delay for object fade / removal
 
-    double      m_angle = 0.0;                              // Current object->body angle, updated every frame by update()
     QPointF     m_previous_position;                        // Previous frame position, updated every frame by update()
 
 
@@ -342,9 +341,7 @@ public:
 
 
     // Object->Body Data - Updated every frame by updateWorld()
-    const double&   getAngle() { return m_angle; }
     QPointF         getPreviousPosition() { return m_previous_position; }
-    void            updateBodyAngle(double updated_angle) { m_angle = updated_angle; }
     void            updateBodyPosition(QPointF updated_position, bool update_previous_position_also = false);
 
 };

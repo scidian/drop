@@ -26,7 +26,7 @@ DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key,
     this->light_type = type;
     this->color = color;
     this->light_size = diameter;
-    this->cone = cone;
+    this->cone = this->m_rotated_cone = cone;
     this->intensity = intensity;
     this->setStartIntensity( intensity );
     this->shadows = shadows;
@@ -84,8 +84,26 @@ bool DrEngineLight::update(double time_passed, double time_warp, QRectF &area) {
 }
 
 
+//####################################################################################
+//##    Override for DrEngineThing::setAgnle() - Sets rotated cone
+//####################################################################################
+void DrEngineLight::setAngle(double new_angle) {
+    while (new_angle <   0.0) new_angle += 360.0;
+    while (new_angle > 360.0) new_angle -= 360.0;
+    DrEngineThing::setAngle(new_angle);
 
+    double new_x = cone.x() + new_angle;
+    double new_y = cone.y() + new_angle;
 
+    if (new_y > 360.0) {
+        new_y -= 360.0;
+    }
+    if (new_x > 360.0) {
+        new_x -= 360.0;
+    }
+
+    m_rotated_cone = QPointF( new_x, new_y );
+}
 
 
 

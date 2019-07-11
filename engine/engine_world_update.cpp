@@ -93,6 +93,13 @@ void DrEngineWorld::updateWorld(double time_passed) {
 
         loadStageToWorld( stage, m_loaded_to, 0);
     }
+
+
+    // !!!!!!!!!! #TEMP: Light update for Demo
+    if (demo_player == Demo_Player::Light) {
+        light1->setPosition( ball->getPosition() );
+        light2->setPosition( ball->getPosition() );
+    }
 }
 
 

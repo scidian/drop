@@ -42,7 +42,9 @@ private:
 
     // Basic Thing Settings
     QPointF         m_position;                         // Current center posiiton
+    double          m_angle = 0.0;                      // Current angle, (for DrEngineObject this is updated every frame by update())
     float           m_alpha = 1.0f;                     // Transparency of object (0.0 invisible, 1.0 opaque)
+
 
     // Thing Properties - Camera
     long            m_active_camera = 0;                // Set to ID of last camera that followed this object, 0 == no camera
@@ -76,10 +78,12 @@ public:
 
     // Getters / Setters
     virtual QPointF         getPosition() { return m_position; }                            // Returns Thing center position in world coordinates
+    virtual double          getAngle() { return m_angle; }                                  // Returns Thing angle
     virtual const float&    getOpacity() { return m_alpha; }                                // Returns Opacity (alpha 0.0 to 1.0) of Thing
     DrEngineWorld*          getWorld() { return m_world; }
 
     virtual void            setPosition(QPointF position) { m_position = position; }
+    virtual void            setAngle(double new_angle) { m_angle = new_angle; }
     virtual void            setOpacity(float  new_alpha) { m_alpha = new_alpha; }
     void                    setWorld(DrEngineWorld *world) { m_world = world; }
 

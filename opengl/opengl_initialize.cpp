@@ -28,6 +28,9 @@ void DrOpenGL::initializeGL() {
     initializeOpenGLFunctions();
     glClearColor(0.0, 0.0, 0.0, 0.0f);
 
+    // ***** Turn on mouse tracking (for mouseMoveEvent)
+    setMouseTracking( true );
+
     // Load some global OpenGL Info
     glGetIntegerv ( GL_MAX_TEXTURE_SIZE, &g_max_texture_size );
     g_max_rays =              (g_max_texture_size < c_desired_max_rays) ?          g_max_texture_size : c_desired_max_rays;
