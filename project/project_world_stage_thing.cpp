@@ -41,6 +41,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, DrThingType::Character);
             addComponentLayering(z);
             addComponentMovement();
+            addComponentLighting();
             addComponentAppearance();
             break;
 
@@ -49,6 +50,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, DrThingType::Object);
             addComponentLayering(z);
             addComponentMovement();
+            addComponentLighting();
             addComponentAppearance();
             break;
 
@@ -218,6 +220,13 @@ void DrThing::addComponentMovement() {
                            "Angle Velocity?", "Should the angle of this Object affect it's velocity? (allows Object to move "
                                               "along an arc instead of spinning in place) <br> "
                                                "<b>NOTE:</b> Object Type must be <b>Kinematic</b> to use this setting!", false, false);
+}
+
+void DrThing::addComponentLighting() {
+    addComponent(Components::Thing_Lighting, "Lighting", "Lighting settings for this item.", Component_Colors::Mustard_Yellow, true);
+    getComponent(Components::Thing_Lighting)->setIcon(Component_Icons::Light);
+    addPropertyToComponent(Components::Thing_Lighting, Properties::Thing_Lighting_Cast_Shadows, Property_Type::Bool, true,
+                           "Cast Shadows", "This object will cast shadows when appearing higher on the z axis than a Light.");
 }
 
 void DrThing::addComponentAppearance() {

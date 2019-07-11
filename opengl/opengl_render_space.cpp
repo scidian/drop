@@ -333,6 +333,7 @@ void DrOpenGL::drawSpaceOccluder() {
                 skip_object = true;
         }
         if (skip_object) continue;
+        if (!object->cast_shadows) continue;
 
         // ***** Get texture to render with, set texture coordinates
         DrEngineTexture *texture = m_engine->getTexture(object->getTextureNumber());

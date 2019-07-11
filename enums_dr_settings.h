@@ -76,6 +76,7 @@ enum class Components {
     Thing_Transform,
     Thing_Layering,
     Thing_Movement,
+    Thing_Lighting,
     Thing_Appearance,
 };
 
@@ -158,6 +159,9 @@ enum class Properties {
     Thing_Velocity_Y,               //variable
     Thing_Spin_Velocity,            //variable
     Thing_Angle_Velocity,           //bool
+
+    // Lighting
+    Thing_Lighting_Cast_Shadows,    //bool
 
     // Appearance
     Thing_Filter_Pixelation,        //positive size

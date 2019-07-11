@@ -69,7 +69,7 @@ void main(void) {
 
             // Make sure light is behind object in z order
             if (u_depth <= z) {
-                // We check from the inside out, so if we made it here, we've hit the closest occluder to the center
+                // ***** We check from the inside out, so if we made it here, we've hit the closest occluder to the center
 
 //                // If the light is covered, allow some light to extrude, mark as covered here to start this process
 //                if (travel_y <= 0.00001) {

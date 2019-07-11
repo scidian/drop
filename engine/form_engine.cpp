@@ -52,7 +52,7 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
         pushSpawn =   new QToolButton(upperWidget);     pushSpawn->setObjectName("pushSpawn");      pushSpawn->setGeometry(  QRect(  5,  5, 140, 20));
         pushCar =     new QToolButton(upperWidget);     pushCar->setObjectName("pushCar");          pushCar->setGeometry(    QRect(  5, 30, 140, 20));
         pushJump =    new QToolButton(upperWidget);     pushJump->setObjectName("pushJump");        pushJump->setGeometry(   QRect(  5, 55, 140, 20));
-        pushCamera =  new QToolButton(upperWidget);     pushCamera->setObjectName("pushCamera");    pushCamera->setGeometry( QRect( 35, 80,  80, 20));
+        pushLight =   new QToolButton(upperWidget);     pushLight->setObjectName("pushLight");      pushLight->setGeometry(  QRect(  5, 80, 140, 20));
 
         pushLine1 =   new QToolButton(upperWidget);     pushLine1->setObjectName("pushLine1");      pushLine1->setGeometry(  QRect(150,  5, 140, 20));
         pushLine2 =   new QToolButton(upperWidget);     pushLine2->setObjectName("pushLine2");      pushLine2->setGeometry(  QRect(150, 30, 140, 20));
@@ -65,6 +65,7 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
         pushPersp =   new QToolButton(upperWidget);     pushPersp->setObjectName("pushPersp");      pushPersp->setGeometry(  QRect(450, 24, 140, 20));
         pushOrtho =   new QToolButton(upperWidget);     pushOrtho->setObjectName("pushOrtho");      pushOrtho->setGeometry(  QRect(450, 48, 140, 20));
+        pushCamera =  new QToolButton(upperWidget);     pushCamera->setObjectName("pushCamera");    pushCamera->setGeometry( QRect(480, 80,  80, 20));
 
         pushDebug1 =  new QToolButton(upperWidget);     pushDebug1->setObjectName("pushDebug1");    pushDebug1->setGeometry( QRect(600,  5, 140, 45));
         pushDebug2 =  new QToolButton(upperWidget);     pushDebug2->setObjectName("pushDebug2");    pushDebug2->setGeometry( QRect(600, 55, 140, 45));
@@ -72,7 +73,7 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
         pushSpawn->setText(QApplication::translate(  "MainWindow", "Spawning Demo",     nullptr));  pushSpawn->setStyleSheet("color: white");
         pushCar->setText(QApplication::translate(    "MainWindow", "Car Demo",          nullptr));  pushCar->setStyleSheet("color: white");
         pushJump->setText(QApplication::translate(   "MainWindow", "Jump Demo",         nullptr));  pushJump->setStyleSheet("color: white");
-        pushCamera->setText(QApplication::translate( "MainWindow", "Cam Switch",        nullptr));  pushCamera->setStyleSheet("color: white");
+        pushLight->setText(QApplication::translate(  "MainWindow", "Light Demo",        nullptr));  pushLight->setStyleSheet("color: white");
 
         pushLine1->setText(QApplication::translate(  "MainWindow", "Line1 World",       nullptr));  pushLine1->setStyleSheet("color: white");
         pushLine2->setText(QApplication::translate(  "MainWindow", "Line2 World",       nullptr));  pushLine2->setStyleSheet("color: white");
@@ -85,6 +86,7 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
         pushPersp->setText(QApplication::translate(  "MainWindow", "Perspective View",  nullptr));  pushPersp->setStyleSheet("color: white");
         pushOrtho->setText(QApplication::translate(  "MainWindow", "Orthographic View", nullptr));  pushOrtho->setStyleSheet("color: white");
+        pushCamera->setText(QApplication::translate( "MainWindow", "Cam Switch",        nullptr));  pushCamera->setStyleSheet("color: white");
 
         pushDebug1->setText(QApplication::translate( "MainWindow", "Debug Shapes",     nullptr));   pushDebug1->setStyleSheet("color: white");
         pushDebug2->setText(QApplication::translate( "MainWindow", "Debug Collision",  nullptr));   pushDebug2->setStyleSheet("color: white");
@@ -96,7 +98,7 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
         connect(pushSpawn,   SIGNAL(clicked()), this, SLOT(on_pushSpawn_clicked()));
         connect(pushCar,     SIGNAL(clicked()), this, SLOT(on_pushCar_clicked()));
         connect(pushJump,    SIGNAL(clicked()), this, SLOT(on_pushJump_clicked()));
-        connect(pushCamera,  SIGNAL(clicked()), this, SLOT(on_pushCamera_clicked()));
+        connect(pushLight,   SIGNAL(clicked()), this, SLOT(on_pushLight_clicked()));
 
         connect(pushLine1,   SIGNAL(clicked()), this, SLOT(on_pushLines1_clicked()));
         connect(pushLine2,   SIGNAL(clicked()), this, SLOT(on_pushLines2_clicked()));
@@ -109,6 +111,7 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
         connect(pushPersp,   SIGNAL(clicked()), this, SLOT(on_pushPersp_clicked()));
         connect(pushOrtho,   SIGNAL(clicked()), this, SLOT(on_pushOrtho_clicked()));
+        connect(pushCamera,  SIGNAL(clicked()), this, SLOT(on_pushCamera_clicked()));
 
         connect(pushDebug1,  SIGNAL(clicked()), this, SLOT(on_pushDebug1_clicked()));
         connect(pushDebug2,  SIGNAL(clicked()), this, SLOT(on_pushDebug2_clicked()));
@@ -299,6 +302,7 @@ void FormEngine::aboutToCompose() {
 void FormEngine::on_pushSpawn_clicked() {   loadDemo(demo_space,  Demo_Player::Spawn ); }
 void FormEngine::on_pushCar_clicked() {     loadDemo(demo_space,  Demo_Player::Car ); }
 void FormEngine::on_pushJump_clicked() {    loadDemo(demo_space,  Demo_Player::Jump ); }
+void FormEngine::on_pushLight_clicked() {   loadDemo(demo_space,  Demo_Player::Light ); }
 
 void FormEngine::on_pushCamera_clicked() {
     m_engine->getCurrentWorld()->switchCameraToNext();
@@ -347,6 +351,7 @@ void FormEngine::updateCheckedButtons() {
         pushJump->setDown(false);
         pushCamera->setEnabled(false);
     }
+    if (demo_player == Demo_Player::Light) pushLight->setDown(true);   else pushLight->setDown(false);
 
     if (demo_space == Demo_Space::Lines1)  pushLine1->setDown(true);   else pushLine1->setDown(false);
     if (demo_space == Demo_Space::Lines2)  pushLine2->setDown(true);   else pushLine2->setDown(false);

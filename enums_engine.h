@@ -17,6 +17,7 @@ enum class Demo_Player {
     Spawn,
     Car,
     Jump,
+    Light,
 };
 enum class Demo_Space {
     Lines1,

@@ -154,6 +154,8 @@ private:
 
 public:
     // ***** Image Post Processing Attributes
+    bool        cast_shadows = true;                        // Will cast shadows when in front of a Light
+
     float       pixel_x = 1.0;                              // Pixelation X     1.0+
     float       pixel_y = 1.0;                              // Pixelation Y     1.0+
     bool        negative = false;                           // Negative         True / False

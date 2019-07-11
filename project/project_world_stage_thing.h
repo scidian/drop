@@ -64,6 +64,7 @@ public:
 
     void addComponentAppearance();
     void addComponentLayering(double z);
+    void addComponentLighting();
     void addComponentMovement();
     void addComponentTransform(double width, double height, double x, double y, DrThingType type);
 

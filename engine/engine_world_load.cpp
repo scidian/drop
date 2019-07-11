@@ -143,22 +143,31 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     }
 
     // ***** Appearance settings
-    QPointF pixelation = thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
-    float   brightness = thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Brightness).toInt() / 255.f;
-    float   contrast =   thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Contrast).toInt() / 255.f;
-    float   saturation = thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Saturation).toInt() / 255.f;
-    float   hue =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Hue).toInt() / 360.f;
-    bool    grayscale =  thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Grayscale).toBool();
-    bool    negative =   thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Negative).toBool();
-    block->pixel_x =    static_cast<float>(pixelation.x());
-    block->pixel_y =    static_cast<float>(pixelation.y());
-    block->brightness = brightness;
-    block->contrast =   contrast;
-    block->saturation = saturation;
-    block->hue =        hue;
-    block->grayscale =  grayscale;
-    block->negative =   negative;
+    bool    cast_shadows =  thing->getComponentPropertyValue(Components::Thing_Lighting,   Properties::Thing_Lighting_Cast_Shadows).toBool();
+    QPointF pixelation =    thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
+    float   brightness =    thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Brightness).toInt() / 255.f;
+    float   contrast =      thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Contrast).toInt() / 255.f;
+    float   saturation =    thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Saturation).toInt() / 255.f;
+    float   hue =           thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Hue).toInt() / 360.f;
+    bool    grayscale =     thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Grayscale).toBool();
+    bool    negative =      thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Negative).toBool();
+    block->cast_shadows =   cast_shadows;
+    block->pixel_x =        static_cast<float>(pixelation.x());
+    block->pixel_y =        static_cast<float>(pixelation.y());
+    block->brightness =     brightness;
+    block->contrast =       contrast;
+    block->saturation =     saturation;
+    block->hue =            hue;
+    block->grayscale =      grayscale;
+    block->negative =       negative;
 }
+
+
+
+
+
+
+
 
 
 
