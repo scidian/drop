@@ -77,7 +77,7 @@ void DrView::rotateSelection(QPointF mouse_in_view, bool use_exact_angle, double
     double angle_adjust;
     double angle_diff = angle;
 
-    if (Dr::IsCloseTo(0, test_round, tolerance) || Dr::IsCloseTo(angle_step, test_round, tolerance)) {
+    if (Dr::IsCloseTo(0.0, test_round, tolerance) || Dr::IsCloseTo(angle_step, test_round, tolerance)) {
         angle = round(angle / angle_step) * angle_step;
         angle_adjust = angle - angle_diff;
     } else if (Dr::IsSimilarAngle(m_editor_relay->currentViewGridAngle(), angle, tolerance)) {
@@ -181,10 +181,10 @@ Transform_Data DrView::decomposeTransform(QTransform &from_transform, bool qr_ty
     // rotation = tan^-1(c/d) = tan^-1(-b/a) it will not work sometimes
     // rotation = a / scaleX  = d / scaleY
 
-    if (Dr::IsCloseTo(0, transform.scale.x(), .000001)) transform.scale.setX(0);
-    if (Dr::IsCloseTo(0, transform.scale.y(), .000001)) transform.scale.setY(0);
-    if (Dr::IsCloseTo(0, transform.skew.x(),  .000001)) transform.skew.setX(0);
-    if (Dr::IsCloseTo(0, transform.skew.y(),  .000001)) transform.skew.setY(0);
+    if (Dr::IsCloseTo(0.0, transform.scale.x(), 0.000001)) transform.scale.setX(0);
+    if (Dr::IsCloseTo(0.0, transform.scale.y(), 0.000001)) transform.scale.setY(0);
+    if (Dr::IsCloseTo(0.0, transform.skew.x(),  0.000001)) transform.skew.setX(0);
+    if (Dr::IsCloseTo(0.0, transform.skew.y(),  0.000001)) transform.skew.setY(0);
 
     transform.rotation *= (180.0 / 3.141592653589793238463);
 

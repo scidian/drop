@@ -230,17 +230,15 @@ void DrOpenGL::drawSpace() {
 //##        Draws Glow Buffer onto screen buffer
 //####################################################################################
 bool DrOpenGL::drawGlowBuffer() {
-    // Check that we should draw Glow Light Buffer
-    double ambient_light = m_engine->getCurrentWorld()->getAmbientLight() / 100.0;
-    if (m_glow_lights.count() <= 0 && Dr::IsCloseTo(1.0, ambient_light, .001)) return true;
 
-    glEnable(GL_BLEND);
+    // Standard blend function
+    ///glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // "Screen" (slembcke) light blend function, works good, but doesnt get brighter than texture colors
     /// glBlendFunc(GL_DST_COLOR, GL_ZERO);
 
     // Best Light blend function, a little but of oversaturation, but looks nice
-    glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
+    //glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
 
     // Another light blend function, was good for singular lights, but doesnt work for multicolored glow map
     ///glBlendFunc(GL_CONSTANT_ALPHA, GL_CONSTANT_ALPHA);
@@ -249,7 +247,45 @@ bool DrOpenGL::drawGlowBuffer() {
     // To Add Lights Together, not really great for lighting though
     ///glBlendFunc(GL_ONE, GL_ONE);
 
-    drawFrameBufferToScreenBuffer(m_glow_fbo, true);
+    ///drawFrameBufferToScreenBufferDefaultShader(m_glow_fbo, true);
+
+
+
+//    // Check that we should draw Ambient Light
+//    float ambient_light = static_cast<float>(m_engine->getCurrentWorld()->getAmbientLight()) / 100.0f;
+//    if (Dr::IsCloseTo(1.0f, ambient_light, 0.001f)) return true;
+//
+//    // Clear the TextureFBO buffer to use for ambient light
+//    releaseOffscreenBuffer();
+//    m_texture_fbo->bind();
+//    glClearColor(ambient_light, ambient_light, ambient_light, 1.0f);
+//    glClear(GL_COLOR_BUFFER_BIT);
+//    glEnable(GL_BLEND);
+//    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//    drawFrameBufferToScreenBufferDefaultShader(m_glow_fbo, false);
+//    m_texture_fbo->release();
+
+//    // Draw ambient light
+//    bindOffscreenBuffer();
+//    glEnable(GL_BLEND);
+//    //glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
+//    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//    drawFrameBufferToScreenBufferDefaultShader(m_texture_fbo, false);
+
+
+    // Draw glow light buffer
+    if (m_glow_lights.count() > 0) {
+         // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object for use as a texture during Screen Shader
+        releaseOffscreenBuffer();
+        QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);
+        bindOffscreenBuffer();
+
+        // Draw Glow Light buffer using Screen Shader
+        glDisable(GL_BLEND);
+        ///drawFrameBufferToScreenBufferScreenShader(m_texture_fbo, m_glow_fbo, false);
+        drawFrameBufferToScreenBufferScreenShader(m_glow_fbo, m_texture_fbo, false);
+    }
+
     return true;
 }
 

@@ -42,6 +42,10 @@ template<class T> T Min(const T& a, const T& b) { return (a < b) ? a : b; }
 // Linear Interpolation between two values
 template<class T> T Lerp(const T& f1, const T& f2, const T& t) { return (f1 * (static_cast<T>(1.0) - t)) + (f2 * t); }
 
+// Returns true if 'number_desired' is within +-'tolerance' of 'number_to_check'
+template<class T> bool IsCloseTo(const T& number_desired, const T&  number_to_check, const T&  tolerance) {
+    return ( (number_to_check <= (number_desired + tolerance)) && (number_to_check >= (number_desired - tolerance)) ); }
+
 
 // Time Functions
 QString     CurrentTimeAsString();
@@ -50,7 +54,6 @@ void        ResetTimer(DrTime &timer);
 
 // Comparison Functions
 double      CheckScaleNotZero(double scale_to_check);
-bool        IsCloseTo(double number_desired, double number_to_check, double tolerance);
 QString     RemoveTrailingDecimals(double value, int max_decimal_places);
 
 // Angle Functions

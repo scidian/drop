@@ -202,6 +202,7 @@ void DrOpenGL::bindGlowLightsBuffer(float ambient_light) {
 
     // Clear the buffer
     glClearColor(ambient_light, ambient_light, ambient_light, 1.0f);
+    ///glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 

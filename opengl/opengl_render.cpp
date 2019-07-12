@@ -57,7 +57,7 @@ void DrOpenGL::paintGL() {
     // ***** Renders Frame Buffer Object to screen buffer as a textured quad, with post processing available
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                  // Standard blend function
-    drawFrameBufferToScreenBuffer(m_texture_fbo);
+    drawFrameBufferToScreenBufferDefaultShader(m_texture_fbo);
 
     // ***** Draws Debug Shapes / Text Onto Frame Buffer Object
     QOpenGLPaintDevice paint_gl(width() * devicePixelRatio(), height() * devicePixelRatio());
@@ -75,7 +75,7 @@ void DrOpenGL::paintGL() {
 //##            - Used for offscreen rendering, allows for entire scene to have post
 //##              processing shaders applied at one time
 //####################################################################################
-void DrOpenGL::bindOffscreenBuffer() {
+void DrOpenGL::bindOffscreenBuffer(bool clear) {
     // Check that off screen buffers are initialized
     if (!m_render_fbo || !m_texture_fbo ||
         (m_render_fbo->width() != width()*devicePixelRatio() || m_render_fbo->height() != height()*devicePixelRatio())) {
@@ -96,12 +96,13 @@ void DrOpenGL::bindOffscreenBuffer() {
     m_render_fbo->bind();
 
     // Clear the buffers
-    float background_red =   static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().redF());
-    float background_green = static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().greenF());
-    float background_blue =  static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().blueF());
-    glClearColor(background_red, background_green, background_blue, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
+    if (clear) {
+        float background_red =   static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().redF());
+        float background_green = static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().greenF());
+        float background_blue =  static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().blueF());
+        glClearColor(background_red, background_green, background_blue, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    }
 
     // Enable anti aliasing if not on mobile
 #if not defined(Q_OS_ANDROID) && not defined(Q_OS_IOS)
@@ -236,50 +237,58 @@ void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height)
 //##        Renders Frame Buffer Object to screen buffer as a textured quad
 //##            Uses "Screen" shader to multiply glow lights into texture
 //####################################################################################
-void DrOpenGL::drawFrameBufferToScreenBufferScreenShader(QOpenGLFramebufferObject *fbo, bool use_kernel) {
+void DrOpenGL::drawFrameBufferToScreenBufferScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower, bool use_kernel) {
 
-    // Bind offscreen frame buffer object as a texture
+    if (!m_screen_shader.bind()) return;
+
+    // Bind offscreen frame buffer objects as textures
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, fbo->texture());
-
-    if (!m_shader.bind()) return;
+    GLint upper_location = glGetUniformLocation(m_screen_shader.programId(), "u_upper");
+    GLint lower_location = glGetUniformLocation(m_screen_shader.programId(), "u_lower");
+    glUseProgram(m_screen_shader.programId());
+    glUniform1i(upper_location, 0);
+    glUniform1i(lower_location, 1);
+    glActiveTexture(GL_TEXTURE0 + 0);   // Texture unit 0
+    glBindTexture(GL_TEXTURE_2D, upper->texture());
+    glActiveTexture(GL_TEXTURE0 + 1);   // Texture unit 1
+    glBindTexture(GL_TEXTURE_2D, lower->texture());
+    glActiveTexture(GL_TEXTURE0);       // For some reason have to set active texture back to 0 for them both to work
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
-    float left =   0.0f - (fbo->width()  / 2.0f);
-    float right =  0.0f + (fbo->width()  / 2.0f);
-    float top =    0.0f + (fbo->height() / 2.0f);
-    float bottom = 0.0f - (fbo->height() / 2.0f);
+    float left =   0.0f - (lower->width()  / 2.0f);
+    float right =  0.0f + (lower->width()  / 2.0f);
+    float top =    0.0f + (lower->height() / 2.0f);
+    float bottom = 0.0f - (lower->height() / 2.0f);
     QMatrix4x4 m_matrix;
     m_matrix.ortho( left, right, bottom, top, -5000.0f, 5000.0f);
-    m_shader.setUniformValue( m_uniform_matrix, m_matrix );
+    m_screen_shader.setUniformValue( m_uniform_screen_matrix, m_matrix );
 
     // Set Texture Coordinates for Shader
     std::vector<float> texture_coordinates;
     setWholeTextureCoordinates(texture_coordinates);
-    m_shader.setAttributeArray( m_attribute_tex_coord, texture_coordinates.data(), 2 );
-    m_shader.enableAttributeArray( m_attribute_tex_coord );
+    m_screen_shader.setAttributeArray(    m_attribute_screen_tex_coord, texture_coordinates.data(), 2 );
+    m_screen_shader.enableAttributeArray( m_attribute_screen_tex_coord );
 
     // Load vertices for this object
     QVector<GLfloat> vertices;
     setVertexFromSides(vertices, left, right, top, bottom, 0.0f);
-    m_shader.setAttributeArray( m_attribute_vertex, vertices.data(), 3 );
-    m_shader.enableAttributeArray( m_attribute_vertex );
+    m_screen_shader.setAttributeArray(    m_attribute_screen_vertex, vertices.data(), 3 );
+    m_screen_shader.enableAttributeArray( m_attribute_screen_vertex );
 
     // Set variables for shader
-    setShaderDefaultValues( fbo->width(), fbo->height() );
-
-
-    m_shader.setUniformValue( m_uniform_kernel,     use_kernel );                // Turns on Kernel filter (blur / sharpen / etc)
+    m_screen_shader.setUniformValue( m_uniform_screen_width,    static_cast<float>(lower->width()) );
+    m_screen_shader.setUniformValue( m_uniform_screen_height,   static_cast<float>(lower->height()) );
+    m_screen_shader.setUniformValue( m_uniform_screen_kernel,   use_kernel );
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
 
     // Disable arrays
-    m_shader.disableAttributeArray( m_attribute_vertex );
-    m_shader.disableAttributeArray( m_attribute_tex_coord );
+    m_screen_shader.disableAttributeArray( m_attribute_screen_vertex );
+    m_screen_shader.disableAttributeArray( m_attribute_screen_tex_coord );
 
     // Release Shader
-    m_shader.release();
+    m_screen_shader.release();
 }
 
 

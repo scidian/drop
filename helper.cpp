@@ -55,14 +55,6 @@ double CheckScaleNotZero(double scale_to_check) {
 
 
 //####################################################################################
-//##        Returns true if 'number_desired' is within +-'tolerance' of 'number_to_check'
-//####################################################################################
-bool IsCloseTo(double number_desired, double number_to_check, double tolerance) {
-    return ( (number_to_check <= (number_desired + tolerance)) && (number_to_check >= (number_desired - tolerance)) );
-}
-
-
-//####################################################################################
 //##        Angle Comparision Functions
 //####################################################################################
 // Returns true of the two angles are parrallel or perpendicular

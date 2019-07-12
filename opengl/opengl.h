@@ -85,13 +85,13 @@ private:
     QVector<DrEngineLight*> m_shadow_lights;
     QVector<DrEngineLight*> m_glow_lights;
 
-    // Shader Variables
+    // Default Shader Variables
     QOpenGLShaderProgram m_shader;
     int     m_attribute_vertex;
     int     m_attribute_tex_coord;
     int     m_uniform_matrix;
 
-    // Custom Shader Input
+    // Default Shader Input
     int     m_uniform_texture;
     int     m_uniform_width;                                    // Width of texture
     int     m_uniform_height;                                   // Height of texture
@@ -148,6 +148,17 @@ private:
     int     m_uniform_light_draw_shadows;
     int     m_uniform_light_is_glow;
 
+    // "Screen" (Light) Shader
+    QOpenGLShaderProgram m_screen_shader;
+    int     m_attribute_screen_vertex;
+    int     m_attribute_screen_tex_coord;
+    int     m_uniform_screen_matrix;
+
+    int     m_uniform_screen_upper;
+    int     m_uniform_screen_lower;
+    int     m_uniform_screen_width;
+    int     m_uniform_screen_height;
+    int     m_uniform_screen_kernel;
 
 public:
     // Constructor / Destructor
@@ -180,7 +191,7 @@ public:
     void            zoomInOut(int level);
 
     // Render Calls
-    void            bindOffscreenBuffer();
+    void            bindOffscreenBuffer(bool clear = true);
     void            cullingOn();
     void            cullingOff();
     void            drawCube(QVector3D center);
@@ -191,7 +202,7 @@ public:
     void            drawDebugJoints(QPainter &painter);
     void            drawDebugShapes(QPainter &painter);
     void            drawFrameBufferToScreenBufferDefaultShader(QOpenGLFramebufferObject *fbo, bool use_kernel = false);
-    void            drawFrameBufferToScreenBufferScreenShader(QOpenGLFramebufferObject *fbo, bool use_kernel = false);
+    void            drawFrameBufferToScreenBufferScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower, bool use_kernel = false);
     bool            drawGlowBuffer();
     void            drawSpace();
     void            drawSpaceOccluder();

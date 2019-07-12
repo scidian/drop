@@ -85,7 +85,7 @@ void main(void) {
             }
         }
 
-//        // If light is covered, we let some light extrude out
+        // If light is covered, we let some light extrude out
 //        if (covered) {
 //            countdown = 1.5 + (random(vec2(coord.x, theta)) * 0.20);
 //            covered = false;
