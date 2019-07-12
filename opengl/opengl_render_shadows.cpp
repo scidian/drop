@@ -21,13 +21,72 @@
 //####################################################################################
 //##        Main Shadow Map / Occluder / Render Routine
 //####################################################################################
-void DrOpenGL::drawShadowMaps() {
+void DrOpenGL::process2DLights() {
     if (m_engine->getCurrentWorld()->light_count <= 0) return;
 
     // ***** Clear list of which lights exist
     checkLightBuffers();
 
     // ***** Check for lights with shadows, if there are none we don't need to draw occluder map
+    m_engine->getCurrentWorld()->light_count = findNeededShadowMaps();
+    if (m_shadow_lights.count() <= 0) return;
+
+    // ***** Render all Space Objects to an off-screen Frame Buffer Object Occluder Map
+    bindOccluderMapBuffer();
+    glViewport(0, 0, m_occluder_fbo->width(), m_occluder_fbo->height());
+    drawSpaceOccluder();
+    m_occluder_fbo->release();
+    glViewport(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
+
+    // ***** Code to have the Occluder Map fbo pop up so we can take a look
+    ///static int count = 0;
+    ///count++;
+    ///if (count % 500 == 0) {
+    ///    Dr::ShowMessageBox("fbo", QPixmap::fromImage( m_occluder_fbo->toImage() ).scaled(512, 512) );
+    ///    count = 0;
+    ///}
+
+    // ***** Calculate Light 1D Shadow Maps
+    drawShadowMaps();
+
+    // ***** Draw Glow Lights
+    drawGlowLights();
+}
+
+
+//####################################################################################
+//##    Check that lights still exist, if not delete buffers
+//####################################################################################
+void DrOpenGL::checkLightBuffers() {
+    // Go through deleted keys
+    for (auto key : m_engine->getCurrentWorld()->mark_light_as_deleted) {
+        // Delete occluder fbo
+        for (auto it = m_occluders.begin(); it != m_occluders.end(); ) {
+            if ((*it).first == key) {
+                delete (*it).second;
+                it = m_occluders.erase(it);
+                continue;
+            }
+            it++;
+        }
+        // Delete shadow fbo
+        for (auto it = m_shadows.begin(); it != m_shadows.end(); ) {
+            if ((*it).first == key) {
+                delete (*it).second;
+                it = m_shadows.erase(it);
+                continue;
+            }
+            it++;
+        }
+    }
+    m_engine->getCurrentWorld()->mark_light_as_deleted.clear();
+}
+
+
+//####################################################################################
+//##    Check for lights with shadows, if there are none we don't need to draw occluder map
+//####################################################################################
+int DrOpenGL::findNeededShadowMaps() {
     int light_count = 0;
     m_shadow_lights.clear();
     m_glow_lights.clear();
@@ -76,25 +135,14 @@ void DrOpenGL::drawShadowMaps() {
         if (light->draw_shadows && light->isInView())
             m_shadow_lights.append(light);
     }
-    m_engine->getCurrentWorld()->light_count = light_count;
-    if (m_shadow_lights.count() <= 0) return;
+    return light_count;
+}
 
-    // ***** Render all Space Objects to an off-screen Frame Buffer Object Occluder Map
-    bindOccluderMapBuffer();
-    glViewport(0, 0, m_occluder_fbo->width(), m_occluder_fbo->height());
-    drawSpaceOccluder();
-    m_occluder_fbo->release();
-    glViewport(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
 
-    // ***** Code to have the Occluder Map fbo pop up so we can take a look
-    ///static int count = 0;
-    ///count++;
-    ///if (count % 500 == 0) {
-    ///    Dr::ShowMessageBox("fbo", QPixmap::fromImage( m_occluder_fbo->toImage() ).scaled(512, 512) );
-    ///    count = 0;
-    ///}
-
-    // ***** Calculate Light 1D Shadow Maps
+//####################################################################################
+//##    Calculate Light 1D Shadow Maps
+//####################################################################################
+void DrOpenGL::drawShadowMaps() {
     for (auto light : m_shadow_lights) {
         // Calculate light position on Occluder Map
         light->setScreenPos( mapToFBO( QVector3D(static_cast<float>(light->getPosition().x()), static_cast<float>(light->getPosition().y()),
@@ -134,157 +182,8 @@ void DrOpenGL::drawShadowMaps() {
         bindLightShadowBuffer(light);
         draw1DShadowMap(light);
         m_shadows[light->getKey()]->release();
-    } // End For
-}
-
-
-//####################################################################################
-//##        Renders Glow Lights on Glow fbo
-//####################################################################################
-void DrOpenGL::drawGlowLights() {
-    // Check that we should draw Glow Light Buffer, if so bind it
-    double ambient_light = m_engine->getCurrentWorld()->getAmbientLight() / 100.0;
-    if (m_glow_lights.count() <= 0 && Dr::IsCloseTo(1.0, ambient_light, .001)) return;
-    bindGlowLightsBuffer(static_cast<float>(ambient_light));
-
-    // Standard blend function
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    // Draw Glow Lights onto Glow FBO
-    for (auto light : m_glow_lights) {
-        draw2DLight(light);
     }
-    m_glow_fbo->release();
 }
-
-
-//####################################################################################
-//##    Check that lights still exist, if not delete buffers
-//####################################################################################
-void DrOpenGL::checkLightBuffers() {
-    // Go through deleted keys
-    for (auto key : m_engine->getCurrentWorld()->mark_light_as_deleted) {
-        // Delete occluder fbo
-        for (auto it = m_occluders.begin(); it != m_occluders.end(); ) {
-            if ((*it).first == key) {
-                delete (*it).second;
-                it = m_occluders.erase(it);
-                continue;
-            }
-            it++;
-        }
-        // Delete shadow fbo
-        for (auto it = m_shadows.begin(); it != m_shadows.end(); ) {
-            if ((*it).first == key) {
-                delete (*it).second;
-                it = m_shadows.erase(it);
-                continue;
-            }
-            it++;
-        }
-    }
-    m_engine->getCurrentWorld()->mark_light_as_deleted.clear();
-}
-
-//####################################################################################
-//##        Allocate Glow Light FBO - To Render All Glow Lights at Once
-//####################################################################################
-void DrOpenGL::bindGlowLightsBuffer(float ambient_light) {
-    // Check that off screen buffers are initialized
-    if (!m_glow_fbo || (m_glow_fbo->width() != width()*devicePixelRatio() || m_glow_fbo->height() != height()*devicePixelRatio())) {
-        delete m_glow_fbo;
-        QOpenGLFramebufferObjectFormat format2;
-        format2.setAttachment(QOpenGLFramebufferObject::Attachment::NoAttachment);
-        m_glow_fbo = new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format2);
-    }
-    m_glow_fbo->bind();
-
-    // Clear the buffer
-    glClearColor(ambient_light, ambient_light, ambient_light, 1.0f);
-    ///glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-}
-
-//####################################################################################
-//##        Allocate Occluder Map (For Whole Scene)
-//####################################################################################
-void DrOpenGL::bindOccluderMapBuffer() {
-    int desired_x, desired_y;
-
-    // Orthographic we can use a larger buffer size
-    if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
-        desired_x = g_max_occluder_fbo_size;
-        desired_y = g_max_occluder_fbo_size;
-
-    // Perspective uses same size as off screen buffer to match view angles
-    } else {
-        desired_x = width()* devicePixelRatio();
-        desired_y = height()*devicePixelRatio();
-    }
-
-    if (!m_occluder_fbo || (m_occluder_fbo->width() != desired_x || m_occluder_fbo->height() != desired_y)) {
-        delete m_occluder_fbo;
-        m_occluder_fbo =  new QOpenGLFramebufferObject(desired_x, desired_y);
-    }
-    m_occluder_fbo->bind();
-
-    // Clear the buffers
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-}
-
-//####################################################################################
-//##        Allocate Light Occluder Frame Buffer Object (For Each Light)
-//####################################################################################
-void DrOpenGL::bindLightOcculderBuffer(DrEngineLight *light) {
-    // Check Frame Buffer Object is initialized
-    bool need_to_create_new = false;
-    if (!(m_occluders[light->getKey()]))
-        need_to_create_new = true;
-    else if (m_occluders[light->getKey()]->width() != light->getLightDiameterFitted() || m_occluders[light->getKey()]->height() != light->getLightDiameterFitted())
-        need_to_create_new = true;
-
-    // Initialize light fbo
-    if (need_to_create_new) {
-        delete m_occluders[light->getKey()];
-        m_occluders[light->getKey()] = new QOpenGLFramebufferObject(light->getLightDiameterFitted(), light->getLightDiameterFitted());
-    }
-
-    // Bind and clear buffer
-    m_occluders[light->getKey()]->bind();
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-}
-
-
-//####################################################################################
-//##        Allocate Shadow Frame Buffer Object
-//####################################################################################
-void DrOpenGL::bindLightShadowBuffer(DrEngineLight *light) {
-    // Shadow map size is the smallest of c_angles, light_radius_fitted, and width()
-    int shadow_size = (light->getLightDiameterFitted() < g_max_rays) ? light->getLightDiameterFitted() : g_max_rays;
-        shadow_size = (width()*devicePixelRatio() < shadow_size) ? width()*devicePixelRatio() : shadow_size;
-
-    // Check Frame Buffer Object is initialized
-    bool need_to_create_new = false;
-    if (m_shadows[light->getKey()] == nullptr)
-        need_to_create_new = true;
-    else if (m_shadows[light->getKey()]->width() != shadow_size)
-        need_to_create_new = true;
-
-    // Initialize shadow fbo
-    if (need_to_create_new) {
-        delete m_shadows[light->getKey()];
-        m_shadows[light->getKey()] = new QOpenGLFramebufferObject(shadow_size, 1);
-    }
-
-    // Bind and clear buffer
-    m_shadows[light->getKey()]->bind();
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-}
-
 
 //####################################################################################
 //##        Renders the 1D Shadow Map based on the Occluder Map (For Each Light)
@@ -340,6 +239,27 @@ void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
 
     // Release Shader
     m_shadow_shader.release();
+}
+
+
+//####################################################################################
+//##        Renders Glow Lights on Glow fbo
+//####################################################################################
+void DrOpenGL::drawGlowLights() {
+    // Check that we should draw Glow Light Buffer, if so bind it
+    double ambient_light = m_engine->getCurrentWorld()->getAmbientLight() / 100.0;
+    if (m_glow_lights.count() <= 0 && Dr::IsCloseTo(1.0, ambient_light, .001)) return;
+    bindGlowLightsBuffer(static_cast<float>(ambient_light));
+
+    // Standard blend function
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // Draw Glow Lights onto Glow FBO
+    for (auto light : m_glow_lights) {
+        draw2DLight(light);
+    }
+    m_glow_fbo->release();
 }
 
 

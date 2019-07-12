@@ -135,8 +135,10 @@ SOURCES += \
     opengl/opengl_math.cpp \
     opengl/opengl_mouse.cpp \
     opengl/opengl_render.cpp \
+    opengl/opengl_render_bind.cpp \
     opengl/opengl_render_debug.cpp \
     opengl/opengl_render_debug_health.cpp \
+    opengl/opengl_render_occluder_map.cpp \
     opengl/opengl_render_shadows.cpp \
     opengl/opengl_render_space.cpp \
     opengl/opengl_render_test_cube.cpp \

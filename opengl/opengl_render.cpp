@@ -37,9 +37,8 @@ void DrOpenGL::paintGL() {
     EngineThings &things = m_engine->getCurrentWorld()->getThings();
     std::sort(things.begin(), things.end(), [] (const DrEngineThing *a, const DrEngineThing *b) { return a->z_order < b->z_order; });
 
-    // ***** If there are Lights, Render Occluder Map, Calculate Shadow Maps
-    drawShadowMaps();
-    drawGlowLights();
+    // ***** If there are Lights, Render Occluder Map, Calculate Shadow Maps, Draw Glow Lights
+    process2DLights();
 
     // ***** Render Onto Frame Buffer Object
     bindOffscreenBuffer();                                                          // Create / Bind Offscreen Frame Buffer Object

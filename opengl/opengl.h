@@ -216,7 +216,7 @@ public:
     void            setVertexFromSides(QVector<GLfloat> &vertices, float left, float right, float top, float bottom, float z);
     void            setWholeTextureCoordinates(std::vector<float> &texture_coords);
 
-    // Soft Shadows
+    // Soft Shadows / Lights
     void            bindGlowLightsBuffer(float ambient_light);
     void            bindOccluderMapBuffer();
     void            bindLightOcculderBuffer(DrEngineLight *light);
@@ -226,6 +226,8 @@ public:
     void            draw2DLight(DrEngineLight *light);
     void            drawGlowLights();
     void            drawShadowMaps();
+    int             findNeededShadowMaps();
+    void            process2DLights();
 
     // Getters and Setters
     float           getScale()          { return m_scale; }
