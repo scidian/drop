@@ -158,7 +158,6 @@ private:
     int     m_uniform_screen_lower;
     int     m_uniform_screen_width;
     int     m_uniform_screen_height;
-    int     m_uniform_screen_kernel;
 
 public:
     // Constructor / Destructor
@@ -202,7 +201,7 @@ public:
     void            drawDebugJoints(QPainter &painter);
     void            drawDebugShapes(QPainter &painter);
     void            drawFrameBufferToScreenBufferDefaultShader(QOpenGLFramebufferObject *fbo, bool use_kernel = false);
-    void            drawFrameBufferToScreenBufferScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower, bool use_kernel = false);
+    void            drawFrameBufferToScreenBufferScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower);
     bool            drawGlowBuffer();
     void            drawSpace();
     void            drawSpaceOccluder();

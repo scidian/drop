@@ -46,6 +46,7 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
     cpSpaceSetGravity(m_space, m_gravity);
     cpSpaceSetDamping(m_space, m_damping);
 
+
     // ***** Custom Wildcard beginFunc CollisionHandlers: Damage / Health    
     QVector<Collision_Type> collide_types { Collision_Type::Damage_None,
                                             Collision_Type::Damage_Player,
@@ -57,19 +58,6 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
         custom_collision_handler->preSolveFunc = PreSolveFuncWildcard;
         custom_collision_handler->separateFunc = SeperateFuncWildcard;
     }
-
-
-
-    // !!!!! #TEMP add lights
-    ///QColor pink = QColor(192,  64, 192);
-    ///addThing( new DrEngineLight(this, getNextKey(), -350,  300,  0, Qt::blue ,  2000, QPointF(  0, 360),  40,  0.0f, true,   0.0f, 0.00f, 0.00f, c_opaque) );
-    ///addThing( new DrEngineLight(this, getNextKey(),  700,  800,  0, Qt::red  ,  3500, QPointF(  0, 360),  52,  5.0f, true,  50.0f, 0.00f, 0.00f, c_opaque) );
-    ///addThing( new DrEngineLight(this, getNextKey(), 1350,  300,  0, Qt::green,  2000, QPointF(  0, 360),  45, 10.0f, true,  50.0f, 0.50f, 2.00f, c_opaque) );
-    ///addThing( new DrEngineLight(this, getNextKey(), 2000,  250, 20, pink,        900, QPointF(  0, 360), 100,  1.0f, false,  0.0f, 0.00f, 0.00f, c_opaque) );
-    ///addThing( new DrEngineLight(this, getNextKey(), 2700, 1000, -1, Qt::white,  4000, QPointF( 45, 315),  60,  5.0f, false, 30.0f, 0.00f, 0.00f, c_opaque) );
-    ///addThing( new DrEngineLight(this, getNextKey(), 3700,  200,  0, Qt::gray ,  1200, QPointF(  0, 360),  50,  1.0f, true,   5.0f, 0.00f, 0.00f, c_opaque) );
-    ///addThing( new DrEngineLight(this, getNextKey(), 4500,  800, -1, Qt::yellow, 4000, QPointF(257, 283),  50,  8.0f, true,  15.0f, 0.25f, 1.00f, 0.75f) );
-
 
 
     // ***** Build desired demo Space

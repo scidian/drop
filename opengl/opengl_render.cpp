@@ -236,7 +236,7 @@ void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height)
 //##        Renders Frame Buffer Object to screen buffer as a textured quad
 //##            Uses "Screen" shader to multiply glow lights into texture
 //####################################################################################
-void DrOpenGL::drawFrameBufferToScreenBufferScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower, bool use_kernel) {
+void DrOpenGL::drawFrameBufferToScreenBufferScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower) {
 
     if (!m_screen_shader.bind()) return;
 
@@ -247,11 +247,12 @@ void DrOpenGL::drawFrameBufferToScreenBufferScreenShader(QOpenGLFramebufferObjec
     glUseProgram(m_screen_shader.programId());
     glUniform1i(upper_location, 0);
     glUniform1i(lower_location, 1);
-    glActiveTexture(GL_TEXTURE0 + 0);   // Texture unit 0
-    glBindTexture(GL_TEXTURE_2D, upper->texture());
-    glActiveTexture(GL_TEXTURE0 + 1);   // Texture unit 1
+
+    // Bind textures - !!!!! #NOTE: Must be called in descending order and end on 0
+    glActiveTexture(GL_TEXTURE1);                           // Texture unit 1
     glBindTexture(GL_TEXTURE_2D, lower->texture());
-    glActiveTexture(GL_TEXTURE0);       // For some reason have to set active texture back to 0 for them both to work
+    glActiveTexture(GL_TEXTURE0);                           // Texture unit 0
+    glBindTexture(GL_TEXTURE_2D, upper->texture());
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
     float left =   0.0f - (lower->width()  / 2.0f);
@@ -277,7 +278,6 @@ void DrOpenGL::drawFrameBufferToScreenBufferScreenShader(QOpenGLFramebufferObjec
     // Set variables for shader
     m_screen_shader.setUniformValue( m_uniform_screen_width,    static_cast<float>(lower->width()) );
     m_screen_shader.setUniformValue( m_uniform_screen_height,   static_cast<float>(lower->height()) );
-    m_screen_shader.setUniformValue( m_uniform_screen_kernel,   use_kernel );
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

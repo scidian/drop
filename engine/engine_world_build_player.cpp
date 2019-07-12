@@ -79,8 +79,8 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         light2->draw_shadows = false;
         addThings( { light1, light2 } );
 
-        addThing(new DrEngineLight(this, getNextKey(), 1100, 350, 0, Light_Type::Glow,   QColor(255, 87, 22),  1300, QPointF(0, 360), 80, 50.0f, true, 50.0f, 70.0f, 300.0f, 1.0));
-        addThing(new DrEngineLight(this, getNextKey(), 1100, 350, 0, Light_Type::Opaque, QColor(255, 213, 79), 1350, QPointF(0, 360), 50, 50.0f, true, 50.0f, 0.0f, 0.0f, 1.0));
+        ///addThing(new DrEngineLight(this, getNextKey(), 1100, 350, 0, Light_Type::Glow,   QColor(255, 87, 22),  1300, QPointF(0, 360), 80, 50.0f, true, 50.0f, 70.0f, 300.0f, 1.0));
+        ///addThing(new DrEngineLight(this, getNextKey(), 1100, 350, 0, Light_Type::Opaque, QColor(255, 213, 79), 1350, QPointF(0, 360), 50, 50.0f, true, 50.0f, 0.0f, 0.0f, 1.0));
 
     } else if (new_player_type == Demo_Player::Spawn) {
         DrEngineObject *ball1;

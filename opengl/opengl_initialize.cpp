@@ -169,7 +169,6 @@ void DrOpenGL::initializeGL() {
     m_uniform_screen_lower =            m_screen_shader.uniformLocation(   "u_lower" );
     m_uniform_screen_width =            m_screen_shader.uniformLocation(   "u_width" );
     m_uniform_screen_height =           m_screen_shader.uniformLocation(   "u_height" );
-    m_uniform_screen_kernel =           m_screen_shader.uniformLocation(   "u_kernel" );
 
 }
 
