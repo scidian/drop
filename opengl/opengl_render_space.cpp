@@ -43,7 +43,7 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type, bool use_offset) {
         float right =  cam_x + (width() *  devicePixelRatio() / 2.0f);
         float top =    cam_y + (height() * devicePixelRatio() / 2.0f);
         float bottom = cam_y - (height() * devicePixelRatio() / 2.0f);
-        m_projection.ortho( left, right, bottom, top, -5000.0f * m_scale, 5000.0f * m_scale);
+        m_projection.ortho( left, right, bottom, top, c_near_plane * m_scale, c_far_plane * m_scale);
         m_model_view.scale( m_scale );
 
     // Perspective
@@ -58,7 +58,7 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type, bool use_offset) {
                             0.0f );
         QVector3D  up(      0.0f, 1.0f, 0.0f);
 
-        m_projection.perspective( c_field_of_view, aspect_ratio, 1.0f, 10000.0f );
+        m_projection.perspective( c_field_of_view, aspect_ratio, 1.0f, (c_far_plane - c_near_plane) );
         m_model_view.lookAt(eye, look_at, up);
         m_model_view.scale( m_scale );
 

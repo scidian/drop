@@ -205,7 +205,7 @@ void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
     float top =    0.0f + ((m_shadows[light->getKey()]->height() ) / 2.0f);
     float bottom = 0.0f - ((m_shadows[light->getKey()]->height() ) / 2.0f);
     QMatrix4x4 m_matrix;
-    m_matrix.ortho( left, right, bottom, top, -5000.0f, 5000.0f);
+    m_matrix.ortho( left, right, bottom, top, c_near_plane, c_far_plane);
     m_shadow_shader.setUniformValue( m_uniform_shadow_matrix, m_matrix );
 
     // Set Texture Coordinates for Shader
@@ -229,6 +229,7 @@ void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
     float screen_scale = width()*devicePixelRatio() / light->light_size;
     m_shadow_shader.setUniformValue( m_uniform_shadow_resolution, light->getLightDiameter(), light->getLightDiameter() * screen_scale );
     m_shadow_shader.setUniformValue( m_uniform_shadow_depth,      static_cast<float>(light->z_order) );
+    m_shadow_shader.setUniformValue( m_uniform_shadow_near_plane, c_near_plane );
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

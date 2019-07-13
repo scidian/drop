@@ -17,10 +17,11 @@ uniform lowp  vec2      u_resolution;                   // X: Total diameter of 
                                                         // Y: Diameter scaled based on screen size to light diameter ratio
 uniform highp float     u_ray_count;                    // Width of 1D Shadow Map (i.e. number of rays to send out)
 uniform highp float     u_depth;                        // Z-Order of light
+uniform highp float     u_near_plane;                   // Near Plane in DrOpenGL
 
 // Other Variables
 const   lowp  float THRESHOLD = 0.75;               // Alpha threshold for our occlusion map
-const   highp float PI = 3.14159;                   // Pi
+const   highp float PI =  3.14159;                  // Pi
 const   highp float RAD = 6.2831853;                // 2.0 * PI is 360 degrees in radians
 
 // Unpacks a float from a color
@@ -65,7 +66,7 @@ void main(void) {
         // If the new distance is below the current, then we'll use that for our ray
         if (data.a > THRESHOLD) {
             // Retreive depth value stored in occluder_frag shader (stored in r/g/b)
-            highp float z = (unpackColor(data.rgb) / 1000.0) - 5000.0;
+            highp float z = (unpackColor(data.rgb) / 1000.0) - abs(u_near_plane);
 
             // Make sure light is behind object in z order
             if (u_depth <= z) {

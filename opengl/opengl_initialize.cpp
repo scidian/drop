@@ -104,6 +104,8 @@ void DrOpenGL::initializeGL() {
     m_uniform_occluder_texture =        m_occluder_shader.uniformLocation(   "u_texture" );
     m_uniform_occluder_alpha =          m_occluder_shader.uniformLocation(   "u_alpha" );
     m_uniform_occluder_depth =          m_occluder_shader.uniformLocation(   "u_depth" );
+    m_uniform_occluder_near_plane =     m_occluder_shader.uniformLocation(   "u_near_plane" );
+    m_uniform_occluder_far_plane =      m_occluder_shader.uniformLocation(   "u_far_plane" );
 
 
     // ***** Initialize our Shadow Map Shader
@@ -123,6 +125,7 @@ void DrOpenGL::initializeGL() {
     m_uniform_shadow_resolution =       m_shadow_shader.uniformLocation(   "u_resolution" );
     m_uniform_shadow_ray_count =        m_shadow_shader.uniformLocation(   "u_ray_count" );
     m_uniform_shadow_depth =            m_shadow_shader.uniformLocation(   "u_depth" );
+    m_uniform_shadow_near_plane =       m_shadow_shader.uniformLocation(   "u_near_plane" );
 
 
     // ***** Initialize our 2D Light Shader

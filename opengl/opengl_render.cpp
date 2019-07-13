@@ -168,7 +168,7 @@ void DrOpenGL::drawFrameBufferToScreenBufferDefaultShader(QOpenGLFramebufferObje
     float top =    0.0f + (fbo->height() / 2.0f);
     float bottom = 0.0f - (fbo->height() / 2.0f);
     QMatrix4x4 m_matrix;
-    m_matrix.ortho( left, right, bottom, top, -5000.0f, 5000.0f);
+    m_matrix.ortho( left, right, bottom, top, c_near_plane, c_far_plane);
     m_shader.setUniformValue( m_uniform_matrix, m_matrix );
 
     // Set Texture Coordinates for Shader
@@ -260,7 +260,7 @@ void DrOpenGL::drawFrameBufferToScreenBufferScreenShader(QOpenGLFramebufferObjec
     float top =    0.0f + (lower->height() / 2.0f);
     float bottom = 0.0f - (lower->height() / 2.0f);
     QMatrix4x4 m_matrix;
-    m_matrix.ortho( left, right, bottom, top, -5000.0f, 5000.0f);
+    m_matrix.ortho( left, right, bottom, top, c_near_plane, c_far_plane);
     m_screen_shader.setUniformValue( m_uniform_screen_matrix, m_matrix );
 
     // Set Texture Coordinates for Shader

@@ -5,6 +5,7 @@
 //      DrWorld Class Definitions
 //
 //
+#include "opengl/opengl.h"
 #include "project.h"
 #include "project_world.h"
 #include "project_world_stage.h"
@@ -120,7 +121,8 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Ambient, Property_Type::Percent, 100,
                            "Ambient Light", "Used to darken World, mostly for the purpose of lighting it with Glow Lights.");
     addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Layer, Property_Type::Double, 0.0,
-                           "Light Layer", "Location along the z axis (Z Order) to draw Glow Lights. Should be between -5000 and 5000 to be visible.");
+                           "Light Layer", "Location along the z axis (Z Order) to draw Glow Lights. Should be between " +
+                                          QString::number(double(c_near_plane)) + " and " + QString::number(double(c_far_plane)) + " to be visible.");
 
     addComponent(Components::World_Appearance, "Appearance", "These filters affect the entire world after it has been rendered.",
                                                Component_Colors::Mellow_Yellow, true);

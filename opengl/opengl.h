@@ -35,12 +35,14 @@ extern int  g_max_occluder_fbo_size;
 extern int  g_max_light_fbo_size;
 
 // Rendering Constants
-const bool  c_use_cam_offset = true;
-const float c_field_of_view = 52.5f;                    // Close to Orthographic size when using standard widescreen ratio
+const float c_near_plane =     -10000.0;
+const float c_far_plane =       10000.0;
+const bool  c_use_cam_offset =  true;
+const float c_field_of_view =   52.5f;                  // Close to Orthographic size when using standard widescreen ratio
 
 // 2D Light Constants
-const float c_occluder_scale_ortho =          1.00f;    // Scale to use for occlusion map (higher the number, less shaky the shadows)
-const float c_occluder_scale_proj =           1.00f;    // Scale to use for occlusion map (higher the number, less shaky the shadows)
+const float c_occluder_scale_ortho =       1.00f;       // Scale to use for occlusion map (higher the number, less shaky the shadows)
+const float c_occluder_scale_proj =        1.00f;       // Scale to use for occlusion map (higher the number, less shaky the shadows)
 const int   c_desired_max_rays =           4096;        // Desired max number of rays to send out during shadow map calculations
 const int   c_desired_occluder_fbo_size =  8192;        // Desired max width and height of offscreen fbo used for shadow map
 const int   c_desired_light_fbo_size =     8192;        // Desired max width and height of offscreen fbo used for lights
@@ -117,6 +119,8 @@ private:
     int     m_uniform_occluder_texture;
     int     m_uniform_occluder_alpha;
     int     m_uniform_occluder_depth;
+    int     m_uniform_occluder_near_plane;
+    int     m_uniform_occluder_far_plane;
 
     // Shadow Map Shader
     QOpenGLShaderProgram m_shadow_shader;
@@ -128,6 +132,7 @@ private:
     int     m_uniform_shadow_resolution;
     int     m_uniform_shadow_ray_count;
     int     m_uniform_shadow_depth;
+    int     m_uniform_shadow_near_plane;
 
     // 2D Light Shader
     QOpenGLShaderProgram m_light_shader;

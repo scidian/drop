@@ -37,7 +37,7 @@ QMatrix4x4 DrOpenGL::occluderMatrix(Render_Type render_type, bool use_offset) {
         float right =  cam_x + (m_occluder_fbo->width() /  2.0f);
         float top =    cam_y + (m_occluder_fbo->height() / 2.0f);
         float bottom = cam_y - (m_occluder_fbo->height() / 2.0f);
-        matrix.ortho( left, right, bottom, top, -5000.0f * m_scale * c_occluder_scale_ortho, 5000.0f * m_scale * c_occluder_scale_ortho);
+        matrix.ortho( left, right, bottom, top, c_near_plane * m_scale * c_occluder_scale_ortho, c_far_plane * m_scale * c_occluder_scale_ortho);
         matrix.scale( m_scale * c_occluder_scale_ortho );
 
     // Perspective
@@ -51,7 +51,7 @@ QMatrix4x4 DrOpenGL::occluderMatrix(Render_Type render_type, bool use_offset) {
         QVector3D  eye(     cam_x + perspective_offset.x(), cam_y + perspective_offset.y(), m_engine->getCurrentWorld()->getCameraPos().z());
         QVector3D  look_at( cam_x, cam_y, 0.0f );
         QVector3D  up(      0.0f,   1.0f, 0.0f );
-        matrix.perspective( c_field_of_view, aspect_ratio, 1.0f, 10000.0f );
+        matrix.perspective( c_field_of_view, aspect_ratio, 1.0f, (c_far_plane - c_near_plane) );
         matrix2.lookAt(eye, look_at, up);
         matrix2.scale( m_scale * c_occluder_scale_proj);
         matrix *= matrix2;
@@ -122,10 +122,10 @@ void DrOpenGL::drawSpaceOccluder() {
         QVector<GLfloat> vertices;
         vertices.clear();
         vertices.resize( 12 );                  // in sets of x, y, z
-        vertices[ 0] = top_right.x() + x;       vertices[1] = top_right.y() + y;        vertices[ 2] = z;           // Top Right
-        vertices[ 3] = top_left.x()  + x;       vertices[4] = top_left.y()  + y;        vertices[ 5] = z;           // Top Left
-        vertices[ 6] = bot_right.x() + x;       vertices[7] = bot_right.y() + y;        vertices[ 8] = z;           // Bottom Right
-        vertices[ 9] = bot_left.x()  + x;       vertices[10] = bot_left.y() + y;        vertices[11] = z;           // Bottom Left
+        vertices[ 0] = top_right.x() + x;       vertices[ 1] = top_right.y() + y;       vertices[ 2] = z;           // Top Right
+        vertices[ 3] = top_left.x()  + x;       vertices[ 4] = top_left.y()  + y;       vertices[ 5] = z;           // Top Left
+        vertices[ 6] = bot_right.x() + x;       vertices[ 7] = bot_right.y() + y;       vertices[ 8] = z;           // Bottom Right
+        vertices[ 9] = bot_left.x()  + x;       vertices[10] = bot_left.y()  + y;       vertices[11] = z;           // Bottom Left
         m_occluder_shader.setAttributeArray( m_attribute_occluder_vertex, vertices.data(), 3 );
         m_occluder_shader.enableAttributeArray( m_attribute_occluder_vertex );
 
@@ -141,6 +141,8 @@ void DrOpenGL::drawSpaceOccluder() {
         }
         m_occluder_shader.setUniformValue( m_uniform_occluder_alpha,      alpha );
         m_occluder_shader.setUniformValue( m_uniform_occluder_depth,      static_cast<float>(object->z_order) );
+        m_occluder_shader.setUniformValue( m_uniform_occluder_near_plane, c_near_plane );
+        m_occluder_shader.setUniformValue( m_uniform_occluder_far_plane,  c_far_plane );
 
         // ***** Draw triangles using shader program
         glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

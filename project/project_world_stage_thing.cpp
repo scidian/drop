@@ -5,6 +5,7 @@
 //      DrThing Class Definitions
 //
 //
+#include "opengl/opengl.h"
 #include "project.h"
 #include "project_asset.h"
 #include "project_world.h"
@@ -197,7 +198,8 @@ void DrThing::addComponentLayering(double z) {
                                                            "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, true);
     getComponent(Components::Thing_Layering)->setIcon(Component_Icons::Layering);
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Z_Order, Property_Type::Double, QVariant::fromValue(z),
-                           "Z Order", "Arrangement of item along the z axis in the stage. Should be between -5000 and 5000 to be visible.");
+                           "Z Order", "Arrangement of item along the z axis in the stage. Should be between " +
+                                      QString::number(double(c_near_plane)) + " and " + QString::number(double(c_far_plane)) + " to be visible.");
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Opacity, Property_Type::Percent, 100,
                            "Opacity", "How transparent this item is, 0 (invisible) - 100 (solid)");
 }
