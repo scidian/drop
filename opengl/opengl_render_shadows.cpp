@@ -22,32 +22,34 @@
 //##        Main Shadow Map / Occluder / Render Routine
 //####################################################################################
 void DrOpenGL::process2DLights() {
-    if (m_engine->getCurrentWorld()->light_count <= 0) return;
 
-    // ***** Clear list of which lights exist
-    checkLightBuffers();
+    if (m_engine->getCurrentWorld()->light_count > 0) {
 
-    // ***** Check for lights with shadows, if there are none we don't need to draw occluder map
-    m_engine->getCurrentWorld()->light_count = findNeededShadowMaps();
-    if (m_shadow_lights.count() <= 0) return;
+        // ***** Clear list of which lights exist
+        checkLightBuffers();
 
-    // ***** Render all Space Objects to an off-screen Frame Buffer Object Occluder Map
-    bindOccluderMapBuffer();
-    glViewport(0, 0, m_occluder_fbo->width(), m_occluder_fbo->height());
-    drawSpaceOccluder();
-    m_occluder_fbo->release();
-    glViewport(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
+        // ***** Check for lights with shadows, if there are none we don't need to draw occluder map
+        m_engine->getCurrentWorld()->light_count = findNeededShadowMaps();
+        if (m_shadow_lights.count() <= 0) return;
 
-    // ***** Code to have the Occluder Map fbo pop up so we can take a look
-    ///static int count = 0;
-    ///count++;
-    ///if (count % 500 == 0) {
-    ///    Dr::ShowMessageBox("fbo", QPixmap::fromImage( m_occluder_fbo->toImage() ).scaled(512, 512) );
-    ///    count = 0;
-    ///}
+        // ***** Render all Space Objects to an off-screen Frame Buffer Object Occluder Map
+        bindOccluderMapBuffer();
+        glViewport(0, 0, m_occluder_fbo->width(), m_occluder_fbo->height());
+        drawSpaceOccluder();
+        m_occluder_fbo->release();
+        glViewport(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
 
-    // ***** Calculate Light 1D Shadow Maps
-    drawShadowMaps();
+        // ***** Code to have the Occluder Map fbo pop up so we can take a look
+        ///static int count = 0;
+        ///count++;
+        ///if (count % 500 == 0) {
+        ///    Dr::ShowMessageBox("fbo", QPixmap::fromImage( m_occluder_fbo->toImage() ).scaled(512, 512) );
+        ///    count = 0;
+        ///}
+
+        // ***** Calculate Light 1D Shadow Maps
+        drawShadowMaps();
+    }
 
     // ***** Draw Glow Lights
     drawGlowLights();
@@ -273,6 +275,7 @@ void DrOpenGL::draw2DLight(DrEngineLight *light) {
 
     // If drawing Shadows, Bind Shadow Map as a texture
     if (light->draw_shadows) {
+        if (m_shadows[light->getKey()] == nullptr) return;
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, m_shadows[light->getKey()]->texture());
     }

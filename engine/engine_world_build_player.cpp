@@ -69,7 +69,8 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ball1->setMoveSpeedY( 300 );
         ball1->cast_shadows = false;
 
-        this->setAmbientLight(3.0);
+        if (this->getAmbientLight() > 3.0)
+            this->setAmbientLight(3.0);
         this->setBackgroundColor(QColor(32, 32, 32));
         this->setGlowZOrder(100.0);
 

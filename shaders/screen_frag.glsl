@@ -47,8 +47,11 @@ void main( void ) {
     vec3 out_color;
 
 
-    //out_color = lower.rgb * (upper.rgb * 1.25);                 // Multiply Blending (can change multiplier)
+    //out_color = lower.rgb * (upper.rgb * 1.25);               // Multiply Blending (can change multiplier)
+
+
     out_color = hardLightBlending(upper.rgb, lower.rgb);        // Hard Light Blending
+    out_color *= lower.rgb;                                     // Extra light added in for reveresed mode
 
 
     gl_FragColor = vec4(out_color, 1.0);

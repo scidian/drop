@@ -258,8 +258,8 @@ bool DrOpenGL::drawGlowBuffer() {
         QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);
         bindOffscreenBuffer();
         glDisable(GL_BLEND);
-        ///drawFrameBufferToScreenBufferScreenShader(m_glow_fbo, m_texture_fbo);
-        drawFrameBufferToScreenBufferScreenShader(m_texture_fbo, m_glow_fbo);
+        ///drawFrameBufferToScreenBufferScreenShader(m_glow_fbo, m_texture_fbo);            // Normal
+        drawFrameBufferToScreenBufferScreenShader(m_texture_fbo, m_glow_fbo);               // Reversed, cool metal look
     }
 
     return true;
