@@ -118,9 +118,9 @@ void DrWorld::initializeWorldSettings(QString new_name) {
 
     addComponent(Components::World_Lighting, "Lighting", "Lighting settings for current World.", Component_Colors::Mustard_Yellow, true);
     getComponent(Components::World_Lighting)->setIcon(Component_Icons::Light);
-    addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Ambient, Property_Type::Percent, 100,
+    addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Ambient, Property_Type::Percent, 50,
                            "Ambient Light", "Used to darken World, mostly for the purpose of lighting it with Glow Lights.");
-    addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Layer, Property_Type::Double, 100.0,
+    addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Layer, Property_Type::Double, 50.0,
                            "Light Layer", "Location along the z axis (Z Order) to draw Glow Lights. Should be between " +
                                           QString::number(double(c_near_plane)) + " and " + QString::number(double(c_far_plane)) + " to be visible.");
 

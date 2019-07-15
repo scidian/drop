@@ -95,7 +95,7 @@ private:
     double          m_delete_threshold_x = 5000;    // X distance away from camera an object can be before it's removed from the scene
     double          m_delete_threshold_y = 5000;    // Y distance away from camera an object can be before it's removed from the scene
 
-    double          m_ambient_light = 100.0;        // Ambient light percentage to use for World, mostly for use with Glow Lights
+    double          m_ambient_light = 50.0;         // Ambient light percentage to use for World, mostly for use with Glow Lights
     double          m_glow_light_z_order = 0.0;     // Z Ordering for Glow Lights
 
     QColor          m_background_color {0,0,0,1};   // Background color to use to clear screen during render

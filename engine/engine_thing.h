@@ -23,6 +23,7 @@ class DrEngineWorld;
 // Type Definitions
 typedef std::map<cpShape*, Shape_Type> ShapeMap;
 
+
 //####################################################################################
 //##    DrEngineThing
 //##        Abstract base class that represents one DrThing in the physics engine

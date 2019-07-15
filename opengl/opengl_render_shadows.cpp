@@ -249,9 +249,9 @@ void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
 //##        Renders Glow Lights on Glow fbo
 //####################################################################################
 void DrOpenGL::drawGlowLights() {
-    // Check that we should draw Glow Light Buffer, if so bind it
+    // If no lights and ambient light is 50% (normal) exit now, otherwise bind Glow Light Buffer
     double ambient_light = m_engine->getCurrentWorld()->getAmbientLight() / 100.0;
-    if (m_glow_lights.count() <= 0 && Dr::IsCloseTo(1.0, ambient_light, .001)) return;
+    if (m_glow_lights.count() <= 0 && Dr::IsCloseTo(0.5, ambient_light, .001)) return;
     bindGlowLightsBuffer(static_cast<float>(ambient_light));
 
     // Standard blend function

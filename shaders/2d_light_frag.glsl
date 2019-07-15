@@ -97,8 +97,16 @@ void main(void) {
     }
 
 
-    // Multiply the sum by our distance, which gives us a radial falloff
-    highp float falloff = intensity * smoothstep(1.0, 0.0, radius * shrink);
+    // Playing around with halo shaped lights, increase variable "halo" to try it out
+    // Max length is 1.414 to the corner from the middle, i.e. the hypotenuse of a normalized right triangle
+    highp float halo = 0.0;
+    highp float falloff;
+    if (radius < halo) {
+        // Multiply the sum by our distance, which gives us a radial falloff
+        falloff = intensity * smoothstep(0.0, 1.0, radius * (1.0 / halo) * shrink);
+    } else {
+        falloff = intensity * smoothstep(1.0, 0.0, (radius - halo) * (1.0 / (1.0 - halo)) * shrink);
+    }
 
 
     // Set Shadow fade amount based on light type
