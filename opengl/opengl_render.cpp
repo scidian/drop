@@ -42,9 +42,9 @@ void DrOpenGL::paintGL() {
 
     // ***** Render Onto Frame Buffer Object
     bindOffscreenBuffer();                                                          // Create / Bind Offscreen Frame Buffer Object
-    drawCube( QVector3D( 2000, 400, -300) );                                     // Render Background 3D Objects
+    ///drawCube( QVector3D( 2000, 400, -300) );                                     // Render Background 3D Objects
     drawSpace();                                                                    // Render cpSpace Objects
-    drawCube( QVector3D(1600, 500, 600) );                                       // Render Foreground 3D Objects
+    ///drawCube( QVector3D(1600, 500, 600) );                                       // Render Foreground 3D Objects
     releaseOffscreenBuffer();                                                       // Release Frame Buffer Object
     QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);         // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
 

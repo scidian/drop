@@ -33,80 +33,6 @@ uniform lowp vec3   u_tint;// = vec3(0, 0, 0);      // Tint, adds rgb to final o
 uniform      bool   u_kernel;// = false;            // Kernel Effects? (blur, sharpen, etc)
 
 
-
-float edge_thres  = 0.2;
-float edge_thres2 = 5.0;
-
-const int HueLevCount = 13;
-const int SatLevCount = 11;
-const int ValLevCount =  6;
-
-float[13] HueLevels = float[] (  0.0, 30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 240.0, 270.0, 300.0, 330.0, 360.0);
-float[11] SatLevels = float[] (  0.0,  0.1,  0.2,  0.3,   0.4,   0.5,   0.6,   0.7,   0.8,   0.9,   1.0);
-float[ 6] ValLevels = float[] (  0.0,  0.2,  0.4,  0.6,   0.8,   1.0);
-
-float nearestLevel(float col, int mode) {
-    int levCount;
-    if (mode == 0) levCount = HueLevCount;
-    if (mode == 1) levCount = SatLevCount;
-    if (mode == 2) levCount = ValLevCount;
-
-    for (int i = 0; i < levCount - 1; i++) {
-        if (mode == 0) {
-            if (col >= HueLevels[i] && col <= HueLevels[i + 1]) {
-                return HueLevels[i + 1];
-            }
-        }
-        if (mode == 1) {
-            if (col >= SatLevels[i] && col <= SatLevels[i + 1]) {
-                return SatLevels[i + 1];
-            }
-        }
-        if (mode == 2) {
-            if (col >= ValLevels[i] && col <= ValLevels[i + 1]) {
-                return ValLevels[i + 1];
-            }
-        }
-   }
-}
-
-// averaged pixel intensity from 3 color channels
-float avgIntensity(vec4 pix) {
-    return (pix.r + pix.g + pix.b) / 3.0;
-}
-
-vec4 getPixel(vec2 coords, float dx, float dy) {
-    return texture2D(u_tex, coords + vec2(dx, dy));
-}
-
-// returns pixel color
-float IsEdge(in vec2 coords) {
-    float dxtex = 1.0 / float(u_width);   //textureSize(u_tex, 0)) ;
-    float dytex = 1.0 / float(u_height);  //textureSize(u_tex, 0));
-    float pix[9];
-    int   k = -1;
-    float delta;
-
-    // read neighboring pixel intensities
-    for (int i = -1; i < 2; i++) {
-        for(int j = -1; j < 2; j++) {
-            k++;
-            pix[k] = avgIntensity(getPixel(coords, float(i) * dxtex, float(j) * dytex));
-        }
-    }
-
-    // average color differences around neighboring pixels
-    delta = (abs(pix[1] - pix[7]) +
-             abs(pix[5] - pix[3]) +
-             abs(pix[0] - pix[8]) +
-             abs(pix[2] - pix[6]) ) / 4.0;
-
-    return clamp(edge_thres2 * delta, 0.0, 1.0);
-}
-
-
-
-
 // ***** Convert red/green/blue to hue/saturation/vibrance
 vec3 rgbToHsv(vec3 c) {
     vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -124,7 +50,43 @@ vec3 hsvToRgb(vec3 c) {
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
-vec3 RGBtoHSV( float r, float g, float b) {
+
+
+
+float edge_thres  = 0.2;
+float edge_thres2 = 5.0;
+
+// Averaged pixel intensity from 3 color channels
+float avgIntensity(vec4 pix) {
+    return (pix.r + pix.g + pix.b) / 3.0;
+}
+
+// Returns pixel color
+float IsEdge(in vec2 coords) {
+    float dxtex = 1.0 / float(u_width);   //textureSize(u_tex, 0)) ;
+    float dytex = 1.0 / float(u_height);  //textureSize(u_tex, 0));
+    float pix[9];
+    int   k = -1;
+    float delta;
+
+    // Read neighboring pixel intensities
+    for (int i = -1; i < 2; i++) {
+        for(int j = -1; j < 2; j++) {
+            k++;
+            pix[k] = avgIntensity( texture2D(u_tex, coords + vec2(float(i) * dxtex, float(j) * dytex)) );
+        }
+    }
+
+    // Average color differences around neighboring pixels
+    delta = (abs(pix[1] - pix[7]) +
+             abs(pix[5] - pix[3]) +
+             abs(pix[0] - pix[8]) +
+             abs(pix[2] - pix[6]) ) / 4.0;
+
+    return clamp(edge_thres2 * delta, 0.0, 1.0);
+}
+
+vec3 RGBtoHSV(float r, float g, float b) {
     float minv, maxv, delta;
     vec3 res;
 
@@ -215,12 +177,14 @@ void main( void ) {
 
         vec3 colorOrg = fragRGB;
         vec3 vHSV = RGBtoHSV(colorOrg.r, colorOrg.g, colorOrg.b);
-        vHSV.x = nearestLevel(vHSV.x, 0);
-        vHSV.y = nearestLevel(vHSV.y, 1);
-        vHSV.z = nearestLevel(vHSV.z, 2);
+        //vec3 vHSV = rgbToHsv(vec3(colorOrg.r, colorOrg.g, colorOrg.b));
+        vHSV.x = 30.0 * (floor(vHSV.x / 30.0) + 1.0);
+        vHSV.y =  0.1 * (floor(vHSV.y / 0.1) +  1.0);
+        vHSV.z =  0.1 * (floor(vHSV.z / 0.1) +  1.0);
         float edg = IsEdge(coordinates.st);
 
         vec3 vRGB = (edg >= edge_thres) ? vec3(0.0, 0.0, 0.0) : HSVtoRGB(vHSV.x, vHSV.y, vHSV.z);
+        //vec3 vRGB = (edg >= edge_thres) ? vec3(0.0, 0.0, 0.0) : hsvToRgb(vec3(vHSV.x, vHSV.y, vHSV.z));
         fragRGB = vec3(vRGB.x, vRGB.y, vRGB.z);
     }
 
