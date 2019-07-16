@@ -210,7 +210,6 @@ void DrOpenGL::drawSpace() {
         m_shader.setUniformValue( m_uniform_kernel,     false );
         ///m_shader.setUniformValue( m_uniform_kernel,     true );
 
-
         // ***** Draw triangles using shader program
         glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
 

@@ -70,7 +70,6 @@ void DrOpenGL::drawSpaceOccluder() {
     // ***** Standard blend function
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //glDisable(GL_BLEND);
 
     // ***** Set Matrix for Shader
     m_occluder_shader.setUniformValue( m_uniform_occluder_matrix, occluderMatrix(m_engine->getCurrentWorld()->render_type, c_use_cam_offset) );

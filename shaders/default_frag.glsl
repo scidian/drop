@@ -33,8 +33,82 @@ uniform lowp vec3   u_tint;// = vec3(0, 0, 0);      // Tint, adds rgb to final o
 uniform      bool   u_kernel;// = false;            // Kernel Effects? (blur, sharpen, etc)
 
 
+
+float edge_thres  = 0.2;
+float edge_thres2 = 5.0;
+
+const int HueLevCount = 13;
+const int SatLevCount = 11;
+const int ValLevCount =  6;
+
+float[13] HueLevels = float[] (  0.0, 30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 240.0, 270.0, 300.0, 330.0, 360.0);
+float[11] SatLevels = float[] (  0.0,  0.1,  0.2,  0.3,   0.4,   0.5,   0.6,   0.7,   0.8,   0.9,   1.0);
+float[ 6] ValLevels = float[] (  0.0,  0.2,  0.4,  0.6,   0.8,   1.0);
+
+float nearestLevel(float col, int mode) {
+    int levCount;
+    if (mode == 0) levCount = HueLevCount;
+    if (mode == 1) levCount = SatLevCount;
+    if (mode == 2) levCount = ValLevCount;
+
+    for (int i = 0; i < levCount - 1; i++) {
+        if (mode == 0) {
+            if (col >= HueLevels[i] && col <= HueLevels[i + 1]) {
+                return HueLevels[i + 1];
+            }
+        }
+        if (mode == 1) {
+            if (col >= SatLevels[i] && col <= SatLevels[i + 1]) {
+                return SatLevels[i + 1];
+            }
+        }
+        if (mode == 2) {
+            if (col >= ValLevels[i] && col <= ValLevels[i + 1]) {
+                return ValLevels[i + 1];
+            }
+        }
+   }
+}
+
+// averaged pixel intensity from 3 color channels
+float avgIntensity(vec4 pix) {
+    return (pix.r + pix.g + pix.b) / 3.0;
+}
+
+vec4 getPixel(vec2 coords, float dx, float dy) {
+    return texture2D(u_tex, coords + vec2(dx, dy));
+}
+
+// returns pixel color
+float IsEdge(in vec2 coords) {
+    float dxtex = 1.0 / float(u_width);   //textureSize(u_tex, 0)) ;
+    float dytex = 1.0 / float(u_height);  //textureSize(u_tex, 0));
+    float pix[9];
+    int   k = -1;
+    float delta;
+
+    // read neighboring pixel intensities
+    for (int i = -1; i < 2; i++) {
+        for(int j = -1; j < 2; j++) {
+            k++;
+            pix[k] = avgIntensity(getPixel(coords, float(i) * dxtex, float(j) * dytex));
+        }
+    }
+
+    // average color differences around neighboring pixels
+    delta = (abs(pix[1] - pix[7]) +
+             abs(pix[5] - pix[3]) +
+             abs(pix[0] - pix[8]) +
+             abs(pix[2] - pix[6]) ) / 4.0;
+
+    return clamp(edge_thres2 * delta, 0.0, 1.0);
+}
+
+
+
+
 // ***** Convert red/green/blue to hue/saturation/vibrance
-vec3 rgb2hsv(vec3 c) {
+vec3 rgbToHsv(vec3 c) {
     vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
     vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
     vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
@@ -44,11 +118,76 @@ vec3 rgb2hsv(vec3 c) {
 }
 
 // ***** Convert hue/saturation/vibrance to red/green/blue
-vec3 hsv2rgb(vec3 c) {
+vec3 hsvToRgb(vec3 c) {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
+
+vec3 RGBtoHSV( float r, float g, float b) {
+    float minv, maxv, delta;
+    vec3 res;
+
+    minv = min(min(r, g), b);
+    maxv = max(max(r, g), b);
+    res.z = maxv;                           // v
+    delta = maxv - minv;
+
+    if( maxv != 0.0 )
+        res.y = delta / maxv;               // s
+    else {
+        // r = g = b = 0                    // s = 0, v is undefined
+        res.y = 0.0;
+        res.x = -1.0;
+        return res;
+    }
+
+    if ( r == maxv )
+        res.x = ( g - b ) / delta;          // between yellow & magenta
+    else if( g == maxv )
+        res.x = 2.0 + ( b - r ) / delta;    // between cyan & yellow
+    else
+        res.x = 4.0 + ( r - g ) / delta;    // between magenta & cyan
+
+    res.x = res.x * 60.0;                   // degrees
+    if( res.x < 0.0 )
+        res.x = res.x + 360.0;
+
+    return res;
+}
+
+vec3 HSVtoRGB(float h, float s, float v ) {
+    int i;
+    float f, p, q, t;
+    vec3 res;
+
+    if( s == 0.0 ) {
+        // achromatic (grey)
+        res.x = v;
+        res.y = v;
+        res.z = v;
+        return res;
+    }
+
+    h /= 60.0;                      // sector 0 to 5
+    i = int(floor( h ));
+    f = h - float(i);               // factorial part of h
+    p = v * ( 1.0 - s );
+    q = v * ( 1.0 - s * f );
+    t = v * ( 1.0 - s * ( 1.0 - f ) );
+
+    if (i == 0) {       res.x = v;  res.y = t;  res.z = p;  }
+    else if (i == 1) {  res.x = q;  res.y = v;  res.z = p;  }
+    else if (i == 2) {  res.x = p;  res.y = v;  res.z = t;  }
+    else if (i == 3) {  res.x = p;  res.y = q;  res.z = v;  }
+    else if (i == 4) {  res.x = t;  res.y = p;  res.z = v;  }
+    else {              res.x = v;  res.y = p;  res.z = q;  }
+
+    return res;
+}
+
+
+
 
 
 void main( void ) {
@@ -70,7 +209,20 @@ void main( void ) {
     vec3 fragRGB = texture_color.rgb;                                               // Save rgb as a vec3 for working with
 
     // ***** NEGATIVE
-    if (u_negative) fragRGB = 1.0 - fragRGB;
+    if (u_negative) {
+        //fragRGB = 1.0 - fragRGB;
+
+
+        vec3 colorOrg = fragRGB;
+        vec3 vHSV = RGBtoHSV(colorOrg.r, colorOrg.g, colorOrg.b);
+        vHSV.x = nearestLevel(vHSV.x, 0);
+        vHSV.y = nearestLevel(vHSV.y, 1);
+        vHSV.z = nearestLevel(vHSV.z, 2);
+        float edg = IsEdge(coordinates.st);
+
+        vec3 vRGB = (edg >= edge_thres) ? vec3(0.0, 0.0, 0.0) : HSVtoRGB(vHSV.x, vHSV.y, vHSV.z);
+        fragRGB = vec3(vRGB.x, vRGB.y, vRGB.z);
+    }
 
     // ***** GRAYSCALE
     if (u_grayscale) {
@@ -80,12 +232,12 @@ void main( void ) {
 
     // ***** HUE / SATURATION ADJUSTMENT
     if (u_hue > 0.0 || u_saturation > 0.0) {
-        vec3 fragHSV = rgb2hsv(fragRGB).xyz;
+        vec3 fragHSV = rgbToHsv(fragRGB).xyz;
         fragHSV.x += u_hue;
         fragHSV.x =  mod(fragHSV.x, 1.0);
         fragHSV.y += u_saturation;
         fragHSV.y =  clamp(fragHSV.y, 0.0, 1.0);
-        fragRGB = hsv2rgb(fragHSV);
+        fragRGB = hsvToRgb(fragHSV);
     }
 
     // ***** CONTRAST / BRIGHTNESS ADJUSTMENT
