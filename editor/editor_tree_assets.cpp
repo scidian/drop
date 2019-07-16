@@ -16,7 +16,7 @@
 #include "debug.h"
 #include "editor_tree_assets.h"
 #include "globals.h"
-#include "image_filter_color.h"
+#include "image_filter.h"
 #include "interface_editor_relay.h"
 #include "helper.h"
 #include "project/project.h"
@@ -263,8 +263,8 @@ DrQPushButtonCategory* TreeAssets::createCategoryButton(QTreeWidgetItem *item, Q
     this->setItemWidget(item, 0, button);                                   // Apply the button to the tree item
 
     QPixmap text_icon( ":/assets/tree_icons/" + icon_resource );
-    text_icon = DrImaging::changeToGrayscale(text_icon);
-    text_icon = DrImaging::changeBrightness(text_icon, 200);
+    text_icon = DrImaging::applySinglePixelFilter( Image_Filter_Type::Grayscale, text_icon, 0 );
+    text_icon = DrImaging::applySinglePixelFilter( Image_Filter_Type::Brightness, text_icon, 200 );
     button->setIcon( text_icon );
     m_filter_hover->attachToHoverHandler(button, advisor_info);
     return button;

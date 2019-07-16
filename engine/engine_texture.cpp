@@ -11,6 +11,8 @@
 
 #include "engine.h"
 #include "engine_texture.h"
+#include "helper.h"
+#include "image_filter.h"
 
 //####################################################################################
 //##        Constructor
@@ -35,7 +37,9 @@ void DrEngineTexture::loadTexture(QPixmap &from_pixmap) {
 
     // Load image, #NOTE: QImage is mirrored vertically to account for the fact that OpenGL and QImage use opposite directions for the y axis
     QImage image = from_pixmap.toImage().mirrored();
-    image = image.convertToFormat( QImage::Format_ARGB32 );
+    image = image.convertToFormat( QImage::Format_ARGB32 );                                             // Convert image to a standard format
+    ///image = image.convertToFormat( QImage::Format_ARGB32_Premultiplied );                            // Doesn't work right for our textures, causes white outlines
+    image = DrImaging::applySinglePixelFilter( Image_Filter_Type::Premultiplied_Alpha, image, 0 );      // Custom premultiply values with alpha function
 
     // Add a "c_texture_border" pixel border to reduce artifacts during multi sampling
     ///QPixmap one_pixel_border( image.width() + (c_texture_border*2), image.height() + (c_texture_border*2));
@@ -58,29 +62,24 @@ void DrEngineTexture::loadTexture(QPixmap &from_pixmap) {
     ///m_texture->setMagnificationFilter(QOpenGLTexture::Nearest);
     ///m_texture->setData(one_pixel_border.toImage(), QOpenGLTexture::GenerateMipMaps);
 
+    // Six options for min filter
     //m_texture->setMinificationFilter( QOpenGLTexture::Filter::Nearest);                  // no anti aliasing
     //m_texture->setMinificationFilter( QOpenGLTexture::Filter::NearestMipMapLinear);      // small is edgy
     //m_texture->setMinificationFilter( QOpenGLTexture::Filter::NearestMipMapNearest);     // small is edgy
-    m_texture->setMinificationFilter( QOpenGLTexture::Filter::Linear);                     // good
-    //m_texture->setMinificationFilter( QOpenGLTexture::Filter::LinearMipMapLinear);       // a little fuzzy
+    //m_texture->setMinificationFilter( QOpenGLTexture::Filter::Linear);                   // good
+    m_texture->setMinificationFilter( QOpenGLTexture::Filter::LinearMipMapLinear);         // good, fuzzier
     //m_texture->setMinificationFilter( QOpenGLTexture::Filter::LinearMipMapNearest);      // good
 
-    //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::Nearest);                  // no anti aliasing
-    //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::NearestMipMapLinear);      //
-    //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::NearestMipMapNearest);     //
-    //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::Linear);                   //
-    //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::LinearMipMapLinear);       // good
-    m_texture->setMagnificationFilter(QOpenGLTexture::Filter::LinearMipMapNearest);        // good
+    // Only two options for mag filter
+    //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::Nearest);
+    m_texture->setMagnificationFilter(QOpenGLTexture::Filter::Linear);
 
-    m_texture->setWrapMode(QOpenGLTexture::WrapMode::ClampToEdge);             // !!! May need to fixed border artifacts?
+    m_texture->setWrapMode(QOpenGLTexture::WrapMode::ClampToEdge);                          // !!! May need to fixed border artifacts?
 
     m_width =  m_texture->width();
     m_height = m_texture->height();
     m_texture_loaded = true;
 }
-
-
-
 
 
 

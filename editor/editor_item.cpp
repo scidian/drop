@@ -10,7 +10,7 @@
 #include "editor_item.h"
 #include "enums.h"
 #include "globals.h"
-#include "image_filter_color.h"
+#include "image_filter.h"
 #include "interface_editor_relay.h"
 #include "helper.h"
 #include "project/project.h"
@@ -162,16 +162,16 @@ void DrItem::applyFilters() {
     QPointF pixelation = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
 
     if (pixelation.x() > 1.0 || pixelation.y() > 1.0)
-                           new_pixmap = DrImaging::changePixelation(new_pixmap, pixelation);
-    if ( negative )        new_pixmap = DrImaging::changeToNegative(new_pixmap);
-    if ( grayscale )       new_pixmap = DrImaging::changeToGrayscale(new_pixmap);
+                           new_pixmap = DrImaging::applyPixelation( new_pixmap, pixelation );
+    if ( negative )        new_pixmap = DrImaging::applySinglePixelFilter( Image_Filter_Type::Negative, new_pixmap, 0 );
+    if ( grayscale )       new_pixmap = DrImaging::applySinglePixelFilter( Image_Filter_Type::Grayscale, new_pixmap, 0 );
 
     // Important to do saturation first, then hue
-    if ( saturation != 0 ) new_pixmap = DrImaging::changeSaturation(new_pixmap, saturation);
-    if ( hue        != 0 ) new_pixmap = DrImaging::changeHue(new_pixmap, hue);
+    if ( saturation != 0 ) new_pixmap = DrImaging::applySinglePixelFilter( Image_Filter_Type::Saturation, new_pixmap, saturation );
+    if ( hue        != 0 ) new_pixmap = DrImaging::applySinglePixelFilter( Image_Filter_Type::Hue, new_pixmap, hue );
 
-    if ( contrast   != 0 ) new_pixmap = DrImaging::changeContrast(new_pixmap, contrast);
-    if ( brightness != 0 ) new_pixmap = DrImaging::changeBrightness(new_pixmap, brightness);
+    if ( contrast   != 0 ) new_pixmap = DrImaging::applySinglePixelFilter( Image_Filter_Type::Contrast, new_pixmap, contrast );
+    if ( brightness != 0 ) new_pixmap = DrImaging::applySinglePixelFilter( Image_Filter_Type::Brightness, new_pixmap, brightness );
 
     setPixmap(new_pixmap);
 }

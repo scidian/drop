@@ -5,8 +5,8 @@
 //
 //
 //
-#ifndef IMAGE_FILTER_COLOR_H
-#define IMAGE_FILTER_COLOR_H
+#ifndef IMAGE_FILTER_H
+#define IMAGE_FILTER_H
 
 #include <QPixmap>
 
@@ -14,8 +14,8 @@
 //##    Different types of filters that can be applied to a QPixmap
 //############################
 enum class Image_Filter_Type {
-    Brightness,
-    Contrast,
+    Brightness,                     // -255 to 255
+    Contrast,                       // Contrast is multiplied by 100 in order to avoid floating point numbers
     Saturation,
     Hue,
     Grayscale,
@@ -23,6 +23,8 @@ enum class Image_Filter_Type {
     Pixelation,
 
     Opacity,
+
+    Premultiplied_Alpha,
 };
 
 
@@ -31,18 +33,18 @@ enum class Image_Filter_Type {
 //############################
 namespace DrImaging {
 
-    QPixmap changeBrightness(const QPixmap& pixmap, int brightness);
-    QPixmap changeContrast(const QPixmap& pixmap, int contrast);
-    QPixmap changeSaturation(const QPixmap& pixmap, int saturation);
-    QPixmap changeHue(const QPixmap& pixmap, int hue);
-    QPixmap changeToGrayscale(const QPixmap& pixmap);
-    QPixmap changeToNegative(const QPixmap& pixmap);
-    QPixmap changePixelation(const QPixmap& pixmap, QPointF pixelation);
+    QPixmap applySinglePixelFilter( Image_Filter_Type filter, const QPixmap& from_pixmap, int value);
+    QImage  applySinglePixelFilter( Image_Filter_Type filter, const QImage&  from_image,  int value );
 
-    QPixmap changeOpacity(const QPixmap& pixmap, int opacity);
+    QPixmap applyPixelation( const QPixmap& from_pixmap, QPointF data_pair );
+    QImage  applyPixelation( const QImage&  from_image,  QPointF data_pair );
 
     QPixmap drawLight(QColor color, int diameter, float cone_start, float cone_end, float intensity, float blur);
 
 }
 
-#endif // IMAGE_FILTER_COLOR_H
+#endif // IMAGE_FILTER_H
+
+
+
+

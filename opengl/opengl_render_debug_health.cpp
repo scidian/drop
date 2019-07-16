@@ -64,9 +64,9 @@ void DrOpenGL::drawDebugHealthNative(QPainter &painter) {
     // ***** Enable shader program
     if (!m_shader.bind()) return;
 
-    // ***** Standard blend function
+    // ***** Blend function
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);              // Standard non-premultiplied alpha blend
 
     // ***** Set texture to numbers
     DrEngineTexture *texture = m_engine->getTexture( Asset_Textures::Numbers );

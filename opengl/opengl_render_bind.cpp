@@ -12,6 +12,60 @@
 
 
 //####################################################################################
+//##        Allocate / Bind Off Screen FBO
+//##            Used for offscreen rendering, allows for entire scene to have post
+//##            processing shaders applied at one time
+//####################################################################################
+void DrOpenGL::bindOffscreenBuffer(bool clear) {
+    // Check that off screen buffers are initialized
+    if (!m_render_fbo || !m_texture_fbo ||
+        (m_render_fbo->width() != width()*devicePixelRatio() || m_render_fbo->height() != height()*devicePixelRatio())) {
+        delete m_render_fbo;
+        delete m_texture_fbo;
+        QOpenGLFramebufferObjectFormat format;
+        format.setAttachment(QOpenGLFramebufferObject::Attachment::CombinedDepthStencil);
+        format.setSamples(4);
+        ///format.setTextureTarget(GL_TEXTURE_2D);                      // This is set automatically, cannot be gl_texture_2d if multisampling is enabled
+        ///format.setInternalTextureFormat(GL_RGBA32F_ARB);             // This is set automatically depending on the system
+        ///format.setMipmap(true);                                      // Don't need
+        m_render_fbo =  new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format);
+
+        QOpenGLFramebufferObjectFormat format2;
+        format2.setAttachment(QOpenGLFramebufferObject::Attachment::NoAttachment);
+        m_texture_fbo = new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format2);
+    }
+    m_render_fbo->bind();
+
+    // Clear the buffers
+    if (clear) {
+        float background_red =   static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().redF());
+        float background_green = static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().greenF());
+        float background_blue =  static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().blueF());
+        glClearColor(background_red, background_green, background_blue, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    }
+
+    // Enable anti aliasing if not on mobile
+#if not defined(Q_OS_ANDROID) && not defined(Q_OS_IOS)
+    glEnable( GL_MULTISAMPLE );
+#endif
+
+}
+
+//####################################################################################
+//##        Relase Off Screen Frame Buffer Object
+//####################################################################################
+void DrOpenGL::releaseOffscreenBuffer() {
+    m_render_fbo->release();
+
+    // Turn off anti aliasing if not on mobile
+#if not defined(Q_OS_ANDROID) && not defined(Q_OS_IOS)
+    glDisable( GL_MULTISAMPLE );
+#endif
+}
+
+
+//####################################################################################
 //##        Allocate / Bind Glow Light FBO
 //##            Glow Light FBO is used to render all glow lights at once
 //####################################################################################

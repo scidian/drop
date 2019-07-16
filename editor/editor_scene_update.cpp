@@ -9,7 +9,7 @@
 #include "editor_scene.h"
 #include "enums_engine.h"
 #include "helper.h"
-#include "image_filter_color.h"
+#include "image_filter.h"
 #include "globals.h"
 #include "project/project.h"
 #include "project/project_asset.h"

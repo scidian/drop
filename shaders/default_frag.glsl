@@ -266,7 +266,7 @@ void main( void ) {
     }
 
 
-    gl_FragColor = vec4(fragRGB, texture_color.a) * alpha_in;
+    gl_FragColor = vec4( fragRGB, texture_color.a) * alpha_in;
 
 
     // ******************** KERNEL EFFECTS

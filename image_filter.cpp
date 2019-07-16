@@ -15,69 +15,22 @@
 
 #include "colors/colors.h"
 #include "globals.h"
-#include "image_filter_color.h"
+#include "image_filter.h"
 #include "helper.h"
 
 
 namespace DrImaging
 {
 
-// Foward declarations
-QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_image, int value );
-QImage applyPixelation( const QImage& from_image, QPointF data_pair );
-
-
-//####################################################################################
-//##        External filter calls
-//####################################################################################
-// Range is -255 to 255
-QPixmap changeBrightness(const QPixmap& pixmap, int brightness) {
-    QImage image = applySinglePixelFilter( Image_Filter_Type::Brightness, pixmap.toImage(), brightness );
-    return QPixmap::fromImage( image );
-}
-
-// Contrast is multiplied by 100 in order to avoid floating point numbers
-QPixmap changeContrast(const QPixmap& pixmap, int contrast) {
-    QImage image = applySinglePixelFilter( Image_Filter_Type::Contrast, pixmap.toImage(), contrast );
-    return QPixmap::fromImage( image );
-}
-
-QPixmap changeSaturation(const QPixmap& pixmap, int saturation) {
-    QImage image = applySinglePixelFilter( Image_Filter_Type::Saturation, pixmap.toImage(), saturation );
-    return QPixmap::fromImage( image );
-}
-
-QPixmap changeHue(const QPixmap& pixmap, int hue) {
-    QImage image = applySinglePixelFilter( Image_Filter_Type::Hue, pixmap.toImage(), hue );
-    return QPixmap::fromImage( image );
-}
-
-QPixmap changeToGrayscale(const QPixmap& pixmap) {
-    QImage image = applySinglePixelFilter( Image_Filter_Type::Grayscale, pixmap.toImage(), 0 );
-    return QPixmap::fromImage( image );
-}
-
-QPixmap changeToNegative(const QPixmap& pixmap) {
-    QImage image = applySinglePixelFilter( Image_Filter_Type::Negative, pixmap.toImage(), 0 );
-    return QPixmap::fromImage( image );
-}
-
-QPixmap changePixelation(const QPixmap& pixmap, QPointF pixelation) {
-    QImage image = applyPixelation( pixmap.toImage(), pixelation );
-    return QPixmap::fromImage( image );
-}
-
-// Added this to change opacity for drag events
-QPixmap changeOpacity(const QPixmap& pixmap, int opacity) {
-    QImage image = applySinglePixelFilter( Image_Filter_Type::Opacity, pixmap.toImage(), opacity);
-    return QPixmap::fromImage( image );
-}
-
 
 //####################################################################################
 //##        Loops through image and changes one pixel at a time based on a
 //##        premultiplied table
 //####################################################################################
+QPixmap applySinglePixelFilter( Image_Filter_Type filter, const QPixmap& from_pixmap, int value) {
+    return QPixmap::fromImage( applySinglePixelFilter(filter, from_pixmap.toImage(), value ));
+}
+
 QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_image, int value) {
 
     QImage image = from_image;
@@ -108,9 +61,11 @@ QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_imag
 
                     // Grab the current pixel color
                     QColor color = QColor::fromRgba( line[x] );
-                    double temp;
 
-                    int hue;
+                    // Temp variables
+                    qreal  r, g, b;
+                    double temp;
+                    int    hue;
 
                     switch (filter) {
                         case Image_Filter_Type::Brightness:
@@ -137,6 +92,14 @@ QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_imag
                             break;
                         case Image_Filter_Type::Opacity:
                             color.setAlpha( Dr::Clamp(color.alpha() + value, 0, 255) );
+                            break;
+                        case Image_Filter_Type::Premultiplied_Alpha:
+                            r = color.redF() *   color.alphaF();
+                            g = color.greenF() * color.alphaF();
+                            b = color.blueF() *  color.alphaF();
+                            color.setRedF(   r );
+                            color.setGreenF( g );
+                            color.setBlueF(  b );
                             break;
                         case Image_Filter_Type::Pixelation: ;                                           // Different Function
                     }
@@ -171,6 +134,10 @@ QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_imag
 //####################################################################################
 //##        Pixelates Image
 //####################################################################################
+QPixmap applyPixelation( const QPixmap& from_pixmap, QPointF data_pair ) {
+    return QPixmap::fromImage( applyPixelation(from_pixmap.toImage(), data_pair ));
+}
+
 QImage applyPixelation(const QImage& from_image, QPointF data_pair ) {
     QImage image = from_image;
     image.detach();
@@ -205,6 +172,8 @@ QImage applyPixelation(const QImage& from_image, QPointF data_pair ) {
 
     return image;
 }
+
+
 
 
 //####################################################################################
@@ -308,7 +277,7 @@ QPixmap drawLight(QColor color, int diameter, float cone_start, float cone_end, 
 
 
 
-}   // namespace Dr
+}   // End DrImaging Namespace
 
 
 

@@ -42,9 +42,9 @@ void DrOpenGL::paintGL() {
 
     // ***** Render Onto Frame Buffer Object
     bindOffscreenBuffer();                                                          // Create / Bind Offscreen Frame Buffer Object
-    ///drawCube( QVector3D( 2000, 400, -300) );                                     // Render Background 3D Objects
+    drawCube( QVector3D( 2000, 400, -300) );                                     // Render Background 3D Objects
     drawSpace();                                                                    // Render cpSpace Objects
-    ///drawCube( QVector3D(1600, 500, 600) );                                       // Render Foreground 3D Objects
+    drawCube( QVector3D(1600, 500, 600) );                                       // Render Foreground 3D Objects
     releaseOffscreenBuffer();                                                       // Release Frame Buffer Object
     QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);         // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
 
@@ -55,7 +55,7 @@ void DrOpenGL::paintGL() {
 
     // ***** Renders Frame Buffer Object to screen buffer as a textured quad, with post processing available
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                  // Standard blend function
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);              // Standard non-premultiplied alpha blend
     drawFrameBufferToScreenBufferDefaultShader(m_texture_fbo);
 
     // ***** Draws Debug Shapes / Text Onto Frame Buffer Object
@@ -70,59 +70,6 @@ void DrOpenGL::paintGL() {
 
 
 //####################################################################################
-//##        Initializes Off Screen FBO
-//##            - Used for offscreen rendering, allows for entire scene to have post
-//##              processing shaders applied at one time
-//####################################################################################
-void DrOpenGL::bindOffscreenBuffer(bool clear) {
-    // Check that off screen buffers are initialized
-    if (!m_render_fbo || !m_texture_fbo ||
-        (m_render_fbo->width() != width()*devicePixelRatio() || m_render_fbo->height() != height()*devicePixelRatio())) {
-        delete m_render_fbo;
-        delete m_texture_fbo;
-        QOpenGLFramebufferObjectFormat format;
-        format.setAttachment(QOpenGLFramebufferObject::Attachment::CombinedDepthStencil);
-        format.setSamples(4);
-        ///format.setTextureTarget(GL_TEXTURE_2D);                      // This is set automatically, cannot be gl_texture_2d if multisampling is enabled
-        ///format.setInternalTextureFormat(GL_RGBA32F_ARB);             // This is set automatically depending on the system
-        ///format.setMipmap(true);                                      // Don't need
-        m_render_fbo =  new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format);
-
-        QOpenGLFramebufferObjectFormat format2;
-        format2.setAttachment(QOpenGLFramebufferObject::Attachment::NoAttachment);
-        m_texture_fbo = new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format2);
-    }
-    m_render_fbo->bind();
-
-    // Clear the buffers
-    if (clear) {
-        float background_red =   static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().redF());
-        float background_green = static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().greenF());
-        float background_blue =  static_cast<float>(m_engine->getCurrentWorld()->getBackgroundColor().blueF());
-        glClearColor(background_red, background_green, background_blue, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    }
-
-    // Enable anti aliasing if not on mobile
-#if not defined(Q_OS_ANDROID) && not defined(Q_OS_IOS)
-    glEnable( GL_MULTISAMPLE );
-#endif
-
-}
-
-//####################################################################################
-//##        Relase Off Screen Frame Buffer Object
-//####################################################################################
-void DrOpenGL::releaseOffscreenBuffer() {
-    m_render_fbo->release();
-
-    // Turn off anti aliasing if not on mobile
-#if not defined(Q_OS_ANDROID) && not defined(Q_OS_IOS)
-    glDisable( GL_MULTISAMPLE );
-#endif
-}
-
-//####################################################################################
 //##        Applies coordinates that represents an entire texture
 //####################################################################################
 void DrOpenGL::setWholeTextureCoordinates(std::vector<float> &texture_coords) {
@@ -133,6 +80,7 @@ void DrOpenGL::setWholeTextureCoordinates(std::vector<float> &texture_coords) {
     texture_coords[4] = 1;    texture_coords[5] = 0;
     texture_coords[6] = 0;    texture_coords[7] = 0;
 }
+
 
 //####################################################################################
 //##        Returns list of vertices at z plane 0 from sides passed in
@@ -149,6 +97,7 @@ void DrOpenGL::setVertexFromSides(QVector<GLfloat> &vertices, float left, float 
     vertices[ 6] = bot_right.x();       vertices[ 7] = bot_right.y();       vertices[ 8] = z;           // Bottom Right
     vertices[ 9] = bot_left.x();        vertices[10] = bot_left.y();        vertices[11] = z;           // Bottom Left
 }
+
 
 //####################################################################################
 //##        Renders Frame Buffer Object to screen buffer as a textured quad

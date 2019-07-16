@@ -81,9 +81,10 @@ void DrOpenGL::setUpSpaceShader(std::vector<float> &texture_coords) {
     // ***** Enable shader program
     if (!m_shader.bind()) return;
 
-    // ***** Standard blend function
+    // ***** Blend function
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    ///glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);           // Standard non-premultiplied alpha blend
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);                    // Premultiplied alpha blend
 
     // ***** Set Matrix for Shader, calculates current matrix
     m_shader.setUniformValue( m_uniform_matrix, (m_projection * m_model_view) );
@@ -130,7 +131,6 @@ void DrOpenGL::drawSpace() {
 
                 } else if (light->light_type == Light_Type::Glow) {
 
-
                 }
             }
             continue;
@@ -150,8 +150,9 @@ void DrOpenGL::drawSpace() {
 
         // ***** Get texture to render with, set texture coordinates
         DrEngineTexture *texture = m_engine->getTexture(object->getTextureNumber());
-        if (!texture->texture()->isBound())
+        if (!texture->texture()->isBound()) {
             texture->texture()->bind();
+        }
         texture_width =  texture->width();
         texture_height = texture->height();
 
@@ -245,7 +246,7 @@ bool DrOpenGL::drawGlowBuffer() {
     // Blend functions, in order of best
     if (mode == Blend_Mode::Standard) {
         glEnable(GL_BLEND);
-        glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);                     // Best Light blend function, a little but of oversaturation, but looks nice
+        glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);                        // Best Light blend function, a little but of oversaturation, but looks nice
         ///glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);           // Standard blend function
         ///glBlendFunc(GL_DST_COLOR, GL_ZERO);                          // "Screen" (slembcke) light blend function. Good, but doesnt get brighter than texture colors
         ///glBlendFunc(GL_ONE, GL_ONE);                                 // To Add Lights Together, not really great for lighting though

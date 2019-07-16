@@ -127,6 +127,7 @@ SOURCES += \
     forms/form_popup_grid_snap.cpp \
     forms/form_settings.cpp \
     helper.cpp \
+    image_filter.cpp \
     library/poly_partition.cpp \
     main.cpp \
     opengl/opengl.cpp \
@@ -166,7 +167,6 @@ SOURCES += \
     constants.cpp \
     interface_editor_relay.cpp \
     globals.cpp \
-    image_filter_color.cpp \
     style/style_format_widgets.cpp \
     style/style_sheet_main.cpp \
     style/style_sheet_toolbar.cpp \
@@ -233,6 +233,7 @@ HEADERS += \
     forms/form_popup.h \
     forms/form_settings.h \
     helper.h \
+    image_filter.h \
     library/poly_partition.h \
     opengl/opengl.h \
     playground/form_playground.h \
@@ -253,7 +254,6 @@ HEADERS += \
     constants.h \
     interface_editor_relay.h \
     globals.h \
-    image_filter_color.h \
     enums_form_main.h \
     style/style.h \
     widgets/widgets.h \
