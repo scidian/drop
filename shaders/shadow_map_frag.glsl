@@ -2,11 +2,11 @@
 #ifdef GL_ES
 precision highp float;
 #endif
-//
-//
-//  Fragment Shader - Shadow Map
-//
-//
+//####################################################################################
+//##
+//##    Fragment Shader - Shadow Map
+//##
+//####################################################################################
 
 // ***** Input from Vertex Shader
 varying highp vec2      coordinates;                    // Texture Coodinates
@@ -24,17 +24,25 @@ const   lowp  float THRESHOLD = 0.75;               // Alpha threshold for our o
 const   highp float PI =  3.14159;                  // Pi
 const   highp float RAD = 6.2831853;                // 2.0 * PI is 360 degrees in radians
 
-// Unpacks a float from a color
+
+//####################################################################################
+//##        Unpacks a float from a color
+//####################################################################################
 highp float unpackColor(highp vec3 color) {
     return (color.r * 255.0) + (color.g * 255.0) * 256.0 + (color.b * 255.0) * 256.0 * 256.0;
 }
 
-// Returns a random number, that is between 0.0 and 0.999999 inclusive.
+//####################################################################################
+//##        Returns a random number, that is between 0.0 and 0.999999 inclusive
+//####################################################################################
 float random(vec2 p) {
     return fract(cos(dot(p, vec2(23.14069263277926, 2.665144142690225))) * 12345.6789);
 }
 
-// Fragment Shader
+
+//####################################################################################
+//##        Main Shader Function
+//####################################################################################
 void main(void) {        
 
     highp float distance =     1.0;

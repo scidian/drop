@@ -2,11 +2,11 @@
 #ifdef GL_ES
 precision highp float;
 #endif
-//
-//
-//  Fragment Shader
-//
-//
+//####################################################################################
+//##
+//##    Main Fragment Shader
+//##
+//####################################################################################
 
 // ***** Input from Vertex Shader
 varying highp vec2  coordinates;                    // Texture Coodinates
@@ -33,6 +33,9 @@ uniform lowp vec3   u_tint;// = vec3(0, 0, 0);      // Tint, adds rgb to final o
 uniform      bool   u_kernel;// = false;            // Kernel Effects? (blur, sharpen, etc)
 
 
+//####################################################################################
+//##        Fast Rgb / Hsv Conversion Functions
+//####################################################################################
 // ***** Convert red/green/blue to hue/saturation/vibrance
 vec3 rgbToHsv(vec3 c) {
     vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -52,7 +55,9 @@ vec3 hsvToRgb(vec3 c) {
 
 
 
-
+//####################################################################################
+//##        Cartoon Filter Functions
+//####################################################################################
 float edge_thres  = 0.2;
 float edge_thres2 = 5.0;
 
@@ -149,9 +154,9 @@ vec3 HSVtoRGB(float h, float s, float v ) {
 }
 
 
-
-
-
+//####################################################################################
+//##        Main Shader Function
+//####################################################################################
 void main( void ) {
 
     // ***** PIXELATED

@@ -2,11 +2,11 @@
 #ifdef GL_ES
 precision highp float;
 #endif
-//
-//
-//  Occluder Fragment Shader
-//
-//
+//####################################################################################
+//##
+//##    Occluder Fragment Shader
+//##
+//####################################################################################
 
 // ***** Input from Vertex Shader
 varying highp vec2  coordinates;                    // Texture Coodinates
@@ -19,7 +19,10 @@ uniform highp float     u_depth;                    // Z-Order of item, assuming
 uniform highp float     u_near_plane;               // Near plane in DrOpenGL
 uniform highp float     u_far_plane;                // Far plane in DrOpenGL
 
-// Packs a float into a color
+
+//####################################################################################
+//##        Packs a float into a color
+//####################################################################################
 highp vec3 packColor(highp float f) {
     highp vec3 color;
     color.b = floor(f / 65536.0);
@@ -28,6 +31,10 @@ highp vec3 packColor(highp float f) {
     return color / 255.0;                           // Return has 3 components in range [0..255], normalize them
 }
 
+
+//####################################################################################
+//##        Main Shader Function
+//####################################################################################
 void main( void ) {
 
     highp float z =  clamp(u_depth, u_near_plane, u_far_plane);                 // Clamp to within near and far plane

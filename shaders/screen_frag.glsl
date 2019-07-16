@@ -2,11 +2,11 @@
 #ifdef GL_ES
 precision highp float;
 #endif
-//
-//
-//  "Screen" Light Shader
-//
-//
+//####################################################################################
+//##
+//##    "Screen" Light Shader
+//##
+//####################################################################################
 
 // ***** Input from Vertex Shader
 varying highp vec2  coordinates;                    // Texture Coodinates
@@ -19,6 +19,9 @@ uniform lowp float  u_width;                        // Width of gl window
 uniform lowp float  u_height;                       // Height of gl window
 
 
+//####################################################################################
+//##        Blends two colors with "Hard Light" blending
+//####################################################################################
 vec3 hardLightBlending(vec3 upper, vec3 lower) {
     vec3 out_color;
     if (upper.r > 0.5) {
@@ -40,6 +43,9 @@ vec3 hardLightBlending(vec3 upper, vec3 lower) {
 }
 
 
+//####################################################################################
+//##        Main Shader Function
+//####################################################################################
 void main( void ) {
 
     vec4 upper = texture2D(u_upper, coordinates.st);            // Lights

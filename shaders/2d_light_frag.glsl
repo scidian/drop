@@ -2,11 +2,11 @@
 #ifdef GL_ES
 precision highp float;
 #endif
-//
-//
-//  Fragment Shader - 2D Light
-//
-//
+//####################################################################################
+//##
+//##    Fragment Shader - 2D Light
+//##
+//####################################################################################
 
 // ***** Input from Vertex Shader
 varying highp vec2  coordinates;                    // Texture Coodinates
@@ -35,7 +35,9 @@ const   highp float DEG = 0.0174533;                // One Degree in Radians is 
         highp float shadow_fade;                    // Used to fade the start of shadows
 
 
-// Sample from the 1D Distance (Shadow) Map
+//####################################################################################
+//##        Sample from the 1D Distance (Shadow) Map
+//####################################################################################
 highp float sampleShadow(highp vec2 coord_in, highp float r) {
     // Original Return
     //return step(r, texture2D(u_texture, coord_in).r);
@@ -48,6 +50,9 @@ highp float sampleShadow(highp vec2 coord_in, highp float r) {
 }
 
 
+//####################################################################################
+//##        Main Shader Function
+//####################################################################################
 void main(void) {
 
     // User Inputs

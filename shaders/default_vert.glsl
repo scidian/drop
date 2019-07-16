@@ -2,11 +2,11 @@
 #ifdef GL_ES
 precision highp float;
 #endif
-//
-//
-//
-//
-//
+//####################################################################################
+//##
+//##    Main Vertex Shader
+//##
+//####################################################################################
 
 // Input from Engine
 attribute highp     vec4 vertex;                    // Input
@@ -16,6 +16,10 @@ uniform   highp     mat4 u_matrix;                  // Input
 // Output to Fragment Shader
 varying   highp     vec2 coordinates;               // Output
 
+
+//####################################################################################
+//##        Main Shader Function
+//####################################################################################
 void main( void ) {
 
     // Adjust triangle through camera matrix
