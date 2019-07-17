@@ -97,8 +97,9 @@ private:
     int     m_uniform_texture;
     int     m_uniform_width;                                    // Width of texture
     int     m_uniform_height;                                   // Height of texture
+    int     m_uniform_time;                                     // Time in seconds
+    int     m_uniform_pre;                                      // Premultiplied Alpha Texture?
     int     m_uniform_alpha;                                    // Opacity
-    int     m_uniform_bitrate;                                  // Bitrate
     int     m_uniform_pixel_x;                                  // Pixelation X value
     int     m_uniform_pixel_y;                                  // Pixelation Y value
     int     m_uniform_negative;                                 // Negative?
@@ -107,6 +108,9 @@ private:
     int     m_uniform_saturation;                               // Saturation, -1.0 to 1.0
     int     m_uniform_contrast;                                 // Contrast,   -1.0 to 1.0
     int     m_uniform_brightness;                               // Brightness, -1.0 to 1.0
+    int     m_uniform_bitrate;                                  // Bitrate
+    int     m_uniform_cartoon;                                  // Cartoon? (Comic Book)
+    int     m_uniform_wavy;                                     // Wavy? (Ripple Effect)
     int     m_uniform_tint;                                     // Tint, red/green/blue (0 to 1, 0 to 1, 0 to 1)
     int     m_uniform_kernel;                                   // Kernel Effects?
 

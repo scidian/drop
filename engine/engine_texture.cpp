@@ -39,7 +39,7 @@ void DrEngineTexture::loadTexture(QPixmap &from_pixmap) {
     QImage image = from_pixmap.toImage().mirrored();
     image = image.convertToFormat( QImage::Format_ARGB32 );                                             // Convert image to a standard format
     ///image = image.convertToFormat( QImage::Format_ARGB32_Premultiplied );                            // Doesn't work right for our textures, causes white outlines
-    image = DrImaging::applySinglePixelFilter( Image_Filter_Type::Premultiplied_Alpha, image, 0 );      // Custom premultiply values with alpha function
+    image = DrImaging::applySinglePixelFilter( Image_Filter_Type::Premultiplied_Alpha, image, 0 );      // Create alpha premultiplied texture
 
     // Add a "c_texture_border" pixel border to reduce artifacts during multi sampling
     ///QPixmap one_pixel_border( image.width() + (c_texture_border*2), image.height() + (c_texture_border*2));
@@ -74,7 +74,7 @@ void DrEngineTexture::loadTexture(QPixmap &from_pixmap) {
     //m_texture->setMagnificationFilter(QOpenGLTexture::Filter::Nearest);
     m_texture->setMagnificationFilter(QOpenGLTexture::Filter::Linear);
 
-    m_texture->setWrapMode(QOpenGLTexture::WrapMode::ClampToEdge);                          // !!! May need to fixed border artifacts?
+    m_texture->setWrapMode(QOpenGLTexture::WrapMode::ClampToEdge);                          // !!! Need this to fix border artifacts
 
     m_width =  m_texture->width();
     m_height = m_texture->height();

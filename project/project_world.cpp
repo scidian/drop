@@ -124,12 +124,19 @@ void DrWorld::initializeWorldSettings(QString new_name) {
                            "Light Layer", "Location along the z axis (Z Order) to draw Glow Lights. Should be between " +
                                           QString::number(double(c_near_plane)) + " and " + QString::number(double(c_far_plane)) + " to be visible.");
 
-    addComponent(Components::World_Appearance, "Appearance", "These filters affect the entire world after it has been rendered.",
-                                               Component_Colors::Mellow_Yellow, true);
-    getComponent(Components::World_Appearance)->setIcon(Component_Icons::Appearance);
-    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Bitrate, Property_Type::BitRate, 16,
+    addComponent(Components::World_Special_Effects, "Special Effects", "Special effects that affect the entire world.", Component_Colors::Green_SeaGrass, true);
+    getComponent(Components::World_Special_Effects)->setIcon(Component_Icons::Effects);
+    addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Bitrate, Property_Type::BitRate, 16,
                            "Bit Depth", "Standard output has 16 bit color channel depth, you can use this to reduce the number of available colors. "
                                         "Combining this with Pixelation gives a great retro look.");
+    addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Cartoon, Property_Type::Bool, false,
+                           "Cartoon", "Gives the world a comic book look.");
+    addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wavy, Property_Type::Bool, false,
+                           "Wavy", "Gives the world a trippy / drunken look.");
+
+    addComponent(Components::World_Appearance, "Appearance", "These filters affect the entire world after it has been rendered.",
+                                               Component_Colors::Brown_Sugar, true);
+    getComponent(Components::World_Appearance)->setIcon(Component_Icons::Appearance);
     addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Pixelation, Property_Type::PositiveSizeF, QPointF(1.0, 1.0),
                            "Pixelation", "Size of x and y pixels, larger numbers provide more pixelation.");
     addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Brightness, Property_Type::Filter, 0,

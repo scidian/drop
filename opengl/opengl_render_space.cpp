@@ -116,7 +116,6 @@ void DrOpenGL::drawSpace() {
         }
 
         // ***** If light, draw with seperate shader then move to next Thing
-        float texture_width = 0, texture_height = 0;
         if (thing->getThingType() == DrThingType::Light) {
             DrEngineLight *light = dynamic_cast<DrEngineLight*>(thing);
             if (light) {
@@ -153,8 +152,8 @@ void DrOpenGL::drawSpace() {
         if (!texture->texture()->isBound()) {
             texture->texture()->bind();
         }
-        texture_width =  texture->width();
-        texture_height = texture->height();
+        float texture_width =  texture->width();
+        float texture_height = texture->height();
 
         // ***** Get object position data
         QPointF center = object->getPosition();
@@ -198,7 +197,9 @@ void DrOpenGL::drawSpace() {
         m_shader.setUniformValue( m_uniform_alpha,      alpha );
         m_shader.setUniformValue( m_uniform_width,      texture_width );
         m_shader.setUniformValue( m_uniform_height,     texture_height );
-        m_shader.setUniformValue( m_uniform_bitrate,    16.0f );
+        m_shader.setUniformValue( m_uniform_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
+        m_shader.setUniformValue( m_uniform_pre,        true );
+
         m_shader.setUniformValue( m_uniform_pixel_x,    object->pixel_x );
         m_shader.setUniformValue( m_uniform_pixel_y,    object->pixel_y );
         m_shader.setUniformValue( m_uniform_negative,   object->negative );
@@ -207,9 +208,13 @@ void DrOpenGL::drawSpace() {
         m_shader.setUniformValue( m_uniform_saturation, object->saturation );
         m_shader.setUniformValue( m_uniform_contrast,   object->contrast );
         m_shader.setUniformValue( m_uniform_brightness, object->brightness );
+
+        m_shader.setUniformValue( m_uniform_bitrate,    16.0f );
+        m_shader.setUniformValue( m_uniform_cartoon,    false );
+        m_shader.setUniformValue( m_uniform_wavy,       false );
+
         m_shader.setUniformValue( m_uniform_tint,       0.0f, 0.0f, 0.0f );
         m_shader.setUniformValue( m_uniform_kernel,     false );
-        ///m_shader.setUniformValue( m_uniform_kernel,     true );
 
         // ***** Draw triangles using shader program
         glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

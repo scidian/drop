@@ -71,11 +71,13 @@ void DrOpenGL::initializeGL() {
     m_uniform_matrix =      m_shader.uniformLocation(   "u_matrix" );
 
     // Fragment Shader Input
-    m_uniform_texture =     m_shader.uniformLocation(   "u_tex" );
+    m_uniform_texture =     m_shader.uniformLocation(   "u_texture" );
     m_uniform_alpha =       m_shader.uniformLocation(   "u_alpha" );    
     m_uniform_width =       m_shader.uniformLocation(   "u_width" );
     m_uniform_height =      m_shader.uniformLocation(   "u_height" );
-    m_uniform_bitrate =     m_shader.uniformLocation(   "u_bitrate" );
+    m_uniform_time =        m_shader.uniformLocation(   "u_time" );
+    m_uniform_pre =         m_shader.uniformLocation(   "u_premultiplied");
+
     m_uniform_pixel_x =     m_shader.uniformLocation(   "u_pixel_x" );
     m_uniform_pixel_y =     m_shader.uniformLocation(   "u_pixel_y" );
     m_uniform_negative =    m_shader.uniformLocation(   "u_negative" );
@@ -84,6 +86,11 @@ void DrOpenGL::initializeGL() {
     m_uniform_saturation =  m_shader.uniformLocation(   "u_saturation" );
     m_uniform_contrast =    m_shader.uniformLocation(   "u_contrast" );
     m_uniform_brightness =  m_shader.uniformLocation(   "u_brightness" );
+
+    m_uniform_bitrate =     m_shader.uniformLocation(   "u_bitrate" );
+    m_uniform_cartoon =     m_shader.uniformLocation(   "u_cartoon" );
+    m_uniform_wavy =        m_shader.uniformLocation(   "u_wavy" );
+
     m_uniform_tint =        m_shader.uniformLocation(   "u_tint" );
     m_uniform_kernel =      m_shader.uniformLocation(   "u_kernel" );
 

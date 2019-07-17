@@ -232,7 +232,7 @@ void DrThing::addComponentLighting() {
 }
 
 void DrThing::addComponentAppearance() {
-    addComponent(Components::Thing_Appearance, "Appearance", "Filters for items as they appear in the Stage. ", Component_Colors::Mellow_Yellow, true);
+    addComponent(Components::Thing_Appearance, "Appearance", "Filters for items as they appear in the Stage. ", Component_Colors::Brown_Sugar, true);
     getComponent(Components::Thing_Appearance)->setIcon(Component_Icons::Appearance);
 
     addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation, Property_Type::PositiveSizeF, QPointF(1.0, 1.0),

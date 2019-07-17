@@ -62,6 +62,7 @@ enum class Components {
     World_Settings,
     World_Physics,
     World_Lighting,
+    World_Special_Effects,
     World_Appearance,
 
     Stage_Settings,
@@ -116,7 +117,6 @@ enum class Properties {
     World_Light_Layer,              //percent
 
     // Appearance
-    World_Filter_Bitrate,           //bitrate
     World_Filter_Pixelation,        //positive size
     World_Filter_Brightness,        //filter
     World_Filter_Contrast,          //filter
@@ -124,6 +124,11 @@ enum class Properties {
     World_Filter_Hue,               //filter angle
     World_Filter_Grayscale,         //bool
     World_Filter_Negative,          //bool
+
+    // Special Effects
+    World_Filter_Bitrate,           //bitrate
+    World_Filter_Cartoon,           //bool
+    World_Filter_Wavy,              //bool
 
 
     // ******************** DrStage Component Properties

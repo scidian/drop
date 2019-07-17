@@ -55,8 +55,8 @@ void DrOpenGL::paintGL() {
 
     // ***** Renders Frame Buffer Object to screen buffer as a textured quad, with post processing available
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);              // Standard non-premultiplied alpha blend
-    drawFrameBufferToScreenBufferDefaultShader(m_texture_fbo);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                              // Standard non-premultiplied alpha blend
+    drawFrameBufferToScreenBufferDefaultShader(m_texture_fbo, false);
 
     // ***** Draws Debug Shapes / Text Onto Frame Buffer Object
     QOpenGLPaintDevice paint_gl(width() * devicePixelRatio(), height() * devicePixelRatio());
@@ -135,7 +135,6 @@ void DrOpenGL::drawFrameBufferToScreenBufferDefaultShader(QOpenGLFramebufferObje
     // Set variables for shader
     setShaderDefaultValues( fbo->width(), fbo->height() );
 
-    m_shader.setUniformValue( m_uniform_bitrate,    m_engine->getCurrentWorld()->bitrate );
     m_shader.setUniformValue( m_uniform_pixel_x,    m_engine->getCurrentWorld()->pixel_x );
     m_shader.setUniformValue( m_uniform_pixel_y,    m_engine->getCurrentWorld()->pixel_y );
     m_shader.setUniformValue( m_uniform_negative,   m_engine->getCurrentWorld()->negative );
@@ -144,6 +143,10 @@ void DrOpenGL::drawFrameBufferToScreenBufferDefaultShader(QOpenGLFramebufferObje
     m_shader.setUniformValue( m_uniform_saturation, m_engine->getCurrentWorld()->saturation );
     m_shader.setUniformValue( m_uniform_contrast,   m_engine->getCurrentWorld()->contrast );
     m_shader.setUniformValue( m_uniform_brightness, m_engine->getCurrentWorld()->brightness );
+
+    m_shader.setUniformValue( m_uniform_bitrate,    m_engine->getCurrentWorld()->bitrate );
+    m_shader.setUniformValue( m_uniform_cartoon,    m_engine->getCurrentWorld()->cartoon );
+    m_shader.setUniformValue( m_uniform_wavy,       m_engine->getCurrentWorld()->wavy );
 
     m_shader.setUniformValue( m_uniform_kernel,     use_kernel );                // Turns on Kernel filter (blur / sharpen / etc)
 
@@ -167,7 +170,8 @@ void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height)
     m_shader.setUniformValue( m_uniform_alpha,      1.0f );
     m_shader.setUniformValue( m_uniform_width,      texture_width  );
     m_shader.setUniformValue( m_uniform_height,     texture_height );
-    m_shader.setUniformValue( m_uniform_bitrate,    16.0f );
+    m_shader.setUniformValue( m_uniform_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
+    m_shader.setUniformValue( m_uniform_pre,        false );
     m_shader.setUniformValue( m_uniform_pixel_x,    1.0f );
     m_shader.setUniformValue( m_uniform_pixel_y,    1.0f );
     m_shader.setUniformValue( m_uniform_negative,   false );
@@ -176,6 +180,9 @@ void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height)
     m_shader.setUniformValue( m_uniform_saturation, 0.0f );
     m_shader.setUniformValue( m_uniform_contrast,   0.0f );
     m_shader.setUniformValue( m_uniform_brightness, 0.0f );
+    m_shader.setUniformValue( m_uniform_bitrate,    16.0f );
+    m_shader.setUniformValue( m_uniform_cartoon,    false );
+    m_shader.setUniformValue( m_uniform_wavy,       false );
     m_shader.setUniformValue( m_uniform_tint,       0.0f, 0.0f, 0.0f );     // Add 0 to red, green, and blue
     m_shader.setUniformValue( m_uniform_kernel,     false );                // Currently overrides other effects if set to true
 }
