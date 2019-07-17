@@ -23,7 +23,7 @@ void DrOpenGL::drawCube(QVector3D center) {
     cullingOn();
 
     // ***** Enable shader program
-    if (!m_shader.bind()) return;
+    if (!m_default_shader.bind()) return;
 
     // ***** Blend function
     glEnable(GL_BLEND);
@@ -31,13 +31,13 @@ void DrOpenGL::drawCube(QVector3D center) {
 
     // ***** Set Matrix for Shader, calculates current matrix
     QMatrix4x4 m_matrix = m_projection * m_model_view;
-    m_shader.setUniformValue( m_uniform_matrix, m_matrix );
+    m_default_shader.setUniformValue( u_default_matrix, m_matrix );
 
     // ***** Set Texture Coordinates for Shader
     std::vector<float> texture_coordinates;
     setWholeTextureCoordinates(texture_coordinates);
-    m_shader.setAttributeArray( m_attribute_tex_coord, texture_coordinates.data(), 2 );
-    m_shader.enableAttributeArray( m_attribute_tex_coord );
+    m_default_shader.setAttributeArray( a_default_texture_coord, texture_coordinates.data(), 2 );
+    m_default_shader.enableAttributeArray( a_default_texture_coord );
 
     static float cube_angle;
     cube_angle += .1f;
@@ -95,8 +95,8 @@ void DrOpenGL::drawCube(QVector3D center) {
         vertices[ 6] = bot_right.x() + x;       vertices[ 7] = bot_right.y() + y;       vertices[ 8] = z;           // Bottom Right
         vertices[ 9] = bot_left.x() + x;        vertices[10] = bot_left.y() + y;        vertices[11] = z;           // Bottom Left
 
-        m_shader.setAttributeArray( m_attribute_vertex, vertices.data(), 3 );
-        m_shader.enableAttributeArray( m_attribute_vertex );
+        m_default_shader.setAttributeArray( a_default_vertex, vertices.data(), 3 );
+        m_default_shader.enableAttributeArray( a_default_vertex );
 
         // Set shader variables
         setShaderDefaultValues(static_cast<float>(texture->width()), static_cast<float>(texture->height()));
@@ -105,13 +105,13 @@ void DrOpenGL::drawCube(QVector3D center) {
         glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
 
         // ***** Disable arrays
-        m_shader.disableAttributeArray( m_attribute_vertex );
+        m_default_shader.disableAttributeArray( a_default_vertex );
     }   // For i
 
     // Release Texture and Shader
     texture->texture()->release();
-    m_shader.disableAttributeArray( m_attribute_tex_coord );
-    m_shader.release();
+    m_default_shader.disableAttributeArray( a_default_texture_coord );
+    m_default_shader.release();
 
     // ***** Turn culling off now that we're done with 3d drawing
     cullingOff();

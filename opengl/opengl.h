@@ -87,86 +87,105 @@ private:
     QVector<DrEngineLight*> m_shadow_lights;
     QVector<DrEngineLight*> m_glow_lights;
 
-    // Default Shader Variables
-    QOpenGLShaderProgram m_shader;
-    int     m_attribute_vertex;
-    int     m_attribute_tex_coord;
-    int     m_uniform_matrix;
 
-    // Default Shader Input
-    int     m_uniform_texture;
-    int     m_uniform_width;                                    // Width of texture
-    int     m_uniform_height;                                   // Height of texture
-    int     m_uniform_time;                                     // Time in seconds
-    int     m_uniform_pre;                                      // Premultiplied Alpha Texture?
-    int     m_uniform_alpha;                                    // Opacity
-    int     m_uniform_pixel_x;                                  // Pixelation X value
-    int     m_uniform_pixel_y;                                  // Pixelation Y value
-    int     m_uniform_negative;                                 // Negative?
-    int     m_uniform_grayscale;                                // Grayscale?
-    int     m_uniform_hue;                                      // Hue, 0.0 to 1.0
-    int     m_uniform_saturation;                               // Saturation, -1.0 to 1.0
-    int     m_uniform_contrast;                                 // Contrast,   -1.0 to 1.0
-    int     m_uniform_brightness;                               // Brightness, -1.0 to 1.0
-    int     m_uniform_bitrate;                                  // Bitrate
-    int     m_uniform_cartoon;                                  // Cartoon? (Comic Book)
-    int     m_uniform_wavy;                                     // Wavy? (Ripple Effect)
-    int     m_uniform_tint;                                     // Tint, red/green/blue (0 to 1, 0 to 1, 0 to 1)
-    int     m_uniform_kernel;                                   // Kernel Effects?
 
-    // Shadow Map Shader
+    // ********** Shader Programs / Attributes / Uniforms **********
+
+    // Default Shader
+    QOpenGLShaderProgram m_default_shader;
+    int     a_default_vertex;
+    int     a_default_texture_coord;
+    int     u_default_matrix;
+
+    int     u_default_texture;
+    int     u_default_width;                                    // Width of texture
+    int     u_default_height;                                   // Height of texture
+    int     u_default_time;                                     // Time in seconds
+    int     u_default_pre;                                      // Premultiplied Alpha Texture?
+    int     u_default_alpha;                                    // Opacity
+    int     u_default_tint;                                     // Tint, red/green/blue (0 to 1, 0 to 1, 0 to 1)
+
+    int     u_default_pixel_x;                                  // Pixelation X value
+    int     u_default_pixel_y;                                  // Pixelation Y value
+    int     u_default_negative;                                 // Negative?
+    int     u_default_grayscale;                                // Grayscale?
+    int     u_default_hue;                                      // Hue, 0.0 to 1.0
+    int     u_default_saturation;                               // Saturation, -1.0 to 1.0
+    int     u_default_contrast;                                 // Contrast,   -1.0 to 1.0
+    int     u_default_brightness;                               // Brightness, -1.0 to 1.0
+    int     u_default_bitrate;                                  // Bitrate
+    int     u_default_cartoon;                                  // Cartoon? (Comic Book)
+    int     u_default_wavy;                                     // Wavy? (Ripple Effect)
+
+
+    // Occluder Map Shader
     QOpenGLShaderProgram m_occluder_shader;
-    int     m_attribute_occluder_vertex;
-    int     m_attribute_occluder_tex_coord;
-    int     m_uniform_occluder_matrix;
+    int     a_occluder_vertex;
+    int     a_occluder_texture_coord;
+    int     u_occluder_matrix;
 
-    int     m_uniform_occluder_texture;
-    int     m_uniform_occluder_alpha;
-    int     m_uniform_occluder_depth;
-    int     m_uniform_occluder_near_plane;
-    int     m_uniform_occluder_far_plane;
+    int     u_occluder_texture;
+    int     u_occluder_alpha;
+    int     u_occluder_depth;
+    int     u_occluder_near_plane;
+    int     u_occluder_far_plane;
 
     // Shadow Map Shader
     QOpenGLShaderProgram m_shadow_shader;
-    int     m_attribute_shadow_vertex;
-    int     m_attribute_shadow_tex_coord;
-    int     m_uniform_shadow_matrix;
+    int     a_shadow_vertex;
+    int     a_shadow_texture_coord;
+    int     u_shadow_matrix;
 
-    int     m_uniform_shadow_texture;
-    int     m_uniform_shadow_resolution;
-    int     m_uniform_shadow_ray_count;
-    int     m_uniform_shadow_depth;
-    int     m_uniform_shadow_near_plane;
+    int     u_shadow_texture;
+    int     u_shadow_resolution;
+    int     u_shadow_ray_count;
+    int     u_shadow_depth;
+    int     u_shadow_near_plane;
 
     // 2D Light Shader
     QOpenGLShaderProgram m_light_shader;
-    int     m_attribute_light_vertex;
-    int     m_attribute_light_tex_coord;
-    int     m_uniform_light_matrix;
+    int     a_light_vertex;
+    int     a_light_texture_coord;
+    int     u_light_matrix;
 
-    int     m_uniform_light_texture;
-    int     m_uniform_light_ray_count;
-    int     m_uniform_light_diameter;
-    int     m_uniform_light_fitted;
-    int     m_uniform_light_alpha;
-    int     m_uniform_light_color;                              // Color of light, red/green/blue (0 to 1, 0 to 1, 0 to 1)
-    int     m_uniform_light_cone;
-    int     m_uniform_light_shadows;
-    int     m_uniform_light_intensity;
-    int     m_uniform_light_blur;
-    int     m_uniform_light_draw_shadows;
-    int     m_uniform_light_is_glow;
+    int     u_light_texture;
+    int     u_light_ray_count;
+    int     u_light_diameter;
+    int     u_light_fitted;
+    int     u_light_alpha;
+    int     u_light_color;                                      // Color of light, red/green/blue (0 to 1, 0 to 1, 0 to 1)
+    int     u_light_cone;
+    int     u_light_shadows;
+    int     u_light_intensity;
+    int     u_light_blur;
+    int     u_light_draw_shadows;
+    int     u_light_is_glow;
 
-    // "Screen" (Light) Shader
+    // "Screen" (Hard Light) Shader
     QOpenGLShaderProgram m_screen_shader;
-    int     m_attribute_screen_vertex;
-    int     m_attribute_screen_tex_coord;
-    int     m_uniform_screen_matrix;
+    int     a_screen_vertex;
+    int     a_screen_texture_coord;
+    int     u_screen_matrix;
 
-    int     m_uniform_screen_upper;
-    int     m_uniform_screen_lower;
-    int     m_uniform_screen_width;
-    int     m_uniform_screen_height;
+    int     u_screen_upper;
+    int     u_screen_lower;
+    int     u_screen_width;
+    int     u_screen_height;
+
+    // Kernel Shader
+    QOpenGLShaderProgram m_kernel_shader;
+    int     a_kernel_vertex;
+    int     a_kernel_texture_coord;
+    int     u_kernel_matrix;
+
+    int     u_kernel_texture;
+    int     u_kernel_width;                                     // Width of texture
+    int     u_kernel_height;                                    // Height of texture
+    int     u_kernel_alpha;                                     // Opacity
+
+
+    // ********** End Shaders **********
+
 
 public:
     // Constructor / Destructor
@@ -209,8 +228,9 @@ public:
     void            drawDebugHealthNative(QPainter &painter);
     void            drawDebugJoints(QPainter &painter);
     void            drawDebugShapes(QPainter &painter);
-    void            drawFrameBufferToScreenBufferDefaultShader(QOpenGLFramebufferObject *fbo, bool use_kernel = false);
-    void            drawFrameBufferToScreenBufferScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower);
+    void            drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo);
+    void            drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo);
+    void            drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower);
     bool            drawGlowBuffer();
     void            drawSpace();
     void            drawSpaceOccluder();

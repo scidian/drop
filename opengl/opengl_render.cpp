@@ -56,7 +56,7 @@ void DrOpenGL::paintGL() {
     // ***** Renders Frame Buffer Object to screen buffer as a textured quad, with post processing available
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                              // Standard non-premultiplied alpha blend
-    drawFrameBufferToScreenBufferDefaultShader(m_texture_fbo, false);
+    drawFrameBufferUsingDefaultShader(m_texture_fbo);
 
     // ***** Draws Debug Shapes / Text Onto Frame Buffer Object
     QOpenGLPaintDevice paint_gl(width() * devicePixelRatio(), height() * devicePixelRatio());
@@ -100,16 +100,41 @@ void DrOpenGL::setVertexFromSides(QVector<GLfloat> &vertices, float left, float 
 
 
 //####################################################################################
+//##        Sets shader variables to default normal render
+//####################################################################################
+void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height) {
+    m_default_shader.setUniformValue( u_default_texture,    0 );                            // Use texture unit "0"
+    m_default_shader.setUniformValue( u_default_alpha,      1.0f );
+    m_default_shader.setUniformValue( u_default_tint,       0.0f, 0.0f, 0.0f );             // Add 0 to red, green, and blue
+    m_default_shader.setUniformValue( u_default_width,      texture_width  );
+    m_default_shader.setUniformValue( u_default_height,     texture_height );
+    m_default_shader.setUniformValue( u_default_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
+    m_default_shader.setUniformValue( u_default_pre,        false );
+    m_default_shader.setUniformValue( u_default_pixel_x,    1.0f );
+    m_default_shader.setUniformValue( u_default_pixel_y,    1.0f );
+    m_default_shader.setUniformValue( u_default_negative,   false );
+    m_default_shader.setUniformValue( u_default_grayscale,  false );
+    m_default_shader.setUniformValue( u_default_hue,        0.0f );
+    m_default_shader.setUniformValue( u_default_saturation, 0.0f );
+    m_default_shader.setUniformValue( u_default_contrast,   0.0f );
+    m_default_shader.setUniformValue( u_default_brightness, 0.0f );
+    m_default_shader.setUniformValue( u_default_bitrate,    16.0f );
+    m_default_shader.setUniformValue( u_default_cartoon,    false );
+    m_default_shader.setUniformValue( u_default_wavy,       false );
+}
+
+
+//####################################################################################
 //##        Renders Frame Buffer Object to screen buffer as a textured quad
 //##            Post processing available through the fragment shader
 //####################################################################################
-void DrOpenGL::drawFrameBufferToScreenBufferDefaultShader(QOpenGLFramebufferObject *fbo, bool use_kernel) {
+void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) {
 
     // Bind offscreen frame buffer object as a texture
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, fbo->texture());
 
-    if (!m_shader.bind()) return;
+    if (!m_default_shader.bind()) return;
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
     float left =   0.0f - (fbo->width()  / 2.0f);
@@ -118,81 +143,105 @@ void DrOpenGL::drawFrameBufferToScreenBufferDefaultShader(QOpenGLFramebufferObje
     float bottom = 0.0f - (fbo->height() / 2.0f);
     QMatrix4x4 m_matrix;
     m_matrix.ortho( left, right, bottom, top, c_near_plane, c_far_plane);
-    m_shader.setUniformValue( m_uniform_matrix, m_matrix );
+    m_default_shader.setUniformValue( u_default_matrix, m_matrix );
 
     // Set Texture Coordinates for Shader
     std::vector<float> texture_coordinates;
     setWholeTextureCoordinates(texture_coordinates);
-    m_shader.setAttributeArray( m_attribute_tex_coord, texture_coordinates.data(), 2 );
-    m_shader.enableAttributeArray( m_attribute_tex_coord );
+    m_default_shader.setAttributeArray( a_default_texture_coord, texture_coordinates.data(), 2 );
+    m_default_shader.enableAttributeArray( a_default_texture_coord );
 
     // Load vertices for this object
     QVector<GLfloat> vertices;
     setVertexFromSides(vertices, left, right, top, bottom, 0.0f);
-    m_shader.setAttributeArray( m_attribute_vertex, vertices.data(), 3 );
-    m_shader.enableAttributeArray( m_attribute_vertex );
+    m_default_shader.setAttributeArray( a_default_vertex, vertices.data(), 3 );
+    m_default_shader.enableAttributeArray( a_default_vertex );
 
     // Set variables for shader
     setShaderDefaultValues( fbo->width(), fbo->height() );
 
-    m_shader.setUniformValue( m_uniform_pixel_x,    m_engine->getCurrentWorld()->pixel_x );
-    m_shader.setUniformValue( m_uniform_pixel_y,    m_engine->getCurrentWorld()->pixel_y );
-    m_shader.setUniformValue( m_uniform_negative,   m_engine->getCurrentWorld()->negative );
-    m_shader.setUniformValue( m_uniform_grayscale,  m_engine->getCurrentWorld()->grayscale );
-    m_shader.setUniformValue( m_uniform_hue,        m_engine->getCurrentWorld()->hue );
-    m_shader.setUniformValue( m_uniform_saturation, m_engine->getCurrentWorld()->saturation );
-    m_shader.setUniformValue( m_uniform_contrast,   m_engine->getCurrentWorld()->contrast );
-    m_shader.setUniformValue( m_uniform_brightness, m_engine->getCurrentWorld()->brightness );
+    m_default_shader.setUniformValue( u_default_pixel_x,    m_engine->getCurrentWorld()->pixel_x );
+    m_default_shader.setUniformValue( u_default_pixel_y,    m_engine->getCurrentWorld()->pixel_y );
+    m_default_shader.setUniformValue( u_default_negative,   m_engine->getCurrentWorld()->negative );
+    m_default_shader.setUniformValue( u_default_grayscale,  m_engine->getCurrentWorld()->grayscale );
+    m_default_shader.setUniformValue( u_default_hue,        m_engine->getCurrentWorld()->hue );
+    m_default_shader.setUniformValue( u_default_saturation, m_engine->getCurrentWorld()->saturation );
+    m_default_shader.setUniformValue( u_default_contrast,   m_engine->getCurrentWorld()->contrast );
+    m_default_shader.setUniformValue( u_default_brightness, m_engine->getCurrentWorld()->brightness );
 
-    m_shader.setUniformValue( m_uniform_bitrate,    m_engine->getCurrentWorld()->bitrate );
-    m_shader.setUniformValue( m_uniform_cartoon,    m_engine->getCurrentWorld()->cartoon );
-    m_shader.setUniformValue( m_uniform_wavy,       m_engine->getCurrentWorld()->wavy );
-
-    m_shader.setUniformValue( m_uniform_kernel,     use_kernel );                // Turns on Kernel filter (blur / sharpen / etc)
+    m_default_shader.setUniformValue( u_default_bitrate,    m_engine->getCurrentWorld()->bitrate );
+    m_default_shader.setUniformValue( u_default_cartoon,    m_engine->getCurrentWorld()->cartoon );
+    m_default_shader.setUniformValue( u_default_wavy,       m_engine->getCurrentWorld()->wavy );
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
 
     // Disable arrays
-    m_shader.disableAttributeArray( m_attribute_vertex );
-    m_shader.disableAttributeArray( m_attribute_tex_coord );
+    m_default_shader.disableAttributeArray( a_default_vertex );
+    m_default_shader.disableAttributeArray( a_default_texture_coord );
 
     // Release Shader
-    m_shader.release();
+    m_default_shader.release();
 }
 
 
 //####################################################################################
-//##        Sets shader variables to default normal render
+//##        Renders Frame Buffer Object to screen buffer as a textured quad
+//##            Uses Kernel filter effect to blur, sharpen, etc
 //####################################################################################
-void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height) {
-    m_shader.setUniformValue( m_uniform_texture,    0 );                    // Use texture unit "0"
-    m_shader.setUniformValue( m_uniform_alpha,      1.0f );
-    m_shader.setUniformValue( m_uniform_width,      texture_width  );
-    m_shader.setUniformValue( m_uniform_height,     texture_height );
-    m_shader.setUniformValue( m_uniform_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
-    m_shader.setUniformValue( m_uniform_pre,        false );
-    m_shader.setUniformValue( m_uniform_pixel_x,    1.0f );
-    m_shader.setUniformValue( m_uniform_pixel_y,    1.0f );
-    m_shader.setUniformValue( m_uniform_negative,   false );
-    m_shader.setUniformValue( m_uniform_grayscale,  false );
-    m_shader.setUniformValue( m_uniform_hue,        0.0f );
-    m_shader.setUniformValue( m_uniform_saturation, 0.0f );
-    m_shader.setUniformValue( m_uniform_contrast,   0.0f );
-    m_shader.setUniformValue( m_uniform_brightness, 0.0f );
-    m_shader.setUniformValue( m_uniform_bitrate,    16.0f );
-    m_shader.setUniformValue( m_uniform_cartoon,    false );
-    m_shader.setUniformValue( m_uniform_wavy,       false );
-    m_shader.setUniformValue( m_uniform_tint,       0.0f, 0.0f, 0.0f );     // Add 0 to red, green, and blue
-    m_shader.setUniformValue( m_uniform_kernel,     false );                // Currently overrides other effects if set to true
+void DrOpenGL::drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo) {
+
+    // Bind offscreen frame buffer object as a texture
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, fbo->texture());
+
+    if (!m_kernel_shader.bind()) return;
+
+    // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
+    float left =   0.0f - (fbo->width()  / 2.0f);
+    float right =  0.0f + (fbo->width()  / 2.0f);
+    float top =    0.0f + (fbo->height() / 2.0f);
+    float bottom = 0.0f - (fbo->height() / 2.0f);
+    QMatrix4x4 m_matrix;
+    m_matrix.ortho( left, right, bottom, top, c_near_plane, c_far_plane);
+    m_kernel_shader.setUniformValue( u_kernel_matrix, m_matrix );
+
+    // Set Texture Coordinates for Shader
+    std::vector<float> texture_coordinates;
+    setWholeTextureCoordinates(texture_coordinates);
+    m_kernel_shader.setAttributeArray( a_kernel_texture_coord, texture_coordinates.data(), 2 );
+    m_kernel_shader.enableAttributeArray( a_kernel_texture_coord );
+
+    // Load vertices for this object
+    QVector<GLfloat> vertices;
+    setVertexFromSides(vertices, left, right, top, bottom, 0.0f);
+    m_kernel_shader.setAttributeArray( a_kernel_vertex, vertices.data(), 3 );
+    m_kernel_shader.enableAttributeArray( a_kernel_vertex );
+
+    // Set variables for shader
+    m_kernel_shader.setUniformValue( u_kernel_texture,    0 );                             // Use texture unit "0"
+    m_kernel_shader.setUniformValue( u_kernel_alpha,      1.0f );
+    m_kernel_shader.setUniformValue( u_kernel_width,      static_cast<float>(fbo->width()) );
+    m_kernel_shader.setUniformValue( u_kernel_height,     static_cast<float>(fbo->height()) );
+
+    // Draw triangles using shader program
+    glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
+
+    // Disable arrays
+    m_kernel_shader.disableAttributeArray( a_kernel_vertex );
+    m_kernel_shader.disableAttributeArray( a_kernel_texture_coord );
+
+    // Release Shader
+    m_kernel_shader.release();
 }
+
 
 
 //####################################################################################
 //##        Renders Frame Buffer Object to screen buffer as a textured quad
 //##            Uses "Screen" shader to multiply glow lights into texture
 //####################################################################################
-void DrOpenGL::drawFrameBufferToScreenBufferScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower) {
+void DrOpenGL::drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower) {
 
     if (!m_screen_shader.bind()) return;
 
@@ -217,30 +266,30 @@ void DrOpenGL::drawFrameBufferToScreenBufferScreenShader(QOpenGLFramebufferObjec
     float bottom = 0.0f - (lower->height() / 2.0f);
     QMatrix4x4 m_matrix;
     m_matrix.ortho( left, right, bottom, top, c_near_plane, c_far_plane);
-    m_screen_shader.setUniformValue( m_uniform_screen_matrix, m_matrix );
+    m_screen_shader.setUniformValue( u_screen_matrix, m_matrix );
 
     // Set Texture Coordinates for Shader
     std::vector<float> texture_coordinates;
     setWholeTextureCoordinates(texture_coordinates);
-    m_screen_shader.setAttributeArray(    m_attribute_screen_tex_coord, texture_coordinates.data(), 2 );
-    m_screen_shader.enableAttributeArray( m_attribute_screen_tex_coord );
+    m_screen_shader.setAttributeArray(    a_screen_texture_coord, texture_coordinates.data(), 2 );
+    m_screen_shader.enableAttributeArray( a_screen_texture_coord );
 
     // Load vertices for this object
     QVector<GLfloat> vertices;
     setVertexFromSides(vertices, left, right, top, bottom, 0.0f);
-    m_screen_shader.setAttributeArray(    m_attribute_screen_vertex, vertices.data(), 3 );
-    m_screen_shader.enableAttributeArray( m_attribute_screen_vertex );
+    m_screen_shader.setAttributeArray(    a_screen_vertex, vertices.data(), 3 );
+    m_screen_shader.enableAttributeArray( a_screen_vertex );
 
     // Set variables for shader
-    m_screen_shader.setUniformValue( m_uniform_screen_width,    static_cast<float>(lower->width()) );
-    m_screen_shader.setUniformValue( m_uniform_screen_height,   static_cast<float>(lower->height()) );
+    m_screen_shader.setUniformValue( u_screen_width,    static_cast<float>(lower->width()) );
+    m_screen_shader.setUniformValue( u_screen_height,   static_cast<float>(lower->height()) );
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
 
     // Disable arrays
-    m_screen_shader.disableAttributeArray( m_attribute_screen_vertex );
-    m_screen_shader.disableAttributeArray( m_attribute_screen_tex_coord );
+    m_screen_shader.disableAttributeArray( a_screen_vertex );
+    m_screen_shader.disableAttributeArray( a_screen_texture_coord );
 
     // Release Shader
     m_screen_shader.release();

@@ -208,37 +208,37 @@ void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
     float bottom = 0.0f - ((m_shadows[light->getKey()]->height() ) / 2.0f);
     QMatrix4x4 m_matrix;
     m_matrix.ortho( left, right, bottom, top, c_near_plane, c_far_plane);
-    m_shadow_shader.setUniformValue( m_uniform_shadow_matrix, m_matrix );
+    m_shadow_shader.setUniformValue( u_shadow_matrix, m_matrix );
 
     // Set Texture Coordinates for Shader
     std::vector<float> texture_coordinates;
     setWholeTextureCoordinates(texture_coordinates);
-    m_shadow_shader.setAttributeArray(    m_attribute_shadow_tex_coord, texture_coordinates.data(), 2 );
-    m_shadow_shader.enableAttributeArray( m_attribute_shadow_tex_coord );
+    m_shadow_shader.setAttributeArray(    a_shadow_texture_coord, texture_coordinates.data(), 2 );
+    m_shadow_shader.enableAttributeArray( a_shadow_texture_coord );
 
     // Load vertices for this object
     QVector<GLfloat> vertices;
     setVertexFromSides(vertices, left, right, top, bottom, 0.0f);
-    m_shadow_shader.setAttributeArray(    m_attribute_shadow_vertex, vertices.data(), 3 );
-    m_shadow_shader.enableAttributeArray( m_attribute_shadow_vertex );
+    m_shadow_shader.setAttributeArray(    a_shadow_vertex, vertices.data(), 3 );
+    m_shadow_shader.enableAttributeArray( a_shadow_vertex );
 
     // Use texture unit 0
-    m_shadow_shader.setUniformValue( m_uniform_shadow_texture, 0 );
+    m_shadow_shader.setUniformValue( u_shadow_texture, 0 );
 
     // ***** Give the shader our Ray Count and Scaled Light Radius
-    m_shadow_shader.setUniformValue( m_uniform_shadow_ray_count,  static_cast<float>(m_shadows[light->getKey()]->width()) );
+    m_shadow_shader.setUniformValue( u_shadow_ray_count,  static_cast<float>(m_shadows[light->getKey()]->width()) );
 
     float screen_scale = width()*devicePixelRatio() / light->light_size;
-    m_shadow_shader.setUniformValue( m_uniform_shadow_resolution, light->getLightDiameter(), light->getLightDiameter() * screen_scale );
-    m_shadow_shader.setUniformValue( m_uniform_shadow_depth,      static_cast<float>(light->z_order) );
-    m_shadow_shader.setUniformValue( m_uniform_shadow_near_plane, c_near_plane );
+    m_shadow_shader.setUniformValue( u_shadow_resolution, light->getLightDiameter(), light->getLightDiameter() * screen_scale );
+    m_shadow_shader.setUniformValue( u_shadow_depth,      static_cast<float>(light->z_order) );
+    m_shadow_shader.setUniformValue( u_shadow_near_plane, c_near_plane );
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
 
     // Disable arrays
-    m_shadow_shader.disableAttributeArray( m_attribute_shadow_vertex );
-    m_shadow_shader.disableAttributeArray( m_attribute_shadow_tex_coord );
+    m_shadow_shader.disableAttributeArray( a_shadow_vertex );
+    m_shadow_shader.disableAttributeArray( a_shadow_texture_coord );
 
     // Release Shader
     m_shadow_shader.release();
@@ -283,14 +283,14 @@ void DrOpenGL::draw2DLight(DrEngineLight *light) {
     // Set Matrix for to draw the Light, turn off perspective offset before drawing light
     updateViewMatrix(m_engine->getCurrentWorld()->render_type, false);
     QMatrix4x4 m_matrix = m_projection * m_model_view;
-    m_light_shader.setUniformValue( m_uniform_light_matrix, m_matrix );
+    m_light_shader.setUniformValue( u_light_matrix, m_matrix );
     updateViewMatrix(m_engine->getCurrentWorld()->render_type, c_use_cam_offset);
 
     // Set Texture Coordinates for Shader
     std::vector<float> texture_coordinates;
     setWholeTextureCoordinates(texture_coordinates);
-    m_light_shader.setAttributeArray(    m_attribute_light_tex_coord, texture_coordinates.data(), 2 );
-    m_light_shader.enableAttributeArray( m_attribute_light_tex_coord );
+    m_light_shader.setAttributeArray(    a_light_texture_coord, texture_coordinates.data(), 2 );
+    m_light_shader.enableAttributeArray( a_light_texture_coord );
 
     // Load vertices for this object
     float perspective_scale = (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) ? 1.0 : (light->getPerspectiveScale() + 0.0001f);
@@ -301,23 +301,23 @@ void DrOpenGL::draw2DLight(DrEngineLight *light) {
     QVector<GLfloat> vertices;
 
     setVertexFromSides(vertices, left, right, top, bottom, static_cast<float>(light->z_order));
-    m_light_shader.setAttributeArray(    m_attribute_light_vertex, vertices.data(), 3 );
-    m_light_shader.enableAttributeArray( m_attribute_light_vertex );
+    m_light_shader.setAttributeArray(    a_light_vertex, vertices.data(), 3 );
+    m_light_shader.enableAttributeArray( a_light_vertex );
 
     // Use texture unit 0
-    m_light_shader.setUniformValue( m_uniform_light_texture, 0 );
+    m_light_shader.setUniformValue( u_light_texture, 0 );
 
     // Give the shader our Ray Count (Shadow Map width)
     float shadow_width = (light->draw_shadows) ? m_shadows[light->getKey()]->width() : 0.0f;
-    m_light_shader.setUniformValue( m_uniform_light_ray_count,      static_cast<float>(shadow_width) );
+    m_light_shader.setUniformValue( u_light_ray_count,      static_cast<float>(shadow_width) );
 
     // Give shader the light_size diameter, fitted diameter
-    m_light_shader.setUniformValue( m_uniform_light_diameter,       static_cast<float>(light->getLightDiameter()) );
-    m_light_shader.setUniformValue( m_uniform_light_fitted,         static_cast<float>(light->getLightDiameterFitted()) );
+    m_light_shader.setUniformValue( u_light_diameter,       static_cast<float>(light->getLightDiameter()) );
+    m_light_shader.setUniformValue( u_light_fitted,         static_cast<float>(light->getLightDiameterFitted()) );
 
     // Give shader the opacity, light color
-    m_light_shader.setUniformValue( m_uniform_light_alpha,          light->getOpacity() );
-    m_light_shader.setUniformValue( m_uniform_light_color,
+    m_light_shader.setUniformValue( u_light_alpha,          light->getOpacity() );
+    m_light_shader.setUniformValue( u_light_color,
                                     static_cast<float>(light->color.redF()),
                                     static_cast<float>(light->color.greenF()),
                                     static_cast<float>(light->color.blueF()) );
@@ -327,21 +327,21 @@ void DrOpenGL::draw2DLight(DrEngineLight *light) {
     float cone_2 = qDegreesToRadians(static_cast<float>(light->getRotatedCone().y()));
     if (cone_1 < 0.0f) cone_1 += (2.0f * 3.141592f);
     if (cone_2 < 0.0f) cone_2 += (2.0f * 3.141592f);
-    m_light_shader.setUniformValue( m_uniform_light_cone, cone_1, cone_2 );
+    m_light_shader.setUniformValue( u_light_cone, cone_1, cone_2 );
 
     // Give shader shadow visibility, reduced fade, blur values, whether or not to draw shadows
-    m_light_shader.setUniformValue( m_uniform_light_intensity,      light->intensity );
-    m_light_shader.setUniformValue( m_uniform_light_shadows,        light->shadows );
-    m_light_shader.setUniformValue( m_uniform_light_blur,           light->blur );
-    m_light_shader.setUniformValue( m_uniform_light_draw_shadows,   light->draw_shadows );
-    m_light_shader.setUniformValue( m_uniform_light_is_glow,        (light->light_type == Light_Type::Glow));
+    m_light_shader.setUniformValue( u_light_intensity,      light->intensity );
+    m_light_shader.setUniformValue( u_light_shadows,        light->shadows );
+    m_light_shader.setUniformValue( u_light_blur,           light->blur );
+    m_light_shader.setUniformValue( u_light_draw_shadows,   light->draw_shadows );
+    m_light_shader.setUniformValue( u_light_is_glow,        (light->light_type == Light_Type::Glow));
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
 
     // Disable arrays
-    m_light_shader.disableAttributeArray( m_attribute_light_vertex );
-    m_light_shader.disableAttributeArray( m_attribute_light_tex_coord );
+    m_light_shader.disableAttributeArray( a_light_vertex );
+    m_light_shader.disableAttributeArray( a_light_texture_coord );
 
     // Release Shader
     m_light_shader.release();

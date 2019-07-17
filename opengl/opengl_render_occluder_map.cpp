@@ -72,13 +72,13 @@ void DrOpenGL::drawSpaceOccluder() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // ***** Set Matrix for Shader
-    m_occluder_shader.setUniformValue( m_uniform_occluder_matrix, occluderMatrix(m_engine->getCurrentWorld()->render_type, c_use_cam_offset) );
+    m_occluder_shader.setUniformValue( u_occluder_matrix, occluderMatrix(m_engine->getCurrentWorld()->render_type, c_use_cam_offset) );
 
     // ***** Set Texture Coordinates for Shader
     std::vector<float> texture_coordinates;
     setWholeTextureCoordinates(texture_coordinates);
-    m_occluder_shader.setAttributeArray( m_attribute_occluder_tex_coord, texture_coordinates.data(), 2 );
-    m_occluder_shader.enableAttributeArray( m_attribute_occluder_tex_coord );
+    m_occluder_shader.setAttributeArray( a_occluder_texture_coord, texture_coordinates.data(), 2 );
+    m_occluder_shader.enableAttributeArray( a_occluder_texture_coord );
 
     // ********** Render 2D Objects
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
@@ -125,12 +125,12 @@ void DrOpenGL::drawSpaceOccluder() {
         vertices[ 3] = top_left.x()  + x;       vertices[ 4] = top_left.y()  + y;       vertices[ 5] = z;           // Top Left
         vertices[ 6] = bot_right.x() + x;       vertices[ 7] = bot_right.y() + y;       vertices[ 8] = z;           // Bottom Right
         vertices[ 9] = bot_left.x()  + x;       vertices[10] = bot_left.y()  + y;       vertices[11] = z;           // Bottom Left
-        m_occluder_shader.setAttributeArray( m_attribute_occluder_vertex, vertices.data(), 3 );
-        m_occluder_shader.enableAttributeArray( m_attribute_occluder_vertex );
+        m_occluder_shader.setAttributeArray( a_occluder_vertex, vertices.data(), 3 );
+        m_occluder_shader.enableAttributeArray( a_occluder_vertex );
 
         // ***** Set Shader Variables
         // Texture unit 0
-        m_occluder_shader.setUniformValue( m_uniform_occluder_texture, 0 );
+        m_occluder_shader.setUniformValue( u_occluder_texture, 0 );
 
         // Fade away dying object, start with object alpha
         float alpha = object->getOpacity();
@@ -138,20 +138,20 @@ void DrOpenGL::drawSpaceOccluder() {
             double fade_percent = 1.0 - (static_cast<double>(Dr::MillisecondsElapsed(object->getFadeTimer())) / static_cast<double>(object->getFadeDelay()));
             alpha *= static_cast<float>(fade_percent);
         }
-        m_occluder_shader.setUniformValue( m_uniform_occluder_alpha,      alpha );
-        m_occluder_shader.setUniformValue( m_uniform_occluder_depth,      static_cast<float>(object->z_order) );
-        m_occluder_shader.setUniformValue( m_uniform_occluder_near_plane, c_near_plane );
-        m_occluder_shader.setUniformValue( m_uniform_occluder_far_plane,  c_far_plane );
+        m_occluder_shader.setUniformValue( u_occluder_alpha,      alpha );
+        m_occluder_shader.setUniformValue( u_occluder_depth,      static_cast<float>(object->z_order) );
+        m_occluder_shader.setUniformValue( u_occluder_near_plane, c_near_plane );
+        m_occluder_shader.setUniformValue( u_occluder_far_plane,  c_far_plane );
 
         // ***** Draw triangles using shader program
         glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
 
         // Release bound items
-        m_occluder_shader.disableAttributeArray( m_attribute_occluder_vertex );
+        m_occluder_shader.disableAttributeArray( a_occluder_vertex );
     }
 
     // ***** Disable shader program
-    m_occluder_shader.disableAttributeArray( m_attribute_occluder_tex_coord );
+    m_occluder_shader.disableAttributeArray( a_occluder_texture_coord );
     m_occluder_shader.release();
 }
 

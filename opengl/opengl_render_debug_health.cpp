@@ -62,7 +62,7 @@ void DrOpenGL::drawDebugHealthNative(QPainter &painter) {
     const float spacing = 0.75f;
 
     // ***** Enable shader program
-    if (!m_shader.bind()) return;
+    if (!m_default_shader.bind()) return;
 
     // ***** Blend function
     glEnable(GL_BLEND);
@@ -74,7 +74,7 @@ void DrOpenGL::drawDebugHealthNative(QPainter &painter) {
 
     // ***** Set Matrix for Shader, calculates current matrix
     QMatrix4x4 m_matrix = m_projection * m_model_view;
-    m_shader.setUniformValue( m_uniform_matrix, m_matrix );
+    m_default_shader.setUniformValue( u_default_matrix, m_matrix );
 
     // ***** Loop through each object and draws its health
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
@@ -116,7 +116,7 @@ void DrOpenGL::drawDebugHealthNative(QPainter &painter) {
         float r = static_cast<float>(color.redF());
         float g = static_cast<float>(color.greenF());
         float b = static_cast<float>(color.blueF());
-        m_shader.setUniformValue( m_uniform_tint, r, g, b );
+        m_default_shader.setUniformValue( u_default_tint, r, g, b );
 
         // ***** Render each number as a textured quad
         x -= ((hp.length() - 1.0f) * (half_width * spacing));
@@ -133,21 +133,21 @@ void DrOpenGL::drawDebugHealthNative(QPainter &painter) {
 
             x += (half_width * 2.0f * spacing);
 
-            m_shader.setAttributeArray( m_attribute_tex_coord, texture_coordinates.data(), 2 );
-            m_shader.setAttributeArray( m_attribute_vertex, vertices.data(), 3 );
-            m_shader.enableAttributeArray( m_attribute_tex_coord );
-            m_shader.enableAttributeArray( m_attribute_vertex );
+            m_default_shader.setAttributeArray( a_default_texture_coord, texture_coordinates.data(), 2 );
+            m_default_shader.setAttributeArray( a_default_vertex, vertices.data(), 3 );
+            m_default_shader.enableAttributeArray( a_default_texture_coord );
+            m_default_shader.enableAttributeArray( a_default_vertex );
 
             // ***** Draw triangles using Shader
             glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
 
             // Release bound items
-            m_shader.disableAttributeArray( m_attribute_tex_coord );
-            m_shader.disableAttributeArray( m_attribute_vertex );
+            m_default_shader.disableAttributeArray( a_default_texture_coord );
+            m_default_shader.disableAttributeArray( a_default_vertex );
         }
     }
 
-    m_shader.release();
+    m_default_shader.release();
     painter.endNativePainting();
 }
 

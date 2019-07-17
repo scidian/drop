@@ -79,7 +79,7 @@ void DrOpenGL::cullingOff() {   glDisable( GL_CULL_FACE ); }
 
 void DrOpenGL::setUpSpaceShader(std::vector<float> &texture_coords) {
     // ***** Enable shader program
-    if (!m_shader.bind()) return;
+    if (!m_default_shader.bind()) return;
 
     // ***** Blend function
     glEnable(GL_BLEND);
@@ -87,11 +87,11 @@ void DrOpenGL::setUpSpaceShader(std::vector<float> &texture_coords) {
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);                    // Premultiplied alpha blend
 
     // ***** Set Matrix for Shader, calculates current matrix
-    m_shader.setUniformValue( m_uniform_matrix, (m_projection * m_model_view) );
+    m_default_shader.setUniformValue( u_default_matrix, (m_projection * m_model_view) );
 
     // ***** Set Texture Coordinates for Shader
-    m_shader.setAttributeArray( m_attribute_tex_coord, texture_coords.data(), 2 );
-    m_shader.enableAttributeArray( m_attribute_tex_coord );
+    m_default_shader.setAttributeArray( a_default_texture_coord, texture_coords.data(), 2 );
+    m_default_shader.enableAttributeArray( a_default_texture_coord );
 }
 
 // Renders All Scene Objects
@@ -109,8 +109,8 @@ void DrOpenGL::drawSpace() {
 
         // ***** When we have gone past glow z_order, draw the lights to the scene
         if (!has_rendered_glow_lights && (thing->z_order > m_engine->getCurrentWorld()->getGlowZOrder())) {
-            m_shader.disableAttributeArray( m_attribute_tex_coord );
-            m_shader.release();
+            m_default_shader.disableAttributeArray( a_default_texture_coord );
+            m_default_shader.release();
             has_rendered_glow_lights = drawGlowBuffer();
             setUpSpaceShader(texture_coordinates);
         }
@@ -122,8 +122,8 @@ void DrOpenGL::drawSpace() {
                 if (!light->isInView()) continue;
 
                 if (light->light_type == Light_Type::Opaque) {
-                    m_shader.disableAttributeArray( m_attribute_tex_coord );
-                    m_shader.release();
+                    m_default_shader.disableAttributeArray( a_default_texture_coord );
+                    m_default_shader.release();
                     draw2DLight(light);
                     setUpSpaceShader(texture_coordinates);
                     continue;
@@ -182,50 +182,48 @@ void DrOpenGL::drawSpace() {
         vertices[ 3] = top_left.x()  + x;       vertices[ 4] = top_left.y()  + y;       vertices[ 5] = z;       // Top Left
         vertices[ 6] = bot_right.x() + x;       vertices[ 7] = bot_right.y() + y;       vertices[ 8] = z;       // Bottom Right
         vertices[ 9] = bot_left.x()  + x;       vertices[10] = bot_left.y()  +  y;      vertices[11] = z;       // Bottom Left
-        m_shader.setAttributeArray( m_attribute_vertex, vertices.data(), 3 );
-        m_shader.enableAttributeArray( m_attribute_vertex );
+        m_default_shader.setAttributeArray( a_default_vertex, vertices.data(), 3 );
+        m_default_shader.enableAttributeArray( a_default_vertex );
 
         // ***** Set Shader Variables
-        m_shader.setUniformValue( m_uniform_texture, 0 );                           // Use texture unit 0
+        m_default_shader.setUniformValue( u_default_texture, 0 );                           // Use texture unit 0
 
         // Fade away dying object
-        float alpha = object->getOpacity();                                     // Start with object alpha
+        float alpha = object->getOpacity();                                                 // Start with object alpha
         if (!object->isAlive() && object->getFadeOnDeath()) {
             double fade_percent = 1.0 - (static_cast<double>(Dr::MillisecondsElapsed(object->getFadeTimer())) / static_cast<double>(object->getFadeDelay()));
             alpha *= static_cast<float>(fade_percent);
         }
-        m_shader.setUniformValue( m_uniform_alpha,      alpha );
-        m_shader.setUniformValue( m_uniform_width,      texture_width );
-        m_shader.setUniformValue( m_uniform_height,     texture_height );
-        m_shader.setUniformValue( m_uniform_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
-        m_shader.setUniformValue( m_uniform_pre,        true );
+        m_default_shader.setUniformValue( u_default_alpha,      alpha );
+        m_default_shader.setUniformValue( u_default_tint,       0.0f, 0.0f, 0.0f );
+        m_default_shader.setUniformValue( u_default_width,      texture_width );
+        m_default_shader.setUniformValue( u_default_height,     texture_height );
+        m_default_shader.setUniformValue( u_default_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
+        m_default_shader.setUniformValue( u_default_pre,        true );
 
-        m_shader.setUniformValue( m_uniform_pixel_x,    object->pixel_x );
-        m_shader.setUniformValue( m_uniform_pixel_y,    object->pixel_y );
-        m_shader.setUniformValue( m_uniform_negative,   object->negative );
-        m_shader.setUniformValue( m_uniform_grayscale,  object->grayscale );
-        m_shader.setUniformValue( m_uniform_hue,        object->hue );
-        m_shader.setUniformValue( m_uniform_saturation, object->saturation );
-        m_shader.setUniformValue( m_uniform_contrast,   object->contrast );
-        m_shader.setUniformValue( m_uniform_brightness, object->brightness );
+        m_default_shader.setUniformValue( u_default_pixel_x,    object->pixel_x );
+        m_default_shader.setUniformValue( u_default_pixel_y,    object->pixel_y );
+        m_default_shader.setUniformValue( u_default_negative,   object->negative );
+        m_default_shader.setUniformValue( u_default_grayscale,  object->grayscale );
+        m_default_shader.setUniformValue( u_default_hue,        object->hue );
+        m_default_shader.setUniformValue( u_default_saturation, object->saturation );
+        m_default_shader.setUniformValue( u_default_contrast,   object->contrast );
+        m_default_shader.setUniformValue( u_default_brightness, object->brightness );
 
-        m_shader.setUniformValue( m_uniform_bitrate,    16.0f );
-        m_shader.setUniformValue( m_uniform_cartoon,    false );
-        m_shader.setUniformValue( m_uniform_wavy,       false );
-
-        m_shader.setUniformValue( m_uniform_tint,       0.0f, 0.0f, 0.0f );
-        m_shader.setUniformValue( m_uniform_kernel,     false );
+        m_default_shader.setUniformValue( u_default_bitrate,    16.0f );
+        m_default_shader.setUniformValue( u_default_cartoon,    false );
+        m_default_shader.setUniformValue( u_default_wavy,       false );
 
         // ***** Draw triangles using shader program
         glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
 
         // Release bound items
-        m_shader.disableAttributeArray( m_attribute_vertex );
+        m_default_shader.disableAttributeArray( a_default_vertex );
     }
 
     // ***** Disable shader program
-    m_shader.disableAttributeArray( m_attribute_tex_coord );
-    m_shader.release();
+    m_default_shader.disableAttributeArray( a_default_texture_coord );
+    m_default_shader.release();
 
     // ***** If we didn't draw Glow Lights yet, do it now
     if (!has_rendered_glow_lights) drawGlowBuffer();
@@ -255,7 +253,7 @@ bool DrOpenGL::drawGlowBuffer() {
         ///glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);           // Standard blend function
         ///glBlendFunc(GL_DST_COLOR, GL_ZERO);                          // "Screen" (slembcke) light blend function. Good, but doesnt get brighter than texture colors
         ///glBlendFunc(GL_ONE, GL_ONE);                                 // To Add Lights Together, not really great for lighting though
-        drawFrameBufferToScreenBufferDefaultShader(m_glow_fbo, true);
+        drawFrameBufferUsingKernelShader(m_glow_fbo);
 
     } else if (mode == Blend_Mode::Hard_Light) {
         // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) FBO for use as a texture during Screen Shader, Draw Glow Light buffer using Screen Shader
@@ -263,8 +261,8 @@ bool DrOpenGL::drawGlowBuffer() {
         QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);
         bindOffscreenBuffer();
         glDisable(GL_BLEND);
-        ///drawFrameBufferToScreenBufferScreenShader(m_glow_fbo, m_texture_fbo);            // Normal
-        drawFrameBufferToScreenBufferScreenShader(m_texture_fbo, m_glow_fbo);               // Reversed, cool metal look
+        ///drawFrameBufferUsingScreenShader(m_glow_fbo, m_texture_fbo);            // Normal
+        drawFrameBufferUsingScreenShader(m_texture_fbo, m_glow_fbo);               // Reversed, cool metal look
     }
 
     return true;
