@@ -34,6 +34,7 @@ uniform lowp  float u_brightness;// = 0.0;          // Brightness       Editor: 
 uniform lowp  float u_bitrate;// = 256;             // Bitrate          Editor:    1 to  16
 uniform       bool  u_cartoon;// = false;           // Cartoon          True / False
 uniform       bool  u_wavy;// = false;              // Wavy             True / False
+uniform       bool  u_fisheye;// = false;           // Fisheye Lens     True / False
 
 
 //####################################################################################
@@ -70,7 +71,7 @@ float avgIntensity(vec4 pix) {
 }
 
 // Returns pixel color
-float IsEdge(in vec2 coords) {
+float isEdge(in vec2 coords) {
     float dxtex = 1.0 / float(u_width);     //textureSize(u_texture, 0)) ;
     float dytex = 1.0 / float(u_height);    //textureSize(u_texture, 0));
     float pix[9];
@@ -94,7 +95,7 @@ float IsEdge(in vec2 coords) {
     return clamp(edge_thres2 * delta, 0.0, 1.0);
 }
 
-vec3 RGBtoHSV(float r, float g, float b) {
+vec3 cartoonRgbToHsvV(float r, float g, float b) {
     float minv, maxv, delta;
     vec3 res;
 
@@ -122,7 +123,7 @@ vec3 RGBtoHSV(float r, float g, float b) {
     return res;
 }
 
-vec3 HSVtoRGB(float h, float s, float v ) {
+vec3 cartoonHsvToRgb(float h, float s, float v ) {
     int i;
     float f, p, q, t;
     vec3 res;
@@ -165,19 +166,40 @@ void main( void ) {
     // ***** WAVY
     if (u_wavy) {
         float time = u_time;
-        time = 100.0;                   // !!! Disables imported time (turns off animation)
+        time = 100.0;                           // !!! Disables imported time (turns off animation)
         vec2  tc =  coords.xy;
         vec2  p =   -1.0 + 2.0 * tc;
         float len = length(p);
         coords = tc + (p / len) * cos(len*12.0 - time*4.0) * 0.03;
     }
 
+    // ***** FISHEYE
+    if (u_fisheye) {
+        float lens_size = 0.4;                  // lens size
+        float x_pos = 0.5;
+        float y_pos = 0.5;
+
+        vec2  p = coords.xy;                    // current texture coordinate
+        vec2  m = vec2(x_pos, 1.0 - y_pos);     // lens coordinate
+        vec2  d = p - m;
+        float r = sqrt(dot(d, d));              // distance of pixel from m
+        vec2  uv;
+
+        if (r < lens_size - 0.01) {
+            // Choose one formula to uncomment:
+            //uv = m + vec2(d.x * abs(d.x), d.y * abs(d.y));                        // SQUAREXY
+            uv = m + d * (r * 2.56); // a.k.a. m + normalize(d) * r * r             // SQUARER
+            //uv = m + normalize(d) * sin(r * 3.14159 * 0.5);                       // SINER
+            //uv = m + normalize(d) * asin(r) / (3.14159 * 0.5);                    // ASINR
+            coords = vec2(uv.x, uv.y);
+        }
+    }
 
     // ***** PIXELATED
     vec4 texture_color;
     if (u_pixel_x > 1.0 || u_pixel_y > 1.0) {       
-        highp float dx = u_pixel_x * (1.0 / (u_width));// * 0.99;                   // 99 Percent modifier is more like the function in Image_Filter_Color.cpp
-        highp float dy = u_pixel_y * (1.0 / (u_height));// * 0.99;                  // 99 Percent modifier is more like the function in Image_Filter_Color.cpp
+        highp float dx = u_pixel_x * (1.0 / (u_width)) * 0.99;                      // 99 Percent modifier is more like the function in Image_Filter_Color.cpp
+        highp float dy = u_pixel_y * (1.0 / (u_height)) * 0.99;                     // 99 Percent modifier is more like the function in Image_Filter_Color.cpp
 
         highp float pixel_x = dx * floor(coords.x / dx) + (dx / 2.0);
         highp float pixel_y = dy * floor(coords.y / dy) + (dy / 2.0);
@@ -189,73 +211,73 @@ void main( void ) {
 
     // ********** Set some variables for use later
     highp vec4 alpha_in = vec4(u_alpha, u_alpha, u_alpha, u_alpha);                 // For adding in existing opacity of object
-    highp vec3 fragRGB = texture_color.rgb;                                         // Save rgb as a vec3 for working with
+    highp vec3 frag_rgb = texture_color.rgb;                                        // Save rgb as a vec3 for working with
 
     // If texture is premultiplied...
     // Remove alpha first, then apply filters, then add it back later
-    if (u_premultiplied) fragRGB /= texture_color.a;
+    if (u_premultiplied) frag_rgb /= texture_color.a;
 
 
     // ***** NEGATIVE
     if (u_negative) {
-        fragRGB = 1.0 - fragRGB;
+        frag_rgb = 1.0 - frag_rgb;
     }
 
     // ***** GRAYSCALE
     if (u_grayscale) {
-        highp float average = 0.2126 * fragRGB.r + 0.7152 * fragRGB.g + 0.0722 * fragRGB.b;
-        fragRGB = highp vec3(average, average, average);
+        highp float average = 0.2126 * frag_rgb.r + 0.7152 * frag_rgb.g + 0.0722 * frag_rgb.b;
+        frag_rgb = highp vec3(average, average, average);
     }
 
     // ***** HUE / SATURATION ADJUSTMENT
-    if (u_hue > 0.0 || u_saturation > 0.0) {
-        vec3 fragHSV = rgbToHsv(fragRGB).xyz;
-        fragHSV.x += u_hue;
-        fragHSV.x =  mod(fragHSV.x, 1.0);
-        fragHSV.y += u_saturation;
-        fragHSV.y =  clamp(fragHSV.y, 0.0, 1.0);
-        fragRGB = hsvToRgb(fragHSV);
+    if (u_hue > 0.0 || (u_saturation > 0.001 || u_saturation < -0.001)) {
+        vec3 frag_hsv = rgbToHsv(frag_rgb).xyz;
+        frag_hsv.x += u_hue;
+        frag_hsv.x =  mod(frag_hsv.x, 1.0);
+        frag_hsv.y += u_saturation;
+        frag_hsv.y =  clamp(frag_hsv.y, 0.0, 1.0);
+        frag_rgb =    hsvToRgb(frag_hsv);
     }
 
     // ***** CONTRAST / BRIGHTNESS ADJUSTMENT
-    fragRGB.rgb =  ((fragRGB.rgb - 0.5) * (u_contrast + 0.392) / 0.392) + 0.5;      // Contrast
-    fragRGB.rgb += u_brightness;                                                    // Brightness
-    fragRGB.rgb += u_tint;                                                          // Tint
-    fragRGB.rgb =  clamp(fragRGB.rgb, 0.0, 1.0);
+    frag_rgb.rgb =  ((frag_rgb.rgb - 0.5) * (u_contrast + 0.392) / 0.392) + 0.5;    // Contrast
+    frag_rgb.rgb += u_brightness;                                                   // Brightness
+    frag_rgb.rgb += u_tint;                                                         // Tint
+    frag_rgb.rgb =  clamp(frag_rgb.rgb, 0.0, 1.0);
 
     // ***** BITRATE ADJUSTMENT (16 bit down to 1 bit)
     if (u_bitrate < 16.0) {
         highp float bit_depth = pow(2.0, u_bitrate);
-        fragRGB = highp vec3(floor(fragRGB.r * bit_depth), floor(fragRGB.g * bit_depth), floor(fragRGB.b * bit_depth)) / bit_depth;
+        frag_rgb = highp vec3(floor(frag_rgb.r * bit_depth), floor(frag_rgb.g * bit_depth), floor(frag_rgb.b * bit_depth)) / bit_depth;
 
         // ***** Alternate Method
-        //float numColors = pow(2.0, u_bitrate);
+        //float num_colors = pow(2.0, u_bitrate);
         //float gamma = 1.5;                                                        // (adjustable)
-        //vec3 c = fragRGB.rgb;
+        //vec3 c = frag_rgb.rgb;
         //c = pow(c, vec3(gamma, gamma, gamma));
-        //c = c * numColors;
+        //c = c * num_colors;
         //c = floor(c);
-        //c = c / numColors;
-        //c = pow(c, vec3(1.0/gamma));
-        //fragRGB = c;
+        //c = c / num_colors;
+        //c = pow(c, vec3(1.0 / gamma));
+        //frag_rgb = c;
     }
 
     // ***** CARTOON
     if (u_cartoon) {
-        vec3 original_color = fragRGB;
-        vec3 vHSV = RGBtoHSV(original_color.r, original_color.g, original_color.b);
-        vHSV.x = 30.0 * (floor(vHSV.x / 30.0) + 1.0);
-        vHSV.y =  0.1 * (floor(vHSV.y / 0.1) +  1.0);
-        vHSV.z =  0.1 * (floor(vHSV.z / 0.1) +  1.0);
-        float edg = IsEdge(coords.xy);
-        vec3 vRGB = (edg >= edge_thres) ? vec3(0.0, 0.0, 0.0) : HSVtoRGB(vHSV.x, vHSV.y, vHSV.z);
-        fragRGB = vec3(vRGB.x, vRGB.y, vRGB.z);
+        vec3 original_color = frag_rgb;
+        vec3 v_hsv = cartoonRgbToHsvV(original_color.r, original_color.g, original_color.b);
+        v_hsv.x = 30.0 * (floor(v_hsv.x / 30.0) + 1.0);
+        v_hsv.y =  0.1 * (floor(v_hsv.y / 0.1) +  1.0);
+        v_hsv.z =  0.1 * (floor(v_hsv.z / 0.1) +  1.0);
+        float edg = isEdge(coords.xy);
+        vec3 v_rgb = (edg >= edge_thres) ? vec3(0.0, 0.0, 0.0) : cartoonHsvToRgb(v_hsv.x, v_hsv.y, v_hsv.z);
+        frag_rgb = vec3(v_rgb.x, v_rgb.y, v_rgb.z);
     }
 
     // If texture is premultiplied, add back alpha
-    if (u_premultiplied) fragRGB *= texture_color.a;
+    if (u_premultiplied) frag_rgb *= texture_color.a;
 
-    gl_FragColor = highp vec4(fragRGB, texture_color.a) * alpha_in;
+    gl_FragColor = highp vec4(frag_rgb, texture_color.a) * alpha_in;
 
 }
 

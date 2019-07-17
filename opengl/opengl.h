@@ -116,6 +116,7 @@ private:
     int     u_default_bitrate;                                  // Bitrate
     int     u_default_cartoon;                                  // Cartoon? (Comic Book)
     int     u_default_wavy;                                     // Wavy? (Ripple Effect)
+    int     u_default_fisheye;                                  // Fisheye Lens?
 
 
     // Occluder Map Shader

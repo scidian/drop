@@ -213,6 +213,7 @@ void DrOpenGL::drawSpace() {
         m_default_shader.setUniformValue( u_default_bitrate,    16.0f );
         m_default_shader.setUniformValue( u_default_cartoon,    false );
         m_default_shader.setUniformValue( u_default_wavy,       false );
+        m_default_shader.setUniformValue( u_default_fisheye,    false );
 
         // ***** Draw triangles using shader program
         glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

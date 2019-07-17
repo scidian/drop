@@ -133,6 +133,8 @@ void DrWorld::initializeWorldSettings(QString new_name) {
                            "Cartoon", "Gives the world a comic book look.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wavy, Property_Type::Bool, false,
                            "Wavy", "Gives the world a trippy / drunken look.");
+    addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Fisheye, Property_Type::Bool, false,
+                           "Fisheye", "A wide angle lens.");
 
     addComponent(Components::World_Appearance, "Appearance", "These filters affect the entire world after it has been rendered.",
                                                Component_Colors::Brown_Sugar, true);

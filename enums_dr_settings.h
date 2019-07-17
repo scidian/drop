@@ -129,6 +129,7 @@ enum class Properties {
     World_Filter_Bitrate,           //bitrate
     World_Filter_Cartoon,           //bool
     World_Filter_Wavy,              //bool
+    World_Filter_Fisheye,           //bool
 
 
     // ******************** DrStage Component Properties

@@ -133,6 +133,7 @@ public:
     float           bitrate = 16.0;                             // Bitrate          1 to 16
     bool            cartoon = false;                            // Cartoon          True / False
     bool            wavy = false;                               // Wavy (Ripple)    True / False
+    bool            fisheye = false;                            // Fisheye Lens     True / False
 
 
 public:

@@ -121,6 +121,7 @@ void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height)
     m_default_shader.setUniformValue( u_default_bitrate,    16.0f );
     m_default_shader.setUniformValue( u_default_cartoon,    false );
     m_default_shader.setUniformValue( u_default_wavy,       false );
+    m_default_shader.setUniformValue( u_default_fisheye,    false );
 }
 
 
@@ -172,6 +173,7 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     m_default_shader.setUniformValue( u_default_bitrate,    m_engine->getCurrentWorld()->bitrate );
     m_default_shader.setUniformValue( u_default_cartoon,    m_engine->getCurrentWorld()->cartoon );
     m_default_shader.setUniformValue( u_default_wavy,       m_engine->getCurrentWorld()->wavy );
+    m_default_shader.setUniformValue( u_default_fisheye,    m_engine->getCurrentWorld()->fisheye );
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
