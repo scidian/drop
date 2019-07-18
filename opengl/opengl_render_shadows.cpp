@@ -23,23 +23,25 @@
 //####################################################################################
 void DrOpenGL::process2DLights() {
 
+    // ***** Check for lights, update buffers
     if (m_engine->getCurrentWorld()->light_count > 0) {
-
-        // ***** Clear list of which lights exist
+        // Clear list of which lights exist
         checkLightBuffers();
 
-        // ***** Check for lights with shadows, if there are none we don't need to draw occluder map
+        // Check for lights with shadows, if there are none we don't need to draw occluder map
         m_engine->getCurrentWorld()->light_count = findNeededShadowMaps();
-        if (m_shadow_lights.count() <= 0) return;
+    }
 
-        // ***** Render all Space Objects to an off-screen Frame Buffer Object Occluder Map
+    // ***** Process shadow casting lights
+    if (m_shadow_lights.count() > 0) {
+        // Render all Space Objects to an off-screen Frame Buffer Object Occluder Map
         bindOccluderMapBuffer();
         glViewport(0, 0, m_occluder_fbo->width(), m_occluder_fbo->height());
         drawSpaceOccluder();
         m_occluder_fbo->release();
         glViewport(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
 
-        // ***** Code to have the Occluder Map fbo pop up so we can take a look
+        // Code to have the Occluder Map fbo pop up so we can take a look
         ///static int count = 0;
         ///count++;
         ///if (count % 500 == 0) {
@@ -47,7 +49,7 @@ void DrOpenGL::process2DLights() {
         ///    count = 0;
         ///}
 
-        // ***** Calculate Light 1D Shadow Maps
+        // Calculate Light 1D Shadow Maps
         drawShadowMaps();
     }
 

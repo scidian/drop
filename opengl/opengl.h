@@ -37,7 +37,7 @@ extern int  g_max_light_fbo_size;
 // Rendering Constants
 const float c_near_plane =     -10000.0;
 const float c_far_plane =       10000.0;
-const bool  c_use_cam_offset =  true;
+const bool  c_use_cam_offset =  false;
 const float c_field_of_view =   52.5f;                  // Close to Orthographic size when using standard widescreen ratio
 
 // 2D Light Constants

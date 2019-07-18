@@ -43,7 +43,7 @@ QMatrix4x4 DrOpenGL::occluderMatrix(Render_Type render_type, bool use_offset) {
     // Perspective
     } else {
         // Set camera position
-        QVector3D  perspective_offset = use_offset? QVector3D( 200.0f, 200.0f, 0.0f) : QVector3D( 0.0f, 0.0f, 0.0f);
+        QVector3D  perspective_offset = use_offset? QVector3D(200.0f, 200.0f, 0.0f) : QVector3D(0.0f, 0.0f, 0.0f);
         float cam_x =  (m_engine->getCurrentWorld()->getCameraPos().x()) * m_scale * c_occluder_scale_proj;
         float cam_y =  (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale * c_occluder_scale_proj;
         cam_x = (int(cam_x) / 5) * 5;
