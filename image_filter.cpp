@@ -47,9 +47,9 @@ QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_imag
         int table[ 256 ];
         for ( int i = 0; i < 256; ++i ) {
             switch (filter) {
-            case Image_Filter_Type::Brightness:   table[i] = Dr::Clamp( i + value, 0, 255 );                                      break;
-            case Image_Filter_Type::Contrast:     table[i] = Dr::Clamp( (( i - 127 ) * (value + 128) / 128 ) + 127, 0, 255 );     break;
-            default: ;
+                case Image_Filter_Type::Brightness:   table[i] = Dr::Clamp( i + value, 0, 255 );                                      break;
+                case Image_Filter_Type::Contrast:     table[i] = Dr::Clamp( (( i - 127 ) * (value + 128) / 128 ) + 127, 0, 255 );     break;
+                default: ;
             }
         }
 
@@ -62,11 +62,6 @@ QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_imag
                     // Grab the current pixel color
                     QColor color = QColor::fromRgba( line[x] );
 
-                    // Temp variables
-                    qreal  r, g, b;
-                    double temp;
-                    int    hue;
-
                     switch (filter) {
                         case Image_Filter_Type::Brightness:
                         case Image_Filter_Type::Contrast:
@@ -74,33 +69,36 @@ QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_imag
                             color.setGreen( table[color.green()] );
                             color.setBlue(  table[color.blue()]  );
                             break;
-                        case Image_Filter_Type::Saturation:
+                        case Image_Filter_Type::Saturation: {
                             // !!!!! #NOTE: QColor returns -1 if image is grayscale
                             //              If thats the case give it a default hue of 0 (red) to match shader
-                            hue = (color.hue() == -1) ? 0 : color.hue();
+                            int hue = (color.hue() == -1) ? 0 : color.hue();
                             color.setHsv(hue, Dr::Clamp(color.saturation() + value, 0, 255), color.value(), color.alpha());
                             break;
+                        }
                         case Image_Filter_Type::Hue:
                             color.setHsv(Dr::Clamp(color.hue() + value, 0, 720), color.saturation(), color.value(), color.alpha());
                             break;
-                        case Image_Filter_Type::Grayscale:
-                            temp = (color.redF() * 0.2126) + (color.greenF() * 0.7152) + (color.blueF() * 0.0722);
+                        case Image_Filter_Type::Grayscale: {
+                            double temp = (color.redF() * 0.2126) + (color.greenF() * 0.7152) + (color.blueF() * 0.0722);
                             color.setRgbF(temp, temp, temp, color.alphaF());
                             break;
+                        }
                         case Image_Filter_Type::Negative:
                             color.setRgbF(1.0 - color.redF(), 1.0 - color.greenF(), 1.0 - color.blueF(), color.alphaF());
                             break;
                         case Image_Filter_Type::Opacity:
                             color.setAlpha( Dr::Clamp(color.alpha() + value, 0, 255) );
                             break;
-                        case Image_Filter_Type::Premultiplied_Alpha:
-                            r = color.redF() *   color.alphaF();
-                            g = color.greenF() * color.alphaF();
-                            b = color.blueF() *  color.alphaF();
+                        case Image_Filter_Type::Premultiplied_Alpha: {
+                            qreal r = color.redF() *   color.alphaF();
+                            qreal g = color.greenF() * color.alphaF();
+                            qreal b = color.blueF() *  color.alphaF();
                             color.setRedF(   r );
                             color.setGreenF( g );
                             color.setBlueF(  b );
                             break;
+                        }
                         case Image_Filter_Type::Pixelation: ;                                           // Different Function
                     }
 

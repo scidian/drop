@@ -39,9 +39,6 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
     if (thing->getKey() != m_selected_key) return;
     if (m_selected_type != DrType::Thing) return;
 
-    // Forward definitions for widgets used in switch statement
-    QPushButton     *pushbutton;
-    QDoubleSpinBox  *doublespin;
 
     for (auto widget : m_widgets) {
         long prop_key = widget->property(User_Property::Key).toInt();
@@ -89,8 +86,8 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
             case Property_Type::ScaleF:
             case Property_Type::GridF:
             case Property_Type::GridScaleF:
-            case Property_Type::Variable:
-                doublespin = dynamic_cast<QDoubleSpinBox*>(widget);
+            case Property_Type::Variable: {
+                QDoubleSpinBox *doublespin = dynamic_cast<QDoubleSpinBox*>(widget);
                 if (doublespin->property(User_Property::Order).toInt() == 0)
                     doublespin->setValue(prop->getValue().toPointF().x());
                 else
@@ -99,17 +96,20 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
                     else
                         doublespin->setValue(prop->getValue().toPointF().y());
                 break;
+            }
 
-            case Property_Type::List:
-                pushbutton = dynamic_cast<QPushButton*>(widget);
+            case Property_Type::List: {
+                QPushButton *pushbutton = dynamic_cast<QPushButton*>(widget);
                 pushbutton->setText( pushbutton->menu()->actions().at(prop->getValue().toInt())->text() );
                 pushbutton->menu()->actions().at(prop->getValue().toInt())->setChecked(true);
                 break;
+            }
 
-            case Property_Type::Color:
-                pushbutton = dynamic_cast<QPushButton*>(widget);
+            case Property_Type::Color: {
+                QPushButton *pushbutton = dynamic_cast<QPushButton*>(widget);
                 this->updateColorButton( pushbutton, QColor::fromRgba(prop->getValue().toUInt()) );
                 break;
+            }
 
             case Property_Type::Image:                                  // QPixmap
             case Property_Type::Icon:

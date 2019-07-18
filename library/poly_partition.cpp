@@ -1086,10 +1086,10 @@ int TPPLPartition::MonotonePartition(TPPLPolyList *inpolys, TPPLPolyList *monoto
 	newnumvertices = numvertices;
 
 	polystartindex = 0;
-	for(iter = inpolys->begin(); iter != inpolys->end(); iter++) {
+    for (iter = inpolys->begin(); iter != inpolys->end(); iter++) {
 		poly = &(*iter);
 		polyendindex = polystartindex + poly->GetNumPoints()-1;
-		for(i=0;i<poly->GetNumPoints();i++) {
+        for (i = 0; i < poly->GetNumPoints(); i++) {
 			vertices[i+polystartindex].p = poly->GetPoint(i);
 			if(i==0) vertices[i+polystartindex].previous = polyendindex;
 			else vertices[i+polystartindex].previous = i+polystartindex-1;
@@ -1101,24 +1101,24 @@ int TPPLPartition::MonotonePartition(TPPLPolyList *inpolys, TPPLPolyList *monoto
 
 	//construct the priority queue
 	long *priority = new long [numvertices];
-	for(i=0;i<numvertices;i++) priority[i] = i;
+    for (i = 0; i < numvertices; i++) priority[i] = i;
 	std::sort(priority,&(priority[numvertices]),VertexSorter(vertices));
 
 	//determine vertex types
 	char *vertextypes = new char[maxnumvertices];
-	for(i=0;i<numvertices;i++) {
+    for (i = 0; i < numvertices; i++) {
 		v = &(vertices[i]);
 		vprev = &(vertices[v->previous]);
 		vnext = &(vertices[v->next]);
 
-		if(Below(vprev->p,v->p)&&Below(vnext->p,v->p)) {
-			if(IsConvex(vnext->p,vprev->p,v->p)) {
+        if (Below(vprev->p,v->p)&&Below(vnext->p,v->p)) {
+            if (IsConvex(vnext->p,vprev->p,v->p)) {
 				vertextypes[i] = TPPL_VERTEXTYPE_START;
 			} else {
 				vertextypes[i] = TPPL_VERTEXTYPE_SPLIT;
 			}
-		} else if(Below(v->p,vprev->p)&&Below(v->p,vnext->p)) {
-			if(IsConvex(vnext->p,vprev->p,v->p))
+        } else if (Below(v->p,vprev->p)&&Below(v->p,vnext->p)) {
+            if (IsConvex(vnext->p,vprev->p,v->p))
 			{
 				vertextypes[i] = TPPL_VERTEXTYPE_END;
 			} else {
@@ -1141,10 +1141,10 @@ int TPPLPartition::MonotonePartition(TPPLPolyList *inpolys, TPPLPolyList *monoto
 	set<ScanLineEdge>::iterator *edgeTreeIterators,edgeIter;
 	edgeTreeIterators = new set<ScanLineEdge>::iterator[maxnumvertices];
 	pair<set<ScanLineEdge>::iterator,bool> edgeTreeRet;
-	for(i = 0; i<numvertices; i++) edgeTreeIterators[i] = edgeTree.end();
+    for (i = 0; i < numvertices; i++) edgeTreeIterators[i] = edgeTree.end();
 
 	//for each vertex
-	for(i=0;i<numvertices;i++) {
+    for (i = 0; i < numvertices; i++) {
 		vindex = priority[i];
 		v = &(vertices[vindex]);
 		vindex2 = vindex;
@@ -1152,7 +1152,7 @@ int TPPLPartition::MonotonePartition(TPPLPolyList *inpolys, TPPLPolyList *monoto
 
 		//depending on the vertex type, do the appropriate action
 		//comments in the following sections are copied from "Computational Geometry: Algorithms and Applications"
-		switch(vertextypes[vindex]) {
+        switch (vertextypes[vindex]) {
 			case TPPL_VERTEXTYPE_START:
 				//Insert ei in T and set helper(ei) to vi.
 				newedge.p1 = v->p;
@@ -1169,7 +1169,7 @@ int TPPLPartition::MonotonePartition(TPPLPolyList *inpolys, TPPLPolyList *monoto
 					break;
 				}
 				//if helper(ei-1) is a merge vertex
-				if(vertextypes[helpers[v->previous]]==TPPL_VERTEXTYPE_MERGE) {
+                if (vertextypes[helpers[v->previous]]==TPPL_VERTEXTYPE_MERGE) {
 					//Insert the diagonal connecting vi to helper(ei-1) in D.
 					AddDiagonal(vertices,&newnumvertices,vindex,helpers[v->previous], 
 						vertextypes, edgeTreeIterators, &edgeTree, helpers);
@@ -1179,23 +1179,23 @@ int TPPLPartition::MonotonePartition(TPPLPolyList *inpolys, TPPLPolyList *monoto
 				break;
 
 			case TPPL_VERTEXTYPE_SPLIT:
-				//Search in T to find the edge e j directly left of vi.
+                // Search in T to find the edge e j directly left of vi.
 				newedge.p1 = v->p;
 				newedge.p2 = v->p;
 				edgeIter = edgeTree.lower_bound(newedge);
-				if(edgeIter == edgeTree.begin()) {
+                if (edgeIter == edgeTree.begin()) {
 					error = true;
 					break;
 				}
 				edgeIter--;
-				//Insert the diagonal connecting vi to helper(ej) in D.
-				AddDiagonal(vertices,&newnumvertices,vindex,helpers[edgeIter->index],
-					vertextypes, edgeTreeIterators, &edgeTree, helpers);
+
+                // Insert the diagonal connecting vi to helper(ej) in D.
+                AddDiagonal(vertices,&newnumvertices,vindex,helpers[edgeIter->index], vertextypes, edgeTreeIterators, &edgeTree, helpers);
 				vindex2 = newnumvertices-2;
 				v2 = &(vertices[vindex2]);
-				//helper(e j)�vi
+                // helper(e j) vi
 				helpers[edgeIter->index] = vindex;
-				//Insert ei in T and set helper(ei) to vi.
+                // Insert ei in T and set helper(ei) to vi.
 				newedge.p1 = v2->p;
 				newedge.p2 = vertices[v2->next].p;
 				newedge.index = vindex2;
@@ -1210,31 +1210,31 @@ int TPPLPartition::MonotonePartition(TPPLPolyList *inpolys, TPPLPolyList *monoto
 					break;
 				}
 				//if helper(ei-1) is a merge vertex
-				if(vertextypes[helpers[v->previous]]==TPPL_VERTEXTYPE_MERGE) {
-					//Insert the diagonal connecting vi to helper(ei-1) in D.
+                if (vertextypes[helpers[v->previous]]==TPPL_VERTEXTYPE_MERGE) {
+                    // Insert the diagonal connecting vi to helper(ei-1) in D.
 					AddDiagonal(vertices,&newnumvertices,vindex,helpers[v->previous],
 						vertextypes, edgeTreeIterators, &edgeTree, helpers);
 					vindex2 = newnumvertices-2;
 					v2 = &(vertices[vindex2]);
 				}
-				//Delete ei-1 from T.
+                // Delete ei-1 from T.
 				edgeTree.erase(edgeTreeIterators[v->previous]);
-				//Search in T to find the edge e j directly left of vi.
+                // Search in T to find the edge e j directly left of vi.
 				newedge.p1 = v->p;
 				newedge.p2 = v->p;
 				edgeIter = edgeTree.lower_bound(newedge);
-				if(edgeIter == edgeTree.begin()) {
+                if (edgeIter == edgeTree.begin()) {
 					error = true;
 					break;
 				}
 				edgeIter--;
 				//if helper(ej) is a merge vertex
 				if(vertextypes[helpers[edgeIter->index]]==TPPL_VERTEXTYPE_MERGE) {
-					//Insert the diagonal connecting vi to helper(e j) in D.
+                    // Insert the diagonal connecting vi to helper(e j) in D.
 					AddDiagonal(vertices,&newnumvertices,vindex2,helpers[edgeIter->index],
 						vertextypes, edgeTreeIterators, &edgeTree, helpers);
 				}
-				//helper(e j)�vi
+                //helper(e j) vi
 				helpers[edgeIter->index] = vindex2;
 				break;
 
@@ -1338,8 +1338,7 @@ int TPPLPartition::MonotonePartition(TPPLPolyList *inpolys, TPPLPolyList *monoto
 //adds a diagonal to the doubly-connected list of vertices
 void TPPLPartition::AddDiagonal(MonotoneVertex *vertices, long *numvertices, long index1, long index2, 
 								char *vertextypes, set<ScanLineEdge>::iterator *edgeTreeIterators, 
-								set<ScanLineEdge> *edgeTree, long *helpers) 
-{
+								set<ScanLineEdge> *edgeTree, long *helpers) {
 	long newindex1,newindex2;
 
 	newindex1 = *numvertices;
@@ -1362,7 +1361,7 @@ void TPPLPartition::AddDiagonal(MonotoneVertex *vertices, long *numvertices, lon
 	vertices[index2].next = newindex1;
 	vertices[newindex1].previous = index2;
 
-	//update all relevant structures
+    //u pdate all relevant structures
 	vertextypes[newindex1] = vertextypes[index1];
 	edgeTreeIterators[newindex1] = edgeTreeIterators[index1];
 	helpers[newindex1] = helpers[index1];
@@ -1376,18 +1375,19 @@ void TPPLPartition::AddDiagonal(MonotoneVertex *vertices, long *numvertices, lon
 }
 
 bool TPPLPartition::Below(TPPLPoint &p1, TPPLPoint &p2) {
-	if(p1.y < p2.y) return true;
+    if (p1.y < p2.y) return true;
     else if (qFuzzyCompare(p1.y, p2.y)) {
-		if(p1.x < p2.x) return true;
+        if (p1.x < p2.x) return true;
 	}
 	return false;
 }
 
 //sorts in the falling order of y values, if y is equal, x is used instead
 bool TPPLPartition::VertexSorter::operator() (long index1, long index2) {
-	if(vertices[index1].p.y > vertices[index2].p.y) return true;
-    else if(qFuzzyCompare(vertices[index1].p.y, vertices[index2].p.y)) {
-		if(vertices[index1].p.x > vertices[index2].p.x) return true;
+    if (vertices[index1].p.y > vertices[index2].p.y)
+        return true;
+    else if (qFuzzyCompare(vertices[index1].p.y, vertices[index2].p.y)) {
+        if (vertices[index1].p.x > vertices[index2].p.x) return true;
 	}
 	return false;
 }
@@ -1395,26 +1395,26 @@ bool TPPLPartition::VertexSorter::operator() (long index1, long index2) {
 bool TPPLPartition::ScanLineEdge::IsConvex(const TPPLPoint& p1, const TPPLPoint& p2, const TPPLPoint& p3) const {
 	tppl_float tmp;
 	tmp = (p3.y-p1.y)*(p2.x-p1.x)-(p3.x-p1.x)*(p2.y-p1.y);
-	if(tmp>0) return 1;
+    if (tmp>0) return 1;
 	else return 0;
 }
 
 bool TPPLPartition::ScanLineEdge::operator < (const ScanLineEdge & other) const {
-    if(qFuzzyCompare(other.p1.y, other.p2.y)) {
-        if(qFuzzyCompare(p1.y, p2.y)) {
+    if (qFuzzyCompare(other.p1.y, other.p2.y)) {
+        if (qFuzzyCompare(p1.y, p2.y)) {
 			if(p1.y < other.p1.y) return true;
 			else return false;
 		}
-		if(IsConvex(p1,p2,other.p1)) return true;
+        if (IsConvex(p1,p2,other.p1)) return true;
 		else return false;
     } else if(qFuzzyCompare(p1.y, p2.y)) {
-		if(IsConvex(other.p1,other.p2,p1)) return false;
+        if (IsConvex(other.p1,other.p2,p1)) return false;
 		else return true;	
 	} else if(p1.y < other.p1.y) {
-		if(IsConvex(other.p1,other.p2,p1)) return false;
+        if (IsConvex(other.p1,other.p2,p1)) return false;
 		else return true;			
 	} else {
-		if(IsConvex(p1,p2,other.p1)) return true;
+        if (IsConvex(p1,p2,other.p1)) return true;
 		else return false;
 	}
 }
@@ -1539,8 +1539,8 @@ int TPPLPartition::TriangulateMonotone(TPPLPoly *inPoly, TPPLPolyList *triangles
 		}
 	}
 	vindex = priority[i];
-	for(j=0;j<(stackptr-1);j++) {
-		if(vertextypes[stack[j+1]]==1) {
+    for (j = 0; j < (stackptr-1); j++) {
+        if (vertextypes[stack[j+1]]==1) {
 			triangle.Triangle(points[stack[j]],points[stack[j+1]],points[vindex]);
 		} else {
 			triangle.Triangle(points[stack[j+1]],points[stack[j]],points[vindex]);
@@ -1559,9 +1559,9 @@ int TPPLPartition::Triangulate_MONO(TPPLPolyList *inpolys, TPPLPolyList *triangl
 	TPPLPolyList monotone;
 	TPPLPolyList::iterator iter;
 
-	if(!MonotonePartition(inpolys,&monotone)) return 0;
-	for(iter = monotone.begin(); iter!=monotone.end();iter++) {
-		if(!TriangulateMonotone(&(*iter),triangles)) return 0;
+    if (!MonotonePartition(inpolys,&monotone)) return 0;
+    for (iter = monotone.begin(); iter != monotone.end(); iter++) {
+        if (!TriangulateMonotone(&(*iter),triangles)) return 0;
 	}
 	return 1;
 }

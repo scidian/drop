@@ -114,10 +114,10 @@ void FormMain::buttonGroupGridClicked(int id) {
 
     } else {
         switch (clicked) {
-        case Buttons_Grid::Snap_To_Grid:    Dr::SetPreference(Preferences::World_Editor_Snap_To_Grid,   buttonsGroupGrid->button(id)->isChecked());  break;
-        case Buttons_Grid::Resize_To_Grid:  Dr::SetPreference(Preferences::World_Editor_Resize_To_Grid, buttonsGroupGrid->button(id)->isChecked());  break;
-        case Buttons_Grid::Grid_On_Top:     Dr::SetPreference(Preferences::World_Editor_Grid_On_Top,    buttonsGroupGrid->button(id)->isChecked());  break;
-        case Buttons_Grid::Snap_Options:    ;
+            case Buttons_Grid::Snap_To_Grid:    Dr::SetPreference(Preferences::World_Editor_Snap_To_Grid,   buttonsGroupGrid->button(id)->isChecked());  break;
+            case Buttons_Grid::Resize_To_Grid:  Dr::SetPreference(Preferences::World_Editor_Resize_To_Grid, buttonsGroupGrid->button(id)->isChecked());  break;
+            case Buttons_Grid::Grid_On_Top:     Dr::SetPreference(Preferences::World_Editor_Grid_On_Top,    buttonsGroupGrid->button(id)->isChecked());  break;
+            case Buttons_Grid::Snap_Options:    ;
         }
         viewEditor->updateGrid();
         viewEditor->updateSelectionBoundingBox(8);

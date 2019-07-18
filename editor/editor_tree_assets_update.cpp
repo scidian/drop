@@ -41,35 +41,35 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
                     Properties check_property = static_cast<Properties>(property);
 
                     switch (check_property) {
-                    case Properties::Entity_Name:
-                        asset = m_project->getAsset(item_key);
-                        asset_text = item->getName();
+                        case Properties::Entity_Name:
+                            asset = m_project->getAsset(item_key);
+                            asset_text = item->getName();
 
-                        // Update all Things in the project that use this asset name
-                        for (auto world : m_project->getWorldMap()) {
-                            for (auto stage : world.second->getStageMap()) {
-                                for (auto thing : stage.second->getThingMap()) {
-                                    if (thing.second->getAssetKey() == asset->getKey()) {
-                                        thing.second->setComponentPropertyValue(Components::Entity_Name, Properties::Entity_Name, asset_text);
-                                        newly_changed_items.append(thing.second);
-                                        if (!newly_changed_properties.contains(Properties::Entity_Name)) {
-                                            newly_changed_properties.append(Properties::Entity_Name);
+                            // Update all Things in the project that use this asset name
+                            for (auto world : m_project->getWorldMap()) {
+                                for (auto stage : world.second->getStageMap()) {
+                                    for (auto thing : stage.second->getThingMap()) {
+                                        if (thing.second->getAssetKey() == asset->getKey()) {
+                                            thing.second->setComponentPropertyValue(Components::Entity_Name, Properties::Entity_Name, asset_text);
+                                            newly_changed_items.append(thing.second);
+                                            if (!newly_changed_properties.contains(Properties::Entity_Name)) {
+                                                newly_changed_properties.append(Properties::Entity_Name);
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
 
-                        // Update asset name label
-                        asset_name = frame->findChild<QLabel*>("assetName");
-                        if (asset_name) {
-                            text_holder = frame->findChild<QFrame*>("textHolder");
-                            asset_text = Dr::FitStringToWidth( asset_name->font(), asset_text, text_holder->width() );
-                            asset_name->setText( asset_text );
-                        }
+                            // Update asset name label
+                            asset_name = frame->findChild<QLabel*>("assetName");
+                            if (asset_name) {
+                                text_holder = frame->findChild<QFrame*>("textHolder");
+                                asset_text = Dr::FitStringToWidth( asset_name->font(), asset_text, text_holder->width() );
+                                asset_name->setText( asset_text );
+                            }
 
-                        break;
-                    default: ;
+                            break;
+                        default: ;
                     }
                 }
             }
