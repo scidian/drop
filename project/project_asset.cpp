@@ -49,6 +49,10 @@ DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_
                     my_starting_pixmap = m_parent_project->getDrEffect(source_key)->getPixmap();
                     initializeAssetSettingsEffect("Light");
                     break;
+                case DrEffectType::Water:
+                    my_starting_pixmap = m_parent_project->getDrEffect(source_key)->getPixmap();
+                    initializeAssetSettingsEffect("Water");
+                    break;
             }
             break;
         case DrAssetType::Text:

@@ -29,6 +29,7 @@ QPixmap DrEffect::getPixmap() {
 
     switch (m_effect_type) {
         case DrEffectType::Light:   return DrImaging::drawLight(Qt::white, 200, 0, 360, 50, 5);
+        case DrEffectType::Water:   return QPixmap(":/assets/icon/icon256.png");
     }
 
 }

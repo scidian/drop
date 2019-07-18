@@ -78,15 +78,12 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
         Properties property = static_cast<Properties>(one_property);
         QVariant new_value  = thing->findPropertyFromPropertyKey(one_property)->getValue();
 
-        Body_Type type;
-        bool pretest, test;
-        QColor c;
-        float f1, f2, f3, f4;
+
         switch (property) {
-            case Properties::Thing_Object_Physics_Type:
-                pretest = thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Velocity_X)->isEditable();
-                type = static_cast<Body_Type>(thing->getComponentPropertyValue(Components::Thing_Settings_Object, Properties::Thing_Object_Physics_Type).toInt());
-                test = (type == Body_Type::Kinematic || type == Body_Type::Dynamic) ? true : false;
+            case Properties::Thing_Object_Physics_Type: {
+                bool pretest = thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Velocity_X)->isEditable();
+                Body_Type type = static_cast<Body_Type>(thing->getComponentPropertyValue(Components::Thing_Settings_Object, Properties::Thing_Object_Physics_Type).toInt());
+                bool test = (type == Body_Type::Kinematic || type == Body_Type::Dynamic) ? true : false;
                 if (test != pretest) {
                     thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Velocity_X)->setEditable(test);
                     thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Velocity_Y)->setEditable(test);
@@ -102,6 +99,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
                     m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { thing } , { Properties::Thing_Angle_Velocity });
                 }
                 break;
+            }
 
             case Properties::Thing_Position:
                 setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
@@ -109,11 +107,10 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
 
             case Properties::Thing_Size:
             case Properties::Thing_Scale:
-            case Properties::Thing_Rotation:
-
+            case Properties::Thing_Rotation: {
                 // ***** Keep Thing Square: Size / scale change override for Things that need to be square (light, etc)
                 //       Search keywords: "keep square", "locked", "same size"
-                pretest = false;
+                bool pretest = false;
                 if (thing->getThingType() == DrThingType::Light) {
                     if (property == Properties::Thing_Size) {
                         if (Dr::IsCloseTo(scale.y(), size.y() / item->getAssetHeight(), 0.001)) size.setY(size.x());    else size.setX(size.y());
@@ -153,6 +150,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
                 }
 
                 break;
+            }
 
             case Properties::Thing_Z_Order:
                 item->setZValue(new_value.toDouble());
@@ -173,16 +171,25 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
             case Properties::Thing_Light_Cone_Start:
             case Properties::Thing_Light_Cone_End:
             case Properties::Thing_Light_Intensity:
-            case Properties::Thing_Light_Blur:
-                c =  QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Color).toUInt());
-                f1 = item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start).toFloat();
-                f2 = item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toFloat();
-                f3 = item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity).toFloat();
-                f4 = item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Blur).toFloat();
-                item->setPixmap( DrImaging::drawLight( c, 400, f1, f2, f3, f4 ) );
+            case Properties::Thing_Light_Blur: {
+                QColor c =  QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Color).toUInt());
+                float f1 = item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start).toFloat();
+                float f2 = item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toFloat();
+                float f3 = item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity).toFloat();
+                float f4 = item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Blur).toFloat();
+                item->setPixmap( DrImaging::drawLight(c, 400, f1, f2, f3, f4) );
                 item->setAssetWidth(  item->pixmap().width() );
                 item->setAssetHeight( item->pixmap().height() );
                 break;
+            }
+
+            case Properties::Thing_Water_Color: {
+                QColor c =  QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Color).toUInt());
+                item->setPixmap( DrImaging::drawWater(c) );
+                item->setAssetWidth(  item->pixmap().width() );
+                item->setAssetHeight( item->pixmap().height() );
+                break;
+            }
 
             case Properties::Thing_Text_User_Text:
                 text = item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();

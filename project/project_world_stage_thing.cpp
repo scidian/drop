@@ -66,6 +66,12 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentTransform(400, 400, x, -y, DrThingType::Light);
             addComponentLayering(z);
             break;
+
+        case DrThingType::Water:
+            addComponentSettingsWater();
+            addComponentTransform(400, 400, x, -y, DrThingType::Water);
+            addComponentLayering(z);
+            break;
     }
 
 }
@@ -142,6 +148,21 @@ void DrThing::addComponentSettingsLight(QColor color) {
                            "Pulse Amount", "This value will cause light to pulse back and forth +/- the Pulse Amount from the lights Intensity.");
     addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse_Speed, Property_Type::Double, 1.0,
                            "Pulse Speed", "How fast the light Pulses over time. This value is the total change desired over the course of one second.");
+}
+
+void DrThing::addComponentSettingsWater() {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Water",
+                           "Effect Name", "Name of the current Effect.", false, false);
+
+    addComponent(Components::Thing_Settings_Water, "Water Settings", "Settings for current Water reflection.", Component_Colors::Blue_Drop, true);
+    getComponent(Components::Thing_Settings_Water)->setIcon(Component_Icons::Water);
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Direction, Property_Type::List, 0,
+                           "Direction", "Direction this water should reflect from, usually Up. ");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Color, Property_Type::Color, QColor(96, 96, 255).rgba(),
+                           "Water Color", "Color tint for this Water.");
+
 }
 
 void DrThing::addComponentSettingsText(QString new_name) {

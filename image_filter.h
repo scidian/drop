@@ -40,6 +40,7 @@ namespace DrImaging {
     QImage  applyPixelation( const QImage&  from_image,  QPointF data_pair );
 
     QPixmap drawLight(QColor color, int diameter, float cone_start, float cone_end, float intensity, float blur);
+    QPixmap drawWater(QColor color);
 
 }
 

@@ -28,6 +28,7 @@ namespace Component_Colors {
     const QColor Red_Tuscan     { QColor(104,  71,  86, 255) };
     const QColor Purple_Pastel  { QColor(176, 161, 186, 255) };
     const QColor Blue_Yonder    { QColor(165, 181, 191, 255) };
+    const QColor Blue_Drop      { QColor(  0, 180, 175, 255) };
 
     const QColor Green_SeaGrass { QColor(154, 225, 157, 255) };
 
@@ -50,6 +51,7 @@ namespace Component_Icons {
     const QString Character     { QString(":/assets/inspector_icons/comp_character.png") };
     const QString Object        { QString(":/assets/inspector_icons/comp_object.png") };
     const QString Light         { QString(":/assets/inspector_icons/comp_light.png") };
+    const QString Water         { QString(":/assets/inspector_icons/comp_water.png") };
     const QString Font          { QString(":/assets/inspector_icons/comp_font.png") };
     const QString Camera        { QString(":/assets/inspector_icons/comp_camera.png") };
 

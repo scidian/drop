@@ -60,6 +60,7 @@ public:
     void addComponentSettingsObject(QString new_name, bool should_collide = true);
     void addComponentSettingsLight(QColor color);
     void addComponentSettingsText(QString new_name);
+    void addComponentSettingsWater();
     void addComponentSettingsCamera(QString new_name);
 
     void addComponentAppearance();

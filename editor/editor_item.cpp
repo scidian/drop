@@ -38,8 +38,6 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
     m_temp_only  = is_temp_only;
 
     // Load image from asset
-    QString text;
-
     switch (m_asset->getAssetType()) {
         case DrAssetType::Object:
         case DrAssetType::Character:
@@ -50,7 +48,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
             break;
         case DrAssetType::Effect:
             switch (m_editor_relay->currentProject()->getDrEffect( m_asset->getSourceKey() )->getEffectType()) {
-                case DrEffectType::Light:
+                case DrEffectType::Light: {
                     uint light_color =  m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Color)->getValue().toUInt();
                     float cone_start =  m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start)->getValue().toFloat();
                     float cone_end =    m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End)->getValue().toFloat();
@@ -58,18 +56,25 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
                     float blur =        m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Blur)->getValue().toFloat();
                     m_pixmap = DrImaging::drawLight( QColor::fromRgba( light_color ), 400, cone_start, cone_end, intensity, blur);
                     break;
+                }
+                case DrEffectType::Water: {
+                    uint water_color =  m_thing->getComponentProperty(Components::Thing_Settings_Water, Properties::Thing_Water_Color)->getValue().toUInt();
+                    m_pixmap = DrImaging::drawWater( QColor::fromRgba( water_color ));
+                    break;
+                }
             }
             setPixmap(m_pixmap);
             m_asset_width =  m_pixmap.width();
             m_asset_height = m_pixmap.height();
             break;
-        case DrAssetType::Text:
-            text =     m_thing->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
+        case DrAssetType::Text: {
+            QString text = m_thing->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
             m_pixmap = m_editor_relay->currentProject()->getDrFont( m_asset->getSourceKey() )->createText( text );
             setPixmap(m_pixmap);
             m_asset_width =  m_pixmap.width();
             m_asset_height = m_pixmap.height();
             break;
+        }
     }
 
 

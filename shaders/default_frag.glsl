@@ -176,9 +176,9 @@ void main( void ) {
         // Water Reflection
         float y_start = 0.4;                            // 0.0 is bottom, 1.0 is top
 
-        float water_opacity = 1.00;                     // 0.85 is nice
+        float water_opacity = 0.85;                     // 0.85 is nice
         vec3  overlay_color = vec3(0.3, 0.3, 1.0);      // light blue
-        float color_percent = 0.10;                     // 0.25 is nice
+        float color_percent = 0.25;                     // 0.25 is nice
 
         vec2 uv = coords;
         if (uv.y > y_start) {
@@ -186,13 +186,13 @@ void main( void ) {
 
         } else {
 
-            float wave_length =    200.0;       // 50 is good for big waves, 200 is good for small ripples      0.0 to 400.0
+            float wave_length =  200.0;         // 50 is good for big waves, 200 is good for small ripples      0.0 to 400.0
             float wave_speed =     5.0;         //  1 is good for big waves,   5 is good for small ripples      0.0 to  10.0
 
             float wave_min_width = 0.25;        // Minimum wave starting width          0.0 to  1.0     good start =  0.25
-            float wave_stretch =   3.0;         // Stretches away from the start        0.0 to 10.0     good start =  3.0
+            float wave_stretch =   3.00;        // Stretches away from the start        0.0 to 10.0     good start =  3.00
 
-            float bob_speed =  2.00;            // Between 0.0 and 5.0                                  good = 2.0
+            float bob_speed =  2.00;            // Between 0.0 and 5.0                                  good = 2.00
             float bob_amount = 0.01;            // Between 0.0 and 0.05                                 good = 0.01
 
 

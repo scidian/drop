@@ -275,6 +275,15 @@ QPixmap drawLight(QColor color, int diameter, float cone_start, float cone_end, 
 }
 
 
+//####################################################################################
+//##        Draws a DrEngineWater as a Pixmap
+//####################################################################################
+QPixmap drawWater(QColor color) {
+    QPixmap water(400, 400);
+    water.fill(color);
+    return water;
+}
+
 
 
 }   // End DrImaging Namespace

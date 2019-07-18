@@ -121,5 +121,7 @@
         <file>assets/inspector_icons/comp_effects.png</file>
         <file>assets/tree_icons/tree_effects.png</file>
         <file>assets/inspector_icons/comp_light.png</file>
+        <file>assets/tree_icons/tree_water.png</file>
+        <file>assets/inspector_icons/comp_water.png</file>
     </qresource>
 </RCC>

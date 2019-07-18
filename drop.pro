@@ -101,7 +101,7 @@ SOURCES += \
     engine/engine_thing_light.cpp \
     engine/engine_thing_object.cpp \
     engine/engine_thing_object_create.cpp \
-    engine/engine_thing_reflect.cpp \
+    engine/engine_thing_water.cpp \
     engine/engine_world.cpp \
     engine/engine_world_build_player.cpp \
     engine/engine_world_build_world.cpp \
@@ -222,7 +222,7 @@ HEADERS += \
     engine/engine_thing.h \
     engine/engine_thing_light.h \
     engine/engine_thing_object.h \
-    engine/engine_thing_reflect.h \
+    engine/engine_thing_water.h \
     engine/engine_world.h \
     engine/form_engine.h \
     enums.h \

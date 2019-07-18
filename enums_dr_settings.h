@@ -71,6 +71,7 @@ enum class Components {
     Thing_Settings_Character,
     Thing_Settings_Object,
     Thing_Settings_Light,
+    Thing_Settings_Water,
     Thing_Settings_Text,
     Thing_Settings_Camera,
 
@@ -189,7 +190,7 @@ enum class Properties {
     Thing_Object_Collide,           //bool
     Thing_Object_Damage,            //list (none, player, enemy, all)
 
-    // Text Settings
+    // Light Settings
     Thing_Light_Type,               //list (Opaque, Glow)
     Thing_Light_Color,              //color
     Thing_Light_Cone_Start,         //filter angle      0 to 360
@@ -200,6 +201,10 @@ enum class Properties {
     Thing_Light_Shadows,            //0 to 100
     Thing_Light_Pulse,              //double
     Thing_Light_Pulse_Speed,        //double
+
+    // Water Settings
+    Thing_Water_Direction,          //list (Up, Down, Left, Right)
+    Thing_Water_Color,              //color
 
     // Text Settings
     Thing_Text_User_Text,           //string
