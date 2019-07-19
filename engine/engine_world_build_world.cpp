@@ -47,17 +47,19 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
     cpSpaceSetDamping(m_space, m_damping);
 
 
+
     // ***** Custom Wildcard beginFunc CollisionHandlers: Damage / Health    
     QVector<Collision_Type> collide_types { Collision_Type::Damage_None,
                                             Collision_Type::Damage_Player,
                                             Collision_Type::Damage_Enemy,
                                             Collision_Type::Damage_All };
-    for (Collision_Type c : collide_types) {
-        cpCollisionHandler *custom_collision_handler = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(c));
+    for (Collision_Type collision : collide_types) {
+        cpCollisionHandler *custom_collision_handler = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(collision));
         custom_collision_handler->beginFunc =    BeginFuncWildcard;
         custom_collision_handler->preSolveFunc = PreSolveFuncWildcard;
         custom_collision_handler->separateFunc = SeperateFuncWildcard;
     }
+
 
 
     // ***** Build desired demo Space
@@ -108,6 +110,29 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
 
         // ***** Load Current Stage to origin position
         loadStageToWorld(stage, 0, 0);
+
+
+
+        // ********** Bouyancy Test
+        cpBody *staticBody = cpSpaceGetStaticBody(m_space);
+        cpShape *shape;
+
+        {
+            // Add the edges of the bucket
+            cpBB bb = cpBBNew(-2000, -1000, 0, 0);
+
+            // Add the sensor for the water.
+            shape = cpSpaceAddShape(m_space, cpBoxShapeNew2(staticBody, bb, 0.0));
+            cpShapeSetSensor(shape, cpTrue);
+            cpShapeSetCollisionType(shape, 232323);     // 232323 is temp number for water
+        }
+
+        cpCollisionHandler *handler = cpSpaceAddCollisionHandler(m_space, 232323, 0);
+        handler->preSolveFunc = static_cast<cpCollisionPreSolveFunc>(WaterPreSolve);
+
+
+
+
 
 
     } else if (new_space_type == Demo_Space::Lines1) {

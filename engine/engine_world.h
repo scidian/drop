@@ -41,6 +41,9 @@ extern void     SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *);        
 extern void     PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);            // defined in engine_world_update_player.cpp
 extern void     KinematicUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);         // defined in engine_world_update_object.cpp
 
+extern cpBool   WaterPreSolve(cpArbiter *arb, cpSpace *space, void *);
+
+
 //####################################################################################
 //##    DrEngineWorld
 //##        Holds one Physics World for use in Engine

@@ -43,6 +43,7 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b);
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
+    if (!object_a || !object_b) return cpTrue;
 
     // Temp cancel gravity on another object if colliding and should cancel it, also slow down object on contact
     if ( qFuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false ) {
@@ -69,6 +70,7 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b);
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
+    if (!object_a || !object_b) return cpTrue;
 
     if ( object_a->isAlive() && object_a->isDying()) return cpTrue;                     // Don't deal damage while dying
     if (!object_a->isAlive()) return cpFalse;                                           // If object a is dead, cancel collision
@@ -114,7 +116,8 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
 extern void SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b);
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
-    ///DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
+    DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
+    if (!object_a || !object_b) return;
 
     // Stop canceling gravity when seperates
     object_a->setTempGravityMultiplier( 1.0 );
@@ -141,6 +144,111 @@ static void BodyAddRecoil(cpSpace *, cpArbiter *arb, DrEngineObject *object) {
     cpBodySetVelocity( object->body, velocity );                // Set body to new velocity
 }
 
+
+
+
+
+
+//####################################################################################
+//##    Bouyancy Test
+//####################################################################################
+#define FLUID_DENSITY 0.004
+#define FLUID_DRAG 2.0
+
+// Modified from chipmunk_private.h
+static inline cpFloat k_scalar_body(cpBody *body, cpVect point, cpVect n) {
+    cpFloat rcn =    cpvcross(cpvsub(point, cpBodyGetPosition(body)), n);
+    cpFloat mass =   cpBodyGetMass(body);
+    cpFloat moment = cpBodyGetMoment(body);
+    return 1.0/mass + rcn*rcn/moment;
+}
+
+extern cpBool WaterPreSolve(cpArbiter *arb, cpSpace *space, void *) {
+    // Get water and collider shape
+    CP_ARBITER_GET_SHAPES(arb, water, collider);
+
+    // Get the top of the water sensor bounding box to use as the water level
+    cpFloat level = cpShapeGetBB(water).t;
+
+    // Get DrEngineObject from shape user data, check body type and shape type
+    DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(collider));
+    if (object_b->body_type != Body_Type::Dynamic) return cpTrue;                                   // Only process dynamic bodies
+    if (object_b->shape_type[collider] == Shape_Type::Segment) return cpTrue;                       // Don't precess segments
+
+    // If shape is a circle, create a temporary polygon circle shape
+    if (object_b->shape_type[collider] == Shape_Type::Circle) {
+        cpVect  offset = cpCircleShapeGetOffset(collider);
+        QVector<QPointF> points = object_b->createEllipseFromCircle(QPointF(offset.x, offset.y), cpCircleShapeGetRadius(collider), 12);
+        int old_point_count = static_cast<int>(points.size());
+
+        // Copy polygon Vertices into a scaled cpVect array
+        std::vector<cpVect> verts;
+        verts.clear();
+        verts.resize( static_cast<ulong>(old_point_count) );
+        for (int i = 0; i < old_point_count; i++)
+            verts[static_cast<ulong>(i)] = cpv( points[i].x() * static_cast<double>(object_b->getScaleX()), points[i].y() * static_cast<double>(object_b->getScaleY()));
+        collider = cpPolyShapeNew( object_b->body, old_point_count, verts.data(), cpTransformIdentity, c_extra_radius);
+    }
+
+    // Clip the polygon against the water level
+    std::vector<cpVect> clipped;
+    clipped.clear();
+    int  count = cpPolyShapeGetCount(collider);
+    for (int i = 0, j = count - 1; i < count; j = i, i++) {
+        cpVect a = cpBodyLocalToWorld(object_b->body, cpPolyShapeGetVert(collider, j));
+        cpVect b = cpBodyLocalToWorld(object_b->body, cpPolyShapeGetVert(collider, i));
+        if (a.y < level) clipped.push_back(a);
+
+        cpFloat a_level = a.y - level;
+        cpFloat b_level = b.y - level;
+        if (a_level * b_level < 0.0) {
+            cpFloat t = cpfabs(a_level) / (cpfabs(a_level) + cpfabs(b_level));
+            clipped.push_back(cpvlerp(a, b, t));
+        }
+    }
+
+    // Destroy temporary polygon circle shape
+    if (object_b->shape_type[collider] == Shape_Type::Circle) cpShapeFree( collider );
+
+
+
+
+
+    // Calculate buoyancy from the clipped polygon area
+    cpFloat clipped_area =   cpAreaForPoly(static_cast<int>(clipped.size()), clipped.data(), 0.0);
+    cpFloat displaced_mass = clipped_area * FLUID_DENSITY;
+    cpVect  centroid =       cpCentroidForPoly(static_cast<int>(clipped.size()), clipped.data());
+    cpFloat dt = cpSpaceGetCurrentTimeStep(space);
+    cpVect  g =  cpSpaceGetGravity(space);
+
+    // Apply the buoyancy force as an impulse
+    cpVect impulse = cpvmult(g, -displaced_mass * dt);
+    if (isnan(impulse.x)) impulse.x = 0.0;
+    if (isnan(impulse.y)) impulse.y = 0.0;
+    cpBodyApplyImpulseAtWorldPoint(object_b->body, impulse, centroid);
+
+
+    // Apply linear damping for the fluid drag
+    cpVect  v_centroid = cpBodyGetVelocityAtWorldPoint(object_b->body, centroid);
+    cpFloat k =          k_scalar_body(object_b->body, centroid, cpvnormalize(v_centroid));
+    cpFloat damping =    clipped_area * FLUID_DRAG * FLUID_DENSITY;
+    cpFloat v_coef =     cpfexp(-damping * dt * k);                                     // linear drag
+    impulse = cpvmult(cpvsub(cpvmult(v_centroid, v_coef), v_centroid), 1.0 / k);
+    if (isnan(impulse.x)) impulse.x = 0.0;
+    if (isnan(impulse.y)) impulse.y = 0.0;
+    cpBodyApplyImpulseAtWorldPoint(object_b->body, impulse, centroid);
+
+
+    // Apply angular damping for the fluid drag
+    cpVect  cog =       cpBodyLocalToWorld(object_b->body, cpBodyGetCenterOfGravity(object_b->body));
+    cpFloat w_damping = cpMomentForPoly(FLUID_DRAG * FLUID_DENSITY * clipped_area, static_cast<int>(clipped.size()), clipped.data(), cpvneg(cog), 0.01);
+    cpFloat moment = cpBodyGetMoment(object_b->body);
+    cpFloat angular_velocity = cpBodyGetAngularVelocity(object_b->body) * cpfexp(-w_damping*dt / moment);
+    if (isnan(angular_velocity)) angular_velocity = 0.0;
+    cpBodySetAngularVelocity(object_b->body, angular_velocity);
+
+    return cpTrue;
+}
 
 
 

@@ -17,9 +17,9 @@
 //####################################################################################
 //##    Creates a list of Vertices that represent a scaled circle
 //####################################################################################
-static QVector<QPointF> createEllipseFromCircle(const QPointF &center, const double &radius) {
+QVector<QPointF> DrEngineObject::createEllipseFromCircle(const QPointF &center, const double &radius, const int &point_count) {
     QVector<QPointF> ellipse;
-    int count = 18;
+    int count = point_count;
     for (int i = 0; i < count; i++) {
         QTransform t = QTransform().translate(center.x(), center.y()).rotate(i * 360.0 / count);
         QPointF point = t.map(QPointF( 0, radius));
@@ -46,7 +46,7 @@ void DrEngineObject::addShapeBoxFromTexture(long texture_number) {
 void DrEngineObject::addShapeCircle(double circle_radius, QPointF shape_offset) {
     // Check if Circle, but not perfect square scale, if so, create with a polygon ellipse instead of a circle
     if (qFuzzyCompare(this->getScaleX(), this->getScaleY()) == false) {
-        QVector<QPointF> points = createEllipseFromCircle(shape_offset, circle_radius);
+        QVector<QPointF> points = createEllipseFromCircle(shape_offset, circle_radius, 18);
         addShapePolygon(points);
     } else {
         double  radius = circle_radius * static_cast<double>(this->getScaleX());

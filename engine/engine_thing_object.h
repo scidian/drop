@@ -180,14 +180,14 @@ public:
     virtual bool        update(double time_passed, double time_warp, QRectF &area) override;
 
     // Shape Creation
-    void    addShapeBox(double width, double height);
-    void    addShapeBoxFromTexture(long texture_number);
-    void    addShapeCircle(double circle_radius, QPointF shape_offset);
-    void    addShapeCircleFromTexture(long texture_number);
-    void    addShapePolygon(QVector<QPointF> &points);
-    void    addShapeSegment(QPointF p1, QPointF p2, double padding = 2.0);
-    void    applyShapeSettings(cpShape *shape, double area, Shape_Type shape_type);
-
+    void                addShapeBox(double width, double height);
+    void                addShapeBoxFromTexture(long texture_number);
+    void                addShapeCircle(double circle_radius, QPointF shape_offset);
+    void                addShapeCircleFromTexture(long texture_number);
+    void                addShapePolygon(QVector<QPointF> &points);
+    void                addShapeSegment(QPointF p1, QPointF p2, double padding = 2.0);
+    void                applyShapeSettings(cpShape *shape, double area, Shape_Type shape_type);
+    QVector<QPointF>    createEllipseFromCircle(const QPointF &center, const double &radius, const int &point_count);
 
 
 
