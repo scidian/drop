@@ -160,7 +160,7 @@ static inline cpFloat k_scalar_body(cpBody *body, cpVect point, cpVect n) {
     cpFloat rcn =    cpvcross(cpvsub(point, cpBodyGetPosition(body)), n);
     cpFloat mass =   cpBodyGetMass(body);
     cpFloat moment = cpBodyGetMoment(body);
-    return 1.0/mass + rcn*rcn/moment;
+    return (1.0/mass + rcn*rcn/moment);
 }
 
 extern cpBool WaterPreSolve(cpArbiter *arb, cpSpace *space, void *) {

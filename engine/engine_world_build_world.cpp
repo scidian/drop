@@ -115,22 +115,19 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
 
         // ********** Bouyancy Test
         cpBody *staticBody = cpSpaceGetStaticBody(m_space);
-        cpShape *shape;
 
-        {
-            // Add the edges of the bucket
-            cpBB bb = cpBBNew(-2000, -1000, 0, 0);
-
-            // Add the sensor for the water.
-            shape = cpSpaceAddShape(m_space, cpBoxShapeNew2(staticBody, bb, 0.0));
-            cpShapeSetSensor(shape, cpTrue);
-            cpShapeSetCollisionType(shape, 232323);     // 232323 is temp number for water
-        }
+        // Add the sensor for the water
+        cpBB bb = cpBBNew(-2000, -1000, 0, 0);
+        cpShape *shape = cpSpaceAddShape(m_space, cpBoxShapeNew2(staticBody, bb, 0.0));
+        cpShapeSetSensor(shape, cpTrue);
+        cpShapeSetCollisionType(shape, 232323);     // 232323 is temp number for water
 
         cpCollisionHandler *handler = cpSpaceAddCollisionHandler(m_space, 232323, 0);
         handler->preSolveFunc = static_cast<cpCollisionPreSolveFunc>(WaterPreSolve);
-
-
+        for (Collision_Type collision : collide_types) {
+            cpCollisionHandler *handler = cpSpaceAddCollisionHandler(m_space, 232323, static_cast<cpCollisionType>(collision));
+            handler->preSolveFunc = static_cast<cpCollisionPreSolveFunc>(WaterPreSolve);
+        }
 
 
 
