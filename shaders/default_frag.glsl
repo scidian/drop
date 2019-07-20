@@ -154,6 +154,15 @@ vec3 cartoonHsvToRgb(float h, float s, float v ) {
 }
 
 
+// Random usued for frosted glass
+float rand(vec2 co) {
+    vec2 v1 = vec2(92.0, 80.0);
+    vec2 v2 = vec2(41.0, 62.0);
+    float rnd_scale = 5.1;
+    return fract(sin(dot(co.xy ,v1)) + cos(dot(co.xy ,v2)) * rnd_scale);
+}
+
+
 //####################################################################################
 //##        Main Shader Function
 //####################################################################################
@@ -161,18 +170,67 @@ void main( void ) {
 
     // Grab coordinates into a vec2 that is not read-only
     highp vec2 coords = coordinates.st;
-
+    float time = u_time;
 
     // ***** WAVY
-    if (u_wavy) {
-        float time = u_time;
+    if (u_wavy) {    
 //        time = 100.0;                           // !!! Disables imported time (turns off animation)
 //        vec2  tc =  coords.xy;
 //        vec2  p =   -1.0 + 2.0 * tc;
 //        float len = length(p);
 //        coords = tc + (p / len) * cos(len*12.0 - time*4.0) * 0.03;
+    }
 
 
+    // ***** Frosted Glass
+    if (u_wavy) {
+        float rnd_factor = 0.05;
+        float y_start = 0.4;                            // 0.0 is bottom, 1.0 is top
+
+
+        vec2 uv = coords;
+        vec3 tc = vec3(1.0, 0.0, 0.0);
+        if (uv.y < y_start) {
+
+            vec2 rnd = vec2(rand(uv.xy), rand(uv.yx));
+
+            tc = texture2D(u_texture, uv + rnd * rnd_factor).rgb;
+
+        } else if (uv.y >= y_start) {
+            tc = texture2D(u_texture, uv).rgb;
+        }
+
+        gl_FragColor = vec4(tc, 1.0);
+        return;
+    }
+
+
+    // ***** 2D Shockwave
+    if (u_wavy) {
+        vec2 center = vec2(0.5, 0.5);
+        vec3 shock_params = vec3(10.0, 0.8, 0.1);
+
+        time = mod(time, 2.0);
+
+        vec2 uv = coords;
+        vec2 tex_coord = coords;
+        float distance = distance(uv, center);
+        if ( (distance <= (time + shock_params.z)) && (distance >= (time - shock_params.z)) ) {
+            float diff = (distance - time);
+            float powDiff = 1.0 - pow(abs(diff*shock_params.x), shock_params.y);
+            float diffTime = diff  * powDiff;
+            vec2 diffUV = normalize(uv - center);
+            tex_coord = uv + (diffUV * diffTime);
+        }
+        gl_FragColor = texture2D(u_texture, tex_coord);
+        return;
+    }
+
+
+
+
+    // ***** Water
+    if (u_wavy) {
         // Water Reflection
         float y_start = 0.4;                            // 0.0 is bottom, 1.0 is top
 
