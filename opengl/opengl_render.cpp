@@ -131,11 +131,27 @@ void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height)
 //####################################################################################
 void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) {
 
+    if (!m_default_shader.bind()) return;
+
     // Bind offscreen frame buffer object as a texture
+    ///glEnable(GL_TEXTURE_2D);
+    ///glBindTexture(GL_TEXTURE_2D, fbo->texture());
+
+    // Bind offscreen frame buffer objects as textures
     glEnable(GL_TEXTURE_2D);
+    GLint texture =      glGetUniformLocation(m_default_shader.programId(), "u_texture");
+    GLint water_normal = glGetUniformLocation(m_default_shader.programId(), "u_texture_displacement");
+    glUseProgram(m_default_shader.programId());
+    glUniform1i(texture,      0);
+    glUniform1i(water_normal, 1);
+
+    // Bind textures - !!!!! #NOTE: Must be called in descending order and end on 0
+    glActiveTexture(GL_TEXTURE1);                           // Texture unit 1
+    glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Water_Normal_1)->texture()->textureId());
+    glActiveTexture(GL_TEXTURE0);                           // Texture unit 0
     glBindTexture(GL_TEXTURE_2D, fbo->texture());
 
-    if (!m_default_shader.bind()) return;
+
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
     float left =   0.0f - (fbo->width()  / 2.0f);

@@ -38,13 +38,14 @@ void DrOpenGL::initializeGL() {
     g_max_light_fbo_size =    (g_max_texture_size < c_desired_light_fbo_size) ?    g_max_texture_size : c_desired_light_fbo_size;
 
     // Load test resources
-    m_engine->addTexture(Asset_Textures::Numbers,   ":/assets/engine/numbers.png");             // -1
-    m_engine->addTexture(Asset_Textures::Ball,      ":/assets/test_images/ball_1.png");         // -4
-    m_engine->addTexture(Asset_Textures::Block,     ":/assets/test_images/metal_block.png");    // -5
-    m_engine->addTexture(Asset_Textures::Plant,     ":/assets/test_images/moon_plant_6.png");   // -6
-    m_engine->addTexture(Asset_Textures::Rover,     ":/assets/test_images/rover_body.png");     // -7
-    m_engine->addTexture(Asset_Textures::Wheel,     ":/assets/test_images/rover_wheel.png");    // -8
-    m_engine->addTexture(Asset_Textures::Spare,     ":/assets/test_images/spare_wheel.png");    // -9
+    m_engine->addTexture(Asset_Textures::Numbers,           ":/assets/engine/numbers.png");
+    m_engine->addTexture(Asset_Textures::Water_Normal_1,    ":/assets/textures/water_normal.jpg");
+    m_engine->addTexture(Asset_Textures::Ball,              ":/assets/test_images/ball_1.png");
+    m_engine->addTexture(Asset_Textures::Block,             ":/assets/test_images/metal_block.png");
+    m_engine->addTexture(Asset_Textures::Plant,             ":/assets/test_images/moon_plant_6.png");
+    m_engine->addTexture(Asset_Textures::Rover,             ":/assets/test_images/rover_body.png");
+    m_engine->addTexture(Asset_Textures::Wheel,             ":/assets/test_images/rover_wheel.png");
+    m_engine->addTexture(Asset_Textures::Spare,             ":/assets/test_images/spare_wheel.png");
 
 
     // ***** Load resources from project

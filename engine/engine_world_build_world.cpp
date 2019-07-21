@@ -117,7 +117,7 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
         cpBody *staticBody = cpSpaceGetStaticBody(m_space);
 
         // Add the sensor for the water
-        cpBB bb = cpBBNew(-2000, -1000, 0, 0);
+        cpBB bb = cpBBNew(-2000, -1000, 0, -10);
         cpShape *shape = cpSpaceAddShape(m_space, cpBoxShapeNew2(staticBody, bb, 0.0));
         cpShapeSetSensor(shape, cpTrue);
         cpShapeSetCollisionType(shape, 232323);     // 232323 is temp number for water

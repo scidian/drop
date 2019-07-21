@@ -13,6 +13,7 @@ varying highp vec2  coordinates;                    // Texture Coodinates
 
 // ***** Input from Engine
 uniform sampler2D   u_texture;                      // Texture
+uniform sampler2D   u_texture_displacement;         // Water Texture
 uniform lowp  float u_alpha;                        // Opacity
 uniform lowp  vec3  u_tint;// = vec3(0, 0, 0);      // Tint, adds rgb to final output
 
@@ -168,7 +169,7 @@ float rand(vec2 co) {
 //####################################################################################
 void main( void ) {
 
-    // Grab coordinates into a vec2 that is not read-only
+    // Move coordinates into a vec2 that is not read-only
     highp vec2 coords = coordinates.st;
     float time = u_time;
 
@@ -182,48 +183,25 @@ void main( void ) {
     }
 
 
-    // ***** Frosted Glass
-    if (u_wavy) {
-        float rnd_factor = 0.05;
-        float y_start = 0.4;                            // 0.0 is bottom, 1.0 is top
-
-
-        vec2 uv = coords;
-        vec3 tc = vec3(1.0, 0.0, 0.0);
-        if (uv.y < y_start) {
-
-            vec2 rnd = vec2(rand(uv.xy), rand(uv.yx));
-
-            tc = texture2D(u_texture, uv + rnd * rnd_factor).rgb;
-
-        } else if (uv.y >= y_start) {
-            tc = texture2D(u_texture, uv).rgb;
-        }
-
-        gl_FragColor = vec4(tc, 1.0);
-        return;
-    }
-
-
     // ***** 2D Shockwave
     if (u_wavy) {
-        vec2 center = vec2(0.5, 0.5);
-        vec3 shock_params = vec3(10.0, 0.8, 0.1);
+//        vec2 center = vec2(0.5, 0.5);
+//        vec3 shock_params = vec3(10.0, 0.8, 0.1);
 
-        time = mod(time, 2.0);
+//        time = mod(time, 2.0);
 
-        vec2 uv = coords;
-        vec2 tex_coord = coords;
-        float distance = distance(uv, center);
-        if ( (distance <= (time + shock_params.z)) && (distance >= (time - shock_params.z)) ) {
-            float diff = (distance - time);
-            float powDiff = 1.0 - pow(abs(diff*shock_params.x), shock_params.y);
-            float diffTime = diff  * powDiff;
-            vec2 diffUV = normalize(uv - center);
-            tex_coord = uv + (diffUV * diffTime);
-        }
-        gl_FragColor = texture2D(u_texture, tex_coord);
-        return;
+//        vec2 uv = coords;
+//        vec2 tex_coord = coords;
+//        float distance = distance(uv, center);
+//        if ( (distance <= (time + shock_params.z)) && (distance >= (time - shock_params.z)) ) {
+//            float diff = (distance - time);
+//            float powDiff = 1.0 - pow(abs(diff*shock_params.x), shock_params.y);
+//            float diffTime = diff  * powDiff;
+//            vec2 diffUV = normalize(uv - center);
+//            tex_coord = uv + (diffUV * diffTime);
+//        }
+//        gl_FragColor = texture2D(u_texture, tex_coord);
+//        return;
     }
 
 
@@ -234,32 +212,82 @@ void main( void ) {
         // Water Reflection
         float y_start = 0.4;                            // 0.0 is bottom, 1.0 is top
 
-        float water_opacity = 0.85;                     // 0.85 is nice
+        float water_opacity = 0.80;                     // 0.85 is nice
         vec3  overlay_color = vec3(0.3, 0.3, 1.0);      // light blue
         float color_percent = 0.25;                     // 0.25 is nice
 
         vec2 uv = coords;
+        vec4 water;
         if (uv.y > y_start) {
             gl_FragColor = texture2D(u_texture, vec2(uv.x, uv.y));
 
         } else {
 
-            float wave_length =  200.0;         // 50 is good for big waves, 200 is good for small ripples      0.0 to 400.0
+            float wave_length =  300.0;         // 50 is good for big waves, 200 is good for small ripples      0.0 to 400.0
             float wave_speed =     5.0;         //  1 is good for big waves,   5 is good for small ripples      0.0 to  10.0
 
-            float wave_min_width = 0.25;        // Minimum wave starting width          0.0 to  1.0     good start =  0.25
-            float wave_stretch =   3.00;        // Stretches away from the start        0.0 to 10.0     good start =  3.00
+            float wave_min_width_x = 0.05;      // Minimum wave starting width          0.0 to  1.0     good start =  0.25
+            float wave_stretch_x =   0.50;      // Stretches away from the start        0.0 to 10.0     good start =  3.00
+
+            float wave_min_width_y = 0.50;      // Minimum wave starting width          0.0 to  1.0     good start =  0.25
+            float wave_stretch_y =   2.00;      // Stretches away from the start        0.0 to 10.0     good start =  3.00
+
+            float wave_height =   0.50;         // Wave Height                          good =  0.50
+            float peak_distance = 60.0;         // Lower is further apart               good = 60.0
 
             float bob_speed =  2.00;            // Between 0.0 and 5.0                                  good = 2.00
-            float bob_amount = 0.01;            // Between 0.0 and 0.05                                 good = 0.01
+            float bob_amount = 0.02;            // Between 0.0 and 0.05                                 good = 0.01
 
 
-            float xoffset = 0.005 * cos(time*wave_speed + wave_length * uv.y) * (wave_min_width + (y_start - uv.y) * wave_stretch);
-            float yoffset = bob_amount * cos(time*bob_speed + uv.y) * ((y_start - uv.y) / y_start);
+            // Simple Reflection
+            //color = texture2D(u_texture, vec2(uv.x, ((2.0 * y_start) - uv.y)));
 
-            vec4 color = texture2D(u_texture, vec2(uv.x + xoffset, ((2.0 * y_start) - uv.y + yoffset)));
-                 color = vec4(mix(color.rgb, overlay_color, color_percent), 1.0);
-            gl_FragColor = mix(texture2D(u_texture, coords.st), color, water_opacity);
+
+            // Ripple + Refraction water
+            vec3  displacement = texture2D(u_texture_displacement, vec2(mod(coords.x/2.0 + mod(time/50.0, 1.0), 1.0), coords.y) ).rgb;
+            float refract_x = abs(displacement.x - displacement.y)*0.01;
+            float refract_y = abs(displacement.y - displacement.x)*0.01;
+
+            float xoffset = cos(time*wave_speed + wave_length * uv.y) * (wave_min_width_x + (y_start - uv.y) * wave_stretch_x) * 0.005;
+
+
+            float bob =     sin(time*bob_speed + uv.x);
+            //float yoffset = bob_amount * bob * ((y_start - uv.y) / y_start);
+            //float yoffset = cos(time*wave_speed + wave_length * uv.x) * (wave_min_width_y + (y_start - uv.y) * wave_stretch_y) * 0.05;
+            float yoffset = sin(coords.x*peak_distance + time) * (wave_height*0.01);
+
+            water = texture2D(u_texture, vec2(coords.x + refract_x + xoffset, (2.0 * y_start) - uv.y + refract_y + yoffset));
+
+
+
+
+
+            // If we are above offset, just pass pixel color through as it is above the top of the wave
+            vec4 original;
+            float y_top = y_start - ((refract_y + yoffset) + (0.01 * wave_height));
+
+            if (uv.y > y_top) {
+                original = texture2D(u_texture, vec2(coords.x, coords.y));
+                water =    original;
+
+            // Otherwise Refract Original Pixel Color, mix in Overlay Color
+            } else {
+                // Existing pixel color refracted through water
+                original = texture2D(u_texture, vec2(coords.x + refract_x, coords.y + refract_y));
+
+                // Mix in overlay_color
+                vec3 displace_color = texture2D(u_texture_displacement, vec2(mod(coords.x/2.0 + mod(time/50.0, 1.0), 1.0) + xoffset, coords.y + yoffset) ).rgb;
+                     overlay_color = mix(overlay_color, displace_color, 0.50);
+                water = vec4(mix(water.rgb, overlay_color, color_percent), 1.0);
+
+                // Make water foam lighter
+                if (uv.y > y_top - 0.003)
+                    water *= 1.0 + ((uv.y - (y_top - 0.003)) * 2000.0);
+
+            }
+
+
+            gl_FragColor = mix(original, water, water_opacity);
         }
         return;
 

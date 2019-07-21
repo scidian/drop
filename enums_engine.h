@@ -30,12 +30,15 @@ enum class Demo_Space {
 
 enum Asset_Textures {
     Numbers = -1,
-    Ball =  -4,
-    Block = -5,
-    Plant = -6,
-    Rover = -7,
-    Wheel = -8,
-    Spare = -9
+
+    Water_Normal_1 = -50,
+
+    Ball =  -100,
+    Block = -101,
+    Plant = -102,
+    Rover = -103,
+    Wheel = -104,
+    Spare = -105
 };
 
 
