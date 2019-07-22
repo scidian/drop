@@ -40,6 +40,7 @@ void DrOpenGL::initializeGL() {
     // Load test resources
     m_engine->addTexture(Asset_Textures::Numbers,           ":/assets/engine/numbers.png");
     m_engine->addTexture(Asset_Textures::Water_Normal_1,    ":/assets/textures/water_normal.jpg");
+    m_engine->addTexture(Asset_Textures::Water_Texture_1,   ":/assets/textures/water_texture.png");
     m_engine->addTexture(Asset_Textures::Ball,              ":/assets/test_images/ball_1.png");
     m_engine->addTexture(Asset_Textures::Block,             ":/assets/test_images/metal_block.png");
     m_engine->addTexture(Asset_Textures::Plant,             ":/assets/test_images/moon_plant_6.png");
@@ -75,6 +76,9 @@ void DrOpenGL::initializeGL() {
     u_default_texture =         m_default_shader.uniformLocation(   "u_texture" );
     u_default_alpha =           m_default_shader.uniformLocation(   "u_alpha" );
     u_default_tint =            m_default_shader.uniformLocation(   "u_tint" );
+    u_default_zoom =            m_default_shader.uniformLocation(   "u_zoom" );
+    u_default_pos =             m_default_shader.uniformLocation(   "u_position" );
+
     u_default_width =           m_default_shader.uniformLocation(   "u_width" );
     u_default_height =          m_default_shader.uniformLocation(   "u_height" );
     u_default_time =            m_default_shader.uniformLocation(   "u_time" );

@@ -104,6 +104,8 @@ private:
     int     u_default_pre;                                      // Premultiplied Alpha Texture?
     int     u_default_alpha;                                    // Opacity
     int     u_default_tint;                                     // Tint, red/green/blue (0 to 1, 0 to 1, 0 to 1)
+    int     u_default_zoom;                                     // Current zoom level (need for water shader)
+    int     u_default_pos;                                      // Current camera position (need for water shader)
 
     int     u_default_pixel_x;                                  // Pixelation X value
     int     u_default_pixel_y;                                  // Pixelation Y value

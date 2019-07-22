@@ -106,6 +106,8 @@ void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height)
     m_default_shader.setUniformValue( u_default_texture,    0 );                            // Use texture unit "0"
     m_default_shader.setUniformValue( u_default_alpha,      1.0f );
     m_default_shader.setUniformValue( u_default_tint,       0.0f, 0.0f, 0.0f );             // Add 0 to red, green, and blue
+    m_default_shader.setUniformValue( u_default_zoom,       m_scale );
+    m_default_shader.setUniformValue( u_default_pos,        m_engine->getCurrentWorld()->getCameraPos().x(), m_engine->getCurrentWorld()->getCameraPos().y(), 0.0f );
     m_default_shader.setUniformValue( u_default_width,      texture_width  );
     m_default_shader.setUniformValue( u_default_height,     texture_height );
     m_default_shader.setUniformValue( u_default_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
@@ -139,15 +141,23 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
 
     // Bind offscreen frame buffer objects as textures
     glEnable(GL_TEXTURE_2D);
-    GLint texture =      glGetUniformLocation(m_default_shader.programId(), "u_texture");
-    GLint water_normal = glGetUniformLocation(m_default_shader.programId(), "u_texture_displacement");
+    GLint texture =       glGetUniformLocation(m_default_shader.programId(), "u_texture");
+    GLint water_normal =  glGetUniformLocation(m_default_shader.programId(), "u_texture_displacement");
+    GLint water_texture = glGetUniformLocation(m_default_shader.programId(), "u_texture_water");
     glUseProgram(m_default_shader.programId());
-    glUniform1i(texture,      0);
-    glUniform1i(water_normal, 1);
+    glUniform1i(texture,       0);
+    glUniform1i(water_normal,  1);
+    glUniform1i(water_texture, 2);
 
     // Bind textures - !!!!! #NOTE: Must be called in descending order and end on 0
+    glActiveTexture(GL_TEXTURE2);                           // Texture unit 2
+    glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Water_Texture_1)->texture()->textureId());
+    m_engine->getTexture(Asset_Textures::Water_Texture_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::MirroredRepeat);
+
     glActiveTexture(GL_TEXTURE1);                           // Texture unit 1
     glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Water_Normal_1)->texture()->textureId());
+    m_engine->getTexture(Asset_Textures::Water_Normal_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::MirroredRepeat);
+
     glActiveTexture(GL_TEXTURE0);                           // Texture unit 0
     glBindTexture(GL_TEXTURE_2D, fbo->texture());
 

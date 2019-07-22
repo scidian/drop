@@ -13,9 +13,13 @@ varying highp vec2  coordinates;                    // Texture Coodinates
 
 // ***** Input from Engine
 uniform sampler2D   u_texture;                      // Texture
-uniform sampler2D   u_texture_displacement;         // Water Texture
+uniform sampler2D   u_texture_displacement;         // Refraction Texture
+uniform sampler2D   u_texture_water;                // Water Texture
+
 uniform lowp  float u_alpha;                        // Opacity
 uniform lowp  vec3  u_tint;// = vec3(0, 0, 0);      // Tint, adds rgb to final output
+uniform lowp  float u_zoom;                         // Current zoom level
+uniform lowp  vec3  u_position;                     // Current camera position
 
 uniform highp float u_width;                        // Texture Width
 uniform highp float u_height;                       // Texture Height
@@ -216,10 +220,9 @@ void main( void ) {
         vec3  overlay_color = vec3(0.3, 0.3, 1.0);      // light blue
         float color_percent = 0.25;                     // 0.25 is nice
 
-        vec2 uv = coords;
         vec4 water;
-        if (uv.y > y_start) {
-            gl_FragColor = texture2D(u_texture, vec2(uv.x, uv.y));
+        if (coords.y > y_start) {
+            gl_FragColor = texture2D(u_texture, coords.xy);
 
         } else {
 
@@ -229,34 +232,41 @@ void main( void ) {
             float wave_min_width_x = 0.05;      // Minimum wave starting width          0.0 to  1.0     good start =  0.25
             float wave_stretch_x =   0.50;      // Stretches away from the start        0.0 to 10.0     good start =  3.00
 
-            float wave_min_width_y = 0.50;      // Minimum wave starting width          0.0 to  1.0     good start =  0.25
-            float wave_stretch_y =   2.00;      // Stretches away from the start        0.0 to 10.0     good start =  3.00
-
-            float wave_height =   0.50;         // Wave Height                          good =  0.50
+            float wave_height =   0.35;         // Wave Height                          good =  0.35
             float peak_distance = 60.0;         // Lower is further apart               good = 60.0
 
-            float bob_speed =  2.00;            // Between 0.0 and 5.0                                  good = 2.00
-            float bob_amount = 0.02;            // Between 0.0 and 0.05                                 good = 0.01
+            float bob_speed =  2.0;             // Between 0.0 and 5.0                                  good = 2.00
+            float bob_amount = 2.0;             // Between 0.0 and 50.0                                 good = 2.00
+
+            float refract_reflection =  0.5;
+            float refract_underwater =  1.5;
+            float refract_texture    = 20.0;
 
 
             // Simple Reflection
-            //color = texture2D(u_texture, vec2(uv.x, ((2.0 * y_start) - uv.y)));
+            //color = texture2D(u_texture, vec2(coords.x, ((2.0 * y_start) - coords.y)));
 
+//            vec2 uv = coords.xy;
+//                 uv.x += (u_position.x*0.0015*(1.0/u_zoom));
+//                 uv.y += (u_position.y*0.0015*(1.0/u_zoom));
 
             // Ripple + Refraction water
-            vec3  displacement = texture2D(u_texture_displacement, vec2(mod(coords.x/2.0 + mod(time/50.0, 1.0), 1.0), coords.y) ).rgb;
+            vec3  displacement = texture2D(u_texture_displacement, vec2(coords.x/2.0 + time/50.0, coords.y) ).rgb;
+            //vec3  displacement = vec3(0.0, 0.0, 0.0);     // Use this to turn off refraction / normal map
+
             float refract_x = abs(displacement.x - displacement.y)*0.01;
             float refract_y = abs(displacement.y - displacement.x)*0.01;
 
-            float xoffset = cos(time*wave_speed + wave_length * uv.y) * (wave_min_width_x + (y_start - uv.y) * wave_stretch_x) * 0.005;
+            float xoffset = cos(time*wave_speed + wave_length * coords.y) * (wave_min_width_x + (y_start - coords.y) * wave_stretch_x) * 0.005;
 
+            float bob =  sin(time*bob_speed + coords.x);
+                  bob *= bob_amount * ((y_start - coords.y) / y_start) * u_zoom;
+            float yoffset = sin(coords.x*peak_distance*(1.0/u_zoom) + time) * (wave_height*0.01*u_zoom);
 
-            float bob =     sin(time*bob_speed + uv.x);
-            //float yoffset = bob_amount * bob * ((y_start - uv.y) / y_start);
-            //float yoffset = cos(time*wave_speed + wave_length * uv.x) * (wave_min_width_y + (y_start - uv.y) * wave_stretch_y) * 0.05;
-            float yoffset = sin(coords.x*peak_distance + time) * (wave_height*0.01);
+            float y_top = y_start - ((refract_y + yoffset) + (0.01 * wave_height*u_zoom));
 
-            water = texture2D(u_texture, vec2(coords.x + refract_x + xoffset, (2.0 * y_start) - uv.y + refract_y + yoffset));
+            water = texture2D(u_texture, vec2(coords.x + refract_x*refract_reflection + xoffset,
+                                              2.0*y_start - coords.y + refract_y*refract_reflection + (yoffset * bob) - (y_start - y_top) ));
 
 
 
@@ -264,26 +274,25 @@ void main( void ) {
 
             // If we are above offset, just pass pixel color through as it is above the top of the wave
             vec4 original;
-            float y_top = y_start - ((refract_y + yoffset) + (0.01 * wave_height));
-
-            if (uv.y > y_top) {
+            if (coords.y > y_top) {
                 original = texture2D(u_texture, vec2(coords.x, coords.y));
                 water =    original;
 
             // Otherwise Refract Original Pixel Color, mix in Overlay Color
             } else {
                 // Existing pixel color refracted through water
-                original = texture2D(u_texture, vec2(coords.x + refract_x, coords.y + refract_y));
+                original = texture2D(u_texture, vec2(coords.x + refract_x*refract_underwater, coords.y + refract_y*refract_underwater));
 
-                // Mix in overlay_color
-                vec3 displace_color = texture2D(u_texture_displacement, vec2(mod(coords.x/2.0 + mod(time/50.0, 1.0), 1.0) + xoffset, coords.y + yoffset) ).rgb;
-                     overlay_color = mix(overlay_color, displace_color, 0.50);
+                // Mix in overlay_color and water texture
+                float psx = 0.0015*(1.0/u_zoom);
+                float psy = 0.0015*(1.0/u_zoom);
+                vec3 displace_color = texture2D(u_texture_water, vec2(coords.x*3.0*(1.0/u_zoom) + refract_x*refract_texture + xoffset + u_position.x*psx + time/50.0,
+                                                                      coords.y*3.0*(1.0/u_zoom) + refract_y*refract_texture + yoffset + u_position.y*psy) ).rgb;
+                     overlay_color = mix(overlay_color, displace_color, 0.75);
                 water = vec4(mix(water.rgb, overlay_color, color_percent), 1.0);
 
                 // Make water foam lighter
-                if (uv.y > y_top - 0.003)
-                    water *= 1.0 + ((uv.y - (y_top - 0.003)) * 2000.0);
-
+                //if (coords.y > y_top - 0.003) water *= 1.0 + ((coords.y - (y_top - 0.003)) * 2000.0);
             }
 
 

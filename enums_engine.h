@@ -29,16 +29,17 @@ enum class Demo_Space {
 
 
 enum Asset_Textures {
-    Numbers = -1,
+    Numbers =            -1,
 
-    Water_Normal_1 = -50,
+    Water_Normal_1 =    -50,
+    Water_Texture_1 =   -51,
 
-    Ball =  -100,
-    Block = -101,
-    Plant = -102,
-    Rover = -103,
-    Wheel = -104,
-    Spare = -105
+    Ball =      -100,
+    Block =     -101,
+    Plant =     -102,
+    Rover =     -103,
+    Wheel =     -104,
+    Spare =     -105
 };
 
 
