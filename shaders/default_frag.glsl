@@ -213,62 +213,70 @@ void main( void ) {
 
     // ***** Water
     if (u_wavy) {
-        // Water Reflection
         float y_start = 0.4;                            // 0.0 is bottom, 1.0 is top
 
-        float water_opacity = 0.80;                     // 0.85 is nice
-        vec3  overlay_color = vec3(0.3, 0.3, 1.0);      // light blue
-        float color_percent = 0.25;                     // 0.25 is nice
-
-        vec4 water;
         if (coords.y > y_start) {
             gl_FragColor = texture2D(u_texture, coords.xy);
 
         } else {
+            vec4 reflection;
+
+            // Water Variables
+            vec3  overlay_color = vec3(0.3, 0.3, 1.0);      // light blue
+            float texture_percent = 0.5;
+            float color_percent =   0.25;                   // 0.25 is nice
+            float water_opacity =   0.80;                   // 0.85 is nice
+
 
             float wave_length =  300.0;         // 50 is good for big waves, 200 is good for small ripples      0.0 to 400.0
             float wave_speed =     5.0;         //  1 is good for big waves,   5 is good for small ripples      0.0 to  10.0
 
-            float wave_min_width_x = 0.05;      // Minimum wave starting width          0.0 to  1.0     good start =  0.25
-            float wave_stretch_x =   0.50;      // Stretches away from the start        0.0 to 10.0     good start =  3.00
+            float wave_min_width_x = 0.25;      // Minimum wave starting width          0.0 to  1.0     good start =  0.25
+            float wave_stretch_x =   0.75;      // Stretches away from the start        0.0 to 10.0     good start =  3.00
 
-            float wave_height =   0.35;         // Wave Height                          good =  0.35
-            float peak_distance = 60.0;         // Lower is further apart               good = 60.0
+            float wave_height =   0.25;         // Wave Height                          good =  0.35
+            float peak_distance = 30.0;         // Lower is further apart               good = 60.0
 
-            float bob_speed =  2.0;             // Between 0.0 and 5.0                                  good = 2.00
-            float bob_amount = 2.0;             // Between 0.0 and 50.0                                 good = 2.00
+            float bob_speed =   2.0;            // Between 0.0 and 5.0                                  good = 2.00
+            float bob_amount =  2.0;            // Between 0.0 and 50.0                                 good = 2.00
 
-            float refract_reflection =  0.5;
+            float refract_reflection =  1.0;
             float refract_underwater =  1.5;
-            float refract_texture    = 20.0;
+            float refract_texture    =  4.0;
 
+
+
+
+
+
+            refract_reflection *= u_zoom;
+            refract_underwater *= u_zoom;
+            refract_texture    *= u_zoom;
+
+            float player_x = u_position.x*0.00082 * (1.0/u_zoom);
+            float player_y = u_position.y*0.00082 * (1.0/u_zoom);
+            float diff_w = (u_width*(1.0/u_zoom))  / 1200.0;
+            float diff_h = (u_height*(1.0/u_zoom)) / 1200.0;
 
             // Simple Reflection
-            //color = texture2D(u_texture, vec2(coords.x, ((2.0 * y_start) - coords.y)));
-
-//            vec2 uv = coords.xy;
-//                 uv.x += (u_position.x*0.0015*(1.0/u_zoom));
-//                 uv.y += (u_position.y*0.0015*(1.0/u_zoom));
+            //reflection = texture2D(u_texture, vec2(coords.x, ((2.0 * y_start) - coords.y)));
 
             // Ripple + Refraction water
-            vec3  displacement = texture2D(u_texture_displacement, vec2(coords.x/2.0 + time/50.0, coords.y) ).rgb;
-            //vec3  displacement = vec3(0.0, 0.0, 0.0);     // Use this to turn off refraction / normal map
-
+            vec3  displacement = texture2D(u_texture_displacement,
+                                           vec2(coords.x*diff_w*(1.0/u_zoom) + player_x + time/50.0,
+                                                coords.y*diff_h*(1.0/u_zoom) + player_y) ).rgb;
             float refract_x = abs(displacement.x - displacement.y)*0.01;
             float refract_y = abs(displacement.y - displacement.x)*0.01;
 
             float xoffset = cos(time*wave_speed + wave_length * coords.y) * (wave_min_width_x + (y_start - coords.y) * wave_stretch_x) * 0.005;
 
-            float bob =  sin(time*bob_speed + coords.x);
-                  bob *= bob_amount * ((y_start - coords.y) / y_start) * u_zoom;
-            float yoffset = sin(coords.x*peak_distance*(1.0/u_zoom) + time) * (wave_height*0.01*u_zoom);
+            float top_reduction = 0.35;
+            float bob = sin(time*bob_speed + coords.x+refract_x*refract_reflection) * bob_amount * u_zoom;
+            float yoffset = sin( (coords.x*diff_w*(1.0/u_zoom) + player_x) * peak_distance*(1.0/u_zoom) + time) * (wave_height*0.01*u_zoom);
+            float y_top = y_start - refract_y + yoffset*bob*top_reduction;
 
-            float y_top = y_start - ((refract_y + yoffset) + (0.01 * wave_height*u_zoom));
-
-            water = texture2D(u_texture, vec2(coords.x + refract_x*refract_reflection + xoffset,
-                                              2.0*y_start - coords.y + refract_y*refract_reflection + (yoffset * bob) - (y_start - y_top) ));
-
-
+            reflection = texture2D(u_texture, vec2(coords.x + refract_x*refract_reflection + xoffset,
+                                              2.0*y_start - coords.y + refract_y*refract_reflection + yoffset*bob));
 
 
 
@@ -276,7 +284,7 @@ void main( void ) {
             vec4 original;
             if (coords.y > y_top) {
                 original = texture2D(u_texture, vec2(coords.x, coords.y));
-                water =    original;
+                reflection = original;
 
             // Otherwise Refract Original Pixel Color, mix in Overlay Color
             } else {
@@ -284,19 +292,19 @@ void main( void ) {
                 original = texture2D(u_texture, vec2(coords.x + refract_x*refract_underwater, coords.y + refract_y*refract_underwater));
 
                 // Mix in overlay_color and water texture
-                float psx = 0.0015*(1.0/u_zoom);
-                float psy = 0.0015*(1.0/u_zoom);
-                vec3 displace_color = texture2D(u_texture_water, vec2(coords.x*3.0*(1.0/u_zoom) + refract_x*refract_texture + xoffset + u_position.x*psx + time/50.0,
-                                                                      coords.y*3.0*(1.0/u_zoom) + refract_y*refract_texture + yoffset + u_position.y*psy) ).rgb;
-                     overlay_color = mix(overlay_color, displace_color, 0.75);
-                water = vec4(mix(water.rgb, overlay_color, color_percent), 1.0);
+                float shrink_texture = 4.0;     // 1.0 = normal size, 4.0 equals 1/4 size
+                vec3 water = texture2D(u_texture_water,
+                                                vec2((coords.x*diff_w*(1.0/u_zoom) + refract_x*refract_texture + xoffset + player_x + time/50.0),
+                                                     (coords.y*diff_h*(1.0/u_zoom) + refract_y*refract_texture + yoffset + player_y)) * shrink_texture ).rgb;
+                     overlay_color = mix(overlay_color, water, texture_percent);
+                reflection = vec4(mix(reflection.rgb, overlay_color, color_percent), 1.0);
 
                 // Make water foam lighter
                 //if (coords.y > y_top - 0.003) water *= 1.0 + ((coords.y - (y_top - 0.003)) * 2000.0);
             }
 
 
-            gl_FragColor = mix(original, water, water_opacity);
+            gl_FragColor = mix(original, reflection, water_opacity);
         }
         return;
 
