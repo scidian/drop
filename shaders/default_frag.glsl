@@ -228,56 +228,51 @@ void main( void ) {
             float water_opacity =   0.80;                   // 0.85 is nice
 
 
-            float wave_length =  300.0;         // 50 is good for big waves, 200 is good for small ripples      0.0 to 400.0
-            float wave_speed =     5.0;         //  1 is good for big waves,   5 is good for small ripples      0.0 to  10.0
+            float wave_length =  300.0;                     // 50 is good for big waves, 200 is good for small ripples      0.0 to 400.0
+            float wave_speed =     5.0;                     //  1 is good for big waves,   5 is good for small ripples      0.0 to  10.0
 
-            float wave_min_width_x = 0.25;      // Minimum wave starting width          0.0 to  1.0     good start =  0.25
-            float wave_stretch_x =   0.75;      // Stretches away from the start        0.0 to 10.0     good start =  3.00
+            float wave_min_width_x = 0.25;                  // Minimum wave starting width          0.0 to  1.0     good start =  0.25
+            float wave_stretch_x =   0.75;                  // Stretches away from the start        0.0 to 10.0     good start =  3.00
 
-            float wave_height =   0.25;         // Wave Height                          good =  0.35
-            float peak_distance = 30.0;         // Lower is further apart               good = 60.0
+            float wave_height =   0.25;                     // Wave Height                          good =  0.35
+            float peak_distance = 30.0;                     // Lower is further apart               good = 60.0
 
-            float bob_speed =   2.0;            // Between 0.0 and 5.0                                  good = 2.00
-            float bob_amount =  2.0;            // Between 0.0 and 50.0                                 good = 2.00
+            float bob_speed =   2.0;                        // Between 0.0 and 5.0                                  good = 2.00
+            float bob_amount =  2.0;                        // Between 0.0 and 50.0                                 good = 2.00
 
-            float refract_reflection =  1.0;
-            float refract_underwater =  1.5;
-            float refract_texture    =  4.0;
-
-
-
+            // Refraction amounts on the different textures
+            float refract_reflection =  1.0 * u_zoom;
+            float refract_underwater =  1.5 * u_zoom;
+            float refract_texture    =  4.0 * u_zoom;
 
 
-
-            refract_reflection *= u_zoom;
-            refract_underwater *= u_zoom;
-            refract_texture    *= u_zoom;
-
+            // Calculate some position and scaling values
             float player_x = u_position.x*0.00082 * (1.0/u_zoom);
             float player_y = u_position.y*0.00082 * (1.0/u_zoom);
             float diff_w = (u_width*(1.0/u_zoom))  / 1200.0;
             float diff_h = (u_height*(1.0/u_zoom)) / 1200.0;
 
-            // Simple Reflection
-            //reflection = texture2D(u_texture, vec2(coords.x, ((2.0 * y_start) - coords.y)));
-
-            // Ripple + Refraction water
+            // Grab value from 2D Water Normal Texture, use it to get refraction values
             vec3  displacement = texture2D(u_texture_displacement,
                                            vec2(coords.x*diff_w*(1.0/u_zoom) + player_x + time/50.0,
                                                 coords.y*diff_h*(1.0/u_zoom) + player_y) ).rgb;
             float refract_x = abs(displacement.x - displacement.y)*0.01;
             float refract_y = abs(displacement.y - displacement.x)*0.01;
 
+            // Calculates vertical waves
             float xoffset = cos(time*wave_speed + wave_length * coords.y) * (wave_min_width_x + (y_start - coords.y) * wave_stretch_x) * 0.005;
 
+            // Calculates horizontal waves
             float top_reduction = 0.35;
             float bob = sin(time*bob_speed + coords.x+refract_x*refract_reflection) * bob_amount * u_zoom;
             float yoffset = sin( (coords.x*diff_w*(1.0/u_zoom) + player_x) * peak_distance*(1.0/u_zoom) + time) * (wave_height*0.01*u_zoom);
             float y_top = y_start - refract_y + yoffset*bob*top_reduction;
 
+            // Grab the reflected value from existing screen
             reflection = texture2D(u_texture, vec2(coords.x + refract_x*refract_reflection + xoffset,
                                               2.0*y_start - coords.y + refract_y*refract_reflection + yoffset*bob));
-
+            // Simple reflection
+            //reflection = texture2D(u_texture, vec2(coords.x, ((2.0 * y_start) - coords.y)));
 
 
             // If we are above offset, just pass pixel color through as it is above the top of the wave
