@@ -125,5 +125,7 @@
         <file>assets/inspector_icons/comp_water.png</file>
         <file>assets/textures/water_normal.jpg</file>
         <file>assets/textures/water_texture.png</file>
+        <file>assets/textures/water_texture_2.png</file>
+        <file>assets/textures/lava_texture.jpg</file>
     </qresource>
 </RCC>

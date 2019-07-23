@@ -160,7 +160,8 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
 
     glActiveTexture(GL_TEXTURE0);                           // Texture unit 0
     glBindTexture(GL_TEXTURE_2D, fbo->texture());
-
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
