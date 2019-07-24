@@ -233,11 +233,15 @@ void main( void ) {
         float bob_speed =           3.0;                    // Between 0.0 and 5.0                                  good =  2.00
         float bob_amount =          5.0;                    // Between 0.0 and 50.0                                 good =  2.00
 
+        vec3  surface_color =       vec3(0.75, 0.75, 1.0);
+        float surface_tint =        0.50;
+        float surface_height =      9.0;
+
         // Refraction amounts on the different textures
-        float refract_reflection =    5.0 * u_zoom;
-        float refract_underwater =    5.0 * u_zoom;
-        float refract_texture    =   25.0 * u_zoom;
-        float refract_top_of_water =  3.0 * u_zoom;
+        float refract_reflection =    2.0 * u_zoom;
+        float refract_underwater =    2.0 * u_zoom;
+        float refract_texture    =   10.0 * u_zoom;
+        float refract_top_of_water =  2.0 * u_zoom;
 
         // ----- End Water Input Variables
 
@@ -251,7 +255,7 @@ void main( void ) {
 
         // Grab value from 2D Water Normal Texture, use it to get refraction values
         vec3  displacement = texture2D(u_texture_displacement,
-                                       vec2(( (coords.x*diff_w)/u_zoom + player_x + time/50.0),
+                                       vec2(( (coords.x*diff_w)/u_zoom + player_x - time/20.0), //50.0),
                                             ( (coords.y*diff_h)/u_zoom + player_y)) / (shrink_texture/u_zoom) ).rgb;
         float refract_x = (displacement.x - displacement.y)*0.01;
         float refract_y = (displacement.y - displacement.x)*0.01;
@@ -291,9 +295,21 @@ void main( void ) {
             water = texture2D(u_texture_water, vec2(
                         (coords.x*diff_w*(1.0/u_zoom) + refract_x*refract_texture + player_x + xoffset), // + (time/50.0),      // gives movement
                         (coords.y*diff_h*(1.0/u_zoom) + refract_y*refract_texture + player_y + yoffset*bob_texture)) * shrink_texture );
-            water =    vec4(mix(water.rgb,  overlay_color,  color_tint),          1.0);
-            original =      mix(original,   water,          water_opacity);
-            original =      mix(original,   reflection,     reflection_opacity);
+                water = vec4(mix(water.rgb, overlay_color, color_tint),   1.0);
+
+            original = mix(original,   water,          water_opacity);
+            original = mix(original,   reflection,     reflection_opacity);
+
+            // Surface coloring (sea foam)
+            float foam_distance = (surface_height + sin(refract_x+time/50.0)) / u_height * u_zoom;
+            if (coords.y > (y_top - foam_distance)) {
+                float foam_position = (coords.y - (y_top - foam_distance)) / foam_distance;
+                original = vec4(mix(original.rgb, surface_color, surface_tint * foam_position), 1.0);
+
+                // Anti-alias the top of the sea foam
+                if (coords.y > (y_top - (1.0/u_height)))
+                    original = mix(texture2D(u_texture, vec2(coords.x, coords.y)), original, 0.5);
+            }
         }
 
         gl_FragColor = original;
