@@ -160,6 +160,8 @@ void DrThing::addComponentSettingsWater() {
     getComponent(Components::Thing_Settings_Water)->setIcon(Component_Icons::Water);
     addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Color, Property_Type::Color, QColor(96, 96, 255, 255).rgba(),
                            "Water Color", "Color tint for this Water.");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Color_Tint, Property_Type::Percent, 50.0,
+                           "Tint Percent", "How much to tint the water, 0 (none) - 100 (all the way)");
 
 }
 

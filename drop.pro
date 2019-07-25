@@ -144,6 +144,7 @@ SOURCES += \
     opengl/opengl_render_shadows.cpp \
     opengl/opengl_render_space.cpp \
     opengl/opengl_render_test_cube.cpp \
+    opengl/opengl_render_water.cpp \
     playground/form_playground.cpp \
     playground/form_playground_build.cpp \
     playground/form_playground_items.cpp \

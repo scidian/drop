@@ -12,12 +12,13 @@
 //##    Constructor / Destructor
 //####################################################################################
 DrEngineWater::DrEngineWater(DrEngineWorld *world, long unique_key,
-                             double x, double y, double z, QPointF size, QColor color, float opacity) :
+                             double x, double y, double z, QPointF size, QColor color, float tint, float opacity) :
     DrEngineThing(world, unique_key) {
 
     this->setPosition( QPointF(x, y) );
     this->z_order = z;
     this->water_color = color;
+    this->water_tint = tint;
     this->water_size = size;
     this->setOpacity( opacity );
 }

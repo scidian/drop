@@ -23,8 +23,13 @@ uniform highp float u_width;                        // Texture Width
 uniform highp float u_height;                       // Texture Height
 uniform highp float u_time;                         // Time in seconds
 
-uniform lowp  float u_water_top;                    // Top of Water, from 0.0 to 1.0 in screen coordinates
+uniform lowp  float u_water_top;                    // Top of Water,        from 0.0 to 1.0 in screen coordinates
+uniform lowp  float u_water_bottom;                 // Bottom of Water,     from 0.0 to 1.0 in screen coordinates
+uniform lowp  float u_water_left;                   // Left side of Water,  from 0.0 to 1.0 in screen coordinates
+uniform lowp  float u_water_right;                  // Right side of Water, from 0.0 to 1.0 in screen coordinates
+
 uniform highp vec3  u_color;                        // Water Color, r/g/b               0.0 to 1.0 x 3
+uniform highp float u_color_tint;                   // Water Color Tint Percent
 
 
 //####################################################################################
@@ -34,7 +39,7 @@ void main( void ) {
 
     // ***** Water Input Variables
     vec3  overlay_color =       u_color;
-    float color_tint =          0.50;                   // 0.50 is nice
+    float color_tint =          u_color_tint;
     float reflection_opacity =  0.50 * u_alpha;         // 0.50 is nice
 
     float wave_length =    pow( 5.0, 2.0);              // Vertical wave length                 0.0 to  20.0    good = 5 big wave, 15 small ripples
@@ -65,10 +70,7 @@ void main( void ) {
     // Move coordinates into a vec2 that is not read-only
     highp vec2 coords = coordinates.st;
     float time = u_time;
-
-
     float y_start = u_water_top;                                                // 0.0 is bottom, 1.0 is top
-
 
     // Calculate some position and scaling values
     float shrink_texture = 3.0;                                                 // 1.0 = normal size, 4.0 equals 1/4 size
@@ -104,7 +106,7 @@ void main( void ) {
 
 
     // If we are above offset, just pass pixel color through as it is above the top of the wave
-    if (coords.y > y_top) {
+    if (coords.y > y_top || coords.y < u_water_bottom || coords.x < u_water_left || coords.x > u_water_right) {
         discard;
 
     // Otherwise Refract Original Pixel Color, mix in Overlay Color

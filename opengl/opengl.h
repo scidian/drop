@@ -200,7 +200,12 @@ private:
     int     u_water_pos;                                        // Current camera position (need for water shader)
 
     int     u_water_top;
+    int     u_water_bottom;
+    int     u_water_left;
+    int     u_water_right;
+
     int     u_water_color;
+    int     u_water_color_tint;
 
     // ********** End Shaders **********
 

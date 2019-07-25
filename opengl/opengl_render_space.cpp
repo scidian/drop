@@ -98,9 +98,14 @@ void DrOpenGL::setUpSpaceShader(std::vector<float> &texture_coords) {
 // Renders All Scene Objects
 void DrOpenGL::drawSpace() {
 
+    // Keeps track of if we have rendered the lights yet
     bool has_rendered_glow_lights = false;
 
-    // Initialize shader settings
+    // ***** This variable was put in so that multiple Water things drawn next to each other will use the same copy of the render fbo as it currently was,
+    //       this saves lots of blit calls, and stops some vertical fragments from appearing as they would try to refract each other
+    DrThingType last_thing = DrThingType::Object;
+
+    // ***** Initialize shader settings
     std::vector<float> texture_coordinates;
     setWholeTextureCoordinates(texture_coordinates);
     setUpSpaceShader(texture_coordinates);
@@ -127,6 +132,7 @@ void DrOpenGL::drawSpace() {
                     m_default_shader.release();
                     draw2DLight(light);
                     setUpSpaceShader(texture_coordinates);
+                    last_thing = DrThingType::Light;
                     continue;
 
                 } else if (light->light_type == Light_Type::Glow) {
@@ -143,16 +149,14 @@ void DrOpenGL::drawSpace() {
                 m_default_shader.disableAttributeArray( a_default_texture_coord );
                 m_default_shader.release();
 
-
-
-                releaseOffscreenBuffer();
-                QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);
-                bindOffscreenBuffer(false);
+                if (last_thing != DrThingType::Water) {
+                    releaseOffscreenBuffer();
+                    QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);
+                    bindOffscreenBuffer(false);
+                }
                 glDisable(GL_BLEND);
                 drawFrameBufferUsingWaterShader(m_texture_fbo, water);
-
-
-
+                last_thing = DrThingType::Water;
 
                 setUpSpaceShader(texture_coordinates);
                 continue;
@@ -245,6 +249,7 @@ void DrOpenGL::drawSpace() {
 
         // Release bound items
         m_default_shader.disableAttributeArray( a_default_vertex );
+        last_thing = DrThingType::Object;
     }
 
     // ***** Disable shader program

@@ -225,7 +225,12 @@ void DrOpenGL::initializeGL() {
     u_water_time =              m_water_shader.uniformLocation(     "u_time" );
 
     u_water_top =               m_water_shader.uniformLocation(     "u_water_top" );
+    u_water_bottom =            m_water_shader.uniformLocation(     "u_water_bottom" );
+    u_water_left =              m_water_shader.uniformLocation(     "u_water_left" );
+    u_water_right =             m_water_shader.uniformLocation(     "u_water_right" );
+
     u_water_color =             m_water_shader.uniformLocation(     "u_color" );
+    u_water_color_tint =        m_water_shader.uniformLocation(     "u_color_tint" );
 
 }
 
