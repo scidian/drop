@@ -104,8 +104,6 @@ private:
     int     u_default_pre;                                      // Premultiplied Alpha Texture?
     int     u_default_alpha;                                    // Opacity
     int     u_default_tint;                                     // Tint, red/green/blue (0 to 1, 0 to 1, 0 to 1)
-    int     u_default_zoom;                                     // Current zoom level (need for water shader)
-    int     u_default_pos;                                      // Current camera position (need for water shader)
 
     int     u_default_pixel_x;                                  // Pixelation X value
     int     u_default_pixel_y;                                  // Pixelation Y value
@@ -187,6 +185,19 @@ private:
     int     u_kernel_alpha;                                     // Opacity
 
 
+    // Water Shader
+    QOpenGLShaderProgram m_water_shader;
+    int     a_water_vertex;
+    int     a_water_texture_coord;
+    int     u_water_matrix;
+
+    int     u_water_width;                                      // Width of texture
+    int     u_water_height;                                     // Height of texture
+    int     u_water_time;                                       // Time in seconds
+    int     u_water_alpha;                                      // Opacity
+    int     u_water_zoom;                                       // Current zoom level (need for water shader)
+    int     u_water_pos;                                        // Current camera position (need for water shader)
+
     // ********** End Shaders **********
 
 
@@ -234,6 +245,7 @@ public:
     void            drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo);
     void            drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo);
     void            drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower);
+    void            drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo);
     bool            drawGlowBuffer();
     void            drawSpace();
     void            drawSpaceOccluder();

@@ -78,8 +78,6 @@ void DrOpenGL::initializeGL() {
     u_default_texture =         m_default_shader.uniformLocation(   "u_texture" );
     u_default_alpha =           m_default_shader.uniformLocation(   "u_alpha" );
     u_default_tint =            m_default_shader.uniformLocation(   "u_tint" );
-    u_default_zoom =            m_default_shader.uniformLocation(   "u_zoom" );
-    u_default_pos =             m_default_shader.uniformLocation(   "u_position" );
 
     u_default_width =           m_default_shader.uniformLocation(   "u_width" );
     u_default_height =          m_default_shader.uniformLocation(   "u_height" );
@@ -129,16 +127,16 @@ void DrOpenGL::initializeGL() {
     m_shadow_shader.link();
 
     // Shadow Vertex Shader Input
-    a_shadow_vertex =         m_shadow_shader.attributeLocation( "vertex" );
-    a_shadow_texture_coord =      m_shadow_shader.attributeLocation( "texture_coordinates" );
-    u_shadow_matrix =           m_shadow_shader.uniformLocation(   "u_matrix" );
+    a_shadow_vertex =           m_shadow_shader.attributeLocation(  "vertex" );
+    a_shadow_texture_coord =    m_shadow_shader.attributeLocation(  "texture_coordinates" );
+    u_shadow_matrix =           m_shadow_shader.uniformLocation(    "u_matrix" );
 
     // Shadow Fragment Shader Input
-    u_shadow_texture =          m_shadow_shader.uniformLocation(   "u_texture" );
-    u_shadow_resolution =       m_shadow_shader.uniformLocation(   "u_resolution" );
-    u_shadow_ray_count =        m_shadow_shader.uniformLocation(   "u_ray_count" );
-    u_shadow_depth =            m_shadow_shader.uniformLocation(   "u_depth" );
-    u_shadow_near_plane =       m_shadow_shader.uniformLocation(   "u_near_plane" );
+    u_shadow_texture =          m_shadow_shader.uniformLocation(    "u_texture" );
+    u_shadow_resolution =       m_shadow_shader.uniformLocation(    "u_resolution" );
+    u_shadow_ray_count =        m_shadow_shader.uniformLocation(    "u_ray_count" );
+    u_shadow_depth =            m_shadow_shader.uniformLocation(    "u_depth" );
+    u_shadow_near_plane =       m_shadow_shader.uniformLocation(    "u_near_plane" );
 
 
     // ***** Initialize our 2D Light Shader
@@ -149,23 +147,23 @@ void DrOpenGL::initializeGL() {
     m_light_shader.link();
 
     // 2D Light Vertex Shader Input
-    a_light_vertex =          m_light_shader.attributeLocation( "vertex" );
+    a_light_vertex =          m_light_shader.attributeLocation(     "vertex" );
     a_light_texture_coord =       m_light_shader.attributeLocation( "texture_coordinates" );
-    u_light_matrix =            m_light_shader.uniformLocation(   "u_matrix" );
+    u_light_matrix =            m_light_shader.uniformLocation(     "u_matrix" );
 
     // 2D Light Fragment Shader Input
-    u_light_texture =           m_light_shader.uniformLocation(   "u_texture" );
-    u_light_ray_count =         m_light_shader.uniformLocation(   "u_ray_count" );
-    u_light_diameter =          m_light_shader.uniformLocation(   "u_light_diameter" );
-    u_light_fitted =            m_light_shader.uniformLocation(   "u_light_fitted" );
-    u_light_alpha =             m_light_shader.uniformLocation(   "u_alpha" );
-    u_light_color =             m_light_shader.uniformLocation(   "u_color" );
-    u_light_cone =              m_light_shader.uniformLocation(   "u_cone" );
-    u_light_shadows =           m_light_shader.uniformLocation(   "u_light_shadows" );
-    u_light_intensity =         m_light_shader.uniformLocation(   "u_intensity" );
-    u_light_blur =              m_light_shader.uniformLocation(   "u_blur" );
-    u_light_draw_shadows =      m_light_shader.uniformLocation(   "u_draw_shadows" );
-    u_light_is_glow =           m_light_shader.uniformLocation(   "u_is_glow" );
+    u_light_texture =           m_light_shader.uniformLocation(     "u_texture" );
+    u_light_ray_count =         m_light_shader.uniformLocation(     "u_ray_count" );
+    u_light_diameter =          m_light_shader.uniformLocation(     "u_light_diameter" );
+    u_light_fitted =            m_light_shader.uniformLocation(     "u_light_fitted" );
+    u_light_alpha =             m_light_shader.uniformLocation(     "u_alpha" );
+    u_light_color =             m_light_shader.uniformLocation(     "u_color" );
+    u_light_cone =              m_light_shader.uniformLocation(     "u_cone" );
+    u_light_shadows =           m_light_shader.uniformLocation(     "u_light_shadows" );
+    u_light_intensity =         m_light_shader.uniformLocation(     "u_intensity" );
+    u_light_blur =              m_light_shader.uniformLocation(     "u_blur" );
+    u_light_draw_shadows =      m_light_shader.uniformLocation(     "u_draw_shadows" );
+    u_light_is_glow =           m_light_shader.uniformLocation(     "u_is_glow" );
 
 
     // ***** Initialize our Screen Shader
@@ -176,15 +174,15 @@ void DrOpenGL::initializeGL() {
     m_screen_shader.link();
 
     // 2D Light Vertex Shader Input
-    a_screen_vertex =         m_screen_shader.attributeLocation( "vertex" );
-    a_screen_texture_coord =      m_screen_shader.attributeLocation( "texture_coordinates" );
-    u_screen_matrix =           m_screen_shader.uniformLocation(   "u_matrix" );
+    a_screen_vertex =           m_screen_shader.attributeLocation(  "vertex" );
+    a_screen_texture_coord =    m_screen_shader.attributeLocation(  "texture_coordinates" );
+    u_screen_matrix =           m_screen_shader.uniformLocation(    "u_matrix" );
 
     // 2D Light Fragment Shader Input
-    u_screen_upper =            m_screen_shader.uniformLocation(   "u_upper" );
-    u_screen_lower =            m_screen_shader.uniformLocation(   "u_lower" );
-    u_screen_width =            m_screen_shader.uniformLocation(   "u_width" );
-    u_screen_height =           m_screen_shader.uniformLocation(   "u_height" );
+    u_screen_upper =            m_screen_shader.uniformLocation(    "u_upper" );
+    u_screen_lower =            m_screen_shader.uniformLocation(    "u_lower" );
+    u_screen_width =            m_screen_shader.uniformLocation(    "u_width" );
+    u_screen_height =           m_screen_shader.uniformLocation(    "u_height" );
 
 
     // ***** Initialize our Kernel Shader
@@ -195,15 +193,36 @@ void DrOpenGL::initializeGL() {
     m_kernel_shader.link();
 
     // Kernel Vertex Shader Input
-    a_kernel_vertex =           m_kernel_shader.attributeLocation( "vertex" );
-    a_kernel_texture_coord =    m_kernel_shader.attributeLocation( "texture_coordinates" );
-    u_kernel_matrix =           m_kernel_shader.uniformLocation(   "u_matrix" );
+    a_kernel_vertex =           m_kernel_shader.attributeLocation(  "vertex" );
+    a_kernel_texture_coord =    m_kernel_shader.attributeLocation(  "texture_coordinates" );
+    u_kernel_matrix =           m_kernel_shader.uniformLocation(    "u_matrix" );
 
     // Kernel Fragment Shader Input
-    u_kernel_texture =          m_kernel_shader.uniformLocation(   "u_texture" );
-    u_kernel_width =            m_kernel_shader.uniformLocation(   "u_width" );
-    u_kernel_height =           m_kernel_shader.uniformLocation(   "u_height" );
-    u_kernel_alpha =            m_kernel_shader.uniformLocation(   "u_alpha" );
+    u_kernel_texture =          m_kernel_shader.uniformLocation(    "u_texture" );
+    u_kernel_width =            m_kernel_shader.uniformLocation(    "u_width" );
+    u_kernel_height =           m_kernel_shader.uniformLocation(    "u_height" );
+    u_kernel_alpha =            m_kernel_shader.uniformLocation(    "u_alpha" );
+
+
+    // ***** Initialize our Water Shader
+    QOpenGLShader v_water_shader( QOpenGLShader::Vertex );          v_water_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader f_water_shader( QOpenGLShader::Fragment );        f_water_shader.compileSourceFile( ":/shaders/water_frag.glsl" );
+    m_water_shader.addShader( &v_water_shader );
+    m_water_shader.addShader( &f_water_shader );
+    m_water_shader.link();
+
+    // Vertex Shader Input
+    a_water_vertex =            m_water_shader.attributeLocation(   "vertex" );
+    a_water_texture_coord =     m_water_shader.attributeLocation(   "texture_coordinates" );
+    u_water_matrix =            m_water_shader.uniformLocation(     "u_matrix" );
+
+    // Fragment Shader Input
+    u_water_alpha =             m_water_shader.uniformLocation(     "u_alpha" );
+    u_water_zoom =              m_water_shader.uniformLocation(     "u_zoom" );
+    u_water_pos =               m_water_shader.uniformLocation(     "u_position" );
+    u_water_width =             m_water_shader.uniformLocation(     "u_width" );
+    u_water_height =            m_water_shader.uniformLocation(     "u_height" );
+    u_water_time =              m_water_shader.uniformLocation(     "u_time" );
 
 
 

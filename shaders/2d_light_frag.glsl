@@ -15,6 +15,7 @@ varying highp vec2  coordinates;                    // Texture Coodinates
 uniform highp sampler2D u_texture;                  // Shadow Map 1D
 uniform highp float     u_ray_count;                // Width of 1D Shadow Map
 
+// ***** Light Variables
 uniform highp float u_light_diameter;               // Original Light Diameter
 uniform highp float u_light_fitted;                 // Light Diameter Fit to Max Size
 uniform lowp  float u_alpha;                        // Opacity of light                 0.0 to 1.0
@@ -26,6 +27,7 @@ uniform highp float u_intensity;                    // Intensity                
 uniform highp float u_blur;                         // Blur                             0.0 to 100.0
 uniform bool        u_draw_shadows;                 // Draw shadows                     true or false
 uniform bool        u_is_glow;                      // True if this is a glow light
+
 
 // Local Constants / Variables
 const   highp float PI =  3.1415926;
