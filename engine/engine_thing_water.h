@@ -24,6 +24,10 @@ class DrEngineWater : public DrEngineThing
 {
 public:
     // Water Settings
+    QPointF         water_size;                             // Size of water
+    QColor          water_color = QColor(128, 128, 255);    // Color of water
+
+
     float           wave_length =  200.0f;                  // 50 is good for big waves, 200 is good for small ripples      0.0 to 400.0
     float           wave_speed =     5.0f;                  //  1 is good for big waves,   5 is good for small ripples      0.0 to  10.0
 
@@ -36,7 +40,7 @@ public:
 
 public:
     // Constructor / Destructor
-    DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z);
+    DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z, QPointF size, QColor color, float opacity);
     virtual ~DrEngineWater() override;
 
     // Abstract Engine Thing Overrides

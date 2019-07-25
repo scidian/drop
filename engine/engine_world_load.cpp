@@ -174,8 +174,11 @@ void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double off
     QPointF     position =      thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
     double      z_order =       thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
     float       alpha =         thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
+    QPointF     size =          thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF();
 
-    addThing( new DrEngineWater(this, getNextKey(), position.x() + offset_x, -position.y() + offset_y, z_order ) );
+    QColor      water_color =   QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Color).toUInt());
+
+    addThing( new DrEngineWater(this, getNextKey(), position.x() + offset_x, -position.y() + offset_y, z_order, size, water_color, alpha ) );
 }
 
 

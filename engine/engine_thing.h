@@ -85,7 +85,7 @@ public:
 
     virtual void            setPosition(QPointF position) { m_position = position; }
     virtual void            setAngle(double new_angle) { m_angle = new_angle; }
-    virtual void            setOpacity(float  new_alpha) { m_alpha = new_alpha; }
+    virtual void            setOpacity(float new_alpha) { m_alpha = new_alpha; }
     void                    setWorld(DrEngineWorld *world) { m_world = world; }
 
 };

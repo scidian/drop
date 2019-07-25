@@ -64,7 +64,7 @@ public:
     void addComponentSettingsCamera(QString new_name);
 
     void addComponentAppearance();
-    void addComponentLayering(double z);
+    void addComponentLayering(double z, double opacity = 100.0);
     void addComponentLighting();
     void addComponentMovement();
     void addComponentTransform(double width, double height, double x, double y, DrThingType type);

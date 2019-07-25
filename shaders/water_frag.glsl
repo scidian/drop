@@ -23,7 +23,8 @@ uniform highp float u_width;                        // Texture Width
 uniform highp float u_height;                       // Texture Height
 uniform highp float u_time;                         // Time in seconds
 
-
+uniform lowp  float u_water_top;                    // Top of Water, from 0.0 to 1.0 in screen coordinates
+uniform highp vec3  u_color;                        // Water Color, r/g/b               0.0 to 1.0 x 3
 
 
 //####################################################################################
@@ -31,9 +32,8 @@ uniform highp float u_time;                         // Time in seconds
 //####################################################################################
 void main( void ) {
 
-
     // ***** Water Input Variables
-    vec3  overlay_color =       vec3(0.3, 0.3, 1.0);    // light blue
+    vec3  overlay_color =       u_color;
     float color_tint =          0.50;                   // 0.50 is nice
     float reflection_opacity =  0.50 * u_alpha;         // 0.50 is nice
 
@@ -50,7 +50,7 @@ void main( void ) {
     float bob_amount =          5.0;                    // Between 0.0 and 50.0                                 good =  2.00
 
     vec3  surface_color =       vec3(0.75, 0.75, 1.0);
-    float surface_tint =        0.15;
+    float surface_tint =        0.5;
     float surface_height =      7.5;
 
     // Refraction amounts on the different textures
@@ -67,7 +67,7 @@ void main( void ) {
     float time = u_time;
 
 
-    float y_start = 0.4;                                // 0.0 is bottom, 1.0 is top
+    float y_start = u_water_top;                                                // 0.0 is bottom, 1.0 is top
 
 
     // Calculate some position and scaling values
@@ -131,7 +131,7 @@ void main( void ) {
             original = vec4(mix(original.rgb, surface_color, surface_tint * clamp(2.0*foam_position, 0.0, 1.0)), 1.0);
 
             // Anti-alias the top of the sea foam
-            if (coords.y > (y_top - (1.0/u_height)))
+            if (coords.y > (y_top - (u_zoom/u_height)))
                 original = mix(texture2D(u_texture, vec2(coords.x, coords.y)), original, 0.5);
         }
     }

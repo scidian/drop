@@ -107,7 +107,7 @@ void DrView::dropEvent(QDropEvent *event) {
                         my_scene->addItemToSceneFromThing( thing );
                         break;
                     case DrEffectType::Water:
-                        thing = stage->addThing(DrThingType::Water, asset_key, position.x(), -position.y(), 0);     // FIX: z order
+                        thing = stage->addThing(DrThingType::Water, asset_key, position.x(), -position.y(), 10);    // FIX: z order
                         my_scene->addItemToSceneFromThing( thing );
                         break;
                 }

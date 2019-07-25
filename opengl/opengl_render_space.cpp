@@ -149,7 +149,7 @@ void DrOpenGL::drawSpace() {
                 QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);
                 bindOffscreenBuffer(false);
                 glDisable(GL_BLEND);
-                drawFrameBufferUsingWaterShader(m_texture_fbo);
+                drawFrameBufferUsingWaterShader(m_texture_fbo, water);
 
 
 

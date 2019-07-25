@@ -70,7 +70,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
         case DrThingType::Water:
             addComponentSettingsWater();
             addComponentTransform(400, 400, x, -y, DrThingType::Water);
-            addComponentLayering(z);
+            addComponentLayering(z, 50.0);
             break;
     }
 
@@ -158,7 +158,7 @@ void DrThing::addComponentSettingsWater() {
 
     addComponent(Components::Thing_Settings_Water, "Water Settings", "Settings for current Water reflection.", Component_Colors::Blue_Drop, true);
     getComponent(Components::Thing_Settings_Water)->setIcon(Component_Icons::Water);
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Color, Property_Type::Color, QColor(96, 96, 255).rgba(),
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Color, Property_Type::Color, QColor(96, 96, 255, 255).rgba(),
                            "Water Color", "Color tint for this Water.");
 
 }
@@ -212,14 +212,14 @@ void DrThing::addComponentTransform(double width, double height, double x, doubl
                            "Scale", "X and Y scale of item within the stage.");
 }
 
-void DrThing::addComponentLayering(double z) {
+void DrThing::addComponentLayering(double z, double opacity) {
     addComponent(Components::Thing_Layering, "Layering", "Controls the order items are drawn onto the screen. For \"Z Order\", lower numbers are "
                                                            "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, true);
     getComponent(Components::Thing_Layering)->setIcon(Component_Icons::Layering);
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Z_Order, Property_Type::Double, QVariant::fromValue(z),
                            "Z Order", "Arrangement of item along the z axis in the stage. Should be between " +
                                       QString::number(double(c_near_plane)) + " and " + QString::number(double(c_far_plane)) + " to be visible.");
-    addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Opacity, Property_Type::Percent, 100,
+    addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Opacity, Property_Type::Percent, opacity,
                            "Opacity", "How transparent this item is, 0 (invisible) - 100 (solid)");
 }
 

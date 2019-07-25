@@ -23,6 +23,7 @@
 class DrEngine;
 class DrEngineLight;
 class DrEngineObject;
+class DrEngineWater;
 class FormEngine;
 
 // Type Definitions
@@ -198,6 +199,9 @@ private:
     int     u_water_zoom;                                       // Current zoom level (need for water shader)
     int     u_water_pos;                                        // Current camera position (need for water shader)
 
+    int     u_water_top;
+    int     u_water_color;
+
     // ********** End Shaders **********
 
 
@@ -245,7 +249,7 @@ public:
     void            drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo);
     void            drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo);
     void            drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower);
-    void            drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo);
+    void            drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water);
     bool            drawGlowBuffer();
     void            drawSpace();
     void            drawSpaceOccluder();

@@ -15,6 +15,7 @@
 #include "engine/engine_camera.h"
 #include "engine/engine_thing_light.h"
 #include "engine/engine_thing_object.h"
+#include "engine/engine_thing_water.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
 #include "engine/form_engine.h"
@@ -302,7 +303,7 @@ void DrOpenGL::drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper,
 //##        Renders Frame Buffer Object to screen buffer as a textured quad
 //##            Uses Water Shader to draw reflective / refractive / textured water
 //####################################################################################
-void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo) {
+void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water) {
 
     if (!m_water_shader.bind()) return;
     if (!fbo) return;
@@ -353,8 +354,19 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo) {
     m_water_shader.setAttributeArray(    a_water_vertex, vertices.data(), 3 );
     m_water_shader.enableAttributeArray( a_water_vertex );
 
+
+    // Calculate top of Water in shader coordinates
+    QPointF screen_position = mapToScreen(water->getPosition().x(), water->getPosition().y() + (water->water_size.y() / 2.0), water->z_order);
+    float water_top = static_cast<float>((fbo->height() - screen_position.y()) / fbo->height());
+    m_water_shader.setUniformValue( u_water_top,        water_top );
+    m_light_shader.setUniformValue( u_water_color,
+                                    static_cast<float>(water->water_color.redF()),
+                                    static_cast<float>(water->water_color.greenF()),
+                                    static_cast<float>(water->water_color.blueF()) );
+
+
     // Set variables for shader
-    m_water_shader.setUniformValue( u_water_alpha,      0.5f );
+    m_water_shader.setUniformValue( u_water_alpha,      water->getOpacity() );
     m_water_shader.setUniformValue( u_water_zoom,       m_scale );
     m_water_shader.setUniformValue( u_water_pos,        m_engine->getCurrentWorld()->getCameraPos().x(), m_engine->getCurrentWorld()->getCameraPos().y(), 0.0f );
     m_water_shader.setUniformValue( u_water_width,      static_cast<float>(fbo->width()) );
