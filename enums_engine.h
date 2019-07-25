@@ -97,12 +97,6 @@ enum class Light_Type {
     Glow,
 };
 
-enum class Water_Direction {
-    Up,
-    Down,
-    Left,
-    Right,
-};
 
 
 

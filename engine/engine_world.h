@@ -159,6 +159,7 @@ public:
     void            loadLightToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadObjectToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadStageToWorld(DrStage *stage, double offset_x, double offset_y);
+    void            loadWaterToWorld(DrThing *thing, double offset_x, double offset_y);
     void            updateSpace(double time_passed);
     void            updateWorld(double time_passed);
     void            wakeAllBodies();

@@ -14,6 +14,7 @@
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
 #include "engine/engine_thing_light.h"
+#include "engine/engine_thing_water.h"
 #include "engine/engine_thing_object.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
@@ -115,7 +116,7 @@ void DrOpenGL::drawSpace() {
             setUpSpaceShader(texture_coordinates);
         }
 
-        // ***** If light, draw with seperate shader then move to next Thing
+        // ***** If Light, draw with seperate Light Shader, then move to next Thing
         if (thing->getThingType() == DrThingType::Light) {
             DrEngineLight *light = dynamic_cast<DrEngineLight*>(thing);
             if (light) {
@@ -134,6 +135,30 @@ void DrOpenGL::drawSpace() {
             }
             continue;
         }
+
+        // ***** If Water, draw with seperate Water Shader, then move to next Thing
+        if (thing->getThingType() == DrThingType::Water) {
+            DrEngineWater *water = dynamic_cast<DrEngineWater*>(thing);
+            if (water) {
+                m_default_shader.disableAttributeArray( a_default_texture_coord );
+                m_default_shader.release();
+
+
+
+                releaseOffscreenBuffer();
+                QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);
+                bindOffscreenBuffer(false);
+                glDisable(GL_BLEND);
+                drawFrameBufferUsingWaterShader(m_texture_fbo);
+
+
+
+
+                setUpSpaceShader(texture_coordinates);
+                continue;
+            }
+        }
+
 
         // ***** Convert Thing to Object, Continue with Render
         if (thing->getThingType() != DrThingType::Object) continue;

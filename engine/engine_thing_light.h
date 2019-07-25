@@ -64,8 +64,11 @@ public:
     // Abstract Engine Thing Overrides
     virtual void        addToWorld() override;
     virtual DrThingType getThingType() override { return DrThingType::Light; }
-    virtual void        setAngle(double new_angle) override;
     virtual bool        update(double time_passed, double time_warp, QRectF &area) override;
+
+    // Non-Abstract Engine Thing Overrides
+    virtual void        setAngle(double new_angle) override;
+
 
     // Getters / Setters
     QPointF     getScreenPos() { return m_screen_pos; }

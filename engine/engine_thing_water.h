@@ -24,8 +24,6 @@ class DrEngineWater : public DrEngineThing
 {
 public:
     // Water Settings
-    Water_Direction water_direction = Water_Direction::Up;  // Direction this water should reflect from
-
     float           wave_length =  200.0f;                  // 50 is good for big waves, 200 is good for small ripples      0.0 to 400.0
     float           wave_speed =     5.0f;                  //  1 is good for big waves,   5 is good for small ripples      0.0 to  10.0
 
@@ -37,7 +35,14 @@ public:
 
 
 public:
+    // Constructor / Destructor
     DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z);
+    virtual ~DrEngineWater() override;
+
+    // Abstract Engine Thing Overrides
+    virtual void        addToWorld() override;
+    virtual DrThingType getThingType() override { return DrThingType::Water; }
+    virtual bool        update(double time_passed, double time_warp, QRectF &area) override;
 
 };
 

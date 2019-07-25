@@ -11,6 +11,7 @@
 #include "engine.h"
 #include "engine_thing_light.h"
 #include "engine_thing_object.h"
+#include "engine_thing_water.h"
 #include "engine_world.h"
 #include "project/project_world_stage.h"
 #include "project/project_world_stage_thing.h"
@@ -37,44 +38,14 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
             loadObjectToWorld(thing, offset_x, offset_y);
         } else if (thing->getThingType() == DrThingType::Light) {
             loadLightToWorld(thing, offset_x, offset_y);
+        } else if (thing->getThingType() == DrThingType::Water) {
+            loadWaterToWorld(thing, offset_x, offset_y);
         }
 
     }
 
     // ***** Update distance we've loaded scenes to
     m_loaded_to += stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();
-}
-
-
-
-//####################################################################################
-//##    Loads one DrProject DrThingType::Light to World / Space
-//####################################################################################
-void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double offset_y) {
-
-    // Load Light Thing Properties
-    QPointF     position =      thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
-    double      z_order =       thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
-    float       alpha =         thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
-    double      light_size =    thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF().x();
-    QColor      light_color =   QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Color).toUInt());
-    int         light_type =    thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Type).toInt();
-
-    double      cone_start =    thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start).toDouble();
-    double      cone_end =      thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toDouble();
-    float       intensity =     thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity).toFloat();
-    float       blur =          thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Blur).toFloat();
-    float       shadows =       thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Shadows).toFloat();
-    bool        draw_shadows =  thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Draw_Shadows).toBool();
-
-    float       pulse =         thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse).toFloat();
-    float       pulse_speed =   thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse_Speed).toFloat();
-
-    light_size *= c_light_size_adjuster;
-
-    addThing( new DrEngineLight(this, getNextKey(), position.x() + offset_x, -position.y() + offset_y, z_order, static_cast<Light_Type>(light_type),
-                                light_color, static_cast<float>(light_size),
-                                QPointF(cone_start, cone_end), intensity, shadows, draw_shadows, blur, pulse, pulse_speed, alpha));
 }
 
 
@@ -162,6 +133,50 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     block->negative =       negative;
 }
 
+
+//####################################################################################
+//##    Loads one DrProject DrThingType::Light to World / Space
+//####################################################################################
+void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double offset_y) {
+
+    // Load Light Thing Properties
+    QPointF     position =      thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
+    double      z_order =       thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
+    float       alpha =         thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
+    double      light_size =    thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF().x();
+    QColor      light_color =   QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Color).toUInt());
+    int         light_type =    thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Type).toInt();
+
+    double      cone_start =    thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start).toDouble();
+    double      cone_end =      thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toDouble();
+    float       intensity =     thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity).toFloat();
+    float       blur =          thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Blur).toFloat();
+    float       shadows =       thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Shadows).toFloat();
+    bool        draw_shadows =  thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Draw_Shadows).toBool();
+
+    float       pulse =         thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse).toFloat();
+    float       pulse_speed =   thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse_Speed).toFloat();
+
+    light_size *= c_light_size_adjuster;
+
+    addThing( new DrEngineLight(this, getNextKey(), position.x() + offset_x, -position.y() + offset_y, z_order, static_cast<Light_Type>(light_type),
+                                light_color, static_cast<float>(light_size),
+                                QPointF(cone_start, cone_end), intensity, shadows, draw_shadows, blur, pulse, pulse_speed, alpha));
+}
+
+
+//####################################################################################
+//##    Loads one DrProject DrThingType::Light to World / Space
+//####################################################################################
+void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double offset_y) {
+
+    // Load Light Thing Properties
+    QPointF     position =      thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
+    double      z_order =       thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
+    float       alpha =         thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
+
+    addThing( new DrEngineWater(this, getNextKey(), position.x() + offset_x, -position.y() + offset_y, z_order ) );
+}
 
 
 

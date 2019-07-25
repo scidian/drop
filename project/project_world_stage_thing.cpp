@@ -158,8 +158,6 @@ void DrThing::addComponentSettingsWater() {
 
     addComponent(Components::Thing_Settings_Water, "Water Settings", "Settings for current Water reflection.", Component_Colors::Blue_Drop, true);
     getComponent(Components::Thing_Settings_Water)->setIcon(Component_Icons::Water);
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Direction, Property_Type::List, 0,
-                           "Direction", "Direction this water should reflect from, usually Up. ");
     addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Color, Property_Type::Color, QColor(96, 96, 255).rgba(),
                            "Water Color", "Color tint for this Water.");
 

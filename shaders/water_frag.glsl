@@ -55,7 +55,7 @@ void main( void ) {
 
     // Refraction amounts on the different textures
     float refract_reflection =    1.0 * u_zoom;
-    float refract_underwater =    1.0 * u_zoom;
+    float refract_underwater =    2.0 * u_zoom;
     float refract_texture    =   10.0 * u_zoom;
     float refract_top_of_water =  1.0 * u_zoom;
 
@@ -119,7 +119,7 @@ void main( void ) {
         water = texture2D(u_texture_water, vec2(
                     (coords.x*diff_w*(1.0/u_zoom) + refract_x*refract_texture*(1.0/u_zoom) + player_x + xoffset), // + (time/50.0),      // gives movement
                     (coords.y*diff_h*(1.0/u_zoom) + refract_y*refract_texture*(1.0/u_zoom) + player_y + yoffset*bob_texture)) * (shrink_texture*u_zoom) );
-            water = vec4(mix(water.rgb, overlay_color, color_tint),   1.0);
+        water = vec4(mix(water.rgb, overlay_color, color_tint),   1.0);
 
         original = mix(original,   water,          u_alpha);
         original = mix(original,   reflection,     reflection_opacity);

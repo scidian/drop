@@ -48,23 +48,11 @@ void DrOpenGL::paintGL() {
     releaseOffscreenBuffer();                                                       // Release Frame Buffer Object
     QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);         // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
 
-
-    // !!!!! TEMP: Water
-    bindOffscreenBuffer(false);                                                     // Create / Bind Offscreen Frame Buffer Object
-    drawFrameBufferUsingWaterShader(m_texture_fbo);
-    releaseOffscreenBuffer();                                                       // Release Frame Buffer Object
-    QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);         // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
-
-
-
-    // ***** Bind default Qt FrameBuffer, clear and set up for drawing
+    // ***** Bind default Qt FrameBuffer, Clear and Render FBO to screen buffer as a textured quad, with post processing available
     QOpenGLFramebufferObject::bindDefault();
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-    // ***** Renders Frame Buffer Object to screen buffer as a textured quad, with post processing available
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                              // Standard non-premultiplied alpha blend
+    glDisable(GL_BLEND);
     drawFrameBufferUsingDefaultShader(m_texture_fbo);
 
     // ***** Draws Debug Shapes / Text Onto Frame Buffer Object
@@ -366,7 +354,7 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo) {
     m_water_shader.enableAttributeArray( a_water_vertex );
 
     // Set variables for shader
-    m_water_shader.setUniformValue( u_water_alpha,      1.0f );
+    m_water_shader.setUniformValue( u_water_alpha,      0.5f );
     m_water_shader.setUniformValue( u_water_zoom,       m_scale );
     m_water_shader.setUniformValue( u_water_pos,        m_engine->getCurrentWorld()->getCameraPos().x(), m_engine->getCurrentWorld()->getCameraPos().y(), 0.0f );
     m_water_shader.setUniformValue( u_water_width,      static_cast<float>(fbo->width()) );

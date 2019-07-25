@@ -203,7 +203,6 @@ enum class Properties {
     Thing_Light_Pulse_Speed,        //double
 
     // Water Settings
-    Thing_Water_Direction,          //list (Up, Down, Left, Right)
     Thing_Water_Color,              //color
 
     // Text Settings
