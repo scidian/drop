@@ -178,8 +178,13 @@ void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double off
 
     QColor      water_color =   QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Color).toUInt());
     float       water_tint =    thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Color_Tint).toFloat() / 100.0f;
+    float       reflection =    thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Reflection).toFloat() / 100.0f;
+    float       ripple_length = thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Length).toFloat();
+    float       ripple_speed =  thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Speed).toFloat();
 
-    addThing( new DrEngineWater(this, getNextKey(), position.x() + offset_x, -position.y() + offset_y, z_order, size, water_color, water_tint, alpha ) );
+    addThing( new DrEngineWater(this, getNextKey(), position.x() + offset_x, -position.y() + offset_y, z_order,
+                                size, water_color, water_tint, reflection, ripple_length, ripple_speed,
+                                alpha ) );
 }
 
 

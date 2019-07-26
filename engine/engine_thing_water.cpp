@@ -11,15 +11,21 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrEngineWater::DrEngineWater(DrEngineWorld *world, long unique_key,
-                             double x, double y, double z, QPointF size, QColor color, float tint, float opacity) :
+DrEngineWater::DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z,
+                             QPointF size, QColor color, float tint, float reflection, float rip_length, float rip_speed,
+                             float opacity) :
     DrEngineThing(world, unique_key) {
 
     this->setPosition( QPointF(x, y) );
     this->z_order = z;
+    this->water_size = size;
+
     this->water_color = color;
     this->water_tint = tint;
-    this->water_size = size;
+    this->reflection_opacity = reflection;
+    this->ripple_length = rip_length;
+    this->ripple_speed = rip_speed;
+
     this->setOpacity( opacity );
 }
 

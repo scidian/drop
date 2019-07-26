@@ -26,7 +26,11 @@ public:
     // Water Settings
     QPointF         water_size;                             // Size of water
     QColor          water_color = QColor(128, 128, 255);    // Color of water
-    float           water_tint = 0.5f;                      // Color Tint Percentage
+    float           water_tint = 0.5f;                      // Color tint percentage    0 to 1
+    float           reflection_opacity = 0.5f;              // Reflection opacity       0 to 1
+
+    float           ripple_length = 50.0;                   // Ripple length            0 to 100
+    float           ripple_speed =  50.0;                   // Ripple speed             0 to 100
 
 
     float           wave_length =  200.0f;                  // 50 is good for big waves, 200 is good for small ripples      0.0 to 400.0
@@ -41,7 +45,9 @@ public:
 
 public:
     // Constructor / Destructor
-    DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z, QPointF size, QColor color, float tint, float opacity);
+    DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z,
+                  QPointF size, QColor color, float tint, float reflection, float rip_length, float rip_speed,
+                  float opacity);
     virtual ~DrEngineWater() override;
 
     // Abstract Engine Thing Overrides

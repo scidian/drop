@@ -67,8 +67,8 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
 
     glActiveTexture(GL_TEXTURE0);                           // Texture unit 0
     glBindTexture(GL_TEXTURE_2D, fbo->texture());
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER); // GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER); // GL_MIRRORED_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);      // Better for water ripples
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);      // Better for reflection
 
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
@@ -101,7 +101,11 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
                                     static_cast<float>(water->water_color.redF()),
                                     static_cast<float>(water->water_color.greenF()),
                                     static_cast<float>(water->water_color.blueF()) );
-    m_water_shader.setUniformValue( u_water_color_tint, water->water_tint );
+
+    m_water_shader.setUniformValue( u_water_color_tint,     water->water_tint );
+    m_water_shader.setUniformValue( u_water_reflection,     water->reflection_opacity );
+    m_water_shader.setUniformValue( u_water_ripple_length,  water->ripple_length );
+    m_water_shader.setUniformValue( u_water_ripple_speed,   water->ripple_speed );
 
     // Set variables for shader
     m_water_shader.setUniformValue( u_water_alpha,      water->getOpacity() );

@@ -206,6 +206,9 @@ private:
 
     int     u_water_color;
     int     u_water_color_tint;
+    int     u_water_reflection;
+    int     u_water_ripple_length;
+    int     u_water_ripple_speed;
 
     // ********** End Shaders **********
 

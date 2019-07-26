@@ -158,10 +158,16 @@ void DrThing::addComponentSettingsWater() {
 
     addComponent(Components::Thing_Settings_Water, "Water Settings", "Settings for current Water reflection.", Component_Colors::Blue_Drop, true);
     getComponent(Components::Thing_Settings_Water)->setIcon(Component_Icons::Water);
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Color, Property_Type::Color, QColor(96, 96, 255, 255).rgba(),
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Color, Property_Type::Color, QColor(0, 140, 136, 255).rgba(),
                            "Water Color", "Color tint for this Water.");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Color_Tint, Property_Type::Percent, 50.0,
-                           "Tint Percent", "How much to tint the water, 0 (none) - 100 (all the way)");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Color_Tint, Property_Type::Percent, 75.0,
+                           "Tint Percent", "How much color to tint the water, 0 (none) - 100 (all the way)");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Reflection, Property_Type::Percent, 25.0,
+                           "Reflection", "Reflection opacity.");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Length, Property_Type::Percent, 50.0,
+                           "Ripple Length", "Size of ripples to show in water");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Speed, Property_Type::Percent, 25.0,
+                           "Ripple Speed", "Rate ripples move through water");
 
 }
 

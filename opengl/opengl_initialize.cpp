@@ -231,8 +231,13 @@ void DrOpenGL::initializeGL() {
 
     u_water_color =             m_water_shader.uniformLocation(     "u_color" );
     u_water_color_tint =        m_water_shader.uniformLocation(     "u_color_tint" );
+    u_water_reflection =        m_water_shader.uniformLocation(     "u_reflection" );
+    u_water_ripple_length =     m_water_shader.uniformLocation(     "u_ripple_length" );
+    u_water_ripple_speed =      m_water_shader.uniformLocation(     "u_ripple_speed" );
+
 
 }
+
 
 
 

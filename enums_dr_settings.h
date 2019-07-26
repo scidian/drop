@@ -205,6 +205,9 @@ enum class Properties {
     // Water Settings
     Thing_Water_Color,              //color
     Thing_Water_Color_Tint,         //percent
+    Thing_Water_Reflection,         //percent
+    Thing_Water_Ripple_Length,      //percent
+    Thing_Water_Ripple_Speed,       //percent
 
     // Text Settings
     Thing_Text_User_Text,           //string
