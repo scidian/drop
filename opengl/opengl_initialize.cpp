@@ -62,6 +62,9 @@ void DrOpenGL::initializeGL() {
     }
 
 
+
+    // ******************** Shaders ********************
+
     // ***** Initialize our basic shader, shaders have 2 parts, a Vertex shader followed by a Fragment shader
     QOpenGLShader v_default_shader( QOpenGLShader::Vertex );        v_default_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
     QOpenGLShader f_default_shader( QOpenGLShader::Fragment );      f_default_shader.compileSourceFile( ":/shaders/default_frag.glsl" );
@@ -232,8 +235,13 @@ void DrOpenGL::initializeGL() {
     u_water_color =             m_water_shader.uniformLocation(     "u_color" );
     u_water_color_tint =        m_water_shader.uniformLocation(     "u_color_tint" );
     u_water_reflection =        m_water_shader.uniformLocation(     "u_reflection" );
-    u_water_ripple_length =     m_water_shader.uniformLocation(     "u_ripple_length" );
+    u_water_ripple_frequency =  m_water_shader.uniformLocation(     "u_ripple_frequency" );
     u_water_ripple_speed =      m_water_shader.uniformLocation(     "u_ripple_speed" );
+    u_water_ripple_amplitude =  m_water_shader.uniformLocation(     "u_ripple_amplitude" );
+    u_water_ripple_stretch =    m_water_shader.uniformLocation(     "u_ripple_stretch" );
+    u_water_wave_frequency =    m_water_shader.uniformLocation(     "u_wave_frequency" );
+    u_water_wave_speed =        m_water_shader.uniformLocation(     "u_wave_speed" );
+    u_water_wave_amplitude =    m_water_shader.uniformLocation(     "u_wave_amplitude" );
 
 
 }

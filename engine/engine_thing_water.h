@@ -26,27 +26,24 @@ public:
     // Water Settings
     QPointF         water_size;                             // Size of water
     QColor          water_color = QColor(128, 128, 255);    // Color of water
-    float           water_tint = 0.5f;                      // Color tint percentage    0 to 1
-    float           reflection_opacity = 0.5f;              // Reflection opacity       0 to 1
+    float           water_tint = 0.5f;                      // Color tint percentage     0 to 1
+    float           reflection_opacity = 0.5f;              // Reflection opacity        0 to 1
 
-    float           ripple_length = 50.0;                   // Ripple length            0 to 100
-    float           ripple_speed =  50.0;                   // Ripple speed             0 to 100
+    float           ripple_frequency = 100.0;               // Ripple frequency         25 to 100 is pretty good
+    float           ripple_speed =      50.0;               // Ripple speed              0 to 100 is pretty good
+    float           ripple_amplitude =  25.0;               // Ripple amplitude          0 to 100 is pretty good
+    float           ripple_stretch =    25.0;               // Ripple stretch            0 to 100 is pretty good
 
-
-    float           wave_length =  200.0f;                  // 50 is good for big waves, 200 is good for small ripples      0.0 to 400.0
-    float           wave_speed =     5.0f;                  //  1 is good for big waves,   5 is good for small ripples      0.0 to  10.0
-
-    float           wave_min_width = 0.25f;                 // Minimum wave starting width          0.0 to  1.0     good start =  0.25
-    float           wave_stretch =   3.00f;                 // Stretches away from the start        0.0 to 10.0     good start =  3.00
-
-    float           bob_speed =      2.00f;                 // Between 0.0 and 5.0                                  good = 2.00
-    float           bob_amount =     0.01f;                 // Between 0.0 and 0.05                                 good = 0.01
+    float           wave_frequency =    20.0;               // Wave frequency
+    float           wave_speed =        20.0;               // Wave frequency
+    float           wave_amplitude =    20.0;               // Wave frequency
 
 
 public:
     // Constructor / Destructor
-    DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z,
-                  QPointF size, QColor color, float tint, float reflection, float rip_length, float rip_speed,
+    DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z, QPointF size, QColor color, float tint, float reflection,
+                  float rip_length, float rip_speed, float rip_amplitude, float rip_stretch,
+                  float w_length,   float w_speed,   float w_amplitude,
                   float opacity);
     virtual ~DrEngineWater() override;
 

@@ -171,19 +171,25 @@ void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double off
 void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double offset_y) {
 
     // Load Light Thing Properties
-    QPointF     position =      thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
-    double      z_order =       thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
-    float       alpha =         thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
-    QPointF     size =          thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF();
+    QPointF     position =          thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
+    double      z_order =           thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
+    float       alpha =             thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
+    QPointF     size =              thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF();
 
-    QColor      water_color =   QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Color).toUInt());
-    float       water_tint =    thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Color_Tint).toFloat() / 100.0f;
-    float       reflection =    thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Reflection).toFloat() / 100.0f;
-    float       ripple_length = thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Length).toFloat();
-    float       ripple_speed =  thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Speed).toFloat();
+    QColor      water_color =       QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Color).toUInt());
+    float       water_tint =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Color_Tint).toFloat() / 100.0f;
+    float       reflection =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Reflection).toFloat() / 100.0f;
+    float       ripple_freq =       thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Frequency).toFloat();
+    float       ripple_speed =      thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Speed).toFloat();
+    float       ripple_amplitude =  thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Amplitude).toFloat();
+    float       ripple_stretch =    thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Stretch).toFloat();
+    float       wave_freq =         thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Wave_Frequency).toFloat();
+    float       wave_speed =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Wave_Speed).toFloat();
+    float       wave_amplitude =    thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Wave_Amplitude).toFloat();
 
-    addThing( new DrEngineWater(this, getNextKey(), position.x() + offset_x, -position.y() + offset_y, z_order,
-                                size, water_color, water_tint, reflection, ripple_length, ripple_speed,
+    addThing( new DrEngineWater(this, getNextKey(), position.x() + offset_x, -position.y() + offset_y, z_order, size, water_color, water_tint, reflection,
+                                ripple_freq, ripple_speed, ripple_amplitude, ripple_stretch,
+                                wave_freq, wave_speed, wave_amplitude,
                                 alpha ) );
 }
 

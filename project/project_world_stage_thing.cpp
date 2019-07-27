@@ -164,10 +164,23 @@ void DrThing::addComponentSettingsWater() {
                            "Tint Percent", "How much color to tint the water, 0 (none) - 100 (all the way)");
     addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Reflection, Property_Type::Percent, 25.0,
                            "Reflection", "Reflection opacity.");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Length, Property_Type::Percent, 50.0,
-                           "Ripple Length", "Size of ripples to show in water");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Speed, Property_Type::Percent, 25.0,
-                           "Ripple Speed", "Rate ripples move through water");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Frequency, Property_Type::Double, 100.0,
+                           "Ripple Frequency", "Length of ripples appearing in water, lower numbers produce longer period ripples. "
+                                               "Generally, ranging around 0 to 100 will produce nice results.");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Speed, Property_Type::Double, 50.0,
+                           "Ripple Speed", "Rate ripples move through water. Generally, ranging around 0 to 100 will produce nice results.");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Amplitude, Property_Type::Double, 20.0,
+                           "Ripple Amplitude", "Size of ripples appearing in water. Generally, ranging around 0 to 100 will produce nice results.");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Stretch, Property_Type::Double, 10.0,
+                           "Ripple Stretch", "Rate ripple amplitude increases as ripples move away from start of water. A setting of 0 will keep Amplitude "
+                                             "the same, a negative value will decrease ripple amplitude.");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Wave_Frequency, Property_Type::Double, 10.0,
+                           "Wave Frequency", "Length of waves appearing in water, lower numbers produce longer period waves. "
+                                             "Generally, ranging around 0 to 100 will produce nice results.");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Wave_Speed, Property_Type::Double, 20.0,
+                           "Wave Speed", "Rate waves move up and down. Generally, ranging around 0 to 100 will produce nice results.");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Wave_Amplitude, Property_Type::Double, 10.0,
+                           "Wave Amplitude", "Size of waves as they move up and down in water. Generally, ranging around 0 to 100 will produce nice results.");
 
 }
 

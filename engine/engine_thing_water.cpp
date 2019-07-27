@@ -11,8 +11,9 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrEngineWater::DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z,
-                             QPointF size, QColor color, float tint, float reflection, float rip_length, float rip_speed,
+DrEngineWater::DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z, QPointF size, QColor color, float tint, float reflection,
+                             float rip_frequency, float rip_speed, float rip_amplitude, float rip_stretch,
+                             float w_length,      float w_speed,   float w_amplitude,
                              float opacity) :
     DrEngineThing(world, unique_key) {
 
@@ -23,8 +24,15 @@ DrEngineWater::DrEngineWater(DrEngineWorld *world, long unique_key, double x, do
     this->water_color = color;
     this->water_tint = tint;
     this->reflection_opacity = reflection;
-    this->ripple_length = rip_length;
+
+    this->ripple_frequency = rip_frequency;
     this->ripple_speed = rip_speed;
+    this->ripple_amplitude = rip_amplitude;
+    this->ripple_stretch = rip_stretch;
+
+    this->wave_frequency = w_length;
+    this->wave_speed = w_speed;
+    this->wave_amplitude = w_amplitude;
 
     this->setOpacity( opacity );
 }
