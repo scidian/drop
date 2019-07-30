@@ -181,6 +181,23 @@ void DrThing::addComponentSettingsWater() {
                            "Wave Speed", "Rate waves move up and down. Generally, ranging around 0 to 100 will produce nice results.");
     addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Wave_Amplitude, Property_Type::Double, 10.0,
                            "Wave Amplitude", "Size of waves as they move up and down in water. Generally, ranging around 0 to 100 will produce nice results.");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Surface_Color, Property_Type::Color, QColor(255, 255, 255, 255).rgba(),
+                           "Foam Color", "Color tint for the top layer of the water.");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Surface_Tint, Property_Type::Percent, 50.0,
+                           "Foam Tint", "How much color to tint the top layer of the water, 0 (none) - 100 (all the way)");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Surface_Height, Property_Type::Double, 5.0,
+                           "Foam Height", "Thickness of the top layer of the water.");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Refract_Reflection, Property_Type::Percent, 20.0,
+                           "Refract Reflect", "How much refraction to apply to the reflection shown on the water surface.");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Refract_Underwater, Property_Type::Percent, 20.0,
+                           "Refract Under", "How much refraction to apply to the objects under the water.");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Refract_Texture, Property_Type::Percent, 20.0,
+                           "Refract Texture", "How much refraction to apply to the water texture.");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Refract_Foam, Property_Type::Percent, 20.0,
+                           "Refract Foam", "How much refraction to apply to the foam on top of the water.");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Movement_Speed, Property_Type::Double, 0.0,
+                           "Movement Speed", "This value will cause the water texture to move left / right.");
+
 
 }
 

@@ -214,6 +214,14 @@ private:
     int     u_water_wave_frequency;
     int     u_water_wave_speed;
     int     u_water_wave_amplitude;
+    int     u_water_surface_color;
+    int     u_water_surface_tint;
+    int     u_water_surface_height;
+    int     u_refract_reflection;
+    int     u_refract_underwater;
+    int     u_refract_texture;
+    int     u_refract_foam;
+    int     u_movement_speed;
 
     // ********** End Shaders **********
 

@@ -242,6 +242,14 @@ void DrOpenGL::initializeGL() {
     u_water_wave_frequency =    m_water_shader.uniformLocation(     "u_wave_frequency" );
     u_water_wave_speed =        m_water_shader.uniformLocation(     "u_wave_speed" );
     u_water_wave_amplitude =    m_water_shader.uniformLocation(     "u_wave_amplitude" );
+    u_water_surface_color =     m_water_shader.uniformLocation(     "u_surface_color" );
+    u_water_surface_tint =      m_water_shader.uniformLocation(     "u_surface_tint" );
+    u_water_surface_height =    m_water_shader.uniformLocation(     "u_surface_height" );
+    u_refract_reflection =      m_water_shader.uniformLocation(     "u_refract_reflection" );
+    u_refract_underwater =      m_water_shader.uniformLocation(     "u_refract_underwater" );
+    u_refract_texture =         m_water_shader.uniformLocation(     "u_refract_texture" );
+    u_refract_foam =            m_water_shader.uniformLocation(     "u_refract_foam" );
+    u_movement_speed =          m_water_shader.uniformLocation(     "u_movement_speed" );
 
 
 }

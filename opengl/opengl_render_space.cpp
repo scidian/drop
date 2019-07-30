@@ -85,7 +85,11 @@ void DrOpenGL::setUpSpaceShader(std::vector<float> &texture_coords) {
     // ***** Blend function
     glEnable(GL_BLEND);
     ///glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);           // Standard non-premultiplied alpha blend
+    ///glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);                     // Additive blending
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);                    // Premultiplied alpha blend
+
+    // Fancy Seperate RGB/Alpha Blend Functions
+    ///glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);        // Premultiplied alpha blend
 
     // ***** Set Matrix for Shader, calculates current matrix
     m_default_shader.setUniformValue( u_default_matrix, (m_projection * m_model_view) );
@@ -162,6 +166,8 @@ void DrOpenGL::drawSpace() {
                 continue;
             }
         }
+
+
 
 
         // ***** Convert Thing to Object, Continue with Render
@@ -283,7 +289,7 @@ bool DrOpenGL::drawGlowBuffer() {
         glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);                        // Best Light blend function, a little but of oversaturation, but looks nice
         ///glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);           // Standard blend function
         ///glBlendFunc(GL_DST_COLOR, GL_ZERO);                          // "Screen" (slembcke) light blend function. Good, but doesnt get brighter than texture colors
-        ///glBlendFunc(GL_ONE, GL_ONE);                                 // To Add Lights Together, not really great for lighting though
+        ///glBlendFunc(GL_ONE, GL_ONE);                                 // Supposed to add lights together, not really great for lighting though
         drawFrameBufferUsingKernelShader(m_glow_fbo);
 
     } else if (mode == Blend_Mode::Hard_Light) {

@@ -38,12 +38,24 @@ public:
     float           wave_speed =        20.0;               // Wave frequency
     float           wave_amplitude =    20.0;               // Wave frequency
 
+    QColor          surface_color = QColor(255, 255, 255);  // Surface color
+    float           surface_tint = 0.5f;                    // Surface tint percentage
+    float           surface_height = 5.0f;                  // Surface height
+
+    float           refract_reflection = 1.0f;
+    float           refract_underwater = 1.0f;
+    float           refract_texture = 1.0f;
+    float           refract_foam = 1.0f;
+
+    float           movement_speed = 0.0f;                  // Moves texture left / right
 
 public:
     // Constructor / Destructor
     DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z, QPointF size, QColor color, float tint, float reflection,
-                  float rip_length, float rip_speed, float rip_amplitude, float rip_stretch,
-                  float w_length,   float w_speed,   float w_amplitude,
+                  float rip_length,  float rip_speed, float rip_amplitude, float rip_stretch,
+                  float w_length,    float w_speed,   float w_amplitude,
+                  QColor foam_color, float foam_tint, float foam_height,
+                  float r_reflection,  float r_underwater, float r_texture, float r_foam, float texture_movement,
                   float opacity);
     virtual ~DrEngineWater() override;
 
@@ -55,9 +67,16 @@ public:
 };
 
 
-
-
 #endif // ENGINE_THING_WATER_H
+
+
+
+
+
+
+
+
+
 
 
 

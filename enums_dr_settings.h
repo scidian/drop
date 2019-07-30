@@ -213,6 +213,14 @@ enum class Properties {
     Thing_Water_Wave_Frequency,     //double
     Thing_Water_Wave_Speed,         //double
     Thing_Water_Wave_Amplitude,     //double
+    Thing_Water_Surface_Color,      //color
+    Thing_Water_Surface_Tint,       //percent
+    Thing_Water_Surface_Height,     //double
+    Thing_Water_Refract_Reflection, //percent
+    Thing_Water_Refract_Underwater, //percent
+    Thing_Water_Refract_Texture,    //percent
+    Thing_Water_Refract_Foam,       //percent
+    Thing_Water_Movement_Speed,     //double
 
     // Text Settings
     Thing_Text_User_Text,           //string

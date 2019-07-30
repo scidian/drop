@@ -112,6 +112,19 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
     m_water_shader.setUniformValue( u_water_wave_speed,         water->wave_speed );
     m_water_shader.setUniformValue( u_water_wave_amplitude,     water->wave_amplitude );
 
+    m_water_shader.setUniformValue( u_water_surface_color,
+                                    static_cast<float>(water->surface_color.redF()),
+                                    static_cast<float>(water->surface_color.greenF()),
+                                    static_cast<float>(water->surface_color.blueF()) );
+    m_water_shader.setUniformValue( u_water_surface_tint,       water->surface_tint );
+    m_water_shader.setUniformValue( u_water_surface_height,     water->surface_height );
+
+    m_water_shader.setUniformValue( u_refract_reflection,       water->refract_reflection );
+    m_water_shader.setUniformValue( u_refract_underwater,       water->refract_underwater );
+    m_water_shader.setUniformValue( u_refract_texture,          water->refract_texture );
+    m_water_shader.setUniformValue( u_refract_foam,             water->refract_foam );
+    m_water_shader.setUniformValue( u_movement_speed,           water->movement_speed );
+
     // Set variables for shader
     m_water_shader.setUniformValue( u_water_alpha,      water->getOpacity() );
     m_water_shader.setUniformValue( u_water_zoom,       m_scale );

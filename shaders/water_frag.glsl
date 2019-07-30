@@ -41,6 +41,16 @@ uniform lowp  float u_wave_frequency;               // Horizontal wave length   
 uniform lowp  float u_wave_speed;                   // Bob speed                            0.0 to 100.0    good = 20
 uniform lowp  float u_wave_amplitude;               // Bob amount                           0.0 to 100.0    good = 20
 
+uniform lowp  vec3  u_surface_color;                // Surface Color, r/g/b                 0.0 to 1.0 x 3
+uniform lowp  float u_surface_tint;                 // Surface Color Tint Percent
+uniform lowp  float u_surface_height;               // Surface Height
+
+uniform lowp  float u_refract_reflection;           // good = 1.0
+uniform lowp  float u_refract_underwater;           // good = 2.0
+uniform lowp  float u_refract_texture;              // good = 8.0
+uniform lowp  float u_refract_foam;                 // good = 2.0
+
+uniform lowp  float u_movement_speed;               // Moves texture, top of water left or right, default should be 0
 
 //####################################################################################
 //##        Main Shader Function
@@ -61,36 +71,35 @@ void main( void ) {
     float wave_speed =          u_wave_speed/10.0;
     float wave_amplitude =      u_wave_amplitude/10.0;
 
-
-
-    vec3  surface_color =       vec3(1.0, 1.0, 1.0);
-    float surface_tint =        0.5;
-    float surface_height =      7.5;
+    vec3  surface_color =       u_surface_color;
+    float surface_tint =        u_surface_tint;
+    float surface_height =      u_surface_height;
 
     // Refraction amounts on the different textures
-    float refract_reflection =    1.0 * u_zoom;
-    float refract_underwater =    2.0 * u_zoom;
-    float refract_texture    =    8.0 * u_zoom;
-    float refract_top_of_water =  2.0 * u_zoom;
+    float refract_reflection =  u_refract_reflection / 20.0;
+    float refract_underwater =  u_refract_underwater / 20.0;
+    float refract_texture    =  u_refract_texture / 4.0;
+    float refract_foam =        u_refract_foam / 10.0;
+
+    // Moves texture, top of water left or right
+    float movement_speed = u_movement_speed;
 
 
-    float movement_speed = 0.0;
-
-
-    // Move coordinates into a vec2 that is not read-only
+    // ***** Move coordinates into a vec2 that is not read-only
     highp vec2 coords = coordinates.st;
     float time = u_time;
     float movement = -movement_speed * (time/20.0);
     float y_start = u_water_top;                                                // 0.0 is bottom, 1.0 is top
 
-    // Calculate some position and scaling values
+    // ***** Calculate some position and scaling values
     float shrink_texture = 3.0;                                                 // 1.0 = normal size, 4.0 equals 1/4 size
     float player_x = u_position.x*0.00083 * (1.0/u_zoom);
     float player_y = u_position.y*0.00083 * (1.0/u_zoom);
     float diff_w = (u_width* (1.0/u_zoom)) / 1200.0;
     float diff_h = (u_height*(1.0/u_zoom)) / 1200.0;
 
-    // Grab value from 2D Water Normal Texture, use it to get refraction values
+
+    // ***** Grab value from 2D Water Normal Texture, use it to get refraction values
     vec3  displacement = texture2D(u_texture_displacement,
                                    vec2(( (coords.x*diff_w)/u_zoom + player_x + movement/2.0),
                                         ( (coords.y*diff_h)/u_zoom + player_y)) / (shrink_texture) ).rgb;
@@ -99,14 +108,14 @@ void main( void ) {
 
 
 
-    // Calculates vertical waves (ripples)
+    // ***** Calculates vertical waves (ripples)
     float xoffset = cos(time*ripple_speed + ripple_frequency*((coords.y*diff_h)/u_zoom + player_y)*u_zoom) * (0.005*u_zoom) *
                     (ripple_amplitude + (y_start - coords.y) * ripple_stretch);
 
     // Calculates horizontal waves
     float yoffset = sin(time*wave_speed   + wave_frequency  *((coords.x*diff_w)/u_zoom + player_x)*u_zoom) * (0.005*u_zoom);
     float bob =     sin(time*wave_speed   + coords.x+refract_x*refract_reflection) * wave_amplitude;
-    float y_top =   y_start - abs(refract_y)*refract_top_of_water*u_zoom + yoffset*bob;
+    float y_top =   y_start - abs(refract_y)*refract_foam*u_zoom + yoffset*bob;
 
     // Grab the reflected value from existing screen
     vec4 reflection, water, original;
@@ -117,7 +126,7 @@ void main( void ) {
 
 
 
-    // If we are above offset, just pass pixel color through as it is above the top of the wave
+    // ***** If we are above offset, just pass pixel color through as it is above the top of the wave
     if (coords.y > y_top || coords.y < u_water_bottom || coords.x < u_water_left || coords.x > u_water_right) {
         discard;
 
@@ -135,7 +144,7 @@ void main( void ) {
         water = vec4(mix(water.rgb, overlay_color, color_tint),   1.0);
 
         original = mix(original,   water,          u_alpha);
-        original = mix(original,   reflection,     reflection_opacity*reflection.a);
+        original = mix(original,   reflection,     reflection_opacity);//*reflection.a);
 
         // Surface coloring (sea foam)
         float foam_distance = (surface_height + sin(refract_x + movement)) / u_height * u_zoom;

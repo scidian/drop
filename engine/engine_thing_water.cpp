@@ -14,6 +14,8 @@
 DrEngineWater::DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z, QPointF size, QColor color, float tint, float reflection,
                              float rip_frequency, float rip_speed, float rip_amplitude, float rip_stretch,
                              float w_length,      float w_speed,   float w_amplitude,
+                             QColor foam_color,   float foam_tint, float foam_height,
+                            float r_reflection,  float r_underwater, float r_texture, float r_foam, float texture_movement,
                              float opacity) :
     DrEngineThing(world, unique_key) {
 
@@ -33,6 +35,16 @@ DrEngineWater::DrEngineWater(DrEngineWorld *world, long unique_key, double x, do
     this->wave_frequency = w_length;
     this->wave_speed = w_speed;
     this->wave_amplitude = w_amplitude;
+
+    this->surface_color = foam_color;
+    this->surface_tint = foam_tint;
+    this->surface_height = foam_height;
+
+    this->refract_reflection = r_reflection;
+    this->refract_underwater = r_underwater;
+    this->refract_texture = r_texture;
+    this->refract_foam = r_foam;
+    this->movement_speed = texture_movement;
 
     this->setOpacity( opacity );
 }
@@ -65,4 +77,10 @@ bool DrEngineWater::update(double time_passed, double time_warp, QRectF &area) {
     if (area.contains(getPosition()) == false) remove = true;
     return remove;
 }
+
+
+
+
+
+
 
