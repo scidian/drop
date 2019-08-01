@@ -97,10 +97,14 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
     m_water_shader.setUniformValue( u_water_bottom,     water_bottom );
     m_water_shader.setUniformValue( u_water_left,       water_left );
     m_water_shader.setUniformValue( u_water_right,      water_right );
-    m_water_shader.setUniformValue( u_water_color,
-                                    static_cast<float>(water->water_color.redF()),
-                                    static_cast<float>(water->water_color.greenF()),
-                                    static_cast<float>(water->water_color.blueF()) );
+    m_water_shader.setUniformValue( u_start_color,
+                                    static_cast<float>(water->start_color.redF()),
+                                    static_cast<float>(water->start_color.greenF()),
+                                    static_cast<float>(water->start_color.blueF()) );
+    m_water_shader.setUniformValue( u_end_color,
+                                    static_cast<float>(water->end_color.redF()),
+                                    static_cast<float>(water->end_color.greenF()),
+                                    static_cast<float>(water->end_color.blueF()) );
 
     m_water_shader.setUniformValue( u_water_color_tint,         water->water_tint );
     m_water_shader.setUniformValue( u_water_reflection,         water->reflection_opacity );

@@ -176,7 +176,8 @@ void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double off
     float       alpha =             thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
     QPointF     size =              thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF();
 
-    QColor      water_color =       QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Color).toUInt());
+    QColor      start_color =       QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color).toUInt());
+    QColor      end_color =         QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color).toUInt());
     float       water_tint =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Color_Tint).toFloat() / 100.0f;
     float       reflection =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Reflection).toFloat() / 100.0f;
     float       ripple_freq =       thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Frequency).toFloat();
@@ -187,21 +188,23 @@ void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double off
     float       wave_speed =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Wave_Speed).toFloat();
     float       wave_amplitude =    thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Wave_Amplitude).toFloat();
 
-    QColor      foam_color =        QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Surface_Color).toUInt());
-    float       foam_tint =         thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Surface_Tint).toFloat() / 100.0f;
-    float       foam_height =       thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Surface_Height).toFloat();
-
     float       refract_1 =         thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Refract_Reflection).toFloat();
     float       refract_2 =         thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Refract_Underwater).toFloat();
     float       refract_3 =         thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Refract_Texture).toFloat();
-    float       refract_4 =         thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Refract_Foam).toFloat();
+
     float       move_speed =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Movement_Speed).toFloat();
 
-    addThing( new DrEngineWater(this, getNextKey(), position.x() + offset_x, -position.y() + offset_y, z_order, size, water_color, water_tint, reflection,
+    QColor      foam_color =    QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Color).toUInt());
+    float       foam_tint =     thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Tint).toFloat() / 100.0f;
+    float       foam_height =   thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Height).toFloat();
+    float       foam_refract =  thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Refract_Foam).toFloat();
+
+    addThing( new DrEngineWater(this, getNextKey(), position.x() + offset_x, -position.y() + offset_y, z_order, size, start_color, end_color,
+                                water_tint, reflection,
                                 ripple_freq, ripple_speed, ripple_amplitude, ripple_stretch,
                                 wave_freq, wave_speed, wave_amplitude,
                                 foam_color, foam_tint, foam_height,
-                                refract_1, refract_2, refract_3, refract_4, move_speed, alpha ) );
+                                refract_1, refract_2, refract_3, foam_refract, move_speed, alpha ) );
 }
 
 

@@ -72,6 +72,7 @@ enum class Components {
     Thing_Settings_Object,
     Thing_Settings_Light,
     Thing_Settings_Water,
+    Thing_Settings_Water_Foam,
     Thing_Settings_Text,
     Thing_Settings_Camera,
 
@@ -203,9 +204,11 @@ enum class Properties {
     Thing_Light_Pulse_Speed,        //double
 
     // Water Settings
-    Thing_Water_Color,              //color
+    Thing_Water_Start_Color,        //color
+    Thing_Water_End_Color,          //color
     Thing_Water_Color_Tint,         //percent
     Thing_Water_Reflection,         //percent
+    Thing_Water_Movement_Speed,     //double
     Thing_Water_Ripple_Frequency,   //double
     Thing_Water_Ripple_Speed,       //double
     Thing_Water_Ripple_Amplitude,   //double
@@ -213,14 +216,15 @@ enum class Properties {
     Thing_Water_Wave_Frequency,     //double
     Thing_Water_Wave_Speed,         //double
     Thing_Water_Wave_Amplitude,     //double
-    Thing_Water_Surface_Color,      //color
-    Thing_Water_Surface_Tint,       //percent
-    Thing_Water_Surface_Height,     //double
     Thing_Water_Refract_Reflection, //percent
     Thing_Water_Refract_Underwater, //percent
     Thing_Water_Refract_Texture,    //percent
+
+    //Water Foam Settings
+    Thing_Water_Surface_Color,      //color
+    Thing_Water_Surface_Tint,       //percent
+    Thing_Water_Surface_Height,     //double
     Thing_Water_Refract_Foam,       //percent
-    Thing_Water_Movement_Speed,     //double
 
     // Text Settings
     Thing_Text_User_Text,           //string

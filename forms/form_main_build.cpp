@@ -216,6 +216,7 @@ void FormMain::buildWidgetsShared() {
                 treeInspector->setExpandsOnDoubleClick(false);
                 treeInspector->setHeaderHidden(true);
                 treeInspector->setFrameShape(QFrame::NoFrame);
+                treeInspector->setUniformRowHeights(false);
 
             verticalLayoutObject->addWidget(treeInspector);
         dockInspector->setWidget(widgetInspector);

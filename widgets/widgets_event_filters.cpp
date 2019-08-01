@@ -49,7 +49,6 @@ bool DrFilterHoverHandler::eventFilter(QObject *obj, QEvent *event) {
         hover_widget->update();
     }
 
-
     return QObject::eventFilter(obj, event);
 }
 

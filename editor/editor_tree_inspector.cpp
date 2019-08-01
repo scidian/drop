@@ -57,6 +57,7 @@ void TreeInspector::setAdvisorInfo(QString header, QString body) { m_editor_rela
 //##    Dynamically build Inspector
 //####################################################################################
 void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
+
     // If no keys were passed in, clear Inspector and exit
     if (key_list.count() == 0) {
         m_selected_key = c_no_key;
@@ -126,7 +127,6 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
 
     for (auto component_pair: list_components) {
 
-
         // *****Create new item in list to hold component and add the TreeWidgetItem to the tree
         QTreeWidgetItem *category_item = new QTreeWidgetItem();
         category_item->setData(0, User_Roles::Key, QVariant::fromValue(component_pair.second->getComponentKey()));      // Stores component key
@@ -138,8 +138,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
         grid->setContentsMargins(0, 0, 0, 0);
 
         if (component_pair.second->getComponentKey() == Dr::EnumToInt(Components::Entity_Name)) {
-            //button_frame->setMaximumHeight(0);
-            category_item->setSizeHint(0, QSize(0, 0));
+            // Make it really small but not zero to hide category button for Name, zero causes scroll bar to stop working for some reason
+            category_item->setSizeHint(0, QSize(1, 1));
         } else {
             DrQPushButtonCategory *category_button = new DrQPushButtonCategory(QString(" ") + component_pair.second->getDisplayNameQString(),
                                                                  Qt::black, Qt::black, nullptr, category_item);
@@ -257,6 +257,15 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
         // Apply the property frame widget to the tree item
         this->setItemWidget(property_item, 0, properties_frame);
     }
+
+
+    // ***** Adds a spacer item at the bottom to allow for comfortable scrolling to the bottom of the tree
+    QTreeWidgetItem *spacer_item  = new QTreeWidgetItem();
+    QLabel *spacer_label = new QLabel();
+    spacer_label->setFixedHeight(160);
+    this->addTopLevelItem(spacer_item);
+    this->setItemWidget(spacer_item, 0, spacer_label);
+
 
     // ***** Disable / enable widgets based on property status
     for (auto widget : m_widgets) {

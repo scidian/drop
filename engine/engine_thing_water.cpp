@@ -11,7 +11,8 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrEngineWater::DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z, QPointF size, QColor color, float tint, float reflection,
+DrEngineWater::DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z, QPointF size, QColor start_color, QColor end_color,
+                             float tint, float reflection,
                              float rip_frequency, float rip_speed, float rip_amplitude, float rip_stretch,
                              float w_length,      float w_speed,   float w_amplitude,
                              QColor foam_color,   float foam_tint, float foam_height,
@@ -23,7 +24,8 @@ DrEngineWater::DrEngineWater(DrEngineWorld *world, long unique_key, double x, do
     this->z_order = z;
     this->water_size = size;
 
-    this->water_color = color;
+    this->start_color = start_color;
+    this->end_color = end_color;
     this->water_tint = tint;
     this->reflection_opacity = reflection;
 

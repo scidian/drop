@@ -18,27 +18,28 @@
 //##    Possible background colors for Component Categories
 //############################
 namespace Component_Colors {
-    const QColor White_Snow     { QColor(255, 252, 249, 255) };
+    const QColor White_Snow         { QColor(255, 252, 249, 255) };
 
-    const QColor Orange_Medium  { QColor(221, 110,  66, 255) };
+    const QColor Orange_Medium      { QColor(221, 110,  66, 255) };
 
-    const QColor Pink_Pearl     { QColor(228, 180, 194, 255) };
-    const QColor Red_Faded      { QColor(255, 105, 120, 255) };
+    const QColor Pink_Pearl         { QColor(228, 180, 194, 255) };
+    const QColor Red_Faded          { QColor(255, 105, 120, 255) };
 
-    const QColor Red_Tuscan     { QColor(104,  71,  86, 255) };
-    const QColor Purple_Pastel  { QColor(176, 161, 186, 255) };
-    const QColor Blue_Yonder    { QColor(165, 181, 191, 255) };
-    const QColor Blue_Drop      { QColor(  0, 180, 175, 255) };
+    const QColor Red_Tuscan         { QColor(104,  71,  86, 255) };
+    const QColor Purple_Pastel      { QColor(176, 161, 186, 255) };
+    const QColor Blue_Yonder        { QColor(165, 181, 191, 255) };
 
-    const QColor Green_SeaGrass { QColor(154, 225, 157, 255) };
+    const QColor Green_SeaGrass     { QColor(154, 225, 157, 255) };
 
-    const QColor Mustard_Yellow { QColor(255, 200,  87, 255) };
-    const QColor Mellow_Yellow  { QColor(250, 223, 127, 255) };
+    const QColor Mustard_Yellow     { QColor(255, 200,  87, 255) };
+    const QColor Mellow_Yellow      { QColor(250, 223, 127, 255) };
 
-    const QColor Brown_Sugar    { QColor(165, 117,  72, 255) };
-    const QColor Beige_Apricot  { QColor(252, 215, 173, 255) };
+    const QColor Brown_Sugar        { QColor(165, 117,  72, 255) };
+    const QColor Beige_Apricot      { QColor(252, 215, 173, 255) };
 
-
+    const QColor Blue_Drop_Dark     { QColor(  0, 180, 175, 255) };
+    const QColor Blue_Drop          { QColor(  0, 225, 219, 255) };
+    const QColor Blue_Drop_Light    { QColor(128, 255, 248, 255) };
 };
 
 //####################################################################################
@@ -52,6 +53,7 @@ namespace Component_Icons {
     const QString Object        { QString(":/assets/inspector_icons/comp_object.png") };
     const QString Light         { QString(":/assets/inspector_icons/comp_light.png") };
     const QString Water         { QString(":/assets/inspector_icons/comp_water.png") };
+    const QString Water_Foam    { QString(":/assets/inspector_icons/comp_water_foam.png") };
     const QString Font          { QString(":/assets/inspector_icons/comp_font.png") };
     const QString Camera        { QString(":/assets/inspector_icons/comp_camera.png") };
 

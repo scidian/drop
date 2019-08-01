@@ -28,7 +28,8 @@ uniform lowp  float u_water_bottom;                 // Bottom of Water,     from
 uniform lowp  float u_water_left;                   // Left side of Water,  from 0.0 to 1.0 in screen coordinates
 uniform lowp  float u_water_right;                  // Right side of Water, from 0.0 to 1.0 in screen coordinates
 
-uniform lowp  vec3  u_color;                        // Water Color, r/g/b               0.0 to 1.0 x 3
+uniform lowp  vec3  u_start_color;                  // Water Start (Top)  Color, r/g/b      0.0 to 1.0 x 3
+uniform lowp  vec3  u_end_color;                    // Water End (Bottom) Color, r/g/b      0.0 to 1.0 x 3
 uniform lowp  float u_color_tint;                   // Water Color Tint Percent
 uniform lowp  float u_reflection;                   // Reflection Opacity               good start = 0.5
 
@@ -58,7 +59,8 @@ uniform lowp  float u_movement_speed;               // Moves texture, top of wat
 void main( void ) {
 
     // ***** Water Input Variables
-    vec3  overlay_color =       u_color;
+    vec3  start_color =         u_start_color;
+    vec3  end_color =           u_end_color;
     float color_tint =          u_color_tint;
     float reflection_opacity =  u_reflection;
 
@@ -79,10 +81,10 @@ void main( void ) {
     float refract_reflection =  u_refract_reflection / 20.0;
     float refract_underwater =  u_refract_underwater / 20.0;
     float refract_texture    =  u_refract_texture / 4.0;
-    float refract_foam =        u_refract_foam / 10.0;
+    float refract_foam =        u_refract_foam / 12.0;
 
     // Moves texture, top of water left or right
-    float movement_speed = u_movement_speed;
+    float movement_speed =      u_movement_speed;
 
 
     // ***** Move coordinates into a vec2 that is not read-only
@@ -139,9 +141,10 @@ void main( void ) {
 
         // Mix in overlay_color and water texture
         water = texture2D(u_texture_water, vec2(
-                    (coords.x*diff_w*(1.0/u_zoom) + refract_x*refract_texture*(1.0/u_zoom) + player_x + xoffset) + movement,
+                    (coords.x*diff_w*(1.0/u_zoom) + refract_x*refract_texture*(1.0/u_zoom) + player_x + xoffset) + (movement/2.0),
                     (coords.y*diff_h*(1.0/u_zoom) + refract_y*refract_texture*(1.0/u_zoom) + player_y + yoffset*bob)) * (shrink_texture*u_zoom) );
-        water = vec4(mix(water.rgb, overlay_color, color_tint),   1.0);
+        vec3 water_color = mix(start_color, end_color, smoothstep(0.0, 1.0, (coords.y - u_water_top) / (u_water_bottom - u_water_top)));
+        water = vec4(mix(water.rgb, water_color, color_tint), 1.0);
 
         original = mix(original,   water,          u_alpha);
         original = mix(original,   reflection,     reflection_opacity);//*reflection.a);

@@ -204,7 +204,8 @@ private:
     int     u_water_left;
     int     u_water_right;
 
-    int     u_water_color;
+    int     u_start_color;
+    int     u_end_color;
     int     u_water_color_tint;
     int     u_water_reflection;
     int     u_water_ripple_frequency;

@@ -58,8 +58,9 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
                     break;
                 }
                 case DrEffectType::Water: {
-                    uint water_color =  m_thing->getComponentProperty(Components::Thing_Settings_Water, Properties::Thing_Water_Color)->getValue().toUInt();
-                    m_pixmap = DrImaging::drawWater( QColor::fromRgba( water_color ));
+                    uint start_color =  m_thing->getComponentProperty(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color)->getValue().toUInt();
+                    uint end_color =    m_thing->getComponentProperty(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color)->getValue().toUInt();
+                    m_pixmap = DrImaging::drawWater( QColor::fromRgba(start_color), QColor::fromRgba(end_color) );
                     break;
                 }
             }

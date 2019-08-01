@@ -234,7 +234,7 @@ void FormMain::buildWidgetsEditor()
             verticalLayoutAsset->setSpacing(0);
             verticalLayoutAsset->setContentsMargins(0, 0, 0, 0);
 
-                // ***** Load our custom TreeInspector for the Stage List
+                // ***** Load our custom TreeAssets for the Asset List
                 treeAssetEditor = new TreeAssets(widgetAssestEditor, m_project, this);
                 treeAssetEditor->setObjectName(QStringLiteral("treeAssetEditor"));
                 treeAssetEditor->setColumnCount(1);
