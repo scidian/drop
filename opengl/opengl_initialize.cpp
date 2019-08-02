@@ -39,10 +39,15 @@ void DrOpenGL::initializeGL() {
 
     // Load test resources
     m_engine->addTexture(Asset_Textures::Numbers,           ":/assets/engine/numbers.png");
+
     m_engine->addTexture(Asset_Textures::Water_Normal_1,    ":/assets/textures/water_normal.jpg");
-    m_engine->addTexture(Asset_Textures::Water_Texture_1,   ":/assets/textures/water_texture.png");
+    m_engine->addTexture(Asset_Textures::Water_Texture_1,   ":/assets/textures/water_texture_1.png");
     m_engine->addTexture(Asset_Textures::Water_Texture_2,   ":/assets/textures/water_texture_2.png");
-    m_engine->addTexture(Asset_Textures::Lava_Texture_1,    ":/assets/textures/lava_texture.jpg");
+    m_engine->addTexture(Asset_Textures::Water_Texture_3,   ":/assets/textures/water_texture_3.png");
+    m_engine->addTexture(Asset_Textures::Water_Texture_5,   ":/assets/textures/water_texture_5.png");
+    m_engine->addTexture(Asset_Textures::Water_Texture_7,   ":/assets/textures/water_texture_7.png");
+    m_engine->addTexture(Asset_Textures::Water_Texture_8,   ":/assets/textures/water_texture_8.png");
+
     m_engine->addTexture(Asset_Textures::Ball,              ":/assets/test_images/ball_1.png");
     m_engine->addTexture(Asset_Textures::Block,             ":/assets/test_images/metal_block.png");
     m_engine->addTexture(Asset_Textures::Plant,             ":/assets/test_images/moon_plant_6.png");

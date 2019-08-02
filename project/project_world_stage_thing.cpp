@@ -162,10 +162,12 @@ void DrThing::addComponentSettingsWater() {
                            "Start Color", "Color tint for the top of this Water.");
     addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color, Property_Type::Color, QColor(0, 58, 103, 255).rgba(),
                            "End Color", "Color tint to fade to for the bottom of this Water.");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Color_Tint, Property_Type::Percent, 95.0,
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Color_Tint, Property_Type::Percent, 75.0,
                            "Tint Percent", "How much color to tint the water, 0 (none) - 100 (all the way)");
     addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Reflection, Property_Type::Percent, 20.0,
                            "Reflection", "Reflection opacity.");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Movement_Speed, Property_Type::Double, 0.0,
+                           "Movement Speed", "This value will cause the water texture to move left / right.");
     addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Frequency, Property_Type::Double, 100.0,
                            "Ripple Frequency", "Length of ripples appearing in water, lower numbers produce longer period ripples. "
                                                "Generally, ranging around 0 to 100 will produce nice results.");
@@ -183,14 +185,18 @@ void DrThing::addComponentSettingsWater() {
                            "Wave Speed", "Rate waves move up and down. Generally, ranging around 0 to 100 will produce nice results.");
     addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Wave_Amplitude, Property_Type::Double, 10.0,
                            "Wave Amplitude", "Size of waves as they move up and down in water. Generally, ranging around 0 to 100 will produce nice results.");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Refract_Reflection, Property_Type::Percent, 20.0,
-                           "Refract Reflect", "How much refraction to apply to the reflection shown on the water surface.");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Refract_Underwater, Property_Type::Percent, 20.0,
-                           "Refract Under", "How much refraction to apply to the objects under the water.");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Refract_Texture, Property_Type::Percent, 20.0,
-                           "Refract Texture", "How much refraction to apply to the water texture.");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Movement_Speed, Property_Type::Double, 0.0,
-                           "Movement Speed", "This value will cause the water texture to move left / right.");
+
+    addComponent(Components::Thing_Settings_Water_Refract, "Refraction Settings", "Settings that effect refraction (randomness) of different parts of "
+                                                                                  "this Water.", Component_Colors::Blue_Drop_Dark, true);
+    getComponent(Components::Thing_Settings_Water_Refract)->setIcon(Component_Icons::Water_Refract);
+    addPropertyToComponent(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Reflection, Property_Type::Percent, 20.0,
+                           "Reflection", "How much refraction to apply to the reflection shown on the water surface.");
+    addPropertyToComponent(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Underwater, Property_Type::Percent, 20.0,
+                           "Underwater", "How much refraction to apply to the objects under the water.");
+    addPropertyToComponent(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Texture, Property_Type::Percent, 20.0,
+                           "Texture", "How much refraction to apply to the water texture.");
+    addPropertyToComponent(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Foam, Property_Type::Percent, 20.0,
+                           "Surface", "How much refraction to apply to the top of the water.");
 
     addComponent(Components::Thing_Settings_Water_Foam, "Foam Settings", "Settings for top of the current Water.", Component_Colors::Blue_Drop_Light, true);
     getComponent(Components::Thing_Settings_Water_Foam)->setIcon(Component_Icons::Water_Foam);
@@ -200,8 +206,6 @@ void DrThing::addComponentSettingsWater() {
                            "Tint", "How much color to tint the foam on top of the water, 0 (none) - 100 (all the way)");
     addPropertyToComponent(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Height, Property_Type::Double, 5.0,
                            "Height", "Thickness of the foam on top of the water.");
-    addPropertyToComponent(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Refract_Foam, Property_Type::Percent, 20.0,
-                           "Refraction", "How much refraction (randomness) to apply to the foam on top of the water.");
 
 }
 

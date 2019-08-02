@@ -124,9 +124,13 @@
         <file>assets/tree_icons/tree_water.png</file>
         <file>assets/inspector_icons/comp_water.png</file>
         <file>assets/textures/water_normal.jpg</file>
-        <file>assets/textures/water_texture.png</file>
-        <file>assets/textures/water_texture_2.png</file>
-        <file>assets/textures/lava_texture.jpg</file>
         <file>assets/inspector_icons/comp_water_foam.png</file>
+        <file>assets/textures/water_texture_1.png</file>
+        <file>assets/textures/water_texture_3.png</file>
+        <file>assets/textures/water_texture_5.png</file>
+        <file>assets/textures/water_texture_7.png</file>
+        <file>assets/textures/water_texture_8.png</file>
+        <file>assets/textures/water_texture_2.png</file>
+        <file>assets/inspector_icons/comp_water_refract.png</file>
     </qresource>
 </RCC>

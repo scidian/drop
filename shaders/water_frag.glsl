@@ -81,7 +81,7 @@ void main( void ) {
     float refract_reflection =  u_refract_reflection / 20.0;
     float refract_underwater =  u_refract_underwater / 20.0;
     float refract_texture    =  u_refract_texture / 4.0;
-    float refract_foam =        u_refract_foam / 12.0;
+    float refract_foam =        u_refract_foam / 20.0;
 
     // Moves texture, top of water left or right
     float movement_speed =      u_movement_speed;
@@ -97,26 +97,28 @@ void main( void ) {
     float shrink_texture = 3.0;                                                 // 1.0 = normal size, 4.0 equals 1/4 size
     float player_x = u_position.x*0.00083 * (1.0/u_zoom);
     float player_y = u_position.y*0.00083 * (1.0/u_zoom);
-    float diff_w = (u_width* (1.0/u_zoom)) / 1200.0;
-    float diff_h = (u_height*(1.0/u_zoom)) / 1200.0;
+    float diff_w = (u_width  * (1.0/u_zoom)) / 1200.0;
+    float diff_h = (u_height * (1.0/u_zoom)) / 1200.0;
+
+    float zoom_coord_x = ((coords.x - 0.5)*diff_w)/u_zoom;
+    float zoom_coord_y = ((coords.y - 0.5)*diff_h)/u_zoom;
 
 
     // ***** Grab value from 2D Water Normal Texture, use it to get refraction values
-    vec3  displacement = texture2D(u_texture_displacement,
-                                   vec2(( (coords.x*diff_w)/u_zoom + player_x + movement/2.0),
-                                        ( (coords.y*diff_h)/u_zoom + player_y)) / (shrink_texture) ).rgb;
-    float refract_x = (displacement.x - displacement.y)*0.01;
-    float refract_y = (displacement.y - displacement.x)*0.01;
-
+    vec3  displacement = texture2D(u_texture_displacement, vec2(  (zoom_coord_x + player_x) * u_zoom + movement/2.0,
+                                                                 ((zoom_coord_y + player_y) * u_zoom) / shrink_texture) - time/200.0).rgb;
+    float refract_x = (displacement.x - displacement.y) * 0.01;// * u_zoom;
+    float refract_y = (displacement.y - displacement.x) * 0.01;// * u_zoom;
 
 
     // ***** Calculates vertical waves (ripples)
-    float xoffset = cos(time*ripple_speed + ripple_frequency*((coords.y*diff_h)/u_zoom + player_y)*u_zoom) * (0.005*u_zoom) *
+    float xoffset = cos(time*ripple_speed + ripple_frequency * (zoom_coord_y + player_y) * u_zoom) * (0.005 * u_zoom) *
                     (ripple_amplitude + (y_start - coords.y) * ripple_stretch);
 
     // Calculates horizontal waves
-    float yoffset = sin(time*wave_speed   + wave_frequency  *((coords.x*diff_w)/u_zoom + player_x)*u_zoom) * (0.005*u_zoom);
+    float yoffset = sin(time*wave_speed   + wave_frequency   * (zoom_coord_x + player_x) * u_zoom) * (0.005 * u_zoom);
     float bob =     sin(time*wave_speed   + coords.x+refract_x*refract_reflection) * wave_amplitude;
+    //float bob =     wave_amplitude;
     float y_top =   y_start - abs(refract_y)*refract_foam*u_zoom + yoffset*bob;
 
     // Grab the reflected value from existing screen
@@ -141,8 +143,8 @@ void main( void ) {
 
         // Mix in overlay_color and water texture
         water = texture2D(u_texture_water, vec2(
-                    (coords.x*diff_w*(1.0/u_zoom) + refract_x*refract_texture*(1.0/u_zoom) + player_x + xoffset) + (movement/2.0),
-                    (coords.y*diff_h*(1.0/u_zoom) + refract_y*refract_texture*(1.0/u_zoom) + player_y + yoffset*bob)) * (shrink_texture*u_zoom) );
+                              (zoom_coord_x + refract_x*refract_texture*(1.0/u_zoom)  + player_x + xoffset/(u_zoom)) + (movement/2.0),
+                              (zoom_coord_y + refract_y*refract_texture*(1.0/u_zoom)  + player_y + yoffset*bob)) * (shrink_texture*u_zoom) );
         vec3 water_color = mix(start_color, end_color, smoothstep(0.0, 1.0, (coords.y - u_water_top) / (u_water_bottom - u_water_top)));
         water = vec4(mix(water.rgb, water_color, color_tint), 1.0);
 

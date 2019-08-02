@@ -53,6 +53,7 @@ namespace Component_Icons {
     const QString Object        { QString(":/assets/inspector_icons/comp_object.png") };
     const QString Light         { QString(":/assets/inspector_icons/comp_light.png") };
     const QString Water         { QString(":/assets/inspector_icons/comp_water.png") };
+    const QString Water_Refract { QString(":/assets/inspector_icons/comp_water_refract.png") };
     const QString Water_Foam    { QString(":/assets/inspector_icons/comp_water_foam.png") };
     const QString Font          { QString(":/assets/inspector_icons/comp_font.png") };
     const QString Camera        { QString(":/assets/inspector_icons/comp_camera.png") };

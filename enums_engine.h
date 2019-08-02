@@ -32,9 +32,12 @@ enum Asset_Textures {
     Numbers =            -1,
 
     Water_Normal_1 =    -50,
-    Water_Texture_1 =   -60,
-    Water_Texture_2 =   -61,
-    Lava_Texture_1 =    -70,
+    Water_Texture_1 =   -61,
+    Water_Texture_2 =   -62,
+    Water_Texture_3 =   -63,
+    Water_Texture_5 =   -65,
+    Water_Texture_7 =   -67,
+    Water_Texture_8 =   -68,
 
     Ball =      -100,
     Block =     -101,
