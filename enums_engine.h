@@ -35,9 +35,7 @@ enum Asset_Textures {
     Water_Texture_1 =   -61,
     Water_Texture_2 =   -62,
     Water_Texture_3 =   -63,
-    Water_Texture_5 =   -65,
-    Water_Texture_7 =   -67,
-    Water_Texture_8 =   -68,
+    Water_Texture_4 =   -64,
 
     Ball =      -100,
     Block =     -101,

@@ -91,7 +91,9 @@ void main( void ) {
     highp vec2 coords = coordinates.st;
     float time = u_time;
     float movement = -movement_speed * (time/20.0);
+    if (movement < 0) wave_speed *= -1.0;
     float y_start = u_water_top;                                                // 0.0 is bottom, 1.0 is top
+
 
     // ***** Calculate some position and scaling values
     float shrink_texture = 3.0;                                                 // 1.0 = normal size, 4.0 equals 1/4 size
@@ -106,9 +108,9 @@ void main( void ) {
 
     // ***** Grab value from 2D Water Normal Texture, use it to get refraction values
     vec3  displacement = texture2D(u_texture_displacement, vec2(  (zoom_coord_x + player_x) * u_zoom + movement/2.0,
-                                                                 ((zoom_coord_y + player_y) * u_zoom) / shrink_texture) - time/200.0).rgb;
-    float refract_x = (displacement.x - displacement.y) * 0.01;// * u_zoom;
-    float refract_y = (displacement.y - displacement.x) * 0.01;// * u_zoom;
+                                                                 ((zoom_coord_y + player_y) * u_zoom) / shrink_texture) - (time/100.0)).rgb;
+    float refract_x = (displacement.x - displacement.y) * 0.01;
+    float refract_y = (displacement.y - displacement.x) * 0.01;
 
 
     // ***** Calculates vertical waves (ripples)
@@ -149,7 +151,7 @@ void main( void ) {
         water = vec4(mix(water.rgb, water_color, color_tint), 1.0);
 
         original = mix(original,   water,          u_alpha);
-        original = mix(original,   reflection,     reflection_opacity);//*reflection.a);
+        original = mix(original,   reflection,     reflection_opacity);
 
         // Surface coloring (sea foam)
         float foam_distance = (surface_height + sin(refract_x + movement)) / u_height * u_zoom;
