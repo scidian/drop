@@ -156,56 +156,62 @@ void DrThing::addComponentSettingsWater() {
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Water",
                            "Effect Name", "Name of the current Effect.", false, false);
 
-    addComponent(Components::Thing_Settings_Water, "Water Settings", "Settings for current Water.", Component_Colors::Blue_Drop, true);
+    addComponent(Components::Thing_Settings_Water, "Water Settings", "Settings for current Water.", Component_Colors::Blue_Drop_1, true);
     getComponent(Components::Thing_Settings_Water)->setIcon(Component_Icons::Water);
     addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color, Property_Type::Color, QColor(41, 182, 246, 255).rgba(),
                            "Start Color", "Color tint for the top of this Water.");
     addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color, Property_Type::Color, QColor(0, 58, 103, 255).rgba(),
-                           "End Color", "Color tint to fade to for the bottom of this Water.");
+                           "End Color", "Color tint to fade to toward the bottom of this Water.");
     addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Color_Tint, Property_Type::Percent, 75.0,
-                           "Tint Percent", "How much color to tint the water, 0 (none) - 100 (all the way)");
+                           "Tint Percent", "How much color to tint the Water, 0 (none) - 100 (all the way)");
     addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Reflection, Property_Type::Percent, 20.0,
                            "Reflection", "Reflection opacity.");
     addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Movement_Speed, Property_Type::Double, 0.0,
-                           "Movement Speed", "This value will cause the water texture to move left / right.");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Frequency, Property_Type::Double, 100.0,
-                           "Ripple Frequency", "Length of ripples appearing in water, lower numbers produce longer period ripples. "
-                                               "Generally, ranging around 0 to 100 will produce nice results.");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Speed, Property_Type::Double, 50.0,
-                           "Ripple Speed", "Rate ripples move through water. Generally, ranging around 0 to 100 will produce nice results.");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Amplitude, Property_Type::Double, 20.0,
-                           "Ripple Amplitude", "Size of ripples appearing in water. Generally, ranging around 0 to 100 will produce nice results.");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Stretch, Property_Type::Double, 10.0,
-                           "Ripple Stretch", "Rate ripple amplitude increases as ripples move away from start of water. A setting of 0 will keep Amplitude "
-                                             "the same, a negative value will decrease ripple amplitude.");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Wave_Frequency, Property_Type::Double, 10.0,
-                           "Wave Frequency", "Length of waves appearing in water, lower numbers produce longer period waves. "
-                                             "Generally, ranging around 0 to 100 will produce nice results.");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Wave_Speed, Property_Type::Double, 20.0,
-                           "Wave Speed", "Rate waves move up and down. Generally, ranging around 0 to 100 will produce nice results.");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Wave_Amplitude, Property_Type::Double, 10.0,
-                           "Wave Amplitude", "Size of waves as they move up and down in water. Generally, ranging around 0 to 100 will produce nice results.");
+                           "Movement", "This value will cause the Water Texture to move left / right.");
+
+    addComponent(Components::Thing_Settings_Water_Ripple, "Ripple Settings", "Settings for this Water's Ripple effect.", Component_Colors::Blue_Drop_2, true);
+    getComponent(Components::Thing_Settings_Water_Ripple)->setIcon(Component_Icons::Water_Ripple);
+    addPropertyToComponent(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Frequency, Property_Type::Double, 100.0,
+                           "Frequency", "Length of Ripples appearing in Water, lower numbers produce longer period Ripples. "
+                                        "Generally, ranging around 0 to 100 will produce nice results.");
+    addPropertyToComponent(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Speed, Property_Type::Double, 50.0,
+                           "Speed", "Rate Ripples move through Water. Generally, ranging around 0 to 100 will produce nice results.");
+    addPropertyToComponent(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Amplitude, Property_Type::Double, 20.0,
+                           "Amplitude", "Size of Ripples appearing in Water. Generally, ranging around 0 to 100 will produce nice results.");
+    addPropertyToComponent(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Stretch, Property_Type::Double, 10.0,
+                           "Stretch", "Rate the Ripples' Amplitude increases as Ripples move away from start of water. A setting of 0 will keep Amplitude "
+                                      "the same, a negative value will decrease Ripple Amplitude.");
+
+    addComponent(Components::Thing_Settings_Water_Wave, "Wave Settings", "Settings that this Water's Wave effect.", Component_Colors::Blue_Drop_3, true);
+    getComponent(Components::Thing_Settings_Water_Wave)->setIcon(Component_Icons::Water_Wave);
+    addPropertyToComponent(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Frequency, Property_Type::Double, 10.0,
+                           "Frequency", "Length of Waves appearing in Water, lower numbers produce longer period waves. "
+                                        "Generally, ranging around 0 to 100 will produce nice results.");
+    addPropertyToComponent(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Speed, Property_Type::Double, 20.0,
+                           "Speed", "Rate Waves move up and down. Generally, ranging around 0 to 100 will produce nice results.");
+    addPropertyToComponent(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Amplitude, Property_Type::Double, 10.0,
+                           "Amplitude", "Size of Waves as they move up and down in Water. Generally, ranging around 0 to 100 will produce nice results.");
 
     addComponent(Components::Thing_Settings_Water_Refract, "Refraction Settings", "Settings that effect refraction (randomness) of different parts of "
-                                                                                  "this Water.", Component_Colors::Blue_Drop_Dark, true);
+                                                                                  "this Water.", Component_Colors::Blue_Drop_4, true);
     getComponent(Components::Thing_Settings_Water_Refract)->setIcon(Component_Icons::Water_Refract);
     addPropertyToComponent(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Reflection, Property_Type::Percent, 20.0,
-                           "Reflection", "How much refraction to apply to the reflection shown on the water surface.");
+                           "Reflection", "How much refraction to apply to the Reflection shown on the Water surface.");
     addPropertyToComponent(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Underwater, Property_Type::Percent, 20.0,
-                           "Underwater", "How much refraction to apply to the objects under the water.");
+                           "Underwater", "How much refraction to apply to the objects under the Water.");
     addPropertyToComponent(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Texture, Property_Type::Percent, 20.0,
-                           "Texture", "How much refraction to apply to the water texture.");
+                           "Texture", "How much refraction to apply to the Water Texture.");
     addPropertyToComponent(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Foam, Property_Type::Percent, 20.0,
-                           "Surface", "How much refraction to apply to the top of the water.");
+                           "Surface", "How much refraction to apply to the top of the Water.");
 
-    addComponent(Components::Thing_Settings_Water_Foam, "Foam Settings", "Settings for top of the current Water.", Component_Colors::Blue_Drop_Light, true);
+    addComponent(Components::Thing_Settings_Water_Foam, "Foam Settings", "Settings for top of the current Water.", Component_Colors::Blue_Drop_5, true);
     getComponent(Components::Thing_Settings_Water_Foam)->setIcon(Component_Icons::Water_Foam);
     addPropertyToComponent(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Color, Property_Type::Color, QColor(255, 255, 255, 255).rgba(),
-                           "Color", "Color tint for the foam on the top of the water.");
+                           "Color", "Color tint for the foam on the top of the Water.");
     addPropertyToComponent(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Tint, Property_Type::Percent, 75.0,
-                           "Tint", "How much color to tint the foam on top of the water, 0 (none) - 100 (all the way)");
+                           "Tint", "How much color to tint the foam on top of the Water, 0 (none) - 100 (all the way)");
     addPropertyToComponent(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Height, Property_Type::Double, 5.0,
-                           "Height", "Thickness of the foam on top of the water.");
+                           "Height", "Thickness of the foam on top of the Water.");
 
 }
 
@@ -275,18 +281,18 @@ void DrThing::addComponentMovement() {
                                                           Component_Colors::Red_Faded, true);
     getComponent(Components::Thing_Movement)->setIcon(Component_Icons::Movement);
     addPropertyToComponent(Components::Thing_Movement, Properties::Thing_Velocity_X, Property_Type::Variable, QPointF(0, 0),
-                           "Velocity X", "Initial horizontal movement speed of Object, +/- variable amount.  <br><br> "
+                           "Horizontal", "Initial horizontal movement speed of Object, +/- variable amount.  <br><br> "
                                          "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!", false, false);
     addPropertyToComponent(Components::Thing_Movement, Properties::Thing_Velocity_Y, Property_Type::Variable, QPointF(0, 0),
-                           "Velocity Y", "Initial vertical movement speed of Object, +/- variable amount.  <br><br> "
-                                         "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!", false, false);
+                           "Vertical",  "Initial vertical movement speed of Object, +/- variable amount.  <br><br> "
+                                        "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!", false, false);
     addPropertyToComponent(Components::Thing_Movement, Properties::Thing_Spin_Velocity, Property_Type::Variable, QPointF(0, 0),
-                           "Spin Velocity", "Initial rotational speed Object, +/- variable amount. <br><br> "
-                                               "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!", false, false);
+                           "Rotation", "Initial rotational speed Object, +/- variable amount. <br><br> "
+                                       "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!", false, false);
     addPropertyToComponent(Components::Thing_Movement, Properties::Thing_Angle_Velocity, Property_Type::Bool, true,
-                           "Angle Velocity?", "Should the angle of this Object affect it's velocity? (allows Object to move "
-                                              "along an arc instead of spinning in place) <br> "
-                                               "<b>NOTE:</b> Object Type must be <b>Kinematic</b> to use this setting!", false, false);
+                           "Relative?", "Should the Rotation of this object affect it's Movement direction? (allows Object to move "
+                                        "along an arc instead of spinning in place) <br> "
+                                        "<b>NOTE:</b> Object Type must be <b>Kinematic</b> to use this setting!", false, false);
 }
 
 void DrThing::addComponentLighting() {

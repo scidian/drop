@@ -181,13 +181,15 @@ void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double off
     float       water_tint =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Color_Tint).toFloat() / 100.0f;
     float       reflection =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Reflection).toFloat() / 100.0f;
     float       move_speed =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Movement_Speed).toFloat();
-    float       ripple_freq =       thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Frequency).toFloat();
-    float       ripple_speed =      thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Speed).toFloat();
-    float       ripple_amplitude =  thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Amplitude).toFloat();
-    float       ripple_stretch =    thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Ripple_Stretch).toFloat();
-    float       wave_freq =         thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Wave_Frequency).toFloat();
-    float       wave_speed =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Wave_Speed).toFloat();
-    float       wave_amplitude =    thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Wave_Amplitude).toFloat();
+
+    float       ripple_freq =       thing->getComponentPropertyValue(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Frequency).toFloat();
+    float       ripple_speed =      thing->getComponentPropertyValue(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Speed).toFloat();
+    float       ripple_amplitude =  thing->getComponentPropertyValue(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Amplitude).toFloat();
+    float       ripple_stretch =    thing->getComponentPropertyValue(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Stretch).toFloat();
+
+    float       wave_freq =         thing->getComponentPropertyValue(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Frequency).toFloat();
+    float       wave_speed =        thing->getComponentPropertyValue(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Speed).toFloat();
+    float       wave_amplitude =    thing->getComponentPropertyValue(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Amplitude).toFloat();
 
     float       refract_1 =         thing->getComponentPropertyValue(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Reflection).toFloat();
     float       refract_2 =         thing->getComponentPropertyValue(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Underwater).toFloat();

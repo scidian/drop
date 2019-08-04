@@ -53,6 +53,30 @@ uniform lowp  float u_refract_foam;                 // good = 2.0
 
 uniform lowp  float u_movement_speed;               // Moves texture, top of water left or right, default should be 0
 
+
+// Other Variables
+const   lowp  float THRESHOLD = 0.75;                       // Alpha threshold for our occlusion map
+const   highp float PI =  3.14159;                          // Pi
+const   highp float RAD = 6.2831853;                        // 2.0 * PI is 360 degrees in radians
+const   highp float PI180 = highp float(PI / 180.0);        // To convert Degrees to Radians
+
+
+//####################################################################################
+//##        2D Rotation / Translation
+//####################################################################################
+vec2 rotate(vec2 v, float a) {
+    a *= PI180;
+    float s = sin(a);
+    float c = cos(a);
+    mat2  m = mat2(c, -s, s, c);
+    return m * v;
+}
+
+vec2 translate(vec2 v, float x, float y) {
+    return vec2(v.x + x, v.y + y);
+}
+
+
 //####################################################################################
 //##        Main Shader Function
 //####################################################################################
@@ -89,6 +113,18 @@ void main( void ) {
 
     // ***** Move coordinates into a vec2 that is not read-only
     highp vec2 coords = coordinates.st;
+
+
+
+    vec2 center = vec2(u_water_right - (u_water_right - u_water_left)/2.0, u_water_top - (u_water_top - u_water_bottom)/2.0);
+
+
+    float rotation = 90.0;
+    coords = translate(coords, -center.x, -center.y);
+    coords = rotate(coords, rotation);
+    coords = translate(coords,  center.x,  center.y);
+
+
     float time = u_time;
     float movement = -movement_speed * (time/20.0);
     if (movement < 0) wave_speed *= -1.0;

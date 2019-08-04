@@ -37,9 +37,11 @@ namespace Component_Colors {
     const QColor Brown_Sugar        { QColor(165, 117,  72, 255) };
     const QColor Beige_Apricot      { QColor(252, 215, 173, 255) };
 
-    const QColor Blue_Drop_Dark     { QColor(  0, 180, 175, 255) };
-    const QColor Blue_Drop          { QColor(  0, 225, 219, 255) };
-    const QColor Blue_Drop_Light    { QColor(128, 255, 248, 255) };
+    const QColor Blue_Drop_1        { QColor(  0, 150, 145, 255) };
+    const QColor Blue_Drop_2        { QColor(  0, 180, 175, 255) };
+    const QColor Blue_Drop_3        { QColor(  0, 225, 219, 255) };
+    const QColor Blue_Drop_4        { QColor( 96, 255, 248, 255) };
+    const QColor Blue_Drop_5        { QColor(192, 255, 248, 255) };
 };
 
 //####################################################################################
@@ -53,6 +55,8 @@ namespace Component_Icons {
     const QString Object        { QString(":/assets/inspector_icons/comp_object.png") };
     const QString Light         { QString(":/assets/inspector_icons/comp_light.png") };
     const QString Water         { QString(":/assets/inspector_icons/comp_water.png") };
+    const QString Water_Ripple  { QString(":/assets/inspector_icons/comp_water_ripple.png") };
+    const QString Water_Wave    { QString(":/assets/inspector_icons/comp_water_wave.png") };
     const QString Water_Refract { QString(":/assets/inspector_icons/comp_water_refract.png") };
     const QString Water_Foam    { QString(":/assets/inspector_icons/comp_water_foam.png") };
     const QString Font          { QString(":/assets/inspector_icons/comp_font.png") };

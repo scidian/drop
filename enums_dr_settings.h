@@ -72,6 +72,8 @@ enum class Components {
     Thing_Settings_Object,
     Thing_Settings_Light,
     Thing_Settings_Water,
+    Thing_Settings_Water_Ripple,
+    Thing_Settings_Water_Wave,
     Thing_Settings_Water_Refract,
     Thing_Settings_Water_Foam,
     Thing_Settings_Text,
