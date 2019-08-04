@@ -125,10 +125,10 @@
         <file>assets/inspector_icons/comp_water.png</file>
         <file>assets/textures/water_normal.jpg</file>
         <file>assets/inspector_icons/comp_water_foam.png</file>
-        <file>assets/textures/water_texture_1.png</file>
         <file>assets/inspector_icons/comp_water_refract.png</file>
-        <file>assets/textures/water_texture_2.png</file>
-        <file>assets/textures/water_texture_3.png</file>
-        <file>assets/textures/water_texture_4.png</file>
+        <file>assets/textures/water_texture_1.jpg</file>
+        <file>assets/textures/water_texture_2.jpg</file>
+        <file>assets/textures/water_texture_3.jpg</file>
+        <file>assets/textures/water_texture_4.jpg</file>
     </qresource>
 </RCC>

@@ -78,14 +78,14 @@ void main( void ) {
     float surface_height =      u_surface_height;
 
     // Refraction amounts on the different textures
-    float refract_reflection =  u_refract_reflection / 20.0;
-    float refract_underwater =  u_refract_underwater / 20.0;
-    float refract_texture    =  u_refract_texture / 4.0;
-    float refract_foam =        u_refract_foam / 20.0;
+    float refract_reflection =  u_refract_reflection/20.0;
+    float refract_underwater =  u_refract_underwater/20.0;
+    float refract_texture    =  u_refract_texture/4.0;
+    float refract_foam =        u_refract_foam/20.0;
 
     // Moves texture, top of water left or right
-    float movement_speed =      u_movement_speed;
-
+    float movement_speed =      u_movement_speed/10.0;
+    float refract_speed =       1.0;
 
     // ***** Move coordinates into a vec2 that is not read-only
     highp vec2 coords = coordinates.st;
@@ -108,7 +108,7 @@ void main( void ) {
 
     // ***** Grab value from 2D Water Normal Texture, use it to get refraction values
     vec3  displacement = texture2D(u_texture_displacement, vec2(  (zoom_coord_x + player_x) * u_zoom + movement/2.0,
-                                                                 ((zoom_coord_y + player_y) * u_zoom) / shrink_texture) - (time/100.0)).rgb;
+                                                                 ((zoom_coord_y + player_y) * u_zoom) / shrink_texture) - (refract_speed*(time/100.0))).rgb;
     float refract_x = (displacement.x - displacement.y) * 0.01;
     float refract_y = (displacement.y - displacement.x) * 0.01;
 

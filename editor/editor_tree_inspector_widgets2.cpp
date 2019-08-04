@@ -3,7 +3,10 @@
 //
 //  File:
 //      Non-numerical property row building functions
-//
+//          - CheckBox
+//          - Line Edit
+//          - Pushbutton with a popup menu instead of a QComboBox
+//          - Colorful button used to represent a Color property
 //
 #include <QApplication>
 #include <QCheckBox>
@@ -19,7 +22,7 @@
 #include "forms/form_popup.h"
 #include "helper.h"
 #include "settings/settings_component_property.h"
-#include "../style/style.h"
+#include "style/style.h"
 #include "widgets/widgets_event_filters.h"
 
 

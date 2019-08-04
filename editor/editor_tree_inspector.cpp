@@ -227,7 +227,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
                 case Property_Type::List:           new_widget = createListBox(             prop, fp, sp_right);                                break;
                 case Property_Type::Color:          new_widget = createColorBox(            prop, fp, sp_right);                                break;
 
-                case Property_Type::Image:                                  // QPixmap
+                case Property_Type::Image:          new_widget = createImageFrame(          prop, fp, sp_right);                                break;
+
                 case Property_Type::Icon:
                 case Property_Type::Polygon:                                // For Collision Shapes
                 case Property_Type::Vector3D:

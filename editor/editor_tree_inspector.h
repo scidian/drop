@@ -70,6 +70,7 @@ public:
     void                addToWidgetList(QWidget *widget) { m_widgets.append(widget); }
     QCheckBox*          createCheckBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
     QWidget*            createColorBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
+    QFrame*             createImageFrame(DrProperty *property, QFont &font, QSizePolicy size_policy);
     QPushButton*        createListBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
     QDoubleSpinBox*     createDoubleSpinBox(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
     QFrame*             createDoubleSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
