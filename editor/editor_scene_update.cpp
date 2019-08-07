@@ -11,6 +11,7 @@
 #include "helper.h"
 #include "image_filter.h"
 #include "globals.h"
+#include "opengl/opengl.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_effect.h"
@@ -109,13 +110,30 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
             case Properties::Thing_Scale:
             case Properties::Thing_Rotation: {
                 // ***** Keep Thing Square: Size / scale change override for Things that need to be square (light, etc)
+                // ***** Also limits max size
                 //       Search keywords: "keep square", "locked", "same size"
                 bool pretest = false;
                 if (thing->getThingType() == DrThingType::Light) {
                     if (property == Properties::Thing_Size) {
-                        if (Dr::IsCloseTo(scale.y(), size.y() / item->getAssetHeight(), 0.001)) size.setY(size.x());    else size.setX(size.y());
+                        if (Dr::IsCloseTo(scale.y(), size.y() / item->getAssetHeight(), 0.001)) {
+                            if (size.x() >  c_desired_light_fbo_size) size.setX( c_desired_light_fbo_size);
+                            if (size.x() < -c_desired_light_fbo_size) size.setX(-c_desired_light_fbo_size);
+                            size.setY(size.x());
+                        } else {
+                            if (size.y() >  c_desired_light_fbo_size) size.setY( c_desired_light_fbo_size);
+                            if (size.y() < -c_desired_light_fbo_size) size.setY(-c_desired_light_fbo_size);
+                            size.setX(size.y());
+                        }
                     } else {
-                        if (Dr::IsCloseTo(size.y(), scale.y() * item->getAssetHeight(), 0.001)) scale.setY(scale.x());  else scale.setX(scale.y());
+                        if (Dr::IsCloseTo(size.y(), scale.y() * item->getAssetHeight(), 0.001)) {
+                            if (scale.x() * item->getAssetWidth() >  c_desired_light_fbo_size)  scale.setX( c_desired_light_fbo_size / item->getAssetWidth());
+                            if (scale.x() * item->getAssetWidth() < -c_desired_light_fbo_size)  scale.setX(-c_desired_light_fbo_size / item->getAssetWidth());
+                            scale.setY(scale.x());
+                        } else {
+                            if (scale.y() * item->getAssetHeight() >  c_desired_light_fbo_size) scale.setY( c_desired_light_fbo_size / item->getAssetHeight());
+                            if (scale.y() * item->getAssetHeight() < -c_desired_light_fbo_size) scale.setY(-c_desired_light_fbo_size / item->getAssetHeight());
+                            scale.setX(scale.y());
+                        }
                     }
                     pretest = true;
                 }

@@ -15,6 +15,7 @@
 #include "globals.h"
 #include "interface_editor_relay.h"
 #include "helper.h"
+#include "opengl/opengl.h"
 #include "project/project.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"
@@ -352,13 +353,20 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
         }
     }
 
-    // Checks if Items should have to remain Square shaped (light, etc) and forces it to do so
+    // ***** Checks if Items should have to remain Square shaped (light, etc) and forces it to do so
+    // ***** Also limits max size
+    //       Search keywords: "keep square", "locked", "same size"
     if (original->getThing()) {
         if (original->getThing()->getThingType() == DrThingType::Light) {
-            if (qFuzzyCompare(start_scale.x(), new_scale_x))
+            if (qFuzzyCompare(start_scale.x(), new_scale_x)) {
+                if (new_scale_y * original->getAssetHeight() >  c_desired_light_fbo_size) new_scale_y =  (c_desired_light_fbo_size / original->getAssetHeight());
+                if (new_scale_y * original->getAssetHeight() < -c_desired_light_fbo_size) new_scale_y = -(c_desired_light_fbo_size / original->getAssetHeight());
                 new_scale_x = new_scale_y;
-            else
+            } else {
+                if (new_scale_x * original->getAssetWidth() >  c_desired_light_fbo_size)  new_scale_x =  (c_desired_light_fbo_size / original->getAssetWidth());
+                if (new_scale_x * original->getAssetWidth() < -c_desired_light_fbo_size)  new_scale_x = -(c_desired_light_fbo_size / original->getAssetWidth());
                 new_scale_y = new_scale_x;
+            }
         }
     }
 

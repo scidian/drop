@@ -136,7 +136,7 @@ void main( void ) {
 
 
     // ***** Calculate some position and scaling values
-    float shrink_texture = 3.0;                                                 // 1.0 = normal size, 4.0 equals 1/4 size
+    const float shrink_texture = 3.0;                                           // 1.0 = normal size, 4.0 equals 1/4 size
     float player_x = u_position.x*0.00083 * (1.0/u_zoom);
     float player_y = u_position.y*0.00083 * (1.0/u_zoom);
     float diff_w = (u_width  * (1.0/u_zoom)) / 1200.0;
@@ -159,7 +159,7 @@ void main( void ) {
 
     // Calculates horizontal waves
     float yoffset = sin(time*wave_speed   + wave_frequency   * (zoom_coord_x + player_x) * u_zoom) * (0.005 * u_zoom);
-    float bob =     sin(time*wave_speed   + coords.x+refract_x*refract_reflection) * wave_amplitude;
+    float bob =     sin(time*wave_speed   + coords.x + refract_x*refract_reflection) * wave_amplitude;
     //float bob =   wave_amplitude;
     float y_top =   y_start - abs(refract_y)*refract_foam*u_zoom + yoffset*bob;
 
