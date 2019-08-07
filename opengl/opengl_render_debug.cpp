@@ -211,7 +211,7 @@ void DrOpenGL::drawDebugShapes(QPainter &painter) {
 
             } else if (object->shape_type[shape] == Shape_Type::Polygon || object->shape_type[shape] == Shape_Type::Box) {
 
-                QTransform t = QTransform().translate(center.x(), center.y()).rotate( object->getAngle());
+                QTransform t = QTransform().translate(center.x(), center.y()).rotate(object->getAngle());
                 QPolygonF polygon, mapped;
                 for (int i = 0; i < cpPolyShapeGetCount( shape ); i++) {
                     cpVect  vert  = cpPolyShapeGetVert( shape, i );

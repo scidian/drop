@@ -29,18 +29,40 @@
 //####################################################################################
 void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water) {
 
-    // Calculate sides of Water in shader coordinates
+    // Get Water angle for use in this function
+    float angle = static_cast<float>(water->getAngle());
+
+    // Get water position in screen coordinates
     QPointF position_top =    mapToScreen(water->getPosition().x(), water->getPosition().y() + (water->water_size.y() / 2.0), water->z_order);
     QPointF position_bottom = mapToScreen(water->getPosition().x(), water->getPosition().y() - (water->water_size.y() / 2.0), water->z_order);
     QPointF position_left =   mapToScreen(water->getPosition().x() - (water->water_size.x() / 2.0), water->getPosition().y(), water->z_order);
     QPointF position_right =  mapToScreen(water->getPosition().x() + (water->water_size.x() / 2.0), water->getPosition().y(), water->z_order);
-    float water_top =    static_cast<float>((fbo->height() - position_top.y()) / fbo->height());
-    float water_bottom = static_cast<float>((fbo->height() - position_bottom.y()) / fbo->height());
-    float water_left =   static_cast<float>(position_left.x()  / fbo->width());
-    float water_right =  static_cast<float>(position_right.x() / fbo->width());
+    if (position_left.x()   > position_right.x())
+        Dr::Swap(position_left,   position_right);
+    if (position_bottom.y() < position_top.y()) {
+        Dr::Swap(position_bottom, position_top);
+        angle += 180.0f;
+    }
 
-    // Check water is in view
-    if (water_top < 0.0f || water_bottom > 1.0f || water_right < 0.0f || water_left > 1.0f) return;
+    // Calculate corners of Water to check if it is within view
+    QPointF center = QPointF( position_right.x() - ((position_right.x() - position_left.x())   / 2.0),
+                              position_top.y() -   ((position_top.y() -   position_bottom.y()) / 2.0));
+    QTransform t = QTransform().translate(center.x(), center.y()).rotate(static_cast<double>(angle)).translate(-center.x(), -center.y());
+    QPointF top_left =  t.map(QPointF(position_left.x(),  position_top.y()));
+    QPointF top_right = t.map(QPointF(position_right.x(), position_top.y()));
+    QPointF bot_left =  t.map(QPointF(position_left.x(),  position_bottom.y()));
+    QPointF bot_right = t.map(QPointF(position_right.x(), position_bottom.y()));
+    QRect   in_view = QRect(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
+    QPolygonF water_box; water_box << top_left << top_right << bot_left << bot_right;
+    QRect     water_rect = water_box.boundingRect().toRect();
+    bool process_water = water_rect.intersects(in_view) || water_rect.contains(in_view) || in_view.contains(water_rect);
+    if (!process_water) return;
+
+    // Calculate sides of Water in shader coordinates
+    double water_top =    (fbo->height() - position_top.y()) / fbo->height();
+    double water_bottom = (fbo->height() - position_bottom.y()) / fbo->height();
+    double water_left =   position_left.x()  / fbo->width();
+    double water_right =  position_right.x() / fbo->width();
 
     // If we are to render water, bind the shader
     if (!m_water_shader.bind()) return;
@@ -93,10 +115,10 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
     m_water_shader.enableAttributeArray( a_water_vertex );
 
     // Set water variables
-    m_water_shader.setUniformValue( u_water_top,        water_top );
-    m_water_shader.setUniformValue( u_water_bottom,     water_bottom );
-    m_water_shader.setUniformValue( u_water_left,       water_left );
-    m_water_shader.setUniformValue( u_water_right,      water_right );
+    m_water_shader.setUniformValue( u_water_top,        static_cast<float>(water_top) );
+    m_water_shader.setUniformValue( u_water_bottom,     static_cast<float>(water_bottom) );
+    m_water_shader.setUniformValue( u_water_left,       static_cast<float>(water_left) );
+    m_water_shader.setUniformValue( u_water_right,      static_cast<float>(water_right) );
     m_water_shader.setUniformValue( u_start_color,
                                     static_cast<float>(water->start_color.redF()),
                                     static_cast<float>(water->start_color.greenF()),
@@ -136,9 +158,7 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
     m_water_shader.setUniformValue( u_water_width,      static_cast<float>(fbo->width()) );
     m_water_shader.setUniformValue( u_water_height,     static_cast<float>(fbo->height()) );
     m_water_shader.setUniformValue( u_water_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
-    m_water_shader.setUniformValue( u_water_angle,      static_cast<float>(water->getAngle()) );
-
-    g_info = "Angle: " + QString::number(water->getAngle());
+    m_water_shader.setUniformValue( u_water_angle,      angle );
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

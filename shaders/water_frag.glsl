@@ -32,7 +32,7 @@ uniform lowp  float u_water_right;                  // Right side of Water, from
 uniform lowp  vec3  u_start_color;                  // Water Start (Top)  Color, r/g/b      0.0 to 1.0 x 3
 uniform lowp  vec3  u_end_color;                    // Water End (Bottom) Color, r/g/b      0.0 to 1.0 x 3
 uniform lowp  float u_color_tint;                   // Water Color Tint Percent
-uniform lowp  float u_reflection;                   // Reflection Opacity               good start = 0.5
+uniform lowp  float u_reflection;                   // Reflection Opacity                   good start = 0.5
 
 uniform lowp  float u_ripple_frequency;             // Vertical wave length                 0.0 to 100.0    good = 25 big wave, 100 small ripples
 uniform lowp  float u_ripple_speed;                 // Vertical wave speed                  0.0 to 100.0    good = 10 big wave,  50 small ripples
@@ -77,11 +77,6 @@ vec2 rotate(vec2 v, vec2 center_point, float angle) {
     float a = angle * PI180;                                        // Convert to radians
     float s = sin(a);
     float c = cos(a);
-
-    //mat3 m = mat3(  c,   s, 0.0,
-    //               -s,   c, 0.0,
-    //              0.0, 0.0, 1.0);
-    //v = vec3(m * vec3(v.x, v.y, 1.0)).xy;
 
     mat2 m = mat2(c, s, -s, c);
     v = m * v;
@@ -165,7 +160,7 @@ void main( void ) {
     // Calculates horizontal waves
     float yoffset = sin(time*wave_speed   + wave_frequency   * (zoom_coord_x + player_x) * u_zoom) * (0.005 * u_zoom);
     float bob =     sin(time*wave_speed   + coords.x+refract_x*refract_reflection) * wave_amplitude;
-    //float bob =     wave_amplitude;
+    //float bob =   wave_amplitude;
     float y_top =   y_start - abs(refract_y)*refract_foam*u_zoom + yoffset*bob;
 
 
@@ -216,9 +211,6 @@ void main( void ) {
         // Anti-alias the top of the sea foam
         if (coords.y > (y_top - (u_zoom/u_height))) {
             original = mix(texture2D(u_texture, coordinates), original, 0.5);
-
-            //vec2 reverse = rotate(coordinates, water_center, -rotation);
-            //original = mix(texture2D(u_texture, reverse), original, 0.0);
         }
     }
 

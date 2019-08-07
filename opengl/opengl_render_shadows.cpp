@@ -103,7 +103,7 @@ int DrOpenGL::findNeededShadowMaps() {
         light_count++;
 
         // Calculate size of light texture (fbo)
-        light->setLightDiameter( static_cast<int>(light->light_size) );
+        light->setLightDiameter( abs(static_cast<int>(light->light_size)) );
         light->setLightDiameterFitted( (light->getLightDiameter() > g_max_light_fbo_size) ? g_max_light_fbo_size : light->getLightDiameter() );
 
         // In perspective mode we still draw the light the same size as z-order 0 even if its far away, this allows for cool large lights (like a big sun)
@@ -149,7 +149,8 @@ int DrOpenGL::findNeededShadowMaps() {
 void DrOpenGL::drawShadowMaps() {
     for (auto light : m_shadow_lights) {
         // Calculate light position on Occluder Map
-        light->setScreenPos( mapToFBO( QVector3D(static_cast<float>(light->getPosition().x()), static_cast<float>(light->getPosition().y()),
+        light->setScreenPos( mapToFBO( QVector3D(static_cast<float>(light->getPosition().x()),
+                                                 static_cast<float>(light->getPosition().y()),
                                                  static_cast<float>(light->z_order)),
                                        m_occluder_fbo, occluderMatrix(m_engine->getCurrentWorld()->render_type, false)) );
         double middle = m_texture_fbo->height() / 2.0;
@@ -230,7 +231,7 @@ void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
     // ***** Give the shader our Ray Count and Scaled Light Radius
     m_shadow_shader.setUniformValue( u_shadow_ray_count,  static_cast<float>(m_shadows[light->getKey()]->width()) );
 
-    float screen_scale = width()*devicePixelRatio() / light->light_size;
+    float screen_scale = width()*devicePixelRatio() / abs(light->light_size);
     m_shadow_shader.setUniformValue( u_shadow_resolution, light->getLightDiameter(), light->getLightDiameter() * screen_scale );
     m_shadow_shader.setUniformValue( u_shadow_depth,      static_cast<float>(light->z_order) );
     m_shadow_shader.setUniformValue( u_shadow_near_plane, c_near_plane );

@@ -43,9 +43,15 @@ template<class T> T Min(const T& a, const T& b) { return (a < b) ? a : b; }
 template<class T> T Lerp(const T& f1, const T& f2, const T& t) { return (f1 * (static_cast<T>(1.0) - t)) + (f2 * t); }
 
 // Returns true if 'number_desired' is within +-'tolerance' of 'number_to_check'
-template<class T> bool IsCloseTo(const T& number_desired, const T&  number_to_check, const T&  tolerance) {
+template<class T> bool IsCloseTo(const T& number_desired, const T& number_to_check, const T& tolerance) {
     return ( (number_to_check <= (number_desired + tolerance)) && (number_to_check >= (number_desired - tolerance)) ); }
 
+// Swaps two values
+template<class T> void Swap(T& number1, T& number2) {
+    T temp = number1;
+    number1 = number2;
+    number2 = temp;
+}
 
 // Time Functions
 QString     CurrentTimeAsString();

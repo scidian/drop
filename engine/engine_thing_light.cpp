@@ -27,7 +27,7 @@ DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key,
 
     this->light_type = type;
     this->color = color;
-    this->light_size = diameter;
+    this->light_size = abs(diameter);
     this->cone = this->m_rotated_cone = cone;
     this->intensity = intensity;
     this->setStartIntensity( intensity );
