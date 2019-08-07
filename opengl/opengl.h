@@ -195,6 +195,7 @@ private:
     int     u_water_width;                                      // Width of texture
     int     u_water_height;                                     // Height of texture
     int     u_water_time;                                       // Time in seconds
+    int     u_water_angle;                                      // Angle of water
     int     u_water_alpha;                                      // Opacity
     int     u_water_zoom;                                       // Current zoom level (need for water shader)
     int     u_water_pos;                                        // Current camera position (need for water shader)

@@ -229,6 +229,7 @@ void DrOpenGL::initializeGL() {
     u_water_width =             m_water_shader.uniformLocation(     "u_width" );
     u_water_height =            m_water_shader.uniformLocation(     "u_height" );
     u_water_time =              m_water_shader.uniformLocation(     "u_time" );
+    u_water_angle =             m_water_shader.uniformLocation(     "u_angle" );
 
     u_water_top =               m_water_shader.uniformLocation(     "u_water_top" );
     u_water_bottom =            m_water_shader.uniformLocation(     "u_water_bottom" );

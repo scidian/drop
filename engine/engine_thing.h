@@ -79,7 +79,7 @@ public:
 
     // Getters / Setters
     virtual QPointF         getPosition() { return m_position; }                            // Returns Thing center position in world coordinates
-    virtual double          getAngle() { return m_angle; }                                  // Returns Thing angle
+    virtual double          getAngle() { return m_angle; }                                  // Returns Thing angle (in degrees)
     virtual const float&    getOpacity() { return m_alpha; }                                // Returns Opacity (alpha 0.0 to 1.0) of Thing
     DrEngineWorld*          getWorld() { return m_world; }
 

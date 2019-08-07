@@ -22,6 +22,7 @@ uniform lowp  vec3  u_position;                     // Current camera position
 uniform highp float u_width;                        // Texture Width
 uniform highp float u_height;                       // Texture Height
 uniform highp float u_time;                         // Time in seconds
+uniform lowp  float u_angle;                        // Angle of water in degrees
 
 uniform lowp  float u_water_top;                    // Top of Water,        from 0.0 to 1.0 in screen coordinates
 uniform lowp  float u_water_bottom;                 // Bottom of Water,     from 0.0 to 1.0 in screen coordinates
@@ -65,10 +66,9 @@ const   highp float PI180 = highp float(PI / 180.0);        // To convert Degree
 //##        2D Rotation / Translation
 //####################################################################################
 vec2 translate(vec2 v, float x, float y) {
-    mat3 m = mat3(1.0, 0.0, 0.0,
-                  0.0, 1.0, 0.0,
-                    x,   y, 1.0);
-    return vec3(m * vec3(v.x, v.y, 1.0)).xy;
+    v.x = v.x + x;
+    v.y = v.y + y;
+    return v;
 }
 
 vec2 rotate(vec2 v, vec2 center_point, float angle) {
@@ -77,10 +77,15 @@ vec2 rotate(vec2 v, vec2 center_point, float angle) {
     float a = angle * PI180;                                        // Convert to radians
     float s = sin(a);
     float c = cos(a);
-    mat3 m = mat3(  c,   s, 0.0,
-                   -s,   c, 0.0,
-                  0.0, 0.0, 1.0);
-    v = vec3(m * vec3(v.x, v.y, 1.0)).xy;
+
+    //mat3 m = mat3(  c,   s, 0.0,
+    //               -s,   c, 0.0,
+    //              0.0, 0.0, 1.0);
+    //v = vec3(m * vec3(v.x, v.y, 1.0)).xy;
+
+    mat2 m = mat2(c, s, -s, c);
+    v = m * v;
+
     v.x /= (u_width / u_height);                                    // Account for texture ratio
     v = translate(v,  (center_point.x),  (center_point.y));         // Remove center translation
     return v;
@@ -125,10 +130,9 @@ void main( void ) {
     highp vec2 coords = coordinates.xy;
 
     // Apply rotation
-    float rotation = mod(u_time, 360.0) * 30.0;
+    float rotation = u_angle;   // mod(u_time, 360.0) * 15.0; // <-- spins based on time
     vec2  water_center = vec2(u_water_right - (u_water_right - u_water_left)/2.0, u_water_top - (u_water_top - u_water_bottom)/2.0);
     coords = rotate(coords, water_center, rotation);
-
 
     float time = u_time;
     float movement = -movement_speed * (time/20.0);
@@ -164,69 +168,57 @@ void main( void ) {
     //float bob =     wave_amplitude;
     float y_top =   y_start - abs(refract_y)*refract_foam*u_zoom + yoffset*bob;
 
-    // Grab the reflected value from existing screen
-    vec4 reflection, water, original;
-//    reflection = texture2D(u_texture, vec2(              coords.x + refract_x*refract_reflection - xoffset,
-//                                           2.0*y_start - coords.y - refract_y*refract_reflection + yoffset*bob) );
 
-
-    //vec2 reflect_refraction = vec2(refract_x*refract_reflection - xoffset, refract_y*refract_reflection + yoffset*bob);
-    //     reflect_refraction = rotate(reflect_refraction, vec2(0.0, 0.0), rotation);
-
-    //vec2 get_reflection = vec2(u_water_right + (u_water_right - coordinates.x) + .02, coordinates.y - .02);
-    vec2 get_reflection = vec2(coords.x, y_start + (y_start - coords.y));
-         get_reflection = rotate(get_reflection, water_center, rotation);
-
-         //get_reflection.x += reflect_refraction.x;
-         //get_reflection.y -= reflect_refraction.y;
-
-
-
-    reflection = texture2D(u_texture, vec2(get_reflection.x, get_reflection.y));
-
-
-
-    // ***** OPTIONAL: Simple reflection
-    //reflection = texture2D(u_texture, vec2(coords.x, ((2.0 * y_start) - coords.y)));
-
-
-
-    // ***** If we are above offset, just pass pixel color through as it is above the top of the wave
-//    if (coordinates.y > y_top || coordinates.y < u_water_bottom || coordinates.x < u_water_left || coordinates.x > u_water_right) {
+    // ***** If out of range, don't process this pixel
+    //if (coordinates.y > y_top || coordinates.y < u_water_bottom || coordinates.x < u_water_left || coordinates.x > u_water_right) {
     if (coords.y > y_top || coords.y < u_water_bottom || coords.x < u_water_left || coords.x > u_water_right) {
         discard;
+    }
 
-    // Otherwise Refract Original Pixel Color, mix in Overlay Color
-    } else {
-        // Existing pixel color refracted through water
-        vec2 under_refraction = vec2(refract_x*refract_underwater + xoffset, refract_y*refract_underwater - yoffset*bob);
-             under_refraction = rotate(under_refraction, vec2(0.0, 0.0), rotation);
-        vec2 get_under = vec2(coordinates.x + under_refraction.x, coordinates.y - under_refraction.y);
-        original = texture2D(u_texture, get_under);
 
-        // Mix in overlay_color and water texture
-        water = texture2D(u_texture_water, vec2(
-                              (zoom_coord_x + refract_x*refract_texture*(1.0/u_zoom)  + player_x + xoffset/u_zoom + movement/2.0),
-                              (zoom_coord_y + refract_y*refract_texture*(1.0/u_zoom)  + player_y + yoffset*bob)) * (shrink_texture*u_zoom) );
-        vec3 water_color = mix(start_color, end_color, smoothstep(0.0, 1.0, (coords.y - u_water_top) / (u_water_bottom - u_water_top)));
-        water = vec4(mix(water.rgb, water_color, color_tint), 1.0);
+    // ***** Grab the reflected value from existing screen
+    vec4 reflection, water, original;
+    //reflection = texture2D(u_texture, vec2(coords.x, ((2.0 * y_start) - coords.y)));                                      // OPTIONAL: Simple reflection
+    //reflection = texture2D(u_texture, vec2(              coords.x + refract_x*refract_reflection - xoffset,               // OPTIONAL: Original reflection
+    //                                       2.0*y_start - coords.y - refract_y*refract_reflection + yoffset*bob) );
+    vec2 reflect_refraction = vec2(refract_x*refract_reflection - xoffset, refract_y*refract_reflection + yoffset*bob);
+         reflect_refraction = rotate(reflect_refraction, vec2(0.0, 0.0), rotation);
+    vec2 get_reflection = vec2(coords.x, y_start + (y_start - coords.y));
+         get_reflection = rotate(get_reflection, water_center, -rotation);
+         get_reflection.x += reflect_refraction.x;
+         get_reflection.y -= reflect_refraction.y;
+    reflection = texture2D(u_texture, get_reflection);
 
-        original = mix(original,   water,          u_alpha);
-        original = mix(original,   reflection,     reflection_opacity);
 
-        // Surface coloring (sea foam)
-        float foam_distance = (surface_height + sin(refract_x + movement)) / u_height * u_zoom;
-        if (coords.y > (y_top - foam_distance)) {
-            float foam_position = (coords.y - (y_top - foam_distance)) / foam_distance;
-            original = vec4(mix(original.rgb, surface_color, surface_tint * clamp(2.0*foam_position, 0.0, 1.0)), 1.0);
 
-            // Anti-alias the top of the sea foam
-            if (coords.y > (y_top - (u_zoom/u_height))) {
-                original = mix(texture2D(u_texture, coordinates), original, 0.5);
+    // Existing pixel color refracted through water
+    vec2 under_refraction = vec2(refract_x*refract_underwater + xoffset, refract_y*refract_underwater - yoffset*bob);
+         under_refraction = rotate(under_refraction, vec2(0.0, 0.0), rotation);
+    vec2 get_under = vec2(coordinates.x + under_refraction.x, coordinates.y - under_refraction.y);
+    original = texture2D(u_texture, get_under);
 
-                //vec2 reverse = rotate(coordinates, water_center, -rotation);
-                //original = mix(texture2D(u_texture, reverse), original, 0.0);
-            }
+    // Mix in overlay_color and water texture
+    water = texture2D(u_texture_water, vec2(
+                          (zoom_coord_x + refract_x*refract_texture*(1.0/u_zoom)  + player_x + xoffset/u_zoom + movement/2.0),
+                          (zoom_coord_y + refract_y*refract_texture*(1.0/u_zoom)  + player_y + yoffset*bob)) * (shrink_texture*u_zoom) );
+    vec3 water_color = mix(start_color, end_color, smoothstep(0.0, 1.0, (coords.y - u_water_top) / (u_water_bottom - u_water_top)));
+    water = vec4(mix(water.rgb, water_color, color_tint), 1.0);
+
+    original = mix(original,   water,          u_alpha);
+    original = mix(original,   reflection,     reflection_opacity);
+
+    // Surface coloring (sea foam)
+    float foam_distance = (surface_height + sin(refract_x + movement)) / u_height * u_zoom;
+    if (coords.y > (y_top - foam_distance)) {
+        float foam_position = (coords.y - (y_top - foam_distance)) / foam_distance;
+        original = vec4(mix(original.rgb, surface_color, surface_tint * clamp(2.0*foam_position, 0.0, 1.0)), 1.0);
+
+        // Anti-alias the top of the sea foam
+        if (coords.y > (y_top - (u_zoom/u_height))) {
+            original = mix(texture2D(u_texture, coordinates), original, 0.5);
+
+            //vec2 reverse = rotate(coordinates, water_center, -rotation);
+            //original = mix(texture2D(u_texture, reverse), original, 0.0);
         }
     }
 

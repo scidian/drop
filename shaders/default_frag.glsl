@@ -73,7 +73,7 @@ float avgIntensity(vec4 pix) {
 
 // Returns pixel color
 float isEdge(in vec2 coords) {
-    float dxtex = 1.0 / float(u_width);     //textureSize(u_texture, 0)) ;
+    float dxtex = 1.0 / float(u_width);     //textureSize(u_texture, 0));
     float dytex = 1.0 / float(u_height);    //textureSize(u_texture, 0));
     float pix[9];
     int   k = -1;
@@ -174,7 +174,7 @@ void main( void ) {
     float time = u_time;
 
     // ***** WAVY
-    if (u_wavy) {    
+    if (u_wavy) {
         //time = 100.0;                           // !!! Disables imported time (turns off animation)
         vec2  tc =  coords.xy;
         vec2  p =   -1.0 + 2.0 * tc;
@@ -183,7 +183,7 @@ void main( void ) {
     }
 
 
-    // ***** 2D Shockwave
+    // ***** 2D SHOCKWAVE
     if (u_wavy) {
 //        vec2 center = vec2(0.5, 0.5);
 //        vec3 shock_params = vec3(10.0, 0.8, 0.1);
@@ -205,16 +205,27 @@ void main( void ) {
     }
 
 
+    // ***** GRID
+//    if (u_wavy) {
+//        float multiplicationFactor = 32.0;          // Scales the number of stripes
+//        float threshold = 0.5;                      // Defines the with of the lines (1.0 equals full square)
+//        vec2 t = coords * multiplicationFactor;
+//        if (fract(t.s * (u_width / u_height)) > threshold && fract(t.t) > threshold ) {
+//            discard;
+//        }
+//    }
+
+
     // ***** FISHEYE
     if (u_fisheye) {
-        float lens_size = 0.4;                  // lens size
+        float lens_size = 0.4;                  // Lens size
         float x_pos = 0.5;
         float y_pos = 0.5;
 
-        vec2  p = coords.xy;                    // current texture coordinate
-        vec2  m = vec2(x_pos, 1.0 - y_pos);     // lens coordinate
+        vec2  p = coords.xy;                    // Current texture coordinate
+        vec2  m = vec2(x_pos, 1.0 - y_pos);     // Lens coordinate
         vec2  d = p - m;
-        float r = sqrt(dot(d, d));              // distance of pixel from m
+        float r = sqrt(dot(d, d));              // Distance of pixel from m
         vec2  uv;
 
         if (r < lens_size - 0.01) {
