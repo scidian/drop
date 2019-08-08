@@ -187,6 +187,7 @@ void DrOpenGL::initializeGL() {
     // 2D Light Fragment Shader Input
     u_screen_upper =            m_screen_shader.uniformLocation(    "u_upper" );
     u_screen_lower =            m_screen_shader.uniformLocation(    "u_lower" );
+    u_screen_blend =            m_screen_shader.uniformLocation(    "u_blend_mode" );
     u_screen_width =            m_screen_shader.uniformLocation(    "u_width" );
     u_screen_height =           m_screen_shader.uniformLocation(    "u_height" );
 

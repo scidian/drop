@@ -243,7 +243,7 @@ void DrOpenGL::drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo) {
 //##        Renders Frame Buffer Object to screen buffer as a textured quad
 //##            Uses "Screen" shader to multiply glow lights into texture
 //####################################################################################
-void DrOpenGL::drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower) {
+void DrOpenGL::drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower, Blend_Mode mode) {
 
     if (!m_screen_shader.bind()) return;
 
@@ -285,6 +285,7 @@ void DrOpenGL::drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper,
     // Set variables for shader
     m_screen_shader.setUniformValue( u_screen_width,    static_cast<float>(lower->width()) );
     m_screen_shader.setUniformValue( u_screen_height,   static_cast<float>(lower->height()) );
+    m_screen_shader.setUniformValue( u_screen_blend,    static_cast<int>(mode) );
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

@@ -44,7 +44,7 @@ enum class Property_Type {
     Color,                  // QColor.rgba()    For Colors
     Polygon,                // QPolygon         For Collision Shapes
     Vector3D,
-    List,
+    List,                   // enum list
 };
 
 
@@ -120,6 +120,7 @@ enum class Properties {
     // Lighting
     World_Light_Ambient,            //double
     World_Light_Layer,              //percent
+    World_Light_Blend,              //list, enum class Blend_Mode
 
     // Appearance
     World_Filter_Pixelation,        //positive size
@@ -146,7 +147,7 @@ enum class Properties {
     Stage_Cooldown,                 //Positive
 
     // Grid
-    Stage_Grid_Style,               //list
+    Stage_Grid_Style,               //list, enum class Grid_Style (Lines,  Dots)
     Stage_Grid_Origin_Point,        //pointf
     Stage_Grid_Size,                //sizef
     Stage_Grid_Scale,               //scale
@@ -190,12 +191,12 @@ enum class Properties {
     Thing_Character_Jump_Y,         //double
 
     // Object Settings
-    Thing_Object_Physics_Type,      //list (static, kinematic, dynamic)
+    Thing_Object_Physics_Type,      //list, enum class Body_Type (Static, Kinematic, Dynamic)
     Thing_Object_Collide,           //bool
-    Thing_Object_Damage,            //list (none, player, enemy, all)
+    Thing_Object_Damage,            //list, enum class Collision_Type (none, player, enemy, all)
 
     // Light Settings
-    Thing_Light_Type,               //list (Opaque, Glow)
+    Thing_Light_Type,               //list, enum class Light_Type (Opaque, Glow)
     Thing_Light_Color,              //color
     Thing_Light_Cone_Start,         //filter angle      0 to 360
     Thing_Light_Cone_End,           //filter angle      0 to 360

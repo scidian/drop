@@ -171,6 +171,7 @@ private:
 
     int     u_screen_upper;
     int     u_screen_lower;
+    int     u_screen_blend;
     int     u_screen_width;
     int     u_screen_height;
 
@@ -271,7 +272,7 @@ public:
     void            drawDebugShapes(QPainter &painter);
     void            drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo);
     void            drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo);
-    void            drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower);
+    void            drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower, Blend_Mode mode);
     void            drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water);
     bool            drawGlowBuffer();
     void            drawSpace();

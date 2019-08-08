@@ -270,18 +270,13 @@ void DrOpenGL::drawSpace() {
 //####################################################################################
 //##        Draws Glow Buffer onto screen buffer
 //####################################################################################
-enum class Blend_Mode {
-    Standard,
-    Hard_Light,
-};
-
 bool DrOpenGL::drawGlowBuffer() {
 
-    Blend_Mode mode = Blend_Mode::Standard;
+    Blend_Mode mode = m_engine->getCurrentWorld()->getGlowBlendMode();
 
     // If no lights and ambient light is 50% (normal) exit now
     double ambient_light = m_engine->getCurrentWorld()->getAmbientLight() / 100.0;
-    if (m_glow_lights.count() <= 0 && Dr::IsCloseTo(0.5, ambient_light, .001)) return true;
+    if (m_glow_lights.count() <= 0 && Dr::IsCloseTo(0.5, ambient_light, .001) && mode == Blend_Mode::Standard) return true;
 
     // Blend functions, in order of best
     if (mode == Blend_Mode::Standard) {
@@ -292,14 +287,13 @@ bool DrOpenGL::drawGlowBuffer() {
         ///glBlendFunc(GL_ONE, GL_ONE);                                 // Supposed to add lights together, not really great for lighting though
         drawFrameBufferUsingKernelShader(m_glow_fbo);
 
-    } else if (mode == Blend_Mode::Hard_Light) {
+    } else {
         // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) FBO for use as a texture during Screen Shader, Draw Glow Light buffer using Screen Shader
         releaseOffscreenBuffer();
         QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);
         bindOffscreenBuffer();
         glDisable(GL_BLEND);
-        ///drawFrameBufferUsingScreenShader(m_glow_fbo, m_texture_fbo);            // Normal
-        drawFrameBufferUsingScreenShader(m_texture_fbo, m_glow_fbo);               // Reversed, cool metal look
+        drawFrameBufferUsingScreenShader(m_glow_fbo, m_texture_fbo, mode);
     }
 
     return true;

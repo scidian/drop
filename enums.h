@@ -102,7 +102,7 @@ enum User_Roles {
 //##    Possible handle rects - Order used to be vector / array index critical, but it shouldn't be now...
 //##                            Probably still best to leave Top thru Bottom_Right as values 0 thru 7
 //############################
-enum class Position_Flags {
+enum class Position_Flags {                                 // !!!!! Order is important
     Top          = 0,
     Bottom       = 1,
     Right        = 2,

@@ -14,6 +14,7 @@ varying highp vec2  coordinates;                    // Texture Coodinates
 // ***** Input from Engine
 uniform sampler2D   u_upper;                        // Texture (Lights)
 uniform sampler2D   u_lower;                        // Texture (Ground)
+uniform int         u_blend_mode;                   // Blend mode
 
 uniform lowp float  u_width;                        // Width of gl window
 uniform lowp float  u_height;                       // Height of gl window
@@ -48,25 +49,35 @@ vec3 hardLightBlending(vec3 upper, vec3 lower) {
 //####################################################################################
 void main( void ) {
 
+    // enum class Blend_Mode
+    //  Standard    = 0,
+    //  Multiply    = 1,
+    //  Screen      = 2
+    //  Hard_Light  = 3,
+
     vec4 upper = texture2D(u_upper, coordinates.st);            // Lights
     vec4 lower = texture2D(u_lower, coordinates.st);            // Ground
     vec3 out_color;
 
 
-    //out_color = lower.rgb * (upper.rgb * 1.25);               // Multiply Blending (can change multiplier)
+    // Multiply Blending (can change multiplier)
+    if (u_blend_mode == 1) {
+        out_color = lower.rgb * upper.rgb * 1.3;
 
+    // Screen Blending
+    } else if (u_blend_mode == 2) {
+        out_color = hardLightBlending(upper.rgb, lower.rgb);
+        out_color *= lower.rgb;
 
-    out_color = hardLightBlending(upper.rgb, lower.rgb);        // Hard Light Blending
-    out_color *= lower.rgb;                                     // Extra light added in for reveresed mode
+    // Hard Light Blending, extra light added in for reveresed mode
+    } else if (u_blend_mode == 3) {
+        out_color = hardLightBlending(lower.rgb, upper.rgb);
+        out_color *= lower.rgb;
+    }
 
 
     gl_FragColor = vec4(out_color, 1.0);
-
 }
-
-
-
-
 
 
 

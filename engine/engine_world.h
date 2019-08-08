@@ -100,6 +100,7 @@ private:
 
     double          m_ambient_light = 50.0;         // Ambient light percentage to use for World, mostly for use with Glow Lights
     double          m_glow_light_z_order = 0.0;     // Z Ordering for Glow Lights
+    int             m_glow_blend_mode = 0;          // enum class Blend_Mode decides how light layer is applied to screen
 
     QColor          m_background_color {0,0,0,1};   // Background color to use to clear screen during render
     double          m_game_direction = 0.0;         // Direction to load new levels, 0 = to the right, 90 = up, 180 = to the left, etc
@@ -202,6 +203,7 @@ public:
     const QColor&       getBackgroundColor()        { return m_background_color; }
     const double&       getAmbientLight()           { return m_ambient_light; }
     const double&       getGlowZOrder()             { return m_glow_light_z_order; }
+    Blend_Mode          getGlowBlendMode()          { return static_cast<Blend_Mode>(m_glow_blend_mode); }
 
     void                setTimeWarp(double new_time_warp) { m_time_warp = new_time_warp; }
     void                setGravity(cpVect new_gravity) { m_gravity = new_gravity; }
@@ -214,6 +216,7 @@ public:
     void                setBackgroundColor(QColor new_color) { m_background_color = new_color; }
     void                setAmbientLight(double new_ambient)  { m_ambient_light = new_ambient; }
     void                setGlowZOrder(double new_z_order)    { m_glow_light_z_order = new_z_order; }
+    void                setGlowBlendMode(Blend_Mode mode)    { m_glow_blend_mode = static_cast<int>(mode); }
 
 };
 

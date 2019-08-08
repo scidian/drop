@@ -59,6 +59,13 @@ enum class Matrix_Type {
     Projection,
 };
 
+enum class Blend_Mode {                 // !!!!! Order is important
+    Standard    = 0,
+    Multiply    = 1,
+    Screen      = 2,
+    Hard_Light  = 3,
+};
+
 //####################################################################################
 //##    Control Enumerations
 //############################
@@ -73,8 +80,8 @@ enum class Pedal {
 //####################################################################################
 //##    DrEngineObject Enumerations
 //############################
-enum class Body_Type {
-    Static =    0,                      // Order is important
+enum class Body_Type {                  // !!!!! Order is important
+    Static =    0,
     Kinematic = 1,
     Dynamic =   2,
 };
@@ -86,7 +93,7 @@ enum class Shape_Type {
     Polygon,                            // cpPolyShapeNew
 };
 
-enum class Collision_Type {
+enum class Collision_Type {             // !!!!! Order is important
     Damage_None =           1,
     Damage_Player =         2,
     Damage_Enemy =          3,
