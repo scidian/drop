@@ -107,7 +107,7 @@ void DrOpenGL::initializeGL() {
 
     // ***** Initialize our Occluder Map Shader
     QOpenGLShader v_occluder_shader( QOpenGLShader::Vertex );       v_occluder_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
-    QOpenGLShader f_occluder_shader( QOpenGLShader::Fragment );     f_occluder_shader.compileSourceFile( ":/shaders/occluder_frag.glsl" );
+    QOpenGLShader f_occluder_shader( QOpenGLShader::Fragment );     f_occluder_shader.compileSourceFile( ":/shaders/frag_occluder.glsl" );
     m_occluder_shader.addShader( &v_occluder_shader );
     m_occluder_shader.addShader( &f_occluder_shader );
     m_occluder_shader.link();
@@ -127,7 +127,7 @@ void DrOpenGL::initializeGL() {
 
     // ***** Initialize our Shadow Map Shader
     QOpenGLShader v_shadow_shader( QOpenGLShader::Vertex );         v_shadow_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
-    QOpenGLShader f_shadow_shader( QOpenGLShader::Fragment );       f_shadow_shader.compileSourceFile( ":/shaders/shadow_map_frag.glsl" );
+    QOpenGLShader f_shadow_shader( QOpenGLShader::Fragment );       f_shadow_shader.compileSourceFile( ":/shaders/frag_shadow_map.glsl" );
     m_shadow_shader.addShader( &v_shadow_shader );
     m_shadow_shader.addShader( &f_shadow_shader );
     m_shadow_shader.link();
@@ -147,7 +147,7 @@ void DrOpenGL::initializeGL() {
 
     // ***** Initialize our 2D Light Shader
     QOpenGLShader v_light_shader( QOpenGLShader::Vertex );          v_light_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
-    QOpenGLShader f_light_shader( QOpenGLShader::Fragment );        f_light_shader.compileSourceFile( ":/shaders/2d_light_frag.glsl" );
+    QOpenGLShader f_light_shader( QOpenGLShader::Fragment );        f_light_shader.compileSourceFile( ":/shaders/frag_2d_light.glsl" );
     m_light_shader.addShader( &v_light_shader );
     m_light_shader.addShader( &f_light_shader );
     m_light_shader.link();
@@ -174,7 +174,7 @@ void DrOpenGL::initializeGL() {
 
     // ***** Initialize our Screen Shader
     QOpenGLShader v_screen_shader( QOpenGLShader::Vertex );         v_screen_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
-    QOpenGLShader f_screen_shader( QOpenGLShader::Fragment );       f_screen_shader.compileSourceFile( ":/shaders/screen_frag.glsl" );
+    QOpenGLShader f_screen_shader( QOpenGLShader::Fragment );       f_screen_shader.compileSourceFile( ":/shaders/frag_screen.glsl" );
     m_screen_shader.addShader( &v_screen_shader );
     m_screen_shader.addShader( &f_screen_shader );
     m_screen_shader.link();
@@ -194,7 +194,7 @@ void DrOpenGL::initializeGL() {
 
     // ***** Initialize our Kernel Shader
     QOpenGLShader v_kernel_shader( QOpenGLShader::Vertex );         v_kernel_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
-    QOpenGLShader f_kernel_shader( QOpenGLShader::Fragment );       f_kernel_shader.compileSourceFile( ":/shaders/kernel_frag.glsl" );
+    QOpenGLShader f_kernel_shader( QOpenGLShader::Fragment );       f_kernel_shader.compileSourceFile( ":/shaders/frag_kernel.glsl" );
     m_kernel_shader.addShader( &v_kernel_shader );
     m_kernel_shader.addShader( &f_kernel_shader );
     m_kernel_shader.link();
@@ -213,7 +213,7 @@ void DrOpenGL::initializeGL() {
 
     // ***** Initialize our Water Shader
     QOpenGLShader v_water_shader( QOpenGLShader::Vertex );          v_water_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
-    QOpenGLShader f_water_shader( QOpenGLShader::Fragment );        f_water_shader.compileSourceFile( ":/shaders/water_frag.glsl" );
+    QOpenGLShader f_water_shader( QOpenGLShader::Fragment );        f_water_shader.compileSourceFile( ":/shaders/frag_water.glsl" );
     m_water_shader.addShader( &v_water_shader );
     m_water_shader.addShader( &f_water_shader );
     m_water_shader.link();

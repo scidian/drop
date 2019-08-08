@@ -2,11 +2,11 @@
     <qresource prefix="/">
         <file>shaders/default_frag.glsl</file>
         <file>shaders/default_vert.glsl</file>
-        <file>shaders/shadow_map_frag.glsl</file>
-        <file>shaders/2d_light_frag.glsl</file>
-        <file>shaders/occluder_frag.glsl</file>
-        <file>shaders/screen_frag.glsl</file>
-        <file>shaders/kernel_frag.glsl</file>
-        <file>shaders/water_frag.glsl</file>
+        <file>shaders/frag_water.glsl</file>
+        <file>shaders/frag_shadow_map.glsl</file>
+        <file>shaders/frag_kernel.glsl</file>
+        <file>shaders/frag_screen.glsl</file>
+        <file>shaders/frag_occluder.glsl</file>
+        <file>shaders/frag_2d_light.glsl</file>
     </qresource>
 </RCC>
