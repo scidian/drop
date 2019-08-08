@@ -92,6 +92,7 @@ void DrOpenGL::initializeGL() {
 
     u_default_pixel_x =         m_default_shader.uniformLocation(   "u_pixel_x" );
     u_default_pixel_y =         m_default_shader.uniformLocation(   "u_pixel_y" );
+    u_default_pixel_offset =    m_default_shader.uniformLocation(   "u_pixel_offset" );
     u_default_negative =        m_default_shader.uniformLocation(   "u_negative" );
     u_default_grayscale =       m_default_shader.uniformLocation(   "u_grayscale" );
     u_default_hue =             m_default_shader.uniformLocation(   "u_hue" );

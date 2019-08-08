@@ -25,6 +25,7 @@ uniform       bool  u_premultiplied;                // True if the texture we ar
 // EXACT SAME ORDER AS IN EDITOR!!!!!
 uniform lowp  float u_pixel_x;// = 1.0;             // Pixel Width X    1.0 Normal, 4.0 is nice pixelation
 uniform lowp  float u_pixel_y;// = 1.0;             // Pixel Width Y    1.0 Normal, 4.0 is nice pixelation
+uniform highp vec2  u_pixel_offset;                 // Used to offset pixelation to reduce pixel flicker
 uniform       bool  u_negative;// = false;          // Negative         True / False
 uniform       bool  u_grayscale;// = false;         // Grayscale        True / False
 uniform lowp  float u_hue;// = 0.0;                 // Hue              Editor:    0 to 360     Shader:  0.0 to 1.0
@@ -241,11 +242,14 @@ void main( void ) {
     // ***** PIXELATED
     vec4 texture_color;
     if (u_pixel_x > 1.0 || u_pixel_y > 1.0) {       
-        highp float dx = u_pixel_x * (1.0 / (u_width)) * 0.99;                      // 99 Percent modifier is more like the function in Image_Filter_Color.cpp
-        highp float dy = u_pixel_y * (1.0 / (u_height)) * 0.99;                     // 99 Percent modifier is more like the function in Image_Filter_Color.cpp
+        highp float pixel_width =  (1.0 / (u_width));
+        highp float pixel_height = (1.0 / (u_height));
 
-        highp float pixel_x = dx * floor(coords.x / dx) + (dx / 2.0);
-        highp float pixel_y = dy * floor(coords.y / dy) + (dy / 2.0);
+        highp float dx = u_pixel_x * pixel_width;
+        highp float dy = u_pixel_y * pixel_height;
+
+        highp float pixel_x = dx * floor(coords.x / dx) + (dx / 2.0) - (u_pixel_offset.x * pixel_width) ;
+        highp float pixel_y = dy * floor(coords.y / dy) + (dy / 2.0) - (u_pixel_offset.y * pixel_height);
         texture_color = texture2D(u_texture, highp vec2(pixel_x, pixel_y)).rgba;
     } else {
         texture_color = texture2D(u_texture, coords.st).rgba;                       // If not pixelated, grab initial texture color at the current location

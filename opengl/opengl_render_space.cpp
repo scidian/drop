@@ -229,26 +229,27 @@ void DrOpenGL::drawSpace() {
             double fade_percent = 1.0 - (static_cast<double>(Dr::MillisecondsElapsed(object->getFadeTimer())) / static_cast<double>(object->getFadeDelay()));
             alpha *= static_cast<float>(fade_percent);
         }
-        m_default_shader.setUniformValue( u_default_alpha,      alpha );
-        m_default_shader.setUniformValue( u_default_tint,       0.0f, 0.0f, 0.0f );
-        m_default_shader.setUniformValue( u_default_width,      texture_width );
-        m_default_shader.setUniformValue( u_default_height,     texture_height );
-        m_default_shader.setUniformValue( u_default_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
-        m_default_shader.setUniformValue( u_default_pre,        true );
+        m_default_shader.setUniformValue( u_default_alpha,          alpha );
+        m_default_shader.setUniformValue( u_default_tint,           0.0f, 0.0f, 0.0f );
+        m_default_shader.setUniformValue( u_default_width,          texture_width );
+        m_default_shader.setUniformValue( u_default_height,         texture_height );
+        m_default_shader.setUniformValue( u_default_time,           static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
+        m_default_shader.setUniformValue( u_default_pre,            true );
 
-        m_default_shader.setUniformValue( u_default_pixel_x,    object->pixel_x );
-        m_default_shader.setUniformValue( u_default_pixel_y,    object->pixel_y );
-        m_default_shader.setUniformValue( u_default_negative,   object->negative );
-        m_default_shader.setUniformValue( u_default_grayscale,  object->grayscale );
-        m_default_shader.setUniformValue( u_default_hue,        object->hue );
-        m_default_shader.setUniformValue( u_default_saturation, object->saturation );
-        m_default_shader.setUniformValue( u_default_contrast,   object->contrast );
-        m_default_shader.setUniformValue( u_default_brightness, object->brightness );
+        m_default_shader.setUniformValue( u_default_pixel_x,        object->pixel_x );
+        m_default_shader.setUniformValue( u_default_pixel_y,        object->pixel_y );
+        m_default_shader.setUniformValue( u_default_pixel_offset,   0.0f, 0.0f );
+        m_default_shader.setUniformValue( u_default_negative,       object->negative );
+        m_default_shader.setUniformValue( u_default_grayscale,      object->grayscale );
+        m_default_shader.setUniformValue( u_default_hue,            object->hue );
+        m_default_shader.setUniformValue( u_default_saturation,     object->saturation );
+        m_default_shader.setUniformValue( u_default_contrast,       object->contrast );
+        m_default_shader.setUniformValue( u_default_brightness,     object->brightness );
 
-        m_default_shader.setUniformValue( u_default_bitrate,    16.0f );
-        m_default_shader.setUniformValue( u_default_cartoon,    false );
-        m_default_shader.setUniformValue( u_default_wavy,       false );
-        m_default_shader.setUniformValue( u_default_fisheye,    false );
+        m_default_shader.setUniformValue( u_default_bitrate,        16.0f );
+        m_default_shader.setUniformValue( u_default_cartoon,        false );
+        m_default_shader.setUniformValue( u_default_wavy,           false );
+        m_default_shader.setUniformValue( u_default_fisheye,        false );
 
         // ***** Draw triangles using shader program
         glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

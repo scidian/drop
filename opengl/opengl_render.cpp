@@ -101,25 +101,26 @@ void DrOpenGL::setVertexFromSides(QVector<GLfloat> &vertices, float left, float 
 //##        Sets shader variables to default normal render
 //####################################################################################
 void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height) {
-    m_default_shader.setUniformValue( u_default_texture,    0 );                            // Use texture unit "0"
-    m_default_shader.setUniformValue( u_default_alpha,      1.0f );
-    m_default_shader.setUniformValue( u_default_tint,       0.0f, 0.0f, 0.0f );             // Add 0 to red, green, and blue
-    m_default_shader.setUniformValue( u_default_width,      texture_width  );
-    m_default_shader.setUniformValue( u_default_height,     texture_height );
-    m_default_shader.setUniformValue( u_default_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
-    m_default_shader.setUniformValue( u_default_pre,        false );
-    m_default_shader.setUniformValue( u_default_pixel_x,    1.0f );
-    m_default_shader.setUniformValue( u_default_pixel_y,    1.0f );
-    m_default_shader.setUniformValue( u_default_negative,   false );
-    m_default_shader.setUniformValue( u_default_grayscale,  false );
-    m_default_shader.setUniformValue( u_default_hue,        0.0f );
-    m_default_shader.setUniformValue( u_default_saturation, 0.0f );
-    m_default_shader.setUniformValue( u_default_contrast,   0.0f );
-    m_default_shader.setUniformValue( u_default_brightness, 0.0f );
-    m_default_shader.setUniformValue( u_default_bitrate,    16.0f );
-    m_default_shader.setUniformValue( u_default_cartoon,    false );
-    m_default_shader.setUniformValue( u_default_wavy,       false );
-    m_default_shader.setUniformValue( u_default_fisheye,    false );
+    m_default_shader.setUniformValue( u_default_texture,        0 );                            // Use texture unit "0"
+    m_default_shader.setUniformValue( u_default_alpha,          1.0f );
+    m_default_shader.setUniformValue( u_default_tint,           0.0f, 0.0f, 0.0f );             // Add 0 to red, green, and blue
+    m_default_shader.setUniformValue( u_default_width,          texture_width  );
+    m_default_shader.setUniformValue( u_default_height,         texture_height );
+    m_default_shader.setUniformValue( u_default_time,           static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
+    m_default_shader.setUniformValue( u_default_pre,            false );
+    m_default_shader.setUniformValue( u_default_pixel_x,        1.0f );
+    m_default_shader.setUniformValue( u_default_pixel_y,        1.0f );
+    m_default_shader.setUniformValue( u_default_pixel_offset,   0.0f, 0.0f );
+    m_default_shader.setUniformValue( u_default_negative,       false );
+    m_default_shader.setUniformValue( u_default_grayscale,      false );
+    m_default_shader.setUniformValue( u_default_hue,            0.0f );
+    m_default_shader.setUniformValue( u_default_saturation,     0.0f );
+    m_default_shader.setUniformValue( u_default_contrast,       0.0f );
+    m_default_shader.setUniformValue( u_default_brightness,     0.0f );
+    m_default_shader.setUniformValue( u_default_bitrate,        16.0f );
+    m_default_shader.setUniformValue( u_default_cartoon,        false );
+    m_default_shader.setUniformValue( u_default_wavy,           false );
+    m_default_shader.setUniformValue( u_default_fisheye,        false );
 }
 
 
@@ -160,8 +161,15 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     // Set variables for shader
     setShaderDefaultValues( fbo->width(), fbo->height() );
 
+    // Set Pixelation Variables for Shader
     m_default_shader.setUniformValue( u_default_pixel_x,    m_engine->getCurrentWorld()->pixel_x );
     m_default_shader.setUniformValue( u_default_pixel_y,    m_engine->getCurrentWorld()->pixel_y );
+    double integral;
+    double x_decimal = modf(static_cast<double>(m_engine->getCurrentWorld()->getCameraPos().x()), &integral) * static_cast<double>(m_scale);
+    double y_decimal = modf(static_cast<double>(m_engine->getCurrentWorld()->getCameraPos().y()), &integral) * static_cast<double>(m_scale);
+    m_default_shader.setUniformValue( u_default_pixel_offset,   static_cast<float>(x_decimal), static_cast<float>(y_decimal) );
+
+    // Set more Appearance Variables for Shader
     m_default_shader.setUniformValue( u_default_negative,   m_engine->getCurrentWorld()->negative );
     m_default_shader.setUniformValue( u_default_grayscale,  m_engine->getCurrentWorld()->grayscale );
     m_default_shader.setUniformValue( u_default_hue,        m_engine->getCurrentWorld()->hue );
