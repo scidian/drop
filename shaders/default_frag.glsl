@@ -16,6 +16,7 @@ uniform sampler2D   u_texture;                      // Texture
 
 uniform lowp  float u_alpha;                        // Opacity
 uniform lowp  vec3  u_tint;// = vec3(0, 0, 0);      // Tint, adds rgb to final output
+uniform highp float u_zoom;                         // Zoom factor
 
 uniform highp float u_width;                        // Texture Width
 uniform highp float u_height;                       // Texture Height
@@ -156,14 +157,6 @@ vec3 cartoonHsvToRgb(float h, float s, float v ) {
 }
 
 
-// Random usued for frosted glass
-float rand(vec2 co) {
-    vec2 v1 = vec2(92.0, 80.0);
-    vec2 v2 = vec2(41.0, 62.0);
-    float rnd_scale = 5.1;
-    return fract(sin(dot(co.xy ,v1)) + cos(dot(co.xy ,v2)) * rnd_scale);
-}
-
 
 //####################################################################################
 //##        Main Shader Function
@@ -242,17 +235,17 @@ void main( void ) {
     // ***** PIXELATED
     vec4 texture_color;
     if (u_pixel_x > 1.0 || u_pixel_y > 1.0) {       
+
         highp float pixel_width =  (1.0 / (u_width));
         highp float pixel_height = (1.0 / (u_height));
 
-        float real_pixel_x = ((coords.x / 1.0) * u_width) - fract(u_pixel_offset.x);
-        float real_pixel_y = (((1.0 - coords.y) / 1.0) * u_height) - fract(u_pixel_offset.y);
+        // ***** Method 1
+        highp float real_pixel_x = ((coords.x / 1.0) * u_width) - (fract(u_pixel_offset.x)*u_zoom);
+        highp float real_pixel_y = (((1.0 - coords.y) / 1.0) * u_height) - (fract(u_pixel_offset.y)*u_zoom);
+        highp float pixel_x =       u_pixel_x * floor(real_pixel_x / u_pixel_x) * pixel_width;
+        highp float pixel_y = 1.0 - u_pixel_y * floor(real_pixel_y / u_pixel_y) * pixel_height;
 
-        highp float pixel_x =       (u_pixel_x * floor(real_pixel_x / u_pixel_x) * pixel_width);
-        highp float pixel_y = 1.0 - (u_pixel_y * floor(real_pixel_y / u_pixel_y) * pixel_height);
-
-        //highp float pixel_width =  (1.0 / (u_width));
-        //highp float pixel_height = (1.0 / (u_height));
+        // ***** Method 2
         //highp float dx = u_pixel_x * pixel_width;
         //highp float dy = u_pixel_y * pixel_height;
         //highp float pixel_x = dx * floor(coords.x / dx) + (dx / 2.0) - (fract(u_pixel_offset.x) * pixel_width);
@@ -302,10 +295,11 @@ void main( void ) {
 
     // ***** BITRATE ADJUSTMENT (16 bit down to 1 bit)
     if (u_bitrate < 16.0) {
+        // ***** Method 1
         highp float bit_depth = pow(2.0, u_bitrate);
         frag_rgb = highp vec3(floor(frag_rgb.r * bit_depth), floor(frag_rgb.g * bit_depth), floor(frag_rgb.b * bit_depth)) / bit_depth;
 
-        // ***** Alternate Method
+        // ***** Method 2
         //float num_colors = pow(2.0, u_bitrate);
         //float gamma = 1.5;                                                        // (adjustable)
         //vec3 c = frag_rgb.rgb;

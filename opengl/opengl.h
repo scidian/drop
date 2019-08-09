@@ -105,6 +105,7 @@ private:
     int     u_default_pre;                                      // Premultiplied Alpha Texture?
     int     u_default_alpha;                                    // Opacity
     int     u_default_tint;                                     // Tint, red/green/blue (0 to 1, 0 to 1, 0 to 1)
+    int     u_default_zoom;                                     // Zoom (m_scale)
 
     int     u_default_pixel_x;                                  // Pixelation X value
     int     u_default_pixel_y;                                  // Pixelation Y value
@@ -280,12 +281,13 @@ public:
     void            drawSpaceOccluder();
     QColor          objectDebugColor(DrEngineObject *object, bool text_color = false);
     QMatrix4x4      occluderMatrix(Render_Type render_type, bool use_offset);
+    QMatrix4x4      orthoMatrix(float width, float height);
     void            updateViewMatrix(Render_Type render_type, bool use_offset);
     void            releaseOffscreenBuffer();
     void            setShaderDefaultValues(float texture_width, float texture_height);
     void            setNumberTextureCoordinates(QString letter, std::vector<float> &texture_coordinates);
     void            setUpSpaceShader(std::vector<float> &texture_coords);
-    void            setVertexFromSides(QVector<GLfloat> &vertices, float left, float right, float top, float bottom, float z);
+    void            setQuadVertices(QVector<GLfloat> &vertices, float width, float height, QPointF center, float z);
     void            setWholeTextureCoordinates(std::vector<float> &texture_coords);
 
     // Soft Shadows / Lights

@@ -205,13 +205,7 @@ void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
     glDisable(GL_BLEND);
 
     // Reset our projection matrix to the FBO size
-    float left =   0.0f - ((m_shadows[light->getKey()]->width() )  / 2.0f);
-    float right =  0.0f + ((m_shadows[light->getKey()]->width() )  / 2.0f);
-    float top =    0.0f + ((m_shadows[light->getKey()]->height() ) / 2.0f);
-    float bottom = 0.0f - ((m_shadows[light->getKey()]->height() ) / 2.0f);
-    QMatrix4x4 m_matrix;
-    m_matrix.ortho( left, right, bottom, top, c_near_plane, c_far_plane);
-    m_shadow_shader.setUniformValue( u_shadow_matrix, m_matrix );
+    m_shadow_shader.setUniformValue( u_shadow_matrix, orthoMatrix(m_shadows[light->getKey()]->width(), m_shadows[light->getKey()]->height()) );
 
     // Set Texture Coordinates for Shader
     std::vector<float> texture_coordinates;
@@ -221,7 +215,7 @@ void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
 
     // Load vertices for this object
     QVector<GLfloat> vertices;
-    setVertexFromSides(vertices, left, right, top, bottom, 0.0f);
+    setQuadVertices(vertices, m_shadows[light->getKey()]->width(), m_shadows[light->getKey()]->height(), QPointF(0, 0), 0.0f);
     m_shadow_shader.setAttributeArray(    a_shadow_vertex, vertices.data(), 3 );
     m_shadow_shader.enableAttributeArray( a_shadow_vertex );
 
@@ -297,13 +291,10 @@ void DrOpenGL::draw2DLight(DrEngineLight *light) {
 
     // Load vertices for this object
     float perspective_scale = (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) ? 1.0 : (light->getPerspectiveScale() + 0.0001f);
-    float left =   static_cast<float>(light->getPosition().x()) - (light->getLightDiameterFitted()/perspective_scale / 2.0f);
-    float right =  static_cast<float>(light->getPosition().x()) + (light->getLightDiameterFitted()/perspective_scale / 2.0f);
-    float top =    static_cast<float>(light->getPosition().y()) + (light->getLightDiameterFitted()/perspective_scale / 2.0f);
-    float bottom = static_cast<float>(light->getPosition().y()) - (light->getLightDiameterFitted()/perspective_scale / 2.0f);
+    float quad_width =  (light->getLightDiameterFitted()/perspective_scale);
+    float quad_height = (light->getLightDiameterFitted()/perspective_scale);
     QVector<GLfloat> vertices;
-
-    setVertexFromSides(vertices, left, right, top, bottom, static_cast<float>(light->z_order));
+    setQuadVertices(vertices, quad_width, quad_height, light->getPosition(), static_cast<float>(light->z_order));
     m_light_shader.setAttributeArray(    a_light_vertex, vertices.data(), 3 );
     m_light_shader.enableAttributeArray( a_light_vertex );
 

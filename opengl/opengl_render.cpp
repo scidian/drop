@@ -68,6 +68,19 @@ void DrOpenGL::paintGL() {
 
 
 //####################################################################################
+//##        Returns a square matrix for rendering a flat quad (usually to fill screen)
+//####################################################################################
+QMatrix4x4 DrOpenGL::orthoMatrix(float width, float height) {
+    float left =   0.0f - (width  / 2.0f);
+    float right =  0.0f + (width  / 2.0f);
+    float top =    0.0f + (height / 2.0f);
+    float bottom = 0.0f - (height / 2.0f);
+    QMatrix4x4 m;
+    m.ortho( left, right, bottom, top, c_near_plane, c_far_plane);
+    return m;
+}
+
+//####################################################################################
 //##        Applies coordinates that represents an entire texture
 //####################################################################################
 void DrOpenGL::setWholeTextureCoordinates(std::vector<float> &texture_coords) {
@@ -83,11 +96,16 @@ void DrOpenGL::setWholeTextureCoordinates(std::vector<float> &texture_coords) {
 //####################################################################################
 //##        Returns list of vertices at z plane 0 from sides passed in
 //####################################################################################
-void DrOpenGL::setVertexFromSides(QVector<GLfloat> &vertices, float left, float right, float top, float bottom, float z) {
+void DrOpenGL::setQuadVertices(QVector<GLfloat> &vertices, float width, float height, QPointF center, float z) {
+    float left =   static_cast<float>(center.x()) - (width  / 2.0f);
+    float right =  static_cast<float>(center.x()) + (width  / 2.0f);
+    float top =    static_cast<float>(center.y()) + (height / 2.0f);
+    float bottom = static_cast<float>(center.y()) - (height / 2.0f);
     QVector3D top_right = QVector3D( right, top, 0);
     QVector3D top_left =  QVector3D( left,  top, 0);
     QVector3D bot_right = QVector3D( right, bottom, 0);
     QVector3D bot_left =  QVector3D( left,  bottom, 0);
+
     vertices.clear();
     vertices.resize( 12 );              // in sets of x, y, z
     vertices[ 0] = top_right.x();       vertices[ 1] = top_right.y();       vertices[ 2] = z;           // Top Right
@@ -104,6 +122,7 @@ void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height)
     m_default_shader.setUniformValue( u_default_texture,        0 );                            // Use texture unit "0"
     m_default_shader.setUniformValue( u_default_alpha,          1.0f );
     m_default_shader.setUniformValue( u_default_tint,           0.0f, 0.0f, 0.0f );             // Add 0 to red, green, and blue
+    m_default_shader.setUniformValue( u_default_zoom,           m_scale );
     m_default_shader.setUniformValue( u_default_width,          texture_width  );
     m_default_shader.setUniformValue( u_default_height,         texture_height );
     m_default_shader.setUniformValue( u_default_time,           static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
@@ -138,13 +157,7 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     glBindTexture(GL_TEXTURE_2D, fbo->texture());
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
-    float left =   0.0f - (fbo->width()  / 2.0f);
-    float right =  0.0f + (fbo->width()  / 2.0f);
-    float top =    0.0f + (fbo->height() / 2.0f);
-    float bottom = 0.0f - (fbo->height() / 2.0f);
-    QMatrix4x4 m_matrix;
-    m_matrix.ortho( left, right, bottom, top, c_near_plane, c_far_plane);
-    m_default_shader.setUniformValue( u_default_matrix, m_matrix );
+    m_default_shader.setUniformValue( u_default_matrix, orthoMatrix(fbo->width(), fbo->height()) );
 
     // Set Texture Coordinates for Shader
     std::vector<float> texture_coordinates;
@@ -154,7 +167,7 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
 
     // Load vertices for this object
     QVector<GLfloat> vertices;
-    setVertexFromSides(vertices, left, right, top, bottom, 0.0f);
+    setQuadVertices(vertices, fbo->width(), fbo->height(), QPointF(0, 0), 0.0f);
     m_default_shader.setAttributeArray( a_default_vertex, vertices.data(), 3 );
     m_default_shader.enableAttributeArray( a_default_vertex );
 
@@ -205,13 +218,7 @@ void DrOpenGL::drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo) {
     glBindTexture(GL_TEXTURE_2D, fbo->texture());
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
-    float left =   0.0f - (fbo->width()  / 2.0f);
-    float right =  0.0f + (fbo->width()  / 2.0f);
-    float top =    0.0f + (fbo->height() / 2.0f);
-    float bottom = 0.0f - (fbo->height() / 2.0f);
-    QMatrix4x4 m_matrix;
-    m_matrix.ortho( left, right, bottom, top, c_near_plane, c_far_plane);
-    m_kernel_shader.setUniformValue( u_kernel_matrix, m_matrix );
+    m_kernel_shader.setUniformValue( u_kernel_matrix, orthoMatrix(fbo->width(), fbo->height()) );
 
     // Set Texture Coordinates for Shader
     std::vector<float> texture_coordinates;
@@ -221,7 +228,7 @@ void DrOpenGL::drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo) {
 
     // Load vertices for this object
     QVector<GLfloat> vertices;
-    setVertexFromSides(vertices, left, right, top, bottom, 0.0f);
+    setQuadVertices(vertices, fbo->width(), fbo->height(), QPointF(0, 0), 0.0f);
     m_kernel_shader.setAttributeArray( a_kernel_vertex, vertices.data(), 3 );
     m_kernel_shader.enableAttributeArray( a_kernel_vertex );
 
@@ -267,13 +274,7 @@ void DrOpenGL::drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper,
     glBindTexture(GL_TEXTURE_2D, upper->texture());
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
-    float left =   0.0f - (lower->width()  / 2.0f);
-    float right =  0.0f + (lower->width()  / 2.0f);
-    float top =    0.0f + (lower->height() / 2.0f);
-    float bottom = 0.0f - (lower->height() / 2.0f);
-    QMatrix4x4 m_matrix;
-    m_matrix.ortho( left, right, bottom, top, c_near_plane, c_far_plane);
-    m_screen_shader.setUniformValue( u_screen_matrix, m_matrix );
+    m_screen_shader.setUniformValue( u_screen_matrix, orthoMatrix(lower->width(), lower->height()) );
 
     // Set Texture Coordinates for Shader
     std::vector<float> texture_coordinates;
@@ -283,7 +284,7 @@ void DrOpenGL::drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper,
 
     // Load vertices for this object
     QVector<GLfloat> vertices;
-    setVertexFromSides(vertices, left, right, top, bottom, 0.0f);
+    setQuadVertices(vertices, lower->width(), lower->height(), QPointF(0, 0), 0.0f);
     m_screen_shader.setAttributeArray(    a_screen_vertex, vertices.data(), 3 );
     m_screen_shader.enableAttributeArray( a_screen_vertex );
 

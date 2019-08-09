@@ -84,6 +84,7 @@ void DrOpenGL::initializeGL() {
     u_default_texture =         m_default_shader.uniformLocation(   "u_texture" );
     u_default_alpha =           m_default_shader.uniformLocation(   "u_alpha" );
     u_default_tint =            m_default_shader.uniformLocation(   "u_tint" );
+    u_default_zoom =            m_default_shader.uniformLocation(   "u_zoom" );
 
     u_default_width =           m_default_shader.uniformLocation(   "u_width" );
     u_default_height =          m_default_shader.uniformLocation(   "u_height" );

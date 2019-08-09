@@ -113,13 +113,7 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
 
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
-    float left =   0.0f - (fbo->width()  / 2.0f);
-    float right =  0.0f + (fbo->width()  / 2.0f);
-    float top =    0.0f + (fbo->height() / 2.0f);
-    float bottom = 0.0f - (fbo->height() / 2.0f);
-    QMatrix4x4 m_matrix;
-    m_matrix.ortho( left, right, bottom, top, c_near_plane, c_far_plane);
-    m_water_shader.setUniformValue( u_water_matrix, m_matrix );
+    m_water_shader.setUniformValue( u_water_matrix, orthoMatrix(fbo->width(), fbo->height()) );
 
     // Set Texture Coordinates for Shader
     std::vector<float> texture_coordinates;
@@ -129,7 +123,7 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
 
     // Load vertices for this object
     QVector<GLfloat> vertices;
-    setVertexFromSides(vertices, left, right, top, bottom, 0.0f);
+    setQuadVertices(vertices, fbo->width(), fbo->height(), QPointF(0, 0), 0.0f);
     m_water_shader.setAttributeArray(    a_water_vertex, vertices.data(), 3 );
     m_water_shader.enableAttributeArray( a_water_vertex );
 
