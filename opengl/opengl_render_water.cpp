@@ -80,8 +80,27 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
 
     // Bind textures - !!!!! #NOTE: Must be called in descending order and end on 0
     glActiveTexture(GL_TEXTURE2);                           // Texture unit 2
-    glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Water_Texture_1)->texture()->textureId());
-    m_engine->getTexture(Asset_Textures::Water_Texture_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::MirroredRepeat);
+    switch (water->water_texture) {
+        case Water_Texture::None:
+
+            break;
+        case Water_Texture::Ripples:
+            glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Water_Texture_1)->texture()->textureId());
+            m_engine->getTexture(Asset_Textures::Water_Texture_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::MirroredRepeat);
+            break;
+        case Water_Texture::Cells:
+            glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Water_Texture_2)->texture()->textureId());
+            m_engine->getTexture(Asset_Textures::Water_Texture_2)->texture()->setWrapMode(QOpenGLTexture::WrapMode::MirroredRepeat);
+            break;
+        case Water_Texture::Caustic:
+            glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Water_Texture_3)->texture()->textureId());
+            m_engine->getTexture(Asset_Textures::Water_Texture_3)->texture()->setWrapMode(QOpenGLTexture::WrapMode::MirroredRepeat);
+            break;
+        case Water_Texture::Liquid:
+            glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Water_Texture_4)->texture()->textureId());
+            m_engine->getTexture(Asset_Textures::Water_Texture_4)->texture()->setWrapMode(QOpenGLTexture::WrapMode::MirroredRepeat);
+            break;
+    }
 
     glActiveTexture(GL_TEXTURE1);                           // Texture unit 1
     glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Water_Normal_1)->texture()->textureId());

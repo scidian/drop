@@ -124,9 +124,8 @@ void DrWorld::initializeWorldSettings(QString new_name) {
                            "Light Layer", "Location along the z axis (Z Order) to draw Glow Lights. Should be between " +
                                           QString::number(double(c_near_plane)) + " and " + QString::number(double(c_far_plane)) + " to be visible.");
     addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Blend, Property_Type::List, 0,
-                           "Blend Mode", "<b>Multiply</b> - Can not move. <br> "
-                                         "<b>Screen</b> - Moves at fixed speed. <br> "
-                                         "<b>Hard Light</b> - Physics object.");
+                           "Blend Mode", "This is the blend mode used to add Glow Lights and Object Emitted Light to the Stage. Different blend modes can effect "
+                                         "oversaturation levels or be better for dark scenes.");
 
     addComponent(Components::World_Special_Effects, "Special Effects", "Special effects that affect the entire world.", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::World_Special_Effects)->setIcon(Component_Icons::Effects);

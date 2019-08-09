@@ -25,6 +25,7 @@ class DrEngineWater : public DrEngineThing
 public:
     // Water Settings
     QPointF         water_size;                             // Size of water
+    Water_Texture   water_texture = Water_Texture::Ripples; // Texture to use
     QColor          start_color = QColor(128, 128, 255);    // Color of top of water
     QColor          end_color = QColor(128, 128, 255);      // Color of bottom of water
     float           water_tint = 0.5f;                      // Color tint percentage     0 to 1
@@ -52,7 +53,7 @@ public:
 
 public:
     // Constructor / Destructor
-    DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, QPointF size, QColor start_color, QColor end_color,
+    DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, QPointF size, Water_Texture texture, QColor start_color, QColor end_color,
                   float tint, float reflection,
                   float rip_length,     float rip_speed, float rip_amplitude, float rip_stretch,
                   float w_length,       float w_speed,   float w_amplitude,

@@ -158,10 +158,16 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
         options << tr("Opaque")
                 << tr("Glow");
     } else if   (property_key == static_cast<int>(Properties::World_Light_Blend)) {
-        options << tr("Standard")
+        options << tr("Default")
                 << tr("Multiply")
-                << tr("Screen")
+                << tr("Overlay")
                 << tr("Hard Light");
+    } else if   (property_key == static_cast<int>(Properties::Thing_Water_Texture)) {
+        options << tr("None")
+                << tr("Ripples")
+                << tr("Cells")
+                << tr("Caustic")
+                << tr("Liquid");
     } else {
         options << tr("Unknown List");
     }

@@ -208,6 +208,7 @@ enum class Properties {
     Thing_Light_Pulse_Speed,        //double
 
     // Water Settings
+    Thing_Water_Texture,            //list, enum class Water_Texture
     Thing_Water_Start_Color,        //color
     Thing_Water_End_Color,          //color
     Thing_Water_Color_Tint,         //percent

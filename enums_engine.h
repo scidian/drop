@@ -45,6 +45,13 @@ enum Asset_Textures {
     Spare =     -105
 };
 
+enum class Water_Texture {
+    None     = 0,
+    Ripples  = 1,
+    Cells    = 2,
+    Caustic  = 3,
+    Liquid   = 4,
+};
 
 //####################################################################################
 //##    Render Enumerations
@@ -62,7 +69,7 @@ enum class Matrix_Type {
 enum class Blend_Mode {                 // !!!!! Order is important
     Standard    = 0,
     Multiply    = 1,
-    Screen      = 2,
+    Overlay     = 2,
     Hard_Light  = 3,
 };
 

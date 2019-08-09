@@ -26,19 +26,19 @@ uniform lowp float  u_height;                       // Height of gl window
 vec3 hardLightBlending(vec3 upper, vec3 lower) {
     vec3 out_color;
     if (upper.r > 0.5) {
-        out_color.r = 1.0 - ( (1.0 - lower.r) * (1.0 - (2.0 * (upper.r - 0.5))) );
+        out_color.r = 1.0 - ((1.0 - lower.r) * (1.0 - (2.0 * (upper.r - 0.5))));
     } else {
-        out_color.r = lower.r * (2.0 * upper.r);
+        out_color.r = 2.0 * upper.r * lower.r;
     }
     if (upper.g > 0.5) {
-        out_color.g = 1.0 - ( (1.0 - lower.g) * (1.0 - (2.0 * (upper.g - 0.5))) );
+        out_color.g = 1.0 - ((1.0 - lower.g) * (1.0 - (2.0 * (upper.g - 0.5))));
     } else {
-        out_color.g = lower.g * (2.0 * upper.g);
+        out_color.g = 2.0 * upper.g * lower.g;
     }
     if (upper.b > 0.5) {
-        out_color.b = 1.0 - ( (1.0 - lower.b) * (1.0 - (2.0 * (upper.b - 0.5))) );
+        out_color.b = 1.0 - ((1.0 - lower.b) * (1.0 - (2.0 * (upper.b - 0.5))));
     } else {
-        out_color.b = lower.b * (2.0 * upper.b);
+        out_color.b = 2.0 * upper.b * lower.b;
     }
     return out_color;
 }
@@ -50,9 +50,9 @@ vec3 hardLightBlending(vec3 upper, vec3 lower) {
 void main( void ) {
 
     // enum class Blend_Mode
-    //  Standard    = 0,
+    //  Default     = 0,
     //  Multiply    = 1,
-    //  Screen      = 2
+    //  Overlay     = 2
     //  Hard_Light  = 3,
 
     vec4 upper = texture2D(u_upper, coordinates.st);            // Lights
@@ -62,12 +62,16 @@ void main( void ) {
 
     // Multiply Blending (can change multiplier)
     if (u_blend_mode == 1) {
-        out_color = lower.rgb * upper.rgb * 1.3;
+        out_color = lower.rgb * upper.rgb * 1.5;
 
     // Screen Blending
+    //} else if (u_blend_mode == ?) {
+    //    out_color = 1.0 - ((1.0 - lower.rgb) * (1.0 - (2.0 * (upper.rgb - 0.5))));
+
+    // Overlay Blending
     } else if (u_blend_mode == 2) {
         out_color = hardLightBlending(upper.rgb, lower.rgb);
-        out_color *= lower.rgb;
+        //out_color *= lower.rgb;
 
     // Hard Light Blending, extra light added in for reveresed mode
     } else if (u_blend_mode == 3) {
@@ -78,8 +82,6 @@ void main( void ) {
 
     gl_FragColor = vec4(out_color, 1.0);
 }
-
-
 
 
 

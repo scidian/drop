@@ -162,12 +162,9 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     setShaderDefaultValues( fbo->width(), fbo->height() );
 
     // Set Pixelation Variables for Shader
-    m_default_shader.setUniformValue( u_default_pixel_x,    m_engine->getCurrentWorld()->pixel_x );
-    m_default_shader.setUniformValue( u_default_pixel_y,    m_engine->getCurrentWorld()->pixel_y );
-    double integral;
-    double x_decimal = modf(static_cast<double>(m_engine->getCurrentWorld()->getCameraPos().x()), &integral) * static_cast<double>(m_scale);
-    double y_decimal = modf(static_cast<double>(m_engine->getCurrentWorld()->getCameraPos().y()), &integral) * static_cast<double>(m_scale);
-    m_default_shader.setUniformValue( u_default_pixel_offset,   static_cast<float>(x_decimal), static_cast<float>(y_decimal) );
+    m_default_shader.setUniformValue( u_default_pixel_x,        m_engine->getCurrentWorld()->pixel_x );
+    m_default_shader.setUniformValue( u_default_pixel_y,        m_engine->getCurrentWorld()->pixel_y );
+    m_default_shader.setUniformValue( u_default_pixel_offset,   m_engine->getCurrentWorld()->getCameraPos().x(), m_engine->getCurrentWorld()->getCameraPos().y() );
 
     // Set more Appearance Variables for Shader
     m_default_shader.setUniformValue( u_default_negative,   m_engine->getCurrentWorld()->negative );

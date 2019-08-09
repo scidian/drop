@@ -177,6 +177,7 @@ void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double off
     QPointF     size =              thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF();
     double      angle =             thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
 
+    int         texture =           thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Texture).toInt();
     QColor      start_color =       QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color).toUInt());
     QColor      end_color =         QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color).toUInt());
     float       water_tint =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Color_Tint).toFloat() / 100.0f;
@@ -201,7 +202,8 @@ void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double off
     float       foam_tint =     thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Tint).toFloat() / 100.0f;
     float       foam_height =   thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Height).toFloat();
 
-    addThing( new DrEngineWater(this, getNextKey(), position.x() + offset_x, -position.y() + offset_y, z_order, angle, size, start_color, end_color,
+    addThing( new DrEngineWater(this, getNextKey(), position.x() + offset_x, -position.y() + offset_y, z_order, angle, size, static_cast<Water_Texture>(texture),
+                                start_color, end_color,
                                 water_tint, reflection,
                                 ripple_freq, ripple_speed, ripple_amplitude, ripple_stretch,
                                 wave_freq, wave_speed, wave_amplitude,
