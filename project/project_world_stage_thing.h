@@ -61,6 +61,7 @@ public:
     void addComponentSettingsLight(QColor color);
     void addComponentSettingsText(QString new_name);
     void addComponentSettingsWater();
+    void addComponentSettingsFisheye();
     void addComponentSettingsCamera(QString new_name);
 
     void addComponentAppearance();

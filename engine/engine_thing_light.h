@@ -8,8 +8,6 @@
 #ifndef ENGINE_LIGHT_H
 #define ENGINE_LIGHT_H
 
-#include <QOpenGLFramebufferObject>
-
 #include "chipmunk/chipmunk.h"
 #include "engine_thing_object.h"
 #include "enums.h"

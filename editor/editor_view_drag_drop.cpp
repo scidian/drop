@@ -92,28 +92,32 @@ void DrView::dropEvent(QDropEvent *event) {
         DrThing  *thing;
         switch (asset->getAssetType()) {
             case DrAssetType::Character:
-                thing = stage->addThing(DrThingType::Character, asset_key, position.x(), -position.y(), 0);         // FIX: z order
+                thing = stage->addThing(DrThingType::Character, asset_key, position.x(), -position.y(), 0);             // FIX: z order
                 my_scene->addItemToSceneFromThing( thing );
                 break;
             case DrAssetType::Object:
-                thing = stage->addThing(DrThingType::Object,    asset_key, position.x(), -position.y(), 0);         // FIX: z order
+                thing = stage->addThing(DrThingType::Object,    asset_key, position.x(), -position.y(), 0);             // FIX: z order
                 my_scene->addItemToSceneFromThing( thing );
                 break;
             case DrAssetType::Effect:
                 effect = m_project->getDrEffect( asset->getSourceKey() );
                 switch (effect->getEffectType()) {
                     case DrEffectType::Light:
-                        thing = stage->addThing(DrThingType::Light, asset_key, position.x(), -position.y(), 0);     // FIX: z order
+                        thing = stage->addThing(DrThingType::Light, asset_key, position.x(), -position.y(), 0);         // FIX: z order
                         my_scene->addItemToSceneFromThing( thing );
                         break;
                     case DrEffectType::Water:
-                        thing = stage->addThing(DrThingType::Water, asset_key, position.x(), -position.y(), 10);    // FIX: z order
+                        thing = stage->addThing(DrThingType::Water, asset_key, position.x(), -position.y(), 10);        // FIX: z order
+                        my_scene->addItemToSceneFromThing( thing );
+                        break;
+                    case DrEffectType::Fisheye:
+                        thing = stage->addThing(DrThingType::Fisheye, asset_key, position.x(), -position.y(), 5);       // FIX: z order
                         my_scene->addItemToSceneFromThing( thing );
                         break;
                 }
                 break;
             case DrAssetType::Text:
-                thing = stage->addThing(DrThingType::Text,      asset_key, position.x(), -position.y(), 0);         // FIX: z order
+                thing = stage->addThing(DrThingType::Text,      asset_key, position.x(), -position.y(), 0);             // FIX: z order
                 my_scene->addItemToSceneFromThing( thing );
                 break;    
         }

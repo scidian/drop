@@ -62,6 +62,7 @@ void TreeProject::buildProjectTree() {
                     case DrThingType::Character: thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_character.png"));   break;
                     case DrThingType::Light:     thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_light.png"));       break;
                     case DrThingType::Water:     thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_water.png"));       break;
+                    case DrThingType::Fisheye:   thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_fisheye.png"));     break;
                     ///case DrThingType::Camera:    thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_camera.png"));      break;
                 }
 

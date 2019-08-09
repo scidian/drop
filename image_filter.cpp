@@ -293,6 +293,22 @@ QPixmap drawWater(QColor top_color, QColor bottom_color) {
 }
 
 
+//####################################################################################
+//##        Draws a DrEngineFisheye as a Pixmap
+//####################################################################################
+QPixmap drawFisheye(QColor color) {
+    QPixmap lens(400, 400);
+    lens.fill(Qt::transparent);
+
+    QPainter painter(&lens);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(color);
+    painter.drawEllipse(0, 0, 400, 400);
+
+    return lens;
+}
+
+
 
 }   // End DrImaging Namespace
 

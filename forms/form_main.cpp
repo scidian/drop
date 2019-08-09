@@ -66,6 +66,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
     // !!!!! #TEMP: Add stored project files
     long effect_1 = m_project->addEffect("Light", DrEffectType::Light);
     long effect_2 = m_project->addEffect("Water", DrEffectType::Water);
+    long effect_3 = m_project->addEffect("Water", DrEffectType::Fisheye);
 
     long image_1  = m_project->addImage(":/assets/test_images/test_square.png");
     long image_2  = m_project->addImage(":/assets/test_images/ground_fill.png");
@@ -90,6 +91,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
     // !!!!! #TEMP: Add assets
     m_project->addAsset(DrAssetType::Effect, effect_1);                             // Light
     m_project->addAsset(DrAssetType::Effect, effect_2);                             // Water
+    m_project->addAsset(DrAssetType::Effect, effect_3);                             // Fisheye
 
 
     long a_ball   =  m_project->addAsset(DrAssetType::Character, image_6 );         // "Ball 1"

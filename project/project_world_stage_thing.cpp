@@ -72,6 +72,12 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentTransform(400, 400, x, -y, DrThingType::Water);
             addComponentLayering(z, 75.0);
             break;
+
+        case DrThingType::Fisheye:
+            addComponentSettingsFisheye();
+            addComponentTransform(400, 400, x, -y, DrThingType::Fisheye);
+            addComponentLayering(z, 50.0);
+            break;
     }
 
 }
@@ -215,6 +221,18 @@ void DrThing::addComponentSettingsWater() {
     addPropertyToComponent(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Height, Property_Type::Double, 5.0,
                            "Height", "Thickness of the foam on top of the Water.");
 
+}
+
+void DrThing::addComponentSettingsFisheye() {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Fisheye",
+                           "Effect Name", "Name of the current Effect.", false, false);
+
+    addComponent(Components::Thing_Settings_Fisheye, "Fisheye Lens Settings", "Settings for current Fisheye Lens.", Component_Colors::Orange_Medium, true);
+    getComponent(Components::Thing_Settings_Fisheye)->setIcon(Component_Icons::Fisheye);
+    addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color, Property_Type::Color, QColor(128, 128, 128, 255).rgba(),
+                           "Color", "Color tint for this Lens.");
 }
 
 void DrThing::addComponentSettingsText(QString new_name) {

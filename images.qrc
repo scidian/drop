@@ -132,5 +132,9 @@
         <file>assets/textures/water_texture_4.jpg</file>
         <file>assets/inspector_icons/comp_water_ripple.png</file>
         <file>assets/inspector_icons/comp_water_wave.png</file>
+        <file>assets/asset_types/fisheye.png</file>
+        <file>assets/asset_types/water.png</file>
+        <file>assets/inspector_icons/comp_fisheye.png</file>
+        <file>assets/tree_icons/tree_fisheye.png</file>
     </qresource>
 </RCC>

@@ -65,6 +65,7 @@ enum class DrThingType {
     Light,
     Text,
     Water,
+    Fisheye,
 
     //Action,
     //Camera,
@@ -75,6 +76,7 @@ enum class DrThingType {
 enum class DrEffectType {
     Light,
     Water,
+    Fisheye,
 };
 
 

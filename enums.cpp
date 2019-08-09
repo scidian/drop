@@ -54,6 +54,7 @@ QString StringFromThingType(DrThingType type) {
         case DrThingType::Light:        return "Light";
         case DrThingType::Text:         return "Text";
         case DrThingType::Water:        return "Water";
+        case DrThingType::Fisheye:      return "Fisheye";
 
         ///case DrThingType::Action:       return "Action";
         ///case DrThingType::Camera:       return "Camera";

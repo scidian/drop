@@ -76,6 +76,7 @@ enum class Components {
     Thing_Settings_Water_Wave,
     Thing_Settings_Water_Refract,
     Thing_Settings_Water_Foam,
+    Thing_Settings_Fisheye,
     Thing_Settings_Text,
     Thing_Settings_Camera,
 
@@ -222,7 +223,7 @@ enum class Properties {
     Thing_Water_Wave_Speed,         //double
     Thing_Water_Wave_Amplitude,     //double
 
-    //Water Refract Settings
+    //W ater Refract Settings
     Thing_Water_Refract_Reflection, //percent
     Thing_Water_Refract_Underwater, //percent
     Thing_Water_Refract_Texture,    //percent
@@ -232,6 +233,9 @@ enum class Properties {
     Thing_Water_Surface_Color,      //color
     Thing_Water_Surface_Tint,       //percent
     Thing_Water_Surface_Height,     //double
+
+    // Fisheye Settings
+    Thing_Fisheye_Color,            //color
 
     // Text Settings
     Thing_Text_User_Text,           //string
