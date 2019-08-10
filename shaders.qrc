@@ -8,5 +8,6 @@
         <file>shaders/frag_screen.glsl</file>
         <file>shaders/frag_occluder.glsl</file>
         <file>shaders/frag_2d_light.glsl</file>
+        <file>shaders/frag_fisheye.glsl</file>
     </qresource>
 </RCC>

@@ -136,7 +136,6 @@ enum class Properties {
     World_Filter_Bitrate,           //bitrate
     World_Filter_Cartoon,           //bool
     World_Filter_Wavy,              //bool
-    World_Filter_Fisheye,           //bool
 
 
     // ******************** DrStage Component Properties
@@ -236,6 +235,7 @@ enum class Properties {
 
     // Fisheye Settings
     Thing_Fisheye_Color,            //color
+    Thing_Fisheye_Color_Tint,       //percent
 
     // Text Settings
     Thing_Text_User_Text,           //string

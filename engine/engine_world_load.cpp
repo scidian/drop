@@ -9,6 +9,7 @@
 #include <QRandomGenerator>
 
 #include "engine.h"
+#include "engine_thing_fisheye.h"
 #include "engine_thing_light.h"
 #include "engine_thing_object.h"
 #include "engine_thing_water.h"
@@ -40,6 +41,8 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
             loadLightToWorld(thing, offset_x, offset_y);
         } else if (thing->getThingType() == DrThingType::Water) {
             loadWaterToWorld(thing, offset_x, offset_y);
+        } else if (thing->getThingType() == DrThingType::Fisheye) {
+            loadFisheyeToWorld(thing, offset_x, offset_y);
         }
 
     }
@@ -139,7 +142,7 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
 //####################################################################################
 void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double offset_y) {
 
-    // Load Light Thing Properties
+    // Load Thing Properties
     QPointF     position =      thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
     double      z_order =       thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
     float       alpha =         thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
@@ -166,11 +169,11 @@ void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double off
 
 
 //####################################################################################
-//##    Loads one DrProject DrThingType::Light to World / Space
+//##    Loads one DrProject DrThingType::Water to World / Space
 //####################################################################################
 void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double offset_y) {
 
-    // Load Light Thing Properties
+    // Load Thing Properties
     QPointF     position =          thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
     double      z_order =           thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
     float       alpha =             thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
@@ -213,6 +216,25 @@ void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double off
 
 
 
+//####################################################################################
+//##    Loads one DrProject DrThingType::Fisheye to World / Space
+//####################################################################################
+void DrEngineWorld::loadFisheyeToWorld(DrThing *thing, double offset_x, double offset_y) {
+
+    // Load Thing Properties
+    QPointF     position =          thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
+    double      z_order =           thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
+    float       alpha =             thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
+    QPointF     size =              thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF();
+    double      angle =             thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
+
+    QColor      start_color =       QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color).toUInt());
+    float       water_tint =        thing->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color_Tint).toFloat() / 100.0f;
+    float       move_speed =        0;
+
+    addThing( new DrEngineFisheye(this, getNextKey(), position.x() + offset_x, -position.y() + offset_y, z_order, angle, size,
+                                  start_color, water_tint, move_speed, alpha ) );
+}
 
 
 

@@ -13,6 +13,7 @@
 
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
+#include "engine/engine_thing_fisheye.h"
 #include "engine/engine_thing_light.h"
 #include "engine/engine_thing_water.h"
 #include "engine/engine_thing_object.h"
@@ -167,6 +168,27 @@ void DrOpenGL::drawSpace() {
             }
         }
 
+        // ***** If Fisheye, draw with seperate Water Shader, then move to next Thing
+        if (thing->getThingType() == DrThingType::Fisheye) {
+            DrEngineFisheye *lens = dynamic_cast<DrEngineFisheye*>(thing);
+            if (lens) {
+                m_default_shader.disableAttributeArray( a_default_texture_coord );
+                m_default_shader.release();
+
+                if (last_thing != DrThingType::Fisheye) {
+                    releaseOffscreenBuffer();
+                    QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);
+                    bindOffscreenBuffer(false);
+                }
+                glDisable(GL_BLEND);
+                drawFrameBufferUsingFisheyeShader(m_texture_fbo, lens);
+                last_thing = DrThingType::Fisheye;
+
+                setUpSpaceShader(texture_coordinates);
+                continue;
+            }
+        }
+
 
 
 
@@ -249,7 +271,6 @@ void DrOpenGL::drawSpace() {
         m_default_shader.setUniformValue( u_default_bitrate,        16.0f );
         m_default_shader.setUniformValue( u_default_cartoon,        false );
         m_default_shader.setUniformValue( u_default_wavy,           false );
-        m_default_shader.setUniformValue( u_default_fisheye,        false );
 
         // ***** Draw triangles using shader program
         glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

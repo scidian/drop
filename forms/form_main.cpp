@@ -66,7 +66,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
     // !!!!! #TEMP: Add stored project files
     long effect_1 = m_project->addEffect("Light", DrEffectType::Light);
     long effect_2 = m_project->addEffect("Water", DrEffectType::Water);
-    long effect_3 = m_project->addEffect("Water", DrEffectType::Fisheye);
+    long effect_3 = m_project->addEffect("Fisheye Lens", DrEffectType::Fisheye);
 
     long image_1  = m_project->addImage(":/assets/test_images/test_square.png");
     long image_2  = m_project->addImage(":/assets/test_images/ground_fill.png");

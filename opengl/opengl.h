@@ -21,6 +21,7 @@
 
 // Forward Declarations
 class DrEngine;
+class DrEngineFisheye;
 class DrEngineLight;
 class DrEngineObject;
 class DrEngineWater;
@@ -119,7 +120,6 @@ private:
     int     u_default_bitrate;                                  // Bitrate
     int     u_default_cartoon;                                  // Cartoon? (Comic Book)
     int     u_default_wavy;                                     // Wavy? (Ripple Effect)
-    int     u_default_fisheye;                                  // Fisheye Lens?
 
 
     // Occluder Map Shader
@@ -208,8 +208,8 @@ private:
     int     u_water_left;
     int     u_water_right;
 
-    int     u_start_color;
-    int     u_end_color;
+    int     u_water_start_color;
+    int     u_water_end_color;
     int     u_water_color_tint;
     int     u_water_reflection;
     int     u_water_ripple_frequency;
@@ -226,7 +226,31 @@ private:
     int     u_refract_underwater;
     int     u_refract_texture;
     int     u_refract_foam;
-    int     u_movement_speed;
+    int     u_water_movement_speed;
+
+
+    // Fisheye Shader
+    QOpenGLShaderProgram m_fisheye_shader;
+    int     a_fisheye_vertex;
+    int     a_fisheye_texture_coord;
+    int     u_fisheye_matrix;
+
+    int     u_fisheye_width;                                      // Width of texture
+    int     u_fisheye_height;                                     // Height of texture
+    int     u_fisheye_time;                                       // Time in seconds
+    int     u_fisheye_angle;                                      // Angle of water
+    int     u_fisheye_alpha;                                      // Opacity
+    int     u_fisheye_zoom;                                       // Current zoom level (need for water shader)
+    int     u_fisheye_pos;                                        // Current camera position (need for water shader)
+
+    int     u_fisheye_top;
+    int     u_fisheye_bottom;
+    int     u_fisheye_left;
+    int     u_fisheye_right;
+
+    int     u_fisheye_start_color;
+    int     u_fisheye_color_tint;
+    int     u_fisheye_movement_speed;
 
     // ********** End Shaders **********
 
@@ -273,6 +297,7 @@ public:
     void            drawDebugJoints(QPainter &painter);
     void            drawDebugShapes(QPainter &painter);
     void            drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo);
+    void            drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, DrEngineFisheye *lens);
     void            drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo);
     void            drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower, Blend_Mode mode);
     void            drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water);

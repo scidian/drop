@@ -107,7 +107,6 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
         bitrate =     world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Bitrate).toInt();
         cartoon =     world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cartoon).toBool();
         wavy =        world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Wavy).toBool();
-        fisheye =     world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Fisheye).toBool();
 
         // ***** Load Current Stage to origin position
         loadStageToWorld(stage, 0, 0);

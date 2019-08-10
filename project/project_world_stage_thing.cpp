@@ -87,9 +87,8 @@ DrThing::~DrThing() { }
 
 
 //####################################################################################
-//##    Property loading
+//##    Character Components
 //####################################################################################
-
 void DrThing::addComponentSettingsCharacter(QString new_name) {
     addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
@@ -104,6 +103,9 @@ void DrThing::addComponentSettingsCharacter(QString new_name) {
                            "Jump Force Y", "Force of jump button in y direction");
 }
 
+//####################################################################################
+//##    Object Components
+//####################################################################################
 void DrThing::addComponentSettingsObject(QString new_name, bool should_collide) {
     addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
@@ -124,6 +126,9 @@ void DrThing::addComponentSettingsObject(QString new_name, bool should_collide) 
                                      "Object will be treated as an enemy and vice versa.");
 }
 
+//####################################################################################
+//##    Light Components
+//####################################################################################
 void DrThing::addComponentSettingsLight(QColor color) {
     addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
@@ -156,6 +161,9 @@ void DrThing::addComponentSettingsLight(QColor color) {
                            "Pulse Speed", "How fast the light Pulses over time. This value is the total change desired over the course of one second.");
 }
 
+//####################################################################################
+//##    Water Components
+//####################################################################################
 void DrThing::addComponentSettingsWater() {
     addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
@@ -223,6 +231,9 @@ void DrThing::addComponentSettingsWater() {
 
 }
 
+//####################################################################################
+//##    Fisheye Components
+//####################################################################################
 void DrThing::addComponentSettingsFisheye() {
     addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
@@ -233,8 +244,13 @@ void DrThing::addComponentSettingsFisheye() {
     getComponent(Components::Thing_Settings_Fisheye)->setIcon(Component_Icons::Fisheye);
     addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color, Property_Type::Color, QColor(128, 128, 128, 255).rgba(),
                            "Color", "Color tint for this Lens.");
+    addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color_Tint, Property_Type::Percent, 50.0,
+                           "Tint Percent", "How much color to tint the Lens, 0 (none) - 100 (all the way)");
 }
 
+//####################################################################################
+//##    Text Components
+//####################################################################################
 void DrThing::addComponentSettingsText(QString new_name) {
     addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
@@ -247,7 +263,9 @@ void DrThing::addComponentSettingsText(QString new_name) {
                            "User Text", "Custom text value to be shown in this Text Box.");
 }
 
-
+//####################################################################################
+//##    Camera Components
+//####################################################################################
 void DrThing::addComponentSettingsCamera(QString new_name) {
     addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
@@ -262,9 +280,12 @@ void DrThing::addComponentSettingsCamera(QString new_name) {
 
 
 
-
 //####################################################################################
+//####################################################################################
+//##
 //##    Shared Components
+//##
+//####################################################################################
 //####################################################################################
 void DrThing::addComponentTransform(double width, double height, double x, double y, DrThingType type) {
     addComponent(Components::Thing_Transform, "Transform", "Sets the physical size and angle of the item in the stage.", Component_Colors::Green_SeaGrass, true);

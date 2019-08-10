@@ -13,6 +13,7 @@
 
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
+#include "engine/engine_thing_fisheye.h"
 #include "engine/engine_thing_light.h"
 #include "engine/engine_thing_object.h"
 #include "engine/engine_thing_water.h"
@@ -132,11 +133,11 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
     m_water_shader.setUniformValue( u_water_bottom,     static_cast<float>(water_bottom) );
     m_water_shader.setUniformValue( u_water_left,       static_cast<float>(water_left) );
     m_water_shader.setUniformValue( u_water_right,      static_cast<float>(water_right) );
-    m_water_shader.setUniformValue( u_start_color,
+    m_water_shader.setUniformValue( u_water_start_color,
                                     static_cast<float>(water->start_color.redF()),
                                     static_cast<float>(water->start_color.greenF()),
                                     static_cast<float>(water->start_color.blueF()) );
-    m_water_shader.setUniformValue( u_end_color,
+    m_water_shader.setUniformValue( u_water_end_color,
                                     static_cast<float>(water->end_color.redF()),
                                     static_cast<float>(water->end_color.greenF()),
                                     static_cast<float>(water->end_color.blueF()) );
@@ -162,7 +163,7 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
     m_water_shader.setUniformValue( u_refract_underwater,       water->refract_underwater );
     m_water_shader.setUniformValue( u_refract_texture,          water->refract_texture );
     m_water_shader.setUniformValue( u_refract_foam,             water->refract_foam );
-    m_water_shader.setUniformValue( u_movement_speed,           water->movement_speed );
+    m_water_shader.setUniformValue( u_water_movement_speed,     water->movement_speed );
 
     // Set variables for shader
     m_water_shader.setUniformValue( u_water_alpha,      water->getOpacity() );
@@ -182,6 +183,110 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
 
     // Release Shader
     m_water_shader.release();
+}
+
+
+//####################################################################################
+//##        Renders Frame Buffer Object to screen buffer as a textured quad
+//##            Uses Fisheye Shader to draw Fisheye Lens
+//####################################################################################
+void DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, DrEngineFisheye *lens) {
+
+    // Get angle for use in this function
+    float angle = static_cast<float>(lens->getAngle());
+
+    // Get position in screen coordinates
+    QPointF position_top =    mapToScreen(lens->getPosition().x(), lens->getPosition().y() + (lens->lens_size.y() / 2.0), lens->z_order);
+    QPointF position_bottom = mapToScreen(lens->getPosition().x(), lens->getPosition().y() - (lens->lens_size.y() / 2.0), lens->z_order);
+    QPointF position_left =   mapToScreen(lens->getPosition().x() - (lens->lens_size.x() / 2.0), lens->getPosition().y(), lens->z_order);
+    QPointF position_right =  mapToScreen(lens->getPosition().x() + (lens->lens_size.x() / 2.0), lens->getPosition().y(), lens->z_order);
+    if (position_left.x()   > position_right.x())
+        Dr::Swap(position_left,   position_right);
+    if (position_bottom.y() < position_top.y()) {
+        Dr::Swap(position_bottom, position_top);
+        angle += 180.0f;
+    }
+
+    // Calculate corners to check if it is within view
+    QPointF center = QPointF( position_right.x() - ((position_right.x() - position_left.x())   / 2.0),
+                              position_top.y() -   ((position_top.y() -   position_bottom.y()) / 2.0));
+    QTransform t = QTransform().translate(center.x(), center.y()).rotate(static_cast<double>(angle)).translate(-center.x(), -center.y());
+    QPointF top_left =  t.map(QPointF(position_left.x(),  position_top.y()));
+    QPointF top_right = t.map(QPointF(position_right.x(), position_top.y()));
+    QPointF bot_left =  t.map(QPointF(position_left.x(),  position_bottom.y()));
+    QPointF bot_right = t.map(QPointF(position_right.x(), position_bottom.y()));
+    QRect   in_view = QRect(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
+    QPolygonF lens_box; lens_box << top_left << top_right << bot_left << bot_right;
+    QRect     lens_rect = lens_box.boundingRect().toRect();
+    bool process_lens = lens_rect.intersects(in_view) || lens_rect.contains(in_view) || in_view.contains(lens_rect);
+    if (!process_lens) return;
+
+    // Calculate sides of lens in shader coordinates
+    double top =    (fbo->height() - position_top.y()) / fbo->height();
+    double bottom = (fbo->height() - position_bottom.y()) / fbo->height();
+    double left =   position_left.x()  / fbo->width();
+    double right =  position_right.x() / fbo->width();
+
+    // If we are to render lens, bind the shader
+    if (!m_fisheye_shader.bind()) return;
+    if (!fbo) return;
+
+    // Bind offscreen frame buffer objects as textures
+    glEnable(GL_TEXTURE_2D);
+    GLint texture =       glGetUniformLocation(m_fisheye_shader.programId(), "u_texture");
+    glUseProgram(m_fisheye_shader.programId());
+    glUniform1i(texture,       0);
+    glActiveTexture(GL_TEXTURE0);                           // Texture unit 0
+    glBindTexture(GL_TEXTURE_2D, fbo->texture());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);      // GL_CLAMP_TO_EDGE // <-- Was better for sides before rotation was added
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);      // Better for reflection
+
+
+    // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
+    m_fisheye_shader.setUniformValue( u_fisheye_matrix, orthoMatrix(fbo->width(), fbo->height()) );
+
+    // Set Texture Coordinates for Shader
+    std::vector<float> texture_coordinates;
+    setWholeTextureCoordinates(texture_coordinates);
+    m_fisheye_shader.setAttributeArray(    a_fisheye_texture_coord, texture_coordinates.data(), 2 );
+    m_fisheye_shader.enableAttributeArray( a_fisheye_texture_coord );
+
+    // Load vertices for this object
+    QVector<GLfloat> vertices;
+    setQuadVertices(vertices, fbo->width(), fbo->height(), QPointF(0, 0), 0.0f);
+    m_fisheye_shader.setAttributeArray(    a_fisheye_vertex, vertices.data(), 3 );
+    m_fisheye_shader.enableAttributeArray( a_fisheye_vertex );
+
+    // Set fisheye variables
+    m_fisheye_shader.setUniformValue( u_fisheye_top,        static_cast<float>(top) );
+    m_fisheye_shader.setUniformValue( u_fisheye_bottom,     static_cast<float>(bottom) );
+    m_fisheye_shader.setUniformValue( u_fisheye_left,       static_cast<float>(left) );
+    m_fisheye_shader.setUniformValue( u_fisheye_right,      static_cast<float>(right) );
+    m_fisheye_shader.setUniformValue( u_fisheye_start_color,
+                                    static_cast<float>(lens->start_color.redF()),
+                                    static_cast<float>(lens->start_color.greenF()),
+                                    static_cast<float>(lens->start_color.blueF()) );
+    m_fisheye_shader.setUniformValue( u_fisheye_color_tint,         lens->color_tint );
+    m_fisheye_shader.setUniformValue( u_fisheye_movement_speed,     lens->movement_speed );
+
+    // Set variables for shader
+    m_fisheye_shader.setUniformValue( u_fisheye_alpha,      lens->getOpacity() );
+    m_fisheye_shader.setUniformValue( u_fisheye_zoom,       m_scale );
+    m_fisheye_shader.setUniformValue( u_fisheye_pos,        m_engine->getCurrentWorld()->getCameraPos().x(), m_engine->getCurrentWorld()->getCameraPos().y(), 0.0f );
+    m_fisheye_shader.setUniformValue( u_fisheye_width,      static_cast<float>(fbo->width()) );
+    m_fisheye_shader.setUniformValue( u_fisheye_height,     static_cast<float>(fbo->height()) );
+    m_fisheye_shader.setUniformValue( u_fisheye_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
+    m_fisheye_shader.setUniformValue( u_fisheye_angle,      angle );
+
+    // Draw triangles using shader program
+    glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
+
+    // Disable arrays
+    m_fisheye_shader.disableAttributeArray( a_fisheye_vertex );
+    m_fisheye_shader.disableAttributeArray( a_fisheye_texture_coord );
+
+    // Release Shader
+    m_fisheye_shader.release();
 }
 
 

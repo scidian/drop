@@ -37,7 +37,6 @@ uniform lowp  float u_brightness;// = 0.0;          // Brightness       Editor: 
 uniform lowp  float u_bitrate;// = 256;             // Bitrate          Editor:    1 to  16
 uniform       bool  u_cartoon;// = false;           // Cartoon          True / False
 uniform       bool  u_wavy;// = false;              // Wavy             True / False
-uniform       bool  u_fisheye;// = false;           // Fisheye Lens     True / False
 
 
 //####################################################################################
@@ -178,7 +177,7 @@ void main( void ) {
 
 
     // ***** 2D SHOCKWAVE
-    if (u_wavy) {
+//    if (u_wavy) {
 //        vec2 center = vec2(0.5, 0.5);
 //        vec3 shock_params = vec3(10.0, 0.8, 0.1);
 
@@ -196,7 +195,7 @@ void main( void ) {
 //        }
 //        gl_FragColor = texture2D(u_texture, tex_coord);
 //        return;
-    }
+//    }
 
 
     // ***** GRID
@@ -209,28 +208,6 @@ void main( void ) {
 //        }
 //    }
 
-
-    // ***** FISHEYE
-    if (u_fisheye) {
-        float lens_size = 0.4;                  // Lens size
-        float x_pos = 0.5;
-        float y_pos = 0.5;
-
-        vec2  p = coords.xy;                    // Current texture coordinate
-        vec2  m = vec2(x_pos, 1.0 - y_pos);     // Lens coordinate
-        vec2  d = p - m;
-        float r = sqrt(dot(d, d));              // Distance of pixel from m
-        vec2  uv;
-
-        if (r < lens_size - 0.01) {
-            // Choose one formula to uncomment:
-            //uv = m + vec2(d.x * abs(d.x), d.y * abs(d.y));                        // SQUAREXY
-            uv = m + d * (r * 2.56); // a.k.a. m + normalize(d) * r * r             // SQUARER
-            //uv = m + normalize(d) * sin(r * 3.14159 * 0.5);                       // SINER
-            //uv = m + normalize(d) * asin(r) / (3.14159 * 0.5);                    // ASINR
-            coords = vec2(uv.x, uv.y);
-        }
-    }
 
     // ***** PIXELATED
     vec4 texture_color;

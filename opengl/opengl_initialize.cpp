@@ -104,7 +104,6 @@ void DrOpenGL::initializeGL() {
     u_default_bitrate =         m_default_shader.uniformLocation(   "u_bitrate" );
     u_default_cartoon =         m_default_shader.uniformLocation(   "u_cartoon" );
     u_default_wavy =            m_default_shader.uniformLocation(   "u_wavy" );
-    u_default_fisheye =         m_default_shader.uniformLocation(   "u_fisheye" );
 
 
     // ***** Initialize our Occluder Map Shader
@@ -239,8 +238,8 @@ void DrOpenGL::initializeGL() {
     u_water_left =              m_water_shader.uniformLocation(     "u_water_left" );
     u_water_right =             m_water_shader.uniformLocation(     "u_water_right" );
 
-    u_start_color =             m_water_shader.uniformLocation(     "u_start_color" );
-    u_end_color =               m_water_shader.uniformLocation(     "u_end_color" );
+    u_water_start_color =       m_water_shader.uniformLocation(     "u_start_color" );
+    u_water_end_color =         m_water_shader.uniformLocation(     "u_end_color" );
     u_water_color_tint =        m_water_shader.uniformLocation(     "u_color_tint" );
     u_water_reflection =        m_water_shader.uniformLocation(     "u_reflection" );
     u_water_ripple_frequency =  m_water_shader.uniformLocation(     "u_ripple_frequency" );
@@ -257,7 +256,38 @@ void DrOpenGL::initializeGL() {
     u_refract_underwater =      m_water_shader.uniformLocation(     "u_refract_underwater" );
     u_refract_texture =         m_water_shader.uniformLocation(     "u_refract_texture" );
     u_refract_foam =            m_water_shader.uniformLocation(     "u_refract_foam" );
-    u_movement_speed =          m_water_shader.uniformLocation(     "u_movement_speed" );
+    u_water_movement_speed =    m_water_shader.uniformLocation(     "u_movement_speed" );
+
+
+    // ***** Initialize our Fisheye Shader
+    QOpenGLShader v_fisheye_shader( QOpenGLShader::Vertex );        v_fisheye_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader f_fisheye_shader( QOpenGLShader::Fragment );      f_fisheye_shader.compileSourceFile( ":/shaders/frag_fisheye.glsl" );
+    m_fisheye_shader.addShader( &v_fisheye_shader );
+    m_fisheye_shader.addShader( &f_fisheye_shader );
+    m_fisheye_shader.link();
+
+    // Vertex Shader Input
+    a_fisheye_vertex =          m_fisheye_shader.attributeLocation(   "vertex" );
+    a_fisheye_texture_coord =   m_fisheye_shader.attributeLocation(   "texture_coordinates" );
+    u_fisheye_matrix =          m_fisheye_shader.uniformLocation(     "u_matrix" );
+
+    // Fragment Shader Input
+    u_fisheye_alpha =           m_fisheye_shader.uniformLocation(     "u_alpha" );
+    u_fisheye_zoom =            m_fisheye_shader.uniformLocation(     "u_zoom" );
+    u_fisheye_pos =             m_fisheye_shader.uniformLocation(     "u_position" );
+    u_fisheye_width =           m_fisheye_shader.uniformLocation(     "u_width" );
+    u_fisheye_height =          m_fisheye_shader.uniformLocation(     "u_height" );
+    u_fisheye_time =            m_fisheye_shader.uniformLocation(     "u_time" );
+    u_fisheye_angle =           m_fisheye_shader.uniformLocation(     "u_angle" );
+
+    u_fisheye_top =             m_fisheye_shader.uniformLocation(     "u_top" );
+    u_fisheye_bottom =          m_fisheye_shader.uniformLocation(     "u_bottom" );
+    u_fisheye_left =            m_fisheye_shader.uniformLocation(     "u_left" );
+    u_fisheye_right =           m_fisheye_shader.uniformLocation(     "u_right" );
+
+    u_fisheye_start_color =     m_fisheye_shader.uniformLocation(     "u_start_color" );
+    u_fisheye_color_tint =      m_fisheye_shader.uniformLocation(     "u_color_tint" );
+    u_fisheye_movement_speed =  m_fisheye_shader.uniformLocation(     "u_movement_speed" );
 
 
 }
