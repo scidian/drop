@@ -77,6 +77,9 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
                     dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toDouble());
                 break;
 
+            case Property_Type::RangedDouble:
+                dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toList().first().toDouble() );             break;
+
             case Property_Type::String:     dynamic_cast<QLineEdit*>(widget)->setText(prop->getValue().toString());         break;
 
             case Property_Type::PositionF:
@@ -166,6 +169,14 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
             case Property_Type::String:
                 property->setValue(new_value);
                 break;
+
+            case Property_Type::RangedDouble: {
+                QList<QVariant> ranged_double = property->getValue().toList();
+                ranged_double[0] = new_value;
+                property->setValue(ranged_double);
+                break;
+            }
+
             case Property_Type::PositionF:                              // Floating pair x and y, y is flipped
             case Property_Type::PointF:                                 // Floating pair x and y
             case Property_Type::SizeF:                                  // Floating pair w and h

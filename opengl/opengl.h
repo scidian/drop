@@ -250,7 +250,7 @@ private:
 
     int     u_fisheye_start_color;
     int     u_fisheye_color_tint;
-    int     u_fisheye_movement_speed;
+    int     u_fisheye_lens_zoom;
 
     // ********** End Shaders **********
 

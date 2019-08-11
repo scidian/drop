@@ -60,6 +60,13 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     ///// Could also try to use a QLineEdit with a QValidator
     ///myLineEdit->setValidator( new QDoubleValidator(0, 100, 2, this) );
 
+    double property_value;
+    if (spin_type == Property_Type::RangedDouble) {
+        property_value = property->getValue().toList().first().toDouble();
+    } else {
+        property_value = property->getValue().toDouble();
+    }
+
     DrQTripleSpinBox *spin = new DrQTripleSpinBox();
     spin->setFont(font);
     spin->setSizePolicy(size_policy);
@@ -69,6 +76,11 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
         case Property_Type::PositiveDouble: spin->setRange(0, 100000000);                       spin->setSingleStep(0.1);   break;
         case Property_Type::Percent:        spin->setRange(0, 100);     spin->setSuffix("%");   spin->setSingleStep(5);     break;
         case Property_Type::Angle:          spin->setRange(-360, 360);  spin->setSuffix("°");   spin->setSingleStep(5);     break;
+
+        case Property_Type::RangedDouble:
+            spin->setRange(property->getValue().toList().at(1).toDouble(), property->getValue().toList().at(2).toDouble());
+            spin->setSingleStep(property->getValue().toList().at(3).toDouble());
+            break;
         default:                            spin->setRange(-100000000, 100000000);
     }
     spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);     // Hides little up / down buttons
@@ -76,7 +88,7 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     // Store property key within item, set initial starting value of spin box
     long property_key = property->getPropertyKey();
     spin->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
-    spin->setValue(property->getValue().toDouble());
+    spin->setValue( property_value );
 
     // Connect HoverHandler with proper text, add this widget to list of widgets in Inspector
     m_filter_hover->attachToHoverHandler(spin, property);

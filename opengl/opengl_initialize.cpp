@@ -287,7 +287,7 @@ void DrOpenGL::initializeGL() {
 
     u_fisheye_start_color =     m_fisheye_shader.uniformLocation(     "u_start_color" );
     u_fisheye_color_tint =      m_fisheye_shader.uniformLocation(     "u_color_tint" );
-    u_fisheye_movement_speed =  m_fisheye_shader.uniformLocation(     "u_movement_speed" );
+    u_fisheye_lens_zoom =       m_fisheye_shader.uniformLocation(     "u_lens_zoom" );
 
 
 }

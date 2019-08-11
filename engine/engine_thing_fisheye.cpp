@@ -12,7 +12,7 @@
 //##    Constructor / Destructor
 //####################################################################################
 DrEngineFisheye::DrEngineFisheye(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, QPointF size,
-                               QColor start_color, float tint, float texture_movement, float opacity) :
+                               QColor start_color, float tint, float zoom, float opacity) :
     DrEngineThing(world, unique_key) {
 
     this->setPosition( QPointF(x, y) );
@@ -22,7 +22,7 @@ DrEngineFisheye::DrEngineFisheye(DrEngineWorld *world, long unique_key, double x
 
     this->start_color = start_color;
     this->color_tint = tint;
-    this->movement_speed = texture_movement;
+    this->lens_zoom = zoom;
 
     this->setOpacity( opacity );
 }

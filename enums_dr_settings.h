@@ -23,6 +23,8 @@ enum class Property_Type {
 
     Double,                 // double       any floating point number
     PositiveDouble,         // double       any floating point number >= 0.0
+    RangedDouble,           // double       QList<QVariant> of 4 values, double, minimmum double value, max double value, and step size
+
     Percent,                // double       floating point from 0.0 to 100.0, shows percent symbol
     Angle,                  // double       floating point for showing degrees, shows degree symbol in spinbox
     String,                 // QString
@@ -37,7 +39,7 @@ enum class Property_Type {
     ScaleF,                 // QPointF      Floating pair, has smaller increment step in spin box
     GridF,                  // QPointF      Floating pair x and y, minimum value of c_minimum_grid_size for both x and y
     GridScaleF,             // QPointF      Floating pair x and y, minimum value of c_minimum_grid_scale for both x and y
-    Variable,               // QPointF      floating point pair, number followed by a +/- number
+    Variable,               // QPointF      Floating point pair, number followed by a +/- number
 
     Image,                  // QPixmap
     Icon,
@@ -236,6 +238,7 @@ enum class Properties {
     // Fisheye Settings
     Thing_Fisheye_Color,            //color
     Thing_Fisheye_Color_Tint,       //percent
+    Thing_Fisheye_Lens_Zoom,        //ranged double, 0 to 10
 
     // Text Settings
     Thing_Text_User_Text,           //string

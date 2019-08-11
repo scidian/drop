@@ -22,15 +22,14 @@ uniform highp float u_height;                       // Texture Height
 uniform highp float u_time;                         // Time in seconds
 uniform lowp  float u_angle;                        // Angle in degrees
 
-uniform lowp  float u_top;                          // Top of Lens,         from 0.0 to 1.0 in screen coordinates
-uniform lowp  float u_bottom;                       // Bottom of Lens,      from 0.0 to 1.0 in screen coordinates
-uniform lowp  float u_left;                         // Left side of Lens,   from 0.0 to 1.0 in screen coordinates
-uniform lowp  float u_right;                        // Right side of Lens,  from 0.0 to 1.0 in screen coordinates
+uniform lowp  float u_top;                          // Top of Lens,                 from 0.0 to 1.0 in screen coordinates
+uniform lowp  float u_bottom;                       // Bottom of Lens,              from 0.0 to 1.0 in screen coordinates
+uniform lowp  float u_left;                         // Left side of Lens,           from 0.0 to 1.0 in screen coordinates
+uniform lowp  float u_right;                        // Right side of Lens,          from 0.0 to 1.0 in screen coordinates
 
-uniform lowp  vec3  u_start_color;                  // Start Color, r/g/b        0.0 to 1.0 x 3
+uniform lowp  vec3  u_start_color;                  // Start Color, r/g/b                0.0 to 1.0 x 3
 uniform lowp  float u_color_tint;                   // Color Tint Percent
-
-uniform lowp  float u_movement_speed;               // Moves texture left or right, default should be 0
+uniform lowp  float u_lens_zoom;                    // Zoom level of Fisheye Lens        0.0 to 10.0
 
 
 // Other Variables
@@ -81,40 +80,28 @@ highp float calculateRotationAngleInRadians(vec2 center_point, vec2 target_point
 void main( void ) {
 
     // ***** Fisheye Input Variables
+    float time = u_time;
+    float rotation = u_angle;   // mod(u_time, 360.0) * 15.0; // <-- spins based on time
+
     vec3  start_color =         u_start_color;
     float color_tint =          u_color_tint;
-
-    float lens_zoom = 2.0;//2.56;
-
-    // Moves texture, top of water left or right
-    float movement_speed =      u_movement_speed/10.0;
+    float lens_zoom =           u_lens_zoom;
 
 
-
-    // ***** Move coordinates into a vec2 that is not read-only
-    highp vec2 coords = coordinates.xy;
-
-    // Apply rotation
-    float rotation = u_angle;   // mod(u_time, 360.0) * 15.0; // <-- spins based on time
+    // ***** Apply rotation. Move coordinates into a vec2 that is not read-only
     float lens_width = (u_right - u_left);
     float lens_height = (u_top - u_bottom);
     vec2  lens_center = vec2(u_right - lens_width/2.0, u_top - lens_height/2.0);
-    coords = rotate(coords, lens_center, rotation);
-
-    float time = u_time;
-    float movement = -movement_speed * (time/20.0);   
-    float y_start = u_top;                                                // 0.0 is bottom, 1.0 is top
+    vec2  coords = rotate(coordinates.xy, lens_center, rotation);
 
 
     // ***** Calculate some position and scaling values
-    const float shrink_texture = 3.0;                                           // 1.0 = normal size, 4.0 equals 1/4 size
-    float player_x = u_position.x*0.00083 * (1.0/u_zoom);
-    float player_y = u_position.y*0.00083 * (1.0/u_zoom);
-    float diff_w = (u_width  * (1.0/u_zoom)) / 1200.0;
-    float diff_h = (u_height * (1.0/u_zoom)) / 1200.0;
-
-    float zoom_coord_x = ((coords.x - 0.5)*diff_w)/u_zoom;
-    float zoom_coord_y = ((coords.y - 0.5)*diff_h)/u_zoom;
+    //float player_x = u_position.x*0.00083 * (1.0/u_zoom);
+    //float player_y = u_position.y*0.00083 * (1.0/u_zoom);
+    //float diff_w = (u_width  * (1.0/u_zoom)) / 1200.0;
+    //float diff_h = (u_height * (1.0/u_zoom)) / 1200.0;
+    //float zoom_coord_x = ((coords.x - 0.5)*diff_w)/u_zoom;
+    //float zoom_coord_y = ((coords.y - 0.5)*diff_h)/u_zoom;
 
 
     // ***** If out of range, don't process this pixel
@@ -122,8 +109,6 @@ void main( void ) {
     if (coords.y > u_top || coords.y < u_bottom || coords.x < u_left || coords.x > u_right) {
         discard;
     }
-
-
 
 
     // ***** FISHEYE
@@ -153,19 +138,15 @@ void main( void ) {
 
     // Choose one formula to uncomment:
     vec2  uv;
-
-    lens_zoom = mod(u_time, 10.0);
-
     uv = lens_center + dist * (radius * lens_zoom / u_zoom); // a.k.a. lens_center + normalize(dist) * radius * radius      // SQUARER
     //uv = lens_center + vec2(dist.x * abs(dist.x), dist.y * abs(dist.y));                                                  // SQUAREXY
     //uv = lens_center + normalize(dist) * sin(radius * 3.14159 * 0.5);                                                     // SINER
     //uv = lens_center + normalize(dist) * asin(radius) / (3.14159 * 0.5);                                                  // ASINR
-
     coords = rotate(vec2(uv.x, uv.y), lens_center, -rotation);
 
     // Mix in overlay_color and water texture
     vec4 lens = texture2D(u_texture, coords);
-    //lens = vec4( mix(lens.rgb, start_color, color_tint * (1.0 - (radius / lens_size)*0.5)), 1.0 );
+    lens = vec4( mix(lens.rgb, start_color, color_tint * (1.0 - (radius / lens_size)*0.75)), 1.0 );
 
     gl_FragColor = vec4(lens.rgb, lens.a * u_alpha);
 

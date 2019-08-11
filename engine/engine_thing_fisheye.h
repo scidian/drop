@@ -24,13 +24,13 @@ public:
     // Lens Settings
     QPointF         lens_size;                              // Size of water
     QColor          start_color = QColor(128, 128, 255);    // Color of top of water
-    float           color_tint = 0.5f;                      // Color tint percentage     0 to 1
-    float           movement_speed = 0.0f;                  // Moves texture left / right
+    float           color_tint = 0.5f;                      // Color tint percentage     0 to  1
+    float           lens_zoom = 2.2f;                       // Lens Zoom                 0 to 10
 
 public:
     // Constructor / Destructor
     DrEngineFisheye(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, QPointF size,
-                    QColor start_color, float tint, float texture_movement, float opacity);
+                    QColor start_color, float tint, float zoom, float opacity);
     virtual ~DrEngineFisheye() override;
 
     // Abstract Engine Thing Overrides

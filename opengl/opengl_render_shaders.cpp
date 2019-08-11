@@ -238,8 +238,8 @@ void DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, 
     glUniform1i(texture,       0);
     glActiveTexture(GL_TEXTURE0);                           // Texture unit 0
     glBindTexture(GL_TEXTURE_2D, fbo->texture());
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);// GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);// GL_CLAMP_TO_EDGE);
 
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
@@ -267,7 +267,7 @@ void DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, 
                                     static_cast<float>(lens->start_color.greenF()),
                                     static_cast<float>(lens->start_color.blueF()) );
     m_fisheye_shader.setUniformValue( u_fisheye_color_tint,         lens->color_tint );
-    m_fisheye_shader.setUniformValue( u_fisheye_movement_speed,     lens->movement_speed );
+    m_fisheye_shader.setUniformValue( u_fisheye_lens_zoom,          lens->lens_zoom );
 
     // Set variables for shader
     m_fisheye_shader.setUniformValue( u_fisheye_alpha,      lens->getOpacity() );
@@ -277,6 +277,10 @@ void DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, 
     m_fisheye_shader.setUniformValue( u_fisheye_height,     static_cast<float>(fbo->height()) );
     m_fisheye_shader.setUniformValue( u_fisheye_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
     m_fisheye_shader.setUniformValue( u_fisheye_angle,      angle );
+
+    double integral;
+    double fraction = modf(QTime::currentTime().msecsSinceStartOfDay() / 1000.0, &integral);
+    g_info = "Lens Zoom: " + QString::number(int(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) % 10) + "." + QString::number(fraction);
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

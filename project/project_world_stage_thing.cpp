@@ -244,8 +244,10 @@ void DrThing::addComponentSettingsFisheye() {
     getComponent(Components::Thing_Settings_Fisheye)->setIcon(Component_Icons::Fisheye);
     addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color, Property_Type::Color, QColor(128, 128, 128, 255).rgba(),
                            "Color", "Color tint for this Lens.");
-    addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color_Tint, Property_Type::Percent, 50.0,
+    addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color_Tint, Property_Type::Percent, 25.0,
                            "Tint Percent", "How much color to tint the Lens, 0 (none) - 100 (all the way)");
+    addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Lens_Zoom, Property_Type::RangedDouble, QList<QVariant>({ 2.25, 0.0, 10.0, 0.25 }),
+                           "Lens Zoom", "How much to zoom the Fisheye Lens. Default is 2.25");
 }
 
 //####################################################################################

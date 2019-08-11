@@ -230,10 +230,10 @@ void DrEngineWorld::loadFisheyeToWorld(DrThing *thing, double offset_x, double o
 
     QColor      start_color =       QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color).toUInt());
     float       water_tint =        thing->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color_Tint).toFloat() / 100.0f;
-    float       move_speed =        0;
+    float       zoom =              thing->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Lens_Zoom).toList().first().toFloat();
 
     addThing( new DrEngineFisheye(this, getNextKey(), position.x() + offset_x, -position.y() + offset_y, z_order, angle, size,
-                                  start_color, water_tint, move_speed, alpha ) );
+                                  start_color, water_tint, zoom, alpha ) );
 }
 
 
