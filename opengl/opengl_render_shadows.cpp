@@ -161,7 +161,7 @@ void DrOpenGL::drawShadowMaps() {
         if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
             o_scale = static_cast<double>(c_occluder_scale_ortho * m_scale);
         } else {
-            float screen_scale = 1.0f;
+            float screen_scale;
             screen_scale = (m_occluder_fbo->height() / 800.0f) * 1.00f;         // field of view = 52.5 (in use)
             ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 0.45f;      // field of view = 95
             ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 0.70f;      // field of view = 70
@@ -223,10 +223,9 @@ void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
     m_shadow_shader.setUniformValue( u_shadow_texture, 0 );
 
     // ***** Give the shader our Ray Count and Scaled Light Radius
-    m_shadow_shader.setUniformValue( u_shadow_ray_count,  static_cast<float>(m_shadows[light->getKey()]->width()) );
-
     float screen_scale = width()*devicePixelRatio() / abs(light->light_size);
-    m_shadow_shader.setUniformValue( u_shadow_resolution, light->getLightDiameter(), light->getLightDiameter() * screen_scale );
+    m_shadow_shader.setUniformValue( u_shadow_resolution, light->getLightDiameter(), light->getLightDiameter() * screen_scale);
+    m_shadow_shader.setUniformValue( u_shadow_ray_count,  static_cast<float>(m_shadows[light->getKey()]->width()) );
     m_shadow_shader.setUniformValue( u_shadow_depth,      static_cast<float>(light->z_order) );
     m_shadow_shader.setUniformValue( u_shadow_near_plane, c_near_plane );
 

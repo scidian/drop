@@ -299,6 +299,7 @@ QPixmap drawWater(QColor top_color, QColor bottom_color) {
 QPixmap drawFisheye(QColor color) {
     QPixmap lens(400, 400);
     lens.fill(Qt::transparent);
+    color.setAlphaF(color.alphaF() * 0.5);          // Decrease lens opacity by half
 
     QPainter painter(&lens);
     painter.setPen(Qt::NoPen);

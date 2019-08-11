@@ -84,7 +84,7 @@ void main( void ) {
     vec3  start_color =         u_start_color;
     float color_tint =          u_color_tint;
 
-    float lens_zoom = 2.56;
+    float lens_zoom = 2.0;//2.56;
 
     // Moves texture, top of water left or right
     float movement_speed =      u_movement_speed/10.0;
@@ -153,6 +153,9 @@ void main( void ) {
 
     // Choose one formula to uncomment:
     vec2  uv;
+
+    lens_zoom = mod(u_time, 10.0);
+
     uv = lens_center + dist * (radius * lens_zoom / u_zoom); // a.k.a. lens_center + normalize(dist) * radius * radius      // SQUARER
     //uv = lens_center + vec2(dist.x * abs(dist.x), dist.y * abs(dist.y));                                                  // SQUAREXY
     //uv = lens_center + normalize(dist) * sin(radius * 3.14159 * 0.5);                                                     // SINER
@@ -162,7 +165,7 @@ void main( void ) {
 
     // Mix in overlay_color and water texture
     vec4 lens = texture2D(u_texture, coords);
-    //lens = vec4( mix(lens.rgb, start_color, color_tint * (1.0 - (radius / lens_size))), 1.0 );
+    //lens = vec4( mix(lens.rgb, start_color, color_tint * (1.0 - (radius / lens_size)*0.5)), 1.0 );
 
     gl_FragColor = vec4(lens.rgb, lens.a * u_alpha);
 

@@ -76,7 +76,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
         case DrThingType::Fisheye:
             addComponentSettingsFisheye();
             addComponentTransform(400, 400, x, -y, DrThingType::Fisheye);
-            addComponentLayering(z, 50.0);
+            addComponentLayering(z, 100.0);
             break;
     }
 
