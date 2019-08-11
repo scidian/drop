@@ -175,12 +175,13 @@ void DrOpenGL::drawSpace() {
                 m_default_shader.disableAttributeArray( a_default_texture_coord );
                 m_default_shader.release();
 
-                if (last_thing != DrThingType::Fisheye) {
+                //if (last_thing != DrThingType::Fisheye) {
                     releaseOffscreenBuffer();
                     QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);
                     bindOffscreenBuffer(false);
-                }
-                glDisable(GL_BLEND);
+                //}
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);           // Standard non-premultiplied alpha blend
                 drawFrameBufferUsingFisheyeShader(m_texture_fbo, lens);
                 last_thing = DrThingType::Fisheye;
 

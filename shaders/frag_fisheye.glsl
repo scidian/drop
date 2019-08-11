@@ -39,7 +39,6 @@ const   highp float PI =  3.14159;                          // Pi
 const   highp float RAD = 6.2831853;                        // 2.0 * PI is 360 degrees in radians
 const   highp float PI180 = highp float(PI / 180.0);        // To convert Degrees to Radians
 
-
 //####################################################################################
 //##        2D Rotation / Translation
 //####################################################################################
@@ -66,6 +65,17 @@ vec2 rotate(vec2 v, vec2 center_point, float angle) {
 
 
 //####################################################################################
+//##        Calculates angle from a center point to any target point, 0 = Up
+//####################################################################################
+highp float calculateRotationAngleInRadians(vec2 center_point, vec2 target_point) {
+    // Calculate the angle theta from the deltaY and deltaX values (atan2 returns radians values from [-PI, PI])
+    // 0 currently points EAST
+    // #NOTE: By preserving Y and X param order to atan2, we are expecting a CLOCKWISE angle direction
+    return atan(target_point.y - center_point.y, target_point.x - center_point.x);
+}
+
+
+//####################################################################################
 //##        Main Shader Function
 //####################################################################################
 void main( void ) {
@@ -74,9 +84,12 @@ void main( void ) {
     vec3  start_color =         u_start_color;
     float color_tint =          u_color_tint;
 
+    float lens_zoom = 2.56;
+
     // Moves texture, top of water left or right
     float movement_speed =      u_movement_speed/10.0;
-    float refract_speed =       1.0;
+
+
 
     // ***** Move coordinates into a vec2 that is not read-only
     highp vec2 coords = coordinates.xy;
@@ -114,33 +127,44 @@ void main( void ) {
 
 
     // ***** FISHEYE
-    float ratio = lens_width / lens_height;
-    vec2  dx = vec2(u_left, lens_center.y) - lens_center;
-    vec2  dy = vec2(u_top,  lens_center.x) - lens_center;
-    float max_x = sqrt(dot(dx, dx));
-    float max_y = sqrt(dot(dy, dy));
+    vec2  dist =   coords.xy - lens_center;                                 // Distance vector of pixel from lens_center
+    float radius = abs(length(dist));//sqrt(dot(dist, dist));               // Convert distance to float radius
+    float theta =  calculateRotationAngleInRadians(lens_center, coords);    // Calculate angle of radius so we can figure out max ellipse radius at that angle
 
-    vec2  d = coords.xy - lens_center;
-    float r = sqrt(dot(d, d));              // Distance of pixel from lens_center
+    // Calculates distance to border of ellipse at the angle of the current coordinate
+    float a =  lens_width  / 2.0;
+    float b =  lens_height / 2.0;
+    float a2 = pow(a, 2.0);
+    float b2 = pow(b, 2.0);
+    float mx = abs( ((a * b)             ) / (sqrt(b2 + (a2 * pow(tan(theta), 2.0)))) );
+    float my = abs( ((a * b) * tan(theta)) / (sqrt(b2 + (a2 * pow(tan(theta), 2.0)))) );
 
-    float lens_size = max_x * ratio;
+    if (theta > (PI/2.0) && theta < (RAD - PI/2.0)) {
+        mx *= -1.0;
+        my *= -1.0;
+    }
 
-    // If outside of ellipse, don't process
-    if (r > lens_size) discard;
+    vec2  max_dist =  vec2(mx, my);
+    float lens_size = abs(length(max_dist));//sqrt(dot(max_dist, max_dist));
+    if (radius > lens_size) {
+        discard;                                        // If outside of ellipse, don't process
+        return;
+    }
 
     // Choose one formula to uncomment:
     vec2  uv;
-    uv = lens_center + d * (r * 2.56); // a.k.a. lens_center + normalize(d) * r * r         // SQUARER
-    //uv = lens_center + vec2(d.x * abs(d.x), d.y * abs(d.y));                              // SQUAREXY
-    //uv = lens_center + normalize(d) * sin(r * 3.14159 * 0.5);                             // SINER
-    //uv = lens_center + normalize(d) * asin(r) / (3.14159 * 0.5);                          // ASINR
-    coords = vec2(uv.x, uv.y);
+    uv = lens_center + dist * (radius * lens_zoom / u_zoom); // a.k.a. lens_center + normalize(dist) * radius * radius      // SQUARER
+    //uv = lens_center + vec2(dist.x * abs(dist.x), dist.y * abs(dist.y));                                                  // SQUAREXY
+    //uv = lens_center + normalize(dist) * sin(radius * 3.14159 * 0.5);                                                     // SINER
+    //uv = lens_center + normalize(dist) * asin(radius) / (3.14159 * 0.5);                                                  // ASINR
+
+    coords = rotate(vec2(uv.x, uv.y), lens_center, -rotation);
 
     // Mix in overlay_color and water texture
     vec4 lens = texture2D(u_texture, coords);
-    lens = vec4(mix(lens.rgb, u_start_color, color_tint), 1.0);
+    //lens = vec4( mix(lens.rgb, start_color, color_tint * (1.0 - (radius / lens_size))), 1.0 );
 
-    gl_FragColor = lens;
+    gl_FragColor = vec4(lens.rgb, lens.a * u_alpha);
 
 }
 

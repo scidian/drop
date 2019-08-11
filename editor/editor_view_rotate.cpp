@@ -198,11 +198,11 @@ Transform_Data DrView::decomposeTransform(QTransform &from_transform, bool qr_ty
 //####################################################################################
 //##        Calculates angle from a center point to any target point, 0 = Up
 //####################################################################################
-double DrView::calcRotationAngleInDegrees(QPointF centerPt, QPointF targetPt) {
+double DrView::calcRotationAngleInDegrees(QPointF center_point, QPointF target_point) {
     // Calculate the angle theta from the deltaY and deltaX values (atan2 returns radians values from [-PI, PI])
     // 0 currently points EAST
     // #NOTE: By preserving Y and X param order to atan2,  we are expecting a CLOCKWISE angle direction
-    double theta = qAtan2(targetPt.y() - centerPt.y(), targetPt.x() - centerPt.x());
+    double theta = qAtan2(target_point.y() - center_point.y(), target_point.x() - center_point.x());
 
     // Rotate the theta angle clockwise by 90 degrees (this makes 0 point NORTH)
     // #NOTE: adding to an angle rotates it clockwise, subtracting would rotate it counter-clockwise
