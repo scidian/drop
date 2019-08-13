@@ -314,6 +314,7 @@ public:
     void            setUpSpaceShader(std::vector<float> &texture_coords);
     void            setQuadVertices(QVector<GLfloat> &vertices, float width, float height, QPointF center, float z);
     void            setWholeTextureCoordinates(std::vector<float> &texture_coords);
+    void            stopSpaceShader();
 
     // Soft Shadows / Lights
     void            bindGlowLightsBuffer(float ambient_light);

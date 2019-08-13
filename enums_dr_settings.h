@@ -13,36 +13,34 @@
 //##    Used to track what the QVariant m_value data type really is
 //############################
 enum class Property_Type {
-    Bool,                   // bool         true or false
-    Int,                    // long         any integer
-    Positive,               // long         integer >= 0
-    BitRate,                // long         integer from    1 to  16, used for bit rate
-    BitDepth,               // long         integer from    0 to 255
-    Filter,                 // long         integer from -255 to 255, used for image filters
-    FilterAngle,            // long         integer from    0 to 360, used for image filters
+    Bool,                   // bool             True or False
+    Int,                    // long             Integer
+    Positive,               // long             Integer >= 0
+    RangedInt,              // long             QList<QVariant> of 4 values, long, min long value, max long value, long step size
 
-    Double,                 // double       any floating point number
-    PositiveDouble,         // double       any floating point number >= 0.0
-    RangedDouble,           // double       QList<QVariant> of 4 values, double, minimmum double value, max double value, and step size
+    Angle,                  // double           Floating point for showing degrees, shows degree symbol in spinbox
+    Double,                 // double           Floating point number
+    PositiveDouble,         // double           Floating point number >= 0.0
+    RangedDouble,           // double           QList<QVariant> of 4 values, double, min double value, max double value, double step size
+    Slider,                 // double w/slider  QList<QVariant> of 5 values, double, min double value, max double value, double step size, string suffix ("%", etc)
+    Percent,                // slider           Floating point from 0.0 to 100.0, shows percent symbol
 
-    Percent,                // double       floating point from 0.0 to 100.0, shows percent symbol
-    Angle,                  // double       floating point for showing degrees, shows degree symbol in spinbox
     String,                 // QString
 
-    PositionF,              // QPointF      Floating pair x and y, used for object positions in scene
-                            //                  Y is shown flipped (i.e. * -1), Box2D and Monogame use different coordinate system than Qt
-                            //                  Y flipped in: createDoubleSpinBoxPair(), updateSettingsFromNewValue(),
-                            //                                updateInspectorPropertyBoxes(), updateToolTipData()
-    PointF,                 // QPointF      Floating pair x and y
-    SizeF,                  // QPointF      Floating pair w and h
-    PositiveSizeF,          // QPointF      Floating pair x and y, both numbers are >= 1.0
-    ScaleF,                 // QPointF      Floating pair, has smaller increment step in spin box
-    GridF,                  // QPointF      Floating pair x and y, minimum value of c_minimum_grid_size for both x and y
-    GridScaleF,             // QPointF      Floating pair x and y, minimum value of c_minimum_grid_scale for both x and y
-    Variable,               // QPointF      Floating point pair, number followed by a +/- number
+    PositionF,              // QPointF              Floating pair x and y, used for object positions in scene
+                            //                      Y is shown flipped (i.e. * -1), Box2D and Monogame use different coordinate system than Qt
+                            //                      Y flipped in: createDoubleSpinBoxPair(), updateSettingsFromNewValue(),
+                            //                                    updateInspectorPropertyBoxes(), updateToolTipData()
+    PointF,                 // QPointF          Floating pair x and y
+    SizeF,                  // QPointF          Floating pair w and h
+    PositiveSizeF,          // QPointF          Floating pair x and y, both numbers are >= 1.0
+    ScaleF,                 // QPointF          Floating pair, has smaller increment step in spin box
+    GridF,                  // QPointF          Floating pair x and y, minimum value of c_minimum_grid_size for both x and y
+    GridScaleF,             // QPointF          Floating pair x and y, minimum value of c_minimum_grid_scale for both x and y
+    Variable,               // QPointF          Floating point pair, number followed by a +/- number
 
     Image,                  // QPixmap
-    Icon,
+    Icon,                   // QPixmap
     Color,                  // QColor.rgba()    For Colors
     Polygon,                // QPolygon         For Collision Shapes
     Vector3D,
@@ -130,12 +128,12 @@ enum class Properties {
     World_Filter_Brightness,        //filter
     World_Filter_Contrast,          //filter
     World_Filter_Saturation,        //filter
-    World_Filter_Hue,               //filter angle
+    World_Filter_Hue,               //slider
     World_Filter_Grayscale,         //bool
     World_Filter_Negative,          //bool
 
     // Special Effects
-    World_Filter_Bitrate,           //bitrate
+    World_Filter_Bitrate,           //ranged int, 0 to 16
     World_Filter_Cartoon,           //bool
     World_Filter_Wavy,              //bool
 
@@ -182,7 +180,7 @@ enum class Properties {
     Thing_Filter_Brightness,        //filter
     Thing_Filter_Contrast,          //filter
     Thing_Filter_Saturation,        //filter
-    Thing_Filter_Hue,               //filter angle
+    Thing_Filter_Hue,               //slider, 0 to 360
     Thing_Filter_Grayscale,         //bool
     Thing_Filter_Negative,          //bool
 
@@ -200,8 +198,8 @@ enum class Properties {
     // Light Settings
     Thing_Light_Type,               //list, enum class Light_Type (Opaque, Glow)
     Thing_Light_Color,              //color
-    Thing_Light_Cone_Start,         //filter angle      0 to 360
-    Thing_Light_Cone_End,           //filter angle      0 to 360
+    Thing_Light_Cone_Start,         //slider, 0 to 360
+    Thing_Light_Cone_End,           //slider, 0 to 360
     Thing_Light_Intensity,          //0 to 100
     Thing_Light_Blur,               //0 to 100
     Thing_Light_Draw_Shadows,       //bool

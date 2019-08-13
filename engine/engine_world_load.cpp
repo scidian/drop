@@ -35,14 +35,13 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
         // Check if Thing type, if it is, call appropriate Thing Loader
         if (thing->getType() != DrType::Thing) continue;
 
-        if (thing->getThingType() == DrThingType::Object) {
-            loadObjectToWorld(thing, offset_x, offset_y);
-        } else if (thing->getThingType() == DrThingType::Light) {
-            loadLightToWorld(thing, offset_x, offset_y);
-        } else if (thing->getThingType() == DrThingType::Water) {
-            loadWaterToWorld(thing, offset_x, offset_y);
-        } else if (thing->getThingType() == DrThingType::Fisheye) {
-            loadFisheyeToWorld(thing, offset_x, offset_y);
+        switch (thing->getThingType()) {
+            case DrThingType::Object:   loadObjectToWorld(thing, offset_x, offset_y);       break;
+            case DrThingType::Light:    loadLightToWorld(thing, offset_x, offset_y);        break;
+            case DrThingType::Water:    loadWaterToWorld(thing, offset_x, offset_y);        break;
+            case DrThingType::Fisheye:  loadFisheyeToWorld(thing, offset_x, offset_y);      break;
+        default:
+            break;
         }
 
     }
@@ -119,10 +118,10 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     // ***** Appearance settings
     bool    cast_shadows =  thing->getComponentPropertyValue(Components::Thing_Lighting,   Properties::Thing_Lighting_Cast_Shadows).toBool();
     QPointF pixelation =    thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
-    float   brightness =    thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Brightness).toInt() / 255.f;
-    float   contrast =      thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Contrast).toInt() / 255.f;
-    float   saturation =    thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Saturation).toInt() / 255.f;
-    float   hue =           thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Hue).toInt() / 360.f;
+    float   brightness =    thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Brightness).toList().first().toInt() / 255.f;
+    float   contrast =      thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Contrast).toList().first().toInt() / 255.f;
+    float   saturation =    thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Saturation).toList().first().toInt() / 255.f;
+    float   hue =           thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Hue).toList().first().toInt() / 360.f;
     bool    grayscale =     thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Grayscale).toBool();
     bool    negative =      thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Negative).toBool();
     block->cast_shadows =   cast_shadows;
@@ -150,8 +149,8 @@ void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double off
     QColor      light_color =   QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Color).toUInt());
     int         light_type =    thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Type).toInt();
 
-    double      cone_start =    thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start).toDouble();
-    double      cone_end =      thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toDouble();
+    double      cone_start =    thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start).toList().first().toDouble();
+    double      cone_end =      thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toList().first().toDouble();
     float       intensity =     thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity).toFloat();
     float       blur =          thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Blur).toFloat();
     float       shadows =       thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Shadows).toFloat();

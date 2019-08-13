@@ -67,6 +67,10 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
         ///case DrThingType::Camera:
         ///    "Camera " + QString::number(static_cast<long>(m_things.size() + 1));
         ///    break;
+
+        case DrThingType::None:
+            new_name = "None";
+            break;
     }
 
     long new_thing_key = m_parent_project->getNextKey();

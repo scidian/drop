@@ -61,16 +61,15 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 
             case Property_Type::Int:
             case Property_Type::Positive:
-            case Property_Type::BitRate:
-            case Property_Type::BitDepth:
                                             dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toInt());            break;
+
+            case Property_Type::RangedInt:
+                dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toList().first().toInt() );                      break;
 
             case Property_Type::Double:
             case Property_Type::PositiveDouble:
             case Property_Type::Percent:
             case Property_Type::Angle:
-            case Property_Type::Filter:
-            case Property_Type::FilterAngle:
                 if (widget->property(User_Property::Order).toInt() == 2)
                     dynamic_cast<QSlider*>(widget)->setValue(prop->getValue().toInt());
                 else
@@ -78,7 +77,12 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
                 break;
 
             case Property_Type::RangedDouble:
-                dynamic_cast<QDoubleSpinBox*>(widget)->setValue(prop->getValue().toList().first().toDouble() );             break;
+            case Property_Type::Slider:
+                if (widget->property(User_Property::Order).toInt() == 2)
+                    dynamic_cast<QSlider*>(widget)->setValue( prop->getValue().toList().first().toInt() );
+                else
+                    dynamic_cast<QDoubleSpinBox*>(widget)->setValue( prop->getValue().toList().first().toDouble() );
+                break;
 
             case Property_Type::String:     dynamic_cast<QLineEdit*>(widget)->setText(prop->getValue().toString());         break;
 
@@ -157,10 +161,6 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
             case Property_Type::Bool:                                   // true or false
             case Property_Type::Int:                                    // any integer
             case Property_Type::Positive:                               // integer >= 0
-            case Property_Type::BitRate:                                // integer from    1 to  16
-            case Property_Type::BitDepth:                               // integer from    0 to 255
-            case Property_Type::Filter:                                 // integer from -255 to 255
-            case Property_Type::FilterAngle:                            // integer from    0 to 360
             case Property_Type::Double:                                 // any floating point
             case Property_Type::PositiveDouble:
             case Property_Type::Percent:                                // floating point from 0.0 to 100.0
@@ -170,10 +170,12 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
                 property->setValue(new_value);
                 break;
 
-            case Property_Type::RangedDouble: {
-                QList<QVariant> ranged_double = property->getValue().toList();
-                ranged_double[0] = new_value;
-                property->setValue(ranged_double);
+            case Property_Type::RangedInt:
+            case Property_Type::RangedDouble:
+            case Property_Type::Slider: {
+                QList<QVariant> ranged_list = property->getValue().toList();
+                ranged_list[0] = new_value;
+                property->setValue(ranged_list);
                 break;
             }
 

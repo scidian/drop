@@ -64,9 +64,18 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
 
 
     // !!!!! #TEMP: Add stored project files
-    long effect_1 = m_project->addEffect("Light", DrEffectType::Light);
-    long effect_2 = m_project->addEffect("Water", DrEffectType::Water);
-    long effect_3 = m_project->addEffect("Fisheye Lens", DrEffectType::Fisheye);
+    long effect_1 =  m_project->addEffect("Light",          DrEffectType::Light);
+    long effect_2 =  m_project->addEffect("Water",          DrEffectType::Water);
+    long effect_3 =  m_project->addEffect("Fire",           DrEffectType::Fire);
+    long effect_4 =  m_project->addEffect("Mirror",         DrEffectType::Mirror);
+    long effect_5 =  m_project->addEffect("Fisheye Lens",   DrEffectType::Fisheye);
+    long effect_6 =  m_project->addEffect("Swirl",          DrEffectType::Swirl);
+    long effect_7 =  m_project->addEffect("Flag",           DrEffectType::Flag);
+    long effect_8 =  m_project->addEffect("Rain",           DrEffectType::Rain);
+    long effect_9 =  m_project->addEffect("Snow",           DrEffectType::Snow);
+    long effect_10 = m_project->addEffect("Clouds",         DrEffectType::Clouds);
+    long effect_11 = m_project->addEffect("Fog",            DrEffectType::Fog);
+
 
     long image_1  = m_project->addImage(":/assets/test_images/test_square.png");
     long image_2  = m_project->addImage(":/assets/test_images/ground_fill.png");
@@ -91,7 +100,15 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
     // !!!!! #TEMP: Add assets
     m_project->addAsset(DrAssetType::Effect, effect_1);                             // Light
     m_project->addAsset(DrAssetType::Effect, effect_2);                             // Water
-    m_project->addAsset(DrAssetType::Effect, effect_3);                             // Fisheye
+    m_project->addAsset(DrAssetType::Effect, effect_3);                             // Fire
+    m_project->addAsset(DrAssetType::Effect, effect_4);                             // Mirror
+    m_project->addAsset(DrAssetType::Effect, effect_5);                             // Fisheye
+    m_project->addAsset(DrAssetType::Effect, effect_6);                             // Swirl
+    m_project->addAsset(DrAssetType::Effect, effect_7);                             // Flag
+    m_project->addAsset(DrAssetType::Effect, effect_8);                             // Rain
+    m_project->addAsset(DrAssetType::Effect, effect_9);                             // Snow
+    m_project->addAsset(DrAssetType::Effect, effect_10);                            // Clouds
+    m_project->addAsset(DrAssetType::Effect, effect_11);                            // Fog
 
 
     long a_ball   =  m_project->addAsset(DrAssetType::Character, image_6 );         // "Ball 1"

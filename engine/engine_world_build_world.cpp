@@ -97,14 +97,14 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
         QPointF pixelation = world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Pixelation).toPointF();
         pixel_x =     static_cast<float>(pixelation.x());
         pixel_y =     static_cast<float>(pixelation.y());
-        brightness =  world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Brightness).toInt() / 255.f;
-        contrast =    world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Contrast).toInt() / 255.f;
-        saturation =  world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Saturation).toInt() / 255.f;
-        hue =         world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Hue).toInt() / 360.f;
+        brightness =  world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Brightness).toList().first().toInt() / 255.f;
+        contrast =    world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Contrast).toList().first().toInt() / 255.f;
+        saturation =  world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Saturation).toList().first().toInt() / 255.f;
+        hue =         world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Hue).toList().first().toInt() / 360.f;
         grayscale =   world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Grayscale).toBool();
         negative =    world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Negative).toBool();
 
-        bitrate =     world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Bitrate).toInt();
+        bitrate =     world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Bitrate).toList().first().toInt();
         cartoon =     world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cartoon).toBool();
         wavy =        world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Wavy).toBool();
 

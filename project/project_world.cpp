@@ -129,7 +129,7 @@ void DrWorld::initializeWorldSettings(QString new_name) {
 
     addComponent(Components::World_Special_Effects, "Special Effects", "Special effects that affect the entire world.", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::World_Special_Effects)->setIcon(Component_Icons::Effects);
-    addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Bitrate, Property_Type::BitRate, 16,
+    addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Bitrate, Property_Type::RangedInt, QList<QVariant>({ 16, 0, 16, 1 }),
                            "Bit Depth", "Standard output has 16 bit color channel depth, you can use this to reduce the number of available colors. "
                                         "Combining this with Pixelation gives a great retro look.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Cartoon, Property_Type::Bool, false,
@@ -142,13 +142,13 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     getComponent(Components::World_Appearance)->setIcon(Component_Icons::Appearance);
     addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Pixelation, Property_Type::PositiveSizeF, QPointF(1.0, 1.0),
                            "Pixelation", "Size of x and y pixels, larger numbers provide more pixelation.");
-    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Brightness, Property_Type::Filter, 0,
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Brightness, Property_Type::Slider, QList<QVariant>({0, -255, 255, 5, ""}),
                            "Brightness", "How light / dark this world should appear. \nDefault: \t0 \nRange: \t-255 to 255");
-    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Contrast, Property_Type::Filter, 0,
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Contrast, Property_Type::Slider, QList<QVariant>({0, -255, 255, 5, ""}),
                            "Contrast", "Amount of distinguishable difference of colors. \nDefault: \t0 \nRange: \t-255 to 255");
-    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Saturation, Property_Type::Filter, 0,
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Saturation, Property_Type::Slider, QList<QVariant>({0, -255, 255, 5, ""}),
                            "Saturation", "How colorful the colors appear. \nDefault: \t0 \nRange: \t-255 to 255");
-    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Hue, Property_Type::FilterAngle, 0,
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Hue, Property_Type::Slider, QList<QVariant>({0, 0, 360, 5, ""}),
                            "Hue", "Rotate color values. \nDefault: \t0 \nRange: \t0 to 360");
     addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Grayscale, Property_Type::Bool, false,
                            "Grayscale", "Should this world be shown grayscale?");

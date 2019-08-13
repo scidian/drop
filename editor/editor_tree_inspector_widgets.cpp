@@ -19,24 +19,30 @@
 //##    Integer Spin Box
 //####################################################################################
 QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type) {
+
+    int property_value;
+    if (spin_type == Property_Type::RangedInt)
+        property_value = property->getValue().toList().first().toInt();
+    else
+        property_value = property->getValue().toInt();
+
     QSpinBox *spin = new QSpinBox();
     spin->setFont(font);
     spin->setSizePolicy(size_policy);
     switch (spin_type) {
         case Property_Type::Int:            spin->setRange(-100000000, 100000000);      spin->setSingleStep(  5 );      break;
         case Property_Type::Positive:       spin->setRange(0, 100000000);               spin->setSingleStep(  5 );      break;
-        case Property_Type::BitRate:        spin->setRange(1, 16);                      spin->setSingleStep(  1 );      break;
-        case Property_Type::BitDepth:       spin->setRange(0, 255);                     spin->setSingleStep(  5 );      break;
-        case Property_Type::Filter:         spin->setRange(-255, 255);                  spin->setSingleStep( 10 );      break;
-        case Property_Type::FilterAngle:    spin->setRange(0, 360);                     spin->setSingleStep(  5 );      break;
+        case Property_Type::RangedInt:
+            spin->setRange(property->getValue().toList().at(1).toInt(), property->getValue().toList().at(2).toInt());
+            spin->setSingleStep(property->getValue().toList().at(3).toInt());
+            break;
         default:                            spin->setRange(-100000000, 100000000);
     }
     spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
 
     long property_key = property->getPropertyKey();
-
     spin->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
-    spin->setValue(property->getValue().toInt());
+    spin->setValue( property_value );
 
     m_filter_hover->attachToHoverHandler(spin, property);
     addToWidgetList(spin);
@@ -61,11 +67,10 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     ///myLineEdit->setValidator( new QDoubleValidator(0, 100, 2, this) );
 
     double property_value;
-    if (spin_type == Property_Type::RangedDouble) {
+    if (spin_type == Property_Type::RangedDouble)
         property_value = property->getValue().toList().first().toDouble();
-    } else {
+    else
         property_value = property->getValue().toDouble();
-    }
 
     DrQTripleSpinBox *spin = new DrQTripleSpinBox();
     spin->setFont(font);
@@ -76,7 +81,6 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
         case Property_Type::PositiveDouble: spin->setRange(0, 100000000);                       spin->setSingleStep(0.1);   break;
         case Property_Type::Percent:        spin->setRange(0, 100);     spin->setSuffix("%");   spin->setSingleStep(5);     break;
         case Property_Type::Angle:          spin->setRange(-360, 360);  spin->setSuffix("°");   spin->setSingleStep(5);     break;
-
         case Property_Type::RangedDouble:
             spin->setRange(property->getValue().toList().at(1).toDouble(), property->getValue().toList().at(2).toDouble());
             spin->setSingleStep(property->getValue().toList().at(3).toDouble());
@@ -267,6 +271,12 @@ QString DrQTripleSpinBox::textFromValue(double value) const {
 QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type) {
     long property_key = property->getPropertyKey();
 
+    double property_value;
+    if (spin_type == Property_Type::Slider)
+        property_value = property->getValue().toList().first().toDouble();
+    else
+        property_value = property->getValue().toDouble();
+
     QWidget *slider_pair = new QWidget();
     slider_pair->setMaximumHeight(28);
     slider_pair->setSizePolicy(size_policy);
@@ -286,13 +296,19 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
             case Property_Type::Double:         spin->setRange(-100000000, 100000000);              spin->setSingleStep(5);     break;
             case Property_Type::Percent:        spin->setRange(   0, 100); spin->setSuffix("%");    spin->setSingleStep(5);     break;
             case Property_Type::Angle:          spin->setRange(-360, 360); spin->setSuffix("°");    spin->setSingleStep(5);     break;
-            case Property_Type::Filter:         spin->setRange(-255, 255);                          spin->setSingleStep(5);     break;
-            case Property_Type::FilterAngle:    spin->setRange(   0, 360);                          spin->setSingleStep(5);     break;
+            case Property_Type::Slider:
+                spin->setRange(property->getValue().toList().at(1).toDouble(),
+                               property->getValue().toList().at(2).toDouble());
+                spin->setSingleStep(property->getValue().toList().at(3).toDouble());
+                spin->setSuffix(property->getValue().toList().at(4).toString());
+                break;
+
             default:                            spin->setRange(-100000000, 100000000);
         }
         spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);                 // Hides little up / down buttons
         spin->setProperty(User_Property::Key, QVariant::fromValue( property_key ));         // Store property key within item
-        spin->setValue(property->getValue().toDouble());                                    // Set initial starting value of spin box
+        spin->setProperty(User_Property::Order, 0);
+        spin->setValue(property_value);                                                     // Set initial starting value of spin box
         this->addToWidgetList(spin);
 
         // This stops mouse wheel from stealing focus unless user has selected the widget
@@ -305,7 +321,7 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
         slider->setSizePolicy(size_policy);
         slider->setTickPosition(QSlider::TickPosition::NoTicks);
         slider->setRange( static_cast<int>(spin->minimum()), static_cast<int>(spin->maximum()) );
-        slider->setValue(property->getValue().toInt());
+        slider->setValue( static_cast<int>(property_value));
         slider->setProperty(User_Property::Key, QVariant::fromValue( property_key ));       // Store property key within item
         slider->setProperty(User_Property::Order, 2);
         this->addToWidgetList(slider);

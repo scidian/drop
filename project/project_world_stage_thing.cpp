@@ -37,6 +37,9 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
 
     // Call to load in all the components / properties for this Stage thing
     switch (new_thing_type) {
+        case DrThingType::None:
+            break;
+
         case DrThingType::Character:
             addComponentSettingsCharacter(new_thing_name);
             addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, DrThingType::Character);
@@ -78,6 +81,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentTransform(400, 400, x, -y, DrThingType::Fisheye);
             addComponentLayering(z, 100.0);
             break;
+
     }
 
 }
@@ -142,9 +146,9 @@ void DrThing::addComponentSettingsLight(QColor color) {
                                          "<b>Glow</b> - Provides diffuse lighting, no z ordering available. ");
     addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Color, Property_Type::Color, color.rgba(),
                            "Light Color", "The Color for this Light.");
-    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start, Property_Type::FilterAngle, 0,
+    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start, Property_Type::Slider, QList<QVariant>({0, 0, 360, 5, "°"}),
                            "Cone Start", "Starting angle of light, Cone Angles travel in counter-clockwise direction.");
-    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End, Property_Type::FilterAngle, 360,
+    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End, Property_Type::Slider, QList<QVariant>({360, 0, 360, 5, "°"}),
                            "Cone End", "Ending angle of light, Cone Angles travel in counter-clockwise direction.");
     addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity, Property_Type::Percent, 50.0,
                            "Intensity", "How intense the light is starting from the middle out.");
@@ -351,13 +355,13 @@ void DrThing::addComponentAppearance() {
 
     addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation, Property_Type::PositiveSizeF, QPointF(1.0, 1.0),
                            "Pixelation", "Size of x and y pixels, larger numbers provide more pixelation.");
-    addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Brightness, Property_Type::Filter, 0,
+    addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Brightness, Property_Type::Slider, QList<QVariant>({0, -255, 255, 5, ""}),
                            "Brightness", "How light / dark this item should appear. \nDefault: \t0 \nRange: \t-255 to 255");
-    addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Contrast, Property_Type::Filter, 0,
+    addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Contrast, Property_Type::Slider, QList<QVariant>({0, -255, 255, 5, ""}),
                            "Contrast", "Amount of distinguishable difference of colors. \nDefault: \t0 \nRange: \t-255 to 255");
-    addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Saturation, Property_Type::Filter, 0,
+    addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Saturation, Property_Type::Slider, QList<QVariant>({0, -255, 255, 5, ""}),
                            "Saturation", "How colorful the colors appear. \nDefault: \t0 \nRange: \t-255 to 255");
-    addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Hue, Property_Type::FilterAngle, 0,
+    addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Hue, Property_Type::Slider, QList<QVariant>({0, 0, 360, 5, ""}),
                            "Hue", "Rotate color values. \nDefault: \t0 \nRange: \t0 to 360");
     addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Grayscale, Property_Type::Bool, false,
                            "Grayscale", "Should this item be shown grayscale?");

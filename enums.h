@@ -60,12 +60,16 @@ enum class DrAssetType {
 };
 
 enum class DrThingType {
+    None,
+
     Character,
     Object,
-    Light,
     Text,
+
+    Light,
     Water,
     Fisheye,
+    Mirror,
 
     //Action,
     //Camera,
@@ -76,7 +80,15 @@ enum class DrThingType {
 enum class DrEffectType {
     Light,
     Water,
+    Fire,
+    Mirror,
     Fisheye,
+    Swirl,
+    Flag,
+    Rain,
+    Snow,
+    Clouds,
+    Fog,
 };
 
 
@@ -145,6 +157,7 @@ namespace User_Property {
 namespace Dr {
     QString     StringFromType(DrType type);
     QString     StringFromAssetType(DrAssetType type);
+    QString     StringFromEffectType(DrEffectType type);
     QString     StringFromThingType(DrThingType type);
     QString     StringFromPositionFlag(Position_Flags flag);
 

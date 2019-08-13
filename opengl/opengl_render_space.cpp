@@ -100,30 +100,34 @@ void DrOpenGL::setUpSpaceShader(std::vector<float> &texture_coords) {
     m_default_shader.enableAttributeArray( a_default_texture_coord );
 }
 
+void DrOpenGL::stopSpaceShader() {
+    m_default_shader.disableAttributeArray( a_default_texture_coord );
+    m_default_shader.release();
+}
+
+
 // Renders All Scene Objects
 void DrOpenGL::drawSpace() {
 
     // Keeps track of if we have rendered the lights yet
     bool has_rendered_glow_lights = false;
 
-    // ***** This variable was put in so that multiple Water things drawn next to each other will use the same copy of the render fbo as it currently was,
-    //       this saves lots of blit calls, and stops some vertical fragments from appearing as they would try to refract each other
-    DrThingType last_thing = DrThingType::Object;
+    // This variable was put in so that multiple Water things drawn next to each other will use the same copy of the render fbo as it currently was,
+    //      this saves lots of blit calls, and stops some vertical fragments from appearing as they would try to refract each other
+    DrThingType last_thing = DrThingType::None;
 
-    // ***** Initialize shader settings
+    // Initialize texture coordinates used for default shader
     std::vector<float> texture_coordinates;
     setWholeTextureCoordinates(texture_coordinates);
-    setUpSpaceShader(texture_coordinates);
 
     // ********** Render 2D Objects
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
 
         // ***** When we have gone past glow z_order, draw the lights to the scene
         if (!has_rendered_glow_lights && (thing->z_order > m_engine->getCurrentWorld()->getGlowZOrder())) {
-            m_default_shader.disableAttributeArray( a_default_texture_coord );
-            m_default_shader.release();
+            stopSpaceShader();
             has_rendered_glow_lights = drawGlowBuffer();
-            setUpSpaceShader(texture_coordinates);
+            last_thing = DrThingType::None;
         }
 
         // ***** If Light, draw with seperate Light Shader, then move to next Thing
@@ -133,10 +137,9 @@ void DrOpenGL::drawSpace() {
                 if (!light->isInView()) continue;
 
                 if (light->light_type == Light_Type::Opaque) {
-                    m_default_shader.disableAttributeArray( a_default_texture_coord );
-                    m_default_shader.release();
+                    stopSpaceShader();
+                    glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);          // Standard blend function
                     draw2DLight(light);
-                    setUpSpaceShader(texture_coordinates);
                     last_thing = DrThingType::Light;
                     continue;
 
@@ -151,8 +154,7 @@ void DrOpenGL::drawSpace() {
         if (thing->getThingType() == DrThingType::Water) {
             DrEngineWater *water = dynamic_cast<DrEngineWater*>(thing);
             if (water) {
-                m_default_shader.disableAttributeArray( a_default_texture_coord );
-                m_default_shader.release();
+                stopSpaceShader();
 
                 if (last_thing != DrThingType::Water) {
                     releaseOffscreenBuffer();
@@ -162,8 +164,6 @@ void DrOpenGL::drawSpace() {
                 glDisable(GL_BLEND);
                 drawFrameBufferUsingWaterShader(m_texture_fbo, water);
                 last_thing = DrThingType::Water;
-
-                setUpSpaceShader(texture_coordinates);
                 continue;
             }
         }
@@ -172,20 +172,16 @@ void DrOpenGL::drawSpace() {
         if (thing->getThingType() == DrThingType::Fisheye) {
             DrEngineFisheye *lens = dynamic_cast<DrEngineFisheye*>(thing);
             if (lens) {
-                m_default_shader.disableAttributeArray( a_default_texture_coord );
-                m_default_shader.release();
+                stopSpaceShader();
 
                 if (last_thing != DrThingType::Fisheye) {
                     releaseOffscreenBuffer();
                     QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);
                     bindOffscreenBuffer(false);
                 }
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);           // Standard non-premultiplied alpha blend
+                glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);          // Standard blend function
                 drawFrameBufferUsingFisheyeShader(m_texture_fbo, lens);
                 last_thing = DrThingType::Fisheye;
-
-                setUpSpaceShader(texture_coordinates);
                 continue;
             }
         }
@@ -204,6 +200,9 @@ void DrOpenGL::drawSpace() {
                 skip_object = true;
         }
         if (skip_object) continue;
+
+        // ***** Restore shader settings
+        if (last_thing != DrThingType::Object) setUpSpaceShader(texture_coordinates);
 
         // ***** Get texture to render with, set texture coordinates
         DrEngineTexture *texture = m_engine->getTexture(object->getTextureNumber());
@@ -282,8 +281,7 @@ void DrOpenGL::drawSpace() {
     }
 
     // ***** Disable shader program
-    m_default_shader.disableAttributeArray( a_default_texture_coord );
-    m_default_shader.release();
+    stopSpaceShader();
 
     // ***** If we didn't draw Glow Lights yet, do it now
     if (!has_rendered_glow_lights) drawGlowBuffer();

@@ -57,13 +57,14 @@ void TreeProject::buildProjectTree() {
 
                 QTreeWidgetItem *thing_item = new QTreeWidgetItem(stage_item);                             // Create new item and add as child item
                 switch (thing->getThingType()) {
-                    case DrThingType::Object:    thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_object.png"));      break;
-                    case DrThingType::Text:      thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_text.png"));        break;
-                    case DrThingType::Character: thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_character.png"));   break;
-                    case DrThingType::Light:     thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_light.png"));       break;
-                    case DrThingType::Water:     thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_water.png"));       break;
-                    case DrThingType::Fisheye:   thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_fisheye.png"));     break;
-                    ///case DrThingType::Camera:    thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_camera.png"));      break;
+                    case DrThingType::None:      Dr::ShowErrorMessage("buildProjectTree", "No Icon for DrThingType::None");     break;
+                    case DrThingType::Object:    thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_object.png"));          break;
+                    case DrThingType::Text:      thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_text.png"));            break;
+                    case DrThingType::Character: thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_character.png"));       break;
+                    case DrThingType::Light:     thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_light.png"));           break;
+                    case DrThingType::Water:     thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_water.png"));           break;
+                    case DrThingType::Fisheye:   thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_fisheye.png"));         break;
+                    ///case DrThingType::Camera:    thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_camera.png"));       break;
                 }
 
                 thing_item->setText(0, thing->getName());                                                   // Set text for item

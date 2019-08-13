@@ -30,7 +30,15 @@ QPixmap DrEffect::getPixmap() {
     switch (m_effect_type) {
         case DrEffectType::Light:   return DrImaging::drawLight(Qt::white, 200, 0, 360, 50, 5);
         case DrEffectType::Water:   return QPixmap(":/assets/asset_types/water.png");
+        case DrEffectType::Fire:    return QPixmap(":/assets/asset_types/fire.png");
+        case DrEffectType::Mirror:  return QPixmap(":/assets/asset_types/mirror.png");
         case DrEffectType::Fisheye: return QPixmap(":/assets/asset_types/fisheye.png");
+        case DrEffectType::Swirl:   return QPixmap(":/assets/asset_types/swirl.png");
+        case DrEffectType::Flag:    return QPixmap(":/assets/asset_types/flag.png");
+        case DrEffectType::Rain:    return QPixmap(":/assets/asset_types/rain.png");
+        case DrEffectType::Snow:    return QPixmap(":/assets/asset_types/snow.png");
+        case DrEffectType::Clouds:  return QPixmap(":/assets/asset_types/clouds.png");
+        case DrEffectType::Fog:     return QPixmap(":/assets/asset_types/fog.png");
     }
 
 }

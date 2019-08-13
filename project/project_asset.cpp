@@ -44,20 +44,8 @@ DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_
             initializeAssetSettingsObject(m_parent_project->getDrImage(source_key)->getSimplifiedName(), my_starting_pixmap );
             break;
         case DrAssetType::Effect:
-            switch (m_parent_project->getDrEffect(source_key)->getEffectType()) {
-                case DrEffectType::Light:
-                    my_starting_pixmap = m_parent_project->getDrEffect(source_key)->getPixmap();
-                    initializeAssetSettingsEffect("Light");
-                    break;
-                case DrEffectType::Water:
-                    my_starting_pixmap = m_parent_project->getDrEffect(source_key)->getPixmap();
-                    initializeAssetSettingsEffect("Water");
-                    break;
-                case DrEffectType::Fisheye:
-                    my_starting_pixmap = m_parent_project->getDrEffect(source_key)->getPixmap();
-                    initializeAssetSettingsEffect("Fisheye Lens");
-                    break;
-            }
+            my_starting_pixmap = m_parent_project->getDrEffect(source_key)->getPixmap();
+            initializeAssetSettingsEffect(Dr::StringFromEffectType(m_parent_project->getDrEffect(source_key)->getEffectType()));
             break;
         case DrAssetType::Text:
             my_starting_pixmap = m_parent_project->getDrFont(source_key)->getPixmap();

@@ -207,15 +207,15 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
                 case Property_Type::Bool:           new_widget = createCheckBox(            prop, fp, sp_right);                                break;
                 case Property_Type::String:         new_widget = createLineEdit(            prop, fp, sp_right);                                break;
                 case Property_Type::Int:            new_widget = createIntSpinBox(          prop, fp, sp_right, Property_Type::Int);            break;
+                case Property_Type::RangedInt:      new_widget = createIntSpinBox(          prop, fp, sp_right, Property_Type::RangedDouble);   break;
                 case Property_Type::Positive:       new_widget = createIntSpinBox(          prop, fp, sp_right, Property_Type::Positive);       break;
-                case Property_Type::BitRate:        new_widget = createIntSpinBox(          prop, fp, sp_right, Property_Type::BitRate);        break;
-                case Property_Type::BitDepth:       new_widget = createIntSpinBox(          prop, fp, sp_right, Property_Type::BitDepth);       break;
-                case Property_Type::Filter:         new_widget = createSlider(              prop, fp, sp_right, Property_Type::Filter);         break;
-                case Property_Type::FilterAngle:    new_widget = createSlider(              prop, fp, sp_right, Property_Type::FilterAngle);    break;
+
+                case Property_Type::Percent:        new_widget = createSlider(              prop, fp, sp_right, Property_Type::Percent);        break;
+                case Property_Type::Slider:         new_widget = createSlider(              prop, fp, sp_right, Property_Type::Slider);         break;
+
                 case Property_Type::Double:         new_widget = createDoubleSpinBox(       prop, fp, sp_right, Property_Type::Double);         break;
                 case Property_Type::PositiveDouble: new_widget = createDoubleSpinBox(       prop, fp, sp_right, Property_Type::PositiveDouble); break;
                 case Property_Type::RangedDouble:   new_widget = createDoubleSpinBox(       prop, fp, sp_right, Property_Type::RangedDouble);   break;
-                case Property_Type::Percent:        new_widget = createSlider(              prop, fp, sp_right, Property_Type::Percent);        break;
                 case Property_Type::Angle:          new_widget = createDoubleSpinBox(       prop, fp, sp_right, Property_Type::Angle);          break;
                 case Property_Type::PositionF:      new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::PositionF);      break;
                 case Property_Type::PointF:         new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::PointF);         break;
