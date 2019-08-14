@@ -76,6 +76,7 @@ enum class Components {
     Thing_Settings_Water_Wave,
     Thing_Settings_Water_Refract,
     Thing_Settings_Water_Foam,
+    Thing_Settings_Fire,
     Thing_Settings_Fisheye,
     Thing_Settings_Text,
     Thing_Settings_Camera,
@@ -232,6 +233,11 @@ enum class Properties {
     Thing_Water_Surface_Color,      //color
     Thing_Water_Surface_Tint,       //percent
     Thing_Water_Surface_Height,     //double
+
+    // Fire Settings
+    Thing_Fire_Color_1,             //color
+    Thing_Fire_Color_2,             //color
+    Thing_Fire_Color_Tint,          //percent
 
     // Fisheye Settings
     Thing_Fisheye_Color,            //color

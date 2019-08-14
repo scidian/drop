@@ -68,8 +68,9 @@ enum class DrThingType {
 
     Light,
     Water,
-    Fisheye,
+    Fire,
     Mirror,
+    Fisheye,
 
     //Action,
     //Camera,

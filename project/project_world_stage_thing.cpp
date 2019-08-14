@@ -76,6 +76,12 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentLayering(z, 75.0);
             break;
 
+        case DrThingType::Fire:
+            addComponentSettingsFire();
+            addComponentTransform(400, 400, x, -y, DrThingType::Fire);
+            addComponentLayering(z, 100.0);
+            break;
+
         case DrThingType::Fisheye:
             addComponentSettingsFisheye();
             addComponentTransform(400, 400, x, -y, DrThingType::Fisheye);
@@ -233,6 +239,26 @@ void DrThing::addComponentSettingsWater() {
     addPropertyToComponent(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Height, Property_Type::Double, 5.0,
                            "Height", "Thickness of the foam on top of the Water.");
 
+}
+
+//####################################################################################
+//##    Fire Components
+//####################################################################################
+void DrThing::addComponentSettingsFire() {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Fire",
+                           "Effect Name", "Name of the current Effect.", false, false);
+
+    addComponent(Components::Thing_Settings_Fire, "Fire Settings", "Settings for current Fire.", Component_Colors::Red_Faded, true);
+    getComponent(Components::Thing_Settings_Fire)->setIcon(Component_Icons::Fire);
+
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1, Property_Type::Color, QColor(251, 140,   0, 255).rgba(),
+                           "Start Color", "Start color tint for this Fire.");
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2, Property_Type::Color, QColor(183,  28,  28, 255).rgba(),
+                           "End Color", "End color tint for this Fire.");
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_Tint, Property_Type::Percent, 25.0,
+                           "Tint Percent", "How much color to tint the Fire, 0 (none) - 100 (all the way)");
 }
 
 //####################################################################################

@@ -110,6 +110,10 @@ void DrView::dropEvent(QDropEvent *event) {
                         thing = stage->addThing(DrThingType::Water, asset_key, position.x(), -position.y(), 10);        // FIX: z order
                         my_scene->addItemToSceneFromThing( thing );
                         break;
+                    case DrEffectType::Fire:
+                        thing = stage->addThing(DrThingType::Fire, asset_key, position.x(), -position.y(), 5);          // FIX: z order
+                        my_scene->addItemToSceneFromThing( thing );
+                        break;
                     case DrEffectType::Fisheye:
                         thing = stage->addThing(DrThingType::Fisheye, asset_key, position.x(), -position.y(), 5);       // FIX: z order
                         my_scene->addItemToSceneFromThing( thing );

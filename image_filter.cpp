@@ -293,13 +293,35 @@ QPixmap drawWater(QColor top_color, QColor bottom_color) {
 }
 
 
+
+//####################################################################################
+//##        Draws a DrEngineFire as a Pixmap
+//####################################################################################
+QPixmap drawFire(QColor color_1, QColor color_2) {
+    QPixmap water(400, 400);
+    water.fill(Qt::transparent);
+
+    QLinearGradient gradient(0, 0, 0, 400);
+    gradient.setColorAt(0.00, color_1);
+    gradient.setColorAt(1.00, color_2);
+
+    QPainter painter(&water);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(gradient);
+    painter.drawEllipse(0, 0, 400, 400);
+
+    return water;
+}
+
+
+
 //####################################################################################
 //##        Draws a DrEngineFisheye as a Pixmap
 //####################################################################################
 QPixmap drawFisheye(QColor color) {
     QPixmap lens(400, 400);
     lens.fill(Qt::transparent);
-    color.setAlphaF(color.alphaF() * 0.5);          // Decrease lens opacity by half
+    color.setAlphaF(color.alphaF() * 0.5);                  // Decrease lens opacity by half
 
     QPainter painter(&lens);
     painter.setPen(Qt::NoPen);

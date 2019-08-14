@@ -136,5 +136,16 @@
         <file>assets/asset_types/water.png</file>
         <file>assets/inspector_icons/comp_fisheye.png</file>
         <file>assets/tree_icons/tree_fisheye.png</file>
+        <file>assets/asset_types/fire.png</file>
+        <file>assets/asset_types/mirror.png</file>
+        <file>assets/asset_types/swirl.png</file>
+        <file>assets/asset_types/rain.png</file>
+        <file>assets/asset_types/flag.png</file>
+        <file>assets/asset_types/clouds.png</file>
+        <file>assets/asset_types/snow.png</file>
+        <file>assets/asset_types/fog.png</file>
+        <file>assets/asset_types/light.png</file>
+        <file>assets/inspector_icons/comp_fire.png</file>
+        <file>assets/tree_icons/tree_fire.png</file>
     </qresource>
 </RCC>

@@ -28,7 +28,7 @@ DrEffect::DrEffect(DrProject *parent_project, long key, QString effect_name, DrE
 QPixmap DrEffect::getPixmap() {
 
     switch (m_effect_type) {
-        case DrEffectType::Light:   return DrImaging::drawLight(Qt::white, 200, 0, 360, 50, 5);
+        case DrEffectType::Light:   return QPixmap(":/assets/asset_types/light.png");
         case DrEffectType::Water:   return QPixmap(":/assets/asset_types/water.png");
         case DrEffectType::Fire:    return QPixmap(":/assets/asset_types/fire.png");
         case DrEffectType::Mirror:  return QPixmap(":/assets/asset_types/mirror.png");
@@ -42,3 +42,14 @@ QPixmap DrEffect::getPixmap() {
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
