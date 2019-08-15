@@ -117,9 +117,7 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
     m_water_shader.setUniformValue( u_water_matrix, orthoMatrix(fbo->width(), fbo->height()) );
 
     // Set Texture Coordinates for Shader
-    std::vector<float> texture_coordinates;
-    setWholeTextureCoordinates(texture_coordinates);
-    m_water_shader.setAttributeArray(    a_water_texture_coord, texture_coordinates.data(), 2 );
+    m_water_shader.setAttributeArray(    a_water_texture_coord, m_whole_texture_coordinates.data(), 2 );
     m_water_shader.enableAttributeArray( a_water_texture_coord );
 
     // Load vertices for this object
@@ -246,9 +244,7 @@ void DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, 
     m_fisheye_shader.setUniformValue( u_fisheye_matrix, orthoMatrix(fbo->width(), fbo->height()) );
 
     // Set Texture Coordinates for Shader
-    std::vector<float> texture_coordinates;
-    setWholeTextureCoordinates(texture_coordinates);
-    m_fisheye_shader.setAttributeArray(    a_fisheye_texture_coord, texture_coordinates.data(), 2 );
+    m_fisheye_shader.setAttributeArray(    a_fisheye_texture_coord, m_whole_texture_coordinates.data(), 2 );
     m_fisheye_shader.enableAttributeArray( a_fisheye_texture_coord );
 
     // Load vertices for this object
@@ -269,7 +265,7 @@ void DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, 
     m_fisheye_shader.setUniformValue( u_fisheye_color_tint,         lens->color_tint );
     m_fisheye_shader.setUniformValue( u_fisheye_lens_zoom,          lens->lens_zoom );
 
-    // Set variables for shader
+    // Set more variables for shader
     m_fisheye_shader.setUniformValue( u_fisheye_alpha,      lens->getOpacity() );
     m_fisheye_shader.setUniformValue( u_fisheye_zoom,       m_scale );
     m_fisheye_shader.setUniformValue( u_fisheye_pos,        m_engine->getCurrentWorld()->getCameraPos().x(), m_engine->getCurrentWorld()->getCameraPos().y(), 0.0f );
@@ -277,10 +273,6 @@ void DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, 
     m_fisheye_shader.setUniformValue( u_fisheye_height,     static_cast<float>(fbo->height()) );
     m_fisheye_shader.setUniformValue( u_fisheye_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
     m_fisheye_shader.setUniformValue( u_fisheye_angle,      angle );
-
-    double integral;
-    double fraction = modf(QTime::currentTime().msecsSinceStartOfDay() / 1000.0, &integral);
-    g_info = "Lens Zoom: " + QString::number(int(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) % 10) + "." + QString::number(fraction);
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

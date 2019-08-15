@@ -185,6 +185,24 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
                 item->applyFilters();
                 break;
 
+            case Properties::Thing_Fire_Color_1:
+            case Properties::Thing_Fire_Color_2: {
+                QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1).toUInt());
+                QColor ce = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2).toUInt());
+                item->setPixmap( DrImaging::drawFire(cs, ce) );
+                item->setAssetWidth(  item->pixmap().width() );
+                item->setAssetHeight( item->pixmap().height() );
+                break;
+            }
+
+            case Properties::Thing_Fisheye_Color: {
+                QColor ce = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color).toUInt());
+                item->setPixmap( DrImaging::drawFisheye(ce) );
+                item->setAssetWidth(  item->pixmap().width() );
+                item->setAssetHeight( item->pixmap().height() );
+                break;
+            }
+
             case Properties::Thing_Light_Color:
             case Properties::Thing_Light_Cone_Start:
             case Properties::Thing_Light_Cone_End:

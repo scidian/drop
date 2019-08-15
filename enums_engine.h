@@ -37,6 +37,8 @@ enum Asset_Textures {
     Water_Texture_3 =   -63,
     Water_Texture_4 =   -64,
 
+    Fire_Texture_1 =    -70,
+
     Ball =      -100,
     Block =     -101,
     Plant =     -102,

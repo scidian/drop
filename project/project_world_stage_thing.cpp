@@ -257,8 +257,8 @@ void DrThing::addComponentSettingsFire() {
                            "Start Color", "Start color tint for this Fire.");
     addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2, Property_Type::Color, QColor(183,  28,  28, 255).rgba(),
                            "End Color", "End color tint for this Fire.");
-    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_Tint, Property_Type::Percent, 25.0,
-                           "Tint Percent", "How much color to tint the Fire, 0 (none) - 100 (all the way)");
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Intensity, Property_Type::Percent, 50.0,
+                           "Intensity", "How much color to apply to fire.");
 }
 
 //####################################################################################

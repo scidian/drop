@@ -156,6 +156,7 @@ public:
     void            addThings(QList<DrEngineThing*> things);
     void            buildWorld(Demo_Space new_space_type, long current_editor_world);
     void            clearWorld();
+    void            loadFireToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadFisheyeToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadLightToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadObjectToWorld(DrThing *thing, double offset_x, double offset_y);

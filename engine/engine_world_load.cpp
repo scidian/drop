@@ -9,6 +9,7 @@
 #include <QRandomGenerator>
 
 #include "engine.h"
+#include "engine_thing_fire.h"
 #include "engine_thing_fisheye.h"
 #include "engine_thing_light.h"
 #include "engine_thing_object.h"
@@ -39,6 +40,7 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
             case DrThingType::Object:   loadObjectToWorld(thing, offset_x, offset_y);       break;
             case DrThingType::Light:    loadLightToWorld(thing, offset_x, offset_y);        break;
             case DrThingType::Water:    loadWaterToWorld(thing, offset_x, offset_y);        break;
+            case DrThingType::Fire:     loadFireToWorld(thing, offset_x, offset_y);         break;
             case DrThingType::Fisheye:  loadFisheyeToWorld(thing, offset_x, offset_y);      break;
         default:
             break;
@@ -140,8 +142,6 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
 //##    Loads one DrProject DrThingType::Light to World / Space
 //####################################################################################
 void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double offset_y) {
-
-    // Load Thing Properties
     QPointF     position =      thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
     double      z_order =       thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
     float       alpha =         thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
@@ -171,8 +171,6 @@ void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double off
 //##    Loads one DrProject DrThingType::Water to World / Space
 //####################################################################################
 void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double offset_y) {
-
-    // Load Thing Properties
     QPointF     position =          thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
     double      z_order =           thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
     float       alpha =             thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
@@ -214,13 +212,10 @@ void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double off
 }
 
 
-
 //####################################################################################
 //##    Loads one DrProject DrThingType::Fisheye to World / Space
 //####################################################################################
 void DrEngineWorld::loadFisheyeToWorld(DrThing *thing, double offset_x, double offset_y) {
-
-    // Load Thing Properties
     QPointF     position =          thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
     double      z_order =           thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
     float       alpha =             thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
@@ -235,6 +230,25 @@ void DrEngineWorld::loadFisheyeToWorld(DrThing *thing, double offset_x, double o
                                   start_color, water_tint, zoom, alpha ) );
 }
 
+
+//####################################################################################
+//##    Loads one DrProject DrThingType::Fire to World / Space
+//####################################################################################
+void DrEngineWorld::loadFireToWorld(DrThing *thing, double offset_x, double offset_y) {
+    QPointF     position =          thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
+    QPointF     scale =             thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
+    double      z_order =           thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
+    float       alpha =             thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
+    QPointF     size =              thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF();
+    double      angle =             thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
+
+    QColor      color_1 =           QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1).toUInt());
+    QColor      color_2 =           QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2).toUInt());
+    float       intensity =         thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Intensity).toFloat() / 100.f;
+
+    addThing( new DrEngineFire(this, getNextKey(), position.x() + offset_x, -position.y() + offset_y, z_order, scale, angle, size,
+                               color_1, color_2, intensity, alpha ) );
+}
 
 
 

@@ -37,7 +37,14 @@ void DrOpenGL::process2DLights() {
         // Render all Space Objects to an off-screen Frame Buffer Object Occluder Map
         bindOccluderMapBuffer();
         glViewport(0, 0, m_occluder_fbo->width(), m_occluder_fbo->height());
-        drawSpaceOccluder();
+        bool shader_initialized = false;
+        for (auto thing : m_engine->getCurrentWorld()->getThings()) {
+            if (!shader_initialized) {
+                if (drawObjectOccluder(thing, true)) shader_initialized = true;
+            } else {
+                drawObjectOccluder(thing, false);
+            }
+        }
         m_occluder_fbo->release();
         glViewport(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
 
@@ -208,9 +215,7 @@ void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
     m_shadow_shader.setUniformValue( u_shadow_matrix, orthoMatrix(m_shadows[light->getKey()]->width(), m_shadows[light->getKey()]->height()) );
 
     // Set Texture Coordinates for Shader
-    std::vector<float> texture_coordinates;
-    setWholeTextureCoordinates(texture_coordinates);
-    m_shadow_shader.setAttributeArray(    a_shadow_texture_coord, texture_coordinates.data(), 2 );
+    m_shadow_shader.setAttributeArray(    a_shadow_texture_coord, m_whole_texture_coordinates.data(), 2 );
     m_shadow_shader.enableAttributeArray( a_shadow_texture_coord );
 
     // Load vertices for this object
@@ -283,9 +288,7 @@ void DrOpenGL::draw2DLight(DrEngineLight *light) {
     updateViewMatrix(m_engine->getCurrentWorld()->render_type, c_use_cam_offset);
 
     // Set Texture Coordinates for Shader
-    std::vector<float> texture_coordinates;
-    setWholeTextureCoordinates(texture_coordinates);
-    m_light_shader.setAttributeArray(    a_light_texture_coord, texture_coordinates.data(), 2 );
+    m_light_shader.setAttributeArray(    a_light_texture_coord, m_whole_texture_coordinates.data(), 2 );
     m_light_shader.enableAttributeArray( a_light_texture_coord );
 
     // Load vertices for this object

@@ -80,18 +80,6 @@ QMatrix4x4 DrOpenGL::orthoMatrix(float width, float height) {
     return m;
 }
 
-//####################################################################################
-//##        Applies coordinates that represents an entire texture
-//####################################################################################
-void DrOpenGL::setWholeTextureCoordinates(std::vector<float> &texture_coords) {
-    texture_coords.clear();
-    texture_coords.resize( 8 );
-    texture_coords[0] = 1;    texture_coords[1] = 1;
-    texture_coords[2] = 0;    texture_coords[3] = 1;
-    texture_coords[4] = 1;    texture_coords[5] = 0;
-    texture_coords[6] = 0;    texture_coords[7] = 0;
-}
-
 
 //####################################################################################
 //##        Returns list of vertices at z plane 0 from sides passed in
@@ -159,9 +147,7 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     m_default_shader.setUniformValue( u_default_matrix, orthoMatrix(fbo->width(), fbo->height()) );
 
     // Set Texture Coordinates for Shader
-    std::vector<float> texture_coordinates;
-    setWholeTextureCoordinates(texture_coordinates);
-    m_default_shader.setAttributeArray( a_default_texture_coord, texture_coordinates.data(), 2 );
+    m_default_shader.setAttributeArray( a_default_texture_coord, m_whole_texture_coordinates.data(), 2 );
     m_default_shader.enableAttributeArray( a_default_texture_coord );
 
     // Load vertices for this object
@@ -219,9 +205,7 @@ void DrOpenGL::drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo) {
     m_kernel_shader.setUniformValue( u_kernel_matrix, orthoMatrix(fbo->width(), fbo->height()) );
 
     // Set Texture Coordinates for Shader
-    std::vector<float> texture_coordinates;
-    setWholeTextureCoordinates(texture_coordinates);
-    m_kernel_shader.setAttributeArray( a_kernel_texture_coord, texture_coordinates.data(), 2 );
+    m_kernel_shader.setAttributeArray( a_kernel_texture_coord, m_whole_texture_coordinates.data(), 2 );
     m_kernel_shader.enableAttributeArray( a_kernel_texture_coord );
 
     // Load vertices for this object
@@ -275,9 +259,7 @@ void DrOpenGL::drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper,
     m_screen_shader.setUniformValue( u_screen_matrix, orthoMatrix(lower->width(), lower->height()) );
 
     // Set Texture Coordinates for Shader
-    std::vector<float> texture_coordinates;
-    setWholeTextureCoordinates(texture_coordinates);
-    m_screen_shader.setAttributeArray(    a_screen_texture_coord, texture_coordinates.data(), 2 );
+    m_screen_shader.setAttributeArray(    a_screen_texture_coord, m_whole_texture_coordinates.data(), 2 );
     m_screen_shader.enableAttributeArray( a_screen_texture_coord );
 
     // Load vertices for this object

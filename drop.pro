@@ -99,6 +99,7 @@ SOURCES += \
     engine/engine_camera.cpp \
     engine/engine_texture.cpp \
     engine/engine_thing.cpp \
+    engine/engine_thing_fire.cpp \
     engine/engine_thing_fisheye.cpp \
     engine/engine_thing_light.cpp \
     engine/engine_thing_object.cpp \
@@ -142,9 +143,9 @@ SOURCES += \
     opengl/opengl_render_bind.cpp \
     opengl/opengl_render_debug.cpp \
     opengl/opengl_render_debug_health.cpp \
+    opengl/opengl_render_effects.cpp \
     opengl/opengl_render_lights.cpp \
-    opengl/opengl_render_occluder_map.cpp \
-    opengl/opengl_render_shaders.cpp \
+    opengl/opengl_render_objects.cpp \
     opengl/opengl_render_space.cpp \
     opengl/opengl_render_test_cube.cpp \
     playground/form_playground.cpp \
@@ -223,6 +224,7 @@ HEADERS += \
     engine/engine_camera.h \
     engine/engine_texture.h \
     engine/engine_thing.h \
+    engine/engine_thing_fire.h \
     engine/engine_thing_fisheye.h \
     engine/engine_thing_light.h \
     engine/engine_thing_object.h \

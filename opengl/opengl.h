@@ -17,13 +17,16 @@
 #include <QMatrix4x4>
 #include <chrono>
 
+#include "enums.h"
 #include "enums_engine.h"
 
 // Forward Declarations
 class DrEngine;
+class DrEngineFire;
 class DrEngineFisheye;
 class DrEngineLight;
 class DrEngineObject;
+class DrEngineThing;
 class DrEngineWater;
 class FormEngine;
 
@@ -74,6 +77,8 @@ private:
     float           m_background_red = 0;
     float           m_background_green = 0;
     float           m_background_blue = 0;
+
+    std::vector<float>       m_whole_texture_coordinates;       // Used to keep the coordinates of rendering an entire texture
 
     // Frame Buffers
     QOpenGLFramebufferObject *m_render_fbo = nullptr;           // Used for offscreen rendering
@@ -243,14 +248,26 @@ private:
     int     u_fisheye_zoom;                                       // Current zoom level (need for water shader)
     int     u_fisheye_pos;                                        // Current camera position (need for water shader)
 
-    int     u_fisheye_top;
-    int     u_fisheye_bottom;
-    int     u_fisheye_left;
-    int     u_fisheye_right;
+    int     u_fisheye_top, u_fisheye_bottom, u_fisheye_left, u_fisheye_right;
 
     int     u_fisheye_start_color;
     int     u_fisheye_color_tint;
     int     u_fisheye_lens_zoom;
+
+
+    // Fire Shader
+    QOpenGLShaderProgram m_fire_shader;
+    int     a_fire_vertex;
+    int     a_fire_texture_coord;
+    int     u_fire_matrix;
+
+    int     u_fire_texture;
+    int     u_fire_alpha;
+    int     u_fire_time;                                        // Time in seconds
+    int     u_fire_position;
+    int     u_fire_start_color;
+    int     u_fire_end_color;
+    int     u_fire_intensity;
 
     // ********** End Shaders **********
 
@@ -285,6 +302,11 @@ public:
     QPointF         mapToFBO(QVector3D point3D, QOpenGLFramebufferObject *fbo, QMatrix4x4 matrix);
     void            zoomInOut(int level);
 
+    // Initialization Calls
+    void            loadBuiltInTextures();
+    void            loadProjectTextures();
+    void            loadShaders();
+
     // Render Calls
     void            bindOffscreenBuffer(bool clear = true);
     void            cullingOn();
@@ -296,14 +318,17 @@ public:
     void            drawDebugHealthNative(QPainter &painter);
     void            drawDebugJoints(QPainter &painter);
     void            drawDebugShapes(QPainter &painter);
+    void            drawEffect(DrEngineThing *thing, DrThingType &last_thing);
     void            drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo);
     void            drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, DrEngineFisheye *lens);
     void            drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo);
     void            drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower, Blend_Mode mode);
     void            drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water);
     bool            drawGlowBuffer();
+    void            drawObject(DrEngineThing *thing, DrThingType &last_thing);
+    void            drawObjectFire(DrEngineThing *thing, DrThingType &last_thing);
+    bool            drawObjectOccluder(DrEngineThing *thing, bool need_init_shader = true);
     void            drawSpace();
-    void            drawSpaceOccluder();
     QColor          objectDebugColor(DrEngineObject *object, bool text_color = false);
     QMatrix4x4      occluderMatrix(Render_Type render_type, bool use_offset);
     QMatrix4x4      orthoMatrix(float width, float height);
@@ -311,10 +336,7 @@ public:
     void            releaseOffscreenBuffer();
     void            setShaderDefaultValues(float texture_width, float texture_height);
     void            setNumberTextureCoordinates(QString letter, std::vector<float> &texture_coordinates);
-    void            setUpSpaceShader(std::vector<float> &texture_coords);
     void            setQuadVertices(QVector<GLfloat> &vertices, float width, float height, QPointF center, float z);
-    void            setWholeTextureCoordinates(std::vector<float> &texture_coords);
-    void            stopSpaceShader();
 
     // Soft Shadows / Lights
     void            bindGlowLightsBuffer(float ambient_light);

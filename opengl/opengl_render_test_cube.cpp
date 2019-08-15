@@ -34,9 +34,7 @@ void DrOpenGL::drawCube(QVector3D center) {
     m_default_shader.setUniformValue( u_default_matrix, m_matrix );
 
     // ***** Set Texture Coordinates for Shader
-    std::vector<float> texture_coordinates;
-    setWholeTextureCoordinates(texture_coordinates);
-    m_default_shader.setAttributeArray( a_default_texture_coord, texture_coordinates.data(), 2 );
+    m_default_shader.setAttributeArray( a_default_texture_coord, m_whole_texture_coordinates.data(), 2 );
     m_default_shader.enableAttributeArray( a_default_texture_coord );
 
     static float cube_angle;

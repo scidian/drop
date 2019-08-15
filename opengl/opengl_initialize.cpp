@@ -19,16 +19,17 @@ int g_max_rays =                2048;
 int g_max_occluder_fbo_size =   2048;
 int g_max_light_fbo_size =      2048;
 
+
 //####################################################################################
 //##        Initialize OpenGL Resources
 //####################################################################################
 void DrOpenGL::initializeGL() {
 
-    // ***** Set up the rendering context, load shaders and other resources, etc.:
+    // Set up the rendering context, load shaders and other resources, etc.:
     initializeOpenGLFunctions();
     glClearColor(0.0, 0.0, 0.0, 0.0f);
 
-    // ***** Turn on mouse tracking (for mouseMoveEvent)
+    // Turn on mouse tracking (for mouseMoveEvent)
     setMouseTracking( true );
 
     // Load some global OpenGL Info
@@ -37,7 +38,24 @@ void DrOpenGL::initializeGL() {
     g_max_occluder_fbo_size = (g_max_texture_size < c_desired_occluder_fbo_size) ? g_max_texture_size : c_desired_occluder_fbo_size;
     g_max_light_fbo_size =    (g_max_texture_size < c_desired_light_fbo_size) ?    g_max_texture_size : c_desired_light_fbo_size;
 
-    // Load test resources
+    // Create a vector containing the texture coordinates for a whole texture
+    m_whole_texture_coordinates.clear();
+    m_whole_texture_coordinates.resize( 8 );
+    m_whole_texture_coordinates[0] = 1;    m_whole_texture_coordinates[1] = 1;
+    m_whole_texture_coordinates[2] = 0;    m_whole_texture_coordinates[3] = 1;
+    m_whole_texture_coordinates[4] = 1;    m_whole_texture_coordinates[5] = 0;
+    m_whole_texture_coordinates[6] = 0;    m_whole_texture_coordinates[7] = 0;
+
+    loadBuiltInTextures();
+    loadProjectTextures();
+    loadShaders();
+}
+
+
+//####################################################################################
+//##        Built in temp textures and shader textures
+//####################################################################################
+void DrOpenGL::loadBuiltInTextures() {
     m_engine->addTexture(Asset_Textures::Numbers,           ":/assets/engine/numbers.png");
 
     m_engine->addTexture(Asset_Textures::Water_Normal_1,    ":/assets/textures/water_normal.jpg");
@@ -46,6 +64,8 @@ void DrOpenGL::initializeGL() {
     m_engine->addTexture(Asset_Textures::Water_Texture_3,   ":/assets/textures/water_texture_3.jpg");
     m_engine->addTexture(Asset_Textures::Water_Texture_4,   ":/assets/textures/water_texture_4.jpg");
 
+    m_engine->addTexture(Asset_Textures::Fire_Texture_1,    ":/assets/textures/fire_flame_1.png");
+
     m_engine->addTexture(Asset_Textures::Ball,              ":/assets/test_images/ball_1.png");
     m_engine->addTexture(Asset_Textures::Block,             ":/assets/test_images/metal_block.png");
     m_engine->addTexture(Asset_Textures::Plant,             ":/assets/test_images/moon_plant_6.png");
@@ -53,8 +73,13 @@ void DrOpenGL::initializeGL() {
     m_engine->addTexture(Asset_Textures::Wheel,             ":/assets/test_images/rover_wheel.png");
     m_engine->addTexture(Asset_Textures::Spare,             ":/assets/test_images/spare_wheel.png");
 
+}
 
-    // ***** Load resources from project
+
+//####################################################################################
+//##        Load resources from project
+//####################################################################################
+void DrOpenGL::loadProjectTextures() {
     for (auto asset_pair : m_engine->getProject()->getAssetMap() ) {
         DrAsset *asset = asset_pair.second;
 
@@ -63,10 +88,13 @@ void DrOpenGL::initializeGL() {
             m_engine->addTexture( asset->getKey(), pixmap);
         }
     }
+}
 
 
-
-    // ******************** Shaders ********************
+//####################################################################################
+//##        Shaders
+//####################################################################################
+void DrOpenGL::loadShaders() {
 
     // ***** Initialize our basic shader, shaders have 2 parts, a Vertex shader followed by a Fragment shader
     QOpenGLShader v_default_shader( QOpenGLShader::Vertex );        v_default_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
@@ -288,6 +316,27 @@ void DrOpenGL::initializeGL() {
     u_fisheye_start_color =     m_fisheye_shader.uniformLocation(     "u_start_color" );
     u_fisheye_color_tint =      m_fisheye_shader.uniformLocation(     "u_color_tint" );
     u_fisheye_lens_zoom =       m_fisheye_shader.uniformLocation(     "u_lens_zoom" );
+
+
+    // ***** Initialize our Fire Shader
+    QOpenGLShader v_fire_shader( QOpenGLShader::Vertex );        v_fire_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader f_fire_shader( QOpenGLShader::Fragment );      f_fire_shader.compileSourceFile( ":/shaders/frag_fire.glsl" );
+    m_fire_shader.addShader( &v_fire_shader );
+    m_fire_shader.addShader( &f_fire_shader );
+    m_fire_shader.link();
+
+    // Vertex Shader Input
+    a_fire_vertex =          m_fire_shader.attributeLocation(   "vertex" );
+    a_fire_texture_coord =   m_fire_shader.attributeLocation(   "texture_coordinates" );
+    u_fire_matrix =          m_fire_shader.uniformLocation(     "u_matrix" );
+
+    // Fragment Shader Input
+    u_fire_alpha =           m_fire_shader.uniformLocation(     "u_alpha" );
+    u_fire_time =            m_fire_shader.uniformLocation(     "u_time" );
+    u_fire_position =        m_fire_shader.uniformLocation(     "u_pos" );
+    u_fire_start_color =     m_fire_shader.uniformLocation(     "u_start_color" );
+    u_fire_end_color =       m_fire_shader.uniformLocation(     "u_end_color" );
+    u_fire_intensity =       m_fire_shader.uniformLocation(     "u_intensity" );
 
 
 }
