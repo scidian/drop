@@ -46,8 +46,22 @@ void main( void ) {
     highp float time = (u_time * -1.0 * speed) + (u_pos.x * 0.2) + (u_pos.y * 0.2);
 
 
+    // Pixelation
+    vec2 coords = coordinates;
+    float u_width = 200.0;
+    float u_height = 200.0;
+    highp float pixel_width =  (1.0 / (u_width));
+    highp float pixel_height = (1.0 / (u_height));
+    float u_pixel_x = 4.0;
+    float u_pixel_y = 4.0;
+    highp float real_pixel_x = ((coords.x / 1.0) * u_width);
+    highp float real_pixel_y = (((1.0 - coords.y) / 1.0) * u_height);
+    coords.x =       u_pixel_x * floor(real_pixel_x / u_pixel_x) * pixel_width;
+    coords.y = 1.0 - u_pixel_y * floor(real_pixel_y / u_pixel_y) * pixel_height;
+
+
     // Generate noisy x value
-    vec2 uv = coordinates.xy;
+    vec2 uv = coords.xy;
     vec2 x1 = vec2(uv.x*1.40 + 0.010, uv.y     + time*0.69);
     vec2 x2 = vec2(uv.x*0.50 - 0.033, uv.y*2.0 + time*0.12);
     vec2 x3 = vec2(uv.x*0.94 + 0.020, uv.y*3.0 + time*0.61);
