@@ -215,6 +215,10 @@ void main( void ) {
     }
 
 
+//    highp float bit_depth = pow(2.0, 3.0);
+//    original.rgb = vec3(floor(original.r * bit_depth), floor(original.g * bit_depth), floor(original.b * bit_depth)) / bit_depth;
+
+
     gl_FragColor = original;
 }
 

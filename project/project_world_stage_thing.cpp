@@ -259,6 +259,12 @@ void DrThing::addComponentSettingsFire() {
                            "End Color", "End color tint for this Fire.");
     addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Intensity, Property_Type::Percent, 50.0,
                            "Intensity", "How much color to apply to fire.");
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Smoothness, Property_Type::Percent, 15.0,
+                           "Smoothness", "How smooth to make the flames.");
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Wavy, Property_Type::Percent, 50.0,
+                           "Waviness", "How wavy to make the flames.");
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Speed, Property_Type::Percent, 50.0,
+                           "Intensity", "How much color to apply to fire.");
 }
 
 //####################################################################################

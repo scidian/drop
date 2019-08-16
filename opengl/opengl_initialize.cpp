@@ -64,7 +64,9 @@ void DrOpenGL::loadBuiltInTextures() {
     m_engine->addTexture(Asset_Textures::Water_Texture_3,   ":/assets/textures/water_texture_3.jpg");
     m_engine->addTexture(Asset_Textures::Water_Texture_4,   ":/assets/textures/water_texture_4.jpg");
 
-    m_engine->addTexture(Asset_Textures::Fire_Texture_1,    ":/assets/textures/fire_flame_1.png");
+    m_engine->addTexture(Asset_Textures::Fire_Noise,        ":/assets/textures/fire_noise.png");
+    m_engine->addTexture(Asset_Textures::Fire_Flame_Torch,  ":/assets/textures/fire_flame_torch.png");
+    m_engine->addTexture(Asset_Textures::Fire_Flame_Candle, ":/assets/textures/fire_flame_candle.png");
 
     m_engine->addTexture(Asset_Textures::Ball,              ":/assets/test_images/ball_1.png");
     m_engine->addTexture(Asset_Textures::Block,             ":/assets/test_images/metal_block.png");
@@ -326,17 +328,22 @@ void DrOpenGL::loadShaders() {
     m_fire_shader.link();
 
     // Vertex Shader Input
-    a_fire_vertex =          m_fire_shader.attributeLocation(   "vertex" );
-    a_fire_texture_coord =   m_fire_shader.attributeLocation(   "texture_coordinates" );
-    u_fire_matrix =          m_fire_shader.uniformLocation(     "u_matrix" );
+    a_fire_vertex =             m_fire_shader.attributeLocation(   "vertex" );
+    a_fire_texture_coord =      m_fire_shader.attributeLocation(   "texture_coordinates" );
+    u_fire_matrix =             m_fire_shader.uniformLocation(     "u_matrix" );
 
     // Fragment Shader Input
-    u_fire_alpha =           m_fire_shader.uniformLocation(     "u_alpha" );
-    u_fire_time =            m_fire_shader.uniformLocation(     "u_time" );
-    u_fire_position =        m_fire_shader.uniformLocation(     "u_pos" );
-    u_fire_start_color =     m_fire_shader.uniformLocation(     "u_start_color" );
-    u_fire_end_color =       m_fire_shader.uniformLocation(     "u_end_color" );
-    u_fire_intensity =       m_fire_shader.uniformLocation(     "u_intensity" );
+    u_fire_alpha =              m_fire_shader.uniformLocation(     "u_alpha" );
+    u_fire_time =               m_fire_shader.uniformLocation(     "u_time" );
+    u_fire_position =           m_fire_shader.uniformLocation(     "u_pos" );
+    u_fire_width =              m_fire_shader.uniformLocation(     "u_width" );
+    u_fire_height =             m_fire_shader.uniformLocation(     "u_height" );
+
+    u_fire_start_color =        m_fire_shader.uniformLocation(     "u_start_color" );
+    u_fire_end_color =          m_fire_shader.uniformLocation(     "u_end_color" );
+    u_fire_intensity =          m_fire_shader.uniformLocation(     "u_intensity" );
+    u_fire_smoothness =         m_fire_shader.uniformLocation(     "u_smoothness" );
+    u_fire_wavy =               m_fire_shader.uniformLocation(     "u_wavy" );
 
 
 }

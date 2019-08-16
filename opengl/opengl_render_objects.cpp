@@ -249,14 +249,24 @@ void DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     m_fire_shader.setAttributeArray( a_fire_texture_coord, m_whole_texture_coordinates.data(), 2 );
     m_fire_shader.enableAttributeArray( a_fire_texture_coord );
 
-    // ***** Get texture to render with, set texture coordinates
-    DrEngineTexture *texture = m_engine->getTexture(Asset_Textures::Fire_Texture_1);
-    if (!texture->texture()->isBound()) {
-        texture->texture()->bind();
-        texture->texture()->setWrapMode(QOpenGLTexture::WrapMode::MirroredRepeat);
-    }
-    float texture_width =  texture->width();
-    float texture_height = texture->height();
+    // ***** Bind textures
+    glEnable(GL_TEXTURE_2D);
+    GLint fire_noise = glGetUniformLocation(m_fire_shader.programId(), "u_texture_noise");
+    GLint fire_flame = glGetUniformLocation(m_fire_shader.programId(), "u_texture_flame");
+    glUseProgram(m_fire_shader.programId());
+    glUniform1i(fire_noise, 0);
+    glUniform1i(fire_flame, 1);
+
+    // !!!!! #NOTE: Must be called in descending order and end on 0
+    glActiveTexture(GL_TEXTURE1);                           // Texture unit 1
+    DrEngineTexture *flame = m_engine->getTexture(Asset_Textures::Fire_Flame_Torch);
+    glBindTexture(GL_TEXTURE_2D, flame->texture()->textureId());
+    flame->texture()->setWrapMode(QOpenGLTexture::WrapMode::ClampToEdge);
+
+    glActiveTexture(GL_TEXTURE0);                           // Texture unit 0
+    glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Fire_Noise)->texture()->textureId());
+    m_engine->getTexture(Asset_Textures::Fire_Noise)->texture()->setWrapMode(QOpenGLTexture::WrapMode::MirroredRepeat);
+
 
     // ***** Get object position data
     QPointF center = fire->getPosition();
@@ -265,12 +275,12 @@ void DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     x = static_cast<float>(center.x());
     y = static_cast<float>(center.y());
     z = static_cast<float>(fire->z_order);
-    half_width =  texture_width *  fire->getScaleX() / 2.0f;
-    half_height = texture_height * fire->getScaleY() / 2.0f;
+    half_width =  static_cast<float>(fire->fire_size.x()) * fire->getScaleX() / 2.0f;
+    half_height = static_cast<float>(fire->fire_size.y()) * fire->getScaleY() / 2.0f;
 
     // ***** Create rotation matrix, apply rotation to object
     QMatrix4x4 matrix;
-    matrix.rotate( static_cast<float>(fire->getAngle()), 0.0, 0.0, 1.0 );
+    matrix.rotate( static_cast<float>( -fire->getAngle()), 0.0, 0.0, 1.0 );
     QVector3D top_right = matrix * QVector3D( half_width,  half_height, 0);
     QVector3D top_left =  matrix * QVector3D(-half_width,  half_height, 0);
     QVector3D bot_right = matrix * QVector3D( half_width, -half_height, 0);
@@ -283,17 +293,17 @@ void DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     vertices[ 0] = top_right.x() + x;       vertices[ 1] = top_right.y() + y;       vertices[ 2] = z;       // Top Right
     vertices[ 3] = top_left.x()  + x;       vertices[ 4] = top_left.y()  + y;       vertices[ 5] = z;       // Top Left
     vertices[ 6] = bot_right.x() + x;       vertices[ 7] = bot_right.y() + y;       vertices[ 8] = z;       // Bottom Right
-    vertices[ 9] = bot_left.x()  + x;       vertices[10] = bot_left.y()  +  y;      vertices[11] = z;       // Bottom Left
+    vertices[ 9] = bot_left.x()  + x;       vertices[10] = bot_left.y()  + y;       vertices[11] = z;       // Bottom Left
     m_fire_shader.setAttributeArray( a_fire_vertex, vertices.data(), 3 );
     m_fire_shader.enableAttributeArray( a_fire_vertex );
 
     // ***** Set Shader Variables
     float now = static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.f);
-
-    m_fire_shader.setUniformValue( u_fire_texture,  0 );                           // Use texture unit 0
     m_fire_shader.setUniformValue( u_fire_alpha,    fire->getOpacity() );
     m_fire_shader.setUniformValue( u_fire_time,     now );
     m_fire_shader.setUniformValue( u_fire_position, x, y );
+    m_fire_shader.setUniformValue( u_fire_width,    static_cast<float>(fire->fire_size.x()) * fire->getScaleX() );
+    m_fire_shader.setUniformValue( u_fire_height,   static_cast<float>(fire->fire_size.y()) * fire->getScaleY() );
 
     m_fire_shader.setUniformValue( u_fire_start_color,
                                         static_cast<float>(fire->start_color.redF()),
@@ -303,7 +313,9 @@ void DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
                                         static_cast<float>(fire->end_color.redF()),
                                         static_cast<float>(fire->end_color.greenF()),
                                         static_cast<float>(fire->end_color.blueF()) );
-    m_fire_shader.setUniformValue( u_fire_intensity, fire->intensity );
+    m_fire_shader.setUniformValue( u_fire_intensity,    fire->intensity );
+    m_fire_shader.setUniformValue( u_fire_smoothness,   fire->smoothness );
+    m_fire_shader.setUniformValue( u_fire_wavy,         fire->wavy );
 
     // ***** Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

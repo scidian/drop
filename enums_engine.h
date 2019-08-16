@@ -29,22 +29,27 @@ enum class Demo_Space {
 
 
 enum Asset_Textures {
-    Numbers =            -1,
+    Numbers =               -1,
 
-    Water_Normal_1 =    -50,
-    Water_Texture_1 =   -61,
-    Water_Texture_2 =   -62,
-    Water_Texture_3 =   -63,
-    Water_Texture_4 =   -64,
+    Water_Normal_1 =        -50,
+    Water_Texture_1 =       -61,
+    Water_Texture_2 =       -62,
+    Water_Texture_3 =       -63,
+    Water_Texture_4 =       -64,
 
-    Fire_Texture_1 =    -70,
+    Fire_Noise =            -70,
+    Fire_Flame_Torch =      -71,
+    Fire_Flame_Candle =     -72,
+    Fire_Flame_Triangle =   -73,
+    Fire_Flame_Circle =     -74,
+    Fire_Flame_Square =     -75,
 
-    Ball =      -100,
-    Block =     -101,
-    Plant =     -102,
-    Rover =     -103,
-    Wheel =     -104,
-    Spare =     -105
+    Ball =          -100,
+    Block =         -101,
+    Plant =         -102,
+    Rover =         -103,
+    Wheel =         -104,
+    Spare =         -105
 };
 
 enum class Water_Texture {

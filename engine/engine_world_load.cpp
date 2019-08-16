@@ -245,9 +245,15 @@ void DrEngineWorld::loadFireToWorld(DrThing *thing, double offset_x, double offs
     QColor      color_1 =           QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1).toUInt());
     QColor      color_2 =           QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2).toUInt());
     float       intensity =         thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Intensity).toFloat() / 100.f;
+    float       smooth =            thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Smoothness).toFloat() / 100.f;
+    float       wave =              thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Wavy).toFloat() / 100.f;
+
+    // Find out original QPixmap size used in editor
+    size.setX( size.x() / scale.x() );
+    size.setY( size.y() / scale.y() );
 
     addThing( new DrEngineFire(this, getNextKey(), position.x() + offset_x, -position.y() + offset_y, z_order, scale, angle, size,
-                               color_1, color_2, intensity, alpha ) );
+                               color_1, color_2, intensity, smooth, wave, alpha ) );
 }
 
 

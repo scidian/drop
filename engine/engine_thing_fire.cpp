@@ -12,7 +12,7 @@
 //##    Constructor / Destructor
 //####################################################################################
 DrEngineFire::DrEngineFire(DrEngineWorld *world, long unique_key, double x, double y, double z, QPointF scale, double angle, QPointF size,
-                           QColor color_1, QColor color_2, float color_intensity,
+                           QColor color_1, QColor color_2, float color_intensity, float smooth, float wave,
                            float opacity) :
     DrEngineThing(world, unique_key) {
 
@@ -26,6 +26,8 @@ DrEngineFire::DrEngineFire(DrEngineWorld *world, long unique_key, double x, doub
     this->start_color = color_1;
     this->end_color = color_2;
     this->intensity = color_intensity;
+    this->smoothness = smooth;
+    this->wavy = wave;
 
     this->setOpacity( opacity );
 }

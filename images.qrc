@@ -147,6 +147,8 @@
         <file>assets/asset_types/light.png</file>
         <file>assets/inspector_icons/comp_fire.png</file>
         <file>assets/tree_icons/tree_fire.png</file>
-        <file>assets/textures/fire_flame_1.png</file>
+        <file>assets/textures/fire_flame_torch.png</file>
+        <file>assets/textures/fire_noise.png</file>
+        <file>assets/textures/fire_flame_candle.png</file>
     </qresource>
 </RCC>

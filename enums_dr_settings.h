@@ -238,6 +238,9 @@ enum class Properties {
     Thing_Fire_Color_1,             //color
     Thing_Fire_Color_2,             //color
     Thing_Fire_Intensity,           //percent
+    Thing_Fire_Smoothness,          //percent
+    Thing_Fire_Wavy,                //percent
+    Thing_Fire_Speed,               //ranged double, 1.0 to
 
     // Fisheye Settings
     Thing_Fisheye_Color,            //color

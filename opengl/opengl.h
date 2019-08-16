@@ -261,13 +261,15 @@ private:
     int     a_fire_texture_coord;
     int     u_fire_matrix;
 
-    int     u_fire_texture;
     int     u_fire_alpha;
     int     u_fire_time;                                        // Time in seconds
     int     u_fire_position;
+    int     u_fire_width, u_fire_height;
     int     u_fire_start_color;
     int     u_fire_end_color;
     int     u_fire_intensity;
+    int     u_fire_smoothness;
+    int     u_fire_wavy;
 
     // ********** End Shaders **********
 
