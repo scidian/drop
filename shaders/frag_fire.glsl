@@ -129,6 +129,8 @@ void main( void ) {
     float speed;                                                    // Speed             1.0 very slow,  15.0 nice,  25.00 very fast
     if (u_speed > 25.0) {
         speed = sqrt(26.0 - (u_speed - 25.0));
+    } else if (u_speed <= 0.001) {
+        speed = 1000000.0;
     } else {
         speed = 30.0 - u_speed;
     }
@@ -157,8 +159,10 @@ void main( void ) {
     color_2 = pow(color_1, bottom_shrink);
 
     // ***** Playing with Increasing Color Intensity
-    color_1 *= pow(intensity + 0.5, 2.0);
-    color_2 *= pow(intensity + 0.5, 2.0);
+    //color_1 *= pow(intensity + 0.5, 2.0);
+    //color_2 *= pow(intensity + 0.5, 2.0);
+    color_1 *= intensity * 2.0;
+    color_2 *= intensity * 2.0;
 
 
     // ***** Original Color Fade

@@ -248,7 +248,7 @@ void DrEngineWorld::loadFireToWorld(DrThing *thing, double offset_x, double offs
     float       intensity =         thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Intensity).toFloat() / 100.f;
     float       smooth =            thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Smoothness).toFloat() / 100.f;
     float       wave =              thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Wavy).toFloat() / 100.f;
-    float       speed =             thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Speed).toList().first().toFloat();
+    float       speed =             thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Speed).toFloat();
 
     float       bitrate =           thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Bitrate).toList().first().toInt();
 

@@ -265,8 +265,8 @@ void DrThing::addComponentSettingsFire() {
                            "Smoothness", "How smooth to make the flames.");
     addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Wavy, Property_Type::Percent, 50.0,
                            "Waviness", "How wavy to make the flames.");
-    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Speed, Property_Type::RangedDouble, QList<QVariant>({ 80.00, 1.0, 100.0, 5.0 }),
-                           "Speed", "How fast flames should move. Default is 80. Ranged from 1 to 100.");
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Speed, Property_Type::Percent, 80.0,
+                           "Speed", "How fast flames should move.");
     addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Bitrate, Property_Type::RangedInt, QList<QVariant>({ 256, 0, 256, 16 }),
                            "Bit Depth", "Standard output has 256 color channel depth, you can use this to limit the number of available colors. "
                                         "Combining this with Pixelation gives a great retro look.");
