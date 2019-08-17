@@ -38,11 +38,9 @@ enum Asset_Textures {
     Water_Texture_4 =       -64,
 
     Fire_Noise =            -70,
-    Fire_Flame_Torch =      -71,
-    Fire_Flame_Candle =     -72,
-    Fire_Flame_Triangle =   -73,
-    Fire_Flame_Circle =     -74,
-    Fire_Flame_Square =     -75,
+    Fire_Flame_None =       -71,
+    Fire_Flame_Torch =      -72,
+    Fire_Flame_Candle =     -73,
 
     Ball =          -100,
     Block =         -101,
@@ -59,6 +57,12 @@ enum class Water_Texture {
     Caustic  = 3,
     Liquid   = 4,
 };
+
+enum class Fire_Mask {
+    Torch = 0,
+    Candle = 1,
+};
+
 
 //####################################################################################
 //##    Render Enumerations

@@ -34,7 +34,7 @@ uniform lowp  float u_saturation;// = 0.0;          // Saturation       Editor: 
 uniform lowp  float u_contrast;// = 0.0;            // Contrast         Editor: -255 to 255     Shader: -1.0 to 1.0
 uniform lowp  float u_brightness;// = 0.0;          // Brightness       Editor: -255 to 255     Shader: -1.0 to 1.0
 
-uniform lowp  float u_bitrate;// = 256;             // Bitrate          Editor:    1 to  16
+uniform lowp  float u_bitrate;// = 256;             // Bitrate          Editor:    0 to  256
 uniform       bool  u_cartoon;// = false;           // Cartoon          True / False
 uniform       bool  u_wavy;// = false;              // Wavy             True / False
 
@@ -270,10 +270,10 @@ void main( void ) {
     frag_rgb.rgb += u_tint;                                                         // Tint
     frag_rgb.rgb =  clamp(frag_rgb.rgb, 0.0, 1.0);
 
-    // ***** BITRATE ADJUSTMENT (16 bit down to 1 bit)
-    if (u_bitrate < 16.0) {
+    // ***** BITRATE ADJUSTMENT (16 bit (pow(2.0, 16.0) == 256.0) down to 1 bit)
+    if (u_bitrate < 256.0) {
         // ***** Method 1
-        highp float bit_depth = pow(2.0, u_bitrate);
+        highp float bit_depth = u_bitrate;
         frag_rgb = highp vec3(floor(frag_rgb.r * bit_depth), floor(frag_rgb.g * bit_depth), floor(frag_rgb.b * bit_depth)) / bit_depth;
 
         // ***** Method 2

@@ -75,7 +75,7 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
 
     long new_thing_key = m_parent_project->getNextKey();
     m_things[new_thing_key] = new DrThing(m_parent_project, m_parent_world, this, new_thing_key,
-                                             new_name, new_type, from_asset_key, x, y, z, should_collide);
+                                          new_name, new_type, from_asset_key, x, y, z, should_collide);
     return m_things[new_thing_key];
 }
 

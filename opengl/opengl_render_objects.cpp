@@ -259,7 +259,11 @@ void DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
 
     // !!!!! #NOTE: Must be called in descending order and end on 0
     glActiveTexture(GL_TEXTURE1);                           // Texture unit 1
-    DrEngineTexture *flame = m_engine->getTexture(Asset_Textures::Fire_Flame_Torch);
+    DrEngineTexture *flame;
+    switch (fire->fire_mask) {
+        case Fire_Mask::Torch:  flame = m_engine->getTexture(Asset_Textures::Fire_Flame_Torch);     break;
+        case Fire_Mask::Candle: flame = m_engine->getTexture(Asset_Textures::Fire_Flame_Candle);    break;
+    }
     glBindTexture(GL_TEXTURE_2D, flame->texture()->textureId());
     flame->texture()->setWrapMode(QOpenGLTexture::WrapMode::ClampToEdge);
 
@@ -305,6 +309,7 @@ void DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     m_fire_shader.setUniformValue( u_fire_width,    static_cast<float>(fire->fire_size.x()) * fire->getScaleX() );
     m_fire_shader.setUniformValue( u_fire_height,   static_cast<float>(fire->fire_size.y()) * fire->getScaleY() );
 
+    m_fire_shader.setUniformValue( u_fire_shape,    static_cast<int>(fire->fire_mask) );
     m_fire_shader.setUniformValue( u_fire_start_color,
                                         static_cast<float>(fire->start_color.redF()),
                                         static_cast<float>(fire->start_color.greenF()),
@@ -316,6 +321,8 @@ void DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     m_fire_shader.setUniformValue( u_fire_intensity,    fire->intensity );
     m_fire_shader.setUniformValue( u_fire_smoothness,   fire->smoothness );
     m_fire_shader.setUniformValue( u_fire_wavy,         fire->wavy );
+    m_fire_shader.setUniformValue( u_fire_speed,       (fire->flame_speed / 2.f) );
+    m_fire_shader.setUniformValue( u_fire_bitrate,      fire->bitrate );
 
     // ***** Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

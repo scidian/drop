@@ -235,12 +235,14 @@ enum class Properties {
     Thing_Water_Surface_Height,     //double
 
     // Fire Settings
+    Thing_Fire_Shape,               //list, enum class Fire_Mask
     Thing_Fire_Color_1,             //color
     Thing_Fire_Color_2,             //color
     Thing_Fire_Intensity,           //percent
     Thing_Fire_Smoothness,          //percent
     Thing_Fire_Wavy,                //percent
     Thing_Fire_Speed,               //ranged double, 1.0 to
+    Thing_Fire_Bitrate,             //ranged int, 0 to 16
 
     // Fisheye Settings
     Thing_Fisheye_Color,            //color

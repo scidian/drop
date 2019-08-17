@@ -150,5 +150,6 @@
         <file>assets/textures/fire_flame_torch.png</file>
         <file>assets/textures/fire_noise.png</file>
         <file>assets/textures/fire_flame_candle.png</file>
+        <file>assets/textures/fire_flame_none.png</file>
     </qresource>
 </RCC>

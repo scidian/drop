@@ -66,7 +66,8 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
                 case DrEffectType::Fire: {
                     uint color_1 =      m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1)->getValue().toUInt();
                     uint color_2 =      m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2)->getValue().toUInt();
-                    m_pixmap = DrImaging::drawFire( QColor::fromRgba(color_1), QColor::fromRgba(color_2) );
+                    int  mask    =      m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape)->getValue().toInt();
+                    m_pixmap = DrImaging::drawFire( QColor::fromRgba(color_1), QColor::fromRgba(color_2), static_cast<Fire_Mask>(mask) );
                     break;
                 }
                 case DrEffectType::Fisheye: {

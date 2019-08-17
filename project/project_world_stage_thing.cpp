@@ -78,7 +78,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
 
         case DrThingType::Fire:
             addComponentSettingsFire();
-            addComponentTransform(400, 400, x, -y, DrThingType::Fire);
+            addComponentTransform(250, 400, x, -y, DrThingType::Fire);
             addComponentLayering(z, 100.0);
             break;
 
@@ -253,18 +253,23 @@ void DrThing::addComponentSettingsFire() {
     addComponent(Components::Thing_Settings_Fire, "Fire Settings", "Settings for current Fire.", Component_Colors::Red_Faded, true);
     getComponent(Components::Thing_Settings_Fire)->setIcon(Component_Icons::Fire);
 
-    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1, Property_Type::Color, QColor(251, 140,   0, 255).rgba(),
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape, Property_Type::List, 0,
+                           "Shape", "Defines a shape mask to use for the Fire.");
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1, Property_Type::Color, QColor(255,   0, 0, 255).rgba(),
                            "Start Color", "Start color tint for this Fire.");
-    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2, Property_Type::Color, QColor(183,  28,  28, 255).rgba(),
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2, Property_Type::Color, QColor(255, 255, 0, 255).rgba(),
                            "End Color", "End color tint for this Fire.");
     addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Intensity, Property_Type::Percent, 50.0,
                            "Intensity", "How much color to apply to fire.");
-    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Smoothness, Property_Type::Percent, 15.0,
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Smoothness, Property_Type::Percent, 25.0,
                            "Smoothness", "How smooth to make the flames.");
     addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Wavy, Property_Type::Percent, 50.0,
                            "Waviness", "How wavy to make the flames.");
-    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Speed, Property_Type::Percent, 50.0,
-                           "Intensity", "How much color to apply to fire.");
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Speed, Property_Type::RangedDouble, QList<QVariant>({ 80.00, 1.0, 100.0, 5.0 }),
+                           "Speed", "How fast flames should move. Default is 80. Ranged from 1 to 100.");
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Bitrate, Property_Type::RangedInt, QList<QVariant>({ 256, 0, 256, 16 }),
+                           "Bit Depth", "Standard output has 256 color channel depth, you can use this to limit the number of available colors. "
+                                        "Combining this with Pixelation gives a great retro look.");
 }
 
 //####################################################################################
@@ -283,7 +288,7 @@ void DrThing::addComponentSettingsFisheye() {
     addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color_Tint, Property_Type::Percent, 25.0,
                            "Tint Percent", "How much color to tint the Lens, 0 (none) - 100 (all the way)");
     addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Lens_Zoom, Property_Type::RangedDouble, QList<QVariant>({ 2.25, 0.0, 10.0, 0.25 }),
-                           "Lens Zoom", "How much to zoom the Fisheye Lens. Default is 2.25");
+                           "Lens Zoom", "How much to zoom the Fisheye Lens. Default is 2.25. Ranged from 0 to 10.");
 }
 
 //####################################################################################

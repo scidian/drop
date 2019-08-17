@@ -168,6 +168,9 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
                 << tr("Cells")
                 << tr("Caustic")
                 << tr("Liquid");
+    } else if   (property_key == static_cast<int>(Properties::Thing_Fire_Shape)) {
+        options << tr("Torch")
+                << tr("Candle");
     } else {
         options << tr("Unknown List");
     }

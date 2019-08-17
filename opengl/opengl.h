@@ -265,11 +265,14 @@ private:
     int     u_fire_time;                                        // Time in seconds
     int     u_fire_position;
     int     u_fire_width, u_fire_height;
+    int     u_fire_shape;
     int     u_fire_start_color;
     int     u_fire_end_color;
     int     u_fire_intensity;
     int     u_fire_smoothness;
     int     u_fire_wavy;
+    int     u_fire_speed;
+    int     u_fire_bitrate;
 
     // ********** End Shaders **********
 
