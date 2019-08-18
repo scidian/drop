@@ -85,6 +85,7 @@ public:
     double                  getAssetHeight()              { return m_asset_height; }
     void                    setAssetWidth(double width)   { m_asset_width  = width; }
     void                    setAssetHeight(double height) { m_asset_height = height; }
+    void                    setBasePixmap(QPixmap pix)    { m_pixmap = pix; }
 
     QColor                  getColorAtPoint(QPointF at_local_point);
     QColor                  getColorAtPoint(QPointF at_view_point, QGraphicsView *mouse_over_view);

@@ -29,16 +29,18 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key) : DrEngine
 DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, Body_Type body_type, long texture_number,
                                double x, double y, double z, QPointF scale, double friction, double bounce,
                                bool should_collide, bool can_rotate, double angle, float opacity) : DrEngineThing (world, unique_key) {
-    // Basics
-    this->setTextureNumber(texture_number);                                     // Texture to render from
+    // Thing Basics
+    this->setOpacity(opacity);
     this->setScaleX(scale.x());                                                 // Save x scale for later
     this->setScaleY(scale.y());                                                 // Save y scale for later
     this->z_order = z;
+
+    // Object Basics
+    this->setTextureNumber(texture_number);                                     // Texture to render from
     this->updateBodyPosition( QPointF(x, y), true );
 
     this->setCustomFriction(friction);
     this->setCustomBounce(bounce);
-    this->setOpacity(opacity);
     this->setDoesCollide(should_collide);
     this->setCanRotate(can_rotate);
 

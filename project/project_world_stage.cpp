@@ -6,6 +6,7 @@
 //
 //
 #include "colors/colors.h"
+#include "helper.h"
 #include "project.h"
 #include "project_asset.h"
 #include "project_world.h"
@@ -61,6 +62,7 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
         case DrThingType::Text:
         case DrThingType::Water:
         case DrThingType::Fisheye:
+        case DrThingType::Fire:
             new_name = asset->getComponentProperty(Components::Entity_Name, Properties::Entity_Name)->getValue().toString();
             break;
 
@@ -71,6 +73,9 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
         case DrThingType::None:
             new_name = "None";
             break;
+
+        default:
+            Dr::ShowMessageBox("Error in DrStage::addThing, DrThingType not handled! Type: " + Dr::StringFromThingType(new_type));
     }
 
     long new_thing_key = m_parent_project->getNextKey();

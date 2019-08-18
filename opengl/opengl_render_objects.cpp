@@ -106,6 +106,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing) {
     m_default_shader.setUniformValue( u_default_time,           static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
     m_default_shader.setUniformValue( u_default_pre,            true );
 
+    m_default_shader.setUniformValue( u_default_bitrate,        object->bitrate );
     m_default_shader.setUniformValue( u_default_pixel_x,        object->pixel_x );
     m_default_shader.setUniformValue( u_default_pixel_y,        object->pixel_y );
     m_default_shader.setUniformValue( u_default_pixel_offset,   0.0f, 0.0f );
@@ -116,7 +117,6 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing) {
     m_default_shader.setUniformValue( u_default_contrast,       object->contrast );
     m_default_shader.setUniformValue( u_default_brightness,     object->brightness );
 
-    m_default_shader.setUniformValue( u_default_bitrate,        16.0f );
     m_default_shader.setUniformValue( u_default_cartoon,        false );
     m_default_shader.setUniformValue( u_default_wavy,           false );
 
@@ -279,8 +279,8 @@ void DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     x = static_cast<float>(center.x());
     y = static_cast<float>(center.y());
     z = static_cast<float>(fire->z_order);
-    half_width =  static_cast<float>(fire->fire_size.x()) * fire->getScaleX() / 2.0f;
-    half_height = static_cast<float>(fire->fire_size.y()) * fire->getScaleY() / 2.0f;
+    half_width =  static_cast<float>(fire->getSize().x()) * fire->getScaleX() / 2.0f;
+    half_height = static_cast<float>(fire->getSize().y()) * fire->getScaleY() / 2.0f;
 
     // ***** Create rotation matrix, apply rotation to object
     QMatrix4x4 matrix;
@@ -306,8 +306,8 @@ void DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     m_fire_shader.setUniformValue( u_fire_alpha,    fire->getOpacity() );
     m_fire_shader.setUniformValue( u_fire_time,     now );
     m_fire_shader.setUniformValue( u_fire_position, x, y );
-    m_fire_shader.setUniformValue( u_fire_width,    static_cast<float>(fire->fire_size.x()) * fire->getScaleX() );
-    m_fire_shader.setUniformValue( u_fire_height,   static_cast<float>(fire->fire_size.y()) * fire->getScaleY() );
+    m_fire_shader.setUniformValue( u_fire_width,    static_cast<float>(fire->getSize().x()) * fire->getScaleX() );
+    m_fire_shader.setUniformValue( u_fire_height,   static_cast<float>(fire->getSize().y()) * fire->getScaleY() );
 
     m_fire_shader.setUniformValue( u_fire_shape,    static_cast<int>(fire->fire_mask) );
     m_fire_shader.setUniformValue( u_fire_start_color,
@@ -318,10 +318,17 @@ void DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
                                         static_cast<float>(fire->end_color.redF()),
                                         static_cast<float>(fire->end_color.greenF()),
                                         static_cast<float>(fire->end_color.blueF()) );
+    m_fire_shader.setUniformValue( u_fire_smoke_color,
+                                        static_cast<float>(fire->smoke_color.redF()),
+                                        static_cast<float>(fire->smoke_color.greenF()),
+                                        static_cast<float>(fire->smoke_color.blueF()) );
     m_fire_shader.setUniformValue( u_fire_intensity,    fire->intensity );
     m_fire_shader.setUniformValue( u_fire_smoothness,   fire->smoothness );
     m_fire_shader.setUniformValue( u_fire_wavy,         fire->wavy );
     m_fire_shader.setUniformValue( u_fire_speed,       (fire->flame_speed / 2.f) );
+
+    m_fire_shader.setUniformValue( u_fire_pixel_x,      fire->pixel_x );
+    m_fire_shader.setUniformValue( u_fire_pixel_y,      fire->pixel_y );
     m_fire_shader.setUniformValue( u_fire_bitrate,      fire->bitrate );
 
     // ***** Draw triangles using shader program

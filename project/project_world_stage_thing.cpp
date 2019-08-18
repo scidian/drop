@@ -80,6 +80,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentSettingsFire();
             addComponentTransform(250, 400, x, -y, DrThingType::Fire);
             addComponentLayering(z, 100.0);
+            addComponentAppearance(true);
             break;
 
         case DrThingType::Fisheye:
@@ -256,20 +257,19 @@ void DrThing::addComponentSettingsFire() {
     addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape, Property_Type::List, 0,
                            "Shape", "Defines a shape mask to use for the Fire.");
     addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1, Property_Type::Color, QColor(255,   0, 0, 255).rgba(),
-                           "Start Color", "Start color tint for this Fire.");
+                           "Top Color", "Top color of this Fire.");
     addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2, Property_Type::Color, QColor(255, 255, 0, 255).rgba(),
-                           "End Color", "End color tint for this Fire.");
+                           "Bottom Color", "Bottom color of this Fire.");
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_Smoke, Property_Type::Color, QColor(0, 0, 0, 255).rgba(),
+                           "Smoke Color", "Background color of this Fire.");
     addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Intensity, Property_Type::Percent, 50.0,
-                           "Intensity", "How much color to apply to fire.");
+                           "Intensity", "How intense colors should appear in this Fire.");
     addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Smoothness, Property_Type::Percent, 25.0,
                            "Smoothness", "How smooth to make the flames.");
     addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Wavy, Property_Type::Percent, 50.0,
                            "Waviness", "How wavy to make the flames.");
     addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Speed, Property_Type::Percent, 80.0,
-                           "Speed", "How fast flames should move.");
-    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Bitrate, Property_Type::RangedInt, QList<QVariant>({ 256, 0, 256, 16 }),
-                           "Bit Depth", "Standard output has 256 color channel depth, you can use this to limit the number of available colors. "
-                                        "Combining this with Pixelation gives a great retro look.");
+                           "Speed", "How fast flames will move.");
 }
 
 //####################################################################################
@@ -386,24 +386,28 @@ void DrThing::addComponentLighting() {
                            "Cast Shadows", "This object will cast shadows when appearing higher on the z axis than a Light.");
 }
 
-void DrThing::addComponentAppearance() {
-    addComponent(Components::Thing_Appearance, "Appearance", "Filters for items as they appear in the Stage. ", Component_Colors::Brown_Sugar, true);
+void DrThing::addComponentAppearance(bool bitrate_and_pixel_only) {
+    addComponent(Components::Thing_Appearance, "Appearance", "Filters for items as they appear in the Stage.", Component_Colors::Brown_Sugar, true);
     getComponent(Components::Thing_Appearance)->setIcon(Component_Icons::Appearance);
 
+    addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate, Property_Type::Slider, QList<QVariant>({256, 0, 256, 8, ""}),
+                           "Bit Depth", "Standard output has color channel depth of 256, you can use this value to limit the number of available colors. "
+                                        "Combining this with Pixelation gives a great retro look.");
     addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation, Property_Type::PositiveSizeF, QPointF(1.0, 1.0),
                            "Pixelation", "Size of x and y pixels, larger numbers provide more pixelation.");
+    bool hidden = bitrate_and_pixel_only;
     addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Brightness, Property_Type::Slider, QList<QVariant>({0, -255, 255, 5, ""}),
-                           "Brightness", "How light / dark this item should appear. \nDefault: \t0 \nRange: \t-255 to 255");
+                           "Brightness", "How light / dark this item should appear. \nDefault: \t0 \nRange: \t-255 to 255", hidden);
     addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Contrast, Property_Type::Slider, QList<QVariant>({0, -255, 255, 5, ""}),
-                           "Contrast", "Amount of distinguishable difference of colors. \nDefault: \t0 \nRange: \t-255 to 255");
+                           "Contrast", "Amount of distinguishable difference of colors. \nDefault: \t0 \nRange: \t-255 to 255", hidden);
     addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Saturation, Property_Type::Slider, QList<QVariant>({0, -255, 255, 5, ""}),
-                           "Saturation", "How colorful the colors appear. \nDefault: \t0 \nRange: \t-255 to 255");
+                           "Saturation", "How colorful the colors appear. \nDefault: \t0 \nRange: \t-255 to 255", hidden);
     addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Hue, Property_Type::Slider, QList<QVariant>({0, 0, 360, 5, ""}),
-                           "Hue", "Rotate color values. \nDefault: \t0 \nRange: \t0 to 360");
+                           "Hue", "Rotate color values. \nDefault: \t0 \nRange: \t0 to 360", hidden);
     addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Grayscale, Property_Type::Bool, false,
-                           "Grayscale", "Should this item be shown grayscale?");
+                           "Grayscale", "Should this item be shown grayscale?", hidden);
     addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Negative, Property_Type::Bool, false,
-                           "Negative", "Should this item's colors be inverted?");
+                           "Negative", "Should this item's colors be inverted?", hidden);
 }
 
 

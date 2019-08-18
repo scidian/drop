@@ -22,7 +22,6 @@ class DrEngineFisheye : public DrEngineThing
 {
 public:
     // Lens Settings
-    QPointF         lens_size;                              // Size of lens
     QColor          start_color = QColor(128, 128, 255);    // Color tint of lens
     float           color_tint = 0.5f;                      // Color tint percentage     0 to  1
     float           lens_zoom = 2.2f;                       // Lens Zoom                 0 to 10

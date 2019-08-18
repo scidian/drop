@@ -42,20 +42,35 @@ private:
     long            m_key;                              // Unique key for this item
 
     // Basic Thing Settings
+    double          m_angle =   0.0;                    // Current angle, (for DrEngineObject this is updated every frame by update())
+    float           m_opacity = 1.0f;                   // Transparency of Thing (0.0 invisible, 1.0 opaque)
     QPointF         m_position;                         // Current center posiiton
-    double          m_angle = 0.0;                      // Current angle, (for DrEngineObject this is updated every frame by update())
-    float           m_alpha = 1.0f;                     // Transparency of object (0.0 invisible, 1.0 opaque)
-
+    float           m_scale_x = 1.0f;                   // Scale of Thing in world
+    float           m_scale_y = 1.0f;                   // Scale of Thing in world
+    QPointF         m_size;                             // Original size of Thing
 
     // Thing Properties - Camera
     long            m_active_camera = 0;                // Set to ID of last camera that followed this object, 0 == no camera
 
 
 public:
+    // ***** Image Post Processing Attributes
+    float       bitrate = 256.0;                        // Bitrate          1 to 256
+    float       pixel_x = 1.0;                          // Pixelation X     1.0+
+    float       pixel_y = 1.0;                          // Pixelation Y     1.0+
+    bool        negative = false;                       // Negative         True / False
+    bool        grayscale = false;                      // Grayscale        True / False
+    float       hue = 0.0f;                             // Hue              Editor:    0 to 360     Shader:  0.0 to 1.0
+    float       saturation = 0.0f;                      // Saturation       Editor: -255 to 255     Shader: -1.0 to 1.0
+    float       contrast = 0.0f;                        // Contrast         Editor: -255 to 255     Shader: -1.0 to 1.0
+    float       brightness = 0.0f;                      // Brightness       Editor: -255 to 255     Shader: -1.0 to 1.0
+
+
     // ********** Local Variables Updated by Engine
     //                NOT TO BE SET BY USER
     double      time_since_last_update = 0.0;           // Milliseconds since update() was called last
     DrTime      update_timer = Clock::now();            // Used to keep track of time passed since update() was called last
+
 
 
 public:
@@ -78,15 +93,23 @@ public:
     void                    setActiveCameraKey(const long& new_camera_key) { m_active_camera = new_camera_key; }
 
     // Getters / Setters
+    virtual double          getAngle() {    return m_angle; }                               // Returns Thing angle (in degrees)
+    virtual const float&    getOpacity() {  return m_opacity; }                             // Returns Opacity (alpha 0.0 to 1.0) of Thing
     virtual QPointF         getPosition() { return m_position; }                            // Returns Thing center position in world coordinates
-    virtual double          getAngle() { return m_angle; }                                  // Returns Thing angle (in degrees)
-    virtual const float&    getOpacity() { return m_alpha; }                                // Returns Opacity (alpha 0.0 to 1.0) of Thing
-    DrEngineWorld*          getWorld() { return m_world; }
+    virtual const float&    getScaleX() {   return m_scale_x; }
+    virtual const float&    getScaleY() {   return m_scale_y; }
+    virtual QPointF         getSize() {     return m_size; }                                // Returns original Thing size
+    DrEngineWorld*          getWorld() {    return m_world; }
 
-    virtual void            setPosition(QPointF position) { m_position = position; }
-    virtual void            setAngle(double new_angle) { m_angle = new_angle; }
-    virtual void            setOpacity(float new_alpha) { m_alpha = new_alpha; }
-    void                    setWorld(DrEngineWorld *world) { m_world = world; }
+    virtual void            setAngle(double new_angle) {        m_angle = new_angle; }
+    virtual void            setOpacity(float new_opacity) {     m_opacity = new_opacity; }
+    virtual void            setPosition(QPointF position) {     m_position = position; }
+    void                    setScaleX(float new_scale_x)  {     m_scale_x = new_scale_x; }
+    void                    setScaleX(double new_scale_x) {     m_scale_x = static_cast<float>(new_scale_x); }
+    void                    setScaleY(float new_scale_y)  {     m_scale_y = new_scale_y; }
+    void                    setScaleY(double new_scale_y) {     m_scale_y = static_cast<float>(new_scale_y); }
+    virtual void            setSize(QPointF size) {             m_size = size; }
+    void                    setWorld(DrEngineWorld *world) {    m_world = world; }
 
 };
 

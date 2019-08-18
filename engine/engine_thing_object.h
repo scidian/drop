@@ -61,10 +61,6 @@ private:
     bool            m_does_collide = true;          // Set to false to have this object not collide with anything
     long            m_texture_number;               // Reference to which texture to use from Engine->EngineTexture map
 
-    float           m_scale_x = 1.0f;               // Scale of object in world
-    float           m_scale_y = 1.0f;               // Scale of object in world
-
-
     // Object Properties - Bounce / Friction
     double          m_custom_friction = c_friction; // Defaults to c_friction (-1) if this item uses global m_friction, otherwise stores custom friction
     double          m_custom_bounce = c_bounce;     // Defaults to c_bounce (-1) if this item uses global m_bounce, otherwise stores custom bounce
@@ -155,15 +151,6 @@ public:
     // ***** Image Post Processing Attributes
     bool        cast_shadows = true;                        // Will cast shadows when in front of a Light
 
-    float       pixel_x = 1.0;                              // Pixelation X     1.0+
-    float       pixel_y = 1.0;                              // Pixelation Y     1.0+
-    bool        negative = false;                           // Negative         True / False
-    bool        grayscale = false;                          // Grayscale        True / False
-    float       hue = 0.0f;                                 // Hue              Editor:    0 to 360     Shader:  0.0 to 1.0
-    float       saturation = 0.0f;                          // Saturation       Editor: -255 to 255     Shader: -1.0 to 1.0
-    float       contrast = 0.0f;                            // Contrast         Editor: -255 to 255     Shader: -1.0 to 1.0
-    float       brightness = 0.0f;                          // Brightness       Editor: -255 to 255     Shader: -1.0 to 1.0
-
 
 
 public:
@@ -194,15 +181,9 @@ public:
     // Object Basic Settings
     const bool&     doesCollide() { return m_does_collide; }
     const long&     getTextureNumber() { return m_texture_number; }
-    const float&    getScaleX() { return m_scale_x; }
-    const float&    getScaleY() { return m_scale_y; }
 
     void            setDoesCollide(bool should_collide) { m_does_collide = should_collide; }
     void            setTextureNumber(long texture_number) { m_texture_number = texture_number; }
-    void            setScaleX(float new_scale_x)  { m_scale_x = new_scale_x; }
-    void            setScaleX(double new_scale_x) { m_scale_x = static_cast<float>(new_scale_x); }
-    void            setScaleY(float new_scale_y)  { m_scale_y = new_scale_y; }
-    void            setScaleY(double new_scale_y) { m_scale_y = static_cast<float>(new_scale_y); }
 
 
     // Object Properties - Bounce / Friction

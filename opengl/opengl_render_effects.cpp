@@ -34,10 +34,10 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
     float angle = static_cast<float>(water->getAngle());
 
     // Get water position in screen coordinates
-    QPointF position_top =    mapToScreen(water->getPosition().x(), water->getPosition().y() + (water->water_size.y() / 2.0), water->z_order);
-    QPointF position_bottom = mapToScreen(water->getPosition().x(), water->getPosition().y() - (water->water_size.y() / 2.0), water->z_order);
-    QPointF position_left =   mapToScreen(water->getPosition().x() - (water->water_size.x() / 2.0), water->getPosition().y(), water->z_order);
-    QPointF position_right =  mapToScreen(water->getPosition().x() + (water->water_size.x() / 2.0), water->getPosition().y(), water->z_order);
+    QPointF position_top =    mapToScreen(water->getPosition().x(), water->getPosition().y() + (water->getSize().y() / 2.0), water->z_order);
+    QPointF position_bottom = mapToScreen(water->getPosition().x(), water->getPosition().y() - (water->getSize().y() / 2.0), water->z_order);
+    QPointF position_left =   mapToScreen(water->getPosition().x() - (water->getSize().x() / 2.0), water->getPosition().y(), water->z_order);
+    QPointF position_right =  mapToScreen(water->getPosition().x() + (water->getSize().x() / 2.0), water->getPosition().y(), water->z_order);
     if (position_left.x()   > position_right.x())
         Dr::Swap(position_left,   position_right);
     if (position_bottom.y() < position_top.y()) {
@@ -194,10 +194,10 @@ void DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, 
     float angle = static_cast<float>(lens->getAngle());
 
     // Get position in screen coordinates
-    QPointF position_top =    mapToScreen(lens->getPosition().x(), lens->getPosition().y() + (lens->lens_size.y() / 2.0), lens->z_order);
-    QPointF position_bottom = mapToScreen(lens->getPosition().x(), lens->getPosition().y() - (lens->lens_size.y() / 2.0), lens->z_order);
-    QPointF position_left =   mapToScreen(lens->getPosition().x() - (lens->lens_size.x() / 2.0), lens->getPosition().y(), lens->z_order);
-    QPointF position_right =  mapToScreen(lens->getPosition().x() + (lens->lens_size.x() / 2.0), lens->getPosition().y(), lens->z_order);
+    QPointF position_top =    mapToScreen(lens->getPosition().x(), lens->getPosition().y() + (lens->getSize().y() / 2.0), lens->z_order);
+    QPointF position_bottom = mapToScreen(lens->getPosition().x(), lens->getPosition().y() - (lens->getSize().y() / 2.0), lens->z_order);
+    QPointF position_left =   mapToScreen(lens->getPosition().x() - (lens->getSize().x() / 2.0), lens->getPosition().y(), lens->z_order);
+    QPointF position_right =  mapToScreen(lens->getPosition().x() + (lens->getSize().x() / 2.0), lens->getPosition().y(), lens->z_order);
     if (position_left.x()   > position_right.x())
         Dr::Swap(position_left,   position_right);
     if (position_bottom.y() < position_top.y()) {

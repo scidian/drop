@@ -115,8 +115,9 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
     if (list_new_items.count() > 0 || list_old_items.count() == 0) {
         blockSignals(true);
         this->clearSelection();
-        for (auto item : list_new_items)
+        for (auto item : list_new_items) {
             item->setSelected(true);
+        }
         update_widgets_when_done = true;
         blockSignals(false);
         selectionChanged();

@@ -12,28 +12,26 @@
 //##    Constructor / Destructor
 //####################################################################################
 DrEngineFire::DrEngineFire(DrEngineWorld *world, long unique_key, double x, double y, double z, QPointF scale, double angle, QPointF size,
-                           Fire_Mask mask, QColor color_1, QColor color_2, float color_intensity, float smooth, float wave, float speed,
-                           float bit_depth, float opacity) :
+                           Fire_Mask mask, QColor color_1, QColor color_2, QColor smoke, float color_intensity, float smooth, float wave, float speed,
+                           float opacity) :
     DrEngineThing(world, unique_key) {
 
-    this->setPosition( QPointF(x, y) );
-    this->z_order = z;
+    this->setAngle(angle);
+    this->setOpacity(opacity);
+    this->setPosition(QPointF(x, y));
     this->setScaleX(scale.x());                                                 // Save x scale for later
     this->setScaleY(scale.y());                                                 // Save y scale for later
-    this->fire_size = size;
-    this->setAngle(angle);
+    this->setSize(size);
+    this->z_order = z;
 
     this->fire_mask = mask;
     this->start_color = color_1;
     this->end_color = color_2;
+    this->smoke_color = smoke;
     this->intensity = color_intensity;
     this->smoothness = smooth;
     this->wavy = wave;
     this->flame_speed = speed;
-
-    this->bitrate = bit_depth;
-
-    this->setOpacity( opacity );
 }
 
 DrEngineFire::~DrEngineFire() {

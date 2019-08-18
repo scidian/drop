@@ -297,9 +297,10 @@ QPixmap drawWater(QColor top_color, QColor bottom_color) {
 //####################################################################################
 //##        Draws a DrEngineFire as a Pixmap
 //####################################################################################
-QPixmap drawFire(QColor color_1, QColor color_2, Fire_Mask mask) {
+QPixmap drawFire(QColor color_1, QColor color_2, QColor smoke, Fire_Mask mask) {
     int width =  250;
     int height = 400;
+    int border = 6;
 
     QPixmap fire(width, height);
     fire.fill(Qt::transparent);
@@ -309,12 +310,12 @@ QPixmap drawFire(QColor color_1, QColor color_2, Fire_Mask mask) {
     gradient.setColorAt(1.00, color_2);
 
     QPainter painter(&fire);
-    painter.setPen(Qt::NoPen);
+    painter.setPen( QPen(smoke, border * 2) );
     painter.setBrush(gradient);
 
     switch (mask) {
         case Fire_Mask::Torch:
-            painter.drawEllipse(0, 0, width, height * 2);
+            painter.drawEllipse(border, border, width - (border * 2), (height * 2)  - (border * 2));
             break;
         case Fire_Mask::Candle: {
             ///QPainterPath flame;
@@ -323,14 +324,15 @@ QPixmap drawFire(QColor color_1, QColor color_2, Fire_Mask mask) {
             ///flame.moveTo(width / 2, height);
             ///flame.cubicTo( width + (width / 2.2), height * 0.75, width - (width / 4), height * 0.75, width / 2, 0);
 
-            QPointF tl =    QPointF(width / 10, height / 10);
-            QPointF tr =    QPointF(width - (width / 10), height / 10);
-            QPointF bl =    QPointF(width / 20, height - height / 40);
-            QPointF br =    QPointF(width - width / 20, height - height / 40);
-            QPointF top =   QPointF(width / 2, 0);
-            QPointF right = QPointF(width, height - (height / 3));
-            QPointF bot =   QPointF(width / 2, height);
-            QPointF left =  QPointF(0, height - (height / 3));
+            QPointF tl =    QPointF(width / 10,             0);
+            QPointF bl =    QPointF(width / 40,             height - height / 40);
+            QPointF br =    QPointF(width - (width / 40),   height - height / 40);
+            QPointF tr =    QPointF(width - (width / 10),   0);
+
+            QPointF top =   QPointF(width / 2,      border);
+            QPointF left =  QPointF(border,         height - (height / 3));
+            QPointF bot =   QPointF(width / 2,      height - border);
+            QPointF right = QPointF(width - border, height - (height / 3));
 
             QPainterPath flame(top);
             flame.quadTo(tl, left);

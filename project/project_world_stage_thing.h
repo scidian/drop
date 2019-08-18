@@ -65,7 +65,7 @@ public:
     void addComponentSettingsFisheye();
     void addComponentSettingsCamera(QString new_name);
 
-    void addComponentAppearance();
+    void addComponentAppearance(bool bitrate_and_pixel_only = false);
     void addComponentLayering(double z, double opacity = 100.0);
     void addComponentLighting();
     void addComponentMovement();

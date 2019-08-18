@@ -125,6 +125,7 @@ enum class Properties {
     World_Light_Blend,              //list, enum class Blend_Mode
 
     // Appearance
+    World_Filter_Bitrate,           //ranged int, 0 to 256
     World_Filter_Pixelation,        //positive size
     World_Filter_Brightness,        //filter
     World_Filter_Contrast,          //filter
@@ -134,7 +135,6 @@ enum class Properties {
     World_Filter_Negative,          //bool
 
     // Special Effects
-    World_Filter_Bitrate,           //ranged int, 0 to 16
     World_Filter_Cartoon,           //bool
     World_Filter_Wavy,              //bool
 
@@ -177,6 +177,7 @@ enum class Properties {
     Thing_Lighting_Cast_Shadows,    //bool
 
     // Appearance
+    Thing_Filter_Bitrate,           //ranged int, 0 to 256
     Thing_Filter_Pixelation,        //positive size
     Thing_Filter_Brightness,        //filter
     Thing_Filter_Contrast,          //filter
@@ -238,11 +239,11 @@ enum class Properties {
     Thing_Fire_Shape,               //list, enum class Fire_Mask
     Thing_Fire_Color_1,             //color
     Thing_Fire_Color_2,             //color
+    Thing_Fire_Color_Smoke,         //color
     Thing_Fire_Intensity,           //percent
     Thing_Fire_Smoothness,          //percent
     Thing_Fire_Wavy,                //percent
     Thing_Fire_Speed,               //ranged double, 1.0 to
-    Thing_Fire_Bitrate,             //ranged int, 0 to 16
 
     // Fisheye Settings
     Thing_Fisheye_Color,            //color

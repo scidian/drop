@@ -28,11 +28,14 @@ uniform lowp  float u_height;                       // Fire height
 uniform       int   u_shape;                        // Which shape mask we are using
 uniform lowp  vec3  u_start_color;                  // Start (Top)  Color, r/g/b        0.0 to 1.0 x 3
 uniform lowp  vec3  u_end_color;                    // End (Bottom) Color, r/g/b        0.0 to 1.0 x 3
+uniform lowp  vec3  u_smoke_color;                  // Smoke Color, r/g/b               0.0 to 1.0 x 3
 uniform lowp  float u_intensity;                    // Flame Intensity
 uniform lowp  float u_smoothness;                   // Flame Smoothness
 uniform lowp  float u_wavy;                         // Flame Waviness
 uniform lowp  float u_speed;                        // Flame Speed                      1.0 to 25.0
 
+uniform highp float u_pixel_x;// = 1.0;             // Pixel Width X    1.0 Normal, 4.0 is nice pixelation
+uniform highp float u_pixel_y;// = 1.0;             // Pixel Width Y    1.0 Normal, 4.0 is nice pixelation
 uniform lowp  float u_bitrate;// = 256;             // Bitrate          Editor:    1 to  256
 
 
@@ -130,10 +133,26 @@ void main( void ) {
     if (u_speed > 25.0) {
         speed = sqrt(26.0 - (u_speed - 25.0));
     } else if (u_speed <= 0.001) {
-        speed = 1000000.0;
+        speed = 200.0;
     } else {
         speed = 30.0 - u_speed;
     }
+
+
+    // ***** Grab coordinates into an editable vec2
+    vec2 coords = coordinates;
+
+    // ***** Pixelation
+    if (u_pixel_x > 1.0 || u_pixel_y > 1.0) {
+        highp float pixel_width =  (1.0 / (u_width));
+        highp float pixel_height = (1.0 / (u_height));
+        highp float real_pixel_x = ((coords.x / 1.0) * u_width);
+        highp float real_pixel_y = (((1.0 - coords.y) / 1.0) * u_height);
+        highp float pixel_x =       u_pixel_x * floor(real_pixel_x / u_pixel_x) * pixel_width;
+        highp float pixel_y = 1.0 - u_pixel_y * floor(real_pixel_y / u_pixel_y) * pixel_height;
+        coords = vec2(pixel_x, pixel_y);
+    }
+
 
     // ***** Perlin Noise Octaves
     float color_1 = 0.0, color_2 = 0.0;
@@ -142,23 +161,30 @@ void main( void ) {
     float z = u_time / speed;
     for (float i = 0.0; i < octaves; i++) {
         float amplitude = pow(power, i);
-        float x_noise = ((coordinates.x * 1.5) / frequency) + u_pos.x;
-        float y_noise = ((coordinates.y - z)   / frequency) + u_pos.y;
+        float x_noise = ((coords.x * 1.5) / frequency) + u_pos.x;
+        float y_noise = ((coords.y - z)   / frequency) + u_pos.y;
         float z_noise = z * 4.0;
         color_1 += snoise(vec3(x_noise, y_noise, z_noise)) / amplitude;
         frequency /= 2.0;
     }
     color_1 = (color_1 + 2.0) / (octaves - 1.0);
 
-    // Calculate color values
-    float p1 = pow(coordinates.y, 1.695);
-    float p2 = 8.0 * (1.0 - p1);
-    color_1 = pow(color_1, 8.0 - p2);                       // Power for steeper curves
-    float bottom_shrink = 5.8;                              // Higher numbers shrinks bottom color, 6 is default
-    if (u_shape == 1) bottom_shrink = 2.6;
-    color_2 = pow(color_1, bottom_shrink);
+    // ***** Calculate color values
+    float top_shrink;
+    float bottom_shrink;                                    // Higher numbers shrinks bottom color
+    if (u_shape == 0) {
+        top_shrink =    8.0;
+        bottom_shrink = 5.8;
+    } else if (u_shape == 1) {
+        top_shrink =    6.0;
+        bottom_shrink = 2.6;
+    }
+    float p1 = pow(coords.y, 1.695);
+    float p2 = top_shrink * (1.0 - p1);
+    color_1 =  pow(color_1, top_shrink - p2);
+    color_2 =  pow(color_1, bottom_shrink);
 
-    // ***** Playing with Increasing Color Intensity
+    // ***** Increasing Color Intensity
     //color_1 *= pow(intensity + 0.5, 2.0);
     //color_2 *= pow(intensity + 0.5, 2.0);
     color_1 *= intensity * 2.0;
@@ -175,10 +201,10 @@ void main( void ) {
     //  color = vec4( color_2,     0.0, color_1, 1.0);          // Purple   to  Blue
 
     // ***** Custom Colors
-    vec3 black =  vec3(0.0, 0.0, 0.0);
-    vec3 top =    mix(black, start_color, clamp(color_1 * 1.00, 0.0, 1.0));
-    vec3 bottom = mix(black, end_color,   clamp(color_2 * 1.50, 0.0, 1.0));
-    color =  vec4(mix(top,   bottom,      clamp(color_2 * 1.00, 0.0, 1.0)), 1.0);
+    vec4 smoke =  vec4(u_smoke_color, 0.0);
+    vec4 top =    mix(smoke, vec4(start_color, 1.0), clamp(color_1 * 1.00, 0.0, 1.0));
+    vec4 bottom = mix(smoke, vec4(end_color,   1.0), clamp(color_2 * 1.50, 0.0, 1.0));
+    color =       mix(top,   bottom,                 clamp(color_2 * 1.00, 0.0, 1.0));
 
 
     // ***** Bit Depth (0.0 to 256.0)
@@ -189,10 +215,11 @@ void main( void ) {
     // ***** Apply Flame Shape
     float noise_density = 1.0;      // higher is more dense
     float whisp = 2.5;              // higher is less whispier
-    float flame_alpha = texture2D(u_texture_flame, coordinates).b;
-    float noise_alpha = texture2D(u_texture_noise, (coordinates - vec2(u_pos.x - (color_1 / whisp), u_time / speed)) * noise_density).a;
+    float flame_alpha = texture2D(u_texture_flame, coords).b;
+    float noise_alpha = texture2D(u_texture_noise, (coords - vec2(u_pos.x - (color_1 / whisp), u_time / speed)) * noise_density).a;
           noise_alpha = flame_alpha - noise_alpha;
     color.a = mix(noise_alpha, flame_alpha, wavy);
+
 
     // ***** Final Output
     gl_FragColor = color * vec4(u_alpha, u_alpha, u_alpha, u_alpha);

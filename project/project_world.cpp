@@ -129,9 +129,6 @@ void DrWorld::initializeWorldSettings(QString new_name) {
 
     addComponent(Components::World_Special_Effects, "Special Effects", "Special effects that affect the entire world.", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::World_Special_Effects)->setIcon(Component_Icons::Effects);
-    addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Bitrate, Property_Type::RangedInt, QList<QVariant>({ 256, 0, 256, 16 }),
-                           "Bit Depth", "Standard output has 256 color channel depth, you can use this to limit the number of available colors. "
-                                        "Combining this with Pixelation gives a great retro look.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Cartoon, Property_Type::Bool, false,
                            "Cartoon", "Gives the world a comic book look.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wavy, Property_Type::Bool, false,
@@ -140,6 +137,9 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     addComponent(Components::World_Appearance, "Appearance", "These filters affect the entire world after it has been rendered.",
                                                Component_Colors::Brown_Sugar, true);
     getComponent(Components::World_Appearance)->setIcon(Component_Icons::Appearance);
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Bitrate, Property_Type::RangedInt, QList<QVariant>({ 256, 0, 256, 8 }),
+                           "Bit Depth", "Standard output has color channel depth of 256, you can use this value to limit the number of available colors. "
+                                        "Combining this with Pixelation gives a great retro look.");
     addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Pixelation, Property_Type::PositiveSizeF, QPointF(1.0, 1.0),
                            "Pixelation", "Size of x and y pixels, larger numbers provide more pixelation.");
     addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Brightness, Property_Type::Slider, QList<QVariant>({0, -255, 255, 5, ""}),

@@ -343,11 +343,14 @@ void DrOpenGL::loadShaders() {
     u_fire_shape =              m_fire_shader.uniformLocation(      "u_shape" );
     u_fire_start_color =        m_fire_shader.uniformLocation(      "u_start_color" );
     u_fire_end_color =          m_fire_shader.uniformLocation(      "u_end_color" );
+    u_fire_smoke_color =        m_fire_shader.uniformLocation(      "u_smoke_color" );
     u_fire_intensity =          m_fire_shader.uniformLocation(      "u_intensity" );
     u_fire_smoothness =         m_fire_shader.uniformLocation(      "u_smoothness" );
     u_fire_wavy =               m_fire_shader.uniformLocation(      "u_wavy" );
     u_fire_speed =              m_fire_shader.uniformLocation(      "u_speed" );
 
+    u_fire_pixel_x =            m_fire_shader.uniformLocation(      "u_pixel_x" );
+    u_fire_pixel_y =            m_fire_shader.uniformLocation(      "u_pixel_y" );
     u_fire_bitrate =            m_fire_shader.uniformLocation(      "u_bitrate" );
 
 }

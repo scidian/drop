@@ -115,6 +115,7 @@ void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height)
     m_default_shader.setUniformValue( u_default_height,         texture_height );
     m_default_shader.setUniformValue( u_default_time,           static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
     m_default_shader.setUniformValue( u_default_pre,            false );
+    m_default_shader.setUniformValue( u_default_bitrate,        256.0f );
     m_default_shader.setUniformValue( u_default_pixel_x,        1.0f );
     m_default_shader.setUniformValue( u_default_pixel_y,        1.0f );
     m_default_shader.setUniformValue( u_default_pixel_offset,   0.0f, 0.0f );
@@ -124,7 +125,6 @@ void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height)
     m_default_shader.setUniformValue( u_default_saturation,     0.0f );
     m_default_shader.setUniformValue( u_default_contrast,       0.0f );
     m_default_shader.setUniformValue( u_default_brightness,     0.0f );
-    m_default_shader.setUniformValue( u_default_bitrate,        16.0f );
     m_default_shader.setUniformValue( u_default_cartoon,        false );
     m_default_shader.setUniformValue( u_default_wavy,           false );
 }
@@ -159,7 +159,8 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     // Set variables for shader
     setShaderDefaultValues( fbo->width(), fbo->height() );
 
-    // Set Pixelation Variables for Shader
+    // Set Bit Rate / Pixelation Variables for Shader
+    m_default_shader.setUniformValue( u_default_bitrate,        m_engine->getCurrentWorld()->bitrate );
     m_default_shader.setUniformValue( u_default_pixel_x,        m_engine->getCurrentWorld()->pixel_x );
     m_default_shader.setUniformValue( u_default_pixel_y,        m_engine->getCurrentWorld()->pixel_y );
     m_default_shader.setUniformValue( u_default_pixel_offset,   m_engine->getCurrentWorld()->getCameraPos().x(), m_engine->getCurrentWorld()->getCameraPos().y() );
@@ -172,7 +173,6 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     m_default_shader.setUniformValue( u_default_contrast,   m_engine->getCurrentWorld()->contrast );
     m_default_shader.setUniformValue( u_default_brightness, m_engine->getCurrentWorld()->brightness );
 
-    m_default_shader.setUniformValue( u_default_bitrate,    m_engine->getCurrentWorld()->bitrate );
     m_default_shader.setUniformValue( u_default_cartoon,    m_engine->getCurrentWorld()->cartoon );
     m_default_shader.setUniformValue( u_default_wavy,       m_engine->getCurrentWorld()->wavy );
 

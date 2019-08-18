@@ -34,6 +34,16 @@ typedef std::map<long, DrEngineTexture*> EngineTextureMap;
 typedef QVector<DrEngineLight*>          EngineLights;
 typedef QVector<DrEngineThing*>          EngineThings;
 
+// Local Structs
+struct ThingInfo {
+    double      angle;
+    float       opacity;
+    QPointF     position;
+    QPointF     scale;
+    QPointF     size;
+    double      z_order;
+};
+
 // Global Forward Declaratopns for static Chipmunk callbacks
 extern cpBool   BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                       // defined in engine_world_collision.cpp
 extern cpBool   PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                    // defined in engine_world_collision.cpp
@@ -125,6 +135,7 @@ public:
     DrEngineLight  *light2;
 
     // Image Post Processing Variables
+    float           bitrate = 256.0;                            // Bitrate          1 to 256
     float           pixel_x = 1.0;                              // Pixelation X     1.0+
     float           pixel_y = 1.0;                              // Pixelation Y     1.0+
     bool            negative = false;                           // Negative         True / False
@@ -134,7 +145,6 @@ public:
     float           contrast = 0.0f;                            // Contrast         Editor: -255 to 255     Shader: -1.0 to 1.0
     float           brightness = 0.0f;                          // Brightness       Editor: -255 to 255     Shader: -1.0 to 1.0
 
-    float           bitrate = 16.0;                             // Bitrate          1 to 16
     bool            cartoon = false;                            // Cartoon          True / False
     bool            wavy = false;                               // Wavy (Ripple)    True / False
 
@@ -156,6 +166,7 @@ public:
     void            addThings(QList<DrEngineThing*> things);
     void            buildWorld(Demo_Space new_space_type, long current_editor_world);
     void            clearWorld();
+    ThingInfo       getThingBasicInfo(DrThing *thing);
     void            loadFireToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadFisheyeToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadLightToWorld(DrThing *thing, double offset_x, double offset_y);

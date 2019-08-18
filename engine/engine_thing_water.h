@@ -22,7 +22,6 @@ class DrEngineWater : public DrEngineThing
 {
 public:
     // Water Settings
-    QPointF         water_size;                             // Size of water
     Water_Texture   water_texture = Water_Texture::Ripples; // Texture to use
     QColor          start_color = QColor(128, 128, 255);    // Color of top of water
     QColor          end_color = QColor(128, 128, 255);      // Color of bottom of water

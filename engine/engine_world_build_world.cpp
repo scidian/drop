@@ -94,6 +94,7 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
         m_glow_light_z_order =  world->getComponentPropertyValue(Components::World_Lighting, Properties::World_Light_Layer).toDouble();
         m_glow_blend_mode =     world->getComponentPropertyValue(Components::World_Lighting, Properties::World_Light_Blend).toInt();
 
+        bitrate =     world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Bitrate).toList().first().toInt();
         QPointF pixelation = world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Pixelation).toPointF();
         pixel_x =     static_cast<float>(pixelation.x());
         pixel_y =     static_cast<float>(pixelation.y());
@@ -104,7 +105,6 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
         grayscale =   world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Grayscale).toBool();
         negative =    world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Negative).toBool();
 
-        bitrate =     world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Bitrate).toList().first().toInt();
         cartoon =     world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cartoon).toBool();
         wavy =        world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Wavy).toBool();
 

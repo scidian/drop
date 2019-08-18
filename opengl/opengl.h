@@ -268,10 +268,14 @@ private:
     int     u_fire_shape;
     int     u_fire_start_color;
     int     u_fire_end_color;
+    int     u_fire_smoke_color;
     int     u_fire_intensity;
     int     u_fire_smoothness;
     int     u_fire_wavy;
     int     u_fire_speed;
+
+    int     u_fire_pixel_x;
+    int     u_fire_pixel_y;
     int     u_fire_bitrate;
 
     // ********** End Shaders **********

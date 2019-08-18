@@ -187,13 +187,17 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
 
             case Properties::Thing_Fire_Color_1:
             case Properties::Thing_Fire_Color_2:
+            case Properties::Thing_Fire_Color_Smoke:
             case Properties::Thing_Fire_Shape: {
                 QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1).toUInt());
                 QColor ce = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2).toUInt());
+                QColor sm = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_Smoke).toUInt());
                 int  mask = item->getThing()->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape)->getValue().toInt();
-                item->setPixmap( DrImaging::drawFire(cs, ce, static_cast<Fire_Mask>(mask)) );
+                item->setPixmap( DrImaging::drawFire(cs, ce, sm, static_cast<Fire_Mask>(mask)) );
+                item->setBasePixmap(  item->pixmap() );
                 item->setAssetWidth(  item->pixmap().width() );
                 item->setAssetHeight( item->pixmap().height() );
+                item->applyFilters();
                 break;
             }
 

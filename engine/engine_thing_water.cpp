@@ -21,10 +21,11 @@ DrEngineWater::DrEngineWater(DrEngineWorld *world, long unique_key, double x, do
                              float opacity) :
     DrEngineThing(world, unique_key) {
 
-    this->setPosition( QPointF(x, y) );
-    this->z_order = z;
-    this->water_size = size;
     this->setAngle(angle);
+    this->setOpacity( opacity );
+    this->setPosition( QPointF(x, y) );
+    this->setSize(size);
+    this->z_order = z;
 
     this->water_texture = texture;
     this->start_color = start_color;
@@ -50,8 +51,6 @@ DrEngineWater::DrEngineWater(DrEngineWorld *world, long unique_key, double x, do
     this->refract_texture = r_texture;
     this->refract_foam = r_foam;
     this->movement_speed = texture_movement;
-
-    this->setOpacity( opacity );
 }
 
 DrEngineWater::~DrEngineWater() {
