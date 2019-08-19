@@ -262,7 +262,7 @@ void FormEngine::updateEngine() {
     }
 
     // Additional render on MacOS (smooths more with vsync being disabled)
-    if (m_engine->getCurrentWorld()->getThings().count() < 250 && m_engine->getCurrentWorld()->light_count <= 0) {
+    if (m_engine->getCurrentWorld()->getThings().count() < 250 && m_engine->getCurrentWorld()->effect_count <= 0) {
         double render_milliseconds = getTimerMilliseconds(Engine_Timer::Render);
         if (render_milliseconds > (1000.0 / m_ideal_frames_per_second)) {
             resetTimer(Engine_Timer::Render);

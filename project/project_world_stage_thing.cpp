@@ -5,6 +5,7 @@
 //      DrThing Class Definitions
 //
 //
+#include "helper.h"
 #include "opengl/opengl.h"
 #include "project.h"
 #include "project_asset.h"
@@ -37,9 +38,6 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
 
     // Call to load in all the components / properties for this Stage thing
     switch (new_thing_type) {
-        case DrThingType::None:
-            break;
-
         case DrThingType::Character:
             addComponentSettingsCharacter(new_thing_name);
             addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, DrThingType::Character);
@@ -64,12 +62,28 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentLayering(z);
             break;
 
+        // ***** DrEffectType DrThing's
+        case DrThingType::Fire:
+            addComponentSettingsFire();
+            addComponentTransform(250, 400, x, -y, DrThingType::Fire);
+            addComponentLayering(z, 100.0);
+            addComponentAppearance(true);
+            break;
+        case DrThingType::Fisheye:
+            addComponentSettingsFisheye();
+            addComponentTransform(400, 400, x, -y, DrThingType::Fisheye);
+            addComponentLayering(z, 100.0);
+            break;
         case DrThingType::Light:
             addComponentSettingsLight(Qt::white);
             addComponentTransform(400, 400, x, -y, DrThingType::Light);
             addComponentLayering(z);
             break;
-
+        case DrThingType::Mirror:
+            addComponentSettingsMirror();
+            addComponentTransform(400, 400, x, -y, DrThingType::Mirror);
+            addComponentLayering(z);
+            break;
         case DrThingType::Water:
             addComponentSettingsWater();
             addComponentTransform(400, 400, x, -y, DrThingType::Water);
@@ -77,250 +91,13 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentAppearance(true);
             break;
 
-        case DrThingType::Fire:
-            addComponentSettingsFire();
-            addComponentTransform(250, 400, x, -y, DrThingType::Fire);
-            addComponentLayering(z, 100.0);
-            addComponentAppearance(true);
-            break;
-
-        case DrThingType::Fisheye:
-            addComponentSettingsFisheye();
-            addComponentTransform(400, 400, x, -y, DrThingType::Fisheye);
-            addComponentLayering(z, 100.0);
-            break;
-
+        default:
+            Dr::ShowMessageBox("Error in DrThing Constructor, DrThingType not handled! Type: " + Dr::StringFromThingType(new_thing_type));
     }
 
 }
 
 DrThing::~DrThing() { }
-
-
-
-//####################################################################################
-//##    Character Components
-//####################################################################################
-void DrThing::addComponentSettingsCharacter(QString new_name) {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
-                           "Character Name", "Name of the current Character.", false, false);
-
-    addComponent(Components::Thing_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::Mustard_Yellow, true);
-    getComponent(Components::Thing_Settings_Character)->setIcon(Component_Icons::Character);
-    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Jump_X, Property_Type::Double, 0,
-                           "Jump Force X", "Force of jump button in x direction");
-    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Jump_Y, Property_Type::Double, 0,
-                           "Jump Force Y", "Force of jump button in y direction");
-}
-
-//####################################################################################
-//##    Object Components
-//####################################################################################
-void DrThing::addComponentSettingsObject(QString new_name, bool should_collide) {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
-                           "Object Name", "Name of the current Object.", false, false);
-
-    addComponent(Components::Thing_Settings_Object, "Object Settings", "Settings for current Object.", Component_Colors::White_Snow, true);
-    getComponent(Components::Thing_Settings_Object)->setIcon(Component_Icons::Object);
-    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Object_Physics_Type, Property_Type::List, 0,
-                           "Object Type", "<b>Static</b> - Can not move. <br> "
-                                          "<b>Kinematic</b> - Moves at fixed speed. <br> "
-                                          "<b>Dynamic</b> - Physics object.");
-    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Object_Collide, Property_Type::Bool, should_collide,
-                           "Collide?", "Should this Object collide with Dynamic Objects? Objects not marked to collide "
-                                       "still provide damage and sound reponses when coming into contact with other Objects.");
-    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Object_Damage, Property_Type::List, 0,
-                           "Damage", "Choose the type of Object this will damage when coming into contact. By choosing \"Damage Player\" this "
-                                     "Object will be treated as an enemy and vice versa.");
-}
-
-//####################################################################################
-//##    Light Components
-//####################################################################################
-void DrThing::addComponentSettingsLight(QColor color) {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Light",
-                           "Effect Name", "Name of the current Effect.", false, false);
-
-    addComponent(Components::Thing_Settings_Light, "Light Settings", "Settings for current Light.", Component_Colors::Mellow_Yellow, true);
-    getComponent(Components::Thing_Settings_Light)->setIcon(Component_Icons::Light);
-    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Type, Property_Type::List, 0,
-                           "Light Type", "<b>Opaque</b> - Solid texture, does not provide lighting. <br> "
-                                         "<b>Glow</b> - Provides diffuse lighting, no z ordering available. ");
-    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Color, Property_Type::Color, color.rgba(),
-                           "Light Color", "The Color for this Light.");
-    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start, Property_Type::Slider, QList<QVariant>({0, 0, 360, 5, "°"}),
-                           "Cone Start", "Starting angle of light, Cone Angles travel in counter-clockwise direction.");
-    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End, Property_Type::Slider, QList<QVariant>({360, 0, 360, 5, "°"}),
-                           "Cone End", "Ending angle of light, Cone Angles travel in counter-clockwise direction.");
-    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity, Property_Type::Percent, 50.0,
-                           "Intensity", "How intense the light is starting from the middle out.");
-    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Blur, Property_Type::Percent, 50.0,
-                           "Blur", "How much to blur the light's edges and shadows.");
-    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Draw_Shadows, Property_Type::Bool, 50.0,
-                           "Cast Shadows", "Should this light cast shadows? <b>NOTE:</b> The use of many shadow casting lights on the screen at one "
-                                           "time can slow down older devices.");
-    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Shadows, Property_Type::Percent, 50.0,
-                           "Shadow Amount", "How much light should shine through the shadows. 0 is No Light, 100 is Most Light.");
-    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse, Property_Type::Double, 0.0,
-                           "Pulse Amount", "This value will cause light to pulse back and forth +/- the Pulse Amount from the lights Intensity.");
-    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse_Speed, Property_Type::Double, 1.0,
-                           "Pulse Speed", "How fast the light Pulses over time. This value is the total change desired over the course of one second.");
-}
-
-//####################################################################################
-//##    Water Components
-//####################################################################################
-void DrThing::addComponentSettingsWater() {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Water",
-                           "Effect Name", "Name of the current Effect.", false, false);
-
-    addComponent(Components::Thing_Settings_Water, "Water Settings", "Settings for current Water.", Component_Colors::Blue_Drop_1, true);
-    getComponent(Components::Thing_Settings_Water)->setIcon(Component_Icons::Water);
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Texture, Property_Type::List, 1,
-                           "Texture", "Defines a texture to use for the water surface, can give the Water several different looks.");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color, Property_Type::Color, QColor(41, 182, 246, 255).rgba(),
-                           "Start Color", "Color tint for the top of this Water.");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color, Property_Type::Color, QColor(0, 58, 103, 255).rgba(),
-                           "End Color", "Color tint to fade to toward the bottom of this Water.");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Color_Tint, Property_Type::Percent, 75.0,
-                           "Tint Percent", "How much color to tint the Water, 0 (none) - 100 (all the way)");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Reflection, Property_Type::Percent, 20.0,
-                           "Reflection", "Reflection opacity.");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Movement_Speed, Property_Type::Double, 0.0,
-                           "Movement", "This value will cause the Water Texture to move left / right.");
-
-    addComponent(Components::Thing_Settings_Water_Ripple, "Ripple Settings", "Settings for this Water's Ripple effect.", Component_Colors::Blue_Drop_2, true);
-    getComponent(Components::Thing_Settings_Water_Ripple)->setIcon(Component_Icons::Water_Ripple);
-    addPropertyToComponent(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Frequency, Property_Type::Double, 100.0,
-                           "Frequency", "Length of Ripples appearing in Water, lower numbers produce longer period Ripples. "
-                                        "Generally, ranging around 0 to 100 will produce nice results.");
-    addPropertyToComponent(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Speed, Property_Type::Double, 50.0,
-                           "Speed", "Rate Ripples move through Water. Generally, ranging around 0 to 100 will produce nice results.");
-    addPropertyToComponent(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Amplitude, Property_Type::Double, 20.0,
-                           "Amplitude", "Size of Ripples appearing in Water. Generally, ranging around 0 to 100 will produce nice results.");
-    addPropertyToComponent(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Stretch, Property_Type::Double, 10.0,
-                           "Stretch", "Rate the Ripples' Amplitude increases as Ripples move away from start of water. A setting of 0 will keep Amplitude "
-                                      "the same, a negative value will decrease Ripple Amplitude.");
-
-    addComponent(Components::Thing_Settings_Water_Wave, "Wave Settings", "Settings that this Water's Wave effect.", Component_Colors::Blue_Drop_3, true);
-    getComponent(Components::Thing_Settings_Water_Wave)->setIcon(Component_Icons::Water_Wave);
-    addPropertyToComponent(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Frequency, Property_Type::Double, 10.0,
-                           "Frequency", "Length of Waves appearing in Water, lower numbers produce longer period waves. "
-                                        "Generally, ranging around 0 to 100 will produce nice results.");
-    addPropertyToComponent(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Speed, Property_Type::Double, 20.0,
-                           "Speed", "Rate Waves move up and down. Generally, ranging around 0 to 100 will produce nice results.");
-    addPropertyToComponent(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Amplitude, Property_Type::Double, 10.0,
-                           "Amplitude", "Size of Waves as they move up and down in Water. Generally, ranging around 0 to 100 will produce nice results.");
-
-    addComponent(Components::Thing_Settings_Water_Refract, "Refraction Settings", "Settings that effect refraction (randomness) of different parts of "
-                                                                                  "this Water.", Component_Colors::Blue_Drop_4, true);
-    getComponent(Components::Thing_Settings_Water_Refract)->setIcon(Component_Icons::Water_Refract);
-    addPropertyToComponent(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Reflection, Property_Type::Percent, 20.0,
-                           "Reflection", "How much refraction to apply to the Reflection shown on the Water surface.");
-    addPropertyToComponent(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Underwater, Property_Type::Percent, 20.0,
-                           "Underwater", "How much refraction to apply to the objects under the Water.");
-    addPropertyToComponent(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Texture, Property_Type::Percent, 20.0,
-                           "Texture", "How much refraction to apply to the Water Texture.");
-    addPropertyToComponent(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Foam, Property_Type::Percent, 20.0,
-                           "Surface", "How much refraction to apply to the top of the Water.");
-
-    addComponent(Components::Thing_Settings_Water_Foam, "Foam Settings", "Settings for top of the current Water.", Component_Colors::Blue_Drop_5, true);
-    getComponent(Components::Thing_Settings_Water_Foam)->setIcon(Component_Icons::Water_Foam);
-    addPropertyToComponent(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Color, Property_Type::Color, QColor(255, 255, 255, 255).rgba(),
-                           "Color", "Color tint for the foam on the top of the Water.");
-    addPropertyToComponent(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Tint, Property_Type::Percent, 75.0,
-                           "Tint", "How much color to tint the foam on top of the Water, 0 (none) - 100 (all the way)");
-    addPropertyToComponent(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Height, Property_Type::Double, 5.0,
-                           "Height", "Thickness of the foam on top of the Water.");
-
-}
-
-//####################################################################################
-//##    Fire Components
-//####################################################################################
-void DrThing::addComponentSettingsFire() {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Fire",
-                           "Effect Name", "Name of the current Effect.", false, false);
-
-    addComponent(Components::Thing_Settings_Fire, "Fire Settings", "Settings for current Fire.", Component_Colors::Red_Faded, true);
-    getComponent(Components::Thing_Settings_Fire)->setIcon(Component_Icons::Fire);
-
-    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape, Property_Type::List, 0,
-                           "Shape", "Defines a shape mask to use for the Fire.");
-    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1, Property_Type::Color, QColor(255,   0, 0, 255).rgba(),
-                           "Top Color", "Top color of this Fire.");
-    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2, Property_Type::Color, QColor(255, 255, 0, 255).rgba(),
-                           "Bottom Color", "Bottom color of this Fire.");
-    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_Smoke, Property_Type::Color, QColor(0, 0, 0, 255).rgba(),
-                           "Smoke Color", "Background color of this Fire.");
-    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Intensity, Property_Type::Percent, 50.0,
-                           "Intensity", "How intense colors should appear in this Fire.");
-    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Smoothness, Property_Type::Percent, 25.0,
-                           "Smoothness", "How smooth to make the flames.");
-    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Wavy, Property_Type::Percent, 50.0,
-                           "Waviness", "How wavy to make the flames.");
-    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Speed, Property_Type::Percent, 80.0,
-                           "Speed", "How fast flames will move.");
-}
-
-//####################################################################################
-//##    Fisheye Components
-//####################################################################################
-void DrThing::addComponentSettingsFisheye() {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Fisheye",
-                           "Effect Name", "Name of the current Effect.", false, false);
-
-    addComponent(Components::Thing_Settings_Fisheye, "Fisheye Lens Settings", "Settings for current Fisheye Lens.", Component_Colors::Orange_Medium, true);
-    getComponent(Components::Thing_Settings_Fisheye)->setIcon(Component_Icons::Fisheye);
-    addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color, Property_Type::Color, QColor(128, 128, 128, 255).rgba(),
-                           "Color", "Color tint for this Lens.");
-    addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color_Tint, Property_Type::Percent, 25.0,
-                           "Tint Percent", "How much color to tint the Lens, 0 (none) - 100 (all the way)");
-    addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Lens_Zoom, Property_Type::RangedDouble, QList<QVariant>({ 2.25, 0.0, 10.0, 0.25 }),
-                           "Lens Zoom", "How much to zoom the Fisheye Lens. Default is 2.25. Ranged from 0 to 10.");
-}
-
-//####################################################################################
-//##    Text Components
-//####################################################################################
-void DrThing::addComponentSettingsText(QString new_name) {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
-                           "Text Name", "Name of the current Text Box.", false, false);
-
-    addComponent(Components::Thing_Settings_Text, "Text Settings", "Settings for current Text Box.", Component_Colors::Orange_Medium, true);
-    getComponent(Components::Thing_Settings_Text)->setIcon(Component_Icons::Font);
-    addPropertyToComponent(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text, Property_Type::String, "Text",
-                           "User Text", "Custom text value to be shown in this Text Box.");
-}
-
-//####################################################################################
-//##    Camera Components
-//####################################################################################
-void DrThing::addComponentSettingsCamera(QString new_name) {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
-                           "Camera Name", "Name of the current Camera.", false, false);
-
-    addComponent(Components::Thing_Settings_Camera, "Camera Settings", "Settings for this Camera.", Component_Colors::Beige_Apricot, true);
-    getComponent(Components::Thing_Settings_Camera)->setIcon(Component_Icons::Camera);
-    addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom, Property_Type::Double, 10,
-                           "Zoom Level", "Sets distance away from stage (0 to 1000)");
-}
 
 
 
@@ -412,10 +189,263 @@ void DrThing::addComponentAppearance(bool bitrate_and_pixel_only) {
 }
 
 
+//####################################################################################
+//##    Camera Components
+//####################################################################################
+void DrThing::addComponentSettingsCamera(QString new_name) {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
+                           "Camera Name", "Name of the current Camera.", false, false);
+
+    addComponent(Components::Thing_Settings_Camera, "Camera Settings", "Settings for this Camera.", Component_Colors::Beige_Apricot, true);
+    getComponent(Components::Thing_Settings_Camera)->setIcon(Component_Icons::Camera);
+    addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom, Property_Type::Double, 10,
+                           "Zoom Level", "Sets distance away from stage (0 to 1000)");
+}
+
+//####################################################################################
+//##    Character Components
+//####################################################################################
+void DrThing::addComponentSettingsCharacter(QString new_name) {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
+                           "Character Name", "Name of the current Character.", false, false);
+
+    addComponent(Components::Thing_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::Mustard_Yellow, true);
+    getComponent(Components::Thing_Settings_Character)->setIcon(Component_Icons::Character);
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Jump_X, Property_Type::Double, 0,
+                           "Jump Force X", "Force of jump button in x direction");
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Jump_Y, Property_Type::Double, 0,
+                           "Jump Force Y", "Force of jump button in y direction");
+}
+
+//####################################################################################
+//##    Object Components
+//####################################################################################
+void DrThing::addComponentSettingsObject(QString new_name, bool should_collide) {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
+                           "Object Name", "Name of the current Object.", false, false);
+
+    addComponent(Components::Thing_Settings_Object, "Object Settings", "Settings for current Object.", Component_Colors::White_Snow, true);
+    getComponent(Components::Thing_Settings_Object)->setIcon(Component_Icons::Object);
+    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Object_Physics_Type, Property_Type::List, 0,
+                           "Object Type", "<b>Static</b> - Can not move. <br> "
+                                          "<b>Kinematic</b> - Moves at fixed speed. <br> "
+                                          "<b>Dynamic</b> - Physics object.");
+    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Object_Collide, Property_Type::Bool, should_collide,
+                           "Collide?", "Should this Object collide with Dynamic Objects? Objects not marked to collide "
+                                       "still provide damage and sound reponses when coming into contact with other Objects.");
+    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Object_Damage, Property_Type::List, 0,
+                           "Damage", "Choose the type of Object this will damage when coming into contact. By choosing \"Damage Player\" this "
+                                     "Object will be treated as an enemy and vice versa.");
+}
+
+//####################################################################################
+//##    Text Components
+//####################################################################################
+void DrThing::addComponentSettingsText(QString new_name) {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
+                           "Text Name", "Name of the current Text Box.", false, false);
+
+    addComponent(Components::Thing_Settings_Text, "Text Settings", "Settings for current Text Box.", Component_Colors::Orange_Medium, true);
+    getComponent(Components::Thing_Settings_Text)->setIcon(Component_Icons::Font);
+    addPropertyToComponent(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text, Property_Type::String, "Text",
+                           "User Text", "Custom text value to be shown in this Text Box.");
+}
 
 
+//####################################################################################
+//####################################################################################
+//##
+//##    Effect Specific
+//##
+//####################################################################################
+//####################################################################################
 
+//####################################################################################
+//##    Fire Components
+//####################################################################################
+void DrThing::addComponentSettingsFire() {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Fire",
+                           "Effect Name", "Name of the current Effect.", false, false);
 
+    addComponent(Components::Thing_Settings_Fire, "Fire Settings", "Settings for current Fire.", Component_Colors::Red_Faded, true);
+    getComponent(Components::Thing_Settings_Fire)->setIcon(Component_Icons::Fire);
+
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape, Property_Type::List, 0,
+                           "Shape", "Defines a shape mask to use for the Fire.");
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1, Property_Type::Color, QColor(255,   0, 0, 255).rgba(),
+                           "Top Color", "Top color of this Fire.");
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2, Property_Type::Color, QColor(255, 255, 0, 255).rgba(),
+                           "Bottom Color", "Bottom color of this Fire.");
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_Smoke, Property_Type::Color, QColor(0, 0, 0, 255).rgba(),
+                           "Smoke Color", "Background color of this Fire.");
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Intensity, Property_Type::Percent, 50.0,
+                           "Intensity", "How intense colors should appear in this Fire.");
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Smoothness, Property_Type::Percent, 25.0,
+                           "Smoothness", "How smooth to make the flames.");
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Wavy, Property_Type::Percent, 50.0,
+                           "Waviness", "How wavy to make the flames.");
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Speed, Property_Type::Percent, 80.0,
+                           "Speed", "How fast flames will move.");
+}
+
+//####################################################################################
+//##    Fisheye Components
+//####################################################################################
+void DrThing::addComponentSettingsFisheye() {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Fisheye",
+                           "Effect Name", "Name of the current Effect.", false, false);
+
+    addComponent(Components::Thing_Settings_Fisheye, "Fisheye Lens Settings", "Settings for current Fisheye Lens.", Component_Colors::Orange_Medium, true);
+    getComponent(Components::Thing_Settings_Fisheye)->setIcon(Component_Icons::Fisheye);
+    addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color, Property_Type::Color, QColor(128, 128, 128, 255).rgba(),
+                           "Color", "Color tint for this Lens.");
+    addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color_Tint, Property_Type::Percent, 25.0,
+                           "Tint Percent", "How much color to tint the Lens, 0 (none) - 100 (all the way)");
+    addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Lens_Zoom, Property_Type::RangedDouble, QList<QVariant>({ 2.25, 0.0, 10.0, 0.25 }),
+                           "Lens Zoom", "How much to zoom the Fisheye Lens. Default is 2.25. Ranged from 0 to 10.");
+}
+
+//####################################################################################
+//##    Light Components
+//####################################################################################
+void DrThing::addComponentSettingsLight(QColor color) {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Light",
+                           "Effect Name", "Name of the current Effect.", false, false);
+
+    addComponent(Components::Thing_Settings_Light, "Light Settings", "Settings for current Light.", Component_Colors::Mellow_Yellow, true);
+    getComponent(Components::Thing_Settings_Light)->setIcon(Component_Icons::Light);
+    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Type, Property_Type::List, 0,
+                           "Light Type", "<b>Opaque</b> - Solid texture, does not provide lighting. <br> "
+                                         "<b>Glow</b> - Provides diffuse lighting, no z ordering available. ");
+    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Color, Property_Type::Color, color.rgba(),
+                           "Light Color", "The Color for this Light.");
+    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start, Property_Type::Slider, QList<QVariant>({0, 0, 360, 5, "°"}),
+                           "Cone Start", "Starting angle of light, Cone Angles travel in counter-clockwise direction.");
+    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End, Property_Type::Slider, QList<QVariant>({360, 0, 360, 5, "°"}),
+                           "Cone End", "Ending angle of light, Cone Angles travel in counter-clockwise direction.");
+    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity, Property_Type::Percent, 50.0,
+                           "Intensity", "How intense the light is starting from the middle out.");
+    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Blur, Property_Type::Percent, 50.0,
+                           "Blur", "How much to blur the light's edges and shadows.");
+    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Draw_Shadows, Property_Type::Bool, 50.0,
+                           "Cast Shadows", "Should this light cast shadows? <b>NOTE:</b> The use of many shadow casting lights on the screen at one "
+                                           "time can slow down older devices.");
+    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Shadows, Property_Type::Percent, 50.0,
+                           "Shadow Amount", "How much light should shine through the shadows. 0 is No Light, 100 is Most Light.");
+    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse, Property_Type::Double, 0.0,
+                           "Pulse Amount", "This value will cause light to pulse back and forth +/- the Pulse Amount from the lights Intensity.");
+    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse_Speed, Property_Type::Double, 1.0,
+                           "Pulse Speed", "How fast the light Pulses over time. This value is the total change desired over the course of one second.");
+}
+
+//####################################################################################
+//##    Mirror Components
+//####################################################################################
+void DrThing::addComponentSettingsMirror() {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Mirror",
+                           "Effect Name", "Name of the current Effect.", false, false);
+
+    addComponent(Components::Thing_Settings_Mirror, "Mirror Settings", "Settings for current Mirror.", Component_Colors::Silver_Snow, true);
+    getComponent(Components::Thing_Settings_Mirror)->setIcon(Component_Icons::Mirror);
+    addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color, Property_Type::Color, QColor(238, 238, 238, 255).rgba(),
+                           "Start Color", "Color tint for the top of this Mirror.");
+    addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color, Property_Type::Color, QColor(97, 97, 97, 255).rgba(),
+                           "End Color", "Color tint to fade to toward the bottom of this Mirror.");
+    addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Color_Tint, Property_Type::Percent, 25.0,
+                           "Tint Percent", "How much color to tint the Mirror, 0 (none) - 100 (all the way)");
+    addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Blur, Property_Type::Double, 0.0,
+                           "Scatter", "Amount to scatter reflection.");
+    addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Blur_Stretch, Property_Type::Double, 0.0,
+                           "Scatter Stretch", "Amount to increase scatter away from start of mirror.");
+}
+
+//####################################################################################
+//##    Water Components
+//####################################################################################
+void DrThing::addComponentSettingsWater() {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Water",
+                           "Effect Name", "Name of the current Effect.", false, false);
+
+    addComponent(Components::Thing_Settings_Water, "Water Settings", "Settings for current Water.", Component_Colors::Blue_Drop_1, true);
+    getComponent(Components::Thing_Settings_Water)->setIcon(Component_Icons::Water);
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Texture, Property_Type::List, 1,
+                           "Texture", "Defines a texture to use for the water surface, can give the Water several different looks.");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color, Property_Type::Color, QColor(41, 182, 246, 255).rgba(),
+                           "Start Color", "Color tint for the top of this Water.");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color, Property_Type::Color, QColor(0, 58, 103, 255).rgba(),
+                           "End Color", "Color tint to fade to toward the bottom of this Water.");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Color_Tint, Property_Type::Percent, 75.0,
+                           "Tint Percent", "How much color to tint the Water, 0 (none) - 100 (all the way)");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Reflection, Property_Type::Percent, 20.0,
+                           "Reflection", "Reflection opacity.");
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Movement_Speed, Property_Type::Double, 0.0,
+                           "Movement", "This value will cause the Water Texture to move left / right.");
+
+    addComponent(Components::Thing_Settings_Water_Ripple, "Ripple Settings", "Settings for this Water's Ripple effect.", Component_Colors::Blue_Drop_2, true);
+    getComponent(Components::Thing_Settings_Water_Ripple)->setIcon(Component_Icons::Water_Ripple);
+    addPropertyToComponent(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Frequency, Property_Type::Double, 100.0,
+                           "Frequency", "Length of Ripples appearing in Water, lower numbers produce longer period Ripples. "
+                                        "Generally, ranging around 0 to 100 will produce nice results.");
+    addPropertyToComponent(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Speed, Property_Type::Double, 50.0,
+                           "Speed", "Rate Ripples move through Water. Generally, ranging around 0 to 100 will produce nice results.");
+    addPropertyToComponent(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Amplitude, Property_Type::Double, 20.0,
+                           "Amplitude", "Size of Ripples appearing in Water. Generally, ranging around 0 to 100 will produce nice results.");
+    addPropertyToComponent(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Stretch, Property_Type::Double, 10.0,
+                           "Stretch", "Rate the Ripples' Amplitude increases as Ripples move away from start of water. A setting of 0 will keep Amplitude "
+                                      "the same, a negative value will decrease Ripple Amplitude.");
+
+    addComponent(Components::Thing_Settings_Water_Wave, "Wave Settings", "Settings that this Water's Wave effect.", Component_Colors::Blue_Drop_3, true);
+    getComponent(Components::Thing_Settings_Water_Wave)->setIcon(Component_Icons::Water_Wave);
+    addPropertyToComponent(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Frequency, Property_Type::Double, 10.0,
+                           "Frequency", "Length of Waves appearing in Water, lower numbers produce longer period waves. "
+                                        "Generally, ranging around 0 to 100 will produce nice results.");
+    addPropertyToComponent(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Speed, Property_Type::Double, 20.0,
+                           "Speed", "Rate Waves move up and down. Generally, ranging around 0 to 100 will produce nice results.");
+    addPropertyToComponent(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Amplitude, Property_Type::Double, 10.0,
+                           "Amplitude", "Size of Waves as they move up and down in Water. Generally, ranging around 0 to 100 will produce nice results.");
+
+    addComponent(Components::Thing_Settings_Water_Refract, "Refraction Settings", "Settings that effect refraction (randomness) of different parts of "
+                                                                                  "this Water.", Component_Colors::Blue_Drop_4, true);
+    getComponent(Components::Thing_Settings_Water_Refract)->setIcon(Component_Icons::Water_Refract);
+    addPropertyToComponent(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Reflection, Property_Type::Percent, 20.0,
+                           "Reflection", "How much refraction to apply to the Reflection shown on the Water surface.");
+    addPropertyToComponent(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Underwater, Property_Type::Percent, 20.0,
+                           "Underwater", "How much refraction to apply to the objects under the Water.");
+    addPropertyToComponent(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Texture, Property_Type::Percent, 20.0,
+                           "Texture", "How much refraction to apply to the Water Texture.");
+    addPropertyToComponent(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Foam, Property_Type::Percent, 20.0,
+                           "Surface", "How much refraction to apply to the top of the Water.");
+
+    addComponent(Components::Thing_Settings_Water_Foam, "Foam Settings", "Settings for top of the current Water.", Component_Colors::Blue_Drop_5, true);
+    getComponent(Components::Thing_Settings_Water_Foam)->setIcon(Component_Icons::Water_Foam);
+    addPropertyToComponent(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Color, Property_Type::Color, QColor(255, 255, 255, 255).rgba(),
+                           "Color", "Color tint for the foam on the top of the Water.");
+    addPropertyToComponent(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Tint, Property_Type::Percent, 75.0,
+                           "Tint", "How much color to tint the foam on top of the Water, 0 (none) - 100 (all the way)");
+    addPropertyToComponent(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Height, Property_Type::Double, 5.0,
+                           "Height", "Thickness of the foam on top of the Water.");
+    addPropertyToComponent(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Is_Flat, Property_Type::Bool, false,
+                           "Keep Flat?", "Should the top of the water stay completely flat, even with waves and refraction?");
+
+}
 
 
 

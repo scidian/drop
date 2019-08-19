@@ -55,22 +55,25 @@ public:
     DrItem*         getDrItem()                 { return m_item_in_scene; }
     void            setDrItem(DrItem *item)     { m_item_in_scene = item; }
 
-    // Function calls
-    void addComponentSettingsCharacter(QString new_name);
-    void addComponentSettingsObject(QString new_name, bool should_collide = true);
-    void addComponentSettingsLight(QColor color);
-    void addComponentSettingsText(QString new_name);
-    void addComponentSettingsWater();
-    void addComponentSettingsFire();
-    void addComponentSettingsFisheye();
-    void addComponentSettingsCamera(QString new_name);
+    // Thing Components
+    void    addComponentAppearance(bool bitrate_and_pixel_only = false);
+    void    addComponentLayering(double z, double opacity = 100.0);
+    void    addComponentLighting();
+    void    addComponentMovement();
+    void    addComponentTransform(double width, double height, double x, double y, DrThingType type);
 
-    void addComponentAppearance(bool bitrate_and_pixel_only = false);
-    void addComponentLayering(double z, double opacity = 100.0);
-    void addComponentLighting();
-    void addComponentMovement();
-    void addComponentTransform(double width, double height, double x, double y, DrThingType type);
+    // Thing Specific Components
+    void    addComponentSettingsCamera(QString new_name);
+    void    addComponentSettingsCharacter(QString new_name);
+    void    addComponentSettingsObject(QString new_name, bool should_collide = true);
+    void    addComponentSettingsText(QString new_name);
 
+    // Effect Specific Components
+    void    addComponentSettingsFire();
+    void    addComponentSettingsFisheye();
+    void    addComponentSettingsLight(QColor color);
+    void    addComponentSettingsMirror();
+    void    addComponentSettingsWater();
 
 };
 

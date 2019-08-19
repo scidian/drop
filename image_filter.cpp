@@ -274,27 +274,6 @@ QPixmap drawLight(QColor color, int diameter, float cone_start, float cone_end, 
 
 
 //####################################################################################
-//##        Draws a DrEngineWater as a Pixmap
-//####################################################################################
-QPixmap drawWater(QColor top_color, QColor bottom_color) {
-    QPixmap water(400, 400);
-    water.fill(top_color);
-
-    QLinearGradient gradient(0, 0, 0, 400);
-    gradient.setColorAt(0.00, top_color);
-    gradient.setColorAt(1.00, bottom_color);
-
-    QPainter painter(&water);
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(gradient);
-    painter.drawRect(0, 0, 400, 400);
-
-    return water;
-}
-
-
-
-//####################################################################################
 //##        Draws a DrEngineFire as a Pixmap
 //####################################################################################
 QPixmap drawFire(QColor color_1, QColor color_2, QColor smoke, Fire_Mask mask) {
@@ -353,16 +332,61 @@ QPixmap drawFire(QColor color_1, QColor color_2, QColor smoke, Fire_Mask mask) {
 //##        Draws a DrEngineFisheye as a Pixmap
 //####################################################################################
 QPixmap drawFisheye(QColor color) {
-    QPixmap lens(400, 400);
+    int width =  400;
+    int height = 400;
+    QPixmap lens(width, height);
     lens.fill(Qt::transparent);
     color.setAlphaF(color.alphaF() * 0.5);                  // Decrease lens opacity by half
 
     QPainter painter(&lens);
     painter.setPen(Qt::NoPen);
     painter.setBrush(color);
-    painter.drawEllipse(0, 0, 400, 400);
+    painter.drawEllipse(0, 0, width, height);
 
     return lens;
+}
+
+//####################################################################################
+//##        Draws a DrEngineMirror as a Pixmap
+//####################################################################################
+QPixmap drawMirror(QColor top_color, QColor bottom_color) {
+    int width =  400;
+    int height = 400;
+    int border = 6;
+    QPixmap mirror(width, height);
+    mirror.fill(Qt::transparent);
+
+    QLinearGradient gradient(0, 0, 0, height);
+    gradient.setColorAt(0.00, top_color);
+    gradient.setColorAt(1.00, bottom_color);
+
+    QPainter painter(&mirror);
+    painter.setPen( QPen(QColor(176, 118, 17), border * 2));
+    painter.setBrush( gradient );
+    painter.drawRoundedRect( QRectF(border, border, width - (border * 2), height - (border * 2)), border, border);
+
+    return mirror;
+}
+
+//####################################################################################
+//##        Draws a DrEngineWater as a Pixmap
+//####################################################################################
+QPixmap drawWater(QColor top_color, QColor bottom_color) {
+    int width =  400;
+    int height = 400;
+    QPixmap water(width, height);
+    water.fill(top_color);
+
+    QLinearGradient gradient(0, 0, 0, height);
+    gradient.setColorAt(0.00, top_color);
+    gradient.setColorAt(1.00, bottom_color);
+
+    QPainter painter(&water);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(gradient);
+    painter.drawRect(0, 0, width, height);
+
+    return water;
 }
 
 

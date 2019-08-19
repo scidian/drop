@@ -102,6 +102,7 @@ SOURCES += \
     engine/engine_thing_fire.cpp \
     engine/engine_thing_fisheye.cpp \
     engine/engine_thing_light.cpp \
+    engine/engine_thing_mirror.cpp \
     engine/engine_thing_object.cpp \
     engine/engine_thing_object_create.cpp \
     engine/engine_thing_water.cpp \
@@ -227,6 +228,7 @@ HEADERS += \
     engine/engine_thing_fire.h \
     engine/engine_thing_fisheye.h \
     engine/engine_thing_light.h \
+    engine/engine_thing_mirror.h \
     engine/engine_thing_object.h \
     engine/engine_thing_water.h \
     engine/engine_world.h \

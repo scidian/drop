@@ -82,6 +82,13 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
                     setPixmap(m_pixmap);
                     break;
                 }
+                case DrEffectType::Mirror: {
+                    uint color_1 =  m_thing->getComponentProperty(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color)->getValue().toUInt();
+                    uint color_2 =  m_thing->getComponentProperty(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color)->getValue().toUInt();
+                    m_pixmap = DrImaging::drawMirror( QColor::fromRgba(color_1), QColor::fromRgba(color_2) );
+                    setPixmap(m_pixmap);
+                    break;
+                }
                 case DrEffectType::Water: {
                     uint start_color =  m_thing->getComponentProperty(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color)->getValue().toUInt();
                     uint end_color =    m_thing->getComponentProperty(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color)->getValue().toUInt();

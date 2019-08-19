@@ -56,23 +56,23 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
     // Figure out name for Thing
     QString new_name;
     switch (new_type) {
+        // Thing Types
         case DrThingType::Character:
         case DrThingType::Object:
-        case DrThingType::Light:
         case DrThingType::Text:
-        case DrThingType::Water:
+
+        // Effect Types
         case DrThingType::Fisheye:
         case DrThingType::Fire:
+        case DrThingType::Light:
+        case DrThingType::Mirror:
+        case DrThingType::Water:
             new_name = asset->getComponentProperty(Components::Entity_Name, Properties::Entity_Name)->getValue().toString();
             break;
 
         ///case DrThingType::Camera:
         ///    "Camera " + QString::number(static_cast<long>(m_things.size() + 1));
         ///    break;
-
-        case DrThingType::None:
-            new_name = "None";
-            break;
 
         default:
             Dr::ShowMessageBox("Error in DrStage::addThing, DrThingType not handled! Type: " + Dr::StringFromThingType(new_type));

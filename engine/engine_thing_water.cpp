@@ -16,7 +16,7 @@ DrEngineWater::DrEngineWater(DrEngineWorld *world, long unique_key, double x, do
                              float tint, float reflection,
                              float rip_frequency, float rip_speed, float rip_amplitude, float rip_stretch,
                              float w_length,      float w_speed,   float w_amplitude,
-                             QColor foam_color,   float foam_tint, float foam_height,
+                             QColor foam_color,   float foam_tint, float foam_height, bool foam_flat,
                             float r_reflection,  float r_underwater, float r_texture, float r_foam, float texture_movement,
                              float opacity) :
     DrEngineThing(world, unique_key) {
@@ -45,6 +45,7 @@ DrEngineWater::DrEngineWater(DrEngineWorld *world, long unique_key, double x, do
     this->surface_color = foam_color;
     this->surface_tint = foam_tint;
     this->surface_height = foam_height;
+    this->surface_keep_flat = foam_flat;
 
     this->refract_reflection = r_reflection;
     this->refract_underwater = r_underwater;

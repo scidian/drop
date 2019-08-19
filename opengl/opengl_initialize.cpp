@@ -58,16 +58,18 @@ void DrOpenGL::initializeGL() {
 void DrOpenGL::loadBuiltInTextures() {
     m_engine->addTexture(Asset_Textures::Numbers,           ":/assets/engine/numbers.png");
 
+    m_engine->addTexture(Asset_Textures::Fire_Noise,        ":/assets/textures/fire_noise.png");
+    m_engine->addTexture(Asset_Textures::Fire_Flame_None,   ":/assets/textures/fire_flame_none.png");
+    m_engine->addTexture(Asset_Textures::Fire_Flame_Torch,  ":/assets/textures/fire_flame_torch.png");
+    m_engine->addTexture(Asset_Textures::Fire_Flame_Candle, ":/assets/textures/fire_flame_candle.png");
+
+    m_engine->addTexture(Asset_Textures::Mirror_Noise_1,    ":/assets/textures/mirror_noise_1.png");
+
     m_engine->addTexture(Asset_Textures::Water_Normal_1,    ":/assets/textures/water_normal.jpg");
     m_engine->addTexture(Asset_Textures::Water_Texture_1,   ":/assets/textures/water_texture_1.jpg");
     m_engine->addTexture(Asset_Textures::Water_Texture_2,   ":/assets/textures/water_texture_2.jpg");
     m_engine->addTexture(Asset_Textures::Water_Texture_3,   ":/assets/textures/water_texture_3.jpg");
     m_engine->addTexture(Asset_Textures::Water_Texture_4,   ":/assets/textures/water_texture_4.jpg");
-
-    m_engine->addTexture(Asset_Textures::Fire_Noise,        ":/assets/textures/fire_noise.png");
-    m_engine->addTexture(Asset_Textures::Fire_Flame_None,   ":/assets/textures/fire_flame_none.png");
-    m_engine->addTexture(Asset_Textures::Fire_Flame_Torch,  ":/assets/textures/fire_flame_torch.png");
-    m_engine->addTexture(Asset_Textures::Fire_Flame_Candle, ":/assets/textures/fire_flame_candle.png");
 
     m_engine->addTexture(Asset_Textures::Ball,              ":/assets/test_images/ball_1.png");
     m_engine->addTexture(Asset_Textures::Block,             ":/assets/test_images/metal_block.png");
@@ -283,6 +285,7 @@ void DrOpenGL::loadShaders() {
     u_water_surface_color =     m_water_shader.uniformLocation(     "u_surface_color" );
     u_water_surface_tint =      m_water_shader.uniformLocation(     "u_surface_tint" );
     u_water_surface_height =    m_water_shader.uniformLocation(     "u_surface_height" );
+    u_water_surface_flat =      m_water_shader.uniformLocation(     "u_surface_keep_flat" );
     u_refract_reflection =      m_water_shader.uniformLocation(     "u_refract_reflection" );
     u_refract_underwater =      m_water_shader.uniformLocation(     "u_refract_underwater" );
     u_refract_texture =         m_water_shader.uniformLocation(     "u_refract_texture" );
@@ -356,6 +359,39 @@ void DrOpenGL::loadShaders() {
     u_fire_pixel_x =            m_fire_shader.uniformLocation(      "u_pixel_x" );
     u_fire_pixel_y =            m_fire_shader.uniformLocation(      "u_pixel_y" );
     u_fire_bitrate =            m_fire_shader.uniformLocation(      "u_bitrate" );
+
+
+    // ***** Initialize our Mirror Shader
+    QOpenGLShader v_mirror_shader( QOpenGLShader::Vertex );        v_mirror_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader f_mirror_shader( QOpenGLShader::Fragment );      f_mirror_shader.compileSourceFile( ":/shaders/frag_mirror.glsl" );
+    m_mirror_shader.addShader( &v_mirror_shader );
+    m_mirror_shader.addShader( &f_mirror_shader );
+    m_mirror_shader.link();
+
+    // Vertex Shader Input
+    a_mirror_vertex =           m_mirror_shader.attributeLocation(   "vertex" );
+    a_mirror_texture_coord =    m_mirror_shader.attributeLocation(   "texture_coordinates" );
+    u_mirror_matrix =           m_mirror_shader.uniformLocation(     "u_matrix" );
+
+    // Fragment Shader Input
+    u_mirror_alpha =            m_mirror_shader.uniformLocation(     "u_alpha" );
+    u_mirror_zoom =             m_mirror_shader.uniformLocation(     "u_zoom" );
+    u_mirror_pos =              m_mirror_shader.uniformLocation(     "u_position" );
+    u_mirror_width =            m_mirror_shader.uniformLocation(     "u_width" );
+    u_mirror_height =           m_mirror_shader.uniformLocation(     "u_height" );
+    u_mirror_time =             m_mirror_shader.uniformLocation(     "u_time" );
+    u_mirror_angle =            m_mirror_shader.uniformLocation(     "u_angle" );
+
+    u_mirror_top =              m_mirror_shader.uniformLocation(     "u_top" );
+    u_mirror_bottom =           m_mirror_shader.uniformLocation(     "u_bottom" );
+    u_mirror_left =             m_mirror_shader.uniformLocation(     "u_left" );
+    u_mirror_right =            m_mirror_shader.uniformLocation(     "u_right" );
+
+    u_mirror_color_top =        m_mirror_shader.uniformLocation(     "u_color_top" );
+    u_mirror_color_bottom =     m_mirror_shader.uniformLocation(     "u_color_bottom" );
+    u_mirror_color_tint =       m_mirror_shader.uniformLocation(     "u_color_tint" );
+    u_mirror_blur =             m_mirror_shader.uniformLocation(     "u_blur" );
+    u_mirror_blur_stretch =     m_mirror_shader.uniformLocation(     "u_blur_stretch" );
 
 }
 

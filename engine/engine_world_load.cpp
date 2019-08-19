@@ -12,6 +12,7 @@
 #include "engine_thing_fire.h"
 #include "engine_thing_fisheye.h"
 #include "engine_thing_light.h"
+#include "engine_thing_mirror.h"
 #include "engine_thing_object.h"
 #include "engine_thing_water.h"
 #include "engine_world.h"
@@ -52,11 +53,16 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
         if (thing->getType() != DrType::Thing) continue;
 
         switch (thing->getThingType()) {
+            // Load Thing
             case DrThingType::Object:   loadObjectToWorld(thing, offset_x, offset_y);       break;
-            case DrThingType::Light:    loadLightToWorld(thing, offset_x, offset_y);        break;
-            case DrThingType::Water:    loadWaterToWorld(thing, offset_x, offset_y);        break;
+
+            // Load Thing Effect
             case DrThingType::Fire:     loadFireToWorld(thing, offset_x, offset_y);         break;
             case DrThingType::Fisheye:  loadFisheyeToWorld(thing, offset_x, offset_y);      break;
+            case DrThingType::Light:    loadLightToWorld(thing, offset_x, offset_y);        break;
+            case DrThingType::Mirror:   loadMirrorToWorld(thing, offset_x, offset_y);       break;
+            case DrThingType::Water:    loadWaterToWorld(thing, offset_x, offset_y);        break;
+
         default:
             break;
         }
@@ -152,82 +158,6 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
 
 
 //####################################################################################
-//##    Loads one DrProject DrThingType::Light to World / Space
-//####################################################################################
-void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double offset_y) {
-    ThingInfo   info =          getThingBasicInfo( thing );
-    QColor      light_color =   QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Color).toUInt());
-    int         light_type =    thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Type).toInt();
-
-    double      cone_start =    thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start).toList().first().toDouble();
-    double      cone_end =      thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toList().first().toDouble();
-    float       intensity =     thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity).toFloat();
-    float       blur =          thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Blur).toFloat();
-    float       shadows =       thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Shadows).toFloat();
-    bool        draw_shadows =  thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Draw_Shadows).toBool();
-
-    float       pulse =         thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse).toFloat();
-    float       pulse_speed =   thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse_Speed).toFloat();
-
-    info.size.setX( info.size.x() * c_light_size_adjuster);
-
-    addThing( new DrEngineLight(this, getNextKey(), info.position.x() + offset_x, -info.position.y() + offset_y, info.z_order,
-                                static_cast<Light_Type>(light_type),
-                                light_color, static_cast<float>(info.size.x()),
-                                QPointF(cone_start, cone_end), intensity, shadows, draw_shadows, blur, pulse, pulse_speed, info.opacity));
-}
-
-
-//####################################################################################
-//##    Loads one DrProject DrThingType::Water to World / Space
-//####################################################################################
-void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double offset_y) {   
-    ThingInfo   info =              getThingBasicInfo( thing );
-
-    int         texture =           thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Texture).toInt();
-    QColor      start_color =       QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color).toUInt());
-    QColor      end_color =         QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color).toUInt());
-    float       water_tint =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Color_Tint).toFloat() / 100.0f;
-    float       reflection =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Reflection).toFloat() / 100.0f;
-    float       move_speed =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Movement_Speed).toFloat();
-
-    float       ripple_freq =       thing->getComponentPropertyValue(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Frequency).toFloat();
-    float       ripple_speed =      thing->getComponentPropertyValue(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Speed).toFloat();
-    float       ripple_amplitude =  thing->getComponentPropertyValue(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Amplitude).toFloat();
-    float       ripple_stretch =    thing->getComponentPropertyValue(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Stretch).toFloat();
-
-    float       wave_freq =         thing->getComponentPropertyValue(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Frequency).toFloat();
-    float       wave_speed =        thing->getComponentPropertyValue(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Speed).toFloat();
-    float       wave_amplitude =    thing->getComponentPropertyValue(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Amplitude).toFloat();
-
-    float       refract_1 =         thing->getComponentPropertyValue(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Reflection).toFloat();
-    float       refract_2 =         thing->getComponentPropertyValue(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Underwater).toFloat();
-    float       refract_3 =         thing->getComponentPropertyValue(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Texture).toFloat();
-    float       foam_refract =      thing->getComponentPropertyValue(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Foam).toFloat();
-
-    QColor      foam_color =    QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Color).toUInt());
-    float       foam_tint =     thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Tint).toFloat() / 100.0f;
-    float       foam_height =   thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Height).toFloat();
-
-    float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toList().first().toInt();
-    QPointF     pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
-
-    DrEngineWater *water = new DrEngineWater(this, getNextKey(), info.position.x() + offset_x, -info.position.y() + offset_y, info.z_order, info.angle,
-                                             info.size, static_cast<Water_Texture>(texture),
-                                             start_color, end_color,
-                                             water_tint, reflection,
-                                             ripple_freq, ripple_speed, ripple_amplitude, ripple_stretch,
-                                             wave_freq, wave_speed, wave_amplitude,
-                                             foam_color, foam_tint, foam_height,
-                                             refract_1, refract_2, refract_3, foam_refract, move_speed, info.opacity );
-    addThing( water );
-    water->bitrate = bit_rate;
-    water->pixel_x = static_cast<float>(pixelation.x());
-    water->pixel_y = static_cast<float>(pixelation.y());
-}
-
-
-//####################################################################################
 //##    Loads one DrProject DrThingType::Fisheye to World / Space
 //####################################################################################
 void DrEngineWorld::loadFisheyeToWorld(DrThing *thing, double offset_x, double offset_y) {
@@ -271,6 +201,101 @@ void DrEngineWorld::loadFireToWorld(DrThing *thing, double offset_x, double offs
     fire->pixel_x = static_cast<float>(pixelation.x());
     fire->pixel_y = static_cast<float>(pixelation.y());
 }
+
+
+//####################################################################################
+//##    Loads one DrProject DrThingType::Light to World / Space
+//####################################################################################
+void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double offset_y) {
+    ThingInfo   info =          getThingBasicInfo( thing );
+    QColor      light_color =   QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Color).toUInt());
+    int         light_type =    thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Type).toInt();
+
+    double      cone_start =    thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start).toList().first().toDouble();
+    double      cone_end =      thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toList().first().toDouble();
+    float       intensity =     thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity).toFloat();
+    float       blur =          thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Blur).toFloat();
+    float       shadows =       thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Shadows).toFloat();
+    bool        draw_shadows =  thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Draw_Shadows).toBool();
+
+    float       pulse =         thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse).toFloat();
+    float       pulse_speed =   thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse_Speed).toFloat();
+
+    info.size.setX( info.size.x() * c_light_size_adjuster);
+
+    addThing( new DrEngineLight(this, getNextKey(), info.position.x() + offset_x, -info.position.y() + offset_y, info.z_order,
+                                static_cast<Light_Type>(light_type),
+                                light_color, static_cast<float>(info.size.x()),
+                                QPointF(cone_start, cone_end), intensity, shadows, draw_shadows, blur, pulse, pulse_speed, info.opacity));
+}
+
+
+//####################################################################################
+//##    Loads one DrProject DrThingType::Mirror to World / Space
+//####################################################################################
+void DrEngineWorld::loadMirrorToWorld(DrThing *thing, double offset_x, double offset_y) {
+    ThingInfo   info =              getThingBasicInfo( thing );
+
+    QColor color_1 = QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color).toUInt());
+    QColor color_2 = QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color).toUInt());
+    float       color_tint =        thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Color_Tint).toFloat() / 100.0f;
+    float       blur =              thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Blur).toFloat();
+    float       blur_stretch =      thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Blur_Stretch).toFloat();
+
+    addThing( new DrEngineMirror(this, getNextKey(), info.position.x() + offset_x, -info.position.y() + offset_y, info.z_order, info.angle, info.size,
+                                 color_1, color_2, color_tint, blur, blur_stretch, info.opacity ) );
+}
+
+
+//####################################################################################
+//##    Loads one DrProject DrThingType::Water to World / Space
+//####################################################################################
+void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double offset_y) {   
+    ThingInfo   info =              getThingBasicInfo( thing );
+
+    int         texture =           thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Texture).toInt();
+    QColor      start_color =       QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color).toUInt());
+    QColor      end_color =         QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color).toUInt());
+    float       water_tint =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Color_Tint).toFloat() / 100.0f;
+    float       reflection =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Reflection).toFloat() / 100.0f;
+    float       move_speed =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Movement_Speed).toFloat();
+
+    float       ripple_freq =       thing->getComponentPropertyValue(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Frequency).toFloat();
+    float       ripple_speed =      thing->getComponentPropertyValue(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Speed).toFloat();
+    float       ripple_amplitude =  thing->getComponentPropertyValue(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Amplitude).toFloat();
+    float       ripple_stretch =    thing->getComponentPropertyValue(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Stretch).toFloat();
+
+    float       wave_freq =         thing->getComponentPropertyValue(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Frequency).toFloat();
+    float       wave_speed =        thing->getComponentPropertyValue(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Speed).toFloat();
+    float       wave_amplitude =    thing->getComponentPropertyValue(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Amplitude).toFloat();
+
+    float       refract_1 =         thing->getComponentPropertyValue(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Reflection).toFloat();
+    float       refract_2 =         thing->getComponentPropertyValue(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Underwater).toFloat();
+    float       refract_3 =         thing->getComponentPropertyValue(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Texture).toFloat();
+    float       foam_refract =      thing->getComponentPropertyValue(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Foam).toFloat();
+
+    QColor      foam_color =    QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Color).toUInt());
+    float       foam_tint =     thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Tint).toFloat() / 100.0f;
+    float       foam_height =   thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Height).toFloat();
+    bool        foam_flat =     thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Is_Flat).toBool();
+
+    float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toList().first().toInt();
+    QPointF     pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
+
+    DrEngineWater *water = new DrEngineWater(this, getNextKey(), info.position.x() + offset_x, -info.position.y() + offset_y, info.z_order, info.angle,
+                                             info.size, static_cast<Water_Texture>(texture),
+                                             start_color, end_color,
+                                             water_tint, reflection,
+                                             ripple_freq, ripple_speed, ripple_amplitude, ripple_stretch,
+                                             wave_freq, wave_speed, wave_amplitude,
+                                             foam_color, foam_tint, foam_height, foam_flat,
+                                             refract_1, refract_2, refract_3, foam_refract, move_speed, info.opacity );
+    addThing( water );
+    water->bitrate = bit_rate;
+    water->pixel_x = static_cast<float>(pixelation.x());
+    water->pixel_y = static_cast<float>(pixelation.y());
+}
+
 
 
 

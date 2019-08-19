@@ -10,5 +10,6 @@
         <file>shaders/frag_2d_light.glsl</file>
         <file>shaders/frag_fisheye.glsl</file>
         <file>shaders/frag_fire.glsl</file>
+        <file>shaders/frag_mirror.glsl</file>
     </qresource>
 </RCC>

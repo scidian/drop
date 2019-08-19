@@ -25,6 +25,7 @@ class DrEngine;
 class DrEngineFire;
 class DrEngineFisheye;
 class DrEngineLight;
+class DrEngineMirror;
 class DrEngineObject;
 class DrEngineThing;
 class DrEngineWater;
@@ -227,6 +228,7 @@ private:
     int     u_water_surface_color;
     int     u_water_surface_tint;
     int     u_water_surface_height;
+    int     u_water_surface_flat;
     int     u_refract_reflection;
     int     u_refract_underwater;
     int     u_refract_texture;
@@ -243,13 +245,13 @@ private:
     int     a_fisheye_texture_coord;
     int     u_fisheye_matrix;
 
-    int     u_fisheye_width;                                      // Width of texture
-    int     u_fisheye_height;                                     // Height of texture
-    int     u_fisheye_time;                                       // Time in seconds
-    int     u_fisheye_angle;                                      // Angle of water
-    int     u_fisheye_alpha;                                      // Opacity
-    int     u_fisheye_zoom;                                       // Current zoom level (need for water shader)
-    int     u_fisheye_pos;                                        // Current camera position (need for water shader)
+    int     u_fisheye_width;                                    // Width of texture
+    int     u_fisheye_height;                                   // Height of texture
+    int     u_fisheye_time;                                     // Time in seconds
+    int     u_fisheye_angle;                                    // Angle of fisheye
+    int     u_fisheye_alpha;                                    // Opacity
+    int     u_fisheye_zoom;                                     // Current zoom level (need for fisheye shader)
+    int     u_fisheye_pos;                                      // Current camera position (need for fisheye shader)
 
     int     u_fisheye_top, u_fisheye_bottom, u_fisheye_left, u_fisheye_right;
 
@@ -280,6 +282,29 @@ private:
     int     u_fire_pixel_x;
     int     u_fire_pixel_y;
     int     u_fire_bitrate;
+
+
+    // Mirror Shader
+    QOpenGLShaderProgram m_mirror_shader;
+    int     a_mirror_vertex;
+    int     a_mirror_texture_coord;
+    int     u_mirror_matrix;
+
+    int     u_mirror_width;                                      // Width of texture
+    int     u_mirror_height;                                     // Height of texture
+    int     u_mirror_time;                                       // Time in seconds
+    int     u_mirror_angle;                                      // Angle of mirror
+    int     u_mirror_alpha;                                      // Opacity
+    int     u_mirror_zoom;                                       // Current zoom level (need for mirror shader)
+    int     u_mirror_pos;                                        // Current camera position (need for mirror shader)
+
+    int     u_mirror_top, u_mirror_bottom, u_mirror_left, u_mirror_right;
+
+    int     u_mirror_color_top;
+    int     u_mirror_color_bottom;
+    int     u_mirror_color_tint;
+    int     u_mirror_blur;
+    int     u_mirror_blur_stretch;
 
     // ********** End Shaders **********
 
@@ -330,15 +355,16 @@ public:
     void            drawDebugHealthNative(QPainter &painter);
     void            drawDebugJoints(QPainter &painter);
     void            drawDebugShapes(QPainter &painter);
-    void            drawEffect(DrEngineThing *thing, DrThingType &last_thing);
+    bool            drawEffect(DrEngineThing *thing, DrThingType &last_thing);
     void            drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo);
-    void            drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, DrEngineFisheye *lens);
+    bool            drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, DrEngineFisheye *lens);
     void            drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo);
+    bool            drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, DrEngineMirror *mirror);
     void            drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower, Blend_Mode mode);
-    void            drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water);
+    bool            drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water);
     bool            drawGlowBuffer();
     void            drawObject(DrEngineThing *thing, DrThingType &last_thing);
-    void            drawObjectFire(DrEngineThing *thing, DrThingType &last_thing);
+    bool            drawObjectFire(DrEngineThing *thing, DrThingType &last_thing);
     bool            drawObjectOccluder(DrEngineThing *thing, bool need_init_shader = true);
     void            drawSpace();
     bool            getEffectPosition(QOpenGLFramebufferObject *fbo, DrEngineThing *thing,
@@ -362,7 +388,7 @@ public:
     void            bindLightShadowBuffer(DrEngineLight *light);
     void            checkLightBuffers();
     void            draw1DShadowMap(DrEngineLight *light);
-    void            draw2DLight(DrEngineLight *light);
+    bool            draw2DLight(DrEngineLight *light);
     void            drawGlowLights();
     void            drawShadowMaps();
     int             findNeededShadowMaps();

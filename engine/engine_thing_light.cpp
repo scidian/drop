@@ -22,6 +22,7 @@ DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key,
                              float shadows, bool draw_shadows, float blur, float pulse, float pulse_speed, float opacity)
     : DrEngineThing(world, unique_key) {
 
+    this->setOpacity( opacity );
     this->setPosition( QPointF(x, y) );
     this->z_order = z;
 
@@ -36,7 +37,6 @@ DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key,
     this->blur = blur;
     this->pulse = pulse;
     this->pulse_speed = pulse_speed;
-    this->setOpacity( opacity );
 }
 
 

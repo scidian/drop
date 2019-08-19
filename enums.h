@@ -49,6 +49,8 @@ enum class DrType {
 };
 
 // ################## Sub Types ####################
+// !!!!! #NOTE: This order decides the order they
+//              appear in the Assets Tree!
 enum class DrAssetType {
     Character,
     Object,
@@ -78,7 +80,8 @@ enum class DrThingType {
     //Particle,
 };
 
-// !!!!! #NOTE: This order decides the order they appear in the Assets Tree
+// !!!!! #NOTE: This order decides the order they
+//              appear in the Assets Tree!
 enum class DrEffectType {
     Light,
     Water,

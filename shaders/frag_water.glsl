@@ -46,6 +46,7 @@ uniform lowp  float u_wave_amplitude;               // Bob amount               
 uniform lowp  vec3  u_surface_color;                // Surface Color, r/g/b                 0.0 to 1.0 x 3
 uniform lowp  float u_surface_tint;                 // Surface Color Tint Percent
 uniform lowp  float u_surface_height;               // Surface Height
+uniform       bool  u_surface_keep_flat;            // Keep top of water flat?
 
 uniform lowp  float u_refract_reflection;           // good = 1.0
 uniform lowp  float u_refract_underwater;           // good = 2.0
@@ -176,7 +177,16 @@ void main( void ) {
     float yoffset = sin(time*wave_speed   + wave_frequency   * (zoom_coord_x + player_x) * u_zoom) * (0.005 * u_zoom);
     float bob =     sin(time*wave_speed   + coords.x + refract_x*refract_reflection) * wave_amplitude;
     //float bob =   wave_amplitude;
-    float y_top =   y_start - abs(refract_y)*refract_foam*u_zoom + yoffset*bob;
+
+    // Decide top of water start
+    float y_top = y_start - abs(refract_y)*refract_foam*u_zoom + yoffset*bob;
+    float add_foam;
+    if (u_surface_keep_flat) {
+        add_foam = u_water_top - y_top;
+        y_top = u_water_top;
+    } else {
+        add_foam = 0.0;
+    }
 
 
     // ***** If out of range, don't process this pixel
@@ -205,6 +215,7 @@ void main( void ) {
     vec2 under_refraction = vec2(refract_x*refract_underwater + xoffset, refract_y*refract_underwater - yoffset*bob);
          under_refraction = rotate(under_refraction, vec2(0.0, 0.0), rotation);
     vec2 get_under = vec2(coordinates.x + under_refraction.x, coordinates.y - under_refraction.y);
+         get_under = clamp(get_under, (1.0 / u_width), 1.0 - (1.0 / u_height));
     original = texture2D(u_texture, get_under);
 
     // Mix in overlay_color and water texture
@@ -219,6 +230,7 @@ void main( void ) {
 
     // Surface coloring (sea foam)
     float foam_distance = (surface_height + sin(refract_x + movement)) / u_height * u_zoom;
+          foam_distance += add_foam;
     if (coords.y > (y_top - foam_distance)) {
         float foam_position = (coords.y - (y_top - foam_distance)) / foam_distance;
         original = vec4(mix(original.rgb, surface_color, surface_tint * clamp(2.0*foam_position, 0.0, 1.0)), 1.0);

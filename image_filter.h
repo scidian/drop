@@ -45,6 +45,7 @@ namespace DrImaging {
     QPixmap drawFire(QColor color_1, QColor color_2, QColor smoke, Fire_Mask mask);
     QPixmap drawFisheye(QColor color);
     QPixmap drawLight(QColor color, int diameter, float cone_start, float cone_end, float intensity, float blur);
+    QPixmap drawMirror(QColor top_color, QColor bottom_color);
     QPixmap drawWater(QColor top_color, QColor bottom_color);
 
 }

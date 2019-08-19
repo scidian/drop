@@ -210,13 +210,14 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
 
 //####################################################################################
 //##        Uses Fire Shader to draw Fire
+//##            - Returns true if rendered, false if not
 //####################################################################################
-void DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
+bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     DrEngineFire *fire = dynamic_cast<DrEngineFire*>(thing);
-    if (!fire) return;
+    if (!fire) return false;
 
     // ***** Enable shader program
-    if (!m_fire_shader.bind()) return;
+    if (!m_fire_shader.bind()) return false;
 
     // ***** Blend function
     glEnable(GL_BLEND);
@@ -296,6 +297,7 @@ void DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     m_fire_shader.release();
 
     last_thing = DrThingType::Fire;
+    return true;
 }
 
 

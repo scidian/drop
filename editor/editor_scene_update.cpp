@@ -225,6 +225,16 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
                 break;
             }
 
+            case Properties::Thing_Mirror_Start_Color:
+            case Properties::Thing_Mirror_End_Color: {
+                QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color).toUInt());
+                QColor ce = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color).toUInt());
+                item->setPixmap( DrImaging::drawMirror(cs, ce) );
+                item->setAssetWidth(  item->pixmap().width() );
+                item->setAssetHeight( item->pixmap().height() );
+                break;
+            }
+
             case Properties::Thing_Water_Start_Color:
             case Properties::Thing_Water_End_Color: {
                 QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color).toUInt());

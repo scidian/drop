@@ -31,16 +31,18 @@ enum class Demo_Space {
 enum Asset_Textures {
     Numbers =               -1,
 
-    Water_Normal_1 =        -50,
-    Water_Texture_1 =       -61,
-    Water_Texture_2 =       -62,
-    Water_Texture_3 =       -63,
-    Water_Texture_4 =       -64,
+    Fire_Noise =            -50,
+    Fire_Flame_None =       -51,
+    Fire_Flame_Torch =      -52,
+    Fire_Flame_Candle =     -53,
 
-    Fire_Noise =            -70,
-    Fire_Flame_None =       -71,
-    Fire_Flame_Torch =      -72,
-    Fire_Flame_Candle =     -73,
+    Mirror_Noise_1 =        -60,
+
+    Water_Normal_1 =        -70,
+    Water_Texture_1 =       -81,
+    Water_Texture_2 =       -82,
+    Water_Texture_3 =       -83,
+    Water_Texture_4 =       -84,
 
     Ball =          -100,
     Block =         -101,

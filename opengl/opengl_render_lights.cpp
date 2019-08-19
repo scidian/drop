@@ -268,15 +268,16 @@ void DrOpenGL::drawGlowLights() {
 
 
 //####################################################################################
-//##        Renders the light to the using the Shadow Map
+//##        Renders the light using the Shadow Map
+//##            - Returns true if rendered, false if not
 //####################################################################################
-void DrOpenGL::draw2DLight(DrEngineLight *light) {
+bool DrOpenGL::draw2DLight(DrEngineLight *light) {
     // Bind Light Shader
-    if (!m_light_shader.bind()) return;
+    if (!m_light_shader.bind()) return false;
 
     // If drawing Shadows, Bind Shadow Map as a texture
     if (light->draw_shadows) {
-        if (m_shadows[light->getKey()] == nullptr) return;
+        if (m_shadows[light->getKey()] == nullptr) return false;
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, m_shadows[light->getKey()]->texture());
     }
@@ -341,6 +342,7 @@ void DrOpenGL::draw2DLight(DrEngineLight *light) {
 
     // Release Shader
     m_light_shader.release();
+    return true;
 }
 
 

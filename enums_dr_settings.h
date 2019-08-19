@@ -52,7 +52,6 @@ enum class Property_Type {
 //##    Possible components and their properties
 //############################
 enum class Components {
-
     Entity_Name,
 
     Asset_Object_Settings,
@@ -68,18 +67,20 @@ enum class Components {
     Stage_Settings,
     Stage_Grid,
 
+    Thing_Settings_Camera,
     Thing_Settings_Character,
     Thing_Settings_Object,
+    Thing_Settings_Text,
+
+    Thing_Settings_Fire,
+    Thing_Settings_Fisheye,
     Thing_Settings_Light,
+    Thing_Settings_Mirror,
     Thing_Settings_Water,
     Thing_Settings_Water_Ripple,
     Thing_Settings_Water_Wave,
     Thing_Settings_Water_Refract,
-    Thing_Settings_Water_Foam,
-    Thing_Settings_Fire,
-    Thing_Settings_Fisheye,
-    Thing_Settings_Text,
-    Thing_Settings_Camera,
+    Thing_Settings_Water_Foam,  
 
     Thing_Transform,
     Thing_Layering,
@@ -88,12 +89,12 @@ enum class Components {
     Thing_Appearance,
 };
 
-enum class Properties {
 
+enum class Properties {
     Entity_Name,
 
-    // ********************
 
+    // ******************** DrAsset Component Properties
     // Settings
     Asset_Collision_Shape,          //polygon
 
@@ -104,8 +105,8 @@ enum class Properties {
     Asset_Font_Family,
     Asset_Font_Size,
 
-    // ******************** DrWorld Component Properties
 
+    // ******************** DrWorld Component Properties
     // Settings
     World_Game_Direction,           //double
     World_Score_Multiplier,         //double
@@ -140,7 +141,6 @@ enum class Properties {
 
 
     // ******************** DrStage Component Properties
-
     // Settings
     Stage_Start,                    //positive
     Stage_End,                      //positive
@@ -155,8 +155,8 @@ enum class Properties {
     Stage_Grid_Rotation,            //angle
     Stage_Grid_Color,               //color
 
-    // ******************** DrThing Component Properties
 
+    // ******************** DrThing Component Properties
     // Transform
     Thing_Position,                 //positionf
     Thing_Rotation,                 //angle
@@ -186,7 +186,10 @@ enum class Properties {
     Thing_Filter_Grayscale,         //bool
     Thing_Filter_Negative,          //bool
 
-    // *****
+
+    // ********** Thing Specific
+    // Camera Settings
+    Thing_Camera_Zoom,              //double
 
     // Character Settings
     Thing_Character_Jump_X,         //double
@@ -196,6 +199,25 @@ enum class Properties {
     Thing_Object_Physics_Type,      //list, enum class Body_Type (Static, Kinematic, Dynamic)
     Thing_Object_Collide,           //bool
     Thing_Object_Damage,            //list, enum class Collision_Type (none, player, enemy, all)
+
+    // Text Settings
+    Thing_Text_User_Text,           //string
+
+    // ********** Effect Specific
+    // Fire Settings
+    Thing_Fire_Shape,               //list, enum class Fire_Mask
+    Thing_Fire_Color_1,             //color
+    Thing_Fire_Color_2,             //color
+    Thing_Fire_Color_Smoke,         //color
+    Thing_Fire_Intensity,           //percent
+    Thing_Fire_Smoothness,          //percent
+    Thing_Fire_Wavy,                //percent
+    Thing_Fire_Speed,               //ranged double, 1.0 to
+
+    // Fisheye Settings
+    Thing_Fisheye_Color,            //color
+    Thing_Fisheye_Color_Tint,       //percent
+    Thing_Fisheye_Lens_Zoom,        //ranged double, 0 to 10
 
     // Light Settings
     Thing_Light_Type,               //list, enum class Light_Type (Opaque, Glow)
@@ -208,6 +230,13 @@ enum class Properties {
     Thing_Light_Shadows,            //0 to 100
     Thing_Light_Pulse,              //double
     Thing_Light_Pulse_Speed,        //double
+
+    // Mirror Settings
+    Thing_Mirror_Start_Color,       //color
+    Thing_Mirror_End_Color,         //color
+    Thing_Mirror_Color_Tint,        //percent
+    Thing_Mirror_Blur,              //double
+    Thing_Mirror_Blur_Stretch,      //double
 
     // Water Settings
     Thing_Water_Texture,            //list, enum class Water_Texture
@@ -224,7 +253,7 @@ enum class Properties {
     Thing_Water_Wave_Speed,         //double
     Thing_Water_Wave_Amplitude,     //double
 
-    //W ater Refract Settings
+    // Water Refract Settings
     Thing_Water_Refract_Reflection, //percent
     Thing_Water_Refract_Underwater, //percent
     Thing_Water_Refract_Texture,    //percent
@@ -234,27 +263,7 @@ enum class Properties {
     Thing_Water_Surface_Color,      //color
     Thing_Water_Surface_Tint,       //percent
     Thing_Water_Surface_Height,     //double
-
-    // Fire Settings
-    Thing_Fire_Shape,               //list, enum class Fire_Mask
-    Thing_Fire_Color_1,             //color
-    Thing_Fire_Color_2,             //color
-    Thing_Fire_Color_Smoke,         //color
-    Thing_Fire_Intensity,           //percent
-    Thing_Fire_Smoothness,          //percent
-    Thing_Fire_Wavy,                //percent
-    Thing_Fire_Speed,               //ranged double, 1.0 to
-
-    // Fisheye Settings
-    Thing_Fisheye_Color,            //color
-    Thing_Fisheye_Color_Tint,       //percent
-    Thing_Fisheye_Lens_Zoom,        //ranged double, 0 to 10
-
-    // Text Settings
-    Thing_Text_User_Text,           //string
-
-    // Camera Settings
-    Thing_Camera_Zoom,              //double
+    Thing_Water_Surface_Is_Flat,    //bool
 
 };
 

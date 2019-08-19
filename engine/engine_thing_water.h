@@ -40,6 +40,7 @@ public:
     QColor          surface_color = QColor(255, 255, 255);  // Surface color
     float           surface_tint = 0.5f;                    // Surface tint percentage
     float           surface_height = 5.0f;                  // Surface height
+    bool            surface_keep_flat = false;              // Keep top of water flat?
 
     float           refract_reflection = 1.0f;
     float           refract_underwater = 1.0f;
@@ -54,7 +55,7 @@ public:
                   float tint, float reflection,
                   float rip_length,     float rip_speed, float rip_amplitude, float rip_stretch,
                   float w_length,       float w_speed,   float w_amplitude,
-                  QColor foam_color,    float foam_tint, float foam_height,
+                  QColor foam_color,    float foam_tint, float foam_height, bool foam_flat,
                   float r_reflection,   float r_underwater, float r_texture, float r_foam, float texture_movement,
                   float opacity);
     virtual ~DrEngineWater() override;

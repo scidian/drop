@@ -15,6 +15,7 @@
 #include "engine/engine_camera.h"
 #include "engine/engine_thing_fisheye.h"
 #include "engine/engine_thing_light.h"
+#include "engine/engine_thing_mirror.h"
 #include "engine/engine_thing_object.h"
 #include "engine/engine_thing_water.h"
 #include "engine/engine_texture.h"
@@ -66,19 +67,177 @@ bool DrOpenGL::getEffectPosition(QOpenGLFramebufferObject *fbo, DrEngineThing *t
 
 
 //####################################################################################
-//##        Renders Frame Buffer Object to screen buffer as a textured quad
-//##            Uses Water Shader to draw reflective / refractive / textured water
+//##        Renders FBO to screen buffer as a textured quad using Fisheye Shader
+//##            - Returns true if rendered, false if not
 //####################################################################################
-void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water) {
+bool DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, DrEngineFisheye *lens) {
+
+    // Check effect position and if we should render it
+    double top, bottom, left, right;
+    float  angle = static_cast<float>(lens->getAngle());
+    if (getEffectPosition(fbo, lens, top, bottom, left, right, angle) == false) return false;
+
+    // If we are to render, bind the shader
+    if (!m_fisheye_shader.bind()) return false;
+    if (!fbo) return false;
+
+    // Bind offscreen frame buffer objects as textures
+    glEnable(GL_TEXTURE_2D);
+    GLint texture = glGetUniformLocation(m_fisheye_shader.programId(), "u_texture");
+    glUseProgram(m_fisheye_shader.programId());
+    glUniform1i(texture,       0);
+    glActiveTexture(GL_TEXTURE0);                           // Texture unit 0
+    glBindTexture(GL_TEXTURE_2D, fbo->texture());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);// GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);// GL_CLAMP_TO_EDGE);
+
+
+    // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
+    m_fisheye_shader.setUniformValue( u_fisheye_matrix, orthoMatrix(fbo->width(), fbo->height()) );
+
+    // Set Texture Coordinates for Shader
+    m_fisheye_shader.setAttributeArray(    a_fisheye_texture_coord, m_whole_texture_coordinates.data(), 2 );
+    m_fisheye_shader.enableAttributeArray( a_fisheye_texture_coord );
+
+    // Load vertices for this object
+    QVector<GLfloat> vertices;
+    setQuadVertices(vertices, fbo->width(), fbo->height(), QPointF(0, 0), 0.0f);
+    m_fisheye_shader.setAttributeArray(    a_fisheye_vertex, vertices.data(), 3 );
+    m_fisheye_shader.enableAttributeArray( a_fisheye_vertex );
+
+    // Set fisheye variables
+    m_fisheye_shader.setUniformValue( u_fisheye_top,        static_cast<float>(top) );
+    m_fisheye_shader.setUniformValue( u_fisheye_bottom,     static_cast<float>(bottom) );
+    m_fisheye_shader.setUniformValue( u_fisheye_left,       static_cast<float>(left) );
+    m_fisheye_shader.setUniformValue( u_fisheye_right,      static_cast<float>(right) );
+    m_fisheye_shader.setUniformValue( u_fisheye_start_color,
+                                    static_cast<float>(lens->start_color.redF()),
+                                    static_cast<float>(lens->start_color.greenF()),
+                                    static_cast<float>(lens->start_color.blueF()) );
+    m_fisheye_shader.setUniformValue( u_fisheye_color_tint,         lens->color_tint );
+    m_fisheye_shader.setUniformValue( u_fisheye_lens_zoom,          lens->lens_zoom );
+
+    // Set more variables for shader
+    m_fisheye_shader.setUniformValue( u_fisheye_alpha,      lens->getOpacity() );
+    m_fisheye_shader.setUniformValue( u_fisheye_zoom,       m_scale );
+    m_fisheye_shader.setUniformValue( u_fisheye_pos,        m_engine->getCurrentWorld()->getCameraPos().x(), m_engine->getCurrentWorld()->getCameraPos().y(), 0.0f );
+    m_fisheye_shader.setUniformValue( u_fisheye_width,      static_cast<float>(fbo->width()) );
+    m_fisheye_shader.setUniformValue( u_fisheye_height,     static_cast<float>(fbo->height()) );
+    m_fisheye_shader.setUniformValue( u_fisheye_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
+    m_fisheye_shader.setUniformValue( u_fisheye_angle,      angle );
+
+    // Draw triangles using shader program
+    glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
+
+    // Disable arrays
+    m_fisheye_shader.disableAttributeArray( a_fisheye_vertex );
+    m_fisheye_shader.disableAttributeArray( a_fisheye_texture_coord );
+
+    // Release Shader
+    m_fisheye_shader.release();
+    return true;
+}
+
+
+//####################################################################################
+//##        Renders FBO to screen buffer as a textured quad using Mirror Shader
+//##            - Returns true if rendered, false if not
+//####################################################################################
+bool DrOpenGL::drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, DrEngineMirror *mirror) {
+
+    // Check effect position and if we should render it
+    double top, bottom, left, right;
+    float  angle = static_cast<float>(mirror->getAngle());
+    if (getEffectPosition(fbo, mirror, top, bottom, left, right, angle) == false) return false;
+
+    // If we are to render, bind the shader
+    if (!m_mirror_shader.bind()) return false;
+    if (!fbo) return false;
+
+    // Bind offscreen frame buffer objects as textures
+    glEnable(GL_TEXTURE_2D);
+    GLint texture = glGetUniformLocation(m_mirror_shader.programId(), "u_texture");
+    GLint noise =   glGetUniformLocation(m_mirror_shader.programId(), "u_texture_noise");
+    glUseProgram(m_mirror_shader.programId());
+    glUniform1i(texture,    0);
+    glUniform1i(noise,      1);
+
+    // Bind textures - !!!!! #NOTE: Must be called in descending order and end on 0
+    glActiveTexture(GL_TEXTURE1);                           // Texture unit 1
+    glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Mirror_Noise_1)->texture()->textureId());
+    m_engine->getTexture(Asset_Textures::Mirror_Noise_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::MirroredRepeat);
+
+    glActiveTexture(GL_TEXTURE0);                           // Texture unit 0
+    glBindTexture(GL_TEXTURE_2D, fbo->texture());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);      // GL_CLAMP_TO_EDGE // <-- Was better for sides before rotation was added
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);      // Better for reflection
+
+    // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
+    m_mirror_shader.setUniformValue( u_mirror_matrix, orthoMatrix(fbo->width(), fbo->height()) );
+
+    // Set Texture Coordinates for Shader
+    m_mirror_shader.setAttributeArray(    a_mirror_texture_coord, m_whole_texture_coordinates.data(), 2 );
+    m_mirror_shader.enableAttributeArray( a_mirror_texture_coord );
+
+    // Load vertices for this object
+    QVector<GLfloat> vertices;
+    setQuadVertices(vertices, fbo->width(), fbo->height(), QPointF(0, 0), 0.0f);
+    m_mirror_shader.setAttributeArray(    a_mirror_vertex, vertices.data(), 3 );
+    m_mirror_shader.enableAttributeArray( a_mirror_vertex );
+
+    // Set mirror variables
+    m_mirror_shader.setUniformValue( u_mirror_top,        static_cast<float>(top) );
+    m_mirror_shader.setUniformValue( u_mirror_bottom,     static_cast<float>(bottom) );
+    m_mirror_shader.setUniformValue( u_mirror_left,       static_cast<float>(left) );
+    m_mirror_shader.setUniformValue( u_mirror_right,      static_cast<float>(right) );
+    m_mirror_shader.setUniformValue( u_mirror_color_top,
+                                    static_cast<float>(mirror->start_color.redF()),
+                                    static_cast<float>(mirror->start_color.greenF()),
+                                    static_cast<float>(mirror->start_color.blueF()) );
+    m_mirror_shader.setUniformValue( u_mirror_color_bottom,
+                                    static_cast<float>(mirror->end_color.redF()),
+                                    static_cast<float>(mirror->end_color.greenF()),
+                                    static_cast<float>(mirror->end_color.blueF()) );
+    m_mirror_shader.setUniformValue( u_mirror_color_tint,   mirror->tint_percent );
+    m_mirror_shader.setUniformValue( u_mirror_blur,         mirror->blur );
+    m_mirror_shader.setUniformValue( u_mirror_blur_stretch, mirror->blur_stretch );
+
+    // Set more variables for shader
+    m_mirror_shader.setUniformValue( u_mirror_alpha,      mirror->getOpacity() );
+    m_mirror_shader.setUniformValue( u_mirror_zoom,       m_scale );
+    m_mirror_shader.setUniformValue( u_mirror_pos,        m_engine->getCurrentWorld()->getCameraPos().x(), m_engine->getCurrentWorld()->getCameraPos().y(), 0.0f );
+    m_mirror_shader.setUniformValue( u_mirror_width,      static_cast<float>(fbo->width()) );
+    m_mirror_shader.setUniformValue( u_mirror_height,     static_cast<float>(fbo->height()) );
+    m_mirror_shader.setUniformValue( u_mirror_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
+    m_mirror_shader.setUniformValue( u_mirror_angle,      angle );
+
+    // Draw triangles using shader program
+    glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
+
+    // Disable arrays
+    m_mirror_shader.disableAttributeArray( a_mirror_vertex );
+    m_mirror_shader.disableAttributeArray( a_mirror_texture_coord );
+
+    // Release Shader
+    m_mirror_shader.release();
+    return true;
+}
+
+
+//####################################################################################
+//##        Renders FBO to screen buffer as a textured quad using Water Shader to draw reflective / refractive / textured water
+//##            - Returns true if rendered, false if not
+//####################################################################################
+bool DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water) {
 
     // Check effect position and if we should render it
     double top, bottom, left, right;
     float  angle = static_cast<float>(water->getAngle());
-    if (getEffectPosition(fbo, water, top, bottom, left, right, angle) == false) return;
+    if (getEffectPosition(fbo, water, top, bottom, left, right, angle) == false) return false;
 
     // If we are to render, bind the shader
-    if (!m_water_shader.bind()) return;
-    if (!fbo) return;
+    if (!m_water_shader.bind()) return false;
+    if (!fbo) return false;
 
     // Bind offscreen frame buffer objects as textures
     glEnable(GL_TEXTURE_2D);
@@ -167,6 +326,7 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
                                     static_cast<float>(water->surface_color.blueF()) );
     m_water_shader.setUniformValue( u_water_surface_tint,       water->surface_tint );
     m_water_shader.setUniformValue( u_water_surface_height,     water->surface_height );
+    m_water_shader.setUniformValue( u_water_surface_flat,       water->surface_keep_flat );
 
     m_water_shader.setUniformValue( u_refract_reflection,       water->refract_reflection );
     m_water_shader.setUniformValue( u_refract_underwater,       water->refract_underwater );
@@ -196,80 +356,8 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
 
     // Release Shader
     m_water_shader.release();
+    return true;
 }
-
-
-//####################################################################################
-//##        Renders Frame Buffer Object to screen buffer as a textured quad
-//##            Uses Fisheye Shader to draw Fisheye Lens
-//####################################################################################
-void DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, DrEngineFisheye *lens) {
-
-    // Check effect position and if we should render it
-    double top, bottom, left, right;
-    float  angle = static_cast<float>(lens->getAngle());
-    if (getEffectPosition(fbo, lens, top, bottom, left, right, angle) == false) return;
-
-    // If we are to render, bind the shader
-    if (!m_fisheye_shader.bind()) return;
-    if (!fbo) return;
-
-    // Bind offscreen frame buffer objects as textures
-    glEnable(GL_TEXTURE_2D);
-    GLint texture =       glGetUniformLocation(m_fisheye_shader.programId(), "u_texture");
-    glUseProgram(m_fisheye_shader.programId());
-    glUniform1i(texture,       0);
-    glActiveTexture(GL_TEXTURE0);                           // Texture unit 0
-    glBindTexture(GL_TEXTURE_2D, fbo->texture());
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);// GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);// GL_CLAMP_TO_EDGE);
-
-
-    // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
-    m_fisheye_shader.setUniformValue( u_fisheye_matrix, orthoMatrix(fbo->width(), fbo->height()) );
-
-    // Set Texture Coordinates for Shader
-    m_fisheye_shader.setAttributeArray(    a_fisheye_texture_coord, m_whole_texture_coordinates.data(), 2 );
-    m_fisheye_shader.enableAttributeArray( a_fisheye_texture_coord );
-
-    // Load vertices for this object
-    QVector<GLfloat> vertices;
-    setQuadVertices(vertices, fbo->width(), fbo->height(), QPointF(0, 0), 0.0f);
-    m_fisheye_shader.setAttributeArray(    a_fisheye_vertex, vertices.data(), 3 );
-    m_fisheye_shader.enableAttributeArray( a_fisheye_vertex );
-
-    // Set fisheye variables
-    m_fisheye_shader.setUniformValue( u_fisheye_top,        static_cast<float>(top) );
-    m_fisheye_shader.setUniformValue( u_fisheye_bottom,     static_cast<float>(bottom) );
-    m_fisheye_shader.setUniformValue( u_fisheye_left,       static_cast<float>(left) );
-    m_fisheye_shader.setUniformValue( u_fisheye_right,      static_cast<float>(right) );
-    m_fisheye_shader.setUniformValue( u_fisheye_start_color,
-                                    static_cast<float>(lens->start_color.redF()),
-                                    static_cast<float>(lens->start_color.greenF()),
-                                    static_cast<float>(lens->start_color.blueF()) );
-    m_fisheye_shader.setUniformValue( u_fisheye_color_tint,         lens->color_tint );
-    m_fisheye_shader.setUniformValue( u_fisheye_lens_zoom,          lens->lens_zoom );
-
-    // Set more variables for shader
-    m_fisheye_shader.setUniformValue( u_fisheye_alpha,      lens->getOpacity() );
-    m_fisheye_shader.setUniformValue( u_fisheye_zoom,       m_scale );
-    m_fisheye_shader.setUniformValue( u_fisheye_pos,        m_engine->getCurrentWorld()->getCameraPos().x(), m_engine->getCurrentWorld()->getCameraPos().y(), 0.0f );
-    m_fisheye_shader.setUniformValue( u_fisheye_width,      static_cast<float>(fbo->width()) );
-    m_fisheye_shader.setUniformValue( u_fisheye_height,     static_cast<float>(fbo->height()) );
-    m_fisheye_shader.setUniformValue( u_fisheye_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
-    m_fisheye_shader.setUniformValue( u_fisheye_angle,      angle );
-
-    // Draw triangles using shader program
-    glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
-
-    // Disable arrays
-    m_fisheye_shader.disableAttributeArray( a_fisheye_vertex );
-    m_fisheye_shader.disableAttributeArray( a_fisheye_texture_coord );
-
-    // Release Shader
-    m_fisheye_shader.release();
-}
-
 
 
 

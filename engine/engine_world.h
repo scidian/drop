@@ -124,6 +124,7 @@ private:
 public:
     bool            has_scene = false;                          // True after a scene has been loaded into cpSpace    
     Render_Type     render_type = Render_Type::Orthographic;    // Should render perspective or orthographic?
+    long            effect_count = 0;                           // Stores number of effects being rendered
     long            light_count = 0;                            // Stores number of lights in scene
     QList<long>     mark_light_as_deleted;                      // Marks a light as removed from scene for use by other parts of engine (shadow fbos)
 
@@ -170,6 +171,7 @@ public:
     void            loadFireToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadFisheyeToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadLightToWorld(DrThing *thing, double offset_x, double offset_y);
+    void            loadMirrorToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadObjectToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadStageToWorld(DrStage *stage, double offset_x, double offset_y);
     void            loadWaterToWorld(DrThing *thing, double offset_x, double offset_y);

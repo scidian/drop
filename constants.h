@@ -19,6 +19,7 @@
 //############################
 namespace Component_Colors {
     const QColor White_Snow         { QColor(255, 252, 249, 255) };
+    const QColor Silver_Snow        { QColor(192, 188, 183, 255) };
 
     const QColor Orange_Medium      { QColor(221, 110,  66, 255) };
 
@@ -48,31 +49,34 @@ namespace Component_Colors {
 //##    Possible icons for Component Categories
 //############################
 namespace Component_Icons {
+    // General Components
+    const QString None          { QString("") };
     const QString Name          { QString(":/assets/inspector_icons/comp_name.png") };
-
     const QString Settings      { QString(":/assets/inspector_icons/comp_settings.png") };
+    const QString Physics       { QString(":/assets/inspector_icons/comp_physics.png") };
+    const QString Transform     { QString(":/assets/inspector_icons/comp_transform.png") };
+    const QString Layering      { QString(":/assets/inspector_icons/comp_layering.png") };
+    const QString Movement      { QString(":/assets/inspector_icons/comp_movement.png") };
+    const QString Appearance    { QString(":/assets/inspector_icons/comp_appearance.png") };
+    const QString Animation     { QString(":/assets/inspector_icons/comp_animation.png") };
+    const QString Effects       { QString(":/assets/inspector_icons/comp_effects.png") };
+
+    // Thing Components
+    const QString Camera        { QString(":/assets/inspector_icons/comp_camera.png") };
     const QString Character     { QString(":/assets/inspector_icons/comp_character.png") };
+    const QString Font          { QString(":/assets/inspector_icons/comp_font.png") };
     const QString Object        { QString(":/assets/inspector_icons/comp_object.png") };
+
+    // Effect Components
+    const QString Fire          { QString(":/assets/inspector_icons/comp_fire.png") };
+    const QString Fisheye       { QString(":/assets/inspector_icons/comp_fisheye.png") };
     const QString Light         { QString(":/assets/inspector_icons/comp_light.png") };
+    const QString Mirror        { QString(":/assets/inspector_icons/comp_mirror.png") };
     const QString Water         { QString(":/assets/inspector_icons/comp_water.png") };
     const QString Water_Ripple  { QString(":/assets/inspector_icons/comp_water_ripple.png") };
     const QString Water_Wave    { QString(":/assets/inspector_icons/comp_water_wave.png") };
     const QString Water_Refract { QString(":/assets/inspector_icons/comp_water_refract.png") };
     const QString Water_Foam    { QString(":/assets/inspector_icons/comp_water_foam.png") };
-    const QString Fire          { QString(":/assets/inspector_icons/comp_fire.png") };
-    const QString Fisheye       { QString(":/assets/inspector_icons/comp_fisheye.png") };
-    const QString Font          { QString(":/assets/inspector_icons/comp_font.png") };
-    const QString Camera        { QString(":/assets/inspector_icons/comp_camera.png") };
-
-    const QString Physics       { QString(":/assets/inspector_icons/comp_physics.png") };
-    const QString Transform     { QString(":/assets/inspector_icons/comp_transform.png") };
-    const QString Layering      { QString(":/assets/inspector_icons/comp_layering.png") };
-    const QString Movement      { QString(":/assets/inspector_icons/comp_movement.png") };
-    const QString Appearance    { QString(":/assets/inspector_icons/comp_appearance.png") };    
-    const QString Animation     { QString(":/assets/inspector_icons/comp_animation.png") };
-    const QString Effects       { QString(":/assets/inspector_icons/comp_effects.png") };
-
-    const QString None          { QString("") };
 };
 
 

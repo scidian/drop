@@ -1,0 +1,45 @@
+//
+//      Created by Stephens Nunnally on 8/19/2019, (c) 2019 Scidian Software, All Rights Reserved
+//
+//  File:
+//
+//
+//
+#ifndef ENGINE_THING_MIRROR_H
+#define ENGINE_THING_MIRROR_H
+
+#include "chipmunk/chipmunk.h"
+#include "engine_thing.h"
+#include "enums.h"
+#include "enums_engine.h"
+
+
+//####################################################################################
+//##    DrEngineMirror
+//##        Mirror Effect
+//############################
+class DrEngineMirror : public DrEngineThing
+{
+public:
+    // Mirror Settings
+    QColor          start_color =   QColor(192, 192, 192);      // Color tint of top of mirror
+    QColor          end_color =     QColor(128, 128, 255);      // Color tint of bottom of mirror
+    float           tint_percent = 0.5f;                        // Color tint percentage     0 to  1
+    float           blur = 0.0f;                                // Blur amount
+    float           blur_stretch = 0.0f;                        // Blur stretch
+
+public:
+    // Constructor / Destructor
+    DrEngineMirror(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, QPointF size,
+                   QColor color_1, QColor color_2, float tint_amount, float blur, float blur_stretch, float opacity);
+    virtual ~DrEngineMirror() override;
+
+    // Abstract Engine Thing Overrides
+    virtual void        addToWorld() override;
+    virtual DrThingType getThingType() override { return DrThingType::Mirror; }
+    virtual bool        update(double time_passed, double time_warp, QRectF &area) override;
+
+};
+
+
+#endif // ENGINE_THING_MIRROR_H
