@@ -66,11 +66,11 @@ enum class DrThingType {
     Object,
     Text,
 
-    Light,
-    Water,
     Fire,
-    Mirror,
     Fisheye,
+    Light,
+    Mirror,
+    Water,
 
     //Action,
     //Camera,
@@ -78,6 +78,7 @@ enum class DrThingType {
     //Particle,
 };
 
+// !!!!! #NOTE: This order decides the order they appear in the Assets Tree
 enum class DrEffectType {
     Light,
     Water,

@@ -25,19 +25,16 @@
 
 
 //####################################################################################
-//##        Renders Frame Buffer Object to screen buffer as a textured quad
-//##            Uses Water Shader to draw reflective / refractive / textured water
+//##        Finds Effect in screen coordinates, checks if should be rendered.
+//##        Returns top, bottom, left, right in shader coordinates.
 //####################################################################################
-void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water) {
-
-    // Get Water angle for use in this function
-    float angle = static_cast<float>(water->getAngle());
-
-    // Get water position in screen coordinates
-    QPointF position_top =    mapToScreen(water->getPosition().x(), water->getPosition().y() + (water->getSize().y() / 2.0), water->z_order);
-    QPointF position_bottom = mapToScreen(water->getPosition().x(), water->getPosition().y() - (water->getSize().y() / 2.0), water->z_order);
-    QPointF position_left =   mapToScreen(water->getPosition().x() - (water->getSize().x() / 2.0), water->getPosition().y(), water->z_order);
-    QPointF position_right =  mapToScreen(water->getPosition().x() + (water->getSize().x() / 2.0), water->getPosition().y(), water->z_order);
+bool DrOpenGL::getEffectPosition(QOpenGLFramebufferObject *fbo, DrEngineThing *thing,
+                       double &top, double &bottom, double &left, double &right, float &angle) {
+    // Get Thing position in screen coordinates
+    QPointF position_top =    mapToScreen(thing->getPosition().x(), thing->getPosition().y() + (thing->getSize().y() / 2.0), thing->z_order);
+    QPointF position_bottom = mapToScreen(thing->getPosition().x(), thing->getPosition().y() - (thing->getSize().y() / 2.0), thing->z_order);
+    QPointF position_left =   mapToScreen(thing->getPosition().x() - (thing->getSize().x() / 2.0), thing->getPosition().y(), thing->z_order);
+    QPointF position_right =  mapToScreen(thing->getPosition().x() + (thing->getSize().x() / 2.0), thing->getPosition().y(), thing->z_order);
     if (position_left.x()   > position_right.x())
         Dr::Swap(position_left,   position_right);
     if (position_bottom.y() < position_top.y()) {
@@ -45,7 +42,7 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
         angle += 180.0f;
     }
 
-    // Calculate corners of Water to check if it is within view
+    // Calculate corners of Thing to check if it is within view
     QPointF center = QPointF( position_right.x() - ((position_right.x() - position_left.x())   / 2.0),
                               position_top.y() -   ((position_top.y() -   position_bottom.y()) / 2.0));
     QTransform t = QTransform().translate(center.x(), center.y()).rotate(static_cast<double>(angle)).translate(-center.x(), -center.y());
@@ -54,18 +51,32 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
     QPointF bot_left =  t.map(QPointF(position_left.x(),  position_bottom.y()));
     QPointF bot_right = t.map(QPointF(position_right.x(), position_bottom.y()));
     QRect   in_view = QRect(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
-    QPolygonF water_box; water_box << top_left << top_right << bot_left << bot_right;
-    QRect     water_rect = water_box.boundingRect().toRect();
-    bool process_water = water_rect.intersects(in_view) || water_rect.contains(in_view) || in_view.contains(water_rect);
-    if (!process_water) return;
+    QPolygonF thing_box; thing_box << top_left << top_right << bot_left << bot_right;
+    QRect     thing_rect = thing_box.boundingRect().toRect();
+    bool process = thing_rect.intersects(in_view) || thing_rect.contains(in_view) || in_view.contains(thing_rect);
+    if (!process) return false;
 
-    // Calculate sides of Water in shader coordinates
-    double water_top =    (fbo->height() - position_top.y()) / fbo->height();
-    double water_bottom = (fbo->height() - position_bottom.y()) / fbo->height();
-    double water_left =   position_left.x()  / fbo->width();
-    double water_right =  position_right.x() / fbo->width();
+    // Calculate sides of Thing in shader coordinates
+    top =    (fbo->height() - position_top.y()) / fbo->height();
+    bottom = (fbo->height() - position_bottom.y()) / fbo->height();
+    left =   position_left.x()  / fbo->width();
+    right =  position_right.x() / fbo->width();
+    return true;
+}
 
-    // If we are to render water, bind the shader
+
+//####################################################################################
+//##        Renders Frame Buffer Object to screen buffer as a textured quad
+//##            Uses Water Shader to draw reflective / refractive / textured water
+//####################################################################################
+void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water) {
+
+    // Check effect position and if we should render it
+    double top, bottom, left, right;
+    float  angle = static_cast<float>(water->getAngle());
+    if (getEffectPosition(fbo, water, top, bottom, left, right, angle) == false) return;
+
+    // If we are to render, bind the shader
     if (!m_water_shader.bind()) return;
     if (!fbo) return;
 
@@ -127,10 +138,10 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
     m_water_shader.enableAttributeArray( a_water_vertex );
 
     // Set water variables
-    m_water_shader.setUniformValue( u_water_top,        static_cast<float>(water_top) );
-    m_water_shader.setUniformValue( u_water_bottom,     static_cast<float>(water_bottom) );
-    m_water_shader.setUniformValue( u_water_left,       static_cast<float>(water_left) );
-    m_water_shader.setUniformValue( u_water_right,      static_cast<float>(water_right) );
+    m_water_shader.setUniformValue( u_water_top,        static_cast<float>(top) );
+    m_water_shader.setUniformValue( u_water_bottom,     static_cast<float>(bottom) );
+    m_water_shader.setUniformValue( u_water_left,       static_cast<float>(left) );
+    m_water_shader.setUniformValue( u_water_right,      static_cast<float>(right) );
     m_water_shader.setUniformValue( u_water_start_color,
                                     static_cast<float>(water->start_color.redF()),
                                     static_cast<float>(water->start_color.greenF()),
@@ -172,6 +183,10 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
     m_water_shader.setUniformValue( u_water_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
     m_water_shader.setUniformValue( u_water_angle,      angle );
 
+    m_water_shader.setUniformValue( u_water_pixel_x,    water->pixel_x );
+    m_water_shader.setUniformValue( u_water_pixel_y,    water->pixel_y );
+    m_water_shader.setUniformValue( u_water_bitrate,    water->bitrate );
+
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
 
@@ -190,42 +205,12 @@ void DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
 //####################################################################################
 void DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, DrEngineFisheye *lens) {
 
-    // Get angle for use in this function
-    float angle = static_cast<float>(lens->getAngle());
+    // Check effect position and if we should render it
+    double top, bottom, left, right;
+    float  angle = static_cast<float>(lens->getAngle());
+    if (getEffectPosition(fbo, lens, top, bottom, left, right, angle) == false) return;
 
-    // Get position in screen coordinates
-    QPointF position_top =    mapToScreen(lens->getPosition().x(), lens->getPosition().y() + (lens->getSize().y() / 2.0), lens->z_order);
-    QPointF position_bottom = mapToScreen(lens->getPosition().x(), lens->getPosition().y() - (lens->getSize().y() / 2.0), lens->z_order);
-    QPointF position_left =   mapToScreen(lens->getPosition().x() - (lens->getSize().x() / 2.0), lens->getPosition().y(), lens->z_order);
-    QPointF position_right =  mapToScreen(lens->getPosition().x() + (lens->getSize().x() / 2.0), lens->getPosition().y(), lens->z_order);
-    if (position_left.x()   > position_right.x())
-        Dr::Swap(position_left,   position_right);
-    if (position_bottom.y() < position_top.y()) {
-        Dr::Swap(position_bottom, position_top);
-        angle += 180.0f;
-    }
-
-    // Calculate corners to check if it is within view
-    QPointF center = QPointF( position_right.x() - ((position_right.x() - position_left.x())   / 2.0),
-                              position_top.y() -   ((position_top.y() -   position_bottom.y()) / 2.0));
-    QTransform t = QTransform().translate(center.x(), center.y()).rotate(static_cast<double>(angle)).translate(-center.x(), -center.y());
-    QPointF top_left =  t.map(QPointF(position_left.x(),  position_top.y()));
-    QPointF top_right = t.map(QPointF(position_right.x(), position_top.y()));
-    QPointF bot_left =  t.map(QPointF(position_left.x(),  position_bottom.y()));
-    QPointF bot_right = t.map(QPointF(position_right.x(), position_bottom.y()));
-    QRect   in_view = QRect(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
-    QPolygonF lens_box; lens_box << top_left << top_right << bot_left << bot_right;
-    QRect     lens_rect = lens_box.boundingRect().toRect();
-    bool process_lens = lens_rect.intersects(in_view) || lens_rect.contains(in_view) || in_view.contains(lens_rect);
-    if (!process_lens) return;
-
-    // Calculate sides of lens in shader coordinates
-    double top =    (fbo->height() - position_top.y()) / fbo->height();
-    double bottom = (fbo->height() - position_bottom.y()) / fbo->height();
-    double left =   position_left.x()  / fbo->width();
-    double right =  position_right.x() / fbo->width();
-
-    // If we are to render lens, bind the shader
+    // If we are to render, bind the shader
     if (!m_fisheye_shader.bind()) return;
     if (!fbo) return;
 

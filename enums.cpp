@@ -52,11 +52,13 @@ QString StringFromThingType(DrThingType type) {
         case DrThingType::None:         return "None";
         case DrThingType::Character:    return "Character";
         case DrThingType::Object:       return "Object";
-        case DrThingType::Light:        return "Light";
         case DrThingType::Text:         return "Text";
-        case DrThingType::Water:        return "Water";
+
+        case DrThingType::Fire:         return "Fire";
         case DrThingType::Fisheye:      return "Fisheye";
+        case DrThingType::Light:        return "Light";
         case DrThingType::Mirror:       return "Mirror";
+        case DrThingType::Water:        return "Water";
 
         ///case DrThingType::Action:       return "Action";
         ///case DrThingType::Camera:       return "Camera";

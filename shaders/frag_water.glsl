@@ -54,6 +54,10 @@ uniform lowp  float u_refract_foam;                 // good = 2.0
 
 uniform lowp  float u_movement_speed;               // Moves texture, top of water left or right, default should be 0
 
+uniform highp float u_pixel_x;// = 1.0;             // Pixel Width X    1.0 Normal, 4.0 is nice pixelation
+uniform highp float u_pixel_y;// = 1.0;             // Pixel Width Y    1.0 Normal, 4.0 is nice pixelation
+uniform lowp  float u_bitrate;// = 256;             // Bitrate          Editor:    1 to  256
+
 
 // Other Variables
 const   lowp  float THRESHOLD = 0.75;                       // Alpha threshold for our occlusion map
@@ -123,6 +127,17 @@ void main( void ) {
 
     // ***** Move coordinates into a vec2 that is not read-only
     highp vec2 coords = coordinates.xy;
+
+    // ***** Pixelation
+    if (u_pixel_x > 1.0 || u_pixel_y > 1.0) {
+        highp float pixel_width =  (1.0 / (u_width));
+        highp float pixel_height = (1.0 / (u_height));
+        highp float real_pixel_x = ((coords.x / 1.0) * u_width);
+        highp float real_pixel_y = (((1.0 - coords.y) / 1.0) * u_height);
+        highp float pixel_x =       u_pixel_x * floor(real_pixel_x / u_pixel_x) * pixel_width;
+        highp float pixel_y = 1.0 - u_pixel_y * floor(real_pixel_y / u_pixel_y) * pixel_height;
+        coords = vec2(pixel_x, pixel_y);
+    }
 
     // Apply rotation
     float rotation = u_angle;   // mod(u_time, 360.0) * 15.0; // <-- spins based on time
@@ -215,8 +230,9 @@ void main( void ) {
     }
 
 
-//    highp float bit_depth = pow(2.0, 3.0);
-//    original.rgb = vec3(floor(original.r * bit_depth), floor(original.g * bit_depth), floor(original.b * bit_depth)) / bit_depth;
+    // ***** Bit Depth (0.0 to 256.0)
+    highp float bit_depth = u_bitrate;
+    original.rgb = vec3(floor(original.r * bit_depth), floor(original.g * bit_depth), floor(original.b * bit_depth)) / bit_depth;
 
 
     gl_FragColor = original;

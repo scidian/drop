@@ -289,6 +289,10 @@ void DrOpenGL::loadShaders() {
     u_refract_foam =            m_water_shader.uniformLocation(     "u_refract_foam" );
     u_water_movement_speed =    m_water_shader.uniformLocation(     "u_movement_speed" );
 
+    u_water_pixel_x =           m_water_shader.uniformLocation(      "u_pixel_x" );
+    u_water_pixel_y =           m_water_shader.uniformLocation(      "u_pixel_y" );
+    u_water_bitrate =           m_water_shader.uniformLocation(      "u_bitrate" );
+
 
     // ***** Initialize our Fisheye Shader
     QOpenGLShader v_fisheye_shader( QOpenGLShader::Vertex );        v_fisheye_shader.compileSourceFile( ":/shaders/default_vert.glsl" );

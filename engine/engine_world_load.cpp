@@ -209,14 +209,21 @@ void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double off
     float       foam_tint =     thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Tint).toFloat() / 100.0f;
     float       foam_height =   thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Height).toFloat();
 
-    addThing( new DrEngineWater(this, getNextKey(), info.position.x() + offset_x, -info.position.y() + offset_y, info.z_order, info.angle,
-                                info.size, static_cast<Water_Texture>(texture),
-                                start_color, end_color,
-                                water_tint, reflection,
-                                ripple_freq, ripple_speed, ripple_amplitude, ripple_stretch,
-                                wave_freq, wave_speed, wave_amplitude,
-                                foam_color, foam_tint, foam_height,
-                                refract_1, refract_2, refract_3, foam_refract, move_speed, info.opacity ) );
+    float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toList().first().toInt();
+    QPointF     pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
+
+    DrEngineWater *water = new DrEngineWater(this, getNextKey(), info.position.x() + offset_x, -info.position.y() + offset_y, info.z_order, info.angle,
+                                             info.size, static_cast<Water_Texture>(texture),
+                                             start_color, end_color,
+                                             water_tint, reflection,
+                                             ripple_freq, ripple_speed, ripple_amplitude, ripple_stretch,
+                                             wave_freq, wave_speed, wave_amplitude,
+                                             foam_color, foam_tint, foam_height,
+                                             refract_1, refract_2, refract_3, foam_refract, move_speed, info.opacity );
+    addThing( water );
+    water->bitrate = bit_rate;
+    water->pixel_x = static_cast<float>(pixelation.x());
+    water->pixel_y = static_cast<float>(pixelation.y());
 }
 
 

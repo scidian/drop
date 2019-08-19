@@ -233,6 +233,9 @@ private:
     int     u_refract_foam;
     int     u_water_movement_speed;
 
+    int     u_water_pixel_x;
+    int     u_water_pixel_y;
+    int     u_water_bitrate;
 
     // Fisheye Shader
     QOpenGLShaderProgram m_fisheye_shader;
@@ -338,6 +341,8 @@ public:
     void            drawObjectFire(DrEngineThing *thing, DrThingType &last_thing);
     bool            drawObjectOccluder(DrEngineThing *thing, bool need_init_shader = true);
     void            drawSpace();
+    bool            getEffectPosition(QOpenGLFramebufferObject *fbo, DrEngineThing *thing,
+                                      double &top, double &bottom, double &left, double &right, float &angle);
     void            getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing, float angle);
     QColor          objectDebugColor(DrEngineObject *object, bool text_color = false);
     QMatrix4x4      occluderMatrix(Render_Type render_type, bool use_offset);

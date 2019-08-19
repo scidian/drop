@@ -39,32 +39,23 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
 
     // Load image from asset
     switch (m_asset->getAssetType()) {
-        case DrAssetType::Object:
         case DrAssetType::Character:
+        case DrAssetType::Object:
             m_pixmap = m_asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
             applyFilters();                                 // Apply filters and set pixmap
             m_asset_width =  m_asset->getWidth();           // Dimensions of associated asset, used for boundingRect
             m_asset_height = m_asset->getHeight();
             break;
+        case DrAssetType::Text: {
+            QString text = m_thing->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
+            m_pixmap = m_editor_relay->currentProject()->getDrFont( m_asset->getSourceKey() )->createText( text );
+            setPixmap(m_pixmap);
+            m_asset_width =  m_pixmap.width();
+            m_asset_height = m_pixmap.height();
+            break;
+        }
         case DrAssetType::Effect:
             switch (m_editor_relay->currentProject()->getDrEffect( m_asset->getSourceKey() )->getEffectType()) {
-                case DrEffectType::Light: {
-                    uint light_color =  m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Color)->getValue().toUInt();
-                    float cone_start =  m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start)->getValue().toList().first().toFloat();
-                    float cone_end =    m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End)->getValue().toList().first().toFloat();
-                    float intensity =   m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity)->getValue().toFloat();
-                    float blur =        m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Blur)->getValue().toFloat();
-                    m_pixmap = DrImaging::drawLight( QColor::fromRgba( light_color ), 400, cone_start, cone_end, intensity, blur);
-                    setPixmap(m_pixmap);
-                    break;
-                }
-                case DrEffectType::Water: {
-                    uint start_color =  m_thing->getComponentProperty(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color)->getValue().toUInt();
-                    uint end_color =    m_thing->getComponentProperty(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color)->getValue().toUInt();
-                    m_pixmap = DrImaging::drawWater( QColor::fromRgba(start_color), QColor::fromRgba(end_color) );
-                    setPixmap(m_pixmap);
-                    break;
-                }
                 case DrEffectType::Fire: {
                     uint color_1 =      m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1)->getValue().toUInt();
                     uint color_2 =      m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2)->getValue().toUInt();
@@ -81,18 +72,28 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
                     setPixmap(m_pixmap);
                     break;
                 }
+                case DrEffectType::Light: {
+                    uint light_color =  m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Color)->getValue().toUInt();
+                    float cone_start =  m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start)->getValue().toList().first().toFloat();
+                    float cone_end =    m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End)->getValue().toList().first().toFloat();
+                    float intensity =   m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity)->getValue().toFloat();
+                    float blur =        m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Blur)->getValue().toFloat();
+                    m_pixmap = DrImaging::drawLight( QColor::fromRgba( light_color ), 400, cone_start, cone_end, intensity, blur);
+                    setPixmap(m_pixmap);
+                    break;
+                }
+                case DrEffectType::Water: {
+                    uint start_color =  m_thing->getComponentProperty(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color)->getValue().toUInt();
+                    uint end_color =    m_thing->getComponentProperty(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color)->getValue().toUInt();
+                    m_pixmap = DrImaging::drawWater( QColor::fromRgba(start_color), QColor::fromRgba(end_color) );
+                    setPixmap(m_pixmap);
+                    applyFilters();
+                    break;
+                }
             }
             m_asset_width =  m_pixmap.width();
             m_asset_height = m_pixmap.height();
             break;
-        case DrAssetType::Text: {
-            QString text = m_thing->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
-            m_pixmap = m_editor_relay->currentProject()->getDrFont( m_asset->getSourceKey() )->createText( text );
-            setPixmap(m_pixmap);
-            m_asset_width =  m_pixmap.width();
-            m_asset_height = m_pixmap.height();
-            break;
-        }
     }
 
 

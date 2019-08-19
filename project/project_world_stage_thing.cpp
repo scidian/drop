@@ -74,6 +74,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentSettingsWater();
             addComponentTransform(400, 400, x, -y, DrThingType::Water);
             addComponentLayering(z, 75.0);
+            addComponentAppearance(true);
             break;
 
         case DrThingType::Fire:
