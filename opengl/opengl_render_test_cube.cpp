@@ -85,14 +85,8 @@ void DrOpenGL::drawCube(QVector3D center) {
         bot_right = matrix * QVector3D( half_width, -half_height, half_no_border);
         bot_left =  matrix * QVector3D(-half_width, -half_height, half_no_border);
 
-        QVector<float> vertices;
-        vertices.clear();
-        vertices.resize( 12 );  // in sets of x, y, z
-        vertices[ 0] = top_right.x() + x;       vertices[ 1] = top_right.y() + y;       vertices[ 2] = z;           // Top Right
-        vertices[ 3] = top_left.x()  + x;       vertices[ 4] = top_left.y()  + y;       vertices[ 5] = z;           // Top Left
-        vertices[ 6] = bot_right.x() + x;       vertices[ 7] = bot_right.y() + y;       vertices[ 8] = z;           // Bottom Right
-        vertices[ 9] = bot_left.x() + x;        vertices[10] = bot_left.y() + y;        vertices[11] = z;           // Bottom Left
-
+        QVector<GLfloat> vertices;
+        setQuadRotatedVertices(vertices, top_right, top_left, bot_left, bot_right, QVector3D(x, y, z));
         m_default_shader.setAttributeArray( a_default_vertex, vertices.data(), 3 );
         m_default_shader.enableAttributeArray( a_default_vertex );
 

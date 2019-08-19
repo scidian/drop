@@ -80,9 +80,8 @@ QMatrix4x4 DrOpenGL::orthoMatrix(float width, float height) {
     return m;
 }
 
-
 //####################################################################################
-//##        Returns list of vertices at z plane 0 from sides passed in
+//##        Returns list of vertices at z plane from size passed in
 //####################################################################################
 void DrOpenGL::setQuadVertices(QVector<GLfloat> &vertices, float width, float height, QPointF center, float z) {
     float left =   static_cast<float>(center.x()) - (width  / 2.0f);
@@ -100,6 +99,19 @@ void DrOpenGL::setQuadVertices(QVector<GLfloat> &vertices, float width, float he
     vertices[ 3] = top_left.x();        vertices[ 4] = top_left.y();        vertices[ 5] = z;           // Top Left
     vertices[ 6] = bot_right.x();       vertices[ 7] = bot_right.y();       vertices[ 8] = z;           // Bottom Right
     vertices[ 9] = bot_left.x();        vertices[10] = bot_left.y();        vertices[11] = z;           // Bottom Left
+}
+
+//####################################################################################
+//##        Returns list of vertices at z plane from 4 corners
+//####################################################################################
+void DrOpenGL::setQuadRotatedVertices(QVector<GLfloat> &vertices, QVector3D &top_right, QVector3D &top_left,
+                                      QVector3D &bot_left, QVector3D &bot_right, QVector3D position) {
+    vertices.clear();
+    vertices.resize( 12 );              // in sets of x, y, z
+    vertices[ 0] = top_right.x() + position.x();    vertices[ 1] = top_right.y() + position.y();    vertices[ 2] = position.z();    // Top Right
+    vertices[ 3] = top_left.x()  + position.x();    vertices[ 4] = top_left.y()  + position.y();    vertices[ 5] = position.z();    // Top Left
+    vertices[ 6] = bot_right.x() + position.x();    vertices[ 7] = bot_right.y() + position.y();    vertices[ 8] = position.z();    // Bottom Right
+    vertices[ 9] = bot_left.x()  + position.x();    vertices[10] = bot_left.y()  + position.y();    vertices[11] = position.z();    // Bottom Left
 }
 
 

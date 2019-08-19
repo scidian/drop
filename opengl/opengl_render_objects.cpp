@@ -15,6 +15,32 @@
 #include "opengl/opengl.h"
 
 
+//####################################################################################
+//##        Calculates rotated, z-ordered vertices for a DrEngineThing
+//####################################################################################
+void DrOpenGL::getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing, float angle) {
+    // ***** Get object position data
+    QPointF center = thing->getPosition();
+    float   x, y, z;
+    float   half_width, half_height;
+    x = static_cast<float>(center.x());
+    y = static_cast<float>(center.y());
+    z = static_cast<float>(thing->z_order);
+    half_width =  static_cast<float>(thing->getSize().x()) * thing->getScaleX() / 2.0f;
+    half_height = static_cast<float>(thing->getSize().y()) * thing->getScaleY() / 2.0f;
+
+    // ***** Create rotation matrix, apply rotation to object
+    QMatrix4x4 matrix;
+    matrix.rotate( angle, 0.0, 0.0, 1.0 );
+    QVector3D top_right = matrix * QVector3D( half_width,  half_height, 0);
+    QVector3D top_left =  matrix * QVector3D(-half_width,  half_height, 0);
+    QVector3D bot_right = matrix * QVector3D( half_width, -half_height, 0);
+    QVector3D bot_left =  matrix * QVector3D(-half_width, -half_height, 0);
+
+    // ***** Load vertices for this object
+    setQuadRotatedVertices(vertices, top_right, top_left, bot_left, bot_right, QVector3D(x, y, z));
+}
+
 
 //####################################################################################
 //##        Draws a DrEngineObject effect type with default shader
@@ -61,32 +87,9 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing) {
     float texture_width =  texture->width();
     float texture_height = texture->height();
 
-    // ***** Get object position data
-    QPointF center = object->getPosition();
-    float   x, y, z;
-    float   half_width, half_height;
-    x = static_cast<float>(center.x());
-    y = static_cast<float>(center.y());
-    z = static_cast<float>(object->z_order);
-    half_width =  texture_width *  object->getScaleX() / 2.0f;
-    half_height = texture_height * object->getScaleY() / 2.0f;
-
-    // ***** Create rotation matrix, apply rotation to object
-    QMatrix4x4 matrix;
-    matrix.rotate( static_cast<float>(object->getAngle()), 0.0, 0.0, 1.0 );
-    QVector3D top_right = matrix * QVector3D( half_width,  half_height, 0);
-    QVector3D top_left =  matrix * QVector3D(-half_width,  half_height, 0);
-    QVector3D bot_right = matrix * QVector3D( half_width, -half_height, 0);
-    QVector3D bot_left =  matrix * QVector3D(-half_width, -half_height, 0);
-
     // ***** Load vertices for this object
     QVector<GLfloat> vertices;
-    vertices.clear();
-    vertices.resize( 12 );                      // in sets of x, y, z
-    vertices[ 0] = top_right.x() + x;       vertices[ 1] = top_right.y() + y;       vertices[ 2] = z;       // Top Right
-    vertices[ 3] = top_left.x()  + x;       vertices[ 4] = top_left.y()  + y;       vertices[ 5] = z;       // Top Left
-    vertices[ 6] = bot_right.x() + x;       vertices[ 7] = bot_right.y() + y;       vertices[ 8] = z;       // Bottom Right
-    vertices[ 9] = bot_left.x()  + x;       vertices[10] = bot_left.y()  + y;       vertices[11] = z;       // Bottom Left
+    getThingVertices(vertices, object, static_cast<float>(object->getAngle()));
     m_default_shader.setAttributeArray( a_default_vertex, vertices.data(), 3 );
     m_default_shader.enableAttributeArray( a_default_vertex );
 
@@ -170,34 +173,11 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
     // ***** Get texture to render with, set texture coordinates
     DrEngineTexture *texture = m_engine->getTexture(object->getTextureNumber());
     if (!texture->texture()->isBound())
-        texture->texture()->bind();
-
-    // ***** Get object position data
-    QPointF center = object->getPosition();
-
-    float x, y, z, half_width, half_height;
-    x = static_cast<float>(center.x());
-    y = static_cast<float>(center.y());
-    z = static_cast<float>(object->z_order);
-    half_width =  (static_cast<float>(texture->width()) *  object->getScaleX() * 1.00f) / 2.0f;
-    half_height = (static_cast<float>(texture->height()) * object->getScaleY() * 1.00f) / 2.0f;
-
-    // ***** Create rotation matrix, apply rotation to object
-    QMatrix4x4 matrix;
-    matrix.rotate( static_cast<float>(object->getAngle()), 0.0, 0.0, 1.0 );
-    QVector3D top_right = matrix * QVector3D( half_width,  half_height, 0);
-    QVector3D top_left =  matrix * QVector3D(-half_width,  half_height, 0);
-    QVector3D bot_right = matrix * QVector3D( half_width, -half_height, 0);
-    QVector3D bot_left =  matrix * QVector3D(-half_width, -half_height, 0);
+        texture->texture()->bind();  
 
     // ***** Load vertices for this object
     QVector<GLfloat> vertices;
-    vertices.clear();
-    vertices.resize( 12 );                  // in sets of x, y, z
-    vertices[ 0] = top_right.x() + x;       vertices[ 1] = top_right.y() + y;       vertices[ 2] = z;           // Top Right
-    vertices[ 3] = top_left.x()  + x;       vertices[ 4] = top_left.y()  + y;       vertices[ 5] = z;           // Top Left
-    vertices[ 6] = bot_right.x() + x;       vertices[ 7] = bot_right.y() + y;       vertices[ 8] = z;           // Bottom Right
-    vertices[ 9] = bot_left.x()  + x;       vertices[10] = bot_left.y()  + y;       vertices[11] = z;           // Bottom Left
+    getThingVertices(vertices, object, static_cast<float>(object->getAngle()));
     m_occluder_shader.setAttributeArray( a_occluder_vertex, vertices.data(), 3 );
     m_occluder_shader.enableAttributeArray( a_occluder_vertex );
 
@@ -271,33 +251,9 @@ void DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Fire_Noise)->texture()->textureId());
     m_engine->getTexture(Asset_Textures::Fire_Noise)->texture()->setWrapMode(QOpenGLTexture::WrapMode::MirroredRepeat);
 
-
-    // ***** Get object position data
-    QPointF center = fire->getPosition();
-    float   x, y, z;
-    float   half_width, half_height;
-    x = static_cast<float>(center.x());
-    y = static_cast<float>(center.y());
-    z = static_cast<float>(fire->z_order);
-    half_width =  static_cast<float>(fire->getSize().x()) * fire->getScaleX() / 2.0f;
-    half_height = static_cast<float>(fire->getSize().y()) * fire->getScaleY() / 2.0f;
-
-    // ***** Create rotation matrix, apply rotation to object
-    QMatrix4x4 matrix;
-    matrix.rotate( static_cast<float>( -fire->getAngle()), 0.0, 0.0, 1.0 );
-    QVector3D top_right = matrix * QVector3D( half_width,  half_height, 0);
-    QVector3D top_left =  matrix * QVector3D(-half_width,  half_height, 0);
-    QVector3D bot_right = matrix * QVector3D( half_width, -half_height, 0);
-    QVector3D bot_left =  matrix * QVector3D(-half_width, -half_height, 0);
-
     // ***** Load vertices for this object
     QVector<GLfloat> vertices;
-    vertices.clear();
-    vertices.resize( 12 );                      // in sets of x, y, z
-    vertices[ 0] = top_right.x() + x;       vertices[ 1] = top_right.y() + y;       vertices[ 2] = z;       // Top Right
-    vertices[ 3] = top_left.x()  + x;       vertices[ 4] = top_left.y()  + y;       vertices[ 5] = z;       // Top Left
-    vertices[ 6] = bot_right.x() + x;       vertices[ 7] = bot_right.y() + y;       vertices[ 8] = z;       // Bottom Right
-    vertices[ 9] = bot_left.x()  + x;       vertices[10] = bot_left.y()  + y;       vertices[11] = z;       // Bottom Left
+    getThingVertices(vertices, fire, static_cast<float>(-fire->getAngle()));
     m_fire_shader.setAttributeArray( a_fire_vertex, vertices.data(), 3 );
     m_fire_shader.enableAttributeArray( a_fire_vertex );
 
@@ -305,7 +261,7 @@ void DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     float now = static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.f);
     m_fire_shader.setUniformValue( u_fire_alpha,    fire->getOpacity() );
     m_fire_shader.setUniformValue( u_fire_time,     now );
-    m_fire_shader.setUniformValue( u_fire_position, x, y );
+    m_fire_shader.setUniformValue( u_fire_position, static_cast<float>(thing->getPosition().x()), static_cast<float>(thing->getPosition().y()) );
     m_fire_shader.setUniformValue( u_fire_width,    static_cast<float>(fire->getSize().x()) * fire->getScaleX() );
     m_fire_shader.setUniformValue( u_fire_height,   static_cast<float>(fire->getSize().y()) * fire->getScaleY() );
 

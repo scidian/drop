@@ -8,6 +8,7 @@
 #include <QtMath>
 
 #include "engine.h"
+#include "engine_texture.h"
 #include "engine_thing_object.h"
 #include "engine_world.h"
 
@@ -36,6 +37,9 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, Body_Type 
     this->z_order = z;
 
     // Object Basics
+    if (texture_number != 0) {
+        this->setSize( QPointF(world->getTexture(texture_number)->width(), world->getTexture(texture_number)->height()) );
+    }
     this->setTextureNumber(texture_number);                                     // Texture to render from
     this->updateBodyPosition( QPointF(x, y), true );
 
