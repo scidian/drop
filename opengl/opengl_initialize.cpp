@@ -392,6 +392,12 @@ void DrOpenGL::loadShaders() {
     u_mirror_color_tint =       m_mirror_shader.uniformLocation(     "u_color_tint" );
     u_mirror_blur =             m_mirror_shader.uniformLocation(     "u_blur" );
     u_mirror_blur_stretch =     m_mirror_shader.uniformLocation(     "u_blur_stretch" );
+    u_mirror_scale =            m_mirror_shader.uniformLocation(     "u_scale" );
+
+    u_mirror_pixel_x =          m_mirror_shader.uniformLocation(     "u_pixel_x" );
+    u_mirror_pixel_y =          m_mirror_shader.uniformLocation(     "u_pixel_y" );
+    u_mirror_bitrate =          m_mirror_shader.uniformLocation(     "u_bitrate" );
+
 
 }
 

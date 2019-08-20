@@ -305,6 +305,11 @@ private:
     int     u_mirror_color_tint;
     int     u_mirror_blur;
     int     u_mirror_blur_stretch;
+    int     u_mirror_scale;
+
+    int     u_mirror_pixel_x;
+    int     u_mirror_pixel_y;
+    int     u_mirror_bitrate;
 
     // ********** End Shaders **********
 

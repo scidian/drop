@@ -23,16 +23,21 @@ uniform highp float u_height;                       // Texture Height
 uniform highp float u_time;                         // Time in seconds
 uniform lowp  float u_angle;                        // Angle of Mirror in degrees
 
-uniform lowp  float u_top;                          // Top of Mirror,        from 0.0 to 1.0 in screen coordinates
-uniform lowp  float u_bottom;                       // Bottom of Mirror,     from 0.0 to 1.0 in screen coordinates
-uniform lowp  float u_left;                         // Left side of Mirror,  from 0.0 to 1.0 in screen coordinates
-uniform lowp  float u_right;                        // Right side of Mirror, from 0.0 to 1.0 in screen coordinates
+uniform highp float u_top;                          // Top of Mirror,        from 0.0 to 1.0 in screen coordinates
+uniform highp float u_bottom;                       // Bottom of Mirror,     from 0.0 to 1.0 in screen coordinates
+uniform highp float u_left;                         // Left side of Mirror,  from 0.0 to 1.0 in screen coordinates
+uniform highp float u_right;                        // Right side of Mirror, from 0.0 to 1.0 in screen coordinates
 
 uniform lowp  vec3  u_color_top;                    // Mirror Color, r/g/b      0.0 to 1.0 x 3
 uniform lowp  vec3  u_color_bottom;                 // Mirror Color, r/g/b      0.0 to 1.0 x 3
 uniform lowp  float u_color_tint;                   // Mirror Color Tint Percent
 uniform lowp  float u_blur;
 uniform lowp  float u_blur_stretch;
+uniform lowp  float u_scale;
+
+uniform highp float u_pixel_x;// = 1.0;             // Pixel Width X    1.0 Normal, 4.0 is nice pixelation
+uniform highp float u_pixel_y;// = 1.0;             // Pixel Width Y    1.0 Normal, 4.0 is nice pixelation
+uniform lowp  float u_bitrate;// = 256;             // Bitrate          Editor:    1 to  256
 
 
 // Other Variables
@@ -82,9 +87,20 @@ void main( void ) {
     // ***** Move coordinates into a vec2 that is not read-only
     highp vec2 coords = coordinates.xy;
 
+    // ***** Pixelation
+    if (u_pixel_x > 1.0 || u_pixel_y > 1.0) {
+        highp float pixel_width =  (1.0 / (u_width));
+        highp float pixel_height = (1.0 / (u_height));
+        highp float real_pixel_x = ((coords.x / 1.0) * u_width);
+        highp float real_pixel_y = (((1.0 - coords.y) / 1.0) * u_height);
+        highp float pixel_x =       u_pixel_x * floor(real_pixel_x / u_pixel_x) * pixel_width;
+        highp float pixel_y = 1.0 - u_pixel_y * floor(real_pixel_y / u_pixel_y) * pixel_height;
+        coords = vec2(pixel_x, pixel_y);
+    }
+
     // Apply rotation
     float rotation = u_angle;   // mod(u_time, 360.0) * 15.0; // <-- spins based on time
-    vec2  mirror_center = vec2(u_right - (u_right - u_left)/2.0, u_top - (u_top - u_bottom)/2.0);
+    highp vec2  mirror_center = vec2(u_right - (u_right - u_left)/2.0, u_top - (u_top - u_bottom)/2.0);
     coords = rotate(coords, mirror_center, rotation);
 
 
@@ -98,8 +114,9 @@ void main( void ) {
     float zoom_coord_y = ((coords.y - 0.5)*diff_h)/u_zoom;
 
     // ***** Grab value from 2D Noise Texture, use it to get refraction values
-    vec3  displacement = texture2D(u_texture_noise, vec2( (zoom_coord_x + player_x) * u_zoom,
-                                                         ((zoom_coord_y + player_y) * u_zoom) / shrink_texture)).rgb;
+    float scale = u_scale / 5.0;
+    vec3  displacement = texture2D(u_texture_noise, vec2( (zoom_coord_x + player_x) * u_zoom / scale,
+                                                         ((zoom_coord_y + player_y) * u_zoom / scale) / shrink_texture)).rgb;
     float pixel_x = (1.0 / u_width)  * u_zoom;
     float pixel_y = (1.0 / u_height) * u_zoom;
     //float refract_x = (displacement.x - displacement.y) * 10.0 * pixel_x;
@@ -129,8 +146,13 @@ void main( void ) {
 
     // Existing pixel color through mirror
     vec2 get_under = vec2(coordinates.x, coordinates.y);
-    original = texture2D(u_texture, get_under);
-    original = mix(original,   reflection,     u_alpha);
+    original = vec4(texture2D(u_texture, get_under).rgb, 1.0);
+    original.rgb = mix(original.rgb,   reflection.rgb,     u_alpha);
+
+
+    // ***** Bit Depth (0.0 to 256.0)
+    highp float bit_depth = u_bitrate;
+    original.rgb = vec3(floor(original.r * bit_depth), floor(original.g * bit_depth), floor(original.b * bit_depth)) / bit_depth;
 
 
     gl_FragColor = original;

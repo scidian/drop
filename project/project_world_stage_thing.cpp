@@ -83,6 +83,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentSettingsMirror();
             addComponentTransform(400, 400, x, -y, DrThingType::Mirror);
             addComponentLayering(z);
+            addComponentAppearance(true);
             break;
         case DrThingType::Water:
             addComponentSettingsWater();
@@ -363,16 +364,18 @@ void DrThing::addComponentSettingsMirror() {
 
     addComponent(Components::Thing_Settings_Mirror, "Mirror Settings", "Settings for current Mirror.", Component_Colors::Silver_Snow, true);
     getComponent(Components::Thing_Settings_Mirror)->setIcon(Component_Icons::Mirror);
-    addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color, Property_Type::Color, QColor(238, 238, 238, 255).rgba(),
+    addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color, Property_Type::Color, QColor(255, 255, 255, 255).rgba(),
                            "Start Color", "Color tint for the top of this Mirror.");
-    addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color, Property_Type::Color, QColor(97, 97, 97, 255).rgba(),
+    addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color, Property_Type::Color, QColor(170, 170, 170, 255).rgba(),
                            "End Color", "Color tint to fade to toward the bottom of this Mirror.");
-    addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Color_Tint, Property_Type::Percent, 25.0,
+    addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Color_Tint, Property_Type::Percent, 50.0,
                            "Tint Percent", "How much color to tint the Mirror, 0 (none) - 100 (all the way)");
-    addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Blur, Property_Type::Double, 0.0,
+    addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Blur, Property_Type::Double, 5.0,
                            "Scatter", "Amount to scatter reflection.");
     addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Blur_Stretch, Property_Type::Double, 0.0,
                            "Scatter Stretch", "Amount to increase scatter away from start of mirror.");
+    addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Scale, Property_Type::RangedDouble, QList<QVariant>({ 1.0, 0.1, 100000.0, 0.1 }),
+                           "Scatter Scale", "How much to scale the scatter noise. Default is 1.0. Must be greater than 0.");
 }
 
 //####################################################################################

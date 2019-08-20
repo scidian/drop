@@ -212,7 +212,7 @@ enum class Properties {
     Thing_Fire_Intensity,           //percent
     Thing_Fire_Smoothness,          //percent
     Thing_Fire_Wavy,                //percent
-    Thing_Fire_Speed,               //ranged double, 1.0 to
+    Thing_Fire_Speed,               //ranged double, 1.0 to ?
 
     // Fisheye Settings
     Thing_Fisheye_Color,            //color
@@ -237,6 +237,7 @@ enum class Properties {
     Thing_Mirror_Color_Tint,        //percent
     Thing_Mirror_Blur,              //double
     Thing_Mirror_Blur_Stretch,      //double
+    Thing_Mirror_Scale,             //ranged double, 0.001 to no limit
 
     // Water Settings
     Thing_Water_Texture,            //list, enum class Water_Texture

@@ -232,6 +232,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
                 item->setPixmap( DrImaging::drawMirror(cs, ce) );
                 item->setAssetWidth(  item->pixmap().width() );
                 item->setAssetHeight( item->pixmap().height() );
+                item->applyFilters();
                 break;
             }
 

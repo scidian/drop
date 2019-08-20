@@ -111,9 +111,9 @@ bool DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, 
     m_fisheye_shader.setUniformValue( u_fisheye_left,       static_cast<float>(left) );
     m_fisheye_shader.setUniformValue( u_fisheye_right,      static_cast<float>(right) );
     m_fisheye_shader.setUniformValue( u_fisheye_start_color,
-                                    static_cast<float>(lens->start_color.redF()),
-                                    static_cast<float>(lens->start_color.greenF()),
-                                    static_cast<float>(lens->start_color.blueF()) );
+                                        static_cast<float>(lens->start_color.redF()),
+                                        static_cast<float>(lens->start_color.greenF()),
+                                        static_cast<float>(lens->start_color.blueF()) );
     m_fisheye_shader.setUniformValue( u_fisheye_color_tint,         lens->color_tint );
     m_fisheye_shader.setUniformValue( u_fisheye_lens_zoom,          lens->lens_zoom );
 
@@ -191,16 +191,17 @@ bool DrOpenGL::drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, D
     m_mirror_shader.setUniformValue( u_mirror_left,       static_cast<float>(left) );
     m_mirror_shader.setUniformValue( u_mirror_right,      static_cast<float>(right) );
     m_mirror_shader.setUniformValue( u_mirror_color_top,
-                                    static_cast<float>(mirror->start_color.redF()),
-                                    static_cast<float>(mirror->start_color.greenF()),
-                                    static_cast<float>(mirror->start_color.blueF()) );
+                                        static_cast<float>(mirror->start_color.redF()),
+                                        static_cast<float>(mirror->start_color.greenF()),
+                                        static_cast<float>(mirror->start_color.blueF()) );
     m_mirror_shader.setUniformValue( u_mirror_color_bottom,
-                                    static_cast<float>(mirror->end_color.redF()),
-                                    static_cast<float>(mirror->end_color.greenF()),
-                                    static_cast<float>(mirror->end_color.blueF()) );
+                                        static_cast<float>(mirror->end_color.redF()),
+                                        static_cast<float>(mirror->end_color.greenF()),
+                                        static_cast<float>(mirror->end_color.blueF()) );
     m_mirror_shader.setUniformValue( u_mirror_color_tint,   mirror->tint_percent );
     m_mirror_shader.setUniformValue( u_mirror_blur,         mirror->blur );
     m_mirror_shader.setUniformValue( u_mirror_blur_stretch, mirror->blur_stretch );
+    m_mirror_shader.setUniformValue( u_mirror_scale,        mirror->scale );
 
     // Set more variables for shader
     m_mirror_shader.setUniformValue( u_mirror_alpha,      mirror->getOpacity() );
@@ -210,6 +211,10 @@ bool DrOpenGL::drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, D
     m_mirror_shader.setUniformValue( u_mirror_height,     static_cast<float>(fbo->height()) );
     m_mirror_shader.setUniformValue( u_mirror_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
     m_mirror_shader.setUniformValue( u_mirror_angle,      angle );
+
+    m_mirror_shader.setUniformValue( u_mirror_pixel_x,    mirror->pixel_x );
+    m_mirror_shader.setUniformValue( u_mirror_pixel_y,    mirror->pixel_y );
+    m_mirror_shader.setUniformValue( u_mirror_bitrate,    mirror->bitrate );
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
@@ -302,13 +307,13 @@ bool DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
     m_water_shader.setUniformValue( u_water_left,       static_cast<float>(left) );
     m_water_shader.setUniformValue( u_water_right,      static_cast<float>(right) );
     m_water_shader.setUniformValue( u_water_start_color,
-                                    static_cast<float>(water->start_color.redF()),
-                                    static_cast<float>(water->start_color.greenF()),
-                                    static_cast<float>(water->start_color.blueF()) );
+                                        static_cast<float>(water->start_color.redF()),
+                                        static_cast<float>(water->start_color.greenF()),
+                                        static_cast<float>(water->start_color.blueF()) );
     m_water_shader.setUniformValue( u_water_end_color,
-                                    static_cast<float>(water->end_color.redF()),
-                                    static_cast<float>(water->end_color.greenF()),
-                                    static_cast<float>(water->end_color.blueF()) );
+                                        static_cast<float>(water->end_color.redF()),
+                                        static_cast<float>(water->end_color.greenF()),
+                                        static_cast<float>(water->end_color.blueF()) );
 
     m_water_shader.setUniformValue( u_water_color_tint,         water->water_tint );
     m_water_shader.setUniformValue( u_water_reflection,         water->reflection_opacity );
@@ -321,9 +326,9 @@ bool DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
     m_water_shader.setUniformValue( u_water_wave_amplitude,     water->wave_amplitude );
 
     m_water_shader.setUniformValue( u_water_surface_color,
-                                    static_cast<float>(water->surface_color.redF()),
-                                    static_cast<float>(water->surface_color.greenF()),
-                                    static_cast<float>(water->surface_color.blueF()) );
+                                        static_cast<float>(water->surface_color.redF()),
+                                        static_cast<float>(water->surface_color.greenF()),
+                                        static_cast<float>(water->surface_color.blueF()) );
     m_water_shader.setUniformValue( u_water_surface_tint,       water->surface_tint );
     m_water_shader.setUniformValue( u_water_surface_height,     water->surface_height );
     m_water_shader.setUniformValue( u_water_surface_flat,       water->surface_keep_flat );

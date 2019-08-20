@@ -352,7 +352,7 @@ QPixmap drawFisheye(QColor color) {
 QPixmap drawMirror(QColor top_color, QColor bottom_color) {
     int width =  400;
     int height = 400;
-    int border = 6;
+    int border = 4;
     QPixmap mirror(width, height);
     mirror.fill(Qt::transparent);
 

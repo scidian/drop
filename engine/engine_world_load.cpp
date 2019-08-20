@@ -241,9 +241,17 @@ void DrEngineWorld::loadMirrorToWorld(DrThing *thing, double offset_x, double of
     float       color_tint =        thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Color_Tint).toFloat() / 100.0f;
     float       blur =              thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Blur).toFloat();
     float       blur_stretch =      thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Blur_Stretch).toFloat();
+    float       scale =             thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Scale).toList().first().toFloat();
 
-    addThing( new DrEngineMirror(this, getNextKey(), info.position.x() + offset_x, -info.position.y() + offset_y, info.z_order, info.angle, info.size,
-                                 color_1, color_2, color_tint, blur, blur_stretch, info.opacity ) );
+    float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toList().first().toInt();
+    QPointF     pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
+
+    DrEngineMirror *mirror = new DrEngineMirror(this, getNextKey(), info.position.x() + offset_x, -info.position.y() + offset_y, info.z_order, info.angle, info.size,
+                                                color_1, color_2, color_tint, blur, blur_stretch, scale, info.opacity );
+    addThing( mirror );
+    mirror->bitrate = bit_rate;
+    mirror->pixel_x = static_cast<float>(pixelation.x());
+    mirror->pixel_y = static_cast<float>(pixelation.y());
 }
 
 
