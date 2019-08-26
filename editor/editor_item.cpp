@@ -90,6 +90,13 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
                     applyFilters();
                     break;
                 }
+                case DrEffectType::Swirl: {
+                    uint color_1 =  m_thing->getComponentProperty(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color)->getValue().toUInt();
+                    m_pixmap = DrImaging::drawSwirl( QColor::fromRgba(color_1) );
+                    setPixmap(m_pixmap);
+                    applyFilters();
+                    break;
+                }
                 case DrEffectType::Water: {
                     uint start_color =  m_thing->getComponentProperty(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color)->getValue().toUInt();
                     uint end_color =    m_thing->getComponentProperty(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color)->getValue().toUInt();

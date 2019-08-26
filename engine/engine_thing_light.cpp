@@ -17,9 +17,9 @@
 //##    Constructor / Destructor
 //####################################################################################
 DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key,
-                             double x, double y, double z,
+                             double x, double y, double z, float opacity,
                              Light_Type type, QColor color, float diameter, QPointF cone, float intensity,
-                             float shadows, bool draw_shadows, float blur, float pulse, float pulse_speed, float opacity)
+                             float shadows, bool draw_shadows, float blur, float pulse, float pulse_speed)
     : DrEngineThing(world, unique_key) {
 
     this->setOpacity( opacity );

@@ -28,14 +28,15 @@ public:
 
 public:
     // Constructor / Destructor
-    DrEngineFisheye(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, QPointF size,
-                    QColor start_color, float tint, float zoom, float opacity);
+    DrEngineFisheye(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, float opacity, QPointF size,
+                    QColor start_color, float tint, float zoom);
     virtual ~DrEngineFisheye() override;
 
     // Abstract Engine Thing Overrides
     virtual void        addToWorld() override;
     virtual DrThingType getThingType() override { return DrThingType::Fisheye; }
     virtual bool        update(double time_passed, double time_warp, QRectF &area) override;
+
 
 };
 

@@ -357,7 +357,7 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
     // ***** Also limits max size
     //       Search keywords: "keep square", "locked", "same size"
     if (original->getThing()) {
-        if (original->getThing()->getThingType() == DrThingType::Light) {
+        if (original->getThing()->getThingType() == DrThingType::Light || original->getThing()->getThingType() == DrThingType::Swirl) {
             if (qFuzzyCompare(start_scale.x(), new_scale_x)) {
                 if (new_scale_y * original->getAssetHeight() >  c_desired_light_fbo_size) new_scale_y =  (c_desired_light_fbo_size / original->getAssetHeight());
                 if (new_scale_y * original->getAssetHeight() < -c_desired_light_fbo_size) new_scale_y = -(c_desired_light_fbo_size / original->getAssetHeight());

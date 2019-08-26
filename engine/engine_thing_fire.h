@@ -35,16 +35,14 @@ public:
 
 public:
     // Constructor / Destructor
-    DrEngineFire(DrEngineWorld *world, long unique_key, double x, double y, double z, QPointF scale, double angle, QPointF size, Fire_Mask mask,
-                 QColor color_1, QColor color_2, QColor smoke, float tint, float smooth, float wave, float speed, float opacity);
+    DrEngineFire(DrEngineWorld *world, long unique_key, double x, double y, double z, QPointF scale, double angle, float opacity, QPointF size,
+                 Fire_Mask mask, QColor color_1, QColor color_2, QColor smoke, float tint, float smooth, float wave, float speed);
     virtual ~DrEngineFire() override;
 
     // Abstract Engine Thing Overrides
     virtual void        addToWorld() override;
     virtual DrThingType getThingType() override { return DrThingType::Fire; }
     virtual bool        update(double time_passed, double time_warp, QRectF &area) override;
-
-
 
 
 };

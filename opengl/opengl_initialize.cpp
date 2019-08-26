@@ -329,8 +329,8 @@ void DrOpenGL::loadShaders() {
 
 
     // ***** Initialize our Fire Shader
-    QOpenGLShader v_fire_shader( QOpenGLShader::Vertex );        v_fire_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
-    QOpenGLShader f_fire_shader( QOpenGLShader::Fragment );      f_fire_shader.compileSourceFile( ":/shaders/frag_fire.glsl" );
+    QOpenGLShader v_fire_shader( QOpenGLShader::Vertex );           v_fire_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader f_fire_shader( QOpenGLShader::Fragment );         f_fire_shader.compileSourceFile( ":/shaders/frag_fire.glsl" );
     m_fire_shader.addShader( &v_fire_shader );
     m_fire_shader.addShader( &f_fire_shader );
     m_fire_shader.link();
@@ -362,8 +362,8 @@ void DrOpenGL::loadShaders() {
 
 
     // ***** Initialize our Mirror Shader
-    QOpenGLShader v_mirror_shader( QOpenGLShader::Vertex );        v_mirror_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
-    QOpenGLShader f_mirror_shader( QOpenGLShader::Fragment );      f_mirror_shader.compileSourceFile( ":/shaders/frag_mirror.glsl" );
+    QOpenGLShader v_mirror_shader( QOpenGLShader::Vertex );         v_mirror_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader f_mirror_shader( QOpenGLShader::Fragment );       f_mirror_shader.compileSourceFile( ":/shaders/frag_mirror.glsl" );
     m_mirror_shader.addShader( &v_mirror_shader );
     m_mirror_shader.addShader( &f_mirror_shader );
     m_mirror_shader.link();
@@ -399,6 +399,40 @@ void DrOpenGL::loadShaders() {
     u_mirror_bitrate =          m_mirror_shader.uniformLocation(     "u_bitrate" );
 
 
+    // ***** Initialize our Swirl Shader
+    QOpenGLShader v_swirl_shader( QOpenGLShader::Vertex );          v_swirl_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader f_swirl_shader( QOpenGLShader::Fragment );        f_swirl_shader.compileSourceFile( ":/shaders/frag_swirl.glsl" );
+    m_swirl_shader.addShader( &v_swirl_shader );
+    m_swirl_shader.addShader( &f_swirl_shader );
+    m_swirl_shader.link();
+
+    // Vertex Shader Input
+    a_swirl_vertex =            m_swirl_shader.attributeLocation(   "vertex" );
+    a_swirl_texture_coord =     m_swirl_shader.attributeLocation(   "texture_coordinates" );
+    u_swirl_matrix =            m_swirl_shader.uniformLocation(     "u_matrix" );
+
+    // Fragment Shader Input
+    u_swirl_alpha =             m_swirl_shader.uniformLocation(     "u_alpha" );
+    u_swirl_zoom =              m_swirl_shader.uniformLocation(     "u_zoom" );
+    u_swirl_pos =               m_swirl_shader.uniformLocation(     "u_position" );
+    u_swirl_width =             m_swirl_shader.uniformLocation(     "u_width" );
+    u_swirl_height =            m_swirl_shader.uniformLocation(     "u_height" );
+    u_swirl_time =              m_swirl_shader.uniformLocation(     "u_time" );
+    u_swirl_angle =             m_swirl_shader.uniformLocation(     "u_angle" );
+
+    u_swirl_top =               m_swirl_shader.uniformLocation(     "u_top" );
+    u_swirl_bottom =            m_swirl_shader.uniformLocation(     "u_bottom" );
+    u_swirl_left =              m_swirl_shader.uniformLocation(     "u_left" );
+    u_swirl_right =             m_swirl_shader.uniformLocation(     "u_right" );
+
+    u_swirl_start_color =       m_swirl_shader.uniformLocation(     "u_start_color" );
+    u_swirl_color_tint =        m_swirl_shader.uniformLocation(     "u_color_tint" );
+    u_swirl_rotation =          m_swirl_shader.uniformLocation(     "u_rotation" );
+    u_swirl_radius =            m_swirl_shader.uniformLocation(     "u_radius" );
+
+    u_swirl_pixel_x =           m_swirl_shader.uniformLocation(     "u_pixel_x" );
+    u_swirl_pixel_y =           m_swirl_shader.uniformLocation(     "u_pixel_y" );
+    u_swirl_bitrate =           m_swirl_shader.uniformLocation(     "u_bitrate" );
 }
 
 

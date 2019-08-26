@@ -17,6 +17,7 @@
 #include "engine/engine_thing_light.h"
 #include "engine/engine_thing_mirror.h"
 #include "engine/engine_thing_object.h"
+#include "engine/engine_thing_swirl.h"
 #include "engine/engine_thing_water.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
@@ -225,6 +226,85 @@ bool DrOpenGL::drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, D
 
     // Release Shader
     m_mirror_shader.release();
+    return true;
+}
+
+
+//####################################################################################
+//##        Renders FBO to screen buffer as a textured quad using Swirl Shader
+//##            - Returns true if rendered, false if not
+//####################################################################################
+bool DrOpenGL::drawFrameBufferUsingSwirlShader(QOpenGLFramebufferObject *fbo, DrEngineSwirl *swirl) {
+
+    // Check effect position and if we should render it
+    double top, bottom, left, right;
+    float  angle = static_cast<float>(swirl->getAngle());
+    if (getEffectPosition(fbo, swirl, top, bottom, left, right, angle) == false) return false;
+
+    // If we are to render, bind the shader
+    if (!m_swirl_shader.bind()) return false;
+    if (!fbo) return false;
+
+    // Bind offscreen frame buffer objects as textures
+    glEnable(GL_TEXTURE_2D);
+    GLint texture = glGetUniformLocation(m_swirl_shader.programId(), "u_texture");
+    glUseProgram(m_swirl_shader.programId());
+    glUniform1i(texture,    0);
+
+    glActiveTexture(GL_TEXTURE0);                           // Texture unit 0
+    glBindTexture(GL_TEXTURE_2D, fbo->texture());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);      // GL_CLAMP_TO_EDGE
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+    // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
+    m_swirl_shader.setUniformValue( u_swirl_matrix, orthoMatrix(fbo->width(), fbo->height()) );
+
+    // Set Texture Coordinates for Shader
+    m_swirl_shader.setAttributeArray(    a_swirl_texture_coord, m_whole_texture_coordinates.data(), 2 );
+    m_swirl_shader.enableAttributeArray( a_swirl_texture_coord );
+
+    // Load vertices for this object
+    QVector<GLfloat> vertices;
+    setQuadVertices(vertices, fbo->width(), fbo->height(), QPointF(0, 0), 0.0f);
+    m_swirl_shader.setAttributeArray(    a_swirl_vertex, vertices.data(), 3 );
+    m_swirl_shader.enableAttributeArray( a_swirl_vertex );
+
+    // Set swirl variables
+    m_swirl_shader.setUniformValue( u_swirl_top,        static_cast<float>(top) );
+    m_swirl_shader.setUniformValue( u_swirl_bottom,     static_cast<float>(bottom) );
+    m_swirl_shader.setUniformValue( u_swirl_left,       static_cast<float>(left) );
+    m_swirl_shader.setUniformValue( u_swirl_right,      static_cast<float>(right) );
+
+    m_swirl_shader.setUniformValue( u_swirl_start_color,
+                                        static_cast<float>(swirl->start_color.redF()),
+                                        static_cast<float>(swirl->start_color.greenF()),
+                                        static_cast<float>(swirl->start_color.blueF()) );
+    m_swirl_shader.setUniformValue( u_swirl_color_tint,         swirl->color_tint );
+    m_swirl_shader.setUniformValue( u_swirl_rotation,   swirl->rotation );
+    m_swirl_shader.setUniformValue( u_swirl_radius,     static_cast<float>(swirl->getSize().x()) );
+
+    // Set more variables for shader
+    m_swirl_shader.setUniformValue( u_swirl_alpha,      swirl->getOpacity() );
+    m_swirl_shader.setUniformValue( u_swirl_zoom,       m_scale );
+    m_swirl_shader.setUniformValue( u_swirl_pos,        m_engine->getCurrentWorld()->getCameraPos().x(), m_engine->getCurrentWorld()->getCameraPos().y(), 0.0f );
+    m_swirl_shader.setUniformValue( u_swirl_width,      static_cast<float>(fbo->width()) );
+    m_swirl_shader.setUniformValue( u_swirl_height,     static_cast<float>(fbo->height()) );
+    m_swirl_shader.setUniformValue( u_swirl_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
+    m_swirl_shader.setUniformValue( u_swirl_angle,      angle );
+
+    m_swirl_shader.setUniformValue( u_swirl_pixel_x,    swirl->pixel_x );
+    m_swirl_shader.setUniformValue( u_swirl_pixel_y,    swirl->pixel_y );
+    m_swirl_shader.setUniformValue( u_swirl_bitrate,    swirl->bitrate );
+
+    // Draw triangles using shader program
+    glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
+
+    // Disable arrays
+    m_swirl_shader.disableAttributeArray( a_swirl_vertex );
+    m_swirl_shader.disableAttributeArray( a_swirl_texture_coord );
+
+    // Release Shader
+    m_swirl_shader.release();
     return true;
 }
 

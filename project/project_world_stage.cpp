@@ -66,6 +66,7 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
         case DrThingType::Fire:
         case DrThingType::Light:
         case DrThingType::Mirror:
+        case DrThingType::Swirl:
         case DrThingType::Water:
             new_name = asset->getComponentProperty(Components::Entity_Name, Properties::Entity_Name)->getValue().toString();
             break;

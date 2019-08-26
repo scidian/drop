@@ -58,6 +58,7 @@ QString StringFromThingType(DrThingType type) {
         case DrThingType::Fisheye:      return "Fisheye";
         case DrThingType::Light:        return "Light";
         case DrThingType::Mirror:       return "Mirror";
+        case DrThingType::Swirl:        return "Swirl";
         case DrThingType::Water:        return "Water";
 
         ///case DrThingType::Action:       return "Action";

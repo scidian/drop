@@ -55,8 +55,8 @@ private:
 public:
     // Constructor / Destructor
     DrEngineLight(DrEngineWorld *world, long unique_key,
-                  double x, double y, double z, Light_Type type, QColor color, float diameter, QPointF cone, float intensity,
-                  float shadows, bool draw_shadows, float blur, float pulse, float pulse_speed, float opacity);
+                  double x, double y, double z, float opacity, Light_Type type, QColor color, float diameter, QPointF cone, float intensity,
+                  float shadows, bool draw_shadows, float blur, float pulse, float pulse_speed);
     virtual ~DrEngineLight() override;
 
     // Abstract Engine Thing Overrides

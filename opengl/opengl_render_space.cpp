@@ -18,6 +18,7 @@
 #include "engine/engine_thing_light.h"
 #include "engine/engine_thing_object.h"
 #include "engine/engine_thing_mirror.h"
+#include "engine/engine_thing_swirl.h"
 #include "engine/engine_thing_water.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
@@ -68,6 +69,7 @@ void DrOpenGL::drawSpace() {
             case DrThingType::Fisheye:
             case DrThingType::Light:
             case DrThingType::Mirror:
+            case DrThingType::Swirl:
             case DrThingType::Water:
                 if (drawEffect(thing, last_thing)) ++effect_count;
                 break;
@@ -169,6 +171,24 @@ bool DrOpenGL::drawEffect(DrEngineThing *thing, DrThingType &last_thing) {
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);          // Standard blend function
             if (drawFrameBufferUsingMirrorShader(m_texture_fbo, mirror)) {
                 last_thing = DrThingType::Mirror;
+                return true;
+            }
+        }
+    }
+
+    // ***** If Swirl, draw with seperate Swirl Shader, then move to next Thing
+    if (thing->getThingType() == DrThingType::Swirl) {
+        DrEngineSwirl *swirl = dynamic_cast<DrEngineSwirl*>(thing);
+        if (swirl) {
+            if (last_thing != DrThingType::Swirl) {
+                releaseOffscreenBuffer();
+                QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);
+                bindOffscreenBuffer(false);
+            }
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);          // Standard blend function
+            if (drawFrameBufferUsingSwirlShader(m_texture_fbo, swirl)) {
+                last_thing = DrThingType::Swirl;
                 return true;
             }
         }

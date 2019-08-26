@@ -11,8 +11,8 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrEngineFisheye::DrEngineFisheye(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, QPointF size,
-                                 QColor start_color, float tint, float zoom, float opacity) :
+DrEngineFisheye::DrEngineFisheye(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, float opacity, QPointF size,
+                                 QColor start_color, float tint, float zoom) :
     DrEngineThing(world, unique_key) {
 
     this->setAngle(angle);

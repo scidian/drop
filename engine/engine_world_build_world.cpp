@@ -32,6 +32,7 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
 
     // ***** Set up physics world
     m_background_color = QColor(0, 0, 0);
+    m_ambient_light = 50;
     demo_space = new_space_type;
 
     m_space = cpSpaceNew();                             // Creates an empty space
@@ -110,6 +111,7 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
 
         // ***** Load Current Stage to origin position
         loadStageToWorld(stage, 0, 0);
+
 
 
 

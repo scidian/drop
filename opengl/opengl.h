@@ -27,6 +27,7 @@ class DrEngineFisheye;
 class DrEngineLight;
 class DrEngineMirror;
 class DrEngineObject;
+class DrEngineSwirl;
 class DrEngineThing;
 class DrEngineWater;
 class FormEngine;
@@ -96,9 +97,100 @@ private:
     QVector<DrEngineLight*> m_glow_lights;
 
 
+public:
+    // Constructor / Destructor
+    DrOpenGL(QWidget *parent, FormEngine *form_engine, DrEngine *engine);
+    ~DrOpenGL() override;
 
-    // ********** Shader Programs / Attributes / Uniforms **********
+    // Event Overrides
+    virtual void    keyPressEvent(QKeyEvent *event) override;
+    virtual void    keyReleaseEvent(QKeyEvent *event) override;
+    virtual void    mousePressEvent(QMouseEvent *event) override;
+    virtual void    mouseReleaseEvent(QMouseEvent *event) override;
+    virtual void    mouseMoveEvent(QMouseEvent *event) override;
 
+    // OpenGL Overrides
+    virtual void    initializeGL() override;
+    virtual void    resizeGL(int w, int h) override;
+    virtual void    paintGL() override;
+#if QT_CONFIG(wheelevent)
+    virtual void    wheelEvent(QWheelEvent *event) override;
+#endif
+
+    // Function Calls
+    QVector3D       mapFromScreen(double x, double y);
+    QVector3D       mapFromScreen(float x, float y);
+    QVector3D       mapFromScreen(QPointF point);
+    QPointF         mapToScreen(double x, double y, double z);
+    QPointF         mapToScreen(float x, float y, float z);
+    QPointF         mapToScreen(QVector3D point3D);
+    QPointF         mapToFBO(QVector3D point3D, QOpenGLFramebufferObject *fbo, QMatrix4x4 matrix);
+    void            zoomInOut(int level);
+
+    // Initialization Calls
+    void            loadBuiltInTextures();
+    void            loadProjectTextures();
+    void            loadShaders();
+
+    // Render Calls
+    void            bindOffscreenBuffer(bool clear = true);
+    void            cullingOn();
+    void            cullingOff();
+    void            drawCube(QVector3D center);
+    void            drawDebug(QPainter &painter);
+    void            drawDebugCollisions(QPainter &painter);
+    void            drawDebugHealth(QPainter &painter);
+    void            drawDebugHealthNative(QPainter &painter);
+    void            drawDebugJoints(QPainter &painter);
+    void            drawDebugShapes(QPainter &painter);
+    bool            drawEffect(DrEngineThing *thing, DrThingType &last_thing);
+    void            drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo);
+    bool            drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, DrEngineFisheye *lens);
+    void            drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo);
+    bool            drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, DrEngineMirror *mirror);
+    void            drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower, Blend_Mode mode);
+    bool            drawFrameBufferUsingSwirlShader(QOpenGLFramebufferObject *fbo, DrEngineSwirl *swirl);
+    bool            drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water);
+    bool            drawGlowBuffer();
+    void            drawObject(DrEngineThing *thing, DrThingType &last_thing);
+    bool            drawObjectFire(DrEngineThing *thing, DrThingType &last_thing);
+    bool            drawObjectOccluder(DrEngineThing *thing, bool need_init_shader = true);
+    void            drawSpace();
+    bool            getEffectPosition(QOpenGLFramebufferObject *fbo, DrEngineThing *thing,
+                                      double &top, double &bottom, double &left, double &right, float &angle);
+    void            getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing, float angle);
+    QColor          objectDebugColor(DrEngineObject *object, bool text_color = false);
+    QMatrix4x4      occluderMatrix(Render_Type render_type, bool use_offset);
+    QMatrix4x4      orthoMatrix(float width, float height);
+    void            updateViewMatrix(Render_Type render_type, bool use_offset);
+    void            releaseOffscreenBuffer();
+    void            setShaderDefaultValues(float texture_width, float texture_height);
+    void            setNumberTextureCoordinates(QString letter, std::vector<float> &texture_coordinates);
+    void            setQuadVertices(QVector<GLfloat> &vertices, float width, float height, QPointF center, float z);
+    void            setQuadRotatedVertices(QVector<GLfloat> &vertices, QVector3D &top_right, QVector3D &top_left,
+                                           QVector3D &bot_left, QVector3D &bot_right, QVector3D position);
+
+    // Soft Shadows / Lights
+    void            bindGlowLightsBuffer(float ambient_light);
+    void            bindOccluderMapBuffer();
+    void            bindLightOcculderBuffer(DrEngineLight *light);
+    void            bindLightShadowBuffer(DrEngineLight *light);
+    void            checkLightBuffers();
+    void            draw1DShadowMap(DrEngineLight *light);
+    bool            draw2DLight(DrEngineLight *light);
+    void            drawGlowLights();
+    void            drawShadowMaps();
+    int             findNeededShadowMaps();
+    void            process2DLights();
+
+    // Getters and Setters
+    float           getScale()          { return m_scale; }
+
+
+//####################################################################################
+//##    Shader Programs / Attributes / Uniforms
+//####################################################################################
+private:
     // Default Shader
     QOpenGLShaderProgram m_default_shader;
     int     a_default_vertex;
@@ -311,96 +403,33 @@ private:
     int     u_mirror_pixel_y;
     int     u_mirror_bitrate;
 
+
+    // Swirl Shader
+    QOpenGLShaderProgram m_swirl_shader;
+    int     a_swirl_vertex;
+    int     a_swirl_texture_coord;
+    int     u_swirl_matrix;
+
+    int     u_swirl_width;                                       // Width of texture
+    int     u_swirl_height;                                      // Height of texture
+    int     u_swirl_time;                                        // Time in seconds
+    int     u_swirl_angle;                                       // Angle of swirl
+    int     u_swirl_alpha;                                       // Opacity
+    int     u_swirl_zoom;                                        // Current zoom level (need for swirl shader)
+    int     u_swirl_pos;                                         // Current camera position (need for swirl shader)
+
+    int     u_swirl_top, u_swirl_bottom, u_swirl_left, u_swirl_right;
+
+    int     u_swirl_start_color;
+    int     u_swirl_color_tint;
+    int     u_swirl_rotation;
+    int     u_swirl_radius;
+
+    int     u_swirl_pixel_x;
+    int     u_swirl_pixel_y;
+    int     u_swirl_bitrate;
+
     // ********** End Shaders **********
-
-
-public:
-    // Constructor / Destructor
-    DrOpenGL(QWidget *parent, FormEngine *form_engine, DrEngine *engine);
-    ~DrOpenGL() override;
-
-    // Event Overrides
-    virtual void    keyPressEvent(QKeyEvent *event) override;
-    virtual void    keyReleaseEvent(QKeyEvent *event) override;
-    virtual void    mousePressEvent(QMouseEvent *event) override;
-    virtual void    mouseReleaseEvent(QMouseEvent *event) override;
-    virtual void    mouseMoveEvent(QMouseEvent *event) override;
-
-    // OpenGL Overrides
-    virtual void    initializeGL() override;
-    virtual void    resizeGL(int w, int h) override;
-    virtual void    paintGL() override;
-#if QT_CONFIG(wheelevent)
-    virtual void    wheelEvent(QWheelEvent *event) override;
-#endif
-
-    // Function Calls
-    QVector3D       mapFromScreen(double x, double y);
-    QVector3D       mapFromScreen(float x, float y);
-    QVector3D       mapFromScreen(QPointF point);
-    QPointF         mapToScreen(double x, double y, double z);
-    QPointF         mapToScreen(float x, float y, float z);
-    QPointF         mapToScreen(QVector3D point3D);
-    QPointF         mapToFBO(QVector3D point3D, QOpenGLFramebufferObject *fbo, QMatrix4x4 matrix);
-    void            zoomInOut(int level);
-
-    // Initialization Calls
-    void            loadBuiltInTextures();
-    void            loadProjectTextures();
-    void            loadShaders();
-
-    // Render Calls
-    void            bindOffscreenBuffer(bool clear = true);
-    void            cullingOn();
-    void            cullingOff();
-    void            drawCube(QVector3D center);
-    void            drawDebug(QPainter &painter);
-    void            drawDebugCollisions(QPainter &painter);
-    void            drawDebugHealth(QPainter &painter);
-    void            drawDebugHealthNative(QPainter &painter);
-    void            drawDebugJoints(QPainter &painter);
-    void            drawDebugShapes(QPainter &painter);
-    bool            drawEffect(DrEngineThing *thing, DrThingType &last_thing);
-    void            drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo);
-    bool            drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, DrEngineFisheye *lens);
-    void            drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo);
-    bool            drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, DrEngineMirror *mirror);
-    void            drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower, Blend_Mode mode);
-    bool            drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water);
-    bool            drawGlowBuffer();
-    void            drawObject(DrEngineThing *thing, DrThingType &last_thing);
-    bool            drawObjectFire(DrEngineThing *thing, DrThingType &last_thing);
-    bool            drawObjectOccluder(DrEngineThing *thing, bool need_init_shader = true);
-    void            drawSpace();
-    bool            getEffectPosition(QOpenGLFramebufferObject *fbo, DrEngineThing *thing,
-                                      double &top, double &bottom, double &left, double &right, float &angle);
-    void            getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing, float angle);
-    QColor          objectDebugColor(DrEngineObject *object, bool text_color = false);
-    QMatrix4x4      occluderMatrix(Render_Type render_type, bool use_offset);
-    QMatrix4x4      orthoMatrix(float width, float height);
-    void            updateViewMatrix(Render_Type render_type, bool use_offset);
-    void            releaseOffscreenBuffer();
-    void            setShaderDefaultValues(float texture_width, float texture_height);
-    void            setNumberTextureCoordinates(QString letter, std::vector<float> &texture_coordinates);
-    void            setQuadVertices(QVector<GLfloat> &vertices, float width, float height, QPointF center, float z);
-    void            setQuadRotatedVertices(QVector<GLfloat> &vertices, QVector3D &top_right, QVector3D &top_left,
-                                           QVector3D &bot_left, QVector3D &bot_right, QVector3D position);
-
-    // Soft Shadows / Lights
-    void            bindGlowLightsBuffer(float ambient_light);
-    void            bindOccluderMapBuffer();
-    void            bindLightOcculderBuffer(DrEngineLight *light);
-    void            bindLightShadowBuffer(DrEngineLight *light);
-    void            checkLightBuffers();
-    void            draw1DShadowMap(DrEngineLight *light);
-    bool            draw2DLight(DrEngineLight *light);
-    void            drawGlowLights();
-    void            drawShadowMaps();
-    int             findNeededShadowMaps();
-    void            process2DLights();
-
-    // Getters and Setters
-    float           getScale()          { return m_scale; }
 
 };
 

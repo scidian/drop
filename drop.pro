@@ -105,6 +105,7 @@ SOURCES += \
     engine/engine_thing_mirror.cpp \
     engine/engine_thing_object.cpp \
     engine/engine_thing_object_create.cpp \
+    engine/engine_thing_swirl.cpp \
     engine/engine_thing_water.cpp \
     engine/engine_world.cpp \
     engine/engine_world_build_player.cpp \
@@ -132,6 +133,7 @@ SOURCES += \
     forms/form_popup_grid_snap.cpp \
     forms/form_settings.cpp \
     helper.cpp \
+    image_draw_effects.cpp \
     image_filter.cpp \
     library/poly_partition.cpp \
     main.cpp \
@@ -230,6 +232,7 @@ HEADERS += \
     engine/engine_thing_light.h \
     engine/engine_thing_mirror.h \
     engine/engine_thing_object.h \
+    engine/engine_thing_swirl.h \
     engine/engine_thing_water.h \
     engine/engine_world.h \
     engine/form_engine.h \

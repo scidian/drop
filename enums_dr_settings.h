@@ -76,6 +76,7 @@ enum class Components {
     Thing_Settings_Fisheye,
     Thing_Settings_Light,
     Thing_Settings_Mirror,
+    Thing_Settings_Swirl,
     Thing_Settings_Water,
     Thing_Settings_Water_Ripple,
     Thing_Settings_Water_Wave,
@@ -238,6 +239,11 @@ enum class Properties {
     Thing_Mirror_Blur,              //double
     Thing_Mirror_Blur_Stretch,      //double
     Thing_Mirror_Scale,             //ranged double, 0.001 to no limit
+
+    // Swirl Settings
+    Thing_Swirl_Start_Color,        //color
+    Thing_Swirl_Color_Tint,         //percent
+    Thing_Swirl_Angle,              //double
 
     // Water Settings
     Thing_Water_Texture,            //list, enum class Water_Texture

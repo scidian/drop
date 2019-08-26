@@ -33,6 +33,7 @@ private:
 
     // Local Variables
     DrThingType     m_thing_type;                       // Holds type of current Thing
+    DrEffectType    m_effect_type;                      // Holds type of Effect, if thing is an Effect and has a sub EffectType
     long            m_asset_key;                        // Holds the associated asset key, this way we know what image to grab for GraphicsView
     DrItem         *m_item_in_scene = nullptr;          // Holds a pointer to a QGraphicsItem if this Thing is currently represented in the editor
 
@@ -47,6 +48,7 @@ public:
 
     // Getters and setters
     DrThingType     getThingType()              { return m_thing_type; }
+    DrEffectType    getEffectType()             { return m_effect_type; }
     DrProject*      getParentProject()          { return m_parent_project; }
     DrWorld*        getParentWorld()            { return m_parent_world; }
     DrStage*        getParentStage()            { return m_parent_stage; }
@@ -73,6 +75,7 @@ public:
     void    addComponentSettingsFisheye();
     void    addComponentSettingsLight(QColor color);
     void    addComponentSettingsMirror();
+    void    addComponentSettingsSwirl();
     void    addComponentSettingsWater();
 
 };

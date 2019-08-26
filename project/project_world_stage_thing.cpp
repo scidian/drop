@@ -85,6 +85,12 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentLayering(z);
             addComponentAppearance(true);
             break;
+        case DrThingType::Swirl:
+            addComponentSettingsSwirl();
+            addComponentTransform(400, 400, x, -y, DrThingType::Swirl);
+            addComponentLayering(z);
+            addComponentAppearance(true);
+            break;
         case DrThingType::Water:
             addComponentSettingsWater();
             addComponentTransform(400, 400, x, -y, DrThingType::Water);
@@ -376,6 +382,25 @@ void DrThing::addComponentSettingsMirror() {
                            "Scatter Stretch", "Amount to increase scatter away from start of mirror.");
     addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Scale, Property_Type::RangedDouble, QList<QVariant>({ 1.0, 0.1, 100000.0, 0.1 }),
                            "Scatter Scale", "How much to scale the scatter noise. Default is 1.0. Must be greater than 0.");
+}
+
+//####################################################################################
+//##    Swirl Components
+//####################################################################################
+void DrThing::addComponentSettingsSwirl() {
+    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Swirl",
+                           "Effect Name", "Name of the current Effect.", false, false);
+
+    addComponent(Components::Thing_Settings_Swirl, "Swirl Settings", "Settings for current Swirl.", Component_Colors::Purple_Pastel, true);
+    getComponent(Components::Thing_Settings_Swirl)->setIcon(Component_Icons::Swirl);
+    addPropertyToComponent(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color, Property_Type::Color, QColor(255, 255, 255, 255).rgba(),
+                           "Color", "Color tint for this Lens.");
+    addPropertyToComponent(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Color_Tint, Property_Type::Percent, 0.0,
+                           "Tint Percent", "How much color to tint the Lens, 0 (none) - 100 (all the way)");
+    addPropertyToComponent(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Angle, Property_Type::Double, 180.0,
+                           "Angle", "Amount to swirl images under the Swirl effect.");
 }
 
 //####################################################################################

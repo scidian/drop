@@ -11,5 +11,6 @@
         <file>shaders/frag_fisheye.glsl</file>
         <file>shaders/frag_fire.glsl</file>
         <file>shaders/frag_mirror.glsl</file>
+        <file>shaders/frag_swirl.glsl</file>
     </qresource>
 </RCC>

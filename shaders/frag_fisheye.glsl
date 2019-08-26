@@ -144,7 +144,7 @@ void main( void ) {
     //uv = lens_center + normalize(dist) * asin(radius) / (3.14159 * 0.5);                                                  // ASINR
     coords = rotate(vec2(uv.x, uv.y), lens_center, -rotation);
 
-    // Mix in overlay_color and water texture
+    // Mix in overlay_color and lens texture
     vec4 lens = texture2D(u_texture, coords);
     lens = vec4( mix(lens.rgb, start_color, color_tint * (1.0 - (radius / lens_size)*0.75)), 1.0 );
 

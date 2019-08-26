@@ -46,6 +46,7 @@ namespace DrImaging {
     QPixmap drawFisheye(QColor color);
     QPixmap drawLight(QColor color, int diameter, float cone_start, float cone_end, float intensity, float blur);
     QPixmap drawMirror(QColor top_color, QColor bottom_color);
+    QPixmap drawSwirl(QColor top_color);
     QPixmap drawWater(QColor top_color, QColor bottom_color);
 
 }

@@ -113,7 +113,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
                 // ***** Also limits max size
                 //       Search keywords: "keep square", "locked", "same size"
                 bool pretest = false;
-                if (thing->getThingType() == DrThingType::Light) {
+                if (thing->getThingType() == DrThingType::Light || thing->getThingType() == DrThingType::Swirl) {
                     if (property == Properties::Thing_Size) {
                         if (Dr::IsCloseTo(scale.y(), size.y() / item->getAssetHeight(), 0.001)) {
                             if (size.x() >  c_desired_light_fbo_size) size.setX( c_desired_light_fbo_size);
@@ -230,6 +230,17 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
                 QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color).toUInt());
                 QColor ce = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color).toUInt());
                 item->setPixmap( DrImaging::drawMirror(cs, ce) );
+                item->setBasePixmap(  item->pixmap() );
+                item->setAssetWidth(  item->pixmap().width() );
+                item->setAssetHeight( item->pixmap().height() );
+                item->applyFilters();
+                break;
+            }
+
+            case Properties::Thing_Swirl_Start_Color: {
+                QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color).toUInt());
+                item->setPixmap( DrImaging::drawSwirl(cs) );
+                item->setBasePixmap(  item->pixmap() );
                 item->setAssetWidth(  item->pixmap().width() );
                 item->setAssetHeight( item->pixmap().height() );
                 item->applyFilters();
@@ -241,6 +252,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
                 QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color).toUInt());
                 QColor ce = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color).toUInt());
                 item->setPixmap( DrImaging::drawWater(cs, ce) );
+                item->setBasePixmap(  item->pixmap() );
                 item->setAssetWidth(  item->pixmap().width() );
                 item->setAssetHeight( item->pixmap().height() );
                 item->applyFilters();

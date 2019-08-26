@@ -51,19 +51,20 @@ public:
 
 public:
     // Constructor / Destructor
-    DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, QPointF size, Water_Texture texture, QColor start_color, QColor end_color,
+    DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, float opacity, QPointF size,
+                  Water_Texture texture, QColor start_color, QColor end_color,
                   float tint, float reflection,
                   float rip_length,     float rip_speed, float rip_amplitude, float rip_stretch,
                   float w_length,       float w_speed,   float w_amplitude,
                   QColor foam_color,    float foam_tint, float foam_height, bool foam_flat,
-                  float r_reflection,   float r_underwater, float r_texture, float r_foam, float texture_movement,
-                  float opacity);
+                  float r_reflection,   float r_underwater, float r_texture, float r_foam, float texture_movement);
     virtual ~DrEngineWater() override;
 
     // Abstract Engine Thing Overrides
     virtual void        addToWorld() override;
     virtual DrThingType getThingType() override { return DrThingType::Water; }
     virtual bool        update(double time_passed, double time_warp, QRectF &area) override;
+
 
 };
 

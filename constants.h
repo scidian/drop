@@ -72,6 +72,7 @@ namespace Component_Icons {
     const QString Fisheye       { QString(":/assets/inspector_icons/comp_fisheye.png") };
     const QString Light         { QString(":/assets/inspector_icons/comp_light.png") };
     const QString Mirror        { QString(":/assets/inspector_icons/comp_mirror.png") };
+    const QString Swirl         { QString(":/assets/inspector_icons/comp_swirl.png") };
     const QString Water         { QString(":/assets/inspector_icons/comp_water.png") };
     const QString Water_Ripple  { QString(":/assets/inspector_icons/comp_water_ripple.png") };
     const QString Water_Wave    { QString(":/assets/inspector_icons/comp_water_wave.png") };

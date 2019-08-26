@@ -72,6 +72,7 @@ enum class DrThingType {
     Fisheye,
     Light,
     Mirror,
+    Swirl,
     Water,
 
     //Action,

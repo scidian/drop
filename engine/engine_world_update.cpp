@@ -87,11 +87,14 @@ void DrEngineWorld::updateWorld(double time_passed) {
                 stages.append(stage_pair.second);
             }
         }
-        int stage_count = static_cast<int>(stages.size());
-        int stage_num = QRandomGenerator::global()->bounded(0, stage_count);
-        DrStage *stage = stages[stage_num];
 
-        loadStageToWorld( stage, m_loaded_to, 0);
+        // If there is at least one other stage available, load it up
+        if (stages.count() >= 1) {
+            int stage_count = static_cast<int>(stages.size());
+            int stage_num = QRandomGenerator::global()->bounded(0, stage_count);
+            DrStage *stage = stages[stage_num];
+            loadStageToWorld( stage, m_loaded_to, 0);
+        }
     }
 
 

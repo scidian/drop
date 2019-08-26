@@ -39,6 +39,13 @@ uniform       bool  u_cartoon;// = false;           // Cartoon          True / F
 uniform       bool  u_wavy;// = false;              // Wavy             True / False
 
 
+// Constants
+const   lowp  float THRESHOLD = 0.75;                       // Alpha threshold for our occlusion map
+const   highp float PI =  3.14159;                          // Pi
+const   highp float RAD = 6.2831853;                        // 2.0 * PI is 360 degrees in radians
+const   highp float PI180 = highp float(PI / 180.0);        // To convert Degrees to Radians
+
+
 //####################################################################################
 //##        Fast Rgb / Hsv Conversion Functions
 //####################################################################################
@@ -58,7 +65,6 @@ vec3 hsvToRgb(vec3 c) {
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
-
 
 
 //####################################################################################
@@ -156,6 +162,31 @@ vec3 cartoonHsvToRgb(float h, float s, float v ) {
 }
 
 
+//####################################################################################
+//##        2D Rotation / Translation
+//####################################################################################
+vec2 translate(vec2 v, float x, float y) {
+    v.x = v.x + x;
+    v.y = v.y + y;
+    return v;
+}
+
+vec2 rotate(vec2 v, vec2 center_point, float angle) {
+    v = translate(v, -(center_point.x), -(center_point.y));         // Translate to center point
+    v.x *= (u_width / u_height);                                    // Account for texture ratio
+    float a = angle * PI180;                                        // Convert to radians
+    float s = sin(a);
+    float c = cos(a);
+
+    mat2 m = mat2(c, s, -s, c);
+    v = m * v;
+
+    v.x /= (u_width / u_height);                                    // Account for texture ratio
+    v = translate(v,  (center_point.x),  (center_point.y));         // Remove center translation
+    return v;
+}
+
+
 
 //####################################################################################
 //##        Main Shader Function
@@ -167,12 +198,41 @@ void main( void ) {
     float time = u_time;
 
     // ***** WAVY
+//    if (u_wavy) {
+//        //time = 100.0;                           // !!! Disables imported time (turns off animation)
+//        vec2  tc =  coords.xy;
+//        vec2  p =   -1.0 + 2.0 * tc;
+//        float len = length(p);
+//        coords = tc + (p / len) * cos(len*12.0 - time*4.0) * 0.03;
+//    }
+
+
+    // ***** SWIRL
     if (u_wavy) {
-        //time = 100.0;                           // !!! Disables imported time (turns off animation)
-        vec2  tc =  coords.xy;
-        vec2  p =   -1.0 + 2.0 * tc;
-        float len = length(p);
-        coords = tc + (p / len) * cos(len*12.0 - time*4.0) * 0.03;
+        float radius = 200.0;
+        float angle = 1.2;      // 5.0 is about as high as youd want to go?
+        vec2  center = vec2(u_width / 2.0, u_height / 2.0);
+
+        vec2 tex_size = vec2(u_width, u_height);
+        vec2 tc = coords * tex_size;
+        tc -= center;
+        float dist = length(tc);
+        if (dist < radius) {
+            float percent = (radius - dist) / radius;
+            float theta = percent * percent * angle * 8.0;
+            float s = sin(theta);
+            float c = cos(theta);
+            tc = vec2(dot(tc, vec2(c, -s)), dot(tc, vec2(s, c)));
+
+            tc += center;
+            tc /= tex_size;
+            vec3 color = texture2D(u_texture, tc).rgb;
+            gl_FragColor = vec4(color, 1.0);
+            return;
+        } else {
+            gl_FragColor = texture2D(u_texture, coordinates);
+            return;
+        }
     }
 
 

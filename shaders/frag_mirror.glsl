@@ -40,7 +40,7 @@ uniform highp float u_pixel_y;// = 1.0;             // Pixel Width Y    1.0 Norm
 uniform lowp  float u_bitrate;// = 256;             // Bitrate          Editor:    1 to  256
 
 
-// Other Variables
+// Constants
 const   lowp  float THRESHOLD = 0.75;                       // Alpha threshold for our occlusion map
 const   highp float PI =  3.14159;                          // Pi
 const   highp float RAD = 6.2831853;                        // 2.0 * PI is 360 degrees in radians
@@ -136,15 +136,15 @@ void main( void ) {
     //reflection = texture2D(u_texture, vec2(              coords.x + refract_x*refract_reflection - xoffset,               // OPTIONAL: Original reflection
     //                                       2.0*y_start - coords.y - refract_y*refract_reflection + yoffset*bob) );
     vec2 get_reflection = vec2(coords.x + refract_x, u_top + (u_top - coords.y) + refract_y);
-         get_reflection = clamp(get_reflection, (1.0 / u_width), 1.0 - (1.0 / u_height));
          get_reflection = rotate(get_reflection, mirror_center, -rotation);
+         //get_reflection = clamp(get_reflection, (1.0 / u_width), 1.0 - (1.0 / u_height));
     reflection = texture2D(u_texture, get_reflection);
 
     vec3 mirror_color = mix(start_color, end_color, smoothstep(0.0, 1.0, (coords.y - u_top) / (u_bottom - u_top)));
     reflection.rgb = mix(reflection.rgb, mirror_color, color_tint);
 
 
-    // Existing pixel color through mirror
+    // ***** Existing pixel color through mirror
     vec2 get_under = vec2(coordinates.x, coordinates.y);
     original = vec4(texture2D(u_texture, get_under).rgb, 1.0);
     original.rgb = mix(original.rgb,   reflection.rgb,     u_alpha);
