@@ -127,10 +127,8 @@ void main( void ) {
     vec4 original = vec4(color, u_alpha);
 
 
-
     // ***** Mix in overlay_color
-    original.rgb = mix(original.rgb, u_start_color, u_color_tint * (1.0 - (radius / tex_size.x)*0.75));
-
+    original.rgb = mix(original.rgb, u_start_color, u_color_tint * (1.0 - (dist / radius)*0.75));
 
     // ***** Bit Depth (0.0 to 256.0)
     highp float bit_depth = u_bitrate;

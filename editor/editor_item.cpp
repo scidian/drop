@@ -83,16 +83,17 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
                     break;
                 }
                 case DrEffectType::Mirror: {
-                    uint color_1 =  m_thing->getComponentProperty(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color)->getValue().toUInt();
-                    uint color_2 =  m_thing->getComponentProperty(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color)->getValue().toUInt();
+                    uint color_1 = m_thing->getComponentProperty(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color)->getValue().toUInt();
+                    uint color_2 = m_thing->getComponentProperty(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color)->getValue().toUInt();
                     m_pixmap = DrImaging::drawMirror( QColor::fromRgba(color_1), QColor::fromRgba(color_2) );
                     setPixmap(m_pixmap);
                     applyFilters();
                     break;
                 }
                 case DrEffectType::Swirl: {
-                    uint color_1 =  m_thing->getComponentProperty(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color)->getValue().toUInt();
-                    m_pixmap = DrImaging::drawSwirl( QColor::fromRgba(color_1) );
+                    uint color_1 = m_thing->getComponentProperty(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color)->getValue().toUInt();
+                    float  angle = m_thing->getComponentProperty(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Angle)->getValue().toFloat();
+                    m_pixmap = DrImaging::drawSwirl( QColor::fromRgba(color_1), static_cast<double>(angle) );
                     setPixmap(m_pixmap);
                     applyFilters();
                     break;

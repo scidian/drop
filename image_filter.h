@@ -42,11 +42,13 @@ namespace DrImaging {
     QPixmap applyPixelation( const QPixmap& from_pixmap, QPointF data_pair );
     QImage  applyPixelation( const QImage&  from_image,  QPointF data_pair );
 
+    QPixmap drawFibonacci(QColor background_color, QColor pen_color);
+
     QPixmap drawFire(QColor color_1, QColor color_2, QColor smoke, Fire_Mask mask);
     QPixmap drawFisheye(QColor color);
     QPixmap drawLight(QColor color, int diameter, float cone_start, float cone_end, float intensity, float blur);
     QPixmap drawMirror(QColor top_color, QColor bottom_color);
-    QPixmap drawSwirl(QColor top_color);
+    QPixmap drawSwirl(QColor top_color, double angle);
     QPixmap drawWater(QColor top_color, QColor bottom_color);
 
 }

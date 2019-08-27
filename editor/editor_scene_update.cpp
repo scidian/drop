@@ -237,9 +237,11 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
                 break;
             }
 
-            case Properties::Thing_Swirl_Start_Color: {
+            case Properties::Thing_Swirl_Start_Color:
+            case Properties::Thing_Swirl_Angle: {
                 QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color).toUInt());
-                item->setPixmap( DrImaging::drawSwirl(cs) );
+                float  a =                   item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Angle).toFloat();
+                item->setPixmap( DrImaging::drawSwirl(cs, static_cast<double>(a)) );
                 item->setBasePixmap(  item->pixmap() );
                 item->setAssetWidth(  item->pixmap().width() );
                 item->setAssetHeight( item->pixmap().height() );

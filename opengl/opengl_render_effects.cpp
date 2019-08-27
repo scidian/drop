@@ -170,8 +170,8 @@ bool DrOpenGL::drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, D
 
     glActiveTexture(GL_TEXTURE0);                           // Texture unit 0
     glBindTexture(GL_TEXTURE_2D, fbo->texture());
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);      // GL_CLAMP_TO_EDGE // <-- Was better for sides before rotation was added
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);      // Better for reflection
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER); // GL_CLAMP_TO_EDGE  // GL_MIRRORED_REPEAT
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER); // GL_CLAMP_TO_EDGE  // GL_MIRRORED_REPEAT
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
     m_mirror_shader.setUniformValue( u_mirror_matrix, orthoMatrix(fbo->width(), fbo->height()) );
@@ -253,8 +253,8 @@ bool DrOpenGL::drawFrameBufferUsingSwirlShader(QOpenGLFramebufferObject *fbo, Dr
 
     glActiveTexture(GL_TEXTURE0);                           // Texture unit 0
     glBindTexture(GL_TEXTURE_2D, fbo->texture());
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);      // GL_CLAMP_TO_EDGE
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT); // GL_CLAMP_TO_BORDER); // GL_CLAMP_TO_EDGE
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT); // GL_CLAMP_TO_BORDER); // GL_CLAMP_TO_EDGE
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
     m_swirl_shader.setUniformValue( u_swirl_matrix, orthoMatrix(fbo->width(), fbo->height()) );

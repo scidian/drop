@@ -176,6 +176,7 @@ SOURCES += \
     interface_editor_relay.cpp \
     globals.cpp \
     style/style_format_widgets.cpp \
+    style/style_pixmap.cpp \
     style/style_sheet_main.cpp \
     style/style_sheet_toolbar.cpp \
     widgets/widgets.cpp \

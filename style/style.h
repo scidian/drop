@@ -29,7 +29,7 @@ enum class Shadow_Types {
 //############################
 namespace Dr {
 
-// Form / Widget Functions
+// ***** Form / Widget Functions
 void        ApplyCustomStyleSheetFormatting(QWidget *widget);
 void        ApplyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color);
 void        ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type);
@@ -50,9 +50,16 @@ QString     StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_perce
 QString     StyleSheetPoppedOutBackgroundBorder(QColor background_color, QColor border_color, int top_percent,
                                                 int bottom_percent, bool highlight = false);
 
+// ***** QPixmap Functions
+void        SetMaskCircleShape (QPixmap &pix);
+
+
 }
 
 #endif // STYLE_WIDGET_H
+
+
+
 
 
 

@@ -12,26 +12,30 @@
 #include <QRgb>
 #include <QTime>
 #include <QVector2D>
+#include <QVector3D>
 
 #include "colors/colors.h"
 #include "globals.h"
 #include "image_filter.h"
 #include "helper.h"
+#include "style/style.h"
 
 
 namespace DrImaging
 {
+
+// Constants
+const float PI =    3.14159f;
+const float RAD =   2.0f * PI;      // 2.0 * PI is 360 in radians
+const float DEG =   0.0174533f;     // One Degree in Radians is 0.0174533
+
+const int   c_border = 6;           // Border used for mirror, fire, swirl, etc...
 
 
 //####################################################################################
 //##        Draws a DrEffectType::Light as a Pixmap
 //##            !! Implemented same algorithm as 2d_light_frag.glsl
 //####################################################################################
-// Constants
-const float PI =    3.14159f;
-const float RAD =   2.0f * PI;      // 2.0 * PI is 360 in radians
-const float DEG =   0.0174533f;     // One Degree in Radians is 0.0174533
-
 QPixmap drawLight(QColor color, int diameter, float cone_start, float cone_end, float intensity, float blur) {
 
     QPixmap light(diameter, diameter);
@@ -128,7 +132,7 @@ QPixmap drawLight(QColor color, int diameter, float cone_start, float cone_end, 
 QPixmap drawFire(QColor color_1, QColor color_2, QColor smoke, Fire_Mask mask) {
     int width =  250;
     int height = 400;
-    int border = 6;
+    int border = c_border;
 
     QPixmap fire(width, height);
     fire.fill(Qt::transparent);
@@ -200,7 +204,7 @@ QPixmap drawFisheye(QColor color) {
 QPixmap drawMirror(QColor top_color, QColor bottom_color) {
     int width =  400;
     int height = 400;
-    int border = 4;
+    int border = c_border;
     QPixmap mirror(width, height);
     mirror.fill(Qt::transparent);
 
@@ -218,19 +222,19 @@ QPixmap drawMirror(QColor top_color, QColor bottom_color) {
 
 
 //####################################################################################
-//##        Draws a DrEffectType::Swirl as a Pixmap
+//##        Draws a Fibonacci Swirl, was the original draw routine for DrEngineSwirl
 //####################################################################################
-QPixmap drawSwirl(QColor color) {
+QPixmap drawFibonacci(QColor background_color, QColor pen_color) {
     int width =  400;
     int height = 400;
     QPixmap swirl(width, height);
     swirl.fill(Qt::transparent);
 
     // Draws a circle
-    color.setAlphaF(color.alphaF() * 0.5);                  // Decrease lens opacity by half
+    background_color.setAlphaF(background_color.alphaF() * 0.5);                  // Decrease lens opacity by half
     QPainter painter(&swirl);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(color);
+    painter.setBrush(background_color);
     painter.drawEllipse(0, 0, width, height);
     painter.end();
 
@@ -238,8 +242,7 @@ QPixmap drawSwirl(QColor color) {
     painter.begin(&swirl);
     painter.translate(width / 2, height / 2);
     painter.setBrush(Qt::NoBrush);
-    QColor pen_color = QColor(32, 32, 32);
-    painter.setPen( QPen(pen_color, 6.0) );
+    painter.setPen( QPen(pen_color, c_border) );
     QPainterPath spiral;
     spiral.moveTo(0, 0);
 
@@ -247,7 +250,7 @@ QPixmap drawSwirl(QColor color) {
     QVector<double> fib;
     fib.append(1.0);
     fib.append(2.0);
-    double adjust = .65;                                   // Minimum of 0.5
+    double adjust = 1.00;                                   // Minimum of 0.5
     for (int i = 2; i < 40; ++i) {
         fib.append( (fib[i - 2] + fib[i - 1]) * adjust );
     }
@@ -272,17 +275,85 @@ QPixmap drawSwirl(QColor color) {
         angle += 90;
     }
     ///painter.drawPath(spiral);
+    painter.end();
 
     // Create a mask to limit to circle shape
+    Dr::SetMaskCircleShape(swirl);
+
+    return swirl;
+}
+
+
+//####################################################################################
+//##        Draws a DrEffectType::Swirl as a Pixmap
+//####################################################################################
+QPixmap drawSwirl(QColor color, double angle) {
+    // Initialize pixmap
+    int width =  400;
+    int height = 400;
+    QPixmap swirl(width, height);
+    color.setAlphaF(color.alphaF() * 0.5);                  // Decrease lens opacity by half
+    swirl.fill(color);
+
+    // Draws a cross that can be swirled
+    QPainter painter(&swirl);
+    painter.setPen( QPen(Qt::black, c_border));
+    painter.drawLine(0, 0, width, height);
+    painter.drawLine(width, 0, 0, height);
     painter.end();
-    QPixmap mask(width, height);
-    mask.fill(Qt::green);
-    painter.begin(&mask);
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(Qt::red);
-    painter.drawEllipse(0, 0, width, height);
-    painter.end();
-    swirl.setMask( mask.createMaskFromColor(Qt::green) );
+
+    // Swirl the image
+    QImage source = swirl.toImage();
+    QImage dest   = swirl.toImage();
+    if ( source.format() != QImage::Format::Format_ARGB32 ) {
+        source = source.convertToFormat( QImage::Format_ARGB32 );
+        dest =   dest.convertToFormat(   QImage::Format_ARGB32 );
+    }
+    source.detach();
+    dest.detach();
+
+    // Truecolor Rgba
+    if (source.colorCount() == 0 ) {
+        if ( source.hasAlphaChannel() ) {
+
+            // Grab all the scan lines
+            QVector<QRgb*> source_lines, dest_lines;
+            for( int y = 0; y < source.height(); ++y ) {
+                source_lines.append( reinterpret_cast<QRgb*>(source.scanLine(y)) );
+                dest_lines.append(   reinterpret_cast<QRgb*>(  dest.scanLine(y)) );
+            }
+
+            // Loop through every pixel and perform swirl
+            double radius = width / 2.0;
+            angle /= 100.0;
+            for( int y = 0; y < source.height(); ++y ) {
+                for( int x = 0; x < source.width(); ++x ) {
+                    QPointF center   { width / 2.0, height / 2.0 };
+                    QPointF tex_size { width / 1.0, height / 1.0 };
+                    QPointF tc { double(x), double(y) };
+                    tc -= center;
+                    double dist = QLineF(0, 0, tc.x(), tc.y()).length();
+                    double percent = (radius - dist) / radius;
+                    double theta = percent * percent * angle * 8.0;
+                    float s = static_cast<float>(sin(theta));
+                    float c = static_cast<float>(cos(theta));
+                    tc = QPointF( static_cast<double>(QVector3D::dotProduct( QVector3D(float(tc.x()), float(tc.y()), 0.0), QVector3D(c, -s, 0.0))),
+                                  static_cast<double>(QVector3D::dotProduct( QVector3D(float(tc.x()), float(tc.y()), 0.0), QVector3D(s,  c, 0.0))) );
+                    tc += center;
+
+                    int fx = static_cast<int>(tc.x());
+                    int fy = static_cast<int>(tc.y());
+                    if (fx >= 0 && fx < source.width() && fy >= 0 && fy < source.height())
+                        dest_lines[y][x] = source_lines[fx][fy];
+                }
+            }
+
+        } else {    Dr::ShowMessageBox("Error in drawSwirl(), Image missing alpha channel!"); }
+    } else {    Dr::ShowMessageBox("Error in drawSwirl(), Image only has 256 colors!"); }
+
+    // Copy image back into pixmap, apply circular mask
+    swirl = QPixmap::fromImage(dest);
+    Dr::SetMaskCircleShape(swirl);
 
     return swirl;
 }

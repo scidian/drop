@@ -399,8 +399,8 @@ void DrThing::addComponentSettingsSwirl() {
                            "Color", "Color tint for this Lens.");
     addPropertyToComponent(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Color_Tint, Property_Type::Percent, 0.0,
                            "Tint Percent", "How much color to tint the Lens, 0 (none) - 100 (all the way)");
-    addPropertyToComponent(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Angle, Property_Type::Double, 180.0,
-                           "Angle", "Amount to swirl images under the Swirl effect.");
+    addPropertyToComponent(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Angle, Property_Type::Double, 100.0,
+                           "Intensity", "Amount to swirl images under the Swirl effect.");
 }
 
 //####################################################################################
