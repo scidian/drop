@@ -208,7 +208,7 @@ void main( void ) {
 
 
     // ***** SWIRL
-    if (u_wavy) {
+    if (u_grayscale) {
         float radius = 200.0;
         float angle = 1.2;      // 5.0 is about as high as youd want to go?
         vec2  center = vec2(u_width / 2.0, u_height / 2.0);

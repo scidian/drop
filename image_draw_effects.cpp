@@ -225,12 +225,64 @@ QPixmap drawSwirl(QColor color) {
     int height = 400;
     QPixmap swirl(width, height);
     swirl.fill(Qt::transparent);
-    color.setAlphaF(color.alphaF() * 0.5);                  // Decrease lens opacity by half
 
+    // Draws a circle
+    color.setAlphaF(color.alphaF() * 0.5);                  // Decrease lens opacity by half
     QPainter painter(&swirl);
     painter.setPen(Qt::NoPen);
     painter.setBrush(color);
     painter.drawEllipse(0, 0, width, height);
+    painter.end();
+
+    // Prep painter
+    painter.begin(&swirl);
+    painter.translate(width / 2, height / 2);
+    painter.setBrush(Qt::NoBrush);
+    QColor pen_color = QColor(32, 32, 32);
+    painter.setPen( QPen(pen_color, 6.0) );
+    QPainterPath spiral;
+    spiral.moveTo(0, 0);
+
+    // Create a fibonacci sequence
+    QVector<double> fib;
+    fib.append(1.0);
+    fib.append(2.0);
+    double adjust = .65;                                   // Minimum of 0.5
+    for (int i = 2; i < 40; ++i) {
+        fib.append( (fib[i - 2] + fib[i - 1]) * adjust );
+    }
+
+    // Draw the fibonacci spiral
+    int angle = 180;
+    for (int i = 0; i < fib.length() - 1; ++i) {
+        QRectF arc = QRectF( spiral.currentPosition().x() - fib[i], spiral.currentPosition().y() - fib[i], fib[i] * 2.0, fib[i] * 2.0 );
+        painter.drawArc( arc, angle * 16, 90 * 16 );
+        spiral.arcTo( arc, angle, 90.0 );
+
+        double move = fib[i + 1];
+        if (i % 4 == 0) {
+            spiral.moveTo( spiral.currentPosition().x(),        spiral.currentPosition().y() - move );
+        } else if (i % 4 == 1) {
+            spiral.moveTo( spiral.currentPosition().x() - move, spiral.currentPosition().y());
+        } else if (i % 4 == 2) {
+            spiral.moveTo( spiral.currentPosition().x(),        spiral.currentPosition().y() + move );
+        } else if (i % 4 == 3) {
+            spiral.moveTo( spiral.currentPosition().x() + move, spiral.currentPosition().y());
+        }
+        angle += 90;
+    }
+    ///painter.drawPath(spiral);
+
+    // Create a mask to limit to circle shape
+    painter.end();
+    QPixmap mask(width, height);
+    mask.fill(Qt::green);
+    painter.begin(&mask);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(Qt::red);
+    painter.drawEllipse(0, 0, width, height);
+    painter.end();
+    swirl.setMask( mask.createMaskFromColor(Qt::green) );
 
     return swirl;
 }
