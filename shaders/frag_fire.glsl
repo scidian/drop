@@ -172,12 +172,14 @@ void main( void ) {
     // ***** Calculate color values
     float top_shrink;
     float bottom_shrink;                                    // Higher numbers shrinks bottom color
-    if (u_shape == 0) {
-        top_shrink =    8.0;
-        bottom_shrink = 5.8;
-    } else if (u_shape == 1) {
+    // Candle
+    if (u_shape == 1) {
         top_shrink =    6.0;
         bottom_shrink = 2.6;
+    // Torch 0, Square 2, Triangle 3
+    } else {
+        top_shrink =    8.0;
+        bottom_shrink = 5.8;
     }
     float p1 = pow(coords.y, 1.695);
     float p2 = top_shrink * (1.0 - p1);

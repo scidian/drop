@@ -35,16 +35,19 @@ enum Asset_Textures {
     Fire_Flame_None =       -51,
     Fire_Flame_Torch =      -52,
     Fire_Flame_Candle =     -53,
+    Fire_Flame_Square =     -54,
+    Fire_Flame_Triangle =   -55,
+
 
     Mirror_Noise_1 =        -60,
 
-    Water_Normal_1 =        -70,
+    Water_Normal_1  =       -70,
     Water_Texture_1 =       -81,
     Water_Texture_2 =       -82,
     Water_Texture_3 =       -83,
     Water_Texture_4 =       -84,
 
-    Ball =          -100,
+    Ball  =         -100,
     Block =         -101,
     Plant =         -102,
     Rover =         -103,
@@ -61,8 +64,10 @@ enum class Water_Texture {
 };
 
 enum class Fire_Mask {
-    Torch = 0,
-    Candle = 1,
+    Torch =     0,
+    Candle =    1,
+    Square =    2,
+    Triangle =  3,
 };
 
 

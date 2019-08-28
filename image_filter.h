@@ -13,12 +13,17 @@
 #include "enums_engine.h"
 
 
+// Image Constants
+const int   c_image_size = 600;             // Size of graphic to use for effects (water, mirror, fire, fisheye, swirl, etc.)
+const int   c_image_border = 6;             // Border used for mirror, fire, swirl, etc...
+
+
 //####################################################################################
 //##    Different types of filters that can be applied to a QPixmap
 //############################
 enum class Image_Filter_Type {
-    Brightness,                     // -255 to 255
-    Contrast,                       // Contrast is multiplied by 100 in order to avoid floating point numbers
+    Brightness,                             // -255 to 255
+    Contrast,                               // Contrast is multiplied by 100 in order to avoid floating point numbers
     Saturation,
     Hue,
     Grayscale,

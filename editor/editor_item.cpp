@@ -60,7 +60,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
                     uint color_1 =      m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1)->getValue().toUInt();
                     uint color_2 =      m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2)->getValue().toUInt();
                     uint smoke =        m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_Smoke)->getValue().toUInt();
-                    int  mask    =      m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape)->getValue().toInt();
+                    int  mask  =        m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape)->getValue().toInt();
                     m_pixmap = DrImaging::drawFire( QColor::fromRgba(color_1), QColor::fromRgba(color_2), QColor::fromRgba(smoke), static_cast<Fire_Mask>(mask) );
                     setPixmap(m_pixmap);
                     applyFilters();
@@ -70,6 +70,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
                     uint color =        m_thing->getComponentProperty(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color)->getValue().toUInt();
                     m_pixmap = DrImaging::drawFisheye( QColor::fromRgba(color) );
                     setPixmap(m_pixmap);
+                    applyFilters();
                     break;
                 }
                 case DrEffectType::Light: {
@@ -78,7 +79,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
                     float cone_end =    m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End)->getValue().toList().first().toFloat();
                     float intensity =   m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity)->getValue().toFloat();
                     float blur =        m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Blur)->getValue().toFloat();
-                    m_pixmap = DrImaging::drawLight( QColor::fromRgba( light_color ), 400, cone_start, cone_end, intensity, blur);
+                    m_pixmap = DrImaging::drawLight( QColor::fromRgba( light_color ), c_image_size, cone_start, cone_end, intensity, blur);
                     setPixmap(m_pixmap);
                     break;
                 }

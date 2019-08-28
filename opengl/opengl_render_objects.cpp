@@ -242,8 +242,10 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     glActiveTexture(GL_TEXTURE1);                           // Texture unit 1
     DrEngineTexture *flame;
     switch (fire->fire_mask) {
-        case Fire_Mask::Torch:  flame = m_engine->getTexture(Asset_Textures::Fire_Flame_Torch);     break;
-        case Fire_Mask::Candle: flame = m_engine->getTexture(Asset_Textures::Fire_Flame_Candle);    break;
+        case Fire_Mask::Torch:      flame = m_engine->getTexture(Asset_Textures::Fire_Flame_Torch);     break;
+        case Fire_Mask::Candle:     flame = m_engine->getTexture(Asset_Textures::Fire_Flame_Candle);    break;
+        case Fire_Mask::Square:     flame = m_engine->getTexture(Asset_Textures::Fire_Flame_Square);    break;
+        case Fire_Mask::Triangle:   flame = m_engine->getTexture(Asset_Textures::Fire_Flame_Triangle);  break;
     }
     glBindTexture(GL_TEXTURE_2D, flame->texture()->textureId());
     flame->texture()->setWrapMode(QOpenGLTexture::WrapMode::ClampToEdge);

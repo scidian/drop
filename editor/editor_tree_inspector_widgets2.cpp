@@ -170,7 +170,9 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
                 << tr("Liquid");
     } else if   (property_key == static_cast<int>(Properties::Thing_Fire_Shape)) {
         options << tr("Torch")
-                << tr("Candle");
+                << tr("Candle")
+                << tr("Square")
+                << tr("Triangle");
     } else {
         options << tr("Unknown List");
     }

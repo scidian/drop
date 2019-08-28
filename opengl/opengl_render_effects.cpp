@@ -127,6 +127,10 @@ bool DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, 
     m_fisheye_shader.setUniformValue( u_fisheye_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
     m_fisheye_shader.setUniformValue( u_fisheye_angle,      angle );
 
+    m_fisheye_shader.setUniformValue( u_fisheye_pixel_x,    lens->pixel_x );
+    m_fisheye_shader.setUniformValue( u_fisheye_pixel_y,    lens->pixel_y );
+    m_fisheye_shader.setUniformValue( u_fisheye_bitrate,    lens->bitrate );
+
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
 

@@ -206,6 +206,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
                 item->setPixmap( DrImaging::drawFisheye(ce) );
                 item->setAssetWidth(  item->pixmap().width() );
                 item->setAssetHeight( item->pixmap().height() );
+                item->applyFilters();
                 break;
             }
 
@@ -219,7 +220,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
                 float  cone_end =    item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toList().first().toFloat();
                 float  intensity =   item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity).toFloat();
                 float  blur =        item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Blur).toFloat();
-                item->setPixmap( DrImaging::drawLight(light_color, 400, cone_start, cone_end, intensity, blur) );
+                item->setPixmap( DrImaging::drawLight(light_color, c_image_size, cone_start, cone_end, intensity, blur) );
                 item->setAssetWidth(  item->pixmap().width() );
                 item->setAssetHeight( item->pixmap().height() );
                 break;

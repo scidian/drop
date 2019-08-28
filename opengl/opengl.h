@@ -351,6 +351,9 @@ private:
     int     u_fisheye_color_tint;
     int     u_fisheye_lens_zoom;
 
+    int     u_fisheye_pixel_x;
+    int     u_fisheye_pixel_y;
+    int     u_fisheye_bitrate;
 
     // Fire Shader
     QOpenGLShaderProgram m_fire_shader;

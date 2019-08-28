@@ -31,6 +31,10 @@ uniform lowp  vec3  u_start_color;                  // Start Color, r/g/b       
 uniform lowp  float u_color_tint;                   // Color Tint Percent
 uniform lowp  float u_lens_zoom;                    // Zoom level of Fisheye Lens        0.0 to 10.0
 
+uniform highp float u_pixel_x;// = 1.0;             // Pixel Width X    1.0 Normal, 4.0 is nice pixelation
+uniform highp float u_pixel_y;// = 1.0;             // Pixel Width Y    1.0 Normal, 4.0 is nice pixelation
+uniform lowp  float u_bitrate;// = 256;             // Bitrate          Editor:    1 to  256
+
 
 // Other Variables
 const   lowp  float THRESHOLD = 0.75;                       // Alpha threshold for our occlusion map
@@ -94,14 +98,16 @@ void main( void ) {
     vec2  lens_center = vec2(u_right - lens_width/2.0, u_top - lens_height/2.0);
     vec2  coords = rotate(coordinates.xy, lens_center, rotation);
 
-
-    // ***** Calculate some position and scaling values
-    //float player_x = u_position.x*0.00083 * (1.0/u_zoom);
-    //float player_y = u_position.y*0.00083 * (1.0/u_zoom);
-    //float diff_w = (u_width  * (1.0/u_zoom)) / 1200.0;
-    //float diff_h = (u_height * (1.0/u_zoom)) / 1200.0;
-    //float zoom_coord_x = ((coords.x - 0.5)*diff_w)/u_zoom;
-    //float zoom_coord_y = ((coords.y - 0.5)*diff_h)/u_zoom;
+    // ***** Pixelation
+    if (u_pixel_x > 1.0 || u_pixel_y > 1.0) {
+        highp float pixel_width =  (1.0 / (u_width));
+        highp float pixel_height = (1.0 / (u_height));
+        highp float real_pixel_x = ((coords.x / 1.0) * u_width);
+        highp float real_pixel_y = (((1.0 - coords.y) / 1.0) * u_height);
+        highp float pixel_x =       u_pixel_x * floor(real_pixel_x / u_pixel_x) * pixel_width;
+        highp float pixel_y = 1.0 - u_pixel_y * floor(real_pixel_y / u_pixel_y) * pixel_height;
+        coords = vec2(pixel_x, pixel_y);
+    }
 
 
     // ***** If out of range, don't process this pixel
@@ -147,6 +153,12 @@ void main( void ) {
     // Mix in overlay_color and lens texture
     vec4 lens = texture2D(u_texture, coords);
     lens = vec4( mix(lens.rgb, start_color, color_tint * (1.0 - (radius / lens_size)*0.75)), 1.0 );
+
+
+    // ***** Bit Depth (0.0 to 256.0)
+    highp float bit_depth = u_bitrate;
+    lens.rgb = vec3(floor(lens.r * bit_depth), floor(lens.g * bit_depth), floor(lens.b * bit_depth)) / bit_depth;
+
 
     gl_FragColor = vec4(lens.rgb, lens.a * u_alpha);
 

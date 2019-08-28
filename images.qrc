@@ -156,5 +156,7 @@
         <file>assets/textures/mirror_noise_1.png</file>
         <file>assets/inspector_icons/comp_swirl.png</file>
         <file>assets/tree_icons/tree_swirl.png</file>
+        <file>assets/textures/fire_flame_square.png</file>
+        <file>assets/textures/fire_flame_triangle.png</file>
     </qresource>
 </RCC>

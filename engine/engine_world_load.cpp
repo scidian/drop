@@ -169,9 +169,16 @@ void DrEngineWorld::loadFisheyeToWorld(DrThing *thing, double offset_x, double o
     float       tint =              thing->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color_Tint).toFloat() / 100.0f;
     float       zoom =              thing->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Lens_Zoom).toList().first().toFloat();
 
-    addThing( new DrEngineFisheye(this, getNextKey(), info.position.x() + offset_x, -info.position.y() + offset_y,
-                                  info.z_order, info.angle, info.opacity, info.size,
-                                  start_color, tint, zoom ) );
+    float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toList().first().toInt();
+    QPointF     pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
+
+    DrEngineFisheye *lens = new DrEngineFisheye(this, getNextKey(), info.position.x() + offset_x, -info.position.y() + offset_y,
+                                                info.z_order, info.angle, info.opacity, info.size,
+                                                start_color, tint, zoom );
+    addThing( lens );
+    lens->bitrate = bit_rate;
+    lens->pixel_x = static_cast<float>(pixelation.x());
+    lens->pixel_y = static_cast<float>(pixelation.y());
 }
 
 

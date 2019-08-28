@@ -24,13 +24,10 @@
 namespace DrImaging
 {
 
-// Constants
+// Local Constants
 const float PI =    3.14159f;
 const float RAD =   2.0f * PI;      // 2.0 * PI is 360 in radians
 const float DEG =   0.0174533f;     // One Degree in Radians is 0.0174533
-
-const int   c_border = 6;           // Border used for mirror, fire, swirl, etc...
-
 
 //####################################################################################
 //##        Draws a DrEffectType::Light as a Pixmap
@@ -130,9 +127,9 @@ QPixmap drawLight(QColor color, int diameter, float cone_start, float cone_end, 
 //##        Draws a DrEffectType::Fire as a Pixmap
 //####################################################################################
 QPixmap drawFire(QColor color_1, QColor color_2, QColor smoke, Fire_Mask mask) {
-    int width =  250;
-    int height = 400;
-    int border = c_border;
+    int width =  static_cast<int>(c_image_size * 0.625);
+    int height = c_image_size;
+    int border = c_image_border;
 
     QPixmap fire(width, height);
     fire.fill(Qt::transparent);
@@ -174,6 +171,18 @@ QPixmap drawFire(QColor color_1, QColor color_2, QColor smoke, Fire_Mask mask) {
             painter.drawPath(flame);
             break;
         }
+        case Fire_Mask::Square:
+            painter.drawRect(border, border, width - (border * 2), (height * 2)  - (border * 2));
+            break;
+        case Fire_Mask::Triangle: {
+            QPainterPath flame;
+            flame.moveTo( QPointF( width / 2, border) );
+            flame.lineTo( QPointF( 0,     height + border) );
+            flame.lineTo( QPointF( width, height + border) );
+            flame.lineTo( QPointF( width / 2, border) );
+            painter.drawPath(flame);
+            break;
+        }
     }
 
     return fire;
@@ -184,8 +193,8 @@ QPixmap drawFire(QColor color_1, QColor color_2, QColor smoke, Fire_Mask mask) {
 //##        Draws a DrEffectType::Fisheye as a Pixmap
 //####################################################################################
 QPixmap drawFisheye(QColor color) {
-    int width =  400;
-    int height = 400;
+    int width =  c_image_size;
+    int height = c_image_size;
     QPixmap lens(width, height);
     lens.fill(Qt::transparent);
     color.setAlphaF(color.alphaF() * 0.5);                  // Decrease lens opacity by half
@@ -202,9 +211,9 @@ QPixmap drawFisheye(QColor color) {
 //##        Draws a DrEffectType::Mirror as a Pixmap
 //####################################################################################
 QPixmap drawMirror(QColor top_color, QColor bottom_color) {
-    int width =  400;
-    int height = 400;
-    int border = c_border;
+    int width =  c_image_size;
+    int height = c_image_size;
+    int border = c_image_border;
     QPixmap mirror(width, height);
     mirror.fill(Qt::transparent);
 
@@ -225,8 +234,8 @@ QPixmap drawMirror(QColor top_color, QColor bottom_color) {
 //##        Draws a Fibonacci Swirl, was the original draw routine for DrEngineSwirl
 //####################################################################################
 QPixmap drawFibonacci(QColor background_color, QColor pen_color) {
-    int width =  400;
-    int height = 400;
+    int width =  c_image_size;
+    int height = c_image_size;
     QPixmap swirl(width, height);
     swirl.fill(Qt::transparent);
 
@@ -242,7 +251,7 @@ QPixmap drawFibonacci(QColor background_color, QColor pen_color) {
     painter.begin(&swirl);
     painter.translate(width / 2, height / 2);
     painter.setBrush(Qt::NoBrush);
-    painter.setPen( QPen(pen_color, c_border) );
+    painter.setPen( QPen(pen_color, c_image_border) );
     QPainterPath spiral;
     spiral.moveTo(0, 0);
 
@@ -289,15 +298,15 @@ QPixmap drawFibonacci(QColor background_color, QColor pen_color) {
 //####################################################################################
 QPixmap drawSwirl(QColor color, double angle) {
     // Initialize pixmap
-    int width =  400;
-    int height = 400;
+    int width =  c_image_size;
+    int height = c_image_size;
     QPixmap swirl(width, height);
     color.setAlphaF(color.alphaF() * 0.5);                  // Decrease lens opacity by half
     swirl.fill(color);
 
     // Draws a cross that can be swirled
     QPainter painter(&swirl);
-    painter.setPen( QPen(Qt::black, c_border));
+    painter.setPen( QPen(Qt::black, c_image_border));
     painter.drawLine(0, 0, width, height);
     painter.drawLine(width, 0, 0, height);
     painter.end();
@@ -363,8 +372,8 @@ QPixmap drawSwirl(QColor color, double angle) {
 //##        Draws a DrEffectType::Water as a Pixmap
 //####################################################################################
 QPixmap drawWater(QColor top_color, QColor bottom_color) {
-    int width =  400;
-    int height = 400;
+    int width =  c_image_size;
+    int height = c_image_size;
     QPixmap water(width, height);
     water.fill(top_color);
 

@@ -105,7 +105,7 @@ void main( void ) {
     // ***** Draw Swirl Effect
     vec2 tex_size = vec2(u_width, u_height);
 
-    float radius = (u_radius / 2.0) * u_zoom;
+    float radius = (abs(u_radius) / 2.0) * u_zoom;
     float angle = u_rotation / 100.0;      // 5.0 is about as high as youd want to go?
 
 

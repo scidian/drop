@@ -6,6 +6,7 @@
 //
 //
 #include "helper.h"
+#include "image_filter.h"
 #include "opengl/opengl.h"
 #include "project.h"
 #include "project_asset.h"
@@ -65,35 +66,36 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
         // ***** DrEffectType DrThing's
         case DrThingType::Fire:
             addComponentSettingsFire();
-            addComponentTransform(250, 400, x, -y, DrThingType::Fire);
+            addComponentTransform(static_cast<int>(c_image_size * 0.625), c_image_size, x, -y, DrThingType::Fire);
             addComponentLayering(z, 100.0);
             addComponentAppearance(true);
             break;
         case DrThingType::Fisheye:
             addComponentSettingsFisheye();
-            addComponentTransform(400, 400, x, -y, DrThingType::Fisheye);
+            addComponentTransform(c_image_size, c_image_size, x, -y, DrThingType::Fisheye);
             addComponentLayering(z, 100.0);
+            addComponentAppearance(true);
             break;
         case DrThingType::Light:
             addComponentSettingsLight(Qt::white);
-            addComponentTransform(400, 400, x, -y, DrThingType::Light);
+            addComponentTransform(c_image_size, c_image_size, x, -y, DrThingType::Light);
             addComponentLayering(z);
             break;
         case DrThingType::Mirror:
             addComponentSettingsMirror();
-            addComponentTransform(400, 400, x, -y, DrThingType::Mirror);
+            addComponentTransform(c_image_size, c_image_size, x, -y, DrThingType::Mirror);
             addComponentLayering(z);
             addComponentAppearance(true);
             break;
         case DrThingType::Swirl:
             addComponentSettingsSwirl();
-            addComponentTransform(400, 400, x, -y, DrThingType::Swirl);
+            addComponentTransform(c_image_size, c_image_size, x, -y, DrThingType::Swirl);
             addComponentLayering(z);
             addComponentAppearance(true);
             break;
         case DrThingType::Water:
             addComponentSettingsWater();
-            addComponentTransform(400, 400, x, -y, DrThingType::Water);
+            addComponentTransform(c_image_size, c_image_size, x, -y, DrThingType::Water);
             addComponentLayering(z, 75.0);
             addComponentAppearance(true);
             break;

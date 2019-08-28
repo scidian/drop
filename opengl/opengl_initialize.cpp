@@ -56,27 +56,29 @@ void DrOpenGL::initializeGL() {
 //##        Built in temp textures and shader textures
 //####################################################################################
 void DrOpenGL::loadBuiltInTextures() {
-    m_engine->addTexture(Asset_Textures::Numbers,           ":/assets/engine/numbers.png");
+    m_engine->addTexture(Asset_Textures::Numbers,               ":/assets/engine/numbers.png");
 
-    m_engine->addTexture(Asset_Textures::Fire_Noise,        ":/assets/textures/fire_noise.png");
-    m_engine->addTexture(Asset_Textures::Fire_Flame_None,   ":/assets/textures/fire_flame_none.png");
-    m_engine->addTexture(Asset_Textures::Fire_Flame_Torch,  ":/assets/textures/fire_flame_torch.png");
-    m_engine->addTexture(Asset_Textures::Fire_Flame_Candle, ":/assets/textures/fire_flame_candle.png");
+    m_engine->addTexture(Asset_Textures::Fire_Noise,            ":/assets/textures/fire_noise.png");
+    m_engine->addTexture(Asset_Textures::Fire_Flame_None,       ":/assets/textures/fire_flame_none.png");
+    m_engine->addTexture(Asset_Textures::Fire_Flame_Torch,      ":/assets/textures/fire_flame_torch.png");
+    m_engine->addTexture(Asset_Textures::Fire_Flame_Candle,     ":/assets/textures/fire_flame_candle.png");
+    m_engine->addTexture(Asset_Textures::Fire_Flame_Square,     ":/assets/textures/fire_flame_square.png");
+    m_engine->addTexture(Asset_Textures::Fire_Flame_Triangle,   ":/assets/textures/fire_flame_triangle.png");
 
-    m_engine->addTexture(Asset_Textures::Mirror_Noise_1,    ":/assets/textures/mirror_noise_1.png");
+    m_engine->addTexture(Asset_Textures::Mirror_Noise_1,        ":/assets/textures/mirror_noise_1.png");
 
-    m_engine->addTexture(Asset_Textures::Water_Normal_1,    ":/assets/textures/water_normal.jpg");
-    m_engine->addTexture(Asset_Textures::Water_Texture_1,   ":/assets/textures/water_texture_1.jpg");
-    m_engine->addTexture(Asset_Textures::Water_Texture_2,   ":/assets/textures/water_texture_2.jpg");
-    m_engine->addTexture(Asset_Textures::Water_Texture_3,   ":/assets/textures/water_texture_3.jpg");
-    m_engine->addTexture(Asset_Textures::Water_Texture_4,   ":/assets/textures/water_texture_4.jpg");
+    m_engine->addTexture(Asset_Textures::Water_Normal_1,        ":/assets/textures/water_normal.jpg");
+    m_engine->addTexture(Asset_Textures::Water_Texture_1,       ":/assets/textures/water_texture_1.jpg");
+    m_engine->addTexture(Asset_Textures::Water_Texture_2,       ":/assets/textures/water_texture_2.jpg");
+    m_engine->addTexture(Asset_Textures::Water_Texture_3,       ":/assets/textures/water_texture_3.jpg");
+    m_engine->addTexture(Asset_Textures::Water_Texture_4,       ":/assets/textures/water_texture_4.jpg");
 
-    m_engine->addTexture(Asset_Textures::Ball,              ":/assets/test_images/ball_1.png");
-    m_engine->addTexture(Asset_Textures::Block,             ":/assets/test_images/metal_block.png");
-    m_engine->addTexture(Asset_Textures::Plant,             ":/assets/test_images/moon_plant_6.png");
-    m_engine->addTexture(Asset_Textures::Rover,             ":/assets/test_images/rover_body.png");
-    m_engine->addTexture(Asset_Textures::Wheel,             ":/assets/test_images/rover_wheel.png");
-    m_engine->addTexture(Asset_Textures::Spare,             ":/assets/test_images/spare_wheel.png");
+    m_engine->addTexture(Asset_Textures::Ball,                  ":/assets/test_images/ball_1.png");
+    m_engine->addTexture(Asset_Textures::Block,                 ":/assets/test_images/metal_block.png");
+    m_engine->addTexture(Asset_Textures::Plant,                 ":/assets/test_images/moon_plant_6.png");
+    m_engine->addTexture(Asset_Textures::Rover,                 ":/assets/test_images/rover_body.png");
+    m_engine->addTexture(Asset_Textures::Wheel,                 ":/assets/test_images/rover_wheel.png");
+    m_engine->addTexture(Asset_Textures::Spare,                 ":/assets/test_images/spare_wheel.png");
 
 }
 
@@ -327,6 +329,9 @@ void DrOpenGL::loadShaders() {
     u_fisheye_color_tint =      m_fisheye_shader.uniformLocation(     "u_color_tint" );
     u_fisheye_lens_zoom =       m_fisheye_shader.uniformLocation(     "u_lens_zoom" );
 
+    u_fisheye_pixel_x =         m_fisheye_shader.uniformLocation(     "u_pixel_x" );
+    u_fisheye_pixel_y =         m_fisheye_shader.uniformLocation(     "u_pixel_y" );
+    u_fisheye_bitrate =         m_fisheye_shader.uniformLocation(     "u_bitrate" );
 
     // ***** Initialize our Fire Shader
     QOpenGLShader v_fire_shader( QOpenGLShader::Vertex );           v_fire_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
