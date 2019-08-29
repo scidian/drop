@@ -57,11 +57,6 @@ QString DrEngine::pedalAsString() {
 //####################################################################################
 //##    DrEngineTexture
 //####################################################################################
-DrEngineTexture* DrEngine::addTexture(long texture_id, QString from_asset_string) {
-    m_textures[texture_id] = new DrEngineTexture(from_asset_string);
-    return m_textures[texture_id];
-}
-
 DrEngineTexture* DrEngine::addTexture(long texture_id, QPixmap &pixmap) {
     m_textures[texture_id] = new DrEngineTexture(pixmap);
     return m_textures[texture_id];

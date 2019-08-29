@@ -117,6 +117,26 @@ float snoise(vec3 v) {
 }
 
 
+//####################################################################################
+//##        Shape Functions
+//####################################################################################
+const vec2 center = vec2(0.5, 0.8);
+float egg_shape(vec2 coord, float radius){
+    coord.y = 1.0 - coord.y;
+    vec2 diff = abs(coord - center);
+
+    if (coord.y < center.y){
+        diff.y /= 2.0;
+    } else {
+        diff.y *= 2.0;
+    }
+
+    float  dist =  sqrt(diff.x * diff.x + diff.y * diff.y) / radius;
+    float  value = sqrt(1.0 - dist * dist);
+    return clamp(value, 0.0, 1.0);
+}
+
+
 
 //####################################################################################
 //##        Main Shader Function
@@ -174,12 +194,12 @@ void main( void ) {
     float bottom_shrink;                                    // Higher numbers shrinks bottom color
     // Candle
     if (u_shape == 1) {
-        top_shrink =    6.0;
-        bottom_shrink = 2.6;
+        top_shrink =    7.0;
+        bottom_shrink = 4.4;
     // Torch 0, Square 2, Triangle 3
     } else {
-        top_shrink =    8.0;
-        bottom_shrink = 5.8;
+        top_shrink =    7.0;
+        bottom_shrink = 6.0;
     }
     float p1 = pow(coords.y, 1.695);
     float p2 = top_shrink * (1.0 - p1);
@@ -204,9 +224,9 @@ void main( void ) {
 
     // ***** Custom Colors
     vec4 smoke =  vec4(u_smoke_color, 0.0);
-    vec4 top =    mix(smoke, vec4(start_color, 1.0), clamp(color_1 * 1.00, 0.0, 1.0));
-    vec4 bottom = mix(smoke, vec4(end_color,   1.0), clamp(color_2 * 1.50, 0.0, 1.0));
-    color =       mix(top,   bottom,                 clamp(color_2 * 1.00, 0.0, 1.0));
+    vec4 top =    mix(smoke, vec4(start_color, 1.0), clamp(color_1 * 1.35, 0.0, 1.0));
+    vec4 bottom = mix(smoke, vec4(end_color,   1.0), clamp(color_2 * 1.35, 0.0, 1.0));
+    color =       mix(top,   bottom,                 clamp((1.0 - coords.y) * color_2, 0.0, 1.0));
 
 
     // ***** Bit Depth (0.0 to 256.0)
@@ -217,7 +237,15 @@ void main( void ) {
     // ***** Apply Flame Shape
     float noise_density = 1.0;      // higher is more dense
     float whisp = 2.5;              // higher is less whispier
-    float flame_alpha = texture2D(u_texture_flame, coords).b;
+    float flame_alpha;
+    // Candle
+    if (u_shape == 1) {
+        float egg_s =  egg_shape(coords, 0.4);
+              //egg_s += egg_shape(coords, 0.2) / 2.0;
+        flame_alpha = egg_s;
+    } else {
+        flame_alpha = texture2D(u_texture_flame, coords).b;
+    }
     float noise_alpha = texture2D(u_texture_noise, (coords - vec2(u_pos.x - (color_1 / whisp), u_time / speed)) * noise_density).a;
           noise_alpha = flame_alpha - noise_alpha;
     color.a = mix(noise_alpha, flame_alpha, wavy);

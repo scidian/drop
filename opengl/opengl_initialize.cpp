@@ -7,6 +7,7 @@
 //
 #include "engine/engine.h"
 #include "engine/engine_thing_object.h"
+#include "engine/engine_vertex_data.h"
 #include "opengl/opengl.h"
 #include "project/project.h"
 #include "project/project_asset.h"
@@ -53,32 +54,59 @@ void DrOpenGL::initializeGL() {
 
 
 //####################################################################################
+//##        Adds texture to Engine and creates 3D Extruded VBO for texture
+//####################################################################################
+void DrOpenGL::importTexture(long texture_id, QString from_asset_string) {
+    QPixmap pix = QPixmap(from_asset_string);
+    importTexture(texture_id, pix);
+}
+
+void DrOpenGL::importTexture(long texture_id, QPixmap &pixmap) {
+    m_engine->addTexture(texture_id, pixmap);
+
+    // 3D Extruded Textures
+    m_texture_data[texture_id] = new DrEngineVertexData();
+
+    m_texture_vbos[texture_id] = new QOpenGLBuffer();
+    m_texture_vbos[texture_id]->create();
+    m_texture_vbos[texture_id]->bind();
+    m_texture_vbos[texture_id]->allocate(m_texture_data[texture_id]->constData(),
+                                        m_texture_data[texture_id]->count() * static_cast<int>(sizeof(GLfloat)));
+//            glEnableVertexAttribArray(0);
+//            glEnableVertexAttribArray(1);
+//            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), nullptr);
+//            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), reinterpret_cast<void *>(3 * sizeof(GLfloat)));
+    m_texture_vbos[texture_id]->release();
+}
+
+
+//####################################################################################
 //##        Built in temp textures and shader textures
 //####################################################################################
 void DrOpenGL::loadBuiltInTextures() {
-    m_engine->addTexture(Asset_Textures::Numbers,               ":/assets/engine/numbers.png");
+    importTexture(Asset_Textures::Numbers,               ":/assets/engine/numbers.png");
 
-    m_engine->addTexture(Asset_Textures::Fire_Noise,            ":/assets/textures/fire_noise.png");
-    m_engine->addTexture(Asset_Textures::Fire_Flame_None,       ":/assets/textures/fire_flame_none.png");
-    m_engine->addTexture(Asset_Textures::Fire_Flame_Torch,      ":/assets/textures/fire_flame_torch.png");
-    m_engine->addTexture(Asset_Textures::Fire_Flame_Candle,     ":/assets/textures/fire_flame_candle.png");
-    m_engine->addTexture(Asset_Textures::Fire_Flame_Square,     ":/assets/textures/fire_flame_square.png");
-    m_engine->addTexture(Asset_Textures::Fire_Flame_Triangle,   ":/assets/textures/fire_flame_triangle.png");
+    importTexture(Asset_Textures::Fire_Noise,            ":/assets/textures/fire_noise.png");
+    importTexture(Asset_Textures::Fire_Flame_None,       ":/assets/textures/fire_flame_none.png");
+    importTexture(Asset_Textures::Fire_Flame_Torch,      ":/assets/textures/fire_flame_torch.png");
+    importTexture(Asset_Textures::Fire_Flame_Candle,     ":/assets/textures/fire_flame_candle.png");
+    importTexture(Asset_Textures::Fire_Flame_Square,     ":/assets/textures/fire_flame_square.png");
+    importTexture(Asset_Textures::Fire_Flame_Triangle,   ":/assets/textures/fire_flame_triangle.png");
 
-    m_engine->addTexture(Asset_Textures::Mirror_Noise_1,        ":/assets/textures/mirror_noise_1.png");
+    importTexture(Asset_Textures::Mirror_Noise_1,        ":/assets/textures/mirror_noise_1.png");
 
-    m_engine->addTexture(Asset_Textures::Water_Normal_1,        ":/assets/textures/water_normal.jpg");
-    m_engine->addTexture(Asset_Textures::Water_Texture_1,       ":/assets/textures/water_texture_1.jpg");
-    m_engine->addTexture(Asset_Textures::Water_Texture_2,       ":/assets/textures/water_texture_2.jpg");
-    m_engine->addTexture(Asset_Textures::Water_Texture_3,       ":/assets/textures/water_texture_3.jpg");
-    m_engine->addTexture(Asset_Textures::Water_Texture_4,       ":/assets/textures/water_texture_4.jpg");
+    importTexture(Asset_Textures::Water_Normal_1,        ":/assets/textures/water_normal.jpg");
+    importTexture(Asset_Textures::Water_Texture_1,       ":/assets/textures/water_texture_1.jpg");
+    importTexture(Asset_Textures::Water_Texture_2,       ":/assets/textures/water_texture_2.jpg");
+    importTexture(Asset_Textures::Water_Texture_3,       ":/assets/textures/water_texture_3.jpg");
+    importTexture(Asset_Textures::Water_Texture_4,       ":/assets/textures/water_texture_4.jpg");
 
-    m_engine->addTexture(Asset_Textures::Ball,                  ":/assets/test_images/ball_1.png");
-    m_engine->addTexture(Asset_Textures::Block,                 ":/assets/test_images/metal_block.png");
-    m_engine->addTexture(Asset_Textures::Plant,                 ":/assets/test_images/moon_plant_6.png");
-    m_engine->addTexture(Asset_Textures::Rover,                 ":/assets/test_images/rover_body.png");
-    m_engine->addTexture(Asset_Textures::Wheel,                 ":/assets/test_images/rover_wheel.png");
-    m_engine->addTexture(Asset_Textures::Spare,                 ":/assets/test_images/spare_wheel.png");
+    importTexture(Asset_Textures::Ball,                  ":/assets/test_images/ball_1.png");
+    importTexture(Asset_Textures::Block,                 ":/assets/test_images/metal_block.png");
+    importTexture(Asset_Textures::Plant,                 ":/assets/test_images/moon_plant_6.png");
+    importTexture(Asset_Textures::Rover,                 ":/assets/test_images/rover_body.png");
+    importTexture(Asset_Textures::Wheel,                 ":/assets/test_images/rover_wheel.png");
+    importTexture(Asset_Textures::Spare,                 ":/assets/test_images/spare_wheel.png");
 
 }
 
@@ -92,7 +120,7 @@ void DrOpenGL::loadProjectTextures() {
 
         if (asset->getAssetType() == DrAssetType::Object) {
             QPixmap pixmap = asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
-            m_engine->addTexture( asset->getKey(), pixmap);
+            importTexture(asset->getKey(), pixmap);
         }
     }
 }
@@ -108,6 +136,8 @@ void DrOpenGL::loadShaders() {
     QOpenGLShader f_default_shader( QOpenGLShader::Fragment );      f_default_shader.compileSourceFile( ":/shaders/default_frag.glsl" );
     m_default_shader.addShader( &v_default_shader );
     m_default_shader.addShader( &f_default_shader );
+    m_default_shader.bindAttributeLocation("vertex",                PROGRAM_VERTEX_ATTRIBUTE);
+    m_default_shader.bindAttributeLocation("texture_coordinates",   PROGRAM_TEXCOORD_ATTRIBUTE);
     m_default_shader.link();
 
     // Vertex Shader Input

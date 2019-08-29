@@ -29,6 +29,7 @@ class DrEngineMirror;
 class DrEngineObject;
 class DrEngineSwirl;
 class DrEngineThing;
+class DrEngineVertexData;
 class DrEngineWater;
 class FormEngine;
 
@@ -40,6 +41,10 @@ extern int  g_max_texture_size;
 extern int  g_max_rays;
 extern int  g_max_occluder_fbo_size;
 extern int  g_max_light_fbo_size;
+
+// VBO Constants
+#define PROGRAM_VERTEX_ATTRIBUTE    0
+#define PROGRAM_TEXCOORD_ATTRIBUTE  1
 
 // Rendering Constants
 const float c_near_plane =     -10000.0;
@@ -81,6 +86,10 @@ private:
     float           m_background_blue = 0;
 
     std::vector<float>       m_whole_texture_coordinates;       // Used to keep the coordinates of rendering an entire texture
+
+    // VBO's
+    std::map<long, QOpenGLBuffer*>      m_texture_vbos;         // Stores extruded texture vbo's
+    std::map<long, DrEngineVertexData*> m_texture_data;         // Stores extruded texture vertex data
 
     // Frame Buffers
     QOpenGLFramebufferObject *m_render_fbo = nullptr;           // Used for offscreen rendering
@@ -128,6 +137,8 @@ public:
     void            zoomInOut(int level);
 
     // Initialization Calls
+    void            importTexture(long texture_id, QString from_asset_string);
+    void            importTexture(long texture_id, QPixmap &pixmap);
     void            loadBuiltInTextures();
     void            loadProjectTextures();
     void            loadShaders();
@@ -153,6 +164,7 @@ public:
     bool            drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water);
     bool            drawGlowBuffer();
     void            drawObject(DrEngineThing *thing, DrThingType &last_thing);
+    void            drawObjectExtrude(DrEngineThing *thing, DrThingType &last_thing);
     bool            drawObjectFire(DrEngineThing *thing, DrThingType &last_thing);
     bool            drawObjectOccluder(DrEngineThing *thing, bool need_init_shader = true);
     void            drawSpace();

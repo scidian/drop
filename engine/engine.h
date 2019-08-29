@@ -63,7 +63,6 @@ public:
     void    deleteTextures();
 
     // Textures
-    DrEngineTexture*    addTexture(long texture_id, QString from_asset_string);
     DrEngineTexture*    addTexture(long texture_id, QPixmap &pixmap);
     DrEngineTexture*    getTexture(long texture_id) { return m_textures[texture_id]; }
     EngineTextureMap&   getTextureMap() { return m_textures; }

@@ -61,7 +61,16 @@ void DrOpenGL::drawSpace() {
         switch (thing->getThingType()) {
             case DrThingType::Character:
             case DrThingType::Object:
-                drawObject(thing, last_thing);
+
+                //drawObject(thing, last_thing);
+
+                drawObjectExtrude(thing, last_thing);
+
+                break;
+            case DrThingType::Text:
+                // !!!!!
+                // !!!!! IMPLEMENT DRAW TEXT HERE !!!!!
+                // !!!!!
                 break;
             case DrThingType::Fire:
                 if (drawObjectFire(thing, last_thing)) ++effect_count;

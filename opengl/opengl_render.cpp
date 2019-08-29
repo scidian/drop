@@ -104,8 +104,10 @@ void DrOpenGL::setQuadVertices(QVector<GLfloat> &vertices, float width, float he
 //####################################################################################
 //##        Returns list of vertices at z plane from 4 corners
 //####################################################################################
-void DrOpenGL::setQuadRotatedVertices(QVector<GLfloat> &vertices, QVector3D &top_right, QVector3D &top_left,
-                                      QVector3D &bot_left, QVector3D &bot_right, QVector3D position) {
+void DrOpenGL::setQuadRotatedVertices(QVector<GLfloat> &vertices,
+                                      QVector3D &top_right, QVector3D &top_left,
+                                      QVector3D &bot_left,  QVector3D &bot_right,
+                                      QVector3D position) {
     vertices.clear();
     vertices.resize( 12 );              // in sets of x, y, z
     vertices[ 0] = top_right.x() + position.x();    vertices[ 1] = top_right.y() + position.y();    vertices[ 2] = position.z();    // Top Right

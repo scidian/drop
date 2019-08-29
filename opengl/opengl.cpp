@@ -10,6 +10,7 @@
 #include "engine/engine.h"
 #include "engine/engine_thing_object.h"
 #include "engine/engine_texture.h"
+#include "engine/engine_vertex_data.h"
 #include "engine/engine_world.h"
 #include "engine/form_engine.h"
 #include "opengl/opengl.h"
@@ -27,16 +28,26 @@ DrOpenGL::~DrOpenGL() {
     m_engine->clearWorlds();
 
     makeCurrent();
+        // Delete textures
         m_engine->deleteTextures();
+
+        // Delete frame buffer objects
         delete m_render_fbo;
         delete m_texture_fbo;
         delete m_glow_fbo;
         delete m_occluder_fbo;
-
         for (auto fbo_pair : m_occluders)
             delete fbo_pair.second;
         for (auto fbo_pair : m_shadows)
             delete fbo_pair.second;
+
+        // Delete vertex buffer objects
+        for (auto vbo_pair : m_texture_vbos) {
+            vbo_pair.second->destroy();
+            delete vbo_pair.second;
+        }
+        for (auto data_pair : m_texture_data)
+            delete data_pair.second;
 
     doneCurrent();
 }

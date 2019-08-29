@@ -19,7 +19,8 @@
 void DrOpenGL::bindOffscreenBuffer(bool clear) {
     // Check that off screen buffers are initialized
     if (!m_render_fbo || !m_texture_fbo ||
-        (m_render_fbo->width() != width()*devicePixelRatio() || m_render_fbo->height() != height()*devicePixelRatio())) {
+         m_render_fbo->width()  != width()*devicePixelRatio() ||
+         m_render_fbo->height() != height()*devicePixelRatio()) {
         delete m_render_fbo;
         delete m_texture_fbo;
         QOpenGLFramebufferObjectFormat format;

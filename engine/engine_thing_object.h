@@ -11,6 +11,7 @@
 #include "enums_engine.h"
 #include "engine_thing.h"
 
+
 enum class One_Way {                    // One Way Collide
     None,
     Pass_Through,                       // Objects can pass through going one_way_direction
@@ -150,6 +151,9 @@ private:
 public:
     // ***** Image Post Processing Attributes
     bool        cast_shadows = true;                        // Will cast shadows when in front of a Light
+
+
+    bool            extrude_3d = false;                     // Playing with 3d extrusion
 
 
 
