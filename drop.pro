@@ -136,6 +136,7 @@ SOURCES += \
     helper.cpp \
     image_draw_effects.cpp \
     image_filter.cpp \
+    library/hullfinder.cpp \
     library/poly_partition.cpp \
     main.cpp \
     opengl/opengl.cpp \
@@ -252,7 +253,7 @@ HEADERS += \
     forms/form_settings.h \
     helper.h \
     image_filter.h \
-    library/par_msquares.h \
+    library/hullfinder.h \
     library/poly_partition.h \
     opengl/opengl.h \
     playground/form_playground.h \

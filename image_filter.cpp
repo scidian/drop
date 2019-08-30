@@ -191,7 +191,7 @@ QImage imageMask(const QImage &from_image, QColor mask_color, int max_alpha) {
                 QRgb* line = reinterpret_cast<QRgb*>( image.scanLine( y ));
                 for (int x = 0; x < image.width(); ++x) {
                     QColor color = QColor::fromRgba( line[x] );
-                    line[x] = (color.alpha() < max_alpha) ? mask_color.light().rgba() : mask_color.rgba();
+                    line[x] = (color.alpha() < max_alpha) ? 0 : mask_color.rgba();
                 }
             }
 
@@ -230,6 +230,63 @@ float* imageBitsAsFloat(const QImage &from_image) {
     } else {    Dr::ShowMessageBox("Image only has 256 colors!"); }
     return out;
 }
+
+
+//####################################################################################
+//##        Returns a list of points of possible edges of an image
+//####################################################################################
+QVector<Point> outlinePointList(const QImage& from_image, int alpha_tolerance ) {
+    QImage image = from_image;
+    if (image.format() != QImage::Format::Format_ARGB32)
+        image = image.convertToFormat( QImage::Format_ARGB32 );
+    image.detach();
+
+    QVector<Point> points;
+    points.clear();
+
+    // Truecolor Rgba
+    if (image.colorCount() == 0 ) {
+        if ( image.hasAlphaChannel() ) {
+
+            // Grab all the scan lines
+            QVector<QRgb*> lines;
+            for (int y = 0; y < image.height(); ++y) {
+                lines.append( reinterpret_cast<QRgb*>(image.scanLine(y)) );
+            }
+
+            // Loop through every pixel to see if is possibly on border
+            for (int y = 0; y < image.height(); ++y) {
+                for (int x = 0; x < image.width(); ++x) {
+
+                    if ( QColor::fromRgba(lines[y][x]).alpha() < alpha_tolerance) continue;
+
+                    bool touching_transparent = false;
+
+                    // Run through all pixels this pixel is touching to see if they are transparent
+                    int x_start, x_end, y_start, y_end;
+                    x_start = (x > 0) ? x - 1 : x;
+                    y_start = (y > 0) ? y - 1 : y;
+                    x_end =   (x < (image.width() - 1))  ? x + 1 : x;
+                    y_end =   (y < (image.height() - 1)) ? y + 1 : y;
+                    for (int i = x_start; i <= x_end; ++i) {
+                        for (int j = y_start; j <= y_end; ++j) {
+                            if ( QColor::fromRgba(lines[j][i]).alpha() < alpha_tolerance)
+                                touching_transparent = true;
+                            if (touching_transparent) break;
+                        }
+                        if (touching_transparent) break;
+                    }
+
+                    if (touching_transparent) points.push_back(Point(x, y));
+                }
+            }
+
+        } else {    Dr::ShowMessageBox("Image missing alpha channel!"); }
+    } else {    Dr::ShowMessageBox("Image only has 256 colors!"); }
+
+    return points;
+}
+
 
 
 

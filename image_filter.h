@@ -11,7 +11,7 @@
 #include <QPixmap>
 
 #include "enums_engine.h"
-
+#include "library/hullfinder.h"
 
 // Image Constants
 const int   c_image_size = 600;             // Size of graphic to use for effects (water, mirror, fire, fisheye, swirl, etc.)
@@ -58,6 +58,8 @@ namespace DrImaging {
 
     float*  imageBitsAsFloat(const QImage &from_image);
     QImage  imageMask(const QImage& from_image, QColor mask_color, int max_alpha);
+
+    QVector<Point> outlinePointList(const QImage& from_image, int alpha_tolerance );
 
 }
 

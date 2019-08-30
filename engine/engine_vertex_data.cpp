@@ -14,7 +14,6 @@
 #include "engine_vertex_data.h"
 #include "helper.h"
 #include "image_filter.h"
-#include "library/par_msquares.h"
 
 const float c_extrude_depth = 40.0f;
 
@@ -34,76 +33,7 @@ DrEngineVertexData::DrEngineVertexData(QPixmap &pixmap) : m_count(0) {
     float w2 = width  / 2.f;
     float h2 = height / 2.f;
 
-//    int new_width =  width;
-//    int new_height = height;
-//    if (pixmap.width()  % CELLSIZE != 0) new_width +=  (CELLSIZE - (pixmap.width()  % CELLSIZE));
-//    if (pixmap.height() % CELLSIZE != 0) new_height += (CELLSIZE - (pixmap.height() % CELLSIZE));
 
-//    QPixmap new_pix(new_width, new_height);
-//    if (new_pix.width() != pixmap.width() || new_pix.height() != pixmap.height()) {
-//        new_pix.fill(Qt::transparent);
-//        QPainter painter(&new_pix);
-//        painter.drawPixmap( new_pix.rect(), pixmap, pixmap.rect() );
-//        painter.end();
-//    } else {
-//        new_pix = pixmap.copy();
-//    }
-//    float x_ratio = static_cast<float>(new_width) /  static_cast<float>(width);
-//    float y_ratio = static_cast<float>(new_height) / static_cast<float>(height);
-
-
-//    // Run marching squares as Multi-Colorerd, must be 256 or less colors
-//    //QImage image = new_pix.toImage();
-//    //image = image.convertToFormat( QImage::Format_Indexed8, Qt::ThresholdDither | Qt::AutoColor );
-//    //image = image.convertToFormat( QImage::Format_Mono, Qt::ImageConversionFlag::AvoidDither | Qt::AutoColor );
-//    //image = image.convertToFormat( QImage::Format_ARGB32 );
-//    //image.detach();
-//    //unsigned char *pixels = image.bits();
-//    //par_msquares_meshlist* mlist = par_msquares_color_multi(pixels, new_pix.width(), new_pix.height(), CELLSIZE, PAR_RGBA, PAR_MSQUARES_SIMPLIFY);
-
-//    // Run marching squares as Color
-//    //QColor mask_color = QColor(0, 0, 0, 0);
-//    //QImage image = DrImaging::imageMask(new_pix.toImage(), mask_color, 1);
-//    //unsigned char *pixels = image.bits();
-//    //par_msquares_meshlist* mlist = par_msquares_color(pixels, new_pix.width(), new_pix.height(), CELLSIZE, 0x0, PAR_RGBA, PAR_MSQUARES_SIMPLIFY);
-
-//    // Run marching squares as Grayscale
-//    QImage image = new_pix.toImage();
-//    float *grays = DrImaging::imageBitsAsFloat( image );
-//    par_msquares_meshlist* mlist = par_msquares_grayscale(grays, new_pix.width(), new_pix.height(), CELLSIZE, 1000000.0, PAR_MSQUARES_SIMPLIFY);
-
-
-//    // Load all points from all meshes into vector
-//    QVector<QVector3D> points;
-//    points.clear();
-//    for (int m = 0; m < par_msquares_get_count(mlist); m++) {
-//        par_msquares_mesh const* mesh = par_msquares_get_mesh(mlist, m);
-//        float* pt = mesh->points;
-//        for (int i = 0; i < mesh->npoints; i++) {
-//            float z = mesh->dim > 2 ? pt[2] : 0;
-//            points.push_back( QVector3D(pt[0] * x_ratio, pt[1] * y_ratio, z) );
-//            pt += mesh->dim;
-//        }
-//    }
-
-//    // Add all triangles to Vertex Data buffer
-//    int offset = 0;
-//    for (int m = 0; m < par_msquares_get_count(mlist); m++) {
-//        par_msquares_mesh const* mesh = par_msquares_get_mesh(mlist, m);
-//        uint16_t *index = mesh->triangles;
-//        for (int i = 0; i < mesh->ntriangles; i++) {
-//            int a = (offset + *index++);
-//            int b = (offset + *index++);
-//            int c = (offset + *index++);
-
-//            triangle((points[a].x() * width) - w2, (points[a].y() * height) - h2, points[a].x(), points[a].y(),
-//                     (points[b].x() * width) - w2, (points[b].y() * height) - h2, points[b].x(), points[b].y(),
-//                     (points[c].x() * width) - w2, (points[c].y() * height) - h2, points[c].x(), points[c].y());
-//        }
-//        offset += mesh->npoints;
-//    }
-//    par_msquares_free(mlist);
-//    return;
 
 
 
