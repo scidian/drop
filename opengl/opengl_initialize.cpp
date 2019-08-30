@@ -66,7 +66,7 @@ void DrOpenGL::importTexture(long texture_id, QPixmap &pixmap) {
     m_engine->addTexture(texture_id, pixmap);
 
     // 3D Extruded Textures
-    m_texture_data[texture_id] = new DrEngineVertexData( m_engine->getTexture(texture_id)->width(), m_engine->getTexture(texture_id)->height() );
+    m_texture_data[texture_id] = new DrEngineVertexData( pixmap );
 
     m_texture_vbos[texture_id] = new QOpenGLBuffer();
     m_texture_vbos[texture_id]->create();

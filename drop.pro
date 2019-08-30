@@ -139,16 +139,17 @@ SOURCES += \
     library/poly_partition.cpp \
     main.cpp \
     opengl/opengl.cpp \
+    opengl/opengl_bind_fbo.cpp \
     opengl/opengl_initialize.cpp \
     opengl/opengl_keyboard.cpp \
     opengl/opengl_math.cpp \
     opengl/opengl_matrix.cpp \
     opengl/opengl_mouse.cpp \
     opengl/opengl_render.cpp \
-    opengl/opengl_render_bind.cpp \
     opengl/opengl_render_debug.cpp \
     opengl/opengl_render_debug_health.cpp \
     opengl/opengl_render_effects.cpp \
+    opengl/opengl_render_fbo.cpp \
     opengl/opengl_render_lights.cpp \
     opengl/opengl_render_objects.cpp \
     opengl/opengl_render_space.cpp \

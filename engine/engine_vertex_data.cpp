@@ -6,19 +6,106 @@
 //
 //
 #include <QtMath>
+#include <QDebug>
+#include <QPainter>
+#include <QPixmap>
 
+#include "engine_texture.h"
 #include "engine_vertex_data.h"
+#include "helper.h"
+#include "image_filter.h"
+#include "library/par_msquares.h"
 
-const float c_extrude_depth = 20.0f;
+const float c_extrude_depth = 40.0f;
+
+#define CELLSIZE 16
+
+#define PAR_RGB  3
+#define PAR_RGBA 4
 
 //####################################################################################
 //##        Constructor
 //####################################################################################
-DrEngineVertexData::DrEngineVertexData(int width, int height) : m_count(0) {
+DrEngineVertexData::DrEngineVertexData(QPixmap &pixmap) : m_count(0) {
     m_data.resize(1000 * c_vertex_length);
 
-    float w2 = width / 2.f;
+    int width =  pixmap.width();
+    int height = pixmap.height();
+    float w2 = width  / 2.f;
     float h2 = height / 2.f;
+
+//    int new_width =  width;
+//    int new_height = height;
+//    if (pixmap.width()  % CELLSIZE != 0) new_width +=  (CELLSIZE - (pixmap.width()  % CELLSIZE));
+//    if (pixmap.height() % CELLSIZE != 0) new_height += (CELLSIZE - (pixmap.height() % CELLSIZE));
+
+//    QPixmap new_pix(new_width, new_height);
+//    if (new_pix.width() != pixmap.width() || new_pix.height() != pixmap.height()) {
+//        new_pix.fill(Qt::transparent);
+//        QPainter painter(&new_pix);
+//        painter.drawPixmap( new_pix.rect(), pixmap, pixmap.rect() );
+//        painter.end();
+//    } else {
+//        new_pix = pixmap.copy();
+//    }
+//    float x_ratio = static_cast<float>(new_width) /  static_cast<float>(width);
+//    float y_ratio = static_cast<float>(new_height) / static_cast<float>(height);
+
+
+//    // Run marching squares as Multi-Colorerd, must be 256 or less colors
+//    //QImage image = new_pix.toImage();
+//    //image = image.convertToFormat( QImage::Format_Indexed8, Qt::ThresholdDither | Qt::AutoColor );
+//    //image = image.convertToFormat( QImage::Format_Mono, Qt::ImageConversionFlag::AvoidDither | Qt::AutoColor );
+//    //image = image.convertToFormat( QImage::Format_ARGB32 );
+//    //image.detach();
+//    //unsigned char *pixels = image.bits();
+//    //par_msquares_meshlist* mlist = par_msquares_color_multi(pixels, new_pix.width(), new_pix.height(), CELLSIZE, PAR_RGBA, PAR_MSQUARES_SIMPLIFY);
+
+//    // Run marching squares as Color
+//    //QColor mask_color = QColor(0, 0, 0, 0);
+//    //QImage image = DrImaging::imageMask(new_pix.toImage(), mask_color, 1);
+//    //unsigned char *pixels = image.bits();
+//    //par_msquares_meshlist* mlist = par_msquares_color(pixels, new_pix.width(), new_pix.height(), CELLSIZE, 0x0, PAR_RGBA, PAR_MSQUARES_SIMPLIFY);
+
+//    // Run marching squares as Grayscale
+//    QImage image = new_pix.toImage();
+//    float *grays = DrImaging::imageBitsAsFloat( image );
+//    par_msquares_meshlist* mlist = par_msquares_grayscale(grays, new_pix.width(), new_pix.height(), CELLSIZE, 1000000.0, PAR_MSQUARES_SIMPLIFY);
+
+
+//    // Load all points from all meshes into vector
+//    QVector<QVector3D> points;
+//    points.clear();
+//    for (int m = 0; m < par_msquares_get_count(mlist); m++) {
+//        par_msquares_mesh const* mesh = par_msquares_get_mesh(mlist, m);
+//        float* pt = mesh->points;
+//        for (int i = 0; i < mesh->npoints; i++) {
+//            float z = mesh->dim > 2 ? pt[2] : 0;
+//            points.push_back( QVector3D(pt[0] * x_ratio, pt[1] * y_ratio, z) );
+//            pt += mesh->dim;
+//        }
+//    }
+
+//    // Add all triangles to Vertex Data buffer
+//    int offset = 0;
+//    for (int m = 0; m < par_msquares_get_count(mlist); m++) {
+//        par_msquares_mesh const* mesh = par_msquares_get_mesh(mlist, m);
+//        uint16_t *index = mesh->triangles;
+//        for (int i = 0; i < mesh->ntriangles; i++) {
+//            int a = (offset + *index++);
+//            int b = (offset + *index++);
+//            int c = (offset + *index++);
+
+//            triangle((points[a].x() * width) - w2, (points[a].y() * height) - h2, points[a].x(), points[a].y(),
+//                     (points[b].x() * width) - w2, (points[b].y() * height) - h2, points[b].x(), points[b].y(),
+//                     (points[c].x() * width) - w2, (points[c].y() * height) - h2, points[c].x(), points[c].y());
+//        }
+//        offset += mesh->npoints;
+//    }
+//    par_msquares_free(mlist);
+//    return;
+
+
 
     // EXAMPLE: Adding Triangles
     const GLfloat x1 = +w2;     // Top Right
@@ -108,9 +195,9 @@ void DrEngineVertexData::triangle(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat t
                                   GLfloat x3, GLfloat y3, GLfloat tx3, GLfloat ty3) {
     QVector3D n = QVector3D::normal(QVector3D(x3 - x1, y3 - y1, 0.0f), QVector3D(x2 - x1, y2 - y1, 0.0f));
 
-    add(QVector3D(x1, y1, c_extrude_depth), n, QVector2D(tx1, ty1));
-    add(QVector3D(x2, y2, c_extrude_depth), n, QVector2D(tx2, ty2));
-    add(QVector3D(x3, y3, c_extrude_depth), n, QVector2D(tx3, ty3));
+    add(QVector3D(x1, y1, +c_extrude_depth), n, QVector2D(tx1, ty1));
+    add(QVector3D(x2, y2, +c_extrude_depth), n, QVector2D(tx2, ty2));
+    add(QVector3D(x3, y3, +c_extrude_depth), n, QVector2D(tx3, ty3));
 
     n = QVector3D::normal(QVector3D(x1 - x3, y1 - y3, 0.0f), QVector3D(x2 - x3, y2 - y3, 0.0f));
 
@@ -133,14 +220,6 @@ void DrEngineVertexData::extrude(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty
     add(QVector3D(x2, y2, +c_extrude_depth), n, QVector2D(tx2, ty2));
     add(QVector3D(x1, y1, -c_extrude_depth), n, QVector2D(tx1, ty1));
     add(QVector3D(x2, y2, -c_extrude_depth), n, QVector2D(tx2, ty2));
-
-//    add(QVector3D(x1, y1, +c_extrude_depth), n, QVector2D(0, 0));
-//    add(QVector3D(x1, y1, -c_extrude_depth), n, QVector2D(0, 0));
-//    add(QVector3D(x2, y2, +c_extrude_depth), n, QVector2D(0, 0));
-
-//    add(QVector3D(x2, y2, +c_extrude_depth), n, QVector2D(0, 0));
-//    add(QVector3D(x2, y2, -c_extrude_depth), n, QVector2D(0, 0));
-//    add(QVector3D(x1, y1, +c_extrude_depth), n, QVector2D(0, 0));
 }
 
 

@@ -17,33 +17,6 @@
 
 
 //####################################################################################
-//##        Calculates rotated, z-ordered vertices for a DrEngineThing
-//####################################################################################
-void DrOpenGL::getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing, float angle) {
-    // ***** Get object position data
-    QPointF center = thing->getPosition();
-    float   x, y, z;
-    float   half_width, half_height;
-    x = static_cast<float>(center.x());
-    y = static_cast<float>(center.y());
-    z = static_cast<float>(thing->z_order);
-    half_width =  static_cast<float>(thing->getSize().x()) * thing->getScaleX() / 2.0f;
-    half_height = static_cast<float>(thing->getSize().y()) * thing->getScaleY() / 2.0f;
-
-    // ***** Create rotation matrix, apply rotation to object
-    QMatrix4x4 matrix;
-    matrix.rotate( angle, 0.0, 0.0, 1.0 );
-    QVector3D top_right = matrix * QVector3D( half_width,  half_height, 0);
-    QVector3D top_left =  matrix * QVector3D(-half_width,  half_height, 0);
-    QVector3D bot_right = matrix * QVector3D( half_width, -half_height, 0);
-    QVector3D bot_left =  matrix * QVector3D(-half_width, -half_height, 0);
-
-    // ***** Load vertices for this object
-    setQuadRotatedVertices(vertices, top_right, top_left, bot_left, bot_right, QVector3D(x, y, z));
-}
-
-
-//####################################################################################
 //##        Draws a DrEngineObject effect type with default shader
 //####################################################################################
 void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing) {
@@ -168,7 +141,7 @@ void DrOpenGL::drawObjectExtrude(DrEngineThing *thing, DrThingType &last_thing) 
     x = static_cast<float>(center.x());
     y = static_cast<float>(center.y());
     z = static_cast<float>(thing->z_order);
-    float now = 0.f;//static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 30.f);
+    float now = static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 30.f);
     float angle = static_cast<float>(object->getAngle());
     QMatrix4x4 matrix;
     matrix.translate(x, y, z);

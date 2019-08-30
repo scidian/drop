@@ -39,9 +39,9 @@ QPixmap drawLight(QColor color, int diameter, float cone_start, float cone_end, 
     light.fill(Qt::transparent);
 
     QImage image = light.toImage();
-    image.detach();
     if ( image.format() != QImage::Format::Format_ARGB32 )
         image = image.convertToFormat( QImage::Format_ARGB32 );
+    image.detach();
 
     // Truecolor Rgba
     if (image.colorCount() == 0 ) {
@@ -49,7 +49,7 @@ QPixmap drawLight(QColor color, int diameter, float cone_start, float cone_end, 
 
             // Grab all the scan lines
             QVector<QRgb*> lines;
-            for( int y = 0; y < image.height(); ++y ) {
+            for (int y = 0; y < image.height(); ++y) {
                 lines.append( reinterpret_cast<QRgb*>(image.scanLine(y)) );
             }
 
@@ -67,8 +67,8 @@ QPixmap drawLight(QColor color, int diameter, float cone_start, float cone_end, 
             float alpha =   1.0f;
 
             // Loop through every pixel
-            for( int y = 0; y < image.height(); ++y ) {
-                for( int x = 0; x < image.width(); ++x ) {
+            for (int y = 0; y < image.height(); ++y) {
+                for (int x = 0; x < image.width(); ++x) {
 
                     // Rectangular to Polar
                     QVector2D norm = QVector2D( x - (image.width() / 2.0f), (image.height() / 2.0f) - y );

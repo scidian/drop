@@ -56,9 +56,20 @@ namespace DrImaging {
     QPixmap drawSwirl(QColor top_color, double angle);
     QPixmap drawWater(QColor top_color, QColor bottom_color);
 
+    float*  imageBitsAsFloat(const QImage &from_image);
+    QImage  imageMask(const QImage& from_image, QColor mask_color, int max_alpha);
+
 }
 
 #endif // IMAGE_FILTER_H
+
+
+
+
+
+
+
+
 
 
 

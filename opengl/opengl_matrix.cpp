@@ -16,6 +16,20 @@
 
 
 //####################################################################################
+//##        Returns a square matrix for rendering a flat quad (usually to fill screen)
+//####################################################################################
+QMatrix4x4 DrOpenGL::orthoMatrix(float width, float height) {
+    float left =   0.0f - (width  / 2.0f);
+    float right =  0.0f + (width  / 2.0f);
+    float top =    0.0f + (height / 2.0f);
+    float bottom = 0.0f - (height / 2.0f);
+    QMatrix4x4 m;
+    m.ortho( left, right, bottom, top, c_near_plane, c_far_plane);
+    return m;
+}
+
+
+//####################################################################################
 //##        Update the view matrices before rendering
 //####################################################################################
 void DrOpenGL::updateViewMatrix(Render_Type render_type, bool use_offset) {
@@ -60,8 +74,6 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type, bool use_offset) {
         ///m_model_view.rotate( m_angle, 0.0f, 1.0f, 0.0f );
     }
 }
-
-
 
 
 //####################################################################################

@@ -134,7 +134,7 @@ par_msquares_boundary* par_msquares_extract_boundary(par_msquares_mesh const* );
 // END PUBLIC API
 // -----------------------------------------------------------------------------
 
-//#define PAR_MSQUARES_IMPLEMENTATION
+#define PAR_MSQUARES_IMPLEMENTATION
 
 #ifdef PAR_MSQUARES_IMPLEMENTATION
 #include <stdlib.h>

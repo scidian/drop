@@ -29,7 +29,7 @@ private:
 
 public:
     // Constructor
-    DrEngineVertexData(int width, int height);
+    DrEngineVertexData(QPixmap &pixmap);
 
     // Properties
     const GLfloat  *constData() const {     return m_data.constData(); }

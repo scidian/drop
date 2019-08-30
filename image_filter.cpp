@@ -34,9 +34,9 @@ QPixmap applySinglePixelFilter( Image_Filter_Type filter, const QPixmap& from_pi
 QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_image, int value) {
 
     QImage image = from_image;
-    image.detach();
     if ( image.format() != QImage::Format::Format_ARGB32 )
         image = image.convertToFormat( QImage::Format_ARGB32 );
+    image.detach();
 
     QTime time_it;
     time_it.restart();
@@ -55,9 +55,9 @@ QImage applySinglePixelFilter( Image_Filter_Type filter, const QImage& from_imag
 
         if ( image.hasAlphaChannel() ) {
             // Loop through every pixel
-            for( int y = 0; y < image.height(); ++y ) {
+            for (int y = 0; y < image.height(); ++y) {
                 QRgb* line = reinterpret_cast<QRgb*>( image.scanLine( y ));
-                for( int x = 0; x < image.width(); ++x ) {
+                for (int x = 0; x < image.width(); ++x) {
 
                     // Grab the current pixel color
                     QColor color = QColor::fromRgba( line[x] );
@@ -138,9 +138,9 @@ QPixmap applyPixelation( const QPixmap& from_pixmap, QPointF data_pair ) {
 
 QImage applyPixelation(const QImage& from_image, QPointF data_pair ) {
     QImage image = from_image;
-    image.detach();
-    if ( image.format() != QImage::Format::Format_ARGB32 )
+    if (image.format() != QImage::Format::Format_ARGB32)
         image = image.convertToFormat( QImage::Format_ARGB32 );
+    image.detach();
 
     // Truecolor Rgba
     if (image.colorCount() == 0 ) {
@@ -148,13 +148,13 @@ QImage applyPixelation(const QImage& from_image, QPointF data_pair ) {
 
             // Grab all the scan lines
             QVector<QRgb*> lines;
-            for( int y = 0; y < image.height(); ++y ) {
+            for (int y = 0; y < image.height(); ++y) {
                 lines.append( reinterpret_cast<QRgb*>(image.scanLine(y)) );
             }
 
             // Loop through every pixel
-            for( int y = 0; y < image.height(); ++y ) {
-                for( int x = 0; x < image.width(); ++x ) {
+            for (int y = 0; y < image.height(); ++y) {
+                for (int x = 0; x < image.width(); ++x) {
                     double dx = data_pair.x();
                     double dy = data_pair.y();
 
@@ -173,8 +173,72 @@ QImage applyPixelation(const QImage& from_image, QPointF data_pair ) {
 
 
 
+//####################################################################################
+//##        Turns Image into a Mask of the spcified color
+//####################################################################################
+QImage imageMask(const QImage &from_image, QColor mask_color, int max_alpha) {
+    QImage image = from_image;
+    if ( image.format() != QImage::Format::Format_ARGB32 )
+        image = image.convertToFormat( QImage::Format_ARGB32 );
+    image.detach();
+
+    // Truecolor Rgba
+    if (image.colorCount() == 0 ) {
+        if ( image.hasAlphaChannel() ) {
+
+            // Loop through every pixel, if alpha is below threshold, set to mask color
+            for (int y = 0; y < image.height(); ++y) {
+                QRgb* line = reinterpret_cast<QRgb*>( image.scanLine( y ));
+                for (int x = 0; x < image.width(); ++x) {
+                    QColor color = QColor::fromRgba( line[x] );
+                    line[x] = (color.alpha() < max_alpha) ? mask_color.light().rgba() : mask_color.rgba();
+                }
+            }
+
+        } else {    Dr::ShowMessageBox("Image missing alpha channel!"); }
+    } else {    Dr::ShowMessageBox("Image only has 256 colors!"); }
+    return image;
+}
+
+
+//####################################################################################
+//##        Returns an array of bits from an Image as aRgb float values
+//####################################################################################
+float* imageBitsAsFloat(const QImage &from_image) {
+    QImage image = from_image;
+    if ( image.format() != QImage::Format::Format_ARGB32 )
+        image = image.convertToFormat( QImage::Format_ARGB32 );
+    image.detach();
+
+    float *out = static_cast<float*>( malloc(static_cast<unsigned long>(image.width() * image.height()) * sizeof(float)) );
+
+    // Truecolor Rgba
+    if (image.colorCount() == 0 ) {
+        if ( image.hasAlphaChannel() ) {
+
+            // Loop through every pixel, if alpha is below threshold, set to mask color
+            int index = 0;
+            for (int y = 0; y < image.height(); ++y) {
+                QRgb* line = reinterpret_cast<QRgb*>( image.scanLine( y ));
+                for (int x = 0; x < image.width(); ++x) {
+                    out[index] = line[x];
+                    index++;
+                }
+            }
+
+        } else {    Dr::ShowMessageBox("Image missing alpha channel!"); }
+    } else {    Dr::ShowMessageBox("Image only has 256 colors!"); }
+    return out;
+}
+
+
 
 }   // End DrImaging Namespace
+
+
+
+
+
 
 
 
