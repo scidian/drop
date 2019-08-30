@@ -6,25 +6,25 @@
 #include <QVector>
 #include <QMap>
 
-class Point
+class HullPoint
 {
 public:
     double x;
     double y;
-    Point();
-    Point(double _x, double _y);
-    Point & operator=(const Point & other);
-    Point operator+(const Point & other) const;
-    Point operator-(const Point & other) const;
-    Point operator*(double k) const;
-    Point operator/(double k) const;
-    bool operator==(const Point & other) const;
+    HullPoint();
+    HullPoint(double _x, double _y);
+    HullPoint & operator=(const HullPoint & other);
+    HullPoint operator+(const HullPoint & other) const;
+    HullPoint operator-(const HullPoint & other) const;
+    HullPoint operator*(double k) const;
+    HullPoint operator/(double k) const;
+    bool operator==(const HullPoint & other) const;
 
-    double DotProduct(const Point & other) const;
-    double DistanceSquared(const Point & to) const;
-    double Distance(const Point & to) const;
-    double Distance(const Point & segmentStart, const Point & segmentEnd) const;
-    double DecisionDistance(const QList<Point> & points) const;
+    double DotProduct(const HullPoint & other) const;
+    double DistanceSquared(const HullPoint & to) const;
+    double Distance(const HullPoint & to) const;
+    double Distance(const HullPoint & segmentStart, const HullPoint & segmentEnd) const;
+    double DecisionDistance(const QList<HullPoint> & points) const;
 };
 
 class HullFinder
@@ -32,13 +32,13 @@ class HullFinder
 public:
     HullFinder();
 
-    static double IsLeft(Point p0, Point p1, Point p2);
-    static bool IsPointInsidePolygon(Point v, const QVector<Point> & polygon);
-    static bool CheckEdgeIntersection(const Point & p1, const Point & p2, const Point & p3, const Point & p4);
-    static bool CheckEdgeIntersection(const QVector<Point> & hull, Point curEdgeStart, Point curEdgeEnd, Point checkEdgeStart, Point checkEdgeEnd);
-    static Point NearestInnerPoint(Point edgeStart, Point edgeEnd, const QVector<Point> & points, const QVector<Point> & hull, bool * found);
-    static QVector<Point> FindConvexHull(const QVector<Point> & points);
-    static QVector<Point> FindConcaveHull(const QVector<Point> & points, double N);
+    static double IsLeft(HullPoint p0, HullPoint p1, HullPoint p2);
+    static bool IsPointInsidePolygon(HullPoint v, const QVector<HullPoint> & polygon);
+    static bool CheckEdgeIntersection(const HullPoint & p1, const HullPoint & p2, const HullPoint & p3, const HullPoint & p4);
+    static bool CheckEdgeIntersection(const QVector<HullPoint> & hull, HullPoint curEdgeStart, HullPoint curEdgeEnd, HullPoint checkEdgeStart, HullPoint checkEdgeEnd);
+    static HullPoint NearestInnerPoint(HullPoint edgeStart, HullPoint edgeEnd, const QVector<HullPoint> & points, const QVector<HullPoint> & hull, bool * found);
+    static QVector<HullPoint> FindConvexHull(const QVector<HullPoint> & points);
+    static QVector<HullPoint> FindConcaveHull(const QVector<HullPoint> & points, double N);
 };
 
 #endif // HULLFINDER_H

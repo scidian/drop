@@ -1,65 +1,65 @@
 #include "hullfinder.h"
 
-Point::Point()
+HullPoint::HullPoint()
 {
     x = 0;
     y = 0;
 }
 
-Point::Point(double _x, double _y)
+HullPoint::HullPoint(double _x, double _y)
 {
     x = _x;
     y = _y;
 }
 
-Point & Point::operator=(const Point & other)
+HullPoint & HullPoint::operator=(const HullPoint & other)
 {
     x = other.x;
     y = other.y;
     return *this;
 }
 
-Point Point::operator+(const Point & other) const
+HullPoint HullPoint::operator+(const HullPoint & other) const
 {
-    return Point(x + other.x, y + other.y);
+    return HullPoint(x + other.x, y + other.y);
 }
 
-Point Point::operator-(const Point & other) const
+HullPoint HullPoint::operator-(const HullPoint & other) const
 {
-    return Point(x - other.x, y - other.y);
+    return HullPoint(x - other.x, y - other.y);
 }
 
-Point Point::operator*(double k) const
+HullPoint HullPoint::operator*(double k) const
 {
-    return Point(x * k, y * k);
+    return HullPoint(x * k, y * k);
 }
 
-Point Point::operator/(double k) const
+HullPoint HullPoint::operator/(double k) const
 {
-    return Point(x / k, y / k);
+    return HullPoint(x / k, y / k);
 }
 
-bool Point::operator==(const Point & other) const
+bool HullPoint::operator==(const HullPoint & other) const
 {
     return x == other.x && y == other.y;
 }
 
-double Point::DotProduct(const Point & other) const
+double HullPoint::DotProduct(const HullPoint & other) const
 {
     return x * other.x + y * other.y;
 }
 
-double Point::DistanceSquared(const Point & to) const
+double HullPoint::DistanceSquared(const HullPoint & to) const
 {
     return (double)((to.x - x) * (to.x - x) + (to.y - y) * (to.y - y));
 }
 
-double Point::Distance(const Point & to) const
+double HullPoint::Distance(const HullPoint & to) const
 {
     return sqrt(DistanceSquared(to));
 }
 
-double Point::Distance(const Point & segmentStart, const Point & segmentEnd) const
+double HullPoint::Distance(const HullPoint & segmentStart, const HullPoint & segmentEnd) const
 {
     const double l2 = segmentStart.DistanceSquared(segmentEnd);
     if (l2 == 0.0) {
@@ -67,7 +67,7 @@ double Point::Distance(const Point & segmentStart, const Point & segmentEnd) con
     }
 
     // Consider the line extending the segment, parameterized as v + t (w - v)
-    // We find projection of point p onto the line.
+    // We find projection of HullPoint p onto the line.
     // It falls where t = [(p-v) . (w-v)] / |w-v|^2
     const double t = ((*this - segmentStart).DotProduct(segmentEnd - segmentStart)) / l2;
     if (t < 0.0) {
@@ -77,16 +77,16 @@ double Point::Distance(const Point & segmentStart, const Point & segmentEnd) con
     }
 
     // Projection falls on the segment
-    Point projection = segmentStart + (segmentEnd - segmentStart) * t;
+    HullPoint projection = segmentStart + (segmentEnd - segmentStart) * t;
     return Distance(projection);
 }
 
-double Point::DecisionDistance(const QList<Point> & points) const
+double HullPoint::DecisionDistance(const QList<HullPoint> & HullPoints) const
 {
-    Point result = points[0];
-    double dst = Distance(points[0]);
-    for (int i = 1; i < points.size(); i++) {
-        Point cur = points[i];
+    HullPoint result = HullPoints[0];
+    double dst = Distance(HullPoints[0]);
+    for (int i = 1; i < HullPoints.size(); i++) {
+        HullPoint cur = HullPoints[i];
         double curDistance = Distance(cur);
         if (curDistance < dst) {
             result = cur;
@@ -100,12 +100,12 @@ HullFinder::HullFinder()
 {
 }
 
-double HullFinder::IsLeft(Point p0, Point p1, Point p2)
+double HullFinder::IsLeft(HullPoint p0, HullPoint p1, HullPoint p2)
 {
     return (p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y);
 }
 
-bool HullFinder::IsPointInsidePolygon(Point v, const QVector<Point> & polygon)
+bool HullFinder::IsPointInsidePolygon(HullPoint v, const QVector<HullPoint> & polygon)
 {
     bool result = false;
     int j = polygon.count() - 1;
@@ -123,7 +123,7 @@ bool HullFinder::IsPointInsidePolygon(Point v, const QVector<Point> & polygon)
     return result;
 }
 
-bool HullFinder::CheckEdgeIntersection(const Point & p0, const Point & p1, const Point & p2, const Point & p3)
+bool HullFinder::CheckEdgeIntersection(const HullPoint & p0, const HullPoint & p1, const HullPoint & p2, const HullPoint & p3)
 {
     double s1_x = p1.x - p0.x;
     double s1_y = p1.y - p0.y;
@@ -134,13 +134,13 @@ bool HullFinder::CheckEdgeIntersection(const Point & p0, const Point & p1, const
     return (s > 0 && s < 1 && t > 0 && t < 1);
 }
 
-bool HullFinder::CheckEdgeIntersection(const QVector<Point> & hull, Point curEdgeStart, Point curEdgeEnd, Point checkEdgeStart, Point checkEdgeEnd)
+bool HullFinder::CheckEdgeIntersection(const QVector<HullPoint> & hull, HullPoint curEdgeStart, HullPoint curEdgeEnd, HullPoint checkEdgeStart, HullPoint checkEdgeEnd)
 {
     for (int i = 0; i < hull.size() - 2; i++) {
         int e1 = i;
         int e2 = i + 1;
-        Point p1 = hull[e1];
-        Point p2 = hull[e2];
+        HullPoint p1 = hull[e1];
+        HullPoint p2 = hull[e2];
 
         if (curEdgeStart == p1 && curEdgeEnd == p2) {
             continue;
@@ -153,18 +153,18 @@ bool HullFinder::CheckEdgeIntersection(const QVector<Point> & hull, Point curEdg
     return false;
 }
 
-Point HullFinder::NearestInnerPoint(Point edgeStart, Point edgeEnd, const QVector<Point> &points, const QVector<Point> &hull, bool * found)
+HullPoint HullFinder::NearestInnerPoint(HullPoint edgeStart, HullPoint edgeEnd, const QVector<HullPoint> &HullPoints, const QVector<HullPoint> &hull, bool * found)
 {
-    Point result;
+    HullPoint result;
     double distance = 0;
     *found = false;
 
-    foreach (Point p, points) {
-        // Skip points that are already in he hull
+    foreach (HullPoint p, HullPoints) {
+        // Skip HullPoints that are already in he hull
         if (hull.contains(p)) {
             continue;
         }
-        /*if (!IsPointInsidePolygon(p, hull)) {
+        /*if (!IsHullPointInsidePolygon(p, hull)) {
             continue;
         }*/
 
@@ -187,16 +187,16 @@ Point HullFinder::NearestInnerPoint(Point edgeStart, Point edgeEnd, const QVecto
     return result;
 }
 
-QVector<Point> HullFinder::FindConvexHull(const QVector<Point> & points)
+QVector<HullPoint> HullFinder::FindConvexHull(const QVector<HullPoint> & HullPoints)
 {
-    QVector<Point> P = points;
-    QVector<Point> H;
+    QVector<HullPoint> P = HullPoints;
+    QVector<HullPoint> H;
 
     // Sort P by x and y
     for (int i = 0; i < P.size(); i++) {
         for (int j = i + 1; j < P.size(); j++) {
             if (P[j].x < P[i].x || (P[j].x == P[i].x && P[j].y < P[i].y)) {
-                Point tmp = P[i];
+                HullPoint tmp = P[i];
                 P[i] = P[j];
                 P[j] = tmp;
             }
@@ -206,7 +206,7 @@ QVector<Point> HullFinder::FindConvexHull(const QVector<Point> & points)
     // the output array H[] will be used as the stack
     int i;                 // array scan index
 
-    // Get the indices of points with min x-coord and min|max y-coord
+    // Get the indices of HullPoints with min x-coord and min|max y-coord
     int minmin = 0, minmax;
     double xmin = P[0].x;
     for (i = 1; i < P.size(); i++)
@@ -216,11 +216,11 @@ QVector<Point> HullFinder::FindConvexHull(const QVector<Point> & points)
         H.push_back(P[minmin]);
         if (P[minmax].y != P[minmin].y) // a  nontrivial segment
             H.push_back(P[minmax]);
-        H.push_back(P[minmin]);            // add polygon endpoint
+        H.push_back(P[minmin]);            // add polygon endHullPoint
         return H;
     }
 
-    // Get the indices of points with max x-coord and min|max y-coord
+    // Get the indices of HullPoints with max x-coord and min|max y-coord
     int maxmin, maxmax = P.size() - 1;
     double xmax = P.last().x;
     for (i = P.size() - 2; i >= 0; i--)
@@ -228,7 +228,7 @@ QVector<Point> HullFinder::FindConvexHull(const QVector<Point> & points)
     maxmin = i+1;
 
     // Compute the lower hull on the stack H
-    H.push_back(P[minmin]);      // push  minmin point onto stack
+    H.push_back(P[minmin]);      // push  minmin HullPoint onto stack
     i = minmax;
     while (++i <= maxmin)
     {
@@ -236,20 +236,20 @@ QVector<Point> HullFinder::FindConvexHull(const QVector<Point> & points)
         if (IsLeft(P[minmin], P[maxmin], P[i]) >= 0 && i < maxmin)
             continue;           // ignore P[i] above or on the lower line
 
-        while (H.size() > 1)         // there are at least 2 points on the stack
+        while (H.size() > 1)         // there are at least 2 HullPoints on the stack
         {
             // test if  P[i] is left of the line at the stack top
             if (IsLeft(H[H.size() - 2], H.last(), P[i]) > 0)
                 break;         // P[i] is a new hull  vertex
-            H.pop_back();         // pop top point off  stack
+            H.pop_back();         // pop top HullPoint off  stack
         }
         H.push_back(P[i]);        // push P[i] onto stack
     }
 
     // Next, compute the upper hull on the stack H above  the bottom hull
-    if (maxmax != maxmin)      // if  distinct xmax points
-         H.push_back(P[maxmax]);  // push maxmax point onto stack
-    int bot = H.size();                  // the bottom point of the upper hull stack
+    if (maxmax != maxmin)      // if  distinct xmax HullPoints
+         H.push_back(P[maxmax]);  // push maxmax HullPoint onto stack
+    int bot = H.size();                  // the bottom HullPoint of the upper hull stack
     i = maxmin;
     while (--i >= minmax)
     {
@@ -257,37 +257,37 @@ QVector<Point> HullFinder::FindConvexHull(const QVector<Point> & points)
         if (IsLeft( P[maxmax], P[minmax], P[i])  >= 0 && i > minmax)
             continue;           // ignore P[i] below or on the upper line
 
-        while (H.size() > bot)     // at least 2 points on the upper stack
+        while (H.size() > bot)     // at least 2 HullPoints on the upper stack
         {
             // test if  P[i] is left of the line at the stack top
             if (IsLeft(H[H.size() - 2], H.last(), P[i]) > 0)
                 break;         // P[i] is a new hull  vertex
-            H.pop_back();         // pop top point off stack
+            H.pop_back();         // pop top HullPoint off stack
         }
         H.push_back(P[i]);        // push P[i] onto stack
     }
     if (minmax != minmin)
-        H.push_back(P[minmin]);  // push  joining endpoint onto stack
+        H.push_back(P[minmin]);  // push  joining endHullPoint onto stack
 
     return H;
 }
 
-QVector<Point> HullFinder::FindConcaveHull(const QVector<Point> &points, double N) {
-    QVector<Point> concaveList = FindConvexHull(points);
+QVector<HullPoint> HullFinder::FindConcaveHull(const QVector<HullPoint> &HullPoints, double N) {
+    QVector<HullPoint> concaveList = FindConvexHull(HullPoints);
 
     for (int i = 0; i < concaveList.size() - 1; i++) {
-        // Find the nearest inner point pk ∈ G from the edge (ci1, ci2);
-        Point ci1 = concaveList[i];
-        Point ci2 = concaveList[i + 1];
+        // Find the nearest inner HullPoint pk ∈ G from the edge (ci1, ci2);
+        HullPoint ci1 = concaveList[i];
+        HullPoint ci2 = concaveList[i + 1];
 
         bool found;
-        Point pk = NearestInnerPoint(ci1, ci2, points, concaveList, &found);
+        HullPoint pk = NearestInnerPoint(ci1, ci2, HullPoints, concaveList, &found);
         if (!found || concaveList.contains(pk)) {
             continue;
         }
 
         double eh = ci1.Distance(ci2);  // the lenght of the edge
-        QList<Point> tmp;
+        QList<HullPoint> tmp;
         tmp.push_back(ci1);
         tmp.push_back(ci2);
         double dd = pk.DecisionDistance(tmp);

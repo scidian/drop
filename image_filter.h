@@ -59,7 +59,7 @@ namespace DrImaging {
     float*  imageBitsAsFloat(const QImage &from_image);
     QImage  imageMask(const QImage& from_image, QColor mask_color, int max_alpha);
 
-    QVector<Point> outlinePointList(const QImage& from_image, int alpha_tolerance );
+    QVector<HullPoint> outlinePointList(const QImage& from_image, double alpha_tolerance );
 
 }
 

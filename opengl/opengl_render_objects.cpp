@@ -141,7 +141,7 @@ void DrOpenGL::drawObjectExtrude(DrEngineThing *thing, DrThingType &last_thing) 
     x = static_cast<float>(center.x());
     y = static_cast<float>(center.y());
     z = static_cast<float>(thing->z_order);
-    float now = static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 30.f);
+    float now = 0;//static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 30.f);
     float angle = static_cast<float>(object->getAngle());
     QMatrix4x4 matrix;
     matrix.translate(x, y, z);

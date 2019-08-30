@@ -235,13 +235,13 @@ float* imageBitsAsFloat(const QImage &from_image) {
 //####################################################################################
 //##        Returns a list of points of possible edges of an image
 //####################################################################################
-QVector<Point> outlinePointList(const QImage& from_image, int alpha_tolerance ) {
+QVector<HullPoint> outlinePointList(const QImage& from_image, double alpha_tolerance ) {
     QImage image = from_image;
     if (image.format() != QImage::Format::Format_ARGB32)
         image = image.convertToFormat( QImage::Format_ARGB32 );
     image.detach();
 
-    QVector<Point> points;
+    QVector<HullPoint> points;
     points.clear();
 
     // Truecolor Rgba
@@ -258,7 +258,7 @@ QVector<Point> outlinePointList(const QImage& from_image, int alpha_tolerance ) 
             for (int y = 0; y < image.height(); ++y) {
                 for (int x = 0; x < image.width(); ++x) {
 
-                    if ( QColor::fromRgba(lines[y][x]).alpha() < alpha_tolerance) continue;
+                    if ( QColor::fromRgba(lines[y][x]).alphaF() < alpha_tolerance) continue;
 
                     bool touching_transparent = false;
 
@@ -270,14 +270,23 @@ QVector<Point> outlinePointList(const QImage& from_image, int alpha_tolerance ) 
                     y_end =   (y < (image.height() - 1)) ? y + 1 : y;
                     for (int i = x_start; i <= x_end; ++i) {
                         for (int j = y_start; j <= y_end; ++j) {
-                            if ( QColor::fromRgba(lines[j][i]).alpha() < alpha_tolerance)
+                            if ( QColor::fromRgba(lines[j][i]).alphaF() < alpha_tolerance)
                                 touching_transparent = true;
                             if (touching_transparent) break;
                         }
                         if (touching_transparent) break;
                     }
 
-                    if (touching_transparent) points.push_back(Point(x, y));
+                    if (touching_transparent) {
+                        points.push_back(HullPoint(x, y));
+                    } else {
+                        if ((x == 0 && y == 0) ||
+                            (x == 0 && y == (image.height() - 1)) ||
+                            (x == (image.width() - 1) && y == 0) ||
+                            (x == (image.width() - 1) && y == (image.height() - 1))) {
+                            points.push_back(HullPoint(x, y));
+                        }
+                    }
                 }
             }
 

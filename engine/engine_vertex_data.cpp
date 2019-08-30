@@ -15,7 +15,7 @@
 #include "helper.h"
 #include "image_filter.h"
 
-const float c_extrude_depth = 40.0f;
+const float c_extrude_depth = 20.0f;
 
 #define CELLSIZE 16
 
@@ -33,42 +33,67 @@ DrEngineVertexData::DrEngineVertexData(QPixmap &pixmap) : m_count(0) {
     float w2 = width  / 2.f;
     float h2 = height / 2.f;
 
-
-
-
-
     // EXAMPLE: Adding Triangles
-    const GLfloat x1 = +w2;     // Top Right
-    const GLfloat y1 = +h2;
-    const GLfloat x2 = -w2;     // Top Left
-    const GLfloat y2 = +h2;
-    const GLfloat x3 = +w2;     // Bottom Right
-    const GLfloat y3 = -h2;
-    const GLfloat x4 = -w2;     // Bottom Left
-    const GLfloat y4 = -h2;
+    GLfloat x1 = +w2;     // Top Right
+    GLfloat y1 = +h2;
+    GLfloat x2 = -w2;     // Top Left
+    GLfloat y2 = +h2;
+    GLfloat x3 = +w2;     // Bottom Right
+    GLfloat y3 = -h2;
+    GLfloat x4 = -w2;     // Bottom Left
+    GLfloat y4 = -h2;
 
-    const GLfloat tx1 = 1.0;
-    const GLfloat ty1 = 1.0;
-    const GLfloat tx2 = 0.0;
-    const GLfloat ty2 = 1.0;
-    const GLfloat tx3 = 1.0;
-    const GLfloat ty3 = 0.0;
-    const GLfloat tx4 = 0.0;
-    const GLfloat ty4 = 0.0;
+    GLfloat tx1 = 1.0;
+    GLfloat ty1 = 1.0;
+    GLfloat tx2 = 0.0;
+    GLfloat ty2 = 1.0;
+    GLfloat tx3 = 1.0;
+    GLfloat ty3 = 0.0;
+    GLfloat tx4 = 0.0;
+    GLfloat ty4 = 0.0;
 
     quad( x1,  y1,  tx1, ty1,
           x2,  y2,  tx2, ty2,
           x3,  y3,  tx3, ty3,
           x4,  y4,  tx4, ty4);
 
-    extrude( x1,  y1,  tx1, ty1,
-             x2,  y2,  tx2, ty2);
-    extrude( x2,  y2,  tx2, ty2,
-             x4,  y4,  tx4, ty4);
-    extrude( x4,  y4,  tx4, ty4,
-             x3,  y3,  tx3, ty3);
-    extrude( x3,  y3,  tx3, ty3,
-             x1,  y1,  tx1, ty1);
+//    extrude( x1,  y1,  tx1, ty1,
+//             x2,  y2,  tx2, ty2);
+//    extrude( x2,  y2,  tx2, ty2,
+//             x4,  y4,  tx4, ty4);
+//    extrude( x4,  y4,  tx4, ty4,
+//             x3,  y3,  tx3, ty3);
+//    extrude( x3,  y3,  tx3, ty3,
+//             x1,  y1,  tx1, ty1);
+
+
+    QVector<HullPoint> image_points = DrImaging::outlinePointList( pixmap.toImage(), 0.9 );
+    QVector<HullPoint> final_points = HullFinder::FindConcaveHull( image_points, 10.0 );
+
+    double w2d = width  / 2.0;
+    double h2d = height / 2.0;
+    for (int i = 0; i < final_points.count(); i++) {
+        int point1, point2;
+        if (i == final_points.count() - 1) {
+            point1 = 0;         point2 = i;
+        } else {
+            point1 = i + 1;     point2 = i;
+        }
+
+        x1 = static_cast<GLfloat>(final_points[point1].x - w2d);
+        y1 = static_cast<GLfloat>((height - final_points[point1].y) - h2d);
+       tx1 = static_cast<GLfloat>(final_points[point1].x / width);
+       ty1 = static_cast<GLfloat>(1.0 - final_points[point1].y / height);
+
+        x2 = static_cast<GLfloat>(final_points[point2].x - w2d);
+        y2 = static_cast<GLfloat>((height - final_points[point2].y) - h2d);
+       tx2 = static_cast<GLfloat>(final_points[point2].x / width);
+       ty2 = static_cast<GLfloat>(1.0 - final_points[point2].y / height);
+
+       extrude( x1, y1, tx1, ty1,
+                x2, y2, tx2, ty2);
+    }
+
 }
 
 

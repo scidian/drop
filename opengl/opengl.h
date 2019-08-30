@@ -147,7 +147,6 @@ public:
     void            bindOffscreenBuffer(bool clear = true);
     void            cullingOn();
     void            cullingOff();
-    void            drawCube(QVector3D center);
     void            drawDebug(QPainter &painter);
     void            drawDebugCollisions(QPainter &painter);
     void            drawDebugHealth(QPainter &painter);
