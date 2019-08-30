@@ -64,7 +64,9 @@ void DrOpenGL::drawSpace() {
 
                 //drawObject(thing, last_thing);
 
+                cullingOn();
                 drawObjectExtrude(thing, last_thing);
+                cullingOff();
 
                 break;
             case DrThingType::Text:

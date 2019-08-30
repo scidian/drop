@@ -29,7 +29,7 @@ private:
 
 public:
     // Constructor
-    DrEngineVertexData();
+    DrEngineVertexData(int width, int height);
 
     // Properties
     const GLfloat  *constData() const {     return m_data.constData(); }

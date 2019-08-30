@@ -14,18 +14,21 @@ const float c_extrude_depth = 20.0f;
 //####################################################################################
 //##        Constructor
 //####################################################################################
-DrEngineVertexData::DrEngineVertexData() : m_count(0) {
-    m_data.resize(100 * c_vertex_length);
+DrEngineVertexData::DrEngineVertexData(int width, int height) : m_count(0) {
+    m_data.resize(1000 * c_vertex_length);
+
+    float w2 = width / 2.f;
+    float h2 = height / 2.f;
 
     // EXAMPLE: Adding Triangles
-    const GLfloat x1 = +20.f;
-    const GLfloat y1 = +20.f;
-    const GLfloat x2 = -20.f;
-    const GLfloat y2 = +20.f;
-    const GLfloat x3 = +20.f;
-    const GLfloat y3 = -20.f;
-    const GLfloat x4 = -20.f;
-    const GLfloat y4 = -20.f;
+    const GLfloat x1 = +w2;     // Top Right
+    const GLfloat y1 = +h2;
+    const GLfloat x2 = -w2;     // Top Left
+    const GLfloat y2 = +h2;
+    const GLfloat x3 = +w2;     // Bottom Right
+    const GLfloat y3 = -h2;
+    const GLfloat x4 = -w2;     // Bottom Left
+    const GLfloat y4 = -h2;
 
     const GLfloat tx1 = 1.0;
     const GLfloat ty1 = 1.0;
@@ -36,17 +39,19 @@ DrEngineVertexData::DrEngineVertexData() : m_count(0) {
     const GLfloat tx4 = 0.0;
     const GLfloat ty4 = 0.0;
 
-    quad( x1,  y1,  x2,  y2,  x3,  y3,  x4,  y4,
-         tx1, ty1, tx2, ty2, tx3, ty3, tx4, ty4);
+    quad( x1,  y1,  tx1, ty1,
+          x2,  y2,  tx2, ty2,
+          x3,  y3,  tx3, ty3,
+          x4,  y4,  tx4, ty4);
 
-    extrude( x1,  y1,  x2,  y2,
-            tx1, ty1, tx2, ty2);
-    extrude( x2,  y2,  x3,  y3,
-            tx2, ty2, tx3, ty3);
-    extrude( x3,  y3,  x4,  y4,
-            tx3, ty3, tx4, ty4);
-    extrude( x4,  y4,  x1,  y1,
-            tx4, ty4, tx1, ty1);
+    extrude( x1,  y1,  tx1, ty1,
+             x2,  y2,  tx2, ty2);
+    extrude( x2,  y2,  tx2, ty2,
+             x4,  y4,  tx4, ty4);
+    extrude( x4,  y4,  tx4, ty4,
+             x3,  y3,  tx3, ty3);
+    extrude( x3,  y3,  tx3, ty3,
+             x1,  y1,  tx1, ty1);
 }
 
 
@@ -56,14 +61,14 @@ DrEngineVertexData::DrEngineVertexData() : m_count(0) {
 void DrEngineVertexData::add(const QVector3D &v, const QVector3D &n, const QVector2D &t) {
     if (m_count + c_vertex_length > m_data.count()) m_data.resize(m_data.count() + (100 * c_vertex_length));
     GLfloat *p = m_data.data() + m_count;
-    *p++ = v.x();
-    *p++ = v.y();
-    *p++ = v.z();
-    *p++ = n.x();
-    *p++ = n.y();
-    *p++ = n.z();
-    *p++ = t.x();
-    *p++ = t.y();
+    *p++ = v.x();       // 0 - x
+    *p++ = v.y();       // 1 - y
+    *p++ = v.z();       // 2 - z
+    *p++ = n.x();       // 3 - normal x
+    *p++ = n.y();       // 4 - normal y
+    *p++ = n.z();       // 5 - normal z
+    *p++ = t.x();       // 6 - texture x
+    *p++ = t.y();       // 7 - texture y
     m_count += c_vertex_length;
 }
 
@@ -76,18 +81,18 @@ void DrEngineVertexData::quad(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
                               GLfloat x4, GLfloat y4, GLfloat tx4, GLfloat ty4) {
     QVector3D n = QVector3D::normal(QVector3D(x4 - x1, y4 - y1, 0.0f), QVector3D(x2 - x1, y2 - y1, 0.0f));
 
-    add(QVector3D(x1, y1, c_extrude_depth), n, QVector2D(tx1, ty1));
-    add(QVector3D(x4, y4, c_extrude_depth), n, QVector2D(tx4, ty4));
-    add(QVector3D(x2, y2, c_extrude_depth), n, QVector2D(tx2, ty2));
+    add(QVector3D(x1, y1, +c_extrude_depth), n, QVector2D(tx1, ty1));
+    add(QVector3D(x2, y2, +c_extrude_depth), n, QVector2D(tx2, ty2));
+    add(QVector3D(x3, y3, +c_extrude_depth), n, QVector2D(tx3, ty3));
 
-    add(QVector3D(x3, y3, c_extrude_depth), n, QVector2D(tx3, ty3));
-    add(QVector3D(x2, y2, c_extrude_depth), n, QVector2D(tx2, ty2));
-    add(QVector3D(x4, y4, c_extrude_depth), n, QVector2D(tx4, ty4));
+    add(QVector3D(x2, y2, +c_extrude_depth), n, QVector2D(tx2, ty2));
+    add(QVector3D(x4, y4, +c_extrude_depth), n, QVector2D(tx4, ty4));
+    add(QVector3D(x3, y3, +c_extrude_depth), n, QVector2D(tx3, ty3));
 
     n = QVector3D::normal(QVector3D(x1 - x4, y1 - y4, 0.0f), QVector3D(x2 - x4, y2 - y4, 0.0f));
 
-    add(QVector3D(x4, y4, -c_extrude_depth), n, QVector2D(tx4, ty4));
     add(QVector3D(x1, y1, -c_extrude_depth), n, QVector2D(tx1, ty1));
+    add(QVector3D(x3, y3, -c_extrude_depth), n, QVector2D(tx3, ty3));
     add(QVector3D(x2, y2, -c_extrude_depth), n, QVector2D(tx2, ty2));
 
     add(QVector3D(x2, y2, -c_extrude_depth), n, QVector2D(tx2, ty2));
@@ -103,15 +108,15 @@ void DrEngineVertexData::triangle(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat t
                                   GLfloat x3, GLfloat y3, GLfloat tx3, GLfloat ty3) {
     QVector3D n = QVector3D::normal(QVector3D(x3 - x1, y3 - y1, 0.0f), QVector3D(x2 - x1, y2 - y1, 0.0f));
 
-    add(QVector3D(x1, y1, -c_extrude_depth), n, QVector2D(tx1, ty1));
-    add(QVector3D(x3, y3, -c_extrude_depth), n, QVector2D(tx3, ty3));
-    add(QVector3D(x2, y2, -c_extrude_depth), n, QVector2D(tx2, ty2));
-
-    n = QVector3D::normal(QVector3D(x1 - x3, y1 - y3, 0.0f), QVector3D(x2 - x3, y2 - y3, 0.0f));
-
     add(QVector3D(x1, y1, c_extrude_depth), n, QVector2D(tx1, ty1));
     add(QVector3D(x2, y2, c_extrude_depth), n, QVector2D(tx2, ty2));
     add(QVector3D(x3, y3, c_extrude_depth), n, QVector2D(tx3, ty3));
+
+    n = QVector3D::normal(QVector3D(x1 - x3, y1 - y3, 0.0f), QVector3D(x2 - x3, y2 - y3, 0.0f));
+
+    add(QVector3D(x1, y1, -c_extrude_depth), n, QVector2D(tx1, ty1));
+    add(QVector3D(x3, y3, -c_extrude_depth), n, QVector2D(tx3, ty3));
+    add(QVector3D(x2, y2, -c_extrude_depth), n, QVector2D(tx2, ty2));
 }
 
 //####################################################################################
@@ -125,9 +130,17 @@ void DrEngineVertexData::extrude(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty
     add(QVector3D(x1, y1, -c_extrude_depth), n, QVector2D(tx1, ty1));
     add(QVector3D(x2, y2, +c_extrude_depth), n, QVector2D(tx2, ty2));
 
-    add(QVector3D(x2, y2, -c_extrude_depth), n, QVector2D(tx2, ty2));
     add(QVector3D(x2, y2, +c_extrude_depth), n, QVector2D(tx2, ty2));
     add(QVector3D(x1, y1, -c_extrude_depth), n, QVector2D(tx1, ty1));
+    add(QVector3D(x2, y2, -c_extrude_depth), n, QVector2D(tx2, ty2));
+
+//    add(QVector3D(x1, y1, +c_extrude_depth), n, QVector2D(0, 0));
+//    add(QVector3D(x1, y1, -c_extrude_depth), n, QVector2D(0, 0));
+//    add(QVector3D(x2, y2, +c_extrude_depth), n, QVector2D(0, 0));
+
+//    add(QVector3D(x2, y2, +c_extrude_depth), n, QVector2D(0, 0));
+//    add(QVector3D(x2, y2, -c_extrude_depth), n, QVector2D(0, 0));
+//    add(QVector3D(x1, y1, +c_extrude_depth), n, QVector2D(0, 0));
 }
 
 

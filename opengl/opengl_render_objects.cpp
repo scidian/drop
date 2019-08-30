@@ -162,23 +162,29 @@ void DrOpenGL::drawObjectExtrude(DrEngineThing *thing, DrThingType &last_thing) 
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);                    // Premultiplied alpha blend
 
-    // Set Matrix for Shader, calculates current matrix
-    m_default_shader.setUniformValue( u_default_matrix, (m_projection * m_model_view) );
+    // Set Matrix for Shader, calculates current matrix, adds in object location
+    QPointF center = thing->getPosition();
+    float   x, y, z;
+    x = static_cast<float>(center.x());
+    y = static_cast<float>(center.y());
+    z = static_cast<float>(thing->z_order);
+    float now = 0.f;//static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 30.f);
+    float angle = static_cast<float>(object->getAngle());
+    QMatrix4x4 matrix;
+    matrix.translate(x, y, z);
+    matrix.rotate(now, 0.f, 1.f, 0.f);
+    matrix.rotate(angle, 0.0, 0.0, 1.0);
+    matrix.scale(object->getScaleX(), object->getScaleY(), 1.0);
+    m_default_shader.setUniformValue( u_default_matrix, (m_projection * m_model_view * matrix) );
 
 
     m_texture_vbos[object->getTextureNumber()]->bind();
 
     m_default_shader.enableAttributeArray(  PROGRAM_VERTEX_ATTRIBUTE);
-    m_default_shader.enableAttributeArray(  PROGRAM_TEXCOORD_ATTRIBUTE);
     m_default_shader.setAttributeBuffer(    PROGRAM_VERTEX_ATTRIBUTE,   GL_FLOAT, 0                  , 3, c_vertex_length * sizeof(GLfloat));
+
+    m_default_shader.enableAttributeArray(  PROGRAM_TEXCOORD_ATTRIBUTE);
     m_default_shader.setAttributeBuffer(    PROGRAM_TEXCOORD_ATTRIBUTE, GL_FLOAT, 6 * sizeof(GLfloat), 2, c_vertex_length * sizeof(GLfloat));
-
-
-    m_default_shader.enableAttributeArray(  a_occluder_texture_coord );
-    m_default_shader.enableAttributeArray(  a_occluder_vertex );
-    //m_default_shader.setAttributeArray(     a_occluder_texture_coord, m_whole_texture_coordinates.data(), 2 );
-    //m_default_shader.setAttributeArray(     a_occluder_vertex, vertices.data(), 3 );
-
 
 
 
@@ -230,7 +236,7 @@ void DrOpenGL::drawObjectExtrude(DrEngineThing *thing, DrThingType &last_thing) 
     // ***** Draw triangles using shader program
 
     glDrawArrays(GL_TRIANGLES, 0, m_texture_data[object->getTextureNumber()]->vertexCount() );
-    //glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
+    //glDrawArrays(GL_TRIANGLE_STRIP, 0, m_texture_data[object->getTextureNumber()]->vertexCount() );
 
     m_texture_vbos[object->getTextureNumber()]->release();
 
