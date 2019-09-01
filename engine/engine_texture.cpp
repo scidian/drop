@@ -26,6 +26,9 @@ DrEngineTexture::DrEngineTexture(QPixmap &from_pixmap) {
 //####################################################################################
 void DrEngineTexture::loadTexture(QPixmap &from_pixmap) {
 
+    // Calculate and save average color of texture
+    m_average_color = DrImaging::averageColor(from_pixmap);
+
     // Load image, #NOTE: QImage is mirrored vertically to account for the fact that OpenGL and QImage use opposite directions for the y axis
     QImage image = from_pixmap.toImage().mirrored();
     image = image.convertToFormat( QImage::Format_ARGB32 );                                             // Convert image to a standard format

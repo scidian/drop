@@ -64,9 +64,10 @@ void DrOpenGL::drawSpace() {
 
                 //drawObject(thing, last_thing);
                 cullingOn();
-                //glDepthFunc(GL_LEQUAL);
+                glEnable(GL_DEPTH_TEST);
+                glDepthFunc(GL_LEQUAL);
                 drawObjectExtrude(thing, last_thing);
-                //glDepthFunc(GL_ALWAYS);
+                glDisable(GL_DEPTH_TEST);
                 cullingOff();
 
                 break;

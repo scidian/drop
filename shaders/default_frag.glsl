@@ -19,6 +19,7 @@ varying mediump vec3    vert_normal;                        // Current vertex no
 uniform sampler2D       u_texture;                          // Texture
 
 uniform lowp    float   u_alpha;                            // Opacity
+uniform lowp    vec3    u_average_color;                    // Average color of texture
 uniform lowp    vec3    u_tint;// = vec3(0, 0, 0);          // Tint, adds rgb to final output
 uniform highp   float   u_zoom;                             // Zoom factor
 
@@ -302,6 +303,7 @@ void main( void ) {
     // ********** Set some variables for use later
     highp vec4 alpha_in = vec4(u_alpha, u_alpha, u_alpha, u_alpha);                 // For adding in existing opacity of object
     highp vec3 frag_rgb = texture_color.rgb;                                        // Save rgb as a vec3 for working with
+               frag_rgb = mix(u_average_color, frag_rgb, texture_color.a);
 
     // If texture is premultiplied...
     // Remove alpha first, then apply filters, then add it back later
@@ -377,7 +379,11 @@ void main( void ) {
     }
 
 
-    gl_FragColor = highp vec4(frag_rgb, texture_color.a) * alpha_in;
+    // Get final color
+    gl_FragColor = highp vec4(frag_rgb, 1.0) * alpha_in;
+    //gl_FragColor = highp vec4(frag_rgb, texture_color.a) * alpha_in;              // <----- Before we added in average color
+
+    // Don't draw fragment to depth buffer if mostly invisible
     if (gl_FragColor.a < 0.05) discard;
 
 }

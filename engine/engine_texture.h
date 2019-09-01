@@ -23,6 +23,8 @@ private:
     int                 m_width;                        // Width of texture
     int                 m_height;                       // Height of texture
 
+    QColor              m_average_color;                // Average Color of Texture
+
 public:
     // Constructor / Destructor
     DrEngineTexture(QPixmap &from_pixmap);
@@ -34,8 +36,11 @@ public:
     // Getters & Setters
     const int&      height() { return m_height; }
     const int&      width()  { return m_width; }
+
+    QColor          averageColor()    { return m_average_color; }
     const bool&     isTextureLoaded() { return m_texture_loaded; }
     QOpenGLTexture* texture()         { return m_texture; }
+
 };
 
 

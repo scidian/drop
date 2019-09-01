@@ -253,6 +253,7 @@ void main( void ) {
 
     // ***** Final Output
     gl_FragColor = color * vec4(u_alpha, u_alpha, u_alpha, u_alpha);
+    if (gl_FragColor.a < 0.05) discard;
 }
 
 

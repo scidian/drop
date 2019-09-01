@@ -16,7 +16,7 @@
 #include "image_filter.h"
 #include "library/poly_partition.h"
 
-const float c_extrude_depth = 5.0f;
+const float c_extrude_depth = 35.0f;
 
 #define CELLSIZE 16
 
@@ -59,8 +59,7 @@ DrEngineVertexData::DrEngineVertexData(QPixmap &pixmap) : m_count(0) {
 //          x2,  y2,  tx2, ty2,
 //          x3,  y3,  tx3, ty3,
 //          x4,  y4,  tx4, ty4);
-
-
+//
 //    extrude( x1,  y1,  tx1, ty1,
 //             x2,  y2,  tx2, ty2);
 //    extrude( x2,  y2,  tx2, ty2,
@@ -142,15 +141,17 @@ DrEngineVertexData::DrEngineVertexData(QPixmap &pixmap) : m_count(0) {
        tx2 = static_cast<GLfloat>(      final_points[point2].x / width);
        ty2 = static_cast<GLfloat>(1.0 - final_points[point2].y / height);
 
-       if (x1 < 0) x1 -= 1.f; else x1 += 1.f;
-       if (x2 < 0) x2 -= 1.f; else x2 += 1.f;
-       if (y1 < 0) y1 -= 1.f; else y1 += 1.f;
-       if (y2 < 0) y2 -= 1.f; else y2 += 1.f;
-
        x1 -= static_cast<GLfloat>(w2d);
        x2 -= static_cast<GLfloat>(w2d);
        y1 -= static_cast<GLfloat>(h2d);
        y2 -= static_cast<GLfloat>(h2d);
+
+       float pixel_w = (1.0f / width);
+       float pixel_h = (1.0f / height);
+       if (tx1 > 0.5f) x1 -= pixel_w; else x1 += pixel_w;
+       if (tx2 > 0.5f) x2 -= pixel_w; else x2 += pixel_w;
+       if (ty1 > 0.5f) y1 -= pixel_h; else y1 += pixel_h;
+       if (ty2 > 0.5f) y2 -= pixel_h; else y2 += pixel_h;
 
        extrude( x1, y1, tx1, ty1,
                 x2, y2, tx2, ty2);

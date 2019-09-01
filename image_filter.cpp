@@ -23,6 +23,33 @@ namespace DrImaging
 {
 
 
+
+//####################################################################################
+//##        Returns average color of a Pixmap
+//####################################################################################
+QColor averageColor(const QPixmap &pixmap) {
+    QPixmap  one(5, 5);
+    QPainter painter(&one);
+    painter.drawPixmap(one.rect(), pixmap, pixmap.rect());
+    painter.end();
+
+    QImage image = one.toImage();
+    double r = 0, g = 0, b = 0;
+    double count = 0;
+    for (int i = 0; i < one.width(); ++i) {
+        for (int j = 0; j < one.height(); ++j) {
+            QColor pixel = image.pixelColor(i, j);
+            r += pixel.red() * pixel.alphaF();
+            g += pixel.green() * pixel.alphaF();
+            b += pixel.blue() * pixel.alphaF();
+            count += pixel.alphaF();
+        }
+    }
+
+    return QColor(static_cast<int>(r / count), static_cast<int>(g / count), static_cast<int>(b / count));
+}
+
+
 //####################################################################################
 //##        Loops through image and changes one pixel at a time based on a
 //##        premultiplied table
@@ -277,23 +304,6 @@ QVector<HullPoint> outlinePointList(const QImage& from_image, double alpha_toler
                         if (touching_transparent) break;
                     }
 
-
-                    // Run through all pixels this pixel is touching to see if they are transparent
-                    if (touching_transparent) continue;
-                    x_start = (x > 1) ? x - 2 : x;
-                    y_start = (y > 1) ? y - 2 : y;
-                    x_end =   (x < (image.width() - 2))  ? x + 2 : x;
-                    y_end =   (y < (image.height() - 2)) ? y + 2 : y;
-                    for (int i = x_start; i <= x_end; ++i) {
-                        for (int j = y_start; j <= y_end; ++j) {
-                            if ( QColor::fromRgba(lines[j][i]).alphaF() < alpha_tolerance)
-                                touching_transparent = true;
-                            if (touching_transparent) break;
-                        }
-                        if (touching_transparent) break;
-                    }
-
-
                     if (touching_transparent) {
                         points.push_back(HullPoint(x, y));
                     } else {
@@ -312,6 +322,9 @@ QVector<HullPoint> outlinePointList(const QImage& from_image, double alpha_toler
 
     return points;
 }
+
+
+
 
 
 

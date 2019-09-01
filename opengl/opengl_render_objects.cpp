@@ -83,6 +83,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing) {
     }
     m_default_shader.setUniformValue( u_default_alpha,          alpha );
     m_default_shader.setUniformValue( u_default_tint,           0.0f, 0.0f, 0.0f );
+    m_default_shader.setUniformValue( u_default_average_color,  0.0f, 0.0f, 0.0f );
     m_default_shader.setUniformValue( u_default_width,          texture_width );
     m_default_shader.setUniformValue( u_default_height,         texture_height );
     m_default_shader.setUniformValue( u_default_time,           static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
@@ -184,6 +185,11 @@ void DrOpenGL::drawObjectExtrude(DrEngineThing *thing, DrThingType &last_thing) 
 
     // ***** Set Shader Variables
     m_default_shader.setUniformValue( u_default_texture, 0 );                           // Use texture unit 0
+
+    m_default_shader.setUniformValue( u_default_average_color,
+                                        static_cast<float>(texture->averageColor().redF()),
+                                        static_cast<float>(texture->averageColor().greenF()),
+                                        static_cast<float>(texture->averageColor().blueF()) );
     m_default_shader.setUniformValue( u_default_tint,           0.0f, 0.0f, 0.0f );
     m_default_shader.setUniformValue( u_default_width,          texture_width );
     m_default_shader.setUniformValue( u_default_height,         texture_height );

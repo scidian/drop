@@ -43,9 +43,7 @@ void DrOpenGL::paintGL() {
 
     // ***** Render Onto Frame Buffer Object
     bindOffscreenBuffer();                                                          // Create / Bind Offscreen Frame Buffer Object
-   // glEnable(GL_DEPTH_TEST);
     drawSpace();                                                                    // Render cpSpace Objects
-    //glDisable(GL_DEPTH_TEST);
     releaseOffscreenBuffer();                                                       // Release Frame Buffer Object
 
     QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);         // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
@@ -139,6 +137,7 @@ void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height)
     m_default_shader.setUniformValue( u_default_texture,        0 );                            // Use texture unit "0"
     m_default_shader.setUniformValue( u_default_alpha,          1.0f );
     m_default_shader.setUniformValue( u_default_tint,           0.0f, 0.0f, 0.0f );             // Add 0 to red, green, and blue
+    m_default_shader.setUniformValue( u_default_average_color,  0.0f, 0.0f, 0.0f );
     m_default_shader.setUniformValue( u_default_zoom,           m_scale );
     m_default_shader.setUniformValue( u_default_width,          texture_width  );
     m_default_shader.setUniformValue( u_default_height,         texture_height );

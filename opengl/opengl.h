@@ -221,6 +221,7 @@ private:
     int     u_default_time;                                     // Time in seconds
     int     u_default_pre;                                      // Premultiplied Alpha Texture?
     int     u_default_alpha;                                    // Opacity
+    int     u_default_average_color;                            // Average texture color
     int     u_default_tint;                                     // Tint, red/green/blue (0 to 1, 0 to 1, 0 to 1)
     int     u_default_zoom;                                     // Zoom (m_scale)
 

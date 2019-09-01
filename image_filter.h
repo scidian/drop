@@ -47,6 +47,8 @@ namespace DrImaging {
     QPixmap applyPixelation( const QPixmap& from_pixmap, QPointF data_pair );
     QImage  applyPixelation( const QImage&  from_image,  QPointF data_pair );
 
+    QColor  averageColor(const QPixmap &pixmap);
+
     QPixmap drawFibonacci(QColor background_color, QColor pen_color);
 
     QPixmap drawFire(QColor color_1, QColor color_2, QColor smoke, Fire_Mask mask);
