@@ -118,10 +118,11 @@ void DrOpenGL::loadBuiltInTextures() {
 void DrOpenGL::loadProjectTextures() {
     for (auto asset_pair : m_engine->getProject()->getAssetMap() ) {
         DrAsset *asset = asset_pair.second;
-
-        if (asset->getAssetType() == DrAssetType::Object) {
-            QPixmap pixmap = asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
-            importTexture(asset->getKey(), pixmap);
+        if (asset) {
+            if (asset->getAssetType() == DrAssetType::Object) {
+                QPixmap pixmap = asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
+                importTexture(asset->getKey(), pixmap);
+            }
         }
     }
 }
@@ -139,12 +140,15 @@ void DrOpenGL::loadShaders() {
     m_default_shader.addShader( &f_default_shader );
     m_default_shader.bindAttributeLocation("vertex",                PROGRAM_VERTEX_ATTRIBUTE);
     m_default_shader.bindAttributeLocation("texture_coordinates",   PROGRAM_TEXCOORD_ATTRIBUTE);
+    m_default_shader.bindAttributeLocation("normal",                PROGRAM_NORMAL_ATTRIBUTE);
     m_default_shader.link();
 
     // Vertex Shader Input
     a_default_vertex =          m_default_shader.attributeLocation( "vertex" );
     a_default_texture_coord =   m_default_shader.attributeLocation( "texture_coordinates" );
+    a_default_normal =          m_default_shader.attributeLocation( "normal" );
     u_default_matrix =          m_default_shader.uniformLocation(   "u_matrix" );
+    u_default_matrix_object =   m_default_shader.uniformLocation(   "u_matrix_object" );
 
     // Fragment Shader Input
     u_default_texture =         m_default_shader.uniformLocation(   "u_texture" );
@@ -167,13 +171,16 @@ void DrOpenGL::loadShaders() {
     u_default_contrast =        m_default_shader.uniformLocation(   "u_contrast" );
     u_default_brightness =      m_default_shader.uniformLocation(   "u_brightness" );
 
+    u_default_shade_away =      m_default_shader.uniformLocation(   "u_shade_away" );
+    u_default_camera_pos =      m_default_shader.uniformLocation(   "u_camera_pos" );
+
     u_default_bitrate =         m_default_shader.uniformLocation(   "u_bitrate" );
     u_default_cartoon =         m_default_shader.uniformLocation(   "u_cartoon" );
     u_default_wavy =            m_default_shader.uniformLocation(   "u_wavy" );
 
 
     // ***** Initialize our Occluder Map Shader
-    QOpenGLShader v_occluder_shader( QOpenGLShader::Vertex );       v_occluder_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader v_occluder_shader( QOpenGLShader::Vertex );       v_occluder_shader.compileSourceFile( ":/shaders/vert_effects.glsl" );
     QOpenGLShader f_occluder_shader( QOpenGLShader::Fragment );     f_occluder_shader.compileSourceFile( ":/shaders/frag_occluder.glsl" );
     m_occluder_shader.addShader( &v_occluder_shader );
     m_occluder_shader.addShader( &f_occluder_shader );
@@ -193,7 +200,7 @@ void DrOpenGL::loadShaders() {
 
 
     // ***** Initialize our Shadow Map Shader
-    QOpenGLShader v_shadow_shader( QOpenGLShader::Vertex );         v_shadow_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader v_shadow_shader( QOpenGLShader::Vertex );         v_shadow_shader.compileSourceFile( ":/shaders/vert_effects.glsl" );
     QOpenGLShader f_shadow_shader( QOpenGLShader::Fragment );       f_shadow_shader.compileSourceFile( ":/shaders/frag_shadow_map.glsl" );
     m_shadow_shader.addShader( &v_shadow_shader );
     m_shadow_shader.addShader( &f_shadow_shader );
@@ -213,7 +220,7 @@ void DrOpenGL::loadShaders() {
 
 
     // ***** Initialize our 2D Light Shader
-    QOpenGLShader v_light_shader( QOpenGLShader::Vertex );          v_light_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader v_light_shader( QOpenGLShader::Vertex );          v_light_shader.compileSourceFile( ":/shaders/vert_effects.glsl" );
     QOpenGLShader f_light_shader( QOpenGLShader::Fragment );        f_light_shader.compileSourceFile( ":/shaders/frag_2d_light.glsl" );
     m_light_shader.addShader( &v_light_shader );
     m_light_shader.addShader( &f_light_shader );
@@ -240,7 +247,7 @@ void DrOpenGL::loadShaders() {
 
 
     // ***** Initialize our Screen Shader
-    QOpenGLShader v_screen_shader( QOpenGLShader::Vertex );         v_screen_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader v_screen_shader( QOpenGLShader::Vertex );         v_screen_shader.compileSourceFile( ":/shaders/vert_effects.glsl" );
     QOpenGLShader f_screen_shader( QOpenGLShader::Fragment );       f_screen_shader.compileSourceFile( ":/shaders/frag_screen.glsl" );
     m_screen_shader.addShader( &v_screen_shader );
     m_screen_shader.addShader( &f_screen_shader );
@@ -260,7 +267,7 @@ void DrOpenGL::loadShaders() {
 
 
     // ***** Initialize our Kernel Shader
-    QOpenGLShader v_kernel_shader( QOpenGLShader::Vertex );         v_kernel_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader v_kernel_shader( QOpenGLShader::Vertex );         v_kernel_shader.compileSourceFile( ":/shaders/vert_effects.glsl" );
     QOpenGLShader f_kernel_shader( QOpenGLShader::Fragment );       f_kernel_shader.compileSourceFile( ":/shaders/frag_kernel.glsl" );
     m_kernel_shader.addShader( &v_kernel_shader );
     m_kernel_shader.addShader( &f_kernel_shader );
@@ -279,7 +286,7 @@ void DrOpenGL::loadShaders() {
 
 
     // ***** Initialize our Water Shader
-    QOpenGLShader v_water_shader( QOpenGLShader::Vertex );          v_water_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader v_water_shader( QOpenGLShader::Vertex );          v_water_shader.compileSourceFile( ":/shaders/vert_effects.glsl" );
     QOpenGLShader f_water_shader( QOpenGLShader::Fragment );        f_water_shader.compileSourceFile( ":/shaders/frag_water.glsl" );
     m_water_shader.addShader( &v_water_shader );
     m_water_shader.addShader( &f_water_shader );
@@ -331,7 +338,7 @@ void DrOpenGL::loadShaders() {
 
 
     // ***** Initialize our Fisheye Shader
-    QOpenGLShader v_fisheye_shader( QOpenGLShader::Vertex );        v_fisheye_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader v_fisheye_shader( QOpenGLShader::Vertex );        v_fisheye_shader.compileSourceFile( ":/shaders/vert_effects.glsl" );
     QOpenGLShader f_fisheye_shader( QOpenGLShader::Fragment );      f_fisheye_shader.compileSourceFile( ":/shaders/frag_fisheye.glsl" );
     m_fisheye_shader.addShader( &v_fisheye_shader );
     m_fisheye_shader.addShader( &f_fisheye_shader );
@@ -365,7 +372,7 @@ void DrOpenGL::loadShaders() {
     u_fisheye_bitrate =         m_fisheye_shader.uniformLocation(     "u_bitrate" );
 
     // ***** Initialize our Fire Shader
-    QOpenGLShader v_fire_shader( QOpenGLShader::Vertex );           v_fire_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader v_fire_shader( QOpenGLShader::Vertex );           v_fire_shader.compileSourceFile( ":/shaders/vert_effects.glsl" );
     QOpenGLShader f_fire_shader( QOpenGLShader::Fragment );         f_fire_shader.compileSourceFile( ":/shaders/frag_fire.glsl" );
     m_fire_shader.addShader( &v_fire_shader );
     m_fire_shader.addShader( &f_fire_shader );
@@ -398,7 +405,7 @@ void DrOpenGL::loadShaders() {
 
 
     // ***** Initialize our Mirror Shader
-    QOpenGLShader v_mirror_shader( QOpenGLShader::Vertex );         v_mirror_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader v_mirror_shader( QOpenGLShader::Vertex );         v_mirror_shader.compileSourceFile( ":/shaders/vert_effects.glsl" );
     QOpenGLShader f_mirror_shader( QOpenGLShader::Fragment );       f_mirror_shader.compileSourceFile( ":/shaders/frag_mirror.glsl" );
     m_mirror_shader.addShader( &v_mirror_shader );
     m_mirror_shader.addShader( &f_mirror_shader );
@@ -436,7 +443,7 @@ void DrOpenGL::loadShaders() {
 
 
     // ***** Initialize our Swirl Shader
-    QOpenGLShader v_swirl_shader( QOpenGLShader::Vertex );          v_swirl_shader.compileSourceFile( ":/shaders/default_vert.glsl" );
+    QOpenGLShader v_swirl_shader( QOpenGLShader::Vertex );          v_swirl_shader.compileSourceFile( ":/shaders/vert_effects.glsl" );
     QOpenGLShader f_swirl_shader( QOpenGLShader::Fragment );        f_swirl_shader.compileSourceFile( ":/shaders/frag_swirl.glsl" );
     m_swirl_shader.addShader( &v_swirl_shader );
     m_swirl_shader.addShader( &f_swirl_shader );

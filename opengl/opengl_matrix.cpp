@@ -45,6 +45,8 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type, bool use_offset) {
     if (render_type == Render_Type::Orthographic) {
         float cam_x =  (m_engine->getCurrentWorld()->getCameraPos().x()) * m_scale;
         float cam_y =  (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale;
+        m_eye = QVector3D( cam_x, cam_y, m_engine->getCurrentWorld()->getCameraPos().z() );
+
         float left =   cam_x - (width() *  devicePixelRatio() / 2.0f);
         float right =  cam_x + (width() *  devicePixelRatio() / 2.0f);
         float top =    cam_y + (height() * devicePixelRatio() / 2.0f);
@@ -56,16 +58,15 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type, bool use_offset) {
     } else {
         // Set camera position
         QVector3D  perspective_offset = use_offset ? QVector3D(200.0f, 200.0f, 0.0f) : QVector3D(0.0f, 0.0f, 0.0f);
-        QVector3D  eye(     m_engine->getCurrentWorld()->getCameraPos().x()        * m_scale + perspective_offset.x(),
-                           (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale + perspective_offset.y(),
-                            m_engine->getCurrentWorld()->getCameraPos().z() );
-        QVector3D  look_at( m_engine->getCurrentWorld()->getCameraPos().x()        * m_scale,
-                           (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale,
-                            0.0f );
-        QVector3D  up(      0.0f, 1.0f, 0.0f);
-
+        m_eye =     QVector3D(  m_engine->getCurrentWorld()->getCameraPos().x()        * m_scale + perspective_offset.x(),
+                               (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale + perspective_offset.y(),
+                                m_engine->getCurrentWorld()->getCameraPos().z() );
+        m_look_at = QVector3D(  m_engine->getCurrentWorld()->getCameraPos().x()        * m_scale,
+                               (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale,
+                                0.0f );
+        m_up =      QVector3D(  0.0f, 1.0f, 0.0f);
         m_projection.perspective( c_field_of_view, aspect_ratio, 1.0f, (c_far_plane - c_near_plane) );
-        m_model_view.lookAt(eye, look_at, up);
+        m_model_view.lookAt(m_eye, m_look_at, m_up);
         m_model_view.scale( m_scale );
 
         // Rotates the camera around the center of the sceen

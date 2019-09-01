@@ -128,6 +128,9 @@ void TreeAssets::buildAssetTree(QString search_text) {
 
     // ********** Loop through each object asset and add it to the component frame
     for (auto asset_pair: list_assets) {
+        DrAsset *asset = asset_pair.second;
+        if (!asset) continue;
+
         QString asset_name = asset_pair.second->getName();
         if (!asset_name.toLower().contains(search_text.toLower())) continue;
 

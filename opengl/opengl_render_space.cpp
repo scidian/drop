@@ -63,9 +63,10 @@ void DrOpenGL::drawSpace() {
             case DrThingType::Object:
 
                 //drawObject(thing, last_thing);
-
                 cullingOn();
+                //glDepthFunc(GL_LEQUAL);
                 drawObjectExtrude(thing, last_thing);
+                //glDepthFunc(GL_ALWAYS);
                 cullingOff();
 
                 break;

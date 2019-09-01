@@ -53,13 +53,19 @@ DrProperty* DrSettings::getComponentProperty(long component, long property) {
 
 
 QString DrSettings::getName() {
+    DrComponent *name_component;
+    DrProperty  *name_property;
     switch (getType()) {
         case DrType::World:
         case DrType::Stage:
         case DrType::StartStage:
         case DrType::Thing:
         case DrType::Asset:
-            return getComponent(Components::Entity_Name)->getProperty(Properties::Entity_Name)->getValue().toString();
+            name_component = getComponent(Components::Entity_Name);
+            if (!name_component) return "No Name Compoenent";
+            name_property  = name_component->getProperty(Properties::Entity_Name);
+            if (!name_property)  return "No Name Property";
+            return name_property->getValue().toString();
         case DrType::Image:     return "DrImage - Unknown Name";
         case DrType::Font:      return "DrFont - Unknown Name";
         case DrType::NotFound:  return "Type NotFound";

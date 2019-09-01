@@ -43,8 +43,11 @@ void DrOpenGL::paintGL() {
 
     // ***** Render Onto Frame Buffer Object
     bindOffscreenBuffer();                                                          // Create / Bind Offscreen Frame Buffer Object
+   // glEnable(GL_DEPTH_TEST);
     drawSpace();                                                                    // Render cpSpace Objects
+    //glDisable(GL_DEPTH_TEST);
     releaseOffscreenBuffer();                                                       // Release Frame Buffer Object
+
     QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);         // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
 
     // ***** Bind default Qt FrameBuffer, Clear and Render FBO to screen buffer as a textured quad, with post processing available
@@ -151,6 +154,7 @@ void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height)
     m_default_shader.setUniformValue( u_default_saturation,     0.0f );
     m_default_shader.setUniformValue( u_default_contrast,       0.0f );
     m_default_shader.setUniformValue( u_default_brightness,     0.0f );
+    m_default_shader.setUniformValue( u_default_shade_away,     false );
     m_default_shader.setUniformValue( u_default_cartoon,        false );
     m_default_shader.setUniformValue( u_default_wavy,           false );
 }

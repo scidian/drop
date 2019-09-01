@@ -8,35 +8,42 @@ precision highp float;
 //##
 //####################################################################################
 
+
 // ***** Input from Vertex Shader
-varying highp vec2  coordinates;                    // Texture Coodinates
+varying highp   vec2    coordinates;                        // Texture Coodinates
+varying mediump vec3    vert;                               // Current vertex
+varying mediump vec3    vert_normal;                        // Current vertex normal
+
 
 // ***** Input from Engine
-uniform sampler2D   u_texture;                      // Texture
+uniform sampler2D       u_texture;                          // Texture
 
-uniform lowp  float u_alpha;                        // Opacity
-uniform lowp  vec3  u_tint;// = vec3(0, 0, 0);      // Tint, adds rgb to final output
-uniform highp float u_zoom;                         // Zoom factor
+uniform lowp    float   u_alpha;                            // Opacity
+uniform lowp    vec3    u_tint;// = vec3(0, 0, 0);          // Tint, adds rgb to final output
+uniform highp   float   u_zoom;                             // Zoom factor
 
-uniform highp float u_width;                        // Texture Width
-uniform highp float u_height;                       // Texture Height
-uniform highp float u_time;                         // Time in seconds
-uniform       bool  u_premultiplied;                // True if the texture we are using has premultiplied alphas (affects negative)
+uniform highp   float   u_width;                            // Texture Width
+uniform highp   float   u_height;                           // Texture Height
+uniform highp   float   u_time;                             // Time in seconds
+uniform         bool    u_premultiplied;                    // True if the texture we are using has premultiplied alphas (affects negative)
 
 // EXACT SAME ORDER AS IN EDITOR!!!!!
-uniform highp float u_pixel_x;// = 1.0;             // Pixel Width X    1.0 Normal, 4.0 is nice pixelation
-uniform highp float u_pixel_y;// = 1.0;             // Pixel Width Y    1.0 Normal, 4.0 is nice pixelation
-uniform highp vec2  u_pixel_offset;                 // Used to offset pixelation to reduce pixel flicker
-uniform       bool  u_negative;// = false;          // Negative         True / False
-uniform       bool  u_grayscale;// = false;         // Grayscale        True / False
-uniform lowp  float u_hue;// = 0.0;                 // Hue              Editor:    0 to 360     Shader:  0.0 to 1.0
-uniform lowp  float u_saturation;// = 0.0;          // Saturation       Editor: -255 to 255     Shader: -1.0 to 1.0
-uniform lowp  float u_contrast;// = 0.0;            // Contrast         Editor: -255 to 255     Shader: -1.0 to 1.0
-uniform lowp  float u_brightness;// = 0.0;          // Brightness       Editor: -255 to 255     Shader: -1.0 to 1.0
+uniform highp   float   u_pixel_x;// = 1.0;                 // Pixel Width X    1.0 Normal, 4.0 is nice pixelation
+uniform highp   float   u_pixel_y;// = 1.0;                 // Pixel Width Y    1.0 Normal, 4.0 is nice pixelation
+uniform highp   vec2    u_pixel_offset;                     // Used to offset pixelation to reduce pixel flicker
+uniform         bool    u_negative;// = false;              // Negative         True / False
+uniform         bool    u_grayscale;// = false;             // Grayscale        True / False
+uniform lowp    float   u_hue;// = 0.0;                     // Hue              Editor:    0 to 360     Shader:  0.0 to 1.0
+uniform lowp    float   u_saturation;// = 0.0;              // Saturation       Editor: -255 to 255     Shader: -1.0 to 1.0
+uniform lowp    float   u_contrast;// = 0.0;                // Contrast         Editor: -255 to 255     Shader: -1.0 to 1.0
+uniform lowp    float   u_brightness;// = 0.0;              // Brightness       Editor: -255 to 255     Shader: -1.0 to 1.0
 
-uniform lowp  float u_bitrate;// = 256;             // Bitrate          Editor:    0 to  256
-uniform       bool  u_cartoon;// = false;           // Cartoon          True / False
-uniform       bool  u_wavy;// = false;              // Wavy             True / False
+uniform         bool    u_shade_away;
+uniform lowp    vec3    u_camera_pos;
+
+uniform lowp    float   u_bitrate;// = 256;                 // Bitrate          Editor:    0 to  256
+uniform         bool    u_cartoon;// = false;               // Cartoon          True / False
+uniform         bool    u_wavy;// = false;                  // Wavy             True / False
 
 
 // Constants
@@ -198,42 +205,40 @@ void main( void ) {
     float time = u_time;
 
     // ***** WAVY
-//    if (u_wavy) {
-//        //time = 100.0;                           // !!! Disables imported time (turns off animation)
-//        vec2  tc =  coords.xy;
-//        vec2  p =   -1.0 + 2.0 * tc;
-//        float len = length(p);
-//        coords = tc + (p / len) * cos(len*12.0 - time*4.0) * 0.03;
-//    }
+    if (u_wavy) {
+        //time = 100.0;                           // !!! Disables imported time (turns off animation)
+        vec2  tc =  coords.xy;
+        vec2  p =   -1.0 + 2.0 * tc;
+        float len = length(p);
+        coords = tc + (p / len) * cos(len*12.0 - time*4.0) * 0.03;
+    }
 
 
     // ***** SWIRL
-    if (u_grayscale) {
-        float radius = 200.0;
-        float angle = 1.2;      // 5.0 is about as high as youd want to go?
-        vec2  center = vec2(u_width / 2.0, u_height / 2.0);
-
-        vec2 tex_size = vec2(u_width, u_height);
-        vec2 tc = coords * tex_size;
-        tc -= center;
-        float dist = length(tc);
-        if (dist < radius) {
-            float percent = (radius - dist) / radius;
-            float theta = percent * percent * angle * 8.0;
-            float s = sin(theta);
-            float c = cos(theta);
-            tc = vec2(dot(tc, vec2(c, -s)), dot(tc, vec2(s, c)));
-
-            tc += center;
-            tc /= tex_size;
-            vec3 color = texture2D(u_texture, tc).rgb;
-            gl_FragColor = vec4(color, 1.0);
-            return;
-        } else {
-            gl_FragColor = texture2D(u_texture, coordinates);
-            return;
-        }
-    }
+//    if (u_swirl) {
+//        float radius = 200.0;
+//        float angle = 1.2;      // 5.0 is about as high as youd want to go?
+//        vec2  center = vec2(u_width / 2.0, u_height / 2.0);
+//        vec2 tex_size = vec2(u_width, u_height);
+//        vec2 tc = coords * tex_size;
+//        tc -= center;
+//        float dist = length(tc);
+//        if (dist < radius) {
+//            float percent = (radius - dist) / radius;
+//            float theta = percent * percent * angle * 8.0;
+//            float s = sin(theta);
+//            float c = cos(theta);
+//            tc = vec2(dot(tc, vec2(c, -s)), dot(tc, vec2(s, c)));
+//            tc += center;
+//            tc /= tex_size;
+//            vec3 color = texture2D(u_texture, tc).rgb;
+//            gl_FragColor = vec4(color, 1.0);
+//            return;
+//        } else {
+//            gl_FragColor = texture2D(u_texture, coordinates);
+//            return;
+//        }
+//    }
 
 
     // ***** 2D SHOCKWAVE
@@ -360,10 +365,20 @@ void main( void ) {
         frag_rgb = vec3(v_rgb.x, v_rgb.y, v_rgb.z);
     }
 
-    // If texture is premultiplied, add back alpha
+
+    // ***** If texture is premultiplied, add back alpha
     if (u_premultiplied) frag_rgb *= texture_color.a;
 
+    // ***** If triangle is facing away from camera, darken it
+    if (u_shade_away) {
+        highp float dp = dot(normalize(vert_normal), normalize(vert - u_camera_pos)) + 0.15;
+                    dp = clamp(dp, 0.0, 1.0);
+        frag_rgb = mix(vec3(0.0), frag_rgb, dp);
+    }
+
+
     gl_FragColor = highp vec4(frag_rgb, texture_color.a) * alpha_in;
+    if (gl_FragColor.a < 0.05) discard;
 
 }
 
