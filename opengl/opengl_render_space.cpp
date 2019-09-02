@@ -13,16 +13,16 @@
 
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
-#include "engine/engine_thing_fire.h"
-#include "engine/engine_thing_fisheye.h"
-#include "engine/engine_thing_light.h"
-#include "engine/engine_thing_object.h"
-#include "engine/engine_thing_mirror.h"
-#include "engine/engine_thing_swirl.h"
-#include "engine/engine_thing_water.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
 #include "engine/form_engine.h"
+#include "engine_things/engine_thing_fire.h"
+#include "engine_things/engine_thing_fisheye.h"
+#include "engine_things/engine_thing_light.h"
+#include "engine_things/engine_thing_object.h"
+#include "engine_things/engine_thing_mirror.h"
+#include "engine_things/engine_thing_swirl.h"
+#include "engine_things/engine_thing_water.h"
 #include "enums_engine.h"
 #include "helper.h"
 #include "opengl/opengl.h"
@@ -39,8 +39,9 @@ void DrOpenGL::cullingOff() {   glDisable( GL_CULL_FACE ); }
 // Renders All Scene Objects
 void DrOpenGL::drawSpace() {
 
-    // Keeps track of if we have rendered the lights yet
-    bool has_rendered_glow_lights = false;
+    // ***** Reset Frame Variables
+    m_triangles = 0;                                        // Reset frame triangle count
+    bool has_rendered_glow_lights = false;                  // Keeps track of if we have rendered the lights yet
 
     // This variable was put in so that multiple Water things drawn next to each other will use the same copy of the render fbo as it currently was,
     //      this saves lots of blit calls, and stops some vertical fragments from appearing as they would try to refract each other
@@ -62,13 +63,19 @@ void DrOpenGL::drawSpace() {
             case DrThingType::Character:
             case DrThingType::Object:
 
-                //drawObject(thing, last_thing);
-                cullingOn();
-                glEnable(GL_DEPTH_TEST);
-                glDepthFunc(GL_LEQUAL);
-                drawObjectExtrude(thing, last_thing);
-                glDisable(GL_DEPTH_TEST);
-                cullingOff();
+                // If no depth to object, or if in Orthographic mode and object is not rotated on X or Y axis, just draw front face
+                if (qFuzzyCompare(thing->getExtrusion(), 0.0) ||
+                    ((m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) &&
+                            qFuzzyCompare(thing->getAngleX(), 0.0) && qFuzzyCompare(thing->getAngleY(), 0.0)) ) {
+                    drawObject(thing, last_thing);
+                } else {
+                    cullingOn();
+                    glEnable(GL_DEPTH_TEST);
+                    glDepthFunc(GL_LEQUAL);
+                    drawObjectExtrude(thing, last_thing);
+                    glDisable(GL_DEPTH_TEST);
+                    cullingOff();
+                }
 
                 break;
             case DrThingType::Text:

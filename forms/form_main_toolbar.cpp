@@ -9,9 +9,9 @@
 #include <QToolBar>
 #include <QToolButton>
 
-#include "editor/editor_item.h"
-#include "editor/editor_scene.h"
-#include "editor/editor_view.h"
+#include "editor_view/editor_item.h"
+#include "editor_view/editor_scene.h"
+#include "editor_view/editor_view.h"
 #include "enums_form_main.h"
 #include "form_main.h"
 #include "globals.h"

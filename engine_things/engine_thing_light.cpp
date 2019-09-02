@@ -7,10 +7,10 @@
 //
 #include <QRandomGenerator>
 
-#include "engine.h"
+#include "engine/engine.h"
+#include "engine/engine_world.h"
+#include "engine/form_engine.h"
 #include "engine_thing_light.h"
-#include "engine_world.h"
-#include "form_engine.h"
 #include "opengl/opengl.h"
 
 //####################################################################################

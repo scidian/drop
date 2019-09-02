@@ -7,12 +7,12 @@
 //
 #include <QtMath>
 
-#include "engine.h"
-#include "engine_texture.h"
+#include "3rdparty/poly_partition.h"
+#include "engine/engine.h"
+#include "engine/engine_texture.h"
+#include "engine/engine_world.h"
 #include "engine_thing_object.h"
-#include "engine_world.h"
 #include "helper.h"
-#include "library/poly_partition.h"
 
 //####################################################################################
 //##    Creates a list of Vertices that represent a scaled circle

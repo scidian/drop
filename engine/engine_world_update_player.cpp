@@ -9,7 +9,7 @@
 #include <QDebug>
 
 #include "engine.h"
-#include "engine_thing_object.h"
+#include "engine_things/engine_thing_object.h"
 #include "engine_world.h"
 
 

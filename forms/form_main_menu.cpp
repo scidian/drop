@@ -12,13 +12,13 @@
 
 #include "colors/colors.h"
 #include "debug.h"
-#include "editor/editor_item.h"
-#include "editor/editor_scene.h"
 #include "editor/editor_tree_advisor.h"
 #include "editor/editor_tree_assets.h"
 #include "editor/editor_tree_inspector.h"
 #include "editor/editor_tree_project.h"
-#include "editor/editor_view.h"
+#include "editor_view/editor_item.h"
+#include "editor_view/editor_scene.h"
+#include "editor_view/editor_view.h"
 #include "form_main.h"
 #include "helper.h"
 
@@ -31,10 +31,10 @@ void FormMain::menuAbout() {
 }
 
 void FormMain::menuUndo() {
-        sceneEditor->undoAction();
+    sceneEditor->undoAction();
 }
 void FormMain::menuRedo() {
-        sceneEditor->redoAction();
+    sceneEditor->redoAction();
 }
 
 // Pops up a message box listing all child widgets of FormMain

@@ -6,10 +6,11 @@
 //
 //
 #include "engine.h"
-#include "engine_thing_light.h"
-#include "engine_thing_object.h"
 #include "engine_texture.h"
+#include "engine_things/engine_thing_light.h"
+#include "engine_things/engine_thing_object.h"
 #include "engine_world.h"
+
 
 //####################################################################################
 //##    Sets up an object to be controlled as a "player"

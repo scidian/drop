@@ -6,7 +6,7 @@
 //
 //
 #include "helper.h"
-#include "image_filter.h"
+#include "imaging/imaging.h"
 #include "project.h"
 #include "project_asset.h"
 #include "project_effect.h"

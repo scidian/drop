@@ -90,6 +90,8 @@ private:
     float           m_background_green = 0;
     float           m_background_blue = 0;
 
+    long            m_triangles = 0;                            // Tracks how many triangles are drawn every frame, including occluder map draws
+
     std::vector<float>       m_whole_texture_coordinates;       // Used to keep the coordinates of rendering an entire texture
 
     // VBO's
@@ -201,6 +203,9 @@ public:
 
     // Getters and Setters
     float           getScale()          { return m_scale; }
+    long            getTriangleCount()  { return m_triangles; }
+
+    void            addTriangles(long triangles) { m_triangles += triangles; }
 
 
 //####################################################################################

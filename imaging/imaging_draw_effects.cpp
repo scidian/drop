@@ -16,7 +16,7 @@
 
 #include "colors/colors.h"
 #include "globals.h"
-#include "image_filter.h"
+#include "imaging.h"
 #include "helper.h"
 #include "style/style.h"
 

@@ -10,10 +10,10 @@
 #include <cmath>
 
 #include "engine/engine.h"
-#include "engine/engine_thing_object.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
 #include "engine/form_engine.h"
+#include "engine_things/engine_thing_object.h"
 #include "helper.h"
 #include "opengl/opengl.h"
 

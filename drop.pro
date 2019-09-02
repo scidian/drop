@@ -25,6 +25,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    3rdparty/hullfinder.cpp \
+    3rdparty/poly_partition.cpp \
     chipmunk/chipmunk.c \
     chipmunk/cpArbiter.c \
     chipmunk/cpArray.c \
@@ -62,14 +64,6 @@ SOURCES += \
     colors/colors_palette_material.cpp \
     colors/colors_palette_rocky_rover.cpp \
     colors/colors_palette_window_themes.cpp \
-    editor/editor_item.cpp \
-    editor/editor_item_item_change.cpp \
-    editor/editor_item_paint.cpp \
-    editor/editor_scene.cpp \
-    editor/editor_scene_key_press.cpp \
-    editor/editor_scene_select.cpp \
-    editor/editor_scene_undo_commands.cpp \
-    editor/editor_scene_update.cpp \
     editor/editor_tree_advisor.cpp \
     editor/editor_tree_assets.cpp \
     editor/editor_tree_assets_mouse.cpp \
@@ -83,30 +77,29 @@ SOURCES += \
     editor/editor_tree_project_drag_drop.cpp \
     editor/editor_tree_project_selection.cpp \
     editor/editor_tree_project_update.cpp \
-    editor/editor_view.cpp \
-    editor/editor_view_drag_drop.cpp \
-    editor/editor_view_grid.cpp \
-    editor/editor_view_key_press.cpp \
-    editor/editor_view_mouse.cpp \
-    editor/editor_view_mouse_move.cpp \
-    editor/editor_view_paint.cpp \
-    editor/editor_view_paint_items.cpp \
-    editor/editor_view_resize.cpp \
-    editor/editor_view_rotate.cpp \
-    editor/editor_view_select.cpp \
-    editor/editor_view_tooltip.cpp \
+    editor_view/editor_item.cpp \
+    editor_view/editor_item_item_change.cpp \
+    editor_view/editor_item_paint.cpp \
+    editor_view/editor_scene.cpp \
+    editor_view/editor_scene_key_press.cpp \
+    editor_view/editor_scene_select.cpp \
+    editor_view/editor_scene_undo_commands.cpp \
+    editor_view/editor_scene_update.cpp \
+    editor_view/editor_view.cpp \
+    editor_view/editor_view_drag_drop.cpp \
+    editor_view/editor_view_grid.cpp \
+    editor_view/editor_view_key_press.cpp \
+    editor_view/editor_view_mouse.cpp \
+    editor_view/editor_view_mouse_move.cpp \
+    editor_view/editor_view_paint.cpp \
+    editor_view/editor_view_paint_items.cpp \
+    editor_view/editor_view_resize.cpp \
+    editor_view/editor_view_rotate.cpp \
+    editor_view/editor_view_select.cpp \
+    editor_view/editor_view_tooltip.cpp \
     engine/engine.cpp \
     engine/engine_camera.cpp \
     engine/engine_texture.cpp \
-    engine/engine_thing.cpp \
-    engine/engine_thing_fire.cpp \
-    engine/engine_thing_fisheye.cpp \
-    engine/engine_thing_light.cpp \
-    engine/engine_thing_mirror.cpp \
-    engine/engine_thing_object.cpp \
-    engine/engine_thing_object_create.cpp \
-    engine/engine_thing_swirl.cpp \
-    engine/engine_thing_water.cpp \
     engine/engine_vertex_data.cpp \
     engine/engine_world.cpp \
     engine/engine_world_build_player.cpp \
@@ -117,6 +110,15 @@ SOURCES += \
     engine/engine_world_update.cpp \
     engine/engine_world_update_player.cpp \
     engine/form_engine.cpp \
+    engine_things/engine_thing.cpp \
+    engine_things/engine_thing_fire.cpp \
+    engine_things/engine_thing_fisheye.cpp \
+    engine_things/engine_thing_light.cpp \
+    engine_things/engine_thing_mirror.cpp \
+    engine_things/engine_thing_object.cpp \
+    engine_things/engine_thing_object_create.cpp \
+    engine_things/engine_thing_swirl.cpp \
+    engine_things/engine_thing_water.cpp \
     enums.cpp \
     forms/form_blank.cpp \
     forms/form_color_magnifier.cpp \
@@ -134,10 +136,9 @@ SOURCES += \
     forms/form_popup_grid_snap.cpp \
     forms/form_settings.cpp \
     helper.cpp \
-    image_draw_effects.cpp \
-    image_filter.cpp \
-    library/hullfinder.cpp \
-    library/poly_partition.cpp \
+    imaging/imaging_draw_effects.cpp \
+    imaging/imaging_filters.cpp \
+    imaging/imaging_misc.cpp \
     main.cpp \
     opengl/opengl.cpp \
     opengl/opengl_bind_fbo.cpp \
@@ -187,6 +188,8 @@ SOURCES += \
     widgets/widgets_layout.cpp
 
 HEADERS += \
+    3rdparty/hullfinder.h \
+    3rdparty/poly_partition.h \
     chipmunk/chipmunk.h \
     chipmunk/chipmunk_ffi.h \
     chipmunk/chipmunk_private.h \
@@ -219,28 +222,28 @@ HEADERS += \
     chipmunk/cpVect.h \
     chipmunk/prime.h \
     colors/colors.h \
-    editor/editor_item.h \
-    editor/editor_scene.h \
-    editor/editor_scene_undo_commands.h \
     editor/editor_tree_advisor.h \
     editor/editor_tree_assets.h \
     editor/editor_tree_inspector.h \
     editor/editor_tree_project.h \
-    editor/editor_view.h \
+    editor_view/editor_item.h \
+    editor_view/editor_scene.h \
+    editor_view/editor_scene_undo_commands.h \
+    editor_view/editor_view.h \
     engine/engine.h \
     engine/engine_camera.h \
     engine/engine_texture.h \
-    engine/engine_thing.h \
-    engine/engine_thing_fire.h \
-    engine/engine_thing_fisheye.h \
-    engine/engine_thing_light.h \
-    engine/engine_thing_mirror.h \
-    engine/engine_thing_object.h \
-    engine/engine_thing_swirl.h \
-    engine/engine_thing_water.h \
     engine/engine_vertex_data.h \
     engine/engine_world.h \
     engine/form_engine.h \
+    engine_things/engine_thing.h \
+    engine_things/engine_thing_fire.h \
+    engine_things/engine_thing_fisheye.h \
+    engine_things/engine_thing_light.h \
+    engine_things/engine_thing_mirror.h \
+    engine_things/engine_thing_object.h \
+    engine_things/engine_thing_swirl.h \
+    engine_things/engine_thing_water.h \
     enums.h \
     enums_dr_settings.h \
     enums_engine.h \
@@ -251,9 +254,7 @@ HEADERS += \
     forms/form_popup.h \
     forms/form_settings.h \
     helper.h \
-    image_filter.h \
-    library/hullfinder.h \
-    library/poly_partition.h \
+    imaging/imaging.h \
     opengl/opengl.h \
     playground/form_playground.h \
     playground/playground.h \

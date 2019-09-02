@@ -6,12 +6,12 @@
 //
 //
 #include "engine/engine.h"
-#include "engine/engine_thing_object.h"
-#include "engine/engine_thing_fire.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_vertex_data.h"
 #include "engine/engine_world.h"
 #include "engine/form_engine.h"
+#include "engine_things/engine_thing_object.h"
+#include "engine_things/engine_thing_fire.h"
 #include "helper.h"
 #include "opengl/opengl.h"
 #include "project/project.h"
@@ -113,6 +113,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing) {
     ///m_default_shader.disableAttributeArray( a_default_texture_coord );
     ///m_default_shader.release();
 
+    addTriangles( 2 );
     last_thing = DrThingType::Object;
 }
 
@@ -163,18 +164,7 @@ void DrOpenGL::drawObjectExtrude(DrEngineThing *thing, DrThingType &last_thing) 
     matrix_eye.scale(1.f/m_scale);
     QVector3D eye_move = matrix_eye * m_eye;
 
-
-    // ***** Point shader to proper vbo data for object
-    m_texture_vbos[object->getTextureNumber()]->bind();
-    m_default_shader.enableAttributeArray(  PROGRAM_VERTEX_ATTRIBUTE);
-    m_default_shader.enableAttributeArray(  PROGRAM_TEXCOORD_ATTRIBUTE);
-    m_default_shader.enableAttributeArray(  PROGRAM_NORMAL_ATTRIBUTE);
-    m_default_shader.setAttributeBuffer(    PROGRAM_VERTEX_ATTRIBUTE,   GL_FLOAT, 0                  , 3, c_vertex_length * sizeof(GLfloat));
-    m_default_shader.setAttributeBuffer(    PROGRAM_TEXCOORD_ATTRIBUTE, GL_FLOAT, 6 * sizeof(GLfloat), 2, c_vertex_length * sizeof(GLfloat));
-    m_default_shader.setAttributeBuffer(    PROGRAM_NORMAL_ATTRIBUTE,   GL_FLOAT, 3 * sizeof(GLfloat), 3, c_vertex_length * sizeof(GLfloat));
-
-
-    // ***** Get texture to render with, set texture coordinates
+    // Get texture to render with, set texture coordinates
     DrEngineTexture *texture = m_engine->getTexture(object->getTextureNumber());
     if (!texture->texture()->isBound()) {
         texture->texture()->bind();
@@ -222,8 +212,16 @@ void DrOpenGL::drawObjectExtrude(DrEngineThing *thing, DrThingType &last_thing) 
 
 
     // ***** Draw triangles using shader program
+    m_texture_vbos[object->getTextureNumber()]->bind();
+    m_default_shader.enableAttributeArray(  PROGRAM_VERTEX_ATTRIBUTE);
+    m_default_shader.enableAttributeArray(  PROGRAM_TEXCOORD_ATTRIBUTE);
+    m_default_shader.enableAttributeArray(  PROGRAM_NORMAL_ATTRIBUTE);
+    m_default_shader.setAttributeBuffer(    PROGRAM_VERTEX_ATTRIBUTE,   GL_FLOAT, 0                  , 3, c_vertex_length * sizeof(GLfloat));
+    m_default_shader.setAttributeBuffer(    PROGRAM_TEXCOORD_ATTRIBUTE, GL_FLOAT, 6 * sizeof(GLfloat), 2, c_vertex_length * sizeof(GLfloat));
+    m_default_shader.setAttributeBuffer(    PROGRAM_NORMAL_ATTRIBUTE,   GL_FLOAT, 3 * sizeof(GLfloat), 3, c_vertex_length * sizeof(GLfloat));
     glDrawArrays(GL_TRIANGLES, 0, m_texture_data[object->getTextureNumber()]->vertexCount() );
     m_texture_vbos[object->getTextureNumber()]->release();
+
 
     // Release bound items
     m_default_shader.disableAttributeArray( PROGRAM_VERTEX_ATTRIBUTE );
@@ -231,6 +229,7 @@ void DrOpenGL::drawObjectExtrude(DrEngineThing *thing, DrThingType &last_thing) 
     m_default_shader.disableAttributeArray( PROGRAM_NORMAL_ATTRIBUTE );
     m_default_shader.release();
 
+    addTriangles( m_texture_data[object->getTextureNumber()]->triangleCount() );
     last_thing = DrThingType::None;
 }
 
@@ -305,6 +304,7 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
     ///m_occluder_shader.disableAttributeArray( a_occluder_texture_coord );
     ///m_occluder_shader.release();
 
+    addTriangles( 2 );
     return true;            // Returns true when m_occluder_shader has been initialized
 }
 
@@ -400,6 +400,7 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     m_fire_shader.disableAttributeArray( a_fire_texture_coord );
     m_fire_shader.release();
 
+    addTriangles( 2 );
     last_thing = DrThingType::Fire;
     return true;
 }

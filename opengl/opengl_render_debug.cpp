@@ -10,10 +10,10 @@
 #include <cmath>
 
 #include "engine/engine.h"
-#include "engine/engine_thing_object.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
 #include "engine/form_engine.h"
+#include "engine_things/engine_thing_object.h"
 #include "helper.h"
 #include "opengl/opengl.h"
 
@@ -81,9 +81,10 @@ void DrOpenGL::drawDebug(QPainter &painter) {
     painter.setFont(font);
     painter.setPen( Qt::white );
     painter.drawText( QPointF(20, 20), "Items: " + QString::number(m_engine->getCurrentWorld()->getThings().count()) + ", Scale: " + QString::number(double(m_scale)) );
-    painter.drawText( QPointF(20, 40), "FPS: " +       QString::number(m_engine->getFormEngine()->fps_render)
+    painter.drawText( QPointF(20, 40), "Triangles: " + QString::number(getTriangleCount()) );
+    painter.drawText( QPointF(20, 60), "FPS: " +       QString::number(m_engine->getFormEngine()->fps_render)
                                      + ", Physics: " + QString::number(m_engine->getFormEngine()->fps_physics));
-    painter.drawText( QPointF(20, 60), g_info);
+    painter.drawText( QPointF(20, 80), g_info);
 
     ///int max_sample = 0, max_text = 0, max_number_textures = 0, max_layers = 0;
     ///glGetIntegerv ( GL_MAX_SAMPLES, &max_sample );                                      // Finds max multi sampling available on system

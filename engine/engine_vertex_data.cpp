@@ -10,13 +10,13 @@
 #include <QPainter>
 #include <QPixmap>
 
+#include "3rdparty/poly_partition.h"
 #include "engine_texture.h"
 #include "engine_vertex_data.h"
 #include "helper.h"
-#include "image_filter.h"
-#include "library/poly_partition.h"
+#include "imaging/imaging.h"
 
-const float c_extrude_depth = 35.0f;
+const float c_extrude_depth = 20.0f;
 
 #define CELLSIZE 16
 
@@ -59,7 +59,7 @@ DrEngineVertexData::DrEngineVertexData(QPixmap &pixmap) : m_count(0) {
 //          x2,  y2,  tx2, ty2,
 //          x3,  y3,  tx3, ty3,
 //          x4,  y4,  tx4, ty4);
-//
+
 //    extrude( x1,  y1,  tx1, ty1,
 //             x2,  y2,  tx2, ty2);
 //    extrude( x2,  y2,  tx2, ty2,
@@ -71,8 +71,8 @@ DrEngineVertexData::DrEngineVertexData(QPixmap &pixmap) : m_count(0) {
 
 
     // ***** Find concave hull
-    QVector<HullPoint> image_points = DrImaging::outlinePointList( pixmap.toImage(), 0.9 );
-    QVector<HullPoint> concave_hull = HullFinder::FindConcaveHull( image_points, 10.0 );
+    QVector<HullPoint> image_points = DrImaging::outlinePointList( pixmap.toImage(), 0.90 );
+    QVector<HullPoint> concave_hull = HullFinder::FindConcaveHull( image_points,     5.00 );
 
     // if  ((y2-y1) / (x2-x1)) == ((y3-y1)/(x3-x1)) then slope is same and is along same line
 
@@ -82,7 +82,6 @@ DrEngineVertexData::DrEngineVertexData(QPixmap &pixmap) : m_count(0) {
         final_points.push_back(concave_hull[i]);
         i++;
     }
-
 
 
     // ***** Triangulate concave hull

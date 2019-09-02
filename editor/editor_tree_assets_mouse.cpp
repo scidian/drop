@@ -17,7 +17,7 @@
 #include "editor_tree_assets.h"
 #include "enums.h"
 #include "globals.h"
-#include "image_filter.h"
+#include "imaging/imaging.h"
 #include "interface_editor_relay.h"
 #include "helper.h"
 #include "project/project.h"

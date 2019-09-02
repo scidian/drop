@@ -10,11 +10,12 @@
 #include <QOpenGLWidget>
 
 #include "debug.h"
-#include "editor/editor_scene.h"
 #include "editor/editor_tree_assets.h"
 #include "editor/editor_tree_inspector.h"
 #include "editor/editor_tree_project.h"
-#include "editor/editor_view.h"
+#include "editor_view/editor_item.h"
+#include "editor_view/editor_scene.h"
+#include "editor_view/editor_view.h"
 #include "form_main.h"
 #include "globals.h"
 #include "helper.h"
@@ -23,8 +24,7 @@
 //####################################################################################
 //##        Builds Widgets used for FormMainMode "World Editor"
 //####################################################################################
-void FormMain::buildWidgetsEditor()
-{
+void FormMain::buildWidgetsEditor() {
     QFont font = Dr::CustomFont();
 
     QSizePolicy sizePolicy(                     QSizePolicy::Preferred,         QSizePolicy::Preferred);

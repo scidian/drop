@@ -51,6 +51,7 @@ QString     StyleSheetPoppedOutBackgroundBorder(QColor background_color, QColor 
                                                 int bottom_percent, bool highlight = false);
 
 // ***** QPixmap Functions
+QImage      ImageMask(const QImage& from_image, QColor mask_color, int max_alpha);
 void        SetMaskCircleShape (QPixmap &pix);
 
 

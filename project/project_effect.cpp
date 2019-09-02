@@ -5,7 +5,7 @@
 //
 //
 //
-#include "image_filter.h"
+#include "imaging/imaging.h"
 #include "project.h"
 #include "project_effect.h"
 

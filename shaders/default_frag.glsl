@@ -303,11 +303,16 @@ void main( void ) {
     // ********** Set some variables for use later
     highp vec4 alpha_in = vec4(u_alpha, u_alpha, u_alpha, u_alpha);                 // For adding in existing opacity of object
     highp vec3 frag_rgb = texture_color.rgb;                                        // Save rgb as a vec3 for working with
-               frag_rgb = mix(u_average_color, frag_rgb, texture_color.a);
+
+    // Don't draw fragment to depth buffer if mostly invisible
+   if (texture_color.a < 0.05) discard;
 
     // If texture is premultiplied...
     // Remove alpha first, then apply filters, then add it back later
     if (u_premultiplied) frag_rgb /= texture_color.a;
+
+    // Add in average color
+    frag_rgb = mix(u_average_color, frag_rgb, texture_color.a);
 
 
     // ***** NEGATIVE
@@ -371,20 +376,17 @@ void main( void ) {
     // ***** If texture is premultiplied, add back alpha
     if (u_premultiplied) frag_rgb *= texture_color.a;
 
+
     // ***** If triangle is facing away from camera, darken it
     if (u_shade_away) {
         highp float dp = dot(normalize(vert_normal), normalize(vert - u_camera_pos)) + 0.15;
                     dp = clamp(dp, 0.0, 1.0);
         frag_rgb = mix(vec3(0.0), frag_rgb, dp);
+        gl_FragColor = highp vec4(frag_rgb, 1.0) * alpha_in;
+    } else {
+        gl_FragColor = highp vec4(frag_rgb, texture_color.a) * alpha_in;
     }
 
-
-    // Get final color
-    gl_FragColor = highp vec4(frag_rgb, 1.0) * alpha_in;
-    //gl_FragColor = highp vec4(frag_rgb, texture_color.a) * alpha_in;              // <----- Before we added in average color
-
-    // Don't draw fragment to depth buffer if mostly invisible
-    if (gl_FragColor.a < 0.05) discard;
 
 }
 

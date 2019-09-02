@@ -10,8 +10,8 @@
 
 #include <QPixmap>
 
+#include "3rdparty/hullfinder.h"
 #include "enums_engine.h"
-#include "library/hullfinder.h"
 
 // Image Constants
 const int   c_image_size = 600;             // Size of graphic to use for effects (water, mirror, fire, fisheye, swirl, etc.)
@@ -41,14 +41,15 @@ enum class Image_Filter_Type {
 //############################
 namespace DrImaging {
 
+    // Filters
     QPixmap applySinglePixelFilter( Image_Filter_Type filter, const QPixmap& from_pixmap, int value);
     QImage  applySinglePixelFilter( Image_Filter_Type filter, const QImage&  from_image,  int value );
 
     QPixmap applyPixelation( const QPixmap& from_pixmap, QPointF data_pair );
     QImage  applyPixelation( const QImage&  from_image,  QPointF data_pair );
 
-    QColor  averageColor(const QPixmap &pixmap);
 
+    // Draw Images for DrEffects
     QPixmap drawFibonacci(QColor background_color, QColor pen_color);
 
     QPixmap drawFire(QColor color_1, QColor color_2, QColor smoke, Fire_Mask mask);
@@ -58,10 +59,12 @@ namespace DrImaging {
     QPixmap drawSwirl(QColor top_color, double angle);
     QPixmap drawWater(QColor top_color, QColor bottom_color);
 
-    float*  imageBitsAsFloat(const QImage &from_image);
-    QImage  imageMask(const QImage& from_image, QColor mask_color, int max_alpha);
 
-    QVector<HullPoint> outlinePointList(const QImage& from_image, double alpha_tolerance );
+    // Misc Image Functions
+    QColor              averageColor(const QPixmap &pixmap, bool screen_shot = false);
+    float*              imageBitsAsFloat(const QImage &from_image);
+    QVector<HullPoint>  outlinePointList(const QImage& from_image, double alpha_tolerance );
+
 
 }
 

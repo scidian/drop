@@ -12,6 +12,7 @@
         <file>shaders/frag_fire.glsl</file>
         <file>shaders/frag_mirror.glsl</file>
         <file>shaders/frag_swirl.glsl</file>
-        <file>shaders/vert_simple.glsl</file>
+        <file>shaders/simple_vert.glsl</file>
+        <file>shaders/simple_frag.glsl</file>
     </qresource>
 </RCC>

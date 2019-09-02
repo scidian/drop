@@ -10,7 +10,7 @@
 #include <QDateTime>
 
 #include "engine/engine.h"
-#include "engine/engine_thing_object.h"
+#include "engine_things/engine_thing_object.h"
 #include "helper.h"
 #include "opengl/opengl.h"
 #include "project/project.h"

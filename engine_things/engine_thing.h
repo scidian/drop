@@ -41,13 +41,18 @@ private:
     // Engine Info
     long            m_key;                              // Unique key for this item
 
-    // Basic Thing Settings
-    double          m_angle =   0.0;                    // Current angle, (for DrEngineObject this is updated every frame by update())
+    // Basic Thing Properties
+    double          m_angle =   0.0;                    // Current angle (on Z axis), (for DrEngineObject this is updated every frame by update())
     float           m_opacity = 1.0f;                   // Transparency of Thing (0.0 invisible, 1.0 opaque)
     QPointF         m_position;                         // Current center posiiton
     float           m_scale_x = 1.0f;                   // Scale of Thing in world
     float           m_scale_y = 1.0f;                   // Scale of Thing in world
     QPointF         m_size;                             // Original size of Thing
+
+    // Thing Properties - 3D
+    double          m_angle_x = 0.0;                    // X axis rotation
+    double          m_angle_y = 0.0;                    // Y axis rotation
+    double          m_extrusion = 25.0;                 // Desired 3D Depth of 2D Objects
 
     // Thing Properties - Camera
     long            m_active_camera = 0;                // Set to ID of last camera that followed this object, 0 == no camera
@@ -92,7 +97,7 @@ public:
     bool                    hasActiveCamera() { return (m_active_camera == 0) ? false : true; }
     void                    setActiveCameraKey(const long& new_camera_key) { m_active_camera = new_camera_key; }
 
-    // Getters / Setters
+    // Basic Properties
     virtual double          getAngle() {    return m_angle; }                               // Returns Thing angle (in degrees)
     virtual const float&    getOpacity() {  return m_opacity; }                             // Returns Opacity (alpha 0.0 to 1.0) of Thing
     virtual QPointF         getPosition() { return m_position; }                            // Returns Thing center position in world coordinates
@@ -110,6 +115,15 @@ public:
     void                    setScaleY(double new_scale_y) {     m_scale_y = static_cast<float>(new_scale_y); }
     virtual void            setSize(QPointF size) {             m_size = size; }
     void                    setWorld(DrEngineWorld *world) {    m_world = world; }
+
+    // 3D Properties
+    const double&           getAngleX() {       return m_angle_x; }                         // Returns Thing X Axis Rotation (in degrees)
+    const double&           getAngleY() {       return m_angle_y; }                         // Returns Thing Y Axis Rotation (in degrees)
+    const double&           getExtrusion() {    return m_extrusion; }                       // Returns Thing 3D Extrusion Depth
+
+    void                    setAngleX(double new_angle_x) {     m_angle_x = new_angle_x; }
+    void                    setAngleY(double new_angle_y) {     m_angle_y = new_angle_y; }
+    void                    setExtrusion(double new_depth) {    m_extrusion = new_depth; }
 
 };
 

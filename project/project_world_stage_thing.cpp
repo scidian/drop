@@ -6,7 +6,7 @@
 //
 //
 #include "helper.h"
-#include "image_filter.h"
+#include "imaging/imaging.h"
 #include "opengl/opengl.h"
 #include "project.h"
 #include "project_asset.h"

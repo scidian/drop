@@ -15,8 +15,8 @@
 
 #include "colors/colors.h"
 #include "debug.h"
-#include "editor_item.h"
-#include "editor_scene.h"
+#include "editor_view/editor_item.h"
+#include "editor_view/editor_scene.h"
 #include "editor_tree_inspector.h"
 #include "globals.h"
 #include "interface_editor_relay.h"

@@ -34,6 +34,7 @@ public:
     // Properties
     const GLfloat  *constData() const {     return m_data.constData(); }
     int             count() const {         return m_count; }
+    int             triangleCount() const { return vertexCount() / 3; }
     int             vertexCount() const {   return m_count / c_vertex_length; }
 
     // Creation Functions

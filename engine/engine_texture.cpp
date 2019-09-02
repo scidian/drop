@@ -12,7 +12,7 @@
 #include "engine.h"
 #include "engine_texture.h"
 #include "helper.h"
-#include "image_filter.h"
+#include "imaging/imaging.h"
 
 //####################################################################################
 //##        Constructor

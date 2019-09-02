@@ -13,11 +13,11 @@
 
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
-#include "engine/engine_thing_light.h"
-#include "engine/engine_thing_object.h"
-#include "engine/engine_thing_water.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
+#include "engine_things/engine_thing_light.h"
+#include "engine_things/engine_thing_object.h"
+#include "engine_things/engine_thing_water.h"
 #include "engine/form_engine.h"
 #include "helper.h"
 #include "opengl/opengl.h"
@@ -26,7 +26,7 @@
 //####################################################################################
 //##        Render, Paint the Scene (called by update())
 //####################################################################################
-void DrOpenGL::paintGL() {
+void DrOpenGL::paintGL() {    
     // ***** Find OpenGL Version supported on this system
     ///auto ver = glGetString(GL_VERSION);
     ///m_engine->info = QString::fromUtf8(reinterpret_cast<const char*>(ver));
