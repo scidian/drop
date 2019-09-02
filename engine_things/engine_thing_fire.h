@@ -44,6 +44,8 @@ public:
     virtual DrThingType getThingType() override { return DrThingType::Fire; }
     virtual bool        update(double time_passed, double time_warp, QRectF &area) override;
 
+    // Engine Thing Overrides
+    virtual double      getAngle() override { return -(DrEngineThing::getAngle()); }
 
 };
 

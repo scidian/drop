@@ -156,6 +156,14 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     block->hue =            hue;
     block->grayscale =      grayscale;
     block->negative =       negative;
+
+    // ***** 3D Settings
+    double extrusion =      thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Depth).toDouble();
+    double x_axis_speed =   thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_X_Axis_Speed).toDouble() / 100.0;
+    double y_axis_speed =   thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Y_Axis_Speed).toDouble() / 100.0;
+    block->setExtrusion(extrusion);
+    block->setAngleX( x_axis_speed );
+    block->setAngleY( y_axis_speed );
 }
 
 

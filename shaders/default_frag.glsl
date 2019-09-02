@@ -312,7 +312,9 @@ void main( void ) {
     if (u_premultiplied) frag_rgb /= texture_color.a;
 
     // Add in average color
-    frag_rgb = mix(u_average_color, frag_rgb, texture_color.a);
+    if (u_shade_away) {
+        frag_rgb = mix(u_average_color, frag_rgb, texture_color.a);
+    }
 
 
     // ***** NEGATIVE
@@ -377,12 +379,14 @@ void main( void ) {
     if (u_premultiplied) frag_rgb *= texture_color.a;
 
 
-    // ***** If triangle is facing away from camera, darken it
+    // ***** If triangle is facing away from camera, darken it, and don't use transparent pixels for the extruded object
     if (u_shade_away) {
         highp float dp = dot(normalize(vert_normal), normalize(vert - u_camera_pos)) + 0.15;
                     dp = clamp(dp, 0.0, 1.0);
         frag_rgb = mix(vec3(0.0), frag_rgb, dp);
         gl_FragColor = highp vec4(frag_rgb, 1.0) * alpha_in;
+
+    // Otherwise we're drawing image in 2D and we do want transparent borders
     } else {
         gl_FragColor = highp vec4(frag_rgb, texture_color.a) * alpha_in;
     }

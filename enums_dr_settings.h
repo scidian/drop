@@ -86,6 +86,7 @@ enum class Components {
     Thing_Transform,
     Thing_Layering,
     Thing_Movement,
+    Thing_3D,
     Thing_Lighting,
     Thing_Appearance,
 };
@@ -186,6 +187,11 @@ enum class Properties {
     Thing_Filter_Hue,               //slider, 0 to 360
     Thing_Filter_Grayscale,         //bool
     Thing_Filter_Negative,          //bool
+
+    // 3D Variables
+    Thing_3D_Depth,                 //positive double
+    Thing_3D_X_Axis_Speed,          //double
+    Thing_3D_Y_Axis_Speed,          //double
 
 
     // ********** Thing Specific

@@ -68,7 +68,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing) {
 
     // ***** Load vertices for this object
     QVector<GLfloat> vertices;
-    getThingVertices(vertices, object, static_cast<float>(object->getAngle()));
+    getThingVertices(vertices, object);
     m_default_shader.setAttributeArray(    a_default_vertex, vertices.data(), 3 );
     m_default_shader.enableAttributeArray( a_default_vertex );
 
@@ -148,14 +148,10 @@ void DrOpenGL::drawObjectExtrude(DrEngineThing *thing, DrThingType &last_thing) 
     float now = static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 10.f);
     QMatrix4x4 matrix;
     matrix.translate(x, y, z);
-    DrAsset *asset = m_engine->getProject()->getAsset(object->getTextureNumber());
-    if (asset) {
-        if (asset->getName() == "metal block")      matrix.rotate(now, 1.f, 0.f, 0.f);
-        if (asset->getName() == "moon plant 6")     matrix.rotate(now, 0.f, 1.f, 0.f);
-        if (asset->getName() == "a1")               matrix.rotate(now, 0.f, 1.f, 0.f);
-    }
+    if (qFuzzyCompare(object->getAngleX(), 0.0) == false) matrix.rotate(now * static_cast<float>(object->getAngleX()), 1.f, 0.f, 0.f);
+    if (qFuzzyCompare(object->getAngleY(), 0.0) == false) matrix.rotate(now * static_cast<float>(object->getAngleY()), 0.f, 1.f, 0.f);
     matrix.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
-    matrix.scale(object->getScaleX(), object->getScaleY(), 1.0);
+    matrix.scale( object->getScaleX(), object->getScaleY(), static_cast<float>(object->getExtrusion()) );
     m_default_shader.setUniformValue( u_default_matrix,         (m_projection * m_model_view * matrix) );
     m_default_shader.setUniformValue( u_default_matrix_object,  (matrix) );
 
@@ -278,7 +274,7 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
 
     // ***** Load vertices for this object
     QVector<GLfloat> vertices;
-    getThingVertices(vertices, object, static_cast<float>(object->getAngle()));
+    getThingVertices(vertices, object);
     m_occluder_shader.setAttributeArray( a_occluder_vertex, vertices.data(), 3 );
     m_occluder_shader.enableAttributeArray( a_occluder_vertex );
 
@@ -358,7 +354,7 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
 
     // ***** Load vertices for this object
     QVector<GLfloat> vertices;
-    getThingVertices(vertices, fire, static_cast<float>(-fire->getAngle()));
+    getThingVertices(vertices, fire);
     m_fire_shader.setAttributeArray( a_fire_vertex, vertices.data(), 3 );
     m_fire_shader.enableAttributeArray( a_fire_vertex );
 

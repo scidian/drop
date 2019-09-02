@@ -58,6 +58,7 @@ public:
     void            setDrItem(DrItem *item)     { m_item_in_scene = item; }
 
     // Thing Components
+    void    addComponent3D();
     void    addComponentAppearance(bool bitrate_and_pixel_only = false);
     void    addComponentLayering(double z, double opacity = 100.0);
     void    addComponentLighting();

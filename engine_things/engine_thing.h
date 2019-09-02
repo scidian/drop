@@ -42,7 +42,7 @@ private:
     long            m_key;                              // Unique key for this item
 
     // Basic Thing Properties
-    double          m_angle =   0.0;                    // Current angle (on Z axis), (for DrEngineObject this is updated every frame by update())
+    double          m_angle_z = 0.0;                    // Current angle (on Z axis), (for DrEngineObject this is updated every frame by update())
     float           m_opacity = 1.0f;                   // Transparency of Thing (0.0 invisible, 1.0 opaque)
     QPointF         m_position;                         // Current center posiiton
     float           m_scale_x = 1.0f;                   // Scale of Thing in world
@@ -50,9 +50,9 @@ private:
     QPointF         m_size;                             // Original size of Thing
 
     // Thing Properties - 3D
-    double          m_angle_x = 0.0;                    // X axis rotation
-    double          m_angle_y = 0.0;                    // Y axis rotation
-    double          m_extrusion = 25.0;                 // Desired 3D Depth of 2D Objects
+    double          m_angle_x =   0.0;                  // X axis rotation speed
+    double          m_angle_y =   0.0;                  // Y axis rotation speed
+    double          m_extrusion = 0.0;                  // Desired 3D Depth of 2D Objects
 
     // Thing Properties - Camera
     long            m_active_camera = 0;                // Set to ID of last camera that followed this object, 0 == no camera
@@ -98,7 +98,7 @@ public:
     void                    setActiveCameraKey(const long& new_camera_key) { m_active_camera = new_camera_key; }
 
     // Basic Properties
-    virtual double          getAngle() {    return m_angle; }                               // Returns Thing angle (in degrees)
+    virtual double          getAngle() {    return m_angle_z; }                             // Returns Thing angle (in degrees)
     virtual const float&    getOpacity() {  return m_opacity; }                             // Returns Opacity (alpha 0.0 to 1.0) of Thing
     virtual QPointF         getPosition() { return m_position; }                            // Returns Thing center position in world coordinates
     virtual const float&    getScaleX() {   return m_scale_x; }
@@ -106,7 +106,7 @@ public:
     virtual QPointF         getSize() {     return m_size; }                                // Returns original Thing size
     DrEngineWorld*          getWorld() {    return m_world; }
 
-    virtual void            setAngle(double new_angle) {        m_angle = new_angle; }
+    virtual void            setAngle(double new_angle) {        m_angle_z = new_angle; }
     virtual void            setOpacity(float new_opacity) {     m_opacity = new_opacity; }
     virtual void            setPosition(QPointF position) {     m_position = position; }
     void                    setScaleX(float new_scale_x)  {     m_scale_x = new_scale_x; }

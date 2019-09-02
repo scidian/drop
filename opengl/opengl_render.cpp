@@ -106,7 +106,7 @@ void DrOpenGL::setQuadRotatedVertices(QVector<GLfloat> &vertices,
 //####################################################################################
 //##        Calculates rotated, z-ordered vertices for a DrEngineThing
 //####################################################################################
-void DrOpenGL::getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing, float angle) {
+void DrOpenGL::getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing) {
     // ***** Get object position data
     QPointF center = thing->getPosition();
     float   x, y, z;
@@ -118,8 +118,11 @@ void DrOpenGL::getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing
     half_height = static_cast<float>(thing->getSize().y()) * thing->getScaleY() / 2.0f;
 
     // ***** Create rotation matrix, apply rotation to object
+    float now = static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 10.f);
     QMatrix4x4 matrix;
-    matrix.rotate( angle, 0.0, 0.0, 1.0 );
+    if (qFuzzyCompare(thing->getAngleX(), 0.0) == false) matrix.rotate(now * static_cast<float>(thing->getAngleX()), 1.f, 0.f, 0.f);
+    if (qFuzzyCompare(thing->getAngleY(), 0.0) == false) matrix.rotate(now * static_cast<float>(thing->getAngleY()), 0.f, 1.f, 0.f);
+    matrix.rotate( static_cast<float>(thing->getAngle()), 0.0, 0.0, 1.0 );
     QVector3D top_right = matrix * QVector3D( half_width,  half_height, 0);
     QVector3D top_left =  matrix * QVector3D(-half_width,  half_height, 0);
     QVector3D bot_right = matrix * QVector3D( half_width, -half_height, 0);

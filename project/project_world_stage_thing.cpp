@@ -44,6 +44,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, DrThingType::Character);
             addComponentLayering(z);
             addComponentMovement();
+            addComponent3D();
             addComponentLighting();
             addComponentAppearance();
             break;
@@ -53,6 +54,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, DrThingType::Object);
             addComponentLayering(z);
             addComponentMovement();
+            addComponent3D();
             addComponentLighting();
             addComponentAppearance();
             break;
@@ -158,12 +160,23 @@ void DrThing::addComponentMovement() {
                            "Vertical",  "Initial vertical movement speed of Object, +/- variable amount.  <br><br> "
                                         "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!", false, false);
     addPropertyToComponent(Components::Thing_Movement, Properties::Thing_Spin_Velocity, Property_Type::Variable, QPointF(0, 0),
-                           "Rotation", "Initial rotational speed Object, +/- variable amount. <br><br> "
+                           "Rotation Z", "Initial rotational speed Object, +/- variable amount. Affects physics.<br><br> "
                                        "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!", false, false);
     addPropertyToComponent(Components::Thing_Movement, Properties::Thing_Angle_Velocity, Property_Type::Bool, true,
                            "Relative?", "Should the Rotation of this object affect it's Movement direction? (allows Object to move "
                                         "along an arc instead of spinning in place) <br> "
                                         "<b>NOTE:</b> Object Type must be <b>Kinematic</b> to use this setting!", false, false);
+}
+
+void DrThing::addComponent3D() {
+    addComponent(Components::Thing_3D, "3D Extrusion", "Turns 2D Objects in 3D, rotates 3D Objects.", Component_Colors::Orange_Pastel, true);
+    getComponent(Components::Thing_3D)->setIcon(Component_Icons::Object);
+    addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Depth, Property_Type::PositiveDouble, 25.0,
+                           "Depth", "Depth of Object in pixels when appearing in 3D.");
+    addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_X_Axis_Speed, Property_Type::Double, 0.0,
+                           "Rotation X", "Rotational speed of object on the X Axis, does not affect physics.");
+    addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Y_Axis_Speed, Property_Type::Double, 0.0,
+                           "Rotation Y", "Rotational speed of object on the Y Axis, does not affect physics.");
 }
 
 void DrThing::addComponentLighting() {
@@ -196,6 +209,7 @@ void DrThing::addComponentAppearance(bool bitrate_and_pixel_only) {
     addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Negative, Property_Type::Bool, false,
                            "Negative", "Should this item's colors be inverted?", hidden);
 }
+
 
 
 //####################################################################################

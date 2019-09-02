@@ -22,6 +22,7 @@ namespace Component_Colors {
     const QColor Silver_Snow        { QColor(192, 188, 183, 255) };
 
     const QColor Orange_Medium      { QColor(221, 110,  66, 255) };
+    const QColor Orange_Pastel      { QColor(0xfa, 0x92, 0, 255) };
 
     const QColor Pink_Pearl         { QColor(228, 180, 194, 255) };
     const QColor Red_Faded          { QColor(255, 105, 120, 255) };

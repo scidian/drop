@@ -16,7 +16,7 @@
 #include "helper.h"
 #include "imaging/imaging.h"
 
-const float c_extrude_depth = 20.0f;
+const float c_extrude_depth = 1.0f;
 
 #define CELLSIZE 16
 
