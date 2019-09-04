@@ -177,6 +177,8 @@ void DrThing::addComponent3D() {
                            "Rotation X", "Rotational speed of object on the X Axis, does not affect physics.");
     addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Y_Axis_Speed, Property_Type::Double, 0.0,
                            "Rotation Y", "Rotational speed of object on the Y Axis, does not affect physics.");
+    addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Billboard, Property_Type::Bool, false,
+                           "Billboard?", "Keeps this object facing toward camera no matter the camera position or camera angle.");
 }
 
 void DrThing::addComponentLighting() {

@@ -192,6 +192,7 @@ enum class Properties {
     Thing_3D_Depth,                 //positive double
     Thing_3D_X_Axis_Speed,          //double
     Thing_3D_Y_Axis_Speed,          //double
+    Thing_3D_Billboard,             //bool
 
 
     // ********** Thing Specific

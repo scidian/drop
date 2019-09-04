@@ -148,6 +148,19 @@ void DrOpenGL::drawObjectExtrude(DrEngineThing *thing, DrThingType &last_thing) 
     float now = static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 10.f);
     QMatrix4x4 matrix;
     matrix.translate(x, y, z);
+
+    if (m_engine->getCurrentWorld()->render_type == Render_Type::Perspective && object->getBillboard()) {
+        QMatrix4x4  pmv = (m_projection * m_model_view);
+        // Get length of first row as scale factor
+        float       scale_factor = pmv.row(0).toVector3D().length();
+        // Get upper left 3x3 sub-matrix and unscale
+        QMatrix3x3  parent_rotation = pmv.toGenericMatrix<3,3>();
+                    parent_rotation *= 1.0f / scale_factor;
+        QQuaternion inverse_parent_rotation = QQuaternion::fromRotationMatrix(parent_rotation).inverted();
+        // Set as rotation
+        matrix.rotate(inverse_parent_rotation);
+    }
+
     if (qFuzzyCompare(object->getAngleX(), 0.0) == false) matrix.rotate(now * static_cast<float>(object->getAngleX()), 1.f, 0.f, 0.f);
     if (qFuzzyCompare(object->getAngleY(), 0.0) == false) matrix.rotate(now * static_cast<float>(object->getAngleY()), 0.f, 1.f, 0.f);
     matrix.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);

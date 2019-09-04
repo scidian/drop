@@ -52,6 +52,7 @@ private:
     // Thing Properties - 3D
     double          m_angle_x =   0.0;                  // X axis rotation speed
     double          m_angle_y =   0.0;                  // Y axis rotation speed
+    bool            m_billboard = false;                // Keeps object facing camera
     double          m_extrusion = 0.0;                  // Desired 3D Depth of 2D Objects
 
     // Thing Properties - Camera
@@ -119,10 +120,12 @@ public:
     // 3D Properties
     const double&           getAngleX() {       return m_angle_x; }                         // Returns Thing X Axis Rotation (in degrees)
     const double&           getAngleY() {       return m_angle_y; }                         // Returns Thing Y Axis Rotation (in degrees)
+    const bool&             getBillboard() {    return m_billboard; }
     const double&           getExtrusion() {    return m_extrusion; }                       // Returns Thing 3D Extrusion Depth
 
     void                    setAngleX(double new_angle_x) {     m_angle_x = new_angle_x; }
     void                    setAngleY(double new_angle_y) {     m_angle_y = new_angle_y; }
+    void                    setBillboard(bool billboard) {      m_billboard = billboard; }
     void                    setExtrusion(double new_depth) {    m_extrusion = new_depth; }
 
 };
