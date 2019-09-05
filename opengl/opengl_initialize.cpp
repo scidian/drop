@@ -49,8 +49,16 @@ void DrOpenGL::initializeGL() {
     m_whole_texture_coordinates[4] = 1;    m_whole_texture_coordinates[5] = 0;
     m_whole_texture_coordinates[6] = 0;    m_whole_texture_coordinates[7] = 0;
 
+    m_quad_vertices.clear();
+    m_quad_vertices.resize( 12 );              // in sets of x, y, z
+    m_quad_vertices[ 0] =  0.5;    m_quad_vertices[ 1] =  0.5;    m_quad_vertices[ 2] = 0.0;    // Top Right
+    m_quad_vertices[ 3] = -0.5;    m_quad_vertices[ 4] =  0.5;    m_quad_vertices[ 5] = 0.0;    // Top Left
+    m_quad_vertices[ 6] =  0.5;    m_quad_vertices[ 7] = -0.5;    m_quad_vertices[ 8] = 0.0;    // Bottom Right
+    m_quad_vertices[ 9] = -0.5;    m_quad_vertices[10] = -0.5;    m_quad_vertices[11] = 0.0;    // Bottom Left
+
     loadBuiltInTextures();
     loadProjectTextures();
+    loadBuiltInModels();
     loadShaders();
 }
 
@@ -71,7 +79,8 @@ void DrOpenGL::importTexture(long texture_id, QPixmap &pixmap) {
     ///if (asset) { if (asset->getName() == "moon plant 6") { DrImaging::averageColor(pixmap, true); } }
 
     // 3D Extruded Textures
-    m_texture_data[texture_id] = new DrEngineVertexData( pixmap );
+    m_texture_data[texture_id] = new DrEngineVertexData();
+    m_texture_data[texture_id]->initializeExtrudedPixmap( pixmap );
 
     m_texture_vbos[texture_id] = new QOpenGLBuffer();
     m_texture_vbos[texture_id]->create();
@@ -132,6 +141,19 @@ void DrOpenGL::loadProjectTextures() {
     }
 }
 
+//####################################################################################
+//##        Built in 3D Models
+//####################################################################################
+void DrOpenGL::loadBuiltInModels() {
+    // Cube to use to turn textures into cubes
+    m_cube_data = new DrEngineVertexData();
+    m_cube_data->initializeTextureCube();
+    m_cube_vbo =  new QOpenGLBuffer();
+    m_cube_vbo->create();
+    m_cube_vbo->bind();
+    m_cube_vbo->allocate(m_cube_data->constData(), m_cube_data->count() * static_cast<int>(sizeof(GLfloat)));
+    m_cube_vbo->release();
+}
 
 //####################################################################################
 //##        Shaders

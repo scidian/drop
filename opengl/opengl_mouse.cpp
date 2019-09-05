@@ -45,6 +45,7 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                 if (QRandomGenerator::global()->bounded(0, 2) == 0) {
                     circle = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, x, y, z);
                 } else {
+                    ///circle = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, x, y, z);
                     circle = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, x, y, z, QPointF(2, 1));
                 }
                 circle->addShapeCircle(ball_radius, c_center);
@@ -89,6 +90,8 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
             for (int i = 0; i < 25; i++ ) {
                 DrEngineObject *block = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Block, x, y, z);
                 block->addShapeBoxFromTexture(Asset_Textures::Block);
+                block->set3DType(Convert_3D_Type::Cube);
+                block->setDepth(61);
                 world->addThing(block);
 
                 double hue = QRandomGenerator::global()->bounded(1.0);

@@ -68,12 +68,13 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type, bool use_offset) {
 
     // Orthographic
     if (render_type == Render_Type::Orthographic) {
-        float left =   m_eye.x() - (width() *  devicePixelRatio() / 2.0f);
-        float right =  m_eye.x() + (width() *  devicePixelRatio() / 2.0f);
-        float top =    m_eye.y() + (height() * devicePixelRatio() / 2.0f);
-        float bottom = m_eye.y() - (height() * devicePixelRatio() / 2.0f);
+        QVector3D frame = QVector3D( cam_x, cam_y, 0.f );
+        float left =   frame.x() - (width() *  devicePixelRatio() / 2.0f);
+        float right =  frame.x() + (width() *  devicePixelRatio() / 2.0f);
+        float top =    frame.y() + (height() * devicePixelRatio() / 2.0f);
+        float bottom = frame.y() - (height() * devicePixelRatio() / 2.0f);
         m_projection.ortho( left, right, bottom, top, c_near_plane * m_scale, c_far_plane * m_scale);
-        ///m_model_view.lookAt(m_eye, m_look_at, m_up);
+        //m_model_view.lookAt(m_eye, m_look_at, m_up);
         m_model_view.scale( m_scale );
 
     // Perspective

@@ -158,14 +158,16 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     block->negative =       negative;
 
     // ***** 3D Settings
-    double extrusion =      thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Depth).toDouble();
+    int    convert_type =   thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Type).toInt();
+    double depth =          thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Depth).toDouble();
     double x_axis_speed =   thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_X_Axis_Speed).toDouble() / 100.0;
     double y_axis_speed =   thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Y_Axis_Speed).toDouble() / 100.0;
     bool   billboard =      thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Billboard).toBool();
-    block->setExtrusion(extrusion);
+    block->set3DType(static_cast<Convert_3D_Type>(convert_type));
     block->setAngleX( x_axis_speed );
     block->setAngleY( y_axis_speed );
     block->setBillboard( billboard );
+    block->setDepth(depth);
 }
 
 

@@ -91,11 +91,14 @@ private:
 
     long            m_triangles = 0;                            // Tracks how many triangles are drawn every frame, including occluder map draws
 
-    std::vector<float>       m_whole_texture_coordinates;       // Used to keep the coordinates of rendering an entire texture
+    std::vector<float>      m_whole_texture_coordinates;        // Used to keep the coordinates of rendering an entire texture
+    QVector<GLfloat>        m_quad_vertices;                    // Used to keep standard 2D textured quad coordinates
 
     // VBO's
     std::map<long, QOpenGLBuffer*>      m_texture_vbos;         // Stores extruded texture vbo's
     std::map<long, DrEngineVertexData*> m_texture_data;         // Stores extruded texture vertex data
+    QOpenGLBuffer                      *m_cube_vbo;             // Stores cube vbo, to use to turn a texture into a cube
+    DrEngineVertexData                 *m_cube_data;            // Stores cube vertex data, to use to turn a texture into a cube
 
     // Frame Buffers
     QOpenGLFramebufferObject *m_render_fbo = nullptr;           // Used for offscreen rendering
@@ -145,6 +148,7 @@ public:
     // Initialization Calls
     void            importTexture(long texture_id, QString from_asset_string);
     void            importTexture(long texture_id, QPixmap &pixmap);
+    void            loadBuiltInModels();
     void            loadBuiltInTextures();
     void            loadProjectTextures();
     void            loadShaders();
@@ -168,8 +172,7 @@ public:
     bool            drawFrameBufferUsingSwirlShader(QOpenGLFramebufferObject *fbo, DrEngineSwirl *swirl);
     bool            drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water);
     bool            drawGlowBuffer();
-    void            drawObject(DrEngineThing *thing, DrThingType &last_thing);
-    void            drawObjectExtrude(DrEngineThing *thing, DrThingType &last_thing);
+    void            drawObject(DrEngineThing *thing, DrThingType &last_thing, bool draw2D);
     bool            drawObjectFire(DrEngineThing *thing, DrThingType &last_thing);
     bool            drawObjectOccluder(DrEngineThing *thing, bool need_init_shader = true);
     void            drawSpace();
@@ -181,6 +184,8 @@ public:
     QMatrix4x4      orthoMatrix(float width, float height);
     void            updateViewMatrix(Render_Type render_type, bool use_offset);
     void            releaseOffscreenBuffer();
+    void            releaseDefaultAttributeBuffer();
+    void            setDefaultAttributeBuffer();
     void            setShaderDefaultValues(float texture_width, float texture_height);
     void            setNumberTextureCoordinates(QString letter, std::vector<float> &texture_coordinates);
     void            setQuadVertices(QVector<GLfloat> &vertices, float width, float height, QPointF center, float z);

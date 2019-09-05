@@ -56,23 +56,25 @@ void DrOpenGL::drawSpace() {
         if (!has_rendered_glow_lights && (thing->z_order > m_engine->getCurrentWorld()->getGlowZOrder())) {
             has_rendered_glow_lights = drawGlowBuffer();
             last_thing = DrThingType::None;
-        }
+        }      
 
         // ***** Draw Thing with appropriate Shader
+        bool draw2D;
         switch (thing->getThingType()) {
             case DrThingType::Character:
             case DrThingType::Object:
 
                 // If no depth to object, or if in Orthographic mode and object is not rotated on X or Y axis, just draw front face
-                if (qFuzzyCompare(thing->getExtrusion(), 0.0) ||
-                    ((m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) &&
-                            qFuzzyCompare(thing->getAngleX(), 0.0) && qFuzzyCompare(thing->getAngleY(), 0.0)) ) {
-                    drawObject(thing, last_thing);
+                draw2D = qFuzzyCompare(thing->getDepth(), 0.0) || thing->getBillboard() ||
+                         ((m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) &&
+                          qFuzzyCompare(thing->getAngleX(), 0.0) && qFuzzyCompare(thing->getAngleY(), 0.0));
+                if (draw2D && last_thing == DrThingType::Object) {
+                    drawObject(thing, last_thing, draw2D);
                 } else {
                     cullingOn();
                     glEnable(GL_DEPTH_TEST);
                     glDepthFunc(GL_LEQUAL);
-                    drawObjectExtrude(thing, last_thing);
+                    drawObject(thing, last_thing, draw2D);
                     glDisable(GL_DEPTH_TEST);
                     cullingOff();
                 }

@@ -13,6 +13,7 @@
 #include <QVector2D>
 #include <QVector3D>
 
+
 // Local Constants
 const int c_vertex_length = 8;          // 8 is (3) for xyz, (3) for normal, and (2) for texture coordinate
 
@@ -29,7 +30,7 @@ private:
 
 public:
     // Constructor
-    DrEngineVertexData(QPixmap &pixmap);
+    DrEngineVertexData();
 
     // Properties
     const GLfloat  *constData() const {     return m_data.constData(); }
@@ -38,9 +39,18 @@ public:
     int             vertexCount() const {   return m_count / c_vertex_length; }
 
     // Creation Functions
+    void    initializeExtrudedPixmap(QPixmap &pixmap);
+    void    initializeTextureCube();
+    void    initializeTextureQuad();
+
+    // Building Functions
     void    add(const QVector3D &v, const QVector3D &n, const QVector2D &t);
     void    extrude(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
                     GLfloat x2, GLfloat y2, GLfloat tx2, GLfloat ty2);
+    void    cube(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
+                 GLfloat x2, GLfloat y2, GLfloat tx2, GLfloat ty2,
+                 GLfloat x3, GLfloat y3, GLfloat tx3, GLfloat ty3,
+                 GLfloat x4, GLfloat y4, GLfloat tx4, GLfloat ty4);
     void    quad(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
                  GLfloat x2, GLfloat y2, GLfloat tx2, GLfloat ty2,
                  GLfloat x3, GLfloat y3, GLfloat tx3, GLfloat ty3,
@@ -52,6 +62,14 @@ public:
 
 
 #endif // OPENGL_VBO_H
+
+
+
+
+
+
+
+
 
 
 

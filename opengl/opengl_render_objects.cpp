@@ -21,7 +21,7 @@
 //####################################################################################
 //##        Draws a DrEngineObject effect type with default shader
 //####################################################################################
-void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing) {
+void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool draw2D) {
     if (thing->getThingType() != DrThingType::Object) return;
     DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
     if (!object) return;
@@ -49,99 +49,17 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing) {
 
         // Fancy Seperate RGB/Alpha Blend Functions
         ///glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);        // Premultiplied alpha blend
+    }
 
-        // Set Matrix for Shader, calculates current matrix
-        m_default_shader.setUniformValue( u_default_matrix, (m_projection * m_model_view) );
-
-        // Set Texture Coordinates for Shader
+    // ***** If we should render as just a simple textured quad, set texture coordinates and quad vertices
+    if (draw2D) {
         m_default_shader.setAttributeArray(    a_default_texture_coord, m_whole_texture_coordinates.data(), 2 );
         m_default_shader.enableAttributeArray( a_default_texture_coord );
+        m_default_shader.setAttributeArray(    a_default_vertex, m_quad_vertices.data(), 3 );
+        m_default_shader.enableAttributeArray( a_default_vertex );
     }
 
-    // ***** Get texture to render with, set texture coordinates
-    DrEngineTexture *texture = m_engine->getTexture(object->getTextureNumber());
-    if (!texture->texture()->isBound()) {
-        texture->texture()->bind();
-    }
-    float texture_width =  texture->width();
-    float texture_height = texture->height();
-
-    // ***** Load vertices for this object
-    QVector<GLfloat> vertices;
-    getThingVertices(vertices, object);
-    m_default_shader.setAttributeArray(    a_default_vertex, vertices.data(), 3 );
-    m_default_shader.enableAttributeArray( a_default_vertex );
-
-    // ***** Set Shader Variables
-    m_default_shader.setUniformValue( u_default_texture, 0 );                           // Use texture unit 0
-
-    // Fade away dying object
-    float alpha = object->getOpacity();                                                 // Start with object alpha
-    if (!object->isAlive() && object->getFadeOnDeath()) {
-        double fade_percent = 1.0 - (static_cast<double>(Dr::MillisecondsElapsed(object->getFadeTimer())) / static_cast<double>(object->getFadeDelay()));
-        alpha *= static_cast<float>(fade_percent);
-    }
-    m_default_shader.setUniformValue( u_default_alpha,          alpha );
-    m_default_shader.setUniformValue( u_default_tint,           0.0f, 0.0f, 0.0f );
-    m_default_shader.setUniformValue( u_default_average_color,  0.0f, 0.0f, 0.0f );
-    m_default_shader.setUniformValue( u_default_width,          texture_width );
-    m_default_shader.setUniformValue( u_default_height,         texture_height );
-    m_default_shader.setUniformValue( u_default_time,           static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
-    m_default_shader.setUniformValue( u_default_pre,            true );
-
-    m_default_shader.setUniformValue( u_default_bitrate,        object->bitrate );
-    m_default_shader.setUniformValue( u_default_pixel_x,        object->pixel_x );
-    m_default_shader.setUniformValue( u_default_pixel_y,        object->pixel_y );
-    m_default_shader.setUniformValue( u_default_pixel_offset,   0.0f, 0.0f );
-    m_default_shader.setUniformValue( u_default_negative,       object->negative );
-    m_default_shader.setUniformValue( u_default_grayscale,      object->grayscale );
-    m_default_shader.setUniformValue( u_default_hue,            object->hue );
-    m_default_shader.setUniformValue( u_default_saturation,     object->saturation );
-    m_default_shader.setUniformValue( u_default_contrast,       object->contrast );
-    m_default_shader.setUniformValue( u_default_brightness,     object->brightness );
-
-    m_default_shader.setUniformValue( u_default_shade_away,     false );
-
-    m_default_shader.setUniformValue( u_default_cartoon,        false );
-    m_default_shader.setUniformValue( u_default_wavy,           false );
-
-    // ***** Draw triangles using shader program
-    glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
-
-    // Release bound items
-    m_default_shader.disableAttributeArray( a_default_vertex );
-    ///m_default_shader.disableAttributeArray( a_default_texture_coord );
-    ///m_default_shader.release();
-
-    addTriangles( 2 );
-    last_thing = DrThingType::Object;
-}
-
-
-
-
-
-//####################################################################################
-//##        Draws a DrEngineObject effect type with default shader
-//####################################################################################
-void DrOpenGL::drawObjectExtrude(DrEngineThing *thing, DrThingType &last_thing) {
-    if (thing->getThingType() != DrThingType::Object) return;
-    DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-    if (!object) return;
-
-    // ***** Don't draw Segments (lines)
-    if (object->shapes.count() > 0) {
-        if (object->shape_type[object->shapes[0]] == Shape_Type::Segment) return;
-    }
-
-    // ***** Enable shader program
-    if (!m_default_shader.bind()) return;
-
-    // Blend function
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);                    // Premultiplied alpha blend
-
-    // Set Matrix for Shader, calculates current matrix, adds in object location
+    // ***** Set Matrix for Shader, calculates current matrix, adds in object location
     float x =   static_cast<float>(thing->getPosition().x());
     float y =   static_cast<float>(thing->getPosition().y());
     float z =   static_cast<float>(thing->z_order);
@@ -149,7 +67,7 @@ void DrOpenGL::drawObjectExtrude(DrEngineThing *thing, DrThingType &last_thing) 
     QMatrix4x4 matrix;
     matrix.translate(x, y, z);
 
-    if (m_engine->getCurrentWorld()->render_type == Render_Type::Perspective && object->getBillboard()) {
+    if (object->getBillboard()) {
         QMatrix4x4  pmv = (m_projection * m_model_view);
         // Get length of first row as scale factor
         float       scale_factor = pmv.row(0).toVector3D().length();
@@ -164,16 +82,20 @@ void DrOpenGL::drawObjectExtrude(DrEngineThing *thing, DrThingType &last_thing) 
     if (qFuzzyCompare(object->getAngleX(), 0.0) == false) matrix.rotate(now * static_cast<float>(object->getAngleX()), 1.f, 0.f, 0.f);
     if (qFuzzyCompare(object->getAngleY(), 0.0) == false) matrix.rotate(now * static_cast<float>(object->getAngleY()), 0.f, 1.f, 0.f);
     matrix.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
-    matrix.scale( object->getScaleX(), object->getScaleY(), static_cast<float>(object->getExtrusion()) );
+    if (draw2D || object->get3DType() == Convert_3D_Type::Cube)
+        matrix.scale(static_cast<float>(object->getSize().x()), static_cast<float>(object->getSize().y()), 1.f);
+    matrix.scale( object->getScaleX(), object->getScaleY(), static_cast<float>(object->getDepth()) );
+
     m_default_shader.setUniformValue( u_default_matrix,         (m_projection * m_model_view * matrix) );
     m_default_shader.setUniformValue( u_default_matrix_object,  (matrix) );
 
     // Remove scaling from camera position for shading calculations
-    QMatrix4x4 matrix_eye;  matrix_eye.setToIdentity();
+    QMatrix4x4 matrix_eye;
     matrix_eye.scale(1.f/m_scale);
     QVector3D eye_move = matrix_eye * m_eye;
 
-    // Get texture to render with, set texture coordinates
+
+    // ***** Get texture to render with, set texture coordinates
     DrEngineTexture *texture = m_engine->getTexture(object->getTextureNumber());
     if (!texture->texture()->isBound()) {
         texture->texture()->bind();
@@ -184,7 +106,6 @@ void DrOpenGL::drawObjectExtrude(DrEngineThing *thing, DrThingType &last_thing) 
 
     // ***** Set Shader Variables
     m_default_shader.setUniformValue( u_default_texture, 0 );                           // Use texture unit 0
-
     m_default_shader.setUniformValue( u_default_average_color,
                                         static_cast<float>(texture->averageColor().redF()),
                                         static_cast<float>(texture->averageColor().greenF()),
@@ -198,7 +119,7 @@ void DrOpenGL::drawObjectExtrude(DrEngineThing *thing, DrThingType &last_thing) 
     m_default_shader.setUniformValue( u_default_bitrate,        object->bitrate );
     m_default_shader.setUniformValue( u_default_pixel_x,        object->pixel_x );
     m_default_shader.setUniformValue( u_default_pixel_y,        object->pixel_y );
-    m_default_shader.setUniformValue( u_default_pixel_offset,   0.0f, 0.0f );
+    m_default_shader.setUniformValue( u_default_pixel_offset,   0.5f, 0.5f );
     m_default_shader.setUniformValue( u_default_negative,       object->negative );
     m_default_shader.setUniformValue( u_default_grayscale,      object->grayscale );
     m_default_shader.setUniformValue( u_default_hue,            object->hue );
@@ -206,7 +127,7 @@ void DrOpenGL::drawObjectExtrude(DrEngineThing *thing, DrThingType &last_thing) 
     m_default_shader.setUniformValue( u_default_contrast,       object->contrast );
     m_default_shader.setUniformValue( u_default_brightness,     object->brightness );
 
-    m_default_shader.setUniformValue( u_default_shade_away,     true );
+    m_default_shader.setUniformValue( u_default_shade_away,     !draw2D );
     m_default_shader.setUniformValue( u_default_camera_pos,     eye_move.x(), eye_move.y(), eye_move.z() );
     m_default_shader.setUniformValue( u_default_cartoon,        false );
     m_default_shader.setUniformValue( u_default_wavy,           false );
@@ -221,30 +142,52 @@ void DrOpenGL::drawObjectExtrude(DrEngineThing *thing, DrThingType &last_thing) 
 
 
     // ***** Draw triangles using shader program
-    m_texture_vbos[object->getTextureNumber()]->bind();
+    if (draw2D) {
+        glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
+        m_default_shader.disableAttributeArray( a_default_vertex );
+        ///m_default_shader.disableAttributeArray( a_default_texture_coord );
+        addTriangles( 2 );
+        last_thing = DrThingType::Object;
+
+    } else if (object->get3DType() == Convert_3D_Type::Cube) {
+        m_cube_vbo->bind();
+        setDefaultAttributeBuffer();
+        glDrawArrays(GL_TRIANGLES, 0, m_cube_data->vertexCount() );
+        m_cube_vbo->release();
+        addTriangles( 12 );
+        releaseDefaultAttributeBuffer();
+        last_thing = DrThingType::None;
+
+    } else {
+        m_texture_vbos[object->getTextureNumber()]->bind();
+        setDefaultAttributeBuffer();
+        glDrawArrays(GL_TRIANGLES, 0, m_texture_data[object->getTextureNumber()]->vertexCount() );
+        m_texture_vbos[object->getTextureNumber()]->release();
+        addTriangles( m_texture_data[object->getTextureNumber()]->triangleCount() );
+        releaseDefaultAttributeBuffer();
+        last_thing = DrThingType::None;
+    }
+
+    ///m_default_shader.release();
+}
+
+// Bind vertex array
+void DrOpenGL::setDefaultAttributeBuffer() {
+    int float_size = sizeof(GLfloat);
     m_default_shader.enableAttributeArray(  PROGRAM_VERTEX_ATTRIBUTE);
     m_default_shader.enableAttributeArray(  PROGRAM_TEXCOORD_ATTRIBUTE);
     m_default_shader.enableAttributeArray(  PROGRAM_NORMAL_ATTRIBUTE);
-    m_default_shader.setAttributeBuffer(    PROGRAM_VERTEX_ATTRIBUTE,   GL_FLOAT, 0                  , 3, c_vertex_length * sizeof(GLfloat));
-    m_default_shader.setAttributeBuffer(    PROGRAM_TEXCOORD_ATTRIBUTE, GL_FLOAT, 6 * sizeof(GLfloat), 2, c_vertex_length * sizeof(GLfloat));
-    m_default_shader.setAttributeBuffer(    PROGRAM_NORMAL_ATTRIBUTE,   GL_FLOAT, 3 * sizeof(GLfloat), 3, c_vertex_length * sizeof(GLfloat));
-    glDrawArrays(GL_TRIANGLES, 0, m_texture_data[object->getTextureNumber()]->vertexCount() );
-    m_texture_vbos[object->getTextureNumber()]->release();
+    m_default_shader.setAttributeBuffer(    PROGRAM_VERTEX_ATTRIBUTE,   GL_FLOAT, 0             , 3, c_vertex_length * float_size);
+    m_default_shader.setAttributeBuffer(    PROGRAM_TEXCOORD_ATTRIBUTE, GL_FLOAT, 6 * float_size, 2, c_vertex_length * float_size);
+    m_default_shader.setAttributeBuffer(    PROGRAM_NORMAL_ATTRIBUTE,   GL_FLOAT, 3 * float_size, 3, c_vertex_length * float_size);
+}
 
-
-    // Release bound items
+// Release bound items
+void DrOpenGL::releaseDefaultAttributeBuffer() {
     m_default_shader.disableAttributeArray( PROGRAM_VERTEX_ATTRIBUTE );
     m_default_shader.disableAttributeArray( PROGRAM_TEXCOORD_ATTRIBUTE );
     m_default_shader.disableAttributeArray( PROGRAM_NORMAL_ATTRIBUTE );
-    m_default_shader.release();
-
-    addTriangles( m_texture_data[object->getTextureNumber()]->triangleCount() );
-    last_thing = DrThingType::None;
 }
-
-
-
-
 
 
 //####################################################################################
@@ -288,7 +231,7 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
     // ***** Load vertices for this object
     QVector<GLfloat> vertices;
     getThingVertices(vertices, object);
-    m_occluder_shader.setAttributeArray( a_occluder_vertex, vertices.data(), 3 );
+    m_occluder_shader.setAttributeArray(    a_occluder_vertex, vertices.data(), 3 );
     m_occluder_shader.enableAttributeArray( a_occluder_vertex );
 
     // ***** Set Shader Variables
@@ -368,7 +311,7 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     // ***** Load vertices for this object
     QVector<GLfloat> vertices;
     getThingVertices(vertices, fire);
-    m_fire_shader.setAttributeArray( a_fire_vertex, vertices.data(), 3 );
+    m_fire_shader.setAttributeArray(    a_fire_vertex, vertices.data(), 3 );
     m_fire_shader.enableAttributeArray( a_fire_vertex );
 
     // ***** Set Shader Variables

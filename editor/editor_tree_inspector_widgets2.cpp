@@ -173,6 +173,9 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
                 << tr("Candle")
                 << tr("Square")
                 << tr("Triangle");
+    } else if   (property_key == static_cast<int>(Properties::Thing_3D_Type)) {
+        options << tr("Extruded")
+                << tr("Wrapped Cube");
     } else {
         options << tr("Unknown List");
     }

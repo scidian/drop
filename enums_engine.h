@@ -130,7 +130,10 @@ enum class Light_Type {
     Glow,
 };
 
-
+enum class Convert_3D_Type {            // !!!!! Order is important
+    Extrusion = 0,
+    Cube =      1,
+};
 
 
 //####################################################################################

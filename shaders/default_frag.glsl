@@ -279,20 +279,22 @@ void main( void ) {
     vec4 texture_color;
     if (u_pixel_x > 1.0 || u_pixel_y > 1.0) {       
 
-        highp float pixel_width =  (1.0 / (u_width));
-        highp float pixel_height = (1.0 / (u_height));
+        highp float pixel_width =  1.0 / u_width;
+        highp float pixel_height = 1.0 / u_height;
 
         // ***** Method 1
-        highp float real_pixel_x = ((coords.x / 1.0) * u_width) - (fract(u_pixel_offset.x)*u_zoom);
-        highp float real_pixel_y = (((1.0 - coords.y) / 1.0) * u_height) - (fract(u_pixel_offset.y)*u_zoom);
-        highp float pixel_x =       u_pixel_x * floor(real_pixel_x / u_pixel_x) * pixel_width;
-        highp float pixel_y = 1.0 - u_pixel_y * floor(real_pixel_y / u_pixel_y) * pixel_height;
+        highp float real_pixel_x =        (coords.x  * u_width)  + (fract(u_pixel_offset.x) * u_zoom);
+        highp float real_pixel_y = ((1.0 - coords.y) * u_height) + (fract(u_pixel_offset.y) * u_zoom);
+        highp float pixel_x =       ((u_pixel_x * floor(real_pixel_x / u_pixel_x) + u_pixel_x/2.0) * pixel_width);
+        highp float pixel_y = 1.0 - ((u_pixel_y * floor(real_pixel_y / u_pixel_y) + u_pixel_y/2.0) * pixel_height);
 
         // ***** Method 2
-        //highp float dx = u_pixel_x * pixel_width;
-        //highp float dy = u_pixel_y * pixel_height;
-        //highp float pixel_x = dx * floor(coords.x / dx) + (dx / 2.0) - (fract(u_pixel_offset.x) * pixel_width);
-        //highp float pixel_y = dy * floor(coords.y / dy) + (dy / 2.0) - (fract(u_pixel_offset.y) * pixel_height);
+        //highp float dx =        u_pixel_x * pixel_width;
+        //highp float dy =        u_pixel_y * pixel_height;
+        //highp float fract_x =   fract(u_pixel_offset.x) * pixel_width;
+        //highp float fract_y =   fract(u_pixel_offset.y) * pixel_height;
+        //highp float pixel_x =   dx * floor((coords.x - fract_x) / dx) + (dx / 2.0);
+        //highp float pixel_y =   dy * floor((coords.y - fract_y) / dy) + (dy / 2.0);
 
         texture_color = texture2D(u_texture, highp vec2(pixel_x, pixel_y)).rgba;
     } else {

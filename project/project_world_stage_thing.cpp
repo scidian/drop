@@ -169,9 +169,12 @@ void DrThing::addComponentMovement() {
 }
 
 void DrThing::addComponent3D() {
-    addComponent(Components::Thing_3D, "3D Extrusion", "Turns 2D Objects in 3D, rotates 3D Objects.", Component_Colors::Orange_Pastel, true);
+    addComponent(Components::Thing_3D, "3D Properties", "Turns 2D Objects in 3D, rotates 3D Objects.", Component_Colors::Orange_Pastel, true);
     getComponent(Components::Thing_3D)->setIcon(Component_Icons::Object);
-    addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Depth, Property_Type::PositiveDouble, 25.0,
+    addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Type, Property_Type::List, 0,
+                           "Type", "How this object is represented in 3D. The texture can be Extruded (pulled) into the 3rd dimension. Or it can be Wrapped "
+                                   "onto a Cube.");
+    addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Depth, Property_Type::PositiveDouble, 50.0,
                            "Depth", "Depth of Object in pixels when appearing in 3D.");
     addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_X_Axis_Speed, Property_Type::Double, 0.0,
                            "Rotation X", "Rotational speed of object on the X Axis, does not affect physics.");

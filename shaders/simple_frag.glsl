@@ -28,12 +28,17 @@ void main( void ) {
 
     // ***** Grab coordinates into an editable vec2
     vec2 coords = coordinates;
+    vec4 texture_color = texture2D(u_texture, coords.st).rgba;
 
+    highp vec4 alpha_in = vec4(u_alpha, u_alpha, u_alpha, u_alpha);                 // For adding in existing opacity of object
+    highp vec3 frag_rgb = texture_color.rgb;                                        // Save rgb as a vec3 for working with
+
+    // ***** Don't draw fragment to depth buffer if mostly invisible
+    if (texture_color.a < 0.05) discard;
 
 
     // ***** Final Output
-    gl_FragColor = texture2D(u_texture, coords) * vec4(u_alpha, u_alpha, u_alpha, u_alpha);
-    if (gl_FragColor.a < 0.05) discard;
+    gl_FragColor = highp vec4(frag_rgb, texture_color.a) * alpha_in;
 }
 
 

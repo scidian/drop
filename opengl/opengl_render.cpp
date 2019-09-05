@@ -149,7 +149,7 @@ void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height)
     m_default_shader.setUniformValue( u_default_bitrate,        256.0f );
     m_default_shader.setUniformValue( u_default_pixel_x,        1.0f );
     m_default_shader.setUniformValue( u_default_pixel_y,        1.0f );
-    m_default_shader.setUniformValue( u_default_pixel_offset,   0.0f, 0.0f );
+    m_default_shader.setUniformValue( u_default_pixel_offset,   0.5f, 0.5f );
     m_default_shader.setUniformValue( u_default_negative,       false );
     m_default_shader.setUniformValue( u_default_grayscale,      false );
     m_default_shader.setUniformValue( u_default_hue,            0.0f );
