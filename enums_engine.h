@@ -80,7 +80,8 @@ enum class Render_Type {
 };
 
 enum class Matrix_Type {
-    Model_View,
+    Model,
+    View,
     Projection,
 };
 

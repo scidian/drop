@@ -284,7 +284,7 @@ bool DrOpenGL::draw2DLight(DrEngineLight *light) {
 
     // Set Matrix for to draw the Light, turn off perspective offset before drawing light
     updateViewMatrix(m_engine->getCurrentWorld()->render_type, false);
-    QMatrix4x4 m_matrix = m_projection * m_model_view;
+    QMatrix4x4 m_matrix = m_projection * m_view;
     m_light_shader.setUniformValue( u_light_matrix, m_matrix );
     updateViewMatrix(m_engine->getCurrentWorld()->render_type, c_use_cam_offset);
 

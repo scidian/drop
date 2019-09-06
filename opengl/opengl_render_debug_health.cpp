@@ -73,7 +73,7 @@ void DrOpenGL::drawDebugHealthNative(QPainter &painter) {
     texture->texture()->bind();
 
     // ***** Set Matrix for Shader, calculates current matrix
-    QMatrix4x4 m_matrix = m_projection * m_model_view;
+    QMatrix4x4 m_matrix = m_projection * m_view;
     m_default_shader.setUniformValue( u_default_matrix, m_matrix );
 
     // ***** Loop through each object and draws its health

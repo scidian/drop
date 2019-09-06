@@ -18,6 +18,59 @@
 #include "project/project_asset.h"
 
 
+QMatrix4x4 billboardSphericalBegin(QVector3D camera, QVector3D object, QMatrix4x4 model_view_projection, bool cylindrical_only = false) {
+    QMatrix4x4 mvp = model_view_projection;
+    QVector3D  look_at, obj_to_cam_proj, up_aux, obj_to_cam;
+    float      angle_cosine;
+
+    // obj_to_cam_proj is the vector in world coordinates from the local origin to the camera projected in the XZ plane
+    obj_to_cam_proj.setX( camera.x() - object.x() );
+    obj_to_cam_proj.setY( 0 );
+    obj_to_cam_proj.setZ( camera.z() - object.z() );
+
+    // This is the original look_at vector for the object in world coordinates
+    look_at = QVector3D(0, 0, 1);
+
+    // Normalize both vectors to get the cosine directly afterwards
+    obj_to_cam_proj.normalize();
+
+    // Easy fix to determine wether the angle is -/+:
+    //      For positive angles up_aux will be a vector pointing in the positive y direction,
+    //      Otherwise up_aux will point downwards effectively reversing the rotation
+    up_aux = QVector3D::crossProduct(look_at, obj_to_cam_proj);
+
+    // Compute the angle
+    angle_cosine = QVector3D::dotProduct(look_at, obj_to_cam_proj);
+
+    // Perform the rotation
+    if ((angle_cosine < 0.9999f) && (angle_cosine > -0.9999f)) {
+        mvp.rotate( acos(angle_cosine)*180.f/3.14f, up_aux.x(), up_aux.y(), up_aux.z());
+    }
+
+    // So far it is just a cylindrical billboard, now the second part tilts the object so that it faces the camera
+    // "obj_to_cam" is the vector in world coordinates from the local origin to the camera
+    if (cylindrical_only) return mvp;
+    obj_to_cam.setX( camera.x() - object.x() );
+    obj_to_cam.setY( camera.y() - object.y() );
+    obj_to_cam.setZ( camera.z() - object.z() );
+
+    // Normalize to get the cosine afterwards
+    obj_to_cam.normalize();
+
+    // Compute the angle between obj_to_cam_proj and obj_to_cam, i.e. compute the required angle for the lookup vector
+    angle_cosine = QVector3D::dotProduct(obj_to_cam_proj, obj_to_cam);
+
+    // Tilt the object
+    if ((angle_cosine < 0.9999f) && (angle_cosine > -0.9999f)) {
+        if (obj_to_cam.y() < 0) mvp.rotate( acos(angle_cosine)*180.f/3.14f,  1, 0, 0 );
+        else                    mvp.rotate( acos(angle_cosine)*180.f/3.14f, -1, 0, 0 );
+    }
+
+    return mvp;
+}
+
+
+
 //####################################################################################
 //##        Draws a DrEngineObject effect type with default shader
 //####################################################################################
@@ -62,32 +115,42 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     // ***** Set Matrix for Shader, calculates current matrix, adds in object location
     float x =   static_cast<float>(thing->getPosition().x());
     float y =   static_cast<float>(thing->getPosition().y());
-    float z =   static_cast<float>(thing->z_order);
-    float now = static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 10.f);
-    QMatrix4x4 matrix;
-    matrix.translate(x, y, z);
+    float z =   static_cast<float>(thing->z_order + m_add_z);
+    double now = QTime::currentTime().msecsSinceStartOfDay() / 10.0;
 
+    // Translate
+    QMatrix4x4 model;
+    model.translate(x, y, z);
+
+    // Rotate
+    if (qFuzzyCompare(object->getAngleX(), 0.0) == false || qFuzzyCompare(object->getRotateSpeedX(), 0.0) == false)
+        model.rotate(static_cast<float>(object->getAngleX() + (now * object->getRotateSpeedX())), 1.f, 0.f, 0.f);
+    if (qFuzzyCompare(object->getAngleY(), 0.0) == false || qFuzzyCompare(object->getRotateSpeedY(), 0.0) == false)
+        model.rotate(static_cast<float>(object->getAngleY() + (now * object->getRotateSpeedY())), 0.f, 1.f, 0.f);
+    model.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
+
+    // Rotate Billboards
     if (object->getBillboard()) {
-        QMatrix4x4  pmv = (m_projection * m_model_view);
-        // Get length of first row as scale factor
-        float       scale_factor = pmv.row(0).toVector3D().length();
-        // Get upper left 3x3 sub-matrix and unscale
-        QMatrix3x3  parent_rotation = pmv.toGenericMatrix<3,3>();
-                    parent_rotation *= 1.0f / scale_factor;
-        QQuaternion inverse_parent_rotation = QQuaternion::fromRotationMatrix(parent_rotation).inverted();
-        // Set as rotation
-        matrix.rotate(inverse_parent_rotation);
+        ///QMatrix4x4 pmv = (m_projection * m_view * model);
+        ///// Get length of first row as scale factor
+        ///float       scale_factor = pmv.row(0).toVector3D().length();
+        ///// Get upper left 3x3 sub-matrix and unscale
+        ///QMatrix3x3  parent_rotation = pmv.toGenericMatrix<3,3>();
+        ///            parent_rotation *= 1.0f / scale_factor;
+        ///QQuaternion inverse_parent_rotation = QQuaternion::fromRotationMatrix(parent_rotation).inverted();
+        ///// Set as rotation
+        ///model.rotate(inverse_parent_rotation);
+        model = billboardSphericalBegin( QVector3D(m_eye.x(), m_eye.y(), m_eye.z()),
+                                         QVector3D(x * m_scale, y * m_scale, z), model, false);
     }
 
-    if (qFuzzyCompare(object->getAngleX(), 0.0) == false) matrix.rotate(now * static_cast<float>(object->getAngleX()), 1.f, 0.f, 0.f);
-    if (qFuzzyCompare(object->getAngleY(), 0.0) == false) matrix.rotate(now * static_cast<float>(object->getAngleY()), 0.f, 1.f, 0.f);
-    matrix.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
+    // Scale
     if (draw2D || object->get3DType() == Convert_3D_Type::Cube)
-        matrix.scale(static_cast<float>(object->getSize().x()), static_cast<float>(object->getSize().y()), 1.f);
-    matrix.scale( object->getScaleX(), object->getScaleY(), static_cast<float>(object->getDepth()) );
+        model.scale(static_cast<float>(object->getSize().x()), static_cast<float>(object->getSize().y()), 1.f);
+    model.scale( object->getScaleX(), object->getScaleY(), static_cast<float>(object->getDepth()) );
 
-    m_default_shader.setUniformValue( u_default_matrix,         (m_projection * m_model_view * matrix) );
-    m_default_shader.setUniformValue( u_default_matrix_object,  (matrix) );
+    m_default_shader.setUniformValue( u_default_matrix,         m_projection * m_view * model );
+    m_default_shader.setUniformValue( u_default_matrix_object,  model );
 
     // Remove scaling from camera position for shading calculations
     QMatrix4x4 matrix_eye;
@@ -278,7 +341,7 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);           // Standard non-premultiplied alpha blend
 
     // ***** Set Matrix for Shader, calculates current matrix
-    m_fire_shader.setUniformValue( u_fire_matrix, (m_projection * m_model_view) );
+    m_fire_shader.setUniformValue( u_fire_matrix, (m_projection * m_view) );
 
     // ***** Set Texture Coordinates for Shader
     m_fire_shader.setAttributeArray( a_fire_texture_coord, m_whole_texture_coordinates.data(), 2 );

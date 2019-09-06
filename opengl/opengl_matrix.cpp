@@ -30,7 +30,7 @@ QMatrix4x4 DrOpenGL::orthoMatrix(float width, float height) {
 
 
 //####################################################################################
-//##        Update the view matrices before rendering
+//##        Update the View / Projection matrices before rendering
 //####################################################################################
 void DrOpenGL::updateViewMatrix(Render_Type render_type, bool use_offset) {
     //          Axis:
@@ -39,7 +39,7 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type, bool use_offset) {
     //              -Z back,        +Z front (close to camera)
     float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
 
-    m_model_view.setToIdentity();
+    m_view.setToIdentity();
     m_projection.setToIdentity();
 
     // Set camera position
@@ -74,14 +74,14 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type, bool use_offset) {
         float top =    frame.y() + (height() * devicePixelRatio() / 2.0f);
         float bottom = frame.y() - (height() * devicePixelRatio() / 2.0f);
         m_projection.ortho( left, right, bottom, top, c_near_plane * m_scale, c_far_plane * m_scale);
-        //m_model_view.lookAt(m_eye, m_look_at, m_up);
-        m_model_view.scale( m_scale );
+        ///m_view.lookAt(m_eye, m_look_at, m_up);
+        m_view.scale( m_scale );
 
     // Perspective
     } else {
         m_projection.perspective( c_field_of_view, aspect_ratio, 1.0f, (c_far_plane - c_near_plane) );
-        m_model_view.lookAt(m_eye, m_look_at, m_up);
-        m_model_view.scale( m_scale );
+        m_view.lookAt(m_eye, m_look_at, m_up);
+        m_view.scale( m_scale );
     }
 }
 

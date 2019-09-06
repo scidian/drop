@@ -45,7 +45,7 @@ QPointF DrOpenGL::mapToScreen(QVector3D point3D) {
     x_pos = point3D.x();
     y_pos = point3D.y();
     z_pos = point3D.z();
-    QVector3D vec = QVector3D( x_pos, y_pos, z_pos).project( m_model_view, m_projection, viewport );
+    QVector3D vec = QVector3D( x_pos, y_pos, z_pos).project( m_view, m_projection, viewport );
     return QPointF( static_cast<double>(vec.x()),  static_cast<double>((height() * devicePixelRatio()) - vec.y()) );
 }
 
@@ -59,7 +59,7 @@ QVector3D DrOpenGL::mapFromScreen(QPointF point) {
 
     QVector3D vec;
     if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
-        vec = QVector3D( x_pos, y_pos, 0 ).unproject( m_model_view, m_projection, viewport);
+        vec = QVector3D( x_pos, y_pos, 0 ).unproject( m_view, m_projection, viewport);
         vec.setX( vec.x() );
         vec.setY( vec.y() );
         vec.setZ( vec.z() );
@@ -73,9 +73,9 @@ QVector3D DrOpenGL::mapFromScreen(QPointF point) {
         // Old way to unproject, returns unpredictable z coordinate that cannot easily be moved to z plane 0...
         ///// Find what the Z value is for a projected vector
         ///QVector3D find_z(0, 0, 0);
-        ///find_z = find_z.project(m_model_view, m_projection, viewport);
+        ///find_z = find_z.project(m_view, m_projection, viewport);
         ///// Then we use that Z value to unproject
-        ///vec = QVector3D( x_pos, y_pos, find_z.z()).unproject( m_model_view, m_projection, viewport);
+        ///vec = QVector3D( x_pos, y_pos, find_z.z()).unproject( m_view, m_projection, viewport);
 
         // ********** New Perspective Unproject Method
         // Since two points determine a line, we actually need to call unproject() twice: once with screen z == 0.0, then again with screen z == 1.0
@@ -86,8 +86,8 @@ QVector3D DrOpenGL::mapFromScreen(QPointF point) {
 
         // Unproject at near and far plane
         QVector3D near, far;
-        near = QVector3D( x_pos, y_pos, 0.0f ).unproject( m_model_view, m_projection, viewport);
-        far =  QVector3D( x_pos, y_pos, 1.0f ).unproject( m_model_view, m_projection, viewport);
+        near = QVector3D( x_pos, y_pos, 0.0f ).unproject( m_view, m_projection, viewport);
+        far =  QVector3D( x_pos, y_pos, 1.0f ).unproject( m_view, m_projection, viewport);
 
         // Find distance to z plane 0 as a percentage, and interpolate between the two near and far plane mouse points
         float z_total = abs(near.z()) + abs(far.z());

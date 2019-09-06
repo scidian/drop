@@ -160,7 +160,7 @@ void DrThing::addComponentMovement() {
                            "Vertical",  "Initial vertical movement speed of Object, +/- variable amount.  <br><br> "
                                         "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!", false, false);
     addPropertyToComponent(Components::Thing_Movement, Properties::Thing_Spin_Velocity, Property_Type::Variable, QPointF(0, 0),
-                           "Rotation Z", "Initial rotational speed Object, +/- variable amount. Affects physics.<br><br> "
+                           "Rotation", "Initial rotational speed Object on the Z Axis, +/- variable amount. <br><br> "
                                        "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!", false, false);
     addPropertyToComponent(Components::Thing_Movement, Properties::Thing_Angle_Velocity, Property_Type::Bool, true,
                            "Relative?", "Should the Rotation of this object affect it's Movement direction? (allows Object to move "
@@ -176,12 +176,16 @@ void DrThing::addComponent3D() {
                                    "onto a Cube.");
     addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Depth, Property_Type::PositiveDouble, 50.0,
                            "Depth", "Depth of Object in pixels when appearing in 3D.");
-    addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_X_Axis_Speed, Property_Type::Double, 0.0,
-                           "Rotation X", "Rotational speed of object on the X Axis, does not affect physics.");
-    addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Y_Axis_Speed, Property_Type::Double, 0.0,
-                           "Rotation Y", "Rotational speed of object on the Y Axis, does not affect physics.");
+    addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_X_Axis_Rotation, Property_Type::Variable, QPointF(0, 0),
+                           "Rotation X", "Starting rotation of object on the X Axis, +/- variable amount. Does not affect physics.");
+    addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Y_Axis_Rotation, Property_Type::Variable, QPointF(0, 0),
+                           "Rotation Y", "Starting rotation of object on the Y Axis, +/- variable amount. Does not affect physics.");
+    addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_X_Axis_Speed, Property_Type::Variable, QPointF(0, 0),
+                           "Speed X", "Rotational speed of object on the X Axis, +/- variable amount. Does not affect physics.");
+    addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Y_Axis_Speed, Property_Type::Variable, QPointF(0, 0),
+                           "Speed Y", "Rotational speed of object on the Y Axis, +/- variable amount. Does not affect physics.");
     addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Billboard, Property_Type::Bool, false,
-                           "Billboard?", "Keeps this object facing toward camera no matter the camera position or camera angle.");
+                           "Face Camera?", "Keeps this object facing toward camera no matter the camera position or camera angle.");
 }
 
 void DrThing::addComponentLighting() {

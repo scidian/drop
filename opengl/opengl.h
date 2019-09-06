@@ -75,7 +75,7 @@ private:
     DrEngine       *m_engine;                                   // Pointer to Engine instance that will run in this OpenGLWidget
 
     // Local Variables
-    QMatrix4x4      m_model_view;
+    QMatrix4x4      m_view;
     QMatrix4x4      m_projection;
 
     QVector3D       m_eye;
@@ -90,6 +90,7 @@ private:
     float           m_background_blue = 0;
 
     long            m_triangles = 0;                            // Tracks how many triangles are drawn every frame, including occluder map draws
+    double          m_add_z;                                    // Used to stop z fighting
 
     std::vector<float>      m_whole_texture_coordinates;        // Used to keep the coordinates of rendering an entire texture
     QVector<GLfloat>        m_quad_vertices;                    // Used to keep standard 2D textured quad coordinates

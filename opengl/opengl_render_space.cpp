@@ -40,17 +40,23 @@ void DrOpenGL::cullingOff() {   glDisable( GL_CULL_FACE ); }
 void DrOpenGL::drawSpace() {
 
     // ***** Reset Frame Variables
-    m_triangles = 0;                                        // Reset frame triangle count
-    bool has_rendered_glow_lights = false;                  // Keeps track of if we have rendered the lights yet
+    m_triangles = 0;                                                    // Reset frame triangle count
+    bool has_rendered_glow_lights = false;                              // Keeps track of if we have rendered the lights yet
 
     // This variable was put in so that multiple Water things drawn next to each other will use the same copy of the render fbo as it currently was,
     //      this saves lots of blit calls, and stops some vertical fragments from appearing as they would try to refract each other
     DrThingType last_thing = DrThingType::None;
 
     // ********** Render 2D Objects
-    long &effect_count = m_engine->getCurrentWorld()->effect_count;
-    effect_count = 0;
+    long  &effect_count = m_engine->getCurrentWorld()->effect_count;
+           effect_count = 0;
+    long   thing_count = 0;
+    double last_z; m_add_z = 0.0;                                       // Used to stop z fighting (a.k.a z-fighting, stitching)
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
+
+        if (thing_count == 0) last_z = thing->z_order - 1000.0;
+        if (Dr::IsCloseTo(last_z, thing->z_order, 0.001)) m_add_z += 0.1; else m_add_z = 0.0;
+        last_z = thing->z_order;
 
         // ***** When we have gone past glow z_order, draw the lights to the scene
         if (!has_rendered_glow_lights && (thing->z_order > m_engine->getCurrentWorld()->getGlowZOrder())) {
@@ -65,9 +71,10 @@ void DrOpenGL::drawSpace() {
             case DrThingType::Object:
 
                 // If no depth to object, or if in Orthographic mode and object is not rotated on X or Y axis, just draw front face
-                draw2D = qFuzzyCompare(thing->getDepth(), 0.0) || thing->getBillboard() ||
-                         ((m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) &&
-                          qFuzzyCompare(thing->getAngleX(), 0.0) && qFuzzyCompare(thing->getAngleY(), 0.0));
+                draw2D = qFuzzyCompare(thing->getDepth(), 0.0) ||
+                         (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic &&
+                          qFuzzyCompare(thing->getAngleX(), 0.0)       && qFuzzyCompare(thing->getAngleY(), 0.0) &&
+                          qFuzzyCompare(thing->getRotateSpeedX(), 0.0) && qFuzzyCompare(thing->getRotateSpeedY(), 0.0));
                 if (draw2D && last_thing == DrThingType::Object) {
                     drawObject(thing, last_thing, draw2D);
                 } else {
@@ -98,6 +105,8 @@ void DrOpenGL::drawSpace() {
             case DrThingType::None:
                 break;
         }
+
+        ++thing_count;
     }
 
     // ***** If we didn't draw Glow Lights yet, do it now

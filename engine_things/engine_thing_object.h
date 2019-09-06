@@ -247,7 +247,7 @@ public:
     bool            shouldDamage(Collision_Type check_can_damage);
     bool            takeDamage(double damage_to_take, bool reset_damage_timer = true, bool death_touch = false);
 
-    // Object Movement - Rotation
+    // Object Movement - Rotation (On Z Axis)
     const double&   getRotateSpeed() { return m_rotate_speed; }
     void            setRotateSpeed(double new_rotate_speed) { m_rotate_speed = new_rotate_speed; }
 

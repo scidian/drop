@@ -191,8 +191,10 @@ enum class Properties {
     // 3D Variables
     Thing_3D_Type,                  //list, enum class Convert_3D_Type (Extrusion, Cube)
     Thing_3D_Depth,                 //positive double
-    Thing_3D_X_Axis_Speed,          //double
-    Thing_3D_Y_Axis_Speed,          //double
+    Thing_3D_X_Axis_Rotation,       //variable
+    Thing_3D_Y_Axis_Rotation,       //variable
+    Thing_3D_X_Axis_Speed,          //variable
+    Thing_3D_Y_Axis_Speed,          //variable
     Thing_3D_Billboard,             //bool
 
 
