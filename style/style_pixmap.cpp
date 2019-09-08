@@ -7,6 +7,7 @@
 //
 #include "colors/colors.h"
 #include "helper.h"
+#include "imaging/imaging.h"
 #include "style.h"
 
 
@@ -19,25 +20,16 @@ namespace Dr {
 //####################################################################################
 QImage ImageMask(const QImage &from_image, QColor mask_color, int max_alpha) {
     QImage image = from_image;
-    if ( image.format() != QImage::Format::Format_ARGB32 )
-        image = image.convertToFormat( QImage::Format_ARGB32 );
-    image.detach();
+    QVector<QRgb*> lines = DrImaging::getScanLines(image);
 
-    // Truecolor Rgba
-    if (image.colorCount() == 0 ) {
-        if ( image.hasAlphaChannel() ) {
-
-            // Loop through every pixel, if alpha is below threshold, set to mask color
-            for (int y = 0; y < image.height(); ++y) {
-                QRgb* line = reinterpret_cast<QRgb*>( image.scanLine( y ));
-                for (int x = 0; x < image.width(); ++x) {
-                    QColor color = QColor::fromRgba( line[x] );
-                    line[x] = (color.alpha() < max_alpha) ? 0 : mask_color.rgba();
-                }
-            }
-
-        } else {    Dr::ShowMessageBox("Image missing alpha channel!"); }
-    } else {    Dr::ShowMessageBox("Image only has 256 colors!"); }
+    // Loop through every pixel, if alpha is below threshold, set to mask color
+    for (int y = 0; y < image.height(); ++y) {
+        QRgb* line = reinterpret_cast<QRgb*>( image.scanLine( y ));
+        for (int x = 0; x < image.width(); ++x) {
+            QColor color = QColor::fromRgba( line[x] );
+            line[x] = (color.alpha() < max_alpha) ? 0 : mask_color.rgba();
+        }
+    }
     return image;
 }
 

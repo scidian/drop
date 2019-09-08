@@ -13,6 +13,9 @@
 #include <QVector2D>
 #include <QVector3D>
 
+#include "3rdparty/hullfinder.h"
+#include "3rdparty/poly_partition.h"
+
 
 // Local Constants
 const int c_vertex_length = 8;          // 8 is (3) for xyz, (3) for normal, and (2) for texture coordinate
@@ -42,6 +45,10 @@ public:
     void    initializeExtrudedPixmap(QPixmap &pixmap);
     void    initializeTextureCube();
     void    initializeTextureQuad();
+
+    // Helper Functions
+    static  QVector<HullPoint>  simplifyPoints(const QVector<HullPoint> &from_points, double tolerance, int test_count);
+    static  QVector<HullPoint>  smoothPoints(const QVector<HullPoint> &from_points, int neighbors, double neighbor_distance, double weight);
 
     // Building Functions
     void    add(const QVector3D &v, const QVector3D &n, const QVector2D &t);

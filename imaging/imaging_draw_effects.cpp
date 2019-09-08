@@ -29,95 +29,80 @@ const float PI =    3.14159f;
 const float RAD =   2.0f * PI;      // 2.0 * PI is 360 in radians
 const float DEG =   0.0174533f;     // One Degree in Radians is 0.0174533
 
+
 //####################################################################################
 //##        Draws a DrEffectType::Light as a Pixmap
 //##            !! Implemented same algorithm as 2d_light_frag.glsl
 //####################################################################################
 QPixmap drawLight(QColor color, int diameter, float cone_start, float cone_end, float intensity, float blur) {
-
     QPixmap light(diameter, diameter);
     light.fill(Qt::transparent);
 
     QImage image = light.toImage();
-    if ( image.format() != QImage::Format::Format_ARGB32 )
-        image = image.convertToFormat( QImage::Format_ARGB32 );
-    image.detach();
+    QVector<QRgb*> lines = getScanLines(image);
 
-    // Truecolor Rgba
-    if (image.colorCount() == 0 ) {
-        if ( image.hasAlphaChannel() ) {
+    float cone_1 = qDegreesToRadians(cone_start);
+    float cone_2 = qDegreesToRadians(cone_end);
+    if (cone_1 < 0.0f) cone_1 += RAD;
+    if (cone_2 < 0.0f) cone_2 += RAD;
 
-            // Grab all the scan lines
-            QVector<QRgb*> lines;
-            for (int y = 0; y < image.height(); ++y) {
-                lines.append( reinterpret_cast<QRgb*>(image.scanLine(y)) );
-            }
+    if (intensity >= 50.0f) {
+        intensity = (intensity - 40.0f) / 10.f;
+    } else {
+        intensity /= 50.0f;
+    }
+    blur +=         0.001f;
+    float alpha =   1.0f;
 
-            float cone_1 = qDegreesToRadians(cone_start);
-            float cone_2 = qDegreesToRadians(cone_end);
-            if (cone_1 < 0.0f) cone_1 += RAD;
-            if (cone_2 < 0.0f) cone_2 += RAD;
+    // Loop through every pixel
+    for (int y = 0; y < image.height(); ++y) {
+        for (int x = 0; x < image.width(); ++x) {
 
-            if (intensity >= 50.0f) {
-                intensity = (intensity - 40.0f) / 10.f;
+            // Rectangular to Polar
+            QVector2D norm = QVector2D( x - (image.width() / 2.0f), (image.height() / 2.0f) - y );
+            float theta =    static_cast<float>(qAtan2( static_cast<double>(norm.y()), static_cast<double>(norm.x()) ));
+            float r =        norm.length() / (image.width() / 2.0f);
+            float opacity =  alpha;
+
+            // Check that pixel is within allowed light cone
+            if (theta < 0.0f) theta += RAD;                             // Add 360 degrees in radians if theta is less than zero
+            if (cone_1 > cone_2) {
+                if (theta < cone_1 && theta > cone_2) {
+                    float diff_x = Dr::Lerp(0.0f, 1.0f, ((cone_1 - theta) / DEG) * (1.0f/blur));
+                    float diff_y = Dr::Lerp(0.0f, 1.0f, ((theta - cone_2) / DEG) * (1.0f/blur));
+                    opacity -= Dr::Min(diff_x, diff_y);
+                    if (opacity <= 0.01f) continue;
+                }
             } else {
-                intensity /= 50.0f;
-            }
-            blur +=         0.001f;
-            float alpha =   1.0f;
-
-            // Loop through every pixel
-            for (int y = 0; y < image.height(); ++y) {
-                for (int x = 0; x < image.width(); ++x) {
-
-                    // Rectangular to Polar
-                    QVector2D norm = QVector2D( x - (image.width() / 2.0f), (image.height() / 2.0f) - y );
-                    float theta =    static_cast<float>(qAtan2( static_cast<double>(norm.y()), static_cast<double>(norm.x()) ));
-                    float r =        norm.length() / (image.width() / 2.0f);
-                    float opacity =  alpha;
-
-                    // Check that pixel is within allowed light cone
-                    if (theta < 0.0f) theta += RAD;                             // Add 360 degrees in radians if theta is less than zero
-                    if (cone_1 > cone_2) {
-                        if (theta < cone_1 && theta > cone_2) {
-                            float diff_x = Dr::Lerp(0.0f, 1.0f, ((cone_1 - theta) / DEG) * (1.0f/blur));
-                            float diff_y = Dr::Lerp(0.0f, 1.0f, ((theta - cone_2) / DEG) * (1.0f/blur));
-                            opacity -= Dr::Min(diff_x, diff_y);
-                            if (opacity <= 0.01f) continue;
-                        }
-                    } else {
-                        if (theta < cone_1 || theta > cone_2) {
-                            float diff_x = 0.0f, diff_y = 0.0f;
-                            if (theta > cone_2) {
-                                diff_x = Dr::Lerp(0.0f, 1.0f, ((cone_1 + RAD - theta) / DEG) * (1.0f/blur));
-                                diff_y = Dr::Lerp(0.0f, 1.0f, ((theta - cone_2)       / DEG) * (1.0f/blur));
-                            } else if (theta < cone_1) {
-                                diff_x = Dr::Lerp(0.0f, 1.0f, ((cone_1 - theta)       / DEG) * (1.0f/blur));
-                                diff_y = Dr::Lerp(0.0f, 1.0f, ((theta + RAD - cone_2) / DEG) * (1.0f/blur));
-                            }
-                            opacity -= Dr::Min(diff_x, diff_y);
-                            if (opacity <= 0.01f) continue;
-                        }
+                if (theta < cone_1 || theta > cone_2) {
+                    float diff_x = 0.0f, diff_y = 0.0f;
+                    if (theta > cone_2) {
+                        diff_x = Dr::Lerp(0.0f, 1.0f, ((cone_1 + RAD - theta) / DEG) * (1.0f/blur));
+                        diff_y = Dr::Lerp(0.0f, 1.0f, ((theta - cone_2)       / DEG) * (1.0f/blur));
+                    } else if (theta < cone_1) {
+                        diff_x = Dr::Lerp(0.0f, 1.0f, ((cone_1 - theta)       / DEG) * (1.0f/blur));
+                        diff_y = Dr::Lerp(0.0f, 1.0f, ((theta + RAD - cone_2) / DEG) * (1.0f/blur));
                     }
-
-                    // Multiply the intensity by our distance, which gives us a radial falloff
-                    float amount = Dr::Lerp(1.0f, 0.0f, r) * intensity;
-
-                    // Multiply by light color
-                    int red =   Dr::Clamp(static_cast<int>(color.red() * amount),      0, 255 );
-                    int green = Dr::Clamp(static_cast<int>(color.green() * amount),    0, 255 );
-                    int blue =  Dr::Clamp(static_cast<int>(color.blue() * amount),     0, 255 );
-                    int alpha = Dr::Clamp(static_cast<int>(255.0f * opacity * amount), 0, 255 );
-
-                    QColor new_color = QColor(red, green, blue, 255);
-                    new_color.setAlpha(alpha);
-
-                    lines[y][x] = static_cast<uint>(new_color.rgba());
+                    opacity -= Dr::Min(diff_x, diff_y);
+                    if (opacity <= 0.01f) continue;
                 }
             }
 
-        } else {    Dr::ShowMessageBox("Image missing alpha channel!"); }
-    } else {    Dr::ShowMessageBox("Image only has 256 colors!"); }
+            // Multiply the intensity by our distance, which gives us a radial falloff
+            float amount = Dr::Lerp(1.0f, 0.0f, r) * intensity;
+
+            // Multiply by light color
+            int red =   Dr::Clamp(static_cast<int>(color.red() * amount),      0, 255 );
+            int green = Dr::Clamp(static_cast<int>(color.green() * amount),    0, 255 );
+            int blue =  Dr::Clamp(static_cast<int>(color.blue() * amount),     0, 255 );
+            int alpha = Dr::Clamp(static_cast<int>(255.0f * opacity * amount), 0, 255 );
+
+            QColor new_color = QColor(red, green, blue, 255);
+            new_color.setAlpha(alpha);
+
+            lines[y][x] = static_cast<uint>(new_color.rgba());
+        }
+    }
 
     return QPixmap::fromImage(image);
 }
@@ -314,51 +299,33 @@ QPixmap drawSwirl(QColor color, double angle) {
     // Swirl the image
     QImage source = swirl.toImage();
     QImage dest   = swirl.toImage();
-    if ( source.format() != QImage::Format::Format_ARGB32 ) {
-        source = source.convertToFormat( QImage::Format_ARGB32 );
-        dest =   dest.convertToFormat(   QImage::Format_ARGB32 );
+    QVector<QRgb*> source_lines =   getScanLines(source);
+    QVector<QRgb*> dest_lines =     getScanLines(dest);
+
+    // Loop through every pixel and perform swirl
+    double radius = width / 2.0;
+    angle /= 100.0;
+    for( int y = 0; y < source.height(); ++y ) {
+        for( int x = 0; x < source.width(); ++x ) {
+            QPointF center   { width / 2.0, height / 2.0 };
+            QPointF tex_size { width / 1.0, height / 1.0 };
+            QPointF tc { double(x), double(y) };
+            tc -= center;
+            double dist = QLineF(0, 0, tc.x(), tc.y()).length();
+            double percent = (radius - dist) / radius;
+            double theta = percent * percent * angle * 8.0;
+            float s = static_cast<float>(sin(theta));
+            float c = static_cast<float>(cos(theta));
+            tc = QPointF( static_cast<double>(QVector3D::dotProduct( QVector3D(float(tc.x()), float(tc.y()), 0.0), QVector3D(c, -s, 0.0))),
+                          static_cast<double>(QVector3D::dotProduct( QVector3D(float(tc.x()), float(tc.y()), 0.0), QVector3D(s,  c, 0.0))) );
+            tc += center;
+
+            int fx = static_cast<int>(tc.x());
+            int fy = static_cast<int>(tc.y());
+            if (fx >= 0 && fx < source.width() && fy >= 0 && fy < source.height())
+                dest_lines[y][x] = source_lines[fx][fy];
+        }
     }
-    source.detach();
-    dest.detach();
-
-    // Truecolor Rgba
-    if (source.colorCount() == 0 ) {
-        if ( source.hasAlphaChannel() ) {
-
-            // Grab all the scan lines
-            QVector<QRgb*> source_lines, dest_lines;
-            for( int y = 0; y < source.height(); ++y ) {
-                source_lines.append( reinterpret_cast<QRgb*>(source.scanLine(y)) );
-                dest_lines.append(   reinterpret_cast<QRgb*>(  dest.scanLine(y)) );
-            }
-
-            // Loop through every pixel and perform swirl
-            double radius = width / 2.0;
-            angle /= 100.0;
-            for( int y = 0; y < source.height(); ++y ) {
-                for( int x = 0; x < source.width(); ++x ) {
-                    QPointF center   { width / 2.0, height / 2.0 };
-                    QPointF tex_size { width / 1.0, height / 1.0 };
-                    QPointF tc { double(x), double(y) };
-                    tc -= center;
-                    double dist = QLineF(0, 0, tc.x(), tc.y()).length();
-                    double percent = (radius - dist) / radius;
-                    double theta = percent * percent * angle * 8.0;
-                    float s = static_cast<float>(sin(theta));
-                    float c = static_cast<float>(cos(theta));
-                    tc = QPointF( static_cast<double>(QVector3D::dotProduct( QVector3D(float(tc.x()), float(tc.y()), 0.0), QVector3D(c, -s, 0.0))),
-                                  static_cast<double>(QVector3D::dotProduct( QVector3D(float(tc.x()), float(tc.y()), 0.0), QVector3D(s,  c, 0.0))) );
-                    tc += center;
-
-                    int fx = static_cast<int>(tc.x());
-                    int fy = static_cast<int>(tc.y());
-                    if (fx >= 0 && fx < source.width() && fy >= 0 && fy < source.height())
-                        dest_lines[y][x] = source_lines[fx][fy];
-                }
-            }
-
-        } else {    Dr::ShowMessageBox("Error in drawSwirl(), Image missing alpha channel!"); }
-    } else {    Dr::ShowMessageBox("Error in drawSwirl(), Image only has 256 colors!"); }
 
     // Copy image back into pixmap, apply circular mask
     swirl = QPixmap::fromImage(dest);

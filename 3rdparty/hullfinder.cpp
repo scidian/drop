@@ -184,7 +184,7 @@ QVector<HullPoint> HullFinder::FindConvexHull(const QVector<HullPoint> & HullPoi
     }
 
     // the output array H[] will be used as the stack
-    int i;                 // array scan index
+    int i;                              // array scan index
 
     // Get the indices of HullPoints with min x-coord and min|max y-coord
     int minmin = 0, minmax;
@@ -196,7 +196,7 @@ QVector<HullPoint> HullFinder::FindConvexHull(const QVector<HullPoint> & HullPoi
         H.push_back(P[minmin]);
         if (qFuzzyCompare(P[minmax].y, P[minmin].y) == false) // a  nontrivial segment
             H.push_back(P[minmax]);
-        H.push_back(P[minmin]);            // add polygon endHullPoint
+        H.push_back(P[minmin]);         // add polygon endHullPoint
         return H;
     }
 
@@ -208,46 +208,46 @@ QVector<HullPoint> HullFinder::FindConvexHull(const QVector<HullPoint> & HullPoi
     maxmin = i+1;
 
     // Compute the lower hull on the stack H
-    H.push_back(P[minmin]);      // push  minmin HullPoint onto stack
+    H.push_back(P[minmin]);             // push  minmin HullPoint onto stack
     i = minmax;
     while (++i <= maxmin)
     {
         // the lower line joins P[minmin]  with P[maxmin]
         if (IsLeft(P[minmin], P[maxmin], P[i]) >= 0 && i < maxmin)
-            continue;           // ignore P[i] above or on the lower line
+            continue;                   // ignore P[i] above or on the lower line
 
-        while (H.size() > 1)         // there are at least 2 HullPoints on the stack
+        while (H.size() > 1)            // there are at least 2 HullPoints on the stack
         {
             // test if  P[i] is left of the line at the stack top
             if (IsLeft(H[H.size() - 2], H.last(), P[i]) > 0)
-                break;         // P[i] is a new hull  vertex
-            H.pop_back();         // pop top HullPoint off  stack
+                break;                  // P[i] is a new hull  vertex
+            H.pop_back();               // pop top HullPoint off  stack
         }
-        H.push_back(P[i]);        // push P[i] onto stack
+        H.push_back(P[i]);              // push P[i] onto stack
     }
 
     // Next, compute the upper hull on the stack H above  the bottom hull
-    if (maxmax != maxmin)      // if  distinct xmax HullPoints
-         H.push_back(P[maxmax]);  // push maxmax HullPoint onto stack
-    int bot = H.size();                  // the bottom HullPoint of the upper hull stack
+    if (maxmax != maxmin)               // if  distinct xmax HullPoints
+         H.push_back(P[maxmax]);        // push maxmax HullPoint onto stack
+    int bot = H.size();                 // the bottom HullPoint of the upper hull stack
     i = maxmin;
     while (--i >= minmax)
     {
         // the upper line joins P[maxmax]  with P[minmax]
         if (IsLeft( P[maxmax], P[minmax], P[i])  >= 0 && i > minmax)
-            continue;           // ignore P[i] below or on the upper line
+            continue;                   // ignore P[i] below or on the upper line
 
-        while (H.size() > bot)     // at least 2 HullPoints on the upper stack
+        while (H.size() > bot)          // at least 2 HullPoints on the upper stack
         {
             // test if  P[i] is left of the line at the stack top
             if (IsLeft(H[H.size() - 2], H.last(), P[i]) > 0)
-                break;         // P[i] is a new hull  vertex
-            H.pop_back();         // pop top HullPoint off stack
+                break;                  // P[i] is a new hull  vertex
+            H.pop_back();               // pop top HullPoint off stack
         }
-        H.push_back(P[i]);        // push P[i] onto stack
+        H.push_back(P[i]);              // push P[i] onto stack
     }
     if (minmax != minmin)
-        H.push_back(P[minmin]);  // push  joining endHullPoint onto stack
+        H.push_back(P[minmin]);         // push joining endHullPoint onto stack
 
     return H;
 }
@@ -266,7 +266,7 @@ QVector<HullPoint> HullFinder::FindConcaveHull(const QVector<HullPoint> &HullPoi
             continue;
         }
 
-        double eh = ci1.Distance(ci2);  // the lenght of the edge
+        double eh = ci1.Distance(ci2);  // the length of the edge
         QList<HullPoint> tmp;
         tmp.push_back(ci1);
         tmp.push_back(ci2);
@@ -284,3 +284,6 @@ QVector<HullPoint> HullFinder::FindConcaveHull(const QVector<HullPoint> &HullPoi
     }
     return concaveList;
 }
+
+
+

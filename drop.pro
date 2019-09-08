@@ -101,6 +101,7 @@ SOURCES += \
     engine/engine_camera.cpp \
     engine/engine_texture.cpp \
     engine/engine_vertex_data.cpp \
+    engine/engine_vertex_data_pixmap.cpp \
     engine/engine_world.cpp \
     engine/engine_world_build_player.cpp \
     engine/engine_world_build_world.cpp \
@@ -139,6 +140,7 @@ SOURCES += \
     imaging/imaging_draw_effects.cpp \
     imaging/imaging_filters.cpp \
     imaging/imaging_misc.cpp \
+    imaging/imaging_objects.cpp \
     main.cpp \
     opengl/opengl.cpp \
     opengl/opengl_bind_fbo.cpp \

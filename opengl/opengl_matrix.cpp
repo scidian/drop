@@ -43,8 +43,12 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type, bool use_offset) {
     m_projection.setToIdentity();
 
     // Set camera position
-    float cam_x = (m_engine->getCurrentWorld()->getCameraPos().x())       * m_scale;
-    float cam_y = (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale;
+    float cam_x, cam_y;
+          cam_x = (m_engine->getCurrentWorld()->getCameraPos().x())       * m_scale;
+    if (render_type == Render_Type::Orthographic)
+          cam_y = (m_engine->getCurrentWorld()->getCameraPos().y() + 100) * m_scale;
+    else
+          cam_y = (m_engine->getCurrentWorld()->getCameraPos().y()) * m_scale;
     m_eye =     QVector3D( cam_x, cam_y, m_engine->getCurrentWorld()->getCameraPos().z() );
     m_look_at = QVector3D( cam_x, cam_y, 0.0f );
     m_up =      QVector3D(  0.0f,  1.0f, 0.0f );

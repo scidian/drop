@@ -48,7 +48,7 @@ void DrOpenGL::bindOffscreenBuffer(bool clear) {
 
     // Enable anti aliasing if not on mobile
 #if not defined(Q_OS_ANDROID) && not defined(Q_OS_IOS)
-    glEnable( GL_MULTISAMPLE );
+    ///glEnable( GL_MULTISAMPLE );
 #endif
 
 }
@@ -61,7 +61,7 @@ void DrOpenGL::releaseOffscreenBuffer() {
 
     // Turn off anti aliasing if not on mobile
 #if not defined(Q_OS_ANDROID) && not defined(Q_OS_IOS)
-    glDisable( GL_MULTISAMPLE );
+    ///glDisable( GL_MULTISAMPLE );
 #endif
 }
 

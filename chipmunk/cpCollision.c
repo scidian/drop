@@ -44,7 +44,7 @@
 static inline void
 cpCollisionInfoPushContact(struct cpCollisionInfo *info, cpVect p1, cpVect p2, cpHashValue hash)
 {
-	cpAssertSoft(info->count <= CP_MAX_CONTACTS_PER_ARBITER, "Internal error: Tried to push too many contacts.");
+    cpAssertSoft(info->count <= CP_MAX_CONTACTS_PER_ARBITER, "Internal error: Tried to push too many contacts.")
 	
 	struct cpContact *con = &info->arr[info->count];
 	con->r1 = p1;

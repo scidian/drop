@@ -11,7 +11,6 @@
 #include <QPixmap>
 #include <QMatrix4x4>
 
-#include "3rdparty/poly_partition.h"
 #include "engine_texture.h"
 #include "engine_vertex_data.h"
 #include "helper.h"
@@ -90,117 +89,6 @@ void DrEngineVertexData::initializeTextureCube() {
           x3,  y3,  tx3, ty3,
           x4,  y4,  tx4, ty4);
 }
-
-
-//####################################################################################
-//##        Builds an Extruded Pixmap
-//####################################################################################
-void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
-    m_data.resize(1000 * c_vertex_length);
-
-    int width =  pixmap.width();
-    int height = pixmap.height();
-    float   w2 = width  / 2.f;
-    float   h2 = height / 2.f;
-    double w2d = width  / 2.0;
-    double h2d = height / 2.0;
-
-    // EXAMPLE: Adding Triangles
-    GLfloat x1 = +w2, y1 = +h2;         // Top Right
-    GLfloat x2 = -w2, y2 = +h2;         // Top Left
-    GLfloat x3 = +w2, y3 = -h2;         // Bottom Right
-
-    GLfloat tx1 = 1.0, ty1 = 1.0;
-    GLfloat tx2 = 0.0, ty2 = 1.0;
-    GLfloat tx3 = 1.0, ty3 = 0.0;
-
-
-    // ***** Find concave hull
-    QVector<HullPoint> image_points = DrImaging::outlinePointList( pixmap.toImage(), 0.90 );
-    QVector<HullPoint> concave_hull = HullFinder::FindConcaveHull( image_points,     5.00 );
-
-
-    // ***** Simplify points:
-    //       !!!!! If ((y2-y1) / (x2-x1)) == ((y3-y1)/(x3-x1)) then slope is same and is along same line
-    QVector<HullPoint> final_points;
-    int i = 0;
-    while (i < concave_hull.count()) {
-        final_points.push_back(concave_hull[i]);
-        i++;
-    }
-
-
-    // ***** Triangulate concave hull
-    // Copy HullPoints into TPPLPoly
-    std::list<TPPLPoly> testpolys, result;
-    TPPLPoly poly;
-    poly.Init(final_points.count());
-    for (int i = 0; i < final_points.count(); i++) {
-        poly[i].x = final_points[i].x;
-        poly[i].y = final_points[i].y;
-    }
-    testpolys.push_back( poly );
-
-    // Run triangulation, add triangles to vertex data
-    TPPLPartition pp;
-    pp.Triangulate_EC(&(*testpolys.begin()), &result);
-    for (auto poly : result) {
-        x1 = static_cast<GLfloat>(         poly[0].x - w2d);
-        y1 = static_cast<GLfloat>(height - poly[0].y - h2d);
-        x2 = static_cast<GLfloat>(         poly[1].x - w2d);
-        y2 = static_cast<GLfloat>(height - poly[1].y - h2d);
-        x3 = static_cast<GLfloat>(         poly[2].x - w2d);
-        y3 = static_cast<GLfloat>(height - poly[2].y - h2d);
-
-        tx1 = static_cast<GLfloat>(      poly[0].x / width);
-        ty1 = static_cast<GLfloat>(1.0 - poly[0].y / height);
-        tx2 = static_cast<GLfloat>(      poly[1].x / width);
-        ty2 = static_cast<GLfloat>(1.0 - poly[1].y / height);
-        tx3 = static_cast<GLfloat>(      poly[2].x / width);
-        ty3 = static_cast<GLfloat>(1.0 - poly[2].y / height);
-
-        triangle( x1, y1, tx1, ty1,
-                  x3, y3, tx3, ty3,
-                  x2, y2, tx2, ty2);
-    }
-
-
-    // ***** Add extruded triangles
-    for (int i = 0; i < final_points.count(); i++) {
-        int point1, point2;
-        if (i == final_points.count() - 1) {
-            point1 = 0;         point2 = i;
-        } else {
-            point1 = i + 1;     point2 = i;
-        }
-
-        x1 = static_cast<GLfloat>(         final_points[point1].x);
-        y1 = static_cast<GLfloat>(height - final_points[point1].y);
-       tx1 = static_cast<GLfloat>(      final_points[point1].x / width);
-       ty1 = static_cast<GLfloat>(1.0 - final_points[point1].y / height);
-
-        x2 = static_cast<GLfloat>(         final_points[point2].x);
-        y2 = static_cast<GLfloat>(height - final_points[point2].y);
-       tx2 = static_cast<GLfloat>(      final_points[point2].x / width);
-       ty2 = static_cast<GLfloat>(1.0 - final_points[point2].y / height);
-
-       x1 -= static_cast<GLfloat>(w2d);
-       x2 -= static_cast<GLfloat>(w2d);
-       y1 -= static_cast<GLfloat>(h2d);
-       y2 -= static_cast<GLfloat>(h2d);
-
-       float pixel_w = (1.0f / width);
-       float pixel_h = (1.0f / height);
-       if (tx1 > 0.5f) x1 -= pixel_w; else x1 += pixel_w;
-       if (tx2 > 0.5f) x2 -= pixel_w; else x2 += pixel_w;
-       if (ty1 > 0.5f) y1 -= pixel_h; else y1 += pixel_h;
-       if (ty2 > 0.5f) y2 -= pixel_h; else y2 += pixel_h;
-
-       extrude( x1, y1, tx1, ty1,
-                x2, y2, tx2, ty2);
-    }
-}
-
 
 //####################################################################################
 //##        Adds a Vertex, including a Normal

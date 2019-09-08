@@ -41,6 +41,13 @@ enum class Image_Filter_Type {
 //############################
 namespace DrImaging {
 
+    // Misc Image Functions
+    QColor              averageColor(const QPixmap &pixmap, bool screen_shot = false);
+    QVector<QRgb*>      getScanLines(QImage &image);
+    float*              imageBitsAsFloat(const QImage &from_image);
+    QVector<HullPoint>  outlinePointList(const QImage& from_image, double alpha_tolerance );
+
+
     // Filters
     QPixmap applySinglePixelFilter( Image_Filter_Type filter, const QPixmap& from_pixmap, int value);
     QImage  applySinglePixelFilter( Image_Filter_Type filter, const QImage&  from_image,  int value );
@@ -60,10 +67,8 @@ namespace DrImaging {
     QPixmap drawWater(QColor top_color, QColor bottom_color);
 
 
-    // Misc Image Functions
-    QColor              averageColor(const QPixmap &pixmap, bool screen_shot = false);
-    float*              imageBitsAsFloat(const QImage &from_image);
-    QVector<HullPoint>  outlinePointList(const QImage& from_image, double alpha_tolerance );
+    // Object Counting / Fill (a la Ravens Project)
+    QImage  blackAndWhiteFromAlpha(const QImage& from_image, double alpha_tolerance);
 
 
 }

@@ -97,19 +97,19 @@ TPPLPoly& TPPLPoly::operator=(const TPPLPoly &src) {
 int TPPLPoly::GetOrientation() const {
 	long i1,i2;
 	tppl_float area = 0;
-	for(i1=0; i1<numpoints; i1++) {
-		i2 = i1+1;
-		if(i2 == numpoints) i2 = 0;
+    for (i1 = 0; i1 < numpoints; i1++) {
+        i2 = i1 + 1;
+        if (i2 == numpoints) i2 = 0;
 		area += points[i1].x * points[i2].y - points[i1].y * points[i2].x;
 	}
-	if(area>0) return TPPL_CCW;
-	if(area<0) return TPPL_CW;
+    if (area>0) return TPPL_CCW;
+    if (area<0) return TPPL_CW;
 	return 0;
 }
 
 void TPPLPoly::SetOrientation(int orientation) {
 	int polyorientation = GetOrientation();
-	if(polyorientation&&(polyorientation!=orientation)) {
+    if (polyorientation&&(polyorientation!=orientation)) {
 		Invert();
 	}
 }
@@ -376,7 +376,7 @@ void TPPLPartition::UpdateVertex(PartitionVertex *v, PartitionVertex *vertices, 
 	}
 }
 
-//triangulation by ear removal
+// Triangulation by Ear Removal
 int TPPLPartition::Triangulate_EC(TPPLPoly *poly, TPPLPolyList *triangles) {
 	if(!poly->Valid()) return 0;
 
@@ -577,9 +577,9 @@ int TPPLPartition::ConvexPartition_HM(TPPLPolyList *inpolys, TPPLPolyList *parts
 	return 1;
 }
 
-//minimum-weight polygon triangulation by dynamic programming
-//O(n^3) time complexity
-//O(n^2) space complexity
+// Minimum-weight Polygon Triangulation by dynamic programming
+// O(n^3) time complexity
+// O(n^2) space complexity
 int TPPLPartition::Triangulate_OPT(TPPLPoly *poly, TPPLPolyList *triangles) {
 	if(!poly->Valid()) return 0;
 
