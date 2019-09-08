@@ -45,15 +45,15 @@ namespace DrImaging {
     QColor              averageColor(const QPixmap &pixmap, bool screen_shot = false);
     QVector<QRgb*>      getScanLines(QImage &image);
     float*              imageBitsAsFloat(const QImage &from_image);
-    QVector<HullPoint>  outlinePointList(const QImage& from_image, double alpha_tolerance );
+    QVector<HullPoint>  outlinePointList(const QImage &from_image);
 
 
     // Filters
-    QPixmap applySinglePixelFilter( Image_Filter_Type filter, const QPixmap& from_pixmap, int value);
-    QImage  applySinglePixelFilter( Image_Filter_Type filter, const QImage&  from_image,  int value );
+    QPixmap applySinglePixelFilter( Image_Filter_Type filter, const QPixmap &from_pixmap, int value);
+    QImage  applySinglePixelFilter( Image_Filter_Type filter, const QImage  &from_image,  int value);
 
-    QPixmap applyPixelation( const QPixmap& from_pixmap, QPointF data_pair );
-    QImage  applyPixelation( const QImage&  from_image,  QPointF data_pair );
+    QPixmap applyPixelation( const QPixmap &from_pixmap, QPointF data_pair );
+    QImage  applyPixelation( const QImage  &from_image,  QPointF data_pair );
 
 
     // Draw Images for DrEffects
@@ -68,8 +68,9 @@ namespace DrImaging {
 
 
     // Object Counting / Fill (a la Ravens Project)
-    QImage  blackAndWhiteFromAlpha(const QImage& from_image, double alpha_tolerance);
-    QImage  floodFill(const QImage& from_image, int start_x, int start_y, QColor color, double tolerance);
+    QImage          blackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance);
+    QVector<QImage> findObjectsInImage(const QPixmap &pixmap, double alpha_tolerance);
+    QImage          floodFill(QImage &from_image, int start_x, int start_y, QColor color, double tolerance);
 
 
 }

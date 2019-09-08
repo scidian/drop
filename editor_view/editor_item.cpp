@@ -205,12 +205,7 @@ void DrItem::applyFilters() {
     if (pixelation.x() > 1.0 || pixelation.y() > 1.0)
                            new_pixmap = DrImaging::applyPixelation( new_pixmap, pixelation );
     if ( negative )        new_pixmap = DrImaging::applySinglePixelFilter( Image_Filter_Type::Negative, new_pixmap, 0 );
-    if ( grayscale )       {
-        new_pixmap = DrImaging::applySinglePixelFilter( Image_Filter_Type::Grayscale, new_pixmap, 0 );
-
-        new_pixmap = QPixmap::fromImage( DrImaging::floodFill(new_pixmap.toImage(), 0, 0, QColor(255, 0, 0, 255), 0.001) );
-
-    }
+    if ( grayscale )       new_pixmap = DrImaging::applySinglePixelFilter( Image_Filter_Type::Grayscale, new_pixmap, 0 );
 
     // Important to do saturation first, then hue
     if ( saturation != 0 ) new_pixmap = DrImaging::applySinglePixelFilter( Image_Filter_Type::Saturation, new_pixmap, saturation );

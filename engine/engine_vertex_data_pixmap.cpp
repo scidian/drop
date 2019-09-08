@@ -122,95 +122,101 @@ QVector<HullPoint> DrEngineVertexData::smoothPoints(const QVector<HullPoint> &fr
 void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
     m_data.resize(100 * c_vertex_length);
 
-    // ***** Get list of possible outline points
-    QVector<HullPoint> image_points =           DrImaging::outlinePointList(pixmap.toImage(), 0.9);
+    // Break pixmap into seperate images for each object in image
+    QVector<QImage> images = DrImaging::findObjectsInImage(pixmap, 0.9);
 
-    // ***** Find concave hull for extrusion points
-    QVector<HullPoint> concave_hull_face =      HullFinder::FindConcaveHull(image_points, 3.5);
-    QVector<HullPoint> concave_hull_extrude =   concave_hull_face;  //HullFinder::FindConcaveHull(image_points, 0.9);
+    for (auto image : images) {
+        // ***** Get list of possible outline points
+        QVector<HullPoint> image_points =           DrImaging::outlinePointList(image);
 
-    // ***** Simplify point list
-    QVector<HullPoint> simple_points_face =     simplifyPoints(concave_hull_face,   0.000001, 10);
-    QVector<HullPoint> simple_points_extrude =  simple_points_face; //simplifyPoints(concave_hull_extrude, 0.000001, 5);
+        // ***** Find concave hull for extrusion points
+        QVector<HullPoint> concave_hull_face =      HullFinder::FindConcaveHull(image_points, 3.5);
+        QVector<HullPoint> concave_hull_extrude =   concave_hull_face;  //HullFinder::FindConcaveHull(image_points, 0.9);
 
-    // ***** Smooths / curves points in the list
-    QVector<HullPoint> smooth_points_face =     smoothPoints(simple_points_face,    5, 5.0, 0.5);
-    QVector<HullPoint> smooth_points_extrude =  smooth_points_face; //smoothPoints(simple_points_extrude, 5, 5.0, 0.5);
+        // ***** Simplify point list
+        QVector<HullPoint> simple_points_face =     simplifyPoints(concave_hull_face,   0.000001, 10);
+        QVector<HullPoint> simple_points_extrude =  simple_points_face; //simplifyPoints(concave_hull_extrude, 0.000001, 5);
 
-
-    // ***** Triangulate concave hull
-    // Copy HullPoints into TPPLPoly
-    std::list<TPPLPoly> testpolys, result;
-    TPPLPoly poly; poly.Init(smooth_points_face.count());
-    for (int i = 0; i < smooth_points_face.count(); i++) {
-        poly[i].x = smooth_points_face[i].x;
-        poly[i].y = smooth_points_face[i].y;
-    }
-    testpolys.push_back( poly );
-
-    // Run triangulation, add triangles to vertex data
-    TPPLPartition pp;
-    pp.Triangulate_EC( &testpolys, &result );
-    ///pp.Triangulate_OPT(  &testpolys, &result);
-    ///pp.Triangulate_MONO( &testpolys, &result);
-    int width =  pixmap.width();
-    int height = pixmap.height();
-    double w2d = width  / 2.0;
-    double h2d = height / 2.0;
-    for (auto poly : result) {
-        GLfloat x1 = static_cast<GLfloat>(         poly[0].x - w2d);
-        GLfloat y1 = static_cast<GLfloat>(height - poly[0].y - h2d);
-        GLfloat x2 = static_cast<GLfloat>(         poly[1].x - w2d);
-        GLfloat y2 = static_cast<GLfloat>(height - poly[1].y - h2d);
-        GLfloat x3 = static_cast<GLfloat>(         poly[2].x - w2d);
-        GLfloat y3 = static_cast<GLfloat>(height - poly[2].y - h2d);
-
-        GLfloat tx1 = static_cast<GLfloat>(      poly[0].x / width);
-        GLfloat ty1 = static_cast<GLfloat>(1.0 - poly[0].y / height);
-        GLfloat tx2 = static_cast<GLfloat>(      poly[1].x / width);
-        GLfloat ty2 = static_cast<GLfloat>(1.0 - poly[1].y / height);
-        GLfloat tx3 = static_cast<GLfloat>(      poly[2].x / width);
-        GLfloat ty3 = static_cast<GLfloat>(1.0 - poly[2].y / height);
-
-        triangle( x1, y1, tx1, ty1,
-                  x3, y3, tx3, ty3,
-                  x2, y2, tx2, ty2);
-    }
+        // ***** Smooths / curves points in the list
+        QVector<HullPoint> smooth_points_face =     smoothPoints(simple_points_face,    5, 5.0, 0.5);
+        QVector<HullPoint> smooth_points_extrude =  smooth_points_face; //smoothPoints(simple_points_extrude, 5, 5.0, 0.5);
 
 
-    // ***** Add extruded triangles
-    for (int i = 0; i < smooth_points_extrude.count(); i++) {
-        int point1, point2;
-        if (i == smooth_points_extrude.count() - 1) {
-            point1 = 0;         point2 = i;
-        } else {
-            point1 = i + 1;     point2 = i;
+        // ***** Triangulate concave hull
+        // Copy HullPoints into TPPLPoly
+        std::list<TPPLPoly> testpolys, result;
+        TPPLPoly poly; poly.Init(smooth_points_face.count());
+        for (int i = 0; i < smooth_points_face.count(); i++) {
+            poly[i].x = smooth_points_face[i].x;
+            poly[i].y = smooth_points_face[i].y;
+        }
+        testpolys.push_back( poly );
+
+        // Run triangulation, add triangles to vertex data
+        TPPLPartition pp;
+        pp.Triangulate_EC( &testpolys, &result );
+        ///pp.Triangulate_OPT(  &testpolys, &result);
+        ///pp.Triangulate_MONO( &testpolys, &result);
+        int width =  image.width();
+        int height = image.height();
+        double w2d = width  / 2.0;
+        double h2d = height / 2.0;
+        for (auto poly : result) {
+            GLfloat x1 = static_cast<GLfloat>(         poly[0].x - w2d);
+            GLfloat y1 = static_cast<GLfloat>(height - poly[0].y - h2d);
+            GLfloat x2 = static_cast<GLfloat>(         poly[1].x - w2d);
+            GLfloat y2 = static_cast<GLfloat>(height - poly[1].y - h2d);
+            GLfloat x3 = static_cast<GLfloat>(         poly[2].x - w2d);
+            GLfloat y3 = static_cast<GLfloat>(height - poly[2].y - h2d);
+
+            GLfloat tx1 = static_cast<GLfloat>(      poly[0].x / width);
+            GLfloat ty1 = static_cast<GLfloat>(1.0 - poly[0].y / height);
+            GLfloat tx2 = static_cast<GLfloat>(      poly[1].x / width);
+            GLfloat ty2 = static_cast<GLfloat>(1.0 - poly[1].y / height);
+            GLfloat tx3 = static_cast<GLfloat>(      poly[2].x / width);
+            GLfloat ty3 = static_cast<GLfloat>(1.0 - poly[2].y / height);
+
+            triangle( x1, y1, tx1, ty1,
+                      x3, y3, tx3, ty3,
+                      x2, y2, tx2, ty2);
         }
 
-        GLfloat  x1 = static_cast<GLfloat>(         smooth_points_extrude[point1].x);
-        GLfloat  y1 = static_cast<GLfloat>(height - smooth_points_extrude[point1].y);
-        GLfloat tx1 = static_cast<GLfloat>(      smooth_points_extrude[point1].x / width);
-        GLfloat ty1 = static_cast<GLfloat>(1.0 - smooth_points_extrude[point1].y / height);
 
-        GLfloat  x2 = static_cast<GLfloat>(         smooth_points_extrude[point2].x);
-        GLfloat  y2 = static_cast<GLfloat>(height - smooth_points_extrude[point2].y);
-        GLfloat tx2 = static_cast<GLfloat>(      smooth_points_extrude[point2].x / width);
-        GLfloat ty2 = static_cast<GLfloat>(1.0 - smooth_points_extrude[point2].y / height);
+        // ***** Add extruded triangles
+        for (int i = 0; i < smooth_points_extrude.count(); i++) {
+            int point1, point2;
+            if (i == smooth_points_extrude.count() - 1) {
+                point1 = 0;         point2 = i;
+            } else {
+                point1 = i + 1;     point2 = i;
+            }
 
-        x1 -= static_cast<GLfloat>(w2d);
-        x2 -= static_cast<GLfloat>(w2d);
-        y1 -= static_cast<GLfloat>(h2d);
-        y2 -= static_cast<GLfloat>(h2d);
+            GLfloat  x1 = static_cast<GLfloat>(         smooth_points_extrude[point1].x);
+            GLfloat  y1 = static_cast<GLfloat>(height - smooth_points_extrude[point1].y);
+            GLfloat tx1 = static_cast<GLfloat>(      smooth_points_extrude[point1].x / width);
+            GLfloat ty1 = static_cast<GLfloat>(1.0 - smooth_points_extrude[point1].y / height);
 
-        float pixel_w = (1.0f / width);
-        float pixel_h = (1.0f / height);
-        if (tx1 > 0.5f) x1 -= pixel_w; else x1 += pixel_w;
-        if (tx2 > 0.5f) x2 -= pixel_w; else x2 += pixel_w;
-        if (ty1 > 0.5f) y1 -= pixel_h; else y1 += pixel_h;
-        if (ty2 > 0.5f) y2 -= pixel_h; else y2 += pixel_h;
+            GLfloat  x2 = static_cast<GLfloat>(         smooth_points_extrude[point2].x);
+            GLfloat  y2 = static_cast<GLfloat>(height - smooth_points_extrude[point2].y);
+            GLfloat tx2 = static_cast<GLfloat>(      smooth_points_extrude[point2].x / width);
+            GLfloat ty2 = static_cast<GLfloat>(1.0 - smooth_points_extrude[point2].y / height);
 
-        extrude( x1, y1, tx1, ty1,
-                 x2, y2, tx2, ty2);
+            x1 -= static_cast<GLfloat>(w2d);
+            x2 -= static_cast<GLfloat>(w2d);
+            y1 -= static_cast<GLfloat>(h2d);
+            y2 -= static_cast<GLfloat>(h2d);
+
+            float pixel_w = (1.0f / width);
+            float pixel_h = (1.0f / height);
+            if (tx1 > 0.5f) x1 -= pixel_w; else x1 += pixel_w;
+            if (tx2 > 0.5f) x2 -= pixel_w; else x2 += pixel_w;
+            if (ty1 > 0.5f) y1 -= pixel_h; else y1 += pixel_h;
+            if (ty2 > 0.5f) y2 -= pixel_h; else y2 += pixel_h;
+
+            extrude( x1, y1, tx1, ty1,
+                     x2, y2, tx2, ty2);
+        }
+
     }
 }
 

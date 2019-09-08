@@ -24,6 +24,11 @@ namespace DrImaging
 {
 
 
+// Local constants
+const unsigned int c_color_black = QColor(  0,   0,   0,   0).rgba();
+const unsigned int c_color_white = QColor(255, 255, 255, 255).rgba();
+
+
 //####################################################################################
 //##    Returns array of scanlines that are a direct access to QImage pixels
 //####################################################################################
@@ -53,7 +58,7 @@ QVector<QRgb*> getScanLines(QImage &image) {
 //##    Returns black / white image, white == had pixel, black == was transparent
 //##        alpha_tolerance is from 0.0 to 1.0
 //####################################################################################
-QImage blackAndWhiteFromAlpha(const QImage& from_image, double alpha_tolerance) {
+QImage blackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance) {
     QImage image = from_image;
     QVector<QRgb*> lines = getScanLines(image);
 
@@ -61,9 +66,9 @@ QImage blackAndWhiteFromAlpha(const QImage& from_image, double alpha_tolerance) 
     for (int y = 0; y < image.height(); ++y) {
         for (int x = 0; x < image.width(); ++x) {
             if (QColor::fromRgba(lines[y][x]).alphaF() < alpha_tolerance)
-                lines[y][x] = 0.0;
+                lines[y][x] = c_color_black;
             else
-                lines[y][x] = QColor(255, 255, 255, 255).rgba();
+                lines[y][x] = c_color_white;
         }
     }
     return image;
@@ -73,6 +78,7 @@ QImage blackAndWhiteFromAlpha(const QImage& from_image, double alpha_tolerance) 
 
 //####################################################################################
 //##    Flood fill
+//##        !!!!! #NOTE: Returns flood as it's own image, image passed in is altered!!
 //##        tolerance: how similar color should be to continue to fill, 0.0 to 1.0
 //####################################################################################
 class FillPoint {
@@ -93,21 +99,25 @@ bool isSameColor(QColor color1, QColor color2, double tolerance) {
 #define FLOOD_WAS_PROCESSED         1
 #define FLOOD_MARKED_FOR_PROCESS    2
 
-QImage floodFill(const QImage& from_image, int start_x, int start_y, QColor color, double tolerance) {
-    // Get scan lines, check if start point is in range
-    QImage image =     from_image.copy();
+QImage floodFill(QImage &from_image, int start_x, int start_y, QColor color, double tolerance) {
+    // Get scan lines
+    QImage flood =     from_image.copy();
     QImage processed = from_image.copy();
-    QVector<QRgb*> image_lines =     getScanLines(image);
+    QVector<QRgb*> image_lines =     getScanLines(from_image);
+    QVector<QRgb*> flood_lines =     getScanLines(flood);
     QVector<QRgb*> processed_lines = getScanLines(processed);
-    if (start_x < 0 || start_y < 0 || start_x > image.width() - 1 || start_y > image.height() - 1) return image;
 
     // Get starting color, set processed image to all zeros
     QColor start_color = QColor::fromRgba(image_lines[start_y][start_x]);
-    for (int y = 0; y < image.height(); ++y) {
-        for (int x = 0; x < image.width(); ++x) {
+    for (int y = 0; y < from_image.height(); ++y) {
+        for (int x = 0; x < from_image.width(); ++x) {
+            flood_lines[y][x] = 0;
             processed_lines[y][x] = FLOOD_NOT_PROCESSED;
         }
     }
+
+    // Check if start point is in range
+    if (start_x < 0 || start_y < 0 || start_x > from_image.width() - 1 || start_y > from_image.height() - 1) return flood;
 
     QVector<FillPoint> points;
     points.push_back(FillPoint(start_x, start_y));
@@ -116,12 +126,13 @@ QImage floodFill(const QImage& from_image, int start_x, int start_y, QColor colo
         for (auto point: points) {
             if (processed_lines[point.y][point.x] == FLOOD_WAS_PROCESSED) continue;
             image_lines[point.y][point.x] = color.rgba();
+            flood_lines[point.y][point.x] = color.rgba();
             processed_lines[point.y][point.x] = FLOOD_WAS_PROCESSED;
 
-            int x_start = (point.x > 0) ?                  point.x - 1 : 0;
-            int x_end =   (point.x < image.width() - 1)  ? point.x + 1 : image.width()  - 1;
-            int y_start = (point.y > 0) ?                  point.y - 1 : 0;
-            int y_end =   (point.y < image.height() - 1) ? point.y + 1 : image.height() - 1;
+            int x_start = (point.x > 0) ?                       point.x - 1 : 0;
+            int x_end =   (point.x < from_image.width() - 1)  ? point.x + 1 : from_image.width()  - 1;
+            int y_start = (point.y > 0) ?                       point.y - 1 : 0;
+            int y_end =   (point.y < from_image.height() - 1) ? point.y + 1 : from_image.height() - 1;
 
             for (int x = x_start; x <= x_end; ++x) {
                 for (int y = y_start; y <= y_end; ++y) {
@@ -147,19 +158,91 @@ QImage floodFill(const QImage& from_image, int start_x, int start_y, QColor colo
         }
     } while (points.count() > 0);
 
-    return image;
+    return flood;
+}
+
+
+//####################################################################################
+//##    Find Objects
+//##        Seperates parts of an image divided by alpha space into seperate images
+//####################################################################################
+QVector<QImage> findObjectsInImage(const QPixmap &pixmap, double alpha_tolerance) {
+    QImage black_white = blackAndWhiteFromAlpha(pixmap.toImage(), alpha_tolerance);
+    QVector<QRgb*> lines = getScanLines(black_white);
+    QVector<QImage> images;
+
+    for (int x = 0; x < black_white.width(); ++x) {
+        for (int y = 0; y < black_white.height(); ++y) {
+            ///if (black_white.pixel(x, y) == c_color_white) {
+            if (lines[y][x] == c_color_white) {
+                images.push_back( floodFill(black_white, x, y, c_color_black, 0.001) );
+            }
+        }
+    }
+    return images;
 }
 
 
 
+//####################################################################################
+//##    Returns a list of points of possible edges of an image
+//##        !!!!! #NOTE: Image passed in should be black and white
+//##                     (i.e. from DrImageing::blackAndWhiteFromAlpha())
+//####################################################################################
+QVector<HullPoint> outlinePointList(const QImage &from_image) {
+    QImage image = from_image;
+    QVector<QRgb*> lines = getScanLines(image);
 
+    QVector<HullPoint> points;
+    points.clear();
 
+    // Loop through every pixel to see if is possibly on border
+    for (int y = 0; y < image.height(); ++y) {
+        for (int x = 0; x < image.width(); ++x) {
+            if (lines[y][x] == c_color_black) continue;
 
+            // Run through all pixels this pixel is touching to see if they are transparent (i.e. black)
+            int x_start, x_end, y_start, y_end;
+            x_start = (x > 0) ? x - 1 : x;
+            y_start = (y > 0) ? y - 1 : y;
+            x_end =   (x < (image.width() - 1))  ? x + 1 : x;
+            y_end =   (y < (image.height() - 1)) ? y + 1 : y;
+            bool touching_transparent = false;
+            for (int i = x_start; i <= x_end; ++i) {
+                for (int j = y_start; j <= y_end; ++j) {
+                    if (lines[j][i] == c_color_black) touching_transparent = true;
+                    if (touching_transparent) break;
+                }
+                if (touching_transparent) break;
+            }
 
+            if (touching_transparent) {
+                points.push_back(HullPoint(x, y));
+            } else {
+                if ((x == 0 && y == 0) ||
+                    (x == 0 && y == (image.height() - 1)) ||
+                    (x == (image.width() - 1) && y == 0) ||
+                    (x == (image.width() - 1) && y == (image.height() - 1))) {
+                    points.push_back(HullPoint(x, y));
+                }
+            }
+        }
+    }
+    return points;
+}
 
 
 
 }   // End Namespace Imaging
+
+
+
+
+
+
+
+
+
 
 
 

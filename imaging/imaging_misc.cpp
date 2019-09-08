@@ -78,53 +78,6 @@ float* imageBitsAsFloat(const QImage &from_image) {
 }
 
 
-//####################################################################################
-//##    Returns a list of points of possible edges of an image
-//####################################################################################
-QVector<HullPoint> outlinePointList(const QImage& from_image, double alpha_tolerance) {
-    QImage image = from_image;
-    QVector<QRgb*> lines = getScanLines(image);
-
-    QVector<HullPoint> points;
-    points.clear();
-
-    // Loop through every pixel to see if is possibly on border
-    for (int y = 0; y < image.height(); ++y) {
-        for (int x = 0; x < image.width(); ++x) {
-            if (QColor::fromRgba(lines[y][x]).alphaF() < alpha_tolerance) continue;
-
-            // Run through all pixels this pixel is touching to see if they are transparent
-            int x_start, x_end, y_start, y_end;
-            x_start = (x > 0) ? x - 1 : x;
-            y_start = (y > 0) ? y - 1 : y;
-            x_end =   (x < (image.width() - 1))  ? x + 1 : x;
-            y_end =   (y < (image.height() - 1)) ? y + 1 : y;
-            bool touching_transparent = false;
-            for (int i = x_start; i <= x_end; ++i) {
-                for (int j = y_start; j <= y_end; ++j) {
-                    if ( QColor::fromRgba(lines[j][i]).alphaF() < alpha_tolerance)
-                        touching_transparent = true;
-                    if (touching_transparent) break;
-                }
-                if (touching_transparent) break;
-            }
-
-            if (touching_transparent) {
-                points.push_back(HullPoint(x, y));
-            } else {
-                if ((x == 0 && y == 0) ||
-                    (x == 0 && y == (image.height() - 1)) ||
-                    (x == (image.width() - 1) && y == 0) ||
-                    (x == (image.width() - 1) && y == (image.height() - 1))) {
-                    points.push_back(HullPoint(x, y));
-                }
-            }
-        }
-    }
-    return points;
-}
-
-
 
 }   // End Namespce DrImaging
 
