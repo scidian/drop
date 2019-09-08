@@ -26,14 +26,14 @@ const   highp float RAD = 6.2831853;                // 2.0 * PI is 360 degrees i
 
 
 //####################################################################################
-//##        Unpacks a float from a color
+//##    Unpacks a float from a color
 //####################################################################################
 highp float unpackColor(highp vec3 color) {
     return (color.r * 255.0) + (color.g * 255.0) * 256.0 + (color.b * 255.0) * 256.0 * 256.0;
 }
 
 //####################################################################################
-//##        Returns a random number, that is between 0.0 and 0.999999 inclusive
+//##    Returns a random number, that is between 0.0 and 0.999999 inclusive
 //####################################################################################
 float random(vec2 p) {
     return fract(cos(dot(p, vec2(23.14069263277926, 2.665144142690225))) * 12345.6789);
@@ -41,7 +41,7 @@ float random(vec2 p) {
 
 
 //####################################################################################
-//##        Main Shader Function
+//##    Main Shader Function
 //####################################################################################
 void main(void) {        
 

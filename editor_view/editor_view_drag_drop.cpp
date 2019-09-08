@@ -22,7 +22,7 @@
 #include "project/project_world_stage_thing.h"
 
 //####################################################################################
-//##        Drag Handling
+//##    Drag Handling
 //####################################################################################
 void DrView::dragEnterEvent(QDragEnterEvent *event) {
     if (event->mimeData()->hasFormat("application/x-drop-asset-data")) {                // From asset tree
@@ -60,7 +60,7 @@ void DrView::dragMoveEvent(QDragMoveEvent *event) {
 
 
 //####################################################################################
-//##        Drop Handling - Accept an asset fropped from the Asset Tree
+//##    Drop Handling - Accept an asset fropped from the Asset Tree
 //####################################################################################
 void DrView::dropEvent(QDropEvent *event) {
     // Stop drawing crosshairs under item drop

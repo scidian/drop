@@ -20,7 +20,7 @@
 #include "widgets/widgets_event_filters.h"
 
 //####################################################################################
-//##        Constructor
+//##    Constructor
 //####################################################################################
 FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent) {
 
@@ -63,7 +63,7 @@ FormSettings::~FormSettings() { }
 
 
 //####################################################################################
-//##        Keeps container widget same size as form
+//##    Keeps container widget same size as form
 //####################################################################################
 void FormSettings::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);

@@ -25,7 +25,7 @@
 
 
 //####################################################################################
-//##        Key Events
+//##    Key Events
 //####################################################################################
 void DrScene::keyReleaseEvent(QKeyEvent *event) { QGraphicsScene::keyReleaseEvent(event); }
 

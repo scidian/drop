@@ -168,7 +168,7 @@ QGraphicsItemGroup* DrScene::createEmptyItemGroup(double angle, QPointF scale) {
 
 
 //####################################################################################
-//##        Selects items based on rows selected in Editor_Project_Tree
+//##    Selects items based on rows selected in Editor_Project_Tree
 //####################################################################################
 void DrScene::updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list) {
     // Turn off signals to stop recurssive calling of interface_relay->updateItemSelection()

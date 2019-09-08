@@ -14,14 +14,14 @@
 #include "helper.h"
 
 //####################################################################################
-//##        Constructor
+//##    Constructor
 //####################################################################################
 FormPopupColor::FormPopupColor(DrProject *project, QWidget *widget_to_use_for_mapToGlobal, QWidget *parent, int x_offset, int y_offset)
     : FormPopup(parent, project, widget_to_use_for_mapToGlobal, x_offset, y_offset) { }
 
 
 //####################################################################################
-//##        Builds a popup with a lot of colors to choose from
+//##    Builds a popup with a lot of colors to choose from
 //####################################################################################
 void FormPopupColor::buildPopupColors(QWidget *wants_color, QColor start_color) {
 
@@ -103,7 +103,7 @@ void FormPopupColor::buildPopupColors(QWidget *wants_color, QColor start_color) 
 
 
 //####################################################################################
-//##        Creates a block group of color buttons from palette colors
+//##    Creates a block group of color buttons from palette colors
 //####################################################################################
 QWidget* FormPopupColor::createColorBlock(Colors type, int start_index, int columns, int rows, int mid_step,
                                       int block_width, int block_height, int border, int x_spacing, int y_spacing) {
@@ -215,7 +215,7 @@ QString FormPopupColor::createButtonStyleSheet(QColor color, int border) {
 
 
 //####################################################################################
-//##        Updates the info label color and text
+//##    Updates the info label color and text
 //####################################################################################
 void FormPopupColor::setInfoLabelColor(QColor color) {
     bool white = (color.red() < 160 && color.green() < 160 && color.blue() < 160);
@@ -232,7 +232,7 @@ void FormPopupColor::setInfoLabelColor(QColor color) {
 
 
 //####################################################################################
-//##        On close, save current tab for later
+//##    On close, save current tab for later
 //####################################################################################
 void FormPopupColor::closeEvent(QCloseEvent *event) {
     Dr::SetPreference(Preferences::Color_Popup_Tab, m_palette_block->currentIndex());
@@ -242,7 +242,7 @@ void FormPopupColor::closeEvent(QCloseEvent *event) {
 
 
 //####################################################################################
-//##        ColorLabel Class Functions
+//##    ColorLabel Class Functions
 //####################################################################################
 DrQPushButtonPageSelect::DrQPushButtonPageSelect(QWidget *parent, FormPopupColor *popup, QString description) :
     QPushButton(parent), m_popup(popup), m_description(description) {
@@ -260,7 +260,7 @@ void DrQPushButtonPageSelect::leaveEvent(QEvent *) {
 
 
 //####################################################################################
-//##        ColorLabel Class Functions
+//##    ColorLabel Class Functions
 //####################################################################################
 DrQPushButtonColorSelect::DrQPushButtonColorSelect(QWidget *parent, FormPopupColor *popup, QColor my_color, int width, int height) :
     QPushButton(parent), m_popup(popup), m_color(my_color), m_width(width), m_height(height) {

@@ -16,7 +16,7 @@
 #include "opengl/opengl.h"
 
 //####################################################################################
-//##        Constructor / Destructor
+//##    Constructor / Destructor
 //####################################################################################
 DrOpenGL::DrOpenGL(QWidget *parent, FormEngine *form_engine, DrEngine *engine) : QOpenGLWidget(parent), m_form_engine(form_engine), m_engine(engine) {
     // ***** DO NOT perform any OpenGL resource initialization in constructor, use initializeGL() instead    
@@ -57,7 +57,7 @@ DrOpenGL::~DrOpenGL() {
 
 
 //####################################################################################
-//##        Handle Window Resizing
+//##    Handle Window Resizing
 //####################################################################################
 void DrOpenGL::resizeGL(int w, int h) {
     glViewport(0, 0, w * devicePixelRatio(), h * devicePixelRatio());

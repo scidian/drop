@@ -25,8 +25,8 @@ namespace DrImaging
 
 
 //####################################################################################
-//##        Loops through image and changes one pixel at a time based on a
-//##        premultiplied table
+//##    Loops through image and changes one pixel at a time based on a
+//##    premultiplied table
 //####################################################################################
 QPixmap applySinglePixelFilter(Image_Filter_Type filter, const QPixmap& from_pixmap, int value) {
     return QPixmap::fromImage(applySinglePixelFilter(filter, from_pixmap.toImage(), value));
@@ -101,7 +101,7 @@ QImage applySinglePixelFilter(Image_Filter_Type filter, const QImage& from_image
 
 
 //####################################################################################
-//##        Pixelates Image
+//##    Pixelates Image
 //####################################################################################
 QPixmap applyPixelation(const QPixmap& from_pixmap, QPointF data_pair) {
     return QPixmap::fromImage( applyPixelation(from_pixmap.toImage(), data_pair ));

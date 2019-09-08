@@ -23,10 +23,10 @@
 
 
 //####################################################################################
-//##        Updates the property boxes already in the Inspector when a new
-//##            item is selected or when something in the project has changed
+//##    Updates the property boxes already in the Inspector when a new
+//##        item is selected or when something in the project has changed
 //##
-//##        Inspector Widget SIGNALS are blocked to prevent recursive updating
+//##    Inspector Widget SIGNALS are blocked to prevent recursive updating
 //####################################################################################
 void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_items, QList<long> property_keys_to_update) {
     if (changed_items.isEmpty()) return;
@@ -142,11 +142,11 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 
 
 //####################################################################################
-//##        SLOT: connceted from SIGNAL that is emmited when the user changes the values
-//##            of the input boxes in the Inspector.
+//##    SLOT: connceted from SIGNAL that is emmited when the user changes the values
+//##          of the input boxes in the Inspector.
 //##
-//##        Updates the appropriate DrSettings DrProperty Values of the item changed
-//##            in the Inspector after a new value has been accepted
+//##    Updates the appropriate DrSettings DrProperty Values of the item changed
+//##        in the Inspector after a new value has been accepted
 //####################################################################################
 void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order) {
     if (m_selected_key == c_no_key) return;

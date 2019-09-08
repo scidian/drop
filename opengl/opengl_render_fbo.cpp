@@ -24,8 +24,8 @@
 
 
 //####################################################################################
-//##        Renders Frame Buffer Object to screen buffer as a textured quad
-//##            Post processing available through the fragment shader
+//##    Renders Frame Buffer Object to screen buffer as a textured quad
+//##        Post processing available through the fragment shader
 //####################################################################################
 void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) {
 
@@ -82,8 +82,8 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
 
 
 //####################################################################################
-//##        Renders Frame Buffer Object to screen buffer as a textured quad
-//##            Uses Kernel filter effect to blur, sharpen, etc
+//##    Renders Frame Buffer Object to screen buffer as a textured quad
+//##        Uses Kernel filter effect to blur, sharpen, etc
 //####################################################################################
 void DrOpenGL::drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo) {
 
@@ -98,13 +98,13 @@ void DrOpenGL::drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo) {
     m_kernel_shader.setUniformValue( u_kernel_matrix, orthoMatrix(fbo->width(), fbo->height()) );
 
     // Set Texture Coordinates for Shader
-    m_kernel_shader.setAttributeArray( a_kernel_texture_coord, m_whole_texture_coordinates.data(), 2 );
+    m_kernel_shader.setAttributeArray(    a_kernel_texture_coord, m_whole_texture_coordinates.data(), 2 );
     m_kernel_shader.enableAttributeArray( a_kernel_texture_coord );
 
     // Load vertices for this object
     QVector<GLfloat> vertices;
     setQuadVertices(vertices, fbo->width(), fbo->height(), QPointF(0, 0), 0.0f);
-    m_kernel_shader.setAttributeArray( a_kernel_vertex, vertices.data(), 3 );
+    m_kernel_shader.setAttributeArray(    a_kernel_vertex, vertices.data(), 3 );
     m_kernel_shader.enableAttributeArray( a_kernel_vertex );
 
     // Set variables for shader
@@ -127,8 +127,8 @@ void DrOpenGL::drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo) {
 
 
 //####################################################################################
-//##        Renders Frame Buffer Object to screen buffer as a textured quad
-//##            Uses "Screen" shader to multiply glow lights into texture
+//##    Renders Frame Buffer Object to screen buffer as a textured quad
+//##        Uses "Screen" shader to multiply glow lights into texture
 //####################################################################################
 void DrOpenGL::drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower, Blend_Mode mode) {
 

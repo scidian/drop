@@ -20,7 +20,7 @@
 #include "settings/settings_component_property.h"
 
 //####################################################################################
-//##        SLOT, Sets the Advisor Dock text
+//##    SLOT, Sets the Advisor Dock text
 //####################################################################################
 void TreeAdvisor::changeAdvisor(QString header, QString body) {
     if (advisor_mutex.tryLock() == false) return;           // Try and lock mutex to make this thread safe
@@ -64,7 +64,7 @@ void TreeAdvisor::changeAdvisor(QString header, QString body) {
 
 
 //####################################################################################
-//##        EVENT, Handles changing the Advisor on Mouse Enter
+//##    EVENT, Handles changing the Advisor on Mouse Enter
 //####################################################################################
 void TreeAdvisor::enterEvent(QEvent *event) {
     m_editor_relay->setAdvisorInfo(Advisor_Info::Advisor_Window);

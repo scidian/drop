@@ -60,7 +60,7 @@
 
 
 //####################################################################################
-//##        Item Change Event - Allows for auto updating on property changes
+//##    Item Change Event - Allows for auto updating on property changes
 //####################################################################################
 QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value) {
     // If this is a temporary item, or not attached to a scene, do not process change

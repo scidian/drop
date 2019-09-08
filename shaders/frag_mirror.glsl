@@ -48,7 +48,7 @@ const   highp float PI180 = highp float(PI / 180.0);        // To convert Degree
 
 
 //####################################################################################
-//##        2D Rotation / Translation
+//##    2D Rotation / Translation
 //####################################################################################
 vec2 translate(vec2 v, float x, float y) {
     v.x = v.x + x;
@@ -73,7 +73,7 @@ vec2 rotate(vec2 v, vec2 center_point, float angle) {
 
 
 //####################################################################################
-//##        Main Shader Function
+//##    Main Shader Function
 //####################################################################################
 void main( void ) {
 

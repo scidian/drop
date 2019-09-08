@@ -24,7 +24,7 @@
 
 
 //####################################################################################
-//##        Populates Tree Project List based on project data
+//##    Populates Tree Project List based on project data
 //####################################################################################
 void TreeProject::buildProjectTree() {
 
@@ -102,7 +102,7 @@ void TreeProject::enterEvent(QEvent *event)
 
 
 //####################################################################################
-//##        Returns a list of the items contained within the tree
+//##    Returns a list of the items contained within the tree
 //####################################################################################
 QList <QTreeWidgetItem*> TreeProject::getListOfAllTreeWidgetItems() {
     return getListOfChildrenFromItem( this->invisibleRootItem() );

@@ -26,7 +26,7 @@
 
 
 //####################################################################################
-//##        Starts resizing mode
+//##    Starts resizing mode
 //####################################################################################
 void DrView::startResize(QPoint mouse_in_view, bool use_tool_tip) {
     // Figure out starting orientation
@@ -68,7 +68,7 @@ void DrView::startResize(QPoint mouse_in_view, bool use_tool_tip) {
 
 
 //####################################################################################
-//##        Call appropriate resize function
+//##    Call appropriate resize function
 //####################################################################################
 void DrView::resizeSelection(QPointF mouse_in_scene, bool use_exact_scale, QPointF scale_to_use) {
     // Figure out what sides to use for x axis and y axis
@@ -105,7 +105,7 @@ Position_Flags DrView::findOppositeSide(Position_Flags start_side) {
 
 
 //####################################################################################
-//##        Main resize function
+//##    Main resize function
 //####################################################################################
 void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_scale, QPointF scale_to_use) {
     // Test for scene, convert to our custom class
@@ -289,7 +289,7 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_sc
 
 
 //####################################################################################
-//##        Remove shearing from item
+//##    Remove shearing from item
 //####################################################################################
 void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
 
@@ -388,7 +388,7 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
 
 
 //####################################################################################
-//##        Checks if any of these Items should have to remain Square shaped
+//##    Checks if any of these Items should have to remain Square shaped
 //####################################################################################
 bool DrView::containsSquareItem(QGraphicsItem *item) {
     DrItem *original = dynamic_cast<DrItem*>(item);

@@ -27,7 +27,7 @@
 
 
 //####################################################################################
-//##        Re-configures FormMain to new mode
+//##    Re-configures FormMain to new mode
 //####################################################################################
 void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
 
@@ -90,7 +90,7 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
 
 
 //####################################################################################
-//##        Sets initial settings of FormMain
+//##    Sets initial settings of FormMain
 //####################################################################################
 void FormMain::initializeFormMainSettings() {
     // ***** Main window settings
@@ -115,7 +115,7 @@ void FormMain::initializeFormMainSettings() {
 
 
 //####################################################################################
-//##        Builds shared widgets used for all modes of FormMain
+//##    Builds shared widgets used for all modes of FormMain
 //####################################################################################
 void FormMain::buildWidgetsShared() {
 
@@ -242,7 +242,7 @@ void FormMain::buildWidgetsShared() {
 
 
 //####################################################################################
-//##        Keeps docks from changing width while FormMain is changed around
+//##    Keeps docks from changing width while FormMain is changed around
 //####################################################################################
 void FormMain::lockDockWidth(QDockWidget *dock, int width) { dock->setFixedWidth( width ); }
 void FormMain::unlockDockWidth(QDockWidget *dock) {

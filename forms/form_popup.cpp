@@ -19,7 +19,7 @@
 #include "widgets/widgets_event_filters.h"
 
 //####################################################################################
-//##        Constructor
+//##    Constructor
 //####################################################################################
 FormPopup::FormPopup(QWidget *parent, DrProject *project, QWidget *widget_to_use_for_mapToGlobal, int x_offset, int y_offset)
     : QWidget(parent), m_project(project), m_mapper(widget_to_use_for_mapToGlobal) {
@@ -51,7 +51,7 @@ void FormPopup::focusOutEvent(QFocusEvent *) { this->close(); }
 
 
 //####################################################################################
-//##        Paints arrow at top / bottom of form
+//##    Paints arrow at top / bottom of form
 //####################################################################################
 void FormPopup::paintEvent(QPaintEvent *event) {
 
@@ -94,7 +94,7 @@ void FormPopup::paintEvent(QPaintEvent *event) {
 
 
 //####################################################################################
-//##        Closes form if clicked in transparent area
+//##    Closes form if clicked in transparent area
 //####################################################################################
 void FormPopup::mousePressEvent(QMouseEvent *event) {
     if (this->mask().contains(event->pos()) == false)
@@ -103,7 +103,7 @@ void FormPopup::mousePressEvent(QMouseEvent *event) {
 
 
 //####################################################################################
-//##        Keeps container widget same size as form
+//##    Keeps container widget same size as form
 //####################################################################################
 void FormPopup::resizeEvent(QResizeEvent *event) {
     Dr::ApplyPopupMask(this, 8, 8, m_below);
@@ -113,7 +113,7 @@ void FormPopup::resizeEvent(QResizeEvent *event) {
 
 
 //####################################################################################
-//##        Upon first showing, shape window
+//##    Upon first showing, shape window
 //####################################################################################
 void FormPopup::showEvent(QShowEvent *event) {
 

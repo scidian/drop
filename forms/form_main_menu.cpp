@@ -24,7 +24,7 @@
 
 
 //####################################################################################
-//##        Main Menu Bar Functions
+//##    Main Menu Bar Functions
 //####################################################################################
 void FormMain::menuAbout() {
     QMessageBox::about(this, tr("About Drop"), tr("<b>Drop Creator</b> A Drag and Drop Game Maker by Stephens Nunnally"));
@@ -69,7 +69,7 @@ void FormMain::editMenuAboutToHide() {
 }
 
 //####################################################################################
-//##        Sets up FormMain menu system
+//##    Sets up FormMain menu system
 //####################################################################################
 void FormMain::buildMenu() {
 

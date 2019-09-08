@@ -29,7 +29,7 @@
 
 
 //####################################################################################
-//##        DrawBackground / DrawForground, called before and after paintEvent
+//##    DrawBackground / DrawForground, called before and after paintEvent
 //####################################################################################
 void DrView::drawBackground(QPainter *painter, const QRectF &rect) {
     Q_UNUSED(rect);
@@ -57,7 +57,7 @@ void DrView::drawBackground(QPainter *painter, const QRectF &rect) {
 }
 
 void DrView::drawForeground(QPainter *painter, const QRectF &rect) {
-    Q_UNUSED(rect);
+    Q_UNUSED(rect)
 
     if (m_grid_show_on_top == true) {
         paintGrid(*painter);
@@ -73,7 +73,7 @@ void DrView::drawForeground(QPainter *painter, const QRectF &rect) {
 
 
 //####################################################################################
-//##        PAINT: Main Paint Event for QGraphicsView (DrView)
+//##    PAINT: Main Paint Event for QGraphicsView (DrView)
 //####################################################################################
 void DrView::paintEvent(QPaintEvent *event) {
     // ******************** Pass on event to parent class paint items into scene
@@ -147,7 +147,7 @@ void DrView::paintEvent(QPaintEvent *event) {
 
 
 //####################################################################################
-//##        PAINT: Draws grid lines
+//##    PAINT: Draws grid lines
 //####################################################################################
 void DrView::paintGrid(QPainter &painter) {
     double point_size = 4;
@@ -223,7 +223,7 @@ void DrView::paintGrid(QPainter &painter) {
 
 
 //####################################################################################
-//##        PAINT: Paints Game Frame in Scene Coordinates
+//##    PAINT: Paints Game Frame in Scene Coordinates
 //####################################################################################
 void DrView::paintGameFrame(QPainter &painter) {
 
@@ -245,7 +245,7 @@ void DrView::paintGameFrame(QPainter &painter) {
 
 
 //####################################################################################
-//##        PAINT: Paints Stage Bounds in Scene Coordinates
+//##    PAINT: Paints Stage Bounds in Scene Coordinates
 //####################################################################################
 void DrView::paintStageBounds(QPainter &painter, DrStage* stage) {
     long stage_size = stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();
@@ -299,7 +299,7 @@ void DrView::paintStageBounds(QPainter &painter, DrStage* stage) {
 
 
 //####################################################################################
-//##        PAINT: Paints tool tip when using OpenGL
+//##    PAINT: Paints tool tip when using OpenGL
 //####################################################################################
 void DrView::paintToolTip(QPainter &painter) {
     int w = m_tool_tip->geometry().width();
@@ -324,7 +324,7 @@ void DrView::paintToolTip(QPainter &painter) {
 
 
 //####################################################################################
-//##        PAINT: Draw our Rubber Band selection box with custom colors
+//##    PAINT: Draw our Rubber Band selection box with custom colors
 //####################################################################################
 void DrViewRubberBand::paintEvent(QPaintEvent *) {
     QStylePainter painter(this);

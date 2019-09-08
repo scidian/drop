@@ -25,7 +25,7 @@
 
 
 //####################################################################################
-//##        Constructor & destructor
+//##    Constructor & destructor
 //####################################################################################
 DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, bool is_temp_only) : m_editor_relay(editor_relay) {
     // Store relevant project / thing data for use later
@@ -169,7 +169,7 @@ void DrItem::enableItemChangeFlags() {
 }
 
 //####################################################################################
-//##        Item Property Overrides
+//##    Item Property Overrides
 //####################################################################################
 // Outline of entire item
 QRectF DrItem::boundingRect() const {
@@ -189,7 +189,7 @@ QPainterPath DrItem::shape() const {
 
 
 //####################################################################################
-//##        Pixmap Filters
+//##    Pixmap Filters
 //####################################################################################
 void DrItem::applyFilters() {
     QPixmap new_pixmap = m_pixmap.copy();
@@ -220,7 +220,7 @@ void DrItem::applyFilters() {
 
 
 //####################################################################################
-//##        Input overrides
+//##    Input overrides
 //####################################################################################
 void DrItem::mousePressEvent(QGraphicsSceneMouseEvent *event) { QGraphicsItem::mousePressEvent(event); }
 void DrItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) { QGraphicsItem::mouseMoveEvent(event); }

@@ -19,7 +19,7 @@
 #include "helper.h"
 
 //####################################################################################
-//##        Mouse Events
+//##    Mouse Events
 //####################################################################################
 void DrOpenGL::mousePressEvent(QMouseEvent *event) {
     if (m_engine->getCurrentWorld()->has_scene == false) return;
@@ -134,7 +134,7 @@ void DrOpenGL::mouseMoveEvent(QMouseEvent *event) {
 }
 
 //####################################################################################
-//##        Wheel Event / Zoom Functions
+//##    Wheel Event / Zoom Functions
 //####################################################################################
 
 // Handles zooming in / out of view with mouse wheel

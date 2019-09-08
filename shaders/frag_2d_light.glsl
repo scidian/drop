@@ -38,7 +38,7 @@ const   highp float DEG = 0.0174533;                // One Degree in Radians is 
 
 
 //####################################################################################
-//##        Sample from the 1D Distance (Shadow) Map
+//##    Sample from the 1D Distance (Shadow) Map
 //####################################################################################
 highp float sampleShadow(highp vec2 coord_in, highp float r) {
     // Original Return
@@ -53,7 +53,7 @@ highp float sampleShadow(highp vec2 coord_in, highp float r) {
 
 
 //####################################################################################
-//##        Main Shader Function
+//##    Main Shader Function
 //####################################################################################
 void main(void) {
 

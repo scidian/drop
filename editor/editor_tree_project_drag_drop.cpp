@@ -19,7 +19,7 @@
 
 
 //####################################################################################
-//##        Drag / Drop Events
+//##    Drag / Drop Events
 //####################################################################################
 // This removes the item from under the mouse, sort of
 void TreeProject::startDrag(Qt::DropActions supportedActions) {

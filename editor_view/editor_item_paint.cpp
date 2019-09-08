@@ -18,7 +18,7 @@
 
 
 //####################################################################################
-//##        Custom Paint Handling
+//##    Custom Paint Handling
 //####################################################################################
 void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     ///if (option->state & QStyle::State_Selected)  { fillColor = QColor(Qt::red); } //m_color.dark(150); }              // If selected

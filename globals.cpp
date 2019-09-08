@@ -15,11 +15,11 @@ typedef std::map<Preferences, QVariant> PreferenceMap;
 
 
 //####################################################################################
-//##        These functions can be used globally without passing around an interface pointer
+//##    These functions can be used globally without passing around an interface pointer
 //##
-//##        - Just need to #include "interface_relay.h"
-//##        - When program starts, FormMain is set as active 'IEditorRelay' class
-//##        - Make calls like: "Dr::SetLabelText"
+//##    - Just need to #include "interface_relay.h"
+//##    - When program starts, FormMain is set as active 'IEditorRelay' class
+//##    - Make calls like: "Dr::SetLabelText"
 //##
 //####################################################################################
 

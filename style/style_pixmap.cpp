@@ -16,7 +16,7 @@ namespace Dr {
 
 
 //####################################################################################
-//##        Turns Image into a Mask of the spcified color
+//##    Turns Image into a Mask of the spcified color
 //####################################################################################
 QImage ImageMask(const QImage &from_image, QColor mask_color, int max_alpha) {
     QImage image = from_image;
@@ -34,7 +34,7 @@ QImage ImageMask(const QImage &from_image, QColor mask_color, int max_alpha) {
 }
 
 //####################################################################################
-//##        Creates a circular mask to limit to QPixmap shape
+//##    Creates a circular mask to limit to QPixmap shape
 //####################################################################################
 void SetMaskCircleShape (QPixmap &pix) {
     QPixmap mask(pix.width(), pix.height());

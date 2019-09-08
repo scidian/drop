@@ -29,7 +29,7 @@
 
 
 //####################################################################################
-//##        Render, Paint the Scene
+//##    Render, Paint the Scene
 //####################################################################################
 // Before rendering 3D objects, enable face culling for triangles facing away from view
 void DrOpenGL::cullingOn() {    glEnable( GL_CULL_FACE );   glCullFace(  GL_BACK );     glFrontFace( GL_CCW ); }
@@ -115,7 +115,7 @@ void DrOpenGL::drawSpace() {
 
 
 //####################################################################################
-//##        Draws Glow Buffer onto screen buffer
+//##    Draws Glow Buffer onto screen buffer
 //####################################################################################
 bool DrOpenGL::drawGlowBuffer() {
 
@@ -148,7 +148,7 @@ bool DrOpenGL::drawGlowBuffer() {
 
 
 //####################################################################################
-//##        Draws a DrEngineThing effect type with proper shader
+//##    Draws a DrEngineThing effect type with proper shader
 //####################################################################################
 bool DrOpenGL::drawEffect(DrEngineThing *thing, DrThingType &last_thing) {
 

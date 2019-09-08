@@ -19,10 +19,10 @@
 
 
 //####################################################################################
-//##        Simplifies a list of points, reducing multiple points along the same slope
-//##            - if ((y2-y1) / (x2-x1)) == ((y3-y1)/(x3-x1)), then slope is same and is along same line
-//##            tolerance:  how similar slop should be, bigger numbers causes less points
-//##            test_count: how many points to test before we just go ahead and add a point
+//##    Simplifies a list of points, reducing multiple points along the same slope
+//##        NOTE: If ((y2-y1) / (x2-x1)) == ((y3-y1)/(x3-x1)), then slope is same and is along same line
+//##        tolerance:  how similar slop should be, bigger numbers causes less points
+//##        test_count: how many points to test before we just go ahead and add a point
 //####################################################################################
 QVector<HullPoint> DrEngineVertexData::simplifyPoints(const QVector<HullPoint> &from_points, double tolerance, int test_count) {
     QVector<HullPoint> simple_points;
@@ -71,7 +71,7 @@ QVector<HullPoint> DrEngineVertexData::simplifyPoints(const QVector<HullPoint> &
 
 
 //####################################################################################
-//##        Smooth / Curve a collection of points
+//##    Smooth / Curve a collection of points
 //####################################################################################
 // Returns a point from a vector with wrap around coverage of vector indices
 HullPoint pointAt(const QVector<HullPoint> &point_list, int index) {
@@ -117,7 +117,7 @@ QVector<HullPoint> DrEngineVertexData::smoothPoints(const QVector<HullPoint> &fr
 
 
 //####################################################################################
-//##        Builds an Extruded Pixmap
+//##    Builds an Extruded Pixmap
 //####################################################################################
 void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
     m_data.resize(100 * c_vertex_length);

@@ -25,8 +25,8 @@
 
 
 //####################################################################################
-//##        Called after some change has been made to items on another widget besides
-//##        the QGraphicsView, updates the items in the scene
+//##    Called after some change has been made to items on another widget besides
+//##    the QGraphicsView, updates the items in the scene
 //####################################################################################
 void DrScene::updateChangesInScene(QList<DrSettings*> changed_items, QList<long> property_keys) {
     if (changed_items.isEmpty()) return;

@@ -31,11 +31,11 @@
  */
 
 //####################################################################################
-//##        #NOTE: Push function executes redo() function of command when called
+//##    #NOTE: Push function executes redo() function of command when called
 //##
-//##        SLOT, Needs to be connected to
-//##            - Mouse release on View
-//##            - Arrow key press on scene
+//##    SLOT, Needs to be connected to
+//##        - Mouse release on View
+//##        - Arrow key press on scene
 //####################################################################################
 void DrScene::undoAction() {
     m_undo->undo();
@@ -158,7 +158,7 @@ DrItem* DrScene::addItemToSceneFromThing(DrThing *thing) {
 
 
 //####################################################################################
-//##        Move Command on the QUndoStack
+//##    Move Command on the QUndoStack
 //####################################################################################
 UndoCommandMove::UndoCommandMove(DrScene *scene, const QPointF &old_pos, QUndoCommand *parent) : QUndoCommand(parent) {
     m_scene = scene;
@@ -195,7 +195,7 @@ void UndoCommandMove::redo() {
 
 
 //####################################################################################
-//##        Deselects old items, Selects one new item
+//##    Deselects old items, Selects one new item
 //####################################################################################
 UndoCommandNewSelection::UndoCommandNewSelection(DrScene *scene,
                                                    QList<DrThing*> old_list,

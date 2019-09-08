@@ -16,7 +16,7 @@
 
 
 //####################################################################################
-//##        Returns a square matrix for rendering a flat quad (usually to fill screen)
+//##    Returns a square matrix for rendering a flat quad (usually to fill screen)
 //####################################################################################
 QMatrix4x4 DrOpenGL::orthoMatrix(float width, float height) {
     float left =   0.0f - (width  / 2.0f);
@@ -30,7 +30,7 @@ QMatrix4x4 DrOpenGL::orthoMatrix(float width, float height) {
 
 
 //####################################################################################
-//##        Update the View / Projection matrices before rendering
+//##    Update the View / Projection matrices before rendering
 //####################################################################################
 void DrOpenGL::updateViewMatrix(Render_Type render_type, bool use_offset) {
     //          Axis:
@@ -91,7 +91,7 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type, bool use_offset) {
 
 
 //####################################################################################
-//##        Occluder Map FBO Matrices
+//##    Occluder Map FBO Matrices
 //####################################################################################
 QMatrix4x4 DrOpenGL::occluderMatrix(Render_Type render_type, bool use_offset) {
     float aspect_ratio = static_cast<float>(m_occluder_fbo->width()) / static_cast<float>(m_occluder_fbo->height());

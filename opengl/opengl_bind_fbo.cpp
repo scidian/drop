@@ -12,9 +12,9 @@
 
 
 //####################################################################################
-//##        Allocate / Bind Off Screen FBO
-//##            Used for offscreen rendering, allows for entire scene to have post
-//##            processing shaders applied at one time
+//##    Allocate / Bind Off Screen FBO
+//##        Used for offscreen rendering, allows for entire scene to have post
+//##        processing shaders applied at one time
 //####################################################################################
 void DrOpenGL::bindOffscreenBuffer(bool clear) {
     // Check that off screen buffers are initialized
@@ -54,7 +54,7 @@ void DrOpenGL::bindOffscreenBuffer(bool clear) {
 }
 
 //####################################################################################
-//##        Relase Off Screen Frame Buffer Object
+//##    Relase Off Screen Frame Buffer Object
 //####################################################################################
 void DrOpenGL::releaseOffscreenBuffer() {
     m_render_fbo->release();
@@ -67,8 +67,8 @@ void DrOpenGL::releaseOffscreenBuffer() {
 
 
 //####################################################################################
-//##        Allocate / Bind Glow Light FBO
-//##            Glow Light FBO is used to render all glow lights at once
+//##    Allocate / Bind Glow Light FBO
+//##        Glow Light FBO is used to render all glow lights at once
 //####################################################################################
 void DrOpenGL::bindGlowLightsBuffer(float ambient_light) {
     // Check that off screen buffers are initialized
@@ -81,15 +81,15 @@ void DrOpenGL::bindGlowLightsBuffer(float ambient_light) {
     m_glow_fbo->bind();
 
     // Clear the buffer
-    glClearColor(ambient_light, ambient_light, ambient_light, 0.0f);
+    glClearColor(ambient_light, ambient_light, ambient_light, 1.0f);    // !!!!! #WARNING: Do not change opacity from 1.0 !!!!!
     ///glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
 //####################################################################################
-//##        Allocate / Bind Occluder Map FBO
-//##            Occluder Map FBO is used to draw objects onto a buffer that lights can copy to cast shadows onto.
-//##            The objects are drawn using pixels encoded with their respective z order.
+//##    Allocate / Bind Occluder Map FBO
+//##        Occluder Map FBO is used to draw objects onto a buffer that lights can copy to cast shadows onto.
+//##        The objects are drawn using pixels encoded with their respective z order.
 //####################################################################################
 void DrOpenGL::bindOccluderMapBuffer() {
     int desired_x, desired_y;
@@ -118,9 +118,9 @@ void DrOpenGL::bindOccluderMapBuffer() {
 
 
 //####################################################################################
-//##        Allocate / Bind Light Occluder FBO (For Each Light)
-//##            Light Occluder FBO's are the size of the light to be drawn, they have their location part of the
-//##            Occluder Map FBO copied on to them to be processed with the Shadow Map Frag shader to produce a 1D shadow map.
+//##    Allocate / Bind Light Occluder FBO (For Each Light)
+//##        Light Occluder FBO's are the size of the light to be drawn, they have their location part of the
+//##        Occluder Map FBO copied on to them to be processed with the Shadow Map Frag shader to produce a 1D shadow map.
 //####################################################################################
 void DrOpenGL::bindLightOcculderBuffer(DrEngineLight *light) {
     // Check Frame Buffer Object is initialized
@@ -145,9 +145,9 @@ void DrOpenGL::bindLightOcculderBuffer(DrEngineLight *light) {
 
 
 //####################################################################################
-//##        Allocate / Bind Shadow FBO (For Each Light)
-//##            A 1D shadow map fbo for each light. The pixels are encoded with the distance from the light center to the nearest shadow
-//##            caster extending out at the respective angle to the shadow maps width (0 to width == 0 to 360 degrees)
+//##    Allocate / Bind Shadow FBO (For Each Light)
+//##        A 1D shadow map fbo for each light. The pixels are encoded with the distance from the light center to the nearest shadow
+//##        caster extending out at the respective angle to the shadow maps width (0 to width == 0 to 360 degrees)
 //####################################################################################
 void DrOpenGL::bindLightShadowBuffer(DrEngineLight *light) {
     // Shadow map size is the smallest of c_angles, light_radius_fitted, and width()

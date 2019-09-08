@@ -40,7 +40,7 @@ constexpr double c_speed_slowdown = 0.50;                   // Multiplier to slo
 //##        Support for object collisions, damage, recoil, one way platforms and more
 //####################################################################################
 extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
-    CP_ARBITER_GET_SHAPES(arb, a, b);
+    CP_ARBITER_GET_SHAPES(arb, a, b)
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
     if (!object_a || !object_b) return cpTrue;
@@ -67,7 +67,7 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
 
 
 extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
-    CP_ARBITER_GET_SHAPES(arb, a, b);
+    CP_ARBITER_GET_SHAPES(arb, a, b)
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
     if (!object_a || !object_b) return cpTrue;
@@ -114,7 +114,7 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
 }
 
 extern void SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
-    CP_ARBITER_GET_SHAPES(arb, a, b);
+    CP_ARBITER_GET_SHAPES(arb, a, b)
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
     if (!object_a || !object_b) return;
@@ -165,7 +165,7 @@ static inline cpFloat k_scalar_body(cpBody *body, cpVect point, cpVect n) {
 
 extern cpBool WaterPreSolve(cpArbiter *arb, cpSpace *space, void *) {
     // Get water and collider shape
-    CP_ARBITER_GET_SHAPES(arb, water, collider);
+    CP_ARBITER_GET_SHAPES(arb, water, collider)
 
     // Get the top of the water sensor bounding box to use as the water level
     cpFloat level = cpShapeGetBB(water).t;

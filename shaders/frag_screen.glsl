@@ -21,7 +21,7 @@ uniform lowp float  u_height;                       // Height of gl window
 
 
 //####################################################################################
-//##        Blends two colors with "Hard Light" blending
+//##    Blends two colors with "Hard Light" blending
 //####################################################################################
 vec3 hardLightBlending(vec3 upper, vec3 lower) {
     vec3 out_color;
@@ -45,7 +45,7 @@ vec3 hardLightBlending(vec3 upper, vec3 lower) {
 
 
 //####################################################################################
-//##        Main Shader Function
+//##    Main Shader Function
 //####################################################################################
 void main( void ) {
 

@@ -12,14 +12,14 @@
 namespace Dr {
 
 //####################################################################################
-//##        Local Static Variables
+//##    Local Static Variables
 //####################################################################################
 static std::bitset<static_cast<int>(Debug_Flags::Total)>   g_debug_flags;
 static bool                                                done_loading = false;    // True after initial startup of FormMain,
                                                                                     // makes sure done loading before any calls to SetLabelText
 
 //####################################################################################
-//##        Functions to initialize, set and check flags
+//##    Functions to initialize, set and check flags
 //####################################################################################
 bool CheckDoneLoading() { return done_loading; }
 void SetDoneLoading(bool done) { done_loading = done; }

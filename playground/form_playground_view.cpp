@@ -18,7 +18,7 @@
 #include "playground_toy.h"
 
 //####################################################################################
-//##        Updates GraphicsItems to match physics scene
+//##    Updates GraphicsItems to match physics scene
 //####################################################################################
 void FormPlayground::updateGraphicsView() {
     for (auto toy : m_playground->objects) {
@@ -34,7 +34,7 @@ void FormPlayground::updateGraphicsView() {
 
 
 //####################################################################################
-//##        Mouse Handling
+//##    Mouse Handling
 //####################################################################################
 void DrPlaygroundView::mousePressEvent(QMouseEvent *event) {
     QRect   box { -990, -990, 1980, 1980 };
@@ -115,7 +115,7 @@ void DrPlaygroundView::mouseMoveEvent(QMouseEvent *event) {
 
 
 //####################################################################################
-//##        Wheel Event / Zoom Functions
+//##    Wheel Event / Zoom Functions
 //####################################################################################
 // Handles zooming in / out of view with mouse wheel
 #if QT_CONFIG(wheelevent)

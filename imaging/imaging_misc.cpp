@@ -25,7 +25,7 @@ namespace DrImaging
 
 
 //####################################################################################
-//##        Returns average color of a Pixmap
+//##    Returns average color of a Pixmap
 //####################################################################################
 QColor averageColor(const QPixmap &pixmap, bool screen_shot) {
     QPixmap  one(20, 20);
@@ -59,7 +59,7 @@ QColor averageColor(const QPixmap &pixmap, bool screen_shot) {
 
 
 //####################################################################################
-//##        Returns an array of bits from an Image as aRgb float values
+//##    Returns an array of bits from an Image as aRgb float values
 //####################################################################################
 float* imageBitsAsFloat(const QImage &from_image) {
     QImage image = from_image;
@@ -79,7 +79,7 @@ float* imageBitsAsFloat(const QImage &from_image) {
 
 
 //####################################################################################
-//##        Returns a list of points of possible edges of an image
+//##    Returns a list of points of possible edges of an image
 //####################################################################################
 QVector<HullPoint> outlinePointList(const QImage& from_image, double alpha_tolerance) {
     QImage image = from_image;

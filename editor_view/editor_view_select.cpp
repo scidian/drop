@@ -24,7 +24,7 @@
 
 
 //####################################################################################
-//##        Starts selecting mode
+//##    Starts selecting mode
 //####################################################################################
 void DrView::startSelect(QMouseEvent *event) {
     m_items_start = my_scene->getSelectionItems();
@@ -41,7 +41,7 @@ void DrView::startSelect(QMouseEvent *event) {
 }
 
 //####################################################################################
-//##        Handles resizing Rubber Band box and updating Selection Area during View_Mode::Selecting
+//##    Handles resizing Rubber Band box and updating Selection Area during View_Mode::Selecting
 //####################################################################################
 void DrView::processSelection(QPoint mouse_in_view) {
     QRect band_box = QRect(m_origin, mouse_in_view).normalized();

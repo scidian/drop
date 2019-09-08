@@ -23,7 +23,7 @@
 #include "widgets/widgets_event_filters.h"
 
 //####################################################################################
-//##        Constructor
+//##    Constructor
 //####################################################################################
 FormPlayground::FormPlayground(QWidget *parent) : QWidget(parent) {
     // ***** Set up initial window
@@ -61,7 +61,7 @@ FormPlayground::~FormPlayground() {
 }
 
 //####################################################################################
-//##        Keeps container widget same size as form
+//##    Keeps container widget same size as form
 //####################################################################################
 void FormPlayground::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);

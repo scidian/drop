@@ -22,7 +22,7 @@
 
 
 //####################################################################################
-//##        Builds Widgets used for FormMainMode "World Editor"
+//##    Builds Widgets used for FormMainMode "World Editor"
 //####################################################################################
 void FormMain::buildWidgetsEditor() {
     QFont font = Dr::CustomFont();

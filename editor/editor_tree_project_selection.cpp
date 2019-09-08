@@ -14,9 +14,9 @@
 
 
 //####################################################################################
-//##        Updates selection
-//##            Checks to make sure if more than one item is selected all new items
-//##            not matching original type are not selected
+//##    Updates selection
+//##        Checks to make sure if more than one item is selected all new items
+//##        not matching original type are not selected
 //####################################################################################
 void TreeProject::selectionChanged (const QItemSelection &selected, const QItemSelection &deselected) {
 
@@ -90,7 +90,7 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
 
 
 //####################################################################################
-//##        Selects rows based on items selected in view
+//##    Selects rows based on items selected in view
 //####################################################################################
 void TreeProject::updateSelectionFromView(QList<QGraphicsItem*> item_list) {
     setAllowSelectionEvent(false);

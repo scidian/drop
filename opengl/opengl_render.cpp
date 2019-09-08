@@ -24,7 +24,7 @@
 
 
 //####################################################################################
-//##        Render, Paint the Scene (called by update())
+//##    Render, Paint the Scene (called by update())
 //####################################################################################
 void DrOpenGL::paintGL() {    
     // ***** Find OpenGL Version supported on this system
@@ -67,7 +67,7 @@ void DrOpenGL::paintGL() {
 
 
 //####################################################################################
-//##        Returns list of vertices at z plane from size passed in
+//##    Returns list of vertices at z plane from size passed in
 //####################################################################################
 void DrOpenGL::setQuadVertices(QVector<GLfloat> &vertices, float width, float height, QPointF center, float z) {
     float left =   static_cast<float>(center.x()) - (width  / 2.0f);
@@ -88,7 +88,7 @@ void DrOpenGL::setQuadVertices(QVector<GLfloat> &vertices, float width, float he
 }
 
 //####################################################################################
-//##        Returns list of vertices at z plane from 4 corners
+//##    Returns list of vertices at z plane from 4 corners
 //####################################################################################
 void DrOpenGL::setQuadRotatedVertices(QVector<GLfloat> &vertices,
                                       QVector3D &top_right, QVector3D &top_left,
@@ -104,7 +104,7 @@ void DrOpenGL::setQuadRotatedVertices(QVector<GLfloat> &vertices,
 
 
 //####################################################################################
-//##        Calculates rotated, z-ordered vertices for a DrEngineThing
+//##    Calculates rotated, z-ordered vertices for a DrEngineThing
 //####################################################################################
 void DrOpenGL::getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing) {
     // ***** Get object position data

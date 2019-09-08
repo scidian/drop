@@ -55,7 +55,7 @@ const   highp float PI180 = highp float(PI / 180.0);        // To convert Degree
 
 
 //####################################################################################
-//##        Fast Rgb / Hsv Conversion Functions
+//##    Fast Rgb / Hsv Conversion Functions
 //####################################################################################
 // ***** Convert red/green/blue to hue/saturation/vibrance
 vec3 rgbToHsv(vec3 c) {
@@ -76,7 +76,7 @@ vec3 hsvToRgb(vec3 c) {
 
 
 //####################################################################################
-//##        Cartoon Filter Functions
+//##    Cartoon Filter Functions
 //####################################################################################
 float edge_thres  = 0.2;
 float edge_thres2 = 5.0;
@@ -171,7 +171,7 @@ vec3 cartoonHsvToRgb(float h, float s, float v ) {
 
 
 //####################################################################################
-//##        2D Rotation / Translation
+//##    2D Rotation / Translation
 //####################################################################################
 vec2 translate(vec2 v, float x, float y) {
     v.x = v.x + x;
@@ -197,7 +197,7 @@ vec2 rotate(vec2 v, vec2 center_point, float angle) {
 
 
 //####################################################################################
-//##        Main Shader Function
+//##    Main Shader Function
 //####################################################################################
 void main( void ) {
 

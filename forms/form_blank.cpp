@@ -15,7 +15,7 @@
 #include "widgets/widgets_event_filters.h"
 
 //####################################################################################
-//##        Constructor
+//##    Constructor
 //####################################################################################
 FormBlank::FormBlank(DrProject *project, QWidget *parent) : QWidget(parent) {
 
@@ -56,7 +56,7 @@ FormBlank::FormBlank(DrProject *project, QWidget *parent) : QWidget(parent) {
 
 
 //####################################################################################
-//##        Keeps container widget same size as form
+//##    Keeps container widget same size as form
 //####################################################################################
 void FormBlank::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);

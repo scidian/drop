@@ -23,7 +23,7 @@
 
 
 //####################################################################################
-//##        Constructor / Destructor
+//##    Constructor / Destructor
 //####################################################################################
 DrViewToolTip::DrViewToolTip(QWidget *parent) : QWidget(parent) {
     this->setObjectName(QStringLiteral("formTooltip"));

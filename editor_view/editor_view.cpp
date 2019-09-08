@@ -25,7 +25,7 @@
 
 
 //####################################################################################
-//##        Constructor & destructor
+//##    Constructor & destructor
 //####################################################################################
 DrView::DrView(QWidget *parent, DrProject *project, DrScene *from_scene, IEditorRelay *editor_relay) :
                QGraphicsView(parent), m_project(project), m_editor_relay(editor_relay) {
@@ -73,7 +73,7 @@ DrView::~DrView() {
 
 
 //####################################################################################
-//##        Scene Change SLOTs / Events to update selection box when scene / selection changes
+//##    Scene Change SLOTs / Events to update selection box when scene / selection changes
 //####################################################################################
 // SLOT: Connected from scene().sceneRectChanged
 void DrView::sceneRectChanged(QRectF new_rect) {
@@ -104,8 +104,8 @@ void DrView::scrollContentsBy(int dx, int dy) {
 
 
 //####################################################################################
-//##        Recenters view when window is resized (after FormMain has loaded and view
-//##            has shown a scene at least once)
+//##    Recenters view when window is resized (after FormMain has loaded and view
+//##    has shown a scene at least once)
 //####################################################################################
 void DrView::resizeEvent(QResizeEvent *event) {
     QGraphicsView::resizeEvent(event);
@@ -120,7 +120,7 @@ void DrView::resizeEvent(QResizeEvent *event) {
 
 
 //####################################################################################
-//##        Returns current view mode as QString
+//##    Returns current view mode as QString
 //####################################################################################
 QString DrView::currentViewModeAsString() {
     switch (m_view_mode) {
@@ -137,8 +137,8 @@ QString DrView::currentViewModeAsString() {
 
 
 //####################################################################################
-//##        Recalculates corner and sides handles,
-//##        Usually called after View or Item changes
+//##    Recalculates corner and sides handles,
+//##    Usually called after View or Item changes
 //####################################################################################
 void DrView::updateSelectionBoundingBox(int called_from) {
     // Test for scene, convert to our custom class and lock the scene

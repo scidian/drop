@@ -19,7 +19,7 @@
 
 
 //####################################################################################
-//##        Main Shadow Map / Occluder / Render Routine
+//##    Main Shadow Map / Occluder / Render Routine
 //####################################################################################
 void DrOpenGL::process2DLights() {
 
@@ -198,7 +198,7 @@ void DrOpenGL::drawShadowMaps() {
 }
 
 //####################################################################################
-//##        Renders the 1D Shadow Map based on the Occluder Map (For Each Light)
+//##    Renders the 1D Shadow Map based on the Occluder Map (For Each Light)
 //####################################################################################
 void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
     // Bind Shadow Shader
@@ -247,7 +247,7 @@ void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
 
 
 //####################################################################################
-//##        Renders Glow Lights on Glow fbo
+//##    Renders Glow Lights on Glow fbo
 //####################################################################################
 void DrOpenGL::drawGlowLights() {
     // If no lights and ambient light is 50% (normal) exit now, otherwise bind Glow Light Buffer
@@ -268,8 +268,8 @@ void DrOpenGL::drawGlowLights() {
 
 
 //####################################################################################
-//##        Renders the light using the Shadow Map
-//##            - Returns true if rendered, false if not
+//##    Renders the light using the Shadow Map
+//##        - Returns true if rendered, false if not
 //####################################################################################
 bool DrOpenGL::draw2DLight(DrEngineLight *light) {
     // Bind Light Shader

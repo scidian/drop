@@ -15,7 +15,7 @@
 
 
 //####################################################################################
-//##        PAINT: Paints outline around every selected item
+//##    PAINT: Paints outline around every selected item
 //####################################################################################
 void DrView::paintItemOutlines(QPainter &painter) {
     QList<QGraphicsItem*>  my_items = my_scene->getSelectionItems();
@@ -53,7 +53,7 @@ void DrView::paintItemOutlines(QPainter &painter) {
 
 
 //####################################################################################
-//##        PAINT: Paints bounding box onto view
+//##    PAINT: Paints bounding box onto view
 //####################################################################################
 void DrView::paintBoundingBox(QPainter &painter) {
     bool antialiasing_before = painter.testRenderHint(QPainter::Antialiasing);
@@ -98,7 +98,7 @@ void DrView::paintBoundingBox(QPainter &painter) {
 
 
 //####################################################################################
-//##        PAINT: Paints handles onto view
+//##    PAINT: Paints handles onto view
 //####################################################################################
 void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw) {
     painter.setBrush(Dr::GetColor(Window_Colors::Icon_Light));
@@ -149,7 +149,7 @@ void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw) {
 
 
 //####################################################################################
-//##        PAINT: Paints lines showing rotation while rotating
+//##    PAINT: Paints lines showing rotation while rotating
 //####################################################################################
 void DrView::paintGroupAngle(QPainter &painter, double angle) {
     bool antialiasing_before = painter.testRenderHint(QPainter::Antialiasing);
@@ -182,7 +182,7 @@ void DrView::paintGroupAngle(QPainter &painter, double angle) {
 
 
 //####################################################################################
-//##        PAINT: Paints cross in the center of item / selection box while translating
+//##    PAINT: Paints cross in the center of item / selection box while translating
 //####################################################################################
 void DrView::paintItemCenters(QPainter &painter) {
     // Don't draw if snap to grid is off
@@ -214,7 +214,7 @@ void DrView::paintItemCenters(QPainter &painter) {
 
 
 //####################################################################################
-//##        PAINT: Paints the actual crosshairs for function paintItemCenters
+//##    PAINT: Paints the actual crosshairs for function paintItemCenters
 //####################################################################################
 void DrView::paintCrossHairs(QPainter &painter, QPoint center) {
     QTransform t = QTransform()

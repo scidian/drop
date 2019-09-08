@@ -21,7 +21,7 @@ uniform highp float     u_far_plane;                // Far plane in DrOpenGL
 
 
 //####################################################################################
-//##        Packs a float into a color
+//##    Packs a float into a color
 //####################################################################################
 highp vec3 packColor(highp float f) {
     highp vec3 color;
@@ -33,7 +33,7 @@ highp vec3 packColor(highp float f) {
 
 
 //####################################################################################
-//##        Main Shader Function
+//##    Main Shader Function
 //####################################################################################
 void main( void ) {
 

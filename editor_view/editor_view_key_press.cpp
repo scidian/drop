@@ -11,7 +11,7 @@
 #include "interface_editor_relay.h"
 
 //####################################################################################
-//##        Key Events
+//##    Key Events
 //####################################################################################
 // Key press event
 void DrView::keyPressEvent(QKeyEvent *event) {

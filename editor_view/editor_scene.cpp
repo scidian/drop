@@ -27,7 +27,7 @@
 
 
 //####################################################################################
-//##        Constructor & destructor
+//##    Constructor & destructor
 //####################################################################################
 DrScene::DrScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
                  QGraphicsScene(parent),
@@ -59,7 +59,7 @@ DrScene::~DrScene() {}
 
 
 //####################################################################################
-//##        SLOT's: sceneRectChanged, sceneChanged
+//##    SLOT's: sceneRectChanged, sceneChanged
 //####################################################################################
 // Connected from SIGNAL: QGraphicsScene::sceneRectChanged
 void DrScene::sceneRectChanged(QRectF new_rect) {
@@ -91,7 +91,7 @@ void DrScene::sceneChanged(QList<QRectF>) {
 
 
 //####################################################################################
-//##        setPositionByOrigin - Sets item to new_x, new_y position in scene, offset by_origin point
+//##    setPositionByOrigin - Sets item to new_x, new_y position in scene, offset by_origin point
 //####################################################################################
 void DrScene::setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y) {
     item->setPos(new_x, new_y);

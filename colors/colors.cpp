@@ -17,7 +17,7 @@ typedef std::map<Color_Palettes, Palette_Info> Color_Palette_Map;
 namespace Dr {
 
 //####################################################################################
-//##        Local Static Variables
+//##    Local Static Variables
 //####################################################################################
 static Color_Scheme      g_current_color_scheme = Color_Scheme::Dark;
 static Color_Scheme_Map  g_color_schemes;
@@ -27,7 +27,7 @@ QString BorderWidth()       { return "1px"; }                                   
 int     BorderWidthAsInt()  { return 1; }                                       // Project wide border width for Style Sheets, as Int
 
 //####################################################################################
-//##        Retreive custom colors
+//##    Retreive custom colors
 //####################################################################################
 Color_Scheme    GetColorScheme()                        { return g_current_color_scheme; }
 void            SetColorScheme(Color_Scheme new_scheme) { g_current_color_scheme = new_scheme; }
@@ -49,9 +49,9 @@ bool            GetPaletteShowInList(Color_Palettes palette)                { re
 
 
 //####################################################################################
-//##        Color History
+//##    Color History
 //####################################################################################
-void    AddToColorHistory(QColor color) {
+void AddToColorHistory(QColor color) {
     // Load old color history list (up to 36 colors)
     QList<QVariant> variant_list = Dr::GetPreference(Preferences::Color_Popup_History).toList();
 
@@ -78,9 +78,9 @@ void    AddToColorHistory(QColor color) {
 
 
 //####################################################################################
-//##        Store custom window palette colors
+//##    Store custom window palette colors
 //####################################################################################
-void    LoadPalettes() {
+void LoadPalettes() {
     LoadPaletteBasic(        g_color_palettes[Color_Palettes::Basic] );
     LoadPaletteBlank(        g_color_palettes[Color_Palettes::Blank] );
     LoadPaletteMaterial(     g_color_palettes[Color_Palettes::Material] );

@@ -34,7 +34,7 @@
 
 
 //####################################################################################
-//##        Constructor / Destructor for Main Window
+//##    Constructor / Destructor for Main Window
 //####################################################################################
 FormMain::~FormMain() {
     // Wait until scene is not being changed, then delete view and scene
@@ -215,7 +215,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
 
 
 //####################################################################################
-//##        Populates DrScene with passed in DrStage when Program is done loading
+//##    Populates DrScene with passed in DrStage when Program is done loading
 //####################################################################################
 void FormMain::buildSceneAfterLoading(long stage_key) {
     if (Dr::CheckDoneLoading() == false) {
@@ -227,7 +227,7 @@ void FormMain::buildSceneAfterLoading(long stage_key) {
 
 
 //####################################################################################
-//##        Sets the new palette to the style sheets
+//##    Sets the new palette to the style sheets
 //####################################################################################
 void FormMain::changePalette(Color_Scheme new_color_scheme) {
     Dr::SetColorScheme(new_color_scheme);
@@ -240,7 +240,7 @@ void FormMain::changePalette(Color_Scheme new_color_scheme) {
 
 
 //####################################################################################
-//##        FormMain Wide Event Filter, catches all events
+//##    FormMain Wide Event Filter, catches all events
 //####################################################################################
 bool FormMain::eventFilter(QObject *obj, QEvent *event) {
     // ***** Some event numbers we know, we can use this to find more
@@ -290,7 +290,7 @@ void FormMain::resizeEvent(QResizeEvent *event) {
 
 
 //####################################################################################
-//##        Sets the text of a label on FormMain, can be called globally from Dr::SetLabelText
+//##    Sets the text of a label on FormMain, can be called globally from Dr::SetLabelText
 //####################################################################################
 void FormMain::setLabelText(Label_Names label_name, QString new_text) {
     if (Dr::CheckDoneLoading() == false) return;

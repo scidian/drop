@@ -16,7 +16,7 @@
 
 
 //####################################################################################
-//##        Maps 3D Point to / from 2D FBO Map Coordinates
+//##    Maps 3D Point to / from 2D FBO Map Coordinates
 //####################################################################################
 QPointF DrOpenGL::mapToFBO(QVector3D point3D, QOpenGLFramebufferObject *fbo, QMatrix4x4 matrix) {
     QRect viewport = QRect(0, 0, fbo->width(), fbo->height());
@@ -34,7 +34,7 @@ QPointF DrOpenGL::mapToFBO(QVector3D point3D, QOpenGLFramebufferObject *fbo, QMa
 
 
 //####################################################################################
-//##        Maps 3D Point to / from 2D QOpenGLWidget Coordinates
+//##    Maps 3D Point to / from 2D QOpenGLWidget Coordinates
 //####################################################################################
 QPointF DrOpenGL::mapToScreen(double x, double y, double z) { return mapToScreen( QVector3D(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z))); }
 QPointF DrOpenGL::mapToScreen(float  x, float  y, float  z) { return mapToScreen( QVector3D(x, y, z )); }

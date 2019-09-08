@@ -25,7 +25,7 @@
 
 
 //####################################################################################
-//##        Starts rotating mode
+//##    Starts rotating mode
 //####################################################################################
 void DrView::startRotate(QPoint mouse_in_view, bool use_tool_tip) {
     // Store starting rotation of current selection group
@@ -44,7 +44,7 @@ void DrView::startRotate(QPoint mouse_in_view, bool use_tool_tip) {
 
 
 //####################################################################################
-//##        Main Rotation Function
+//##    Main Rotation Function
 //####################################################################################
 void DrView::rotateSelection(QPointF mouse_in_view, bool use_exact_angle, double angle_to_use) {
 
@@ -140,7 +140,7 @@ void DrView::rotateSelection(QPointF mouse_in_view, bool use_exact_angle, double
 
 
 //####################################################################################
-//##        Extract Angle, Scale and Skew from Transforms
+//##    Extract Angle, Scale and Skew from Transforms
 //####################################################################################
 double DrView::extractAngleFromTransform(QTransform &from_transform) {
     QTransform t = from_transform;
@@ -196,7 +196,7 @@ Transform_Data DrView::decomposeTransform(QTransform &from_transform, bool qr_ty
 
 
 //####################################################################################
-//##        Calculates angle from a center point to any target point, 0 = Up
+//##    Calculates angle from a center point to any target point, 0 = Up
 //####################################################################################
 double DrView::calcRotationAngleInDegrees(QPointF center_point, QPointF target_point) {
     // Calculate the angle theta from the deltaY and deltaX values (atan2 returns radians values from [-PI, PI])

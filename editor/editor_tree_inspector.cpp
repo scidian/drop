@@ -34,7 +34,7 @@
 
 
 //####################################################################################
-//##        Constructor
+//##    Constructor
 //####################################################################################
 TreeInspector::TreeInspector(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
                               QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay) {

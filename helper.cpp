@@ -28,7 +28,7 @@ static QString  g_font_family_bold;             // Keeps family name of our cust
 
 
 //####################################################################################
-//##        Returns System time as string
+//##    Returns System time as string
 //####################################################################################
 QString CurrentTimeAsString() {
     return QTime().currentTime().toString() + "." + QString::number(QTime().currentTime().msec());
@@ -36,7 +36,7 @@ QString CurrentTimeAsString() {
 
 
 //####################################################################################
-//##        High-Res Timer Functions
+//##    High-Res Timer Functions
 //####################################################################################
 double MillisecondsElapsed(const DrTime &timer) {
     return (std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - timer).count() /  1000000.0);
@@ -45,7 +45,7 @@ void ResetTimer(DrTime &timer) { timer = Clock::now(); }
 
 
 //####################################################################################
-//##        Makes sure scale is not zero so we don't mess up QGraphicsItem transform
+//##    Makes sure scale is not zero so we don't mess up QGraphicsItem transform
 //####################################################################################
 double CheckScaleNotZero(double scale_to_check) {
     if (scale_to_check <  .001 && scale_to_check >= 0) scale_to_check =  .001;
@@ -55,7 +55,7 @@ double CheckScaleNotZero(double scale_to_check) {
 
 
 //####################################################################################
-//##        Angle Comparision Functions
+//##    Angle Comparision Functions
 //####################################################################################
 // Returns true of the two angles are parrallel or perpendicular
 bool IsSimilarAngle(double angle1, double angle2, double tolerance) {
@@ -92,7 +92,7 @@ double Closest90DegreeAngle(double angle, double angle_to_find) {
 
 
 //####################################################################################
-//##        Trimms double to max_decimal_places, and then removes any trailing zeros
+//##    Trims double to max_decimal_places, and then removes any trailing zeros
 //####################################################################################
 QString RemoveTrailingDecimals(double value, int max_decimal_places) {
     double int_part, decimal_part = 0;
@@ -114,7 +114,7 @@ QString RemoveTrailingDecimals(double value, int max_decimal_places) {
 
 //####################################################################################
 //##
-//##        Custom Font Functions
+//##    Custom Font Functions
 //##
 //####################################################################################
 void LoadCustomFonts() {
@@ -143,8 +143,8 @@ QFont CustomFont() {
 
 
 //####################################################################################
-//##        These functions check the width of text that would be drawn
-//##        with a particular font
+//##    These functions check the width of text that would be drawn
+//##    with a particular font
 //####################################################################################
 int CheckFontWidth(QFont font, QString text_to_check) {
     QFontMetrics font_metrics { font };
@@ -171,7 +171,7 @@ QString StringFromBool(bool boolean) { return boolean? "True" : "False"; }
 
 
 //####################################################################################
-//##        Used to show a modal error message
+//##    Used to show a modal error message
 //####################################################################################
 void ShowErrorMessage(QString function_name, QString error_message) {
     QMessageBox::warning(nullptr, "Error", "Error from " + function_name + "(): " + error_message);
@@ -179,7 +179,7 @@ void ShowErrorMessage(QString function_name, QString error_message) {
 
 
 //####################################################################################
-//##        Used to show a modal messagebox
+//##    Used to show a modal messagebox
 //####################################################################################
 void ShowMessageBox(QString new_message, QPixmap pixmap) {
     QMessageBox *msg_box = new QMessageBox(nullptr);

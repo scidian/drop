@@ -24,7 +24,7 @@ int g_max_light_fbo_size =      2048;
 
 
 //####################################################################################
-//##        Initialize OpenGL Resources
+//##    Initialize OpenGL Resources
 //####################################################################################
 void DrOpenGL::initializeGL() {
 
@@ -64,7 +64,7 @@ void DrOpenGL::initializeGL() {
 
 
 //####################################################################################
-//##        Adds texture to Engine and creates 3D Extruded VBO for texture
+//##    Adds texture to Engine and creates 3D Extruded VBO for texture
 //####################################################################################
 void DrOpenGL::importTexture(long texture_id, QString from_asset_string) {
     QPixmap pix = QPixmap(from_asset_string);
@@ -96,7 +96,7 @@ void DrOpenGL::importTexture(long texture_id, QPixmap &pixmap) {
 
 
 //####################################################################################
-//##        Built in temp textures and shader textures
+//##    Built in temp textures and shader textures
 //####################################################################################
 void DrOpenGL::loadBuiltInTextures() {
     importTexture(Asset_Textures::Numbers,               ":/assets/engine/numbers.png");
@@ -127,7 +127,7 @@ void DrOpenGL::loadBuiltInTextures() {
 
 
 //####################################################################################
-//##        Load resources from project
+//##    Load resources from project
 //####################################################################################
 void DrOpenGL::loadProjectTextures() {
     for (auto asset_pair : m_engine->getProject()->getAssetMap() ) {
@@ -142,7 +142,7 @@ void DrOpenGL::loadProjectTextures() {
 }
 
 //####################################################################################
-//##        Built in 3D Models
+//##    Built in 3D Models
 //####################################################################################
 void DrOpenGL::loadBuiltInModels() {
     // Cube to use to turn textures into cubes
@@ -156,7 +156,7 @@ void DrOpenGL::loadBuiltInModels() {
 }
 
 //####################################################################################
-//##        Shaders
+//##    Shaders
 //####################################################################################
 void DrOpenGL::loadShaders() {
 

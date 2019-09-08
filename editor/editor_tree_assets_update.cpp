@@ -16,7 +16,7 @@
 
 
 //####################################################################################
-//##        Updates Asset List (like asset names) if items have been changed
+//##    Updates Asset List (like asset names) if items have been changed
 //####################################################################################
 void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> property_keys) {
     if (changed_items.isEmpty()) return;

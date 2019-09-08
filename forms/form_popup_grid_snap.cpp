@@ -13,7 +13,7 @@
 #include "helper.h"
 
 //####################################################################################
-//##        Builds out FormPop's inner widget to show options for grid snapping
+//##    Builds out FormPop's inner widget to show options for grid snapping
 //####################################################################################
 void FormPopup::buildPopupGridSnap() {
     QFont font = Dr::CustomFont();

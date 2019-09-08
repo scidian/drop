@@ -31,8 +31,8 @@ const float DEG =   0.0174533f;     // One Degree in Radians is 0.0174533
 
 
 //####################################################################################
-//##        Draws a DrEffectType::Light as a Pixmap
-//##            !! Implemented same algorithm as 2d_light_frag.glsl
+//##    Draws a DrEffectType::Light as a Pixmap
+//##        !! Implemented same algorithm as 2d_light_frag.glsl
 //####################################################################################
 QPixmap drawLight(QColor color, int diameter, float cone_start, float cone_end, float intensity, float blur) {
     QPixmap light(diameter, diameter);
@@ -109,7 +109,7 @@ QPixmap drawLight(QColor color, int diameter, float cone_start, float cone_end, 
 
 
 //####################################################################################
-//##        Draws a DrEffectType::Fire as a Pixmap
+//##    Draws a DrEffectType::Fire as a Pixmap
 //####################################################################################
 QPixmap drawFire(QColor color_1, QColor color_2, QColor smoke, Fire_Mask mask) {
     int width =  static_cast<int>(c_image_size * 0.625);
@@ -175,7 +175,7 @@ QPixmap drawFire(QColor color_1, QColor color_2, QColor smoke, Fire_Mask mask) {
 
 
 //####################################################################################
-//##        Draws a DrEffectType::Fisheye as a Pixmap
+//##    Draws a DrEffectType::Fisheye as a Pixmap
 //####################################################################################
 QPixmap drawFisheye(QColor color) {
     int width =  c_image_size;
@@ -193,7 +193,7 @@ QPixmap drawFisheye(QColor color) {
 }
 
 //####################################################################################
-//##        Draws a DrEffectType::Mirror as a Pixmap
+//##    Draws a DrEffectType::Mirror as a Pixmap
 //####################################################################################
 QPixmap drawMirror(QColor top_color, QColor bottom_color) {
     int width =  c_image_size;
@@ -216,7 +216,7 @@ QPixmap drawMirror(QColor top_color, QColor bottom_color) {
 
 
 //####################################################################################
-//##        Draws a Fibonacci Swirl, was the original draw routine for DrEngineSwirl
+//##    Draws a Fibonacci Swirl, was the original draw routine for DrEngineSwirl
 //####################################################################################
 QPixmap drawFibonacci(QColor background_color, QColor pen_color) {
     int width =  c_image_size;
@@ -279,7 +279,7 @@ QPixmap drawFibonacci(QColor background_color, QColor pen_color) {
 
 
 //####################################################################################
-//##        Draws a DrEffectType::Swirl as a Pixmap
+//##    Draws a DrEffectType::Swirl as a Pixmap
 //####################################################################################
 QPixmap drawSwirl(QColor color, double angle) {
     // Initialize pixmap
@@ -336,7 +336,7 @@ QPixmap drawSwirl(QColor color, double angle) {
 
 
 //####################################################################################
-//##        Draws a DrEffectType::Water as a Pixmap
+//##    Draws a DrEffectType::Water as a Pixmap
 //####################################################################################
 QPixmap drawWater(QColor top_color, QColor bottom_color) {
     int width =  c_image_size;

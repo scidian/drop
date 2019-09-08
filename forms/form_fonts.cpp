@@ -15,7 +15,7 @@
 #include "widgets/widgets_event_filters.h"
 
 //####################################################################################
-//##        Constructor
+//##    Constructor
 //####################################################################################
 FormFonts::FormFonts(DrProject *project, QWidget *parent) : QWidget(parent) {
 
@@ -55,7 +55,7 @@ FormFonts::FormFonts(DrProject *project, QWidget *parent) : QWidget(parent) {
 
 
 //####################################################################################
-//##        Keeps container widget same size as form
+//##    Keeps container widget same size as form
 //####################################################################################
 void FormFonts::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);

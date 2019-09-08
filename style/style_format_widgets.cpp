@@ -18,9 +18,9 @@ namespace Dr {
 
 
 //####################################################################################
-//##        Centers form_to_center on screen,
-//##            Tries to use whatever screen parent_to_find_screen_from is on, if it can't
-//##            find a valid screen, it defaults to centering the window on the primary screen
+//##    Centers form_to_center on screen,
+//##        Tries to use whatever screen parent_to_find_screen_from is on, if it can't
+//##        find a valid screen, it defaults to centering the window on the primary screen
 //####################################################################################
 void CenterFormOnScreen(QWidget *parent_to_find_screen_from, QWidget *form_to_center,
                         double width_percentage, double height_percentage) {
@@ -51,7 +51,7 @@ QScreen* FindScreenFromWidget(QWidget *widget) {
 
 
 //####################################################################################
-//##        Gives widget drop shadow
+//##    Gives widget drop shadow
 //####################################################################################
 void ApplyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color) {
     QGraphicsDropShadowEffect *shadow_effect;
@@ -72,7 +72,7 @@ void ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type) {
 
 
 //####################################################################################
-//##        Gives widget rounded corners,
+//##    Gives widget rounded corners,
 //####################################################################################
 // Radius is absolute size
 void ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius, int method) {

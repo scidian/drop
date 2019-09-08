@@ -27,8 +27,8 @@
 
 
 //####################################################################################
-//##        Finds Effect in screen coordinates, checks if should be rendered.
-//##        Returns top, bottom, left, right in shader coordinates.
+//##    Finds Effect in screen coordinates, checks if should be rendered.
+//##        - Returns top, bottom, left, right in shader coordinates.
 //####################################################################################
 bool DrOpenGL::getEffectPosition(QOpenGLFramebufferObject *fbo, DrEngineThing *thing,
                        double &top, double &bottom, double &left, double &right, float &angle) {
@@ -68,8 +68,8 @@ bool DrOpenGL::getEffectPosition(QOpenGLFramebufferObject *fbo, DrEngineThing *t
 
 
 //####################################################################################
-//##        Renders FBO to screen buffer as a textured quad using Fisheye Shader
-//##            - Returns true if rendered, false if not
+//##    Renders FBO to screen buffer as a textured quad using Fisheye Shader
+//##        - Returns true if rendered, false if not
 //####################################################################################
 bool DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, DrEngineFisheye *lens) {
 
@@ -145,8 +145,8 @@ bool DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, 
 
 
 //####################################################################################
-//##        Renders FBO to screen buffer as a textured quad using Mirror Shader
-//##            - Returns true if rendered, false if not
+//##    Renders FBO to screen buffer as a textured quad using Mirror Shader
+//##        - Returns true if rendered, false if not
 //####################################################################################
 bool DrOpenGL::drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, DrEngineMirror *mirror) {
 
@@ -235,8 +235,8 @@ bool DrOpenGL::drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, D
 
 
 //####################################################################################
-//##        Renders FBO to screen buffer as a textured quad using Swirl Shader
-//##            - Returns true if rendered, false if not
+//##    Renders FBO to screen buffer as a textured quad using Swirl Shader
+//##        - Returns true if rendered, false if not
 //####################################################################################
 bool DrOpenGL::drawFrameBufferUsingSwirlShader(QOpenGLFramebufferObject *fbo, DrEngineSwirl *swirl) {
 
@@ -314,8 +314,8 @@ bool DrOpenGL::drawFrameBufferUsingSwirlShader(QOpenGLFramebufferObject *fbo, Dr
 
 
 //####################################################################################
-//##        Renders FBO to screen buffer as a textured quad using Water Shader to draw reflective / refractive / textured water
-//##            - Returns true if rendered, false if not
+//##    Renders FBO to screen buffer as a textured quad using Water Shader to draw reflective / refractive / textured water
+//##        - Returns true if rendered, false if not
 //####################################################################################
 bool DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water) {
 

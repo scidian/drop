@@ -35,7 +35,7 @@
 
 
 //####################################################################################
-//##        Constructor
+//##    Constructor
 //####################################################################################
 TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
                        QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay) {
@@ -75,7 +75,7 @@ void TreeAssets::searchTextChanged(QString new_text) {
 
 
 //####################################################################################
-//##        Tree Building Functions
+//##    Tree Building Functions
 //####################################################################################
 void TreeAssets::buildAssetTree(QString search_text) {
 

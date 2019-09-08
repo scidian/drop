@@ -72,7 +72,7 @@ QMatrix4x4 billboardSphericalBegin(QVector3D camera, QVector3D object, QMatrix4x
 
 
 //####################################################################################
-//##        Draws a DrEngineObject effect type with default shader
+//##    Draws a DrEngineObject effect type with default shader
 //####################################################################################
 void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool draw2D) {
     if (thing->getThingType() != DrThingType::Object) return;
@@ -255,7 +255,7 @@ void DrOpenGL::releaseDefaultAttributeBuffer() {
 
 
 //####################################################################################
-//##        Renders the light to the using the Shadow Map
+//##    Renders the light to the using the Shadow Map
 //####################################################################################
 bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
     if ( thing->getThingType() != DrThingType::Object) return false;
@@ -327,8 +327,8 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
 
 
 //####################################################################################
-//##        Uses Fire Shader to draw Fire
-//##            - Returns true if rendered, false if not
+//##    Uses Fire Shader to draw Fire
+//##        - Returns true if rendered, false if not
 //####################################################################################
 bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     DrEngineFire *fire = dynamic_cast<DrEngineFire*>(thing);

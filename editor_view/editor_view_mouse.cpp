@@ -28,7 +28,7 @@
 
 
 //####################################################################################
-//##        Mouse Pressed
+//##    Mouse Pressed
 //####################################################################################
 // Forwards a double click as just another mouse down
 void DrView::mouseDoubleClickEvent(QMouseEvent *event) { mousePressEvent(event); }
@@ -148,7 +148,7 @@ void DrView::checkTranslateToolTipStarted() {
 
 
 //####################################################################################
-//##        Mouse Released
+//##    Mouse Released
 //####################################################################################
 void DrView::mouseReleaseEvent(QMouseEvent *event) {
     // Test for scene, convert to our custom class
@@ -206,7 +206,7 @@ void DrView::mouseReleaseEvent(QMouseEvent *event) {
 
 
 //####################################################################################
-//##        Wheel Event / Zoom Functions
+//##    Wheel Event / Zoom Functions
 //####################################################################################
 // Handles zooming in / out of view with mouse wheel
 #if QT_CONFIG(wheelevent)

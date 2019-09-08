@@ -12,7 +12,7 @@
 namespace Dr {
 
 //####################################################################################
-//##        Apply palette / coloring / styling to children widgets
+//##    Apply palette / coloring / styling to children widgets
 //####################################################################################
 void ApplyCustomStyleSheetFormatting(QWidget *widget) {
 
@@ -247,15 +247,16 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget) {
         "       border-radius: 0px; }"
         // Popup Menu for PushButton
         " QMenu#menuComboBox { "
-        "      padding-top: 4px; padding-bottom: 4px; "
-        "      color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
-        "      font-size: " + QString::number(Dr::FontSize()) + "px; "
-        "      border: " + Dr::BorderWidth() + " solid; margin: 0px; "
-        "      border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
-        "      background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; }"
-        " QMenu#menuComboBox::item { padding-top: 2px; padding-bottom: 3px; } "
+        "       padding-top: 4px; padding-bottom: 4px; "
+        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
+        "       font-size: " + QString::number(Dr::FontSize()) + "px; "
+        "       border: " + Dr::BorderWidth() + " solid; margin: 0px; "
+        "       border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; }"
+        " QMenu#menuComboBox::item { "
+        "       padding-left: 18px; padding-top: 2px; padding-bottom: 3px; } "
         " QMenu#menuComboBox::item:selected { "
-        "       padding-left: 2px; "
+        "       padding-left: 22px; "
         "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; } "
         " QMenu#menuComboBox::indicator:checked { left: 5px; top: -3px; } "

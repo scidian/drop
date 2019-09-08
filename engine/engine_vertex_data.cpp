@@ -25,13 +25,13 @@ const float c_extrude_depth = 0.5f;
 
 
 //####################################################################################
-//##        Constructor - Texture Cube
+//##    Constructor - Texture Cube
 //####################################################################################
 DrEngineVertexData::DrEngineVertexData() : m_count(0) { }
 
 
 //####################################################################################
-//##        Builds a Textured Quad
+//##    Builds a Textured Quad
 //####################################################################################
 void DrEngineVertexData::initializeTextureQuad() {
     m_data.resize(8 * c_vertex_length);
@@ -63,7 +63,7 @@ void DrEngineVertexData::initializeTextureQuad() {
 
 
 //####################################################################################
-//##        Builds a Textured Cube
+//##    Builds a Textured Cube
 //####################################################################################
 void DrEngineVertexData::initializeTextureCube() {
     m_data.resize(40 * c_vertex_length);
@@ -91,7 +91,7 @@ void DrEngineVertexData::initializeTextureCube() {
 }
 
 //####################################################################################
-//##        Adds a Vertex, including a Normal
+//##    Adds a Vertex, including a Normal
 //####################################################################################
 void DrEngineVertexData::add(const QVector3D &v, const QVector3D &n, const QVector2D &t) {
     if (m_count + c_vertex_length > m_data.count()) m_data.resize(m_data.count() + (100 * c_vertex_length));
@@ -110,7 +110,7 @@ void DrEngineVertexData::add(const QVector3D &v, const QVector3D &n, const QVect
 
 
 //####################################################################################
-//##        Adds a Cube, as 3 pairs of front and back
+//##    Adds a Cube, as 3 pairs of front and back
 //####################################################################################
 void DrEngineVertexData::cube(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
                               GLfloat x2, GLfloat y2, GLfloat tx2, GLfloat ty2,
@@ -166,7 +166,7 @@ void DrEngineVertexData::cube(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
 
 
 //####################################################################################
-//##        Adds a Quad, front and back
+//##    Adds a Quad, front and back
 //####################################################################################
 void DrEngineVertexData::quad(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
                               GLfloat x2, GLfloat y2, GLfloat tx2, GLfloat ty2,
@@ -195,7 +195,7 @@ void DrEngineVertexData::quad(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
 }
 
 //####################################################################################
-//##        Adds a Triangle, front and back
+//##    Adds a Triangle, front and back
 //####################################################################################
 void DrEngineVertexData::triangle(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
                                   GLfloat x2, GLfloat y2, GLfloat tx2, GLfloat ty2,
@@ -214,7 +214,7 @@ void DrEngineVertexData::triangle(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat t
 }
 
 //####################################################################################
-//##        Adds a Quad extruded from an Edge
+//##    Adds a Quad extruded from an Edge
 //####################################################################################
 void DrEngineVertexData::extrude(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
                                  GLfloat x2, GLfloat y2, GLfloat tx2, GLfloat ty2) {

@@ -20,7 +20,7 @@ constexpr int c_pen_selected_size = 4;
 
 
 //####################################################################################
-//##        Custom Item Painting
+//##    Custom Item Painting
 //####################################################################################
 void DrPlaygroundLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     int pen_size = (this->data(User_Roles::Selected).toBool()) ? c_pen_selected_size : c_pen_size;
@@ -58,7 +58,7 @@ void DrPlaygroundBox::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 
 
 //####################################################################################
-//##        Adds QGraphicsItems to Represent Playground Toys
+//##    Adds QGraphicsItems to Represent Playground Toys
 //####################################################################################
 QGraphicsLineItem* FormPlayground::addGraphicsLine(DrToy *toy, QColor color) {
     DrPlaygroundLine *line = new DrPlaygroundLine();
@@ -99,7 +99,7 @@ void FormPlayground::addItemToScene(DrToy *toy, QGraphicsItem *item, QColor colo
 
 
 //####################################################################################
-//##        Item Change Event - Allows for updating Space when item is moved
+//##    Item Change Event - Allows for updating Space when item is moved
 //####################################################################################
 static QVariant UpdateToyPosition(QGraphicsItem *item, const QVariant &value) {
     // Value is new scene position
@@ -146,7 +146,7 @@ QVariant DrPlaygroundBox::itemChange(GraphicsItemChange change, const QVariant &
 
 
 //####################################################################################
-//##        Gives Line Item a wider Shape for easier selecting
+//##    Gives Line Item a wider Shape for easier selecting
 //####################################################################################
 QPainterPath DrPlaygroundLine::shape() const {
     double radians = line().angle() * M_PI / 180;

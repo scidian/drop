@@ -15,14 +15,14 @@
 #include "imaging/imaging.h"
 
 //####################################################################################
-//##        Constructor
+//##    Constructor
 //####################################################################################
 DrEngineTexture::DrEngineTexture(QPixmap &from_pixmap) {
     loadTexture(from_pixmap);
 }
 
 //####################################################################################
-//##        Loads a texture
+//##    Loads a texture
 //####################################################################################
 void DrEngineTexture::loadTexture(QPixmap &from_pixmap) {
 

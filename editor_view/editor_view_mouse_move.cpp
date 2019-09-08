@@ -27,7 +27,7 @@
 
 
 //####################################################################################
-//##        Mouse Moved
+//##    Mouse Moved
 //####################################################################################
 void DrView::mouseMoveEvent(QMouseEvent *event) {
     // Test for scene, convert to our custom class and lock the scene
