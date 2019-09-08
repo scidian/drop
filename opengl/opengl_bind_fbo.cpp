@@ -81,7 +81,7 @@ void DrOpenGL::bindGlowLightsBuffer(float ambient_light) {
     m_glow_fbo->bind();
 
     // Clear the buffer
-    glClearColor(ambient_light, ambient_light, ambient_light, 1.0f);    // !!!!! #WARNING: Do not change opacity from 1.0 !!!!!
+    glClearColor(ambient_light, ambient_light, ambient_light, 1.0f);    // !!!!! #WARNING: Do not change opacity from 1.0f !!!!!
     ///glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 }

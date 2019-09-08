@@ -69,6 +69,7 @@ namespace DrImaging {
 
     // Object Counting / Fill (a la Ravens Project)
     QImage  blackAndWhiteFromAlpha(const QImage& from_image, double alpha_tolerance);
+    QImage  floodFill(const QImage& from_image, int start_x, int start_y, QColor color, double tolerance);
 
 
 }
