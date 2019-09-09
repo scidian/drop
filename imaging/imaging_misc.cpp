@@ -54,7 +54,15 @@ QColor averageColor(const QPixmap &pixmap, bool screen_shot) {
         image.save( file_name );
     }
 
-    return QColor(static_cast<int>(r / count), static_cast<int>(g / count), static_cast<int>(b / count));
+    int red =   static_cast<int>(r / count);
+    int green = static_cast<int>(g / count);
+    int blue =  static_cast<int>(b / count);
+
+    red =   Dr::Clamp(red,   0, 255);
+    green = Dr::Clamp(green, 0, 255);
+    blue =  Dr::Clamp(blue,  0, 255);
+
+    return QColor(red, green, blue);
 }
 
 

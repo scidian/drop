@@ -28,6 +28,8 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
     ///images.push_back( DrImaging::blackAndWhiteFromAlpha(pixmap.toImage(), 0.9, false));
 
     for (auto image : images) {
+        if (image.width() < 1 || image.height() < 1) continue;
+
         // ***** Get list of possible outline points
         QVector<HullPoint> image_points =           DrImaging::outlinePointList(image);
 

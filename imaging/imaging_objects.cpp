@@ -57,8 +57,10 @@ QVector<QRgb*> getScanLines(QImage &image) {
 
 
 //####################################################################################
-//##    Returns black / white image, white == had pixel, black == was transparent
+//##    Returns black / white image
 //##        alpha_tolerance is from 0.0 to 1.0
+//##        NORMAL:  white == had pixel, black == was transparent
+//##        INVERSE: black == had pixel, white == was transparent
 //####################################################################################
 QImage blackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, bool inverse) {
     QImage image = from_image;
@@ -73,11 +75,9 @@ QImage blackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, 
         color2 = c_color_white;
     }
 
-    // Loop through every pixel
     for (int y = 0; y < image.height(); ++y) {
         for (int x = 0; x < image.width(); ++x) {
-            unsigned int pixel = static_cast<unsigned int>(lines[y][x]);
-            lines[y][x] = (QColor::fromRgba(pixel).alphaF() < alpha_tolerance) ? color1 : color2;
+            lines[y][x] = (QColor::fromRgba(lines[y][x]).alphaF() < alpha_tolerance) ? color1 : color2;
         }
     }
     return image;
@@ -119,6 +119,10 @@ QImage floodFill(QImage &from_image, int start_x, int start_y, QColor color, dou
     QVector<QRgb*> flood_lines =     getScanLines(flood);
     QVector<QRgb*> processed_lines = getScanLines(processed);
 
+    // Check if start point is in range
+    if (start_x < 0 || start_y < 0 || start_x > from_image.width() - 1 || start_y > from_image.height() - 1) return flood;
+    if (from_image.width() < 1 || from_image.height() < 1) return flood;
+
     // Get starting color, set processed image to all zeros
     QColor start_color = QColor::fromRgba(image_lines[start_y][start_x]);
     for (int y = 0; y < from_image.height(); ++y) {
@@ -127,9 +131,6 @@ QImage floodFill(QImage &from_image, int start_x, int start_y, QColor color, dou
             processed_lines[y][x] = FLOOD_NOT_PROCESSED;
         }
     }
-
-    // Check if start point is in range
-    if (start_x < 0 || start_y < 0 || start_x > from_image.width() - 1 || start_y > from_image.height() - 1) return flood;
 
     QVector<FillPoint> points;
     points.push_back(FillPoint(start_x, start_y));
@@ -186,7 +187,6 @@ QVector<QImage> findObjectsInImage(const QPixmap &pixmap, double alpha_tolerance
     QColor white = QColor::fromRgba(c_color_white);
     for (int x = 0; x < black_white.width(); ++x) {
         for (int y = 0; y < black_white.height(); ++y) {
-            ///if (black_white.pixel(x, y) == c_color_black) {
             if (lines[y][x] == c_color_black) {
                 images.push_back( floodFill(black_white, x, y, white, 0.001) );
             }
