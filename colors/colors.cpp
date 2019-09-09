@@ -10,6 +10,7 @@
 #include "colors.h"
 #include "enums.h"
 #include "globals.h"
+#include "helper.h"
 
 typedef std::map<Color_Scheme,   std::map<Window_Colors, QColor>> Color_Scheme_Map;
 typedef std::map<Color_Palettes, Palette_Info> Color_Palette_Map;
@@ -26,13 +27,29 @@ static Color_Palette_Map g_color_palettes;                                      
 QString BorderWidth()       { return "1px"; }                                   // Project wide border width for Style Sheets, as QString
 int     BorderWidthAsInt()  { return 1; }                                       // Project wide border width for Style Sheets, as Int
 
+
+//####################################################################################
+//##    Color Helper Functions
+//####################################################################################
+// Compares 2 colors, returns true if they are the same
+bool IsSameColor(QColor color1, QColor color2, double tolerance) {
+    return ( Dr::IsCloseTo(color1.redF(),   color2.redF(),   tolerance) &&
+             Dr::IsCloseTo(color1.greenF(), color2.greenF(), tolerance) &&
+             Dr::IsCloseTo(color1.blueF(),  color2.blueF(),  tolerance) &&
+             Dr::IsCloseTo(color1.alphaF(), color2.alphaF(), tolerance) );
+}
+
+// Returns a random color
+QColor RandomColor() {
+    return QColor::fromRgb(QRandomGenerator::global()->generate());
+}
+
+
 //####################################################################################
 //##    Retreive custom colors
 //####################################################################################
 Color_Scheme    GetColorScheme()                        { return g_current_color_scheme; }
 void            SetColorScheme(Color_Scheme new_scheme) { g_current_color_scheme = new_scheme; }
-
-QColor          GetRandomColor()                        { return QColor::fromRgb(QRandomGenerator::global()->generate()); }
 
 QColor          GetColor(Window_Colors color_role)                           { return g_color_schemes[g_current_color_scheme][color_role]; }
 

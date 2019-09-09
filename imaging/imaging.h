@@ -35,6 +35,11 @@ enum class Image_Filter_Type {
     Premultiplied_Alpha,
 };
 
+enum class Flood_Fill_Type {
+    Compare_4,
+    Compare_8,
+};
+
 
 //####################################################################################
 //##    Image editing declarations
@@ -45,8 +50,8 @@ namespace DrImaging {
     QColor              averageColor(const QPixmap &pixmap, bool screen_shot = false);
     QVector<QRgb*>      getScanLines(QImage &image);
     float*              imageBitsAsFloat(const QImage &from_image);
-    bool                isSameColor(QColor color1, QColor color2, double tolerance);
     QVector<HullPoint>  outlinePointList(const QImage &from_image);
+    QVector<HullPoint>  traceImageOutline(const QImage &from_image);
 
 
     // Filters
@@ -71,7 +76,7 @@ namespace DrImaging {
     // Object Counting / Fill (a la Ravens Project)
     QImage          blackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, bool inverse = false);
     QVector<QImage> findObjectsInImage(const QPixmap &pixmap, double alpha_tolerance);
-    QImage          floodFill(QImage &from_image, int start_x, int start_y, QColor color, double tolerance);
+    QImage          floodFill(QImage &from_image, int at_x, int at_y, QColor color, double tolerance, Flood_Fill_Type type, int &flood_pixel_count);
 
 
 }

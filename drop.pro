@@ -101,7 +101,7 @@ SOURCES += \
     engine/engine_camera.cpp \
     engine/engine_texture.cpp \
     engine/engine_vertex_data.cpp \
-    engine/engine_vertex_data_pixmap.cpp \
+    engine/engine_vertex_data_extrude.cpp \
     engine/engine_world.cpp \
     engine/engine_world_build_player.cpp \
     engine/engine_world_build_world.cpp \

@@ -10,6 +10,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QMatrix4x4>
+#include <algorithm>
 
 #include "engine_texture.h"
 #include "engine_vertex_data.h"
@@ -30,26 +31,33 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
     for (auto image : images) {
         if (image.width() < 1 || image.height() < 1) continue;
 
-        // ***** Get list of possible outline points
-        QVector<HullPoint> image_points =           DrImaging::outlinePointList(image);
+        // ***** Get a list of possible outline points, find concave hull
+        ///QVector<HullPoint> image_points =   DrImaging::outlinePointList(image);
+        ///if (image_points.count() < 1) continue;
+        ///QVector<HullPoint> concave_hull =   HullFinder::FindConcaveHull(image_points, 3.5);
 
-        // ***** Find concave hull for extrusion points
-        QVector<HullPoint> concave_hull_face =      HullFinder::FindConcaveHull(image_points, 3.5);
-        QVector<HullPoint> concave_hull_extrude =   concave_hull_face;  //HullFinder::FindConcaveHull(image_points, 0.9);
+        // ***** Trace edge of image
+        QVector<HullPoint> image_points =   DrImaging::traceImageOutline(image);
+        Winding_Orientation winding =       HullFinder::FindWindingOrientation(image_points);
+        switch (winding) {
+            case Winding_Orientation::Unknown:          continue;
+            case Winding_Orientation::Clockwise:        std::reverse(image_points.begin(), image_points.end()); break;
+            case Winding_Orientation::CounterClockwise: break;
+        }
 
-        // ***** Simplify point list
-        QVector<HullPoint> simple_points_face =     simplifyPoints(concave_hull_face,   0.000001, 10);
-        QVector<HullPoint> simple_points_extrude =  simple_points_face; //simplifyPoints(concave_hull_extrude, 0.000001, 5);
+        // ***** Simplify, then Smooth point list
+        ///QVector<HullPoint> simple_points =  simplifyPoints(image_points,   0.000001, 10);
+        ///QVector<HullPoint> smooth_points =  smoothPoints(simple_points,    5, 5.0, 0.5);
 
-        // ***** Smooths / curves points in the list
-        QVector<HullPoint> smooth_points_face =     smoothPoints(simple_points_face,    5, 5.0, 0.5);
-        QVector<HullPoint> smooth_points_extrude =  smooth_points_face; //smoothPoints(simple_points_extrude, 5, 5.0, 0.5);
+        // ***** Smooth, then Simplify point list
+        QVector<HullPoint> smooth_points =  smoothPoints(image_points, 4, 4.0, 0.4);
+        QVector<HullPoint> simple_points =  simplifyPoints(smooth_points, 0.01, 25);            // A value of 1.0 looks nice for #KEYWORD: "low poly"
 
         // ***** Triangulate concave hull
-        triangulateFace(smooth_points_face, image.width(), image.height());
+        triangulateFace(simple_points, image.width(), image.height());
 
         // ***** Add extruded triangles
-        extrudeFacePolygon(smooth_points_extrude, image.width(), image.height());
+        extrudeFacePolygon(simple_points, image.width(), image.height());
     }
 }
 
@@ -58,6 +66,7 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
 //##    Simplifies a list of points, reducing multiple points along the same slope
 //##        NOTE: If ((y2-y1) / (x2-x1)) == ((y3-y1)/(x3-x1)), then slope is same and is along same line
 //##        tolerance:  how similar slop should be, bigger numbers causes less points
+//##                    0.01 looks nice for most objects, 1.0 looks good for #KEYWORD: "low poly", "low-poly"
 //##        test_count: how many points to test before we just go ahead and add a point
 //####################################################################################
 QVector<HullPoint> DrEngineVertexData::simplifyPoints(const QVector<HullPoint> &from_points, double tolerance, int test_count) {

@@ -10,17 +10,17 @@ HullPoint::HullPoint(double _x, double _y) {
     y = _y;
 }
 
-HullPoint & HullPoint::operator=(const HullPoint & other) {
+HullPoint & HullPoint::operator=(const HullPoint &other) {
     x = other.x;
     y = other.y;
     return *this;
 }
 
-HullPoint HullPoint::operator+(const HullPoint & other) const {
+HullPoint HullPoint::operator+(const HullPoint &other) const {
     return HullPoint(x + other.x, y + other.y);
 }
 
-HullPoint HullPoint::operator-(const HullPoint & other) const {
+HullPoint HullPoint::operator-(const HullPoint &other) const {
     return HullPoint(x - other.x, y - other.y);
 }
 
@@ -32,23 +32,23 @@ HullPoint HullPoint::operator/(double k) const {
     return HullPoint(x / k, y / k);
 }
 
-bool HullPoint::operator==(const HullPoint & other) const {
+bool HullPoint::operator==(const HullPoint &other) const {
     return qFuzzyCompare(x, other.x) && qFuzzyCompare(y, other.y);
 }
 
-double HullPoint::DotProduct(const HullPoint & other) const {
+double HullPoint::DotProduct(const HullPoint &other) const {
     return x * other.x + y * other.y;
 }
 
-double HullPoint::DistanceSquared(const HullPoint & to) const {
+double HullPoint::DistanceSquared(const HullPoint &to) const {
     return static_cast<double>( ((to.x - x) * (to.x - x) + (to.y - y) * (to.y - y)) );
 }
 
-double HullPoint::Distance(const HullPoint & to) const {
+double HullPoint::Distance(const HullPoint &to) const {
     return sqrt(DistanceSquared(to));
 }
 
-double HullPoint::Distance(const HullPoint & segmentStart, const HullPoint & segmentEnd) const {
+double HullPoint::Distance(const HullPoint &segmentStart, const HullPoint &segmentEnd) const {
     const double l2 = segmentStart.DistanceSquared(segmentEnd);
     if (l2 == 0.0) {
         return Distance(segmentStart);   // v == w case
@@ -93,12 +93,9 @@ bool HullFinder::IsPointInsidePolygon(HullPoint v, const QVector<HullPoint> & po
 {
     bool result = false;
     int j = polygon.count() - 1;
-    for (int i = 0; i < polygon.count(); i++)
-    {
-        if ((polygon[i].y < v.y && polygon[j].y > v.y) || (polygon[j].y < v.y && polygon[i].y > v.y))
-        {
-            if (polygon[i].x + (v.y - polygon[i].y) / (polygon[j].y - polygon[i].y) * (polygon[j].x - polygon[i].x) < v.x)
-            {
+    for (int i = 0; i < polygon.count(); i++) {
+        if ((polygon[i].y < v.y && polygon[j].y > v.y) || (polygon[j].y < v.y && polygon[i].y > v.y)) {
+            if (polygon[i].x + (v.y - polygon[i].y) / (polygon[j].y - polygon[i].y) * (polygon[j].x - polygon[i].x) < v.x) {
                 result = !result;
             }
         }
@@ -107,7 +104,7 @@ bool HullFinder::IsPointInsidePolygon(HullPoint v, const QVector<HullPoint> & po
     return result;
 }
 
-bool HullFinder::CheckEdgeIntersection(const HullPoint & p0, const HullPoint & p1, const HullPoint & p2, const HullPoint & p3) {
+bool HullFinder::CheckEdgeIntersection(const HullPoint &p0, const HullPoint &p1, const HullPoint &p2, const HullPoint &p3) {
     double s1_x = p1.x - p0.x;
     double s1_y = p1.y - p0.y;
     double s2_x = p3.x - p2.x;
@@ -117,7 +114,7 @@ bool HullFinder::CheckEdgeIntersection(const HullPoint & p0, const HullPoint & p
     return (s > 0 && s < 1 && t > 0 && t < 1);
 }
 
-bool HullFinder::CheckEdgeIntersection(const QVector<HullPoint> & hull, HullPoint curEdgeStart, HullPoint curEdgeEnd, HullPoint checkEdgeStart, HullPoint checkEdgeEnd) {
+bool HullFinder::CheckEdgeIntersection(const QVector<HullPoint> &hull, HullPoint curEdgeStart, HullPoint curEdgeEnd, HullPoint checkEdgeStart, HullPoint checkEdgeEnd) {
     for (int i = 0; i < hull.size() - 2; i++) {
         int e1 = i;
         int e2 = i + 1;
@@ -135,7 +132,7 @@ bool HullFinder::CheckEdgeIntersection(const QVector<HullPoint> & hull, HullPoin
     return false;
 }
 
-HullPoint HullFinder::NearestInnerPoint(HullPoint edgeStart, HullPoint edgeEnd, const QVector<HullPoint> &HullPoints, const QVector<HullPoint> &hull, bool * found) {
+HullPoint HullFinder::NearestInnerPoint(HullPoint edgeStart, HullPoint edgeEnd, const QVector<HullPoint> &HullPoints, const QVector<HullPoint> &hull, bool *found) {
     HullPoint result;
     double distance = 0;
     *found = false;
@@ -168,7 +165,7 @@ HullPoint HullFinder::NearestInnerPoint(HullPoint edgeStart, HullPoint edgeEnd, 
     return result;
 }
 
-QVector<HullPoint> HullFinder::FindConvexHull(const QVector<HullPoint> & HullPoints) {
+QVector<HullPoint> HullFinder::FindConvexHull(const QVector<HullPoint> &HullPoints) {
     QVector<HullPoint> P = HullPoints;
     QVector<HullPoint> H;
 
@@ -210,8 +207,7 @@ QVector<HullPoint> HullFinder::FindConvexHull(const QVector<HullPoint> & HullPoi
     // Compute the lower hull on the stack H
     H.push_back(P[minmin]);             // push  minmin HullPoint onto stack
     i = minmax;
-    while (++i <= maxmin)
-    {
+    while (++i <= maxmin) {
         // the lower line joins P[minmin]  with P[maxmin]
         if (IsLeft(P[minmin], P[maxmin], P[i]) >= 0 && i < maxmin)
             continue;                   // ignore P[i] above or on the lower line
@@ -231,8 +227,7 @@ QVector<HullPoint> HullFinder::FindConvexHull(const QVector<HullPoint> & HullPoi
          H.push_back(P[maxmax]);        // push maxmax HullPoint onto stack
     int bot = H.size();                 // the bottom HullPoint of the upper hull stack
     i = maxmin;
-    while (--i >= minmax)
-    {
+    while (--i >= minmax) {
         // the upper line joins P[maxmax]  with P[minmax]
         if (IsLeft( P[maxmax], P[minmax], P[i])  >= 0 && i > minmax)
             continue;                   // ignore P[i] below or on the upper line
@@ -284,6 +279,32 @@ QVector<HullPoint> HullFinder::FindConcaveHull(const QVector<HullPoint> &HullPoi
     }
     return concaveList;
 }
+
+
+//####################################################################################
+//##    Returns winding direction of points
+//####################################################################################
+Winding_Orientation HullFinder::FindWindingOrientation(const QVector<HullPoint> &points) {
+    int i1, i2;
+    double area = 0;
+    for (i1 = 0; i1 < points.count(); i1++) {
+        i2 = i1 + 1;
+        if (i2 == points.count()) i2 = 0;
+        area += points[i1].x * points[i2].y - points[i1].y * points[i2].x;
+    }
+    if (area > 0) return Winding_Orientation::CounterClockwise;
+    if (area < 0) return Winding_Orientation::Clockwise;
+    return Winding_Orientation::Unknown;
+}
+
+
+
+
+
+
+
+
+
 
 
 

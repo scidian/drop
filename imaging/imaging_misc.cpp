@@ -25,6 +25,31 @@ namespace DrImaging
 
 
 //####################################################################################
+//##    Returns array of scanlines that are a direct access to QImage pixels
+//####################################################################################
+QVector<QRgb*> getScanLines(QImage &image) {
+    QVector<QRgb*> lines;
+
+    if (image.format() != QImage::Format::Format_ARGB32)
+        image = image.convertToFormat( QImage::Format_ARGB32 );
+    image.detach();
+
+    // Truecolor Rgba
+    if (image.colorCount() == 0) {
+        if (image.hasAlphaChannel()) {
+
+            // Grab all the scan lines
+            for (int y = 0; y < image.height(); ++y)
+                lines.append( reinterpret_cast<QRgb*>(image.scanLine(y)) );
+
+        } else {    Dr::ShowMessageBox("Image missing alpha channel!"); }
+    } else {    Dr::ShowMessageBox("Image only has 256 colors!"); }
+
+    return lines;
+}
+
+
+//####################################################################################
 //##    Returns average color of a Pixmap
 //####################################################################################
 QColor averageColor(const QPixmap &pixmap, bool screen_shot) {
@@ -73,15 +98,19 @@ float* imageBitsAsFloat(const QImage &from_image) {
     QImage image = from_image;
     QVector<QRgb*> lines = getScanLines(image);
 
-    float *out = static_cast<float*>( malloc(static_cast<unsigned long>(image.width() * image.height()) * sizeof(float)) );
+    // Method #1
+    ///float *out = static_cast<float*>( malloc(static_cast<unsigned long>(image.width() * image.height()) * sizeof(float)) );
+    ///int index = 0;
+    ///for (int y = 0; y < image.height(); ++y) {
+    ///    for (int x = 0; x < image.width(); ++x) {
+    ///        out[index] = lines[y][x];
+    ///        index++;
+    ///    }
+    ///}
 
-    int index = 0;
-    for (int y = 0; y < image.height(); ++y) {
-        for (int x = 0; x < image.width(); ++x) {
-            out[index] = lines[y][x];
-            index++;
-        }
-    }
+    // Method #2
+    float *out = reinterpret_cast<float*>(image.bits());
+
     return out;
 }
 

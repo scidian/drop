@@ -45,16 +45,21 @@ struct Palette_Info {
 
 namespace Dr {
 
-    void            LoadPalettes();
+    // Color Helper Functions
+    bool            IsSameColor(QColor color1, QColor color2, double tolerance);
+    QColor          RandomColor();
 
+    // Style Functions
+    QString         BorderWidth();                              // Project wide border width for Style Sheets, as QString
+    int             BorderWidthAsInt();                         // Project wide border width for Style Sheets, as Int
+
+    // Custom Palette Functions
+    void            LoadPalettes();
     void            LoadPaletteBasic(Palette_Info &palette);
     void            LoadPaletteBlank(Palette_Info &palette);
     void            LoadPaletteMaterial(Palette_Info &palette);
     void            LoadPaletteRockyRover(Palette_Info &palette);
     void            LoadPaletteWindowThemes(Palette_Info &palette);
-
-    QString         BorderWidth();                              // Project wide border width for Style Sheets, as QString
-    int             BorderWidthAsInt();                         // Project wide border width for Style Sheets, as Int
 
     Color_Scheme    GetColorScheme();
     QColor          GetColor(Window_Colors color_role);    
@@ -63,8 +68,6 @@ namespace Dr {
     int             GetPaletteColorCount(Color_Palettes palette);
     QString         GetPaletteName(Color_Palettes palette);
     bool            GetPaletteShowInList(Color_Palettes palette);
-
-    QColor          GetRandomColor();
 
     void            AddToColorHistory(QColor color);
 

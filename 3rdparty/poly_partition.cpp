@@ -115,7 +115,7 @@ void TPPLPoly::SetOrientation(int orientation) {
 }
 
 void TPPLPoly::Invert() {
-	std::reverse(points, points + numpoints);
+    std::reverse(points, points + numpoints);
 }
 
 TPPLPartition::PartitionVertex::PartitionVertex() : previous(nullptr), next(nullptr) {

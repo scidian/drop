@@ -355,7 +355,7 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
 
     // ***** Checks if Items should have to remain Square shaped (light, etc) and forces it to do so
     // ***** Also limits max size
-    //       Search keywords: "keep square", "locked", "same size"
+    //       #KEYWORD: "keep square", "locked", "same size"
     if (original->getThing()) {
         if (original->getThing()->getThingType() == DrThingType::Light || original->getThing()->getThingType() == DrThingType::Swirl) {
             if (qFuzzyCompare(start_scale.x(), new_scale_x)) {

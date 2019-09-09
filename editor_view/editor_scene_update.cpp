@@ -111,7 +111,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
             case Properties::Thing_Rotation: {
                 // ***** Keep Thing Square: Size / scale change override for Things that need to be square (light, etc)
                 // ***** Also limits max size
-                //       Search keywords: "keep square", "locked", "same size"
+                //       #KEYWORD: "keep square", "locked", "same size"
                 bool pretest = false;
                 if (thing->getThingType() == DrThingType::Light || thing->getThingType() == DrThingType::Swirl) {
                     if (property == Properties::Thing_Size) {
