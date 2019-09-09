@@ -55,7 +55,7 @@ void DrOpenGL::drawSpace() {
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
 
         if (thing_count == 0) last_z = thing->z_order - 1000.0;
-        if (Dr::IsCloseTo(last_z, thing->z_order, 0.001)) m_add_z += 0.15; else m_add_z = 0.0;
+        if (Dr::IsCloseTo(last_z, thing->z_order, 0.001)) m_add_z += 0.05; else m_add_z = 0.0;
         last_z = thing->z_order;
 
         // ***** When we have gone past glow z_order, draw the lights to the scene

@@ -59,8 +59,8 @@ QVector<QRgb*> getScanLines(QImage &image) {
 //####################################################################################
 //##    Returns black / white image
 //##        alpha_tolerance is from 0.0 to 1.0
-//##        NORMAL:  white == had pixel, black == was transparent
-//##        INVERSE: black == had pixel, white == was transparent
+//##        NORMAL  (inverse == false): transparent areas are black, objects are white
+//##        INVERSE (inverse == true) : transparent areas are white, objects are black
 //####################################################################################
 QImage blackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, bool inverse) {
     QImage image = from_image;

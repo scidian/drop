@@ -45,82 +45,11 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
         QVector<HullPoint> smooth_points_face =     smoothPoints(simple_points_face,    5, 5.0, 0.5);
         QVector<HullPoint> smooth_points_extrude =  smooth_points_face; //smoothPoints(simple_points_extrude, 5, 5.0, 0.5);
 
-
         // ***** Triangulate concave hull
-        // Copy HullPoints into TPPLPoly
-        std::list<TPPLPoly> testpolys, result;
-        TPPLPoly poly; poly.Init(smooth_points_face.count());
-        for (int i = 0; i < smooth_points_face.count(); i++) {
-            poly[i].x = smooth_points_face[i].x;
-            poly[i].y = smooth_points_face[i].y;
-        }
-        testpolys.push_back( poly );
-
-        // Run triangulation, add triangles to vertex data
-        TPPLPartition pp;
-        pp.Triangulate_EC( &testpolys, &result );
-        ///pp.Triangulate_OPT(  &testpolys, &result);
-        ///pp.Triangulate_MONO( &testpolys, &result);
-        int width =  image.width();
-        int height = image.height();
-        double w2d = width  / 2.0;
-        double h2d = height / 2.0;
-        for (auto poly : result) {
-            GLfloat x1 = static_cast<GLfloat>(         poly[0].x - w2d);
-            GLfloat y1 = static_cast<GLfloat>(height - poly[0].y - h2d);
-            GLfloat x2 = static_cast<GLfloat>(         poly[1].x - w2d);
-            GLfloat y2 = static_cast<GLfloat>(height - poly[1].y - h2d);
-            GLfloat x3 = static_cast<GLfloat>(         poly[2].x - w2d);
-            GLfloat y3 = static_cast<GLfloat>(height - poly[2].y - h2d);
-
-            GLfloat tx1 = static_cast<GLfloat>(      poly[0].x / width);
-            GLfloat ty1 = static_cast<GLfloat>(1.0 - poly[0].y / height);
-            GLfloat tx2 = static_cast<GLfloat>(      poly[1].x / width);
-            GLfloat ty2 = static_cast<GLfloat>(1.0 - poly[1].y / height);
-            GLfloat tx3 = static_cast<GLfloat>(      poly[2].x / width);
-            GLfloat ty3 = static_cast<GLfloat>(1.0 - poly[2].y / height);
-
-            triangle( x1, y1, tx1, ty1,
-                      x3, y3, tx3, ty3,
-                      x2, y2, tx2, ty2);
-        }
-
+        triangulateFace(smooth_points_face, image.width(), image.height());
 
         // ***** Add extruded triangles
-        for (int i = 0; i < smooth_points_extrude.count(); i++) {
-            int point1, point2;
-            if (i == smooth_points_extrude.count() - 1) {
-                point1 = 0;         point2 = i;
-            } else {
-                point1 = i + 1;     point2 = i;
-            }
-
-            GLfloat  x1 = static_cast<GLfloat>(         smooth_points_extrude[point1].x);
-            GLfloat  y1 = static_cast<GLfloat>(height - smooth_points_extrude[point1].y);
-            GLfloat tx1 = static_cast<GLfloat>(      smooth_points_extrude[point1].x / width);
-            GLfloat ty1 = static_cast<GLfloat>(1.0 - smooth_points_extrude[point1].y / height);
-
-            GLfloat  x2 = static_cast<GLfloat>(         smooth_points_extrude[point2].x);
-            GLfloat  y2 = static_cast<GLfloat>(height - smooth_points_extrude[point2].y);
-            GLfloat tx2 = static_cast<GLfloat>(      smooth_points_extrude[point2].x / width);
-            GLfloat ty2 = static_cast<GLfloat>(1.0 - smooth_points_extrude[point2].y / height);
-
-            x1 -= static_cast<GLfloat>(w2d);
-            x2 -= static_cast<GLfloat>(w2d);
-            y1 -= static_cast<GLfloat>(h2d);
-            y2 -= static_cast<GLfloat>(h2d);
-
-            float pixel_w = (1.0f / width);
-            float pixel_h = (1.0f / height);
-            if (tx1 > 0.5f) x1 -= pixel_w; else x1 += pixel_w;
-            if (tx2 > 0.5f) x2 -= pixel_w; else x2 += pixel_w;
-            if (ty1 > 0.5f) y1 -= pixel_h; else y1 += pixel_h;
-            if (ty2 > 0.5f) y2 -= pixel_h; else y2 += pixel_h;
-
-            extrude( x1, y1, tx1, ty1,
-                     x2, y2, tx2, ty2);
-        }
-
+        extrudeFacePolygon(smooth_points_extrude, image.width(), image.height());
     }
 }
 
@@ -244,6 +173,93 @@ QVector<HullPoint> DrEngineVertexData::smoothPoints(const QVector<HullPoint> &fr
     }
     return smooth_points;
 }
+
+
+//####################################################################################
+//##    Triangulate Face and add Triangles to Vertex Data
+//####################################################################################
+void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &from_points, int width, int height) {
+    // Copy HullPoints into TPPLPoly
+    std::list<TPPLPoly> testpolys, result;
+    TPPLPoly poly; poly.Init(from_points.count());
+    for (int i = 0; i < from_points.count(); i++) {
+        poly[i].x = from_points[i].x;
+        poly[i].y = from_points[i].y;
+    }
+    testpolys.push_back( poly );
+
+    // Run triangulation, add triangles to vertex data
+    TPPLPartition pp;
+    pp.Triangulate_EC( &testpolys, &result );
+    ///pp.Triangulate_OPT(  &testpolys, &result);
+    ///pp.Triangulate_MONO( &testpolys, &result);
+
+    double w2d = width  / 2.0;
+    double h2d = height / 2.0;
+    for (auto poly : result) {
+        GLfloat x1 = static_cast<GLfloat>(         poly[0].x - w2d);
+        GLfloat y1 = static_cast<GLfloat>(height - poly[0].y - h2d);
+        GLfloat x2 = static_cast<GLfloat>(         poly[1].x - w2d);
+        GLfloat y2 = static_cast<GLfloat>(height - poly[1].y - h2d);
+        GLfloat x3 = static_cast<GLfloat>(         poly[2].x - w2d);
+        GLfloat y3 = static_cast<GLfloat>(height - poly[2].y - h2d);
+
+        GLfloat tx1 = static_cast<GLfloat>(      poly[0].x / width);
+        GLfloat ty1 = static_cast<GLfloat>(1.0 - poly[0].y / height);
+        GLfloat tx2 = static_cast<GLfloat>(      poly[1].x / width);
+        GLfloat ty2 = static_cast<GLfloat>(1.0 - poly[1].y / height);
+        GLfloat tx3 = static_cast<GLfloat>(      poly[2].x / width);
+        GLfloat ty3 = static_cast<GLfloat>(1.0 - poly[2].y / height);
+
+        triangle( x1, y1, tx1, ty1,
+                  x3, y3, tx3, ty3,
+                  x2, y2, tx2, ty2);
+    }
+}
+
+
+//####################################################################################
+//##    Add Extrusion Triangles to Vertex Data
+//####################################################################################
+void DrEngineVertexData::extrudeFacePolygon(const QVector<HullPoint> &from_points, int width, int height) {
+    double w2d = width  / 2.0;
+    double h2d = height / 2.0;
+
+    for (int i = 0; i < from_points.count(); i++) {
+        int point1, point2;
+        if (i == from_points.count() - 1) {
+            point1 = 0;         point2 = i;
+        } else {
+            point1 = i + 1;     point2 = i;
+        }
+
+        GLfloat  x1 = static_cast<GLfloat>(         from_points[point1].x);
+        GLfloat  y1 = static_cast<GLfloat>(height - from_points[point1].y);
+        GLfloat tx1 = static_cast<GLfloat>(      from_points[point1].x / width);
+        GLfloat ty1 = static_cast<GLfloat>(1.0 - from_points[point1].y / height);
+
+        GLfloat  x2 = static_cast<GLfloat>(         from_points[point2].x);
+        GLfloat  y2 = static_cast<GLfloat>(height - from_points[point2].y);
+        GLfloat tx2 = static_cast<GLfloat>(      from_points[point2].x / width);
+        GLfloat ty2 = static_cast<GLfloat>(1.0 - from_points[point2].y / height);
+
+        x1 -= static_cast<GLfloat>(w2d);
+        x2 -= static_cast<GLfloat>(w2d);
+        y1 -= static_cast<GLfloat>(h2d);
+        y2 -= static_cast<GLfloat>(h2d);
+
+        float pixel_w = (1.0f / width);
+        float pixel_h = (1.0f / height);
+        if (tx1 > 0.5f) x1 -= pixel_w; else x1 += pixel_w;
+        if (tx2 > 0.5f) x2 -= pixel_w; else x2 += pixel_w;
+        if (ty1 > 0.5f) y1 -= pixel_h; else y1 += pixel_h;
+        if (ty2 > 0.5f) y2 -= pixel_h; else y2 += pixel_h;
+
+        extrude( x1, y1, tx1, ty1,
+                 x2, y2, tx2, ty2);
+    }
+}
+
 
 
 
