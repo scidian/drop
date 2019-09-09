@@ -25,6 +25,8 @@ namespace DrImaging
 
 
 // Local constants
+///const unsigned int c_color_black = 0;
+///const unsigned int c_color_white = 4294967295;
 const unsigned int c_color_black = QColor(  0,   0,   0,   0).rgba();
 const unsigned int c_color_white = QColor(255, 255, 255, 255).rgba();
 
@@ -58,22 +60,39 @@ QVector<QRgb*> getScanLines(QImage &image) {
 //##    Returns black / white image, white == had pixel, black == was transparent
 //##        alpha_tolerance is from 0.0 to 1.0
 //####################################################################################
-QImage blackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance) {
+QImage blackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, bool inverse) {
     QImage image = from_image;
     QVector<QRgb*> lines = getScanLines(image);
+
+    unsigned int color1, color2;
+    if (inverse) {
+        color1 = c_color_white;
+        color2 = c_color_black;
+    } else {
+        color1 = c_color_black;
+        color2 = c_color_white;
+    }
 
     // Loop through every pixel
     for (int y = 0; y < image.height(); ++y) {
         for (int x = 0; x < image.width(); ++x) {
-            if (QColor::fromRgba(lines[y][x]).alphaF() < alpha_tolerance)
-                lines[y][x] = c_color_black;
-            else
-                lines[y][x] = c_color_white;
+            unsigned int pixel = static_cast<unsigned int>(lines[y][x]);
+            lines[y][x] = (QColor::fromRgba(pixel).alphaF() < alpha_tolerance) ? color1 : color2;
         }
     }
     return image;
 }
 
+
+//####################################################################################
+//##    Compares 2 colors, returns true if they are the same
+//####################################################################################
+bool isSameColor(QColor color1, QColor color2, double tolerance) {
+    return ( Dr::IsCloseTo(color1.redF(),   color2.redF(),   tolerance) &&
+             Dr::IsCloseTo(color1.greenF(), color2.greenF(), tolerance) &&
+             Dr::IsCloseTo(color1.blueF(),  color2.blueF(),  tolerance) &&
+             Dr::IsCloseTo(color1.alphaF(), color2.alphaF(), tolerance) );
+}
 
 
 //####################################################################################
@@ -87,13 +106,6 @@ public:
     int  x;
     int  y;
 };
-
-bool isSameColor(QColor color1, QColor color2, double tolerance) {
-    return ( Dr::IsCloseTo(color1.redF(),   color2.redF(),   tolerance) &&
-             Dr::IsCloseTo(color1.greenF(), color2.greenF(), tolerance) &&
-             Dr::IsCloseTo(color1.blueF(),  color2.blueF(),  tolerance) &&
-             Dr::IsCloseTo(color1.alphaF(), color2.alphaF(), tolerance));
-}
 
 #define FLOOD_NOT_PROCESSED         0
 #define FLOOD_WAS_PROCESSED         1
@@ -167,15 +179,16 @@ QImage floodFill(QImage &from_image, int start_x, int start_y, QColor color, dou
 //##        Seperates parts of an image divided by alpha space into seperate images
 //####################################################################################
 QVector<QImage> findObjectsInImage(const QPixmap &pixmap, double alpha_tolerance) {
-    QImage black_white = blackAndWhiteFromAlpha(pixmap.toImage(), alpha_tolerance);
-    QVector<QRgb*> lines = getScanLines(black_white);
+    QImage black_white = blackAndWhiteFromAlpha(pixmap.toImage(), alpha_tolerance, true);
+    QVector<QRgb*>  lines = getScanLines(black_white);
     QVector<QImage> images;
 
+    QColor white = QColor::fromRgba(c_color_white);
     for (int x = 0; x < black_white.width(); ++x) {
         for (int y = 0; y < black_white.height(); ++y) {
-            ///if (black_white.pixel(x, y) == c_color_white) {
-            if (lines[y][x] == c_color_white) {
-                images.push_back( floodFill(black_white, x, y, c_color_black, 0.001) );
+            ///if (black_white.pixel(x, y) == c_color_black) {
+            if (lines[y][x] == c_color_black) {
+                images.push_back( floodFill(black_white, x, y, white, 0.001) );
             }
         }
     }

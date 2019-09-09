@@ -16,106 +16,6 @@
 #include "helper.h"
 #include "imaging/imaging.h"
 
-
-
-//####################################################################################
-//##    Simplifies a list of points, reducing multiple points along the same slope
-//##        NOTE: If ((y2-y1) / (x2-x1)) == ((y3-y1)/(x3-x1)), then slope is same and is along same line
-//##        tolerance:  how similar slop should be, bigger numbers causes less points
-//##        test_count: how many points to test before we just go ahead and add a point
-//####################################################################################
-QVector<HullPoint> DrEngineVertexData::simplifyPoints(const QVector<HullPoint> &from_points, double tolerance, int test_count) {
-    QVector<HullPoint> simple_points;
-    if (from_points.count()  > 0) simple_points.push_back(from_points[0]);        // Add first point
-    if (from_points.count() == 2) simple_points.push_back(from_points[1]);        // Add second / last point if only two points
-    if (from_points.count()  > 2) {
-        int at_point =      0;
-        int next_point =    1;
-        int check_point  =  2;
-        // Loop through points finding lines and eliminating duplicate points among them
-        while (at_point < from_points.count() - 1) {
-            bool found_next_end_point =false;
-            int  count = 0;
-            do {
-                double x1 = from_points[at_point].x;
-                double y1 = from_points[at_point].y;
-                double x2 = from_points[next_point].x;
-                double y2 = from_points[next_point].y;
-                double x3 = from_points[check_point].x;
-                double y3 = from_points[check_point].y;
-                ++count;
-
-                // Check if slope is no longer the same, which means the line has changed direction
-                bool slope_is_the_same = Dr::IsCloseTo(((y2-y1) / (x2-x1)), ((y3-y1) / (x3-x1)), tolerance);
-                if (!slope_is_the_same || count > test_count) {
-                    found_next_end_point = true;
-                    at_point = next_point;
-                    simple_points.push_back(from_points[at_point]);
-                }
-
-                ++next_point;
-                ++check_point;
-
-                // Check point is at the end
-                if (check_point == from_points.count()) {
-                    found_next_end_point = true;
-                    at_point = check_point - 1;
-                    simple_points.push_back(from_points[at_point]);
-                }
-
-            } while (found_next_end_point == false);
-        }
-    }
-    return simple_points;
-}
-
-
-//####################################################################################
-//##    Smooth / Curve a collection of points
-//####################################################################################
-// Returns a point from a vector with wrap around coverage of vector indices
-HullPoint pointAt(const QVector<HullPoint> &point_list, int index) {
-    if (index < 0)
-        return point_list[index + point_list.count()];
-    else if (index >= point_list.count())
-        return point_list[index - point_list.count()];
-    else
-        return point_list[index];
-}
-
-// Smooths points, neigbors is in each direction (so 1 is index +/- 1 more point in each direction
-QVector<HullPoint> DrEngineVertexData::smoothPoints(const QVector<HullPoint> &from_points, int neighbors, double neighbor_distance, double weight) {
-    QVector<HullPoint> smooth_points;
-
-    if (from_points.count() <= neighbors) {
-        for (int i = 0; i < from_points.count(); ++i) smooth_points.push_back(from_points[i]);
-        return smooth_points;
-    }
-
-    // Go through and smooth the points (simple average)
-    for (int i = 0; i < from_points.count(); i++) {
-        HullPoint this_point = from_points[i];
-        double total_used = 0;
-        double x = 0, y = 0;
-        for (int j = i - neighbors; j <= i + neighbors; j++) {
-            HullPoint check_point = pointAt(from_points, j);
-            if (j == i) {
-                x += check_point.x;
-                y += check_point.y;
-                ++total_used;
-
-            } else if (QLineF(this_point.x, this_point.y, check_point.x, check_point.y).length() < neighbor_distance) {
-                x += (check_point.x * weight);
-                y += (check_point.y * weight);
-                total_used += weight;
-            }
-        }
-        smooth_points.push_back(HullPoint(x / total_used, y / total_used));
-    }
-    return smooth_points;
-}
-
-
 //####################################################################################
 //##    Builds an Extruded Pixmap
 //####################################################################################
@@ -123,7 +23,9 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
     m_data.resize(100 * c_vertex_length);
 
     // Break pixmap into seperate images for each object in image
-    QVector<QImage> images = DrImaging::findObjectsInImage(pixmap, 0.9);
+    QVector<QImage> images;
+    images = DrImaging::findObjectsInImage(pixmap, 0.9);
+    ///images.push_back( DrImaging::blackAndWhiteFromAlpha(pixmap.toImage(), 0.9, false));
 
     for (auto image : images) {
         // ***** Get list of possible outline points
@@ -219,6 +121,128 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
 
     }
 }
+
+
+//####################################################################################
+//##    Simplifies a list of points, reducing multiple points along the same slope
+//##        NOTE: If ((y2-y1) / (x2-x1)) == ((y3-y1)/(x3-x1)), then slope is same and is along same line
+//##        tolerance:  how similar slop should be, bigger numbers causes less points
+//##        test_count: how many points to test before we just go ahead and add a point
+//####################################################################################
+QVector<HullPoint> DrEngineVertexData::simplifyPoints(const QVector<HullPoint> &from_points, double tolerance, int test_count) {
+    QVector<HullPoint> simple_points;
+    if (from_points.count()  > 0) simple_points.push_back(from_points[0]);        // Add first point
+    if (from_points.count() == 2) simple_points.push_back(from_points[1]);        // Add second / last point if only two points
+    if (from_points.count()  > 2) {
+        int at_point =      0;
+        int next_point =    1;
+        int check_point  =  2;
+
+        // Loop through points finding lines and eliminating duplicate points among them
+        while (at_point < from_points.count() - 1) {
+            bool found_next_end_point =false;
+            int  count = 0;
+            do {
+                double x1 = from_points[at_point].x;
+                double y1 = from_points[at_point].y;
+                double x2 = from_points[next_point].x;
+                double y2 = from_points[next_point].y;
+                double x3 = from_points[check_point].x;
+                double y3 = from_points[check_point].y;
+                ++count;
+
+                // Check if slope is no longer the same, which means the line has changed direction
+                bool slope_is_the_same = Dr::IsCloseTo(((y2-y1) / (x2-x1)), ((y3-y1) / (x3-x1)), tolerance);
+                if (!slope_is_the_same || count > test_count) {
+                    found_next_end_point = true;
+                    at_point = next_point;
+                    simple_points.push_back(from_points[at_point]);
+                }
+
+                ++next_point;
+                ++check_point;
+
+                // Check point is at the end
+                if (check_point == from_points.count()) {
+                    found_next_end_point = true;
+                    at_point = check_point - 1;
+                    simple_points.push_back(from_points[at_point]);
+                }
+
+            } while (found_next_end_point == false);
+        }
+    }
+    return simple_points;
+}
+
+
+//####################################################################################
+//##    Smooth / Curve a collection of points
+//####################################################################################
+// Returns a point from a vector with wrap around coverage of vector indices
+HullPoint pointAt(const QVector<HullPoint> &point_list, int index) {
+    if (index < 0)
+        return point_list[index + point_list.count()];
+    else if (index >= point_list.count())
+        return point_list[index - point_list.count()];
+    else
+        return point_list[index];
+}
+
+const double c_smooth_min_size = 50.0;
+
+// Smooths points, neigbors is in each direction (so 1 is index +/- 1 more point in each direction
+QVector<HullPoint> DrEngineVertexData::smoothPoints(const QVector<HullPoint> &from_points, int neighbors, double neighbor_distance, double weight) {
+    QVector<HullPoint> smooth_points;
+
+    // Check size of polygon, accomodate smoothing for small images
+    double x_min = from_points[0].x;
+    double x_max = from_points[0].x;
+    double y_min = from_points[0].y;
+    double y_max = from_points[0].y;
+    for (int i = 0; i < from_points.count(); i++) {
+        if (from_points[i].x < x_min) x_min = from_points[i].x;
+        if (from_points[i].x > x_max) x_max = from_points[i].x;
+        if (from_points[i].y < y_min) y_min = from_points[i].y;
+        if (from_points[i].y > y_max) y_max = from_points[i].y;
+    }
+    double x_size = x_max - x_min;
+    double y_size = y_max - y_min;
+    if (x_size < c_smooth_min_size) {
+        neighbor_distance /= (c_smooth_min_size / x_size);
+    } else if (y_size < c_smooth_min_size) {
+        neighbor_distance /= (c_smooth_min_size / y_size);
+    }
+
+    // If not enough neighbors, just return starting polygon
+    if (from_points.count() <= neighbors) {
+        for (int i = 0; i < from_points.count(); ++i) smooth_points.push_back(from_points[i]);
+        return smooth_points;
+    }
+
+    // Go through and smooth the points (simple average)
+    for (int i = 0; i < from_points.count(); i++) {
+        HullPoint this_point = from_points[i];
+        double total_used = 0;
+        double x = 0, y = 0;
+        for (int j = i - neighbors; j <= i + neighbors; j++) {
+            HullPoint check_point = pointAt(from_points, j);
+            if (j == i) {
+                x += check_point.x;
+                y += check_point.y;
+                ++total_used;
+
+            } else if (QLineF(this_point.x, this_point.y, check_point.x, check_point.y).length() < neighbor_distance) {
+                x += (check_point.x * weight);
+                y += (check_point.y * weight);
+                total_used += weight;
+            }
+        }
+        smooth_points.push_back(HullPoint(x / total_used, y / total_used));
+    }
+    return smooth_points;
+}
+
 
 
 

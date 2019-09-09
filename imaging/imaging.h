@@ -45,6 +45,7 @@ namespace DrImaging {
     QColor              averageColor(const QPixmap &pixmap, bool screen_shot = false);
     QVector<QRgb*>      getScanLines(QImage &image);
     float*              imageBitsAsFloat(const QImage &from_image);
+    bool                isSameColor(QColor color1, QColor color2, double tolerance);
     QVector<HullPoint>  outlinePointList(const QImage &from_image);
 
 
@@ -68,7 +69,7 @@ namespace DrImaging {
 
 
     // Object Counting / Fill (a la Ravens Project)
-    QImage          blackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance);
+    QImage          blackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, bool inverse = false);
     QVector<QImage> findObjectsInImage(const QPixmap &pixmap, double alpha_tolerance);
     QImage          floodFill(QImage &from_image, int start_x, int start_y, QColor color, double tolerance);
 
