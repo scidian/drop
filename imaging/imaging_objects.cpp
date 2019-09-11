@@ -207,7 +207,6 @@ QVector<QImage> findObjectsInImage(const QPixmap &pixmap, double alpha_tolerance
 #define TRACE_PROCESSED_ONCE        3           // Pixels that added to the border once
 #define TRACE_PROCESSED_TWICE       4           // Pixels that added to the border twice        (after a there and back again trace)
 
-
 QVector<HullPoint> traceImageOutline(const QImage &from_image) {
     // Initialize images
     QImage image = from_image;

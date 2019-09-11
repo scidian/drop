@@ -115,7 +115,7 @@ void DrView::dropEvent(QDropEvent *event) {
                         my_scene->addItemToSceneFromThing( thing );
                         break;
                     case DrEffectType::Light:
-                        thing = stage->addThing(DrThingType::Light, asset_key, position.x(), -position.y(), 0);         // !!!!! #FIX: z order
+                        thing = stage->addThing(DrThingType::Light, asset_key, position.x(), -position.y(), -10);         // !!!!! #FIX: z order
                         my_scene->addItemToSceneFromThing( thing );
                         break;
                     case DrEffectType::Mirror:

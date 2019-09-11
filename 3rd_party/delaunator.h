@@ -418,9 +418,7 @@ Delaunator::Delaunator(std::vector<double> const& in_coords)
 
         // walk forward through the hull, adding more triangles and flipping recursively
         std::size_t next = hull_next[e];
-        while (
-            q = hull_next[next],
-            orient(x, y, coords[2 * next], coords[2 * next + 1], coords[2 * q], coords[2 * q + 1])) {
+        while (q = hull_next[next], orient(x, y, coords[2 * next], coords[2 * next + 1], coords[2 * q], coords[2 * q + 1])) {
             t = add_triangle(next, i, q, hull_tri[i], INVALID_INDEX, hull_tri[next]);
             hull_tri[i] = legalize(t + 2);
             hull_next[next] = next; // mark as removed
@@ -430,9 +428,7 @@ Delaunator::Delaunator(std::vector<double> const& in_coords)
 
         // walk backward from the other side, adding more triangles and flipping
         if (e == start) {
-            while (
-                q = hull_prev[e],
-                orient(x, y, coords[2 * q], coords[2 * q + 1], coords[2 * e], coords[2 * e + 1])) {
+            while (q = hull_prev[e], orient(x, y, coords[2 * q], coords[2 * q + 1], coords[2 * e], coords[2 * e + 1])) {
                 t = add_triangle(q, i, e, INVALID_INDEX, hull_tri[e], hull_tri[q]);
                 legalize(t + 2);
                 hull_tri[q] = t;

@@ -49,13 +49,14 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
         // ***** Smooth, then Simplify point list, a value of 1.0 looks nice for #KEYWORD: "low poly"
         points =  smoothPoints(  points, 4, 4.0, 0.4);
         points =  simplifyPoints(points, 0.030,    5, true);    // First run with averaging points to reduce triangles among similar slopes
-        points =  simplifyPoints(points, 0.001, 5000, false);   // Then run again with smaller tolerance to reduce triangles along straight lines
+        //points =  simplifyPoints(points, 0.001, 5000, false);   // Then run again with smaller tolerance to reduce triangles along straight lines
+        //points =  simplifyPoints(points, 0.001,   10, false);   // Then run again with smaller tolerance to reduce triangles along straight lines
 
         // ***** Triangulate concave hull
-        triangulateFace(points, image.width(), image.height(), Trianglulation::Ear_Clipping);
+//        triangulateFace(points, image.width(), image.height(), Trianglulation::Ear_Clipping);
 //        triangulateFace(points, image.width(), image.height(), Trianglulation::Optimal_Polygon);
 //        triangulateFace(points, image.width(), image.height(), Trianglulation::Monotone);
-//        triangulateFace(points, image.width(), image.height(), Trianglulation::Delaunay);
+        triangulateFace(points, image.width(), image.height(), Trianglulation::Delaunay);
 
         // ***** Add extruded triangles
         extrudeFacePolygon(points, image.width(), image.height());
@@ -211,6 +212,7 @@ void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &from_points, 
     double h2d = height / 2.0;
 
     if (type == Trianglulation::Delaunay) {
+
         // Copy HullPoints into vector
         std::vector<double> coords;
         for (int i = 0; i < from_points.count(); i++) {
@@ -222,15 +224,15 @@ void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &from_points, 
         Delaunator::Delaunator d(coords);
 
         for (std::size_t i = 0; i < d.triangles.size(); i+=3) {
-            GLfloat x1 = static_cast<GLfloat>(         d.coords[2 * d.triangles[i]]         - w2d);
-            GLfloat y1 = static_cast<GLfloat>(height - d.coords[2 * d.triangles[i] + 1]     - h2d);
+            GLfloat x1 = static_cast<GLfloat>(         d.coords[2 * d.triangles[i + 0]]     - w2d);
+            GLfloat y1 = static_cast<GLfloat>(height - d.coords[2 * d.triangles[i + 0] + 1] - h2d);
             GLfloat x2 = static_cast<GLfloat>(         d.coords[2 * d.triangles[i + 1]]     - w2d);
             GLfloat y2 = static_cast<GLfloat>(height - d.coords[2 * d.triangles[i + 1] + 1] - h2d);
             GLfloat x3 = static_cast<GLfloat>(         d.coords[2 * d.triangles[i + 2]]     - w2d);
             GLfloat y3 = static_cast<GLfloat>(height - d.coords[2 * d.triangles[i + 2] + 1] - h2d);
 
-            GLfloat tx1 = static_cast<GLfloat>(      d.coords[2 * d.triangles[i]]           / width);
-            GLfloat ty1 = static_cast<GLfloat>(1.0 - d.coords[2 * d.triangles[i] + 1]       / height);
+            GLfloat tx1 = static_cast<GLfloat>(      d.coords[2 * d.triangles[i + 0]]       / width);
+            GLfloat ty1 = static_cast<GLfloat>(1.0 - d.coords[2 * d.triangles[i + 0] + 1]   / height);
             GLfloat tx2 = static_cast<GLfloat>(      d.coords[2 * d.triangles[i + 1]]       / width);
             GLfloat ty2 = static_cast<GLfloat>(1.0 - d.coords[2 * d.triangles[i + 1] + 1]   / height);
             GLfloat tx3 = static_cast<GLfloat>(      d.coords[2 * d.triangles[i + 2]]       / width);
