@@ -8,7 +8,7 @@
 #ifndef ENGINE_LIGHT_H
 #define ENGINE_LIGHT_H
 
-#include "chipmunk/chipmunk.h"
+#include "3rd_party_chipmunk/chipmunk.h"
 #include "engine_thing_object.h"
 #include "enums.h"
 #include "enums_engine.h"

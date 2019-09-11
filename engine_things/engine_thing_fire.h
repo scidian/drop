@@ -8,7 +8,7 @@
 #ifndef ENGINE_THING_FIRE_H
 #define ENGINE_THING_FIRE_H
 
-#include "chipmunk/chipmunk.h"
+#include "3rd_party_chipmunk/chipmunk.h"
 #include "engine_thing.h"
 #include "enums.h"
 #include "enums_engine.h"

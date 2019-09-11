@@ -13,8 +13,8 @@
 #include <QVector2D>
 #include <QVector3D>
 
-#include "3rdparty/hullfinder.h"
-#include "3rdparty/poly_partition.h"
+#include "3rd_party/hullfinder.h"
+#include "3rd_party/poly_partition.h"
 
 
 // Local Constants

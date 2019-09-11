@@ -12,7 +12,7 @@
 #include <QString>
 #include <map>
 
-#include "chipmunk/chipmunk.h"
+#include "3rd_party_chipmunk/chipmunk.h"
 #include "enums_engine.h"
 
 // Forward declarations

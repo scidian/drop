@@ -13,7 +13,7 @@
 #include <QVector2D>
 #include <QVector3D>
 
-#include "engine_mesh/engine_vec3.h"
+#include "3rd_party/vec3.h"
 
 struct Tri_Face {
     long point_1;

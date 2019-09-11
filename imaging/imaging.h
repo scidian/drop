@@ -10,7 +10,7 @@
 
 #include <QPixmap>
 
-#include "3rdparty/hullfinder.h"
+#include "3rd_party/hullfinder.h"
 #include "enums_engine.h"
 
 // Image Constants

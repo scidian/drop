@@ -7,7 +7,7 @@
 //
 #include <QtMath>
 
-#include "3rdparty/poly_partition.h"
+#include "3rd_party/poly_partition.h"
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
