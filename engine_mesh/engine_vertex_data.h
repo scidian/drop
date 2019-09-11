@@ -5,8 +5,8 @@
 //
 //
 //
-#ifndef OPENGL_VBO_H
-#define OPENGL_VBO_H
+#ifndef ENGINE_VERTEX_DATA_H
+#define ENGINE_VERTEX_DATA_H
 
 #include <QOpenGLWidget>
 #include <QVector>
@@ -19,6 +19,15 @@
 
 // Local Constants
 const int c_vertex_length = 8;          // 8 is (3) for xyz, (3) for normal, and (2) for texture coordinate
+
+
+// Local Enums
+enum class Trianglulation {
+    Ear_Clipping,
+    Optimal_Polygon,
+    Monotone,
+    Delaunay,
+};
 
 
 //####################################################################################
@@ -47,12 +56,12 @@ public:
     void    initializeTextureQuad();
 
     // Helper Functions
-    static  QVector<HullPoint>  simplifyPoints(const QVector<HullPoint> &from_points, double tolerance, int test_count);
+    static  QVector<HullPoint>  simplifyPoints(const QVector<HullPoint> &from_points, double tolerance, int test_count, bool average = false);
     static  QVector<HullPoint>  smoothPoints(const QVector<HullPoint> &from_points, int neighbors, double neighbor_distance, double weight);
 
     // Extrusion Functions
     void    extrudeFacePolygon(const QVector<HullPoint> &from_points, int width, int height);
-    void    triangulateFace(const QVector<HullPoint> &from_points, int width, int height);
+    void    triangulateFace(const QVector<HullPoint> &from_points, int width, int height, Trianglulation type);
 
     // Building Functions
     void    add(const QVector3D &v, const QVector3D &n, const QVector2D &t);
@@ -72,7 +81,7 @@ public:
 };
 
 
-#endif // OPENGL_VBO_H
+#endif // ENGINE_VERTEX_DATA_H
 
 
 

@@ -28,8 +28,8 @@ namespace DrImaging
 // Local constants
 ///const unsigned int c_color_black = 0;
 ///const unsigned int c_color_white = 4294967295;
-const unsigned int c_color_black = QColor(  0,   0,   0,   0).rgba();
-const unsigned int c_color_white = QColor(255, 255, 255, 255).rgba();
+const unsigned int c_color_black =  QColor(  0,   0,   0,   0).rgba();
+const unsigned int c_color_white =  QColor(255, 255, 255, 255).rgba();
 
 
 // Local Interger Point Class
@@ -92,9 +92,16 @@ QImage floodFill(QImage &from_image, int at_x, int at_y, QColor color, double to
     QVector<QRgb*> flood_lines =     getScanLines(flood);
     QVector<QRgb*> processed_lines = getScanLines(processed);
 
-    // Check if start point is in range
-    if (at_x < 0 || at_y < 0 || at_x > from_image.width() - 1 || at_y > from_image.height() - 1) return QImage(0, 0, QImage::Format::Format_ARGB32);
-    if (from_image.width() < 1 || from_image.height() < 1) return QImage(0, 0, QImage::Format::Format_ARGB32);
+    // Check if start point is in range    
+    if (at_x < 0 || at_y < 0 || at_x > from_image.width() - 1 || at_y > from_image.height() - 1) {
+        return QImage(0, 0, QImage::Format::Format_ARGB32);
+    } else if (from_image.width() < 1 || from_image.height() < 1) {
+        return QImage(0, 0, QImage::Format::Format_ARGB32);
+    } else if ((from_image.width()) == 1 && (from_image.height() == 1)) {
+        image_lines[0][0] = color.rgba();
+        flood_lines[0][0] = color.rgba();
+        return flood;
+    }
 
     // Get starting color, set processed image to all zeros
     QColor start_color = QColor::fromRgba(image_lines[at_y][at_x]);
@@ -105,10 +112,14 @@ QImage floodFill(QImage &from_image, int at_x, int at_y, QColor color, double to
         }
     }
 
-    QVector<IntPoint> points;
+    // Push starting point onto vector
+    QVector<IntPoint> points; points.clear();
     points.push_back(IntPoint(at_x, at_y));
+    bool processed_some;
+
     do {
         // Go through each point and find new points to fill
+        processed_some = false;
         for (auto point: points) {
             if (processed_lines[point.y][point.x] == FLOOD_WAS_PROCESSED) continue;
             image_lines[point.y][point.x] = color.rgba();
@@ -136,6 +147,7 @@ QImage floodFill(QImage &from_image, int at_x, int at_y, QColor color, double to
                         if (Dr::IsSameColor(start_color, QColor::fromRgba(image_lines[y][x]), tolerance)) {
                             points.push_back(IntPoint(x, y));
                             processed_lines[y][x] = FLOOD_MARKED_FOR_PROCESS;
+                            processed_some = true;
                         }
                     }
                 }
@@ -150,7 +162,7 @@ QImage floodFill(QImage &from_image, int at_x, int at_y, QColor color, double to
             else
                 ++it;
         }
-    } while (points.count() > 0);
+    } while ((points.count() > 0) && processed_some);
 
     return flood;
 }
@@ -163,7 +175,7 @@ QImage floodFill(QImage &from_image, int at_x, int at_y, QColor color, double to
 //##        of the object, and the object itself is white
 //####################################################################################
 QVector<QImage> findObjectsInImage(const QPixmap &pixmap, double alpha_tolerance) {
-    QImage black_white = blackAndWhiteFromAlpha(pixmap.toImage(), alpha_tolerance, true);
+    QImage black_white =    blackAndWhiteFromAlpha(pixmap.toImage(), alpha_tolerance, true);
     QVector<QRgb*>  lines = getScanLines(black_white);
     QVector<QImage> images;
 
@@ -189,11 +201,12 @@ QVector<QImage> findObjectsInImage(const QPixmap &pixmap, double alpha_tolerance
 //##        !!!!! #NOTE: Image passed in should be black and white,
 //##                     probably from DrImageing::blackAndWhiteFromAlpha()
 //####################################################################################
-#define TRACE_NOT_PROCESSED         0           // Pixels that can be part of the border
-#define TRACE_PROCESSED_ONCE        1           // Pixels that added to the border once
-#define TRACE_PROCESSED_TWICE       2           // Pixels that added to the border twice (after a there and back again trace)
-#define TRACE_NOT_BORDER            5           // Pixels that are not near the edge
-#define TRACE_START_PIXEL          10           // Starting pixel
+#define TRACE_NOT_BORDER            0           // Pixels that are not near the edge
+#define TRACE_START_PIXEL           1           // Starting pixel
+#define TRACE_NOT_PROCESSED         2           // Pixels that can be part of the border
+#define TRACE_PROCESSED_ONCE        3           // Pixels that added to the border once
+#define TRACE_PROCESSED_TWICE       4           // Pixels that added to the border twice        (after a there and back again trace)
+
 
 QVector<HullPoint> traceImageOutline(const QImage &from_image) {
     // Initialize images
@@ -201,29 +214,31 @@ QVector<HullPoint> traceImageOutline(const QImage &from_image) {
     QImage processed =  from_image.copy();
     QVector<QRgb*> image_lines =        getScanLines(image);
     QVector<QRgb*> processed_lines =    getScanLines(processed);
+    int border_pixel_count = 0;
 
     // Initialize point array, verify image size
     QVector<IntPoint> points; points.clear();
     if (image.width() < 1 || image.height() < 1) return QVector<HullPoint> { };
 
     // ***** Find starting point, and also set processed image bits
-    bool has_start_point = false;
+    //       !!!!! #NOTE: Important that y loop is on top, we need to come at pixel from the left
     IntPoint last_point;
-    for (int x = 0; x < image.width(); ++x) {
-        for (int y = 0; y < image.height(); ++y) {
-            // If pixel is black, it cannot be part of the border
+    bool has_start_point = false;
+    for (int y = 0; y < image.height(); ++y) {
+        for (int x = 0; x < image.width(); ++x) {
+            // If pixel is part of the exterior, it cannot be part of the border
             if (image_lines[y][x] == c_color_black) {
                 processed_lines[y][x] = TRACE_NOT_BORDER;
                 continue;
             }
 
-            // Run through all pixels this pixel is touching to see if any are transparent (i.e. black)
+            // Run through all pixels this pixel is touching to see if any are transparent (i.e. c_color_black)
             bool can_be_border = false;
             if (x == 0 || y == 0 || x == (image.width() - 1) || y == (image.height() - 1)) {
                 can_be_border = true;
             } else {
                 for (int i = x - 1; i <= x + 1; ++i) {
-                    for (int j = y  - 1; j <= y + 1; ++j) {
+                    for (int j = y - 1; j <= y + 1; ++j) {
                         if (image_lines[j][i] == c_color_black) can_be_border = true;
                     }
                 }
@@ -232,22 +247,26 @@ QVector<HullPoint> traceImageOutline(const QImage &from_image) {
             // If not touching any transparent pixels, and not on edge, cannot be part of border
             if (!can_be_border) {
                 processed_lines[y][x] = TRACE_NOT_BORDER;
-                continue;
-            }
 
             // Otherwise mark it as not processed and check if we have a start point
-            processed_lines[y][x] = TRACE_NOT_PROCESSED;
-            if (!has_start_point) {
-                points.push_back(IntPoint(x, y));
-                last_point = IntPoint(x - 1, y);
-                processed_lines[y][x] = TRACE_START_PIXEL;
-                has_start_point = true;
+            } else {
+                processed_lines[y][x] = TRACE_NOT_PROCESSED;
+                ++border_pixel_count;
+                if (!has_start_point) {
+                    points.push_back(IntPoint(x, y));
+                    last_point = IntPoint(x - 1, y);
+                    processed_lines[y][x] = TRACE_START_PIXEL;
+                    has_start_point = true;
+                }
             }
         }
     }
+    if (border_pixel_count < 3) return QVector<HullPoint> { };
+
 
     // ***** Find outline points
     QVector<IntPoint> surround;
+    bool back_at_start;
     do {
         // Collect list of points around current point
         surround.clear();
@@ -259,6 +278,10 @@ QVector<HullPoint> traceImageOutline(const QImage &from_image) {
         for (int x = x_start; x <= x_end; ++x) {
             for (int y = y_start; y <= y_end; ++y) {
                 if (x == current_point.x && y == current_point.y) continue;
+                ///if ( (x == current_point.x - 1) && (y == current_point.y - 1) ) continue;
+                ///if ( (x == current_point.x + 1) && (y == current_point.y - 1) ) continue;
+                ///if ( (x == current_point.x - 1) && (y == current_point.y + 1) ) continue;
+                ///if ( (x == current_point.x + 1) && (y == current_point.y + 1) ) continue;
                 if (processed_lines[y][x] != TRACE_PROCESSED_TWICE && processed_lines[y][x] != TRACE_NOT_BORDER) {
                     surround.push_back(IntPoint(x, y));
                 }
@@ -266,21 +289,31 @@ QVector<HullPoint> traceImageOutline(const QImage &from_image) {
         }
 
         // Compare surrounding points to see which one has the greatest angle measured clockwise from the last set of points
-        double compare_angle = DrView::calcRotationAngleInDegrees(QPointF(current_point.x, current_point.y), QPointF(last_point.x, last_point.y));
-        double angle = -1;
+        double   last_point_angle = DrView::calcRotationAngleInDegrees(QPointF(current_point.x, current_point.y), QPointF(last_point.x, last_point.y));
+        double   angle_diff = 0;
+        bool     first = true;
         IntPoint next_point;
         for (auto point : surround) {
+            // Find angle of point
             double check_angle = DrView::calcRotationAngleInDegrees(QPointF(current_point.x, current_point.y), QPointF(point.x, point.y));
-            while (check_angle > 0) {             check_angle -= 360.0; }
-            while (check_angle < compare_angle) { check_angle += 360.0; }
-            if (check_angle > angle) {
-                angle = check_angle;
+            while (check_angle > 0) {                 check_angle -= 360.0; }
+            while (check_angle <= last_point_angle) { check_angle += 360.0; }
+
+            // Add penalty for each time pixel has been checked
+            ///if (processed_lines[point.y][point.x] != TRACE_START_PIXEL)
+            ///    check_angle += (processed_lines[point.y][point.x] - TRACE_NOT_PROCESSED) * 360.0;
+
+            // See if next closest point
+            double check_point_diff = check_angle - last_point_angle;
+            if (first || check_point_diff < angle_diff) {
+                angle_diff = check_point_diff;
                 next_point = point;
+                first = false;
             }
         }
 
         // If we found an angle, we found our next point, add it to the list
-        if (angle > -1) {
+        if (surround.count() > 0) {
             if (processed_lines[current_point.y][current_point.x] == TRACE_NOT_PROCESSED)
                 processed_lines[current_point.y][current_point.x] = TRACE_PROCESSED_ONCE;
             else if (processed_lines[current_point.y][current_point.x] == TRACE_PROCESSED_ONCE)
@@ -289,7 +322,10 @@ QVector<HullPoint> traceImageOutline(const QImage &from_image) {
             points.push_back(next_point);
         }
 
-    } while ((surround.count() > 0) && (processed_lines[points.last().y][points.last().x] != TRACE_START_PIXEL));
+        // Check if we're back at start and no more options
+        back_at_start = (processed_lines[points.last().y][points.last().x] == TRACE_START_PIXEL);
+
+    } while ((surround.count() > 0) && !back_at_start);
 
     // ***** Convert to HullPoint array and return
     QVector<HullPoint> hull_points;

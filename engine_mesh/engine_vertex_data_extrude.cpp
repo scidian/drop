@@ -12,13 +12,14 @@
 #include <QMatrix4x4>
 #include <algorithm>
 
-#include "engine_texture.h"
-#include "engine_vertex_data.h"
+#include "3rdparty/delaunator.h"
+#include "engine/engine_texture.h"
+#include "engine_mesh/engine_vertex_data.h"
 #include "helper.h"
 #include "imaging/imaging.h"
 
 //####################################################################################
-//##    Builds an Extruded Pixmap
+//##    Builds an Extruded Pixmap Model
 //####################################################################################
 void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
     m_data.resize(100 * c_vertex_length);
@@ -37,27 +38,27 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
         ///QVector<HullPoint> concave_hull =   HullFinder::FindConcaveHull(image_points, 3.5);
 
         // ***** Trace edge of image
-        QVector<HullPoint> image_points =   DrImaging::traceImageOutline(image);
-        Winding_Orientation winding =       HullFinder::FindWindingOrientation(image_points);
+        QVector<HullPoint> points =     DrImaging::traceImageOutline(image);
+        Winding_Orientation winding =   HullFinder::FindWindingOrientation(points);
         switch (winding) {
             case Winding_Orientation::Unknown:          continue;
-            case Winding_Orientation::Clockwise:        std::reverse(image_points.begin(), image_points.end()); break;
+            case Winding_Orientation::Clockwise:        std::reverse(points.begin(), points.end()); break;
             case Winding_Orientation::CounterClockwise: break;
         }
 
-        // ***** Simplify, then Smooth point list
-        ///QVector<HullPoint> simple_points =  simplifyPoints(image_points,   0.000001, 10);
-        ///QVector<HullPoint> smooth_points =  smoothPoints(simple_points,    5, 5.0, 0.5);
-
-        // ***** Smooth, then Simplify point list
-        QVector<HullPoint> smooth_points =  smoothPoints(image_points, 4, 4.0, 0.4);
-        QVector<HullPoint> simple_points =  simplifyPoints(smooth_points, 0.01, 25);            // A value of 1.0 looks nice for #KEYWORD: "low poly"
+        // ***** Smooth, then Simplify point list, a value of 1.0 looks nice for #KEYWORD: "low poly"
+        points =  smoothPoints(  points, 4, 4.0, 0.4);
+        points =  simplifyPoints(points, 0.030,    5, true);    // First run with averaging points to reduce triangles among similar slopes
+        points =  simplifyPoints(points, 0.001, 5000, false);   // Then run again with smaller tolerance to reduce triangles along straight lines
 
         // ***** Triangulate concave hull
-        triangulateFace(simple_points, image.width(), image.height());
+        triangulateFace(points, image.width(), image.height(), Trianglulation::Ear_Clipping);
+//        triangulateFace(points, image.width(), image.height(), Trianglulation::Optimal_Polygon);
+//        triangulateFace(points, image.width(), image.height(), Trianglulation::Monotone);
+//        triangulateFace(points, image.width(), image.height(), Trianglulation::Delaunay);
 
         // ***** Add extruded triangles
-        extrudeFacePolygon(simple_points, image.width(), image.height());
+        extrudeFacePolygon(points, image.width(), image.height());
     }
 }
 
@@ -69,10 +70,10 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
 //##                    0.01 looks nice for most objects, 1.0 looks good for #KEYWORD: "low poly", "low-poly"
 //##        test_count: how many points to test before we just go ahead and add a point
 //####################################################################################
-QVector<HullPoint> DrEngineVertexData::simplifyPoints(const QVector<HullPoint> &from_points, double tolerance, int test_count) {
+QVector<HullPoint> DrEngineVertexData::simplifyPoints(const QVector<HullPoint> &from_points, double tolerance, int test_count, bool average) {
     QVector<HullPoint> simple_points;
-    if (from_points.count()  > 0) simple_points.push_back(from_points[0]);        // Add first point
-    if (from_points.count() == 2) simple_points.push_back(from_points[1]);        // Add second / last point if only two points
+    if (from_points.count()  > 0) simple_points.push_back(from_points[0]);          // Add first point
+    if (from_points.count() == 2) simple_points.push_back(from_points[1]);          // Add second / last point if only two points
     if (from_points.count()  > 2) {
         int at_point =      0;
         int next_point =    1;
@@ -85,14 +86,32 @@ QVector<HullPoint> DrEngineVertexData::simplifyPoints(const QVector<HullPoint> &
             do {
                 double x1 = from_points[at_point].x;
                 double y1 = from_points[at_point].y;
+
                 double x2 = from_points[next_point].x;
                 double y2 = from_points[next_point].y;
+                if (average && (next_point - at_point > 1)) {
+                    int diff = next_point - at_point;
+                    int index = at_point + (diff / 2);
+                    x2 = from_points[index].x;
+                    y2 = from_points[index].y;
+                }
+
                 double x3 = from_points[check_point].x;
                 double y3 = from_points[check_point].y;
                 ++count;
 
                 // Check if slope is no longer the same, which means the line has changed direction
-                bool slope_is_the_same = Dr::IsCloseTo(((y2-y1) / (x2-x1)), ((y3-y1) / (x3-x1)), tolerance);
+                double slope1 = (y2-y1) / (x2-x1);
+                double slope2 = (y3-y1) / (x3-x1);
+                bool   slope_is_the_same = false;
+                if (qFuzzyCompare(y1, y2) && qFuzzyCompare(y2, y3))
+                    slope_is_the_same = true;
+                else if (qFuzzyCompare(x1, x2) && qFuzzyCompare(x2, x3))
+                    slope_is_the_same = true;
+                else if (Dr::IsCloseTo(slope1, slope2, tolerance))
+                    slope_is_the_same = true;
+
+
                 if (!slope_is_the_same || count > test_count) {
                     found_next_end_point = true;
                     at_point = next_point;
@@ -187,42 +206,80 @@ QVector<HullPoint> DrEngineVertexData::smoothPoints(const QVector<HullPoint> &fr
 //####################################################################################
 //##    Triangulate Face and add Triangles to Vertex Data
 //####################################################################################
-void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &from_points, int width, int height) {
-    // Copy HullPoints into TPPLPoly
-    std::list<TPPLPoly> testpolys, result;
-    TPPLPoly poly; poly.Init(from_points.count());
-    for (int i = 0; i < from_points.count(); i++) {
-        poly[i].x = from_points[i].x;
-        poly[i].y = from_points[i].y;
-    }
-    testpolys.push_back( poly );
-
-    // Run triangulation, add triangles to vertex data
-    TPPLPartition pp;
-    pp.Triangulate_EC( &testpolys, &result );
-    ///pp.Triangulate_OPT(  &testpolys, &result);
-    ///pp.Triangulate_MONO( &testpolys, &result);
-
+void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &from_points, int width, int height, Trianglulation type) {
     double w2d = width  / 2.0;
     double h2d = height / 2.0;
-    for (auto poly : result) {
-        GLfloat x1 = static_cast<GLfloat>(         poly[0].x - w2d);
-        GLfloat y1 = static_cast<GLfloat>(height - poly[0].y - h2d);
-        GLfloat x2 = static_cast<GLfloat>(         poly[1].x - w2d);
-        GLfloat y2 = static_cast<GLfloat>(height - poly[1].y - h2d);
-        GLfloat x3 = static_cast<GLfloat>(         poly[2].x - w2d);
-        GLfloat y3 = static_cast<GLfloat>(height - poly[2].y - h2d);
 
-        GLfloat tx1 = static_cast<GLfloat>(      poly[0].x / width);
-        GLfloat ty1 = static_cast<GLfloat>(1.0 - poly[0].y / height);
-        GLfloat tx2 = static_cast<GLfloat>(      poly[1].x / width);
-        GLfloat ty2 = static_cast<GLfloat>(1.0 - poly[1].y / height);
-        GLfloat tx3 = static_cast<GLfloat>(      poly[2].x / width);
-        GLfloat ty3 = static_cast<GLfloat>(1.0 - poly[2].y / height);
+    if (type == Trianglulation::Delaunay) {
+        // Copy HullPoints into vector
+        std::vector<double> coords;
+        for (int i = 0; i < from_points.count(); i++) {
+            coords.push_back(from_points[i].x);
+            coords.push_back(from_points[i].y);
+        }
 
-        triangle( x1, y1, tx1, ty1,
-                  x3, y3, tx3, ty3,
-                  x2, y2, tx2, ty2);
+        // Run triangulation, add triangles to vertex data
+        Delaunator::Delaunator d(coords);
+
+        for (std::size_t i = 0; i < d.triangles.size(); i+=3) {
+            GLfloat x1 = static_cast<GLfloat>(         d.coords[2 * d.triangles[i]]         - w2d);
+            GLfloat y1 = static_cast<GLfloat>(height - d.coords[2 * d.triangles[i] + 1]     - h2d);
+            GLfloat x2 = static_cast<GLfloat>(         d.coords[2 * d.triangles[i + 1]]     - w2d);
+            GLfloat y2 = static_cast<GLfloat>(height - d.coords[2 * d.triangles[i + 1] + 1] - h2d);
+            GLfloat x3 = static_cast<GLfloat>(         d.coords[2 * d.triangles[i + 2]]     - w2d);
+            GLfloat y3 = static_cast<GLfloat>(height - d.coords[2 * d.triangles[i + 2] + 1] - h2d);
+
+            GLfloat tx1 = static_cast<GLfloat>(      d.coords[2 * d.triangles[i]]           / width);
+            GLfloat ty1 = static_cast<GLfloat>(1.0 - d.coords[2 * d.triangles[i] + 1]       / height);
+            GLfloat tx2 = static_cast<GLfloat>(      d.coords[2 * d.triangles[i + 1]]       / width);
+            GLfloat ty2 = static_cast<GLfloat>(1.0 - d.coords[2 * d.triangles[i + 1] + 1]   / height);
+            GLfloat tx3 = static_cast<GLfloat>(      d.coords[2 * d.triangles[i + 2]]       / width);
+            GLfloat ty3 = static_cast<GLfloat>(1.0 - d.coords[2 * d.triangles[i + 2] + 1]   / height);
+
+            triangle( x1, y1, tx1, ty1,
+                      x2, y2, tx2, ty2,
+                      x3, y3, tx3, ty3);
+        }
+
+
+    } else {
+        // Copy HullPoints into TPPLPoly
+        std::list<TPPLPoly> testpolys, result;
+        TPPLPoly poly; poly.Init(from_points.count());
+        for (int i = 0; i < from_points.count(); i++) {
+            poly[i].x = from_points[i].x;
+            poly[i].y = from_points[i].y;
+        }
+        testpolys.push_back( poly );
+
+        // Run triangulation, add triangles to vertex data
+        TPPLPartition pp;
+        switch (type) {
+            case Trianglulation::Ear_Clipping:      pp.Triangulate_EC(&(*testpolys.begin()), &result);      break;
+            case Trianglulation::Optimal_Polygon:   pp.Triangulate_OPT(&(*testpolys.begin()), &result);     break;
+            case Trianglulation::Monotone:          pp.Triangulate_MONO(&(*testpolys.begin()), &result);    break;
+            default: return;
+        }
+
+        for (auto poly : result) {
+            GLfloat x1 = static_cast<GLfloat>(         poly[0].x - w2d);
+            GLfloat y1 = static_cast<GLfloat>(height - poly[0].y - h2d);
+            GLfloat x2 = static_cast<GLfloat>(         poly[1].x - w2d);
+            GLfloat y2 = static_cast<GLfloat>(height - poly[1].y - h2d);
+            GLfloat x3 = static_cast<GLfloat>(         poly[2].x - w2d);
+            GLfloat y3 = static_cast<GLfloat>(height - poly[2].y - h2d);
+
+            GLfloat tx1 = static_cast<GLfloat>(      poly[0].x / width);
+            GLfloat ty1 = static_cast<GLfloat>(1.0 - poly[0].y / height);
+            GLfloat tx2 = static_cast<GLfloat>(      poly[1].x / width);
+            GLfloat ty2 = static_cast<GLfloat>(1.0 - poly[1].y / height);
+            GLfloat tx3 = static_cast<GLfloat>(      poly[2].x / width);
+            GLfloat ty3 = static_cast<GLfloat>(1.0 - poly[2].y / height);
+
+            triangle( x1, y1, tx1, ty1,
+                      x3, y3, tx3, ty3,
+                      x2, y2, tx2, ty2);
+        }
     }
 }
 

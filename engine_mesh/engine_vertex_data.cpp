@@ -11,8 +11,8 @@
 #include <QPixmap>
 #include <QMatrix4x4>
 
-#include "engine_texture.h"
-#include "engine_vertex_data.h"
+#include "engine/engine_texture.h"
+#include "engine_mesh/engine_vertex_data.h"
 #include "helper.h"
 #include "imaging/imaging.h"
 

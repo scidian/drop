@@ -76,6 +76,7 @@ namespace Dr {
      *
      * @brief SetColorScheme is a setter to a global veriable that keeps track of which color scheme to use for the open editor
      * @param new_scheme
+     * @note
      */
     void            SetColorScheme(Color_Scheme new_scheme);
 

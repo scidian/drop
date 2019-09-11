@@ -75,15 +75,24 @@ void DrOpenGL::drawSpace() {
                          (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic &&
                           qFuzzyCompare(thing->getAngleX(), 0.0)       && qFuzzyCompare(thing->getAngleY(), 0.0) &&
                           qFuzzyCompare(thing->getRotateSpeedX(), 0.0) && qFuzzyCompare(thing->getRotateSpeedY(), 0.0));
-                if (draw2D && last_thing == DrThingType::Object) {
+                if (draw2D) {
                     drawObject(thing, last_thing, draw2D);
                 } else {
+
+                    ///glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );        // Wireframe on
+                    ///glEnable(GL_LINE_SMOOTH);
+                    ///glLineWidth(1);
+
                     cullingOn();
                     glEnable(GL_DEPTH_TEST);
                     glDepthFunc(GL_LEQUAL);
                     drawObject(thing, last_thing, draw2D);
                     glDisable(GL_DEPTH_TEST);
                     cullingOff();
+
+                    ///glDisable(GL_LINE_SMOOTH);
+                    ///glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );        // Wireframe off
+
                 }
 
                 break;

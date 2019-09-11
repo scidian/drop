@@ -100,8 +100,6 @@ SOURCES += \
     engine/engine.cpp \
     engine/engine_camera.cpp \
     engine/engine_texture.cpp \
-    engine/engine_vertex_data.cpp \
-    engine/engine_vertex_data_extrude.cpp \
     engine/engine_world.cpp \
     engine/engine_world_build_player.cpp \
     engine/engine_world_build_world.cpp \
@@ -111,6 +109,8 @@ SOURCES += \
     engine/engine_world_update.cpp \
     engine/engine_world_update_player.cpp \
     engine/form_engine.cpp \
+    engine_mesh/engine_vertex_data.cpp \
+    engine_mesh/engine_vertex_data_extrude.cpp \
     engine_things/engine_thing.cpp \
     engine_things/engine_thing_fire.cpp \
     engine_things/engine_thing_fisheye.cpp \
@@ -190,8 +190,10 @@ SOURCES += \
     widgets/widgets_layout.cpp
 
 HEADERS += \
+    3rdparty/delaunator.h \
     3rdparty/hullfinder.h \
     3rdparty/poly_partition.h \
+    3rdparty/vec3.h \
     chipmunk/chipmunk.h \
     chipmunk/chipmunk_ffi.h \
     chipmunk/chipmunk_private.h \
@@ -235,9 +237,10 @@ HEADERS += \
     engine/engine.h \
     engine/engine_camera.h \
     engine/engine_texture.h \
-    engine/engine_vertex_data.h \
     engine/engine_world.h \
     engine/form_engine.h \
+    engine_mesh/engine_mesh.h \
+    engine_mesh/engine_vertex_data.h \
     engine_things/engine_thing.h \
     engine_things/engine_thing_fire.h \
     engine_things/engine_thing_fisheye.h \

@@ -9,9 +9,9 @@
 
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
-#include "engine/engine_vertex_data.h"
 #include "engine/engine_world.h"
 #include "engine/form_engine.h"
+#include "engine_mesh/engine_vertex_data.h"
 #include "engine_things/engine_thing_object.h"
 #include "opengl/opengl.h"
 

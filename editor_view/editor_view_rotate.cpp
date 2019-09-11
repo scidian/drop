@@ -198,6 +198,11 @@ Transform_Data DrView::decomposeTransform(QTransform &from_transform, bool qr_ty
 //####################################################################################
 //##    Calculates angle from a center point to any target point, 0 = Up
 //##        #KEYWORD: "angleTo", "angleFrom", "angle between", "angleBetween"
+//##              0
+//##              |
+//##        270 --+-- 90
+//##              |
+//##             180
 //####################################################################################
 double DrView::calcRotationAngleInDegrees(QPointF center_point, QPointF target_point) {
     // Calculate the angle theta from the deltaY and deltaX values (atan2 returns radians values from [-PI, PI])

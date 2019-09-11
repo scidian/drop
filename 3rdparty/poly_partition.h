@@ -1,26 +1,30 @@
-//Copyright (C) 2011 by Ivan Fratric
 //
-//Permission is hereby granted, free of charge, to any person obtaining a copy
-//of this software and associated documentation files (the "Software"), to deal
-//in the Software without restriction, including without limitation the rights
-//to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//copies of the Software, and to permit persons to whom the Software is
-//furnished to do so, subject to the following conditions:
+// Description:     Poly Partition
+// Author:          Ivan Fratric
+// License:         Distributed under the MIT License
+// Source(s):       https://github.com/ivanfratric/polypartition
 //
-//The above copyright notice and this permission notice shall be included in
-//all copies or substantial portions of the Software.
+// Copyright (C) 2011 by Ivan Fratric
 //
-//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//THE SOFTWARE.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 //
-// For more info on this library:
-//      https://github.com/ivanfratric/polypartition
-
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//
 #ifndef POLYPARTITION_H
 #define POLYPARTITION_H
 
@@ -33,7 +37,10 @@ typedef double tppl_float;
 #define TPPL_CCW 1
 #define TPPL_CW -1
 
-//2D point structure
+//####################################################################################
+//##    TPPLPoint
+//##        2D point structure
+//############################
 struct TPPLPoint {
     tppl_float x;
     tppl_float y;
@@ -89,7 +96,10 @@ struct TPPLPoint {
 };
 
 
-//Polygon implemented as an array of points with a 'hole' flag
+//####################################################################################
+//##    TPPLPoly
+//##        Polygon implemented as an array of points with a 'hole' flag
+//############################
 class TPPLPoly {
     protected:
         
@@ -174,6 +184,10 @@ typedef std::list<TPPLPoly, TPPL_ALLOCATOR(TPPLPoly)> TPPLPolyList;
 typedef std::list<TPPLPoly> TPPLPolyList;
 #endif
 
+
+//####################################################################################
+//##    TPPLPartition
+//############################
 class TPPLPartition {
     protected:
         struct PartitionVertex {
