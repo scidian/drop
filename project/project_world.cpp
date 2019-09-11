@@ -129,6 +129,8 @@ void DrWorld::initializeWorldSettings(QString new_name) {
 
     addComponent(Components::World_Special_Effects, "Special Effects", "Special effects that affect the entire world.", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::World_Special_Effects)->setIcon(Component_Icons::Effects);
+    addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wireframe, Property_Type::Bool, false,
+                           "Wireframe", "Renders all the world's objects as outlines.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Cartoon, Property_Type::Bool, false,
                            "Cartoon", "Gives the world a comic book look.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wavy, Property_Type::Bool, false,

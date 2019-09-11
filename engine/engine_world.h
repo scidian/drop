@@ -146,6 +146,7 @@ public:
     float           contrast = 0.0f;                            // Contrast         Editor: -255 to 255     Shader: -1.0 to 1.0
     float           brightness = 0.0f;                          // Brightness       Editor: -255 to 255     Shader: -1.0 to 1.0
 
+    bool            wireframe = false;                          // Wireframe        True / False
     bool            cartoon = false;                            // Cartoon          True / False
     bool            wavy = false;                               // Wavy (Ripple)    True / False
 

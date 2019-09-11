@@ -192,6 +192,8 @@ public:
     void            setQuadVertices(QVector<GLfloat> &vertices, float width, float height, QPointF center, float z);
     void            setQuadRotatedVertices(QVector<GLfloat> &vertices, QVector3D &top_right, QVector3D &top_left,
                                            QVector3D &bot_left, QVector3D &bot_right, QVector3D position);
+    void            wireframeOn(bool smooth = false);
+    void            wireframeOff(bool smooth = false);
 
     // Soft Shadows / Lights
     void            bindGlowLightsBuffer(float ambient_light);

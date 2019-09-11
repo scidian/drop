@@ -138,6 +138,7 @@ enum class Properties {
     World_Filter_Negative,          //bool
 
     // Special Effects
+    World_Filter_Wireframe,         //bool
     World_Filter_Cartoon,           //bool
     World_Filter_Wavy,              //bool
 

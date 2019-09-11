@@ -29,14 +29,37 @@
 
 
 //####################################################################################
-//##    Render, Paint the Scene
+//##    Triangle Culling On / Off
+//##        Before rendering 3D objects, enable face culling for triangles facing away from view
+//##        Turn off culling before drawing 2D quads
+//##        !!!!! #NOTE: Must turn OFF culling for QPainter to work
 //####################################################################################
-// Before rendering 3D objects, enable face culling for triangles facing away from view
-void DrOpenGL::cullingOn() {    glEnable( GL_CULL_FACE );   glCullFace(  GL_BACK );     glFrontFace( GL_CCW ); }
-// Turn off culling before drawing 2D quads, #NOTE: Must turn OFF culling for QPainter to work
-void DrOpenGL::cullingOff() {   glDisable( GL_CULL_FACE ); }
+void DrOpenGL::cullingOn() {
+    glEnable( GL_CULL_FACE );
+    glCullFace(  GL_BACK );
+    glFrontFace( GL_CCW );
+}
+void DrOpenGL::cullingOff() {
+    glDisable( GL_CULL_FACE );
+}
 
-// Renders All Scene Objects
+//####################################################################################
+//##    Wireframe Rendering
+//####################################################################################
+void DrOpenGL::wireframeOn(bool smooth) {
+    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );                        // Wireframe on
+    if (smooth) glEnable(GL_LINE_SMOOTH);                               // Enables line anti-aliasing
+    glLineWidth(1);                                                     // Only '1' fully supported by OpenGL standard
+}
+void DrOpenGL::wireframeOff(bool smooth) {
+    if (smooth) glDisable(GL_LINE_SMOOTH);
+    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );                        // Wireframe off
+}
+
+
+//####################################################################################
+//##    Render all Scene Objects
+//####################################################################################
 void DrOpenGL::drawSpace() {
 
     // ***** Reset Frame Variables
@@ -69,6 +92,7 @@ void DrOpenGL::drawSpace() {
         switch (thing->getThingType()) {
             case DrThingType::Character:
             case DrThingType::Object:
+                if (m_engine->getCurrentWorld()->wireframe) wireframeOn();
 
                 // If no depth to object, or if in Orthographic mode and object is not rotated on X or Y axis, just draw front face
                 draw2D = qFuzzyCompare(thing->getDepth(), 0.0) ||
@@ -79,22 +103,15 @@ void DrOpenGL::drawSpace() {
                     drawObject(thing, last_thing, draw2D);
                 } else {
 
-                    ///glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );        // Wireframe on
-                    ///glEnable(GL_LINE_SMOOTH);
-                    ///glLineWidth(1);
-
                     cullingOn();
                     glEnable(GL_DEPTH_TEST);
                     glDepthFunc(GL_LEQUAL);
                     drawObject(thing, last_thing, draw2D);
                     glDisable(GL_DEPTH_TEST);
                     cullingOff();
-
-                    ///glDisable(GL_LINE_SMOOTH);
-                    ///glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );        // Wireframe off
-
                 }
 
+                if (m_engine->getCurrentWorld()->wireframe) wireframeOff();
                 break;
             case DrThingType::Text:
                 // !!!!!
