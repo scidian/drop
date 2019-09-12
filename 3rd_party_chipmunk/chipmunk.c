@@ -226,12 +226,10 @@ QHullPartition(cpVect *verts, int count, cpVect a, cpVect b, cpFloat tol)
 	return head;
 }
 
-static int
-QHullReduce(cpFloat tol, cpVect *verts, int count, cpVect a, cpVect pivot, cpVect b, cpVect *result)
-{
-	if(count < 0){
+static int QHullReduce(cpFloat tol, cpVect *verts, int count, cpVect a, cpVect pivot, cpVect b, cpVect *result) {
+    if (count < 0){
 		return 0;
-	} else if(count == 0) {
+    } else if (count == 0) {
 		result[0] = pivot;
 		return 1;
 	} else {
@@ -247,12 +245,10 @@ QHullReduce(cpFloat tol, cpVect *verts, int count, cpVect a, cpVect pivot, cpVec
 
 // QuickHull seemed like a neat algorithm, and efficient-ish for large input sets.
 // My implementation performs an in place reduction using the result array as scratch space.
-int
-cpConvexHull(int count, const cpVect *verts, cpVect *result, int *first, cpFloat tol)
-{
-	if(verts != result){
+int cpConvexHull(int count, const cpVect *verts, cpVect *result, int *first, cpFloat tol) {
+    if (verts != result) {
 		// Copy the line vertexes into the empty part of the result polyline to use as a scratch buffer.
-		memcpy(result, verts, count*sizeof(cpVect));
+        memcpy(result, verts, (unsigned long)count * sizeof(cpVect));
 	}
 	
 	// Degenerate case, all points are the same.

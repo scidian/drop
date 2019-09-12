@@ -74,9 +74,8 @@ void DrEngineObject::addShapePolygon(QVector<QPointF> &points) {
     double scale_y = static_cast<double>(this->getScaleY());
 
     // Copy polygon Vertices into a scaled cpVect array
-    std::vector<cpVect> verts;
-    verts.clear();
-    verts.resize( static_cast<ulong>(old_point_count) );
+    std::vector<cpVect> hull;   hull.clear();   hull.resize(  static_cast<ulong>(old_point_count) );        // Temporary array for ConvexHull call below
+    std::vector<cpVect> verts;  verts.clear();  verts.resize( static_cast<ulong>(old_point_count) );
     for (int i = 0; i < old_point_count; i++)
         verts[static_cast<ulong>(i)] = cpv( points[i].x() * scale_x, points[i].y() * scale_y);
 
@@ -92,14 +91,13 @@ void DrEngineObject::addShapePolygon(QVector<QPointF> &points) {
 
     // Calculate the convex hull of a given set of points. Returns the count of points in the hull. Result must be a pointer to a cpVect array
     // with at least count elements. If result is NULL, then verts array wil be reduced instead. first is an optional pointer to an integer to store
-    // where the first vertex in the hull came from (i.e. verts[first] == result[0]) tol is the allowed amount to shrink the hull when simplifying it.
-    // A tolerance of 0.0 creates an exact hull.
-    cpVect hull[99];
+    // where the first vertex in the hull came from (i.e. verts[first] == result[0]). Tolerance (tol) is the allowed amount to shrink the hull when
+    // simplifying it. A tolerance of 0.0 creates an exact hull.
     int first = 0;
-    int new_point_count = cpConvexHull(old_point_count, verts.data(), hull, &first, 0.0);
+    int new_point_count = cpConvexHull(old_point_count, verts.data(), hull.data(), &first, 0.0);
 
     // Shape is convex or could not determine convex hull
-    if (new_point_count == 0) Dr::ShowMessageBox("Warning! Could not form convex hull!");
+    if (new_point_count == 0) Dr::ShowMessageBox("Warning! From addShapePolygon()... Could not form convex hull!");
     if ((new_point_count == old_point_count || (new_point_count == 0))) {
         cpShape *shape = cpPolyShapeNew( this->body, old_point_count, verts.data(), cpTransformIdentity, c_extra_radius);
         double   area =  cpAreaForPoly(old_point_count, verts.data(), c_extra_radius );

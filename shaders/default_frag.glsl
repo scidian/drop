@@ -307,7 +307,7 @@ void main( void ) {
     highp vec3 frag_rgb = texture_color.rgb;                                        // Save rgb as a vec3 for working with
 
     // Don't draw fragment to depth buffer if mostly invisible
-   if (texture_color.a < 0.05) discard;
+    if (texture_color.a < 0.05) discard;
 
     // If texture is premultiplied...
     // Remove alpha first, then apply filters, then add it back later
@@ -386,7 +386,8 @@ void main( void ) {
         highp float dp = dot(normalize(vert_normal), normalize(vert - u_camera_pos)) + 0.15;
                     dp = clamp(dp, 0.0, 1.0);
         frag_rgb = mix(vec3(0.0), frag_rgb, dp);
-        gl_FragColor = highp vec4(frag_rgb, 1.0) * alpha_in;
+        gl_FragColor = (highp vec4(frag_rgb, 1.0) * alpha_in);
+        //if (texture_color.a < 0.05) gl_FragColor = clamp(gl_FragColor + vec4(1.0, 0.0, 0.0, 0.5), 0.0, 1.0);
 
     // Otherwise we're drawing image in 2D and we do want transparent borders
     } else {

@@ -13,9 +13,27 @@
 #include "3rd_party/hullfinder.h"
 #include "enums_engine.h"
 
+
 // Image Constants
 const int   c_image_size = 600;             // Size of graphic to use for effects (water, mirror, fire, fisheye, swirl, etc.)
 const int   c_image_border = 6;             // Border used for mirror, fire, swirl, etc...
+
+// Color constants
+///const unsigned int c_color_black = 0;
+///const unsigned int c_color_white = 4294967295;
+const unsigned int c_color_black =  QColor(  0,   0,   0,   0).rgba();
+const unsigned int c_color_white =  QColor(255, 255, 255, 255).rgba();
+
+// Small, Helpful Interger Point Class
+class IntPoint {
+public:
+    int  x = 0;
+    int  y = 0;
+    IntPoint() { }
+    IntPoint(int x_, int y_) : x(x_), y(y_) { }
+    IntPoint(double x_, double y_) : x(static_cast<int>(x_)), y(static_cast<int>(y_)) { }
+    IntPoint(float x_, float y_) : x(static_cast<int>(x_)), y(static_cast<int>(y_)) { }
+};
 
 
 //####################################################################################
@@ -76,7 +94,7 @@ namespace DrImaging {
     // Object Counting / Fill (a la Ravens Project)
     QImage          blackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, bool inverse = false);
     QVector<QImage> findObjectsInImage(const QPixmap &pixmap, double alpha_tolerance);
-    QImage          floodFill(QImage &from_image, int at_x, int at_y, QColor color, double tolerance, Flood_Fill_Type type, int &flood_pixel_count);
+    QImage          floodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, double tolerance, Flood_Fill_Type type, int &flood_pixel_count);
 
 
 }

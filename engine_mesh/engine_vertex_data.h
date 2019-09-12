@@ -61,7 +61,7 @@ public:
 
     // Extrusion Functions
     void    extrudeFacePolygon(const QVector<HullPoint> &from_points, int width, int height);
-    void    triangulateFace(const QVector<HullPoint> &from_points, int width, int height, Trianglulation type);
+    void    triangulateFace(const QVector<HullPoint> &from_points, QImage &black_and_white, Trianglulation type);
 
     // Building Functions
     void    add(const QVector3D &v, const QVector3D &n, const QVector2D &t);

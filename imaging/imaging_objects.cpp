@@ -25,23 +25,6 @@ namespace DrImaging
 {
 
 
-// Local constants
-///const unsigned int c_color_black = 0;
-///const unsigned int c_color_white = 4294967295;
-const unsigned int c_color_black =  QColor(  0,   0,   0,   0).rgba();
-const unsigned int c_color_white =  QColor(255, 255, 255, 255).rgba();
-
-
-// Local Interger Point Class
-class IntPoint {
-public:
-    int  x = 0;
-    int  y = 0;
-    IntPoint() { }
-    IntPoint(int _x, int _y) : x(_x), y(_y) { }
-};
-
-
 //####################################################################################
 //##    Returns black / white image
 //##        alpha_tolerance is from 0.0 to 1.0
@@ -82,7 +65,7 @@ QImage blackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, 
 #define FLOOD_WAS_PROCESSED         1
 #define FLOOD_MARKED_FOR_PROCESS    2
 
-QImage floodFill(QImage &from_image, int at_x, int at_y, QColor color, double tolerance, Flood_Fill_Type type, int &flood_pixel_count) {
+QImage floodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, double tolerance, Flood_Fill_Type type, int &flood_pixel_count) {
     flood_pixel_count = 0;
 
     // Get scan lines
@@ -98,8 +81,8 @@ QImage floodFill(QImage &from_image, int at_x, int at_y, QColor color, double to
     } else if (from_image.width() < 1 || from_image.height() < 1) {
         return QImage(0, 0, QImage::Format::Format_ARGB32);
     } else if ((from_image.width()) == 1 && (from_image.height() == 1)) {
-        image_lines[0][0] = color.rgba();
-        flood_lines[0][0] = color.rgba();
+        image_lines[0][0] = fill_color.rgba();
+        flood_lines[0][0] = fill_color.rgba();
         return flood;
     }
 
@@ -122,8 +105,8 @@ QImage floodFill(QImage &from_image, int at_x, int at_y, QColor color, double to
         processed_some = false;
         for (auto point: points) {
             if (processed_lines[point.y][point.x] == FLOOD_WAS_PROCESSED) continue;
-            image_lines[point.y][point.x] = color.rgba();
-            flood_lines[point.y][point.x] = color.rgba();
+            image_lines[point.y][point.x] = fill_color.rgba();
+            flood_lines[point.y][point.x] = fill_color.rgba();
             processed_lines[point.y][point.x] = FLOOD_WAS_PROCESSED;
             ++flood_pixel_count;
 
