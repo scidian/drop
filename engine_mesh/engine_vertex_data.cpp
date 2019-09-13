@@ -217,26 +217,38 @@ void DrEngineVertexData::triangle(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat t
 //##    Adds a Quad extruded from an Edge
 //####################################################################################
 void DrEngineVertexData::extrude(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
-                                 GLfloat x2, GLfloat y2, GLfloat tx2, GLfloat ty2) {
-    //QVector3D n = QVector3D::normal(QVector3D(0.0f, 0.0f, -c_extrude_depth), QVector3D(x2 - x1, y2 - y1, 0.0f));
-    //QVector3D n = QVector3D::normal(QVector3D(0.0f, 0.0f, -c_extrude_depth), QVector3D(x1 - x2, y1 - y2, 0.0f));
-    QVector3D n;
-    n = QVector3D::normal( QVector3D(x1, y1, +c_extrude_depth),
-                           QVector3D(x2, y2, +c_extrude_depth),
-                           QVector3D(x1, y1, -c_extrude_depth));
+                                 GLfloat x2, GLfloat y2, GLfloat tx2, GLfloat ty2, int steps) {
+    // Original normal formula
+    ///QVector3D n = QVector3D::normal(QVector3D(0.0f, 0.0f, -c_extrude_depth), QVector3D(x2 - x1, y2 - y1, 0.0f));
+    ///QVector3D n = QVector3D::normal(QVector3D(0.0f, 0.0f, -c_extrude_depth), QVector3D(x1 - x2, y1 - y2, 0.0f));
 
-    add(QVector3D(x1, y1, +c_extrude_depth), n, QVector2D(tx1, ty1));
-    add(QVector3D(x1, y1, -c_extrude_depth), n, QVector2D(tx1, ty1));
-    add(QVector3D(x2, y2, +c_extrude_depth), n, QVector2D(tx2, ty2));
+    float step = (c_extrude_depth * 2.0f) / static_cast<float>(steps);
+    float front = c_extrude_depth;
+    float back =  c_extrude_depth - step;
+
+    for (int i = 0; i < steps; i++) {
+        QVector3D n;
+        n = QVector3D::normal( QVector3D(x1, y1, front),
+                               QVector3D(x2, y2, front),
+                               QVector3D(x1, y1, back));
+
+        add(QVector3D(x1, y1, front), n, QVector2D(tx1, ty1));
+        add(QVector3D(x1, y1, back), n, QVector2D(tx1, ty1));
+        add(QVector3D(x2, y2, front), n, QVector2D(tx2, ty2));
 
 
-    n = QVector3D::normal( QVector3D(x2, y2, +c_extrude_depth),
-                           QVector3D(x2, y2, -c_extrude_depth),
-                           QVector3D(x1, y1, -c_extrude_depth));
+        n = QVector3D::normal( QVector3D(x2, y2, front),
+                               QVector3D(x2, y2, back),
+                               QVector3D(x1, y1, back));
 
-    add(QVector3D(x2, y2, +c_extrude_depth), n, QVector2D(tx2, ty2));
-    add(QVector3D(x1, y1, -c_extrude_depth), n, QVector2D(tx1, ty1));
-    add(QVector3D(x2, y2, -c_extrude_depth), n, QVector2D(tx2, ty2));
+        add(QVector3D(x2, y2, front), n, QVector2D(tx2, ty2));
+        add(QVector3D(x1, y1, back), n, QVector2D(tx1, ty1));
+        add(QVector3D(x2, y2, back), n, QVector2D(tx2, ty2));
+
+        front -= step;
+        back  -= step;
+    }
+
 }
 
 

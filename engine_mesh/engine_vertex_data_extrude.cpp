@@ -53,7 +53,7 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
         points =  smoothPoints(  points, 4, 4.0, 0.4);
 
         points =  simplifyPoints(points, 0.030,    5, true);    // First run with averaging points to reduce triangles among similar slopes
-        points =  simplifyPoints(points, 0.001, 5000, false);   // Then run again with smaller tolerance to reduce triangles along straight lines
+        points =  simplifyPoints(points, 0.001,   20, false);   // Then run again with smaller tolerance to reduce triangles along straight lines
         // or
         ///points =  simplifyPoints(points, 0.030,   10, true);    // Test
 
@@ -64,7 +64,7 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
         triangulateFace(points, image, Trianglulation::Delaunay);
 
         // ***** Add extruded triangles
-        extrudeFacePolygon(points, image.width(), image.height());
+        extrudeFacePolygon(points, image.width(), image.height(), 2);
     }
 }
 
@@ -277,9 +277,10 @@ void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &from_points, 
                 coords.push_back(poly[i].y);
             }
 
-            // Add some uniform points
-            int x_add = width / 20;
-            int y_add = height / 20;
+            // Add some uniform points, 4 points looks great and keeps triangles low
+            int x_add, y_add;
+            x_add = width /  4;
+            y_add = height / 4;
             if (x_add < 1) x_add = 1;
             if (y_add < 1) y_add = 1;
             for (int i = (x_add / 2); i < width; i += x_add) {
@@ -290,6 +291,29 @@ void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &from_points, 
                     }
                 }
             }
+
+            // Add some points just around the edges of the hull
+            /**
+            for (int i = 0; i < poly.GetNumPoints(); i++) {
+                double x_start = poly[i].x - 2;
+                double x_end =   poly[i].x + 2;
+                double y_start = poly[i].y - 2;
+                double y_end =   poly[i].y + 2;
+                for (double x = x_start; x <= x_end; x += 1) {
+                    for (double y = y_start; y <= y_end; y += 1) {
+                        int at_x = static_cast<int>(x);
+                        int at_y = static_cast<int>(y);
+                        if (at_x == int(poly[i].x) || at_y == int(poly[i].y)) continue;
+                        at_x = Dr::Clamp(at_x, 0, width -  1);
+                        at_y = Dr::Clamp(at_y, 0, height - 1);
+                        if (black_and_white.pixel(at_x, at_y) != c_color_black) {
+                            coords.push_back( at_x );
+                            coords.push_back( at_y );
+                        }
+                    }
+                }
+            }
+            */
 
             // Run triangulation, add triangles to vertex data
             Delaunator::Delaunator d(coords);
@@ -366,7 +390,7 @@ void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &from_points, 
 //####################################################################################
 //##    Add Extrusion Triangles to Vertex Data
 //####################################################################################
-void DrEngineVertexData::extrudeFacePolygon(const QVector<HullPoint> &from_points, int width, int height) {
+void DrEngineVertexData::extrudeFacePolygon(const QVector<HullPoint> &from_points, int width, int height, int steps) {
     double w2d = width  / 2.0;
     double h2d = height / 2.0;
 
@@ -380,13 +404,13 @@ void DrEngineVertexData::extrudeFacePolygon(const QVector<HullPoint> &from_point
 
         GLfloat  x1 = static_cast<GLfloat>(         from_points[point1].x);
         GLfloat  y1 = static_cast<GLfloat>(height - from_points[point1].y);
-        GLfloat tx1 = static_cast<GLfloat>(      from_points[point1].x / width);
-        GLfloat ty1 = static_cast<GLfloat>(1.0 - from_points[point1].y / height);
+        GLfloat tx1 = static_cast<GLfloat>(         from_points[point1].x / width);
+        GLfloat ty1 = static_cast<GLfloat>(1.0 -    from_points[point1].y / height);
 
         GLfloat  x2 = static_cast<GLfloat>(         from_points[point2].x);
         GLfloat  y2 = static_cast<GLfloat>(height - from_points[point2].y);
-        GLfloat tx2 = static_cast<GLfloat>(      from_points[point2].x / width);
-        GLfloat ty2 = static_cast<GLfloat>(1.0 - from_points[point2].y / height);
+        GLfloat tx2 = static_cast<GLfloat>(         from_points[point2].x / width);
+        GLfloat ty2 = static_cast<GLfloat>(1.0 -    from_points[point2].y / height);
 
         x1 -= static_cast<GLfloat>(w2d);
         x2 -= static_cast<GLfloat>(w2d);
@@ -401,7 +425,7 @@ void DrEngineVertexData::extrudeFacePolygon(const QVector<HullPoint> &from_point
         if (ty2 > 0.5f) y2 -= pixel_h; else y2 += pixel_h;
 
         extrude( x1, y1, tx1, ty1,
-                 x2, y2, tx2, ty2);
+                 x2, y2, tx2, ty2, steps);
     }
 }
 

@@ -60,13 +60,13 @@ public:
     static  QVector<HullPoint>  smoothPoints(const QVector<HullPoint> &from_points, int neighbors, double neighbor_distance, double weight);
 
     // Extrusion Functions
-    void    extrudeFacePolygon(const QVector<HullPoint> &from_points, int width, int height);
+    void    extrudeFacePolygon(const QVector<HullPoint> &from_points, int width, int height, int steps);
     void    triangulateFace(const QVector<HullPoint> &from_points, QImage &black_and_white, Trianglulation type);
 
     // Building Functions
     void    add(const QVector3D &v, const QVector3D &n, const QVector2D &t);
     void    extrude(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
-                    GLfloat x2, GLfloat y2, GLfloat tx2, GLfloat ty2);
+                    GLfloat x2, GLfloat y2, GLfloat tx2, GLfloat ty2, int steps = 1);
     void    cube(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
                  GLfloat x2, GLfloat y2, GLfloat tx2, GLfloat ty2,
                  GLfloat x3, GLfloat y3, GLfloat tx3, GLfloat ty3,

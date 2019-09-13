@@ -69,7 +69,7 @@ double HullPoint::Distance(const HullPoint &segmentStart, const HullPoint &segme
     return Distance(projection);
 }
 
-double HullPoint::DecisionDistance(const QList<HullPoint> & HullPoints) const {
+double HullPoint::DecisionDistance(const QList<HullPoint> &HullPoints) const {
     HullPoint result = HullPoints[0];
     double dst = Distance(HullPoints[0]);
     for (int i = 1; i < HullPoints.size(); i++) {
@@ -89,8 +89,7 @@ double HullFinder::IsLeft(HullPoint p0, HullPoint p1, HullPoint p2) {
     return (p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y);
 }
 
-bool HullFinder::IsPointInsidePolygon(HullPoint v, const QVector<HullPoint> & polygon)
-{
+bool HullFinder::IsPointInsidePolygon(HullPoint v, const QVector<HullPoint> &polygon) {
     bool result = false;
     int j = polygon.count() - 1;
     for (int i = 0; i < polygon.count(); i++) {
