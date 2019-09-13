@@ -52,10 +52,10 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
         // ***** Smooth, then Simplify point list, a value of 1.0 looks nice for #KEYWORD: "low poly"
         points =  smoothPoints(  points, 4, 4.0, 0.4);
 
-        points =  simplifyPoints(points, 0.030,    5, true);    // First run with averaging points to reduce triangles among similar slopes
-        points =  simplifyPoints(points, 0.001,   20, false);   // Then run again with smaller tolerance to reduce triangles along straight lines
-        // or
-        ///points =  simplifyPoints(points, 0.030,   10, true);    // Test
+        int split = static_cast<int>((((image.width() + image.height()) / 2) * 0.2) / 5);
+        points =  simplifyPoints(points, 0.030,     5, true);       // First run with averaging points to reduce triangles among similar slopes
+        points =  simplifyPoints(points, 0.001, split, false);      // Then run again with smaller tolerance to reduce triangles along straight lines
+
 
         // ***** Triangulate concave hull
         ///triangulateFace(points, image, Trianglulation::Ear_Clipping);
@@ -292,28 +292,16 @@ void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &from_points, 
                 }
             }
 
-            // Add some points just around the edges of the hull
-            /**
-            for (int i = 0; i < poly.GetNumPoints(); i++) {
-                double x_start = poly[i].x - 2;
-                double x_end =   poly[i].x + 2;
-                double y_start = poly[i].y - 2;
-                double y_end =   poly[i].y + 2;
-                for (double x = x_start; x <= x_end; x += 1) {
-                    for (double y = y_start; y <= y_end; y += 1) {
-                        int at_x = static_cast<int>(x);
-                        int at_y = static_cast<int>(y);
-                        if (at_x == int(poly[i].x) || at_y == int(poly[i].y)) continue;
-                        at_x = Dr::Clamp(at_x, 0, width -  1);
-                        at_y = Dr::Clamp(at_y, 0, height - 1);
-                        if (black_and_white.pixel(at_x, at_y) != c_color_black) {
-                            coords.push_back( at_x );
-                            coords.push_back( at_y );
-                        }
-                    }
-                }
-            }
-            */
+            // Add points on transparent pixels to be removed later. Helps keep the edges prominent.
+//            for (int x = 0; x < width; x++) {
+//                for (int y = 0; y < height; y++) {
+//                    if (black_and_white.pixel(x, y) == c_color_black) {
+//                        coords.push_back( x );
+//                        coords.push_back( y );
+//                    }
+//                }
+//            }
+
 
             // Run triangulation, add triangles to vertex data
             Delaunator::Delaunator d(coords);
@@ -339,29 +327,21 @@ void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &from_points, 
                 if (transparent_count > 1) continue;
 
                 // Check each triangle to see if mid-points lie outside concave hull by checking concave hull intersections
-                /**
-                HullPoint mid12( (x1 + x2) / 2.0, (y1 + y2) / 2.0 );
-                HullPoint mid13( (x1 + x3) / 2.0, (y1 + y3) / 2.0 );
-                HullPoint mid23( (x2 + x3) / 2.0, (y2 + y3) / 2.0 );
-                QLineF line_12(mid12.x, mid12.y, 100000.0, mid12.y);
-                QLineF line_13(mid13.x, mid13.y, 100000.0, mid13.y);
-                QLineF line_23(mid23.x, mid23.y, 100000.0, mid23.y);
-                int intersect_count_12 = 0;
-                int intersect_count_13 = 0;
-                int intersect_count_23 = 0;
-                for (int i = 0; i < (from_points.count() - 1); ++i) {
-                    QLineF  check_line = QLineF(from_points[i].x, from_points[i].y, from_points[i+1].x, from_points[i+1].y);
-                    QPointF intersection_point;
-                    if (check_line.intersect(line_12, &intersection_point) == QLineF::IntersectType::BoundedIntersection) ++intersect_count_12;
-                    if (check_line.intersect(line_13, &intersection_point) == QLineF::IntersectType::BoundedIntersection) ++intersect_count_13;
-                    if (check_line.intersect(line_23, &intersection_point) == QLineF::IntersectType::BoundedIntersection) ++intersect_count_23;
-                }
-                int outside_count = 0;
-                if (intersect_count_12 % 2 == 0) ++outside_count;
-                if (intersect_count_13 % 2 == 0) ++outside_count;
-                if (intersect_count_23 % 2 == 0) ++outside_count;
-                if (outside_count > 1) continue;
-                */
+//                HullPoint mid12( (x1 + x2) / 2.0, (y1 + y2) / 2.0 );
+//                HullPoint mid13( (x1 + x3) / 2.0, (y1 + y3) / 2.0 );
+//                HullPoint mid23( (x2 + x3) / 2.0, (y2 + y3) / 2.0 );
+//                QLineF line_12(mid12.x, mid12.y, 100000.0, mid12.y);
+//                QLineF line_13(mid13.x, mid13.y, 100000.0, mid13.y);
+//                QLineF line_23(mid23.x, mid23.y, 100000.0, mid23.y);
+//                bool intersect_hull = false;
+//                for (int i = 0; i < (from_points.count() - 1); ++i) {
+//                    QLineF  check_line = QLineF(from_points[i].x, from_points[i].y, from_points[i+1].x, from_points[i+1].y);
+//                    QPointF intersection_point;
+//                    if (check_line.intersect(line_12, &intersection_point) == QLineF::IntersectType::BoundedIntersection) intersect_hull = !intersect_hull;
+//                    if (check_line.intersect(line_13, &intersection_point) == QLineF::IntersectType::BoundedIntersection) intersect_hull = !intersect_hull;
+//                    if (check_line.intersect(line_23, &intersection_point) == QLineF::IntersectType::BoundedIntersection) intersect_hull = !intersect_hull;
+//                }
+//                if (intersect_hull == false) continue;
 
                 GLfloat ix1 = static_cast<GLfloat>(         x1 - w2d);
                 GLfloat iy1 = static_cast<GLfloat>(height - y1 - h2d);

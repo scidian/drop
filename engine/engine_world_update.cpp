@@ -37,7 +37,10 @@ void DrEngineWorld::updateSpace(double time_passed) {
 void DrEngineWorld::updateWorld(double time_passed) {
 
     // Calculate area that if Things are within, they can stay in the Space
-    QRectF threshold(getCameraPosXD() - m_delete_threshold_x, getCameraPosYD() - m_delete_threshold_y, m_delete_threshold_x*2.0, m_delete_threshold_y*2.0);
+    QRectF threshold(getCameraPositionX() - m_delete_threshold_x,
+                     getCameraPositionY() - m_delete_threshold_y,
+                     m_delete_threshold_x*2.0,
+                     m_delete_threshold_y*2.0);
 
     // ***** Update global variables for use in callbacks
     g_gravity_normal = cpvnormalize( cpSpaceGetGravity(m_space) );
@@ -68,7 +71,7 @@ void DrEngineWorld::updateWorld(double time_passed) {
         QTransform t = QTransform().translate(m_game_start.x(), m_game_start.y())
                                    .rotate(m_game_direction)
                                    .translate(-m_game_start.x(), -m_game_start.y());
-        QPointF rotated = t.map( QPointF( static_cast<double>(getCameraPos().x()), static_cast<double>(getCameraPos().y()) ));
+        QPointF rotated = t.map( QPointF( getCameraPositionX(), getCameraPositionY() ));
         m_game_distance = rotated.x() - m_game_start.x();
         ///info = "Distance: " + QString::number(m_game_distance) + ", Loaded To: " + QString::number(m_loaded_to);
 

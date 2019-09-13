@@ -102,6 +102,7 @@ private:
     long            m_active_camera = 0;            // Key to active camera in the Engine, 0 == No Camera
     bool            m_switching_cameras = false;    // True when we want to start tweening towards a new camera
     QVector3D       m_temp_position;                // Used for tweening between cameras
+    QVector3D       m_temp_rotation;                // Used for tweening between cameras
 
 
     // Scene Variables
@@ -191,10 +192,14 @@ public:
     void                setActiveCamera(long new_camera) { m_active_camera = new_camera; }
     DrEngineCamera*     getCamera(long camera_id) { return m_cameras[camera_id]; }
     EngineCameraMap&    getCameraMap() { return m_cameras; }
-    QVector3D           getCameraPos();
-    double              getCameraPosXD();
-    double              getCameraPosYD();
-    double              getCameraPosZD();
+    QVector3D           getCameraPosition();
+    double              getCameraPositionX();
+    double              getCameraPositionY();
+    double              getCameraPositionZ();
+    QVector3D           getCameraRotation();
+    double              getCameraRotationX();
+    double              getCameraRotationY();
+    double              getCameraRotationZ();
     void                moveCameras(double milliseconds);
     void                switchCameraToNext();
     void                switchCameras(long new_camera);

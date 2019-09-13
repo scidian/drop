@@ -31,6 +31,29 @@ static inline void SmoothMove(QVector3D& start, const QVector3D &target, const f
 
 
 //####################################################################################
+//##    Equalizes x, y, and z angles to within 0 to 360
+//####################################################################################
+static float EqualizeAngle0to360(const float &angle) {
+    float equalized = angle;
+    while (equalized <   0) { equalized += 360; }
+    while (equalized > 360) { equalized -= 360; }
+    return equalized;
+}
+
+//####################################################################################
+//##    Finds closest angle within 180 degrees of angle (both angles must be between 0 to 360)
+//####################################################################################
+static float FindClosestAngle180(const float &start, const float &angle) {
+    float closest = angle;
+    if (closest - start > 180)
+        closest -= 360;
+    else if (start - closest > 180)
+        closest += 360;
+    return closest;
+}
+
+
+//####################################################################################
 //##    DrEngineWorld - Camera Functions
 //####################################################################################
 // Default parameters: nullptr, 0, 0, 800
@@ -58,10 +81,26 @@ void DrEngineWorld::moveCameras(double milliseconds) {
         camera_pair.second->moveCamera(milliseconds);
 
         if (m_switching_cameras) {
-            QVector3D target = getCamera(m_active_camera)->getPosition();
-            SmoothMove(m_temp_position, target, .0050f, static_cast<float>(milliseconds) );
+            // Lerp position
+            QVector3D target_position = getCamera(m_active_camera)->getPosition();
+            SmoothMove(m_temp_position, target_position, .0050f, static_cast<float>(milliseconds) );
             ///smoothMoveMaxSpeed(m_temp_position, target, 4.0f);
-            if ( m_temp_position.distanceToPoint(target) < 1 ) m_switching_cameras = false;
+
+            // Lerp Rotation
+            QVector3D target_rotation = getCamera(m_active_camera)->getRotation();
+                      target_rotation.setX( EqualizeAngle0to360(target_rotation.x()) );
+                      target_rotation.setY( EqualizeAngle0to360(target_rotation.y()) );
+                      target_rotation.setZ( EqualizeAngle0to360(target_rotation.z()) );
+                      target_rotation.setX( FindClosestAngle180(m_temp_rotation.x(), target_rotation.x()) );
+                      target_rotation.setY( FindClosestAngle180(m_temp_rotation.y(), target_rotation.y()) );
+                      target_rotation.setZ( FindClosestAngle180(m_temp_rotation.z(), target_rotation.z()) );
+            SmoothMove(m_temp_rotation, target_rotation, .0050f, static_cast<float>(milliseconds) );
+
+            if ( m_temp_position.distanceToPoint(target_position) < 1 ) {
+                m_temp_position = target_position;
+                m_temp_rotation = target_rotation;
+                m_switching_cameras = false;
+            }
         }
     }
 }
@@ -75,7 +114,11 @@ void DrEngineWorld::updateCameras() {
 
 // Initiates a move to a new camera
 void DrEngineWorld::switchCameras(long new_camera) {
-    m_temp_position = getCameraPos();
+    m_temp_position = getCameraPosition();
+    m_temp_rotation = getCameraRotation();
+        m_temp_rotation.setX( EqualizeAngle0to360(m_temp_rotation.x()) );
+        m_temp_rotation.setY( EqualizeAngle0to360(m_temp_rotation.y()) );
+        m_temp_rotation.setZ( EqualizeAngle0to360(m_temp_rotation.z()) );
     m_switching_cameras = true;
     m_active_camera = new_camera;
 }
@@ -107,9 +150,9 @@ void DrEngineWorld::switchCameraToNext() {
 
 
 //####################################################################################
-//##    DrEngineWorld - Returns camera position, also takes into handle camera switching
+//##    DrEngineWorld - Returns Camera Position, also takes into handle camera switching
 //####################################################################################
-QVector3D DrEngineWorld::getCameraPos() {
+QVector3D DrEngineWorld::getCameraPosition() {
     if (m_active_camera == 0) {
         return c_default_camera_pos;
     } else if (m_switching_cameras == false) {
@@ -118,9 +161,27 @@ QVector3D DrEngineWorld::getCameraPos() {
         return m_temp_position;
     }
 }
-double DrEngineWorld::getCameraPosXD() { return static_cast<double>(getCameraPos().x()); }
-double DrEngineWorld::getCameraPosYD() { return static_cast<double>(getCameraPos().y()); }
-double DrEngineWorld::getCameraPosZD() { return static_cast<double>(getCameraPos().z()); }
+double DrEngineWorld::getCameraPositionX() { return static_cast<double>(getCameraPosition().x()); }
+double DrEngineWorld::getCameraPositionY() { return static_cast<double>(getCameraPosition().y()); }
+double DrEngineWorld::getCameraPositionZ() { return static_cast<double>(getCameraPosition().z()); }
+
+
+//####################################################################################
+//##    DrEngineWorld - Returns Camera Rotation, also takes into handle camera switching
+//####################################################################################
+QVector3D DrEngineWorld::getCameraRotation() {
+    if (m_active_camera == 0) {
+        return c_default_camera_rot;
+    } else if (m_switching_cameras == false) {
+        return m_cameras[m_active_camera]->getRotation();
+    } else {
+        return m_temp_rotation;
+    }
+}
+double DrEngineWorld::getCameraRotationX() { return static_cast<double>(getCameraRotation().x()); }
+double DrEngineWorld::getCameraRotationY() { return static_cast<double>(getCameraRotation().y()); }
+double DrEngineWorld::getCameraRotationZ() { return static_cast<double>(getCameraRotation().z()); }
+
 
 //####################################################################################
 //####################################################################################
@@ -133,9 +194,16 @@ DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, f
     m_key = unique_key;
     m_position = QVector3D(x, y, z);
     m_target = m_position;
-    m_avg_speed_x.clear();  m_avg_speed_x.fill(0, 20);
-    m_avg_speed_y.clear();  m_avg_speed_y.fill(0, 20);
+    m_avg_speed_x.clear();  m_avg_speed_x.fill(0, 20);          // Zero out average speed vector
+    m_avg_speed_y.clear();  m_avg_speed_y.fill(0, 20);          // Zero out average speed vector
     m_speed = QVector3D(0, 0, 0);
+
+    // !!!!! #TEMP: Give camera some rotation for when using with perspective. Eventually rotation needs to
+    //              work with orthographic as well...
+    //              X Rotation, controls up / down
+    //              Y Rotation, controls left / right
+    //              Z Rotation, tilts head
+    m_rotation = QVector3D(-20, -20, 0);
 }
 
 //####################################################################################

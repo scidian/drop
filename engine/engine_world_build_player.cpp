@@ -6,6 +6,7 @@
 //
 //
 #include "engine.h"
+#include "engine_camera.h"
 #include "engine_texture.h"
 #include "engine_things/engine_thing_light.h"
 #include "engine_things/engine_thing_object.h"
@@ -59,6 +60,8 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         assignPlayerControls(ball2, false, true, false);
         ball2->setJumpCount( c_unlimited_jump );
         ball2->setRotateSpeed( 20.0 );
+        m_cameras[ball2->getActiveCameraKey()]->setRotation( -30, 30, 0);
+
 
     } else if (new_player_type == Demo_Player::Light) {
         DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 200, 50, 0, c_scale1x1, 0.25, 0.5, true, false);

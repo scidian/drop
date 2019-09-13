@@ -56,18 +56,19 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     m_default_shader.setUniformValue( u_default_bitrate,        m_engine->getCurrentWorld()->bitrate );
     m_default_shader.setUniformValue( u_default_pixel_x,        m_engine->getCurrentWorld()->pixel_x );
     m_default_shader.setUniformValue( u_default_pixel_y,        m_engine->getCurrentWorld()->pixel_y );
-    m_default_shader.setUniformValue( u_default_pixel_offset,   m_engine->getCurrentWorld()->getCameraPos().x(), m_engine->getCurrentWorld()->getCameraPos().y() );
+    m_default_shader.setUniformValue( u_default_pixel_offset,   m_engine->getCurrentWorld()->getCameraPosition().x(),
+                                                                m_engine->getCurrentWorld()->getCameraPosition().y() );
 
     // Set more Appearance Variables for Shader
-    m_default_shader.setUniformValue( u_default_negative,   m_engine->getCurrentWorld()->negative );
-    m_default_shader.setUniformValue( u_default_grayscale,  m_engine->getCurrentWorld()->grayscale );
-    m_default_shader.setUniformValue( u_default_hue,        m_engine->getCurrentWorld()->hue );
-    m_default_shader.setUniformValue( u_default_saturation, m_engine->getCurrentWorld()->saturation );
-    m_default_shader.setUniformValue( u_default_contrast,   m_engine->getCurrentWorld()->contrast );
-    m_default_shader.setUniformValue( u_default_brightness, m_engine->getCurrentWorld()->brightness );
+    m_default_shader.setUniformValue( u_default_negative,       m_engine->getCurrentWorld()->negative );
+    m_default_shader.setUniformValue( u_default_grayscale,      m_engine->getCurrentWorld()->grayscale );
+    m_default_shader.setUniformValue( u_default_hue,            m_engine->getCurrentWorld()->hue );
+    m_default_shader.setUniformValue( u_default_saturation,     m_engine->getCurrentWorld()->saturation );
+    m_default_shader.setUniformValue( u_default_contrast,       m_engine->getCurrentWorld()->contrast );
+    m_default_shader.setUniformValue( u_default_brightness,     m_engine->getCurrentWorld()->brightness );
 
-    m_default_shader.setUniformValue( u_default_cartoon,    m_engine->getCurrentWorld()->cartoon );
-    m_default_shader.setUniformValue( u_default_wavy,       m_engine->getCurrentWorld()->wavy );
+    m_default_shader.setUniformValue( u_default_cartoon,        m_engine->getCurrentWorld()->cartoon );
+    m_default_shader.setUniformValue( u_default_wavy,           m_engine->getCurrentWorld()->wavy );
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

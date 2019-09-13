@@ -30,7 +30,8 @@ private:
     long            m_key;                                      // Unique DrEngineWorld Key of for this camera in the DrEngineWorld EngineCameraMap
 
     QVector3D       m_position = QVector3D(0, 0, 0);            // Current camera position
-    QVector3D       m_speed = QVector3D(0, 0, 0);               // Current camera speed
+    QVector3D       m_speed =    QVector3D(0, 0, 0);            // Current camera speed
+    QVector3D       m_rotation = QVector3D(0, 0, 0);            // Current camera rotation
 
     QVector3D       m_target;                                   // Calculated point this camera is moving towards
 
@@ -54,14 +55,25 @@ public:
     long                getKey()            { return m_key; }
     long                getThingFollowing() { return m_follow_key; }
     const QVector3D&    getPosition()       { return m_position; }
+    const QVector3D&    getRotation()       { return m_rotation; }
     const QVector3D&    getSpeed()          { return m_speed; }
 
     void                setPosition(QVector3D new_position) {       m_position = new_position; }
     void                setPosition(double x, double y, double z) { m_position = QVector3D(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)); }
     void                setPosition(float x, float y, float z) {    m_position = QVector3D(x, y, z); }
+    void                setPosition(int x, int y, int z) {          m_position = QVector3D(x, y, z); }
     void                setPositionX(float x) { m_position.setX(x); }
     void                setPositionY(float y) { m_position.setY(y); }
     void                setPositionZ(float z) { m_position.setZ(z); }
+
+    void                setRotation(QVector3D new_rotation) {       m_rotation = new_rotation; }
+    void                setRotation(double x, double y, double z) { m_rotation = QVector3D(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)); }
+    void                setRotation(float x, float y, float z) {    m_rotation = QVector3D(x, y, z); }
+    void                setRotation(int x, int y, int z) {          m_rotation = QVector3D(x, y, z); }
+    void                setRotationX(float x) { m_rotation.setX(x); }
+    void                setRotationY(float y) { m_rotation.setY(y); }
+    void                setRotationZ(float z) { m_rotation.setZ(z); }
+
     void                setSpeed(QVector3D new_speed) {          m_speed = new_speed; }
     void                setSpeed(double x, double y, double z) { m_speed = QVector3D(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)); }
     void                setSpeed(float x, float y, float z) {    m_speed = QVector3D(x, y, z); }

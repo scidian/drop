@@ -121,7 +121,8 @@ bool DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, 
     // Set more variables for shader
     m_fisheye_shader.setUniformValue( u_fisheye_alpha,      lens->getOpacity() );
     m_fisheye_shader.setUniformValue( u_fisheye_zoom,       m_scale );
-    m_fisheye_shader.setUniformValue( u_fisheye_pos,        m_engine->getCurrentWorld()->getCameraPos().x(), m_engine->getCurrentWorld()->getCameraPos().y(), 0.0f );
+    m_fisheye_shader.setUniformValue( u_fisheye_pos,        m_engine->getCurrentWorld()->getCameraPosition().x(),
+                                                            m_engine->getCurrentWorld()->getCameraPosition().y(), 0.0f );
     m_fisheye_shader.setUniformValue( u_fisheye_width,      static_cast<float>(fbo->width()) );
     m_fisheye_shader.setUniformValue( u_fisheye_height,     static_cast<float>(fbo->height()) );
     m_fisheye_shader.setUniformValue( u_fisheye_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
@@ -209,17 +210,18 @@ bool DrOpenGL::drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, D
     m_mirror_shader.setUniformValue( u_mirror_scale,        mirror->scale );
 
     // Set more variables for shader
-    m_mirror_shader.setUniformValue( u_mirror_alpha,      mirror->getOpacity() );
-    m_mirror_shader.setUniformValue( u_mirror_zoom,       m_scale );
-    m_mirror_shader.setUniformValue( u_mirror_pos,        m_engine->getCurrentWorld()->getCameraPos().x(), m_engine->getCurrentWorld()->getCameraPos().y(), 0.0f );
-    m_mirror_shader.setUniformValue( u_mirror_width,      static_cast<float>(fbo->width()) );
-    m_mirror_shader.setUniformValue( u_mirror_height,     static_cast<float>(fbo->height()) );
-    m_mirror_shader.setUniformValue( u_mirror_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
-    m_mirror_shader.setUniformValue( u_mirror_angle,      angle );
+    m_mirror_shader.setUniformValue( u_mirror_alpha,        mirror->getOpacity() );
+    m_mirror_shader.setUniformValue( u_mirror_zoom,         m_scale );
+    m_mirror_shader.setUniformValue( u_mirror_pos,          m_engine->getCurrentWorld()->getCameraPosition().x(),
+                                                            m_engine->getCurrentWorld()->getCameraPosition().y(), 0.0f );
+    m_mirror_shader.setUniformValue( u_mirror_width,        static_cast<float>(fbo->width()) );
+    m_mirror_shader.setUniformValue( u_mirror_height,       static_cast<float>(fbo->height()) );
+    m_mirror_shader.setUniformValue( u_mirror_time,         static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
+    m_mirror_shader.setUniformValue( u_mirror_angle,        angle );
 
-    m_mirror_shader.setUniformValue( u_mirror_pixel_x,    mirror->pixel_x );
-    m_mirror_shader.setUniformValue( u_mirror_pixel_y,    mirror->pixel_y );
-    m_mirror_shader.setUniformValue( u_mirror_bitrate,    mirror->bitrate );
+    m_mirror_shader.setUniformValue( u_mirror_pixel_x,      mirror->pixel_x );
+    m_mirror_shader.setUniformValue( u_mirror_pixel_y,      mirror->pixel_y );
+    m_mirror_shader.setUniformValue( u_mirror_bitrate,      mirror->bitrate );
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
@@ -290,7 +292,8 @@ bool DrOpenGL::drawFrameBufferUsingSwirlShader(QOpenGLFramebufferObject *fbo, Dr
     // Set more variables for shader
     m_swirl_shader.setUniformValue( u_swirl_alpha,      swirl->getOpacity() );
     m_swirl_shader.setUniformValue( u_swirl_zoom,       m_scale );
-    m_swirl_shader.setUniformValue( u_swirl_pos,        m_engine->getCurrentWorld()->getCameraPos().x(), m_engine->getCurrentWorld()->getCameraPos().y(), 0.0f );
+    m_swirl_shader.setUniformValue( u_swirl_pos,        m_engine->getCurrentWorld()->getCameraPosition().x(),
+                                                        m_engine->getCurrentWorld()->getCameraPosition().y(), 0.0f );
     m_swirl_shader.setUniformValue( u_swirl_width,      static_cast<float>(fbo->width()) );
     m_swirl_shader.setUniformValue( u_swirl_height,     static_cast<float>(fbo->height()) );
     m_swirl_shader.setUniformValue( u_swirl_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
@@ -426,7 +429,8 @@ bool DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
     // Set variables for shader
     m_water_shader.setUniformValue( u_water_alpha,      water->getOpacity() );
     m_water_shader.setUniformValue( u_water_zoom,       m_scale );
-    m_water_shader.setUniformValue( u_water_pos,        m_engine->getCurrentWorld()->getCameraPos().x(), m_engine->getCurrentWorld()->getCameraPos().y(), 0.0f );
+    m_water_shader.setUniformValue( u_water_pos,        m_engine->getCurrentWorld()->getCameraPosition().x(),
+                                                        m_engine->getCurrentWorld()->getCameraPosition().y(), 0.0f );
     m_water_shader.setUniformValue( u_water_width,      static_cast<float>(fbo->width()) );
     m_water_shader.setUniformValue( u_water_height,     static_cast<float>(fbo->height()) );
     m_water_shader.setUniformValue( u_water_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
