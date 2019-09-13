@@ -203,7 +203,7 @@ DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, f
     //              X Rotation, controls up / down
     //              Y Rotation, controls left / right
     //              Z Rotation, tilts head
-    m_rotation = QVector3D(-20, -20, 0);
+    m_rotation = QVector3D(-15, 15, 0);
 }
 
 //####################################################################################

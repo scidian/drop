@@ -60,7 +60,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         assignPlayerControls(ball2, false, true, false);
         ball2->setJumpCount( c_unlimited_jump );
         ball2->setRotateSpeed( 20.0 );
-        m_cameras[ball2->getActiveCameraKey()]->setRotation( -30, 30, 0);
+        m_cameras[ball2->getActiveCameraKey()]->setRotation( -25, -40, 0);
 
 
     } else if (new_player_type == Demo_Player::Light) {

@@ -24,7 +24,6 @@ const int c_vertex_length = 8;          // 8 is (3) for xyz, (3) for normal, and
 // Local Enums
 enum class Trianglulation {
     Ear_Clipping,
-    Optimal_Polygon,
     Monotone,
     Delaunay,
 };

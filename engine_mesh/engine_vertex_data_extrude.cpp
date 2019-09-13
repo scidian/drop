@@ -29,7 +29,8 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
 
     // Break pixmap into seperate images for each object in image
     QVector<QImage> images;
-    images = DrImaging::findObjectsInImage(pixmap, 0.9);
+    QVector<QRect>  rects;
+    DrImaging::findObjectsInImage(pixmap, images, rects, 0.9);
     ///images.push_back( DrImaging::blackAndWhiteFromAlpha(pixmap.toImage(), 0.9, false));
 
     for (auto image : images) {
@@ -218,7 +219,8 @@ void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &from_points, 
     double w2d = width  / 2.0;
     double h2d = height / 2.0;
 
-    // Copy HullPoints into TPPLPoly
+    // ***** Copy HullPoints into TPPLPoly
+    if (from_points.count() < 3) return;
     std::list<TPPLPoly> testpolys, result;
     TPPLPoly poly; poly.Init(from_points.count());
     for (int i = 0; i < from_points.count(); i++) {
@@ -227,12 +229,11 @@ void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &from_points, 
     }
     testpolys.push_back( poly );
 
-    // Run triangulation
+    // ***** Run triangulation
     TPPLPartition pp;
     switch (type) {
-        case Trianglulation::Ear_Clipping:      pp.Triangulate_EC(&(*testpolys.begin()), &result);          break;
-        case Trianglulation::Optimal_Polygon:   pp.Triangulate_OPT(&(*testpolys.begin()), &result);         break;
-        case Trianglulation::Monotone:          pp.Triangulate_MONO(&(*testpolys.begin()), &result);        break;
+        case Trianglulation::Ear_Clipping:      pp.Triangulate_EC(  &testpolys, &result);       break;
+        case Trianglulation::Monotone:          pp.Triangulate_MONO(&testpolys, &result);       break;
         case Trianglulation::Delaunay: {
             result.push_back( poly );
             ///pp.ConvexPartition_OPT(&(*testpolys.begin()), &result);
@@ -241,7 +242,7 @@ void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &from_points, 
         }
     }
 
-    // Add triangulated convex hull to vertex data
+    // ***** Add triangulated convex hull to vertex data
     if (type != Trianglulation::Delaunay) {
         for (auto poly : result) {
             GLfloat x1 = static_cast<GLfloat>(         poly[0].x - w2d);
@@ -264,104 +265,85 @@ void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &from_points, 
         }
 
 
-    // After splitting concave hull into convex polygons, add Delaunay Triangulation to vertex data
+    // ***** After splitting concave hull into convex polygons, add Delaunay Triangulation to vertex data
     } else {
 
+        // Copy HullPoints into vector
+        std::vector<double> coords;
         for (auto poly : result) {
-            if (poly.GetNumPoints() < 3) continue;
-
-            // Copy HullPoints into vector
-            std::vector<double> coords;
             for (int i = 0; i < poly.GetNumPoints(); i++) {
                 coords.push_back(poly[i].x);
                 coords.push_back(poly[i].y);
             }
+        }
 
-            // Add some uniform points, 4 points looks great and keeps triangles low
-            int x_add, y_add;
-            x_add = width /  4;
-            y_add = height / 4;
-            if (x_add < 1) x_add = 1;
-            if (y_add < 1) y_add = 1;
-            for (int i = (x_add / 2); i < width; i += x_add) {
-                for (int j = (y_add / 2); j < height; j += y_add) {
-                    if (black_and_white.pixel(i, j) != c_color_black) {
-                        coords.push_back( i );
-                        coords.push_back( j );
-                    }
+        // Add some uniform points, 4 points looks great and keeps triangles low
+        int x_add, y_add;
+        x_add = width /  4;
+        y_add = height / 4;
+        if (x_add < 1) x_add = 1;
+        if (y_add < 1) y_add = 1;
+        for (int i = (x_add / 2); i < width; i += x_add) {
+            for (int j = (y_add / 2); j < height; j += y_add) {
+                if (black_and_white.pixel(i, j) != c_color_black) {
+                    coords.push_back( i );
+                    coords.push_back( j );
                 }
             }
+        }
 
-            // Add points on transparent pixels to be removed later. Helps keep the edges prominent.
-//            for (int x = 0; x < width; x++) {
-//                for (int y = 0; y < height; y++) {
-//                    if (black_and_white.pixel(x, y) == c_color_black) {
-//                        coords.push_back( x );
-//                        coords.push_back( y );
-//                    }
+        // Add points on transparent pixels to be removed later. Helps keep the edges prominent.
+//        for (int x = 0; x < width; x++) {
+//            for (int y = 0; y < height; y++) {
+//                if (black_and_white.pixel(x, y) == c_color_black) {
+//                    coords.push_back( x );
+//                    coords.push_back( y );
 //                }
 //            }
+//        }
 
+        // Run triangulation, add triangles to vertex data
+        Delaunator::Delaunator d(coords);
 
-            // Run triangulation, add triangles to vertex data
-            Delaunator::Delaunator d(coords);
+        // Delaunay Trianglulation returns a collection of triangles filling a convex hull of a collection of points.
+        // So no we have to go through the triangles returned and remove any that are over transparent areas of our object.
+        for (std::size_t i = 0; i < d.triangles.size(); i += 3) {
+            double x1 = d.coords[2 * d.triangles[i + 0]];
+            double y1 = d.coords[2 * d.triangles[i + 0] + 1];
+            double x2 = d.coords[2 * d.triangles[i + 1]];
+            double y2 = d.coords[2 * d.triangles[i + 1] + 1];
+            double x3 = d.coords[2 * d.triangles[i + 2]];
+            double y3 = d.coords[2 * d.triangles[i + 2] + 1];
 
-            // Delaunay Trianglulation returns a collection of triangles filling a convex hull of a collection of points.
-            // So no we have to go through the triangles returned and remove any that are over transparent areas of our object.
-            for (std::size_t i = 0; i < d.triangles.size(); i += 3) {
-                double x1 = d.coords[2 * d.triangles[i + 0]];
-                double y1 = d.coords[2 * d.triangles[i + 0] + 1];
-                double x2 = d.coords[2 * d.triangles[i + 1]];
-                double y2 = d.coords[2 * d.triangles[i + 1] + 1];
-                double x3 = d.coords[2 * d.triangles[i + 2]];
-                double y3 = d.coords[2 * d.triangles[i + 2] + 1];
+            // Check each triangle to see if mid-points lie outside concave hull by comparing object image
+            IntPoint mid12( (x1 + x2) / 2.0, (y1 + y2) / 2.0 );
+            IntPoint mid23( (x2 + x3) / 2.0, (y2 + y3) / 2.0 );
+            IntPoint mid13( (x1 + x3) / 2.0, (y1 + y3) / 2.0 );
+            int transparent_count = 0;
+            if (black_and_white.pixel(mid12.x, mid12.y) == c_color_black) ++transparent_count;
+            if (black_and_white.pixel(mid23.x, mid23.y) == c_color_black) ++transparent_count;
+            if (black_and_white.pixel(mid13.x, mid13.y) == c_color_black) ++transparent_count;
+            if (transparent_count > 1) continue;
 
-                // Check each triangle to see if mid-points lie outside concave hull by comparing object image
-                IntPoint mid12( (x1 + x2) / 2.0, (y1 + y2) / 2.0 );
-                IntPoint mid23( (x2 + x3) / 2.0, (y2 + y3) / 2.0 );
-                IntPoint mid13( (x1 + x3) / 2.0, (y1 + y3) / 2.0 );
-                int transparent_count = 0;
-                if (black_and_white.pixel(mid12.x, mid12.y) == c_color_black) ++transparent_count;
-                if (black_and_white.pixel(mid23.x, mid23.y) == c_color_black) ++transparent_count;
-                if (black_and_white.pixel(mid13.x, mid13.y) == c_color_black) ++transparent_count;
-                if (transparent_count > 1) continue;
+            GLfloat ix1 = static_cast<GLfloat>(         x1 - w2d);
+            GLfloat iy1 = static_cast<GLfloat>(height - y1 - h2d);
+            GLfloat ix2 = static_cast<GLfloat>(         x2 - w2d);
+            GLfloat iy2 = static_cast<GLfloat>(height - y2 - h2d);
+            GLfloat ix3 = static_cast<GLfloat>(         x3 - w2d);
+            GLfloat iy3 = static_cast<GLfloat>(height - y3 - h2d);
 
-                // Check each triangle to see if mid-points lie outside concave hull by checking concave hull intersections
-//                HullPoint mid12( (x1 + x2) / 2.0, (y1 + y2) / 2.0 );
-//                HullPoint mid13( (x1 + x3) / 2.0, (y1 + y3) / 2.0 );
-//                HullPoint mid23( (x2 + x3) / 2.0, (y2 + y3) / 2.0 );
-//                QLineF line_12(mid12.x, mid12.y, 100000.0, mid12.y);
-//                QLineF line_13(mid13.x, mid13.y, 100000.0, mid13.y);
-//                QLineF line_23(mid23.x, mid23.y, 100000.0, mid23.y);
-//                bool intersect_hull = false;
-//                for (int i = 0; i < (from_points.count() - 1); ++i) {
-//                    QLineF  check_line = QLineF(from_points[i].x, from_points[i].y, from_points[i+1].x, from_points[i+1].y);
-//                    QPointF intersection_point;
-//                    if (check_line.intersect(line_12, &intersection_point) == QLineF::IntersectType::BoundedIntersection) intersect_hull = !intersect_hull;
-//                    if (check_line.intersect(line_13, &intersection_point) == QLineF::IntersectType::BoundedIntersection) intersect_hull = !intersect_hull;
-//                    if (check_line.intersect(line_23, &intersection_point) == QLineF::IntersectType::BoundedIntersection) intersect_hull = !intersect_hull;
-//                }
-//                if (intersect_hull == false) continue;
+            GLfloat tx1 = static_cast<GLfloat>(      x1 / width);
+            GLfloat ty1 = static_cast<GLfloat>(1.0 - y1 / height);
+            GLfloat tx2 = static_cast<GLfloat>(      x2 / width);
+            GLfloat ty2 = static_cast<GLfloat>(1.0 - y2 / height);
+            GLfloat tx3 = static_cast<GLfloat>(      x3 / width);
+            GLfloat ty3 = static_cast<GLfloat>(1.0 - y3 / height);
 
-                GLfloat ix1 = static_cast<GLfloat>(         x1 - w2d);
-                GLfloat iy1 = static_cast<GLfloat>(height - y1 - h2d);
-                GLfloat ix2 = static_cast<GLfloat>(         x2 - w2d);
-                GLfloat iy2 = static_cast<GLfloat>(height - y2 - h2d);
-                GLfloat ix3 = static_cast<GLfloat>(         x3 - w2d);
-                GLfloat iy3 = static_cast<GLfloat>(height - y3 - h2d);
+            triangle( ix1, iy1, tx1, ty1,
+                      ix2, iy2, tx2, ty2,
+                      ix3, iy3, tx3, ty3);
+        }   // end for int i
 
-                GLfloat tx1 = static_cast<GLfloat>(      x1 / width);
-                GLfloat ty1 = static_cast<GLfloat>(1.0 - y1 / height);
-                GLfloat tx2 = static_cast<GLfloat>(      x2 / width);
-                GLfloat ty2 = static_cast<GLfloat>(1.0 - y2 / height);
-                GLfloat tx3 = static_cast<GLfloat>(      x3 / width);
-                GLfloat ty3 = static_cast<GLfloat>(1.0 - y3 / height);
-
-                triangle( ix1, iy1, tx1, ty1,
-                          ix2, iy2, tx2, ty2,
-                          ix3, iy3, tx3, ty3);
-            }   // end for int i
-        }   // end for auto poly
     }   // end if
 
 }

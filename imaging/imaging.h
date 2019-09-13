@@ -92,9 +92,10 @@ namespace DrImaging {
 
 
     // Object Counting / Fill (a la Ravens Project)
-    QImage          blackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, bool inverse = false);
-    QVector<QImage> findObjectsInImage(const QPixmap &pixmap, double alpha_tolerance);
-    QImage          floodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, double tolerance, Flood_Fill_Type type, int &flood_pixel_count);
+    QImage  blackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, bool inverse = false);
+    int     findObjectsInImage(const QPixmap &pixmap, QVector<QImage> &images, QVector<QRect> &rects, double alpha_tolerance);
+    QImage  floodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, double tolerance, Flood_Fill_Type type,
+                      int &flood_pixel_count, QRect &flood_rect);
 
 
 }

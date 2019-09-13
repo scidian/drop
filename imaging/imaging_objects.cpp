@@ -65,7 +65,8 @@ QImage blackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, 
 #define FLOOD_WAS_PROCESSED         1
 #define FLOOD_MARKED_FOR_PROCESS    2
 
-QImage floodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, double tolerance, Flood_Fill_Type type, int &flood_pixel_count) {
+QImage floodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, double tolerance, Flood_Fill_Type type,
+                 int &flood_pixel_count, QRect &flood_rect) {
     flood_pixel_count = 0;
 
     // Get scan lines
@@ -83,6 +84,7 @@ QImage floodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, doub
     } else if ((from_image.width()) == 1 && (from_image.height() == 1)) {
         image_lines[0][0] = fill_color.rgba();
         flood_lines[0][0] = fill_color.rgba();
+        flood_rect = QRect(at_x, at_y, 1, 1);
         return flood;
     }
 
@@ -100,6 +102,8 @@ QImage floodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, doub
     points.push_back(IntPoint(at_x, at_y));
     bool processed_some;
 
+    int min_x = at_x, max_x = at_x;
+    int min_y = at_y, max_y = at_y;
     do {
         // Go through each point and find new points to fill
         processed_some = false;
@@ -108,6 +112,10 @@ QImage floodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, doub
             image_lines[point.y][point.x] = fill_color.rgba();
             flood_lines[point.y][point.x] = fill_color.rgba();
             processed_lines[point.y][point.x] = FLOOD_WAS_PROCESSED;
+            if (point.x < min_x) min_x = point.x;
+            if (point.x > max_x) max_x = point.x;
+            if (point.y < min_y) min_y = point.y;
+            if (point.y > max_y) max_y = point.y;
             ++flood_pixel_count;
 
             int x_start = (point.x > 0) ?                       point.x - 1 : 0;
@@ -147,20 +155,22 @@ QImage floodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, doub
         }
     } while ((points.count() > 0) && processed_some);
 
+    flood_rect = QRect(min_x, min_y, (max_x - min_x) + 1, (max_y - min_y) + 1);
     return flood;
 }
 
 
 //####################################################################################
 //##    Find Objects
-//##        Seperates parts of an image divided by alpha space into seperate images, the
-//##        resulting array of images are black and white. Black where around the ouside of
-//##        of the object, and the object itself is white
+//##        Seperates parts of an image divided by alpha space into seperate images, returns image count.
+//##        The images are stored into the reference array passed in 'images', the images are black and white.
+//##            Black where around the ouside of of the object, and the object itself is white.
+//##        Rects of images are returned in 'rects'
 //####################################################################################
-QVector<QImage> findObjectsInImage(const QPixmap &pixmap, double alpha_tolerance) {
+int findObjectsInImage(const QPixmap &pixmap, QVector<QImage> &images, QVector<QRect> &rects, double alpha_tolerance) {
     QImage black_white =    blackAndWhiteFromAlpha(pixmap.toImage(), alpha_tolerance, true);
     QVector<QRgb*>  lines = getScanLines(black_white);
-    QVector<QImage> images;
+    int object_count = 0;
 
     // Loop through every pixel in image, if we find a spot that has an object, flood fill that
     // spot and add the resulting image shape to the array of object images
@@ -168,14 +178,18 @@ QVector<QImage> findObjectsInImage(const QPixmap &pixmap, double alpha_tolerance
     for (int x = 0; x < black_white.width(); ++x) {
         for (int y = 0; y < black_white.height(); ++y) {
             if (lines[y][x] == c_color_black) {
-                int flood_pixel_count;
-                QImage flood_fill = floodFill(black_white, x, y, white, 0.001, Flood_Fill_Type::Compare_4, flood_pixel_count);
-                if (flood_pixel_count > 0)
+                QRect  rect;
+                int    flood_pixel_count;
+                QImage flood_fill = floodFill(black_white, x, y, white, 0.001, Flood_Fill_Type::Compare_4, flood_pixel_count, rect);
+                if (flood_pixel_count > 0) {
+                    rects.push_back( rect );
                     images.push_back( flood_fill );
+                    ++object_count;
+                }
             }
         }
     }
-    return images;
+    return object_count;
 }
 
 
