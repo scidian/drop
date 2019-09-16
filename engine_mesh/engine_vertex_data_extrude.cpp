@@ -325,6 +325,7 @@ void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &from_points, 
             if (black_and_white.pixel(mid13.x, mid13.y) == c_color_black) ++transparent_count;
             if (transparent_count > 1) continue;
 
+            // Add triangle
             GLfloat ix1 = static_cast<GLfloat>(         x1 - w2d);
             GLfloat iy1 = static_cast<GLfloat>(height - y1 - h2d);
             GLfloat ix2 = static_cast<GLfloat>(         x2 - w2d);

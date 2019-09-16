@@ -1,4 +1,4 @@
-#version 120
+// version 120
 #ifdef GL_ES
 precision highp float;
 #endif
@@ -57,12 +57,12 @@ void main(void) {
     for (highp float travel_y = 0.0; travel_y < ray_length; travel_y += ray_diff) {
 
         // Rectangular to Polar filter
-        highp vec2    norm = highp vec2(coordinates.s * ray_diff, (travel_y / ray_length) ) * 2.0 - 1.0;
+        highp vec2    norm = vec2(coordinates.s * ray_diff, (travel_y / ray_length) ) * 2.0 - 1.0;
         highp float  theta = PI * 1.5 + norm.x * PI;
         highp float radius = (1.0 + norm.y) * 0.5;
 
         // Coordinate which we will sample from occluder map
-        highp vec2 coord = highp vec2(-radius * sin(theta), radius * cos(theta)) / 2.0 + 0.5;
+        highp vec2 coord = vec2(-radius * sin(theta), radius * cos(theta)) / 2.0 + 0.5;
 
         // Sample the occluder map
         highp vec4 data = texture2D(u_texture, coord).rgba;
@@ -110,7 +110,7 @@ void main(void) {
 
     }   // End For
 
-    gl_FragColor = highp vec4(highp vec3(distance), 1.0);
+    gl_FragColor = vec4(vec3(distance), 1.0);
 }
 
 

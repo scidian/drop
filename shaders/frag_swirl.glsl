@@ -1,4 +1,4 @@
-#version 120
+// version 120
 #ifdef GL_ES
 precision highp float;
 #endif
@@ -38,10 +38,10 @@ uniform lowp  float u_bitrate;// = 256;             // Bitrate          Editor: 
 
 
 // Constants
-const   lowp  float THRESHOLD = 0.75;                       // Alpha threshold for our occlusion map
-const   highp float PI =  3.14159;                          // Pi
-const   highp float RAD = 6.2831853;                        // 2.0 * PI is 360 degrees in radians
-const   highp float PI180 = highp float(PI / 180.0);        // To convert Degrees to Radians
+const   lowp  float THRESHOLD = 0.75;               // Alpha threshold for our occlusion map
+const   highp float PI =  3.14159;                  // Pi
+const   highp float RAD = 6.2831853;                // 2.0 * PI is 360 degrees in radians
+const   highp float PI180 = PI / 180.0;             // To convert Degrees to Radians
 
 
 //####################################################################################

@@ -1,4 +1,4 @@
-#version 120
+// version 120
 #ifdef GL_ES
 precision highp float;
 #endif
@@ -38,7 +38,7 @@ void main( void ) {
 
 
     // ***** Final Output
-    gl_FragColor = highp vec4(frag_rgb, texture_color.a) * alpha_in;
+    gl_FragColor = vec4(frag_rgb, texture_color.a) * alpha_in;
 }
 
 

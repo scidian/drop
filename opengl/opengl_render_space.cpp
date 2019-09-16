@@ -47,13 +47,21 @@ void DrOpenGL::cullingOff() {
 //##    Wireframe Rendering
 //####################################################################################
 void DrOpenGL::wireframeOn(bool smooth) {
+#if not defined (Q_OS_IOS)
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );                        // Wireframe on
     if (smooth) glEnable(GL_LINE_SMOOTH);                               // Enables line anti-aliasing
     glLineWidth(1);                                                     // Only '1' fully supported by OpenGL standard
+#else
+    Q_UNUSED(smooth)
+#endif
 }
 void DrOpenGL::wireframeOff(bool smooth) {
+#if not defined (Q_OS_IOS)
     if (smooth) glDisable(GL_LINE_SMOOTH);
     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );                        // Wireframe off
+#else
+    Q_UNUSED(smooth)
+#endif
 }
 
 

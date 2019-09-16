@@ -1,4 +1,4 @@
-#version 120
+// version 120
 #ifdef GL_ES
 precision highp float;
 #endif
@@ -42,7 +42,7 @@ void main( void ) {
                 z *= 1000.0;                                                    // Multiply by 1000 to include decimal precision
     highp vec3  color_out = packColor(z);                                       // Pack z order into a vec3
 
-    gl_FragColor = highp vec4(color_out, texture2D(u_tex, coordinates.st).a * u_alpha);
+    gl_FragColor = vec4(color_out, texture2D(u_tex, coordinates.st).a * u_alpha);
 
 }
 

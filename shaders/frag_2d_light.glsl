@@ -1,4 +1,4 @@
-#version 120
+// version 120
 #ifdef GL_ES
 precision highp float;
 #endif
@@ -127,7 +127,7 @@ void main(void) {
     highp float sum = 0.0;
     if (u_draw_shadows) {
         // The texture coordinate to sample our 1D lookup texture, always 0.0 on y axis
-        highp vec2  tc = highp vec2(coord, 0.0);
+        highp vec2  tc = vec2(coord, 0.0);
 
         // The center sample, which gives us hard shadows
         highp float center = sampleShadow(tc, radius);
@@ -139,15 +139,15 @@ void main(void) {
         highp float fuzz = (1.0 / u_light_diameter) * (blur * 0.05) * center_dist;          // The (0.05) reduces our blur down, could be adjusted
 
         // Now we use a simple gaussian blur, sum of 1.0 == in light, 0.0 == in shadow
-        sum += sampleShadow(highp vec2(tc.x - 4.0 * fuzz, tc.y), radius) * 0.05;
-        sum += sampleShadow(highp vec2(tc.x - 3.0 * fuzz, tc.y), radius) * 0.09;
-        sum += sampleShadow(highp vec2(tc.x - 2.0 * fuzz, tc.y), radius) * 0.12;
-        sum += sampleShadow(highp vec2(tc.x - 1.0 * fuzz, tc.y), radius) * 0.15;
+        sum += sampleShadow(vec2(tc.x - 4.0 * fuzz, tc.y), radius) * 0.05;
+        sum += sampleShadow(vec2(tc.x - 3.0 * fuzz, tc.y), radius) * 0.09;
+        sum += sampleShadow(vec2(tc.x - 2.0 * fuzz, tc.y), radius) * 0.12;
+        sum += sampleShadow(vec2(tc.x - 1.0 * fuzz, tc.y), radius) * 0.15;
         sum += center * 0.16;
-        sum += sampleShadow(highp vec2(tc.x + 1.0 * fuzz, tc.y), radius) * 0.15;
-        sum += sampleShadow(highp vec2(tc.x + 2.0 * fuzz, tc.y), radius) * 0.12;
-        sum += sampleShadow(highp vec2(tc.x + 3.0 * fuzz, tc.y), radius) * 0.09;
-        sum += sampleShadow(highp vec2(tc.x + 4.0 * fuzz, tc.y), radius) * 0.05;
+        sum += sampleShadow(vec2(tc.x + 1.0 * fuzz, tc.y), radius) * 0.15;
+        sum += sampleShadow(vec2(tc.x + 2.0 * fuzz, tc.y), radius) * 0.12;
+        sum += sampleShadow(vec2(tc.x + 3.0 * fuzz, tc.y), radius) * 0.09;
+        sum += sampleShadow(vec2(tc.x + 4.0 * fuzz, tc.y), radius) * 0.05;
 
         // At this point sum is less than or equal to 1.0
         sum *= falloff;
@@ -157,7 +157,7 @@ void main(void) {
     }
 
     // Multiply by light color
-    gl_FragColor = highp vec4(u_color, opacity) * highp vec4(falloff, falloff, falloff, falloff);
+    gl_FragColor = vec4(u_color, opacity) * vec4(falloff, falloff, falloff, falloff);
 
 }
 

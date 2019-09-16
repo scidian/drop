@@ -1,4 +1,4 @@
-#version 120
+// version 120
 #ifdef GL_ES
 precision highp float;
 #endif
@@ -16,55 +16,55 @@ uniform sampler2D   u_texture;                      // Texture
 uniform sampler2D   u_texture_displacement;         // Refraction Texture
 uniform sampler2D   u_texture_water;                // Water Texture
 
-uniform lowp  float u_alpha;                        // Opacity
-uniform lowp  float u_zoom;                         // Current zoom level
-uniform lowp  vec3  u_position;                     // Current camera position
-uniform highp float u_width;                        // Texture Width
-uniform highp float u_height;                       // Texture Height
-uniform highp float u_time;                         // Time in seconds
-uniform lowp  float u_angle;                        // Angle of water in degrees
+uniform mediump float u_alpha;                      // Opacity
+uniform mediump float u_zoom;                       // Current zoom level
+uniform mediump vec3  u_position;                   // Current camera position
+uniform highp   float u_width;                      // Texture Width
+uniform highp   float u_height;                     // Texture Height
+uniform highp   float u_time;                       // Time in seconds
+uniform mediump float u_angle;                      // Angle of water in degrees
 
-uniform lowp  float u_water_top;                    // Top of Water,        from 0.0 to 1.0 in screen coordinates
-uniform lowp  float u_water_bottom;                 // Bottom of Water,     from 0.0 to 1.0 in screen coordinates
-uniform lowp  float u_water_left;                   // Left side of Water,  from 0.0 to 1.0 in screen coordinates
-uniform lowp  float u_water_right;                  // Right side of Water, from 0.0 to 1.0 in screen coordinates
+uniform mediump float u_water_top;                  // Top of Water,        from 0.0 to 1.0 in screen coordinates
+uniform mediump float u_water_bottom;               // Bottom of Water,     from 0.0 to 1.0 in screen coordinates
+uniform mediump float u_water_left;                 // Left side of Water,  from 0.0 to 1.0 in screen coordinates
+uniform mediump float u_water_right;                // Right side of Water, from 0.0 to 1.0 in screen coordinates
 
-uniform lowp  vec3  u_start_color;                  // Water Start (Top)  Color, r/g/b      0.0 to 1.0 x 3
-uniform lowp  vec3  u_end_color;                    // Water End (Bottom) Color, r/g/b      0.0 to 1.0 x 3
-uniform lowp  float u_color_tint;                   // Water Color Tint Percent
-uniform lowp  float u_reflection;                   // Reflection Opacity                   good start = 0.5
+uniform mediump vec3  u_start_color;                // Water Start (Top)  Color, r/g/b      0.0 to 1.0 x 3
+uniform mediump vec3  u_end_color;                  // Water End (Bottom) Color, r/g/b      0.0 to 1.0 x 3
+uniform mediump float u_color_tint;                 // Water Color Tint Percent
+uniform mediump float u_reflection;                 // Reflection Opacity                   good start = 0.5
 
-uniform lowp  float u_ripple_frequency;             // Vertical wave length                 0.0 to 100.0    good = 25 big wave, 100 small ripples
-uniform lowp  float u_ripple_speed;                 // Vertical wave speed                  0.0 to 100.0    good = 10 big wave,  50 small ripples
-uniform lowp  float u_ripple_amplitude;             // Starting vertical wave width         0.0 to 100.0    good = 25
-uniform lowp  float u_ripple_stretch;               // Stretches width away from the start  0.0 to 100.0    good = 25
+uniform mediump float u_ripple_frequency;           // Vertical wave length                 0.0 to 100.0    good = 25 big wave, 100 small ripples
+uniform mediump float u_ripple_speed;               // Vertical wave speed                  0.0 to 100.0    good = 10 big wave,  50 small ripples
+uniform mediump float u_ripple_amplitude;           // Starting vertical wave width         0.0 to 100.0    good = 25
+uniform mediump float u_ripple_stretch;             // Stretches width away from the start  0.0 to 100.0    good = 25
 
-uniform lowp  float u_wave_frequency;               // Horizontal wave length               0.0 to 100.0    good = 10
-uniform lowp  float u_wave_speed;                   // Bob speed                            0.0 to 100.0    good = 20
-uniform lowp  float u_wave_amplitude;               // Bob amount                           0.0 to 100.0    good = 20
+uniform mediump float u_wave_frequency;             // Horizontal wave length               0.0 to 100.0    good = 10
+uniform mediump float u_wave_speed;                 // Bob speed                            0.0 to 100.0    good = 20
+uniform mediump float u_wave_amplitude;             // Bob amount                           0.0 to 100.0    good = 20
 
-uniform lowp  vec3  u_surface_color;                // Surface Color, r/g/b                 0.0 to 1.0 x 3
-uniform lowp  float u_surface_tint;                 // Surface Color Tint Percent
-uniform lowp  float u_surface_height;               // Surface Height
-uniform       bool  u_surface_keep_flat;            // Keep top of water flat?
+uniform mediump vec3  u_surface_color;              // Surface Color, r/g/b                 0.0 to 1.0 x 3
+uniform mediump float u_surface_tint;               // Surface Color Tint Percent
+uniform mediump float u_surface_height;             // Surface Height
+uniform         bool  u_surface_keep_flat;          // Keep top of water flat?
 
-uniform lowp  float u_refract_reflection;           // good = 1.0
-uniform lowp  float u_refract_underwater;           // good = 2.0
-uniform lowp  float u_refract_texture;              // good = 8.0
-uniform lowp  float u_refract_foam;                 // good = 2.0
+uniform mediump float u_refract_reflection;         // good = 1.0
+uniform mediump float u_refract_underwater;         // good = 2.0
+uniform mediump float u_refract_texture;            // good = 8.0
+uniform mediump float u_refract_foam;               // good = 2.0
 
-uniform lowp  float u_movement_speed;               // Moves texture, top of water left or right, default should be 0
+uniform mediump float u_movement_speed;             // Moves texture, top of water left or right, default should be 0
 
-uniform highp float u_pixel_x;// = 1.0;             // Pixel Width X    1.0 Normal, 4.0 is nice pixelation
-uniform highp float u_pixel_y;// = 1.0;             // Pixel Width Y    1.0 Normal, 4.0 is nice pixelation
-uniform lowp  float u_bitrate;// = 256;             // Bitrate          Editor:    1 to  256
+uniform highp   float u_pixel_x;// = 1.0;           // Pixel Width X    1.0 Normal, 4.0 is nice pixelation
+uniform highp   float u_pixel_y;// = 1.0;           // Pixel Width Y    1.0 Normal, 4.0 is nice pixelation
+uniform mediump float u_bitrate;// = 256;           // Bitrate          Editor:    1 to  256
 
 
 // Other Variables
-const   lowp  float THRESHOLD = 0.75;                       // Alpha threshold for our occlusion map
-const   highp float PI =  3.14159;                          // Pi
-const   highp float RAD = 6.2831853;                        // 2.0 * PI is 360 degrees in radians
-const   highp float PI180 = highp float(PI / 180.0);        // To convert Degrees to Radians
+const   lowp  float THRESHOLD = 0.75;               // Alpha threshold for our occlusion map
+const   highp float PI =  3.14159;                  // Pi
+const   highp float RAD = 6.2831853;                // 2.0 * PI is 360 degrees in radians
+const   highp float PI180 = PI / 180.0;             // To convert Degrees to Radians
 
 
 //####################################################################################
@@ -145,7 +145,7 @@ void main( void ) {
 
     float time = u_time;
     float movement = -movement_speed * (time/20.0);
-    if (movement < 0) wave_speed *= -1.0;
+    if (movement < 0.0) wave_speed *= -1.0;
     float y_start = u_water_top;                                                // 0.0 is bottom, 1.0 is top
 
 

@@ -17,26 +17,35 @@
 //##    Constructor / Destructor
 //####################################################################################
 DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key,
-                             double x, double y, double z, float opacity,
-                             Light_Type type, QColor color, float diameter, QPointF cone, float intensity,
-                             float shadows, bool draw_shadows, float blur, float pulse, float pulse_speed)
+                             double x_, double y_, double z_,
+                             float  opacity_,
+                             Light_Type type_,
+                             QColor     color_,
+                             float      diameter_,
+                             QPointF    cone_,
+                             float intensity_,
+                             float shadows_,
+                             bool  draw_shadows_,
+                             float blur_,
+                             float pulse_,
+                             float pulse_speed_)
     : DrEngineThing(world, unique_key) {
 
-    this->setOpacity( opacity );
-    this->setPosition( QPointF(x, y) );
-    this->z_order = z;
+    this->setOpacity( opacity_ );
+    this->setPosition( QPointF(x_, y_) );
+    this->z_order = z_;
 
-    this->light_type = type;
-    this->color = color;
-    this->light_size = abs(diameter);
-    this->cone = this->m_rotated_cone = cone;
-    this->intensity = intensity;
+    this->light_type = type_;
+    this->color = color_;
+    this->light_size = abs(diameter_);
+    this->cone = this->m_rotated_cone = cone_;
+    this->intensity = intensity_;
     this->setStartIntensity( intensity );
-    this->shadows = shadows;
-    this->draw_shadows = draw_shadows;
-    this->blur = blur;
-    this->pulse = pulse;
-    this->pulse_speed = pulse_speed;
+    this->shadows = shadows_;
+    this->draw_shadows = draw_shadows_;
+    this->blur = blur_;
+    this->pulse = pulse_;
+    this->pulse_speed = pulse_speed_;
 }
 
 
@@ -66,7 +75,7 @@ bool DrEngineLight::update(double time_passed, double time_warp, QRectF &area) {
             m_pulse_target = (pulse_speed < 0) ? m_start_intensity - pulse : m_start_intensity + pulse;
         }
 
-        intensity += m_pulse_direction * static_cast<float>((time_passed / 1000.0) * time_warp);;
+        intensity += m_pulse_direction * static_cast<float>((time_passed / 1000.0) * time_warp);
 
         if        (m_pulse_direction > 0 && intensity > m_pulse_target) {
             m_pulse_direction = -(abs(pulse_speed));

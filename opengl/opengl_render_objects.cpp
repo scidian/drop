@@ -191,7 +191,11 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     m_default_shader.setUniformValue( u_default_contrast,       object->contrast );
     m_default_shader.setUniformValue( u_default_brightness,     object->brightness );
 
+#if not defined (Q_OS_IOS)
     m_default_shader.setUniformValue( u_default_shade_away,     !draw2D );
+#else
+    m_default_shader.setUniformValue( u_default_shade_away,     false );
+#endif
     m_default_shader.setUniformValue( u_default_camera_pos,     eye_move.x(), eye_move.y(), eye_move.z() );
     m_default_shader.setUniformValue( u_default_cartoon,        false );
     m_default_shader.setUniformValue( u_default_wavy,           false );

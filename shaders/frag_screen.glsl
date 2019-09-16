@@ -1,4 +1,4 @@
-#version 120
+// version 120
 #ifdef GL_ES
 precision highp float;
 #endif
@@ -54,6 +54,12 @@ void main( void ) {
     //  Multiply    = 1,
     //  Overlay     = 2
     //  Hard_Light  = 3,
+
+    // ????? Can also do this to get last drawn pixel color instead of copying last frame buffer:
+    //
+    // lowp vec4 last_color = gl_LastFragData[0];
+    //
+    // ?????
 
     vec4 upper = texture2D(u_upper, coordinates.st);            // Lights
     vec4 lower = texture2D(u_lower, coordinates.st);            // Ground

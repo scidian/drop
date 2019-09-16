@@ -1,4 +1,4 @@
-#version 120
+// version 120
 #ifdef GL_ES
 precision highp float;
 #endif
@@ -51,7 +51,7 @@ uniform         bool    u_wavy;// = false;                  // Wavy             
 const   lowp  float THRESHOLD = 0.75;                       // Alpha threshold for our occlusion map
 const   highp float PI =  3.14159;                          // Pi
 const   highp float RAD = 6.2831853;                        // 2.0 * PI is 360 degrees in radians
-const   highp float PI180 = highp float(PI / 180.0);        // To convert Degrees to Radians
+const   highp float PI180 = PI / 180.0;                     // To convert Degrees to Radians
 
 
 //####################################################################################
@@ -296,7 +296,7 @@ void main( void ) {
         //highp float pixel_x =   dx * floor((coords.x - fract_x) / dx) + (dx / 2.0);
         //highp float pixel_y =   dy * floor((coords.y - fract_y) / dy) + (dy / 2.0);
 
-        texture_color = texture2D(u_texture, highp vec2(pixel_x, pixel_y)).rgba;
+        texture_color = texture2D(u_texture, vec2(pixel_x, pixel_y)).rgba;
     } else {
         texture_color = texture2D(u_texture, coords.st).rgba;                       // If not pixelated, grab initial texture color at the current location
     }
@@ -327,7 +327,7 @@ void main( void ) {
     // ***** GRAYSCALE
     if (u_grayscale) {
         highp float average = 0.2126 * frag_rgb.r + 0.7152 * frag_rgb.g + 0.0722 * frag_rgb.b;
-        frag_rgb = highp vec3(average, average, average);
+        frag_rgb = vec3(average, average, average);
     }
 
     // ***** HUE / SATURATION ADJUSTMENT
@@ -350,7 +350,7 @@ void main( void ) {
     if (u_bitrate < 256.0) {
         // ***** Method 1
         highp float bit_depth = u_bitrate;
-        frag_rgb = highp vec3(floor(frag_rgb.r * bit_depth), floor(frag_rgb.g * bit_depth), floor(frag_rgb.b * bit_depth)) / bit_depth;
+        frag_rgb = vec3(floor(frag_rgb.r * bit_depth), floor(frag_rgb.g * bit_depth), floor(frag_rgb.b * bit_depth)) / bit_depth;
 
         // ***** Method 2
         //float num_colors = pow(2.0, u_bitrate);
@@ -369,8 +369,8 @@ void main( void ) {
         vec3 original_color = frag_rgb;
         vec3 v_hsv = cartoonRgbToHsvV(original_color.r, original_color.g, original_color.b);
         v_hsv.x = 30.0 * (floor(v_hsv.x / 30.0) + 1.0);
-        v_hsv.y =  0.1 * (floor(v_hsv.y / 0.1) +  1.0);
-        v_hsv.z =  0.1 * (floor(v_hsv.z / 0.1) +  1.0);
+        v_hsv.y =  0.1 * (floor(v_hsv.y /  0.1) + 1.0);
+        v_hsv.z =  0.1 * (floor(v_hsv.z /  0.1) + 1.0);
         float edg = isEdge(coords.xy);
         vec3 v_rgb = (edg >= edge_thres) ? vec3(0.0, 0.0, 0.0) : cartoonHsvToRgb(v_hsv.x, v_hsv.y, v_hsv.z);
         frag_rgb = vec3(v_rgb.x, v_rgb.y, v_rgb.z);
@@ -386,12 +386,12 @@ void main( void ) {
         highp float dp = dot(normalize(vert_normal), normalize(vert - u_camera_pos)) + 0.15;
                     dp = clamp(dp, 0.0, 1.0);
         frag_rgb = mix(vec3(0.0), frag_rgb, dp);
-        gl_FragColor = (highp vec4(frag_rgb, 1.0) * alpha_in);
+        gl_FragColor = vec4(frag_rgb, 1.0) * alpha_in;
         //if (texture_color.a < 0.05) gl_FragColor = clamp(gl_FragColor + vec4(1.0, 0.0, 0.0, 0.5), 0.0, 1.0);
 
     // Otherwise we're drawing image in 2D and we do want transparent borders
     } else {
-        gl_FragColor = highp vec4(frag_rgb, texture_color.a) * alpha_in;
+        gl_FragColor = vec4(frag_rgb, texture_color.a) * alpha_in;
     }
 
 
