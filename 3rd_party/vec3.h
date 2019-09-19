@@ -32,6 +32,7 @@
 #include <QtMath>
 #include <cmath>
 
+#include <helper.h>
 
 //####################################################################################
 //##    Vec3
@@ -125,7 +126,7 @@ struct Vec3 {
     }
 
     bool operator==(const Vec3& d_) const {
-        return qFuzzyCompare(x, d_.x) && qFuzzyCompare(y, d_.y) && qFuzzyCompare(z, d_.z);
+        return Dr::IsCloseTo(x, d_.x, 0.001f) && Dr::IsCloseTo(y, d_.y, 0.001f) && Dr::IsCloseTo(z, d_.z, 0.001f);
     }
 
     // No mathematical meaning, but useful to use Vec3 in std::map

@@ -18,22 +18,16 @@
 struct Vertex {
     Vec3 position;
     Vec3 normal;
-    Vec3 texture_coords;
+    Vec3 texture_coords;        // Vec2, Only uses x and y
     Vec3 barycentric;
 };
 
-struct Tri_Face {
-    Vertex point1;
-    Vertex point2;
-    Vertex point3;
+struct Triangle {
+    std::vector<Vertex>     points;
 };
 
 struct Mesh {
-    std::vector<Vec3> m_vertices;
-    std::vector<Vec3> m_normals;
-    std::vector<Vec3> m_colors;
-    std::vector<Tri_Face> m_triangles;
-    unsigned long vertices_count() const { return m_vertices.size(); }
+    std::vector<Triangle>   m_triangles;
     unsigned long triangle_count() const { return m_triangles.size(); }
 };
 

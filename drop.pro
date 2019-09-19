@@ -111,6 +111,7 @@ SOURCES += \
     engine/form_engine.cpp \
     engine_mesh/engine_vertex_data.cpp \
     engine_mesh/engine_vertex_data_extrude.cpp \
+    engine_mesh/engine_vertex_data_smooth.cpp \
     engine_things/engine_thing.cpp \
     engine_things/engine_thing_fire.cpp \
     engine_things/engine_thing_fisheye.cpp \

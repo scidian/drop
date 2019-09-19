@@ -47,12 +47,12 @@ void DrEngineVertexData::initializeTextureQuad() {
 
     QVector3D n;
     n = QVector3D::normal(QVector3D(x4 - x1, y4 - y1, 0.0f), QVector3D(x2 - x1, y2 - y1, 0.0f));
-    add(QVector3D(x1, y1, 0.f), n, QVector2D(tx1, ty1), Triangle::Point1);
-    add(QVector3D(x2, y2, 0.f), n, QVector2D(tx2, ty2), Triangle::Point2);
-    add(QVector3D(x3, y3, 0.f), n, QVector2D(tx3, ty3), Triangle::Point3);
-    add(QVector3D(x2, y2, 0.f), n, QVector2D(tx2, ty2), Triangle::Point1);
-    add(QVector3D(x4, y4, 0.f), n, QVector2D(tx4, ty4), Triangle::Point2);
-    add(QVector3D(x3, y3, 0.f), n, QVector2D(tx3, ty3), Triangle::Point3);
+    add(QVector3D(x1, y1, 0.f), n, QVector2D(tx1, ty1), Triangle_Point::Point1);
+    add(QVector3D(x2, y2, 0.f), n, QVector2D(tx2, ty2), Triangle_Point::Point2);
+    add(QVector3D(x3, y3, 0.f), n, QVector2D(tx3, ty3), Triangle_Point::Point3);
+    add(QVector3D(x2, y2, 0.f), n, QVector2D(tx2, ty2), Triangle_Point::Point1);
+    add(QVector3D(x4, y4, 0.f), n, QVector2D(tx4, ty4), Triangle_Point::Point2);
+    add(QVector3D(x3, y3, 0.f), n, QVector2D(tx3, ty3), Triangle_Point::Point3);
 }
 
 
@@ -84,10 +84,15 @@ void DrEngineVertexData::initializeTextureCube() {
           x4,  y4,  tx4, ty4);
 }
 
+
 //####################################################################################
-//##    Adds a Vertex, including a Normal
+//##    Adds a Vertex, including:
+//##        Vec3 Position
+//##        Vec3 Normal
+//##        Vec2 UV Texture Coordinates
+//##        Vec3 Barycentric Coordinates (gives shader a number between 0.0 and 1.0 to lerp to)
 //####################################################################################
-void DrEngineVertexData::add(const QVector3D &vertex, const QVector3D &normal, const QVector2D &text_coord, Triangle point_number) {
+void DrEngineVertexData::add(const QVector3D &vertex, const QVector3D &normal, const QVector2D &text_coord, Triangle_Point point_number) {
     if (m_count + c_vertex_length > m_data.count()) m_data.resize(m_data.count() + (100 * c_vertex_length));
     GLfloat *p = m_data.data() + m_count;
     *p++ = vertex.x();                  // 0 - x
@@ -99,13 +104,12 @@ void DrEngineVertexData::add(const QVector3D &vertex, const QVector3D &normal, c
     *p++ = text_coord.x();              // 6 - texture x
     *p++ = text_coord.y();              // 7 - texture y
     switch(point_number) {
-        case Triangle::Point1:  *p++ = 1;   *p++ = 0;   *p++ = 0;   break;
-        case Triangle::Point2:  *p++ = 0;   *p++ = 1;   *p++ = 0;   break;
-        case Triangle::Point3:  *p++ = 0;   *p++ = 0;   *p++ = 1;   break;
+        case Triangle_Point::Point1:    *p++ = 1;   *p++ = 0;   *p++ = 0;   break;
+        case Triangle_Point::Point2:    *p++ = 0;   *p++ = 1;   *p++ = 0;   break;
+        case Triangle_Point::Point3:    *p++ = 0;   *p++ = 0;   *p++ = 1;   break;
     }
     m_count += c_vertex_length;
 }
-
 
 
 //####################################################################################
@@ -147,19 +151,19 @@ void DrEngineVertexData::cube(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
         p3b = rotate * p3b;
         p4b = rotate * p4b;
 
-        add(p1f, nf, QVector2D(tx1, ty1), Triangle::Point1);
-        add(p2f, nf, QVector2D(tx2, ty2), Triangle::Point2);
-        add(p3f, nf, QVector2D(tx3, ty3), Triangle::Point3);
-        add(p2f, nf, QVector2D(tx2, ty2), Triangle::Point1);
-        add(p4f, nf, QVector2D(tx4, ty4), Triangle::Point2);
-        add(p3f, nf, QVector2D(tx3, ty3), Triangle::Point3);
+        add(p1f, nf, QVector2D(tx1, ty1), Triangle_Point::Point1);
+        add(p2f, nf, QVector2D(tx2, ty2), Triangle_Point::Point2);
+        add(p3f, nf, QVector2D(tx3, ty3), Triangle_Point::Point3);
+        add(p2f, nf, QVector2D(tx2, ty2), Triangle_Point::Point1);
+        add(p4f, nf, QVector2D(tx4, ty4), Triangle_Point::Point2);
+        add(p3f, nf, QVector2D(tx3, ty3), Triangle_Point::Point3);
 
-        add(p1b, nb, QVector2D(tx1, ty1), Triangle::Point1);
-        add(p3b, nb, QVector2D(tx3, ty3), Triangle::Point2);
-        add(p2b, nb, QVector2D(tx2, ty2), Triangle::Point3);
-        add(p2b, nb, QVector2D(tx2, ty2), Triangle::Point1);
-        add(p3b, nb, QVector2D(tx3, ty3), Triangle::Point2);
-        add(p4b, nb, QVector2D(tx4, ty4), Triangle::Point3);
+        add(p1b, nb, QVector2D(tx1, ty1), Triangle_Point::Point1);
+        add(p3b, nb, QVector2D(tx3, ty3), Triangle_Point::Point2);
+        add(p2b, nb, QVector2D(tx2, ty2), Triangle_Point::Point3);
+        add(p2b, nb, QVector2D(tx2, ty2), Triangle_Point::Point1);
+        add(p3b, nb, QVector2D(tx3, ty3), Triangle_Point::Point2);
+        add(p4b, nb, QVector2D(tx4, ty4), Triangle_Point::Point3);
     }
 }
 
@@ -174,23 +178,23 @@ void DrEngineVertexData::quad(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
     QVector3D n;
     n = QVector3D::normal(QVector3D(x4 - x1, y4 - y1, 0.0f), QVector3D(x2 - x1, y2 - y1, 0.0f));
 
-    add(QVector3D(x1, y1, +c_extrude_depth), n, QVector2D(tx1, ty1), Triangle::Point1);
-    add(QVector3D(x2, y2, +c_extrude_depth), n, QVector2D(tx2, ty2), Triangle::Point2);
-    add(QVector3D(x3, y3, +c_extrude_depth), n, QVector2D(tx3, ty3), Triangle::Point3);
+    add(QVector3D(x1, y1, +c_extrude_depth), n, QVector2D(tx1, ty1), Triangle_Point::Point1);
+    add(QVector3D(x2, y2, +c_extrude_depth), n, QVector2D(tx2, ty2), Triangle_Point::Point2);
+    add(QVector3D(x3, y3, +c_extrude_depth), n, QVector2D(tx3, ty3), Triangle_Point::Point3);
 
-    add(QVector3D(x2, y2, +c_extrude_depth), n, QVector2D(tx2, ty2), Triangle::Point1);
-    add(QVector3D(x4, y4, +c_extrude_depth), n, QVector2D(tx4, ty4), Triangle::Point2);
-    add(QVector3D(x3, y3, +c_extrude_depth), n, QVector2D(tx3, ty3), Triangle::Point3);
+    add(QVector3D(x2, y2, +c_extrude_depth), n, QVector2D(tx2, ty2), Triangle_Point::Point1);
+    add(QVector3D(x4, y4, +c_extrude_depth), n, QVector2D(tx4, ty4), Triangle_Point::Point2);
+    add(QVector3D(x3, y3, +c_extrude_depth), n, QVector2D(tx3, ty3), Triangle_Point::Point3);
 
     n = QVector3D::normal(QVector3D(x1 - x4, y1 - y4, 0.0f), QVector3D(x2 - x4, y2 - y4, 0.0f));
 
-    add(QVector3D(x1, y1, -c_extrude_depth), n, QVector2D(tx1, ty1), Triangle::Point1);
-    add(QVector3D(x3, y3, -c_extrude_depth), n, QVector2D(tx3, ty3), Triangle::Point2);
-    add(QVector3D(x2, y2, -c_extrude_depth), n, QVector2D(tx2, ty2), Triangle::Point3);
+    add(QVector3D(x1, y1, -c_extrude_depth), n, QVector2D(tx1, ty1), Triangle_Point::Point1);
+    add(QVector3D(x3, y3, -c_extrude_depth), n, QVector2D(tx3, ty3), Triangle_Point::Point2);
+    add(QVector3D(x2, y2, -c_extrude_depth), n, QVector2D(tx2, ty2), Triangle_Point::Point3);
 
-    add(QVector3D(x2, y2, -c_extrude_depth), n, QVector2D(tx2, ty2), Triangle::Point1);
-    add(QVector3D(x3, y3, -c_extrude_depth), n, QVector2D(tx3, ty3), Triangle::Point2);
-    add(QVector3D(x4, y4, -c_extrude_depth), n, QVector2D(tx4, ty4), Triangle::Point3);
+    add(QVector3D(x2, y2, -c_extrude_depth), n, QVector2D(tx2, ty2), Triangle_Point::Point1);
+    add(QVector3D(x3, y3, -c_extrude_depth), n, QVector2D(tx3, ty3), Triangle_Point::Point2);
+    add(QVector3D(x4, y4, -c_extrude_depth), n, QVector2D(tx4, ty4), Triangle_Point::Point3);
 }
 
 //####################################################################################
@@ -201,15 +205,15 @@ void DrEngineVertexData::triangle(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat t
                                   GLfloat x3, GLfloat y3, GLfloat tx3, GLfloat ty3) {
     QVector3D n = QVector3D::normal(QVector3D(x3 - x1, y3 - y1, 0.0f), QVector3D(x2 - x1, y2 - y1, 0.0f));
 
-    add(QVector3D(x1, y1, +c_extrude_depth), n, QVector2D(tx1, ty1), Triangle::Point1);
-    add(QVector3D(x2, y2, +c_extrude_depth), n, QVector2D(tx2, ty2), Triangle::Point2);
-    add(QVector3D(x3, y3, +c_extrude_depth), n, QVector2D(tx3, ty3), Triangle::Point3);
+    add(QVector3D(x1, y1, +c_extrude_depth), n, QVector2D(tx1, ty1), Triangle_Point::Point1);
+    add(QVector3D(x2, y2, +c_extrude_depth), n, QVector2D(tx2, ty2), Triangle_Point::Point2);
+    add(QVector3D(x3, y3, +c_extrude_depth), n, QVector2D(tx3, ty3), Triangle_Point::Point3);
 
     n = QVector3D::normal(QVector3D(x1 - x3, y1 - y3, 0.0f), QVector3D(x2 - x3, y2 - y3, 0.0f));
 
-    add(QVector3D(x1, y1, -c_extrude_depth), n, QVector2D(tx1, ty1), Triangle::Point1);
-    add(QVector3D(x3, y3, -c_extrude_depth), n, QVector2D(tx3, ty3), Triangle::Point2);
-    add(QVector3D(x2, y2, -c_extrude_depth), n, QVector2D(tx2, ty2), Triangle::Point3);
+    add(QVector3D(x1, y1, -c_extrude_depth), n, QVector2D(tx1, ty1), Triangle_Point::Point1);
+    add(QVector3D(x3, y3, -c_extrude_depth), n, QVector2D(tx3, ty3), Triangle_Point::Point2);
+    add(QVector3D(x2, y2, -c_extrude_depth), n, QVector2D(tx2, ty2), Triangle_Point::Point3);
 }
 
 //####################################################################################
@@ -231,18 +235,18 @@ void DrEngineVertexData::extrude(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty
                                QVector3D(x2, y2, front),
                                QVector3D(x1, y1, back));
 
-        add(QVector3D(x1, y1, front), n, QVector2D(tx1, ty1), Triangle::Point1);
-        add(QVector3D(x1, y1, back),  n, QVector2D(tx1, ty1), Triangle::Point2);
-        add(QVector3D(x2, y2, front), n, QVector2D(tx2, ty2), Triangle::Point3);
+        add(QVector3D(x1, y1, front), n, QVector2D(tx1, ty1), Triangle_Point::Point1);
+        add(QVector3D(x1, y1, back),  n, QVector2D(tx1, ty1), Triangle_Point::Point2);
+        add(QVector3D(x2, y2, front), n, QVector2D(tx2, ty2), Triangle_Point::Point3);
 
 
         n = QVector3D::normal( QVector3D(x2, y2, front),
                                QVector3D(x2, y2, back),
                                QVector3D(x1, y1, back));
 
-        add(QVector3D(x2, y2, front), n, QVector2D(tx2, ty2), Triangle::Point1);
-        add(QVector3D(x1, y1, back),  n, QVector2D(tx1, ty1), Triangle::Point2);
-        add(QVector3D(x2, y2, back),  n, QVector2D(tx2, ty2), Triangle::Point3);
+        add(QVector3D(x2, y2, front), n, QVector2D(tx2, ty2), Triangle_Point::Point1);
+        add(QVector3D(x1, y1, back),  n, QVector2D(tx1, ty1), Triangle_Point::Point2);
+        add(QVector3D(x2, y2, back),  n, QVector2D(tx2, ty2), Triangle_Point::Point3);
 
         front -= step;
         back  -= step;

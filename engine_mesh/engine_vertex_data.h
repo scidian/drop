@@ -12,15 +12,20 @@
 #include <QVector>
 #include <QVector2D>
 #include <QVector3D>
+#include <map>
 
 #include "3rd_party/hullfinder.h"
 #include "3rd_party/poly_partition.h"
+#include "engine_mesh.h"
 
-// Local defines
+// Type Definitions
+typedef std::map<std::string, std::vector<Vec3>> NeighborMap;
+
+// Defines
 #define PAR_RGB  3
 #define PAR_RGBA 4
 
-// Local Constants
+// Constants
 const int   c_vertex_length = 11;           // 11 is (3) for xyz + (3) for normal + (2) for texture coordinate + (3) for barycentric (for wireframe)
 const float c_extrude_depth = 0.5f;
 
@@ -31,7 +36,7 @@ enum class Trianglulation {
     Delaunay,
 };
 
-enum class Triangle {
+enum class Triangle_Point {
     Point1,
     Point2,
     Point3,
@@ -67,12 +72,18 @@ public:
     static  QVector<HullPoint>  simplifyPoints(const QVector<HullPoint> &from_points, double tolerance, int test_count, bool average = false);
     static  QVector<HullPoint>  smoothPoints(const QVector<HullPoint> &from_points, int neighbors, double neighbor_distance, double weight);
 
+    Mesh                        getMesh(NeighborMap &neighbors);
+    Vertex                      getVertex(int vertex_number);
+    void                        setVertex(int vertex_number, Vertex v);
+    void                        smoothVertices(float weight);
+
+
     // Extrusion Functions
     void    extrudeFacePolygon(const QVector<HullPoint> &from_points, int width, int height, int steps);
     void    triangulateFace(const QVector<HullPoint> &from_points, QImage &black_and_white, Trianglulation type);
 
     // Building Functions
-    void    add(const QVector3D &vertex, const QVector3D &normal, const QVector2D &text_coord, Triangle point_number);
+    void    add(const QVector3D &vertex, const QVector3D &normal, const QVector2D &text_coord, Triangle_Point point_number);
     void    extrude(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
                     GLfloat x2, GLfloat y2, GLfloat tx2, GLfloat ty2, int steps = 1);
     void    cube(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,

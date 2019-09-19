@@ -54,8 +54,8 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
         points =  smoothPoints(  points, 4, 4.0, 0.4);
 
         int split = static_cast<int>((((image.width() + image.height()) / 2) * 0.2) / 5);
-        points =  simplifyPoints(points, 0.030,     5, true);       // First run with averaging points to reduce triangles among similar slopes
-        points =  simplifyPoints(points, 0.001, split, false);      // Then run again with smaller tolerance to reduce triangles along straight lines
+        points =  simplifyPoints(points, 0.030,     5, true);         // First run with averaging points to reduce triangles among similar slopes
+        points =  simplifyPoints(points, 0.001, split, false);        // Then run again with smaller tolerance to reduce triangles along straight lines
 
 
         // ***** Triangulate concave hull
@@ -67,11 +67,16 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
         // ***** Add extruded triangles
         extrudeFacePolygon(points, image.width(), image.height(), 2);
     }
+
+
+    smoothVertices(0.1f);
+
+
 }
 
 
 //####################################################################################
-//##    Simplifies a list of points, reducing multiple points along the same slope
+//##    Simplifies a list of points representing a 2D outline, reducing multiple points along the same slope
 //##        NOTE: If ((y2-y1) / (x2-x1)) == ((y3-y1)/(x3-x1)), then slope is same and is along same line
 //##        tolerance:  how similar slop should be, bigger numbers causes less points
 //##                    0.01 looks nice for most objects, 1.0 looks good for #KEYWORD: "low poly", "low-poly"
@@ -143,7 +148,7 @@ QVector<HullPoint> DrEngineVertexData::simplifyPoints(const QVector<HullPoint> &
 
 
 //####################################################################################
-//##    Smooth / Curve a collection of points
+//##    Smooth / Curve a collection of points representing a 2D outline
 //####################################################################################
 // Returns a point from a vector with wrap around coverage of vector indices
 HullPoint pointAt(const QVector<HullPoint> &point_list, int index) {
