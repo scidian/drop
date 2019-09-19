@@ -40,7 +40,7 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     m_default_shader.setUniformValue( u_default_matrix, orthoMatrix(fbo->width(), fbo->height()) );
 
     // Set Texture Coordinates for Shader
-    m_default_shader.setAttributeArray( a_default_texture_coord, m_whole_texture_coordinates.data(), 2 );
+    m_default_shader.setAttributeArray(    a_default_texture_coord, m_quad_texture_coordinates.data(), 2 );
     m_default_shader.enableAttributeArray( a_default_texture_coord );
 
     // Load vertices for this object
@@ -69,6 +69,7 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
 
     m_default_shader.setUniformValue( u_default_cartoon,        m_engine->getCurrentWorld()->cartoon );
     m_default_shader.setUniformValue( u_default_wavy,           m_engine->getCurrentWorld()->wavy );
+    m_default_shader.setUniformValue( u_default_wireframe,      false );
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
@@ -99,7 +100,7 @@ void DrOpenGL::drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo) {
     m_kernel_shader.setUniformValue( u_kernel_matrix, orthoMatrix(fbo->width(), fbo->height()) );
 
     // Set Texture Coordinates for Shader
-    m_kernel_shader.setAttributeArray(    a_kernel_texture_coord, m_whole_texture_coordinates.data(), 2 );
+    m_kernel_shader.setAttributeArray(    a_kernel_texture_coord, m_quad_texture_coordinates.data(), 2 );
     m_kernel_shader.enableAttributeArray( a_kernel_texture_coord );
 
     // Load vertices for this object
@@ -153,7 +154,7 @@ void DrOpenGL::drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper,
     m_screen_shader.setUniformValue( u_screen_matrix, orthoMatrix(lower->width(), lower->height()) );
 
     // Set Texture Coordinates for Shader
-    m_screen_shader.setAttributeArray(    a_screen_texture_coord, m_whole_texture_coordinates.data(), 2 );
+    m_screen_shader.setAttributeArray(    a_screen_texture_coord, m_quad_texture_coordinates.data(), 2 );
     m_screen_shader.enableAttributeArray( a_screen_texture_coord );
 
     // Load vertices for this object

@@ -215,7 +215,7 @@ void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
     m_shadow_shader.setUniformValue( u_shadow_matrix, orthoMatrix(m_shadows[light->getKey()]->width(), m_shadows[light->getKey()]->height()) );
 
     // Set Texture Coordinates for Shader
-    m_shadow_shader.setAttributeArray(    a_shadow_texture_coord, m_whole_texture_coordinates.data(), 2 );
+    m_shadow_shader.setAttributeArray(    a_shadow_texture_coord, m_quad_texture_coordinates.data(), 2 );
     m_shadow_shader.enableAttributeArray( a_shadow_texture_coord );
 
     // Load vertices for this object
@@ -289,7 +289,7 @@ bool DrOpenGL::draw2DLight(DrEngineLight *light) {
     updateViewMatrix(m_engine->getCurrentWorld()->render_type, c_use_cam_offset);
 
     // Set Texture Coordinates for Shader
-    m_light_shader.setAttributeArray(    a_light_texture_coord, m_whole_texture_coordinates.data(), 2 );
+    m_light_shader.setAttributeArray(    a_light_texture_coord, m_quad_texture_coordinates.data(), 2 );
     m_light_shader.enableAttributeArray( a_light_texture_coord );
 
     // Load vertices for this object

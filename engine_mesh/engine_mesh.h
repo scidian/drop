@@ -15,12 +15,18 @@
 
 #include "3rd_party/vec3.h"
 
-struct Tri_Face {
-    long point_1;
-    long point_2;
-    long point_3;
+struct Vertex {
+    Vec3 position;
+    Vec3 normal;
+    Vec3 texture_coords;
+    Vec3 barycentric;
 };
 
+struct Tri_Face {
+    Vertex point1;
+    Vertex point2;
+    Vertex point3;
+};
 
 struct Mesh {
     std::vector<Vec3> m_vertices;

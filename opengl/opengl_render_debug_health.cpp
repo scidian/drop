@@ -105,7 +105,7 @@ void DrOpenGL::drawDebugHealthNative(QPainter &painter) {
         QVector<GLfloat> vertices;
         texture_coordinates.clear();
         vertices.clear();
-        texture_coordinates.resize( static_cast<u_long>(8 * hp.length()) );
+        texture_coordinates.resize( static_cast<unsigned long>(8 * hp.length()) );
         vertices.resize( 12 * hp.length() );
 
         // Figure out what color to make the health, get health as string

@@ -43,9 +43,10 @@ extern int  g_max_occluder_fbo_size;
 extern int  g_max_light_fbo_size;
 
 // VBO Constants
-#define PROGRAM_VERTEX_ATTRIBUTE    0
-#define PROGRAM_TEXCOORD_ATTRIBUTE  1
-#define PROGRAM_NORMAL_ATTRIBUTE    2
+#define PROGRAM_VERTEX_ATTRIBUTE        0
+#define PROGRAM_NORMAL_ATTRIBUTE        1
+#define PROGRAM_TEXCOORD_ATTRIBUTE      2
+#define PROGRAM_BARYCENTRIC_ATTRIBUTE   3
 
 // Rendering Constants
 const bool  c_use_cam_offset =  true;
@@ -92,14 +93,14 @@ private:
     long            m_triangles = 0;                            // Tracks how many triangles are drawn every frame, including occluder map draws
     double          m_add_z;                                    // Used to stop z fighting
 
-    std::vector<float>      m_whole_texture_coordinates;        // Used to keep the coordinates of rendering an entire texture
-    QVector<GLfloat>        m_quad_vertices;                    // Used to keep standard 2D textured quad coordinates
+    std::vector<float>      m_quad_vertices;                    // Used to keep standard 2D textured quad coordinates
+    std::vector<float>      m_quad_texture_coordinates;         // Used to keep the coordinates of rendering an entire texture as a quad
+    std::vector<float>      m_quad_barycentric;                 // Used to keep standard 2D textured quad barycentric coords
 
     // VBO's
     std::map<long, QOpenGLBuffer*>      m_texture_vbos;         // Stores extruded texture vbo's
     std::map<long, DrEngineVertexData*> m_texture_data;         // Stores extruded texture vertex data
     QOpenGLBuffer                      *m_cube_vbo;             // Stores cube vbo, to use to turn a texture into a cube
-    DrEngineVertexData                 *m_cube_data;            // Stores cube vertex data, to use to turn a texture into a cube
 
     // Frame Buffers
     QOpenGLFramebufferObject *m_render_fbo = nullptr;           // Used for offscreen rendering
@@ -186,14 +187,12 @@ public:
     void            updateViewMatrix(Render_Type render_type, bool use_offset);
     void            releaseOffscreenBuffer();
     void            releaseDefaultAttributeBuffer();
-    void            setDefaultAttributeBuffer();
+    void            setDefaultAttributeBuffer(QOpenGLBuffer *buffer);
     void            setShaderDefaultValues(float texture_width, float texture_height);
     void            setNumberTextureCoordinates(QString letter, std::vector<float> &texture_coordinates);
     void            setQuadVertices(QVector<GLfloat> &vertices, float width, float height, QPointF center, float z);
     void            setQuadRotatedVertices(QVector<GLfloat> &vertices, QVector3D &top_right, QVector3D &top_left,
                                            QVector3D &bot_left, QVector3D &bot_right, QVector3D position);
-    void            wireframeOn(bool smooth = false);
-    void            wireframeOff(bool smooth = false);
 
     // Soft Shadows / Lights
     void            bindGlowLightsBuffer(float ambient_light);
@@ -222,8 +221,9 @@ private:
     // Default Shader
     QOpenGLShaderProgram m_default_shader;
     int     a_default_vertex;
-    int     a_default_texture_coord;
     int     a_default_normal;
+    int     a_default_texture_coord;
+    int     a_default_barycentric;
     int     u_default_matrix;
     int     u_default_matrix_object;
 
@@ -253,6 +253,7 @@ private:
     int     u_default_bitrate;                                  // Bitrate
     int     u_default_cartoon;                                  // Cartoon? (Comic Book)
     int     u_default_wavy;                                     // Wavy? (Ripple Effect)
+    int     u_default_wireframe;                                // Wireframe?
 
 
     // Occluder Map Shader

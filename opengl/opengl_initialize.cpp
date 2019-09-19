@@ -41,25 +41,12 @@ void DrOpenGL::initializeGL() {
     g_max_occluder_fbo_size = (g_max_texture_size < c_desired_occluder_fbo_size) ? g_max_texture_size : c_desired_occluder_fbo_size;
     g_max_light_fbo_size =    (g_max_texture_size < c_desired_light_fbo_size) ?    g_max_texture_size : c_desired_light_fbo_size;
 
-    // Create a vector containing the texture coordinates for a whole texture
-    m_whole_texture_coordinates.clear();
-    m_whole_texture_coordinates.resize( 8 );
-    m_whole_texture_coordinates[0] = 1;    m_whole_texture_coordinates[1] = 1;
-    m_whole_texture_coordinates[2] = 0;    m_whole_texture_coordinates[3] = 1;
-    m_whole_texture_coordinates[4] = 1;    m_whole_texture_coordinates[5] = 0;
-    m_whole_texture_coordinates[6] = 0;    m_whole_texture_coordinates[7] = 0;
-
-    m_quad_vertices.clear();
-    m_quad_vertices.resize( 12 );              // in sets of x, y, z
-    m_quad_vertices[ 0] =  0.5;    m_quad_vertices[ 1] =  0.5;    m_quad_vertices[ 2] = 0.0;    // Top Right
-    m_quad_vertices[ 3] = -0.5;    m_quad_vertices[ 4] =  0.5;    m_quad_vertices[ 5] = 0.0;    // Top Left
-    m_quad_vertices[ 6] =  0.5;    m_quad_vertices[ 7] = -0.5;    m_quad_vertices[ 8] = 0.0;    // Bottom Right
-    m_quad_vertices[ 9] = -0.5;    m_quad_vertices[10] = -0.5;    m_quad_vertices[11] = 0.0;    // Bottom Left
-
+    // Load Textures / Models / Shaders
     loadBuiltInTextures();
     loadProjectTextures();
     loadBuiltInModels();
     loadShaders();
+
 }
 
 
@@ -74,23 +61,21 @@ void DrOpenGL::importTexture(long texture_id, QString from_asset_string) {
 void DrOpenGL::importTexture(long texture_id, QPixmap &pixmap) {
     m_engine->addTexture(texture_id, pixmap);
 
-    // Produces screen shot on desktop of shrunken pixmap
+    // ***** Produces screen shot on desktop of shrunken pixmap
     ///DrAsset *asset = m_engine->getProject()->getAsset(texture_id);
     ///if (asset) { if (asset->getName() == "moon plant 6") { DrImaging::averageColor(pixmap, true); } }
 
-    // 3D Extruded Textures
+    // ***** 3D Extruded Textures
+    // Create mesh
     m_texture_data[texture_id] = new DrEngineVertexData();
     m_texture_data[texture_id]->initializeExtrudedPixmap( pixmap );
 
+    // Allocate mesh into vbo for use with OpenGL (could delete m_texture_data after this)
     m_texture_vbos[texture_id] = new QOpenGLBuffer();
     m_texture_vbos[texture_id]->create();
     m_texture_vbos[texture_id]->bind();
     m_texture_vbos[texture_id]->allocate(m_texture_data[texture_id]->constData(),
-                                        m_texture_data[texture_id]->count() * static_cast<int>(sizeof(GLfloat)));
-//            glEnableVertexAttribArray(0);
-//            glEnableVertexAttribArray(1);
-//            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), nullptr);
-//            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), reinterpret_cast<void *>(3 * sizeof(GLfloat)));
+                                         m_texture_data[texture_id]->count() * static_cast<int>(sizeof(GLfloat)));
     m_texture_vbos[texture_id]->release();
 }
 
@@ -145,14 +130,37 @@ void DrOpenGL::loadProjectTextures() {
 //##    Built in 3D Models
 //####################################################################################
 void DrOpenGL::loadBuiltInModels() {
-    // Cube to use to turn textures into cubes
-    m_cube_data = new DrEngineVertexData();
-    m_cube_data->initializeTextureCube();
-    m_cube_vbo =  new QOpenGLBuffer();
-    m_cube_vbo->create();
-    m_cube_vbo->bind();
-    m_cube_vbo->allocate(m_cube_data->constData(), m_cube_data->count() * static_cast<int>(sizeof(GLfloat)));
-    m_cube_vbo->release();
+    // ***** Quad Vertex Array and UV Texture Array
+    m_quad_texture_coordinates.clear();
+    m_quad_texture_coordinates.resize( 8 );
+    m_quad_texture_coordinates[0] = 1;    m_quad_texture_coordinates[1] = 1;
+    m_quad_texture_coordinates[2] = 0;    m_quad_texture_coordinates[3] = 1;
+    m_quad_texture_coordinates[4] = 1;    m_quad_texture_coordinates[5] = 0;
+    m_quad_texture_coordinates[6] = 0;    m_quad_texture_coordinates[7] = 0;
+
+    m_quad_vertices.clear();
+    m_quad_vertices.resize( 12 );               // in sets of x, y, z
+    m_quad_vertices[ 0] =  0.5;    m_quad_vertices[ 1] =  0.5;    m_quad_vertices[ 2] = 0.0;        // Top Right
+    m_quad_vertices[ 3] = -0.5;    m_quad_vertices[ 4] =  0.5;    m_quad_vertices[ 5] = 0.0;        // Top Left
+    m_quad_vertices[ 6] =  0.5;    m_quad_vertices[ 7] = -0.5;    m_quad_vertices[ 8] = 0.0;        // Bottom Right
+    m_quad_vertices[ 9] = -0.5;    m_quad_vertices[10] = -0.5;    m_quad_vertices[11] = 0.0;        // Bottom Left
+
+    m_quad_barycentric.clear();
+    m_quad_barycentric.resize( 12 );            // in sets of x, y, z
+    m_quad_barycentric[ 0] = 1.0;   m_quad_barycentric[ 1] = 0.0;  m_quad_barycentric[ 2] = 0.0;    // Top Right
+    m_quad_barycentric[ 3] = 0.0;   m_quad_barycentric[ 4] = 1.0;  m_quad_barycentric[ 5] = 0.0;    // Top Left
+    m_quad_barycentric[ 6] = 0.0;   m_quad_barycentric[ 7] = 0.0;  m_quad_barycentric[ 8] = 1.0;    // Bottom Right
+    m_quad_barycentric[ 9] = 1.0;   m_quad_barycentric[10] = 0.0;  m_quad_barycentric[11] = 0.0;    // Bottom Left
+
+    // ***** Cube to use to turn textures into cubes
+    DrEngineVertexData *cube = new DrEngineVertexData();
+    cube->initializeTextureCube();
+        m_cube_vbo =  new QOpenGLBuffer();
+        m_cube_vbo->create();
+        m_cube_vbo->bind();
+        m_cube_vbo->allocate(cube->constData(), cube->count() * static_cast<int>(sizeof(GLfloat)));
+        m_cube_vbo->release();
+    delete cube;
 }
 
 //####################################################################################
@@ -166,14 +174,16 @@ void DrOpenGL::loadShaders() {
     m_default_shader.addShader( &v_default_shader );
     m_default_shader.addShader( &f_default_shader );
     m_default_shader.bindAttributeLocation("vertex",                PROGRAM_VERTEX_ATTRIBUTE);
-    m_default_shader.bindAttributeLocation("texture_coordinates",   PROGRAM_TEXCOORD_ATTRIBUTE);
     m_default_shader.bindAttributeLocation("normal",                PROGRAM_NORMAL_ATTRIBUTE);
+    m_default_shader.bindAttributeLocation("texture_coordinates",   PROGRAM_TEXCOORD_ATTRIBUTE);
+    m_default_shader.bindAttributeLocation("barycentric",           PROGRAM_BARYCENTRIC_ATTRIBUTE);
     m_default_shader.link();
 
     // Vertex Shader Input
     a_default_vertex =          m_default_shader.attributeLocation( "vertex" );
-    a_default_texture_coord =   m_default_shader.attributeLocation( "texture_coordinates" );
     a_default_normal =          m_default_shader.attributeLocation( "normal" );
+    a_default_texture_coord =   m_default_shader.attributeLocation( "texture_coordinates" );
+    a_default_barycentric =     m_default_shader.attributeLocation( "barycentric" );
     u_default_matrix =          m_default_shader.uniformLocation(   "u_matrix" );
     u_default_matrix_object =   m_default_shader.uniformLocation(   "u_matrix_object" );
 
@@ -205,6 +215,7 @@ void DrOpenGL::loadShaders() {
     u_default_bitrate =         m_default_shader.uniformLocation(   "u_bitrate" );
     u_default_cartoon =         m_default_shader.uniformLocation(   "u_cartoon" );
     u_default_wavy =            m_default_shader.uniformLocation(   "u_wavy" );
+    u_default_wireframe =       m_default_shader.uniformLocation(   "u_wireframe" );
 
 
     // ***** Initialize our Occluder Map Shader

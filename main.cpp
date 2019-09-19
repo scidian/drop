@@ -101,11 +101,11 @@ int main(int argc, char *argv[]) {
     // ***** Set OpenGL surface format of QOpenGLWidgets
     QSurfaceFormat format;
     format.setDepthBufferSize(24);                              // Enable Depth Buffer
-#if defined (Q_OS_MACOS)
-    format.setSwapInterval(0);                                  // Disable V-Sync (set to 0 to disable, doesn't seem to work on iOS)
-#else
-    format.setSwapInterval(1);                                  // Enable V-Sync (set to 1 to enable, doesn't seem to work on macOS)
-#endif
+    #if defined (Q_OS_MACOS)
+        format.setSwapInterval(0);                                  // Disable V-Sync (set to 0 to disable, doesn't seem to work on iOS)
+    #else
+        format.setSwapInterval(1);                                  // Enable V-Sync (set to 1 to enable, doesn't seem to work on macOS)
+    #endif
     ///format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);    // Use Off Screen Double Buffer
     ///format.setSamples(4);                                    // Multi-sampling, not needed if rendering to offscreen fbo with its own multisampling
     ///format.setStencilBufferSize(8);

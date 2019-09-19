@@ -16,16 +16,25 @@
 #include "3rd_party/hullfinder.h"
 #include "3rd_party/poly_partition.h"
 
+// Local defines
+#define PAR_RGB  3
+#define PAR_RGBA 4
 
 // Local Constants
-const int c_vertex_length = 8;          // 8 is (3) for xyz, (3) for normal, and (2) for texture coordinate
-
+const int   c_vertex_length = 11;           // 11 is (3) for xyz + (3) for normal + (2) for texture coordinate + (3) for barycentric (for wireframe)
+const float c_extrude_depth = 0.5f;
 
 // Local Enums
 enum class Trianglulation {
     Ear_Clipping,
     Monotone,
     Delaunay,
+};
+
+enum class Triangle {
+    Point1,
+    Point2,
+    Point3,
 };
 
 
@@ -63,7 +72,7 @@ public:
     void    triangulateFace(const QVector<HullPoint> &from_points, QImage &black_and_white, Trianglulation type);
 
     // Building Functions
-    void    add(const QVector3D &v, const QVector3D &n, const QVector2D &t);
+    void    add(const QVector3D &vertex, const QVector3D &normal, const QVector2D &text_coord, Triangle point_number);
     void    extrude(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
                     GLfloat x2, GLfloat y2, GLfloat tx2, GLfloat ty2, int steps = 1);
     void    cube(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,

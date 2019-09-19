@@ -10,17 +10,20 @@ precision highp float;
 
 
 // ***** Input from Engine
-attribute highp     vec4 vertex;                    // Input
-attribute highp     vec3 normal;                    // Input
-attribute highp     vec2 texture_coordinates;       // Input
-uniform   highp     mat4 u_matrix;                  // Input
-uniform   mediump   mat4 u_matrix_object;           // Input
+attribute   highp   vec4 vertex;                    // Input
+attribute   highp   vec3 normal;                    // Input
+attribute   highp   vec2 texture_coordinates;       // Input
+attribute   highp   vec3 barycentric;               // Input
+
+uniform     highp   mat4 u_matrix;                  // Input
+uniform     highp   mat4 u_matrix_object;           // Input
 
 
 // ***** Output to Fragment Shader
-varying   highp     vec2 coordinates;               // Output
-varying   mediump   vec3 vert;                      // Output
-varying   mediump   vec3 vert_normal;               // Output
+varying     highp   vec2 coordinates;               // Output
+varying     highp   vec3 vert;                      // Output
+varying     highp   vec3 vert_normal;               // Output
+varying     highp   vec3 vert_bary;                 // Output
 
 
 //####################################################################################
@@ -39,9 +42,11 @@ void main( void ) {
     vert = object_vert.xyz;
 
     // Adjust object face normal to proper rotation / scale / position
-    vec4 normal_vert = u_matrix_object * vec4(normal, 0.0);
+    vec4 normal_vert = vec4(normal, 0.0);                                   // !!!!! w MUST be 0.0
+         normal_vert = u_matrix_object * normal_vert;
     vert_normal = normal_vert.xyz;
 
+    vert_bary = barycentric;
 }
 
 

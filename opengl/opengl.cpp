@@ -50,7 +50,6 @@ DrOpenGL::~DrOpenGL() {
             delete data_pair.second;
         m_cube_vbo->destroy();
         delete m_cube_vbo;
-        delete m_cube_data;
 
     doneCurrent();
 }

@@ -11,16 +11,16 @@ precision highp float;
 
 // ***** Input from Vertex Shader
 varying highp   vec2    coordinates;                        // Texture Coodinates
-varying mediump vec3    vert;                               // Current vertex
-varying mediump vec3    vert_normal;                        // Current vertex normal
-
+varying highp   vec3    vert;                               // Current vertex
+varying highp   vec3    vert_normal;                        // Current vertex normal
+varying highp   vec3    vert_bary;                          // Current vertex barycentric coordinate (used for wireframe)
 
 // ***** Input from Engine
 uniform sampler2D       u_texture;                          // Texture
 
-uniform lowp    float   u_alpha;                            // Opacity
-uniform lowp    vec3    u_average_color;                    // Average color of texture
-uniform lowp    vec3    u_tint;// = vec3(0, 0, 0);          // Tint, adds rgb to final output
+uniform mediump float   u_alpha;                            // Opacity
+uniform mediump vec3    u_average_color;                    // Average color of texture
+uniform mediump vec3    u_tint;// = vec3(0, 0, 0);          // Tint, adds rgb to final output
 uniform highp   float   u_zoom;                             // Zoom factor
 
 uniform highp   float   u_width;                            // Texture Width
@@ -34,24 +34,24 @@ uniform highp   float   u_pixel_y;// = 1.0;                 // Pixel Width Y    
 uniform highp   vec2    u_pixel_offset;                     // Used to offset pixelation to reduce pixel flicker
 uniform         bool    u_negative;// = false;              // Negative         True / False
 uniform         bool    u_grayscale;// = false;             // Grayscale        True / False
-uniform lowp    float   u_hue;// = 0.0;                     // Hue              Editor:    0 to 360     Shader:  0.0 to 1.0
-uniform lowp    float   u_saturation;// = 0.0;              // Saturation       Editor: -255 to 255     Shader: -1.0 to 1.0
-uniform lowp    float   u_contrast;// = 0.0;                // Contrast         Editor: -255 to 255     Shader: -1.0 to 1.0
-uniform lowp    float   u_brightness;// = 0.0;              // Brightness       Editor: -255 to 255     Shader: -1.0 to 1.0
+uniform mediump float   u_hue;// = 0.0;                     // Hue              Editor:    0 to 360     Shader:  0.0 to 1.0
+uniform mediump float   u_saturation;// = 0.0;              // Saturation       Editor: -255 to 255     Shader: -1.0 to 1.0
+uniform mediump float   u_contrast;// = 0.0;                // Contrast         Editor: -255 to 255     Shader: -1.0 to 1.0
+uniform mediump float   u_brightness;// = 0.0;              // Brightness       Editor: -255 to 255     Shader: -1.0 to 1.0
 
 uniform         bool    u_shade_away;
-uniform lowp    vec3    u_camera_pos;
+uniform highp   vec3    u_camera_pos;
 
-uniform lowp    float   u_bitrate;// = 256;                 // Bitrate          Editor:    0 to  256
+uniform mediump float   u_bitrate;// = 256;                 // Bitrate          Editor:    0 to  256
 uniform         bool    u_cartoon;// = false;               // Cartoon          True / False
 uniform         bool    u_wavy;// = false;                  // Wavy             True / False
-
+uniform         bool    u_wireframe;// = false;             // Wireframe        True / False
 
 // Constants
-const   lowp  float THRESHOLD = 0.75;                       // Alpha threshold for our occlusion map
-const   highp float PI =  3.14159;                          // Pi
-const   highp float RAD = 6.2831853;                        // 2.0 * PI is 360 degrees in radians
-const   highp float PI180 = PI / 180.0;                     // To convert Degrees to Radians
+const   highp   float   THRESHOLD = 0.75;                   // Alpha threshold for our occlusion map
+const   highp   float   PI =  3.14159;                      // Pi
+const   highp   float   RAD = 6.2831853;                    // 2.0 * PI is 360 degrees in radians
+const   highp   float   PI180 = PI / 180.0;                 // To convert Degrees to Radians
 
 
 //####################################################################################
@@ -72,6 +72,18 @@ vec3 hsvToRgb(vec3 c) {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+
+
+//####################################################################################
+//##    Calculates how close point is to edge of triangle (used for wirefame)
+//####################################################################################
+float wireframe_width = 1.0;    // A number here like 6.0 is big, but still works. Looks like fat lines...
+
+float edgeFactor() {
+    vec3 d =  fwidth(vert_bary);
+    vec3 a3 = smoothstep(vec3(0.0), d * wireframe_width * sqrt(u_zoom), vert_bary);
+    return min(min(a3.x, a3.y), a3.z);
 }
 
 
@@ -201,6 +213,10 @@ vec2 rotate(vec2 v, vec2 center_point, float angle) {
 //####################################################################################
 void main( void ) {
 
+    // Keeps colors through this shader
+    vec4 texture_color;
+    vec4 final_color;
+
     // Move coordinates into a vec2 that is not read-only
     highp vec2 coords = coordinates.st;
     float time = u_time;
@@ -213,7 +229,6 @@ void main( void ) {
         float len = length(p);
         coords = tc + (p / len) * cos(len*12.0 - time*4.0) * 0.03;
     }
-
 
     // ***** SWIRL
 //    if (u_swirl) {
@@ -276,9 +291,7 @@ void main( void ) {
 
 
     // ***** PIXELATED
-    vec4 texture_color;
     if (u_pixel_x > 1.0 || u_pixel_y > 1.0) {       
-
         highp float pixel_width =  1.0 / u_width;
         highp float pixel_height = 1.0 / u_height;
 
@@ -386,15 +399,31 @@ void main( void ) {
         highp float dp = dot(normalize(vert_normal), normalize(vert - u_camera_pos)) + 0.15;
                     dp = clamp(dp, 0.0, 1.0);
         frag_rgb = mix(vec3(0.0), frag_rgb, dp);
-        gl_FragColor = vec4(frag_rgb, 1.0) * alpha_in;
-        //if (texture_color.a < 0.05) gl_FragColor = clamp(gl_FragColor + vec4(1.0, 0.0, 0.0, 0.5), 0.0, 1.0);
+        final_color = vec4(frag_rgb, 1.0) * alpha_in;
 
-    // Otherwise we're drawing image in 2D and we do want transparent borders
+    // ***** Otherwise we're drawing image in 2D and we do want transparent borders
     } else {
-        gl_FragColor = vec4(frag_rgb, texture_color.a) * alpha_in;
+        final_color = vec4(frag_rgb, texture_color.a) * alpha_in;
     }
 
 
+    // ***** WIREFRAME
+    if (u_wireframe) {
+        float wireframe_percent = 0.2;
+        final_color *= (1.0 - edgeFactor());
+
+        // If not on edge, draw texture faded, or just maybe just discard
+        if ( all(lessThan(final_color, vec4(0.02))) ) {
+            // Texture is slightly there
+            final_color = vec4(frag_rgb * 0.15, 0.15) * alpha_in;
+            // Or gone completely
+            //discard;
+        }
+    }
+
+
+    // ***** FINAL COLOR TO SCREEN
+    gl_FragColor = final_color;
 }
 
 

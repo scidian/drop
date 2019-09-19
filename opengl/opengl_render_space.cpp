@@ -43,27 +43,6 @@ void DrOpenGL::cullingOff() {
     glDisable( GL_CULL_FACE );
 }
 
-//####################################################################################
-//##    Wireframe Rendering
-//####################################################################################
-void DrOpenGL::wireframeOn(bool smooth) {
-#if not defined (Q_OS_IOS)
-    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );                        // Wireframe on
-    if (smooth) glEnable(GL_LINE_SMOOTH);                               // Enables line anti-aliasing
-    glLineWidth(1);                                                     // Only '1' fully supported by OpenGL standard
-#else
-    Q_UNUSED(smooth)
-#endif
-}
-void DrOpenGL::wireframeOff(bool smooth) {
-#if not defined (Q_OS_IOS)
-    if (smooth) glDisable(GL_LINE_SMOOTH);
-    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );                        // Wireframe off
-#else
-    Q_UNUSED(smooth)
-#endif
-}
-
 
 //####################################################################################
 //##    Render all Scene Objects
@@ -100,8 +79,6 @@ void DrOpenGL::drawSpace() {
         switch (thing->getThingType()) {
             case DrThingType::Character:
             case DrThingType::Object:
-                if (m_engine->getCurrentWorld()->wireframe) wireframeOn();
-
                 // If no depth to object, or if in Orthographic mode and object is not rotated on X or Y axis, just draw front face
                 draw2D = qFuzzyCompare(thing->getDepth(), 0.0) ||
                          (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic &&
@@ -119,7 +96,6 @@ void DrOpenGL::drawSpace() {
                     cullingOff();
                 }
 
-                if (m_engine->getCurrentWorld()->wireframe) wireframeOff();
                 break;
             case DrThingType::Text:
                 // !!!!!
