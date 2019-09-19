@@ -61,8 +61,8 @@ enum class Components {
     World_Settings,
     World_Physics,
     World_Lighting,
-    World_Special_Effects,
     World_Appearance,
+    World_Special_Effects,
 
     Stage_Settings,
     Stage_Grid,
@@ -89,6 +89,7 @@ enum class Components {
     Thing_3D,
     Thing_Lighting,
     Thing_Appearance,
+    Thing_Special_Effects,
 };
 
 
@@ -188,6 +189,9 @@ enum class Properties {
     Thing_Filter_Hue,               //slider, 0 to 360
     Thing_Filter_Grayscale,         //bool
     Thing_Filter_Negative,          //bool
+
+    // Special Effects
+    Thing_Filter_Wireframe,         //bool
 
     // 3D Variables
     Thing_3D_Type,                  //list, enum class Convert_3D_Type (Extrusion, Cube)

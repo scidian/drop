@@ -63,6 +63,7 @@ public:
     void    addComponentLayering(double z, double opacity = 100.0);
     void    addComponentLighting();
     void    addComponentMovement();
+    void    addComponentSpecialEffects();
     void    addComponentTransform(double width, double height, double x, double y, DrThingType type);
 
     // Thing Specific Components

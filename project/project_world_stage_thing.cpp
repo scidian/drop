@@ -47,6 +47,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponent3D();
             addComponentLighting();
             addComponentAppearance();
+            addComponentSpecialEffects();
             break;
 
         case DrThingType::Object:
@@ -57,6 +58,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponent3D();
             addComponentLighting();
             addComponentAppearance();
+            addComponentSpecialEffects();
             break;
 
         case DrThingType::Text:
@@ -192,7 +194,7 @@ void DrThing::addComponentLighting() {
     addComponent(Components::Thing_Lighting, "Lighting", "Lighting settings for this item.", Component_Colors::Mustard_Yellow, true);
     getComponent(Components::Thing_Lighting)->setIcon(Component_Icons::Light);
     addPropertyToComponent(Components::Thing_Lighting, Properties::Thing_Lighting_Cast_Shadows, Property_Type::Bool, true,
-                           "Cast Shadows", "This object will cast shadows when appearing higher on the z axis than a Light.");
+                           "Cast Shadows", "This item will cast shadows when appearing higher on the z axis than a Light.");
 }
 
 void DrThing::addComponentAppearance(bool bitrate_and_pixel_only) {
@@ -219,7 +221,12 @@ void DrThing::addComponentAppearance(bool bitrate_and_pixel_only) {
                            "Negative", "Should this item's colors be inverted?", hidden);
 }
 
-
+void DrThing::addComponentSpecialEffects() {
+    addComponent(Components::Thing_Special_Effects, "Special Effects", "Special effects that affect this item.", Component_Colors::Green_SeaGrass, true);
+    getComponent(Components::Thing_Special_Effects)->setIcon(Component_Icons::Effects);
+    addPropertyToComponent(Components::Thing_Special_Effects, Properties::Thing_Filter_Wireframe, Property_Type::Bool, false,
+                           "Wireframe", "Renders this item as an 3d outline, item 3D Depth should be greater than 0 for best effect.");
+}
 
 //####################################################################################
 //##    Camera Components

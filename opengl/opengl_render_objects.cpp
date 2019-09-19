@@ -190,7 +190,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     m_default_shader.setUniformValue( u_default_camera_pos,     eye_move.x(), eye_move.y(), eye_move.z() );
     m_default_shader.setUniformValue( u_default_cartoon,        false );
     m_default_shader.setUniformValue( u_default_wavy,           false );
-    m_default_shader.setUniformValue( u_default_wireframe,      m_engine->getCurrentWorld()->wireframe );
+    m_default_shader.setUniformValue( u_default_wireframe,      (m_engine->getCurrentWorld()->wireframe || object->wireframe) );
 
     // Fade away dying object
     float alpha = object->getOpacity();                                                 // Start with object alpha
@@ -203,54 +203,45 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
 
     // ***** Draw triangles using shader program
     if (draw2D) {
-        m_default_shader.enableAttributeArray( a_default_vertex );
-        m_default_shader.enableAttributeArray( a_default_texture_coord );
-        m_default_shader.enableAttributeArray( a_default_barycentric );
-        m_default_shader.setAttributeArray(    a_default_vertex,        m_quad_vertices.data(),             3 );
-        m_default_shader.setAttributeArray(    a_default_texture_coord, m_quad_texture_coordinates.data(),  2 );
-        m_default_shader.setAttributeArray(    a_default_barycentric,   m_quad_barycentric.data(),          3 );
-        glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
-        m_default_shader.disableAttributeArray( a_default_vertex );
-        m_default_shader.disableAttributeArray( a_default_texture_coord );
-        m_default_shader.disableAttributeArray( a_default_barycentric );
+        setDefaultAttributeBuffer(m_quad_vbo);
+        int quad_vertices =  m_quad_vbo->size() / (c_vertex_length * c_float_size);
+        glDrawArrays(GL_TRIANGLES, 0, quad_vertices );
+        releaseDefaultAttributeBuffer();
+        m_quad_vbo->release();
         addTriangles( 2 );
-        last_thing = DrThingType::Object;
 
     } else if (object->get3DType() == Convert_3D_Type::Cube) {
         setDefaultAttributeBuffer(m_cube_vbo);
-        int float_size =     static_cast<int>(sizeof(GLfloat));
-        int cube_vertices =  m_cube_vbo->size() / (c_vertex_length * float_size);
+        int cube_vertices =  m_cube_vbo->size() / (c_vertex_length * c_float_size);
         glDrawArrays(GL_TRIANGLES, 0, cube_vertices );
+        releaseDefaultAttributeBuffer();
         m_cube_vbo->release();
         addTriangles( 12 );      // aka 'cube_vertices / 3'
-        releaseDefaultAttributeBuffer();
-        last_thing = DrThingType::Object;
 
     } else {
         setDefaultAttributeBuffer(m_texture_vbos[object->getTextureNumber()]);
         glDrawArrays(GL_TRIANGLES, 0, m_texture_data[object->getTextureNumber()]->vertexCount() );
+        releaseDefaultAttributeBuffer();
         m_texture_vbos[object->getTextureNumber()]->release();
         addTriangles( m_texture_data[object->getTextureNumber()]->triangleCount() );
-        releaseDefaultAttributeBuffer();
-        last_thing = DrThingType::Object;
     }
 
     ///m_default_shader.release();
+    last_thing = DrThingType::Object;
 }
 
 // Bind vertex array
 void DrOpenGL::setDefaultAttributeBuffer(QOpenGLBuffer *buffer) {
-    int float_size = sizeof(GLfloat);
     // As QOpenGlWidget calls
     ///buffer->bind();
     ///m_default_shader.enableAttributeArray(  PROGRAM_VERTEX_ATTRIBUTE);
     ///m_default_shader.enableAttributeArray(  PROGRAM_NORMAL_ATTRIBUTE);
     ///m_default_shader.enableAttributeArray(  PROGRAM_TEXCOORD_ATTRIBUTE);
     ///m_default_shader.enableAttributeArray(  PROGRAM_BARYCENTRIC_ATTRIBUTE);
-    ///m_default_shader.setAttributeBuffer(    PROGRAM_VERTEX_ATTRIBUTE,      GL_FLOAT, 0             , 3, c_vertex_length * float_size);
-    ///m_default_shader.setAttributeBuffer(    PROGRAM_NORMAL_ATTRIBUTE,      GL_FLOAT, 3 * float_size, 3, c_vertex_length * float_size);
-    ///m_default_shader.setAttributeBuffer(    PROGRAM_TEXCOORD_ATTRIBUTE,    GL_FLOAT, 6 * float_size, 2, c_vertex_length * float_size);
-    ///m_default_shader.setAttributeBuffer(    PROGRAM_BARYCENTRIC_ATTRIBUTE, GL_FLOAT, 8 * float_size, 3, c_vertex_length * float_size);
+    ///m_default_shader.setAttributeBuffer(    PROGRAM_VERTEX_ATTRIBUTE,      GL_FLOAT, 0               , 3, c_vertex_length * c_float_size);
+    ///m_default_shader.setAttributeBuffer(    PROGRAM_NORMAL_ATTRIBUTE,      GL_FLOAT, 3 * c_float_size, 3, c_vertex_length * c_float_size);
+    ///m_default_shader.setAttributeBuffer(    PROGRAM_TEXCOORD_ATTRIBUTE,    GL_FLOAT, 6 * c_float_size, 2, c_vertex_length * c_float_size);
+    ///m_default_shader.setAttributeBuffer(    PROGRAM_BARYCENTRIC_ATTRIBUTE, GL_FLOAT, 8 * c_float_size, 3, c_vertex_length * c_float_size);
 
     // Standard OpenGL Calls
     glBindBuffer(GL_ARRAY_BUFFER, buffer->bufferId());
@@ -258,10 +249,10 @@ void DrOpenGL::setDefaultAttributeBuffer(QOpenGLBuffer *buffer) {
     glEnableVertexAttribArray( PROGRAM_NORMAL_ATTRIBUTE );
     glEnableVertexAttribArray( PROGRAM_TEXCOORD_ATTRIBUTE );
     glEnableVertexAttribArray( PROGRAM_BARYCENTRIC_ATTRIBUTE );
-    glVertexAttribPointer( PROGRAM_VERTEX_ATTRIBUTE,      3, GL_FLOAT, GL_FALSE, c_vertex_length * float_size, nullptr);
-    glVertexAttribPointer( PROGRAM_NORMAL_ATTRIBUTE,      3, GL_FLOAT, GL_FALSE, c_vertex_length * float_size, reinterpret_cast<void *>(3 * float_size));
-    glVertexAttribPointer( PROGRAM_TEXCOORD_ATTRIBUTE,    2, GL_FLOAT, GL_FALSE, c_vertex_length * float_size, reinterpret_cast<void *>(6 * float_size));
-    glVertexAttribPointer( PROGRAM_BARYCENTRIC_ATTRIBUTE, 3, GL_FLOAT, GL_FALSE, c_vertex_length * float_size, reinterpret_cast<void *>(8 * float_size));
+    glVertexAttribPointer( PROGRAM_VERTEX_ATTRIBUTE,      3, GL_FLOAT, GL_FALSE, c_vertex_length * c_float_size, nullptr);
+    glVertexAttribPointer( PROGRAM_NORMAL_ATTRIBUTE,      3, GL_FLOAT, GL_FALSE, c_vertex_length * c_float_size, reinterpret_cast<void *>(3 * c_float_size));
+    glVertexAttribPointer( PROGRAM_TEXCOORD_ATTRIBUTE,    2, GL_FLOAT, GL_FALSE, c_vertex_length * c_float_size, reinterpret_cast<void *>(6 * c_float_size));
+    glVertexAttribPointer( PROGRAM_BARYCENTRIC_ATTRIBUTE, 3, GL_FLOAT, GL_FALSE, c_vertex_length * c_float_size, reinterpret_cast<void *>(8 * c_float_size));
 }
 
 // Release bound items

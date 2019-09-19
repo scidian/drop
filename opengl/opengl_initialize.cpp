@@ -152,6 +152,16 @@ void DrOpenGL::loadBuiltInModels() {
     m_quad_barycentric[ 6] = 0.0;   m_quad_barycentric[ 7] = 0.0;  m_quad_barycentric[ 8] = 1.0;    // Bottom Right
     m_quad_barycentric[ 9] = 1.0;   m_quad_barycentric[10] = 0.0;  m_quad_barycentric[11] = 0.0;    // Bottom Left
 
+    // ***** Quad to use to render textures
+    DrEngineVertexData *quad = new DrEngineVertexData();
+    quad->initializeTextureQuad();
+        m_quad_vbo =  new QOpenGLBuffer();
+        m_quad_vbo->create();
+        m_quad_vbo->bind();
+        m_quad_vbo->allocate(quad->constData(), quad->count() * static_cast<int>(sizeof(GLfloat)));
+        m_quad_vbo->release();
+    delete quad;
+
     // ***** Cube to use to turn textures into cubes
     DrEngineVertexData *cube = new DrEngineVertexData();
     cube->initializeTextureCube();

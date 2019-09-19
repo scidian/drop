@@ -48,6 +48,9 @@ extern int  g_max_light_fbo_size;
 #define PROGRAM_TEXCOORD_ATTRIBUTE      2
 #define PROGRAM_BARYCENTRIC_ATTRIBUTE   3
 
+// OpenGL Constants
+const int   c_float_size =      static_cast<int>(sizeof(GLfloat));
+
 // Rendering Constants
 const bool  c_use_cam_offset =  true;
 const float c_near_plane =     -10000.0;
@@ -100,6 +103,7 @@ private:
     // VBO's
     std::map<long, QOpenGLBuffer*>      m_texture_vbos;         // Stores extruded texture vbo's
     std::map<long, DrEngineVertexData*> m_texture_data;         // Stores extruded texture vertex data
+    QOpenGLBuffer                      *m_quad_vbo;             // Stores quad vbo, to use to render 2d quads
     QOpenGLBuffer                      *m_cube_vbo;             // Stores cube vbo, to use to turn a texture into a cube
 
     // Frame Buffers

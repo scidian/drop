@@ -146,6 +146,7 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     float   hue =           thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Hue).toList().first().toInt() / 360.f;
     bool    grayscale =     thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Grayscale).toBool();
     bool    negative =      thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Negative).toBool();
+    bool    wireframe =     thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Wireframe).toBool();
     block->cast_shadows =   cast_shadows;
     block->bitrate =        bit_rate;
     block->pixel_x =        static_cast<float>(pixelation.x());
@@ -156,6 +157,7 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     block->hue =            hue;
     block->grayscale =      grayscale;
     block->negative =       negative;
+    block->wireframe =      wireframe;
 
     // ***** 3D Settings
     int    convert_type =   thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Type).toInt();

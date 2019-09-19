@@ -127,15 +127,6 @@ void DrWorld::initializeWorldSettings(QString new_name) {
                            "Blend Mode", "This is the blend mode used to add Glow Lights and Object Emitted Light to the Stage. Different blend modes can effect "
                                          "oversaturation levels or be better for dark scenes.");
 
-    addComponent(Components::World_Special_Effects, "Special Effects", "Special effects that affect the entire world.", Component_Colors::Green_SeaGrass, true);
-    getComponent(Components::World_Special_Effects)->setIcon(Component_Icons::Effects);
-    addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wireframe, Property_Type::Bool, false,
-                           "Wireframe", "Renders all the world's objects as outlines.");
-    addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Cartoon, Property_Type::Bool, false,
-                           "Cartoon", "Gives the world a comic book look.");
-    addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wavy, Property_Type::Bool, false,
-                           "Wavy", "Gives the world a trippy / drunken look.");
-
     addComponent(Components::World_Appearance, "Appearance", "These filters affect the entire world after it has been rendered.",
                                                Component_Colors::Brown_Sugar, true);
     getComponent(Components::World_Appearance)->setIcon(Component_Icons::Appearance);
@@ -157,6 +148,14 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Negative, Property_Type::Bool, false,
                            "Negative", "Should this world's colors be inverted?");
 
+    addComponent(Components::World_Special_Effects, "Special Effects", "Special effects that affect the entire world.", Component_Colors::Green_SeaGrass, true);
+    getComponent(Components::World_Special_Effects)->setIcon(Component_Icons::Effects);
+    addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wireframe, Property_Type::Bool, false,
+                           "Wireframe", "Renders all the world's objects as outlines.");
+    addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Cartoon, Property_Type::Bool, false,
+                           "Cartoon", "Gives the world a comic book look.");
+    addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wavy, Property_Type::Bool, false,
+                           "Wavy", "Gives the world a trippy / drunken look.");
 }
 
 

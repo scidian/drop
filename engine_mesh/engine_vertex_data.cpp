@@ -27,7 +27,7 @@ DrEngineVertexData::DrEngineVertexData() : m_count(0) { }
 //##    Builds a Textured Quad
 //####################################################################################
 void DrEngineVertexData::initializeTextureQuad() {
-    m_data.resize(8 * c_vertex_length);
+    m_data.resize(6 * c_vertex_length);
 
     int   width =  1;
     int   height = 1;
@@ -45,7 +45,8 @@ void DrEngineVertexData::initializeTextureQuad() {
     GLfloat tx3 = 1.0, ty3 = 0.0;
     GLfloat tx4 = 0.0, ty4 = 0.0;
 
-    QVector3D n = QVector3D::normal(QVector3D(x4 - x1, y4 - y1, 0.0f), QVector3D(x2 - x1, y2 - y1, 0.0f));
+    QVector3D n;
+    n = QVector3D::normal(QVector3D(x4 - x1, y4 - y1, 0.0f), QVector3D(x2 - x1, y2 - y1, 0.0f));
     add(QVector3D(x1, y1, 0.f), n, QVector2D(tx1, ty1), Triangle::Point1);
     add(QVector3D(x2, y2, 0.f), n, QVector2D(tx2, ty2), Triangle::Point2);
     add(QVector3D(x3, y3, 0.f), n, QVector2D(tx3, ty3), Triangle::Point3);
@@ -59,7 +60,7 @@ void DrEngineVertexData::initializeTextureQuad() {
 //##    Builds a Textured Cube
 //####################################################################################
 void DrEngineVertexData::initializeTextureCube() {
-    m_data.resize(40 * c_vertex_length);
+    m_data.resize(36 * c_vertex_length);
 
     int   width =  1;
     int   height = 1;

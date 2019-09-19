@@ -83,11 +83,14 @@ void DrOpenGL::drawSpace() {
                 draw2D = qFuzzyCompare(thing->getDepth(), 0.0) ||
                          (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic &&
                           qFuzzyCompare(thing->getAngleX(), 0.0)       && qFuzzyCompare(thing->getAngleY(), 0.0) &&
-                          qFuzzyCompare(thing->getRotateSpeedX(), 0.0) && qFuzzyCompare(thing->getRotateSpeedY(), 0.0));
+                          qFuzzyCompare(thing->getRotateSpeedX(), 0.0) && qFuzzyCompare(thing->getRotateSpeedY(), 0.0) &&
+                          !thing->wireframe);
                 if (draw2D) {
+                    glEnable(GL_DEPTH_TEST);
                     drawObject(thing, last_thing, draw2D);
-                } else {
+                    glDisable(GL_DEPTH_TEST);
 
+                } else {
                     cullingOn();
                     glEnable(GL_DEPTH_TEST);
                     glDepthFunc(GL_LEQUAL);
