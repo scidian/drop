@@ -29,6 +29,7 @@ namespace Component_Colors {
 
     const QColor Red_Tuscan         { QColor(104,  71,  86, 255) };
     const QColor Purple_Pastel      { QColor(176, 161, 186, 255) };
+    const QColor Purple_Royal       { QColor("#7E57C2") };
     const QColor Blue_Yonder        { QColor(165, 181, 191, 255) };
 
     const QColor Green_SeaGrass     { QColor(154, 225, 157, 255) };

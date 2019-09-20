@@ -319,16 +319,19 @@ void main( void ) {
     highp vec4 alpha_in = vec4(u_alpha, u_alpha, u_alpha, u_alpha);                 // For adding in existing opacity of object
     highp vec3 frag_rgb = texture_color.rgb;                                        // Save rgb as a vec3 for working with
 
-    // Don't draw fragment to depth buffer if mostly invisible
-    if ((texture_color.a * u_alpha) < 0.05) discard;
 
     // If texture is premultiplied...
     // Remove alpha first, then apply filters, then add it back later
     if (u_premultiplied) frag_rgb /= texture_color.a;
 
-    // Add in average color
+
+    // If 3D, add in average color, set pixel to opaque
     if (u_shade_away) {
         frag_rgb = mix(u_average_color, frag_rgb, texture_color.a);
+        texture_color.a = 1.0;
+    } else {
+        // Don't draw fragment to depth buffer if 2D and mostly invisible
+        if ((texture_color.a * u_alpha) < 0.05) discard;
     }
 
 
@@ -399,7 +402,8 @@ void main( void ) {
         highp float dp = dot(normalize(vert_normal), normalize(vert - u_camera_pos)) + 0.15;
                     dp = clamp(dp, 0.0, 1.0);
         frag_rgb = mix(vec3(0.0), frag_rgb, dp);
-        final_color = vec4(frag_rgb, 1.0) * alpha_in;
+        //final_color = vec4(frag_rgb, 1.0) * alpha_in;
+        final_color = vec4(frag_rgb, texture_color.a) * alpha_in;
 
     // ***** Otherwise we're drawing image in 2D and we do want transparent borders
     } else {

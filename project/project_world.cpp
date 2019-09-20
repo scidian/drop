@@ -148,7 +148,7 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Negative, Property_Type::Bool, false,
                            "Negative", "Should this world's colors be inverted?");
 
-    addComponent(Components::World_Special_Effects, "Special Effects", "Special effects that affect the entire world.", Component_Colors::Green_SeaGrass, true);
+    addComponent(Components::World_Special_Effects, "Special Effects", "Special effects that affect the entire world.", Component_Colors::Purple_Royal, true);
     getComponent(Components::World_Special_Effects)->setIcon(Component_Icons::Effects);
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wireframe, Property_Type::Bool, false,
                            "Wireframe", "Renders all the world's objects as outlines.");

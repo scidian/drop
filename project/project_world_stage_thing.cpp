@@ -171,7 +171,8 @@ void DrThing::addComponentMovement() {
 }
 
 void DrThing::addComponent3D() {
-    addComponent(Components::Thing_3D, "3D Properties", "Turns 2D Objects in 3D, rotates 3D Objects.", Component_Colors::Orange_Pastel, true);
+    addComponent(Components::Thing_3D, "3D Properties", "Turns 2D Objects in 3D, rotates 3D Objects. Extrusion works best for images whose pixels are "
+                                       "mostly opaque.", Component_Colors::Orange_Pastel, true);
     getComponent(Components::Thing_3D)->setIcon(Component_Icons::Object);
     addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Type, Property_Type::List, 0,
                            "Type", "How this object is represented in 3D. The texture can be Extruded (pulled) into the 3rd dimension. Or it can be Wrapped "
@@ -222,7 +223,7 @@ void DrThing::addComponentAppearance(bool bitrate_and_pixel_only) {
 }
 
 void DrThing::addComponentSpecialEffects() {
-    addComponent(Components::Thing_Special_Effects, "Special Effects", "Special effects that affect this item.", Component_Colors::Green_SeaGrass, true);
+    addComponent(Components::Thing_Special_Effects, "Special Effects", "Special effects that affect this item.", Component_Colors::Purple_Royal, true);
     getComponent(Components::Thing_Special_Effects)->setIcon(Component_Icons::Effects);
     addPropertyToComponent(Components::Thing_Special_Effects, Properties::Thing_Filter_Wireframe, Property_Type::Bool, false,
                            "Wireframe", "Renders this item as an 3d outline, item 3D Depth should be greater than 0 for best effect.");

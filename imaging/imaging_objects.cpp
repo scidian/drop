@@ -201,10 +201,10 @@ void fillBorder(QImage &image, QColor fill_color, QRect rect) {
 //##            Black where around the ouside of of the object, and the object itself is white.
 //##        Rects of images are returned in 'rects'
 //####################################################################################
-int findObjectsInImage(const QPixmap &pixmap, QVector<QImage> &images, QVector<QRect> &rects, double alpha_tolerance, bool convert) {
+int findObjectsInImage(const QImage &image, QVector<QImage> &images, QVector<QRect> &rects, double alpha_tolerance, bool convert) {
     QImage black_white;
-    if (convert) black_white = blackAndWhiteFromAlpha(pixmap.toImage(), alpha_tolerance, true);
-    else         black_white = pixmap.toImage();
+    if (convert) black_white = blackAndWhiteFromAlpha(image, alpha_tolerance, true);
+    else         black_white = image;
     QVector<QRgb*>  lines = getScanLines(black_white);
     int object_count = 0;
 

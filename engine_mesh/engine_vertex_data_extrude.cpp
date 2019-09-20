@@ -32,7 +32,7 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
     // ***** Break pixmap into seperate images for each object in image
     QVector<QImage> images;
     QVector<QRect>  rects;
-    DrImaging::findObjectsInImage(pixmap, images, rects, 0.9);
+    DrImaging::findObjectsInImage(pixmap.toImage(), images, rects, 0.9);
     ///images.push_back( DrImaging::blackAndWhiteFromAlpha(pixmap.toImage(), 0.9, false));
 
     // ***** Go through each image (object) and add triangles for it
@@ -56,15 +56,13 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
 
 
         // ***** Copy image and finds holes as seperate outlines
-        QImage holes(image.width(), image.height(), QImage::Format_ARGB32);     // Create new copy
-        holes.fill(c_color_white);
-        DrImaging::copyImage(holes, image, rects[image_number]);                // Copy object rect
-        DrImaging::fillBorder(holes, c_color_white, rects[image_number]);       // Ensures only holes are left as black spots
+        QImage holes = image.copy(rects[image_number]);
+        DrImaging::fillBorder(holes, c_color_white, holes.rect());              // Ensures only holes are left as black spots
 
         // Breaks holes into seperate images for each hole
         QVector<QImage> hole_images;
         QVector<QRect>  hole_rects;
-        DrImaging::findObjectsInImage(QPixmap::fromImage(holes), hole_images, hole_rects, 0.9, false);
+        DrImaging::findObjectsInImage(holes, hole_images, hole_rects, 0.9, false);
 
         // Go through each image (hole) create list for it
         QVector<QVector<HullPoint>> hole_list;
@@ -77,6 +75,11 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
                 case Winding_Orientation::Unknown:          continue;
                 case Winding_Orientation::Clockwise:        break;
                 case Winding_Orientation::CounterClockwise: std::reverse(one_hole.begin(), one_hole.end()); break;
+            }
+            // Add in sub image offset to points
+            for (auto &point : one_hole) {
+                point.x += rects[image_number].x();
+                point.y += rects[image_number].y();
             }
             one_hole = smoothPoints(  one_hole, 5, 5.0, 0.5);
             one_hole = simplifyPoints(one_hole, 0.030,     5, true);
