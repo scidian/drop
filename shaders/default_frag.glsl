@@ -320,7 +320,7 @@ void main( void ) {
     highp vec3 frag_rgb = texture_color.rgb;                                        // Save rgb as a vec3 for working with
 
     // Don't draw fragment to depth buffer if mostly invisible
-    if (texture_color.a < 0.05) discard;
+    if ((texture_color.a * u_alpha) < 0.05) discard;
 
     // If texture is premultiplied...
     // Remove alpha first, then apply filters, then add it back later

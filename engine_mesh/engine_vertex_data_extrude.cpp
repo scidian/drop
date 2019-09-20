@@ -71,7 +71,7 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
         for (int hole_number = 0; hole_number < hole_images.count(); hole_number++) {
             QImage &hole = hole_images[hole_number];
             if (hole.width() < 1 || hole.height() < 1) continue;
-            QVector<HullPoint> one_hole = DrImaging::traceImageOutline(hole);
+            QVector<HullPoint> one_hole =      DrImaging::traceImageOutline(hole);
             Winding_Orientation hole_winding = HullFinder::FindWindingOrientation(one_hole);
             switch (hole_winding) {
                 case Winding_Orientation::Unknown:          continue;
@@ -333,16 +333,6 @@ void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &outline_point
                 }
             }
         }
-
-        // Add points on transparent pixels to be removed later. Helps keep the edges prominent.
-//        for (int x = 0; x < width; x++) {
-//            for (int y = 0; y < height; y++) {
-//                if (black_and_white.pixel(x, y) == c_color_black) {
-//                    coords.push_back( x );
-//                    coords.push_back( y );
-//                }
-//            }
-//        }
 
         // Run triangulation, add triangles to vertex data
         Delaunator::Delaunator d(coords);
