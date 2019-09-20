@@ -64,6 +64,11 @@ enum class Flood_Fill_Type {
 //############################
 namespace DrImaging {
 
+    // Basic Drawing
+    void    copyImage(QImage &dest_image, QImage &source_image, QRect rect) ;
+    void    fillImage(QImage &image, QColor color, QRect rect);
+
+
     // Misc Image Functions
     QColor              averageColor(const QPixmap &pixmap, bool screen_shot = false);
     QVector<QRgb*>      getScanLines(QImage &image);
@@ -93,7 +98,8 @@ namespace DrImaging {
 
     // Object Counting / Fill (a la Ravens Project)
     QImage  blackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, bool inverse = false);
-    int     findObjectsInImage(const QPixmap &pixmap, QVector<QImage> &images, QVector<QRect> &rects, double alpha_tolerance);
+    void    fillBorder(QImage &image, QColor fill_color, QRect rect);
+    int     findObjectsInImage(const QPixmap &pixmap, QVector<QImage> &images, QVector<QRect> &rects, double alpha_tolerance, bool convert = true);
     QImage  floodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, double tolerance, Flood_Fill_Type type,
                       int &flood_pixel_count, QRect &flood_rect);
 

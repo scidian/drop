@@ -77,6 +77,7 @@ QImage floodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, doub
     QVector<QRgb*> processed_lines = getScanLines(processed);
 
     // Check if start point is in range    
+    flood_rect = QRect(0, 0, 0, 0);
     if (at_x < 0 || at_y < 0 || at_x > from_image.width() - 1 || at_y > from_image.height() - 1) {
         return QImage(0, 0, QImage::Format::Format_ARGB32);
     } else if (from_image.width() < 1 || from_image.height() < 1) {
@@ -161,26 +162,60 @@ QImage floodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, doub
 
 
 //####################################################################################
+//##    Fill border
+//##        Traces Border of 'rect' and makes sure to fill in any c_color_black areas with fill_color
+//####################################################################################
+void fillBorder(QImage &image, QColor fill_color, QRect rect) {
+    QVector<QRgb*> lines = DrImaging::getScanLines(image);
+    QRect  fill_rect;
+    int    fill_qty;
+
+    int y1 = rect.y();
+    int y2 = rect.y() + rect.height() - 1;
+    for (int x = rect.x(); x < rect.x() + rect.width(); x++) {
+        if (lines[y1][x] == c_color_black) {
+            DrImaging::floodFill(image, x, y1, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
+        }
+        if (lines[y2][x] == c_color_black) {
+            DrImaging::floodFill(image, x, y2, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
+        }
+    }
+
+    int x1 = rect.x();
+    int x2 = rect.x() + rect.width() - 1;
+    for (int y = rect.y(); y < rect.y() + rect.height(); y++) {
+        if (lines[y][x1] == c_color_black) {
+            DrImaging::floodFill(image, x1, y, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
+        }
+        if (lines[y][x2] == c_color_black) {
+            DrImaging::floodFill(image, x2, y, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
+        }
+    }
+}
+
+
+//####################################################################################
 //##    Find Objects
 //##        Seperates parts of an image divided by alpha space into seperate images, returns image count.
 //##        The images are stored into the reference array passed in 'images', the images are black and white.
 //##            Black where around the ouside of of the object, and the object itself is white.
 //##        Rects of images are returned in 'rects'
 //####################################################################################
-int findObjectsInImage(const QPixmap &pixmap, QVector<QImage> &images, QVector<QRect> &rects, double alpha_tolerance) {
-    QImage black_white =    blackAndWhiteFromAlpha(pixmap.toImage(), alpha_tolerance, true);
+int findObjectsInImage(const QPixmap &pixmap, QVector<QImage> &images, QVector<QRect> &rects, double alpha_tolerance, bool convert) {
+    QImage black_white;
+    if (convert) black_white = blackAndWhiteFromAlpha(pixmap.toImage(), alpha_tolerance, true);
+    else         black_white = pixmap.toImage();
     QVector<QRgb*>  lines = getScanLines(black_white);
     int object_count = 0;
 
-    // Loop through every pixel in image, if we find a spot that has an object, flood fill that
-    // spot and add the resulting image shape to the array of object images
-    QColor white = QColor::fromRgba(c_color_white);
+    // Loop through every pixel in image, if we find a spot that has an object,
+    // flood fill that spot and add the resulting image shape to the array of object images
     for (int x = 0; x < black_white.width(); ++x) {
         for (int y = 0; y < black_white.height(); ++y) {
             if (lines[y][x] == c_color_black) {
                 QRect  rect;
                 int    flood_pixel_count;
-                QImage flood_fill = floodFill(black_white, x, y, white, 0.001, Flood_Fill_Type::Compare_4, flood_pixel_count, rect);
+                QImage flood_fill = floodFill(black_white, x, y, c_color_white, 0.001, Flood_Fill_Type::Compare_4, flood_pixel_count, rect);
                 if (flood_pixel_count > 0) {
                     rects.push_back( rect );
                     images.push_back( flood_fill );

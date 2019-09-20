@@ -138,6 +138,7 @@ SOURCES += \
     forms/form_popup_grid_snap.cpp \
     forms/form_settings.cpp \
     helper.cpp \
+    imaging/imaging_draw.cpp \
     imaging/imaging_draw_effects.cpp \
     imaging/imaging_filters.cpp \
     imaging/imaging_misc.cpp \

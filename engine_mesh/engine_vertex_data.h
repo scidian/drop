@@ -80,7 +80,8 @@ public:
 
     // Extrusion Functions
     void    extrudeFacePolygon(const QVector<HullPoint> &outline_points, int width, int height, int steps);
-    void    triangulateFace(const QVector<HullPoint> &outline_points, QImage &black_and_white, Trianglulation type);
+    void    triangulateFace(const QVector<HullPoint> &outline_points, const QVector<QVector<HullPoint>> &hole_list,
+                            const QImage &black_and_white, Trianglulation type);
 
     // Building Functions
     void    add(const QVector3D &vertex, const QVector3D &normal, const QVector2D &text_coord, Triangle_Point point_number);

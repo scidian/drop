@@ -181,9 +181,10 @@ void ShowErrorMessage(QString function_name, QString error_message) {
 //####################################################################################
 //##    Used to show a modal messagebox
 //####################################################################################
-void ShowMessageBox(QString new_message, QPixmap pixmap) {
+void ShowMessageBox(QString new_message, QPixmap pixmap, bool modal) {
     QMessageBox *msg_box = new QMessageBox(nullptr);
 
+    msg_box->setModal(modal);
     msg_box->setText(new_message);
     msg_box->setIconPixmap(pixmap);
     msg_box->exec();

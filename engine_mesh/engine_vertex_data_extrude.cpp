@@ -6,11 +6,13 @@
 //
 //
 #include <QtMath>
+#include <QDateTime>
 #include <QDebug>
 #include <QMatrix4x4>
 #include <QPainter>
 #include <QPixmap>
 #include <QRandomGenerator>
+#include <QStandardPaths>
 #include <algorithm>
 
 #include "3rd_party/delaunator.h"
@@ -27,19 +29,16 @@
 void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
     m_data.resize(100 * c_vertex_length);
 
-    // Break pixmap into seperate images for each object in image
+    // ***** Break pixmap into seperate images for each object in image
     QVector<QImage> images;
     QVector<QRect>  rects;
     DrImaging::findObjectsInImage(pixmap, images, rects, 0.9);
     ///images.push_back( DrImaging::blackAndWhiteFromAlpha(pixmap.toImage(), 0.9, false));
 
-    for (auto image : images) {
+    // ***** Go through each image (object) and add triangles for it
+    for (int image_number = 0; image_number < images.count(); image_number++) {
+        QImage &image = images[image_number];
         if (image.width() < 1 || image.height() < 1) continue;
-
-        // ***** Get a list of possible outline points, find concave hull
-        ///QVector<HullPoint> image_points =   DrImaging::outlinePointList(image);
-        ///if (image_points.count() < 1) continue;
-        ///QVector<HullPoint> concave_hull =   HullFinder::FindConcaveHull(image_points, 3.5);
 
         // ***** Trace edge of image
         QVector<HullPoint>  points =  DrImaging::traceImageOutline(image);
@@ -49,26 +48,58 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
             case Winding_Orientation::CounterClockwise: break;
         }
 
-        // ***** Smooth, then Simplify point list, a value of 1.0 looks nice for #KEYWORD: "low poly"
+        // ***** Smooth, then Simplify point list
+        int split = int((((image.width() + image.height()) / 2) * 0.2) / 5);    // Splits longest line of outline into 5 triangles
         points =  smoothPoints(  points, 5, 5.0, 0.5);
+        points =  simplifyPoints(points, 0.030,     5, true);                   // First run with averaging points to reduce triangles among similar slopes
+        points =  simplifyPoints(points, 0.001, split, false);                  // Run again with smaller tolerance to reduce triangles along straight lines
 
-        int split = static_cast<int>((((image.width() + image.height()) / 2) * 0.2) / 5);
-        points =  simplifyPoints(points, 0.030,     5, true);         // First run with averaging points to reduce triangles among similar slopes
-        points =  simplifyPoints(points, 0.001, split, false);        // Then run again with smaller tolerance to reduce triangles along straight lines
+
+        // ***** Copy image and finds holes as seperate outlines
+        QImage holes(image.width(), image.height(), QImage::Format_ARGB32);     // Create new copy
+        holes.fill(c_color_white);
+        DrImaging::copyImage(holes, image, rects[image_number]);                // Copy object rect
+        DrImaging::fillBorder(holes, c_color_white, rects[image_number]);       // Ensures only holes are left as black spots
+
+        // Breaks holes into seperate images for each hole
+        QVector<QImage> hole_images;
+        QVector<QRect>  hole_rects;
+        DrImaging::findObjectsInImage(QPixmap::fromImage(holes), hole_images, hole_rects, 0.9, false);
+
+        // Go through each image (hole) create list for it
+        QVector<QVector<HullPoint>> hole_list;
+        for (int hole_number = 0; hole_number < hole_images.count(); hole_number++) {
+            QImage &hole = hole_images[hole_number];
+            if (hole.width() < 1 || hole.height() < 1) continue;
+            QVector<HullPoint> one_hole = DrImaging::traceImageOutline(hole);
+            Winding_Orientation hole_winding = HullFinder::FindWindingOrientation(one_hole);
+            switch (hole_winding) {
+                case Winding_Orientation::Unknown:          continue;
+                case Winding_Orientation::Clockwise:        break;
+                case Winding_Orientation::CounterClockwise: std::reverse(one_hole.begin(), one_hole.end()); break;
+            }
+            one_hole = smoothPoints(  one_hole, 5, 5.0, 0.5);
+            one_hole = simplifyPoints(one_hole, 0.030,     5, true);
+            one_hole = simplifyPoints(one_hole, 0.001, split, false);
+            hole_list.push_back(one_hole);
+        }
 
 
         // ***** Triangulate concave hull
-        ///triangulateFace(points, image, Trianglulation::Ear_Clipping);
-        ///triangulateFace(points, image, Trianglulation::Optimal_Polygon);
-        ///triangulateFace(points, image, Trianglulation::Monotone);
-        triangulateFace(points, image, Trianglulation::Delaunay);
+        ///triangulateFace(points, hole_list, image, Trianglulation::Ear_Clipping);
+        ///triangulateFace(points, hole_list, image, Trianglulation::Optimal_Polygon);
+        ///triangulateFace(points, hole_list, image, Trianglulation::Monotone);
+        triangulateFace(points, hole_list, image, Trianglulation::Delaunay);
 
         // ***** Add extruded triangles
         extrudeFacePolygon(points, image.width(), image.height(), 2);
+        for (auto hole : hole_list) {
+            extrudeFacePolygon(hole, image.width(), image.height(), 2);
+        }
     }
 
     // ***** Smooth Vertices
-    smoothVertices(1.0f);
+    ///smoothVertices(1.0f);
 }
 
 
@@ -215,7 +246,8 @@ QVector<HullPoint> DrEngineVertexData::smoothPoints(const QVector<HullPoint> &ou
 //####################################################################################
 //##    Triangulate Face and add Triangles to Vertex Data
 //####################################################################################
-void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &outline_points, QImage &black_and_white, Trianglulation type) {
+void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &outline_points, const QVector<QVector<HullPoint>> &hole_list,
+                                         const QImage &black_and_white, Trianglulation type) {
     int width =  black_and_white.width();
     int height = black_and_white.height();
     double w2d = width  / 2.0;
@@ -270,12 +302,20 @@ void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &outline_point
     // ***** After splitting concave hull into convex polygons, add Delaunay Triangulation to vertex data
     } else {
 
-        // Copy HullPoints into vector
+        // Copy Outline Points into coordinate list
         std::vector<double> coords;
         for (auto poly : result) {
             for (int i = 0; i < poly.GetNumPoints(); i++) {
                 coords.push_back(poly[i].x);
                 coords.push_back(poly[i].y);
+            }
+        }
+
+        // Copy Hole Points coordinate list
+        for (auto hole : hole_list) {
+            for (auto point : hole) {
+                coords.push_back(point.x);
+                coords.push_back(point.y);
             }
         }
 
@@ -360,12 +400,9 @@ void DrEngineVertexData::extrudeFacePolygon(const QVector<HullPoint> &outline_po
     double h2d = height / 2.0;
 
     for (int i = 0; i < outline_points.count(); i++) {
-        int point1, point2;
-        if (i == outline_points.count() - 1) {
-            point1 = 0;         point2 = i;
-        } else {
-            point1 = i + 1;     point2 = i;
-        }
+        int point1 = i + 1;
+        int point2 = i;
+        if (point1 >= outline_points.count()) point1 = 0;
 
         GLfloat  x1 = static_cast<GLfloat>(         outline_points[point1].x);
         GLfloat  y1 = static_cast<GLfloat>(height - outline_points[point1].y);
