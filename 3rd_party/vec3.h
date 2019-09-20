@@ -122,7 +122,7 @@ struct Vec3 {
 
     //############################ Overload Operators - Comparisons
     bool operator!= (const Vec3 &v_) const {
-        return (qFuzzyCompare(x, v_.x) == false) || (qFuzzyCompare(y, v_.y) == false) || (qFuzzyCompare(z, v_.z) == false);
+        return (Dr::IsCloseTo(x, v_.x, 0.001f) == false) || (Dr::IsCloseTo(y, v_.y, 0.001f) == false) || (Dr::IsCloseTo(z, v_.z, 0.001f) == false);
     }
 
     bool operator==(const Vec3& d_) const {
@@ -131,9 +131,9 @@ struct Vec3 {
 
     // No mathematical meaning, but useful to use Vec3 in std::map
     bool operator< (const Vec3& v_) const {
-        if (qFuzzyCompare(x, v_.x) == false)
+        if (Dr::IsCloseTo(x, v_.x, 0.001f) == false)
             return x < v_.x;
-        else if (qFuzzyCompare(y, v_.y) == false)
+        else if (Dr::IsCloseTo(y, v_.y, 0.001f) == false)
             return y < v_.y;
         else
             return z < v_.z;

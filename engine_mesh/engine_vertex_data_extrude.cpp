@@ -42,16 +42,15 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
         ///QVector<HullPoint> concave_hull =   HullFinder::FindConcaveHull(image_points, 3.5);
 
         // ***** Trace edge of image
-        QVector<HullPoint> points =     DrImaging::traceImageOutline(image);
-        Winding_Orientation winding =   HullFinder::FindWindingOrientation(points);
-        switch (winding) {
+        QVector<HullPoint>  points =  DrImaging::traceImageOutline(image);
+        switch (HullFinder::FindWindingOrientation(points)) {
             case Winding_Orientation::Unknown:          continue;
-            case Winding_Orientation::Clockwise:        std::reverse(points.begin(), points.end()); break;
+            case Winding_Orientation::Clockwise:        std::reverse(points.begin(), points.end());     break;
             case Winding_Orientation::CounterClockwise: break;
         }
 
         // ***** Smooth, then Simplify point list, a value of 1.0 looks nice for #KEYWORD: "low poly"
-        points =  smoothPoints(  points, 4, 4.0, 0.4);
+        points =  smoothPoints(  points, 5, 5.0, 0.5);
 
         int split = static_cast<int>((((image.width() + image.height()) / 2) * 0.2) / 5);
         points =  simplifyPoints(points, 0.030,     5, true);         // First run with averaging points to reduce triangles among similar slopes
@@ -68,10 +67,8 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
         extrudeFacePolygon(points, image.width(), image.height(), 2);
     }
 
-
-    smoothVertices(0.1f);
-
-
+    // ***** Smooth Vertices
+    smoothVertices(1.0f);
 }
 
 
@@ -82,34 +79,34 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap) {
 //##                    0.01 looks nice for most objects, 1.0 looks good for #KEYWORD: "low poly", "low-poly"
 //##        test_count: how many points to test before we just go ahead and add a point
 //####################################################################################
-QVector<HullPoint> DrEngineVertexData::simplifyPoints(const QVector<HullPoint> &from_points, double tolerance, int test_count, bool average) {
+QVector<HullPoint> DrEngineVertexData::simplifyPoints(const QVector<HullPoint> &outline_points, double tolerance, int test_count, bool average) {
     QVector<HullPoint> simple_points;
-    if (from_points.count()  > 0) simple_points.push_back(from_points[0]);          // Add first point
-    if (from_points.count() == 2) simple_points.push_back(from_points[1]);          // Add second / last point if only two points
-    if (from_points.count()  > 2) {
+    if (outline_points.count()  > 0) simple_points.push_back(outline_points[0]);            // Add first point
+    if (outline_points.count() == 2) simple_points.push_back(outline_points[1]);            // Add second / last point if only two points
+    if (outline_points.count()  > 2) {
         int at_point =      0;
         int next_point =    1;
         int check_point  =  2;
 
         // Loop through points finding lines and eliminating duplicate points among them
-        while (at_point < from_points.count() - 1) {
+        while (at_point < outline_points.count() - 1) {
             bool found_next_end_point =false;
             int  count = 0;
             do {
-                double x1 = from_points[at_point].x;
-                double y1 = from_points[at_point].y;
+                double x1 = outline_points[at_point].x;
+                double y1 = outline_points[at_point].y;
 
-                double x2 = from_points[next_point].x;
-                double y2 = from_points[next_point].y;
+                double x2 = outline_points[next_point].x;
+                double y2 = outline_points[next_point].y;
                 if (average && (next_point - at_point > 1)) {
                     int diff = next_point - at_point;
                     int index = at_point + (diff / 2);
-                    x2 = from_points[index].x;
-                    y2 = from_points[index].y;
+                    x2 = outline_points[index].x;
+                    y2 = outline_points[index].y;
                 }
 
-                double x3 = from_points[check_point].x;
-                double y3 = from_points[check_point].y;
+                double x3 = outline_points[check_point].x;
+                double y3 = outline_points[check_point].y;
                 ++count;
 
                 // Check if slope is no longer the same, which means the line has changed direction
@@ -127,17 +124,17 @@ QVector<HullPoint> DrEngineVertexData::simplifyPoints(const QVector<HullPoint> &
                 if (!slope_is_the_same || count > test_count) {
                     found_next_end_point = true;
                     at_point = next_point;
-                    simple_points.push_back(from_points[at_point]);
+                    simple_points.push_back(outline_points[at_point]);
                 }
 
                 ++next_point;
                 ++check_point;
 
                 // Check point is at the end
-                if (check_point == from_points.count()) {
+                if (check_point == outline_points.count()) {
                     found_next_end_point = true;
                     at_point = check_point - 1;
-                    simple_points.push_back(from_points[at_point]);
+                    simple_points.push_back(outline_points[at_point]);
                 }
 
             } while (found_next_end_point == false);
@@ -163,19 +160,19 @@ HullPoint pointAt(const QVector<HullPoint> &point_list, int index) {
 const double c_smooth_min_size = 50.0;
 
 // Smooths points, neigbors is in each direction (so 1 is index +/- 1 more point in each direction
-QVector<HullPoint> DrEngineVertexData::smoothPoints(const QVector<HullPoint> &from_points, int neighbors, double neighbor_distance, double weight) {
+QVector<HullPoint> DrEngineVertexData::smoothPoints(const QVector<HullPoint> &outline_points, int neighbors, double neighbor_distance, double weight) {
     QVector<HullPoint> smooth_points;
 
     // Check size of polygon, accomodate smoothing for small images
-    double x_min = from_points[0].x;
-    double x_max = from_points[0].x;
-    double y_min = from_points[0].y;
-    double y_max = from_points[0].y;
-    for (int i = 0; i < from_points.count(); i++) {
-        if (from_points[i].x < x_min) x_min = from_points[i].x;
-        if (from_points[i].x > x_max) x_max = from_points[i].x;
-        if (from_points[i].y < y_min) y_min = from_points[i].y;
-        if (from_points[i].y > y_max) y_max = from_points[i].y;
+    double x_min = outline_points[0].x;
+    double x_max = outline_points[0].x;
+    double y_min = outline_points[0].y;
+    double y_max = outline_points[0].y;
+    for (int i = 0; i < outline_points.count(); i++) {
+        if (outline_points[i].x < x_min) x_min = outline_points[i].x;
+        if (outline_points[i].x > x_max) x_max = outline_points[i].x;
+        if (outline_points[i].y < y_min) y_min = outline_points[i].y;
+        if (outline_points[i].y > y_max) y_max = outline_points[i].y;
     }
     double x_size = x_max - x_min;
     double y_size = y_max - y_min;
@@ -186,18 +183,18 @@ QVector<HullPoint> DrEngineVertexData::smoothPoints(const QVector<HullPoint> &fr
     }
 
     // If not enough neighbors, just return starting polygon
-    if (from_points.count() <= neighbors) {
-        for (int i = 0; i < from_points.count(); ++i) smooth_points.push_back(from_points[i]);
+    if (outline_points.count() <= neighbors) {
+        for (int i = 0; i < outline_points.count(); ++i) smooth_points.push_back(outline_points[i]);
         return smooth_points;
     }
 
     // Go through and smooth the points (simple average)
-    for (int i = 0; i < from_points.count(); i++) {
-        HullPoint this_point = from_points[i];
+    for (int i = 0; i < outline_points.count(); i++) {
+        HullPoint this_point = outline_points[i];
         double total_used = 0;
         double x = 0, y = 0;
         for (int j = i - neighbors; j <= i + neighbors; j++) {
-            HullPoint check_point = pointAt(from_points, j);
+            HullPoint check_point = pointAt(outline_points, j);
             if (j == i) {
                 x += check_point.x;
                 y += check_point.y;
@@ -218,19 +215,19 @@ QVector<HullPoint> DrEngineVertexData::smoothPoints(const QVector<HullPoint> &fr
 //####################################################################################
 //##    Triangulate Face and add Triangles to Vertex Data
 //####################################################################################
-void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &from_points, QImage &black_and_white, Trianglulation type) {
+void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &outline_points, QImage &black_and_white, Trianglulation type) {
     int width =  black_and_white.width();
     int height = black_and_white.height();
     double w2d = width  / 2.0;
     double h2d = height / 2.0;
 
     // ***** Copy HullPoints into TPPLPoly
-    if (from_points.count() < 3) return;
+    if (outline_points.count() < 3) return;
     std::list<TPPLPoly> testpolys, result;
-    TPPLPoly poly; poly.Init(from_points.count());
-    for (int i = 0; i < from_points.count(); i++) {
-        poly[i].x = from_points[i].x;
-        poly[i].y = from_points[i].y;
+    TPPLPoly poly; poly.Init(outline_points.count());
+    for (int i = 0; i < outline_points.count(); i++) {
+        poly[i].x = outline_points[i].x;
+        poly[i].y = outline_points[i].y;
     }
     testpolys.push_back( poly );
 
@@ -358,27 +355,27 @@ void DrEngineVertexData::triangulateFace(const QVector<HullPoint> &from_points, 
 //####################################################################################
 //##    Add Extrusion Triangles to Vertex Data
 //####################################################################################
-void DrEngineVertexData::extrudeFacePolygon(const QVector<HullPoint> &from_points, int width, int height, int steps) {
+void DrEngineVertexData::extrudeFacePolygon(const QVector<HullPoint> &outline_points, int width, int height, int steps) {
     double w2d = width  / 2.0;
     double h2d = height / 2.0;
 
-    for (int i = 0; i < from_points.count(); i++) {
+    for (int i = 0; i < outline_points.count(); i++) {
         int point1, point2;
-        if (i == from_points.count() - 1) {
+        if (i == outline_points.count() - 1) {
             point1 = 0;         point2 = i;
         } else {
             point1 = i + 1;     point2 = i;
         }
 
-        GLfloat  x1 = static_cast<GLfloat>(         from_points[point1].x);
-        GLfloat  y1 = static_cast<GLfloat>(height - from_points[point1].y);
-        GLfloat tx1 = static_cast<GLfloat>(         from_points[point1].x / width);
-        GLfloat ty1 = static_cast<GLfloat>(1.0 -    from_points[point1].y / height);
+        GLfloat  x1 = static_cast<GLfloat>(         outline_points[point1].x);
+        GLfloat  y1 = static_cast<GLfloat>(height - outline_points[point1].y);
+        GLfloat tx1 = static_cast<GLfloat>(         outline_points[point1].x / width);
+        GLfloat ty1 = static_cast<GLfloat>(1.0 -    outline_points[point1].y / height);
 
-        GLfloat  x2 = static_cast<GLfloat>(         from_points[point2].x);
-        GLfloat  y2 = static_cast<GLfloat>(height - from_points[point2].y);
-        GLfloat tx2 = static_cast<GLfloat>(         from_points[point2].x / width);
-        GLfloat ty2 = static_cast<GLfloat>(1.0 -    from_points[point2].y / height);
+        GLfloat  x2 = static_cast<GLfloat>(         outline_points[point2].x);
+        GLfloat  y2 = static_cast<GLfloat>(height - outline_points[point2].y);
+        GLfloat tx2 = static_cast<GLfloat>(         outline_points[point2].x / width);
+        GLfloat ty2 = static_cast<GLfloat>(1.0 -    outline_points[point2].y / height);
 
         x1 -= static_cast<GLfloat>(w2d);
         x2 -= static_cast<GLfloat>(w2d);

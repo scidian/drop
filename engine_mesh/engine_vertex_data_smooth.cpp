@@ -43,10 +43,11 @@ Vertex DrEngineVertexData::getVertex(int vertex_number) {
     v.barycentric.x =       *p++;
     v.barycentric.y =       *p++;
     v.barycentric.z =       *p++;
-//    v.position.x = roundToDecimalPlace(v.position.x, 2);
-//    v.position.y = roundToDecimalPlace(v.position.y, 2);
-//    v.position.z = roundToDecimalPlace(v.position.z, 2);
-    v.position.z *= 100.f;
+
+    v.position.z *= 10.f;
+    v.position.x = roundToDecimalPlace(v.position.x, 3);
+    v.position.y = roundToDecimalPlace(v.position.y, 3);
+    v.position.z = roundToDecimalPlace(v.position.z, 3);
     return v;
 }
 
@@ -57,7 +58,7 @@ void DrEngineVertexData::setVertex(int vertex_number, Vertex v) {
     GLfloat *p = m_data.data() + (vertex_number * c_vertex_length);
     *p++ = v.position.x;
     *p++ = v.position.y;
-    *p++ = v.position.z / 100.f;
+    *p++ = v.position.z / 10.f;
     *p++ = v.normal.x;
     *p++ = v.normal.y;
     *p++ = v.normal.z;
@@ -66,6 +67,18 @@ void DrEngineVertexData::setVertex(int vertex_number, Vertex v) {
     *p++ = v.barycentric.x;
     *p++ = v.barycentric.y;
     *p++ = v.barycentric.z;
+}
+
+
+//####################################################################################
+//##    Adds point_to_add to neighbor_list if point is not already included
+//####################################################################################
+void addNeighbor(std::vector<Vertex> &neighbor_list, Vertex point_to_add) {
+    for (auto &point : neighbor_list) {
+        if (point.position == point_to_add.position)
+            return;
+    }
+    neighbor_list.push_back(point_to_add);
 }
 
 //####################################################################################
@@ -78,21 +91,22 @@ Mesh DrEngineVertexData::getMesh(NeighborMap &neighbors) {
         Vertex point1 = getVertex(i+1);
         Vertex point2 = getVertex(i+2);
 
-        std::string pos0 = Dr::RemoveTrailingDecimals(static_cast<double>(point0.position.x), 1).toStdString() + ":" +
-                           Dr::RemoveTrailingDecimals(static_cast<double>(point0.position.y), 1).toStdString() + ":" +
-                           Dr::RemoveTrailingDecimals(static_cast<double>(point0.position.z), 1).toStdString();
-        std::string pos1 = Dr::RemoveTrailingDecimals(static_cast<double>(point1.position.x), 1).toStdString() + ":" +
-                           Dr::RemoveTrailingDecimals(static_cast<double>(point1.position.y), 1).toStdString() + ":" +
-                           Dr::RemoveTrailingDecimals(static_cast<double>(point1.position.z), 1).toStdString();
-        std::string pos2 = Dr::RemoveTrailingDecimals(static_cast<double>(point2.position.x), 1).toStdString() + ":" +
-                           Dr::RemoveTrailingDecimals(static_cast<double>(point2.position.y), 1).toStdString() + ":" +
-                           Dr::RemoveTrailingDecimals(static_cast<double>(point2.position.z), 1).toStdString();
-        neighbors[pos0].push_back(point1.position);
-        neighbors[pos0].push_back(point2.position);
-        neighbors[pos1].push_back(point0.position);
-        neighbors[pos1].push_back(point2.position);
-        neighbors[pos2].push_back(point0.position);
-        neighbors[pos2].push_back(point1.position);
+        std::string pos0 = Dr::RemoveTrailingDecimals(static_cast<double>(point0.position.x), 3).toStdString() + ":" +
+                           Dr::RemoveTrailingDecimals(static_cast<double>(point0.position.y), 3).toStdString() + ":" +
+                           Dr::RemoveTrailingDecimals(static_cast<double>(point0.position.z), 3).toStdString();
+        std::string pos1 = Dr::RemoveTrailingDecimals(static_cast<double>(point1.position.x), 3).toStdString() + ":" +
+                           Dr::RemoveTrailingDecimals(static_cast<double>(point1.position.y), 3).toStdString() + ":" +
+                           Dr::RemoveTrailingDecimals(static_cast<double>(point1.position.z), 3).toStdString();
+        std::string pos2 = Dr::RemoveTrailingDecimals(static_cast<double>(point2.position.x), 3).toStdString() + ":" +
+                           Dr::RemoveTrailingDecimals(static_cast<double>(point2.position.y), 3).toStdString() + ":" +
+                           Dr::RemoveTrailingDecimals(static_cast<double>(point2.position.z), 3).toStdString();
+
+        addNeighbor(neighbors[pos0], point1);
+        addNeighbor(neighbors[pos0], point2);
+        addNeighbor(neighbors[pos1], point0);
+        addNeighbor(neighbors[pos1], point2);
+        addNeighbor(neighbors[pos2], point0);
+        addNeighbor(neighbors[pos2], point1);
 
         Triangle tri;
         tri.points.push_back( point0 );
@@ -105,49 +119,122 @@ Mesh DrEngineVertexData::getMesh(NeighborMap &neighbors) {
 
 
 //####################################################################################
+//##    Cotangent weights over a triangular mesh
+//##        Source: http://rodolphe-vaillant.fr/?e=69
+//####################################################################################
+float LaplacianPositiveCotanWeight(Vertex vertex_i, Vertex edge_j, Vertex edge_j_previous, Vertex edge_j_next ) {
+    Vec3 pi      = vertex_i.position;
+    Vec3 pj      = edge_j.position;
+    Vec3 pj_prev = edge_j_previous.position;
+    Vec3 pj_next = edge_j_next.position;
+
+    float e1 = (pi      - pj     ).norm();
+    float e2 = (pi      - pj_prev).norm();
+    float e3 = (pj_prev - pj     ).norm();
+    // NOTE: cos(alpha) = (a^2.b^2  - c^2) / (2.a.b)
+    //       with a, b, c the lengths of of the sides of the triangle and (a, b) forming the angle alpha
+    float cos_alpha = fabs((e3*e3 + e2*e2 - e1*e1) / (2.0f*e3*e2));
+
+    float e4 = (pi      - pj_next).norm();
+    float e5 = (pj_next - pj     ).norm();
+    float cos_beta = fabs((e4*e4 + e5*e5 - e1*e1) / (2.0f*e4*e5));
+
+    // NOTE: cot(x) = cos(x)/sin(x)
+    //       and recall cos(x)^2 + sin(x)^2 = 1
+    //       then sin(x) = sqrt(1-cos(x))
+    float cotan1 = cos_alpha / sqrt(1.0f - cos_alpha * cos_alpha);
+    float cotan2 = cos_beta  / sqrt(1.0f - cos_beta  * cos_beta );
+
+    // If the mesh is not a water-tight closed volume we must check for edges lying on the sides of wholes
+//    if (mesh.is_vert_on_side(vertex_i) && mesh.is_vert_on_side(vertex_j)) {
+//        if (vertex_j_next == vertex_j_prev) {
+//            cotan2 = 0.0f;
+//        } else {
+//            if (mesh.is_vert_on_side(vertex_i) && mesh.is_vert_on_side(vertex_j_next))
+//                cotan2 = 0.0;
+//            else
+//                cotan1 = 0.0f;
+//        }
+//    }
+
+    // wij = (cot(alpha) + cot(beta))
+    float wij = (cotan1 + cotan2) / 2.0f;
+    if (isnan(wij)) wij = 0.0f;
+
+    // Compute the cotangent value close to 0.0f, as cotan approaches infinity close to zero we clamp higher values
+    const float eps = 1e-6f;
+    const float cotan_max = cos( eps ) / sin( eps );
+    if (wij >= cotan_max) wij = cotan_max;
+
+    return wij;
+}
+
+
+
+//####################################################################################
 //##    Smooths Vertices based on 'weight' of neighbors, recalculates normals
 //####################################################################################
 void DrEngineVertexData::smoothVertices(float weight) {
-    // Get Data Array into Mesh, find neighbors
+    // ***** Get Data Array into Mesh, find neighbors
     NeighborMap neighbors;
     Mesh mesh = getMesh(neighbors);
 
-    // Smooth points
+    // ***** Smooth points
     for (auto &triangle : mesh.m_triangles) {
         for (auto &point : triangle.points) {
-            float total_used = 1.f;
-            float x = point.position.x;
-            float y = point.position.y;
-            float z = point.position.z;
+            Vec3  position(0.f);
+            Vec3  normals(0.f);
+            Vec3  texture(0.f);
+            float total_weight = 0.f;
+            std::string pos = Dr::RemoveTrailingDecimals(static_cast<double>(point.position.x), 3).toStdString() + ":" +
+                              Dr::RemoveTrailingDecimals(static_cast<double>(point.position.y), 3).toStdString() + ":" +
+                              Dr::RemoveTrailingDecimals(static_cast<double>(point.position.z), 3).toStdString();
 
-            std::string pos = Dr::RemoveTrailingDecimals(static_cast<double>(point.position.x), 1).toStdString() + ":" +
-                              Dr::RemoveTrailingDecimals(static_cast<double>(point.position.y), 1).toStdString() + ":" +
-                              Dr::RemoveTrailingDecimals(static_cast<double>(point.position.z), 1).toStdString();
-            for (auto neighbor : neighbors[pos]) {
-                x += (neighbor.x * weight);
-                y += (neighbor.y * weight);
-                z += (neighbor.z * weight);
-                total_used += weight;
+            unsigned long prev = neighbors[pos].size() - 1;
+            unsigned long next = 1;
+            for (unsigned long i = 0; i < neighbors[pos].size(); i++) {
+                Vertex neighbor = neighbors[pos][i];
+                Vertex neighbor_prev = neighbors[pos][prev];
+                Vertex neighbor_next = neighbors[pos][next];
+
+                float distance = QVector3D(point.position.x, point.position.y, point.position.z).distanceToPoint(
+                                           QVector3D(neighbor.position.x, neighbor.position.y, neighbor.position.z));
+                // #NOTE: If we set neighbor_weight = 1.0f, the procedure operates a uniform smoothing,
+                //        the initial distribution of the triangles won't be preserved
+                float neighbor_weight = weight;
+                ///neighbor_weight *= Dr::Clamp(abs(1.0f / distance), 0.f, 1.f);
+                ///neighbor_weight *= LaplacianPositiveCotanWeight(point, neighbor, neighbor_next, neighbor_prev);
+
+                position += (neighbor_weight * neighbor.position);
+                normals  += (neighbor_weight * neighbor.normal);
+                texture  += (neighbor_weight * neighbor.texture_coords);
+                total_weight += neighbor_weight;
+
+                // Increment neighbors
+                prev = i;
+                next++;
+                if (next >= neighbors[pos].size()) next = 0;
             }
-            point.position.x = x / total_used;
-            point.position.y = y / total_used;
-            point.position.z = z / total_used;
+
+            // When using cotan weights smoothing may be unstable, in this case we need to set t < 1
+            // sometimes you even need to get as low as t < 0.5
+            float t = 0.9f;
+            point.position =       (position / total_weight) * t + point.position * (1.f - t);
+            point.texture_coords = (texture /  total_weight) * t + point.texture_coords * (1.f - t);
+            point.normal =         (normals /  total_weight) * t + point.normal * (1.f - t);
         }
     }
 
-    // Set Mesh Data back into Data Array
+    // ***** Set Mesh Data back into Data Array
     for (int i = 0; i < vertexCount(); i += 3) {
         Triangle tri = mesh.m_triangles[static_cast<unsigned long>(i / 3)];
 
         // Recalculate normals
-        QVector3D n = QVector3D::normal( QVector3D(tri.points[0].position.x, tri.points[0].position.y, tri.points[0].position.z),
-                                         QVector3D(tri.points[2].position.x, tri.points[2].position.y, tri.points[2].position.z),
-                                         QVector3D(tri.points[1].position.x, tri.points[1].position.y, tri.points[1].position.z));
-        for (auto &point : tri.points) {
-            point.normal.x = n.x();
-            point.normal.y = n.y();
-            point.normal.z = n.z();
-        }
+        ///Vec3 v1 = tri.points[2].position - tri.points[0].position;
+        ///Vec3 v2 = tri.points[1].position - tri.points[0].position;
+        ///Vec3 n = v1.cross( v2 );
+        ///n.normalize();
+        ///for (auto &point : tri.points) { point.normal = n; }
 
         setVertex(i,   tri.points[0]);
         setVertex(i+1, tri.points[1]);
