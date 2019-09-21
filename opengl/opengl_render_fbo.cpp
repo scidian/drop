@@ -181,6 +181,49 @@ void DrOpenGL::drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper,
 
 
 
+//####################################################################################
+//##    Renders Frame Buffer Object to screen buffer as a textured quad
+//##        Uses "Simple" shader for speed
+//####################################################################################
+void DrOpenGL::drawFrameBufferUsingSimpleShader(QOpenGLFramebufferObject *fbo) {
+
+    if (!m_simple_shader.bind()) return;
+    if (!fbo) return;
+
+    // Bind offscreen frame buffer object as a texture
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, fbo->texture());
+
+    // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
+    m_simple_shader.setUniformValue( u_simple_matrix, orthoMatrix(fbo->width(), fbo->height()) );
+
+    // Set Texture Coordinates for Shader
+    m_simple_shader.setAttributeArray(    a_simple_texture_coord, m_quad_texture_coordinates.data(), 2 );
+    m_simple_shader.enableAttributeArray( a_simple_texture_coord );
+
+    // Load vertices for this object
+    QVector<GLfloat> vertices;
+    setQuadVertices(vertices, fbo->width(), fbo->height(), QPointF(0, 0), 0.0f);
+    m_simple_shader.setAttributeArray(    a_simple_vertex, vertices.data(), 3 );
+    m_simple_shader.enableAttributeArray( a_simple_vertex );
+
+    // Set variables for shader
+    m_simple_shader.setUniformValue( u_simple_texture,    0 );                             // Use texture unit "0"
+    m_simple_shader.setUniformValue( u_simple_alpha,      1.0f );
+
+    // Draw triangles using shader program
+    glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
+
+    // Disable arrays
+    m_simple_shader.disableAttributeArray( a_simple_vertex );
+    m_simple_shader.disableAttributeArray( a_simple_texture_coord );
+
+    // Release Shader
+    m_simple_shader.release();
+}
+
+
+
 
 
 

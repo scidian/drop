@@ -86,17 +86,18 @@ void DrOpenGL::drawSpace() {
                           qFuzzyCompare(thing->getRotateSpeedX(), 0.0) && qFuzzyCompare(thing->getRotateSpeedY(), 0.0) &&
                           !thing->wireframe);
                 if (draw2D) {
-                    glEnable(GL_DEPTH_TEST);
-                    drawObject(thing, last_thing, draw2D);
-                    glDisable(GL_DEPTH_TEST);
+                    ///glEnable(GL_DEPTH_TEST);
+                    ///drawObject(thing, last_thing, draw2D);
+                    drawObjectSimple(thing, last_thing, draw2D);
+                    ///glDisable(GL_DEPTH_TEST);
 
                 } else {
-               //     cullingOn();
+                    cullingOn();
                     glEnable(GL_DEPTH_TEST);
                     glDepthFunc(GL_LEQUAL);
                     drawObject(thing, last_thing, draw2D);
                     glDisable(GL_DEPTH_TEST);
-                //    cullingOff();
+                    cullingOff();
                 }
 
                 break;

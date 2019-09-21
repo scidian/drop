@@ -63,6 +63,7 @@ double      CheckScaleNotZero(double scale_to_check);
 QString     RemoveTrailingDecimals(double value, int max_decimal_places);
 
 // Angle Functions
+template<class T> T RadiansToDegrees(const T& rad) { return (rad * 57.295779513082321); }
 double      Closest90DegreeAngle(double angle, double angle_to_find);
 bool        IsSimilarAngle(double angle1, double angle2, double tolerance = .001);
 bool        IsSquare(double check_angle);

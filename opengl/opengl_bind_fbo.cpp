@@ -25,7 +25,7 @@ void DrOpenGL::bindOffscreenBuffer(bool clear) {
         delete m_texture_fbo;
         QOpenGLFramebufferObjectFormat format;
         format.setAttachment(QOpenGLFramebufferObject::Attachment::CombinedDepthStencil);
-        format.setSamples(4);
+        //format.setSamples(4);
         ///format.setTextureTarget(GL_TEXTURE_2D);                      // This is set automatically, cannot be gl_texture_2d if multisampling is enabled
         ///format.setInternalTextureFormat(GL_RGBA32F_ARB);             // This is set automatically depending on the system
         ///format.setMipmap(true);                                      // Don't need

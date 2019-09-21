@@ -119,7 +119,7 @@ bool DrEngineObject::update(double , double , QRectF &area) {
     // ***** Get some info about the current object from the space and save it to the current DrEngineObject
     cpVect new_position = cpBodyGetPosition( body );
     updateBodyPosition( QPointF( new_position.x, new_position.y ));
-    setAngle( qRadiansToDegrees( cpBodyGetAngle( body )) );
+    setAngle( Dr::RadiansToDegrees( cpBodyGetAngle( body )) );
 
     // **** Check that any object with custom PlayerUpdateVelocity callback is awake so it can access key / button events
     bool sleeping = cpBodyIsSleeping(body);
@@ -144,7 +144,7 @@ bool DrEngineObject::update(double , double , QRectF &area) {
     // ***** Process non-static object movement
     if (body_type != Body_Type::Static) {
         // If has rotate speed (wheels, etc.), apply gas pedal
-        if (qFuzzyCompare(getRotateSpeed(), 0) == false) {
+        if (Dr::IsCloseTo(0.0, getRotateSpeed(), 0.001) == false) {
             switch (g_pedal) {
                 case Pedal::None:               break;
                 case Pedal::Clockwise:          cpBodySetAngularVelocity( body, -getRotateSpeed() );    break;

@@ -93,8 +93,8 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     }
 
     // Enable shader program
-    if (last_thing != DrThingType::Object)
-        if (!m_default_shader.bind()) return;
+    ///if (last_thing != DrThingType::Object)
+    if (!m_default_shader.bind()) return;
 
 
     // ***** Blend function
@@ -203,11 +203,23 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
 
     // ***** Draw triangles using shader program
     if (draw2D) {
-        setDefaultAttributeBuffer(m_quad_vbo);
-        int quad_vertices =  m_quad_vbo->size() / (c_vertex_length * c_float_size);
-        glDrawArrays(GL_TRIANGLES, 0, quad_vertices );
-        releaseDefaultAttributeBuffer();
-        m_quad_vbo->release();
+        // Simple Quad Render
+        m_default_shader.enableAttributeArray( a_default_vertex );
+        m_default_shader.enableAttributeArray( a_default_texture_coord );
+        m_default_shader.enableAttributeArray( a_default_barycentric );
+        m_default_shader.setAttributeArray(    a_default_vertex,        m_quad_vertices.data(),             3 );
+        m_default_shader.setAttributeArray(    a_default_texture_coord, m_quad_texture_coordinates.data(),  2 );
+        m_default_shader.setAttributeArray(    a_default_barycentric,   m_quad_barycentric.data(),          3 );
+        glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
+        m_default_shader.disableAttributeArray( a_default_vertex );
+        m_default_shader.disableAttributeArray( a_default_texture_coord );
+        m_default_shader.disableAttributeArray( a_default_barycentric );
+        // VBO Render
+        ///setDefaultAttributeBuffer(m_quad_vbo);
+        ///int quad_vertices =  m_quad_vbo->size() / (c_vertex_length * c_float_size);
+        ///glDrawArrays(GL_TRIANGLES, 0, quad_vertices );
+        ///releaseDefaultAttributeBuffer();
+        ///m_quad_vbo->release();
         addTriangles( 2 );
 
     } else if (object->get3DType() == Convert_3D_Type::Cube) {
@@ -226,7 +238,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         addTriangles( m_texture_data[object->getTextureNumber()]->triangleCount() );
     }
 
-    ///m_default_shader.release();
+    m_default_shader.release();
     last_thing = DrThingType::Object;
 }
 
@@ -262,6 +274,94 @@ void DrOpenGL::releaseDefaultAttributeBuffer() {
     m_default_shader.disableAttributeArray( PROGRAM_TEXCOORD_ATTRIBUTE );
     m_default_shader.disableAttributeArray( PROGRAM_BARYCENTRIC_ATTRIBUTE );
 }
+
+
+//####################################################################################
+//##    Draws a DrEngineObject effect type with simple shader
+//####################################################################################
+void DrOpenGL::drawObjectSimple(DrEngineThing *thing, DrThingType &last_thing, bool draw2D) {
+
+    // ***** Initial type checks
+    if (thing->getThingType() != DrThingType::Object) return;
+    DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
+    if (!object) return;
+
+    // Don't draw Segments (lines)
+    if (object->shapes.count() > 0) {
+        if (object->shape_type[object->shapes[0]] == Shape_Type::Segment) return;
+    }
+
+    // Enable shader program
+    ///if (last_thing != DrThingType::Object)
+    if (!m_simple_shader.bind()) return;
+
+    // ***** Blend function
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);                    // Premultiplied alpha blend
+
+    // ***** Set Matrix for Shader, calculates current matrix, adds in object location
+    float x =   static_cast<float>(thing->getPosition().x());
+    float y =   static_cast<float>(thing->getPosition().y());
+    float z =   static_cast<float>(thing->z_order + m_add_z);
+    double now = QTime::currentTime().msecsSinceStartOfDay() / 10.0;
+
+    // Translate
+    QMatrix4x4 model;
+    model.translate(x, y, z);
+
+    // Rotate
+    if (!object->getBillboard()) {
+        if (qFuzzyCompare(object->getAngleX(), 0.0) == false || qFuzzyCompare(object->getRotateSpeedX(), 0.0) == false)
+            model.rotate(static_cast<float>(object->getAngleX() + (now * object->getRotateSpeedX())), 1.f, 0.f, 0.f);
+        if (qFuzzyCompare(object->getAngleY(), 0.0) == false || qFuzzyCompare(object->getRotateSpeedY(), 0.0) == false)
+            model.rotate(static_cast<float>(object->getAngleY() + (now * object->getRotateSpeedY())), 0.f, 1.f, 0.f);
+        model.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
+
+    // Rotate Billboards
+    } else {
+        model = billboardSphericalBegin( QVector3D(m_eye.x(), m_eye.y(), m_eye.z()),
+                                         QVector3D(x * m_scale, y * m_scale, z), model, false);
+    }
+
+    // Scale
+    if (draw2D || object->get3DType() == Convert_3D_Type::Cube)
+        model.scale(static_cast<float>(object->getSize().x()), static_cast<float>(object->getSize().y()), 1.0f);
+    model.scale( object->getScaleX(), object->getScaleY(), static_cast<float>(object->getDepth()) );
+
+    m_simple_shader.setUniformValue( u_simple_matrix,         m_projection * m_view * model );
+
+    // ***** Get texture to render with, set texture coordinates
+    DrEngineTexture *texture = m_engine->getTexture(object->getTextureNumber());
+    if (!texture->texture()->isBound()) texture->texture()->bind();
+
+    // ***** Set Shader Variables
+    m_simple_shader.setUniformValue( u_simple_texture, 0 );                           // Use texture unit 0
+
+    // Fade away dying object
+    float alpha = object->getOpacity();                                                 // Start with object alpha
+    if (!object->isAlive() && object->getFadeOnDeath()) {
+        double fade_percent = 1.0 - (static_cast<double>(Dr::MillisecondsElapsed(object->getFadeTimer())) / static_cast<double>(object->getFadeDelay()));
+        alpha *= static_cast<float>(fade_percent);
+    }
+    m_simple_shader.setUniformValue( u_simple_alpha,          alpha );
+
+
+    // ***** Draw triangles using shader program
+    m_simple_shader.enableAttributeArray( a_simple_vertex );
+    m_simple_shader.enableAttributeArray( a_simple_texture_coord );
+    m_simple_shader.setAttributeArray(    a_simple_vertex,        m_quad_vertices.data(),             3 );
+    m_simple_shader.setAttributeArray(    a_simple_texture_coord, m_quad_texture_coordinates.data(),  2 );
+    glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
+    m_simple_shader.disableAttributeArray( a_simple_vertex );
+    m_simple_shader.disableAttributeArray( a_simple_texture_coord );
+    addTriangles( 2 );
+
+    m_simple_shader.release();
+    last_thing = DrThingType::Object;
+}
+
+
+
 
 
 //####################################################################################

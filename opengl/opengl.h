@@ -175,10 +175,12 @@ public:
     void            drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo);
     bool            drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, DrEngineMirror *mirror);
     void            drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower, Blend_Mode mode);
+    void            drawFrameBufferUsingSimpleShader(QOpenGLFramebufferObject *fbo);
     bool            drawFrameBufferUsingSwirlShader(QOpenGLFramebufferObject *fbo, DrEngineSwirl *swirl);
     bool            drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water);
     bool            drawGlowBuffer();
     void            drawObject(DrEngineThing *thing, DrThingType &last_thing, bool draw2D);
+    void            drawObjectSimple(DrEngineThing *thing, DrThingType &last_thing, bool draw2D);
     bool            drawObjectFire(DrEngineThing *thing, DrThingType &last_thing);
     bool            drawObjectOccluder(DrEngineThing *thing, bool need_init_shader = true);
     void            drawSpace();
@@ -314,6 +316,15 @@ private:
     int     u_screen_blend;
     int     u_screen_width;
     int     u_screen_height;
+
+    // Simple Shader
+    QOpenGLShaderProgram m_simple_shader;
+    int     a_simple_vertex;
+    int     a_simple_texture_coord;
+    int     u_simple_matrix;
+    int     u_simple_texture;
+    int     u_simple_alpha;                                     // Opacity
+
 
     // Kernel Shader
     QOpenGLShaderProgram m_kernel_shader;

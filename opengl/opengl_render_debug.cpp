@@ -80,11 +80,12 @@ void DrOpenGL::drawDebug(QPainter &painter) {
     QFont font("Avenir", 12);
     painter.setFont(font);
     painter.setPen( Qt::white );
-    painter.drawText( QPointF(20, 20), "Items: " + QString::number(m_engine->getCurrentWorld()->getThings().count()) + ", Scale: " + QString::number(double(m_scale)) );
-    painter.drawText( QPointF(20, 40), "Triangles: " + QString::number(getTriangleCount()) );
-    painter.drawText( QPointF(20, 60), "FPS: " +       QString::number(m_engine->getFormEngine()->fps_render)
-                                     + ", Physics: " + QString::number(m_engine->getFormEngine()->fps_physics));
-    painter.drawText( QPointF(20, 80), g_info);
+    painter.drawText( QPointF(20,  20), "FPS: \t" + QString::number(m_engine->getFormEngine()->fps_render) );               // Frames per second
+    painter.drawText( QPointF(20,  40), "OBJ: \t" + QString::number(m_engine->getCurrentWorld()->getThings().count()) );    // Object count
+    painter.drawText( QPointF(20,  60), "TRI: \t" + QString::number(getTriangleCount()) );                                  // Triangle count
+    painter.drawText( QPointF(20,  80), "MAG: \t" + QString::number(double(m_scale)) );                                     // World scale
+    //painter.drawText( QPointF(20, 100), "PHY: \t" + QString::number(m_engine->getFormEngine()->fps_physics) );            // Physics update
+    //painter.drawText( QPointF(20, 120), g_info );                                                                         // Global debug string
 
     ///int max_sample = 0, max_text = 0, max_number_textures = 0, max_layers = 0;
     ///glGetIntegerv ( GL_MAX_SAMPLES, &max_sample );                                      // Finds max multi sampling available on system
