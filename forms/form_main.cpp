@@ -90,6 +90,8 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
     long image_11 = m_project->addImage(":/assets/test_images/cake_ice_cube.png");
     long image_12 = m_project->addImage(":/assets/test_images/planetwithareallylongname.png");
     long image_13 = m_project->addImage(":/assets/test_images/metal_block.png");
+    long image_14 = m_project->addImage(":/assets/test_images/donut.png");
+    long image_15 = m_project->addImage(":/assets/test_images/shapes2.png");
 
     long font_1 =   m_project->addFont("Distance Font", QPixmap(":/assets/test_images/test_font.png"),   "Arial",          20, true);
     long font_2 =   m_project->addFont("Coin Count",    QPixmap(":/assets/test_images/test_font_2.png"), "Britannic Bold", 15, true);
@@ -126,6 +128,8 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
     m_project->addAsset(DrAssetType::Object, image_7 );                             // "Water 1"
     m_project->addAsset(DrAssetType::Object, image_5 );                             // "Rover Body"
     m_project->addAsset(DrAssetType::Object, image_8 );                             // "Rover Wheel"
+    m_project->addAsset(DrAssetType::Object, image_14 );                            // "Donut"
+    m_project->addAsset(DrAssetType::Object, image_15 );                            // "Shapes 2"
 
     long a_font =    m_project->addAsset(DrAssetType::Text, font_1);                // "Test Font"
     m_project->addAsset(DrAssetType::Text, font_2);                                 // "Test Font 2"

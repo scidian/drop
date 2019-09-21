@@ -18,6 +18,7 @@
 typedef std::chrono::high_resolution_clock Clock;
 typedef Clock::time_point DrTime;
 
+
 //####################################################################################
 //##    A library of helpful functions within the global Dr namespace
 //############################
@@ -56,6 +57,7 @@ template<class T> void Swap(T& number1, T& number2) {
 // Time Functions
 QString     CurrentTimeAsString();
 double      MillisecondsElapsed(const DrTime &timer);
+double      MillisecondsSinceStartOfDay();
 void        ResetTimer(DrTime &timer);
 
 // Comparison Functions

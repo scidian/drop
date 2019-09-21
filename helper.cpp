@@ -41,6 +41,16 @@ QString CurrentTimeAsString() {
 double MillisecondsElapsed(const DrTime &timer) {
     return (std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - timer).count() /  1000000.0);
 }
+double MillisecondsSinceStartOfDay() {
+    auto now =    std::chrono::system_clock::now();
+    time_t tnow = std::chrono::system_clock::to_time_t(now);
+    tm *date = std::localtime(&tnow);
+    date->tm_hour = 0;
+    date->tm_min =  0;
+    date->tm_sec =  0;
+    auto midnight = std::chrono::system_clock::from_time_t(std::mktime(date));
+    return std::chrono::duration_cast<std::chrono::milliseconds>(now - midnight).count();
+}
 void ResetTimer(DrTime &timer) { timer = Clock::now(); }
 
 

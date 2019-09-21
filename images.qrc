@@ -158,5 +158,7 @@
         <file>assets/tree_icons/tree_swirl.png</file>
         <file>assets/textures/fire_flame_square.png</file>
         <file>assets/textures/fire_flame_triangle.png</file>
+        <file>assets/test_images/donut.png</file>
+        <file>assets/test_images/shapes2.png</file>
     </qresource>
 </RCC>

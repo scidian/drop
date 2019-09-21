@@ -72,7 +72,7 @@ QMatrix4x4 billboardSphericalBegin(QVector3D camera, QVector3D object, QMatrix4x
 
 
 //####################################################################################
-//##    Draws a DrEngineObject effect type with default shader
+//##    Draws a DrEngineObject effect type with Default Shader
 //####################################################################################
 void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool draw2D) {
 
@@ -93,8 +93,8 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     }
 
     // Enable shader program
-    ///if (last_thing != DrThingType::Object)
-    if (!m_default_shader.bind()) return;
+    if (last_thing != DrThingType::Object)
+        if (!m_default_shader.bind()) return;
 
 
     // ***** Blend function
@@ -111,7 +111,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     float x =   static_cast<float>(thing->getPosition().x());
     float y =   static_cast<float>(thing->getPosition().y());
     float z =   static_cast<float>(thing->z_order + m_add_z);
-    double now = QTime::currentTime().msecsSinceStartOfDay() / 10.0;
+    double now = Dr::MillisecondsSinceStartOfDay() / 10.0;
 
     // Translate
     QMatrix4x4 model;
@@ -172,7 +172,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     m_default_shader.setUniformValue( u_default_tint,           0.0f, 0.0f, 0.0f );
     m_default_shader.setUniformValue( u_default_width,          texture_width );
     m_default_shader.setUniformValue( u_default_height,         texture_height );
-    m_default_shader.setUniformValue( u_default_time,           static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
+    m_default_shader.setUniformValue( u_default_time,           static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0) );
     m_default_shader.setUniformValue( u_default_pre,            true );
 
     m_default_shader.setUniformValue( u_default_bitrate,        object->bitrate );
@@ -238,7 +238,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         addTriangles( m_texture_data[object->getTextureNumber()]->triangleCount() );
     }
 
-    m_default_shader.release();
+    ///m_default_shader.release();
     last_thing = DrThingType::Object;
 }
 
@@ -277,9 +277,9 @@ void DrOpenGL::releaseDefaultAttributeBuffer() {
 
 
 //####################################################################################
-//##    Draws a DrEngineObject effect type with simple shader
+//##    Draws a DrEngineObject effect type with Simple Shader
 //####################################################################################
-void DrOpenGL::drawObjectSimple(DrEngineThing *thing, DrThingType &last_thing, bool draw2D) {
+void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
 
     // ***** Initial type checks
     if (thing->getThingType() != DrThingType::Object) return;
@@ -292,7 +292,6 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing, DrThingType &last_thing, b
     }
 
     // Enable shader program
-    ///if (last_thing != DrThingType::Object)
     if (!m_simple_shader.bind()) return;
 
     // ***** Blend function
@@ -303,29 +302,21 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing, DrThingType &last_thing, b
     float x =   static_cast<float>(thing->getPosition().x());
     float y =   static_cast<float>(thing->getPosition().y());
     float z =   static_cast<float>(thing->z_order + m_add_z);
-    double now = QTime::currentTime().msecsSinceStartOfDay() / 10.0;
+    double now = Dr::MillisecondsSinceStartOfDay() / 10.0;
 
     // Translate
     QMatrix4x4 model;
     model.translate(x, y, z);
 
     // Rotate
-    if (!object->getBillboard()) {
-        if (qFuzzyCompare(object->getAngleX(), 0.0) == false || qFuzzyCompare(object->getRotateSpeedX(), 0.0) == false)
-            model.rotate(static_cast<float>(object->getAngleX() + (now * object->getRotateSpeedX())), 1.f, 0.f, 0.f);
-        if (qFuzzyCompare(object->getAngleY(), 0.0) == false || qFuzzyCompare(object->getRotateSpeedY(), 0.0) == false)
-            model.rotate(static_cast<float>(object->getAngleY() + (now * object->getRotateSpeedY())), 0.f, 1.f, 0.f);
-        model.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
-
-    // Rotate Billboards
-    } else {
-        model = billboardSphericalBegin( QVector3D(m_eye.x(), m_eye.y(), m_eye.z()),
-                                         QVector3D(x * m_scale, y * m_scale, z), model, false);
-    }
+    if (qFuzzyCompare(object->getAngleX(), 0.0) == false || qFuzzyCompare(object->getRotateSpeedX(), 0.0) == false)
+        model.rotate(static_cast<float>(object->getAngleX() + (now * object->getRotateSpeedX())), 1.f, 0.f, 0.f);
+    if (qFuzzyCompare(object->getAngleY(), 0.0) == false || qFuzzyCompare(object->getRotateSpeedY(), 0.0) == false)
+        model.rotate(static_cast<float>(object->getAngleY() + (now * object->getRotateSpeedY())), 0.f, 1.f, 0.f);
+    model.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
 
     // Scale
-    if (draw2D || object->get3DType() == Convert_3D_Type::Cube)
-        model.scale(static_cast<float>(object->getSize().x()), static_cast<float>(object->getSize().y()), 1.0f);
+    model.scale(static_cast<float>(object->getSize().x()), static_cast<float>(object->getSize().y()), 1.0f);
     model.scale( object->getScaleX(), object->getScaleY(), static_cast<float>(object->getDepth()) );
 
     m_simple_shader.setUniformValue( u_simple_matrix,         m_projection * m_view * model );
@@ -345,7 +336,6 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing, DrThingType &last_thing, b
     }
     m_simple_shader.setUniformValue( u_simple_alpha,          alpha );
 
-
     // ***** Draw triangles using shader program
     m_simple_shader.enableAttributeArray( a_simple_vertex );
     m_simple_shader.enableAttributeArray( a_simple_texture_coord );
@@ -357,11 +347,7 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing, DrThingType &last_thing, b
     addTriangles( 2 );
 
     m_simple_shader.release();
-    last_thing = DrThingType::Object;
 }
-
-
-
 
 
 //####################################################################################
@@ -489,7 +475,7 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     m_fire_shader.enableAttributeArray( a_fire_vertex );
 
     // ***** Set Shader Variables
-    float now = static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.f);
+    float now = static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0);
     m_fire_shader.setUniformValue( u_fire_alpha,    fire->getOpacity() );
     m_fire_shader.setUniformValue( u_fire_time,     now );
     m_fire_shader.setUniformValue( u_fire_position, static_cast<float>(thing->getPosition().x()), static_cast<float>(thing->getPosition().y()) );

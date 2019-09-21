@@ -45,15 +45,14 @@ void DrOpenGL::paintGL() {
     bindOffscreenBuffer();                                                          // Create / Bind Offscreen Frame Buffer Object
     drawSpace();                                                                    // Render cpSpace Objects
     releaseOffscreenBuffer();                                                       // Release Frame Buffer Object
-    ///QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);         // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
+    QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);         // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
 
     // ***** Bind default Qt FrameBuffer, Clear and Render FBO to screen buffer as a textured quad, with post processing available
     QOpenGLFramebufferObject::bindDefault();
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glDisable(GL_BLEND);
-    ///drawFrameBufferUsingDefaultShader(m_texture_fbo);
-    drawFrameBufferUsingSimpleShader(m_render_fbo);
+    drawFrameBufferUsingDefaultShader(m_texture_fbo);
 
     // ***** Draws Debug Shapes / Text Onto Frame Buffer Object
     QOpenGLPaintDevice paint_gl(width() * devicePixelRatio(), height() * devicePixelRatio());
@@ -118,7 +117,7 @@ void DrOpenGL::getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing
     half_height = static_cast<float>(thing->getSize().y()) * thing->getScaleY() / 2.0f;
 
     // ***** Create rotation matrix, apply rotation to object
-    float now = static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 10.f);
+    float now = static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 10.0);
     QMatrix4x4 matrix;
     if (qFuzzyCompare(thing->getAngleX(), 0.0) == false) matrix.rotate(now * static_cast<float>(thing->getAngleX()), 1.f, 0.f, 0.f);
     if (qFuzzyCompare(thing->getAngleY(), 0.0) == false) matrix.rotate(now * static_cast<float>(thing->getAngleY()), 0.f, 1.f, 0.f);
@@ -144,7 +143,7 @@ void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height)
     m_default_shader.setUniformValue( u_default_zoom,           m_scale );
     m_default_shader.setUniformValue( u_default_width,          texture_width  );
     m_default_shader.setUniformValue( u_default_height,         texture_height );
-    m_default_shader.setUniformValue( u_default_time,           static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
+    m_default_shader.setUniformValue( u_default_time,           static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0) );
     m_default_shader.setUniformValue( u_default_pre,            false );
     m_default_shader.setUniformValue( u_default_bitrate,        256.0f );
     m_default_shader.setUniformValue( u_default_pixel_x,        1.0f );

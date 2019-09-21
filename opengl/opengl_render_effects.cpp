@@ -129,7 +129,7 @@ bool DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, 
                                                             m_engine->getCurrentWorld()->getCameraPosition().y(), 0.0f );
     m_fisheye_shader.setUniformValue( u_fisheye_width,      static_cast<float>(fbo->width()) );
     m_fisheye_shader.setUniformValue( u_fisheye_height,     static_cast<float>(fbo->height()) );
-    m_fisheye_shader.setUniformValue( u_fisheye_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
+    m_fisheye_shader.setUniformValue( u_fisheye_time,       static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0) );
     m_fisheye_shader.setUniformValue( u_fisheye_angle,      angle );
 
     m_fisheye_shader.setUniformValue( u_fisheye_pixel_x,    lens->pixel_x );
@@ -225,7 +225,7 @@ bool DrOpenGL::drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, D
                                                             m_engine->getCurrentWorld()->getCameraPosition().y(), 0.0f );
     m_mirror_shader.setUniformValue( u_mirror_width,        static_cast<float>(fbo->width()) );
     m_mirror_shader.setUniformValue( u_mirror_height,       static_cast<float>(fbo->height()) );
-    m_mirror_shader.setUniformValue( u_mirror_time,         static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
+    m_mirror_shader.setUniformValue( u_mirror_time,         static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0) );
     m_mirror_shader.setUniformValue( u_mirror_angle,        angle );
 
     m_mirror_shader.setUniformValue( u_mirror_pixel_x,      mirror->pixel_x );
@@ -305,7 +305,7 @@ bool DrOpenGL::drawFrameBufferUsingSwirlShader(QOpenGLFramebufferObject *fbo, Dr
                                                         m_engine->getCurrentWorld()->getCameraPosition().y(), 0.0f );
     m_swirl_shader.setUniformValue( u_swirl_width,      static_cast<float>(fbo->width()) );
     m_swirl_shader.setUniformValue( u_swirl_height,     static_cast<float>(fbo->height()) );
-    m_swirl_shader.setUniformValue( u_swirl_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
+    m_swirl_shader.setUniformValue( u_swirl_time,       static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0) );
     m_swirl_shader.setUniformValue( u_swirl_angle,      angle );
 
     m_swirl_shader.setUniformValue( u_swirl_pixel_x,    swirl->pixel_x );
@@ -447,7 +447,7 @@ bool DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
                                                         m_engine->getCurrentWorld()->getCameraPosition().y(), 0.0f );
     m_water_shader.setUniformValue( u_water_width,      static_cast<float>(fbo->width()) );
     m_water_shader.setUniformValue( u_water_height,     static_cast<float>(fbo->height()) );
-    m_water_shader.setUniformValue( u_water_time,       static_cast<float>(QTime::currentTime().msecsSinceStartOfDay() / 1000.0) );
+    m_water_shader.setUniformValue( u_water_time,       static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0) );
     m_water_shader.setUniformValue( u_water_angle,      angle );
 
     m_water_shader.setUniformValue( u_water_pixel_x,    water->pixel_x );

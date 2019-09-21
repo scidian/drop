@@ -180,7 +180,7 @@ public:
     bool            drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water);
     bool            drawGlowBuffer();
     void            drawObject(DrEngineThing *thing, DrThingType &last_thing, bool draw2D);
-    void            drawObjectSimple(DrEngineThing *thing, DrThingType &last_thing, bool draw2D);
+    void            drawObjectSimple(DrEngineThing *thing);
     bool            drawObjectFire(DrEngineThing *thing, DrThingType &last_thing);
     bool            drawObjectOccluder(DrEngineThing *thing, bool need_init_shader = true);
     void            drawSpace();

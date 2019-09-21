@@ -327,6 +327,7 @@ void main( void ) {
 
     // If 3D, add in average color, set pixel to opaque
     if (u_shade_away) {
+        if (u_alpha < 0.05) discard;
         frag_rgb = mix(u_average_color, frag_rgb, texture_color.a);
         texture_color.a = 1.0;
     } else {
