@@ -11,7 +11,6 @@
 #include <QLineEdit>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
-#include <QTime>
 
 #include "colors/colors.h"
 #include "debug.h"

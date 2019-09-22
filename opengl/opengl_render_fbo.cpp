@@ -39,9 +39,11 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
     m_default_shader.setUniformValue( u_default_matrix, orthoMatrix(fbo->width(), fbo->height()) );
 
-    // Set Texture Coordinates for Shader
-    m_default_shader.setAttributeArray(    a_default_texture_coord, m_quad_texture_coordinates.data(), 2 );
+    // Set Texture / Barycentric Coordinates for Shader
     m_default_shader.enableAttributeArray( a_default_texture_coord );
+    m_default_shader.enableAttributeArray( a_default_barycentric );
+    m_default_shader.setAttributeArray(    a_default_texture_coord, m_quad_texture_coordinates.data(), 2 );
+    m_default_shader.setAttributeArray(    a_default_barycentric,   m_quad_barycentric.data(),          3 );
 
     // Load vertices for this object
     QVector<GLfloat> vertices;
@@ -77,6 +79,7 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     // Disable arrays
     m_default_shader.disableAttributeArray( a_default_vertex );
     m_default_shader.disableAttributeArray( a_default_texture_coord );
+    m_default_shader.disableAttributeArray( a_default_barycentric );
 
     // Release Shader
     m_default_shader.release();
