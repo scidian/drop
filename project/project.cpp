@@ -9,6 +9,7 @@
 #include <QTime>
 
 #include "helper.h"
+#include "helper_qt.h"
 #include "project.h"
 #include "project_asset.h"
 #include "project_effect.h"

@@ -101,7 +101,7 @@ QString StringFromPositionFlag(Position_Flags flag) {
     }
 }
 
-QString StringFromBodyType(Body_Type type) {
+std::string StringFromBodyType(Body_Type type) {
     switch (type) {
         case Body_Type::Static:             return "Static";
         case Body_Type::Dynamic:            return "Dynamic";
@@ -109,7 +109,7 @@ QString StringFromBodyType(Body_Type type) {
     }
 }
 
-QString StringFromShapeType(Shape_Type type) {
+std::string StringFromShapeType(Shape_Type type) {
     switch (type) {
         case Shape_Type::Segment:           return "Segment";
         case Shape_Type::Box:               return "Box";

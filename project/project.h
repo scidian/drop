@@ -8,6 +8,7 @@
 #ifndef DRPROJECT_H
 #define DRPROJECT_H
 
+#include "constants.h"
 #include "settings/settings.h"
 
 enum class Project_Options {

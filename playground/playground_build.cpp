@@ -9,6 +9,7 @@
 #include "editor/editor_tree_inspector.h"
 #include "form_playground.h"
 #include "helper.h"
+#include "helper_qt.h"
 #include "playground.h"
 #include "playground_toy.h"
 

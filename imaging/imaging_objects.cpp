@@ -19,6 +19,7 @@
 #include "globals.h"
 #include "imaging.h"
 #include "helper.h"
+#include "types/point.h"
 
 
 namespace DrImaging
@@ -239,7 +240,7 @@ int findObjectsInImage(const QImage &image, QVector<QImage> &images, QVector<QRe
 #define TRACE_PROCESSED_ONCE        3           // Pixels that added to the border once
 #define TRACE_PROCESSED_TWICE       4           // Pixels that added to the border twice        (after a there and back again trace)
 
-QVector<HullPoint> traceImageOutline(const QImage &from_image) {
+QVector<DrPoint> traceImageOutline(const QImage &from_image) {
     // Initialize images
     QImage image = from_image;
     QImage processed =  from_image.copy();
@@ -249,7 +250,7 @@ QVector<HullPoint> traceImageOutline(const QImage &from_image) {
 
     // Initialize point array, verify image size
     QVector<IntPoint> points; points.clear();
-    if (image.width() < 1 || image.height() < 1) return QVector<HullPoint> { };
+    if (image.width() < 1 || image.height() < 1) return QVector<DrPoint> { };
 
     // ***** Find starting point, and also set processed image bits
     //       !!!!! #NOTE: Important that y loop is on top, we need to come at pixel from the left
@@ -292,7 +293,7 @@ QVector<HullPoint> traceImageOutline(const QImage &from_image) {
             }
         }
     }
-    if (border_pixel_count < 3) return QVector<HullPoint> { };
+    if (border_pixel_count < 3) return QVector<DrPoint> { };
 
 
     // ***** Find outline points
@@ -358,10 +359,10 @@ QVector<HullPoint> traceImageOutline(const QImage &from_image) {
 
     } while ((surround.count() > 0) && !back_at_start);
 
-    // ***** Convert to HullPoint array and return
-    QVector<HullPoint> hull_points;
+    // ***** Convert to DrPoint array and return
+    QVector<DrPoint> hull_points;
     for (int i = 0; i < points.count(); ++i) {
-        hull_points.push_back(HullPoint(points[i].x, points[i].y));
+        hull_points.push_back(DrPoint(points[i].x, points[i].y));
     }
     return hull_points;
 }
@@ -372,11 +373,11 @@ QVector<HullPoint> traceImageOutline(const QImage &from_image) {
 //##        !!!!! #NOTE: Image passed in should be black and white
 //##                     (i.e. from DrImageing::blackAndWhiteFromAlpha())
 //####################################################################################
-QVector<HullPoint> outlinePointList(const QImage &from_image) {
+QVector<DrPoint> outlinePointList(const QImage &from_image) {
     QImage image = from_image;
     QVector<QRgb*> lines = getScanLines(image);
 
-    QVector<HullPoint> points;
+    QVector<DrPoint> points;
     points.clear();
 
     // Loop through every pixel to see if is possibly on border
@@ -400,13 +401,13 @@ QVector<HullPoint> outlinePointList(const QImage &from_image) {
             }
 
             if (touching_transparent) {
-                points.push_back(HullPoint(x, y));
+                points.push_back(DrPoint(x, y));
             } else {
                 if ((x == 0 && y == 0) ||
                     (x == 0 && y == (image.height() - 1)) ||
                     (x == (image.width() - 1) && y == 0) ||
                     (x == (image.width() - 1) && y == (image.height() - 1))) {
-                    points.push_back(HullPoint(x, y));
+                    points.push_back(DrPoint(x, y));
                 }
             }
         }

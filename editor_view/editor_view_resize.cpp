@@ -15,6 +15,7 @@
 #include "globals.h"
 #include "interface_editor_relay.h"
 #include "helper.h"
+#include "helper_qt.h"
 #include "opengl/opengl.h"
 #include "project/project.h"
 #include "project/project_world.h"

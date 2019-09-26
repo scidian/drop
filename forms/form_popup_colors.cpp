@@ -12,6 +12,7 @@
 #include "form_popup.h"
 #include "globals.h"
 #include "helper.h"
+#include "helper_qt.h"
 
 //####################################################################################
 //##    Constructor

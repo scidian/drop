@@ -314,6 +314,7 @@ Delaunator::Delaunator(std::vector<double> const& in_coords)
         }
     }
 
+    // !!!!! #NOTE: To avoid this error make sure point list does not include duplicates
     if (!(min_radius < std::numeric_limits<double>::max())) {
         throw std::runtime_error("not triangulation");
     }

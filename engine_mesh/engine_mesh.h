@@ -8,10 +8,7 @@
 #ifndef ENGINE_MESH_H
 #define ENGINE_MESH_H
 
-#include <QOpenGLWidget>
-#include <QVector>
-#include <QVector2D>
-#include <QVector3D>
+#include <vector>
 
 #include "3rd_party/vec3.h"
 

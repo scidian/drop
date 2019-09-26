@@ -14,10 +14,13 @@
 #include <QTime>
 #include <QVector2D>
 
+#include <limits>
+
 #include "colors/colors.h"
 #include "globals.h"
 #include "imaging.h"
 #include "helper.h"
+#include "helper_qt.h"
 
 
 namespace DrImaging
@@ -99,7 +102,7 @@ float* imageBitsAsFloat(const QImage &from_image) {
     QVector<QRgb*> lines = getScanLines(image);
 
     // Method #1
-    ///float *out = static_cast<float*>( malloc(static_cast<unsigned long>(image.width() * image.height()) * sizeof(float)) );
+    ///float *out = static_cast<float*>( malloc(static_cast<std::size_t>(image.width() * image.height()) * sizeof(float)) );
     ///int index = 0;
     ///for (int y = 0; y < image.height(); ++y) {
     ///    for (int x = 0; x < image.width(); ++x) {

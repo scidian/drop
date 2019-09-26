@@ -21,6 +21,7 @@
 #include "editor_view/editor_view.h"
 #include "form_main.h"
 #include "helper.h"
+#include "helper_qt.h"
 
 
 //####################################################################################

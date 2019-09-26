@@ -7,6 +7,8 @@
 //
 #include <QDebug>
 
+#include <limits>
+
 #include "engine/engine_texture.h"
 #include "engine_mesh/engine_vertex_data.h"
 #include "helper.h"
@@ -177,9 +179,9 @@ void DrEngineVertexData::smoothVertices(float weight) {
             Vec3  texture(0.f);
             float total_weight = 0.f;
 
-            unsigned long prev = neighbors[point.position].size() - 1;
-            unsigned long next = 1;
-            for (unsigned long i = 0; i < neighbors[point.position].size(); i++) {
+            std::size_t prev = neighbors[point.position].size() - 1;
+            std::size_t next = 1;
+            for (std::size_t i = 0; i < neighbors[point.position].size(); i++) {
                 Vertex neighbor = neighbors[point.position][i];
                 Vertex neighbor_prev = neighbors[point.position][prev];
                 Vertex neighbor_next = neighbors[point.position][next];
@@ -214,7 +216,7 @@ void DrEngineVertexData::smoothVertices(float weight) {
 
     // ***** Set Mesh Data back into Data Array
     for (int i = 0; i < vertexCount(); i += 3) {
-        Triangle tri = mesh.m_triangles[static_cast<unsigned long>(i / 3)];
+        Triangle tri = mesh.m_triangles[static_cast<std::size_t>(i / 3)];
 
         // Recalculate normals
         Vec3 v1 = tri.points[2].position - tri.points[0].position;

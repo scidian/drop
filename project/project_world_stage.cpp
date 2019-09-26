@@ -7,6 +7,7 @@
 //
 #include "colors/colors.h"
 #include "helper.h"
+#include "helper_qt.h"
 #include "project.h"
 #include "project_asset.h"
 #include "project_world.h"

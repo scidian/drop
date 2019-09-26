@@ -18,6 +18,7 @@
 #include "form_settings.h"
 #include "globals.h"
 #include "helper.h"
+#include "helper_qt.h"
 #include "playground/form_playground.h"
 #include "style/style.h"
 #include "widgets/widgets_event_filters.h"

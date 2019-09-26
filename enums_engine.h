@@ -2,13 +2,13 @@
 //      Created by Stephens Nunnally on 5/31/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//
+//      To be Engine compatible, this file does NOT, and should NOT #include any Qt Library types
 //
 //
 #ifndef ENUMS_ENGINE_H
 #define ENUMS_ENGINE_H
 
-#include <QString>
+#include <string>
 
 //####################################################################################
 //##    !!!!! #TEMP: Temporary Demo Enums
@@ -141,8 +141,8 @@ enum class Convert_3D_Type {            // !!!!! Order is important
 //##    Some public forward function declarations for some enum functions
 //############################
 namespace Dr {
-    QString     StringFromBodyType(Body_Type type);
-    QString     StringFromShapeType(Shape_Type type);
+    std::string StringFromBodyType(Body_Type type);
+    std::string StringFromShapeType(Shape_Type type);
 }
 
 

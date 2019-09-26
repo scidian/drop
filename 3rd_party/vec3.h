@@ -29,7 +29,6 @@
 #ifndef ENGINE_VEC3_H
 #define ENGINE_VEC3_H
 
-#include <QtMath>
 #include <cmath>
 
 #include <helper.h>

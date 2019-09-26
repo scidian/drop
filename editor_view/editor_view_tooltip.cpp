@@ -12,6 +12,7 @@
 #include "editor_view.h"
 #include "interface_editor_relay.h"
 #include "helper.h"
+#include "helper_qt.h"
 #include "project/project.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"

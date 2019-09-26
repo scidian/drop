@@ -92,6 +92,8 @@
 #include "forms/form_main.h"
 #include "globals.h"
 #include "helper.h"
+#include "helper_qt.h"
+
 
 int main(int argc, char *argv[]) {
 

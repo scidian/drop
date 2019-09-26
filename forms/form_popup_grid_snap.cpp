@@ -11,6 +11,7 @@
 #include "form_popup.h"
 #include "globals.h"
 #include "helper.h"
+#include "helper_qt.h"
 
 //####################################################################################
 //##    Builds out FormPop's inner widget to show options for grid snapping

@@ -139,6 +139,7 @@ SOURCES += \
     forms/form_popup_grid_snap.cpp \
     forms/form_settings.cpp \
     helper.cpp \
+    helper_qt.cpp \
     imaging/imaging_draw.cpp \
     imaging/imaging_draw_effects.cpp \
     imaging/imaging_filters.cpp \
@@ -188,6 +189,7 @@ SOURCES += \
     style/style_pixmap.cpp \
     style/style_sheet_main.cpp \
     style/style_sheet_toolbar.cpp \
+    types/point.cpp \
     widgets/widgets.cpp \
     widgets/widgets_event_filters.cpp \
     widgets/widgets_layout.cpp
@@ -262,6 +264,7 @@ HEADERS += \
     forms/form_popup.h \
     forms/form_settings.h \
     helper.h \
+    helper_qt.h \
     imaging/imaging.h \
     opengl/opengl.h \
     playground/form_playground.h \
@@ -284,6 +287,7 @@ HEADERS += \
     globals.h \
     enums_form_main.h \
     style/style.h \
+    types/point.h \
     widgets/widgets.h \
     widgets/widgets_event_filters.h \
     widgets/widgets_layout.h

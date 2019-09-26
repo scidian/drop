@@ -8,15 +8,17 @@
 #ifndef ENGINE_VERTEX_DATA_H
 #define ENGINE_VERTEX_DATA_H
 
-#include <QOpenGLWidget>
+#include <QOpenGLWidget>    // for "GLFloat"
 #include <QVector>
 #include <QVector2D>
 #include <QVector3D>
+
 #include <map>
 
-#include "3rd_party/hullfinder.h"
-#include "3rd_party/poly_partition.h"
 #include "engine_mesh.h"
+
+// Forward Declarations
+class DrPoint;
 
 // Type Definitions
 typedef std::map<Vec3, std::vector<Vertex>> NeighborMap;
@@ -64,13 +66,13 @@ public:
     int             vertexCount() const {   return m_count / c_vertex_length; }
 
     // Creation Functions
-    void    initializeExtrudedPixmap(QPixmap &pixmap);
+    void    initializeExtrudedPixmap(QPixmap &pixmap, bool wireframe = true);
     void    initializeTextureCube();
     void    initializeTextureQuad();
 
     // Helper Functions
-    static  QVector<HullPoint>  simplifyPoints(const QVector<HullPoint> &outline_points, double tolerance, int test_count, bool average = false);
-    static  QVector<HullPoint>  smoothPoints(const QVector<HullPoint> &outline_points, int neighbors, double neighbor_distance, double weight);
+    static  QVector<DrPoint>    simplifyPoints(const QVector<DrPoint> &outline_points, double tolerance, int test_count, bool average = false);
+    static  QVector<DrPoint>    smoothPoints(const QVector<DrPoint> &outline_points, int neighbors, double neighbor_distance, double weight);
 
     Mesh                        getMesh(NeighborMap &neighbors);
     Vertex                      getVertex(int vertex_number);
@@ -79,9 +81,9 @@ public:
 
 
     // Extrusion Functions
-    void    extrudeFacePolygon(const QVector<HullPoint> &outline_points, int width, int height, int steps);
-    void    triangulateFace(const QVector<HullPoint> &outline_points, const QVector<QVector<HullPoint>> &hole_list,
-                            const QImage &black_and_white, Trianglulation type);
+    void    extrudeFacePolygon(const QVector<DrPoint> &outline_points, int width, int height, int steps);
+    void    triangulateFace(const QVector<DrPoint> &outline_points, const QVector<QVector<DrPoint>> &hole_list,
+                            const QImage &black_and_white, bool wireframe, Trianglulation type);
 
     // Building Functions
     void    add(const QVector3D &vertex, const QVector3D &normal, const QVector2D &text_coord, Triangle_Point point_number);

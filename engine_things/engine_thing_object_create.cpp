@@ -97,7 +97,9 @@ void DrEngineObject::addShapePolygon(QVector<QPointF> &points) {
     int new_point_count = cpConvexHull(old_point_count, verts.data(), hull.data(), &first, 0.0);
 
     // Shape is convex or could not determine convex hull
-    if (new_point_count == 0) Dr::ShowMessageBox("Warning! From addShapePolygon()... Could not form convex hull!");
+    ///if (new_point_count == 0) {
+    ///    Dr::ShowMessageBox("Warning! From addShapePolygon()... Could not form convex hull!");
+    ///}
     if ((new_point_count == old_point_count || (new_point_count == 0))) {
         cpShape *shape = cpPolyShapeNew( this->body, old_point_count, verts.data(), cpTransformIdentity, c_extra_radius);
         double   area =  cpAreaForPoly(old_point_count, verts.data(), c_extra_radius );

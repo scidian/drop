@@ -9,7 +9,6 @@
 #ifndef DRSETTINGS_H
 #define DRSETTINGS_H
 
-#include "constants.h"
 #include "enums.h"
 #include "enums_dr_settings.h"
 

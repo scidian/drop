@@ -20,6 +20,7 @@
 #include "form_main.h"
 #include "globals.h"
 #include "helper.h"
+#include "helper_qt.h"
 #include "project/project.h"
 #include "project/project_world_stage.h"
 #include "style/style.h"

@@ -22,14 +22,15 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
+#include <algorithm>
+#include <list>
+#include <limits>
+#include <math.h>
+#include <set>
+#include <stdexcept>
 #include <stdio.h>
 #include <string.h>
-#include <math.h>
-#include <list>
-#include <algorithm>
-#include <set>
 #include <vector>
-#include <stdexcept>
 
 using namespace std;
 
@@ -77,7 +78,7 @@ TPPLPoly::TPPLPoly(const TPPLPoly &src) : TPPLPoly() {
 
 	if(numpoints > 0) {
 		points = new TPPLPoint[numpoints];
-        memcpy(points, src.points, static_cast<ulong>(numpoints) * sizeof(TPPLPoint));
+        memcpy(points, src.points, static_cast<std::size_t>(numpoints) * sizeof(TPPLPoint));
 	}
 }
 
@@ -88,7 +89,7 @@ TPPLPoly& TPPLPoly::operator=(const TPPLPoly &src) {
 	
 	if(numpoints > 0) {
 		points = new TPPLPoint[numpoints];
-        memcpy(points, src.points, static_cast<ulong>(numpoints) * sizeof(TPPLPoint));
+        memcpy(points, src.points, static_cast<std::size_t>(numpoints) * sizeof(TPPLPoint));
 	}
 	
 	return *this;
@@ -125,7 +126,7 @@ TPPLPartition::PartitionVertex::PartitionVertex() : previous(nullptr), next(null
 TPPLPoint TPPLPartition::Normalize(const TPPLPoint &p) {
 	TPPLPoint r;
 	tppl_float n = sqrt(p.x*p.x + p.y*p.y);
-    if (qFuzzyCompare(n, 0) == false) {
+    if (Dr::FuzzyCompare(n, 0.0) == false) {
 		r = p/n;
 	} else {
 		r.x = 0;
@@ -143,10 +144,10 @@ tppl_float TPPLPartition::Distance(const TPPLPoint &p1, const TPPLPoint &p2) {
 
 //checks if two lines intersect
 int TPPLPartition::Intersects(TPPLPoint &p11, TPPLPoint &p12, TPPLPoint &p21, TPPLPoint &p22) {
-    if(qFuzzyCompare(p11.x, p21.x) && qFuzzyCompare(p11.y, p21.y)) return 0;
-    if(qFuzzyCompare(p11.x, p22.x) && qFuzzyCompare(p11.y, p22.y)) return 0;
-    if(qFuzzyCompare(p12.x, p21.x) && qFuzzyCompare(p12.y, p21.y)) return 0;
-    if(qFuzzyCompare(p12.x, p22.x) && qFuzzyCompare(p12.y, p22.y)) return 0;
+    if(Dr::FuzzyCompare(p11.x, p21.x) && Dr::FuzzyCompare(p11.y, p21.y)) return 0;
+    if(Dr::FuzzyCompare(p11.x, p22.x) && Dr::FuzzyCompare(p11.y, p22.y)) return 0;
+    if(Dr::FuzzyCompare(p12.x, p21.x) && Dr::FuzzyCompare(p12.y, p21.y)) return 0;
+    if(Dr::FuzzyCompare(p12.x, p22.x) && Dr::FuzzyCompare(p12.y, p22.y)) return 0;
 
 	TPPLPoint v1ort,v2ort,v;
 	tppl_float dot11,dot12,dot21,dot22;
@@ -363,9 +364,9 @@ void TPPLPartition::UpdateVertex(PartitionVertex *v, PartitionVertex *vertices, 
 	if(v->isConvex) {
 		v->isEar = true;
 		for(i=0;i<numvertices;i++) {
-            if(qFuzzyCompare(vertices[i].p.x, v->p.x)  && qFuzzyCompare(vertices[i].p.y, v->p.y))  continue;
-            if(qFuzzyCompare(vertices[i].p.x, v1->p.x) && qFuzzyCompare(vertices[i].p.y, v1->p.y)) continue;
-            if(qFuzzyCompare(vertices[i].p.x, v3->p.x) && qFuzzyCompare(vertices[i].p.y, v3->p.y)) continue;
+            if(Dr::FuzzyCompare(vertices[i].p.x, v->p.x)  && Dr::FuzzyCompare(vertices[i].p.y, v->p.y))  continue;
+            if(Dr::FuzzyCompare(vertices[i].p.x, v1->p.x) && Dr::FuzzyCompare(vertices[i].p.y, v1->p.y)) continue;
+            if(Dr::FuzzyCompare(vertices[i].p.x, v3->p.x) && Dr::FuzzyCompare(vertices[i].p.y, v3->p.y)) continue;
 			if(IsInside(v1->p,v->p,v3->p,vertices[i].p)) {
 				v->isEar = false;
 				break;
@@ -508,9 +509,9 @@ int TPPLPartition::ConvexPartition_HM(TPPLPoly *poly, TPPLPolyList *parts) {
 				poly2 = &(*iter2);
 
 				for(i21=0;i21<poly2->GetNumPoints();i21++) {
-                    if ((qFuzzyCompare(d2.x, poly2->GetPoint(i21).x) == false) || (qFuzzyCompare(d2.y, poly2->GetPoint(i21).y) == false)) continue;
+                    if ((Dr::FuzzyCompare(d2.x, poly2->GetPoint(i21).x) == false) || (Dr::FuzzyCompare(d2.y, poly2->GetPoint(i21).y) == false)) continue;
 					i22 = (i21+1)%(poly2->GetNumPoints());
-                    if ((qFuzzyCompare(d1.x, poly2->GetPoint(i22).x) == false) || (qFuzzyCompare(d1.y, poly2->GetPoint(i22).y) == false)) continue;
+                    if ((Dr::FuzzyCompare(d1.x, poly2->GetPoint(i22).x) == false) || (Dr::FuzzyCompare(d1.y, poly2->GetPoint(i22).y) == false)) continue;
 					isdiagonal = true;
 					break;
 				}
@@ -1291,7 +1292,7 @@ int TPPLPartition::MonotonePartition(TPPLPolyList *inpolys, TPPLPolyList *monoto
 	}
 
 	char *used = new char[newnumvertices];
-    memset(used,0, static_cast<ulong>(newnumvertices) * sizeof(char));
+    memset(used,0, static_cast<std::size_t>(newnumvertices) * sizeof(char));
 
 	if(!error) {
 		//return result
@@ -1379,7 +1380,7 @@ void TPPLPartition::AddDiagonal(MonotoneVertex *vertices, long *numvertices, lon
 
 bool TPPLPartition::Below(TPPLPoint &p1, TPPLPoint &p2) {
     if (p1.y < p2.y) return true;
-    else if (qFuzzyCompare(p1.y, p2.y)) {
+    else if (Dr::FuzzyCompare(p1.y, p2.y)) {
         if (p1.x < p2.x) return true;
 	}
 	return false;
@@ -1389,7 +1390,7 @@ bool TPPLPartition::Below(TPPLPoint &p1, TPPLPoint &p2) {
 bool TPPLPartition::VertexSorter::operator() (long index1, long index2) {
     if (vertices[index1].p.y > vertices[index2].p.y)
         return true;
-    else if (qFuzzyCompare(vertices[index1].p.y, vertices[index2].p.y)) {
+    else if (Dr::FuzzyCompare(vertices[index1].p.y, vertices[index2].p.y)) {
         if (vertices[index1].p.x > vertices[index2].p.x) return true;
 	}
 	return false;
@@ -1403,14 +1404,14 @@ bool TPPLPartition::ScanLineEdge::IsConvex(const TPPLPoint& p1, const TPPLPoint&
 }
 
 bool TPPLPartition::ScanLineEdge::operator < (const ScanLineEdge & other) const {
-    if (qFuzzyCompare(other.p1.y, other.p2.y)) {
-        if (qFuzzyCompare(p1.y, p2.y)) {
+    if (Dr::FuzzyCompare(other.p1.y, other.p2.y)) {
+        if (Dr::FuzzyCompare(p1.y, p2.y)) {
 			if(p1.y < other.p1.y) return true;
 			else return false;
 		}
         if (IsConvex(p1,p2,other.p1)) return true;
 		else return false;
-    } else if(qFuzzyCompare(p1.y, p2.y)) {
+    } else if(Dr::FuzzyCompare(p1.y, p2.y)) {
         if (IsConvex(other.p1,other.p2,p1)) return false;
 		else return true;	
 	} else if(p1.y < other.p1.y) {

@@ -10,9 +10,10 @@
 
 #include <QPixmap>
 
-#include "3rd_party/hullfinder.h"
 #include "enums_engine.h"
 
+// Forward Declarations
+class DrPoint;
 
 // Image Constants
 const int   c_image_size = 600;             // Size of graphic to use for effects (water, mirror, fire, fisheye, swirl, etc.)
@@ -73,8 +74,8 @@ namespace DrImaging {
     QColor              averageColor(const QPixmap &pixmap, bool screen_shot = false);
     QVector<QRgb*>      getScanLines(QImage &image);
     float*              imageBitsAsFloat(const QImage &from_image);
-    QVector<HullPoint>  outlinePointList(const QImage &from_image);
-    QVector<HullPoint>  traceImageOutline(const QImage &from_image);
+    QVector<DrPoint>    outlinePointList(const QImage &from_image);
+    QVector<DrPoint>    traceImageOutline(const QImage &from_image);
 
 
     // Filters

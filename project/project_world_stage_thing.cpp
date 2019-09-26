@@ -6,6 +6,7 @@
 //
 //
 #include "helper.h"
+#include "helper_qt.h"
 #include "imaging/imaging.h"
 #include "opengl/opengl.h"
 #include "project.h"

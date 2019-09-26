@@ -16,6 +16,7 @@
 #include "form_main.h"
 #include "globals.h"
 #include "helper.h"
+#include "helper_qt.h"
 
 constexpr int c_text_box_height = 35;
 

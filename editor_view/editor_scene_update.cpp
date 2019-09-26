@@ -9,6 +9,7 @@
 #include "editor_scene.h"
 #include "enums_engine.h"
 #include "helper.h"
+#include "helper_qt.h"
 #include "imaging/imaging.h"
 #include "globals.h"
 #include "opengl/opengl.h"

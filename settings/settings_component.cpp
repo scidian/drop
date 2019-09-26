@@ -5,7 +5,9 @@
 //      DrComponent Class Definitions
 //
 //
+#include "constants.h"
 #include "helper.h"
+#include "helper_qt.h"
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"

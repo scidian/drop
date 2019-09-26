@@ -7,6 +7,7 @@
 //
 #include <QtMath>
 #include <QPainter>
+
 #include <cmath>
 
 #include "engine/engine.h"
@@ -15,6 +16,7 @@
 #include "engine/form_engine.h"
 #include "engine_things/engine_thing_object.h"
 #include "helper.h"
+#include "helper_qt.h"
 #include "opengl/opengl.h"
 
 
@@ -105,7 +107,7 @@ void DrOpenGL::drawDebugHealthNative(QPainter &painter) {
         QVector<GLfloat> vertices;
         texture_coordinates.clear();
         vertices.clear();
-        texture_coordinates.resize( static_cast<unsigned long>(8 * hp.length()) );
+        texture_coordinates.resize( static_cast<std::size_t>(8 * hp.length()) );
         vertices.resize( 12 * hp.length() );
 
         // Figure out what color to make the health, get health as string

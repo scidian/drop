@@ -28,14 +28,18 @@
 #ifndef POLYPARTITION_H
 #define POLYPARTITION_H
 
-#include <QtMath>
 #include <list>
 #include <set>
 
+#include "helper.h"
+
+// Type Definitions
 typedef double tppl_float;
 
+// Local Constants
 #define TPPL_CCW 1
 #define TPPL_CW -1
+
 
 //####################################################################################
 //##    TPPLPoint
@@ -76,21 +80,21 @@ struct TPPLPoint {
         return r;
     }
     
-//    bool operator==(const TPPLPoint& p) const {
-//        if ((x == p.x) && (y == p.y)) return true;
-//        else return false;
-//    }
-//    bool operator!=(const TPPLPoint& p) const {
-//        if ((x == p.x) && (y == p.y)) return false;
-//        else return true;
-//    }
+    ///bool operator==(const TPPLPoint& p) const {
+    ///    if ((x == p.x) && (y == p.y)) return true;
+    ///    else return false;
+    ///}
+    ///bool operator!=(const TPPLPoint& p) const {
+    ///    if ((x == p.x) && (y == p.y)) return false;
+    ///    else return true;
+    ///}
 
     bool operator==(const TPPLPoint& p) const {
-        if (qFuzzyCompare(x, p.x) && qFuzzyCompare(y, p.y)) return true;
+        if (Dr::IsCloseTo(x, p.x, 0.0001) && Dr::IsCloseTo(y, p.y, 0.0001)) return true;
         else return false;
     }
     bool operator!=(const TPPLPoint& p) const {
-        if (qFuzzyCompare(x, p.x) && qFuzzyCompare(y, p.y)) return false;
+        if (Dr::IsCloseTo(x, p.x, 0.0001) && Dr::IsCloseTo(y, p.y, 0.0001)) return false;
         else return true;
     }
 };

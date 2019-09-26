@@ -17,6 +17,7 @@
 #include "form_playground.h"
 #include "globals.h"
 #include "helper.h"
+#include "helper_qt.h"
 #include "playground.h"
 #include "playground_toy.h"
 #include "style/style.h"
@@ -153,8 +154,8 @@ void FormPlayground::clickedItem(DrToy *toy) {
 
     QString info;
     info += "<center><b>Object Info</b></center><br>";
-    info += "<b>Body Type:</b> " + Dr::StringFromBodyType(toy->body_type) + "<br>";
-    info += "<b>Shape Type:</b> " + Dr::StringFromShapeType(toy->shape_type) + "<br>";
+    info += "<b>Body Type:</b> " + QString::fromStdString( Dr::StringFromBodyType(toy->body_type) ) + "<br>";
+    info += "<b>Shape Type:</b> " + QString::fromStdString( Dr::StringFromShapeType(toy->shape_type) ) + "<br>";
     info += "<b>Friction:</b> " + QString::number( cpShapeGetFriction(toy->shape) ) + "<br>";
     info += "<b>Bounce:</b> " + QString::number( cpShapeGetElasticity(toy->shape)) + "<br>";
 
