@@ -23,12 +23,12 @@
 #ifndef HULLFINDER_H
 #define HULLFINDER_H
 
-#include <math.h>
-#include <vector>
-
 #include <QList>
 #include <QVector>
 #include <QMap>
+
+#include <math.h>
+#include <vector>
 
 // Forward Declarations
 class DrPoint;

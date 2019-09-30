@@ -20,6 +20,7 @@
 #include "3rd_party/delaunator.h"
 #include "3rd_party/hullfinder.h"
 #include "3rd_party/poly_partition.h"
+#include "3rd_party/polyline_simplification.h"
 #include "3rd_party_chipmunk/chipmunk.h"
 #include "engine/engine_texture.h"
 #include "engine_mesh/engine_vertex_data.h"
@@ -54,17 +55,19 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
         }
 
         // ***** Smooth, then Simplify point list
-        int split = wireframe ? int((((image.width() + image.height()) / 2) * 0.2) / 5) : 1000;         // Splits longest line of outline into 5 triangles
         points =  smoothPoints(  points, 5, 5.0, 0.5);
-        points =  simplifyPoints(points, 0.030,     5, true);                   // First run with averaging points to reduce triangles among similar slopes
-        points =  simplifyPoints(points, 0.001, split, false);                  // Run again with smaller tolerance to reduce triangles along straight lines
-        ///points =  simplifyPoints(points, 0.300, 2, false);                   // Run a few more times for #KEYWORD: "low poly"
-        ///points =  simplifyPoints(points, 0.300, 2, false);                   // Run a few more times for #KEYWORD: "low poly"
 
+        // Run Polyline Simplification algorithm
+        points = QVector<DrPoint>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(points.toStdVector(), 0.1) );
+
+        // Old Way of Simplifying Points on Similar Slopes
+        ///int split = wireframe ? int((((image.width() + image.height()) / 2) * 0.2) / 5) : 1000;      // Splits longest lines of outline into 5 triangles
+        ///points =  simplifyPoints(points, 0.030,     5, true);            // First run with averaging points to reduce triangles among similar slopes
+        ///points =  simplifyPoints(points, 0.001, split, false);           // Run again with smaller tolerance to reduce triangles along straight lines
 
         // ***** Copy image and finds holes as seperate outlines
         QImage holes = image.copy(rects[image_number]);
-        DrImaging::fillBorder(holes, c_color_white, holes.rect());              // Ensures only holes are left as black spots
+        DrImaging::fillBorder(holes, c_color_white, holes.rect());          // Ensures only holes are left as black spots
 
         // Breaks holes into seperate images for each hole
         QVector<QImage> hole_images;
@@ -89,8 +92,7 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
                 point.y += rects[image_number].y();
             }
             one_hole = smoothPoints(  one_hole, 5, 5.0, 0.5);
-            one_hole = simplifyPoints(one_hole, 0.030,     5, true);
-            one_hole = simplifyPoints(one_hole, 0.001, split, false);
+            one_hole = QVector<DrPoint>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(one_hole.toStdVector(), 0.1) );
             hole_list.push_back(one_hole);
         }
 
@@ -201,7 +203,7 @@ DrPoint pointAt(const QVector<DrPoint> &point_list, int index) {
 
 const double c_smooth_min_size = 50.0;
 
-// Smooths points, neigbors is in each direction (so 1 is index +/- 1 more point in each direction
+// Smooths points, neighbors is in each direction (so 1 is index +/- 1 more point in each direction
 QVector<DrPoint> DrEngineVertexData::smoothPoints(const QVector<DrPoint> &outline_points, int neighbors, double neighbor_distance, double weight) {
     QVector<DrPoint> smooth_points;
 

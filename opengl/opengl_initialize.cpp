@@ -68,7 +68,8 @@ void DrOpenGL::importTexture(long texture_id, QPixmap &pixmap) {
     // ***** 3D Extruded Textures
     // Create mesh
     m_texture_data[texture_id] = new DrEngineVertexData();
-    m_texture_data[texture_id]->initializeExtrudedPixmap( pixmap, true );       // Run with 'false' to reduce number of triangles in scene
+    m_texture_data[texture_id]->initializeExtrudedPixmap( pixmap, false );      // Run with 'false' to reduce number of triangles in scene
+                                                                                // Run with 'true' for better looking models in wireframe
 
     // Allocate mesh into vbo for use with OpenGL (could delete m_texture_data after this)
     m_texture_vbos[texture_id] = new QOpenGLBuffer();

@@ -28,6 +28,7 @@ QMAKE_CFLAGS += -std=c99
 SOURCES += \
     3rd_party/hullfinder.cpp \
     3rd_party/poly_partition.cpp \
+    3rd_party/polyline_simplification.cpp \
     3rd_party_chipmunk/chipmunk.c \
     3rd_party_chipmunk/cpArbiter.c \
     3rd_party_chipmunk/cpArray.c \
@@ -198,6 +199,7 @@ HEADERS += \
     3rd_party/delaunator.h \
     3rd_party/hullfinder.h \
     3rd_party/poly_partition.h \
+    3rd_party/polyline_simplification.h \
     3rd_party/vec3.h \
     3rd_party_chipmunk/chipmunk.h \
     3rd_party_chipmunk/chipmunk_ffi.h \

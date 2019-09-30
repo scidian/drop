@@ -44,7 +44,7 @@ void DrEngine::deleteTextures() {
 //####################################################################################
 //##    Convenience Functions
 //####################################################################################
-QString DrEngine::pedalAsString() {
+std::string DrEngine::pedalAsString() {
     switch (g_pedal) {
         case Pedal::None:               return "None";
         case Pedal::Brake:              return "Brake";

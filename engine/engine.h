@@ -9,8 +9,9 @@
 #define ENGINE_H
 
 #include <QPixmap>
-#include <QString>
+
 #include <map>
+#include <string>
 
 #include "3rd_party_chipmunk/chipmunk.h"
 #include "enums_engine.h"
@@ -76,7 +77,7 @@ public:
     DrEngineWorld*      getCurrentWorld()           { return m_worlds[m_current_world]; }
     DrEngineWorld*      getWorld(long world_key)    { return m_worlds[world_key]; }
 
-    QString             pedalAsString();
+    std::string         pedalAsString();
 
 };
 
