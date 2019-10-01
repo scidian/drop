@@ -16,6 +16,7 @@
 #include "enums.h"
 #include "enums_engine.h"
 #include "helper.h"
+#include "types/point.h"
 
 // Forward Declarations
 class DrEngineWorld;
@@ -44,10 +45,10 @@ private:
     // Basic Thing Properties
     double          m_angle_z = 0.0;                    // Current angle (on Z axis), (for DrEngineObject this is updated every frame by update())
     float           m_opacity = 1.0f;                   // Transparency of Thing (0.0 invisible, 1.0 opaque)
-    QPointF         m_position;                         // Current center posiiton
+    DrPoint         m_position;                         // Current center posiiton
     float           m_scale_x = 1.0f;                   // Scale of Thing in world
     float           m_scale_y = 1.0f;                   // Scale of Thing in world
-    QPointF         m_size;                             // Original size of Thing
+    DrPoint         m_size;                             // Original size of Thing
 
     // Thing Properties - 3D
     Convert_3D_Type m_3d_type = Convert_3D_Type::Extrusion;
@@ -105,20 +106,20 @@ public:
     // Basic Properties
     virtual double          getAngle() {    return m_angle_z; }                             // Returns Thing angle (in degrees)
     virtual const float&    getOpacity() {  return m_opacity; }                             // Returns Opacity (alpha 0.0 to 1.0) of Thing
-    virtual QPointF         getPosition() { return m_position; }                            // Returns Thing center position in world coordinates
+    virtual DrPoint         getPosition() { return m_position; }                            // Returns Thing center position in world coordinates
     virtual const float&    getScaleX() {   return m_scale_x; }
     virtual const float&    getScaleY() {   return m_scale_y; }
-    virtual QPointF         getSize() {     return m_size; }                                // Returns original Thing size
+    virtual DrPoint         getSize() {     return m_size; }                                // Returns original Thing size
     DrEngineWorld*          getWorld() {    return m_world; }
 
     virtual void            setAngle(double new_angle) {        m_angle_z = new_angle; }
     virtual void            setOpacity(float new_opacity) {     m_opacity = new_opacity; }
-    virtual void            setPosition(QPointF position) {     m_position = position; }
+    virtual void            setPosition(DrPoint position) {     m_position = position; }
     void                    setScaleX(float new_scale_x)  {     m_scale_x = new_scale_x; }
     void                    setScaleX(double new_scale_x) {     m_scale_x = static_cast<float>(new_scale_x); }
     void                    setScaleY(float new_scale_y)  {     m_scale_y = new_scale_y; }
     void                    setScaleY(double new_scale_y) {     m_scale_y = static_cast<float>(new_scale_y); }
-    virtual void            setSize(QPointF size) {             m_size = size; }
+    virtual void            setSize(DrPoint size) {             m_size = size; }
     void                    setWorld(DrEngineWorld *world) {    m_world = world; }
 
     // 3D Properties

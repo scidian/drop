@@ -22,7 +22,7 @@ DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key,
                              Light_Type type_,
                              QColor     color_,
                              float      diameter_,
-                             QPointF    cone_,
+                             DrPoint    cone_,
                              float intensity_,
                              float shadows_,
                              bool  draw_shadows_,
@@ -32,7 +32,7 @@ DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key,
     : DrEngineThing(world, unique_key) {
 
     this->setOpacity( opacity_ );
-    this->setPosition( QPointF(x_, y_) );
+    this->setPosition( DrPoint(x_, y_) );
     this->z_order = z_;
 
     this->light_type = type_;
@@ -87,10 +87,10 @@ bool DrEngineLight::update(double time_passed, double time_warp, QRectF &area) {
     }
 
     // !!!!! TEMP: Move light
-    ///this->setPosition(QPointF(this->getPosition().x() + 2, this->getPosition().y()));
+    ///this->setPosition(DrPoint(this->getPosition().x + 2, this->getPosition().y));
 
     // ***** Delete object if ends up outside the deletion threshold
-    if (area.contains(getPosition()) == false) remove = true;
+    if (area.contains(QPointF(getPosition().x, getPosition().y)) == false) remove = true;
     return remove;
 }
 
@@ -103,8 +103,8 @@ void DrEngineLight::setAngle(double new_angle) {
     while (new_angle > 360.0) new_angle -= 360.0;
     DrEngineThing::setAngle(new_angle);
 
-    double new_x = cone.x() + new_angle;
-    double new_y = cone.y() + new_angle;
+    double new_x = cone.x + new_angle;
+    double new_y = cone.y + new_angle;
 
     if (new_y > 360.0) {
         new_y -= 360.0;
@@ -113,7 +113,7 @@ void DrEngineLight::setAngle(double new_angle) {
         new_x -= 360.0;
     }
 
-    m_rotated_cone = QPointF( new_x, new_y );
+    m_rotated_cone = DrPoint( new_x, new_y );
 }
 
 

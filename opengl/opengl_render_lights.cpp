@@ -117,13 +117,13 @@ int DrOpenGL::findNeededShadowMaps() {
         //      far away. This calculates the size difference for rendering later
         double light_radius = (light->getLightDiameterFitted() / 2.0);
         if (m_engine->getCurrentWorld()->render_type == Render_Type::Perspective && m_occluder_fbo) {
-            QPointF map_0_a = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x()), 0.0f, 0.0f),
+            QPointF map_0_a = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x), 0.0f, 0.0f),
                                           m_occluder_fbo, occluderMatrix(Render_Type::Perspective, false) );
-            QPointF map_0_b = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x() + (light->getLightDiameterFitted()/2.0)), 0.0f, 0.0f),
+            QPointF map_0_b = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x + (light->getLightDiameterFitted()/2.0)), 0.0f, 0.0f),
                                           m_occluder_fbo, occluderMatrix(Render_Type::Perspective, false) );
-            QPointF map_z_a = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x()), 0.0f, static_cast<float>(light->z_order)),
+            QPointF map_z_a = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x), 0.0f, static_cast<float>(light->z_order)),
                                           m_occluder_fbo, occluderMatrix(Render_Type::Perspective, false) );
-            QPointF map_z_b = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x() + (light->getLightDiameterFitted()/2.0)), 0.0f,
+            QPointF map_z_b = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x + (light->getLightDiameterFitted()/2.0)), 0.0f,
                                                   static_cast<float>(light->z_order)),
                                           m_occluder_fbo, occluderMatrix(Render_Type::Perspective, false) );
             double map_0 = (map_0_a.x() > map_0_b.x()) ? (map_0_a.x() - map_0_b.x()) : (map_0_b.x() - map_0_a.x());
@@ -133,10 +133,10 @@ int DrOpenGL::findNeededShadowMaps() {
         }
 
         // Check if light is in view to be rendered
-        QPoint top_left =  mapToScreen(light->getPosition().x() - light_radius, light->getPosition().y() + light_radius, light->z_order ).toPoint();
-        QPoint top_right = mapToScreen(light->getPosition().x() + light_radius, light->getPosition().y() + light_radius, light->z_order ).toPoint();
-        QPoint bot_left =  mapToScreen(light->getPosition().x() - light_radius, light->getPosition().y() - light_radius, light->z_order ).toPoint();
-        QPoint bot_right = mapToScreen(light->getPosition().x() + light_radius, light->getPosition().y() - light_radius, light->z_order ).toPoint();
+        QPoint top_left =  mapToScreen(light->getPosition().x - light_radius, light->getPosition().y + light_radius, light->z_order ).toPoint();
+        QPoint top_right = mapToScreen(light->getPosition().x + light_radius, light->getPosition().y + light_radius, light->z_order ).toPoint();
+        QPoint bot_left =  mapToScreen(light->getPosition().x - light_radius, light->getPosition().y - light_radius, light->z_order ).toPoint();
+        QPoint bot_right = mapToScreen(light->getPosition().x + light_radius, light->getPosition().y - light_radius, light->z_order ).toPoint();
         QPolygon light_box; light_box << top_left << top_right << bot_left << bot_right;
         QRect in_view = QRect(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
         light->setIsInView( light_box.boundingRect().intersects(in_view) || light_box.boundingRect().contains(in_view) ||
@@ -156,8 +156,8 @@ int DrOpenGL::findNeededShadowMaps() {
 void DrOpenGL::drawShadowMaps() {
     for (auto light : m_shadow_lights) {
         // Calculate light position on Occluder Map
-        light->setScreenPos( mapToFBO( QVector3D(static_cast<float>(light->getPosition().x()),
-                                                 static_cast<float>(light->getPosition().y()),
+        light->setScreenPos( mapToFBO( QVector3D(static_cast<float>(light->getPosition().x),
+                                                 static_cast<float>(light->getPosition().y),
                                                  static_cast<float>(light->z_order)),
                                        m_occluder_fbo, occluderMatrix(m_engine->getCurrentWorld()->render_type, false)) );
         double middle = m_texture_fbo->height() / 2.0;
@@ -297,7 +297,7 @@ bool DrOpenGL::draw2DLight(DrEngineLight *light) {
     float quad_width =  (light->getLightDiameterFitted()/perspective_scale);
     float quad_height = (light->getLightDiameterFitted()/perspective_scale);
     QVector<GLfloat> vertices;
-    setQuadVertices(vertices, quad_width, quad_height, light->getPosition(), static_cast<float>(light->z_order));
+    setQuadVertices(vertices, quad_width, quad_height, QPointF(light->getPosition().x, light->getPosition().y), static_cast<float>(light->z_order));
     m_light_shader.setAttributeArray(    a_light_vertex, vertices.data(), 3 );
     m_light_shader.enableAttributeArray( a_light_vertex );
 
@@ -320,8 +320,8 @@ bool DrOpenGL::draw2DLight(DrEngineLight *light) {
                                     static_cast<float>(light->color.blueF()) );
 
     // Give shader the light cone start and end angles
-    float cone_1 = qDegreesToRadians(static_cast<float>(light->getRotatedCone().x()));
-    float cone_2 = qDegreesToRadians(static_cast<float>(light->getRotatedCone().y()));
+    float cone_1 = qDegreesToRadians(static_cast<float>(light->getRotatedCone().x));
+    float cone_2 = qDegreesToRadians(static_cast<float>(light->getRotatedCone().y));
     if (cone_1 < 0.0f) cone_1 += (2.0f * 3.141592f);
     if (cone_2 < 0.0f) cone_2 += (2.0f * 3.141592f);
     m_light_shader.setUniformValue( u_light_cone, cone_1, cone_2 );

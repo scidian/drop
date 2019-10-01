@@ -13,17 +13,18 @@
 #include "engine/engine_world.h"
 #include "engine_thing_object.h"
 #include "helper.h"
+#include "helper_qt.h"
 
 //####################################################################################
 //##    Creates a list of Vertices that represent a scaled circle
 //####################################################################################
-QVector<QPointF> DrEngineObject::createEllipseFromCircle(const QPointF &center, const double &radius, const int &point_count) {
-    QVector<QPointF> ellipse;
+QVector<DrPoint> DrEngineObject::createEllipseFromCircle(const DrPoint &center, const double &radius, const int &point_count) {
+    QVector<DrPoint> ellipse;
     int count = point_count;
     for (int i = 0; i < count; i++) {
-        QTransform t = QTransform().translate(center.x(), center.y()).rotate(i * 360.0 / count);
+        QTransform t = QTransform().translate(center.x, center.y).rotate(i * 360.0 / count);
         QPointF point = t.map(QPointF( 0, radius));
-        ellipse.append( point );
+        ellipse.append( DrPoint(point.x(), point.y()) );
     }
     return ellipse;
 }
@@ -43,14 +44,14 @@ void DrEngineObject::addShapeBoxFromTexture(long texture_number) {
     addShapeBox(width, height);
 }
 
-void DrEngineObject::addShapeCircle(double circle_radius, QPointF shape_offset) {
+void DrEngineObject::addShapeCircle(double circle_radius, DrPoint shape_offset) {
     // Check if Circle, but not perfect square scale, if so, create with a polygon ellipse instead of a circle
     if (qFuzzyCompare(this->getScaleX(), this->getScaleY()) == false) {
-        QVector<QPointF> points = createEllipseFromCircle(shape_offset, circle_radius, 18);
+        QVector<DrPoint> points = createEllipseFromCircle(shape_offset, circle_radius, 18);
         addShapePolygon(points);
     } else {
         double  radius = circle_radius * static_cast<double>(this->getScaleX());
-        cpVect  offset = cpv(shape_offset.x(), shape_offset.y());                           // Offset of collision shape
+        cpVect  offset = cpv(shape_offset.x, shape_offset.y);                               // Offset of collision shape
         cpShape *shape = cpCircleShapeNew(this->body, radius, offset);
         double    area = cpAreaForCircle( 0, circle_radius );
         applyShapeSettings(shape, area, Shape_Type::Circle);
@@ -58,34 +59,34 @@ void DrEngineObject::addShapeCircle(double circle_radius, QPointF shape_offset) 
 }
 void DrEngineObject::addShapeCircleFromTexture(long texture_number) {
     double radius = getWorld()->getTexture(texture_number)->width() / 2.0;
-    addShapeCircle(radius, QPointF(0, 0));
+    addShapeCircle(radius, DrPoint(0, 0));
 }
 
-void DrEngineObject::addShapeSegment(QPointF p1, QPointF p2, double padding) {
-    cpShape *shape = cpSegmentShapeNew(this->body, cpv(p1.x(), p1.y()), cpv(p2.x(), p2.y()), padding);
-    double   area =  cpAreaForSegment(cpv(p1.x(), p1.y()), cpv(p2.x(), p2.y()), padding);
+void DrEngineObject::addShapeSegment(DrPoint p1, DrPoint p2, double padding) {
+    cpShape *shape = cpSegmentShapeNew(this->body, cpv(p1.x, p1.y), cpv(p2.x, p2.y), padding);
+    double   area =  cpAreaForSegment(cpv(p1.x, p1.y), cpv(p2.x, p2.y), padding);
     applyShapeSettings(shape, area, Shape_Type::Segment);
 }
 
-void DrEngineObject::addShapePolygon(QVector<QPointF> &points) {
+void DrEngineObject::addShapePolygon(QVector<DrPoint> &points) {
 
     int old_point_count =static_cast<int>(points.size());
     double scale_x = static_cast<double>(this->getScaleX());
     double scale_y = static_cast<double>(this->getScaleY());
 
     // Copy polygon Vertices into a scaled cpVect array
-    std::vector<cpVect> hull;   hull.clear();   hull.resize(  static_cast<ulong>(old_point_count) );        // Temporary array for ConvexHull call below
-    std::vector<cpVect> verts;  verts.clear();  verts.resize( static_cast<ulong>(old_point_count) );
+    std::vector<cpVect> hull;   hull.clear();   hull.resize(  static_cast<size_t>(old_point_count) );       // Temporary array for ConvexHull call below
+    std::vector<cpVect> verts;  verts.clear();  verts.resize( static_cast<size_t>(old_point_count) );
     for (int i = 0; i < old_point_count; i++)
-        verts[static_cast<ulong>(i)] = cpv( points[i].x() * scale_x, points[i].y() * scale_y);
+        verts[static_cast<size_t>(i)] = cpv( points[i].x * scale_x, points[i].y * scale_y);
 
     // Determine if polygon is concave, if it is create multiple shapes, otherwise create one shape
     std::list<TPPLPoly> testpolys, result;                              // Used by library Poly Partition
     TPPLPoly poly;
     poly.Init(old_point_count);
     for (int i = 0; i < old_point_count; i++) {
-        poly[i].x = points[i].x() * scale_x;
-        poly[i].y = points[i].y() * scale_y;
+        poly[i].x = points[i].x * scale_x;
+        poly[i].y = points[i].y * scale_y;
     }
     testpolys.push_back( poly );
 
@@ -97,9 +98,9 @@ void DrEngineObject::addShapePolygon(QVector<QPointF> &points) {
     int new_point_count = cpConvexHull(old_point_count, verts.data(), hull.data(), &first, 0.0);
 
     // Shape is convex or could not determine convex hull
-    ///if (new_point_count == 0) {
-    ///    Dr::ShowMessageBox("Warning! From addShapePolygon()... Could not form convex hull!");
-    ///}
+    if (new_point_count == 0) {
+        Dr::ShowMessageBox("Warning! From addShapePolygon()... Could not form convex hull!");
+    }
     if ((new_point_count == old_point_count || (new_point_count == 0))) {
         cpShape *shape = cpPolyShapeNew( this->body, old_point_count, verts.data(), cpTransformIdentity, c_extra_radius);
         double   area =  cpAreaForPoly(old_point_count, verts.data(), c_extra_radius );

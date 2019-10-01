@@ -93,8 +93,10 @@
 #include "globals.h"
 #include "helper.h"
 #include "helper_qt.h"
+#include "project/thing_shape_list.h"
 
 
+// ********** MAIN **********
 int main(int argc, char *argv[]) {
 
     // ***** Initiliaze application

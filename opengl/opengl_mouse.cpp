@@ -46,7 +46,7 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                     circle = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, x, y, z);
                 } else {
                     ///circle = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, x, y, z);
-                    circle = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, x, y, z, QPointF(2, 1));
+                    circle = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, x, y, z, DrPoint(2, 1));
                 }
                 circle->addShapeCircle(ball_radius, c_center);
                 circle->setOriginalVelocityX(vel_x);
@@ -61,15 +61,15 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
         } else if (event->button() & Qt::RightButton) {
 
             // Polygon shape points should be counter-clockwise
-            QVector<QPointF> points;
-            points.append( QPointF( 20, -55) );     // Right Bottom
-            points.append( QPointF( 45,  15) );     // Right Middle
-            points.append( QPointF(  5,  60) );     // Top
-            points.append( QPointF(-10, -30) );     // Left Mid Middle Concave <-- point is ignored by Chipmunk
-            points.append( QPointF(-46, -10) );     // Left Middle
-            points.append( QPointF(-38, -55) );     // Left Bottom
+            QVector<DrPoint> points;
+            points.append( DrPoint( 20, -55) );     // Right Bottom
+            points.append( DrPoint( 45,  15) );     // Right Middle
+            points.append( DrPoint(  5,  60) );     // Top
+            points.append( DrPoint(-10, -30) );     // Left Mid Middle Concave <-- point is ignored by Chipmunk
+            points.append( DrPoint(-46, -10) );     // Left Middle
+            points.append( DrPoint(-38, -55) );     // Left Bottom
 
-            DrEngineObject *plant = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Plant, x, y, z, QPointF(2, .5));
+            DrEngineObject *plant = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Plant, x, y, z, DrPoint(2, .5));
             plant->addShapePolygon(points);
             world->addThing(plant);
         }
@@ -126,7 +126,7 @@ void DrOpenGL::mouseMoveEvent(QMouseEvent *event) {
     if (m_form_engine->demo_player == Demo_Player::Light) {
         DrEngineObject *ball = m_engine->getCurrentWorld()->ball;
 
-        QPointF ball_pos =  mapToScreen( ball->getPosition().x(), ball->getPosition().y(), ball->z_order );
+        QPointF ball_pos =  mapToScreen( ball->getPosition().x, ball->getPosition().y, ball->z_order );
         double  angle =     QLineF( ball_pos, QPointF(event->pos().x() * devicePixelRatio(), event->pos().y() * devicePixelRatio()) ).angle();
 
         m_engine->getCurrentWorld()->light1->setAngle(angle);

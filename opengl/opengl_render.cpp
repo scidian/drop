@@ -107,14 +107,14 @@ void DrOpenGL::setQuadRotatedVertices(QVector<GLfloat> &vertices,
 //####################################################################################
 void DrOpenGL::getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing) {
     // ***** Get object position data
-    QPointF center = thing->getPosition();
+    DrPoint center = thing->getPosition();
     float   x, y, z;
     float   half_width, half_height;
-    x = static_cast<float>(center.x());
-    y = static_cast<float>(center.y());
+    x = static_cast<float>(center.x);
+    y = static_cast<float>(center.y);
     z = static_cast<float>(thing->z_order);
-    half_width =  static_cast<float>(thing->getSize().x()) * thing->getScaleX() / 2.0f;
-    half_height = static_cast<float>(thing->getSize().y()) * thing->getScaleY() / 2.0f;
+    half_width =  static_cast<float>(thing->getSize().x) * thing->getScaleX() / 2.0f;
+    half_height = static_cast<float>(thing->getSize().y) * thing->getScaleY() / 2.0f;
 
     // ***** Create rotation matrix, apply rotation to object
     float now = static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 10.0);

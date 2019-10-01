@@ -108,8 +108,8 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
 
 
     // ***** Set Matrix for Shader, calculates current matrix, adds in object location
-    float x =   static_cast<float>(thing->getPosition().x());
-    float y =   static_cast<float>(thing->getPosition().y());
+    float x =   static_cast<float>(thing->getPosition().x);
+    float y =   static_cast<float>(thing->getPosition().y);
     float z =   static_cast<float>(thing->z_order + m_add_z);
     double now = Dr::MillisecondsSinceStartOfDay() / 10.0;
 
@@ -142,7 +142,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
 
     // Scale
     if (draw2D || object->get3DType() == Convert_3D_Type::Cube)
-        model.scale(static_cast<float>(object->getSize().x()), static_cast<float>(object->getSize().y()), 1.0f);
+        model.scale(static_cast<float>(object->getSize().x), static_cast<float>(object->getSize().y), 1.0f);
     model.scale( object->getScaleX(), object->getScaleY(), static_cast<float>(object->getDepth()) );
 
     m_default_shader.setUniformValue( u_default_matrix,         m_projection * m_view * model );
@@ -299,8 +299,8 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);                    // Premultiplied alpha blend
 
     // ***** Set Matrix for Shader, calculates current matrix, adds in object location
-    float x =   static_cast<float>(thing->getPosition().x());
-    float y =   static_cast<float>(thing->getPosition().y());
+    float x =   static_cast<float>(thing->getPosition().x);
+    float y =   static_cast<float>(thing->getPosition().y);
     float z =   static_cast<float>(thing->z_order + m_add_z);
     double now = Dr::MillisecondsSinceStartOfDay() / 10.0;
 
@@ -316,7 +316,7 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
     model.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
 
     // Scale
-    model.scale(static_cast<float>(object->getSize().x()), static_cast<float>(object->getSize().y()), 1.0f);
+    model.scale(static_cast<float>(object->getSize().x), static_cast<float>(object->getSize().y), 1.0f);
     model.scale( object->getScaleX(), object->getScaleY(), static_cast<float>(object->getDepth()) );
 
     m_simple_shader.setUniformValue( u_simple_matrix,         m_projection * m_view * model );
@@ -478,9 +478,9 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     float now = static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0);
     m_fire_shader.setUniformValue( u_fire_alpha,    fire->getOpacity() );
     m_fire_shader.setUniformValue( u_fire_time,     now );
-    m_fire_shader.setUniformValue( u_fire_position, static_cast<float>(thing->getPosition().x()), static_cast<float>(thing->getPosition().y()) );
-    m_fire_shader.setUniformValue( u_fire_width,    static_cast<float>(fire->getSize().x()) * fire->getScaleX() );
-    m_fire_shader.setUniformValue( u_fire_height,   static_cast<float>(fire->getSize().y()) * fire->getScaleY() );
+    m_fire_shader.setUniformValue( u_fire_position, static_cast<float>(thing->getPosition().x), static_cast<float>(thing->getPosition().y) );
+    m_fire_shader.setUniformValue( u_fire_width,    static_cast<float>(fire->getSize().x) * fire->getScaleX() );
+    m_fire_shader.setUniformValue( u_fire_height,   static_cast<float>(fire->getSize().y) * fire->getScaleY() );
 
     m_fire_shader.setUniformValue( u_fire_shape,    static_cast<int>(fire->fire_mask) );
     m_fire_shader.setUniformValue( u_fire_start_color,

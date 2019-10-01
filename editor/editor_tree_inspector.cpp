@@ -244,11 +244,9 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
                 //      CASES NOT ACCOUNTED FOR
                 //
                 //################ !!!!!!!!!!!!!!!!!!!!!!!
+                case Property_Type::Collision:                                // For Collision Shapes
                 case Property_Type::Icon:
-                case Property_Type::Polygon:                                // For Collision Shapes?
                 case Property_Type::Vector3D:
-
-
 
                     break;
             }

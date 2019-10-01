@@ -31,7 +31,7 @@ public:
 
 public:
     // Constructor / Destructor
-    DrEngineMirror(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, float opacity, QPointF size,
+    DrEngineMirror(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, float opacity, DrPoint size,
                    QColor color_1, QColor color_2, float tint_amount, float blur, float blur_stretch, float scale);
     virtual ~DrEngineMirror() override;
 

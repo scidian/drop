@@ -11,13 +11,13 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrEngineFisheye::DrEngineFisheye(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, float opacity, QPointF size,
+DrEngineFisheye::DrEngineFisheye(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, float opacity, DrPoint size,
                                  QColor start_color, float tint, float zoom) :
     DrEngineThing(world, unique_key) {
 
     this->setAngle(angle);
     this->setOpacity( opacity );
-    this->setPosition( QPointF(x, y) );
+    this->setPosition( DrPoint(x, y) );
     this->setSize(size);
     this->z_order = z;
 
@@ -51,7 +51,7 @@ bool DrEngineFisheye::update(double time_passed, double time_warp, QRectF &area)
     bool remove = false;
 
     // ***** Delete object if ends up outside the deletion threshold
-    if (area.contains(getPosition()) == false) remove = true;
+    if (area.contains(QPointF(getPosition().x, getPosition().y)) == false) remove = true;
     return remove;
 }
 

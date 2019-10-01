@@ -28,7 +28,7 @@ public:
 
 public:
     // Constructor / Destructor
-    DrEngineFisheye(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, float opacity, QPointF size,
+    DrEngineFisheye(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, float opacity, DrPoint size,
                     QColor start_color, float tint, float zoom);
     virtual ~DrEngineFisheye() override;
 

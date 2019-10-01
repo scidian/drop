@@ -48,17 +48,19 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
 
         // ***** Trace edge of image
         QVector<DrPoint> points =  DrImaging::traceImageOutline(image);
+
+        // Smooth point list
+        points =  smoothPoints(  points, 5, 5.0, 0.5);
+
+        // Run Polyline Simplification algorithm
+        points = QVector<DrPoint>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(points.toStdVector(), 2.0) );
+
+        // Check winding
         switch (HullFinder::FindWindingOrientation(points)) {
             case Winding_Orientation::Unknown:          continue;
             case Winding_Orientation::Clockwise:        std::reverse(points.begin(), points.end());     break;
             case Winding_Orientation::CounterClockwise: break;
         }
-
-        // ***** Smooth, then Simplify point list
-        points =  smoothPoints(  points, 5, 5.0, 0.5);
-
-        // Run Polyline Simplification algorithm
-        points = QVector<DrPoint>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(points.toStdVector(), 0.1) );
 
         // Old Way of Simplifying Points on Similar Slopes
         ///int split = wireframe ? int((((image.width() + image.height()) / 2) * 0.2) / 5) : 1000;      // Splits longest lines of outline into 5 triangles
@@ -80,12 +82,6 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
             QImage &hole = hole_images[hole_number];
             if (hole.width() < 1 || hole.height() < 1) continue;
             QVector<DrPoint> one_hole =        DrImaging::traceImageOutline(hole);
-            Winding_Orientation hole_winding = HullFinder::FindWindingOrientation(one_hole);
-            switch (hole_winding) {
-                case Winding_Orientation::Unknown:          continue;
-                case Winding_Orientation::Clockwise:        break;
-                case Winding_Orientation::CounterClockwise: std::reverse(one_hole.begin(), one_hole.end()); break;
-            }
             // Add in sub image offset to points
             for (auto &point : one_hole) {
                 point.x += rects[image_number].x();
@@ -93,6 +89,11 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
             }
             one_hole = smoothPoints(  one_hole, 5, 5.0, 0.5);
             one_hole = QVector<DrPoint>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(one_hole.toStdVector(), 0.1) );
+            switch (HullFinder::FindWindingOrientation(one_hole)) {
+                case Winding_Orientation::Unknown:          continue;
+                case Winding_Orientation::Clockwise:        break;
+                case Winding_Orientation::CounterClockwise: std::reverse(one_hole.begin(), one_hole.end()); break;
+            }
             hole_list.push_back(one_hole);
         }
 

@@ -39,12 +39,14 @@ enum class Property_Type {
     GridScaleF,             // QPointF          Floating pair x and y, minimum value of c_minimum_grid_scale for both x and y
     Variable,               // QPointF          Floating point pair, number followed by a +/- number
 
+    List,                   // enum list
     Image,                  // QPixmap
     Icon,                   // QPixmap
     Color,                  // QColor.rgba()    For Colors
-    Polygon,                // QPolygon         For Collision Shapes
     Vector3D,
-    List,                   // enum list
+
+    Collision,              // DrShapeList      For Collision Shapes
+
 };
 
 

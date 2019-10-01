@@ -14,6 +14,7 @@
 // Forward Declarations
 class DrFont;
 class DrProject;
+class DrShapeList;
 
 //####################################################################################
 //##    DrAsset
@@ -51,8 +52,8 @@ public:
     long            getSourceKey()      { return m_source_key; }
 
     // Function Calls
-    void        initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap);
-    void        initializeAssetSettingsObject(QString new_name, QPixmap pixmap);
+    void        initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap, DrShapeList &shape);
+    void        initializeAssetSettingsObject(QString new_name, QPixmap pixmap, DrShapeList &shape);
     void        initializeAssetSettingsEffect(QString new_name);
     void        initializeAssetSettingsFont(DrFont *font);
 

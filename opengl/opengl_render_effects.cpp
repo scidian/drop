@@ -33,10 +33,10 @@
 bool DrOpenGL::getEffectPosition(QOpenGLFramebufferObject *fbo, DrEngineThing *thing,
                        double &top, double &bottom, double &left, double &right, float &angle) {
     // Get Thing position in screen coordinates
-    QPointF position_top =    mapToScreen(thing->getPosition().x(), thing->getPosition().y() + (thing->getSize().y() / 2.0), thing->z_order);
-    QPointF position_bottom = mapToScreen(thing->getPosition().x(), thing->getPosition().y() - (thing->getSize().y() / 2.0), thing->z_order);
-    QPointF position_left =   mapToScreen(thing->getPosition().x() - (thing->getSize().x() / 2.0), thing->getPosition().y(), thing->z_order);
-    QPointF position_right =  mapToScreen(thing->getPosition().x() + (thing->getSize().x() / 2.0), thing->getPosition().y(), thing->z_order);
+    QPointF position_top =    mapToScreen(thing->getPosition().x, thing->getPosition().y + (thing->getSize().y / 2.0), thing->z_order);
+    QPointF position_bottom = mapToScreen(thing->getPosition().x, thing->getPosition().y - (thing->getSize().y / 2.0), thing->z_order);
+    QPointF position_left =   mapToScreen(thing->getPosition().x - (thing->getSize().x / 2.0), thing->getPosition().y, thing->z_order);
+    QPointF position_right =  mapToScreen(thing->getPosition().x + (thing->getSize().x / 2.0), thing->getPosition().y, thing->z_order);
     if (position_left.x()   > position_right.x())
         Dr::Swap(position_left,   position_right);
     if (position_bottom.y() < position_top.y()) {
@@ -296,7 +296,7 @@ bool DrOpenGL::drawFrameBufferUsingSwirlShader(QOpenGLFramebufferObject *fbo, Dr
                                         static_cast<float>(swirl->start_color.blueF()) );
     m_swirl_shader.setUniformValue( u_swirl_color_tint,         swirl->color_tint );
     m_swirl_shader.setUniformValue( u_swirl_rotation,   swirl->rotation );
-    m_swirl_shader.setUniformValue( u_swirl_radius,     static_cast<float>(swirl->getSize().x()) );
+    m_swirl_shader.setUniformValue( u_swirl_radius,     static_cast<float>(swirl->getSize().x) );
 
     // Set more variables for shader
     m_swirl_shader.setUniformValue( u_swirl_alpha,      swirl->getOpacity() );

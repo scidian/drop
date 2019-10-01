@@ -19,6 +19,7 @@
 
 #include "enums.h"
 #include "enums_engine.h"
+#include "types/point.h"
 
 // Forward Declarations
 class DrEngine;

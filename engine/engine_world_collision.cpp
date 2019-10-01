@@ -10,6 +10,7 @@
 #include "engine.h"
 #include "engine_things/engine_thing_object.h"
 #include "engine_world.h"
+#include "project/thing_shape_list.h"
 
 //  Arbiter Callbacks:
 //      begin:      Called when objects first touch. Return true from the callback to process the collision normally or false to cause Chipmunk to ignore
@@ -23,11 +24,11 @@
 //      seperate:   Two shapes have just stopped touching for the first time this step. To ensure that begin() / separate() are always called in balanced pairs,
 //                      it will also be called when removing a shape while its in contact with something or when deallocating the space.
 
-enum class One_Way2 {                   // One Way Collide
+enum class One_Way_Reference {          // One Way Collide
     None,
     Pass_Through,                       // Objects can pass through going one_way_direction
     Weak_Point,                         // Only takes damage from one_way_direction
-    Damage_Direction,                   // Only gives damage from one_way_direction (block with
+    ///Damage_Direction,                // Only gives damage from one_way_direction
 };
 
 // Internal Linkage (File Scope) Forward Declarations
@@ -178,7 +179,7 @@ extern cpBool WaterPreSolve(cpArbiter *arb, cpSpace *space, void *) {
     // If shape is a circle, create a temporary polygon circle shape
     if (object_b->shape_type[collider] == Shape_Type::Circle) {
         cpVect  offset = cpCircleShapeGetOffset(collider);
-        QVector<QPointF> points = object_b->createEllipseFromCircle(QPointF(offset.x, offset.y), cpCircleShapeGetRadius(collider), 12);
+        QVector<DrPoint> points = object_b->createEllipseFromCircle(DrPoint(offset.x, offset.y), cpCircleShapeGetRadius(collider), 12);
         int old_point_count = static_cast<int>(points.size());
 
         // Copy polygon Vertices into a scaled cpVect array
@@ -186,7 +187,7 @@ extern cpBool WaterPreSolve(cpArbiter *arb, cpSpace *space, void *) {
         verts.clear();
         verts.resize( static_cast<ulong>(old_point_count) );
         for (int i = 0; i < old_point_count; i++)
-            verts[static_cast<ulong>(i)] = cpv( points[i].x() * static_cast<double>(object_b->getScaleX()), points[i].y() * static_cast<double>(object_b->getScaleY()));
+            verts[static_cast<ulong>(i)] = cpv( points[i].x * static_cast<double>(object_b->getScaleX()), points[i].y * static_cast<double>(object_b->getScaleY()));
         collider = cpPolyShapeNew( object_b->body, old_point_count, verts.data(), cpTransformIdentity, c_extra_radius);
     }
 

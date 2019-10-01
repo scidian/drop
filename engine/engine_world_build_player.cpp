@@ -79,13 +79,13 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         this->setGlowZOrder(100.0);
 
         ball = ball1;
-        light1 = new DrEngineLight(this, getNextKey(), 250, 25, -100, 1.0, Light_Type::Glow, QColor(255, 255, 153), 3400, QPointF(340,  20), 54, 50.0f, true, 15.0f, 0.00f, 0.00f);
-        light2 = new DrEngineLight(this, getNextKey(), 250, 25, -100, 1.0, Light_Type::Glow, QColor(255, 215, 215),  100, QPointF(  0, 360), 60, 50.0f, true, 10.0f, 0.00f, 0.00f);
+        light1 = new DrEngineLight(this, getNextKey(), 250, 25, -100, 1.0, Light_Type::Glow, QColor(255, 255, 153), 3400, DrPoint(340,  20), 54, 50.0f, true, 15.0f, 0.00f, 0.00f);
+        light2 = new DrEngineLight(this, getNextKey(), 250, 25, -100, 1.0, Light_Type::Glow, QColor(255, 215, 215),  100, DrPoint(  0, 360), 60, 50.0f, true, 10.0f, 0.00f, 0.00f);
         light2->draw_shadows = false;
         addThings( { light1, light2 } );
 
-        ///addThing(new DrEngineLight(this, getNextKey(), 1100, 350, 0, Light_Type::Glow,   QColor(255, 87, 22),  1300, QPointF(0, 360), 80, 50.0f, true, 50.0f, 70.0f, 300.0f, 1.0));
-        ///addThing(new DrEngineLight(this, getNextKey(), 1100, 350, 0, Light_Type::Opaque, QColor(255, 213, 79), 1350, QPointF(0, 360), 50, 50.0f, true, 50.0f, 0.0f, 0.0f, 1.0));
+        ///addThing(new DrEngineLight(this, getNextKey(), 1100, 350, 0, Light_Type::Glow,   QColor(255, 87, 22),  1300, DrPoint(0, 360), 80, 50.0f, true, 50.0f, 70.0f, 300.0f, 1.0));
+        ///addThing(new DrEngineLight(this, getNextKey(), 1100, 350, 0, Light_Type::Opaque, QColor(255, 213, 79), 1350, DrPoint(0, 360), 50, 50.0f, true, 50.0f, 0.0f, 0.0f, 1.0));
 
     } else if (new_player_type == Demo_Player::Spawn) {
         DrEngineObject *ball1;
@@ -101,20 +101,20 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
     } else if (new_player_type == Demo_Player::Car) {
         // Add body
-        QVector<QPointF> points;
-        points.append( QPointF( -45.5,  -5.0 ));
-        points.append( QPointF( -45.5,  18.0 ));
-        points.append( QPointF( -54.5,  18.0 ));
-        points.append( QPointF( -57.0,  -5.0 ));
-        points.append( QPointF( -57.0, -24.0 ));
-        points.append( QPointF(  58.5, -24.0 ));
-        points.append( QPointF(  50.5,  -5.0 ));
-        points.append( QPointF(  48.0,  16.0 ));
-        points.append( QPointF(  37.0,  23.0 ));
-        points.append( QPointF(  31.0,  23.0 ));
-        points.append( QPointF(  20.0,  16.0 ));
-        points.append( QPointF(   5.5,  16.0 ));
-        points.append( QPointF(   5.5,  -5.0 ));
+        QVector<DrPoint> points;
+        points.append( DrPoint( -45.5,  -5.0 ));
+        points.append( DrPoint( -45.5,  18.0 ));
+        points.append( DrPoint( -54.5,  18.0 ));
+        points.append( DrPoint( -57.0,  -5.0 ));
+        points.append( DrPoint( -57.0, -24.0 ));
+        points.append( DrPoint(  58.5, -24.0 ));
+        points.append( DrPoint(  50.5,  -5.0 ));
+        points.append( DrPoint(  48.0,  16.0 ));
+        points.append( DrPoint(  37.0,  23.0 ));
+        points.append( DrPoint(  31.0,  23.0 ));
+        points.append( DrPoint(  20.0,  16.0 ));
+        points.append( DrPoint(   5.5,  16.0 ));
+        points.append( DrPoint(   5.5,  -5.0 ));
         DrEngineObject *rover = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Rover, 50, 75, 0, c_scale1x1, 5, 0.1, true);
         rover->addShapePolygon(points);
         addThing(rover);

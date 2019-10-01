@@ -95,6 +95,13 @@ enum class Blend_Mode {                 // !!!!! Order is important
 //####################################################################################
 //##    Control Enumerations
 //############################
+enum class One_Way {                    // One Way Collide
+    None,
+    Pass_Through,                       // Objects can pass through going one_way_direction
+    Weak_Spot,                          // Only takes damage from one_way_direction (bustable block, turtle enemy)
+    ///Damage_Direction,                // Only gives damage from one_way_direction
+};
+
 enum class Pedal {
     Brake,
     None,

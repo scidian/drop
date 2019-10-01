@@ -64,7 +64,7 @@ QString DrSettings::getName() {
         case DrType::Thing:
         case DrType::Asset:
             name_component = getComponent(Components::Entity_Name);
-            if (!name_component) return "No Name Compoenent";
+            if (!name_component) return "No Name Component";
             name_property  = name_component->getProperty(Properties::Entity_Name);
             if (!name_property)  return "No Name Property";
             return name_property->getValue().toString();

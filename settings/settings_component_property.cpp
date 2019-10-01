@@ -4,6 +4,7 @@
 //  File:
 //      DrProperty Class Definitions
 //
+//      !!!!! #TODO: Replace 'QVariant' value with our own 'void *' value to use outside of Qt Framework
 //
 #include "settings.h"
 #include "settings_component.h"

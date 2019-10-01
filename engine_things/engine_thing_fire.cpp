@@ -11,15 +11,15 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrEngineFire::DrEngineFire(DrEngineWorld *world, long unique_key, double x, double y, double z, QPointF scale, double angle, float opacity, QPointF size,
+DrEngineFire::DrEngineFire(DrEngineWorld *world, long unique_key, double x, double y, double z, DrPoint scale, double angle, float opacity, DrPoint size,
                            Fire_Mask mask, QColor color_1, QColor color_2, QColor smoke, float color_intensity, float smooth, float wave, float speed) :
     DrEngineThing(world, unique_key) {
 
     this->setAngle(angle);
     this->setOpacity(opacity);
-    this->setPosition(QPointF(x, y));
-    this->setScaleX(scale.x());                                                 // Save x scale for later
-    this->setScaleY(scale.y());                                                 // Save y scale for later
+    this->setPosition(DrPoint(x, y));
+    this->setScaleX(scale.x);                                                   // Save x scale for later
+    this->setScaleY(scale.y);                                                   // Save y scale for later
     this->setSize(size);
     this->z_order = z;
 
@@ -58,7 +58,7 @@ bool DrEngineFire::update(double time_passed, double time_warp, QRectF &area) {
     bool remove = false;
 
     // ***** Delete object if ends up outside the deletion threshold
-    if (area.contains(getPosition()) == false) remove = true;
+    if (area.contains(QPointF(getPosition().x, getPosition().y)) == false) remove = true;
     return remove;
 }
 

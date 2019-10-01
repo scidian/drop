@@ -179,6 +179,7 @@ SOURCES += \
     project/project_world.cpp \
     project/project_world_stage.cpp \
     project/project_world_stage_thing.cpp \
+    project/thing_shape_list.cpp \
     settings/settings.cpp \
     settings/settings_component.cpp \
     settings/settings_component_property.cpp \
@@ -280,6 +281,7 @@ HEADERS += \
     project/project_world.h \
     project/project_world_stage.h \
     project/project_world_stage_thing.h \
+    project/thing_shape_list.h \
     settings/settings.h \
     settings/settings_component.h \
     settings/settings_component_property.h \

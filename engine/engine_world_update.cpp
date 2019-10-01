@@ -68,11 +68,11 @@ void DrEngineWorld::updateWorld(double time_passed) {
     // ***** Calculate distance and load new stage if we need to
     bool should_add_stage = false;
     if (demo_space == Demo_Space::Project && has_scene == true) {
-        QTransform t = QTransform().translate(m_game_start.x(), m_game_start.y())
+        QTransform t = QTransform().translate(m_game_start.x, m_game_start.y)
                                    .rotate(m_game_direction)
-                                   .translate(-m_game_start.x(), -m_game_start.y());
+                                   .translate(-m_game_start.x, -m_game_start.y);
         QPointF rotated = t.map( QPointF( getCameraPositionX(), getCameraPositionY() ));
-        m_game_distance = rotated.x() - m_game_start.x();
+        m_game_distance = rotated.x() - m_game_start.x;
         ///info = "Distance: " + QString::number(m_game_distance) + ", Loaded To: " + QString::number(m_loaded_to);
 
         if (m_loaded_to - m_game_distance < m_load_buffer)

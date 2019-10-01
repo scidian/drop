@@ -35,7 +35,7 @@ public:
 
 public:
     // Constructor / Destructor
-    DrEngineFire(DrEngineWorld *world, long unique_key, double x, double y, double z, QPointF scale, double angle, float opacity, QPointF size,
+    DrEngineFire(DrEngineWorld *world, long unique_key, double x, double y, double z, DrPoint scale, double angle, float opacity, DrPoint size,
                  Fire_Mask mask, QColor color_1, QColor color_2, QColor smoke, float tint, float smooth, float wave, float speed);
     virtual ~DrEngineFire() override;
 

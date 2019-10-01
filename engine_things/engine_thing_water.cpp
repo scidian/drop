@@ -11,7 +11,7 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrEngineWater::DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, float opacity, QPointF size,
+DrEngineWater::DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, float opacity, DrPoint size,
                              Water_Texture texture, QColor start_color, QColor end_color,
                              float tint, float reflection,
                              float rip_frequency, float rip_speed, float rip_amplitude, float rip_stretch,
@@ -22,7 +22,7 @@ DrEngineWater::DrEngineWater(DrEngineWorld *world, long unique_key, double x, do
 
     this->setAngle(angle);
     this->setOpacity( opacity );
-    this->setPosition( QPointF(x, y) );
+    this->setPosition( DrPoint(x, y) );
     this->setSize(size);
     this->z_order = z;
 
@@ -78,7 +78,7 @@ bool DrEngineWater::update(double time_passed, double time_warp, QRectF &area) {
     bool remove = false;
 
     // ***** Delete object if ends up outside the deletion threshold
-    if (area.contains(getPosition()) == false) remove = true;
+    if (area.contains(QPointF(getPosition().x, getPosition().y)) == false) remove = true;
     return remove;
 }
 
