@@ -238,7 +238,11 @@ void DrOpenGL::drawDebugShapes(QPainter &painter) {
                         painter.drawPolygon( mapped );
                         painter.drawLine( l1, l2 );
                     } else {
-                        object_poly = object_poly.united( mapped );
+
+//                        object_poly = object_poly.united( mapped );
+
+                        painter.drawPolygon( mapped );
+
                     }
                 }
 
@@ -247,9 +251,9 @@ void DrOpenGL::drawDebugShapes(QPainter &painter) {
         }   // End For shape
 
 
-        // ***** Draw a multi shape Shape_Type::Polygon
-        if (!object_poly.isEmpty())
-            painter.drawPolygon( object_poly );
+//        // ***** Draw a multi shape Shape_Type::Polygon
+//        if (!object_poly.isEmpty())
+//            painter.drawPolygon( object_poly );
 
     }   // End For object
 }

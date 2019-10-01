@@ -50,17 +50,13 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
         QVector<DrPoint> points =  DrImaging::traceImageOutline(image);
 
         // Smooth point list
-        points =  smoothPoints( points, 5, 5.0, 0.5);
+        points =  smoothPoints( points, 5, 5.0, 0.5 );
 
         // Run Polyline Simplification algorithm
         points = QVector<DrPoint>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(points.toStdVector(), 0.1) );
 
         // Check winding
-        switch (HullFinder::FindWindingOrientation(points)) {
-            case Winding_Orientation::Unknown:          continue;
-            case Winding_Orientation::Clockwise:        std::reverse(points.begin(), points.end());     break;
-            case Winding_Orientation::CounterClockwise: break;
-        }
+        HullFinder::EnsureWindingOrientation(points, Winding_Orientation::CounterClockwise);
 
         // Old Way of Simplifying Points on Similar Slopes
         ///int split = wireframe ? int((((image.width() + image.height()) / 2) * 0.2) / 5) : 1000;      // Splits longest lines of outline into 5 triangles
@@ -71,12 +67,12 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
         QImage holes = image.copy(rects[image_number]);
         DrImaging::fillBorder(holes, c_color_white, holes.rect());          // Ensures only holes are left as black spots
 
-        // Breaks holes into seperate images for each hole
+        // Breaks holes into seperate images for each Hole
         QVector<QImage> hole_images;
         QVector<QRect>  hole_rects;
         DrImaging::findObjectsInImage(holes, hole_images, hole_rects, 0.9, false);
 
-        // Go through each image (hole) create list for it
+        // Go through each image (Hole) create list for it
         QVector<QVector<DrPoint>> hole_list;
         for (int hole_number = 0; hole_number < hole_images.count(); hole_number++) {
             QImage &hole = hole_images[hole_number];
@@ -87,24 +83,20 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
                 point.x += rects[image_number].x();
                 point.y += rects[image_number].y();
             }
-            one_hole = smoothPoints(  one_hole, 5, 5.0, 0.5);
+            one_hole = smoothPoints( one_hole, 5, 5.0, 0.5 );
             one_hole = QVector<DrPoint>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(one_hole.toStdVector(), 0.1) );
-            switch (HullFinder::FindWindingOrientation(one_hole)) {
-                case Winding_Orientation::Unknown:          continue;
-                case Winding_Orientation::Clockwise:        break;
-                case Winding_Orientation::CounterClockwise: std::reverse(one_hole.begin(), one_hole.end()); break;
-            }
+            HullFinder::EnsureWindingOrientation(one_hole, Winding_Orientation::Clockwise);
             hole_list.push_back(one_hole);
         }
 
 
-        // ***** Triangulate concave hull
+        // ***** Triangulate Concave Hull
         ///triangulateFace(points, hole_list, image, wireframe, Trianglulation::Ear_Clipping);
         ///triangulateFace(points, hole_list, image, wireframe, Trianglulation::Optimal_Polygon);
         ///triangulateFace(points, hole_list, image, wireframe, Trianglulation::Monotone);
         triangulateFace(points, hole_list, image, wireframe, Trianglulation::Delaunay);
 
-        // ***** Add extruded triangles
+        // ***** Add extruded triangles from Hull and Holes
         int slices = wireframe ? 2 : 1;
         extrudeFacePolygon(points, image.width(), image.height(), slices);
         for (auto hole : hole_list) {
@@ -118,6 +110,8 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
 
 
 //####################################################################################
+//##    #NOTE: This function superseeded by "3rd_party/polyline_simplification.h"
+//##
 //##    Simplifies a list of points representing a 2D outline, reducing multiple points along the same slope
 //##        NOTE: If ((y2-y1) / (x2-x1)) == ((y3-y1)/(x3-x1)), then slope is same and is along same line
 //##        tolerance:  how similar slop should be, bigger numbers causes less points

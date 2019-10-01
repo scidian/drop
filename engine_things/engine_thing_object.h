@@ -170,7 +170,7 @@ public:
     void                addShapeBoxFromTexture(long texture_number);
     void                addShapeCircle(double circle_radius, DrPoint shape_offset);
     void                addShapeCircleFromTexture(long texture_number);
-    void                addShapePolygon(QVector<DrPoint> &points);
+    void                addShapePolygon(const QVector<DrPoint> &points);
     void                addShapeSegment(DrPoint p1, DrPoint p2, double padding = 2.0);
     void                applyShapeSettings(cpShape *shape, double area, Shape_Type shape_type);
     QVector<DrPoint>    createEllipseFromCircle(const DrPoint &center, const double &radius, const int &point_count);

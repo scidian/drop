@@ -69,47 +69,52 @@ void DrEngineObject::addShapeSegment(DrPoint p1, DrPoint p2, double padding) {
     applyShapeSettings(shape, area, Shape_Type::Segment);
 }
 
-void DrEngineObject::addShapePolygon(QVector<DrPoint> &points) {
+void DrEngineObject::addShapePolygon(const QVector<DrPoint> &points) {
 
+    // Apply scale to points, verify Winding
     int old_point_count =static_cast<int>(points.size());
     double scale_x = static_cast<double>(this->getScaleX());
     double scale_y = static_cast<double>(this->getScaleY());
-
-    // Copy polygon Vertices into a scaled cpVect array
-    std::vector<cpVect> hull;   hull.clear();   hull.resize(  static_cast<size_t>(old_point_count) );       // Temporary array for ConvexHull call below
-    std::vector<cpVect> verts;  verts.clear();  verts.resize( static_cast<size_t>(old_point_count) );
-    for (int i = 0; i < old_point_count; i++) {
-        verts[static_cast<size_t>(i)] = cpv( points[i].x * scale_x, points[i].y * scale_y);
+    QVector<DrPoint> scaled_points;
+    for (auto &point : points) {
+        scaled_points.push_back( DrPoint(point.x * scale_x, point.y * scale_y) );
     }
+    HullFinder::EnsureWindingOrientation(scaled_points, Winding_Orientation::CounterClockwise);
 
-    // Determine if polygon is concave, if it is create multiple shapes, otherwise create one shape
-    std::list<TPPLPoly> testpolys, result;                              // Used by library Poly Partition
-    TPPLPoly poly;
-    poly.Init(old_point_count);
+    // Copy polygon Vertices into a scaled cpVect array, and scaled TPPLPoly array
+    TPPLPoly            poly;   poly.Init(old_point_count);
+    std::vector<cpVect> verts;  verts.resize( static_cast<size_t>(old_point_count) );
     for (int i = 0; i < old_point_count; i++) {
-        poly[i].x = points[i].x * scale_x;
-        poly[i].y = points[i].y * scale_y;
+        double x = scaled_points[i].x;
+        double y = scaled_points[i].y;
+        poly[i].x = x;
+        poly[i].y = y;
+        verts[static_cast<size_t>(i)] = cpv(x, y);
     }
-    testpolys.push_back( poly );
 
     // Calculate the convex hull of a given set of points. Returns the count of points in the hull. Result must be a pointer to a cpVect array
     // with at least count elements. If result is NULL, then verts array wil be reduced instead. first is an optional pointer to an integer to store
     // where the first vertex in the hull came from (i.e. verts[first] == result[0]). Tolerance (tol) is the allowed amount to shrink the hull when
     // simplifying it. A tolerance of 0.0 creates an exact hull.
     int first = 0;
+    std::vector<cpVect> hull;   hull.clear();   hull.resize(  static_cast<size_t>(old_point_count) );       // Temporary array for ConvexHull call below
     int new_point_count = cpConvexHull(old_point_count, verts.data(), hull.data(), &first, 0.0);
 
+    // !!!!! #NOTE: For Chipmunk Polygon Shapes, points must be in Counter-Clockwise Winding !!!!!
     // Shape is convex or could not determine convex hull
     if (new_point_count == 0) {
         Dr::ShowMessageBox("Warning! From addShapePolygon()... Could not form convex hull!");
     }
     if ((new_point_count == old_point_count || (new_point_count == 0))) {
-        cpShape *shape = cpPolyShapeNew( this->body, old_point_count, verts.data(), cpTransformIdentity, c_extra_radius);
+        cpShape *shape = cpPolyShapeNew( this->body, old_point_count, verts.data(), cpTransformIdentity, c_extra_radius );
         double   area =  cpAreaForPoly(old_point_count, verts.data(), c_extra_radius );
         applyShapeSettings(shape, area, Shape_Type::Polygon);
 
     // Shape is concave
     } else {
+        // Use 3rd_party library Poly Partition to partition concave polygon into convex polygons
+        std::list<TPPLPoly> testpolys, result;
+        testpolys.push_back( poly );
         TPPLPartition pp;
         pp.ConvexPartition_OPT(&(*testpolys.begin()), &result);
         ///pp.ConvexPartition_HM(&testpolys, &result);
@@ -122,7 +127,7 @@ void DrEngineObject::addShapePolygon(QVector<DrPoint> &points) {
                 verts[static_cast<ulong>(i)] = cpv( poly[i].x, poly[i].y );
             }
 
-            cpShape *shape = cpPolyShapeNew( this->body, static_cast<int>(poly.GetNumPoints()), verts.data(), cpTransformIdentity, c_extra_radius);
+            cpShape *shape = cpPolyShapeNew( this->body, static_cast<int>(poly.GetNumPoints()), verts.data(), cpTransformIdentity, c_extra_radius );
             double   area =  cpAreaForPoly(static_cast<int>(poly.GetNumPoints()), verts.data(), c_extra_radius );
             applyShapeSettings(shape, area, Shape_Type::Polygon);
         }

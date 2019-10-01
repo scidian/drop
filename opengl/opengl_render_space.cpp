@@ -92,12 +92,12 @@ void DrOpenGL::drawSpace() {
                     glDisable(GL_DEPTH_TEST);
 
                 } else {
-                    cullingOn();
+//                    cullingOn();
                     glEnable(GL_DEPTH_TEST);
                     glDepthFunc(GL_LEQUAL);
                     drawObject(thing, last_thing, draw2D);
                     glDisable(GL_DEPTH_TEST);
-                    cullingOff();
+//                    cullingOff();
                 }
 
                 break;

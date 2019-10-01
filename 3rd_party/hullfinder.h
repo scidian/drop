@@ -59,7 +59,8 @@ public:
     static QVector<DrPoint> FindConcaveHull(const QVector<DrPoint> &points, double N);
 
     // Functions Added by Stevinz
-    static Winding_Orientation FindWindingOrientation(const QVector<DrPoint> &points);
+    static void                 EnsureWindingOrientation(QVector<DrPoint> &points, Winding_Orientation direction_desired);
+    static Winding_Orientation  FindWindingOrientation(const QVector<DrPoint> &points);
 };
 
 #endif // HULLFINDER_H

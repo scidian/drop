@@ -203,6 +203,17 @@ QVector<DrPoint> HullFinder::FindConcaveHull(const QVector<DrPoint> &DrPoints, d
     return concaveList;
 }
 
+//####################################################################################
+//##    Makes sure points are in the desired Winding Orientation
+//####################################################################################
+void HullFinder::EnsureWindingOrientation(QVector<DrPoint> &points, Winding_Orientation direction_desired) {
+    Winding_Orientation winding = HullFinder::FindWindingOrientation(points);
+    if ((winding == Winding_Orientation::Clockwise        && direction_desired == Winding_Orientation::CounterClockwise) ||
+        (winding == Winding_Orientation::CounterClockwise && direction_desired == Winding_Orientation::Clockwise))
+    {
+        std::reverse(points.begin(), points.end());
+    }
+}
 
 //####################################################################################
 //##    Returns winding direction of points
