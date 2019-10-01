@@ -50,10 +50,10 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
         QVector<DrPoint> points =  DrImaging::traceImageOutline(image);
 
         // Smooth point list
-        points =  smoothPoints(  points, 5, 5.0, 0.5);
+        points =  smoothPoints( points, 5, 5.0, 0.5);
 
         // Run Polyline Simplification algorithm
-        points = QVector<DrPoint>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(points.toStdVector(), 2.0) );
+        points = QVector<DrPoint>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(points.toStdVector(), 0.1) );
 
         // Check winding
         switch (HullFinder::FindWindingOrientation(points)) {

@@ -7,6 +7,7 @@
 //
 #include <QtMath>
 
+#include "3rd_party/hullfinder.h"
 #include "3rd_party/poly_partition.h"
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
@@ -77,8 +78,9 @@ void DrEngineObject::addShapePolygon(QVector<DrPoint> &points) {
     // Copy polygon Vertices into a scaled cpVect array
     std::vector<cpVect> hull;   hull.clear();   hull.resize(  static_cast<size_t>(old_point_count) );       // Temporary array for ConvexHull call below
     std::vector<cpVect> verts;  verts.clear();  verts.resize( static_cast<size_t>(old_point_count) );
-    for (int i = 0; i < old_point_count; i++)
+    for (int i = 0; i < old_point_count; i++) {
         verts[static_cast<size_t>(i)] = cpv( points[i].x * scale_x, points[i].y * scale_y);
+    }
 
     // Determine if polygon is concave, if it is create multiple shapes, otherwise create one shape
     std::list<TPPLPoly> testpolys, result;                              // Used by library Poly Partition
@@ -116,8 +118,10 @@ void DrEngineObject::addShapePolygon(QVector<DrPoint> &points) {
             std::vector<cpVect> verts;
             verts.clear();
             verts.resize( static_cast<ulong>( poly.GetNumPoints()) );
-            for (int i = 0; i < poly.GetNumPoints(); i++)
+            for (int i = 0; i < poly.GetNumPoints(); i++) {
                 verts[static_cast<ulong>(i)] = cpv( poly[i].x, poly[i].y );
+            }
+
             cpShape *shape = cpPolyShapeNew( this->body, static_cast<int>(poly.GetNumPoints()), verts.data(), cpTransformIdentity, c_extra_radius);
             double   area =  cpAreaForPoly(static_cast<int>(poly.GetNumPoints()), verts.data(), c_extra_radius );
             applyShapeSettings(shape, area, Shape_Type::Polygon);

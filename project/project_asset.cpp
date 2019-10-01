@@ -95,7 +95,7 @@ DrShapeList autoCollisionShape(QPixmap pixmap, int max_points) {
         QVector<DrPoint> points =  DrImaging::traceImageOutline(image);
 
         // Run Polyline Simplification algorithm
-        points = QVector<DrPoint>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(points.toStdVector(), 2.0) );
+        points = QVector<DrPoint>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(points.toStdVector(), 1.0) );
         ///points = HullFinder::FindConcaveHull(points, 5.0);
 
         // Adjust points so that (0, 0) is the center of the image

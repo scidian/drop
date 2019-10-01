@@ -107,6 +107,10 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     // ***** Add the block to the cpSpace
     DrEngineObject *block = new DrEngineObject(this, getNextKey(), body_type, asset_key, info.position.x + offset_x, -info.position.y + offset_y,
                                                info.z_order, info.scale, c_friction, c_bounce, collide, true, info.angle, info.opacity);
+
+
+
+
     //block->addShapeBoxFromTexture(asset_key);
 
     QVariant shapes = m_project->getAsset(asset_key)->getComponentPropertyValue(Components::Asset_Object_Settings, Properties::Asset_Collision_Shape);
@@ -115,6 +119,8 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
         QVector<DrPoint> points = QVector<DrPoint>::fromStdVector(poly);
         block->addShapePolygon(points);
     }
+
+
 
 
 
