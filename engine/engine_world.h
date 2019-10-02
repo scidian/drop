@@ -15,7 +15,7 @@
 
 #include "3rd_party_chipmunk/chipmunk.h"
 #include "enums_engine.h"
-#include "types/point.h"
+#include "types/pointf.h"
 
 // Forward declarations
 class DrEngine;
@@ -39,9 +39,9 @@ typedef QVector<DrEngineThing*>          EngineThings;
 struct ThingInfo {
     double      angle;
     float       opacity;
-    DrPoint     position;
-    DrPoint     scale;
-    DrPoint     size;
+    DrPointF    position;
+    DrPointF    scale;
+    DrPointF    size;
     double      z_order;
 };
 
@@ -116,7 +116,7 @@ private:
 
     QColor          m_background_color {0,0,0,1};   // Background color to use to clear screen during render
     double          m_game_direction = 0.0;         // Direction to load new levels, 0 = to the right, 90 = up, 180 = to the left, etc
-    DrPoint         m_game_start {0, 0};            // Origin point start stage loaded at
+    DrPointF        m_game_start {0, 0};            // Origin point start stage loaded at
     double          m_game_distance = 0.0;          // Keeps track of distance traveled linearly from the start
     double          m_load_buffer = 3000;           // Distance further from m_game_distance we should already have preloaded
     double          m_loaded_to = 0.0;              // Last distance we loaded a new stage

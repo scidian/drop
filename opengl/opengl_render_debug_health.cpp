@@ -35,8 +35,8 @@ void DrOpenGL::drawDebugHealth(QPainter &painter) {
         QColor color = objectDebugColor(object, true);
 
         // Load Object Position
-        DrPoint center = object->getPosition();
-        QPointF text_coord = mapToScreen(center.x, center.y, 0);
+        DrPointF center = object->getPosition();
+        QPointF  text_coord = mapToScreen(center.x, center.y, 0);
 
         if (rect().contains( text_coord.toPoint() )) {
             // Health as a QPainterPath
@@ -88,7 +88,7 @@ void DrOpenGL::drawDebugHealthNative(QPainter &painter) {
         if (hp.length() < 1) continue;
 
         // ***** Load object position
-        DrPoint center = object->getPosition();
+        DrPointF center = object->getPosition();
         float x, y, z;
         float half_width, half_height;
         x = static_cast<float>(center.x);

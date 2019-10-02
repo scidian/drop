@@ -192,6 +192,7 @@ SOURCES += \
     style/style_sheet_main.cpp \
     style/style_sheet_toolbar.cpp \
     types/point.cpp \
+    types/pointf.cpp \
     widgets/widgets.cpp \
     widgets/widgets_event_filters.cpp \
     widgets/widgets_layout.cpp
@@ -292,6 +293,7 @@ HEADERS += \
     enums_form_main.h \
     style/style.h \
     types/point.h \
+    types/pointf.h \
     widgets/widgets.h \
     widgets/widgets_event_filters.h \
     widgets/widgets_layout.h

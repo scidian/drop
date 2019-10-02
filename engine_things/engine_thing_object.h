@@ -8,9 +8,11 @@
 #ifndef ENGINE_OBJECT_H
 #define ENGINE_OBJECT_H
 
+#include <QVector3D>
+
 #include "enums_engine.h"
 #include "engine_thing.h"
-#include "types/point.h"
+#include "types/pointf.h"
 
 enum class Jump_State {
     Need_To_Jump,
@@ -19,8 +21,8 @@ enum class Jump_State {
 
 // Constants for calling engine addObject calls
 constexpr double    c_epsilon = 0.000001;               // Floating point zero
-const     DrPoint   c_center    {0, 0};                 // Default offset in no offset
-const     DrPoint   c_scale1x1  {1, 1};                 // Default scale of 1x1
+const     DrPointF  c_center    {0, 0};                 // Default offset in no offset
+const     DrPointF  c_scale1x1  {1, 1};                 // Default scale of 1x1
 const     QVector3D c_default_camera_pos {0, 0, 800};   // Default camera position if there is no active camera
 const     QVector3D c_default_camera_rot {-15, 15, 0};  // Default camera rotation if there is no active camera
 constexpr double    c_norotate =   0;                   // Default rotation amount of zero
@@ -140,7 +142,7 @@ private:
     DrTime      m_death_timer =  Clock::now();              // Used to incorporate death_delay for object dying
     DrTime      m_fade_timer =   Clock::now();              // Used to incorporate fade_delay for object fade / removal
 
-    DrPoint     m_previous_position;                        // Previous frame position, updated every frame by update()
+    DrPointF    m_previous_position;                        // Previous frame position, updated every frame by update()
 
 
 public:
@@ -156,7 +158,7 @@ public:
     // Constructor / Destructor
     DrEngineObject(DrEngineWorld *world, long unique_key);
     DrEngineObject(DrEngineWorld *world, long unique_key, Body_Type body_type, long texture_number = 0,
-                   double x = 0, double y = 0, double z = 0, DrPoint scale = c_scale1x1, double friction = c_friction, double bounce = c_bounce,
+                   double x = 0, double y = 0, double z = 0, DrPointF scale = c_scale1x1, double friction = c_friction, double bounce = c_bounce,
                    bool should_collide = true, bool can_rotate = true, double angle = c_norotate, float opacity = c_opaque);
     virtual ~DrEngineObject() override;
 
@@ -168,12 +170,12 @@ public:
     // Shape Creation
     void                addShapeBox(double width, double height);
     void                addShapeBoxFromTexture(long texture_number);
-    void                addShapeCircle(double circle_radius, DrPoint shape_offset);
+    void                addShapeCircle(double circle_radius, DrPointF shape_offset);
     void                addShapeCircleFromTexture(long texture_number);
-    void                addShapePolygon(const QVector<DrPoint> &points);
-    void                addShapeSegment(DrPoint p1, DrPoint p2, double padding = 2.0);
+    void                addShapePolygon(const QVector<DrPointF> &points);
+    void                addShapeSegment(DrPointF p1, DrPointF p2, double padding = 2.0);
     void                applyShapeSettings(cpShape *shape, double area, Shape_Type shape_type);
-    QVector<DrPoint>    createEllipseFromCircle(const DrPoint &center, const double &radius, const int &point_count);
+    QVector<DrPointF>   createEllipseFromCircle(const DrPointF &center, const double &radius, const int &point_count);
 
 
 
@@ -208,7 +210,7 @@ public:
 
     void            setOneWay(One_Way one_way_type) { m_one_way = one_way_type; }
     void            setOneWayDirection(cpVect direction) { m_one_way_direction = direction; }
-    void            setOneWayDirection(DrPoint direction) { m_one_way_direction = cpv(direction.x, direction.y); }
+    void            setOneWayDirection(DrPointF direction) { m_one_way_direction = cpv(direction.x, direction.y); }
     void            setGravityMultiplier(double gravity_multiplier) { m_gravity_multiplier = gravity_multiplier; }
 
     // Object Properties - Health / Damage
@@ -321,8 +323,8 @@ public:
 
 
     // Object->Body Data - Updated every frame by updateWorld()
-    DrPoint         getPreviousPosition() { return m_previous_position; }
-    void            updateBodyPosition(DrPoint updated_position, bool update_previous_position_also = false);
+    DrPointF        getPreviousPosition() { return m_previous_position; }
+    void            updateBodyPosition(DrPointF updated_position, bool update_previous_position_also = false);
 
 };
 

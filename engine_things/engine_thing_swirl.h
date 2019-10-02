@@ -28,14 +28,12 @@ public:
 
 public:
     // Constructor / Destructor
-    DrEngineSwirl(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, float opacity, DrPoint size,
+    DrEngineSwirl(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, float opacity, DrPointF size,
                   QColor color, float tint, float rotation_amount);
     virtual ~DrEngineSwirl() override;
 
     // Abstract Engine Thing Overrides
-    virtual void        addToWorld() override;
     virtual DrThingType getThingType() override { return DrThingType::Swirl; }
-    virtual bool        update(double time_passed, double time_warp, QRectF &area) override;
 
 
 };

@@ -11,13 +11,13 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrEngineFire::DrEngineFire(DrEngineWorld *world, long unique_key, double x, double y, double z, DrPoint scale, double angle, float opacity, DrPoint size,
+DrEngineFire::DrEngineFire(DrEngineWorld *world, long unique_key, double x, double y, double z, DrPointF scale, double angle, float opacity, DrPointF size,
                            Fire_Mask mask, QColor color_1, QColor color_2, QColor smoke, float color_intensity, float smooth, float wave, float speed) :
     DrEngineThing(world, unique_key) {
 
     this->setAngle(angle);
     this->setOpacity(opacity);
-    this->setPosition(DrPoint(x, y));
+    this->setPosition(DrPointF(x, y));
     this->setScaleX(scale.x);                                                   // Save x scale for later
     this->setScaleY(scale.y);                                                   // Save y scale for later
     this->setSize(size);
@@ -35,31 +35,6 @@ DrEngineFire::DrEngineFire(DrEngineWorld *world, long unique_key, double x, doub
 
 DrEngineFire::~DrEngineFire() {
 
-}
-
-
-
-//####################################################################################
-//##    Override for DrEngineThing::addToWorld()
-//####################################################################################
-void DrEngineFire::addToWorld() {
-
-}
-
-
-
-//####################################################################################
-//##    Override for DrEngineThing::update() - Pulses Light
-//####################################################################################
-bool DrEngineFire::update(double time_passed, double time_warp, QRectF &area) {
-    Q_UNUSED( time_passed )
-    Q_UNUSED( time_warp )
-
-    bool remove = false;
-
-    // ***** Delete object if ends up outside the deletion threshold
-    if (area.contains(QPointF(getPosition().x, getPosition().y)) == false) remove = true;
-    return remove;
 }
 
 

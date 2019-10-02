@@ -20,6 +20,7 @@
 #include "imaging.h"
 #include "helper.h"
 #include "types/point.h"
+#include "types/pointf.h"
 
 
 namespace DrImaging
@@ -100,8 +101,8 @@ QImage floodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, doub
     }
 
     // Push starting point onto vector
-    QVector<IntPoint> points; points.clear();
-    points.push_back(IntPoint(at_x, at_y));
+    QVector<DrPoint> points; points.clear();
+    points.push_back(DrPoint(at_x, at_y));
     bool processed_some;
 
     int min_x = at_x, max_x = at_x;
@@ -138,7 +139,7 @@ QImage floodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, doub
 
                     if (processed_lines[y][x] == FLOOD_NOT_PROCESSED) {
                         if (Dr::IsSameColor(start_color, QColor::fromRgba(image_lines[y][x]), tolerance)) {
-                            points.push_back(IntPoint(x, y));
+                            points.push_back(DrPoint(x, y));
                             processed_lines[y][x] = FLOOD_MARKED_FOR_PROCESS;
                             processed_some = true;
                         }
@@ -240,7 +241,7 @@ int findObjectsInImage(const QImage &image, QVector<QImage> &images, QVector<QRe
 #define TRACE_PROCESSED_ONCE        3           // Pixels that added to the border once
 #define TRACE_PROCESSED_TWICE       4           // Pixels that added to the border twice        (after a there and back again trace)
 
-QVector<DrPoint> traceImageOutline(const QImage &from_image) {
+QVector<DrPointF> traceImageOutline(const QImage &from_image) {
     // Initialize images
     QImage image = from_image;
     QImage processed =  from_image.copy();
@@ -249,12 +250,12 @@ QVector<DrPoint> traceImageOutline(const QImage &from_image) {
     int border_pixel_count = 0;
 
     // Initialize point array, verify image size
-    QVector<IntPoint> points; points.clear();
-    if (image.width() < 1 || image.height() < 1) return QVector<DrPoint> { };
+    QVector<DrPoint> points; points.clear();
+    if (image.width() < 1 || image.height() < 1) return QVector<DrPointF> { };
 
     // ***** Find starting point, and also set processed image bits
     //       !!!!! #NOTE: Important that y loop is on top, we need to come at pixel from the left
-    IntPoint last_point;
+    DrPoint last_point;
     bool has_start_point = false;
     for (int y = 0; y < image.height(); ++y) {
         for (int x = 0; x < image.width(); ++x) {
@@ -285,24 +286,24 @@ QVector<DrPoint> traceImageOutline(const QImage &from_image) {
                 processed_lines[y][x] = TRACE_NOT_PROCESSED;
                 ++border_pixel_count;
                 if (!has_start_point) {
-                    points.push_back(IntPoint(x, y));
-                    last_point = IntPoint(x - 1, y);
+                    points.push_back(DrPoint(x, y));
+                    last_point = DrPoint(x - 1, y);
                     processed_lines[y][x] = TRACE_START_PIXEL;
                     has_start_point = true;
                 }
             }
         }
     }
-    if (border_pixel_count < 3) return QVector<DrPoint> { };
+    if (border_pixel_count < 3) return QVector<DrPointF> { };
 
 
     // ***** Find outline points
-    QVector<IntPoint> surround;
+    QVector<DrPoint> surround;
     bool back_at_start;
     do {
         // Collect list of points around current point
         surround.clear();
-        IntPoint current_point = points.last();
+        DrPoint current_point = points.last();
         int x_start = (current_point.x > 0) ?                       current_point.x - 1 : 0;
         int x_end =   (current_point.x < from_image.width() - 1)  ? current_point.x + 1 : from_image.width()  - 1;
         int y_start = (current_point.y > 0) ?                       current_point.y - 1 : 0;
@@ -315,7 +316,7 @@ QVector<DrPoint> traceImageOutline(const QImage &from_image) {
                 ///if ( (x == current_point.x - 1) && (y == current_point.y + 1) ) continue;
                 ///if ( (x == current_point.x + 1) && (y == current_point.y + 1) ) continue;
                 if (processed_lines[y][x] != TRACE_PROCESSED_TWICE && processed_lines[y][x] != TRACE_NOT_BORDER) {
-                    surround.push_back(IntPoint(x, y));
+                    surround.push_back(DrPoint(x, y));
                 }
             }
         }
@@ -324,7 +325,7 @@ QVector<DrPoint> traceImageOutline(const QImage &from_image) {
         double   last_point_angle = DrView::calcRotationAngleInDegrees(QPointF(current_point.x, current_point.y), QPointF(last_point.x, last_point.y));
         double   angle_diff = 0;
         bool     first = true;
-        IntPoint next_point;
+        DrPoint  next_point;
         for (auto point : surround) {
             // Find angle of point
             double check_angle = DrView::calcRotationAngleInDegrees(QPointF(current_point.x, current_point.y), QPointF(point.x, point.y));
@@ -359,10 +360,10 @@ QVector<DrPoint> traceImageOutline(const QImage &from_image) {
 
     } while ((surround.count() > 0) && !back_at_start);
 
-    // ***** Convert to DrPoint array and return
-    QVector<DrPoint> hull_points;
+    // ***** Convert to DrPointF array and return
+    QVector<DrPointF> hull_points;
     for (int i = 0; i < points.count(); ++i) {
-        hull_points.push_back(DrPoint(points[i].x, points[i].y));
+        hull_points.push_back(DrPointF(points[i].x, points[i].y));
     }
     return hull_points;
 }
@@ -373,11 +374,11 @@ QVector<DrPoint> traceImageOutline(const QImage &from_image) {
 //##        !!!!! #NOTE: Image passed in should be black and white
 //##                     (i.e. from DrImageing::blackAndWhiteFromAlpha())
 //####################################################################################
-QVector<DrPoint> outlinePointList(const QImage &from_image) {
+QVector<DrPointF> outlinePointList(const QImage &from_image) {
     QImage image = from_image;
     QVector<QRgb*> lines = getScanLines(image);
 
-    QVector<DrPoint> points;
+    QVector<DrPointF> points;
     points.clear();
 
     // Loop through every pixel to see if is possibly on border
@@ -401,13 +402,13 @@ QVector<DrPoint> outlinePointList(const QImage &from_image) {
             }
 
             if (touching_transparent) {
-                points.push_back(DrPoint(x, y));
+                points.push_back(DrPointF(x, y));
             } else {
                 if ((x == 0 && y == 0) ||
                     (x == 0 && y == (image.height() - 1)) ||
                     (x == (image.width() - 1) && y == 0) ||
                     (x == (image.width() - 1) && y == (image.height() - 1))) {
-                    points.push_back(DrPoint(x, y));
+                    points.push_back(DrPointF(x, y));
                 }
             }
         }

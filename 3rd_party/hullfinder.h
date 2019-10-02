@@ -31,7 +31,7 @@
 #include <vector>
 
 // Forward Declarations
-class DrPoint;
+class DrPointF;
 
 // Local Enums
 enum class Winding_Orientation {
@@ -50,17 +50,17 @@ class HullFinder
 public:
     HullFinder();
 
-    static double IsLeft(DrPoint p0, DrPoint p1, DrPoint p2);
-    static bool IsPointInsidePolygon(DrPoint v, const QVector<DrPoint> &polygon);
-    static bool CheckEdgeIntersection(const DrPoint &p1, const DrPoint &p2, const DrPoint &p3, const DrPoint &p4);
-    static bool CheckEdgeIntersection(const QVector<DrPoint> &hull, DrPoint curEdgeStart, DrPoint curEdgeEnd, DrPoint checkEdgeStart, DrPoint checkEdgeEnd);
-    static DrPoint NearestInnerPoint(DrPoint edgeStart, DrPoint edgeEnd, const QVector<DrPoint> & points, const QVector<DrPoint> & hull, bool *found);
-    static QVector<DrPoint> FindConvexHull(const QVector<DrPoint> &points);
-    static QVector<DrPoint> FindConcaveHull(const QVector<DrPoint> &points, double N);
+    static double IsLeft(DrPointF p0, DrPointF p1, DrPointF p2);
+    static bool IsPointInsidePolygon(DrPointF v, const QVector<DrPointF> &polygon);
+    static bool CheckEdgeIntersection(const DrPointF &p1, const DrPointF &p2, const DrPointF &p3, const DrPointF &p4);
+    static bool CheckEdgeIntersection(const QVector<DrPointF> &hull, DrPointF curEdgeStart, DrPointF curEdgeEnd, DrPointF checkEdgeStart, DrPointF checkEdgeEnd);
+    static DrPointF NearestInnerPoint(DrPointF edgeStart, DrPointF edgeEnd, const QVector<DrPointF> & points, const QVector<DrPointF> & hull, bool *found);
+    static QVector<DrPointF> FindConvexHull(const QVector<DrPointF> &points);
+    static QVector<DrPointF> FindConcaveHull(const QVector<DrPointF> &points, double N);
 
     // Functions Added by Stevinz
-    static void                 EnsureWindingOrientation(QVector<DrPoint> &points, Winding_Orientation direction_desired);
-    static Winding_Orientation  FindWindingOrientation(const QVector<DrPoint> &points);
+    static void                 EnsureWindingOrientation(QVector<DrPointF> &points, Winding_Orientation direction_desired);
+    static Winding_Orientation  FindWindingOrientation(const QVector<DrPointF> &points);
 };
 
 #endif // HULLFINDER_H

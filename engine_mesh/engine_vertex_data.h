@@ -18,7 +18,7 @@
 #include "engine_mesh.h"
 
 // Forward Declarations
-class DrPoint;
+class DrPointF;
 
 // Type Definitions
 typedef std::map<Vec3, std::vector<Vertex>> NeighborMap;
@@ -71,8 +71,8 @@ public:
     void    initializeTextureQuad();
 
     // Helper Functions
-    static  QVector<DrPoint>    simplifyPoints(const QVector<DrPoint> &outline_points, double tolerance, int test_count, bool average = false);
-    static  QVector<DrPoint>    smoothPoints(const QVector<DrPoint> &outline_points, int neighbors, double neighbor_distance, double weight);
+    static  QVector<DrPointF>   simplifyPoints(const QVector<DrPointF> &outline_points, double tolerance, int test_count, bool average = false);
+    static  QVector<DrPointF>   smoothPoints(const QVector<DrPointF> &outline_points, int neighbors, double neighbor_distance, double weight);
 
     Mesh                        getMesh(NeighborMap &neighbors);
     Vertex                      getVertex(int vertex_number);
@@ -81,8 +81,8 @@ public:
 
 
     // Extrusion Functions
-    void    extrudeFacePolygon(const QVector<DrPoint> &outline_points, int width, int height, int steps);
-    void    triangulateFace(const QVector<DrPoint> &outline_points, const QVector<QVector<DrPoint>> &hole_list,
+    void    extrudeFacePolygon(const QVector<DrPointF> &outline_points, int width, int height, int steps);
+    void    triangulateFace(const QVector<DrPointF> &outline_points, const QVector<QVector<DrPointF>> &hole_list,
                             const QImage &black_and_white, bool wireframe, Trianglulation type);
 
     // Building Functions

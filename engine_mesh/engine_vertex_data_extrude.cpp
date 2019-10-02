@@ -27,6 +27,7 @@
 #include "helper.h"
 #include "imaging/imaging.h"
 #include "types/point.h"
+#include "types/pointf.h"
 
 
 //####################################################################################
@@ -47,13 +48,13 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
         if (image.width() < 1 || image.height() < 1) continue;
 
         // ***** Trace edge of image
-        QVector<DrPoint> points =  DrImaging::traceImageOutline(image);
+        QVector<DrPointF> points = DrImaging::traceImageOutline(image);
 
         // Smooth point list
         points =  smoothPoints( points, 5, 5.0, 0.5 );
 
         // Run Polyline Simplification algorithm
-        points = QVector<DrPoint>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(points.toStdVector(), 0.1) );
+        points = QVector<DrPointF>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(points.toStdVector(), 0.1) );
 
         // Check winding
         HullFinder::EnsureWindingOrientation(points, Winding_Orientation::CounterClockwise);
@@ -73,18 +74,18 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
         DrImaging::findObjectsInImage(holes, hole_images, hole_rects, 0.9, false);
 
         // Go through each image (Hole) create list for it
-        QVector<QVector<DrPoint>> hole_list;
+        QVector<QVector<DrPointF>> hole_list;
         for (int hole_number = 0; hole_number < hole_images.count(); hole_number++) {
             QImage &hole = hole_images[hole_number];
             if (hole.width() < 1 || hole.height() < 1) continue;
-            QVector<DrPoint> one_hole =        DrImaging::traceImageOutline(hole);
+            QVector<DrPointF> one_hole = DrImaging::traceImageOutline(hole);
             // Add in sub image offset to points
             for (auto &point : one_hole) {
                 point.x += rects[image_number].x();
                 point.y += rects[image_number].y();
             }
             one_hole = smoothPoints( one_hole, 5, 5.0, 0.5 );
-            one_hole = QVector<DrPoint>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(one_hole.toStdVector(), 0.1) );
+            one_hole = QVector<DrPointF>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(one_hole.toStdVector(), 0.1) );
             HullFinder::EnsureWindingOrientation(one_hole, Winding_Orientation::Clockwise);
             hole_list.push_back(one_hole);
         }
@@ -118,8 +119,8 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
 //##                    0.01 looks nice for most objects, 1.0 looks good for #KEYWORD: "low poly", "low-poly"
 //##        test_count: how many points to test before we just go ahead and add a point
 //####################################################################################
-QVector<DrPoint> DrEngineVertexData::simplifyPoints(const QVector<DrPoint> &outline_points, double tolerance, int test_count, bool average) {
-    QVector<DrPoint> simple_points;
+QVector<DrPointF> DrEngineVertexData::simplifyPoints(const QVector<DrPointF> &outline_points, double tolerance, int test_count, bool average) {
+    QVector<DrPointF> simple_points;
     if (outline_points.count()  > 0) simple_points.push_back(outline_points[0]);            // Add first point
     if (outline_points.count() == 2) simple_points.push_back(outline_points[1]);            // Add second / last point if only two points
     if (outline_points.count()  > 2) {
@@ -187,7 +188,7 @@ QVector<DrPoint> DrEngineVertexData::simplifyPoints(const QVector<DrPoint> &outl
 //##    Smooth / Curve a collection of points representing a 2D outline
 //####################################################################################
 // Returns a point from a vector with wrap around coverage of vector indices
-DrPoint pointAt(const QVector<DrPoint> &point_list, int index) {
+DrPointF pointAt(const QVector<DrPointF> &point_list, int index) {
     if (index < 0)
         return point_list[index + point_list.count()];
     else if (index >= point_list.count())
@@ -199,8 +200,8 @@ DrPoint pointAt(const QVector<DrPoint> &point_list, int index) {
 const double c_smooth_min_size = 50.0;
 
 // Smooths points, neighbors is in each direction (so 1 is index +/- 1 more point in each direction
-QVector<DrPoint> DrEngineVertexData::smoothPoints(const QVector<DrPoint> &outline_points, int neighbors, double neighbor_distance, double weight) {
-    QVector<DrPoint> smooth_points;
+QVector<DrPointF> DrEngineVertexData::smoothPoints(const QVector<DrPointF> &outline_points, int neighbors, double neighbor_distance, double weight) {
+    QVector<DrPointF> smooth_points;
 
     // Check size of polygon, accomodate smoothing for small images
     double x_min = outline_points[0].x;
@@ -229,11 +230,11 @@ QVector<DrPoint> DrEngineVertexData::smoothPoints(const QVector<DrPoint> &outlin
 
     // Go through and smooth the points (simple average)
     for (int i = 0; i < outline_points.count(); i++) {
-        DrPoint this_point = outline_points[i];
+        DrPointF this_point = outline_points[i];
         double total_used = 0;
         double x = 0, y = 0;
         for (int j = i - neighbors; j <= i + neighbors; j++) {
-            DrPoint check_point = pointAt(outline_points, j);
+            DrPointF check_point = pointAt(outline_points, j);
             if (j == i) {
                 x += check_point.x;
                 y += check_point.y;
@@ -245,7 +246,7 @@ QVector<DrPoint> DrEngineVertexData::smoothPoints(const QVector<DrPoint> &outlin
                 total_used += weight;
             }
         }
-        smooth_points.push_back(DrPoint(x / total_used, y / total_used));
+        smooth_points.push_back(DrPointF(x / total_used, y / total_used));
     }
     return smooth_points;
 }
@@ -254,14 +255,14 @@ QVector<DrPoint> DrEngineVertexData::smoothPoints(const QVector<DrPoint> &outlin
 //####################################################################################
 //##    Triangulate Face and add Triangles to Vertex Data
 //####################################################################################
-void DrEngineVertexData::triangulateFace(const QVector<DrPoint> &outline_points, const QVector<QVector<DrPoint>> &hole_list,
+void DrEngineVertexData::triangulateFace(const QVector<DrPointF> &outline_points, const QVector<QVector<DrPointF>> &hole_list,
                                          const QImage &black_and_white, bool wireframe, Trianglulation type) {
     int width =  black_and_white.width();
     int height = black_and_white.height();
     double w2d = width  / 2.0;
     double h2d = height / 2.0;
 
-    // ***** Copy DrPoints into TPPLPoly
+    // ***** Copy DrPointFs into TPPLPoly
     if (outline_points.count() < 3) return;
     std::list<TPPLPoly> testpolys, result;
     TPPLPoly poly; poly.Init(outline_points.count());
@@ -376,9 +377,9 @@ void DrEngineVertexData::triangulateFace(const QVector<DrPoint> &outline_points,
             double y3 = d.coords[2 * d.triangles[i + 2] + 1];
 
             // Check each triangle to see if mid-points lie outside concave hull by comparing object image
-            IntPoint mid12( (x1 + x2) / 2.0, (y1 + y2) / 2.0 );
-            IntPoint mid23( (x2 + x3) / 2.0, (y2 + y3) / 2.0 );
-            IntPoint mid13( (x1 + x3) / 2.0, (y1 + y3) / 2.0 );
+            DrPoint mid12( (x1 + x2) / 2.0, (y1 + y2) / 2.0 );
+            DrPoint mid23( (x2 + x3) / 2.0, (y2 + y3) / 2.0 );
+            DrPoint mid13( (x1 + x3) / 2.0, (y1 + y3) / 2.0 );
             int transparent_count = 0;
             if (black_and_white.pixel(mid12.x, mid12.y) == c_color_black) ++transparent_count;
             if (black_and_white.pixel(mid23.x, mid23.y) == c_color_black) ++transparent_count;
@@ -413,7 +414,7 @@ void DrEngineVertexData::triangulateFace(const QVector<DrPoint> &outline_points,
 //####################################################################################
 //##    Add Extrusion Triangles to Vertex Data
 //####################################################################################
-void DrEngineVertexData::extrudeFacePolygon(const QVector<DrPoint> &outline_points, int width, int height, int steps) {
+void DrEngineVertexData::extrudeFacePolygon(const QVector<DrPointF> &outline_points, int width, int height, int steps) {
     double w2d = width  / 2.0;
     double h2d = height / 2.0;
 

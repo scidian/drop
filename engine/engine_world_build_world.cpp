@@ -74,7 +74,7 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
 
         // ***** World Settings
         m_game_direction += world->getComponentPropertyValue(Components::World_Settings, Properties::World_Game_Direction).toDouble();
-        m_game_start = DrPoint(0, 0);       // Set starting load position
+        m_game_start = DrPointF(0, 0);      // Set starting load position
         m_loaded_to = 0;                    // Reset how far we've loaded
 
         if (world->getComponentPropertyValue(Components::World_Settings, Properties::World_Use_Background_Color).toBool())
@@ -141,9 +141,9 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
         m_bounce =   0.8;
 
         // Static line segment shapes for the ground
-        DrEngineObject *line1 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  line1->addShapeSegment( DrPoint( -800,    0), DrPoint( 300, -250) );
-        DrEngineObject *line2 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  line2->addShapeSegment( DrPoint(  250,   50), DrPoint(1750,  350) );
-        DrEngineObject *line3 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  line3->addShapeSegment( DrPoint(-1100, -300), DrPoint(-900, -300) );
+        DrEngineObject *line1 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  line1->addShapeSegment( DrPointF( -800,    0), DrPointF( 300, -250) );
+        DrEngineObject *line2 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  line2->addShapeSegment( DrPointF(  250,   50), DrPointF(1750,  350) );
+        DrEngineObject *line3 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  line3->addShapeSegment( DrPointF(-1100, -300), DrPointF(-900, -300) );
         addThings( { line1, line2, line3 } );
 
 
@@ -152,10 +152,10 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
         m_bounce =   0.5;
 
         // Static line segment shapes for the ground
-        DrEngineObject *line1 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  line1->addShapeSegment( DrPoint(-1000, -200), DrPoint(1000, -200) );
-        DrEngineObject *line2 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  line2->addShapeSegment( DrPoint(  500, -100), DrPoint( 700, -100) );
-        DrEngineObject *line3 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  line3->addShapeSegment( DrPoint(  100,    0), DrPoint( 300,    0) );
-        DrEngineObject *line4 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  line4->addShapeSegment( DrPoint( -300,  150), DrPoint(-100,  150) );
+        DrEngineObject *line1 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  line1->addShapeSegment( DrPointF(-1000, -200), DrPointF(1000, -200) );
+        DrEngineObject *line2 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  line2->addShapeSegment( DrPointF(  500, -100), DrPointF( 700, -100) );
+        DrEngineObject *line3 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  line3->addShapeSegment( DrPointF(  100,    0), DrPointF( 300,    0) );
+        DrEngineObject *line4 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  line4->addShapeSegment( DrPointF( -300,  150), DrPointF(-100,  150) );
         addThings( { line1, line2, line3, line4 } );
 
         // One way platform support
@@ -212,39 +212,39 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
         addThings( { belt1, belt2, belt3, belt4 } );
 
         // ***** Ladder / Sticky Blocks
-        DrEngineObject *ladder1 = new DrEngineObject(this, getNextKey(), Body_Type::Kinematic, Asset_Textures::Block, -980, 100, -1, DrPoint(1, 3), -1, -1, false);
+        DrEngineObject *ladder1 = new DrEngineObject(this, getNextKey(), Body_Type::Kinematic, Asset_Textures::Block, -980, 100, -1, DrPointF(1, 3), -1, -1, false);
         ladder1->addShapeBoxFromTexture(Asset_Textures::Block);
         ladder1->setGravityMultiplier( 0.0 );
         addThing(ladder1);
 
-        DrEngineObject *ladder2 = new DrEngineObject(this, getNextKey(), Body_Type::Kinematic, Asset_Textures::Block, 300, 320, -1, DrPoint(6, 5));
+        DrEngineObject *ladder2 = new DrEngineObject(this, getNextKey(), Body_Type::Kinematic, Asset_Textures::Block, 300, 320, -1, DrPointF(6, 5));
         ladder2->addShapeBoxFromTexture(Asset_Textures::Block);
         ladder2->setGravityMultiplier( 0.5 );
         addThing(ladder2);
 
-        DrEngineObject *ladder_ball = new DrEngineObject(this, getNextKey(), Body_Type::Kinematic, Asset_Textures::Ball, 800, 200, 0, DrPoint(3, 3));
+        DrEngineObject *ladder_ball = new DrEngineObject(this, getNextKey(), Body_Type::Kinematic, Asset_Textures::Ball, 800, 200, 0, DrPointF(3, 3));
         ladder_ball->addShapeCircleFromTexture(Asset_Textures::Block);
         ladder_ball->setGravityMultiplier( 0.0 );
         ladder_ball->setRotateSpeed(4);
         addThing(ladder_ball);
 
-        DrEngineObject *ladder3 = new DrEngineObject(this, getNextKey(), Body_Type::Kinematic, Asset_Textures::Block, 1300, 325, -1, DrPoint(6, 6));
+        DrEngineObject *ladder3 = new DrEngineObject(this, getNextKey(), Body_Type::Kinematic, Asset_Textures::Block, 1300, 325, -1, DrPointF(6, 6));
         ladder3->addShapeBoxFromTexture(Asset_Textures::Block);
         ladder3->setGravityMultiplier( 0.3 );
         addThing(ladder3);
 
 
         // ***** Bridge Test
-        DrEngineObject *anchor_a = new DrEngineObject(this, getNextKey(), Body_Type::Kinematic, Asset_Textures::Block, 2500, -10, -1, DrPoint(1.5, .1));
-        DrEngineObject *chain_1 =  new DrEngineObject(this, getNextKey(), Body_Type::Dynamic,   Asset_Textures::Block, 2600, -10, -1, DrPoint(1.5, .1));
-        DrEngineObject *chain_2 =  new DrEngineObject(this, getNextKey(), Body_Type::Dynamic,   Asset_Textures::Block, 2700, -10, -1, DrPoint(1.5, .1));
-        DrEngineObject *chain_3 =  new DrEngineObject(this, getNextKey(), Body_Type::Dynamic,   Asset_Textures::Block, 2800, -10, -1, DrPoint(1.5, .1));
-        DrEngineObject *chain_4 =  new DrEngineObject(this, getNextKey(), Body_Type::Dynamic,   Asset_Textures::Block, 2900, -10, -1, DrPoint(1.5, .1));
-        DrEngineObject *chain_5 =  new DrEngineObject(this, getNextKey(), Body_Type::Dynamic,   Asset_Textures::Block, 3000, -10, -1, DrPoint(1.5, .1));
-        DrEngineObject *chain_6 =  new DrEngineObject(this, getNextKey(), Body_Type::Dynamic,   Asset_Textures::Block, 3100, -10, -1, DrPoint(1.5, .1));
-        DrEngineObject *chain_7 =  new DrEngineObject(this, getNextKey(), Body_Type::Dynamic,   Asset_Textures::Block, 3200, -10, -1, DrPoint(1.5, .1));
-        DrEngineObject *chain_8 =  new DrEngineObject(this, getNextKey(), Body_Type::Dynamic,   Asset_Textures::Block, 3300, -10, -1, DrPoint(1.5, .1));
-        DrEngineObject *anchor_b = new DrEngineObject(this, getNextKey(), Body_Type::Kinematic, Asset_Textures::Block, 3400, -10, -1, DrPoint(1.5, .1));
+        DrEngineObject *anchor_a = new DrEngineObject(this, getNextKey(), Body_Type::Kinematic, Asset_Textures::Block, 2500, -10, -1, DrPointF(1.5, .1));
+        DrEngineObject *chain_1 =  new DrEngineObject(this, getNextKey(), Body_Type::Dynamic,   Asset_Textures::Block, 2600, -10, -1, DrPointF(1.5, .1));
+        DrEngineObject *chain_2 =  new DrEngineObject(this, getNextKey(), Body_Type::Dynamic,   Asset_Textures::Block, 2700, -10, -1, DrPointF(1.5, .1));
+        DrEngineObject *chain_3 =  new DrEngineObject(this, getNextKey(), Body_Type::Dynamic,   Asset_Textures::Block, 2800, -10, -1, DrPointF(1.5, .1));
+        DrEngineObject *chain_4 =  new DrEngineObject(this, getNextKey(), Body_Type::Dynamic,   Asset_Textures::Block, 2900, -10, -1, DrPointF(1.5, .1));
+        DrEngineObject *chain_5 =  new DrEngineObject(this, getNextKey(), Body_Type::Dynamic,   Asset_Textures::Block, 3000, -10, -1, DrPointF(1.5, .1));
+        DrEngineObject *chain_6 =  new DrEngineObject(this, getNextKey(), Body_Type::Dynamic,   Asset_Textures::Block, 3100, -10, -1, DrPointF(1.5, .1));
+        DrEngineObject *chain_7 =  new DrEngineObject(this, getNextKey(), Body_Type::Dynamic,   Asset_Textures::Block, 3200, -10, -1, DrPointF(1.5, .1));
+        DrEngineObject *chain_8 =  new DrEngineObject(this, getNextKey(), Body_Type::Dynamic,   Asset_Textures::Block, 3300, -10, -1, DrPointF(1.5, .1));
+        DrEngineObject *anchor_b = new DrEngineObject(this, getNextKey(), Body_Type::Kinematic, Asset_Textures::Block, 3400, -10, -1, DrPointF(1.5, .1));
         anchor_a->addShapeBoxFromTexture(Asset_Textures::Block);
         chain_1->addShapeBoxFromTexture( Asset_Textures::Block);
         chain_2->addShapeBoxFromTexture( Asset_Textures::Block);
@@ -284,35 +284,35 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
         for (auto shape : chain_8->shapes)  cpShapeSetFilter( shape, filter);
 
         // ***** Static line segment shapes for the ground
-        DrEngineObject *line1 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  line1->addShapeSegment( DrPoint(-1000,   0), DrPoint( 2500,   0) );
-        DrEngineObject *line2 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  line2->addShapeSegment( DrPoint( 3470,   0), DrPoint( 4500,   0) );
-        DrEngineObject *line3 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  line3->addShapeSegment( DrPoint( 4500,   0), DrPoint( 4500, 100) );
+        DrEngineObject *line1 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  line1->addShapeSegment( DrPointF(-1000,   0), DrPointF( 2500,   0) );
+        DrEngineObject *line2 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  line2->addShapeSegment( DrPointF( 3470,   0), DrPointF( 4500,   0) );
+        DrEngineObject *line3 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  line3->addShapeSegment( DrPointF( 4500,   0), DrPointF( 4500, 100) );
         addThings( { line1, line2, line3 } );
 
         // ***** Big ramp
-        DrEngineObject *ramp1 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  ramp1->addShapeSegment( DrPoint(    0,    0), DrPoint(300,   50) );
-        DrEngineObject *ramp2 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  ramp2->addShapeSegment( DrPoint(  300,   50), DrPoint(600,    0) );
+        DrEngineObject *ramp1 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  ramp1->addShapeSegment( DrPointF(    0,    0), DrPointF(300,   50) );
+        DrEngineObject *ramp2 = new DrEngineObject(this, getNextKey(), Body_Type::Static);  ramp2->addShapeSegment( DrPointF(  300,   50), DrPointF(600,    0) );
         addThings( { ramp1, ramp2 } );
 
         // ***** Little bumps
-        DrEngineObject *bump1 =  new DrEngineObject(this, getNextKey(), Body_Type::Static); bump1->addShapeSegment(  DrPoint( 1090,    0), DrPoint(1120,   4) );
-        DrEngineObject *bump2 =  new DrEngineObject(this, getNextKey(), Body_Type::Static); bump2->addShapeSegment(  DrPoint( 1120,    4), DrPoint(1150,   0) );
-        DrEngineObject *bump3 =  new DrEngineObject(this, getNextKey(), Body_Type::Static); bump3->addShapeSegment(  DrPoint( 1170,    0), DrPoint(1200,   4) );
-        DrEngineObject *bump4 =  new DrEngineObject(this, getNextKey(), Body_Type::Static); bump4->addShapeSegment(  DrPoint( 1200,    4), DrPoint(1230,   0) );
-        DrEngineObject *bump5 =  new DrEngineObject(this, getNextKey(), Body_Type::Static); bump5->addShapeSegment(  DrPoint( 1250,    0), DrPoint(1280,   4) );
-        DrEngineObject *bump6 =  new DrEngineObject(this, getNextKey(), Body_Type::Static); bump6->addShapeSegment(  DrPoint( 1280,    4), DrPoint(1310,   0) );
-        DrEngineObject *bump7 =  new DrEngineObject(this, getNextKey(), Body_Type::Static); bump7->addShapeSegment(  DrPoint( 1330,    0), DrPoint(1360,   4) );
-        DrEngineObject *bump8 =  new DrEngineObject(this, getNextKey(), Body_Type::Static); bump8->addShapeSegment(  DrPoint( 1360,    4), DrPoint(1390,   0) );
-        DrEngineObject *bump9 =  new DrEngineObject(this, getNextKey(), Body_Type::Static); bump9->addShapeSegment(  DrPoint( 1410,    0), DrPoint(1440,   4) );
-        DrEngineObject *bump10 = new DrEngineObject(this, getNextKey(), Body_Type::Static); bump10->addShapeSegment( DrPoint( 1440,    4), DrPoint(1470,   0) );
-        DrEngineObject *bump11 = new DrEngineObject(this, getNextKey(), Body_Type::Static); bump11->addShapeSegment( DrPoint( 1490,    0), DrPoint(1520,   4) );
-        DrEngineObject *bump12 = new DrEngineObject(this, getNextKey(), Body_Type::Static); bump12->addShapeSegment( DrPoint( 1520,    4), DrPoint(1550,   0) );
-        DrEngineObject *bump13 = new DrEngineObject(this, getNextKey(), Body_Type::Static); bump13->addShapeSegment( DrPoint( 1570,    0), DrPoint(1600,   4) );
-        DrEngineObject *bump14 = new DrEngineObject(this, getNextKey(), Body_Type::Static); bump14->addShapeSegment( DrPoint( 1600,    4), DrPoint(1630,   0) );
-        DrEngineObject *bump15 = new DrEngineObject(this, getNextKey(), Body_Type::Static); bump15->addShapeSegment( DrPoint( 1650,    0), DrPoint(1680,   4) );
-        DrEngineObject *bump16 = new DrEngineObject(this, getNextKey(), Body_Type::Static); bump16->addShapeSegment( DrPoint( 1680,    4), DrPoint(1710,   0) );
-        DrEngineObject *bump17 = new DrEngineObject(this, getNextKey(), Body_Type::Static); bump17->addShapeSegment( DrPoint( 1730,    0), DrPoint(1760,   4) );
-        DrEngineObject *bump18 = new DrEngineObject(this, getNextKey(), Body_Type::Static); bump18->addShapeSegment( DrPoint( 1760,    4), DrPoint(1790,   0) );
+        DrEngineObject *bump1 =  new DrEngineObject(this, getNextKey(), Body_Type::Static); bump1->addShapeSegment(  DrPointF( 1090,    0), DrPointF(1120,   4) );
+        DrEngineObject *bump2 =  new DrEngineObject(this, getNextKey(), Body_Type::Static); bump2->addShapeSegment(  DrPointF( 1120,    4), DrPointF(1150,   0) );
+        DrEngineObject *bump3 =  new DrEngineObject(this, getNextKey(), Body_Type::Static); bump3->addShapeSegment(  DrPointF( 1170,    0), DrPointF(1200,   4) );
+        DrEngineObject *bump4 =  new DrEngineObject(this, getNextKey(), Body_Type::Static); bump4->addShapeSegment(  DrPointF( 1200,    4), DrPointF(1230,   0) );
+        DrEngineObject *bump5 =  new DrEngineObject(this, getNextKey(), Body_Type::Static); bump5->addShapeSegment(  DrPointF( 1250,    0), DrPointF(1280,   4) );
+        DrEngineObject *bump6 =  new DrEngineObject(this, getNextKey(), Body_Type::Static); bump6->addShapeSegment(  DrPointF( 1280,    4), DrPointF(1310,   0) );
+        DrEngineObject *bump7 =  new DrEngineObject(this, getNextKey(), Body_Type::Static); bump7->addShapeSegment(  DrPointF( 1330,    0), DrPointF(1360,   4) );
+        DrEngineObject *bump8 =  new DrEngineObject(this, getNextKey(), Body_Type::Static); bump8->addShapeSegment(  DrPointF( 1360,    4), DrPointF(1390,   0) );
+        DrEngineObject *bump9 =  new DrEngineObject(this, getNextKey(), Body_Type::Static); bump9->addShapeSegment(  DrPointF( 1410,    0), DrPointF(1440,   4) );
+        DrEngineObject *bump10 = new DrEngineObject(this, getNextKey(), Body_Type::Static); bump10->addShapeSegment( DrPointF( 1440,    4), DrPointF(1470,   0) );
+        DrEngineObject *bump11 = new DrEngineObject(this, getNextKey(), Body_Type::Static); bump11->addShapeSegment( DrPointF( 1490,    0), DrPointF(1520,   4) );
+        DrEngineObject *bump12 = new DrEngineObject(this, getNextKey(), Body_Type::Static); bump12->addShapeSegment( DrPointF( 1520,    4), DrPointF(1550,   0) );
+        DrEngineObject *bump13 = new DrEngineObject(this, getNextKey(), Body_Type::Static); bump13->addShapeSegment( DrPointF( 1570,    0), DrPointF(1600,   4) );
+        DrEngineObject *bump14 = new DrEngineObject(this, getNextKey(), Body_Type::Static); bump14->addShapeSegment( DrPointF( 1600,    4), DrPointF(1630,   0) );
+        DrEngineObject *bump15 = new DrEngineObject(this, getNextKey(), Body_Type::Static); bump15->addShapeSegment( DrPointF( 1650,    0), DrPointF(1680,   4) );
+        DrEngineObject *bump16 = new DrEngineObject(this, getNextKey(), Body_Type::Static); bump16->addShapeSegment( DrPointF( 1680,    4), DrPointF(1710,   0) );
+        DrEngineObject *bump17 = new DrEngineObject(this, getNextKey(), Body_Type::Static); bump17->addShapeSegment( DrPointF( 1730,    0), DrPointF(1760,   4) );
+        DrEngineObject *bump18 = new DrEngineObject(this, getNextKey(), Body_Type::Static); bump18->addShapeSegment( DrPointF( 1760,    4), DrPointF(1790,   0) );
         addThings( { bump1,  bump2,  bump3,  bump4,  bump5,  bump6,  bump7,  bump8,  bump9,  bump10,
                      bump11, bump12, bump13, bump14, bump15, bump16, bump17, bump18 } );
     }

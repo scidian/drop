@@ -228,8 +228,8 @@ void DrEngineCamera::updateCamera() {
     if (follow == nullptr) {                                m_follow_key = 0;   return;     }
     if (follow->getThingType() != DrThingType::Object) {    m_follow_key = 0;   return;     }
     DrEngineObject *object = dynamic_cast<DrEngineObject*>(follow);
-    DrPoint follow_pos = object->getPosition();
-    DrPoint follow_previous_pos = object->getPreviousPosition();
+    DrPointF follow_pos = object->getPosition();
+    DrPointF follow_previous_pos = object->getPreviousPosition();
 
     // Calculate the average object Speed
     m_avg_speed_x.push_back( follow_pos.x - follow_previous_pos.x );

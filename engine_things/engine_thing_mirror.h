@@ -31,14 +31,13 @@ public:
 
 public:
     // Constructor / Destructor
-    DrEngineMirror(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, float opacity, DrPoint size,
+    DrEngineMirror(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, float opacity, DrPointF size,
                    QColor color_1, QColor color_2, float tint_amount, float blur, float blur_stretch, float scale);
     virtual ~DrEngineMirror() override;
 
     // Abstract Engine Thing Overrides
-    virtual void        addToWorld() override;
     virtual DrThingType getThingType() override { return DrThingType::Mirror; }
-    virtual bool        update(double time_passed, double time_warp, QRectF &area) override;
+
 
 
 };

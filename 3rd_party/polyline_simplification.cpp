@@ -14,10 +14,10 @@
 #include <utility>
 
 #include "3rd_party/polyline_simplification.h"
-#include "types/point.h"
+#include "types/pointf.h"
 
 
-double PerpendicularDistance(const DrPoint &pt, const DrPoint &line_start, const DrPoint &line_end) {
+double PerpendicularDistance(const DrPointF &pt, const DrPointF &line_start, const DrPointF &line_end) {
     double dx = line_end.x - line_start.x;
     double dy = line_end.y - line_start.y;
 
@@ -46,8 +46,8 @@ double PerpendicularDistance(const DrPoint &pt, const DrPoint &line_start, const
 }
 
 
-std::vector<DrPoint> PolylineSimplification::RamerDouglasPeucker(const std::vector<DrPoint> &point_list, double epsilon) {
-    std::vector<DrPoint> simplified;
+std::vector<DrPointF> PolylineSimplification::RamerDouglasPeucker(const std::vector<DrPointF> &point_list, double epsilon) {
+    std::vector<DrPointF> simplified;
 
     if (point_list.size() < 2) {
         ///throw std::invalid_argument("Not enough points to simplify");
@@ -73,10 +73,10 @@ std::vector<DrPoint> PolylineSimplification::RamerDouglasPeucker(const std::vect
     // If max distance is greater than epsilon, recursively simplify
     if (dmax > epsilon) {
         // Recursive call
-        std::vector<DrPoint> first_line { point_list.begin(), point_list.begin() + static_cast<long>(index) + 1 };
-        std::vector<DrPoint> last_line  { point_list.begin() + static_cast<long>(index), point_list.end() };
-        std::vector<DrPoint> recursive_results1 = RamerDouglasPeucker(first_line, epsilon);
-        std::vector<DrPoint> recursive_results2 = RamerDouglasPeucker(last_line,  epsilon);
+        std::vector<DrPointF> first_line { point_list.begin(), point_list.begin() + static_cast<long>(index) + 1 };
+        std::vector<DrPointF> last_line  { point_list.begin() + static_cast<long>(index), point_list.end() };
+        std::vector<DrPointF> recursive_results1 = RamerDouglasPeucker(first_line, epsilon);
+        std::vector<DrPointF> recursive_results2 = RamerDouglasPeucker(last_line,  epsilon);
 
         // Build the result list
         simplified.assign(recursive_results1.begin(), recursive_results1.end() - 1);

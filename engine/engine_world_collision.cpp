@@ -179,7 +179,7 @@ extern cpBool WaterPreSolve(cpArbiter *arb, cpSpace *space, void *) {
     // If shape is a circle, create a temporary polygon circle shape
     if (object_b->shape_type[collider] == Shape_Type::Circle) {
         cpVect  offset = cpCircleShapeGetOffset(collider);
-        QVector<DrPoint> points = object_b->createEllipseFromCircle(DrPoint(offset.x, offset.y), cpCircleShapeGetRadius(collider), 12);
+        QVector<DrPointF> points = object_b->createEllipseFromCircle(DrPointF(offset.x, offset.y), cpCircleShapeGetRadius(collider), 12);
         int old_point_count = static_cast<int>(points.size());
 
         // Copy polygon Vertices into a scaled cpVect array

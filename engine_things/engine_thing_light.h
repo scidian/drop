@@ -25,7 +25,7 @@ public:
     Light_Type      light_type = Light_Type::Opaque;        // Type of Light: Opaque or Glow
     float           light_size = 1500.0f;                   // Diameter of light
     QColor          color = QColor(192, 64, 192);           // Color of light
-    DrPoint         cone = DrPoint(0.0, 360.0);             // Start / end angle of light
+    DrPointF        cone = DrPointF(0.0, 360.0);             // Start / end angle of light
                                                             //      float cone_1 = qDegreesToRadians( 30.0f);    // Pac-man
                                                             //      float cone_2 = qDegreesToRadians(330.0f);
                                                             //      float cone_1 = qDegreesToRadians(330.0f);    // Small cone
@@ -50,12 +50,12 @@ private:
     float           m_pulse_target;                         // Pulse target intensity
     float           m_perspective_scale = 1.0f;             // Scales light at a far away zorder for Perspective Rendering
     bool            m_visible = false;                      // Tracks if light is in view
-    DrPoint         m_rotated_cone = DrPoint(0, 360);       // Cone set to current angle
+    DrPointF        m_rotated_cone = DrPointF(0, 360);       // Cone set to current angle
 
 public:
     // Constructor / Destructor
     DrEngineLight(DrEngineWorld *world, long unique_key,
-                  double x, double y, double z, float opacity, Light_Type type, QColor color, float diameter, DrPoint cone, float intensity,
+                  double x, double y, double z, float opacity, Light_Type type, QColor color, float diameter, DrPointF cone, float intensity,
                   float shadows, bool draw_shadows, float blur, float pulse, float pulse_speed);
     virtual ~DrEngineLight() override;
 
@@ -76,7 +76,7 @@ public:
     float       getPulseDirection() { return m_pulse_direction; }
     float       getPerspectiveScale() { return m_perspective_scale; }
     bool        isInView() { return m_visible; }
-    DrPoint     getRotatedCone() { return m_rotated_cone; }
+    DrPointF    getRotatedCone() { return m_rotated_cone; }
 
     void        setScreenPos(QPointF new_pos) { m_screen_pos = new_pos; }
     void        setLightDiameter(int new_diameter) { m_light_diameter = new_diameter; }

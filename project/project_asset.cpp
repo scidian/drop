@@ -87,12 +87,12 @@ DrShapeList autoCollisionShape(QPixmap pixmap) {
     DrImaging::findObjectsInImage(pixmap.toImage(), images, rects, 0.9);
 
     // ***** Creates a box polygon for use with complicated / not complicated enough images
-    QVector<DrPoint> box;
+    QVector<DrPointF> box;
     box.clear();
-    box.push_back( DrPoint(0,                    0) );
-    box.push_back( DrPoint(pixmap.width() - 1,   0) );
-    box.push_back( DrPoint(pixmap.width() - 1,   pixmap.height() - 1) );
-    box.push_back( DrPoint(0,                    pixmap.height() - 1) );
+    box.push_back( DrPointF(0,                  0) );
+    box.push_back( DrPointF(pixmap.width() - 1, 0) );
+    box.push_back( DrPointF(pixmap.width() - 1, pixmap.height() - 1) );
+    box.push_back( DrPointF(0,                  pixmap.height() - 1) );
 
     // ***** Go through each image (object) and Polygon for it
     if (images.count() < 50) {
@@ -101,19 +101,19 @@ DrShapeList autoCollisionShape(QPixmap pixmap) {
             if (image.width() < 1 || image.height() < 1) continue;
 
             // Trace edge of image
-            QVector<DrPoint> points =  DrImaging::traceImageOutline(image);
+            QVector<DrPointF> points = DrImaging::traceImageOutline(image);
 
             // Run Polyline Simplification algorithm
-            QVector<DrPoint> simple_points;
-            simple_points = QVector<DrPoint>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(points.toStdVector(), 2.0) );
+            QVector<DrPointF> simple_points;
+            simple_points = QVector<DrPointF>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(points.toStdVector(), 2.0) );
             if ((simple_points.count() < 4)) {
                 ///points = HullFinder::FindConcaveHull(points, 5.0);
                 points.clear();
-                points.push_back( DrPoint(rects[image_number].topLeft().x(),        rects[image_number].topLeft().y()) );
-                points.push_back( DrPoint(rects[image_number].topRight().x(),       rects[image_number].topRight().y()) );
-                points.push_back( DrPoint(rects[image_number].bottomRight().x(),    rects[image_number].bottomRight().y()) );
-                points.push_back( DrPoint(rects[image_number].bottomLeft().x(),     rects[image_number].bottomLeft().y()) );
-                points.push_back( DrPoint(rects[image_number].topLeft().x(),        rects[image_number].topLeft().y()) );
+                points.push_back( DrPointF(rects[image_number].topLeft().x(),        rects[image_number].topLeft().y()) );
+                points.push_back( DrPointF(rects[image_number].topRight().x(),       rects[image_number].topRight().y()) );
+                points.push_back( DrPointF(rects[image_number].bottomRight().x(),    rects[image_number].bottomRight().y()) );
+                points.push_back( DrPointF(rects[image_number].bottomLeft().x(),     rects[image_number].bottomLeft().y()) );
+                points.push_back( DrPointF(rects[image_number].topLeft().x(),        rects[image_number].topLeft().y()) );
             } else{
                 points = simple_points;
             }

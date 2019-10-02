@@ -1,8 +1,8 @@
 //
-//      Created by Stephens Nunnally on 9/25/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 10/2/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      Useful 2D Point Class, adapted from HullFinder
+//      Useful 2D Point Class with Integers, adapted from HullFinder
 //
 //
 #ifndef DR_POINT_H
@@ -17,32 +17,19 @@
 class DrPoint
 {
 public:
-    double x;
-    double y;
+    int x;
+    int y;
     DrPoint();
-    DrPoint(double _x, double _y);
+    DrPoint(int x, int y_);
+    DrPoint(float x_, float y_);
+    DrPoint(double x_, double y_);
     DrPoint & operator=(const DrPoint &other);
     DrPoint operator+(const DrPoint &other) const;
     DrPoint operator-(const DrPoint &other) const;
-    DrPoint operator*(double k) const;
-    DrPoint operator/(double k) const;
-    bool operator==(const DrPoint &other) const;
-
-    double DotProduct(const DrPoint &other) const;
-    double DistanceSquared(const DrPoint &to) const;
-    double Distance(const DrPoint &to) const;
-    double Distance(const DrPoint &segmentStart, const DrPoint &segmentEnd) const;
-    double DecisionDistance(const std::vector<DrPoint> &points) const;
+    DrPoint operator*(int k) const;
+    DrPoint operator/(int k) const;
+    bool    operator==(const DrPoint &other) const;
 };
 
 
 #endif // DR_POINT_H
-
-
-
-
-
-
-
-
-

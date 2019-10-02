@@ -40,9 +40,9 @@ ThingInfo DrEngineWorld::getThingBasicInfo(DrThing *thing) {
     QPointF pos =   thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
     QPointF scale = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
     QPointF size =  thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF();
-    info.position = DrPoint(pos.x(), pos.y());
-    info.scale =    DrPoint(scale.x(), scale.y());
-    info.size =     DrPoint(size.x(), size.y());
+    info.position = DrPointF(pos.x(), pos.y());
+    info.scale =    DrPointF(scale.x(), scale.y());
+    info.size =     DrPointF(size.x(), size.y());
     info.opacity =  thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
     info.z_order =  thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
     return info;
@@ -116,7 +116,7 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     QVariant shapes = m_project->getAsset(asset_key)->getComponentPropertyValue(Components::Asset_Object_Settings, Properties::Asset_Collision_Shape);
     DrShapeList shape = shapes.value<DrShapeList>();
     for (auto poly : shape.getPolygons()) {
-        QVector<DrPoint> points = QVector<DrPoint>::fromStdVector(poly);
+        QVector<DrPointF> points = QVector<DrPointF>::fromStdVector(poly);
         block->addShapePolygon(points);
     }
 
@@ -280,7 +280,7 @@ void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double off
     addThing( new DrEngineLight(this, getNextKey(), info.position.x + offset_x, -info.position.y + offset_y, info.z_order, info.opacity,
                                 static_cast<Light_Type>(light_type),
                                 light_color, static_cast<float>(info.size.x),
-                                DrPoint(cone_start, cone_end), intensity, shadows, draw_shadows, blur, pulse, pulse_speed));
+                                DrPointF(cone_start, cone_end), intensity, shadows, draw_shadows, blur, pulse, pulse_speed));
 }
 
 

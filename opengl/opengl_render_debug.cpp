@@ -123,7 +123,7 @@ void DrOpenGL::drawDebugShapes(QPainter &painter) {
         painter.setBrush( QBrush( brush_color));
 
         // Load Object Position
-        DrPoint center = object->getPosition();
+        DrPointF center = object->getPosition();
 
         // Used to store combined polygon of a multi-shape body
         QPolygonF object_poly;
@@ -283,10 +283,10 @@ void DrOpenGL::drawDebugJoints(QPainter &painter) {
         DrEngineObject *object_b = static_cast<DrEngineObject*>(cpBodyGetUserData(body_b));
 
         // Load Object Positions
-        DrPoint center_a = object_a->getPosition();
-        DrPoint center_b = object_b->getPosition();
-        QPointF l1 = mapToScreen( center_a.x, center_a.y, 0);
-        QPointF l2 = mapToScreen( center_b.x, center_b.y, 0);
+        DrPointF center_a = object_a->getPosition();
+        DrPointF center_b = object_b->getPosition();
+        QPointF  l1 = mapToScreen( center_a.x, center_a.y, 0);
+        QPointF  l2 = mapToScreen( center_b.x, center_b.y, 0);
 
         painter.drawLine( l1, l2 );
     }

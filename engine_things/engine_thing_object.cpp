@@ -28,7 +28,7 @@ static void GetBodyShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_
 DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key) : DrEngineThing (world, unique_key) { }
 
 DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, Body_Type body_type, long texture_number,
-                               double x, double y, double z, DrPoint scale, double friction, double bounce,
+                               double x, double y, double z, DrPointF scale, double friction, double bounce,
                                bool should_collide, bool can_rotate, double angle, float opacity) : DrEngineThing (world, unique_key) {
     // Thing Basics
     this->setOpacity(opacity);
@@ -38,10 +38,10 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, Body_Type 
 
     // Object Basics
     if (texture_number != 0) {
-        this->setSize( DrPoint(world->getTexture(texture_number)->width(), world->getTexture(texture_number)->height()) );
+        this->setSize( DrPointF(world->getTexture(texture_number)->width(), world->getTexture(texture_number)->height()) );
     }
     this->setTextureNumber(texture_number);                                     // Texture to render from
-    this->updateBodyPosition( DrPoint(x, y), true );
+    this->updateBodyPosition( DrPointF(x, y), true );
 
     this->setCustomFriction(friction);
     this->setCustomBounce(bounce);
@@ -108,17 +108,17 @@ void DrEngineObject::addToWorld() {
 //####################################################################################
 //##    Updates - Override for DrEngineThing::update()
 //####################################################################################
-void DrEngineObject::updateBodyPosition(DrPoint updated_position, bool update_previous_position_also) {
+void DrEngineObject::updateBodyPosition(DrPointF updated_position, bool update_previous_position_also) {
     m_previous_position = update_previous_position_also ? updated_position : getPosition();
     setPosition( updated_position );
 }
 
-bool DrEngineObject::update(double , double , QRectF &area) {
+bool DrEngineObject::update(double time_passed, double time_warp, QRectF &area) {
     bool remove = false;
 
     // ***** Get some info about the current object from the space and save it to the current DrEngineObject
     cpVect new_position = cpBodyGetPosition( body );
-    updateBodyPosition( DrPoint( new_position.x, new_position.y ));
+    updateBodyPosition( DrPointF( new_position.x, new_position.y ));
     setAngle( Dr::RadiansToDegrees( cpBodyGetAngle( body )) );
 
     // **** Check that any object with custom PlayerUpdateVelocity callback is awake so it can access key / button events
@@ -180,10 +180,8 @@ bool DrEngineObject::update(double , double , QRectF &area) {
         }
     }
 
-    // Delete object if ends up outside the deletion threshold
-    if (!area.contains(QPointF(new_position.x, new_position.y))) remove = true;
 
-    return remove;
+    return (remove && DrEngineThing::update(time_passed, time_warp, area));
 };
 
 

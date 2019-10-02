@@ -19,13 +19,13 @@
 //####################################################################################
 //##    Creates a list of Vertices that represent a scaled circle
 //####################################################################################
-QVector<DrPoint> DrEngineObject::createEllipseFromCircle(const DrPoint &center, const double &radius, const int &point_count) {
-    QVector<DrPoint> ellipse;
+QVector<DrPointF> DrEngineObject::createEllipseFromCircle(const DrPointF &center, const double &radius, const int &point_count) {
+    QVector<DrPointF> ellipse;
     int count = point_count;
     for (int i = 0; i < count; i++) {
         QTransform t = QTransform().translate(center.x, center.y).rotate(i * 360.0 / count);
         QPointF point = t.map(QPointF( 0, radius));
-        ellipse.append( DrPoint(point.x(), point.y()) );
+        ellipse.append( DrPointF(point.x(), point.y()) );
     }
     return ellipse;
 }
@@ -45,10 +45,10 @@ void DrEngineObject::addShapeBoxFromTexture(long texture_number) {
     addShapeBox(width, height);
 }
 
-void DrEngineObject::addShapeCircle(double circle_radius, DrPoint shape_offset) {
+void DrEngineObject::addShapeCircle(double circle_radius, DrPointF shape_offset) {
     // Check if Circle, but not perfect square scale, if so, create with a polygon ellipse instead of a circle
     if (qFuzzyCompare(this->getScaleX(), this->getScaleY()) == false) {
-        QVector<DrPoint> points = createEllipseFromCircle(shape_offset, circle_radius, 18);
+        QVector<DrPointF> points = createEllipseFromCircle(shape_offset, circle_radius, 18);
         addShapePolygon(points);
     } else {
         double  radius = circle_radius * static_cast<double>(this->getScaleX());
@@ -60,24 +60,24 @@ void DrEngineObject::addShapeCircle(double circle_radius, DrPoint shape_offset) 
 }
 void DrEngineObject::addShapeCircleFromTexture(long texture_number) {
     double radius = getWorld()->getTexture(texture_number)->width() / 2.0;
-    addShapeCircle(radius, DrPoint(0, 0));
+    addShapeCircle(radius, DrPointF(0, 0));
 }
 
-void DrEngineObject::addShapeSegment(DrPoint p1, DrPoint p2, double padding) {
+void DrEngineObject::addShapeSegment(DrPointF p1, DrPointF p2, double padding) {
     cpShape *shape = cpSegmentShapeNew(this->body, cpv(p1.x, p1.y), cpv(p2.x, p2.y), padding);
     double   area =  cpAreaForSegment(cpv(p1.x, p1.y), cpv(p2.x, p2.y), padding);
     applyShapeSettings(shape, area, Shape_Type::Segment);
 }
 
-void DrEngineObject::addShapePolygon(const QVector<DrPoint> &points) {
+void DrEngineObject::addShapePolygon(const QVector<DrPointF> &points) {
 
     // Apply scale to points, verify Winding
     int old_point_count =static_cast<int>(points.size());
     double scale_x = static_cast<double>(this->getScaleX());
     double scale_y = static_cast<double>(this->getScaleY());
-    QVector<DrPoint> scaled_points;
+    QVector<DrPointF> scaled_points;
     for (auto &point : points) {
-        scaled_points.push_back( DrPoint(point.x * scale_x, point.y * scale_y) );
+        scaled_points.push_back( DrPointF(point.x * scale_x, point.y * scale_y) );
     }
     HullFinder::EnsureWindingOrientation(scaled_points, Winding_Orientation::CounterClockwise);
 

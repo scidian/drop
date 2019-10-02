@@ -46,7 +46,7 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                     circle = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, x, y, z);
                 } else {
                     ///circle = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, x, y, z);
-                    circle = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, x, y, z, DrPoint(2, 1));
+                    circle = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, x, y, z, DrPointF(2, 1));
                 }
                 circle->addShapeCircle(ball_radius, c_center);
                 circle->setOriginalVelocityX(vel_x);
@@ -61,15 +61,15 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
         } else if (event->button() & Qt::RightButton) {
 
             // Polygon shape points should be counter-clockwise
-            QVector<DrPoint> points;
-            points.append( DrPoint( 20, -55) );     // Right Bottom
-            points.append( DrPoint( 45,  15) );     // Right Middle
-            points.append( DrPoint(  5,  60) );     // Top
-            points.append( DrPoint(-10, -30) );     // Left Mid Middle Concave <-- point is ignored by Chipmunk
-            points.append( DrPoint(-46, -10) );     // Left Middle
-            points.append( DrPoint(-38, -55) );     // Left Bottom
+            QVector<DrPointF> points;
+            points.append( DrPointF( 20, -55) );    // Right Bottom
+            points.append( DrPointF( 45,  15) );    // Right Middle
+            points.append( DrPointF(  5,  60) );    // Top
+            points.append( DrPointF(-10, -30) );    // Left Mid Middle Concave <-- point is ignored by Chipmunk
+            points.append( DrPointF(-46, -10) );    // Left Middle
+            points.append( DrPointF(-38, -55) );    // Left Bottom
 
-            DrEngineObject *plant = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Plant, x, y, z, DrPoint(2, .5));
+            DrEngineObject *plant = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Plant, x, y, z, DrPointF(2, .5));
             plant->addShapePolygon(points);
             world->addThing(plant);
         }

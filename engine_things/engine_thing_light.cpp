@@ -11,6 +11,7 @@
 #include "engine/engine_world.h"
 #include "engine/form_engine.h"
 #include "engine_thing_light.h"
+#include "helper.h"
 #include "opengl/opengl.h"
 
 //####################################################################################
@@ -22,7 +23,7 @@ DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key,
                              Light_Type type_,
                              QColor     color_,
                              float      diameter_,
-                             DrPoint    cone_,
+                             DrPointF   cone_,
                              float intensity_,
                              float shadows_,
                              bool  draw_shadows_,
@@ -32,7 +33,7 @@ DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key,
     : DrEngineThing(world, unique_key) {
 
     this->setOpacity( opacity_ );
-    this->setPosition( DrPoint(x_, y_) );
+    this->setPosition( DrPointF(x_, y_) );
     this->z_order = z_;
 
     this->light_type = type_;
@@ -59,6 +60,8 @@ DrEngineLight::~DrEngineLight() {
 //####################################################################################
 void DrEngineLight::addToWorld() {
     getWorld()->light_count++;
+
+    DrEngineThing::addToWorld();
 }
 
 
@@ -69,8 +72,8 @@ bool DrEngineLight::update(double time_passed, double time_warp, QRectF &area) {
     bool remove = false;
 
     // ***** Pulse light
-    if (qFuzzyCompare(pulse_speed, 0) == false) {
-        if (qFuzzyCompare(m_pulse_direction, 0)) {
+    if (Dr::FuzzyCompare(pulse_speed, 0.f) == false) {
+        if (Dr::FuzzyCompare(m_pulse_direction, 0.f)) {
             m_pulse_direction = pulse_speed;
             m_pulse_target = (pulse_speed < 0) ? m_start_intensity - pulse : m_start_intensity + pulse;
         }
@@ -86,12 +89,7 @@ bool DrEngineLight::update(double time_passed, double time_warp, QRectF &area) {
         }
     }
 
-    // !!!!! TEMP: Move light
-    ///this->setPosition(DrPoint(this->getPosition().x + 2, this->getPosition().y));
-
-    // ***** Delete object if ends up outside the deletion threshold
-    if (area.contains(QPointF(getPosition().x, getPosition().y)) == false) remove = true;
-    return remove;
+    return (remove && DrEngineThing::update(time_passed, time_warp, area));
 }
 
 
@@ -113,7 +111,7 @@ void DrEngineLight::setAngle(double new_angle) {
         new_x -= 360.0;
     }
 
-    m_rotated_cone = DrPoint( new_x, new_y );
+    m_rotated_cone = DrPointF( new_x, new_y );
 }
 
 

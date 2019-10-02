@@ -17,7 +17,7 @@
 #include <vector>
 
 // Forward Declarations
-class DrPoint;
+class DrPointF;
 
 
 //####################################################################################
@@ -30,7 +30,7 @@ class PolylineSimplification
 public:
     PolylineSimplification();
 
-    static std::vector<DrPoint> RamerDouglasPeucker(const std::vector<DrPoint> &point_list, double epsilon);
+    static std::vector<DrPointF> RamerDouglasPeucker(const std::vector<DrPointF> &point_list, double epsilon);
 
 };
 

@@ -4,16 +4,16 @@
 //
 //
 #include "hullfinder.h"
-#include "types/point.h"
+#include "types/pointf.h"
 
 
 HullFinder::HullFinder() { }
 
-double HullFinder::IsLeft(DrPoint p0, DrPoint p1, DrPoint p2) {
+double HullFinder::IsLeft(DrPointF p0, DrPointF p1, DrPointF p2) {
     return (p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y);
 }
 
-bool HullFinder::IsPointInsidePolygon(DrPoint v, const QVector<DrPoint> &polygon) {
+bool HullFinder::IsPointInsidePolygon(DrPointF v, const QVector<DrPointF> &polygon) {
     bool result = false;
     int j = polygon.count() - 1;
     for (int i = 0; i < polygon.count(); i++) {
@@ -27,7 +27,7 @@ bool HullFinder::IsPointInsidePolygon(DrPoint v, const QVector<DrPoint> &polygon
     return result;
 }
 
-bool HullFinder::CheckEdgeIntersection(const DrPoint &p0, const DrPoint &p1, const DrPoint &p2, const DrPoint &p3) {
+bool HullFinder::CheckEdgeIntersection(const DrPointF &p0, const DrPointF &p1, const DrPointF &p2, const DrPointF &p3) {
     double s1_x = p1.x - p0.x;
     double s1_y = p1.y - p0.y;
     double s2_x = p3.x - p2.x;
@@ -37,12 +37,12 @@ bool HullFinder::CheckEdgeIntersection(const DrPoint &p0, const DrPoint &p1, con
     return (s > 0 && s < 1 && t > 0 && t < 1);
 }
 
-bool HullFinder::CheckEdgeIntersection(const QVector<DrPoint> &hull, DrPoint curEdgeStart, DrPoint curEdgeEnd, DrPoint checkEdgeStart, DrPoint checkEdgeEnd) {
+bool HullFinder::CheckEdgeIntersection(const QVector<DrPointF> &hull, DrPointF curEdgeStart, DrPointF curEdgeEnd, DrPointF checkEdgeStart, DrPointF checkEdgeEnd) {
     for (int i = 0; i < hull.size() - 2; i++) {
         int e1 = i;
         int e2 = i + 1;
-        DrPoint p1 = hull[e1];
-        DrPoint p2 = hull[e2];
+        DrPointF p1 = hull[e1];
+        DrPointF p2 = hull[e2];
 
         if (curEdgeStart == p1 && curEdgeEnd == p2) {
             continue;
@@ -55,17 +55,17 @@ bool HullFinder::CheckEdgeIntersection(const QVector<DrPoint> &hull, DrPoint cur
     return false;
 }
 
-DrPoint HullFinder::NearestInnerPoint(DrPoint edgeStart, DrPoint edgeEnd, const QVector<DrPoint> &DrPoints, const QVector<DrPoint> &hull, bool *found) {
-    DrPoint result;
+DrPointF HullFinder::NearestInnerPoint(DrPointF edgeStart, DrPointF edgeEnd, const QVector<DrPointF> &DrPointFs, const QVector<DrPointF> &hull, bool *found) {
+    DrPointF result;
     double distance = 0;
     *found = false;
 
-    foreach (DrPoint p, DrPoints) {
-        // Skip DrPoints that are already in he hull
+    foreach (DrPointF p, DrPointFs) {
+        // Skip DrPointFs that are already in he hull
         if (hull.contains(p)) {
             continue;
         }
-        /*if (!IsDrPointInsidePolygon(p, hull)) {
+        /*if (!IsPointInsidePolygon(p, hull)) {
             continue;
         }*/
 
@@ -88,15 +88,15 @@ DrPoint HullFinder::NearestInnerPoint(DrPoint edgeStart, DrPoint edgeEnd, const 
     return result;
 }
 
-QVector<DrPoint> HullFinder::FindConvexHull(const QVector<DrPoint> &DrPoints) {
-    QVector<DrPoint> P = DrPoints;
-    QVector<DrPoint> H;
+QVector<DrPointF> HullFinder::FindConvexHull(const QVector<DrPointF> &DrPointFs) {
+    QVector<DrPointF> P = DrPointFs;
+    QVector<DrPointF> H;
 
     // Sort P by x and y
     for (int i = 0; i < P.size(); i++) {
         for (int j = i + 1; j < P.size(); j++) {
             if (P[j].x < P[i].x || (qFuzzyCompare(P[j].x, P[i].x) && P[j].y < P[i].y)) {
-                DrPoint tmp = P[i];
+                DrPointF tmp = P[i];
                 P[i] = P[j];
                 P[j] = tmp;
             }
@@ -106,7 +106,7 @@ QVector<DrPoint> HullFinder::FindConvexHull(const QVector<DrPoint> &DrPoints) {
     // the output array H[] will be used as the stack
     int i;                              // array scan index
 
-    // Get the indices of DrPoints with min x-coord and min|max y-coord
+    // Get the indices of Points with min x-coord and min|max y-coord
     int minmin = 0, minmax;
     double xmin = P[0].x;
     for (i = 1; i < P.size(); i++)
@@ -116,11 +116,11 @@ QVector<DrPoint> HullFinder::FindConvexHull(const QVector<DrPoint> &DrPoints) {
         H.push_back(P[minmin]);
         if (qFuzzyCompare(P[minmax].y, P[minmin].y) == false) // a  nontrivial segment
             H.push_back(P[minmax]);
-        H.push_back(P[minmin]);         // add polygon endDrPoint
+        H.push_back(P[minmin]);         // add polygon end point
         return H;
     }
 
-    // Get the indices of DrPoints with max x-coord and min|max y-coord
+    // Get the indices of Points with max x-coord and min|max y-coord
     int maxmin, maxmax = P.size() - 1;
     double xmax = P.last().x;
     for (i = P.size() - 2; i >= 0; i--)
@@ -128,64 +128,64 @@ QVector<DrPoint> HullFinder::FindConvexHull(const QVector<DrPoint> &DrPoints) {
     maxmin = i+1;
 
     // Compute the lower hull on the stack H
-    H.push_back(P[minmin]);             // push  minmin DrPoint onto stack
+    H.push_back(P[minmin]);             // push  minmin point onto stack
     i = minmax;
     while (++i <= maxmin) {
         // the lower line joins P[minmin]  with P[maxmin]
         if (IsLeft(P[minmin], P[maxmin], P[i]) >= 0 && i < maxmin)
             continue;                   // ignore P[i] above or on the lower line
 
-        while (H.size() > 1)            // there are at least 2 DrPoints on the stack
+        while (H.size() > 1)            // there are at least 2 points on the stack
         {
             // test if  P[i] is left of the line at the stack top
             if (IsLeft(H[H.size() - 2], H.last(), P[i]) > 0)
                 break;                  // P[i] is a new hull  vertex
-            H.pop_back();               // pop top DrPoint off  stack
+            H.pop_back();               // pop top point off  stack
         }
         H.push_back(P[i]);              // push P[i] onto stack
     }
 
     // Next, compute the upper hull on the stack H above  the bottom hull
-    if (maxmax != maxmin)               // if  distinct xmax DrPoints
-         H.push_back(P[maxmax]);        // push maxmax DrPoint onto stack
-    int bot = H.size();                 // the bottom DrPoint of the upper hull stack
+    if (maxmax != maxmin)               // if  distinct xmax points
+         H.push_back(P[maxmax]);        // push maxmax point onto stack
+    int bot = H.size();                 // the bottom point of the upper hull stack
     i = maxmin;
     while (--i >= minmax) {
         // the upper line joins P[maxmax]  with P[minmax]
         if (IsLeft( P[maxmax], P[minmax], P[i])  >= 0 && i > minmax)
             continue;                   // ignore P[i] below or on the upper line
 
-        while (H.size() > bot)          // at least 2 DrPoints on the upper stack
+        while (H.size() > bot)          // at least 2 points on the upper stack
         {
             // test if  P[i] is left of the line at the stack top
             if (IsLeft(H[H.size() - 2], H.last(), P[i]) > 0)
                 break;                  // P[i] is a new hull  vertex
-            H.pop_back();               // pop top DrPoint off stack
+            H.pop_back();               // pop top point off stack
         }
         H.push_back(P[i]);              // push P[i] onto stack
     }
     if (minmax != minmin)
-        H.push_back(P[minmin]);         // push joining endDrPoint onto stack
+        H.push_back(P[minmin]);         // push joining end point onto stack
 
     return H;
 }
 
-QVector<DrPoint> HullFinder::FindConcaveHull(const QVector<DrPoint> &DrPoints, double N) {
-    QVector<DrPoint> concaveList = FindConvexHull(DrPoints);
+QVector<DrPointF> HullFinder::FindConcaveHull(const QVector<DrPointF> &DrPointFs, double N) {
+    QVector<DrPointF> concaveList = FindConvexHull(DrPointFs);
 
     for (int i = 0; i < concaveList.size() - 1; i++) {
-        // Find the nearest inner DrPoint pk ∈ G from the edge (ci1, ci2);
-        DrPoint ci1 = concaveList[i];
-        DrPoint ci2 = concaveList[i + 1];
+        // Find the nearest inner point pk ∈ G from the edge (ci1, ci2);
+        DrPointF ci1 = concaveList[i];
+        DrPointF ci2 = concaveList[i + 1];
 
         bool found;
-        DrPoint pk = NearestInnerPoint(ci1, ci2, DrPoints, concaveList, &found);
+        DrPointF pk = NearestInnerPoint(ci1, ci2, DrPointFs, concaveList, &found);
         if (!found || concaveList.contains(pk)) {
             continue;
         }
 
         double eh = ci1.Distance(ci2);  // the length of the edge
-        std::vector<DrPoint> tmp;
+        std::vector<DrPointF> tmp;
         tmp.push_back(ci1);
         tmp.push_back(ci2);
         double dd = pk.DecisionDistance(tmp);
@@ -206,7 +206,7 @@ QVector<DrPoint> HullFinder::FindConcaveHull(const QVector<DrPoint> &DrPoints, d
 //####################################################################################
 //##    Makes sure points are in the desired Winding Orientation
 //####################################################################################
-void HullFinder::EnsureWindingOrientation(QVector<DrPoint> &points, Winding_Orientation direction_desired) {
+void HullFinder::EnsureWindingOrientation(QVector<DrPointF> &points, Winding_Orientation direction_desired) {
     Winding_Orientation winding = HullFinder::FindWindingOrientation(points);
     if ((winding == Winding_Orientation::Clockwise        && direction_desired == Winding_Orientation::CounterClockwise) ||
         (winding == Winding_Orientation::CounterClockwise && direction_desired == Winding_Orientation::Clockwise))
@@ -218,7 +218,7 @@ void HullFinder::EnsureWindingOrientation(QVector<DrPoint> &points, Winding_Orie
 //####################################################################################
 //##    Returns winding direction of points
 //####################################################################################
-Winding_Orientation HullFinder::FindWindingOrientation(const QVector<DrPoint> &points) {
+Winding_Orientation HullFinder::FindWindingOrientation(const QVector<DrPointF> &points) {
     int i1, i2;
     double area = 0;
     for (i1 = 0; i1 < points.count(); i1++) {
