@@ -195,7 +195,7 @@ QPainterPath DrItem::shape() const {
 //##    Pixmap Filters
 //####################################################################################
 void DrItem::applyFilters() {
-    QPixmap new_pixmap = m_pixmap.copy();
+    QImage new_image = m_pixmap.toImage().copy();
 
     int     brightness = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Brightness).toList().first().toInt();
     int     contrast   = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Contrast).toList().first().toInt();
@@ -206,18 +206,18 @@ void DrItem::applyFilters() {
     QPointF pixelation = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
 
     if (pixelation.x() > 1.0 || pixelation.y() > 1.0)
-                           new_pixmap = DrImaging::applyPixelation( new_pixmap, pixelation );
-    if ( negative )        new_pixmap = DrImaging::applySinglePixelFilter( Image_Filter_Type::Negative, new_pixmap, 0 );
-    if ( grayscale )       new_pixmap = DrImaging::applySinglePixelFilter( Image_Filter_Type::Grayscale, new_pixmap, 0 );
+                           new_image = DrImaging::applyPixelation( new_image, pixelation );
+    if ( negative )        new_image = DrImaging::applySinglePixelFilter( Image_Filter_Type::Negative, new_image, 0 );
+    if ( grayscale )       new_image = DrImaging::applySinglePixelFilter( Image_Filter_Type::Grayscale, new_image, 0 );
 
     // Important to do saturation first, then hue
-    if ( saturation != 0 ) new_pixmap = DrImaging::applySinglePixelFilter( Image_Filter_Type::Saturation, new_pixmap, saturation );
-    if ( hue        != 0 ) new_pixmap = DrImaging::applySinglePixelFilter( Image_Filter_Type::Hue, new_pixmap, hue );
+    if ( saturation != 0 ) new_image = DrImaging::applySinglePixelFilter( Image_Filter_Type::Saturation, new_image, saturation );
+    if ( hue        != 0 ) new_image = DrImaging::applySinglePixelFilter( Image_Filter_Type::Hue, new_image, hue );
 
-    if ( contrast   != 0 ) new_pixmap = DrImaging::applySinglePixelFilter( Image_Filter_Type::Contrast, new_pixmap, contrast );
-    if ( brightness != 0 ) new_pixmap = DrImaging::applySinglePixelFilter( Image_Filter_Type::Brightness, new_pixmap, brightness );
+    if ( contrast   != 0 ) new_image = DrImaging::applySinglePixelFilter( Image_Filter_Type::Contrast, new_image, contrast );
+    if ( brightness != 0 ) new_image = DrImaging::applySinglePixelFilter( Image_Filter_Type::Brightness, new_image, brightness );
 
-    setPixmap(new_pixmap);
+    setPixmap( QPixmap::fromImage(new_image) );
 }
 
 

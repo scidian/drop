@@ -210,6 +210,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
             switch (property_pair.second->getPropertyType()) {
                 case Property_Type::Bool:           new_widget = createCheckBox(            prop, fp, sp_right);                                break;
                 case Property_Type::String:         new_widget = createLineEdit(            prop, fp, sp_right);                                break;
+                case Property_Type::Textbox:        new_widget = createTextEdit(            prop, fp, sp_right);                                break;
                 case Property_Type::Int:            new_widget = createIntSpinBox(          prop, fp, sp_right, Property_Type::Int);            break;
                 case Property_Type::RangedInt:      new_widget = createIntSpinBox(          prop, fp, sp_right, Property_Type::RangedInt);      break;
                 case Property_Type::Positive:       new_widget = createIntSpinBox(          prop, fp, sp_right, Property_Type::Positive);       break;

@@ -26,7 +26,7 @@ FormBlank::FormBlank(DrProject *project, QWidget *parent) : QWidget(parent) {
     setWindowFlags(Qt::WindowType::FramelessWindowHint | Qt::WindowType::Tool);
     setMinimumSize(QSize(200, 200));
     setObjectName(QStringLiteral("childForm"));
-    Dr::ApplyCustomStyleSheetFormatting(this);
+    this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
 
     // ***** Center window on screen and install dragging event filter
     Dr::CenterFormOnScreen(parent, this);

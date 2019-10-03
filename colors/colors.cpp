@@ -48,10 +48,10 @@ QColor RandomColor() {
 //####################################################################################
 //##    Retreive custom colors
 //####################################################################################
-Color_Scheme    GetColorScheme()                        { return g_current_color_scheme; }
-void            SetColorScheme(Color_Scheme new_scheme) { g_current_color_scheme = new_scheme; }
+Color_Scheme    GetColorScheme()                                { return g_current_color_scheme; }
+void            SetColorScheme(Color_Scheme new_scheme)         { g_current_color_scheme = new_scheme; }
 
-QColor          GetColor(Window_Colors color_role)                           { return g_color_schemes[g_current_color_scheme][color_role]; }
+QColor          GetColor(Window_Colors color_role)              { return g_color_schemes[g_current_color_scheme][color_role]; }
 
 QColor          GetColorFromPalette(Color_Palettes palette, int color_index) {
     if ( color_index >= 0 && color_index <= (g_color_palettes[palette].number_of_colors - 1) )
@@ -60,9 +60,9 @@ QColor          GetColorFromPalette(Color_Palettes palette, int color_index) {
         return QColor(QRgb(0x00000000));
 }
 
-int             GetPaletteColorCount(Color_Palettes palette)                { return g_color_palettes[palette].number_of_colors; }
-QString         GetPaletteName(Color_Palettes palette)                      { return g_color_palettes[palette].name; }
-bool            GetPaletteShowInList(Color_Palettes palette)                { return g_color_palettes[palette].show_in_list; }
+int             GetPaletteColorCount(Color_Palettes palette)    { return g_color_palettes[palette].number_of_colors; }
+QString         GetPaletteName(Color_Palettes palette)          { return g_color_palettes[palette].name; }
+bool            GetPaletteShowInList(Color_Palettes palette)    { return g_color_palettes[palette].show_in_list; }
 
 
 //####################################################################################

@@ -209,7 +209,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
 
 
     // ########## Initialize form and customize colors and styles
-    Dr::ApplyCustomStyleSheetFormatting(this);
+    this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
 
     initializeFormMainSettings();
     buildMenu();
@@ -242,7 +242,20 @@ void FormMain::buildSceneAfterLoading(long stage_key) {
 //####################################################################################
 void FormMain::changePalette(Color_Scheme new_color_scheme) {
     Dr::SetColorScheme(new_color_scheme);
-    Dr::ApplyCustomStyleSheetFormatting(this);
+
+    // When changing from Qt 5.12 to Qt 5.13.1 style sheet propagation seemed to stop working, tried the following things:
+    ///     QCoreApplication::setAttribute(Qt::AA_UseStyleSheetPropagationInWidgetStyles, true);
+    ///     this->setAttribute(Qt::WA_WindowPropagation, true);
+    ///     this->ensurePolished();
+    // but didn't work, so now we loop through all the children QWidgets and Polish / Update them...
+
+    this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
+
+    for (auto widget : findChildren<QWidget *>()) {
+        widget->style()->unpolish(widget);
+        widget->style()->polish(widget);
+        widget->update();
+    }
 
     if (m_current_mode == Form_Main_Mode::World_Editor)
         viewEditor->updateGrid();

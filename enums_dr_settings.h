@@ -14,40 +14,42 @@
 //############################
 enum class Property_Type {
     Bool,                   // bool             True or False
+
     Int,                    // long             Integer
     Positive,               // long             Integer >= 0
     RangedInt,              // long             QList<QVariant> of 4 values, long, min long value, max long value, long step size
 
-    Angle,                  // double           Floating point for showing degrees, shows degree symbol in spinbox
     Double,                 // double           Floating point number
+    Angle,                  // double           Floating point for showing degrees, shows degree symbol in spinbox
     PositiveDouble,         // double           Floating point number >= 0.0
     RangedDouble,           // double           QList<QVariant> of 4 values, double, min double value, max double value, double step size
     Slider,                 // double w/slider  QList<QVariant> of 5 values, double, min double value, max double value, double step size, string suffix ("%", etc)
-    Percent,                // slider           Floating point from 0.0 to 100.0, shows percent symbol
+    Percent,                // double w/slider  Floating point from 0.0 to 100.0, shows percent symbol
 
-    String,                 // QString
+    String,                 // QString          Uses QLineEdit
+    Textbox,                // QString          Uses QTextEdit for multi-line htmnl text input
 
-    PositionF,              // QPointF              Floating pair x and y, used for object positions in scene
-                            //                      Y is shown flipped (i.e. * -1), Box2D and Monogame use different coordinate system than Qt
+    PointF,                 // QPointF          Floating pair x and y
+    PositionF,              // QPointF          Floating pair x and y, used for object positions in scene
+                            //                      Y is shown flipped (i.e. * -1), Chipmunk uses different coordinate system than Qt
                             //                      Y flipped in: createDoubleSpinBoxPair(), updateSettingsFromNewValue(),
                             //                                    updateInspectorPropertyBoxes(), updateToolTipData()
-    PointF,                 // QPointF          Floating pair x and y
+    ScaleF,                 // QPointF          Floating pair x and y, has smaller increment step in spin box
     SizeF,                  // QPointF          Floating pair w and h
-    PositiveSizeF,          // QPointF          Floating pair x and y, both numbers are >= 1.0
-    ScaleF,                 // QPointF          Floating pair, has smaller increment step in spin box
+    PositiveSizeF,          // QPointF          Floating pair w and h, both numbers are >= 1.0
+
     GridF,                  // QPointF          Floating pair x and y, minimum value of c_minimum_grid_size  for both x and y
     GridScaleF,             // QPointF          Floating pair x and y, minimum value of c_minimum_grid_scale for both x and y
     Variable,               // QPointF          Floating point pair, number followed by a +/- number
 
     List,                   // enum list
 
+    Collision,              // DrShapeList      For Collision Shapes
+    Color,                  // QColor.rgba()    For Colors
     Image,                  // QPixmap
     Icon,                   // QPixmap
-    Color,                  // QColor.rgba()    For Colors
-    Vector3D,
 
-    Collision,              // DrShapeList      For Collision Shapes
-
+    Vector3D,               // QVector3D        X, Y, Z
 };
 
 

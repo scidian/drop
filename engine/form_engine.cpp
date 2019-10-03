@@ -35,7 +35,7 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
     this->setAttribute( Qt::WA_QuitOnClose, false );                // We don't want Drop to stay open when FormMain is closed and this is still open
     this->setObjectName("Drop Player");
     this->resize(1200, 900);
-    Dr::ApplyCustomStyleSheetFormatting(this);
+    this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
     Dr::CenterFormOnScreen(parent, this);
 
     // ***** Create an instance of the game engine

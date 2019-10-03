@@ -33,8 +33,7 @@ FormPopup::FormPopup(QWidget *parent, DrProject *project, QWidget *widget_to_use
     this->setWindowFlag(Qt::WindowType::Popup);
     this->setFixedSize(QSize(50, 50));
     this->setObjectName(QStringLiteral("childForm"));
-
-    Dr::ApplyCustomStyleSheetFormatting(this);
+    this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
 
     // Create a layout for the form
     m_layout = new QVBoxLayout(this);
@@ -138,8 +137,8 @@ void FormPopup::showEvent(QShowEvent *event) {
             y = top_left.y() - m_offset.y() - this->geometry().height();
             m_below = false;
             m_layout->setContentsMargins(1, 1, 1, 15);
-            m_inner_widget->setObjectName(QStringLiteral("innerWidgetPopupAbove"));     // Change style sheet for new location
-            Dr::ApplyCustomStyleSheetFormatting(m_inner_widget);                        // Force style sheet to update
+            m_inner_widget->setObjectName(QStringLiteral("innerWidgetPopupAbove"));         // Change style sheet for new location
+            m_inner_widget->setStyleSheet( Dr::CustomStyleSheetFormatting() );              // Force style sheet to update
             Dr::ApplyPopupMask(this, 8, 8, m_below);
         }
     }

@@ -158,7 +158,7 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap,
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
                            "Character Name", "Name of the current Character Asset.");
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::String, "",
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::Textbox, "",
                            "Description", "Custom Advisor description for this item.");
 
     addComponent(Components::Asset_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::Mustard_Yellow, true);
@@ -215,7 +215,7 @@ void DrAsset::initializeAssetSettingsObject(QString new_name, QPixmap pixmap, Dr
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
                            "Object Name", "Name of the current Object Asset.");
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::String, "",
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::Textbox, "",
                            "Description", "Custom Advisor description for this item.");
 
     addComponent(Components::Asset_Collision, "Collision Settings", "Collision settings for current Object.", Component_Colors::White_Snow, true);
@@ -235,7 +235,7 @@ void DrAsset::initializeAssetSettingsEffect(QString new_name) {
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
                            "Effect Name", "Name of the current Effect Asset.", false, false);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::String, "",
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::Textbox, "",
                            "Description", "Custom Advisor description for this item.");
 }
 
@@ -245,7 +245,7 @@ void DrAsset::initializeAssetSettingsFont(DrFont *font) {
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, font->getName(),
                            "Font Name", "Name of the current Font Asset.");
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::String, "",
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::Textbox, "",
                            "Description", "Custom Advisor description for this item.");
 
     addComponent(Components::Asset_Settings_Font, "Font Settings", "Font settings for this Text Asset.", Component_Colors::Orange_Medium, true);

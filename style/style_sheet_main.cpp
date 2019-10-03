@@ -15,7 +15,7 @@ namespace Dr {
 //####################################################################################
 //##    Apply palette / coloring / styling to children widgets
 //####################################################################################
-void ApplyCustomStyleSheetFormatting(QWidget *widget) {
+QString CustomStyleSheetFormatting() {
 
     QString style_sheet = QString(
 
@@ -229,6 +229,21 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget) {
         " QLineEdit::!enabled { background: transparent; border: none; "
         "       color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
 
+        // Text Edit, mostly in Inspector
+        " QTextEdit {               border: " + Dr::BorderWidth() + " solid; height: 20px; "
+        "       border-top-left-radius: 4px; border-bottom-left-radius: 6px; border-top-right-radius: 4px; border-bottom-right-radius: 6px;"
+        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; " + StyleSheetRecessedBackgroundBorder(5, 95) +
+        "       selection-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
+        "       selection-background-color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } "
+        " QTextEdit:hover {         border: " + Dr::BorderWidth() + " solid; "
+        "       color: " + Dr::GetColor(Window_Colors::Text_Light).name() + "; " + StyleSheetRecessedBackgroundBorder(5, 95, true) + " }"
+        " QTextEdit:focus { "
+        "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
+        "       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
+        "       border-radius: 0px; }"
+        " QTextEdit::!enabled { background: transparent; border: none; "
+        "       color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
 
         // Drop down PushButtons
         " QPushButton#buttonDropDown { border: " + Dr::BorderWidth() + " solid; height: 20px; "
@@ -343,8 +358,7 @@ void ApplyCustomStyleSheetFormatting(QWidget *widget) {
 
     style_sheet += Dr::StyleSheetToolBar();
 
-    widget->setStyleSheet(style_sheet);
-    widget->update();
+    return style_sheet;
 }
 
 

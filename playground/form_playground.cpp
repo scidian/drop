@@ -34,7 +34,7 @@ FormPlayground::FormPlayground(QWidget *parent) : QWidget(parent) {
     setAttribute( Qt::WA_DeleteOnClose, true );                         // Make sure this form is deleted when it closes
     setMouseTracking(true);
     setObjectName(QStringLiteral("childForm"));
-    Dr::ApplyCustomStyleSheetFormatting(this);
+    setStyleSheet( Dr::CustomStyleSheetFormatting() );
 
     // ***** Center window on screen and install dragging event filter
     Dr::CenterFormOnScreen(parent, this);

@@ -83,7 +83,7 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
                            "World Name", "Name of the current world.");
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::String, "",
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::Textbox, "",
                            "Description", "Custom Advisor description for this item.");
 
     addComponent(Components::World_Settings, "World Settings", "Settings for current world.", Component_Colors::White_Snow, true);

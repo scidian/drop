@@ -224,6 +224,10 @@ void DrView::recalculateGrid() {
     }
 
 
+    // If too many dots, don't bother, too slow
+    ///Dr::SetLabelText(Label_Names::Label_1, "Dots: " + QString::number(new_points.count()));
+    if (allow_dots && new_points.count() > 500000) allow_dots = false;
+
     // ********** Rotate grid points and add points inside view to QVector used to paint grid dots
     m_grid_points.clear();
     if (allow_dots) {

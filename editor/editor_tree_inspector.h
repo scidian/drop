@@ -12,6 +12,7 @@
 #include <QComboBox>
 #include <QDoubleSpinBox>
 #include <QPushButton>
+#include <QTextEdit>
 #include <QTreeWidget>
 
 #include "enums.h"
@@ -76,6 +77,7 @@ public:
     QFrame*             createDoubleSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
     QSpinBox*           createIntSpinBox(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
     QLineEdit*          createLineEdit(DrProperty *property, QFont &font, QSizePolicy size_policy);
+    QTextEdit*          createTextEdit(DrProperty *property, QFont &font, QSizePolicy size_policy);
     QWidget*            createSlider(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
     QFrame*             createVariableSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy);
     DrQTripleSpinBox*   initializeEmptySpinBox(DrProperty *property, QFont &font, double start_value);

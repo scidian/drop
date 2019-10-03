@@ -128,6 +128,29 @@ QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font, QSiz
     return edit;
 }
 
+//####################################################################################
+//##    Text Edit
+//####################################################################################
+QTextEdit* TreeInspector::createTextEdit(DrProperty *property, QFont &font, QSizePolicy size_policy) {
+    QTextEdit *edit = new QTextEdit();
+    edit->setFont(font);
+    edit->setSizePolicy(size_policy);
+    edit->setLineWrapMode(QTextEdit::LineWrapMode::WidgetWidth);
+    edit->setFixedHeight(90);
+
+    long property_key = property->getPropertyKey();
+
+    edit->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
+    edit->setText(property->getValue().toString());
+
+    m_filter_hover->attachToHoverHandler(edit, property);
+    addToWidgetList(edit);
+
+    connect (edit,  &QTextEdit::textChanged,
+             this, [this, property_key, edit] () { updateSettingsFromNewValue( property_key, edit->toPlainText() ); }); /// edit->toHtml() ); });
+
+    return edit;
+}
 
 
 //####################################################################################

@@ -32,7 +32,7 @@ FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent
 
     setMinimumSize(QSize(200, 200));
     setObjectName(QStringLiteral("childForm"));
-    Dr::ApplyCustomStyleSheetFormatting(this);
+    this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
 
     // ***** Center window on screen and install dragging event filter
     Dr::CenterFormOnScreen(parent, this);

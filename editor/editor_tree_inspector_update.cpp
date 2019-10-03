@@ -57,14 +57,18 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
         widget->setEnabled( prop->isEditable() );
 
         switch (prop->getPropertyType()) {
-            case Property_Type::Bool:       dynamic_cast<QCheckBox*>(widget)->setChecked(prop->getValue().toBool());        break;
+            case Property_Type::Bool:
+                dynamic_cast<QCheckBox*>(widget)->setChecked(prop->getValue().toBool());
+                break;
 
             case Property_Type::Int:
             case Property_Type::Positive:
-                                            dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toInt());            break;
+                dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toInt());
+                break;
 
             case Property_Type::RangedInt:
-                dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toList().first().toInt() );                      break;
+                dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toList().first().toInt() );
+                break;
 
             case Property_Type::Double:
             case Property_Type::PositiveDouble:
@@ -84,7 +88,13 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
                     dynamic_cast<QDoubleSpinBox*>(widget)->setValue( prop->getValue().toList().first().toDouble() );
                 break;
 
-            case Property_Type::String:     dynamic_cast<QLineEdit*>(widget)->setText(prop->getValue().toString());         break;
+            case Property_Type::String:
+                dynamic_cast<QLineEdit*>(widget)->setText(prop->getValue().toString());
+                break;
+
+            case Property_Type::Textbox:
+                dynamic_cast<QTextEdit*>(widget)->setText(prop->getValue().toString());
+                break;
 
             case Property_Type::PositionF:
             case Property_Type::PointF:
@@ -168,6 +178,7 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
             case Property_Type::Angle:                                  // floating point for showing degrees
             case Property_Type::List:                                   // index value
             case Property_Type::String:
+            case Property_Type::Textbox:
                 property->setValue(new_value);
                 break;
 
