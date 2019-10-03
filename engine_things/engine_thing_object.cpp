@@ -36,7 +36,7 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, Body_Type 
     this->setScaleY(scale.y);                                                   // Save y scale for later
     this->z_order = z;
 
-    // Object Basics
+    // Object Basics                 !!!!! #NOTE: texture_number == Asset Key
     if (texture_number != 0) {
         this->setSize( DrPointF(world->getTexture(texture_number)->width(), world->getTexture(texture_number)->height()) );
     }
@@ -181,7 +181,7 @@ bool DrEngineObject::update(double time_passed, double time_warp, QRectF &area) 
     }
 
 
-    return (remove && DrEngineThing::update(time_passed, time_warp, area));
+    return (remove || DrEngineThing::update(time_passed, time_warp, area));
 };
 
 

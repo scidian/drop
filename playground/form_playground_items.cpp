@@ -14,7 +14,7 @@
 #include "playground.h"
 #include "playground_toy.h"
 
-// Local constants
+// Internal Constants
 constexpr int c_pen_size = 2;
 constexpr int c_pen_selected_size = 4;
 

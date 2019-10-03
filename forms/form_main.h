@@ -166,6 +166,7 @@ private:
     void        initializeFormMainSettings();
     void        setFormMainMode(Form_Main_Mode new_mode);
 
+    void        initializeDockWidgets();
     void        lockDockWidth(QDockWidget *dock, int width);
     void        unlockDockWidth(QDockWidget *dock);
 

@@ -28,8 +28,9 @@
 // Custom types for QVariant
 Q_DECLARE_METATYPE(DrShapeList);
 
-// Forward Declarations
+// Internal Linkage (File Scope) Forward Declarations
 DrShapeList autoCollisionShape(QPixmap pixmap);
+
 
 //####################################################################################
 //##    Constructor, Destructor
@@ -157,11 +158,45 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap,
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
                            "Asset Name", "Name of the current Asset.");
 
-    addComponent(Components::Asset_Object_Settings, "Asset Settings", "Basic settings for current Object Asset.", Component_Colors::White_Snow, true);
-    getComponent(Components::Asset_Object_Settings)->setIcon(Component_Icons::Settings);
-    addPropertyToComponent(Components::Asset_Object_Settings, Properties::Asset_Collision_Shape, Property_Type::Collision,
+    addComponent(Components::Asset_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::Mustard_Yellow, true);
+    getComponent(Components::Asset_Settings_Character)->setIcon(Component_Icons::Character);
+
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Max_Speed, Property_Type::PointF, QPointF(1000, 1000),
+                           "Max Speed", "Maximum movement speed of this Character in the x and y direction.");
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Forced_Speed, Property_Type::PointF, QPointF(0, 0),
+                           "Forced Speed", "Forced movement speed of this Character in the x and y direction.");
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Move_Speed, Property_Type::PointF, QPointF(400, 0),
+                           "Move Speed", "Button / Joystick movement speed of this Character in the x and y direction.");
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Force, Property_Type::PointF, QPointF(0, 250),
+                           "Jump Force", "Force of jump button in the x and y direction");
+
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Timeout, Property_Type::Positive, 800,
+                           "Jump Timeout", "Time, in milliseconds, Character should continue to gain jump force when jump button is held down.");
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Counter, Property_Type::Int, 1,
+                           "Jump Count", "Number of jumps character can make before having to touch the ground or wall. For unlimited jumps "
+                                         "use any negative number.");
+
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Air, Property_Type::Bool, true,
+                           "Air Jump?", "Can this Character start jumping while falling in the air? (for example, if the Character fell off a platform)");
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Wall, Property_Type::Bool, true,
+                           "Wall Jump?", "Can this Character jump off of walls?");
+
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Air_Drag, Property_Type::PositiveDouble, 0.50,
+                           "Air Drag", "Affects acceleration and decceleration in air. Usually ranging from 0.0 to 1.0 or higher.");
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Ground_Drag, Property_Type::PositiveDouble, 0.25,
+                           "Ground Drag", "Affects acceleration and decceleration on the ground. Usually ranging from 0.0 to 1.0 or higher.");
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Rotation_Drag, Property_Type::PositiveDouble, 0.25,
+                           "Rotate Drag", "Affects rotation acceleration and decceleration. Usually ranging from 0.0 to 1.0 or higher.");
+
+
+
+
+
+    addComponent(Components::Asset_Collision, "Collision Settings", "Collision settings for current Character.", Component_Colors::White_Snow, true);
+    getComponent(Components::Asset_Collision)->setIcon(Component_Icons::Settings);
+    addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Shape, Property_Type::Collision,
                            QVariant::fromValue<DrShapeList>(shape),
-                           "Collision Shape", "Shape of the Asset as it interacts with other Assets in the world.");
+                           "Collision Shape", "Shape of the Character as it interacts with other Assets in the world.");
 
     addComponent(Components::Asset_Animation, "Animation", "Images to show for this Asset.", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
@@ -175,11 +210,11 @@ void DrAsset::initializeAssetSettingsObject(QString new_name, QPixmap pixmap, Dr
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
                            "Asset Name", "Name of the current Asset.");
 
-    addComponent(Components::Asset_Object_Settings, "Asset Settings", "Basic settings for current Object Asset.", Component_Colors::White_Snow, true);
-    getComponent(Components::Asset_Object_Settings)->setIcon(Component_Icons::Settings);
-    addPropertyToComponent(Components::Asset_Object_Settings, Properties::Asset_Collision_Shape, Property_Type::Collision,
+    addComponent(Components::Asset_Collision, "Collision Settings", "Collision settings for current Object.", Component_Colors::White_Snow, true);
+    getComponent(Components::Asset_Collision)->setIcon(Component_Icons::Settings);
+    addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Shape, Property_Type::Collision,
                            QVariant::fromValue<DrShapeList>(shape),
-                           "Collision Shape", "Shape of the Asset as it interacts with other Assets in the world.");
+                           "Collision Shape", "Shape of the Object as it interacts with other Assets in the world.");
 
     addComponent(Components::Asset_Animation, "Animation", "Images to show for this Asset.", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
@@ -201,11 +236,11 @@ void DrAsset::initializeAssetSettingsFont(DrFont *font) {
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, font->getName(),
                            "Asset Name", "Name of the current Asset.");
 
-    addComponent(Components::Asset_Font_Settings, "Font Settings", "Font settings for this Text Asset.", Component_Colors::Orange_Medium, true);
-    getComponent(Components::Asset_Font_Settings)->setIcon(Component_Icons::Font);
-    addPropertyToComponent(Components::Asset_Font_Settings, Properties::Asset_Font_Family, Property_Type::String, font->getPropertyFontFamily(),
+    addComponent(Components::Asset_Settings_Font, "Font Settings", "Font settings for this Text Asset.", Component_Colors::Orange_Medium, true);
+    getComponent(Components::Asset_Settings_Font)->setIcon(Component_Icons::Font);
+    addPropertyToComponent(Components::Asset_Settings_Font, Properties::Asset_Font_Family, Property_Type::String, font->getPropertyFontFamily(),
                            "Font Family", "Font used for this text asset.", false, false);
-    addPropertyToComponent(Components::Asset_Font_Settings, Properties::Asset_Font_Size, Property_Type::Int, font->getPropertyFontSize(),
+    addPropertyToComponent(Components::Asset_Settings_Font, Properties::Asset_Font_Size, Property_Type::Int, font->getPropertyFontSize(),
                            "Font Size", "Font size of this text asset.", false, false);
 }
 

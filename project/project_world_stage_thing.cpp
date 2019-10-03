@@ -44,9 +44,8 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentSettingsCharacter(new_thing_name);
             addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, DrThingType::Character);
             addComponentLayering(z);
-            addComponentMovement();
-            addComponent3D();
             addComponentLighting();
+            addComponent3D();
             addComponentAppearance();
             addComponentSpecialEffects();
             break;
@@ -56,8 +55,8 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, DrThingType::Object);
             addComponentLayering(z);
             addComponentMovement();
-            addComponent3D();
             addComponentLighting();
+            addComponent3D();
             addComponentAppearance();
             addComponentSpecialEffects();
             break;
@@ -253,13 +252,6 @@ void DrThing::addComponentSettingsCharacter(QString new_name) {
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
                            "Character Name", "Name of the current Character.", false, false);
-
-    addComponent(Components::Thing_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::Mustard_Yellow, true);
-    getComponent(Components::Thing_Settings_Character)->setIcon(Component_Icons::Character);
-    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Jump_X, Property_Type::Double, 0,
-                           "Jump Force X", "Force of jump button in x direction");
-    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Jump_Y, Property_Type::Double, 0,
-                           "Jump Force Y", "Force of jump button in y direction");
 }
 
 //####################################################################################

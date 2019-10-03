@@ -51,8 +51,9 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
         upperWidget->setFixedHeight(100);
         pushSpawn =   new QToolButton(upperWidget);     pushSpawn->setObjectName("pushSpawn");      pushSpawn->setGeometry(  QRect(  5,  5, 140, 20));
         pushCar =     new QToolButton(upperWidget);     pushCar->setObjectName("pushCar");          pushCar->setGeometry(    QRect(  5, 30, 140, 20));
-        pushJump =    new QToolButton(upperWidget);     pushJump->setObjectName("pushJump");        pushJump->setGeometry(   QRect(  5, 55, 140, 20));
-        pushLight =   new QToolButton(upperWidget);     pushLight->setObjectName("pushLight");      pushLight->setGeometry(  QRect(  5, 80, 140, 20));
+        pushJump =    new QToolButton(upperWidget);     pushJump->setObjectName("pushJump");        pushJump->setGeometry(   QRect(  5, 55,  65, 20));
+        pushLight =   new QToolButton(upperWidget);     pushLight->setObjectName("pushLight");      pushLight->setGeometry(  QRect( 80, 55,  65, 20));
+        pushPlayer =  new QToolButton(upperWidget);     pushPlayer->setObjectName("pushPlayer");    pushPlayer->setGeometry( QRect(  5, 80, 140, 20));
 
         pushLine1 =   new QToolButton(upperWidget);     pushLine1->setObjectName("pushLine1");      pushLine1->setGeometry(  QRect(150,  5, 140, 20));
         pushLine2 =   new QToolButton(upperWidget);     pushLine2->setObjectName("pushLine2");      pushLine2->setGeometry(  QRect(150, 30, 140, 20));
@@ -72,8 +73,9 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
         pushSpawn->setText(QApplication::translate(  "MainWindow", "Spawning Demo",     nullptr));  pushSpawn->setStyleSheet("color: white");
         pushCar->setText(QApplication::translate(    "MainWindow", "Car Demo",          nullptr));  pushCar->setStyleSheet("color: white");
-        pushJump->setText(QApplication::translate(   "MainWindow", "Jump Demo",         nullptr));  pushJump->setStyleSheet("color: white");
-        pushLight->setText(QApplication::translate(  "MainWindow", "Light Demo",        nullptr));  pushLight->setStyleSheet("color: white");
+        pushJump->setText(QApplication::translate(   "MainWindow", "Jump",              nullptr));  pushJump->setStyleSheet("color: white");
+        pushLight->setText(QApplication::translate(  "MainWindow", "Light",             nullptr));  pushLight->setStyleSheet("color: white");
+        pushPlayer->setText(QApplication::translate( "MainWindow", "Player Demo",       nullptr));  pushPlayer->setStyleSheet("color: white");
 
         pushLine1->setText(QApplication::translate(  "MainWindow", "Line1 World",       nullptr));  pushLine1->setStyleSheet("color: white");
         pushLine2->setText(QApplication::translate(  "MainWindow", "Line2 World",       nullptr));  pushLine2->setStyleSheet("color: white");
@@ -95,26 +97,28 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
         layout->addWidget(upperWidget);
 
 
-        connect(pushSpawn,   SIGNAL(clicked()), this, SLOT(on_pushSpawn_clicked()));
-        connect(pushCar,     SIGNAL(clicked()), this, SLOT(on_pushCar_clicked()));
-        connect(pushJump,    SIGNAL(clicked()), this, SLOT(on_pushJump_clicked()));
-        connect(pushLight,   SIGNAL(clicked()), this, SLOT(on_pushLight_clicked()));
+        connect(pushSpawn,      SIGNAL(clicked()), this, SLOT(on_pushSpawn_clicked()));
+        connect(pushCar,        SIGNAL(clicked()), this, SLOT(on_pushCar_clicked()));
+        connect(pushJump,       SIGNAL(clicked()), this, SLOT(on_pushJump_clicked()));
+        connect(pushLight,      SIGNAL(clicked()), this, SLOT(on_pushLight_clicked()));
+        connect(pushPlayer,     SIGNAL(clicked()), this, SLOT(on_pushPlayer_clicked()));
 
-        connect(pushLine1,   SIGNAL(clicked()), this, SLOT(on_pushLines1_clicked()));
-        connect(pushLine2,   SIGNAL(clicked()), this, SLOT(on_pushLines2_clicked()));
-        connect(pushBlocks,  SIGNAL(clicked()), this, SLOT(on_pushBlocks_clicked()));
-        connect(pushProject, SIGNAL(clicked()), this, SLOT(on_pushProject_clicked()));
+        connect(pushLine1,      SIGNAL(clicked()), this, SLOT(on_pushLines1_clicked()));
+        connect(pushLine2,      SIGNAL(clicked()), this, SLOT(on_pushLines2_clicked()));
+        connect(pushBlocks,     SIGNAL(clicked()), this, SLOT(on_pushBlocks_clicked()));
 
-        connect(pushStart,   SIGNAL(clicked()), this, SLOT(on_pushStart_clicked()));
-        connect(pushStop,    SIGNAL(clicked()), this, SLOT(on_pushStop_clicked()));
-        connect(pushClose,   SIGNAL(clicked()), this, SLOT(on_pushClose_clicked()));
+        connect(pushProject,    SIGNAL(clicked()), this, SLOT(on_pushProject_clicked()));
 
-        connect(pushPersp,   SIGNAL(clicked()), this, SLOT(on_pushPersp_clicked()));
-        connect(pushOrtho,   SIGNAL(clicked()), this, SLOT(on_pushOrtho_clicked()));
-        connect(pushCamera,  SIGNAL(clicked()), this, SLOT(on_pushCamera_clicked()));
+        connect(pushStart,      SIGNAL(clicked()), this, SLOT(on_pushStart_clicked()));
+        connect(pushStop,       SIGNAL(clicked()), this, SLOT(on_pushStop_clicked()));
+        connect(pushClose,      SIGNAL(clicked()), this, SLOT(on_pushClose_clicked()));
 
-        connect(pushDebug1,  SIGNAL(clicked()), this, SLOT(on_pushDebug1_clicked()));
-        connect(pushDebug2,  SIGNAL(clicked()), this, SLOT(on_pushDebug2_clicked()));
+        connect(pushPersp,      SIGNAL(clicked()), this, SLOT(on_pushPersp_clicked()));
+        connect(pushOrtho,      SIGNAL(clicked()), this, SLOT(on_pushOrtho_clicked()));
+        connect(pushCamera,     SIGNAL(clicked()), this, SLOT(on_pushCamera_clicked()));
+
+        connect(pushDebug1,     SIGNAL(clicked()), this, SLOT(on_pushDebug1_clicked()));
+        connect(pushDebug2,     SIGNAL(clicked()), this, SLOT(on_pushDebug2_clicked()));
 
 
         m_opengl = new DrOpenGL(centralWidget, this, m_engine);
@@ -249,26 +253,37 @@ void FormEngine::updateEngine() {
     }
 
     // ***** Update Physics and Render
-    if (m_wait_vsync == false) {
-        m_wait_vsync = true;
-        double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
-        resetTimer(Engine_Timer::Update);
-        m_engine->getCurrentWorld()->updateSpace(update_milliseconds);                      // Physics Engine
-        m_engine->getCurrentWorld()->updateWorld(update_milliseconds);                      // Additional World / Thing Updating
-        ++m_engine->getFormEngine()->fps_count_physics;                                     // Updates Physics Frames per Second
-        m_engine->getCurrentWorld()->updateCameras();                                       // Update Camera Targets
-        moveCameras();                                                                      // Move Cameras
-        m_opengl->update();                                                                 // Render
-    }
-
-    // Additional render on MacOS (smooths more with vsync being disabled)
     #if defined (Q_OS_MACOS)
+        double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
+        if (update_milliseconds > m_engine->getCurrentWorld()->getTimeStepAsMilliseconds()) {
+            resetTimer(Engine_Timer::Update);
+            m_engine->getCurrentWorld()->updateSpace(update_milliseconds);                      // Physics Engine
+            m_engine->getCurrentWorld()->updateWorld(update_milliseconds);                      // Additional World / Thing Updating
+            ++m_engine->getFormEngine()->fps_count_physics;                                     // Updates Physics Frames per Second
+            m_engine->getCurrentWorld()->updateCameras();                                       // Update Camera Targets
+            moveCameras();                                                                      // Move Cameras
+            m_opengl->update();                                                                 // Render
+        }
+
+        // Additional render on MacOS (smooths more with vsync being disabled)
         if (m_engine->getCurrentWorld()->getThings().count() < 250 && m_engine->getCurrentWorld()->effect_count <= 0) {
             double render_milliseconds = getTimerMilliseconds(Engine_Timer::Render);
             if (render_milliseconds > (1000.0 / m_ideal_frames_per_second)) {
                 resetTimer(Engine_Timer::Render);
                 m_opengl->update();                                                             // Render
             }
+        }
+    #else
+        if (m_wait_vsync == false) {
+            m_wait_vsync = true;
+            double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
+            resetTimer(Engine_Timer::Update);
+            m_engine->getCurrentWorld()->updateSpace(update_milliseconds);                      // Physics Engine
+            m_engine->getCurrentWorld()->updateWorld(update_milliseconds);                      // Additional World / Thing Updating
+            ++m_engine->getFormEngine()->fps_count_physics;                                     // Updates Physics Frames per Second
+            m_engine->getCurrentWorld()->updateCameras();                                       // Update Camera Targets
+            moveCameras();                                                                      // Move Cameras
+            m_opengl->update();                                                                 // Render
         }
     #endif
 
@@ -292,6 +307,7 @@ void FormEngine::on_pushSpawn_clicked() {   loadDemo(demo_space,  Demo_Player::S
 void FormEngine::on_pushCar_clicked() {     loadDemo(demo_space,  Demo_Player::Car ); }
 void FormEngine::on_pushJump_clicked() {    loadDemo(demo_space,  Demo_Player::Jump ); }
 void FormEngine::on_pushLight_clicked() {   loadDemo(demo_space,  Demo_Player::Light ); }
+void FormEngine::on_pushPlayer_clicked() {  loadDemo(demo_space,  Demo_Player::Player ); }
 
 void FormEngine::on_pushCamera_clicked() {
     m_engine->getCurrentWorld()->switchCameraToNext();
@@ -331,8 +347,8 @@ void FormEngine::on_pushDebug2_clicked() {
 //##    Update Checked Buttons
 //####################################################################################
 void FormEngine::updateCheckedButtons() {
-    if (demo_player == Demo_Player::Spawn) pushSpawn->setDown(true);   else pushSpawn->setDown(false);
-    if (demo_player == Demo_Player::Car)   pushCar->setDown(true);     else pushCar->setDown(false);
+    if (demo_player == Demo_Player::Spawn)  pushSpawn->setDown(true);   else pushSpawn->setDown(false);
+    if (demo_player == Demo_Player::Car)    pushCar->setDown(true);     else pushCar->setDown(false);
     if (demo_player == Demo_Player::Jump)  {
         pushJump->setDown(true);
         pushCamera->setEnabled(true);
@@ -340,12 +356,13 @@ void FormEngine::updateCheckedButtons() {
         pushJump->setDown(false);
         pushCamera->setEnabled(false);
     }
-    if (demo_player == Demo_Player::Light) pushLight->setDown(true);   else pushLight->setDown(false);
+    if (demo_player == Demo_Player::Light)  pushLight->setDown(true);   else pushLight->setDown(false);
+    if (demo_player == Demo_Player::Player) pushPlayer->setDown(true);  else pushPlayer->setDown(false);
 
-    if (demo_space == Demo_Space::Lines1)  pushLine1->setDown(true);   else pushLine1->setDown(false);
-    if (demo_space == Demo_Space::Lines2)  pushLine2->setDown(true);   else pushLine2->setDown(false);
-    if (demo_space == Demo_Space::Blocks)  pushBlocks->setDown(true);  else pushBlocks->setDown(false);
-    if (demo_space == Demo_Space::Project) pushProject->setDown(true); else pushProject->setDown(false);
+    if (demo_space == Demo_Space::Lines1)   pushLine1->setDown(true);   else pushLine1->setDown(false);
+    if (demo_space == Demo_Space::Lines2)   pushLine2->setDown(true);   else pushLine2->setDown(false);
+    if (demo_space == Demo_Space::Blocks)   pushBlocks->setDown(true);  else pushBlocks->setDown(false);
+    if (demo_space == Demo_Space::Project)  pushProject->setDown(true); else pushProject->setDown(false);
 
     if (m_engine->getCurrentWorld()->render_type == Render_Type::Perspective)  pushPersp->setDown(true); else pushPersp->setDown(false);
     if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) pushOrtho->setDown(true); else pushOrtho->setDown(false);

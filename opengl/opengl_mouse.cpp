@@ -83,7 +83,9 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
         } else if (event->button() & Qt::RightButton)
             g_pedal = Pedal::CounterClockwise;
 
-    } else if (m_form_engine->demo_player == Demo_Player::Jump || m_form_engine->demo_player == Demo_Player::Light) {
+    } else if (m_form_engine->demo_player == Demo_Player::Jump ||
+               m_form_engine->demo_player == Demo_Player::Light ||
+               m_form_engine->demo_player == Demo_Player::Player) {
         if (event->button() & Qt::LeftButton) {
             g_jump_button = true;
         } else if (event->button() & Qt::RightButton) {
@@ -112,7 +114,9 @@ void DrOpenGL::mouseReleaseEvent(QMouseEvent *event) {
         if (event->buttons() == Qt::MouseButton::NoButton)
             g_pedal = Pedal::None;
 
-    } else if (m_form_engine->demo_player == Demo_Player::Jump || m_form_engine->demo_player == Demo_Player::Light) {
+    } else if (m_form_engine->demo_player == Demo_Player::Jump ||
+               m_form_engine->demo_player == Demo_Player::Light ||
+               m_form_engine->demo_player == Demo_Player::Player) {
         if (event->buttons() == Qt::MouseButton::NoButton) {
             g_jump_button = false;
             g_pedal = Pedal::None;

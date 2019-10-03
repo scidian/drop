@@ -24,7 +24,7 @@
 namespace DrImaging
 {
 
-// Local Constants
+// Internal Constants
 const float PI =    3.14159f;
 const float RAD =   2.0f * PI;      // 2.0 * PI is 360 in radians
 const float DEG =   0.0174533f;     // One Degree in Radians is 0.0174533

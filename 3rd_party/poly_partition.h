@@ -36,7 +36,7 @@
 // Type Definitions
 typedef double tppl_float;
 
-// Local Constants
+// Poly Partition Constants
 #define TPPL_CCW 1
 #define TPPL_CW -1
 

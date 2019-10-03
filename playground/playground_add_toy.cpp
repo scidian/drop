@@ -12,7 +12,7 @@
 #include "playground.h"
 #include "playground_toy.h"
 
-// Local Constants
+// Internal Constants
 constexpr double c_extra_radius =    0.010;         // Radius added on to block and polygon shapes for better collisions
 constexpr double c_mass_multiplier = 0.002;         // Shapes Area times this multiplier = shape mass
 

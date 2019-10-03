@@ -8,6 +8,7 @@
 #include <math.h>
 
 #include "helper.h"
+#include "types/point.h"
 #include "types/pointf.h"
 
 
@@ -104,8 +105,12 @@ double DrPointF::DecisionDistance(const std::vector<DrPointF> &DrPointFs) const 
 }
 
 
-
-
+//####################################################################################
+//##    Conversions
+//####################################################################################
+DrPoint DrPointF::toPoint() {
+    return DrPoint( x, y );
+}
 
 
 

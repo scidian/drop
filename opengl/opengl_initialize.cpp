@@ -119,7 +119,8 @@ void DrOpenGL::loadProjectTextures() {
     for (auto asset_pair : m_engine->getProject()->getAssetMap() ) {
         DrAsset *asset = asset_pair.second;
         if (asset) {
-            if (asset->getAssetType() == DrAssetType::Object) {
+            DrAssetType asset_type = asset->getAssetType();
+            if (asset_type == DrAssetType::Object || asset_type == DrAssetType::Character) {
                 QPixmap pixmap = asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
                 importTexture(asset->getKey(), pixmap);
             }

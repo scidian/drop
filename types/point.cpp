@@ -9,6 +9,7 @@
 
 #include "helper.h"
 #include "types/point.h"
+#include "types/pointf.h"
 
 
 //####################################################################################
@@ -62,6 +63,14 @@ DrPoint DrPoint::operator/(int k) const {
 
 bool DrPoint::operator==(const DrPoint &other) const {
     return (x == other.x) && (y == other.y);
+}
+
+
+//####################################################################################
+//##    Conversions
+//####################################################################################
+DrPointF DrPoint::toPointF() {
+    return DrPointF( x, y );
 }
 
 

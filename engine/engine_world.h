@@ -64,6 +64,7 @@ class DrEngineWorld
 
 private:
     // External Borrowed Pointers
+    DrEngine           *m_engine;                   // Pointer to Engine
     DrProject          *m_project;                  // Pointer to Project loaded into Engine
     EngineTextureMap   &m_textures;                 // Reference to map of Textures used for Rendering
 
@@ -155,7 +156,7 @@ public:
 
 public:
     // Constructor / Destrcutor / Cleanup
-    DrEngineWorld(DrProject *project, EngineTextureMap &textures, long world_key);
+    DrEngineWorld(DrEngine *engine, DrProject *project, EngineTextureMap &textures, long world_key);
     ~DrEngineWorld();
 
     // Important Functions
@@ -168,9 +169,15 @@ public:
     void            assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera);
     void            addThing(DrEngineThing *thing);
     void            addThings(QList<DrEngineThing*> things);
-    void            buildWorld(Demo_Space new_space_type, long current_editor_world);
+    void            buildWorld(Demo_Space new_space_type, long world_id_to_build);
     void            clearWorld();
-    ThingInfo       getThingBasicInfo(DrThing *thing);
+
+    void            loadThing3DSettings(DrThing *thing, DrEngineObject *object);
+    void            loadThingAppearanceSettings(DrThing *thing, DrEngineObject *object);
+    ThingInfo       loadThingBasicInfo(DrThing *thing);
+    void            loadThingCollisionShape(DrEngineObject *object);
+
+    void            loadCharacterToWorld(DrThing *thing);
     void            loadFireToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadFisheyeToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadLightToWorld(DrThing *thing, double offset_x, double offset_y);
@@ -179,13 +186,16 @@ public:
     void            loadStageToWorld(DrStage *stage, double offset_x, double offset_y);
     void            loadSwirlToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadWaterToWorld(DrThing *thing, double offset_x, double offset_y);
+
     void            updateSpace(double time_passed);
     void            updateWorld(double time_passed);
     void            wakeAllBodies();
 
+
     // Textures
     DrEngineTexture*    getTexture(long texture_id) { return m_textures[texture_id]; }
     EngineTextureMap&   getTextureMap() { return m_textures; }
+
 
     // Cameras
     long                addCamera(long thing_key_to_follow = 0, float x = 0, float y = 0, float z = 800);
@@ -205,6 +215,7 @@ public:
     void                switchCameraToNext();
     void                switchCameras(long new_camera);
     void                updateCameras();
+
 
     // Getter and Setters
     //DrEngine*           getEngine()                 { return m_engine; }

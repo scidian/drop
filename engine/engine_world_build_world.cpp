@@ -29,7 +29,7 @@
 //####################################################################################
 //##    Build Space
 //####################################################################################
-void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_world) {
+void DrEngineWorld::buildWorld(Demo_Space new_space_type, long world_id_to_build) {
 
     // ***** Set up physics world
     m_background_color = QColor(0, 0, 0);
@@ -43,7 +43,7 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
     ///cpSpaceSetIdleSpeedThreshold(m_space, 25.0);     // Can set this manually, but also set automatically based on gravity
 
     // Default gravity / damping settings
-    m_gravity = cpv(0, -1000);                          // cpVect is a 2D vector and cpv() is a shortcut for initializing them
+    m_gravity = cpv(0, -1000);                          // cpVect is a 2D vector (aka 2D point) and cpv() is a shortcut for initializing them
     m_damping = 1;                                      // Kind of like air drag
     cpSpaceSetGravity(m_space, m_gravity);
     cpSpaceSetDamping(m_space, m_damping);
@@ -67,9 +67,8 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long current_editor_wo
     // ***** Build desired demo Space
     if (new_space_type == Demo_Space::Project) {
 
-        // ***** Find current world shown in editor, load Start Stage of that world
-
-        DrWorld *world = m_project->getWorld(current_editor_world);
+        // ***** Find current world, load Start Stage of that world
+        DrWorld *world = m_project->getWorld(world_id_to_build);
         DrStage *stage = world->getStageFromKey(world->getFirstStageKey());
 
         // ***** World Settings

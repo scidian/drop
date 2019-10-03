@@ -19,7 +19,7 @@ DrEngine::DrEngine(FormEngine *form_engine, DrProject *project) : m_form_engine(
     m_current_editor_world = m_project->getOption(Project_Options::Current_World).toLongLong();
     m_current_world = m_current_editor_world;
 
-    m_worlds[m_current_world] = new DrEngineWorld(project, this->getTextureMap(), m_current_world);
+    m_worlds[m_current_world] = new DrEngineWorld(this, project, this->getTextureMap(), m_current_world);
 
 }
 

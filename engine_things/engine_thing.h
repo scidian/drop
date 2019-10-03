@@ -100,7 +100,7 @@ public:
     // Thing Properties - Camera
     const long&             getActiveCameraKey() { return m_active_camera; }
     bool                    hasActiveCamera() { return (m_active_camera == 0) ? false : true; }
-    void                    setActiveCameraKey(const long& new_camera_key) { m_active_camera = new_camera_key; }
+    void                    setActiveCameraKey(const long &new_camera_key) { m_active_camera = new_camera_key; }
 
     // Basic Properties
     virtual double          getAngle() {    return m_angle_z; }                             // Returns Thing angle (in degrees)

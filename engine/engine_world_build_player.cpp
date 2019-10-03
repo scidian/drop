@@ -11,6 +11,13 @@
 #include "engine_things/engine_thing_light.h"
 #include "engine_things/engine_thing_object.h"
 #include "engine_world.h"
+#include "project/project.h"
+#include "project/project_asset.h"
+#include "project/project_font.h"
+#include "project/project_image.h"
+#include "project/project_world.h"
+#include "project/project_world_stage.h"
+#include "project/project_world_stage_thing.h"
 
 
 //####################################################################################
@@ -38,7 +45,24 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
     demo_player = new_player_type;
 
-    if (new_player_type == Demo_Player::Jump) {
+    if (new_player_type == Demo_Player::Player) {
+
+        // Find current world shown in editor, load Start Stage of that world
+        DrWorld *world = m_project->getWorld(m_engine->getCurrentEditorWorld());
+        DrStage *stage = world->getStageFromKey(world->getFirstStageKey());
+
+        // Load Characters
+        for (auto thing_pair : stage->getThingMap()) {
+            // Grab current Thing, check if Character so we can load it
+            DrThing *thing = thing_pair.second;
+            if (thing->getType() != DrType::Thing) continue;
+            if (thing->getThingType() != DrThingType::Character) continue;
+
+            loadCharacterToWorld(thing);
+        }
+
+
+    } else if (new_player_type == Demo_Player::Jump) {
         DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 200, 50, 0, c_scale1x1, 0.25, 0.5, true, false);
         ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
         addThing(ball1);

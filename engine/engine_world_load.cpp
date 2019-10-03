@@ -27,26 +27,11 @@
 // Custom types for QVariant
 Q_DECLARE_METATYPE(DrShapeList);
 
-// Local Constants
+// Internal Linkage (File Scope) Forward Declarations
+
+
+// Internal Constants
 const double    c_light_size_adjuster = 1.15;           // Multiplier to equal out the slight rendering difference between shader and pixmap drawing functions
-
-
-//####################################################################################
-//##    Loads Basic DrThing Info from LAyering / Transform components
-//####################################################################################
-ThingInfo DrEngineWorld::getThingBasicInfo(DrThing *thing) {
-    ThingInfo info;
-    info.angle =    thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
-    QPointF pos =   thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
-    QPointF scale = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
-    QPointF size =  thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF();
-    info.position = DrPointF(pos.x(), pos.y());
-    info.scale =    DrPointF(scale.x(), scale.y());
-    info.size =     DrPointF(size.x(), size.y());
-    info.opacity =  thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
-    info.z_order =  thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
-    return info;
-}
 
 
 //####################################################################################
@@ -87,13 +72,162 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
 
 
 //####################################################################################
+//##    Loads Basic DrThing Info from Layering / Transform components
+//####################################################################################
+ThingInfo DrEngineWorld::loadThingBasicInfo(DrThing *thing) {
+    ThingInfo info;
+    info.angle =    thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
+    QPointF pos =   thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
+    QPointF scale = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
+    QPointF size =  thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF();
+    info.position = DrPointF(pos.x(), pos.y());
+    info.scale =    DrPointF(scale.x(), scale.y());
+    info.size =     DrPointF(size.x(), size.y());
+    info.opacity =  thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
+    info.z_order =  thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
+    return info;
+}
+
+//####################################################################################
+//##    Loads 3D Settings from DrThing in DrProject to DrEngineObject
+//####################################################################################
+void DrEngineWorld::loadThing3DSettings(DrThing *thing, DrEngineObject *object) {
+    int    convert_type =   thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Type).toInt();
+    double depth =          thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Depth).toDouble();
+    QPointF x_axis_rotate = thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_X_Axis_Rotation).toPointF();
+    QPointF y_axis_rotate = thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Y_Axis_Rotation).toPointF();
+    QPointF x_axis_speed =  thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_X_Axis_Speed).toPointF();
+    QPointF y_axis_speed =  thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Y_Axis_Speed).toPointF();
+    bool   billboard =      thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Billboard).toBool();
+    object->set3DType(static_cast<Convert_3D_Type>(convert_type));
+    object->setAngleX( x_axis_rotate.x() + (QRandomGenerator::global()->bounded(x_axis_rotate.y() * 2.0) - x_axis_rotate.y()) );
+    object->setAngleY( y_axis_rotate.x() + (QRandomGenerator::global()->bounded(y_axis_rotate.y() * 2.0) - y_axis_rotate.y()) );
+    object->setBillboard( billboard );
+    object->setDepth(depth);
+    object->setRotateSpeedX( (x_axis_speed.x() + (QRandomGenerator::global()->bounded(x_axis_speed.y() * 2.0) - x_axis_speed.y())) / 100.0 );
+    object->setRotateSpeedY( (y_axis_speed.x() + (QRandomGenerator::global()->bounded(y_axis_speed.y() * 2.0) - y_axis_speed.y())) / 100.0 );
+}
+
+//####################################################################################
+//##    Loads Appearance Settings from DrThing in DrProject to DrEngineObject
+//####################################################################################
+void DrEngineWorld::loadThingAppearanceSettings(DrThing *thing, DrEngineObject *object) {
+    bool    cast_shadows =  thing->getComponentPropertyValue(Components::Thing_Lighting,   Properties::Thing_Lighting_Cast_Shadows).toBool();
+    int     bit_rate =      thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toList().first().toInt();
+    QPointF pixelation =    thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
+    float   brightness =    thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Brightness).toList().first().toInt() / 255.f;
+    float   contrast =      thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Contrast).toList().first().toInt() / 255.f;
+    float   saturation =    thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Saturation).toList().first().toInt() / 255.f;
+    float   hue =           thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Hue).toList().first().toInt() / 360.f;
+    bool    grayscale =     thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Grayscale).toBool();
+    bool    negative =      thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Negative).toBool();
+    bool    wireframe =     thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Wireframe).toBool();
+    object->cast_shadows =  cast_shadows;
+    object->bitrate =       bit_rate;
+    object->pixel_x =       static_cast<float>(pixelation.x());
+    object->pixel_y =       static_cast<float>(pixelation.y());
+    object->brightness =    brightness;
+    object->contrast =      contrast;
+    object->saturation =    saturation;
+    object->hue =           hue;
+    object->grayscale =     grayscale;
+    object->negative =      negative;
+    object->wireframe =     wireframe;
+}
+
+//####################################################################################
+//##    Loads Collision Shape from DrThing in DrProject to DrEngineObject
+//####################################################################################
+void DrEngineWorld::loadThingCollisionShape(DrEngineObject *object) {
+    ///block->addShapeBoxFromTexture(asset_key);
+    QVariant shapes = m_project->getAsset(object->getAssetKey())->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Shape);
+    DrShapeList shape = shapes.value<DrShapeList>();
+    for (auto poly : shape.getPolygons()) {
+        QVector<DrPointF> points = QVector<DrPointF>::fromStdVector(poly);
+        object->addShapePolygon(points);
+    }
+}
+
+
+//####################################################################################
+//##    Loads one DrProject DrThingType::Object to World / Space
+//####################################################################################
+void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
+
+    // ***** Load Character Thing Properties
+    long        asset_key = thing->getAssetKey();
+    DrAsset    *asset = m_project->getAsset(asset_key);
+    ThingInfo   info =      loadThingBasicInfo( thing );
+
+    // ***** Add the player to the cpSpace
+    DrEngineObject *player = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, asset_key, info.position.x, -info.position.y,
+                                                info.z_order, info.scale, c_friction, c_bounce, c_collide_true, true, info.angle, info.opacity);
+
+    loadThingCollisionShape(player);                                    // Load collision shape(s)
+    addThing(player);                                                   // Add to world
+
+    // ***** Load Character Settings
+    assignPlayerControls(player, true, true, true);
+
+    QPointF max_speed =     asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Max_Speed).toPointF();
+    QPointF forced_speed =  asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Forced_Speed).toPointF();
+    QPointF move_speed =    asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Move_Speed).toPointF();
+
+    QPointF jump_force =    asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Force).toPointF();
+    int     jump_timeout =  asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Timeout).toInt();
+    int     jump_count =    asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Counter).toInt();
+    bool    jump_air =      asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Air).toBool();
+    bool    jump_wall =     asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Wall).toBool();
+
+    double  air_drag =      asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Air_Drag).toDouble();
+    double  ground_drag =   asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Ground_Drag).toDouble();
+    double  rotate_drag =   asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Rotation_Drag).toDouble();
+
+    player->setMaxSpeedX( max_speed.x() );
+    player->setMaxSpeedY( max_speed.y() );
+    player->setForcedSpeedX( forced_speed.x() );
+    player->setForcedSpeedY( forced_speed.y() );
+    player->setMoveSpeedX( move_speed.x() );
+    player->setMoveSpeedY( move_speed.y() );
+
+    player->setJumpForceX( jump_force.x() );
+    player->setJumpForceY( jump_force.y() );
+    player->setJumpTimeout( jump_timeout );
+    player->setJumpCount( jump_count );
+    player->setCanAirJump( jump_air );
+    player->setCanWallJump( jump_wall );
+
+    player->setAirDrag( air_drag );
+    player->setGroundDrag( ground_drag );
+    player->setRotateDrag( rotate_drag );
+
+
+//    ball1->setHealth( 80.0 );
+//    ///ball1->setDeathTouch( true );
+//    ///ball1->setIgnoreGravity( true );
+
+//    assignPlayerControls(ball2, false, true, false);
+//    ball2->setRotateSpeed( 20.0 );
+//    m_cameras[ball2->getActiveCameraKey()]->setRotation( -25, -40, 0 );
+
+
+
+    // ***** Appearance settings
+    loadThingAppearanceSettings(thing, player);
+
+    // ***** 3D Settings
+    loadThing3DSettings(thing, player);
+}
+
+
+//####################################################################################
 //##    Loads one DrProject DrThingType::Object to World / Space
 //####################################################################################
 void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double offset_y) {
 
     // ***** Load Object Thing Properties
     long        asset_key = thing->getAssetKey();
-    ThingInfo   info =      getThingBasicInfo( thing );
+    ThingInfo   info =      loadThingBasicInfo( thing );
     bool        collide =   thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Collide).toBool();
     int         physics =   thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Physics_Type).toInt();
 
@@ -107,23 +241,7 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     // ***** Add the block to the cpSpace
     DrEngineObject *block = new DrEngineObject(this, getNextKey(), body_type, asset_key, info.position.x + offset_x, -info.position.y + offset_y,
                                                info.z_order, info.scale, c_friction, c_bounce, collide, true, info.angle, info.opacity);
-
-
-
-
-    //block->addShapeBoxFromTexture(asset_key);
-
-    QVariant shapes = m_project->getAsset(asset_key)->getComponentPropertyValue(Components::Asset_Object_Settings, Properties::Asset_Collision_Shape);
-    DrShapeList shape = shapes.value<DrShapeList>();
-    for (auto poly : shape.getPolygons()) {
-        QVector<DrPointF> points = QVector<DrPointF>::fromStdVector(poly);
-        block->addShapePolygon(points);
-    }
-
-
-
-
-
+    loadThingCollisionShape(block);
     addThing(block);
 
     // ***** Set collision type
@@ -163,43 +281,10 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     }
 
     // ***** Appearance settings
-    bool    cast_shadows =  thing->getComponentPropertyValue(Components::Thing_Lighting,   Properties::Thing_Lighting_Cast_Shadows).toBool();
-    int     bit_rate =      thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toList().first().toInt();
-    QPointF pixelation =    thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
-    float   brightness =    thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Brightness).toList().first().toInt() / 255.f;
-    float   contrast =      thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Contrast).toList().first().toInt() / 255.f;
-    float   saturation =    thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Saturation).toList().first().toInt() / 255.f;
-    float   hue =           thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Hue).toList().first().toInt() / 360.f;
-    bool    grayscale =     thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Grayscale).toBool();
-    bool    negative =      thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Negative).toBool();
-    bool    wireframe =     thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Wireframe).toBool();
-    block->cast_shadows =   cast_shadows;
-    block->bitrate =        bit_rate;
-    block->pixel_x =        static_cast<float>(pixelation.x());
-    block->pixel_y =        static_cast<float>(pixelation.y());
-    block->brightness =     brightness;
-    block->contrast =       contrast;
-    block->saturation =     saturation;
-    block->hue =            hue;
-    block->grayscale =      grayscale;
-    block->negative =       negative;
-    block->wireframe =      wireframe;
+    loadThingAppearanceSettings(thing, block);
 
     // ***** 3D Settings
-    int    convert_type =   thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Type).toInt();
-    double depth =          thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Depth).toDouble();
-    QPointF x_axis_rotate = thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_X_Axis_Rotation).toPointF();
-    QPointF y_axis_rotate = thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Y_Axis_Rotation).toPointF();
-    QPointF x_axis_speed =  thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_X_Axis_Speed).toPointF();
-    QPointF y_axis_speed =  thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Y_Axis_Speed).toPointF();
-    bool   billboard =      thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Billboard).toBool();
-    block->set3DType(static_cast<Convert_3D_Type>(convert_type));
-    block->setAngleX( x_axis_rotate.x() + (QRandomGenerator::global()->bounded(x_axis_rotate.y() * 2.0) - x_axis_rotate.y()) );
-    block->setAngleY( y_axis_rotate.x() + (QRandomGenerator::global()->bounded(y_axis_rotate.y() * 2.0) - y_axis_rotate.y()) );
-    block->setBillboard( billboard );
-    block->setDepth(depth);
-    block->setRotateSpeedX( (x_axis_speed.x() + (QRandomGenerator::global()->bounded(x_axis_speed.y() * 2.0) - x_axis_speed.y())) / 100.0 );
-    block->setRotateSpeedY( (y_axis_speed.x() + (QRandomGenerator::global()->bounded(y_axis_speed.y() * 2.0) - y_axis_speed.y())) / 100.0 );
+    loadThing3DSettings(thing, block);
 }
 
 
@@ -207,7 +292,7 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
 //##    Loads one DrProject DrThingType::Fisheye to World / Space
 //####################################################################################
 void DrEngineWorld::loadFisheyeToWorld(DrThing *thing, double offset_x, double offset_y) {
-    ThingInfo   info =              getThingBasicInfo( thing );
+    ThingInfo   info =              loadThingBasicInfo( thing );
 
     QColor      start_color =       QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color).toUInt());
     float       tint =              thing->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color_Tint).toFloat() / 100.0f;
@@ -230,7 +315,7 @@ void DrEngineWorld::loadFisheyeToWorld(DrThing *thing, double offset_x, double o
 //##    Loads one DrProject DrThingType::Fire to World / Space
 //####################################################################################
 void DrEngineWorld::loadFireToWorld(DrThing *thing, double offset_x, double offset_y) {
-    ThingInfo   info =              getThingBasicInfo( thing );
+    ThingInfo   info =              loadThingBasicInfo( thing );
 
     int         mask =              thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape).toInt();
     QColor      color_1 =           QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1).toUInt());
@@ -261,7 +346,7 @@ void DrEngineWorld::loadFireToWorld(DrThing *thing, double offset_x, double offs
 //##    Loads one DrProject DrThingType::Light to World / Space
 //####################################################################################
 void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double offset_y) {
-    ThingInfo   info =          getThingBasicInfo( thing );
+    ThingInfo   info =          loadThingBasicInfo( thing );
     QColor      light_color =   QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Color).toUInt());
     int         light_type =    thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Type).toInt();
 
@@ -288,7 +373,7 @@ void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double off
 //##    Loads one DrProject DrThingType::Mirror to World / Space
 //####################################################################################
 void DrEngineWorld::loadMirrorToWorld(DrThing *thing, double offset_x, double offset_y) {
-    ThingInfo   info =              getThingBasicInfo( thing );
+    ThingInfo   info =              loadThingBasicInfo( thing );
 
     QColor color_1 = QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color).toUInt());
     QColor color_2 = QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color).toUInt());
@@ -314,7 +399,7 @@ void DrEngineWorld::loadMirrorToWorld(DrThing *thing, double offset_x, double of
 //##    Loads one DrProject DrThingType::Swirl to World / Space
 //####################################################################################
 void DrEngineWorld::loadSwirlToWorld(DrThing *thing, double offset_x, double offset_y) {
-    ThingInfo   info =              getThingBasicInfo( thing );
+    ThingInfo   info =              loadThingBasicInfo( thing );
 
     QColor      start_color =       QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color).toUInt());
     float       tint =              thing->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Color_Tint).toFloat() / 100.0f;
@@ -337,7 +422,7 @@ void DrEngineWorld::loadSwirlToWorld(DrThing *thing, double offset_x, double off
 //##    Loads one DrProject DrThingType::Water to World / Space
 //####################################################################################
 void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double offset_y) {   
-    ThingInfo   info =              getThingBasicInfo( thing );
+    ThingInfo   info =              loadThingBasicInfo( thing );
 
     int         texture =           thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Texture).toInt();
     QColor      start_color =       QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color).toUInt());

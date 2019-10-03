@@ -6,6 +6,7 @@
 //
 //
 #include <QApplication>
+#include <QDockWidget>
 #include <QKeyEvent>
 #include <QTimer>
 
@@ -92,6 +93,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
     long image_13 = m_project->addImage(":/assets/test_images/metal_block.png");
     long image_14 = m_project->addImage(":/assets/test_images/donut.png");
     long image_15 = m_project->addImage(":/assets/test_images/shapes2.png");
+    long image_16 = m_project->addImage(":/assets/test_images/frog.png");
 
     long font_1 =   m_project->addFont("Distance Font", QPixmap(":/assets/test_images/test_font.png"),   "Arial",          20, true);
     long font_2 =   m_project->addFont("Coin Count",    QPixmap(":/assets/test_images/test_font_2.png"), "Britannic Bold", 15, true);
@@ -114,6 +116,8 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
 
 
     long a_ball   =  m_project->addAsset(DrAssetType::Character, image_6 );         // "Ball 1"
+    long a_frog   =  m_project->addAsset(DrAssetType::Character, image_16 );        // "Frog"
+
     long a_square =  m_project->addAsset(DrAssetType::Object, image_1 );            // "Dr Square"
     long a_ground  = m_project->addAsset(DrAssetType::Object, image_2 );            // "Ground Fill"
     long a_top  =    m_project->addAsset(DrAssetType::Object, image_3 );            // "Ground Top"
@@ -150,6 +154,9 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
 
     // Stage 4 Rover Test
     long start_stage = m_project->findWorldWithName("World 2")->getFirstStageKey();
+    m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Character, a_frog,    0,    35,   0);
+   /// m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Character, a_ball,    0,    35,   0);
+
     m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_planet,   200,   600,  -1);
     m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_planet,  1200,   475,  -1);
 
@@ -173,7 +180,6 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
     m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_block,    750,   350,  -3);
 
     // Stage 2 Misc Test
-    m_project->findWorldWithName("World 2")->getStageWithName("2")->addThing(DrThingType::Character, a_ball,  200,   600,  4);
     m_project->findWorldWithName("World 2")->getStageWithName("2")->addThing(DrThingType::Object, a_square,   600,   700,  2);
     m_project->findWorldWithName("World 2")->getStageWithName("2")->addThing(DrThingType::Text,   a_font,     500,   900,  6);
 
@@ -211,6 +217,8 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
     buildToolBar();
     buildWidgetsShared();
     buildWidgetsEditor();
+    initializeDockWidgets();
+
 
     setFormMainMode( Form_Main_Mode::World_Editor );
 

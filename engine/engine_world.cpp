@@ -12,9 +12,10 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrEngineWorld::DrEngineWorld(DrProject *project, EngineTextureMap &textures, long world_key) : m_textures(textures) {
+DrEngineWorld::DrEngineWorld(DrEngine *engine, DrProject *project, EngineTextureMap &textures, long world_key) : m_textures(textures) {
+    m_engine =  engine;
     m_project = project;
-    m_world = world_key;
+    m_world =   world_key;
 }
 
 DrEngineWorld::~DrEngineWorld() {

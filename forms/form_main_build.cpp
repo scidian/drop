@@ -148,7 +148,7 @@ void FormMain::buildWidgetsShared() {
     dockAdvisor->setObjectName(QStringLiteral("dockAdvisor"));
     dockAdvisor->setSizePolicy(sizePolicyLess);
     dockAdvisor->setFont(font);
-    dockAdvisor->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable);
+    dockAdvisor->setFeatures(QDockWidget::DockWidgetMovable);/// | QDockWidget::DockWidgetClosable);
     dockAdvisor->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
         widgetAdvisor = new QWidget();
         widgetAdvisor->setObjectName(QStringLiteral("widgetAdvisor"));
@@ -222,13 +222,34 @@ void FormMain::buildWidgetsShared() {
             verticalLayoutObject->addWidget(treeInspector);
         dockInspector->setWidget(widgetInspector);
 
+}
+
+
+//####################################################################################
+//##    Lays out docks for the first time
+//####################################################################################
+void FormMain::initializeDockWidgets() {
+
+    // ***** Starting width, if screen size is small, decrease starting width of assets to make more room (to single column)
+    if (this->geometry().width() < 1500)
+        dockAssetsEditor->setFixedWidth( 124 );
+    else
+        dockAssetsEditor->setFixedWidth( 221 );
+    addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea, dockAssetsEditor);
+    dockAssetsEditor->hide();
+
 
     // ***** Add QMainWindow Docks, set starting widths
     dockInspector->setFixedWidth( 250 );
     dockAdvisor->setFixedWidth(   250 );
+    ///addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dockInspector);
+    ///addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dockAdvisor);
+    ///resizeDocks( { dockAdvisor, dockInspector }, { 140, 900 }, Qt::Vertical);
+
+    addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea, dockAdvisor);
     addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dockInspector);
-    addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dockAdvisor);
-    resizeDocks( { dockAdvisor, dockInspector }, { 140, 900 }, Qt::Vertical);
+    resizeDocks( { dockAdvisor   }, { 130 }, Qt::Vertical);
+    resizeDocks( { dockInspector }, { 900 }, Qt::Vertical);
 
 
     ///// Helpful QDockWidget commands
@@ -245,7 +266,9 @@ void FormMain::buildWidgetsShared() {
 //####################################################################################
 //##    Keeps docks from changing width while FormMain is changed around
 //####################################################################################
-void FormMain::lockDockWidth(QDockWidget *dock, int width) { dock->setFixedWidth( width ); }
+void FormMain::lockDockWidth(QDockWidget *dock, int width) {
+    dock->setFixedWidth( width );
+}
 void FormMain::unlockDockWidth(QDockWidget *dock) {
     int pre_width = dock->width();
     dock->setMaximumSize(622, QWIDGETSIZE_MAX);

@@ -10,6 +10,9 @@
 
 #include <vector>
 
+// Forward Declarations
+class DrPointF;
+
 //####################################################################################
 //##    DrPoint
 //##        Useful 2D Point Class, adapted from HullFinder
@@ -19,16 +22,24 @@ class DrPoint
 public:
     int x;
     int y;
+
+public:
+    // Constructors
     DrPoint();
     DrPoint(int x, int y_);
     DrPoint(float x_, float y_);
     DrPoint(double x_, double y_);
+
+    // Operator Overloads
     DrPoint & operator=(const DrPoint &other);
     DrPoint operator+(const DrPoint &other) const;
     DrPoint operator-(const DrPoint &other) const;
     DrPoint operator*(int k) const;
     DrPoint operator/(int k) const;
     bool    operator==(const DrPoint &other) const;
+
+    // Conversions
+    DrPointF toPointF();
 };
 
 

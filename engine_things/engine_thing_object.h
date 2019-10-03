@@ -20,22 +20,24 @@ enum class Jump_State {
 };
 
 // Constants for calling engine addObject calls
-constexpr double    c_epsilon = 0.000001;               // Floating point zero
-const     DrPointF  c_center    {0, 0};                 // Default offset in no offset
-const     DrPointF  c_scale1x1  {1, 1};                 // Default scale of 1x1
-const     QVector3D c_default_camera_pos {0, 0, 800};   // Default camera position if there is no active camera
-const     QVector3D c_default_camera_rot {-15, 15, 0};  // Default camera rotation if there is no active camera
-constexpr double    c_norotate =   0;                   // Default rotation amount of zero
-constexpr double    c_opaque =     1;                   // Default transparency of fully opaque
-constexpr double    c_friction =  -1;                   // Flag for add**** call to use world friction setting
-constexpr double    c_bounce =    -1;                   // Flag for add**** call to use world bounce setting
-constexpr int       c_no_max_health = -1;               // Flag for no maximum health
-constexpr int       c_unlimited_health = -1;            // Flag for unlimited health
-constexpr int       c_unlimited_jump =   -1;            // Flag for unlimited jump
+constexpr   double      c_epsilon = 0.000001;                   // Floating point zero
+const       DrPointF    c_center    {0, 0};                     // Default offset in no offset
+const       DrPointF    c_scale1x1  {1, 1};                     // Default scale of 1x1
+const       QVector3D   c_default_camera_pos {0, 0, 800};       // Default camera position if there is no active camera
+const       QVector3D   c_default_camera_rot {-15, 15, 0};      // Default camera rotation if there is no active camera
+constexpr   double      c_norotate =   0;                       // Default rotation amount of zero
+constexpr   double      c_opaque =     1;                       // Default transparency of fully opaque
+constexpr   double      c_friction =  -1;                       // Flag for add**** call to use world friction setting
+constexpr   double      c_bounce =    -1;                       // Flag for add**** call to use world bounce setting
+constexpr   int         c_no_max_health = -1;                   // Flag for no maximum health
+constexpr   int         c_unlimited_health = -1;                // Flag for unlimited health
+constexpr   int         c_unlimited_jump =   -1;                // Flag for unlimited jump
+const       bool        c_collide_true = true;                  // Constant for collision true
+const       bool        c_collide_false = false;                // Constant for collision false
 
 // Constants for Object Body / Shape Creation
-constexpr double    c_extra_radius =    0.010;          // Radius added on to block and polygon shapes for better collisions
-constexpr double    c_mass_multiplier = 0.002;          // Shapes Area times this multiplier = shape mass
+constexpr   double      c_extra_radius =    0.010;              // Radius added on to block and polygon shapes for better collisions
+constexpr   double      c_mass_multiplier = 0.002;              // Shapes Area times this multiplier = shape mass
 
 //####################################################################################
 //##    DrEngineObject
@@ -120,6 +122,7 @@ private:
     bool            m_can_rotate = true;            // To be set during object creation, moment of inertia is set to infinity to stop rotation
     bool            m_ignore_gravity = false;       // If turned to true, this object no longer is affected by gravity
 
+
     // ***** Local Variables Updated by Engine
     //              NOT TO BE SET BY USER
     //
@@ -148,9 +151,7 @@ private:
 public:
     // ***** Image Post Processing Attributes
     bool        cast_shadows = true;                        // Will cast shadows when in front of a Light
-
-
-    bool            extrude_3d = false;                     // Playing with 3d extrusion
+    bool        extrude_3d = false;                         // Playing with 3d extrusion
 
 
 
@@ -182,6 +183,7 @@ public:
     // Object Basic Settings
     const bool&     doesCollide() { return m_does_collide; }
     const long&     getTextureNumber() { return m_texture_number; }
+    const long&     getAssetKey() { return m_texture_number; }
 
     void            setDoesCollide(bool should_collide) { m_does_collide = should_collide; }
     void            setTextureNumber(long texture_number) { m_texture_number = texture_number; }
@@ -281,7 +283,7 @@ public:
     void            setJumpForceX(double new_jump_force_x) { m_jump_force_x = new_jump_force_x; }
     void            setJumpForceY(double new_jump_force_y) { m_jump_force_y = new_jump_force_y; }
     void            setJumpTimeout(long new_jump_timeout) { m_jump_timeout = new_jump_timeout; }
-    void            setJumpCount(int new_jump_count) { m_jump_count = new_jump_count; }
+    void            setJumpCount(int new_jump_count) { m_jump_count = (new_jump_count < -1) ? c_unlimited_jump : new_jump_count; }
 
     void            setAirDrag(double new_air_drag) { m_air_drag = new_air_drag; }
     void            setGroundDrag(double new_ground_drag) { m_ground_drag = new_ground_drag; }

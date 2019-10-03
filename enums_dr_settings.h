@@ -54,23 +54,35 @@ enum class Property_Type {
 //##    Possible components and their properties
 //############################
 enum class Components {
+
+    // ***** General Components
     Entity_Name,
 
-    Asset_Object_Settings,
-    Asset_Font_Settings,
+
+    // ***** DrAsset Components
+    Asset_Settings_Character,
+    Asset_Settings_Object,
+    Asset_Settings_Font,
+
+    Asset_Collision,
     Asset_Animation,
 
+
+    // ***** DrWorld Components
     World_Settings,
     World_Physics,
     World_Lighting,
     World_Appearance,
     World_Special_Effects,
 
+
+    // ***** DrStage Components
     Stage_Settings,
     Stage_Grid,
 
+
+    // ***** DrThing Components
     Thing_Settings_Camera,
-    Thing_Settings_Character,
     Thing_Settings_Object,
     Thing_Settings_Text,
 
@@ -88,10 +100,11 @@ enum class Components {
     Thing_Transform,
     Thing_Layering,
     Thing_Movement,
-    Thing_3D,
     Thing_Lighting,
+    Thing_3D,
     Thing_Appearance,
     Thing_Special_Effects,
+
 };
 
 
@@ -100,15 +113,31 @@ enum class Properties {
 
 
     // ******************** DrAsset Component Properties
-    // Settings
-    Asset_Collision_Shape,          //polygon
+    // Asset_Settings_Character
+    Asset_Character_Max_Speed,      //pointf
+    Asset_Character_Forced_Speed,   //pointf
+    Asset_Character_Move_Speed,     //pointf
+    Asset_Character_Jump_Force,     //pointf
+    Asset_Character_Jump_Timeout,   //positive int
+    Asset_Character_Jump_Counter,   //int
 
-    // Animation
-    Asset_Animation_Default,        //image
+    Asset_Character_Jump_Air,       //bool
+    Asset_Character_Jump_Wall,      //bool
 
-    // Font
+    Asset_Character_Air_Drag,       //positive double
+    Asset_Character_Ground_Drag,    //positive double
+    Asset_Character_Rotation_Drag,  //positive double
+
+
+    // Asset_Settings_Font
     Asset_Font_Family,
     Asset_Font_Size,
+
+    // Asset_Collision
+    Asset_Collision_Shape,          //polygon    
+
+    // Asset_Animation
+    Asset_Animation_Default,        //image
 
 
     // ******************** DrWorld Component Properties
@@ -208,10 +237,6 @@ enum class Properties {
     // ********** Thing Specific
     // Camera Settings
     Thing_Camera_Zoom,              //double
-
-    // Character Settings
-    Thing_Character_Jump_X,         //double
-    Thing_Character_Jump_Y,         //double
 
     // Object Settings
     Thing_Object_Physics_Type,      //list, enum class Body_Type (Static, Kinematic, Dynamic)

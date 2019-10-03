@@ -89,7 +89,7 @@ bool DrEngineLight::update(double time_passed, double time_warp, QRectF &area) {
         }
     }
 
-    return (remove && DrEngineThing::update(time_passed, time_warp, area));
+    return (remove || DrEngineThing::update(time_passed, time_warp, area));
 }
 
 

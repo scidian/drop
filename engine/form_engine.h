@@ -61,9 +61,9 @@ private:
 public:
     // Widgets
     QWidget        *centralWidget;
-    QToolButton    *pushSpawn,      *pushCar,       *pushJump,      *pushLight,     *pushCamera;
-    QToolButton    *pushLine1,      *pushLine2,     *pushBlocks,    *pushProject;
-    QToolButton    *pushStart,      *pushStop,      *pushClose;
+    QToolButton    *pushSpawn,      *pushCar,       *pushJump,      *pushLight,     *pushPlayer;
+    QToolButton    *pushLine1,      *pushLine2,     *pushBlocks,                    *pushProject;
+    QToolButton    *pushStart,      *pushStop,      *pushClose,     *pushCamera;
     QToolButton    *pushPersp,      *pushOrtho;
     QToolButton    *pushDebug1,     *pushDebug2;
 
@@ -85,7 +85,7 @@ public:
 
     // Demo Variables
     Demo_Space          demo_space =  Demo_Space::Project;
-    Demo_Player         demo_player = Demo_Player::Jump;
+    Demo_Player         demo_player = Demo_Player::Player;
 
 public:
     // Constructor / Destructor
@@ -117,6 +117,7 @@ private slots:
     void on_pushCar_clicked();
     void on_pushJump_clicked();
     void on_pushLight_clicked();
+    void on_pushPlayer_clicked();
 
     void on_pushLines1_clicked();
     void on_pushLines2_clicked();

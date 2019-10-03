@@ -65,7 +65,8 @@ void DrEngineWorld::clearWorld() {
             delete thing;
         m_things.clear();
 
-        // Clear all Cameras
+        // Reset active camera to none, Clear all Cameras
+        m_active_camera = 0;
         for (auto camera_pair : m_cameras)
             delete camera_pair.second;
         m_cameras.clear();

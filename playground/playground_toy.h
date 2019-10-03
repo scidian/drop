@@ -17,7 +17,7 @@
 // Forward Declarations
 class DrPlayground;
 
-// Local Constants
+// Internal Constants
 constexpr double    c_friction =  -1;                   // Flag for add**** call to use world friction setting
 constexpr double    c_bounce =    -1;                   // Flag for add**** call to use world bounce setting
 
