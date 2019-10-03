@@ -71,11 +71,11 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
     long effect_4 =  m_project->addEffect("Mirror",         DrEffectType::Mirror);
     long effect_5 =  m_project->addEffect("Fisheye Lens",   DrEffectType::Fisheye);
     long effect_6 =  m_project->addEffect("Swirl",          DrEffectType::Swirl);
-    long effect_7 =  m_project->addEffect("Flag",           DrEffectType::Flag);
-    long effect_8 =  m_project->addEffect("Rain",           DrEffectType::Rain);
-    long effect_9 =  m_project->addEffect("Snow",           DrEffectType::Snow);
-    long effect_10 = m_project->addEffect("Clouds",         DrEffectType::Clouds);
-    long effect_11 = m_project->addEffect("Fog",            DrEffectType::Fog);
+//    long effect_7 =  m_project->addEffect("Flag",           DrEffectType::Flag);
+//    long effect_8 =  m_project->addEffect("Rain",           DrEffectType::Rain);
+//    long effect_9 =  m_project->addEffect("Snow",           DrEffectType::Snow);
+//    long effect_10 = m_project->addEffect("Clouds",         DrEffectType::Clouds);
+//    long effect_11 = m_project->addEffect("Fog",            DrEffectType::Fog);
 
 
     long image_1  = m_project->addImage(":/assets/test_images/test_square.png");
@@ -93,7 +93,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
     long image_13 = m_project->addImage(":/assets/test_images/metal_block.png");
     long image_14 = m_project->addImage(":/assets/test_images/donut.png");
     long image_15 = m_project->addImage(":/assets/test_images/shapes2.png");
-    long image_16 = m_project->addImage(":/assets/test_images/frog.png");
+    long image_16 = m_project->addImage(":/assets/test_images/dragon.png");
 
     long font_1 =   m_project->addFont("Distance Font", QPixmap(":/assets/test_images/test_font.png"),   "Arial",          20, true);
     long font_2 =   m_project->addFont("Coin Count",    QPixmap(":/assets/test_images/test_font_2.png"), "Britannic Bold", 15, true);
@@ -108,15 +108,15 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
     m_project->addAsset(DrAssetType::Effect, effect_4);                             // Mirror
     m_project->addAsset(DrAssetType::Effect, effect_5);                             // Fisheye
     m_project->addAsset(DrAssetType::Effect, effect_6);                             // Swirl
-    m_project->addAsset(DrAssetType::Effect, effect_7);                             // Flag
-    m_project->addAsset(DrAssetType::Effect, effect_8);                             // Rain
-    m_project->addAsset(DrAssetType::Effect, effect_9);                             // Snow
-    m_project->addAsset(DrAssetType::Effect, effect_10);                            // Clouds
-    m_project->addAsset(DrAssetType::Effect, effect_11);                            // Fog
+//    m_project->addAsset(DrAssetType::Effect, effect_7);                             // Flag
+//    m_project->addAsset(DrAssetType::Effect, effect_8);                             // Rain
+//    m_project->addAsset(DrAssetType::Effect, effect_9);                             // Snow
+//    m_project->addAsset(DrAssetType::Effect, effect_10);                            // Clouds
+//    m_project->addAsset(DrAssetType::Effect, effect_11);                            // Fog
 
 
-    long a_ball   =  m_project->addAsset(DrAssetType::Character, image_6 );         // "Ball 1"
-    long a_frog   =  m_project->addAsset(DrAssetType::Character, image_16 );        // "Frog"
+                     m_project->addAsset(DrAssetType::Character, image_6 );         // "Ball 1"
+    long a_dragon =  m_project->addAsset(DrAssetType::Character, image_16 );        // "Dragon"
 
     long a_square =  m_project->addAsset(DrAssetType::Object, image_1 );            // "Dr Square"
     long a_ground  = m_project->addAsset(DrAssetType::Object, image_2 );            // "Ground Fill"
@@ -154,8 +154,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
 
     // Stage 4 Rover Test
     long start_stage = m_project->findWorldWithName("World 2")->getFirstStageKey();
-    m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Character, a_frog,    0,    35,   0);
-   /// m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Character, a_ball,    0,    35,   0);
+    m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Character, a_dragon,  0,    60,   0);
 
     m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_planet,   200,   600,  -1);
     m_project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_planet,  1200,   475,  -1);

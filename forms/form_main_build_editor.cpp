@@ -225,7 +225,7 @@ void FormMain::buildWidgetsEditor() {
     dockAssetsEditor->setWindowTitle( tr("Assets") );
     dockAssetsEditor->setObjectName(QStringLiteral("dockAssetsEditor"));
     dockAssetsEditor->setFont(font);
-    dockAssetsEditor->setFeatures(QDockWidget::DockWidgetMovable);  // | QDockWidget::DockWidgetClosable);
+    dockAssetsEditor->setFeatures(QDockWidget::DockWidgetMovable); /// | QDockWidget::DockWidgetFloatable);  /// | QDockWidget::DockWidgetClosable);
     dockAssetsEditor->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
         widgetAssestEditor = new QWidget();
         widgetAssestEditor->setObjectName(QStringLiteral("widgetAssestsEditor"));

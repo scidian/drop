@@ -148,7 +148,7 @@ void FormMain::buildWidgetsShared() {
     dockAdvisor->setObjectName(QStringLiteral("dockAdvisor"));
     dockAdvisor->setSizePolicy(sizePolicyLess);
     dockAdvisor->setFont(font);
-    dockAdvisor->setFeatures(QDockWidget::DockWidgetMovable);/// | QDockWidget::DockWidgetClosable);
+    dockAdvisor->setFeatures(QDockWidget::DockWidgetMovable); /// | QDockWidget::DockWidgetFloatable); /// | QDockWidget::DockWidgetClosable);
     dockAdvisor->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
         widgetAdvisor = new QWidget();
         widgetAdvisor->setObjectName(QStringLiteral("widgetAdvisor"));
@@ -188,7 +188,7 @@ void FormMain::buildWidgetsShared() {
     dockInspector->setObjectName(QStringLiteral("dockInspector"));
     dockInspector->setSizePolicy(sizePolicyPreferredVertical);
     dockInspector->setFont(font);
-    dockInspector->setFeatures(QDockWidget::DockWidgetMovable);
+    dockInspector->setFeatures(QDockWidget::DockWidgetMovable); /// | QDockWidget::DockWidgetFloatable);
     dockInspector->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
         widgetInspector = new QWidget();
         widgetInspector->setObjectName(QStringLiteral("widgetInspector"));
