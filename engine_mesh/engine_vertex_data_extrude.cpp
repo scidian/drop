@@ -153,9 +153,9 @@ QVector<DrPointF> DrEngineVertexData::simplifyPoints(const QVector<DrPointF> &ou
                 double slope1 = (y2-y1) / (x2-x1);
                 double slope2 = (y3-y1) / (x3-x1);
                 bool   slope_is_the_same = false;
-                if (qFuzzyCompare(y1, y2) && qFuzzyCompare(y2, y3))
+                if (Dr::FuzzyCompare(y1, y2) && Dr::FuzzyCompare(y2, y3))
                     slope_is_the_same = true;
-                else if (qFuzzyCompare(x1, x2) && qFuzzyCompare(x2, x3))
+                else if (Dr::FuzzyCompare(x1, x2) && Dr::FuzzyCompare(x2, x3))
                     slope_is_the_same = true;
                 else if (Dr::IsCloseTo(slope1, slope2, tolerance))
                     slope_is_the_same = true;

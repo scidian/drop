@@ -163,14 +163,22 @@ void FormMain::buildMenu() {
         menuDebug = new QMenu(menuBar);
         menuDebug->setObjectName(QStringLiteral("menuDebug"));
 
-        QAction *actionListChildren =  new QAction(this); actionListChildren->setObjectName(QStringLiteral("actionListChildren"));
+        QAction *actionToggleDescriptions, *actionListChildren;
+        actionToggleDescriptions =  new QAction(this); actionToggleDescriptions->setObjectName(QStringLiteral("actionToggleDescriptions"));
+        actionListChildren =        new QAction(this); actionListChildren->setObjectName(QStringLiteral("actionListChildren"));
 
         menuBar->addAction(menuDebug->menuAction());
+        menuDebug->addAction(actionToggleDescriptions);
         menuDebug->addAction(actionListChildren);
 
+        actionToggleDescriptions->setCheckable(true);
+        actionToggleDescriptions->setChecked( Dr::CheckDebugFlag(Debug_Flags::Show_Custom_Descriptions) );
+
+        connect(actionToggleDescriptions, &QAction::triggered, []() { Dr::FlipDebugFlag(Debug_Flags::Show_Custom_Descriptions); });
         connect(actionListChildren, &QAction::triggered, [this]() { this->menuListChildren(); });
 
         menuDebug->setTitle(QApplication::translate("MainWindow", "Debug", nullptr));
+        actionToggleDescriptions->setText(QApplication::translate("MainWindow", "Show Custom Descriptions", nullptr));
         actionListChildren->setText(QApplication::translate("MainWindow", "List Children", nullptr));
     }
     // !!!!!

@@ -80,10 +80,10 @@ void DrOpenGL::drawSpace() {
             case DrThingType::Character:
             case DrThingType::Object:
                 // If no depth to object, or if in Orthographic mode and object is not rotated on X or Y axis, just draw front face
-                draw2D = qFuzzyCompare(thing->getDepth(), 0.0) ||
+                draw2D = Dr::FuzzyCompare(thing->getDepth(), 0.0) ||
                          (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic &&
-                          qFuzzyCompare(thing->getAngleX(), 0.0)       && qFuzzyCompare(thing->getAngleY(), 0.0) &&
-                          qFuzzyCompare(thing->getRotateSpeedX(), 0.0) && qFuzzyCompare(thing->getRotateSpeedY(), 0.0) &&
+                          Dr::FuzzyCompare(thing->getAngleX(), 0.0)       && Dr::FuzzyCompare(thing->getAngleY(), 0.0) &&
+                          Dr::FuzzyCompare(thing->getRotateSpeedX(), 0.0) && Dr::FuzzyCompare(thing->getRotateSpeedY(), 0.0) &&
                           !thing->wireframe);
                 if (draw2D) {
                     glEnable(GL_DEPTH_TEST);

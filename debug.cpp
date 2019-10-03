@@ -28,6 +28,10 @@ bool CheckDebugFlag(Debug_Flags flag) {
     return g_debug_flags.test(static_cast<size_t>(flag));
 }
 
+void FlipDebugFlag(Debug_Flags flag) {
+    g_debug_flags.flip(static_cast<size_t>(flag));
+}
+
 void SetDebugFlag(Debug_Flags flag) {
     g_debug_flags.set(static_cast<size_t>(flag));
 }
@@ -35,6 +39,7 @@ void SetDebugFlag(Debug_Flags flag) {
 void InitializeFlags() {
     SetDebugFlag( Debug_Flags::Show_Secret_Menu );
     //SetDebugFlag( Debug_Flags::Show_Undo_View );
+    //SetDebugFlag( Debug_Flags::Show_Custom_Descriptions );
 
     SetDebugFlag( Debug_Flags::Turn_On_Antialiasing );
     //SetDebugFlag( Debug_Flags::Turn_On_OpenGL );

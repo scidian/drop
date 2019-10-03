@@ -11,6 +11,7 @@
 #include "engine.h"
 #include "engine_things/engine_thing_object.h"
 #include "engine_world.h"
+#include "helper.h"
 
 
 //####################################################################################
@@ -162,8 +163,8 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
                     player_v.y = 0;
                 }
             }
-            ///if (qFuzzyCompare(jump_vx, 0) == false) player_v.x = 0;
-            ///if (qFuzzyCompare(jump_vy, 0) == false) player_v.y = 0;
+            ///if (Dr::FuzzyCompare(jump_vx, 0.0) == false) player_v.x = 0;
+            ///if (Dr::FuzzyCompare(jump_vy, 0.0) == false) player_v.y = 0;
 
             player_v = cpvadd(player_v, cpv(jump_vx, jump_vy));
             cpBodySetVelocity( object->body, player_v );
@@ -185,8 +186,8 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     cpVect  body_v = cpBodyGetVelocity( object->body );
 
     // Calculate target velocity, includes any Forced Movement
-    cpFloat target_vx = (object->getMoveSpeedX() * key_x) + object->getForcedSpeedX();
-    cpFloat target_vy = (object->getMoveSpeedY() * key_y) + object->getForcedSpeedY();
+    cpFloat target_vx = (object->getMoveSpeedX() * key_x);// + object->getForcedSpeedX();
+    cpFloat target_vy = (object->getMoveSpeedY() * key_y);// + object->getForcedSpeedY();
 
     // This code subtracts gravity from target speed, not sure if we want to leave this in
     //      (useful for allowing movement force against gravity for m_cancel_gravity property, i.e. climbing up ladders)
@@ -212,7 +213,7 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     double c_drag_rotate = 0.025;
 
     // This increases slowdown speed while in contact with a ladder (cancel gravity object)
-    if (qFuzzyCompare(object->getTempGravityMultiplier(), 1.0) == false) {
+    if (Dr::FuzzyCompare(object->getTempGravityMultiplier(), 1.0) == false) {
         c_drag_air    = (c_drag_air * object->getTempGravityMultiplier()) + 0.0001;
         c_drag_ground = (c_drag_ground * object->getTempGravityMultiplier()) + 0.0001;
     }
@@ -227,23 +228,23 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
     // Interpolate towards desired velocity if in air
     if (!object->isOnGround() && !object->isOnWall()) {
-        if ((qFuzzyCompare(body_v.x, 0) == false && qFuzzyCompare(target_vx, 0) == false) ||
+        if ((Dr::FuzzyCompare(body_v.x, 0.0) == false && Dr::FuzzyCompare(target_vx, 0.0) == false) ||
             (body_v.x <= 0 && target_vx > 0) || (body_v.x >= 0 && target_vx < 0))
                 body_v.x = cpflerpconst( body_v.x, target_vx, air_accel_x * dt);
         else    body_v.x = cpflerpconst( body_v.x, 0, air_drag / c_drag_air * dt);
 
-        if ((qFuzzyCompare(body_v.y, 0) == false && qFuzzyCompare(target_vy, 0) == false) ||
+        if ((Dr::FuzzyCompare(body_v.y, 0.0) == false && Dr::FuzzyCompare(target_vy, 0.0) == false) ||
             (body_v.y <= 0 && target_vy > 0) || (body_v.y >= 0 && target_vy < 0))
                 body_v.y = cpflerpconst( body_v.y, target_vy, air_accel_y * dt);
         else    body_v.y = cpflerpconst( body_v.y, 0, air_drag / c_drag_air * dt);
 
     // Interpolate towards desired velocity if on ground / wall
     } else {
-        if (qFuzzyCompare(target_vx, 0) == false)
+        if (Dr::FuzzyCompare(target_vx, 0.0) == false)
                 body_v.x = cpflerpconst( body_v.x, target_vx, ground_accel_x * dt);
         else    body_v.x = cpflerpconst( body_v.x, target_vx, ground_drag / c_drag_ground * dt);
 
-        if (qFuzzyCompare(target_vy, 0) == false)
+        if (Dr::FuzzyCompare(target_vy, 0.0) == false)
                 body_v.y = cpflerpconst( body_v.y, target_vy, ground_accel_y * dt);
         else    body_v.y = cpflerpconst( body_v.y, target_vy, ground_drag / c_drag_ground * dt);
     }
@@ -253,6 +254,10 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     double body_r = cpBodyGetAngularVelocity( body );
     body_r = cpflerpconst( body_r, 0, object->getRotateDrag() / c_drag_rotate * dt);
     cpBodySetAngularVelocity( body, body_r );
+
+
+    body_v.x += object->getForcedSpeedX();
+    body_v.y += object->getForcedSpeedY();
 
 
     // ***** Max Speed - Limit Velocity

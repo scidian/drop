@@ -5,6 +5,7 @@
 //      DrThing Class Definitions
 //
 //
+#include "debug.h"
 #include "helper.h"
 #include "helper_qt.h"
 #include "imaging/imaging.h"
@@ -237,6 +238,8 @@ void DrThing::addComponentSettingsCamera(QString new_name) {
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
                            "Camera Name", "Name of the current Camera.", false, false);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::String, "",
+                           "Description", "Custom Advisor description for this item.");
 
     addComponent(Components::Thing_Settings_Camera, "Camera Settings", "Settings for this Camera.", Component_Colors::Beige_Apricot, true);
     getComponent(Components::Thing_Settings_Camera)->setIcon(Component_Icons::Camera);
@@ -252,6 +255,8 @@ void DrThing::addComponentSettingsCharacter(QString new_name) {
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
                            "Character Name", "Name of the current Character.", false, false);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::String, "",
+                           "Description", "Custom Advisor description for this item.");
 }
 
 //####################################################################################
@@ -262,6 +267,8 @@ void DrThing::addComponentSettingsObject(QString new_name, bool should_collide) 
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
                            "Object Name", "Name of the current Object.", false, false);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::String, "",
+                           "Description", "Custom Advisor description for this item.");
 
     addComponent(Components::Thing_Settings_Object, "Object Settings", "Settings for current Object.", Component_Colors::White_Snow, true);
     getComponent(Components::Thing_Settings_Object)->setIcon(Component_Icons::Object);
@@ -285,6 +292,8 @@ void DrThing::addComponentSettingsText(QString new_name) {
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
                            "Text Name", "Name of the current Text Box.", false, false);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::String, "",
+                           "Description", "Custom Advisor description for this item.");
 
     addComponent(Components::Thing_Settings_Text, "Text Settings", "Settings for current Text Box.", Component_Colors::Orange_Medium, true);
     getComponent(Components::Thing_Settings_Text)->setIcon(Component_Icons::Font);
@@ -309,6 +318,8 @@ void DrThing::addComponentSettingsFire() {
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Fire",
                            "Effect Name", "Name of the current Effect.", false, false);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::String, "",
+                           "Description", "Custom Advisor description for this item.");
 
     addComponent(Components::Thing_Settings_Fire, "Fire Settings", "Settings for current Fire.", Component_Colors::Red_Faded, true);
     getComponent(Components::Thing_Settings_Fire)->setIcon(Component_Icons::Fire);
@@ -339,6 +350,8 @@ void DrThing::addComponentSettingsFisheye() {
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Fisheye",
                            "Effect Name", "Name of the current Effect.", false, false);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::String, "",
+                           "Description", "Custom Advisor description for this item.");
 
     addComponent(Components::Thing_Settings_Fisheye, "Fisheye Lens Settings", "Settings for current Fisheye Lens.", Component_Colors::Orange_Medium, true);
     getComponent(Components::Thing_Settings_Fisheye)->setIcon(Component_Icons::Fisheye);
@@ -358,6 +371,8 @@ void DrThing::addComponentSettingsLight(QColor color) {
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Light",
                            "Effect Name", "Name of the current Effect.", false, false);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::String, "",
+                           "Description", "Custom Advisor description for this item.");
 
     addComponent(Components::Thing_Settings_Light, "Light Settings", "Settings for current Light.", Component_Colors::Mellow_Yellow, true);
     getComponent(Components::Thing_Settings_Light)->setIcon(Component_Icons::Light);
@@ -393,6 +408,8 @@ void DrThing::addComponentSettingsMirror() {
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Mirror",
                            "Effect Name", "Name of the current Effect.", false, false);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::String, "",
+                           "Description", "Custom Advisor description for this item.");
 
     addComponent(Components::Thing_Settings_Mirror, "Mirror Settings", "Settings for current Mirror.", Component_Colors::Silver_Snow, true);
     getComponent(Components::Thing_Settings_Mirror)->setIcon(Component_Icons::Mirror);
@@ -418,6 +435,8 @@ void DrThing::addComponentSettingsSwirl() {
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Swirl",
                            "Effect Name", "Name of the current Effect.", false, false);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::String, "",
+                           "Description", "Custom Advisor description for this item.");
 
     addComponent(Components::Thing_Settings_Swirl, "Swirl Settings", "Settings for current Swirl.", Component_Colors::Purple_Pastel, true);
     getComponent(Components::Thing_Settings_Swirl)->setIcon(Component_Icons::Swirl);
@@ -437,6 +456,8 @@ void DrThing::addComponentSettingsWater() {
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Water",
                            "Effect Name", "Name of the current Effect.", false, false);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::String, "",
+                           "Description", "Custom Advisor description for this item.");
 
     addComponent(Components::Thing_Settings_Water, "Water Settings", "Settings for current Water.", Component_Colors::Blue_Drop_1, true);
     getComponent(Components::Thing_Settings_Water)->setIcon(Component_Icons::Water);

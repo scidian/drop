@@ -88,7 +88,7 @@ void DrView::rotateSelection(QPointF mouse_in_view, bool use_exact_angle, double
     }
 
     // ********** If we didnt snap to nearest ANGLE_STEP, try to snap to nearest .1 decimal place
-    if (qFuzzyCompare(angle_adjust, 0)) {
+    if (Dr::FuzzyCompare(angle_adjust, 0.0)) {
         angle = QString::number(angle, 'f', 1).toDouble();
         angle_adjust = angle - angle_diff;
     }
@@ -162,13 +162,13 @@ Transform_Data DrView::decomposeTransform(QTransform &from_transform, bool qr_ty
 
     // Apply the QR-like decomposition.
     if (qr_type) {
-        if (qFuzzyCompare(a, 0) == false || qFuzzyCompare(b, 0) == false) {
+        if (Dr::FuzzyCompare(a, 0.0) == false || Dr::FuzzyCompare(b, 0.0) == false) {
             double r = sqrt(a * a + b * b);
             transform.rotation = b > 0 ? qAcos(a / r) : -qAcos(a / r);
             transform.scale = QPointF( r, delta / r );
             transform.skew =  QPointF( qAtan((a * c + b * d) / (r * r)),  0 );
 
-        } else if (qFuzzyCompare(c, 0) == false || qFuzzyCompare(d, 0) == false) {
+        } else if (Dr::FuzzyCompare(c, 0.0) == false || Dr::FuzzyCompare(d, 0.0) == false) {
             double s = sqrt(c * c + d * d);
             transform.rotation = (3.141592653589793238463 / 2.0) - (d > 0 ? qAcos(-c / s) : -qAcos(c / s));
             transform.scale = QPointF( delta / s, s );

@@ -15,6 +15,7 @@
 enum class Debug_Flags {
     Show_Secret_Menu,                   // Add special menu to menu bar containing some hidden test functions
     Show_Undo_View,                     // Shows a window with all undo / redo commands from current DrScene
+    Show_Custom_Descriptions,           // Shows hidden custom Asset / Thing Advisor descriptions
 
     Turn_On_Antialiasing,               // Turns on antialiasing in the World Editor GraphicsView
     Turn_On_OpenGL,                     // Turns on opengl optimizations for World Editor GraphicsView
@@ -45,6 +46,7 @@ enum class Debug_Flags {
 namespace Dr {
 
     bool CheckDebugFlag(Debug_Flags flag);
+    void FlipDebugFlag(Debug_Flags flag);
     void SetDebugFlag(Debug_Flags flag);
 
     bool CheckDoneLoading();
@@ -56,3 +58,15 @@ namespace Dr {
 
 
 #endif // DEBUG_H
+
+
+
+
+
+
+
+
+
+
+
+

@@ -48,10 +48,10 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 
     // Apply the proper opacity to this item and either paint the pixmap, or paint a pattern representation of the item
     if (transparency > 0) {
-        if (qFuzzyCompare(painter->opacity(), transparency) == false) painter->setOpacity(transparency);
+        if (Dr::FuzzyCompare(painter->opacity(), transparency) == false) painter->setOpacity(transparency);
         QGraphicsPixmapItem::paint(painter, &my_option, widget);
     } else {
-        if (qFuzzyCompare(painter->opacity(), 1) == false) painter->setOpacity(1);
+        if (Dr::FuzzyCompare(painter->opacity(), 1.0) == false) painter->setOpacity(1);
 
         QPen comestic_pen = QPen(Dr::GetColor(Window_Colors::Icon_Dark), 0, Qt::PenStyle::SolidLine, Qt::PenCapStyle::FlatCap, Qt::PenJoinStyle::MiterJoin );
         comestic_pen.setCosmetic(true);

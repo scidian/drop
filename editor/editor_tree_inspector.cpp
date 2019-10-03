@@ -108,7 +108,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
 
     // Change Advisor text after new item selection
     switch (m_selected_type) {
-        case DrType::Asset:        m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Object);          break;
+        case DrType::Asset:        m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Description);     break;
         case DrType::World:        m_editor_relay->setAdvisorInfo(Advisor_Info::World_Description);     break;
         case DrType::Stage:        m_editor_relay->setAdvisorInfo(Advisor_Info::Stage_Description);     break;
         case DrType::Thing:
@@ -180,6 +180,10 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
         // Loop through each property and add it to the component frame
         for (auto property_pair: component_pair.second->getPropertyList()) {
             if (property_pair.second->isHidden()) continue;
+
+            if (property_pair.second->getPropertyKey() == Dr::EnumToInt(Properties::Entity_Description)) {
+                if (Dr::CheckDebugFlag(Debug_Flags::Show_Custom_Descriptions) == false) continue;
+            }
 
             QFrame *single_row = new QFrame(properties_frame);
             QBoxLayout *horizontal_split = new QHBoxLayout(single_row);

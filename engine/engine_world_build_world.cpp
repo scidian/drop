@@ -211,7 +211,8 @@ void DrEngineWorld::buildWorld(Demo_Space new_space_type, long world_id_to_build
         addThings( { belt1, belt2, belt3, belt4 } );
 
         // ***** Ladder / Sticky Blocks
-        DrEngineObject *ladder1 = new DrEngineObject(this, getNextKey(), Body_Type::Kinematic, Asset_Textures::Block, -980, 100, -1, DrPointF(1, 3), -1, -1, false);
+        DrEngineObject *ladder1 = new DrEngineObject(this, getNextKey(), Body_Type::Kinematic, Asset_Textures::Block,
+                                                     -980, 100, -1, DrPointF(1, 3), -1, -1, false);
         ladder1->addShapeBoxFromTexture(Asset_Textures::Block);
         ladder1->setGravityMultiplier( 0.0 );
         addThing(ladder1);

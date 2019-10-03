@@ -30,10 +30,11 @@ DrProject::DrProject(long key_generator_starting_number) {
 }
 
 DrProject::~DrProject() {
-    for (auto i: m_worlds) { delete i.second; }
-    for (auto i: m_assets) { delete i.second; }
-    for (auto i: m_fonts)  { delete i.second; }
-    for (auto i: m_images) { delete i.second; }
+    for (auto i: m_worlds)  { delete i.second; }
+    for (auto i: m_assets)  { delete i.second; }
+    for (auto i: m_fonts)   { delete i.second; }
+    for (auto i: m_images)  { delete i.second; }
+    for (auto i: m_effects) { delete i.second; }
 }
 
 
@@ -95,6 +96,9 @@ DrSettings* DrProject::findSettingsFromKey(long check_key) {
 
     ImageMap::iterator image_iter = m_images.find(check_key);
     if (image_iter != m_images.end())   return image_iter->second;
+
+    EffectMap::iterator effect_iter = m_effects.find(check_key);
+    if (effect_iter != m_effects.end()) return effect_iter->second;
 
     FontMap::iterator font_iter = m_fonts.find(check_key);
     if (font_iter != m_fonts.end())     return font_iter->second;

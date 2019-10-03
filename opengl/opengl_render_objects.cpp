@@ -119,9 +119,9 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
 
     // Rotate
     if (!object->getBillboard()) {
-        if (qFuzzyCompare(object->getAngleX(), 0.0) == false || qFuzzyCompare(object->getRotateSpeedX(), 0.0) == false)
+        if (Dr::FuzzyCompare(object->getAngleX(), 0.0) == false || Dr::FuzzyCompare(object->getRotateSpeedX(), 0.0) == false)
             model.rotate(static_cast<float>(object->getAngleX() + (now * object->getRotateSpeedX())), 1.f, 0.f, 0.f);
-        if (qFuzzyCompare(object->getAngleY(), 0.0) == false || qFuzzyCompare(object->getRotateSpeedY(), 0.0) == false)
+        if (Dr::FuzzyCompare(object->getAngleY(), 0.0) == false || Dr::FuzzyCompare(object->getRotateSpeedY(), 0.0) == false)
             model.rotate(static_cast<float>(object->getAngleY() + (now * object->getRotateSpeedY())), 0.f, 1.f, 0.f);
         model.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
 
@@ -309,9 +309,9 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
     model.translate(x, y, z);
 
     // Rotate
-    if (qFuzzyCompare(object->getAngleX(), 0.0) == false || qFuzzyCompare(object->getRotateSpeedX(), 0.0) == false)
+    if (Dr::FuzzyCompare(object->getAngleX(), 0.0) == false || Dr::FuzzyCompare(object->getRotateSpeedX(), 0.0) == false)
         model.rotate(static_cast<float>(object->getAngleX() + (now * object->getRotateSpeedX())), 1.f, 0.f, 0.f);
-    if (qFuzzyCompare(object->getAngleY(), 0.0) == false || qFuzzyCompare(object->getRotateSpeedY(), 0.0) == false)
+    if (Dr::FuzzyCompare(object->getAngleY(), 0.0) == false || Dr::FuzzyCompare(object->getRotateSpeedY(), 0.0) == false)
         model.rotate(static_cast<float>(object->getAngleY() + (now * object->getRotateSpeedY())), 0.f, 1.f, 0.f);
     model.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
 

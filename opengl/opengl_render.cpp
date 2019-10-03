@@ -119,8 +119,8 @@ void DrOpenGL::getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing
     // ***** Create rotation matrix, apply rotation to object
     float now = static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 10.0);
     QMatrix4x4 matrix;
-    if (qFuzzyCompare(thing->getAngleX(), 0.0) == false) matrix.rotate(now * static_cast<float>(thing->getAngleX()), 1.f, 0.f, 0.f);
-    if (qFuzzyCompare(thing->getAngleY(), 0.0) == false) matrix.rotate(now * static_cast<float>(thing->getAngleY()), 0.f, 1.f, 0.f);
+    if (Dr::FuzzyCompare(thing->getAngleX(), 0.0) == false) matrix.rotate(now * static_cast<float>(thing->getAngleX()), 1.f, 0.f, 0.f);
+    if (Dr::FuzzyCompare(thing->getAngleY(), 0.0) == false) matrix.rotate(now * static_cast<float>(thing->getAngleY()), 0.f, 1.f, 0.f);
     matrix.rotate( static_cast<float>(thing->getAngle()), 0.0, 0.0, 1.0 );
     QVector3D top_right = matrix * QVector3D( half_width,  half_height, 0);
     QVector3D top_left =  matrix * QVector3D(-half_width,  half_height, 0);

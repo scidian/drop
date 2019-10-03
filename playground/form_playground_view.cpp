@@ -22,11 +22,11 @@
 //####################################################################################
 void FormPlayground::updateGraphicsView() {
     for (auto toy : m_playground->objects) {
-        if (qFuzzyCompare(toy->graphic->pos().x(),  toy->m_position.x()) == false ||
-            qFuzzyCompare(toy->graphic->pos().y(), -toy->m_position.y()) == false) {
+        if (Dr::FuzzyCompare(toy->graphic->pos().x(),  toy->m_position.x()) == false ||
+            Dr::FuzzyCompare(toy->graphic->pos().y(), -toy->m_position.y()) == false) {
             toy->graphic->setPos( QPointF(toy->m_position.x(), -toy->m_position.y()) );
         }
-        if (qFuzzyCompare(toy->graphic->rotation(), -toy->m_angle) == false ) {
+        if (Dr::FuzzyCompare(toy->graphic->rotation(), -toy->m_angle) == false ) {
             toy->graphic->setRotation( -toy->m_angle );
         }
     }

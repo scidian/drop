@@ -6,6 +6,7 @@
 //
 //
 #include "colors/colors.h"
+#include "debug.h"
 #include "helper.h"
 #include "helper_qt.h"
 #include "project.h"
@@ -136,6 +137,8 @@ void DrStage::initializeStageSettings(QString new_name) {
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
                            "Stage Name", "Name of the current stage.");
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::String, "",
+                           "Description", "Custom Advisor description for this item.");
 
     addComponent(Components::Stage_Settings, "Stage Settings", "Settings for current stage.", Component_Colors::White_Snow, true);
     getComponent(Components::Stage_Settings)->setIcon(Component_Icons::Settings);

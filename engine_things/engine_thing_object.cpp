@@ -128,16 +128,16 @@ bool DrEngineObject::update(double time_passed, double time_warp, QRectF &area) 
     }
 
 //    // ***** Update global friction and bounce to all objects if globals have changed (possibly due to Gameplay Action)
-//    if (qFuzzyCompare(object->getCustomFriction(), c_friction) == false) {
+//    if (Dr::FuzzyCompare(object->getCustomFriction(), c_friction) == false) {
 //        for (auto shape : object->shapes) {
 //            cpFloat friction = cpShapeGetFriction( shape );
-//            if (qFuzzyCompare(friction, m_friction) == false) cpShapeSetFriction( shape, m_friction );
+//            if (Dr::FuzzyCompare(friction, m_friction) == false) cpShapeSetFriction( shape, m_friction );
 //        }
 //    }
-//    if (qFuzzyCompare(object->getCustomBounce(), c_bounce) == false) {
+//    if (Dr::FuzzyCompare(object->getCustomBounce(), c_bounce) == false) {
 //        for (auto shape : object->shapes) {
 //            cpFloat bounce = cpShapeGetElasticity( shape );
-//            if (qFuzzyCompare(bounce, m_bounce) == false) cpShapeSetElasticity( shape, m_bounce );
+//            if (Dr::FuzzyCompare(bounce, m_bounce) == false) cpShapeSetElasticity( shape, m_bounce );
 //        }
 //    }
 

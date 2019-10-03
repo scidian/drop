@@ -142,6 +142,8 @@ namespace Advisor_Info {
                                                                   "to view / adjust properties for each item." };
 
     // Project Types
+    const HeaderBodyList Asset_Description      { "Asset", "This is an item that can be dragged into your project. Changing the properties "
+                                                           "of this item will affect all instances of this item project wide." };
     const HeaderBodyList World_Description      { "World", "A World is a container of Stages." };
     const HeaderBodyList Stage_Description      { "Stage", "A Stage is a container of Things." };
     const HeaderBodyList Camera_Thing           { "Camera", "This is a Camera. This will decide what the player sees." };

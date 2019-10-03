@@ -69,7 +69,7 @@ bool DrScene::shouldEnableResizeToGrid() {
 
     // Check that grid is squared
     QPointF current_view_grid_scale = m_editor_relay->currentViewGridScale();
-    if (qFuzzyCompare(current_view_grid_scale.x(), current_view_grid_scale.y()) == false) match_angle = false;
+    if (Dr::FuzzyCompare(current_view_grid_scale.x(), current_view_grid_scale.y()) == false) match_angle = false;
 
     return match_angle;
 }

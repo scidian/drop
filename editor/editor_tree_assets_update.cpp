@@ -70,6 +70,7 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
                             }
 
                             break;
+
                         default: ;
                     }
                 }

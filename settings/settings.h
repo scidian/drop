@@ -70,7 +70,13 @@ public:
 
 };
 
+
 #endif // DRSETTINGS_H
+
+
+
+
+
 
 
 

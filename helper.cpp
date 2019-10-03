@@ -56,10 +56,10 @@ bool IsSimilarAngle(double angle1, double angle2, double tolerance) {
 bool IsSquare(double check_angle) {
     check_angle = abs(check_angle);
     while (check_angle >= 360) check_angle -= 360;
-    if (qFuzzyCompare(check_angle, 0))   return true;
-    if (qFuzzyCompare(check_angle, 90))  return true;
-    if (qFuzzyCompare(check_angle, 180)) return true;
-    if (qFuzzyCompare(check_angle, 270)) return true;
+    if (Dr::FuzzyCompare(check_angle, 0.0))   return true;
+    if (Dr::FuzzyCompare(check_angle, 90.0))  return true;
+    if (Dr::FuzzyCompare(check_angle, 180.0)) return true;
+    if (Dr::FuzzyCompare(check_angle, 270.0)) return true;
     return false;
 }
 

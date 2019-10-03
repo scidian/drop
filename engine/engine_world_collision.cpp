@@ -49,7 +49,7 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     if (!object_a || !object_b) return cpTrue;
 
     // Temp cancel gravity on another object if colliding and should cancel it, also slow down object on contact
-    if ( qFuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false ) {
+    if ( Dr::FuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false ) {
         cpVect vel = cpBodyGetVelocity( object_a->body );
         cpBodySetVelocity( object_a->body, cpv(vel.x * c_speed_slowdown, vel.y * c_speed_slowdown) );
         object_a->setTempGravityMultiplier( object_b->getGravityMultiplier() );
@@ -78,7 +78,7 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     if ( object_a->isAlive() && object_a->isDying()) return cpTrue;                     // Don't deal damage while dying
     if (!object_a->isAlive()) return cpFalse;                                           // If object a is dead, cancel collision
     if (!object_b->isAlive()) return cpFalse;                                           // If object b is dead, cancel collision
-    if ( qFuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false )                // Temp cancel / reduce / increade gravity on another
+    if ( Dr::FuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false )             // Temp cancel / reduce / increade gravity on another
         object_a->setTempGravityMultiplier( object_b->getGravityMultiplier() );         //      object if colliding and should cancel / adjust it
     if (!object_a->doesDamage()) return cpTrue;                                         // Object does no damage, exit
 

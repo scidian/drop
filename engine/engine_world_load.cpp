@@ -159,16 +159,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     DrAsset    *asset = m_project->getAsset(asset_key);
     ThingInfo   info =      loadThingBasicInfo( thing );
 
-    // ***** Add the player to the cpSpace
-    DrEngineObject *player = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, asset_key, info.position.x, -info.position.y,
-                                                info.z_order, info.scale, c_friction, c_bounce, c_collide_true, true, info.angle, info.opacity);
-
-    loadThingCollisionShape(player);                                    // Load collision shape(s)
-    addThing(player);                                                   // Add to world
-
     // ***** Load Character Settings
-    assignPlayerControls(player, true, true, true);
-
     QPointF max_speed =     asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Max_Speed).toPointF();
     QPointF forced_speed =  asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Forced_Speed).toPointF();
     QPointF move_speed =    asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Move_Speed).toPointF();
@@ -183,6 +174,19 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     double  ground_drag =   asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Ground_Drag).toDouble();
     double  rotate_drag =   asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Rotation_Drag).toDouble();
 
+    bool    can_rotate =    asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Can_Rotate).toBool();
+    bool    feels_gravity = asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Feels_Gravity).toBool();
+
+    // ***** Add the player to the cpSpace
+    DrEngineObject *player = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, asset_key,
+                                                info.position.x, -info.position.y, info.z_order,
+                                                info.scale, c_friction, c_bounce,
+                                                c_collide_true, can_rotate, info.angle, info.opacity);
+    loadThingCollisionShape(player);                                    // Load collision shape(s)
+    addThing(player);                                                   // Add to world
+    assignPlayerControls(player, true, true, true);
+
+    // ***** Apply Character Settings
     player->setMaxSpeedX( max_speed.x() );
     player->setMaxSpeedY( max_speed.y() );
     player->setForcedSpeedX( forced_speed.x() );
@@ -201,14 +205,9 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     player->setGroundDrag( ground_drag );
     player->setRotateDrag( rotate_drag );
 
+    player->setIgnoreGravity( !feels_gravity );
 
-//    ball1->setHealth( 80.0 );
-//    ///ball1->setDeathTouch( true );
-//    ///ball1->setIgnoreGravity( true );
 
-//    assignPlayerControls(ball2, false, true, false);
-//    ball2->setRotateSpeed( 20.0 );
-//    m_cameras[ball2->getActiveCameraKey()]->setRotation( -25, -40, 0 );
 
 
 

@@ -132,7 +132,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
         DrAsset *asset = asset_pair.second;
         if (!asset) continue;
 
-        QString asset_name = asset_pair.second->getName();
+        QString asset_name = asset->getName();
         if (!asset_name.toLower().contains(search_text.toLower())) continue;
 
         QSize frame_size = QSize(100, 66);
@@ -142,7 +142,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
         // ***** Store current asset key in widget and install a mouse handler event filter on the item, DrFilterAssetMouseHandler
         QFrame *single_asset = new QFrame();
         single_asset->setObjectName("assetFrame");
-        single_asset->setProperty(User_Property::Key,        QVariant::fromValue( asset_pair.second->getKey() ));
+        single_asset->setProperty(User_Property::Key,        QVariant::fromValue( asset->getKey() ));
         single_asset->setProperty(User_Property::Mouse_Down, false);
         single_asset->installEventFilter(new DrFilterAssetMouseHandler(single_asset, m_editor_relay));
         single_asset->setFixedSize(frame_size);
@@ -170,25 +170,27 @@ void TreeAssets::buildAssetTree(QString search_text) {
         vertical_split->setMargin(0);
         vertical_split->setContentsMargins(0, 14, 0, 0);                    // Put some space at the top
             QPixmap pix;
-            switch (asset_pair.second->getAssetType()) {
+            QString description = asset->getComponentProperty(Components::Entity_Name, Properties::Entity_Description)->getValue().toString();
+            switch (asset->getAssetType()) {
                 case DrAssetType::Character:
-                    pix = asset_pair.second->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
-                    m_filter_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Character[1] );
+                    pix = asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
+                    if (description == "") description = Advisor_Info::Asset_Character[1];
                     break;
                 case DrAssetType::Object:
-                    pix = asset_pair.second->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
-                    m_filter_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Object[1] );
+                    pix = asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
+                    if (description == "") description = Advisor_Info::Asset_Object[1];
                     break;
                 case DrAssetType::Effect:
-                    pix = m_project->getDrEffect( asset_pair.second->getSourceKey() )->getPixmap();
-                    m_filter_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Effect[1] );
+                    pix = m_project->getDrEffect( asset->getSourceKey() )->getPixmap();
+                    if (description == "") description = Advisor_Info::Asset_Effect[1];
                     break;
                 case DrAssetType::Text:
-                    ///pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->getFontPixmap();
-                    pix = m_project->getDrFont( asset_pair.second->getSourceKey() )->createText( "Aa" );
-                    m_filter_hover->attachToHoverHandler(single_asset, asset_name, Advisor_Info::Asset_Text[1] );
+                    ///pix = m_project->getDrFont( asset->getSourceKey() )->getFontPixmap();
+                    pix = m_project->getDrFont( asset->getSourceKey() )->createText( "Aa" );
+                    if (description == "") description = Advisor_Info::Asset_Text[1];
                     break;
             }
+            m_filter_hover->attachToHoverHandler(single_asset, asset_name, description);
 
             QLabel *asset_pix = new QLabel(single_asset);
             asset_pix->setObjectName(QStringLiteral("assetPixmap"));
@@ -202,8 +204,8 @@ void TreeAssets::buildAssetTree(QString search_text) {
 
 
         // ***** Add widget to proper category            
-        grid_layouts[asset_pair.second->getAssetType()]->addWidget(single_asset);
-        category_buttons[asset_pair.second->getAssetType()]->setEnabled(true);
+        grid_layouts[asset->getAssetType()]->addWidget(single_asset);
+        category_buttons[asset->getAssetType()]->setEnabled(true);
 
         rowCount++;
     }

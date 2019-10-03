@@ -9,6 +9,7 @@
 
 #include "3rd_party/hullfinder.h"
 #include "3rd_party/polyline_simplification.h"
+#include "debug.h"
 #include "engine_mesh/engine_vertex_data.h"
 #include "helper.h"
 #include "imaging/imaging.h"
@@ -156,7 +157,9 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap,
     addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
-                           "Asset Name", "Name of the current Asset.");
+                           "Character Name", "Name of the current Character Asset.");
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::String, "",
+                           "Description", "Custom Advisor description for this item.");
 
     addComponent(Components::Asset_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::Mustard_Yellow, true);
     getComponent(Components::Asset_Settings_Character)->setIcon(Component_Icons::Character);
@@ -173,8 +176,8 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap,
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Timeout, Property_Type::Positive, 800,
                            "Jump Timeout", "Time, in milliseconds, Character should continue to gain jump force when jump button is held down.");
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Counter, Property_Type::Int, 1,
-                           "Jump Count", "Number of jumps character can make before having to touch the ground or wall. For unlimited jumps "
-                                         "use any negative number.");
+                           "Jump Count", "Number of jumps Character can make before having to touch the ground or wall. For unlimited jumps "
+                                         "use any negative number (like -1). A Jump Count of 0 disables jumping for this Character.");
 
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Air, Property_Type::Bool, true,
                            "Air Jump?", "Can this Character start jumping while falling in the air? (for example, if the Character fell off a platform)");
@@ -188,7 +191,10 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap,
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Rotation_Drag, Property_Type::PositiveDouble, 0.25,
                            "Rotate Drag", "Affects rotation acceleration and decceleration. Usually ranging from 0.0 to 1.0 or higher.");
 
-
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Can_Rotate, Property_Type::Bool, false,
+                           "Can Rotate?", "Can this character rotate (on z axis)? If not, rotation will be fixed.");
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Feels_Gravity, Property_Type::Bool, true,
+                           "Feels Gravity?", "Should this character be affected by gravity?");
 
 
 
@@ -208,7 +214,9 @@ void DrAsset::initializeAssetSettingsObject(QString new_name, QPixmap pixmap, Dr
     addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
-                           "Asset Name", "Name of the current Asset.");
+                           "Object Name", "Name of the current Object Asset.");
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::String, "",
+                           "Description", "Custom Advisor description for this item.");
 
     addComponent(Components::Asset_Collision, "Collision Settings", "Collision settings for current Object.", Component_Colors::White_Snow, true);
     getComponent(Components::Asset_Collision)->setIcon(Component_Icons::Settings);
@@ -226,7 +234,9 @@ void DrAsset::initializeAssetSettingsEffect(QString new_name) {
     addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
-                           "Asset Name", "Name of the current Asset.", false, false);
+                           "Effect Name", "Name of the current Effect Asset.", false, false);
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::String, "",
+                           "Description", "Custom Advisor description for this item.");
 }
 
 
@@ -234,7 +244,9 @@ void DrAsset::initializeAssetSettingsFont(DrFont *font) {
     addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, font->getName(),
-                           "Asset Name", "Name of the current Asset.");
+                           "Font Name", "Name of the current Font Asset.");
+    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::String, "",
+                           "Description", "Custom Advisor description for this item.");
 
     addComponent(Components::Asset_Settings_Font, "Font Settings", "Font settings for this Text Asset.", Component_Colors::Orange_Medium, true);
     getComponent(Components::Asset_Settings_Font)->setIcon(Component_Icons::Font);

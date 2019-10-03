@@ -3,6 +3,7 @@
 //
 //
 //
+#include "helper.h"
 #include "hullfinder.h"
 #include "types/pointf.h"
 
@@ -95,7 +96,7 @@ QVector<DrPointF> HullFinder::FindConvexHull(const QVector<DrPointF> &DrPointFs)
     // Sort P by x and y
     for (int i = 0; i < P.size(); i++) {
         for (int j = i + 1; j < P.size(); j++) {
-            if (P[j].x < P[i].x || (qFuzzyCompare(P[j].x, P[i].x) && P[j].y < P[i].y)) {
+            if (P[j].x < P[i].x || (Dr::FuzzyCompare(P[j].x, P[i].x) && P[j].y < P[i].y)) {
                 DrPointF tmp = P[i];
                 P[i] = P[j];
                 P[j] = tmp;
@@ -104,19 +105,19 @@ QVector<DrPointF> HullFinder::FindConvexHull(const QVector<DrPointF> &DrPointFs)
     }
 
     // the output array H[] will be used as the stack
-    int i;                              // array scan index
+    int i;                                                              // array scan index
 
     // Get the indices of Points with min x-coord and min|max y-coord
     int minmin = 0, minmax;
     double xmin = P[0].x;
     for (i = 1; i < P.size(); i++)
-        if (qFuzzyCompare(P[i].x, xmin) == false) break;
+        if (Dr::FuzzyCompare(P[i].x, xmin) == false) break;
     minmax = i - 1;
-    if (minmax == P.size() - 1) {       // degenerate case: all x-coords == xmin
+    if (minmax == P.size() - 1) {                                       // degenerate case: all x-coords == xmin
         H.push_back(P[minmin]);
-        if (qFuzzyCompare(P[minmax].y, P[minmin].y) == false) // a  nontrivial segment
+        if (Dr::FuzzyCompare(P[minmax].y, P[minmin].y) == false)        // a nontrivial segment
             H.push_back(P[minmax]);
-        H.push_back(P[minmin]);         // add polygon end point
+        H.push_back(P[minmin]);                                         // add polygon end point
         return H;
     }
 
@@ -124,7 +125,7 @@ QVector<DrPointF> HullFinder::FindConvexHull(const QVector<DrPointF> &DrPointFs)
     int maxmin, maxmax = P.size() - 1;
     double xmax = P.last().x;
     for (i = P.size() - 2; i >= 0; i--)
-        if (qFuzzyCompare(P[i].x, xmax) == false) break;
+        if (Dr::FuzzyCompare(P[i].x, xmax) == false) break;
     maxmin = i+1;
 
     // Compute the lower hull on the stack H
