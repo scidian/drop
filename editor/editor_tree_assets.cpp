@@ -170,7 +170,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
         vertical_split->setMargin(0);
         vertical_split->setContentsMargins(0, 14, 0, 0);                    // Put some space at the top
             QPixmap pix;
-            QString description = asset->getComponentProperty(Components::Entity_Name, Properties::Entity_Description)->getValue().toString();
+            QString description = asset->getComponentProperty(Components::Hidden_Settings, Properties::Hidden_Advisor_Description)->getValue().toString();
             switch (asset->getAssetType()) {
                 case DrAssetType::Character:
                     pix = asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();

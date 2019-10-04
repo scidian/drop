@@ -22,13 +22,17 @@ typedef std::map<long, DrComponent*> ComponentMap;
 
 //####################################################################################
 //##    DrComponent
-//##        Class to hold a component for all Project objects
+//##        Class to hold a component for all Project Entities
 //############################
 class DrSettings
 {
 private:
     ComponentMap m_components;                      // Map of pointers to DrComponent classes
     long         m_key;                             // Holds unique key for each object with a base class DrSettings
+
+    long         m_is_visible;                      // Should this be visible in editor
+    long         m_is_locked;
+
 
 protected:       // so derived classes can access
     void         setKey (long new_key) { m_key = new_key; }
@@ -40,33 +44,41 @@ public:
 
 
     // Getters and Setters
-    long            getKey()            { return m_key; }
-    virtual DrType  getType()           { return DrType::BaseClass; }       // Returns different types depending on reimplementation in child class
+    long            getKey()                { return m_key; }
+    virtual DrType  getType()               { return DrType::BaseClass; }       // Returns different types depending on reimplementation in child class
 
-    DrSettings*  getSettings()          { return this; }
+    DrSettings*     getSettings()           { return this; }
+    QString         getName();                                                  // Returns Name from shared "Entity_Name" component
 
-    QString      getName();
+    bool            isLocked()                  { return m_is_locked; }
+    bool            isVisible()                 { return m_is_visible; }
+    void            setLocked(bool locked)      { m_is_locked = locked; }
+    void            setVisible(bool visible)    { m_is_visible = visible; }
 
-    ComponentMap getComponentList()     { return m_components; }
-    long         getComponentCount()    { return static_cast<int>(m_components.size()); }
 
-    DrComponent* getComponent(long component)               { return m_components[component]; }
-    DrComponent* getComponent(Components component)         { return m_components[static_cast<long>(component)]; }
-    DrProperty*  getComponentProperty(long component, long property);
-    DrProperty*  getComponentProperty(Components component, Properties property);
-    QVariant     getComponentPropertyValue(long component, long property);
-    QVariant     getComponentPropertyValue(Components component, Properties property);
+    // Component Handling
+    ComponentMap    getComponentList()                  { return m_components; }
+    long            getComponentCount()                 { return static_cast<int>(m_components.size()); }
 
-    void         setComponentPropertyValue(long component, long property, QVariant value);
-    void         setComponentPropertyValue(Components component, Properties property, QVariant value);
+    DrComponent*    getComponent(long component)        { return m_components[component]; }
+    DrComponent*    getComponent(Components component)  { return m_components[static_cast<long>(component)]; }
+    DrProperty*     getComponentProperty(long component, long property);
+    DrProperty*     getComponentProperty(Components component, Properties property);
+    QVariant        getComponentPropertyValue(long component, long property);
+    QVariant        getComponentPropertyValue(Components component, Properties property);
 
-    // Function Calls
-    DrComponent* findComponentFromPropertyKey(long property_key_to_find);
-    DrProperty*  findPropertyFromPropertyKey(long property_key_to_find);
+    void            setComponentPropertyValue(long component, long property, QVariant value);
+    void            setComponentPropertyValue(Components component, Properties property, QVariant value);
 
-    void         addComponent(Components component, QString display_name, QString description, QColor color, bool is_turned_on);
-    void         addPropertyToComponent(Components component, Properties property_number, Property_Type type, QVariant value,
-                                QString display_name, QString description, bool is_hidden = false, bool is_editable = true);
+    // Component / Property Searching
+    DrComponent*    findComponentFromPropertyKey(long property_key_to_find);
+    DrProperty*     findPropertyFromPropertyKey(long property_key_to_find);
+
+    // Component / Property Building
+    void            addComponent(Components component, QString display_name, QString description, QColor color, bool is_turned_on);
+    void            addPropertyToComponent(Components component, Properties property_number, Property_Type type, QVariant value,
+                                           QString display_name, QString description, bool is_hidden = false, bool is_editable = true);
+    void            addComponentHiddenSettings();
 
 };
 

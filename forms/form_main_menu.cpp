@@ -163,42 +163,42 @@ void FormMain::buildMenu() {
         menuDebug = new QMenu(menuBar);
         menuDebug->setObjectName(QStringLiteral("menuDebug"));
 
-        QAction *actionToggleDescriptions, *actionListChildren;
-        actionToggleDescriptions =  new QAction(this); actionToggleDescriptions->setObjectName(QStringLiteral("actionToggleDescriptions"));
-        actionListChildren =        new QAction(this); actionListChildren->setObjectName(QStringLiteral("actionListChildren"));
+        QAction *actionHidden, *actionListChildren;
+        actionHidden =          new QAction(this); actionHidden->setObjectName(QStringLiteral("actionToggleDescriptions"));
+        actionListChildren =    new QAction(this); actionListChildren->setObjectName(QStringLiteral("actionListChildren"));
 
         menuBar->addAction(menuDebug->menuAction());
-        menuDebug->addAction(actionToggleDescriptions);
+        menuDebug->addAction(actionHidden);
         menuDebug->addAction(actionListChildren);
 
-        actionToggleDescriptions->setCheckable(true);
-        actionToggleDescriptions->setChecked( Dr::CheckDebugFlag(Debug_Flags::Show_Custom_Descriptions) );
+        actionHidden->setCheckable(true);
+        actionHidden->setChecked( Dr::CheckDebugFlag(Debug_Flags::Show_Custom_Descriptions) );
 
-        connect(actionToggleDescriptions, &QAction::triggered, []() { Dr::FlipDebugFlag(Debug_Flags::Show_Custom_Descriptions); });
+        connect(actionHidden, &QAction::triggered, []() { Dr::FlipDebugFlag(Debug_Flags::Show_Custom_Descriptions); });
         connect(actionListChildren, &QAction::triggered, [this]() { this->menuListChildren(); });
 
-        menuDebug->setTitle(QApplication::translate("MainWindow", "Debug", nullptr));
-        actionToggleDescriptions->setText(QApplication::translate("MainWindow", "Show Custom Descriptions", nullptr));
-        actionListChildren->setText(QApplication::translate("MainWindow", "List Children", nullptr));
+        menuDebug->setTitle(QApplication::translate("MainWindow",       "Debug", nullptr));
+        actionHidden->setText(QApplication::translate("MainWindow",         "Show Hidden Droplet Properties", nullptr));
+        actionListChildren->setText(QApplication::translate("MainWindow",   "List FormMain Children Widgets", nullptr));
     }
     // !!!!!
 
     // ***** Set menu titles and sub menu texts
-    menuFile->setTitle(QApplication::translate("MainWindow", "&File", nullptr));
-    actionExit->setText(QApplication::translate("MainWindow", "E&xit", nullptr));
+    menuFile->setTitle(QApplication::translate("MainWindow",            "&File", nullptr));
+    actionExit->setText(QApplication::translate("MainWindow",               "E&xit", nullptr));
 
-    menuEdit->setTitle(QApplication::translate("MainWindow", "&Edit", nullptr));
-    actionUndo->setText(QApplication::translate("MainWindow", "&Undo", nullptr));
-    actionRedo->setText(QApplication::translate("MainWindow", "&Redo", nullptr));
+    menuEdit->setTitle(QApplication::translate("MainWindow",            "&Edit", nullptr));
+    actionUndo->setText(QApplication::translate("MainWindow",               "&Undo", nullptr));
+    actionRedo->setText(QApplication::translate("MainWindow",               "&Redo", nullptr));
 
-    menuColor_Schemes->setTitle(QApplication::translate("MainWindow", "Color Schemes", nullptr));
-    actionDark->setText(QApplication::translate("MainWindow", "Dark", nullptr));
-    actionLight->setText(QApplication::translate("MainWindow", "Light", nullptr));
-    actionBlue->setText(QApplication::translate("MainWindow", "Blue", nullptr));
-    actionAutumn->setText(QApplication::translate("MainWindow", "Autumn", nullptr));
+    menuColor_Schemes->setTitle(QApplication::translate("MainWindow",   "Color Schemes", nullptr));
+    actionDark->setText(QApplication::translate("MainWindow",               "Dark", nullptr));
+    actionLight->setText(QApplication::translate("MainWindow",              "Light", nullptr));
+    actionBlue->setText(QApplication::translate("MainWindow",               "Blue", nullptr));
+    actionAutumn->setText(QApplication::translate("MainWindow",             "Autumn", nullptr));
 
-    menuHelp->setTitle(QApplication::translate("MainWindow", "&Help", nullptr));
-    actionAbout->setText(QApplication::translate("MainWindow", "&About", nullptr));
+    menuHelp->setTitle(QApplication::translate("MainWindow",            "&Help", nullptr));
+    actionAbout->setText(QApplication::translate("MainWindow",              "&About", nullptr));
 
     this->setMenuBar(menuBar);
 }

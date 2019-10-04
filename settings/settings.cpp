@@ -18,7 +18,7 @@
 //##    Constructor, Destructor
 //####################################################################################
 DrSettings::DrSettings() {
-
+    addComponentHiddenSettings();
 }
 
 DrSettings::~DrSettings() {
@@ -53,7 +53,7 @@ DrProperty* DrSettings::getComponentProperty(long component, long property) {
 }
 
 
-
+// Returns Name from shared "Entity_Name" component
 QString DrSettings::getName() {
     DrComponent *name_component;
     DrProperty  *name_property;
@@ -105,6 +105,15 @@ void DrSettings::addPropertyToComponent(Components component, Properties propert
     m_components[static_cast<long>(component)]->addProperty(property_number, type, value, display_name, description, is_hidden, is_editable);
 }
 
+void DrSettings::addComponentHiddenSettings() {
+    addComponent(Components::Hidden_Settings, "Hidden Settings", "Custom hidden entity properties for Droplets.", Component_Colors::Purple_Royal, true);
+    getComponent(Components::Hidden_Settings)->setIcon(Component_Icons::Hidden);
+    addPropertyToComponent(Components::Hidden_Settings, Properties::Hidden_Advisor_Description, Property_Type::Textbox, "",
+                           "Description", "Custom Advisor description for this item.");
+    addPropertyToComponent(Components::Hidden_Settings, Properties::Hidden_Item_Locked, Property_Type::Bool, false,
+                           "Locked?", "Can this item be moved?");
+
+}
 
 
 

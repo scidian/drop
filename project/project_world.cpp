@@ -24,7 +24,8 @@ DrWorld::DrWorld(DrProject *parent_project, long new_world_key, QString new_worl
 
     initializeWorldSettings(new_world_name);
 
-    addStage();         // Adds the initial "Start Stage"
+    m_start_stage_key = addStage();                         // Adds the initial "Start Stage"
+    m_last_stage_shown_in_editor = m_start_stage_key;
 }
 
 DrWorld::~DrWorld() {
@@ -32,21 +33,19 @@ DrWorld::~DrWorld() {
 }
 
 // Adds a Stage to the map container, assins name based on current stage count
-void DrWorld::addStage(QString new_stage_name) {
-    if (new_stage_name == "") {
-        new_stage_name = QString::number(static_cast<long>(m_stages.size() + 1));
-    }
-
-    long new_stage_key = m_parent_project->getNextKey();
+long DrWorld::addStage(QString new_stage_name) {
     bool need_start_stage = false;
     if (m_stages.size() < 1) {
         need_start_stage = true;
         new_stage_name = "Start Stage";
+    } else if (new_stage_name == "") {
+        new_stage_name = QString::number(static_cast<long>(m_stages.size() + 1));
     }
 
+    long new_stage_key = m_parent_project->getNextKey();
+
     m_stages[new_stage_key] = new DrStage(m_parent_project, this, new_stage_key, new_stage_name, need_start_stage);    
-
-
+    return new_stage_key;
 }
 
 
@@ -83,8 +82,6 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
                            "World Name", "Name of the current world.");
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Description, Property_Type::Textbox, "",
-                           "Description", "Custom Advisor description for this item.");
 
     addComponent(Components::World_Settings, "World Settings", "Settings for current world.", Component_Colors::White_Snow, true);
     getComponent(Components::World_Settings)->setIcon(Component_Icons::Settings);

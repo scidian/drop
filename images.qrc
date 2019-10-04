@@ -161,5 +161,6 @@
         <file>assets/test_images/donut.png</file>
         <file>assets/test_images/shapes2.png</file>
         <file>assets/test_images/dragon.png</file>
+        <file>assets/inspector_icons/comp_hidden.png</file>
     </qresource>
 </RCC>

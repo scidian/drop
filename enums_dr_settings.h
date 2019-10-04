@@ -60,6 +60,7 @@ enum class Components {
 
     // ***** General Components
     Entity_Name,
+    Hidden_Settings,
 
 
     // ***** DrAsset Components
@@ -115,7 +116,11 @@ enum class Properties {
 
     // ******************** General Entity Properties
     Entity_Name,
-    Entity_Description,
+
+
+    // ******************** Hidden Properties, for Droplets
+    Hidden_Advisor_Description,             // string, html capable textbox
+    Hidden_Item_Locked,                     // bool
 
 
     // ******************** DrAsset Component Properties

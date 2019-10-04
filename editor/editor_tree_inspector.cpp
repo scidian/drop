@@ -126,10 +126,17 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
     m_widgets.clear();
 
     for (auto component_pair: list_components) {
+        DrComponent *component = component_pair.second;
+
+        if (component->isTurnedOn() == false) {
+            continue;
+        } else if (component->getComponentKey() == Dr::EnumToInt(Components::Hidden_Settings)) {
+            if (Dr::CheckDebugFlag(Debug_Flags::Show_Custom_Descriptions) == false) continue;
+        }
 
         // *****Create new item in list to hold component and add the TreeWidgetItem to the tree
         QTreeWidgetItem *category_item = new QTreeWidgetItem();
-        category_item->setData(0, User_Roles::Key, QVariant::fromValue(component_pair.second->getComponentKey()));      // Stores component key
+        category_item->setData(0, User_Roles::Key, QVariant::fromValue(component->getComponentKey()));      // Stores component key
         this->addTopLevelItem(category_item);
 
         // Create and style a button to be used as a header item for the category
@@ -137,11 +144,11 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
         QGridLayout *grid = new QGridLayout(button_frame);
         grid->setContentsMargins(0, 0, 0, 0);
 
-        if (component_pair.second->getComponentKey() == Dr::EnumToInt(Components::Entity_Name)) {
+        if (component->getComponentKey() == Dr::EnumToInt(Components::Entity_Name)) {
             // Make it really small but not zero to hide category button for Name, zero causes scroll bar to stop working for some reason
             category_item->setSizeHint(0, QSize(1, 1));
         } else {
-            DrQPushButtonCategory *category_button = new DrQPushButtonCategory(QString(" ") + component_pair.second->getDisplayNameQString(),
+            DrQPushButtonCategory *category_button = new DrQPushButtonCategory(QString(" ") + component->getDisplayNameQString(),
                                                                  Qt::black, Qt::black, nullptr, category_item);
             QString button_style;
             button_style = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: black; "
@@ -152,18 +159,18 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
                                                         " border-bottom-width: " + Dr::BorderWidth() + "; "
                                                         " border-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
                                                         " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
-                                                        "   stop:0.00 " + component_pair.second->getColor().lighter(120).name() +
-                                                        "   stop:0.05 " + component_pair.second->getColor().lighter(120).name() +
-                                                        "   stop:0.10 " + component_pair.second->getColor().name() +
-                                                        " , stop:0.90 " + component_pair.second->getColor().darker(200).name() +
-                                                        " , stop:0.95 " + component_pair.second->getColor().darker(300).name() +
-                                                        " , stop:1.00 " + component_pair.second->getColor().darker(300).name() + "); } "
-                                          " QPushButton:hover:!pressed { color: " + component_pair.second->getColor().lighter(200).name() + "; } "
-                                          " QPushButton:pressed { color: " + component_pair.second->getColor().darker(250).name() + "; } ");
+                                                        "   stop:0.00 " + component->getColor().lighter(120).name() +
+                                                        "   stop:0.05 " + component->getColor().lighter(120).name() +
+                                                        "   stop:0.10 " + component->getColor().name() +
+                                                        " , stop:0.90 " + component->getColor().darker(200).name() +
+                                                        " , stop:0.95 " + component->getColor().darker(300).name() +
+                                                        " , stop:1.00 " + component->getColor().darker(300).name() + "); } "
+                                          " QPushButton:hover:!pressed { color: " + component->getColor().lighter(200).name() + "; } "
+                                          " QPushButton:pressed { color: " + component->getColor().darker(250).name() + "; } ");
             // Apply the button widget to the tree item
-            category_button->setIcon(QIcon(component_pair.second->getIcon()));
+            category_button->setIcon(QIcon(component->getIcon()));
             category_button->setStyleSheet(button_style);
-            m_filter_hover->attachToHoverHandler(category_button, component_pair.second->getDisplayName(), component_pair.second->getDescription());
+            m_filter_hover->attachToHoverHandler(category_button, component->getDisplayName(), component->getDescription());
             grid->addWidget(category_button);
         }
         this->setItemWidget(category_item, 0, button_frame);
@@ -178,12 +185,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
         vertical_layout->setContentsMargins(6,4,8,4);
 
         // Loop through each property and add it to the component frame
-        for (auto property_pair: component_pair.second->getPropertyList()) {
+        for (auto property_pair: component->getPropertyList()) {
             if (property_pair.second->isHidden()) continue;
-
-            if (property_pair.second->getPropertyKey() == Dr::EnumToInt(Properties::Entity_Description)) {
-                if (Dr::CheckDebugFlag(Debug_Flags::Show_Custom_Descriptions) == false) continue;
-            }
 
             QFrame *single_row = new QFrame(properties_frame);
             QBoxLayout *horizontal_split = new QHBoxLayout(single_row);

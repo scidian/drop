@@ -27,10 +27,14 @@ class DrWorld : public DrSettings
 {
 private:
     // External Borrowed Pointers
-    DrProject  *m_parent_project;                           // Holds reference to parent Project class that handles key generation for project
+    DrProject  *m_parent_project;                       // Holds reference to parent Project class that handles key generation for project
 
     // Local variables
-    StageMap    m_stages;                                   // Map of pointers to DrStage classes       (holds the stages for current world)   
+    StageMap    m_stages;                               // Map of pointers to DrStage classes       (holds the stages for current world)
+
+    long        m_start_stage_key;                      // Stores key of StartStage for this World
+    long        m_last_stage_shown_in_editor;           // Last Stage shown in editor when this World was selected, set to StartStage on creation
+
 
 public:
     // Constructor & Destructor
@@ -39,13 +43,19 @@ public:
 
 
     // Getters and Setters
-    virtual DrType  getType() override  { return DrType::World; }
-    DrProject*      getParentProject()  { return m_parent_project; }
-    StageMap&       getStageMap()       { return m_stages; }
+    virtual DrType  getType() override                  { return DrType::World; }
+    DrProject*      getParentProject()                  { return m_parent_project; }
+    StageMap&       getStageMap()                       { return m_stages; }
+
+    long            getLastStageShownKey()              { return m_last_stage_shown_in_editor; }
+    long            getStartStageKey()                  { return m_start_stage_key; }
+
+    void            setLastStageShownKey(long stage)    { m_last_stage_shown_in_editor = stage; }
+    void            setStartStageKey(long stage)        { m_start_stage_key = stage; }
 
 
     // Function Calls
-    void        addStage(QString new_stage_name = "");
+    long        addStage(QString new_stage_name = "");
     void        initializeWorldSettings(QString new_name);
 
     long        getFirstStageKey();

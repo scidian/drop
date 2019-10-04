@@ -59,7 +59,7 @@ private:
     OptionMap   m_options;                              // Map holding DrProject Wide options
 
     // **********
-    //      Every Item In These Projects Maps:
+    //      Every Item In These Project Maps is called an Entity and:
     //          - Inherit DrSettings for DrComponent / DrProperty usage
     //          - Is assigned an unique key upon creation from DrProject::getNextKey()
     //

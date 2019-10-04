@@ -117,7 +117,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
 
     // Store some initial user data
     setData(User_Roles::Name, m_asset->getName() );
-    QString description = m_thing->getComponentPropertyValue(Components::Entity_Name, Properties::Entity_Description).toString();
+    QString description = m_thing->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Advisor_Description).toString();
     if (description == "") description = Dr::StringFromThingType( m_thing->getThingType() );
     setData(User_Roles::Type, description);
     setData(User_Roles::Key, QVariant::fromValue(m_thing_key));

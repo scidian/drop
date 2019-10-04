@@ -43,14 +43,20 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
         //******************************************************
 
         // Call to undo command to change scene to newly selected Stage or newly selected thing's parent Stage
-        DrSettings *selected_item = m_project->findSettingsFromKey(selected_key);
-        if (selected_item != nullptr) {
-            DrType selected_type = selected_item->getType();
+        DrSettings *selected_entity = m_project->findSettingsFromKey(selected_key);
+        if (selected_entity != nullptr) {
+            DrType selected_type = selected_entity->getType();
             long change_to_key = c_no_key;
-            if (selected_type == DrType::Stage || selected_type == DrType::StartStage) {
+            if (selected_type == DrType::World) {
+                DrWorld *world = dynamic_cast<DrWorld*>(selected_entity);
+                change_to_key = world->getLastStageShownKey();
+                DrSettings *check_for_stage = m_project->findSettingsFromKey(change_to_key);
+                if (check_for_stage == nullptr) change_to_key = world->getStartStageKey();
+
+            } else if (selected_type == DrType::Stage || selected_type == DrType::StartStage) {
                 change_to_key = selected_key;
             } else if (selected_type == DrType::Thing) {
-                DrThing *as_thing = dynamic_cast<DrThing*>(selected_item);
+                DrThing *as_thing = dynamic_cast<DrThing*>(selected_entity);
                 change_to_key = as_thing->getParentStage()->getKey();
             }
             if (change_to_key != c_no_key) {

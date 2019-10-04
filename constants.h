@@ -54,6 +54,7 @@ namespace Component_Icons {
     // General Components
     const QString None          { QString("") };
     const QString Name          { QString(":/assets/inspector_icons/comp_name.png") };
+    const QString Hidden        { QString(":/assets/inspector_icons/comp_hidden.png") };
     const QString Settings      { QString(":/assets/inspector_icons/comp_settings.png") };
     const QString Physics       { QString(":/assets/inspector_icons/comp_physics.png") };
     const QString Transform     { QString(":/assets/inspector_icons/comp_transform.png") };

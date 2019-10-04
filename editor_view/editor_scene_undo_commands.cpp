@@ -88,12 +88,13 @@ QString UndoCommandChangeStage::changeStage(long old_stage, long new_stage, bool
     if (from_stage == nullptr) {
         return "Redo Select Stage " + displayed->getName();
     }
+    from_stage->getParentWorld()->setLastStageShownKey(new_stage);
 
     // Calculate new scene and view rects, clear scene and set sizes
     QRectF new_scene_rect(-1000, -1000, 2000, 2000);
     QRectF new_view_rect( -4000, -4000, 8000, 8000);
-    QPointF adjust;
 
+    QPointF adjust;
     switch (m_project->getOptionOrientation()) {
         case Orientation::Portrait:     adjust = QPointF(400, -800);    break;
         case Orientation::Landscape:    adjust = QPointF(800, -400);    break;

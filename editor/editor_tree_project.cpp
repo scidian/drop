@@ -32,34 +32,36 @@ void TreeProject::buildProjectTree() {
     setAllowSelectionEvent(false);
     this->clear();
 
-    for (auto world_pair: m_project->getWorldMap())
-    {
+    for (auto world_pair: m_project->getWorldMap()) {
+
         QTreeWidgetItem *world_item = new QTreeWidgetItem(this);                                            // Create new item (top level item)
 
+        DrWorld *world = world_pair.second;
         world_item->setIcon(0, QIcon(":/assets/tree_icons/tree_world.png"));                                // Loads icon for world
-        world_item->setText(0, "World: " + world_pair.second->getName());                                   // Set text for item
-        world_item->setData(0, User_Roles::Key, QVariant::fromValue(world_pair.second->getKey()));
+        world_item->setText(0, "World: " + world->getName());                                               // Set text for item
+        world_item->setData(0, User_Roles::Key, QVariant::fromValue(world->getKey()));
         this->addTopLevelItem(world_item);                                                                  // Add it on our tree as the top item.
 
-        for (auto stage_pair: world_pair.second->getStageMap())
-        {
+        for (auto stage_pair: world->getStageMap()) {
+
             QTreeWidgetItem *stage_item = new QTreeWidgetItem(world_item);                                  // Create new item and add as child item
+
+            DrStage *stage = stage_pair.second;
             stage_item->setIcon(0, QIcon(":/assets/tree_icons/tree_stage.png"));                            // Loads icon for stage
-            stage_item->setText(0, "Stage: " + stage_pair.second->getName());                               // Set text for item
-            stage_item->setData(0, User_Roles::Key, QVariant::fromValue(stage_pair.second->getKey()));
+            stage_item->setText(0, "Stage: " + stage->getName());                                           // Set text for item
+            stage_item->setData(0, User_Roles::Key, QVariant::fromValue(stage->getKey()));
 
 
             // ***** Iterates through Things based on z-order of each Thing
-            ThingMap &things = stage_pair.second->getThingMap();
-            QList<long> keys = stage_pair.second->thingKeysSortedByZOrder();
-            for (auto key: keys)
-            {
+            ThingMap &things = stage->getThingMap();
+            QList<long> keys = stage->thingKeysSortedByZOrder();
+
+            for (auto key: keys) {
                 DrThing *thing = things[key];
 
                 QTreeWidgetItem *thing_item = new QTreeWidgetItem(stage_item);                             // Create new item and add as child item
                 switch (thing->getThingType()) {
                     case DrThingType::None:      Dr::ShowErrorMessage("buildProjectTree", "No Icon for DrThingType::None");     break;
-                    ///case DrThingType::Camera:    thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_camera.png"));       break;
                     case DrThingType::Character: thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_character.png"));       break;
                     case DrThingType::Object:    thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_object.png"));          break;
                     case DrThingType::Text:      thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_text.png"));            break;
@@ -78,24 +80,23 @@ void TreeProject::buildProjectTree() {
 
                 // Add lock box
                 QString check_images = QString(" QCheckBox::indicator { width: 12px; height: 12px; }"
-                                               " QCheckBox::indicator:checked { image: url(:/assets/tree_icons/tree_lock.png); }"
+                                               " QCheckBox::indicator:checked {   image: url(:/assets/tree_icons/tree_lock.png); }"
                                                " QCheckBox::indicator:unchecked { image: url(:/assets/tree_icons/tree_bullet.png); }");
                 QCheckBox *lock_item = new QCheckBox();
                 lock_item->setFocusPolicy(Qt::FocusPolicy::NoFocus);
                 lock_item->setStyleSheet(check_images);
                 this->setItemWidget(thing_item, 1, lock_item);
-
             }
         }
     }
+
     this->expandAll();                                             // Expand all items
     this->update();
     setAllowSelectionEvent(true);
 }
 
 // Handles changing the Advisor on Mouse Enter
-void TreeProject::enterEvent(QEvent *event)
-{
+void TreeProject::enterEvent(QEvent *event) {
     m_editor_relay->setAdvisorInfo(Advisor_Info::Project_Tree);
     QTreeWidget::enterEvent(event);
 }
@@ -112,7 +113,7 @@ QList <QTreeWidgetItem*> TreeProject::getListOfAllTreeWidgetItems() {
 QList <QTreeWidgetItem*> TreeProject::getListOfChildrenFromItem( QTreeWidgetItem *item ) {
     QList <QTreeWidgetItem*> items;
 
-    for( int i = 0; i < item->childCount(); ++i ) {
+    for (int i = 0; i < item->childCount(); ++i) {
         items.append( item->child(i) );
         items.append( getListOfChildrenFromItem( item->child(i) ) );
     }
