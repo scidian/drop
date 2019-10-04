@@ -30,14 +30,7 @@ void DrScene::selectionChanged() {
 
     // Don't allow selection if locked
     blockSignals(true);
-    for (auto item : selectedItems()) {
-        long item_key = item->data(User_Roles::Key).toLongLong();
-        DrSettings *settings = m_project->findSettingsFromKey(item_key);
-        if (settings == nullptr)  continue;
-        if (settings->isLocked()) {
-            item->setSelected(false);
-        }
-    }
+    unselectLockedItems();
     blockSignals(false);
 
     // If selection hasnt changed, return
@@ -49,8 +42,9 @@ void DrScene::selectionChanged() {
     // Pass on selection changes
     if (m_editor_relay) {
         QList<long> item_keys { };
-        for (auto item : selectedItems())
+        for (auto item : selectedItems()) {
             item_keys.append(item->data(User_Roles::Key).toLongLong());
+        }
 
         m_editor_relay->buildInspector(item_keys);
         m_editor_relay->updateItemSelection(Editor_Widgets::Scene_View);
@@ -216,6 +210,20 @@ void DrScene::updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list) 
 }
 
 
+//####################################################################################
+//##    Unselects all locked items that may have been selected
+//####################################################################################
+void DrScene::unselectLockedItems() {
+    // Turn off signals to stop recurssive calling of interface_relay->updateItemSelection()
+    for (auto item : selectedItems()) {
+        long item_key = item->data(User_Roles::Key).toLongLong();
+        DrSettings *settings = m_project->findSettingsFromKey(item_key);
+        if (settings == nullptr)  continue;
+        if (settings->isLocked()) {
+            item->setSelected(false);
+        }
+    }
+}
 
 
 

@@ -121,6 +121,12 @@ void FormMain::updateInspectorEnabledProperties() {
     treeInspector->updateLockedSettings();
 };
 
+void FormMain::updateItemChanges(Editor_Widgets selected_from) {
+    if (selected_from != Editor_Widgets::Scene_View) {
+        sceneEditor->unselectLockedItems();
+    }
+}
+
 
 
 DrProject* FormMain::currentProject() { return m_project; }

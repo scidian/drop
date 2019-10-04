@@ -92,32 +92,38 @@ void DrView::mousePressEvent(QMouseEvent *event) {
             if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
 
                 if (m_origin_item != nullptr) {
+                    long item_key = m_origin_item->data(User_Roles::Key).toLongLong();
+                    DrSettings *settings = m_project->findSettingsFromKey(item_key);
+                    if (settings != nullptr) {
 
-                    // ***** If we clicked clicked a new item, set selection group to that
-                    if (my_scene->getSelectionItems().contains(m_origin_item) == false) {
-                        my_scene->clearSelection();
-                        m_origin_item->setSelected(true);
+                        // ***** If we clicked clicked a new item, set selection group to that
+                        if (my_scene->getSelectionItems().contains(m_origin_item) == false) {
+                            my_scene->clearSelection();
+                            m_origin_item->setSelected(true);
 
-                    } else {
-                        m_editor_relay->buildInspector( { static_cast<long>(m_origin_item->data(User_Roles::Key).toLongLong()) } );
-                    }
+                        } else {
+                            m_editor_relay->buildInspector( { static_cast<long>(m_origin_item->data(User_Roles::Key).toLongLong()) } );
+                        }
 
-                    // ***** Process press event for item movement (Translation)
-                    // Make sure item is on top before firing QGraphicsView event so we start translating properly
-                    double original_z = m_origin_item->zValue();
-                    m_origin_item->setZValue(999999999999);
-                    QGraphicsView::mousePressEvent(event);
-                    m_origin_item->setZValue(original_z);
+                        // ***** Process press event for item movement (Translation)
+                        if (settings->isLocked() == false) {
+                            // Make sure item is on top before firing QGraphicsView event so we start translating properly
+                            double original_z = m_origin_item->zValue();
+                            m_origin_item->setZValue(std::numeric_limits<double>::max());
+                            QGraphicsView::mousePressEvent(event);
+                            m_origin_item->setZValue(original_z);
 
-                    // Prep Translating start
-                    viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
-                    QTimer::singleShot(500, this, SLOT(checkTranslateToolTipStarted()));
+                            // Prep Translating start
+                            viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
+                            QTimer::singleShot(500, this, SLOT(checkTranslateToolTipStarted()));
 
-                    m_hide_bounding = true;
-                    m_view_mode = View_Mode::Translating;
+                            m_hide_bounding = true;
+                            m_view_mode = View_Mode::Translating;
 
-                    for (auto item : my_scene->getSelectionItems()) {
-                        item->moveBy(0, 0);
+                            for (auto item : my_scene->getSelectionItems()) {
+                                item->moveBy(0, 0);
+                            }
+                        }
                     }
                 }
 

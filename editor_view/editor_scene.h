@@ -77,7 +77,7 @@ public:
     void            updateChangesInScene(QList<DrSettings*> changed_items, QList<long> property_keys);
     void            updateItemInScene(DrSettings* changed_item, QList<long> property_keys);
     void            updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list);
-
+    void            unselectLockedItems();
 
     // Undo / Redo Functions
     void            undoAction();

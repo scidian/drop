@@ -33,8 +33,9 @@ public:
     virtual void        buildScene(long from_stage_key) = 0;
 
     virtual void        updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Properties> property_keys) = 0;
-    virtual void        updateItemSelection(Editor_Widgets selected_from) = 0;
     virtual void        updateInspectorEnabledProperties() = 0;
+    virtual void        updateItemChanges(Editor_Widgets selected_from) = 0;
+    virtual void        updateItemSelection(Editor_Widgets selected_from) = 0;
 
     virtual DrProject*  currentProject() = 0;
     virtual void        centerViewOnPoint(QPointF center_point) = 0;
