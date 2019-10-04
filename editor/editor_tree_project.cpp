@@ -83,8 +83,21 @@ void TreeProject::buildProjectTree() {
                                                " QCheckBox::indicator:checked {   image: url(:/assets/tree_icons/tree_lock.png); }"
                                                " QCheckBox::indicator:unchecked { image: url(:/assets/tree_icons/tree_bullet.png); }");
                 QCheckBox *lock_item = new QCheckBox();
-                lock_item->setFocusPolicy(Qt::FocusPolicy::NoFocus);
-                lock_item->setStyleSheet(check_images);
+                lock_item->setFocusPolicy( Qt::FocusPolicy::NoFocus );
+                lock_item->setStyleSheet(  check_images );
+                lock_item->setCheckState(  thing->isLocked() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked );
+
+                // Locking / unlocking function
+                connect(lock_item, &QCheckBox::toggled, this, [this, thing, lock_item] () {
+                    if (thing->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Item_Locked).toBool()) {
+                        lock_item->setCheckState( Qt::CheckState::Checked );
+                    } else {
+                        bool locked = (lock_item->checkState() == Qt::CheckState::Checked) ? true : false;
+                        thing->setLocked( locked );
+                    }
+                    this->m_editor_relay->updateInspectorEnabledProperties();
+                });
+
                 this->setItemWidget(thing_item, 1, lock_item);
             }
         }

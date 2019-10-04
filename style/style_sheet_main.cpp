@@ -261,6 +261,10 @@ QString CustomStyleSheetFormatting() {
         "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
         "       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
         "       border-radius: 0px; }"
+        " QPushButton#buttonDropDown::!enabled { "
+        "       color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
+        "       background: transparent; border: none; }"
+
         // Popup Menu for PushButton
         " QMenu#menuComboBox { "
         "       padding-top: 4px; padding-bottom: 4px; "
@@ -299,6 +303,13 @@ QString CustomStyleSheetFormatting() {
         " QSlider::sub-page:horizontal { border-radius: 2px; border-top: 1px solid; "
         "       background: " +   Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
         "       border-color: " + Dr::GetColor(Window_Colors::Icon_Light).name() + "; } "
+        // Disabled Slider
+        " QSlider::sub-page:horizontal:!enabled { border-radius: 2px; border-top: 1px solid; "
+        "       background: " +   Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
+        "       border-color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
+        " QSlider::handle:horizontal:!enabled {"
+        "       background: " +   Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
+
 
         //################################################################################
         //##    FormPopup Styling

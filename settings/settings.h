@@ -27,11 +27,11 @@ typedef std::map<long, DrComponent*> ComponentMap;
 class DrSettings
 {
 private:
-    ComponentMap m_components;                      // Map of pointers to DrComponent classes
-    long         m_key;                             // Holds unique key for each object with a base class DrSettings
+    ComponentMap m_components;                          // Map of pointers to DrComponent classes
+    long         m_key;                                 // Holds unique key for each object with a base class DrSettings
 
-    long         m_is_visible;                      // Should this be visible in editor
-    long         m_is_locked;
+    long         m_is_visible = true;                   // Should this be visible in editor
+    long         m_is_locked = false;
 
 
 protected:       // so derived classes can access
@@ -50,7 +50,7 @@ public:
     DrSettings*     getSettings()           { return this; }
     QString         getName();                                                  // Returns Name from shared "Entity_Name" component
 
-    bool            isLocked()                  { return m_is_locked; }
+    bool            isLocked()                  { return (m_is_locked || getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Item_Locked).toBool()); }
     bool            isVisible()                 { return m_is_visible; }
     void            setLocked(bool locked)      { m_is_locked = locked; }
     void            setVisible(bool visible)    { m_is_visible = visible; }

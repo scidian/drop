@@ -47,9 +47,9 @@ DrView::DrView(QWidget *parent, DrProject *project, DrScene *from_scene, IEditor
 
 
     // ********** Connect signals to scene
-    connect(my_scene, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
+    connect(my_scene, SIGNAL(selectionChanged()),       this, SLOT(selectionChanged()));
     connect(my_scene, SIGNAL(sceneRectChanged(QRectF)), this, SLOT(sceneRectChanged(QRectF)));
-    connect(my_scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged(QList<QRectF>)));
+    connect(my_scene, SIGNAL(changed(QList<QRectF>)),   this, SLOT(sceneChanged(QList<QRectF>)));
 
     connect(my_scene, &DrScene::updateGrid,  this, [this]() { updateGrid(); });
     connect(my_scene, &DrScene::updateViews, this, [this]() { update(); });
@@ -93,7 +93,7 @@ void DrView::setViewRect(QRectF new_rect) { this->setSceneRect(new_rect); }
 
 // SLOTs: Connected from scene().changed and scene().selectionChanged
 void DrView::sceneChanged(QList<QRectF>) { updateSelectionBoundingBox(7); }
-void DrView::selectionChanged()          { updateSelectionBoundingBox(2);}
+void DrView::selectionChanged()          { updateSelectionBoundingBox(2); }
 
 // EVENT: Called when viewport is dragged or scrollbars are used
 void DrView::scrollContentsBy(int dx, int dy) {
@@ -220,9 +220,9 @@ void DrView::updateSelectionBoundingBox(int called_from) {
     m_handles[Position_Flags::Right] =  add_rotation.map(temp_right);
 
     // *****  Store polygon centers for use later in paintHandles
-    for (auto h : m_handles)
+    for (auto h : m_handles) {
         m_handles_centers[h.first] = h.second.boundingRect().center();
-
+    }
 
     // *****  Calculates angles for mouse cursors over sides
     m_handles_angles[Position_Flags::Top] =    QLineF(m_handles_centers[Position_Flags::Top_Left],     m_handles_centers[Position_Flags::Top_Right]).angle();

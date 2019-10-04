@@ -117,7 +117,9 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from) {
     Dr::SetLabelText(Label_Names::Label_Bottom, "Update Selection: " + Dr::CurrentTimeAsString());
 }
 
-
+void FormMain::updateInspectorEnabledProperties() {
+    treeInspector->updateLockedSettings();
+};
 
 
 

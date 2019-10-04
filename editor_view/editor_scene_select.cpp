@@ -27,10 +27,26 @@
 //  QPointF                 m_selection_scale;          // Scaling applied to current selection
 //  QRectF                  m_selection_box;            // Starting outline of selected items
 void DrScene::selectionChanged() {
+
+    // Don't allow selection if locked
+    blockSignals(true);
+    for (auto item : selectedItems()) {
+        long item_key = item->data(User_Roles::Key).toLongLong();
+        DrSettings *settings = m_project->findSettingsFromKey(item_key);
+        if (settings == nullptr)  continue;
+        if (settings->isLocked()) {
+            item->setSelected(false);
+        }
+    }
+    blockSignals(false);
+
+    // If selection hasnt changed, return
     if (selectedItems() == m_selection_items) return;
 
+    // Reset selection group
     resetSelectionGroup();
 
+    // Pass on selection changes
     if (m_editor_relay) {
         QList<long> item_keys { };
         for (auto item : selectedItems())
@@ -97,8 +113,9 @@ QRectF DrScene::totalSelectionSceneRect() {
 
     // Start with rect of first item, add on each additional items rect
     total_rect = selectedItems().first()->sceneBoundingRect();
-    for (auto item: selectedItems())
+    for (auto item: selectedItems()) {
         total_rect = total_rect.united(item->sceneBoundingRect());
+    }
 
     return total_rect;
 }
@@ -184,7 +201,12 @@ void DrScene::updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list) 
         for (auto item : items()) {
             long item_key = item->data(User_Roles::Key).toLongLong();
 
-            if (item_key == row_key) item->setSelected(true);
+            if (item_key == row_key) {
+                DrSettings *settings = m_project->findSettingsFromKey(item_key);
+                if (settings == nullptr)  continue;
+                if (settings->isLocked()) continue;
+                item->setSelected(true);
+            }
         }
     }
     resetSelectionGroup();

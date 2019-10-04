@@ -99,7 +99,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
         DrThing *thing2 = dynamic_cast<DrThing*>(new_settings);
         if (thing1->getThingType() == thing2->getThingType()) {
             m_selected_key = new_key;
-            updateInspectorPropertyBoxes( { thing2 }, { });
+            updateInspectorPropertyBoxes( { thing2 }, { } );
+            updateLockedSettings();
             return;
         }
     }
@@ -186,7 +187,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
 
         // Loop through each property and add it to the component frame
         for (auto property_pair: component->getPropertyList()) {
-            if (property_pair.second->isHidden()) continue;
+            DrProperty *property = property_pair.second;
+            if (property->isHidden()) continue;
 
             QFrame *single_row = new QFrame(properties_frame);
             QBoxLayout *horizontal_split = new QHBoxLayout(single_row);
@@ -194,7 +196,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
             horizontal_split->setMargin(0);
             horizontal_split->setContentsMargins(0,0,0,0);
 
-            QLabel *property_name = new QLabel(property_pair.second->getDisplayName());
+            QLabel *property_name = new QLabel(property->getDisplayName());
             QFont fp = Dr::CustomFont();
             property_name->setFont(fp);
                 QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -204,13 +206,13 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
                 sp_right.setHorizontalStretch(c_inspector_size_right);
 
             property_name->setSizePolicy(sp_left);
-            m_filter_hover->attachToHoverHandler(property_name, property_pair.second);
+            m_filter_hover->attachToHoverHandler(property_name, property);
             horizontal_split->addWidget(property_name);
 
             QWidget    *new_widget = nullptr;
-            DrProperty *prop = property_pair.second;
+            DrProperty *prop = property;
 
-            switch (property_pair.second->getPropertyType()) {
+            switch (property->getPropertyType()) {
                 case Property_Type::Bool:           new_widget = createCheckBox(            prop, fp, sp_right);                                break;
                 case Property_Type::String:         new_widget = createLineEdit(            prop, fp, sp_right);                                break;
                 case Property_Type::Textbox:        new_widget = createTextEdit(            prop, fp, sp_right);                                break;
@@ -284,19 +286,32 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
     this->addTopLevelItem(spacer_item);
     this->setItemWidget(spacer_item, 0, spacer_label);
 
-
     // ***** Disable / enable widgets based on property status
-    for (auto widget : m_widgets) {
-        long prop_key = widget->property(User_Property::Key).toInt();
-        DrProperty *prop = m_project->findSettingsFromKey( m_selected_key )->findPropertyFromPropertyKey(prop_key);
-        if (prop == nullptr) continue;
-        widget->setEnabled( prop->isEditable() );
-    }
+    updateLockedSettings();
 
+    // ***** Expands all tree items
     this->expandAll();
 }
 
 
+//####################################################################################
+//##    Disable / Enable property widgets based on property status
+//####################################################################################
+void TreeInspector::updateLockedSettings() {
+    // Go through each widget in Object Inpector propert widget list
+    for (auto widget : m_widgets) {
+        long prop_key = widget->property(User_Property::Key).toInt();
+        DrProperty *prop = m_project->findSettingsFromKey( m_selected_key )->findPropertyFromPropertyKey(prop_key);
+        if (prop == nullptr) continue;
+
+        // Make sure Hidden Component Properties stay enabled, otherwise disable if Property is not editable or Thing is locked
+        if (prop->getParentComponent()->getComponentKey() == Dr::EnumToInt(Components::Hidden_Settings)) {
+            widget->setEnabled( true );
+        } else {
+            widget->setEnabled( prop->isEditable() && !(prop->getParentSettings()->isLocked()) );
+        }
+    }
+}
 
 
 

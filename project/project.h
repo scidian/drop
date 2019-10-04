@@ -106,7 +106,7 @@ public:
 
 
     // Function Calls
-    DrSettings*     findSettingsFromKey(long check_key);
+    DrSettings*     findSettingsFromKey(long check_key, bool show_warning = true);
     DrType          findChildTypeFromKey(long check_key);
 
     DrAsset*        findAssetFromKey(long check_key);

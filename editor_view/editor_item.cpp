@@ -225,9 +225,27 @@ void DrItem::applyFilters() {
 //####################################################################################
 //##    Input overrides
 //####################################################################################
-void DrItem::mousePressEvent(QGraphicsSceneMouseEvent *event) { QGraphicsItem::mousePressEvent(event); }
-void DrItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) { QGraphicsItem::mouseMoveEvent(event); }
-void DrItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) { QGraphicsItem::mouseReleaseEvent(event); }
+void DrItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    DrSettings *settings = m_project->findSettingsFromKey(getThingKey());
+    if (settings == nullptr) return;
+    if (settings->isLocked()) return;
+    QGraphicsItem::mousePressEvent(event);
+}
+
+void DrItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+    DrSettings *settings = m_project->findSettingsFromKey(getThingKey());
+    if (settings == nullptr) return;
+    if (settings->isLocked()) return;
+    QGraphicsItem::mouseMoveEvent(event);
+}
+
+void DrItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+    DrSettings *settings = m_project->findSettingsFromKey(getThingKey());
+    if (settings == nullptr) return;
+    if (settings->isLocked()) return;
+    QGraphicsItem::mouseReleaseEvent(event);
+}
+
 void DrItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) { QGraphicsItem::hoverLeaveEvent(event);}
 
 

@@ -16,8 +16,9 @@
 #include "editor_scene.h"
 #include "editor_view.h"
 #include "globals.h"
-#include "interface_editor_relay.h"
 #include "helper.h"
+#include "helper_qt.h"
+#include "interface_editor_relay.h"
 #include "project/project.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"
@@ -41,7 +42,19 @@ void DrView::mousePressEvent(QMouseEvent *event) {
     // On initial mouse down, store mouse origin point
     m_origin =          event->pos();
     m_origin_in_scene = mapToScene(m_origin);
-    m_origin_item =     itemAt(event->pos());
+
+    // Get top most unlocked item
+    m_origin_item =  itemAt(event->pos());
+    for (auto item : items(event->pos())) {
+        long item_key = item->data(User_Roles::Key).toLongLong();
+        DrSettings *settings = m_project->findSettingsFromKey(item_key);
+        if (settings != nullptr) {
+            if (settings->isLocked() == false) {
+                m_origin_item = item;
+                break;
+            }
+        }
+    }
 
     // If space bar isn't down, process mouse down
     if (dragMode() == QGraphicsView::DragMode::NoDrag) {
@@ -84,27 +97,36 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                     if (my_scene->getSelectionItems().contains(m_origin_item) == false) {
                         my_scene->clearSelection();
                         m_origin_item->setSelected(true);
+
                     } else {
                         m_editor_relay->buildInspector( { static_cast<long>(m_origin_item->data(User_Roles::Key).toLongLong()) } );
                     }
 
                     // ***** Process press event for item movement (Translation)
+                    // Make sure item is on top before firing QGraphicsView event so we start translating properly
+                    double original_z = m_origin_item->zValue();
+                    m_origin_item->setZValue(999999999999);
                     QGraphicsView::mousePressEvent(event);
+                    m_origin_item->setZValue(original_z);
+
+                    // Prep Translating start
                     viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
                     QTimer::singleShot(500, this, SLOT(checkTranslateToolTipStarted()));
 
                     m_hide_bounding = true;
                     m_view_mode = View_Mode::Translating;
 
-                    for (auto item : my_scene->getSelectionItems())
+                    for (auto item : my_scene->getSelectionItems()) {
                         item->moveBy(0, 0);
+                    }
                 }
 
             // ******************** If clicked while control is down, add to selection group, or take out
             } else if (event->modifiers() & Qt::KeyboardModifier::ControlModifier && m_origin_item != nullptr) {
 
-                if (m_origin_item != nullptr)
-                    m_origin_item->setSelected(!m_origin_item->isSelected());
+                if (m_origin_item != nullptr) {
+                     m_origin_item->setSelected(!m_origin_item->isSelected());
+                }
 
             }
 
@@ -155,8 +177,7 @@ void DrView::mouseReleaseEvent(QMouseEvent *event) {
     if (scene() == nullptr) return;
 
     // Process left mouse button released
-    if (event->button() & Qt::LeftButton)
-    {
+    if (event->button() & Qt::LeftButton) {
         m_hide_bounding = false;
         m_rubber_band->hide();
         m_tool_tip->stopToolTip();

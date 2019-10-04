@@ -62,8 +62,21 @@ void DrView::processSelection(QPoint mouse_in_view) {
     // Figure out new selection items
     my_scene->setSelectionArea(selection_area, Qt::ItemSelectionOperation::ReplaceSelection,
                                Qt::ItemSelectionMode::IntersectsItemShape, viewportTransform());     // Pass box to scene for selection
-    for (auto item : m_items_keep)
-        if (item->isSelected() == false) item->setSelected(true);
+    for (auto item : m_items_keep) {
+        if (item->isSelected() == false) {
+            item->setSelected(true);
+        }
+    }
+
+    // Don't allow selection if locked
+    for (auto item : my_scene->selectedItems()) {
+        long item_key = item->data(User_Roles::Key).toLongLong();
+        DrSettings *settings = m_project->findSettingsFromKey(item_key);
+        if (settings == nullptr)  continue;
+        if (settings->isLocked()) {
+            item->setSelected(false);
+        }
+    }
 
     // Re-connect signal and call selectionChanged if necessary
     my_scene->blockSignals(false);

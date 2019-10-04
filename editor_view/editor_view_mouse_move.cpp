@@ -61,7 +61,18 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
         m_tool_tip->updateToolTipPosition(m_last_mouse_pos);
 
     // ******************** Grab item under mouse
-    QGraphicsItem *check_item = itemAt(m_last_mouse_pos);
+    QGraphicsItem *check_item = nullptr;/// = itemAt(m_last_mouse_pos);
+    for (auto item : items(m_last_mouse_pos)) {
+        long item_key = item->data(User_Roles::Key).toLongLong();
+        DrSettings *settings = m_project->findSettingsFromKey(item_key);
+        if (settings != nullptr) {
+            if (settings->isLocked() == false) {
+                check_item = item;
+                break;
+            }
+        }
+    }
+
 
 
     // !!!!! #DEBUG: Shows red, green, blue and alpha of pixel under mouse
@@ -202,12 +213,14 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
 
 
     // ******************* If we're in selection mode, process mouse movement and resize box as needed
-   if (m_view_mode == View_Mode::Selecting)
+    if (m_view_mode == View_Mode::Selecting) {
         processSelection(event->pos());
+    }
 
     // ******************* If mouse moved while over Size Grip, resize
-    if (m_view_mode == View_Mode::Resizing)
+    if (m_view_mode == View_Mode::Resizing) {
         resizeSelection(mapToScene(event->pos()));
+    }
 
     // ******************* If mouse moved while alt pressed, rotate
     if (m_view_mode == View_Mode::Rotating) {
@@ -240,9 +253,9 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
 
 
     // ***** Update
-    if (m_view_mode != View_Mode::None || m_tool_tip->isHidden() == false)
+    if (m_view_mode != View_Mode::None || m_tool_tip->isHidden() == false) {
         update();
-
+    }
 
     // ***** Unlock scene mutex
     my_scene->scene_mutex.unlock();

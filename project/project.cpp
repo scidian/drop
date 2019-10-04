@@ -90,7 +90,7 @@ void DrProject::addWorld() {
 //####################################################################################
 
 // Returns a pointer to the Base DrSettings class of the item with the specified key
-DrSettings* DrProject::findSettingsFromKey(long check_key) {
+DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning) {
     AssetMap::iterator asset_iter = m_assets.find(check_key);
     if (asset_iter != m_assets.end())   return asset_iter->second;
 
@@ -119,10 +119,12 @@ DrSettings* DrProject::findSettingsFromKey(long check_key) {
         }
     }
 
-    Dr::ShowMessageBox("WARNING: Did not find key (" + QString::number(check_key) +
-                       ") in project! \n"
-                       "Last key used in project: " + QString::number(m_key_generator - 1) + "!\n\n"
-                       "This warning called from \"DrProject::findChildSettingsFromKey\"");
+    if (show_warning) {
+        Dr::ShowMessageBox("WARNING: Did not find key (" + QString::number(check_key) +
+                           ") in project! \n"
+                           "Last key used in project: " + QString::number(m_key_generator - 1) + "!\n\n"
+                           "This warning called from \"DrProject::findChildSettingsFromKey\"");
+    }
     return nullptr;
 }
 

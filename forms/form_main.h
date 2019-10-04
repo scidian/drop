@@ -140,6 +140,7 @@ public:
     virtual void        updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items,
                                                            QList<Properties> property_keys) override;
     virtual void        updateItemSelection(Editor_Widgets selected_from) override;
+    virtual void        updateInspectorEnabledProperties() override;
 
     virtual DrProject*  currentProject() override;
     virtual void        centerViewOnPoint(QPointF center_point) override;
