@@ -25,9 +25,10 @@ void DrView::keyPressEvent(QKeyEvent *event) {
 
     // Fire mouse move event to update mouse cursor on key presses
     QMouseEvent *fire_mouse_move = new QMouseEvent(QEvent::MouseMove, m_last_mouse_pos, Qt::NoButton,
-                                                   Qt::MouseButtons(), Qt::KeyboardModifiers());
+                                                   Qt::MouseButtons(), { Qt::KeyboardModifier::NoModifier });
     m_flag_dont_check_keys = true;
     mouseMoveEvent(fire_mouse_move);
+    delete fire_mouse_move;
 }
 
 // Key release event
@@ -42,8 +43,9 @@ void DrView::keyReleaseEvent(QKeyEvent *event) {
 
     // Fire mouse move event to update mouse cursor on key release
     QMouseEvent *fire_mouse_move = new QMouseEvent(QEvent::MouseMove, m_last_mouse_pos, Qt::NoButton,
-                                                   Qt::MouseButtons(), Qt::KeyboardModifiers());
+                                                   Qt::MouseButtons(), { Qt::KeyboardModifier::NoModifier });
     mouseMoveEvent(fire_mouse_move);
+    delete fire_mouse_move;
 }
 
 

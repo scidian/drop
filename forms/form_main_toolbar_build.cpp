@@ -75,7 +75,7 @@ void FormMain::buildToolBar()
         toolbarLayoutMode->addWidget(tool);
 
 
-    // ***** Mode "Editor" Add-On, Layering: Holds buttons that send Things to front / back
+    // ***** Mode "Editor" Add-On, Layering: Holds buttons that send Things to Front / Back
     widgetGroupLayering = new QWidget(widgetToolbar);
     widgetGroupLayering->hide();
     widgetGroupLayering->setObjectName(QStringLiteral("widgetGroupLayering"));
@@ -105,7 +105,25 @@ void FormMain::buildToolBar()
         toolbarLayoutLayering->addWidget(tool);
 
 
-    // ***** Mode "Editor" Add-On, Transform: Holds buttons that flip / rotate things
+    // ***** Mode "Editor" Add-On, Edit: Holds Delete button, future Cut / Copy / Paste
+    widgetGroupEdit = new QWidget(widgetToolbar);
+    widgetGroupEdit->hide();
+    widgetGroupEdit->setObjectName(QStringLiteral("widgetGroupEdit"));
+    widgetGroupEdit->setFixedHeight(46);
+        QHBoxLayout *toolbarLayoutEdit = new QHBoxLayout(widgetGroupEdit);
+        toolbarLayoutEdit->setSpacing(1);
+        toolbarLayoutEdit->setContentsMargins(0, 0, 0, 0);
+
+        buttonsGroupEdit = new QButtonGroup();
+        buttonsGroupEdit->setExclusive(false);
+        connect(buttonsGroupEdit, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupEditClicked(int)));
+
+        tool = createToolbarButton(QStringLiteral("buttonDeleteThing"), Advisor_Info::Trash_Can, 34, 26, false, false);
+        buttonsGroupEdit->addButton(tool, int(Buttons_Edit::Delete));
+        toolbarLayoutEdit->addWidget(tool);
+
+
+    // ***** Mode "Editor" Add-On, Transform: Holds buttons that Flip / Rotate things
     widgetGroupTransform = new QWidget(widgetToolbar);
     widgetGroupTransform->hide();
     widgetGroupTransform->setObjectName(QStringLiteral("widgetGroupTransform"));
@@ -139,7 +157,7 @@ void FormMain::buildToolBar()
         toolbarLayoutTransform->addWidget(tool);
 
 
-    // ***** Mode "Editor" Add-On, Grid: Holds buttons that control snapo to grid, resize to grid, show grid on top
+    // ***** Mode "Editor" Add-On, Grid: Holds buttons that control Snap to Grid, Resize to Grid, Show Grid on Top
     widgetGroupGrid = new QWidget(widgetToolbar);
     widgetGroupGrid->hide();
     widgetGroupGrid->setObjectName(QStringLiteral("widgetGroupGrid"));
@@ -174,8 +192,7 @@ void FormMain::buildToolBar()
         toolbarLayoutGrid->addWidget(tool);
 
 
-
-    // ***** Mode "Editor" Add-On, Play: Holds buttons that starts game engine window
+    // ***** Mode "Editor" Add-On, Play: Holds buttons that starts game Engine window
     widgetGroupPlay = new QWidget(widgetToolbar);
     widgetGroupPlay->hide();
     widgetGroupPlay->setObjectName(QStringLiteral("widgetGroupPlay"));
@@ -192,8 +209,6 @@ void FormMain::buildToolBar()
         buttonsGroupPlay->addButton(tool, int(Buttons_Play::Play));
         toolbarLayoutPlay->addWidget(tool);
         toolbarLayoutPlay->addWidget(createToolbarSpacer(24, 34, false));
-
-
 
 
     // ***** Settings Buttons
@@ -225,6 +240,7 @@ void FormMain::buildToolBar()
             FormSettings *settings_editor = new FormSettings(m_project, this);
             settings_editor->show();
         });
+
 
     // ********** Set up initial toolbar
     // Clears the containers that keeps track of whats added to the toolbar layout

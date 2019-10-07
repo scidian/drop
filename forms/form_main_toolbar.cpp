@@ -30,11 +30,15 @@ void FormMain::updateToolbar() {
         selected = "No Selection";
         for (auto button : buttonsGroupLayering->buttons())
             if (button->isEnabled()) button->setEnabled(false);
+        for (auto button : buttonsGroupEdit->buttons())
+            if (button->isEnabled()) button->setEnabled(false);
         for (auto button : buttonsGroupTransform->buttons())
             if (button->isEnabled()) button->setEnabled(false);
 
     } else {
         for (auto button : buttonsGroupLayering->buttons())
+            if (!button->isEnabled()) button->setEnabled(true);
+        for (auto button : buttonsGroupEdit->buttons())
             if (!button->isEnabled()) button->setEnabled(true);
         for (auto button : buttonsGroupTransform->buttons())
             if (!button->isEnabled()) button->setEnabled(true);
@@ -73,6 +77,7 @@ void FormMain::setToolbar(Form_Main_Mode new_mode) {
     switch (new_mode) {
         case Form_Main_Mode::World_Editor:
             addToolbarGroup( widgetGroupLayering,   true );
+            addToolbarGroup( widgetGroupEdit,       true );
             addToolbarGroup( widgetGroupTransform,  true );
             addToolbarGroup( widgetGroupGrid,       true );
             addToolbarGroup( widgetGroupPlay,       false );

@@ -74,6 +74,10 @@ enum class Buttons_Layering {
     Send_Forward,
 };
 
+enum class Buttons_Edit {
+    Delete,
+};
+
 enum class Buttons_Transform {
     Reset_Object,
     Flip_H,

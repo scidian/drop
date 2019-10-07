@@ -62,6 +62,22 @@ void FormMain::buttonGroupLayeringClicked(int id) {
 
 
 //####################################################################################
+//##    buttonGroupEdit SLOT and functions
+//####################################################################################
+void FormMain::buttonGroupEditClicked(int id) {
+    Buttons_Edit clicked = static_cast<Buttons_Edit>(id);
+
+    if (clicked == Buttons_Edit::Delete) {
+
+        QKeyEvent *event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Delete, { Qt::KeyboardModifier::NoModifier });
+        sceneEditor->keyPressEvent(event);
+        delete event;
+
+    }
+}
+
+
+//####################################################################################
 //##    buttonGroupTransform SLOT and functions
 //####################################################################################
 void FormMain::buttonGroupTransformClicked(int id) {

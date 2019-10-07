@@ -82,6 +82,7 @@ private:
     QWidget        *widgetToolbar;          QHBoxLayout    *widgetToolbarLayout;
 
     QWidget        *widgetGroupMode;        QButtonGroup   *buttonsGroupMode;
+    QWidget        *widgetGroupEdit;        QButtonGroup   *buttonsGroupEdit;
     QWidget        *widgetGroupLayering;    QButtonGroup   *buttonsGroupLayering;
     QWidget        *widgetGroupTransform;   QButtonGroup   *buttonsGroupTransform;
     QWidget        *widgetGroupGrid;        QButtonGroup   *buttonsGroupGrid;
@@ -192,6 +193,7 @@ private slots:
     void            buttonGroupModeClicked(int id);
     void            buttonGroupPlayClicked(int id);
     void            buttonGroupLayeringClicked(int id);
+    void            buttonGroupEditClicked(int id);
     void            buttonGroupTransformClicked(int id);
     void            buttonGroupGridClicked(int id);
 

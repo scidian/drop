@@ -162,5 +162,7 @@
         <file>assets/test_images/shapes2.png</file>
         <file>assets/test_images/dragon.png</file>
         <file>assets/inspector_icons/comp_hidden.png</file>
+        <file>assets/toolbar_icons/toolbar_trash_gray.png</file>
+        <file>assets/toolbar_icons/toolbar_trash.png</file>
     </qresource>
 </RCC>
