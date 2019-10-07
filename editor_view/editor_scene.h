@@ -76,6 +76,7 @@ public:
     IEditorRelay*   getRelay() { return m_editor_relay; }
     void            updateChangesInScene(QList<DrSettings*> changed_items, QList<long> property_keys);
     void            updateItemInScene(DrSettings* changed_item, QList<long> property_keys);
+    void            updateSelectionFromKeyList(QList<long> key_list);
     void            updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list);
     void            unselectLockedItems();
 

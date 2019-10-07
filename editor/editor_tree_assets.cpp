@@ -132,6 +132,10 @@ void TreeAssets::buildAssetTree(QString search_text) {
         DrAsset *asset = asset_pair.second;
         if (!asset) continue;
 
+        if (asset->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees).toBool()) {
+            if (Dr::CheckDebugFlag(Debug_Flags::Show_Custom_Descriptions) == false) continue;
+        }
+
         QString asset_name = asset->getName();
         if (!asset_name.toLower().contains(search_text.toLower())) continue;
 

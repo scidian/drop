@@ -106,7 +106,7 @@ namespace Advisor_Info {
     const HeaderBodyList Send_to_Front          { "Send to Font",  "Send selected item(s) to the front." };
     const HeaderBodyList Send_Backward          { "Send Backward", "Send selected item(s) back by one." };
     const HeaderBodyList Send_Forward           { "Send Forward",  "Send selected item(s) forward by one." };
-    const HeaderBodyList Trash_Can              { "Delete",        "Remove selected item(s) from the Stage." };
+    const HeaderBodyList Trash_Can              { "Delete",        "Remove selected item(s)." };
     const HeaderBodyList Reset                  { "Reset Transform", "Resets selected objects' transforms to a Scale of X:1, Y:1 and Rotation of "
                                                                             "0 Degrees." };
     const HeaderBodyList Flip_H                 { "Flip Horizontal", "Flips the selection horizontally." };

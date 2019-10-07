@@ -22,7 +22,10 @@
 //##    Drag / Drop Events
 //####################################################################################
 // This removes the item from under the mouse, sort of
-void TreeProject::startDrag(Qt::DropActions supportedActions) {
+void TreeProject::startDrag(Qt::DropActions supportedActions) {    
+
+    return;
+
     // Partly copied from Qt 5.5.5 sources
     QModelIndexList indexes = selectedIndexes();
     if (indexes.count() > 0) {

@@ -16,6 +16,10 @@
 class DrThing;
 class DrProject;
 class DrSettings;
+class DrView;
+class TreeAssets;
+class TreeInspector;
+class TreeProject;
 
 //####################################################################################
 //##    IEditorRelay
@@ -23,10 +27,21 @@ class DrSettings;
 //############################
 class IEditorRelay
 {
+private:
+    Editor_Widgets      m_active_widget = Editor_Widgets::Scene_View;
+
 public:
+    // Constructor / Destructor
     IEditorRelay() { }
     virtual ~IEditorRelay();
 
+    // Editor Widget Accessors
+    virtual TreeAssets*     getAssetTree() = 0;
+    virtual TreeInspector*  getInspector() = 0;
+    virtual TreeProject*    getProjectTree() = 0;
+    virtual DrView*         getSceneView() = 0;
+
+    // Editor Functions
     virtual void        buildAssetTree() = 0;
     virtual void        buildInspector(QList<long> key_list) = 0;
     virtual void        buildProjectTree() = 0;
@@ -46,13 +61,17 @@ public:
 
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) = 0;
     virtual void        setAdvisorInfo(QString header, QString body) = 0;
+
+    // Getter / Setters
+    Editor_Widgets      getActiveWidget() { return m_active_widget; }
+    void                setActiveWidget(Editor_Widgets widget) { m_active_widget = widget; }
 };
 
 
-
-
-
 #endif // I_EDITOR_RELAY_H
+
+
+
 
 
 

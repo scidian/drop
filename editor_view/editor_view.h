@@ -200,6 +200,9 @@ public:
     virtual void    dragMoveEvent(QDragMoveEvent *event) override;
     virtual void    dropEvent(QDropEvent *event) override;
 
+    // Event Overrides - Misc
+    virtual void    focusInEvent(QFocusEvent *event) override;
+
 
     // View Display Functions
     void            setViewRect(QRectF new_rect);

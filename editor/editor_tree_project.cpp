@@ -58,6 +58,11 @@ void TreeProject::buildProjectTree() {
 
             for (auto key: keys) {
                 DrThing *thing = things[key];
+                if (!thing) continue;
+
+                if (thing->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees).toBool()) {
+                    if (Dr::CheckDebugFlag(Debug_Flags::Show_Custom_Descriptions) == false) continue;
+                }
 
                 QTreeWidgetItem *thing_item = new QTreeWidgetItem(stage_item);                             // Create new item and add as child item
                 switch (thing->getThingType()) {
@@ -79,9 +84,12 @@ void TreeProject::buildProjectTree() {
                 stage_item->addChild(thing_item);
 
                 // Add lock box
-                QString check_images = QString(" QCheckBox::indicator { width: 12px; height: 12px; }"
-                                               " QCheckBox::indicator:checked {   image: url(:/assets/tree_icons/tree_lock.png); }"
-                                               " QCheckBox::indicator:unchecked { image: url(:/assets/tree_icons/tree_bullet.png); }");
+                bool forced = thing->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Item_Locked).toBool();
+                QString check_images = QString(" QCheckBox::indicator { width: 12px; height: 12px; } "
+                                               " QCheckBox::indicator:unchecked { image: url(:/assets/tree_icons/tree_bullet.png); } ");
+                if (forced) check_images +=    " QCheckBox::indicator:checked {   image: url(:/assets/tree_icons/tree_lock_disable.png); } ";
+                else        check_images +=    " QCheckBox::indicator:checked {   image: url(:/assets/tree_icons/tree_lock.png); } ";
+
                 QCheckBox *lock_item = new QCheckBox();
                 lock_item->setFocusPolicy( Qt::FocusPolicy::NoFocus );
                 lock_item->setStyleSheet(  check_images );
@@ -115,6 +123,10 @@ void TreeProject::enterEvent(QEvent *event) {
     QTreeWidget::enterEvent(event);
 }
 
+void TreeProject::focusInEvent(QFocusEvent *event) {
+    m_editor_relay->setActiveWidget(Editor_Widgets::Project_Tree);
+    QTreeWidget::focusInEvent(event);
+}
 
 
 //####################################################################################

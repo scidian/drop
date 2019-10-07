@@ -109,9 +109,12 @@ void DrSettings::addComponentHiddenSettings() {
     addComponent(Components::Hidden_Settings, "Hidden Settings", "Custom hidden entity properties for Droplets.", Component_Colors::Purple_Royal, true);
     getComponent(Components::Hidden_Settings)->setIcon(Component_Icons::Hidden);
     addPropertyToComponent(Components::Hidden_Settings, Properties::Hidden_Advisor_Description, Property_Type::Textbox, "",
-                           "Description", "Custom Advisor description for this item.");
+                           "Description", "Custom Advisor Description for this item.");
     addPropertyToComponent(Components::Hidden_Settings, Properties::Hidden_Item_Locked, Property_Type::Bool, false,
-                           "Locked?", "Can this item be moved?");
+                           "Locked?", "Can this item be moved / changed by user?");
+    addPropertyToComponent(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees, Property_Type::Bool, false,
+                           "Hide?", "Should this item be hidden from editor listings (Asset Tree / Project Tree?)");
+
 
 }
 

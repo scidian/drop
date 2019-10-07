@@ -184,19 +184,29 @@ QGraphicsItemGroup* DrScene::createEmptyItemGroup(double angle, QPointF scale) {
 //##    Selects items based on rows selected in Editor_Project_Tree
 //####################################################################################
 void DrScene::updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list) {
+    QList <long> keys;
+    for (auto row : tree_list) {
+        long row_key = row->data(0, User_Roles::Key).toLongLong();
+        keys.append(row_key);
+    }
+    updateSelectionFromKeyList(keys);
+}
+
+//####################################################################################
+//##    Selects items based on custom Key list
+//####################################################################################
+void DrScene::updateSelectionFromKeyList(QList<long> key_list) {
     // Turn off signals to stop recurssive calling of interface_relay->updateItemSelection()
     blockSignals(true);
 
     // Clear current selection
     for (auto item : selectedItems()) item->setSelected(false);
 
-    for (auto row : tree_list) {
-        long row_key = row->data(0, User_Roles::Key).toLongLong();
-
+    for (auto key : key_list) {
         for (auto item : items()) {
             long item_key = item->data(User_Roles::Key).toLongLong();
 
-            if (item_key == row_key) {
+            if (item_key == key) {
                 DrSettings *settings = m_project->findSettingsFromKey(item_key);
                 if (settings == nullptr)  continue;
                 if (settings->isLocked()) continue;

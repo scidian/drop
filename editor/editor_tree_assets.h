@@ -44,6 +44,8 @@ private:
     // Local Variables
     DrFilterHoverHandler *m_filter_hover;                   // Pointer to an event filter hover handler
 
+    long                  m_selected_key = 0;               // Unique Key of last clicked on Asset
+
     QList<QFrame*>        m_asset_frames;                   // List of the single row frames that contain name and pixmap labels
 
     QWidget              *m_search_widget;
@@ -63,6 +65,10 @@ public:
     IEditorRelay*   getRelay() { return m_editor_relay; }
     void            forceUpdateOfItemSizes() { this->scheduleDelayedItemsLayout(); }                    // !!!!! #NOTE: Forces updating of QTreeWidget, yay!
     void            updateAssetList(QList<DrSettings*> changed_items, QList<long> property_keys);
+
+    // Getters / Setters
+    long            getSelectedKey() { return m_selected_key; }
+    void            setSelectedKey(long key) { m_selected_key = key; }
 
 private slots:
     void            searchTextChanged(QString new_text);

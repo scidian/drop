@@ -96,7 +96,7 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
 
 
 //####################################################################################
-//##    Selects rows based on items selected in view
+//##    Selects rows based on items selected in Scene View
 //####################################################################################
 void TreeProject::updateSelectionFromView(QList<QGraphicsItem*> item_list) {
     QList <long> keys;
@@ -108,7 +108,7 @@ void TreeProject::updateSelectionFromView(QList<QGraphicsItem*> item_list) {
 }
 
 //####################################################################################
-//##    Selects rows based on custom key list
+//##    Selects rows based on custom Key list
 //####################################################################################
 void TreeProject::updateSelectionFromKeyList(QList<long> key_list) {
     setAllowSelectionEvent(false);

@@ -70,9 +70,11 @@ private:
 
     Form_Main_Mode          m_current_mode = Form_Main_Mode::Program_Loading;       // Holds what Form_Main_Mode state formMain is in
 
+
     // ***** Menu Widgets
     QMenuBar       *menuBar;
     QAction        *actionUndo, *actionRedo;
+
 
     // ***** Toolbar Widgets
     QList<QWidget*>      toolbarWidgets { };
@@ -88,7 +90,6 @@ private:
     QWidget        *widgetGroupGrid;        QButtonGroup   *buttonsGroupGrid;
     QWidget        *widgetGroupPlay;        QButtonGroup   *buttonsGroupPlay;
     QWidget        *widgetGroupSettings;
-
 
 
     // ***** Shared FormMain Widgets
@@ -108,15 +109,16 @@ private:
     QScrollArea    *areaBottom;
     QFrame         *statusBar;
 
-    // "Editor" Status Bar Widgets
+    //       "Editor" Status Bar Widgets
     QLabel         *labelSelected;
 
-//public:
+
     // ***** Labels to display info
     QLabel         *label1,         *label2,        *label3,        *labelMouse1,   *labelMouse2;
     QLabel         *labelObject1,   *labelObject2,  *labelObject3,  *labelObject4,  *labelObject5;
     QLabel         *labelPosition,  *labelCenter,   *labelScale,    *labelRotate,   *labelZOrder,   *labelPosFlag;
     QLabel         *labelBottom;
+
 
 public:
     // Constructor and Destructor
@@ -133,6 +135,11 @@ public:
 
 
     // Interface Relay Implementations
+    virtual TreeAssets*     getAssetTree() override     { return treeAssetEditor; }
+    virtual TreeInspector*  getInspector() override     { return treeInspector; }
+    virtual TreeProject*    getProjectTree() override   { return treeProjectEditor; }
+    virtual DrView*         getSceneView() override     { return viewEditor; }
+
     virtual void        buildAssetTree() override;
     virtual void        buildInspector(QList<long> key_list) override;
     virtual void        buildProjectTree() override;

@@ -66,7 +66,8 @@ void DrView::dropEvent(QDropEvent *event) {
     // Stop drawing crosshairs under item drop
     m_drop_might_happen = false;
 
-    DrStage *stage =     my_scene->getCurrentStageShown();
+    DrStage *stage = my_scene->getCurrentStageShown();
+    DrThing *thing = nullptr;
 
     // ********** From Asset Tree
     if (event->mimeData()->hasFormat("application/x-drop-asset-data")) {
@@ -89,7 +90,6 @@ void DrView::dropEvent(QDropEvent *event) {
         long      asset_key = variant_key.toInt();
         DrAsset  *asset =     m_editor_relay->currentProject()->getAsset(asset_key);
         DrEffect *effect;
-        DrThing  *thing;
         switch (asset->getAssetType()) {
             case DrAssetType::Character:
                 thing = stage->addThing(DrThingType::Character, asset_key, position.x(), -position.y(), 0);                 // !!!!! #FIX: z order
@@ -162,7 +162,7 @@ void DrView::dropEvent(QDropEvent *event) {
 
         // Add Object Thing at mouse position
         QPointF  position =  mapToScene(event->pos());
-        DrThing *thing = stage->addThing(DrThingType::Object, asset_key, position.x(), -position.y(), 0);    // FIX: z order
+        thing = stage->addThing(DrThingType::Object, asset_key, position.x(), -position.y(), 0);    // FIX: z order
         my_scene->addItemToSceneFromThing( thing );
 
         //######################
@@ -191,6 +191,14 @@ void DrView::dropEvent(QDropEvent *event) {
     //######################
     //######################
     //######################
+
+
+    // ***** Selects the newly dropped Thing, loads to Object Inspector
+    if (thing != nullptr) {
+        m_editor_relay->buildInspector( { thing->getKey() } );
+        m_editor_relay->updateItemSelection(Editor_Widgets::Scene_View, { thing->getKey() } );
+        m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree );
+    }
 
 }
 

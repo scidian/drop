@@ -55,7 +55,11 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
 
     // On mouse down, update the Inspector, prepare for drag and drop
     if (event->type() == QEvent::MouseButtonPress) {
+        m_editor_relay->setActiveWidget(Editor_Widgets::Asset_Tree);
         m_editor_relay->buildInspector( { asset_key } );
+        m_editor_relay->updateItemSelection(Editor_Widgets::Asset_Tree, { });
+
+        m_editor_relay->getAssetTree()->setSelectedKey( asset_key );
 
         QMouseEvent *mouse_event = dynamic_cast<QMouseEvent*>(event);
         asset_frame->setProperty(User_Property::Mouse_Down,     true);

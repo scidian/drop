@@ -69,7 +69,10 @@ DrView::~DrView() {
     delete m_tool_tip;
 }
 
-
+void DrView::focusInEvent(QFocusEvent *event) {
+    m_editor_relay->setActiveWidget(Editor_Widgets::Scene_View);
+    QGraphicsView::focusInEvent(event);
+}
 
 
 

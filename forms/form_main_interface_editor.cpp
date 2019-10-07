@@ -107,22 +107,32 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
 }
 
 void FormMain::updateItemSelection(Editor_Widgets selected_from, QList<long> optional_key_list) {
-    // Selects items in scene based on new selection in tree view
-    if (selected_from != Editor_Widgets::Scene_View)    sceneEditor->updateSelectionFromProjectTree( treeProjectEditor->selectedItems() );
-    if (selected_from != Editor_Widgets::Project_Tree)  {
-        // If we passed custom list
-        if (optional_key_list.count() > 0) {
-            treeProjectEditor->updateSelectionFromKeyList( optional_key_list );
 
-        // Otherwise, don't update project tree while rubber band box is being moved around, very slow
-        } else if (viewEditor->currentViewMode() != View_Mode::Selecting) {
-            treeProjectEditor->updateSelectionFromView( sceneEditor->getSelectionItems() );
+    if (selected_from == Editor_Widgets::Scene_View || selected_from == Editor_Widgets::Project_Tree) {
+        // Selects items in Scene View based on new selection in Project Tree
+        if (selected_from != Editor_Widgets::Scene_View) {
+            sceneEditor->updateSelectionFromProjectTree( treeProjectEditor->selectedItems() );
         }
+
+        // Selects items in Project Tree based on new selection in Scene View
+        if (selected_from != Editor_Widgets::Project_Tree)  {
+            // If we passed custom list
+            if (optional_key_list.count() > 0) {
+                treeProjectEditor->updateSelectionFromKeyList( optional_key_list );
+
+            // Otherwise, don't update project tree while rubber band box is being moved around, very slow
+            } else if (viewEditor->currentViewMode() != View_Mode::Selecting) {
+                treeProjectEditor->updateSelectionFromView( sceneEditor->getSelectionItems() );
+            }
+        }
+
+    } else if (selected_from == Editor_Widgets::Asset_Tree) {
+        sceneEditor->updateSelectionFromKeyList( { } );
+        treeProjectEditor->updateSelectionFromKeyList( { } );
     }
 
     // Updates status bar, enables / disables toolbar buttons
     this->updateToolbar();
-
 
     // !!!!! #TEMP: Testing to make sure not running non stop
     ///static long update_count = 0;

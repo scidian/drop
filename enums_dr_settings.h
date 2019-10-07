@@ -121,6 +121,7 @@ enum class Properties {
     // ******************** Hidden Properties, for Droplets
     Hidden_Advisor_Description,             // string, html capable textbox
     Hidden_Item_Locked,                     // bool
+    Hidden_Hide_From_Trees,                 // bool
 
 
     // ******************** DrAsset Component Properties
