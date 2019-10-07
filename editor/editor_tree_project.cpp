@@ -96,7 +96,7 @@ void TreeProject::buildProjectTree() {
                         thing->setLocked( locked );
                     }
                     this->m_editor_relay->updateInspectorEnabledProperties();
-                    this->m_editor_relay->updateItemChanges(Editor_Widgets::Project_Tree);
+                    this->m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree);
                 });
 
                 this->setItemWidget(thing_item, 1, lock_item);

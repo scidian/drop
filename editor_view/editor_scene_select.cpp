@@ -27,11 +27,8 @@
 //  QPointF                 m_selection_scale;          // Scaling applied to current selection
 //  QRectF                  m_selection_box;            // Starting outline of selected items
 void DrScene::selectionChanged() {
-
     // Don't allow selection if locked
-    blockSignals(true);
     unselectLockedItems();
-    blockSignals(false);
 
     // If selection hasnt changed, return
     if (selectedItems() == m_selection_items) return;
@@ -49,6 +46,10 @@ void DrScene::selectionChanged() {
         m_editor_relay->buildInspector(item_keys);
         m_editor_relay->updateItemSelection(Editor_Widgets::Scene_View);
     }
+
+    // !!!!! #TEMP: Testing to make sure not running non stop
+    static long change_count = 0;
+    Dr::SetLabelText(Label_Names::Label_Bottom, "Selection Changed: " + QString::number(change_count++));
 }
 
 // Called from selectionChanged(), resets properties of current selection. Checks if items are at resize to grid angle
@@ -215,6 +216,9 @@ void DrScene::updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list) 
 //####################################################################################
 void DrScene::unselectLockedItems() {
     // Turn off signals to stop recurssive calling of interface_relay->updateItemSelection()
+    bool was_blocked = signalsBlocked();
+    blockSignals(true);
+
     for (auto item : selectedItems()) {
         long item_key = item->data(User_Roles::Key).toLongLong();
         DrSettings *settings = m_project->findSettingsFromKey(item_key);
@@ -223,6 +227,8 @@ void DrScene::unselectLockedItems() {
             item->setSelected(false);
         }
     }
+
+    blockSignals(was_blocked);
 }
 
 

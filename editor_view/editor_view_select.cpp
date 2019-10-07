@@ -68,13 +68,9 @@ void DrView::processSelection(QPoint mouse_in_view) {
         }
     }
 
-    // Don't allow selection if locked
-    my_scene->unselectLockedItems();
-
     // Re-connect signal and call selectionChanged if necessary
     my_scene->blockSignals(false);
     if (before_band != scene()->selectedItems()) my_scene->selectionChanged();
-
 }
 
 

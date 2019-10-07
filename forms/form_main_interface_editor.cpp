@@ -58,6 +58,10 @@ void FormMain::buildInspector(QList<long> key_list) {
     if (currentViewMode() != View_Mode::None && key_list.count() == 0) return;
 
     treeInspector->buildInspectorFromKeys(key_list);
+
+    // !!!!! #TEMP: Testing to make sure not running non stop
+    ///static long build_count = 0;
+    ///Dr::SetLabelText(Label_Names::Label_Bottom, "Build Inspector: " + QString::number(build_count++));
 }
 
 void FormMain::buildProjectTree() {
@@ -97,16 +101,23 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
     if (changed_from != Editor_Widgets::Asset_Tree)         treeAssetEditor->updateAssetList(changed_items, property_keys_as_long);
 
     // !!!!! #TEMP: Testing to make sure not running non stop
-    Dr::SetLabelText(Label_Names::Label_Bottom, "Update Editor Widgets: " + Dr::CurrentTimeAsString() + ", Mode: " + viewEditor->currentViewModeAsString());
+    ///static long update_count = 0;
+    ///Dr::SetLabelText(Label_Names::Label_Bottom, "Update Editor Widgets: " + QString::number(update_count++) +
+    ///                                            ", Mode: " + viewEditor->currentViewModeAsString());
 }
 
-void FormMain::updateItemSelection(Editor_Widgets selected_from) {
+void FormMain::updateItemSelection(Editor_Widgets selected_from, QList<long> optional_key_list) {
     // Selects items in scene based on new selection in tree view
     if (selected_from != Editor_Widgets::Scene_View)    sceneEditor->updateSelectionFromProjectTree( treeProjectEditor->selectedItems() );
     if (selected_from != Editor_Widgets::Project_Tree)  {
-        // Don't update project tree while rubber band box is being moved around, very slow
-        if (viewEditor->currentViewMode() != View_Mode::Selecting)
+        // If we passed custom list
+        if (optional_key_list.count() > 0) {
+            treeProjectEditor->updateSelectionFromKeyList( optional_key_list );
+
+        // Otherwise, don't update project tree while rubber band box is being moved around, very slow
+        } else if (viewEditor->currentViewMode() != View_Mode::Selecting) {
             treeProjectEditor->updateSelectionFromView( sceneEditor->getSelectionItems() );
+        }
     }
 
     // Updates status bar, enables / disables toolbar buttons
@@ -114,18 +125,13 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from) {
 
 
     // !!!!! #TEMP: Testing to make sure not running non stop
-    Dr::SetLabelText(Label_Names::Label_Bottom, "Update Selection: " + Dr::CurrentTimeAsString());
+    ///static long update_count = 0;
+    ///Dr::SetLabelText(Label_Names::Label_Bottom, "Update Selection: " + QString::number(update_count++));
 }
 
 void FormMain::updateInspectorEnabledProperties() {
     treeInspector->updateLockedSettings();
 };
-
-void FormMain::updateItemChanges(Editor_Widgets selected_from) {
-    if (selected_from != Editor_Widgets::Scene_View) {
-        sceneEditor->unselectLockedItems();
-    }
-}
 
 
 

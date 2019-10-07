@@ -99,17 +99,27 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
 //##    Selects rows based on items selected in view
 //####################################################################################
 void TreeProject::updateSelectionFromView(QList<QGraphicsItem*> item_list) {
+    QList <long> keys;
+    for (auto item : item_list) {
+        long item_key = item->data(User_Roles::Key).toLongLong();
+        keys.append(item_key);
+    }
+    updateSelectionFromKeyList(keys);
+}
+
+//####################################################################################
+//##    Selects rows based on custom key list
+//####################################################################################
+void TreeProject::updateSelectionFromKeyList(QList<long> key_list) {
     setAllowSelectionEvent(false);
     clearSelection();
 
     long items_selected = 0;
-    for (auto item : item_list) {
-        long item_key = item->data(User_Roles::Key).toLongLong();
-
+    for (auto key : key_list) {
         for (auto row : getListOfAllTreeWidgetItems()) {
             long row_key = row->data(0, User_Roles::Key).toLongLong();
 
-            if (item_key == row_key) {
+            if (key == row_key) {
                 row->setSelected(true);
 
                 if (items_selected == 0) {

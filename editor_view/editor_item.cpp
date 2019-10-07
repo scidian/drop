@@ -5,6 +5,7 @@
 //      DrItem Class Definitions
 //
 //
+#include <QGraphicsSceneMouseEvent>
 #include "colors/colors.h"
 #include "debug.h"
 #include "editor_item.h"
@@ -227,22 +228,22 @@ void DrItem::applyFilters() {
 //####################################################################################
 void DrItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     DrSettings *settings = m_project->findSettingsFromKey(getThingKey());
-    if (settings == nullptr) return;
-    if (settings->isLocked()) return;
+    if (settings == nullptr)  event->ignore();
+    if (settings->isLocked()) event->ignore();
     QGraphicsItem::mousePressEvent(event);
 }
 
 void DrItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     DrSettings *settings = m_project->findSettingsFromKey(getThingKey());
-    if (settings == nullptr) return;
-    if (settings->isLocked()) return;
+    if (settings == nullptr)  event->ignore();
+    if (settings->isLocked()) event->ignore();
     QGraphicsItem::mouseMoveEvent(event);
 }
 
 void DrItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     DrSettings *settings = m_project->findSettingsFromKey(getThingKey());
-    if (settings == nullptr) return;
-    if (settings->isLocked()) return;
+    if (settings == nullptr)  event->ignore();
+    if (settings->isLocked()) event->ignore();
     QGraphicsItem::mouseReleaseEvent(event);
 }
 

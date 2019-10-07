@@ -44,12 +44,14 @@ void DrView::mousePressEvent(QMouseEvent *event) {
     m_origin_in_scene = mapToScene(m_origin);
 
     // Get top most unlocked item
+    long        origin_item_key = 0;
+    DrSettings *origin_item_settings = nullptr;
     m_origin_item =  itemAt(event->pos());
     for (auto item : items(event->pos())) {
-        long item_key = item->data(User_Roles::Key).toLongLong();
-        DrSettings *settings = m_project->findSettingsFromKey(item_key);
-        if (settings != nullptr) {
-            if (settings->isLocked() == false) {
+        origin_item_key = item->data(User_Roles::Key).toLongLong();
+        origin_item_settings = m_project->findSettingsFromKey(origin_item_key);
+        if (origin_item_settings != nullptr) {
+            if (origin_item_settings->isLocked() == false) {
                 m_origin_item = item;
                 break;
             }
@@ -90,41 +92,37 @@ void DrView::mousePressEvent(QMouseEvent *event) {
             //                    #NOTE: If object was not already selected the Inspector will be updated when the
             //                           DrScene::selectionChanged slot fires
             if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
+                if (m_origin_item != nullptr && origin_item_settings != nullptr) {
 
-                if (m_origin_item != nullptr) {
-                    long item_key = m_origin_item->data(User_Roles::Key).toLongLong();
-                    DrSettings *settings = m_project->findSettingsFromKey(item_key);
-                    if (settings != nullptr) {
-
-                        // ***** If we clicked clicked a new item, set selection group to that
-                        if (my_scene->getSelectionItems().contains(m_origin_item) == false) {
-                            my_scene->clearSelection();
-                            m_origin_item->setSelected(true);
-
-                        } else {
-                            m_editor_relay->buildInspector( { static_cast<long>(m_origin_item->data(User_Roles::Key).toLongLong()) } );
-                        }
-
-                        // ***** Process press event for item movement (Translation)
-                        if (settings->isLocked() == false) {
-                            // Make sure item is on top before firing QGraphicsView event so we start translating properly
-                            double original_z = m_origin_item->zValue();
-                            m_origin_item->setZValue(std::numeric_limits<double>::max());
-                            QGraphicsView::mousePressEvent(event);
-                            m_origin_item->setZValue(original_z);
-
-                            // Prep Translating start
-                            viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
-                            QTimer::singleShot(500, this, SLOT(checkTranslateToolTipStarted()));
-
-                            m_hide_bounding = true;
-                            m_view_mode = View_Mode::Translating;
-
-                            for (auto item : my_scene->getSelectionItems()) {
-                                item->moveBy(0, 0);
-                            }
-                        }
+                    // ***** If we clicked clicked a new item, set selection group to that
+                    if (my_scene->getSelectionItems().contains(m_origin_item) == false) {
+                        my_scene->clearSelection();
+                        m_origin_item->setSelected(true);
                     }
+
+                    // ***** Process press event for item movement (Translation)
+                    if (origin_item_settings->isLocked() == false) {
+                        // Make sure item is on top before firing QGraphicsView event so we start translating properly
+                        double original_z = m_origin_item->zValue();
+                        m_origin_item->setZValue(std::numeric_limits<double>::max());
+                        QGraphicsView::mousePressEvent(event);
+                        m_origin_item->setZValue(original_z);
+
+                        // Prep Translating start
+                        viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
+                        QTimer::singleShot(500, this, SLOT(checkTranslateToolTipStarted()));
+
+                        m_hide_bounding = true;
+                        m_view_mode = View_Mode::Translating;
+
+                        for (auto item : my_scene->getSelectionItems()) {
+                            item->moveBy(0, 0);
+                        }
+                    } else {
+                        m_editor_relay->buildInspector( { origin_item_key } );
+                        m_editor_relay->updateItemSelection(Editor_Widgets::Scene_View, { origin_item_key } );
+                    }
+
                 }
 
             // ******************** If clicked while control is down, add to selection group, or take out
