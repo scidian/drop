@@ -29,7 +29,7 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
     // ***** If size of list is zero, clear selected_key and exit function
     QList<QTreeWidgetItem*> item_list = this->selectedItems();
     if (item_list.size() == 0) {
-        this->setSelectedKey(0);
+        this->setSelectedKey(c_no_key);
         m_editor_relay->buildInspector(QList<long> { });
         m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree);
         return;

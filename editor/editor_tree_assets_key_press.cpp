@@ -5,6 +5,7 @@
 //
 //
 //
+#include <QDebug>
 #include <QKeyEvent>
 
 #include "colors/colors.h"
@@ -34,18 +35,51 @@
 //####################################################################################
 void TreeAssets::keyPressEvent(QKeyEvent *event) {
 
-    if (event->key() == Qt::Key_Up) {
+    // If nothing selected, pass on key press and exit
+    if (getSelectedKey() == c_no_key) { QTreeWidget::keyPressEvent(event);  return; }
+
+    // ***** Find frame of selected item
+    QList<QFrame*> frames = this->findChildren<QFrame *>("assetFrame");
+    QFrame *selected_frame = nullptr;
+    QFrame *parent_frame =   nullptr;
+    int     layout_index =   c_no_key;
+    for (auto frame : frames) {
+        if (frame->property(User_Property::Key).toLongLong() == getSelectedKey()) {
+            selected_frame = frame;
+            parent_frame = dynamic_cast<QFrame*>(frame->parentWidget());
+            layout_index = parent_frame->layout()->indexOf(frame);
+            break;
+        }
+    }
+    if (layout_index == c_no_key) {     QTreeWidget::keyPressEvent(event);  return; }
+
+
+    // ***** Process arrow keys
+    if (event->key() == Qt::Key_Right) {
+        if (layout_index < parent_frame->layout()->count() - 1) {
+            layout_index++;
+            QFrame *new_frame = dynamic_cast<QFrame*>(parent_frame->layout()->itemAt(layout_index)->widget());
+            long new_key = new_frame->property(User_Property::Key).toLongLong();
+            setSelectedKey(new_key);
+        }
+
+    } else if (event->key() == Qt::Key_Left) {
+        if (layout_index > 0) {
+            layout_index--;
+            QFrame *new_frame = dynamic_cast<QFrame*>(parent_frame->layout()->itemAt(layout_index)->widget());
+            long new_key = new_frame->property(User_Property::Key).toLongLong();
+            setSelectedKey(new_key);
+        }
 
 
     // ***** Delete Asset
     } else if (event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace) {
-        if (getSelectedKey() == 0) return;
         DrAsset *asset = m_project->findAssetFromKey(getSelectedKey());
         if (asset == nullptr) return;
         if (asset->getAssetType() == DrAssetType::Effect) return;
 
         removeAsset(getSelectedKey());
-        setSelectedKey(0);
+        setSelectedKey(c_no_key);
 
         //######################
         //######################
@@ -63,8 +97,6 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
     }
 
     this->update();
-
-    QTreeWidget::keyPressEvent(event);
 }
 
 

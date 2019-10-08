@@ -8,6 +8,7 @@
 #include <QButtonGroup>
 #include <QDebug>
 
+#include "editor/editor_tree_assets.h"
 #include "editor_view/editor_item.h"
 #include "editor_view/editor_scene.h"
 #include "editor_view/editor_view.h"
@@ -55,8 +56,8 @@ void FormMain::buttonGroupLayeringClicked(int id) {
     Buttons_Layering clicked = static_cast<Buttons_Layering>(id);
 
     if (clicked == Buttons_Layering::Send_To_Back) {
-
-        Dr::ShowMessageBox( m_project->testSpeedFindSettings(1000) );
+        // !!!!! #TEMP: Map speed testing
+        ///Dr::ShowMessageBox( m_project->testSpeedFindSettings(1000) );
 
     }
 }
@@ -69,18 +70,16 @@ void FormMain::buttonGroupEditClicked(int id) {
     Buttons_Edit clicked = static_cast<Buttons_Edit>(id);
 
     if (clicked == Buttons_Edit::Delete) {
+        QKeyEvent *event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Delete, { Qt::KeyboardModifier::NoModifier });
 
-        if (getActiveWidget() == Editor_Widgets::Project_Tree ||
-            getActiveWidget() == Editor_Widgets::Scene_View) {
-
-            QKeyEvent *event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Delete, { Qt::KeyboardModifier::NoModifier });
+        if (getActiveWidget() == Editor_Widgets::Project_Tree || getActiveWidget() == Editor_Widgets::Scene_View) {
             sceneEditor->keyPressEvent(event);
             delete event;
 
         } else if (getActiveWidget() == Editor_Widgets::Asset_Tree) {
-
+            treeAssetEditor->keyPressEvent(event);
+            delete event;
         }
-
     }
 }
 

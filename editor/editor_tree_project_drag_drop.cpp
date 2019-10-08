@@ -73,8 +73,7 @@ void TreeProject::dragMoveEvent(QDragMoveEvent *event) {
     // Get item under mouse, if not null lets process it to see if we will allow dropping there
     QTreeWidgetItem *item_at = this->itemAt(event->pos());
     m_can_drop = false;
-    if (item_at != nullptr)
-    {
+    if (item_at != nullptr) {
         long        check_key = item_at->data(0, User_Roles::Key).toLongLong();
 
         // !!!!! #DEBUG:    Show stage tree drag event info
@@ -85,11 +84,11 @@ void TreeProject::dragMoveEvent(QDragMoveEvent *event) {
         // !!!!! END
 
         // Check if its the same type as already selected, if so allow possible drop
-        if (m_is_dragging && m_selected_key != 0 && check_key != 0) {
+        if (m_is_dragging && m_selected_key > 0 && check_key > 0) {
             DrSettings *check_settings =    m_project->findSettingsFromKey(check_key);
             DrSettings *selected_settings = m_project->findSettingsFromKey(m_selected_key);
 
-            if ( check_settings->getType() == selected_settings->getType() ) { m_can_drop = true; }
+            if (check_settings->getType() == selected_settings->getType()) { m_can_drop = true; }
         }
     }
 

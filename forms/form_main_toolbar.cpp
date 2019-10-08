@@ -18,6 +18,7 @@
 #include "globals.h"
 #include "helper.h"
 #include "project/project.h"
+#include "project/project_asset.h"
 #include "project/project_world_stage_thing.h"
 #include "widgets/widgets_event_filters.h"
 
@@ -28,14 +29,13 @@
 void FormMain::updateToolbar() {
 
     if (m_current_mode == Form_Main_Mode::World_Editor) {
+        for (auto button : buttonsGroupLayering->buttons())     if (button->isEnabled()) button->setEnabled(false);
+        for (auto button : buttonsGroupEdit->buttons())         if (button->isEnabled()) button->setEnabled(false);
+        for (auto button : buttonsGroupTransform->buttons())    if (button->isEnabled()) button->setEnabled(false);
+
         QString selected = "No Selection";
         if (getActiveWidget() == Editor_Widgets::Project_Tree || getActiveWidget() == Editor_Widgets::Scene_View) {
-            if (sceneEditor->getSelectionCount() == 0) {
-                for (auto button : buttonsGroupLayering->buttons())     if (button->isEnabled()) button->setEnabled(false);
-                for (auto button : buttonsGroupEdit->buttons())         if (button->isEnabled()) button->setEnabled(false);
-                for (auto button : buttonsGroupTransform->buttons())    if (button->isEnabled()) button->setEnabled(false);
-
-            } else {
+            if (sceneEditor->getSelectionCount() > 0) {
                 for (auto button : buttonsGroupLayering->buttons())     if (!button->isEnabled()) button->setEnabled(true);
                 for (auto button : buttonsGroupEdit->buttons())         if (!button->isEnabled()) button->setEnabled(true);
                 for (auto button : buttonsGroupTransform->buttons())    if (!button->isEnabled()) button->setEnabled(true);
@@ -50,18 +50,14 @@ void FormMain::updateToolbar() {
                 }
             }
 
-        } else if (getActiveWidget() == Editor_Widgets::Asset_Tree && treeAssetEditor->getSelectedKey() != 0) {
-            // Disable Scene buttons
-            for (auto button : buttonsGroupLayering->buttons())     if (button->isEnabled()) button->setEnabled(false);
-            for (auto button : buttonsGroupTransform->buttons())    if (button->isEnabled()) button->setEnabled(false);
-
-            // Enabled Trash Can
-            for (auto button : buttonsGroupEdit->buttons())         if (!button->isEnabled()) button->setEnabled(true);
-
-        } else {
-            for (auto button : buttonsGroupLayering->buttons())     if (button->isEnabled()) button->setEnabled(false);
-            for (auto button : buttonsGroupEdit->buttons())         if (button->isEnabled()) button->setEnabled(false);
-            for (auto button : buttonsGroupTransform->buttons())    if (button->isEnabled()) button->setEnabled(false);
+        } else if (getActiveWidget() == Editor_Widgets::Asset_Tree && treeAssetEditor->getSelectedKey() != c_no_key) {
+            // Enable Trash Can
+            DrAsset *asset = m_project->findAssetFromKey(treeAssetEditor->getSelectedKey());
+            if (asset != nullptr) {
+                if (asset->getAssetType() != DrAssetType::Effect) {
+                    for (auto button : buttonsGroupEdit->buttons())     if (!button->isEnabled()) button->setEnabled(true);
+                }
+            }
         }
 
         labelSelected->setText(selected);

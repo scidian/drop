@@ -130,7 +130,12 @@ DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning) {
 
 // Searches all member variables / containers for the specified unique project key
 DrType DrProject::findChildTypeFromKey(long check_key) {
-    return findSettingsFromKey(check_key)->getType();
+    DrSettings *settings = findSettingsFromKey(check_key);
+    if (settings == nullptr) {
+        return DrType::NotFound;
+    } else {
+        return settings->getType();
+    }
 }
 
 

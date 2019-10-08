@@ -14,6 +14,8 @@
 #include <QTimer>
 #include <QTreeWidget>
 
+#include "enums.h"
+
 // Forward declarations
 class DrProject;
 class DrProperty;
@@ -44,7 +46,7 @@ private:
     // Local Variables
     DrFilterHoverHandler *m_filter_hover;                   // Pointer to an event filter hover handler
 
-    long                  m_selected_key = 0;               // Unique Key of last clicked on Asset
+    long                  m_selected_key = c_no_key;        // Unique Key of last clicked on Asset
 
     QList<QFrame*>        m_asset_frames;                   // List of the single row frames that contain name and pixmap labels
 

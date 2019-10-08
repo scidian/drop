@@ -67,8 +67,8 @@ Qt::Orientations DrQLayoutFlow::expandingDirections() const    { return nullptr;
 int DrQLayoutFlow::count() const                               { return item_list.size(); }
 QSize DrQLayoutFlow::sizeHint() const                          { return minimumSize(); }
 bool DrQLayoutFlow::hasHeightForWidth() const                  { return true; }
-int DrQLayoutFlow::heightForWidth(int width) const
-{
+
+int DrQLayoutFlow::heightForWidth(int width) const {
     int height = doLayout(QRect(0, 0, width, 0), true);
     return height;
 }

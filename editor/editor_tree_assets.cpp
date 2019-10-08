@@ -67,7 +67,7 @@ TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor
 
 // Removes selected key on focus loss
 void TreeAssets::focusOutEvent(QFocusEvent *) {
-    m_selected_key = 0;
+    m_selected_key = c_no_key;
     m_editor_relay->updateItemSelection(Editor_Widgets::Asset_Tree, { } );
 }
 
