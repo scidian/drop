@@ -37,7 +37,7 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
 
     // ***** If size is one, reset first selected item
     if (item_list.size() == 1) {
-        long selected_key = item_list.first()->data(0, User_Roles::Key).toLongLong();       // grab stored key from list view user data
+        long selected_key = item_list.first()->data(0, User_Roles::Key).toLongLong();       // grab stored key from QTreeWidgetItem user data
         this->setSelectedKey(selected_key);
 
         //******************************************************
@@ -91,7 +91,7 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
     // Call to outside update functions to update selection in scene view
     m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree);
 
-    QTreeWidget::selectionChanged(selected, deselected);                    // pass event to parent
+    QTreeWidget::selectionChanged(selected, deselected);                                    // pass event to parent
 }
 
 

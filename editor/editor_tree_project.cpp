@@ -6,6 +6,7 @@
 //
 //
 #include <QCheckBox>
+#include <QDebug>
 #include <QPainter>
 
 #include "colors/colors.h"
@@ -22,6 +23,9 @@
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
+
+#define COLUMN_TITLE    0
+#define COLUMN_LOCK     1
 
 
 //####################################################################################
@@ -91,23 +95,16 @@ void TreeProject::buildProjectTree() {
                 else        check_images +=    " QCheckBox::indicator:checked {   image: url(:/assets/tree_icons/tree_lock.png); } ";
 
                 QCheckBox *lock_item = new QCheckBox();
+                lock_item->setObjectName("projectTreeLock");
+                lock_item->setProperty(User_Property::Key, QVariant::fromValue( thing->getKey() ));
                 lock_item->setFocusPolicy( Qt::FocusPolicy::NoFocus );
                 lock_item->setStyleSheet(  check_images );
                 lock_item->setCheckState(  thing->isLocked() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked );
 
                 // Locking / unlocking function
-                connect(lock_item, &QCheckBox::toggled, this, [this, thing, lock_item] () {
-                    if (thing->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Item_Locked).toBool()) {
-                        lock_item->setCheckState( Qt::CheckState::Checked );
-                    } else {
-                        bool locked = (lock_item->checkState() == Qt::CheckState::Checked) ? true : false;
-                        thing->setLocked( locked );
-                    }
-                    this->m_editor_relay->updateInspectorEnabledProperties();
-                    this->m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree);
-                });
+                connect(lock_item, &QCheckBox::toggled, this, [this, lock_item]() { this->processLockClick(lock_item); });
 
-                this->setItemWidget(thing_item, 1, lock_item);
+                this->setItemWidget(thing_item, COLUMN_LOCK, lock_item);
             }
         }
     }
@@ -146,6 +143,68 @@ QList <QTreeWidgetItem*> TreeProject::getListOfChildrenFromItem( QTreeWidgetItem
 
     return items;
 }
+
+
+//####################################################################################
+//##    Handles click on little Lock Button
+//####################################################################################
+void TreeProject::processLockClick(QCheckBox *from_lock) {
+    // Check if currently locked
+    bool locked = (from_lock->checkState() == Qt::CheckState::Checked) ? true : false;
+
+    // Find entity key attached to lock box
+    long lock_key = from_lock->property(User_Property::Key).toLongLong();
+
+    // See if item is selected
+    QList<QTreeWidgetItem*> item_list = this->selectedItems();
+    bool selected = false;
+    for (auto item : item_list) {
+        if (lock_key == item->data(0, User_Roles::Key).toLongLong()) {                  // grab stored key from QTreeWidgetItem user data
+            selected = true;
+            break;
+        }
+    }
+
+    // Make a list of locks to process
+    QList<QCheckBox*> locks;
+    if (selected == false) {
+        locks.append(from_lock);
+    } else {
+        for (auto item : item_list) {
+            QCheckBox *check_box = dynamic_cast<QCheckBox*>( this->itemWidget(item, COLUMN_LOCK) );
+            if (check_box) locks.append(check_box);
+        }
+    }
+
+    // Process locks
+    for (auto lock : locks) {
+        long key = lock->property(User_Property::Key).toLongLong();
+        DrSettings *entity = m_project->findSettingsFromKey( key );                     // grab stored key from QCheckBox property
+        if (!entity) continue;
+
+        if (entity->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Item_Locked).toBool()) {
+            lock->setCheckState( Qt::CheckState::Checked );
+        } else {
+            entity->setLocked( locked );
+        }
+        lock->setCheckState( entity->isLocked() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked );
+    }
+
+    this->m_editor_relay->updateInspectorEnabledProperties();
+    this->m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree);
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

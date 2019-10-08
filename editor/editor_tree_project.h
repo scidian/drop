@@ -8,6 +8,7 @@
 #ifndef EDITOR_TREE_PROJECT_H
 #define EDITOR_TREE_PROJECT_H
 
+#include <QCheckBox>
 #include <QGraphicsItem>
 #include <QProxyStyle>
 #include <QTreeWidget>
@@ -50,7 +51,8 @@ public:
     // Function calls
     void                        buildProjectTree();
     QList <QTreeWidgetItem*>    getListOfAllTreeWidgetItems();
-    QList <QTreeWidgetItem*>    getListOfChildrenFromItem( QTreeWidgetItem *item );
+    QList <QTreeWidgetItem*>    getListOfChildrenFromItem( QTreeWidgetItem *item);
+    void                        processLockClick(QCheckBox *from_lock);
     void                        updateItemNames(QList<DrSettings*> changed_items, QList<long> property_keys);
     void                        updateSelectionFromKeyList(QList<long> key_list);
     void                        updateSelectionFromView(QList<QGraphicsItem*> item_list);
