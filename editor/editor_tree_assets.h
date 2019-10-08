@@ -56,13 +56,14 @@ public:
     // Constructor
     explicit        TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
 
-    // Event Overrides, start at Qt Docs for QTreeWidget Class to find more
+    // Event Overrides
     virtual void    focusOutEvent(QFocusEvent *event) override;                                         // Inherited from QAbstractItemView
+    virtual void    keyPressEvent(QKeyEvent *event) override;
 
     // Tree Building Functions
-    void                    addAssetsToCategory(QTreeWidgetItem *tree_item, QFrame *asset_frame);
     void                    buildAssetTree(QString search_text = "");
     DrQPushButtonCategory*  createCategoryButton(QTreeWidgetItem *item, QString name, QString icon_resource, QList<QString> advisor_info);
+    void                    removeAsset(long asset_key);
 
     // Function Calls
     IEditorRelay*   getRelay() { return m_editor_relay; }

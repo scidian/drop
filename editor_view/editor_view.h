@@ -256,6 +256,7 @@ public:
     QString         currentViewModeAsString();
     double          currentZoomLevel() { return m_zoom_scale; }
     bool            hasShownAScene() const { return m_flag_has_shown_a_scene_yet; }
+    DrScene*        getDrScene() { return my_scene; }
     void            setHasShownAScene(bool has) { m_flag_has_shown_a_scene_yet = has; }
     void            spaceBarDown();
     void            spaceBarUp();

@@ -91,12 +91,12 @@ public:
     AssetMap&   getAssetMap()           { return m_assets; }
     long        getNumberOfAssets()     { return static_cast<long>(m_assets.size()); }
 
-    DrEffect*   getDrEffect(long key)   { return m_effects[key]; }
-    EffectMap&  getDrEffectMap()        { return m_effects; }
-    DrFont*     getDrFont(long key)     { return m_fonts[key]; }
-    FontMap&    getDrFontMap()          { return m_fonts; }
-    DrImage*    getDrImage(long key)    { return m_images[key]; }
-    ImageMap&   getDrImageMap()         { return m_images; }
+    DrEffect*   getEffect(long key)     { return m_effects[key]; }
+    EffectMap&  getEffectMap()          { return m_effects; }
+    DrFont*     getFont(long key)       { return m_fonts[key]; }
+    FontMap&    getFontMap()            { return m_fonts; }
+    DrImage*    getImage(long key)      { return m_images[key]; }
+    ImageMap&   getImageMap()           { return m_images; }
 
     // Options Calls
     QVariant    getOption(Project_Options option_to_get)   { return m_options[option_to_get]; }

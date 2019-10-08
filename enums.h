@@ -16,7 +16,8 @@ class DrSettings;
 enum class Properties;
 
 // Global Enum Constants
-constexpr int    c_no_key = -1;             // Value that represents no item selected
+constexpr int   c_no_key =        -1;               // Value that represents no item selected
+constexpr int   c_same_key =    -100;               // Value signifying to use the value already obtained
 
 //####################################################################################
 //##

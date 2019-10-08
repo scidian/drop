@@ -68,7 +68,9 @@ SOURCES += \
     colors/colors_palette_window_themes.cpp \
     editor/editor_tree_advisor.cpp \
     editor/editor_tree_assets.cpp \
-    editor/editor_tree_assets_mouse.cpp \
+    editor/editor_tree_assets_drag_drop.cpp \
+    editor/editor_tree_assets_event_filter.cpp \
+    editor/editor_tree_assets_key_press.cpp \
     editor/editor_tree_assets_update.cpp \
     editor/editor_tree_inspector.cpp \
     editor/editor_tree_inspector_update.cpp \

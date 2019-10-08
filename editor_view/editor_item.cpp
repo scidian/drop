@@ -50,14 +50,14 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
             break;
         case DrAssetType::Text: {
             QString text = m_thing->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
-            m_pixmap = m_editor_relay->currentProject()->getDrFont( m_asset->getSourceKey() )->createText( text );
+            m_pixmap = m_editor_relay->currentProject()->getFont( m_asset->getSourceKey() )->createText( text );
             setPixmap(m_pixmap);
             m_asset_width =  m_pixmap.width();
             m_asset_height = m_pixmap.height();
             break;
         }
         case DrAssetType::Effect:
-            switch (m_editor_relay->currentProject()->getDrEffect( m_asset->getSourceKey() )->getEffectType()) {
+            switch (m_editor_relay->currentProject()->getEffect( m_asset->getSourceKey() )->getEffectType()) {
                 case DrEffectType::Fire: {
                     uint color_1 =      m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1)->getValue().toUInt();
                     uint color_2 =      m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2)->getValue().toUInt();

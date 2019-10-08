@@ -104,7 +104,7 @@ void DrView::dropEvent(QDropEvent *event) {
                 my_scene->addItemToSceneFromThing( thing );
                 break;
             case DrAssetType::Effect:
-                effect = m_project->getDrEffect( asset->getSourceKey() );
+                effect = m_project->getEffect( asset->getSourceKey() );
                 switch (effect->getEffectType()) {
                     case DrEffectType::Fire:
                         thing = stage->addThing(DrThingType::Fire, asset_key, position.x(), -position.y(), -5);             // !!!!! #FIX: z order

@@ -7,11 +7,13 @@
 //
 #include <QCheckBox>
 #include <QDebug>
+#include <QKeyEvent>
 #include <QPainter>
 
 #include "colors/colors.h"
 #include "debug.h"
 #include "editor_tree_project.h"
+#include "editor_view/editor_view.h"
 #include "globals.h"
 #include "interface_editor_relay.h"
 #include "helper.h"
@@ -120,9 +122,19 @@ void TreeProject::enterEvent(QEvent *event) {
     QTreeWidget::enterEvent(event);
 }
 
+// Sets this as the Active Editor widget
 void TreeProject::focusInEvent(QFocusEvent *event) {
     m_editor_relay->setActiveWidget(Editor_Widgets::Project_Tree);
     QTreeWidget::focusInEvent(event);
+}
+
+// Forwards some keys to SceneView
+void TreeProject::keyPressEvent(QKeyEvent *event) {
+    if (event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace) {
+        m_editor_relay->getSceneView()->keyPressEvent(event);
+        return;
+    }
+    QTreeWidget::keyPressEvent(event);
 }
 
 
@@ -165,7 +177,7 @@ void TreeProject::processLockClick(QCheckBox *from_lock) {
         }
     }
 
-    // Make a list of locks to process
+    // Make a list of locks to process, either just the one, or all items that are selected
     QList<QCheckBox*> locks;
     if (selected == false) {
         locks.append(from_lock);
@@ -190,6 +202,7 @@ void TreeProject::processLockClick(QCheckBox *from_lock) {
         lock->setCheckState( entity->isLocked() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked );
     }
 
+    // Update Object Inspector Properties and Update SceneView selected items
     this->m_editor_relay->updateInspectorEnabledProperties();
     this->m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree);
 }

@@ -51,21 +51,21 @@ DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_
     switch (new_asset_type) {
         case DrAssetType::Character:
         case DrAssetType::Object:
-            my_starting_pixmap = m_parent_project->getDrImage(source_key)->getPixmapFromImage();
+            my_starting_pixmap = m_parent_project->getImage(source_key)->getPixmapFromImage();
             shape = autoCollisionShape(my_starting_pixmap);
             if (new_asset_type == DrAssetType::Character) {
-                initializeAssetSettingsCharacter(m_parent_project->getDrImage(source_key)->getSimplifiedName(), my_starting_pixmap, shape);
+                initializeAssetSettingsCharacter(m_parent_project->getImage(source_key)->getSimplifiedName(), my_starting_pixmap, shape);
             } else if (new_asset_type == DrAssetType::Object) {
-                initializeAssetSettingsObject(m_parent_project->getDrImage(source_key)->getSimplifiedName(), my_starting_pixmap, shape);
+                initializeAssetSettingsObject(m_parent_project->getImage(source_key)->getSimplifiedName(), my_starting_pixmap, shape);
             }
             break;
         case DrAssetType::Effect:
-            my_starting_pixmap = m_parent_project->getDrEffect(source_key)->getPixmap();
-            initializeAssetSettingsEffect(Dr::StringFromEffectType(m_parent_project->getDrEffect(source_key)->getEffectType()));
+            my_starting_pixmap = m_parent_project->getEffect(source_key)->getPixmap();
+            initializeAssetSettingsEffect(Dr::StringFromEffectType(m_parent_project->getEffect(source_key)->getEffectType()));
             break;
         case DrAssetType::Text:
-            my_starting_pixmap = m_parent_project->getDrFont(source_key)->getPixmap();
-            initializeAssetSettingsFont(m_parent_project->getDrFont(source_key));
+            my_starting_pixmap = m_parent_project->getFont(source_key)->getPixmap();
+            initializeAssetSettingsFont(m_parent_project->getFont(source_key));
             break;
 
     }

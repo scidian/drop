@@ -57,11 +57,12 @@ public:
     void                        updateSelectionFromKeyList(QList<long> key_list);
     void                        updateSelectionFromView(QList<QGraphicsItem*> item_list);
 
-    // Event Overrides, start at Qt Docs for QTreeWidget Class to find more
+    // Event Overrides
     virtual void    enterEvent(QEvent *event) override;                                                             // Inherited from QWidget
     virtual void    dragMoveEvent(QDragMoveEvent *event) override;                                                  // Inherited from QAbstractItemView
     virtual void    dropEvent(QDropEvent *event) override;                                                          // Inherited from QTreeWidget
     virtual void    focusInEvent(QFocusEvent *event) override;                                                      // Inherited from QAbstractItemView
+    virtual void    keyPressEvent(QKeyEvent *event) override;                                                       // Inherited from QAbstractItemView
     virtual void    selectionChanged (const QItemSelection &selected, const QItemSelection &deselected) override;   // Inherited from QTreeView
     virtual void    startDrag(Qt::DropActions supportedActions) override;                                           // Inherited from QAbstractItemView
 

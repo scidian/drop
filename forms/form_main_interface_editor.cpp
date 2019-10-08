@@ -72,7 +72,12 @@ void FormMain::buildProjectTree() {
 void FormMain::buildScene(long from_stage_key) {
     if (sceneEditor->scene_mutex.tryLock(10) == false) return;
 
-    if (sceneEditor->getCurrentStageKeyShown() != from_stage_key) {
+    // Rebuild existing Stage
+    if (from_stage_key == c_same_key) {
+        emit newStageSelected(m_project, sceneEditor, sceneEditor->getCurrentStageKeyShown(), sceneEditor->getCurrentStageKeyShown());
+
+    // Select new stage
+    } else if (sceneEditor->getCurrentStageKeyShown() != from_stage_key) {
         emit newStageSelected(m_project, sceneEditor, sceneEditor->getCurrentStageKeyShown(), from_stage_key);
     }
 
