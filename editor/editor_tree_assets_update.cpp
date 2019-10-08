@@ -80,8 +80,9 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
     update();
 
     // If some assets were changed, and items were updated, update those items in the other widgets
-    if (newly_changed_items.isEmpty() == false)
+    if (newly_changed_items.isEmpty() == false) {
         m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Asset_Tree, newly_changed_items, newly_changed_properties);
+    }
 }
 
 

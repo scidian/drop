@@ -56,6 +56,9 @@ public:
     // Constructor
     explicit        TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
 
+    // Event Overrides, start at Qt Docs for QTreeWidget Class to find more
+    virtual void    focusOutEvent(QFocusEvent *event) override;                                         // Inherited from QAbstractItemView
+
     // Tree Building Functions
     void                    addAssetsToCategory(QTreeWidgetItem *tree_item, QFrame *asset_frame);
     void                    buildAssetTree(QString search_text = "");
@@ -68,7 +71,7 @@ public:
 
     // Getters / Setters
     long            getSelectedKey() { return m_selected_key; }
-    void            setSelectedKey(long key) { m_selected_key = key; }
+    void            setSelectedKey(long key) { m_selected_key = key; this->repaint(); }
 
 private slots:
     void            searchTextChanged(QString new_text);

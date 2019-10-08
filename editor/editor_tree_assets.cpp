@@ -65,6 +65,9 @@ TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor
     parent->layout()->addWidget(m_search_widget);
 }
 
+// Removes selected key on focus lose
+void TreeAssets::focusOutEvent(QFocusEvent *) { m_selected_key = 0; }
+
 // SLOT: Catches signals from m_filter_hover and passes to InterfaceEditorRelay
 void TreeAssets::setAdvisorInfo(QString header, QString body) { m_editor_relay->setAdvisorInfo(header, body); }
 

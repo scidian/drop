@@ -14,6 +14,7 @@
 #include <QScreen>
 #include <QTimer>
 
+#include "colors/colors.h"
 #include "constants.h"
 #include "editor_tree_assets.h"
 #include "enums.h"
@@ -98,10 +99,21 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
             }
         }
 
+    // Highlights selected Asset Item
+    } else if (event->type() == QEvent::Paint) {
+        if (asset_key == m_editor_relay->getAssetTree()->getSelectedKey()) {
+            QPainter painter(asset_frame);
+            painter.setRenderHint(QPainter::Antialiasing, true);
+            painter.setPen( QPen(Dr::GetColor(Window_Colors::Icon_Dark), 2) );
+            painter.setBrush(Qt::NoBrush);
+            QRect box = asset_frame->rect();
+            box.setX( box.x() + 6);     box.setWidth(  box.width() -  1 );
+            box.setY( box.y() + 2);     box.setHeight( box.height() - 2 );
+            painter.drawRoundedRect(box, 6, 6, Qt::SizeMode::AbsoluteSize);
+        }
 
     // Reset asset name if it was scrolling
     } else if (event->type() == QEvent::HoverLeave) {
-
         m_flag_scrolling = false;
         m_timer->stop();
         if (scrolling_mutex.tryLock() == false) {
@@ -110,6 +122,19 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
         }
         scrolling_mutex.unlock();
     }
+
+
+    // ***** Event Debugging
+    // Paint == 12
+    // ToolTip = 110
+    // DynamicPropertyChange = 170
+    if (event->type() != QEvent::MouseMove &&
+        event->type() != QEvent::MouseButtonPress &&
+        event->type() != QEvent::MouseButtonRelease &&
+        event->type() != QEvent::HoverMove) {
+        ///Dr::SetLabelText(Label_Names::Label_1, "Event: " + QString::number(event->type()) + ", " + Dr::CurrentTimeAsString());
+    }
+
 
     return QObject::eventFilter(object, event);
 }
