@@ -120,7 +120,7 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                         }
                     }
 
-                    if (my_scene->getSelectionItems().count() == 1) {
+                    if (my_scene->getSelectionItems().count() <= 1) {
                         m_editor_relay->buildInspector( { origin_item_key } );
                         m_editor_relay->updateItemSelection(Editor_Widgets::Scene_View, { origin_item_key } );
                     }
