@@ -7,6 +7,7 @@
 //
 #include <QDebug>
 #include <QKeyEvent>
+#include <QScrollBar>
 
 #include "colors/colors.h"
 #include "constants.h"
@@ -61,12 +62,12 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
     // ***** Process arrow keys
     if (event->key() == Qt::Key_Right) {
         if (layout_index < flow->count() - 1) {
-            layout_index++;
+            if (layout_index % flow->rowWidth() < flow->rowWidth() - 1) layout_index++;
         }
 
     } else if (event->key() == Qt::Key_Left) {
         if (layout_index > 0) {
-            layout_index--;
+            if (layout_index % flow->rowWidth() > 0) layout_index--;
         }
 
     } else if (event->key() == Qt::Key_Up) {
@@ -75,7 +76,7 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
         }
 
     } else if (event->key() == Qt::Key_Down) {
-        if (layout_index < (flow->count() - 1 - flow->rowWidth())) {
+        if (layout_index < (flow->count() - flow->rowWidth())) {
             layout_index += flow->rowWidth();
         }
 
@@ -109,8 +110,20 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_Right || event->key() == Qt::Key_Left || event->key() == Qt::Key_Up || event->key() == Qt::Key_Down) {
         QFrame *new_frame = dynamic_cast<QFrame*>(flow->itemAt(layout_index)->widget());
         long new_key = new_frame->property(User_Property::Key).toLongLong();
-        setSelectedKey(new_key);
-        m_editor_relay->buildInspector( { new_key } );
+        if (new_key != getSelectedKey()) {
+            setSelectedKey(new_key);
+
+            int widget_top = new_frame->geometry().y() + parent_frame->geometry().y();
+            int widget_bot = widget_top + new_frame->geometry().height();
+
+            if (widget_bot > this->geometry().height()) {
+                verticalScrollBar()->setValue( verticalScrollBar()->value() + (widget_bot - this->geometry().height() + 10));
+            } else if (widget_top < 0) {
+                verticalScrollBar()->setValue( verticalScrollBar()->value() + (widget_top - 10));
+            }
+
+            m_editor_relay->buildInspector( { new_key } );
+        }
     }
 
 

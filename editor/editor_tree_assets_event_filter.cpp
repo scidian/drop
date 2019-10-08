@@ -108,7 +108,7 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
             painter.setBrush(Qt::NoBrush);
             QRect box = asset_frame->rect();
             box.setX( box.x() + 6);     box.setWidth(  box.width() -  1 );
-            box.setY( box.y() + 2);     box.setHeight( box.height() - 2 );
+            box.setY( box.y() + 2);     box.setHeight( box.height() - 3 );
             painter.drawRoundedRect(box, 5, 5, Qt::SizeMode::AbsoluteSize);
         }
 
