@@ -56,11 +56,11 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
 
     // On mouse down, update the Inspector, prepare for drag and drop
     if (event->type() == QEvent::MouseButtonPress) {
+        m_editor_relay->getAssetTree()->setSelectedKey( asset_key );
         m_editor_relay->setActiveWidget(Editor_Widgets::Asset_Tree);
+
         m_editor_relay->buildInspector( { asset_key } );
         m_editor_relay->updateItemSelection(Editor_Widgets::Asset_Tree, { });
-
-        m_editor_relay->getAssetTree()->setSelectedKey( asset_key );
 
         QMouseEvent *mouse_event = dynamic_cast<QMouseEvent*>(event);
         asset_frame->setProperty(User_Property::Mouse_Down,     true);
@@ -109,7 +109,7 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
             QRect box = asset_frame->rect();
             box.setX( box.x() + 6);     box.setWidth(  box.width() -  1 );
             box.setY( box.y() + 2);     box.setHeight( box.height() - 2 );
-            painter.drawRoundedRect(box, 6, 6, Qt::SizeMode::AbsoluteSize);
+            painter.drawRoundedRect(box, 5, 5, Qt::SizeMode::AbsoluteSize);
         }
 
     // Reset asset name if it was scrolling

@@ -65,11 +65,16 @@ TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor
     parent->layout()->addWidget(m_search_widget);
 }
 
-// Removes selected key on focus lose
-void TreeAssets::focusOutEvent(QFocusEvent *) { m_selected_key = 0; }
+// Removes selected key on focus loss
+void TreeAssets::focusOutEvent(QFocusEvent *) {
+    m_selected_key = 0;
+    m_editor_relay->updateItemSelection(Editor_Widgets::Asset_Tree, { } );
+}
 
 // SLOT: Catches signals from m_filter_hover and passes to InterfaceEditorRelay
-void TreeAssets::setAdvisorInfo(QString header, QString body) { m_editor_relay->setAdvisorInfo(header, body); }
+void TreeAssets::setAdvisorInfo(QString header, QString body) {
+    m_editor_relay->setAdvisorInfo(header, body);
+}
 
 // SLOT: Catches signal textChanged() from m_search_bar QLineEdit search bar
 void TreeAssets::searchTextChanged(QString new_text) {

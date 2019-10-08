@@ -36,6 +36,7 @@ enum class Editor_Widgets {
     Inspector_Tree,
     Project_Tree,
     Scene_View,
+
     ToolBar,
 };
 

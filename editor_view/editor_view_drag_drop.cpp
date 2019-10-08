@@ -195,6 +195,7 @@ void DrView::dropEvent(QDropEvent *event) {
 
     // ***** Selects the newly dropped Thing, loads to Object Inspector
     if (thing != nullptr) {
+        this->setFocus();
         m_editor_relay->buildInspector( { thing->getKey() } );
         m_editor_relay->updateItemSelection(Editor_Widgets::Scene_View, { thing->getKey() } );
         m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree );

@@ -9,6 +9,7 @@
 #include <QToolBar>
 #include <QToolButton>
 
+#include "editor/editor_tree_assets.h"
 #include "editor_view/editor_item.h"
 #include "editor_view/editor_scene.h"
 #include "editor_view/editor_view.h"
@@ -30,20 +31,14 @@ void FormMain::updateToolbar() {
         QString selected = "No Selection";
         if (getActiveWidget() == Editor_Widgets::Project_Tree || getActiveWidget() == Editor_Widgets::Scene_View) {
             if (sceneEditor->getSelectionCount() == 0) {
-                for (auto button : buttonsGroupLayering->buttons())
-                    if (button->isEnabled()) button->setEnabled(false);
-                for (auto button : buttonsGroupEdit->buttons())
-                    if (button->isEnabled()) button->setEnabled(false);
-                for (auto button : buttonsGroupTransform->buttons())
-                    if (button->isEnabled()) button->setEnabled(false);
+                for (auto button : buttonsGroupLayering->buttons())     if (button->isEnabled()) button->setEnabled(false);
+                for (auto button : buttonsGroupEdit->buttons())         if (button->isEnabled()) button->setEnabled(false);
+                for (auto button : buttonsGroupTransform->buttons())    if (button->isEnabled()) button->setEnabled(false);
 
             } else {
-                for (auto button : buttonsGroupLayering->buttons())
-                    if (!button->isEnabled()) button->setEnabled(true);
-                for (auto button : buttonsGroupEdit->buttons())
-                    if (!button->isEnabled()) button->setEnabled(true);
-                for (auto button : buttonsGroupTransform->buttons())
-                    if (!button->isEnabled()) button->setEnabled(true);
+                for (auto button : buttonsGroupLayering->buttons())     if (!button->isEnabled()) button->setEnabled(true);
+                for (auto button : buttonsGroupEdit->buttons())         if (!button->isEnabled()) button->setEnabled(true);
+                for (auto button : buttonsGroupTransform->buttons())    if (!button->isEnabled()) button->setEnabled(true);
 
                 if (sceneEditor->getSelectionCount() == 1) {
                     DrThing *thing = dynamic_cast<DrItem*>( sceneEditor->getSelectionItems().first() )->getThing();
@@ -55,16 +50,18 @@ void FormMain::updateToolbar() {
                 }
             }
 
-        } else if (getActiveWidget() == Editor_Widgets::Asset_Tree) {
+        } else if (getActiveWidget() == Editor_Widgets::Asset_Tree && treeAssetEditor->getSelectedKey() != 0) {
             // Disable Scene buttons
-            for (auto button : buttonsGroupLayering->buttons())
-                if (button->isEnabled()) button->setEnabled(false);
-            for (auto button : buttonsGroupTransform->buttons())
-                if (button->isEnabled()) button->setEnabled(false);
+            for (auto button : buttonsGroupLayering->buttons())     if (button->isEnabled()) button->setEnabled(false);
+            for (auto button : buttonsGroupTransform->buttons())    if (button->isEnabled()) button->setEnabled(false);
 
             // Enabled Trash Can
-            for (auto button : buttonsGroupEdit->buttons())
-                if (!button->isEnabled()) button->setEnabled(true);
+            for (auto button : buttonsGroupEdit->buttons())         if (!button->isEnabled()) button->setEnabled(true);
+
+        } else {
+            for (auto button : buttonsGroupLayering->buttons())     if (button->isEnabled()) button->setEnabled(false);
+            for (auto button : buttonsGroupEdit->buttons())         if (button->isEnabled()) button->setEnabled(false);
+            for (auto button : buttonsGroupTransform->buttons())    if (button->isEnabled()) button->setEnabled(false);
         }
 
         labelSelected->setText(selected);
