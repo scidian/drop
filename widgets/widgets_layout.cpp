@@ -69,7 +69,8 @@ QSize DrQLayoutFlow::sizeHint() const                          { return minimumS
 bool DrQLayoutFlow::hasHeightForWidth() const                  { return true; }
 
 int DrQLayoutFlow::heightForWidth(int width) const {
-    int height = doLayout(QRect(0, 0, width, 0), true);
+    int row_width;
+    int height = doLayout(QRect(0, 0, width, 0), row_width, true);
     return height;
 }
 
@@ -94,7 +95,7 @@ void DrQLayoutFlow::setGeometry(const QRect &rect) {
 
     QLayout::setGeometry(rect);
     m_last_size.setWidth(  rect.width() );
-    m_last_size.setHeight( doLayout(rect, false) );
+    m_last_size.setHeight( doLayout(rect, m_row_width, false) );
 
     // Forces an update of parent tree after resize of layout
     if (parentWidget()->objectName() == "assetsContainer") {
@@ -104,30 +105,36 @@ void DrQLayoutFlow::setGeometry(const QRect &rect) {
     }
 }
 
-int DrQLayoutFlow::doLayout(const QRect &rect, bool test_only) const {
+int DrQLayoutFlow::doLayout(const QRect &rect, int &row_width, bool test_only) const {
     int left, top, right, bottom;
     getContentsMargins(&left, &top, &right, &bottom);
     QRect effective_rect = rect.adjusted(+left, +top, -right, -bottom);
     int x = effective_rect.x();
     int y = effective_rect.y();
     int line_height = 0;
+    row_width = 0;
 
+    int column_count = 0;
     for (auto item : item_list) {
         int space_x = horizontalSpacing();
         int space_y = verticalSpacing();
-        if (space_x == -1)  space_x = item->widget()->style()->layoutSpacing(QSizePolicy::Frame, QSizePolicy::Frame, Qt::Horizontal);
-        if (space_y == -1)  space_y = item->widget()->style()->layoutSpacing(QSizePolicy::Frame, QSizePolicy::Frame, Qt::Vertical);
+        if (space_x == -1) space_x = item->widget()->style()->layoutSpacing(QSizePolicy::Frame, QSizePolicy::Frame, Qt::Horizontal);
+        if (space_y == -1) space_y = item->widget()->style()->layoutSpacing(QSizePolicy::Frame, QSizePolicy::Frame, Qt::Vertical);
 
         int next_x = x + item->sizeHint().width() + space_x;
+        row_width = qMax(row_width, column_count);
+        column_count++;
         if (next_x - space_x > effective_rect.right() && line_height > 0) {
             x = effective_rect.x();
             y = y + line_height + space_y;
             next_x = x + item->sizeHint().width() + space_x;
             line_height = 0;
+            column_count = 0;
         }
 
-        if (!test_only)
+        if (!test_only) {
             item->setGeometry(QRect(QPoint(x, y), item->sizeHint()));
+        }
 
         x = next_x;
         line_height = qMax(line_height, item->sizeHint().height());

@@ -28,6 +28,7 @@
 #include "project/project_world_stage_thing.h"
 #include "settings/settings.h"
 #include "settings/settings_component_property.h"
+#include "widgets/widgets_layout.h"
 
 
 //####################################################################################
@@ -42,12 +43,15 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
     QList<QFrame*> frames = this->findChildren<QFrame *>("assetFrame");
     QFrame *selected_frame = nullptr;
     QFrame *parent_frame =   nullptr;
+    DrQLayoutFlow *flow =    nullptr;
     int     layout_index =   c_no_key;
     for (auto frame : frames) {
         if (frame->property(User_Property::Key).toLongLong() == getSelectedKey()) {
             selected_frame = frame;
             parent_frame = dynamic_cast<QFrame*>(frame->parentWidget());
-            layout_index = parent_frame->layout()->indexOf(frame);
+            flow = dynamic_cast<DrQLayoutFlow*>(parent_frame->layout());
+            if (!flow) continue;
+            layout_index = flow->indexOf(frame);
             break;
         }
     }
@@ -56,19 +60,23 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
 
     // ***** Process arrow keys
     if (event->key() == Qt::Key_Right) {
-        if (layout_index < parent_frame->layout()->count() - 1) {
+        if (layout_index < flow->count() - 1) {
             layout_index++;
-            QFrame *new_frame = dynamic_cast<QFrame*>(parent_frame->layout()->itemAt(layout_index)->widget());
-            long new_key = new_frame->property(User_Property::Key).toLongLong();
-            setSelectedKey(new_key);
         }
 
     } else if (event->key() == Qt::Key_Left) {
         if (layout_index > 0) {
             layout_index--;
-            QFrame *new_frame = dynamic_cast<QFrame*>(parent_frame->layout()->itemAt(layout_index)->widget());
-            long new_key = new_frame->property(User_Property::Key).toLongLong();
-            setSelectedKey(new_key);
+        }
+
+    } else if (event->key() == Qt::Key_Up) {
+        if (layout_index >= flow->rowWidth()) {
+            layout_index -= flow->rowWidth();
+        }
+
+    } else if (event->key() == Qt::Key_Down) {
+        if (layout_index < (flow->count() - 1 - flow->rowWidth())) {
+            layout_index += flow->rowWidth();
         }
 
 
@@ -95,6 +103,16 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
 
         m_editor_relay->updateItemSelection(Editor_Widgets::Asset_Tree);
     }
+
+
+    // ***** If we pressed arrow key, update selection
+    if (event->key() == Qt::Key_Right || event->key() == Qt::Key_Left || event->key() == Qt::Key_Up || event->key() == Qt::Key_Down) {
+        QFrame *new_frame = dynamic_cast<QFrame*>(flow->itemAt(layout_index)->widget());
+        long new_key = new_frame->property(User_Property::Key).toLongLong();
+        setSelectedKey(new_key);
+        m_editor_relay->buildInspector( { new_key } );
+    }
+
 
     this->update();
 }

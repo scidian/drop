@@ -22,7 +22,7 @@ class DrProject;
 class DrQLayoutFlow : public QLayout
 {
 private:
-    int     doLayout(const QRect &rect, bool testOnly) const;
+    int     doLayout(const QRect &rect, int &row_width, bool testOnly) const;
     int     smartSpacing(QStyle::PixelMetric pm) const;
 
     QList<QLayoutItem*>  item_list;                         // Holds a list of items inserted into the layout, so we can delete them in the destuctor
@@ -30,6 +30,7 @@ private:
     int                  m_vSpace;
     QSize                m_last_size;
 
+    int                  m_row_width;                       // Holds the largest width (in item count) of the layout
 
 public:
     explicit DrQLayoutFlow(QWidget *parent, int margin_left = -1, int margin_right = -1, int margin_top = -1, int margin_bottom = -1,
@@ -55,6 +56,7 @@ public:
     int     horizontalSpacing() const;
     int     verticalSpacing() const;
     QSize   lastSize() { return m_last_size; }
+    int     rowWidth() { return m_row_width; }
 
 };
 
