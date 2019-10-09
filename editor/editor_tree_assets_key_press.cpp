@@ -59,15 +59,27 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
     if (layout_index == c_no_key) {     QTreeWidget::keyPressEvent(event);  return; }
 
 
+    Dr::SetLabelText(Label_Names::Label_1, "Flow Width: " + QString::number(flow->rowWidth()) + ", " + Dr::CurrentTimeAsString());
+
+
     // ***** Process arrow keys
+    int adjusted_index = layout_index + 1;
     if (event->key() == Qt::Key_Right) {
-        if (layout_index < flow->count() - 1) {
-            if (layout_index % flow->rowWidth() < flow->rowWidth() - 1) layout_index++;
+        // Normal right movement
+        if (adjusted_index < flow->count() && adjusted_index % flow->rowWidth() > 0) {
+            layout_index++;
+        // Wrap around back to the left movement
+        } else if (flow->rowWidth() > 1) {
+            layout_index = (layout_index / flow->rowWidth()) * flow->rowWidth();
         }
 
     } else if (event->key() == Qt::Key_Left) {
-        if (layout_index > 0) {
-            if (layout_index % flow->rowWidth() > 0) layout_index--;
+        // Normal left movement
+        if (adjusted_index > 1 && adjusted_index % flow->rowWidth() != 1) {
+            layout_index--;
+        // Wrap around back to the right movement
+        } else if (flow->rowWidth() > 1) {
+            layout_index += (flow->rowWidth() - 1);
         }
 
     } else if (event->key() == Qt::Key_Up) {
@@ -79,10 +91,14 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
         if (layout_index < (flow->count() - flow->rowWidth())) {
             layout_index += flow->rowWidth();
         }
+    }
+    // Safety check for out of bounds
+    if (layout_index >= flow->count())  layout_index = flow->count() - 1;
+    if (layout_index < 0)               layout_index = 0;
 
 
     // ***** Delete Asset
-    } else if (event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace) {
+    if (event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace) {
         DrAsset *asset = m_project->findAssetFromKey(getSelectedKey());
         if (asset == nullptr) return;
         if (asset->getAssetType() == DrAssetType::Effect) return;

@@ -125,7 +125,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
         switch (asset_type) {
             case DrAssetType::Character: c = createCategoryButton(item, "  Characters", "tree_character.png", Advisor_Info::Asset_Character);   break;
             case DrAssetType::Object:    c = createCategoryButton(item, "  Objects",    "tree_object.png",    Advisor_Info::Asset_Object);      break;
-            case DrAssetType::Effect:    c = createCategoryButton(item, "  Effects",    "tree_effects.png",   Advisor_Info::Asset_Effect);      break;
+            case DrAssetType::Effect:    c = createCategoryButton(item,  " Effects",    "tree_effects.png",   Advisor_Info::Asset_Effect);      break;
             case DrAssetType::Text:      c = createCategoryButton(item, "  Text",       "tree_text.png",      Advisor_Info::Asset_Text);        break;
         }
         category_buttons[asset_type] = c;
@@ -262,10 +262,14 @@ void TreeAssets::buildAssetTree(QString search_text) {
 //####################################################################################
 DrQPushButtonCategory* TreeAssets::createCategoryButton(QTreeWidgetItem *item, QString name, QString icon_resource, QList<QString> advisor_info) {
     QString icon_size = "14px 14px";
-    if (name.toLower().contains("effects")) icon_size = "20px 18px";
+    QString padding_left = "10px";
+    if (name.toLower().contains("effects")) {
+        icon_size = "20px 18px";
+        padding_left = "7px";
+    }
 
     QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: " + icon_size + "; "
-                                                " padding-left: 10px;"
+                                                " padding-left: " + padding_left + "; "
                                                 " color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
                                                 " border: none; "
                                                 " border-style: solid; "

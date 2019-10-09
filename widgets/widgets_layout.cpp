@@ -140,6 +140,7 @@ int DrQLayoutFlow::doLayout(const QRect &rect, int &row_width, bool test_only) c
         line_height = qMax(line_height, item->sizeHint().height());
     }
 
+    row_width = qMax(row_width, column_count);
     int new_height = y + line_height - rect.y() + bottom;
     return new_height;
 }
