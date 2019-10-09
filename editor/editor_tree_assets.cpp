@@ -59,6 +59,7 @@ TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor
             m_search_bar->setObjectName("assetSearchBar");
             m_search_bar->setPlaceholderText("Search");
             m_search_bar->setFont(Dr::CustomFont());
+            m_search_bar->setAttribute(Qt::WA_MacShowFocusRect, 0);
             connect (m_search_bar, SIGNAL(textChanged(QString)), this, SLOT(searchTextChanged(QString)) );
         m_search_layout->addWidget(m_search_bar);
 

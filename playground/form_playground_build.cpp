@@ -89,6 +89,7 @@ void FormPlayground::buildForm() {
 
                         // Example of a spin box, look at editor_tree_inspector_widgets.cpp for more widget examples
                         m_spin_time_warp = new DrQTripleSpinBox();
+                        m_spin_time_warp->setAttribute(Qt::WA_MacShowFocusRect, 0);
                         m_spin_time_warp->setMaximumHeight(23);
                         m_spin_time_warp->setDecimals(3);
                         m_spin_time_warp->setRange(0, 100);
@@ -111,6 +112,7 @@ void FormPlayground::buildForm() {
                         pair_gravity_layout->addWidget(m_world_info_gravity);
 
                         m_spin_gravity_x = new DrQTripleSpinBox();
+                        m_spin_gravity_x->setAttribute(Qt::WA_MacShowFocusRect, 0);
                         m_spin_gravity_x->setMaximumHeight(23);
                         m_spin_gravity_x->setDecimals(3);
                         m_spin_gravity_x->setRange(-1000000, 1000000);
@@ -122,6 +124,7 @@ void FormPlayground::buildForm() {
                         pair_gravity_layout->addWidget(m_spin_gravity_x);
 
                         m_spin_gravity_y = new DrQTripleSpinBox();
+                        m_spin_gravity_y->setAttribute(Qt::WA_MacShowFocusRect, 0);
                         m_spin_gravity_y->setMaximumHeight(23);
                         m_spin_gravity_y->setDecimals(3);
                         m_spin_gravity_y->setRange(-1000000, 1000000);

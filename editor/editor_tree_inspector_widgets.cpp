@@ -30,6 +30,7 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, QSi
     QSpinBox *spin = new QSpinBox();
     spin->setFont(font);
     spin->setSizePolicy(size_policy);
+    spin->setAttribute(Qt::WA_MacShowFocusRect, 0);
     switch (spin_type) {
         case Property_Type::Int:            spin->setRange(-100000000, 100000000);      spin->setSingleStep(  5 );      break;
         case Property_Type::Positive:       spin->setRange(0, 100000000);               spin->setSingleStep(  5 );      break;
@@ -77,6 +78,7 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     spin->setFont(font);
     spin->setSizePolicy(size_policy);
     spin->setDecimals(3);
+    spin->setAttribute(Qt::WA_MacShowFocusRect, 0);
     switch (spin_type) {
         case Property_Type::Double:         spin->setRange(-100000000, 100000000);              spin->setSingleStep(5);     break;
         case Property_Type::PositiveDouble: spin->setRange(0, 100000000);                       spin->setSingleStep(0.1);   break;
@@ -251,6 +253,7 @@ QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &fo
 DrQTripleSpinBox* TreeInspector::initializeEmptySpinBox(DrProperty *property, QFont &font, double start_value) {
     DrQTripleSpinBox *new_spin  = new DrQTripleSpinBox();
     new_spin->setFont(font);
+    new_spin->setAttribute(Qt::WA_MacShowFocusRect, 0);
     new_spin->setMinimumWidth(50);
     new_spin->setDecimals(3);
     new_spin->setRange(-100000000, 100000000);
@@ -289,6 +292,7 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
 
         DrQTripleSpinBox *spin = new DrQTripleSpinBox();
         spin->setFont(font);
+        spin->setAttribute(Qt::WA_MacShowFocusRect, 0);
         spin->setMinimumWidth(40);
         size_policy.setHorizontalStretch(1);
         spin->setSizePolicy(size_policy);

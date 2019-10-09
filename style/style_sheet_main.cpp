@@ -174,6 +174,13 @@ QString CustomStyleSheetFormatting() {
         " QFrame#assetFrame:hover { " + StyleSheetRecessedBackgroundBorder(5, 95, true) + "; } "
         ///"       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name()  + "; }"
 
+        ///" QFrame#assetFrame:disabled { "
+        ///"       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        ///"       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
+        ///"       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
+        ///"       border-radius: 0px; }"
+
+
         " QWidget#assetSearchWidget {"
         "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; } "
         " QLineEdit#assetSearchBar { "

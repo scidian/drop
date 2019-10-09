@@ -41,7 +41,7 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
     if (getSelectedKey() == c_no_key) { QTreeWidget::keyPressEvent(event);  return; }
 
     // ***** Find frame of selected item
-    QList<QFrame*> frames = this->findChildren<QFrame *>("assetFrame");
+    QList<QFrame*> frames =  m_asset_frames; /// this->findChildren<QFrame *>("assetFrame");
     QFrame *selected_frame = nullptr;
     QFrame *parent_frame =   nullptr;
     DrQLayoutFlow *flow =    nullptr;

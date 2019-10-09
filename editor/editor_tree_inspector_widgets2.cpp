@@ -113,6 +113,7 @@ QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font, QSiz
     QLineEdit *edit = new QLineEdit();
     edit->setFont(font);
     edit->setSizePolicy(size_policy);
+    edit->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
     long property_key = property->getPropertyKey();
 

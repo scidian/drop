@@ -110,6 +110,9 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
             box.setX( box.x() + 6);     box.setWidth(  box.width() -  1 );
             box.setY( box.y() + 2);     box.setHeight( box.height() - 3 );
             painter.drawRoundedRect(box, 5, 5, Qt::SizeMode::AbsoluteSize);
+            ///asset_frame->setEnabled(false);
+        } else {
+            ///asset_frame->setEnabled(true);
         }
 
     // Reset asset name if it was scrolling
