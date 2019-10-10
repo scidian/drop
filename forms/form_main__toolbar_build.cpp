@@ -27,8 +27,8 @@
 //####################################################################################
 //##    Builds FormMain toolbar
 //####################################################################################
-void FormMain::buildToolBar()
-{
+void FormMain::buildToolBar() {
+
     // Widgets to use during building
     QToolButton *tool;
 

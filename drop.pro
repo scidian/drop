@@ -26,7 +26,7 @@ CONFIG += c++11
 QMAKE_CFLAGS += -std=c99
 
 SOURCES += \
-    3rd_party/hullfinder.cpp \
+    3rd_party/hull_finder.cpp \
     3rd_party/poly_partition.cpp \
     3rd_party/polyline_simplification.cpp \
     3rd_party_chipmunk/chipmunk.c \
@@ -68,54 +68,54 @@ SOURCES += \
     colors/colors_palette_window_themes.cpp \
     editor/editor_tree_advisor.cpp \
     editor/editor_tree_assets.cpp \
-    editor/editor_tree_assets_drag_drop.cpp \
-    editor/editor_tree_assets_event_filter.cpp \
-    editor/editor_tree_assets_key_press.cpp \
-    editor/editor_tree_assets_update.cpp \
+    editor/editor_tree_assets__drag_drop.cpp \
+    editor/editor_tree_assets__event_filter.cpp \
+    editor/editor_tree_assets__key_press.cpp \
+    editor/editor_tree_assets__update.cpp \
     editor/editor_tree_inspector.cpp \
-    editor/editor_tree_inspector_update.cpp \
-    editor/editor_tree_inspector_widgets.cpp \
-    editor/editor_tree_inspector_widgets2.cpp \
-    editor/editor_tree_inspector_widgets3.cpp \
+    editor/editor_tree_inspector__update.cpp \
+    editor/editor_tree_inspector__widgets.cpp \
+    editor/editor_tree_inspector__widgets2.cpp \
+    editor/editor_tree_inspector__widgets3.cpp \
     editor/editor_tree_project.cpp \
-    editor/editor_tree_project_drag_drop.cpp \
-    editor/editor_tree_project_selection.cpp \
-    editor/editor_tree_project_update.cpp \
+    editor/editor_tree_project__drag_drop.cpp \
+    editor/editor_tree_project__selection.cpp \
+    editor/editor_tree_project__update.cpp \
     editor_view/editor_item.cpp \
-    editor_view/editor_item_item_change.cpp \
-    editor_view/editor_item_paint.cpp \
+    editor_view/editor_item__item_change.cpp \
+    editor_view/editor_item__paint.cpp \
     editor_view/editor_scene.cpp \
-    editor_view/editor_scene_key_press.cpp \
-    editor_view/editor_scene_select.cpp \
+    editor_view/editor_scene__key_press.cpp \
+    editor_view/editor_scene__select.cpp \
+    editor_view/editor_scene__update.cpp \
     editor_view/editor_scene_undo_commands.cpp \
-    editor_view/editor_scene_update.cpp \
     editor_view/editor_view.cpp \
-    editor_view/editor_view_drag_drop.cpp \
-    editor_view/editor_view_grid.cpp \
-    editor_view/editor_view_key_press.cpp \
-    editor_view/editor_view_mouse.cpp \
-    editor_view/editor_view_mouse_move.cpp \
-    editor_view/editor_view_paint.cpp \
-    editor_view/editor_view_paint_items.cpp \
-    editor_view/editor_view_resize.cpp \
-    editor_view/editor_view_rotate.cpp \
-    editor_view/editor_view_select.cpp \
-    editor_view/editor_view_tooltip.cpp \
+    editor_view/editor_view__drag_drop.cpp \
+    editor_view/editor_view__grid.cpp \
+    editor_view/editor_view__key_press.cpp \
+    editor_view/editor_view__mouse.cpp \
+    editor_view/editor_view__mouse_move.cpp \
+    editor_view/editor_view__paint.cpp \
+    editor_view/editor_view__paint_items.cpp \
+    editor_view/editor_view__resize.cpp \
+    editor_view/editor_view__rotate.cpp \
+    editor_view/editor_view__select.cpp \
+    editor_view/editor_view__tooltip.cpp \
     engine/engine.cpp \
     engine/engine_camera.cpp \
     engine/engine_texture.cpp \
     engine/engine_world.cpp \
-    engine/engine_world_build_player.cpp \
-    engine/engine_world_build_world.cpp \
-    engine/engine_world_clear.cpp \
-    engine/engine_world_collision.cpp \
-    engine/engine_world_load.cpp \
-    engine/engine_world_update.cpp \
-    engine/engine_world_update_player.cpp \
+    engine/engine_world__build_player.cpp \
+    engine/engine_world__build_world.cpp \
+    engine/engine_world__clear.cpp \
+    engine/engine_world__collision.cpp \
+    engine/engine_world__load.cpp \
+    engine/engine_world__update.cpp \
+    engine/engine_world__update_player.cpp \
     engine/form_engine.cpp \
     engine_mesh/engine_vertex_data.cpp \
-    engine_mesh/engine_vertex_data_extrude.cpp \
-    engine_mesh/engine_vertex_data_smooth.cpp \
+    engine_mesh/engine_vertex_data__extrude.cpp \
+    engine_mesh/engine_vertex_data__smooth.cpp \
     engine_things/engine_thing.cpp \
     engine_things/engine_thing_fire.cpp \
     engine_things/engine_thing_fisheye.cpp \
@@ -130,16 +130,16 @@ SOURCES += \
     forms/form_color_magnifier.cpp \
     forms/form_fonts.cpp \
     forms/form_main.cpp \
-    forms/form_main_build.cpp \
-    forms/form_main_build_editor.cpp \
-    forms/form_main_interface_editor.cpp \
-    forms/form_main_menu.cpp \
-    forms/form_main_toolbar.cpp \
-    forms/form_main_toolbar_build.cpp \
-    forms/form_main_toolbar_button_click.cpp \
+    forms/form_main__build.cpp \
+    forms/form_main__build_editor.cpp \
+    forms/form_main__interface_editor.cpp \
+    forms/form_main__menu.cpp \
+    forms/form_main__toolbar.cpp \
+    forms/form_main__toolbar_build.cpp \
+    forms/form_main__toolbar_button_click.cpp \
     forms/form_popup.cpp \
+    forms/form_popup__grid_snap.cpp \
     forms/form_popup_colors.cpp \
-    forms/form_popup_grid_snap.cpp \
     forms/form_settings.cpp \
     helper.cpp \
     helper_qt.cpp \
@@ -165,15 +165,17 @@ SOURCES += \
     opengl/opengl_render_objects.cpp \
     opengl/opengl_render_space.cpp \
     playground/form_playground.cpp \
-    playground/form_playground_build.cpp \
-    playground/form_playground_items.cpp \
-    playground/form_playground_view.cpp \
+    playground/form_playground__build.cpp \
+    playground/form_playground__items.cpp \
+    playground/form_playground__view.cpp \
     playground/playground.cpp \
-    playground/playground_add_toy.cpp \
-    playground/playground_build.cpp \
-    playground/playground_clear.cpp \
-    playground/playground_update.cpp \
+    playground/playground__add_toy.cpp \
+    playground/playground__build.cpp \
+    playground/playground__clear.cpp \
+    playground/playground__update.cpp \
     project/project.cpp \
+    project/project__file_save.cpp \
+    project/project__initialize.cpp \
     project/project_asset.cpp \
     project/project_effect.cpp \
     project/project_font.cpp \
@@ -201,7 +203,7 @@ SOURCES += \
 
 HEADERS += \
     3rd_party/delaunator.h \
-    3rd_party/hullfinder.h \
+    3rd_party/hull_finder.h \
     3rd_party/poly_partition.h \
     3rd_party/polyline_simplification.h \
     3rd_party/vec3.h \

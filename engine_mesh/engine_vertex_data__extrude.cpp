@@ -18,7 +18,7 @@
 #include <limits>
 
 #include "3rd_party/delaunator.h"
-#include "3rd_party/hullfinder.h"
+#include "3rd_party/hull_finder.h"
 #include "3rd_party/poly_partition.h"
 #include "3rd_party/polyline_simplification.h"
 #include "3rd_party_chipmunk/chipmunk.h"

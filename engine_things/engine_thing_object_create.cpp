@@ -7,7 +7,7 @@
 //
 #include <QtMath>
 
-#include "3rd_party/hullfinder.h"
+#include "3rd_party/hull_finder.h"
 #include "3rd_party/poly_partition.h"
 #include "engine/engine.h"
 #include "engine/engine_texture.h"

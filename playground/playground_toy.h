@@ -21,6 +21,7 @@ class DrPlayground;
 constexpr double    c_friction =  -1;                   // Flag for add**** call to use world friction setting
 constexpr double    c_bounce =    -1;                   // Flag for add**** call to use world bounce setting
 
+
 //####################################################################################
 //##    DrToy
 //##        Holds one object for use in a Playground cpSpace
@@ -68,7 +69,7 @@ public:
 
 
 public:
-    DrToy(DrPlayground *playground) : m_playground(playground) {}
+    DrToy(DrPlayground *playground) : m_playground(playground) { }
 
 
 };

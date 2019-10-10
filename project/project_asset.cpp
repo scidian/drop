@@ -7,7 +7,7 @@
 //
 #include <QDebug>
 
-#include "3rd_party/hullfinder.h"
+#include "3rd_party/hull_finder.h"
 #include "3rd_party/polyline_simplification.h"
 #include "debug.h"
 #include "engine_mesh/engine_vertex_data.h"

@@ -4,7 +4,7 @@
 //
 //
 #include "helper.h"
-#include "hullfinder.h"
+#include "hull_finder.h"
 #include "types/pointf.h"
 
 
