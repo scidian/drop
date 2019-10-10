@@ -132,7 +132,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
         if (component->isTurnedOn() == false) {
             continue;
         } else if (component->getComponentKey() == Dr::EnumToInt(Components::Hidden_Settings)) {
-            if (Dr::CheckDebugFlag(Debug_Flags::Show_Custom_Descriptions) == false) continue;
+            if (Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) == false) continue;
         }
 
         // *****Create new item in list to hold component and add the TreeWidgetItem to the tree

@@ -6,6 +6,7 @@
 //
 //
 #include <QApplication>
+#include <QDebug>
 #include <QDockWidget>
 #include <QKeyEvent>
 #include <QTimer>
@@ -69,16 +70,16 @@ void FormMain::buildProjectTree() {
 }
 
 // Fires an Undo stack command to change Stages within Scene
-void FormMain::buildScene(long from_stage_key) {
+void FormMain::buildScene(long stage_key) {
     if (sceneEditor->scene_mutex.tryLock(10) == false) return;
 
     // Rebuild existing Stage
-    if (from_stage_key == c_same_key) {
+    if (stage_key == c_same_key) {
         emit newStageSelected(m_project, sceneEditor, sceneEditor->getCurrentStageKeyShown(), sceneEditor->getCurrentStageKeyShown());
 
     // Select new stage
-    } else if (sceneEditor->getCurrentStageKeyShown() != from_stage_key) {
-        emit newStageSelected(m_project, sceneEditor, sceneEditor->getCurrentStageKeyShown(), from_stage_key);
+    } else if (sceneEditor->getCurrentStageKeyShown() != stage_key) {
+        emit newStageSelected(m_project, sceneEditor, sceneEditor->getCurrentStageKeyShown(), stage_key);
     }
 
     sceneEditor->scene_mutex.unlock();

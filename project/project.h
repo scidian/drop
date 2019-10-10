@@ -104,6 +104,9 @@ public:
 
     Orientation getOptionOrientation() { return static_cast<Orientation>( m_options[Project_Options::Orientation].toInt()); }
 
+    // Building
+    void            clearProject();
+    void            initializeNewProject(QString project_name, Orientation orientation, int width, int height, bool test = false);
 
     // Function Calls
     DrSettings*     findSettingsFromKey(long check_key, bool show_warning = true);
@@ -112,11 +115,12 @@ public:
     DrAsset*        findAssetFromKey(long check_key);
     DrStage*        findStageFromKey(long check_key);
     DrThing*        findThingFromKey(long check_key);
+    DrWorld*        findWorldFromKey(long check_key);
 
     QString         testSpeedFindSettings(int test_size);
 
     // Children Creation Calls
-    void            addWorld();
+    long            addWorld();
     long            addAsset(DrAssetType new_asset_type, long image_key);
     long            addEffect(QString effect_name, DrEffectType effect_type);
     long            addFont( QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects = false);

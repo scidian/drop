@@ -45,7 +45,7 @@ public:
     virtual void        buildAssetTree() = 0;
     virtual void        buildInspector(QList<long> key_list) = 0;
     virtual void        buildProjectTree() = 0;
-    virtual void        buildScene(long from_stage_key) = 0;
+    virtual void        buildScene(long stage_key) = 0;
 
     virtual void        updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Properties> property_keys) = 0;
     virtual void        updateInspectorEnabledProperties() = 0;

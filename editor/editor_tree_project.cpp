@@ -67,7 +67,7 @@ void TreeProject::buildProjectTree() {
                 if (!thing) continue;
 
                 if (thing->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees).toBool()) {
-                    if (Dr::CheckDebugFlag(Debug_Flags::Show_Custom_Descriptions) == false) continue;
+                    if (Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) == false) continue;
                 }
 
                 QTreeWidgetItem *thing_item = new QTreeWidgetItem(stage_item);                             // Create new item and add as child item

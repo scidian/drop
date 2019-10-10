@@ -143,7 +143,7 @@ public:
     virtual void        buildAssetTree() override;
     virtual void        buildInspector(QList<long> key_list) override;
     virtual void        buildProjectTree() override;
-    virtual void        buildScene(long from_stage_key) override;
+    virtual void        buildScene(long stage_key) override;
 
     virtual void        updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items,
                                                            QList<Properties> property_keys) override;
@@ -180,6 +180,7 @@ private:
     void        unlockDockWidth(QDockWidget *dock);
 
     // Menu Bar Functions
+    void        menuNew();
     void        menuAbout();
     void        menuUndo();
     void        menuRedo();

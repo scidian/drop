@@ -54,8 +54,13 @@ DrScene::DrScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay
     // !!!!! END
 }
 
-DrScene::~DrScene() {}
+DrScene::~DrScene() { }
 
+void DrScene::clearStageShown() {
+    setCurrentStageKeyShown(c_no_key);
+    setCurrentStageShown(nullptr);
+    clear();
+}
 
 
 //####################################################################################

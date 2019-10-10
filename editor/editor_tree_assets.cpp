@@ -102,7 +102,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
     int rowCount = 0;
     this->clear();
     m_asset_frames.clear();
-
+    if (list_assets.size() < 1) return;
 
     // ***** Create new items in list to hold asset categories
     std::map <DrAssetType, QTreeWidgetItem*>       widget_items;
@@ -146,7 +146,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
         if (!asset) continue;
 
         if (asset->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees).toBool()) {
-            if (Dr::CheckDebugFlag(Debug_Flags::Show_Custom_Descriptions) == false) continue;
+            if (Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) == false) continue;
         }
 
         QString asset_name = asset->getName();

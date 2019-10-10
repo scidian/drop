@@ -62,33 +62,37 @@ void DrScene::selectionGroupNewGroup(DrScene *scene, QList<DrThing*> old_list, Q
 //##        Move Command on the QUndoStack
 //####################################################################################
 UndoCommandChangeStage::UndoCommandChangeStage(DrProject *project, DrScene *scene,
-                                       long old_stage, long new_stage, QUndoCommand *parent) :
+                                       long old_stage_key, long new_stage_key, QUndoCommand *parent) :
                                        QUndoCommand(parent), m_project(project), m_scene(scene) {
-    m_new_stage = new_stage;
-    m_old_stage = old_stage;
+    m_new_stage_key = new_stage_key;
+    m_old_stage_key = old_stage_key;
 }
 
 void UndoCommandChangeStage::undo() {
-    QString new_stage_name = changeStage(m_new_stage, m_old_stage, true);
+    QString new_stage_name = changeStage(m_new_stage_key, m_old_stage_key, true);
     setText( new_stage_name );
 }
 
 void UndoCommandChangeStage::redo() {
-    QString new_stage_name = changeStage(m_old_stage, m_new_stage, false);
+    QString new_stage_name = changeStage(m_old_stage_key, m_new_stage_key, false);
     setText( new_stage_name );
 }
 
-QString UndoCommandChangeStage::changeStage(long old_stage, long new_stage, bool is_undo) {
+QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_key, bool is_undo) {
     // Remove any references within the current project stage things to any GraphicsScene items
-    DrStage *displayed = m_project->findStageFromKey(old_stage);
-    if (displayed) displayed->removeGraphicsItemReferences();
+    DrStage *displayed = m_project->findStageFromKey(old_stage_key);
+    QString redo_name = "ERROR";
+    if (displayed) {
+        displayed->removeGraphicsItemReferences();
+        redo_name = displayed->getName();
+    }
 
     // Load stage we're changing to
-    DrStage *from_stage = m_project->findStageFromKey(new_stage);
-    if (from_stage == nullptr) {
+    DrStage *new_stage = m_project->findStageFromKey(new_stage_key);
+    if (new_stage == nullptr) {
         return "Redo Select Stage " + displayed->getName();
     }
-    from_stage->getParentWorld()->setLastStageShownKey(new_stage);
+    new_stage->getParentWorld()->setLastStageShownKey(new_stage_key);
 
     // Calculate new scene and view rects, clear scene and set sizes
     QRectF new_scene_rect(-1000, -1000, 2000, 2000);
@@ -102,10 +106,10 @@ QString UndoCommandChangeStage::changeStage(long old_stage, long new_stage, bool
     new_scene_rect.adjust(adjust.x(), adjust.y(), adjust.x(), adjust.y());
     new_view_rect.adjust( adjust.x(), adjust.y(), adjust.x(), adjust.y());
 
-    m_scene->setCurrentStageShown(from_stage);
-    m_scene->setCurrentStageKeyShown(m_new_stage);
-    m_project->setOption(Project_Options::Current_World, QVariant::fromValue(from_stage->getParentWorld()->getKey()) );
-    m_project->setOption(Project_Options::Current_Stage, QVariant::fromValue(from_stage->getKey()) );
+    m_scene->setCurrentStageShown(new_stage);
+    m_scene->setCurrentStageKeyShown(m_new_stage_key);
+    m_project->setOption(Project_Options::Current_World, QVariant::fromValue(new_stage->getParentWorld()->getKey()) );
+    m_project->setOption(Project_Options::Current_Stage, QVariant::fromValue(new_stage->getKey()) );
 
     m_scene->clear();
     m_scene->setSceneRect(new_scene_rect);
@@ -113,22 +117,22 @@ QString UndoCommandChangeStage::changeStage(long old_stage, long new_stage, bool
     emit m_scene->updateGrid();
 
     // Load all our Things from data model into QGraphicsItems
-    for (auto thing_pair : from_stage->getThingMap()) {
+    for (auto thing_pair : new_stage->getThingMap()) {
         m_scene->addItemToSceneFromThing(thing_pair.second);
     }
 
     // Center the view on the new stage
-    QPointF new_center = from_stage->getViewCenterPoint();
+    QPointF new_center = new_stage->getViewCenterPoint();
     if (new_center == QPointF(0, 0)) {
         new_center = new_view_rect.center();
-        from_stage->setViewCenterPoint( new_center );
+        new_stage->setViewCenterPoint( new_center );
     }
     m_scene->getRelay()->centerViewOnPoint( new_center );
     m_scene->getRelay()->updateItemSelection(Editor_Widgets::Project_Tree);
 
     // Set Undo / Redo text
-    if (is_undo)    return "Redo Select Stage " + displayed->getName();
-    else            return "Undo Select Stage " + from_stage->getName();
+    if (is_undo)    return "Redo Select Stage " + redo_name;
+    else            return "Undo Select Stage " + new_stage->getName();
 }
 
 DrItem* DrScene::addItemToSceneFromThing(DrThing *thing) {

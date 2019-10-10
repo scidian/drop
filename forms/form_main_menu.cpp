@@ -22,29 +22,32 @@
 #include "form_main.h"
 #include "helper.h"
 #include "helper_qt.h"
-
+#include "project/project.h"
 
 //####################################################################################
-//##    Main Menu Bar Functions
+//##    File Menu Functions
 //####################################################################################
-void FormMain::menuAbout() {
-    QMessageBox::about(this, tr("About Drop"), tr("<b>Drop Creator</b> A Drag and Drop Game Maker by Stephens Nunnally"));
+void FormMain::menuNew() {
+
+    setFormMainMode( Form_Main_Mode::Clear );
+
+    m_project->clearProject();
+    m_project->initializeNewProject("New Project: "+ Dr::CurrentTimeAsString(), Orientation::Portrait, 800, 1600);
+
+    setFormMainMode( Form_Main_Mode::World_Editor );            // Causes FormMain to rebuild itself
 }
 
+
+
+
+//####################################################################################
+//##    Edit Menu Functions
+//####################################################################################
 void FormMain::menuUndo() {
     sceneEditor->undoAction();
 }
 void FormMain::menuRedo() {
     sceneEditor->redoAction();
-}
-
-// Pops up a message box listing all child widgets of FormMain
-void FormMain::menuListChildren() {
-    QString widget_list;
-    for (auto widget : findChildren<QWidget *>()) {
-        widget_list += widget->objectName() + ", ";
-    }
-    Dr::ShowMessageBox(widget_list);
 }
 
 // SLOT: Updates Undo / Redo text
@@ -69,6 +72,28 @@ void FormMain::editMenuAboutToHide() {
     actionRedo->setEnabled(true);
 }
 
+
+//####################################################################################
+//##    Help Menu Functions
+//####################################################################################
+void FormMain::menuAbout() {
+    QMessageBox::about(this, tr("About Drop"), tr("<b>Drop Creator</b> A Drag and Drop Game Maker by Stephens Nunnally"));
+}
+
+
+//####################################################################################
+//##    Debug Menu Functions
+//####################################################################################
+// Pops up a message box listing all child widgets of FormMain
+void FormMain::menuListChildren() {
+    QString widget_list;
+    for (auto widget : findChildren<QWidget *>()) {
+        widget_list += widget->objectName() + ", ";
+    }
+    Dr::ShowMessageBox(widget_list);
+}
+
+
 //####################################################################################
 //##    Sets up FormMain menu system
 //####################################################################################
@@ -81,13 +106,17 @@ void FormMain::buildMenu() {
 
 
     QMenu *menuFile;
-    QAction *actionExit;
+    QAction *actionNew, *actionExit;
     menuFile = new QMenu(menuBar);
     menuFile->setObjectName(QStringLiteral("menuFile"));
-    actionExit = new QAction(this);    actionExit->setObjectName(QStringLiteral("actionExit"));
+    actionNew = new QAction(this);      actionNew->setObjectName(QStringLiteral("actionNew"));
+    actionExit = new QAction(this);     actionExit->setObjectName(QStringLiteral("actionExit"));
+    actionNew->setShortcuts(QKeySequence::New);
     actionExit->setShortcuts(QKeySequence::Quit);
+    connect(actionNew,  &QAction::triggered, [this]() { this->menuNew(); });
     connect(actionExit, SIGNAL(triggered()), this, SLOT(close()));
     menuBar->addAction(menuFile->menuAction());
+    menuFile->addAction(actionNew);
     menuFile->addAction(actionExit);
 
     QMenu *menuEdit;
@@ -172,9 +201,9 @@ void FormMain::buildMenu() {
         menuDebug->addAction(actionListChildren);
 
         actionHidden->setCheckable(true);
-        actionHidden->setChecked( Dr::CheckDebugFlag(Debug_Flags::Show_Custom_Descriptions) );
+        actionHidden->setChecked( Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) );
 
-        connect(actionHidden, &QAction::triggered, []() { Dr::FlipDebugFlag(Debug_Flags::Show_Custom_Descriptions); });
+        connect(actionHidden, &QAction::triggered, []() { Dr::FlipDebugFlag(Debug_Flags::Show_Hidden_Component); });
         connect(actionListChildren, &QAction::triggered, [this]() { this->menuListChildren(); });
 
         menuDebug->setTitle(QApplication::translate("MainWindow",       "Debug", nullptr));
@@ -185,6 +214,7 @@ void FormMain::buildMenu() {
 
     // ***** Set menu titles and sub menu texts
     menuFile->setTitle(QApplication::translate("MainWindow",            "&File", nullptr));
+    actionNew->setText(QApplication::translate("MainWindow",                "&New Project", nullptr));
     actionExit->setText(QApplication::translate("MainWindow",               "E&xit", nullptr));
 
     menuEdit->setTitle(QApplication::translate("MainWindow",            "&Edit", nullptr));

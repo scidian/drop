@@ -27,16 +27,16 @@ private:
     DrScene    *m_scene;
 
     // Local Variables
-    long        m_old_stage;
-    long        m_new_stage;
+    long        m_old_stage_key;
+    long        m_new_stage_key;
 
 public:
-    UndoCommandChangeStage(DrProject *project, DrScene *scene, long old_stage, long new_stage, QUndoCommand *parent = nullptr);
+    UndoCommandChangeStage(DrProject *project, DrScene *scene, long old_stage_key, long new_stage_key, QUndoCommand *parent = nullptr);
 
     void        undo() override;
     void        redo() override;
 
-    QString     changeStage(long old_stage, long new_stage, bool is_undo);
+    QString     changeStage(long old_stage_key, long new_stage_key, bool is_undo);
 };
 
 

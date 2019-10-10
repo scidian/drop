@@ -86,11 +86,12 @@ public:
     QString         getCurrentUndo() { return m_undo->undoText(); }
     QString         getCurrentRedo() { return m_undo->redoText(); }
 
-    // Getters and Setters
+    // Stage Handling
     DrStage*        getCurrentStageShown() { return m_current_stage; }
     void            setCurrentStageShown(DrStage *stage) { m_current_stage = stage; }
     long            getCurrentStageKeyShown() { return m_current_stage_key; }
     void            setCurrentStageKeyShown(long stage_key) { m_current_stage_key = stage_key; }
+    void            clearStageShown();
 
 
     // ********** Selection Functions

@@ -6,6 +6,7 @@
 //
 //
 #include <QApplication>
+#include <QDebug>
 #include <QDockWidget>
 #include <QScreen>
 
@@ -66,7 +67,7 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
                 buildAssetTree();
                 dockAssetsEditor->show();
                 buildProjectTree();
-                sceneEditor->setCurrentStageKeyShown(c_no_key);
+                sceneEditor->clearStageShown();
                 buildSceneAfterLoading( m_project->getOption(Project_Options::Current_Stage).toInt() );
             break;
 
