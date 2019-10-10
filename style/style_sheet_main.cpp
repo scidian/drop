@@ -393,7 +393,7 @@ QString StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_percent, 
         middle = Dr::GetColor(Window_Colors::Background_Dark);
         top =    Dr::GetColor(Window_Colors::Background_Dark).darker(150);
     } else {
-        middle = Dr::GetColor(Window_Colors::Background_Dark).lighter(160);
+        middle = Dr::GetColor(Window_Colors::Background_Dark).lighter(150);
         top =    Dr::GetColor(Window_Colors::Background_Dark);
     }
     return " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "

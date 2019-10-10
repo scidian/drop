@@ -77,15 +77,32 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
 
     // ***** Go through each property that we have been notified has changed and update as appropriately
     for (auto one_property : property_keys) {
-        Properties property = static_cast<Properties>(one_property);
-        QVariant new_value  = thing->findPropertyFromPropertyKey(one_property)->getValue();
+        Properties  property    = static_cast<Properties>(one_property);
+        DrProperty *dr_property = thing->findPropertyFromPropertyKey(one_property);
+        QVariant    new_value   = dr_property->getValue();
 
 
         switch (property) {
+
+            case Properties::Hidden_Hide_From_Trees:
+                if (new_value == true) {
+                    thing->setComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Item_Locked, true);
+                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { thing } , { Properties::Hidden_Item_Locked });
+                }
+                break;
+            case Properties::Hidden_Item_Locked:
+                if (new_value == false) {
+                    if (thing->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees).toBool() == true) {
+                        thing->setComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees, false);
+                        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { thing } , { Properties::Hidden_Hide_From_Trees });
+                    }
+                }
+                break;
+
             case Properties::Thing_Object_Physics_Type: {
                 bool pretest = thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Velocity_X)->isEditable();
                 Body_Type type = static_cast<Body_Type>(thing->getComponentPropertyValue(Components::Thing_Settings_Object, Properties::Thing_Object_Physics_Type).toInt());
-                bool test = (type == Body_Type::Kinematic || type == Body_Type::Dynamic) ? true : false;
+                bool      test = (type == Body_Type::Kinematic || type == Body_Type::Dynamic) ? true : false;
                 if (test != pretest) {
                     thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Velocity_X)->setEditable(test);
                     thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Velocity_Y)->setEditable(test);
@@ -112,7 +129,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
             case Properties::Thing_Rotation: {
                 // ***** Keep Thing Square: Size / scale change override for Things that need to be square (light, etc)
                 // ***** Also limits max size
-                //       #KEYWORD: "keep square", "locked", "same size"
+                //       #KEYWORD: "keep square", "lock size", "same size"
                 bool pretest = false;
                 if (thing->getThingType() == DrThingType::Light || thing->getThingType() == DrThingType::Swirl) {
                     if (property == Properties::Thing_Size) {
