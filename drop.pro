@@ -134,6 +134,7 @@ SOURCES += \
     forms/form_main__build_editor.cpp \
     forms/form_main__interface_editor.cpp \
     forms/form_main__menu.cpp \
+    forms/form_main__menu_build.cpp \
     forms/form_main__toolbar.cpp \
     forms/form_main__toolbar_build.cpp \
     forms/form_main__toolbar_button_click.cpp \
@@ -174,6 +175,7 @@ SOURCES += \
     playground/playground__clear.cpp \
     playground/playground__update.cpp \
     project/project.cpp \
+    project/project__file_open.cpp \
     project/project__file_save.cpp \
     project/project__initialize.cpp \
     project/project_asset.cpp \

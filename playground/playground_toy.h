@@ -74,6 +74,9 @@ public:
 
 };
 
+// ########## QVariant Declaration for storing DrToy pointers with QWidget setData functions
+Q_DECLARE_METATYPE(DrToy*)
+
 
 #endif // PLAYGROUND_TOY_H
 

@@ -18,15 +18,18 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
 
     // ***** Set Project Options
     this->setOption(Project_Options::Name,              project_name);
+    this->setOption(Project_Options::File_Name_Path,    "");
     this->setOption(Project_Options::Orientation,       static_cast<int>(orientation));
     this->setOption(Project_Options::Width,             width);
     this->setOption(Project_Options::Height,            height);
+
 
     // ***** Add Initial World
     long world_1 = this->addWorld();
     DrWorld* current_world = this->findWorldFromKey(world_1);
     this->setOption(Project_Options::Current_World, QVariant::fromValue(world_1));
     this->setOption(Project_Options::Current_Stage, QVariant::fromValue(current_world->getFirstStageKey()) );
+
 
     // ***** Add Effects
     long effect_1 =  this->addEffect("Light",           DrEffectType::Light);

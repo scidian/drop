@@ -26,8 +26,6 @@
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
 
-// Custom types for QVariant
-Q_DECLARE_METATYPE(DrShapeList);
 
 // Internal Linkage (File Scope) Forward Declarations
 DrShapeList autoCollisionShape(QPixmap pixmap);

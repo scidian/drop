@@ -13,6 +13,7 @@
 
 enum class Project_Options {
     Name,                   // string,  Name of Current Project
+    File_Name_Path,         // string,  Full Path and File Name of Project, will save to this unless choose Save As
 
     Current_World,          // long,    World currently displayed in editor
     Current_Stage,          // long,    Scene currently displayed in editor
@@ -105,8 +106,11 @@ public:
     Orientation getOptionOrientation() { return static_cast<Orientation>( m_options[Project_Options::Orientation].toInt()); }
 
     // Building
+    void            addSettingsToMap(DrSettings *entity, QVariantMap &map);
     void            clearProject();
     void            initializeNewProject(QString project_name, Orientation orientation, int width, int height, bool test = false);
+    void            openProjectFromFile(QString open_file);
+    void            saveProjectToFile();
 
     // Function Calls
     DrSettings*     findSettingsFromKey(long check_key, bool show_warning = true);

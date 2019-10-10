@@ -24,12 +24,6 @@
 #include "project/project_world_stage_thing.h"
 #include "project/thing_shape_list.h"
 
-// Custom types for QVariant
-Q_DECLARE_METATYPE(DrShapeList);
-
-// Internal Linkage (File Scope) Forward Declarations
-
-
 // Internal Constants
 const double    c_light_size_adjuster = 1.15;           // Multiplier to equal out the slight rendering difference between shader and pixmap drawing functions
 

@@ -8,6 +8,8 @@
 #ifndef THING_SHAPE_LIST_H
 #define THING_SHAPE_LIST_H
 
+#include <QDataStream>
+
 #include <list>
 
 #include "enums_engine.h"
@@ -48,10 +50,35 @@ public:
     std::list<std::vector<DrPointF>>&   getPolygons() { return m_polygons; }
     std::list<DrCircle>&                getCircles() { return m_circles; }
 
+
+    // Operator Overloads for file saving
+    bool operator==(const DrShapeList & o){
+        //return o.myStringVar == this->myStringVar;
+        return true;
+    }
+
+    friend QDataStream &operator<<(QDataStream &out, const DrShapeList &rhs){
+        //out << rhs.myStringVar;
+        return out;
+    }
+    friend QDataStream &operator>>(QDataStream &in, DrShapeList &rhs){
+        //in >> rhs.myStringVar;
+        return in;
+    }
+
 };
+
+// ########## Must declare for use with QVariant
+Q_DECLARE_METATYPE(DrShapeList);
 
 
 #endif // THING_SHAPE_LIST_H
+
+
+
+
+
+
 
 
 

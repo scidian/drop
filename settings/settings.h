@@ -28,10 +28,11 @@ class DrSettings
 {
 private:
     ComponentMap m_components;                          // Map of pointers to DrComponent classes
-    long         m_key;                                 // Holds unique key for each object with a base class DrSettings
 
-    long         m_is_visible = true;                   // Should this be visible in editor
-    long         m_is_locked = false;
+    // The 3 Parts of Data for Every Setting
+    long         m_key;                                 // Holds unique key for each object with a base class DrSettings
+    long         m_is_visible = true;                   // Should this be visible in editor?
+    long         m_is_locked = false;                   // Should this Entity be locked from editing?
 
 
 protected:       // so derived classes can access

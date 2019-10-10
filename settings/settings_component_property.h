@@ -27,20 +27,14 @@ private:
     DrSettings   *m_parent_settings;
     DrComponent  *m_parent_component;
 
-    // The 4 Parts pf Data for Every Property
-    QString       m_display_name =      "Unknown Property";
-    QString       m_description =       "No description";
-    Property_Type m_preferred_type =    Property_Type::String;
-    QVariant      m_value =             QString::fromStdString("0");
-
-    // The unique id of this property within the parent object
-    long          m_property_key;
-
-    // Should this appear in the Inspector
-    bool          m_is_hidden =         false;
-
-    // Should this be editable in the Inspector
-    bool          m_is_editable =       true;
+    // The 7 Parts of Data for Every Property
+    QString       m_display_name =      "Unknown Property";                     // Name to be displayed in Editor
+    QString       m_description =       "No description";                       // Description to be displayed in Editor
+    Property_Type m_preferred_type =    Property_Type::String;                  // m_value Type
+    QVariant      m_value =             QString::fromStdString("0");            // The stored data this property represents
+    long          m_property_key =      0;                                      // The unique id of this property within the parent object
+    bool          m_is_hidden =         false;                                  // Should this appear in the Inspector
+    bool          m_is_editable =       true;                                   // Should this be editable in the Inspector
 
 public:
     // Constructor & destructor

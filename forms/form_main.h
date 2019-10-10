@@ -179,12 +179,17 @@ private:
     void        lockDockWidth(QDockWidget *dock, int width);
     void        unlockDockWidth(QDockWidget *dock);
 
-    // Menu Bar Functions
+    // File Menu Functions
     void        menuNew();
-    void        menuAbout();
+    void        menuOpen();
+    void        menuSave(bool save_as = false);
+    // Edit Menu Functions
     void        menuUndo();
     void        menuRedo();
+    // Debug Menu Functions
     void        menuListChildren();
+    // Help Menu Functions
+    void        menuAbout();
 
     // Toolbar Functions
     void            addToolbarGroup(QWidget *group, bool add_spacer = true);

@@ -25,9 +25,6 @@ class DrPlaygroundView;
 class DrProject;
 class DrQTripleSpinBox;
 
-// QVariant Declaration for storing DrToy pointers with QWidget setData functions
-Q_DECLARE_METATYPE(DrToy*)
-
 // Type Definitions
 typedef std::chrono::high_resolution_clock Clock;
 

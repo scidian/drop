@@ -32,6 +32,7 @@ private:
     // Local Variables
     PropertyMap m_properties;                                       // Map of pointers to DrProperty classes
 
+    // The 6 Parts of Data for Every Component
     QString     m_display_name = "Unknown Component";
     QString     m_description = "No description";
     QString     m_icon = "";
