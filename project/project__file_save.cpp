@@ -74,7 +74,6 @@ void DrProject::saveProjectToFile() {
         DrEffect *effect = effect_pair.second;
         QVariantMap effect_data;
         effect_data["key"] =        QVariant::fromValue(effect->getKey());
-        effect_data["name"] =       QVariant(effect->getName());
         effect_data["type"] =       QVariant(Dr::EnumToInt(effect->getEffectType()));
         settings.beginWriteArray("effects");
         settings.setArrayIndex(effect_count++);
@@ -148,6 +147,7 @@ void DrProject::saveProjectToFile() {
         settings.endArray();
 
         // Write Stages
+        QString world_array = "stages in world:" + world_data["key"].toString();
         int stage_count = 0;
         for (auto stage_pair : world->getStageMap()) {
             DrStage *stage = stage_pair.second;
@@ -156,12 +156,28 @@ void DrProject::saveProjectToFile() {
             stage_data["is_start_stage"] =  QVariant(stage->isStartStage());
             stage_data["center_point"] =    QVariant(stage->getViewCenterPoint());
             addSettingsToMap(stage, stage_data);
-            settings.beginWriteArray("stages:" + world_data["key"].toString());
+            settings.beginWriteArray(world_array);
             settings.setArrayIndex(stage_count++);
             settings.setValue("stage", stage_data);
             settings.endArray();
-        }
-    }
+
+            // Write Things
+            QString stage_array = "things in stage:" + stage_data["key"].toString();
+            int thing_count = 0;
+            for (auto thing_pair : stage->getThingMap()) {
+                DrThing *thing = thing_pair.second;
+                QVariantMap thing_data;
+                thing_data["key"] =         QVariant::fromValue(thing->getKey());
+                thing_data["asset_key"] =   QVariant::fromValue(thing->getAssetKey());
+                thing_data["type"] =        QVariant(Dr::EnumToInt(thing->getThingType()));
+                addSettingsToMap(thing, thing_data);
+                settings.beginWriteArray(stage_array);
+                settings.setArrayIndex(thing_count++);
+                settings.setValue("thing", thing_data);
+                settings.endArray();
+            } // end thing
+        } // end stage
+    } // end world
 
 
 }

@@ -28,17 +28,16 @@ private:
     DrProject       *m_parent_project;                  // Holds reference to parent Project class that handles key generation for project
 
     // Local Variables
-    QString          m_effect_name;                     // Effect Type as a String, "Light", "Mirror", etc
     DrEffectType     m_effect_type;                     // Effect Type as DrEffectType
 
 public:
-    DrEffect(DrProject *parent_project, long key, QString effect_name, DrEffectType effect_type);
+    DrEffect(DrProject *parent_project, long key, DrEffectType effect_type);
 
     // Functions
     QPixmap         getPixmap();                        // Returns a pixmap for a Light Effect in the editor based on the EffectType
 
     // Getters / Setters
-    QString         getName() override { return m_effect_name; }
+    QString         getName() override;
     DrEffectType    getEffectType() { return m_effect_type; }
 
 };

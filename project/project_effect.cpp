@@ -12,22 +12,38 @@
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrEffect::DrEffect(DrProject *parent_project, long key, QString effect_name, DrEffectType effect_type) {
+DrEffect::DrEffect(DrProject *parent_project, long key, DrEffectType effect_type) {
 
     this->setKey(key);
 
     m_parent_project = parent_project;
-    m_effect_name = effect_name;
     m_effect_type = effect_type;
 }
 
 
+//####################################################################################
+//##    Name of this Effect
+//####################################################################################
+QString DrEffect::getName() {
+    switch (m_effect_type) {
+        case DrEffectType::Light:   return "Light";
+        case DrEffectType::Water:   return "Water";
+        case DrEffectType::Fire:    return "Fire";
+        case DrEffectType::Mirror:  return "Mirror";
+        case DrEffectType::Fisheye: return "Fisheye Lens";
+        case DrEffectType::Swirl:   return "Swirl";
+        case DrEffectType::Flag:    return "Flag";
+        case DrEffectType::Rain:    return "Rain";
+        case DrEffectType::Snow:    return "Snow";
+        case DrEffectType::Clouds:  return "Clouds";
+        case DrEffectType::Fog:     return "Fog";
+    }
+}
 
 //####################################################################################
 //##    Creates a Pixmap for this Effect
 //####################################################################################
 QPixmap DrEffect::getPixmap() {
-
     switch (m_effect_type) {
         case DrEffectType::Light:   return QPixmap(":/assets/asset_types/light.png");
         case DrEffectType::Water:   return QPixmap(":/assets/asset_types/water.png");
@@ -41,7 +57,6 @@ QPixmap DrEffect::getPixmap() {
         case DrEffectType::Clouds:  return QPixmap(":/assets/asset_types/clouds.png");
         case DrEffectType::Fog:     return QPixmap(":/assets/asset_types/fog.png");
     }
-
 }
 
 

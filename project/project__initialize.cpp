@@ -32,17 +32,17 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
 
 
     // ***** Add Effects
-    long effect_1 =  this->addEffect("Light",           DrEffectType::Light);
-    long effect_2 =  this->addEffect("Water",           DrEffectType::Water);
-    long effect_3 =  this->addEffect("Fire",            DrEffectType::Fire);
-    long effect_4 =  this->addEffect("Mirror",          DrEffectType::Mirror);
-    long effect_5 =  this->addEffect("Fisheye Lens",    DrEffectType::Fisheye);
-    long effect_6 =  this->addEffect("Swirl",           DrEffectType::Swirl);
-    //long effect_7 =  this->addEffect("Flag",           DrEffectType::Flag);
-    //long effect_8 =  this->addEffect("Rain",           DrEffectType::Rain);
-    //long effect_9 =  this->addEffect("Snow",           DrEffectType::Snow);
-    //long effect_10 = this->addEffect("Clouds",         DrEffectType::Clouds);
-    //long effect_11 = this->addEffect("Fog",            DrEffectType::Fog);
+    long effect_1 =  this->addEffect(DrEffectType::Light);
+    long effect_2 =  this->addEffect(DrEffectType::Water);
+    long effect_3 =  this->addEffect(DrEffectType::Fire);
+    long effect_4 =  this->addEffect(DrEffectType::Mirror);
+    long effect_5 =  this->addEffect(DrEffectType::Fisheye);
+    long effect_6 =  this->addEffect(DrEffectType::Swirl);
+    //long effect_7 =  this->addEffect(DrEffectType::Flag);
+    //long effect_8 =  this->addEffect(DrEffectType::Rain);
+    //long effect_9 =  this->addEffect(DrEffectType::Snow);
+    //long effect_10 = this->addEffect(DrEffectType::Clouds);
+    //long effect_11 = this->addEffect(DrEffectType::Fog);
 
     this->addAsset(DrAssetType::Effect, effect_1);                             // Light
     this->addAsset(DrAssetType::Effect, effect_2);                             // Water

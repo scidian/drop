@@ -49,7 +49,7 @@ DrStage::~DrStage() {
 //##    ***** #NOTE: Y Axis is in Game Engine coordinates (i.e. positive is up, negative is down)
 //##
 //####################################################################################
-DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, double y, double z, bool should_collide) {
+DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, double y, double z, bool should_collide, long key) {
     DrAsset *asset = m_parent_project->getAsset(from_asset_key);
 
     // Figure out name for Thing
@@ -78,7 +78,7 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
             Dr::ShowMessageBox("Error in DrStage::addThing, DrThingType not handled! Type: " + Dr::StringFromThingType(new_type));
     }
 
-    long new_thing_key = m_parent_project->getNextKey();
+    long new_thing_key = (key == c_no_key) ? m_parent_project->getNextKey() : key;
     m_things[new_thing_key] = new DrThing(m_parent_project, m_parent_world, this, new_thing_key,
                                           new_name, new_type, from_asset_key, x, y, z, should_collide);
     return m_things[new_thing_key];

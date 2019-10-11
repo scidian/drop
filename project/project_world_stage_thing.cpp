@@ -31,7 +31,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
     m_parent_world = parent_world;                  // pointer to parent World
     m_parent_stage = parent_stage;                  // pointer to parent Stage
 
-    setKey(new_thing_key);                          // assign key passed in from key generator, this key matches key in parent Stage map container
+    this->setKey(new_thing_key);                    // assign key passed in from key generator, this key matches key in parent Stage map container
 
     m_thing_type = new_thing_type;                  // assign thing type
     m_asset_key = from_asset_key;                   // associated asset key

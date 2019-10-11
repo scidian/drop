@@ -55,9 +55,9 @@ long DrProject::addAsset(DrAssetType new_asset_type, long source_image_key, long
     return new_asset_key;
 }
 
-long DrProject::addEffect(QString effect_name, DrEffectType effect_type, long key) {
+long DrProject::addEffect(DrEffectType effect_type, long key) {
     long new_effect_key = (key == c_no_key) ? getNextKey() : key;
-    m_effects[new_effect_key] = new DrEffect(this, new_effect_key, effect_name, effect_type);
+    m_effects[new_effect_key] = new DrEffect(this, new_effect_key, effect_type);
     return new_effect_key;
 }
 

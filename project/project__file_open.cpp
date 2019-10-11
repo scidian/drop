@@ -58,9 +58,8 @@ void DrProject::openProjectFromFile(QString open_file) {
         settings.setArrayIndex(i);
         QVariantMap effect_data =   settings.value("effect").value<QVariantMap>();
         long    key =               effect_data["key"].toLongLong();
-        QString name =              effect_data["name"].toString();
-        DrEffectType type =         static_cast<DrEffectType>(effect_data["type"].toInt());
-        addEffect(name, type, key);
+        DrEffectType effect_type =  static_cast<DrEffectType>(effect_data["type"].toInt());
+        addEffect(effect_type, key);
     }
     settings.endArray();
 
@@ -102,8 +101,8 @@ void DrProject::openProjectFromFile(QString open_file) {
         QVariantMap asset_data =    settings.value("asset").value<QVariantMap>();
         long key =                  asset_data["key"].toLongLong();
         long source_key =           asset_data["source_key"].toLongLong();
-        DrAssetType type =          static_cast<DrAssetType>(asset_data["type"].toInt());
-        long new_asset = addAsset(type, source_key, key);
+        DrAssetType asset_type =    static_cast<DrAssetType>(asset_data["type"].toInt());
+        long new_asset = addAsset(asset_type, source_key, key);
         DrAsset *asset = findAssetFromKey(new_asset);
         loadSettingsFromMap(asset, asset_data);
     }
@@ -126,7 +125,7 @@ void DrProject::openProjectFromFile(QString open_file) {
         settings.endArray();
 
         // Read Stages
-        QString world_array = "stages:" + world_data["key"].toString();
+        QString world_array = "stages in world:" + world_data["key"].toString();
         int stage_count = settings.beginReadArray(world_array);
                           settings.endArray();
         for (int j = 0; j < stage_count; ++j) {
@@ -140,40 +139,60 @@ void DrProject::openProjectFromFile(QString open_file) {
             DrStage *stage = findStageFromKey(stage_key);
             loadSettingsFromMap(stage, stage_data);
             settings.endArray();
+
+
+            QString stage_array = "things in stage:" + stage_data["key"].toString();
+            int thing_count = settings.beginReadArray(stage_array);
+                              settings.endArray();
+            for (int t = 0; t < thing_count; ++t) {
+                settings.beginReadArray(stage_array);
+                settings.setArrayIndex(t);
+                QVariantMap thing_data =    settings.value("thing").value<QVariantMap>();
+                long thing_key =            thing_data["key"].toLongLong();
+                long asset_key =            thing_data["asset_key"].toLongLong();
+                DrThingType thing_type =    static_cast<DrThingType>(thing_data["type"].toInt());
+                stage->addThing(thing_type, asset_key, 0, 0, 0, true, thing_key);
+                DrThing *thing = findThingFromKey(thing_key);
+                loadSettingsFromMap(thing, thing_data);
+                settings.endArray();
+            }
         }
     }
-
-
-
 }
 
 
 //####################################################################################
 //##    Load all Components / Properties Settings
 //####################################################################################
+bool checkMapHasKey(QVariantMap &map, QString key) {
+    QVariantMap::iterator it = map.find(key);
+    return (it != map.end());
+}
+
 void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
     entity->setLocked( map["locked"].toBool() );
     entity->setVisible( map["visible"].toBool() );
+    QString k;
     for (auto component_pair : entity->getComponentList()) {
         DrComponent *component = component_pair.second;
         QString map_key = QString::number(component->getComponentKey()) + ":";
-        component->setDisplayName(  map[map_key + "display_name"].toString());
-        component->setDescription(  map[map_key + "description"].toString());
-        component->setIcon(         map[map_key + "icon"].toString());
-        component->setColor(        QColor::fromRgba(map[map_key + "color"].toUInt()));
-        component->setOnOrOff(      map[map_key + "turned_on"].toBool());
-        ///map[map_key + "comp_key"] =     QVariant::fromValue(component->getComponentKey());
+        k = map_key + "display_name";       if (checkMapHasKey(map, k)) component->setDisplayName(  map[k].toString()   );
+        k = map_key + "description";        if (checkMapHasKey(map, k)) component->setDescription(  map[k].toString()   );
+        k = map_key + "icon";               if (checkMapHasKey(map, k)) component->setIcon(         map[k].toString()   );
+        k = map_key + "color";              if (checkMapHasKey(map, k)) component->setColor(        QColor::fromRgba(map[k].toUInt())   );
+        k = map_key + "turned_on";          if (checkMapHasKey(map, k)) component->setOnOrOff(      map[k].toBool()     );
+        ///k = map_key + "comp_key";           if (checkMapHasKey(map, k)) component->setComponentKey( map[k].toLongLong() );
 
         for (auto property_pair : component->getPropertyList()) {
             DrProperty *property = property_pair.second;
             QString map_key = QString::number(component->getComponentKey()) + ":" + QString::number(property->getPropertyKey()) + ":";
-            property->setDisplayName(   map[map_key + "display_name"].toString());
-            property->setDescription(   map[map_key + "description"].toString());
-            property->setPropertyType(  static_cast<Property_Type>(map[map_key + "data_type"].toInt()));
-            property->setValue(         map[map_key + "value"]);
-            ///map[map_key + "prop_key"] =     QVariant::fromValue(property->getPropertyKey());
-            property->setHidden(        map[map_key + "is_hidden"].toBool());
-            property->setEditable(      map[map_key + "is_editable"].toBool());
+            k = map_key + "display_name";   if (checkMapHasKey(map, k)) property->setDisplayName(   map[k].toString()   );
+            k = map_key + "description";    if (checkMapHasKey(map, k)) property->setDescription(   map[k].toString()   );
+            k = map_key + "data_type";      if (checkMapHasKey(map, k)) property->setPropertyType(  static_cast<Property_Type>(map[k].toInt())  );
+            k = map_key + "value";          if (checkMapHasKey(map, k)) property->setValue(         map[k]  );
+            k = map_key + "is_hidden";      if (checkMapHasKey(map, k)) property->setHidden(        map[k].toBool() );
+            k = map_key + "is_editable";    if (checkMapHasKey(map, k)) property->setEditable(      map[k].toBool() );
+            ///k = map_key + "prop_key";       if (checkMapHasKey(map, k)) property->setPropertyKey(   map[k].toLongLong() );
         }
     }
 

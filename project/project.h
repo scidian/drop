@@ -128,7 +128,7 @@ public:
     long            addWorld();
     void            addWorld(long key, long start_stage_key, long last_stage_in_editor_key);
     long            addAsset(DrAssetType new_asset_type, long source_image_key, long key = c_no_key);
-    long            addEffect(QString effect_name, DrEffectType effect_type, long key = c_no_key);
+    long            addEffect(DrEffectType effect_type, long key = c_no_key);
     long            addFont(QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects = false, long key = c_no_key);
     long            addImage(QString image_path);
     long            addImage(long key, QString full_path, QString filename, QString simple_name, QImage &image);
