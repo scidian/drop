@@ -39,6 +39,7 @@ void SetDebugFlag(Debug_Flags flag) {
 void InitializeFlags() {
     SetDebugFlag( Debug_Flags::Show_Secret_Menu );
     //SetDebugFlag( Debug_Flags::Show_Undo_View );
+    //SetDebugFlag( Debug_Flags::Show_Bottom_Debug_Labels );
     //SetDebugFlag( Debug_Flags::Show_Hidden_Component );
 
     SetDebugFlag( Debug_Flags::Turn_On_Antialiasing );

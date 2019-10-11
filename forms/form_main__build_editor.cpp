@@ -212,6 +212,8 @@ void FormMain::buildWidgetsEditor() {
                 labelBottom =    createLabel(areaBottom,  "label_bottom",       QRect( 10, 80, 700, 21),    font);
         splitterVertical->addWidget(areaBottom);
 
+        areaBottom->setVisible( Dr::CheckDebugFlag(Debug_Flags::Show_Bottom_Debug_Labels) );
+
         splitterVertical->setStretchFactor(0, 1);           // widgetStage (index 0) should stretch (1)
         splitterVertical->setStretchFactor(1, 0);           // areaBottom  (index 1) should not stretch (0)
 
