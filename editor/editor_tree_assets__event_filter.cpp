@@ -101,7 +101,7 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
 
     // Highlights selected Asset Item
     } else if (event->type() == QEvent::Paint) {
-        if (asset_key == m_editor_relay->getAssetTree()->getSelectedKey()) {
+        if (asset_key == m_editor_relay->getAssetTree()->getSelectedKey() && m_editor_relay->getAssetTree()->hasFocus()) {
             QPainter painter(asset_frame);
             painter.setRenderHint(QPainter::Antialiasing, true);
             painter.setPen( QPen(Dr::GetColor(Window_Colors::Icon_Dark), 2) );

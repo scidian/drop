@@ -67,7 +67,7 @@ public:
 
     // ***** Custom Pop-Ups
     void            buildPopupAddEntity();                                              // Add Entity to Project
-    void            addAssetFromPopup(DrAssetType asset_type, long key);                // Child function for Popup Entity Form
+    void            addAssetFromPopup(DrAssetType asset_type, long source_key);         // Child function for Popup Entity Form
 
     void            buildPopupGridSnap();                                               // Snap to Grid Option
 };

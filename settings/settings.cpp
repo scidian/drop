@@ -80,10 +80,8 @@ QString DrSettings::getName() {
         case DrType::StartStage:
         case DrType::Thing:
         case DrType::Asset:
-            name_component = getComponent(Components::Entity_Name);
-            if (!name_component) return "No Name Component";
-            name_property  = name_component->getProperty(Properties::Entity_Name);
-            if (!name_property)  return "No Name Property";
+            name_component = getComponent(Components::Entity_Name);                 if (!name_component) return "No Name Component";
+            name_property  = name_component->getProperty(Properties::Entity_Name);  if (!name_property)  return "No Name Property";
             return name_property->getValue().toString();
         case DrType::Image:     return "DrImage - Unknown Name";
         case DrType::Font:      return "DrFont - Unknown Name";
@@ -93,15 +91,14 @@ QString DrSettings::getName() {
     return "Unknown Type, Can't Find Name";
 }
 
-// Returns Name from shared "Entity_Name" component
-void DrSettings::setName(QString new_name) {
+// Sets Name from shared "Entity_Name" component, returns true if successful
+bool DrSettings::setName(QString new_name) {
     DrComponent *name_component;
     DrProperty  *name_property;
-    name_component = getComponent(Components::Entity_Name);
-    if (!name_component) return;
-    name_property  = name_component->getProperty(Properties::Entity_Name);
-    if (!name_property)  return;
+    name_component = getComponent(Components::Entity_Name);                         if (!name_component) return false;
+    name_property  = name_component->getProperty(Properties::Entity_Name);          if (!name_property)  return false;
     name_property->setValue(new_name);
+    return true;
 }
 
 

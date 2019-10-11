@@ -89,7 +89,7 @@ long DrProject::addImage(long key, QString full_path, QString filename, QString 
 
 // Adds a World to the map container, finds next availbable "World xxx" name to assign to World
 long DrProject::addWorld() {
-    int test_num = 0;
+    int test_num = static_cast<int>(m_worlds.size());
     QString new_name;
     do {
         ++test_num;

@@ -50,7 +50,7 @@ public:
 
     DrSettings*     getSettings()           { return this; }
     virtual QString getName();                                                  // Returns Name from shared "Entity_Name" component
-    virtual void    setName(QString new_name);
+    virtual bool    setName(QString new_name);                                  // Returns true if successful
 
     bool            isLocked()                  { return (m_is_locked || getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Item_Locked).toBool()); }
     bool            isVisible()                 { return m_is_visible; }
