@@ -31,15 +31,16 @@ void DrProject::saveProjectToFile() {
 
     // ***** Project Data to be Saved:
     // Done
-    //  long        m_key_generator;                    // Variable to hand out unique id key's to all children items
-    //  OptionMap   m_options;                          // Map holding DrProject Wide options
-    //  EffectMap   m_effects;                          // Holds effects for the project
-    //  ImageMap    m_images;                           // Holds images for the project
-    //  AssetMap    m_assets;                           // Holds assets for the project
+    //      long        m_key_generator;                    // Variable to hand out unique id key's to all children items
+    //      OptionMap   m_options;                          // Map holding DrProject Wide options
+    //      EffectMap   m_effects;                          // Holds effects for the project
+    //      ImageMap    m_images;                           // Holds images for the project
+    //      FontMap     m_fonts;                            // Holds custom fonts for the project
+    //      AssetMap    m_assets;                           // Holds assets for the project
 
     // Need
-    //  WorldMap    m_worlds;                           // Holds worlds for the project
-    //  FontMap     m_fonts;                            // Holds custom fonts for the project
+    //      WorldMap    m_worlds;                           // Holds worlds for the project
+
 
     // !!!!! #IMPORTANT: Register custom QVariant Types
     qRegisterMetaTypeStreamOperators<DrShapeList>("DrShapeList");
@@ -52,7 +53,6 @@ void DrProject::saveProjectToFile() {
 
 
     // ***** Write Options
-    settings.beginWriteArray("options");
     QVariantMap options;
     options["key_generator"] =  QVariant::fromValue(m_key_generator);
     options["name"] =           getOption(Project_Options::Name);
@@ -62,13 +62,13 @@ void DrProject::saveProjectToFile() {
     options["orientation"] =    getOption(Project_Options::Orientation);
     options["width"] =          getOption(Project_Options::Width);
     options["height"] =         getOption(Project_Options::Height);
+    settings.beginWriteArray("options");
     settings.setArrayIndex(0);
     settings.setValue("options", options);
     settings.endArray();
 
 
     // ***** Write Effects
-    settings.beginWriteArray("effects");
     int effect_count = 0;
     for (auto effect_pair : m_effects) {
         DrEffect *effect = effect_pair.second;
@@ -76,14 +76,14 @@ void DrProject::saveProjectToFile() {
         effect_data["key"] =        QVariant::fromValue(effect->getKey());
         effect_data["name"] =       QVariant(effect->getName());
         effect_data["type"] =       QVariant(Dr::EnumToInt(effect->getEffectType()));
+        settings.beginWriteArray("effects");
         settings.setArrayIndex(effect_count++);
         settings.setValue("effect", effect_data);
+        settings.endArray();
     }
-    settings.endArray();
 
 
     // ***** Write Images
-    settings.beginWriteArray("images");
     int image_count = 0;
     for (auto image_pair : m_images) {
         DrImage *image = image_pair.second;
@@ -93,14 +93,14 @@ void DrProject::saveProjectToFile() {
         image_data["filename"] =    QVariant(image->getFilename());
         image_data["simple_name"] = QVariant(image->getSimplifiedName());
         image_data["image"] =       QVariant(QPixmap::fromImage(image->getImage()));
+        settings.beginWriteArray("images");
         settings.setArrayIndex(image_count++);
         settings.setValue("image", image_data);
+        settings.endArray();
     }
-    settings.endArray();
 
 
     // ***** Write Fonts
-    settings.beginWriteArray("fonts");
     int font_count = 0;
     for (auto font_pair : m_fonts) {
         DrFont *font = font_pair.second;
@@ -110,14 +110,14 @@ void DrProject::saveProjectToFile() {
         font_data["font_family"] =  QVariant(font->getPropertyFontFamily());
         font_data["font_size"] =    QVariant(font->getPropertyFontSize());
         font_data["image"] =        QVariant(font->getPixmap());
+        settings.beginWriteArray("fonts");
         settings.setArrayIndex(font_count++);
         settings.setValue("font", font_data);
+        settings.endArray();
     }
-    settings.endArray();
 
 
     // ***** Write Assets
-    settings.beginWriteArray("assets");
     int asset_count = 0;
     for (auto asset_pair : m_assets) {
         DrAsset *asset = asset_pair.second;
@@ -126,10 +126,43 @@ void DrProject::saveProjectToFile() {
         asset_data["source_key"] =  QVariant::fromValue(asset->getSourceKey());
         asset_data["type"] =        QVariant(Dr::EnumToInt(asset->getAssetType()));
         addSettingsToMap(asset, asset_data);
+        settings.beginWriteArray("assets");
         settings.setArrayIndex(asset_count++);
         settings.setValue("asset", asset_data);
+        settings.endArray();
     }
-    settings.endArray();
+
+
+    // ***** Write Worlds
+    int world_count = 0;
+    for (auto world_pair : m_worlds) {
+        DrWorld *world = world_pair.second;
+        QVariantMap world_data;
+        world_data["key"] =             QVariant::fromValue(world->getKey());
+        world_data["start_stage"] =     QVariant::fromValue(world->getStartStageKey());
+        world_data["editor_stage"] =    QVariant::fromValue(world->getLastStageShownKey());
+        addSettingsToMap(world, world_data);
+        settings.beginWriteArray("worlds");
+        settings.setArrayIndex(world_count++);
+        settings.setValue("world", world_data);
+        settings.endArray();
+
+        // Write Stages
+        int stage_count = 0;
+        for (auto stage_pair : world->getStageMap()) {
+            DrStage *stage = stage_pair.second;
+            QVariantMap stage_data;
+            stage_data["key"] =             QVariant::fromValue(stage->getKey());
+            stage_data["is_start_stage"] =  QVariant(stage->isStartStage());
+            stage_data["center_point"] =    QVariant(stage->getViewCenterPoint());
+            addSettingsToMap(stage, stage_data);
+            settings.beginWriteArray("stages:" + world_data["key"].toString());
+            settings.setArrayIndex(stage_count++);
+            settings.setValue("stage", stage_data);
+            settings.endArray();
+        }
+    }
+
 
 }
 
@@ -146,7 +179,7 @@ void DrProject::addSettingsToMap(DrSettings *entity, QVariantMap &map) {
         map[map_key + "display_name"] = QVariant(component->getDisplayName());
         map[map_key + "description"] =  QVariant(component->getDescription());
         map[map_key + "icon"] =         QVariant(component->getIcon());
-        map[map_key + "color"] =        QVariant(component->getColor());
+        map[map_key + "color"] =        QVariant(component->getColor().rgba());
         map[map_key + "turned_on"] =    QVariant(component->isTurnedOn());
         map[map_key + "comp_key"] =     QVariant::fromValue(component->getComponentKey());
 

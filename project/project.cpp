@@ -91,6 +91,12 @@ long DrProject::addWorld() {
     return new_world_key;
 }
 
+// Adds a World to the map container
+void DrProject::addWorld(long key, long start_stage_key, long last_stage_in_editor_key) {
+    m_worlds[key] = new DrWorld(this, key, "TEMP", false);
+    m_worlds[key]->setStartStageKey(start_stage_key);
+    m_worlds[key]->setLastStageShownKey(last_stage_in_editor_key);
+}
 
 
 

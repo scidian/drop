@@ -45,6 +45,7 @@ void DrProject::openProjectFromFile(QString open_file) {
     setOption(Project_Options::Name,            options["name"]);
     setOption(Project_Options::File_Name_Path,  options["file_path"]);
     setOption(Project_Options::Current_World,   options["current_world"]);
+    setOption(Project_Options::Current_Stage,   options["current_stage"]);
     setOption(Project_Options::Orientation,     options["orientation"]);
     setOption(Project_Options::Width,           options["width"]);
     setOption(Project_Options::Height,          options["height"]);
@@ -102,28 +103,81 @@ void DrProject::openProjectFromFile(QString open_file) {
         long key =                  asset_data["key"].toLongLong();
         long source_key =           asset_data["source_key"].toLongLong();
         DrAssetType type =          static_cast<DrAssetType>(asset_data["type"].toInt());
-        addAsset(type, source_key, key);
+        long new_asset = addAsset(type, source_key, key);
+        DrAsset *asset = findAssetFromKey(new_asset);
+        loadSettingsFromMap(asset, asset_data);
     }
     settings.endArray();
 
 
-    //addSettingsToMap(asset, asset_data);
+    // ***** Read Worlds
+    int world_count = settings.beginReadArray("worlds");
+                      settings.endArray();
+    for (int i = 0; i < world_count; ++i) {
+        settings.beginReadArray("worlds");
+        settings.setArrayIndex(i);
+        QVariantMap world_data =    settings.value("world").value<QVariantMap>();
+        long world_key =            world_data["key"].toLongLong();
+        long start_stage_key =      world_data["start_stage"].toLongLong();
+        long editor_stage_key =     world_data["editor_stage"].toLongLong();
+        addWorld(world_key, start_stage_key, editor_stage_key);
+        DrWorld *world = findWorldFromKey(world_key);
+        loadSettingsFromMap(world, world_data);
+        settings.endArray();
 
-
-
-
-
-
-    // ***** Add Initial World
-    long world_1 = this->addWorld();
-    DrWorld* current_world = this->findWorldFromKey(world_1);
-    this->setOption(Project_Options::Current_World, QVariant::fromValue(world_1));
-    this->setOption(Project_Options::Current_Stage, QVariant::fromValue(current_world->getFirstStageKey()) );
+        // Read Stages
+        QString world_array = "stages:" + world_data["key"].toString();
+        int stage_count = settings.beginReadArray(world_array);
+                          settings.endArray();
+        for (int j = 0; j < stage_count; ++j) {
+            settings.beginReadArray(world_array);
+            settings.setArrayIndex(j);
+            QVariantMap stage_data =    settings.value("stage").value<QVariantMap>();
+            long stage_key =            stage_data["key"].toLongLong();
+            bool start_stage =          stage_data["is_start_stage"].toBool();
+            QPointF center_point =      stage_data["center_point"].toPointF();
+            world->addStage(stage_key, start_stage, center_point);
+            DrStage *stage = findStageFromKey(stage_key);
+            loadSettingsFromMap(stage, stage_data);
+            settings.endArray();
+        }
+    }
 
 
 
 }
 
+
+//####################################################################################
+//##    Load all Components / Properties Settings
+//####################################################################################
+void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
+    entity->setLocked( map["locked"].toBool() );
+    entity->setVisible( map["visible"].toBool() );
+    for (auto component_pair : entity->getComponentList()) {
+        DrComponent *component = component_pair.second;
+        QString map_key = QString::number(component->getComponentKey()) + ":";
+        component->setDisplayName(  map[map_key + "display_name"].toString());
+        component->setDescription(  map[map_key + "description"].toString());
+        component->setIcon(         map[map_key + "icon"].toString());
+        component->setColor(        QColor::fromRgba(map[map_key + "color"].toUInt()));
+        component->setOnOrOff(      map[map_key + "turned_on"].toBool());
+        ///map[map_key + "comp_key"] =     QVariant::fromValue(component->getComponentKey());
+
+        for (auto property_pair : component->getPropertyList()) {
+            DrProperty *property = property_pair.second;
+            QString map_key = QString::number(component->getComponentKey()) + ":" + QString::number(property->getPropertyKey()) + ":";
+            property->setDisplayName(   map[map_key + "display_name"].toString());
+            property->setDescription(   map[map_key + "description"].toString());
+            property->setPropertyType(  static_cast<Property_Type>(map[map_key + "data_type"].toInt()));
+            property->setValue(         map[map_key + "value"]);
+            ///map[map_key + "prop_key"] =     QVariant::fromValue(property->getPropertyKey());
+            property->setHidden(        map[map_key + "is_hidden"].toBool());
+            property->setEditable(      map[map_key + "is_editable"].toBool());
+        }
+    }
+
+}
 
 
 

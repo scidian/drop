@@ -43,8 +43,8 @@ void FormMain::menuOpen() {
     QString directory  = QStandardPaths::writableLocation(QStandardPaths::StandardLocation::DesktopLocation);
     QString filter =    tr("Drop Project File (*.drop)");
     QString selected =  tr("Drop Project File (*.drop)");
-    QString open_file = QFileDialog::getOpenFileName(this, caption, directory, filter);
-
+    QFileDialog::Options dialog_options;
+    QString open_file = QFileDialog::getOpenFileName(nullptr, caption, directory, filter, &selected, dialog_options);
     setFormMainMode( Form_Main_Mode::Clear );
     m_project->clearProject();
     m_project->openProjectFromFile(open_file);
@@ -66,8 +66,8 @@ void FormMain::menuSave(bool save_as) {
     if (save_as) {
         QString caption =   "Save Project As";
         QString filter =    tr("Drop Project File (*.drop)");
-        QString selected =  "";//tr("Drop Project File (*.drop)");
-        full_path =  QFileDialog::getSaveFileName(this, caption, full_path, filter, &selected);
+        QString selected =  tr("Drop Project File (*.drop)");
+        full_path =  QFileDialog::getSaveFileName(nullptr, caption, full_path, filter, &selected);
     }
 
     // Save the file

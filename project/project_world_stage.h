@@ -55,6 +55,7 @@ public:
     void            setViewCenterPoint(QPointF new_point) { m_center_view_point = new_point; }
 
     bool            isStartStage()      { return m_is_start_stage; }
+    void            setIsStartStage(bool is_start_stage) { m_is_start_stage = is_start_stage; }
 
     // Misc Stage Functions
     DrThing*        addThing(DrThingType new_type, long from_asset_key, double x, double y, double z, bool should_collide = true);

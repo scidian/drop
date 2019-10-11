@@ -16,15 +16,19 @@
 #include "settings/settings_component_property.h"
 
 //####################################################################################
-//##    Constructor, Destructor - addStage
+//##    Constructor, Destructor
 //####################################################################################
-DrWorld::DrWorld(DrProject *parent_project, long new_world_key, QString new_world_name) {
+DrWorld::DrWorld(DrProject *parent_project, long new_world_key, QString new_world_name, bool add_start_stage) {
     m_parent_project = parent_project;
-    setKey(new_world_key);
+    this->setKey(new_world_key);
 
     initializeWorldSettings(new_world_name);
 
-    m_start_stage_key = addStage();                         // Adds the initial "Start Stage"
+    // Adds the initial "Start Stage"
+    if (add_start_stage) {
+        m_start_stage_key = addStage();
+    }
+
     m_last_stage_shown_in_editor = m_start_stage_key;
 }
 
@@ -32,6 +36,10 @@ DrWorld::~DrWorld() {
     for (auto i: m_stages) { delete i.second; }
 }
 
+
+//####################################################################################
+//##    Adds a Stage
+//####################################################################################
 // Adds a Stage to the map container, assins name based on current stage count
 long DrWorld::addStage(QString new_stage_name) {
     bool need_start_stage = false;
@@ -46,6 +54,12 @@ long DrWorld::addStage(QString new_stage_name) {
 
     m_stages[new_stage_key] = new DrStage(m_parent_project, this, new_stage_key, new_stage_name, need_start_stage);    
     return new_stage_key;
+}
+
+void DrWorld::addStage(long stage_key, bool is_start_stage, QPointF center_point) {
+    m_stages[stage_key] = new DrStage(m_parent_project, this, stage_key, "TEMP", false);
+    m_stages[stage_key]->setIsStartStage(is_start_stage);
+    m_stages[stage_key]->setViewCenterPoint(center_point);
 }
 
 

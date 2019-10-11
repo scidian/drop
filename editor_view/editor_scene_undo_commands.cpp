@@ -5,6 +5,8 @@
 //
 //
 //
+#include <QDebug>
+
 #include "editor_item.h"
 #include "editor_scene.h"
 #include "editor_scene_undo_commands.h"
@@ -79,6 +81,8 @@ void UndoCommandChangeStage::redo() {
 }
 
 QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_key, bool is_undo) {
+    ///qDebug() << "Old Stage: " << old_stage_key << ", New Stage: " << new_stage_key;
+
     // Remove any references within the current project stage things to any GraphicsScene items
     DrStage *displayed = m_project->findStageFromKey(old_stage_key);
     QString redo_name = "ERROR";
@@ -90,7 +94,7 @@ QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_k
     // Load stage we're changing to
     DrStage *new_stage = m_project->findStageFromKey(new_stage_key);
     if (new_stage == nullptr) {
-        return "Redo Select Stage " + displayed->getName();
+        return "Redo Select Stage " + redo_name;
     }
     new_stage->getParentWorld()->setLastStageShownKey(new_stage_key);
 

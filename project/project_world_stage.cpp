@@ -25,7 +25,7 @@ DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world, long new_stag
     m_parent_project = parent_project;              // pointer to parent Project
     m_parent_world = parent_world;                  // pointer to parent World
 
-    setKey(new_stage_key);                          // assign key passed in from key generator, this key matches key in parent World map container
+    this->setKey(new_stage_key);                    // assign key passed in from key generator, this key matches key in parent World map container
 
     m_is_start_stage = is_start_stage;              // is this a start stage or not, can only be one start stage per World
 
