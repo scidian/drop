@@ -49,7 +49,7 @@ public:
     virtual DrType  getType()               { return DrType::BaseClass; }       // Returns different types depending on reimplementation in child class
 
     DrSettings*     getSettings()           { return this; }
-    QString         getName();                                                  // Returns Name from shared "Entity_Name" component
+    virtual QString getName();                                                  // Returns Name from shared "Entity_Name" component
 
     bool            isLocked()                  { return (m_is_locked || getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Item_Locked).toBool()); }
     bool            isVisible()                 { return m_is_visible; }

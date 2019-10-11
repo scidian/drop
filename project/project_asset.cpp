@@ -12,6 +12,7 @@
 #include "debug.h"
 #include "engine_mesh/engine_vertex_data.h"
 #include "helper.h"
+#include "helper_qt.h"
 #include "imaging/imaging.h"
 #include "project.h"
 #include "project_asset.h"
@@ -34,12 +35,12 @@ DrShapeList autoCollisionShape(QPixmap pixmap);
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_asset_type, long source_key) {
+DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_asset_type, long source_image_key) {
     m_parent_project = parent_project;
-    setKey(new_asset_key);
 
+    this->setKey(new_asset_key);
     m_asset_type = new_asset_type;
-    m_source_key = source_key;
+    m_source_key = source_image_key;
 
     m_list_order = new_asset_key;
     m_group_number = 0;
@@ -48,24 +49,28 @@ DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_
     DrShapeList shape;
     switch (new_asset_type) {
         case DrAssetType::Character:
-        case DrAssetType::Object:
-            my_starting_pixmap = m_parent_project->getImage(source_key)->getPixmapFromImage();
+        case DrAssetType::Object: {
+            my_starting_pixmap = m_parent_project->getImage(source_image_key)->getPixmapFromImage();
             shape = autoCollisionShape(my_starting_pixmap);
             if (new_asset_type == DrAssetType::Character) {
-                initializeAssetSettingsCharacter(m_parent_project->getImage(source_key)->getSimplifiedName(), my_starting_pixmap, shape);
+                initializeAssetSettingsCharacter(m_parent_project->getImage(source_image_key)->getSimplifiedName(), my_starting_pixmap, shape);
             } else if (new_asset_type == DrAssetType::Object) {
-                initializeAssetSettingsObject(m_parent_project->getImage(source_key)->getSimplifiedName(), my_starting_pixmap, shape);
+                initializeAssetSettingsObject(m_parent_project->getImage(source_image_key)->getSimplifiedName(), my_starting_pixmap, shape);
             }
             break;
-        case DrAssetType::Effect:
-            my_starting_pixmap = m_parent_project->getEffect(source_key)->getPixmap();
-            initializeAssetSettingsEffect(Dr::StringFromEffectType(m_parent_project->getEffect(source_key)->getEffectType()));
+        }
+        case DrAssetType::Effect: {
+            DrEffect *effect = m_parent_project->getEffect(source_image_key);
+            if (effect == nullptr) Dr::ShowErrorMessage("DrProject::addAsset", "Error! Could not find Effect with key: " + QString::number(source_image_key));
+            my_starting_pixmap = effect->getPixmap();
+            initializeAssetSettingsEffect(Dr::StringFromEffectType(m_parent_project->getEffect(source_image_key)->getEffectType()));
             break;
-        case DrAssetType::Text:
-            my_starting_pixmap = m_parent_project->getFont(source_key)->getPixmap();
-            initializeAssetSettingsFont(m_parent_project->getFont(source_key));
+        }
+        case DrAssetType::Text: {
+            my_starting_pixmap = m_parent_project->getFont(source_image_key)->getPixmap();
+            initializeAssetSettingsFont(m_parent_project->getFont(source_image_key));
             break;
-
+        }
     }
 
     m_width =  my_starting_pixmap.width();

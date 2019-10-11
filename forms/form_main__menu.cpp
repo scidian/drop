@@ -45,10 +45,10 @@ void FormMain::menuOpen() {
     QString selected =  tr("Drop Project File (*.drop)");
     QString open_file = QFileDialog::getOpenFileName(this, caption, directory, filter);
 
-//    setFormMainMode( Form_Main_Mode::Clear );
-//    m_project->clearProject();
-//    m_project->openProjectFromFile(open_file);
-//    setFormMainMode( Form_Main_Mode::World_Editor );
+    setFormMainMode( Form_Main_Mode::Clear );
+    m_project->clearProject();
+    m_project->openProjectFromFile(open_file);
+    setFormMainMode( Form_Main_Mode::World_Editor );
 }
 
 

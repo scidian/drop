@@ -10,7 +10,7 @@
 #include "project_image.h"
 
 //####################################################################################
-//##    Constructor
+//##    Constructors
 //####################################################################################
 DrImage::DrImage(DrProject *parent_project, long key, QString image_path) :
     m_parent_project(parent_project) {
@@ -26,4 +26,14 @@ DrImage::DrImage(DrProject *parent_project, long key, QString image_path) :
 
     m_image = QImage(image_path).convertToFormat(QImage::Format::Format_ARGB32);
 
+}
+
+// File Loading Constructor
+DrImage::DrImage(DrProject *parent_project, long key, QString full_path, QString filename, QString simple_name, QImage &image) {
+    m_parent_project = parent_project;
+    setKey(key);
+    m_full_path = full_path;
+    m_filename = filename;
+    m_simple_name = simple_name;
+    m_image = image;
 }

@@ -62,7 +62,7 @@ public:
     virtual DrType  getType() override      { return DrType::Font; }
 
     DrProject*      getParentProject()      { return m_parent_project; }
-    QString         getName()               { return m_name; }
+    QString         getName() override      { return m_name; }
     QPixmap         getPixmap()             { return m_pixmap; }
 
     QRect           getCharRect(char character)     { return m_positions[character]; }

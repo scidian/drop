@@ -13,7 +13,8 @@
 //##    Constructor, Destructor
 //####################################################################################
 DrEffect::DrEffect(DrProject *parent_project, long key, QString effect_name, DrEffectType effect_type) {
-    setKey(key);
+
+    this->setKey(key);
 
     m_parent_project = parent_project;
     m_effect_name = effect_name;

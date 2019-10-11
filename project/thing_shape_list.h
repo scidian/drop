@@ -13,6 +13,7 @@
 #include <list>
 
 #include "enums_engine.h"
+#include "helper.h"
 #include "types/pointf.h"
 
 
@@ -53,16 +54,15 @@ public:
 
     // Operator Overloads for file saving
     bool operator==(const DrShapeList & o){
-        //return o.myStringVar == this->myStringVar;
-        return true;
+        return Dr::FuzzyCompare(o.m_direction, this->m_direction);
     }
 
     friend QDataStream &operator<<(QDataStream &out, const DrShapeList &rhs){
-        //out << rhs.myStringVar;
+        out << rhs.m_direction;
         return out;
     }
     friend QDataStream &operator>>(QDataStream &in, DrShapeList &rhs){
-        //in >> rhs.myStringVar;
+        in >> rhs.m_direction;
         return in;
     }
 

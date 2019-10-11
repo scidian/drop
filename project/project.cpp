@@ -49,20 +49,20 @@ void DrProject::clearProject() {
 //##    Functions to add different item types into project
 //##
 //####################################################################################
-long DrProject::addAsset(DrAssetType new_asset_type, long image_key) {
-    long new_asset_key = getNextKey();
-    m_assets[new_asset_key] = new DrAsset(this, new_asset_key, new_asset_type, image_key);
+long DrProject::addAsset(DrAssetType new_asset_type, long source_image_key, long key) {
+    long new_asset_key = (key == c_no_key) ? getNextKey() : key;
+    m_assets[new_asset_key] = new DrAsset(this, new_asset_key, new_asset_type, source_image_key);
     return new_asset_key;
 }
 
-long DrProject::addEffect(QString effect_name, DrEffectType effect_type) {
-    long new_effect_key = getNextKey();
+long DrProject::addEffect(QString effect_name, DrEffectType effect_type, long key) {
+    long new_effect_key = (key == c_no_key) ? getNextKey() : key;
     m_effects[new_effect_key] = new DrEffect(this, new_effect_key, effect_name, effect_type);
     return new_effect_key;
 }
 
-long DrProject::addFont(QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects) {
-    long new_font_key = getNextKey();
+long DrProject::addFont(QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects, long key) {
+    long new_font_key = (key == c_no_key) ? getNextKey() : key;
     m_fonts[new_font_key] = new DrFont(this, new_font_key, font_name, font_pixmap, font_family, font_size, use_test_rects);
     return new_font_key;
 }
@@ -72,7 +72,10 @@ long DrProject::addImage(QString image_path) {
     m_images[new_image_key] = new DrImage(this, new_image_key, image_path);
     return new_image_key;
 }
-
+long DrProject::addImage(long key, QString full_path, QString filename, QString simple_name, QImage &image) {
+    m_images[key] = new DrImage(this, key, full_path, filename, simple_name, image);
+    return key;
+}
 
 // Adds a World to the map container, finds next availbable "World xxx" name to assign to World
 long DrProject::addWorld() {
@@ -87,6 +90,8 @@ long DrProject::addWorld() {
     m_worlds[new_world_key] = new DrWorld(this, new_world_key, new_name);
     return new_world_key;
 }
+
+
 
 
 //####################################################################################

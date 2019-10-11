@@ -38,7 +38,7 @@ public:
     QPixmap         getPixmap();                        // Returns a pixmap for a Light Effect in the editor based on the EffectType
 
     // Getters / Setters
-    QString         getName() { return m_effect_name; }
+    QString         getName() override { return m_effect_name; }
     DrEffectType    getEffectType() { return m_effect_type; }
 
 };

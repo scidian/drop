@@ -28,7 +28,7 @@ private:
 
     // Local Variables
     DrAssetType     m_asset_type;                       // Holds asset type (object, character, etc)
-    long            m_source_key;                       // Holds key to source (ie. and asset pulls from an DrImage, DrFont, etc)
+    long            m_source_key;                       // Holds key to source (ie. and asset pulls from an DrImage, DrFont, DrEffect, etc.)
 
     long            m_width;
     long            m_height;
@@ -38,7 +38,7 @@ private:
 
 public:
     // Constructor & Destructor
-    explicit DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_asset_type, long source_key);
+    explicit DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_asset_type, long source_image_key);
     virtual ~DrAsset() override;
 
 

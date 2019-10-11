@@ -36,6 +36,7 @@ private:
 
 public:
     DrImage(DrProject *parent_project, long key, QString image_path);
+    DrImage(DrProject *parent_project, long key, QString full_path, QString filename, QString simple_name, QImage &image);
 
     // Getters and setters
     virtual DrType  getType() override      { return DrType::Image; }

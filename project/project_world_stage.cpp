@@ -35,9 +35,6 @@ DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world, long new_stag
         // If start stage, make name hidden to stop user from changing it
         DrProperty *my_name = getComponentProperty(Components::Entity_Name, Properties::Entity_Name);
         my_name->setEditable(false);
-
-        ///addThing(DrType::Camera, new DrAsset(), 0, 0);
-        ///addThing(DrType::Character, new DrAsset(), 0, 0);
     }
 }
 
